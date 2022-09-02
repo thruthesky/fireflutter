@@ -1,0 +1,116 @@
+name: fireflutter
+
+description: A free, open source, complete, rapid development package for creating Social apps, Chat apps, Community(Forum) apps, Shopping mall apps, and much more based on Firebase.
+version: 0.4.0
+homepage: https://github.com/thruthesky/fireflutter
+
+environment:
+  sdk: ">=2.15.0 <3.0.0"
+  flutter: ">=2.2.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Firebase Dependencies
+  firebase_core: ^1.20.1
+  firebase_auth: ^3.6.3
+  firebase_database: ^9.1.1
+  cloud_firestore: ^3.4.4
+  firebase_dynamic_links: ^4.3.4
+  firebase_storage: ^10.3.5
+  firebase_messaging: ^12.0.2
+  cloud_functions: ^3.3.4
+  flutterfire_ui: ^0.4.3+5
+  # EO
+
+  get: ^4.6.5
+
+  #
+  rxdart: ^0.27.3
+
+  # File upload
+  path_provider: ^2.0.11
+  image_picker: ^0.8.5
+  flutter_image_compress: ^1.1.0
+  photo_view: ^0.14.0
+
+  # Caching uploaded image
+  cached_network_image: ^3.2.0
+
+  # PhoneNumberInput widget
+  country_code_picker: ^2.0.2
+
+  # Chat room pagination. firestore pagination ui helper.
+  paginate_firestore: ^1.0.3+1
+
+  # chat badge
+  badges: ^2.0.2
+
+  # geocoding, geolocator, google_maps_flutter, flutter_polyline_points are for `Find Friend`.
+  geocoding: ^2.0.1
+  geolocator: ^8.2.1
+  
+  # Google Map is not being used by Auth 14.
+  # google_maps_flutter: ^2.1.1
+
+  # flutter_polyline_points: ^1.0.0
+
+  # reminder service,
+  shared_preferences: ^2.0.12
+
+  # date and time
+  jiffy: ^5.0.0
+
+  # uuid
+  uuid: ^3.0.5
+
+  # color picker for admin category management screen
+  flutter_colorpicker: ^1.0.3
+
+  # Forum search function
+  meilisearch: ^0.5.1
+
+  # flutter_html for post content and comment content.
+  # flutter_html 2.x has dependency problem with fluter_svg
+  flutter_html: ^3.0.0-alpha.2
+
+  # for post content & comment content
+  url_launcher: ^6.1.5
+
+  # for post & comment
+  flutter_linkify: ^5.0.2
+
+  # Dio
+  # Download on seoul art exhibition screen
+  dio: ^4.0.6
+
+  # Used in PostModel.
+  intl: ^0.17.0
+
+  #
+  path: ^1.8.0
+
+  # file upload
+  file_picker: ^4.5.1
+
+  # email validation on user email in profile screen.
+  email_validator: ^2.0.1
+
+  # iOS style date picker
+  flutter_holo_date_picker: ^1.0.3
+
+  # calendar
+  table_calendar: ^3.0.6
+
+  # Debouncer
+  easy_debounce: ^2.0.2+1
+
+  # Firestore scroll list view
+  infinite_scroll_pagination: ^3.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
