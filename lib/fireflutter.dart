@@ -4,6 +4,8 @@ export 'src/widgets/short_date.dart';
 export 'src/user/user.dart';
 export 'src/user/user.model.dart';
 export 'src/user/widgets/user.doc.dart';
+export 'src/user/widgets/user.setting.doc.dart';
+export 'src/user/user.settings.model.dart';
 
 export 'src/forum/post.dart';
 export 'src/forum/comment.dart';
