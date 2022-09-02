@@ -28,7 +28,7 @@ class Storage {
     Function(double)? onProgress,
     required String type,
   }) async {
-    if (User.notSignedIn) throw ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD;
+    if (User.instance.notSignedIn) throw ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD;
 
     /// Pick image
     final picker = ImagePicker();
@@ -62,7 +62,7 @@ class Storage {
     required String type,
     Function(double)? onProgress,
   }) async {
-    if (User.notSignedIn) throw ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD;
+    if (User.instance.notSignedIn) throw ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD;
 
     /// Get generated filename.
     // final String basename = file.path.split('/').last;
@@ -79,7 +79,7 @@ class Storage {
       file,
       SettableMetadata(customMetadata: {
         'basename': basename,
-        'uid': User.uid!,
+        'uid': User.instance.uid!,
         'type': type,
       }),
     );

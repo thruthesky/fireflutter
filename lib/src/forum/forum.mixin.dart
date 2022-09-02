@@ -15,8 +15,8 @@ mixin ForumMixin {
 
   /// Returns Firestore instance. Firebase database instance.
   FirebaseFirestore get db => FirebaseFirestore.instance;
-  bool get signedIn => User.signedIn;
-  bool get notSignedIn => User.notSignedIn;
+  bool get signedIn => User.instance.signedIn;
+  bool get notSignedIn => User.instance.notSignedIn;
 
   CollectionReference get userCol => db.collection('users');
   CollectionReference get categoryCol => db.collection('categories');
@@ -53,7 +53,7 @@ mixin ForumMixin {
   }
 
   DocumentReference voteDoc(String id) {
-    return postCol.doc(id).collection('votes').doc(User.uid);
+    return postCol.doc(id).collection('votes').doc(User.instance.uid);
   }
 
   DocumentReference commentDoc(String commentId) {
@@ -61,11 +61,11 @@ mixin ForumMixin {
   }
 
   DocumentReference commentVoteDoc(String commentId) {
-    return commentDoc(commentId).collection('votes').doc(User.uid);
+    return commentDoc(commentId).collection('votes').doc(User.instance.uid);
   }
 
   onReply(Post post, [Comment? comment]) async {
-    if (User.notSignedIn) return ffError(context, 'Sign-in first!');
+    if (User.instance.notSignedIn) return ffError(context, 'Sign-in first!');
 
     return showDialog(
       context: context,
@@ -305,7 +305,7 @@ mixin ForumMixin {
   ///   behaviour.
   ///
   /// [targetDocPath] is the path of target document. The document could be one
-  /// post, comment, or user.
+  /// post, comment, or user.instance.
   /// [likeOrDisliek] can be one of 'like' or 'dislike'.
   ///
   Future<void> feed(String targetDocPath, String likeOrDislike) async {
@@ -313,7 +313,7 @@ mixin ForumMixin {
 
     final targetDocRef = db.doc(targetDocPath);
 
-    String feedDocId = "${targetDocRef.id}-${User.uid}";
+    String feedDocId = "${targetDocRef.id}-${User.instance.uid}";
 
     // if feed not exists, then create new one and increase the number on doc.
     // if existing feed is same as new feed, then remove the feed and decrease the number on doc.

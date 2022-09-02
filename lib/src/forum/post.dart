@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:jiffy/jiffy.dart';
 import '../../../../fireflutter.dart';
 
 /// Post
@@ -65,7 +64,7 @@ class Post with ForumMixin implements Article {
 
   String uid;
 
-  bool get isMine => User.uid == uid;
+  bool get isMine => User.instance.uid == uid;
 
   int noOfComments;
 

@@ -65,7 +65,7 @@ class User {
     return user;
   }
 
-  static Future<UserModel> unblockUser(String uid) async {
+  Future<UserModel> unblockUser(String uid) async {
     UserModel user = await User.instance.get(uid);
 
     /// TODO unblock user by admin

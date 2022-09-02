@@ -207,7 +207,7 @@ class _PostFormState extends State<PostForm> {
           },
         ),
         // if (UserService.instance.user.isAdmin)
-        if (User.isAdmin)
+        if (User.instance.isAdmin)
           Container(
             margin: EdgeInsets.only(top: 16),
             padding: EdgeInsets.all(16),
