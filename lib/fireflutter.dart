@@ -3,10 +3,13 @@ export 'src/functions.dart';
 export 'src/widgets/short_date.dart';
 export 'src/user/user.dart';
 export 'src/user/user.model.dart';
+export 'src/user/widgets/my.doc.dart';
 export 'src/user/widgets/user.doc.dart';
 export 'src/user/widgets/user.setting.doc.dart';
 export 'src/user/widgets/user.profile.photo.dart';
 export 'src/user/user.settings.model.dart';
+export 'src/user/widgets/user.name.dart';
+export 'src/user/widgets/admin.dart';
 
 export 'src/forum/post.dart';
 export 'src/forum/comment.dart';
@@ -18,6 +21,7 @@ export 'src/forum/widgets/post/post.content.dart';
 export 'src/forum/widgets/post/post.widget.dart';
 export 'src/forum/widgets/post/post.no_comment_yet.dart';
 export 'src/forum/widgets/button_base.dart';
+export 'src/forum/widgets/push_notification/forum.list.push_notification.icon.dart';
 export 'src/forum/article.dart';
 export 'src/comment.dart';
 export 'src/chat/chat.dart';
@@ -51,3 +55,5 @@ export 'src/messaging/messaging.service.dart';
 export 'src/widgets/image_list.dart';
 
 export 'src/point/forum_point.dart';
+
+export 'src/report/report.model.dart';

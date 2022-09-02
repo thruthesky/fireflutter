@@ -29,17 +29,18 @@ class User {
   bool get signedIn => !notSignedIn;
   bool get isAnonymous => auth.currentUser?.isAnonymous ?? false;
 
-  /// TODO check if the user is admin
-  bool get isAdmin => false;
+  bool get isAdmin => data?.isAdmin ?? false;
 
   /// ^ Even if anonymously-sign-in enabled, it still needs to be nullable.
   /// ! To avoid `null check operator` problem in the future.
   String? get uid => auth.currentUser?.uid;
 
   create() {}
-  get([String? uid]) {
+  Future<UserModel> get([String? uid]) {
     /// TODO return UserModel of the user uid
+    return Future.value({} as UserModel);
   }
+
   Future<void> update(Map<String, dynamic> data) {
     return doc.set({
       ...data,

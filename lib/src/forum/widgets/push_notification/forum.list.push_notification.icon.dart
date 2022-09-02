@@ -1,4 +1,4 @@
-import '../../../../fireflutter.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 import './forum.list.push_notification.popup_button.dart';
 import 'package:flutter/material.dart';
