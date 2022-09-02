@@ -152,17 +152,18 @@ class ForumListPushNotificationIcon extends StatelessWidget {
     //   return;
     // }
 
-    String topic = '';
-    String title = "notification";
-    if (selection == 'post') {
-      topic = NotificationOptions.post(categoryId);
-      title = 'post ' + title;
-    } else if (selection == 'comment') {
-      topic = NotificationOptions.comment(categoryId);
-      title = 'comment ' + title;
-    }
+    /// TODO check if the user has subscription of the forum cateogry
 
-    /// TODO toggle subscriptions
+    // String topic = '';
+    // String title = "notification";
+    // if (selection == 'post') {
+    //   topic = NotificationOptions.post(categoryId);
+    //   title = 'post ' + title;
+    // } else if (selection == 'comment') {
+    //   topic = NotificationOptions.comment(categoryId);
+    //   title = 'comment ' + title;
+    // }
+
     // await _.settings.toggleSubscription(
     //   topic,
     //   'forum',

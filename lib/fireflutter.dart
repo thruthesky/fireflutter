@@ -38,6 +38,13 @@ export 'src/typesense/typesense.model.dart';
 export 'src/chat/chat.dart';
 export 'src/chat/chat.message.model.dart';
 export 'src/chat/chat.mixins.dart';
+export 'src/chat/chat.defines.dart';
+export 'src/chat/widgets/chat.room.dart';
+export 'src/chat/widgets/chat.rooms.dart';
+export 'src/chat/widgets/chat.badge.dart';
+export 'src/chat/widgets/chat.friend.dart';
+export 'src/chat/widgets/chat.rooms.blocked.dart';
+export 'src/chat/widgets/chat.room.push_notification.icon.dart';
 
 export 'src/messaging/messaging.service.dart';
 
