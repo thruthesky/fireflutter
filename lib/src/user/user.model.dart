@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 class UserModel {
+  String uid = '';
   String nickname = '';
   String firstName = '';
+  String photoUrl = '';
 
   /// Use display name to display user name.
   /// Don't confuse the displayName of FirebaseAuth.

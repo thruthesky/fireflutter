@@ -7,7 +7,7 @@ import '../../fireflutter.dart';
 /// It is used for both of chat room message itself and chat rooms' documents.
 /// See readme for details.
 ///
-class ChatMessageModel with ChatMixins {
+class ChatMessageModel {
   String text;
   String protocol;
   Timestamp timestamp;

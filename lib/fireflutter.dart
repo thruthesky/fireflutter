@@ -1,7 +1,10 @@
 export 'src/defines.dart';
 export 'src/functions.dart';
+export 'src/widgets/short_date.dart';
 export 'src/user/user.dart';
 export 'src/user/user.model.dart';
+export 'src/user/widgets/user.doc.dart';
+
 export 'src/forum/post.dart';
 export 'src/forum/comment.dart';
 export 'src/forum/forum.mixin.dart';
@@ -10,6 +13,7 @@ export 'src/forum/widgets/post.form.dart';
 export 'src/forum/article.dart';
 export 'src/comment.dart';
 export 'src/chat/chat.dart';
+export 'src/chat/widgets/chat.friend.dart';
 
 export 'src/storage/storage.dart';
 export 'src/storage/widgets/file_upload.button.dart';

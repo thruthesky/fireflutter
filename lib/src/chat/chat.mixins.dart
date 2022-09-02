@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 
-mixin ChatMixins {
+class ChatBase {
   /// My room list collection. There are all chat user list in the collection.
   ///
   ///

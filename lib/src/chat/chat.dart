@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:rxdart/rxdart.dart';
 
-class Chat with ChatMixins {
+class Chat {
   // The other user's uid of current room.
   // Use to Identify which room the current user at.
   // Chat Push Notification check if otherUid is the sender then dont show the notification.
@@ -28,7 +28,7 @@ class Chat with ChatMixins {
   ///
   countNewMessages() async {
     if (roomSubscription != null) roomSubscription!.cancel();
-    roomSubscription = ChatMixins.myRoomsCol
+    roomSubscription = ChatBase.myRoomsCol
         .where('newMessages', isGreaterThan: 0)
         .snapshots()
         .listen((QuerySnapshot snapshot) {
@@ -101,7 +101,7 @@ class Chat with ChatMixins {
 
     /// Add a chat message under the chat room.
 
-    await ChatMixins.messagesCol(otherUid).add(data);
+    await ChatBase.messagesCol(otherUid).add(data);
 
     /// When the login user is inside the chat room, it should clear no of new message.
     if (clearNewMessage) {
@@ -124,7 +124,7 @@ class Chat with ChatMixins {
   ///   - /chat/rooms/<my-uid>/<other-uid>
   /// To make sure, all room info doc update must use this method.
   static Future<void> myOtherRoomInfoUpdate(String otherUid, Map<String, dynamic> data) {
-    return ChatMixins.myRoomsCol.doc(otherUid).set(data, SetOptions(merge: true));
+    return ChatBase.myRoomsCol.doc(otherUid).set(data, SetOptions(merge: true));
   }
 
   /// Room info document must be updated. Refer readme.
@@ -133,31 +133,29 @@ class Chat with ChatMixins {
   ///   - /chat/rooms/<other-uid>/<my-uid>
   /// To make sure, all room info doc update must use this method.
   static Future<void> otherMyRoomInfoUpdate(String otherUid, Map<String, dynamic> data) {
-    return ChatMixins.otherRoomsCol(otherUid)
-        .doc(ChatMixins.myUid)
-        .set(data, SetOptions(merge: true));
+    return ChatBase.otherRoomsCol(otherUid).doc(ChatBase.myUid).set(data, SetOptions(merge: true));
   }
 
   /// Return a room info doc under currently logged in user's room list.
   static Future<DocumentSnapshot<Object?>> getRoomInfo(String otherUid) {
-    return ChatMixins.myRoomsCol.doc(otherUid).get();
+    return ChatBase.myRoomsCol.doc(otherUid).get();
   }
 
   /// Return a room block doc under currently logged in user's block list.
   static Future<DocumentSnapshot<Object?>> getBlockRoomInfo(String otherUid) {
-    return ChatMixins.myRoomsBlockedCol.doc(otherUid).get();
+    return ChatBase.myRoomsBlockedCol.doc(otherUid).get();
   }
 
   /// Delete /chat/room/<my-uid>/<other-uid>
   static Future<void> myOtherRoomInfoDelete(String otherUid) {
-    return ChatMixins.myRoomsCol.doc(otherUid).delete();
+    return ChatBase.myRoomsCol.doc(otherUid).delete();
   }
 
   /// block a user
   static Future<void> blockUser(String otherUid) {
     final futures = [
       myOtherRoomInfoDelete(otherUid),
-      ChatMixins.myRoomsBlockedCol.doc(otherUid).set({
+      ChatBase.myRoomsBlockedCol.doc(otherUid).set({
         'timestamp': FieldValue.serverTimestamp(),
       }),
     ];
@@ -168,21 +166,21 @@ class Chat with ChatMixins {
   static Future<void> unblockUser(String otherUid) {
     // print('unblock user');
     final futures = [
-      ChatMixins.myRoomsCol.doc(otherUid).set({
-        'from': ChatMixins.myUid,
+      ChatBase.myRoomsCol.doc(otherUid).set({
+        'from': ChatBase.myUid,
         'to': otherUid,
         'newMessage': 0,
         'text': '',
         'timestamp': FieldValue.serverTimestamp(),
       }),
-      ChatMixins.myRoomsBlockedCol.doc(otherUid).delete(),
+      ChatBase.myRoomsBlockedCol.doc(otherUid).delete(),
     ];
     return Future.wait(futures);
   }
 
   /// add a user as a friend.
   static Future<void> addFriend(String otherUid) async {
-    final room = await ChatMixins.myRoomsCol.doc(otherUid).get();
+    final room = await ChatBase.myRoomsCol.doc(otherUid).get();
     if (room.exists) {
       return myOtherRoomInfoUpdate(otherUid, {'friend': true});
     }
@@ -218,7 +216,7 @@ class Chat with ChatMixins {
   static Future<int> getNoOfNewMessages(String otherUid) async {
     /// Send push notification to the other user.
     QuerySnapshot querySnapshot =
-        await ChatMixins.otherRoomsCol(otherUid).where('newMessages', isGreaterThan: 0).get();
+        await ChatBase.otherRoomsCol(otherUid).where('newMessages', isGreaterThan: 0).get();
 
     int newMessages = 0;
     querySnapshot.docs.forEach((doc) {
