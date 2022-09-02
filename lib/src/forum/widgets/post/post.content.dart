@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../../../../fireflutter.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';

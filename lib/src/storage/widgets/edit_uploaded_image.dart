@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../fireflutter.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 class EditUploadedImage extends StatelessWidget {
   const EditUploadedImage({
@@ -55,9 +55,7 @@ class EditUploadedImage extends StatelessWidget {
                 builder: (ctx) => AlertDialog(
                   title: Text('Delete file?'),
                   actions: [
-                    TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: Text('Cancel')),
+                    TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancel')),
                     TextButton(
                       onPressed: () => Navigator.pop(context, true),
                       child: Text('Yes'),

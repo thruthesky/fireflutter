@@ -57,3 +57,22 @@ export 'src/widgets/image_list.dart';
 export 'src/point/forum_point.dart';
 
 export 'src/report/report.model.dart';
+
+export 'src/job/models/address_search.model.dart';
+
+export 'src/job/models/job.list.option.model.dart';
+export 'src/job/models/job.model.dart';
+export 'src/job/models/job.seeker.list.options.model.dart';
+export 'src/job/models/job.seeker.model.dart';
+export 'src/job/seeker/job.seeker.list.dart';
+export 'src/job/seeker/job.seeker.list.options.dart';
+export 'src/job/seeker/job.seeker.profile.form.dart';
+export 'src/job/seeker/job.seeker.profile.view.dart';
+export 'src/job/job.class.dart';
+export 'src/job/job.edit.form.dart';
+export 'src/job/job.form.dropdown.field.dart';
+export 'src/job/job.form.text.field.dart';
+export 'src/job/job.list.options.dart';
+export 'src/job/job.list.push.notification.icon.dart';
+export 'src/job/job.list.view.dart';
+export 'src/job/job.view.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../fireflutter.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 class PostWidget extends StatelessWidget {
   const PostWidget({
@@ -72,8 +72,7 @@ class PostWidget extends StatelessWidget {
               children: [
                 Text(
                   'Summary',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.grey),
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
                 ),
                 Text(
                   post.summary,
@@ -99,9 +98,8 @@ class PostWidget extends StatelessWidget {
           likeCount: post.like,
           dislikeCount: post.dislike,
           shareButton: shareButton,
-          onSendPushNotification: onSendPushNotification == null
-              ? null
-              : () => onSendPushNotification!(post),
+          onSendPushNotification:
+              onSendPushNotification == null ? null : () => onSendPushNotification!(post),
           onBlockUser: onBlockUser,
           onUnblockUser: onUnblockUser,
         ),

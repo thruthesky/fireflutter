@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:badges/badges.dart';
 
-import '../../../fireflutter.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class ChatRooms extends StatefulWidget {

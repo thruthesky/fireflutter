@@ -1,4 +1,4 @@
-import '../../../fireflutter.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:paginate_firestore/bloc/pagination_cubit.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';

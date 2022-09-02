@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../fireflutter.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 class ButtonBase extends StatelessWidget {
   const ButtonBase({

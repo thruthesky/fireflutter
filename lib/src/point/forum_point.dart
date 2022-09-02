@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../fireflutter.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 class ForumPoint extends StatelessWidget with ForumMixin {
   const ForumPoint({

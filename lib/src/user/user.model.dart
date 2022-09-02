@@ -1,10 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 class UserModel {
   String uid = '';
+  String email = '';
   String nickname = '';
   String firstName = '';
+  String middleName = '';
+  String lastName = '';
+  String gender = '';
+  int birthday = 0;
+
   String photoUrl = '';
 
   /// TODO check if the user is admin
@@ -42,5 +50,18 @@ class UserModel {
     this.uid = uid;
 
     firstName = data['firstName'] ?? '';
+  }
+
+  /// Return empty string('') if there is no error on profile.
+  String get profileError {
+    if (photoUrl == '') return ERROR_NO_PROFILE_PHOTO;
+    if (email == '')
+      return ERROR_NO_EMAIL;
+    else if (EmailValidator.validate(email) == false) return ERROR_MALFORMED_EMAIL;
+    if (firstName == '') return ERROR_NO_FIRST_NAME;
+    if (lastName == '') return ERROR_NO_LAST_NAME;
+    if (gender == '') return ERROR_NO_GENER;
+    if (birthday == 0) return ERROR_NO_BIRTHDAY;
+    return '';
   }
 }

@@ -1,7 +1,7 @@
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import '../../../fireflutter.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 /// UserDoc
 ///

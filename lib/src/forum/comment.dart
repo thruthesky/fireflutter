@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../../fireflutter.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 /// Comment
 ///

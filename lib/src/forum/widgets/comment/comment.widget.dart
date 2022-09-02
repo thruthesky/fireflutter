@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../../../../fireflutter.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 class CommentWidget extends StatefulWidget {
   CommentWidget({
@@ -73,8 +73,7 @@ class _CommentWidgetState extends State<CommentWidget> with ForumMixin {
       comments = [];
       snapshots.docs.forEach((QueryDocumentSnapshot snapshot) {
         /// is it immediate child?
-        final Comment c =
-            Comment.fromJson(snapshot.data() as Json, id: snapshot.id);
+        final Comment c = Comment.fromJson(snapshot.data() as Json, id: snapshot.id);
 
         /// if immediate child comment,
         if (c.postId == c.parentId) {
@@ -153,15 +152,11 @@ class _CommentWidgetState extends State<CommentWidget> with ForumMixin {
                   onEdit: () => widget.onEdit(comment),
                   onDelete: () => widget.onDelete(comment),
                   onLike: () => widget.onLike(comment),
-                  onDislike: () => widget.onDislike == null
-                      ? null
-                      : widget.onDislike!(comment),
+                  onDislike: () => widget.onDislike == null ? null : widget.onDislike!(comment),
                   buttonBuilder: widget.buttonBuilder,
                   likeCount: comment.like,
                   dislikeCount: comment.dislike,
-                  onChat: (widget.onChat != null)
-                      ? () => widget.onChat!(comment)
-                      : null,
+                  onChat: (widget.onChat != null) ? () => widget.onChat!(comment) : null,
                   onBlockUser: widget.onBlockUser,
                   onUnblockUser: widget.onUnblockUser,
                 ),
@@ -185,9 +180,7 @@ class _CommentWidgetState extends State<CommentWidget> with ForumMixin {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(user.displayName.isNotEmpty
-                    ? "${user.displayName}"
-                    : "No name"),
+                Text(user.displayName.isNotEmpty ? "${user.displayName}" : "No name"),
                 SizedBox(height: 8),
                 ShortDate(comment.createdAt),
               ],
