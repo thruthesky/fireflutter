@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fireflutter/fireflutter.dart';
 
-class CommentWidget extends StatefulWidget {
-  CommentWidget({
+class CommentList extends StatefulWidget {
+  CommentList({
     Key? key,
     required this.post,
     required this.parentId,
@@ -54,10 +54,10 @@ class CommentWidget extends StatefulWidget {
   final EdgeInsets padding;
 
   @override
-  State<CommentWidget> createState() => _CommentWidgetState();
+  State<CommentList> createState() => _CommentListState();
 }
 
-class _CommentWidgetState extends State<CommentWidget> with ForumMixin {
+class _CommentListState extends State<CommentList> with ForumMixin {
   List<Comment> comments = [];
   StreamSubscription? sub;
 

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:fireflutter/fireflutter.dart';
 
 class User {
@@ -7,6 +8,7 @@ class User {
   static User get instance => _instance ?? (_instance = User());
 
   UserModel? data;
+  UserSettingsModel? settings;
   String? get displayName => data?.displayName;
 
   CollectionReference get col => FirebaseFirestore.instance.collection('users');
@@ -22,18 +24,16 @@ class User {
     return User.instance.get(uid);
   }
 
-  final FirebaseAuth auth = FirebaseAuth.instance;
-
-  bool get notSignedIn => isAnonymous || auth.currentUser == null;
+  bool get notSignedIn => data?.notSignedIn ?? true;
 
   bool get signedIn => !notSignedIn;
-  bool get isAnonymous => auth.currentUser?.isAnonymous ?? false;
+  bool get isAnonymous => data?.isAnonymous ?? false;
 
   bool get isAdmin => data?.isAdmin ?? false;
 
   /// ^ Even if anonymously-sign-in enabled, it still needs to be nullable.
   /// ! To avoid `null check operator` problem in the future.
-  String? get uid => auth.currentUser?.uid;
+  String? get uid => data?.uid;
 
   create() {}
   Future<UserModel> get([String? uid]) {
@@ -80,5 +80,38 @@ class User {
     // return others[uid]!;
 
     return user;
+  }
+
+  signOut() async {
+    /// Don't update() here. update() will be made on authStateChanges()
+    await FirebaseAuth.instance.signOut();
+  }
+
+  /// 입력된 전화번호가 이미 가입되어져 있으면 참을 리턴한다.
+  /// 전화번호 로그인을 할 때, 만약 전화번호가 이미 가입되어져 있으면, 그 전화번호로 로그인을 하고 아니면, 새로 생성하는데, 이 때, Anonymous 계정과 합친다.
+  /// 이 기능은 클라이언트에서는 안되고, 반드시 cloud 함수로 해야 만 한다.
+  Future<bool> phoneNumberExists(String phoneNumber) async {
+    /// TODO 사용자 전화번호가 이미 가입되어져 있으면 참을 리턴한다.
+    // final res = await FunctionsApi.instance.request(
+    //   FunctionName.userByPhoneNumberExists,
+    //   data: {'phoneNumber': phoneNumber},
+    // );
+    // print('---------> res; $res');
+    // return res['result'];
+
+    return false;
+  }
+
+  bool isOtherUserDisabled(String uid) {
+    /// TODO check if other user is disabled.
+    return false;
+    // if (others[uid] == null) return false;
+    // return others[uid]!.disabled;
+  }
+
+  bool isOtherUserNotDisabled(String uid) {
+    /// TODO check if other user is not disabled.
+    return false;
+    // return !isOtherUserDisabled(uid);
   }
 }

@@ -4,6 +4,8 @@ typedef ErrorCallback = Future<void> Function(dynamic e, StackTrace stackTrace);
 typedef AlertCallback = Future<void> Function(String title, String content);
 typedef ConfirmCallback = Future<bool> Function(String title, String content);
 typedef ToastCallback = Future Function(String title, String message);
+typedef VoidStringCallback = void Function(String);
+typedef VoidNullableCallback = void Function()?;
 
 const ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD = 'Please, sign in first before uploading.';
 const ERROR_IMAGE_NOT_SELECTED = 'ERROR_IMAGE_NOT_SELECTED';

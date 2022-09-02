@@ -2,8 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:intl/intl.dart';
 
 class UserModel {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
   String uid = '';
   String email = '';
   String nickname = '';
@@ -12,11 +15,25 @@ class UserModel {
   String lastName = '';
   String gender = '';
   int birthday = 0;
+  int level = 0;
+
+  int point = 0;
+  String get displayPoint => NumberFormat.currency(locale: 'ko_KR', symbol: '').format(point);
 
   String photoUrl = '';
 
+  bool get ready => profileError == '';
+
+  /// TODO return resteredAt time
+  String get registeredDate => DateFormat("MMMM dd, yyyy").format(DateTime.now());
+
   /// TODO check if the user is admin
   bool get isAdmin => false;
+
+  bool get notSignedIn => isAnonymous || auth.currentUser == null;
+
+  bool get signedIn => !notSignedIn;
+  bool get isAnonymous => auth.currentUser?.isAnonymous ?? false;
 
   /// Use display name to display user name.
   /// Don't confuse the displayName of FirebaseAuth.
@@ -36,6 +53,26 @@ class UserModel {
   }
 
   bool get hasDisplayName => displayName != '';
+
+  /// return age.
+  int get age {
+    final String birthdayString = birthday.toString();
+    if (birthdayString.length != 8) return 0;
+
+    final today = new DateTime.now();
+    final birthDate = new DateTime(
+      int.tryParse(birthdayString.substring(0, 4)) ?? 0,
+      int.tryParse(birthdayString.substring(4, 6)) ?? 0,
+      int.tryParse(birthdayString.substring(6, 8)) ?? 0,
+    );
+
+    int age = today.year - birthDate.year;
+    final m = today.month - birthDate.month;
+    if (m < 0 || (m == 0 && today.day < birthDate.day)) {
+      age--;
+    }
+    return age;
+  }
 
   UserModel();
 
