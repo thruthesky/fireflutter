@@ -5,13 +5,19 @@ export 'src/user/user.dart';
 export 'src/user/user.model.dart';
 export 'src/user/widgets/user.doc.dart';
 export 'src/user/widgets/user.setting.doc.dart';
+export 'src/user/widgets/user.profile.photo.dart';
 export 'src/user/user.settings.model.dart';
 
 export 'src/forum/post.dart';
 export 'src/forum/comment.dart';
 export 'src/forum/forum.mixin.dart';
-export 'src/forum/widgets/comment.edit.dialog.dart';
-export 'src/forum/widgets/post.form.dart';
+export 'src/forum/widgets/comment/comment.edit.dialog.dart';
+export 'src/forum/widgets/comment/comment.widget.dart';
+export 'src/forum/widgets/post/post.form.dart';
+export 'src/forum/widgets/post/post.content.dart';
+export 'src/forum/widgets/post/post.widget.dart';
+export 'src/forum/widgets/post/post.no_comment_yet.dart';
+export 'src/forum/widgets/button_base.dart';
 export 'src/forum/article.dart';
 export 'src/comment.dart';
 export 'src/chat/chat.dart';
@@ -34,3 +40,7 @@ export 'src/chat/chat.message.model.dart';
 export 'src/chat/chat.mixins.dart';
 
 export 'src/messaging/messaging.service.dart';
+
+export 'src/widgets/image_list.dart';
+
+export 'src/point/forum_point.dart';

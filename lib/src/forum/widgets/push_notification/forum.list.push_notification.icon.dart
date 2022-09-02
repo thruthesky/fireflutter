@@ -162,13 +162,14 @@ class ForumListPushNotificationIcon extends StatelessWidget {
       title = 'comment ' + title;
     }
 
-    await _.settings.toggleSubscription(
-      topic,
-      'forum',
-    );
-    return onChanged(
-      selection,
-      _.settings.hasSubscription(topic, 'forum'),
-    );
+    /// TODO toggle subscriptions
+    // await _.settings.toggleSubscription(
+    //   topic,
+    //   'forum',
+    // );
+    // return onChanged(
+    //   selection,
+    //   _.settings.hasSubscription(topic, 'forum'),
+    // );
   }
 }
