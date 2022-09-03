@@ -1,17 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as Firebase;
 import 'package:fireflutter/fireflutter.dart';
 
 class User {
   static User? _instance;
   static User get instance => _instance ?? (_instance = User());
 
+  /// 사용자 정보를 미리 로드하지 않는다. README.md 참고
+  @Deprecated('Use MyDoc(). Do not load user data beforehand.')
   UserModel? data;
   UserSettingsModel? settings;
   String? get displayName => data?.displayName;
 
   CollectionReference get col => FirebaseFirestore.instance.collection('users');
-  DocumentReference get doc => col.doc(FirebaseAuth.instance.currentUser?.uid);
+  DocumentReference get doc =>
+      col.doc(Firebase.FirebaseAuth.instance.currentUser?.uid);
 
   @Deprecated('Use return User.instance.get(uid);')
   Future<UserModel> getOtherUserDoc(
@@ -23,16 +26,22 @@ class User {
     return User.instance.get(uid);
   }
 
-  bool get notSignedIn => data?.notSignedIn ?? true;
+  /// TODO check if the user is admin
+  bool get isAdmin => false;
+
+  bool get notSignedIn =>
+      isAnonymous || Firebase.FirebaseAuth.instance.currentUser == null;
 
   bool get signedIn => !notSignedIn;
-  bool get isAnonymous => data?.isAnonymous ?? false;
+  bool get isAnonymous =>
+      Firebase.FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
 
-  bool get isAdmin => data?.isAdmin ?? false;
+  String? get phoneNumber =>
+      Firebase.FirebaseAuth.instance.currentUser?.phoneNumber;
 
   /// ^ Even if anonymously-sign-in enabled, it still needs to be nullable.
   /// ! To avoid `null check operator` problem in the future.
-  String? get uid => FirebaseAuth.instance.currentUser?.uid;
+  String? get uid => Firebase.FirebaseAuth.instance.currentUser?.uid;
 
   create() {}
 
@@ -86,7 +95,7 @@ class User {
 
   signOut() async {
     /// Don't update() here. update() will be made on authStateChanges()
-    await FirebaseAuth.instance.signOut();
+    await Firebase.FirebaseAuth.instance.signOut();
   }
 
   /// 입력된 전화번호가 이미 가입되어져 있으면 참을 리턴한다.

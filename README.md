@@ -37,10 +37,13 @@ erDiagram
 
 ```mermaid
 flowchart TB;
-Start([FireFlutter 시작 또는 앱 시작]) --> AuthStateChange{로그인 체크\nAuthStateChange}
-AuthStateChange -->|예| Continue[계속]
+Start([FireFlutter 시작 또는 앱 시작]) --> AuthStateChange{로그인 했나?\nAuthStateChange}
+AuthStateChange -->|예, 사용자 로그인| CheckUserDoc{사용자 문서 존재\n/user/$uid}
+CheckUserDoc -->|예, 존재함| Continue
+CheckUserDoc -->|아니오| CreateUserDoc[사용자 문서 생성\ncreatedAt]
+CreateUserDoc --> Continue
 AuthStateChange -->|아니오| SignInAnonymous[익명 로그인]
-SignInAnonymous --> Continue
+SignInAnonymous --> Continue[계속]
 Logout([로그아웃]) --> AuthStateChange
 ```
 

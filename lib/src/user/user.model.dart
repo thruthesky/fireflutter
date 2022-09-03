@@ -29,17 +29,19 @@ class UserModel {
   bool? exists;
   bool get ready => profileError == '';
 
+  bool get isAdmin => false;
+
+  bool get notSignedIn =>
+      isAnonymous || FirebaseAuth.instance.currentUser == null;
+  bool get signedOut => notSignedIn;
+
+  bool get signedIn => !notSignedIn;
+  bool get isAnonymous =>
+      FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+
   /// TODO return resteredAt time
   String get registeredDate =>
       DateFormat("MMMM dd, yyyy").format(DateTime.now());
-
-  /// TODO check if the user is admin
-  bool get isAdmin => false;
-
-  bool get notSignedIn => isAnonymous || auth.currentUser == null;
-
-  bool get signedIn => !notSignedIn;
-  bool get isAnonymous => auth.currentUser?.isAnonymous ?? false;
 
   /// Use display name to display user name.
   /// Don't confuse the displayName of FirebaseAuth.

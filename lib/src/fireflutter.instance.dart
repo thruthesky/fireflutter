@@ -24,7 +24,14 @@ class FireFlutter {
     auth.authStateChanges().listen((firebaseUser) async {
       ///
       if (firebaseUser == null) {
+        log('---> Not signed in. signInAnonymously()');
         await auth.signInAnonymously();
+      } else {
+        if (firebaseUser.isAnonymous) {
+          log('---> The user is anonymous');
+        } else {
+          log('---> The user is not anonymous. email: ${firebaseUser.email}, phone: ${firebaseUser.phoneNumber}');
+        }
       }
     });
   }
