@@ -96,6 +96,7 @@ class UserModel {
     email = data['email'] ?? '';
     gender = data['gender'] ?? '';
     birthday = data['birthday'] ?? 0;
+    photoUrl = data['photoUrl'] ?? '';
   }
 
   ///

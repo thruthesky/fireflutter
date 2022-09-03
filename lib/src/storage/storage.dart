@@ -7,15 +7,17 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:mime/mime.dart';
 
 /// Firebase Storage Service
 ///
 /// Refer readme file for details.
 class Storage {
-  static final String _uploadsPath = 'uploads';
+  // static final String _uploadsPath = 'uploads';
 
   static final storage = FirebaseStorage.instance;
-  static Reference get uploadsFolder => storage.ref().child(_uploadsPath);
+  static Reference get uploadsFolder =>
+      storage.ref().child('users').child(UserService.instance.uid!);
   static Reference ref(String url) {
     return storage.refFromURL(url);
   }
@@ -56,6 +58,9 @@ class Storage {
     );
   }
 
+  /// Upload file to Storage
+  ///
+  /// Fix. Files are uploaded under `/users/<uid>` folder since Sep 3, 2022
   /// Get [File] and return the uploaded url after upload.
   static Future<String> upload({
     required String basename,
@@ -79,7 +84,7 @@ class Storage {
     /// Upload Task
     UploadTask uploadTask = ref.putData(
       file,
-      SettableMetadata(customMetadata: {
+      SettableMetadata(contentType: lookupMimeType(filename), customMetadata: {
         'basename': basename,
         'uid': UserService.instance.uid!,
         'type': type,
@@ -194,13 +199,21 @@ class Storage {
     if (url.contains('firebasestorage.googleapis.com') == false) {
       return url;
     }
+
     String _tempUrl = url;
     if (_tempUrl.indexOf('?') > 0) {
       _tempUrl = _tempUrl.split('?').first;
     }
     final String basename = _tempUrl.split('/').last;
     final String filename = basename.split('.').first;
-    return _tempUrl.replaceFirst(basename, '${filename}_200x200.webp') +
-        '?alt=media';
+
+    /// `/users` 폴더에는 320x320 으로 썸네일 된다.
+    if (_tempUrl.contains('users')) {
+      return _tempUrl.replaceFirst(basename, '${filename}_320x320.webp') +
+          '?alt=media';
+    } else {
+      return _tempUrl.replaceFirst(basename, '${filename}_200x200.webp') +
+          '?alt=media';
+    }
   }
 }

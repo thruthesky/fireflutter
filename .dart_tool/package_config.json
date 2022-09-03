@@ -572,6 +572,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "mime",
+      "rootUri": "file:///Users/thruthesky/.pub-cache/hosted/pub.dartlang.org/mime-1.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "modal_bottom_sheet",
       "rootUri": "file:///Users/thruthesky/.pub-cache/hosted/pub.dartlang.org/modal_bottom_sheet-2.1.0",
       "packageUri": "lib/",
@@ -962,7 +968,7 @@
       "languageVersion": "2.15"
     }
   ],
-  "generated": "2022-09-03T06:46:44.690476Z",
+  "generated": "2022-09-03T14:28:06.968911Z",
   "generator": "pub",
   "generatorVersion": "2.18.0"
 }
