@@ -2,7 +2,7 @@ export 'src/defines.dart';
 export 'src/functions.dart';
 export 'src/fireflutter.instance.dart';
 export 'src/widgets/short_date.dart';
-export 'src/user/user.dart';
+export 'src/user/user.service.dart';
 export 'src/user/user.model.dart';
 export 'src/user/widgets/my.doc.dart';
 export 'src/user/widgets/user.doc.dart';

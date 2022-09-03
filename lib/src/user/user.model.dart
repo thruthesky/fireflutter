@@ -87,10 +87,21 @@ class UserModel {
 
   UserModel();
 
+  setProperties(dynamic data, String uid) {
+    this.uid = uid;
+    if (data == null) return;
+    firstName = data['firstName'] ?? '';
+    lastName = data['lastName'] ?? '';
+    middleName = data['middleName'] ?? '';
+    email = data['email'] ?? '';
+    gender = data['gender'] ?? '';
+    birthday = data['birthday'] ?? 0;
+  }
+
   ///
   UserModel.fromSnapshot(DocumentSnapshot snapshot) {
     exists = snapshot.exists;
-    UserModel.fromData(snapshot.data(), snapshot.id);
+    setProperties(snapshot.data(), snapshot.id);
   }
 
   /// UserModel data set
@@ -98,11 +109,7 @@ class UserModel {
   /// 여기에 지정되는 속성은 [this.copyWith], [this.cloneWith], [this.injectWith] 과 [this.map] 에 반드시, 꼭, 동일하게, 지정되어야 한다.
   /// README 참고
   UserModel.fromData(dynamic data, String uid) {
-    this.uid = uid;
-    if (data == null) return;
-    firstName = data['firstName'] ?? '';
-    lastName = data['lastName'] ?? '';
-    middleName = data['middleName'] ?? '';
+    setProperties(data, uid);
   }
 
   /// Return empty string('') if there is no error on profile.
