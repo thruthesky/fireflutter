@@ -12,7 +12,7 @@ class FireFlutter {
   late dynamic toast;
 
   FireFlutter() {
-    log('---> FireFlutter::constructor()');
+    log('---> FireFlutter::constructor() ...');
 
     /// TODO 사용자 로그인 또는 anonymous 로그인
   }

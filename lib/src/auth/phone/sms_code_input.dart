@@ -1,5 +1,5 @@
-import '../../../fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 class SmsCodeInput extends StatefulWidget {
   SmsCodeInput({
