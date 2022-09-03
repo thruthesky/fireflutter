@@ -73,7 +73,7 @@ class UserProfilePhoto extends StatelessWidget {
         );
 
 //
-//
+//// 여기서 부터
     final child = UserDoc(
       /// From here.
       // uid: uid ?? (User.instance.uid ?? ''),
