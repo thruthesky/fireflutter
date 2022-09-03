@@ -43,6 +43,9 @@ class UserProfilePhoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// 사용자는 Anonymous 또는 본인의 UID 로 로그인을 해야만 한다.
+    if (User.instance.uid == null) return SizedBox.shrink();
+
     final builder = (UserModel user) => Container(
           padding: padding,
           margin: margin,

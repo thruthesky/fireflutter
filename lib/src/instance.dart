@@ -19,5 +19,7 @@ class FireFlutter {
 
   /// alert, confir, error, toast 등을 필요할 때, callback 으로 받아 처리한다.
   /// init() 은 반드시 호출하도록 한다. 그래서, instance 가 생성되고, 사용자 로그인을 처리한다.
-  init() {}
+  init() {
+    log('---> FireFlutter::init()');
+  }
 }
