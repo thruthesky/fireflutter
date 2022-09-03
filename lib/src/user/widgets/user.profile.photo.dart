@@ -72,8 +72,12 @@ class UserProfilePhoto extends StatelessWidget {
           ),
         );
 
+//
+//
     final child = UserDoc(
-      uid: uid ?? User.instance.uid,
+      /// From here.
+      // uid: uid ?? (User.instance.uid ?? ''),
+      uid: uid ?? User.instance.uid!,
       builder: builder,
       loader: SizedBox.shrink(),
     );

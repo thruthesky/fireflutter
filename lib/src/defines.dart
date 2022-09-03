@@ -3,7 +3,7 @@ typedef Json = Map<String, dynamic>;
 typedef ErrorCallback = Future<void> Function(dynamic e, StackTrace stackTrace);
 typedef AlertCallback = Future<void> Function(String title, String content);
 typedef ConfirmCallback = Future<bool> Function(String title, String content);
-typedef ToastCallback = Future Function(String title, String message);
+typedef SnackbarCallback = Function(String title, String message);
 typedef VoidStringCallback = void Function(String);
 typedef VoidNullableCallback = void Function()?;
 
