@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:fireflutter/fireflutter.dart';
 
 class User {
@@ -33,12 +32,15 @@ class User {
 
   /// ^ Even if anonymously-sign-in enabled, it still needs to be nullable.
   /// ! To avoid `null check operator` problem in the future.
-  String? get uid => data?.uid;
+  String? get uid => FirebaseAuth.instance.currentUser?.uid;
 
   create() {}
-  Future<UserModel> get([String? uid]) {
-    /// TODO return UserModel of the user uid
-    return Future.value({} as UserModel);
+
+  /// `/users/<uid>` 문서를 읽어 UserModel 로 리턴한다.
+  /// 해당 문서가 존재하지 않으면 속성이 빈 값이 된다.
+  Future<UserModel> get(String uid) async {
+    final snapshot = await col.doc(uid).get();
+    return UserModel.fromSnapshot(snapshot);
   }
 
   Future<void> update(Map<String, dynamic> data) {

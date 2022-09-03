@@ -4,8 +4,7 @@ import 'package:fireflutter/fireflutter.dart';
 /// UserProfilePhoto
 ///
 /// Display user profile avatar
-/// If [uid] is null, then it uses [MyDoc] to display signed-in user's profile
-/// photo and it will render again on profile photo change.
+///
 /// if [uid] is set, then it uses [UserDoc] to display other user's profile
 /// photo and it will not render again even if the user's photo changes.
 ///
@@ -14,7 +13,7 @@ import 'package:fireflutter/fireflutter.dart';
 /// [radius] can make how round the photo should be.
 class UserProfilePhoto extends StatelessWidget {
   const UserProfilePhoto({
-    this.uid,
+    required this.uid,
     this.emptyIcon = const Icon(
       Icons.person,
       color: Color.fromARGB(255, 111, 111, 111),
@@ -23,14 +22,15 @@ class UserProfilePhoto extends StatelessWidget {
     this.emptyIconBuilder,
     this.size = 40,
     this.onTap,
-    this.boxShadow = const BoxShadow(color: Colors.white, blurRadius: 1.0, spreadRadius: 1.0),
+    this.boxShadow = const BoxShadow(
+        color: Colors.white, blurRadius: 1.0, spreadRadius: 1.0),
     this.padding,
     this.margin,
     this.radius,
     Key? key,
   }) : super(key: key);
 
-  final String? uid;
+  final String uid;
   final double size;
   final Function()? onTap;
   final BoxShadow boxShadow;
@@ -43,9 +43,6 @@ class UserProfilePhoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// 사용자는 Anonymous 또는 본인의 UID 로 로그인을 해야만 한다.
-    if (User.instance.uid == null) return SizedBox.shrink();
-
     final builder = (UserModel user) => Container(
           padding: padding,
           margin: margin,
@@ -75,12 +72,8 @@ class UserProfilePhoto extends StatelessWidget {
           ),
         );
 
-//
-//// 여기서 부터
     final child = UserDoc(
-      /// From here.
-      // uid: uid ?? (User.instance.uid ?? ''),
-      uid: uid ?? User.instance.uid!,
+      uid: uid,
       builder: builder,
       loader: SizedBox.shrink(),
     );

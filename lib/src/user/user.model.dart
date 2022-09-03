@@ -18,14 +18,20 @@ class UserModel {
   int level = 0;
 
   int point = 0;
-  String get displayPoint => NumberFormat.currency(locale: 'ko_KR', symbol: '').format(point);
+  String get displayPoint =>
+      NumberFormat.currency(locale: 'ko_KR', symbol: '').format(point);
 
   String photoUrl = '';
 
+  /// 주의: 문서가 존재하는지 하지 않는지는 확인을 위해서는 반드시, fromSnapshot() 통해서 모델링을 해야 한다.
+  /// 만약, fromData() 를 통해서 속성 설정을 하면, [exists] 는 알수 없는 상태인 null 이 된다.
+  /// 주의: exists 가 null 또는 false 라도, uid 는 설정된다.
+  bool? exists;
   bool get ready => profileError == '';
 
   /// TODO return resteredAt time
-  String get registeredDate => DateFormat("MMMM dd, yyyy").format(DateTime.now());
+  String get registeredDate =>
+      DateFormat("MMMM dd, yyyy").format(DateTime.now());
 
   /// TODO check if the user is admin
   bool get isAdmin => false;
@@ -76,17 +82,22 @@ class UserModel {
 
   UserModel();
 
+  ///
   UserModel.fromSnapshot(DocumentSnapshot snapshot) {
-    UserModel.fromJson(snapshot.data(), snapshot.id);
+    exists = snapshot.exists;
+    UserModel.fromData(snapshot.data(), snapshot.id);
   }
 
   /// UserModel data set
   ///
-  /// 여기에 지정되는 속성은 [this.copyWith], [this.cloneWith], [this.injectWith] 과 [this.map] 에 반드시, 꼭, 동일하게, 지정되어야 한다. README 참고
-  UserModel.fromJson(dynamic data, String uid) {
+  /// 여기에 지정되는 속성은 [this.copyWith], [this.cloneWith], [this.injectWith] 과 [this.map] 에 반드시, 꼭, 동일하게, 지정되어야 한다.
+  /// README 참고
+  UserModel.fromData(dynamic data, String uid) {
     this.uid = uid;
-
+    if (data == null) return;
     firstName = data['firstName'] ?? '';
+    lastName = data['lastName'] ?? '';
+    middleName = data['middleName'] ?? '';
   }
 
   /// Return empty string('') if there is no error on profile.
@@ -94,7 +105,8 @@ class UserModel {
     if (photoUrl == '') return ERROR_NO_PROFILE_PHOTO;
     if (email == '')
       return ERROR_NO_EMAIL;
-    else if (EmailValidator.validate(email) == false) return ERROR_MALFORMED_EMAIL;
+    else if (EmailValidator.validate(email) == false)
+      return ERROR_MALFORMED_EMAIL;
     if (firstName == '') return ERROR_NO_FIRST_NAME;
     if (lastName == '') return ERROR_NO_LAST_NAME;
     if (gender == '') return ERROR_NO_GENER;

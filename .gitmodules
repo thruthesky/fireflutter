@@ -1,0 +1,3 @@
+[submodule "apps/wonderfulkorea"]
+	path = apps/wonderfulkorea
+	url = https://github.com/thruthesky/wonderfulkorea

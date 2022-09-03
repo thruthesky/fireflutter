@@ -4,5 +4,5 @@
     "editor.formatOnSave": true
   },
   "editor.wordWrapColumn": 120,
-  "dart.lineLength": 100
+  "dart.lineLength": 80
 }

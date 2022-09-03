@@ -13,15 +13,11 @@
 # 데이터베이스
 
 
-- `User` 클래스는 사용자 정보를 관리한다.
-- `Post` 클래스는 글 정보를 관리한다.
-- `Comment` 클래스는 코멘트 정보를 관리한다.
-
 
 
 ```mermaid
 erDiagram
-    Users {
+    users {
         string name
         string firstName
         string lastName
@@ -35,8 +31,27 @@ erDiagram
 
 ## 연동
 
-- `FireFlutter.service.init()`
+- `FireFlutter.service.init()` 을 앱 실행 후 가장 빠르게 호출한다.
 
 ## 사용자 로그인
 
+```mermaid
+flowchart TB;
+Start([FireFlutter 시작 또는 앱 시작]) --> AuthStateChange{로그인 체크\nAuthStateChange}
+AuthStateChange -->|예| Continue[계속]
+AuthStateChange -->|아니오| SignInAnonymous[익명 로그인]
+SignInAnonymous --> Continue
+Logout([로그아웃]) --> AuthStateChange
+```
+
 - 사용자가 로그인을 하지 않은 경우(또는 로그아웃을 한 경우), 자동으로 `Anonymous` 로 로그인을 한다.
+- 사용자가 로그인을 하는 경우, 또는 로그인이 되어져 있는 경우, 사용자 문서를 미리 읽어 (두번 읽지 않고) 재 활용을 해 왔는데, 심플한 코드를 위해서 미리 읽지 않는다.
+  - 사용자의 정보 표현이 필요한 곳에서는 `MyDoc` 위젯을 사용한다.
+
+
+# 코딩 가이드
+
+
+- `User` 클래스는 사용자 정보를 관리한다.
+- `Post` 클래스는 글 정보를 관리한다.
+- `Comment` 클래스는 코멘트 정보를 관리한다.
