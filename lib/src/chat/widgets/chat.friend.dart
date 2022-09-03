@@ -49,13 +49,15 @@ class _ChatFriendState extends State<ChatFriend> {
     /// Somehow, widget.uid becomes empty stirng.
     if (widget.uid == "") return SizedBox.shrink();
 
-    if (User.instance.notSignedIn || snapshot == null) return widget.builder(null);
+    if (UserService.instance.notSignedIn || snapshot == null)
+      return widget.builder(null);
 
     bool isFriend;
     if (snapshot?.exists == false) {
       isFriend = false;
     } else {
-      final room = ChatMessageModel.fromJson(snapshot?.data() as Map, snapshot?.reference);
+      final room = ChatMessageModel.fromJson(
+          snapshot?.data() as Map, snapshot?.reference);
       isFriend = room.friend;
     }
 

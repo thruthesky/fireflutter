@@ -28,7 +28,8 @@ class Storage {
     Function(double)? onProgress,
     required String type,
   }) async {
-    if (User.instance.notSignedIn) throw ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD;
+    if (UserService.instance.notSignedIn)
+      throw ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD;
 
     /// Pick image
     final picker = ImagePicker();
@@ -62,7 +63,8 @@ class Storage {
     required String type,
     Function(double)? onProgress,
   }) async {
-    if (User.instance.notSignedIn) throw ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD;
+    if (UserService.instance.notSignedIn)
+      throw ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD;
 
     /// Get generated filename.
     // final String basename = file.path.split('/').last;
@@ -79,7 +81,7 @@ class Storage {
       file,
       SettableMetadata(customMetadata: {
         'basename': basename,
-        'uid': User.instance.uid!,
+        'uid': UserService.instance.uid!,
         'type': type,
       }),
     );
@@ -88,7 +90,8 @@ class Storage {
     StreamSubscription? _sub;
     if (onProgress != null) {
       _sub = uploadTask.snapshotEvents.listen((event) {
-        double progress = event.bytesTransferred.toDouble() / event.totalBytes.toDouble();
+        double progress =
+            event.bytesTransferred.toDouble() / event.totalBytes.toDouble();
         onProgress(progress);
       });
     }
@@ -197,6 +200,7 @@ class Storage {
     }
     final String basename = _tempUrl.split('/').last;
     final String filename = basename.split('.').first;
-    return _tempUrl.replaceFirst(basename, '${filename}_200x200.webp') + '?alt=media';
+    return _tempUrl.replaceFirst(basename, '${filename}_200x200.webp') +
+        '?alt=media';
   }
 }

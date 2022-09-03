@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as Firebase;
 import 'package:fireflutter/fireflutter.dart';
 
@@ -28,9 +29,14 @@ class FireFlutter {
         await auth.signInAnonymously();
       } else {
         if (firebaseUser.isAnonymous) {
-          log('---> The user is anonymous');
+          log('---> Anonymous signed-in.');
         } else {
-          log('---> The user is not anonymous. email: ${firebaseUser.email}, phone: ${firebaseUser.phoneNumber}');
+          log('---> User signed-in. email: ${firebaseUser.email}, phone: ${firebaseUser.phoneNumber}');
+
+          final userDoc = await UserService.instance.get(firebaseUser.uid);
+          if (userDoc.exists == false || userDoc.createdAt == null) {
+            userDoc.update({'createdAt': Timestamp.now()});
+          }
         }
       }
     });

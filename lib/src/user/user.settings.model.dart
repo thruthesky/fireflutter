@@ -11,8 +11,9 @@ class UserSettingsModel {
     required this.password,
   });
 
-  DatabaseReference get userSettingsDoc =>
-      FirebaseDatabase.instance.ref('user-settings').child(User.instance.uid!);
+  DatabaseReference get userSettingsDoc => FirebaseDatabase.instance
+      .ref('user-settings')
+      .child(UserService.instance.uid!);
 
   Map<String, dynamic> topics;
   Map<String, dynamic> data;
@@ -129,7 +130,8 @@ class UserSettingsModel {
   }
 
   /// Updates the subscriptions (subscribe or unsubscribe) of the current user.
-  Future<dynamic> updateSubscription(String topic, String type, bool isSubscribed) async {
+  Future<dynamic> updateSubscription(
+      String topic, String type, bool isSubscribed) async {
     if (isSubscribed) {
       await subscribe(topic, type);
     } else {
@@ -184,14 +186,16 @@ class UserSettingsModel {
 
   /// Functions
 
-  static Future<dynamic> enableAllNotification({String? group, String? type}) async {
+  static Future<dynamic> enableAllNotification(
+      {String? group, String? type}) async {
     // TODO settings function on client only
     return Future.value();
     // return FunctionsApi.instance
     //     .request('enableAllNotification', data: {'group': group, 'type': type}, addAuth: true);
   }
 
-  static Future<dynamic> disableAllNotification({String? group, String? type}) async {
+  static Future<dynamic> disableAllNotification(
+      {String? group, String? type}) async {
     // TODO settings function on client only
     return Future.value();
     // return FunctionsApi.instance

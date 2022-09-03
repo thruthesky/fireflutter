@@ -27,7 +27,7 @@ class _JobSeekerProfileFormState extends State<JobSeekerProfileForm> {
   void initState() {
     super.initState();
     form
-        .load(uid: User.instance.uid!)
+        .load(uid: UserService.instance.uid!)
         .then((x) => setState(() => loaded = true));
   }
 
@@ -36,7 +36,7 @@ class _JobSeekerProfileFormState extends State<JobSeekerProfileForm> {
     return Column(
       children: [
         SizedBox(height: 20),
-        UserProfilePhoto(uid: User.instance.uid!, size: 100),
+        UserProfilePhoto(uid: UserService.instance.uid!, size: 100),
         SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -45,7 +45,7 @@ class _JobSeekerProfileFormState extends State<JobSeekerProfileForm> {
               children: [
                 Text('First Name', style: labelStyle),
                 SizedBox(height: 5),
-                Text('${User.instance.data?.firstName}'),
+                Text('${UserService.instance.data?.firstName}'),
               ],
             ),
             SizedBox(width: 16),
@@ -54,14 +54,14 @@ class _JobSeekerProfileFormState extends State<JobSeekerProfileForm> {
             //   children: [
             //     Text('Middle Name', style: labelStyle),
             //     SizedBox(height: 5),
-            //     Text('${User.instance.data?.middleName}'),
+            //     Text('${UserService.instance.data?.middleName}'),
             //   ],
             // ),
             Column(
               children: [
                 Text('Last Name', style: labelStyle),
                 SizedBox(height: 5),
-                Text('${User.instance.data?.lastName}'),
+                Text('${UserService.instance.data?.lastName}'),
               ],
             ),
           ],
@@ -248,9 +248,9 @@ class _JobSeekerProfileFormState extends State<JobSeekerProfileForm> {
       isSubmitted = true;
       loading = true;
     });
-    if (User.instance.data!.profileError.isNotEmpty) {
+    if (UserService.instance.data!.profileError.isNotEmpty) {
       setState(() => loading = false);
-      throw User.instance.data!.profileError;
+      throw UserService.instance.data!.profileError;
     }
 
     if (!_formKey.currentState!.validate()) {

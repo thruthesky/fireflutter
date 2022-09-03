@@ -36,15 +36,19 @@ class _NotificationSettingState extends State<NotificationSetting> {
         // if (snapshot.hasData == false) return SizedBox.shrink();
         // print(UserSettingService.instance.settings.topics);
 
-        if (categories == null) return Center(child: CircularProgressIndicator.adaptive());
+        if (categories == null)
+          return Center(child: CircularProgressIndicator.adaptive());
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CheckboxListTile(
-              value: User.instance.settings?.value(commentNotification) ?? false,
+              value:
+                  UserService.instance.settings?.value(commentNotification) ??
+                      false,
               onChanged: (b) async {
                 try {
-                  await User.instance.settings?.update({commentNotification: b});
+                  await UserService.instance.settings
+                      ?.update({commentNotification: b});
                   ffAlert(context, "Comment notification",
                       (b == true ? 'Subscribed' : 'Unsubscribed') + " success");
                 } catch (e) {
@@ -52,7 +56,8 @@ class _NotificationSettingState extends State<NotificationSetting> {
                 }
               },
               title: Text('Comment notifications'),
-              subtitle: Text('Receive notifications of new comments under my posts and comments'),
+              subtitle: Text(
+                  'Receive notifications of new comments under my posts and comments'),
               controlAffinity: ListTileControlAffinity.leading,
             ),
             SizedBox(
@@ -134,7 +139,8 @@ class _NotificationSettingState extends State<NotificationSetting> {
                   ),
                 ),
               ),
-              for (Category cat in categories!) PostNotificationCheckBoxListItem(cat: cat),
+              for (Category cat in categories!)
+                PostNotificationCheckBoxListItem(cat: cat),
               Divider(),
               Padding(
                 padding: const EdgeInsets.only(
@@ -148,7 +154,8 @@ class _NotificationSettingState extends State<NotificationSetting> {
                   ),
                 ),
               ),
-              for (Category cat in categories!) CommentNotificationCheckBoxListItem(cat: cat),
+              for (Category cat in categories!)
+                CommentNotificationCheckBoxListItem(cat: cat),
             ],
           ],
         );
@@ -187,24 +194,27 @@ class CommentNotificationCheckBoxListItem extends StatefulWidget {
       _CommentNotificationCheckBoxListItemState();
 }
 
-class _CommentNotificationCheckBoxListItemState extends State<CommentNotificationCheckBoxListItem> {
+class _CommentNotificationCheckBoxListItemState
+    extends State<CommentNotificationCheckBoxListItem> {
   bool loading = false;
 
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(
-      value: User.instance.settings?.hasSubscription('comments_${widget.cat.id}', 'forum'),
+      value: UserService.instance.settings
+          ?.hasSubscription('comments_${widget.cat.id}', 'forum'),
       onChanged: (b) async {
         if (loading == true) return;
         try {
           setState(() {
             loading = true;
           });
-          await User.instance.settings
-              ?.updateSubscription('comments_${widget.cat.id}', 'forum', b ?? false);
+          await UserService.instance.settings?.updateSubscription(
+              'comments_${widget.cat.id}', 'forum', b ?? false);
 
           final reason = b == true ? 'subscribed' : 'unsubscribed';
-          ffAlert(context, "Comment notification", widget.cat.title + " comment $reason success.");
+          ffAlert(context, "Comment notification",
+              widget.cat.title + " comment $reason success.");
           setState(() {
             loading = false;
           });
@@ -232,26 +242,30 @@ class PostNotificationCheckBoxListItem extends StatefulWidget {
   final Category cat;
 
   @override
-  State<PostNotificationCheckBoxListItem> createState() => _PostNotificationCheckBoxListItemState();
+  State<PostNotificationCheckBoxListItem> createState() =>
+      _PostNotificationCheckBoxListItemState();
 }
 
-class _PostNotificationCheckBoxListItemState extends State<PostNotificationCheckBoxListItem> {
+class _PostNotificationCheckBoxListItemState
+    extends State<PostNotificationCheckBoxListItem> {
   bool loading = false;
 
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(
-      value: User.instance.settings?.hasSubscription('posts_${widget.cat.id}', 'forum'),
+      value: UserService.instance.settings
+          ?.hasSubscription('posts_${widget.cat.id}', 'forum'),
       onChanged: (b) async {
         if (loading == true) return;
         try {
           setState(() {
             loading = true;
           });
-          await User.instance.settings
-              ?.updateSubscription('posts_${widget.cat.id}', 'forum', b ?? false);
+          await UserService.instance.settings?.updateSubscription(
+              'posts_${widget.cat.id}', 'forum', b ?? false);
           final reason = b == true ? 'subscribed' : 'unsubscribed';
-          ffAlert(context, "Post notification", widget.cat.title + " post $reason success.");
+          ffAlert(context, "Post notification",
+              widget.cat.title + " post $reason success.");
           setState(() {
             loading = false;
           });

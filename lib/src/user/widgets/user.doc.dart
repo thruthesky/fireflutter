@@ -35,7 +35,7 @@ class _UserDocState extends State<UserDoc> {
   @override
   void initState() {
     super.initState();
-    User.instance.get(widget.uid).then((value) {
+    UserService.instance.get(widget.uid).then((value) {
       if (mounted)
         setState(() {
           user = value;

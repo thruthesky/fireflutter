@@ -66,7 +66,8 @@ class PhoneService {
   Future verifySMSCode({required VoidCallback success}) {
     // log("---> PhoneService::verifiySMSCode()");
     // Get credential
-    credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
+    credential = PhoneAuthProvider.credential(
+        verificationId: verificationId, smsCode: smsCode);
 
     // Verify credential
     return verifyCredential(credential!, success: success);
@@ -80,18 +81,21 @@ class PhoneService {
   ///   - And sms has been sent to user
   ///   - User entered sms code,
   ///   - Then, this method is invokded.
-  Future verifyCredential(PhoneAuthCredential credential, {required VoidCallback success}) async {
+  Future verifyCredential(PhoneAuthCredential credential,
+      {required VoidCallback success}) async {
     /// 참고: https://docs.google.com/document/d/12sZ8VTryUiPsjCu7c1iqXQCoNbF5qiUlrmhWxP7DGjM/edit#heading=h.uzwakaird0ci
 
     try {
-      final re = await User.instance.phoneNumberExists(PhoneService.instance.completeNumber);
+      final re = await UserService.instance
+          .phoneNumberExists(PhoneService.instance.completeNumber);
 
       if (re) {
-        final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+        final userCredential =
+            await FirebaseAuth.instance.signInWithCredential(credential);
         log("---> [OK] The phone number (${PhoneService.instance.completeNumber}) already in use. So, do 'signInWithCredential()' and success; userCredential: $userCredential");
       } else {
-        final userCredential =
-            await FirebaseAuth.instance.currentUser?.linkWithCredential(credential);
+        final userCredential = await FirebaseAuth.instance.currentUser
+            ?.linkWithCredential(credential);
         log("---> [OK] The phone number (${PhoneService.instance.completeNumber}) not in use. So, do 'linkWithCredential()' and success; userCredential: $userCredential");
       }
     } on FirebaseAuthException catch (e) {

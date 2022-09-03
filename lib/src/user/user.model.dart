@@ -17,6 +17,9 @@ class UserModel {
   int birthday = 0;
   int level = 0;
 
+  Timestamp? updatedAt;
+  Timestamp? createdAt;
+
   int point = 0;
   String get displayPoint =>
       NumberFormat.currency(locale: 'ko_KR', symbol: '').format(point);
@@ -114,5 +117,9 @@ class UserModel {
     if (gender == '') return ERROR_NO_GENER;
     if (birthday == 0) return ERROR_NO_BIRTHDAY;
     return '';
+  }
+
+  Future<void> update(Map<String, dynamic> data) {
+    return UserService.instance.update(data);
   }
 }

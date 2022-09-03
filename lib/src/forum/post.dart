@@ -64,7 +64,7 @@ class Post with ForumMixin implements Article {
 
   String uid;
 
-  bool get isMine => User.instance.uid == uid;
+  bool get isMine => UserService.instance.uid == uid;
 
   int noOfComments;
 

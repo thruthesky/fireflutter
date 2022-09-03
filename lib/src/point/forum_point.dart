@@ -19,7 +19,7 @@ class ForumPoint extends StatelessWidget with ForumMixin {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: User.instance.get(uid),
+      future: UserService.instance.get(uid),
       builder: ((cc, snapshotUserData) {
         if (snapshotUserData.hasData) {
           final UserModel user = snapshotUserData.data as UserModel;

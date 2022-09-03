@@ -47,7 +47,7 @@ class Comment with ForumMixin implements Article {
   int createdAt;
   int depth = 0;
 
-  bool get isMine => User.instance.uid == uid;
+  bool get isMine => UserService.instance.uid == uid;
 
   bool get hasPhoto => files.length > 0;
 

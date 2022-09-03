@@ -33,7 +33,7 @@ class _MyDocState extends State<MyDoc> {
     authSubscription =
         Firebase.FirebaseAuth.instance.authStateChanges().listen((user) {
       userDocumentSubscription?.cancel();
-      userDocumentSubscription = User.instance.doc
+      userDocumentSubscription = UserService.instance.doc
           .snapshots()
           .listen((DocumentSnapshot snapshot) async {
         userModel = UserModel.fromSnapshot(snapshot);

@@ -12,7 +12,7 @@ class ChatBase {
       FirebaseFirestore.instance.collection('chat/rooms/$myUid');
 
   /// Login user's firebase uid.
-  static String get myUid => User.instance.uid!;
+  static String get myUid => UserService.instance.uid!;
 
   /// Chat room ID
   ///
@@ -27,7 +27,10 @@ class ChatBase {
 
   /// messages collection of chat user.
   static CollectionReference messagesCol(String otherUid) =>
-      FirebaseFirestore.instance.collection('chat').doc('messages').collection(getRoomId(otherUid));
+      FirebaseFirestore.instance
+          .collection('chat')
+          .doc('messages')
+          .collection(getRoomId(otherUid));
 
   /// Chat room info.
   ///
@@ -51,7 +54,8 @@ class ChatBase {
   /// - Chat room ID is composited with login user UID and other user UID by alphabetic order.
   ///   - If myLoginId = 3 and otherUserLoginId = 4, then the result is "3-4".
   ///   - If myLoginId = 321 and otherUserLoginId = 1234, then the result is "1234-321"
-  static String getChatRoomDocumentId(String myLoginId, String otherUserLoginId) {
+  static String getChatRoomDocumentId(
+      String myLoginId, String otherUserLoginId) {
     return myLoginId.compareTo(otherUserLoginId) < 0
         ? "${myLoginId}__$otherUserLoginId"
         : "${otherUserLoginId}__$myLoginId";

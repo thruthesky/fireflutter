@@ -59,7 +59,8 @@ class _PostFormState extends State<PostForm> {
   bool inSubmit = false;
 
   /// 카테고리(게시판 아이디)가 null 이 아니거나 post.id 가 null 이면, 글 생성.
-  bool get isCreate => (widget.post == null || widget.post?.id == '') || (category != '');
+  bool get isCreate =>
+      (widget.post == null || widget.post?.id == '') || (category != '');
   bool get isUpdate => !isCreate;
 
   /// This is used by custom test also.
@@ -111,7 +112,8 @@ class _PostFormState extends State<PostForm> {
             isExpanded: true,
             value: chooseCategory,
             items: widget.categories!.entries
-                .map((e) => DropdownMenuItem(child: Text(e.key), value: e.value))
+                .map(
+                    (e) => DropdownMenuItem(child: Text(e.key), value: e.value))
                 .toList(),
             onChanged: (v) => setState(() => chooseCategory = v),
           ),
@@ -207,7 +209,7 @@ class _PostFormState extends State<PostForm> {
           },
         ),
         // if (UserService.instance.user.isAdmin)
-        if (User.instance.isAdmin)
+        if (UserService.instance.isAdmin)
           Container(
             margin: EdgeInsets.only(top: 16),
             padding: EdgeInsets.all(16),

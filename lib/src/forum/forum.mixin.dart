@@ -15,8 +15,8 @@ mixin ForumMixin {
 
   /// Returns Firestore instance. Firebase database instance.
   FirebaseFirestore get db => FirebaseFirestore.instance;
-  bool get signedIn => User.instance.signedIn;
-  bool get notSignedIn => User.instance.notSignedIn;
+  bool get signedIn => UserService.instance.signedIn;
+  bool get notSignedIn => UserService.instance.notSignedIn;
 
   CollectionReference get userCol => db.collection('users');
   CollectionReference get categoryCol => db.collection('categories');
@@ -53,7 +53,7 @@ mixin ForumMixin {
   }
 
   DocumentReference voteDoc(String id) {
-    return postCol.doc(id).collection('votes').doc(User.instance.uid);
+    return postCol.doc(id).collection('votes').doc(UserService.instance.uid);
   }
 
   DocumentReference commentDoc(String commentId) {
@@ -61,11 +61,14 @@ mixin ForumMixin {
   }
 
   DocumentReference commentVoteDoc(String commentId) {
-    return commentDoc(commentId).collection('votes').doc(User.instance.uid);
+    return commentDoc(commentId)
+        .collection('votes')
+        .doc(UserService.instance.uid);
   }
 
   onReply(Post post, [Comment? comment]) async {
-    if (User.instance.notSignedIn) return ffError(context, 'Sign-in first!');
+    if (UserService.instance.notSignedIn)
+      return ffError(context, 'Sign-in first!');
 
     return showDialog(
       context: context,
@@ -128,7 +131,8 @@ mixin ForumMixin {
                     categories: categories,
                     photo: photo,
                     heightBetween: 32,
-                    category: (post?.id == null || post?.id == "") ? category : '',
+                    category:
+                        (post?.id == null || post?.id == "") ? category : '',
                     subcategory: post == null ? subcategory : '',
                     onCreate: (id) => Get.back(result: id),
                     onUpdate: (id) => Get.back(result: id),
@@ -175,15 +179,18 @@ mixin ForumMixin {
   /// Post or comment delete
   onDelete(dynamic postOrComment) async {
     try {
-      final re = await FireFlutter.instance.confirm('Delete', "Do you want to delete?");
+      final re = await FireFlutter.instance
+          .confirm('Delete', "Do you want to delete?");
       if (re != true) return;
 
       if (postOrComment is Post) {
         await postOrComment.delete();
-        await FireFlutter.instance.alert('Post deleted', 'You have deleted this post.');
+        await FireFlutter.instance
+            .alert('Post deleted', 'You have deleted this post.');
       } else if (postOrComment is Comment) {
         await postOrComment.delete();
-        await FireFlutter.instance.alert('Comment deleted', 'You have deleted this comment.');
+        await FireFlutter.instance
+            .alert('Comment deleted', 'You have deleted this comment.');
       }
     } catch (e, s) {
       FireFlutter.instance.error(e, s);
@@ -251,7 +258,8 @@ mixin ForumMixin {
     try {
       await postOrComment.report(input.text);
       String type = postOrComment is Post ? 'post' : 'comment';
-      FireFlutter.instance.alert('Report success', 'You have reported this $type');
+      FireFlutter.instance
+          .alert('Report success', 'You have reported this $type');
     } catch (e, s) {
       FireFlutter.instance.error(e, s);
       rethrow;
@@ -305,7 +313,7 @@ mixin ForumMixin {
   ///   behaviour.
   ///
   /// [targetDocPath] is the path of target document. The document could be one
-  /// post, comment, or user.instance.
+  /// post, comment, or UserService.instance.
   /// [likeOrDisliek] can be one of 'like' or 'dislike'.
   ///
   Future<void> feed(String targetDocPath, String likeOrDislike) async {
@@ -313,7 +321,7 @@ mixin ForumMixin {
 
     final targetDocRef = db.doc(targetDocPath);
 
-    String feedDocId = "${targetDocRef.id}-${User.instance.uid}";
+    String feedDocId = "${targetDocRef.id}-${UserService.instance.uid}";
 
     // if feed not exists, then create new one and increase the number on doc.
     // if existing feed is same as new feed, then remove the feed and decrease the number on doc.

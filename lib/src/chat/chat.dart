@@ -35,7 +35,8 @@ class Chat {
       // print('countNewMessages() ... listen()');
       int _newMessages = 0;
       snapshot.docs.forEach((doc) {
-        ChatMessageModel room = ChatMessageModel.fromJson(doc.data() as Map, null);
+        ChatMessageModel room =
+            ChatMessageModel.fromJson(doc.data() as Map, null);
         _newMessages += room.newMessages;
       });
       newMessages.add(_newMessages);
@@ -95,7 +96,7 @@ class Chat {
       'text': text,
       if (protocol != null) 'protocol': protocol,
       'timestamp': FieldValue.serverTimestamp(),
-      'from': User.instance.uid,
+      'from': UserService.instance.uid,
       'to': otherUid,
     };
 
@@ -123,7 +124,8 @@ class Chat {
   /// Update my friend under
   ///   - /chat/rooms/<my-uid>/<other-uid>
   /// To make sure, all room info doc update must use this method.
-  static Future<void> myOtherRoomInfoUpdate(String otherUid, Map<String, dynamic> data) {
+  static Future<void> myOtherRoomInfoUpdate(
+      String otherUid, Map<String, dynamic> data) {
     return ChatBase.myRoomsCol.doc(otherUid).set(data, SetOptions(merge: true));
   }
 
@@ -132,8 +134,11 @@ class Chat {
   /// Update my info under my friend's room list
   ///   - /chat/rooms/<other-uid>/<my-uid>
   /// To make sure, all room info doc update must use this method.
-  static Future<void> otherMyRoomInfoUpdate(String otherUid, Map<String, dynamic> data) {
-    return ChatBase.otherRoomsCol(otherUid).doc(ChatBase.myUid).set(data, SetOptions(merge: true));
+  static Future<void> otherMyRoomInfoUpdate(
+      String otherUid, Map<String, dynamic> data) {
+    return ChatBase.otherRoomsCol(otherUid)
+        .doc(ChatBase.myUid)
+        .set(data, SetOptions(merge: true));
   }
 
   /// Return a room info doc under currently logged in user's room list.
@@ -184,7 +189,8 @@ class Chat {
     if (room.exists) {
       return myOtherRoomInfoUpdate(otherUid, {'friend': true});
     }
-    final msg = 'Hi, I am ${User.instance.displayName}. Can you add me as your friend?';
+    final msg =
+        'Hi, I am ${UserService.instance.displayName}. Can you add me as your friend?';
     await send(text: msg, otherUid: otherUid, myOtherData: {'friend': true});
 
     try {
@@ -215,8 +221,9 @@ class Chat {
   /// ! Warning - Change it to realtime database when time comes.
   static Future<int> getNoOfNewMessages(String otherUid) async {
     /// Send push notification to the other user.
-    QuerySnapshot querySnapshot =
-        await ChatBase.otherRoomsCol(otherUid).where('newMessages', isGreaterThan: 0).get();
+    QuerySnapshot querySnapshot = await ChatBase.otherRoomsCol(otherUid)
+        .where('newMessages', isGreaterThan: 0)
+        .get();
 
     int newMessages = 0;
     querySnapshot.docs.forEach((doc) {

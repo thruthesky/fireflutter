@@ -52,7 +52,8 @@ class _JobListViewState extends State<JobListView> {
     if (options.accomodation != '') {
       query = query.where('withAccomodation', isEqualTo: options.accomodation);
     }
-    if (options.salary != '') query = query.where('salary', isEqualTo: options.salary);
+    if (options.salary != '')
+      query = query.where('salary', isEqualTo: options.salary);
 
     // Only 'status=Y' jobs can be displayed.
     query = query.where('status', isEqualTo: 'Y');
@@ -162,7 +163,7 @@ class _JobListViewState extends State<JobListView> {
                     trailing: Icon(Icons.arrow_right),
                   ),
                 ),
-                if (job.uid == User.instance.uid)
+                if (job.uid == UserService.instance.uid)
                   TextButton(child: Text('edit'), onPressed: widget.onEdit),
                 Divider(
                   color: Colors.grey.shade400,

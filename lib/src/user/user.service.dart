@@ -2,9 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as Firebase;
 import 'package:fireflutter/fireflutter.dart';
 
-class User {
-  static User? _instance;
-  static User get instance => _instance ?? (_instance = User());
+///
+class UserService {
+  static UserService? _instance;
+  static UserService get instance => _instance ?? (_instance = UserService());
 
   /// 사용자 정보를 미리 로드하지 않는다. README.md 참고
   @Deprecated('Use MyDoc(). Do not load user data beforehand.')
@@ -16,14 +17,14 @@ class User {
   DocumentReference get doc =>
       col.doc(Firebase.FirebaseAuth.instance.currentUser?.uid);
 
-  @Deprecated('Use return User.instance.get(uid);')
+  @Deprecated('Use return UserService.instance.get(uid);')
   Future<UserModel> getOtherUserDoc(
     String uid, {
     bool reset = false,
   }) async {
     assert(uid != '');
 
-    return User.instance.get(uid);
+    return UserService.instance.get(uid);
   }
 
   /// TODO check if the user is admin
@@ -52,6 +53,7 @@ class User {
     return UserModel.fromSnapshot(snapshot);
   }
 
+  /// 문서가 존재하지 않으면 생성을 한다.
   Future<void> update(Map<String, dynamic> data) {
     return doc.set({
       ...data,
@@ -62,7 +64,7 @@ class User {
   delete() {}
 
   Future<UserModel> blockUser(String uid) async {
-    UserModel user = await User.instance.get(uid);
+    UserModel user = await UserService.instance.get(uid);
 
     /// TODO block user by admin
     ///
@@ -78,7 +80,7 @@ class User {
   }
 
   Future<UserModel> unblockUser(String uid) async {
-    UserModel user = await User.instance.get(uid);
+    UserModel user = await UserService.instance.get(uid);
 
     /// TODO unblock user by admin
     ///
