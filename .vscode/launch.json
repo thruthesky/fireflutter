@@ -1,0 +1,43 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Emulator - 5554",
+      "cwd": "apps/wonderfulkorea",
+      "program": "lib/main.dart",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554"
+    },
+    {
+      "name": "Simulator - iPhone 13 Pro Max - iMac",
+      "cwd": "apps/wonderfulkorea",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "KEY=VALUE"],
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "ECE40623-ACC2-4729-8DD4-B3DBB46D4B25"
+    },
+    {
+      "name": "Integration Test - Simulator Max Pro 13",
+      "cwd": "apps/wonderfulkorea",
+      "program": "integration_test/simple_test.dart",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "ECE40623-ACC2-4729-8DD4-B3DBB46D4B25",
+      "args": ["--dart-define", "mode=test"]
+    },
+    {
+      "name": "Integration Test - Emulator",
+      "cwd": "apps/wonderfulkorea",
+      "program": "integration_test/simple_test.dart",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "args": ["--dart-define", "mode=test"]
+    }
+  ]
+}

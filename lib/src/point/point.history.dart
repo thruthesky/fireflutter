@@ -1,7 +1,5 @@
-import 'package:fireflutter/src/point/point.history.model.dart';
-
-import '../../fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 class PointHistory extends StatefulWidget {
   const PointHistory({

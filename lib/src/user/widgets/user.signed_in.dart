@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../fireflutter.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 /// 회원 로그인을 했을 때, 보여줄 위젯 또는 빌더
 ///

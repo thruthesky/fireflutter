@@ -1,5 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
-import './../../fireflutter.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 /// UserSettingsModel
 ///
