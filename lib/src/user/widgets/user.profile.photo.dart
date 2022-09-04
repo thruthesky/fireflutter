@@ -76,7 +76,7 @@ class UserProfilePhoto extends StatelessWidget {
     final child = UserDoc(
       uid: uid,
       builder: builder,
-      loader: SizedBox.shrink(),
+      // loader: SizedBox.shrink(),
     );
     if (onTap == null) return child;
 

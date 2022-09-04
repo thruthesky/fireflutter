@@ -1,0 +1,42 @@
+name: example
+description: A new Flutter project.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.18.0 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.2
+
+  # Firebase Dependencies
+  firebase_core: ^1.20.1
+  firebase_auth: ^3.6.3
+  firebase_database: ^9.1.1
+  cloud_firestore: ^3.4.4
+  firebase_dynamic_links: ^4.3.4
+  firebase_storage: ^10.3.5
+  firebase_messaging: ^12.0.2
+  cloud_functions: ^3.3.4
+  flutterfire_ui: ^0.4.3+5
+  # EO
+  
+  fireflutter:
+    path: ..
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+
+flutter:
+
+  uses-material-design: true
+

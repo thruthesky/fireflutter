@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:intl/intl.dart';
@@ -8,7 +7,6 @@ class UserModel {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   String uid = '';
-  String email = '';
   String nickname = '';
   String firstName = '';
   String middleName = '';
@@ -25,6 +23,12 @@ class UserModel {
       NumberFormat.currency(locale: 'ko_KR', symbol: '').format(point);
 
   String photoUrl = '';
+
+  /// [email] 은 FirebaseAuth 의 email 을 그대로 사용한다.
+  String get email => auth.currentUser?.email ?? '';
+
+  /// [phoneNumber] 는 FirebaseAuth 의 phoneNumber 를 그대로 사용한다.
+  String get phoneNumber => auth.currentUser?.phoneNumber ?? '';
 
   /// 주의: 문서가 존재하는지 하지 않는지는 확인을 위해서는 반드시, fromSnapshot() 통해서 모델링을 해야 한다.
   /// 만약, fromData() 를 통해서 속성 설정을 하면, [exists] 는 알수 없는 상태인 null 이 된다.
@@ -94,10 +98,11 @@ class UserModel {
     firstName = data['firstName'] ?? '';
     lastName = data['lastName'] ?? '';
     middleName = data['middleName'] ?? '';
-    email = data['email'] ?? '';
     gender = data['gender'] ?? '';
     birthday = data['birthday'] ?? 0;
     photoUrl = data['photoUrl'] ?? '';
+    createdAt = data['createdAt'];
+    updatedAt = data['updatedAt'];
   }
 
   ///
@@ -117,10 +122,6 @@ class UserModel {
   /// Return empty string('') if there is no error on profile.
   String get profileError {
     if (photoUrl == '') return ERROR_NO_PROFILE_PHOTO;
-    if (email == '')
-      return ERROR_NO_EMAIL;
-    else if (EmailValidator.validate(email) == false)
-      return ERROR_MALFORMED_EMAIL;
     if (firstName == '') return ERROR_NO_FIRST_NAME;
     if (lastName == '') return ERROR_NO_LAST_NAME;
     if (gender == '') return ERROR_NO_GENER;
@@ -134,6 +135,6 @@ class UserModel {
 
   @override
   String toString() {
-    return "UserModel(uid: $uid, firstName: $firstName)";
+    return "UserModel(uid: $uid, email: $email, phoneNumber: $phoneNumber, firstName: $firstName, lastName: $lastName)";
   }
 }

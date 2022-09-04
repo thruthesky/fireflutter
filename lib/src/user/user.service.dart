@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as Firebase;
@@ -53,10 +54,20 @@ class UserService {
     userDocumentSubscription?.cancel();
     userDocumentSubscription =
         doc.snapshots().listen((DocumentSnapshot snapshot) async {
+      if (snapshot.exists == false) {
+        log('---> User document not exits in observeUserDoc.');
+      }
       user = UserModel.fromSnapshot(snapshot);
-      print('----> observeUserDoc $user');
+      log('----> observeUserDoc and update event with; $user');
       userChange.add(user);
     });
+  }
+
+  /// 로그아웃을 할 때 호출되며, 사용자 모델(user)을 초기화하고, listening 해제하고, 이벤트를 날린다.
+  unobserveUserDoc() {
+    userDocumentSubscription?.cancel();
+    user = UserModel();
+    userChange.add(user);
   }
 
   create() {}

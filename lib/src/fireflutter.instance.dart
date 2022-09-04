@@ -20,8 +20,6 @@ class FireFlutter {
 
   /// 생성자는 한번만 호출된다.
   FireFlutter() {
-    log('---> FireFlutter::constructor()');
-
     /// 사용자 로그인
     ///
     /// * 사용자 정보를 미리 읽고 listen 해서 문서가 수정 될 대 마다, 사용자 정보를 업데이트 한다.
@@ -29,6 +27,7 @@ class FireFlutter {
       ///
       if (firebaseUser == null) {
         log('---> Not signed in. signInAnonymously()');
+        UserService.instance.unobserveUserDoc();
         await auth.signInAnonymously();
       } else {
         if (firebaseUser.isAnonymous) {

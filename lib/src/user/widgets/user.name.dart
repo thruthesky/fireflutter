@@ -19,7 +19,7 @@ class UserName extends StatelessWidget {
   Widget build(BuildContext context) {
     return UserDoc(
       uid: uid,
-      loader: SizedBox.shrink(),
+      // loader: SizedBox.shrink(),
       builder: (u) => u.hasDisplayName
           ? Padding(
               padding: padding,
