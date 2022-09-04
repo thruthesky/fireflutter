@@ -133,12 +133,12 @@ AuthStateChange -->|아니오| SignInAnonymous[익명 로그인]
 SignInAnonymous -->UnobserveUserDoc[사용자 모델 동기화 해제\n이벤트발생]
 UnobserveUserDoc --> Continue2[계속]
 UnobserveUserDoc -.-> |이벤트발생| UserDoc
-UserUpdate([회원 정보 수정]) -.-> |동기화| ObserveUserDoc
+UserUpdate([회원 정보 수정]) -.-> |DB UPDATE 동기화| ObserveUserDoc
 AuthStateChange -->|예, 로그인 했음| ObserveUserDoc
 AuthStateChange -->|예, 로그인 했음| CheckUserDoc{사용자 문서 존재하나?\n/user/$uid}
 CheckUserDoc -->|아니오| CreateUserDoc[사용자 문서 생성\ncreatedAt]
 ObserveUserDoc -.-> |이벤트발생| UserDoc[[UserDoc 위젯]]
-CreateUserDoc -.-> |동기화| ObserveUserDoc
+CreateUserDoc -.-> |DB UPDATE 동기화| ObserveUserDoc
 Logout([로그아웃]) --> AuthStateChange
 CheckUserDoc -->|예, 존재함| Continue[계속]
 CreateUserDoc --> Continue
