@@ -90,7 +90,7 @@ class PostModel with ForumMixin implements Article {
   /// To open the post data. Use this to display post content or not on post list screen.
   bool open = false;
 
-  List<Comment> comments = [];
+  List<CommentModel> comments = [];
 
   @Deprecated("Create post with PostApi.")
   factory PostModel.fromDoc(DocumentSnapshot doc) {

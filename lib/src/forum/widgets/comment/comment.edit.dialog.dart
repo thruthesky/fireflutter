@@ -11,7 +11,7 @@ class CommentEditDialog extends StatefulWidget {
 
   final Function() onCancel;
   final Function(Json, Function(bool)) onSubmit;
-  final Comment? comment;
+  final CommentModel? comment;
 
   @override
   State<CommentEditDialog> createState() => _CommentEditDialogState();
@@ -100,7 +100,8 @@ class _CommentEditDialogState extends State<CommentEditDialog> {
                       },
               ),
             ]),
-            if (uploadProgress > 0) LinearProgressIndicator(value: uploadProgress),
+            if (uploadProgress > 0)
+              LinearProgressIndicator(value: uploadProgress),
             ImageListEdit(
               files: files,
               onDeleted: (deletedFileUrl) {

@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 
-/// Comment
+/// CommentModel
 ///
 /// Refer readme for details
-class Comment with ForumMixin implements Article {
-  Comment({
+class CommentModel with ForumMixin implements Article {
+  CommentModel({
     this.id = '',
     required this.postId,
     required this.parentId,
@@ -56,11 +56,12 @@ class Comment with ForumMixin implements Article {
   /// Get document data of map and convert it into post model
   ///
   /// If the comment is created via https, then the id of comment is inside data.
-  factory Comment.fromJson(
+  /// TODO Change it to named constructor.
+  factory CommentModel.fromJson(
     Json data, {
     String? id,
   }) {
-    return Comment(
+    return CommentModel(
       content: data['content'] ?? '',
       files: new List<String>.from(data['files']),
       id: id ?? data['id'],
@@ -78,8 +79,8 @@ class Comment with ForumMixin implements Article {
   }
 
   /// Get indexed document data from Typesense of map and convert it into comment model
-  factory Comment.fromTypesense(Json data, String id) {
-    return Comment(
+  factory CommentModel.fromTypesense(Json data, String id) {
+    return CommentModel(
       id: id,
       postId: data['postId'],
       parentId: data['parentId'],
@@ -98,8 +99,8 @@ class Comment with ForumMixin implements Article {
   ///
   /// Use this when you need to use comment model's methods, like when you are
   /// going to create a new comment.
-  factory Comment.empty() {
-    return Comment(
+  factory CommentModel.empty() {
+    return CommentModel(
       postId: '',
       parentId: '',
       content: '',
@@ -132,7 +133,7 @@ class Comment with ForumMixin implements Article {
 
   @override
   String toString() {
-    return '''Comment($map)''';
+    return '''CommentModel($map)''';
   }
 
   // Map<String, dynamic> get createData {
@@ -164,7 +165,7 @@ class Comment with ForumMixin implements Article {
     // if (signedIn == false) throw ERROR_SIGN_IN_FIRST;
     // if (UserService.instance.user.exists == false) throw ERROR_USER_DOCUMENT_NOT_EXISTS;
     // if (UserService.instance.user.notReady) throw UserService.instance.user.profileError;
-    // final _ = Comment.empty();
+    // final _ = CommentModel.empty();
     // final ref = await _.commentCol.add({
     //   'postId': postId,
     //   'parentId': parentId,

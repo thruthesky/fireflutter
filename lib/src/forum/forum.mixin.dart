@@ -66,7 +66,7 @@ mixin ForumMixin {
         .doc(UserService.instance.uid);
   }
 
-  onReply(PostModel post, [Comment? comment]) async {
+  onReply(PostModel post, [CommentModel? comment]) async {
     if (UserService.instance.notSignedIn)
       return ffError(context, 'Sign-in first!');
 
@@ -79,7 +79,7 @@ mixin ForumMixin {
           onSubmit: (Json form, progress) async {
             try {
               progress(true);
-              await Comment.create(
+              await CommentModel.create(
                 postId: post.id,
                 parentId: comment?.id ?? post.id,
                 content: form['content'],
@@ -148,7 +148,7 @@ mixin ForumMixin {
   }
 
   /// This is for comment only.
-  onCommentEdit(Comment comment) async {
+  onCommentEdit(CommentModel comment) async {
     return showDialog(
       context: context,
       builder: (bc) {
@@ -187,7 +187,7 @@ mixin ForumMixin {
         await postOrComment.delete();
         await FireFlutter.instance
             .alert('Post deleted', 'You have deleted this post.');
-      } else if (postOrComment is Comment) {
+      } else if (postOrComment is CommentModel) {
         await postOrComment.delete();
         await FireFlutter.instance
             .alert('Comment deleted', 'You have deleted this comment.');

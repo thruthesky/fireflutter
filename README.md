@@ -3,6 +3,19 @@
 [English version](README.en.md)
 
 
+- [FireFlutter v0.3](#fireflutter-v03)
+- [개요](#개요)
+- [기능 별 데이터 구조](#기능-별-데이터-구조)
+  - [사용자](#사용자)
+    - [사용자 문서](#사용자-문서)
+  - [글](#글)
+- [Fireflutter 연동](#fireflutter-연동)
+- [사용자 로그인](#사용자-로그인)
+- [사진(파일) 업로드](#사진파일-업로드)
+  - [업로드된 사진 보여주기](#업로드된-사진-보여주기)
+- [글](#글-1)
+  - [글 가져오기](#글-가져오기)
+  - [글 목록 가져오기](#글-목록-가져오기)
 
 # 개요
 
@@ -25,10 +38,11 @@
 
 ### 사용자 문서
 
-- `/users/<uid>` 와 같이 저장되며, 아래의 필드는 미리 정해져 있는 것이며, 원하는 정보(필드)를 마음데로 저장 할 수 있다.
+- `/users/<uid>` 와 같이 저장되며, 아래의 미리 지정된 필드 외에, 원하는 정보(필드)를 추가적으로 저장 할 수 있다.
 - 주의 해야 할 것은 사용자 문서는 누구든지 읽을 수 있다. 따라서 개인 정보를 저장하면 안된다.
 - 특히, 전화번호와 이메일주소는 `FirebaseAuth` 의 사용자 계정에 저장한다.
 
+- 미리 지정된 필드 목록
 ```mermaid
 erDiagram
   users {
@@ -45,6 +59,22 @@ erDiagram
 
 
 ## 글
+
+- `/posts/<postId>` 와 같이 데이터가 저장되며, 아래의 지정된 필드 외에, 원하는 정보(필드)를 추가적으로 지정 할 수 있다.
+- 미리 지정된 필드 목록
+```mermaid
+erDiagram
+  posts {
+    string uid
+    string title
+    string content
+    Timestamp createdAt
+    Timestamp updatedAt
+    array_of_string files
+  }
+```
+
+
 
 
 
@@ -147,4 +177,24 @@ MyDoc(
     ),
   ),
 ),
+```
+
+# 글
+
+## 글 가져오기
+
+- 글 하나 가져오기는 `PostModel.get()` 으로 할 수 있다.
+
+## 글 목록 가져오기
+
+- 글 목록 가져오기는 `PostService.instance.get()` 을 통해서 할 수 있다.
+
+- 예제)
+
+```dart
+List<PostModel> photos = await PostService.instance.get(
+  category: 'news',
+  limit: 5,
+  hasPhoto: true,
+);
 ```

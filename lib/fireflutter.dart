@@ -15,6 +15,7 @@ export 'src/user/widgets/user.signed_in.dart';
 export 'src/user/widgets/user.signed_out.dart';
 
 export 'src/forum/post.model.dart';
+export 'src/forum/post.service.dart';
 export 'src/forum/comment.dart';
 export 'src/forum/forum.mixin.dart';
 export 'src/forum/widgets/comment/comment.edit.dialog.dart';

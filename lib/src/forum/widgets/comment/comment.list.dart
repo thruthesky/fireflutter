@@ -34,19 +34,19 @@ class CommentList extends StatefulWidget {
   /// Callback on reply button pressed. The parameter is the parent comment of
   /// the new comment to be created.
   ///
-  final Function(PostModel post, Comment comment) onReply;
-  final Function(Comment comment) onEdit;
-  final Function(Comment comment) onReport;
-  final Function(Comment comment) onDelete;
-  final Function(Comment comment) onLike;
-  final Function(Comment comment)? onDislike;
+  final Function(PostModel post, CommentModel comment) onReply;
+  final Function(CommentModel comment) onEdit;
+  final Function(CommentModel comment) onReport;
+  final Function(CommentModel comment) onDelete;
+  final Function(CommentModel comment) onLike;
+  final Function(CommentModel comment)? onDislike;
   final Function(int index, List<String> fileList) onImageTap;
 
-  final Function(Comment comment)? onChat;
+  final Function(CommentModel comment)? onChat;
 
   final Widget Function(String, Function())? buttonBuilder;
-  final Widget Function(Comment)? headerBuilder;
-  final Widget Function(Comment)? contentBuilder;
+  final Widget Function(CommentModel)? headerBuilder;
+  final Widget Function(CommentModel)? contentBuilder;
 
   final Function(String uid)? onBlockUser;
   final Function(String uid)? onUnblockUser;
@@ -58,7 +58,7 @@ class CommentList extends StatefulWidget {
 }
 
 class _CommentListState extends State<CommentList> with ForumMixin {
-  List<Comment> comments = [];
+  List<CommentModel> comments = [];
   StreamSubscription? sub;
 
   loadComments() {
@@ -73,8 +73,8 @@ class _CommentListState extends State<CommentList> with ForumMixin {
       comments = [];
       snapshots.docs.forEach((QueryDocumentSnapshot snapshot) {
         /// is it immediate child?
-        final Comment c =
-            Comment.fromJson(snapshot.data() as Json, id: snapshot.id);
+        final CommentModel c =
+            CommentModel.fromJson(snapshot.data() as Json, id: snapshot.id);
 
         /// if immediate child comment,
         if (c.postId == c.parentId) {
@@ -119,7 +119,7 @@ class _CommentListState extends State<CommentList> with ForumMixin {
       shrinkWrap: true,
       itemCount: comments.length,
       itemBuilder: (ctx, i) {
-        final Comment comment = comments[i];
+        final CommentModel comment = comments[i];
 
         return Container(
           key: ValueKey(comment.id),
@@ -172,7 +172,7 @@ class _CommentListState extends State<CommentList> with ForumMixin {
     );
   }
 
-  Widget _commentHeader(Comment comment) {
+  Widget _commentHeader(CommentModel comment) {
     if (widget.headerBuilder != null) return widget.headerBuilder!(comment);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
@@ -198,7 +198,7 @@ class _CommentListState extends State<CommentList> with ForumMixin {
     );
   }
 
-  Widget _contentBuilder(Comment comment) {
+  Widget _contentBuilder(CommentModel comment) {
     return widget.contentBuilder != null
         ? widget.contentBuilder!(comment)
         : Container(
