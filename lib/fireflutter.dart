@@ -14,7 +14,7 @@ export 'src/user/widgets/admin.dart';
 export 'src/user/widgets/user.signed_in.dart';
 export 'src/user/widgets/user.signed_out.dart';
 
-export 'src/forum/post.dart';
+export 'src/forum/post.model.dart';
 export 'src/forum/comment.dart';
 export 'src/forum/forum.mixin.dart';
 export 'src/forum/widgets/comment/comment.edit.dialog.dart';
@@ -62,7 +62,7 @@ export 'src/messaging/messaging.service.dart';
 
 export 'src/widgets/image_list.dart';
 
-export 'src/forum/category.dart';
+export 'src/forum/category.model.dart';
 export 'src/forum/category.service.dart';
 
 export 'src/point/forum_point.dart';

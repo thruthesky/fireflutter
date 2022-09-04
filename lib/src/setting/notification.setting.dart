@@ -13,7 +13,7 @@ class NotificationSetting extends StatefulWidget {
 class _NotificationSettingState extends State<NotificationSetting> {
   final commentNotification = "newCommentUnderMyPostOrComment";
 
-  List<Category>? categories;
+  List<CategoryModel>? categories;
 
   bool loadingAllNotification = false;
 
@@ -139,7 +139,7 @@ class _NotificationSettingState extends State<NotificationSetting> {
                   ),
                 ),
               ),
-              for (Category cat in categories!)
+              for (CategoryModel cat in categories!)
                 PostNotificationCheckBoxListItem(cat: cat),
               Divider(),
               Padding(
@@ -154,7 +154,7 @@ class _NotificationSettingState extends State<NotificationSetting> {
                   ),
                 ),
               ),
-              for (Category cat in categories!)
+              for (CategoryModel cat in categories!)
                 CommentNotificationCheckBoxListItem(cat: cat),
             ],
           ],
@@ -187,7 +187,7 @@ class CommentNotificationCheckBoxListItem extends StatefulWidget {
     required this.cat,
   }) : super(key: key);
 
-  final Category cat;
+  final CategoryModel cat;
 
   @override
   State<CommentNotificationCheckBoxListItem> createState() =>
@@ -239,7 +239,7 @@ class PostNotificationCheckBoxListItem extends StatefulWidget {
     required this.cat,
   }) : super(key: key);
 
-  final Category cat;
+  final CategoryModel cat;
 
   @override
   State<PostNotificationCheckBoxListItem> createState() =>

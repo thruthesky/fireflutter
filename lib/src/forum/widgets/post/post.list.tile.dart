@@ -14,7 +14,7 @@ class PostListTile extends StatelessWidget {
     required this.children,
   }) : super(key: key);
 
-  final Post post;
+  final PostModel post;
   final List<Widget> children;
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,9 @@ class PostListTile extends StatelessWidget {
         child: PostListMeta(post),
       ),
       trailing: Icon(
-        post.open ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
+        post.open
+            ? Icons.keyboard_arrow_up_rounded
+            : Icons.keyboard_arrow_down_rounded,
         color: Colors.grey,
       ),
       children: children,

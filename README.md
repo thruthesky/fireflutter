@@ -10,10 +10,24 @@
 - 파이어베이스 데이터베이스는 NoSQL, Flat Style 구조를 가진다.
   - 그래서, Entity Relationship 을 최소화한다.
 
-# 데이터베이스
+# 기능 별 데이터 구조
 
 
+- 각 기능별 데이터베이스 구조를 설명한다.
+- 각 기능별로 하나의 데이터 자료는 하나의 모델 클래스로 연결된다.
+  - 해당 모델 클래스는 해당 자료에 대한 속성을 가지고 또한 그 데이터 자료에 대한 crud 기능을 가진다.
+  - 예제) `UserModel`, `PostModel`, `CommentModel` 등
+- 각 기능별 기능은 Service 클래스에 기록된다.
+  - 예) `UserService`, `PostService`, `CommentService` 등
 
+
+## 사용자
+
+### 사용자 문서
+
+- `/users/<uid>` 와 같이 저장되며, 아래의 필드는 미리 정해져 있는 것이며, 원하는 정보(필드)를 마음데로 저장 할 수 있다.
+- 주의 해야 할 것은 사용자 문서는 누구든지 읽을 수 있다. 따라서 개인 정보를 저장하면 안된다.
+- 특히, 전화번호와 이메일주소는 `FirebaseAuth` 의 사용자 계정에 저장한다.
 
 ```mermaid
 erDiagram
@@ -21,21 +35,18 @@ erDiagram
       string name
       string firstName
       string lastName
+      string photoUrl "사용자 프로필 사진. Storage 의 이미지가 아니라, 다른 서버의 이미지라도 된다."
       int birthday "YYYYMMDD 년4자리 월2자리 일2자리"
       string gender "M 또는 F"
-      string email "@TODO 이메일은 회원 정보에 저장되어서는 안된다."
+      Timestamp createdAt "맨 처음 한번만 기록"
+      Timestamp updatedAt "사용자가 프로필 변경 할 때 마다 업데이트"
   }
 ```
 
 
+## 글
 
 
-# 코딩 가이드
-
-
-- `User` 클래스는 사용자 정보를 관리한다.
-- `Post` 클래스는 글 정보를 관리한다.
-- `Comment` 클래스는 코멘트 정보를 관리한다.
 
 # Fireflutter 연동
 

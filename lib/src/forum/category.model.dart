@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 
-class Category with ForumMixin {
-  Category({
+class CategoryModel with ForumMixin {
+  CategoryModel({
     required this.id,
     required this.title,
     required this.description,
@@ -22,9 +22,12 @@ class Category with ForumMixin {
   int point;
   String categoryGroup;
 
-  factory Category.emtpy() => Category.fromJson({}, '');
-  factory Category.fromJson(dynamic data, String id) {
-    return Category(
+  /// TODO change it to named constructor
+  factory CategoryModel.emtpy() => CategoryModel.fromJson({}, '');
+
+  /// TODO change it to named constructor
+  factory CategoryModel.fromJson(dynamic data, String id) {
+    return CategoryModel(
       id: id,
       title: data['title'] ?? '',
       description: data['description'] ?? '',
@@ -67,14 +70,14 @@ class Category with ForumMixin {
     };
     final categoryCol = FirebaseFirestore.instance.collection('categories');
     final doc = await categoryCol.doc(category).get();
-    if (doc.exists) throw 'Category already exists';
+    if (doc.exists) throw 'CategoryModel already exists';
     return categoryCol.doc(category).set(data);
   }
 
   /// Update category
   ///
   /// ```dart
-  /// final cat = Category.fromJson({}, 'job');
+  /// final cat = CategoryModel.fromJson({}, 'job');
   /// cat.update('foregroundColor', 'color').catchError(service.error);
   /// ```
   Future<void> update(String field, dynamic value) {

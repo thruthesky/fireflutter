@@ -26,7 +26,7 @@ class CommentList extends StatefulWidget {
     this.padding = const EdgeInsets.all(8),
   }) : super(key: key);
 
-  final Post post;
+  final PostModel post;
   final String parentId;
 
   final Function(String uid) onProfile;
@@ -34,7 +34,7 @@ class CommentList extends StatefulWidget {
   /// Callback on reply button pressed. The parameter is the parent comment of
   /// the new comment to be created.
   ///
-  final Function(Post post, Comment comment) onReply;
+  final Function(PostModel post, Comment comment) onReply;
   final Function(Comment comment) onEdit;
   final Function(Comment comment) onReport;
   final Function(Comment comment) onDelete;
@@ -73,7 +73,8 @@ class _CommentListState extends State<CommentList> with ForumMixin {
       comments = [];
       snapshots.docs.forEach((QueryDocumentSnapshot snapshot) {
         /// is it immediate child?
-        final Comment c = Comment.fromJson(snapshot.data() as Json, id: snapshot.id);
+        final Comment c =
+            Comment.fromJson(snapshot.data() as Json, id: snapshot.id);
 
         /// if immediate child comment,
         if (c.postId == c.parentId) {
@@ -152,11 +153,15 @@ class _CommentListState extends State<CommentList> with ForumMixin {
                   onEdit: () => widget.onEdit(comment),
                   onDelete: () => widget.onDelete(comment),
                   onLike: () => widget.onLike(comment),
-                  onDislike: () => widget.onDislike == null ? null : widget.onDislike!(comment),
+                  onDislike: () => widget.onDislike == null
+                      ? null
+                      : widget.onDislike!(comment),
                   buttonBuilder: widget.buttonBuilder,
                   likeCount: comment.like,
                   dislikeCount: comment.dislike,
-                  onChat: (widget.onChat != null) ? () => widget.onChat!(comment) : null,
+                  onChat: (widget.onChat != null)
+                      ? () => widget.onChat!(comment)
+                      : null,
                   onBlockUser: widget.onBlockUser,
                   onUnblockUser: widget.onUnblockUser,
                 ),
@@ -180,7 +185,9 @@ class _CommentListState extends State<CommentList> with ForumMixin {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(user.displayName.isNotEmpty ? "${user.displayName}" : "No name"),
+                Text(user.displayName.isNotEmpty
+                    ? "${user.displayName}"
+                    : "No name"),
                 SizedBox(height: 8),
                 ShortDate(comment.createdAt),
               ],

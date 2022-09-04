@@ -26,7 +26,7 @@ class PostForm extends StatefulWidget {
 
   final PostFormController? controller;
 
-  final Post? post;
+  final PostModel? post;
   final String? category;
   final String? subcategory;
 
@@ -36,8 +36,8 @@ class PostForm extends StatefulWidget {
   /// If [photo] is set to true, then there must a photo in the post.
   final bool? photo;
 
-  final Function(Post) onCreate;
-  final Function(Post) onUpdate;
+  final Function(PostModel) onCreate;
+  final Function(PostModel) onUpdate;
   final Function()? onCancel;
 
   final Widget Function(TextEditingController)? titleFieldBuilder;
@@ -240,7 +240,7 @@ class _PostFormState extends State<PostForm> {
     );
   }
 
-  Future<Post> onSubmit() async {
+  Future<PostModel> onSubmit() async {
     if (widget.photo == true) {
       if (files.length == 0) {
         throw ERROR_NO_PHOTO_ATTACHED;
@@ -297,6 +297,6 @@ class _PostFormState extends State<PostForm> {
       // );
     }
 
-    return Future.value({} as Post);
+    return Future.value({} as PostModel);
   }
 }

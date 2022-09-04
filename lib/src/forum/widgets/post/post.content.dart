@@ -15,7 +15,7 @@ class PostContent extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final Post post;
+  final PostModel post;
   final bool withImage;
   final Function(String)? onImageTapped;
   final EdgeInsets? padding;
@@ -49,7 +49,8 @@ class PostContent extends StatelessWidget {
                       return SizedBox(
                           width: double.infinity,
                           height: 100,
-                          child: Center(child: CircularProgressIndicator.adaptive()));
+                          child: Center(
+                              child: CircularProgressIndicator.adaptive()));
                     }
                     return CircularProgressIndicator();
                   }),

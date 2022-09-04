@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class PostListMeta extends StatelessWidget {
   const PostListMeta(this.post, {Key? key}) : super(key: key);
 
-  final Post post;
+  final PostModel post;
 
   @override
   Widget build(BuildContext context) {

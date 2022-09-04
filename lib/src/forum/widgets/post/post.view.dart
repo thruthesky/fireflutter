@@ -24,20 +24,20 @@ class PostView extends StatelessWidget {
     this.onUnblockUser,
   }) : super(key: key);
 
-  // final Function(Post)? contentBuilder;
+  // final Function(PostModel)? contentBuilder;
   final Widget Function(String, Function())? buttonBuilder;
   final Widget? shareButton;
-  final Post post;
+  final PostModel post;
   final Function(String uid) onProfile;
-  final Function(Post post) onReport;
-  final Function(Post post) onReply;
-  final Function(Post post) onEdit;
-  final Function(Post post) onDelete;
-  final Function(Post post) onLike;
-  final Function(Post post)? onDislike;
-  final Function(Post post)? onChat;
+  final Function(PostModel post) onReport;
+  final Function(PostModel post) onReply;
+  final Function(PostModel post) onEdit;
+  final Function(PostModel post) onDelete;
+  final Function(PostModel post) onLike;
+  final Function(PostModel post)? onDislike;
+  final Function(PostModel post)? onChat;
   final Function()? onHide;
-  final Function(Post post)? onSendPushNotification;
+  final Function(PostModel post)? onSendPushNotification;
   final Function(int index, List<String> fileList) onImageTap;
   final EdgeInsets? padding;
 
@@ -74,7 +74,8 @@ class PostView extends StatelessWidget {
               children: [
                 Text(
                   'Summary',
-                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.grey),
                 ),
                 Text(
                   post.summary,
@@ -100,8 +101,9 @@ class PostView extends StatelessWidget {
           likeCount: post.like,
           dislikeCount: post.dislike,
           shareButton: shareButton,
-          onSendPushNotification:
-              onSendPushNotification == null ? null : () => onSendPushNotification!(post),
+          onSendPushNotification: onSendPushNotification == null
+              ? null
+              : () => onSendPushNotification!(post),
           onBlockUser: onBlockUser,
           onUnblockUser: onUnblockUser,
         ),

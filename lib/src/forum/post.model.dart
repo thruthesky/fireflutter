@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 
-/// Post
+/// PostModel
 ///
-/// Post and comment are a lot similiar. So both uses the same model.
+/// PostModel and comment are a lot similiar. So both uses the same model.
 /// Refer readme for details
-class Post with ForumMixin implements Article {
-  Post({
+class PostModel with ForumMixin implements Article {
+  PostModel({
     this.id = '',
     this.category = '',
     this.subcategory = '',
@@ -93,20 +93,20 @@ class Post with ForumMixin implements Article {
   List<Comment> comments = [];
 
   @Deprecated("Create post with PostApi.")
-  factory Post.fromDoc(DocumentSnapshot doc) {
-    return Post.fromJson(doc.data() as Json, doc.id);
+  factory PostModel.fromDoc(DocumentSnapshot doc) {
+    return PostModel.fromJson(doc.data() as Json, doc.id);
   }
 
   /// Get document data of map and convert it into post model
   ///
   /// If post is created via http, then it will have [id] inside `data`.
-  factory Post.fromJson(Json data, [String? id]) {
+  factory PostModel.fromJson(Json data, [String? id]) {
     String content = data['content'] ?? '';
 
     /// Check if the content has any html tag.
     bool html = _isHtml(content);
 
-    final post = Post(
+    final post = PostModel(
       id: id ?? data['id'],
       category: data['category'] ?? '',
       subcategory: data['subcategory'] ?? '',
@@ -133,7 +133,7 @@ class Post with ForumMixin implements Article {
 
     /// If the post is opened, then maintain the status.
     /// If the [open] property is not maintained,
-    /// every time the document had updated, `Post.fromJson` will be called again
+    /// every time the document had updated, `PostModel.fromJson` will be called again
     /// and [open] becomes false, and the post may be closed.
     /// For instance, when user likes the post and the post closes on post list.
     // if (PostService.instance.posts[post.id] != null) {
@@ -148,9 +148,9 @@ class Post with ForumMixin implements Article {
   }
 
   /// Get indexed document data from meilisearch of map and convert it into post model
-  @Deprecated('Use Post.fromTypesense')
-  factory Post.fromMeili(Json data, String id) {
-    return Post(
+  @Deprecated('Use PostModel.fromTypesense')
+  factory PostModel.fromMeili(Json data, String id) {
+    return PostModel(
       id: id,
       category: data['category'] ?? '',
       subcategory: data['subcategory'] ?? '',
@@ -167,8 +167,8 @@ class Post with ForumMixin implements Article {
   }
 
   /// Get indexed document data from typesense of map and convert it into post model
-  factory Post.fromTypesense(Json data, String id) {
-    return Post(
+  factory PostModel.fromTypesense(Json data, String id) {
+    return PostModel(
       id: id,
       category: data['category'] ?? '',
       subcategory: data['subcategory'] ?? '',
@@ -213,7 +213,7 @@ class Post with ForumMixin implements Article {
 
   @override
   String toString() {
-    return '''Post($map)''';
+    return '''PostModel($map)''';
   }
 
   Future<void> report(String? reason) {
@@ -232,7 +232,7 @@ class Post with ForumMixin implements Article {
   /// [documentId] is the document id to create with. Read readme for details.
   ///
   /// ```dart
-  /// final ref = await Post(
+  /// final ref = await PostModel(
   ///   category: Get.arguments['category'],
   ///   title: title.text,
   ///   content: content.text,
@@ -311,9 +311,9 @@ class Post with ForumMixin implements Article {
     });
   }
 
-  Future<Post> get(String postId) async {
+  Future<PostModel> get(String postId) async {
     final snapshot = await postDoc(postId).get();
-    return Post.fromJson(snapshot.data() as Json, snapshot.id);
+    return PostModel.fromJson(snapshot.data() as Json, snapshot.id);
   }
 
   /// See readme.

@@ -66,7 +66,7 @@ mixin ForumMixin {
         .doc(UserService.instance.uid);
   }
 
-  onReply(Post post, [Comment? comment]) async {
+  onReply(PostModel post, [Comment? comment]) async {
     if (UserService.instance.notSignedIn)
       return ffError(context, 'Sign-in first!');
 
@@ -98,8 +98,8 @@ mixin ForumMixin {
   }
 
   //
-  Future<Post?> onPostEdit({
-    Post? post,
+  Future<PostModel?> onPostEdit({
+    PostModel? post,
     String? category,
     String? subcategory,
     Map<String, String>? categories,
@@ -183,7 +183,7 @@ mixin ForumMixin {
           .confirm('Delete', "Do you want to delete?");
       if (re != true) return;
 
-      if (postOrComment is Post) {
+      if (postOrComment is PostModel) {
         await postOrComment.delete();
         await FireFlutter.instance
             .alert('Post deleted', 'You have deleted this post.');
@@ -257,7 +257,7 @@ mixin ForumMixin {
     if (re == null) return;
     try {
       await postOrComment.report(input.text);
-      String type = postOrComment is Post ? 'post' : 'comment';
+      String type = postOrComment is PostModel ? 'post' : 'comment';
       FireFlutter.instance
           .alert('Report success', 'You have reported this $type');
     } catch (e, s) {

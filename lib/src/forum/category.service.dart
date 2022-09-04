@@ -9,7 +9,7 @@ class CategoryService with ForumMixin {
     return _instance!;
   }
 
-  List<Category> categories = [];
+  List<CategoryModel> categories = [];
 
   /// Returns all categories.
   ///
@@ -25,7 +25,8 @@ class CategoryService with ForumMixin {
   /// Note that, this is async call. So, it should be used with `setState`
   /// ```dart
   /// ```
-  Future<List<Category>> getCategories({bool hideHiddenCategory: false}) async {
+  Future<List<CategoryModel>> getCategories(
+      {bool hideHiddenCategory: false}) async {
     if (categories.length == 0) {
       categories = await loadCategories();
     }
@@ -40,7 +41,7 @@ class CategoryService with ForumMixin {
   ///
   /// You can filter some categories by [categoryGroup].
   ///
-  Future<List<Category>> loadCategories({
+  Future<List<CategoryModel>> loadCategories({
     String? categoryGroup,
   }) async {
     Query q = categoryCol;
@@ -51,10 +52,10 @@ class CategoryService with ForumMixin {
 
     if (querySnapshot.size == 0) return [];
 
-    final List<Category> _categories = [];
+    final List<CategoryModel> _categories = [];
 
     for (DocumentSnapshot doc in querySnapshot.docs) {
-      _categories.add(Category.fromJson(doc.data(), doc.id));
+      _categories.add(CategoryModel.fromJson(doc.data(), doc.id));
     }
     return _categories;
   }
