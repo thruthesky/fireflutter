@@ -4,14 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/fireflutter.instance.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 mixin ForumMixin {
   /// [post] is the post
   /// [comment] is null for immediate child comment or the parent comment
   ///
 
-  BuildContext get context => Get.context!;
+  BuildContext get context => FireFlutter.instance.context;
 
   /// Returns Firestore instance. Firebase database instance.
   FirebaseFirestore get db => FirebaseFirestore.instance;
@@ -74,7 +73,7 @@ mixin ForumMixin {
       context: context,
       builder: (bc) {
         return CommentEditDialog(
-          onCancel: Get.back,
+          onCancel: Navigator.of(context).pop,
           // onError: service.error,
           onSubmit: (Json form, progress) async {
             try {
@@ -85,7 +84,7 @@ mixin ForumMixin {
                 content: form['content'],
                 files: form['files'],
               );
-              Get.back();
+              Navigator.of(context).pop();
             } catch (e, stack) {
               FireFlutter.instance.error(e, stack);
               progress(false);
@@ -118,7 +117,7 @@ mixin ForumMixin {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(
-                        onPressed: Get.back,
+                        onPressed: Navigator.of(context).pop,
                         icon: Icon(Icons.arrow_back_ios),
                       ),
                       Text('Post edit'),
@@ -134,9 +133,9 @@ mixin ForumMixin {
                     category:
                         (post?.id == null || post?.id == "") ? category : '',
                     subcategory: post == null ? subcategory : '',
-                    onCreate: (id) => Get.back(result: id),
-                    onUpdate: (id) => Get.back(result: id),
-                    onCancel: Get.back,
+                    onCreate: (id) => Navigator.of(context).pop(id),
+                    onUpdate: (id) => Navigator.of(context).pop(id),
+                    onCancel: Navigator.of(context).pop,
                   ),
                 ],
               ),
@@ -154,7 +153,7 @@ mixin ForumMixin {
       builder: (bc) {
         return CommentEditDialog(
           comment: comment,
-          onCancel: Get.back,
+          onCancel: Navigator.of(context).pop,
           // onError: service.error,
           onSubmit: (Json form, progress) async {
             try {
@@ -165,7 +164,7 @@ mixin ForumMixin {
               //   content: form['content'],
               //   files: form['files'],
               // );
-              Get.back();
+              Navigator.of(context).pop();
             } catch (e, s) {
               FireFlutter.instance.error(e, s);
               rethrow;
@@ -240,13 +239,13 @@ mixin ForumMixin {
         actions: [
           TextButton(
             onPressed: () {
-              Get.back();
+              Navigator.of(context).pop();
             },
             child: Text('Close'),
           ),
           TextButton(
             onPressed: () async {
-              Get.back(result: input.text);
+              Navigator.of(context).pop(input.text);
             },
             child: Text('Submit'),
           ),

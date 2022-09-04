@@ -434,12 +434,6 @@
       "languageVersion": "2.15"
     },
     {
-      "name": "get",
-      "rootUri": "file:///Users/thruthesky/.pub-cache/hosted/pub.dartlang.org/get-4.6.5",
-      "packageUri": "lib/",
-      "languageVersion": "2.15"
-    },
-    {
       "name": "google_sign_in",
       "rootUri": "file:///Users/thruthesky/.pub-cache/hosted/pub.dartlang.org/google_sign_in-5.4.1",
       "packageUri": "lib/",
@@ -968,7 +962,7 @@
       "languageVersion": "2.15"
     }
   ],
-  "generated": "2022-09-03T14:28:06.968911Z",
+  "generated": "2022-09-04T12:18:54.650103Z",
   "generator": "pub",
   "generatorVersion": "2.18.0"
 }

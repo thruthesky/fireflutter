@@ -24,8 +24,6 @@ dependencies:
   flutterfire_ui: ^0.4.3+5
   # EO
 
-  get: ^4.6.5
-
   #
   rxdart: ^0.27.3
 

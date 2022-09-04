@@ -5,6 +5,7 @@
 
 - [FireFlutter v0.3](#fireflutter-v03)
 - [개요](#개요)
+- [외부 패키지 목록](#외부-패키지-목록)
 - [기능 별 데이터 구조](#기능-별-데이터-구조)
   - [사용자](#사용자)
     - [사용자 문서](#사용자-문서)
@@ -23,6 +24,11 @@
 - 생산적이지 못하고 성공적이지 못한 결과를 만들어 내는 이유는 오직 하나, 코드를 복잡하 작성하기 때문이다. 반드시, 가장 간단한 코드로 작성되어야 하며 그렇지 않으면 실패하는 것으로 간주한다.
 - 파이어베이스 데이터베이스는 NoSQL, Flat Style 구조를 가진다.
   - 그래서, Entity Relationship 을 최소화한다.
+
+
+# 외부 패키지 목록
+
+- 여러가지 외부 패키지를 쓰지만, 그 중에서도 몇 가지 목록을 하자면 아래와 같다.
 
 # 기능 별 데이터 구조
 
@@ -81,18 +87,32 @@ erDiagram
 
 # Fireflutter 연동
 
-- `pubspec.yaml` 에 package 로 추가를 해도 되고, fork 하여 작업하며 수정 사항을 PR 해도 된다.
-- Fireflutter 를 앱에 연동하기 위해서는 루트 위젯에 `FireFlutter.service.init()` 을 실행한다.
+- Fireflutter 패키지를 `pubspec.yaml` 에 package 로 추가를 해도 되고, fork 하여 작업하며 수정 사항을 PR 해도 된다.
+- Fireflutter 를 앱에 연동하기 위해서는 루트 위젯에 `FireFlutter.service.init(context: ...)` 을 실행한다.
 
 예제)
 ```dart
-class WonderfulKorea extends StatelessWidget {
-  const WonderfulKorea({super.key});
+class RootWidget extends StatelessWidget {
+  const RootWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    FireFlutter.instance.init();
+    FireFlutter.instance.init(context: globalKey.currentContext!); // context 연결
     // ...
+```
+
+예제) Get 상태 관리자를 쓰는 경우
+
+```dart
+class RootWidget extends StatelessWidget {
+  const RootWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      onReady: () {
+        FireFlutter.instance.init(context: Get.context!); // context 지정
+      },
 ```
 
 # 사용자 로그인
