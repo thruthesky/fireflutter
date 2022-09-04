@@ -17,10 +17,10 @@ const COMMENT_CONTENT_DELETED = "Comment is deleted.";
 const ERROR_ALREADY_DELETED = "Already deleted";
 const ERROR_NO_PHOTO_ATTACHED = "Please, upload a photo.";
 
-const ERROR_NO_PROFILE_PHOTO = 'ERROR_NO_PROFILE_PHOTO';
-const ERROR_NO_EMAIL = 'ERROR_NO_EMAIL';
-const ERROR_MALFORMED_EMAIL = 'ERROR_MALFORMED_EMAIL';
-const ERROR_NO_FIRST_NAME = 'ERROR_NO_FIRST_NAME';
-const ERROR_NO_LAST_NAME = 'ERROR_NO_LAST_NAME';
-const ERROR_NO_GENER = 'ERROR_NO_GENER';
-const ERROR_NO_BIRTHDAY = 'ERROR_NO_BIRTHDAY';
+const ERROR_NO_PROFILE_PHOTO = 'Please, input your profile photo.';
+const ERROR_NO_EMAIL = 'Please, input email address.';
+const ERROR_MALFORMED_EMAIL = 'Please, input correct email address.';
+const ERROR_NO_FIRST_NAME = 'Please, input your first name.';
+const ERROR_NO_LAST_NAME = 'Please, input your last name.';
+const ERROR_NO_GENER = 'Please, select your birthday.';
+const ERROR_NO_BIRTHDAY = 'Please, select your birthday.';

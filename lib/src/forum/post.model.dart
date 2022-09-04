@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:jiffy/jiffy.dart';
 
 /// PostModel
 ///
@@ -251,41 +252,34 @@ class PostModel with ForumMixin implements Article {
     String? summary,
     Json extra = const {},
   }) {
-    return Future.value();
     if (signedIn == false) throw ERROR_SIGN_IN_FIRST_FOR_POST_CREATE;
+    if (UserService.instance.user.ready == false)
+      throw UserService.instance.user.profileError;
 
-    /// 여기서 부터, 글쓰기 조건을
-    /// TODO 프로필이 준비되었는지 확인을 하기 위해서는 사용자 문서를 미리 읽어서, 보관해야 한다. 그렇다면 상태관리가 필요하다.
-    /// TODO EasyState 를 사용한다.
-    // if (ready) throw Controller.of.user.profileError;
-
-    // final j = Jiffy();
-    // int week = ((j.unix() - 345600) / 604800).floor();
-    // final createData = {
-    //   'category': category,
-    //   if (subcategory != null) 'subcategory': subcategory,
-    //   'title': title,
-    //   'content': content,
-    //   if (summary != null && summary != '') 'summary': summary,
-    //   if (files != null) 'files': files,
-    //   'uid': Controller.of.user.uid,
-    //   'hasPhoto': (files == null || files.length == 0) ? false : true,
-    //   'deleted': false,
-    //   'noOfComments': 0,
-    //   'year': j.year,
-    //   'month': j.month,
-    //   'day': j.date,
-    //   'dayOfYear': j.dayOfYear,
-    //   'week': week,
-    //   'createdAt': FieldValue.serverTimestamp(),
-    //   'updatedAt': FieldValue.serverTimestamp(),
-    // };
-    // if (documentId != null && documentId != '') {
-    //   return postCol.doc(documentId).set({...createData, ...extra}).then(
-    //       (value) => postCol.doc(documentId));
-    // } else {
-    //   return postCol.add({...createData, ...extra});
-    // }
+    final j = Jiffy();
+    final createData = {
+      'category': category,
+      if (subcategory != null) 'subcategory': subcategory,
+      'title': title,
+      'content': content,
+      if (summary != null && summary != '') 'summary': summary,
+      if (files != null) 'files': files,
+      'uid': UserService.instance.uid,
+      'hasPhoto': (files == null || files.length == 0) ? false : true,
+      'deleted': false,
+      'noOfComments': 0,
+      'year': j.year,
+      'month': j.month,
+      'day': j.date,
+      'createdAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
+    };
+    if (documentId != null && documentId != '') {
+      return postCol.doc(documentId).set({...createData, ...extra}).then(
+          (value) => postCol.doc(documentId));
+    } else {
+      return postCol.add({...createData, ...extra});
+    }
   }
 
   /// TODO update post
