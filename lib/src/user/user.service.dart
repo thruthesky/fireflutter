@@ -1,17 +1,21 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as Firebase;
 import 'package:fireflutter/fireflutter.dart';
+import 'package:rxdart/subjects.dart';
 
 ///
 class UserService {
   static UserService? _instance;
   static UserService get instance => _instance ?? (_instance = UserService());
 
-  /// 사용자 정보를 미리 로드하지 않는다. README.md 참고
-  @Deprecated('Use MyDoc(). Do not load user data beforehand.')
-  UserModel? data;
+  /// 현재 로그인한 사용자의 사용자 문서 모델. 서버에서 변경 될 때 마다 업데이트하고, 이벤트 발생.
+  UserModel user = UserModel();
+  StreamSubscription? userDocumentSubscription;
+  BehaviorSubject userChange = BehaviorSubject.seeded(UserModel());
   UserSettingsModel? settings;
-  String? get displayName => data?.displayName;
+  String? get displayName => user.displayName;
 
   CollectionReference get col => FirebaseFirestore.instance.collection('users');
   DocumentReference get doc =>
@@ -43,6 +47,16 @@ class UserService {
   /// ^ Even if anonymously-sign-in enabled, it still needs to be nullable.
   /// ! To avoid `null check operator` problem in the future.
   String? get uid => Firebase.FirebaseAuth.instance.currentUser?.uid;
+
+  /// 사용자 문서가 업데이트되면, 이벤트를 발생시킨다.
+  observeUserDoc() {
+    userDocumentSubscription?.cancel();
+    userDocumentSubscription =
+        doc.snapshots().listen((DocumentSnapshot snapshot) async {
+      user = UserModel.fromSnapshot(snapshot);
+      userChange.add(user);
+    });
+  }
 
   create() {}
 

@@ -49,7 +49,7 @@ class _NotificationSettingState extends State<NotificationSetting> {
                 try {
                   await UserService.instance.settings
                       ?.update({commentNotification: b});
-                  ffAlert(context, "Comment notification",
+                  ffAlert("Comment notification",
                       (b == true ? 'Subscribed' : 'Unsubscribed') + " success");
                 } catch (e) {
                   rethrow;
@@ -174,7 +174,6 @@ class _NotificationSettingState extends State<NotificationSetting> {
     }
 
     ffAlert(
-      context,
       'Enable Notification',
       content,
     );
@@ -213,7 +212,7 @@ class _CommentNotificationCheckBoxListItemState
               'comments_${widget.cat.id}', 'forum', b ?? false);
 
           final reason = b == true ? 'subscribed' : 'unsubscribed';
-          ffAlert(context, "Comment notification",
+          ffAlert("Comment notification",
               widget.cat.title + " comment $reason success.");
           setState(() {
             loading = false;
@@ -264,8 +263,8 @@ class _PostNotificationCheckBoxListItemState
           await UserService.instance.settings?.updateSubscription(
               'posts_${widget.cat.id}', 'forum', b ?? false);
           final reason = b == true ? 'subscribed' : 'unsubscribed';
-          ffAlert(context, "Post notification",
-              widget.cat.title + " post $reason success.");
+          ffAlert(
+              "Post notification", widget.cat.title + " post $reason success.");
           setState(() {
             loading = false;
           });

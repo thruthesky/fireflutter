@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/fireflutter.instance.dart';
 import 'package:flutter/material.dart';
 
 mixin ForumMixin {
@@ -66,8 +65,7 @@ mixin ForumMixin {
   }
 
   onReply(PostModel post, [CommentModel? comment]) async {
-    if (UserService.instance.notSignedIn)
-      return ffError(context, 'Sign-in first!');
+    if (UserService.instance.notSignedIn) return ffError('Sign-in first!');
 
     return showDialog(
       context: context,

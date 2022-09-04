@@ -10,47 +10,66 @@ import 'package:flutter/material.dart';
 /// 사용자 로그인을 하지 않았거나, 사용자 문서가 존재하지 않으면,
 ///   builder 파라메타로 전달되는 userModel.exists 는 false 가 되고 각종 속성은 기본 값을 가진다.
 /// 사용자가 로그 아웃이나 계정을 변경해도 이전 사용자 문서 listen 을 cancel 하고 새로 로그인한 사용자의 문서를 잘 listen 한다.
-class MyDoc extends StatefulWidget {
-  const MyDoc({
-    Key? key,
-    required this.builder,
-  }) : super(key: key);
+// class MyDoc extends StatefulWidget {
+//   const MyDoc({
+//     Key? key,
+//     required this.builder,
+//   }) : super(key: key);
+//   final Widget Function(UserModel) builder;
+
+//   @override
+//   State<MyDoc> createState() => _MyDocState();
+// }
+
+// class _MyDocState extends State<MyDoc> {
+//   UserModel userModel = UserModel();
+//   StreamSubscription? userDocumentSubscription;
+//   late StreamSubscription authSubscription;
+
+//   @override
+//   void initState() {
+//     super.initState();
+
+//     authSubscription =
+//         Firebase.FirebaseAuth.instance.authStateChanges().listen((user) {
+//       userDocumentSubscription?.cancel();
+//       userDocumentSubscription = UserService.instance.doc
+//           .snapshots()
+//           .listen((DocumentSnapshot snapshot) async {
+//         userModel = UserModel.fromSnapshot(snapshot);
+//         setState(() {});
+//       });
+//     });
+//   }
+
+//   @override
+//   void dispose() {
+//     userDocumentSubscription?.cancel();
+//     authSubscription.cancel();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return this.widget.builder(userModel);
+//   }
+// }
+
+class MyDoc extends StatelessWidget {
+  const MyDoc({Key? key, required this.builder}) : super(key: key);
   final Widget Function(UserModel) builder;
 
   @override
-  State<MyDoc> createState() => _MyDocState();
-}
-
-class _MyDocState extends State<MyDoc> {
-  UserModel userModel = UserModel();
-  StreamSubscription? userDocumentSubscription;
-  late StreamSubscription authSubscription;
-
-  @override
-  void initState() {
-    super.initState();
-
-    authSubscription =
-        Firebase.FirebaseAuth.instance.authStateChanges().listen((user) {
-      userDocumentSubscription?.cancel();
-      userDocumentSubscription = UserService.instance.doc
-          .snapshots()
-          .listen((DocumentSnapshot snapshot) async {
-        userModel = UserModel.fromSnapshot(snapshot);
-        setState(() {});
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    userDocumentSubscription?.cancel();
-    authSubscription.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return this.widget.builder(userModel);
+    return StreamBuilder(
+      stream: UserService.instance.userChange,
+      builder: (_, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return SizedBox.shrink();
+        if (snapshot.hasError) return Text(snapshot.error.toString());
+
+        return builder(snapshot.data as UserModel);
+      },
+    );
   }
 }

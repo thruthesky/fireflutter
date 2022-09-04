@@ -28,7 +28,8 @@ class UserModel {
 
   /// 주의: 문서가 존재하는지 하지 않는지는 확인을 위해서는 반드시, fromSnapshot() 통해서 모델링을 해야 한다.
   /// 만약, fromData() 를 통해서 속성 설정을 하면, [exists] 는 알수 없는 상태인 null 이 된다.
-  /// 주의: exists 가 null 또는 false 라도, uid 는 설정된다.
+  /// 주의: fromSnapshot() 이나 fromData() 를 통해서 호출되면, exists 가 null 또는 false 라도, uid 는 설정된다.
+  ///   그러나, 그냥 UserModel() 로 객체가 생성되면, uid 는 empty string 이 된다.
   bool? exists;
   bool get ready => profileError == '';
 

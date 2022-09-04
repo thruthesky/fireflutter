@@ -45,7 +45,7 @@ class _JobSeekerProfileFormState extends State<JobSeekerProfileForm> {
               children: [
                 Text('First Name', style: labelStyle),
                 SizedBox(height: 5),
-                Text('${UserService.instance.data?.firstName}'),
+                Text('${UserService.instance.user.firstName}'),
               ],
             ),
             SizedBox(width: 16),
@@ -61,7 +61,7 @@ class _JobSeekerProfileFormState extends State<JobSeekerProfileForm> {
               children: [
                 Text('Last Name', style: labelStyle),
                 SizedBox(height: 5),
-                Text('${UserService.instance.data?.lastName}'),
+                Text('${UserService.instance.user.lastName}'),
               ],
             ),
           ],
@@ -248,9 +248,9 @@ class _JobSeekerProfileFormState extends State<JobSeekerProfileForm> {
       isSubmitted = true;
       loading = true;
     });
-    if (UserService.instance.data!.profileError.isNotEmpty) {
+    if (UserService.instance.user.profileError.isNotEmpty) {
       setState(() => loading = false);
-      throw UserService.instance.data!.profileError;
+      throw UserService.instance.user.profileError;
     }
 
     if (!_formKey.currentState!.validate()) {

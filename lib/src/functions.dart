@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
@@ -104,7 +105,8 @@ bounce(
 /// 특정 조건이 만족 될 때까지 기다린다. 기본적으로 50 ms 간격으로 100 번을 기다린다.
 /// Unit test 흘 할 때, 자주 사용되며, 특히 사용자 가입 후, `/users/<uid>` 등의 문서가 생성되기까지 기다릴 때 사용된다.
 Future<int> waitUntil(bool test(),
-    {final int maxIterations: 100, final Duration step: const Duration(milliseconds: 50)}) async {
+    {final int maxIterations: 100,
+    final Duration step: const Duration(milliseconds: 50)}) async {
   return waitFor(test: test, maxIterations: maxIterations, step: step);
   // int iterations = 0;
   // for (; iterations < maxIterations; iterations++) {
@@ -138,7 +140,8 @@ Future<int> waitFor({
     }
   }
   if (iterations >= maxIterations) {
-    throw TimeoutException("Condition not reached within ${iterations * step.inMilliseconds}ms");
+    throw TimeoutException(
+        "Condition not reached within ${iterations * step.inMilliseconds}ms");
   }
   return iterations;
 }
@@ -223,8 +226,10 @@ bool isImageUrl(String url) {
   if (t.endsWith('.gif')) return true;
 
   if (t.startsWith('http') &&
-      (t.contains('.jpg') || t.contains('.jpeg') || t.contains('.png') || t.contains('.gif')))
-    return true;
+      (t.contains('.jpg') ||
+          t.contains('.jpeg') ||
+          t.contains('.png') ||
+          t.contains('.gif'))) return true;
   return false;
 }
 
@@ -241,12 +246,16 @@ String shortDateTime(int createdAt) {
   final today = DateTime.now();
   bool re;
 
-  if (date.year == today.year && date.month == today.month && date.day == today.day) {
+  if (date.year == today.year &&
+      date.month == today.month &&
+      date.day == today.day) {
     re = true;
   } else {
     re = false;
   }
-  return re ? DateFormat.jm().format(date).toLowerCase() : DateFormat.yMd().format(date);
+  return re
+      ? DateFormat.jm().format(date).toLowerCase()
+      : DateFormat.yMd().format(date);
 }
 
 /// Alias of `shortDateTime()`.
@@ -313,9 +322,9 @@ int clientTimestamp() {
   return (DateTime.now().millisecondsSinceEpoch / 1000).round();
 }
 
-Future ffAlert<T>(BuildContext context, String title, String content) {
+Future ffAlert<T>(String title, String content) {
   return showDialog<T>(
-    context: context,
+    context: FireFlutter.instance.context,
     builder: (_) => AlertDialog(
       title: Text(title),
       content: Padding(
@@ -324,7 +333,7 @@ Future ffAlert<T>(BuildContext context, String title, String content) {
       ),
       actions: [
         ElevatedButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.of(FireFlutter.instance.context).pop(),
           child: Text('Close'),
         ),
       ],
@@ -332,9 +341,9 @@ Future ffAlert<T>(BuildContext context, String title, String content) {
   );
 }
 
-Future ffConfirm<T>(BuildContext context, String title, String content) {
+Future ffConfirm<T>(String title, String content) {
   return showDialog<T>(
-    context: context,
+    context: FireFlutter.instance.context,
     builder: (_) => AlertDialog(
       title: Text(title),
       content: Padding(
@@ -343,11 +352,12 @@ Future ffConfirm<T>(BuildContext context, String title, String content) {
       ),
       actions: [
         ElevatedButton(
-          onPressed: () => Navigator.of(context).pop(true),
+          onPressed: () => Navigator.of(FireFlutter.instance.context).pop(true),
           child: Text('Yes'),
         ),
         ElevatedButton(
-          onPressed: () => Navigator.of(context).pop(false),
+          onPressed: () =>
+              Navigator.of(FireFlutter.instance.context).pop(false),
           child: Text('No'),
         ),
       ],
@@ -355,8 +365,8 @@ Future ffConfirm<T>(BuildContext context, String title, String content) {
   );
 }
 
-Future ffError<T>(BuildContext context, dynamic content, {String title = 'Error'}) {
-  return ffAlert<T>(context, title, content.toString());
+Future ffError<T>(dynamic content, {String title = 'Error'}) {
+  return ffAlert<T>(title, content.toString());
 }
 
 /// Set data in local storage (SharedPreferences)

@@ -254,6 +254,7 @@ class PostModel with ForumMixin implements Article {
     return Future.value();
     if (signedIn == false) throw ERROR_SIGN_IN_FIRST_FOR_POST_CREATE;
 
+    /// 여기서 부터, 글쓰기 조건을
     /// TODO 프로필이 준비되었는지 확인을 하기 위해서는 사용자 문서를 미리 읽어서, 보관해야 한다. 그렇다면 상태관리가 필요하다.
     /// TODO EasyState 를 사용한다.
     // if (ready) throw Controller.of.user.profileError;

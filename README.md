@@ -89,7 +89,7 @@ erDiagram
 
 - Fireflutter 패키지를 `pubspec.yaml` 에 package 로 추가를 해도 되고, fork 하여 작업하며 수정 사항을 PR 해도 된다.
 - Fireflutter 를 앱에 연동하기 위해서는 루트 위젯에 `FireFlutter.service.init(context: ...)` 을 실행한다.
-
+  - `context` 는 각종 다이얼로그나 스낵바, Navigator.pop() 등에 사용되는 것으로 `GlobalKey<NavigatorState>()` 를 MaterialApp 에 연결한 후 그 stateContext 를 지정하거나 Get 상태 관리자를 쓴다면 `Get.context` 를 지정해도 된다.
 예제)
 ```dart
 class RootWidget extends StatelessWidget {
@@ -98,7 +98,9 @@ class RootWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FireFlutter.instance.init(context: globalKey.currentContext!); // context 연결
-    // ...
+    return MaterialApp(
+      navigatorKey: globalKey,
+    );
 ```
 
 예제) Get 상태 관리자를 쓰는 경우
@@ -121,7 +123,9 @@ class RootWidget extends StatelessWidget {
 flowchart TB;
 Start([FireFlutter 시작 또는 앱 시작]) --> AuthStateChange{로그인 했나?\nAuthStateChange}
 AuthStateChange -->|예, 사용자 로그인| CheckUserDoc{사용자 문서 존재하나?\n/user/$uid}
-CheckUserDoc -->|예, 존재함| Continue
+CheckUserDoc -->|예, 존재함| ObserveUserDoc
+ObserveUserDoc --> |이벤트발생| UserDoc[[UserDoc 위젯]]
+ObserveUserDoc[UserService.instance.user\n사용자 모델을 DB 동기화\n업데이트 시 이벤트 발생] -->|예, 존재함| Continue
 CheckUserDoc -->|아니오| CreateUserDoc[사용자 문서 생성\ncreatedAt]
 CreateUserDoc --> Continue
 AuthStateChange -->|아니오| SignInAnonymous[익명 로그인]
