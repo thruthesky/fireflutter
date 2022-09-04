@@ -273,6 +273,8 @@ class _PostFormState extends State<PostForm> {
       //       });
       //   },
       // );
+      PostModel()
+        ..create(category: category, title: title.text, content: content.text);
     } else {
       /// TODO update the post
       /// update

@@ -241,7 +241,6 @@ class PostModel with ForumMixin implements Article {
   /// ```
   ///
   /// Read readme for [hasPhoto]
-  /// TODO create a post
   Future<DocumentReference<Object?>> create({
     required String category,
     required String title,
@@ -252,11 +251,12 @@ class PostModel with ForumMixin implements Article {
     String? summary,
     Json extra = const {},
   }) {
-    return Future.value({} as dynamic);
+    return Future.value();
+    if (signedIn == false) throw ERROR_SIGN_IN_FIRST_FOR_POST_CREATE;
 
-    // if (signedIn == false) throw ERROR_SIGN_IN_FIRST;
-    // if (Controller.of.user.exists == false) throw ERROR_USER_DOCUMENT_NOT_EXISTS;
-    // if (Controller.of.user.notReady) throw Controller.of.user.profileError;
+    /// TODO 프로필이 준비되었는지 확인을 하기 위해서는 사용자 문서를 미리 읽어서, 보관해야 한다. 그렇다면 상태관리가 필요하다.
+    /// TODO EasyState 를 사용한다.
+    // if (ready) throw Controller.of.user.profileError;
 
     // final j = Jiffy();
     // int week = ((j.unix() - 345600) / 604800).floor();
@@ -280,9 +280,8 @@ class PostModel with ForumMixin implements Article {
     //   'updatedAt': FieldValue.serverTimestamp(),
     // };
     // if (documentId != null && documentId != '') {
-    //   return postCol
-    //       .doc(documentId)
-    //       .set({...createData, ...extra}).then((value) => postCol.doc(documentId));
+    //   return postCol.doc(documentId).set({...createData, ...extra}).then(
+    //       (value) => postCol.doc(documentId));
     // } else {
     //   return postCol.add({...createData, ...extra});
     // }

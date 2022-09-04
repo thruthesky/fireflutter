@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
-import 'package:jiffy/jiffy.dart';
 
 class PostService with ForumMixin {
   static PostService? _instance;
@@ -123,9 +122,6 @@ class PostService with ForumMixin {
           }
         }
       });
-      // PostService.instance.comments[widget.post.id] = comments;
-
-      // setstate() here
     });
   }
 }

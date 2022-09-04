@@ -7,7 +7,10 @@ typedef SnackbarCallback = Function(String title, String message);
 typedef VoidStringCallback = void Function(String);
 typedef VoidNullableCallback = void Function()?;
 
-const ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD = 'Please, sign in first before uploading.';
+const ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD =
+    'Please, sign in first before uploading.';
+const ERROR_SIGN_IN_FIRST_FOR_POST_CREATE =
+    'Please, sign in first before creating a post.';
 const ERROR_IMAGE_NOT_SELECTED = 'ERROR_IMAGE_NOT_SELECTED';
 
 const COMMENT_CONTENT_DELETED = "Comment is deleted.";
