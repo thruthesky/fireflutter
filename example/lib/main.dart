@@ -53,10 +53,10 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Text('User Profile', style: caption),
-            MyDoc(
-              builder: (my) =>
-                  my.signedIn ? Text(my.toString()) : Text('Please, sign-in'),
-            ),
+MyDoc(
+  builder: (my) =>
+      my.signedIn ? Text(my.toString()) : Text('Please, sign-in'),
+),
             Divider(),
             Text('Sign In', style: caption),
             Wrap(
