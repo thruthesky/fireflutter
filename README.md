@@ -13,6 +13,7 @@
   - [글](#글)
 - [Fireflutter 연동](#fireflutter-연동)
 - [사용자 로그인](#사용자-로그인)
+- [사용자 정보 보여주기](#사용자-정보-보여주기)
 - [사진(파일) 업로드](#사진파일-업로드)
   - [업로드된 사진 보여주기](#업로드된-사진-보여주기)
 - [글](#글-1)
@@ -129,23 +130,35 @@ class RootWidget extends StatelessWidget {
 flowchart TB;
 Start([앱 또는 FireFlutter 시작]) --> AuthStateChange{로그인 했나?\nAuthStateChange}
 AuthStateChange -->|아니오| SignInAnonymous[익명 로그인]
+SignInAnonymous -->UnobserveUserDoc[사용자 모델 동기화 해제\n이벤트발생]
+UnobserveUserDoc --> Continue2[계속]
+UnobserveUserDoc -.-> |이벤트발생| UserDoc
 UserUpdate([회원 정보 수정]) -.-> |동기화| ObserveUserDoc
-AuthStateChange -->|예, 로그인 했음| CheckUserDoc{사용자 문서 존재하나?\n/user/$uid}
-CheckUserDoc -->|예, 존재함| Continue
 AuthStateChange -->|예, 로그인 했음| ObserveUserDoc
+AuthStateChange -->|예, 로그인 했음| CheckUserDoc{사용자 문서 존재하나?\n/user/$uid}
 CheckUserDoc -->|아니오| CreateUserDoc[사용자 문서 생성\ncreatedAt]
-CreateUserDoc --> Continue
-SignInAnonymous --> Continue[계속]
-ObserveUserDoc[UserService.instance.user\n사용자 모델 DB 동기화\n업데이트 이벤트 발생] --> Continue
 ObserveUserDoc -.-> |이벤트발생| UserDoc[[UserDoc 위젯]]
 CreateUserDoc -.-> |동기화| ObserveUserDoc
 Logout([로그아웃]) --> AuthStateChange
+CheckUserDoc -->|예, 존재함| Continue[계속]
+CreateUserDoc --> Continue
+ObserveUserDoc[UserService.instance.user\n사용자 모델 DB 동기화 시작\n업데이트 이벤트 발생] --> Continue
 ```
 
 - 사용자가 로그인을 하지 않은 경우(또는 로그아웃을 한 경우), 자동으로 `Anonymous` 로 로그인을 한다.
 - 사용자가 로그인을 하는 경우, 또는 로그인이 되어져 있는 경우, 사용자 문서를 미리 읽어 (두번 읽지 않고) 재 활용을 해 왔는데, 심플한 코드를 위해서 미리 읽지 않는다.
   - 사용자의 정보 표현이 필요한 곳에서는 `MyDoc` 위젯을 사용한다.
   - 만약, (문서 읽기 회 수를 줄이기 위해) 사용자 문서를 미리 읽어 재 활용하고자 한다면, 클라이언트 앱에서 한다.
+
+
+# 사용자 정보 보여주기
+
+```dart
+MyDoc(
+  builder: (my) =>
+      my.signedIn ? Text(my.toString()) : Text('Please, sign-in'),
+),
+```
 
 # 사진(파일) 업로드
 
