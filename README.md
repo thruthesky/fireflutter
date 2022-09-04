@@ -39,6 +39,7 @@ erDiagram
 
 # Fireflutter 연동
 
+- `pubspec.yaml` 에 package 로 추가를 해도 되고, fork 하여 작업하며 수정 사항을 PR 해도 된다.
 - Fireflutter 를 앱에 연동하기 위해서는 루트 위젯에 `FireFlutter.service.init()` 을 실행한다.
 
 예제)
