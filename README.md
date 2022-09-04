@@ -119,17 +119,22 @@ class RootWidget extends StatelessWidget {
 
 # 사용자 로그인
 
+- 아래는 사용자 로그인(로그아웃)과 사용자 문서가 어떻게 업데이트가 되는지 흐름도이다.
+
 ```mermaid
 flowchart TB;
-Start([FireFlutter 시작 또는 앱 시작]) --> AuthStateChange{로그인 했나?\nAuthStateChange}
-AuthStateChange -->|예, 사용자 로그인| CheckUserDoc{사용자 문서 존재하나?\n/user/$uid}
-CheckUserDoc -->|예, 존재함| ObserveUserDoc
-ObserveUserDoc --> |이벤트발생| UserDoc[[UserDoc 위젯]]
-ObserveUserDoc[UserService.instance.user\n사용자 모델을 DB 동기화\n업데이트 시 이벤트 발생] -->|예, 존재함| Continue
+Start([앱 또는 FireFlutter 시작]) --> AuthStateChange{로그인 했나?\nAuthStateChange}
+AuthStateChange -->|아니오| SignInAnonymous[익명 로그인]
+UserUpdate([회원 정보 수정]) -.-> |동기화| ObserveUserDoc
+AuthStateChange -->|예, 로그인 했음| CheckUserDoc{사용자 문서 존재하나?\n/user/$uid}
+CheckUserDoc -->|예, 존재함| Continue
+AuthStateChange -->|예, 로그인 했음| ObserveUserDoc
 CheckUserDoc -->|아니오| CreateUserDoc[사용자 문서 생성\ncreatedAt]
 CreateUserDoc --> Continue
-AuthStateChange -->|아니오| SignInAnonymous[익명 로그인]
 SignInAnonymous --> Continue[계속]
+ObserveUserDoc[UserService.instance.user\n사용자 모델 DB 동기화\n업데이트 이벤트 발생] --> Continue
+ObserveUserDoc -.-> |이벤트발생| UserDoc[[UserDoc 위젯]]
+CreateUserDoc -.-> |동기화| ObserveUserDoc
 Logout([로그아웃]) --> AuthStateChange
 ```
 

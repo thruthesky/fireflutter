@@ -36,10 +36,13 @@ class FireFlutter {
         } else {
           log('---> User signed-in. email: ${firebaseUser.email}, phone: ${firebaseUser.phoneNumber}');
 
-          final userDoc = await UserService.instance.get(firebaseUser.uid);
-          if (userDoc.exists == false || userDoc.createdAt == null) {
-            userDoc.update({'createdAt': Timestamp.now()});
-          }
+          UserService.instance.get(firebaseUser.uid).then((userDoc) {
+            if (userDoc.exists == false || userDoc.createdAt == null) {
+              log('---> The user has no document. create one now');
+              userDoc.update({'createdAt': Timestamp.now()});
+            }
+          });
+
           UserService.instance.observeUserDoc();
         }
       }

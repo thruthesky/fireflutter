@@ -131,4 +131,9 @@ class UserModel {
   Future<void> update(Map<String, dynamic> data) {
     return UserService.instance.update(data);
   }
+
+  @override
+  String toString() {
+    return "UserModel(uid: $uid, firstName: $firstName)";
+  }
 }

@@ -54,6 +54,7 @@ class UserService {
     userDocumentSubscription =
         doc.snapshots().listen((DocumentSnapshot snapshot) async {
       user = UserModel.fromSnapshot(snapshot);
+      print('----> observeUserDoc $user');
       userChange.add(user);
     });
   }
