@@ -38,7 +38,8 @@ class DynamicLinkService {
   }
 
   // Get any initial links
-  Future<PendingDynamicLinkData?> get initialLink => FirebaseDynamicLinks.instance.getInitialLink();
+  Future<PendingDynamicLinkData?> get initialLink =>
+      FirebaseDynamicLinks.instance.getInitialLink();
 
   listen(Function(Uri?) callback) {
     /// Initialize dynamic link listeners
@@ -148,7 +149,8 @@ class DynamicLinkService {
 
       Uri url;
       if (short) {
-        final ShortDynamicLink shortLink = await FirebaseDynamicLinks.instance.buildShortLink(
+        final ShortDynamicLink shortLink =
+            await FirebaseDynamicLinks.instance.buildShortLink(
           parameters,
         );
         url = shortLink.shortUrl;

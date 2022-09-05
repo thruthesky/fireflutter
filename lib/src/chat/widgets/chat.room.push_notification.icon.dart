@@ -12,10 +12,12 @@ class ChatRoomPushNotificationIcon extends StatefulWidget {
   final double? size;
   final bool hideOnDisabled;
   @override
-  _ChatRoomPushNotificationIconState createState() => _ChatRoomPushNotificationIconState();
+  _ChatRoomPushNotificationIconState createState() =>
+      _ChatRoomPushNotificationIconState();
 }
 
-class _ChatRoomPushNotificationIconState extends State<ChatRoomPushNotificationIcon> {
+class _ChatRoomPushNotificationIconState
+    extends State<ChatRoomPushNotificationIcon> {
   /// TODO global controller
   // Controller get _ => Controller.of;
   bool hasDisabledSubscription() {
@@ -30,12 +32,15 @@ class _ChatRoomPushNotificationIconState extends State<ChatRoomPushNotificationI
   @override
   Widget build(BuildContext context) {
     if (widget.uid == '') return SizedBox.shrink();
-    if (widget.hideOnDisabled && hasDisabledSubscription()) return SizedBox.shrink();
+    if (widget.hideOnDisabled && hasDisabledSubscription())
+      return SizedBox.shrink();
 
     return GestureDetector(
       child: loading == false
           ? Icon(
-              hasDisabledSubscription() ? Icons.notifications_off : Icons.notifications,
+              hasDisabledSubscription()
+                  ? Icons.notifications_off
+                  : Icons.notifications,
               color: Colors.grey.shade700,
               size: widget.size,
             )
@@ -78,7 +83,9 @@ class _ChatRoomPushNotificationIconState extends State<ChatRoomPushNotificationI
       setState(() {
         loading = false;
       });
-    String msg = hasDisabledSubscription() ? 'Unsubscribed success' : 'Subscribed success';
+    String msg = hasDisabledSubscription()
+        ? 'Unsubscribed success'
+        : 'Subscribed success';
     showDialog(
       context: context,
       builder: (c) => AlertDialog(

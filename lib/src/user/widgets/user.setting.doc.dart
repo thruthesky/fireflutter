@@ -25,7 +25,8 @@ class _UserSettingDocState extends State<UserSettingDoc> {
   /// This event may be posted multiple times on user sign-in.
   /// It might be called muliple time on the app life cycle whenever user sign-out and sign-in.
   ///
-  BehaviorSubject<UserSettingsModel?> settingChange = BehaviorSubject.seeded(null);
+  BehaviorSubject<UserSettingsModel?> settingChange =
+      BehaviorSubject.seeded(null);
 
   @override
   void initState() {

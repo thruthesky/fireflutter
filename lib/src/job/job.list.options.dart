@@ -138,11 +138,13 @@ class _JobListOptionsState extends State<JobListOptions> {
                         value: options.sggNm,
                         items: [
                           DropdownMenuItem(
-                            child: Text('Select city/county/gu', style: optionStyle),
+                            child: Text('Select city/county/gu',
+                                style: optionStyle),
                             value: '',
                           ),
                           for (final name
-                              in Job.areas[options.siNm]!..sort((a, b) => a.compareTo(b)))
+                              in Job.areas[options.siNm]!
+                                ..sort((a, b) => a.compareTo(b)))
                             DropdownMenuItem(
                               child: Text(name, style: optionStyle),
                               value: name,
