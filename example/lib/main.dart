@@ -78,11 +78,11 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
 
       ///
       onForegroundMessage: (RemoteMessage message) {
-        print('Got a message whilst in the foreground!');
-        print('Message data: ${message.data}');
+        debugPrint('Got a message whilst in the foreground!');
+        debugPrint('Message data: ${message.data}');
 
         if (message.notification != null) {
-          print(
+          debugPrint(
               'Message also contained a notification: ${message.notification}');
           ffAlert(
             message.notification?.title ?? 'No title',
@@ -102,10 +102,10 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
         log(message.toString());
       },
       onNotificationPermissionDenied: () {
-        // print('onNotificationPermissionDenied()');
+        // debugPrint('onNotificationPermissionDenied()');
       },
       onNotificationPermissionNotDetermined: () {
-        // print('onNotificationPermissionNotDetermined()');
+        // debugPrint('onNotificationPermissionNotDetermined()');
       },
     );
   }
@@ -184,10 +184,10 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
                         FileUploadButton(
                           type: UploadType.userProfilePhoto,
                           onUploaded: (url) {
-                            print('uploaded url: $url');
+                            debugPrint('uploaded url: $url');
                           },
                           onProgress: (p) {
-                            print('progress: $p');
+                            debugPrint('progress: $p');
                           },
                           child: Stack(
                             children: [
