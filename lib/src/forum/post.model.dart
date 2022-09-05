@@ -253,7 +253,7 @@ class PostModel with ForumMixin implements Article {
   /// ```
   ///
   /// Read readme for [hasPhoto]
-  Future<DocumentReference<Object?>> create({
+  Future<PostModel> create({
     required String category,
     required String title,
     required String content,
@@ -262,7 +262,7 @@ class PostModel with ForumMixin implements Article {
     List<String>? files,
     String? summary,
     Json extra = const {},
-  }) {
+  }) async {
     if (signedIn == false) throw ERROR_SIGN_IN_FIRST_FOR_POST_CREATE;
     if (UserService.instance.user.ready == false) {
       throw UserService.instance.user.profileError;
@@ -287,27 +287,29 @@ class PostModel with ForumMixin implements Article {
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
     };
+    DocumentReference<Object?> res;
     if (documentId != null && documentId != '') {
-      return postCol.doc(documentId).set({...createData, ...extra}).then(
+      res = await postCol.doc(documentId).set({...createData, ...extra}).then(
           (value) => postCol.doc(documentId));
     } else {
-      return postCol.add({...createData, ...extra});
+      res = await postCol.add({...createData, ...extra});
     }
+    return PostModel.fromJson((await res.get()).data() as Json);
   }
 
   /// TODO update post
-  Future<void> update({
+  Future<PostModel> update({
     required String title,
     required String content,
     List<String>? files,
     String? summary,
     Json extra = const {},
-  }) {
+  }) async {
     if (deleted) throw ERROR_ALREADY_DELETED;
     if (id.isEmpty) throw 'Post id empty on update';
     if (uid != UserService.instance.uid) throw 'Not your post.';
 
-    return postDoc(id).update({
+    await postDoc(id).update({
       ...{
         'title': title,
         'content': content,
@@ -318,6 +320,7 @@ class PostModel with ForumMixin implements Article {
       },
       ...extra
     });
+    return PostModel.fromJson((await postDoc(id).get()).data() as Json);
   }
 
   Future<PostModel> get(String postId) async {
@@ -326,9 +329,17 @@ class PostModel with ForumMixin implements Article {
   }
 
   /// See readme.
-  Future<String> delete() async {
-    /// TODO delete post
-    return Future.value('');
+  Future<void> delete() async {
+    if (id.isEmpty) throw 'Post id empty on delete';
+    if (uid != UserService.instance.uid) throw 'Not your post.';
+
+    /// TODO delete post images
+    ///
+    if (noOfComments < 1) {
+      return postDoc(id).delete();
+    } else {
+      return postDoc(id).update({'deleted': true});
+    }
   }
 
   /// Increases no of the post read.

@@ -131,8 +131,8 @@ mixin ForumMixin {
                     category:
                         (post?.id == null || post?.id == "") ? category : '',
                     subcategory: post == null ? subcategory : '',
-                    onCreate: (id) => Navigator.of(context).pop(id),
-                    onUpdate: (id) => Navigator.of(context).pop(id),
+                    onCreate: (post) => Navigator.of(context).pop(post),
+                    onUpdate: (post) => Navigator.of(context).pop(post),
                     onCancel: Navigator.of(context).pop,
                   ),
                 ],

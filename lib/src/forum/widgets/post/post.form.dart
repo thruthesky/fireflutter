@@ -281,7 +281,7 @@ class _PostFormState extends State<PostForm> {
           content: content.text,
         );
         if (mounted) setState(() => inSubmit = false);
-        // widget.onCreate(PostModel.fromJson(res));
+        widget.onCreate(res);
       } catch (e) {
         ffError(e);
         rethrow;
@@ -309,7 +309,10 @@ class _PostFormState extends State<PostForm> {
       //   },
       // );\
       try {
-        await widget.post!.update(title: title.text, content: content.text);
+        final res =
+            await widget.post!.update(title: title.text, content: content.text);
+        if (mounted) setState(() => inSubmit = false);
+        widget.onUpdate(res);
       } catch (e) {
         ffError(e);
       }
