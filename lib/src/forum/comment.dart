@@ -214,7 +214,7 @@ class CommentModel with ForumMixin implements Article {
     };
 
     await commentCol.add(createData);
-    return postDoc(postId).update({'noOfComments': 1});
+    return postDoc(postId).update({'noOfComments': FieldValue.increment(1)});
   }
 
   /// Update a comment.
@@ -235,6 +235,10 @@ class CommentModel with ForumMixin implements Article {
   Future<void> delete() async {
     if (id.isEmpty) throw 'Id is empty on comment delete.';
     if (uid != UserService.instance.uid) throw 'Not your comment.';
+
+    /// TODO check if comment has child
+    /// if it has, only mark as deleted.
+    /// if it does not, delete it completely.
 
     /// Delete files.
     if (files.isNotEmpty) files.forEach((url) => Storage.delete(url));
