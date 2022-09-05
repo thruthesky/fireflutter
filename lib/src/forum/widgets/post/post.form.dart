@@ -248,76 +248,28 @@ class _PostFormState extends State<PostForm> {
     }
     setState(() => inSubmit = true);
 
-    if (isCreate) {
-      /// TODO: create a post
-      // return PostApi.instance
-      //     .create(
-      //   documentId: documentId.text,
-      //   category: category != '' ? category : (chooseCategory ?? ''),
-      //   subcategory: widget.subcategory,
-      //   title: title.text,
-      //   content: content.text,
-      //   files: files,
-      // )
-      //     .then((post) {
-      //   widget.onCreate(post);
-      //   return post;
-      // }).onError((e, stackTrace) {
-      //   ffAlert(context, 'ERROR', 'Failed to create a post. $e');
-      //   throw e.toString();
-      // }).whenComplete(
-      //   () {
-      //     if (mounted)
-      //       setState(() {
-      //         inSubmit = false;
-      //       });
-      //   },
-      // );
-
-      try {
-        final res = await PostModel().create(
+    try {
+      if (isCreate) {
+        final post = await PostModel().create(
           category: category,
           title: title.text,
           content: content.text,
+          files: files,
+          documentId: documentId.text,
         );
         if (mounted) setState(() => inSubmit = false);
-        widget.onCreate(res);
-      } catch (e) {
-        ffError(e);
-        rethrow;
-      }
-    } else {
-      /// TODO update the post
-      /// update
-      // return PostApi.instance
-      //     .update(
-      //   id: widget.post!.id,
-      //   title: title.text,
-      //   content: content.text,
-      //   files: files,
-      //   summary: summary.text,
-      // )
-      //     .then((post) {
-      //   widget.onUpdate(post);
-      //   return post;
-      // }).whenComplete(
-      //   () {
-      //     if (mounted)
-      //       setState(() {
-      //         inSubmit = false;
-      //       });
-      //   },
-      // );\
-      try {
-        final res =
-            await widget.post!.update(title: title.text, content: content.text);
+        widget.onCreate(post);
+        return post;
+      } else {
+        final post = await widget.post!
+            .update(title: title.text, content: content.text, files: files);
         if (mounted) setState(() => inSubmit = false);
-        widget.onUpdate(res);
-      } catch (e) {
-        ffError(e);
+        widget.onUpdate(post);
+        return post;
       }
+    } catch (e) {
+      ffError(e);
+      rethrow;
     }
-
-    return Future.value({} as PostModel);
   }
 }

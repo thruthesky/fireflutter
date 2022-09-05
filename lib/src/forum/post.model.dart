@@ -85,6 +85,10 @@ class PostModel with ForumMixin implements Article {
   int day;
   int week;
 
+  /// [createdAt] must be null due to its local cache.
+  /// When the post is created, there will be two `create` events.
+  /// One from local cache. The otehr from live server.
+  /// When app display post data with local cache(that has null on createAt), it may produce null error.
   Timestamp? createdAt;
   Timestamp? updatedAt;
 
@@ -93,31 +97,31 @@ class PostModel with ForumMixin implements Article {
 
   List<CommentModel> comments = [];
 
-  @Deprecated("Create post with PostApi.")
-  factory PostModel.fromDoc(DocumentSnapshot doc) {
+  factory PostModel.fromSnapshot(DocumentSnapshot doc) {
     return PostModel.fromJson(doc.data() as Json, doc.id);
   }
 
   /// Get document data of map and convert it into post model
   ///
   /// If post is created via http, then it will have [id] inside `data`.
-  factory PostModel.fromJson(Json data, [String? id]) {
+  factory PostModel.fromJson(Json data, String id) {
     String content = data['content'] ?? '';
 
     /// Check if the content has any html tag.
     bool html = _isHtml(content);
 
-    // TODO: this might be unnecessary after all existing post's timestamp is converted on the backend.
-    Timestamp _createdAt = data['createdAt'] is int
+    /// In old data format, [createdAt] and [updatedAt] are int of unix timestamp.
+    /// Convert those into Firestore timestamp.
+    Timestamp? _createdAt = data['createdAt'] is int
         ? Timestamp.fromMillisecondsSinceEpoch(data['createdAt'] * 1000)
         : data['createdAt'];
 
-    Timestamp _updatedAt = data['updatedAt'] is int
+    Timestamp? _updatedAt = data['updatedAt'] is int
         ? Timestamp.fromMillisecondsSinceEpoch(data['updatedAt'] * 1000)
         : data['updatedAt'];
 
     final post = PostModel(
-      id: id ?? data['id'],
+      id: id,
       category: data['category'] ?? '',
       subcategory: data['subcategory'] ?? '',
       title: data['title'] ?? '',
@@ -157,25 +161,6 @@ class PostModel with ForumMixin implements Article {
     // PostService.instance.posts[post.id] = post;
 
     return post;
-  }
-
-  /// Get indexed document data from meilisearch of map and convert it into post model
-  @Deprecated('Use PostModel.fromTypesense')
-  factory PostModel.fromMeili(Json data, String id) {
-    return PostModel(
-      id: id,
-      category: data['category'] ?? '',
-      subcategory: data['subcategory'] ?? '',
-      title: data['title'] ?? '',
-      content: data['content'] ?? '',
-      uid: data['uid'] ?? '',
-      like: data['like'] ?? 0,
-      dislike: data['dislike'] ?? 0,
-      deleted: data.containsKey('deleted') ? data['deleted'] == 'Y' : false,
-      createdAt: data['createdAt'] ?? 0,
-      updatedAt: data['updatedAt'] ?? 0,
-      data: data,
-    );
   }
 
   /// Get indexed document data from typesense of map and convert it into post model
@@ -253,6 +238,8 @@ class PostModel with ForumMixin implements Article {
   /// ```
   ///
   /// Read readme for [hasPhoto]
+  ///
+  /// It returns [PostModel] of newly create post.
   Future<PostModel> create({
     required String category,
     required String title,
@@ -260,7 +247,6 @@ class PostModel with ForumMixin implements Article {
     String? subcategory,
     String? documentId,
     List<String>? files,
-    String? summary,
     Json extra = const {},
   }) async {
     if (signedIn == false) throw ERROR_SIGN_IN_FIRST_FOR_POST_CREATE;
@@ -275,7 +261,6 @@ class PostModel with ForumMixin implements Article {
       if (subcategory != null) 'subcategory': subcategory,
       'title': title,
       'content': content,
-      if (summary != null && summary != '') 'summary': summary,
       if (files != null) 'files': files,
       'uid': UserService.instance.uid,
       'hasPhoto': (files == null || files.length == 0) ? false : true,
@@ -289,20 +274,20 @@ class PostModel with ForumMixin implements Article {
     };
     DocumentReference<Object?> res;
     if (documentId != null && documentId != '') {
-      res = await postCol.doc(documentId).set({...createData, ...extra}).then(
-          (value) => postCol.doc(documentId));
+      await postCol.doc(documentId).set({...createData, ...extra});
+      res = postCol.doc(documentId);
     } else {
       res = await postCol.add({...createData, ...extra});
     }
-    return PostModel.fromJson((await res.get()).data() as Json);
+
+    return PostModel.fromSnapshot(await res.get());
   }
 
-  /// TODO update post
+  ///
   Future<PostModel> update({
     required String title,
     required String content,
     List<String>? files,
-    String? summary,
     Json extra = const {},
   }) async {
     if (deleted) throw ERROR_ALREADY_DELETED;
@@ -310,17 +295,14 @@ class PostModel with ForumMixin implements Article {
     if (uid != UserService.instance.uid) throw 'Not your post.';
 
     await postDoc(id).update({
-      ...{
-        'title': title,
-        'content': content,
-        if (files != null) 'files': files,
-        if (summary != null) 'summary': summary,
-        'hasPhoto': (files == null || files.length == 0) ? false : true,
-        'updatedAt': FieldValue.serverTimestamp(),
-      },
+      'title': title,
+      'content': content,
+      if (files != null) 'files': files,
+      'hasPhoto': (files == null || files.length == 0) ? false : true,
+      'updatedAt': FieldValue.serverTimestamp(),
       ...extra
     });
-    return PostModel.fromJson((await postDoc(id).get()).data() as Json);
+    return PostModel.fromSnapshot(await postDoc(id).get());
   }
 
   Future<PostModel> get(String postId) async {

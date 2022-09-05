@@ -1,5 +1,6 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, curly_braces_in_flow_control_structures
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:example/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -34,7 +35,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with ForumMixin {
   @override
   void initState() {
     super.initState();
@@ -288,23 +289,81 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Divider(),
               Text('Post List', style: caption),
-              Wrap(
-                spacing: 4,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text('QnA'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Discussion'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Buy & Sell'),
-                  ),
-                ],
-              )
+              Builder(
+                builder: (context) {
+                  String? postListCategory;
+                  return StatefulBuilder(
+                    builder: (ctx, statefulBuilderSetState) {
+                      Query postListQuery =
+                          FirebaseFirestore.instance.collection('posts');
+                      if (postListCategory != null) {
+                        postListQuery = postListQuery.where('category',
+                            isEqualTo: postListCategory);
+                      }
+
+                      postListQuery = postListQuery
+                          .limit(5)
+                          .orderBy('createdAt', descending: true);
+
+                      return Column(
+                        children: [
+                          Wrap(
+                            spacing: 4,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  statefulBuilderSetState(() {
+                                    postListCategory = 'qna';
+                                  });
+                                },
+                                child: Text('QnA'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  statefulBuilderSetState(() {
+                                    postListCategory = 'discussion';
+                                  });
+                                },
+                                child: Text('Discussion'),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 200,
+                            child: StreamBuilder<QuerySnapshot>(
+                              stream: postListQuery.snapshots(),
+                              builder: (_, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting)
+                                  return CircularProgressIndicator.adaptive();
+                                if (snapshot.hasError)
+                                  return Text(snapshot.error.toString());
+                                final querySnapshot = snapshot.data!;
+                                return ListView(
+                                  children: querySnapshot.docs.map(
+                                    (e) {
+                                      final p = PostModel.fromSnapshot(e);
+                                      return ListTile(
+                                        contentPadding: EdgeInsets.all(0),
+                                        title:
+                                            Text("${p.category} - ${p.title}"),
+                                        onTap: () {
+                                          onPostEdit(post: p);
+                                        },
+                                      );
+                                    },
+                                  ).toList(),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
+              SizedBox(height: 64),
             ],
           ),
         ),
