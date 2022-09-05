@@ -149,10 +149,14 @@ class _PostFormState extends State<PostForm> {
               type: UploadType.post,
               onUploaded: (url) {
                 files = [...files, url];
-                if (mounted)
-                  setState(() {
-                    uploadProgress = 0;
-                  });
+                if (mounted) setState(() => uploadProgress = 0);
+                if (isUpdate) {
+                  widget.post!.update(
+                    title: title.text,
+                    content: content.text,
+                    files: files,
+                  );
+                }
               },
               onProgress: (progress) {
                 if (mounted) setState(() => uploadProgress = progress);
@@ -200,12 +204,13 @@ class _PostFormState extends State<PostForm> {
             /// In result, there will be a broken image.
             /// To prevent this senario, when an image is deleted, the app will update the image list immediately.
             if (isUpdate == false) return;
-            // TODO delete image from the post
-            // FunctionsApi.instance.request(
-            //   FunctionName.postUpdate,
-            //   data: {'id': widget.post!.id, 'files': files},
-            //   addAuth: true,
-            // );
+            if (widget.post != null) {
+              widget.post!.update(
+                title: title.text,
+                content: content.text,
+                files: files,
+              );
+            }
           },
         ),
         // if (UserService.instance.user.isAdmin)
@@ -261,8 +266,11 @@ class _PostFormState extends State<PostForm> {
         widget.onCreate(post);
         return post;
       } else {
-        final post = await widget.post!
-            .update(title: title.text, content: content.text, files: files);
+        final post = await widget.post!.update(
+          title: title.text,
+          content: content.text,
+          files: files,
+        );
         if (mounted) setState(() => inSubmit = false);
         widget.onUpdate(post);
         return post;

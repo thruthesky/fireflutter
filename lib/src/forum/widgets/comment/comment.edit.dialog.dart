@@ -68,6 +68,12 @@ class _CommentEditDialogState extends State<CommentEditDialog> {
                   files = [...files, url];
                   uploadProgress = 0;
                   if (mounted) setState(() {});
+                  if (widget.comment != null) {
+                    widget.comment!.update(
+                      content: content.text,
+                      files: files,
+                    );
+                  }
                 },
                 onProgress: (progress) {
                   if (mounted) setState(() => uploadProgress = progress);
@@ -107,17 +113,11 @@ class _CommentEditDialogState extends State<CommentEditDialog> {
               onDeleted: (deletedFileUrl) {
                 if (widget.comment == null) return;
 
-                /// TODO delete image from the comment.
-
-                /// On post (or comment) edit screen, a user may press back button after deleting an image (without saving the post or comment),
-                /// Then, the image is deleted but the post(or comment) still has the image and the app is trying to show.
-                /// In result, there will be a broken image.
-                /// To prevent this senario, when an image is deleted, the app will update the image list immediately.
-                // FunctionsApi.instance.request(
-                //   FunctionName.commentUpdate,
-                //   data: {'id': widget.comment!.id, 'files': files},
-                //   addAuth: true,
-                // );
+                /// Auto update comment when files are updated.
+                widget.comment!.update(
+                  content: content.text,
+                  files: files,
+                );
               },
             ),
           ],
