@@ -253,8 +253,10 @@ class PostModel with ForumMixin implements Article {
     Json extra = const {},
   }) {
     if (signedIn == false) throw ERROR_SIGN_IN_FIRST_FOR_POST_CREATE;
-    if (UserService.instance.user.ready == false)
+    if (UserService.instance.user.ready == false) {
       throw UserService.instance.user.profileError;
+    }
+    if (category.isEmpty) throw 'Category is empty on post create.';
 
     final j = Jiffy();
     final createData = {

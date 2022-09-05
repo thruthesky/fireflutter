@@ -447,7 +447,7 @@ class _JobEditFormState extends State<JobEditForm> {
                   ),
                 ],
               ),
-              type: 'post',
+              type: UploadType.post,
               onUploaded: (url) {
                 job.files = [...job.files, url];
                 if (mounted)

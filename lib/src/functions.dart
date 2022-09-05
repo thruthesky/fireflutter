@@ -322,8 +322,15 @@ int clientTimestamp() {
   return (DateTime.now().millisecondsSinceEpoch / 1000).round();
 }
 
-Future ffAlert<T>(String title, String content) {
-  return showDialog<T>(
+/// Show alert box
+///
+/// Returns `true` if user tapped on `Close`.
+/// Returns `null` if user close the dialog.
+Future<bool?> ffAlert(String title, String content) {
+  if (FireFlutter.instance.alert != null) {
+    return FireFlutter.instance.alert!(title, content);
+  }
+  return showDialog(
     context: FireFlutter.instance.context,
     builder: (_) => AlertDialog(
       title: Text(title),
@@ -333,7 +340,7 @@ Future ffAlert<T>(String title, String content) {
       ),
       actions: [
         ElevatedButton(
-          onPressed: () => Navigator.of(FireFlutter.instance.context).pop(),
+          onPressed: () => Navigator.of(FireFlutter.instance.context).pop(true),
           child: Text('Close'),
         ),
       ],
@@ -341,8 +348,11 @@ Future ffAlert<T>(String title, String content) {
   );
 }
 
-Future ffConfirm<T>(String title, String content) {
-  return showDialog<T>(
+Future<bool?> ffConfirm(String title, String content) {
+  if (FireFlutter.instance.confirm != null) {
+    return FireFlutter.instance.confirm!(title, content);
+  }
+  return showDialog(
     context: FireFlutter.instance.context,
     builder: (_) => AlertDialog(
       title: Text(title),
@@ -365,8 +375,28 @@ Future ffConfirm<T>(String title, String content) {
   );
 }
 
-Future ffError<T>(dynamic content, {String title = 'Error'}) {
-  return ffAlert<T>(title, content.toString());
+/// Display error on screen
+///
+/// Note that this is only for display error message.
+/// There is no stacktrace, so it cannot record(or log) error information.
+Future ffError(dynamic message) {
+  if (FireFlutter.instance.error != null) {
+    return FireFlutter.instance.error!(message.toString());
+  }
+  return ffAlert('ERROR', message.toString());
+}
+
+Future ffSnackbar({String? title, String? message, Function? onTap}) async {
+  if (FireFlutter.instance.snackbar != null) {
+    return FireFlutter.instance.snackbar!(
+      title,
+      message,
+    );
+  }
+  final re = await ffAlert(title ?? 'Snackbar', message ?? 'Message');
+  if (re == true) {
+    if (onTap != null) onTap();
+  }
 }
 
 /// Set data in local storage (SharedPreferences)

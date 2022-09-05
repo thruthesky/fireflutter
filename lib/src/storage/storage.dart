@@ -28,7 +28,7 @@ class Storage {
     required ImageSource source,
     int quality = 90,
     Function(double)? onProgress,
-    required String type,
+    required UploadType type,
   }) async {
     if (UserService.instance.notSignedIn)
       throw ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD;
@@ -65,7 +65,7 @@ class Storage {
   static Future<String> upload({
     required String basename,
     required Uint8List file,
-    required String type,
+    required UploadType type,
     Function(double)? onProgress,
   }) async {
     if (UserService.instance.notSignedIn)
@@ -87,7 +87,7 @@ class Storage {
       SettableMetadata(contentType: lookupMimeType(filename), customMetadata: {
         'basename': basename,
         'uid': UserService.instance.uid!,
-        'type': type,
+        'type': type.name,
       }),
     );
 
@@ -103,7 +103,16 @@ class Storage {
 
     /// Wait for upload to finish.
     await uploadTask.whenComplete(() => _sub?.cancel());
-    return ref.getDownloadURL();
+
+    final url = await ref.getDownloadURL();
+
+    /// On upload success, do extra work for the type
+    ///
+    if (type == UploadType.userProfilePhoto) {
+      UserService.instance.update({'photoUrl': url});
+    }
+
+    return url;
   }
 
   /// Returns true if the file exists on storage. Or false.
@@ -138,7 +147,9 @@ class Storage {
   ///
   /// If it throws [firestore_storage/unauthorized], then the user may try to delete file that does not belong him.
   /// This may happens in testing or putting url(photoUrl) of other user's photo.
-  static Future<void> delete(String url) async {
+  ///
+  ///
+  static Future<void> delete(String url, {UploadType? type}) async {
     // final String thumbnailUrl = getThumbnailUrl(url);
 
     if (isFirebaseStorageUrl(url) == false) return;
@@ -155,6 +166,9 @@ class Storage {
             ref(getThumbnailUrl(url)).delete(),
         ],
       );
+      if (type == UploadType.userProfilePhoto) {
+        UserService.instance.user.update({'photoUrl': ''});
+      }
     } on FirebaseException catch (e) {
       // debugPrint('Exception happened on file delete; $e');
       if (e.code == 'object-not-found') {

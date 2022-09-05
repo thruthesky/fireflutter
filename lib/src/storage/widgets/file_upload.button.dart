@@ -15,7 +15,7 @@ class FileUploadButton extends StatelessWidget {
   }) : super(key: key);
 
   final Widget? child;
-  final String type;
+  final UploadType type;
   final Function(String) onUploaded;
   final Function(double) onProgress;
 

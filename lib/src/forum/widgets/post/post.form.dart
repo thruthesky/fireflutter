@@ -146,7 +146,7 @@ class _PostFormState extends State<PostForm> {
                 Icons.camera_alt,
                 size: 42,
               ),
-              type: 'post',
+              type: UploadType.post,
               onUploaded: (url) {
                 files = [...files, url];
                 if (mounted)

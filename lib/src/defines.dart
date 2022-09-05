@@ -1,11 +1,19 @@
 typedef Json = Map<String, dynamic>;
 
-typedef ErrorCallback = Future<void> Function(dynamic e, StackTrace stackTrace);
-typedef AlertCallback = Future<void> Function(String title, String content);
-typedef ConfirmCallback = Future<bool> Function(String title, String content);
-typedef SnackbarCallback = Function(String title, String message);
+typedef ErrorCallback = Future Function(dynamic message);
+typedef AlertCallback = Future<bool?> Function(String title, String content);
+typedef ConfirmCallback = Future<bool?> Function(String title, String content);
+typedef SnackbarCallback = Function(
+    {String? title, String? message, Function? onTap});
 typedef VoidStringCallback = void Function(String);
 typedef VoidNullableCallback = void Function()?;
+
+enum UploadType {
+  userProfilePhoto,
+  user,
+  post,
+  comment,
+}
 
 const ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD =
     'Please, sign in first before uploading.';
@@ -22,5 +30,5 @@ const ERROR_NO_EMAIL = 'Please, input email address.';
 const ERROR_MALFORMED_EMAIL = 'Please, input correct email address.';
 const ERROR_NO_FIRST_NAME = 'Please, input your first name.';
 const ERROR_NO_LAST_NAME = 'Please, input your last name.';
-const ERROR_NO_GENER = 'Please, select your birthday.';
+const ERROR_NO_GENER = 'Please, select your gender.';
 const ERROR_NO_BIRTHDAY = 'Please, select your birthday.';

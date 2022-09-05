@@ -63,7 +63,7 @@ class _CommentEditDialogState extends State<CommentEditDialog> {
                   Icons.camera_alt,
                   size: 28,
                 ),
-                type: 'comment',
+                type: UploadType.comment,
                 onUploaded: (url) {
                   files = [...files, url];
                   uploadProgress = 0;

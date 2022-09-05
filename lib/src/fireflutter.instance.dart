@@ -9,10 +9,10 @@ class FireFlutter {
   static FireFlutter get instance => _instance ?? (_instance = FireFlutter());
   static FireFlutter? _instance;
 
-  late ErrorCallback error;
-  late AlertCallback alert;
-  late ConfirmCallback confirm;
-  late dynamic toast;
+  ErrorCallback? error;
+  AlertCallback? alert;
+  ConfirmCallback? confirm;
+  dynamic snackbar;
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -52,8 +52,18 @@ class FireFlutter {
   /// alert, confirm, error, toast 등을 기본 것을 사용하고, 별도로 디자인하고 싶다면, 여기서 callback 지정을 할 수 있다.
   /// 이 함수는 여러번 호출될 수 있고, 호출 할 때 마다 다른 값으로 초기화 할 수 있다.
   ///
-  init({required BuildContext context}) {
+  init({
+    required BuildContext context,
+    AlertCallback? alert,
+    ConfirmCallback? confirm,
+    ErrorCallback? error,
+    SnackbarCallback? snackbar,
+  }) {
     log('---> FireFlutter::init()');
     this.context = context;
+    this.alert = alert;
+    this.confirm = confirm;
+    this.error = error;
+    this.snackbar = snackbar;
   }
 }

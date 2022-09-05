@@ -83,8 +83,8 @@ mixin ForumMixin {
                 files: form['files'],
               );
               Navigator.of(context).pop();
-            } catch (e, stack) {
-              FireFlutter.instance.error(e, stack);
+            } catch (e) {
+              ffError(e);
               progress(false);
               rethrow;
             }
@@ -163,8 +163,8 @@ mixin ForumMixin {
               //   files: form['files'],
               // );
               Navigator.of(context).pop();
-            } catch (e, s) {
-              FireFlutter.instance.error(e, s);
+            } catch (e) {
+              ffError(e);
               rethrow;
             }
           },
@@ -176,21 +176,18 @@ mixin ForumMixin {
   /// Post or comment delete
   onDelete(dynamic postOrComment) async {
     try {
-      final re = await FireFlutter.instance
-          .confirm('Delete', "Do you want to delete?");
+      final re = await ffConfirm('Delete', "Do you want to delete?");
       if (re != true) return;
 
       if (postOrComment is PostModel) {
         await postOrComment.delete();
-        await FireFlutter.instance
-            .alert('Post deleted', 'You have deleted this post.');
+        await ffAlert('Post deleted', 'You have deleted this post.');
       } else if (postOrComment is CommentModel) {
         await postOrComment.delete();
-        await FireFlutter.instance
-            .alert('Comment deleted', 'You have deleted this comment.');
+        await ffAlert('Comment deleted', 'You have deleted this comment.');
       }
-    } catch (e, s) {
-      FireFlutter.instance.error(e, s);
+    } catch (e) {
+      ffError(e);
       rethrow;
     }
   }
@@ -199,8 +196,8 @@ mixin ForumMixin {
     try {
       await postOrComment.feedLike();
       // await feed(postOrComment.path, 'like');
-    } catch (e, s) {
-      FireFlutter.instance.error(e, s);
+    } catch (e) {
+      ffError(e);
       rethrow;
     }
   }
@@ -210,8 +207,8 @@ mixin ForumMixin {
     try {
       await postOrComment.feedDislike();
       // await feed(postOrComment.path, 'dislike');
-    } catch (e, s) {
-      FireFlutter.instance.error(e, s);
+    } catch (e) {
+      ffError(e);
       rethrow;
     }
   }
@@ -255,10 +252,9 @@ mixin ForumMixin {
     try {
       await postOrComment.report(input.text);
       String type = postOrComment is PostModel ? 'post' : 'comment';
-      FireFlutter.instance
-          .alert('Report success', 'You have reported this $type');
+      ffAlert('Report success', 'You have reported this $type');
     } catch (e, s) {
-      FireFlutter.instance.error(e, s);
+      ffError(e);
       rethrow;
     }
   }

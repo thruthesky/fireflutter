@@ -99,7 +99,7 @@ class PhoneService {
         log("---> [OK] The phone number (${PhoneService.instance.completeNumber}) not in use. So, do 'linkWithCredential()' and success; userCredential: $userCredential");
       }
     } on FirebaseAuthException catch (e) {
-      FireFlutter.instance.alert("Sign-in Error", e.toString());
+      ffAlert("Sign-in Error", e.toString());
       rethrow;
     }
 
@@ -141,7 +141,7 @@ class PhoneService {
         verifyCredential(c, success: androidAutomaticVerificationSuccess);
       },
       verificationFailed: (FirebaseAuthException e) {
-        FireFlutter.instance.alert("Phone Verification Error", e.toString());
+        ffAlert("Phone Verification Error", e.toString());
         throw Exception(e);
       },
       codeSent: (String verificationId, resendToken) {

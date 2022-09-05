@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 final globalNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -37,7 +38,24 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    FireFlutter.instance.init(context: globalNavigatorKey.currentContext!);
+    FireFlutter.instance.init(
+      context: globalNavigatorKey.currentContext!,
+      alert: (t, c) {
+        return showDialog<bool?>(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: Text('AlertDialog: $t'),
+            content: Text('AlertDialog: $c'),
+            actions: [
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text('Ok'),
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -46,96 +64,249 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text('FireFlutter Demo'),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text('User Profile', style: caption),
-MyDoc(
-  builder: (my) =>
-      my.signedIn ? Text(my.toString()) : Text('Please, sign-in'),
-),
-            Divider(),
-            Text('Sign In', style: caption),
-            Wrap(
-              spacing: 4,
-              runSpacing: 4,
-              children: [
-                signInAs('User-A'),
-                signInAs('User-B'),
-                signInAs('User-C'),
-                signInAs('User-D'),
-                signInAs('User-E'),
-                signInAs('User-F'),
-                signInAs('User-G'),
-                signOut(),
-              ],
-            ),
-            Divider(),
-            MyDoc(
-              builder: (my) => Text(
-                'Profile Update Form ${my.email}',
-                style: caption,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Text('User Profile', style: caption),
+              MyDoc(
+                builder: (my) =>
+                    my.signedIn ? Text(my.toString()) : Text('Please, sign-in'),
               ),
-            ),
-            StreamBuilder(
-              stream: FirebaseAuth.instance.authStateChanges(),
-              builder: (_, __) => UserDoc(
-                key: ValueKey(UserService.instance.uid),
-                uid: UserService.instance.uid,
-                builder: (u) {
-                  if (u.signedOut) return Text('Please, signin');
+              Divider(),
+              Text('Sign In', style: caption),
+              Wrap(
+                spacing: 4,
+                runSpacing: 4,
+                children: [
+                  signInAs('User-A'),
+                  signInAs('User-B'),
+                  signInAs('User-C'),
+                  signInAs('User-D'),
+                  signInAs('User-E'),
+                  signInAs('User-F'),
+                  signInAs('User-G'),
+                  signOut(),
+                ],
+              ),
+              Divider(),
+              Text('Global navigator context', style: caption),
+              Wrap(
+                spacing: 4,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      final re = await ffAlert('title', 'content');
+                      ffAlert("Chose of alert box", "Choise: $re");
+                    },
+                    child: Text('Alert'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final re = await ffConfirm('title', 'content');
+                      ffAlert("Chose of confirm box", "Choise: $re");
+                    },
+                    child: Text('Confirm'),
+                  ),
+                ],
+              ),
+              Divider(),
+              MyDoc(
+                builder: (my) => Text(
+                  'Profile Update Form ${my.email}',
+                  style: caption,
+                ),
+              ),
+              StreamBuilder(
+                stream: FirebaseAuth.instance.authStateChanges(),
+                builder: (_, __) => UserDoc(
+                  key: ValueKey(UserService.instance.uid),
+                  uid: UserService.instance.uid,
+                  builder: (u) {
+                    if (u.signedOut) return Text('Please, signin');
+                    return Column(
+                      children: [
+                        FileUploadButton(
+                          type: UploadType.userProfilePhoto,
+                          onUploaded: (url) {
+                            print('uploaded url: $url');
+                          },
+                          onProgress: (p) {
+                            print('progress: $p');
+                          },
+                          child: Stack(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade300,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: MyDoc(builder: (my) {
+                                  if (my.photoUrl == '') {
+                                    return Icon(Icons.person, size: 64);
+                                  } else {
+                                    return ClipOval(
+                                      child: SizedBox(
+                                          width: 64,
+                                          height: 64,
+                                          child: Image.network(
+                                            my.photoUrl,
+                                            fit: BoxFit.cover,
+                                          )),
+                                    );
+                                  }
+                                }),
+                              ),
+                              Positioned(
+                                left: 0,
+                                bottom: 0,
+                                child: Icon(
+                                  Icons.camera_alt,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                              Positioned(
+                                right: 0,
+                                bottom: 0,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Storage.delete(
+                                      UserService.instance.user.photoUrl,
+                                      type: UploadType.userProfilePhoto,
+                                    );
+                                  },
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        TextField(
+                          controller: TextEditingController(text: u.firstName),
+                          decoration: InputDecoration(
+                              labelText: 'Input your first name'),
+                          onChanged: (v) =>
+                              UserService.instance.update({'firstName': v}),
+                        ),
+                        TextField(
+                          controller: TextEditingController(text: u.lastName),
+                          decoration: InputDecoration(
+                              labelText: 'Input your last name'),
+                          onChanged: (v) =>
+                              UserService.instance.update({'lastName': v}),
+                        ),
+                        MyDoc(
+                            builder: (my) => Text('Birthday: ${my.birthday}')),
+                        ElevatedButton(
+                          onPressed: () async {
+                            final dt = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime(1960),
+                              firstDate: DateTime(1960),
+                              lastDate: DateTime.now(),
+                            );
+                            if (dt != null) {
+                              UserService.instance.update({
+                                'birthday':
+                                    toInt(DateFormat('yyyyMMdd').format(dt)),
+                              });
+                            }
+                          },
+                          child: Text('Choose Birthday'),
+                        ),
+                        TextField(
+                          controller: TextEditingController(text: u.gender),
+                          decoration: InputDecoration(
+                              labelText: 'Input your gender. M or F.'),
+                          onChanged: (v) => UserService.instance.update(
+                            {'gender': v},
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              Divider(),
+              Text('Post Create', style: caption),
+              StatefulBuilder(
+                builder: (ctx, setState) {
+                  final category = TextEditingController();
+                  final title = TextEditingController();
+                  final content = TextEditingController();
                   return Column(
                     children: [
                       TextField(
-                        controller: TextEditingController(text: u.firstName),
-                        decoration:
-                            InputDecoration(labelText: 'Input your first name'),
-                        onChanged: (v) =>
-                            UserService.instance.update({'firstName': v}),
+                        controller: category,
+                        decoration: InputDecoration(
+                            labelText: 'Input category. i.e) qna, discussion'),
                       ),
                       TextField(
-                        controller: TextEditingController(text: u.lastName),
-                        decoration:
-                            InputDecoration(labelText: 'Input your last name'),
-                        onChanged: (v) =>
-                            UserService.instance.update({'lastName': v}),
+                        controller: title,
+                        decoration: InputDecoration(labelText: 'Input title'),
+                      ),
+                      TextField(
+                        controller: content,
+                        decoration: InputDecoration(labelText: 'Input content'),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.camera_alt),
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              assert(category.text == 'qna' ||
+                                  category.text == 'discussion');
+                              try {
+                                await PostModel().create(
+                                  category: category.text,
+                                  title: title.text,
+                                  content: content.text,
+                                );
+                              } catch (e) {
+                                ffError(e);
+                                rethrow;
+                              }
+                            },
+                            child: Text('Create'),
+                          ),
+                        ],
                       ),
                     ],
                   );
                 },
               ),
-            ),
-            Divider(),
-            Text('Post Create', style: caption),
-            TextField(
-              decoration: InputDecoration(labelText: 'Input title'),
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Input content'),
-            ),
-            Divider(),
-            Text('Post List', style: caption),
-            Wrap(
-              spacing: 4,
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text('QnA'),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text('Discussion'),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text('Buy & Sell'),
-                ),
-              ],
-            )
-          ],
+              Divider(),
+              Text('Post List', style: caption),
+              Wrap(
+                spacing: 4,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: Text('QnA'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: Text('Discussion'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: Text('Buy & Sell'),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -47,5 +47,15 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Wonderful Korea app requires access to camera to take photos and share with other users.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Wonderful Korea app requires to access the location always for navigating on map.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Wonderful Korea app needs access to location to display the weather on the screen.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Wonderful Korea app requires access to mic record voice.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Wonderful Korea app requires access to photo library for uploading into the app and sharing photos with other users.</string>
 </dict>
 </plist>
