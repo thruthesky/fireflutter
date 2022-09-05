@@ -62,12 +62,11 @@ class CommentModel with ForumMixin implements Article {
     Json data, {
     String? id,
   }) {
-    // TODO: this might be unnecessary after all existing post's timestamp is converted on the backend.
-    Timestamp _createdAt = data['createdAt'] is int
+    Timestamp? _createdAt = data['createdAt'] is int
         ? Timestamp.fromMillisecondsSinceEpoch(data['createdAt'] * 1000)
         : data['createdAt'];
 
-    Timestamp _updatedAt = data['updatedAt'] is int
+    Timestamp? _updatedAt = data['updatedAt'] is int
         ? Timestamp.fromMillisecondsSinceEpoch(data['updatedAt'] * 1000)
         : data['updatedAt'];
 
@@ -84,8 +83,6 @@ class CommentModel with ForumMixin implements Article {
       dislike: data['dislike'] ?? 0,
       createdAt: _createdAt,
       updatedAt: _updatedAt,
-      // createdAt: data['createdAt'] ?? 0,
-      // updatedAt: data['updatedAt'] ?? 0,
       data: data,
     );
   }
@@ -117,8 +114,6 @@ class CommentModel with ForumMixin implements Article {
       parentId: '',
       content: '',
       uid: '',
-      // createdAt: 0,
-      // updatedAt: 0,
       data: {},
     );
   }
@@ -165,9 +160,9 @@ class CommentModel with ForumMixin implements Article {
     return increaseForumViewCounter(commentDoc(id));
   }
 
-  /// Create a comment with extra data
-  /// TODO comment create
-  Future<DocumentReference<Object?>> create({
+  /// Create a comment
+  ///
+  Future<void> create({
     required String postId,
     required String parentId,
     String content = '',
@@ -205,6 +200,7 @@ class CommentModel with ForumMixin implements Article {
     final j = Jiffy();
     final createData = {
       'postId': postId,
+      'parentId': parentId,
       'content': content,
       'files': files,
       'uid': UserService.instance.uid,
@@ -217,10 +213,12 @@ class CommentModel with ForumMixin implements Article {
       'updatedAt': FieldValue.serverTimestamp(),
     };
 
-    return commentCol.add(createData);
+    await commentCol.add(createData);
+    return postDoc(postId).update({'noOfComments': 1});
   }
 
-  /// TODO update comment
+  /// Update a comment.
+  ///
   Future<void> update({
     required String content,
     List<String> files = const [],
@@ -232,34 +230,23 @@ class CommentModel with ForumMixin implements Article {
       'files': files,
       'updatedAt': FieldValue.serverTimestamp(),
     });
-
-    // return commentDoc(id).update({
-    //   'content': content,
-    //   if (files != null) 'files': files,
-    //   'updatedAt': FieldValue.serverTimestamp(),
-    // });
   }
 
-  /// TODO comemnt delete
-  Future<String> delete() async {
-    return Future.value('');
-    // return CommentApi.instance.delete(id);
-/*
-    if (files.length > 0) {
-      for (final url in files) {
-        await StorageService.instance.delete(url);
-      }
-    }
-    if (deleted) throw ERROR_ALREADY_DELETED;
-    commentDoc(id).update({
+  Future<void> delete() async {
+    if (id.isEmpty) throw 'Id is empty on comment delete.';
+    if (uid != UserService.instance.uid) throw 'Not your comment.';
+
+    /// Delete files.
+    if (files.isNotEmpty) files.forEach((url) => Storage.delete(url));
+    await commentDoc(id).update({
       'deleted': true,
       'content': '',
       'files': [],
       'updatedAt': FieldValue.serverTimestamp(),
     });
 
-    return PostModel.decreaseNoOfComments(postId);
-    */
+    /// TODO update post comment number.
+    return postDoc(postId).update({'noOfComments': FieldValue.increment(-1)});
   }
 
   /// TODO comment report

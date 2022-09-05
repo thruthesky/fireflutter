@@ -283,7 +283,9 @@ class PostModel with ForumMixin implements Article {
     return PostModel.fromSnapshot(await res.get());
   }
 
+  /// Update a post.
   ///
+  /// It returns [PostModel] of newly create post.
   Future<PostModel> update({
     required String title,
     required String content,
@@ -315,8 +317,9 @@ class PostModel with ForumMixin implements Article {
     if (id.isEmpty) throw 'Post id empty on delete';
     if (uid != UserService.instance.uid) throw 'Not your post.';
 
-    /// TODO delete post images
-    ///
+    /// Delete files.
+    if (files.isNotEmpty) files.forEach((url) => Storage.delete(url));
+
     if (noOfComments < 1) {
       return postDoc(id).delete();
     } else {
