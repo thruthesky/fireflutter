@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:dio/dio.dart';
+import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -423,4 +425,28 @@ Future<bool> setLocalData(String key, dynamic value) async {
 Future<T?> getLocalData<T>(String key) async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.get(key) as T?;
+}
+
+/// Get [Dio] instance that has 'retry' interpreter.
+///
+/// ```dart
+///   final res = await getRetryDio().get(Config.embassyServiceUrl);
+///   print("res.data; ${res.statusCode}, ${res.data}");
+/// ```
+Dio getRetryDio() {
+  final Dio dio = Dio();
+
+  dio.interceptors.add(RetryInterceptor(
+    dio: dio,
+    logPrint: print, // specify log function (optional)
+    retries: 3, // retry count (optional)
+    retryDelays: const [
+      // set delays between retries (optional)
+      Duration(seconds: 1), // wait 1 sec before first retry
+      Duration(seconds: 2), // wait 2 sec before second retry
+      Duration(seconds: 3), // wait 3 sec before third retry
+    ],
+  ));
+
+  return dio;
 }

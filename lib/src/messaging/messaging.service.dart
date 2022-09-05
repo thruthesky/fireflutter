@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -65,7 +66,8 @@ class MessagingService {
     this.onMessageOpenedFromTermiated = onMessageOpenedFromTermiated;
     this.onMessageOpenedFromBackground = onMessageOpenedFromBackground;
     this.onNotificationPermissionDenied = onNotificationPermissionDenied;
-    this.onNotificationPermissionNotDetermined = onNotificationPermissionNotDetermined;
+    this.onNotificationPermissionNotDetermined =
+        onNotificationPermissionNotDetermined;
     _init();
   }
 
@@ -89,7 +91,8 @@ class MessagingService {
     /// Permission request for iOS only. For Android, the permission is granted by default.
 
     if (kIsWeb || Platform.isIOS) {
-      NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+      NotificationSettings settings =
+          await FirebaseMessaging.instance.requestPermission(
         alert: true,
         announcement: false,
         badge: true,
@@ -119,7 +122,8 @@ class MessagingService {
     FirebaseMessaging.onMessage.listen(onForegroundMessage);
 
     // Check if app is opened from CLOSED(TERMINATED) state and get message data.
-    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
       onMessageOpenedFromTermiated(initialMessage);
     }
@@ -130,7 +134,8 @@ class MessagingService {
     });
 
     // Any time the token refreshes, store this in the database too.
-    FirebaseMessaging.instance.onTokenRefresh.listen((token) => tokenChange.add(token));
+    FirebaseMessaging.instance.onTokenRefresh
+        .listen((token) => tokenChange.add(token));
   }
 
   /// Create or update token info
@@ -160,4 +165,40 @@ class MessagingService {
   //   doneDefaultTopic = true;
   //   FirebaseMessaging.instance.subscribeToTopic(defaultTopic);
   // }
+
+  send({
+    required String title,
+    required String body,
+  }) async {
+    /// doc: https://firebase.google.com/docs/cloud-messaging/http-server-ref
+    const apiUrl = "https://fcm.googleapis.com/fcm/send";
+    final data = {
+      "to":
+          "eJMRM-zfS4WOU_m5vYM1Qj:APA91bECIz2MvXd7DvcE_YMngr107ZIO6bNJratt_w5tNlEn7wd7gIALFEaKYjLldO1tyKnw8QuaBGUyWEc1dJFSwxdPBRTUP7XtT68DPZDgunOQEu1hyF4Gn3beY8F8GVQbTlRLjj2N",
+      "notification": {
+        "title": title,
+        "body": body,
+      },
+      "data": {
+        "click_action": "FLUTTER_NOTIFICATION_CLICK",
+      },
+    };
+
+    Dio dio = getRetryDio();
+
+    final res = await dio.post(
+      apiUrl,
+      data: data,
+      options: Options(
+        headers: {
+          'content-type': 'application/json',
+          'Authorization':
+              'key=AAAAWy4G2hU:APA91bG8FpX2kNKMTRlTyiAEo3jDCg6UsiXlmVqCU-7syY0DGgpv_7VVJVpuQRoZqqzmBdUg_BWuluihF6nLwHt3yZpkfXvzzJidyp4_Ku-NgicQa0GT9Rilj_ks83HWSpAoVjaCFN7S',
+        },
+      ),
+    );
+
+    print(res.statusCode);
+    print(res.data);
+  }
 }
