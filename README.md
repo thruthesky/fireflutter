@@ -20,6 +20,8 @@
   - [글 생성](#글-생성)
   - [글 가져오기](#글-가져오기)
   - [글 목록 가져오기](#글-목록-가져오기)
+- [푸시 알림](#푸시-알림)
+  - [푸시 알림 관련 참고 문서가](#푸시-알림-관련-참고-문서가)
 
 # 개요
 
@@ -254,3 +256,13 @@ List<PostModel> photos = await PostService.instance.get(
   hasPhoto: true,
 );
 ```
+
+
+
+# 푸시 알림
+
+## 푸시 알림 관련 참고 문서가
+
+- [HTTP guidelines](https://cloud.google.com/apis/docs/http)
+- [Firebase Cloud Messaging API](https://firebase.google.com/docs/reference/fcm/rest)
+- [Firebase Cloud Messaging HTTP protocol](https://firebase.google.com/docs/cloud-messaging/http-server-ref)

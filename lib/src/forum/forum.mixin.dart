@@ -72,7 +72,6 @@ mixin ForumMixin {
       builder: (bc) {
         return CommentEditDialog(
           onCancel: Navigator.of(context).pop,
-          // onError: service.error,
           onSubmit: (Json form, progress) async {
             try {
               progress(true);
@@ -156,12 +155,10 @@ mixin ForumMixin {
           onSubmit: (Json form, progress) async {
             try {
               progress(true);
-              // TODO comment update
-              // await Comment.update(
-              //   id: comment.id,
-              //   content: form['content'],
-              //   files: form['files'],
-              // );
+              await comment.update(
+                content: form['content'],
+                files: form['files'],
+              );
               Navigator.of(context).pop();
             } catch (e) {
               ffError(e);
