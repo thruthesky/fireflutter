@@ -20,7 +20,7 @@ class PostListMeta extends StatelessWidget {
               style: TextStyle(fontSize: 12, color: Colors.grey),
             ),
             ShortDate(
-              post.createdAt,
+              toInt(post.createdAt),
               style: TextStyle(fontSize: 12, color: Colors.grey),
               padding: EdgeInsets.only(left: 8),
             ),

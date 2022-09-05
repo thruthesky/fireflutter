@@ -138,7 +138,7 @@ class UserService {
     // print('---------> res; $res');
     // return res['result'];
 
-    return false;
+    return true;
   }
 
   bool isOtherUserDisabled(String uid) {

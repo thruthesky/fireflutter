@@ -76,7 +76,7 @@ mixin ForumMixin {
           onSubmit: (Json form, progress) async {
             try {
               progress(true);
-              await CommentModel.create(
+              await CommentModel().create(
                 postId: post.id,
                 parentId: comment?.id ?? post.id,
                 content: form['content'],

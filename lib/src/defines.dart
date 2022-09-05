@@ -8,12 +8,7 @@ typedef SnackbarCallback = Function(
 typedef VoidStringCallback = void Function(String);
 typedef VoidNullableCallback = void Function()?;
 
-enum UploadType {
-  userProfilePhoto,
-  user,
-  post,
-  comment,
-}
+enum UploadType { userProfilePhoto, user, post, comment, chat, party }
 
 const ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD =
     'Please, sign in first before uploading.';

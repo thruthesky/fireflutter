@@ -26,8 +26,8 @@ class PostModel with ForumMixin implements Article {
     this.month = 0,
     this.day = 0,
     this.week = 0,
-    this.createdAt = 0,
-    this.updatedAt = 0,
+    this.createdAt,
+    this.updatedAt,
     data,
     this.isHtmlContent = false,
   }) : data = data ?? {};
@@ -85,8 +85,8 @@ class PostModel with ForumMixin implements Article {
   int day;
   int week;
 
-  int createdAt;
-  int updatedAt;
+  Timestamp? createdAt;
+  Timestamp? updatedAt;
 
   /// To open the post data. Use this to display post content or not on post list screen.
   bool open = false;
@@ -106,6 +106,15 @@ class PostModel with ForumMixin implements Article {
 
     /// Check if the content has any html tag.
     bool html = _isHtml(content);
+
+    // TODO: this might be unnecessary after all existing post's timestamp is converted on the backend.
+    Timestamp _createdAt = data['createdAt'] is int
+        ? Timestamp.fromMillisecondsSinceEpoch(data['createdAt'] * 1000)
+        : data['createdAt'];
+
+    Timestamp _updatedAt = data['updatedAt'] is int
+        ? Timestamp.fromMillisecondsSinceEpoch(data['updatedAt'] * 1000)
+        : data['updatedAt'];
 
     final post = PostModel(
       id: id ?? data['id'],
@@ -127,8 +136,10 @@ class PostModel with ForumMixin implements Article {
       month: data['month'] ?? 0,
       day: data['day'] ?? 0,
       week: data['week'] ?? 0,
-      createdAt: data['createdAt'] ?? 0,
-      updatedAt: data['updatedAt'] ?? 0,
+      createdAt: _createdAt,
+      updatedAt: _updatedAt,
+      // createdAt: data['createdAt'] ?? 0,
+      // updatedAt: data['updatedAt'] ?? 0,
       data: data,
     );
 
@@ -292,8 +303,10 @@ class PostModel with ForumMixin implements Article {
     String? summary,
     Json extra = const {},
   }) {
-    /// TODO check if post has deleted
-    // if (deleted) throw ERROR_ALREADY_DELETED;
+    if (deleted) throw ERROR_ALREADY_DELETED;
+    if (id.isEmpty) throw 'Post id empty on update';
+    if (uid != UserService.instance.uid) throw 'Not your post.';
+
     return postDoc(id).update({
       ...{
         'title': title,

@@ -189,7 +189,9 @@ class _CommentListState extends State<CommentList> with ForumMixin {
                     ? "${user.displayName}"
                     : "No name"),
                 SizedBox(height: 8),
-                ShortDate(comment.createdAt),
+                ShortDate(
+                  toInt(comment.createdAt!.millisecondsSinceEpoch / 1000),
+                ),
               ],
             ),
           ],

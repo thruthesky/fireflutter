@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:jiffy/jiffy.dart';
 
 /// CommentModel
 ///
@@ -7,16 +8,16 @@ import 'package:fireflutter/fireflutter.dart';
 class CommentModel with ForumMixin implements Article {
   CommentModel({
     this.id = '',
-    required this.postId,
-    required this.parentId,
+    this.postId = '',
+    this.parentId = '',
+    this.uid = '',
+    this.data = const {},
     this.content = '',
     this.like = 0,
     this.dislike = 0,
-    required this.uid,
     this.deleted = false,
-    this.createdAt = 0,
-    this.updatedAt = 0,
-    required this.data,
+    this.createdAt,
+    this.updatedAt,
     this.files = const [],
     this.point = 0,
   });
@@ -43,8 +44,8 @@ class CommentModel with ForumMixin implements Article {
 
   List<String> files;
 
-  int updatedAt;
-  int createdAt;
+  Timestamp? updatedAt;
+  Timestamp? createdAt;
   int depth = 0;
 
   bool get isMine => UserService.instance.uid == uid;
@@ -61,6 +62,15 @@ class CommentModel with ForumMixin implements Article {
     Json data, {
     String? id,
   }) {
+    // TODO: this might be unnecessary after all existing post's timestamp is converted on the backend.
+    Timestamp _createdAt = data['createdAt'] is int
+        ? Timestamp.fromMillisecondsSinceEpoch(data['createdAt'] * 1000)
+        : data['createdAt'];
+
+    Timestamp _updatedAt = data['updatedAt'] is int
+        ? Timestamp.fromMillisecondsSinceEpoch(data['updatedAt'] * 1000)
+        : data['updatedAt'];
+
     return CommentModel(
       content: data['content'] ?? '',
       files: new List<String>.from(data['files']),
@@ -72,8 +82,10 @@ class CommentModel with ForumMixin implements Article {
       deleted: data['deleted'] ?? false,
       like: data['like'] ?? 0,
       dislike: data['dislike'] ?? 0,
-      createdAt: data['createdAt'] ?? 0,
-      updatedAt: data['updatedAt'] ?? 0,
+      createdAt: _createdAt,
+      updatedAt: _updatedAt,
+      // createdAt: data['createdAt'] ?? 0,
+      // updatedAt: data['updatedAt'] ?? 0,
       data: data,
     );
   }
@@ -105,8 +117,8 @@ class CommentModel with ForumMixin implements Article {
       parentId: '',
       content: '',
       uid: '',
-      createdAt: 0,
-      updatedAt: 0,
+      // createdAt: 0,
+      // updatedAt: 0,
       data: {},
     );
   }
@@ -155,7 +167,7 @@ class CommentModel with ForumMixin implements Article {
 
   /// Create a comment with extra data
   /// TODO comment create
-  static Future<DocumentReference<Object?>> create({
+  Future<DocumentReference<Object?>> create({
     required String postId,
     required String parentId,
     String content = '',
@@ -183,20 +195,49 @@ class CommentModel with ForumMixin implements Article {
 
     // return ref;
 
-    return Future.value() as dynamic;
+    if (signedIn == false) throw ERROR_SIGN_IN_FIRST_FOR_POST_CREATE;
+    if (UserService.instance.user.ready == false) {
+      throw UserService.instance.user.profileError;
+    }
+    if (postId.isEmpty) throw 'Post id is empty on comment create.';
+    if (parentId.isEmpty) throw 'Parent id is empty on comment create.';
+
+    final j = Jiffy();
+    final createData = {
+      'postId': postId,
+      'content': content,
+      'files': files,
+      'uid': UserService.instance.uid,
+      'hasPhoto': files.length == 0 ? false : true,
+      'deleted': false,
+      'year': j.year,
+      'month': j.month,
+      'day': j.date,
+      'createdAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
+    };
+
+    return commentCol.add(createData);
   }
 
   /// TODO update comment
   Future<void> update({
     required String content,
-    List<String>? files,
+    List<String> files = const [],
   }) {
     if (deleted) throw ERROR_ALREADY_DELETED;
-    return commentDoc(id).update({
+    if (uid != UserService.instance.uid) throw 'Not your comment.';
+    return commentCol.doc(id).update({
       'content': content,
-      if (files != null) 'files': files,
+      'files': files,
       'updatedAt': FieldValue.serverTimestamp(),
     });
+
+    // return commentDoc(id).update({
+    //   'content': content,
+    //   if (files != null) 'files': files,
+    //   'updatedAt': FieldValue.serverTimestamp(),
+    // });
   }
 
   /// TODO comemnt delete

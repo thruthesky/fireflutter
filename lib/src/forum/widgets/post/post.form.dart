@@ -273,8 +273,19 @@ class _PostFormState extends State<PostForm> {
       //       });
       //   },
       // );
-      return PostModel()
-        ..create(category: category, title: title.text, content: content.text);
+
+      try {
+        final res = await PostModel().create(
+          category: category,
+          title: title.text,
+          content: content.text,
+        );
+        if (mounted) setState(() => inSubmit = false);
+        // widget.onCreate(PostModel.fromJson(res));
+      } catch (e) {
+        ffError(e);
+        rethrow;
+      }
     } else {
       /// TODO update the post
       /// update
@@ -296,7 +307,12 @@ class _PostFormState extends State<PostForm> {
       //         inSubmit = false;
       //       });
       //   },
-      // );
+      // );\
+      try {
+        await widget.post!.update(title: title.text, content: content.text);
+      } catch (e) {
+        ffError(e);
+      }
     }
 
     return Future.value({} as PostModel);
