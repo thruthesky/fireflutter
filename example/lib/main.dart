@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:example/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -39,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
   @override
   void initState() {
     super.initState();
+
     FireFlutter.instance.init(
       context: globalNavigatorKey.currentContext!,
       alert: (t, c) {
@@ -57,6 +59,25 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
         );
       },
     );
+
+    initFirebaseCloudMessaging();
+  }
+
+  initFirebaseCloudMessaging() async {
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    print('fcmToken; $fcmToken');
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+        ffAlert(
+          message.notification?.title ?? 'No title',
+          message.notification?.body ?? 'No body',
+        );
+      }
+    });
   }
 
   @override
@@ -234,6 +255,17 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
                     );
                   },
                 ),
+              ),
+              Divider(),
+              Text('Push notification', style: caption),
+              ElevatedButton(
+                onPressed: () {
+                  MessagingService.instance.send(
+                    title: 'Message title',
+                    body: 'Message body',
+                  );
+                },
+                child: Text('Send a message'),
               ),
               Divider(),
               Text('Post Create', style: caption),

@@ -39,6 +39,15 @@
       "deviceId": "emulator-5554",
       "args": ["--dart-define", "mode=test"]
     },
+
+    {
+      "name": "example - Emulator - 5554",
+      "cwd": "example",
+      "program": "lib/main.dart",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554"
+    },
     {
       "name": "example - Simulator - iPhone 13 Pro Max - iMac",
       "cwd": "example",

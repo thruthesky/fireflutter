@@ -82,6 +82,7 @@ dependencies:
   # Dio
   # Download on seoul art exhibition screen
   dio: ^4.0.6
+  dio_smart_retry: ^1.3.2
 
   # Used in PostModel.
   intl: ^0.17.0
