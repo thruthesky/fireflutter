@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -88,6 +91,18 @@ class MessagingService {
     //   });
     // });
 
+    /// `/fcm-tokens/<docId>/{token: '...', uid: '...'}`
+    /// Save(or update) token
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user == null) return;
+      FirebaseFirestore.instance.collection('fcm-tokens').doc(token).set(
+        {
+          if (user.isAnonymous == false) 'uid': user.uid,
+        },
+        SetOptions(merge: true),
+      );
+    });
+
     /// Permission request for iOS only. For Android, the permission is granted by default.
 
     if (kIsWeb || Platform.isIOS) {
@@ -113,7 +128,7 @@ class MessagingService {
 
     // Get the token each time the application loads and save it to database.
     token = await FirebaseMessaging.instance.getToken() ?? '';
-    // print('token::');
+    log('---> device token: $token');
     // print(token);
     tokenChange.add(token);
     // debugPrint(token);
@@ -167,14 +182,14 @@ class MessagingService {
   // }
 
   send({
+    required String token,
     required String title,
     required String body,
   }) async {
     /// doc: https://firebase.google.com/docs/cloud-messaging/http-server-ref
     const apiUrl = "https://fcm.googleapis.com/fcm/send";
     final data = {
-      "to":
-          "eJMRM-zfS4WOU_m5vYM1Qj:APA91bECIz2MvXd7DvcE_YMngr107ZIO6bNJratt_w5tNlEn7wd7gIALFEaKYjLldO1tyKnw8QuaBGUyWEc1dJFSwxdPBRTUP7XtT68DPZDgunOQEu1hyF4Gn3beY8F8GVQbTlRLjj2N",
+      "to": token,
       "notification": {
         "title": title,
         "body": body,
