@@ -75,7 +75,7 @@ class _PostFormState extends State<PostForm> {
     setState(() {
       title.text = widget.post?.title ?? '';
       content.text = widget.post?.content ?? '';
-      summary.text = widget.post?.summary ?? '';
+      // summary.text = widget.post?.summary ?? '';
       files = widget.post?.files ?? [];
     });
     if (widget.controller != null) {
