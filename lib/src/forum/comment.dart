@@ -223,31 +223,38 @@ class CommentModel with ForumMixin implements Article {
     /// Delete files.
     if (files.isNotEmpty) files.forEach((url) => Storage.delete(url));
 
+    await commentDoc(id).update({
+      'deleted': true,
+      'content': '',
+      'files': [],
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+
     /// TODO check if comment has child
     /// if it has, only mark as deleted.
     /// if it does not, delete it completely.
-    final childSnap = await commentCol
-        .where(
-          'parentId',
-          isEqualTo: id,
-        )
-        .limit(1)
-        .get();
+    // final childSnap = await commentCol
+    //     .where(
+    //       'parentId',
+    //       isEqualTo: id,
+    //     )
+    //     .limit(1)
+    //     .get();
 
-    debugPrint('${childSnap.size}');
+    // debugPrint('${childSnap.size}');
 
-    if (childSnap.docs.isNotEmpty) {
-      debugPrint('comment has child');
-      await commentDoc(id).update({
-        'deleted': true,
-        'content': '',
-        'files': [],
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
-    } else {
-      debugPrint('comment has no child');
-      await commentDoc(id).delete();
-    }
+    // if (childSnap.docs.isNotEmpty) {
+    //   debugPrint('comment has child');
+    //   await commentDoc(id).update({
+    //     'deleted': true,
+    //     'content': '',
+    //     'files': [],
+    //     'updatedAt': FieldValue.serverTimestamp(),
+    //   });
+    // } else {
+    //   debugPrint('comment has no child');
+    //   await commentDoc(id).delete();
+    // }
 
     /// TODO update post comment number.
     return postDoc(postId).update({'noOfComments': FieldValue.increment(-1)});
