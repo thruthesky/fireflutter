@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "flutterkorea-app"
-  }
+    "default": "flutterkorea-app",
+    "test": "withcenter-test-project"
+  },
+  "targets": {},
+  "etags": {}
 }

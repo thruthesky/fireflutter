@@ -1,5 +1,5 @@
 import dayjs = require("dayjs");
-import { v4 as uuidv4 } from "uuid";
+import {v4 as uuidv4} from "uuid";
 
 /**
  * @file utils.ts
@@ -83,17 +83,17 @@ export class Utils {
    */
   static decodeHTMLEntities(text: string) {
     const entities: any = {
-      amp: "&",
-      apos: "'",
+      "amp": "&",
+      "apos": "'",
       "#x27": "'",
       "#x2F": "/",
       "#39": "'",
       "#47": "/",
-      lt: "<",
-      gt: ">",
-      nbsp: " ",
-      quot: "\"",
-      bull: "•",
+      "lt": "<",
+      "gt": ">",
+      "nbsp": " ",
+      "quot": "\"",
+      "bull": "•",
     };
     return text.replace(/&([^;]+);/gm, function(match, entity) {
       return entities[entity] || match;

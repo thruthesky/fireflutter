@@ -14,9 +14,12 @@ export class Messaging {
     }
   }
 
-  private static async sendMessageToTopic(data: any, context: CallableContext) {}
+  private static async sendMessageToTopic(data: any, context: CallableContext) {
+    console.log(data, context);
+  }
 
   private static async sendMessageToTokens(data: any, context: CallableContext) {
+    console.log("check user auth with context", context);
     const payload = this.preMessagePayload(data);
 
     let tokens;
@@ -34,7 +37,7 @@ export class Messaging {
     for (const c of chunks) {
       // Send notifications to all tokens.
       const newPayload: admin.messaging.MulticastMessage = Object.assign(
-        { tokens: c },
+          { tokens: c },
         payload as any
       );
       sendToDevicePromise.push(admin.messaging().sendMulticast(newPayload));
@@ -77,7 +80,7 @@ export class Messaging {
    * Returns tokens of multiple users.
    *
    * @param uids array of user uid
-   * @returns array of tokens
+   * @return array of tokens
    */
   private static async getTokensFromUids(uids: string) {
     if (!uids) return [];
@@ -90,7 +93,7 @@ export class Messaging {
    * Returns tokens of a user.
    *
    * @param uid user uid
-   * @returns array of tokens
+   * @return array of tokens
    */
   private static async getTokens(uid: string): Promise<string[]> {
     if (!uid) return [];
