@@ -55,7 +55,9 @@ class EditUploadedImage extends StatelessWidget {
                 builder: (ctx) => AlertDialog(
                   title: Text('Delete file?'),
                   actions: [
-                    TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancel')),
+                    TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('Cancel')),
                     TextButton(
                       onPressed: () => Navigator.pop(context, true),
                       child: Text('Yes'),

@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, curly_braces_in_flow_control_structures
 
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:example/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,6 +12,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 final globalNavigatorKey = GlobalKey<NavigatorState>();
+
+Future<void> onTerminatedMessage(message) async {
+  //
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,20 +70,44 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
   }
 
   initFirebaseCloudMessaging() async {
-    final fcmToken = await FirebaseMessaging.instance.getToken();
-    print('fcmToken; $fcmToken');
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
+    ///
+    MessagingService.instance.init(
+      // while the app is close and notification arrive you can use this to do small work
+      // example are changing the badge count or informing backend.
+      onBackgroundMessage: onTerminatedMessage,
 
-      if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
-        ffAlert(
-          message.notification?.title ?? 'No title',
-          message.notification?.body ?? 'No body',
-        );
-      }
-    });
+      ///
+      onForegroundMessage: (RemoteMessage message) {
+        debugPrint('Got a message whilst in the foreground!');
+        debugPrint('Message data: ${message.data}');
+
+        if (message.notification != null) {
+          debugPrint(
+              'Message also contained a notification: ${message.notification}');
+          ffAlert(
+            message.notification?.title ?? 'No title',
+            message.notification?.body ?? 'No body',
+          );
+        }
+      },
+      onMessageOpenedFromTermiated: (message) {
+        // this will triggered when the notification on tray was tap while the app is closed
+        // if you change screen right after the app is open it display only white screen.
+        WidgetsBinding.instance.addPostFrameCallback((duration) {
+          log(message.toString());
+        });
+      },
+      // this will triggered when the notification on tray was tap while the app is open but in background state.
+      onMessageOpenedFromBackground: (message) {
+        log(message.toString());
+      },
+      onNotificationPermissionDenied: () {
+        // debugPrint('onNotificationPermissionDenied()');
+      },
+      onNotificationPermissionNotDetermined: () {
+        // debugPrint('onNotificationPermissionNotDetermined()');
+      },
+    );
   }
 
   @override
@@ -154,10 +184,10 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
                         FileUploadButton(
                           type: UploadType.userProfilePhoto,
                           onUploaded: (url) {
-                            print('uploaded url: $url');
+                            debugPrint('uploaded url: $url');
                           },
                           onProgress: (p) {
-                            print('progress: $p');
+                            debugPrint('progress: $p');
                           },
                           child: Stack(
                             children: [
@@ -261,7 +291,8 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
               ElevatedButton(
                 onPressed: () {
                   MessagingService.instance.send(
-                    title: 'Message title',
+                    token: MessagingService.instance.token,
+                    title: 'Message title to myself!',
                     body: 'Message body',
                   );
                 },

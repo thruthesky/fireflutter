@@ -47,13 +47,17 @@ class _ChatRoomsState extends State<ChatRooms> {
 
   init() async {
     firstLoad = true;
-    sub = ChatBase.myRoomsCol.orderBy('timestamp', descending: true).snapshots().listen((snapshot) {
+    sub = ChatBase.myRoomsCol
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .listen((snapshot) {
       friends.clear();
       youMayKnow.clear();
       friendsMessageCount = 0;
       youMayKnowMessageCount = 0;
       for (final doc in snapshot.docs) {
-        final room = ChatMessageModel.fromJson(doc.data() as Map, doc.reference);
+        final room =
+            ChatMessageModel.fromJson(doc.data() as Map, doc.reference);
         if (room.friend) {
           friends.add(room);
           friendsMessageCount += room.newMessages;
@@ -90,7 +94,8 @@ class _ChatRoomsState extends State<ChatRooms> {
     if (friends.length == 0 && youMayKnow.length == 0) {
       return widget.onEmpty ??
           const Center(
-            child: Text('No friends, yet. Please send a message to some friends.'),
+            child:
+                Text('No friends, yet. Please send a message to some friends.'),
           );
     }
 

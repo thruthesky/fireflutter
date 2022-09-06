@@ -7,4 +7,5 @@ typedef FunctionRoomsBlockedItemBuilder = Widget Function(String);
 typedef MessageBuilder = Widget Function(ChatMessageModel);
 typedef InputBuilder = Widget Function(void Function(String));
 
-const ERROR_CHAT_MESSAGE_ADD = 'Failed to send message (ERROR_CHAT_MESSAGE_ADD)';
+const ERROR_CHAT_MESSAGE_ADD =
+    'Failed to send message (ERROR_CHAT_MESSAGE_ADD)';

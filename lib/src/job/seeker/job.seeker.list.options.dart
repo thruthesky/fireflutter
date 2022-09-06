@@ -2,7 +2,8 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class JobSeekerListOptions extends StatefulWidget {
-  const JobSeekerListOptions({Key? key, required this.change}) : super(key: key);
+  const JobSeekerListOptions({Key? key, required this.change})
+      : super(key: key);
 
   final Function(JobSeekerListOptionsModel) change;
 
@@ -57,10 +58,13 @@ class _JobSeekerListOptionsState extends State<JobSeekerListOptions> {
                     value: options.sggNm,
                     items: [
                       DropdownMenuItem(
-                        child: Text('Select city/county/gu', style: optionStyle),
+                        child:
+                            Text('Select city/county/gu', style: optionStyle),
                         value: '',
                       ),
-                      for (final name in Job.areas[options.siNm]!..sort((a, b) => a.compareTo(b)))
+                      for (final name
+                          in Job.areas[options.siNm]!
+                            ..sort((a, b) => a.compareTo(b)))
                         DropdownMenuItem(
                           child: Text(name, style: optionStyle),
                           value: name,

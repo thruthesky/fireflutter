@@ -50,7 +50,9 @@ class ForumListPushNotificationIcon extends StatelessWidget {
           children: [
             ForumListPushNotificationPopUpButton(
               icon: Icon(
-                hasSubscription ? Icons.notifications_on : Icons.notifications_off,
+                hasSubscription
+                    ? Icons.notifications_on
+                    : Icons.notifications_off,
                 color: hasSubscription
                     ? Color.fromARGB(255, 74, 74, 74)
                     : Color.fromARGB(255, 177, 177, 177),
@@ -73,7 +75,9 @@ class ForumListPushNotificationIcon extends StatelessWidget {
                       Row(
                         children: [
                           Icon(
-                            hasPostSubscription ? Icons.notifications_on : Icons.notifications_off,
+                            hasPostSubscription
+                                ? Icons.notifications_on
+                                : Icons.notifications_off,
                             color: hasPostSubscription
                                 ? Theme.of(context).colorScheme.primary
                                 : Theme.of(context).colorScheme.secondary,
@@ -96,7 +100,9 @@ class ForumListPushNotificationIcon extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(
-                        hasCommentSubscription ? Icons.notifications_on : Icons.notifications_off,
+                        hasCommentSubscription
+                            ? Icons.notifications_on
+                            : Icons.notifications_off,
                         color: hasCommentSubscription
                             ? Theme.of(context).colorScheme.primary
                             : Theme.of(context).colorScheme.secondary,

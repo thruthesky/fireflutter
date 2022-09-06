@@ -101,12 +101,14 @@ class _ChatRoomState extends State<ChatRoom> {
                 final snapshot = documentSnapshots[index];
 
                 final data = snapshot.data() as Map?;
-                final message = ChatMessageModel.fromJson(data!, snapshot.reference);
+                final message =
+                    ChatMessageModel.fromJson(data!, snapshot.reference);
 
                 return widget.messageBuilder(message);
               },
               // orderBy is compulsory to enable pagination
-              query: ChatBase.messagesCol(widget.otherUid).orderBy('timestamp', descending: true),
+              query: ChatBase.messagesCol(widget.otherUid)
+                  .orderBy('timestamp', descending: true),
               //Change types accordingly
               itemBuilderType: PaginateBuilderType.listView,
               // To update db data in real time.
@@ -138,7 +140,8 @@ class _ChatRoomState extends State<ChatRoom> {
               },
               onEmpty: widget.emptyDisplay != null
                   ? widget.emptyDisplay!
-                  : Center(child: Text('No chats, yet. Please send some message.')),
+                  : Center(
+                      child: Text('No chats, yet. Please send some message.')),
               // separator: Divider(color: Colors.blue),
             ),
           ),
@@ -157,7 +160,8 @@ class _ChatRoomState extends State<ChatRoom> {
               return SizedBox.shrink();
             },
           ),
-          if (isRoomBlocked == false) SafeArea(child: widget.inputBuilder(onSubmitText)),
+          if (isRoomBlocked == false)
+            SafeArea(child: widget.inputBuilder(onSubmitText)),
         ],
       ),
     );

@@ -103,7 +103,8 @@ class TypesenseSearchResult {
       requestParams: json['request_params'],
       searchTimeMs: json['search_time_ms'],
       hits: json['hits']
-          .map<TypesenseSearchHitModel>((e) => TypesenseSearchHitModel.fromJSON(e))
+          .map<TypesenseSearchHitModel>(
+              (e) => TypesenseSearchHitModel.fromJSON(e))
           .toList(),
     );
   }

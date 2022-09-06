@@ -26,7 +26,8 @@ class _JobSeekerListState extends State<JobSeekerList> {
   Query get _query {
     Query q = Job.jobSeekerCol.where('status', isEqualTo: 'Y');
 
-    JobSeekerListOptionsModel options = widget.options ?? JobSeekerListOptionsModel();
+    JobSeekerListOptionsModel options =
+        widget.options ?? JobSeekerListOptionsModel();
 
     if (options.siNm.isNotEmpty) {
       q = q.where('siNm', isEqualTo: options.siNm);

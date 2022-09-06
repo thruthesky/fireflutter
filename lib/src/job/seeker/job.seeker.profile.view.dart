@@ -32,8 +32,9 @@ class _JobSeekerProfileViewState extends State<JobSeekerProfileView> {
               child: UserProfilePhoto(
             uid: user.uid,
             size: 100,
-            onTap:
-                widget.onTapProfilePhoto != null ? () => widget.onTapProfilePhoto!(user.uid) : null,
+            onTap: widget.onTapProfilePhoto != null
+                ? () => widget.onTapProfilePhoto!(user.uid)
+                : null,
           )),
           SizedBox(height: 20),
           Row(

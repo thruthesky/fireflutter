@@ -97,7 +97,8 @@ class _JobViewState extends State<JobView> {
           label: "Detail Address",
         ),
         SizedBox(height: 15),
-        Text('Job details', style: TextStyle(fontSize: 16, color: Colors.black)),
+        Text('Job details',
+            style: TextStyle(fontSize: 16, color: Colors.black)),
         SizedBox(height: 10),
         JobViewItem(
           value: Job.categories[job.category] ?? '',

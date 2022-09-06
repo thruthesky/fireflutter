@@ -17,7 +17,8 @@ class ImageList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int imagesToShow = files.length < noOfImagesToShow ? files.length : noOfImagesToShow;
+    int imagesToShow =
+        files.length < noOfImagesToShow ? files.length : noOfImagesToShow;
 
     if (files.length == 0) return SizedBox.shrink();
 
@@ -32,7 +33,9 @@ class ImageList extends StatelessWidget {
               mainAxisSpacing: 4,
               crossAxisSpacing: 4,
               crossAxisCount: 3,
-              children: [for (int i = 0; i < imagesToShow; i++) imageBuilder(i)],
+              children: [
+                for (int i = 0; i < imagesToShow; i++) imageBuilder(i)
+              ],
             )
           : imageBuilder(0, false),
     );

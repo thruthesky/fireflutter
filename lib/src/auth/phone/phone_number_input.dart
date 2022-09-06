@@ -14,7 +14,8 @@ class PhoneNumberInput extends StatefulWidget {
     this.inputTitle = const SizedBox.shrink(),
     this.phoneNumberContainerBuilder,
     this.dialCodeStyle = const TextStyle(fontSize: 24),
-    this.phoneNumberInputDecoration = const InputDecoration(border: InputBorder.none),
+    this.phoneNumberInputDecoration =
+        const InputDecoration(border: InputBorder.none),
     this.phoneNumberInputTextStyle = const TextStyle(),
     this.submitTitle = const SizedBox.shrink(),
     this.submitButton = const Text(
@@ -123,7 +124,8 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
                         setState(() {
                           PhoneService.instance.codeSentProgress = true;
                         });
-                        PhoneService.instance.phoneNumber = PhoneService.instance.completeNumber;
+                        PhoneService.instance.phoneNumber =
+                            PhoneService.instance.completeNumber;
                         // print( 'phone number: ${PhoneService.instance.phoneNumber}');
                         PhoneService.instance.verifyPhoneNumber(
                           codeSent: (verificationId) {
@@ -133,7 +135,8 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
                             });
                           },
                           androidAutomaticVerificationSuccess: widget.success,
-                          codeAutoRetrievalTimeout: widget.codeAutoRetrievalTimeout,
+                          codeAutoRetrievalTimeout:
+                              widget.codeAutoRetrievalTimeout,
                         );
                       },
                       child: widget.submitButton,
