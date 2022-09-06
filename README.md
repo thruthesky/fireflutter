@@ -25,6 +25,8 @@
 - [푸시 알림](#푸시-알림)
   - [푸시 알림 관련 참고 문서](#푸시-알림-관련-참고-문서)
   - [푸시 알림 설정](#푸시-알림-설정)
+    - [iOS 설정](#ios-설정)
+  - [푸시 알림 코딩](#푸시-알림-코딩)
 
 # 프로젝트 개요
 
@@ -314,6 +316,10 @@ FirestoreListView<PostModel>(
 
 # 푸시 알림
 
+- 레거시 (REST) API 를 쓰면 플러터 앱 내에서 푸시 알림을 전송 할 수 있지만, 토픽으로 메시지를 보낼 때 플랫폼 구분이 어렵다. (토픽을 플랫폼별 그룹을 따로 만들 수 있지만 복잡해 진다.)
+  - 플랫폼을 구분 할 수 있어야 `click_action` 에 올바른 값을 집어 넣을 수 있다. 예를 들면, Android 에서는 `FLUTTER_CLICK_ACTION` 와 같은 값을 지정해야 한다.
+- 그래서, 클라우드 함수를 이용해서 메시지(푸시)를 보낸다.
+
 ## 푸시 알림 관련 참고 문서
 
 - [HTTP guidelines](https://cloud.google.com/apis/docs/http)
@@ -321,9 +327,18 @@ FirestoreListView<PostModel>(
 - [Firebase Cloud Messaging HTTP protocol](https://firebase.google.com/docs/cloud-messaging/http-server-ref)
 
 
-
-
 ## 푸시 알림 설정
+
+### iOS 설정
+
+- Firebase 연결 설정
+- Xcode 의 Signing & Capabilities 에서 Push Notifications 기능 추가
+- Xcode 의 Signing & Capabilities 에서 Background Modes 를 추가하고, `Background fetc` 와 `Remote notifications` 를 추가
+- APNs Authentication Key 생성 후 Firebase APN 설정
+
+
+
+## 푸시 알림 코딩
 
 - 푸시 알림을 이용하기 위해서는 `FireFlutter.instance.init()` 외에 추가적으로 `MessagingService.instance.init()` 을 추가 해 주어야 한다.
 

@@ -74,11 +74,17 @@ class MessagingService {
     _init();
   }
 
-  _updateToken(User? user, String? token) {
+  _updateToken(User? user, String? token) async {
+    if (user == null) return;
     if (token == null) return;
-    FirebaseFirestore.instance.collection('fcm-tokens').doc(token).set(
+    await FirebaseFirestore.instance.collection('fcm-tokens').doc(token).set(
       {
-        if (user?.isAnonymous == false) 'uid': user?.uid,
+        if (user.isAnonymous == false) 'uid': user.uid,
+        'platform': Platform.isAndroid
+            ? 'android'
+            : Platform.isIOS
+                ? 'ios'
+                : 'web',
       },
       SetOptions(merge: true),
     );
