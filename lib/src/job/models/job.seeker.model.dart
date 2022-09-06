@@ -1,5 +1,3 @@
-import 'package:fireflutter/fireflutter.dart';
-
 class JobSeekerModel {
   String id;
   String proficiency;

@@ -263,7 +263,7 @@ mixin ForumMixin {
       await postOrComment.report(input.text);
       String type = postOrComment is PostModel ? 'post' : 'comment';
       ffAlert('Report success', 'You have reported this $type');
-    } catch (e, s) {
+    } catch (e) {
       ffError(e);
       rethrow;
     }
