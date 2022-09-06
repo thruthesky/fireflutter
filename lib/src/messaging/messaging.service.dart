@@ -45,7 +45,7 @@ class MessagingService {
   late Function(RemoteMessage) onMessageOpenedFromBackground;
   late Function onNotificationPermissionDenied;
   late Function onNotificationPermissionNotDetermined;
-  String token = '';
+  String? token;
   final BehaviorSubject<String?> tokenChange = BehaviorSubject.seeded(null);
   StreamSubscription? tokenChangeSubscription;
   String defaultTopic = 'defaultTopic';
@@ -74,34 +74,25 @@ class MessagingService {
     _init();
   }
 
+  _updateToken(User? user, String? token) {
+    if (token == null) return;
+    FirebaseFirestore.instance.collection('fcm-tokens').doc(token).set(
+      {
+        if (user?.isAnonymous == false) 'uid': user?.uid,
+      },
+      SetOptions(merge: true),
+    );
+  }
+
   /// Initialize Messaging
   _init() async {
-    /// TODO: update token when the user signed in.
-    ///
-    /// Listen to user setting load. This is life time listener. No need to unsubscribe.
-    // Controller.of.settingChange.distinct((p, n) => p?.password == n?.password).listen((settings) {
-    //   if (settings?.password == null) return;
-    //   // log('---> MessagingService::init() update token for ${settings?.password} ');
-    //   tokenChangeSubscription?.cancel();
-    //   tokenChangeSubscription = tokenChange.listen((token) {
-    //     if (token != null) {
-    //       // log('---> tokenChange->_updateToken($token)');
-    //       _updateToken(token);
-    //     }
-    //   });
-    // });
-
+    /// 앱이 실행되는 동안 listen 하므로, cancel 하지 않음.
     /// `/fcm-tokens/<docId>/{token: '...', uid: '...'}`
     /// Save(or update) token
-    FirebaseAuth.instance.authStateChanges().listen((user) {
-      if (user == null) return;
-      FirebaseFirestore.instance.collection('fcm-tokens').doc(token).set(
-        {
-          if (user.isAnonymous == false) 'uid': user.uid,
-        },
-        SetOptions(merge: true),
-      );
-    });
+    FirebaseAuth.instance
+        .authStateChanges()
+        .listen((user) => _updateToken(user, token));
+    tokenChange.listen((token) => _updateToken(null, token));
 
     /// Permission request for iOS only. For Android, the permission is granted by default.
 
@@ -158,18 +149,18 @@ class MessagingService {
   /// User may not signed in. That is why we cannot put this code in user model.
   /// must be called when user signIn or when tokenRefresh
   /// skip if user is not signIn. _updateToken() will registered the device to default topic
-  _updateToken([String? token]) {
-    if (token == null) token = this.token;
-    if (token == '') return;
+  // _updateToken([String? token]) {
+  //   if (token == null) token = this.token;
+  //   if (token == '') return;
 
-    // since user will always sign-in with anonymous or real account this is done in backend
-    // subscribeToDefaultTopic();
+  // since user will always sign-in with anonymous or real account this is done in backend
+  // subscribeToDefaultTopic();
 
-    // print('---> _updateToken(); $token, ${UserService.instance.user}');
-    // FunctionsApi.instance.request('updateToken', data: {'token': token}, addAuth: true);
+  // print('---> _updateToken(); $token, ${UserService.instance.user}');
+  // FunctionsApi.instance.request('updateToken', data: {'token': token}, addAuth: true);
 
-    // TODO update token and subscribe the existing topics.
-  }
+  // TODO update token and subscribe the existing topics.
+  // }
 
   /// Subcribe to default topic.
   ///

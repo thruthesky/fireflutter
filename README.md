@@ -23,7 +23,8 @@
   - [글 목록 가져오기](#글-목록-가져오기)
     - [글 목록을 무한 스크롤로 가져오기](#글-목록을-무한-스크롤로-가져오기)
 - [푸시 알림](#푸시-알림)
-  - [푸시 알림 관련 참고 문서가](#푸시-알림-관련-참고-문서가)
+  - [푸시 알림 관련 참고 문서](#푸시-알림-관련-참고-문서)
+  - [푸시 알림 설정](#푸시-알림-설정)
 
 # 프로젝트 개요
 
@@ -313,8 +314,16 @@ FirestoreListView<PostModel>(
 
 # 푸시 알림
 
-## 푸시 알림 관련 참고 문서가
+## 푸시 알림 관련 참고 문서
 
 - [HTTP guidelines](https://cloud.google.com/apis/docs/http)
 - [Firebase Cloud Messaging API](https://firebase.google.com/docs/reference/fcm/rest)
 - [Firebase Cloud Messaging HTTP protocol](https://firebase.google.com/docs/cloud-messaging/http-server-ref)
+
+
+
+
+## 푸시 알림 설정
+
+- 푸시 알림을 이용하기 위해서는 `FireFlutter.instance.init()` 외에 추가적으로 `MessagingService.instance.init()` 을 추가 해 주어야 한다.
+
