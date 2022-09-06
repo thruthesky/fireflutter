@@ -95,12 +95,15 @@ class MessagingService {
     /// Save(or update) token
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user == null) return;
-      FirebaseFirestore.instance.collection('fcm-tokens').doc(token).set(
-        {
-          if (user.isAnonymous == false) 'uid': user.uid,
-        },
-        SetOptions(merge: true),
-      );
+      if (user.isAnonymous == true) return;
+
+      tokenChangeSubscription?.cancel();
+      tokenChangeSubscription = tokenChange.listen((token) {
+        if (token != null) {
+          // log('---> tokenChange->_updateToken($token)');
+          _updateToken(token);
+        }
+      });
     });
 
     /// Permission request for iOS only. For Android, the permission is granted by default.
@@ -162,8 +165,15 @@ class MessagingService {
     if (token == null) token = this.token;
     if (token == '') return;
 
-    // since user will always sign-in with anonymous or real account this is done in backend
-    // subscribeToDefaultTopic();
+    FirebaseFirestore.instance.collection('fcm-tokens').doc(token).set(
+      {
+        'uid': UserService.instance.uid,
+      },
+      SetOptions(merge: true),
+    );
+
+    // subcribe to defaultTopic
+    subscribeToDefaultTopic();
 
     // print('---> _updateToken(); $token, ${UserService.instance.user}');
     // FunctionsApi.instance.request('updateToken', data: {'token': token}, addAuth: true);
@@ -174,12 +184,14 @@ class MessagingService {
   /// Subcribe to default topic.
   ///
   /// This may be called on every app boot (after permission, initialization)
-  // subscribeToDefaultTopic() async {
-  //   if (kIsWeb) return;
-  //   if (doneDefaultTopic) return;
-  //   doneDefaultTopic = true;
-  //   FirebaseMessaging.instance.subscribeToTopic(defaultTopic);
-  // }
+  subscribeToDefaultTopic() async {
+    if (doneDefaultTopic) return;
+    doneDefaultTopic = true;
+    if (kIsWeb) {
+    } else {
+      FirebaseMessaging.instance.subscribeToTopic(defaultTopic);
+    }
+  }
 
   send({
     required String token,
