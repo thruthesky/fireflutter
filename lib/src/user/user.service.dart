@@ -74,9 +74,19 @@ class UserService {
 
   /// `/users/<uid>` 문서를 읽어 UserModel 로 리턴한다.
   /// 해당 문서가 존재하지 않으면 속성이 빈 값이 된다.
-  Future<UserModel> get(String uid) async {
+  /// 참고, 이 함수는 읽은 사용자 문서를 메모리 캐시를 한다. 즉, (비용 절감을 위해서) Firestore 에서 한번만 읽고 두 번 읽지 않는다.
+  /// 만약 [cache] 가 false 이면, Firestore 로 부터 문서를 읽는다. 즉, refresh 한다.
+  Map<String, UserModel> userDocumentContainer = {};
+  Future<UserModel> get(
+    String uid, {
+    bool cache = true,
+  }) async {
+    if (cache = true && userDocumentContainer[uid] != null) {
+      return userDocumentContainer[uid]!;
+    }
     final snapshot = await col.doc(uid).get();
-    return UserModel.fromSnapshot(snapshot);
+    userDocumentContainer[uid] = UserModel.fromSnapshot(snapshot);
+    return userDocumentContainer[uid]!;
   }
 
   /// 문서가 존재하지 않으면 생성을 한다.

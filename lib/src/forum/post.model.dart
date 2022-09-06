@@ -13,7 +13,6 @@ class PostModel with ForumMixin implements Article {
     this.subcategory = '',
     this.title = '',
     this.content = '',
-    this.summary = '',
     this.uid = '',
     this.noOfComments = 0,
     this.hasPhoto = false,
@@ -58,8 +57,6 @@ class PostModel with ForumMixin implements Article {
   String get displayContent {
     return deleted ? 'post-content-deleted' : content;
   }
-
-  String summary;
 
   bool deleted;
 
@@ -126,7 +123,6 @@ class PostModel with ForumMixin implements Article {
       subcategory: data['subcategory'] ?? '',
       title: data['title'] ?? '',
       content: content,
-      summary: data['summary'] ?? '',
       isHtmlContent: html,
       noOfComments: data['noOfComments'] ?? 0,
       hasPhoto: data['hasPhoto'] ?? false,
@@ -188,7 +184,6 @@ class PostModel with ForumMixin implements Article {
       'subcategory': subcategory,
       'title': title,
       'content': content,
-      'summary': summary,
       'isHtmlContent': isHtmlContent,
       'noOfComments': noOfComments,
       'hasPhoto': hasPhoto,

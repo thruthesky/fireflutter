@@ -965,10 +965,10 @@
       "name": "fireflutter",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "2.15"
+      "languageVersion": "2.18"
     }
   ],
-  "generated": "2022-09-06T01:11:18.488464Z",
+  "generated": "2022-09-06T07:45:32.960696Z",
   "generator": "pub",
   "generatorVersion": "2.18.0"
 }

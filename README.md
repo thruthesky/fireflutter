@@ -4,14 +4,15 @@
 
 
 - [FireFlutter v0.3](#fireflutter-v03)
-- [개요](#개요)
+- [프로젝트 개요](#프로젝트-개요)
+  - [데이터베이스](#데이터베이스)
 - [해야 할 것](#해야-할-것)
 - [외부 패키지 목록](#외부-패키지-목록)
 - [기능 별 데이터 구조](#기능-별-데이터-구조)
   - [사용자](#사용자)
     - [사용자 문서](#사용자-문서)
   - [글](#글)
-- [Fireflutter 연동](#fireflutter-연동)
+- [Fireflutter 초기화](#fireflutter-초기화)
 - [사용자 로그인](#사용자-로그인)
 - [사용자 정보 보여주기](#사용자-정보-보여주기)
 - [사진(파일) 업로드](#사진파일-업로드)
@@ -20,14 +21,27 @@
   - [글 생성](#글-생성)
   - [글 가져오기](#글-가져오기)
   - [글 목록 가져오기](#글-목록-가져오기)
+    - [글 목록을 무한 스크롤로 가져오기](#글-목록을-무한-스크롤로-가져오기)
 - [푸시 알림](#푸시-알림)
   - [푸시 알림 관련 참고 문서가](#푸시-알림-관련-참고-문서가)
 
-# 개요
+# 프로젝트 개요
 
 - 생산적이지 못하고 성공적이지 못한 결과를 만들어 내는 이유는 오직 하나, 코드를 복잡하 작성하기 때문이다. 반드시, 가장 간단한 코드로 작성되어야 하며 그렇지 않으면 실패하는 것으로 간주한다.
 - 파이어베이스 데이터베이스는 NoSQL, Flat Style 구조를 가진다.
   - 그래서, Entity Relationship 을 최소화한다.
+
+
+## 데이터베이스
+
+- Firestore 위주로 데이터를 저장하며, Realtime Database 는 백업 용도로 쓴다.
+  - 참고로, (2022년 9월 6일 환율 기준) Firestore 100만 문서 읽기에 약 520원 정도하며, Realtime Database 는 읽기/쓰기에 드는 비용이 없이 무료이다.
+- Realtime Database 는 Firestore 에 비해 상대적으로 저렴하여 적극 활용 할 필요가 있다. Realtime Database 사용하는 경우는
+  - 백업. Realtime Database 는 자동으로 백업을 하는 기능이 있다. 따라서 Firestore 의 데이터를 Realtime Database 에 집어 넣어 백업을 할 수 있다. 그 외 데이터 백업이 필요한 경우.
+  - 데이터를 저장만 하는 것이 아니라, 읽어야 하는 경우에는 Realtime Database 를 사용하지 않는다.
+- Firestore 가 문서 저장과 읽기에 비용이 발생하지만, 감당해야하는 부분이며, 최소한의 읽기(비용 지출)를 위해서 최대한의 메모리 캐시를 한다.
+
+
 
 # 해야 할 것
 
@@ -92,7 +106,7 @@ erDiagram
 
 
 
-# Fireflutter 연동
+# Fireflutter 초기화
 
 - Fireflutter 패키지를 `pubspec.yaml` 에 package 로 추가를 해도 되고, fork 하여 작업하며 수정 사항을 PR 해도 된다.
 - Fireflutter 를 앱에 연동하기 위해서는 루트 위젯에 `FireFlutter.service.init(context: ...)` 을 실행한다.
@@ -122,6 +136,16 @@ class RootWidget extends StatelessWidget {
       onReady: () {
         FireFlutter.instance.init(context: Get.context!); // context 지정
       },
+```
+
+예제) Go_Router 를 쓰는 경우,
+```dart
+class RootWidget extends StatefullWidget {
+  initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      FireFlutter.instance
+          .init(context: router.routerDelegate.navigatorKey.currentContext!);
+    });
 ```
 
 # 사용자 로그인
@@ -155,16 +179,22 @@ ObserveUserDoc[UserService.instance.user\n사용자 모델 DB 동기화 시작\n
 
 # 사용자 정보 보여주기
 
-- `MyDoc` 은 장치를 소유한 사용자의 정보를 보여준다. 로그인을 하지 않았으면 빈 사용자 모델을 파라메타로 전달하고, 로그인을 하였으면 그 사용자 모델을 전달한다.
+- 나의 사용자 문서의 데이터를 실시간으로 보여 줄 때에는 `MyDoc` 위젯을 사용하고,
+- 다른 사용자 문서를 보여 줄 때에는 `UserDoc` 위젯을 사용한다.
 
-- 예제) `my` 가 사용자 모델이다. 로그인을 했는지 안했는지 판별하여 다른 동작을 할 수 있다.
-
+- `MyDoc(builder: (user) => ...)` 의 builder 함수에는 사용자가 로그인을 하지 않았으면 빈 사용자 모델을 파라메타로 전달하고, 로그인을 하였으면 그 사용자 모델을 전달한다.
+  - 예제) 아래에서 `my` 가 사용자 모델이다. 로그인을 했는지 안했는지 판별하여 다른 동작을 할 수 있다.
 ```dart
 MyDoc(
   builder: (my) =>
       my.signedIn ? Text(my.toString()) : Text('Please, sign-in'),
 ),
 ```
+
+- `UserDoc` 위젯은 사용자 문서를 가져오기 위해 `UserService.instance.get(uid: ...)` 함수를 사용한다. 이 함수는 사용자 문서를 Firestore 에서 가져 온 후 메모리 캐시를 하므로 동일한 uid 로 여러번 호출해도 비용이 발생하지 않는다. 참고로 uid 에는 나의 uid 또는 타인의 uid 일 수 있다.
+
+- 게시판 목록 등에서 특정 사용자 이름이 여러번 표시 될 수 있는데, 이 때 `UserService.instance.get(uid: ...)` 또는 `UserDoc` 위젯을 사용하면 된다.
+
 
 # 사진(파일) 업로드
 
@@ -257,6 +287,28 @@ List<PostModel> photos = await PostService.instance.get(
 );
 ```
 
+
+### 글 목록을 무한 스크롤로 가져오기
+
+- 화면에 표시해야 할 글 목록을 많은 경우, 스크롤을 할 때 마다 다음 페이지에 해당하는 글 목록을 가져와야 하는데, 가장 표준적이고 쉬운 방법인 `FirestoreListView`를 사용 하였다.
+- `FirestoreListView` 의 사용법에 익숙하다면, 직접 Query 를 작성해서 가져 올 수도 있겠지만 조금 더 사용하기 쉽게 함수와 위젯을 추가해 놓았다.
+
+```dart
+FirestoreListView<PostModel>(
+  query: posts(),
+  itemBuilder: ((context, snapshot) {
+    final post = snapshot.data();
+    return ListTile(
+      title: Column(
+        children: [
+          Text('title: ${post.displayTitle}'),
+        ],
+      ),
+      onTap: () => router.push('/view?id=${post.id}'),
+    );
+  }),
+),
+```
 
 
 # 푸시 알림

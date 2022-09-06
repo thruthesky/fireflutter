@@ -188,12 +188,13 @@ class MessagingService {
     if (doneDefaultTopic) return;
     doneDefaultTopic = true;
     if (kIsWeb) {
+      // rest api to subscribe token to topic
     } else {
       FirebaseMessaging.instance.subscribeToTopic(defaultTopic);
     }
   }
 
-  send({
+  send_old({
     required String token,
     required String title,
     required String body,
@@ -221,6 +222,46 @@ class MessagingService {
           'content-type': 'application/json',
           'Authorization':
               'key=AAAAWy4G2hU:APA91bG8FpX2kNKMTRlTyiAEo3jDCg6UsiXlmVqCU-7syY0DGgpv_7VVJVpuQRoZqqzmBdUg_BWuluihF6nLwHt3yZpkfXvzzJidyp4_Ku-NgicQa0GT9Rilj_ks83HWSpAoVjaCFN7S',
+        },
+      ),
+    );
+
+    print(res.statusCode);
+    print(res.data);
+  }
+
+
+  
+
+  /// https://firebase.google.com/docs/cloud-messaging/migrate-v1
+  /// Migrate from legacy HTTP to HTTP v1 
+  send({
+    required String token,
+    required String title,
+    required String body,
+  }) async {
+    const apiUrl = "https://fcm.googleapis.com/v1/projects/wonderful-korea/messages:send";
+    final data = {
+      "to": token,
+      "notification": {
+        "title": title,
+        "body": body,
+      },
+      "data": {
+        "click_action": "FLUTTER_NOTIFICATION_CLICK",
+      },
+    };
+
+    Dio dio = getRetryDio();
+
+    final res = await dio.post(
+      apiUrl,
+      data: data,
+      options: Options(
+        headers: {
+          'content-type': 'application/json',
+          'Authorization':
+              'Bearer AAAAWy4G2hU:APA91bG8FpX2kNKMTRlTyiAEo3jDCg6UsiXlmVqCU-7syY0DGgpv_7VVJVpuQRoZqqzmBdUg_BWuluihF6nLwHt3yZpkfXvzzJidyp4_Ku-NgicQa0GT9Rilj_ks83HWSpAoVjaCFN7S',
         },
       ),
     );

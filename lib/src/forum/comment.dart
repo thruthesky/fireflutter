@@ -54,14 +54,17 @@ class CommentModel with ForumMixin implements Article {
 
   int point;
 
+  factory CommentModel.fromSnapshot(DocumentSnapshot doc) {
+    return CommentModel.fromJson(doc.data() as Json, doc.id);
+  }
+
   /// Get document data of map and convert it into post model
   ///
   /// If the comment is created via https, then the id of comment is inside data.
-  /// TODO Change it to named constructor.
   factory CommentModel.fromJson(
-    Json data, {
+    Json data,
     String? id,
-  }) {
+  ) {
     Timestamp? _createdAt = data['createdAt'] is int
         ? Timestamp.fromMillisecondsSinceEpoch(data['createdAt'] * 1000)
         : data['createdAt'];
@@ -172,25 +175,8 @@ class CommentModel with ForumMixin implements Article {
     // if (signedIn == false) throw ERROR_SIGN_IN_FIRST;
     // if (UserService.instance.user.exists == false) throw ERROR_USER_DOCUMENT_NOT_EXISTS;
     // if (UserService.instance.user.notReady) throw UserService.instance.user.profileError;
-    // final _ = CommentModel.empty();
-    // final ref = await _.commentCol.add({
-    //   'postId': postId,
-    //   'parentId': parentId,
-    //   'content': content,
-    //   'files': files,
-    //   'createdAt': FieldValue.serverTimestamp(),
-    //   'updatedAt': FieldValue.serverTimestamp(),
-    //   'uid': FirebaseAuth.instance.currentUser?.uid ?? '',
-    // });
 
-    // // final post = await PostModel().get(postId);
-    // // await post.increaseNoOfComments();
-
-    // Post.increaseNoOfComments(postId);
-
-    // return ref;
-
-    if (signedIn == false) throw ERROR_SIGN_IN_FIRST_FOR_POST_CREATE;
+    if (signedIn == false) throw ERROR_SIGN_IN_FIRST_FOR_COMMENT_CREATE;
     if (UserService.instance.user.ready == false) {
       throw UserService.instance.user.profileError;
     }
@@ -236,18 +222,41 @@ class CommentModel with ForumMixin implements Article {
     if (id.isEmpty) throw 'Id is empty on comment delete.';
     if (uid != UserService.instance.uid) throw 'Not your comment.';
 
-    /// TODO check if comment has child
-    /// if it has, only mark as deleted.
-    /// if it does not, delete it completely.
-
     /// Delete files.
     if (files.isNotEmpty) files.forEach((url) => Storage.delete(url));
+
     await commentDoc(id).update({
       'deleted': true,
       'content': '',
       'files': [],
       'updatedAt': FieldValue.serverTimestamp(),
     });
+
+    /// TODO check if comment has child
+    /// if it has, only mark as deleted.
+    /// if it does not, delete it completely.
+    // final childSnap = await commentCol
+    //     .where(
+    //       'parentId',
+    //       isEqualTo: id,
+    //     )
+    //     .limit(1)
+    //     .get();
+
+    // debugPrint('${childSnap.size}');
+
+    // if (childSnap.docs.isNotEmpty) {
+    //   debugPrint('comment has child');
+    //   await commentDoc(id).update({
+    //     'deleted': true,
+    //     'content': '',
+    //     'files': [],
+    //     'updatedAt': FieldValue.serverTimestamp(),
+    //   });
+    // } else {
+    //   debugPrint('comment has no child');
+    //   await commentDoc(id).delete();
+    // }
 
     /// TODO update post comment number.
     return postDoc(postId).update({'noOfComments': FieldValue.increment(-1)});

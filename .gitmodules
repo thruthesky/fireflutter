@@ -1,3 +1,6 @@
 [submodule "apps/wonderfulkorea"]
 	path = apps/wonderfulkorea
 	url = https://github.com/thruthesky/wonderfulkorea
+[submodule "apps/flutterkorea"]
+	path = apps/flutterkorea
+	url = https://github.com/thruthesky/flutterkorea

@@ -45,6 +45,19 @@ mixin ForumMixin {
     return postCol.doc(id);
   }
 
+  Query<PostModel> postsQuery({
+    int limit = 10,
+    bool decending = true,
+  }) {
+    return postCol
+        .limit(limit)
+        .orderBy('createdAt', descending: decending)
+        .withConverter<PostModel>(
+          fromFirestore: (snapshot, _) => PostModel.fromSnapshot(snapshot),
+          toFirestore: (post, _) => post.map,
+        );
+  }
+
   // Use this for static.
   static DocumentReference postDocument(String id) {
     return FirebaseFirestore.instance.collection('posts').doc(id);

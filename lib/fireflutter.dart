@@ -32,6 +32,7 @@ export 'src/forum/widgets/post/post.list.tile.dart';
 export 'src/forum/widgets/post/post.preview_image.dart';
 export 'src/forum/widgets/post/post.list.meta.dart';
 export 'src/forum/widgets/post/post.view.dart';
+export 'src/forum/widgets/post/post.list.title.dart';
 export 'src/comment.dart';
 export 'src/chat/chat.dart';
 export 'src/chat/widgets/chat.friend.dart';

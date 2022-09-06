@@ -95,7 +95,7 @@ class PostService with ForumMixin {
 
         /// is it immediate child?
         final CommentModel c =
-            CommentModel.fromJson(snapshot.data() as Json, id: snapshot.id);
+            CommentModel.fromJson(snapshot.data() as Json, snapshot.id);
         // print(c);
 
         // if exists in array, just update it.
