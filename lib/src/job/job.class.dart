@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/functions.dart';
 import 'package:flutter/material.dart';
 
 class Job {
