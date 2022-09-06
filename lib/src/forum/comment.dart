@@ -172,23 +172,6 @@ class CommentModel with ForumMixin implements Article {
     // if (signedIn == false) throw ERROR_SIGN_IN_FIRST;
     // if (UserService.instance.user.exists == false) throw ERROR_USER_DOCUMENT_NOT_EXISTS;
     // if (UserService.instance.user.notReady) throw UserService.instance.user.profileError;
-    // final _ = CommentModel.empty();
-    // final ref = await _.commentCol.add({
-    //   'postId': postId,
-    //   'parentId': parentId,
-    //   'content': content,
-    //   'files': files,
-    //   'createdAt': FieldValue.serverTimestamp(),
-    //   'updatedAt': FieldValue.serverTimestamp(),
-    //   'uid': FirebaseAuth.instance.currentUser?.uid ?? '',
-    // });
-
-    // // final post = await PostModel().get(postId);
-    // // await post.increaseNoOfComments();
-
-    // Post.increaseNoOfComments(postId);
-
-    // return ref;
 
     if (signedIn == false) throw ERROR_SIGN_IN_FIRST_FOR_POST_CREATE;
     if (UserService.instance.user.ready == false) {
