@@ -71,24 +71,26 @@ class _CommentListState extends State<CommentList> with ForumMixin {
         .snapshots()
         .listen((QuerySnapshot snapshots) {
       comments = [];
-      snapshots.docs.forEach((QueryDocumentSnapshot snapshot) {
-        /// is it immediate child?
-        final CommentModel c =
-            CommentModel.fromJson(snapshot.data() as Json, id: snapshot.id);
+      snapshots.docs.forEach(
+        (QueryDocumentSnapshot snapshot) {
+          /// is it immediate child?
+          final CommentModel c =
+              CommentModel.fromJson(snapshot.data() as Json, snapshot.id);
 
-        /// if immediate child comment,
-        if (c.postId == c.parentId) {
-          /// add at bottom
-          comments.add(c);
-        } else {
-          /// It's a comment under another comemnt. Find parent.
-          int i = comments.indexWhere((e) => e.id == c.parentId);
-          if (i >= 0) {
-            c.depth = comments[i].depth + 1;
-            comments.insert(i + 1, c);
+          /// if immediate child comment,
+          if (c.postId == c.parentId) {
+            /// add at bottom
+            comments.add(c);
+          } else {
+            /// It's a comment under another comemnt. Find parent.
+            int i = comments.indexWhere((e) => e.id == c.parentId);
+            if (i >= 0) {
+              c.depth = comments[i].depth + 1;
+              comments.insert(i + 1, c);
+            }
           }
-        }
-      });
+        },
+      );
 
       if (mounted) setState(() {});
     });

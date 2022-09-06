@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:flutter/foundation.dart';
 import 'package:jiffy/jiffy.dart';
 
 /// CommentModel
@@ -55,14 +54,17 @@ class CommentModel with ForumMixin implements Article {
 
   int point;
 
+  factory CommentModel.fromSnapshot(DocumentSnapshot doc) {
+    return CommentModel.fromJson(doc.data() as Json, doc.id);
+  }
+
   /// Get document data of map and convert it into post model
   ///
   /// If the comment is created via https, then the id of comment is inside data.
-  /// TODO Change it to named constructor.
   factory CommentModel.fromJson(
-    Json data, {
+    Json data,
     String? id,
-  }) {
+  ) {
     Timestamp? _createdAt = data['createdAt'] is int
         ? Timestamp.fromMillisecondsSinceEpoch(data['createdAt'] * 1000)
         : data['createdAt'];
@@ -223,31 +225,12 @@ class CommentModel with ForumMixin implements Article {
     /// Delete files.
     if (files.isNotEmpty) files.forEach((url) => Storage.delete(url));
 
-    /// TODO check if comment has child
-    /// if it has, only mark as deleted.
-    /// if it does not, delete it completely.
-    final childSnap = await commentCol
-        .where(
-          'parentId',
-          isEqualTo: id,
-        )
-        .limit(1)
-        .get();
-
-    debugPrint('${childSnap.size}');
-
-    if (childSnap.docs.isNotEmpty) {
-      debugPrint('comment has child');
-      await commentDoc(id).update({
-        'deleted': true,
-        'content': '',
-        'files': [],
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
-    } else {
-      debugPrint('comment has no child');
-      await commentDoc(id).delete();
-    }
+    await commentDoc(id).update({
+      'deleted': true,
+      'content': '',
+      'files': [],
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
 
     /// TODO update post comment number.
     return postDoc(postId).update({'noOfComments': FieldValue.increment(-1)});

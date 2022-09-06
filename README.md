@@ -11,7 +11,7 @@
   - [사용자](#사용자)
     - [사용자 문서](#사용자-문서)
   - [글](#글)
-- [Fireflutter 연동](#fireflutter-연동)
+- [Fireflutter 초기화](#fireflutter-초기화)
 - [사용자 로그인](#사용자-로그인)
 - [사용자 정보 보여주기](#사용자-정보-보여주기)
 - [사진(파일) 업로드](#사진파일-업로드)
@@ -92,7 +92,7 @@ erDiagram
 
 
 
-# Fireflutter 연동
+# Fireflutter 초기화
 
 - Fireflutter 패키지를 `pubspec.yaml` 에 package 로 추가를 해도 되고, fork 하여 작업하며 수정 사항을 PR 해도 된다.
 - Fireflutter 를 앱에 연동하기 위해서는 루트 위젯에 `FireFlutter.service.init(context: ...)` 을 실행한다.
@@ -122,6 +122,16 @@ class RootWidget extends StatelessWidget {
       onReady: () {
         FireFlutter.instance.init(context: Get.context!); // context 지정
       },
+```
+
+예제) Go_Router 를 쓰는 경우,
+```dart
+class RootWidget extends StatefullWidget {
+  initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      FireFlutter.instance
+          .init(context: router.routerDelegate.navigatorKey.currentContext!);
+    });
 ```
 
 # 사용자 로그인
