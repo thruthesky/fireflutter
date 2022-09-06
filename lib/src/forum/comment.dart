@@ -231,8 +231,6 @@ class CommentModel with ForumMixin implements Article {
       'files': [],
       'updatedAt': FieldValue.serverTimestamp(),
     });
-<<<<<<< HEAD
-=======
 
     /// TODO check if comment has child
     /// if it has, only mark as deleted.
@@ -259,7 +257,6 @@ class CommentModel with ForumMixin implements Article {
     //   debugPrint('comment has no child');
     //   await commentDoc(id).delete();
     // }
->>>>>>> e5807d2492dc601987284f3fcd86ee0454c50fd0
 
     /// TODO update post comment number.
     return postDoc(postId).update({'noOfComments': FieldValue.increment(-1)});
