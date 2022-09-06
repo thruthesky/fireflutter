@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:jiffy/jiffy.dart';
 
 /// CommentModel
@@ -173,7 +174,7 @@ class CommentModel with ForumMixin implements Article {
     // if (UserService.instance.user.exists == false) throw ERROR_USER_DOCUMENT_NOT_EXISTS;
     // if (UserService.instance.user.notReady) throw UserService.instance.user.profileError;
 
-    if (signedIn == false) throw ERROR_SIGN_IN_FIRST_FOR_POST_CREATE;
+    if (signedIn == false) throw ERROR_SIGN_IN_FIRST_FOR_COMMENT_CREATE;
     if (UserService.instance.user.ready == false) {
       throw UserService.instance.user.profileError;
     }
@@ -219,18 +220,34 @@ class CommentModel with ForumMixin implements Article {
     if (id.isEmpty) throw 'Id is empty on comment delete.';
     if (uid != UserService.instance.uid) throw 'Not your comment.';
 
+    /// Delete files.
+    if (files.isNotEmpty) files.forEach((url) => Storage.delete(url));
+
     /// TODO check if comment has child
     /// if it has, only mark as deleted.
     /// if it does not, delete it completely.
+    final childSnap = await commentCol
+        .where(
+          'parentId',
+          isEqualTo: id,
+        )
+        .limit(1)
+        .get();
 
-    /// Delete files.
-    if (files.isNotEmpty) files.forEach((url) => Storage.delete(url));
-    await commentDoc(id).update({
-      'deleted': true,
-      'content': '',
-      'files': [],
-      'updatedAt': FieldValue.serverTimestamp(),
-    });
+    debugPrint('${childSnap.size}');
+
+    if (childSnap.docs.isNotEmpty) {
+      debugPrint('comment has child');
+      await commentDoc(id).update({
+        'deleted': true,
+        'content': '',
+        'files': [],
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } else {
+      debugPrint('comment has no child');
+      await commentDoc(id).delete();
+    }
 
     /// TODO update post comment number.
     return postDoc(postId).update({'noOfComments': FieldValue.increment(-1)});
