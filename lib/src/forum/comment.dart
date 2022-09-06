@@ -231,6 +231,35 @@ class CommentModel with ForumMixin implements Article {
       'files': [],
       'updatedAt': FieldValue.serverTimestamp(),
     });
+<<<<<<< HEAD
+=======
+
+    /// TODO check if comment has child
+    /// if it has, only mark as deleted.
+    /// if it does not, delete it completely.
+    // final childSnap = await commentCol
+    //     .where(
+    //       'parentId',
+    //       isEqualTo: id,
+    //     )
+    //     .limit(1)
+    //     .get();
+
+    // debugPrint('${childSnap.size}');
+
+    // if (childSnap.docs.isNotEmpty) {
+    //   debugPrint('comment has child');
+    //   await commentDoc(id).update({
+    //     'deleted': true,
+    //     'content': '',
+    //     'files': [],
+    //     'updatedAt': FieldValue.serverTimestamp(),
+    //   });
+    // } else {
+    //   debugPrint('comment has no child');
+    //   await commentDoc(id).delete();
+    // }
+>>>>>>> e5807d2492dc601987284f3fcd86ee0454c50fd0
 
     /// TODO update post comment number.
     return postDoc(postId).update({'noOfComments': FieldValue.increment(-1)});
