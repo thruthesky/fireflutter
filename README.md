@@ -9,7 +9,6 @@
 - [해야 할 것](#해야-할-것)
 - [외부 패키지 목록](#외부-패키지-목록)
 - [기능 별 데이터 구조](#기능-별-데이터-구조)
-- [클라우드 함수](#클라우드-함수)
   - [사용자](#사용자)
     - [사용자 문서](#사용자-문서)
   - [글](#글)
@@ -28,6 +27,9 @@
   - [푸시 알림 설정](#푸시-알림-설정)
     - [iOS 설정](#ios-설정)
   - [푸시 알림 코딩](#푸시-알림-코딩)
+- [클라우드 함수](#클라우드-함수)
+  - [유닛 테스트](#유닛-테스트)
+  - [클라우드 함수 Deploy](#클라우드-함수-deploy)
 
 # 프로젝트 개요
 
@@ -64,32 +66,6 @@
   - 예를 들어 사용자 문서 생성, 글 생성, 코멘트 생성은 `UserModel`, `PostModel`, `CommentModel` 의 모델에서 하며, 기타 읽기, 수정, 삭제 등 자료 하나에 대한 기능을 모델이 담고 있다.
 - 그 외, 각 기능별 기능은 각 Service 클래스에 기록된다.
   - 예를 들어, 검색과 같이 자료 1개에 대한 기능이 아닌 경우 Service 클래스에 기록되는데, `UserService`, `PostService`, `CommentService` 등이 있다.
-
-
-# 클라우드 함수
-
-- 클라우드 함수를 최소한으로 작성하려고 하지만, 꼭 필요한 경우가 있다.
-  - 예를 들면, 푸시 알림을 보낼 때, 레거시 키로 작업을 하기에는 한계가 있다. [푸시 알림](#푸시-알림) 참고.
-
-- 클라우드 함수를 작업 할 때에는 필연적으로 유닛 테스트가 따라 온다. 유닛 테스트를 손 쉽게 하기 위해서 기본적인 코드를 로컬 컴퓨터에서 수정하면 바로 테스트 결과를 볼 수 있도록 작성한다. 이렇게 하기 위해서는 Firebase 의 service account 를 다운로드해서 아래와 같이 `./firebase/functions/credentials/test.service-account.ts` 로 저장을 한다.
-  - 참고, 로컬 컴퓨터에서 테스트를 할 때에는 관리자 권한이 없어 service account 가 필요한 것이다. 클라우드 함수로 등록되어 실행 될 때에는 service account 없이도 (모든 권한은 아니지만) 권한이 주어져 있어 괜찮다.
-
-```ts
-export const credentials = {
-  type: "service_account",
-  project_id: "...",
-  private_key_id: "...",
-  private_key: "-----BEGIN PRIVATE KEY-----\nMI ... Ji\n-----END PRIVATE KEY-----\n",
-  client_email: "...",
-  client_id: "...",
-  auth_uri: "...",
-  token_uri: "...",
-  auth_provider_x509_cert_url: "...",
-  client_x509_cert_url: "...",
-};
-```
-
-- 테스트가 끝나고 클라우드 함수로 실행 될 수 있도록 wrapping 한 함수를 함수를 파이어베이스에 올려서 잘 되는지 확인을 하면 된다.
 
 
 
@@ -371,4 +347,51 @@ FirestoreListView<PostModel>(
 ## 푸시 알림 코딩
 
 - 푸시 알림을 이용하기 위해서는 `FireFlutter.instance.init()` 외에 추가적으로 `MessagingService.instance.init()` 을 추가 해 주어야 한다.
+
+
+
+
+
+# 클라우드 함수
+
+- 클라우드 함수를 최소한으로 작성하려고 하지만, 꼭 필요한 경우가 있다.
+  - 예를 들면, 푸시 알림을 보낼 때, 레거시 키로 작업을 하기에는 한계가 있다. [푸시 알림](#푸시-알림) 참고.
+
+- 클라우드 함수를 작업 할 때에는 필연적으로 유닛 테스트가 따라 온다. 유닛 테스트를 손 쉽게 하기 위해서 기본적인 코드를 로컬 컴퓨터에서 수정하면 바로 테스트 결과를 볼 수 있도록 작성한다. 이렇게 하기 위해서는 Firebase 의 service account 를 다운로드해서 아래와 같이 `./firebase/functions/credentials/test.service-account.ts` 로 저장을 한다.
+  - 참고, 로컬 컴퓨터에서 테스트를 할 때에는 관리자 권한이 없어 service account 가 필요한 것이다. 클라우드 함수로 등록되어 실행 될 때에는 service account 없이도 (모든 권한은 아니지만) 권한이 주어져 있어 괜찮다.
+
+```ts
+export const credentials = {
+  type: "service_account",
+  project_id: "...",
+  private_key_id: "...",
+  private_key: "-----BEGIN PRIVATE KEY-----\nMI ... Ji\n-----END PRIVATE KEY-----\n",
+  client_email: "...",
+  client_id: "...",
+  auth_uri: "...",
+  token_uri: "...",
+  auth_provider_x509_cert_url: "...",
+  client_x509_cert_url: "...",
+};
+```
+
+- 테스트가 끝나고 클라우드 함수로 실행 될 수 있도록 wrapping 한 함수를 함수를 파이어베이스에 올려서 잘 되는지 확인을 하면 된다.
+
+
+## 유닛 테스트
+
+- 클라우드 함수 개발은 소스 코드를 변경하고 결과를 바로 확인 할 수 있는 것이 아니라 많은 시간과 번거로운 작업을 거쳐야 하기 때문에 유닛 테스트는 필수적인 개발 방법이다.
+- 유닛 테스트에는 여러가지 시나리오가 있겠지만, 로컬 컴퓨터에서 테스트 소스 코드를 수정하면 실제 파이어베이스에 접속해서 (클라우드 함수 호출을 제외한) 기본 소스 코드를 테스트하는 방식을 채택했다. 이렇게 하면 로컬에서 Firebase Emulator 를 돌릴 필요는 없지만, 테스트용 파이어베이스를 하나 준비해야 한다. (실제 서비스용 파이어베이스에 테스트를 하는 것은 권장하지 않는다.)
+- 테스트 명령은 아래와 같이 하면 된다. 참고로 package.json 을 살펴보고 어떻게 구성되어져 있는지 살펴본다.
+
+예제)
+```shell
+$ npm run test tests/messaging/send-message-to-tokens.spec.ts
+```
+
+
+## 클라우드 함수 Deploy
+
+- 클라우드 함수를 deploy 할 때에는 어느 파이어베이스에 deploy 하는지 `firebase use` 명령으로 확인을 해야 한다.
+
 
