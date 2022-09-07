@@ -92,6 +92,16 @@ class CommentModel with ForumMixin implements Article {
 
   /// Get indexed document data from Typesense of map and convert it into comment model
   factory CommentModel.fromTypesense(Json data, String id) {
+    /// In old data format, [createdAt] and [updatedAt] are int of unix timestamp.
+    /// Convert those into Firestore timestamp.
+    Timestamp? _createdAt = data['createdAt'] is int
+        ? Timestamp.fromMillisecondsSinceEpoch(data['createdAt'] * 1000)
+        : data['createdAt'];
+
+    Timestamp? _updatedAt = data['updatedAt'] is int
+        ? Timestamp.fromMillisecondsSinceEpoch(data['updatedAt'] * 1000)
+        : data['updatedAt'];
+
     return CommentModel(
       id: id,
       postId: data['postId'],
@@ -101,8 +111,8 @@ class CommentModel with ForumMixin implements Article {
       like: data['like'] ?? 0,
       dislike: data['dislike'] ?? 0,
       deleted: data['deleted'] ?? false,
-      createdAt: data['createdAt'] ?? 0,
-      updatedAt: data['updatedAt'] ?? 0,
+      createdAt: _createdAt,
+      updatedAt: _updatedAt,
       data: data,
     );
   }
