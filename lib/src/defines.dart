@@ -29,3 +29,6 @@ const ERROR_NO_FIRST_NAME = 'Please, input your first name.';
 const ERROR_NO_LAST_NAME = 'Please, input your last name.';
 const ERROR_NO_GENER = 'Please, select your gender.';
 const ERROR_NO_BIRTHDAY = 'Please, select your birthday.';
+
+const ERROR_POST_ALREADY_REPORTED = 'Post is already reported';
+const ERROR_COMMENT_ALREADY_REPORTED = 'Comment is already reported';

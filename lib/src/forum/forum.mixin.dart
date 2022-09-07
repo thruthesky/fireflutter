@@ -4,6 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
+enum ReportTarget {
+  post,
+  comment,
+  user,
+  chat,
+}
+
 mixin ForumMixin {
   /// [post] is the post
   /// [comment] is null for immediate child comment or the parent comment
@@ -269,6 +276,40 @@ mixin ForumMixin {
     }
   }
 
+  /// Create a report document.
+  ///
+  /// [uid] is the uid of the reporter.
+  ///
+  /// [reporteeUid] is the uid of the user being reported.
+  ///
+  Future<void> createReport({
+    required ReportTarget target,
+    required String targetId,
+    String? reason,
+    String? reporteeUid,
+  }) async {
+    final uid = UserService.instance.uid;
+    final docId = "${target.name}-$targetId-$uid";
+
+    final reportSnap = await reportCol.doc(docId).get();
+    if (reportSnap.exists) {
+      throw target == ReportTarget.post
+          ? ERROR_POST_ALREADY_REPORTED
+          : ERROR_COMMENT_ALREADY_REPORTED;
+    }
+
+    return reportCol.doc(docId).set({
+      'uid': uid,
+      'target': target.name,
+      'targetId': targetId,
+      'timestamp': FieldValue.serverTimestamp(),
+      if (reason != null) 'reason': reason,
+      if (reporteeUid != null) 'reporteeUid': reporteeUid,
+    });
+  }
+
+  /// Show image on a seperate dialog.
+  ///
   onImageTapped(int initialIndex, List<String> files) {
     // return alert('Display original image', 'TODO: display original images with a scaffold.');
     return showDialog(

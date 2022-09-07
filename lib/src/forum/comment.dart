@@ -171,11 +171,6 @@ class CommentModel with ForumMixin implements Article {
     String content = '',
     List<String> files = const [],
   }) async {
-    // bool signedIn = FirebaseAuth.instance.currentUser != null;
-    // if (signedIn == false) throw ERROR_SIGN_IN_FIRST;
-    // if (UserService.instance.user.exists == false) throw ERROR_USER_DOCUMENT_NOT_EXISTS;
-    // if (UserService.instance.user.notReady) throw UserService.instance.user.profileError;
-
     if (signedIn == false) throw ERROR_SIGN_IN_FIRST_FOR_COMMENT_CREATE;
     if (UserService.instance.user.ready == false) {
       throw UserService.instance.user.profileError;
@@ -218,6 +213,8 @@ class CommentModel with ForumMixin implements Article {
     });
   }
 
+  /// Marks a comment as deleted.
+  /// TODO check if comment has child
   Future<void> delete() async {
     if (id.isEmpty) throw 'Id is empty on comment delete.';
     if (uid != UserService.instance.uid) throw 'Not your comment.';
@@ -232,49 +229,22 @@ class CommentModel with ForumMixin implements Article {
       'updatedAt': FieldValue.serverTimestamp(),
     });
 
-    /// TODO check if comment has child
-    /// if it has, only mark as deleted.
-    /// if it does not, delete it completely.
-    // final childSnap = await commentCol
-    //     .where(
-    //       'parentId',
-    //       isEqualTo: id,
-    //     )
-    //     .limit(1)
-    //     .get();
-
-    // debugPrint('${childSnap.size}');
-
-    // if (childSnap.docs.isNotEmpty) {
-    //   debugPrint('comment has child');
-    //   await commentDoc(id).update({
-    //     'deleted': true,
-    //     'content': '',
-    //     'files': [],
-    //     'updatedAt': FieldValue.serverTimestamp(),
-    //   });
-    // } else {
-    //   debugPrint('comment has no child');
-    //   await commentDoc(id).delete();
-    // }
-
-    /// TODO update post comment number.
     return postDoc(postId).update({'noOfComments': FieldValue.increment(-1)});
   }
 
-  /// TODO comment report
+  /// Report comment.
+  ///
   Future<void> report(String? reason) {
-    return Future.value();
+    return createReport(
+      target: ReportTarget.comment,
+      targetId: id,
+      reason: reason,
+      reporteeUid: uid,
+    );
+
     // return ReportApi.instance.report(
     //   target: 'comment',
     //   targetId: id,
-    //   reason: reason,
-    // );
-
-    // return createReport(
-    //   target: 'comment',
-    //   targetId: id,
-    //   reporteeUid: uid,
     //   reason: reason,
     // );
   }
