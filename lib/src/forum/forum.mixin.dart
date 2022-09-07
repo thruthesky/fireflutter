@@ -4,13 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-enum ReportTarget {
-  post,
-  comment,
-  user,
-  chat,
-}
-
 mixin ForumMixin {
   /// [post] is the post
   /// [comment] is null for immediate child comment or the parent comment
@@ -231,6 +224,14 @@ mixin ForumMixin {
   }
 
   onReport(dynamic postOrComment) async {
+    if (!signedIn) {
+      return ffError(
+        postOrComment is PostModel
+            ? ERROR_SIGN_IN_FIRST_FOR_POST_REPORT
+            : ERROR_SIGN_IN_FIRST_FOR_COMMENT_REPORT,
+      );
+    }
+
     log("type of post or comment: ${postOrComment.runtimeType}");
     final input = TextEditingController(text: '');
     String? re = await showDialog(
