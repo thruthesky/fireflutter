@@ -72,7 +72,7 @@ export class Messaging {
       await Promise.all(tokensToRemove);
 
       // 결과 리턴
-      return { success: value.successCount, error: value.errorCount };
+      return { success: value.successCount, error: value.failureCount };
     } catch (e) {
       console.log("---> caught on sendMessageToTokens() await Promise.all()", e);
       throw e;
@@ -125,6 +125,12 @@ export class Messaging {
     // return Object.keys(val);
   }
 
+  /**
+   * Returns complete payload from the query data from client.
+   *
+   * @param query query data that has payload information
+   * @returns an object of payload
+   */
   static completePayload(query: SendMessage) {
     // query = this.checkQueryPayload(query);
     if (!query.title) throw invalidArgument("title-is-empty");
