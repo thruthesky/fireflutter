@@ -13,7 +13,7 @@ class PostListMeta extends StatelessWidget {
         Row(
           children: [
             // User(uid: post.uid, size: 20, iconSize: 16),
-            UserProfilePhoto(uid: post.uid, size: 20),
+            UserDoc(uid: post.uid, builder: (user) => ProfilePhoto(user: user)),
             UserName(
               uid: post.uid,
               padding: EdgeInsets.only(left: 8),

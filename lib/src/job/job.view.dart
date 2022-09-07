@@ -47,22 +47,21 @@ class _JobViewState extends State<JobView> {
               ),
             ),
             SizedBox(height: 8),
-            Row(
-              children: [
-                UserProfilePhoto(
-                  uid: job.uid,
-                  onTap: widget.onTapProfilePhoto != null
-                      ? () => widget.onTapProfilePhoto!(job.uid)
-                      : null,
-                ),
-                SizedBox(width: 8),
-                UserDoc(
-                  uid: job.uid,
-                  builder: (u) => Text(
-                    u.displayName,
+            UserDoc(
+              uid: job.uid,
+              builder: (user) => Row(
+                children: [
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: widget.onTapProfilePhoto != null
+                        ? () => widget.onTapProfilePhoto!(job.uid)
+                        : null,
+                    child: ProfilePhoto(user: user),
                   ),
-                ),
-              ],
+                  SizedBox(width: 8),
+                  Text(user.displayName),
+                ],
+              ),
             ),
             Divider(height: 24),
           ],

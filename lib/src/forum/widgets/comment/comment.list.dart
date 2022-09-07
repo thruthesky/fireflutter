@@ -182,7 +182,7 @@ class _CommentListState extends State<CommentList> with ForumMixin {
         uid: comment.uid,
         builder: (user) => Row(
           children: [
-            UserProfilePhoto(uid: user.uid),
+            ProfilePhoto(user: user),
             SizedBox(width: 8),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
