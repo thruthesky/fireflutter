@@ -7,27 +7,30 @@ import { Utils } from "../utils/utils";
 
 export class Messaging {
   static async sendMessage(data: any, context: CallableContext): Promise<any> {
-    if (data.uids || data.tokens) {
-      return this.sendMessageToTokens(data, context);
+    if (data.uids) {
+      const tokens = await this.getTokensFromUids(data.uids);
+      return this.sendMessageToTokens(tokens, data, context);
+    } else if (data.tokens) {
+      return this.sendMessageToTokens(data.tokens.split(","), data, context);
     } else {
       return this.sendMessageToTopic(data, context);
     }
   }
 
-  private static async sendMessageToTopic(data: any, context: CallableContext) {
+  static async sendMessageToTopic(data: any, context: CallableContext) {
     console.log(data, context);
   }
 
-  private static async sendMessageToTokens(data: any, context: CallableContext) {
-    console.log("check user auth with context", context);
-    const payload = this.preMessagePayload(data);
+  static async sendMessageToTokens(
+    tokens: string[],
+    data: any,
+    context: CallableContext
+  ): Promise<{ success: number; error: number }> {
+    // console.log("check user auth with context", context);
+    const payload = this.completePayload(data);
 
-    let tokens;
-    if (data.uids) {
-      tokens = await this.getTokensFromUids(data.uids);
-    } else if (data.tokens) {
-      tokens = data.tokens.split(",");
-    }
+    // console.log(JSON.stringify(payload));
+
     if (tokens.length == 0) return { success: 0, error: 0 };
 
     // / sendMulticast supports 500 token per batch only.
@@ -37,7 +40,7 @@ export class Messaging {
     for (const c of chunks) {
       // Send notifications to all tokens.
       const newPayload: admin.messaging.MulticastMessage = Object.assign(
-          { tokens: c },
+        { tokens: c },
         payload as any
       );
       sendToDevicePromise.push(admin.messaging().sendMulticast(newPayload));
@@ -53,6 +56,7 @@ export class Messaging {
 
       res.responses.forEach((result, index) => {
         const error = result.error;
+        console.log(error);
         if (error) {
           // Cleanup the tokens who are not registered anymore.
           if (this.isInvalidTokenErrorCode(error.code)) {
@@ -65,7 +69,7 @@ export class Messaging {
     return { success: successCount, error: errorCount };
   }
 
-  private static isInvalidTokenErrorCode(code: string) {
+  static isInvalidTokenErrorCode(code: string) {
     if (
       code === "messaging/invalid-registration-token" ||
       code === "messaging/registration-token-not-registered" ||
@@ -82,7 +86,7 @@ export class Messaging {
    * @param uids array of user uid
    * @return array of tokens
    */
-  private static async getTokensFromUids(uids: string) {
+  static async getTokensFromUids(uids: string): Promise<string[]> {
     if (!uids) return [];
     const promises: Promise<string[]>[] = [];
     uids.split(",").forEach((uid) => promises.push(this.getTokens(uid)));
@@ -95,7 +99,7 @@ export class Messaging {
    * @param uid user uid
    * @return array of tokens
    */
-  private static async getTokens(uid: string): Promise<string[]> {
+  static async getTokens(uid: string): Promise<string[]> {
     if (!uid) return [];
     const snapshot = await Ref.messageTokens.where("uid", "==", uid).get();
 
@@ -110,10 +114,10 @@ export class Messaging {
     // return Object.keys(val);
   }
 
-  private static preMessagePayload(query: SendMessage) {
+  static completePayload(query: SendMessage) {
     // query = this.checkQueryPayload(query);
-    if (!query.title) throw invalidArgument("Title is empty");
-    if (!query.body) throw invalidArgument("Body is empty");
+    if (!query.title) throw invalidArgument("title-is-empty");
+    if (!query.body) throw invalidArgument("body-is-empty");
     const res: MessagePayload = {
       data: {
         id: query.id ?? "",

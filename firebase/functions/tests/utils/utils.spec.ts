@@ -6,11 +6,12 @@ import { FirebaseAppInitializer } from "../firebase-app-initializer";
 
 // import { Messaging } from "../../src/classes/messaging";
 import { expect } from "chai";
+import { Utils } from "../../src/utils/utils";
 
 new FirebaseAppInitializer();
 
-describe("Tokens test", () => {
-  it("Token saving test for one user", async () => {
-    expect("0").to.be.an("int");
+describe("Utils", () => {
+  it("Utils.getToday", async () => {
+    expect(Utils.getToday()).to.be.an("string");
   });
 });

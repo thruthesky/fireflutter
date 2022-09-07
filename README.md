@@ -30,6 +30,8 @@
 - [클라우드 함수](#클라우드-함수)
   - [유닛 테스트](#유닛-테스트)
   - [클라우드 함수 Deploy](#클라우드-함수-deploy)
+  - [플러터에서 클라우드 함수 호출](#플러터에서-클라우드-함수-호출)
+  - [푸시 알림 사운드](#푸시-알림-사운드)
 
 # 프로젝트 개요
 
@@ -340,9 +342,9 @@ FirestoreListView<PostModel>(
 
 # 푸시 알림
 
-- 레거시 (REST) API 를 쓰면 플러터 앱 내에서 푸시 알림을 전송 할 수 있지만, 토픽으로 메시지를 보낼 때 플랫폼 구분이 어렵다. (토픽을 플랫폼별 그룹을 따로 만들 수 있지만 복잡해 진다.)
-  - 플랫폼을 구분 할 수 있어야 `click_action` 에 올바른 값을 집어 넣을 수 있다. 예를 들면, Android 에서는 `FLUTTER_CLICK_ACTION` 와 같은 값을 지정해야 한다.
-- 그래서, 클라우드 함수를 이용해서 메시지(푸시)를 보낸다.
+- 레거시 (REST) API 를 쓰면 플러터 앱 내에서 푸시 알림을 전송 할 수 있지만, 토픽으로 메시지를 보낼 때 플랫폼 구분이 어렵다. (물론 하나의 토픽을 플랫폼별로 묶으면 android 의 click_action 과 web 의 click_action 을 따로 지정 할 수 있다.)
+  - 플랫폼을 구분 할 수 있어야 `click_action` 에 올바른 값을 집어 넣을 수 있다. 예를 들면, Android 에서는 `FLUTTER_CLICK_ACTION` 와 같은 값을 지정해야 하고, web 에는 URL 을 지정해야 한다.
+- 무엇 보다 Firebase 에서 Legacy API 를 없애려고하는 느낌이 강하게 든다. 이전에는 Firebase 에서 Legacy API 가 Deprecated 되었어도 잘 사용 할 수 있었는데, 2022년 9월에 새로운 Firebase Project 를 생성하니, Legacy API 가 기본적으로 DISABLE 되어져 있었다. 분위기가 심상치 않아서, 푸시 알림을 (플러터 앱에서 보낼 수 있음에도 불구하고) 클라우드 함수를 이용하도록 결정했다.
 
 ## 푸시 알림 관련 참고 문서
 
@@ -365,9 +367,6 @@ FirestoreListView<PostModel>(
 ## 푸시 알림 코딩
 
 - 푸시 알림을 이용하기 위해서는 `FireFlutter.instance.init()` 외에 추가적으로 `MessagingService.instance.init()` 을 추가 해 주어야 한다.
-
-
-
 
 
 # 클라우드 함수
@@ -412,4 +411,40 @@ $ npm run test tests/messaging/send-message-to-tokens.spec.ts
 
 - 클라우드 함수를 deploy 할 때에는 어느 파이어베이스에 deploy 하는지 `firebase use` 명령으로 확인을 해야 한다.
 
+
+
+
+## 플러터에서 클라우드 함수 호출
+
+- 테스트를 위한 클라우드 함수로 `success` 와 `invalidArgument` 가 있다.
+
+```dart
+try {
+  final result = await callable('success');
+  print("Result: ${result.data}");
+} on FirebaseFunctionsException catch (error) {
+  print('An error has thrown');
+  print(error.code);
+  print(error.details);
+  print(error.message);
+}
+```
+
+```dart
+try {
+  final result = await callable('throwInvalidArgument');
+  print("Result: ${result.data}");
+} on FirebaseFunctionsException catch (error) {
+  print('An error has thrown');
+  print(error.code);
+  print(error.details);
+  print(error.message);
+}
+```
+
+
+
+## 푸시 알림 사운드
+
+- Android 와 iOS 둘 다 사운드 파일을 `default_sound.wav` 로 사용한다.
 

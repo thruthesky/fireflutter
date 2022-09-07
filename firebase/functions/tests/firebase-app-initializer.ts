@@ -1,6 +1,6 @@
 import * as admin from "firebase-admin";
 import { ServiceAccount } from "firebase-admin";
-import credentials from "../credentials/test.service-account.json";
+import credentials from "../credentials/flutterkorea.service-account.json";
 
 export class FirebaseAppInitializer {
   constructor() {
