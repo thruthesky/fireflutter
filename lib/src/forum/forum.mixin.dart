@@ -298,15 +298,18 @@ mixin ForumMixin {
           ? ERROR_POST_ALREADY_REPORTED
           : ERROR_COMMENT_ALREADY_REPORTED;
     }
-
-    return reportCol.doc(docId).set({
-      'uid': uid,
+    final data = {
+      'reporterUid': uid,
       'target': target.name,
       'targetId': targetId,
-      'timestamp': FieldValue.serverTimestamp(),
+      'createdAt': FieldValue.serverTimestamp(),
       if (reason != null) 'reason': reason,
       if (reporteeUid != null) 'reporteeUid': reporteeUid,
-    });
+    };
+
+    log(data.toString());
+
+    await reportCol.doc(docId).set(data);
   }
 
   /// Show image on a seperate dialog.

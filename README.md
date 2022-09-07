@@ -212,16 +212,34 @@ MyDoc(
 
 - Storage 권한은 아래와 같이 지정한다.
 
-```text
-match /users/{uid} {
-  allow read: if true;
-  allow write: if uid == request.auth.uid;
+```sh
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    match /users/{uid}/{fileName} {
+      allow read;
+      allow write: if uid == request.auth.uid;
+    }
+    
+  }
 }
 ```
 
 - 사진은 [Resize Images](https://firebase.google.com/products/extensions/firebase-storage-resize-images) 익스텐션을 사용해서 자동 썸네일을 생성한다.
   - 썸네일은 `_320x320.webp` 로 저장되도록 해야 한다.
-    - 이렇게 하기 위해서는 설정을 `이미지 저장 경로` 를 `/users` 로 지정하고, 썸네일을 `320x320` 크기로 `webp` 형태로 저장하면 된다.
+    - 이렇게 하기 위해서는 설정을
+      - `Sizes of resized images` 에 `320x320` 크기로 지정,
+      - `Deletion of original file` 에 `No` 선택,
+      - `Make resized images public` 에 `Yes` 선택,
+      - `Cloud Storage path for resized images` 에는 공백
+      - `이미지 저장 경로(Paths that contain images you want to resize)` 를 `/users` 로 지정하고,
+      - `Cache-Control header for resized images` 에 `max-age=86400`
+      - `Convert image to preferred types` 에는 `webp` 만 선택
+      - `Output options for selected formats` 에는 공백
+      - `GIF and WEBP animated option` 에는 Yes 선택
+      - `Cloud Function memory` 에는 2GB 선택
+      - `Enable Events` 선택하지 않음.
   - 업로드 한 이미지는 `UploadedImage` 위젯을 통해 보여주면 된다.
 
 - 파일 업로드 예제

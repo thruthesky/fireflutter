@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:jiffy/jiffy.dart';
@@ -273,6 +275,7 @@ class PostModel with ForumMixin implements Article {
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
     };
+    log(createData.toString());
     DocumentReference<Object?> res;
     if (documentId != null && documentId != '') {
       await postCol.doc(documentId).set({...createData, ...extra});

@@ -102,7 +102,9 @@ class Storage {
     }
 
     /// Wait for upload to finish.
-    await uploadTask.whenComplete(() => _sub?.cancel());
+    await uploadTask
+        .whenComplete(() => _sub?.cancel())
+        .catchError((e) => throw Exception(e));
 
     final url = await ref.getDownloadURL();
 
