@@ -208,9 +208,15 @@ class PostModel with ForumMixin implements Article {
     return '''PostModel($map)''';
   }
 
+  /// Report post.
+  ///
   Future<void> report(String? reason) {
-    /// TODO change it to firestore call.
-    return Future.value(0);
+    return createReport(
+      target: ReportTarget.post,
+      targetId: id,
+      reporteeUid: uid,
+      reason: reason,
+    );
 
     // return ReportApi.instance.report(
     //   target: 'post',

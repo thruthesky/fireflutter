@@ -10,6 +10,8 @@ typedef VoidNullableCallback = void Function()?;
 
 enum UploadType { userProfilePhoto, user, post, comment, chat, party }
 
+enum ReportTarget { post, comment, user, chat }
+
 const ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD =
     'Please, sign in first before uploading.';
 const ERROR_SIGN_IN_FIRST_FOR_POST_CREATE =
@@ -29,3 +31,11 @@ const ERROR_NO_FIRST_NAME = 'Please, input your first name.';
 const ERROR_NO_LAST_NAME = 'Please, input your last name.';
 const ERROR_NO_GENER = 'Please, select your gender.';
 const ERROR_NO_BIRTHDAY = 'Please, select your birthday.';
+
+const ERROR_POST_ALREADY_REPORTED = 'Post is already reported';
+const ERROR_COMMENT_ALREADY_REPORTED = 'Comment is already reported';
+
+const ERROR_SIGN_IN_FIRST_FOR_POST_REPORT =
+    'Please, sign in first to report a post.';
+const ERROR_SIGN_IN_FIRST_FOR_COMMENT_REPORT =
+    'Please, sign in first to report a comment.';

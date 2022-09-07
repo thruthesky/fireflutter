@@ -224,6 +224,14 @@ mixin ForumMixin {
   }
 
   onReport(dynamic postOrComment) async {
+    if (!signedIn) {
+      return ffError(
+        postOrComment is PostModel
+            ? ERROR_SIGN_IN_FIRST_FOR_POST_REPORT
+            : ERROR_SIGN_IN_FIRST_FOR_COMMENT_REPORT,
+      );
+    }
+
     log("type of post or comment: ${postOrComment.runtimeType}");
     final input = TextEditingController(text: '');
     String? re = await showDialog(
@@ -269,6 +277,40 @@ mixin ForumMixin {
     }
   }
 
+  /// Create a report document.
+  ///
+  /// [uid] is the uid of the reporter.
+  ///
+  /// [reporteeUid] is the uid of the user being reported.
+  ///
+  Future<void> createReport({
+    required ReportTarget target,
+    required String targetId,
+    String? reason,
+    String? reporteeUid,
+  }) async {
+    final uid = UserService.instance.uid;
+    final docId = "${target.name}-$targetId-$uid";
+
+    final reportSnap = await reportCol.doc(docId).get();
+    if (reportSnap.exists) {
+      throw target == ReportTarget.post
+          ? ERROR_POST_ALREADY_REPORTED
+          : ERROR_COMMENT_ALREADY_REPORTED;
+    }
+
+    return reportCol.doc(docId).set({
+      'uid': uid,
+      'target': target.name,
+      'targetId': targetId,
+      'timestamp': FieldValue.serverTimestamp(),
+      if (reason != null) 'reason': reason,
+      if (reporteeUid != null) 'reporteeUid': reporteeUid,
+    });
+  }
+
+  /// Show image on a seperate dialog.
+  ///
   onImageTapped(int initialIndex, List<String> files) {
     // return alert('Display original image', 'TODO: display original images with a scaffold.');
     return showDialog(

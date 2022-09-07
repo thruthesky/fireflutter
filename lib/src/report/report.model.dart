@@ -1,4 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ReportModel {
   String id;
@@ -6,7 +7,7 @@ class ReportModel {
   String targetId;
   String uid;
   String reason;
-  int timestamp;
+  Timestamp? timestamp;
 
   ReportModel({
     required this.id,
@@ -18,13 +19,17 @@ class ReportModel {
   });
 
   factory ReportModel.fromJson(Json json, {String? id}) {
+    Timestamp? _ts = json['timestamp'] is int
+        ? Timestamp.fromMillisecondsSinceEpoch(json['timestamp'] * 1000)
+        : json['timestamp'];
+
     return ReportModel(
       target: json['target'] ?? '',
       targetId: json['targetId'] ?? '',
       uid: json['uid'] ?? '',
       reason: json['reason'] ?? '',
-      timestamp: json['timestamp'] ?? 0,
       id: id ?? json['id'],
+      timestamp: _ts,
     );
   }
 
