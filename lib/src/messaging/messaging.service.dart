@@ -245,8 +245,7 @@ class MessagingService {
       options: Options(
         headers: {
           'content-type': 'application/json',
-          'Authorization':
-              'Bearer AAAAWy4G2hU:APA91bG8FpX2kNKMTRlTyiAEo3jDCg6UsiXlmVqCU-7syY0DGgpv_7VVJVpuQRoZqqzmBdUg_BWuluihF6nLwHt3yZpkfXvzzJidyp4_Ku-NgicQa0GT9Rilj_ks83HWSpAoVjaCFN7S',
+          'Authorization': "...",
         },
       ),
     );

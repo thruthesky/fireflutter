@@ -1,6 +1,12 @@
 export class Test {
   static testCount = 0;
 
+  // one push token.
+  static token =
+    "d-RUY7gztE1wnheilIWUYC:APA91bE_owxgKAYy7808o5EFFSKhyle5jpv9-tcfX2_KPh1rgrzh58K4erUwO1mk7bea6FVoksyH7ouACZjr0kA_kYe0X8uUergnAeS85UEBL3u7CxEC4sg3jRXLhGu2FdRKnqfuV0Ya";
+  // three push tokens. two are real. one is fake.
+  static tokens = ["fake-token"];
+
   /**
    * Create a user for test
    *
