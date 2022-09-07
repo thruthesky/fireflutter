@@ -91,7 +91,10 @@ class _JobSeekerListState extends State<JobSeekerList> {
                     Column(
                       children: [
                         if (index == 0) SizedBox(height: 32),
-                        UserProfilePhoto(uid: seeker.id, size: 55),
+                        UserDoc(
+                          uid: seeker.id,
+                          builder: (user) => ProfilePhoto(user: user, size: 55),
+                        ),
                       ],
                     ),
                     SizedBox(width: 16),

@@ -29,13 +29,17 @@ class _JobSeekerProfileViewState extends State<JobSeekerProfileView> {
         children: [
           SizedBox(height: 20),
           Center(
-              child: UserProfilePhoto(
-            uid: user.uid,
-            size: 100,
-            onTap: widget.onTapProfilePhoto != null
-                ? () => widget.onTapProfilePhoto!(user.uid)
-                : null,
-          )),
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: widget.onTapProfilePhoto != null
+                  ? () => widget.onTapProfilePhoto!(user.uid)
+                  : null,
+              child: ProfilePhoto(
+                user: user,
+                size: 100,
+              ),
+            ),
+          ),
           SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

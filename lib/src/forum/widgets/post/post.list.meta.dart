@@ -13,14 +13,14 @@ class PostListMeta extends StatelessWidget {
         Row(
           children: [
             // User(uid: post.uid, size: 20, iconSize: 16),
-            UserProfilePhoto(uid: post.uid, size: 20),
+            UserDoc(uid: post.uid, builder: (user) => ProfilePhoto(user: user)),
             UserName(
               uid: post.uid,
               padding: EdgeInsets.only(left: 8),
               style: TextStyle(fontSize: 12, color: Colors.grey),
             ),
             ShortDate(
-              toInt(post.createdAt),
+              toInt(post.createdAt!.millisecondsSinceEpoch / 1000),
               style: TextStyle(fontSize: 12, color: Colors.grey),
               padding: EdgeInsets.only(left: 8),
             ),
