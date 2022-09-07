@@ -9,7 +9,7 @@ mixin ForumMixin {
   /// [comment] is null for immediate child comment or the parent comment
   ///
 
-  BuildContext get context => FireFlutter.instance.context;
+  BuildContext get context => FireFlutterService.instance.context;
 
   /// Returns Firestore instance. Firebase database instance.
   FirebaseFirestore get db => FirebaseFirestore.instance;

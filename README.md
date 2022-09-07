@@ -54,7 +54,7 @@
 
 # 해야 할 것
 
-- 글 쓰기 등 권한이 필요한 경우, `FireFlutter.instance.init(permission: (Permission p)) {}` 와 같이 해서, 프로필이 완료되었는지, 레벨이 되는지 등을 검사해서, 권한을 부여 할 수 있도록 한다.
+- 글 쓰기 등 권한이 필요한 경우, `FireFlutterService.instance.init(permission: (Permission p)) {}` 와 같이 해서, 프로필이 완료되었는지, 레벨이 되는지 등을 검사해서, 권한을 부여 할 수 있도록 한다.
 
 # 외부 패키지 목록
 
@@ -130,7 +130,7 @@ class RootWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FireFlutter.instance.init(context: globalKey.currentContext!); // context 연결
+    FireFlutterService.instance.init(context: globalKey.currentContext!); // context 연결
     return MaterialApp(
       navigatorKey: globalKey,
     );
@@ -146,7 +146,7 @@ class RootWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       onReady: () {
-        FireFlutter.instance.init(context: Get.context!); // context 지정
+        FireFlutterService.instance.init(context: Get.context!); // context 지정
       },
 ```
 
@@ -155,13 +155,15 @@ class RootWidget extends StatelessWidget {
 class RootWidget extends StatefullWidget {
   initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      FireFlutter.instance
+      FireFlutterService.instance
           .init(context: router.routerDelegate.navigatorKey.currentContext!);
     });
 ```
 
 # 사용자 로그인
 
+- 사용자가 Firebase 의 Authentication 에 로그인을 하면 FireFlutterSeivce 가 `FirebaseAuth.authStateChanged()`로 감지하여 필요한 동작을 한다.
+  - 플러터 앱에서 익명 로그인, 메일 주소 로그인, 전화 번호 로그인, 기타 소셜 로그인 등 상관없이 로그인만 하면 된다.
 - 아래는 사용자 로그인(로그아웃)과 사용자 문서가 어떻게 업데이트가 되는지 흐름도이다.
 
 ```mermaid
@@ -343,15 +345,17 @@ FirestoreListView<PostModel>(
 
 # 푸시 알림
 
-- 레거시 (REST) API 를 쓰면 플러터 앱 내에서 푸시 알림을 전송 할 수 있지만, 토픽으로 메시지를 보낼 때 플랫폼 구분이 어렵다. (물론 하나의 토픽을 플랫폼별로 묶으면 android 의 click_action 과 web 의 click_action 을 따로 지정 할 수 있다.)
-  - 플랫폼을 구분 할 수 있어야 `click_action` 에 올바른 값을 집어 넣을 수 있다. 예를 들면, Android 에서는 `FLUTTER_CLICK_ACTION` 와 같은 값을 지정해야 하고, web 에는 URL 을 지정해야 한다.
-- 무엇 보다 Firebase 에서 Legacy API 를 없애려고하는 느낌이 강하게 든다. 이전에는 Firebase 에서 Legacy API 가 Deprecated 되었어도 잘 사용 할 수 있었는데, 2022년 9월에 새로운 Firebase Project 를 생성하니, Legacy API 가 기본적으로 DISABLE 되어져 있었다. 분위기가 심상치 않아서, 푸시 알림을 (플러터 앱에서 보낼 수 있음에도 불구하고) 클라우드 함수를 이용하도록 결정했다.
+- 레거시 API 를 쓰면 플러터 앱 내에서 푸시 알림을 전송 할 수 있지만, 토픽으로 메시지를 보낼 때 플랫폼 구분이 어렵다. (물론 하나의 토픽을 플랫폼별로 묶으면 android 의 click_action 과 web 의 click_action 을 따로 지정 할 수 있다.)
+  - 플랫폼을 구분 할 수 있어야 Android 의 `click_action` 에는 `FLUTTER_CLICK_ACTION` 를 지정하고, web 의 `click_action` 에는 URL 을 지정 할 수 있다.
+    - 참고로 Flutter 에서 `click_action` 이 없어도 올바로 동작할 수 있는지 확인이 필요하다.
+- 무엇 보다 Firebase 에서 Legacy API 를 없애려고하는 느낌이 강하게 든다. 이전에는 Firebase 에서 Legacy API 가 Deprecated 되었어도 잘 사용 할 수 있었는데, 2022년 9월에 새로운 Firebase Project 를 생성하니, Legacy API 가 기본적으로 DISABLE 되어져 있었다.
+- 이러한 이유로 푸시 알림을 (플러터 앱에서 보낼 수 있음에도 불구하고) 전송 할 때, 클라우드 함수를 통해 새로운 API(v1) 사용한다.
+- 참고, [푸시 알림 관련 클라우드 함수](https://github.com/thruthesky/fireflutter/blob/main/firebase/functions/src/classes/messaging.ts), [푸시 알림 유닛 테스트 코드](https://github.com/thruthesky/fireflutter/blob/main/firebase/functions/tests/messaging/send-message-with-tokens.spec.ts)
 
 ## 푸시 알림 관련 참고 문서
 
-- [HTTP guidelines](https://cloud.google.com/apis/docs/http)
-- [Firebase Cloud Messaging API](https://firebase.google.com/docs/reference/fcm/rest)
-- [Firebase Cloud Messaging HTTP protocol](https://firebase.google.com/docs/cloud-messaging/http-server-ref)
+- [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging)
+- [Set up a Firebase Cloud Messaging client app on Flutter](https://firebase.google.com/docs/cloud-messaging/flutter/client)
 
 
 ## 푸시 알림 설정
@@ -380,7 +384,7 @@ FirestoreListView<PostModel>(
 
 ## 푸시 알림 코딩
 
-- 푸시 알림을 이용하기 위해서는 `FireFlutter.instance.init()` 외에 추가적으로 `MessagingService.instance.init()` 을 추가 해 주어야 한다.
+- 푸시 알림을 이용하기 위해서는 `FireFlutterService.instance.init()` 외에 추가적으로 `MessagingService.instance.init()` 을 추가 해 주어야 한다.
 
 
 # 클라우드 함수

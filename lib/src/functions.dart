@@ -329,11 +329,11 @@ int clientTimestamp() {
 /// Returns `true` if user tapped on `Close`.
 /// Returns `null` if user close the dialog.
 Future<bool?> ffAlert(String title, String content) {
-  if (FireFlutter.instance.alert != null) {
-    return FireFlutter.instance.alert!(title, content);
+  if (FireFlutterService.instance.alert != null) {
+    return FireFlutterService.instance.alert!(title, content);
   }
   return showDialog(
-    context: FireFlutter.instance.context,
+    context: FireFlutterService.instance.context,
     builder: (_) => AlertDialog(
       title: Text(title),
       content: Padding(
@@ -342,7 +342,8 @@ Future<bool?> ffAlert(String title, String content) {
       ),
       actions: [
         ElevatedButton(
-          onPressed: () => Navigator.of(FireFlutter.instance.context).pop(true),
+          onPressed: () =>
+              Navigator.of(FireFlutterService.instance.context).pop(true),
           child: Text('Close'),
         ),
       ],
@@ -351,11 +352,11 @@ Future<bool?> ffAlert(String title, String content) {
 }
 
 Future<bool?> ffConfirm(String title, String content) {
-  if (FireFlutter.instance.confirm != null) {
-    return FireFlutter.instance.confirm!(title, content);
+  if (FireFlutterService.instance.confirm != null) {
+    return FireFlutterService.instance.confirm!(title, content);
   }
   return showDialog(
-    context: FireFlutter.instance.context,
+    context: FireFlutterService.instance.context,
     builder: (_) => AlertDialog(
       title: Text(title),
       content: Padding(
@@ -364,12 +365,13 @@ Future<bool?> ffConfirm(String title, String content) {
       ),
       actions: [
         ElevatedButton(
-          onPressed: () => Navigator.of(FireFlutter.instance.context).pop(true),
+          onPressed: () =>
+              Navigator.of(FireFlutterService.instance.context).pop(true),
           child: Text('Yes'),
         ),
         ElevatedButton(
           onPressed: () =>
-              Navigator.of(FireFlutter.instance.context).pop(false),
+              Navigator.of(FireFlutterService.instance.context).pop(false),
           child: Text('No'),
         ),
       ],
@@ -382,15 +384,15 @@ Future<bool?> ffConfirm(String title, String content) {
 /// Note that this is only for display error message.
 /// There is no stacktrace, so it cannot record(or log) error information.
 Future ffError(dynamic message) {
-  if (FireFlutter.instance.error != null) {
-    return FireFlutter.instance.error!(message.toString());
+  if (FireFlutterService.instance.error != null) {
+    return FireFlutterService.instance.error!(message.toString());
   }
   return ffAlert('ERROR', message.toString());
 }
 
 Future ffSnackbar({String? title, String? message, Function? onTap}) async {
-  if (FireFlutter.instance.snackbar != null) {
-    return FireFlutter.instance.snackbar!(
+  if (FireFlutterService.instance.snackbar != null) {
+    return FireFlutterService.instance.snackbar!(
       title,
       message,
     );
