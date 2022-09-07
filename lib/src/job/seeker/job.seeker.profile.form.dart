@@ -36,7 +36,7 @@ class _JobSeekerProfileFormState extends State<JobSeekerProfileForm> {
     return Column(
       children: [
         SizedBox(height: 20),
-        UserProfilePhoto(uid: UserService.instance.uid!, size: 100),
+        MyDoc(builder: (user) => ProfilePhoto(user: user, size: 100)),
         SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
