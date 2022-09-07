@@ -16,9 +16,14 @@ describe("Send message to token", () => {
     try {
       const res = await Messaging.sendMessage(
         {
-          title: "from cli",
+          title: "from cli (silent)",
           body: "to iphone. is that so?",
-          tokens: [Test.token, Test.jaehoSimulatorToken].join(","),
+          tokens: [
+            "e7aDJhxtQRq0DOCKbhVR3b:APA91bEp82cV0YBpIQscegkexGKDbMqM7nxrcAiOaH5AXV_YEcISGg0er9fiFeDMA4KYbEspT8KQyTzsmpOLpFZrRaFcdovTwwV-W9ePEFdhK6TmJMvzy0N3bfWDhSox4A9iQK00luT8",
+            "cy-4z6EBQKKcC3PW4dfAj_:APA91bGTnRlmXIU6aJRpLJvpAXbVXhUUWT4i9JQzArqXc5wjzoS0ngnECMuVrxf-l9s1ei3P6cxlBTdPSgJRWYH9ggvQKAweKufOjTmMDR56UnmHLm3W4NxUI42RwxtHPZQ8u4E2_9c6",
+            Test.token,
+            Test.jaehoSimulatorToken,
+          ].join(","),
         },
         {} as any
       );

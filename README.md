@@ -25,6 +25,7 @@
 - [푸시 알림](#푸시-알림)
   - [푸시 알림 관련 참고 문서](#푸시-알림-관련-참고-문서)
   - [푸시 알림 설정](#푸시-알림-설정)
+    - [Android 설정](#android-설정)
     - [iOS 설정](#ios-설정)
   - [푸시 알림 코딩](#푸시-알림-코딩)
 - [클라우드 함수](#클라우드-함수)
@@ -355,6 +356,19 @@ FirestoreListView<PostModel>(
 
 ## 푸시 알림 설정
 
+### Android 설정
+
+
+- Android 에서 따로 설정 할 것은 없다.
+- 만약, system tray 를 메시지를 클릭했는데 앱이 안열리면 main/AndroidManifest.xml 에 아래의 내용을 추가한다. 참고 [Firebase Messaging 8.0 Mirgration Guide](https://firebase.flutter.dev/docs/migration/)에는 아래의 내용 추가가 필요 없다고 하는데, ...
+
+```xml
+<intent-filter>
+    <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+    <category android:name="android.intent.category.DEFAULT" />
+</intent-filter>
+```
+
 ### iOS 설정
 
 - Firebase 연결 설정
@@ -447,4 +461,6 @@ try {
 ## 푸시 알림 사운드
 
 - Android 와 iOS 둘 다 사운드 파일을 `default_sound.wav` 로 사용한다.
+  - 참고로, WAV 파일을 압축하여 작은 용량으로 사운드 파일을 추가 할 수 있다.
+
 

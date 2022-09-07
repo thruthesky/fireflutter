@@ -48,6 +48,7 @@
       "type": "dart",
       "deviceId": "emulator-5554"
     },
+
     {
       "name": "example - Simulator - iPhone 13 Pro Max - iMac",
       "cwd": "example",
@@ -56,6 +57,15 @@
       "request": "launch",
       "type": "dart",
       "deviceId": "ECE40623-ACC2-4729-8DD4-B3DBB46D4B25"
+    },
+    {
+      "name": "flutterkorea - debug - Emulator",
+      "cwd": "apps/flutterkorea",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "KEY=VALUE"],
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554"
     },
     {
       "name": "flutterkorea - Simulator - iPhone 13 Pro Max - iMac",

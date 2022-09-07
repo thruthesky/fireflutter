@@ -31,45 +31,52 @@ export class Messaging {
   ): Promise<{ success: number; error: number }> {
     // console.log("check user auth with context", context);
     const payload = this.completePayload(data);
-
-    // console.log(JSON.stringify(payload));
-
     if (tokens.length == 0) return { success: 0, error: 0 };
 
-    // / sendMulticast supports 500 token per batch only.
+    // sendMulticast() 는 오직 500 개 까지만 지원. 그래서 500 개 단위로 쪼개서 batch 처리.
     const chunks = Utils.chunk(tokens, 500);
 
-    const sendToDevicePromise = [];
-    for (const c of chunks) {
-      // Send notifications to all tokens.
+    const multicastPromise = [];
+    // 토큰 500개 단위로 푸시 알림 전송하는 Promise 를 배열에 담는다.
+    for (const _500_tokens of chunks) {
       const newPayload: admin.messaging.MulticastMessage = Object.assign(
-        { tokens: c },
+        { tokens: _500_tokens },
         payload as any
       );
-      sendToDevicePromise.push(admin.messaging().sendMulticast(newPayload));
+      multicastPromise.push(admin.messaging().sendMulticast(newPayload));
     }
-    const sendDevice = await Promise.all(sendToDevicePromise);
 
-    const tokensToRemove: Promise<any>[] = [];
-    let successCount = 0;
-    let errorCount = 0;
-    sendDevice.forEach((res, i) => {
-      successCount += res.successCount;
-      errorCount += res.failureCount;
-
-      res.responses.forEach((result, index) => {
-        const error = result.error;
-        console.log(error);
-        if (error) {
-          // Cleanup the tokens who are not registered anymore.
-          if (this.isInvalidTokenErrorCode(error.code)) {
-            tokensToRemove.push(Ref.messageTokens.doc(chunks[i][index]).delete());
+    try {
+      // 전체 토큰을 한번에 전송
+      const settled = await Promise.allSettled(multicastPromise);
+      // 결과는 배열로
+      const value = (settled[0] as any).value;
+      const tokensToRemove: Promise<any>[] = [];
+      // 결과는 1차원 배열은 토큰의 500개 chunks 단위.
+      // 2차원 배열은 각 토큰을 성공/실패 결과
+      for (const ci in settled) {
+        for (const idx in value.responses) {
+          const i = parseInt(idx);
+          const res = value.responses[i];
+          if (res.success) {
+          } else {
+            // 실패한 토큰은 DB 에서 제거
+            // res.success == false 이면 어차피 실패한 것이다. 그 중에서도 token 아이디가 잘못되었다는 에러 메시지 이면,
+            if (this.isInvalidTokenErrorCode(res.error.code)) {
+              tokensToRemove.push(Ref.messageTokens.doc(chunks[ci][i]).delete());
+            }
           }
         }
-      });
-    });
-    await Promise.all(tokensToRemove);
-    return { success: successCount, error: errorCount };
+      }
+      // 잘못된 토큰 삭제
+      await Promise.all(tokensToRemove);
+
+      // 결과 리턴
+      return { success: value.successCount, error: value.errorCount };
+    } catch (e) {
+      console.log("---> caught on sendMessageToTokens() await Promise.all()", e);
+      throw e;
+    }
   }
 
   static isInvalidTokenErrorCode(code: string) {
