@@ -45,7 +45,7 @@ class MessagingService {
   late Function(RemoteMessage) onMessageOpenedFromBackground;
   late Function onNotificationPermissionDenied;
   late Function onNotificationPermissionNotDetermined;
-  String token = '';
+  String? token;
   final BehaviorSubject<String?> tokenChange = BehaviorSubject.seeded(null);
   StreamSubscription? tokenChangeSubscription;
   String defaultTopic = 'defaultTopic';
@@ -74,37 +74,31 @@ class MessagingService {
     _init();
   }
 
+  _updateToken(User? user, String? token) async {
+    if (user == null) return;
+    if (token == null) return;
+    await FirebaseFirestore.instance.collection('fcm-tokens').doc(token).set(
+      {
+        if (user.isAnonymous == false) 'uid': user.uid,
+        'platform': Platform.isAndroid
+            ? 'android'
+            : Platform.isIOS
+                ? 'ios'
+                : 'web',
+      },
+      SetOptions(merge: true),
+    );
+  }
+
   /// Initialize Messaging
   _init() async {
-    /// TODO: update token when the user signed in.
-    ///
-    /// Listen to user setting load. This is life time listener. No need to unsubscribe.
-    // Controller.of.settingChange.distinct((p, n) => p?.password == n?.password).listen((settings) {
-    //   if (settings?.password == null) return;
-    //   // log('---> MessagingService::init() update token for ${settings?.password} ');
-    //   tokenChangeSubscription?.cancel();
-    //   tokenChangeSubscription = tokenChange.listen((token) {
-    //     if (token != null) {
-    //       // log('---> tokenChange->_updateToken($token)');
-    //       _updateToken(token);
-    //     }
-    //   });
-    // });
-
+    /// 앱이 실행되는 동안 listen 하므로, cancel 하지 않음.
     /// `/fcm-tokens/<docId>/{token: '...', uid: '...'}`
     /// Save(or update) token
-    FirebaseAuth.instance.authStateChanges().listen((user) {
-      if (user == null) return;
-      if (user.isAnonymous == true) return;
-
-      tokenChangeSubscription?.cancel();
-      tokenChangeSubscription = tokenChange.listen((token) {
-        if (token != null) {
-          // log('---> tokenChange->_updateToken($token)');
-          _updateToken(token);
-        }
-      });
-    });
+    FirebaseAuth.instance
+        .authStateChanges()
+        .listen((user) => _updateToken(user, token));
+    tokenChange.listen((token) => _updateToken(null, token));
 
     /// Permission request for iOS only. For Android, the permission is granted by default.
 
@@ -161,25 +155,18 @@ class MessagingService {
   /// User may not signed in. That is why we cannot put this code in user model.
   /// must be called when user signIn or when tokenRefresh
   /// skip if user is not signIn. _updateToken() will registered the device to default topic
-  _updateToken([String? token]) {
-    if (token == null) token = this.token;
-    if (token == '') return;
+  // _updateToken([String? token]) {
+  //   if (token == null) token = this.token;
+  //   if (token == '') return;
 
-    FirebaseFirestore.instance.collection('fcm-tokens').doc(token).set(
-      {
-        'uid': UserService.instance.uid,
-      },
-      SetOptions(merge: true),
-    );
+  // since user will always sign-in with anonymous or real account this is done in backend
+  // subscribeToDefaultTopic();
 
-    // subcribe to defaultTopic
-    subscribeToDefaultTopic();
+  // print('---> _updateToken(); $token, ${UserService.instance.user}');
+  // FunctionsApi.instance.request('updateToken', data: {'token': token}, addAuth: true);
 
-    // print('---> _updateToken(); $token, ${UserService.instance.user}');
-    // FunctionsApi.instance.request('updateToken', data: {'token': token}, addAuth: true);
-
-    // TODO update token and subscribe the existing topics.
-  }
+  // TODO update token and subscribe the existing topics.
+  // }
 
   /// Subcribe to default topic.
   ///
@@ -230,17 +217,15 @@ class MessagingService {
     print(res.data);
   }
 
-
-  
-
   /// https://firebase.google.com/docs/cloud-messaging/migrate-v1
-  /// Migrate from legacy HTTP to HTTP v1 
+  /// Migrate from legacy HTTP to HTTP v1
   send({
     required String token,
     required String title,
     required String body,
   }) async {
-    const apiUrl = "https://fcm.googleapis.com/v1/projects/wonderful-korea/messages:send";
+    const apiUrl =
+        "https://fcm.googleapis.com/v1/projects/wonderful-korea/messages:send";
     final data = {
       "to": token,
       "notification": {

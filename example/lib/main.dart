@@ -291,7 +291,7 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
               ElevatedButton(
                 onPressed: () {
                   MessagingService.instance.send(
-                    token: MessagingService.instance.token,
+                    token: MessagingService.instance.token!,
                     title: 'Message title to myself!',
                     body: 'Message body',
                   );
