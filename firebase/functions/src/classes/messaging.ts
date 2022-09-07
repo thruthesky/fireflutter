@@ -7,13 +7,16 @@ import { Utils } from "../utils/utils";
 
 export class Messaging {
   static async sendMessage(data: any, context: CallableContext): Promise<any> {
+    console.log(data);
     if (data.uids) {
       const tokens = await this.getTokensFromUids(data.uids);
       return this.sendMessageToTokens(tokens, data, context);
     } else if (data.tokens) {
       return this.sendMessageToTokens(data.tokens.split(","), data, context);
-    } else {
+    } else if (data.topic) {
       return this.sendMessageToTopic(data, context);
+    } else {
+      throw invalidArgument("One of uids, tokens, topic must be present");
     }
   }
 
@@ -106,6 +109,7 @@ export class Messaging {
     if (snapshot.empty) {
       return [];
     }
+
     return snapshot.docs.map((doc) => doc.id);
 
     // console.log("snapshot.exists()", snapshot.exists(), snapshot.val());

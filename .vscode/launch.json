@@ -74,6 +74,16 @@
       "request": "launch",
       "type": "dart",
       "deviceId": "00008030-000904C80290802E"
+    },
+    {
+      "name": "flutterkorea - release - iPhone11ProMax - iMac",
+      "cwd": "apps/flutterkorea",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "KEY=VALUE"],
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "00008030-000904C80290802E",
+      "flutterMode": "release"
     }
   ]
 }

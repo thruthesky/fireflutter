@@ -12,11 +12,14 @@ import { HttpsError } from "firebase-functions/v1/auth";
 new FirebaseAppInitializer();
 
 describe("Send message to token", () => {
-  it("Send a message to a token", async () => {
+  it("Send a message with tokens", async () => {
     try {
-      const res = await Messaging.sendMessageToTokens(
-        [Test.token],
-        { title: "from cli", body: "to iphone. is that so?" },
+      const res = await Messaging.sendMessage(
+        {
+          title: "from cli",
+          body: "to iphone. is that so?",
+          tokens: [Test.token, Test.jaehoSimulatorToken].join(","),
+        },
         {} as any
       );
       console.log(JSON.stringify(res));
