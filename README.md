@@ -27,6 +27,7 @@
   - [푸시 알림 설정](#푸시-알림-설정)
     - [Android 설정](#android-설정)
     - [iOS 설정](#ios-설정)
+  - [푸시 알림 문서 구조](#푸시-알림-문서-구조)
   - [푸시 알림 코딩](#푸시-알림-코딩)
 - [클라우드 함수](#클라우드-함수)
   - [유닛 테스트](#유닛-테스트)
@@ -54,7 +55,12 @@
 
 # 해야 할 것
 
+
+- 푸시 알림을 본 문서의 [푸시 알림](#푸시-알림)에 나오는데로 수정한다.
+  - 토픽 구독 없이, 토큰으로 모든 subscription 로직 작성.
+  - 토큰 문서 구조를 FireFlutter 지원하도록 `/users/<uid>/fcm_tokens` 로 변경.
 - 글 쓰기 등 권한이 필요한 경우, `FireFlutterService.instance.init(permission: (Permission p)) {}` 와 같이 해서, 프로필이 완료되었는지, 레벨이 되는지 등을 검사해서, 권한을 부여 할 수 있도록 한다.
+
 
 # 외부 패키지 목록
 
@@ -351,6 +357,13 @@ FirestoreListView<PostModel>(
 - 무엇 보다 Firebase 에서 Legacy API 를 없애려고하는 느낌이 강하게 든다. 이전에는 Firebase 에서 Legacy API 가 Deprecated 되었어도 잘 사용 할 수 있었는데, 2022년 9월에 새로운 Firebase Project 를 생성하니, Legacy API 가 기본적으로 DISABLE 되어져 있었다.
 - 이러한 이유로 푸시 알림을 (플러터 앱에서 보낼 수 있음에도 불구하고) 전송 할 때, 클라우드 함수를 통해 새로운 API(v1) 사용한다.
 - 참고, [푸시 알림 관련 클라우드 함수](https://github.com/thruthesky/fireflutter/blob/main/firebase/functions/src/classes/messaging.ts), [푸시 알림 유닛 테스트 코드](https://github.com/thruthesky/fireflutter/blob/main/firebase/functions/tests/messaging/send-message-with-tokens.spec.ts)
+- 또한, 클라우 함수를 통해서 푸시 알림을 할 때에 가능한 topic 을 사용하지 않고, 개별 토큰에 메시지를 보낸다.
+  - Topic 을 사용하지 않는 이유는 한 사용자가 핸드폰 2개를 쓰고, 여러개의 컴퓨터(데스크톱, 노트북)에서 여러개의 웹 브라우저를 쓰는 경우 동기화를 시켜야하는데 이 작업이 만만치 않다. 예를 들어 안드로이 폰에서 QnA 게시판 토픽을 subscription 했으면, 그 사용자가 사용하는 다른 폰(아이폰 등)이나 컴퓨터에서도 자동 subscription 되어야 한다. 반대로 해제하는 경우도 마찬가지이다. 문제는 이 뿐만이 아니다. 사용자가 QnA 게시판의 모든 알림(글, 코멘트) 구독하고 설정에서 내 글의 코멘트를 구독하도록 했다면, 그 사용자가 QnA 에 글을 작성하고, 댓글이 있으면 동일한 푸시 알림이 두 번 전송되어져 온다. 이 때, 동일한 푸시 알림이 두 번 전송 되지 않도록 내부적으로 처리를 해야 한다. 이외에도 여러가지 필요한 작업이 있는데 만만치 많다. 사실 지금까지는 이런 방식으로 푸시 알림 관련 작업을 해 왔지만, 0.3 버전 부터는 개별 토큰에 직접 메시지를 보내도록 변경을 했다.
+- 예를 들어, 여러 사용자가 QnA 구독하는 경우, 해당 QnA 구독을 각 사용자 설정에 기록을 하고, QnA 구독자에게 푸시 알림을 보내야하는 경우, QnA 구독자(들)의 모든 토큰을 가져와서, 클라우드 함수에서 메시지를 보내면 된다.
+  - 이렇게 하면, 복잡한 토픽 subscription 로직을 작성할 필요 없다.
+  - 또한 토큰을 저장한 문서를 많이 읽을 필요가 있고, 또 많은 네트워크 접속이 필요할 수 있으므로 클라이언트 앱 보다는 서버 측에서 이런 작업을 하는 것이 올바르다.
+
+
 
 ## 푸시 알림 관련 참고 문서
 
@@ -380,6 +393,18 @@ FirestoreListView<PostModel>(
 - Xcode 의 Signing & Capabilities 에서 Background Modes 를 추가하고, `Background fetc` 와 `Remote notifications` 를 추가
 - APNs Authentication Key 생성 후 Firebase APN 설정
 
+
+## 푸시 알림 문서 구조
+
+푸시 알림 문서는 사용자 문서 하위에 `/users/<uid>/fcm_tokens {created_at: ..., device_type: ..., fcm_token: ... }` 와 같이 저장된다.
+
+- created_at 은 토큰이 생성된 시간
+- device_type 은 device type. ie) android, iOS,
+- fcm_token 은 토큰
+
+참고로, (2022년 9월 기준) 이 구조는 FlutterFlow 에서 사용하는 구조이다. FlutterFlow 에서는 사용자가 로그인을 해야지만 토큰을 저장할 수 있으며 Anonymous SignIn 은 지원하지 않는다.
+
+얼핏 생각하면 한 사용자가 토큰을 많이 사용하는 경우, 하나의 문서에 토큰을 필드로 지정하고, device_type 을 값으로 지정하면, read 이벤트를 최소화 할 있다고 여길 수 있다. 하지만 사용자는 핸드폰에 앱을 설치해서 사용하는데, (웹 배포를 하면 웹으로도 같이 사용 할 수도 있지만) 어림 짐작으로 한 사용자당 토큰이 1개인 경우가 90% 이상이라 판단 된다. 그래서 문서 하나당 토큰 하나를 둔다.
 
 
 ## 푸시 알림 코딩
