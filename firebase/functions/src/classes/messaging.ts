@@ -90,7 +90,7 @@ export class Messaging {
   }
 
   /**
-   * Removes the tokens from /users/<uid>/fcm_tokens/<tokenDocId>
+   * Remove tokens from user token documents `/users/<uid>/fcm_tokens/<docId>`
    * 
    * @param tokens tokens to remove
    * 
@@ -107,10 +107,6 @@ export class Messaging {
           for(const doc of snapshot.docs) {
             await doc.ref.delete();
           }
-          //  docs.forEach(async (doc) => {
-          //   // and delete
-          //   await doc.ref.delete();
-          // });
         })
       );
     }
