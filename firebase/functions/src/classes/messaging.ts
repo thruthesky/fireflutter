@@ -24,6 +24,13 @@ export class Messaging {
     console.log(data, context);
   }
 
+  /**
+   * Send push notifications with the tokens and returns the result.
+   * 
+   * @param tokens array of tokens.
+   * @param data data to send push notification.
+   * @param context Cloud Functions Callable context
+   */
   static async sendMessageToTokens(
     tokens: string[],
     data: any,
@@ -40,36 +47,39 @@ export class Messaging {
     // 토큰 500개 단위로 푸시 알림 전송하는 Promise 를 배열에 담는다.
     for (const _500_tokens of chunks) {
       const newPayload: admin.messaging.MulticastMessage = Object.assign(
+        {},
         { tokens: _500_tokens },
         payload as any
       );
       multicastPromise.push(admin.messaging().sendMulticast(newPayload));
     }
 
+
     try {
       // 전체 토큰을 한번에 전송
       const settled = await Promise.allSettled(multicastPromise);
       // 결과는 배열로
       const value = (settled[0] as any).value;
-      const tokensToRemove: Promise<any>[] = [];
       // 결과는 1차원 배열은 토큰의 500개 chunks 단위.
       // 2차원 배열은 각 토큰을 성공/실패 결과
+      const failedTokens = [];
       for (const ci in settled) {
         for (const idx in value.responses) {
           const i = parseInt(idx);
           const res = value.responses[i];
-          if (res.success) {
-          } else {
-            // 실패한 토큰은 DB 에서 제거
-            // res.success == false 이면 어차피 실패한 것이다. 그 중에서도 token 아이디가 잘못되었다는 에러 메시지 이면,
+          if (res.success == false ) {
+            // Delete tokens that failed.
+            // If res.success == false, then the token failed, anyway.
+            // But check if the error message to be sure that the token is not being used anymore.
             if (this.isInvalidTokenErrorCode(res.error.code)) {
-              tokensToRemove.push(Ref.messageTokens.doc(chunks[ci][i]).delete());
+              failedTokens.push(chunks[ci][i]);
             }
           }
         }
       }
-      // 잘못된 토큰 삭제
-      await Promise.all(tokensToRemove);
+
+      // Batch delte of failed tokens
+      await this.removeTokens(failedTokens);
 
       // 결과 리턴
       return { success: value.successCount, error: value.failureCount };
@@ -77,6 +87,34 @@ export class Messaging {
       console.log("---> caught on sendMessageToTokens() await Promise.all()", e);
       throw e;
     }
+  }
+
+  /**
+   * Removes the tokens from /users/<uid>/fcm_tokens/<tokenDocId>
+   * 
+   * @param tokens tokens to remove
+   * 
+   * Use this method to remove tokens that failed to be sent.
+   * 
+   * Test, tests/messaging/remove-tokens.spec.ts
+   */
+  static async removeTokens(tokens: string[]) {
+    const promises: Promise<any>[] = [];
+    for( const token of tokens) {
+      promises.push(
+        // Get the document of the token
+        Ref.db.collectionGroup('fcm_tokens').where('fcm_token', '==', token).get().then( async (snapshot) => {
+          for(const doc of snapshot.docs) {
+            await doc.ref.delete();
+          }
+          //  docs.forEach(async (doc) => {
+          //   // and delete
+          //   await doc.ref.delete();
+          // });
+        })
+      );
+    }
+    await Promise.all(promises);
   }
 
   static isInvalidTokenErrorCode(code: string) {
@@ -111,18 +149,12 @@ export class Messaging {
    */
   static async getTokens(uid: string): Promise<string[]> {
     if (!uid) return [];
-    const snapshot = await Ref.messageTokens.where("uid", "==", uid).get();
-
+    const snapshot = await Ref.tokenCol(uid).get();
     if (snapshot.empty) {
       return [];
     }
 
     return snapshot.docs.map((doc) => doc.id);
-
-    // console.log("snapshot.exists()", snapshot.exists(), snapshot.val());
-
-    // const val = snapshot.val();
-    // return Object.keys(val);
   }
 
   /**

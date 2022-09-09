@@ -13,12 +13,7 @@
           "package_name": "com.example.example"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "391614224917-50ug0qb4fssf1bm2ajah7cjae9tpdvsc.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyAb8TWG0oDhBfuHRwWGt7M3xEMQRJr3d-Y"
@@ -28,14 +23,37 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "391614224917-50ug0qb4fssf1bm2ajah7cjae9tpdvsc.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "391614224917-0mujlqc3apdvs1lm8rjnlb1lfghltv8h.apps.googleusercontent.com",
+              "client_id": "391614224917-233cvp7tqh1tm4mntcfl1h94samgjin8.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.withcenter.test"
+                "bundle_id": "com.withcenter.partykorea"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:391614224917:android:d9229f23d6e974562c0c1c",
+        "android_client_info": {
+          "package_name": "com.example.flutterkorea"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAb8TWG0oDhBfuHRwWGt7M3xEMQRJr3d-Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "391614224917-233cvp7tqh1tm4mntcfl1h94samgjin8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.withcenter.partykorea"
               }
             }
           ]
@@ -49,12 +67,7 @@
           "package_name": "com.fireflutter.example"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "391614224917-50ug0qb4fssf1bm2ajah7cjae9tpdvsc.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyAb8TWG0oDhBfuHRwWGt7M3xEMQRJr3d-Y"
@@ -64,14 +77,37 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "391614224917-50ug0qb4fssf1bm2ajah7cjae9tpdvsc.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "391614224917-0mujlqc3apdvs1lm8rjnlb1lfghltv8h.apps.googleusercontent.com",
+              "client_id": "391614224917-233cvp7tqh1tm4mntcfl1h94samgjin8.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.withcenter.test"
+                "bundle_id": "com.withcenter.partykorea"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:391614224917:android:4e3afb5551eb346f2c0c1c",
+        "android_client_info": {
+          "package_name": "com.flutterkorea.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAb8TWG0oDhBfuHRwWGt7M3xEMQRJr3d-Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "391614224917-233cvp7tqh1tm4mntcfl1h94samgjin8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.withcenter.partykorea"
               }
             }
           ]
@@ -85,12 +121,7 @@
           "package_name": "com.githubactions.flutter_git_actions_test"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "391614224917-50ug0qb4fssf1bm2ajah7cjae9tpdvsc.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyAb8TWG0oDhBfuHRwWGt7M3xEMQRJr3d-Y"
@@ -100,14 +131,10 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "391614224917-50ug0qb4fssf1bm2ajah7cjae9tpdvsc.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "391614224917-0mujlqc3apdvs1lm8rjnlb1lfghltv8h.apps.googleusercontent.com",
+              "client_id": "391614224917-233cvp7tqh1tm4mntcfl1h94samgjin8.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.withcenter.test"
+                "bundle_id": "com.withcenter.partykorea"
               }
             }
           ]
@@ -121,20 +148,7 @@
           "package_name": "com.mycompany.partykorea"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "391614224917-pab0tq5ruuibep8dg9higssojfu6sim7.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.mycompany.partykorea",
-            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
-          }
-        },
-        {
-          "client_id": "391614224917-50ug0qb4fssf1bm2ajah7cjae9tpdvsc.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyAb8TWG0oDhBfuHRwWGt7M3xEMQRJr3d-Y"
@@ -144,14 +158,10 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "391614224917-50ug0qb4fssf1bm2ajah7cjae9tpdvsc.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "391614224917-0mujlqc3apdvs1lm8rjnlb1lfghltv8h.apps.googleusercontent.com",
+              "client_id": "391614224917-233cvp7tqh1tm4mntcfl1h94samgjin8.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.withcenter.test"
+                "bundle_id": "com.withcenter.partykorea"
               }
             }
           ]
@@ -165,36 +175,7 @@
           "package_name": "com.withcenter.namecard"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "391614224917-0nqgvkq4t3o3b8lumtkdn3dm7jspnd6s.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.withcenter.namecard",
-            "certificate_hash": "eab04d7a3b71fc2c84e8328b4d8c8888bb5bf4e6"
-          }
-        },
-        {
-          "client_id": "391614224917-3g8isqp24b0obi6gpt4uvsq3fp9n28ta.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.withcenter.namecard",
-            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
-          }
-        },
-        {
-          "client_id": "391614224917-9u5oh3pelrseaj5euebp4aepdnoh51s2.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.withcenter.namecard",
-            "certificate_hash": "d3a1f3fafe7e0874f320410122b3a706bfc843a7"
-          }
-        },
-        {
-          "client_id": "391614224917-50ug0qb4fssf1bm2ajah7cjae9tpdvsc.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyAb8TWG0oDhBfuHRwWGt7M3xEMQRJr3d-Y"
@@ -204,14 +185,10 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "391614224917-50ug0qb4fssf1bm2ajah7cjae9tpdvsc.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "391614224917-0mujlqc3apdvs1lm8rjnlb1lfghltv8h.apps.googleusercontent.com",
+              "client_id": "391614224917-233cvp7tqh1tm4mntcfl1h94samgjin8.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.withcenter.test"
+                "bundle_id": "com.withcenter.partykorea"
               }
             }
           ]
@@ -233,10 +210,6 @@
             "package_name": "com.withcenter.partykorea",
             "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
           }
-        },
-        {
-          "client_id": "391614224917-50ug0qb4fssf1bm2ajah7cjae9tpdvsc.apps.googleusercontent.com",
-          "client_type": 3
         }
       ],
       "api_key": [
@@ -248,14 +221,10 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "391614224917-50ug0qb4fssf1bm2ajah7cjae9tpdvsc.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "391614224917-0mujlqc3apdvs1lm8rjnlb1lfghltv8h.apps.googleusercontent.com",
+              "client_id": "391614224917-233cvp7tqh1tm4mntcfl1h94samgjin8.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.withcenter.test"
+                "bundle_id": "com.withcenter.partykorea"
               }
             }
           ]
@@ -269,44 +238,7 @@
           "package_name": "com.withcenter.test"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "391614224917-4j5emisuph2o0ooa9ndr1366ollo76eg.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.withcenter.test",
-            "certificate_hash": "d69aa82f88d61edddeb369bfc71c117abcb2825c"
-          }
-        },
-        {
-          "client_id": "391614224917-fnf63hg4hmc71o1sha7jas43u21117c5.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.withcenter.test",
-            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
-          }
-        },
-        {
-          "client_id": "391614224917-kj0rf9a0bb3q9n8eqt3cbc14hbvkjl21.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.withcenter.test",
-            "certificate_hash": "049dc75de7e393534fcce0ddae3c4a377bbb23d6"
-          }
-        },
-        {
-          "client_id": "391614224917-kspg1cs5nmpnje5ehsk8esqgmk0ofqqd.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.withcenter.test",
-            "certificate_hash": "52eac206ece4ecea05fe5f2d21e819f0e0d915f8"
-          }
-        },
-        {
-          "client_id": "391614224917-50ug0qb4fssf1bm2ajah7cjae9tpdvsc.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyAb8TWG0oDhBfuHRwWGt7M3xEMQRJr3d-Y"
@@ -316,14 +248,10 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "391614224917-50ug0qb4fssf1bm2ajah7cjae9tpdvsc.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "391614224917-0mujlqc3apdvs1lm8rjnlb1lfghltv8h.apps.googleusercontent.com",
+              "client_id": "391614224917-233cvp7tqh1tm4mntcfl1h94samgjin8.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.withcenter.test"
+                "bundle_id": "com.withcenter.partykorea"
               }
             }
           ]

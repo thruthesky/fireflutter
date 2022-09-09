@@ -396,15 +396,26 @@ FirestoreListView<PostModel>(
 
 ## 푸시 알림 문서 구조
 
-푸시 알림 문서는 사용자 문서 하위에 `/users/<uid>/fcm_tokens {created_at: ..., device_type: ..., fcm_token: ... }` 와 같이 저장된다.
+푸시 알림 문서는 사용자 문서 하위에 `/users/<uid>/fcm_tokens/<docId> {created_at: ..., device_type: ..., fcm_token: ... }` 와 같이 저장된다.
 
-- created_at 은 토큰이 생성된 시간
-- device_type 은 device type. ie) android, iOS,
-- fcm_token 은 토큰
+```mermaid
+erDiagram
+  Document {
+    string device_type "장치의 플랫폼 이름. 참고로, FireFlutter 에서는 모두 소문자로 저장. 예) ios. 하지만 FlutterFlow 와 같이 다른 플랫폼에서는 iOS 로 저장 할 수 있으니 주의."
+    string fcm_token "토큰"
+    string uid "사용자 uid"
+  }
+```
 
-참고로, (2022년 9월 기준) 이 구조는 FlutterFlow 에서 사용하는 구조이다. FlutterFlow 에서는 사용자가 로그인을 해야지만 토큰을 저장할 수 있으며 Anonymous SignIn 은 지원하지 않는다.
+참고로, (2022년 9월 기준) 이 구조는 FlutterFlow 에서 사용하는 구조와 비슷하다. 사실 FlutterFlow 호환을 위해서 이 구조로 작성했다.
+FlutterFlow 에서는 `created_at` 이라는 필드를 따로 추가하는데, FireFlutter 에서는 이 필드를 사용하지 않는다.
+또한 FlutterFlow 에서는 사용자가 계정 로그인을 해야지만 토큰을 저장할 수 있는데 반해, FireFlutter 에서는 계정 로그인을 않고, Anonymous 로그인을 해도 토큰 저장을 할 수 있다. 이것은 사용자가 계정 로그인을 하지 않아도 푸시 알림 subscription 을 할 수 있도록 기능을 만들 수 있다.
+FlutterFlow 에는 없는 `uid` 를 추가했다. 이를 통해서 필요에 따라 subcollection query 를 할 수 있다.
 
-얼핏 생각하면 한 사용자가 토큰을 많이 사용하는 경우, 하나의 문서에 토큰을 필드로 지정하고, device_type 을 값으로 지정하면, read 이벤트를 최소화 할 있다고 여길 수 있다. 하지만 사용자는 핸드폰에 앱을 설치해서 사용하는데, (웹 배포를 하면 웹으로도 같이 사용 할 수도 있지만) 어림 짐작으로 한 사용자당 토큰이 1개인 경우가 90% 이상이라 판단 된다. 그래서 문서 하나당 토큰 하나를 둔다.
+참고로, 사용자의 모든 토큰을 하나의 문서에 저장하는 것도 생각 할 수 있는데,
+얼핏 생각하면 한 사용자가 토큰을 많이 사용하는 경우, 하나의 문서에 모든 토큰을 저장하면 read 이벤트를 최소화 할 있다고 생각 할 수 있다. 하지만 사용자 대부분은 핸드폰에 앱을 설치해서 사용하는데, (웹 배포를 하면 웹으로도 같이 사용 할 수도 있지만) 어림 짐작으로 한 사용자당 토큰이 1개인 경우가 90% 이상이라 판단 된다. 그래서 문서 하나당 토큰 하나를 두는 것도 큰 문제가 없다.
+
+참고로, `/users/<uid>/fcm_tokens/<docId>`에서 FlutterFlow 는 `<docId>` 키를 랜덤하게 생성하지만, FireFlutter 에서는 push token id 를 key 로 지정한다.
 
 
 ## 푸시 알림 코딩

@@ -25,12 +25,16 @@ describe("Send message to token", () => {
             "cy-4z6EBQKKcC3PW4dfAj_:APA91bGTnRlmXIU6aJRpLJvpAXbVXhUUWT4i9JQzArqXc5wjzoS0ngnECMuVrxf-l9s1ei3P6cxlBTdPSgJRWYH9ggvQKAweKufOjTmMDR56UnmHLm3W4NxUI42RwxtHPZQ8u4E2_9c6",
             "cHa2hawxTyKIMO1aOcToJk:APA91bE_UoXKBY9fKP2sV9Yu4edPZJEiSbL4ruBe_jwgr0BYMt3YsduYkfIvIjPgVbpI5o7PbsMnmCdZ0H2TMbE81oYvT6u-qBhRUUGfNAnBaFXYUlYpkEj_910RguQnQg0LfF-q_o-T",
             "ehZTS_4ETICyLDr-pL5l4f:APA91bGepNBvbXdu8gKJXSxRJ3UU2oU6dZTRzo_O5rkxISb9bvqo5ptCp1fOkLjUCMLeTI0Mi5Bi2HvLQSsr-4pflW6Q_Ho1aCY4nXLL3xjCwcI3c6LpQ0fW4OxwWir_YnUKf6a7OfQe",
+            "d-RUY7gztE1wnheilIWUYC:APA91bE_owxgKAYy7808o5EFFSKhyle5jpv9-tcfX2_KPh1rgrzh58K4erUwO1mk7bea6FVoksyH7ouACZjr0kA_kYe0X8uUergnAeS85UEBL3u7CxEC4sg3jRXLhGu2FdRKnqfuV0Ya",
+            "fBI1f2ACSnyMnXGQxpdxwo:APA91bEqJ_ZHSif6w0ZAhdvF85k4TnWdmZ13KQQ42BSN9HUx1jlcJSxcx5nTG784bwZb5yGSihlM9hQuUM28gT4c84l3w8nzmhc1O06kUe47mSu4r3r3b3Uj2eafhuY_lG-K2sSeWmUA",
             Test.token,
             Test.jaehoSimulatorToken,
           ].join(","),
         },
         {} as any
       );
+      
+
       console.log(JSON.stringify(res));
       expect("0").to.be.an("string");
     } catch (e) {

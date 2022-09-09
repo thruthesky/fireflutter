@@ -1,31 +1,24 @@
 import * as admin from "firebase-admin";
 export class Ref {
-  static get db() {
+  static get db(): admin.firestore.Firestore {
     return admin.firestore();
   }
 
-  static get rdb() {
-    return admin.database();
-  }
-
-  static get settingsCol() {
-    return this.db.collection("settings");
-  }
-
+  
+  
   static get users() {
-    return this.rdb.ref("users");
+    return this.db.collection("users");
   }
-
-  static get adminDoc() {
-    return this.settingsCol.doc("admins");
+  static userDoc(uid: string) {
+    return this.users.doc(uid);
   }
 
   /** ****************************** MESSAGING References ****************************/
 
-  static get messageTokens() {
-    return this.db.collection("fcm-tokens");
+  static tokenCol(uid: string): admin.firestore.CollectionReference {
+    return this.userDoc(uid).collection("fcm_tokens");
   }
-  //   static token(id: string) {
-  //     return this.messageTokens.child(id);
-  //   }
+  static tokenDoc(uid: string, token: string): admin.firestore.DocumentReference {
+    return this.tokenCol(uid).doc(token);
+  }
 }
