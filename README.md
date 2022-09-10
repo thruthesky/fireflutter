@@ -332,12 +332,43 @@ List<PostModel> photos = await PostService.instance.get(
 
 ### 글 목록을 무한 스크롤로 가져오기
 
-- 화면에 표시해야 할 글 목록을 많은 경우, 스크롤을 할 때 마다 다음 페이지에 해당하는 글 목록을 가져와야 하는데, 가장 표준적이고 쉬운 방법인 `FirestoreListView`를 사용 하였다.
-- `FirestoreListView` 의 사용법에 익숙하다면, 직접 Query 를 작성해서 가져 올 수도 있겠지만 조금 더 사용하기 쉽게 함수와 위젯을 추가해 놓았다.
+- 화면에 글 목록을 표시하는 경우 `FirestoreListView` 화 함께 `postsQuery()` 를 사용하면 보다 쉽게 Firestore 로 부터 글을 가져 올 수 있다.
+- 또한 글 목록을 많은 경우, 스크롤을 할 때 마다 다음 페이지에 해당하는 글 목록을 가져와야 하는데, 이 때에도 `FirestoreListView` 와 함께 `postsQuery()` 를 사용하면 된다.
+- `FirestoreListView` 의 사용법에 익숙하다면, 직접 Query 를 작성해서 가져 올 수도 있겠지만 `postsQuery()` 가 조금 더 사용하기 쉽게 함수와 위젯을 추가해 놓았다.
 
+- 아래는 StreamBuilder 를 사용해서, Firestore 로 부터 글을 가져온다.
+```dart
+StreamBuilder(
+  stream: FirebaseFirestore.instance
+      .collection('posts')
+      .limit(3)
+      .snapshots(),
+  builder: ((context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return const CircularProgressIndicator.adaptive();
+    }
+    if (snapshot.hasError) return Text(snapshot.error.toString());
+    if (snapshot.hasData == false ||
+        (snapshot.data?.docs ?? []).isEmpty) {
+      return const Text('No posts, yet');
+    }
+    return Column(
+      children: snapshot.data?.docs.map((doc) {
+            final p = PostModel.fromSnapshot(doc);
+            return ListTile(title: Text(p.displayTitle));
+          }).toList() ??
+          [],
+    );
+  }),
+),
+```
+
+
+- 아래는 FirestoreListView 와 postsQuery() 를 사용해서, Firestore 로 부터 글을 가져온다.
 ```dart
 FirestoreListView<PostModel>(
-  query: posts(),
+  shrinkWrap: true,
+  query: postsQuery(limit: 3),
   itemBuilder: ((context, snapshot) {
     final post = snapshot.data();
     return ListTile(
