@@ -16,6 +16,8 @@ mixin ForumMixin {
   bool get signedIn => UserService.instance.signedIn;
   bool get notSignedIn => UserService.instance.notSignedIn;
 
+  FieldValue get serverTimestamp => FieldValue.serverTimestamp();
+
   CollectionReference get userCol => db.collection('users');
   CollectionReference get categoryCol => db.collection('categories');
   CollectionReference get postCol => db.collection('posts');
@@ -45,6 +47,21 @@ mixin ForumMixin {
     return postCol.doc(id);
   }
 
+  /// 카테고리 목록을 할 때 사용하는 쿼리
+  Query<CategoryModel> categoriesQuery({
+    int limit = 100,
+    bool decending = true,
+  }) {
+    return categoryCol
+        .limit(limit)
+        // .orderBy('createdAt', descending: decending)
+        .withConverter<CategoryModel>(
+          fromFirestore: (snapshot, _) => CategoryModel.fromSnapshot(snapshot),
+          toFirestore: (category, _) => category.map,
+        );
+  }
+
+  /// 글 목록을 할 때 사용하는 쿼리
   Query<PostModel> postsQuery({
     int limit = 10,
     bool decending = true,
@@ -103,6 +120,128 @@ mixin ForumMixin {
           },
         );
       },
+    );
+  }
+
+  /// 자세한 내용은 README.md 참고
+  Future<PostModel?> onCategoryEdit({
+    CategoryModel? category,
+  }) {
+    final categoryId = TextEditingController();
+    final categoryTitle = TextEditingController(text: category?.title);
+    final categoryDescription =
+        TextEditingController(text: category?.description);
+    final categoryOrder =
+        TextEditingController(text: category?.order.toString());
+    final categoryPoint =
+        TextEditingController(text: category?.point.toString());
+    final categoryGroup = TextEditingController(text: category?.group);
+    return showGeneralDialog(
+      context: context,
+      pageBuilder: (_, __, ___) => Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        onPressed: Navigator.of(context).pop,
+                        icon: Icon(Icons.arrow_back_ios),
+                      ),
+                      Text('Category edit'),
+                    ],
+                  ),
+                  Divider(),
+                  SizedBox(height: 32),
+                  category == null
+                      ? TextField(
+                          controller: categoryId,
+                          decoration: InputDecoration(
+                            label: Text('Input category ID'),
+                          ),
+                        )
+                      : ListTile(
+                          title: Text(category.id),
+                          subtitle: Text('Category'),
+                        ),
+                  TextField(
+                    controller: categoryTitle,
+                    decoration: InputDecoration(
+                      label: Text('Input category title'),
+                    ),
+                  ),
+                  TextField(
+                    controller: categoryDescription,
+                    decoration: InputDecoration(
+                      label: Text('Input category description'),
+                    ),
+                  ),
+                  TextField(
+                    controller: categoryOrder,
+                    decoration: InputDecoration(
+                      label: Text('Input category order'),
+                    ),
+                  ),
+                  TextField(
+                    controller: categoryPoint,
+                    decoration: InputDecoration(
+                      label: Text('Input category point'),
+                    ),
+                  ),
+                  TextField(
+                    controller: categoryGroup,
+                    decoration: InputDecoration(
+                      label: Text('Input category group'),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      TextButton(
+                        onPressed: Navigator.of(context).pop,
+                        child: Text('Cancel'),
+                      ),
+                      Spacer(),
+                      TextButton(
+                        onPressed: () async {
+                          try {
+                            if (category == null) {
+                              /// TODO 카테고리 생성시 개발자가 적절하게 추가 항목을 입력 할 수 있도록 한다.
+                              await CategoryModel().create(
+                                category: categoryId.text,
+                                title: categoryTitle.text,
+                                description: categoryDescription.text,
+                                point: toInt(categoryPoint.text),
+                                order: toInt(categoryOrder.text),
+                                group: categoryGroup.text,
+                              );
+                            } else {
+                              await category.update({
+                                'title': categoryTitle.text,
+                                'description': categoryDescription.text,
+                                'point': toInt(categoryPoint.text),
+                                'order': toInt(categoryOrder.text),
+                                'group': categoryGroup.text,
+                              });
+                            }
+                            Navigator.of(context).pop();
+                          } catch (e) {
+                            ffError(e);
+                          }
+                        },
+                        child: Text(category == null ? 'CREATE' : 'UPDATE'),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 

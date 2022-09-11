@@ -12,8 +12,8 @@ class Admin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MyDoc(builder: (my) {
-      if (my.isAdmin == false)
+    return MyDoc(builder: (im) {
+      if (im.admin == false)
         return const SizedBox.shrink();
       else
         return child;

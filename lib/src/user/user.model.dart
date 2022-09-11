@@ -14,6 +14,7 @@ class UserModel {
   String gender = '';
   int birthday = 0;
   int level = 0;
+  bool admin = false;
 
   Timestamp? updatedAt;
   Timestamp? createdAt;
@@ -36,8 +37,6 @@ class UserModel {
   ///   그러나, 그냥 UserModel() 로 객체가 생성되면, uid 는 empty string 이 된다.
   bool? exists;
   bool get ready => profileError == '';
-
-  bool get isAdmin => false;
 
   bool get notSignedIn =>
       isAnonymous || FirebaseAuth.instance.currentUser == null;
@@ -101,6 +100,7 @@ class UserModel {
     gender = data['gender'] ?? '';
     birthday = data['birthday'] ?? 0;
     photoUrl = data['photoUrl'] ?? '';
+    admin = data['admin'] ?? false;
     createdAt = data['createdAt'];
     updatedAt = data['updatedAt'];
   }

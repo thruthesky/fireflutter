@@ -3,40 +3,52 @@ import 'package:fireflutter/fireflutter.dart';
 
 class CategoryModel with ForumMixin {
   CategoryModel({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.backgroundColor,
-    required this.foregroundColor,
-    required this.order,
-    required this.point,
-    required this.categoryGroup,
+    this.id = '',
+    this.title = '',
+    this.description = '',
+    this.order = 0,
+    this.point = 0,
+    this.group = '',
   });
 
   String id;
   String title;
   String description;
-  String backgroundColor;
-  String foregroundColor;
   int order;
   int point;
-  String categoryGroup;
+  String group;
 
-  /// TODO change it to named constructor
   factory CategoryModel.emtpy() => CategoryModel.fromJson({}, '');
 
-  /// TODO change it to named constructor
+  factory CategoryModel.fromSnapshot(DocumentSnapshot doc) {
+    return CategoryModel.fromJson(doc.data(), doc.id);
+  }
+
   factory CategoryModel.fromJson(dynamic data, String id) {
     return CategoryModel(
       id: id,
       title: data['title'] ?? '',
       description: data['description'] ?? '',
-      backgroundColor: data['backgroundColor'] ?? '',
-      foregroundColor: data['foregroundColor'] ?? '',
       order: toInt(data['order']),
       point: toInt(data['point']),
-      categoryGroup: data['categoryGroup'] ?? '',
+      group: data['group'] ?? '',
     );
+  }
+
+  Map<String, dynamic> get map {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'order': order,
+      'point': point,
+      'group': group,
+    };
+  }
+
+  @override
+  toString() {
+    return 'CategoryModel($map)';
   }
 
   /// Return an int from dynamic.
@@ -56,21 +68,26 @@ class CategoryModel with ForumMixin {
   }
 
   /// category create
-  static Future<void> create({
+  Future<void> create({
     required String category,
-    required String title,
-    required String description,
+    String title = '',
+    String description = '',
+    int point = 0,
+    int order = 0,
+    String group = '',
   }) async {
+    if (category == '') throw ERROR_CATEGORY_IS_EMPTY_ON_CATEGORY_CREATE;
     final data = {
       'title': title,
       'description': description,
-      'order': 0,
-      'point': 0,
-      'categoryGroup': '',
+      'order': order,
+      'point': point,
+      'group': group,
+      'createdAt': serverTimestamp,
     };
     final categoryCol = FirebaseFirestore.instance.collection('categories');
     final doc = await categoryCol.doc(category).get();
-    if (doc.exists) throw 'CategoryModel already exists';
+    if (doc.exists) throw ERROR_CATEGORY_EXISTS_ON_CATEGORY_CREATE;
     return categoryCol.doc(category).set(data);
   }
 
@@ -78,18 +95,9 @@ class CategoryModel with ForumMixin {
   ///
   /// ```dart
   /// final cat = CategoryModel.fromJson({}, 'job');
-  /// cat.update('foregroundColor', 'color').catchError(service.error);
   /// ```
-  Future<void> update(String field, dynamic value) {
-    return categoryDoc(id).update({field: value});
-  }
-
-  Future<void> updateBackgroundColor(String value) {
-    return update('backgroundColor', value);
-  }
-
-  Future<void> updateForegroundColor(String value) {
-    return update('foregroundColor', value);
+  Future<void> update(Map<String, Object?> data) {
+    return categoryDoc(id).update(data);
   }
 
   Future<void> delete() {

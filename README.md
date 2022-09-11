@@ -38,6 +38,7 @@
   - [푸시 알림 사운드](#푸시-알림-사운드)
 - [Firestore 보안 규칙](#firestore-보안-규칙)
   - [관리자 지정](#관리자-지정)
+  - [게시판](#게시판)
 - [에러 핸들링](#에러-핸들링)
 
 
@@ -582,9 +583,21 @@ try {
 
 
 ## 관리자 지정
-- 관리자를 지정 할 때에는 직접 Firebase Console 에서 Firestore 탭에서 `/settings/admin {<uid>: true}` 와 같이 지정을 해야 한다.
-- 
+- 관리자를 지정 할 때에는 직접 Firebase Console 에서 Firestore 탭에서 `/settings/admins {<uid>: true}` 와 같이 지정을 해야 한다.
 
+![Admin Settings](https://github.com/thruthesky/fireflutter/wiki/img/security-rules-firestore-admin.jpg)
+
+- 위와 같이 관리자 지정된 사용자의 사용자 문서에서 `/users/<uid> {admin: true}` 를 해 주어도 되고,
+  - 프로그램적으로 적절한 액션을 하면, 프로그램적으로 지정해도 된다.
+    - 예) 로그인한 사용자가 설정에서 버전 문자열을 세번 탭하면, 액션이 실행되고 관리자로 지정되어져 있으면, 자신의 사용자 문서에 `{admin: true}` 를 직접 지정하면 된다.
+    - 참고로, 해커가 `{admin: true}`를 임의로 지정한다고 해도 보안 규칙에 의해서 관리자만 관리자 권한을 행사 할 수 있으므로 안전하다.
+
+- 관리자가 지정되면, 카테고리를 생성하거나 수정 할 수 있다.
+
+
+## 게시판
+
+- 글 생성시, 카테고리를 입력해야하며, 해당 카테고리는 `/categories` 컬렉션에 문서로 존재해야 한다.
 
 # 에러 핸들링
 
