@@ -19,6 +19,7 @@
   - [업로드된 사진 보여주기](#업로드된-사진-보여주기)
 - [글](#글-1)
   - [글 생성](#글-생성)
+    - [글 생성 위젯 - PostForm](#글-생성-위젯---postform)
   - [글 가져오기](#글-가져오기)
   - [글 목록 가져오기](#글-목록-가져오기)
     - [글 목록을 무한 스크롤로 가져오기](#글-목록을-무한-스크롤로-가져오기)
@@ -34,6 +35,7 @@
   - [클라우드 함수 Deploy](#클라우드-함수-deploy)
   - [플러터에서 클라우드 함수 호출](#플러터에서-클라우드-함수-호출)
   - [푸시 알림 사운드](#푸시-알림-사운드)
+- [에러 핸들링](#에러-핸들링)
 
 
 # 해야 할 것
@@ -311,6 +313,30 @@ MyDoc(
 - 글을 작성하기 위해서는 `PostModel.create()` 함수를 호출하면 된다.
 - `ForumMixin` mixin 의 `onPostEdit`
 
+### 글 생성 위젯 - PostForm
+
+- 글을 생성하기 위해서는 직접 위젯을 만들어 쓰면 되는데, 기본적으로 제공하는 글 작성 위젯인 `PostForm` 에 대해서 설명을 한다.
+  - 이 위젯은 `lib/src/forum/widgets/post` 폴더에 있으며 그냥 소스 코드를 열어서 복사하여 사용해도 된다.
+- PostForm 은 글 쓰기에 필요한 위젯을 제공하고 있는데, 제목, 내용 입력란과 카테고리 선택, 파일 업로드 등이 있다.
+- 사용자가 글 쓰기 버튼을 누르면, 이 PostForm 위젯을 새로운 스크린에 보여주어도 되고, 전체 화면 Dialog 에 보여줘도 된다.
+  - 참고로, `ForumMixin::onPostEdit` 에서는 전체 화면 Dialog 를 사용해서 글 쓰기 폼을 보여주고 있다.
+- 카테고리는 `category` 변수에 넣어서 전달하면 기본 선택이 되는데 추가적으로 카테고리 선택 항목을 보여주고 싶다면 `categories` 변수에 `{레이블: 카테고리, ...}` 와 같은 형태로 전달하면 된다.
+- 예제)
+```dart
+IconButton(
+  onPressed: () async {
+    final post = await onPostEdit(category: 'qna', categories: {
+      'QnA': 'qna',
+      'Discussion': 'discussion',
+    });
+    print('post, $post');
+  },
+  icon: Icon(Icons.create, color: Theme.of(context).primaryColor),
+),
+```
+
+
+
 ## 글 가져오기
 
 - 글 하나 가져오기는 `PostModel.get()` 으로 할 수 있다.
@@ -544,4 +570,30 @@ try {
 - Android 와 iOS 둘 다 사운드 파일을 `default_sound.wav` 로 사용한다.
   - 참고로, WAV 파일을 압축하여 작은 용량으로 사운드 파일을 추가 할 수 있다.
 
+
+
+
+
+# 에러 핸들링
+
+- FireFlutter 에서 에러를 핸들링하는 방법은 에러를 throw 하던지, 에러를 화면에 표시하던지, 아니면 에러를 화면에 표시하고, throw 하는 경우가 있다.
+  - 예를 들면, `FileUploadButton` 위젯에서 사용자가 사진을 업로드 하려고 할 때, 회원 로그인을 하지 않았다면, 화면에 에러를 표시하고, 관련 에러를 throw 한다.
+    - 위젯이므로 에러를 throw 해도 상위(부모) 위젯에서 catch 를 하지 못한다. 즉, 최상위 에러 핸들러에서 핸들링 해야하는 것이다. 예) `FlutterError.onError`
+    - 만약, `FileUploadButton` 에서 회원 로그인하지 않아서 발생하는 에러를 화면에 표시하지 않도록 하고, 별도로 커스터마이징하고 싶다면 아래와 같이 하면 된다.
+```dart
+
+FireFlutterService.instance.init(
+  context: router.routerDelegate.navigatorKey.currentContext!,
+  error: (message) {
+    /// 이렇게 FireFlutter 에서 화면에 표시되는 모든 에러 메시지 전체를 핸들링
+
+    /// 필요에 따라 커스터마이징
+    if (message == ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD) {
+      return ffAlert('앗', '사진 업로드를 위해서는 먼저 로그인을 해 주세요.');
+    } else {
+      return ffAlert('ERROR', message);
+    }
+  },
+);
+```
 
