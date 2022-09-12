@@ -48,7 +48,7 @@ dependencies:
   # geocoding, geolocator, google_maps_flutter, flutter_polyline_points are for `Find Friend`.
   geocoding: ^2.0.1
   geolocator: ^8.2.1
-  
+
   # Google Map is not being used by Auth 14.
   # google_maps_flutter: ^2.1.1
 
