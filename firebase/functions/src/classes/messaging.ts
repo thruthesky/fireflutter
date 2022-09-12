@@ -21,19 +21,20 @@ export class Messaging {
 
   static async sendMessageByAction(data: any, context: CallableContext) {
     console.log("sendMessageByAction()", data, context);
-    let subscriptionId = '';
-    if (data.action == "post-create" || data.action == "comment-create") {
-      subscriptionId = data.action + "." + data.category;
-    } else {
-      // not supported other types.
-    }
+    // let subscriptionId = '';
+    // if (data.action == "post-create" || data.action == "comment-create") {
+    //   subscriptionId = data.action + "." + data.category;
+    // } else {
+    //   // not supported other types.
+    // }
 
     // Get users who subscribed the subscription
-    console.log("subscription::", subscriptionId);
-    const snap = await Ref.db.collectionGroup("user_subscriptions").where('action', "==", data.action)
-    .where('category', '==', data.category)
-    
-    .get();
+    // console.log("subscription::", subscriptionId);
+    const snap = await Ref.db
+      .collectionGroup("user_subscriptions")
+      .where("action", "==", data.action)
+      .where("category", "==", data.category)
+      .get();
 
     console.log("snap.size", snap.size);
     // No users
@@ -43,8 +44,9 @@ export class Messaging {
     for (const doc of snap.docs) {
       uids.push(doc.ref.parent.parent!.id);
     }
-
     console.log("uids::", uids);
+    const tokens = await this.getTokensFromUids(uids.join(","));
+    return this.sendMessageToTokens(tokens, data, context);
   }
 
   /**
@@ -60,6 +62,9 @@ export class Messaging {
     context: CallableContext
   ): Promise<{ success: number; error: number }> {
     // console.log("check user auth with context", context);
+    // add login user uid
+    if (context.auth?.uid != undefined) data.senderUid = context.auth?.uid;
+
     const payload = this.completePayload(data);
     if (tokens.length == 0) return { success: 0, error: 0 };
 

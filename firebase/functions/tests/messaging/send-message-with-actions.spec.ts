@@ -16,16 +16,31 @@ new FirebaseAppInitializer();
 describe("Send message by actions", () => {
   it("Send message by action", async () => {
     const userA = "user-a-" + Test.id();
+    const action = "comment-create";
+    const category = "qna";
     await User.create(userA, {});
-    
+    await User.setSubscription(userA, "forum", { action: action, category: category });
+
+    await User.setToken({
+      fcm_token:
+        "d1cBU6UuR9KqYtyeIVimFA:APA91bHlC2l_Crl_twwq8JRZIwnFtsTZKec6RYkoupJwnu3P5ZfuTo7qFrWBptGJKtvxqIuWAIxZOZGTDWL7GTcUhkWXsrHW0k824ara8G6ZJnK4Q61hlXO7x4pJ0kVJiaXPWQQuqG9Z",
+      device_type: "android",
+      uid: userA,
+    });
+
+    await User.setToken({
+      fcm_token: "invalid-tokens",
+      device_type: "android",
+      uid: userA,
+    });
 
     try {
       const res = await Messaging.sendMessage(
         {
           title: "from cli",
           body: "to iphone. is that so?",
-          action: "comment-create", // post-create
-          category: "qna",
+          action: action, // post-create
+          category: category,
         },
         {} as any
       );
