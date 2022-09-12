@@ -15,8 +15,10 @@ class JobSeekerModel {
 
   String status;
 
-  int createdAt;
-  int updatedAt;
+  // int createdAt;
+  // int updatedAt;
+  Timestamp? createdAt;
+  Timestamp? updatedAt;
 
   JobSeekerModel({
     this.id = '',
@@ -27,11 +29,19 @@ class JobSeekerModel {
     this.siNm = '',
     this.sggNm = '',
     this.status = 'Y',
-    this.createdAt = 0,
-    this.updatedAt = 0,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory JobSeekerModel.fromJson(Map<String, dynamic> json, String id) {
+    Timestamp? _createdAt = json['createdAt'] is int
+        ? Timestamp.fromMillisecondsSinceEpoch(json['createdAt'] * 1000)
+        : json['createdAt'];
+
+    Timestamp? _updatedAt = json['updatedAt'] is int
+        ? Timestamp.fromMillisecondsSinceEpoch(json['updatedAt'] * 1000)
+        : json['updatedAt'];
+
     return JobSeekerModel(
       id: id,
       proficiency: json['proficiency'] ?? '',
@@ -41,12 +51,22 @@ class JobSeekerModel {
       siNm: json['siNm'] ?? '',
       sggNm: json['sggNm'] ?? '',
       status: json['status'] ?? 'Y',
-      createdAt: json['createdAt'] ?? 0,
-      updatedAt: json['updatedAt'] ?? 0,
+      // createdAt: json['createdAt'] ?? 0,
+      // updatedAt: json['updatedAt'] ?? 0,
+      createdAt: _createdAt,
+      updatedAt: _updatedAt,
     );
   }
 
   copyWith(Map<String, dynamic> data) {
+    Timestamp? _createdAt = data['createdAt'] is int
+        ? Timestamp.fromMillisecondsSinceEpoch(data['createdAt'] * 1000)
+        : data['createdAt'];
+
+    Timestamp? _updatedAt = data['updatedAt'] is int
+        ? Timestamp.fromMillisecondsSinceEpoch(data['updatedAt'] * 1000)
+        : data['updatedAt'];
+
     proficiency = data['proficiency'] ?? '';
     experiences = data['experiences'] ?? '0';
     industry = data['industry'] ?? '';
@@ -54,8 +74,10 @@ class JobSeekerModel {
     siNm = data['siNm'] ?? '';
     sggNm = data['sggNm'] ?? '';
     status = data['status'] ?? 'Y';
-    createdAt = data['createdAt'] ?? 0;
-    updatedAt = data['updatedAt'] ?? 0;
+    // createdAt: data['createdAt'] ?? 0,
+    // updatedAt: data['updatedAt'] ?? 0,
+    createdAt = _createdAt;
+    updatedAt = _updatedAt;
   }
 
   /// TODO: update backend rules.
