@@ -17,7 +17,7 @@ class _JobSeekerProfileFormState extends State<JobSeekerProfileForm> {
   final labelStyle = TextStyle(fontSize: 10, color: Colors.blueGrey);
   final _formKey = GlobalKey<FormState>(debugLabel: 'jobSeeker');
 
-  final form = JobSeekerModel();
+  final form = JobSeekerModel(id: UserService.instance.uid!);
 
   bool loaded = false;
   bool loading = false;

@@ -1,3 +1,8 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fireflutter/fireflutter.dart';
+
 class JobSeekerModel {
   String id;
   String proficiency;
@@ -53,25 +58,28 @@ class JobSeekerModel {
     updatedAt = data['updatedAt'] ?? 0;
   }
 
+  /// TODO: update backend rules.
+  ///
   Future update() async {
-    /// TODO job update profile
-    // return await FunctionsApi.instance.request(
-    //   'jobUpdateProfile',
-    //   data: updateMap,
-    //   addAuth: true,
-    // );
+    final profile = await load(uid: id);
+
+    final data = {
+      ...updateMap,
+      'updatedAt': FieldValue.serverTimestamp(),
+    };
+
+    if (profile == null) data['createdAt'] = FieldValue.serverTimestamp();
+    log('Job profile update ====> ' + data.toString());
+    return await Job.jobSeekerCol.doc(id).set(data);
   }
 
-  load({required String uid}) async {
-    /// TODO job get profile
-    // final data = await FunctionsApi.instance.request(
-    //   'jobGetProfile',
-    //   data: {'uid': uid},
-    // );
-    // if (data is String) return;
-    // print('job profile; $data');
-    // copyWith(data);
-    // print('updateMap; $updateMap');
+  /// Get job profile.
+  /// It returns null if the document does not exists.
+  ///
+  Future<JobSeekerModel?> load({required String uid}) async {
+    final res = await Job.jobSeekerCol.doc(uid).get();
+    if (res.exists == false) return null;
+    return JobSeekerModel.fromJson(res.data() as Json, res.id);
   }
 
   Map<String, dynamic> get updateMap => {
