@@ -3,6 +3,9 @@ export class Ref {
   static get db(): admin.firestore.Firestore {
     return admin.firestore();
   }
+  static get rdb(): admin.database.Database {
+    return admin.database();
+  }
 
   
   

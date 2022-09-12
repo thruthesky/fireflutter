@@ -9,6 +9,7 @@
     "start": "npm run shell",
     "deploy": "npm run lint -- --fix && npm run build && firebase deploy --only functions",
     "logs": "firebase functions:log",
+    "lab": "ts-node",
     "test": "mocha --timeout 20000 --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts"
   },
   "engines": {
