@@ -7,28 +7,49 @@ import { Utils } from "../utils/utils";
 
 export class Messaging {
   static async sendMessage(data: any, context: CallableContext): Promise<any> {
-    console.log(data);
+    
 
-    //
     if (data.tokens) {
       return this.sendMessageToTokens(data.tokens.split(","), data, context);
-    }  else if (data.uids) {
+    } else if (data.uids) {
       const tokens = await this.getTokensFromUids(data.uids);
       return this.sendMessageToTokens(tokens, data, context);
-    } else if (data.topic) {
-      return this.sendMessageToTopic(data, context);
+    } else if (data.action) {
+      return this.sendMessageByAction(data, context);
     } else {
       throw invalidArgument("One of uids, tokens, topic must be present");
     }
   }
 
-  static async sendMessageToTopic(data: any, context: CallableContext) {
-    console.log(data, context);
+  static async sendMessageByAction(data: any, context: CallableContext) {
+    console.log('sendMessageByAction()', data, context);
+    let subscription: string = "";
+    if (data.action == "post-create" || data.action == "comment-create") {
+      subscription = data.action + "." + data.category;
+    } else {
+      // not supported other types.
+    }
+
+    // Get users who subscribed the subscription
+
+    const snap = await Ref.db
+      .collectionGroup("settings")
+      .where(subscription, "==", true)
+      .get();
+    // No users
+    if (snap.size == 0) return;
+
+    const uids: string[] = [];
+    for (const doc of snap.docs) {
+      uids.push(doc.ref.parent.parent!.id);
+    }
+
+    console.log(uids);
   }
 
   /**
    * Send push notifications with the tokens and returns the result.
-   * 
+   *
    * @param tokens array of tokens.
    * @param data data to send push notification.
    * @param context Cloud Functions Callable context
@@ -42,11 +63,11 @@ export class Messaging {
     const payload = this.completePayload(data);
     if (tokens.length == 0) return { success: 0, error: 0 };
 
-    // sendMulticast() 는 오직 500 개 까지만 지원. 그래서 500 개 단위로 쪼개서 batch 처리.
-    const chunks = Utils.chunk(tokens, 5);
+    // sendMulticast() supports 500 tokens at a time. Chunk and send by batches.
+    const chunks = Utils.chunk(tokens, 500);
 
     const multicastPromise = [];
-    // 토큰 500개 단위로 푸시 알림 전송하는 Promise 를 배열에 담는다.
+    // Save [sendMulticast()] into a promise.
     for (const _500_tokens of chunks) {
       const newPayload: admin.messaging.MulticastMessage = Object.assign(
         {},
@@ -56,7 +77,6 @@ export class Messaging {
       multicastPromise.push(admin.messaging().sendMulticast(newPayload));
     }
 
-
     const failedTokens = [];
     let successCount: number = 0;
     let failureCount: number = 0;
@@ -64,25 +84,20 @@ export class Messaging {
       // Send all the push messages in the promise with [Promise.allSettle].
       const settled = await Promise.allSettled(multicastPromise);
       // Returns are in array
-      for( const e of settled ) {
-console.log(e);
-        const value = (e as any).value;
+      for (const settledIndex in settled) {
+        const value = (settled[settledIndex] as any).value;
         successCount += value.successCount;
         failureCount += value.failureCount;
 
-        // 결과는 1차원 배열은 토큰의 500개 chunks 단위.
-        // 2차원 배열은 각 토큰을 성공/실패 결과
-        for (const ci in settled) {
-          for (const idx in value.responses) {
-            const i = parseInt(idx);
-            const res = value.responses[i];
-            if (res.success == false ) {
-              // Delete tokens that failed.
-              // If res.success == false, then the token failed, anyway.
-              // But check if the error message to be sure that the token is not being used anymore.
-              if (this.isInvalidTokenErrorCode(res.error.code)) {
-                failedTokens.push(chunks[ci][i]);
-              }
+        for (const idx in value.responses) {
+          const i = parseInt(idx);
+          const res = value.responses[i];
+          if (res.success == false) {
+            // Delete tokens that failed.
+            // If res.success == false, then the token failed, anyway.
+            // But check if the error message to be sure that the token is not being used anymore.
+            if (this.isInvalidTokenErrorCode(res.error.code)) {
+              failedTokens.push(chunks[settledIndex][i]);
             }
           }
         }
@@ -94,35 +109,46 @@ console.log(e);
       // 결과 리턴
       return { success: successCount, error: failureCount };
     } catch (e) {
-      console.log("---> caught on sendMessageToTokens() await Promise.allSettled()", e);
+      console.log(
+        "---> caught on sendMessageToTokens() await Promise.allSettled()",
+        e
+      );
       throw e;
     }
   }
 
   /**
    * Remove tokens from user token documents `/users/<uid>/fcm_tokens/<docId>`
-   * 
+   *
    * @param tokens tokens to remove
-   * 
+   *
    * Use this method to remove tokens that failed to be sent.
-   * 
+   *
    * Test, tests/messaging/remove-tokens.spec.ts
    */
   static async removeTokens(tokens: string[]) {
     const promises: Promise<any>[] = [];
-    for( const token of tokens) {
+    for (const token of tokens) {
       promises.push(
         // Get the document of the token
-        Ref.db.collectionGroup('fcm_tokens').where('fcm_token', '==', token).get().then( async (snapshot) => {
-          for(const doc of snapshot.docs) {
-            await doc.ref.delete();
-          }
-        })
+        Ref.db
+          .collectionGroup("fcm_tokens")
+          .where("fcm_token", "==", token)
+          .get()
+          .then(async (snapshot) => {
+            for (const doc of snapshot.docs) {
+              await doc.ref.delete();
+            }
+          })
       );
     }
     await Promise.all(promises);
   }
 
+  /**
+   * Return true if the token is invalid. So it can be removed from database.
+   * There are many error codes. see https://firebase.google.com/docs/cloud-messaging/send-message#admin
+   */
   static isInvalidTokenErrorCode(code: string) {
     if (
       code === "messaging/invalid-registration-token" ||
@@ -217,7 +243,8 @@ console.log(e);
 
     if (res.notification.body != "") {
       res.notification.body = Utils.removeHtmlTags(res.notification.body) ?? "";
-      res.notification.body = Utils.decodeHTMLEntities(res.notification.body) ?? "";
+      res.notification.body =
+        Utils.decodeHTMLEntities(res.notification.body) ?? "";
       if (res.notification.body.length > 255) {
         res.notification.body = res.notification.body.substring(0, 255);
       }

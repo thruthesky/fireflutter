@@ -13,6 +13,17 @@ export class Ref {
     return this.users.doc(uid);
   }
 
+  static userSettingsCol(uid: string): admin.firestore.CollectionReference {
+    return this.userDoc(uid).collection('user_settings');
+  }
+  static userSettingsGroupCol(uid: string): admin.firestore.CollectionGroup {
+    return this.db.collectionGroup('user_settings');
+  }
+
+  static userSettingsDoc(uid: string, docId: string): admin.firestore.DocumentReference {
+    return this.userSettingsCol(uid).doc(docId);
+  }
+
   /** ****************************** MESSAGING References ****************************/
 
   static tokenCol(uid: string): admin.firestore.CollectionReference {

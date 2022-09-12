@@ -67,7 +67,6 @@ describe("Messaging", () => {
     snapshot = await admin.firestore().collectionGroup("fcm_tokens").where('fcm_token', '==', 'token-b-2').get();
     expect(snapshot.docs.length).equals(0);
     
-    
   });
 
 
