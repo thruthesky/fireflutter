@@ -173,17 +173,17 @@ class MessagingService with FireFlutterMixin {
   /// Subcribe to default topic.
   ///
   /// This may be called on every app boot (after permission, initialization)
-  subscribeToDefaultTopic() async {
-    if (doneDefaultTopic) return;
-    doneDefaultTopic = true;
-    if (kIsWeb) {
-      // rest api to subscribe token to topic
-    } else {
-      FirebaseMessaging.instance.subscribeToTopic(defaultTopic);
-    }
-  }
+  // subscribeToDefaultTopic() async {
+  //   if (doneDefaultTopic) return;
+  //   doneDefaultTopic = true;
+  //   if (kIsWeb) {
+  //     // rest api to subscribe token to topic
+  //   } else {
+  //     FirebaseMessaging.instance.subscribeToTopic(defaultTopic);
+  //   }
+  // }
 
-  send_old({
+  send({
     required String token,
     required String title,
     required String body,
@@ -219,40 +219,40 @@ class MessagingService with FireFlutterMixin {
     print(res.data);
   }
 
-  /// https://firebase.google.com/docs/cloud-messaging/migrate-v1
-  /// Migrate from legacy HTTP to HTTP v1
-  send({
-    required String token,
-    required String title,
-    required String body,
-  }) async {
-    const apiUrl =
-        "https://fcm.googleapis.com/v1/projects/wonderful-korea/messages:send";
-    final data = {
-      "to": token,
-      "notification": {
-        "title": title,
-        "body": body,
-      },
-      "data": {
-        "click_action": "FLUTTER_NOTIFICATION_CLICK",
-      },
-    };
+//   /// https://firebase.google.com/docs/cloud-messaging/migrate-v1
+//   /// Migrate from legacy HTTP to HTTP v1
+//   send({
+//     required String token,
+//     required String title,
+//     required String body,
+//   }) async {
+//     const apiUrl =
+//         "https://fcm.googleapis.com/v1/projects/wonderful-korea/messages:send";
+//     final data = {
+//       "to": token,
+//       "notification": {
+//         "title": title,
+//         "body": body,
+//       },
+//       "data": {
+//         "click_action": "FLUTTER_NOTIFICATION_CLICK",
+//       },
+//     };
 
-    Dio dio = getRetryDio();
+//     Dio dio = getRetryDio();
 
-    final res = await dio.post(
-      apiUrl,
-      data: data,
-      options: Options(
-        headers: {
-          'content-type': 'application/json',
-          'Authorization': "...",
-        },
-      ),
-    );
+//     final res = await dio.post(
+//       apiUrl,
+//       data: data,
+//       options: Options(
+//         headers: {
+//           'content-type': 'application/json',
+//           'Authorization': "...",
+//         },
+//       ),
+//     );
 
-    print(res.statusCode);
-    print(res.data);
-  }
+//     print(res.statusCode);
+//     print(res.data);
+//   }
 }

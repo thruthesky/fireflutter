@@ -7,8 +7,6 @@ import { Utils } from "../utils/utils";
 
 export class Messaging {
   static async sendMessage(data: any, context: CallableContext): Promise<any> {
-    
-
     if (data.tokens) {
       return this.sendMessageToTokens(data.tokens.split(","), data, context);
     } else if (data.uids) {
@@ -22,7 +20,7 @@ export class Messaging {
   }
 
   static async sendMessageByAction(data: any, context: CallableContext) {
-    console.log('sendMessageByAction()', data, context);
+    console.log("sendMessageByAction()", data, context);
     let subscription: string = "";
     if (data.action == "post-create" || data.action == "comment-create") {
       subscription = data.action + "." + data.category;
@@ -31,11 +29,10 @@ export class Messaging {
     }
 
     // Get users who subscribed the subscription
+    console.log("subscription::", subscription);
+    const snap = await Ref.db.collectionGroup("user_settings").where(subscription, "==", true).get();
 
-    const snap = await Ref.db
-      .collectionGroup("settings")
-      .where(subscription, "==", true)
-      .get();
+    console.log("snap.size", snap.size);
     // No users
     if (snap.size == 0) return;
 
@@ -44,7 +41,7 @@ export class Messaging {
       uids.push(doc.ref.parent.parent!.id);
     }
 
-    console.log(uids);
+    console.log("uids::", uids);
   }
 
   /**
@@ -69,11 +66,7 @@ export class Messaging {
     const multicastPromise = [];
     // Save [sendMulticast()] into a promise.
     for (const _500_tokens of chunks) {
-      const newPayload: admin.messaging.MulticastMessage = Object.assign(
-        {},
-        { tokens: _500_tokens },
-        payload as any
-      );
+      const newPayload: admin.messaging.MulticastMessage = Object.assign({}, { tokens: _500_tokens }, payload as any);
       multicastPromise.push(admin.messaging().sendMulticast(newPayload));
     }
 
@@ -109,10 +102,7 @@ export class Messaging {
       // 결과 리턴
       return { success: successCount, error: failureCount };
     } catch (e) {
-      console.log(
-        "---> caught on sendMessageToTokens() await Promise.allSettled()",
-        e
-      );
+      console.log("---> caught on sendMessageToTokens() await Promise.allSettled()", e);
       throw e;
     }
   }
@@ -243,8 +233,7 @@ export class Messaging {
 
     if (res.notification.body != "") {
       res.notification.body = Utils.removeHtmlTags(res.notification.body) ?? "";
-      res.notification.body =
-        Utils.decodeHTMLEntities(res.notification.body) ?? "";
+      res.notification.body = Utils.decodeHTMLEntities(res.notification.body) ?? "";
       if (res.notification.body.length > 255) {
         res.notification.body = res.notification.body.substring(0, 255);
       }
