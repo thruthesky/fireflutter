@@ -7,8 +7,6 @@ import { Utils } from "../utils/utils";
 
 export class Messaging {
   static async sendMessage(data: any, context: CallableContext): Promise<any> {
-    
-
     if (data.tokens) {
       return this.sendMessageToTokens(data.tokens.split(","), data, context);
     } else if (data.uids) {
@@ -22,20 +20,23 @@ export class Messaging {
   }
 
   static async sendMessageByAction(data: any, context: CallableContext) {
-    console.log('sendMessageByAction()', data, context);
-    let subscription: string = "";
-    if (data.action == "post-create" || data.action == "comment-create") {
-      subscription = data.action + "." + data.category;
-    } else {
-      // not supported other types.
-    }
+    console.log("sendMessageByAction()", data, context);
+    // let subscriptionId = '';
+    // if (data.action == "post-create" || data.action == "comment-create") {
+    //   subscriptionId = data.action + "." + data.category;
+    // } else {
+    //   // not supported other types.
+    // }
 
     // Get users who subscribed the subscription
-
+    // console.log("subscription::", subscriptionId);
     const snap = await Ref.db
-      .collectionGroup("settings")
-      .where(subscription, "==", true)
+      .collectionGroup("user_subscriptions")
+      .where("action", "==", data.action)
+      .where("category", "==", data.category)
       .get();
+
+    console.log("snap.size", snap.size);
     // No users
     if (snap.size == 0) return;
 
@@ -43,8 +44,9 @@ export class Messaging {
     for (const doc of snap.docs) {
       uids.push(doc.ref.parent.parent!.id);
     }
-
-    console.log(uids);
+    console.log("uids::", uids);
+    const tokens = await this.getTokensFromUids(uids.join(","));
+    return this.sendMessageToTokens(tokens, data, context);
   }
 
   /**
@@ -60,6 +62,9 @@ export class Messaging {
     context: CallableContext
   ): Promise<{ success: number; error: number }> {
     // console.log("check user auth with context", context);
+    // add login user uid
+    if (context.auth?.uid != undefined) data.senderUid = context.auth?.uid;
+
     const payload = this.completePayload(data);
     if (tokens.length == 0) return { success: 0, error: 0 };
 
@@ -69,11 +74,7 @@ export class Messaging {
     const multicastPromise = [];
     // Save [sendMulticast()] into a promise.
     for (const _500_tokens of chunks) {
-      const newPayload: admin.messaging.MulticastMessage = Object.assign(
-        {},
-        { tokens: _500_tokens },
-        payload as any
-      );
+      const newPayload: admin.messaging.MulticastMessage = Object.assign({}, { tokens: _500_tokens }, payload as any);
       multicastPromise.push(admin.messaging().sendMulticast(newPayload));
     }
 
@@ -109,10 +110,7 @@ export class Messaging {
       // 결과 리턴
       return { success: successCount, error: failureCount };
     } catch (e) {
-      console.log(
-        "---> caught on sendMessageToTokens() await Promise.allSettled()",
-        e
-      );
+      console.log("---> caught on sendMessageToTokens() await Promise.allSettled()", e);
       throw e;
     }
   }
@@ -243,8 +241,7 @@ export class Messaging {
 
     if (res.notification.body != "") {
       res.notification.body = Utils.removeHtmlTags(res.notification.body) ?? "";
-      res.notification.body =
-        Utils.decodeHTMLEntities(res.notification.body) ?? "";
+      res.notification.body = Utils.decodeHTMLEntities(res.notification.body) ?? "";
       if (res.notification.body.length > 255) {
         res.notification.body = res.notification.body.substring(0, 255);
       }

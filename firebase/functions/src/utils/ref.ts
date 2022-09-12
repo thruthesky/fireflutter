@@ -3,6 +3,9 @@ export class Ref {
   static get db(): admin.firestore.Firestore {
     return admin.firestore();
   }
+  static get rdb(): admin.database.Database {
+    return admin.database();
+  }
 
   
   
@@ -22,6 +25,15 @@ export class Ref {
 
   static userSettingsDoc(uid: string, docId: string): admin.firestore.DocumentReference {
     return this.userSettingsCol(uid).doc(docId);
+  }
+
+
+  static userSubscriptionsCol(uid: string): admin.firestore.CollectionReference {
+    return this.userDoc(uid).collection('user_subscriptions');
+  }
+
+  static userSubscriptionsDoc(uid: string, subscriptionId: string): admin.firestore.DocumentReference {
+    return this.userSubscriptionsCol(uid).doc(subscriptionId);
   }
 
   /** ****************************** MESSAGING References ****************************/

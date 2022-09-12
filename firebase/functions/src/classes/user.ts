@@ -23,6 +23,16 @@ export class User {
     return snapshot.data();
   }
 
+  /**
+   * Save settings
+   * @param uid uid of user
+   * @param docId key of the settings
+   * @param data data of the settings
+   * @returns void
+   * 
+   * @example
+   *  await User.setSettings(userA, "abc", { "def": true });
+   */
   static async setSettings(
     uid: string,
     docId: string,
@@ -33,6 +43,18 @@ export class User {
 
     return Ref.userSettingsDoc(uid, docId).set(data, { merge: true });
   }
+
+  static async setSubscription(
+    uid: string,
+    subscriptionId: string,
+    data: {
+      [key: string]: any;
+    }
+  ): Promise<admin.firestore.WriteResult> {
+
+    return Ref.userSubscriptionsDoc(uid, subscriptionId).set(data, { merge: true });
+  }
+
 
   static async setToken(data: {
     fcm_token: string;
