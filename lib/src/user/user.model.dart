@@ -101,8 +101,15 @@ class UserModel {
     birthday = data['birthday'] ?? 0;
     photoUrl = data['photoUrl'] ?? '';
     admin = data['admin'] ?? false;
-    createdAt = data['createdAt'];
-    updatedAt = data['updatedAt'];
+
+    /// Some timestamp data (like date from Typesense) is int.
+    createdAt = data['createdAt'] is int
+        ? Timestamp(data['createdAt'], 0)
+        : data['createdAt'];
+    updatedAt = data['updatedAt'] is int
+        ? Timestamp(data['updatedAt'], 0)
+        : data['updatedAt'];
+    // data['updatedAt'];
   }
 
   ///
