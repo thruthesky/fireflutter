@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
   void initState() {
     super.initState();
 
-    FireFlutter.instance.init(
+    FireFlutterService.instance.init(
       context: globalNavigatorKey.currentContext!,
       alert: (t, c) {
         return showDialog<bool?>(

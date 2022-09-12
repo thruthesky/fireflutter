@@ -64,14 +64,14 @@ class _PostFormState extends State<PostForm> {
   bool get isUpdate => !isCreate;
 
   /// This is used by custom test also.
-  String category = '';
+  String? category = '';
 
-  String? chooseCategory;
+  String? selectedCategory;
 
   @override
   void initState() {
     super.initState();
-    category = widget.category ?? widget.post?.category ?? '';
+    category = widget.category ?? widget.post?.category;
     setState(() {
       title.text = widget.post?.title ?? '';
       content.text = widget.post?.content ?? '';
@@ -103,19 +103,19 @@ class _PostFormState extends State<PostForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (category == '' && widget.categories != null) ...[
+        if (widget.categories != null) ...[
           Text(
             'Choose a category',
             style: Theme.of(context).textTheme.caption,
           ),
           DropdownButton<String>(
             isExpanded: true,
-            value: chooseCategory,
+            value: selectedCategory ?? category,
             items: widget.categories!.entries
                 .map(
                     (e) => DropdownMenuItem(child: Text(e.key), value: e.value))
                 .toList(),
-            onChanged: (v) => setState(() => chooseCategory = v),
+            onChanged: (v) => setState(() => selectedCategory = v),
           ),
           SizedBox(height: widget.heightBetween),
         ],
@@ -235,9 +235,6 @@ class _PostFormState extends State<PostForm> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                SizedBox(height: 16),
-                Text('Summary'),
-                TextField(controller: summary),
               ],
             ),
           )
@@ -256,13 +253,12 @@ class _PostFormState extends State<PostForm> {
     try {
       if (isCreate) {
         final post = await PostModel().create(
-          category: category,
+          category: selectedCategory ?? category,
           title: title.text,
           content: content.text,
           files: files,
           documentId: documentId.text,
         );
-        if (mounted) setState(() => inSubmit = false);
         widget.onCreate(post);
         return post;
       } else {
@@ -271,13 +267,14 @@ class _PostFormState extends State<PostForm> {
           content: content.text,
           files: files,
         );
-        if (mounted) setState(() => inSubmit = false);
         widget.onUpdate(post);
         return post;
       }
     } catch (e) {
       ffError(e);
       rethrow;
+    } finally {
+      if (mounted) setState(() => inSubmit = false);
     }
   }
 }

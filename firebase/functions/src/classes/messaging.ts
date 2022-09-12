@@ -24,6 +24,13 @@ export class Messaging {
     console.log(data, context);
   }
 
+  /**
+   * Send push notifications with the tokens and returns the result.
+   * 
+   * @param tokens array of tokens.
+   * @param data data to send push notification.
+   * @param context Cloud Functions Callable context
+   */
   static async sendMessageToTokens(
     tokens: string[],
     data: any,
@@ -31,45 +38,79 @@ export class Messaging {
   ): Promise<{ success: number; error: number }> {
     // console.log("check user auth with context", context);
     const payload = this.completePayload(data);
-
-    // console.log(JSON.stringify(payload));
-
     if (tokens.length == 0) return { success: 0, error: 0 };
 
-    // / sendMulticast supports 500 token per batch only.
+    // sendMulticast() 는 오직 500 개 까지만 지원. 그래서 500 개 단위로 쪼개서 batch 처리.
     const chunks = Utils.chunk(tokens, 500);
 
-    const sendToDevicePromise = [];
-    for (const c of chunks) {
-      // Send notifications to all tokens.
+    const multicastPromise = [];
+    // 토큰 500개 단위로 푸시 알림 전송하는 Promise 를 배열에 담는다.
+    for (const _500_tokens of chunks) {
       const newPayload: admin.messaging.MulticastMessage = Object.assign(
-        { tokens: c },
+        {},
+        { tokens: _500_tokens },
         payload as any
       );
-      sendToDevicePromise.push(admin.messaging().sendMulticast(newPayload));
+      multicastPromise.push(admin.messaging().sendMulticast(newPayload));
     }
-    const sendDevice = await Promise.all(sendToDevicePromise);
 
-    const tokensToRemove: Promise<any>[] = [];
-    let successCount = 0;
-    let errorCount = 0;
-    sendDevice.forEach((res, i) => {
-      successCount += res.successCount;
-      errorCount += res.failureCount;
 
-      res.responses.forEach((result, index) => {
-        const error = result.error;
-        console.log(error);
-        if (error) {
-          // Cleanup the tokens who are not registered anymore.
-          if (this.isInvalidTokenErrorCode(error.code)) {
-            tokensToRemove.push(Ref.messageTokens.doc(chunks[i][index]).delete());
+    try {
+      // 전체 토큰을 한번에 전송
+      const settled = await Promise.allSettled(multicastPromise);
+      // 결과는 배열로
+      const value = (settled[0] as any).value;
+      // 결과는 1차원 배열은 토큰의 500개 chunks 단위.
+      // 2차원 배열은 각 토큰을 성공/실패 결과
+      const failedTokens = [];
+      for (const ci in settled) {
+        for (const idx in value.responses) {
+          const i = parseInt(idx);
+          const res = value.responses[i];
+          if (res.success == false ) {
+            // Delete tokens that failed.
+            // If res.success == false, then the token failed, anyway.
+            // But check if the error message to be sure that the token is not being used anymore.
+            if (this.isInvalidTokenErrorCode(res.error.code)) {
+              failedTokens.push(chunks[ci][i]);
+            }
           }
         }
-      });
-    });
-    await Promise.all(tokensToRemove);
-    return { success: successCount, error: errorCount };
+      }
+
+      // Batch delte of failed tokens
+      await this.removeTokens(failedTokens);
+
+      // 결과 리턴
+      return { success: value.successCount, error: value.failureCount };
+    } catch (e) {
+      console.log("---> caught on sendMessageToTokens() await Promise.all()", e);
+      throw e;
+    }
+  }
+
+  /**
+   * Remove tokens from user token documents `/users/<uid>/fcm_tokens/<docId>`
+   * 
+   * @param tokens tokens to remove
+   * 
+   * Use this method to remove tokens that failed to be sent.
+   * 
+   * Test, tests/messaging/remove-tokens.spec.ts
+   */
+  static async removeTokens(tokens: string[]) {
+    const promises: Promise<any>[] = [];
+    for( const token of tokens) {
+      promises.push(
+        // Get the document of the token
+        Ref.db.collectionGroup('fcm_tokens').where('fcm_token', '==', token).get().then( async (snapshot) => {
+          for(const doc of snapshot.docs) {
+            await doc.ref.delete();
+          }
+        })
+      );
+    }
+    await Promise.all(promises);
   }
 
   static isInvalidTokenErrorCode(code: string) {
@@ -104,20 +145,20 @@ export class Messaging {
    */
   static async getTokens(uid: string): Promise<string[]> {
     if (!uid) return [];
-    const snapshot = await Ref.messageTokens.where("uid", "==", uid).get();
-
+    const snapshot = await Ref.tokenCol(uid).get();
     if (snapshot.empty) {
       return [];
     }
 
     return snapshot.docs.map((doc) => doc.id);
-
-    // console.log("snapshot.exists()", snapshot.exists(), snapshot.val());
-
-    // const val = snapshot.val();
-    // return Object.keys(val);
   }
 
+  /**
+   * Returns complete payload from the query data from client.
+   *
+   * @param query query data that has payload information
+   * @returns an object of payload
+   */
   static completePayload(query: SendMessage) {
     // query = this.checkQueryPayload(query);
     if (!query.title) throw invalidArgument("title-is-empty");

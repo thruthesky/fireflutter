@@ -5,9 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class FireFlutter {
-  static FireFlutter get instance => _instance ?? (_instance = FireFlutter());
-  static FireFlutter? _instance;
+class FireFlutterService {
+  static FireFlutterService get instance =>
+      _instance ?? (_instance = FireFlutterService());
+  static FireFlutterService? _instance;
 
   ErrorCallback? error;
   AlertCallback? alert;
@@ -19,7 +20,7 @@ class FireFlutter {
   late BuildContext context;
 
   /// 생성자는 한번만 호출된다.
-  FireFlutter() {
+  FireFlutterService() {
     /// 사용자 로그인
     ///
     /// * 사용자 정보를 미리 읽고 listen 해서 문서가 수정 될 대 마다, 사용자 정보를 업데이트 한다.
@@ -59,7 +60,7 @@ class FireFlutter {
     ErrorCallback? error,
     SnackbarCallback? snackbar,
   }) {
-    log('---> FireFlutter::init()');
+    log('---> FireFlutterService::init()');
     this.context = context;
     this.alert = alert;
     this.confirm = confirm;

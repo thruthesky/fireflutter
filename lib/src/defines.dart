@@ -39,3 +39,16 @@ const ERROR_SIGN_IN_FIRST_FOR_POST_REPORT =
     'Please, sign in first to report a post.';
 const ERROR_SIGN_IN_FIRST_FOR_COMMENT_REPORT =
     'Please, sign in first to report a comment.';
+
+const ERROR_CATEGORY_IS_EMPTY_ON_POST_CREATE =
+    'Category is empty. (post-create/category-empty)';
+
+const ERROR_POST_ID_IS_EMPTY_FOR_UPDATE = 'Post id is empty on update.';
+
+const ERROR_NOT_YOUR_POST = 'Not your post';
+
+const ERROR_CATEGORY_IS_EMPTY_ON_CATEGORY_CREATE =
+    'Please, input category ID to create the category';
+
+const ERROR_CATEGORY_EXISTS_ON_CATEGORY_CREATE =
+    'The category is already exists. Please, input another category ID.';

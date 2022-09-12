@@ -30,8 +30,11 @@ class Storage {
     Function(double)? onProgress,
     required UploadType type,
   }) async {
-    if (UserService.instance.notSignedIn)
+    /// 에러 핸들링 README 참고
+    if (UserService.instance.notSignedIn) {
+      ffError(ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD);
       throw ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD;
+    }
 
     /// Pick image
     final picker = ImagePicker();

@@ -27,7 +27,7 @@ import 'package:fireflutter/fireflutter.dart';
 ///
 ///
 ///
-class MessagingService {
+class MessagingService with FireFlutterMixin {
   static MessagingService? _instance;
   static MessagingService get instance {
     _instance ??= MessagingService();
@@ -47,7 +47,7 @@ class MessagingService {
   late Function onNotificationPermissionNotDetermined;
   String? token;
   final BehaviorSubject<String?> tokenChange = BehaviorSubject.seeded(null);
-  StreamSubscription? tokenChangeSubscription;
+
   String defaultTopic = 'defaultTopic';
   bool doneDefaultTopic = false;
 
@@ -74,17 +74,17 @@ class MessagingService {
     _init();
   }
 
-  _updateToken(User? user, String? token) async {
-    if (user == null) return;
+  /// `/users/<uid>/fcm_tokens/<docId>` 에 저장을 한다.
+  _updateToken(String? token) async {
+    if (FirebaseAuth.instance.currentUser == null) return;
     if (token == null) return;
-    await FirebaseFirestore.instance.collection('fcm-tokens').doc(token).set(
+    final ref = tokenDoc(token);
+    print('ref; ${ref.path}');
+    await ref.set(
       {
-        if (user.isAnonymous == false) 'uid': user.uid,
-        'platform': Platform.isAndroid
-            ? 'android'
-            : Platform.isIOS
-                ? 'ios'
-                : 'web',
+        'uid': FirebaseAuth.instance.currentUser?.uid,
+        'device_type': platformName(),
+        'fcm_token': token,
       },
       SetOptions(merge: true),
     );
@@ -93,12 +93,14 @@ class MessagingService {
   /// Initialize Messaging
   _init() async {
     /// 앱이 실행되는 동안 listen 하므로, cancel 하지 않음.
-    /// `/fcm-tokens/<docId>/{token: '...', uid: '...'}`
+    /// `/fcm_tokens/<docId>/{token: '...', uid: '...'}`
     /// Save(or update) token
     FirebaseAuth.instance
         .authStateChanges()
-        .listen((user) => _updateToken(user, token));
-    tokenChange.listen((token) => _updateToken(null, token));
+        .listen((user) => _updateToken(token));
+
+    ///
+    tokenChange.listen((token) => _updateToken(token));
 
     /// Permission request for iOS only. For Android, the permission is granted by default.
 

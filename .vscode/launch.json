@@ -48,6 +48,7 @@
       "type": "dart",
       "deviceId": "emulator-5554"
     },
+
     {
       "name": "example - Simulator - iPhone 13 Pro Max - iMac",
       "cwd": "example",
@@ -56,6 +57,24 @@
       "request": "launch",
       "type": "dart",
       "deviceId": "ECE40623-ACC2-4729-8DD4-B3DBB46D4B25"
+    },
+    {
+      "name": "flutterkorea - Emulator",
+      "cwd": "apps/flutterkorea",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "KEY=VALUE"],
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554"
+    },
+    {
+      "name": "flutterkorea - Galaxy W 3",
+      "cwd": "apps/flutterkorea",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "KEY=VALUE"],
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "3300a275cab914b9"
     },
     {
       "name": "flutterkorea - Simulator - iPhone 13 Pro Max - iMac",
@@ -67,7 +86,17 @@
       "deviceId": "ECE40623-ACC2-4729-8DD4-B3DBB46D4B25"
     },
     {
-      "name": "flutterkorea - iPhone11ProMax - iMac",
+      "name": "flutterkorea - Simulator - iPhone 13 Pro Max - MacBoook",
+      "cwd": "apps/flutterkorea",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "KEY=VALUE"],
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "42362233-110F-43F7-B6CA-F983EB4E4889"
+    },
+    
+    {
+      "name": "flutterkorea - iPhone11ProMax",
       "cwd": "apps/flutterkorea",
       "program": "lib/main.dart",
       "args": ["--dart-define", "KEY=VALUE"],
@@ -84,6 +113,16 @@
       "type": "dart",
       "deviceId": "00008030-000904C80290802E",
       "flutterMode": "release"
+    },
+    {
+      "name": "flutterkorea - web",
+      "cwd": "apps/flutterkorea",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "KEY=VALUE"],
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "chrome",
+      "flutterMode": "debug"
     }
   ]
 }

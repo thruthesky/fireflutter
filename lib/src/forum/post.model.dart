@@ -254,7 +254,7 @@ class PostModel with ForumMixin implements Article {
   ///
   /// It returns [PostModel] of newly create post.
   Future<PostModel> create({
-    required String category,
+    String? category,
     required String title,
     required String content,
     String? subcategory,
@@ -266,7 +266,9 @@ class PostModel with ForumMixin implements Article {
     if (UserService.instance.user.ready == false) {
       throw UserService.instance.user.profileError;
     }
-    if (category.isEmpty) throw 'Category is empty on post create.';
+    if (category == null || category == '') {
+      throw ERROR_CATEGORY_IS_EMPTY_ON_POST_CREATE;
+    }
 
     final j = Jiffy();
     final createData = {
@@ -307,8 +309,8 @@ class PostModel with ForumMixin implements Article {
     Json extra = const {},
   }) async {
     if (deleted) throw ERROR_ALREADY_DELETED;
-    if (id.isEmpty) throw 'Post id empty on update';
-    if (uid != UserService.instance.uid) throw 'Not your post.';
+    if (id.isEmpty) throw ERROR_POST_ID_IS_EMPTY_FOR_UPDATE;
+    if (uid != UserService.instance.uid) throw ERROR_NOT_YOUR_POST;
 
     await postDoc(id).update({
       'title': title,
@@ -329,7 +331,7 @@ class PostModel with ForumMixin implements Article {
   /// See readme.
   Future<void> delete() async {
     if (id.isEmpty) throw 'Post id empty on delete';
-    if (uid != UserService.instance.uid) throw 'Not your post.';
+    if (uid != UserService.instance.uid) throw ERROR_NOT_YOUR_POST;
 
     /// Delete files.
     if (files.isNotEmpty) files.forEach((url) => Storage.delete(url));
