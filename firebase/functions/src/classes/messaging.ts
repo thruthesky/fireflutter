@@ -8,11 +8,13 @@ import { Utils } from "../utils/utils";
 export class Messaging {
   static async sendMessage(data: any, context: CallableContext): Promise<any> {
     console.log(data);
-    if (data.uids) {
+
+    //
+    if (data.tokens) {
+      return this.sendMessageToTokens(data.tokens.split(","), data, context);
+    }  else if (data.uids) {
       const tokens = await this.getTokensFromUids(data.uids);
       return this.sendMessageToTokens(tokens, data, context);
-    } else if (data.tokens) {
-      return this.sendMessageToTokens(data.tokens.split(","), data, context);
     } else if (data.topic) {
       return this.sendMessageToTopic(data, context);
     } else {
@@ -41,7 +43,7 @@ export class Messaging {
     if (tokens.length == 0) return { success: 0, error: 0 };
 
     // sendMulticast() 는 오직 500 개 까지만 지원. 그래서 500 개 단위로 쪼개서 batch 처리.
-    const chunks = Utils.chunk(tokens, 500);
+    const chunks = Utils.chunk(tokens, 5);
 
     const multicastPromise = [];
     // 토큰 500개 단위로 푸시 알림 전송하는 Promise 를 배열에 담는다.
@@ -55,24 +57,32 @@ export class Messaging {
     }
 
 
+    const failedTokens = [];
+    let successCount: number = 0;
+    let failureCount: number = 0;
     try {
-      // 전체 토큰을 한번에 전송
+      // Send all the push messages in the promise with [Promise.allSettle].
       const settled = await Promise.allSettled(multicastPromise);
-      // 결과는 배열로
-      const value = (settled[0] as any).value;
-      // 결과는 1차원 배열은 토큰의 500개 chunks 단위.
-      // 2차원 배열은 각 토큰을 성공/실패 결과
-      const failedTokens = [];
-      for (const ci in settled) {
-        for (const idx in value.responses) {
-          const i = parseInt(idx);
-          const res = value.responses[i];
-          if (res.success == false ) {
-            // Delete tokens that failed.
-            // If res.success == false, then the token failed, anyway.
-            // But check if the error message to be sure that the token is not being used anymore.
-            if (this.isInvalidTokenErrorCode(res.error.code)) {
-              failedTokens.push(chunks[ci][i]);
+      // Returns are in array
+      for( const e of settled ) {
+console.log(e);
+        const value = (e as any).value;
+        successCount += value.successCount;
+        failureCount += value.failureCount;
+
+        // 결과는 1차원 배열은 토큰의 500개 chunks 단위.
+        // 2차원 배열은 각 토큰을 성공/실패 결과
+        for (const ci in settled) {
+          for (const idx in value.responses) {
+            const i = parseInt(idx);
+            const res = value.responses[i];
+            if (res.success == false ) {
+              // Delete tokens that failed.
+              // If res.success == false, then the token failed, anyway.
+              // But check if the error message to be sure that the token is not being used anymore.
+              if (this.isInvalidTokenErrorCode(res.error.code)) {
+                failedTokens.push(chunks[ci][i]);
+              }
             }
           }
         }
@@ -82,9 +92,9 @@ export class Messaging {
       await this.removeTokens(failedTokens);
 
       // 결과 리턴
-      return { success: value.successCount, error: value.failureCount };
+      return { success: successCount, error: failureCount };
     } catch (e) {
-      console.log("---> caught on sendMessageToTokens() await Promise.all()", e);
+      console.log("---> caught on sendMessageToTokens() await Promise.allSettled()", e);
       throw e;
     }
   }
