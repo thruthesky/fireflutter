@@ -24,6 +24,15 @@ export class Ref {
     return this.userSettingsCol(uid).doc(docId);
   }
 
+
+  static userSubscriptionsCol(uid: string): admin.firestore.CollectionReference {
+    return this.userDoc(uid).collection('user_subscriptions');
+  }
+
+  static userSubscriptionsDoc(uid: string, subscriptionId: string): admin.firestore.DocumentReference {
+    return this.userSubscriptionsCol(uid).doc(subscriptionId);
+  }
+
   /** ****************************** MESSAGING References ****************************/
 
   static tokenCol(uid: string): admin.firestore.CollectionReference {

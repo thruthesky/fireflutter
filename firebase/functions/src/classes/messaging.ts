@@ -21,16 +21,19 @@ export class Messaging {
 
   static async sendMessageByAction(data: any, context: CallableContext) {
     console.log("sendMessageByAction()", data, context);
-    let subscription: string = "";
+    let subscriptionId = '';
     if (data.action == "post-create" || data.action == "comment-create") {
-      subscription = data.action + "." + data.category;
+      subscriptionId = data.action + "." + data.category;
     } else {
       // not supported other types.
     }
 
     // Get users who subscribed the subscription
-    console.log("subscription::", subscription);
-    const snap = await Ref.db.collectionGroup("user_settings").where(subscription, "==", true).get();
+    console.log("subscription::", subscriptionId);
+    const snap = await Ref.db.collectionGroup("user_subscriptions").where('action', "==", data.action)
+    .where('category', '==', data.category)
+    
+    .get();
 
     console.log("snap.size", snap.size);
     // No users

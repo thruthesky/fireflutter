@@ -17,7 +17,7 @@ describe("Send message by actions", () => {
   it("Send message by action", async () => {
     const userA = "user-a-" + Test.id();
     await User.create(userA, {});
-    await User.setSettings(userA, "subscriptions", { "comment-create.qna": true });
+    
 
     try {
       const res = await Messaging.sendMessage(
