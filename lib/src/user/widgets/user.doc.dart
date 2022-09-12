@@ -52,6 +52,7 @@ class _UserDocState extends State<UserDoc> {
 
   @override
   Widget build(BuildContext context) {
+    print('builder(user); $user');
     return widget.builder(user);
   }
 }
