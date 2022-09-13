@@ -60,6 +60,8 @@ describe("Send message by actions", () => {
         {} as any
       );
       console.log("res::", res);
+      expect(res.success).equals(1);
+      expect(res.error).equals(1);
     } catch (e) {
       console.log((e as HttpsError).code, (e as HttpsError).message);
       expect.fail("Must succeed on sending a message to a token");
