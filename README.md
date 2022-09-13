@@ -46,6 +46,11 @@
 
 # 해야 할 것
 
+- Mixin 이 안좋다. Service 로 모두 변경한다.
+
+
+
+
 - 플러터코리아 앱을 https://flutterkorea.co.kr 로 연결하고, 최대한 빠르게 배포한다.
   - 그리고, FlutterFlow 로 연결해서, 강좌 앱을 만들도록 한다.
 
@@ -60,6 +65,7 @@
   - 다음 버전에서 업데이트 할 때, Cloud functions 를 통해서 해결한다.
     - `/users/<uid>/fcm_tokens/<tokenId>` 를 `onWrite` 이벤트 trigger 를 통해서 `all`,`andriod`,`ios`,`web` 등의 토픽으로 자동 subscription 한다.
 
+- (다음버전) 푸시 알림은 글 관련 모델에서 동작한다. 플러터플로에서 활용 할 수 있도록 위젯을 별도로 만들거나, 라이브러리를 만들어 본다.
 
 # 프로젝트 개요
 
