@@ -49,7 +49,7 @@ class PostModel with ForumMixin implements Article {
   String get displayTitle {
     final _title = deleted ? 'post-title-deleted' : title;
     if (_title.trim() == '') {
-      return '';
+      return 'No title';
     } else {
       return _title;
     }
@@ -370,7 +370,9 @@ class PostModel with ForumMixin implements Article {
   ///
   /// It returns one of 'MM/DD/YYYY' or 'HH:MM AA' format.
   String get shortDateTime {
-    return shortDateTimeFromFirestoreTimestamp(createdAt);
+    return shortDateTimeFromFirestoreTimestamp(
+      toInt(createdAt!.millisecondsSinceEpoch / 1000),
+    );
     // final date = DateTime.fromMillisecondsSinceEpoch(createdAt.millisecondsSinceEpoch);
     // final today = DateTime.now();
     // bool re;
