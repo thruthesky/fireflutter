@@ -1,23 +1,38 @@
 import "mocha";
-// import * as admin from "firebase-admin";
+import * as admin from "firebase-admin";
 import { FirebaseAppInitializer } from "../firebase-app-initializer";
 // import { Test } from "../../src/classes/test";
 // import { Utils } from "../../src/classes/utils";
 
 import { Messaging } from "../../src/classes/messaging";
 import { expect } from "chai";
-// import { Test } from "../test";
 import { HttpsError } from "firebase-functions/v1/auth";
-import { Test } from "../test";
 import { User } from "../../src/classes/user";
+
+import { Test } from "../test";
 
 new FirebaseAppInitializer();
 
+const userA = "user-a-" + Test.id();
+
+const action = "comment-create-test";
+const category = "qna-test";
+
 describe("Send message by actions", () => {
+  it("delete user subcription action test", async () => {
+    // Delete all existing token, so the test will be match to 1.
+    let snap = await admin
+      .firestore()
+      .collectionGroup("user_subscriptions")
+      .where("action", "==", action)
+      .where("category", "==", category)
+      .get();
+    for (const doc of snap.docs) {
+      await doc.ref.delete();
+    }
+  });
+
   it("Send message by action", async () => {
-    const userA = "user-a-" + Test.id();
-    const action = "comment-create";
-    const category = "qna";
     await User.create(userA, {});
     await User.setSubscription(userA, "forum", { action: action, category: category });
 
@@ -44,7 +59,6 @@ describe("Send message by actions", () => {
         },
         {} as any
       );
-
       console.log("res::", res);
     } catch (e) {
       console.log((e as HttpsError).code, (e as HttpsError).message);

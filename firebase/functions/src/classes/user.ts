@@ -8,10 +8,7 @@ export class User {
    * @param data data to update as the user profile
    *
    */
-  static async create(
-    uid: string,
-    data: any
-  ): Promise<admin.firestore.WriteResult> {
+  static async create(uid: string, data: any): Promise<admin.firestore.WriteResult> {
     data.createdAt = admin.firestore.FieldValue.serverTimestamp();
     const user = await this.get(uid);
     if (user) throw "user-exists";
@@ -29,7 +26,7 @@ export class User {
    * @param docId key of the settings
    * @param data data of the settings
    * @returns void
-   * 
+   *
    * @example
    *  await User.setSettings(userA, "abc", { "def": true });
    */
@@ -40,7 +37,6 @@ export class User {
       [key: string]: any;
     }
   ): Promise<admin.firestore.WriteResult> {
-
     return Ref.userSettingsDoc(uid, docId).set(data, { merge: true });
   }
 
@@ -51,10 +47,8 @@ export class User {
       [key: string]: any;
     }
   ): Promise<admin.firestore.WriteResult> {
-
     return Ref.userSubscriptionsDoc(uid, subscriptionId).set(data, { merge: true });
   }
-
 
   static async setToken(data: {
     fcm_token: string;
