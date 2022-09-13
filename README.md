@@ -55,6 +55,12 @@
 - 글 쓰기 등 권한이 필요한 경우, `FireFlutterService.instance.init(permission: (Permission p)) {}` 와 같이 해서, 프로필이 완료되었는지, 레벨이 되는지 등을 검사해서, 권한을 부여 할 수 있도록 한다.
 
 
+- (다음버전) 전체 푸시 알림
+  - 전체 푸시 알림은 `condition="!('nonExistingTopic' in topics)"`와 같은 방식으로 되지 않는다.
+  - 다음 버전에서 업데이트 할 때, Cloud functions 를 통해서 해결한다.
+    - `/users/<uid>/fcm_tokens/<tokenId>` 를 `onWrite` 이벤트 trigger 를 통해서 `all`,`andriod`,`ios`,`web` 등의 토픽으로 자동 subscription 한다.
+
+
 # 프로젝트 개요
 
 - 생산적이지 못하고 성공적이지 못한 결과를 만들어 내는 이유는 오직 하나, 코드를 복잡하 작성하기 때문이다. 반드시, 가장 간단한 코드로 작성되어야 하며 그렇지 않으면 실패하는 것으로 간주한다.

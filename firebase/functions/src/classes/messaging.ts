@@ -7,7 +7,10 @@ import { Utils } from "../utils/utils";
 
 export class Messaging {
   static async sendMessage(data: any, context: CallableContext): Promise<any> {
-    if (data.tokens) {
+    if ( data.topic ) {
+      /// see TODO in README.md
+    }
+    else if (data.tokens) {
       return this.sendMessageToTokens(data.tokens.split(","), data, context);
     } else if (data.uids) {
       const tokens = await this.getTokensFromUids(data.uids);
