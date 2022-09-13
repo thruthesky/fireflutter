@@ -52,14 +52,16 @@ describe("Send message by actions", () => {
     try {
       const res = await Messaging.sendMessage(
         {
-          title: "from cli",
-          body: "to iphone. is that so?",
+          title: "from cli via action",
+          body: "using action and category",
           action: action, // post-create
           category: category,
         },
         {} as any
       );
       console.log("res::", res);
+      expect(res.success).equals(1);
+      expect(res.error).equals(1);
     } catch (e) {
       console.log((e as HttpsError).code, (e as HttpsError).message);
       expect.fail("Must succeed on sending a message to a token");
