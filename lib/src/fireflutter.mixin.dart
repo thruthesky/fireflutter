@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
+@Deprecated('User FireFlutter.instance.xxx or Model methods')
 mixin FireFlutterMixin {
   BuildContext get context => FireFlutterService.instance.context;
 

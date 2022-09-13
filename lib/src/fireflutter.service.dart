@@ -16,6 +16,7 @@ class FireFlutterService {
   dynamic snackbar;
 
   FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   late BuildContext context;
 

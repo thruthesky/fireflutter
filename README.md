@@ -18,6 +18,9 @@
 - [사용자 정보 보여주기](#사용자-정보-보여주기)
 - [사진(파일) 업로드](#사진파일-업로드)
   - [업로드된 사진 보여주기](#업로드된-사진-보여주기)
+- [사용자 설정](#사용자-설정)
+  - [사용자 설정을 바탕으로 위젯을 보여주는 MySettingsDoc](#사용자-설정을-바탕으로-위젯을-보여주는-mysettingsdoc)
+  - [사용자 설정 관련 함수](#사용자-설정-관련-함수)
 - [글](#글-1)
   - [글 생성](#글-생성)
     - [글 생성 위젯 - PostForm](#글-생성-위젯---postform)
@@ -326,6 +329,96 @@ MyDoc(
   ),
 ),
 ```
+
+
+# 사용자 설정
+
+- 사용자 설정은 사용자 문서 아래에 컬렉션으로 저장된다.
+  - 예) `/users/<uid>/user_settings/<settingDocumentId> { ... }`
+    - `/users/<uid>/user_setttings` 컬렉션이어서 그 하위에 여러개의 문서를 생성 할 수 있다.
+
+- 사용자의 기본 설정은 `/users/<uid>/user_settings/settings` 폴더에 저장한다.
+  - 사용자 설정 관련 위젯이나 함수를 사용 할 때, `settingDocumentId` 지정을 하지 않으면, 기본적으로 `/users/<uid>/user_settings/settings` 문서에 적용이 되는데 이를 `기본 문서`라고 한다.
+  - 예를 들어, `MySettingsDoc` 을 사용 할 때, `id` 를 지정하지 않으면, `settings` 문서의 설정을 사용한다.
+
+## 사용자 설정을 바탕으로 위젯을 보여주는 MySettingsDoc
+
+- 사용자 설정을 읽어 builder 를 통해 위젯을 표현한다.
+- 참고로, `MySettingsDoc` 은 reactive 해서 설정이 변경되면 builder 가 다시 호출 되어 자식 위젯을 다시 그린다. 따라서 상태 관리나 `setState()` 를 호출 할 필요 없다.
+
+* 예제) 스위치를 켜고 끄는 위젯인데, 상태 관리나 `setState()` 를 쓰지 않고 위젯을 다시 빌드(렌더링) 한다. 
+```dart
+MySettingsDoc(builder: (settings) {
+  return SwitchListTile(
+    title: Text('Notify new comments under my posts and comments'),
+    value: settings[commentNotification] ?? false,
+    onChanged: ((value) async {
+      await UserService.instance.settings.update({
+        commentNotification: value,
+      });
+    }),
+  );
+});
+```
+
+## 사용자 설정 관련 함수
+
+- 사용자 설정 관련 함수(기능)는 `UserSettings` 클래스에 있으며 이 클래스 인스턴스가 `UserService.instance.settings` 멤버 변수에 저장된다.
+  - 즉, `UserService.instance.settings` 를 통해서 사용하면 된다.
+
+- `UserService.instance.settings.update()` 또는 `UserService.instance.settings.delete()` 와 같이 하면 기본 문서(`/users/<uid>/user_settings/settings`)를 업데이트 하거나 삭제한다. 즉, 문서 ID 를 지정하지 않으면 기본 문서를 사용하는 것이다.
+
+- 만약, 기본 문서가 아닌 다른 문서를 사용하고 싶다면, `UserService.instance.settings.doc(...문서ID...)` 와 같이 원하는 문서 ID 를 지정하면 된다.
+  - 예제) `UserService.instance.settings.doc('fruits').update({'a': 'apple'});`
+- 사용자 설정 함수 중에서 `UserService.instance.settings.doc(...).update(...)` 는 업데이트 할 문서가 존재하지 않으면 생성을 한다.
+
+
+- 예제) 아래의 예제는 여러개의 사용자 설정 문서를 읽어서, reactive 하게 re-build(랜더링)하며, 문서를 업데이트(생성)하고 삭제를 하는 예제를 보여준다.
+  - 참고로, 아래의 코드는 게시판 별 푸시 알림 구독을 할지 말지 목록해서 보여 주는 것이다.
+```dart
+@override
+Widget build(BuildContext context) {
+  String id = '$type-create.${category.id}';
+  return MySettingsDoc(
+    id: id,
+    builder: (settings) {
+      return CheckboxListTile(
+        value: settings == null ? false : true,
+        onChanged: ((value) async {
+          if (value == true) {
+            await UserService.instance.settings.doc(id).update({
+              'action': '$type-create',
+              'category': category.id,
+            });
+          } else {
+            await UserService.instance.settings.doc(id).delete();
+          }
+        }),
+        title: Text(category.title),
+      );
+    },
+  );
+}
+```
+
+- This is the sample screen of the code above.
+
+![Push messaging settings screen](https://github.com/thruthesky/fireflutter/wiki/img/notification-settings-screen.jpg)
+
+- This is the firestore doucment for the actions of the code above.
+
+![Firestore messaging subscriptions](https://github.com/thruthesky/fireflutter/wiki/img/firestore-messaging-subscriptions.jpg)
+
+
+
+
+
+- You can pass the setting's document id to `MySettingsDoc` to oberve different settings document under `/users/<uid>/user_settings` collection.
+
+- Use `mySettings(uid)` in `FireFlutterMixin` to get the user's settings.
+
+
+
 
 # 글
 

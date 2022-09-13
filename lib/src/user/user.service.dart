@@ -165,4 +165,7 @@ class UserService {
     return false;
     // return !isOtherUserDisabled(uid);
   }
+
+  /// 사용자 설정 관련 코드
+  UserSettings settings = UserSettings();
 }

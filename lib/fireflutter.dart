@@ -4,17 +4,16 @@ export 'src/fireflutter.mixin.dart';
 export 'src/fireflutter.service.dart';
 export 'src/widgets/short_date.dart';
 export 'src/user/user.service.dart';
-export 'src/user/user.settings.service.dart';
 export 'src/user/user.model.dart';
 export 'src/user/widgets/my.doc.dart';
 export 'src/user/widgets/user.doc.dart';
 export 'src/user/widgets/user.setting.doc.dart';
 export 'src/user/widgets/user.profile.photo.dart';
-export 'src/user/user.settings.model.dart';
 export 'src/user/widgets/user.name.dart';
 export 'src/user/widgets/admin.dart';
 export 'src/user/widgets/user.signed_in.dart';
 export 'src/user/widgets/user.signed_out.dart';
+export 'src/user/user.settings.dart';
 
 export 'src/forum/post.model.dart';
 export 'src/forum/post.service.dart';

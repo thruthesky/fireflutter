@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:fireflutter/fireflutter.dart';
 
@@ -12,8 +10,7 @@ class NotificationSetting extends StatefulWidget {
   State<NotificationSetting> createState() => _NotificationSettingState();
 }
 
-class _NotificationSettingState extends State<NotificationSetting>
-    with FireFlutterMixin {
+class _NotificationSettingState extends State<NotificationSetting> {
   final commentNotification = "notify-new-comment-under-my-posts-and-comments";
 
   List<CategoryModel>? categories;
@@ -41,7 +38,9 @@ class _NotificationSettingState extends State<NotificationSetting>
                 'Receive notifications of new comments under my posts and comments'),
             value: settings?[commentNotification] ?? false,
             onChanged: ((value) async {
-              await updateMySettings({commentNotification: value});
+              await UserService.instance.settings.update({
+                commentNotification: value,
+              });
             }),
           );
         }),
@@ -60,7 +59,7 @@ class _NotificationSettingState extends State<NotificationSetting>
   }
 }
 
-class NotificationSettingsItem extends StatelessWidget with FireFlutterMixin {
+class NotificationSettingsItem extends StatelessWidget {
   const NotificationSettingsItem({
     Key? key,
     required this.category,
@@ -80,12 +79,12 @@ class NotificationSettingsItem extends StatelessWidget with FireFlutterMixin {
           value: settings == null ? false : true,
           onChanged: ((value) async {
             if (value == true) {
-              await updateMySettings(id: id, {
+              await UserService.instance.settings.doc(id).update({
                 'action': '$type-create',
                 'category': category.id,
               });
             } else {
-              await deleteMySettings(id);
+              await UserService.instance.settings.doc(id).delete();
             }
           }),
           title: Text(category.title),
