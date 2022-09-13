@@ -1,3 +1,4 @@
+import 'package:fireflutter/src/user/user.settings.service.dart';
 import 'package:flutter/material.dart';
 import 'package:fireflutter/fireflutter.dart';
 
@@ -47,8 +48,8 @@ class _NotificationSettingState extends State<NotificationSetting> {
                       false,
               onChanged: (b) async {
                 try {
-                  await UserService.instance.settings
-                      ?.update({commentNotification: b});
+                  await UserSettingsService.instance
+                      .update(commentNotification, b);
                   ffAlert("Comment notification",
                       (b == true ? 'Subscribed' : 'Unsubscribed') + " success");
                 } catch (e) {

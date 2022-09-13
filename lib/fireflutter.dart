@@ -4,6 +4,7 @@ export 'src/fireflutter.mixin.dart';
 export 'src/fireflutter.service.dart';
 export 'src/widgets/short_date.dart';
 export 'src/user/user.service.dart';
+export 'src/user/user.settings.service.dart';
 export 'src/user/user.model.dart';
 export 'src/user/widgets/my.doc.dart';
 export 'src/user/widgets/user.doc.dart';

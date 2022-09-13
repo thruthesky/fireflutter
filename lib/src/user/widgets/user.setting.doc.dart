@@ -18,7 +18,7 @@ class UserSettingDoc extends StatefulWidget {
 
 class _UserSettingDocState extends State<UserSettingDoc> {
   UserSettingsModel settings = UserSettingsModel.empty();
-  StreamSubscription? userSettingSubscriptoion;
+  StreamSubscription? userSettingSubscription;
 
   /// User settings event
   ///
@@ -32,7 +32,7 @@ class _UserSettingDocState extends State<UserSettingDoc> {
   void initState() {
     super.initState();
     FirebaseAuth.instance.authStateChanges().listen((_user) async {
-      userSettingSubscriptoion?.cancel();
+      userSettingSubscription?.cancel();
       settings = UserSettingsModel.empty();
       if (_user == null) {
         /// Nothing to do when user signed-out.
@@ -42,7 +42,7 @@ class _UserSettingDocState extends State<UserSettingDoc> {
         /// TODO listen for user settings document and when updated, re-render. so the builder will build child widget.
 
         //   // 그리고 settings doc 을 listen.
-        //   userSettingSubscriptoion = User.userSettingsDoc.onValue.listen((event) async {
+        //   userSettingSubscription = User.userSettingsDoc.onValue.listen((event) async {
         //     // Default - empty setting (if user settings doc does not exists.)
         //     if (event.snapshot.exists) {
         //       settings = UserSettingsModel.fromJson(event.snapshot.value);
