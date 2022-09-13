@@ -21,6 +21,16 @@ class UserSettings {
     return col.doc(documentId).set(data, SetOptions(merge: true));
   }
 
+  /// Gets the document.
+  ///
+  /// ```dart
+  /// int? createdAt = (await UserService.instance.settings.get())?[lastTestDocCreatedAt];
+  /// ```
+  Future<Map<String, dynamic>?> get() async {
+    final snapshot = await col.doc(documentId).get();
+    return snapshot.data() as Map<String, dynamic>;
+  }
+
   Future<void> delete() {
     return col.doc(documentId).delete();
   }

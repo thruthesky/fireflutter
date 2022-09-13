@@ -22,6 +22,15 @@
       "deviceId": "ECE40623-ACC2-4729-8DD4-B3DBB46D4B25"
     },
     {
+      "name": "WonderfulKorea - iPhone11MaxPro - iMac",
+      "cwd": "apps/wonderfulkorea",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "KEY=VALUE"],
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "00008030-000904C80290802E"
+    },
+    {
       "name": "Simulator - iPhone 13 Pro Max - Macbook",
       "cwd": "apps/wonderfulkorea",
       "program": "lib/main.dart",
@@ -103,7 +112,7 @@
       "type": "dart",
       "deviceId": "42362233-110F-43F7-B6CA-F983EB4E4889"
     },
-    
+
     {
       "name": "flutterkorea - iPhone11ProMax",
       "cwd": "apps/flutterkorea",
@@ -139,7 +148,7 @@
       "cwd": "apps/wonderfulkorea",
       "request": "launch",
       "type": "dart",
-      "deviceId": "emulator-5554",
-    },
+      "deviceId": "emulator-5554"
+    }
   ]
 }

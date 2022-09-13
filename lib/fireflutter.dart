@@ -1,6 +1,5 @@
 export 'src/defines.dart';
 export 'src/functions.dart';
-export 'src/fireflutter.mixin.dart';
 export 'src/fireflutter.service.dart';
 export 'src/widgets/short_date.dart';
 export 'src/user/user.service.dart';

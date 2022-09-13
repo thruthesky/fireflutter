@@ -10,6 +10,49 @@ class FireFlutterService {
       _instance ?? (_instance = FireFlutterService());
   static FireFlutterService? _instance;
 
+  FirebaseFirestore get db => FirebaseFirestore.instance;
+  String? get _uid => FirebaseAuth.instance.currentUser?.uid;
+
+  CollectionReference get userCol => db.collection('users');
+  DocumentReference get myDoc => userCol.doc(_uid!);
+  DocumentReference userDoc(String uid) => userCol.doc(uid);
+
+  DocumentReference tokenDoc(String token) {
+    return myDoc.collection('fcm_tokens').doc(token);
+  }
+
+  bool get signedIn => UserService.instance.signedIn;
+  bool get notSignedIn => UserService.instance.notSignedIn;
+
+  FieldValue get serverTimestamp => FieldValue.serverTimestamp();
+
+  CollectionReference get categoryCol => db.collection('categories');
+  CollectionReference get postCol => db.collection('posts');
+  CollectionReference get commentCol => db.collection('comments');
+
+  CollectionReference get reportCol => db.collection('reports');
+  CollectionReference get feedCol => db.collection('feeds');
+
+  // Global (system) settings for app setting.
+  CollectionReference get settingDoc => db.collection('settings');
+
+  // User setting
+  CollectionReference userSettingsCol(String uid) =>
+      userDoc(uid).collection('user_settings');
+  DocumentReference userSettingsDoc(String uid) =>
+      userSettingsCol(uid).doc('settings');
+
+  // Forum category menus
+  DocumentReference reportDoc(String id) => reportCol.doc(id);
+
+  DocumentReference categoryDoc(String id) {
+    return db.collection('categories').doc(id);
+  }
+
+  DocumentReference postDoc(String id) {
+    return postCol.doc(id);
+  }
+
   ErrorCallback? error;
   AlertCallback? alert;
   ConfirmCallback? confirm;

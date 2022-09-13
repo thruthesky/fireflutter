@@ -27,7 +27,7 @@ import 'package:fireflutter/fireflutter.dart';
 ///
 ///
 ///
-class MessagingService with FireFlutterMixin {
+class MessagingService {
   static MessagingService? _instance;
   static MessagingService get instance {
     _instance ??= MessagingService();
@@ -78,7 +78,7 @@ class MessagingService with FireFlutterMixin {
   _updateToken(String? token) async {
     if (FirebaseAuth.instance.currentUser == null) return;
     if (token == null) return;
-    final ref = tokenDoc(token);
+    final ref = FireFlutterService.instance.tokenDoc(token);
     print('ref; ${ref.path}');
     await ref.set(
       {
