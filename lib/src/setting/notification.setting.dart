@@ -1,4 +1,3 @@
-import 'package:fireflutter/src/user/user.settings.service.dart';
 import 'package:flutter/material.dart';
 import 'package:fireflutter/fireflutter.dart';
 
@@ -75,89 +74,89 @@ class _NotificationSettingState extends State<NotificationSetting> {
                 ),
               ),
             ),
-            if (loadingAllNotification == true) ...[
-              SizedBox(
-                height: 16,
-              ),
-              Center(
-                child: CircularProgressIndicator.adaptive(),
-              )
-            ] else ...[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () async {
-                      try {
-                        setState(() {
-                          loadingAllNotification = true;
-                        });
-                        await enableOrDisableAllNotification(true);
-                        setState(() {
-                          loadingAllNotification = false;
-                        });
-                      } catch (e) {
-                        setState(() {
-                          loadingAllNotification = false;
-                        });
-                        rethrow;
-                      }
-                    },
-                    child: Text('Enable all notification'),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      if (loadingAllNotification) return;
-                      try {
-                        setState(() {
-                          loadingAllNotification = true;
-                        });
-                        await enableOrDisableAllNotification(false);
-                        setState(() {
-                          loadingAllNotification = false;
-                        });
-                      } catch (e) {
-                        setState(() {
-                          loadingAllNotification = false;
-                        });
-                        rethrow;
-                      }
-                    },
-                    child: Text('Disable all notification'),
-                  ),
-                ],
-              ),
-              Divider(),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 24,
-                ),
-                child: Text(
-                  'Post notifications',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-              ),
-              for (CategoryModel cat in categories!)
-                PostNotificationCheckBoxListItem(cat: cat),
-              Divider(),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 24,
-                ),
-                child: Text(
-                  'Comment notifications',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-              ),
-              for (CategoryModel cat in categories!)
-                CommentNotificationCheckBoxListItem(cat: cat),
-            ],
+            // if (loadingAllNotification == true) ...[
+            //   SizedBox(
+            //     height: 16,
+            //   ),
+            //   Center(
+            //     child: CircularProgressIndicator.adaptive(),
+            //   )
+            // ] else ...[
+            //   Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       TextButton(
+            //         onPressed: () async {
+            //           try {
+            //             setState(() {
+            //               loadingAllNotification = true;
+            //             });
+            //             await enableOrDisableAllNotification(true);
+            //             setState(() {
+            //               loadingAllNotification = false;
+            //             });
+            //           } catch (e) {
+            //             setState(() {
+            //               loadingAllNotification = false;
+            //             });
+            //             rethrow;
+            //           }
+            //         },
+            //         child: Text('Enable all notification'),
+            //       ),
+            //       TextButton(
+            //         onPressed: () async {
+            //           if (loadingAllNotification) return;
+            //           try {
+            //             setState(() {
+            //               loadingAllNotification = true;
+            //             });
+            //             await enableOrDisableAllNotification(false);
+            //             setState(() {
+            //               loadingAllNotification = false;
+            //             });
+            //           } catch (e) {
+            //             setState(() {
+            //               loadingAllNotification = false;
+            //             });
+            //             rethrow;
+            //           }
+            //         },
+            //         child: Text('Disable all notification'),
+            //       ),
+            //     ],
+            //   ),
+            //   Divider(),
+            //   Padding(
+            //     padding: const EdgeInsets.only(
+            //       left: 24,
+            //     ),
+            //     child: Text(
+            //       'Post notifications',
+            //       style: TextStyle(
+            //         fontSize: 13,
+            //         fontStyle: FontStyle.italic,
+            //       ),
+            //     ),
+            //   ),
+            //   for (CategoryModel cat in categories!)
+            //     PostNotificationCheckBoxListItem(cat: cat),
+            //   Divider(),
+            //   Padding(
+            //     padding: const EdgeInsets.only(
+            //       left: 24,
+            //     ),
+            //     child: Text(
+            //       'Comment notifications',
+            //       style: TextStyle(
+            //         fontSize: 13,
+            //         fontStyle: FontStyle.italic,
+            //       ),
+            //     ),
+            //   ),
+            //   for (CategoryModel cat in categories!)
+            //     CommentNotificationCheckBoxListItem(cat: cat),
+            // ],
           ],
         );
       },

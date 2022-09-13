@@ -152,37 +152,6 @@ class MessagingService with FireFlutterMixin {
         .listen((token) => tokenChange.add(token));
   }
 
-  /// Create or update token info
-  ///
-  /// User may not signed in. That is why we cannot put this code in user model.
-  /// must be called when user signIn or when tokenRefresh
-  /// skip if user is not signIn. _updateToken() will registered the device to default topic
-  // _updateToken([String? token]) {
-  //   if (token == null) token = this.token;
-  //   if (token == '') return;
-
-  // since user will always sign-in with anonymous or real account this is done in backend
-  // subscribeToDefaultTopic();
-
-  // print('---> _updateToken(); $token, ${UserService.instance.user}');
-  // FunctionsApi.instance.request('updateToken', data: {'token': token}, addAuth: true);
-
-  // TODO update token and subscribe the existing topics.
-  // }
-
-  /// Subcribe to default topic.
-  ///
-  /// This may be called on every app boot (after permission, initialization)
-  // subscribeToDefaultTopic() async {
-  //   if (doneDefaultTopic) return;
-  //   doneDefaultTopic = true;
-  //   if (kIsWeb) {
-  //     // rest api to subscribe token to topic
-  //   } else {
-  //     FirebaseMessaging.instance.subscribeToTopic(defaultTopic);
-  //   }
-  // }
-
   send({
     required String token,
     required String title,

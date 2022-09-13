@@ -34,27 +34,10 @@ class UserSettingsModel {
   //   return topics[type]?[topic];
   // }
 
-  /// Update user setting
-  ///
-  /// ! For topic subscription, the app must use the cloud function.
-  ///
-  /// ```dart
-  /// update({  'password': 'xxx' });
-  ///
-  // Future<void> update(Json settings) async {
-  //   ///
-  //   final snapshot = await userSettingsDoc.get();
-  //   if (snapshot.exists) {
-  //     return userSettingsDoc.update(settings);
-  //   } else {
-  //     return userSettingsDoc.set(settings);
-  //   }
-  // }
-
-  // /// Returns the value of the key
-  // value(String key) {
-  //   return data[key];
-  // }
+  /// Returns the value of the key
+  value(String key) {
+    return data[key];
+  }
 
   /// Returns the value of the key or null
   ///
