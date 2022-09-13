@@ -14,6 +14,7 @@ class UserModel {
   String gender = '';
   int birthday = 0;
   int level = 0;
+  bool admin = false;
 
   Timestamp? updatedAt;
   Timestamp? createdAt;
@@ -32,12 +33,11 @@ class UserModel {
 
   /// 주의: 문서가 존재하는지 하지 않는지는 확인을 위해서는 반드시, fromSnapshot() 통해서 모델링을 해야 한다.
   /// 만약, fromData() 를 통해서 속성 설정을 하면, [exists] 는 알수 없는 상태인 null 이 된다.
+  ///   예를 들어, UserDoc(uid: ..., builder: (user) => user.exists) 와 같이 하면, true 의 값을 가진다. 내부적으로 fromSnapshot() 을 쓰기 때문이다.
   /// 주의: fromSnapshot() 이나 fromData() 를 통해서 호출되면, exists 가 null 또는 false 라도, uid 는 설정된다.
   ///   그러나, 그냥 UserModel() 로 객체가 생성되면, uid 는 empty string 이 된다.
   bool? exists;
   bool get ready => profileError == '';
-
-  bool get isAdmin => false;
 
   bool get notSignedIn =>
       isAnonymous || FirebaseAuth.instance.currentUser == null;
@@ -101,8 +101,16 @@ class UserModel {
     gender = data['gender'] ?? '';
     birthday = data['birthday'] ?? 0;
     photoUrl = data['photoUrl'] ?? '';
-    createdAt = data['createdAt'];
-    updatedAt = data['updatedAt'];
+    admin = data['admin'] ?? false;
+
+    /// Some timestamp data (like date from Typesense) is int.
+    createdAt = data['createdAt'] is int
+        ? Timestamp(data['createdAt'], 0)
+        : data['createdAt'];
+    updatedAt = data['updatedAt'] is int
+        ? Timestamp(data['updatedAt'], 0)
+        : data['updatedAt'];
+    // data['updatedAt'];
   }
 
   ///
@@ -135,6 +143,6 @@ class UserModel {
 
   @override
   String toString() {
-    return "UserModel(uid: $uid, email: $email, phoneNumber: $phoneNumber, firstName: $firstName, lastName: $lastName)";
+    return "UserModel(uid: $uid, email: $email, phoneNumber: $phoneNumber, firstName: $firstName, lastName: $lastName, photoUrl: $photoUrl, exists: $exists)";
   }
 }

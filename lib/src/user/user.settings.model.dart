@@ -1,75 +1,38 @@
-import 'package:firebase_database/firebase_database.dart';
-import 'package:fireflutter/fireflutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// UserSettingsModel
 ///
 ///
 class UserSettingsModel {
-  UserSettingsModel({
-    required this.topics,
-    required this.data,
-    required this.password,
-  });
+  UserSettingsModel();
 
-  DatabaseReference get userSettingsDoc => FirebaseDatabase.instance
-      .ref('user-settings')
-      .child(UserService.instance.uid!);
+  Map<String, dynamic> topics = {};
+  Map<String, dynamic> data = {};
 
-  Map<String, dynamic> topics;
-  Map<String, dynamic> data;
-  String password;
-  factory UserSettingsModel.fromJson(dynamic data) {
-    return UserSettingsModel(
-      topics: Map<String, dynamic>.from(data['topic'] ?? {}),
-      data: Map<String, dynamic>.from(data),
-      password: data['password'] ?? '',
-    );
+  UserSettingsModel.fromSnapshot(DocumentSnapshot snapshot) {
+    setProperties(snapshot.data());
   }
 
-  topicsFolder(String type) {
-    return topics[type];
-  }
-
-  getTopicsFolderValue(String type, String topic) {
-    return topics[type]?[topic];
+  UserSettingsModel.fromData(dynamic data) {
+    setProperties(data);
   }
 
   factory UserSettingsModel.empty() {
-    return UserSettingsModel(topics: {}, data: {}, password: '');
+    return UserSettingsModel.fromData({});
   }
 
-  /// Create user-setting document for the first time with time and password.
-  ///
-  /// This method is being invoked by `UserSettingService::initAuthChanges` and sets
-  /// user's password for the first time.
-  // Future<UserSettingsModel> create() async {
-  //   await userSettingsDoc.set({
-  //     'timestamp': ServerValue.timestamp,
-  //     'password': getRandomString(),
-  //   });
-  //   return this.get();
-  // }
-
-  /// Generate new password for the user.
-  ///
-  /// Note, this should be called only if the user has no password, yet.
-  ///
-  // Future<void> deprecatedGeneratePassword() async {
-  //   final pw = getRandomString();
-  //   await userSettingsDoc.update({
-  //     'password': pw,
-  //   });
-  //   password = pw;
-  // }
-
-  Future<UserSettingsModel> get() async {
-    final snapshot = await userSettingsDoc.get();
-    if (snapshot.exists) {
-      return UserSettingsModel.fromJson(snapshot.value);
-    } else {
-      return UserSettingsModel.empty();
-    }
+  setProperties(dynamic data) {
+    topics = Map<String, dynamic>.from(data['topic'] ?? {});
+    data = Map<String, dynamic>.from(data);
   }
+
+  // topicsFolder(String type) {
+  //   return topics[type];
+  // }
+
+  // getTopicsFolderValue(String type, String topic) {
+  //   return topics[type]?[topic];
+  // }
 
   /// Update user setting
   ///
@@ -78,20 +41,20 @@ class UserSettingsModel {
   /// ```dart
   /// update({  'password': 'xxx' });
   ///
-  Future<void> update(Json settings) async {
-    ///
-    final snapshot = await userSettingsDoc.get();
-    if (snapshot.exists) {
-      return userSettingsDoc.update(settings);
-    } else {
-      return userSettingsDoc.set(settings);
-    }
-  }
+  // Future<void> update(Json settings) async {
+  //   ///
+  //   final snapshot = await userSettingsDoc.get();
+  //   if (snapshot.exists) {
+  //     return userSettingsDoc.update(settings);
+  //   } else {
+  //     return userSettingsDoc.set(settings);
+  //   }
+  // }
 
-  /// Returns the value of the key
-  value(String key) {
-    return data[key];
-  }
+  // /// Returns the value of the key
+  // value(String key) {
+  //   return data[key];
+  // }
 
   /// Returns the value of the key or null
   ///
@@ -105,14 +68,14 @@ class UserSettingsModel {
   // }
 
   /// Get user settings doc from realtime database
-  Future<Json> read() async {
-    final snapshot = await userSettingsDoc.get();
-    if (snapshot.exists) {
-      return Map<String, dynamic>.from(snapshot.value as dynamic);
-    } else {
-      return {} as Json;
-    }
-  }
+  // Future<Json> read() async {
+  //   final snapshot = await userSettingsDoc.get();
+  //   if (snapshot.exists) {
+  //     return Map<String, dynamic>.from(snapshot.value as dynamic);
+  //   } else {
+  //     return {} as Json;
+  //   }
+  // }
 
   /// Returns true if the user has subscribed the topic.
   /// If user subscribed the topic, that topic name will be saved into user meta in backend

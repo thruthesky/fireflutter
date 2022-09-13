@@ -44,7 +44,7 @@ class _UserDocState extends State<UserDoc> {
         if (mounted)
           setState(() {
             user = value;
-            print('---> user; $user');
+            // print('---> user; $user');
           });
       });
     }
@@ -52,6 +52,7 @@ class _UserDocState extends State<UserDoc> {
 
   @override
   Widget build(BuildContext context) {
+    // print('builder(user); $user');
     return widget.builder(user);
   }
 }

@@ -50,6 +50,8 @@ class UserService {
   String? get uid => Firebase.FirebaseAuth.instance.currentUser?.uid;
 
   /// 사용자 문서가 업데이트되면, 이벤트를 발생시킨다.
+  /// 주의, Anonymous 사용자로 로그인하는 경우는 이 함수가 호출되지 않는다.
+  /// 그리고, Anonymous 로 로그인하는 경우, unobserverUserDoc() 을 통해서 MyDoc() 이 한번 호출된다.
   observeUserDoc() {
     userDocumentSubscription?.cancel();
     userDocumentSubscription =

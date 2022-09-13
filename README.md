@@ -4,9 +4,10 @@
 
 
 - [FireFlutter v0.3](#fireflutter-v03)
-- [프로젝트 개요](#프로젝트-개요)
-  - [데이터베이스](#데이터베이스)
 - [해야 할 것](#해야-할-것)
+- [프로젝트 개요](#프로젝트-개요)
+  - [이슈 및 문제 해결](#이슈-및-문제-해결)
+  - [데이터베이스](#데이터베이스)
 - [외부 패키지 목록](#외부-패키지-목록)
 - [기능 별 데이터 구조](#기능-별-데이터-구조)
   - [사용자](#사용자)
@@ -19,6 +20,7 @@
   - [업로드된 사진 보여주기](#업로드된-사진-보여주기)
 - [글](#글-1)
   - [글 생성](#글-생성)
+    - [글 생성 위젯 - PostForm](#글-생성-위젯---postform)
   - [글 가져오기](#글-가져오기)
   - [글 목록 가져오기](#글-목록-가져오기)
     - [글 목록을 무한 스크롤로 가져오기](#글-목록을-무한-스크롤로-가져오기)
@@ -27,12 +29,37 @@
   - [푸시 알림 설정](#푸시-알림-설정)
     - [Android 설정](#android-설정)
     - [iOS 설정](#ios-설정)
+  - [푸시 알림 문서 구조](#푸시-알림-문서-구조)
   - [푸시 알림 코딩](#푸시-알림-코딩)
+  - [푸시 알림 구독](#푸시-알림-구독)
 - [클라우드 함수](#클라우드-함수)
   - [유닛 테스트](#유닛-테스트)
   - [클라우드 함수 Deploy](#클라우드-함수-deploy)
   - [플러터에서 클라우드 함수 호출](#플러터에서-클라우드-함수-호출)
   - [푸시 알림 사운드](#푸시-알림-사운드)
+- [Firestore 보안 규칙](#firestore-보안-규칙)
+  - [관리자 지정](#관리자-지정)
+  - [게시판](#게시판)
+- [에러 핸들링](#에러-핸들링)
+- [실험 코드](#실험-코드)
+
+
+# 해야 할 것
+
+- 플러터코리아 앱을 https://flutterkorea.co.kr 로 연결하고, 최대한 빠르게 배포한다.
+  - 그리고, FlutterFlow 로 연결해서, 강좌 앱을 만들도록 한다.
+
+- 푸시 알림을 본 문서의 [푸시 알림](#푸시-알림)에 나오는데로 수정한다.
+  - 토픽 구독 없이, 토큰으로 모든 subscription 로직 작성.
+  예를 들어, QnA subscribe 하면 환경 설정에만 기록하고, 토픽 구독하지 않는다. 그래서 QnA 에 새 글 이 있으면 해당 토픽을 subscribe 한 사용자의 uid 배열을 서버로 전달해서, 푸시를 보내도록 한다.
+- 글 쓰기 등 권한이 필요한 경우, `FireFlutterService.instance.init(permission: (Permission p)) {}` 와 같이 해서, 프로필이 완료되었는지, 레벨이 되는지 등을 검사해서, 권한을 부여 할 수 있도록 한다.
+
+
+- (다음버전) 전체 푸시 알림
+  - 전체 푸시 알림은 `condition="!('nonExistingTopic' in topics)"`와 같은 방식으로 되지 않는다.
+  - 다음 버전에서 업데이트 할 때, Cloud functions 를 통해서 해결한다.
+    - `/users/<uid>/fcm_tokens/<tokenId>` 를 `onWrite` 이벤트 trigger 를 통해서 `all`,`andriod`,`ios`,`web` 등의 토픽으로 자동 subscription 한다.
+
 
 # 프로젝트 개요
 
@@ -40,6 +67,9 @@
 - 파이어베이스 데이터베이스는 NoSQL, Flat Style 구조를 가진다.
   - 그래서, Entity Relationship 을 최소화한다.
 
+## 이슈 및 문제 해결
+
+- [Github Issues](https://github.com/users/thruthesky/projects/6)에 이슈를 등록해주세요.
 
 ## 데이터베이스
 
@@ -52,9 +82,6 @@
 
 
 
-# 해야 할 것
-
-- 글 쓰기 등 권한이 필요한 경우, `FireFlutterService.instance.init(permission: (Permission p)) {}` 와 같이 해서, 프로필이 완료되었는지, 레벨이 되는지 등을 검사해서, 권한을 부여 할 수 있도록 한다.
 
 # 외부 패키지 목록
 
@@ -301,6 +328,30 @@ MyDoc(
 - 글을 작성하기 위해서는 `PostModel.create()` 함수를 호출하면 된다.
 - `ForumMixin` mixin 의 `onPostEdit`
 
+### 글 생성 위젯 - PostForm
+
+- 글을 생성하기 위해서는 직접 위젯을 만들어 쓰면 되는데, 기본적으로 제공하는 글 작성 위젯인 `PostForm` 에 대해서 설명을 한다.
+  - 이 위젯은 `lib/src/forum/widgets/post` 폴더에 있으며 그냥 소스 코드를 열어서 복사하여 사용해도 된다.
+- PostForm 은 글 쓰기에 필요한 위젯을 제공하고 있는데, 제목, 내용 입력란과 카테고리 선택, 파일 업로드 등이 있다.
+- 사용자가 글 쓰기 버튼을 누르면, 이 PostForm 위젯을 새로운 스크린에 보여주어도 되고, 전체 화면 Dialog 에 보여줘도 된다.
+  - 참고로, `ForumMixin::onPostEdit` 에서는 전체 화면 Dialog 를 사용해서 글 쓰기 폼을 보여주고 있다.
+- 카테고리는 `category` 변수에 넣어서 전달하면 기본 선택이 되는데 추가적으로 카테고리 선택 항목을 보여주고 싶다면 `categories` 변수에 `{레이블: 카테고리, ...}` 와 같은 형태로 전달하면 된다.
+- 예제)
+```dart
+IconButton(
+  onPressed: () async {
+    final post = await onPostEdit(category: 'qna', categories: {
+      'QnA': 'qna',
+      'Discussion': 'discussion',
+    });
+    print('post, $post');
+  },
+  icon: Icon(Icons.create, color: Theme.of(context).primaryColor),
+),
+```
+
+
+
 ## 글 가져오기
 
 - 글 하나 가져오기는 `PostModel.get()` 으로 할 수 있다.
@@ -322,12 +373,43 @@ List<PostModel> photos = await PostService.instance.get(
 
 ### 글 목록을 무한 스크롤로 가져오기
 
-- 화면에 표시해야 할 글 목록을 많은 경우, 스크롤을 할 때 마다 다음 페이지에 해당하는 글 목록을 가져와야 하는데, 가장 표준적이고 쉬운 방법인 `FirestoreListView`를 사용 하였다.
-- `FirestoreListView` 의 사용법에 익숙하다면, 직접 Query 를 작성해서 가져 올 수도 있겠지만 조금 더 사용하기 쉽게 함수와 위젯을 추가해 놓았다.
+- 화면에 글 목록을 표시하는 경우 `FirestoreListView` 화 함께 `postsQuery()` 를 사용하면 보다 쉽게 Firestore 로 부터 글을 가져 올 수 있다.
+- 또한 글 목록을 많은 경우, 스크롤을 할 때 마다 다음 페이지에 해당하는 글 목록을 가져와야 하는데, 이 때에도 `FirestoreListView` 와 함께 `postsQuery()` 를 사용하면 된다.
+- `FirestoreListView` 의 사용법에 익숙하다면, 직접 Query 를 작성해서 가져 올 수도 있겠지만 `postsQuery()` 가 조금 더 사용하기 쉽게 함수와 위젯을 추가해 놓았다.
 
+- 아래는 StreamBuilder 를 사용해서, Firestore 로 부터 글을 가져온다.
+```dart
+StreamBuilder(
+  stream: FirebaseFirestore.instance
+      .collection('posts')
+      .limit(3)
+      .snapshots(),
+  builder: ((context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return const CircularProgressIndicator.adaptive();
+    }
+    if (snapshot.hasError) return Text(snapshot.error.toString());
+    if (snapshot.hasData == false ||
+        (snapshot.data?.docs ?? []).isEmpty) {
+      return const Text('No posts, yet');
+    }
+    return Column(
+      children: snapshot.data?.docs.map((doc) {
+            final p = PostModel.fromSnapshot(doc);
+            return ListTile(title: Text(p.displayTitle));
+          }).toList() ??
+          [],
+    );
+  }),
+),
+```
+
+
+- 아래는 FirestoreListView 와 postsQuery() 를 사용해서, Firestore 로 부터 글을 가져온다.
 ```dart
 FirestoreListView<PostModel>(
-  query: posts(),
+  shrinkWrap: true,
+  query: postsQuery(limit: 3),
   itemBuilder: ((context, snapshot) {
     final post = snapshot.data();
     return ListTile(
@@ -347,10 +429,23 @@ FirestoreListView<PostModel>(
 
 - 레거시 API 를 쓰면 플러터 앱 내에서 푸시 알림을 전송 할 수 있지만, 토픽으로 메시지를 보낼 때 플랫폼 구분이 어렵다. (물론 하나의 토픽을 플랫폼별로 묶으면 android 의 click_action 과 web 의 click_action 을 따로 지정 할 수 있다.)
   - 플랫폼을 구분 할 수 있어야 Android 의 `click_action` 에는 `FLUTTER_CLICK_ACTION` 를 지정하고, web 의 `click_action` 에는 URL 을 지정 할 수 있다.
-    - 참고로 Flutter 에서 `click_action` 이 없어도 올바로 동작할 수 있는지 확인이 필요하다.
-- 무엇 보다 Firebase 에서 Legacy API 를 없애려고하는 느낌이 강하게 든다. 이전에는 Firebase 에서 Legacy API 가 Deprecated 되었어도 잘 사용 할 수 있었는데, 2022년 9월에 새로운 Firebase Project 를 생성하니, Legacy API 가 기본적으로 DISABLE 되어져 있었다.
-- 이러한 이유로 푸시 알림을 (플러터 앱에서 보낼 수 있음에도 불구하고) 전송 할 때, 클라우드 함수를 통해 새로운 API(v1) 사용한다.
-- 참고, [푸시 알림 관련 클라우드 함수](https://github.com/thruthesky/fireflutter/blob/main/firebase/functions/src/classes/messaging.ts), [푸시 알림 유닛 테스트 코드](https://github.com/thruthesky/fireflutter/blob/main/firebase/functions/tests/messaging/send-message-with-tokens.spec.ts)
+    - 참고로 Flutter 에서 `click_action` 이 없어도 onResume 등에서 올바로 동작할 수 있는지 확인이 필요하다.
+  - 무엇 보다 Firebase 에서 Legacy API 를 없애려고하는 느낌이 강하게 든다. 이전에는 Firebase 에서 Legacy API 가 Deprecated 되었어도 잘 사용 할 수 있었는데, 2022년 9월에 새로운 Firebase Project 를 생성하니, Legacy API 가 기본적으로 DISABLE 되어져 있었다.
+
+- 하지만, FireFlutter 0.3 에서는 토픽을 사용해서 구독을 하지 않는데, 그 이유는 로직의 복잡도가 증가하기 때문이다.
+  에를 들어, 한 사용자가 핸드폰 2개를 쓰고, 여러개의 컴퓨터(데스크톱, 노트북)에서 여러개의 웹 브라우저를 쓰고 있는 경우, 토픽을 구독한 경우, 모든 핸드폰과 컴퓨터, 각 웹 브라우저 마다 동기화가 되어야 한다는 것이다. (그렇지 않으면 동작이 이상하게 된다.) 그런데 이 동기화 작업이 만만치 않다. 예를 들어 안드로이 폰에서 QnA 게시판 토픽을 subscription 했으면, 그 사용자가 사용하는 다른 폰(아이폰 등)이나 컴퓨터에서도 자동 subscription 되어야 한다. 반대로 해제하는 경우도 마찬가지이다. 만약, 사용자가 새로운 핸드폰(또는 컴퓨터)에 로그인을 한다면, 그 핸드폰(또는 컴퓨터) 또한 동기화 해야 한다. 즉 새로운 기기 마다 동기화를 해야하며, 새로운 토큰이 생성(리프레시)될 때 마다 동기화 작업이 이루어져야 한다. 문제는 이 뿐만이 아니다. 사용자가 QnA 게시판의 모든 알림(글, 코멘트) 구독하고, 개인 설정에서 내 글의 코멘트를 구독하도록 했다고 가정하면, 그 사용자가 QnA 에 글을 작성하고, 다른 사용자가 댓글을 작성하면 글 작성자에게 동일한 푸시 알림이 두 번 전송되어져 온다. 이 같은 경우, 동일한(중복된) 푸시 알림이 두 번 전송 되지 않도록 내부적으로 처리를 해야 한다. 이외에도 여러가지 필요한 작업이 있는데 만만치 많다. 사실 지금까지는 이런 방식으로 푸시 알림 로직을 개발해 왔지만, 0.3 버전 부터는 "간단한 코드"를 목표로 이런 복잡한 로직(토픽 구독)을 없애고 개별 토큰을 통해서 푸시 알림을 하도록 했다.
+
+- 개별 토큰에 푸시 알림을 하는 것은 레거시 API 를 통해서 클라이언트에서 할 수도 있다. 하지만, 많은 토큰 문서를 클라이언트에서 서버로 부터 읽어야 하므로 클라이언트 보다는 서버에서 작업하는 것이 올바르다.
+  - 참고, [푸시 알림 관련 클라우드 함수](https://github.com/thruthesky/fireflutter/blob/main/firebase/functions/src/classes/messaging.ts), [푸시 알림 유닛 테스트 코드](https://github.com/thruthesky/fireflutter/blob/main/firebase/functions/tests/messaging/send-message-with-tokens.spec.ts)
+
+- 또한 한가지 고려해야 할 점은, 개별 토큰을 이용해서 푸시 알림을 보낼 때, 심각한 비용 증가 문제에 부딪칠 수 있다.
+  - 예를 들어, QnA 게시판 구독자가 1만 명이 있고, 사용자 별 푸시 토큰이 (평균) 2개 씩이고, QnA 게시판에 하루에 글(코멘트 포함)이 100 개씩 올라 온다면, 토큰을 저장하는 문서를 2백만 번을 read 해야 한다. 이러한 푸시 알림이 다른 게시판에도 발생한다면, 그리고 시간이 지날 수록 비용은 증가 할 것이다.
+  - 해결책, 토큰 저장한 문서에 read 이벤트가 많이 발생하여 비용 증가를 일으키는데 토큰을 realtime database 에 저장하면, 비용이 증가하지 않는다.
+    - 기존 Firestore 문서 구조를 그대로 유지하고, 클라이언트 코드 수정없이 하려면,
+      - Firestore 의 토큰 저장 문서에 클라우드 함수 write 이벤트 trigger 코딩을 해서, 토큰이 생성/수정/삭제 될 때 마다 realtime database 로 동기화시킨다. 그리고 개별 토큰을 읽어 들일 때, Firestore 가 아닌, realtime database 에서 읽어 푸시 알림을 보내면 된다.
+      - @todo 이 기능은 다음 버전으로 미루도록 한다.
+
+
 
 ## 푸시 알림 관련 참고 문서
 
@@ -381,10 +476,39 @@ FirestoreListView<PostModel>(
 - APNs Authentication Key 생성 후 Firebase APN 설정
 
 
+## 푸시 알림 문서 구조
+
+푸시 알림 문서는 사용자 문서 하위에 `/users/<uid>/fcm_tokens/<docId> {created_at: ..., device_type: ..., fcm_token: ... }` 와 같이 저장된다.
+
+```mermaid
+erDiagram
+  Document {
+    string device_type "장치의 플랫폼 이름. 참고로, FireFlutter 에서는 모두 소문자로 저장. 예) ios. 하지만 FlutterFlow 와 같이 다른 플랫폼에서는 iOS 로 저장 할 수 있으니 주의."
+    string fcm_token "토큰"
+    string uid "사용자 uid"
+  }
+```
+
+참고로, (2022년 9월 기준) 이 구조는 FlutterFlow 에서 사용하는 구조와 비슷하다. 사실 FlutterFlow 호환을 위해서 이 구조로 작성했다.
+FlutterFlow 에서는 `created_at` 이라는 필드를 따로 추가하는데, FireFlutter 에서는 이 필드를 사용하지 않는다.
+또한 FlutterFlow 에서는 사용자가 계정 로그인을 해야지만 토큰을 저장할 수 있는데 반해, FireFlutter 에서는 계정 로그인을 않고, Anonymous 로그인을 해도 토큰 저장을 할 수 있다. 이것은 사용자가 계정 로그인을 하지 않아도 푸시 알림 subscription 을 할 수 있도록 기능을 만들 수 있다.
+FlutterFlow 에는 없는 `uid` 를 추가했다. 이를 통해서 필요에 따라 subcollection query 를 할 수 있다.
+
+참고로, 사용자의 모든 토큰을 하나의 문서에 저장하는 것도 생각 할 수 있는데,
+얼핏 생각하면 한 사용자가 토큰을 많이 사용하는 경우, 하나의 문서에 모든 토큰을 저장하면 read 이벤트를 최소화 할 있다고 생각 할 수 있다. 하지만 사용자 대부분은 핸드폰에 앱을 설치해서 사용하는데, (웹 배포를 하면 웹으로도 같이 사용 할 수도 있지만) 어림 짐작으로 한 사용자당 토큰이 1개인 경우가 90% 이상이라 판단 된다. 그래서 문서 하나당 토큰 하나를 두는 것도 큰 문제가 없다.
+
+참고로, `/users/<uid>/fcm_tokens/<docId>`에서 FlutterFlow 는 `<docId>` 키를 랜덤하게 생성하지만, FireFlutter 에서는 push token id 를 key 로 지정한다.
+
 
 ## 푸시 알림 코딩
 
 - 푸시 알림을 이용하기 위해서는 `FireFlutterService.instance.init()` 외에 추가적으로 `MessagingService.instance.init()` 을 추가 해 주어야 한다.
+
+## 푸시 알림 구독
+
+- [영어]() 참고.
+
+
 
 
 # 클라우드 함수
@@ -468,3 +592,54 @@ try {
   - 참고로, WAV 파일을 압축하여 작은 용량으로 사운드 파일을 추가 할 수 있다.
 
 
+
+# Firestore 보안 규칙
+
+
+## 관리자 지정
+- 관리자를 지정 할 때에는 직접 Firebase Console 에서 Firestore 탭에서 `/settings/admins {<uid>: true}` 와 같이 지정을 해야 한다.
+
+![Admin Settings](https://github.com/thruthesky/fireflutter/wiki/img/security-rules-firestore-admin.jpg)
+
+- 위와 같이 관리자 지정된 사용자의 사용자 문서에서 `/users/<uid> {admin: true}` 를 해 주어도 되고,
+  - 프로그램적으로 적절한 액션을 하면, 프로그램적으로 지정해도 된다.
+    - 예) 로그인한 사용자가 설정에서 버전 문자열을 세번 탭하면, 액션이 실행되고 관리자로 지정되어져 있으면, 자신의 사용자 문서에 `{admin: true}` 를 직접 지정하면 된다.
+    - 참고로, 해커가 `{admin: true}`를 임의로 지정한다고 해도 보안 규칙에 의해서 관리자만 관리자 권한을 행사 할 수 있으므로 안전하다.
+
+- 관리자가 지정되면, 카테고리를 생성하거나 수정 할 수 있다.
+
+
+## 게시판
+
+- 글 생성시, 카테고리를 입력해야하며, 해당 카테고리는 `/categories` 컬렉션에 문서로 존재해야 한다.
+
+# 에러 핸들링
+
+- FireFlutter 에서 에러를 핸들링하는 방법은 에러를 throw 하던지, 에러를 화면에 표시하던지, 아니면 에러를 화면에 표시하고, throw 하는 경우가 있다.
+  - 예를 들면, `FileUploadButton` 위젯에서 사용자가 사진을 업로드 하려고 할 때, 회원 로그인을 하지 않았다면, 화면에 에러를 표시하고, 관련 에러를 throw 한다.
+    - 위젯이므로 에러를 throw 해도 상위(부모) 위젯에서 catch 를 하지 못한다. 즉, 최상위 에러 핸들러에서 핸들링 해야하는 것이다. 예) `FlutterError.onError`
+    - 만약, `FileUploadButton` 에서 회원 로그인하지 않아서 발생하는 에러를 화면에 표시하지 않도록 하고, 별도로 커스터마이징하고 싶다면 아래와 같이 하면 된다.
+```dart
+
+FireFlutterService.instance.init(
+  context: router.routerDelegate.navigatorKey.currentContext!,
+  error: (message) {
+    /// 이렇게 FireFlutter 에서 화면에 표시되는 모든 에러 메시지 전체를 핸들링
+
+    /// 필요에 따라 커스터마이징
+    if (message == ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD) {
+      return ffAlert('앗', '사진 업로드를 위해서는 먼저 로그인을 해 주세요.');
+    } else {
+      return ffAlert('ERROR', message);
+    }
+  },
+);
+```
+
+
+
+# 실험 코드
+
+- 개발을 진행 함에 있어서 데이터 구조 변경이 필요한 경우가 있다. 그와 같은 경우 기존의 데이터 포맷을 새로운 데이터 포맷에 맞게 포팅을 해야하는데, 그러한 포팅 작업(소스 코드 작업)을 `<project>/firebase/lab` 폴더에서 하면 된다.
+- 실행은
+  - `% npm run lab porting/porting-user-data.ts` 와 같이 실행을 하면 된다.

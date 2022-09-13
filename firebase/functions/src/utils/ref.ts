@@ -1,31 +1,47 @@
 import * as admin from "firebase-admin";
 export class Ref {
-  static get db() {
+  static get db(): admin.firestore.Firestore {
     return admin.firestore();
   }
-
-  static get rdb() {
+  static get rdb(): admin.database.Database {
     return admin.database();
   }
 
-  static get settingsCol() {
-    return this.db.collection("settings");
-  }
-
+  
+  
   static get users() {
-    return this.rdb.ref("users");
+    return this.db.collection("users");
+  }
+  static userDoc(uid: string) {
+    return this.users.doc(uid);
   }
 
-  static get adminDoc() {
-    return this.settingsCol.doc("admins");
+  static userSettingsCol(uid: string): admin.firestore.CollectionReference {
+    return this.userDoc(uid).collection('user_settings');
+  }
+  static userSettingsGroupCol(uid: string): admin.firestore.CollectionGroup {
+    return this.db.collectionGroup('user_settings');
+  }
+
+  static userSettingsDoc(uid: string, docId: string): admin.firestore.DocumentReference {
+    return this.userSettingsCol(uid).doc(docId);
+  }
+
+
+  static userSubscriptionsCol(uid: string): admin.firestore.CollectionReference {
+    return this.userDoc(uid).collection('user_subscriptions');
+  }
+
+  static userSubscriptionsDoc(uid: string, subscriptionId: string): admin.firestore.DocumentReference {
+    return this.userSubscriptionsCol(uid).doc(subscriptionId);
   }
 
   /** ****************************** MESSAGING References ****************************/
 
-  static get messageTokens() {
-    return this.db.collection("fcm-tokens");
+  static tokenCol(uid: string): admin.firestore.CollectionReference {
+    return this.userDoc(uid).collection("fcm_tokens");
   }
-  //   static token(id: string) {
-  //     return this.messageTokens.child(id);
-  //   }
+  static tokenDoc(uid: string, token: string): admin.firestore.DocumentReference {
+    return this.tokenCol(uid).doc(token);
+  }
 }

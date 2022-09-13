@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
@@ -451,4 +452,12 @@ Dio getRetryDio() {
   ));
 
   return dio;
+}
+
+/// It returns one of 'web', 'android', 'fuchsia', 'ios', 'linux', 'macos', 'windows'.
+String platformName() {
+  if (kIsWeb)
+    return 'web';
+  else
+    return defaultTargetPlatform.name.toLowerCase();
 }

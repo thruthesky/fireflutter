@@ -1,3 +1,6 @@
+import * as amdin from "firebase-admin";
+import { User } from "../src/classes/user";
+
 export class Test {
   static testCount = 0;
 
@@ -10,6 +13,11 @@ export class Test {
   // three push tokens. two are real. one is fake.
   static tokens = ["fake-token"];
 
+
+    static id(): string {
+      return (new Date().getTime()) + "-" + (this.testCount++);
+    }
+
   /**
    * Create a user for test
    *
@@ -21,8 +29,24 @@ export class Test {
    * @example create a user.
    * test.createTestUser(userA).then((v) => console.log(v));
    */
-  static async createTestUser(uid: string, data?: any) {
+  static async createTestUser(uid: string, data?: any): Promise<amdin.firestore.WriteResult> {
     // check if the user of uid exists, then return null
-    console.log(uid, data);
+
+    
+    const timestamp = new Date().getTime();
+
+    const userData = {
+      firstName: "firstName" + timestamp,
+      lastName: "lastName" + timestamp,
+      createdAt: amdin.firestore.FieldValue.serverTimestamp(),
+    };
+
+    if (data !== null) {
+      Object.assign(userData, data);
+    }
+
+    
+    return User.create(uid, userData);
   }
+
 }

@@ -10,7 +10,7 @@ service cloud.firestore {
       allow write: if (request.auth.uid == uid);
     }
     //
-    match /fcm-tokens/{tokenId} {
+    match /fcm_tokens/{tokenId} {
       allow read: if true;
       allow list: if false;
       allow create: if true;

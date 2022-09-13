@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/point/point.class.dart';
 
 class JobModel {
   JobModel({
@@ -28,8 +30,8 @@ class JobModel {
     this.withAccomodation = 'N',
     this.files = const [],
     this.status = 'Y',
-    this.createdAt = 0,
-    this.updatedAt = 0,
+    this.createdAt,
+    this.updatedAt,
   });
 
   String id;
@@ -59,8 +61,10 @@ class JobModel {
   List<String> files;
   String status;
 
-  int createdAt;
-  int updatedAt;
+  // int createdAt;
+  // int updatedAt;
+  Timestamp? createdAt;
+  Timestamp? updatedAt;
 
   factory JobModel.fromJson(Json json, [String id = '']) {
     final int _days = json['workingDays'] is int
@@ -69,6 +73,14 @@ class JobModel {
     final int _hours = json['workingHours'] is int
         ? json['workingHours']
         : int.parse(json['workingHours'] ?? '-1');
+
+    Timestamp? _createdAt = json['createdAt'] is int
+        ? Timestamp.fromMillisecondsSinceEpoch(json['createdAt'] * 1000)
+        : json['createdAt'];
+
+    Timestamp? _updatedAt = json['updatedAt'] is int
+        ? Timestamp.fromMillisecondsSinceEpoch(json['updatedAt'] * 1000)
+        : json['updatedAt'];
 
     return JobModel(
       id: json['id'] ?? id,
@@ -97,8 +109,10 @@ class JobModel {
       emdNm: json['emdNm'] ?? '',
       files: List<String>.from(json['files'] ?? []),
       status: json['status'] ?? 'Y',
-      createdAt: toInt(json['createdAt']),
-      updatedAt: toInt(json['updatedAt']),
+      // createdAt: toInt(json['createdAt']),
+      // updatedAt: toInt(json['updatedAt']),
+      createdAt: _createdAt,
+      updatedAt: _updatedAt,
     );
   }
 
@@ -147,20 +161,44 @@ class JobModel {
   }
 
   Future edit() async {
+    /// TODO complete job edit
+    ///
+    /// Admin can create many jobs.
+    /// User can only create 1 job, and update it.
+
     if (id == '') {
-      /// TODO job create
+      // Check if user have sufficient points to create a job post.
+      final userPoint = await Point.getUserPoint(uid);
+      if (userPoint < Job.pointDeductionForCreation) {
+        throw ERROR_LACK_OF_POINT_ON_JOB_CREATE;
+      }
+
       // return await FunctionsApi.instance.request(
       //   'jobCreate',
       //   data: toCreate,
       //   addAuth: true,
       // );
+      return await Job.jobCol.add({
+        ...toCreate,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      // Deduct point to user and update history.
+
     } else {
-      /// TODO job edit
+      /// Check if user owns the job post.
+      if (uid != UserService.instance.uid) throw ERROR_NOT_YOUR_JOB_POST;
+
       // return await FunctionsApi.instance.request(
       //   'jobUpdate',
       //   data: toUpdate,
       //   addAuth: true,
       // );
+      return await Job.jobCol.doc(id).set({
+        ...toUpdate,
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
     }
   }
 }
