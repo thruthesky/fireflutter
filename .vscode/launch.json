@@ -132,6 +132,14 @@
       "type": "dart",
       "deviceId": "chrome",
       "flutterMode": "debug"
-    }
+    },
+    {
+      "name": "WK Integration test | Emulator 5554",
+      "program": "integration_test/all_test.dart",
+      "cwd": "apps/wonderfulkorea",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+    },
   ]
 }
