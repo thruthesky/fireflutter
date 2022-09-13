@@ -43,7 +43,7 @@ class ForumListPushNotificationIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     if (categoryId == '') return SizedBox.shrink();
 
-    return UserSettingDoc(
+    return MySettingsDoc(
       builder: (settings) {
         return Stack(
           alignment: AlignmentDirectional.center,

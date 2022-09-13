@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:jiffy/jiffy.dart';
 
@@ -253,6 +254,9 @@ class PostModel with ForumMixin implements Article {
   /// Read readme for [hasPhoto]
   ///
   /// It returns [PostModel] of newly create post.
+  ///   - To return the [PostModel] of newly created post, it needs an extra document-read event.
+  ///     - It is super fast anyway.
+  ///     - It won't be expansive since "post creation" event won't happen very often.
   Future<PostModel> create({
     String? category,
     required String title,
@@ -295,6 +299,13 @@ class PostModel with ForumMixin implements Article {
     } else {
       res = await postCol.add({...createData, ...extra});
     }
+
+    /// TODO send push notification through Cloud Function and don't wait because it takes time. Instead, do .then().catchError().
+    // FirebaseFunctions.instance
+    //     .httpsCallable('sendMessage')
+    //     .call({'action': 'post-create', 'category': category})
+    //     .then((value) => null)
+    //     .catchError((e) => print(e));
 
     return PostModel.fromSnapshot(await res.get());
   }

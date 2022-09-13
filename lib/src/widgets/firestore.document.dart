@@ -18,9 +18,9 @@ class FirestoreDocument extends StatefulWidget {
 
   final String? path;
   final Query? query;
-  final Function(dynamic) onError;
-  final Function(dynamic) onFound;
-  final Function() onNotFound;
+  final Widget Function(dynamic) onError;
+  final Widget Function(dynamic data) onFound;
+  final Widget Function() onNotFound;
 
   @override
   State<FirestoreDocument> createState() => _FirestoreDocumentState();
