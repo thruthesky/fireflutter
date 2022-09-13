@@ -50,15 +50,16 @@ mixin ForumMixin {
   /// 카테고리 목록을 할 때 사용하는 쿼리
   Query<CategoryModel> categoriesQuery({
     int limit = 100,
+    String? orderBy,
     bool decending = true,
   }) {
-    return categoryCol
-        .limit(limit)
-        // .orderBy('createdAt', descending: decending)
-        .withConverter<CategoryModel>(
-          fromFirestore: (snapshot, _) => CategoryModel.fromSnapshot(snapshot),
-          toFirestore: (category, _) => category.map,
-        );
+    Query q = categoryCol.limit(limit);
+    if (orderBy != null) q = q.orderBy(orderBy, descending: decending);
+
+    return q.withConverter<CategoryModel>(
+      fromFirestore: (snapshot, _) => CategoryModel.fromSnapshot(snapshot),
+      toFirestore: (category, _) => category.map,
+    );
   }
 
   /// 글 목록을 할 때 사용하는 쿼리
