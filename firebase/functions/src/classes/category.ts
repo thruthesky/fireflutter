@@ -9,6 +9,7 @@ export class Category {
    * @returns category data or null
    */
   static async get(id: string): Promise<CategoryDocument | null> {
+    if (!id) throw Error("id is empty on Category.get(id)");
     const snapshot = await Ref.categoryDoc(id).get();
     if (snapshot.exists) {
       const data = snapshot.data() as CategoryDocument;

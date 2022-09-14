@@ -1,9 +1,11 @@
 import * as admin from "firebase-admin";
 import { Ref } from "../utils/ref";
 
-import { EventName, pointEvent, PointHistory } from "../interfaces/point.interface";
+import { pointEvent, PointHistory } from "../interfaces/point.interface";
 import { Category } from "./category";
 import { Utils } from "../utils/utils";
+import { PostDocument } from "../interfaces/post.interface";
+import { EventName } from "../event-name";
 
 /**
  * Point increase time duration.
@@ -29,13 +31,15 @@ import { Utils } from "../utils/utils";
 export class Point {
   /**
    * Returns point document reference
-   * @param category the category of the post
-   * @param uid the uid of the post
+   * @param data is the data of post
    * @param postId the post id that had just been created.
    * @returns reference of the point history document or null if the point event didn't happen.
    * @reference see `tests/point/list.ts` for generating post creation bonus point for test.
    */
-  static async postCreate(data: any, postId: string) {
+  static async postCreate(data: PostDocument, postId: string) {
+    if (!data) throw Error("data is empty on Point.postCreate");
+    if (!data.category) throw Error("data.category is empty on Point.postCreate");
+    if (!postId) throw Error("postId is empty on Point.postCreate");
     if ((await this.timePassed(data.uid, EventName.postCreate)) === false) return null;
 
     // Point document to add into point folder.
@@ -65,22 +69,25 @@ export class Point {
 
   static async updatePoint(uid: string, point: number): Promise<admin.firestore.WriteResult> {
     return Ref.userMetaPointDoc(uid).set(
-        {
-          point: admin.firestore.FieldValue.increment(point),
-        },
-        { merge: true }
+      {
+        point: admin.firestore.FieldValue.increment(point),
+      },
+      { merge: true }
     );
   }
 
   static async getCompleteData(
-      data: any,
-      eventName: string
+    data: any,
+    eventName: string
   ): Promise<{ eventName: string; createdAt: admin.firestore.FieldValue; point: number } | null> {
     let point = 30;
 
     if (eventName == EventName.postCreate) {
       const category = await Category.get(data.category);
-      if (category === null) return null;
+      if (category === null) {
+        throw Error("category is null(not exists) on Point.getCompleteData()");
+      }
+
       if (!category.point) return null;
       point = category.point ?? 0;
     }
@@ -108,9 +115,9 @@ export class Point {
    * @param {*} eventName event name
    */
   static async timePassed(
-      uid: string,
-      // createdAt: admin.firestore.Timestamp,
-      eventName: string
+    uid: string,
+    // createdAt: admin.firestore.Timestamp,
+    eventName: string
   ): Promise<boolean> {
     const within = pointEvent[eventName].within;
 
