@@ -301,14 +301,14 @@ class PostModel with ForumMixin implements Article {
     }
 
     /// TODO send push notification through Cloud Function and don't wait because it takes time. Instead, do .then().catchError().
-    FirebaseFunctions.instance
-        .httpsCallable('sendMessage')
-        .call({'action': 'post-create', 'category': category})
-        .then((value) => print('sendMesage() $value'))
-        .catchError((e) {
-          print('sendMessage(): catchError $e');
-          throw e;
-        });
+    // FirebaseFunctions.instance
+    //     .httpsCallable('sendMessage')
+    //     .call({'action': 'post-create', 'category': category})
+    //     .then((value) => print('sendMesage() $value'))
+    //     .catchError((e) {
+    //       print('sendMessage(): catchError $e');
+    //       throw e;
+    //     });
 
     return PostModel.fromSnapshot(await res.get());
   }

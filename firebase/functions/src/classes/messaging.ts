@@ -1,29 +1,36 @@
 import * as admin from "firebase-admin";
-import { CallableContext } from "firebase-functions/v1/https";
 import { MessagePayload, SendMessage } from "../interfaces/messaging.interface";
 import { invalidArgument } from "../utils/library";
 import { Ref } from "../utils/ref";
 import { Utils } from "../utils/utils";
 
 export class Messaging {
-  static async sendMessage(data: any, context: CallableContext): Promise<any> {
+  static async sendMessage(data: any): Promise<any> {
     if (data.topic) {
       // / see TODO in README.md
     } else if (data.tokens) {
-      return this.sendMessageToTokens(data.tokens.split(","), data, context);
+      return this.sendMessageToTokens(data.tokens.split(","), data);
     } else if (data.uids) {
       const tokens = await this.getTokensFromUids(data.uids);
-      return this.sendMessageToTokens(tokens, data, context);
+      return this.sendMessageToTokens(tokens, data);
     } else if (data.action) {
-      return this.sendMessageByAction(data, context);
+      return this.sendMessageByAction(data);
     } else {
       throw invalidArgument("One of uids, tokens, topic must be present");
     }
   }
 
-  static async sendMessageByAction(data: any, context: CallableContext) {
+  /**
+   *
+   * @param data
+   *  'action' can be one of 'post-create', 'comment-create',
+   *  'uid' is the uid of the user
+   *  'category' is the category of the post.
+   * @param context
+   * @returns
+   */
+  static async sendMessageByAction(data: any) {
     // Get users who subscribed the subscription
-    // console.log("subscription::", subscriptionId);
     const snap = await Ref.db
         .collectionGroup("user_subscriptions")
         .where("action", "==", data.action)
@@ -31,6 +38,7 @@ export class Messaging {
         .get();
 
     console.log("snap.size", snap.size);
+
     // No users
     if (snap.size == 0) return;
 
@@ -40,7 +48,7 @@ export class Messaging {
     }
     console.log("uids::", uids);
     const tokens = await this.getTokensFromUids(uids.join(","));
-    return this.sendMessageToTokens(tokens, data, context);
+    return this.sendMessageToTokens(tokens, data);
   }
 
   /**
@@ -52,12 +60,12 @@ export class Messaging {
    */
   static async sendMessageToTokens(
       tokens: string[],
-      data: any,
-      context: CallableContext
+      data: any
   ): Promise<{ success: number; error: number }> {
     // console.log("check user auth with context", context);
     // add login user uid
-    if (context.auth?.uid != undefined) data.senderUid = context.auth?.uid;
+
+    data.senderUid = data.uid;
 
     const payload = this.completePayload(data);
     if (tokens.length == 0) return { success: 0, error: 0 };
