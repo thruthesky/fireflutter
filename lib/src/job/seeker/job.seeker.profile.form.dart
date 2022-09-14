@@ -17,7 +17,7 @@ class _JobSeekerProfileFormState extends State<JobSeekerProfileForm> {
   final labelStyle = TextStyle(fontSize: 10, color: Colors.blueGrey);
   final _formKey = GlobalKey<FormState>(debugLabel: 'jobSeeker');
 
-  final form = JobSeekerModel(id: UserService.instance.uid!);
+  JobSeekerModel form = JobSeekerModel(id: UserService.instance.uid!);
 
   bool loaded = false;
   bool loading = false;
@@ -26,9 +26,20 @@ class _JobSeekerProfileFormState extends State<JobSeekerProfileForm> {
   @override
   void initState() {
     super.initState();
-    form
-        .load(uid: UserService.instance.uid!)
-        .then((x) => setState(() => loaded = true));
+    // form.load(uid: UserService.instance.uid!).then((x) {
+    //   if (mounted) setState(() => loaded = true);
+    // });
+    formLoad();
+  }
+
+  formLoad() async {
+    try {
+      final res = await form.load(uid: UserService.instance.uid!);
+      if (res != null) form = res;
+      if (mounted) setState(() => loaded = true);
+    } catch (e) {
+      ffError(e.toString());
+    }
   }
 
   @override
@@ -49,14 +60,6 @@ class _JobSeekerProfileFormState extends State<JobSeekerProfileForm> {
               ],
             ),
             SizedBox(width: 16),
-
-            // Column(
-            //   children: [
-            //     Text('Middle Name', style: labelStyle),
-            //     SizedBox(height: 5),
-            //     Text('${UserService.instance.data?.middleName}'),
-            //   ],
-            // ),
             Column(
               children: [
                 Text('Last Name', style: labelStyle),

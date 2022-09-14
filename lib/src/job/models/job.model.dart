@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/point/point.class.dart';
 
 class JobModel {
   JobModel({
@@ -61,8 +60,6 @@ class JobModel {
   List<String> files;
   String status;
 
-  // int createdAt;
-  // int updatedAt;
   Timestamp? createdAt;
   Timestamp? updatedAt;
 
@@ -109,8 +106,6 @@ class JobModel {
       emdNm: json['emdNm'] ?? '',
       files: List<String>.from(json['files'] ?? []),
       status: json['status'] ?? 'Y',
-      // createdAt: toInt(json['createdAt']),
-      // updatedAt: toInt(json['updatedAt']),
       createdAt: _createdAt,
       updatedAt: _updatedAt,
     );
@@ -153,52 +148,31 @@ class JobModel {
     return data;
   }
 
-  // AddressModel get address => AddressModel.fromMap(toMap);
-
   @override
   String toString() {
     return '''JobModel($toUpdate)''';
   }
 
+  /// Create or Update job post.
+  ///
+  /// No point checking and deduction when creating job post (Sept. 14, 2022)
+  ///
+  /// Admin can create many jobs.
+  /// User can only create 1 job, and update it.
   Future edit() async {
-    /// TODO complete job edit
-    ///
-    /// Admin can create many jobs.
-    /// User can only create 1 job, and update it.
-
     if (id == '') {
-      // Check if user have sufficient points to create a job post.
-      final userPoint = await Point.getUserPoint(uid);
-      if (userPoint < Job.pointDeductionForCreation) {
-        throw ERROR_LACK_OF_POINT_ON_JOB_CREATE;
-      }
-
-      // return await FunctionsApi.instance.request(
-      //   'jobCreate',
-      //   data: toCreate,
-      //   addAuth: true,
-      // );
       return await Job.jobCol.add({
         ...toCreate,
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       });
-
-      // Deduct point to user and update history.
-
     } else {
       /// Check if user owns the job post.
       if (uid != UserService.instance.uid) throw ERROR_NOT_YOUR_JOB_POST;
-
-      // return await FunctionsApi.instance.request(
-      //   'jobUpdate',
-      //   data: toUpdate,
-      //   addAuth: true,
-      // );
-      return await Job.jobCol.doc(id).set({
+      return await Job.jobCol.doc(id).update({
         ...toUpdate,
         'updatedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
+      });
     }
   }
 }

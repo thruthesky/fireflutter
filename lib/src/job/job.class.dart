@@ -13,7 +13,7 @@ class Job {
   static final String jobOpenings = 'jobOpenings';
   static final String jobSeekers = 'jobSeekers';
 
-  static final pointDeductionForCreation = 1200;
+  // static final pointDeductionForCreation = 1200;
 
   static final apiUrl =
       "https://www.juso.go.kr/addrlink/addrEngApi.do?currentPage=1&countPerPage=100&confmKey=U01TX0FVVEgyMDIyMDQwNzIyMDI0MDExMjQzNzE=&resultType=json&keyword=";

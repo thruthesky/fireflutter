@@ -15,8 +15,6 @@ class JobSeekerModel {
 
   String status;
 
-  // int createdAt;
-  // int updatedAt;
   Timestamp? createdAt;
   Timestamp? updatedAt;
 
@@ -51,8 +49,6 @@ class JobSeekerModel {
       siNm: json['siNm'] ?? '',
       sggNm: json['sggNm'] ?? '',
       status: json['status'] ?? 'Y',
-      // createdAt: json['createdAt'] ?? 0,
-      // updatedAt: json['updatedAt'] ?? 0,
       createdAt: _createdAt,
       updatedAt: _updatedAt,
     );
@@ -74,23 +70,20 @@ class JobSeekerModel {
     siNm = data['siNm'] ?? '';
     sggNm = data['sggNm'] ?? '';
     status = data['status'] ?? 'Y';
-    // createdAt: data['createdAt'] ?? 0,
-    // updatedAt: data['updatedAt'] ?? 0,
     createdAt = _createdAt;
     updatedAt = _updatedAt;
   }
 
-  /// TODO: update backend rules.
-  ///
   Future update() async {
     final profile = await load(uid: id);
 
     final data = {
       ...updateMap,
+      'createdAt':
+          profile != null ? profile.createdAt! : FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
     };
 
-    if (profile == null) data['createdAt'] = FieldValue.serverTimestamp();
     log('Job profile update ====> ' + data.toString());
     return await Job.jobSeekerCol.doc(id).set(data);
   }
