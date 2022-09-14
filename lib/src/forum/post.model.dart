@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:jiffy/jiffy.dart';
 
@@ -298,13 +299,6 @@ class PostModel with ForumMixin implements Article {
     } else {
       res = await postCol.add({...createData, ...extra});
     }
-
-    /// TODO send push notification through Cloud Function and don't wait because it takes time. Instead, do .then().catchError().
-    // FirebaseFunctions.instance
-    //     .httpsCallable('sendMessage')
-    //     .call({'action': 'post-create', 'category': category})
-    //     .then((value) => null)
-    //     .catchError((e) => print(e));
 
     return PostModel.fromSnapshot(await res.get());
   }
