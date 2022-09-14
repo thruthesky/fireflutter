@@ -7,10 +7,9 @@ import { Utils } from "../utils/utils";
 
 export class Messaging {
   static async sendMessage(data: any, context: CallableContext): Promise<any> {
-    if ( data.topic ) {
-      /// see TODO in README.md
-    }
-    else if (data.tokens) {
+    if (data.topic) {
+      // / see TODO in README.md
+    } else if (data.tokens) {
       return this.sendMessageToTokens(data.tokens.split(","), data, context);
     } else if (data.uids) {
       const tokens = await this.getTokensFromUids(data.uids);
@@ -23,21 +22,13 @@ export class Messaging {
   }
 
   static async sendMessageByAction(data: any, context: CallableContext) {
-    console.log("sendMessageByAction()", data, context);
-    // let subscriptionId = '';
-    // if (data.action == "post-create" || data.action == "comment-create") {
-    //   subscriptionId = data.action + "." + data.category;
-    // } else {
-    //   // not supported other types.
-    // }
-
     // Get users who subscribed the subscription
     // console.log("subscription::", subscriptionId);
     const snap = await Ref.db
-      .collectionGroup("user_subscriptions")
-      .where("action", "==", data.action)
-      .where("category", "==", data.category)
-      .get();
+        .collectionGroup("user_subscriptions")
+        .where("action", "==", data.action)
+        .where("category", "==", data.category)
+        .get();
 
     console.log("snap.size", snap.size);
     // No users
@@ -60,9 +51,9 @@ export class Messaging {
    * @param context Cloud Functions Callable context
    */
   static async sendMessageToTokens(
-    tokens: string[],
-    data: any,
-    context: CallableContext
+      tokens: string[],
+      data: any,
+      context: CallableContext
   ): Promise<{ success: number; error: number }> {
     // console.log("check user auth with context", context);
     // add login user uid
@@ -76,25 +67,29 @@ export class Messaging {
 
     const multicastPromise = [];
     // Save [sendMulticast()] into a promise.
-    for (const _500_tokens of chunks) {
-      const newPayload: admin.messaging.MulticastMessage = Object.assign({}, { tokens: _500_tokens }, payload as any);
+    for (const _500Tokens of chunks) {
+      const newPayload: admin.messaging.MulticastMessage = Object.assign(
+          {},
+          { tokens: _500Tokens },
+        payload as any
+      );
       multicastPromise.push(admin.messaging().sendMulticast(newPayload));
     }
 
     const failedTokens = [];
-    let successCount: number = 0;
-    let failureCount: number = 0;
+    let successCount = 0;
+    let failureCount = 0;
     try {
       // Send all the push messages in the promise with [Promise.allSettle].
       const settled = await Promise.allSettled(multicastPromise);
       // Returns are in array
-      for (const settledIndex in settled) {
+      for (let settledIndex = 0; settledIndex < settled.length; settledIndex++) {
         const value = (settled[settledIndex] as any).value;
         successCount += value.successCount;
         failureCount += value.failureCount;
 
-        for (const idx in value.responses) {
-          const i = parseInt(idx);
+        for (let i = 0; i < value.responses.length; i++) {
+          // const i = parseInt(idx);
           const res = value.responses[i];
           if (res.success == false) {
             // Delete tokens that failed.
@@ -131,16 +126,16 @@ export class Messaging {
     const promises: Promise<any>[] = [];
     for (const token of tokens) {
       promises.push(
-        // Get the document of the token
-        Ref.db
-          .collectionGroup("fcm_tokens")
-          .where("fcm_token", "==", token)
-          .get()
-          .then(async (snapshot) => {
-            for (const doc of snapshot.docs) {
-              await doc.ref.delete();
-            }
-          })
+          // Get the document of the token
+          Ref.db
+              .collectionGroup("fcm_tokens")
+              .where("fcm_token", "==", token)
+              .get()
+              .then(async (snapshot) => {
+                for (const doc of snapshot.docs) {
+                  await doc.ref.delete();
+                }
+              })
       );
     }
     await Promise.all(promises);

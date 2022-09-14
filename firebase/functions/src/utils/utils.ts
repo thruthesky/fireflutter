@@ -24,7 +24,7 @@ export class Utils {
    *
    * @return int unix timestamp
    */
-  static getTimestamp(servertime?: any) {
+  static getTimestamp() {
     return Math.round(new Date().getTime() / 1000);
   }
 
@@ -87,10 +87,10 @@ export class Utils {
       lt: "<",
       gt: ">",
       nbsp: " ",
-      quot: '"',
+      quot: "\"",
       bull: "•",
     };
-    return text.replace(/&([^;]+);/gm, function (match, entity) {
+    return text.replace(/&([^;]+);/gm, function(match, entity) {
       return entities[entity] || match;
     });
   }

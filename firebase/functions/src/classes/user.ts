@@ -17,7 +17,7 @@ export class User {
   static async create(uid: string, data: any): Promise<UserDocument | null> {
     data.createdAt = admin.firestore.FieldValue.serverTimestamp();
     const user = await this.get(uid);
-    if (user) throw "user-exists";
+    if (user) throw Error("user-exists");
     await Ref.userDoc(uid).set(data);
     return this.get(uid);
   }
@@ -41,9 +41,9 @@ export class User {
    *  await User.setSettings(userA, "abc", { "def": true });
    */
   static async setSettings(
-    uid: string,
-    docId: string,
-    data: {
+      uid: string,
+      docId: string,
+      data: {
       [key: string]: any;
     }
   ): Promise<admin.firestore.WriteResult> {
@@ -51,9 +51,9 @@ export class User {
   }
 
   static async setSubscription(
-    uid: string,
-    subscriptionId: string,
-    data: {
+      uid: string,
+      subscriptionId: string,
+      data: {
       [key: string]: any;
     }
   ): Promise<admin.firestore.WriteResult> {
@@ -68,7 +68,7 @@ export class User {
     return Ref.tokenDoc(data.uid, data.fcm_token).set(data);
   }
 
-  /// Returns user's point. 0 if it's not exists.
+  // / Returns user's point. 0 if it's not exists.
   static async point(uid: string): Promise<number> {
     const data = (await Ref.userDoc(uid).collection("user_meta").doc("point").get()).data();
     return data?.point ?? 0;

@@ -65,18 +65,18 @@ export class Point {
 
   static async updatePoint(uid: string, point: number): Promise<admin.firestore.WriteResult> {
     return Ref.userMetaPointDoc(uid).set(
-      {
-        point: admin.firestore.FieldValue.increment(point),
-      },
-      { merge: true }
+        {
+          point: admin.firestore.FieldValue.increment(point),
+        },
+        { merge: true }
     );
   }
 
   static async getCompleteData(
-    data: any,
-    eventName: string
+      data: any,
+      eventName: string
   ): Promise<{ eventName: string; createdAt: admin.firestore.FieldValue; point: number } | null> {
-    let point: number = 30;
+    let point = 30;
 
     if (eventName == EventName.postCreate) {
       const category = await Category.get(data.category);
@@ -108,9 +108,9 @@ export class Point {
    * @param {*} eventName event name
    */
   static async timePassed(
-    uid: string,
-    // createdAt: admin.firestore.Timestamp,
-    eventName: string
+      uid: string,
+      // createdAt: admin.firestore.Timestamp,
+      eventName: string
   ): Promise<boolean> {
     const within = pointEvent[eventName].within;
 
