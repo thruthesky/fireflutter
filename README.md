@@ -62,6 +62,8 @@
 - 플러터코리아 앱을 https://flutterkorea.co.kr 로 연결하고, 최대한 빠르게 배포한다.
   - 그리고, FlutterFlow 로 연결해서, 강좌 앱을 만들도록 한다.
 
+- Rich editor - https://github.com/tneotia/html-editor-enhanced 를 이용해서 빌드한다. Quill 보다는 HTML 편집기가 여러모로 낳을 것 같다.
+
 - 푸시 알림을 본 문서의 [푸시 알림](#푸시-알림)에 나오는데로 수정한다.
   - 토픽 구독 없이, 토큰으로 모든 subscription 로직 작성.
   예를 들어, QnA subscribe 하면 환경 설정에만 기록하고, 토픽 구독하지 않는다. 그래서 QnA 에 새 글 이 있으면 해당 토픽을 subscribe 한 사용자의 uid 배열을 서버로 전달해서, 푸시를 보내도록 한다.

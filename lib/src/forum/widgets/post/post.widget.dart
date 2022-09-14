@@ -62,26 +62,6 @@ class PostWidget extends StatelessWidget {
           padding: padding,
         ),
         ForumPoint(uid: post.uid, point: post.point),
-        // if (post.summary != '')
-        //   Container(
-        //     padding: EdgeInsets.all(16),
-        //     color: Theme.of(context).colorScheme.secondary,
-        //     width: double.infinity,
-        //     child: Column(
-        //       crossAxisAlignment: CrossAxisAlignment.start,
-        //       children: [
-        //         Text(
-        //           'Summary',
-        //           style: TextStyle(
-        //               fontWeight: FontWeight.bold, color: Colors.grey),
-        //         ),
-        //         Text(
-        //           post.summary,
-        //           style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
         ButtonBase(
           uid: post.uid,
           isPost: true,

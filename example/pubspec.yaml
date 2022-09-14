@@ -29,6 +29,9 @@ dependencies:
   fireflutter:
     path: ..
 
+
+  intl: any
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

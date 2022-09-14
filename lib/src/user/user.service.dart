@@ -85,7 +85,7 @@ class UserService {
     String uid, {
     bool cache = true,
   }) async {
-    if (cache = true && userDocumentContainer[uid] != null) {
+    if (cache == true && userDocumentContainer[uid] != null) {
       return userDocumentContainer[uid]!;
     }
     final snapshot = await col.doc(uid).get();
@@ -143,6 +143,7 @@ class UserService {
   /// 입력된 전화번호가 이미 가입되어져 있으면 참을 리턴한다.
   /// 전화번호 로그인을 할 때, 만약 전화번호가 이미 가입되어져 있으면, 그 전화번호로 로그인을 하고 아니면, 새로 생성하는데, 이 때, Anonymous 계정과 합친다.
   /// 이 기능은 클라이언트에서는 안되고, 반드시 cloud 함수로 해야 만 한다.
+  /// 그리고, 그리고, callable functions 이 아닌, 그냥 rest api 를 그대로 사용한다.
   Future<bool> phoneNumberExists(String phoneNumber) async {
     /// TODO 사용자 전화번호가 이미 가입되어져 있으면 참을 리턴한다.
     // final res = await FunctionsApi.instance.request(

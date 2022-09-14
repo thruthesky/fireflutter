@@ -93,7 +93,7 @@ class FireFlutterService {
     });
   }
 
-  /// TODO alert, confirm, error, toast overwrite
+
   /// alert, confirm, error, toast 등을 기본 것을 사용하고, 별도로 디자인하고 싶다면, 여기서 callback 지정을 할 수 있다.
   /// 이 함수는 여러번 호출될 수 있고, 호출 할 때 마다 다른 값으로 초기화 할 수 있다.
   ///
