@@ -49,6 +49,7 @@
   - [Common Fitfalls](#common-fitfalls)
 - [위젯](#위젯)
   - [DocumentBuilder](#documentbuilder)
+  - [Admin](#admin)
 - [실험 코드](#실험-코드)
 
 
@@ -805,6 +806,11 @@ DocumentBuilder(
 ## DocumentBuilder
 
 - Firestore 문서를 observe 하여 그 문서가 업데이트되면 reative 하게 위젯을 빌드해서 보여준다.
+
+
+## Admin
+
+- 로그인한 관리자이면 위젯을 빌드해서 보여준다.
 
 
 
