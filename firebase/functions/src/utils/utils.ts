@@ -1,5 +1,5 @@
 import dayjs = require("dayjs");
-import {v4 as uuidv4} from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * @file utils.ts
@@ -20,17 +20,12 @@ export class Utils {
   }
 
   /**
-   * Returns unix timestamp
+   * Returns unix timestamp in seconds from 19...
    *
    * @return int unix timestamp
    */
   static getTimestamp(servertime?: any) {
-    if (servertime) {
-      const d = servertime.toDate();
-      return Math.round(d.getTime() / 1000);
-    } else {
-      return Math.round(new Date().getTime() / 1000);
-    }
+    return Math.round(new Date().getTime() / 1000);
   }
 
   /**
@@ -83,19 +78,19 @@ export class Utils {
    */
   static decodeHTMLEntities(text: string) {
     const entities: any = {
-      "amp": "&",
-      "apos": "'",
+      amp: "&",
+      apos: "'",
       "#x27": "'",
       "#x2F": "/",
       "#39": "'",
       "#47": "/",
-      "lt": "<",
-      "gt": ">",
-      "nbsp": " ",
-      "quot": "\"",
-      "bull": "•",
+      lt: "<",
+      gt: ">",
+      nbsp: " ",
+      quot: '"',
+      bull: "•",
     };
-    return text.replace(/&([^;]+);/gm, function(match, entity) {
+    return text.replace(/&([^;]+);/gm, function (match, entity) {
       return entities[entity] || match;
     });
   }

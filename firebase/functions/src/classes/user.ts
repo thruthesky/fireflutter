@@ -1,6 +1,12 @@
 import * as admin from "firebase-admin";
+import { UserDocument } from "../interfaces/user.interface";
 import { Ref } from "../utils/ref";
 
+/**
+ * User class
+ *
+ * It supports user management for cloud functions.
+ */
 export class User {
   /**
    * Create the profile document.
@@ -8,16 +14,20 @@ export class User {
    * @param data data to update as the user profile
    *
    */
-  static async create(uid: string, data: any): Promise<admin.firestore.WriteResult> {
+  static async create(uid: string, data: any): Promise<UserDocument | null> {
     data.createdAt = admin.firestore.FieldValue.serverTimestamp();
     const user = await this.get(uid);
     if (user) throw "user-exists";
-    return Ref.userDoc(uid).set(data);
+    await Ref.userDoc(uid).set(data);
+    return this.get(uid);
   }
 
-  static async get(uid: string) {
+  static async get(uid: string): Promise<UserDocument | null> {
     const snapshot = await Ref.userDoc(uid).get();
-    return snapshot.data();
+    if (snapshot.exists === false) return null;
+    const data = snapshot.data() as UserDocument;
+    data.id = uid;
+    return data;
   }
 
   /**
@@ -56,5 +66,11 @@ export class User {
     uid: string;
   }): Promise<admin.firestore.WriteResult> {
     return Ref.tokenDoc(data.uid, data.fcm_token).set(data);
+  }
+
+  /// Returns user's point. 0 if it's not exists.
+  static async point(uid: string): Promise<number> {
+    const data = (await Ref.userDoc(uid).collection("user_meta").doc("point").get()).data();
+    return data?.point ?? 0;
   }
 }

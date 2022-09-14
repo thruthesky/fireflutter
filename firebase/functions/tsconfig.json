@@ -12,5 +12,5 @@
     "esModuleInterop": true
   },
   "compileOnSave": true,
-  "include": ["src"]
+  "include": ["src", "tests/point/time-passed.spec.ts"]
 }
