@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/point/point.class.dart';
 
 class JobModel {
   JobModel({
@@ -61,8 +60,6 @@ class JobModel {
   List<String> files;
   String status;
 
-  // int createdAt;
-  // int updatedAt;
   Timestamp? createdAt;
   Timestamp? updatedAt;
 
@@ -109,8 +106,6 @@ class JobModel {
       emdNm: json['emdNm'] ?? '',
       files: List<String>.from(json['files'] ?? []),
       status: json['status'] ?? 'Y',
-      // createdAt: toInt(json['createdAt']),
-      // updatedAt: toInt(json['updatedAt']),
       createdAt: _createdAt,
       updatedAt: _updatedAt,
     );
@@ -153,8 +148,6 @@ class JobModel {
     return data;
   }
 
-  // AddressModel get address => AddressModel.fromMap(toMap);
-
   @override
   String toString() {
     return '''JobModel($toUpdate)''';
@@ -167,7 +160,6 @@ class JobModel {
   /// Admin can create many jobs.
   /// User can only create 1 job, and update it.
   Future edit() async {
-    /// TODO complete job edit
     if (id == '') {
       return await Job.jobCol.add({
         ...toCreate,
