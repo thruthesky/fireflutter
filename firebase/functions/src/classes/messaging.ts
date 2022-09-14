@@ -25,10 +25,10 @@ export class Messaging {
     // Get users who subscribed the subscription
     // console.log("subscription::", subscriptionId);
     const snap = await Ref.db
-        .collectionGroup("user_subscriptions")
-        .where("action", "==", data.action)
-        .where("category", "==", data.category)
-        .get();
+      .collectionGroup("user_subscriptions")
+      .where("action", "==", data.action)
+      .where("category", "==", data.category)
+      .get();
 
     console.log("snap.size", snap.size);
     // No users
@@ -38,6 +38,11 @@ export class Messaging {
     for (const doc of snap.docs) {
       uids.push(doc.ref.parent.parent!.id);
     }
+
+    //// TODO if comment
+    // 1 get ancestral id
+    // 2 check if uid want to receive push message under his comment
+
     console.log("uids::", uids);
     const tokens = await this.getTokensFromUids(uids.join(","));
     return this.sendMessageToTokens(tokens, data, context);
@@ -51,9 +56,9 @@ export class Messaging {
    * @param context Cloud Functions Callable context
    */
   static async sendMessageToTokens(
-      tokens: string[],
-      data: any,
-      context: CallableContext
+    tokens: string[],
+    data: any,
+    context: CallableContext
   ): Promise<{ success: number; error: number }> {
     // console.log("check user auth with context", context);
     // add login user uid
@@ -68,11 +73,7 @@ export class Messaging {
     const multicastPromise = [];
     // Save [sendMulticast()] into a promise.
     for (const _500Tokens of chunks) {
-      const newPayload: admin.messaging.MulticastMessage = Object.assign(
-          {},
-          { tokens: _500Tokens },
-        payload as any
-      );
+      const newPayload: admin.messaging.MulticastMessage = Object.assign({}, { tokens: _500Tokens }, payload as any);
       multicastPromise.push(admin.messaging().sendMulticast(newPayload));
     }
 
@@ -126,16 +127,16 @@ export class Messaging {
     const promises: Promise<any>[] = [];
     for (const token of tokens) {
       promises.push(
-          // Get the document of the token
-          Ref.db
-              .collectionGroup("fcm_tokens")
-              .where("fcm_token", "==", token)
-              .get()
-              .then(async (snapshot) => {
-                for (const doc of snapshot.docs) {
-                  await doc.ref.delete();
-                }
-              })
+        // Get the document of the token
+        Ref.db
+          .collectionGroup("fcm_tokens")
+          .where("fcm_token", "==", token)
+          .get()
+          .then(async (snapshot) => {
+            for (const doc of snapshot.docs) {
+              await doc.ref.delete();
+            }
+          })
       );
     }
     await Promise.all(promises);

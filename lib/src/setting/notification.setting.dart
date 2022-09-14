@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fireflutter/fireflutter.dart';
 
@@ -47,10 +48,18 @@ class _NotificationSettingState extends State<NotificationSetting> {
         SizedBox(height: 32),
         if (categories != null) ...[
           Text('Notifications for new posts'),
+          if (kDebugMode)
+            NotificationSettingsItem(
+                category: CategoryModel.fromJson({"title": "Temp"}, 'temp'),
+                type: 'post'),
           for (final category in categories!)
             NotificationSettingsItem(category: category, type: 'post'),
           SizedBox(height: 32),
           Text('Notifications for new comments'),
+          if (kDebugMode)
+            NotificationSettingsItem(
+                category: CategoryModel.fromJson({"title": "Temp"}, 'temp'),
+                type: 'comment'),
           for (final category in categories!)
             NotificationSettingsItem(category: category, type: 'comment'),
         ],

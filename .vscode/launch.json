@@ -13,6 +13,14 @@
       "deviceId": "emulator-5554"
     },
     {
+      "name": "ASUS J8AXB761J32888A",
+      "cwd": "apps/wonderfulkorea",
+      "program": "lib/main.dart",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "J8AXB761J32888A"
+    },
+    {
       "name": "Simulator - iPhone 13 Pro Max - iMac",
       "cwd": "apps/wonderfulkorea",
       "program": "lib/main.dart",
