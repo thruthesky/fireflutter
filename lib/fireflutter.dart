@@ -96,7 +96,7 @@ export 'src/job/job.view.dart';
 
 export 'src/location/location.service.dart';
 
-export 'src/widgets/firestore.document.dart';
+export 'src/widgets/document_builder.dart';
 
 export 'src/setting/notification.setting.dart';
 export 'src/widgets/input.dart';

@@ -1,11 +1,14 @@
 import * as admin from "firebase-admin";
+import * as functions from "firebase-functions";
 import { Ref } from "../utils/ref";
 
-import { pointEvent, PointHistory } from "../interfaces/point.interface";
+import { PointHistory } from "../interfaces/point.interface";
 import { Category } from "./category";
 import { Utils } from "../utils/utils";
 import { PostDocument } from "../interfaces/post.interface";
 import { EventName } from "../event-name";
+import { CommentDocument } from "../interfaces/comment.interface";
+import { Config } from "../config";
 
 /**
  * Point increase time duration.
@@ -37,14 +40,24 @@ export class Point {
    * @reference see `tests/point/list.ts` for generating post creation bonus point for test.
    */
   static async postCreate(data: PostDocument, postId: string) {
+    functions.logger.log("Point.postCreate() begins: data, postId:", data, postId);
     if (!data) throw Error("data is empty on Point.postCreate");
     if (!data.category) throw Error("data.category is empty on Point.postCreate");
     if (!postId) throw Error("postId is empty on Point.postCreate");
-    if ((await this.timePassed(data.uid, EventName.postCreate)) === false) return null;
 
-    // Point document to add into point folder.
+    if ((await this.timePassed(data.uid, EventName.postCreate)) === false) {
+      functions.logger.log("Point.postCreate() timePassed === false. Just return.");
+      return null;
+    }
+
+    // Point history document to add into point history collection.
     const doc = await this.getCompleteData(data, EventName.postCreate);
-    if (doc === null) return;
+    if (doc === null) {
+      functions.logger.log("Point.postCreate() getCompleteData() returns null. Just return.");
+      return null;
+    }
+
+    functions.logger.log("Point.postCreate() recording: doc:", doc);
 
     return Promise.all([
       this.updatePoint(data.uid, doc.point),
@@ -53,7 +66,8 @@ export class Point {
     ]);
   }
 
-  static async commentCreate(data: any, commentId: string) {
+  static async commentCreate(data: CommentDocument, commentId: string) {
+    if (!data) throw Error("data is empty on Point.commentCreate");
     if ((await this.timePassed(data.uid, EventName.commentCreate)) === false) return null;
 
     // Point document to add into point folder.
@@ -69,28 +83,41 @@ export class Point {
 
   static async updatePoint(uid: string, point: number): Promise<admin.firestore.WriteResult> {
     return Ref.userMetaPointDoc(uid).set(
-      {
-        point: admin.firestore.FieldValue.increment(point),
-      },
-      { merge: true }
+        {
+          point: admin.firestore.FieldValue.increment(point),
+        },
+        { merge: true }
     );
   }
 
+  /**
+   * Returns an object to save it as a point history.
+   * @param data data of post or comment.
+   * @param eventName point event name. it may be 'post-create' or 'comment-create'.
+   * @returns return an object to be saved as point history.
+   */
   static async getCompleteData(
-    data: any,
-    eventName: string
+      data: any,
+      eventName: string
   ): Promise<{ eventName: string; createdAt: admin.firestore.FieldValue; point: number } | null> {
-    let point = 30;
+    let point = Config.maximumCommentCreationPoint;
 
+    functions.logger.log("getCompleteData() data:", data);
     if (eventName == EventName.postCreate) {
       const category = await Category.get(data.category);
       if (category === null) {
         throw Error("category is null(not exists) on Point.getCompleteData()");
       }
 
-      if (!category.point) return null;
+      if (!category.point) {
+        functions.logger.log("getCompleteData() category.point is empty: category:", category);
+        return null;
+      }
+
+      functions.logger.log("getCompleteData() got category:", category);
       point = category.point ?? 0;
     }
+
     return {
       eventName: eventName,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -115,22 +142,27 @@ export class Point {
    * @param {*} eventName event name
    */
   static async timePassed(
-    uid: string,
-    // createdAt: admin.firestore.Timestamp,
-    eventName: string
+      uid: string,
+      // createdAt: admin.firestore.Timestamp,
+      eventName: string
   ): Promise<boolean> {
-    const within = pointEvent[eventName].within;
+    const within = Config.pointEvent[eventName].within;
 
     const deadline = new admin.firestore.Timestamp(Utils.getTimestamp() - within, 0);
+
+    functions.logger.log("timePassed(). deadline:", deadline);
 
     // Time didn't passed from last bonus point event? then don't do point event.
     const lastDoc = await this.getLastDoc(uid, eventName);
 
     if (lastDoc === null) {
+      functions.logger.log("timePassed(). lastDoc is null. So, return true.");
       return true;
     }
 
-    // / Time has passed?
+    functions.logger.log("lastDoc.createdAt:", lastDoc.createdAt);
+
+    // Time has passed?
     if (lastDoc.createdAt < deadline) {
       return true;
     } else {

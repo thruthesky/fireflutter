@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -6,27 +7,23 @@ import 'package:flutter/material.dart';
 /// Get a document(or the first document) from Firestore.
 /// It listens and updates only if the document(or the query) updates,
 /// So, there will be less flickering (compring to the StreamBuilder).
-class FirestoreDocument extends StatefulWidget {
-  const FirestoreDocument({
+class DocumentBuilder extends StatefulWidget {
+  const DocumentBuilder({
     Key? key,
     this.path,
     this.query,
-    required this.onError,
-    required this.onFound,
-    required this.onNotFound,
+    required this.builder,
   }) : super(key: key);
 
   final String? path;
   final Query? query;
-  final Widget Function(dynamic) onError;
-  final Widget Function(dynamic data) onFound;
-  final Widget Function() onNotFound;
+  final Widget Function(dynamic data) builder;
 
   @override
-  State<FirestoreDocument> createState() => _FirestoreDocumentState();
+  State<DocumentBuilder> createState() => _DocumentBuilderState();
 }
 
-class _FirestoreDocumentState extends State<FirestoreDocument> {
+class _DocumentBuilderState extends State<DocumentBuilder> {
   dynamic data;
   bool notFound = false;
   dynamic error;
@@ -73,8 +70,11 @@ class _FirestoreDocumentState extends State<FirestoreDocument> {
 
   @override
   Widget build(BuildContext context) {
-    if (error != null) return widget.onError(error);
-    if (data == null) return widget.onNotFound();
-    return widget.onFound(data);
+    if (error != null) {
+      log('---> DocumentBuilder() error; path: ${widget.path}');
+      log(error.toString());
+      return Text(error.toString());
+    }
+    return widget.builder(data);
   }
 }

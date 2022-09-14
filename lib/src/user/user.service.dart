@@ -22,6 +22,8 @@ class UserService {
   DocumentReference get doc =>
       col.doc(Firebase.FirebaseAuth.instance.currentUser?.uid);
 
+  DocumentReference get pointDoc => doc.collection('user_meta').doc('point');
+
   @Deprecated('Use return UserService.instance.get(uid);')
   Future<UserModel> getOtherUserDoc(
     String uid, {
