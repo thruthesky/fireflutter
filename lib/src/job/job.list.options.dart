@@ -129,8 +129,9 @@ class _JobListOptionsState extends State<JobListOptions> {
                       },
                     ),
                   ),
-                  if (options.siNm != '') SizedBox(width: 8),
-                  if (options.siNm != '')
+                  if (options.siNm != '' && options.siNm != 'Sejong')
+                    SizedBox(width: 8),
+                  if (options.siNm != '' && options.siNm != 'Sejong')
                     Expanded(
                       flex: 1,
                       child: DropdownButton<String>(
