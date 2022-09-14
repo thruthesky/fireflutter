@@ -25,7 +25,7 @@ export class Ref {
     return this.db.collectionGroup("user_settings");
   }
 
-  static userSettingsDoc(uid: string, docId: string): admin.firestore.DocumentReference {
+  static userSettingsDoc(uid: string, docId = "settings"): admin.firestore.DocumentReference {
     return this.userSettingsCol(uid).doc(docId);
   }
 
@@ -34,8 +34,8 @@ export class Ref {
   }
 
   static userSubscriptionsDoc(
-      uid: string,
-      subscriptionId: string
+    uid: string,
+    subscriptionId: string
   ): admin.firestore.DocumentReference {
     return this.userSubscriptionsCol(uid).doc(subscriptionId);
   }
@@ -90,14 +90,14 @@ export class Ref {
 
   // Point history folder for post point events.
   static pointLastHistory(
-      uid: string,
-      eventName: string
+    uid: string,
+    eventName: string
   ): admin.firestore.Query<admin.firestore.DocumentData> {
     // console.log(this.pointHistoryCol(uid).path, eventName);
     return this.pointHistoryCol(uid)
-        .where("eventName", "==", eventName)
-        .orderBy("createdAt", "desc")
-        .limit(1);
+      .where("eventName", "==", eventName)
+      .orderBy("createdAt", "desc")
+      .limit(1);
   }
 
   static userMetaPointDoc(uid: string): admin.firestore.DocumentReference {

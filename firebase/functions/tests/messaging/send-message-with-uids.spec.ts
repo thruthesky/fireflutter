@@ -59,14 +59,11 @@ describe("Send message to users", () => {
     });
 
     try {
-      const res = await Messaging.sendMessage(
-        {
-          title: "from cli",
-          body: "to iphone. is that so?",
-          uids: `${userA},${userB}`,
-        },
-        {} as any
-      );
+      const res = await Messaging.sendMessage({
+        title: "from cli",
+        body: "to iphone. is that so?",
+        uids: `${userA},${userB}`,
+      });
       expect(res.success).equals(1);
       expect(res.error).equals(3);
 

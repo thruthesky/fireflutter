@@ -5,9 +5,9 @@ import { FirebaseAppInitializer } from "../firebase-app-initializer";
 
 import { expect } from "chai";
 import { Point } from "../../src/classes/point";
-import { EventName } from "../../src/interfaces/point.interface";
 import { Utils } from "../../src/utils/utils";
 import { Ref } from "../../src/utils/ref";
+import { EventName } from "../../src/event-name";
 
 new FirebaseAppInitializer();
 

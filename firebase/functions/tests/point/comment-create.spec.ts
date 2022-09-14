@@ -13,10 +13,11 @@ import { Test } from "../test";
 // import { Ref } from "../../src/utils/ref";
 // import { Post } from "../../src/classes/post";
 import { User } from "../../src/classes/user";
-import { EventName, pointEvent } from "../../src/interfaces/point.interface";
 import { Utils } from "../../src/utils/utils";
 import { Ref } from "../../src/utils/ref";
 import { Comment } from "../../src/classes/comment";
+import { EventName } from "../../src/event-name";
+import { pointEvent } from "../../src/interfaces/point.interface";
 // import { EventName } from "../../src/interfaces/point.interface";
 
 new FirebaseAppInitializer();
@@ -36,7 +37,7 @@ describe("Point Comment Creation", () => {
     // Two post create but only one got point.
     // Prove it.
     const point = await User.point(comment.uid);
-    expect(point).equals(commentWithPoint.point);
+    expect(point).equals(commentWithPoint!.point);
 
     // Change within and increase point.
     // Set post create `within` time to 1 seconds. and wait 2 seconds.
@@ -47,7 +48,7 @@ describe("Point Comment Creation", () => {
     const cWithPoint = await Comment.get(c.id);
 
     const increased = await User.point(comment.uid);
-    expect(increased).equals((commentWithPoint?.point ?? 0) + (cWithPoint.point ?? 0));
+    expect(increased).equals((commentWithPoint?.point ?? 0) + (cWithPoint!.point ?? 0));
     // console.log(c.uid, increased);
 
     const snapshot = await Ref.pointHistoryCol(comment.uid).get();

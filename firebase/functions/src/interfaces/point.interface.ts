@@ -1,14 +1,10 @@
 import * as admin from "firebase-admin";
+import { EventName } from "../event-name";
 
 export interface PointHistory {
   eventName: string;
   point: number;
   createdAt: admin.firestore.Timestamp;
-}
-
-export class EventName {
-  static postCreate = "post-create";
-  static commentCreate = "comment-create";
 }
 
 export const pointEvent = {

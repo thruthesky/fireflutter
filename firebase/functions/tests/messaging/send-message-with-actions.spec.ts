@@ -50,15 +50,12 @@ describe("Send message by actions", () => {
     });
 
     try {
-      const res = await Messaging.sendMessage(
-        {
-          title: "from cli via action",
-          body: "using action and category",
-          action: action, // post-create
-          category: category,
-        },
-        {} as any
-      );
+      const res = await Messaging.sendMessage({
+        title: "from cli via action",
+        body: "using action and category",
+        action: action, // post-create
+        category: category,
+      });
       console.log("res::", res);
       expect(res.success).equals(1);
       expect(res.error).equals(1);

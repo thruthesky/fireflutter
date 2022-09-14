@@ -1,8 +1,12 @@
 import * as admin from "firebase-admin";
+import { EventName } from "../event-name";
 import { MessagePayload, SendMessage } from "../interfaces/messaging.interface";
+
 import { invalidArgument } from "../utils/library";
 import { Ref } from "../utils/ref";
 import { Utils } from "../utils/utils";
+import { Comment } from "./comment";
+import { User } from "./user";
 
 export class Messaging {
   static async sendMessage(data: any): Promise<any> {
@@ -31,6 +35,7 @@ export class Messaging {
    */
   static async sendMessageByAction(data: any) {
     // Get users who subscribed the subscription
+    // TODO make this a function.
     const snap = await Ref.db
       .collectionGroup("user_subscriptions")
       .where("action", "==", data.action)
@@ -42,16 +47,27 @@ export class Messaging {
     // No users
     if (snap.size == 0) return;
 
-    const uids: string[] = [];
+    let uids: string[] = [];
     for (const doc of snap.docs) {
       uids.push(doc.ref.parent.parent!.id);
     }
+    //
 
-    //// TODO if comment
-    // 1 get ancestral id
-    // 2 check if uid want to receive push message under his comment
+    // Get ancestor's uid
+    if (data.action == EventName.commentCreate) {
+      const ancestors = await Comment.getAncestorsUid(data.id, data.uid);
 
-    console.log("uids::", uids);
+      // Remove ancestors who didn't subscribe for new comment.
+      const subscribers = await this.getNewCommentNotificationUids(ancestors);
+
+      uids = [...uids, ...subscribers];
+    }
+
+    /// remove duplicates
+    uids = [...new Set(uids)];
+
+    //
+    // console.log("uids::", uids);
     const tokens = await this.getTokensFromUids(uids.join(","));
     return this.sendMessageToTokens(tokens, data);
   }
@@ -63,7 +79,10 @@ export class Messaging {
    * @param data data to send push notification.
    * @param context Cloud Functions Callable context
    */
-  static async sendMessageToTokens(tokens: string[], data: any): Promise<{ success: number; error: number }> {
+  static async sendMessageToTokens(
+    tokens: string[],
+    data: any
+  ): Promise<{ success: number; error: number }> {
     // console.log("check user auth with context", context);
     // add login user uid
 
@@ -78,7 +97,11 @@ export class Messaging {
     const multicastPromise = [];
     // Save [sendMulticast()] into a promise.
     for (const _500Tokens of chunks) {
-      const newPayload: admin.messaging.MulticastMessage = Object.assign({}, { tokens: _500Tokens }, payload as any);
+      const newPayload: admin.messaging.MulticastMessage = Object.assign(
+        {},
+        { tokens: _500Tokens },
+        payload as any
+      );
       multicastPromise.push(admin.messaging().sendMulticast(newPayload));
     }
 
@@ -256,5 +279,27 @@ export class Messaging {
     }
 
     return res;
+  }
+
+  /**
+   * Returns an array of uid of the users (from the input uids) who has subscribed for new comment.
+   * The uids of the users who didn't subscribe will be removed on the returned array.
+   * @param uids array of uid
+   * @returns array of uid
+   */
+  static async getNewCommentNotificationUids(uids: string[]): Promise<string[]> {
+    if (uids.length === 0) return [];
+    const promises: Promise<boolean>[] = [];
+    for (const uid of uids) {
+      promises.push(User.commentNotification(uid));
+    }
+    const results = await Promise.all(promises);
+
+    const re = [];
+    // dont add user who has turn off subscription
+    for (let i = 0; i < results.length; i++) {
+      if (results[i]) re.push(uids[i]);
+    }
+    return re;
   }
 }

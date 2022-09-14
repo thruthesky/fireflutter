@@ -13,9 +13,10 @@ import { Category } from "../../src/classes/category";
 // import { Ref } from "../../src/utils/ref";
 import { Post } from "../../src/classes/post";
 import { User } from "../../src/classes/user";
-import { EventName, pointEvent } from "../../src/interfaces/point.interface";
 import { Utils } from "../../src/utils/utils";
 import { Ref } from "../../src/utils/ref";
+import { EventName } from "../../src/event-name";
+import { pointEvent } from "../../src/interfaces/point.interface";
 // import { EventName } from "../../src/interfaces/point.interface";
 
 new FirebaseAppInitializer();

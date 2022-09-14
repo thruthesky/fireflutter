@@ -72,6 +72,31 @@ export class Test {
     });
     return Post.get(postRef.id);
   }
+  /**
+   * Creates a comment
+   * @param uid user uid
+   * @param category forum category
+   * @param data data to create
+   * @returns comment document
+   *
+   * @example Creating a comment under a randomly generated post.
+   * ```
+   * const commentA = await Test.createComment(undefined, "qna");
+   * ```
+   *
+   * @example Creating a comment under another comment
+   * ```
+   * const commentAA = await Test.createComment(undefined, "qna", {
+   *   postId: commentA.postId,
+   *   parentId: commentA.id,
+   * });
+   * ```
+   *
+   * @example Create a comment under a post
+   * ```
+   * await Test.createComment(undefined, "qna", { postId: commentA.postId });
+   * ```
+   */
   static async createComment(
     uid?: string,
     category?: string,
@@ -95,8 +120,9 @@ export class Test {
       uid: uid,
       postId: post.id,
       createdAt: amdin.firestore.FieldValue.serverTimestamp(),
+      ...data,
     });
 
-    return await Comment.get(ref.id); // (await ref.get()).data() as CommentDocument;
+    return (await Comment.get(ref.id)) as CommentDocument;
   }
 }
