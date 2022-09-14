@@ -7,7 +7,7 @@
 - [해야 할 것](#해야-할-것)
 - [프로젝트 개요](#프로젝트-개요)
   - [이슈 및 문제 해결](#이슈-및-문제-해결)
-  - [데이터베이스](#데이터베이스)
+  - [데이터베이스 - Firestore 와 Realtime Database](#데이터베이스---firestore-와-realtime-database)
 - [외부 패키지 목록](#외부-패키지-목록)
 - [기능 별 데이터 구조](#기능-별-데이터-구조)
   - [사용자](#사용자)
@@ -49,9 +49,8 @@
 
 # 해야 할 것
 
-- Mixin 이 안좋다. Service 로 모두 변경한다.
-
-
+- 보안 규칙 설명
+- Cloud Functions 설명
 
 
 - 플러터코리아 앱을 https://flutterkorea.co.kr 로 연결하고, 최대한 빠르게 배포한다.
@@ -80,14 +79,16 @@
 
 - [Github Issues](https://github.com/users/thruthesky/projects/6)에 이슈를 등록해주세요.
 
-## 데이터베이스
+## 데이터베이스 - Firestore 와 Realtime Database
 
-- Firestore 위주로 데이터를 저장하며, Realtime Database 는 백업 용도로 쓴다.
+- Firestore 위주로 데이터를 저장한다.
   - 참고로, (2022년 9월 6일 환율 기준) Firestore 100만 문서 읽기에 약 520원 정도하며, Realtime Database 는 읽기/쓰기에 드는 비용이 없이 무료이다.
+  - Firestore 가 문서 저장과 읽기에 비용이 발생하지만, 감당해야하는 부분이며, 최소한의 읽기(비용 지출)를 위해서 최대한의 메모리 캐시를 한다.
 - Realtime Database 는 Firestore 에 비해 상대적으로 저렴하여 적극 활용 할 필요가 있다. Realtime Database 사용하는 경우는
   - 백업. Realtime Database 는 자동으로 백업을 하는 기능이 있다. 따라서 Firestore 의 데이터를 Realtime Database 에 집어 넣어 백업을 할 수 있다. 그 외 데이터 백업이 필요한 경우.
-  - 데이터를 저장만 하는 것이 아니라, 읽어야 하는 경우에는 Realtime Database 를 사용하지 않는다.
-- Firestore 가 문서 저장과 읽기에 비용이 발생하지만, 감당해야하는 부분이며, 최소한의 읽기(비용 지출)를 위해서 최대한의 메모리 캐시를 한다.
+  - 단순히 데이터를 저장하고 읽는 것이 아니라, 조건을 통해서 검색(목록) 해야 하는 경우에는 Realtime Database 를 사용하지 않는다.
+
+
 
 
 
