@@ -39,6 +39,14 @@
       "deviceId": "00008030-000904C80290802E"
     },
     {
+      "name": "Wonderful Korea - Ace's Phone",
+      "cwd": "apps/wonderfulkorea",
+      "program": "lib/main.dart",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "9c59f12e"
+    },
+    {
       "name": "Simulator - iPhone 13 Pro Max - Macbook",
       "cwd": "apps/wonderfulkorea",
       "program": "lib/main.dart",
