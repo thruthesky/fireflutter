@@ -48,12 +48,13 @@ class _JobEditFormState extends State<JobEditForm> {
 
   init() async {
     final snapshot = await Job.jobCol
-        .where('uid', isEqualTo: UserService.instance.uid)
+        // .where('uid', isEqualTo: UserService.instance.uid)
+        .doc(UserService.instance.uid)
         .get();
-    if (snapshot.size > 0) {
+    if (snapshot.exists) {
       job = JobModel.fromJson(
-        snapshot.docs.first.data() as Map<String, dynamic>,
-        snapshot.docs.first.id,
+        snapshot.data() as Map<String, dynamic>,
+        snapshot.id,
       );
       address = AddressModel.fromMap(job.toUpdate);
       detailedAddress.text = job.detailAddress;
