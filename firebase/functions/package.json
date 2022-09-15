@@ -7,7 +7,7 @@
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "npm run lint -- --fix && npm run build && firebase deploy --only functions:success,functions:throwInvalidArgument,functions:pointIncreaseOnPostCreate,functions:pointIncreaseOnCommentCreate,functions:sendMessage,functions:messagingOnPostCreate",
+    "deploy": "npm run lint -- --fix && npm run build && firebase deploy --only functions:success,functions:throwInvalidArgument,functions:pointIncreaseOnPostCreate,functions:pointIncreaseOnCommentCreate,functions:sendMessage,functions:messagingOnPostCreate,functions:messagingOnCommentCreate",
     "logs": "firebase functions:log",
     "lab": "ts-node",
     "test": "mocha --timeout 20000 --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts"

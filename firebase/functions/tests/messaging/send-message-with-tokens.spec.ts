@@ -17,7 +17,7 @@ describe("Send message to token", () => {
     try {
       const res = await Messaging.sendMessage({
         title: "from cli - android (12)",
-        body: "to iphone. is that so?",
+        content: "to iphone. is that so?",
         tokens: [
           "d0E3XJUaTiG2yzPiJBqXIu:APA91bGyNzZEQrwJBKYM31liTXOnujGkzKW8akmfG55f146DtM2Rx61IaAnyTGvENsXrM9V69tPlknA1e4tRZcSvxlntAjDVBQXvmzaQVzJXWOwiWOIz9tE2kMoiuiABQsttoC-fEZZx",
           "e7aDJhxtQRq0DOCKbhVR3b:APA91bEp82cV0YBpIQscegkexGKDbMqM7nxrcAiOaH5AXV_YEcISGg0er9fiFeDMA4KYbEspT8KQyTzsmpOLpFZrRaFcdovTwwV-W9ePEFdhK6TmJMvzy0N3bfWDhSox4A9iQK00luT8",

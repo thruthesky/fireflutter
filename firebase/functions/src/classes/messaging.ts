@@ -34,10 +34,17 @@ export class Messaging {
    * @returns
    */
   static async sendMessageByAction(data: any) {
+    console.log(`sendMessageByAction(${JSON.stringify(data)})`);
+
+    if (!data.action) {
+      console.log("---> no action. throw error.");
+      throw Error("No action on data.");
+    }
+
     // Get users who subscribed the subscription
     // TODO make this a function.
     const snap = await Ref.db
-        .collectionGroup("user_subscriptions")
+        .collectionGroup("user_settings")
         .where("action", "==", data.action)
         .where("category", "==", data.category)
         .get();
@@ -69,6 +76,7 @@ export class Messaging {
     //
     // console.log("uids::", uids);
     const tokens = await this.getTokensFromUids(uids.join(","));
+
     return this.sendMessageToTokens(tokens, data);
   }
 
@@ -83,16 +91,21 @@ export class Messaging {
       tokens: string[],
       data: any
   ): Promise<{ success: number; error: number }> {
-    // console.log("check user auth with context", context);
+    console.log(`sendMessageToTokens() token.length: ${tokens.length}`);
+    if (tokens.length == 0) {
+      console.log("sendMessageToTokens() no tokens. so, just return results.");
+      return { success: 0, error: 0 };
+    }
     // add login user uid
 
     data.senderUid = data.uid;
 
     const payload = this.completePayload(data);
-    if (tokens.length == 0) return { success: 0, error: 0 };
 
     // sendMulticast() supports 500 tokens at a time. Chunk and send by batches.
     const chunks = Utils.chunk(tokens, 500);
+
+    console.log(`sendMessageToTokens() chunks.length: ${chunks.length}`);
 
     const multicastPromise = [];
     // Save [sendMulticast()] into a promise.
@@ -135,7 +148,9 @@ export class Messaging {
       await this.removeTokens(failedTokens);
 
       // 결과 리턴
-      return { success: successCount, error: failureCount };
+      const results = { success: successCount, error: failureCount };
+      console.log(`sendMessageToTokens() results: ${JSON.stringify(results)}`);
+      return results;
     } catch (e) {
       console.log("---> caught on sendMessageToTokens() await Promise.allSettled()", e);
       throw e;
@@ -220,10 +235,25 @@ export class Messaging {
    * @param query query data that has payload information
    * @returns an object of payload
    */
-  static completePayload(query: SendMessage) {
-    // query = this.checkQueryPayload(query);
-    if (!query.title) throw invalidArgument("title-is-empty");
-    if (!query.body) throw invalidArgument("body-is-empty");
+  static completePayload(query: SendMessage): MessagePayload {
+    console.log(`completePayload(${JSON.stringify(query)})`);
+
+    if (!query.title) {
+      console.log("completePayload() throws error: title-is-empty.)");
+      throw Error("title-is-empty");
+    }
+
+    // If body is empty and content has value, then use content as body.
+    // This may help on event trigger of `post create` and `comment create`.
+    if (!query.body && query.content) {
+      query.body = query.content;
+    }
+
+    if (!query.body) {
+      console.log(`completePayload() throws error: body-is-empty: (${JSON.stringify(query)})`);
+      throw Error("body-is-empty");
+    }
+
     const res: MessagePayload = {
       data: {
         id: query.id ?? "",
@@ -277,6 +307,8 @@ export class Messaging {
     if (query.badge != null) {
       res.apns.payload.aps["badge"] = parseInt(query.badge);
     }
+
+    console.log(`completePayload() return value: ${JSON.stringify(res)}`);
 
     return res;
   }

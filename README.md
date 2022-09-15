@@ -7,6 +7,7 @@
 - [해야 할 것](#해야-할-것)
 - [프로젝트 개요](#프로젝트-개요)
   - [이슈 및 문제 해결](#이슈-및-문제-해결)
+  - [버전 업그레이드 진행 상황](#버전-업그레이드-진행-상황)
   - [데이터베이스 - Firestore 와 Realtime Database](#데이터베이스---firestore-와-realtime-database)
 - [외부 패키지 목록](#외부-패키지-목록)
 - [기능 별 데이터 구조](#기능-별-데이터-구조)
@@ -87,7 +88,12 @@
 
 ## 이슈 및 문제 해결
 
-- [Github Issues](https://github.com/users/thruthesky/projects/6)에 이슈를 등록해주세요.
+- 만약, FireFlutter 를 이용하면서 어려운 점이 있으면 [Github Issues](https://github.com/thruthesky/fireflutter/issues)에 이슈를 등록해주세요.
+
+
+## 버전 업그레이드 진행 상황
+
+- [FireFlutter 0.x 버전 진행 상황](https://github.com/users/thruthesky/projects/6)
 
 ## 데이터베이스 - Firestore 와 Realtime Database
 
