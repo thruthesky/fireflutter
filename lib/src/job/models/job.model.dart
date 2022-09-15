@@ -161,7 +161,7 @@ class JobModel {
   /// User can only create 1 job, and update it.
   Future edit() async {
     if (id == '') {
-      return await Job.jobCol.add({
+      return await Job.jobCol.doc(UserService.instance.uid).set({
         ...toCreate,
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),

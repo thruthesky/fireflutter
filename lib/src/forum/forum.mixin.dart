@@ -210,7 +210,6 @@ mixin ForumMixin {
                         onPressed: () async {
                           try {
                             if (category == null) {
-                              /// TODO 카테고리 생성시 개발자가 적절하게 추가 항목을 입력 할 수 있도록 한다.
                               await CategoryModel().create(
                                 category: categoryId.text,
                                 title: categoryTitle.text,
