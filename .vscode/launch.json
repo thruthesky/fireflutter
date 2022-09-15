@@ -50,7 +50,8 @@
     {
       "name": "Integration Test - Simulator Max Pro 13",
       "cwd": "apps/wonderfulkorea",
-      "program": "integration_test/simple_test.dart",
+      // "program": "integration_test/simple_test.dart",
+      "program": "integration_test/all_test.dart",
       "request": "launch",
       "type": "dart",
       "deviceId": "ECE40623-ACC2-4729-8DD4-B3DBB46D4B25",
@@ -59,13 +60,21 @@
     {
       "name": "Integration Test - Emulator",
       "cwd": "apps/wonderfulkorea",
-      "program": "integration_test/simple_test.dart",
+      // "program": "integration_test/simple_test.dart",
+      "program": "integration_test/all_test.dart",
       "request": "launch",
       "type": "dart",
       "deviceId": "emulator-5554",
       "args": ["--dart-define", "mode=test"]
     },
-
+    {
+      "name": "Integration Test - Ace's Phone",
+      "program": "integration_test/all_test.dart",
+      "cwd": "apps/wonderfulkorea",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "9c59f12e"
+    },
     {
       "name": "example - Emulator - 5554",
       "cwd": "example",
@@ -74,7 +83,6 @@
       "type": "dart",
       "deviceId": "emulator-5554"
     },
-
     {
       "name": "example - Simulator - iPhone 13 Pro Max - iMac",
       "cwd": "example",
@@ -150,13 +158,5 @@
       "deviceId": "chrome",
       "flutterMode": "debug"
     },
-    {
-      "name": "WK Integration test | Emulator 5554",
-      "program": "integration_test/all_test.dart",
-      "cwd": "apps/wonderfulkorea",
-      "request": "launch",
-      "type": "dart",
-      "deviceId": "emulator-5554"
-    }
   ]
 }
