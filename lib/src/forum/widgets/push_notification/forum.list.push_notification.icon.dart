@@ -211,13 +211,6 @@ class _ForumListPushNotificationIconState
       await UserService.instance.settings.doc(topic).delete();
     }
 
-    // await _.settings.toggleSubscription(
-    //   topic,
-    //   'forum',
-    // );
-    // return widget.onChanged(
-    //   selection,
-    //   _.settings.hasSubscription(topic, 'forum'),
-    // );
+    widget.onChanged(selection, subscribe);
   }
 }
