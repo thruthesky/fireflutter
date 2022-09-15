@@ -6,10 +6,12 @@ import 'package:fireflutter/fireflutter.dart';
 
 /// README
 class RecentPostCard extends StatelessWidget with ForumMixin {
-  const RecentPostCard({super.key, this.category, this.hasPhoto = true});
+  const RecentPostCard(
+      {super.key, this.category, this.hasPhoto = true, this.onTap});
 
   final String? category;
   final bool hasPhoto;
+  final Function(PostModel)? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class RecentPostCard extends StatelessWidget with ForumMixin {
 
         final post = snapshot.data!.docs.first.data();
         return GestureDetector(
-          onTap: () => {},
+          onTap: onTap == null ? null : () => onTap!(post),
           behavior: HitTestBehavior.opaque,
           child: Stack(
             children: [

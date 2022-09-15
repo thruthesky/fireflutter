@@ -57,6 +57,7 @@
 - [위젯](#위젯)
   - [DocumentBuilder](#documentbuilder)
   - [Admin](#admin)
+  - [RecentPostCard - 사진이 있는 최근 글 카드로 보여주기](#recentpostcard---사진이-있는-최근-글-카드로-보여주기)
 - [실험 코드](#실험-코드)
 - [문제 해결](#문제-해결)
   - [인덱스 문제](#인덱스-문제)
@@ -970,6 +971,21 @@ DocumentBuilder(
 
 
 
+## RecentPostCard - 사진이 있는 최근 글 카드로 보여주기
+
+- 가장 최근에 작성된 글 중에서 사진이 있는 글을 가져와 Card 형식으로 보여준다.
+  - 특정 카테고리를 지정할 수 있으며, onTap 이벤트를 통해서 사용자가 탭을 하면, 원하는 동작을 할 수 있다.
+  - `RecentPostCard` 위젯의 소스 코드를 복사해서 원하는데로 커스터마이징을 해도 좋다.
+
+- 아래의 예제는 카드를 탭하면 글 읽기 스크린으로 이동한다.
+
+예제)
+```dart
+RecentPostCard(
+  category: 'discussion',
+  onTap: (post) => router.push('${PostViewScreen.routeName}?id=${post.id}'),
+),
+```
 
 # 실험 코드
 
