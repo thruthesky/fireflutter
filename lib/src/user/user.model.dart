@@ -25,8 +25,8 @@ class UserModel {
 
   String photoUrl = '';
 
-  /// [email] 은 FirebaseAuth 의 email 을 그대로 사용한다.
-  String get email => auth.currentUser?.email ?? '';
+  /// [email] 은 FirebaseAuth 의 email 을 우선 순위로 사용하며, 만약 이 값이 없으면, 사용자 문서에 email 있으면 그 값을 사용한다.
+  String email = '';
 
   /// [phoneNumber] 는 FirebaseAuth 의 phoneNumber 를 그대로 사용한다.
   String get phoneNumber => auth.currentUser?.phoneNumber ?? '';
@@ -95,6 +95,12 @@ class UserModel {
   setProperties(dynamic data, String uid) {
     this.uid = uid;
     if (data == null) return;
+
+    /// FirebaseAuth.email 에 메일 주소가 있으면 그것을 먼저 사용하고, 없으면 사용자 문서의 email 주소를 사용한다.
+    email = (auth.currentUser?.email ?? '') == ''
+        ? (data['email'] ?? '')
+        : auth.currentUser?.email;
+
     firstName = data['firstName'] ?? '';
     lastName = data['lastName'] ?? '';
     middleName = data['middleName'] ?? '';

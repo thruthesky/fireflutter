@@ -86,7 +86,7 @@ class PhoneService {
     /// 참고: https://docs.google.com/document/d/12sZ8VTryUiPsjCu7c1iqXQCoNbF5qiUlrmhWxP7DGjM/edit#heading=h.uzwakaird0ci
 
     try {
-      final re = await UserService.instance
+      final re = await FunctionsApi.instance
           .phoneNumberExists(PhoneService.instance.completeNumber);
 
       if (re) {

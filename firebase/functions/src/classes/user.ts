@@ -1,4 +1,5 @@
 import * as admin from "firebase-admin";
+import { UserRecord } from "firebase-functions/v1/auth";
 import { UserDocument } from "../interfaces/user.interface";
 import { Ref } from "../utils/ref";
 
@@ -85,5 +86,20 @@ export class User {
     const data = snapshot.data();
     if (data === void 0) return false;
     return data["notify-new-comment-under-my-posts-and-comments"] ?? false;
+  }
+
+  /**
+   * 입력된 전화번호로 가입된 사용자 정보를 리턴. 사용자 문서가 아니라, Firebase Auth User Record 를 리턴한다.
+   *
+   * @param phoneNumber user's phone number
+   * @return UserRecord or null.
+   */
+  static async getUserByPhoneNumber(phoneNumber: string): Promise<UserRecord | null> {
+    try {
+      const UserRecord = await Ref.auth.getUserByPhoneNumber(phoneNumber);
+      return UserRecord;
+    } catch (e) {
+      return null;
+    }
   }
 }

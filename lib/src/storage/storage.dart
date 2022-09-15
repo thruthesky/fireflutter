@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 
@@ -105,9 +106,10 @@ class Storage {
     }
 
     /// Wait for upload to finish.
-    await uploadTask
-        .whenComplete(() => _sub?.cancel())
-        .catchError((e) => throw Exception(e));
+    await uploadTask.whenComplete(() => _sub?.cancel()).catchError((e) {
+      log("ref.fullPath: ${ref.fullPath}");
+      throw Exception(e);
+    });
 
     final url = await ref.getDownloadURL();
 

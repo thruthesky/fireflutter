@@ -6,7 +6,7 @@
 - [FireFlutter v0.3](#fireflutter-v03)
 - [해야 할 것](#해야-할-것)
 - [프로젝트 개요](#프로젝트-개요)
-  - [이슈 및 문제 해결](#이슈-및-문제-해결)
+  - [이슈 및 문의](#이슈-및-문의)
   - [버전 업그레이드 진행 상황](#버전-업그레이드-진행-상황)
   - [데이터베이스 - Firestore 와 Realtime Database](#데이터베이스---firestore-와-realtime-database)
 - [외부 패키지 목록](#외부-패키지-목록)
@@ -16,6 +16,7 @@
   - [글](#글)
 - [Fireflutter 초기화](#fireflutter-초기화)
 - [사용자 로그인](#사용자-로그인)
+  - [전화번호 로그인](#전화번호-로그인)
 - [사용자 정보 보여주기](#사용자-정보-보여주기)
 - [사진(파일) 업로드](#사진파일-업로드)
   - [업로드된 사진 보여주기](#업로드된-사진-보여주기)
@@ -24,6 +25,7 @@
   - [사용자 설정 관련 함수](#사용자-설정-관련-함수)
 - [글](#글-1)
   - [글 생성](#글-생성)
+    - [글 생성 로직 예](#글-생성-로직-예)
     - [글 생성 위젯 - PostForm](#글-생성-위젯---postform)
   - [글 가져오기](#글-가져오기)
   - [글 목록 가져오기](#글-목록-가져오기)
@@ -37,14 +39,18 @@
   - [푸시 알림 코딩](#푸시-알림-코딩)
   - [푸시 알림 구독](#푸시-알림-구독)
 - [클라우드 함수](#클라우드-함수)
+  - [FunctionsApi](#functionsapi)
   - [유닛 테스트](#유닛-테스트)
   - [클라우드 함수 Deploy](#클라우드-함수-deploy)
   - [플러터에서 클라우드 함수 호출](#플러터에서-클라우드-함수-호출)
   - [푸시 알림 사운드](#푸시-알림-사운드)
+  - [클라우드 함수 설명](#클라우드-함수-설명)
+    - [전화번호로 가입된 사용자 UID 찾기](#전화번호로-가입된-사용자-uid-찾기)
 - [Firestore 보안 규칙](#firestore-보안-규칙)
   - [관리자 지정](#관리자-지정)
   - [게시판](#게시판)
 - [에러 핸들링](#에러-핸들링)
+- [Firestore 인덱싱](#firestore-인덱싱)
 - [포인트와 레벨](#포인트와-레벨)
   - [포인트 설정](#포인트-설정)
   - [Common Fitfalls](#common-fitfalls)
@@ -52,6 +58,8 @@
   - [DocumentBuilder](#documentbuilder)
   - [Admin](#admin)
 - [실험 코드](#실험-코드)
+- [문제 해결](#문제-해결)
+  - [인덱스 문제](#인덱스-문제)
 
 
 # 해야 할 것
@@ -59,6 +67,10 @@
 - 보안 규칙 설명
 - Cloud Functions 설명
 
+- `ForumMixin` 을 `ForumService` 로 변경한다. 통일된 코딩 방식이 필요하다.
+
+
+- 관리자의 경우 글 쓰기 양식에서 Document ID 를 직접 지정하고, 활용 할 수 있도록 한다. 기능이 있지만 잘 동작하는 지 확인한다.
 
 - 플러터코리아 앱을 https://flutterkorea.co.kr 로 연결하고, 최대한 빠르게 배포한다.
   - 그리고, FlutterFlow 로 연결해서, 강좌 앱을 만들도록 한다.
@@ -86,7 +98,7 @@
 - 파이어베이스 데이터베이스는 NoSQL, Flat Style 구조를 가진다.
   - 그래서, Entity Relationship 을 최소화한다.
 
-## 이슈 및 문제 해결
+## 이슈 및 문의
 
 - 만약, FireFlutter 를 이용하면서 어려운 점이 있으면 [Github Issues](https://github.com/thruthesky/fireflutter/issues)에 이슈를 등록해주세요.
 
@@ -243,6 +255,18 @@ ObserveUserDoc[UserService.instance.user\n사용자 모델 DB 동기화 시작\n
   - 사용자의 정보 표현이 필요한 곳에서는 `MyDoc` 위젯을 사용한다.
   - 만약, (문서 읽기 회 수를 줄이기 위해) 사용자 문서를 미리 읽어 재 활용하고자 한다면, 클라이언트 앱에서 한다.
 
+
+## 전화번호 로그인
+
+- FireFlutter 에서는 Firebase Auth 를 통한 로그인만 지원한다. 예를 들면, Anonymous, Email/password, Phone Number, Google, Apple 등의 로그인을 지원한다. 이 중에 한가지로 로그인을 하면 FireFlutter 에서 내부적으로 로그인을 감지하여 동작을 한다.
+
+- FireFlutter 에서는 기본적으로 Phone Number 로그인을 지원하며, 관련된 Service 와 Widget 을 제공한다.
+  - FireFlutter 에서 제공하는 Phone Number 로그인 서비스를 이용하면,
+    - 앱을 처음 실행하면 로그인을 하지 않은 상태인데 이 때에는 자동으로 Anonymous 계정으로 로그인을 한다.
+    - 그리고 사용자가 처음 사용하는 (이미 가입되어 있지 않은) 전화번호 로그인을 하면, 기존에 사용하던 Anonymous 계정과 (그 Anonymous 계정의 각종 설정을 linkWithCredential 을 통해) 합친다.
+      - 만약, Anonymous 계정에서 기존에 존재하는 (이미 가입되어져 있는) 전화번호로 로그인을 하면, Anonymous 의 계정을 버린다.
+    - 내부적으로 `PhoneService.instance.verifyCredential()` 에서 전화번호가 이미 가입되저 있는지
+    `FunctionsApi.instance.phoneNumberExists()` 로 확인을 해서, 사용자가 로그인을 위해서 입력한 전화번호가 이미 가입되어져 있으면 `signInWithCredential()` 로 로그인을 하고 아니면, 즉 새로운 전화번호이면 이미 로그인 한 Anonymous 계정과 합치기 위해서, `linkWithCredential()` 을 사용한다.
 
 # 사용자 정보 보여주기
 
@@ -441,8 +465,17 @@ Widget build(BuildContext context) {
 
 ## 글 생성
 
-- 글을 작성하기 위해서는 `PostModel.create()` 함수를 호출하면 된다.
-- `ForumMixin` mixin 의 `onPostEdit`
+- 글을 작성하기 위해서는 `PostModel.create()` 함수를 호출하여 글을 작성하면 된다. 
+- 게시판 관련 helper 클래스 `ForumMixin` mixin 을 통해서 여러가지 기능을 간편하게 사용 할 수 있다. 또한 게시판 관련해서 기본적으로 제공되는 위젯을 통해서 간편하게 게시판 관련 기능을 작성 할 수 있다.
+
+
+### 글 생성 로직 예
+
+- 먼저, 글 목록 페이지 헤더(타이틀)에 글 생성 버튼을 추가한다.
+- 글 생성 버튼을 클릭하면, 새로운 스크린을 여는 것이 아니라, 그냥 full screen dialog 를 통해서 글 작성 폼을 보여주고, 글 쓰기가 완료되면 dialog 를 닫는다.
+  - 예) 글 생성 버튼을 클릭하면 `ForumMixin` 의 `onPostEdit` 함수를 호출하면 full screen dialog 가 열린다.
+  - 참고로, `onPostEdit` 은 내부적으로 FireFlutter 의 `PostForm` 위젯을 사용하여 글 쓰기 폼을 보여준다.
+
 
 ### 글 생성 위젯 - PostForm
 
@@ -629,8 +662,11 @@ FlutterFlow 에는 없는 `uid` 를 추가했다. 이를 통해서 필요에 따
 
 # 클라우드 함수
 
-- 클라우드 함수를 최소한으로 작성하려고 하지만, 꼭 필요한 경우가 있다.
-  - 예를 들면, 푸시 알림을 보낼 때, 레거시 키로 작업을 하기에는 한계가 있다. [푸시 알림](#푸시-알림) 참고.
+- 클라우드 함수를 최소한으로 작성하려고 하지만, 어쩔 수 없이 사용해야하는 꼭 필요한 경우가 있다.
+  - 예를 들면, 사용자 전화번호가 이미 가입되어져 있는지 확인을 해서, 가입되어져 있지 않은 전화번호이면 기존 사용중인 Anonymous 계정과 합쳐야 하는데, 사용자 전화번호는 민감한 개인 정보이어서 Firebase DB 에 보관 할 수 없다. 또한 보안 규칙에서 읽기로 허용 할도 없다. 클라이언트에서 확인 할 수 있는 방법도 없으며, 이와 같은 경우에는 반드시 클라우드 함수를 써야만 한다.
+  - 또 다른 예를 들면, 푸시 알림을 보낼 때, 클라이언트에서 레거시 키로 작업을 하기에는 한계가 있어 클라우드 함수에서 작업하는 것이 적당하다. [푸시 알림](#푸시-알림) 참고.
+
+- 클라우드 함수에는 `Background functions(event triggers)`, `Call Functions from App`, `Call functions via HTTP requests` 와 같이 세 가지 방식이 있으며 이 세가지 모두 사용을 하고 있다.
 
 - 클라우드 함수를 작업 할 때에는 필연적으로 유닛 테스트가 따라 온다. 유닛 테스트를 손 쉽게 하기 위해서 기본적인 코드를 로컬 컴퓨터에서 수정하면 바로 테스트 결과를 볼 수 있도록 작성한다. 이렇게 하기 위해서는 Firebase 의 service account 를 다운로드해서 아래와 같이 `./firebase/functions/credentials/test.service-account.ts` 로 저장을 한다.
   - 참고, 로컬 컴퓨터에서 테스트를 할 때에는 관리자 권한이 없어 service account 가 필요한 것이다. 클라우드 함수로 등록되어 실행 될 때에는 service account 없이도 (모든 권한은 아니지만) 권한이 주어져 있어 괜찮다.
@@ -652,6 +688,17 @@ export const credentials = {
 
 - 테스트가 끝나고 클라우드 함수로 실행 될 수 있도록 wrapping 한 함수를 함수를 파이어베이스에 올려서 잘 되는지 확인을 하면 된다.
 
+
+## FunctionsApi
+
+- `FunctionsApi` 는 `Call functions via HTTP requests` 를 통해서 Cloud Functions 를 사용 할 때, 도움이 되는 helper class 이다. 
+- `FunctionsApi` 를 사용하기 위해서는 `init()` 를 통해서, Cloud Functions 의 서버 URL 을 기록 해 주어야 한다.
+예제)
+```dart
+FunctionsApi.instance.init(
+  serverUrl: "https://asia-northeast3-xxxxxxx.cloudfunctions.net/",
+);
+```
 
 ## 유닛 테스트
 
@@ -709,6 +756,50 @@ try {
 
 
 
+## 클라우드 함수 설명
+
+### 전화번호로 가입된 사용자 UID 찾기
+
+- `getUserUidFromPhoneNumber` 함수에 전화번호를 전달하면 사용자의 UID 값을 가져올 수 있는데, 전화 번호가 이미 가입되어져 있는지 확인 하고자 할 때 사용 할 수 있다.
+- 전화번호는 `E.164` 포멧이어야 한다.
+  - 형식) `+[국가코드][국번][전화번호]`
+  - 예) `+821012345678`
+
+예제)
+```text
+https://xxx.cloudfunctions.net/getUserUidFromPhoneNumber?phoneNumber=%2B11111111111
+```
+
+결과)
+```json
+{
+  "uid": "jAXh1SngnafzPikQM0jpzKO3yj73"
+}
+```
+
+- 전화번호가 이미 사용되고 있으면(가입되어져 있으면) 해당 사용자의 UID 를 {uid: '...'} 와 같이 리턴한다.
+  - 만약, 입려된 전화번호로 가입된 사용자가 없으면 uid 에는 빈 문자열이 리턴된다.
+
+예제)
+```
+https://.../getUserUidFromPhoneNumber
+```
+- 위 예제에는 전화번호를 전달해주지 않았다. 그래서 회원 정보를 찾지 못하며, 결과 같은 `{uid: ""}` 와 같이 빈 uid 값이 서버에서 클라이언트로 전달된다.
+예제)
+```
+https://.../getUserUidFromPhoneNumber?phoneNumber=+11111111111
+```
+- 위 예제에서 문제는 기호 `+` 를 Web URL 로 전달하면, 공백으로 변경되린다. 그래서 올바른 전화번호로 인식되지 않아 회원 정보를 찾지 못한다. 그래서 `{uid: ""}` 와 같이 빈 uid 값이 서버로 부터 클라이언트로 전달된다.
+
+예제)
+```
+https://.../getUserUidFromPhoneNumber?phoneNumber=%2B11111111111
+```
+- 위 예제와 같이 기호 `+` 를 `%2B` 로 변경해서 서버로 전달해 주면 `+` 기호를 올바로 인식한다.
+
+
+
+
 # Firestore 보안 규칙
 
 
@@ -751,6 +842,17 @@ FireFlutterService.instance.init(
   },
 );
 ```
+
+
+# Firestore 인덱싱
+
+- (인덱싱이 필요한데) 인덱싱이 되지 않은 쿼리를 할 때, Firestore 는 인덱스를 생성할 수 있는 link 와 함께 인덱싱을 하라는 에러를 낸다. 그 link 를 클릭해서 인덱스를 생성하면 된다.
+  - 클라이언트 앱 개발을 할 때, 개발자 콘솔에 에러 메시지가 표시되어 인덱싱이 되지 않은 경우, 보다 쉽게 인덱스를 생성 할 수 있는데, Cloud Functions 에서 쿼리를 할 때, 인덱스가 생성되지 않았다는 에러가 발생하면, GCP 의 로그에서 확인을 해야 하기 때문에, 인덱스가 생성되지 않아서 발생하는 에러를 발견하기 어렵다. 따라서, 클라우드 함수의 기능이 올바로 동작하지 않는 경우, GCP 로그를 확인해서 인덱스 문제가 발생하는지 살펴봐야 한다.
+
+- 설치 항목에 나오는데로 준비된 Firestore Indexes 를 설정하면 된다.
+
+
+
 
 
 # 포인트와 레벨
@@ -828,3 +930,14 @@ DocumentBuilder(
 - 개발을 진행 함에 있어서 데이터 구조 변경이 필요한 경우가 있다. 그와 같은 경우 기존의 데이터 포맷을 새로운 데이터 포맷에 맞게 포팅을 해야하는데, 그러한 포팅 작업(소스 코드 작업)을 `<project>/firebase/lab` 폴더에서 하면 된다.
 - 실행은
   - `% npm run lab porting/porting-user-data.ts` 와 같이 실행을 하면 된다.
+
+
+
+
+
+# 문제 해결
+
+## 인덱스 문제
+
+- Cloud functions 이 제대로 동작하지 않으면, 로그를 살펴봐야하는데, 만약 GCP 콘솔에서 `FAILED_PRECONDITION: The query requires ... index ...` 와 같은 에러 메시지를 보면 인덱싱이 안된 경우이다. 해당 link 로 접속해서 인덱싱을 생성하면 된다.
+

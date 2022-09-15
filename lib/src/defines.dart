@@ -12,6 +12,10 @@ enum UploadType { userProfilePhoto, user, post, comment, chat, party }
 
 enum ReportTarget { post, comment, user, chat }
 
+class FunctionName {
+  static const String getUserUidFromPhoneNumber = 'getUserUidFromPhoneNumber';
+}
+
 const ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD =
     'Please, sign in first before uploading.';
 const ERROR_SIGN_IN_FIRST_FOR_POST_CREATE =

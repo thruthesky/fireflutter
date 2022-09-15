@@ -13,6 +13,15 @@
       "deviceId": "emulator-5554"
     },
     {
+      "name": "WonderfulKorea (JaeHo) - Galaxy W 3",
+      "cwd": "apps/wonderfulkorea",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "KEY=VALUE"],
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "3300a275cab914b9"
+    },
+    {
       "name": "ASUS J8AXB761J32888A",
       "cwd": "apps/wonderfulkorea",
       "program": "lib/main.dart",
@@ -157,6 +166,6 @@
       "type": "dart",
       "deviceId": "chrome",
       "flutterMode": "debug"
-    },
+    }
   ]
 }

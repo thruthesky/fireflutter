@@ -1,5 +1,9 @@
 import * as admin from "firebase-admin";
 export class Ref {
+  static get auth(): admin.auth.Auth {
+    return admin.auth();
+  }
+
   static get db(): admin.firestore.Firestore {
     return admin.firestore();
   }
