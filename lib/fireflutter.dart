@@ -104,3 +104,6 @@ export 'src/widgets/input.dart';
 export 'src/auth/phone/phone.service.dart';
 export 'src/auth/phone/phone_number_input.dart';
 export 'src/auth/phone/sms_code_input.dart';
+
+/// Widgets
+export 'src/widgets/recent_post_card.dart';

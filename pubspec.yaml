@@ -35,7 +35,7 @@ dependencies:
   photo_view: ^0.14.0
 
   # Caching uploaded image
-  cached_network_image: ^3.2.0
+  cached_network_image: ^3.2.2
 
   # PhoneNumberInput widget
   country_code_picker: ^2.0.2
@@ -110,6 +110,7 @@ dependencies:
   infinite_scroll_pagination: ^3.2.0
 
   mime: ^1.0.2
+
 
 dev_dependencies:
   flutter_test:

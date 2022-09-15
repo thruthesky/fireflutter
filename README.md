@@ -65,6 +65,10 @@
 # 해야 할 것
 
 - 보안 규칙 설명
+- 게시판 보안 규칙
+
+- orderby createdAt desc 로 할 때, category, hsaPhoto, deleted, month, uid 등으로 여러가지 인덱스가 생성 될 수 있다.
+  - 인덱스가 200 개 제한이 있으므로, index merging 으로 해결을 한다.
 - Cloud Functions 설명
 
 - `ForumMixin` 을 `ForumService` 로 변경한다. 통일된 코딩 방식이 필요하다.
@@ -554,7 +558,9 @@ StreamBuilder(
 ```
 
 
-- 아래는 FirestoreListView 와 postsQuery() 를 사용해서, Firestore 로 부터 글을 가져온다.
+- 아래는 예제는 위의 예제와 비슷한 동작을 하는 코드로, FirestoreListView 와 postsQuery() 를 사용해서, Firestore 로 부터 글을 가져온다.
+
+예제)
 ```dart
 FirestoreListView<PostModel>(
   shrinkWrap: true,
@@ -569,6 +575,46 @@ FirestoreListView<PostModel>(
       ),
       onTap: () => router.push('/view?id=${post.id}'),
     );
+  }),
+),
+```
+
+- 아래의 예제에는 category 와 limit 옵션을 주어서 글을 가져온다. 주의 할 점은 limit 옵션은 한번(한번의 목록)에 가져와서 보여 줄 개수로서, 반복적으로 1개씩 가져온다. 그래서 1개만 보여주는 것이 아니다.
+
+예제)
+```dart
+FirestoreListView<PostModel>(
+  shrinkWrap: true,
+  physics: const NeverScrollableScrollPhysics(),
+  query: postsQuery(category: 'discussion', limit: 1),
+  itemBuilder: ((context, doc) {
+    final post = doc.data();
+    return Text(post.title);
+  }),
+),
+```
+
+
+- 글 1개만 보여주고 싶다면 아래와 같이 할 수 있다.
+예제)
+```dart
+StreamBuilder(
+  stream:
+      postsQuery(category: 'discussion', limit: 1).snapshots(),
+  builder: ((context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return const CircularProgressIndicator.adaptive();
+    }
+    if (snapshot.hasError) {
+      log(snapshot.error.toString());
+      return Text(snapshot.error.toString());
+    }
+    if (snapshot.hasData == false || snapshot.data?.size == 0) {
+      return const Text('No posts, yet');
+    }
+
+    final post = snapshot.data!.docs.first.data();
+    return Text(post.title);
   }),
 ),
 ```
