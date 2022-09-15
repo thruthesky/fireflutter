@@ -987,6 +987,12 @@ RecentPostCard(
 ),
 ```
 
+결과)
+
+![Recent Post Card](https://github.com/thruthesky/fireflutter/wiki/img/recent-post-card.jpg)
+
+
+
 # 실험 코드
 
 - 개발을 진행 함에 있어서 데이터 구조 변경이 필요한 경우가 있다. 그와 같은 경우 기존의 데이터 포맷을 새로운 데이터 포맷에 맞게 포팅을 해야하는데, 그러한 포팅 작업(소스 코드 작업)을 `<project>/firebase/lab` 폴더에서 하면 된다.
