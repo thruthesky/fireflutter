@@ -5,7 +5,8 @@ export interface SendMessage {
   tokens?: string;
   topic?: string;
   title?: string;
-  body?: string; // / content
+  body?: string; // message body
+  content?: string; // this will be used as message body if message body is empty.
   type?: string;
   senderUid?: string; // / uid
   badge?: string;

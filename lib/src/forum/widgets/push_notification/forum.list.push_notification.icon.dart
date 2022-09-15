@@ -1,54 +1,83 @@
+import 'dart:async';
+
 import 'package:fireflutter/fireflutter.dart';
 
-import './forum.list.push_notification.popup_button.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math; // import this
 
-class ForumListPushNotificationIcon extends StatelessWidget {
+/// Display a bell icon with two small ball indicating the subscription of new post and comment.
+/// Note, anonymous can use subscriptions.
+class ForumListPushNotificationIcon extends StatefulWidget {
   ForumListPushNotificationIcon(
     this.categoryId, {
-    // required this.onError,
-    // required this.onSigninRequired,
     required this.onChanged,
-    this.size,
   });
   final String categoryId;
-  final double? size;
-  // final Function onError;
-  // final Function onSigninRequired;
   final Function(String, bool) onChanged;
 
-  bool get hasSubscription {
-    /// TODO check if the user has subscription of the forum cateogry
-    return true;
-    // return _.settings
-    //         .hasSubscription(NotificationOptions.post(categoryId), 'forum') ||
-    //     _.settings
-    //         .hasSubscription(NotificationOptions.comment(categoryId), 'forum');
+  @override
+  State<ForumListPushNotificationIcon> createState() =>
+      _ForumListPushNotificationIconState();
+}
+
+class _ForumListPushNotificationIconState
+    extends State<ForumListPushNotificationIcon> {
+  bool hasSubscription = false;
+  bool hasPostSubscription = false;
+  bool hasCommentSubscription = false;
+
+  late StreamSubscription post;
+  late StreamSubscription comment;
+
+  String get postTopic => 'post-create.${widget.categoryId}';
+  String get commentTopic => 'comment-create.${widget.categoryId}';
+
+  @override
+  void initState() {
+    super.initState();
+
+    /// listen and re-render
+    post =
+        UserService.instance.settings.doc(postTopic).snapshot().listen((event) {
+      print('snapshot; post create; ${event.data()}');
+      setState(() {
+        hasPostSubscription = event.exists;
+        hasSubscription = hasPostSubscription || hasCommentSubscription;
+      });
+    });
+
+    /// listen and re-render
+    comment = UserService.instance.settings
+        .doc(commentTopic)
+        .snapshot()
+        .listen((event) {
+      print('snapshot; comment create; ${event.data()}');
+      setState(() {
+        hasCommentSubscription = event.exists;
+        hasSubscription = hasPostSubscription || hasCommentSubscription;
+      });
+    });
   }
 
-  bool get hasPostSubscription {
-    /// TODO check if the user has subscription of the forum cateogry
-    return true;
-    // return _.settings.hasSubscription(NotificationOptions.post(categoryId), 'forum');
-  }
-
-  bool get hasCommentSubscription {
-    /// TODO check if the user has subscription of the forum cateogry
-    return true;
-    // return _.settings.hasSubscription(NotificationOptions.comment(categoryId), 'forum');
+  @override
+  void dispose() {
+    post.cancel();
+    comment.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (categoryId == '') return SizedBox.shrink();
+    if (widget.categoryId == '') return SizedBox.shrink();
 
     return MySettingsDoc(
       builder: (settings) {
         return Stack(
           alignment: AlignmentDirectional.center,
           children: [
-            ForumListPushNotificationPopUpButton(
+            PopupMenuButton<dynamic>(
+              padding: EdgeInsets.all(0),
+              offset: Offset.fromDirection(2, 46),
               icon: Icon(
                 hasSubscription
                     ? Icons.notifications_on
@@ -57,7 +86,7 @@ class ForumListPushNotificationIcon extends StatelessWidget {
                     ? Color.fromARGB(255, 74, 74, 74)
                     : Color.fromARGB(255, 177, 177, 177),
               ),
-              items: [
+              itemBuilder: (_) => [
                 PopupMenuItem(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +94,7 @@ class ForumListPushNotificationIcon extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          '$categoryId Subscriptions',
+                          '${widget.categoryId} Subscriptions',
                           style: TextStyle(
                             fontSize: 13,
                           ),
@@ -83,7 +112,7 @@ class ForumListPushNotificationIcon extends StatelessWidget {
                                 : Theme.of(context).colorScheme.secondary,
                           ),
                           Text(
-                            ' Post' + " " + categoryId,
+                            ' Post' + " " + widget.categoryId,
                             style: TextStyle(
                               color: hasPostSubscription
                                   ? Theme.of(context).colorScheme.primary
@@ -108,7 +137,7 @@ class ForumListPushNotificationIcon extends StatelessWidget {
                             : Theme.of(context).colorScheme.secondary,
                       ),
                       Text(
-                        ' Comment' + " " + categoryId,
+                        ' Comment' + " " + widget.categoryId,
                         style: TextStyle(
                           color: hasCommentSubscription
                               ? Theme.of(context).colorScheme.primary
@@ -152,29 +181,41 @@ class ForumListPushNotificationIcon extends StatelessWidget {
     );
   }
 
+  /// Anonymous users can use subscription, but the user must sign-in as anonymous or as a real user.
   onNotificationSelected(dynamic selection) async {
-    // if (_.notSignedIn) {
-    //   onSigninRequired();
-    //   return;
-    // }
+    if (UserService.instance.notSignedInAtAll) {
+      ffError(ERROR_SIGN_IN_FIRST_FOR_FORUM_CAETGORY_SUBSCRIPTION);
+      return;
+    }
 
-    /// TODO check if the user has subscription of the forum cateogry
+    String topic = '';
+    String title = "notification";
+    bool subscribe = false;
 
-    // String topic = '';
-    // String title = "notification";
-    // if (selection == 'post') {
-    //   topic = NotificationOptions.post(categoryId);
-    //   title = 'post ' + title;
-    // } else if (selection == 'comment') {
-    //   topic = NotificationOptions.comment(categoryId);
-    //   title = 'comment ' + title;
-    // }
+    if (selection == 'post') {
+      topic = postTopic;
+      title = 'Post ' + title;
+      subscribe = !hasPostSubscription;
+    } else if (selection == 'comment') {
+      topic = commentTopic;
+      title = 'Comment ' + title;
+      subscribe = !hasCommentSubscription;
+    }
+
+    if (subscribe) {
+      await UserService.instance.settings.doc(topic).update({
+        'action': '$selection-create',
+        'category': widget.categoryId,
+      });
+    } else {
+      await UserService.instance.settings.doc(topic).delete();
+    }
 
     // await _.settings.toggleSubscription(
     //   topic,
     //   'forum',
     // );
-    // return onChanged(
+    // return widget.onChanged(
     //   selection,
     //   _.settings.hasSubscription(topic, 'forum'),
     // );

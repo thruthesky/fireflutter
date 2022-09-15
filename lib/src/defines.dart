@@ -56,3 +56,6 @@ const ERROR_CATEGORY_EXISTS_ON_CATEGORY_CREATE =
 
 const ERROR_LACK_OF_POINT_ON_JOB_CREATE =
     'You don\'t have enough point to create a job post.';
+
+const ERROR_SIGN_IN_FIRST_FOR_FORUM_CAETGORY_SUBSCRIPTION =
+    "Please, sign-in first before subscribing a forum category.";

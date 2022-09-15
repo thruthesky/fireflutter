@@ -37,6 +37,11 @@ class UserService {
   /// TODO check if the user is admin
   bool get isAdmin => false;
 
+  /// Return true if the user didn't sigend at all, even as anonymous.
+  bool get notSignedInAtAll =>
+      Firebase.FirebaseAuth.instance.currentUser == null;
+
+  /// Return true if the user signed with real account. Not anonymous.
   bool get notSignedIn =>
       isAnonymous || Firebase.FirebaseAuth.instance.currentUser == null;
 
