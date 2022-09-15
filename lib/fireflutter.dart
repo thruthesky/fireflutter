@@ -70,7 +70,6 @@ export 'src/forum/category.service.dart';
 
 export 'src/point/forum_point.dart';
 export 'src/point/my_point.builder.dart';
-export 'src/point/point.builder.dart';
 export 'src/point/point.history.dart';
 export 'src/point/point.history.model.dart';
 

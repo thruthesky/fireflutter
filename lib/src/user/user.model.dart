@@ -47,9 +47,9 @@ class UserModel {
   bool get isAnonymous =>
       FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
 
-  /// TODO return resteredAt time
   String get registeredDate =>
-      DateFormat("MMMM dd, yyyy").format(DateTime.now());
+      DateFormat("MMMM dd, yyyy").format(DateTime.fromMillisecondsSinceEpoch(
+          createdAt?.millisecondsSinceEpoch ?? 0));
 
   /// Use display name to display user name.
   /// Don't confuse the displayName of FirebaseAuth.
