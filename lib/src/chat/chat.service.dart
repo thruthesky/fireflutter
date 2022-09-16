@@ -18,7 +18,7 @@ class ChatService {
     required String uid,
     required String badge,
   }) async {
-    final s = UserSettings(uid: uid, documentId: 'chat.$uid');
+    // final s = UserSettings(uid: uid, documentId: 'chat.$uid');
     // print('s.path; ${s.path}, my uid: ${UserService.instance.uid}');
 
     final doc = await UserSettings(
