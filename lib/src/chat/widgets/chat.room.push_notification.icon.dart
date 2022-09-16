@@ -1,3 +1,4 @@
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomPushNotificationIcon extends StatefulWidget {
@@ -16,13 +17,9 @@ class ChatRoomPushNotificationIcon extends StatefulWidget {
 
 class _ChatRoomPushNotificationIconState
     extends State<ChatRoomPushNotificationIcon> {
-  /// TODO global controller
-  // Controller get _ => Controller.of;
-  bool hasDisabledSubscription() {
-    return true;
-    // /// TODO global controller
-    // return _.settings
-    //     .hasDisabledSubscription('chatNotify' + widget.uid, 'chat');
+  String get chatNotify => 'chatNotify.' + widget.uid;
+  bool hasDisabledSubscription(settings) {
+    return settings[chatNotify] == false;
   }
 
   bool loading = false;
@@ -30,58 +27,45 @@ class _ChatRoomPushNotificationIconState
   @override
   Widget build(BuildContext context) {
     if (widget.uid == '') return SizedBox.shrink();
-    if (widget.hideOnDisabled && hasDisabledSubscription())
-      return SizedBox.shrink();
 
-    return GestureDetector(
-      child: loading == false
-          ? Icon(
-              hasDisabledSubscription()
-                  ? Icons.notifications_off
-                  : Icons.notifications,
-              color: Colors.grey.shade700,
-              size: widget.size,
-            )
-          : SizedBox(
-              width: widget.size,
-              height: widget.size,
-              child: CircularProgressIndicator.adaptive(),
-            ),
-      onTap: () => toggle(),
-    );
+    return MySettingsDoc(builder: (settings) {
+      if (widget.hideOnDisabled && hasDisabledSubscription(settings))
+        return SizedBox.shrink();
+
+      return GestureDetector(
+        child: loading == false
+            ? Icon(
+                hasDisabledSubscription(settings)
+                    ? Icons.notifications_off
+                    : Icons.notifications,
+                color: Colors.grey.shade700,
+                size: widget.size,
+              )
+            : SizedBox(
+                width: widget.size,
+                height: widget.size,
+                child: CircularProgressIndicator.adaptive(),
+              ),
+        onTap: () => toggle(settings),
+      );
+    });
   }
 
-  toggle() async {
-    /// TODO global controller
-    // if (_.notSignedIn) {
-    //   return showDialog(
-    //     context: context,
-    //     builder: (c) => AlertDialog(
-    //       title: Text('notifications'),
-    //       content: Text('login_first'),
-    //       actions: [
-    //         ElevatedButton(
-    //           onPressed: () => Navigator.of(context).pop(),
-    //           child: Text('Close'),
-    //         ),
-    //       ],
-    //     ),
-    //   );
-    // }
-
+  toggle(settings) async {
     if (mounted)
       setState(() {
         loading = true;
       });
+    print(hasDisabledSubscription(settings));
+    await UserService.instance.settings.update({
+      chatNotify: hasDisabledSubscription(settings),
+    });
 
-    /// TODO global controller
-    // await _.settings.toggleTopic(
-    //     'chatNotify' + widget.uid, 'chat', hasDisabledSubscription());
     if (mounted)
       setState(() {
         loading = false;
       });
-    String msg = hasDisabledSubscription()
+    String msg = !hasDisabledSubscription(settings)
         ? 'Unsubscribed success'
         : 'Subscribed success';
     showDialog(
