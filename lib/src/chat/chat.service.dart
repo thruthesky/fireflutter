@@ -26,14 +26,14 @@ class ChatService {
         .get();
     // print(doc);
     if (doc != null) {
-      print('The user muted me. Jsut return.');
+      print('The user muted me. Just return.');
       return null;
     }
 
     return MessagingService.instance.queue({
       'title': title,
       'body': body,
-      'uids': [uid],
+      'uids': uid,
       'badge': badge,
       'type': 'chat',
       'senderUid': UserService.instance.uid,

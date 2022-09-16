@@ -32,7 +32,9 @@ export const pushNotificationQueue = functions
     .region("asia-northeast3")
     .firestore.document("/push-notifications-queue/{docId}")
     .onCreate(async (snapshot) => {
+      console.log("pushNotificationQueue::", JSON.stringify(snapshot));
       const re = await Messaging.sendMessage(snapshot.data());
+      console.log("re::", re);
       return admin
           .firestore()
           .collection("push-notifications-queue")
