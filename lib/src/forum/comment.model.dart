@@ -224,7 +224,7 @@ class CommentModel with ForumMixin implements Article {
   }
 
   /// Marks a comment as deleted.
-  /// TODO check if comment has child
+  /// @thruthesky https://github.com/thruthesky/fireflutter/issues/1
   Future<void> delete() async {
     if (id.isEmpty) throw 'Id is empty on comment delete.';
     if (uid != UserService.instance.uid) throw 'Not your comment.';

@@ -297,6 +297,15 @@ MyDoc(
 - 게시판 목록 등에서 특정 사용자 이름이 여러번 표시 될 수 있는데, 이 때 `UserService.instance.get(uid: ...)` 또는 `UserDoc` 위젯을 사용하면 된다.
 
 
+- 사용자 디스플레이 이름은 사용자의 닉네임이다. 사용자의 실명 대신 닉네임을 표시하고자 할 때, displayName 을 사용하면 된다.
+  - 예) `UserService.instance.displayName` 또는 `UserModel.displayName`
+
+- 사용자 디스플레이 이름을 짧게 표시하고 한다면, shortDisplayName 을 사용 할 수 있다.
+  - 예) `UserService.instance.displayName` 또는 `UserModel.shortDisplayName`
+
+
+
+
 # 사진(파일) 업로드
 
 - 사용자가 업로드하는 사진은 Storage 의 `/users/<uid>` 에 저장된다.

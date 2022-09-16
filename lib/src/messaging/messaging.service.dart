@@ -163,7 +163,23 @@ class MessagingService {
   //     'senderUid': Controller.of.user.uid,
   //   });
 
-  Future<DocumentReference> queue(Json data) {
+  /// [uids] 는 배열로 입력되어야 하고, 여기서 콤마로 분리된 문자열로 만들어 서버로 보낸다. 즉, 서버에서는 문자열이어야 한다.
+  Future<DocumentReference> queue({
+    required String title,
+    required String body,
+    List<String>? uids,
+    String? badge,
+    required String type,
+  }) {
+    Json data = {
+      'title': title,
+      'body': body,
+      'badge': badge,
+      'type': type,
+      'senderUid': UserService.instance.uid,
+      'createdAt': FieldValue.serverTimestamp(),
+    };
+    if (uids != null) data['uids'] = uids.join(',');
     return FirebaseFirestore.instance
         .collection('push-notifications-queue')
         .add(data);

@@ -129,7 +129,7 @@ class ChatMessageModel {
 
   /// Deletes other user in my room list.
   Future<void> deleteRoom() {
-    return Chat.myOtherRoomInfoDelete(otherUid);
+    return ChatService.instance.myOtherRoomInfoDelete(otherUid);
     // return otherUserRoomInMyRoomListRef.delete();
   }
 

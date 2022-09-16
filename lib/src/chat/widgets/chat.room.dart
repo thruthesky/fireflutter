@@ -52,24 +52,24 @@ class _ChatRoomState extends State<ChatRoom> {
   void initState() {
     super.initState();
 
-    Chat.clearNewMessages(widget.otherUid);
+    ChatService.instance.clearNewMessages(widget.otherUid);
     getRoomInfo();
   }
 
   getRoomInfo() async {
     /// ! Crashlytics happens an error: type 'Null' is not a subtype of type 'Map<dynamic, dynamic>' in type cast. Error thrown null. at _ChatRoomState.getRoomInfo(chat.room.dart:65)
     /// Not sure why "Chat.getRoomInfo()" produces null.
-    DocumentSnapshot res = await Chat.getRoomInfo(widget.otherUid);
+    DocumentSnapshot res =
+        await ChatService.instance.getRoomInfo(widget.otherUid);
     if (res.exists == false || res.data() == null) {
-      ///@ TODO global error controller
-      // Controller.of.error(
-      //   'There is no room information under my room list for the other user.',
-      //   StackTrace.current,
-      // );
+      ffError(
+        'There is no room information under my room list for the other user.',
+      );
       return;
     }
     roomInfo = ChatMessageModel.fromJson(res.data() as Map);
-    DocumentSnapshot blockRes = await Chat.getBlockRoomInfo(widget.otherUid);
+    DocumentSnapshot blockRes =
+        await ChatService.instance.getBlockRoomInfo(widget.otherUid);
     if (blockRes.exists)
       setState(() {
         isRoomBlocked = true;
@@ -122,7 +122,7 @@ class _ChatRoomState extends State<ChatRoom> {
                 // print('page loaded; reached to end?; ${loaded.hasReachedEnd}');
                 // print('######################################');
                 // _myRoomDoc.set({'newMessages': 0}, SetOptions(merge: true));
-                Chat.clearNewMessages(widget.otherUid);
+                ChatService.instance.clearNewMessages(widget.otherUid);
               },
               onReachedEnd: (PaginationLoaded loaded) {
                 // This is called only one time when it reaches to the end.
@@ -146,7 +146,7 @@ class _ChatRoomState extends State<ChatRoom> {
                 TextButton(
                     onPressed: () async {
                       // print('add as friend');
-                      await Chat.addFriend(widget.otherUid);
+                      await ChatService.instance.addFriend(widget.otherUid);
                       if (widget.onAddFriend != null) widget.onAddFriend!();
                     },
                     child: Text("Add as a friend"));
@@ -164,7 +164,8 @@ class _ChatRoomState extends State<ChatRoom> {
   /// This will be called to send chat data to other user.
   /// It includes text, image url, other other files url.
   void onSubmitText(String text) async {
-    final data = await Chat.send(text: text, otherUid: widget.otherUid);
+    final data =
+        await ChatService.instance.send(text: text, otherUid: widget.otherUid);
 
     /// callback after sending a message to other user and updating the no of
     /// new messages on other user's room list.

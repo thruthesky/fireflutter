@@ -182,9 +182,10 @@ class _ChatRoomsState extends State<ChatRooms> {
 
   Widget messageCount(int count) {
     if (count == 0) return SizedBox.shrink();
+
     return SizedBox(
-      width: 17,
-      height: 17,
+      width: 20,
+      height: 20,
       child: Badge(
         toAnimate: false,
         shape: BadgeShape.circle,

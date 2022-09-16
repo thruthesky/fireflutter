@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 
-/// TODO merge this class with category.dart
 class CategoryService with ForumMixin {
   static CategoryService? _instance;
   static CategoryService get instance {
