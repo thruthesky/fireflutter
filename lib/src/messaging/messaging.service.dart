@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -152,41 +153,59 @@ class MessagingService {
         .listen((token) => tokenChange.add(token));
   }
 
-  send({
-    required String token,
-    required String title,
-    required String body,
-  }) async {
-    /// doc: https://firebase.google.com/docs/cloud-messaging/http-server-ref
-    const apiUrl = "https://fcm.googleapis.com/fcm/send";
-    final data = {
-      "to": token,
-      "notification": {
-        "title": title,
-        "body": body,
-      },
-      "data": {
-        "click_action": "FLUTTER_NOTIFICATION_CLICK",
-      },
-    };
+  //   await Messaging.sendToChatUser({
+  //     'title': '${Controller.of.user.displayName} sent a message',
+  //     'body': data['text'], // for image "Sent a photo"
+  //     'uids': otherUser.uid,
+  //     'badge': newMessages.toString(),
+  //     // chat subscription to disable chat message notification
+  //     // this doesnt subscribe to topic but check if the user has user-setting that is set to 'off' value
+  //     // 'subscription': 'chatNotify' + Userinstance.uid, /// move to backend
+  //     'type': 'chat',
+  //     'senderUid': Controller.of.user.uid,
+  //   });
 
-    Dio dio = getRetryDio();
-
-    final res = await dio.post(
-      apiUrl,
-      data: data,
-      options: Options(
-        headers: {
-          'content-type': 'application/json',
-          'Authorization':
-              'key=AAAAWy4G2hU:APA91bG8FpX2kNKMTRlTyiAEo3jDCg6UsiXlmVqCU-7syY0DGgpv_7VVJVpuQRoZqqzmBdUg_BWuluihF6nLwHt3yZpkfXvzzJidyp4_Ku-NgicQa0GT9Rilj_ks83HWSpAoVjaCFN7S',
-        },
-      ),
-    );
-
-    print(res.statusCode);
-    print(res.data);
+  Future<DocumentReference> queue(Json data) {
+    return FirebaseFirestore.instance
+        .collection('push-notifications-queue')
+        .add(data);
   }
+
+  // send({
+  //   required String token,
+  //   required String title,
+  //   required String body,
+  // }) async {
+  //   /// doc: https://firebase.google.com/docs/cloud-messaging/http-server-ref
+  //   const apiUrl = "https://fcm.googleapis.com/fcm/send";
+  //   final data = {
+  //     "to": token,
+  //     "notification": {
+  //       "title": title,
+  //       "body": body,
+  //     },
+  //     "data": {
+  //       "click_action": "FLUTTER_NOTIFICATION_CLICK",
+  //     },
+  //   };
+
+  //   Dio dio = getRetryDio();
+
+  //   final res = await dio.post(
+  //     apiUrl,
+  //     data: data,
+  //     options: Options(
+  //       headers: {
+  //         'content-type': 'application/json',
+  //         'Authorization':
+  //             'key=AAAAWy4G2hU:APA91bG8FpX2kNKMTRlTyiAEo3jDCg6UsiXlmVqCU-7syY0DGgpv_7VVJVpuQRoZqqzmBdUg_BWuluihF6nLwHt3yZpkfXvzzJidyp4_Ku-NgicQa0GT9Rilj_ks83HWSpAoVjaCFN7S',
+  //       },
+  //     ),
+  //   );
+
+  //   print(res.statusCode);
+  //   print(res.data);
+  // }
 
 //   /// https://firebase.google.com/docs/cloud-messaging/migrate-v1
 //   /// Migrate from legacy HTTP to HTTP v1

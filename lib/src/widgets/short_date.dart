@@ -9,6 +9,8 @@ import 'package:intl/intl.dart';
 ///   - 19:26
 ///   - 6/27
 ///
+/// [timestamp] is unix timestamp. (in seconds).
+///
 class ShortDate extends StatelessWidget {
   const ShortDate(
     this.timestamp, {

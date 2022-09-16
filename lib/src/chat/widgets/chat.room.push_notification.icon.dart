@@ -1,101 +1,34 @@
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class ChatRoomPushNotificationIcon extends StatefulWidget {
-  ChatRoomPushNotificationIcon(
-    this.uid, {
-    this.size,
-    this.hideOnDisabled = false,
-  });
+class ChatRoomPushNotificationIcon extends StatelessWidget {
+  const ChatRoomPushNotificationIcon({super.key, required this.uid});
+
   final String uid;
-  final double? size;
-  final bool hideOnDisabled;
-  @override
-  _ChatRoomPushNotificationIconState createState() =>
-      _ChatRoomPushNotificationIconState();
-}
-
-class _ChatRoomPushNotificationIconState
-    extends State<ChatRoomPushNotificationIcon> {
-  /// TODO global controller
-  // Controller get _ => Controller.of;
-  bool hasDisabledSubscription() {
-    return true;
-    // /// TODO global controller
-    // return _.settings
-    //     .hasDisabledSubscription('chatNotify' + widget.uid, 'chat');
-  }
-
-  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
-    if (widget.uid == '') return SizedBox.shrink();
-    if (widget.hideOnDisabled && hasDisabledSubscription())
-      return SizedBox.shrink();
-
-    return GestureDetector(
-      child: loading == false
-          ? Icon(
-              hasDisabledSubscription()
-                  ? Icons.notifications_off
-                  : Icons.notifications,
-              color: Colors.grey.shade700,
-              size: widget.size,
-            )
-          : SizedBox(
-              width: widget.size,
-              height: widget.size,
-              child: CircularProgressIndicator.adaptive(),
+    final ref = UserService.instance.settings.col.doc("chat.$uid");
+    return DocumentBuilder(
+        ref: ref,
+        builder: (doc) {
+          // if the setting document exists, it means, the user un-subscribed.
+          final bool subscribed = doc == null;
+          return IconButton(
+            icon: Icon(
+              subscribed ? Icons.notifications : Icons.notifications_off,
             ),
-      onTap: () => toggle(),
-    );
-  }
-
-  toggle() async {
-    /// TODO global controller
-    // if (_.notSignedIn) {
-    //   return showDialog(
-    //     context: context,
-    //     builder: (c) => AlertDialog(
-    //       title: Text('notifications'),
-    //       content: Text('login_first'),
-    //       actions: [
-    //         ElevatedButton(
-    //           onPressed: () => Navigator.of(context).pop(),
-    //           child: Text('Close'),
-    //         ),
-    //       ],
-    //     ),
-    //   );
-    // }
-
-    if (mounted)
-      setState(() {
-        loading = true;
-      });
-
-    /// TODO global controller
-    // await _.settings.toggleTopic(
-    //     'chatNotify' + widget.uid, 'chat', hasDisabledSubscription());
-    if (mounted)
-      setState(() {
-        loading = false;
-      });
-    String msg = hasDisabledSubscription()
-        ? 'Unsubscribed success'
-        : 'Subscribed success';
-    showDialog(
-      context: context,
-      builder: (c) => AlertDialog(
-        title: Text('Notification'),
-        content: Text(msg),
-        actions: [
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('Close'),
-          ),
-        ],
-      ),
-    );
+            onPressed: () async {
+              if (subscribed) {
+                // subscribed means, settings file does not exsits.
+                // To un-subscribe, create the settings file.
+                await ref.set({'uid': 'un-subscribed'});
+              } else {
+                // To subscribe, delete the settings file.
+                await ref.delete();
+              }
+            },
+          );
+        });
   }
 }

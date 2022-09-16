@@ -22,7 +22,8 @@
   - [업로드된 사진 보여주기](#업로드된-사진-보여주기)
 - [사용자 설정](#사용자-설정)
   - [사용자 설정을 바탕으로 위젯을 보여주는 MySettingsDoc](#사용자-설정을-바탕으로-위젯을-보여주는-mysettingsdoc)
-  - [사용자 설정 관련 함수](#사용자-설정-관련-함수)
+  - [사용자 설정 관련 코드](#사용자-설정-관련-코드)
+    - [사용자 설정 관련 코드 예](#사용자-설정-관련-코드-예)
 - [글](#글-1)
   - [글 생성](#글-생성)
     - [글 생성 로직 예](#글-생성-로직-예)
@@ -37,7 +38,8 @@
     - [iOS 설정](#ios-설정)
   - [푸시 알림 문서 구조](#푸시-알림-문서-구조)
   - [푸시 알림 코딩](#푸시-알림-코딩)
-  - [푸시 알림 구독](#푸시-알림-구독)
+    - [푸시 알림 구독](#푸시-알림-구독)
+    - [메세지 전송, Push Notification 전송하기](#메세지-전송-push-notification-전송하기)
 - [클라우드 함수](#클라우드-함수)
   - [FunctionsApi](#functionsapi)
   - [유닛 테스트](#유닛-테스트)
@@ -57,6 +59,7 @@
 - [위젯](#위젯)
   - [DocumentBuilder](#documentbuilder)
   - [Admin](#admin)
+  - [RecentPostCard - 사진이 있는 최근 글 카드로 보여주기](#recentpostcard---사진이-있는-최근-글-카드로-보여주기)
 - [실험 코드](#실험-코드)
 - [문제 해결](#문제-해결)
   - [인덱스 문제](#인덱스-문제)
@@ -65,9 +68,16 @@
 # 해야 할 것
 
 - 보안 규칙 설명
+- 게시판 보안 규칙
+
+- orderby createdAt desc 로 할 때, category, hsaPhoto, deleted, month, uid 등으로 여러가지 인덱스가 생성 될 수 있다.
+  - 인덱스가 200 개 제한이 있으므로, index merging 으로 해결을 한다.
 - Cloud Functions 설명
 
 - `ForumMixin` 을 `ForumService` 로 변경한다. 통일된 코딩 방식이 필요하다.
+- `ChatMixin` 도 `ChatService` 로 변경한다.
+
+
 
 
 - 관리자의 경우 글 쓰기 양식에서 Document ID 를 직접 지정하고, 활용 할 수 있도록 한다. 기능이 있지만 잘 동작하는 지 확인한다.
@@ -402,7 +412,7 @@ MySettingsDoc(builder: (settings) {
 });
 ```
 
-## 사용자 설정 관련 함수
+## 사용자 설정 관련 코드
 
 - 사용자 설정 관련 함수(기능)는 `UserSettings` 클래스에 있으며 이 클래스 인스턴스가 `UserService.instance.settings` 멤버 변수에 저장된다.
   - 즉, `UserService.instance.settings` 를 통해서 사용하면 된다.
@@ -416,6 +426,7 @@ MySettingsDoc(builder: (settings) {
 
 - 예제) 아래의 예제는 여러개의 사용자 설정 문서를 읽어서, reactive 하게 re-build(랜더링)하며, 문서를 업데이트(생성)하고 삭제를 하는 예제를 보여준다.
   - 참고로, 아래의 코드는 게시판 별 푸시 알림 구독을 할지 말지 목록해서 보여 주는 것이다.
+  - 아래에서 설정 파일을 어떻게 업데이트(생성)하고 삭제하는지 잘 보고, 다른 곳에서 활용 할 수 있도록 한다.
 ```dart
 @override
 Widget build(BuildContext context) {
@@ -459,7 +470,35 @@ Widget build(BuildContext context) {
 - Use `mySettings(uid)` in `FireFlutterMixin` to get the user's settings.
 
 
+### 사용자 설정 관련 코드 예
 
+- 로그인 한 사용자의 설정을 다룰 때에는 `UserService.instance.settings` 를 사용하면 된다.
+  - 예) 로그인 한 사용자 설정 문서 Document Reference 가져오기
+    - `UserService.instance.settings.doc("chat.$uid")` 는 나의 설정 컬렉션에서 `chat.$uid` 에 해당하는 문서의 reference 를 가져온다. Document Reference 이므로 `.get()`, `.set()` 등의 작업을 할 수 있다.
+
+- 다른 사용자의 설정을 다룰 때에는 `UserSettings` 클래스를 사용하면 된다. 참고로, 다른 사용자의 설정은 읽기 전용이며 쓸 수는 없다.
+  - 예) 다른 사용자 설정 문서의 Document Reference 가져오기
+    - `UserSettings(uid: uid, documentId: 'chat.otherUid')` 와 같이 하면 다른 사용자 컬렉션에서 `chat.otherUid` 설정 문서의 reference 를 가져온다. Document Reference 이므로 `.get()`, `.set()` 등의 작업을 할 수 있다.
+
+- Document Reference 가 아닌 path 가져오기.
+  - 단순히, DocumentReference 에 `path` 속성을 참조하면 된다.
+  - 예)
+    - `UserService.instance.settings.path`
+    - `UserService.instance.settings.doc("chat.$uid").path`
+    - `UserSettings(uid: uid, documentId: 'chat.otherUid').path`
+
+- 참고로, `UserService.instance.settings` 는 내부적으로 `UserSettings` 클래스를 사용한다.
+- `UserSettings` 클래스는 `.get()`, `.update()`, `.delete()` 세 개의 메소드를 제공하는데, 이것은 Firestore 에서 제공하는 것과 약간 다른 `UserSettings` 클래스만의 메소드이다.
+  - `UserSettings.get()` 의 경우, 문서가 존재하면 문서 내용을 객체로 리턴하고, 존재하지 않으면 null 을 리턴한다. Firestore 의 `get()` 은 DocumentSnapshot 을 리턴하는 데 이 점이 서로 다르다.
+  - `UserSettings.update()` 의 경우, 기존에 문서가 존재하지 않으면 생성을 한다는 점이 Firebase 의 `update()` 와 다르다.
+
+
+- 예제) 아래에서 설정 문서가 존재하지 않으면 doc 에 null 값이 적용된다.
+```dart
+final doc = await UserSettings(uid: uid, documentId: 'chat.${UserService.instance.uid}').get();
+if (doc == null) print('document does not exist');
+else print('document: $doc');
+```
 
 # 글
 
@@ -554,7 +593,9 @@ StreamBuilder(
 ```
 
 
-- 아래는 FirestoreListView 와 postsQuery() 를 사용해서, Firestore 로 부터 글을 가져온다.
+- 아래는 예제는 위의 예제와 비슷한 동작을 하는 코드로, FirestoreListView 와 postsQuery() 를 사용해서, Firestore 로 부터 글을 가져온다.
+
+예제)
 ```dart
 FirestoreListView<PostModel>(
   shrinkWrap: true,
@@ -573,13 +614,53 @@ FirestoreListView<PostModel>(
 ),
 ```
 
+- 아래의 예제에는 category 와 limit 옵션을 주어서 글을 가져온다. 주의 할 점은 limit 옵션은 한번(한번의 목록)에 가져와서 보여 줄 개수로서, 반복적으로 1개씩 가져온다. 그래서 1개만 보여주는 것이 아니다.
+
+예제)
+```dart
+FirestoreListView<PostModel>(
+  shrinkWrap: true,
+  physics: const NeverScrollableScrollPhysics(),
+  query: postsQuery(category: 'discussion', limit: 1),
+  itemBuilder: ((context, doc) {
+    final post = doc.data();
+    return Text(post.title);
+  }),
+),
+```
+
+
+- 글 1개만 보여주고 싶다면 아래와 같이 할 수 있다.
+예제)
+```dart
+StreamBuilder(
+  stream:
+      postsQuery(category: 'discussion', limit: 1).snapshots(),
+  builder: ((context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return const CircularProgressIndicator.adaptive();
+    }
+    if (snapshot.hasError) {
+      log(snapshot.error.toString());
+      return Text(snapshot.error.toString());
+    }
+    if (snapshot.hasData == false || snapshot.data?.size == 0) {
+      return const Text('No posts, yet');
+    }
+
+    final post = snapshot.data!.docs.first.data();
+    return Text(post.title);
+  }),
+),
+```
+
 
 # 푸시 알림
 
 - 레거시 API 를 쓰면 플러터 앱 내에서 푸시 알림을 전송 할 수 있지만, 토픽으로 메시지를 보낼 때 플랫폼 구분이 어렵다. (물론 하나의 토픽을 플랫폼별로 묶으면 android 의 click_action 과 web 의 click_action 을 따로 지정 할 수 있다.)
   - 플랫폼을 구분 할 수 있어야 Android 의 `click_action` 에는 `FLUTTER_CLICK_ACTION` 를 지정하고, web 의 `click_action` 에는 URL 을 지정 할 수 있다.
     - 참고로 Flutter 에서 `click_action` 이 없어도 onResume 등에서 올바로 동작할 수 있는지 확인이 필요하다.
-  - 무엇 보다 Firebase 에서 Legacy API 를 없애려고하는 느낌이 강하게 든다. 이전에는 Firebase 에서 Legacy API 가 Deprecated 되었어도 잘 사용 할 수 있었는데, 2022년 9월에 새로운 Firebase Project 를 생성하니, Legacy API 가 기본적으로 DISABLE 되어져 있었다.
+  - 무엇 보다 플러터 앱에서 직접 푸시를 전송하지 않는 이유는 Firebase 에서 Legacy API 를 없애려고하는 느낌이 강하게 들었기 때문이다. 이전에는 Firebase 에서 Legacy API 가 Deprecated 되었어도 잘 사용 할 수 있었는데, 2022년 9월 즈음에 새로운 Firebase Project 를 생성하니, Legacy API 가 기본적으로 DISABLE 되어져 있었으며, 별도로 Enable 해야 했는데, 더 이상 Legacy API 를 사용하지 말라고 권하고 있다.
 
 - 하지만, FireFlutter 0.3 에서는 토픽을 사용해서 구독을 하지 않는데, 그 이유는 로직의 복잡도가 증가하기 때문이다.
   에를 들어, 한 사용자가 핸드폰 2개를 쓰고, 여러개의 컴퓨터(데스크톱, 노트북)에서 여러개의 웹 브라우저를 쓰고 있는 경우, 토픽을 구독한 경우, 모든 핸드폰과 컴퓨터, 각 웹 브라우저 마다 동기화가 되어야 한다는 것이다. (그렇지 않으면 동작이 이상하게 된다.) 그런데 이 동기화 작업이 만만치 않다. 예를 들어 안드로이 폰에서 QnA 게시판 토픽을 subscription 했으면, 그 사용자가 사용하는 다른 폰(아이폰 등)이나 컴퓨터에서도 자동 subscription 되어야 한다. 반대로 해제하는 경우도 마찬가지이다. 만약, 사용자가 새로운 핸드폰(또는 컴퓨터)에 로그인을 한다면, 그 핸드폰(또는 컴퓨터) 또한 동기화 해야 한다. 즉 새로운 기기 마다 동기화를 해야하며, 새로운 토큰이 생성(리프레시)될 때 마다 동기화 작업이 이루어져야 한다. 문제는 이 뿐만이 아니다. 사용자가 QnA 게시판의 모든 알림(글, 코멘트) 구독하고, 개인 설정에서 내 글의 코멘트를 구독하도록 했다고 가정하면, 그 사용자가 QnA 에 글을 작성하고, 다른 사용자가 댓글을 작성하면 글 작성자에게 동일한 푸시 알림이 두 번 전송되어져 온다. 이 같은 경우, 동일한(중복된) 푸시 알림이 두 번 전송 되지 않도록 내부적으로 처리를 해야 한다. 이외에도 여러가지 필요한 작업이 있는데 만만치 많다. 사실 지금까지는 이런 방식으로 푸시 알림 로직을 개발해 왔지만, 0.3 버전 부터는 "간단한 코드"를 목표로 이런 복잡한 로직(토픽 구독)을 없애고 개별 토큰을 통해서 푸시 알림을 하도록 했다.
@@ -653,9 +734,16 @@ FlutterFlow 에는 없는 `uid` 를 추가했다. 이를 통해서 필요에 따
 
 - 푸시 알림을 이용하기 위해서는 `FireFlutterService.instance.init()` 외에 추가적으로 `MessagingService.instance.init()` 을 추가 해 주어야 한다.
 
-## 푸시 알림 구독
+### 푸시 알림 구독
 
-- [영어]() 참고.
+- 푸시 알림 구독은 게시판 카테고리와, 채팅 등 다양한 곳에서 활용된다.
+
+
+### 메세지 전송, Push Notification 전송하기
+
+- 푸시 전송은 Legacy API 를 지원하지 않으며, 클라우드 함수를 통해서 메시지 전송을 한다.
+
+
 
 
 
@@ -922,6 +1010,27 @@ DocumentBuilder(
 
 - 로그인한 관리자이면 위젯을 빌드해서 보여준다.
 
+
+
+## RecentPostCard - 사진이 있는 최근 글 카드로 보여주기
+
+- 가장 최근에 작성된 글 중에서 사진이 있는 글을 가져와 Card 형식으로 보여준다.
+  - 특정 카테고리를 지정할 수 있으며, onTap 이벤트를 통해서 사용자가 탭을 하면, 원하는 동작을 할 수 있다.
+  - `RecentPostCard` 위젯의 소스 코드를 복사해서 원하는데로 커스터마이징을 해도 좋다.
+
+- 아래의 예제는 카드를 탭하면 글 읽기 스크린으로 이동한다.
+
+예제)
+```dart
+RecentPostCard(
+  category: 'discussion',
+  onTap: (post) => router.push('${PostViewScreen.routeName}?id=${post.id}'),
+),
+```
+
+결과)
+
+![Recent Post Card](https://github.com/thruthesky/fireflutter/wiki/img/recent-post-card.jpg)
 
 
 

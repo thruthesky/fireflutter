@@ -7,7 +7,7 @@ class Chat {
   // The other user's uid of current room.
   // Use to Identify which room the current user at.
   // Chat Push Notification check if otherUid is the sender then dont show the notification.
-  static String otherUid = '';
+  // static String otherUid = '';
 
   /// Post [newMessages] event when there is a new message.
   ///

@@ -3,7 +3,27 @@ import 'package:fireflutter/fireflutter.dart';
 
 /// Manage the Firestore-like access on user settings.
 /// It supports `doc()`, `path`, `snapshot()`, `get()`, etc.
+///
+/// To get the document reference,
+/// ```dart
+/// UserService.instance.settings.col.doc("chat.$uid");
+/// ```
+///
+/// To get the path of the document, use one of the below.
+/// ```dart
+/// UserService.instance.settings.col.doc("chat.$uid").path;
+/// UserService.instance.settings.doc("chat.$uid");
+/// ```
+///
+/// To get other user's setting document
+/// ```
+/// final doc = await UserSettings(uid: uid, documentId: 'chat.${UserService.instance.uid}').get();
+/// if (doc == null) print('document does not exist');
+/// else print('document: $doc');
+/// ```
 class UserSettings {
+  UserSettings({this.uid, this.documentId = 'settings'});
+  String? uid;
   String documentId = 'settings';
 
   String get path => col.doc(documentId).path;
@@ -20,8 +40,9 @@ class UserSettings {
     return UserSettings()..documentId = id;
   }
 
-  CollectionReference get col =>
-      UserService.instance.doc.collection('user_settings');
+  CollectionReference get col => uid != null
+      ? FireFlutterService.instance.userSettingsCol(uid!)
+      : UserService.instance.doc.collection('user_settings');
 
   Future<void> update(Map<String, dynamic> data) {
     return col.doc(documentId).set(data, SetOptions(merge: true));
@@ -32,8 +53,13 @@ class UserSettings {
   /// ```dart
   /// int? createdAt = (await UserService.instance.settings.get())?[lastTestDocCreatedAt];
   /// ```
+  ///
+  /// If there the document does not exists, it returns null.
   Future<Map<String, dynamic>?> get() async {
-    final snapshot = await col.doc(documentId).get();
+    final ref = col.doc(documentId);
+    // print('---> ref: ${ref.path}');
+    final snapshot = await ref.get();
+    if (snapshot.exists == false) return null;
     return snapshot.data() as Map<String, dynamic>;
   }
 

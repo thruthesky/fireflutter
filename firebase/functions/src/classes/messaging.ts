@@ -6,9 +6,19 @@ import { invalidArgument } from "../utils/library";
 import { Ref } from "../utils/ref";
 import { Utils } from "../utils/utils";
 import { Comment } from "./comment";
+import { Post } from "./post";
 import { User } from "./user";
 
 export class Messaging {
+  /**
+   * Send push messages
+   *
+   * For forum category subscription, 'data.action' and 'data.category' has the information.
+   * For topics like `allUsers`, `webUsers`, `androidUsers`, `iosUsers` will follow on next version.
+   *
+   * @param data information of sending message
+   * @returns results
+   */
   static async sendMessage(data: any): Promise<any> {
     if (data.topic) {
       // / see TODO in README.md
@@ -30,7 +40,6 @@ export class Messaging {
    *  'action' can be one of 'post-create', 'comment-create',
    *  'uid' is the uid of the user
    *  'category' is the category of the post.
-   * @param context
    * @returns
    */
   static async sendMessageByAction(data: any) {
@@ -41,15 +50,24 @@ export class Messaging {
       throw Error("No action on data.");
     }
 
+    // commentCreate get post and patch data with category and title.
+    if (data.action == EventName.commentCreate) {
+      const post = await Post.get(data.postId);
+      data.category = post.category;
+      data.title = post.title;
+      // console.log("comment::post::", JSON.stringify(post));
+      // console.log("comment::data::", JSON.stringify(data));
+    }
+
     // Get users who subscribed the subscription
     // TODO make this a function.
     const snap = await Ref.db
-        .collectionGroup("user_settings")
-        .where("action", "==", data.action)
-        .where("category", "==", data.category)
-        .get();
+      .collectionGroup("user_settings")
+      .where("action", "==", data.action)
+      .where("category", "==", data.category)
+      .get();
 
-    console.log("snap.size", snap.size);
+    // console.log("snap.size", snap.size);
 
     // No users
     if (snap.size == 0) return;
@@ -88,17 +106,17 @@ export class Messaging {
    * @param context Cloud Functions Callable context
    */
   static async sendMessageToTokens(
-      tokens: string[],
-      data: any
+    tokens: string[],
+    data: any
   ): Promise<{ success: number; error: number }> {
     console.log(`sendMessageToTokens() token.length: ${tokens.length}`);
     if (tokens.length == 0) {
       console.log("sendMessageToTokens() no tokens. so, just return results.");
       return { success: 0, error: 0 };
     }
-    // add login user uid
 
-    data.senderUid = data.uid;
+    // add login user uid
+    // data.senderUid = data.uid; // already inside the completePayload
 
     const payload = this.completePayload(data);
 
@@ -111,8 +129,8 @@ export class Messaging {
     // Save [sendMulticast()] into a promise.
     for (const _500Tokens of chunks) {
       const newPayload: admin.messaging.MulticastMessage = Object.assign(
-          {},
-          { tokens: _500Tokens },
+        {},
+        { tokens: _500Tokens },
         payload as any
       );
       multicastPromise.push(admin.messaging().sendMulticast(newPayload));
@@ -170,16 +188,16 @@ export class Messaging {
     const promises: Promise<any>[] = [];
     for (const token of tokens) {
       promises.push(
-          // Get the document of the token
-          Ref.db
-              .collectionGroup("fcm_tokens")
-              .where("fcm_token", "==", token)
-              .get()
-              .then(async (snapshot) => {
-                for (const doc of snapshot.docs) {
-                  await doc.ref.delete();
-                }
-              })
+        // Get the document of the token
+        Ref.db
+          .collectionGroup("fcm_tokens")
+          .where("fcm_token", "==", token)
+          .get()
+          .then(async (snapshot) => {
+            for (const doc of snapshot.docs) {
+              await doc.ref.delete();
+            }
+          })
       );
     }
     await Promise.all(promises);
@@ -252,6 +270,11 @@ export class Messaging {
     if (!query.body) {
       console.log(`completePayload() throws error: body-is-empty: (${JSON.stringify(query)})`);
       throw Error("body-is-empty");
+    }
+
+    // if postId exist change the payload id.
+    if (query.postId) {
+      query.id = query.postId;
     }
 
     const res: MessagePayload = {

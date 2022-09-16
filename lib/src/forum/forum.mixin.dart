@@ -64,11 +64,16 @@ mixin ForumMixin {
 
   /// 글 목록을 할 때 사용하는 쿼리
   Query<PostModel> postsQuery({
-    int limit = 10,
+    String? category,
+    int? limit,
+    bool? hasPhoto,
     bool decending = true,
   }) {
-    return postCol
-        .limit(limit)
+    Query q = postCol;
+    if (category != null) q = q.where('category', isEqualTo: category);
+    if (hasPhoto != null) q = q.where('hasPhoto', isEqualTo: hasPhoto);
+    return q
+        .limit(limit ?? 10)
         .orderBy('createdAt', descending: decending)
         .withConverter<PostModel>(
           fromFirestore: (snapshot, _) => PostModel.fromSnapshot(snapshot),

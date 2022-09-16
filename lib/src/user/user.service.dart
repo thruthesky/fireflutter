@@ -24,6 +24,8 @@ class UserService {
 
   DocumentReference get pointDoc => doc.collection('user_meta').doc('point');
 
+  CollectionReference get pointHistoryCol => doc.collection('point_history');
+
   @Deprecated('Use return UserService.instance.get(uid);')
   Future<UserModel> getOtherUserDoc(
     String uid, {
@@ -34,8 +36,7 @@ class UserService {
     return UserService.instance.get(uid);
   }
 
-  /// TODO check if the user is admin
-  bool get isAdmin => false;
+  bool get isAdmin => user.admin;
 
   /// Return true if the user didn't sigend at all, even as anonymous.
   bool get notSignedInAtAll =>
