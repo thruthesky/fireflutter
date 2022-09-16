@@ -149,14 +149,16 @@ export class User {
   static async disableUser(adminUid: string, otherUid: string): Promise<UserRecord> {
     this.checkAdmin(adminUid);
     const user = await Ref.auth.updateUser(otherUid, { disabled: true });
-    if (user.disabled == true) await Ref.userDoc(otherUid).update({ disabled: true });
+    if (user.disabled == true) await Ref.userDoc(otherUid).set({ disabled: true }, { merge: true });
     return user;
   }
 
   static async enableUser(adminUid: string, otherUid: string) {
     this.checkAdmin(adminUid);
     const user = await Ref.auth.updateUser(otherUid, { disabled: false });
-    if (user.disabled == false) await Ref.userDoc(otherUid).update({ disabled: false });
+    if (user.disabled == false) {
+      await Ref.userDoc(otherUid).set({ disabled: false }, { merge: true });
+    }
     return user;
   }
 }

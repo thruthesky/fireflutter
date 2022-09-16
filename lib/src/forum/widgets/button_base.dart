@@ -89,24 +89,22 @@ class ButtonBase extends StatelessWidget {
                 value: 'delete',
                 child: Text('Delete', style: TextStyle(color: Colors.red)),
               ),
-
-            /// TODO block and unblock
-            // if (isAdmin &&
-            //     onBlockUser != null &&
-            //     UserService.instance. isOtherUserNotDisabled(uid))
-            //   PopupMenuItem<String>(
-            //     value: 'block',
-            //     child: Text('Block User', style: TextStyle(color: Colors.red)),
-            //   ),
-            // if (isAdmin &&
-            //     onUnblockUser != null &&
-            //     User.isOtherUserDisabled(uid))
-            //   PopupMenuItem<String>(
-            //     value: 'unblock',
-            //     child:
-            //         Text('Unblock User', style: TextStyle(color: Colors.green)),
-            //   ),
-            // PopupMenuDivider(),
+            if (isAdmin &&
+                onBlockUser != null &&
+                UserService.instance.isNotBlocked(uid))
+              PopupMenuItem<String>(
+                value: 'block',
+                child: Text('Block User', style: TextStyle(color: Colors.red)),
+              ),
+            if (isAdmin &&
+                onUnblockUser != null &&
+                UserService.instance.isBlocked(uid))
+              PopupMenuItem<String>(
+                value: 'unblock',
+                child:
+                    Text('Unblock User', style: TextStyle(color: Colors.green)),
+              ),
+            PopupMenuDivider(),
             if (!isMine)
               PopupMenuItem<String>(
                 value: 'report',

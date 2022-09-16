@@ -68,3 +68,6 @@ const ERROR_LACK_OF_POINT_ON_JOB_CREATE =
 
 const ERROR_SIGN_IN_FIRST_FOR_FORUM_CAETGORY_SUBSCRIPTION =
     "Please, sign-in first before subscribing a forum category.";
+
+const ERROR_USER_ALREADY_BLOCKED = 'The user is already blocked.';
+const ERROR_USER_NOT_BLOCKED = 'The user is not blocked.';
