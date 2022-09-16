@@ -41,9 +41,9 @@ export class User {
    *  await User.setSettings(userA, "abc", { "def": true });
    */
   static async setSettings(
-      uid: string,
-      docId: string,
-      data: {
+    uid: string,
+    docId: string,
+    data: {
       [key: string]: any;
     }
   ): Promise<admin.firestore.WriteResult> {
@@ -51,9 +51,9 @@ export class User {
   }
 
   static async setSubscription(
-      uid: string,
-      subscriptionId: string,
-      data: {
+    uid: string,
+    subscriptionId: string,
+    data: {
       [key: string]: any;
     }
   ): Promise<admin.firestore.WriteResult> {
@@ -85,5 +85,18 @@ export class User {
     const data = snapshot.data();
     if (data === void 0) return false;
     return data["notify-new-comment-under-my-posts-and-comments"] ?? false;
+  }
+
+  /**
+   * Returns true if the user has subscribed to the notification when there is a new comment under his post or comment.
+   * @param uid user uid
+   * @returns boolean
+   */
+  static async chatOtherUserNotification(uid: string, otherUid: string): Promise<boolean> {
+    const snapshot = await Ref.userSettingsDoc(uid).get();
+    if (snapshot.exists === false) return false;
+    const data = snapshot.data();
+    if (data === void 0) return false;
+    return data["chatNotify" + otherUid] ?? false;
   }
 }
