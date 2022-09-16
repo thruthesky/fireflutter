@@ -85,18 +85,19 @@ class PhoneService {
       {required VoidCallback success}) async {
     /// 참고: https://docs.google.com/document/d/12sZ8VTryUiPsjCu7c1iqXQCoNbF5qiUlrmhWxP7DGjM/edit#heading=h.uzwakaird0ci
 
+    log('verifiyCredential: phoneNumber: ${this.phoneNumber}');
     try {
-      final re = await UserService.instance
-          .phoneNumberExists(PhoneService.instance.completeNumber);
+      final re =
+          await FunctionsApi.instance.phoneNumberExists(this.phoneNumber);
 
       if (re) {
         final userCredential =
             await FirebaseAuth.instance.signInWithCredential(credential);
-        log("---> [OK] The phone number (${PhoneService.instance.completeNumber}) already in use. So, do 'signInWithCredential()' and success; userCredential: $userCredential");
+        log("---> [OK] The phone number (${this.phoneNumber}) already in use. So, do 'signInWithCredential()' and success; userCredential: $userCredential");
       } else {
         final userCredential = await FirebaseAuth.instance.currentUser
             ?.linkWithCredential(credential);
-        log("---> [OK] The phone number (${PhoneService.instance.completeNumber}) not in use. So, do 'linkWithCredential()' and success; userCredential: $userCredential");
+        log("---> [OK] The phone number (${this.phoneNumber}) not in use. So, do 'linkWithCredential()' and success; userCredential: $userCredential");
       }
     } on FirebaseAuthException catch (e) {
       ffAlert("Sign-in Error", e.toString());
@@ -112,19 +113,24 @@ class PhoneService {
     success();
   }
 
+  /// 전화번호가 올바른지 확인하고 SMS 코드를 전송한다.
+  /// 이 함수는 SMS 코드를 전송해서, 전화번호가 올바른지 확인을 하는데, 결국에는 SMS 코드를 전송하는 역할을 한다고 보면 된다.
+  ///
   /// When user submit his phone number, verify the phone numbrer first before
   /// sending sms code.
   ///
   /// on `codeSent`, move to sms code input screen since SMS code has been delivered to user.
   /// on `codeAutoRetrievalTimeout`, alert user that sms code timed out. and redirect to phone number input screen.
-  /// on `error`, display error.
+  ///
+  /// [error] 는 verify 실패 할 때, error callback 이 상위 위젯의 loader 를 없애는 등의 UI 작업을 위해서 필요하다.
+  /// 비록 [error] callback 이 사용되어도 에러 메시지는 화면에 표시되고, 에러가 throw 된다.
   /// on `androidAutomaticVerificationSuccess` handler will be called on phone verification complete.
   /// This `androidAutomaticVerificationSuccess` handler is only for android that may do automatic sms code resolution and verify the phone auth.
   Future<void> verifyPhoneNumber({
     required CodeSentCallback codeSent,
     required VoidStringCallback codeAutoRetrievalTimeout,
     required VoidCallback androidAutomaticVerificationSuccess,
-    // required ErrorCallback error,
+    required VoidCallback error,
   }) async {
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: phoneNumber,
@@ -141,6 +147,8 @@ class PhoneService {
         verifyCredential(c, success: androidAutomaticVerificationSuccess);
       },
       verificationFailed: (FirebaseAuthException e) {
+        codeSentProgress = false;
+        error();
         ffAlert("Phone Verification Error", e.toString());
         throw Exception(e);
       },

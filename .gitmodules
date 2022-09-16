@@ -4,3 +4,6 @@
 [submodule "apps/flutterkorea"]
 	path = apps/flutterkorea
 	url = https://github.com/thruthesky/flutterkorea
+[submodule "wiki"]
+	path = wiki
+	url = https://github.com/thruthesky/fireflutter.wiki

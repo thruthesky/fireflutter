@@ -1,4 +1,5 @@
 import * as admin from "firebase-admin";
+import { UserRecord } from "firebase-functions/v1/auth";
 import { UserDocument } from "../interfaces/user.interface";
 import { Ref } from "../utils/ref";
 
@@ -97,6 +98,15 @@ export class User {
     if (snapshot.exists === false) return false;
     const data = snapshot.data();
     if (data === void 0) return false;
-    return data["chatNotify" + otherUid] ?? false;
+    return data["chatNotify." + otherUid] ?? false;
+  }
+
+  static async getUserByPhoneNumber(phoneNumber: string): Promise<UserRecord | null> {
+    try {
+      const UserRecord = await Ref.auth.getUserByPhoneNumber(phoneNumber);
+      return UserRecord;
+    } catch (e) {
+      return null;
+    }
   }
 }

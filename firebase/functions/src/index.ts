@@ -6,6 +6,7 @@ admin.initializeApp();
 
 admin.firestore().settings({ ignoreUndefinedProperties: true });
 
+export * from "./functions/user.functions";
 export * from "./functions/messaging.functions";
 export * from "./functions/point.functions";
 export * from "./functions/test.functions";

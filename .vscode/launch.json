@@ -13,6 +13,15 @@
       "deviceId": "emulator-5554"
     },
     {
+      "name": "WonderfulKorea (JaeHo) - Galaxy W 3",
+      "cwd": "apps/wonderfulkorea",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "KEY=VALUE"],
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "3300a275cab914b9"
+    },
+    {
       "name": "ASUS J8AXB761J32888A",
       "cwd": "apps/wonderfulkorea",
       "program": "lib/main.dart",
@@ -39,6 +48,14 @@
       "deviceId": "00008030-000904C80290802E"
     },
     {
+      "name": "Wonderful Korea - Ace's Phone",
+      "cwd": "apps/wonderfulkorea",
+      "program": "lib/main.dart",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "9c59f12e"
+    },
+    {
       "name": "Simulator - iPhone 13 Pro Max - Macbook",
       "cwd": "apps/wonderfulkorea",
       "program": "lib/main.dart",
@@ -50,7 +67,8 @@
     {
       "name": "Integration Test - Simulator Max Pro 13",
       "cwd": "apps/wonderfulkorea",
-      "program": "integration_test/simple_test.dart",
+      // "program": "integration_test/simple_test.dart",
+      "program": "integration_test/all_test.dart",
       "request": "launch",
       "type": "dart",
       "deviceId": "ECE40623-ACC2-4729-8DD4-B3DBB46D4B25",
@@ -59,13 +77,21 @@
     {
       "name": "Integration Test - Emulator",
       "cwd": "apps/wonderfulkorea",
-      "program": "integration_test/simple_test.dart",
+      // "program": "integration_test/simple_test.dart",
+      "program": "integration_test/all_test.dart",
       "request": "launch",
       "type": "dart",
       "deviceId": "emulator-5554",
       "args": ["--dart-define", "mode=test"]
     },
-
+    {
+      "name": "Integration Test - Ace's Phone",
+      "program": "integration_test/all_test.dart",
+      "cwd": "apps/wonderfulkorea",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "9c59f12e"
+    },
     {
       "name": "example - Emulator - 5554",
       "cwd": "example",
@@ -74,7 +100,6 @@
       "type": "dart",
       "deviceId": "emulator-5554"
     },
-
     {
       "name": "example - Simulator - iPhone 13 Pro Max - iMac",
       "cwd": "example",
@@ -149,14 +174,6 @@
       "type": "dart",
       "deviceId": "chrome",
       "flutterMode": "debug"
-    },
-    {
-      "name": "WK Integration test | Emulator 5554",
-      "program": "integration_test/all_test.dart",
-      "cwd": "apps/wonderfulkorea",
-      "request": "launch",
-      "type": "dart",
-      "deviceId": "emulator-5554"
     }
   ]
 }
