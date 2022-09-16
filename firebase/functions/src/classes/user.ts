@@ -109,4 +109,56 @@ export class User {
       return null;
     }
   }
+
+  /**
+   * Return true if the user of the uid is an admin. Otherwise false will be returned.
+   *
+   *
+   * @param uid
+   */
+  static async isAdmin(uid: string): Promise<boolean> {
+    if (!uid) return false;
+
+    const doc = await Ref.adminDoc.get();
+    const admins = doc.data();
+    if (!admins) return false;
+    if (!admins[uid]) return false;
+    return true;
+  }
+
+  /**
+   * Check admin. If the user is not admin, then thow an exception of `ERROR_YOU_ARE_NOT_ADMIN`.
+   * @param uid the user uid
+   * throws error object if there is any error. Or it will return true.
+   */
+  static async checkAdmin(uid?: string): Promise<boolean> {
+    if (typeof uid === "undefined") throw Error("uid is undefined.");
+    if (await this.isAdmin(uid)) {
+      return true;
+    } else {
+      throw Error("You are not an admin.");
+    }
+  }
+
+  /**
+   * Disable a user.
+   *
+   * @param adminUid is the admin uid.
+   * @param otherUid is the user uid to be disabled.
+   */
+  static async disableUser(adminUid: string, otherUid: string): Promise<UserRecord> {
+    this.checkAdmin(adminUid);
+    const user = await Ref.auth.updateUser(otherUid, { disabled: true });
+    if (user.disabled == true) await Ref.userDoc(otherUid).set({ disabled: true }, { merge: true });
+    return user;
+  }
+
+  static async enableUser(adminUid: string, otherUid: string) {
+    this.checkAdmin(adminUid);
+    const user = await Ref.auth.updateUser(otherUid, { disabled: false });
+    if (user.disabled == false) {
+      await Ref.userDoc(otherUid).set({ disabled: false }, { merge: true });
+    }
+    return user;
+  }
 }

@@ -14,6 +14,13 @@ import 'package:fireflutter/fireflutter.dart';
 /// UserService.instance.settings.col.doc("chat.$uid").path;
 /// UserService.instance.settings.doc("chat.$uid");
 /// ```
+///
+/// To get other user's setting document
+/// ```
+/// final doc = await UserSettings(uid: uid, documentId: 'chat.${UserService.instance.uid}').get();
+/// if (doc == null) print('document does not exist');
+/// else print('document: $doc');
+/// ```
 class UserSettings {
   UserSettings({this.uid, this.documentId = 'settings'});
   String? uid;

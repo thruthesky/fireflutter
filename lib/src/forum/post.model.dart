@@ -36,6 +36,8 @@ class PostModel with ForumMixin implements Article {
   /// data is the document data object.
   Json data;
 
+  UserService get _ => UserService.instance;
+
   String id;
   String get path => postDoc(id).path;
 
@@ -334,7 +336,9 @@ class PostModel with ForumMixin implements Article {
   /// See readme.
   Future<void> delete() async {
     if (id.isEmpty) throw 'Post id empty on delete';
-    if (uid != UserService.instance.uid) throw ERROR_NOT_YOUR_POST;
+    if (_.isAdmin == false && _.uid != uid) {
+      throw ERROR_NOT_YOUR_POST;
+    }
 
     /// Delete files.
     if (files.isNotEmpty) files.forEach((url) => Storage.delete(url));

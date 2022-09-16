@@ -22,7 +22,8 @@
   - [업로드된 사진 보여주기](#업로드된-사진-보여주기)
 - [사용자 설정](#사용자-설정)
   - [사용자 설정을 바탕으로 위젯을 보여주는 MySettingsDoc](#사용자-설정을-바탕으로-위젯을-보여주는-mysettingsdoc)
-  - [사용자 설정 관련 함수](#사용자-설정-관련-함수)
+  - [사용자 설정 관련 코드](#사용자-설정-관련-코드)
+    - [사용자 설정 관련 코드 예](#사용자-설정-관련-코드-예)
 - [글](#글-1)
   - [글 생성](#글-생성)
     - [글 생성 로직 예](#글-생성-로직-예)
@@ -411,7 +412,7 @@ MySettingsDoc(builder: (settings) {
 });
 ```
 
-## 사용자 설정 관련 함수
+## 사용자 설정 관련 코드
 
 - 사용자 설정 관련 함수(기능)는 `UserSettings` 클래스에 있으며 이 클래스 인스턴스가 `UserService.instance.settings` 멤버 변수에 저장된다.
   - 즉, `UserService.instance.settings` 를 통해서 사용하면 된다.
@@ -469,7 +470,35 @@ Widget build(BuildContext context) {
 - Use `mySettings(uid)` in `FireFlutterMixin` to get the user's settings.
 
 
+### 사용자 설정 관련 코드 예
 
+- 로그인 한 사용자의 설정을 다룰 때에는 `UserService.instance.settings` 를 사용하면 된다.
+  - 예) 로그인 한 사용자 설정 문서 Document Reference 가져오기
+    - `UserService.instance.settings.doc("chat.$uid")` 는 나의 설정 컬렉션에서 `chat.$uid` 에 해당하는 문서의 reference 를 가져온다. Document Reference 이므로 `.get()`, `.set()` 등의 작업을 할 수 있다.
+
+- 다른 사용자의 설정을 다룰 때에는 `UserSettings` 클래스를 사용하면 된다. 참고로, 다른 사용자의 설정은 읽기 전용이며 쓸 수는 없다.
+  - 예) 다른 사용자 설정 문서의 Document Reference 가져오기
+    - `UserSettings(uid: uid, documentId: 'chat.otherUid')` 와 같이 하면 다른 사용자 컬렉션에서 `chat.otherUid` 설정 문서의 reference 를 가져온다. Document Reference 이므로 `.get()`, `.set()` 등의 작업을 할 수 있다.
+
+- Document Reference 가 아닌 path 가져오기.
+  - 단순히, DocumentReference 에 `path` 속성을 참조하면 된다.
+  - 예)
+    - `UserService.instance.settings.path`
+    - `UserService.instance.settings.doc("chat.$uid").path`
+    - `UserSettings(uid: uid, documentId: 'chat.otherUid').path`
+
+- 참고로, `UserService.instance.settings` 는 내부적으로 `UserSettings` 클래스를 사용한다.
+- `UserSettings` 클래스는 `.get()`, `.update()`, `.delete()` 세 개의 메소드를 제공하는데, 이것은 Firestore 에서 제공하는 것과 약간 다른 `UserSettings` 클래스만의 메소드이다.
+  - `UserSettings.get()` 의 경우, 문서가 존재하면 문서 내용을 객체로 리턴하고, 존재하지 않으면 null 을 리턴한다. Firestore 의 `get()` 은 DocumentSnapshot 을 리턴하는 데 이 점이 서로 다르다.
+  - `UserSettings.update()` 의 경우, 기존에 문서가 존재하지 않으면 생성을 한다는 점이 Firebase 의 `update()` 와 다르다.
+
+
+- 예제) 아래에서 설정 문서가 존재하지 않으면 doc 에 null 값이 적용된다.
+```dart
+final doc = await UserSettings(uid: uid, documentId: 'chat.${UserService.instance.uid}').get();
+if (doc == null) print('document does not exist');
+else print('document: $doc');
+```
 
 # 글
 
@@ -868,9 +897,9 @@ https://.../getUserUidFromPhoneNumber?phoneNumber=%2B11111111111
 ![Admin Settings](https://github.com/thruthesky/fireflutter/wiki/img/security-rules-firestore-admin.jpg)
 
 - 위와 같이 관리자 지정된 사용자의 사용자 문서에서 `/users/<uid> {admin: true}` 를 해 주어도 되고,
-  - 프로그램적으로 적절한 액션을 하면, 프로그램적으로 지정해도 된다.
+  - 사용자가 앱에서 어떤 액션을 하면, 관리자 인지 확인해서, `{admin: true}` 를 프로그램적으로 지정해도 된다.
     - 예) 로그인한 사용자가 설정에서 버전 문자열을 세번 탭하면, 액션이 실행되고 관리자로 지정되어져 있으면, 자신의 사용자 문서에 `{admin: true}` 를 직접 지정하면 된다.
-    - 참고로, 해커가 `{admin: true}`를 임의로 지정한다고 해도 보안 규칙에 의해서 관리자만 관리자 권한을 행사 할 수 있으므로 안전하다.
+    - 참고로, 해커가 자신의 사용자 문서에 `{admin: true}`를 임의로 지정한다고 해도 보안 규칙에 의해서 관리자만 관리자 권한을 행사 할 수 있으므로 안전하다.
 
 - 관리자가 지정되면, 카테고리를 생성하거나 수정 할 수 있다.
 

@@ -15,6 +15,7 @@ class UserModel {
   int birthday = 0;
   int level = 0;
   bool admin = false;
+  bool disabled = false;
 
   Timestamp? updatedAt;
   Timestamp? createdAt;
@@ -65,6 +66,7 @@ class UserModel {
     if (name.length > 12) {
       name = name.substring(0, 10) + '...';
     }
+    if (name == '') name = "(No name user)";
     return name;
   }
 
@@ -116,6 +118,8 @@ class UserModel {
     updatedAt = data['updatedAt'] is int
         ? Timestamp(data['updatedAt'], 0)
         : data['updatedAt'];
+
+    disabled = data['disabled'] ?? false;
     // data['updatedAt'];
   }
 

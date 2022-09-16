@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' as Firebase;
 import 'package:fireflutter/fireflutter.dart';
 import 'package:rxdart/subjects.dart';
@@ -25,6 +26,9 @@ class UserService {
   DocumentReference get pointDoc => doc.collection('user_meta').doc('point');
 
   CollectionReference get pointHistoryCol => doc.collection('point_history');
+
+  /// 사용자 설정 관련 코드
+  UserSettings settings = UserSettings();
 
   @Deprecated('Use return UserService.instance.get(uid);')
   Future<UserModel> getOtherUserDoc(
@@ -83,7 +87,9 @@ class UserService {
   create() {}
 
   /// `/users/<uid>` 문서를 읽어 UserModel 로 리턴한다.
+  ///
   /// 해당 문서가 존재하지 않으면 속성이 빈 값이 된다.
+  ///
   /// 참고, 이 함수는 읽은 사용자 문서를 메모리 캐시를 한다. 즉, (비용 절감을 위해서) Firestore 에서 한번만 읽고 두 번 읽지 않는다.
   /// 만약 [cache] 가 false 이면, Firestore 로 부터 문서를 읽는다. 즉, refresh 한다.
   Map<String, UserModel> userDocumentContainer = {};
@@ -111,34 +117,40 @@ class UserService {
 
   Future<UserModel> blockUser(String uid) async {
     UserModel user = await UserService.instance.get(uid);
+    if (user.disabled) throw ERROR_USER_ALREADY_BLOCKED;
+    try {
+      final res = await FirebaseFunctions.instanceFor(region: 'asia-northeast3')
+          .httpsCallable('disableUser')
+          .call({'uid': uid});
+      log(res.toString());
 
-    /// TODO block user by admin
-    ///
-    // if (user.disabled) throw ERROR_USER_ALREADY_BLOCKED;
-
-    // final res = await FunctionsApi.instance
-    //     .request('adminDisableUser', data: {'userUid': uid}, addAuth: true);
-    // UserModel u = UserModel.fromJson(res, uid);
-    // if (u.disabled) others[uid]!.disabled = u.disabled;
-    // return others[uid]!;
-
-    return user;
+      return await this.get(uid, cache: false);
+    } on FirebaseFunctionsException catch (e) {
+      log('Exception from callable function in UserService.instance.blockUser()');
+      log(e.code);
+      log(e.details);
+      log(e.message.toString());
+      rethrow;
+    }
   }
 
   Future<UserModel> unblockUser(String uid) async {
     UserModel user = await UserService.instance.get(uid);
+    if (user.disabled == false) throw ERROR_USER_NOT_BLOCKED;
+    try {
+      final res = await FirebaseFunctions.instanceFor(region: 'asia-northeast3')
+          .httpsCallable('enableUser')
+          .call({'uid': uid});
+      log(res.toString());
 
-    /// TODO unblock user by admin
-    ///
-    // if (!user.disabled) throw ERROR_USER_ALREADY_UNBLOCKED;
-
-    // final res = await FunctionsApi.instance
-    //     .request('adminEnableUser', data: {'userUid': uid}, addAuth: true);
-    // UserModel u = UserModel.fromJson(res, uid);
-    // if (u.disabled == false) others[uid]!.disabled = u.disabled;
-    // return others[uid]!;
-
-    return user;
+      return await this.get(uid, cache: false);
+    } on FirebaseFunctionsException catch (e) {
+      log('Exception from callable function in UserService.instance.unblockUser()');
+      log(e.code);
+      log(e.details);
+      log(e.message.toString());
+      rethrow;
+    }
   }
 
   signOut() async {
@@ -146,19 +158,41 @@ class UserService {
     await Firebase.FirebaseAuth.instance.signOut();
   }
 
-  bool isOtherUserDisabled(String uid) {
-    /// TODO check if other user is disabled.
-    return false;
-    // if (others[uid] == null) return false;
-    // return others[uid]!.disabled;
+  /// 서버(또는 캐시된 데이터)로 부터 사용자 정보를 가져와서, 사용자 계정이 블럭되었는지 표시하는 disabled 속성 값을
+  /// 확인해서, true 이면, disabled (블럭) 된 것이며 true 를 리턴한다.
+  ///
+  /// 서버로 부터 값을 확인하므로 Future<bool> 을 리턴한다.
+  ///
+  /// Returns true if the user of the uid is disabled.
+  Future<bool> checkDisabled(String uid) async {
+    UserModel user = await UserService.instance.get(uid);
+    return user.disabled;
   }
 
-  bool isOtherUserNotDisabled(String uid) {
-    /// TODO check if other user is not disabled.
-    return false;
-    // return !isOtherUserDisabled(uid);
+  /// Returns true if the user is not disabled.
+  Future<bool> checkEnabled(String uid) async {
+    final re = await this.checkDisabled(uid);
+    return !re;
   }
 
-  /// 사용자 설정 관련 코드
-  UserSettings settings = UserSettings();
+  /// 사용자가 블럭되었는지 확인을 한다.
+  ///
+  /// 주의, 이 함수는 서버로 부터 사용자 문서를 가져오지 않고, 캐시된 것만 사용한다. 따라서 Future 가 아닌 그냥
+  /// bool 을 리턴하는데, 사용자 정보를 가져오지 않은 경우, 실제로 블럭되어져 있어도 false 를 리턴하므로 주의한다.
+  ///
+  /// 이 함수는 메모리에 사용자 문서가 캐시되었다는 확신이 있을 때에만 사용해야 한다.
+  /// 참고로, 사용자 문서를 서버로 부터 가져 올 때, 기본적으로 메모리 캐시를 한다.
+  ///
+  bool isBlocked(String uid) {
+    if (UserService.instance.userDocumentContainer[uid] == null) {
+      return false;
+    } else {
+      return UserService.instance.userDocumentContainer[uid]!.disabled;
+    }
+  }
+
+  /// 사용자가 블럭되지 않았으면 true 를 리턴. 주의, 사용자 정보가 미리, 메모리 캐시되어 있어야 한다.
+  bool isNotBlocked(String uid) {
+    return !this.isBlocked(uid);
+  }
 }
