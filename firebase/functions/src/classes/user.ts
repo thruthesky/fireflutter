@@ -42,9 +42,9 @@ export class User {
    *  await User.setSettings(userA, "abc", { "def": true });
    */
   static async setSettings(
-    uid: string,
-    docId: string,
-    data: {
+      uid: string,
+      docId: string,
+      data: {
       [key: string]: any;
     }
   ): Promise<admin.firestore.WriteResult> {
@@ -52,9 +52,9 @@ export class User {
   }
 
   static async setSubscription(
-    uid: string,
-    subscriptionId: string,
-    data: {
+      uid: string,
+      subscriptionId: string,
+      data: {
       [key: string]: any;
     }
   ): Promise<admin.firestore.WriteResult> {

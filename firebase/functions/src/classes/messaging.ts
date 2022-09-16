@@ -62,10 +62,10 @@ export class Messaging {
     // Get users who subscribed the subscription
     // TODO make this a function.
     const snap = await Ref.db
-      .collectionGroup("user_settings")
-      .where("action", "==", data.action)
-      .where("category", "==", data.category)
-      .get();
+        .collectionGroup("user_settings")
+        .where("action", "==", data.action)
+        .where("category", "==", data.category)
+        .get();
 
     // console.log("snap.size", snap.size);
 
@@ -106,8 +106,8 @@ export class Messaging {
    * @param context Cloud Functions Callable context
    */
   static async sendMessageToTokens(
-    tokens: string[],
-    data: any
+      tokens: string[],
+      data: any
   ): Promise<{ success: number; error: number }> {
     console.log(`sendMessageToTokens() token.length: ${tokens.length}`);
     if (tokens.length == 0) {
@@ -129,8 +129,8 @@ export class Messaging {
     // Save [sendMulticast()] into a promise.
     for (const _500Tokens of chunks) {
       const newPayload: admin.messaging.MulticastMessage = Object.assign(
-        {},
-        { tokens: _500Tokens },
+          {},
+          { tokens: _500Tokens },
         payload as any
       );
       multicastPromise.push(admin.messaging().sendMulticast(newPayload));
@@ -188,16 +188,16 @@ export class Messaging {
     const promises: Promise<any>[] = [];
     for (const token of tokens) {
       promises.push(
-        // Get the document of the token
-        Ref.db
-          .collectionGroup("fcm_tokens")
-          .where("fcm_token", "==", token)
-          .get()
-          .then(async (snapshot) => {
-            for (const doc of snapshot.docs) {
-              await doc.ref.delete();
-            }
-          })
+          // Get the document of the token
+          Ref.db
+              .collectionGroup("fcm_tokens")
+              .where("fcm_token", "==", token)
+              .get()
+              .then(async (snapshot) => {
+                for (const doc of snapshot.docs) {
+                  await doc.ref.delete();
+                }
+              })
       );
     }
     await Promise.all(promises);
