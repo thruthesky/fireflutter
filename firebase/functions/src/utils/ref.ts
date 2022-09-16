@@ -11,6 +11,14 @@ export class Ref {
     return admin.database();
   }
 
+  static get settingsCol() {
+    return this.db.collection("settings");
+  }
+
+  static get adminDoc() {
+    return this.settingsCol.doc("admins");
+  }
+
   static get users() {
     return this.db.collection("users");
   }

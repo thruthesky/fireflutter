@@ -17,7 +17,7 @@ export 'src/user/user.settings.dart';
 
 export 'src/forum/post.model.dart';
 export 'src/forum/post.service.dart';
-export 'src/forum/comment.dart';
+export 'src/forum/comment.model.dart';
 export 'src/forum/forum.mixin.dart';
 export 'src/forum/widgets/comment/comment.edit.dialog.dart';
 export 'src/forum/widgets/comment/comment.list.dart';

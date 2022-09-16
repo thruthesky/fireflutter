@@ -7,38 +7,38 @@ export const sendMessage = functions.region("asia-northeast3").https.onCall(asyn
 });
 
 export const messagingOnPostCreate = functions
-  .region("asia-northeast3")
-  .firestore.document("/posts/{postId}")
-  .onCreate((snapshot) => {
-    const data = snapshot.data();
-    data.id = snapshot.id;
-    data.action = EventName.postCreate;
-    data.type = EventType.post;
-    return Messaging.sendMessage(data);
-  });
+    .region("asia-northeast3")
+    .firestore.document("/posts/{postId}")
+    .onCreate((snapshot) => {
+      const data = snapshot.data();
+      data.id = snapshot.id;
+      data.action = EventName.postCreate;
+      data.type = EventType.post;
+      return Messaging.sendMessage(data);
+    });
 
 export const messagingOnCommentCreate = functions
-  .region("asia-northeast3")
-  .firestore.document("/comments/{commentId}")
-  .onCreate((snapshot) => {
-    const data = snapshot.data();
-    data.id = snapshot.id;
-    data.action = EventName.commentCreate;
-    data.type = EventType.post;
-    return Messaging.sendMessage(data);
-  });
+    .region("asia-northeast3")
+    .firestore.document("/comments/{commentId}")
+    .onCreate((snapshot) => {
+      const data = snapshot.data();
+      data.id = snapshot.id;
+      data.action = EventName.commentCreate;
+      data.type = EventType.post;
+      return Messaging.sendMessage(data);
+    });
 
 export const pushNotificationQueue = functions
-  .region("asia-northeast3")
-  .firestore.document("/push-notifications-queue/{docId}")
-  .onCreate(async (snapshot) => {
-    const re = await Messaging.sendMessage(snapshot.data());
-    return admin
-      .firestore()
-      .collection("push-notifications-queue")
-      .doc(snapshot.id)
-      .update({
-        ...re,
-        sentAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
-  });
+    .region("asia-northeast3")
+    .firestore.document("/push-notifications-queue/{docId}")
+    .onCreate(async (snapshot) => {
+      const re = await Messaging.sendMessage(snapshot.data());
+      return admin
+          .firestore()
+          .collection("push-notifications-queue")
+          .doc(snapshot.id)
+          .update({
+            ...re,
+            sentAt: admin.firestore.FieldValue.serverTimestamp(),
+          });
+    });

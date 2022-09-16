@@ -897,9 +897,9 @@ https://.../getUserUidFromPhoneNumber?phoneNumber=%2B11111111111
 ![Admin Settings](https://github.com/thruthesky/fireflutter/wiki/img/security-rules-firestore-admin.jpg)
 
 - 위와 같이 관리자 지정된 사용자의 사용자 문서에서 `/users/<uid> {admin: true}` 를 해 주어도 되고,
-  - 프로그램적으로 적절한 액션을 하면, 프로그램적으로 지정해도 된다.
+  - 사용자가 앱에서 어떤 액션을 하면, 관리자 인지 확인해서, `{admin: true}` 를 프로그램적으로 지정해도 된다.
     - 예) 로그인한 사용자가 설정에서 버전 문자열을 세번 탭하면, 액션이 실행되고 관리자로 지정되어져 있으면, 자신의 사용자 문서에 `{admin: true}` 를 직접 지정하면 된다.
-    - 참고로, 해커가 `{admin: true}`를 임의로 지정한다고 해도 보안 규칙에 의해서 관리자만 관리자 권한을 행사 할 수 있으므로 안전하다.
+    - 참고로, 해커가 자신의 사용자 문서에 `{admin: true}`를 임의로 지정한다고 해도 보안 규칙에 의해서 관리자만 관리자 권한을 행사 할 수 있으므로 안전하다.
 
 - 관리자가 지정되면, 카테고리를 생성하거나 수정 할 수 있다.
 
