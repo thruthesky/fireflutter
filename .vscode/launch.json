@@ -75,14 +75,14 @@
       "args": ["--dart-define", "mode=test"]
     },
     {
-      "name": "Integration Test - Emulator",
+      "name": "Wonderful Korea - Integration Test - Emulator",
       "cwd": "apps/wonderfulkorea",
       // "program": "integration_test/simple_test.dart",
       "program": "integration_test/all_test.dart",
       "request": "launch",
       "type": "dart",
       "deviceId": "emulator-5554",
-      "args": ["--dart-define", "mode=test"]
+      "args": ["--dart-define", "--coverage"]
     },
     {
       "name": "Integration Test - Ace's Phone",
