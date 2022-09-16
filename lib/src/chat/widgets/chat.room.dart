@@ -33,9 +33,6 @@ class ChatRoom extends StatefulWidget {
 }
 
 class _ChatRoomState extends State<ChatRoom> {
-  /// TODO global controller
-  // Controller get _ => Controller.of;
-
   bool fetching = false;
   final int fetchNum = 20;
   bool noMore = false;
@@ -54,9 +51,6 @@ class _ChatRoomState extends State<ChatRoom> {
   @override
   void initState() {
     super.initState();
-
-    /// TODO global controller
-    // _.otherUid = widget.otherUid;
 
     Chat.clearNewMessages(widget.otherUid);
     getRoomInfo();

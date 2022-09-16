@@ -165,22 +165,10 @@ class MessagingService {
   //     'senderUid': Controller.of.user.uid,
   //   });
 
-  sendToChatUser({
-    required String title,
-    required String body,
-    required String uid,
-    required String badge,
-  }) async {
-    await FirebaseFunctions.instanceFor(region: 'asia-northeast3')
-        .httpsCallable('sendToChatUser')
-        .call({
-      'title': title,
-      'body': body,
-      'uid': uid,
-      'badge': badge,
-      'type': 'chat',
-      'senderUid': UserService.instance.uid
-    });
+  Future<DocumentReference> queue(Json data) {
+    return FirebaseFirestore.instance
+        .collection('push-notifications-queue')
+        .add(data);
   }
 
   // send({

@@ -290,11 +290,11 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
               Text('Push notification', style: caption),
               ElevatedButton(
                 onPressed: () {
-                  MessagingService.instance.send(
-                    token: MessagingService.instance.token!,
-                    title: 'Message title to myself!',
-                    body: 'Message body',
-                  );
+                  // MessagingService.instance.send(
+                  //   token: MessagingService.instance.token!,
+                  //   title: 'Message title to myself!',
+                  //   body: 'Message body',
+                  // );
                 },
                 child: Text('Send a message'),
               ),

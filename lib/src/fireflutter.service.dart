@@ -36,11 +36,20 @@ class FireFlutterService {
   // Global (system) settings for app setting.
   CollectionReference get settingDoc => db.collection('settings');
 
-  // User setting
+  /// User setting
+  /// Note, for the sign-in user's setting, you should use `UserService.instance.settings`
+  /// Note, for other user settings, you should use `UserSettings(otherUid, docId)`.
   CollectionReference userSettingsCol(String uid) =>
       userDoc(uid).collection('user_settings');
-  DocumentReference userSettingsDoc(String uid) =>
-      userSettingsCol(uid).doc('settings');
+
+  /// Get the document of other user's setting.
+  /// You cannot write on other's setting but can read.
+  /// ```dart
+  /// FireFlutterService.instance.userSettingsDoc(uid, "chat.$uid");
+  /// UserSettings(otherUid, "chat.$uid")
+  /// ```
+  DocumentReference userSettingsDoc(String uid, [docId = 'settings']) =>
+      userSettingsCol(uid).doc(docId);
 
   // Forum category menus
   DocumentReference reportDoc(String id) => reportCol.doc(id);
@@ -92,7 +101,6 @@ class FireFlutterService {
       }
     });
   }
-
 
   /// alert, confirm, error, toast 등을 기본 것을 사용하고, 별도로 디자인하고 싶다면, 여기서 callback 지정을 할 수 있다.
   /// 이 함수는 여러번 호출될 수 있고, 호출 할 때 마다 다른 값으로 초기화 할 수 있다.

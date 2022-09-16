@@ -9,6 +9,9 @@ import 'package:fireflutter/fireflutter.dart';
 ///
 /// 화면 깜빡임을 방지하기 위해서 FutureBuilder 나 StreamBiulder 와 같은 것을 사용하지 않는다.
 ///
+/// [uid] 는 null 일 수 있다. 이와 같은 경우, 빈 UserModel 정보를 builder 로 전달한다.
+/// If [uid] is null, then empty UserModel will be passed as builder parameter.
+///
 /// [useCache] 값이 false 이면, 캐시한 값을 사용하지 않는다. 즉, 사용자 정보를 서버에서 매번 가져와서 보여 준다.
 /// [useCache] 값이 null 로 입력되면, [uid] 가 로그인한 사용자의 uid 와 동일하면, 매번 서버로 부터 가져와서
 /// 회원 정보를 보여주고, 아니면, 캐시한 사용자 정보를 보여준다.

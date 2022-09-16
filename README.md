@@ -74,6 +74,9 @@
 - Cloud Functions 설명
 
 - `ForumMixin` 을 `ForumService` 로 변경한다. 통일된 코딩 방식이 필요하다.
+- `ChatMixin` 도 `ChatService` 로 변경한다.
+
+
 
 
 - 관리자의 경우 글 쓰기 양식에서 Document ID 를 직접 지정하고, 활용 할 수 있도록 한다. 기능이 있지만 잘 동작하는 지 확인한다.
@@ -422,6 +425,7 @@ MySettingsDoc(builder: (settings) {
 
 - 예제) 아래의 예제는 여러개의 사용자 설정 문서를 읽어서, reactive 하게 re-build(랜더링)하며, 문서를 업데이트(생성)하고 삭제를 하는 예제를 보여준다.
   - 참고로, 아래의 코드는 게시판 별 푸시 알림 구독을 할지 말지 목록해서 보여 주는 것이다.
+  - 아래에서 설정 파일을 어떻게 업데이트(생성)하고 삭제하는지 잘 보고, 다른 곳에서 활용 할 수 있도록 한다.
 ```dart
 @override
 Widget build(BuildContext context) {

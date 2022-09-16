@@ -10,6 +10,15 @@ import { Post } from "./post";
 import { User } from "./user";
 
 export class Messaging {
+  /**
+   * Send push messages
+   *
+   * For forum category subscription, 'data.action' and 'data.category' has the information.
+   * For topics like `allUsers`, `webUsers`, `androidUsers`, `iosUsers` will follow on next version.
+   *
+   * @param data information of sending message
+   * @returns results
+   */
   static async sendMessage(data: any): Promise<any> {
     if (data.topic) {
       // / see TODO in README.md
@@ -96,7 +105,10 @@ export class Messaging {
    * @param data data to send push notification.
    * @param context Cloud Functions Callable context
    */
-  static async sendMessageToTokens(tokens: string[], data: any): Promise<{ success: number; error: number }> {
+  static async sendMessageToTokens(
+    tokens: string[],
+    data: any
+  ): Promise<{ success: number; error: number }> {
     console.log(`sendMessageToTokens() token.length: ${tokens.length}`);
     if (tokens.length == 0) {
       console.log("sendMessageToTokens() no tokens. so, just return results.");
@@ -116,7 +128,11 @@ export class Messaging {
     const multicastPromise = [];
     // Save [sendMulticast()] into a promise.
     for (const _500Tokens of chunks) {
-      const newPayload: admin.messaging.MulticastMessage = Object.assign({}, { tokens: _500Tokens }, payload as any);
+      const newPayload: admin.messaging.MulticastMessage = Object.assign(
+        {},
+        { tokens: _500Tokens },
+        payload as any
+      );
       multicastPromise.push(admin.messaging().sendMulticast(newPayload));
     }
 
