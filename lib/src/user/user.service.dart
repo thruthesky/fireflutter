@@ -17,7 +17,8 @@ class UserService {
   StreamSubscription? userDocumentSubscription;
   BehaviorSubject userChange = BehaviorSubject.seeded(UserModel());
   // UserSettingsModel? settings;
-  String? get displayName => user.displayName;
+  String get displayName => user.displayName;
+  String get shortDisplayName => user.shortDisplayName;
 
   CollectionReference get col => FirebaseFirestore.instance.collection('users');
   DocumentReference get doc =>

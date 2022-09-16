@@ -70,6 +70,11 @@ class UserModel {
     return name;
   }
 
+  String get shortDisplayName {
+    String name = this.displayName;
+    return name.length > 6 ? name.substring(0, 6) : name;
+  }
+
   bool get hasDisplayName => displayName != '';
 
   /// return age.
