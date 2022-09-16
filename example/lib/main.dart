@@ -14,7 +14,7 @@ import 'package:intl/intl.dart';
 final globalNavigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> onTerminatedMessage(message) async {
-  //
+  // update app badger count
 }
 
 void main() async {
