@@ -284,9 +284,8 @@ mixin ForumMixin {
                     categories: categories,
                     photo: photo,
                     heightBetween: 32,
-                    category: (post?.id != null && post?.id != "")
-                        ? post?.id
-                        : category,
+                    category:
+                        (post?.id != null && post?.id != "") ? "" : category,
                     subcategory: post == null ? subcategory : '',
                     onCreate: (post) => Navigator.of(context).pop(post),
                     onUpdate: (post) => Navigator.of(context).pop(post),
