@@ -13,7 +13,6 @@
 - [기능 별 데이터 구조](#기능-별-데이터-구조)
   - [사용자](#사용자)
     - [사용자 문서](#사용자-문서)
-  - [글](#글)
 - [Fireflutter 초기화](#fireflutter-초기화)
 - [사용자 로그인](#사용자-로그인)
   - [전화번호 로그인](#전화번호-로그인)
@@ -24,7 +23,10 @@
   - [사용자 설정을 바탕으로 위젯을 보여주는 MySettingsBuilder](#사용자-설정을-바탕으로-위젯을-보여주는-mysettingsbuilder)
   - [사용자 설정 관련 코드](#사용자-설정-관련-코드)
     - [사용자 설정 관련 코드 예](#사용자-설정-관련-코드-예)
-- [글](#글-1)
+- [게시판 카테고리](#게시판-카테고리)
+  - [CategoryService.instance.loadCategories()](#categoryserviceinstanceloadcategories)
+  - [CategoryService.instance.getCategories()](#categoryserviceinstancegetcategories)
+- [게시판 글](#게시판-글)
   - [글 생성](#글-생성)
     - [글 생성 로직 예](#글-생성-로직-예)
     - [글 생성 위젯 - PostForm](#글-생성-위젯---postform)
@@ -38,7 +40,7 @@
     - [iOS 설정](#ios-설정)
   - [푸시 알림 문서 구조](#푸시-알림-문서-구조)
   - [푸시 알림 코딩](#푸시-알림-코딩)
-    - [푸시 알림 구독](#푸시-알림-구독)
+    - [푸시 알림 구독과 구현 로직](#푸시-알림-구독과-구현-로직)
     - [메세지 전송, Push Notification 전송하기](#메세지-전송-push-notification-전송하기)
 - [클라우드 함수](#클라우드-함수)
   - [FunctionsApi](#functionsapi)
@@ -95,12 +97,13 @@
 
 - (다음버전) 전체 푸시 알림
   - 전체 푸시 알림은 `condition="!('nonExistingTopic' in topics)"`와 같은 방식으로 되지 않는다.
-  - 다음 버전에서 업데이트 할 때, Cloud functions 를 통해서 해결한다.
+  - 다음 버전에서 업데이트 할 때, topic subscription 으로 해결 할 수 있다.
     - `/users/<uid>/fcm_tokens/<tokenId>` 를 `onWrite` 이벤트 trigger 를 통해서 `all`,`andriod`,`ios`,`web` 등의 토픽으로 자동 subscription 한다.
+  - 또는 사용자의 모든 토큰을 읽어서 모든 토큰에 메시지를 보낼 수 있다. 하지만 조금 비 효율적이라는 판단이 든다. topic subscription 이 나아 보인다.
 
-- (다음버전) 푸시 알림은 글 관련 모델에서 동작한다. 플러터플로에서 활용 할 수 있도록 위젯을 별도로 만들거나, 라이브러리를 만들어 본다.
+- (다음버전) 다음 글 쓰기 대기 시간. 예를 들어, buyandsell 게시판에 글을 한번 쓰면 60 분 또는 24 시간 이내에 글을 다시 쓰지 못하도록 막는 기능. 게시글 무작위 다량 등록하는 spammer 를 막기 위한 것.
 
-- (다음버전) 다음 글 쓰기 대기 시간. 예를 들어, buyandsell 게시판에 글을 한번 쓰면 60 분 또는 24 시간 이내에 글을 다시 쓰지 못하도록 막는 기능.
+
 
 # 프로젝트 개요
 
@@ -151,13 +154,15 @@
 
 ## 사용자
 
+
+
 ### 사용자 문서
 
 - `/users/<uid>` 와 같이 저장되며, 아래의 미리 지정된 필드 외에, 원하는 정보(필드)를 추가적으로 저장 할 수 있다.
 - 주의 해야 할 것은 사용자 문서는 누구든지 읽을 수 있다. 따라서 개인 정보를 저장하면 안된다.
 - 특히, 전화번호와 이메일주소는 `FirebaseAuth` 의 사용자 계정에 저장한다.
 
-- 미리 지정된 필드 목록
+사용자 문서에서 미리 지정된 필드 목록)
 ```mermaid
 erDiagram
   users {
@@ -172,22 +177,6 @@ erDiagram
   }
 ```
 
-
-## 글
-
-- `/posts/<postId>` 와 같이 데이터가 저장되며, 아래의 지정된 필드 외에, 원하는 정보(필드)를 추가적으로 지정 할 수 있다.
-- 미리 지정된 필드 목록
-```mermaid
-erDiagram
-  posts {
-    string uid
-    string title
-    string content
-    Timestamp createdAt
-    Timestamp updatedAt
-    array_of_string files
-  }
-```
 
 
 
@@ -406,9 +395,9 @@ MyDoc(
 - 사용자 설정을 읽어 builder 를 통해 위젯을 표현한다.
 - 참고로, `MySettingsBuilder` 은 reactive 해서 설정이 변경되면 builder 가 다시 호출 되어 자식 위젯을 다시 그린다. 따라서 상태 관리나 `setState()` 를 호출 할 필요 없다.
 
-* 예제) 스위치를 켜고 끄는 위젯인데, 상태 관리나 `setState()` 를 쓰지 않고 위젯을 다시 빌드(렌더링) 한다. 
+- 예제) 스위치를 켜고 끄는 위젯인데, 상태 관리나 `setState()` 를 쓰지 않고 위젯을 다시 빌드(렌더링) 한다. 
 ```dart
-const String commentNotification = 'commentNotification';
+const String commentNotification = 'notify-new-comment-under-my-posts-and-comments';
 MySettingsBuilder(builder: (settings) {
   return SwitchListTile(
     title: Text('Notify new comments under my posts and comments'),
@@ -420,6 +409,29 @@ MySettingsBuilder(builder: (settings) {
     }),
   );
 });
+```
+
+- 예제) Switch 위젯을 on/off 하면, 사용자 설정 문서 `post-create.qna` 이 존재하면 삭제하고, 존재하지 않으면 생성하는 예제.
+  - 아래의 예제에서 `id` 를 지정하고, `settings` 값이 null 이면 설정 문서가 존재하지 않는 것이며, `setState()` 하지 않아도 builder 함수로 위젯을 새로 랜더링하는 것을 잘 익혀 다른 곳에서 재 사용 할 수 있어야 한다.
+```dart
+const String subDocId = 'post-create.qna';
+MySettingsBuilder(
+  id: subDocId,
+  builder: (settings) {
+    return Switch(
+      value: settings != null,
+      onChanged: (bool value) async {
+        if (value) {
+          UserService.instance.settings.doc(subDocId).update({
+            'action': 'post-create',
+            'category': category,
+          });
+        } else {
+          UserService.instance.settings.doc(subDocId).delete();
+        }
+      },
+    );
+  }),
 ```
 
 ## 사용자 설정 관련 코드
@@ -510,7 +522,60 @@ if (doc == null) print('document does not exist');
 else print('document: $doc');
 ```
 
-# 글
+# 게시판 카테고리
+
+- 게시판은 `/categories`, `/posts`, 그리고 `/comments` 와 같이 세 개의 컬렉션에 게시판 관련 데이터가 저장된다.
+  - 그 중에서 `/categories/<categoryId> { ... }` 에 게시판 카테고리가 저장된다.
+
+- 카테고리에는 다음과 같은 기본 필드가 있으며 원한다면 여러분이 직접 얼마든지 추가 필드를 저장해도 된다.
+
+```mermaid
+erDiagram
+  users {
+      string title "카테고리 제목"
+      string description "카테고리 설명"
+      Timestamp createdAt "맨 처음 한번만 기록"
+      string group "카테고리 그룹"
+      int order "카테고리 표시 순서. 메뉴 등에서 카테고리를 표시할 순번"
+      int point "최대 포인트. 사용자가 글을 쓰면 랜덤으로 포인트가 주어지는데, 그 최대 포인트"
+  }
+```
+
+
+## CategoryService.instance.loadCategories()
+
+- 이 함수는 Firestore 로 부터 `/categories` 컬렉션에서 카테고리 문서를 가져온다.
+  - 참고로 Firestore 는 기본적으로 Offline database 로 동작하지만, `Firestore...collection...get()` 을 통해서 데이터를 가져오기 때문에 항상 서버에 접속해서 데이터를 가져온다.
+
+- `categoryGroup` 파라메타를 통해서 특정 그룹의 카테고리만 가져올 수 있다.
+
+## CategoryService.instance.getCategories()
+
+- 이 함수는 `/categories` 컬렉션으로 부터 모든 카테고리 문서를 가져온다. 카테고리 그룹 별로 가져오지 않는다.
+  - 다만, 이 함수는 메모리 캐시를 한다. 즉, 이 함수는 최초 한 번만 서버에 접속하여 데이터를 가져오고 그 다음 부터는 메모리에 캐시된 값을 사용하므로, 서버에 두번 접속하지 않는다. 카테고리 특성 상 한번 카테고리 설정 값이 정해지면 그 값이 잘 변하지 않기 때문에 메모리 캐시를 한다. 만약 실시간 업데이트 확인이 필요하면 직접 적절하게 코딩을 해야 한다.
+
+- 이 함수는 `hideHiddenCategory` 옵션이 있는데, 이 값을 true 로 하면, 카테고리 속성 중에서 `order` 값이 `-1` 로 지정된 것은 가져오지 않는다. (이 것은 클라이언트에서 필터링을 한다.)
+
+- 참고로 이 함수는 async/await 으로 동작하므로 그에 따라 적절히 사용하면 된다.
+
+
+# 게시판 글
+
+
+- `/posts/<postId> { ... }` 와 같이 데이터가 저장되며, 아래의 지정된 필드 외에, 원하는 정보(필드)를 추가적으로 지정 할 수 있다.
+- 글 문서에는 아래와 같이 미리 사용되는 필드들이 있는데, 여러분이 원한다면 얼마든지 추가 필드를 저장하고 활용하면 된다.
+```mermaid
+erDiagram
+  posts {
+    string uid
+    string title
+    string content
+    Timestamp createdAt
+    Timestamp updatedAt
+    array_of_string files
+  }
+```
+
 
 ## 글 생성
 
@@ -744,9 +809,38 @@ FlutterFlow 에는 없는 `uid` 를 추가했다. 이를 통해서 필요에 따
 
 - 푸시 알림을 이용하기 위해서는 `FireFlutterService.instance.init()` 외에 추가적으로 `MessagingService.instance.init()` 을 추가 해 주어야 한다.
 
-### 푸시 알림 구독
+### 푸시 알림 구독과 구현 로직
 
-- 푸시 알림 구독은 게시판 카테고리와, 채팅 등 다양한 곳에서 활용된다.
+- 푸시 알림 구독은 게시판 카테고리와, 채팅 등 다양한 곳에서 사용되는데, 동작 원리를 이해해야 올바른 활용을 할 수 있다.
+
+- 게시판의 경우 `내 글 또는 코멘트에 코멘트가 달리는 경우`, `새 글이 작성되는 경우`, `새 코멘트가 작성되는 경우` 와 같이 세 가지로 분리해서 구독을 할 수 있다.
+
+- `내 글 또는 내 코멘트에 코멘트가 달리는 경우`는 내가 쓴 글 또는 코멘트에 누군가 답변을 달면 푸시 알림으로 빠르게 확인을 하기 위해서 구독(subscribe)를 하는데,
+  - (적절한 UI 작업을 통해) 사용자가 `내 글 또는 코멘트에 답변이 달리면 푸시 알림` 버튼을 클릭하면,
+  - `/users/<uid>/user_settings/settings {notify-new-comment-under-my-posts-and-comments: true}` 와 같이 설정이 된다.
+  - 그러면, 클라우드 함수가 내 글 또는 내 코멘트에 답변을 달 때 마다, 푸시 나에게 알림을 보낸다.
+  - 즉, 클라이언트에서는 단순하게 설정 필드에 true 또는 false 만 저장하면 나머지는 클라우드 함수가 알아서 적절한 때에 푸시 알림을 보내는 것이다.
+
+
+
+- `새 글이 작성되는 경우` 는 특정 게시판에 새 글이 작성되면 푸시 알림을 받고 싶을 때 사용하는 것으로 게시판 카테고리 별로 구독을 할 수 있다.
+  - 만약, `qna` 카테고리에 새글이 작성 될 때 마다 푸시 알림을 받고 싶다면,
+  - 게시판 상단에 푸시 알림 버튼을 디자인 해 놓고 사용자가 클릭하면 구독을 하기 위해서,
+    - `/users/<uid>/user_settings/{subscriptionDocumentId} {action: post-create, category: qna}` 와 같이 저장을 하면 된다.
+    - 위에서 `subscriptionDocumentId` 를 `post-create.qna` 와 같이 저장하면 된다.
+  - 사용자가 구독 해제를 하기 원한다면 (푸시 알림 버튼을 해제 한다면)
+    - `/users/<uid>/user_settings/{subscriptionDocumentId}` 파일을 삭제하면 된다.
+  - 클라우드 함수에서 위의 설정을 보고 새 글이 작성되면 사용자에게 푸시 알림을 보낸다.
+  - 즉, 클라이언트에서는 단순히 설정 문서를 생성하기만 하면 푸시 알림이 동작한다. 나머지는 클라우드 함수가 알아서 푸시 알림을 보낸다.
+
+- `새 코멘트가 작성되는 경우` 는 `새글이 작성되는 경우` 와 비슷하게 동작한다. 다만, action 이름이 `post-create` 이 아니라 `comment-create` 으로 하면 된다.
+
+
+- 참고로, Firestore 의 인덱스 제한으로 필드 이름을 고유하게 설정하지 못한다. 하지만, 문서 이름은 고유하게 설정해야만 하는데, `post-create.qna` 와 같이 지정하면 된다.
+
+
+- 참고로, 현재 FireFlutter 에서는 전체 사용자에게 메시지 전송을 지원하지 않는다. 대신, 파이어베이스의 `Cloud Messaging` 메뉴에서 전송을 할 수 있다.
+
 
 
 ### 메세지 전송, Push Notification 전송하기

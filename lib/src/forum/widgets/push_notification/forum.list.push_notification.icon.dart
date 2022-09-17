@@ -70,6 +70,7 @@ class _ForumListPushNotificationIconState
   Widget build(BuildContext context) {
     if (widget.categoryId == '') return SizedBox.shrink();
 
+    /// TODO: 여기에 MySettingsBuilder 가 굳이 필요하나? 없어도 되지 않나?
     return MySettingsBuilder(
       builder: (settings) {
         return Stack(

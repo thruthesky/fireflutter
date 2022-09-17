@@ -10,20 +10,7 @@ class CategoryService with ForumMixin {
 
   List<CategoryModel> categories = [];
 
-  /// Returns all categories.
-  ///
-  /// It does memory cache.
-  ///
-  /// Note if categoris are not fetched from firestore, then it will fetch and
-  /// return [categories].
-  /// Note if categories are already fetched, then it will return memory cached
-  /// categories, instead of fetcing again.
-  ///
-  /// If [hideHiddenCategory] is set to true, then it will not return categories whose order is -1.
-  ///
-  /// Note that, this is async call. So, it should be used with `setState`
-  /// ```dart
-  /// ```
+  /// see readme
   Future<List<CategoryModel>> getCategories(
       {bool hideHiddenCategory: false}) async {
     if (categories.length == 0) {
@@ -36,10 +23,7 @@ class CategoryService with ForumMixin {
     }
   }
 
-  /// Loads categories and return them as in List of Category model.
-  ///
-  /// You can filter some categories by [categoryGroup].
-  ///
+  /// See readme
   Future<List<CategoryModel>> loadCategories({
     String? categoryGroup,
   }) async {
