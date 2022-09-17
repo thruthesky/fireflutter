@@ -151,18 +151,6 @@ class MessagingService {
         .listen((token) => tokenChange.add(token));
   }
 
-  //   await Messaging.sendToChatUser({
-  //     'title': '${Controller.of.user.displayName} sent a message',
-  //     'body': data['text'], // for image "Sent a photo"
-  //     'uids': otherUser.uid,
-  //     'badge': newMessages.toString(),
-  //     // chat subscription to disable chat message notification
-  //     // this doesnt subscribe to topic but check if the user has user-setting that is set to 'off' value
-  //     // 'subscription': 'chatNotify' + Userinstance.uid, /// move to backend
-  //     'type': 'chat',
-  //     'senderUid': Controller.of.user.uid,
-  //   });
-
   /// [uids] 는 배열로 입력되어야 하고, 여기서 콤마로 분리된 문자열로 만들어 서버로 보낸다. 즉, 서버에서는 문자열이어야 한다.
   Future<DocumentReference> queue({
     required String title,
@@ -184,77 +172,4 @@ class MessagingService {
         .collection('push-notifications-queue')
         .add(data);
   }
-
-  // send({
-  //   required String token,
-  //   required String title,
-  //   required String body,
-  // }) async {
-  //   /// doc: https://firebase.google.com/docs/cloud-messaging/http-server-ref
-  //   const apiUrl = "https://fcm.googleapis.com/fcm/send";
-  //   final data = {
-  //     "to": token,
-  //     "notification": {
-  //       "title": title,
-  //       "body": body,
-  //     },
-  //     "data": {
-  //       "click_action": "FLUTTER_NOTIFICATION_CLICK",
-  //     },
-  //   };
-
-  //   Dio dio = getRetryDio();
-
-  //   final res = await dio.post(
-  //     apiUrl,
-  //     data: data,
-  //     options: Options(
-  //       headers: {
-  //         'content-type': 'application/json',
-  //         'Authorization':
-  //             'key=AAAAWy4G2hU:APA91bG8FpX2kNKMTRlTyiAEo3jDCg6UsiXlmVqCU-7syY0DGgpv_7VVJVpuQRoZqqzmBdUg_BWuluihF6nLwHt3yZpkfXvzzJidyp4_Ku-NgicQa0GT9Rilj_ks83HWSpAoVjaCFN7S',
-  //       },
-  //     ),
-  //   );
-
-  //   print(res.statusCode);
-  //   print(res.data);
-  // }
-
-//   /// https://firebase.google.com/docs/cloud-messaging/migrate-v1
-//   /// Migrate from legacy HTTP to HTTP v1
-//   send({
-//     required String token,
-//     required String title,
-//     required String body,
-//   }) async {
-//     const apiUrl =
-//         "https://fcm.googleapis.com/v1/projects/wonderful-korea/messages:send";
-//     final data = {
-//       "to": token,
-//       "notification": {
-//         "title": title,
-//         "body": body,
-//       },
-//       "data": {
-//         "click_action": "FLUTTER_NOTIFICATION_CLICK",
-//       },
-//     };
-
-//     Dio dio = getRetryDio();
-
-//     final res = await dio.post(
-//       apiUrl,
-//       data: data,
-//       options: Options(
-//         headers: {
-//           'content-type': 'application/json',
-//           'Authorization': "...",
-//         },
-//       ),
-//     );
-
-//     print(res.statusCode);
-//     print(res.data);
-//   }
 }

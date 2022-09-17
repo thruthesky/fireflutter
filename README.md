@@ -39,9 +39,11 @@
     - [Android 설정](#android-설정)
     - [iOS 설정](#ios-설정)
   - [푸시 알림 문서 구조](#푸시-알림-문서-구조)
-  - [푸시 알림 코딩](#푸시-알림-코딩)
-    - [푸시 알림 구독과 구현 로직](#푸시-알림-구독과-구현-로직)
-    - [메세지 전송, Push Notification 전송하기](#메세지-전송-push-notification-전송하기)
+  - [푸시 알림 기능 초기화](#푸시-알림-기능-초기화)
+  - [푸시 알림 구독과 구현 로직](#푸시-알림-구독과-구현-로직)
+  - [푸시 알림 전송 - Push Notification 전송하기](#푸시-알림-전송---push-notification-전송하기)
+    - [게시판 글, 코멘트 관련 푸시 자동 알림](#게시판-글-코멘트-관련-푸시-자동-알림)
+    - [직접 푸시 알림 메시지 전송](#직접-푸시-알림-메시지-전송)
 - [클라우드 함수](#클라우드-함수)
   - [FunctionsApi](#functionsapi)
   - [유닛 테스트](#유닛-테스트)
@@ -560,6 +562,37 @@ erDiagram
 - 참고로 이 함수는 async/await 으로 동작하므로 그에 따라 적절히 사용하면 된다.
 
 - 추천하는 사용 방법은 앱이 처음 실행(부팅)될 때, `CategoryService.instance.getCategories(hideHiddenCategory: true)` 를 통해서 모든 카테고리를 가져와 메모리에 보관을 해 놓고 필요할 때, 그 본관한 변수를 활용한다. 참고로 `Future` 방식으로 동작하므로, 최초 1회 미리 메모리에 보관해 놓고, 일반 변수로 활용하는 것이 편하다.
+  - 만약, 정말, 혹시라도 `getCategories()` 가 호출되기 전에 앱에서 카테고리 정보를 먼저 사용 할 가능성이 있다면, 임시 카테고리 정보를 미리 앱 내에 설정해 놓으면 된다
+- 예제) 카테고리 활용하는 방법. 아래와 같이 `categories` 변수에 임의의 카테고리를 지정해 놓고, `Config.init()` 을 앱이 부팅 할 때 호출하면 된다. 그러면 최소한 카테고리가 Firestore 로 부터 로드되지 않아 발생하는 문제를 막을 수 있다.
+
+```dart
+import 'package:fireflutter/fireflutter.dart';
+
+class Config {
+  /// 이 값은 (혹시나, 서버 쿼리에 실패할 경우 또는 서버로 부터 데이터를 가져오기 전에) 기본 적으로 메뉴로 보여 주는 값이며,
+  /// 앱이 부팅하면서, 실제 category 목록을 가져와서 이곳에 덮어 쓴다.
+  static Map<String, String> categories = {
+    '가입인사': 'greeting',
+    '질문': 'qna',
+    '자유게시판': 'discussion',
+    '뉴스': 'news',
+    '강좌': 'tutorial',
+    '개발자 스토리': 'dev-story',
+  };
+  static init() async {
+    final snapshot = await FireFlutterService.instance.categoryCol
+        .orderBy('order', descending: true)
+        .get();
+
+    categories = {};
+    for (final doc in snapshot.docs) {
+      final category = CategoryModel.fromSnapshot(doc);
+
+      categories[category.title] = category.id;
+    }
+  }
+}
+```
 
 # 게시판 글
 
@@ -807,11 +840,12 @@ FlutterFlow 에는 없는 `uid` 를 추가했다. 이를 통해서 필요에 따
 참고로, `/users/<uid>/fcm_tokens/<docId>`에서 FlutterFlow 는 `<docId>` 키를 랜덤하게 생성하지만, FireFlutter 에서는 push token id 를 key 로 지정한다.
 
 
-## 푸시 알림 코딩
+## 푸시 알림 기능 초기화
 
-- 푸시 알림을 이용하기 위해서는 `FireFlutterService.instance.init()` 외에 추가적으로 `MessagingService.instance.init()` 을 추가 해 주어야 한다.
+- FireFlutter 를 사용하기 위해서는 앱이 부팅 될 때 `FireFlutterService.instance.init()` 를 호출해야 한다.
+- 푸시 알림 기능을 사용하기 위해서는 추가적으로 `MessagingService.instance.init()` 을 호출 해 주어야 한다.
 
-### 푸시 알림 구독과 구현 로직
+## 푸시 알림 구독과 구현 로직
 
 - 푸시 알림 구독은 게시판 카테고리와, 채팅 등 다양한 곳에서 사용되는데, 동작 원리를 이해해야 올바른 활용을 할 수 있다.
 
@@ -845,10 +879,36 @@ FlutterFlow 에는 없는 `uid` 를 추가했다. 이를 통해서 필요에 따
 
 
 
-### 메세지 전송, Push Notification 전송하기
+## 푸시 알림 전송 - Push Notification 전송하기
 
 - 푸시 전송은 Legacy API 를 지원하지 않으며, 클라우드 함수를 통해서 메시지 전송을 한다.
+  - 만약 원한다면, 직접 Legacy API 를 사용하여 플러터 앱에서 푸시 알림 메세지를 전송하도록 코딩하면 된다.
 
+- 푸시 전송은 설정을 자동으로 되는 것과 직접 전송 방식이 있다.
+
+
+### 게시판 글, 코멘트 관련 푸시 자동 알림
+
+- 게시판의 글이나 코멘트는 특별하게 사용자 설정과 연동이 되어져 있다.
+  - 사용자가 설정에서 on/off 를 하면 푸시 알림이 전송되거나 중단된다.
+
+
+### 직접 푸시 알림 메시지 전송
+
+- 직접 푸시 알림 메시지를 전송 할 때에는 특별히 `badge` 를 전송 할 수 있다. `badge` 는 보통 앱의 아이콘에 새로운(또는 읽지 않은) 메시지가 몇개 있는지 숫자로 표시를 해 주는 역할을 한다.
+  - 흔히, 읽지 않은 문자 또는 받지 않은 전화, 또는 읽지 않은 새 카카오톡 메세지 등이 숫자로 표시되는 것을 생각하면 된다.
+- App badge 예제)
+![App](https://github.com/thruthesky/fireflutter/wiki/img/app-badge.jpg)
+
+
+
+- 푸시 알림을 직접 보내기 위해서는 `MessagingService.instance.queue()` 함수를 호출하면 된다.
+  - 이 함수는 Firestore 의 `/push-notifications-queue/messageId` 와 같이 `push-notifications-queue` 컬렉션 아래에 푸시 알림 정보를 담은 문서를 생성한다.
+  - 그러면 Cloud function 의 background function 이 푸시 알림을 보내고 그 결과를 다시 `/push-notifications-queue/messageId` 에 저장한다.
+  - 만약, 플러터앱에서 푸시 알림이 제대로 전송되었는지 확을 하려면 `queue()` 함수가 리턴하는 DocumentReference 를 observe 하면 된다.
+
+
+- 참고로, 채팅 기능에서 이 방식으로 상대방에게 푸시 알림을 보내고 있다.
 
 
 
