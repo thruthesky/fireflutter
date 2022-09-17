@@ -542,6 +542,7 @@ erDiagram
 ```
 
 
+
 ## CategoryService.instance.loadCategories()
 
 - 이 함수는 Firestore 로 부터 `/categories` 컬렉션에서 카테고리 문서를 가져온다.
@@ -558,6 +559,7 @@ erDiagram
 
 - 참고로 이 함수는 async/await 으로 동작하므로 그에 따라 적절히 사용하면 된다.
 
+- 추천하는 사용 방법은 앱이 처음 실행(부팅)될 때, `CategoryService.instance.getCategories(hideHiddenCategory: true)` 를 통해서 모든 카테고리를 가져와 메모리에 보관을 해 놓고 필요할 때, 그 본관한 변수를 활용한다. 참고로 `Future` 방식으로 동작하므로, 최초 1회 미리 메모리에 보관해 놓고, 일반 변수로 활용하는 것이 편하다.
 
 # 게시판 글
 
