@@ -7,7 +7,7 @@ export 'src/user/user.service.dart';
 export 'src/user/user.model.dart';
 export 'src/user/widgets/my.doc.dart';
 export 'src/user/widgets/user.doc.dart';
-export 'src/user/widgets/user.setting.doc.dart';
+export 'src/user/widgets/user.setting.builder.dart';
 export 'src/user/widgets/user.profile.photo.dart';
 export 'src/user/widgets/user.name.dart';
 export 'src/user/widgets/admin.dart';

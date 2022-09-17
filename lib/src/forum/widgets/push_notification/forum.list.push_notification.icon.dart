@@ -70,7 +70,7 @@ class _ForumListPushNotificationIconState
   Widget build(BuildContext context) {
     if (widget.categoryId == '') return SizedBox.shrink();
 
-    return MySettingsDoc(
+    return MySettingsBuilder(
       builder: (settings) {
         return Stack(
           alignment: AlignmentDirectional.center,

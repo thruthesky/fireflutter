@@ -32,7 +32,7 @@ class _NotificationSettingState extends State<NotificationSetting> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        MySettingsDoc(builder: (settings) {
+        MySettingsBuilder(builder: (settings) {
           return SwitchListTile(
             title: Text('Notify new comments'),
             subtitle: Text(
@@ -81,7 +81,7 @@ class NotificationSettingsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String id = '$type-create.${category.id}';
-    return MySettingsDoc(
+    return MySettingsBuilder(
       id: id,
       builder: (settings) {
         return CheckboxListTile(

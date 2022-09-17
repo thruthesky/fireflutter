@@ -1,10 +1,13 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 /// If the document does not exists, the settings passed to builder will be a null.
-class MySettingsDoc extends StatelessWidget {
-  const MySettingsDoc({super.key, this.id = 'settings', required this.builder});
+class MySettingsBuilder extends StatelessWidget {
+  const MySettingsBuilder(
+      {super.key, this.id = 'settings', required this.builder});
 
   final Widget Function(Map<String, dynamic>? settings) builder;
   final String id;
@@ -21,7 +24,10 @@ class MySettingsDoc extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator.adaptive();
           }
-          if (snapshot.hasError) return Text(snapshot.error.toString());
+          if (snapshot.hasError) {
+            log("MySettingsBuiler($id) error: ${snapshot.error}");
+            return Text(snapshot.error.toString());
+          }
 
           Map<String, dynamic>? settings;
           if (snapshot.data != null && snapshot.data?.exists == true) {
@@ -39,18 +45,18 @@ class MySettingsDoc extends StatelessWidget {
 // import 'package:rxdart/subjects.dart';
 // import 'package:fireflutter/fireflutter.dart';
 
-// /// MySettingsDoc
+// /// MySettingsBuilder
 // ///
 // ///
-// class MySettingsDoc extends StatefulWidget {
-//   const MySettingsDoc({required this.builder, Key? key}) : super(key: key);
+// class MySettingsBuilder extends StatefulWidget {
+//   const MySettingsBuilder({required this.builder, Key? key}) : super(key: key);
 //   final Widget Function(UserSettingsModel) builder;
 
 //   @override
-//   State<MySettingsDoc> createState() => _UserSettingDocState();
+//   State<MySettingsBuilder> createState() => _UserSettingDocState();
 // }
 
-// class _UserSettingDocState extends State<MySettingsDoc> {
+// class _UserSettingDocState extends State<MySettingsBuilder> {
 //   UserSettingsModel settings = UserSettingsModel.empty();
 //   StreamSubscription? userSettingSubscription;
 
@@ -104,7 +110,7 @@ class MySettingsDoc extends StatelessWidget {
 
 //         //     // settingsLoaded.add(settings);
 //         //   }, onError: (e) {
-//         //     // print('====> MySettingsDoc listening error; $e');
+//         //     // print('====> MySettingsBuilder listening error; $e');
 //         //     throw e;
 //         //   });
 //       }

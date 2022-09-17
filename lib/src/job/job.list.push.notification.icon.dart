@@ -33,7 +33,7 @@
 //   @override
 //   Widget build(BuildContext context) {
 //     // if (widget.topic == '') return SizedBox.shrink();
-//     return MySettingsDoc(builder: (settings) {
+//     return MySettingsBuilder(builder: (settings) {
 //       return IconButton(
 //         onPressed: () => onNotificationSelected,
 //         icon: Icon(

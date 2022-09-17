@@ -21,7 +21,7 @@
 - [사진(파일) 업로드](#사진파일-업로드)
   - [업로드된 사진 보여주기](#업로드된-사진-보여주기)
 - [사용자 설정](#사용자-설정)
-  - [사용자 설정을 바탕으로 위젯을 보여주는 MySettingsDoc](#사용자-설정을-바탕으로-위젯을-보여주는-mysettingsdoc)
+  - [사용자 설정을 바탕으로 위젯을 보여주는 MySettingsBuilder](#사용자-설정을-바탕으로-위젯을-보여주는-mysettingsbuilder)
   - [사용자 설정 관련 코드](#사용자-설정-관련-코드)
     - [사용자 설정 관련 코드 예](#사용자-설정-관련-코드-예)
 - [글](#글-1)
@@ -399,16 +399,17 @@ MyDoc(
 
 - 사용자의 기본 설정은 `/users/<uid>/user_settings/settings` 폴더에 저장한다.
   - 사용자 설정 관련 위젯이나 함수를 사용 할 때, `settingDocumentId` 지정을 하지 않으면, 기본적으로 `/users/<uid>/user_settings/settings` 문서에 적용이 되는데 이를 `기본 문서`라고 한다.
-  - 예를 들어, `MySettingsDoc` 을 사용 할 때, `id` 를 지정하지 않으면, `settings` 문서의 설정을 사용한다.
+  - 예를 들어, 사용자 설정을 바탕으로 위젯을 표현하는 `MySettingsBuilder` 을 사용 할 때, `id` 를 지정하지 않으면, `settings` 문서의 설정을 사용한다.
 
-## 사용자 설정을 바탕으로 위젯을 보여주는 MySettingsDoc
+## 사용자 설정을 바탕으로 위젯을 보여주는 MySettingsBuilder
 
 - 사용자 설정을 읽어 builder 를 통해 위젯을 표현한다.
-- 참고로, `MySettingsDoc` 은 reactive 해서 설정이 변경되면 builder 가 다시 호출 되어 자식 위젯을 다시 그린다. 따라서 상태 관리나 `setState()` 를 호출 할 필요 없다.
+- 참고로, `MySettingsBuilder` 은 reactive 해서 설정이 변경되면 builder 가 다시 호출 되어 자식 위젯을 다시 그린다. 따라서 상태 관리나 `setState()` 를 호출 할 필요 없다.
 
 * 예제) 스위치를 켜고 끄는 위젯인데, 상태 관리나 `setState()` 를 쓰지 않고 위젯을 다시 빌드(렌더링) 한다. 
 ```dart
-MySettingsDoc(builder: (settings) {
+const String commentNotification = 'commentNotification';
+MySettingsBuilder(builder: (settings) {
   return SwitchListTile(
     title: Text('Notify new comments under my posts and comments'),
     value: settings[commentNotification] ?? false,
@@ -440,7 +441,7 @@ MySettingsDoc(builder: (settings) {
 @override
 Widget build(BuildContext context) {
   String id = '$type-create.${category.id}';
-  return MySettingsDoc(
+  return MySettingsBuilder(
     id: id,
     builder: (settings) {
       return CheckboxListTile(
@@ -474,7 +475,7 @@ Widget build(BuildContext context) {
 
 
 
-- You can pass the setting's document id to `MySettingsDoc` to oberve different settings document under `/users/<uid>/user_settings` collection.
+- You can pass the setting's document id to `MySettingsBuilder` to oberve different settings document under `/users/<uid>/user_settings` collection.
 
 - Use `mySettings(uid)` in `FireFlutterMixin` to get the user's settings.
 
