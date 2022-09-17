@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 /// The data of the setting docuemnt will be passed over builder function.
 /// If the document does not exists, the settings passed to builder will be a null.
 ///
+///
 /// 주의, 이 위젯은 사용자 UID 값이 존재해야만 올바로 동작한다. 최소한 Anonymous 로 로그인을 해야 한다.
 /// 만약, 앱이 최소 설치되어 실행되거나 기타 로그아웃 한 상태에서 Anonymous 로 로그인을 하지 않았다면, 즉,
 /// 사용자가 완전히 로그인하지 않은 상태라면, uid 값이 없어서 null 또는 empty document path 등의
