@@ -113,7 +113,7 @@ class _PostFormState extends State<PostForm> {
             value: selectedCategory ?? category,
             items: widget.categories!.entries
                 .map(
-                    (e) => DropdownMenuItem(child: Text(e.key), value: e.value))
+                    (e) => DropdownMenuItem(child: Text(e.value), value: e.key))
                 .toList(),
             onChanged: (v) => setState(() => selectedCategory = v),
           ),
