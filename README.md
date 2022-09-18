@@ -52,8 +52,8 @@
   - [푸시 알림 사운드](#푸시-알림-사운드)
   - [클라우드 함수 설명](#클라우드-함수-설명)
     - [전화번호로 가입된 사용자 UID 찾기](#전화번호로-가입된-사용자-uid-찾기)
-    - [posts - 글 목록](#posts---글-목록)
-    - [post - 글 한 개를 가져온다.](#post---글-한-개를-가져온다)
+    - [posts 글 목록](#posts-글-목록)
+    - [post 글 한 개 가져오기](#post-글-한-개-가져오기)
 - [Firestore 보안 규칙](#firestore-보안-규칙)
   - [관리자 지정](#관리자-지정)
   - [게시판](#게시판)
@@ -1054,16 +1054,30 @@ https://.../getUserUidFromPhoneNumber?phoneNumber=%2B11111111111
 - 위 예제와 같이 기호 `+` 를 `%2B` 로 변경해서 서버로 전달해 주면 `+` 기호를 올바로 인식한다.
 
 
-### posts - 글 목록
+### posts 글 목록
 
-- 카테고리 별로 글 목록을 할 수 있으며 pagination 을 할 수 있다.
-- 사진이 있는 글만 가져 올 수 있으며,
-- 글을 가져 올 때, 내용은 제외하고 가져 올 수 있다.
+- `category` 옵션으로 카테고리 별로 글 목록을 할 수 있으며 `startAfter` 옵션과 함께 pagination 을 할 수 있다.
+- `hasPhoto=Y` 옵션으로 사진이 있는 글만 가져 올 수 있으며,
+- `content=N` 옵션으로 글을 가져 올 때, 내용은 제외하고 가져 올 수 있다.
+- `limit=10` 옵션으로 한 번에 글을 가져오는 개 수를 지정 할 수 있다.
+- 형식) `/posts?category=...&startAfter=...&hasPhoto=...&content=...&limit=...`
+  - 참고로 `startAfter` 에는 Unix timestamp 를 전송해야 한다.
 
+- 실제 예제 모음)
+  - `https://asia-northeast3-xxx.net/posts`
+    - 아무 옵션없이 호출 하면, 서버는 최근 글 10개 문서를 배열로 리턴
+  - `https://asia-northeast3-xxx.net/posts?content=N&limit=2`
+    - 서버는 글 문서 중 내용 없이, 2 개를 배열로 리턴.
+  - `https://asia-northeast3-xxx.net/posts?content=N&limit=2&startAfter=1663321260`
+    - 글 중에서 `1663321260` 시간 이후에 쓰여진 글 2개를 내용없이 가져온다.
 
-### post - 글 한 개를 가져온다.
+- 참고로, `tests/post/posts.spec.ts` 테스트 코드를 보면 좀 더 자세히 이해를 할 수 있다.
 
-- 글 문서 하나를 가져올 때 사용한다.
+### post 글 한 개 가져오기
+
+- 글 문서 하나를 가져올 때 사용한다. 만약, 문서 아이디를 입력하지 않거나, 존재하지 않는 문서 아이디가 전달되면, 서버로 부터 빈 객체가 리턴된다.
+  - 예) `/post?id=documentID`
+  - 예) `https://asia-northeast3-xxxx.cloudfunctions.net/post?id=dxUcar1mVye2NSIGMYEW`
 
 
 
@@ -1095,7 +1109,6 @@ https://.../getUserUidFromPhoneNumber?phoneNumber=%2B11111111111
     - 위젯이므로 에러를 throw 해도 상위(부모) 위젯에서 catch 를 하지 못한다. 즉, 최상위 에러 핸들러에서 핸들링 해야하는 것이다. 예) `FlutterError.onError`
     - 만약, `FileUploadButton` 에서 회원 로그인하지 않아서 발생하는 에러를 화면에 표시하지 않도록 하고, 별도로 커스터마이징하고 싶다면 아래와 같이 하면 된다.
 ```dart
-
 FireFlutterService.instance.init(
   context: router.routerDelegate.navigatorKey.currentContext!,
   error: (message) {

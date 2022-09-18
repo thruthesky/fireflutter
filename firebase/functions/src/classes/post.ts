@@ -3,8 +3,18 @@ import { PostDocument, PostListOptions } from "../interfaces/post.interface";
 import { Ref } from "../utils/ref";
 
 export class Post {
+  /**
+   * Returns the post document in `PostDocument` format.
+   *
+   * If the post does not exist, it will return an empty object.
+   *
+   * @param id post id
+   * @returns data object of the post document
+   */
   static async get(id: string): Promise<PostDocument> {
-    const data = (await Ref.postDoc(id).get()).data() as PostDocument;
+    const snapshot = await Ref.postDoc(id).get();
+    if (snapshot.exists == false) return {} as PostDocument;
+    const data = snapshot.data() as PostDocument;
     data.id = id;
     return data;
   }
@@ -18,7 +28,7 @@ export class Post {
    * - Or it will throw an exception on failing post creation.
    * @note exception will be thrown on error.
    */
-  static async list(options: PostListOptions): Promise<Array<PostDocument>> {
+  static async posts(options: PostListOptions): Promise<Array<PostDocument>> {
     const posts: Array<PostDocument> = [];
 
     let q: admin.firestore.Query = Ref.postCol;
@@ -38,7 +48,11 @@ export class Post {
     }
 
     if (options.startAfter) {
-      q = q.startAfter(parseInt(options.startAfter!));
+      const startAfter: admin.firestore.Timestamp = admin.firestore.Timestamp.fromMillis(
+          parseInt(options!.startAfter) * 1000
+      );
+
+      q = q.startAfter(startAfter);
     }
 
     const limit = options.limit ? parseInt(options.limit) : 10;

@@ -2,7 +2,8 @@
   "projects": {
     "default": "flutterkorea-app",
     "test": "withcenter-test-project",
-    "wonderfulkorea": "wonderful-korea"
+    "wonderfulkorea": "wonderful-korea",
+    "flutterkorea": "flutterkorea-app"
   },
   "targets": {},
   "etags": {}

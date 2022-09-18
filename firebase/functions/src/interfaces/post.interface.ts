@@ -22,7 +22,5 @@ export interface PostListOptions {
   order?: "asc" | "desc";
   startAfter?: string;
   content?: "Y" | "N";
-  author?: "Y" | "N";
   photo?: "Y" | "N";
-  lastComment?: "Y" | "N";
 }

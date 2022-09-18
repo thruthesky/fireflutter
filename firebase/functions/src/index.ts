@@ -11,3 +11,4 @@ export * from "./functions/messaging.functions";
 export * from "./functions/point.functions";
 export * from "./functions/admin.functions";
 export * from "./functions/test.functions";
+export * from "./functions/post.functions";
