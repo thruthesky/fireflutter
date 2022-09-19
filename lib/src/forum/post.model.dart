@@ -225,18 +225,12 @@ class PostModel with ForumMixin implements Article {
   /// Report post.
   ///
   Future<void> report(String? reason) {
-    return createReport(
+    return FireFlutterService.instance.report(
       target: ReportTarget.post,
       targetId: id,
       reporteeUid: uid,
       reason: reason,
     );
-
-    // return ReportApi.instance.report(
-    //   target: 'post',
-    //   targetId: id,
-    //   reason: reason,
-    // );
   }
 
   /// Create a post with extra data
@@ -346,7 +340,10 @@ class PostModel with ForumMixin implements Article {
     if (noOfComments < 1) {
       return postDoc(id).delete();
     } else {
-      return postDoc(id).update({'deleted': true});
+      return postDoc(id).update({
+        'deleted': true,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
     }
   }
 

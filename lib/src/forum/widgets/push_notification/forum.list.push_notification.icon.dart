@@ -70,115 +70,108 @@ class _ForumListPushNotificationIconState
   Widget build(BuildContext context) {
     if (widget.categoryId == '') return SizedBox.shrink();
 
-    /// TODO: 여기에 MySettingsBuilder 가 굳이 필요하나? 없어도 되지 않나?
-    return MySettingsBuilder(
-      builder: (settings) {
-        return Stack(
-          alignment: AlignmentDirectional.center,
-          children: [
-            PopupMenuButton<dynamic>(
-              padding: EdgeInsets.all(0),
-              offset: Offset.fromDirection(2, 46),
-              icon: Icon(
-                hasSubscription
-                    ? Icons.notifications_on
-                    : Icons.notifications_off,
-                color: hasSubscription
-                    ? Color.fromARGB(255, 74, 74, 74)
-                    : Color.fromARGB(255, 177, 177, 177),
-              ),
-              itemBuilder: (_) => [
-                PopupMenuItem(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          '${widget.categoryId} Subscriptions',
-                          style: TextStyle(
-                            fontSize: 13,
-                          ),
-                        ),
+    return Stack(
+      alignment: AlignmentDirectional.center,
+      children: [
+        PopupMenuButton<dynamic>(
+          padding: EdgeInsets.all(0),
+          offset: Offset.fromDirection(2, 46),
+          icon: Icon(
+            hasSubscription ? Icons.notifications_on : Icons.notifications_off,
+            color: hasSubscription
+                ? Color.fromARGB(255, 74, 74, 74)
+                : Color.fromARGB(255, 177, 177, 177),
+          ),
+          itemBuilder: (_) => [
+            PopupMenuItem(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      '${widget.categoryId} Subscriptions',
+                      style: TextStyle(
+                        fontSize: 13,
                       ),
-                      Divider(),
-                      Row(
-                        children: [
-                          Icon(
-                            hasPostSubscription
-                                ? Icons.notifications_on
-                                : Icons.notifications_off,
-                            color: hasPostSubscription
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context).colorScheme.secondary,
-                          ),
-                          Text(
-                            ' Post' + " " + widget.categoryId,
-                            style: TextStyle(
-                              color: hasPostSubscription
-                                  ? Theme.of(context).colorScheme.primary
-                                  : Theme.of(context).colorScheme.secondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                    ),
                   ),
-                  value: 'post',
-                ),
-                PopupMenuItem(
-                  child: Row(
+                  Divider(),
+                  Row(
                     children: [
                       Icon(
-                        hasCommentSubscription
+                        hasPostSubscription
                             ? Icons.notifications_on
                             : Icons.notifications_off,
-                        color: hasCommentSubscription
+                        color: hasPostSubscription
                             ? Theme.of(context).colorScheme.primary
                             : Theme.of(context).colorScheme.secondary,
                       ),
                       Text(
-                        ' Comment' + " " + widget.categoryId,
+                        ' Post' + " " + widget.categoryId,
                         style: TextStyle(
-                          color: hasCommentSubscription
+                          color: hasPostSubscription
                               ? Theme.of(context).colorScheme.primary
                               : Theme.of(context).colorScheme.secondary,
                         ),
                       ),
                     ],
                   ),
-                  value: 'comment',
-                ),
-              ],
-              onSelected: onNotificationSelected,
+                ],
+              ),
+              value: 'post',
             ),
-            if (hasPostSubscription)
-              Positioned(
-                top: 20,
-                left: 18,
-                child: Transform(
-                  transform: Matrix4.rotationY(math.pi),
-                  alignment: Alignment.center,
-                  child: Icon(
-                    Icons.circle,
-                    size: 6,
-                    color: Color.fromARGB(255, 196, 255, 239),
+            PopupMenuItem(
+              child: Row(
+                children: [
+                  Icon(
+                    hasCommentSubscription
+                        ? Icons.notifications_on
+                        : Icons.notifications_off,
+                    color: hasCommentSubscription
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.secondary,
                   ),
-                ),
+                  Text(
+                    ' Comment' + " " + widget.categoryId,
+                    style: TextStyle(
+                      color: hasCommentSubscription
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                ],
               ),
-            if (hasCommentSubscription)
-              Positioned(
-                top: 20,
-                right: 18,
-                child: Icon(
-                  Icons.circle,
-                  size: 6,
-                  color: Color.fromARGB(255, 255, 202, 132),
-                ),
-              ),
+              value: 'comment',
+            ),
           ],
-        );
-      },
+          onSelected: onNotificationSelected,
+        ),
+        if (hasPostSubscription)
+          Positioned(
+            top: 20,
+            left: 18,
+            child: Transform(
+              transform: Matrix4.rotationY(math.pi),
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.circle,
+                size: 6,
+                color: Color.fromARGB(255, 196, 255, 239),
+              ),
+            ),
+          ),
+        if (hasCommentSubscription)
+          Positioned(
+            top: 20,
+            right: 18,
+            child: Icon(
+              Icons.circle,
+              size: 6,
+              color: Color.fromARGB(255, 255, 202, 132),
+            ),
+          ),
+      ],
     );
   }
 

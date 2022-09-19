@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fireflutter/fireflutter.dart';
 
-class PostWidget extends StatelessWidget {
-  const PostWidget({
+class Post extends StatelessWidget {
+  const Post({
     Key? key,
     this.buttonBuilder,
     this.shareButton,

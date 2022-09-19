@@ -23,7 +23,7 @@ export 'src/forum/widgets/comment/comment.edit.dialog.dart';
 export 'src/forum/widgets/comment/comment.list.dart';
 export 'src/forum/widgets/post/post.form.dart';
 export 'src/forum/widgets/post/post.content.dart';
-export 'src/forum/widgets/post/post.widget.dart';
+export 'src/forum/widgets/post/post.dart';
 export 'src/forum/widgets/post/post.no_comment_yet.dart';
 export 'src/forum/widgets/button_base.dart';
 export 'src/forum/widgets/push_notification/forum.list.push_notification.icon.dart';
@@ -35,7 +35,7 @@ export 'src/forum/widgets/post/post.list.meta.dart';
 export 'src/forum/widgets/post/post.view.dart';
 export 'src/forum/widgets/post/post.list.title.dart';
 
-// export 'src/chat/chat.dart';
+export 'src/chat/chat.functions.dart';
 export 'src/chat/widgets/chat.friend.dart';
 
 export 'src/storage/storage.dart';

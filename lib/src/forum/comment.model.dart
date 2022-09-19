@@ -245,18 +245,12 @@ class CommentModel with ForumMixin implements Article {
   /// Report comment.
   ///
   Future<void> report(String? reason) {
-    return createReport(
+    return FireFlutterService.instance.report(
       target: ReportTarget.comment,
       targetId: id,
       reason: reason,
       reporteeUid: uid,
     );
-
-    // return ReportApi.instance.report(
-    //   target: 'comment',
-    //   targetId: id,
-    //   reason: reason,
-    // );
   }
 
   Future feedLike() {

@@ -7,10 +7,14 @@ class ReportModel {
   String targetId;
   String uid;
   String reason;
+  String reporterUid;
+  String reporteeUid;
   Timestamp? timestamp;
 
   ReportModel({
     required this.id,
+    required this.reporterUid,
+    required this.reporteeUid,
     required this.target,
     required this.targetId,
     required this.uid,
@@ -24,6 +28,8 @@ class ReportModel {
         : json['timestamp'];
 
     return ReportModel(
+      reporteeUid: json['reporteeUid'] ?? '',
+      reporterUid: json['reporterUid'] ?? '',
       target: json['target'] ?? '',
       targetId: json['targetId'] ?? '',
       uid: json['uid'] ?? '',

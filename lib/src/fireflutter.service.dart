@@ -146,4 +146,39 @@ class FireFlutterService {
     }
     return 0;
   }
+
+  /// Create a report document under `/reports` collection.
+  ///
+  /// [reporteeUid] is the uid of the reporter.
+  ///
+  /// [reporteeUid] is the uid of the user being reported.
+  ///
+  Future<void> report({
+    required ReportTarget target,
+    required String targetId,
+    String? reason,
+    String? reporteeUid,
+  }) async {
+    final uid = UserService.instance.uid;
+    final docId = "${target.name}-$targetId-$uid";
+
+    final reportSnap = await reportCol.doc(docId).get();
+    if (reportSnap.exists) {
+      throw target == ReportTarget.post
+          ? ERROR_POST_ALREADY_REPORTED
+          : ERROR_COMMENT_ALREADY_REPORTED;
+    }
+    final data = {
+      'reporterUid': uid,
+      'target': target.name,
+      'targetId': targetId,
+      'createdAt': FieldValue.serverTimestamp(),
+      if (reason != null) 'reason': reason,
+      if (reporteeUid != null) 'reporteeUid': reporteeUid,
+    };
+
+    log(data.toString());
+
+    await reportCol.doc(docId).set(data);
+  }
 }
