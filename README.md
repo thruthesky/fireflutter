@@ -438,6 +438,48 @@ MySettingsBuilder(
   }),
 ```
 
+- 예제) 두개의 위젯 중 하나를 보여주거나, 둘다 보여 주지 않기
+  - 아래의 응용 예제는 사용자 설정 문서에서 { box: ... } 의 값에 null, forum, user 중 하나의 값을 저장하는 것으로 위젯이 StatelesWidget 이므로 변수를 `build()` 안에 저장했다. (클래스 멤버로 저장해도 됨) 그리고 각 아이콘을 연속으로 두 번 클릭하면, null 을 저장해서, 두 위젯 모두 보여주지 않는다.
+  - 이 예제는 상태 관리를 대신해서 Firestore 의 사용자 문서를 사용할 수 있다는 것을 보여주는 것이다.
+
+```dart
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    String? box;
+
+    return Scaffold(
+      actions: [
+        IconButton(
+          tooltip: "Forum search",
+          onPressed: () => _.settings.update({'box': box == 'forum' ? null : 'forum'}),
+          icon: ...,
+        ),
+        IconButton(
+          tooltip: "User search",
+          onPressed: () => _.settings.update({'box': box == 'user' ? null : 'user'}),
+          icon: ...,
+        )
+      ],
+
+      body:
+        MySettingsBuilder(builder: (settings) {
+          box = settings?['box'];
+          if (settings?['box'] == 'forum') {
+            return const SearchBox(
+              margin: EdgeInsets.symmetric(horizontal: sm, vertical: sm),
+            );
+          } else if (settings?['box'] == 'user') {
+            return const UserSearchBox(
+              margin: EdgeInsets.symmetric(horizontal: sm, vertical: sm),
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
+        }),
+```
+
+
 ## 사용자 설정 관련 코드
 
 - 사용자 설정 관련 함수(기능)는 `UserSettings` 클래스에 있으며 이 클래스 인스턴스가 `UserService.instance.settings` 멤버 변수에 저장된다.

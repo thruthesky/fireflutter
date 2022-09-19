@@ -31,16 +31,6 @@ class UserService {
   /// 사용자 설정 관련 코드
   UserSettings settings = UserSettings();
 
-  @Deprecated('Use return UserService.instance.get(uid);')
-  Future<UserModel> getOtherUserDoc(
-    String uid, {
-    bool reset = false,
-  }) async {
-    assert(uid != '');
-
-    return UserService.instance.get(uid);
-  }
-
   bool get isAdmin => user.admin;
 
   /// Return true if the user didn't sigend at all, even as anonymous.
@@ -85,8 +75,6 @@ class UserService {
     userChange.add(user);
   }
 
-  create() {}
-
   /// `/users/<uid>` 문서를 읽어 UserModel 로 리턴한다.
   ///
   /// 해당 문서가 존재하지 않으면 속성이 빈 값이 된다.
@@ -113,8 +101,6 @@ class UserService {
       'updatedAt': Timestamp.now(),
     }, SetOptions(merge: true));
   }
-
-  delete() {}
 
   Future<UserModel> blockUser(String uid) async {
     UserModel user = await UserService.instance.get(uid);
