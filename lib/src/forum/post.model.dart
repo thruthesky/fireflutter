@@ -142,8 +142,6 @@ class PostModel with ForumMixin implements Article {
       week: data['week'] ?? 0,
       createdAt: _createdAt,
       updatedAt: _updatedAt,
-      // createdAt: data['createdAt'] ?? 0,
-      // updatedAt: data['updatedAt'] ?? 0,
       data: data,
     );
 

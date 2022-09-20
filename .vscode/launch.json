@@ -5,6 +5,16 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "WonderfulKorea - web",
+      "cwd": "apps/wonderfulkorea",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "KEY=VALUE"],
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "chrome",
+      "flutterMode": "debug"
+    },
+    {
       "name": "Emulator - 5554",
       "cwd": "apps/wonderfulkorea",
       "program": "lib/main.dart",
