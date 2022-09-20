@@ -85,7 +85,7 @@ export 'src/job/seeker/job.seeker.list.dart';
 export 'src/job/seeker/job.seeker.list.options.dart';
 export 'src/job/seeker/job.seeker.profile.form.dart';
 export 'src/job/seeker/job.seeker.profile.view.dart';
-export 'src/job/job.class.dart';
+export 'src/job/job.dart';
 export 'src/job/job.edit.form.dart';
 export 'src/job/job.form.dropdown.field.dart';
 export 'src/job/job.form.text.field.dart';
