@@ -95,7 +95,7 @@
       "args": ["--dart-define", "--coverage"]
     },
     {
-      "name": "Integration Test - Ace's Phone",
+      "name": "Wonderful Korea - Integration Test - Ace's Phone",
       "program": "integration_test/all_test.dart",
       "cwd": "apps/wonderfulkorea",
       "request": "launch",
