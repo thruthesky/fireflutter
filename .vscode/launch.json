@@ -23,6 +23,15 @@
       "deviceId": "emulator-5554"
     },
     {
+      "name": "Simulator - iPhone 13 Pro Max - Macbook Pro",
+      "cwd": "apps/wonderfulkorea",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "KEY=VALUE"],
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "143E6D3A-8FC5-4119-82B6-F6E43662FCA9"
+    },
+    {
       "name": "WonderfulKorea (JaeHo) - Galaxy W 3",
       "cwd": "apps/wonderfulkorea",
       "program": "lib/main.dart",
