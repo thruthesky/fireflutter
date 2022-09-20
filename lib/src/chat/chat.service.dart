@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 
 import 'package:rxdart/rxdart.dart';
@@ -29,8 +31,7 @@ class ChatService {
   /// Update my friend under
   ///   - /chat/rooms/<my-uid>/<other-uid>
   /// To make sure, all room info doc update must use this method.
-  Future<void> myOtherRoomInfoUpdate(
-      String otherUid, Map<String, dynamic> data) {
+  Future<void> myOtherRoomInfoUpdate(String otherUid, Map<String, dynamic> data) {
     return ChatBase.myRoomsCol.doc(otherUid).set(data, SetOptions(merge: true));
   }
 
@@ -39,11 +40,8 @@ class ChatService {
   /// Update my info under my friend's room list
   ///   - /chat/rooms/<other-uid>/<my-uid>
   /// To make sure, all room info doc update must use this method.
-  Future<void> otherMyRoomInfoUpdate(
-      String otherUid, Map<String, dynamic> data) {
-    return ChatBase.otherRoomsCol(otherUid)
-        .doc(ChatBase.myUid)
-        .set(data, SetOptions(merge: true));
+  Future<void> otherMyRoomInfoUpdate(String otherUid, Map<String, dynamic> data) {
+    return ChatBase.otherRoomsCol(otherUid).doc(ChatBase.myUid).set(data, SetOptions(merge: true));
   }
 
   /// Counting new messages
@@ -55,16 +53,25 @@ class ChatService {
   ///
   ///
   countNewMessages() async {
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user == null) {
+        log('unsubscribeNewMessages');
+        unsubscribeNewMessages();
+      } else {
+        log('unsubscribeNewMessages');
+        subscribeNewMessages();
+      }
+    });
+  }
+
+  subscribeNewMessages() {
     if (roomSubscription != null) roomSubscription!.cancel();
-    roomSubscription = ChatBase.myRoomsCol
-        .where('newMessages', isGreaterThan: 0)
-        .snapshots()
-        .listen((QuerySnapshot snapshot) {
+    roomSubscription =
+        ChatBase.myRoomsCol.where('newMessages', isGreaterThan: 0).snapshots().listen((QuerySnapshot snapshot) {
       // print('countNewMessages() ... listen()');
       noOfNewMessages = 0;
       snapshot.docs.forEach((doc) {
-        ChatMessageModel room =
-            ChatMessageModel.fromJson(doc.data() as Map, null);
+        ChatMessageModel room = ChatMessageModel.fromJson(doc.data() as Map, null);
         noOfNewMessages += room.newMessages;
       });
       newMessages.add(noOfNewMessages);
@@ -196,8 +203,7 @@ class ChatService {
     if (room.exists) {
       return myOtherRoomInfoUpdate(otherUid, {'friend': true});
     }
-    final msg =
-        'Hi, I am ${UserService.instance.displayName}. Can you add me as your friend?';
+    final msg = 'Hi, I am ${UserService.instance.displayName}. Can you add me as your friend?';
     await send(text: msg, otherUid: otherUid, myOtherData: {'friend': true});
 
     try {
@@ -235,9 +241,7 @@ class ChatService {
 
     // int newMessages = await Chat.getNoOfNewMessages(otherUser!.uid);
 
-    final doc = await UserSettings(
-            uid: uid, documentId: 'chat.${UserService.instance.uid}')
-        .get();
+    final doc = await UserSettings(uid: uid, documentId: 'chat.${UserService.instance.uid}').get();
     // print(doc);
     if (doc != null) {
       print('The user muted me. Just return.');
