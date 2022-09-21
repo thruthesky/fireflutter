@@ -53,14 +53,13 @@ class _PostFormState extends State<PostForm> {
   final documentId = TextEditingController();
   final summary = TextEditingController();
 
-  late List<String> files = [];
+  List<String> files = [];
 
   double uploadProgress = 0;
   bool inSubmit = false;
 
   /// 카테고리(게시판 아이디)가 null 이 아니거나 post.id 가 null 이면, 글 생성.
-  bool get isCreate =>
-      (widget.post == null || widget.post?.id == '') || (category != '');
+  bool get isCreate => (widget.post == null || widget.post?.id == '') || (category != '');
   bool get isUpdate => !isCreate;
 
   /// This is used by custom test also.
@@ -85,9 +84,8 @@ class _PostFormState extends State<PostForm> {
 
   @override
   Widget build(BuildContext context) {
-    final titleField = widget.titleFieldBuilder != null
-        ? widget.titleFieldBuilder!(title)
-        : TextField(controller: title);
+    final titleField =
+        widget.titleFieldBuilder != null ? widget.titleFieldBuilder!(title) : TextField(controller: title);
     final contentField = widget.contentFieldBuilder != null
         ? widget.contentFieldBuilder!(content)
         : TextField(controller: content, minLines: 3, maxLines: 10);
@@ -111,10 +109,7 @@ class _PostFormState extends State<PostForm> {
           DropdownButton<String>(
             isExpanded: true,
             value: selectedCategory ?? category,
-            items: widget.categories!.entries
-                .map(
-                    (e) => DropdownMenuItem(child: Text(e.value), value: e.key))
-                .toList(),
+            items: widget.categories!.entries.map((e) => DropdownMenuItem(child: Text(e.value), value: e.key)).toList(),
             onChanged: (v) => setState(() => selectedCategory = v),
           ),
           SizedBox(height: widget.heightBetween),

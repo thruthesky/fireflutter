@@ -14,6 +14,7 @@
   - [사용자](#사용자)
     - [사용자 문서](#사용자-문서)
 - [Fireflutter 초기화](#fireflutter-초기화)
+  - [기타 초기화](#기타-초기화)
 - [사용자 로그인](#사용자-로그인)
   - [전화번호 로그인](#전화번호-로그인)
 - [사용자 정보 보여주기](#사용자-정보-보여주기)
@@ -227,6 +228,20 @@ class RootWidget extends StatefullWidget {
           .init(context: router.routerDelegate.navigatorKey.currentContext!);
     });
 ```
+
+## 기타 초기화
+
+FireFlutter 의 전체 기능을 활용하기 위해서는 추가적으로 다음을 설정해야 한다. 참고로, FireFlutter 가 아닌 외부적인 설정은 적절하게 적용하면 된다.
+
+- 클라우드 함수에 접속하기 위해서 `FunctionsApi` 초기화를 해 주어야 한다.
+- 푸시 알림을 보내기 위해서 `MessagingService` 를 초기화 해 주어야 한다.
+  - 안드로이드에서 푸시 알림 소리 커스터마이징과 헤드업 디스플레이를 하기 위해서 채널 생성을 해야 하고, 사운드 파일을 적절한 위치에 저장한다.
+  - iOS 에서는 소스 커스터마징을 위해서, 사운드 파일을 Xcode 로 추가하면 된다.
+- 클라우드 함수를 Firebase 에 deploy 해야하며,
+  - Security rules 를 설정하고
+  - Index 를 생성해야 한다.
+
+
 
 # 사용자 로그인
 
@@ -991,6 +1006,7 @@ export const credentials = {
 
 - `FunctionsApi` 는 `Call functions via HTTP requests` 를 통해서 Cloud Functions 를 사용 할 때, 도움이 되는 helper class 이다. 
 - `FunctionsApi` 를 사용하기 위해서는 `init()` 를 통해서, Cloud Functions 의 서버 URL 을 기록 해 주어야 한다.
+- 참고로, `serverUrl` 은 맨 마지막에 슬래시(`/`)를 추가해야 한다.
 예제)
 ```dart
 FunctionsApi.instance.init(
