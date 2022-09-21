@@ -82,8 +82,7 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
         debugPrint('Message data: ${message.data}');
 
         if (message.notification != null) {
-          debugPrint(
-              'Message also contained a notification: ${message.notification}');
+          debugPrint('Message also contained a notification: ${message.notification}');
           ffAlert(
             message.notification?.title ?? 'No title',
             message.notification?.body ?? 'No body',
@@ -125,8 +124,7 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
             children: <Widget>[
               Text('User Profile', style: caption),
               MyDoc(
-                builder: (my) =>
-                    my.signedIn ? Text(my.toString()) : Text('Please, sign-in'),
+                builder: (my) => my.signedIn ? Text(my.toString()) : Text('Please, sign-in'),
               ),
               Divider(),
               Text('Sign In', style: caption),
@@ -242,20 +240,15 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
                         ),
                         TextField(
                           controller: TextEditingController(text: u.firstName),
-                          decoration: InputDecoration(
-                              labelText: 'Input your first name'),
-                          onChanged: (v) =>
-                              UserService.instance.update({'firstName': v}),
+                          decoration: InputDecoration(labelText: 'Input your first name'),
+                          onChanged: (v) => UserService.instance.update({'firstName': v}),
                         ),
                         TextField(
                           controller: TextEditingController(text: u.lastName),
-                          decoration: InputDecoration(
-                              labelText: 'Input your last name'),
-                          onChanged: (v) =>
-                              UserService.instance.update({'lastName': v}),
+                          decoration: InputDecoration(labelText: 'Input your last name'),
+                          onChanged: (v) => UserService.instance.update({'lastName': v}),
                         ),
-                        MyDoc(
-                            builder: (my) => Text('Birthday: ${my.birthday}')),
+                        MyDoc(builder: (my) => Text('Birthday: ${my.birthday}')),
                         ElevatedButton(
                           onPressed: () async {
                             final dt = await showDatePicker(
@@ -266,8 +259,7 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
                             );
                             if (dt != null) {
                               UserService.instance.update({
-                                'birthday':
-                                    toInt(DateFormat('yyyyMMdd').format(dt)),
+                                'birthday': toInt(DateFormat('yyyyMMdd').format(dt)),
                               });
                             }
                           },
@@ -275,8 +267,7 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
                         ),
                         TextField(
                           controller: TextEditingController(text: u.gender),
-                          decoration: InputDecoration(
-                              labelText: 'Input your gender. M or F.'),
+                          decoration: InputDecoration(labelText: 'Input your gender. M or F.'),
                           onChanged: (v) => UserService.instance.update(
                             {'gender': v},
                           ),
@@ -309,8 +300,7 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
                     children: [
                       TextField(
                         controller: category,
-                        decoration: InputDecoration(
-                            labelText: 'Input category. i.e) qna, discussion'),
+                        decoration: InputDecoration(labelText: 'Input category. i.e) qna, discussion'),
                       ),
                       TextField(
                         controller: title,
@@ -329,8 +319,7 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
                           ),
                           ElevatedButton(
                             onPressed: () async {
-                              assert(category.text == 'qna' ||
-                                  category.text == 'discussion');
+                              assert(category.text == 'qna' || category.text == 'discussion');
                               try {
                                 await PostModel().create(
                                   category: category.text,
@@ -357,16 +346,12 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
                   String? postListCategory;
                   return StatefulBuilder(
                     builder: (ctx, statefulBuilderSetState) {
-                      Query postListQuery =
-                          FirebaseFirestore.instance.collection('posts');
+                      Query postListQuery = FirebaseFirestore.instance.collection('posts');
                       if (postListCategory != null) {
-                        postListQuery = postListQuery.where('category',
-                            isEqualTo: postListCategory);
+                        postListQuery = postListQuery.where('category', isEqualTo: postListCategory);
                       }
 
-                      postListQuery = postListQuery
-                          .limit(5)
-                          .orderBy('createdAt', descending: true);
+                      postListQuery = postListQuery.limit(5).orderBy('createdAt', descending: true);
 
                       return Column(
                         children: [
@@ -396,11 +381,9 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
                             child: StreamBuilder<QuerySnapshot>(
                               stream: postListQuery.snapshots(),
                               builder: (_, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting)
+                                if (snapshot.connectionState == ConnectionState.waiting)
                                   return CircularProgressIndicator.adaptive();
-                                if (snapshot.hasError)
-                                  return Text(snapshot.error.toString());
+                                if (snapshot.hasError) return Text(snapshot.error.toString());
                                 final querySnapshot = snapshot.data!;
                                 return ListView(
                                   children: querySnapshot.docs.map(
@@ -408,8 +391,7 @@ class _MyHomePageState extends State<MyHomePage> with ForumMixin {
                                       final p = PostModel.fromSnapshot(e);
                                       return ListTile(
                                         contentPadding: EdgeInsets.all(0),
-                                        title:
-                                            Text("${p.category} - ${p.title}"),
+                                        title: Text("${p.category} - ${p.title}"),
                                         onTap: () {
                                           onPostEdit(post: p);
                                         },
