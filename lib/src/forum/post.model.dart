@@ -113,13 +113,11 @@ class PostModel with ForumMixin implements Article {
 
     /// In old data format, [createdAt] and [updatedAt] are int of unix timestamp.
     /// Convert those into Firestore timestamp.
-    Timestamp? _createdAt = data['createdAt'] is int
-        ? Timestamp.fromMillisecondsSinceEpoch(data['createdAt'] * 1000)
-        : data['createdAt'];
+    Timestamp? _createdAt =
+        data['createdAt'] is int ? Timestamp.fromMillisecondsSinceEpoch(data['createdAt'] * 1000) : data['createdAt'];
 
-    Timestamp? _updatedAt = data['updatedAt'] is int
-        ? Timestamp.fromMillisecondsSinceEpoch(data['updatedAt'] * 1000)
-        : data['updatedAt'];
+    Timestamp? _updatedAt =
+        data['updatedAt'] is int ? Timestamp.fromMillisecondsSinceEpoch(data['updatedAt'] * 1000) : data['updatedAt'];
 
     final post = PostModel(
       id: id,
@@ -165,13 +163,11 @@ class PostModel with ForumMixin implements Article {
   factory PostModel.fromTypesense(Json data, String id) {
     /// In old data format, [createdAt] and [updatedAt] are int of unix timestamp.
     /// Convert those into Firestore timestamp.
-    Timestamp? _createdAt = data['createdAt'] is int
-        ? Timestamp.fromMillisecondsSinceEpoch(data['createdAt'] * 1000)
-        : data['createdAt'];
+    Timestamp? _createdAt =
+        data['createdAt'] is int ? Timestamp.fromMillisecondsSinceEpoch(data['createdAt'] * 1000) : data['createdAt'];
 
-    Timestamp? _updatedAt = data['updatedAt'] is int
-        ? Timestamp.fromMillisecondsSinceEpoch(data['updatedAt'] * 1000)
-        : data['updatedAt'];
+    Timestamp? _updatedAt =
+        data['updatedAt'] is int ? Timestamp.fromMillisecondsSinceEpoch(data['updatedAt'] * 1000) : data['updatedAt'];
 
     return PostModel(
       id: id,
@@ -263,12 +259,17 @@ class PostModel with ForumMixin implements Article {
     if (UserService.instance.user.ready == false) {
       throw UserService.instance.user.profileError;
     }
+
+    if (UserService.instance.user.disabled) {
+      throw ERROR_USER_BLOCKED;
+    }
+
     if (category == null || category == '') {
       throw ERROR_CATEGORY_IS_EMPTY_ON_POST_CREATE;
     }
 
     final j = Jiffy();
-    final createData = {
+    final data = {
       'category': category,
       if (subcategory != null) 'subcategory': subcategory,
       'title': title,
@@ -283,14 +284,16 @@ class PostModel with ForumMixin implements Article {
       'day': j.date,
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
+      ...extra,
     };
-    log(createData.toString());
+
+    log(data.toString());
     DocumentReference<Object?> res;
     if (documentId != null && documentId != '') {
-      await postCol.doc(documentId).set({...createData, ...extra});
+      await postCol.doc(documentId).set(data);
       res = postCol.doc(documentId);
     } else {
-      res = await postCol.add({...createData, ...extra});
+      res = await postCol.add(data);
     }
 
     return PostModel.fromSnapshot(await res.get());
