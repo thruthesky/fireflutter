@@ -32,6 +32,15 @@
       "deviceId": "143E6D3A-8FC5-4119-82B6-F6E43662FCA9"
     },
     {
+      "name": "iphone7",
+      "cwd": "apps/wonderfulkorea",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "KEY=VALUE"],
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "096a885ba083f01af93963a8661720cf9e67cb86"
+    },
+    {
       "name": "WonderfulKorea (JaeHo) - Galaxy W 3",
       "cwd": "apps/wonderfulkorea",
       "program": "lib/main.dart",
@@ -64,6 +73,16 @@
       "args": ["--dart-define", "KEY=VALUE"],
       "request": "launch",
       "type": "dart",
+      "deviceId": "00008030-000904C80290802E"
+    },
+    {
+      "name": "WonderfulKorea - Release - iPhone11MaxPro - iMac",
+      "cwd": "apps/wonderfulkorea",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "KEY=VALUE"],
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
       "deviceId": "00008030-000904C80290802E"
     },
     {
