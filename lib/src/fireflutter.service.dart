@@ -6,8 +6,7 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class FireFlutterService {
-  static FireFlutterService get instance =>
-      _instance ?? (_instance = FireFlutterService());
+  static FireFlutterService get instance => _instance ?? (_instance = FireFlutterService());
   static FireFlutterService? _instance;
 
   FirebaseFirestore get db => FirebaseFirestore.instance;
@@ -39,8 +38,7 @@ class FireFlutterService {
   /// User setting
   /// Note, for the sign-in user's setting, you should use `UserService.instance.settings`
   /// Note, for other user settings, you should use `UserSettings(otherUid, docId)`.
-  CollectionReference userSettingsCol(String uid) =>
-      userDoc(uid).collection('user_settings');
+  CollectionReference userSettingsCol(String uid) => userDoc(uid).collection('user_settings');
 
   /// Get the document of other user's setting.
   /// You cannot write on other's setting but can read.
@@ -48,8 +46,7 @@ class FireFlutterService {
   /// FireFlutterService.instance.userSettingsDoc(uid, "chat.$uid");
   /// UserSettings(otherUid, "chat.$uid")
   /// ```
-  DocumentReference userSettingsDoc(String uid, [docId = 'settings']) =>
-      userSettingsCol(uid).doc(docId);
+  DocumentReference userSettingsDoc(String uid, [docId = 'settings']) => userSettingsCol(uid).doc(docId);
 
   // Forum category menus
   DocumentReference reportDoc(String id) => reportCol.doc(id);
@@ -112,7 +109,7 @@ class FireFlutterService {
     ErrorCallback? error,
     SnackbarCallback? snackbar,
   }) {
-    log('---> FireFlutterService::init()');
+    // log('---> FireFlutterService::init()');
     this.context = context;
     this.alert = alert;
     this.confirm = confirm;
@@ -164,9 +161,7 @@ class FireFlutterService {
 
     final reportSnap = await reportCol.doc(docId).get();
     if (reportSnap.exists) {
-      throw target == ReportTarget.post
-          ? ERROR_POST_ALREADY_REPORTED
-          : ERROR_COMMENT_ALREADY_REPORTED;
+      throw target == ReportTarget.post ? ERROR_POST_ALREADY_REPORTED : ERROR_COMMENT_ALREADY_REPORTED;
     }
     final data = {
       'reporterUid': uid,

@@ -4,8 +4,7 @@ import 'package:badges/badges.dart';
 
 /// See README.md for details.
 class ChatBadge extends StatefulWidget {
-  const ChatBadge({Key? key, this.builder, this.density = false})
-      : super(key: key);
+  const ChatBadge({Key? key, this.builder, this.density = false}) : super(key: key);
 
   final Function(Widget? badge)? builder;
   final bool density;
@@ -23,7 +22,7 @@ class _ChatBadgeState extends State<ChatBadge> {
     ChatService.instance.newMessages.listen((int newMessages) {
       if (mounted)
         setState(() {
-          print('---> newMessages; $newMessages');
+          // print('---> newMessages; $newMessages');
           no = newMessages;
         });
     });

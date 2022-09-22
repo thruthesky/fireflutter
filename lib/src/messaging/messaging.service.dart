@@ -68,8 +68,7 @@ class MessagingService {
     this.onMessageOpenedFromTermiated = onMessageOpenedFromTermiated;
     this.onMessageOpenedFromBackground = onMessageOpenedFromBackground;
     this.onNotificationPermissionDenied = onNotificationPermissionDenied;
-    this.onNotificationPermissionNotDetermined =
-        onNotificationPermissionNotDetermined;
+    this.onNotificationPermissionNotDetermined = onNotificationPermissionNotDetermined;
     _init();
   }
 
@@ -78,7 +77,7 @@ class MessagingService {
     if (FirebaseAuth.instance.currentUser == null) return;
     if (token == null) return;
     final ref = FireFlutterService.instance.tokenDoc(token);
-    print('ref; ${ref.path}');
+    // print('ref; ${ref.path}');
     await ref.set(
       {
         'uid': FirebaseAuth.instance.currentUser?.uid,
@@ -94,9 +93,7 @@ class MessagingService {
     /// 앱이 실행되는 동안 listen 하므로, cancel 하지 않음.
     /// `/fcm_tokens/<docId>/{token: '...', uid: '...'}`
     /// Save(or update) token
-    FirebaseAuth.instance
-        .authStateChanges()
-        .listen((user) => _updateToken(token));
+    FirebaseAuth.instance.authStateChanges().listen((user) => _updateToken(token));
 
     ///
     tokenChange.listen((token) => _updateToken(token));
@@ -104,8 +101,7 @@ class MessagingService {
     /// Permission request for iOS only. For Android, the permission is granted by default.
 
     if (kIsWeb || Platform.isIOS) {
-      NotificationSettings settings =
-          await FirebaseMessaging.instance.requestPermission(
+      NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
         alert: true,
         announcement: false,
         badge: true,
@@ -135,8 +131,7 @@ class MessagingService {
     FirebaseMessaging.onMessage.listen(onForegroundMessage);
 
     // Check if app is opened from CLOSED(TERMINATED) state and get message data.
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
       onMessageOpenedFromTermiated(initialMessage);
     }
@@ -147,8 +142,7 @@ class MessagingService {
     });
 
     // Any time the token refreshes, store this in the database too.
-    FirebaseMessaging.instance.onTokenRefresh
-        .listen((token) => tokenChange.add(token));
+    FirebaseMessaging.instance.onTokenRefresh.listen((token) => tokenChange.add(token));
   }
 
   /// [uids] 는 배열로 입력되어야 하고, 여기서 콤마로 분리된 문자열로 만들어 서버로 보낸다. 즉, 서버에서는 문자열이어야 한다.
@@ -168,8 +162,6 @@ class MessagingService {
       'createdAt': FieldValue.serverTimestamp(),
     };
     if (uids != null) data['uids'] = uids.join(',');
-    return FirebaseFirestore.instance
-        .collection('push-notifications-queue')
-        .add(data);
+    return FirebaseFirestore.instance.collection('push-notifications-queue').add(data);
   }
 }

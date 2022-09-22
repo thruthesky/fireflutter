@@ -29,7 +29,7 @@
       "args": ["--dart-define", "KEY=VALUE"],
       "request": "launch",
       "type": "dart",
-      "deviceId": "143E6D3A-8FC5-4119-82B6-F6E43662FCA9"
+      "deviceId": "ECE40623-ACC2-4729-8DD4-B3DBB46D4B25"
     },
     {
       "name": "iphone7",
