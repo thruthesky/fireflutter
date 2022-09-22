@@ -19,7 +19,7 @@ class FunctionsApi {
     required String serverUrl,
     // required Function(String) onError,
   }) {
-    print('FunctionsApi::init');
+    // print('FunctionsApi::init');
     this.serverUrl = serverUrl;
     // this.onError = onError;
   }
@@ -51,16 +51,12 @@ class FunctionsApi {
       } else
 
       /// If the response is an Map(object) and has a non-empty value of `code` property, then it is considered as an error.
-      if (res.data is Map &&
-          res.data['code'] != null &&
-          res.data['code'] != '') {
+      if (res.data is Map && res.data['code'] != null && res.data['code'] != '') {
         throw res.data['code'];
       } else
 
       /// If the response is a JSON string and has `code` property and `ERR_` string, then it is firebase error.
-      if (res.data is String &&
-          (res.data as String).contains('code') &&
-          (res.data as String).contains('ERR_')) {
+      if (res.data is String && (res.data as String).contains('code') && (res.data as String).contains('ERR_')) {
         throw res.data;
       } else {
         /// success
@@ -83,10 +79,7 @@ class FunctionsApi {
   logUrl(String functionName, dynamic data) {
     Map<String, dynamic> temp = Map<String, dynamic>.from(data);
     for (final k in temp.keys) {
-      if (temp[k] != null &&
-          !(temp[k] is String) &&
-          !(temp[k] is List) &&
-          !(temp[k] is Map)) {
+      if (temp[k] != null && !(temp[k] is String) && !(temp[k] is List) && !(temp[k] is Map)) {
         temp[k] = data[k].toString();
       }
     }

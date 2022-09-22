@@ -55,10 +55,10 @@ class ChatService {
   countNewMessages() async {
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user == null) {
-        log('unsubscribeNewMessages');
+        // log('unsubscribeNewMessages');
         unsubscribeNewMessages();
       } else {
-        log('unsubscribeNewMessages');
+        // log('unsubscribeNewMessages');
         subscribeNewMessages();
       }
     });

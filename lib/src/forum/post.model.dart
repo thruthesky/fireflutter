@@ -260,9 +260,10 @@ class PostModel with ForumMixin implements Article {
       throw UserService.instance.user.profileError;
     }
 
-    if (UserService.instance.user.disabled) {
-      throw ERROR_USER_BLOCKED;
-    }
+    // 블럭된 사용자는 글을 쓰지 못하게한다. 참고로 security rule 에서도 막아놓았다.
+    // if (UserService.instance.user.disabled) {
+    //   throw ERROR_USER_BLOCKED;
+    // }
 
     if (category == null || category == '') {
       throw ERROR_CATEGORY_IS_EMPTY_ON_POST_CREATE;

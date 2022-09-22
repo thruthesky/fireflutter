@@ -17,28 +17,42 @@ import 'package:flutter/material.dart';
 /// 에러가 발생한다. 그래서 FirebaseAuth.instance.authStateChanges() 를 사용해서 최소한 Anonymous
 /// 로 로그인을 했는지 확인한다.
 class MySettingsBuilder extends StatelessWidget {
-  const MySettingsBuilder(
-      {super.key, this.id = 'settings', required this.builder});
+  const MySettingsBuilder({
+    super.key,
+    this.id = 'settings',
+    required this.builder,
+    this.placeholder,
+  });
 
   final Widget Function(Map<String, dynamic>? settings) builder;
   final String id;
+  final Widget? placeholder;
+
   @override
   Widget build(BuildContext context) {
+    final Widget holder = placeholder ??
+        Center(
+            child: Container(
+          padding: EdgeInsets.all(16),
+          width: 24,
+          height: 24,
+          child: CircularProgressIndicator.adaptive(),
+        ));
     return StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (_, snap) {
           if (snap.connectionState == ConnectionState.waiting) {
-            return SizedBox.shrink();
+            return holder;
           }
           if (snap.hasData == false) {
-            return SizedBox.shrink();
+            return holder;
           }
           if (snap.hasError) {
             return Text(snap.error.toString());
           }
 
           if (snap.data == null) {
-            return SizedBox.shrink();
+            return holder;
           }
 
           return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
@@ -50,7 +64,7 @@ class MySettingsBuilder extends StatelessWidget {
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator.adaptive();
+                  return holder;
                 }
                 if (snapshot.hasError) {
                   log("MySettingsBuiler($id) error: ${snapshot.error}");

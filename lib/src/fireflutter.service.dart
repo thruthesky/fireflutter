@@ -77,14 +77,14 @@ class FireFlutterService {
     auth.authStateChanges().listen((firebaseUser) async {
       ///
       if (firebaseUser == null) {
-        log('---> Not signed in. signInAnonymously()');
+        // log('---> Not signed in. signInAnonymously()');
         UserService.instance.unobserveUserDoc();
         await auth.signInAnonymously();
       } else {
         if (firebaseUser.isAnonymous) {
-          log('---> Anonymous signed-in.');
+          // log('---> Anonymous signed-in.');
         } else {
-          log('---> User signed-in. email: ${firebaseUser.email}, phone: ${firebaseUser.phoneNumber}');
+          // log('---> User signed-in. email: ${firebaseUser.email}, phone: ${firebaseUser.phoneNumber}');
 
           UserService.instance.get(firebaseUser.uid).then((userDoc) async {
             if (userDoc.exists == false || userDoc.createdAt == null) {

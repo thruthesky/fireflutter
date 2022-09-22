@@ -122,7 +122,7 @@ class MessagingService {
 
     // Get the token each time the application loads and save it to database.
     token = await FirebaseMessaging.instance.getToken() ?? '';
-    log('---> device token: $token');
+    // log('---> device token: $token');
     // print(token);
     tokenChange.add(token);
     // debugPrint(token);
