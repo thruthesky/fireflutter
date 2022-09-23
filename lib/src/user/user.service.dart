@@ -21,8 +21,7 @@ class UserService {
   String get shortDisplayName => user.shortDisplayName;
 
   CollectionReference get col => FirebaseFirestore.instance.collection('users');
-  DocumentReference get doc =>
-      col.doc(Firebase.FirebaseAuth.instance.currentUser?.uid);
+  DocumentReference get doc => col.doc(Firebase.FirebaseAuth.instance.currentUser?.uid);
 
   DocumentReference get pointDoc => doc.collection('user_meta').doc('point');
 
@@ -34,19 +33,15 @@ class UserService {
   bool get isAdmin => user.admin;
 
   /// Return true if the user didn't sigend at all, even as anonymous.
-  bool get notSignedInAtAll =>
-      Firebase.FirebaseAuth.instance.currentUser == null;
+  bool get notSignedInAtAll => Firebase.FirebaseAuth.instance.currentUser == null;
 
   /// Return true if the user signed with real account. Not anonymous.
-  bool get notSignedIn =>
-      isAnonymous || Firebase.FirebaseAuth.instance.currentUser == null;
+  bool get notSignedIn => isAnonymous || Firebase.FirebaseAuth.instance.currentUser == null;
 
   bool get signedIn => !notSignedIn;
-  bool get isAnonymous =>
-      Firebase.FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+  bool get isAnonymous => Firebase.FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
 
-  String? get phoneNumber =>
-      Firebase.FirebaseAuth.instance.currentUser?.phoneNumber;
+  String? get phoneNumber => Firebase.FirebaseAuth.instance.currentUser?.phoneNumber;
 
   /// ^ Even if anonymously-sign-in enabled, it still needs to be nullable.
   /// ! To avoid `null check operator` problem in the future.
@@ -57,8 +52,7 @@ class UserService {
   /// 그리고, Anonymous 로 로그인하는 경우, unobserverUserDoc() 을 통해서 MyDoc() 이 한번 호출된다.
   observeUserDoc() {
     userDocumentSubscription?.cancel();
-    userDocumentSubscription =
-        doc.snapshots().listen((DocumentSnapshot snapshot) async {
+    userDocumentSubscription = doc.snapshots().listen((DocumentSnapshot snapshot) async {
       if (snapshot.exists == false) {
         log('---> User document not exits in observeUserDoc.');
       }
@@ -125,9 +119,8 @@ class UserService {
     UserModel user = await UserService.instance.get(uid);
     if (user.disabled == false) throw ERROR_USER_NOT_BLOCKED;
     try {
-      final res = await FirebaseFunctions.instanceFor(region: 'asia-northeast3')
-          .httpsCallable('enableUser')
-          .call({'uid': uid});
+      final res =
+          await FirebaseFunctions.instanceFor(region: 'asia-northeast3').httpsCallable('enableUser').call({'uid': uid});
       log(res.toString());
 
       return await this.get(uid, cache: false);

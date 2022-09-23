@@ -23,6 +23,15 @@
       "deviceId": "emulator-5554"
     },
     {
+      "name": "Emulator - 5554 - integration test",
+      "cwd": "apps/wonderfulkorea",
+      "program": "integration_test/all_test.dart",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "args": ["--dart-define", "mode=test"]
+    },
+    {
       "name": "Simulator - iPhone 13 Pro Max - Macbook Pro",
       "cwd": "apps/wonderfulkorea",
       "program": "lib/main.dart",
