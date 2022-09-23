@@ -65,13 +65,11 @@ class CommentModel with ForumMixin implements Article {
     Json data,
     String? id,
   ) {
-    Timestamp? _createdAt = data['createdAt'] is int
-        ? Timestamp.fromMillisecondsSinceEpoch(data['createdAt'] * 1000)
-        : data['createdAt'];
+    Timestamp? _createdAt =
+        data['createdAt'] is int ? Timestamp.fromMillisecondsSinceEpoch(data['createdAt'] * 1000) : data['createdAt'];
 
-    Timestamp? _updatedAt = data['updatedAt'] is int
-        ? Timestamp.fromMillisecondsSinceEpoch(data['updatedAt'] * 1000)
-        : data['updatedAt'];
+    Timestamp? _updatedAt =
+        data['updatedAt'] is int ? Timestamp.fromMillisecondsSinceEpoch(data['updatedAt'] * 1000) : data['updatedAt'];
 
     return CommentModel(
       content: data['content'] ?? '',
@@ -94,13 +92,11 @@ class CommentModel with ForumMixin implements Article {
   factory CommentModel.fromTypesense(Json data, String id) {
     /// In old data format, [createdAt] and [updatedAt] are int of unix timestamp.
     /// Convert those into Firestore timestamp.
-    Timestamp? _createdAt = data['createdAt'] is int
-        ? Timestamp.fromMillisecondsSinceEpoch(data['createdAt'] * 1000)
-        : data['createdAt'];
+    Timestamp? _createdAt =
+        data['createdAt'] is int ? Timestamp.fromMillisecondsSinceEpoch(data['createdAt'] * 1000) : data['createdAt'];
 
-    Timestamp? _updatedAt = data['updatedAt'] is int
-        ? Timestamp.fromMillisecondsSinceEpoch(data['updatedAt'] * 1000)
-        : data['updatedAt'];
+    Timestamp? _updatedAt =
+        data['updatedAt'] is int ? Timestamp.fromMillisecondsSinceEpoch(data['updatedAt'] * 1000) : data['updatedAt'];
 
     return CommentModel(
       id: id,
@@ -227,7 +223,7 @@ class CommentModel with ForumMixin implements Article {
   /// @thruthesky https://github.com/thruthesky/fireflutter/issues/1
   Future<void> delete() async {
     if (id.isEmpty) throw 'Id is empty on comment delete.';
-    if (uid != UserService.instance.uid) throw 'Not your comment.';
+    if (UserService.instance.isAdmin == false && uid != UserService.instance.uid) throw 'Not your comment.';
 
     /// Delete files.
     if (files.isNotEmpty) files.forEach((url) => Storage.delete(url));

@@ -20,6 +20,8 @@ class EventName {
   static const String commentCreate = 'comment-create';
 }
 
+const POST_TITLE_DELETED = 'This post has been deleted.';
+
 const ERROR_SIGN_IN_FIRST_FOR_FILE_UPLOAD = 'Please, sign in first before uploading.';
 const ERROR_SIGN_IN_FIRST_FOR_POST_CREATE = 'Please, sign in first before creating a post.';
 const ERROR_SIGN_IN_FIRST_FOR_COMMENT_CREATE = 'Please, sign in first to create a comment';

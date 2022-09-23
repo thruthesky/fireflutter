@@ -49,11 +49,18 @@ class PostModel with ForumMixin implements Article {
 
   String title;
   String get displayTitle {
-    final _title = deleted ? 'post-title-deleted' : title;
-    if (_title.trim() == '') {
-      return 'No title';
+    if (deleted) {
+      return POST_TITLE_DELETED;
+    }
+
+    final _title = title.trim();
+    if (_title != '') return _title;
+
+    final _content = content.trim();
+    if (_content.length > 40) {
+      return _content.substring(0, 40) + '...';
     } else {
-      return _title;
+      return _content;
     }
   }
 
@@ -339,14 +346,14 @@ class PostModel with ForumMixin implements Article {
     /// Delete files.
     if (files.isNotEmpty) files.forEach((url) => Storage.delete(url));
 
-    if (noOfComments < 1) {
-      return postDoc(id).delete();
-    } else {
-      return postDoc(id).update({
-        'deleted': true,
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
-    }
+    // if (noOfComments < 1) {
+    return postDoc(id).delete();
+    // } else {
+    //   return postDoc(id).update({
+    //     'deleted': true,
+    //     'updatedAt': FieldValue.serverTimestamp(),
+    //   });
+    // }
   }
 
   /// Increases no of the post read.
