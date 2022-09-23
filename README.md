@@ -56,6 +56,7 @@
     - [posts 글 목록](#posts-글-목록)
     - [post 글 한 개 가져오기](#post-글-한-개-가져오기)
 - [Firestore 보안 규칙](#firestore-보안-규칙)
+  - [보안 규칙 테스트](#보안-규칙-테스트)
   - [관리자 지정](#관리자-지정)
   - [게시판](#게시판)
 - [에러 핸들링](#에러-핸들링)
@@ -1141,6 +1142,11 @@ https://.../getUserUidFromPhoneNumber?phoneNumber=%2B11111111111
 
 
 # Firestore 보안 규칙
+
+## 보안 규칙 테스트
+
+- Firestore 보안 규칙 테스트 코드는 `<project>/firebase/firestore/tests` 폴더에 있다. 참고) [예제 테스트 코드](https://github.com/thruthesky/fireflutter/blob/main/firebase/firestore/tests/test.spec.js)
+  - 보안 규칙은 매우 중요하며, `App Check` 서비스를 사용한다고 하더라도, 반드시 제대로 된 보안 설정을 해야 한다.
 
 
 ## 관리자 지정

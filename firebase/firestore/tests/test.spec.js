@@ -160,4 +160,40 @@ describe("Forum security rules test", () => {
       })
     );
   });
+
+  it("User without disabled field on post create", async () => {
+    // 사용자 문서는 존재하는데, disabled 필드가 없는 경우,
+
+    await admin().collection("users").doc(C).set({ name: "C" });
+    await setCategory("qna", { title: "Q&A" });
+
+    const col = db(userC).collection("posts");
+    await firebase.assertSucceeds(
+      col.add({
+        category: "qna",
+        uid: C,
+        createdAt: 1,
+        updatedAt: 1,
+        noOfComments: 0,
+        deleted: false,
+      })
+    );
+  });
+  it("User without disabled field on post create", async () => {
+    // disabled 된 사용자 테스트
+    await disableUser(C);
+    await setCategory("qna", { title: "Q&A" });
+
+    const col = db(userC).collection("posts");
+    await firebase.assertFails(
+      col.add({
+        category: "qna",
+        uid: C,
+        createdAt: 1,
+        updatedAt: 1,
+        noOfComments: 0,
+        deleted: false,
+      })
+    );
+  });
 });

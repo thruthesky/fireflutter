@@ -212,6 +212,8 @@ service cloud.firestore {
       return
         exists(/databases/$(database)/documents/users/$(request.auth.uid))
         &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.keys().hasAny(['disabled'])
+        &&
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data['disabled'] == true;
     }
 
