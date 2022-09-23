@@ -4,18 +4,344 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
-    //
+    match /push-notifications-queue/{docId} {
+      allow read: if resource.data.senderUid == request.auth.uid;
+      allow write: if request.resource.data.senderUid == request.auth.uid;
+    }
+    match /chat {
+      match /rooms/{my}/{other} {
+        allow read: if true;
+        allow write: if my == request.auth.uid || other == request.auth.uid;
+      }
+      match /messages/{roomId}/{messageId} {
+    	  allow read: if myChatRoom(roomId);
+        allow create, update: if myChatRoom(roomId) &&
+          messageParticipants(roomId) &&
+          (isBlocked() == false) &&
+          messageFields();
+        allow delete: if myChatRoom(roomId) && myChatMessage();
+      }
+      match /blocks/{myId}/{otherId} {
+        allow read: if ( request.auth.uid == myId || request.auth.uid == otherId);
+        allow write: if ( request.auth.uid == myId );
+      }
+    }
+    
+    
     match /users/{uid} {
       allow read: if true;
       allow write: if (request.auth.uid == uid);
+      match /fcm_tokens/{docId} {
+      	allow read: if true;
+        allow write: if (request.auth.uid == uid);
+      }
+      match /user_settings/{docId} {
+      	allow read: if true;
+        allow write: if (request.auth.uid == uid);
+      }
+      match /user_meta/point {
+        allow read: if true;
+        allow write: if false;
+      }
+      match /point_history/{docId} {
+        allow read: if uid == request.auth.uid;
+        allow write: if false;
+      }
     }
-    //
-    match /fcm_tokens/{tokenId} {
+
+    match /settings/{docId} {
       allow read: if true;
-      allow list: if false;
-      allow create: if true;
-      allow update: if (request.auth.uid == resource.data.uid);
+      allow write: if isAdmin();
+    }
+
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+
+    match /posts/{postId} {
+      allow read: if true;
+      allow create: if
+        isDisabled() == false &&
+        required(['category', 'uid', 'createdAt', 'updatedAt', 'noOfComments', 'deleted']) &&
+        request.resource.data.noOfComments == 0 &&
+        request.resource.data.deleted == false &&
+        debug(categoryExists()) &&
+        willBeMyPost()
+      ;
+
+      // Post update rule;
+      // - Fails if updatedAt is missing
+      // - Success if nothing changes. if request.resource.data is same as resource.data
+      // - Success if 'viewCounter' is updated only.
+      allow update: if
+        ( (isAdmin() || isMyPost() && willBeMyPost()) && mustUpdating(['updatedAt']) && notUpdating(['createdAt']))
+        ||
+        onlyUpdating(['viewCounter', 'like', 'dislike', 'noOfComments'])
+      ;
+      // Post deletion is not allowed.
+      allow delete: if (isAdmin() || isMyPost()) && resource.data.noOfComments == 0;
+    }
+
+
+    match /comments/{commentId} {
+      allow read: if true;
+      allow create: if
+        required(['parentId', 'postId', 'uid', 'createdAt', 'updatedAt'])
+        &&
+        postExists(request.resource.data.postId)
+        &&
+        // Check if if it is immediate child comment(comment's parent id is the same as post id)
+        //  or comment parent id is exists.
+        (
+            request.resource.data.postId == request.resource.data.parentId
+            ||
+            commentExists(request.resource.data.parentId)
+        )
+        &&
+        willBeMyDoc('uid');
+
+      // Security Rule Condition #C1:
+      // updatedAt must be changed on update, and if the data is { updatedAt: 1 },
+      //  - {updatedAt: 1} will succeed,
+      //  - {updatedAt: 2} will also succeed.
+      // Why?
+      //  - If only one of 'like', 'dislike' are changed or **none of them changed**,
+      //    it will succeed.
+      //  - when {updatedAt: 1} submitted, updatedAt didn't change and 'like', 'dislike' didn't changed,
+      //    so, it will succeed.
+      //  - If {updatedAt: 1, content: 'abc'} submitted, updatedAt didn't changed, and something else aside from 'like' and 'dislike' changed,
+      //    so, it will fail.
+      // For the test, see "Comment - update - updatedAt & like" in test.js
+      allow update: if
+        // #C1: If updatedAt does not change, it will be deny here.
+        // C11
+        (
+            isMyDoc('uid')
+            &&
+            willBeMyDoc('uid')
+            &&
+            mustUpdating(['updatedAt'])
+            &&
+            notUpdating(['parentId', 'postId', 'uid', 'createdAt'])
+        )
+        ||
+        // C1: But it will succeed here since time stmap does not change.
+        // C12
+        onlyUpdating(['like', 'dislike'])
+      ;
+
+      // Comment deletion is not allowed.
+      allow delete: if false;                             
+    }
+
+    match /feeds/{feedId} {
+      allow read, write: if true;
+    }
+
+    match /reports/{reportId} {
+      allow read: if isAdmin() || isMyDoc('reporterUid');
+      allow create: if willBeMyDoc('reporterUid') &&
+        fieldCheck(['target', 'targetId', 'reporterUid', 'reporteeUid', 'createdAt'], ['reason']) &&
+        !exists(/databases/$(database)/documents/reports/$(reportId))
+      ;
+      allow update: if resource.data.reporterUid == request.auth.uid;
       allow delete: if false;
+    }
+
+    // ***** For security test *****
+    //
+    //
+    match /test/{docId} {
+      allow read: if true;
+      allow write: if false;
+      
+      match /notUpdating/{col}/{doc} {
+        allow create: if true;
+        allow update: if notUpdating(['a', 'b']);
+      }
+      match /onlyUpdating/{col}/{doc} {
+        allow create: if true;
+        allow update: if onlyUpdating(['a', 'b']);
+      }
+      match /mustUpdating/{col}/{doc} {
+        allow create: if true;
+        allow update: if mustUpdating(['a', 'b']);
+      }
+      match /fieldCheck/{col} {
+        match /optionalOnly {
+          allow create: if fieldCheck([], ['a', 'b', 'c']);
+          allow update: if fieldCheck([], ['a', 'b', 'c']);
+        }
+        match /requiredAndOptional {
+          allow create: if fieldCheck(['r'], ['a', 'b', 'c']);
+          allow update: if fieldCheck(['r'], ['a', 'b', 'c']);
+        }
+      }
+      match /disabled/{doc} {
+        allow read: if isDisabled();
+      }
+    }
+
+
+    // ***** methods ****
+
+    // check if 'A' & 'B' are blocked on chat functionality. 
+    function isBlocked() {
+      return
+        exists(/databases/$(database)/documents/chat/blocks/$(request.resource.data.to)/$(request.resource.data.from)) ||
+        exists(/databases/$(database)/documents/chat/blocks/$(request.resource.data.from)/$(request.resource.data.to));
+    }
+
+    // check if 'to', 'from' fiends are part of room id.
+    function messageParticipants(roomId) {
+      return request.resource.data.to in roomId.split('__') && request.resource.data.from in roomId.split('__');
+    }
+
+    // check if the user is admin.
+    function isAdmin() {
+      return get(/databases/$(database)/documents/settings/admins).data[request.auth.uid] == true;
+    }
+    
+    // check if the user is disabled in FirebaseAuth. Admin can disable the user.
+    function isDisabled() {
+      let un = debug("*** isDisabled ***");
+      return
+        exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.keys().hasAny(['disabled'])
+        &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data['disabled'] == true;
+    }
+
+    function categoryExists() {
+      return exists(/databases/$(database)/documents/categories/$(request.resource.data.category));
+    }
+
+    function postExists(postId) {
+      return exists(/databases/$(database)/documents/posts/$(postId));
+    }
+    function commentExists(commentId) {
+      return exists(/databases/$(database)/documents/comments/$(commentId));
     }
   }
 }
+
+// ***** methods *****
+
+// Check if roomId contains my Uid.
+function myChatRoom(roomId) {
+  return request.auth.uid in roomId.split('__');
+}
+
+// Check if the message is create by me.
+function myChatMessage() {
+  return request.auth.uid == resource.data.from;
+}
+
+function messageFields() {
+  let required = ["to", "from", "timestamp", "text"];
+  let optional = ["protocol"];
+  return fieldCheck(required, optional);
+}
+
+// example: fieldCheck(['required', 'fields'], ['optional', 'fields'])
+function fieldCheck(required, optional) {
+  let all = required.concat( optional );
+  // let fC = debug('****** fieldCheck *****');
+  return required( required ) && request.resource.data.keys().hasOnly(all);
+}
+
+
+// * Warning : It's check the fields after save.
+// * Warning : !!! It's not checking the incoming data fields !!!
+function required(fields) {
+  // let d = debug('**** required ****');
+  // let e = debug(request.resource.data);
+  return request.resource.data.keys().hasAll( fields );
+}
+
+
+// Check if the field matches to the user id before save
+//
+// [field] must match the user uid.
+// Use this to see if the document belongs to the user.
+// For instance, when data is `{authorUid: 'aaa', ...}`,
+//  - you can call `isMyDoc('authorUid')`,
+//  - And if the authorUid is your uid, then it's your document.
+function isMyDoc(field) {
+   return resource.data[field] == request.auth.uid;
+}
+
+
+// Check if the field matches to the user uid
+//
+// [field] must match the user uid.
+// Use this to see if the document belongs to the user after save.
+function willBeMyDoc(field) {
+   return request.resource.data[field] == request.auth.uid;
+}
+
+// Check if login user is the one who created the post
+function isMyPost() {
+  return isMyDoc('uid');
+}
+
+// Check if the post belongs to the user (after create or update).
+// Use this to validate that the author does not change after updating.
+function willBeMyPost() {
+  return willBeMyDoc('uid');
+}
+
+
+// Check if the [fields] does not change.
+//
+// Use this to block chainging on the properties in [fields].
+// ```
+// allow update: if notUpdating(['a', 'b', 'c']);
+// ```
+// Fields that are not in the `fields` parameters may change.
+function notUpdating(fields) {
+  return request.resource.data.diff(resource.data).unchangedKeys().hasAll(fields);
+}
+
+// Only updating [fields]
+// - Succeeds if no property changes or only one or all of the [fields] changes.
+// - Fails if other properties rather than the [fields] are changed.
+//
+// - Success if only the properties in the list of [fields] should be changed.
+// - Success if none of the properties are changed.
+//
+// Note, the action will succeed even if
+//  the value of the fields do not changed or does not exists in incoming data.
+//  This means, even if the incoming data is empty, it will succeed.
+//  FIY, `[].hasOnly(['a', 'b'])` is true expressoin.
+//  See, https://firebase.google.com/docs/reference/rules/rules.List#hasOnly
+// 
+// For instance, when client can only update like and dislike; see the following code;
+// ```
+// rule => onlyUpdating(['like', 'dislike']);
+// code => succeed on `doc.update({})`, `doc.update({like: x})`,
+// code => fails on `doc.update({title: 'x'})` 
+// ```
+// For anthother instance, the client can update 'viewCounter';
+// ```
+// rule => allow update: if onlyUpdating('viewCounter');
+// code succeeds => doc.update({ viewCounter: FieldValue.increment(1) });
+// code succeeds => doc.update({}); // no update is okay.
+// code fials => doc.update({b: 'Banana'})
+// ```
+function onlyUpdating(fields) {
+  return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
+}
+
+
+// The value of [fields] must be changed.
+// Chaging other properties rather than [fields] is fine.
+function mustUpdating(fields) {
+  return request.resource.data.diff(resource.data).affectedKeys().hasAll(fields);
+}
+
