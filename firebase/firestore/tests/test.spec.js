@@ -54,6 +54,27 @@ async function setCategory(id, data) {
   return admin().collection("categories").doc(id).set(data, { merge: true });
 }
 
+/**
+ * 글을 생성하고, id 와 함께 문서를 리턴
+ *
+ * - data.category 에 해당하는 카테고리를 생성.
+ * - 글 생성(문서 추가)
+ * - 생성된(추가된 글) 문서에 id 를 추가하여 리턴.
+ *
+ *
+ * @param {*} data 게시판 글 생성할 데이터
+ * @returns 생성된 문서와 id
+ */
+async function createPost(data) {
+  await setCategory(data.category, { title: data.category });
+  const ref = await admin().collection("posts").add(data);
+
+  const snapshot = await ref.get();
+  const ret = snapshot.data();
+  ret.id = snapshot.id;
+  return ret;
+}
+
 // 테스트 전에, 이전의 데이터를 모두 지운다.
 // 참고, 여기서 하지 말고, describe() 에서 하도록 한다.
 beforeEach(async () => {
@@ -105,7 +126,7 @@ describe("Disable test", () => {
   });
 });
 
-describe("Forum security rules test", () => {
+describe("Post security rules test", () => {
   it("No input data on post create", async () => {
     const col = db(userA).collection("posts");
     // 각종 입력 값 없으면 실패.
@@ -195,5 +216,97 @@ describe("Forum security rules test", () => {
         deleted: false,
       })
     );
+  });
+});
+
+describe("Comment security rules test", () => {
+  it("Success on comment create", async () => {
+    await enableUser(A);
+
+    const post = await createPost({
+      category: "qna",
+      uid: A,
+      createdAt: 1,
+      updatedAt: 1,
+      noOfComments: 0,
+      deleted: false,
+    });
+
+    const add = db(userA).collection("comments").add({
+      uid: A,
+      postId: post.id,
+      parentId: post.id,
+      createdAt: 1,
+      updatedAt: 1,
+    });
+
+    await firebase.assertSucceeds(add);
+  });
+
+  it("Fails on comment create when the user is disabled.", async () => {
+    await disableUser(A);
+
+    const post = await createPost({
+      category: "qna",
+      uid: A,
+      createdAt: 1,
+      updatedAt: 1,
+      noOfComments: 0,
+      deleted: false,
+    });
+
+    const add = db(userA).collection("comments").add({
+      uid: A,
+      postId: post.id,
+      parentId: post.id,
+      createdAt: 1,
+      updatedAt: 1,
+    });
+
+    await firebase.assertFails(add);
+  });
+  it("Succeeds on comment create even if the user doc does not exists.", async () => {
+    await admin().collection("users").doc(A).delete();
+
+    const post = await createPost({
+      category: "qna",
+      uid: A,
+      createdAt: 1,
+      updatedAt: 1,
+      noOfComments: 0,
+      deleted: false,
+    });
+
+    const add = db(userA).collection("comments").add({
+      uid: A,
+      postId: post.id,
+      parentId: post.id,
+      createdAt: 1,
+      updatedAt: 1,
+    });
+
+    await firebase.assertSucceeds(add);
+  });
+  it("Succeeds on comment create even if the user doc exists without disabled field.", async () => {
+    await admin().collection("users").doc(A).set({ name: "A" });
+
+    const post = await createPost({
+      category: "qna",
+      uid: A,
+      createdAt: 1,
+      updatedAt: 1,
+      noOfComments: 0,
+      deleted: false,
+    });
+
+    const add = db(userA).collection("comments").add({
+      uid: A,
+      postId: post.id,
+      parentId: post.id,
+      createdAt: 1,
+      updatedAt: 1,
+    });
+
+    await firebase.assertSucceeds(add);
   });
 });

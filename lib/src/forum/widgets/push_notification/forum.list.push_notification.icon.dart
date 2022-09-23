@@ -16,12 +16,10 @@ class ForumListPushNotificationIcon extends StatefulWidget {
   final Function(String, bool) onChanged;
 
   @override
-  State<ForumListPushNotificationIcon> createState() =>
-      _ForumListPushNotificationIconState();
+  State<ForumListPushNotificationIcon> createState() => _ForumListPushNotificationIconState();
 }
 
-class _ForumListPushNotificationIconState
-    extends State<ForumListPushNotificationIcon> {
+class _ForumListPushNotificationIconState extends State<ForumListPushNotificationIcon> {
   bool hasSubscription = false;
   bool hasPostSubscription = false;
   bool hasCommentSubscription = false;
@@ -37,9 +35,8 @@ class _ForumListPushNotificationIconState
     super.initState();
 
     /// listen and re-render
-    post =
-        UserService.instance.settings.doc(postTopic).snapshot().listen((event) {
-      print('snapshot; post create; ${event.data()}');
+    post = UserService.instance.settings.doc(postTopic).snapshot().listen((event) {
+      // print('snapshot; post create; ${event.data()}');
       setState(() {
         hasPostSubscription = event.exists;
         hasSubscription = hasPostSubscription || hasCommentSubscription;
@@ -47,11 +44,8 @@ class _ForumListPushNotificationIconState
     });
 
     /// listen and re-render
-    comment = UserService.instance.settings
-        .doc(commentTopic)
-        .snapshot()
-        .listen((event) {
-      print('snapshot; comment create; ${event.data()}');
+    comment = UserService.instance.settings.doc(commentTopic).snapshot().listen((event) {
+      // print('snapshot; comment create; ${event.data()}');
       setState(() {
         hasCommentSubscription = event.exists;
         hasSubscription = hasPostSubscription || hasCommentSubscription;
@@ -78,9 +72,7 @@ class _ForumListPushNotificationIconState
           offset: Offset.fromDirection(2, 46),
           icon: Icon(
             hasSubscription ? Icons.notifications_on : Icons.notifications_off,
-            color: hasSubscription
-                ? Color.fromARGB(255, 74, 74, 74)
-                : Color.fromARGB(255, 177, 177, 177),
+            color: hasSubscription ? Color.fromARGB(255, 74, 74, 74) : Color.fromARGB(255, 177, 177, 177),
           ),
           itemBuilder: (_) => [
             PopupMenuItem(
@@ -100,9 +92,7 @@ class _ForumListPushNotificationIconState
                   Row(
                     children: [
                       Icon(
-                        hasPostSubscription
-                            ? Icons.notifications_on
-                            : Icons.notifications_off,
+                        hasPostSubscription ? Icons.notifications_on : Icons.notifications_off,
                         color: hasPostSubscription
                             ? Theme.of(context).colorScheme.primary
                             : Theme.of(context).colorScheme.secondary,
@@ -125,9 +115,7 @@ class _ForumListPushNotificationIconState
               child: Row(
                 children: [
                   Icon(
-                    hasCommentSubscription
-                        ? Icons.notifications_on
-                        : Icons.notifications_off,
+                    hasCommentSubscription ? Icons.notifications_on : Icons.notifications_off,
                     color: hasCommentSubscription
                         ? Theme.of(context).colorScheme.primary
                         : Theme.of(context).colorScheme.secondary,

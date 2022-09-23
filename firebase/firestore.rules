@@ -90,6 +90,7 @@ service cloud.firestore {
     match /comments/{commentId} {
       allow read: if true;
       allow create: if
+        isDisabled() == false &&
         required(['parentId', 'postId', 'uid', 'createdAt', 'updatedAt'])
         &&
         postExists(request.resource.data.postId)
