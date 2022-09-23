@@ -90,6 +90,7 @@ service cloud.firestore {
     match /comments/{commentId} {
       allow read: if true;
       allow create: if
+        isDisabled() == false &&
         required(['parentId', 'postId', 'uid', 'createdAt', 'updatedAt'])
         &&
         postExists(request.resource.data.postId)
@@ -207,13 +208,18 @@ service cloud.firestore {
     }
     
     // check if the user is disabled in FirebaseAuth. Admin can disable the user.
+    // 사용자 문서가 존재하고 disabled 필드가 존재하고 그 값이 true이면 블럭된 것이다.
+    // 사용자 문서가 존재하지 않거나, 사용자 문서에 disabled 필드가 존재하지 않거나, 사용자 문서의 disabled 필드가 false이면 블럭된 것이 아니다.
     function isDisabled() {
-      let un = debug("*** isDisabled ***");
+      // let un = debug("*** isDisabled ***");
       return
+        // 사용자 문서가 존재하고,
         exists(/databases/$(database)/documents/users/$(request.auth.uid))
         &&
+        // 사용자 문서에 disabled 필드가 존재하고,
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.keys().hasAny(['disabled'])
         &&
+        // disabled 필드가 true이면, 블럭된 사용자로 간주.
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data['disabled'] == true;
     }
 
