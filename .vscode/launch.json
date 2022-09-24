@@ -50,7 +50,7 @@
       "deviceId": "096a885ba083f01af93963a8661720cf9e67cb86"
     },
     {
-      "name": "WonderfulKorea (JaeHo) - Galaxy W 3",
+      "name": "J. WonderfulKorea - Galaxy W 3",
       "cwd": "apps/wonderfulkorea",
       "program": "lib/main.dart",
       "args": ["--dart-define", "KEY=VALUE"],
@@ -67,7 +67,7 @@
       "deviceId": "J8AXB761J32888A"
     },
     {
-      "name": "Simulator - iPhone 13 Pro Max - iMac",
+      "name": "J. Wonderful Korea Simulator - iPhone 13 Pro Max - iMac",
       "cwd": "apps/wonderfulkorea",
       "program": "lib/main.dart",
       "args": ["--dart-define", "KEY=VALUE"],
@@ -76,7 +76,7 @@
       "deviceId": "ECE40623-ACC2-4729-8DD4-B3DBB46D4B25"
     },
     {
-      "name": "WonderfulKorea - iPhone11MaxPro - iMac",
+      "name": "J. WonderfulKorea - iPhone11MaxPro - iMac",
       "cwd": "apps/wonderfulkorea",
       "program": "lib/main.dart",
       "args": ["--dart-define", "KEY=VALUE"],
@@ -85,7 +85,7 @@
       "deviceId": "00008030-000904C80290802E"
     },
     {
-      "name": "WonderfulKorea - Release - iPhone11MaxPro - iMac",
+      "name": "J. WonderfulKorea - Release - iPhone11MaxPro - iMac",
       "cwd": "apps/wonderfulkorea",
       "program": "lib/main.dart",
       "args": ["--dart-define", "KEY=VALUE"],
@@ -95,7 +95,7 @@
       "deviceId": "00008030-000904C80290802E"
     },
     {
-      "name": "WonderfulKorea - Simulator - iPhone 13 Pro Max - Macbook",
+      "name": "J. WonderfulKorea - Simulator - iPhone 13 Pro Max - Macbook",
       "cwd": "apps/wonderfulkorea",
       "program": "lib/main.dart",
       "args": ["--dart-define", "KEY=VALUE"],
@@ -104,7 +104,7 @@
       "deviceId": "42362233-110F-43F7-B6CA-F983EB4E4889"
     },
     {
-      "name": "WonderfulKorea - Integration Test - Simulator Max Pro 13",
+      "name": "J. WonderfulKorea - Integration Test - Simulator Max Pro 13",
       "cwd": "apps/wonderfulkorea",
       // "program": "integration_test/simple_test.dart",
       "program": "integration_test/all_test.dart",
@@ -120,7 +120,7 @@
       "request": "launch",
       "type": "dart",
       "deviceId": "9c59f12e",
-      "flutterMode": "debug",
+      "flutterMode": "debug"
     },
     {
       "name": "Wonderful Korea - Ace's Phone | Release",
@@ -129,7 +129,7 @@
       "request": "launch",
       "type": "dart",
       "deviceId": "9c59f12e",
-      "flutterMode": "release",
+      "flutterMode": "release"
     },
     {
       "name": "Wonderful Korea - Integration Test - Emulator",

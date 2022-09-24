@@ -33,7 +33,8 @@ class FireFlutterService {
   CollectionReference get feedCol => db.collection('feeds');
 
   // Global (system) settings for app setting.
-  CollectionReference get settingDoc => db.collection('settings');
+  CollectionReference get settingCol => db.collection('settings');
+  DocumentReference get systemDoc => settingCol.doc('system');
 
   /// User setting
   /// Note, for the sign-in user's setting, you should use `UserService.instance.settings`
