@@ -68,6 +68,7 @@
   - [DocumentBuilder](#documentbuilder)
   - [Admin](#admin)
   - [RecentPostCard - 사진이 있는 최근 글 카드로 보여주기](#recentpostcard---사진이-있는-최근-글-카드로-보여주기)
+- [커스터마이징 - 기능추가](#커스터마이징---기능추가)
 - [실험 코드](#실험-코드)
 - [문제 해결](#문제-해결)
   - [인덱스 문제](#인덱스-문제)
@@ -1292,6 +1293,10 @@ RecentPostCard(
 ![Recent Post Card](https://github.com/thruthesky/fireflutter/wiki/img/recent-post-card.jpg)
 
 
+# 커스터마이징 - 기능추가
+
+- 예를 들어 쇼핑몰 기능을 추가한다면, Firestore 에 새로운 컬렉션을 만들어서 하기 보다는 게시판 기능을 이용해서, `shop` 이라는 카테고리를 만들고, 게시판의 로직(함수들)을 그대로 사용하면 좋다.
+  - 왜냐하면, 게시판에 글/코멘트에는 이미 푸시 알림 기능이 들어가 있고, 게시판 별 구독이 가능하며, 기타 여러가지 기능이 들어가 있는 상태이기 때문이다.
 
 # 실험 코드
 
