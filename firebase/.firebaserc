@@ -3,7 +3,8 @@
     "default": "flutterkorea-app",
     "test": "withcenter-test-project",
     "wonderfulkorea": "wonderful-korea",
-    "flutterkorea": "flutterkorea-app"
+    "flutterkorea": "flutterkorea-app",
+    "nocode": "withcenter-no-code-platform"
   },
   "targets": {},
   "etags": {}
