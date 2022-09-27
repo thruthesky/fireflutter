@@ -599,10 +599,10 @@ erDiagram
   users {
       string title "카테고리 제목"
       string description "카테고리 설명"
-      Timestamp createdAt "맨 처음 한번만 기록"
       string group "카테고리 그룹"
       int order "카테고리 표시 순서. 메뉴 등에서 카테고리를 표시할 순번"
       int point "최대 포인트. 사용자가 글을 쓰면 랜덤으로 포인트가 주어지는데, 그 최대 포인트"
+      Timestamp createdAt "맨 처음 한번만 기록"
   }
 ```
 
