@@ -4,10 +4,15 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
+
+    // 푸시 알림 큐
+    // 클라이언트가 이 문서에 푸시 알림 정보를 저장하면, 백그라운드 함수가 이 문서를 읽어서 푸시 알림을 보내고 결과를 저장한다.
     match /push-notifications-queue/{docId} {
       allow read: if resource.data.senderUid == request.auth.uid;
       allow write: if request.resource.data.senderUid == request.auth.uid;
     }
+
+    // 채팅
     match /chat {
       match /rooms/{my}/{other} {
         allow read: if true;
@@ -28,6 +33,7 @@ service cloud.firestore {
     }
     
     
+    // 사용자 문서
     match /users/{uid} {
       allow read: if true;
       allow write: if (request.auth.uid == uid);
@@ -49,11 +55,13 @@ service cloud.firestore {
       }
     }
 
+    // 설정 문서
     match /settings/{docId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
+    // 카테고리 문서
     match /categories/{categoryId} {
       allow read: if true;
       allow create: if isAdmin();
@@ -62,6 +70,7 @@ service cloud.firestore {
     }
 
 
+    // 게시글 문서
     match /posts/{postId} {
       allow read: if true;
       allow create: if
@@ -87,6 +96,7 @@ service cloud.firestore {
     }
 
 
+    // 댓글 문서
     match /comments/{commentId} {
       allow read: if true;
       allow create: if
@@ -139,10 +149,12 @@ service cloud.firestore {
       allow delete: if false;                             
     }
 
+    // 게시글 좋아요 문서
     match /feeds/{feedId} {
       allow read, write: if true;
     }
 
+    // 신고된 글 저장하는 컬렉션
     match /reports/{reportId} {
       allow read: if isAdmin() || isMyDoc('reporterUid');
       allow create: if willBeMyDoc('reporterUid') &&

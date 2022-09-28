@@ -183,8 +183,12 @@ erDiagram
       string gender "M 또는 F"
       Timestamp createdAt "맨 처음 한번만 기록"
       Timestamp updatedAt "사용자가 프로필 변경 할 때 마다 업데이트"
+      bool admin "관리자인 경우 true. 관리자가 아닌 경우, 이 필드는 존재하지 않음."
   }
 ```
+
+- 참고로 `admin` 에 `true` 값이 저장되면, 클라이언트에서는 `admin` 으로 인식하여 admin 관련 정보(메뉴 등)를 보여 줄 수 있다. 하지만, 실제로 데이터 저장은 firestore security 막혀서 하지 못한다. 또는 하지 못하도록 security 설정을 잘 해야 한다.
+
 
 
 
@@ -666,11 +670,18 @@ class Config {
 erDiagram
   posts {
     string uid
+    string category
     string title
     string content
     Timestamp createdAt
     Timestamp updatedAt
     array_of_string files
+    bool hasPhoto
+    bool deleted
+    bool noOfComments
+    int year "옵션. 글이 작성된 년. 저장 안해도 된다."
+    int month "옵션. 글이 작성된 월. 저장 안해도 된다."
+    int day "옵션. 글이 작성된 일. 저장 안해도 된다."
   }
 ```
 
@@ -1145,6 +1156,10 @@ https://.../getUserUidFromPhoneNumber?phoneNumber=%2B11111111111
 
 
 # Firestore 보안 규칙
+
+- 원래(FireFlutter 버전 0.2 까지)는 보안 규칙 및 인덱싱을 Firebase CLI 명령 툴로 하도록 했다. 하지만, Firebase CLI 사용이 어렵다는 분들이 있고 또 Firebase CLI 로 하는 경우, 기존의 규칙 설정을 덮어 써 버려 문제가 되는 경우도 있었다. 그래서, 버전 0.3 부터는 보안 규칙을 `<project>/firebase/firestore.rules` 에 설명과 함께 기록해 놓고 하나씩 복사해서 파이어베이스 콘솔의 Firestore Security Rules 에 적용 할 것을 권하고 있다.
+
+
 
 ## 보안 규칙 테스트
 
