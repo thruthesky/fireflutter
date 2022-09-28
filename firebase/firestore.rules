@@ -75,7 +75,7 @@ service cloud.firestore {
       allow read: if true;
       allow create: if
         isDisabled() == false &&
-        required(['category', 'uid', 'createdAt', 'updatedAt', 'noOfComments', 'deleted']) &&
+        required(['category', 'uid', 'createdAt', 'updatedAt', 'noOfComments', 'deleted', 'hasPhoto']) &&
         request.resource.data.noOfComments == 0 &&
         request.resource.data.deleted == false &&
         debug(categoryExists()) &&
@@ -87,7 +87,7 @@ service cloud.firestore {
       // - Success if nothing changes. if request.resource.data is same as resource.data
       // - Success if 'viewCounter' is updated only.
       allow update: if
-        ( (isAdmin() || isMyPost() && willBeMyPost()) && mustUpdating(['updatedAt']) && notUpdating(['createdAt']))
+        ( (isAdmin() || isMyPost() && willBeMyPost()) && mustUpdating(['updatedAt', 'hasPhoto']) && notUpdating(['createdAt']))
         ||
         onlyUpdating(['viewCounter', 'like', 'dislike', 'noOfComments'])
       ;
