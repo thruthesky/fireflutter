@@ -26,6 +26,14 @@ export class Ref {
     return this.users.doc(uid);
   }
 
+  static get usersPublicDataCol() {
+    return this.db.collection("users_public_data");
+  }
+  static publicDoc(uid: string) {
+    return this.usersPublicDataCol.doc(uid);
+  }
+
+  //
   static userMetaCol(uid: string): admin.firestore.CollectionReference {
     return this.userDoc(uid).collection("user_meta");
   }

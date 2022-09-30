@@ -69,8 +69,7 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
-
-    // 게시글 문서
+    // 게시글 문서 규칙
     match /posts/{postId} {
       allow read: if true;
       allow create: if
@@ -78,23 +77,26 @@ service cloud.firestore {
         required(['category', 'uid', 'createdAt', 'updatedAt', 'noOfComments', 'deleted', 'hasPhoto']) &&
         request.resource.data.noOfComments == 0 &&
         request.resource.data.deleted == false &&
-        debug(categoryExists()) &&
+        categoryExists() &&
         willBeMyPost()
       ;
 
-      // Post update rule;
-      // - Fails if updatedAt is missing
-      // - Success if nothing changes. if request.resource.data is same as resource.data
-      // - Success if 'viewCounter' is updated only.
+      // 업데이트 규칙: 아래의 규칙 1 또는 2가 성립하면 된다.
+      // 규칙 1.
+      //   - updatedAt 와 hasPhoto 는 필수 입력.
+      //   - updatedAt 의 값은 변경되어야 함.
+      //   - uid 와 createdAt 은 변경되지 않아야 함. (문서에 저장된 자신의 uid 를 다른 사용자의 uid 로 바꿔치기 할 수 없도록 한다.)
+      // 규칙 2.
+      //   - 업데이트 필드 중, 오직 viewCounter, like, dislike, noOfComments 만(하나 또는 여러개) 업데이트 되면 통과.
+      //     (다른 사용자가 자신의 글을 수정하지 못하도록 하지만, 좋아요, 싫어요, 코멘트 개 수 증가, 조회수 증가는 허용한다.)
       allow update: if
-        ( (isAdmin() || isMyPost() && willBeMyPost()) && mustUpdating(['updatedAt', 'hasPhoto']) && notUpdating(['createdAt']))
+        ( (isAdmin() || isMyPost() ) && required(['updatedAt', 'hasPhoto']) && mustUpdating(['updatedAt']) && notUpdating(['uid', 'createdAt']))
         ||
         onlyUpdating(['viewCounter', 'like', 'dislike', 'noOfComments'])
       ;
       // Post deletion is not allowed.
       allow delete: if (isAdmin() || isMyPost()) && resource.data.noOfComments == 0;
     }
-
 
     // 댓글 문서
     match /comments/{commentId} {
