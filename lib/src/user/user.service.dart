@@ -109,8 +109,8 @@ class UserService {
     } on FirebaseFunctionsException catch (e) {
       log('Exception from callable function in UserService.instance.blockUser()');
       log(e.code);
-      log(e.details);
-      log(e.message.toString());
+      log(e.details.toString());
+      log(e.message ?? '');
       rethrow;
     }
   }
