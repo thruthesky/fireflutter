@@ -44,16 +44,14 @@ class _JobListViewState extends State<JobListView> {
     if (options.category != '') {
       query = query.where('category', isEqualTo: options.category);
     }
-    if (options.workingHours != -1)
-      query = query.where('workingHours', isEqualTo: options.workingHours);
+    if (options.workingHours != -1) query = query.where('workingHours', isEqualTo: options.workingHours);
     if (options.workingDays != -1) {
       query = query.where('workingDays', isEqualTo: options.workingDays);
     }
     if (options.accomodation != '') {
       query = query.where('withAccomodation', isEqualTo: options.accomodation);
     }
-    if (options.salary != '')
-      query = query.where('salary', isEqualTo: options.salary);
+    if (options.salary != '') query = query.where('salary', isEqualTo: options.salary);
 
     // Only 'status=Y' jobs can be displayed.
     query = query.where('status', isEqualTo: 'Y');
@@ -134,18 +132,6 @@ class _JobListViewState extends State<JobListView> {
                             Text(job.sggNm, style: style),
                           ],
                         ),
-                        // Row(
-                        //   children: [
-                        //     Text(job.siNm + ',', style: style),
-                        //     SizedBox(width: 4),
-                        //     Text(
-                        //       job.sggNm,
-                        //       style: style,
-                        //       maxLines: 1,
-                        //       overflow: TextOverflow.ellipsis,
-                        //     ),
-                        //   ],
-                        // ),
                         Text(
                           'Schedule: ${schedule(job)}',
                           style: style,
@@ -163,8 +149,7 @@ class _JobListViewState extends State<JobListView> {
                     trailing: Icon(Icons.arrow_right),
                   ),
                 ),
-                if (job.uid == UserService.instance.uid)
-                  TextButton(child: Text('edit'), onPressed: widget.onEdit),
+                if (job.uid == UserService.instance.uid) TextButton(child: Text('edit'), onPressed: widget.onEdit),
                 Divider(
                   color: Colors.grey.shade400,
                 ),

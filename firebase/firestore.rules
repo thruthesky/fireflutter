@@ -4,10 +4,15 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
+
+    // 푸시 알림 큐
+    // 클라이언트가 이 문서에 푸시 알림 정보를 저장하면, 백그라운드 함수가 이 문서를 읽어서 푸시 알림을 보내고 결과를 저장한다.
     match /push-notifications-queue/{docId} {
       allow read: if resource.data.senderUid == request.auth.uid;
       allow write: if request.resource.data.senderUid == request.auth.uid;
     }
+
+    // 채팅
     match /chat {
       match /rooms/{my}/{other} {
         allow read: if true;
@@ -28,6 +33,7 @@ service cloud.firestore {
     }
     
     
+    // 사용자 문서
     match /users/{uid} {
       allow read: if true;
       allow write: if (request.auth.uid == uid);
@@ -48,12 +54,18 @@ service cloud.firestore {
         allow write: if false;
       }
     }
+    match /users_public_data {
+      allow read: if true;
+      allow write: if false;
+    }
 
+    // 설정 문서
     match /settings/{docId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
+    // 카테고리 문서
     match /categories/{categoryId} {
       allow read: if true;
       allow create: if isAdmin();
@@ -61,24 +73,27 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
-
+    // 게시글 문서 규칙
     match /posts/{postId} {
       allow read: if true;
       allow create: if
         isDisabled() == false &&
-        required(['category', 'uid', 'createdAt', 'updatedAt', 'noOfComments', 'deleted']) &&
+        required(['category', 'uid', 'createdAt', 'updatedAt', 'noOfComments', 'deleted', 'hasPhoto']) &&
         request.resource.data.noOfComments == 0 &&
         request.resource.data.deleted == false &&
-        debug(categoryExists()) &&
+        categoryExists() &&
         willBeMyPost()
       ;
 
-      // Post update rule;
-      // - Fails if updatedAt is missing
-      // - Success if nothing changes. if request.resource.data is same as resource.data
-      // - Success if 'viewCounter' is updated only.
+      // 업데이트 규칙: 아래의 규칙 1 또는 2가 성립하면 된다.
+      // 규칙 1.
+      //   - updatedAt 는 필수 입력 값이며, 그 시간 값은 변경되어야 함.
+      //   - uid 와 createdAt 은 변경되지 않아야 함. (문서에 저장된 자신의 uid 를 다른 사용자의 uid 로 바꿔치기 할 수 없도록 한다.)
+      // 규칙 2.
+      //   - 업데이트 필드 중, 오직 viewCounter, like, dislike, noOfComments 만(하나 또는 여러개) 업데이트 되면 통과.
+      //     (다른 사용자가 자신의 글을 수정하지 못하도록 하지만, 좋아요, 싫어요, 코멘트 개 수 증가, 조회수 증가는 허용한다.)
       allow update: if
-        ( (isAdmin() || isMyPost() && willBeMyPost()) && mustUpdating(['updatedAt']) && notUpdating(['createdAt']))
+        ( (isAdmin() || isMyPost() ) && required(['updatedAt']) && mustUpdating(['updatedAt']) && notUpdating(['uid', 'createdAt']))
         ||
         onlyUpdating(['viewCounter', 'like', 'dislike', 'noOfComments'])
       ;
@@ -86,7 +101,7 @@ service cloud.firestore {
       allow delete: if (isAdmin() || isMyPost()) && resource.data.noOfComments == 0;
     }
 
-
+    // 댓글 문서
     match /comments/{commentId} {
       allow read: if true;
       allow create: if
@@ -139,10 +154,12 @@ service cloud.firestore {
       allow delete: if false;                             
     }
 
+    // 게시글 좋아요 문서
     match /feeds/{feedId} {
       allow read, write: if true;
     }
 
+    // 신고된 글 저장하는 컬렉션
     match /reports/{reportId} {
       allow read: if isAdmin() || isMyDoc('reporterUid');
       allow create: if willBeMyDoc('reporterUid') &&
