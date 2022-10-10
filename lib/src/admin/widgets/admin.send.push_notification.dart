@@ -10,11 +10,9 @@ class AdminSendPushNotification extends StatefulWidget {
 }
 
 class _AdminSendPushNotificationState extends State<AdminSendPushNotification> {
-  final tokens = TextEditingController(
-      text:
-          'eQpcvrJSRsKBPRerBFsJro:APA91bGj2GU6nfDS65YIACRPV6PlMC_AaI0qV4-1n36BMHJMutQK-fMR2sndeK1Inh8ZBxs7Tu_c_m7XIrfiKRFpCPZGoOsSZ65CLK1CQclQVtugJjdhIjuSFZIVAWRyU4CWVpSls4K8');
-  final uids = TextEditingController(text: 'MXhctaDjbtMKyWJO3C3fHA7sMnn1');
-  final postId = TextEditingController(text: 'w5v2FxXi7NjLN8vDR8xB');
+  final tokens = TextEditingController();
+  final uids = TextEditingController();
+  final postId = TextEditingController();
   final title = TextEditingController();
   final body = TextEditingController();
 
