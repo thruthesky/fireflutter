@@ -944,7 +944,7 @@ FlutterFlow 에는 없는 `uid` 를 추가했다. 이를 통해서 필요에 따
     - 위에서 `subscriptionDocumentId` 를 `post-create.qna` 와 같이 저장하면 된다.
   - 사용자가 구독 해제를 하기 원한다면 (푸시 알림 버튼을 해제 한다면)
     - `/users/<uid>/user_settings/{subscriptionDocumentId}` 파일을 삭제하면 된다.
-    - 또는 `action` 과 `category` 필드의 값을 없애 버리면 된다. (문서는 그대로 남아 있어도 됨).
+    - 또는 `action` 과 `category` 필드의 값을 없애 버리면 된다. (문서는 그대로 남아 있어도, Cloud functions 에서, `action` 과 `category` 를 검색해서, 푸시 전송을 할 때, 검색되지 않아서, 어차피 푸시 알림은 전송되지 않는다.).
   - 클라우드 함수에서 위의 설정을 보고 새 글이 작성되면 사용자에게 푸시 알림을 보낸다.
   - 즉, 클라이언트에서는 단순히 설정 문서를 생성하기만 하면 푸시 알림이 동작한다. 나머지는 클라우드 함수가 알아서 푸시 알림을 보낸다.
 
