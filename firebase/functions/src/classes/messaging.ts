@@ -244,7 +244,8 @@ export class Messaging {
       return [];
     }
 
-    return snapshot.docs.map((doc) => doc.id);
+    // return snapshot.docs.map((doc) => doc.id);
+    return snapshot.docs.map((doc) => doc.get("fcm_token"));
   }
 
   /**
