@@ -278,12 +278,24 @@ export class Messaging {
       query.id = query.postId;
     }
 
+    // This is only for FlutterFlow.
+    let initialPageName = '';
+    let parameterData = {};
+    if (query.postId) {
+      initialPageName = 'PostView';
+      parameterData = {
+        'postDocumentReference': Ref.postDoc(query.postId!), 
+      }
+    }
+
     const res: MessagePayload = {
       data: {
         id: query.id ?? "",
         type: query.type ?? "",
         senderUid: query.senderUid ?? query.uid ?? "",
         badge: query.badge ?? "",
+        initialPageName: initialPageName,
+        parameterData: parameterData,
       },
       notification: {
         title: query.title ?? "",

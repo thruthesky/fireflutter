@@ -23,6 +23,7 @@ export interface MessagePayload {
     type?: string;
     senderUid?: string;
     badge?: string;
+    [key: string]: any;
   };
   notification: {
     title: string;
