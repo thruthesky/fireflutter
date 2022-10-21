@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import { EventName } from "../event-name";
+import { EventName, EventType } from "../event-name";
 import { MessagePayload, SendMessage } from "../interfaces/messaging.interface";
 
 import { invalidArgument } from "../utils/library";
@@ -279,13 +279,11 @@ export class Messaging {
     }
 
     // This is only for FlutterFlow.
-    let initialPageName = '';
-    let parameterData = {};
-    if (query.postId) {
-      initialPageName = 'PostView';
-      parameterData = {
-        'postDocumentReference': Ref.postDoc(query.postId!), 
-      }
+    let initialPageName = "";
+    let parameterData = "";
+    if (query.id && query.type == EventType.post ) {
+      initialPageName = "PostView";
+      parameterData = `{"postDocumentReference": "${Ref.postDoc(query.id!).path}" }`;
     }
 
     const res: MessagePayload = {
