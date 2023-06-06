@@ -31,6 +31,19 @@
       "flutterMode": "debug"
     },
     {
+      "name": "Simulator - Sonub - Ter.",
+      "cwd": "apps/sonub-flutter",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define",
+        "KEY=VALUE"
+      ],
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "C79F2C44-AB98-4B0B-A727-8C5E8B50C595",
+      "flutterMode": "debug"
+    },
+    {
       "name": "Emulator - 5554",
       "cwd": "apps/wonderfulkorea",
       "program": "lib/main.dart",
