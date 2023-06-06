@@ -8,3 +8,8 @@ wiki/
 .vs_code/
 .dart_tool/
 apps/
+
+apps/.DS_Store
+apps/flutterkorea
+apps/wonderfulkorea
+wiki
