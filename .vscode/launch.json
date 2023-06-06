@@ -5,8 +5,21 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Simulator - J.",
+      "name": "Simulator - Example - J.",
       "cwd": "example",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define",
+        "KEY=VALUE"
+      ],
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "8A752C04-06F3-4B21-9B5E-BEEDF313FC5E",
+      "flutterMode": "debug"
+    },
+    {
+      "name": "Simulator - Sonub - J.",
+      "cwd": "apps/sonub-flutter",
       "program": "lib/main.dart",
       "args": [
         "--dart-define",
