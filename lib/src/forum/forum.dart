@@ -1,14 +1,32 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 
-class Forum extends StatelessWidget {
-  const Forum(this.category, {super.key});
+class ForumController {
+  late final _ForumState state;
+}
+
+class Forum extends StatefulWidget {
+  const Forum({super.key, required this.category, required this.controller});
 
   final String category;
+  final ForumController controller;
+
+  @override
+  State<Forum> createState() => _ForumState();
+}
+
+class _ForumState extends State<Forum> {
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.state = this;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final query = FirebaseDatabase.instance.ref('posts').child(category);
+    final query = FirebaseDatabase.instance.ref('posts').child(widget.category).orderByChild('orderNo');
     print('query: ${query.path}');
     return FirebaseDatabaseListView(
       query: query,
@@ -45,6 +63,18 @@ class Forum extends StatelessWidget {
           },
         );
       },
+    );
+  }
+
+  showPostCreateDialog(
+    BuildContext context,
+  ) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) => Scaffold(
+        appBar: AppBar(title: Text('Post Create')),
+        body: PostCreateForm(),
+      ),
     );
   }
 }
