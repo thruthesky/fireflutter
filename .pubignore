@@ -3,7 +3,6 @@ example/*
 !example/pubspec.yaml
 !example/README.md
 
-wiki/
 
 .vs_code/
 .dart_tool/

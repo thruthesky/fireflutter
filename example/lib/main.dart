@@ -1,4 +1,3 @@
-import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -43,7 +42,6 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               'Widget from FireFlutter Package:',
             ),
-            Hello(),
           ],
         ),
       ),
