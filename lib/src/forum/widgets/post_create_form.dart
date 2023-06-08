@@ -17,7 +17,7 @@ class PostCreateForm extends StatelessWidget {
           TextField(
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              labelText: 'Title -- ',
+              labelText: 'Title',
             ),
           ),
           SizedBox(height: 16),
