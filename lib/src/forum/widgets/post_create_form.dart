@@ -67,33 +67,36 @@ class _PostCreateFormState extends State<PostCreateForm> {
                 child: Text('Cancel'),
               ),
               Spacer(),
-              FutureBuilder<DataSnapshot>(
-                  future:
-                      ForumService.instance.categoryRef(widget.category).orderByChild('orderNo').limitToFirst(1).get(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    }
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    }
+              StreamBuilder<DatabaseEvent>(
+                stream: ForumService.instance
+                    .categoryRef(widget.category)
+                    .orderByChild('orderNo')
+                    .limitToFirst(1)
+                    .onChildAdded,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
 
-                    final post = PostModel.fromQuerySnapshot(snapshot.data!);
-                    print(post);
+                  final post = PostModel.fromSnapshot(snapshot.data!.snapshot);
 
-                    return TextButton(
-                      onPressed: () {
-                        ForumService.instance.categoryRef(widget.category).push().set({
-                          'title': title.text,
-                          'content': content.text,
-                          'orderNo': post.orderNo - 1,
-                          'createdAt': DateTime.now().millisecondsSinceEpoch,
-                        });
-                        Navigator.pop(context);
-                      },
-                      child: Text('Create'),
-                    );
-                  }),
+                  return TextButton(
+                    onPressed: () {
+                      ForumService.instance.categoryRef(widget.category).push().set({
+                        'title': title.text,
+                        'content': content.text,
+                        'orderNo': post.orderNo - 1,
+                        'createdAt': DateTime.now().millisecondsSinceEpoch,
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: Text('Create'),
+                  );
+                },
+              ),
             ],
           ),
         ],

@@ -5,12 +5,12 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Simulator - Example - J.",
-      "cwd": "example",
+      "name": "Simulator - Sonub - J.",
+      "cwd": "apps/sonub-flutter",
       "program": "lib/main.dart",
       "args": [
         "--dart-define",
-        "KEY=VALUE"
+        "apiUrl=https://sonub-api.philgo.com/index.php"
       ],
       "request": "launch",
       "type": "dart",
@@ -18,8 +18,8 @@
       "flutterMode": "debug"
     },
     {
-      "name": "Simulator - Sonub - J.",
-      "cwd": "apps/sonub-flutter",
+      "name": "Simulator - Example - J.",
+      "cwd": "example",
       "program": "lib/main.dart",
       "args": [
         "--dart-define",
