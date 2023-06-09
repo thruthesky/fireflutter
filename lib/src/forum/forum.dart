@@ -27,13 +27,15 @@ class _ForumState extends State<Forum> {
   @override
   Widget build(BuildContext context) {
     final query = FirebaseDatabase.instance.ref('posts').child(widget.category).orderByChild('orderNo');
-    print('query: ${query.path}');
+
     return FirebaseDatabaseListView(
       query: query,
       itemBuilder: (context, snapshot) {
-        Map<String, dynamic> post = Map<String, dynamic>.from(snapshot.value as dynamic);
+        final post = PostModel.fromSnapshot(snapshot);
+
         return ListTile(
-          title: Text('title: ${post['title']}'),
+          key: ValueKey('post-list-' + post.id),
+          title: Text('title: ${post.title}'),
           trailing: Icon(Icons.chevron_right),
           onTap: () {
             showGeneralDialog(
@@ -42,8 +44,8 @@ class _ForumState extends State<Forum> {
                 appBar: AppBar(title: Text('Post')),
                 body: Column(
                   children: [
-                    Text('title: ${post['title']}'),
-                    Text('content: ${post['content']}'),
+                    Text('title: ${post.title}'),
+                    Text('content: ${post.content}'),
                     Row(
                       children: [
                         TextButton(
@@ -67,13 +69,16 @@ class _ForumState extends State<Forum> {
   }
 
   showPostCreateDialog(
-    BuildContext context,
-  ) {
-    showGeneralDialog(
+    BuildContext context, {
+    required String category,
+  }) async {
+    await showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) => Scaffold(
         appBar: AppBar(title: Text('Post Create')),
-        body: PostCreateForm(),
+        body: PostCreateForm(
+          category: category,
+        ),
       ),
     );
   }
