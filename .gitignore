@@ -1,9 +1,9 @@
+.DS_Store
 
 credentials/
 
 doc/
 firebase_options.dart
-
 
 # Flutter/Dart/Pub related
 **/doc/api/
