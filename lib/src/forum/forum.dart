@@ -1,7 +1,9 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/forum/widgets/post_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
+import 'package:intl/intl.dart';
 
 class ForumController {
   late final _ForumState state;
@@ -32,37 +34,47 @@ class _ForumState extends State<Forum> {
       query: query,
       itemBuilder: (context, snapshot) {
         final post = PostModel.fromSnapshot(snapshot);
-
-        return ListTile(
-          key: ValueKey('post-list-' + post.id),
-          title: Text('title: ${post.title}'),
-          trailing: Icon(Icons.chevron_right),
-          onTap: () {
-            showGeneralDialog(
-              context: context,
-              pageBuilder: (context, _, __) => Scaffold(
-                appBar: AppBar(title: Text('Post')),
-                body: Column(
-                  children: [
-                    Text('title: ${post.title}'),
-                    Text('content: ${post.content}'),
-                    Row(
-                      children: [
-                        TextButton(
-                          onPressed: () {},
-                          child: Text('Reply'),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text('Like'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+        return Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: InkWell(
+            key: ValueKey('post-list-' + post.id),
+            child: Container(
+              width: double.infinity,
+              color: Theme.of(context).colorScheme.primaryContainer,
+              padding: EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  Text(
+                    post.title,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  Text(
+                    DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(post.createdAt)).toString(),
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    post.content,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
-            );
-          },
+            ),
+            onTap: () {
+              showGeneralDialog(
+                context: context,
+                pageBuilder: (context, _, __) => Scaffold(
+                  appBar: AppBar(title: Text('Post')),
+                  body: PostViewScreen(
+                    post: post,
+                  ),
+                ),
+              );
+            },
+          ),
         );
       },
     );
