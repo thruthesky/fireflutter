@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:fireflutter/src/model/comment.model.dart';
+import 'package:fireflutter/src/forum/models/comment.model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
