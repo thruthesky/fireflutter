@@ -18,6 +18,19 @@
       "flutterMode": "debug"
     },
     {
+      "name": "Simulator - Sonub - Chris.",
+      "cwd": "apps/sonub-flutter",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define",
+        "apiUrl=https://sonub-api.philgo.com/index.php"
+      ],
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "798DF7C4-34CF-42DD-A1CE-8B183C27F50C",
+      "flutterMode": "debug"
+    },
+    {
       "name": "iPhone11MaxPro - Sonub - J.",
       "cwd": "apps/sonub-flutter",
       "program": "lib/main.dart",
