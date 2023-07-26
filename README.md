@@ -2,11 +2,12 @@
 
 ## Overview
 
+- This firebase extension helps to manage your firebase.
+
 - When a document is created under the `easy-commands` collection,
   - The firebase background function will execute the comamnd specified in `{ command: ... }`.
 
 - The `easy-commands` collection should be protected by security rules for the adming-create-only permission.
-
 
 ## Installation
 
