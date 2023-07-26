@@ -1,3 +1,11 @@
+
+
+service-account.json
+**/service-account.json
+keys/
+**/keys/
+
+
 # Logs
 logs
 *.log

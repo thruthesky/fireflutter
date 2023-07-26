@@ -46,7 +46,7 @@ See the change logs for the change of each version.
 - example of document creation for update_custom claims
 
 
-![Image Link](https://github.com/thruthesky/easy/blob/main/firebase/extensions/easy-extension/docs/command-update_custom_claims_input.jpg?raw=true "This is image title")
+![Image Link](https://github.com/thruthesky/easy-extension/blob/main/docs/command-update_custom_claims_input.jpg?raw=true "This is image title")
 
 
 - Response
@@ -56,7 +56,7 @@ See the change logs for the change of each version.
   - `{ response: { claims: { ..., ... } } }` - the claims that the user currently has. Not the claims that were requested for updating.
 
 
-![Image Link](https://github.com/thruthesky/easy/blob/main/firebase/extensions/easy-extension/docs/command-update_custom_claims_output.jpg?raw=true "This is image title")
+![Image Link](https://github.com/thruthesky/easy-extension/blob/main/docs/command-update_custom_claims_output.jpg?raw=true "This is image title")
 
 
 
@@ -359,4 +359,4 @@ If user not exists, the status will be error.
 
 - The `/easy-commands` collection should be protected by the admin users.
 - See the [sample security rules](https://github.com/easy-extension/firestore.rules) that you may copy and use for the seurity rules of easy-extension
-# easy-extension
+
