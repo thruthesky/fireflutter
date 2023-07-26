@@ -12,7 +12,7 @@ rules_version = '2';
 
 // Return true if the use is root user.
 function isAdmin() {
-  let adminUIDs = ['root', 'root2'];
+  let adminUIDs = ['root', 'admin'];
   return request.auth.uid in adminUIDs || request.auth.token.admin == true;
 }
 

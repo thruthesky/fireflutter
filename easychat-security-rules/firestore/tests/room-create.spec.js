@@ -74,8 +74,8 @@ describe("Firestore security test chat room", () => {
     );
   });
 
-  it("Can't create a single chat room with duplicated user uids -> failure", async () => {
-    await firebase.assertFails(
+  it("One can chat to himeself. -> failure", async () => {
+    await firebase.assertSucceeds(
       db(a)
         .collection("easychat")
         .add(tempChatRoomData({ master: a.uid, users: [a.uid, a.uid], group: false }))
