@@ -42,7 +42,7 @@ A few moments later, you will the that the document is updated
 
 When a command document is created, this extension will execute the specified command.
 
-To learn more about this extension, visit the [Easy Extension Document Site](https://github.com/thruthesky/easy/tree/main/firebase/extensions/easy-extension).
+To learn more about this extension, visit the [Easy Extension Document Site](https://github.com/thruthesky/easy-extension).
 
 <!-- We recommend keeping the following section to explain how to monitor extensions with Firebase -->
 # Monitoring

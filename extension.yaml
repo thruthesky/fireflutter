@@ -4,7 +4,7 @@
 # Identifier for your extension
 # TODO: Replace this with an descriptive name for your extension.
 name: easy-extension
-version: 0.1.1 # Follow semver versioning
+version: 0.1.2 # Follow semver versioning
 specVersion: v1beta # Version of the Firebase Extensions specification
 
 # Friendly display name for your extension (~3-5 words)
@@ -20,7 +20,7 @@ license: Apache-2.0 # https://spdx.org/licenses/
 
 # Public URL for the source code of your extension.
 # TODO:  Replace this with your GitHub repo.
-sourceUrl: https://github.com/thruthesky/easy
+sourceUrl: https://github.com/thruthesky/easy-extension
 
 # Specify whether a paid-tier billing plan is required to use your extension.
 # Learn more in the docs: https://firebase.google.com/docs/extensions/reference/extension-yaml#billing-required-field
