@@ -150,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ElevatedButton(
                             onPressed: () =>
                                 Navigator.of(context).push(MaterialPageRoute(builder: (_) => const OpenRoomsScreen())),
-                            child: const Text('Join Open Rooms'),
+                            child: const Text('Open Room List'),
                           ),
                         ],
                       );

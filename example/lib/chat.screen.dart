@@ -36,35 +36,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   success: (room) {
                     Navigator.of(context).pop();
                     if (context.mounted) {
-                      // TODO Should we make this a separate function?
-                      showGeneralDialog(
-                        context: context,
-                        pageBuilder: (_, __, ___) {
-                          return Scaffold(
-                            appBar: ChatRoomAppBar(room: room),
-                            body: Column(
-                              children: [
-                                Expanded(
-                                  child: ChatMessagesListView(
-                                    room: room,
-                                  ),
-                                ),
-                                SafeArea(
-                                  child: Column(
-                                    children: [
-                                      const Divider(height: 0),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: ChatRoomMessageBox(room: room),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
+                      controller.showChatRoom(context: context, room: room);
                     }
                   },
                   cancel: () => Navigator.of(context).pop(),

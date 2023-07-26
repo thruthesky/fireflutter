@@ -253,6 +253,10 @@ Scafolld(
 
 ## Chat room list
 
+- To list chat rooms, use the code below.
+
+
+
 ```dart
 ChatRoomListView(
   controller: controller,
