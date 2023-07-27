@@ -1,0 +1,17 @@
+
+rules_version = '2';
+
+// Add admin UID's here
+function isAdmin() {
+  let adminUIDs = ['root-uid', 'uid-A', 'uid-B'];
+  return request.auth.uid in adminUIDs;
+}
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /easy-commands/{documentId} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

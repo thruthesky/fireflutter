@@ -1,0 +1,208 @@
+# Learn detailed information about the fields of an extension.yaml file in the docs:
+# https://firebase.google.com/docs/extensions/reference/extension-yaml
+
+# Identifier for your extension
+# TODO: Replace this with an descriptive name for your extension.
+name: easy-extension
+version: 0.1.3 # Follow semver versioning
+specVersion: v1beta # Version of the Firebase Extensions specification
+
+# Friendly display name for your extension (~3-5 words)
+displayName: Firebase Utility Extension
+
+# Brief description of the task your extension performs (~1 sentence)
+description: >-
+  Manage your Firebase project with ease.
+
+icon: icon.png
+
+license: Apache-2.0 # https://spdx.org/licenses/
+
+# Public URL for the source code of your extension.
+# TODO:  Replace this with your GitHub repo.
+sourceUrl: https://github.com/thruthesky/easy-extension
+
+# Specify whether a paid-tier billing plan is required to use your extension.
+# Learn more in the docs: https://firebase.google.com/docs/extensions/reference/extension-yaml#billing-required-field
+billingRequired: true
+
+# In an `apis` field, list any Google APIs (like Cloud Translation, BigQuery, etc.)
+# required for your extension to operate.
+# Learn more in the docs:
+# https://firebase.google.com/docs/extensions/reference/extension-yaml#apis-field
+
+# In a `roles` field, list any IAM access roles required for your extension to operate.
+# Learn more in the docs:
+# https://firebase.google.com/docs/extensions/reference/extension-yaml#roles-field
+roles:
+  - role: firebaseauth.admin
+    reason: Allows the extension to update the user custom claims in Firebase Auth.
+  - role: datastore.owner
+    reason: Allows the extension to update the response of the command execution to Firestore.
+  # - role: firebaseauth.viewer
+  #   reason: >-
+  #     Allows the extension to read the list of existing users in Firebase Auth.
+
+# In the `resources` field, list each of your extension's functions, including the trigger for each function.
+# Learn more in the docs:
+# https://firebase.google.com/docs/extensions/reference/extension-yaml#resources-field
+resources:
+  - name: easyCommand
+    type: firebaseextensions.v1beta.function
+    description: >-
+      Cloud Firestore event trigger function that responds for a specified command to manage your Firebase.
+    properties:
+      location: ${LOCATION}
+      eventTrigger:
+        eventType: providers/cloud.firestore/eventTypes/document.write
+        resource: projects/${PROJECT_ID}/databases/(default)/documents/easy-commands/{documentId}
+      runtime: "nodejs18"
+
+  - name: createUserDocument
+    type: firebaseextensions.v1beta.function
+    description: >-
+      A function that is triggered when a new user is created in Firebase
+      Authentication. It creates a user document in a specified Firestore
+      collection and populates it with all the possible fields from the user record.
+    properties:
+      location: ${LOCATION}
+      eventTrigger:
+        eventType: providers/firebase.auth/eventTypes/user.create
+        resource: projects/${PROJECT_ID}
+      runtime: "nodejs18"
+
+  - name: deleteUserDocument
+    type: firebaseextensions.v1beta.function
+    description: >-
+      A function that is triggered when a user is deleted from Firebase
+      Authentication. If the DELETE_DOCUMENT_ON_USER_DELETE is set to  yes, it deletes the
+      user document from the specified Firestore collection.
+    properties:
+      location: ${LOCATION}
+      eventTrigger:
+        eventType: providers/firebase.auth/eventTypes/user.delete
+        resource: projects/${PROJECT_ID}
+      runtime: "nodejs18"
+
+# In the `params` field, set up your extension's user-configured parameters.
+# Learn more in the docs:
+# https://firebase.google.com/docs/extensions/reference/extension-yaml#params-field
+
+# In the `params` field, set up your extension's user-configured parameters.
+# Learn more in the docs:
+# https://firebase.google.com/docs/extensions/reference/extension-yaml#params-field
+params:
+  - param: USER_COLLECTION_NAME
+    label: Collection path
+    description: Where do you store user document?
+    type: string
+    default: users # Specifying a default is optional.
+    required: false
+
+  - param: CREATE_USER_DOCUMENT
+    label: Create user document on user create
+    description: >-
+      If set to \"Yes\", the extension will automatically create the
+      Firestore user document when the user is created on Firebase
+      Authentication.
+    type: select
+    options:
+      - label: Yes
+        value: yes
+      - label: No
+        value: no
+    default: yes
+    required: true
+
+  - param: DELETE_USER_DOCUMENT
+    label: Delete user document on user delete
+    description: >-
+      If set to \"Yes\", the extension will automatically delete the
+      Firestore user document when the user is deleted from Firebase
+      Authentication.
+    type: select
+    options:
+      - label: Yes
+        value: yes
+      - label: No
+        value: no
+    default: yes
+    required: true
+
+  - param: SYNC_CUSTOM_CLAIMS_TO_USER_DOCUMENT
+    label: Sync back to user document when custom claims are updated.
+    description: >-
+      If set to \"Yes\", custom claims will be sync.
+    type: select
+    options:
+      - label: Yes
+        value: yes
+      - label: No
+        value: no
+    default: yes
+    required: true
+
+  - param: SET_DISABLED_USER_FIELD
+    label: Set disabled field in user document.
+    description: >-
+      If set to \"Yes\", disabled field will be added if the user is disabled. Note that, the document id must be same as user's uid. The document will be created if it does not exist.
+    type: select
+    options:
+      - label: Yes
+        value: yes
+      - label: No
+        value: no
+    default: yes
+    required: true
+
+  - param: LOCATION
+    label: Cloud Functions location
+    description: >-
+      Where do you want to deploy the functions created for this extension?
+      For help selecting a location, refer to the [location selection
+      guide](https://firebase.google.com/docs/functions/locations).
+    type: select
+    options:
+      - label: Iowa (us-central1)
+        value: us-central1
+      - label: South Carolina (us-east1)
+        value: us-east1
+      - label: Northern Virginia (us-east4)
+        value: us-east4
+      - label: Los Angeles (us-west2)
+        value: us-west2
+      - label: Salt Lake City (us-west3)
+        value: us-west3
+      - label: Las Vegas (us-west4)
+        value: us-west4
+      - label: Warsaw (europe-central2)
+        value: europe-central2
+      - label: Belgium (europe-west1)
+        value: europe-west1
+      - label: London (europe-west2)
+        value: europe-west2
+      - label: Frankfurt (europe-west3)
+        value: europe-west3
+      - label: Zurich (europe-west6)
+        value: europe-west6
+      - label: Hong Kong (asia-east2)
+        value: asia-east2
+      - label: Tokyo (asia-northeast1)
+        value: asia-northeast1
+      - label: Osaka (asia-northeast2)
+        value: asia-northeast2
+      - label: Seoul (asia-northeast3)
+        value: asia-northeast3
+      - label: Mumbai (asia-south1)
+        value: asia-south1
+      - label: Jakarta (asia-southeast2)
+        value: asia-southeast2
+      - label: Montreal (northamerica-northeast1)
+        value: northamerica-northeast1
+      - label: Sao Paulo (southamerica-east1)
+        value: southamerica-east1
+      - label: Sydney (australia-southeast1)
+        value: australia-southeast1
+    required: true
+    default: us-central1
+    immutable: true

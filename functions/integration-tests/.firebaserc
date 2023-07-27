@@ -1,0 +1,20 @@
+{
+  "projects": {
+    "test": "withcenter-test-2"
+  },
+  "targets": {},
+  "etags": {
+    "withcenter-test-2": {
+      "extensionInstances": {
+        "easy-extension": "0f5826611b1fadaa086dc9a11c12bb61692ceb63eb00b3d00897673ff276346b",
+        "firestore-user-document-4nct": "606f95b3ac1b2080fc2d5c2352c39ffcef16b41d2666138331fb0e7a69a97959",
+        "firestore-user-document": "f729b37ad85817ef899e176cf6ac573824b961cfa3648fdc03d0dff3e07c2a04",
+        "storage-label-images": "ef85272087a0aa430943cf929c80a26103c670b85dc1528043c33167399a21f0",
+        "firestore-palm-chatbot": "01a42ec6f7e27bc1d3031efcb052ce2f66f72bffc6945f79de9b34edbff54549",
+        "speech-to-text": "fc4f490d2d9cd613ec43369039166e316c4cf0cd79dfa206c6d7e905f22d97b0",
+        "firestore-chatgpt-bot": "4e6a297ffaf02f649bcf420757d8a120950b4f57ed79b2c055fb1f2d78a0e821",
+        "storage-extract-image-text": "54f906d30d87fbcc11f12d82daa3358ba6228fe23d6d5605a2a79ca10ec2aeb4"
+      }
+    }
+  }
+}
