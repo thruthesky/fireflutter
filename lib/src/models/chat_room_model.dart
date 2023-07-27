@@ -9,6 +9,7 @@ class ChatRoomModel {
   final String master;
   final List<String> users;
   final List<String> moderators;
+  final List<String> blockedUsers;
   final Map<String, int> noOfNewMessages;
 
   ChatRoomModel({
@@ -18,8 +19,9 @@ class ChatRoomModel {
     required this.open,
     required this.master,
     required this.users,
-    required this.noOfNewMessages,
     required this.moderators,
+    required this.blockedUsers,
+    required this.noOfNewMessages,
   });
 
   factory ChatRoomModel.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
@@ -34,8 +36,9 @@ class ChatRoomModel {
       open: map['open'],
       master: map['master'],
       users: List<String>.from((map['users'] ?? [])),
+      moderators: List<String>.from(map['moderators'] ?? []),
+      blockedUsers: List<String>.from(map['blockedUsers'] ?? []),
       noOfNewMessages: Map<String, int>.from(map['noOfNewMessages'] ?? {}),
-      moderators: List.from(map['moderators'] ?? []),
     );
   }
 
@@ -48,6 +51,7 @@ class ChatRoomModel {
       'master': master,
       'users': users,
       'moderators': moderators,
+      'blockedUsers': blockedUsers,
       'noOfNewMessages': noOfNewMessages,
     };
   }

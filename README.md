@@ -163,6 +163,7 @@ Scafolld(
 
 
 
+
 ## Additional information
 
 - Please create issues.
@@ -215,6 +216,12 @@ Scafolld(
 - `group: [boolean]` - if true, it's group chat. otherwise it's 1:1 chat
 - `open: [boolean]` - if true, any one in the room can invite and anyone can jogin (except if it's 1:1 chat). If it's false, no one can join except the invitation of master and moderators.
 - `createdAt: [timestamp|date]` is the time that the chat room created.
+- `users: Array[uid]` is the user members.
+- `lastMessage: Map` is the last message in the room
+  - `createdAt` - is the time that last messages was sent.
+  - `senderUid` - is the sender uid.
+  - `text` - is the text in the message.
+
 
 ### Chat user field
 

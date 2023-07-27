@@ -38,24 +38,25 @@ class _ChatRoomMembersListViewState extends State<ChatRoomMembersListView> {
                       backgroundImage: NetworkImage(userSnapshot.data!.photoUrl),
                     ),
               onTap: () {
+                final user = userSnapshot.data;
                 showDialog(
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: Text(userSnapshot.data?.displayName ?? userSnapshot.data?.uid ?? ''),
+                      title: Text(user?.displayName ?? user?.uid ?? ''),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (EasyChat.instance.canRemove(room: widget.room, userUid: userSnapshot.data!.uid)) ...[
+                          if (EasyChat.instance.canRemove(room: widget.room, userUid: user!.uid)) ...[
                             TextButton(
                               child: const Text('Remove from the Group'),
                               onPressed: () {
                                 EasyChat.instance.removeUserFromRoom(
                                   room: widget.room,
-                                  uid: userSnapshot.data!.uid,
+                                  uid: user.uid,
                                   callback: () {
                                     setState(() {
-                                      widget.room.users.remove(userSnapshot.data!.uid);
+                                      widget.room.users.remove(user!.uid);
                                     });
                                     Navigator.pop(context);
                                   },
@@ -63,42 +64,56 @@ class _ChatRoomMembersListViewState extends State<ChatRoomMembersListView> {
                               },
                             ),
                           ],
-                          if (EasyChat.instance.canSetUserAsModerator(room: widget.room, userUid: userSnapshot.data!.uid)) ...[
+                          if (EasyChat.instance.canSetUserAsModerator(room: widget.room, userUid: user.uid)) ...[
                             TextButton(
                               child: const Text("Add as a Moderator"),
                               onPressed: () {
                                 EasyChat.instance.setUserAsModerator(
                                   room: widget.room,
-                                  uid: userSnapshot.data!.uid,
+                                  uid: user.uid,
                                   callback: () {
                                     setState(() {
-                                      widget.room.moderators.add(userSnapshot.data!.uid);
+                                      widget.room.moderators.add(user.uid);
                                     });
                                     Navigator.pop(context);
                                   },
                                 );
-                                debugPrint('Adding as Moderator');
                               },
                             )
                           ],
-                          if (EasyChat.instance
-                              .canRemoveUserAsModerator(room: widget.room, userUid: userSnapshot.data!.uid)) ...[
+                          if (EasyChat.instance.canRemoveUserAsModerator(room: widget.room, userUid: user.uid)) ...[
                             TextButton(
                               child: const Text("Remove as a Moderator"),
                               onPressed: () {
                                 EasyChat.instance.removeUserAsModerator(
                                   room: widget.room,
-                                  uid: userSnapshot.data!.uid,
+                                  uid: user.uid,
                                   callback: () {
                                     setState(() {
-                                      widget.room.moderators.remove(userSnapshot.data!.uid);
+                                      widget.room.moderators.remove(user.uid);
                                     });
                                     Navigator.pop(context);
                                   },
                                 );
-                                debugPrint('Removing as Moderator');
                               },
                             )
+                          ],
+                          if (EasyChat.instance.canBlockUserFromGroup(room: widget.room, userUid: user.uid)) ...[
+                            TextButton(
+                              child: const Text('Block user from the group'),
+                              onPressed: () {
+                                EasyChat.instance.addToBlockedUsers(
+                                  room: widget.room,
+                                  uid: user.uid,
+                                  callback: () {
+                                    setState(() {
+                                      widget.room.blockedUsers.add(user.uid);
+                                    });
+                                  },
+                                );
+                                debugPrint('Blocking this person');
+                              },
+                            ),
                           ],
                         ],
                       ),

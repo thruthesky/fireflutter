@@ -162,6 +162,13 @@ class EasyChat {
     callback?.call();
   }
 
+  Future<void> addToBlockedUsers({required ChatRoomModel room, required String uid, Function()? callback}) async {
+    await roomDoc(room.id).update({
+      'blockedUsers': FieldValue.arrayUnion([uid])
+    });
+    callback?.call();
+  }
+
   /// Return true if the uid is one of the moderators.
   isModerator({required ChatRoomModel room, required String uid}) {
     return room.moderators.contains(uid);
@@ -175,6 +182,10 @@ class EasyChat {
   /// Is the user is master or moderator of the room?
   isAdmin(ChatRoomModel room) {
     return room.master == uid || room.moderators.contains(uid);
+  }
+
+  isBlocked({required ChatRoomModel room, required String uid}) {
+    return room.blockedUsers.contains(uid);
   }
 
   /// Check if user can be removed in the group
@@ -214,6 +225,16 @@ class EasyChat {
     return false;
   }
 
+  canBlockUserFromGroup({required ChatRoomModel room, required String userUid}) {
+    // If the current user is not a admin, don't allow
+    if (!isAdmin(room)) return false;
+
+    // If the target user is not currently blocked, allow blocking
+    if (!isBlocked(room: room, uid: userUid)) return true;
+
+    return false;
+  }
+
   Future<void> sendMessage({
     required ChatRoomModel room,
     String? text,
@@ -228,6 +249,7 @@ class EasyChat {
       if (fileName != null) 'fileName': fileName,
       'createdAt': FieldValue.serverTimestamp(),
       'senderUid': FirebaseAuth.instance.currentUser!.uid,
+      // TODO protocol
     };
     await messageCol(room.id).add(chatMessage);
     updateRoomNewMessagesDetails(room: room, lastMessage: chatMessage);
@@ -359,7 +381,6 @@ class EasyChat {
     required ChatRoomModel room,
     required File file,
     bool isImage = true,
-    // TODO ask if we need to have a plugin or a simple way to check what type of file
     String? fileName,
     String? fileStorageName,
   }) async {
@@ -372,8 +393,7 @@ class EasyChat {
           ? EasyChat.instance.sendMessage(room: room, imageUrl: url)
           : EasyChat.instance.sendMessage(room: room, fileUrl: url, fileName: fileName);
     } on FirebaseException catch (e) {
-      // TODO provide a way of displaying error emssage nicley
-      print(e);
+      debugPrint('$e');
     }
   }
 }
