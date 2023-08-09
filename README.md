@@ -358,9 +358,7 @@ If user not exists, the status will be error.
 ## Security rules
 
 - The `/easy-commands` collection should be protected by the admin users.
-- See the [sample security rules](https://github.com/easy-extension/firestore.rules) that you may copy and use for the seurity rules of easy-extension
+- See the [sample security rules](https://github.com/easy-extension/firestore.rules) that you may copy and use for the seurity rules of easy-extension.
 
 
 
-
-...// aug 9
