@@ -61,7 +61,8 @@ export const createUserDocument = functions.auth
     if (Config.createUserDocument == false) {
       return;
     }
-    return UserModel.createDocument(user.uid, UserModel.popuplateUserFields(user));
+    /// TODO - 'generatedBy' is now added, check if it's working.
+    return UserModel.createDocument(user.uid, { ...UserModel.popuplateUserFields(user), ...{ generatedBy: 'easy-extension' } });
   });
 
 export const deleteUserDocument = functions.auth
