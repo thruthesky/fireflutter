@@ -102,9 +102,3 @@ String sanitizeFilename(String input, {String replacement = ''}) {
 
   return result.length > 255 ? result.substring(0, 255) : result;
 }
-
-/// TODO: translate
-t(String code) {
-  // return EasyChat.instance.t(code);
-  return code;
-}

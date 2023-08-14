@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/models/chat_room_model.dart';
-import 'package:fireflutter/src/services/chat.service.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -68,7 +67,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
   @override
   Widget build(BuildContext context) {
     if (ChatService.instance.loggedIn == false) {
-      return const Center(child: Text('Error - Please, login first to use Easychat'));
+      return Center(child: Text(tr.user.loginFirst));
     }
     // Returning a List View of Chat Rooms
     return FirestoreListView(
