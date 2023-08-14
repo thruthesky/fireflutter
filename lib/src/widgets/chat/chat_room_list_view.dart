@@ -5,7 +5,6 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/models/chat_room_model.dart';
 import 'package:fireflutter/src/services/chat.service.dart';
-import 'package:fireflutter/src/widgets/chat/chat_room_list_tile.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -13,8 +12,7 @@ class ChatRoomListViewController {
   late final ChatRoomListViewState state;
 
   ///
-  showChatRoom(
-      {required BuildContext context, UserModel? user, ChatRoomModel? room}) {
+  showChatRoom({required BuildContext context, UserModel? user, ChatRoomModel? room}) {
     ChatService.instance.showChatRoom(context: context, user: user, room: room);
   }
 }
@@ -70,8 +68,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
   @override
   Widget build(BuildContext context) {
     if (ChatService.instance.loggedIn == false) {
-      return const Center(
-          child: Text('Error - Please, login first to use Easychat'));
+      return const Center(child: Text('Error - Please, login first to use Easychat'));
     }
     // Returning a List View of Chat Rooms
     return FirestoreListView(
@@ -88,7 +85,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
       },
       errorBuilder: (context, error, stackTrace) {
         log(error.toString(), stackTrace: stackTrace);
-        return const Center(child: Text('Error loading chat rooms'));
+        return Center(child: Text('Error loading chat rooms $error'));
       },
       pageSize: widget.pageSize,
       controller: widget.scrollController,
