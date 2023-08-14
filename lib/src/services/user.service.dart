@@ -95,7 +95,7 @@ class UserService {
   /// If the user document already exists, it throws an exception.
   Future<void> create() async {
     if ((await doc.get()).exists) {
-      throw Exception(Error.documentAlreadyExists);
+      throw Exception(Code.documentAlreadyExists);
     }
 
     final u = FirebaseAuth.instance.currentUser!;
@@ -126,7 +126,7 @@ class UserService {
     dynamic value,
   }) async {
     if (userModel == null) {
-      throw Exception(Error.notLoggedIn);
+      throw Exception(Code.notLoggedIn);
     }
 
     userModel = await userModel!.update(
