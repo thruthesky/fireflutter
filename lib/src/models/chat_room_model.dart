@@ -34,15 +34,19 @@ class ChatRoomModel {
   bool get isSingleChat => users.length == 2 && group == false;
   bool get isGroupChat => group;
 
-  CollectionReference get messagesCol => ChatService.instance.roomRef(id).collection('messages');
+  CollectionReference get messagesCol =>
+      ChatService.instance.roomRef(id).collection('messages');
   DocumentReference get ref => ChatService.instance.roomRef(id);
 
-  factory ChatRoomModel.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
+  factory ChatRoomModel.fromDocumentSnapshot(
+      DocumentSnapshot documentSnapshot) {
     return ChatRoomModel.fromMap(
-        map: documentSnapshot.data() as Map<String, dynamic>, id: documentSnapshot.id);
+        map: documentSnapshot.data() as Map<String, dynamic>,
+        id: documentSnapshot.id);
   }
 
-  factory ChatRoomModel.fromMap({required Map<String, dynamic> map, required id}) {
+  factory ChatRoomModel.fromMap(
+      {required Map<String, dynamic> map, required id}) {
     return ChatRoomModel(
       id: id,
       name: map['name'] ?? '',
@@ -69,9 +73,11 @@ class ChatRoomModel {
       users: List<String>.from((updates['users'] ?? users)),
       moderators: List<String>.from(updates['moderators'] ?? moderators),
       blockedUsers: List<String>.from(updates['blockedUsers'] ?? blockedUsers),
-      noOfNewMessages: Map<String, int>.from(updates['noOfNewMessages'] ?? noOfNewMessages),
-      maximumNoOfUsers:
-          updates.containsKey('maximumNoOfUsers') ? updates['maximumNoOfUsers'] : maximumNoOfUsers,
+      noOfNewMessages:
+          Map<String, int>.from(updates['noOfNewMessages'] ?? noOfNewMessages),
+      maximumNoOfUsers: updates.containsKey('maximumNoOfUsers')
+          ? updates['maximumNoOfUsers']
+          : maximumNoOfUsers,
     );
   }
 
@@ -137,7 +143,8 @@ class ChatRoomModel {
       'ChatRoomModel(id: $id, name: $name, group: $group, open: $open, master: $master, users: $users)';
 
   String get otherUserUid {
-    assert(users.length == 2 && group == false, "This is not a single chat room");
+    assert(
+        users.length == 2 && group == false, "This is not a single chat room");
     return ChatService.instance.getOtherUserUid(users);
   }
 
@@ -148,13 +155,15 @@ class ChatRoomModel {
 
     /// Check if the user is already in the room.
     if (room.users.contains(userUid)) {
-      throw Exception(Error.userAlreadyInRoom);
+      //! throw Exception(Error.userAlreadyInRoom);
+      throw Exception("Error.userAlreadyInRoom");
     }
 
     ///
     ///
     if (room.users.length >= room.maximumNoOfUsers) {
-      throw Exception(Error.roomIsFull);
+      //! throw Exception(Error.roomIsFull);
+      throw Exception("Error.roomIsFull");
     }
 
     ///
@@ -165,7 +174,8 @@ class ChatRoomModel {
 
   invite(String userUid) async {
     if (isSingleChat) {
-      throw Exception(Error.singleChatRoomCannotInvite);
+      //! throw Exception(Error.singleChatRoomCannotInvite);
+      throw Exception('Error.singleChatRoomCannotInvite');
     }
     return await addUser(userUid);
   }

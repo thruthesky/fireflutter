@@ -12,6 +12,7 @@ dependencies:
   firebase_auth: ^4.7.2
   firebase_core: ^2.15.0
   firebase_storage: ^11.2.5
+  firebase_ui_firestore: ^1.5.4
   flutter:
     sdk: flutter
   flutter_advanced_avatar: ^1.5.0

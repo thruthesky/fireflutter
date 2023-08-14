@@ -1,5 +1,9 @@
 import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/widgets/chat/chat_message_box.dart';
+import 'package:fireflutter/src/widgets/chat/chat_messages_list_view.dart';
 import 'package:flutter/material.dart';
+
+import 'chat_room_app_bar.dart';
 
 class ChatRoom extends StatefulWidget {
   const ChatRoom({
