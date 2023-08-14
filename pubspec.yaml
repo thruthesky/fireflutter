@@ -1,0 +1,27 @@
+name: fireflutter
+description: A free, open source, complete, rapid development package for creating Social apps, Chat apps, Community(Forum) apps, Shopping mall apps, and much more based on Firebase.
+version: 0.4.1
+homepage: https://github.com/thruthesky/fireflutter
+
+environment:
+  sdk: ">=3.0.6 <4.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  cloud_firestore: ^4.8.4
+  firebase_auth: ^4.7.2
+  firebase_core: ^2.15.0
+  firebase_storage: ^11.2.5
+  flutter:
+    sdk: flutter
+  flutter_advanced_avatar: ^1.5.0
+  cached_network_image: ^3.1.0
+  image_picker: ^1.0.2
+  flutter_image_compress: ^2.0.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
