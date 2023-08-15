@@ -28,7 +28,6 @@ class InviteUserListView extends StatelessWidget {
         .collection('users')
         .where("displayName", isEqualTo: searchText)
         .where(FieldPath.documentId, whereNotIn: room.users.take(10));
-    debugPrint("refreshed?");
     return FirestoreListView(
       query: query,
       itemBuilder: (context, snapshot) {

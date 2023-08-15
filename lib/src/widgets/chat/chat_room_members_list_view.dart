@@ -28,6 +28,7 @@ class _ChatRoomMembersListViewState extends State<ChatRoomMembersListView> {
           builder: (context, userSnapshot) {
             if (userSnapshot.data == null) return const SizedBox();
             final user = userSnapshot.data;
+            debugPrint(user.toString());
             return ListTile(
               title: Text(user?.displayName ?? ''),
               subtitle: RichText(

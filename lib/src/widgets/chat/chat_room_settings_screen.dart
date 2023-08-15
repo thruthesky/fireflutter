@@ -40,15 +40,10 @@ class _ChatRoomSettingsScreenState extends State<ChatRoomSettingsScreen> {
               if (ChatService.instance.isMaster(
                       room: roomSnapshot, uid: ChatService.instance.uid) &&
                   widget.room.group) ...[
-                ChatRoomOpenSettingListTile(
-                  room: roomSnapshot,
-                ),
-                ChatRoomMaximumUsersSettingListTile(
-                  room: roomSnapshot,
-                ),
-                ChatRoomDefaultRoomNameSettingListTile(
-                  room: roomSnapshot,
-                ),
+                ChatRoomOpenSettingListTile(room: roomSnapshot),
+                ChatRoomMaximumUsersSettingListTile(room: roomSnapshot),
+                ChatRoomDefaultRoomNameSettingListTile(room: roomSnapshot),
+                ChatRoomPasswordSettingListTile(room: roomSnapshot),
               ],
               RenameChatRoomSettingTile(
                 room: roomSnapshot,

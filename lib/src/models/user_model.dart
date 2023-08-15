@@ -39,14 +39,16 @@ class UserModel {
     );
   }
 
-  factory UserModel.fromMap({required Map<String, dynamic> map, required String id}) {
+  factory UserModel.fromMap(
+      {required Map<String, dynamic> map, required String id}) {
     final displayName = map['displayName'] ?? '';
     return UserModel(
       uid: id,
-      displayName: displayName == '' ? id.toUpperCase().substring(0, 2) : displayName,
+      displayName:
+          displayName == '' ? id.toUpperCase().substring(0, 2) : displayName,
       name: map['name'] ?? '',
       photoUrl: (map['photoUrl'] ?? '') as String,
-      hasPhotoUrl: map['hasPhotoUrl'] ?? false,
+      hasPhotoUrl: map['hasPhotoUrl'] ? true : false,
       phoneNumber: map['phoneNumber'] ?? '',
       email: map['email'] ?? '',
       createdAt: map['createdAt'],
@@ -74,7 +76,10 @@ class UserModel {
   ///
   /// 사용자 문서가 존재하지 않는 경우, null 을 리턴한다.
   static Future<UserModel?> get(String uid) async {
-    final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(uid).get();
+    final snapshot = await FirebaseFirestore.instance
+        .collection(collectionName)
+        .doc(uid)
+        .get();
     if (!snapshot.exists) {
       return null;
     }
@@ -86,7 +91,10 @@ class UserModel {
   /// 사용자 문서가 이미 존재하는 경우, 문서를 덮어쓴다.
   /// 참고: README.md
   Future<UserModel> create() async {
-    await FirebaseFirestore.instance.collection(UserModel.collectionName).doc(uid).set(toMap());
+    await FirebaseFirestore.instance
+        .collection(UserModel.collectionName)
+        .doc(uid)
+        .set(toMap());
 
     return (await get(uid))!;
   }

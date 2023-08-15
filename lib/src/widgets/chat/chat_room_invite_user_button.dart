@@ -23,7 +23,6 @@ class _InviteUserButtonState extends State<InviteUserButton> {
         showGeneralDialog(
           context: context,
           pageBuilder: (context, _, __) {
-            debugPrint("Rebuilt?");
             return Scaffold(
               appBar: AppBar(
                 title: const Text('Invite User'),

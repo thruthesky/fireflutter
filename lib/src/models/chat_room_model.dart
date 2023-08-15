@@ -18,6 +18,7 @@ class ChatRoomModel {
   final List<String> blockedUsers;
   final Map<String, int> noOfNewMessages;
   final int maximumNoOfUsers;
+  final String? password; // TODO for confirmation
 
   ChatRoomModel({
     required this.id,
@@ -31,6 +32,7 @@ class ChatRoomModel {
     required this.blockedUsers,
     required this.noOfNewMessages,
     required this.maximumNoOfUsers,
+    this.password,
   });
 
   bool get isSingleChat => users.length == 2 && group == false;
@@ -50,18 +52,19 @@ class ChatRoomModel {
   factory ChatRoomModel.fromMap(
       {required Map<String, dynamic> map, required id}) {
     return ChatRoomModel(
-      id: id,
-      name: map['name'] ?? '',
-      rename: map['rename'] ?? {},
-      group: map['group'],
-      open: map['open'],
-      master: map['master'],
-      users: List<String>.from((map['users'] ?? [])),
-      moderators: List<String>.from(map['moderators'] ?? []),
-      blockedUsers: List<String>.from(map['blockedUsers'] ?? []),
-      noOfNewMessages: Map<String, int>.from(map['noOfNewMessages'] ?? {}),
-      maximumNoOfUsers: map['maximumNoOfUsers'],
-    );
+        id: id,
+        name: map['name'] ?? '',
+        rename: map['rename'] ?? {},
+        group: map['group'],
+        open: map['open'],
+        master: map['master'],
+        users: List<String>.from((map['users'] ?? [])),
+        moderators: List<String>.from(map['moderators'] ?? []),
+        blockedUsers: List<String>.from(map['blockedUsers'] ?? []),
+        noOfNewMessages: Map<String, int>.from(map['noOfNewMessages'] ?? {}),
+        maximumNoOfUsers: map['maximumNoOfUsers'] ??
+            100, // TODO confirm where to put the config on default max no of users
+        password: map['password']);
   }
 
   Map<String, dynamic> toMap() {
@@ -77,6 +80,7 @@ class ChatRoomModel {
       'blockedUsers': blockedUsers,
       'noOfNewMessages': noOfNewMessages,
       'maximumNoOfUsers': maximumNoOfUsers,
+      'password': password,
     };
   }
 
@@ -164,7 +168,7 @@ class ChatRoomModel {
     return await addUser(userUid);
   }
 
-  join() async {
+  Future<void> join() async {
     return await addUser(FirebaseAuth.instance.currentUser!.uid);
   }
 }

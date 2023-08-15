@@ -71,15 +71,15 @@ class _ChatRoomMenuScreenState extends State<ChatRoomMenuScreen> {
                   child: Text(widget.otherUser!.displayName),
                 ),
               ],
+              InviteUserButton(
+                room: roomSnapshot,
+              ),
               if (!ChatService.instance.isMaster(
                   room: roomSnapshot, uid: ChatService.instance.uid)) ...[
                 LeaveButton(
                   room: roomSnapshot,
                 ),
               ],
-              InviteUserButton(
-                room: roomSnapshot,
-              ),
               ChatSettingsButton(
                 room: roomSnapshot,
               ),
