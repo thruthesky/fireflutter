@@ -22,7 +22,7 @@ class ChatMessagesListView extends StatelessWidget {
       child: FirestoreListView(
         // TODO ask for help because the app makes weird movement upon scrolling up
         // ! Please NOTICE
-        reverse: false,
+        reverse: true,
         query: query,
         itemBuilder:
             (BuildContext context, QueryDocumentSnapshot<dynamic> doc) {
