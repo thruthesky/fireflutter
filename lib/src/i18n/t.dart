@@ -8,7 +8,7 @@ class UserTranslations {
 }
 
 class ChatTranslations {
-  String loginFirst = 'Please login first';
+  String noChatRooms = 'No chat rooms';
 }
 
 final tr = I18N();
