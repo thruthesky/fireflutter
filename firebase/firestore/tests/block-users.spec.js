@@ -54,7 +54,7 @@ describe("Blocked users", () => {
     // Master A setting B as Moderator
     await setAsModerator(a, b, roomRef.id);
 
-    // A blocks B -> Success
+    // B blocks C -> Success
     await firebase.assertSucceeds(block(b, c, roomRef.id));
   });
 

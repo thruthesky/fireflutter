@@ -202,8 +202,9 @@ class ChatService {
     // If the current user is not a master, don't allow
     if (!isMaster(room: room, uid: uid)) return false;
 
-    // If the user to set as moderator is not a master allow
-    if (!isMaster(room: room, uid: userUid)) return true;
+    // If the user to set as moderator is not a master, and the user is not a moderator yet, allow
+    if (!isMaster(room: room, uid: userUid) &&
+        !isModerator(room: room, uid: userUid)) return true;
 
     return false;
   }

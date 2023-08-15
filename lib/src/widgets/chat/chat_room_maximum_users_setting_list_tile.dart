@@ -20,13 +20,11 @@ class ChatRoomMaximumUsersSettingListTile extends StatefulWidget {
 
 class _ChatRoomMaximumUsersSettingListTileState
     extends State<ChatRoomMaximumUsersSettingListTile> {
-  ChatRoomModel? _roomState;
   final maxNumberOfUsers = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    _roomState ??= widget.room;
-    maxNumberOfUsers.text = "${_roomState?.maximumNoOfUsers ?? ''}";
+    maxNumberOfUsers.text = "${widget.room.maximumNoOfUsers ?? ''}";
     return ListTile(
       title: const Text("Maximum Number of Users"),
       subtitle: TextFormField(
@@ -41,7 +39,7 @@ class _ChatRoomMaximumUsersSettingListTileState
             hintText: 'Enter the limit number of user who can join.'),
         onFieldSubmitted: (value) async {
           await ChatService.instance.updateRoomSetting(
-            room: _roomState!,
+            room: widget.room,
             setting: 'maximumNoOfUsers',
             value: value.isNotEmpty ? int.parse(value) : null,
           );
