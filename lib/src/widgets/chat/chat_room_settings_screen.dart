@@ -5,27 +5,16 @@ import 'package:fireflutter/src/widgets/chat/chat_room_maximum_users_setting_lis
 import 'package:fireflutter/src/widgets/chat/chat_room_open_setting_list_tile.dart';
 import 'package:flutter/material.dart';
 
-class ChatRoomSettingsScreen extends StatefulWidget {
+class ChatRoomSettingsScreen extends StatelessWidget {
   const ChatRoomSettingsScreen({
     super.key,
     required this.room,
-    this.onUpdateRoomSetting, // Todo: For all updates
   });
 
   final ChatRoomModel room;
-  final Function(ChatRoomModel updatedRoom)? onUpdateRoomSetting;
-
-  @override
-  State<ChatRoomSettingsScreen> createState() => _ChatRoomSettingsScreenState();
-}
-
-class _ChatRoomSettingsScreenState extends State<ChatRoomSettingsScreen> {
-  ChatRoomModel? _roomState;
 
   @override
   Widget build(BuildContext context) {
-    _roomState ??= widget.room;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -33,26 +22,16 @@ class _ChatRoomSettingsScreenState extends State<ChatRoomSettingsScreen> {
       body: ListView(
         children: [
           if (ChatService.instance
-                  .isMaster(room: widget.room, uid: ChatService.instance.uid) &&
-              _roomState!.group) ...[
-            // TODO for confirmation, Only master can set [Open] and [Max Users]?
+                  .isMaster(room: room, uid: ChatService.instance.uid) &&
+              room.group) ...[
             ChatRoomOpenSettingListTile(
-              room: _roomState!,
-              onToggleOpen: (updatedRoom) {
-                widget.onUpdateRoomSetting?.call(updatedRoom);
-              },
+              room: room,
             ),
             ChatRoomMaximumUsersSettingListTile(
-              room: _roomState!,
-              onUpdateMaximumNoOfUsers: (updatedRoom) {
-                widget.onUpdateRoomSetting?.call(updatedRoom);
-              },
+              room: room,
             ),
             ChatRoomDefaultRoomNameSettingListTile(
-              room: _roomState!,
-              onUpdateChatRoomName: (updatedRoom) {
-                widget.onUpdateRoomSetting?.call(updatedRoom);
-              },
+              room: room,
             ),
           ],
           // ! Still Ongoing

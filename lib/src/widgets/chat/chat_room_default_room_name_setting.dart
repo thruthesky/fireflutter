@@ -34,13 +34,11 @@ class _ChatRoomDefaultRoomNameSettingListTileState
         decoration: const InputDecoration(
             hintText: 'Enter the default chat room name.'),
         onFieldSubmitted: (value) async {
-          _roomState = await ChatService.instance.updateRoomSetting(
+          await ChatService.instance.updateRoomSetting(
             room: _roomState!,
             setting: 'name',
             value: value,
           );
-          if (mounted) setState(() {});
-          widget.onUpdateChatRoomName?.call(_roomState!);
         },
       ),
     );

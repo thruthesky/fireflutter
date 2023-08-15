@@ -6,11 +6,9 @@ class ChatRoomOpenSettingListTile extends StatefulWidget {
   const ChatRoomOpenSettingListTile({
     super.key,
     required this.room,
-    this.onToggleOpen,
   });
 
   final ChatRoomModel room;
-  final Function(ChatRoomModel updatedRoom)? onToggleOpen;
 
   @override
   State<ChatRoomOpenSettingListTile> createState() =>
@@ -30,13 +28,11 @@ class _ChatRoomOpenSettingListTileState
       trailing: Switch(
         value: _roomState!.open,
         onChanged: (value) async {
-          _roomState = await ChatService.instance.updateRoomSetting(
+          await ChatService.instance.updateRoomSetting(
             room: _roomState!,
             setting: 'open',
             value: value,
           );
-          if (mounted) setState(() {});
-          widget.onToggleOpen?.call(_roomState!);
         },
       ),
     );

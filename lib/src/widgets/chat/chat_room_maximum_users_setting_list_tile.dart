@@ -40,13 +40,11 @@ class _ChatRoomMaximumUsersSettingListTileState
         decoration: const InputDecoration(
             hintText: 'Enter the limit number of user who can join.'),
         onFieldSubmitted: (value) async {
-          _roomState = await ChatService.instance.updateRoomSetting(
+          await ChatService.instance.updateRoomSetting(
             room: _roomState!,
             setting: 'maximumNoOfUsers',
             value: value.isNotEmpty ? int.parse(value) : null,
           );
-          if (mounted) setState(() {});
-          widget.onUpdateMaximumNoOfUsers?.call(_roomState!);
         },
       ),
     );

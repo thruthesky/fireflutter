@@ -79,7 +79,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                       : Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: CircleAvatar(
-                            backgroundImage: NetworkImage(user.photoUrl!),
+                            backgroundImage: NetworkImage(user.photoUrl),
                           ),
                         ),
                 ],
@@ -107,7 +107,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                           return user.hasPhotoUrl == false
                               ? const SizedBox()
                               : Text(
-                                  user.displayName ?? '',
+                                  user.displayName,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                 );
