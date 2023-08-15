@@ -239,6 +239,8 @@ class ChatService {
     await roomDoc(room.id).set({setting: value}, SetOptions(merge: true));
   }
 
+  Future<void> renameRoom() async {}
+
   Future<void> sendMessage({
     required ChatRoomModel room,
     String? text,

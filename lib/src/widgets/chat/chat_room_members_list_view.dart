@@ -64,6 +64,7 @@ class _ChatRoomMembersListViewState extends State<ChatRoomMembersListView> {
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          // TODO should we separate each button as smaller units?
                           if (ChatService.instance.canRemove(
                               room: widget.room, userUid: user.uid)) ...[
                             TextButton(
@@ -73,9 +74,6 @@ class _ChatRoomMembersListViewState extends State<ChatRoomMembersListView> {
                                   room: widget.room,
                                   uid: user.uid,
                                   callback: () {
-                                    setState(() {
-                                      widget.room.users.remove(user.uid);
-                                    });
                                     Navigator.pop(context);
                                   },
                                 );
@@ -91,9 +89,6 @@ class _ChatRoomMembersListViewState extends State<ChatRoomMembersListView> {
                                   room: widget.room,
                                   uid: user.uid,
                                   callback: () {
-                                    setState(() {
-                                      widget.room.moderators.add(user.uid);
-                                    });
                                     Navigator.pop(context);
                                   },
                                 );
@@ -109,9 +104,6 @@ class _ChatRoomMembersListViewState extends State<ChatRoomMembersListView> {
                                   room: widget.room,
                                   uid: user.uid,
                                   callback: () {
-                                    setState(() {
-                                      widget.room.moderators.remove(user.uid);
-                                    });
                                     Navigator.pop(context);
                                   },
                                 );

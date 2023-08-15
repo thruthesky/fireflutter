@@ -9,6 +9,7 @@ import 'package:fireflutter/src/services/chat.service.dart';
 class ChatRoomModel {
   final String id;
   final String name;
+  final Map<String, dynamic> rename;
   final bool group;
   final bool open;
   final String master;
@@ -21,6 +22,7 @@ class ChatRoomModel {
   ChatRoomModel({
     required this.id,
     required this.name,
+    required this.rename,
     required this.group,
     required this.open,
     required this.master,
@@ -50,6 +52,7 @@ class ChatRoomModel {
     return ChatRoomModel(
       id: id,
       name: map['name'] ?? '',
+      rename: map['rename'] ?? {},
       group: map['group'],
       open: map['open'],
       master: map['master'],
@@ -65,6 +68,7 @@ class ChatRoomModel {
     return {
       'id': id,
       'name': name,
+      'rename': rename,
       'group': group,
       'open': open,
       'master': master,

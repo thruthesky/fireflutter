@@ -49,7 +49,21 @@ class _ChatRoomMenuScreenState extends State<ChatRoomMenuScreen> {
               if (roomSnapshot.group) ...[
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Text(roomSnapshot.name),
+                  child: Column(
+                    children: [
+                      Text(
+                        roomSnapshot.name,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20), // TODO customizable ui
+                      ),
+                      if (roomSnapshot.rename[UserService.instance.uid] !=
+                          null) ...[
+                        Text(
+                            '(${roomSnapshot.rename[UserService.instance.uid]})'),
+                      ],
+                    ],
+                  ),
                 ),
               ] else ...[
                 Padding(

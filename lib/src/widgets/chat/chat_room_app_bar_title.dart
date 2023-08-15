@@ -16,7 +16,7 @@ class ChatRoomAppBarTitle extends StatelessWidget {
       return Row(
         children: [
           const SizedBox(width: 8),
-          Text(room.name),
+          Text(room.rename[UserService.instance.uid] ?? room.name),
         ],
       );
     } else {
