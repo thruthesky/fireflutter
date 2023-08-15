@@ -9,6 +9,7 @@ import 'package:fireflutter/src/services/chat.service.dart';
 class ChatRoomModel {
   final String id;
   final String name;
+  final Map<String, dynamic> rename;
   final bool group;
   final bool open;
   final String master;
@@ -17,10 +18,12 @@ class ChatRoomModel {
   final List<String> blockedUsers;
   final Map<String, int> noOfNewMessages;
   final int maximumNoOfUsers;
+  final String? password; // TODO for confirmation
 
   ChatRoomModel({
     required this.id,
     required this.name,
+    required this.rename,
     required this.group,
     required this.open,
     required this.master,
@@ -29,6 +32,7 @@ class ChatRoomModel {
     required this.blockedUsers,
     required this.noOfNewMessages,
     required this.maximumNoOfUsers,
+    this.password,
   });
 
   bool get isSingleChat => users.length == 2 && group == false;
@@ -48,43 +52,26 @@ class ChatRoomModel {
   factory ChatRoomModel.fromMap(
       {required Map<String, dynamic> map, required id}) {
     return ChatRoomModel(
-      id: id,
-      name: map['name'] ?? '',
-      group: map['group'],
-      open: map['open'],
-      master: map['master'],
-      users: List<String>.from((map['users'] ?? [])),
-      moderators: List<String>.from(map['moderators'] ?? []),
-      blockedUsers: List<String>.from(map['blockedUsers'] ?? []),
-      noOfNewMessages: Map<String, int>.from(map['noOfNewMessages'] ?? {}),
-      maximumNoOfUsers: map['maximumNoOfUsers'],
-    );
-  }
-
-  @Deprecated(
-      "Don't use this. It's useless function. Listen the document instead. Or use replaceWith()")
-  update(Map<String, dynamic> updates) {
-    return ChatRoomModel(
-      id: id,
-      name: updates['name'] ?? name,
-      group: updates['group'] ?? group,
-      open: updates['open'] ?? open,
-      master: updates['master'] ?? master,
-      users: List<String>.from((updates['users'] ?? users)),
-      moderators: List<String>.from(updates['moderators'] ?? moderators),
-      blockedUsers: List<String>.from(updates['blockedUsers'] ?? blockedUsers),
-      noOfNewMessages:
-          Map<String, int>.from(updates['noOfNewMessages'] ?? noOfNewMessages),
-      maximumNoOfUsers: updates.containsKey('maximumNoOfUsers')
-          ? updates['maximumNoOfUsers']
-          : maximumNoOfUsers,
-    );
+        id: id,
+        name: map['name'] ?? '',
+        rename: map['rename'] ?? {},
+        group: map['group'],
+        open: map['open'],
+        master: map['master'],
+        users: List<String>.from((map['users'] ?? [])),
+        moderators: List<String>.from(map['moderators'] ?? []),
+        blockedUsers: List<String>.from(map['blockedUsers'] ?? []),
+        noOfNewMessages: Map<String, int>.from(map['noOfNewMessages'] ?? {}),
+        maximumNoOfUsers: map['maximumNoOfUsers'] ??
+            100, // TODO confirm where to put the config on default max no of users
+        password: map['password']);
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'name': name,
+      'rename': rename,
       'group': group,
       'open': open,
       'master': master,
@@ -93,6 +80,7 @@ class ChatRoomModel {
       'blockedUsers': blockedUsers,
       'noOfNewMessages': noOfNewMessages,
       'maximumNoOfUsers': maximumNoOfUsers,
+      'password': password,
     };
   }
 
@@ -180,7 +168,7 @@ class ChatRoomModel {
     return await addUser(userUid);
   }
 
-  join() async {
+  Future<void> join() async {
     return await addUser(FirebaseAuth.instance.currentUser!.uid);
   }
 }

@@ -19,11 +19,15 @@ class ChatMessageModel {
     required this.fileName,
   });
 
-  factory ChatMessageModel.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
-    return ChatMessageModel.fromMap(map: documentSnapshot.data() as Map<String, dynamic>, id: documentSnapshot.id);
+  factory ChatMessageModel.fromDocumentSnapshot(
+      DocumentSnapshot documentSnapshot) {
+    return ChatMessageModel.fromMap(
+        map: documentSnapshot.data() as Map<String, dynamic>,
+        id: documentSnapshot.id);
   }
 
-  factory ChatMessageModel.fromMap({required Map<String, dynamic> map, required id}) {
+  factory ChatMessageModel.fromMap(
+      {required Map<String, dynamic> map, required id}) {
     return ChatMessageModel(
       id: id,
       text: map['text'],
@@ -48,5 +52,6 @@ class ChatMessageModel {
   }
 
   @override
-  String toString() => 'ChatMessageModel(id: $id, text: $text)'; // TODO
+  String toString() =>
+      'ChatMessageModel(id: $id, text: $text,  imageUrl: $imageUrl, senderUid: $senderUid, createdAt: $createdAt, fileUrl: $fileUrl, fileName: $fileName,)';
 }

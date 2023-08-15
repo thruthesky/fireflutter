@@ -51,7 +51,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
     }
 
     final user = UserService.instance.get(widget.chatMessage.senderUid);
-
+    debugPrint("Happeninng again");
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: bubbleMainAxisAlignment,
@@ -74,12 +74,12 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
               final user = snapshot.data as UserModel;
               return Row(
                 children: [
-                  user.hasPhotoUrl == false
+                  user.photoUrl.isEmpty
                       ? const SizedBox()
                       : Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: CircleAvatar(
-                            backgroundImage: NetworkImage(user.photoUrl!),
+                            backgroundImage: NetworkImage(user.photoUrl),
                           ),
                         ),
                 ],
@@ -107,7 +107,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                           return user.hasPhotoUrl == false
                               ? const SizedBox()
                               : Text(
-                                  user.displayName ?? '',
+                                  user.displayName,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                 );
@@ -119,9 +119,9 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                 if (widget.chatMessage.text != null)
                   GestureDetector(
                     onDoubleTap: () {
-                      setState(() {
-                        _showDateTime = !_showDateTime;
-                      });
+                      // setState(() {
+                      //   _showDateTime = !_showDateTime;
+                      // });
                     },
                     child: Container(
                       decoration: BoxDecoration(

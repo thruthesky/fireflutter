@@ -11,7 +11,8 @@ class ChatRoomListViewController {
   late final ChatRoomListViewState state;
 
   ///
-  showChatRoom({required BuildContext context, UserModel? user, ChatRoomModel? room}) {
+  showChatRoom(
+      {required BuildContext context, UserModel? user, ChatRoomModel? room}) {
     ChatService.instance.showChatRoom(context: context, user: user, room: room);
   }
 }

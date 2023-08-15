@@ -6,28 +6,27 @@ import 'package:fireflutter/src/widgets/chat/chat_message_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ChatMessagesListView extends StatefulWidget {
+class ChatMessagesListView extends StatelessWidget {
   const ChatMessagesListView({super.key, required this.room});
 
   final ChatRoomModel room;
 
   @override
-  State<ChatMessagesListView> createState() => _ChatMessagesViewState();
-}
-
-class _ChatMessagesViewState extends State<ChatMessagesListView> {
-  @override
   Widget build(BuildContext context) {
+    debugPrint("Rebuildinghere?");
     final query = ChatService.instance
-        .messageCol(widget.room.id)
+        .messageCol(room.id)
         .orderBy('createdAt', descending: true);
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: FirestoreListView(
+        // TODO ask for help because the app makes weird movement upon scrolling up
+        // ! Please NOTICE
         reverse: true,
         query: query,
         itemBuilder:
             (BuildContext context, QueryDocumentSnapshot<dynamic> doc) {
+          debugPrint("Rebuilding?");
           return ChatMessageBubble(
               chatMessage: ChatMessageModel.fromDocumentSnapshot(doc));
         },

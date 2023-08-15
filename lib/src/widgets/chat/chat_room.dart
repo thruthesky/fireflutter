@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'chat_room_app_bar.dart';
 
-class ChatRoom extends StatefulWidget {
+class ChatRoom extends StatelessWidget {
   const ChatRoom({
     super.key,
     required this.room,
@@ -14,24 +14,14 @@ class ChatRoom extends StatefulWidget {
   final ChatRoomModel room;
 
   @override
-  State<ChatRoom> createState() => _ChatRoomState();
-}
-
-class _ChatRoomState extends State<ChatRoom> {
-  ChatRoomModel? roomState;
-
-  @override
   Widget build(BuildContext context) {
-    // Manage this state
-    roomState ??= widget.room;
-
     return Scaffold(
-      appBar: ChatRoomAppBar(room: roomState!),
+      appBar: ChatRoomAppBar(room: room),
       body: Column(
         children: [
           Expanded(
             child: ChatMessagesListView(
-              room: roomState!,
+              room: room,
             ),
           ),
           SafeArea(
@@ -40,7 +30,7 @@ class _ChatRoomState extends State<ChatRoom> {
                 const Divider(height: 0),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: ChatRoomMessageBox(room: roomState!),
+                  child: ChatRoomMessageBox(room: room),
                 ),
               ],
             ),
