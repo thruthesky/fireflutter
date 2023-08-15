@@ -1,22 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:rxdart/rxdart.dart';
 
 class UserService {
   static UserService? _instance;
   static UserService get instance => _instance ??= UserService._();
+
+  /// null 이면 아직 로드를 안했다는 뜻이다. 즉, 로딩중이라는 뜻이다.
+  ///
+  final BehaviorSubject<UserModel?> userDocumentChanges = BehaviorSubject<UserModel?>.seeded(null);
 
   /// Currently login user's uid
   String get uid => FirebaseAuth.instance.currentUser!.uid;
 
   ///
   UserService._() {
+    /// 로그인을 할 때, userModel 초기가 값 지정
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user == null) {
         userModel = null;
       } else {
-        get(user.uid).then((user) {
-          userModel = user;
+        /// 이 후, 사용자 문서가 업데이트 될 때 마다, userModel 업데이트
+        UserService.instance.doc.snapshots().listen((documentSnapshot) {
+          /// 사용자 문서가 존재하지 않는 경우,
+          if (!documentSnapshot.exists || documentSnapshot.data() == null) {
+            userModel = UserModel(uid: '', exists: false);
+          } else {
+            userModel = UserModel.fromDocumentSnapshot(documentSnapshot);
+          }
+          userDocumentChanges.add(userModel);
         });
       }
     });
@@ -39,17 +52,13 @@ class UserService {
 
   /// Current user model
   ///
-  /// It will be initialized whenever the user is logged in.
+  /// It will be initialized whenever the user is logged in and whenever
+  /// the user document is updated. Use [UserDoc] widget if you want to
+  /// show the user document in real time.
   ///
-  /// Note that, it has always updated data. But it's not reactive. This means,
-  /// even if the user document is updated, this will not fire update event.
-  /// Use [UserDoc] widget if you want to show the user document in real-time.
+  /// 사용자가 로그인 할 때 마다 해당 사용자의 값으로 바뀌고, 그리고 실시간 자동 업데이트를 한다.
+  /// 실시간 자동 문서를 화면에 보여주어야 한다면 [UserDoc] 위젯을 사용하면 된다.
   ///
-  /// 주의, 실시간 자동 업데이트를 하지 않는다. 실시간 자동 문서를 화면에 보여주어야 한다면
-  /// [UserDoc] 위젯을 사용하면 된다.
-  ///
-  /// 사용자가 로그인 할 때 마다 초기화 된다. 다른 아이디로 로그인을 해도, 해당 사용자의 문서가
-  /// 업데이트된다.
   ///
   /// 예) EasyUser.instance.userModel?.photoUrl
   UserModel? userModel;
@@ -58,7 +67,6 @@ class UserService {
   /// Null check operator used on a null value 에러가 발생한다. 만약, 이 에러를 피하려면, 그냥
   /// userModel 을 쓰면 된다.
   ///
-  /// 실시간 업데이트된 정보가 필요하면, [UserDoc] 위젯을 사용하면 된다.
   UserModel get user => userModel!;
 
   String? get photoUrl => userModel?.photoUrl;
@@ -74,9 +82,11 @@ class UserService {
   /// If the user is already cached, it returns the cached value.
   /// Otherwise, it fetches from Firestore and returns the UserModel.
   /// If the user does not exist, it returns null.
-  Future<UserModel?> get(String uid) async {
+  ///
+  /// [reload] is a flag to force reload from Firestore.
+  Future<UserModel?> get(String uid, [bool reload = false]) async {
     /// 캐시되어져 있으면, 그 캐시된 값(UserModel)을 리턴
-    if (_userCache.containsKey(uid)) return _userCache[uid];
+    if (reload == false && _userCache.containsKey(uid)) return _userCache[uid];
 
     /// 아니면, Firestore 에서 불러와서 UserModel 을 만들어 리턴
     final u = await UserModel.get(uid);
@@ -122,6 +132,7 @@ class UserService {
     bool? hasPhotoUrl,
     String? phoneNumber,
     String? email,
+    bool? complete,
     String? field,
     dynamic value,
   }) async {
@@ -136,6 +147,7 @@ class UserService {
       hasPhotoUrl: hasPhotoUrl,
       phoneNumber: phoneNumber,
       email: email,
+      complete: complete,
       field: field,
       value: value,
     );

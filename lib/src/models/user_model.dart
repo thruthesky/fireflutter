@@ -21,6 +21,16 @@ class UserModel {
   /// Dart 에서 사용 할 createAt 의 DateTime 값.
   final DateTime? createdAtDateTime;
 
+  /// Set this to true when the user has completed the profile.
+  /// This should be set when the user submit the profile form.
+  ///
+  /// 사용자가 회원 정보를 업데이트 할 때, 이 값을 true 또는 false 로 지정한다.
+  /// 이 값이 false 이면, 앱에서 회원 정보를 입력하라는 메시지를 표시하거나 기타 동작을 하게 할 수 있다.
+  final bool complete;
+
+  /// 사용자 문서가 존재하지 않는 경우, 이 값이 false 이다.
+  final bool exists;
+
   UserModel({
     required this.uid,
     this.displayName = '',
@@ -30,6 +40,8 @@ class UserModel {
     this.phoneNumber = '',
     this.email = '',
     this.createdAt,
+    this.complete = false,
+    this.exists = true,
   }) : createdAtDateTime = createdAt?.toDate();
 
   factory UserModel.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
@@ -39,19 +51,18 @@ class UserModel {
     );
   }
 
-  factory UserModel.fromMap(
-      {required Map<String, dynamic> map, required String id}) {
+  factory UserModel.fromMap({required Map<String, dynamic> map, required String id}) {
     final displayName = map['displayName'] ?? '';
     return UserModel(
       uid: id,
-      displayName:
-          displayName == '' ? id.toUpperCase().substring(0, 2) : displayName,
+      displayName: displayName == '' ? id.toUpperCase().substring(0, 2) : displayName,
       name: map['name'] ?? '',
       photoUrl: (map['photoUrl'] ?? '') as String,
-      hasPhotoUrl: map['hasPhotoUrl'] ? true : false,
+      hasPhotoUrl: map['hasPhotoUrl'] ?? false,
       phoneNumber: map['phoneNumber'] ?? '',
       email: map['email'] ?? '',
       createdAt: map['createdAt'],
+      complete: map['complete'] ?? false,
     );
   }
 
@@ -65,21 +76,19 @@ class UserModel {
       'phoneNumber': phoneNumber,
       'email': email,
       'createdAt': createdAt ?? FieldValue.serverTimestamp(),
+      'complete': complete,
     };
   }
 
   @override
   String toString() =>
-      'UserModel(uid: $uid, name: $name, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, phoneNumber: $phoneNumber, email: $email, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime)';
+      '''UserModel(uid: $uid, name: $name, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, phoneNumber: $phoneNumber, email: $email, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists)''';
 
   /// 사용자 문서를 읽어온다.
   ///
   /// 사용자 문서가 존재하지 않는 경우, null 을 리턴한다.
   static Future<UserModel?> get(String uid) async {
-    final snapshot = await FirebaseFirestore.instance
-        .collection(collectionName)
-        .doc(uid)
-        .get();
+    final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(uid).get();
     if (!snapshot.exists) {
       return null;
     }
@@ -91,10 +100,7 @@ class UserModel {
   /// 사용자 문서가 이미 존재하는 경우, 문서를 덮어쓴다.
   /// 참고: README.md
   Future<UserModel> create() async {
-    await FirebaseFirestore.instance
-        .collection(UserModel.collectionName)
-        .doc(uid)
-        .set(toMap());
+    await FirebaseFirestore.instance.collection(UserModel.collectionName).doc(uid).set(toMap());
 
     return (await get(uid))!;
   }
@@ -107,22 +113,23 @@ class UserModel {
     bool? hasPhotoUrl,
     String? phoneNumber,
     String? email,
+    bool? complete,
     String? field,
     dynamic value,
   }) async {
     final doc = FirebaseFirestore.instance.collection('users').doc(uid);
-    if (field != null && value != null) {
-      await doc.update({field: value});
-    } else {
-      await doc.update({
-        if (name != null) 'name': name,
-        if (displayName != null) 'displayName': displayName,
-        if (photoUrl != null) 'photoUrl': photoUrl,
-        if (hasPhotoUrl != null) 'hasPhotoUrl': hasPhotoUrl,
-        if (phoneNumber != null) 'phoneNumber': phoneNumber,
-        if (email != null) 'email': email,
-      });
-    }
+
+    await doc.update({
+      if (name != null) 'name': name,
+      if (displayName != null) 'displayName': displayName,
+      if (photoUrl != null) 'photoUrl': photoUrl,
+      if (hasPhotoUrl != null) 'hasPhotoUrl': hasPhotoUrl,
+      if (phoneNumber != null) 'phoneNumber': phoneNumber,
+      if (email != null) 'email': email,
+      if (complete != null) 'complete': complete,
+      if (field != null && value != null) field: value,
+    });
+
     return (await get(uid))!;
   }
 }

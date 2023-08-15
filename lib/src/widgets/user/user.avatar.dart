@@ -18,6 +18,9 @@ import 'package:image_picker/image_picker.dart';
 ///
 /// [delete] is the callback function that is being called when the user taps the delete button.
 ///
+/// [defaultIcon] is a widget to be displayed when the user's avatar is not available.
+/// and the [name] property of AdvancedAvatar is igonored by [defaultIcon].
+///
 /// Note, that this avatar widget uses the [AdvancedAvatar] widget from
 /// the [flutter_advanced_avatar](https://pub.dev/packages/flutter_advanced_avatar) package.
 /// See the examples from the github: https://github.com/alex-melnyk/flutter_advanced_avatar/blob/master/example/lib/main.dart
@@ -32,6 +35,8 @@ class UserAvatar extends StatefulWidget {
     this.delete = false,
     this.uploadStrokeWidth = 6,
     this.shadowBlurRadius = 16.0,
+    this.defaultIcon,
+    this.backgroundColor,
     this.onTap,
   });
 
@@ -43,6 +48,8 @@ class UserAvatar extends StatefulWidget {
   final bool delete;
   final double uploadStrokeWidth;
   final double shadowBlurRadius;
+  final Widget? defaultIcon;
+  final Color? backgroundColor;
   final VoidCallback? onTap;
 
   @override
@@ -80,6 +87,7 @@ class _UserAvatarState extends State<UserAvatar> {
         final oldUrl = UserService.instance.photoUrl;
         await UserService.instance.update(
           photoUrl: url,
+          hasPhotoUrl: true,
         );
         await StorageService.instance.delete(oldUrl);
       },
@@ -90,20 +98,16 @@ class _UserAvatarState extends State<UserAvatar> {
 
             // statusSize: 16,
             // statusColor: Colors.green,
-            name: widget.user.displayName.isNotEmpty
-                ? widget.user.displayName
-                : widget.user.uid.substring(0, 4),
+            name: widget.user.displayName.isNotEmpty ? widget.user.displayName : widget.user.uid.substring(0, 4),
             style: TextStyle(
               fontSize: widget.size / 3,
               fontWeight: FontWeight.w500,
               color: Colors.white,
             ),
-            image: widget.user.photoUrl.isEmpty
-                ? null
-                : CachedNetworkImageProvider(widget.user.photoUrl),
+            image: widget.user.photoUrl.isEmpty ? null : CachedNetworkImageProvider(widget.user.photoUrl),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.green,
+              color: widget.backgroundColor ?? Theme.of(context).colorScheme.secondary,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black54,
@@ -111,6 +115,12 @@ class _UserAvatarState extends State<UserAvatar> {
                 ),
               ],
             ),
+            child: widget.defaultIcon ??
+                Icon(
+                  Icons.person,
+                  size: widget.size / 1.5,
+                  color: Colors.white,
+                ),
             children: [
               if (widget.badgeNumber != null)
                 AlignCircular(
@@ -160,6 +170,7 @@ class _UserAvatarState extends State<UserAvatar> {
                     await UserService.instance.update(
                       field: 'photoUrl',
                       value: FieldValue.delete(),
+                      hasPhotoUrl: false,
                     );
                   },
                   padding: EdgeInsets.zero,

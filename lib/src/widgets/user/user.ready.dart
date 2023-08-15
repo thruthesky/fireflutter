@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 ///
 /// This widget is useful for determining if the user is logged in or not.
 /// If the user is logged in, the [User] object will be returned. Or else,
-/// the [User] object will be null.
+/// the [User] object will be null and it means the user is not logged in.
 ///
 /// Example:
 /// ```dart

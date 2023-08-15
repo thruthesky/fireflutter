@@ -16,7 +16,57 @@ A free, open source, complete, rapid development package for creating Social app
 
 ## Usage
 
+### UserService
+
+`UserService.instance.userModel` is null
+- when the user didn't log in
+- or when the user is logged in and has document, but the `UserService` has not read the user document, yet. In this case it simply needs to wait sometime.
+
+`UserService.instance.userModel.exists` is false if the user has logged in but no document. In this case, the `documentNotExistBuilder` of `UserDoc` will be called.
+
+So, the lifecyle will be the following when the app users `UserDoc`.
+- `UserService.instance.userModel` will be null on app boot
+- `UserService.instance.userModel` will have an instance of `UserModel`
+  - If the user document does not exists, `exists` will be `false` causing `documentNotExistsBuilder` to be called.
+  - If the user document exsist, then it will have right data and `builder` will be called.
+
+
+
+
 ### Widgets
+
+#### UserDoc
+
+To let user update or delete the profile photo, use like below.
+
+```dart
+UserAvatar(
+  user: user,
+  size: 120,
+  upload: true,
+  delete: true,
+),
+```
+
+
+To display user's profile photo, use like below.
+
+```dart
+UserDoc(
+  builder: (user) => UserAvatar(
+    user: user,
+    size: 38,
+    shadowBlurRadius: 0.0,
+    onTap: () => context.push(ProfileScreen.routeName),
+    defaultIcon: const FaIcon(FontAwesomeIcons.lightCircleUser, size: 38),
+    backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+  ),
+  documentNotExistBuilder: () {
+    UserService.instance.create();
+    return const SizedBox.shrink();
+  },
+),
+```
 
 ## Translation
 
