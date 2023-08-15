@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/models/chat_room_model.dart';
-import 'package:fireflutter/src/widgets/chat/chat_room_app_bar_title.dart';
-import 'package:fireflutter/src/widgets/chat/chat_room_menu_button.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -19,24 +19,37 @@ class ChatRoomAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class ChatRoomAppBarState extends State<ChatRoomAppBar> {
-  ChatRoomModel? _roomState;
-
   @override
   Widget build(BuildContext context) {
-    _roomState ??= widget.room;
-    return AppBar(
-      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      title: ChatRoomAppBarTitle(room: _roomState!),
-      actions: [
-        ChatRoomMenuButton(
-          room: widget.room,
-          onUpdateRoomSetting: (updatedRoom) {
-            setState(() {
-              _roomState = updatedRoom;
-            });
-          },
-        ),
-      ],
+    final Stream<DocumentSnapshot> roomStream =
+        ChatService.instance.roomDoc(widget.room.id).snapshots();
+    return StreamBuilder<DocumentSnapshot>(
+      stream: roomStream,
+      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return AppBar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: const Text('Something went wrong.'),
+          );
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return AppBar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: const Text("Loading..."),
+          );
+        }
+        final ChatRoomModel roomSnapshot =
+            ChatRoomModel.fromDocumentSnapshot(snapshot.data!);
+        return AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: ChatRoomAppBarTitle(room: roomSnapshot),
+          actions: [
+            ChatRoomMenuButton(
+              room: roomSnapshot,
+            ),
+          ],
+        );
+      },
     );
   }
 }

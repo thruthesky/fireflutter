@@ -131,7 +131,7 @@ service cloud.firestore {
         // Check if the user is blocked for the chat room.
         // User to user blocking must be implemented in the client side ( by hiding or replacing the message as blocked ).
         function isBlocked() {
-          return 'blockedUsers' in roomData() && roomData().hasAny([request.auth.uid]);
+          return 'blockedUsers' in roomData() && roomData().blockedUsers.hasAny([request.auth.uid]);
         }
 
         allow read: if isRoomUser() && !isBlocked();
