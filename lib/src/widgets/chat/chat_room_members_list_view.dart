@@ -126,7 +126,7 @@ class _ChatRoomMembersListViewState extends State<ChatRoomMembersListView> {
                               onPressed: () {
                                 ChatService.instance.addToBlockedUsers(
                                   room: widget.room,
-                                  uid: user.uid,
+                                  userUid: user.uid,
                                   callback: () {
                                     Navigator.pop(context);
                                   },

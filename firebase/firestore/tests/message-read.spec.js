@@ -71,7 +71,7 @@ describe("Message read test", () => {
         await firebase.assertSucceeds(block(a, b, roomRef.id));
 
         // C reads messages ---> success
-        await firebase.assertFails(
+        await firebase.assertSucceeds(
             db(c)
                 .collection("easychat")
                 .doc(roomRef.id)

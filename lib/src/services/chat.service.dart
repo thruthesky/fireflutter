@@ -143,10 +143,10 @@ class ChatService {
 
   Future<void> addToBlockedUsers(
       {required ChatRoomModel room,
-      required String uid,
+      required String userUid,
       Function()? callback}) async {
     await roomDoc(room.id).update({
-      'blockedUsers': FieldValue.arrayUnion([uid])
+      'blockedUsers': FieldValue.arrayUnion([userUid])
     });
     callback?.call();
   }
