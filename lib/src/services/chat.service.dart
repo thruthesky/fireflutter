@@ -88,19 +88,6 @@ class ChatService {
     );
   }
 
-  @Deprecated('Use room.invite() instead')
-  Future<ChatRoomModel> inviteUser(
-      {required ChatRoomModel room, required String userUid}) async {
-    // return await addUserToRoom(room: room, userUid: userUid);
-    return await room.invite(userUid);
-  }
-
-  @Deprecated('Use room.join() instead')
-  Future<ChatRoomModel> joinRoom({required ChatRoomModel room}) async {
-    // return await addUserToRoom(room: room, userUid: uid);
-    return await room.join();
-  }
-
   Future<void> leaveRoom(
       {required ChatRoomModel room, Function()? callback}) async {
     await roomDoc(room.id).update({
@@ -279,10 +266,10 @@ class ChatService {
       updateNoOfMessages[uid] = FieldValue.increment(1);
     }
     updateNoOfMessages[FirebaseAuth.instance.currentUser!.uid] = 0;
-    // TODO separate noOfMessages into different collection, because of reads
     await roomDoc(room.id).set(
-        {'noOfNewMessages': updateNoOfMessages, 'lastMessage': lastMessage},
-        SetOptions(merge: true));
+      {'noOfNewMessages': updateNoOfMessages, 'lastMessage': lastMessage},
+      SetOptions(merge: true),
+    );
   }
 
   /// Get other user uid

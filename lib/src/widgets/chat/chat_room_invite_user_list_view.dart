@@ -33,7 +33,6 @@ class _InviteUserListViewState extends State<InviteUserListView> {
     return FirestoreListView(
       query: query,
       itemBuilder: (context, snapshot) {
-        // TODO how to remove blinking
         final user = UserModel.fromDocumentSnapshot(snapshot);
         if (widget.room.users.contains(user.uid)) {
           return const SizedBox();

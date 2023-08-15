@@ -1,6 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/models/chat_room_model.dart';
-import 'package:fireflutter/src/services/chat.service.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomMembersListView extends StatefulWidget {

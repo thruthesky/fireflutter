@@ -24,7 +24,7 @@ class _ChatRoomMaximumUsersSettingListTileState
 
   @override
   Widget build(BuildContext context) {
-    maxNumberOfUsers.text = "${widget.room.maximumNoOfUsers ?? ''}";
+    maxNumberOfUsers.text = "${widget.room.maximumNoOfUsers}";
     return ListTile(
       title: const Text("Maximum Number of Users"),
       subtitle: TextFormField(
