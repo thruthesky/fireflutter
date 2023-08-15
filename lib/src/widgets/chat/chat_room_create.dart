@@ -4,15 +4,14 @@ import 'package:fireflutter/src/services/chat.service.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomCreate extends StatefulWidget {
-  const ChatRoomCreate(
-      {super.key,
-      required this.success,
-      required this.cancel,
-      required this.error});
+  const ChatRoomCreate({
+    super.key,
+    required this.success,
+    required this.cancel,
+  });
 
   final void Function(ChatRoomModel room) success;
   final void Function() cancel;
-  final void Function() error;
 
   @override
   State<ChatRoomCreate> createState() => _ChatRoomCreateState();
@@ -24,7 +23,7 @@ class _ChatRoomCreateState extends State<ChatRoomCreate> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(t('Create Chat Room')),
+      title: const Text('Create Chat Room'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

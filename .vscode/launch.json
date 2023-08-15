@@ -14,6 +14,15 @@
       "deviceId": "iPhone 14 Pro Max"
     },
     {
+      "name": "MomCafe - Simulator (J)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "iPhone 14 Pro Max"
+    },
+    {
       "name": "fireflutter example - Simulator (C)",
       "request": "launch",
       "type": "dart",
