@@ -1,17 +1,20 @@
 import 'package:fireflutter/src/models/chat_room_model.dart';
-import 'package:fireflutter/src/widgets/chat/chat_room_invite_user_list_view.dart';
+import 'package:fireflutter/src/widgets/chat/chat_room_search_user_invite.dart';
 import 'package:flutter/material.dart';
 
-class InviteUserButton extends StatelessWidget {
+class InviteUserButton extends StatefulWidget {
   const InviteUserButton({
     super.key,
     required this.room,
-    this.onInvite,
   });
 
   final ChatRoomModel room;
-  final Function(String invitedUserUid)? onInvite;
 
+  @override
+  State<InviteUserButton> createState() => _InviteUserButtonState();
+}
+
+class _InviteUserButtonState extends State<InviteUserButton> {
   @override
   Widget build(BuildContext context) {
     return TextButton(
@@ -22,14 +25,10 @@ class InviteUserButton extends StatelessWidget {
           pageBuilder: (context, _, __) {
             return Scaffold(
               appBar: AppBar(
-                title: const Text('Invite Users'),
+                title: const Text('Invite User'),
               ),
-              body: InviteUserListView(
-                // ! Is it better to relisten here? Will relistening, be a problem with number of reads?
-                room: room,
-                onInvite: (uid) {
-                  onInvite?.call(uid);
-                },
+              body: SearchUserInvite(
+                room: widget.room,
               ),
             );
           },

@@ -133,7 +133,7 @@ class ChatRoomListTileName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return room.group
-        ? _text(room.name)
+        ? _text(room.rename[UserService.instance.uid] ?? room.name)
         : FutureBuilder(
             builder: (_, snapshot) {
               if (snapshot.data == null) {
