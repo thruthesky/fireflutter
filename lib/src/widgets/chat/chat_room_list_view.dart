@@ -27,6 +27,7 @@ class ChatRoomListView extends StatefulWidget {
     super.key,
     required this.controller,
     this.itemBuilder,
+    this.emptyBuilder,
     this.pageSize = 10,
     this.scrollController,
     this.primary,
@@ -41,6 +42,7 @@ class ChatRoomListView extends StatefulWidget {
   final ChatRoomListViewController controller;
   final int pageSize;
   final Widget Function(BuildContext, ChatRoomModel)? itemBuilder;
+  final Widget Function(BuildContext)? emptyBuilder;
   final ScrollController? scrollController;
   final bool? primary;
   final ScrollPhysics? physics;
@@ -80,6 +82,13 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
           return widget.itemBuilder!(context, room);
         } else {
           return ChatRoomListTile(room: room);
+        }
+      },
+      emptyBuilder: (context) {
+        if (widget.emptyBuilder != null) {
+          return widget.emptyBuilder!(context);
+        } else {
+          return Center(child: Text(tr.chat.noChatRooms));
         }
       },
       errorBuilder: (context, error, stackTrace) {
