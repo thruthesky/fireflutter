@@ -79,9 +79,6 @@ class _ChatRoomMenuScreenState extends State<ChatRoomMenuScreen> {
               ],
               InviteUserButton(
                 room: roomSnapshot,
-                onInvite: (invitedUserUid) {
-                  setState(() {});
-                },
               ),
               ChatSettingsButton(
                 room: roomSnapshot,

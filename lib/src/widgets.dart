@@ -13,6 +13,7 @@ export 'widgets/chat/chat_room_create.dart';
 export 'widgets/chat/chat_room_default_room_name_setting.dart';
 export 'widgets/chat/chat_room_file_upload_bottom_sheet.dart';
 export 'widgets/chat/chat_room_invite_user_button.dart';
+export 'widgets/chat/chat_room_search_user_invite.dart';
 export 'widgets/chat/chat_room_invite_user_list_view.dart';
 export 'widgets/chat/chat_room_leave_button.dart';
 export 'widgets/chat/chat_room_list_tile.dart';
