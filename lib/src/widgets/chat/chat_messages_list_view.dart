@@ -13,22 +13,14 @@ class ChatMessagesListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("Rebuildinghere?");
-    final query = ChatService.instance
-        .messageCol(room.id)
-        .orderBy('createdAt', descending: true);
+    final query = ChatService.instance.messageCol(room.id).orderBy('createdAt', descending: true);
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: FirestoreListView(
-        // TODO ask for help because the app makes weird movement upon scrolling up
-        // ! Please NOTICE
         reverse: true,
         query: query,
-        itemBuilder:
-            (BuildContext context, QueryDocumentSnapshot<dynamic> doc) {
-          debugPrint("Rebuilding?");
-          return ChatMessageBubble(
-              chatMessage: ChatMessageModel.fromDocumentSnapshot(doc));
+        itemBuilder: (BuildContext context, QueryDocumentSnapshot<dynamic> doc) {
+          return ChatMessageBubble(chatMessage: ChatMessageModel.fromDocumentSnapshot(doc));
         },
         errorBuilder: (context, error, stackTrace) {
           debugPrint(error.toString());

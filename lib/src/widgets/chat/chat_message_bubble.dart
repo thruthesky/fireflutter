@@ -20,8 +20,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
   bool _showDateTime = false;
   @override
   Widget build(BuildContext context) {
-    final isMyMessage =
-        widget.chatMessage.senderUid == FirebaseAuth.instance.currentUser!.uid;
+    final isMyMessage = widget.chatMessage.senderUid == FirebaseAuth.instance.currentUser!.uid;
     late final MainAxisAlignment bubbleMainAxisAlignment;
     late final CrossAxisAlignment bubbleCrossAxisAlignment;
     late final Color colorOfBubble;
@@ -49,9 +48,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
       bubbleCrossAxisAlignment = CrossAxisAlignment.start;
       borderRadiusOfBubble = borderRadiusOfBubbleOfOtherUser;
     }
-
     final user = UserService.instance.get(widget.chatMessage.senderUid);
-    debugPrint("Happeninng again");
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: bubbleMainAxisAlignment,
@@ -100,16 +97,14 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                       FutureBuilder(
                         future: user,
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) return const Text('');
-                          if (snapshot.hasData == false) return const Text('');
+                          if (snapshot.connectionState == ConnectionState.waiting) return const SizedBox();
+                          if (snapshot.hasData == false) return const SizedBox();
                           final user = snapshot.data as UserModel;
-                          return user.hasPhotoUrl == false
+                          return user.displayName.isEmpty == true
                               ? const SizedBox()
                               : Text(
                                   user.displayName,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
                                 );
                         },
                       ),
@@ -119,9 +114,9 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                 if (widget.chatMessage.text != null)
                   GestureDetector(
                     onDoubleTap: () {
-                      // setState(() {
-                      //   _showDateTime = !_showDateTime;
-                      // });
+                      setState(() {
+                        _showDateTime = !_showDateTime;
+                      });
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -166,11 +161,8 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                             ),
                             Flexible(
                               child: Text(
-                                widget.chatMessage.fileName ??
-                                    widget.chatMessage.fileUrl ??
-                                    'File Attachment',
-                                style: const TextStyle(
-                                    decoration: TextDecoration.underline),
+                                widget.chatMessage.fileName ?? widget.chatMessage.fileUrl ?? 'File Attachment',
+                                style: const TextStyle(decoration: TextDecoration.underline),
                               ),
                             ),
                           ],
@@ -178,13 +170,11 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                       ),
                     ),
                   ),
-                if (widget.chatMessage.imageUrl != null)
-                  Image.network(widget.chatMessage.imageUrl!),
+                if (widget.chatMessage.imageUrl != null) Image.network(widget.chatMessage.imageUrl!),
                 Visibility(
                   visible: _showDateTime,
-                  child: Text(widget.chatMessage.createdAt != null
-                      ? toAgoDate(widget.chatMessage.createdAt!.toDate())
-                      : ''),
+                  child: Text(
+                      widget.chatMessage.createdAt != null ? toAgoDate(widget.chatMessage.createdAt!.toDate()) : ''),
                 )
               ],
             ),
