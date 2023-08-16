@@ -2,6 +2,7 @@
 
 A free, open source, complete, rapid development package for creating Social apps, Chat apps, Community(Forum) apps, Shopping mall apps, and much more based on Firebase
 
+
 ## Features
 
 * User management
@@ -9,7 +10,10 @@ A free, open source, complete, rapid development package for creating Social app
 * Forum
 * Push notification
 
+
 ## Getting started
+
+If you want to build an app using FireFlutter, the best way is to copy codes from the example project.
 
 
 ### Setup
@@ -81,3 +85,4 @@ Here is an example of updating the translation.
 ```dart
 tr.user.loginFirst = '로그인을 해 주세요.';
 ```
+
