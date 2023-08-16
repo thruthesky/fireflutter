@@ -41,17 +41,6 @@ So, the lifecyle will be the following when the app users `UserDoc`.
 
 #### UserDoc
 
-To let user update or delete the profile photo, use like below.
-
-```dart
-UserAvatar(
-  user: user,
-  size: 120,
-  upload: true,
-  delete: true,
-),
-```
-
 
 To display user's profile photo, use like below.
 
@@ -71,6 +60,34 @@ UserDoc(
   },
 ),
 ```
+
+#### UserAvatar
+
+
+To display user's profile photo, use `UserAvatar`.
+
+```dart
+UserAvatar(
+  user: user,
+  size: 120,
+),
+```
+
+
+#### UserProfileAvatar
+
+To let user update or delete the profile photo, use like below.
+
+```dart
+UserProfileAvatar(
+  user: user,
+  size: 120,
+  upload: true,
+  delete: true,
+),
+```
+
+
 
 ## Translation
 
