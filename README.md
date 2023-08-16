@@ -86,3 +86,8 @@ Here is an example of updating the translation.
 tr.user.loginFirst = '로그인을 해 주세요.';
 ```
 
+
+
+## Contribution
+
+Fork the fireflutter and create your own branch. Then update code and push, then pull request.
