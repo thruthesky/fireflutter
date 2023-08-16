@@ -1,7 +1,7 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class ChatDisplayName extends StatelessWidget {
+class ChatDisplayName extends StatefulWidget {
   const ChatDisplayName({
     super.key,
     required this.uid,
@@ -12,24 +12,34 @@ class ChatDisplayName extends StatelessWidget {
   final TextStyle textStyle;
 
   @override
-  Widget build(BuildContext context) {
-    /// Blinking problem.
-    return FutureBuilder(
-      future: UserService.instance.get(uid),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const SizedBox.shrink();
-        }
+  State<ChatDisplayName> createState() => _ChatDisplayNameState();
+}
 
-        if (snapshot.hasData == false) return const SizedBox.shrink();
-        final user = snapshot.data as User;
-        return user.displayName.isEmpty == true
-            ? const SizedBox.shrink()
-            : Text(
-                user.displayName,
-                style: textStyle,
-              );
-      },
-    );
+class _ChatDisplayNameState extends State<ChatDisplayName> {
+  User? user;
+
+  @override
+  void initState() {
+    super.initState();
+    UserService.instance.get(widget.uid).then((value) {
+      if (mounted) {
+        setState(() {
+          user = value;
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (user == null) {
+      return const SizedBox.shrink();
+    }
+    return user!.displayName.isEmpty == true
+        ? const SizedBox.shrink()
+        : Text(
+            user!.displayName,
+            style: widget.textStyle,
+          );
   }
 }
