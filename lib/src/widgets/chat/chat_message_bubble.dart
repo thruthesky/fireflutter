@@ -36,7 +36,6 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
       bottomLeft: radiusOfCorners,
       bottomRight: radiusOfCorners,
     );
-    // To set the bubble details
     if (isMyMessage) {
       colorOfBubble = Theme.of(context).colorScheme.primaryContainer;
       bubbleMainAxisAlignment = MainAxisAlignment.end;
@@ -49,11 +48,28 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
       borderRadiusOfBubble = borderRadiusOfBubbleOfOtherUser;
     }
     final user = UserService.instance.get(widget.chatMessage.senderUid);
+    // final userIsCached = UserService.instance.isUserCached(widget.chatMessage.senderUid);
+    // final cachedUser = UserService.instance.getCache(widget.chatMessage.senderUid);
+    // debugPrint('Cached ${cachedUser.toString()}');
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: bubbleMainAxisAlignment,
       children: [
         if (!isMyMessage) ...[
+          // if (userIsCached) ...[
+          //   Row(
+          //     children: [
+          //       cachedUser!.photoUrl.isEmpty
+          //           ? const SizedBox()
+          //           : Padding(
+          //               padding: const EdgeInsets.only(top: 8.0),
+          //               child: CircleAvatar(
+          //                 backgroundImage: NetworkImage(cachedUser.photoUrl),
+          //               ),
+          //             ),
+          //     ],
+          //   ),
+          // ] else ...[
           FutureBuilder(
             future: user,
             builder: (context, snapshot) {
@@ -83,6 +99,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
               );
             },
           ),
+          // ],
         ],
         Flexible(
           child: Padding(
