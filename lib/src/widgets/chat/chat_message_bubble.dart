@@ -56,7 +56,10 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
       mainAxisAlignment: bubbleMainAxisAlignment,
       children: [
         if (!isMyMessage) ...[
-          ChatAvatar(uid: widget.chatMessage.senderUid),
+          UserAvatar(
+            uid: widget.chatMessage.senderUid,
+            key: ValueKey(widget.chatMessage.id),
+          ),
         ],
         Flexible(
           child: Padding(
@@ -89,7 +92,10 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(widget.chatMessage.text!),
+                            Text(
+                              widget.chatMessage.text!,
+                              textAlign: isMyMessage ? TextAlign.right : null,
+                            ),
                           ],
                         ),
                       ),

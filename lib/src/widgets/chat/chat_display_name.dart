@@ -13,25 +13,18 @@ class ChatDisplayName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userIsCached = UserService.instance.isUserCached(uid);
-    if (userIsCached) {
-      final cachedUser = UserService.instance.getCache(uid);
-      return cachedUser!.displayName.isEmpty == true
-          ? const SizedBox()
-          : Text(
-              cachedUser.displayName,
-              style: textStyle,
-            );
-    }
-    final user = UserService.instance.get(uid);
+    /// Blinking problem.
     return FutureBuilder(
-      future: user,
+      future: UserService.instance.get(uid),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) return const SizedBox();
-        if (snapshot.hasData == false) return const SizedBox();
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SizedBox.shrink();
+        }
+
+        if (snapshot.hasData == false) return const SizedBox.shrink();
         final user = snapshot.data as User;
         return user.displayName.isEmpty == true
-            ? const SizedBox()
+            ? const SizedBox.shrink()
             : Text(
                 user.displayName,
                 style: textStyle,
