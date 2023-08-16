@@ -21,6 +21,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
   @override
   Widget build(BuildContext context) {
     final isMyMessage = widget.chatMessage.senderUid == FirebaseAuth.instance.currentUser!.uid;
+    final isMyMessage = widget.chatMessage.senderUid == FirebaseAuth.instance.currentUser!.uid;
     late final MainAxisAlignment bubbleMainAxisAlignment;
     late final CrossAxisAlignment bubbleCrossAxisAlignment;
     late final Color colorOfBubble;
@@ -36,7 +37,6 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
       bottomLeft: radiusOfCorners,
       bottomRight: radiusOfCorners,
     );
-    // To set the bubble details
     if (isMyMessage) {
       colorOfBubble = Theme.of(context).colorScheme.primaryContainer;
       bubbleMainAxisAlignment = MainAxisAlignment.end;
@@ -48,14 +48,29 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
       bubbleCrossAxisAlignment = CrossAxisAlignment.start;
       borderRadiusOfBubble = borderRadiusOfBubbleOfOtherUser;
     }
-
     final user = UserService.instance.get(widget.chatMessage.senderUid);
-    debugPrint("Happeninng again");
+    // final userIsCached = UserService.instance.isUserCached(widget.chatMessage.senderUid);
+    // final cachedUser = UserService.instance.getCache(widget.chatMessage.senderUid);
+    // debugPrint('Cached ${cachedUser.toString()}');
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: bubbleMainAxisAlignment,
       children: [
         if (!isMyMessage) ...[
+          // if (userIsCached) ...[
+          //   Row(
+          //     children: [
+          //       cachedUser!.photoUrl.isEmpty
+          //           ? const SizedBox()
+          //           : Padding(
+          //               padding: const EdgeInsets.only(top: 8.0),
+          //               child: CircleAvatar(
+          //                 backgroundImage: NetworkImage(cachedUser.photoUrl),
+          //               ),
+          //             ),
+          //     ],
+          //   ),
+          // ] else ...[
           FutureBuilder(
             future: user,
             builder: (context, snapshot) {
@@ -85,6 +100,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
               );
             },
           ),
+          // ],
         ],
         Flexible(
           child: Padding(
@@ -99,10 +115,10 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                       FutureBuilder(
                         future: user,
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) return const Text('');
-                          if (snapshot.hasData == false) return const Text('');
-                          final user = snapshot.data as User;
-                          return user.hasPhotoUrl == false
+                          if (snapshot.connectionState == ConnectionState.waiting) return const SizedBox();
+                          if (snapshot.hasData == false) return const SizedBox();
+                          final user = snapshot.data as UserModel;
+                          return user.displayName.isEmpty == true
                               ? const SizedBox()
                               : Text(
                                   user.displayName,
@@ -116,9 +132,9 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                 if (widget.chatMessage.text != null)
                   GestureDetector(
                     onDoubleTap: () {
-                      // setState(() {
-                      //   _showDateTime = !_showDateTime;
-                      // });
+                      setState(() {
+                        _showDateTime = !_showDateTime;
+                      });
                     },
                     child: Container(
                       decoration: BoxDecoration(
