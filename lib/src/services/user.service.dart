@@ -87,28 +87,17 @@ class UserService {
   /// [reload] is a flag to force reload from Firestore.
   Future<User?> get(String uid, [bool reload = false]) async {
     /// 캐시되어져 있으면, 그 캐시된 값(User)을 리턴
-    if (reload == false && _userCache.containsKey(uid)) return _userCache[uid];
+    if (reload == false && _userCache.containsKey(uid)) {
+      /// Mark that the user data is cached
+      _userCache[uid]!.cached = true;
+      return _userCache[uid];
+    }
 
     /// 아니면, Firestore 에서 불러와서 User 을 만들어 리턴
     final u = await User.get(uid);
     if (u == null) return null;
     _userCache[uid] = u;
     return _userCache[uid];
-  }
-
-  /// Check if the user is already in cache
-  ///
-  bool isUserCached(String uid) {
-    if (_userCache.containsKey(uid)) return true;
-    return false;
-  }
-
-  /// Get user in cache without getting from firestore
-  ///
-  /// Returns null if the user is not in cache
-  User? getCache(String uid) {
-    if (isUserCached(uid)) return _userCache[uid];
-    return null;
   }
 
   /// Sign out from Firebase Auth

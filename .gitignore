@@ -1,4 +1,5 @@
 apps/
+.flutter-plugins-dependencies
 
 # Miscellaneous
 *.class

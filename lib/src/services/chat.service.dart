@@ -212,7 +212,20 @@ class ChatService {
     await roomDoc(room.id).set({setting: value}, SetOptions(merge: true));
   }
 
-  Future<void> renameRoom() async {}
+  /// Renames the room on own side. This does not update the default chat room name.
+  ///
+  Future<void> renameRoom({required String updatedName, required Room room}) async {
+    if (updatedName.isEmpty) {
+      // TODO review if correct
+      await roomDoc(room.id).update({"rename.${UserService.instance.uid}": FieldValue.delete()});
+      return;
+    }
+    await ChatService.instance.updateRoomSetting(
+      room: room,
+      setting: 'rename',
+      value: {UserService.instance.uid: updatedName},
+    );
+  }
 
   Future<void> sendMessage({
     required Room room,
@@ -371,5 +384,22 @@ class ChatService {
         cancel: cancel,
       ),
     );
+  }
+
+  /// Opens the chat room menu
+  openChatRoomMenu({required Room room, required BuildContext context}) async {
+    // TODO customizable chat Room menu screen
+    final otherUser = room.group == true ? null : await ChatService.instance.getOtherUserFromSingleChatRoom(room);
+    if (context.mounted) {
+      showGeneralDialog(
+        context: context,
+        pageBuilder: (context, _, __) {
+          return ChatRoomMenuScreen(
+            room: room,
+            otherUser: otherUser,
+          );
+        },
+      );
+    }
   }
 }

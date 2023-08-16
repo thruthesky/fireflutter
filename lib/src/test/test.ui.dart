@@ -99,15 +99,18 @@ class _TestScreenState extends State<TestUi> {
           onPressed: testCreateSingleChatRoom,
           child: const Text('TEST - create single chat room'),
         ),
-        // TODO
-        // ElevatedButton(
-        //   onPressed: testInviteUserIntoSingleChat,
-        //   child: const Text('TEST - invite user into single chat'),
-        // ),
-        // ElevatedButton(
-        //   onPressed: testInviteUserIntoGroupChat,
-        //   child: const Text('TEST - invite user into group chat'),
-        // ),
+        ElevatedButton(
+          onPressed: testInviteUserIntoSingleChat,
+          child: const Text('TEST - invite user into single chat'),
+        ),
+        ElevatedButton(
+          onPressed: testInviteUserIntoGroupChat,
+          child: const Text('TEST - invite user into group chat'),
+        ),
+        ElevatedButton(
+          onPressed: testChangeDefaultChatRoomName,
+          child: const Text('TEST - Change Default Chat Room Name'),
+        ),
       ],
     );
   }
@@ -118,9 +121,10 @@ class _TestScreenState extends State<TestUi> {
     await testNoOfNewMessage();
     await testMaximumNoOfUsers();
     await testCreateSingleChatRoom();
-    // TODO
-    // await testInviteUserIntoSingleChat();
-    // await testInviteUserIntoGroupChat();
+    await testInviteUserIntoSingleChat();
+    await testInviteUserIntoGroupChat();
+    await testChangeDefaultChatRoomName();
+    await testRenameChatRoomOwnSide();
     Test.report();
   }
 
@@ -154,26 +158,20 @@ class _TestScreenState extends State<TestUi> {
     test(room.noOfNewMessages.isEmpty, 'Must have no noOfNewMessages');
   }
 
-  // TODO Fix error code firsts
-  // testInviteUserIntoSingleChat() async {
-  //   await Test.login(Test.apple);
-  //   final room = await ChatService.instance.createChatRoom(
-  //       roomName: 'Single Room 2', otherUserUid: Test.banana.uid);
-  //   await Test.assertExceptionCode(
-  //       room.invite(Test.cherry.uid), EasyChatCode.singleChatRoomCannotInvite);
-  // }
+  testInviteUserIntoSingleChat() async {
+    await Test.login(Test.apple);
+    final room = await ChatService.instance.createChatRoom(roomName: 'Single Room 2', otherUserUid: Test.banana.uid);
+    await Test.assertExceptionCode(room.invite(Test.cherry.uid), Code.singleChatRoomCannotInvite);
+  }
 
-  // testInviteUserIntoGroupChat() async {
-  //   await Test.login(Test.apple);
-  //   final room = await EasyChat.instance
-  //       .createChatRoom(roomName: 'Single Room 2', maximumNoOfUsers: 3);
-  //   await Test.assertFuture(room.invite(Test.banana.uid));
-  //   await Test.assertFuture(room.invite(Test.cherry.uid));
-  //   await Test.assertExceptionCode(
-  //       room.invite(Test.cherry.uid), EasyChatCode.userAlreadyInRoom);
-  //   await Test.assertExceptionCode(
-  //       room.invite(Test.durian.uid), EasyChatCode.roomIsFull);
-  // }
+  testInviteUserIntoGroupChat() async {
+    await Test.login(Test.apple);
+    final room = await ChatService.instance.createChatRoom(roomName: 'Single Room 2', maximumNoOfUsers: 3);
+    await Test.assertFuture(room.invite(Test.banana.uid));
+    await Test.assertFuture(room.invite(Test.cherry.uid));
+    await Test.assertExceptionCode(room.invite(Test.cherry.uid), Code.userAlreadyInRoom);
+    await Test.assertExceptionCode(room.invite(Test.durian.uid), Code.roomIsFull);
+  }
 
   /// Test the no of new messages.
   ///
@@ -231,15 +229,79 @@ class _TestScreenState extends State<TestUi> {
     await room.invite(Test.banana.uid);
     await room.invite(Test.cherry.uid);
 
-    // TODO fix error codes first
-    // // This should not work because the max is 3
-    // await Test.assertExceptionCode(
-    //     room.invite(Test.durian.uid), EasyChatCode.roomIsFull);
+    // This should not work because the max is 3
+    await Test.assertExceptionCode(room.invite(Test.durian.uid), Code.roomIsFull);
 
     // Get the room
     final roomAfter = await ChatService.instance.getRoom(room.id);
 
     test(roomAfter.users.length == 3,
         "maximumNoOfUsers must be limited to 3. Actual value: ${roomAfter.users.length}. Expected: ${roomAfter.maximumNoOfUsers}");
+  }
+
+  testChangeDefaultChatRoomName() async {
+    await FirebaseAuth.instance.signOut();
+
+    // Wait until logout is complete or you may see firestore permission denied error.
+    await Test.wait();
+
+    // Sign in with apple with its password
+    await Test.login(Test.apple);
+
+    // Get the room
+    Room room = await ChatService.instance.createChatRoom(roomName: 'Testing Room');
+
+    // add the users
+    await room.invite(Test.banana.uid);
+    await room.invite(Test.cherry.uid);
+
+    const newName = 'Updated Name';
+
+    // TODO make a separate function?
+
+    // rename the room
+    await ChatService.instance.updateRoomSetting(room: room, setting: 'name', value: newName);
+
+    // Get the room
+    final roomAfter = await ChatService.instance.getRoom(room.id);
+
+    // test: check the new name
+    test(roomAfter.name == newName, "The room must have the new name \"$newName\". Actual value: ${roomAfter.name}");
+  }
+
+  testRenameChatRoomOwnSide() async {
+    await FirebaseAuth.instance.signOut();
+
+    // Wait until logout is complete or you may see firestore permission denied error.
+    await Test.wait();
+
+    // Sign in with apple with its password
+    await Test.login(Test.apple);
+
+    // Get the room
+    Room room = await ChatService.instance.createChatRoom(roomName: 'Testing Room');
+
+    // add the users
+    await room.invite(Test.banana.uid);
+    await room.invite(Test.cherry.uid);
+
+    const renameApple = "Apple's place";
+
+    // rename the room
+    await ChatService.instance.renameRoom(updatedName: renameApple, room: room);
+
+    // Get the room
+    Room roomAfter = await ChatService.instance.getRoom(room.id);
+
+    // Test if ChatService.instance.renameRoom() function works. It must rename.
+    test(roomAfter.rename[UserService.instance.uid] == renameApple,
+        "The room must have a rename for user. Actual Value: ${roomAfter.rename[UserService.instance.uid]}. Expected: $renameApple");
+
+    // rename the room
+    await ChatService.instance.renameRoom(updatedName: '', room: room);
+
+    // Test if it clears the value. It must delete the value.
+    test(roomAfter.rename[UserService.instance.uid] == null,
+        "The room must not have a rename. Actual Value: ${roomAfter.rename[UserService.instance.uid]}. Expected: Null");
   }
 }
