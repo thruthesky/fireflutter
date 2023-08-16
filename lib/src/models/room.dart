@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/services/chat.service.dart';
 
 /// Room
@@ -135,15 +136,13 @@ class Room {
 
     /// Check if the user is already in the room.
     if (room.users.contains(userUid)) {
-      //! throw Exception(Error.userAlreadyInRoom);
-      throw Exception("Error.userAlreadyInRoom");
+      throw Exception(Code.userAlreadyInRoom);
     }
 
     ///
     ///
     if (room.users.length >= room.maximumNoOfUsers) {
-      //! throw Exception(Error.roomIsFull);
-      throw Exception("Error.roomIsFull");
+      throw Exception(Code.roomIsFull);
     }
 
     ///
@@ -154,8 +153,7 @@ class Room {
 
   invite(String userUid) async {
     if (isSingleChat) {
-      //! throw Exception(Error.singleChatRoomCannotInvite);
-      throw Exception('Error.singleChatRoomCannotInvite');
+      throw Exception(Code.singleChatRoomCannotInvite);
     }
     return await addUser(userUid);
   }

@@ -1,6 +1,5 @@
 import 'package:fireflutter/src/models/room.dart';
 import 'package:fireflutter/src/services/chat.service.dart';
-import 'package:fireflutter/src/widgets/chat/chat_room_menu_screen.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomMenuButton extends StatefulWidget {
@@ -21,19 +20,7 @@ class _ChatRoomMenuButtonState extends State<ChatRoomMenuButton> {
     return IconButton(
       icon: const Icon(Icons.menu),
       onPressed: () async {
-        final otherUser =
-            widget.room.group == true ? null : await ChatService.instance.getOtherUserFromSingleChatRoom(widget.room);
-        if (context.mounted) {
-          showGeneralDialog(
-            context: context,
-            pageBuilder: (context, _, __) {
-              return ChatRoomMenuScreen(
-                room: widget.room,
-                otherUser: otherUser,
-              );
-            },
-          );
-        }
+        return ChatService.instance.openChatRoomMenu(room: widget.room, context: context);
       },
     );
   }

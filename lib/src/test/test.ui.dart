@@ -99,15 +99,14 @@ class _TestScreenState extends State<TestUi> {
           onPressed: testCreateSingleChatRoom,
           child: const Text('TEST - create single chat room'),
         ),
-        // TODO
-        // ElevatedButton(
-        //   onPressed: testInviteUserIntoSingleChat,
-        //   child: const Text('TEST - invite user into single chat'),
-        // ),
-        // ElevatedButton(
-        //   onPressed: testInviteUserIntoGroupChat,
-        //   child: const Text('TEST - invite user into group chat'),
-        // ),
+        ElevatedButton(
+          onPressed: testInviteUserIntoSingleChat,
+          child: const Text('TEST - invite user into single chat'),
+        ),
+        ElevatedButton(
+          onPressed: testInviteUserIntoGroupChat,
+          child: const Text('TEST - invite user into group chat'),
+        ),
       ],
     );
   }
@@ -118,9 +117,8 @@ class _TestScreenState extends State<TestUi> {
     await testNoOfNewMessage();
     await testMaximumNoOfUsers();
     await testCreateSingleChatRoom();
-    // TODO
-    // await testInviteUserIntoSingleChat();
-    // await testInviteUserIntoGroupChat();
+    await testInviteUserIntoSingleChat();
+    await testInviteUserIntoGroupChat();
     Test.report();
   }
 
@@ -154,26 +152,20 @@ class _TestScreenState extends State<TestUi> {
     test(room.noOfNewMessages.isEmpty, 'Must have no noOfNewMessages');
   }
 
-  // TODO Fix error code firsts
-  // testInviteUserIntoSingleChat() async {
-  //   await Test.login(Test.apple);
-  //   final room = await ChatService.instance.createChatRoom(
-  //       roomName: 'Single Room 2', otherUserUid: Test.banana.uid);
-  //   await Test.assertExceptionCode(
-  //       room.invite(Test.cherry.uid), EasyChatCode.singleChatRoomCannotInvite);
-  // }
+  testInviteUserIntoSingleChat() async {
+    await Test.login(Test.apple);
+    final room = await ChatService.instance.createChatRoom(roomName: 'Single Room 2', otherUserUid: Test.banana.uid);
+    await Test.assertExceptionCode(room.invite(Test.cherry.uid), Code.singleChatRoomCannotInvite);
+  }
 
-  // testInviteUserIntoGroupChat() async {
-  //   await Test.login(Test.apple);
-  //   final room = await EasyChat.instance
-  //       .createChatRoom(roomName: 'Single Room 2', maximumNoOfUsers: 3);
-  //   await Test.assertFuture(room.invite(Test.banana.uid));
-  //   await Test.assertFuture(room.invite(Test.cherry.uid));
-  //   await Test.assertExceptionCode(
-  //       room.invite(Test.cherry.uid), EasyChatCode.userAlreadyInRoom);
-  //   await Test.assertExceptionCode(
-  //       room.invite(Test.durian.uid), EasyChatCode.roomIsFull);
-  // }
+  testInviteUserIntoGroupChat() async {
+    await Test.login(Test.apple);
+    final room = await ChatService.instance.createChatRoom(roomName: 'Single Room 2', maximumNoOfUsers: 3);
+    await Test.assertFuture(room.invite(Test.banana.uid));
+    await Test.assertFuture(room.invite(Test.cherry.uid));
+    await Test.assertExceptionCode(room.invite(Test.cherry.uid), Code.userAlreadyInRoom);
+    await Test.assertExceptionCode(room.invite(Test.durian.uid), Code.roomIsFull);
+  }
 
   /// Test the no of new messages.
   ///
@@ -231,10 +223,8 @@ class _TestScreenState extends State<TestUi> {
     await room.invite(Test.banana.uid);
     await room.invite(Test.cherry.uid);
 
-    // TODO fix error codes first
-    // // This should not work because the max is 3
-    // await Test.assertExceptionCode(
-    //     room.invite(Test.durian.uid), EasyChatCode.roomIsFull);
+    // This should not work because the max is 3
+    await Test.assertExceptionCode(room.invite(Test.durian.uid), Code.roomIsFull);
 
     // Get the room
     final roomAfter = await ChatService.instance.getRoom(room.id);
