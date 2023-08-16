@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/widgets/user/user.avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -92,7 +91,10 @@ class _UserAvatarState extends State<UserProfileAvatar> {
       },
       child: Stack(
         children: [
-          UserAvatar(user: widget.user),
+          UserAvatar(
+            user: widget.user,
+            size: widget.size,
+          ),
           uploadProgressIndicator(),
           if (widget.upload)
             Positioned(

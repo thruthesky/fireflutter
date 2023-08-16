@@ -11,7 +11,19 @@ class UserAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (user.hasPhotoUrl == false) {
-      return defaultIcon ?? const Icon(Icons.person);
+      return defaultIcon ??
+          Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.person,
+              size: size / 2,
+            ),
+          );
     }
     return Avatar(url: user.photoUrl, size: size);
   }
