@@ -12,6 +12,8 @@ class ChatMessageBubble extends StatefulWidget {
 
   final Message chatMessage;
 
+  // TODO all actions should be customizable
+
   @override
   State<ChatMessageBubble> createState() => _ChatMessageBubbleState();
 }
