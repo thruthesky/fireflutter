@@ -43,13 +43,13 @@ class _SearchUserInviteState extends State<SearchUserInvite> {
           ),
         ),
         Expanded(
-          child: InviteUserListView(
-            room: widget.room,
+          child: UserFilterListView(
             searchText: search.text,
             exemptedUsers: roomMembers!,
-            onInvite: (invitedUid) {
+            onTap: (user) async {
+              await widget.room.invite(user.uid);
               setState(() {
-                roomMembers!.add(invitedUid);
+                roomMembers!.add(user.uid);
               });
             },
           ),

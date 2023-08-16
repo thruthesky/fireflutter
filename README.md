@@ -7,14 +7,19 @@ A free, open source, complete, rapid development package for creating Social app
   - [Features](#features)
   - [Getting started](#getting-started)
     - [Setup](#setup)
-  - [Usage](#usage)
-    - [UserService](#userservice)
-    - [Widgets](#widgets)
-      - [UserDoc](#userdoc)
-      - [UserProfileAvatar](#userprofileavatar)
-      - [UserProfileAvatar](#userprofileavatar-1)
+- [Usage](#usage)
+  - [UserService](#userservice)
+  - [ChatService](#chatservice)
+    - [How to open 1:1 chat room](#how-to-open-11-chat-room)
+- [Widgets](#widgets)
+  - [UserDoc](#userdoc)
+  - [Avatar](#avatar)
+  - [UserAvatar](#useravatar)
+  - [UserProfileAvatar](#userprofileavatar)
+  - [User Filter List View](#user-filter-list-view)
   - [Translation](#translation)
   - [Contribution](#contribution)
+- [OLD README](#old-readme)
   - [TODO](#todo)
   - [Overview](#overview)
     - [Principle of Design](#principle-of-design)
@@ -76,9 +81,9 @@ If you want to build an app using FireFlutter, the best way is to copy codes fro
 
 ### Setup
 
-## Usage
+# Usage
 
-### UserService
+## UserService
 
 `UserService.instance.nullableUser` is null
 - when the user didn't log in
@@ -93,11 +98,20 @@ So, the lifecyle will be the following when the app users `UserDoc`.
   - If the user document exsist, then it will have right data and `builder` will be called.
 
 
+## ChatService
+
+### How to open 1:1 chat room
+
+Call the `showChatRoom` method anywhere with user model.
+
+```dart
+ChatService.instance.showChatRoom(context: context, user: user);
+```
 
 
-### Widgets
+# Widgets
 
-#### UserDoc
+## UserDoc
 
 
 To display user's profile photo, use like below.
@@ -119,20 +133,22 @@ UserDoc(
 ),
 ```
 
-#### UserProfileAvatar
+## Avatar
+
+## UserAvatar
 
 
 To display user's profile photo, use `UserProfileAvatar`.
 
 ```dart
-UserProfileAvatar(
+UserAvatar(
   user: user,
   size: 120,
 ),
 ```
 
 
-#### UserProfileAvatar
+## UserProfileAvatar
 
 To let user update or delete the profile photo, use like below.
 
@@ -145,6 +161,17 @@ UserProfileAvatar(
 ),
 ```
 
+## User Filter List View
+
+Use this widget to search users by filtering a field with a string value.
+This widget is a list view that has a `ListTile` in each item. So, it supports the properties of `ListView` and `ListTile` at the same time.
+
+```dart
+UserFilterListView(
+  searchText: 'nameValue',
+  field: 'name',
+),
+```
 
 
 ## Translation
@@ -167,6 +194,11 @@ tr.user.loginFirst = '로그인을 해 주세요.';
 
 Fork the fireflutter and create your own branch. Then update code and push, then pull request.
 
+
+
+# OLD README
+
+* Below are the old read files.
 
 
 
