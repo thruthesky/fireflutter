@@ -24,10 +24,9 @@ class InviteUserListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ! Currently we can only search using exact display name
-    final query = FirebaseFirestore.instance
-        .collection('users')
-        .where("displayName", isEqualTo: searchText)
-        .where(FieldPath.documentId, whereNotIn: room.users.take(10));
+    final query = FirebaseFirestore.instance.collection('users').where("displayName", isEqualTo: searchText);
+    // TODO remove the default results.
+    // TODO display default user list with remote.config.optional
     return FirestoreListView(
       query: query,
       itemBuilder: (context, snapshot) {
@@ -41,8 +40,12 @@ class InviteUserListView extends StatelessWidget {
             leading: user.photoUrl.isEmpty
                 ? null
                 : CircleAvatar(
+                    // TODO Avatar
                     backgroundImage: NetworkImage(user.photoUrl),
                   ),
+
+            // TODO proper user listing
+            // TODO on hold, display popup, user
             onTap: () async {
               room.invite(user.uid);
               onInvite?.call(user.uid);

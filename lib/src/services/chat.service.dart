@@ -214,10 +214,10 @@ class ChatService {
 
   /// Renames the room on own side. This does not update the default chat room name.
   ///
+  /// This will clear the room if the input is blank
   Future<void> renameRoom({required String updatedName, required Room room}) async {
     if (updatedName.isEmpty) {
-      // TODO review if correct
-      await roomDoc(room.id).update({"rename.${UserService.instance.uid}": FieldValue.delete()});
+      await roomDoc(room.id).update({'rename.${UserService.instance.uid}': FieldValue.delete()});
       return;
     }
     await ChatService.instance.updateRoomSetting(

@@ -300,6 +300,9 @@ class _TestScreenState extends State<TestUi> {
     // rename the room
     await ChatService.instance.renameRoom(updatedName: '', room: room);
 
+    // Get the update to the room
+    roomAfter = await ChatService.instance.getRoom(room.id);
+
     // Test if it clears the value. It must delete the value.
     test(roomAfter.rename[UserService.instance.uid] == null,
         "The room must not have a rename. Actual Value: ${roomAfter.rename[UserService.instance.uid]}. Expected: Null");

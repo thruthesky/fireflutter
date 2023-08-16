@@ -2,7 +2,6 @@
 
 A free, open source, complete, rapid development package for creating Social apps, Chat apps, Community(Forum) apps, Shopping mall apps, and much more based on Firebase
 
-
 - [FireFlutter](#fireflutter)
   - [Features](#features)
   - [Getting started](#getting-started)
@@ -60,19 +59,16 @@ A free, open source, complete, rapid development package for creating Social app
   - [Tips](#tips)
   - [Security rules](#security-rules-1)
 
-
 ## Features
 
-* User management
-* Chat
-* Forum
-* Push notification
-
+- User management
+- Chat
+- Forum
+- Push notification
 
 ## Getting started
 
 If you want to build an app using FireFlutter, the best way is to copy codes from the example project.
-
 
 ### Setup
 
@@ -81,24 +77,22 @@ If you want to build an app using FireFlutter, the best way is to copy codes fro
 ### UserService
 
 `UserService.instance.nullableUser` is null
+
 - when the user didn't log in
 - or when the user is logged in and has document, but the `UserService` has not read the user document, yet. In this case it simply needs to wait sometime.
 
 `UserService.instance.nullableUser.exists` is false if the user has logged in but no document. In this case, the `documentNotExistBuilder` of `UserDoc` will be called.
 
 So, the lifecyle will be the following when the app users `UserDoc`.
+
 - `UserService.instance.nullableUser` will be null on app boot
 - `UserService.instance.nullableUser` will have an instance of `User`
   - If the user document does not exists, `exists` will be `false` causing `documentNotExistsBuilder` to be called.
   - If the user document exsist, then it will have right data and `builder` will be called.
 
-
-
-
 ### Widgets
 
 #### UserDoc
-
 
 To display user's profile photo, use like below.
 
@@ -121,7 +115,6 @@ UserDoc(
 
 #### UserProfileAvatar
 
-
 To display user's profile photo, use `UserProfileAvatar`.
 
 ```dart
@@ -130,7 +123,6 @@ UserProfileAvatar(
   size: 120,
 ),
 ```
-
 
 #### UserProfileAvatar
 
@@ -144,8 +136,6 @@ UserProfileAvatar(
   delete: true,
 ),
 ```
-
-
 
 ## Translation
 
@@ -161,77 +151,73 @@ Here is an example of updating the translation.
 tr.user.loginFirst = '로그인을 해 주세요.';
 ```
 
-
-
 ## Contribution
 
 Fork the fireflutter and create your own branch. Then update code and push, then pull request.
 
-
-
-
-
-
 ## TODO
 
-.
-* See the Principle.
-* Login is required to use this app. Meaning, this package does not provide login relational feature. the parent app must provide login and login is reuqired for using this package.
-* Create chat room.
-* Updating user's display name and photo url in chat room collection. Not indivisual chat message.
+- See the Principle.
+- Login is required to use this app. Meaning, this package does not provide login relational feature. the parent app must provide login and login is reuqired for using this package.
+- Create chat room.
+- Updating user's display name and photo url in chat room collection. Not indivisual chat message.
 
 ## Overview
 
 ### Principle of Design
+
 - This firebase extension helps to manage your firebase.
 
 - When a document is created under the `easy-commands` collection,
+
   - The firebase background function will execute the comamnd specified in `{ command: ... }`.
 
-* Easychat provides logic as much as possible. This means, the app must provide UI and hook the user event with the easychat logic.
-  * In some case, easychat must provide ui like displaying the list of chat friend list or chat room and message list. But still easychaht provides a way to customise everything.
+- Easychat provides logic as much as possible. This means, the app must provide UI and hook the user event with the easychat logic.
 
-* Easychat also provide sample UI. So, developer can see the code, copy and customise it.
+  - In some case, easychat must provide ui like displaying the list of chat friend list or chat room and message list. But still easychaht provides a way to customise everything.
 
-* Easychat throws exceptions when there are problems. It is the app's responsibility to catch and handle them.
-* For sample UI widgets, it provides `sucess` and `error` handler.
+- Easychat also provide sample UI. So, developer can see the code, copy and customise it.
 
-### Features
+- Easychat throws exceptions when there are problems. It is the app's responsibility to catch and handle them.
+- For sample UI widgets, it provides `sucess` and `error` handler.
 
-* The one who creats the chat room is the master manager of the chat.
-* The master manager can set moderators.
-* Moderators can
-  * kick out chat members.
-  * block or unblock chat members not to join again.
-  * set password so other member may not join.
+### Chat Room Features
 
-* `OpenChat`
-  * A group chat which is searchable.
-  * Anybody search chat room and join.
-  * Members of the group chat can invite other users.
+- The one who creats the chat room is the master manager of the chat.
+- The master manager can set moderators.
+- Moderators can
 
-* `PrivateChat`
-  * A group chat which is not searchable.
-  * Only Master and Moderators can invite users.
+  - kick out chat members.
+  - block or unblock chat members not to join again.
+  - set password so other member may not join.
+
+- `OpenChat`
+
+  - A group chat which is searchable.
+  - Anybody search chat room and join.
+  - Members of the group chat can invite other users.
+
+- `PrivateChat`
+  - A group chat which is not searchable.
+  - Only Master and Moderators can invite users.
 
 ## Environment
 
-* Firestore
+- Firestore
 
 ## Basic Features
 
-* Chat room list
-* 1:1 chat room & multi chat
-* File upload api
-
+- Chat room list
+- 1:1 chat room & multi chat
+- File upload api
 
 ## Example
+
 ## Installation
 
-* The example is in [easychat_example](https://github.com/thruthesky/easychat_example) repository. Add it in `apps` folder and test it.
+- The example is in [easychat_example](https://github.com/thruthesky/easychat_example) repository. Add it in `apps` folder and test it.
 
 ## Setup
-
 
 - [Beta (0.1.4-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.4-beta.0)
 - [Beta (0.1.0-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.0-beta.0)
@@ -239,36 +225,35 @@ Fork the fireflutter and create your own branch. Then update code and push, then
 
 ### Firebase Setup
 
-* Easychat package uses the same connection on your application. You can simply initialize firebase connection inside your application.
+- Easychat package uses the same connection on your application. You can simply initialize firebase connection inside your application.
 
-* The firestore structure for easychat is fixed. If you want to change, you may need to change the security rules and the source code of the package.
-* `/easychat` is the root collection for all chat. The document inside this collection has chat room information.
-* `/eachchat/{documentId}/messages` is the collection for storing all the chat messages.
+- The firestore structure for easychat is fixed. If you want to change, you may need to change the security rules and the source code of the package.
+- `/easychat` is the root collection for all chat. The document inside this collection has chat room information.
+- `/eachchat/{documentId}/messages` is the collection for storing all the chat messages.
 
 #### Firebase Users collection
 
-* You can initialize the easychat to use your user list collection and It must be readable.
-  * Easychat needs displayName and photoUrl in the collection.
-  * Set the user's information like below.
+- You can initialize the easychat to use your user list collection and It must be readable.
+  - Easychat needs displayName and photoUrl in the collection.
+  - Set the user's information like below.
 
 ```dart
 EasyChat.instance.initialize(usersCollection: 'users', displayNameField: 'displayName', photoUrlField: 'photoUrl')
 ```
 
-* listen `eventarc` and update it into a document. For instance, after image processing, listen the event and update it on a document.
+- listen `eventarc` and update it into a document. For instance, after image processing, listen the event and update it on a document.
 
 ### Updating auth custom claims
 
 - Required properties
+
   - `{ command: 'update_custom_claims' }` - the command.
   - `{ uid: 'xxx' }` - the user's uid that the claims will be applied to.
   - `{ claims: { key: value, xxx: xxx, ... } }` - other keys and values for the claims.
 
 - example of document creation for update_custom claims
 
-
 ![Image Link](https://github.com/thruthesky/easy-extension/blob/main/docs/command-update_custom_claims_input.jpg?raw=true "This is image title")
-
 
 - Response
   - `{ config: ... }` - the configuration of the extension
@@ -276,10 +261,7 @@ EasyChat.instance.initialize(usersCollection: 'users', displayNameField: 'displa
   - `{ response: { timestamp: xxxx } }` - the time that the executino had finished.
   - `{ response: { claims: { ..., ... } } }` - the claims that the user currently has. Not the claims that were requested for updating.
 
-
 ![Image Link](https://github.com/thruthesky/easy-extension/blob/main/docs/command-update_custom_claims_output.jpg?raw=true "This is image title")
-
-
 
 - `SYNC_CUSTOM_CLAIMS_TO_USER_DOCUMENT` option only works with `update_custom_claims` command.
   - When it is set to `yes`, the claims of the user will be set to user's document.
@@ -288,21 +270,17 @@ EasyChat.instance.initialize(usersCollection: 'users', displayNameField: 'displa
       - If the user is admin, then the app can show admin menu to the user.
     - Security rules can work better.
 
-
-
-
 ### Disable user
 
 - Disabling a user means that they can't sign in anymore, nor refresh their ID token. In practice this means that within an hour of disabling the user they can no longer have a request.auth.uid in your security rules.
+
   - If you wish to block the user immediately, I recommend to run another command. Running `update_custom_claims` comand with `{ disabled: true }` and you can add it on security rules.
   - Additionally, you can enable `set enable field on user document` to yes. This will add `disabled` field on user documents and you can search(list) users who are disabled.
 
-
-
 - `SET_DISABLED_USER_FIELD` option only works with `disable_user` command.
+
   - When it is set to yes, the `disabled` field with `true` will be set to user document.
   - Use this to know if the user is disabled.
-
 
 - Request
 
@@ -313,11 +291,11 @@ EasyChat.instance.initialize(usersCollection: 'users', displayNameField: 'displa
 }
 ```
 
-* Warning! Once a user changes his displayName and photoUrl, `EasyChat.instance.updateUser()` must be called to update user information in easychat.
+- Warning! Once a user changes his displayName and photoUrl, `EasyChat.instance.updateUser()` must be called to update user information in easychat.
 
 #### Firestore Security Rules
 
-* Copy the following security rules and paste it into your Firebase project.
+- Copy the following security rules and paste it into your Firebase project.
 
 ```json
  ... security rules here ...
@@ -325,25 +303,23 @@ EasyChat.instance.initialize(usersCollection: 'users', displayNameField: 'displa
 
 #### Firebase Indexes
 
-|Collection ID|Fields Indexd|
-|-------------|-------------|
-|easychat     |users lastMessage.createdAt|
-
-
+| Collection ID | Fields Indexd               |
+| ------------- | --------------------------- |
+| easychat      | users lastMessage.createdAt |
 
 ## Widgets
 
-* In this chapter, the usage of the widgets is explained.
-
+- In this chapter, the usage of the widgets is explained.
 
 ### Chat Room List
 
-* The beginning point would be chat room list screen.
-  * On the chat room list screen, you can display chat room create icon and the login user's chat room list.
+- The beginning point would be chat room list screen.
 
-* Follow the setup first.
+  - On the chat room list screen, you can display chat room create icon and the login user's chat room list.
 
-* You can display chat room list like below
+- Follow the setup first.
+
+- You can display chat room list like below
 
 ```dart
 final ChatRoomListViewController controller = ChatRoomListViewController();
@@ -354,7 +330,7 @@ ChatRoomListView(
 
 ### Create a chat room
 
-* To create a chat room, add a button and display `ChatRoomCreate` widget. You may copy the code from `ChatRoomCreate` and apply your own design.
+- To create a chat room, add a button and display `ChatRoomCreate` widget. You may copy the code from `ChatRoomCreate` and apply your own design.
 
 ```dart
 class _ChatRoomListreenState extends State<ChatRoomListSreen> {
@@ -386,7 +362,7 @@ class _ChatRoomListreenState extends State<ChatRoomListSreen> {
       ),
 ```
 
-* You need to create only one screen to use the easychat.
+- You need to create only one screen to use the easychat.
 
 ```dart
 Scafolld(
@@ -398,19 +374,15 @@ Scafolld(
 
 ### How to display a chat room
 
-* In the chat room, there should be a header, a message list view as a body, and message input box.
-* To display the chat room, you need to have a chat room model.
-  * To have a chat room model, you need to create a chat room (probably a group chat).
-  * Then, you will get it on the app by accessing the database or you may compose it using `ChatRoomModel.fromMap()`.
-  * Then, pass the chat room model into the chat room (or you can compose a chat room manually with the chat room model.)
-
-
-
-
+- In the chat room, there should be a header, a message list view as a body, and message input box.
+- To display the chat room, you need to have a chat room model.
+  - To have a chat room model, you need to create a chat room (probably a group chat).
+  - Then, you will get it on the app by accessing the database or you may compose it using `ChatRoomModel.fromMap()`.
+  - Then, pass the chat room model into the chat room (or you can compose a chat room manually with the chat room model.)
 
 ### Additional information
 
-* Please create issues.
+- Please create issues.
 
 ### How to test & UI work Chat room screen
 
@@ -441,7 +413,7 @@ Scafolld(
 
 ### Security Rules
 
-* Run firestore emulator like below and test the security rules.
+- Run firestore emulator like below and test the security rules.
 
 ```sh
 % firebase emulators:start --only firestore
@@ -453,66 +425,69 @@ Scafolld(
 
 #### Chat Room fields
 
-* `master: [string]` is the master. root of the chat room.
-* `moderators: Array[uid]` is the moderators.
-* `group: [boolean]` - if true, it's group chat. otherwise it's 1:1 chat
-* `open: [boolean]` - if true, any one in the room can invite and anyone can jogin (except if it's 1:1 chat). If it's false, no one can join except the invitation of master and moderators.
-* `createdAt: [timestamp|date]` is the time that the chat room created.
-* `users: Array[uid]` is the number of users.
-* `noOfNewMessages: Map<string, number>` - This contains the uid of the chat room users as key and the number of new messages as value.
-* `lastMessage: Map` is the last message in the room.
-  * `createdAt: [timestamp|date]` is the time that the last message was sent.
-  * `senderUid: [string]` is the sender Uid
-  * `text: [string]` is the text in the message
-* `maximumNoOfUsers: [int]` is the maximum no of users in the group.
+- `master: [string]` is the master. root of the chat room.
+- `moderators: Array[uid]` is the moderators.
+- `group: [boolean]` - if true, it's group chat. otherwise it's 1:1 chat
+- `open: [boolean]` - if true, any one in the room can invite and anyone can jogin (except if it's 1:1 chat). If it's false, no one can join except the invitation of master and moderators.
+- `createdAt: [timestamp|date]` is the time that the chat room created.
+- `users: Array[uid]` is the number of users.
+- `noOfNewMessages: Map<string, number>` - This contains the uid of the chat room users as key and the number of new messages as value.
+- `lastMessage: Map` is the last message in the room.
+  - `createdAt: [timestamp|date]` is the time that the last message was sent.
+  - `senderUid: [string]` is the sender Uid
+  - `text: [string]` is the text in the message
+- `maximumNoOfUsers: [int]` is the maximum no of users in the group.
 
 #### Chat Message fields
 
-* `text` is the text message [Optional] - Optional, meaning, a message can be sent without the text.
-* `createdAt` is the time that the message was sent.
-* `senderUid` is the sender Uid
-* `imageUrl [String]` is the image's URL added to the message. [Optional]
-* `fileUrl [String]` is the file's URL added to the message. [Optional]
-* `fileName` is the file name of the file from `fileUrl`. [Optional]
+- `text` is the text message [Optional] - Optional, meaning, a message can be sent without the text.
+- `createdAt` is the time that the message was sent.
+- `senderUid` is the sender Uid
+- `imageUrl [String]` is the image's URL added to the message. [Optional]
+- `fileUrl [String]` is the file's URL added to the message. [Optional]
+- `fileName` is the file name of the file from `fileUrl`. [Optional]
 
 ### Counting no of new messages
 
-* We don't seprate the storage of the no of new message from the chat room document. We have thought about it and finalized that that is not worth. It does not have any money and the logic isn't any simple.
-* noOfNewMessages will have the uid and no. like `{uid-a: 5, uid-b: 0, uid-c: 2}`
-* When somebody chats, increase the no of new messages except the sender.
-* Wehn somebody receives a message in a chat room, make his no of new message to 0.
-* When somebody enters the chat room, make his no of new message to 0.
+- We don't seprate the storage of the no of new message from the chat room document. We have thought about it and finalized that that is not worth. It does not have any money and the logic isn't any simple.
+- noOfNewMessages will have the uid and no. like `{uid-a: 5, uid-b: 0, uid-c: 2}`
+- When somebody chats, increase the no of new messages except the sender.
+- Wehn somebody receives a message in a chat room, make his no of new message to 0.
+- When somebody enters the chat room, make his no of new message to 0.
 
 ### Displaying chat rooms that has new message (unread messages)
 
-* Get whole list of chat room.
-* Filter chat rooms that has 0 of noOfNewmessage of my uid.
+- Get whole list of chat room.
+- Filter chat rooms that has 0 of noOfNewmessage of my uid.
 
 ### 1:1 Chat and Multi user chat
 
-* 1:1 chat room id must be consisted with `uid-uid` pattern in alphabetically sorted.
+- 1:1 chat room id must be consisted with `uid-uid` pattern in alphabetically sorted.
 
-* When the login user taps on a chat room, it is considered that the user wants to enter the chat room. It may be a 1:1 chat or group chat.
-  * In this case, the app will deliver `ChatRoomModel` as a prameter to chat room list screen and chat room list screen will open the chat room.
-* When the login user taps on a user, it means, the login user want to chat with the user. It will be only 1:1 chat.
-  * Int his case, the app will deliver `UserModel` as a parameter to chat room list screen and chat room list screen will open the chat room.
-  * When the login user taps on a user, the app must search if the 1:1 chat room exsits.
-    * If yes, enter the chat room,
-    * If not, create 1:1 chat room and put the two as a member of the chat room, and enter.
-* When one of user in 1:1 chat invites another user, new group chat room will be created and the three users will be the starting members of the chat room.
-  * And the new chat room is a group chat room and more members would invited (without creating another chat room).
+- When the login user taps on a chat room, it is considered that the user wants to enter the chat room. It may be a 1:1 chat or group chat.
+  - In this case, the app will deliver `ChatRoomModel` as a prameter to chat room list screen and chat room list screen will open the chat room.
+- When the login user taps on a user, it means, the login user want to chat with the user. It will be only 1:1 chat.
+  - Int his case, the app will deliver `UserModel` as a parameter to chat room list screen and chat room list screen will open the chat room.
+  - When the login user taps on a user, the app must search if the 1:1 chat room exsits.
+    - If yes, enter the chat room,
+    - If not, create 1:1 chat room and put the two as a member of the chat room, and enter.
+- When one of user in 1:1 chat invites another user, new group chat room will be created and the three users will be the starting members of the chat room.
 
-* Any user in the chat room can invite other user unless it is password-locked.
-* The `inviting` means, the invitor will add the `invitee`'s uid into `users` field.
-  * It is same as `joining`. If the user who wants to join the room, he will simply add his uid into `users` field. That's called `joining`.
+  - And the new chat room is a group chat room and more members would invited (without creating another chat room).
 
-* Any one can join the chat room if `/easychat/{id}/{ open: true }`.
-  * 1:1 chat room must not have `{open: false}`.
+- Any user in the chat room can invite other user unless it is password-locked.
+- The `inviting` means, the invitor will add the `invitee`'s uid into `users` field.
 
-* If a chat room has `{open: false}`, no body can join the room except the invitation of master and moderators.
+  - It is same as `joining`. If the user who wants to join the room, he will simply add his uid into `users` field. That's called `joining`.
 
-* group chat room must have `{group: true, open: [boolean]}`. This is for searching purpose in Firestore.
-  * For 1:1 chat room, it must be `{group: false, open: false}`. This is for searching purpose in Firestore.
+- Any one can join the chat room if `/easychat/{id}/{ open: true }`.
+
+  - 1:1 chat room must not have `{open: false}`.
+
+- If a chat room has `{open: false}`, no body can join the room except the invitation of master and moderators.
+
+- group chat room must have `{group: true, open: [boolean]}`. This is for searching purpose in Firestore.
+  - For 1:1 chat room, it must be `{group: false, open: false}`. This is for searching purpose in Firestore.
 
 ## UI Customization
 
@@ -520,7 +495,7 @@ UI can be customized
 
 ### Chat room list
 
-* To list chat rooms, use the code below.
+- To list chat rooms, use the code below.
 
 ```dart
 ChatRoomListView(
@@ -555,7 +530,7 @@ ChatRoomMenuButton(
 
 The Chat Room Menu consists the following:
 
-* `Invite User` This button opens a List View of users that can be invited to the group chat. To use Invite User Button for List View, follow the code:
+- `Invite User` This button opens a List View of users that can be invited to the group chat. To use Invite User Button for List View, follow the code:
 
 ```dart
 InviteUserButton(
@@ -572,7 +547,7 @@ To programatically, invite a user, follow these codes:
 updatedRoom = await EasyChat.instance.inviteUser(room: chatRoomModel, userUid: user.uid);
 ```
 
-* `Settings` This can open the chat room settings. To use the button that opens the settings menu:
+- `Settings` This can open the chat room settings. To use the button that opens the settings menu:
 
 ```dart
 ChatSettingsButton(
@@ -585,11 +560,11 @@ ChatSettingsButton(
 
 See [Chat Room Settings](#chat-room-settings) for more details
 
-* `Members` This is a List View of the members of the group chat. The user can be marked as [Master], [Moderator] and/or [Blocked]. Tapping the user will open a Dialog that may show options for Setting as Moderator, or Blocking on the group.
+- `Members` This is a List View of the members of the group chat. The user can be marked as [Master], [Moderator] and/or [Blocked]. Tapping the user will open a Dialog that may show options for Setting as Moderator, or Blocking on the group.
 
 ## Chat Room Settings
 
-* `Open Chat Room` This setting determines if the group chat is open or private. Open means anybody can join and invite. Private means only the master or moderators can invite. See the code below to use the Default List Tile.
+- `Open Chat Room` This setting determines if the group chat is open or private. Open means anybody can join and invite. Private means only the master or moderators can invite. See the code below to use the Default List Tile.
 
 ```dart
 ChatRoomOpenSettingListTile(
@@ -610,7 +585,7 @@ updatedRoom = await EasyChat.instance.updateRoomSetting(
 );
 ```
 
-* `Maximum Number of User` This number sets the limitation for the number of users in the chat room. If the current number of users is equal or more than this setting, it will not proceed on adding the user.
+- `Maximum Number of User` This number sets the limitation for the number of users in the chat room. If the current number of users is equal or more than this setting, it will not proceed on adding the user.
 
 ```dart
 ChatRoomMaximumUsersSettingListTile(
@@ -631,7 +606,7 @@ updatedRoom = await EasyChat.instance.updateRoomSetting(
 );
 ```
 
-* `Default Chat Room Name` The master can use this setting to set the default name of the Group Chat.
+- `Default Chat Room Name` The master can use this setting to set the default name of the Group Chat.
 
 ```dart
 ChatRoomDefaultRoomNameSettingListTile(
@@ -654,28 +629,26 @@ updatedRoom = await EasyChat.instance.updateRoomSetting(
 
 ## Run the Security Rule Test
 
-* To run all the tests
-  * `% npm run test`
+- To run all the tests
 
-* To run a single test file, run like below.
-  * `npm run mocha -- tests/xxxxx.spec.js`by dev1
+  - `% npm run test`
+
+- To run a single test file, run like below.
+  - `npm run mocha -- tests/xxxxx.spec.js`by dev1
 
 ## Run the Logic Test
 
-* We don't do the `unit test`, `widget test`, or `integration test`. Instead, we do `logic test` that is developed by ourselves for our test purpose.
-  * You can see the test in `TestScreen`.
-
-
+- We don't do the `unit test`, `widget test`, or `integration test`. Instead, we do `logic test` that is developed by ourselves for our test purpose.
+  - You can see the test in `TestScreen`.
 
 # Developers
 
-
 ## How to add the easychat package as subtree into your project as the repo master
 
-* Note only the master need to as it as subtree.
+- Note only the master need to as it as subtree.
 
-* Add `easychat` as `git subtree` like below. Note that this is for package developers only.
-  * Note that, the `easychat` may have its own `subtree` which means, it may have nested subtrees.
+- Add `easychat` as `git subtree` like below. Note that this is for package developers only.
+  - Note that, the `easychat` may have its own `subtree` which means, it may have nested subtrees.
 
 ```sh
 % flutter create [projectName]
@@ -695,14 +668,14 @@ updatedRoom = await EasyChat.instance.updateRoomSetting(
 % ... add more packages ....
 ```
 
-* Add the `easychat` package like below.
+- Add the `easychat` package like below.
 
 ```yaml
-  easychat:
-    path: lib/easychat
+easychat:
+  path: lib/easychat
 ```
 
-* Initialize firebase like below.
+- Initialize firebase like below.
 
 ```dart
 void main() async {
@@ -714,9 +687,9 @@ void main() async {
 }
 ```
 
-* Enable the [easychat security rules](https://github.com/thruthesky/easychat/blob/main/easychat-security-rules/firestore.rules)
+- Enable the [easychat security rules](https://github.com/thruthesky/easychat/blob/main/easychat-security-rules/firestore.rules)
 
-* Use the `TestUi` like below.
+- Use the `TestUi` like below.
 
 ```dart
 class _MyHomePageState extends State<MyHomePage> {
@@ -747,16 +720,12 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 ```
 
-
 ## Deploy
-
 
 - To deploy to functions, run the command below.
   - `npm run deploy`
 
-
 ## Unit Testing
-
 
 ### Testing on Local Emulators
 
@@ -766,35 +735,30 @@ class _MyHomePageState extends State<MyHomePage> {
   - `cd functions/integration_tests && firebase emulators:start`
   - You can open `https://localhost:4000` to see everything works fine especially with the configuration of `*.env` based on the `extension.yaml` settings.
 
-
 ### Testing on real Firebase
 
 - Test files are under `functions/tests`. This test files work with real Firebase. So, you may need provide a Firebase for test use.
+
   - You can run the emulator on the same folder where `functions/firebase.json` resides, and run the tests on the same folder.
 
 - To run the sample test,
+
   - `npm run test:index`
 
-
 - To run all the tests
-  - `npm run test`
 
+  - `npm run test`
 
 - To run a test by specifying a test script,
   - `npm run mocha -- tests/**/*.ts`
   - `npm run mocha -- tests/update_custom_claims/get_set.spec.ts`
   - `npm run mocha -- tests/update_custom_claims/update.spec.ts`
 
-
-
 ## Tips
 
 - If you want, you can add `timestamp` field for listing.
-
-
 
 ## Security rules
 
 - The `/easy-commands` collection should be protected by the admin users.
 - See the [sample security rules](https://github.com/easy-extension/firestore.rules) that you may copy and use for the seurity rules of easy-extension.
-
