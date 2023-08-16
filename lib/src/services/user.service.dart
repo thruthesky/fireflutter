@@ -96,6 +96,21 @@ class UserService {
     return _userCache[uid];
   }
 
+  /// Check if the user is already in cache
+  ///
+  bool isUserCached(String uid) {
+    if (_userCache.containsKey(uid)) return true;
+    return false;
+  }
+
+  /// Get user in cache without getting from firestore
+  ///
+  /// Returns null if the user is not in cache
+  User? getCache(String uid) {
+    if (isUserCached(uid)) return _userCache[uid];
+    return null;
+  }
+
   /// Sign out from Firebase Auth
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
