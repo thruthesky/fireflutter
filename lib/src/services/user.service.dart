@@ -106,7 +106,7 @@ class UserService {
   /// Get user in cache without getting from firestore
   ///
   /// Returns null if the user is not in cache
-  UserModel? getCache(String uid) {
+  User? getCache(String uid) {
     if (isUserCached(uid)) return _userCache[uid];
     return null;
   }

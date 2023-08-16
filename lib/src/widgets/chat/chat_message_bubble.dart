@@ -21,7 +21,6 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
   @override
   Widget build(BuildContext context) {
     final isMyMessage = widget.chatMessage.senderUid == FirebaseAuth.instance.currentUser!.uid;
-    final isMyMessage = widget.chatMessage.senderUid == FirebaseAuth.instance.currentUser!.uid;
     late final MainAxisAlignment bubbleMainAxisAlignment;
     late final CrossAxisAlignment bubbleCrossAxisAlignment;
     late final Color colorOfBubble;
@@ -117,7 +116,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) return const SizedBox();
                           if (snapshot.hasData == false) return const SizedBox();
-                          final user = snapshot.data as UserModel;
+                          final user = snapshot.data as User;
                           return user.displayName.isEmpty == true
                               ? const SizedBox()
                               : Text(
