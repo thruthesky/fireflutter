@@ -11,7 +11,7 @@ class ChatRoomMenuScreen extends StatefulWidget {
   });
 
   final ChatRoomModel room;
-  final UserModel? otherUser;
+  final User? otherUser;
 
   @override
   State<ChatRoomMenuScreen> createState() => _ChatRoomMenuScreenState();
@@ -20,12 +20,10 @@ class ChatRoomMenuScreen extends StatefulWidget {
 class _ChatRoomMenuScreenState extends State<ChatRoomMenuScreen> {
   @override
   Widget build(BuildContext context) {
-    final Stream<DocumentSnapshot<Object?>> roomStream =
-        ChatService.instance.roomDoc(widget.room.id).snapshots();
+    final Stream<DocumentSnapshot<Object?>> roomStream = ChatService.instance.roomDoc(widget.room.id).snapshots();
     return StreamBuilder<DocumentSnapshot<Object?>>(
       stream: roomStream,
-      builder: (BuildContext context,
-          AsyncSnapshot<DocumentSnapshot<Object?>> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot<Object?>> snapshot) {
         if (snapshot.hasError) {
           return Scaffold(
             appBar: AppBar(),
@@ -38,8 +36,7 @@ class _ChatRoomMenuScreenState extends State<ChatRoomMenuScreen> {
             body: const Text('Loading...'),
           );
         }
-        final ChatRoomModel roomSnapshot =
-            ChatRoomModel.fromDocumentSnapshot(snapshot.data!);
+        final ChatRoomModel roomSnapshot = ChatRoomModel.fromDocumentSnapshot(snapshot.data!);
         return Scaffold(
           appBar: AppBar(
             title: const Text('Chat Room'),
@@ -53,14 +50,10 @@ class _ChatRoomMenuScreenState extends State<ChatRoomMenuScreen> {
                     children: [
                       Text(
                         roomSnapshot.name,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20), // TODO customizable ui
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20), // TODO customizable ui
                       ),
-                      if (roomSnapshot.rename[UserService.instance.uid] !=
-                          null) ...[
-                        Text(
-                            '(${roomSnapshot.rename[UserService.instance.uid]})'),
+                      if (roomSnapshot.rename[UserService.instance.uid] != null) ...[
+                        Text('(${roomSnapshot.rename[UserService.instance.uid]})'),
                       ],
                     ],
                   ),
@@ -74,8 +67,7 @@ class _ChatRoomMenuScreenState extends State<ChatRoomMenuScreen> {
               InviteUserButton(
                 room: roomSnapshot,
               ),
-              if (!ChatService.instance.isMaster(
-                  room: roomSnapshot, uid: ChatService.instance.uid)) ...[
+              if (!ChatService.instance.isMaster(room: roomSnapshot, uid: ChatService.instance.uid)) ...[
                 LeaveButton(
                   room: roomSnapshot,
                 ),

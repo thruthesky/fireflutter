@@ -40,7 +40,7 @@ class UserAvatar extends StatefulWidget {
     this.onTap,
   });
 
-  final UserModel user;
+  final User user;
   final double radius;
   final double size;
   final int? badgeNumber;

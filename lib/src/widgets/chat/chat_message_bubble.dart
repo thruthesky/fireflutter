@@ -1,7 +1,7 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/models/chat_message_model.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:url_launcher/url_launcher.dart';
 
 class ChatMessageBubble extends StatefulWidget {
@@ -20,8 +20,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
   bool _showDateTime = false;
   @override
   Widget build(BuildContext context) {
-    final isMyMessage =
-        widget.chatMessage.senderUid == FirebaseAuth.instance.currentUser!.uid;
+    final isMyMessage = widget.chatMessage.senderUid == FirebaseAuth.instance.currentUser!.uid;
     late final MainAxisAlignment bubbleMainAxisAlignment;
     late final CrossAxisAlignment bubbleCrossAxisAlignment;
     late final Color colorOfBubble;
@@ -71,7 +70,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
               if (snapshot.hasData == false) {
                 return const Text('Error - no user');
               }
-              final user = snapshot.data as UserModel;
+              final user = snapshot.data as User;
               return Row(
                 children: [
                   user.photoUrl.isEmpty
@@ -100,16 +99,14 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                       FutureBuilder(
                         future: user,
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) return const Text('');
+                          if (snapshot.connectionState == ConnectionState.waiting) return const Text('');
                           if (snapshot.hasData == false) return const Text('');
-                          final user = snapshot.data as UserModel;
+                          final user = snapshot.data as User;
                           return user.hasPhotoUrl == false
                               ? const SizedBox()
                               : Text(
                                   user.displayName,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
                                 );
                         },
                       ),
@@ -166,11 +163,8 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                             ),
                             Flexible(
                               child: Text(
-                                widget.chatMessage.fileName ??
-                                    widget.chatMessage.fileUrl ??
-                                    'File Attachment',
-                                style: const TextStyle(
-                                    decoration: TextDecoration.underline),
+                                widget.chatMessage.fileName ?? widget.chatMessage.fileUrl ?? 'File Attachment',
+                                style: const TextStyle(decoration: TextDecoration.underline),
                               ),
                             ),
                           ],
@@ -178,13 +172,11 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                       ),
                     ),
                   ),
-                if (widget.chatMessage.imageUrl != null)
-                  Image.network(widget.chatMessage.imageUrl!),
+                if (widget.chatMessage.imageUrl != null) Image.network(widget.chatMessage.imageUrl!),
                 Visibility(
                   visible: _showDateTime,
-                  child: Text(widget.chatMessage.createdAt != null
-                      ? toAgoDate(widget.chatMessage.createdAt!.toDate())
-                      : ''),
+                  child: Text(
+                      widget.chatMessage.createdAt != null ? toAgoDate(widget.chatMessage.createdAt!.toDate()) : ''),
                 )
               ],
             ),

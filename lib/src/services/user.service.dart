@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:fireflutter/fireflutter.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -9,33 +9,34 @@ class UserService {
 
   /// null 이면 아직 로드를 안했다는 뜻이다. 즉, 로딩중이라는 뜻이다.
   ///
-  final BehaviorSubject<UserModel?> userDocumentChanges = BehaviorSubject<UserModel?>.seeded(null);
+  final BehaviorSubject<User?> userDocumentChanges = BehaviorSubject<User?>.seeded(null);
 
   /// Currently login user's uid
   String get uid => FirebaseAuth.instance.currentUser!.uid;
 
   ///
   UserService._() {
-    /// 로그인을 할 때, userModel 초기가 값 지정
+    /// 로그인을 할 때, nullableUser 초기가 값 지정
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user == null) {
-        userModel = null;
+        nullableUser = null;
+        userDocumentChanges.add(nullableUser);
       } else {
-        /// 이 후, 사용자 문서가 업데이트 될 때 마다, userModel 업데이트
+        /// 이 후, 사용자 문서가 업데이트 될 때 마다, nullableUser 업데이트
         UserService.instance.doc.snapshots().listen((documentSnapshot) {
           /// 사용자 문서가 존재하지 않는 경우,
           if (!documentSnapshot.exists || documentSnapshot.data() == null) {
-            userModel = UserModel(uid: '', exists: false);
+            nullableUser = User(uid: '', exists: false);
           } else {
-            userModel = UserModel.fromDocumentSnapshot(documentSnapshot);
+            nullableUser = User.fromDocumentSnapshot(documentSnapshot);
           }
-          userDocumentChanges.add(userModel);
+          userDocumentChanges.add(nullableUser);
         });
       }
     });
   }
 
-  String get collectionName => UserModel.collectionName;
+  String get collectionName => User.collectionName;
 
   get db => FirebaseFirestore.instance;
 
@@ -45,10 +46,10 @@ class UserService {
   /// User document reference of the currently login user
   DocumentReference get doc => cols.doc(uid);
 
-  /// [_userCache] is a memory cache for [UserModel].
+  /// [_userCache] is a memory cache for [User].
   ///
   /// Firestore 에서 한번 불러온 유저는 다시 불러오지 않는다. Offline DB 라서, 속도 향상은 크게 느끼지 못하지만, 접속을 아껴 비용을 절약한다.
-  final Map<String, UserModel> _userCache = {};
+  final Map<String, User> _userCache = {};
 
   /// Current user model
   ///
@@ -60,16 +61,16 @@ class UserService {
   /// 실시간 자동 문서를 화면에 보여주어야 한다면 [UserDoc] 위젯을 사용하면 된다.
   ///
   ///
-  /// 예) EasyUser.instance.userModel?.photoUrl
-  UserModel? userModel;
+  /// 예) EasyUser.instance.nullableUser?.photoUrl
+  User? nullableUser;
 
-  /// userModel 의 getter 로 null operator 가 강제 적용된 것이다. 즉, userModel 이 null 이면
+  /// nullableUser 의 getter 로 null operator 가 강제 적용된 것이다. 즉, nullableUser 이 null 이면
   /// Null check operator used on a null value 에러가 발생한다. 만약, 이 에러를 피하려면, 그냥
-  /// userModel 을 쓰면 된다.
+  /// nullableUser 을 쓰면 된다.
   ///
-  UserModel get user => userModel!;
+  User get user => nullableUser!;
 
-  String? get photoUrl => userModel?.photoUrl;
+  String? get photoUrl => nullableUser?.photoUrl;
 
   /// 미리 한번 호출 해서, Singleton 을 초기화 해 둔다. 그래야 user 를 사용 할 때, 에러가 발생하지 않는다.
   init() {
@@ -80,16 +81,16 @@ class UserService {
   ///
   /// It does memory cache.
   /// If the user is already cached, it returns the cached value.
-  /// Otherwise, it fetches from Firestore and returns the UserModel.
+  /// Otherwise, it fetches from Firestore and returns the User.
   /// If the user does not exist, it returns null.
   ///
   /// [reload] is a flag to force reload from Firestore.
-  Future<UserModel?> get(String uid, [bool reload = false]) async {
-    /// 캐시되어져 있으면, 그 캐시된 값(UserModel)을 리턴
+  Future<User?> get(String uid, [bool reload = false]) async {
+    /// 캐시되어져 있으면, 그 캐시된 값(User)을 리턴
     if (reload == false && _userCache.containsKey(uid)) return _userCache[uid];
 
-    /// 아니면, Firestore 에서 불러와서 UserModel 을 만들어 리턴
-    final u = await UserModel.get(uid);
+    /// 아니면, Firestore 에서 불러와서 User 을 만들어 리턴
+    final u = await User.get(uid);
     if (u == null) return null;
     _userCache[uid] = u;
     return _userCache[uid];
@@ -110,21 +111,21 @@ class UserService {
 
     final u = FirebaseAuth.instance.currentUser!;
 
-    final model = UserModel(
+    final model = User(
       uid: u.uid,
       email: u.email ?? '',
       displayName: u.displayName ?? '',
       photoUrl: u.photoURL ?? '',
       createdAt: null,
     );
-    userModel = await model.create();
+    nullableUser = await model.create();
   }
 
   /// Login user's document update
   ///
   /// Update a user document under /users/{uid} for the login user.
   ///
-  /// This automatically updates the [userModel] value.
+  /// This automatically updates the [nullableUser] value.
   Future<void> update({
     String? name,
     String? displayName,
@@ -136,11 +137,11 @@ class UserService {
     String? field,
     dynamic value,
   }) async {
-    if (userModel == null) {
+    if (nullableUser == null) {
       throw Exception(Code.notLoggedIn);
     }
 
-    userModel = await userModel!.update(
+    nullableUser = await nullableUser!.update(
       name: name,
       displayName: displayName,
       photoUrl: photoUrl,

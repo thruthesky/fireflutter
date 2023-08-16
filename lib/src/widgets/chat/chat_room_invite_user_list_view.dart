@@ -31,7 +31,7 @@ class InviteUserListView extends StatelessWidget {
     return FirestoreListView(
       query: query,
       itemBuilder: (context, snapshot) {
-        final user = UserModel.fromDocumentSnapshot(snapshot);
+        final user = User.fromDocumentSnapshot(snapshot);
         if (exemptedUsers.contains(user.uid)) {
           return const SizedBox();
         } else {

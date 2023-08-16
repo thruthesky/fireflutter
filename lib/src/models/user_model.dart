@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UserModel {
+class User {
   static const String collectionName = 'users';
 
   final String uid;
@@ -31,7 +31,7 @@ class UserModel {
   /// 사용자 문서가 존재하지 않는 경우, 이 값이 false 이다.
   final bool exists;
 
-  UserModel({
+  User({
     required this.uid,
     this.displayName = '',
     this.name = '',
@@ -44,16 +44,16 @@ class UserModel {
     this.exists = true,
   }) : createdAtDateTime = createdAt?.toDate();
 
-  factory UserModel.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
-    return UserModel.fromMap(
+  factory User.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
+    return User.fromMap(
       map: documentSnapshot.data() as Map<String, dynamic>,
       id: documentSnapshot.id,
     );
   }
 
-  factory UserModel.fromMap({required Map<String, dynamic> map, required String id}) {
+  factory User.fromMap({required Map<String, dynamic> map, required String id}) {
     final displayName = map['displayName'] ?? '';
-    return UserModel(
+    return User(
       uid: id,
       displayName: displayName == '' ? id.toUpperCase().substring(0, 2) : displayName,
       name: map['name'] ?? '',
@@ -82,31 +82,31 @@ class UserModel {
 
   @override
   String toString() =>
-      '''UserModel(uid: $uid, name: $name, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, phoneNumber: $phoneNumber, email: $email, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists)''';
+      '''User(uid: $uid, name: $name, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, phoneNumber: $phoneNumber, email: $email, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists)''';
 
   /// 사용자 문서를 읽어온다.
   ///
   /// 사용자 문서가 존재하지 않는 경우, null 을 리턴한다.
-  static Future<UserModel?> get(String uid) async {
+  static Future<User?> get(String uid) async {
     final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(uid).get();
     if (!snapshot.exists) {
       return null;
     }
-    return UserModel.fromDocumentSnapshot(snapshot);
+    return User.fromDocumentSnapshot(snapshot);
   }
 
   /// 사용자 문서를 생성한다.
   ///
   /// 사용자 문서가 이미 존재하는 경우, 문서를 덮어쓴다.
   /// 참고: README.md
-  Future<UserModel> create() async {
-    await FirebaseFirestore.instance.collection(UserModel.collectionName).doc(uid).set(toMap());
+  Future<User> create() async {
+    await FirebaseFirestore.instance.collection(User.collectionName).doc(uid).set(toMap());
 
     return (await get(uid))!;
   }
 
   /// Update the user document under /users/{uid} for the login user.
-  Future<UserModel> update({
+  Future<User> update({
     String? name,
     String? displayName,
     String? photoUrl,

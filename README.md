@@ -18,15 +18,15 @@ A free, open source, complete, rapid development package for creating Social app
 
 ### UserService
 
-`UserService.instance.userModel` is null
+`UserService.instance.nullableUser` is null
 - when the user didn't log in
 - or when the user is logged in and has document, but the `UserService` has not read the user document, yet. In this case it simply needs to wait sometime.
 
-`UserService.instance.userModel.exists` is false if the user has logged in but no document. In this case, the `documentNotExistBuilder` of `UserDoc` will be called.
+`UserService.instance.nullableUser.exists` is false if the user has logged in but no document. In this case, the `documentNotExistBuilder` of `UserDoc` will be called.
 
 So, the lifecyle will be the following when the app users `UserDoc`.
-- `UserService.instance.userModel` will be null on app boot
-- `UserService.instance.userModel` will have an instance of `UserModel`
+- `UserService.instance.nullableUser` will be null on app boot
+- `UserService.instance.nullableUser` will have an instance of `User`
   - If the user document does not exists, `exists` will be `false` causing `documentNotExistsBuilder` to be called.
   - If the user document exsist, then it will have right data and `builder` will be called.
 

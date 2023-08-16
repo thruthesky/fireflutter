@@ -139,7 +139,7 @@ class ChatRoomListTileName extends StatelessWidget {
               if (snapshot.data == null) {
                 return const SizedBox.shrink();
               }
-              final user = snapshot.data as UserModel;
+              final user = snapshot.data as User;
               return _text(user.displayName);
             },
             future: UserService.instance.get(room.otherUserUid));

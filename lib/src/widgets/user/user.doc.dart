@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 ///
 ///
 /// [documentNotExistBuilder] 사용자가 로그인이 되어있으나, 사용자 문서가 null 인 경우이다.
-/// 예를 들면, 로그인 직후, UserService.instance.userModel 정보가 읽히기 전에 호출되거나, 또는 실제로
+/// 예를 들면, 로그인 직후, UserService.instance.nullableUser 정보가 읽히기 전에 호출되거나, 또는 실제로
 /// 사용자 문서가 존재하지 않는 경우 null 이 되어 이 함수가 호출된다.
 ///
 /// [notLoggedInBuilder] 로그인이 되어있지 않을 때, 빌드할 위젯. 콜백 함수가 지정되지 않으면 빈 위젯을 빌드한다.
@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 ///
 class UserDoc extends StatelessWidget {
   const UserDoc({super.key, required this.builder, this.notLoggedInBuilder, this.documentNotExistBuilder});
-  final Widget Function(UserModel) builder;
+  final Widget Function(User) builder;
   final Widget Function()? notLoggedInBuilder;
   final Widget Function()? documentNotExistBuilder;
 
@@ -33,7 +33,7 @@ class UserDoc extends StatelessWidget {
         }
       }
 
-      return StreamBuilder<UserModel?>(
+      return StreamBuilder<User?>(
         stream: UserService.instance.userDocumentChanges,
         builder: (_, snapshot) {
           final user = snapshot.data;

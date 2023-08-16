@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/models/chat_room_model.dart';
@@ -19,16 +19,13 @@ class ChatService {
   String get uid => FirebaseAuth.instance.currentUser!.uid;
   bool get loggedIn => FirebaseAuth.instance.currentUser != null;
 
-  CollectionReference get chatCol =>
-      FirebaseFirestore.instance.collection('easychat');
-  CollectionReference messageCol(String roomId) =>
-      chatCol.doc(roomId).collection('messages');
+  CollectionReference get chatCol => FirebaseFirestore.instance.collection('easychat');
+  CollectionReference messageCol(String roomId) => chatCol.doc(roomId).collection('messages');
 
   DocumentReference roomRef(String roomId) => chatCol.doc(roomId);
 
-  DocumentReference get myDoc => FirebaseFirestore.instance
-      .collection('users')
-      .doc(FirebaseAuth.instance.currentUser!.uid);
+  DocumentReference get myDoc =>
+      FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid);
   DocumentReference roomDoc(String roomId) => chatCol.doc(roomId);
 
   Function(BuildContext, ChatRoomModel)? onChatRoomFileUpload;
@@ -88,8 +85,7 @@ class ChatService {
     );
   }
 
-  Future<void> leaveRoom(
-      {required ChatRoomModel room, Function()? callback}) async {
+  Future<void> leaveRoom({required ChatRoomModel room, Function()? callback}) async {
     await roomDoc(room.id).update({
       'moderators': FieldValue.arrayRemove([uid]),
       'users': FieldValue.arrayRemove([uid])
@@ -97,10 +93,7 @@ class ChatService {
     callback?.call();
   }
 
-  Future<void> removeUserFromRoom(
-      {required ChatRoomModel room,
-      required String uid,
-      Function()? callback}) async {
+  Future<void> removeUserFromRoom({required ChatRoomModel room, required String uid, Function()? callback}) async {
     await roomDoc(room.id).update({
       'moderators': FieldValue.arrayRemove([uid]),
       'users': FieldValue.arrayRemove([uid])
@@ -108,40 +101,28 @@ class ChatService {
     callback?.call();
   }
 
-  Future<void> setUserAsModerator(
-      {required ChatRoomModel room,
-      required String uid,
-      Function()? callback}) async {
+  Future<void> setUserAsModerator({required ChatRoomModel room, required String uid, Function()? callback}) async {
     await roomDoc(room.id).update({
       'moderators': FieldValue.arrayUnion([uid])
     });
     callback?.call();
   }
 
-  Future<void> removeUserAsModerator(
-      {required ChatRoomModel room,
-      required String uid,
-      Function()? callback}) async {
+  Future<void> removeUserAsModerator({required ChatRoomModel room, required String uid, Function()? callback}) async {
     await roomDoc(room.id).update({
       'moderators': FieldValue.arrayRemove([uid])
     });
     callback?.call();
   }
 
-  Future<void> addToBlockedUsers(
-      {required ChatRoomModel room,
-      required String userUid,
-      Function()? callback}) async {
+  Future<void> addToBlockedUsers({required ChatRoomModel room, required String userUid, Function()? callback}) async {
     await roomDoc(room.id).update({
       'blockedUsers': FieldValue.arrayUnion([userUid])
     });
     callback?.call();
   }
 
-  Future<void> removeToBlockedUsers(
-      {required ChatRoomModel room,
-      required String uid,
-      Function()? callback}) async {
+  Future<void> removeToBlockedUsers({required ChatRoomModel room, required String uid, Function()? callback}) async {
     await roomDoc(room.id).update({
       'blockedUsers': FieldValue.arrayRemove([uid])
     });
@@ -184,20 +165,17 @@ class ChatService {
     return false;
   }
 
-  bool canSetUserAsModerator(
-      {required ChatRoomModel room, required String userUid}) {
+  bool canSetUserAsModerator({required ChatRoomModel room, required String userUid}) {
     // If the current user is not a master, don't allow
     if (!isMaster(room: room, uid: uid)) return false;
 
     // If the user to set as moderator is not a master, and the user is not a moderator yet, allow
-    if (!isMaster(room: room, uid: userUid) &&
-        !isModerator(room: room, uid: userUid)) return true;
+    if (!isMaster(room: room, uid: userUid) && !isModerator(room: room, uid: userUid)) return true;
 
     return false;
   }
 
-  bool canRemoveUserAsModerator(
-      {required ChatRoomModel room, required String userUid}) {
+  bool canRemoveUserAsModerator({required ChatRoomModel room, required String userUid}) {
     // If the current user is not a master, don't allow
     if (!isMaster(room: room, uid: uid)) return false;
 
@@ -207,8 +185,7 @@ class ChatService {
     return false;
   }
 
-  bool canBlockUserFromGroup(
-      {required ChatRoomModel room, required String userUid}) {
+  bool canBlockUserFromGroup({required ChatRoomModel room, required String userUid}) {
     // If the current user is not a admin, don't allow
     if (!isAdmin(room)) return false;
 
@@ -221,8 +198,7 @@ class ChatService {
     return false;
   }
 
-  bool canUnblockUserFromGroup(
-      {required ChatRoomModel room, required String userUid}) {
+  bool canUnblockUserFromGroup({required ChatRoomModel room, required String userUid}) {
     // If the current user is not a admin, don't allow
     if (!isAdmin(room)) return false;
 
@@ -232,10 +208,7 @@ class ChatService {
     return false;
   }
 
-  Future<void> updateRoomSetting(
-      {required ChatRoomModel room,
-      required String setting,
-      required dynamic value}) async {
+  Future<void> updateRoomSetting({required ChatRoomModel room, required String setting, required dynamic value}) async {
     await roomDoc(room.id).set({setting: value}, SetOptions(merge: true));
   }
 
@@ -261,8 +234,7 @@ class ChatService {
     updateRoomNewMessagesDetails(room: room, lastMessage: chatMessage);
   }
 
-  Future<void> updateRoomNewMessagesDetails(
-      {required ChatRoomModel room, Map<String, Object>? lastMessage}) async {
+  Future<void> updateRoomNewMessagesDetails({required ChatRoomModel room, Map<String, Object>? lastMessage}) async {
     Map<Object, Object> updateNoOfMessages = {};
     for (var uid in room.users) {
       updateNoOfMessages[uid] = FieldValue.increment(1);
@@ -285,7 +257,7 @@ class ChatService {
     );
   }
 
-  Future<UserModel?> getOtherUserFromSingleChatRoom(ChatRoomModel room) async {
+  Future<User?> getOtherUserFromSingleChatRoom(ChatRoomModel room) async {
     final otherUserUid = getOtherUserUid(room.users);
     return await UserService.instance.get(otherUserUid);
   }
@@ -298,10 +270,9 @@ class ChatService {
   showChatRoom({
     required BuildContext context,
     ChatRoomModel? room,
-    UserModel? user,
+    User? user,
   }) async {
-    assert(
-        room != null || user != null, "One of room or user must be not null");
+    assert(room != null || user != null, "One of room or user must be not null");
 
     // If it is 1:1 chat, get the chat room. (or create if it does not exist)
     if (user != null) {
@@ -323,8 +294,7 @@ class ChatService {
   /// File upload
   ///
   /// This method is invoked when user press button to upload a file.
-  onPressedFileUploadIcon(
-      {required BuildContext context, required ChatRoomModel room}) async {
+  onPressedFileUploadIcon({required BuildContext context, required ChatRoomModel room}) async {
     if (onChatRoomFileUpload != null) {
       await onChatRoomFileUpload!(context, room);
       return;
@@ -332,23 +302,20 @@ class ChatService {
     final re = await showModalBottomSheet<MediaSource>(
         context: context,
         builder: (_) => ChatRoomFileUploadBottomSheet(
-            room:
-                room)); // For confirmation () removed Image source because we dont have MediaSource
+            room: room)); // For confirmation () removed Image source because we dont have MediaSource
     if (re == null) return; // double check
 
     debugPrint("re: $re");
 
     if (re == MediaSource.gallery || re == MediaSource.camera) {
-      ImageSource imageSource =
-          re == MediaSource.gallery ? ImageSource.gallery : ImageSource.camera;
+      ImageSource imageSource = re == MediaSource.gallery ? ImageSource.gallery : ImageSource.camera;
       onPressedPhotoOption(room: room, imageSource: imageSource);
     } else if (re == MediaSource.file) {
       onPressedChooseFileUploadOption(room: room);
     }
   }
 
-  onPressedPhotoOption(
-      {required ChatRoomModel room, required ImageSource imageSource}) async {
+  onPressedPhotoOption({required ChatRoomModel room, required ImageSource imageSource}) async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: imageSource);
     if (image == null) {
@@ -366,16 +333,10 @@ class ChatService {
     if (result == null) return;
     pickedFile = result.files.first;
     final file = File(pickedFile.path!);
-    final storageName = sanitizeFilename(
-        '${DateTime.now().millisecondsSinceEpoch}-${pickedFile.name}',
-        replacement: '-');
+    final storageName =
+        sanitizeFilename('${DateTime.now().millisecondsSinceEpoch}-${pickedFile.name}', replacement: '-');
     final fileName = sanitizeFilename(pickedFile.name, replacement: '-');
-    onFileUpload(
-        room: room,
-        file: file,
-        isImage: false,
-        fileStorageName: storageName,
-        fileName: fileName);
+    onFileUpload(room: room, file: file, isImage: false, fileStorageName: storageName, fileName: fileName);
   }
 
   onFileUpload({
@@ -386,15 +347,13 @@ class ChatService {
     String? fileStorageName,
   }) async {
     final storageRef = FirebaseStorage.instance.ref();
-    final fileRef = storageRef
-        .child("ChatService/${ChatService.instance.uid}/$fileStorageName");
+    final fileRef = storageRef.child("ChatService/${ChatService.instance.uid}/$fileStorageName");
     try {
       await fileRef.putFile(file);
       final url = await fileRef.getDownloadURL();
       isImage
           ? ChatService.instance.sendMessage(room: room, imageUrl: url)
-          : ChatService.instance
-              .sendMessage(room: room, fileUrl: url, fileName: fileName);
+          : ChatService.instance.sendMessage(room: room, fileUrl: url, fileName: fileName);
     } on FirebaseException catch (e) {
       debugPrint('$e');
     }

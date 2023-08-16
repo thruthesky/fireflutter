@@ -29,7 +29,7 @@ class ChatRoomAppBarTitle extends StatelessWidget {
           if (snapshot.hasData == false) {
             return const Text('Error - no user');
           }
-          final user = snapshot.data as UserModel;
+          final user = snapshot.data as User;
           return Row(
             children: [
               user.photoUrl.isEmpty
