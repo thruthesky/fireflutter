@@ -110,7 +110,7 @@ service cloud.firestore {
         ||
         isLeaving()
         ||
-        ( isRoomUser() && onlyUpdating(['lastMessage', 'noOfNewMessages']) )
+        ( isRoomUser() && onlyUpdating(['lastMessage', 'noOfNewMessages', 'rename']) )
         ||
         ( isOpen() && ((isRoomUser() && onlyAddingOneElement('users')) || isJoining()) )
       ;

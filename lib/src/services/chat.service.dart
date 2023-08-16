@@ -212,7 +212,20 @@ class ChatService {
     await roomDoc(room.id).set({setting: value}, SetOptions(merge: true));
   }
 
-  Future<void> renameRoom() async {}
+  /// Renames the room on own side. This does not update the default chat room name.
+  ///
+  Future<void> renameRoom({required String updatedName, required Room room}) async {
+    if (updatedName.isEmpty) {
+      // TODO review if correct
+      await roomDoc(room.id).update({"rename.${UserService.instance.uid}": FieldValue.delete()});
+      return;
+    }
+    await ChatService.instance.updateRoomSetting(
+      room: room,
+      setting: 'rename',
+      value: {UserService.instance.uid: updatedName},
+    );
+  }
 
   Future<void> sendMessage({
     required Room room,
