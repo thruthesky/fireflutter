@@ -1,13 +1,12 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/widgets/user/user.avatar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
 import 'package:image_picker/image_picker.dart';
 
-/// UserAvatar
+/// UserProfileAvatar
 ///
 /// Displays the user's avatar.
 ///
@@ -24,8 +23,8 @@ import 'package:image_picker/image_picker.dart';
 /// Note, that this avatar widget uses the [AdvancedAvatar] widget from
 /// the [flutter_advanced_avatar](https://pub.dev/packages/flutter_advanced_avatar) package.
 /// See the examples from the github: https://github.com/alex-melnyk/flutter_advanced_avatar/blob/master/example/lib/main.dart
-class UserAvatar extends StatefulWidget {
-  const UserAvatar({
+class UserProfileAvatar extends StatefulWidget {
+  const UserProfileAvatar({
     super.key,
     required this.user,
     this.size = 100,
@@ -53,10 +52,10 @@ class UserAvatar extends StatefulWidget {
   final VoidCallback? onTap;
 
   @override
-  State<UserAvatar> createState() => _UserAvatarState();
+  State<UserProfileAvatar> createState() => _UserAvatarState();
 }
 
-class _UserAvatarState extends State<UserAvatar> {
+class _UserAvatarState extends State<UserProfileAvatar> {
   double? progress;
 
   @override
@@ -93,62 +92,7 @@ class _UserAvatarState extends State<UserAvatar> {
       },
       child: Stack(
         children: [
-          AdvancedAvatar(
-            size: widget.size,
-
-            // statusSize: 16,
-            // statusColor: Colors.green,
-            name: widget.user.displayName.isNotEmpty ? widget.user.displayName : widget.user.uid.substring(0, 4),
-            style: TextStyle(
-              fontSize: widget.size / 3,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
-            ),
-            image: widget.user.photoUrl.isEmpty ? null : CachedNetworkImageProvider(widget.user.photoUrl),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: widget.backgroundColor ?? Theme.of(context).colorScheme.secondary,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black54,
-                  blurRadius: widget.shadowBlurRadius,
-                ),
-              ],
-            ),
-            child: widget.defaultIcon ??
-                Icon(
-                  Icons.person,
-                  size: widget.size / 1.5,
-                  color: Colors.white,
-                ),
-            children: [
-              if (widget.badgeNumber != null)
-                AlignCircular(
-                  alignment: Alignment.topRight,
-                  child: Container(
-                    width: 20,
-                    height: 20,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 0.5,
-                      ),
-                      color: Colors.red,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Text(
-                      widget.badgeNumber.toString(),
-                      style: const TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
+          UserAvatar(user: widget.user),
           uploadProgressIndicator(),
           if (widget.upload)
             Positioned(
