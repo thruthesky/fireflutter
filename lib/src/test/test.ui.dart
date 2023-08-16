@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/models/room.dart';
 import 'package:flutter/material.dart';
 
 class TestUi extends StatefulWidget {
@@ -81,8 +81,7 @@ class _TestScreenState extends State<TestUi> {
         ),
         ElevatedButton(
           onPressed: testAll,
-          child: Text('Run all tests',
-              style: TextStyle(color: Colors.red.shade800)),
+          child: Text('Run all tests', style: TextStyle(color: Colors.red.shade800)),
         ),
         ElevatedButton(
           onPressed: testNoOfNewMessage,
@@ -127,8 +126,7 @@ class _TestScreenState extends State<TestUi> {
 
   testCreateGroupChatRoom() async {
     await Test.login(Test.apple);
-    final groupRoom =
-        await ChatService.instance.createChatRoom(roomName: 'Group Room 1');
+    final groupRoom = await ChatService.instance.createChatRoom(roomName: 'Group Room 1');
     test(groupRoom.name == 'Group Room 1', 'Must be Group Room 1');
     test(groupRoom.group == true, 'Must be a group chat room');
     test(groupRoom.open == false, 'Must be a private group chat room');
@@ -143,8 +141,7 @@ class _TestScreenState extends State<TestUi> {
 
   testCreateSingleChatRoom() async {
     await Test.login(Test.apple);
-    final room = await ChatService.instance.createChatRoom(
-        roomName: 'Single Room 2', otherUserUid: Test.banana.uid);
+    final room = await ChatService.instance.createChatRoom(roomName: 'Single Room 2', otherUserUid: Test.banana.uid);
     test(room.name == 'Single Room 2', 'Must be Single Room 2');
     test(room.group == false, 'Must be a single chat room');
     test(room.open == false, 'Must be a private a chat room');
@@ -186,8 +183,7 @@ class _TestScreenState extends State<TestUi> {
     await Test.login(Test.apple);
 
     // Get the room
-    final room =
-        await ChatService.instance.getOrCreateSingleChatRoom(Test.banana.uid);
+    final room = await ChatService.instance.getOrCreateSingleChatRoom(Test.banana.uid);
 
     await ChatService.instance.roomRef(room.id).update({'noOfNewMessages': {}});
 
@@ -198,8 +194,7 @@ class _TestScreenState extends State<TestUi> {
     );
 
     // Get the no of new messages.
-    final roomAfter =
-        await ChatService.instance.getOrCreateSingleChatRoom(Test.banana.uid);
+    final roomAfter = await ChatService.instance.getOrCreateSingleChatRoom(Test.banana.uid);
 
     test(roomAfter.noOfNewMessages[Test.banana.uid] == 1,
         "noOfNewMessages of Banana must be 1. Actual value: ${roomAfter.noOfNewMessages[Test.banana.uid]}");
@@ -211,8 +206,7 @@ class _TestScreenState extends State<TestUi> {
     );
 
     // Get the no of new messages.
-    final roomAfter2 =
-        await ChatService.instance.getOrCreateSingleChatRoom(Test.banana.uid);
+    final roomAfter2 = await ChatService.instance.getOrCreateSingleChatRoom(Test.banana.uid);
 
     test(roomAfter2.noOfNewMessages[Test.banana.uid] == 2,
         "noOfNewMessages of Banana must be 2. Actual value: ${roomAfter.noOfNewMessages[Test.banana.uid]}");
@@ -228,12 +222,10 @@ class _TestScreenState extends State<TestUi> {
     await Test.login(Test.apple);
 
     // Get the room
-    ChatRoomModel room =
-        await ChatService.instance.createChatRoom(roomName: 'Testing Room');
+    Room room = await ChatService.instance.createChatRoom(roomName: 'Testing Room');
 
     // update the setting
-    await ChatService.instance
-        .updateRoomSetting(room: room, setting: 'maximumNoOfUsers', value: 3);
+    await ChatService.instance.updateRoomSetting(room: room, setting: 'maximumNoOfUsers', value: 3);
 
     // add the users
     await room.invite(Test.banana.uid);

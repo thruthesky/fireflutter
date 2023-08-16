@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/models/room.dart';
 import 'package:flutter/material.dart';
 
 /// Display users who are not inside the room
@@ -16,7 +16,7 @@ class InviteUserListView extends StatelessWidget {
     this.onInvite,
   });
 
-  final ChatRoomModel room;
+  final Room room;
   final String searchText;
   final List<String> exemptedUsers;
   final Function(String invitedUserUid)? onInvite;

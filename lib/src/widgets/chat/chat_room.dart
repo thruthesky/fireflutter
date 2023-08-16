@@ -1,4 +1,4 @@
-import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/models/room.dart';
 import 'package:fireflutter/src/widgets/chat/chat_message_box.dart';
 import 'package:fireflutter/src/widgets/chat/chat_messages_list_view.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +11,7 @@ class ChatRoom extends StatelessWidget {
     required this.room,
   });
 
-  final ChatRoomModel room;
+  final Room room;
 
   @override
   Widget build(BuildContext context) {

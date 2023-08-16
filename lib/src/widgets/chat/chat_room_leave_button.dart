@@ -1,4 +1,4 @@
-import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/models/room.dart';
 import 'package:fireflutter/src/services/chat.service.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +8,7 @@ class LeaveButton extends StatelessWidget {
     required this.room,
   });
 
-  final ChatRoomModel room;
+  final Room room;
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +20,7 @@ class LeaveButton extends StatelessWidget {
           builder: (context) {
             return AlertDialog(
               title: const Text("Leaving Room"),
-              content:
-                  const Text("Are you sure you want to leave the group chat?"),
+              content: const Text("Are you sure you want to leave the group chat?"),
               actions: [
                 TextButton(
                   child: const Text("Leave"),

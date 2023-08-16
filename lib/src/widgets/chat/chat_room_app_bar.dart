@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/models/room.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -9,7 +9,7 @@ class ChatRoomAppBar extends StatefulWidget implements PreferredSizeWidget {
     required this.room,
   });
 
-  final ChatRoomModel room;
+  final Room room;
 
   @override
   createState() => ChatRoomAppBarState();
@@ -21,8 +21,7 @@ class ChatRoomAppBar extends StatefulWidget implements PreferredSizeWidget {
 class ChatRoomAppBarState extends State<ChatRoomAppBar> {
   @override
   Widget build(BuildContext context) {
-    final Stream<DocumentSnapshot> roomStream =
-        ChatService.instance.roomDoc(widget.room.id).snapshots();
+    final Stream<DocumentSnapshot> roomStream = ChatService.instance.roomDoc(widget.room.id).snapshots();
     return StreamBuilder<DocumentSnapshot>(
       stream: roomStream,
       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -38,8 +37,7 @@ class ChatRoomAppBarState extends State<ChatRoomAppBar> {
             title: const Text("Loading..."),
           );
         }
-        final ChatRoomModel roomSnapshot =
-            ChatRoomModel.fromDocumentSnapshot(snapshot.data!);
+        final Room roomSnapshot = Room.fromDocumentSnapshot(snapshot.data!);
         return AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: ChatRoomAppBarTitle(room: roomSnapshot),

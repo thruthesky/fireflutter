@@ -1,4 +1,4 @@
-import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/models/room.dart';
 import 'package:fireflutter/src/widgets/chat/chat_room_search_user_invite.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +8,7 @@ class InviteUserButton extends StatefulWidget {
     required this.room,
   });
 
-  final ChatRoomModel room;
+  final Room room;
 
   @override
   State<InviteUserButton> createState() => _InviteUserButtonState();

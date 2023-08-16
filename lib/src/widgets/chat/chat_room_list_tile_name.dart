@@ -1,5 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/models/room.dart';
 import 'package:flutter/material.dart';
 
 /// ChatRoomListTileName
@@ -23,7 +23,7 @@ class ChatRoomListTileName extends StatelessWidget {
     this.textWidthBasis,
     this.selectionColor,
   }) : textSpan = null;
-  final ChatRoomModel room;
+  final Room room;
 
   /// The text to display as a [InlineSpan].
   ///

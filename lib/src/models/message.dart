@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ChatMessageModel {
+class Message {
   final String id;
   final String? text;
   final String? imageUrl;
@@ -9,7 +9,7 @@ class ChatMessageModel {
   final String? fileUrl;
   final String? fileName;
 
-  ChatMessageModel({
+  Message({
     required this.id,
     required this.text,
     required this.imageUrl,
@@ -19,16 +19,12 @@ class ChatMessageModel {
     required this.fileName,
   });
 
-  factory ChatMessageModel.fromDocumentSnapshot(
-      DocumentSnapshot documentSnapshot) {
-    return ChatMessageModel.fromMap(
-        map: documentSnapshot.data() as Map<String, dynamic>,
-        id: documentSnapshot.id);
+  factory Message.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
+    return Message.fromMap(map: documentSnapshot.data() as Map<String, dynamic>, id: documentSnapshot.id);
   }
 
-  factory ChatMessageModel.fromMap(
-      {required Map<String, dynamic> map, required id}) {
-    return ChatMessageModel(
+  factory Message.fromMap({required Map<String, dynamic> map, required id}) {
+    return Message(
       id: id,
       text: map['text'],
       imageUrl: map['imageUrl'],
@@ -53,5 +49,5 @@ class ChatMessageModel {
 
   @override
   String toString() =>
-      'ChatMessageModel(id: $id, text: $text,  imageUrl: $imageUrl, senderUid: $senderUid, createdAt: $createdAt, fileUrl: $fileUrl, fileName: $fileName,)';
+      'Message(id: $id, text: $text,  imageUrl: $imageUrl, senderUid: $senderUid, createdAt: $createdAt, fileUrl: $fileUrl, fileName: $fileName,)';
 }

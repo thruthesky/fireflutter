@@ -1,5 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/models/chat_message_model.dart';
+import 'package:fireflutter/src/models/message.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:url_launcher/url_launcher.dart';
@@ -10,7 +10,7 @@ class ChatMessageBubble extends StatefulWidget {
     required this.chatMessage,
   });
 
-  final ChatMessageModel chatMessage;
+  final Message chatMessage;
 
   @override
   State<ChatMessageBubble> createState() => _ChatMessageBubbleState();

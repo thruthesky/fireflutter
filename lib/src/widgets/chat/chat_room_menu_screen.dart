@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/models/room.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomMenuScreen extends StatefulWidget {
@@ -10,7 +10,7 @@ class ChatRoomMenuScreen extends StatefulWidget {
     this.otherUser,
   });
 
-  final ChatRoomModel room;
+  final Room room;
   final User? otherUser;
 
   @override
@@ -36,7 +36,7 @@ class _ChatRoomMenuScreenState extends State<ChatRoomMenuScreen> {
             body: const Text('Loading...'),
           );
         }
-        final ChatRoomModel roomSnapshot = ChatRoomModel.fromDocumentSnapshot(snapshot.data!);
+        final Room roomSnapshot = Room.fromDocumentSnapshot(snapshot.data!);
         return Scaffold(
           appBar: AppBar(
             title: const Text('Chat Room'),

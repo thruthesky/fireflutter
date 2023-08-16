@@ -1,5 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/models/room.dart';
 import 'package:flutter/material.dart';
 
 class SearchUserInvite extends StatefulWidget {
@@ -8,7 +8,7 @@ class SearchUserInvite extends StatefulWidget {
     required this.room,
   });
 
-  final ChatRoomModel room;
+  final Room room;
   @override
   State<SearchUserInvite> createState() => _SearchUserInviteState();
 }

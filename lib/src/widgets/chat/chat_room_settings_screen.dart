@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/models/room.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomSettingsScreen extends StatefulWidget {
@@ -9,7 +9,7 @@ class ChatRoomSettingsScreen extends StatefulWidget {
     required this.room,
   });
 
-  final ChatRoomModel room;
+  final Room room;
 
   @override
   State<ChatRoomSettingsScreen> createState() => _ChatRoomSettingsScreenState();
@@ -18,8 +18,7 @@ class ChatRoomSettingsScreen extends StatefulWidget {
 class _ChatRoomSettingsScreenState extends State<ChatRoomSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    final Stream<DocumentSnapshot> roomStream =
-        ChatService.instance.roomDoc(widget.room.id).snapshots();
+    final Stream<DocumentSnapshot> roomStream = ChatService.instance.roomDoc(widget.room.id).snapshots();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -33,12 +32,10 @@ class _ChatRoomSettingsScreenState extends State<ChatRoomSettingsScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Text("Loading...");
           }
-          final ChatRoomModel roomSnapshot =
-              ChatRoomModel.fromDocumentSnapshot(snapshot.data!);
+          final Room roomSnapshot = Room.fromDocumentSnapshot(snapshot.data!);
           return ListView(
             children: [
-              if (ChatService.instance.isMaster(
-                      room: roomSnapshot, uid: ChatService.instance.uid) &&
+              if (ChatService.instance.isMaster(room: roomSnapshot, uid: ChatService.instance.uid) &&
                   widget.room.group) ...[
                 ChatRoomOpenSettingListTile(room: roomSnapshot),
                 ChatRoomMaximumUsersSettingListTile(room: roomSnapshot),

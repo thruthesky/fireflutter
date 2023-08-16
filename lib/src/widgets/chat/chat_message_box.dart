@@ -1,4 +1,4 @@
-import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/models/room.dart';
 import 'package:fireflutter/src/services/chat.service.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +8,7 @@ class ChatRoomMessageBox extends StatefulWidget {
     required this.room,
   });
 
-  final ChatRoomModel room;
+  final Room room;
 
   @override
   State<StatefulWidget> createState() => _ChatRoomMessageBoxState();
@@ -30,8 +30,7 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
             ),
             padding: EdgeInsets.zero,
             onPressed: () {
-              ChatService.instance
-                  .onPressedFileUploadIcon(context: context, room: widget.room);
+              ChatService.instance.onPressedFileUploadIcon(context: context, room: widget.room);
             },
           ),
           Expanded(

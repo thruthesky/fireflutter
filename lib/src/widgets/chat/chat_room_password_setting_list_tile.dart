@@ -1,4 +1,4 @@
-import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/models/room.dart';
 import 'package:fireflutter/src/services/chat.service.dart';
 import 'package:flutter/material.dart';
 
@@ -8,15 +8,13 @@ class ChatRoomPasswordSettingListTile extends StatefulWidget {
     required this.room,
   });
 
-  final ChatRoomModel room;
+  final Room room;
 
   @override
-  State<ChatRoomPasswordSettingListTile> createState() =>
-      _ChatRoomPasswordSettingListTileState();
+  State<ChatRoomPasswordSettingListTile> createState() => _ChatRoomPasswordSettingListTileState();
 }
 
-class _ChatRoomPasswordSettingListTileState
-    extends State<ChatRoomPasswordSettingListTile> {
+class _ChatRoomPasswordSettingListTileState extends State<ChatRoomPasswordSettingListTile> {
   final password = TextEditingController();
 
   bool hidePassword = true;

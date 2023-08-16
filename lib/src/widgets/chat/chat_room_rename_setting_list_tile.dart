@@ -1,5 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/models/room.dart';
 import 'package:flutter/material.dart';
 
 class RenameChatRoomSettingTile extends StatelessWidget {
@@ -8,7 +8,7 @@ class RenameChatRoomSettingTile extends StatelessWidget {
     required this.room,
   });
 
-  final ChatRoomModel room;
+  final Room room;
 
   final chatRoomName = TextEditingController();
 
@@ -24,8 +24,7 @@ class RenameChatRoomSettingTile extends StatelessWidget {
           TextFormField(
             controller: chatRoomName,
             textInputAction: TextInputAction.done,
-            decoration:
-                const InputDecoration(hintText: 'Enter the chat room name.'),
+            decoration: const InputDecoration(hintText: 'Enter the chat room name.'),
             onFieldSubmitted: (value) async {
               if (value.isNotEmpty) {
                 await ChatService.instance.updateRoomSetting(

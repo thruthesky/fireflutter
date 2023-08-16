@@ -1,5 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/models/room.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomMembersListView extends StatefulWidget {
@@ -8,11 +8,10 @@ class ChatRoomMembersListView extends StatefulWidget {
     required this.room,
   });
 
-  final ChatRoomModel room;
+  final Room room;
 
   @override
-  State<ChatRoomMembersListView> createState() =>
-      _ChatRoomMembersListViewState();
+  State<ChatRoomMembersListView> createState() => _ChatRoomMembersListViewState();
 }
 
 class _ChatRoomMembersListViewState extends State<ChatRoomMembersListView> {
@@ -42,8 +41,7 @@ class _ChatRoomMembersListViewState extends State<ChatRoomMembersListView> {
                                 ? 'Moderator '
                                 : '',
                         style: const TextStyle(fontWeight: FontWeight.bold)),
-                    if (ChatService.instance
-                        .isBlocked(room: widget.room, uid: user!.uid)) ...[
+                    if (ChatService.instance.isBlocked(room: widget.room, uid: user!.uid)) ...[
                       const TextSpan(text: 'Blocked'),
                     ],
                   ],
@@ -59,15 +57,12 @@ class _ChatRoomMembersListViewState extends State<ChatRoomMembersListView> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: Text(user.displayName.isEmpty
-                          ? user.uid
-                          : user.displayName),
+                      title: Text(user.displayName.isEmpty ? user.uid : user.displayName),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           // TODO should we separate each button as smaller units?
-                          if (ChatService.instance.canRemove(
-                              room: widget.room, userUid: user.uid)) ...[
+                          if (ChatService.instance.canRemove(room: widget.room, userUid: user.uid)) ...[
                             TextButton(
                               child: const Text('Remove from the Group'),
                               onPressed: () {
@@ -81,8 +76,7 @@ class _ChatRoomMembersListViewState extends State<ChatRoomMembersListView> {
                               },
                             ),
                           ],
-                          if (ChatService.instance.canSetUserAsModerator(
-                              room: widget.room, userUid: user.uid)) ...[
+                          if (ChatService.instance.canSetUserAsModerator(room: widget.room, userUid: user.uid)) ...[
                             TextButton(
                               child: const Text("Add as a Moderator"),
                               onPressed: () {
@@ -96,8 +90,7 @@ class _ChatRoomMembersListViewState extends State<ChatRoomMembersListView> {
                               },
                             )
                           ],
-                          if (ChatService.instance.canRemoveUserAsModerator(
-                              room: widget.room, userUid: user.uid)) ...[
+                          if (ChatService.instance.canRemoveUserAsModerator(room: widget.room, userUid: user.uid)) ...[
                             TextButton(
                               child: const Text("Remove as a Moderator"),
                               onPressed: () {
@@ -111,8 +104,7 @@ class _ChatRoomMembersListViewState extends State<ChatRoomMembersListView> {
                               },
                             )
                           ],
-                          if (ChatService.instance.canBlockUserFromGroup(
-                              room: widget.room, userUid: user.uid)) ...[
+                          if (ChatService.instance.canBlockUserFromGroup(room: widget.room, userUid: user.uid)) ...[
                             TextButton(
                               child: const Text('Block user from the group'),
                               onPressed: () {
@@ -126,8 +118,7 @@ class _ChatRoomMembersListViewState extends State<ChatRoomMembersListView> {
                               },
                             ),
                           ],
-                          if (ChatService.instance.canUnblockUserFromGroup(
-                              room: widget.room, userUid: user.uid)) ...[
+                          if (ChatService.instance.canUnblockUserFromGroup(room: widget.room, userUid: user.uid)) ...[
                             TextButton(
                               child: const Text('Unblock user from the group'),
                               onPressed: () {

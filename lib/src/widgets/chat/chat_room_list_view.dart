@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/models/room.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +11,7 @@ class ChatRoomListViewController {
   late final ChatRoomListViewState state;
 
   ///
-  showChatRoom({required BuildContext context, User? user, ChatRoomModel? room}) {
+  showChatRoom({required BuildContext context, User? user, Room? room}) {
     ChatService.instance.showChatRoom(context: context, user: user, room: room);
   }
 }
@@ -41,7 +41,7 @@ class ChatRoomListView extends StatefulWidget {
 
   final ChatRoomListViewController controller;
   final int pageSize;
-  final Widget Function(BuildContext, ChatRoomModel)? itemBuilder;
+  final Widget Function(BuildContext, Room)? itemBuilder;
   final Widget Function(BuildContext)? emptyBuilder;
   final ScrollController? scrollController;
   final bool? primary;
@@ -53,7 +53,7 @@ class ChatRoomListView extends StatefulWidget {
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final Clip clipBehavior;
 
-  // final void Function(ChatRoomModel) onTap;
+  // final void Function(Room) onTap;
 
   @override
   State<ChatRoomListView> createState() => ChatRoomListViewState();
@@ -77,7 +77,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
           .where('users', arrayContains: ChatService.instance.uid)
           .orderBy('lastMessage.createdAt', descending: true),
       itemBuilder: (context, QueryDocumentSnapshot snapshot) {
-        final room = ChatRoomModel.fromDocumentSnapshot(snapshot);
+        final room = Room.fromDocumentSnapshot(snapshot);
         if (widget.itemBuilder != null) {
           return widget.itemBuilder!(context, room);
         } else {

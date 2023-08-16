@@ -1,19 +1,17 @@
-import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/models/room.dart';
 import 'package:fireflutter/src/types/media_source.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomFileUploadBottomSheet extends StatefulWidget {
   const ChatRoomFileUploadBottomSheet({super.key, required this.room});
 
-  final ChatRoomModel room;
+  final Room room;
 
   @override
-  State<ChatRoomFileUploadBottomSheet> createState() =>
-      _ChatRoomFileUploadBottomSheetState();
+  State<ChatRoomFileUploadBottomSheet> createState() => _ChatRoomFileUploadBottomSheetState();
 }
 
-class _ChatRoomFileUploadBottomSheetState
-    extends State<ChatRoomFileUploadBottomSheet> {
+class _ChatRoomFileUploadBottomSheetState extends State<ChatRoomFileUploadBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(

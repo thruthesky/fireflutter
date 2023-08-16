@@ -1,4 +1,4 @@
-import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/models/room.dart';
 import 'package:fireflutter/src/services/chat.service.dart';
 import 'package:flutter/material.dart';
 
@@ -8,15 +8,14 @@ class ChatRoomOpenSettingListTile extends StatelessWidget {
     required this.room,
   });
 
-  final ChatRoomModel room;
+  final Room room;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: const Text("Open Chat Room"),
-      subtitle: room.open
-          ? const Text("Anyone can join or invite users.")
-          : const Text("Only Admins can invite users."),
+      subtitle:
+          room.open ? const Text("Anyone can join or invite users.") : const Text("Only Admins can invite users."),
       trailing: Switch(
         value: room.open,
         onChanged: (value) async {

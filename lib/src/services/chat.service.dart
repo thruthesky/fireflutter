@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/models/chat_room_model.dart';
+import 'package:fireflutter/src/models/room.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
@@ -28,7 +28,7 @@ class ChatService {
       FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid);
   DocumentReference roomDoc(String roomId) => chatCol.doc(roomId);
 
-  Function(BuildContext, ChatRoomModel)? onChatRoomFileUpload;
+  Function(BuildContext, Room)? onChatRoomFileUpload;
 
   /// TODO: Support official localization.
   Map<String, String> texts = {};
@@ -43,13 +43,13 @@ class ChatService {
 
   /// Get a chat room with the given user uid (1:1 chat)
   /// ! This will expectedly throw an error if we are trying to get a non existing record.
-  Future<ChatRoomModel> getSingleChatRoom(String uid) async {
+  Future<Room> getSingleChatRoom(String uid) async {
     final roomId = getSingleChatRoomId(uid);
     return getRoom(roomId);
   }
 
   /// Get Chat room if exists, or create the chatroom if not exist yet and return it.
-  Future<ChatRoomModel> getOrCreateSingleChatRoom(String uid) async {
+  Future<Room> getOrCreateSingleChatRoom(String uid) async {
     try {
       return await ChatService.instance.getSingleChatRoom(uid);
     } on FirebaseException {
@@ -60,9 +60,9 @@ class ChatService {
   }
 
   /// Returns a chat room module with the given chat room id.
-  Future<ChatRoomModel> getRoom(String roomId) async {
+  Future<Room> getRoom(String roomId) async {
     final snapshot = await roomDoc(roomId).get();
-    return ChatRoomModel.fromDocumentSnapshot(snapshot);
+    return Room.fromDocumentSnapshot(snapshot);
   }
 
   /// Creates a chat room and returns the chat room.
@@ -71,13 +71,13 @@ class ChatService {
   /// [isOpen] If [isOpen] is set, it will create an open chat room. Or it will create a private chat room.
   /// [roomName] If [roomName] is set, it will create a chat room with the given name. Or it will create a chat room with empty name.
   /// [maximumNoOfUsers] If [maximumNoOfUsers] is set, it will create a chat room with the given maximum number of users. Or it will create a chat room with no limit.
-  Future<ChatRoomModel> createChatRoom({
+  Future<Room> createChatRoom({
     String? roomName,
     String? otherUserUid,
     bool isOpen = false,
     int? maximumNoOfUsers,
   }) async {
-    return ChatRoomModel.create(
+    return Room.create(
       roomName: roomName,
       otherUserUid: otherUserUid,
       isOpen: isOpen,
@@ -85,7 +85,7 @@ class ChatService {
     );
   }
 
-  Future<void> leaveRoom({required ChatRoomModel room, Function()? callback}) async {
+  Future<void> leaveRoom({required Room room, Function()? callback}) async {
     await roomDoc(room.id).update({
       'moderators': FieldValue.arrayRemove([uid]),
       'users': FieldValue.arrayRemove([uid])
@@ -93,7 +93,7 @@ class ChatService {
     callback?.call();
   }
 
-  Future<void> removeUserFromRoom({required ChatRoomModel room, required String uid, Function()? callback}) async {
+  Future<void> removeUserFromRoom({required Room room, required String uid, Function()? callback}) async {
     await roomDoc(room.id).update({
       'moderators': FieldValue.arrayRemove([uid]),
       'users': FieldValue.arrayRemove([uid])
@@ -101,28 +101,28 @@ class ChatService {
     callback?.call();
   }
 
-  Future<void> setUserAsModerator({required ChatRoomModel room, required String uid, Function()? callback}) async {
+  Future<void> setUserAsModerator({required Room room, required String uid, Function()? callback}) async {
     await roomDoc(room.id).update({
       'moderators': FieldValue.arrayUnion([uid])
     });
     callback?.call();
   }
 
-  Future<void> removeUserAsModerator({required ChatRoomModel room, required String uid, Function()? callback}) async {
+  Future<void> removeUserAsModerator({required Room room, required String uid, Function()? callback}) async {
     await roomDoc(room.id).update({
       'moderators': FieldValue.arrayRemove([uid])
     });
     callback?.call();
   }
 
-  Future<void> addToBlockedUsers({required ChatRoomModel room, required String userUid, Function()? callback}) async {
+  Future<void> addToBlockedUsers({required Room room, required String userUid, Function()? callback}) async {
     await roomDoc(room.id).update({
       'blockedUsers': FieldValue.arrayUnion([userUid])
     });
     callback?.call();
   }
 
-  Future<void> removeToBlockedUsers({required ChatRoomModel room, required String uid, Function()? callback}) async {
+  Future<void> removeToBlockedUsers({required Room room, required String uid, Function()? callback}) async {
     await roomDoc(room.id).update({
       'blockedUsers': FieldValue.arrayRemove([uid])
     });
@@ -130,27 +130,27 @@ class ChatService {
   }
 
   /// Return true if the uid is one of the moderators.
-  bool isModerator({required ChatRoomModel room, required String uid}) {
+  bool isModerator({required Room room, required String uid}) {
     return room.moderators.contains(uid);
   }
 
   /// Return true if the uid is the master
-  bool isMaster({required ChatRoomModel room, required String uid}) {
+  bool isMaster({required Room room, required String uid}) {
     return room.master == uid;
   }
 
   /// Is the user is master or moderator of the room?
-  bool isAdmin(ChatRoomModel room) {
+  bool isAdmin(Room room) {
     return room.master == uid || room.moderators.contains(uid);
   }
 
-  bool isBlocked({required ChatRoomModel room, required String uid}) {
+  bool isBlocked({required Room room, required String uid}) {
     return room.blockedUsers.isNotEmpty && room.blockedUsers.contains(uid);
   }
 
   /// Check if user can be removed in the group
   ///
-  bool canRemove({required ChatRoomModel room, required String userUid}) {
+  bool canRemove({required Room room, required String userUid}) {
     // One cannot remove himself
     if (userUid == uid) return false;
 
@@ -165,7 +165,7 @@ class ChatService {
     return false;
   }
 
-  bool canSetUserAsModerator({required ChatRoomModel room, required String userUid}) {
+  bool canSetUserAsModerator({required Room room, required String userUid}) {
     // If the current user is not a master, don't allow
     if (!isMaster(room: room, uid: uid)) return false;
 
@@ -175,7 +175,7 @@ class ChatService {
     return false;
   }
 
-  bool canRemoveUserAsModerator({required ChatRoomModel room, required String userUid}) {
+  bool canRemoveUserAsModerator({required Room room, required String userUid}) {
     // If the current user is not a master, don't allow
     if (!isMaster(room: room, uid: uid)) return false;
 
@@ -185,7 +185,7 @@ class ChatService {
     return false;
   }
 
-  bool canBlockUserFromGroup({required ChatRoomModel room, required String userUid}) {
+  bool canBlockUserFromGroup({required Room room, required String userUid}) {
     // If the current user is not a admin, don't allow
     if (!isAdmin(room)) return false;
 
@@ -198,7 +198,7 @@ class ChatService {
     return false;
   }
 
-  bool canUnblockUserFromGroup({required ChatRoomModel room, required String userUid}) {
+  bool canUnblockUserFromGroup({required Room room, required String userUid}) {
     // If the current user is not a admin, don't allow
     if (!isAdmin(room)) return false;
 
@@ -208,14 +208,14 @@ class ChatService {
     return false;
   }
 
-  Future<void> updateRoomSetting({required ChatRoomModel room, required String setting, required dynamic value}) async {
+  Future<void> updateRoomSetting({required Room room, required String setting, required dynamic value}) async {
     await roomDoc(room.id).set({setting: value}, SetOptions(merge: true));
   }
 
   Future<void> renameRoom() async {}
 
   Future<void> sendMessage({
-    required ChatRoomModel room,
+    required Room room,
     String? text,
     String? imageUrl,
     String? fileUrl,
@@ -234,7 +234,7 @@ class ChatService {
     updateRoomNewMessagesDetails(room: room, lastMessage: chatMessage);
   }
 
-  Future<void> updateRoomNewMessagesDetails({required ChatRoomModel room, Map<String, Object>? lastMessage}) async {
+  Future<void> updateRoomNewMessagesDetails({required Room room, Map<String, Object>? lastMessage}) async {
     Map<Object, Object> updateNoOfMessages = {};
     for (var uid in room.users) {
       updateNoOfMessages[uid] = FieldValue.increment(1);
@@ -257,7 +257,7 @@ class ChatService {
     );
   }
 
-  Future<User?> getOtherUserFromSingleChatRoom(ChatRoomModel room) async {
+  Future<User?> getOtherUserFromSingleChatRoom(Room room) async {
     final otherUserUid = getOtherUserUid(room.users);
     return await UserService.instance.get(otherUserUid);
   }
@@ -269,7 +269,7 @@ class ChatService {
   /// In this case, search if there is a chat room the method checks if the 1:1 chat room exists or not.
   showChatRoom({
     required BuildContext context,
-    ChatRoomModel? room,
+    Room? room,
     User? user,
   }) async {
     assert(room != null || user != null, "One of room or user must be not null");
@@ -294,7 +294,7 @@ class ChatService {
   /// File upload
   ///
   /// This method is invoked when user press button to upload a file.
-  onPressedFileUploadIcon({required BuildContext context, required ChatRoomModel room}) async {
+  onPressedFileUploadIcon({required BuildContext context, required Room room}) async {
     if (onChatRoomFileUpload != null) {
       await onChatRoomFileUpload!(context, room);
       return;
@@ -315,7 +315,7 @@ class ChatService {
     }
   }
 
-  onPressedPhotoOption({required ChatRoomModel room, required ImageSource imageSource}) async {
+  onPressedPhotoOption({required Room room, required ImageSource imageSource}) async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: imageSource);
     if (image == null) {
@@ -327,7 +327,7 @@ class ChatService {
     onFileUpload(room: room, file: file, isImage: true, fileStorageName: name);
   }
 
-  onPressedChooseFileUploadOption({required ChatRoomModel room}) async {
+  onPressedChooseFileUploadOption({required Room room}) async {
     late PlatformFile pickedFile;
     final FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result == null) return;
@@ -340,7 +340,7 @@ class ChatService {
   }
 
   onFileUpload({
-    required ChatRoomModel room,
+    required Room room,
     required File file,
     bool isImage = true,
     String? fileName,
@@ -361,7 +361,7 @@ class ChatService {
 
   showCreateChatRoomDialog(
     BuildContext context, {
-    required void Function(ChatRoomModel room) success,
+    required void Function(Room room) success,
     required void Function() cancel,
   }) {
     showDialog(

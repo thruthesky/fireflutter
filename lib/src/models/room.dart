@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/src/services/chat.service.dart';
 
-/// ChatRoomModel
+/// Room
 ///
 /// This is the model for the chat room.
 /// Don't update the property directly. The property is read-only and if you want to apply the changes, listen to the stream of the chat room document.
-class ChatRoomModel {
+class Room {
   final String id;
   final String name;
   final Map<String, dynamic> rename;
@@ -20,7 +20,7 @@ class ChatRoomModel {
   final int maximumNoOfUsers;
   final String? password; // TODO for confirmation
 
-  ChatRoomModel({
+  Room({
     required this.id,
     required this.name,
     required this.rename,
@@ -38,20 +38,15 @@ class ChatRoomModel {
   bool get isSingleChat => users.length == 2 && group == false;
   bool get isGroupChat => group;
 
-  CollectionReference get messagesCol =>
-      ChatService.instance.roomRef(id).collection('messages');
+  CollectionReference get messagesCol => ChatService.instance.roomRef(id).collection('messages');
   DocumentReference get ref => ChatService.instance.roomRef(id);
 
-  factory ChatRoomModel.fromDocumentSnapshot(
-      DocumentSnapshot documentSnapshot) {
-    return ChatRoomModel.fromMap(
-        map: documentSnapshot.data() as Map<String, dynamic>,
-        id: documentSnapshot.id);
+  factory Room.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
+    return Room.fromMap(map: documentSnapshot.data() as Map<String, dynamic>, id: documentSnapshot.id);
   }
 
-  factory ChatRoomModel.fromMap(
-      {required Map<String, dynamic> map, required id}) {
-    return ChatRoomModel(
+  factory Room.fromMap({required Map<String, dynamic> map, required id}) {
+    return Room(
         id: id,
         name: map['name'] ?? '',
         rename: map['rename'] ?? {},
@@ -62,8 +57,8 @@ class ChatRoomModel {
         moderators: List<String>.from(map['moderators'] ?? []),
         blockedUsers: List<String>.from(map['blockedUsers'] ?? []),
         noOfNewMessages: Map<String, int>.from(map['noOfNewMessages'] ?? {}),
-        maximumNoOfUsers: map['maximumNoOfUsers'] ??
-            100, // TODO confirm where to put the config on default max no of users
+        maximumNoOfUsers:
+            map['maximumNoOfUsers'] ?? 100, // TODO confirm where to put the config on default max no of users
         password: map['password']);
   }
 
@@ -90,7 +85,7 @@ class ChatRoomModel {
   /// [isOpen] If [isOpen] is set, it will create an open chat room. Or it will create a private chat room.
   /// [roomName] If [roomName] is set, it will create a chat room with the given name. Or it will create a chat room with empty name.
   /// [maximumNoOfUsers] If [maximumNoOfUsers] is set, it will create a chat room with the given maximum number of users. Or it will create a chat room with no limit.
-  static Future<ChatRoomModel> create({
+  static Future<Room> create({
     String? roomName,
     String? otherUserUid,
     bool isOpen = false,
@@ -118,21 +113,18 @@ class ChatRoomModel {
       }
     };
 
-    final roomId = isSingleChat
-        ? ChatService.instance.getSingleChatRoomId(otherUserUid)
-        : ChatService.instance.chatCol.doc().id;
+    final roomId =
+        isSingleChat ? ChatService.instance.getSingleChatRoomId(otherUserUid) : ChatService.instance.chatCol.doc().id;
 
     await ChatService.instance.chatCol.doc(roomId).set(roomData);
-    return ChatRoomModel.fromMap(map: roomData, id: roomId);
+    return Room.fromMap(map: roomData, id: roomId);
   }
 
   @override
-  String toString() =>
-      'ChatRoomModel(id: $id, name: $name, group: $group, open: $open, master: $master, users: $users)';
+  String toString() => 'Room(id: $id, name: $name, group: $group, open: $open, master: $master, users: $users)';
 
   String get otherUserUid {
-    assert(
-        users.length == 2 && group == false, "This is not a single chat room");
+    assert(users.length == 2 && group == false, "This is not a single chat room");
     return ChatService.instance.getOtherUserUid(users);
   }
 
