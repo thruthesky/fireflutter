@@ -1,9 +1,10 @@
 export 'widgets/user/user.avatar.dart';
+export 'widgets/user/user.profile_avatar.dart';
 export 'widgets/user/user.doc.dart';
 export 'widgets/user/user.ready.dart';
+export 'widgets/common/avatar.dart';
 
 export 'widgets/chat/chat_room.dart';
-export 'widgets/chat/chat_avatar.dart';
 export 'widgets/chat/chat_display_name.dart';
 export 'widgets/chat/chat_friend_list.dart';
 export 'widgets/chat/chat_message_box.dart';

@@ -31,6 +31,8 @@ class User {
   /// 사용자 문서가 존재하지 않는 경우, 이 값이 false 이다.
   final bool exists;
 
+  bool cached = false;
+
   User({
     required this.uid,
     this.displayName = '',
@@ -82,7 +84,7 @@ class User {
 
   @override
   String toString() =>
-      '''User(uid: $uid, name: $name, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, phoneNumber: $phoneNumber, email: $email, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists)''';
+      '''User(uid: $uid, name: $name, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, phoneNumber: $phoneNumber, email: $email, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, cached: $cached)''';
 
   /// 사용자 문서를 읽어온다.
   ///

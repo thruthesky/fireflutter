@@ -1,7 +1,7 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class ChatDisplayName extends StatelessWidget {
+class ChatDisplayName extends StatefulWidget {
   const ChatDisplayName({
     super.key,
     required this.uid,
@@ -12,31 +12,34 @@ class ChatDisplayName extends StatelessWidget {
   final TextStyle textStyle;
 
   @override
+  State<ChatDisplayName> createState() => _ChatDisplayNameState();
+}
+
+class _ChatDisplayNameState extends State<ChatDisplayName> {
+  User? user;
+
+  @override
+  void initState() {
+    super.initState();
+    UserService.instance.get(widget.uid).then((value) {
+      if (mounted) {
+        setState(() {
+          user = value;
+        });
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final userIsCached = UserService.instance.isUserCached(uid);
-    if (userIsCached) {
-      final cachedUser = UserService.instance.getCache(uid);
-      return cachedUser!.displayName.isEmpty == true
-          ? const SizedBox()
-          : Text(
-              cachedUser.displayName,
-              style: textStyle,
-            );
+    if (user == null) {
+      return const SizedBox.shrink();
     }
-    final user = UserService.instance.get(uid);
-    return FutureBuilder(
-      future: user,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) return const SizedBox();
-        if (snapshot.hasData == false) return const SizedBox();
-        final user = snapshot.data as User;
-        return user.displayName.isEmpty == true
-            ? const SizedBox()
-            : Text(
-                user.displayName,
-                style: textStyle,
-              );
-      },
-    );
+    return user!.displayName.isEmpty == true
+        ? const SizedBox.shrink()
+        : Text(
+            user!.displayName,
+            style: widget.textStyle,
+          );
   }
 }
