@@ -46,7 +46,7 @@ To display user's profile photo, use like below.
 
 ```dart
 UserDoc(
-  builder: (user) => UserAvatar(
+  builder: (user) => UserProfileAvatar(
     user: user,
     size: 38,
     shadowBlurRadius: 0.0,
@@ -61,13 +61,13 @@ UserDoc(
 ),
 ```
 
-#### UserAvatar
+#### UserProfileAvatar
 
 
-To display user's profile photo, use `UserAvatar`.
+To display user's profile photo, use `UserProfileAvatar`.
 
 ```dart
-UserAvatar(
+UserProfileAvatar(
   user: user,
   size: 120,
 ),
