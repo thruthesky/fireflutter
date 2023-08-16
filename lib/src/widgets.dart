@@ -1,3 +1,4 @@
+export 'widgets/user/user.avatar.dart';
 export 'widgets/user/user.profile_avatar.dart';
 export 'widgets/user/user.doc.dart';
 export 'widgets/user/user.ready.dart';
