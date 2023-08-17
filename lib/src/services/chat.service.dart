@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/models/room.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
@@ -15,6 +14,8 @@ class ChatService {
 
   ///
   ChatService._();
+
+  ChatRoomCustomize customize = ChatRoomCustomize();
 
   String get uid => FirebaseAuth.instance.currentUser!.uid;
   bool get loggedIn => FirebaseAuth.instance.currentUser != null;
@@ -378,12 +379,15 @@ class ChatService {
     }
   }
 
-  showCreateChatRoomDialog(
+  /// Show create chat room dialog
+  ///
+  /// Note, it does not close the chat creation dialog.
+  Future showCreateChatRoomDialog(
     BuildContext context, {
     required void Function(Room room) success,
     required void Function() cancel,
-  }) {
-    showDialog(
+  }) async {
+    await showDialog(
       context: context,
       builder: (_) => ChatRoomCreate(
         success: success,
@@ -400,7 +404,7 @@ class ChatService {
       showGeneralDialog(
         context: context,
         pageBuilder: (context, _, __) {
-          return ChatRoomMenuScreen(
+          return ChatRoomMenuDialog(
             room: room,
             otherUser: otherUser,
           );

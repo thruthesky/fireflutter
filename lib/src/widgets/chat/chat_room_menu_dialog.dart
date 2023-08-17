@@ -3,8 +3,8 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/models/room.dart';
 import 'package:flutter/material.dart';
 
-class ChatRoomMenuScreen extends StatefulWidget {
-  const ChatRoomMenuScreen({
+class ChatRoomMenuDialog extends StatefulWidget {
+  const ChatRoomMenuDialog({
     super.key,
     required this.room,
     this.otherUser,
@@ -14,10 +14,10 @@ class ChatRoomMenuScreen extends StatefulWidget {
   final User? otherUser;
 
   @override
-  State<ChatRoomMenuScreen> createState() => _ChatRoomMenuScreenState();
+  State<ChatRoomMenuDialog> createState() => _ChatRoomMenuScreenState();
 }
 
-class _ChatRoomMenuScreenState extends State<ChatRoomMenuScreen> {
+class _ChatRoomMenuScreenState extends State<ChatRoomMenuDialog> {
   @override
   Widget build(BuildContext context) {
     final Stream<DocumentSnapshot<Object?>> roomStream = ChatService.instance.roomDoc(widget.room.id).snapshots();
@@ -36,28 +36,29 @@ class _ChatRoomMenuScreenState extends State<ChatRoomMenuScreen> {
             body: const Text('Loading...'),
           );
         }
-        final Room roomSnapshot = Room.fromDocumentSnapshot(snapshot.data!);
+        final Room room = Room.fromDocumentSnapshot(snapshot.data!);
         // TODO different menu for single chat room and group chat room
         // I think it doesn't make sense to see it like a members list.
         // Instead it should only provide the other user profile
         // plus Settings
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Chat Room'),
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: Text(tr.chat.roomMenu),
           ),
           body: ListView(
             children: [
-              if (roomSnapshot.group) ...[
+              if (room.group) ...[
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
                       Text(
-                        roomSnapshot.name,
+                        room.name,
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20), // TODO customizable ui
                       ),
-                      if (roomSnapshot.rename[UserService.instance.uid] != null) ...[
-                        Text('(${roomSnapshot.rename[UserService.instance.uid]})'),
+                      if (room.rename[UserService.instance.uid] != null) ...[
+                        Text('(${room.rename[UserService.instance.uid]})'),
                       ],
                     ],
                   ),
@@ -68,11 +69,25 @@ class _ChatRoomMenuScreenState extends State<ChatRoomMenuScreen> {
                   child: Text(widget.otherUser!.displayName),
                 ),
               ],
-              if (roomSnapshot.isGroupChat) InviteUserButton(room: roomSnapshot),
-              if (!ChatService.instance.isMaster(room: roomSnapshot, uid: ChatService.instance.uid)) ...[
-                LeaveButton(room: roomSnapshot),
+              if (room.isGroupChat)
+                TextButton(
+                  onPressed: () {
+                    showGeneralDialog(
+                      context: context,
+                      pageBuilder: (context, _, __) => Scaffold(
+                        appBar: AppBar(
+                          title: const Text('Invite User'),
+                        ),
+                        body: ChatRoomUserInviteDialog(room: room),
+                      ),
+                    );
+                  },
+                  child: const Text('Invite User'),
+                ),
+              if (!ChatService.instance.isMaster(room: room, uid: ChatService.instance.uid)) ...[
+                LeaveButton(room: room),
               ],
-              ChatSettingsButton(room: roomSnapshot),
+              ChatSettingsButton(room: room),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -80,7 +95,7 @@ class _ChatRoomMenuScreenState extends State<ChatRoomMenuScreen> {
                     padding: EdgeInsets.only(left: 16.0, right: 16.0),
                     child: Text('Members'),
                   ),
-                  ChatRoomMembersListView(room: roomSnapshot),
+                  ChatRoomMembersListView(room: room),
                 ],
               ),
             ],

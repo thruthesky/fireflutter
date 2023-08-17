@@ -10,19 +10,23 @@ A free, open source, complete, rapid development package for creating Social app
   - [UserService](#userservice)
   - [ChatService](#chatservice)
     - [How to open 1:1 chat room](#how-to-open-11-chat-room)
+    - [How to display chat room menu](#how-to-display-chat-room-menu)
+    - [Customizing the chat header](#customizing-the-chat-header)
 - [Widgets](#widgets)
   - [UserDoc](#userdoc)
   - [Avatar](#avatar)
   - [UserAvatar](#useravatar)
   - [UserProfileAvatar](#userprofileavatar)
-  - [User Filter List View](#user-filter-list-view)
-  - [Translation](#translation)
-  - [Contribution](#contribution)
+  - [User List View](#user-list-view)
+- [Customization](#customization)
+  - [Chat Customization](#chat-customization)
+- [Translation](#translation)
+- [Contribution](#contribution)
 - [OLD README](#old-readme)
   - [TODO](#todo)
   - [Overview](#overview)
     - [Principle of Design](#principle-of-design)
-    - [Features](#features-1)
+    - [Chat Room Features](#chat-room-features)
   - [Environment](#environment)
   - [Basic Features](#basic-features)
   - [Example](#example)
@@ -55,6 +59,7 @@ A free, open source, complete, rapid development package for creating Social app
   - [Chat Room Settings](#chat-room-settings)
   - [Run the Security Rule Test](#run-the-security-rule-test)
   - [Run the Logic Test](#run-the-logic-test)
+    - [Tests in Logic Test](#tests-in-logic-test)
 - [Developers](#developers)
   - [How to add the easychat package as subtree into your project as the repo master](#how-to-add-the-easychat-package-as-subtree-into-your-project-as-the-repo-master)
   - [Deploy](#deploy)
@@ -111,6 +116,33 @@ Call the `showChatRoom` method anywhere with user model.
 
 ```dart
 ChatService.instance.showChatRoom(context: context, user: user);
+```
+
+### How to display chat room menu
+
+By default, it has a full screen dialog with default buttons. Since all apps have difference features and design, you will need to customize it or rebuild it. But see the code inside and copy and paste them into your project.
+
+How to show chat room dialog.
+
+```dart
+showGeneralDialog(
+  context: context,
+  pageBuilder: (context, _, __) => Scaffold(
+    appBar: AppBar(
+      title: const Text('Invite User'),
+    ),
+    body: ChatRoomUserInviteDialog(room: room),
+  ),
+);
+```
+
+
+### Customizing the chat header
+
+You can build your own chat header like below.
+
+```dart
+ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoomAppBar(room: room);
 ```
 
 # Widgets
@@ -224,9 +256,23 @@ onPressed() async {
       });
     },
   );
+
 ```
 
-## Translation
+
+# Customization
+
+`fireflutter` supports full customization from the i18n to the complete UI.
+
+
+## Chat Customization
+
+See the chapters for chat service and chat widgets.
+
+
+
+
+# Translation
 
 I feel like the standard i18n feature is a bit heavy and searched for other i18n packages. And I decided to write a simple i18n code for fireflutter.
 
@@ -240,7 +286,7 @@ Here is an example of updating the translation.
 tr.user.loginFirst = '로그인을 해 주세요.';
 ```
 
-## Contribution
+# Contribution
 
 Fork the fireflutter and create your own branch. Then update code and push, then pull request.
 

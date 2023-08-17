@@ -1,9 +1,5 @@
-import 'package:fireflutter/src/models/room.dart';
-import 'package:fireflutter/src/widgets/chat/chat_message_box.dart';
-import 'package:fireflutter/src/widgets/chat/chat_messages_list_view.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
-
-import 'chat_room_app_bar.dart';
 
 class ChatRoom extends StatelessWidget {
   const ChatRoom({
@@ -16,7 +12,7 @@ class ChatRoom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ChatRoomAppBar(room: room),
+      appBar: ChatService.instance.customize.chatRoomAppBarBuilder?.call(room) ?? ChatRoomAppBar(room: room),
       body: Column(
         children: [
           Expanded(

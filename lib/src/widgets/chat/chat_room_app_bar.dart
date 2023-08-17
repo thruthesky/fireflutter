@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/models/room.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -19,33 +18,33 @@ class ChatRoomAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class ChatRoomAppBarState extends State<ChatRoomAppBar> {
+  String title = '';
+  List<Widget>? actions;
   @override
   Widget build(BuildContext context) {
-    final Stream<DocumentSnapshot> roomStream = ChatService.instance.roomDoc(widget.room.id).snapshots();
     return StreamBuilder<DocumentSnapshot>(
-      stream: roomStream,
+      stream: ChatService.instance.roomDoc(widget.room.id).snapshots(),
       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return AppBar(
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            title: const Text('Something went wrong.'),
-          );
-        }
+        //
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return AppBar(
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            title: const Text("Loading..."),
-          );
+          title = 'Loading...';
+        } else if (snapshot.hasError) {
+          //
+          title = snapshot.error.toString();
+        } else {
+          //
+          final Room room = Room.fromDocumentSnapshot(snapshot.data!);
+          title = room.name;
+          actions = [
+            ChatRoomMenuButton(
+              room: room,
+            ),
+          ];
         }
-        final Room roomSnapshot = Room.fromDocumentSnapshot(snapshot.data!);
         return AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: ChatRoomAppBarTitle(room: roomSnapshot),
-          actions: [
-            ChatRoomMenuButton(
-              room: roomSnapshot,
-            ),
-          ],
+          title: Text(title),
+          actions: actions,
         );
       },
     );

@@ -9,6 +9,7 @@ class UserTranslations {
 
 class ChatTranslations {
   String noChatRooms = 'No chat rooms';
+  String roomMenu = 'Chat Room Menu';
 }
 
 final tr = I18N();
