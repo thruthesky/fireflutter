@@ -77,8 +77,6 @@ class UserDoc extends StatelessWidget {
       return onLoading ?? const SizedBox.shrink();
     }
 
-    print('----> user doc: ${snapshot.data}');
-
     final user = snapshot.data;
 
     /// 주의: 로딩 중, 반짝임(깜빡거림)이 발생할 수 있다.
