@@ -89,6 +89,7 @@ class User {
   /// 사용자 문서를 읽어온다.
   ///
   /// 사용자 문서가 존재하지 않는 경우, null 을 리턴한다.
+  /// 캐시하지 않는다.
   static Future<User?> get(String uid) async {
     final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(uid).get();
     if (!snapshot.exists) {
@@ -133,5 +134,10 @@ class User {
     });
 
     return (await get(uid))!;
+  }
+
+  /// If the user has completed the profile, set the complete field to true.
+  Future<User> updateComplete(bool complete) async {
+    return await update(complete: complete);
   }
 }

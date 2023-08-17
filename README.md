@@ -110,6 +110,7 @@ ChatService.instance.showChatRoom(context: context, user: user);
 ## UserDoc
 
 To display user's profile photo, use like below.
+See the comment for the details.
 
 ```dart
 UserDoc(
