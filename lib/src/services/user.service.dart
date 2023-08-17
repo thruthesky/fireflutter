@@ -9,7 +9,7 @@ class UserService {
 
   /// null 이면 아직 로드를 안했다는 뜻이다. 즉, 로딩중이라는 뜻이다. 로그인을 했는지 하지 않았는지 여부는 알 수 없다.
   ///
-  final BehaviorSubject<User?> userDocumentChanges = BehaviorSubject<User?>.seeded(null);
+  final BehaviorSubject<User?> documentChanges = BehaviorSubject<User?>.seeded(null);
 
   /// Currently login user's uid
   String get uid => FirebaseAuth.instance.currentUser!.uid;
@@ -20,7 +20,7 @@ class UserService {
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user == null) {
         nullableUser = null;
-        userDocumentChanges.add(nullableUser);
+        documentChanges.add(nullableUser);
       } else {
         /// 이 후, 사용자 문서가 업데이트 될 때 마다, nullableUser 업데이트
         UserService.instance.doc.snapshots().listen((documentSnapshot) {
@@ -30,7 +30,7 @@ class UserService {
           } else {
             nullableUser = User.fromDocumentSnapshot(documentSnapshot);
           }
-          userDocumentChanges.add(nullableUser);
+          documentChanges.add(nullableUser);
         });
       }
     });
@@ -133,11 +133,17 @@ class UserService {
   /// This automatically updates the [nullableUser] value.
   Future<User?> update({
     String? name,
+    String? firstName,
+    String? lastName,
+    String? middleName,
     String? displayName,
     String? photoUrl,
     bool? hasPhotoUrl,
     String? phoneNumber,
     String? email,
+    int? birthYear,
+    int? birthMonth,
+    int? birthDay,
     bool? complete,
     String? field,
     dynamic value,
@@ -148,11 +154,17 @@ class UserService {
 
     nullableUser = await nullableUser!.update(
       name: name,
+      firstName: firstName,
+      lastName: lastName,
+      middleName: middleName,
       displayName: displayName,
       photoUrl: photoUrl,
       hasPhotoUrl: hasPhotoUrl,
       phoneNumber: phoneNumber,
       email: email,
+      birthYear: birthYear,
+      birthMonth: birthMonth,
+      birthDay: birthDay,
       complete: complete,
       field: field,
       value: value,

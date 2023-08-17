@@ -8,9 +8,16 @@ class User {
   /// 만약, dsiplayName 이 없으면, uid 의 앞 두글자를 대문자로 표시.
   final String displayName;
   final String name;
+  final String firstName;
+  final String lastName;
+  final String middleName;
   final String photoUrl;
   final String phoneNumber;
   final String email;
+
+  final int birthYear;
+  final int birthMonth;
+  final int birthDay;
 
   /// DB 에 저장되는 값. 그래야 검색이 가능.
   final bool hasPhotoUrl;
@@ -37,10 +44,16 @@ class User {
     required this.uid,
     this.displayName = '',
     this.name = '',
+    this.firstName = '',
+    this.lastName = '',
+    this.middleName = '',
     this.photoUrl = '',
     this.hasPhotoUrl = false,
     this.phoneNumber = '',
     this.email = '',
+    this.birthYear = 0,
+    this.birthMonth = 0,
+    this.birthDay = 0,
     this.createdAt,
     this.complete = false,
     this.exists = true,
@@ -59,10 +72,16 @@ class User {
       uid: id,
       displayName: displayName == '' ? id.toUpperCase().substring(0, 2) : displayName,
       name: map['name'] ?? '',
+      firstName: map['firstName'] ?? '',
+      lastName: map['lastName'] ?? '',
+      middleName: map['middleName'] ?? '',
       photoUrl: (map['photoUrl'] ?? '') as String,
       hasPhotoUrl: map['hasPhotoUrl'] ?? false,
       phoneNumber: map['phoneNumber'] ?? '',
       email: map['email'] ?? '',
+      birthYear: map['birthYear'] ?? 0,
+      birthMonth: map['birthMonth'] ?? 0,
+      birthDay: map['birthDay'] ?? 0,
       createdAt: map['createdAt'],
       complete: map['complete'] ?? false,
     );
@@ -73,10 +92,16 @@ class User {
       'uid': uid,
       'displayName': displayName,
       'name': name,
+      'firstName': firstName,
+      'lastName': lastName,
+      'middleName': middleName,
       'photoUrl': photoUrl,
       'hasPhotoUrl': hasPhotoUrl,
       'phoneNumber': phoneNumber,
       'email': email,
+      'birthYear': birthYear,
+      'birthMonth': birthMonth,
+      'birthDay': birthDay,
       'createdAt': createdAt ?? FieldValue.serverTimestamp(),
       'complete': complete,
     };
@@ -84,7 +109,7 @@ class User {
 
   @override
   String toString() =>
-      '''User(uid: $uid, name: $name, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, phoneNumber: $phoneNumber, email: $email, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, cached: $cached)''';
+      '''User(uid: $uid, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, phoneNumber: $phoneNumber, email: $email, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, cached: $cached)''';
 
   /// 사용자 문서를 읽어온다.
   ///
@@ -111,11 +136,17 @@ class User {
   /// Update the user document under /users/{uid} for the login user.
   Future<User> update({
     String? name,
+    String? firstName,
+    String? lastName,
+    String? middleName,
     String? displayName,
     String? photoUrl,
     bool? hasPhotoUrl,
     String? phoneNumber,
     String? email,
+    int? birthYear,
+    int? birthMonth,
+    int? birthDay,
     bool? complete,
     String? field,
     dynamic value,
@@ -124,11 +155,17 @@ class User {
 
     await doc.update({
       if (name != null) 'name': name,
+      if (firstName != null) 'firstName': firstName,
+      if (lastName != null) 'lastName': lastName,
+      if (middleName != null) 'middleName': middleName,
       if (displayName != null) 'displayName': displayName,
       if (photoUrl != null) 'photoUrl': photoUrl,
       if (hasPhotoUrl != null) 'hasPhotoUrl': hasPhotoUrl,
       if (phoneNumber != null) 'phoneNumber': phoneNumber,
       if (email != null) 'email': email,
+      if (birthYear != null) 'birthYear': birthYear,
+      if (birthMonth != null) 'birthMonth': birthMonth,
+      if (birthDay != null) 'birthDay': birthDay,
       if (complete != null) 'complete': complete,
       if (field != null && value != null) field: value,
     });
