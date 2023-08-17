@@ -139,7 +139,8 @@ UserDoc(
 ## UserAvatar
 
 
-To display user's profile photo, use `UserProfileAvatar`.
+To display user's profile photo, use `UserAvatar`.
+Not that, `UserAvatar` does not update the user photo in realtime. So, you may need to give a key when you want it to dsiplay new photo url.
 
 ```dart
 UserAvatar(
