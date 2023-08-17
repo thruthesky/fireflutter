@@ -131,7 +131,7 @@ class UserService {
   /// Update a user document under /users/{uid} for the login user.
   ///
   /// This automatically updates the [nullableUser] value.
-  Future<void> update({
+  Future<User?> update({
     String? name,
     String? displayName,
     String? photoUrl,
@@ -157,5 +157,7 @@ class UserService {
       field: field,
       value: value,
     );
+
+    return nullableUser;
   }
 }
