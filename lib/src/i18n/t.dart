@@ -1,6 +1,7 @@
 class I18N {
   UserTranslations user = UserTranslations();
   ChatTranslations chat = ChatTranslations();
+  CategoryTranslations category = CategoryTranslations();
 }
 
 class UserTranslations {
@@ -10,6 +11,10 @@ class UserTranslations {
 class ChatTranslations {
   String noChatRooms = 'No chat rooms';
   String roomMenu = 'Chat Room Menu';
+}
+
+class CategoryTranslations {
+  String noCategory = 'No category';
 }
 
 final tr = I18N();
