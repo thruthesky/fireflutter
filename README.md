@@ -7,14 +7,19 @@ A free, open source, complete, rapid development package for creating Social app
   - [Features](#features)
   - [Getting started](#getting-started)
     - [Setup](#setup)
-  - [Usage](#usage)
-    - [UserService](#userservice)
-    - [Widgets](#widgets)
-      - [UserDoc](#userdoc)
-      - [UserProfileAvatar](#userprofileavatar)
-      - [UserProfileAvatar](#userprofileavatar-1)
+- [Usage](#usage)
+  - [UserService](#userservice)
+  - [ChatService](#chatservice)
+    - [How to open 1:1 chat room](#how-to-open-11-chat-room)
+- [Widgets](#widgets)
+  - [UserDoc](#userdoc)
+  - [Avatar](#avatar)
+  - [UserAvatar](#useravatar)
+  - [UserProfileAvatar](#userprofileavatar)
+  - [User Filter List View](#user-filter-list-view)
   - [Translation](#translation)
   - [Contribution](#contribution)
+- [OLD README](#old-readme)
   - [TODO](#todo)
   - [Overview](#overview)
     - [Principle of Design](#principle-of-design)
@@ -76,9 +81,9 @@ If you want to build an app using FireFlutter, the best way is to copy codes fro
 
 ### Setup
 
-## Usage
+# Usage
 
-### UserService
+## UserService
 
 `UserService.instance.nullableUser` is null
 - when the user didn't log in
@@ -93,11 +98,20 @@ So, the lifecyle will be the following when the app users `UserDoc`.
   - If the user document exsist, then it will have right data and `builder` will be called.
 
 
+## ChatService
+
+### How to open 1:1 chat room
+
+Call the `showChatRoom` method anywhere with user model.
+
+```dart
+ChatService.instance.showChatRoom(context: context, user: user);
+```
 
 
-### Widgets
+# Widgets
 
-#### UserDoc
+## UserDoc
 
 
 To display user's profile photo, use like below.
@@ -113,26 +127,30 @@ UserDoc(
     backgroundColor: Theme.of(context).colorScheme.inversePrimary,
   ),
   documentNotExistBuilder: () {
+    // Create user document if not exists.
     UserService.instance.create();
     return const SizedBox.shrink();
   },
 ),
 ```
 
-#### UserProfileAvatar
+## Avatar
+
+## UserAvatar
 
 
-To display user's profile photo, use `UserProfileAvatar`.
+To display user's profile photo, use `UserAvatar`.
+Not that, `UserAvatar` does not update the user photo in realtime. So, you may need to give a key when you want it to dsiplay new photo url.
 
 ```dart
-UserProfileAvatar(
+UserAvatar(
   user: user,
   size: 120,
 ),
 ```
 
 
-#### UserProfileAvatar
+## UserProfileAvatar
 
 To let user update or delete the profile photo, use like below.
 
@@ -145,6 +163,63 @@ UserProfileAvatar(
 ),
 ```
 
+## User Filter List View
+
+Use this widget to search users by filtering a field with a string value.
+This widget is a list view that has a `ListTile` in each item. So, it supports the properties of `ListView` and `ListTile` at the same time.
+
+```dart
+UserFilterListView(
+  searchText: 'nameValue',
+  field: 'name',
+),
+```
+
+Example of complete code for displaying the `UserFilterListView` in a dialog wiht search box
+```dart
+onPressed() async {
+  final user = await showGeneralDialog<User>(
+    context: context,
+    pageBuilder: (context, _, __) {
+      TextEditingController search = TextEditingController();
+      return StatefulBuilder(builder: (context, setState) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: const Text('Find friends'),
+          ),
+          body: Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                TextField(
+                  controller: search,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Search',
+                  ),
+                  onSubmitted: (value) => setState(() => search.text = value),
+                ),
+                Expanded(
+                  child: UserFilterListView(
+                    key: ValueKey(search.text),
+                    searchText: search.text,
+                    field: 'name',
+                    avatarBuilder: (user) => const Text('Photo'),
+                    titleBuilder: (user) => Text(user?.uid ?? ''),
+                    subtitleBuilder: (user) => Text(user?.phoneNumber ?? ''),
+                    trailingBuilder: (user) => const Icon(Icons.add),
+                    onTap: (user) => context.pop(user),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      });
+    },
+  );
+```
 
 
 ## Translation
@@ -167,6 +242,11 @@ tr.user.loginFirst = '로그인을 해 주세요.';
 
 Fork the fireflutter and create your own branch. Then update code and push, then pull request.
 
+
+
+# OLD README
+
+* Below are the old read files.
 
 
 
