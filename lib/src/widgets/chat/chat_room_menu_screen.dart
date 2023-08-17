@@ -37,6 +37,10 @@ class _ChatRoomMenuScreenState extends State<ChatRoomMenuScreen> {
           );
         }
         final Room roomSnapshot = Room.fromDocumentSnapshot(snapshot.data!);
+        // TODO different menu for single chat room and group chat room
+        // I think it doesn't make sense to see it like a members list.
+        // Instead it should only provide the other user profile
+        // plus Settings
         return Scaffold(
           appBar: AppBar(
             title: const Text('Chat Room'),
@@ -64,17 +68,11 @@ class _ChatRoomMenuScreenState extends State<ChatRoomMenuScreen> {
                   child: Text(widget.otherUser!.displayName),
                 ),
               ],
-              InviteUserButton(
-                room: roomSnapshot,
-              ),
+              if (roomSnapshot.isGroupChat) InviteUserButton(room: roomSnapshot),
               if (!ChatService.instance.isMaster(room: roomSnapshot, uid: ChatService.instance.uid)) ...[
-                LeaveButton(
-                  room: roomSnapshot,
-                ),
+                LeaveButton(room: roomSnapshot),
               ],
-              ChatSettingsButton(
-                room: roomSnapshot,
-              ),
+              ChatSettingsButton(room: roomSnapshot),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

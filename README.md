@@ -156,19 +156,21 @@ UserProfileAvatar(
 ),
 ```
 
-## User Filter List View
+## User List View
 
-Use this widget to search users by filtering a field with a string value.
+Use this widget to list users. By default, it will list all users. This widget can also
+be used to search users by filtering a field with a string value.
+
 This widget is a list view that has a `ListTile` in each item. So, it supports the properties of `ListView` and `ListTile` at the same time.
 
 ```dart
-UserFilterListView(
+UserListView(
   searchText: 'nameValue',
   field: 'name',
 ),
 ```
 
-Example of complete code for displaying the `UserFilterListView` in a dialog wiht search box
+Example of complete code for displaying the `UserListView` in a dialog with search box
 
 ```dart
 onPressed() async {
@@ -195,7 +197,7 @@ onPressed() async {
                   onSubmitted: (value) => setState(() => search.text = value),
                 ),
                 Expanded(
-                  child: UserFilterListView(
+                  child: UserListView(
                     key: ValueKey(search.text),
                     searchText: search.text,
                     field: 'name',
@@ -724,6 +726,26 @@ updatedRoom = await EasyChat.instance.updateRoomSetting(
 
 - We don't do the `unit test`, `widget test`, or `integration test`. Instead, we do `logic test` that is developed by ourselves for our test purpose.
   - You can see the test in `TestScreen`.
+
+### Tests in Logic Test
+
+The following are the available logic tests that can be used.
+
+- Creating Group Chat Room
+- Chat Room's Number of New Messages
+- Maximum Nunber of Users Setting
+- Creating Single Chat Room
+- Inviting User into Single Chat
+- Inviting User into Group Chat
+- Changing the Default Chat Room Name
+- Renaming Chat Room Own Side
+- Updating Chat Room Password
+  - Master can update the password
+  - Moderator can update the password
+  - Non-admin members should not be able to update the password
+  - Password can be cleared
+
+<!-- TODO: Insert Details per test -->
 
 # Developers
 

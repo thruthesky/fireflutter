@@ -327,41 +327,79 @@ class _TestScreenState extends State<TestUi> {
     // Get the room
     Room room = await ChatService.instance.createChatRoom(roomName: 'Testing Room');
 
-    // Get the room update
-    // room = await ChatService.instance.getRoom(room.id);
-
     // There must be no password upon creating the room
     test(room.password == null,
         "The room must not have a password upon creation. Actual Value: ${room.password}. Expected: null");
-
-    // There must be no password upon creating the room
-    // test
 
     // add the users
     await room.invite(Test.banana.uid);
     await room.invite(Test.cherry.uid);
 
-    const String password = 'sample';
-
     // Master Apple updates the chat room password.
+    const String password = 'sample';
+    await ChatService.instance.updateRoomSetting(room: room, setting: 'password', value: password);
 
-    // The chat room password must be updated.
+    // Get the room update
+    room = await ChatService.instance.getRoom(room.id);
+
+    // TEST: The chat room password must be updated.
+    test(room.password == password,
+        "The chat room password can be updated by Master. Actual Value: ${room.password}. Expected: $password");
 
     // Master Apple set Banana as Moderator
+    await ChatService.instance.setUserAsModerator(room: room, uid: Test.banana.uid);
+
+    // Sign out Master Apple, Sign in with Moderator Banana with its password
+    await FirebaseAuth.instance.signOut();
+    await Test.wait(); // Wait until logout is complete or you may see firestore permission denied error.
+    await Test.login(Test.banana);
 
     // Moderator Banana updates the password
     const String bananaPassword = 'bananapass';
-    // Error Test
+    await ChatService.instance.updateRoomSetting(room: room, setting: 'password', value: bananaPassword);
 
-    // Regular Member Cherry updates the password
+    // Get the room update
+    room = await ChatService.instance.getRoom(room.id);
+
+    // TEST: The chat room password must be updated.
+    test(room.password == bananaPassword,
+        "The chat room password can be updated by Moderator. Actual Value: ${room.password}. Expected: $bananaPassword");
+
+    // Sign out Moderator Banana, Sign in with Cherry with its password
+    await FirebaseAuth.instance.signOut();
+    await Test.wait(); // Wait until logout is complete or you may see firestore permission denied error.
+    await Test.login(Test.cherry);
+
     const String cherryPassword = 'cherry';
-    // Error Test
 
-    // Test if the password retained
-    // password
+    // TODO for confirmation: how do we handle other exceptions
+    const permissionDeniedError =
+        '[cloud_firestore/permission-denied] The caller does not have permission to execute the specified operation.';
+
+    // This should not work because the member is non admin
+    await Test.assertExceptionCode(
+        ChatService.instance.updateRoomSetting(room: room, setting: 'password', value: cherryPassword),
+        permissionDeniedError);
+
+    // Get the room update
+    room = await ChatService.instance.getRoom(room.id);
+
+    // TEST: The chat room password should not be updated.
+    test(room.password != cherryPassword,
+        "The chat room password should not be updated by non-admin member. Actual Value: ${room.password}. Expected: $bananaPassword");
+
+    // Sign out Cherry, Sign in with Master Apple with its password
+    await FirebaseAuth.instance.signOut();
+    await Test.wait(); // Wait until logout is complete or you may see firestore permission denied error.
+    await Test.login(Test.apple);
 
     // Master Apple clears the password
+    await ChatService.instance.updateRoomSetting(room: room, setting: 'password', value: '');
 
-    // the updated password must be null
+    // Get the room update
+    room = await ChatService.instance.getRoom(room.id);
+
+    // TEST: The updated password must be null.
+    test(room.password == null, "The password can be cleared. Actual Value: ${room.password}. Expected: null");
   }
 }

@@ -212,24 +212,9 @@ class ChatService {
   Future<void> updateRoomSetting({required Room room, required String setting, required dynamic value}) async {
     if (value == null || value == '') {
       await roomDoc(room.id).update({setting: FieldValue.delete()});
-    }
-    await roomDoc(room.id).set({setting: value}, SetOptions(merge: true));
-  }
-
-  /// Renames the room on own side. This does not update the default chat room name.
-  ///
-  /// This will clear the room if the input is blank
-  @Deprecated('use updateMyRoomSetting instead')
-  Future<void> renameRoom({required String updatedName, required Room room}) async {
-    if (updatedName.isEmpty) {
-      await roomDoc(room.id).update({'rename.${UserService.instance.uid}': FieldValue.delete()});
       return;
     }
-    await ChatService.instance.updateRoomSetting(
-      room: room,
-      setting: 'rename',
-      value: {UserService.instance.uid: updatedName},
-    );
+    await roomDoc(room.id).set({setting: value}, SetOptions(merge: true));
   }
 
   /// Updates the a room setting on own side.
@@ -267,6 +252,7 @@ class ChatService {
     updateRoomNewMessagesDetails(room: room, lastMessage: chatMessage);
   }
 
+  // TODO will it be better if settings will have an Enum?
   Future<void> updateRoomNewMessagesDetails({required Room room, Map<String, Object>? lastMessage}) async {
     Map<Object, Object> updateNoOfMessages = {};
     for (var uid in room.users) {

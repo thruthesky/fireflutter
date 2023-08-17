@@ -5,11 +5,14 @@ import 'package:flutter/material.dart';
 
 /// Display users who are not inside the room
 ///
+/// [searchText] Use this to search in a list of users
+/// [exemptedUsers] Array of uids who are exempted in search results
+///
 /// TODO: Display only users who open their profile.
-class UserFilterListView extends StatelessWidget {
-  const UserFilterListView({
+class UserListView extends StatelessWidget {
+  const UserListView({
     super.key,
-    required this.searchText,
+    this.searchText,
     this.exemptedUsers = const [],
     this.field = 'displayName',
     this.onTap,
@@ -20,7 +23,7 @@ class UserFilterListView extends StatelessWidget {
     this.trailingBuilder,
   });
 
-  final String searchText;
+  final String? searchText;
   final List<String> exemptedUsers;
   final Function(User)? onTap;
   final Function(User)? onLongPress;
@@ -32,8 +35,13 @@ class UserFilterListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ! Currently we can only search using exact display name
-    final query = FirebaseFirestore.instance.collection('users').where(field, isEqualTo: searchText);
+    late final Query query;
+    if (searchText == null) {
+      query = FirebaseFirestore.instance.collection('users');
+    } else {
+      // ! Currently we can only search using exact display name
+      query = FirebaseFirestore.instance.collection('users').where(field, isEqualTo: searchText);
+    }
     return FirestoreListView(
       query: query,
       itemBuilder: (context, snapshot) {
