@@ -15,6 +15,9 @@ class User {
   final String phoneNumber;
   final String email;
 
+  /// 상태. 개인의 상태. 예를 들어, 휴가중. 또는 모토. 인생은 모험이 아니면 아무것도 아닙니다.
+  final String state;
+
   final int birthYear;
   final int birthMonth;
   final int birthDay;
@@ -51,6 +54,7 @@ class User {
     this.hasPhotoUrl = false,
     this.phoneNumber = '',
     this.email = '',
+    this.state = '',
     this.birthYear = 0,
     this.birthMonth = 0,
     this.birthDay = 0,
@@ -79,6 +83,7 @@ class User {
       hasPhotoUrl: map['hasPhotoUrl'] ?? false,
       phoneNumber: map['phoneNumber'] ?? '',
       email: map['email'] ?? '',
+      state: map['state'] ?? '',
       birthYear: map['birthYear'] ?? 0,
       birthMonth: map['birthMonth'] ?? 0,
       birthDay: map['birthDay'] ?? 0,
@@ -144,6 +149,7 @@ class User {
     bool? hasPhotoUrl,
     String? phoneNumber,
     String? email,
+    String? state,
     int? birthYear,
     int? birthMonth,
     int? birthDay,
@@ -163,6 +169,7 @@ class User {
       if (hasPhotoUrl != null) 'hasPhotoUrl': hasPhotoUrl,
       if (phoneNumber != null) 'phoneNumber': phoneNumber,
       if (email != null) 'email': email,
+      if (state != null) 'state': state,
       if (birthYear != null) 'birthYear': birthYear,
       if (birthMonth != null) 'birthMonth': birthMonth,
       if (birthDay != null) 'birthDay': birthDay,
