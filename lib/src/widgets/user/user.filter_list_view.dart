@@ -13,6 +13,7 @@ class UserFilterListView extends StatelessWidget {
     this.exemptedUsers = const [],
     this.field = 'displayName',
     this.onTap,
+    this.onLongPress,
     this.avatarBuilder,
     this.titleBuilder,
     this.subtitleBuilder,
@@ -22,6 +23,7 @@ class UserFilterListView extends StatelessWidget {
   final String searchText;
   final List<String> exemptedUsers;
   final Function(User)? onTap;
+  final Function(User)? onLongPress;
   final String field;
   final Widget Function(User?)? avatarBuilder;
   final Widget Function(User?)? titleBuilder;
@@ -47,6 +49,9 @@ class UserFilterListView extends StatelessWidget {
             trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
             onTap: () async {
               onTap?.call(user);
+            },
+            onLongPress: () async {
+              onLongPress?.call(user);
             },
           );
         }

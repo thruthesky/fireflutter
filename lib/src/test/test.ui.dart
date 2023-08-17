@@ -111,6 +111,14 @@ class _TestScreenState extends State<TestUi> {
           onPressed: testChangeDefaultChatRoomName,
           child: const Text('TEST - Change Default Chat Room Name'),
         ),
+        ElevatedButton(
+          onPressed: testRenameChatRoomOwnSide,
+          child: const Text('TEST - Rename Chat Room Name'),
+        ),
+        ElevatedButton(
+          onPressed: testChatRoomPasswordUpdate,
+          child: const Text('TEST - Update Chat Room Password'),
+        ),
       ],
     );
   }
@@ -125,6 +133,7 @@ class _TestScreenState extends State<TestUi> {
     await testInviteUserIntoGroupChat();
     await testChangeDefaultChatRoomName();
     await testRenameChatRoomOwnSide();
+    await testChatRoomPasswordUpdate();
     Test.report();
   }
 
@@ -257,8 +266,6 @@ class _TestScreenState extends State<TestUi> {
 
     const newName = 'Updated Name';
 
-    // TODO make a separate function?
-
     // rename the room
     await ChatService.instance.updateRoomSetting(room: room, setting: 'name', value: newName);
 
@@ -288,17 +295,17 @@ class _TestScreenState extends State<TestUi> {
     const renameApple = "Apple's place";
 
     // rename the room
-    await ChatService.instance.renameRoom(updatedName: renameApple, room: room);
+    await ChatService.instance.updateMyRoomSetting(room: room, setting: 'rename', value: renameApple);
 
     // Get the room
     Room roomAfter = await ChatService.instance.getRoom(room.id);
 
-    // Test if ChatService.instance.renameRoom() function works. It must rename.
+    // Test if ChatService.instance.updateMyRoomSetting() function works. It must rename.
     test(roomAfter.rename[UserService.instance.uid] == renameApple,
         "The room must have a rename for user. Actual Value: ${roomAfter.rename[UserService.instance.uid]}. Expected: $renameApple");
 
     // rename the room
-    await ChatService.instance.renameRoom(updatedName: '', room: room);
+    await ChatService.instance.updateMyRoomSetting(room: room, setting: 'rename', value: '');
 
     // Get the update to the room
     roomAfter = await ChatService.instance.getRoom(room.id);
@@ -306,5 +313,55 @@ class _TestScreenState extends State<TestUi> {
     // Test if it clears the value. It must delete the value.
     test(roomAfter.rename[UserService.instance.uid] == null,
         "The room must not have a rename. Actual Value: ${roomAfter.rename[UserService.instance.uid]}. Expected: Null");
+  }
+
+  testChatRoomPasswordUpdate() async {
+    await FirebaseAuth.instance.signOut();
+
+    // Wait until logout is complete or you may see firestore permission denied error.
+    await Test.wait();
+
+    // Sign in with apple with its password
+    await Test.login(Test.apple);
+
+    // Get the room
+    Room room = await ChatService.instance.createChatRoom(roomName: 'Testing Room');
+
+    // Get the room update
+    // room = await ChatService.instance.getRoom(room.id);
+
+    // There must be no password upon creating the room
+    test(room.password == null,
+        "The room must not have a password upon creation. Actual Value: ${room.password}. Expected: null");
+
+    // There must be no password upon creating the room
+    // test
+
+    // add the users
+    await room.invite(Test.banana.uid);
+    await room.invite(Test.cherry.uid);
+
+    const String password = 'sample';
+
+    // Master Apple updates the chat room password.
+
+    // The chat room password must be updated.
+
+    // Master Apple set Banana as Moderator
+
+    // Moderator Banana updates the password
+    const String bananaPassword = 'bananapass';
+    // Error Test
+
+    // Regular Member Cherry updates the password
+    const String cherryPassword = 'cherry';
+    // Error Test
+
+    // Test if the password retained
+    // password
+
+    // Master Apple clears the password
+
+    // the updated password must be null
   }
 }

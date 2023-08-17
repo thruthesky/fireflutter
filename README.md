@@ -558,6 +558,8 @@ Scafolld(
   - And the new chat room is a group chat room and more members would invited (without creating another chat room).
 
 - Any user in the chat room can invite other user unless it is password-locked.
+- Onlt the master can update the password.
+<!-- TODO for confirmation about password -->
 - The `inviting` means, the invitor will add the `invitee`'s uid into `users` field.
 
   - It is same as `joining`. If the user who wants to join the room, he will simply add his uid into `users` field. That's called `joining`.
@@ -801,6 +803,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 ```
+
+- Take note that errors may occur when the multiple execution of testAll are concurrently running.
 
 ## Deploy
 
