@@ -1,5 +1,25 @@
 # Easy Extension
 
+- [Easy Extension](#easy-extension)
+  - [Overview](#overview)
+  - [Installation](#installation)
+  - [Options](#options)
+  - [Command list](#command-list)
+    - [Updating auth custom claims](#updating-auth-custom-claims)
+    - [Disable user](#disable-user)
+    - [Enable user](#enable-user)
+    - [Delete user](#delete-user)
+    - [Get user](#get-user)
+  - [Error handling](#error-handling)
+  - [Deploy](#deploy)
+  - [Unit Testing](#unit-testing)
+    - [Testing on Local Emulators](#testing-on-local-emulators)
+    - [Testing on real Firebase](#testing-on-real-firebase)
+  - [Tips](#tips)
+  - [Security rules](#security-rules)
+  - [Developer installation](#developer-installation)
+
+
 ## Overview
 
 - This firebase extension helps to manage your firebase.
@@ -363,4 +383,15 @@ If user not exists, the status will be error.
 - See the [sample security rules](https://github.com/easy-extension/firestore.rules) that you may copy and use for the seurity rules of easy-extension.
 
 
+
+
+
+## Developer installation
+
+For developers,
+
+- Download the service account and save it as `service-account.json` under the project root folder. Note that, `service-account.json` is added into .gitignore
+- Apply it into environemnt
+  - `export GOOGLE_APPLICATION_CREDENTIALS=../service-account.json`
+- Run the test
 

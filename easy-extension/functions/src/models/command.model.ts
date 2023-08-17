@@ -74,6 +74,7 @@ export class CommandModel {
         code = error.message;
       }
       // log error
+      // * This will produce error message on shell if it runs as unit testing.
       functions.logger.error(
         code,
         message,

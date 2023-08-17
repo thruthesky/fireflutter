@@ -80,7 +80,7 @@ describe("Get user", () => {
 
         const commandDocSnapshot = await ref.get();
         const data = commandDocSnapshot.data();
-        console.log('doc', data);
+        // console.log('doc', data);
 
         expect(data?.response?.data?.email).equal(email);
     });
@@ -103,7 +103,7 @@ describe("Get user", () => {
 
         const commandDocSnapshot = await ref.get();
         const data = commandDocSnapshot.data();
-        console.log('doc', data);
+        // console.log('doc', data);
 
         expect(data?.response?.data?.uid).equal(user.uid);
     });
@@ -123,7 +123,7 @@ describe("Get user", () => {
 
         const commandDocSnapshot = await ref.get();
         const data = commandDocSnapshot.data();
-        console.log('doc', data);
+        // console.log('doc', data);
 
         expect(data?.response?.data?.phoneNumber).equal(user.phoneNumber);
     });
