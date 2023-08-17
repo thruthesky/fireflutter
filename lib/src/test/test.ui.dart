@@ -111,6 +111,14 @@ class _TestScreenState extends State<TestUi> {
           onPressed: testChangeDefaultChatRoomName,
           child: const Text('TEST - Change Default Chat Room Name'),
         ),
+        ElevatedButton(
+          onPressed: testRenameChatRoomOwnSide,
+          child: const Text('TEST - Rename Chat Room Name'),
+        ),
+        ElevatedButton(
+          onPressed: testChatRoomPasswordUpdate,
+          child: const Text('TEST - Update Chat Room Password'),
+        ),
       ],
     );
   }
@@ -125,6 +133,7 @@ class _TestScreenState extends State<TestUi> {
     await testInviteUserIntoGroupChat();
     await testChangeDefaultChatRoomName();
     await testRenameChatRoomOwnSide();
+    await testChatRoomPasswordUpdate();
     Test.report();
   }
 
@@ -257,8 +266,6 @@ class _TestScreenState extends State<TestUi> {
 
     const newName = 'Updated Name';
 
-    // TODO make a separate function?
-
     // rename the room
     await ChatService.instance.updateRoomSetting(room: room, setting: 'name', value: newName);
 
@@ -288,20 +295,111 @@ class _TestScreenState extends State<TestUi> {
     const renameApple = "Apple's place";
 
     // rename the room
-    await ChatService.instance.renameRoom(updatedName: renameApple, room: room);
+    await ChatService.instance.updateMyRoomSetting(room: room, setting: 'rename', value: renameApple);
 
     // Get the room
     Room roomAfter = await ChatService.instance.getRoom(room.id);
 
-    // Test if ChatService.instance.renameRoom() function works. It must rename.
+    // Test if ChatService.instance.updateMyRoomSetting() function works. It must rename.
     test(roomAfter.rename[UserService.instance.uid] == renameApple,
         "The room must have a rename for user. Actual Value: ${roomAfter.rename[UserService.instance.uid]}. Expected: $renameApple");
 
     // rename the room
-    await ChatService.instance.renameRoom(updatedName: '', room: room);
+    await ChatService.instance.updateMyRoomSetting(room: room, setting: 'rename', value: '');
+
+    // Get the update to the room
+    roomAfter = await ChatService.instance.getRoom(room.id);
 
     // Test if it clears the value. It must delete the value.
     test(roomAfter.rename[UserService.instance.uid] == null,
         "The room must not have a rename. Actual Value: ${roomAfter.rename[UserService.instance.uid]}. Expected: Null");
+  }
+
+  testChatRoomPasswordUpdate() async {
+    await FirebaseAuth.instance.signOut();
+
+    // Wait until logout is complete or you may see firestore permission denied error.
+    await Test.wait();
+
+    // Sign in with apple with its password
+    await Test.login(Test.apple);
+
+    // Get the room
+    Room room = await ChatService.instance.createChatRoom(roomName: 'Testing Room');
+
+    // There must be no password upon creating the room
+    test(room.password == null,
+        "The room must not have a password upon creation. Actual Value: ${room.password}. Expected: null");
+
+    // add the users
+    await room.invite(Test.banana.uid);
+    await room.invite(Test.cherry.uid);
+
+    // Master Apple updates the chat room password.
+    const String password = 'sample';
+    await ChatService.instance.updateRoomSetting(room: room, setting: 'password', value: password);
+
+    // Get the room update
+    room = await ChatService.instance.getRoom(room.id);
+
+    // TEST: The chat room password must be updated.
+    test(room.password == password,
+        "The chat room password can be updated by Master. Actual Value: ${room.password}. Expected: $password");
+
+    // Master Apple set Banana as Moderator
+    await ChatService.instance.setUserAsModerator(room: room, uid: Test.banana.uid);
+
+    // Sign out Master Apple, Sign in with Moderator Banana with its password
+    await FirebaseAuth.instance.signOut();
+    await Test.wait(); // Wait until logout is complete or you may see firestore permission denied error.
+    await Test.login(Test.banana);
+
+    // Moderator Banana updates the password
+    const String bananaPassword = 'bananapass';
+    await ChatService.instance.updateRoomSetting(room: room, setting: 'password', value: bananaPassword);
+
+    // Get the room update
+    room = await ChatService.instance.getRoom(room.id);
+
+    // TEST: The chat room password must be updated.
+    test(room.password == bananaPassword,
+        "The chat room password can be updated by Moderator. Actual Value: ${room.password}. Expected: $bananaPassword");
+
+    // Sign out Moderator Banana, Sign in with Cherry with its password
+    await FirebaseAuth.instance.signOut();
+    await Test.wait(); // Wait until logout is complete or you may see firestore permission denied error.
+    await Test.login(Test.cherry);
+
+    const String cherryPassword = 'cherry';
+
+    // TODO for confirmation: how do we handle other exceptions
+    const permissionDeniedError =
+        '[cloud_firestore/permission-denied] The caller does not have permission to execute the specified operation.';
+
+    // This should not work because the member is non admin
+    await Test.assertExceptionCode(
+        ChatService.instance.updateRoomSetting(room: room, setting: 'password', value: cherryPassword),
+        permissionDeniedError);
+
+    // Get the room update
+    room = await ChatService.instance.getRoom(room.id);
+
+    // TEST: The chat room password should not be updated.
+    test(room.password != cherryPassword,
+        "The chat room password should not be updated by non-admin member. Actual Value: ${room.password}. Expected: $bananaPassword");
+
+    // Sign out Cherry, Sign in with Master Apple with its password
+    await FirebaseAuth.instance.signOut();
+    await Test.wait(); // Wait until logout is complete or you may see firestore permission denied error.
+    await Test.login(Test.apple);
+
+    // Master Apple clears the password
+    await ChatService.instance.updateRoomSetting(room: room, setting: 'password', value: '');
+
+    // Get the room update
+    room = await ChatService.instance.getRoom(room.id);
+
+    // TEST: The updated password must be null.
+    test(room.password == null, "The password can be cleared. Actual Value: ${room.password}. Expected: null");
   }
 }

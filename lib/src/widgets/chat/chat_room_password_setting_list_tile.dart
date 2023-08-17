@@ -16,12 +16,16 @@ class ChatRoomPasswordSettingListTile extends StatefulWidget {
 
 class _ChatRoomPasswordSettingListTileState extends State<ChatRoomPasswordSettingListTile> {
   final password = TextEditingController();
-
   bool hidePassword = true;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     password.text = widget.room.password ?? '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return ListTile(
       title: const Text('Password'),
       subtitle: TextFormField(
@@ -34,6 +38,7 @@ class _ChatRoomPasswordSettingListTileState extends State<ChatRoomPasswordSettin
             onPressed: () {
               setState(() {
                 hidePassword = !hidePassword;
+                debugPrint(password.text);
               });
             },
           ),

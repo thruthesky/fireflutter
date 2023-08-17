@@ -35,16 +35,15 @@ class _ChatRoomSettingsScreenState extends State<ChatRoomSettingsScreen> {
           final Room roomSnapshot = Room.fromDocumentSnapshot(snapshot.data!);
           return ListView(
             children: [
-              if (ChatService.instance.isMaster(room: roomSnapshot, uid: ChatService.instance.uid) &&
-                  widget.room.group) ...[
-                ChatRoomOpenSettingListTile(room: roomSnapshot),
-                ChatRoomMaximumUsersSettingListTile(room: roomSnapshot),
-                ChatRoomDefaultRoomNameSettingListTile(room: roomSnapshot),
-                ChatRoomPasswordSettingListTile(room: roomSnapshot),
+              if (widget.room.group) ...[
+                if (ChatService.instance.isMaster(room: roomSnapshot, uid: ChatService.instance.uid)) ...[
+                  ChatRoomOpenSettingListTile(room: roomSnapshot),
+                  ChatRoomMaximumUsersSettingListTile(room: roomSnapshot),
+                  ChatRoomDefaultRoomNameSettingListTile(room: roomSnapshot),
+                  ChatRoomPasswordSettingListTile(room: roomSnapshot),
+                ],
+                RenameChatRoomSettingTile(room: roomSnapshot),
               ],
-              RenameChatRoomSettingTile(
-                room: roomSnapshot,
-              ),
             ],
           );
         },

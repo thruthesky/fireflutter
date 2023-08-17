@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/services/chat.service.dart';
+import 'package:flutter/material.dart';
 
 /// Room
 ///
@@ -158,7 +159,51 @@ class Room {
     return await addUser(userUid);
   }
 
-  Future<void> join() async {
-    return await addUser(FirebaseAuth.instance.currentUser!.uid);
+  Future<bool> join({BuildContext? context}) async {
+    /// ! ongoing
+    // show room password dialog
+    if (password == null) {
+      await addUser(FirebaseAuth.instance.currentUser!.uid);
+      return true;
+    }
+    if (context != null) {
+      // TODO: Error, must provide context
+      final bool passwordResult = await showDialog<bool?>(
+          context: context,
+          builder: (context) {
+            final roomPassword = TextEditingController();
+            return AlertDialog(
+              title: Text(name),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Password: "),
+                  TextFormField(
+                    controller: roomPassword,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter Chat Room Password',
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                ElevatedButton(child: const Text('Cancel'), onPressed: () => Navigator.pop(context)),
+                ElevatedButton(
+                    child: const Text('Enter'),
+                    onPressed: () {
+                      if (roomPassword.text == password) Navigator.pop(context, true);
+                    }),
+              ],
+            );
+          }).then(
+        (passwordResult) {
+          return passwordResult ?? false;
+        },
+      );
+      if (passwordResult) await addUser(FirebaseAuth.instance.currentUser!.uid);
+      return passwordResult;
+    }
+    return false;
   }
 }

@@ -19,8 +19,9 @@ class ChatRoomListTile extends StatelessWidget {
       title: ChatRoomListTileName(room: room),
       onTap: () {
         if (joinOnEnter && !room.users.contains(UserService.instance.uid)) {
-          room.join().then((value) {
-            ChatService.instance.showChatRoom(context: context, room: room);
+          room.join(context: context).then((joinedSuccessfully) {
+            debugPrint("Joined? $joinedSuccessfully");
+            if (joinedSuccessfully) ChatService.instance.showChatRoom(context: context, room: room);
           });
         } else {
           ChatService.instance.showChatRoom(context: context, room: room);

@@ -43,7 +43,7 @@ class _SearchUserInviteState extends State<SearchUserInvite> {
           ),
         ),
         Expanded(
-          child: UserFilterListView(
+          child: UserListView(
             searchText: search.text,
             exemptedUsers: roomMembers!,
             onTap: (user) async {
