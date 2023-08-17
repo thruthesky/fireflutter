@@ -7,7 +7,7 @@ class UserService {
   static UserService? _instance;
   static UserService get instance => _instance ??= UserService._();
 
-  /// null 이면 아직 로드를 안했다는 뜻이다. 즉, 로딩중이라는 뜻이다.
+  /// null 이면 아직 로드를 안했다는 뜻이다. 즉, 로딩중이라는 뜻이다. 로그인을 했는지 하지 않았는지 여부는 알 수 없다.
   ///
   final BehaviorSubject<User?> userDocumentChanges = BehaviorSubject<User?>.seeded(null);
 
@@ -93,7 +93,8 @@ class UserService {
       return _userCache[uid];
     }
 
-    /// 아니면, Firestore 에서 불러와서 User 을 만들어 리턴
+    /// 아니면, Firestore 에서 불러와서 User 을 만들어 리턴.
+    /// 만약, 사용자 문서가 존재하지 않으면 null 을 리턴하며, 캐시에도 저장하지 않는다. 즉, 다음 호출시 다시 로드 시도한다.
     final u = await User.get(uid);
     if (u == null) return null;
     _userCache[uid] = u;

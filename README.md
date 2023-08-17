@@ -127,6 +127,7 @@ UserDoc(
     backgroundColor: Theme.of(context).colorScheme.inversePrimary,
   ),
   documentNotExistBuilder: () {
+    // Create user document if not exists.
     UserService.instance.create();
     return const SizedBox.shrink();
   },
@@ -171,6 +172,52 @@ UserFilterListView(
   searchText: 'nameValue',
   field: 'name',
 ),
+```
+
+Example of complete code for displaying the `UserFilterListView` in a dialog wiht search box
+```dart
+onPressed() async {
+  final user = await showGeneralDialog<User>(
+    context: context,
+    pageBuilder: (context, _, __) {
+      TextEditingController search = TextEditingController();
+      return StatefulBuilder(builder: (context, setState) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: const Text('Find friends'),
+          ),
+          body: Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                TextField(
+                  controller: search,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Search',
+                  ),
+                  onSubmitted: (value) => setState(() => search.text = value),
+                ),
+                Expanded(
+                  child: UserFilterListView(
+                    key: ValueKey(search.text),
+                    searchText: search.text,
+                    field: 'name',
+                    avatarBuilder: (user) => const Text('Photo'),
+                    titleBuilder: (user) => Text(user?.uid ?? ''),
+                    subtitleBuilder: (user) => Text(user?.phoneNumber ?? ''),
+                    trailingBuilder: (user) => const Icon(Icons.add),
+                    onTap: (user) => context.pop(user),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      });
+    },
+  );
 ```
 
 
