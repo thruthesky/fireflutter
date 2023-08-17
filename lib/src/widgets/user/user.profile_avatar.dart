@@ -92,6 +92,7 @@ class _UserAvatarState extends State<UserProfileAvatar> {
       child: Stack(
         children: [
           UserAvatar(
+            key: ValueKey(widget.user.photoUrl),
             user: widget.user,
             size: widget.size,
           ),

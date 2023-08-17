@@ -85,6 +85,7 @@ class ChatService {
     );
   }
 
+  @Deprecated('Use model')
   Future<void> leaveRoom({required Room room, Function()? callback}) async {
     await roomDoc(room.id).update({
       'moderators': FieldValue.arrayRemove([uid]),
