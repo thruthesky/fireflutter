@@ -59,7 +59,7 @@ class UserDoc extends StatelessWidget {
         return live
             // live update
             ? StreamBuilder<User?>(
-                stream: UserService.instance.userDocumentChanges,
+                stream: UserService.instance.documentChanges,
                 builder: buildStreamWidget,
               )
             // update one time
