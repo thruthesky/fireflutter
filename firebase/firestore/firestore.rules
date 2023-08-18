@@ -12,7 +12,7 @@ rules_version = '2';
 
 // Return true if the use is root user.
 function isAdmin() {
-  let adminUIDs = ['root', 'admin'];
+  let adminUIDs = ['root', 'admin', 'CYKk5Q79AmYKQEzw8A95UyEahiz1'];
   return request.auth.uid in adminUIDs || request.auth.token.admin == true;
 }
 
@@ -29,6 +29,15 @@ service cloud.firestore {
     match /easy-settings/{documentId} {
       allow read: if true;
       allow write: if isAdmin();
+    }
+
+    match /categories/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /posts/{documentId} {
+      allow read, write: if true;
     }
 
     // Master can change all the fields.

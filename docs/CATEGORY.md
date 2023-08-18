@@ -4,7 +4,7 @@ Categories are used for posts. This can be access by Admin.
 
 ## Features
 
-- Admins can do basic create, update, or delete categories functions.
+- Admins can do basic create, and update categories functions.
 
 ## Model
 

@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { db, a, b, c, d, createChatRoom, tempChatRoomData, admin } = require("./setup");
+const { db, a, b, c, d, createChatRoom, tempChatRoomData, admin } = require("./../setup");
 
 // load firebase-functions-test SDK
 const firebase = require("@firebase/testing");
