@@ -44,13 +44,13 @@ class Post {
     );
   }
 
-  static Future<Post> create({
-    required String categoryId,
-    required String title,
-    required String content,
-    required String uid,
-    List<String>? files,
-  }) async {
-    return Post.fromMap(map: map, id: id);
-  }
+  // static Future<Post> create({
+  //   required String categoryId,
+  //   required String title,
+  //   required String content,
+  //   required String uid,
+  //   List<String>? files,
+  // }) async {
+  //   return Post.fromMap(map: map, id: id);
+  // }
 }
