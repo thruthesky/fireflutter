@@ -1,3 +1,4 @@
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -10,7 +11,10 @@ Future<ImageSource?> chooseUploadSource(BuildContext context) async {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            const Text('Choose image from ...'),
+            const SizedBox(
+              height: 20,
+            ),
+            Text(tr.upload.chooseFrom),
             ListTile(
               leading: const Icon(Icons.photo_camera),
               title: const Text('Camera'),
@@ -25,8 +29,8 @@ Future<ImageSource?> chooseUploadSource(BuildContext context) async {
                 Navigator.pop(context, ImageSource.gallery);
               },
             ),
-            ElevatedButton(
-              child: const Text('Close BottomSheet'),
+            TextButton(
+              child: const Text('Close'),
               onPressed: () => Navigator.pop(context),
             ),
           ],

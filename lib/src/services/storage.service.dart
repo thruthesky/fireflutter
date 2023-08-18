@@ -32,14 +32,20 @@ class StorageService {
   /// 이 값이 70 이면, 30M 짜리 파일이 1M 로 작아진다.
   /// 이 값이 80 이면, 10M 짜리 파일이 700Kb 로 작아진다. 80 이면 충분하다. 기본 값이다.
   /// 이 값이 0 이면, compress 를 하지 않는다.
+  ///
+  /// [path] is the file path in Firebase Storage.
+  /// If it is null, it will be uploaded to the default path.
+  ///
+  ///
   Future<String?> upload({
     required File file,
     Function(double)? progress,
     Function? complete,
     int compressQuality = 80,
+    String? path,
   }) async {
     final storageRef = FirebaseStorage.instance.ref();
-    final fileRef = storageRef.child("easyuser/$uid/${file.path.split('/').last}");
+    final fileRef = storageRef.child(path ?? "users/$uid/${file.path.split('/').last}");
 
     if (compressQuality > 0) {
       final xfile = await FlutterImageCompress.compressAndGetFile(
@@ -61,6 +67,8 @@ class StorageService {
     /// 업로드 완료 할 때까지 기다림
     await uploadTask.whenComplete(() => complete?.call());
     final url = await fileRef.getDownloadURL();
+    print(fileRef.fullPath);
+
     return url;
   }
 
