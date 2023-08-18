@@ -25,7 +25,6 @@ export 'widgets/chat/chat_room_list_view.dart';
 export 'widgets/chat/chat_room_maximum_users_setting_list_tile.dart';
 export 'widgets/chat/chat_room_members_button.dart';
 export 'widgets/chat/chat_room_members_list_view.dart';
-export 'widgets/chat/chat_room_menu_button.dart';
 export 'widgets/chat/chat_room_menu_dialog.dart';
 export 'widgets/chat/chat_room_no_of_new_messages_text.dart';
 export 'widgets/chat/chat_room_open_list_view.dart';

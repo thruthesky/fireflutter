@@ -36,8 +36,11 @@ class ChatRoomAppBarState extends State<ChatRoomAppBar> {
           final Room room = Room.fromDocumentSnapshot(snapshot.data!);
           title = room.name;
           actions = [
-            ChatRoomMenuButton(
-              room: room,
+            IconButton(
+              icon: const Icon(Icons.settings),
+              onPressed: () async {
+                return ChatService.instance.openChatRoomMenu(context: context, room: widget.room);
+              },
             ),
           ];
         }

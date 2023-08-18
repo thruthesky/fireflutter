@@ -397,19 +397,14 @@ class ChatService {
   }
 
   /// Opens the chat room menu
-  openChatRoomMenu({required Room room, required BuildContext context}) async {
-    // TODO customizable chat Room menu screen
-    final otherUser = room.group == true ? null : await ChatService.instance.getOtherUserFromSingleChatRoom(room);
-    if (context.mounted) {
-      showGeneralDialog(
-        context: context,
-        pageBuilder: (context, _, __) {
-          return ChatRoomMenuDialog(
-            room: room,
-            otherUser: otherUser,
-          );
-        },
-      );
-    }
+  openChatRoomMenu({required Room room, required BuildContext context}) {
+    return showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) {
+        return ChatRoomMenuDialog(
+          room: room,
+        );
+      },
+    );
   }
 }

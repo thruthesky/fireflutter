@@ -11,16 +11,25 @@ import 'package:flutter/material.dart';
 class Room {
   final String id;
   final String name;
-  final Map<String, dynamic> rename;
+
+  /// [rename] Each user can rename the room. This map holds the rename of the room.
+  final Map<String, String> rename;
   final bool group;
   final bool open;
   final String master;
   final List<String> users;
   final List<String> moderators;
   final List<String> blockedUsers;
+
+  // TODO - 각 사용자 별 메세지 읽음 표시를 여기에 저장해야 하는가? 어차피 나의 방이면 누가 채팅을 할 때 마다, 항상 listen 해야 한다. lastMessage 가 변하고,
+  // TODO - 나의 채팅 숫자도 변해야 한다. 그러면, 이 값이 여기에 저장되어야 한다. 그런데 사용자가 100 명만 되어도 좀 무리가 아닌가?
+  // TODO - 향후, 채팅메시지 자체를 RTDB 에 저장하고, 사용자의 개별 속성 값고 RTDB 에 분리해서 저장해야 할 것 같다.
   final Map<String, int> noOfNewMessages;
   final int maximumNoOfUsers;
-  final String? password; // TODO for confirmation
+  // TODO - 비밀번호 업데이트. EasyExtension 의 strignMatch 로 한다.
+  final String? password;
+
+  final Timestamp createdAt;
 
   Room({
     required this.id,
@@ -35,6 +44,7 @@ class Room {
     required this.noOfNewMessages,
     required this.maximumNoOfUsers,
     this.password,
+    required this.createdAt,
   });
 
   bool get isSingleChat => users.length == 2 && group == false;
@@ -49,19 +59,21 @@ class Room {
 
   factory Room.fromMap({required Map<String, dynamic> map, required id}) {
     return Room(
-        id: id,
-        name: map['name'] ?? '',
-        rename: map['rename'] ?? {},
-        group: map['group'],
-        open: map['open'],
-        master: map['master'],
-        users: List<String>.from((map['users'] ?? [])),
-        moderators: List<String>.from(map['moderators'] ?? []),
-        blockedUsers: List<String>.from(map['blockedUsers'] ?? []),
-        noOfNewMessages: Map<String, int>.from(map['noOfNewMessages'] ?? {}),
-        maximumNoOfUsers:
-            map['maximumNoOfUsers'] ?? 100, // TODO confirm where to put the config on default max no of users
-        password: map['password']);
+      id: id,
+      name: map['name'] ?? '',
+      rename: map['rename'] ?? {},
+      group: map['group'],
+      open: map['open'],
+      master: map['master'],
+      users: List<String>.from((map['users'] ?? [])),
+      moderators: List<String>.from(map['moderators'] ?? []),
+      blockedUsers: List<String>.from(map['blockedUsers'] ?? []),
+      noOfNewMessages: Map<String, int>.from(map['noOfNewMessages'] ?? {}),
+      maximumNoOfUsers:
+          map['maximumNoOfUsers'] ?? 100, // TODO confirm where to put the config on default max no of users
+      password: map['password'],
+      createdAt: map['createdAt'] ?? Timestamp.now(),
+    );
   }
 
   Map<String, dynamic> toMap() {
@@ -78,6 +90,7 @@ class Room {
       'noOfNewMessages': noOfNewMessages,
       'maximumNoOfUsers': maximumNoOfUsers,
       'password': password,
+      'createdAt': createdAt,
     };
   }
 

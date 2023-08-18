@@ -21,6 +21,8 @@ A free, open source, complete, rapid development package for creating Social app
 - [Customization](#customization)
   - [Chat Customization](#chat-customization)
 - [Translation](#translation)
+- [Developer](#developer)
+  - [Development Tips](#development-tips)
 - [Contribution](#contribution)
 - [OLD README](#old-readme)
   - [TODO](#todo)
@@ -284,6 +286,52 @@ Here is an example of updating the translation.
 
 ```dart
 tr.user.loginFirst = '로그인을 해 주세요.';
+```
+
+# Developer
+
+## Development Tips
+
+Most often, you would click, and click, and click over, and over again, and again to see what you have changed on the UI. Then, you change the UI again. And you would click, and click over again, and again, ...
+Yes, this is the reality.
+
+To avoid this, you can display the UI part immediately after hot-restart (with keyboard shortcut) like below. This is merely a sample code. You can test any part of the app like below.
+
+I copied the `Room` properties manually from the Firestore document and I edited some of the values of the properties for test purpose. You may code a line to get the real room model data.
+
+```dart
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    Timer(const Duration(milliseconds: 200), () {
+      ChatService.instance.openChatRoomMenu(
+        context: context,
+        room: Room(
+          id: 'DHZWDyeuAlgmKxFxbMbF',
+          name: '필리핀 맘카페 채팅방 - 오늘도 마닐라, 오늘도 화이팅입니다.',
+          rename: {},
+          group: true,
+          open: true,
+          master: 'DHZWDyeuAlgmKxFxbMbF',
+          users: [
+            '15ZXRtt5I2Vr2xo5SJBjAVWaZ0V2',
+            '23TE0SWd8Mejv0Icv6vhSDRHe183',
+            'JAekM4AyPTW1fD9NCwqyLuBCTrI3',
+            'X5ps2UhgbbfUd7UH1JBoUedBzim2',
+            'lyCxEC0oGtUcGi0KKMAs8Y7ihSl2',
+            'ojxsBLMSS6UIegzixHyP4zWaVm13',
+            't1fAVTeN5oMshEPYn9VvB8TuZUy2',
+          ],
+          moderators: [],
+          blockedUsers: [],
+          noOfNewMessages: {},
+          maximumNoOfUsers: 3,
+          createdAt: Timestamp.now(),
+        ),
+      );
+    });
 ```
 
 # Contribution

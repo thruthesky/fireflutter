@@ -2,6 +2,7 @@ import 'package:fireflutter/src/models/room.dart';
 import 'package:fireflutter/src/services/chat.service.dart';
 import 'package:flutter/material.dart';
 
+@Deprecated('Don\'t use this. Use ChatRoomAppBarTitle instead. This will be deleted')
 class LeaveButton extends StatelessWidget {
   const LeaveButton({
     super.key,
