@@ -15,11 +15,16 @@ class User {
   final String phoneNumber;
   final String email;
 
+  /// 상태. 개인의 상태. 예를 들어, 휴가중. 또는 모토. 인생은 모험이 아니면 아무것도 아닙니다.
+  final String state;
+
   final int birthYear;
   final int birthMonth;
   final int birthDay;
 
   /// DB 에 저장되는 값. 그래야 검색이 가능.
+  /// 주의: DB 검색용으로만 써야 한다. 왜냐하면, photoUrl 값이 삭제되면, 이 값이 false 가 되어야하는데,
+  /// (실수로 그렇지 않고 계속) true 값을 가질 수 있다. 예를 들면, 테스트 할 때, 수동으로 photoUrl 만 삭제 할 때, 등...
   final bool hasPhotoUrl;
 
   /// 사용자 문서가 생성된 시간. 항상 존재 해야 함. Firestore 서버 시간
@@ -36,6 +41,7 @@ class User {
   final bool complete;
 
   /// 사용자 문서가 존재하지 않는 경우, 이 값이 false 이다.
+  /// 특히, 이 값이 false 이면 사용자 로그인을 했는데, 사용자 문서가 존재하지 않는 경우이다.
   final bool exists;
 
   bool cached = false;
@@ -51,6 +57,7 @@ class User {
     this.hasPhotoUrl = false,
     this.phoneNumber = '',
     this.email = '',
+    this.state = '',
     this.birthYear = 0,
     this.birthMonth = 0,
     this.birthDay = 0,
@@ -79,6 +86,7 @@ class User {
       hasPhotoUrl: map['hasPhotoUrl'] ?? false,
       phoneNumber: map['phoneNumber'] ?? '',
       email: map['email'] ?? '',
+      state: map['state'] ?? '',
       birthYear: map['birthYear'] ?? 0,
       birthMonth: map['birthMonth'] ?? 0,
       birthDay: map['birthDay'] ?? 0,
@@ -144,6 +152,7 @@ class User {
     bool? hasPhotoUrl,
     String? phoneNumber,
     String? email,
+    String? state,
     int? birthYear,
     int? birthMonth,
     int? birthDay,
@@ -163,6 +172,7 @@ class User {
       if (hasPhotoUrl != null) 'hasPhotoUrl': hasPhotoUrl,
       if (phoneNumber != null) 'phoneNumber': phoneNumber,
       if (email != null) 'email': email,
+      if (state != null) 'state': state,
       if (birthYear != null) 'birthYear': birthYear,
       if (birthMonth != null) 'birthMonth': birthMonth,
       if (birthDay != null) 'birthDay': birthDay,

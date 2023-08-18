@@ -8,6 +8,7 @@ class UserService {
   static UserService get instance => _instance ??= UserService._();
 
   /// null 이면 아직 로드를 안했다는 뜻이다. 즉, 로딩중이라는 뜻이다. 로그인을 했는지 하지 않았는지 여부는 알 수 없다.
+  /// 만약, 로그인을 했는지 여부를 알고 싶다면, [nullableUser] 가 null 인지 아닌지를 확인하면 된다.
   ///
   final BehaviorSubject<User?> documentChanges = BehaviorSubject<User?>.seeded(null);
 
@@ -25,6 +26,7 @@ class UserService {
         /// 이 후, 사용자 문서가 업데이트 될 때 마다, nullableUser 업데이트
         UserService.instance.doc.snapshots().listen((documentSnapshot) {
           /// 사용자 문서가 존재하지 않는 경우,
+          /// * exists: false 는 오직, documentChanges 이벤트에만 적용된다.
           if (!documentSnapshot.exists || documentSnapshot.data() == null) {
             nullableUser = User(uid: '', exists: false);
           } else {
@@ -62,6 +64,12 @@ class UserService {
   ///
   ///
   /// 예) EasyUser.instance.nullableUser?.photoUrl
+  ///
+  /// Note, that [exists: false] is only applied to [documentChanges] event.
+  /// This means,
+  /// - even if the user is logged in, [nullableUser] may be null (while app boots and loads the user document)
+  /// - if [nullableUser] is not null, it means, the user has logged in and the docuemnt has loaded. But the document may not exist.
+  /// - if `exists: false`, it means, the user has logged in, and the app tried to load the docuemnt, but document does not exist.
   User? nullableUser;
 
   /// nullableUser 의 getter 로 null operator 가 강제 적용된 것이다. 즉, nullableUser 이 null 이면
@@ -94,7 +102,8 @@ class UserService {
     }
 
     /// 아니면, Firestore 에서 불러와서 User 을 만들어 리턴.
-    /// 만약, 사용자 문서가 존재하지 않으면 null 을 리턴하며, 캐시에도 저장하지 않는다. 즉, 다음 호출시 다시 로드 시도한다.
+    /// * 주의: 만약, 사용자 문서가 존재하지 않으면 null 을 리턴하며, 캐시에도 저장하지 않는다. 즉, 다음 호출시 다시
+    /// * 로드 시도한다. 이것은 UserService.instance.nullableUser 가 null 이 되는 것과 다른 것이다.
     final u = await User.get(uid);
     if (u == null) return null;
     _userCache[uid] = u;
@@ -141,6 +150,7 @@ class UserService {
     bool? hasPhotoUrl,
     String? phoneNumber,
     String? email,
+    String? state,
     int? birthYear,
     int? birthMonth,
     int? birthDay,
@@ -162,6 +172,7 @@ class UserService {
       hasPhotoUrl: hasPhotoUrl,
       phoneNumber: phoneNumber,
       email: email,
+      state: state,
       birthYear: birthYear,
       birthMonth: birthMonth,
       birthDay: birthDay,

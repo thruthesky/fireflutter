@@ -50,7 +50,6 @@ class UserListView extends StatelessWidget {
           return const SizedBox();
         } else {
           return ListTile(
-            key: ValueKey(user.uid),
             title: titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
             subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAtDateTime.toString()),
             leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
