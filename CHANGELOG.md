@@ -1,3 +1,5 @@
-## 0.0.1
+## 0.4.2
 
-* TODO: Describe initial release.
+* Rewriting fireflutter code.
+* Adding user management and chat, forum features.
+
