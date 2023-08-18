@@ -7,7 +7,7 @@ const {
     d,
     categoriesColName,
     admin,
-} = require("./../setup");
+} = require("../setup");
 
 // load firebase-functions-test SDK
 const firebase = require("@firebase/testing");
