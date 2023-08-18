@@ -1,8 +1,8 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class ChatDisplayName extends StatefulWidget {
-  const ChatDisplayName({
+class UserDisplayName extends StatefulWidget {
+  const UserDisplayName({
     super.key,
     required this.uid,
     this.textStyle = const TextStyle(fontWeight: FontWeight.bold),
@@ -12,10 +12,10 @@ class ChatDisplayName extends StatefulWidget {
   final TextStyle textStyle;
 
   @override
-  State<ChatDisplayName> createState() => _ChatDisplayNameState();
+  State<UserDisplayName> createState() => _UserDisplayNameState();
 }
 
-class _ChatDisplayNameState extends State<ChatDisplayName> {
+class _UserDisplayNameState extends State<UserDisplayName> {
   User? user;
 
   @override

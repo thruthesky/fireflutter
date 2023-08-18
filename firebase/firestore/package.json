@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha tests/*.spec.js --watch",
+    "test": "mocha tests/*/*.spec.js  tests/*.spec.js --watch",
+    "test:posts": "mocha tests/posts/*.spec.js --watch",
+    "test:categories": "mocha tests/categories/*.spec.js --watch",
     "mocha": "mocha --watch",
     "deploy": "firebase deploy --only firestore:rules"
   },

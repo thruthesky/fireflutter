@@ -11,7 +11,7 @@ const {
     invite,
     block,
     setAsModerator,
-} = require("./setup");
+} = require("./../setup");
 
 // load firebase-functions-test SDK
 const firebase = require("@firebase/testing");

@@ -12,7 +12,7 @@ rules_version = '2';
 
 // Return true if the use is root user.
 function isAdmin() {
-  let adminUIDs = ['root', 'admin'];
+  let adminUIDs = ['root', 'admin', 'CYKk5Q79AmYKQEzw8A95UyEahiz1'];
   return request.auth.uid in adminUIDs || request.auth.token.admin == true;
 }
 
@@ -29,6 +29,37 @@ service cloud.firestore {
     match /easy-settings/{documentId} {
       allow read: if true;
       allow write: if isAdmin();
+    }
+
+    match /categories/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // Only allow write if
+    // it's my post
+    // only updating [likers]
+    match /posts/{documentId} {
+
+      function isMyPost() {
+        return 'uid' in request.resource.data && request.resource.data.uid == request.auth.uid;
+      }
+
+      function onlyUpdatingMyselfOnLikers(uid) {
+        return onlyUpdating(['likers'])
+          &&
+          ( onlyRemoving('likers', uid) 
+            ||
+            (
+              onlyAddingOneElement('likers') &&
+              request.resource.data['likers'].toSet().difference(resource.data['likers'].toSet()) == [uid].toSet() 
+            )
+          )
+        ;
+      }
+
+      allow read: if true; // Anyone should be able to read.
+      allow write: if isMyPost() || onlyUpdatingMyselfOnLikers(request.auth.uid);
     }
 
     // Master can change all the fields.
@@ -224,7 +255,6 @@ function onlyRemoving(arryField, element) {
     resource.data[arryField].toSet().intersection(request.resource.data[arryField].toSet()) == request.resource.data[arryField].toSet()
   ;
 }
-
 
 // If the user is disabled by the admin in Firebase Auth, they cannot login and they don't have request.auth.uid.
 // So, no need to check if the user is disabled.

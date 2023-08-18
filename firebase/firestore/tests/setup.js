@@ -9,6 +9,9 @@ const b = { uid: "uid-B", email: "banana@gmail.com" };
 const c = { uid: "uid-C", email: "cherry@gmail.com" };
 const d = { uid: "uid-D", email: "durian@gmail.com" };
 
+const postsColName = "posts";
+const categoriesColName = "categories";
+
 // Connect to Firestore with a user permission.
 function db(auth = null) {
   return firebase
@@ -144,6 +147,8 @@ exports.a = a;
 exports.b = b;
 exports.c = c;
 exports.d = d;
+exports.postsColName = postsColName;
+exports.categoriesColName = categoriesColName;
 exports.TEST_PROJECT_ID = TEST_PROJECT_ID;
 exports.createOpenGroupChat = createOpenGroupChat;
 exports.invite = invite;

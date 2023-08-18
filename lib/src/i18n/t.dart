@@ -2,6 +2,8 @@ class I18N {
   UserTranslations user = UserTranslations();
   ChatTranslations chat = ChatTranslations();
   UploadTranslations upload = UploadTranslations();
+  CategoryTranslations category = CategoryTranslations();
+  PostTranslations post = PostTranslations();
 }
 
 class UserTranslations {
@@ -15,6 +17,14 @@ class ChatTranslations {
 
 class UploadTranslations {
   String chooseFrom = "Choose upload from...";
+}
+
+class CategoryTranslations {
+  String noCategory = 'No category';
+}
+
+class PostTranslations {
+  String noPost = 'No post';
 }
 
 final tr = I18N();
