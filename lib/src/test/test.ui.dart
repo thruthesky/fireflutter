@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/models/room.dart';
 import 'package:flutter/material.dart';
 
 class TestUi extends StatefulWidget {

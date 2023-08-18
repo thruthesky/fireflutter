@@ -6,13 +6,17 @@ class Category {
   final String id;
   final String name;
   final String? description;
-  final Timestamp? createdAt;
+  final Timestamp createdAt;
+  final Timestamp updatedAt;
+  final String createdBy;
 
   Category({
     required this.id,
     required this.name,
     this.description,
-    this.createdAt,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.createdBy,
   });
 
   factory Category.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
@@ -22,9 +26,11 @@ class Category {
   factory Category.fromMap({required Map<String, dynamic> map, required id}) {
     return Category(
       id: id,
-      name: map['name'],
+      name: map['name'] ?? '',
       description: map['description'],
-      createdAt: map['createdAt'],
+      createdAt: map['createdAt'] ?? Timestamp.now(),
+      updatedAt: map['updatedAt'] ?? Timestamp.now(),
+      createdBy: map['createdBy'] ?? '',
     );
   }
 
@@ -34,6 +40,8 @@ class Category {
       'name': name,
       'description': description,
       'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      'createdBy': createdBy,
     };
   }
 
@@ -41,17 +49,24 @@ class Category {
   ///
   static Future<Category> create({
     required String name,
+    String? description,
   }) async {
-    String myUid = FirebaseAuth.instance.currentUser!.uid; // TODO addedBy
-    final categoryData = {
+    String myUid = FirebaseAuth.instance.currentUser!.uid;
+    final Map<String, dynamic> categoryData = {
       'name': name,
+      if (description != null) 'description': description,
       'createdAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
+      'createdBy': myUid,
     };
     final categoryId = CategoryService.instance.categoryCol.doc().id;
     await CategoryService.instance.categoryCol.doc(categoryId).set(categoryData);
+    categoryData['createdAt'] = Timestamp.now();
+    categoryData['updatedAt'] = Timestamp.now();
     return Category.fromMap(map: categoryData, id: categoryId);
   }
 
   @override
-  String toString() => 'Category(id: $id, name: $name,  description: $description, createdAt: $createdAt)';
+  String toString() =>
+      'Category(id: $id, name: $name, description: $description, createdAt: $createdAt, updatedAt: $updatedAt, createdBy: $createdBy)';
 }

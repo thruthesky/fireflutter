@@ -37,4 +37,5 @@ export 'widgets/chat/chat_room_rename_setting_list_tile.dart';
 
 // Category
 export 'widgets/category/category_list_view.dart';
+export 'widgets/category/category_dialog.dart';
 export 'widgets/category/category_create_dialog.dart';

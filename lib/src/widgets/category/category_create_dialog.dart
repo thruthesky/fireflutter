@@ -5,11 +5,11 @@ class CategoryCreateDialog extends StatefulWidget {
   const CategoryCreateDialog({
     super.key,
     required this.success,
-    required this.cancel,
+    this.cancel,
   });
 
   final void Function(Category category) success;
-  final void Function() cancel;
+  final void Function()? cancel;
 
   @override
   State<CategoryCreateDialog> createState() => _CategoryCreateDialogState();
@@ -35,7 +35,9 @@ class _CategoryCreateDialogState extends State<CategoryCreateDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: widget.cancel,
+          onPressed: () {
+            widget.cancel != null ? widget.cancel!() : Navigator.pop(context);
+          },
           child: const Text('Cancel'),
         ),
         TextButton(

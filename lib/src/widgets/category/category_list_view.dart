@@ -75,7 +75,7 @@ class CategoryListViewState extends State<CategoryListView> {
           return ListTile(
             title: Text(category.name),
             onTap: () {
-              debugPrint('Tapping Category ${category.name}');
+              CategoryService.instance.showCategoryDialog(context, category);
             },
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

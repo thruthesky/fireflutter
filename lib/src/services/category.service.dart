@@ -20,7 +20,7 @@ class CategoryService {
   showCreateCategoryDialog(
     BuildContext context, {
     required void Function(Category category) success,
-    required void Function() cancel,
+    void Function()? cancel,
   }) async {
     await showDialog(
       context: context,
@@ -34,6 +34,24 @@ class CategoryService {
   createCategory({required String categoryName}) {
     return Category.create(
       name: categoryName,
+    );
+  }
+
+  /// Update Category
+  updateCategory(String categoryId, Map<String, dynamic> categoryUpdates) async {
+    await categoryDoc(categoryId).update({
+      'name': categoryUpdates['name'],
+      'description': categoryUpdates['description'],
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  showCategoryDialog(BuildContext context, Category category) async {
+    await showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) => CategoryDialog(
+        category: category,
+      ),
     );
   }
 }
