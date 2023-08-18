@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fireflutter/src/services.dart';
 
 class Post {
   final String id;
@@ -32,7 +34,7 @@ class Post {
   factory Post.fromMap({required Map<String, dynamic> map, required id}) {
     return Post(
       id: id,
-      categoryId: map['categoryId'],
+      categoryId: map['categoryId'] ?? '',
       title: map['title'] ?? '',
       content: map['content'] ?? '',
       uid: map['uid'] ?? '',
@@ -44,13 +46,25 @@ class Post {
     );
   }
 
-  // static Future<Post> create({
-  //   required String categoryId,
-  //   required String title,
-  //   required String content,
-  //   required String uid,
-  //   List<String>? files,
-  // }) async {
-  //   return Post.fromMap(map: map, id: id);
-  // }
+  static Future<Post> create({
+    required String categoryId,
+    required String title,
+    required String content,
+    List<String>? files,
+  }) async {
+    String myUid = FirebaseAuth.instance.currentUser!.uid;
+    final Map<String, dynamic> postData = {
+      'title': title,
+      'content': content,
+      'categoryId': categoryId,
+      if (files != null) 'files': files,
+      'createdAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
+      'uid': myUid,
+    };
+    final postId = PostService.instance.postCol.doc().id;
+    postData['createdAt'] = Timestamp.now();
+    postData['updatedAt'] = Timestamp.now();
+    return Post.fromMap(map: postData, id: postId);
+  }
 }

@@ -59,7 +59,7 @@ service cloud.firestore {
       }
 
       allow read: if true; // Anyone should be able to read.
-      allow write: if isMyPost()  || onlyUpdatingMyselfOnLikers(request.auth.uid);
+      allow write: if isMyPost() || onlyUpdatingMyselfOnLikers(request.auth.uid);
     }
 
     // Master can change all the fields.

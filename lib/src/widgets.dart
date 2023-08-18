@@ -6,7 +6,7 @@ export 'widgets/common/avatar.dart';
 
 // Chat
 export 'widgets/chat/chat_room.dart';
-export 'widgets/chat/chat_display_name.dart';
+export 'widgets/user/user.display_name.dart';
 export 'widgets/chat/chat_friend_list.dart';
 export 'widgets/chat/chat_message_box.dart';
 export 'widgets/chat/chat_message_bubble.dart';
@@ -42,3 +42,5 @@ export 'widgets/category/category_create_dialog.dart';
 
 // Post
 export 'widgets/post/post_list_view.dart';
+export 'widgets/post/create_post_dialog.dart';
+export 'widgets/post/post_dialog.dart';

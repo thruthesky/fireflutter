@@ -71,7 +71,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (!isMyMessage) ...[
-                      ChatDisplayName(uid: widget.chatMessage.senderUid),
+                      UserDisplayName(uid: widget.chatMessage.senderUid),
                     ],
                   ],
                 ),

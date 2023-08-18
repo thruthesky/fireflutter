@@ -10,8 +10,6 @@ import 'package:flutter/material.dart';
 ///
 /// It uses [FirestoreListView] to show the list of categories which uses [ListView] internally.
 /// And it supports some(not all) of the ListView properties.
-///
-/// Note that, the controller of ListView is named [scrollController] in this class.
 class CategoryListView extends StatefulWidget {
   const CategoryListView({
     super.key,
@@ -29,7 +27,6 @@ class CategoryListView extends StatefulWidget {
     this.clipBehavior = Clip.hardEdge,
   });
 
-  // final CategoryListViewController controller;
   final int pageSize;
   final Widget Function(BuildContext, Category)? itemBuilder;
   final Widget Function(BuildContext)? emptyBuilder;
@@ -43,7 +40,7 @@ class CategoryListView extends StatefulWidget {
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final Clip clipBehavior;
 
-  // final void Function(Category) onTap;
+  // final void Function(Category) onTap; // TODO onTap custom
 
   @override
   State<CategoryListView> createState() => CategoryListViewState();
@@ -58,20 +55,13 @@ class CategoryListViewState extends State<CategoryListView> {
 
   @override
   Widget build(BuildContext context) {
-    if (ChatService.instance.loggedIn == false) {
-      return Center(child: Text(tr.user.loginFirst));
-    }
-    // Returning a List View of Chat Categories
     return FirestoreListView(
       query: CategoryService.instance.categoryCol, // TODO conditions of category
       itemBuilder: (context, QueryDocumentSnapshot snapshot) {
         final category = Category.fromDocumentSnapshot(snapshot);
-        // final Category = Category.fromDocumentSnapshot(snapshot);
         if (widget.itemBuilder != null) {
           return widget.itemBuilder!(context, category);
         } else {
-          // return Text(category.name);
-          // return CategoryListTile(Category: Category);
           return ListTile(
             title: Text(category.name),
             onTap: () {

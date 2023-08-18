@@ -51,7 +51,7 @@ class Category {
     required String name,
     String? description,
   }) async {
-    String myUid = FirebaseAuth.instance.currentUser!.uid;
+    final String myUid = FirebaseAuth.instance.currentUser!.uid;
     final Map<String, dynamic> categoryData = {
       'name': name,
       if (description != null) 'description': description,
