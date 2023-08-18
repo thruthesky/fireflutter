@@ -12,6 +12,14 @@ class User {
   final String lastName;
   final String middleName;
   final String photoUrl;
+
+  /// ID 카드(신분증)으로 인증된 사용자의 경우, 인증 코드.
+  /// 신분증 등록 후, 텍스트 추출 -> 이름 대조 또는 기타 방법으로 인증된 사용자의 경우 true
+  ///
+  /// 이 값은 다양하게 응용해서 활용하면 된다. 예) 신분증 업로드 후, 신분증 경로 URL 을 저장하거나, 파일 이름 또는 기타 코드를 입력하면 된다.
+  final String idVerifiedCode;
+
+  ///
   final String phoneNumber;
   final String email;
 
@@ -55,6 +63,7 @@ class User {
     this.middleName = '',
     this.photoUrl = '',
     this.hasPhotoUrl = false,
+    this.idVerifiedCode = '',
     this.phoneNumber = '',
     this.email = '',
     this.state = '',
@@ -84,6 +93,7 @@ class User {
       middleName: map['middleName'] ?? '',
       photoUrl: (map['photoUrl'] ?? '') as String,
       hasPhotoUrl: map['hasPhotoUrl'] ?? false,
+      idVerifiedCode: map['idVerifiedCode'] ?? '',
       phoneNumber: map['phoneNumber'] ?? '',
       email: map['email'] ?? '',
       state: map['state'] ?? '',
@@ -105,6 +115,7 @@ class User {
       'middleName': middleName,
       'photoUrl': photoUrl,
       'hasPhotoUrl': hasPhotoUrl,
+      'idVerifiedCode': idVerifiedCode,
       'phoneNumber': phoneNumber,
       'email': email,
       'birthYear': birthYear,
@@ -117,7 +128,7 @@ class User {
 
   @override
   String toString() =>
-      '''User(uid: $uid, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, phoneNumber: $phoneNumber, email: $email, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, cached: $cached)''';
+      '''User(uid: $uid, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, idVerifiedCode: $idVerifiedCode, phoneNumber: $phoneNumber, email: $email, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, cached: $cached)''';
 
   /// 사용자 문서를 읽어온다.
   ///
@@ -150,6 +161,7 @@ class User {
     String? displayName,
     String? photoUrl,
     bool? hasPhotoUrl,
+    String? idVerifiedCode,
     String? phoneNumber,
     String? email,
     String? state,
@@ -170,6 +182,7 @@ class User {
       if (displayName != null) 'displayName': displayName,
       if (photoUrl != null) 'photoUrl': photoUrl,
       if (hasPhotoUrl != null) 'hasPhotoUrl': hasPhotoUrl,
+      if (idVerifiedCode != null) 'idVerifiedCode': idVerifiedCode,
       if (phoneNumber != null) 'phoneNumber': phoneNumber,
       if (email != null) 'email': email,
       if (state != null) 'state': state,

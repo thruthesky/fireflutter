@@ -19,6 +19,15 @@ import 'package:image_picker/image_picker.dart';
 /// [defaultIcon] is a widget to be displayed when the user's avatar is not available.
 /// and the [name] property of AdvancedAvatar is igonored by [defaultIcon].
 ///
+/// [onUploadSuccess] is the callback function that is being called when the user's avatar is uploaded.
+///
+/// [onDeleteSuccess] is the callback function that is being called when the user's avatar is deleted.
+/// This callback is not called when the user uploads and deletes existing photos.
+///
+/// [cameraOnly] if [cameraOnly] is set to true, then it displays the camera when upload buton is being pressed.
+/// [galleryOnly] if [galleryOnly] is set to true, then it displays the gallery when upload buton is being pressed.
+///
+///
 /// Note, that this avatar widget uses the [AdvancedAvatar] widget from
 /// the [flutter_advanced_avatar](https://pub.dev/packages/flutter_advanced_avatar) package.
 /// See the examples from the github: https://github.com/alex-melnyk/flutter_advanced_avatar/blob/master/example/lib/main.dart
@@ -31,6 +40,8 @@ class UserProfileAvatar extends StatefulWidget {
     this.badgeNumber,
     this.upload = false,
     this.delete = false,
+    this.onUploadSuccess,
+    this.onDeleteSuccess,
     this.uploadStrokeWidth = 6,
     this.shadowBlurRadius = 16.0,
     this.defaultIcon,
@@ -53,6 +64,8 @@ class UserProfileAvatar extends StatefulWidget {
   final VoidCallback? onTap;
   final bool cameraOnly;
   final bool galleryOnly;
+  final void Function()? onUploadSuccess;
+  final void Function()? onDeleteSuccess;
 
   @override
   State<UserProfileAvatar> createState() => _UserAvatarState();
@@ -129,6 +142,7 @@ class _UserAvatarState extends State<UserProfileAvatar> {
                       value: FieldValue.delete(),
                       hasPhotoUrl: false,
                     );
+                    widget.onDeleteSuccess?.call();
                   },
                   padding: EdgeInsets.zero,
                   visualDensity: VisualDensity.compact,
