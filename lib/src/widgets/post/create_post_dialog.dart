@@ -21,7 +21,7 @@ class _CreatePostDialogState extends State<CreatePostDialog> {
 
   @override
   Widget build(BuildContext context) {
-    String categoryId = 'discussion'; // TODO , still ongoing
+    // String categoryId = 'discussion'; // TODO , still ongoing
     String categoryName = 'Discussion'; // TODO , still ongoing
     return Scaffold(
       appBar: AppBar(
