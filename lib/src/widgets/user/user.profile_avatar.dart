@@ -36,6 +36,8 @@ class UserProfileAvatar extends StatefulWidget {
     this.defaultIcon,
     this.backgroundColor,
     this.onTap,
+    this.cameraOnly = false,
+    this.galleryOnly = false,
   });
 
   final User user;
@@ -49,6 +51,8 @@ class UserProfileAvatar extends StatefulWidget {
   final Widget? defaultIcon;
   final Color? backgroundColor;
   final VoidCallback? onTap;
+  final bool cameraOnly;
+  final bool galleryOnly;
 
   @override
   State<UserProfileAvatar> createState() => _UserAvatarState();
@@ -66,8 +70,14 @@ class _UserAvatarState extends State<UserProfileAvatar> {
           return;
         }
         if (widget.upload == false) return;
-
-        final source = await chooseUploadSource(context);
+        ImageSource? source;
+        if (widget.cameraOnly) {
+          source = ImageSource.camera;
+        } else if (widget.galleryOnly) {
+          source = ImageSource.gallery;
+        } else {
+          source = await chooseUploadSource(context);
+        }
         if (source == null) return;
         final ImagePicker picker = ImagePicker();
         final XFile? image = await picker.pickImage(source: source);
