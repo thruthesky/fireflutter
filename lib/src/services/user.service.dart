@@ -78,6 +78,8 @@ class UserService {
   ///
   User get user => nullableUser!;
 
+  ///
+  bool get isAdmin => nullableUser?.isAdmin ?? false;
   String? get photoUrl => nullableUser?.photoUrl;
 
   /// 미리 한번 호출 해서, Singleton 을 초기화 해 둔다. 그래야 user 를 사용 할 때, 에러가 발생하지 않는다.

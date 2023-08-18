@@ -5,6 +5,9 @@ class User {
 
   final String uid;
 
+  /// [isAdmin] is set to true if the logged in user is an admin.
+  bool isAdmin = false;
+
   /// 만약, dsiplayName 이 없으면, uid 의 앞 두글자를 대문자로 표시.
   final String displayName;
   final String name;
@@ -56,6 +59,7 @@ class User {
 
   User({
     required this.uid,
+    this.isAdmin = false,
     this.displayName = '',
     this.name = '',
     this.firstName = '',
@@ -86,6 +90,7 @@ class User {
     final displayName = map['displayName'] ?? '';
     return User(
       uid: id,
+      isAdmin: map['isAdmin'] ?? false,
       displayName: displayName == '' ? id.toUpperCase().substring(0, 2) : displayName,
       name: map['name'] ?? '',
       firstName: map['firstName'] ?? '',
@@ -108,6 +113,7 @@ class User {
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
+      'isAdmin': isAdmin,
       'displayName': displayName,
       'name': name,
       'firstName': firstName,
@@ -128,7 +134,7 @@ class User {
 
   @override
   String toString() =>
-      '''User(uid: $uid, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, idVerifiedCode: $idVerifiedCode, phoneNumber: $phoneNumber, email: $email, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, cached: $cached)''';
+      '''User(uid: $uid, isAdmin: $isAdmin, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, idVerifiedCode: $idVerifiedCode, phoneNumber: $phoneNumber, email: $email, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, cached: $cached)''';
 
   /// 사용자 문서를 읽어온다.
   ///
