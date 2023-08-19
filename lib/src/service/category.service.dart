@@ -2,13 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class CategoryService {
+class CategoryService with FireFlutter {
   static CategoryService? _instance;
   static CategoryService get instance => _instance ??= CategoryService._();
   CategoryService._();
-
-  CollectionReference get categoryCol => FirebaseFirestore.instance.collection('categories');
-  DocumentReference categoryDoc(String categoryId) => categoryCol.doc(categoryId);
 
   /// TODO: Support official localization.
   Map<String, String> texts = {};

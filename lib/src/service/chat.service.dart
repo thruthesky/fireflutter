@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 
-class ChatService {
+class ChatService with FireFlutter {
   static ChatService? _instance;
   static ChatService get instance => _instance ??= ChatService._();
 
@@ -16,18 +16,6 @@ class ChatService {
   ChatService._();
 
   ChatRoomCustomize customize = ChatRoomCustomize();
-
-  String get uid => FirebaseAuth.instance.currentUser!.uid;
-  bool get loggedIn => FirebaseAuth.instance.currentUser != null;
-
-  CollectionReference get chatCol => FirebaseFirestore.instance.collection('easychat');
-  CollectionReference messageCol(String roomId) => chatCol.doc(roomId).collection('messages');
-
-  DocumentReference roomRef(String roomId) => chatCol.doc(roomId);
-
-  DocumentReference get myDoc =>
-      FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid);
-  DocumentReference roomDoc(String roomId) => chatCol.doc(roomId);
 
   Function(BuildContext, Room)? onChatRoomFileUpload;
 

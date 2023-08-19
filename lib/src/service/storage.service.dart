@@ -1,14 +1,11 @@
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
-class StorageService {
+class StorageService with FireFlutter {
   static StorageService? _instance;
   static StorageService get instance => _instance ??= StorageService._();
-
-  /// Currently login user's uid
-  String get uid => FirebaseAuth.instance.currentUser!.uid;
 
   ///
   StorageService._();

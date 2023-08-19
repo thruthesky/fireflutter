@@ -4,7 +4,7 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
-class UserService {
+class UserService with FireFlutter {
   static UserService? _instance;
   static UserService get instance => _instance ??= UserService._();
 
@@ -12,9 +12,6 @@ class UserService {
   /// 만약, 로그인을 했는지 여부를 알고 싶다면, [nullableUser] 가 null 인지 아닌지를 확인하면 된다.
   ///
   final BehaviorSubject<User?> documentChanges = BehaviorSubject<User?>.seeded(null);
-
-  /// Currently login user's uid
-  String get uid => FirebaseAuth.instance.currentUser!.uid;
 
   ///
   UserService._() {
@@ -39,15 +36,11 @@ class UserService {
     });
   }
 
-  String get collectionName => User.collectionName;
-
-  get db => FirebaseFirestore.instance;
-
   /// Users collection reference
-  CollectionReference get cols => db.collection(collectionName);
+  CollectionReference get col => userCol;
 
   /// User document reference of the currently login user
-  DocumentReference get doc => cols.doc(uid);
+  DocumentReference get doc => col.doc(uid);
 
   /// [_userCache] is a memory cache for [User].
   ///
@@ -192,8 +185,16 @@ class UserService {
   /// Returns a Stream of User model for the user uid.
   ///
   /// Use this with [StreamBuilder] for real time update(listen) of the user document.
+  ///
+  /// Example
+  /// ```dart
+  /// StreamBuilder<User?>(
+  ///   stream: UserService.instance.listen(widget.user.uid),
+  ///   builder: (context, snapshot) {
+  ///     user = snapshot.data!;
+  /// ```
   Stream<User?> listen(String uid) {
-    return cols
+    return col
         .doc(uid)
         .withConverter<User>(
           fromFirestore: (snapshot, _) => User.fromDocumentSnapshot(snapshot),

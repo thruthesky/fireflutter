@@ -1,20 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fireflutter/src/model/category.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/model/post.dart';
-import 'package:fireflutter/src/widget/post/create_post_dialog.dart';
-import 'package:fireflutter/src/widget/post/post_dialog.dart';
 import 'package:flutter/material.dart';
 
-class PostService {
+class PostService with FireFlutter {
   static PostService? _instance;
   static PostService get instance => _instance ??= PostService._();
   PostService._();
 
-  CollectionReference get postCol => FirebaseFirestore.instance.collection('posts');
-  DocumentReference postDoc(String postId) => postCol.doc(postId);
-
-  /// TODO: Support official localization.
-  Map<String, String> texts = {};
+  get col => postCol;
 
   showCreatePostDialog(
     BuildContext context, {
