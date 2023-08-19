@@ -9,7 +9,7 @@ const firebase = require("@firebase/testing");
 //   //   // create a chat room
 //   //   const ref = await firebase.assertFails(
 //   //     db(b)
-//   //       .collection("easychat")
+//   //       .collection(chatsColName)
 //   //       .add(tempChatRoomData({ master: b.uid, users: [b.uid] }))
 //   //   );
 
@@ -17,7 +17,7 @@ const firebase = require("@firebase/testing");
 //   // // add myself as a mater because there is no uid.
 //   // await firebase.assertSucceeds(
 //   //   db(b)
-//   //     .collection("easychat")
+//   //     .collection(chatsColName)
 //   //     .doc(ref.id)
 //   //     .collection("users")
 //   //     .doc(b.uid)

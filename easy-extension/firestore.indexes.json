@@ -85,7 +85,7 @@
       ]
     },
     {
-      "collectionGroup": "easychat",
+      "collectionGroup": chatsColName,
       "queryScope": "COLLECTION",
       "fields": [
         {

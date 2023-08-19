@@ -25,7 +25,7 @@ mixin FireFlutter {
   DocumentReference postDoc(String postId) => postCol.doc(postId);
 
   /// chat
-  CollectionReference get chatCol => FirebaseFirestore.instance.collection('chat');
+  CollectionReference get chatCol => FirebaseFirestore.instance.collection('chats');
   CollectionReference messageCol(String roomId) => chatCol.doc(roomId).collection('messages');
   DocumentReference roomRef(String roomId) => chatCol.doc(roomId);
   DocumentReference roomDoc(String roomId) => chatCol.doc(roomId);

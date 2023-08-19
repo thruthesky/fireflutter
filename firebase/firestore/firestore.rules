@@ -71,7 +71,7 @@ service cloud.firestore {
     // Master can change all the fields.
     // Moderator can only change some of the fields.
     // Chat members can only add or delete their own uid into `users` field.
-    match /easychat/{roomId} {
+    match /chats/{roomId} {
       //
       function willBeGroupChat() {
         return request.resource.data.group == true;
@@ -159,7 +159,7 @@ service cloud.firestore {
           return 'uid' in request.resource.data && request.resource.data.uid == request.auth.uid;
         }
         function roomData() {
-          return get(/$(prefix())/easychat/$(roomId)).data;
+          return get(/$(prefix())/chats/$(roomId)).data;
         }
         function isRoomUser() {
           return 'users' in roomData() && roomData().users.hasAny([request.auth.uid]);

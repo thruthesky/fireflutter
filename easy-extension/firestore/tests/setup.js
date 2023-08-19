@@ -61,7 +61,7 @@ function tempChatRoomData(options = {}) {
  * - const roomRef = await createChatRoom(a, { master: a.uid, users: [a.uid, b.uid] });
  */
 function createChatRoom(user, options = {}) {
-  return db(user).collection("easychat").add(tempChatRoomData(options));
+  return db(user).collection(chatsColName).add(tempChatRoomData(options));
 }
 
 exports.db = db;
