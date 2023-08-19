@@ -5,7 +5,9 @@ A free, open source, complete, rapid development package for creating Social app
 - [FireFlutter](#fireflutter)
   - [Features](#features)
   - [Getting started](#getting-started)
-    - [Setup](#setup)
+- [Installation](#installation)
+  - [Security rules](#security-rules)
+    - [Security rule for admin](#security-rule-for-admin)
 - [Usage](#usage)
   - [UserService](#userservice)
   - [ChatService](#chatservice)
@@ -33,8 +35,8 @@ A free, open source, complete, rapid development package for creating Social app
   - [Environment](#environment)
   - [Basic Features](#basic-features)
   - [Example](#example)
-  - [Installation](#installation)
-  - [Setup](#setup-1)
+  - [Installation](#installation-1)
+  - [Setup](#setup)
     - [Firebase Setup](#firebase-setup)
       - [Firebase Users collection](#firebase-users-collection)
     - [Updating auth custom claims](#updating-auth-custom-claims)
@@ -48,7 +50,7 @@ A free, open source, complete, rapid development package for creating Social app
     - [Additional information](#additional-information)
     - [How to test \& UI work Chat room screen](#how-to-test--ui-work-chat-room-screen)
   - [Firebase](#firebase)
-    - [Security Rules](#security-rules)
+    - [Security Rules](#security-rules-1)
   - [Logic](#logic)
     - [Fields](#fields)
       - [Chat Room fields](#chat-room-fields)
@@ -70,7 +72,7 @@ A free, open source, complete, rapid development package for creating Social app
     - [Testing on Local Emulators](#testing-on-local-emulators)
     - [Testing on real Firebase](#testing-on-real-firebase)
   - [Tips](#tips)
-  - [Security rules](#security-rules-1)
+  - [Security rules](#security-rules-2)
 
 ## Features
 
@@ -83,7 +85,39 @@ A free, open source, complete, rapid development package for creating Social app
 
 If you want to build an app using FireFlutter, the best way is to copy codes from the example project.
 
-### Setup
+# Installation
+
+
+## Security rules
+
+
+### Security rule for admin
+
+You can add your uid (or other user's uid) to the `adminUIDs` variable in `isAdmin` function in the security rule. With this way, you don't have to pay extra money for validating the user is admin or not.
+
+```dart
+function isAdmin() {
+  let adminUIDs = ['root', 'admin', 'CYKk5Q79AmYKQEzw8A95UyEahiz1'];
+  return request.auth.uid in adminUIDs || request.auth.token.admin == true;
+}
+```
+
+
+Once the admin is set, you can customize your security rules to restrict some docuemnts to write access from other users. By doing this way, you can add sub-admin(s) from client app (without editing the security rules on every time when you add subadmin)
+
+For instance, you may write security rules like below and add the uids of sub-admin users. then, add a security rule function to check if the user is sub-admin.
+
+```ts
+  /setttings/sub-admins {
+    allow read, write: if isAdmin();
+  }
+  function isSubAdmin() {
+    ...
+  }
+```
+
+
+
 
 # Usage
 
@@ -149,6 +183,12 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 ```
 
 # Widgets
+
+
+* The widgets in fireflutter can be a small piece of UI representation or it can be a full screen dialog.
+
+* The file names and the class names of the widgets must match.
+* The user widgets are inside `widgets/user` and the file name is in the form of `user.xxxx.dart` or `user.xxxx.dialog.dart`. And it goes the same to chat and forum.
 
 ## UserDoc
 
@@ -270,9 +310,13 @@ onPressed() async {
 
 ## Chat Customization
 
-See the chapters for chat service and chat widgets.
+The fireflutter gives full customization of the chat feature. It has a lot of widgets and texts to customize and they are nested deep inside the widget layers. So, the fireflutter lets developers to register the builder functions to display(customize) the widgets that are being used in deep place of the chat feature.
 
+Registering the build functions do not cause any performance issues since it only registers the build functions at app booting time. It does not build any widgets while registering.
 
+```dart
+ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoomAppBar(room: room);
+```
 
 
 # Translation
@@ -298,6 +342,7 @@ Yes, this is the reality.
 
 To avoid this, you can display the UI part immediately after hot-restart (with keyboard shortcut) like below. This is merely a sample code. You can test any part of the app like below.
 
+Below is an example of openning chat room menu dialog.
 I copied the `Room` properties manually from the Firestore document and I edited some of the values of the properties for test purpose. You may code a line to get the real room model data.
 
 ```dart
@@ -307,15 +352,14 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
 
     Timer(const Duration(milliseconds: 200), () {
-      ChatService.instance.openChatRoomMenu(
+      ChatService.instance.openChatRoomMenuDialog(
         context: context,
         room: Room(
           id: 'DHZWDyeuAlgmKxFxbMbF',
-          name: '필리핀 맘카페 채팅방 - 오늘도 마닐라, 오늘도 화이팅입니다.',
-          rename: {},
+          name: 'Here we are in Manila. Lets celebrate this beautiful day.',
           group: true,
           open: true,
-          master: 'DHZWDyeuAlgmKxFxbMbF',
+          master: 'ojxsBLMSS6UIegzixHyP4zWaVm13',
           users: [
             '15ZXRtt5I2Vr2xo5SJBjAVWaZ0V2',
             '23TE0SWd8Mejv0Icv6vhSDRHe183',
@@ -323,17 +367,27 @@ class _HomeScreenState extends State<HomeScreen> {
             'X5ps2UhgbbfUd7UH1JBoUedBzim2',
             'lyCxEC0oGtUcGi0KKMAs8Y7ihSl2',
             'ojxsBLMSS6UIegzixHyP4zWaVm13',
+            'aaa', // not existing user
             't1fAVTeN5oMshEPYn9VvB8TuZUy2',
+            'bbb', // not existing user
+            'ccc', // not existing user
+            'ddd', // not existing user
+            'eee', // not existing user
           ],
-          moderators: [],
+          moderators: ['lyCxEC0oGtUcGi0KKMAs8Y7ihSl2', '15ZXRtt5I2Vr2xo5SJBjAVWaZ0V2'],
           blockedUsers: [],
           noOfNewMessages: {},
           maximumNoOfUsers: 3,
+          rename: {
+            FirebaseAuth.instance.currentUser!.uid: 'I renamed this chat room',
+          },
           createdAt: Timestamp.now(),
         ),
       );
-    });
 ```
+
+
+
 
 # Contribution
 

@@ -2,6 +2,16 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+/// Shows a [SnackBar] at the bottom of the screen.
+Future<void> showSnackBar(BuildContext context, String message) async {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message),
+      duration: const Duration(seconds: 3),
+    ),
+  );
+}
+
 Future<ImageSource?> chooseUploadSource(BuildContext context) async {
   final source = await showModalBottomSheet<ImageSource>(
     context: context,
