@@ -1,6 +1,7 @@
 # Easy Extension
 
 - [Easy Extension](#easy-extension)
+<<<<<<< HEAD
 - [Overview](#overview)
 - [Installation](#installation)
   - [Installation Options](#installation-options)
@@ -19,6 +20,28 @@
 - [Tips](#tips)
 - [Security rules](#security-rules)
 - [Developer installation](#developer-installation)
+=======
+  - [Overview](#overview)
+  - [Installation](#installation)
+  - [Options](#options)
+  - [Command list](#command-list)
+    - [Updating auth custom claims](#updating-auth-custom-claims)
+    - [Disable user](#disable-user)
+    - [Enable user](#enable-user)
+    - [Delete user](#delete-user)
+    - [Get user](#get-user)
+  - [Error handling](#error-handling)
+  - [Deploy](#deploy)
+  - [Unit Testing](#unit-testing)
+    - [Testing on Local Emulators](#testing-on-local-emulators)
+    - [Testing on real Firebase](#testing-on-real-firebase)
+  - [Tips](#tips)
+  - [Security rules](#security-rules)
+  - [Developer installation](#developer-installation)
+
+
+## Overview
+>>>>>>> fbafc6c6f47b5b250316188c2c3b241a3d964acb
 
 
 # Overview
