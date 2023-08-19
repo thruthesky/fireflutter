@@ -2,8 +2,15 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/models/room.dart';
 import 'package:flutter/material.dart';
 
-class ChatRoomMembersListView extends StatefulWidget {
-  const ChatRoomMembersListView({
+/// Chat Room User List View
+///
+/// Displays the list of users in the chat room.
+///
+/// It can be used in any where for any cases as long as the chat room model is given.
+///
+/// TODO support all the listview option, so the parent widget can use it as a normal listview.
+class ChatRoomUserListView extends StatefulWidget {
+  const ChatRoomUserListView({
     super.key,
     required this.room,
   });
@@ -11,37 +18,38 @@ class ChatRoomMembersListView extends StatefulWidget {
   final Room room;
 
   @override
-  State<ChatRoomMembersListView> createState() => _ChatRoomMembersListViewState();
+  State<ChatRoomUserListView> createState() => _ChatRoomUserListViewState();
 }
 
-class _ChatRoomMembersListViewState extends State<ChatRoomMembersListView> {
+class _ChatRoomUserListViewState extends State<ChatRoomUserListView> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      shrinkWrap: true,
-      physics: const ClampingScrollPhysics(),
       itemCount: widget.room.users.length,
       itemBuilder: (context, index) {
         return FutureBuilder(
           future: UserService.instance.get(widget.room.users[index]),
           builder: (context, userSnapshot) {
+            // On user document is not found
             if (userSnapshot.data == null) return const SizedBox();
-            final user = userSnapshot.data;
+
+            //
+            final User user = userSnapshot.data!;
             return ListTile(
-              title: Text(user?.displayName ?? ''),
+              title: Text('${user.displayName} @TODO LIST TILE 말고, 1:1 챗, 차단, 프로필 보기 등 메뉴 추가'),
               subtitle: RichText(
                 text: TextSpan(
                   style: DefaultTextStyle.of(context).style,
                   children: <TextSpan>[
                     if (widget.room.isGroupChat)
                       TextSpan(
-                          text: widget.room.master == user?.uid
+                          text: widget.room.master == user.uid
                               ? 'Master '
-                              : widget.room.moderators.contains(user?.uid)
+                              : widget.room.moderators.contains(user.uid)
                                   ? 'Moderator '
                                   : '',
                           style: const TextStyle(fontWeight: FontWeight.bold)),
-                    if (ChatService.instance.isBlocked(room: widget.room, uid: user!.uid)) ...[
+                    if (ChatService.instance.isBlocked(room: widget.room, uid: user.uid)) ...[
                       const TextSpan(text: 'Blocked'),
                     ],
                   ],

@@ -21,52 +21,73 @@ class ChatRoomMenuDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(60, 60, 0, 0),
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Padding(
+      padding: const EdgeInsets.fromLTRB(80, 0, 0, 0),
+      child: SafeArea(
+        bottom: false,
+        child: Scaffold(
+          appBar: AppBar(
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.close),
+              ),
+              // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+              actions: [
+                const Spacer(),
+
+                // 즐겨찾기
+                IconButton(
+                  icon: const Icon(Icons.favorite_border),
+                  onPressed: () {
+                    print('즐겨찾기');
+                  },
+                ),
+
+                // 공유
+                IconButton(
+                    onPressed: () {
+                      print('sahre');
+                    },
+                    icon: Icon(Platform.isAndroid ? Icons.share : Icons.ios_share_rounded)),
+
+                // 친구초대
+                IconButton(
+                  onPressed: () {
+                    showGeneralDialog(
+                      context: context,
+                      pageBuilder: (context, _, __) => Scaffold(
+                        appBar: AppBar(
+                          title: const Text('Invite User'),
+                        ),
+                        body: ChatRoomUserInviteDialog(room: room),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.person_add),
+                ),
+              ]),
+          bottomNavigationBar: BottomNavigationBar(
+            items: const [
+              BottomNavigationBarItem(icon: Icon(Icons.logout), label: 'Leave'),
+              BottomNavigationBarItem(icon: Icon(Icons.notifications_off), label: 'Alarm'),
+            ],
+            onTap: (value) {
+              if (value == 0) {
+                // 방 나가기
+                if (isMaster == false) {
+                  ChatService.instance.leaveRoom(
+                    room: room,
+                  );
+                }
+              }
+            },
+          ),
+          body: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    const Spacer(),
-
-                    // 즐겨찾기
-                    const Icon(Icons.favorite_border),
-
-                    // 공유
-                    Icon(Platform.isAndroid ? Icons.share : Icons.ios_share_rounded),
-
-                    // 방 나가기
-                    if (isMaster == false)
-                      IconButton(
-                        onPressed: () {
-                          ChatService.instance.leaveRoom(
-                            room: room,
-                          );
-                          // room.leave();
-                        },
-                        icon: const Icon(Icons.exit_to_app),
-                      ),
-
-                    TextButton(
-                      onPressed: () {
-                        showGeneralDialog(
-                          context: context,
-                          pageBuilder: (context, _, __) => Scaffold(
-                            appBar: AppBar(
-                              title: const Text('Invite User'),
-                            ),
-                            body: ChatRoomUserInviteDialog(room: room),
-                          ),
-                        );
-                      },
-                      child: const Text('Invite User'),
-                    ),
-                  ],
-                ),
                 const SizedBox(height: 16),
                 if (room.group) ...[
                   if (room.rename[UserService.instance.uid] == null)
@@ -91,7 +112,7 @@ class ChatRoomMenuDialog extends StatelessWidget {
                 const Divider(),
                 const SizedBox(height: 16),
                 const Text('Participants', style: TextStyle(fontSize: 18)),
-                ChatRoomMembersListView(room: room),
+                Expanded(child: ChatRoomUserListView(room: room)),
               ],
             ),
           ),

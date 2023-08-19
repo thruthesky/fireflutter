@@ -24,6 +24,7 @@ A free, open source, complete, rapid development package for creating Social app
 - [Developer](#developer)
   - [Development Tips](#development-tips)
 - [Contribution](#contribution)
+  - [Coding Guideline](#coding-guideline)
 - [OLD README](#old-readme)
   - [TODO](#todo)
   - [Overview](#overview)
@@ -337,6 +338,12 @@ class _HomeScreenState extends State<HomeScreen> {
 # Contribution
 
 Fork the fireflutter and create your own branch. Then update code and push, then pull request.
+
+## Coding Guideline
+
+fireflutter uses sigular form in its file name and variable name, class name. For instance, it alwasy `user` over `users` unless there is good reason.
+
+
 
 # OLD README
 
