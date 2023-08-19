@@ -93,11 +93,11 @@ resources:
 # https://firebase.google.com/docs/extensions/reference/extension-yaml#params-field
 params:
   - param: USER_COLLECTION_NAME
-    label: Collection path
+    label: User collection path
     description: Where do you store user document?
     type: string
     default: users # Specifying a default is optional.
-    required: false
+    required: true
 
   - param: CREATE_USER_DOCUMENT
     label: Create user document on user create
@@ -129,10 +129,11 @@ params:
     default: yes
     required: true
 
-  - param: SYNC_CUSTOM_CLAIMS_TO_USER_DOCUMENT
-    label: Sync back to user document when custom claims are updated.
+  - param: SYNC_CUSTOM_CLAIMS
+    label: Sync back to the user document when custom claims are updated.
     description: >-
-      If set to \"Yes\", custom claims will be sync.
+      If set to \"Yes\", the custom claims will be sync back to user's document
+      after updating the custom claims of the user.
     type: select
     options:
       - label: Yes
@@ -142,8 +143,8 @@ params:
     default: yes
     required: true
 
-  - param: SET_DISABLED_USER_FIELD
-    label: Set disabled field in user document.
+  - param: SYNC_USER_DISABLED_FIELD
+    label: Set back the disabled field to user document.
     description: >-
       If set to \"Yes\", disabled field will be added if the user is disabled. Note that, the document id must be same as user's uid. The document will be created if it does not exist.
     type: select
