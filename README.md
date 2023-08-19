@@ -457,7 +457,7 @@ EasyChat.instance.initialize(usersCollection: 'users', displayNameField: 'displa
 
 ![Image Link](https://github.com/thruthesky/easy-extension/blob/main/docs/command-update_custom_claims_output.jpg?raw=true "This is image title")
 
-- `SYNC_CUSTOM_CLAIMS_TO_USER_DOCUMENT` option only works with `update_custom_claims` command.
+- `SYNC_CUSTOM_CLAIMS` option only works with `update_custom_claims` command.
   - When it is set to `yes`, the claims of the user will be set to user's document.
   - By knowing user's custom claims,
     - the app can know that if the user is admin or not.
@@ -471,7 +471,7 @@ EasyChat.instance.initialize(usersCollection: 'users', displayNameField: 'displa
   - If you wish to block the user immediately, I recommend to run another command. Running `update_custom_claims` comand with `{ disabled: true }` and you can add it on security rules.
   - Additionally, you can enable `set enable field on user document` to yes. This will add `disabled` field on user documents and you can search(list) users who are disabled.
 
-- `SET_DISABLED_USER_FIELD` option only works with `disable_user` command.
+- `SYNC_USER_DISABLED_FIELD` option only works with `disable_user` command.
 
   - When it is set to yes, the `disabled` field with `true` will be set to user document.
   - Use this to know if the user is disabled.
