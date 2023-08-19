@@ -10,13 +10,15 @@
 // Reading a chat room (settings) document is required when creating a new chat message.
 rules_version = '2';
 
-/// * Admin
-///
-/// Return true if the use is root user.
+// ****************************** COPY FROM ***********************************
+//
+//
+// Return true if the use is root user.
 function isAdmin() {
   let adminUIDs = ['root', 'admin', 'CYKk5Q79AmYKQEzw8A95UyEahiz1'];
   return request.auth.uid in adminUIDs || request.auth.token.admin == true;
 }
+// ****************************** COPY UNTIL HERE *****************************
 
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -28,12 +30,7 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    match /easy-settings/{documentId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // ********************** FireFlutter Security Rules **********************
+// ****************************** COPY FROM ***********************************
     // *
     // * Belore are the FireFlutter Security Rules. Put your own rules above.
     // *
@@ -199,9 +196,10 @@ service cloud.firestore {
       allow read: if true;
       allow update: if onlyRemoving('users', 'b');
     }
+// ****************************** COPY UNTIL HERE *****************************
   }
 }
-
+// ****************************** COPY FROM ***********************************
 // * Warning : It's check the fields after save.
 // * Warning : !!! It's not checking the incoming data fields !!!
 function required(fields) {
@@ -267,3 +265,4 @@ function onlyRemoving(arryField, element) {
 // function isDisabled() {
 //   return true;
 // }
+// ****************************** COPY UNTIL HERE *****************************
