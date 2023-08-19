@@ -7,9 +7,6 @@ class CategoryService with FireFlutter {
   static CategoryService get instance => _instance ??= CategoryService._();
   CategoryService._();
 
-  /// TODO: Support official localization.
-  Map<String, String> texts = {};
-
   /// Show Create Category Dialog
   ///
   /// A dialog to create a category.
