@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:fireflutter/fireflutter.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 mixin FireFlutter {
   /// Firestore database instance
-  get db => FirebaseFirestore.instance;
+  FirebaseFirestore get db => FirebaseFirestore.instance;
+
+  /// Firebase Realtime Database instance
+  FirebaseDatabase get rtdb => FirebaseDatabase.instance;
 
   /// Currently login user's uid
   String get uid => FirebaseAuth.instance.currentUser!.uid;

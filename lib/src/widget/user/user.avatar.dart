@@ -14,13 +14,26 @@ import 'package:flutter/material.dart';
 /// [defaultIcon] is the default icon when user photoUrl is null.
 ///
 class UserAvatar extends StatefulWidget {
-  const UserAvatar({super.key, this.user, this.uid, this.size = 32, this.defaultIcon})
-      : assert(user != null || uid != null);
+  const UserAvatar({
+    super.key,
+    this.user,
+    this.uid,
+    this.size = 32,
+    this.defaultIcon,
+    this.borderWidth = 1,
+    this.borderColor = Colors.grey,
+    this.radius = 10,
+    this.onTap,
+  }) : assert(user != null || uid != null);
 
   final User? user;
   final String? uid;
   final double size;
   final Widget? defaultIcon;
+  final double borderWidth;
+  final Color borderColor;
+  final double radius;
+  final Function()? onTap;
 
   @override
   State<UserAvatar> createState() => _UserAvatarState();
@@ -47,10 +60,22 @@ class _UserAvatarState extends State<UserAvatar> {
 
   @override
   Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: _buildAvatar(),
+    );
+  }
+
+  _buildAvatar() {
     if (user == null) return defaultIcon();
     if (user?.photoUrl == null || user?.photoUrl == '') return defaultIcon();
-
-    return Avatar(url: user!.photoUrl, size: widget.size);
+    return Avatar(
+      url: user!.photoUrl,
+      size: widget.size,
+      borderWidth: widget.borderWidth,
+      borderColor: widget.borderColor,
+      radius: widget.radius,
+    );
   }
 
   Widget defaultIcon() {

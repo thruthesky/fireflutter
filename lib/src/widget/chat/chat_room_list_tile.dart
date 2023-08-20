@@ -1,36 +1,60 @@
-import 'package:fireflutter/src/model/room.dart';
-import 'package:fireflutter/src/services.dart';
-import 'package:fireflutter/src/widget/chat/chat_room_list_tile_name.dart';
-import 'package:fireflutter/src/widget/chat/chat_room_no_of_new_messages_text.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
+/// ChatRoomListTile
+///
+/// It is not the material [ListTile] since it does not support flexibilities.
 class ChatRoomListTile extends StatelessWidget {
   const ChatRoomListTile({
     super.key,
     required this.room,
-    // this.joinOnEnter = false,
+    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
   });
   final Room room;
-  // final bool joinOnEnter;
+  final EdgeInsets padding;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: ChatRoomListTileName(room: room),
-      onTap: () {
-        // if (joinOnEnter && !room.users.contains(UserService.instance.uid)) {
-        //   room.join(context: context).then((joinedSuccessfully) {
-        //     debugPrint("Joined? $joinedSuccessfully");
-        //     if (joinedSuccessfully) ChatService.instance.showChatRoom(context: context, room: room);
-        //   });
-        // } else {
-        ChatService.instance.showChatRoom(context: context, room: room);
-        // }
-      },
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: padding,
+      child: Row(
         children: [
-          ChatRoomNoOfNewMessagesText(room: room),
+          room.isSingleChat
+              ? UserAvatar(
+                  uid: otherUserUid(room.users),
+                  size: 48,
+                  radius: 10,
+                  borderWidth: 1,
+                  borderColor: Colors.grey.shade300,
+                )
+              : const Icon(Icons.group),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ChatRoomListTileName(room: room),
+                  ChatRoomNoOfNewMessagesText(room: room),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Column(
+            children: [
+              Text(
+                '10:00',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              const SizedBox(height: 10),
+              Badge(
+                backgroundColor: Theme.of(context).colorScheme.error,
+                label: const Text('3'),
+              ),
+            ],
+          ),
         ],
       ),
     );

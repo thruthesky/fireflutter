@@ -72,7 +72,9 @@ class Room {
       maximumNoOfUsers:
           map['maximumNoOfUsers'] ?? 100, // TODO confirm where to put the config on default max no of users
       password: map['password'],
-      createdAt: map['createdAt'] ?? Timestamp.now(),
+
+      /// Note FieldValue happens when the docuemnt is cached locally on creation and the createdAt is not set on the remote database.
+      createdAt: map['createdAt'] is FieldValue ? Timestamp.now() : map['createdAt'] ?? Timestamp.now(),
     );
   }
 

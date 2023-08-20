@@ -20,6 +20,8 @@ A free, open source, complete, rapid development package for creating Social app
   - [UserAvatar](#useravatar)
   - [UserProfileAvatar](#userprofileavatar)
   - [User List View](#user-list-view)
+- [Chat Feature](#chat-feature)
+  - [No of new message](#no-of-new-message)
 - [Customization](#customization)
   - [Chat Customization](#chat-customization)
 - [Translation](#translation)
@@ -301,6 +303,16 @@ onPressed() async {
   );
 
 ```
+
+
+# Chat Feature
+
+## No of new message
+
+We save the no of new messages of each users in RTDB. If we save the no of new messages of all users of the room in the chat room document like `{ noOfNewMessages: { uid-A: 1, uid-B 2, ... }}`, there will be performance issue and it will cost more. The problem is the chat room must be listened as a stream for realtime update. And if a user chats there are other users who read. Everytime a user reads a messgae, the chat room docuemnt will be fetched for every user with no reason. This is jus tan extra cost. So, we put the number of new messages under `/chats/{roomId}/noOfNewMessages/{uid}` in RTDB.
+
+
+
 
 
 # Customization

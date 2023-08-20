@@ -116,3 +116,10 @@ String sanitizeFilename(String input, {String replacement = ''}) {
 
   return result.length > 255 ? result.substring(0, 255) : result;
 }
+
+/// Alias of [ChatService.instance.getOtherUserUid]
+///
+/// Returns the other user's uid from a list of users.
+String otherUserUid(List<String> users) {
+  return ChatService.instance.getOtherUserUid(users);
+}

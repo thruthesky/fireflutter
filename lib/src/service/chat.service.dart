@@ -241,15 +241,21 @@ class ChatService with FireFlutter {
     updateRoomNewMessagesDetails(room: room, lastMessage: chatMessage);
   }
 
-  // TODO will it be better if settings will have an Enum?
+  ///
+  ///
+  /// See "# No of new message" in README
   Future<void> updateRoomNewMessagesDetails({required Room room, Map<String, Object>? lastMessage}) async {
-    Map<Object, Object> updateNoOfMessages = {};
-    for (var uid in room.users) {
-      updateNoOfMessages[uid] = FieldValue.increment(1);
+    // Increase the no of new message for each user in the room
+    Map<String, dynamic> noOfNewMessages = {};
+    for (String uid in room.users) {
+      noOfNewMessages[uid] = FieldValue.increment(1);
     }
-    updateNoOfMessages[FirebaseAuth.instance.currentUser!.uid] = 0;
+    noOfNewMessages[FirebaseAuth.instance.currentUser!.uid] = 0;
+    rtdb.ref('chats/${room.id}/noOfNewMessages').set(noOfNewMessages);
+
+    //
     await roomDoc(room.id).set(
-      {'noOfNewMessages': updateNoOfMessages, 'lastMessage': lastMessage},
+      {'lastMessage': lastMessage},
       SetOptions(merge: true),
     );
   }

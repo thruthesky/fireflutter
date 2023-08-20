@@ -21,13 +21,20 @@ class ChatRoomListViewController {
 /// And it supports some(not all) of the ListView properties.
 ///
 /// Note that, the controller of ListView is named [scrollController] in this class.
+///
+/// [singleChatOnly] If [singleChatOnly] is set to true, it will only list single chat rooms.
+///
+/// [groupChatOnly] If [groupChatOnly] is set to true, it will only list group chat rooms.
+///
+/// [openChatOnly] If [openChatOnly] is set to true, it will only list open chat rooms.
+///
 class ChatRoomListView extends StatefulWidget {
   const ChatRoomListView({
     super.key,
     required this.controller,
     this.itemBuilder,
     this.emptyBuilder,
-    this.pageSize = 10,
+    this.pageSize = 20,
     this.scrollController,
     this.primary,
     this.physics,
@@ -37,6 +44,9 @@ class ChatRoomListView extends StatefulWidget {
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.clipBehavior = Clip.hardEdge,
     this.chatRoomAppBarBuilder,
+    this.singleChatOnly = false,
+    this.groupChatOnly = false,
+    this.openChatOnly = false,
   });
 
   final ChatRoomListViewController controller;
@@ -52,6 +62,10 @@ class ChatRoomListView extends StatefulWidget {
   final DragStartBehavior dragStartBehavior;
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final Clip clipBehavior;
+
+  final bool singleChatOnly;
+  final bool groupChatOnly;
+  final bool openChatOnly;
 
   // final void Function(Room) onTap;
 
@@ -70,16 +84,28 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
     widget.controller.state = this;
   }
 
+  Query get query {
+    Query q = ChatService.instance.chatCol;
+    q = q.where('users', arrayContains: ChatService.instance.uid);
+    if (widget.singleChatOnly == true) {
+      q = q.where('group', isEqualTo: false);
+    } else if (widget.groupChatOnly == true) {
+      q = q.where('group', isEqualTo: true);
+    } else if (widget.openChatOnly == true) {
+      q = q.where('open', isEqualTo: true);
+    }
+    q = q.orderBy('lastMessage.createdAt', descending: true);
+    return q;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (ChatService.instance.loggedIn == false) {
       return Center(child: Text(tr.user.loginFirst));
     }
-    // Returning a List View of Chat Rooms
+
     return FirestoreListView(
-      query: ChatService.instance.chatCol
-          .where('users', arrayContains: ChatService.instance.uid)
-          .orderBy('lastMessage.createdAt', descending: true),
+      query: query,
       itemBuilder: (context, QueryDocumentSnapshot snapshot) {
         final room = Room.fromDocumentSnapshot(snapshot);
         if (widget.itemBuilder != null) {
@@ -99,6 +125,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
         log(error.toString(), stackTrace: stackTrace);
         return Center(child: Text('Error loading chat rooms $error'));
       },
+      loadingBuilder: (context) => const Center(child: CircularProgressIndicator()),
       pageSize: widget.pageSize,
       controller: widget.scrollController,
       primary: widget.primary,
