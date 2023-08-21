@@ -34,6 +34,20 @@ To use, follow this simple code:
 CategoryListView(),
 ```
 
+Sometimes we want to modify the action when the user tapped the
+category in the list view. For example, showing Update Category dialog
+to an admin after tapping.
+
+This is an example of list view that opens the editing dialog for the category:
+
+```dart
+CategoryListView(
+  onTap: (category) {
+    CategoryService.instance.showUpdateDialog(context, category);
+  },
+),
+```
+
 ### Category Create Dialog
 
 Category Create Dialog is for a dialog that will ask for a category name and create the category.

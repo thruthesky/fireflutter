@@ -31,7 +31,7 @@ class _CreatePostDialogState extends State<CreatePostDialog> {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-            child: Text('Category: ${widget.category.name}'), // TODO pass category id
+            child: Text('Category: ${widget.category.name}'),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, right: 16.0),
@@ -71,12 +71,16 @@ class _CreatePostDialogState extends State<CreatePostDialog> {
               ElevatedButton(
                 child: const Text('Post'),
                 onPressed: () async {
-                  final post = await PostService.instance.createPost(
+                  PostService.instance
+                      .createPost(
                     categoryId: widget.category.id,
                     title: title.text,
                     content: content.text,
-                  );
-                  debugPrint('Posting it $post');
+                  )
+                      .then((post) {
+                    /// TODO go to the post
+                    debugPrint("Go to ${post.id}");
+                  });
                 },
               ),
             ],

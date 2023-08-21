@@ -34,7 +34,7 @@ class _PostListDialogState extends State<PostListDialog> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.categoryId),
+        title: Text(category?.name ?? ''),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -77,7 +77,7 @@ class _PostListDialogState extends State<PostListDialog> {
             onSelected: (value) {
               switch (value) {
                 case "category_settings":
-                  // CategoryService.instance.showCategoryDialog(context, 'discussion')
+                  if (category != null) CategoryService.instance.showUpdateDialog(context, category!);
                   break;
 
                 case "category_list":
@@ -92,9 +92,9 @@ class _PostListDialogState extends State<PostListDialog> {
           )
         ],
       ),
-      // body:  PostListView(
-      //     // controller: controller,
-      //     ),
+      body: PostListView(
+        category: category,
+      ),
     );
   }
 }

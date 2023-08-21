@@ -57,7 +57,7 @@ class CategoryService with FirebaseHelper {
   showListDialog(BuildContext context) async {
     await showGeneralDialog(
       context: context,
-      pageBuilder: (context, _, __) => const CategoryListDialog(),
+      pageBuilder: (context, _, __) => const CategoryListDialog(), // TODO onTapCategory?
     );
   }
 }

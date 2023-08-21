@@ -24,7 +24,7 @@ class PostListView extends StatefulWidget {
     this.dragStartBehavior = DragStartBehavior.start,
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.clipBehavior = Clip.hardEdge,
-    required this.category,
+    this.category,
   });
 
   final int pageSize;
@@ -39,7 +39,7 @@ class PostListView extends StatefulWidget {
   final DragStartBehavior dragStartBehavior;
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final Clip clipBehavior;
-  final Category category;
+  final Category? category;
 
   @override
   State<PostListView> createState() => _PostListViewState();
@@ -48,8 +48,12 @@ class PostListView extends StatefulWidget {
 class _PostListViewState extends State<PostListView> {
   @override
   Widget build(BuildContext context) {
+    debugPrint("Category Id: ${widget.category?.id ?? ''}");
     return FirestoreListView(
-      query: PostService.instance.postCol.where('category', isEqualTo: widget.category.id),
+      query: widget.category ==
+              null // TODO review because it will display a full list first before adding the category filter
+          ? PostService.instance.postCol
+          : PostService.instance.postCol.where('categoryId', isEqualTo: widget.category!.id),
       itemBuilder: (context, QueryDocumentSnapshot snapshot) {
         final post = Post.fromDocumentSnapshot(snapshot);
         if (widget.itemBuilder != null) {
