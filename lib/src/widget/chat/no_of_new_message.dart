@@ -7,9 +7,12 @@ class NoOfNewMessageBadge extends StatelessWidget with FirebaseHelper {
   const NoOfNewMessageBadge({
     super.key,
     required this.room,
+    this.builder,
   });
 
   final Room room;
+  final Widget Function(int)? builder;
+
   @override
   String get uid => UserService.instance.uid;
 
@@ -22,13 +25,15 @@ class NoOfNewMessageBadge extends StatelessWidget with FirebaseHelper {
         final data = snapshot.data;
 
         //
-        final no = data?.snapshot.value ?? 0;
-        if (no == 0) return const SizedBox.shrink();
+        final int no = (data?.snapshot.value ?? 0) as int;
 
-        return Badge(
-          backgroundColor: Theme.of(context).colorScheme.error,
-          label: Text('$no'),
-        );
+        return builder?.call(no) ??
+            (no == 0
+                ? const SizedBox.shrink()
+                : Badge(
+                    backgroundColor: Colors.orange.shade900,
+                    label: Text('$no'),
+                  ));
       },
     );
   }

@@ -41,8 +41,13 @@ class ChatRoomListTile extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(room.name),
+                    room.isGroupChat
+                        ? Text(room.name, style: Theme.of(context).textTheme.bodyLarge)
+                        : UserDoc(
+                            builder: (_) => Text(_.name, style: Theme.of(context).textTheme.bodyLarge),
+                            uid: otherUserUid(room.users)),
                     Text(
                       (room.lastMessage?.text ?? '').replaceAll("\n", ' '),
                       style: Theme.of(context).textTheme.bodySmall,
@@ -53,16 +58,24 @@ class ChatRoomListTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  room.lastMessageTime,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                const SizedBox(height: 10),
-                NoOfNewMessageBadge(room: room),
-              ],
+            NoOfNewMessageBadge(
+              room: room,
+              builder: (no) => Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    room.lastMessageTime,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  const SizedBox(height: 2),
+                  no == 0
+                      ? const SizedBox.shrink()
+                      : Badge(
+                          backgroundColor: Colors.orange.shade900,
+                          label: Text('$no'),
+                        )
+                ],
+              ),
             ),
           ],
         ),
