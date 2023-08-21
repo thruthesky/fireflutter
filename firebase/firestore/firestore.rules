@@ -121,7 +121,7 @@ service cloud.firestore {
       //   return 'group' in resource.data && resource.data.group;
       // }
 
-      allow read: if isOpen() || isRoomUser();
+      allow read: if isRoomUser() || isOpen();
       allow create: if
         required(['master', 'createdAt', 'group', 'open', 'users'])
         &&
@@ -144,7 +144,7 @@ service cloud.firestore {
         ||
         isLeaving()
         ||
-        ( isRoomUser() && onlyUpdating(['lastMessage', 'noOfNewMessages', 'rename']) )
+        ( isRoomUser() && onlyUpdating(['lastMessage', 'rename']) )
         ||
         ( isOpen() && ((isRoomUser() && onlyAddingOneElement('users')) || isJoining()) )
       ;

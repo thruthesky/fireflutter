@@ -21,9 +21,7 @@ class Room {
   final List<String> moderators;
   final List<String> blockedUsers;
 
-  // TODO - 각 사용자 별 메세지 읽음 표시를 여기에 저장해야 하는가? 어차피 나의 방이면 누가 채팅을 할 때 마다, 항상 listen 해야 한다. lastMessage 가 변하고,
-  // TODO - 나의 채팅 숫자도 변해야 한다. 그러면, 이 값이 여기에 저장되어야 한다. 그런데 사용자가 100 명만 되어도 좀 무리가 아닌가?
-  // TODO - 향후, 채팅메시지 자체를 RTDB 에 저장하고, 사용자의 개별 속성 값고 RTDB 에 분리해서 저장해야 할 것 같다.
+  @Deprecated('Delete noOfNewMessages. It is saved under rtdb.')
   final Map<String, int> noOfNewMessages;
   final int maximumNoOfUsers;
   // TODO - 비밀번호 업데이트. EasyExtension 의 strignMatch 로 한다.
@@ -174,51 +172,7 @@ class Room {
     return await addUser(userUid);
   }
 
-  Future<bool> join({BuildContext? context}) async {
-    /// ! ongoing
-    // show room password dialog
-    if (password == null) {
-      await addUser(FirebaseAuth.instance.currentUser!.uid);
-      return true;
-    }
-    if (context != null) {
-      // TODO: Error, must provide context
-      final bool passwordResult = await showDialog<bool?>(
-          context: context,
-          builder: (context) {
-            final roomPassword = TextEditingController();
-            return AlertDialog(
-              title: Text(name),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text("Password: "),
-                  TextFormField(
-                    controller: roomPassword,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter Chat Room Password',
-                    ),
-                  ),
-                ],
-              ),
-              actions: [
-                ElevatedButton(child: const Text('Cancel'), onPressed: () => Navigator.pop(context)),
-                ElevatedButton(
-                    child: const Text('Enter'),
-                    onPressed: () {
-                      if (roomPassword.text == password) Navigator.pop(context, true);
-                    }),
-              ],
-            );
-          }).then(
-        (passwordResult) {
-          return passwordResult ?? false;
-        },
-      );
-      if (passwordResult) await addUser(FirebaseAuth.instance.currentUser!.uid);
-      return passwordResult;
-    }
-    return false;
+  Future<void> join({BuildContext? context}) async {
+    await addUser(FirebaseAuth.instance.currentUser!.uid);
   }
 }

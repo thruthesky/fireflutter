@@ -33,4 +33,6 @@ mixin FireFlutter {
   CollectionReference messageCol(String roomId) => chatCol.doc(roomId).collection('messages');
   DocumentReference roomRef(String roomId) => chatCol.doc(roomId);
   DocumentReference roomDoc(String roomId) => chatCol.doc(roomId);
+
+  DatabaseReference noOfNewMessageRef(String roomId, String uid) => rtdb.ref('chats/$roomId/noOfNewMessages/$uid');
 }
