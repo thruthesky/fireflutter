@@ -26,7 +26,7 @@ class _ForumDialogState extends State<ForumDialog> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              PostService.instance.showCreatePostDialog(
+              PostService.instance.showCreateDialog(
                 context,
                 category: widget.category,
                 success: (val) {

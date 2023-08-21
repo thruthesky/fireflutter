@@ -41,9 +41,11 @@ export 'widget/chat/no_of_new_message.dart';
 export 'widget/category/category_list_view.dart';
 export 'widget/category/category_dialog.dart';
 export 'widget/category/category_create_dialog.dart';
+export 'widget/category/category_list.dialog.dart';
 
 // Post
 export 'widget/post/forum_dialog.dart';
 export 'widget/post/post_list_view.dart';
 export 'widget/post/create_post_dialog.dart';
 export 'widget/post/post_dialog.dart';
+export 'widget/post/post_list.dialog.dart';

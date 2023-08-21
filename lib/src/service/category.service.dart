@@ -7,11 +7,15 @@ class CategoryService with FirebaseHelper {
   static CategoryService get instance => _instance ??= CategoryService._();
   CategoryService._();
 
+  Future<Category?> get(String categoryId) {
+    return Category.get(categoryId);
+  }
+
   /// Show Create Category Dialog
   ///
   /// A dialog to create a category.
   /// It will ask for a name of a category.
-  showCreateCategoryDialog(
+  showCreateDialog(
     BuildContext context, {
     required void Function(Category category) success,
     void Function()? cancel,
@@ -25,7 +29,7 @@ class CategoryService with FirebaseHelper {
     );
   }
 
-  createCategory({required String categoryId, required String categoryName}) {
+  create({required String categoryId, required String categoryName}) {
     return Category.create(
       categoryId: categoryId,
       name: categoryName,
@@ -33,7 +37,7 @@ class CategoryService with FirebaseHelper {
   }
 
   /// Update Category
-  updateCategory(String categoryId, Map<String, dynamic> categoryUpdates) async {
+  update(String categoryId, Map<String, dynamic> categoryUpdates) async {
     await categoryDoc(categoryId).update({
       'name': categoryUpdates['name'],
       'description': categoryUpdates['description'],
@@ -41,12 +45,19 @@ class CategoryService with FirebaseHelper {
     });
   }
 
-  showCategoryDialog(BuildContext context, Category category) async {
+  showUpdateDialog(BuildContext context, Category category) async {
     await showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) => CategoryDialog(
         category: category,
       ),
+    );
+  }
+
+  showListDialog(BuildContext context) async {
+    await showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) => const CategoryListDialog(),
     );
   }
 }

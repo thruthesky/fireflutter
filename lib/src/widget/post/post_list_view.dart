@@ -7,6 +7,9 @@ import 'package:fireflutter/src/model/post.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+/// PostListView
+///
+/// Dispaly posts in a list view.
 class PostListView extends StatefulWidget {
   const PostListView({
     super.key,

@@ -8,6 +8,7 @@ A free, open source, complete, rapid development package for creating Social app
 - [Installation](#installation)
   - [Security rules](#security-rules)
     - [Security rule for admin](#security-rule-for-admin)
+  - [Admin settings](#admin-settings)
 - [Usage](#usage)
   - [UserService](#userservice)
   - [ChatService](#chatservice)
@@ -117,6 +118,11 @@ For instance, you may write security rules like below and add the uids of sub-ad
     ...
   }
 ```
+
+## Admin settings
+
+See the [Security rules for admin](#security-rule-for-admin) chapter to set admin in the security rules. After this, you can set the `isAdmin` field to true on the admin's user document.
+
 
 
 

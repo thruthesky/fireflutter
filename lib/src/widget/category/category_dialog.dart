@@ -60,7 +60,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
                         'name': categoryName.text,
                         'description': description.text,
                       };
-                      CategoryService.instance.updateCategory(widget.category.id, updatedCategory);
+                      CategoryService.instance.update(widget.category.id, updatedCategory);
                     },
                   ),
                 ),

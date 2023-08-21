@@ -50,7 +50,7 @@ class _CategoryCreateDialogState extends State<CategoryCreateDialog> {
         ),
         TextButton(
           onPressed: () async {
-            final createdCategory = await CategoryService.instance.createCategory(
+            final createdCategory = await CategoryService.instance.create(
               categoryId: categoryId.text,
               categoryName: name.text,
             );

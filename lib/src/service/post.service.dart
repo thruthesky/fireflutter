@@ -10,7 +10,7 @@ class PostService with FirebaseHelper {
 
   get col => postCol;
 
-  showCreatePostDialog(
+  showCreateDialog(
     BuildContext context, {
     required Category category,
     required void Function(Post post) success,
