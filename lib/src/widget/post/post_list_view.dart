@@ -21,6 +21,7 @@ class PostListView extends StatefulWidget {
     this.dragStartBehavior = DragStartBehavior.start,
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.clipBehavior = Clip.hardEdge,
+    required this.category,
   });
 
   final int pageSize;
@@ -35,6 +36,7 @@ class PostListView extends StatefulWidget {
   final DragStartBehavior dragStartBehavior;
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final Clip clipBehavior;
+  final Category category;
 
   @override
   State<PostListView> createState() => _PostListViewState();
@@ -44,7 +46,7 @@ class _PostListViewState extends State<PostListView> {
   @override
   Widget build(BuildContext context) {
     return FirestoreListView(
-      query: PostService.instance.postCol,
+      query: PostService.instance.postCol.where('category', isEqualTo: widget.category.id),
       itemBuilder: (context, QueryDocumentSnapshot snapshot) {
         final post = Post.fromDocumentSnapshot(snapshot);
         if (widget.itemBuilder != null) {

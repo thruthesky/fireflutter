@@ -19,7 +19,7 @@ describe("Categories Create Test", () => {
                 'name': 'Test',
                 'createdAt': firebase.firestore.FieldValue.serverTimestamp(),
                 'updatedAt': firebase.firestore.FieldValue.serverTimestamp(),
-                'addedBy': 'test-uid-admin',
+                'createdBy': 'test-uid-admin',
             })
         );
     });
@@ -29,7 +29,7 @@ describe("Categories Create Test", () => {
                 'name': 'Non Admin Test',
                 'createdAt': firebase.firestore.FieldValue.serverTimestamp(),
                 'updatedAt': firebase.firestore.FieldValue.serverTimestamp(),
-                'addedBy': a.uid,
+                'createdBy': a.uid,
             })
         );
     });

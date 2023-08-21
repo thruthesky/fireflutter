@@ -21,7 +21,7 @@ mixin FirebaseHelper {
   DocumentReference get myDoc => userDoc(FirebaseAuth.instance.currentUser!.uid);
 
   // categories
-  CollectionReference get categoryCol => FirebaseFirestore.instance.collection('categories');
+  CollectionReference get categoryCol => FirebaseFirestore.instance.collection(Category.collectionName);
   DocumentReference categoryDoc(String categoryId) => categoryCol.doc(categoryId);
 
   /// post

@@ -25,6 +25,7 @@ class CategoryListView extends StatefulWidget {
     this.dragStartBehavior = DragStartBehavior.start,
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.clipBehavior = Clip.hardEdge,
+    this.onTap,
   });
 
   final int pageSize;
@@ -35,10 +36,10 @@ class CategoryListView extends StatefulWidget {
   final ScrollPhysics? physics;
   final bool shrinkWrap;
   final EdgeInsetsGeometry? padding;
-
   final DragStartBehavior dragStartBehavior;
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final Clip clipBehavior;
+  final Function()? onTap;
 
   // final void Function(Category) onTap; // TODO onTap custom
 
@@ -65,7 +66,12 @@ class CategoryListViewState extends State<CategoryListView> {
           return ListTile(
             title: Text(category.name),
             onTap: () {
-              CategoryService.instance.showCategoryDialog(context, category);
+              if (widget.onTap != null) {
+                widget.onTap!.call();
+              } else {
+                // CategoryService.instance.showCategoryDialog(context, category);
+                PostService.instance.showForumDialog(context, category);
+              }
             },
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

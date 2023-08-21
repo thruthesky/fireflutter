@@ -28,6 +28,18 @@ class _CategoryDialogState extends State<CategoryDialog> {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
+            Text.rich(
+              TextSpan(
+                text: 'Category ID: ',
+                children: [
+                  TextSpan(
+                      text: widget.category.id,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      )),
+                ],
+              ),
+            ),
             TextFormField(
               controller: categoryName,
               decoration: const InputDecoration(labelText: 'Name'),

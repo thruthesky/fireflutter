@@ -17,7 +17,9 @@ class CategoryCreateDialog extends StatefulWidget {
 
 class _CategoryCreateDialogState extends State<CategoryCreateDialog> {
   final name = TextEditingController();
+  final categoryId = TextEditingController();
   bool isOpen = false;
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -25,6 +27,12 @@ class _CategoryCreateDialogState extends State<CategoryCreateDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          TextField(
+            controller: categoryId,
+            decoration: const InputDecoration(
+              labelText: 'Category ID (Permanent)',
+            ),
+          ),
           TextField(
             controller: name,
             decoration: const InputDecoration(
@@ -43,6 +51,7 @@ class _CategoryCreateDialogState extends State<CategoryCreateDialog> {
         TextButton(
           onPressed: () async {
             final createdCategory = await CategoryService.instance.createCategory(
+              categoryId: categoryId.text,
               categoryName: name.text,
             );
             widget.success(createdCategory);

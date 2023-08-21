@@ -20,7 +20,7 @@ describe("Categories Update Test", () => {
             'name': 'Test',
             'createdAt': firebase.firestore.FieldValue.serverTimestamp(),
             'updatedAt': firebase.firestore.FieldValue.serverTimestamp(),
-            'addedBy': 'test-uid-admin',
+            'createdBy': 'test-uid-admin',
         });
 
         // Admin Updates the category
@@ -39,7 +39,7 @@ describe("Categories Update Test", () => {
             'name': 'Test',
             'createdAt': firebase.firestore.FieldValue.serverTimestamp(),
             'updatedAt': firebase.firestore.FieldValue.serverTimestamp(),
-            'addedBy': 'test-uid-admin',
+            'createdBy': 'test-uid-admin',
         });
 
         // Non Admin tried to update category - fail

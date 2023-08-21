@@ -398,9 +398,9 @@ class ChatService with FirebaseHelper {
 
   /// Opens the chat room menu
   openChatRoomMenuDialog({required Room room, required BuildContext context}) {
-    return showGeneralDialog(
+    return showDialog(
       context: context,
-      pageBuilder: (context, _, __) {
+      builder: (context) {
         return ChatRoomMenuDialog(
           room: room,
         );

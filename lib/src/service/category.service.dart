@@ -25,8 +25,9 @@ class CategoryService with FirebaseHelper {
     );
   }
 
-  createCategory({required String categoryName}) {
+  createCategory({required String categoryId, required String categoryName}) {
     return Category.create(
+      categoryId: categoryId,
       name: categoryName,
     );
   }

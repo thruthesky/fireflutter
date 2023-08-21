@@ -7,9 +7,11 @@ class CreatePostDialog extends StatefulWidget {
   const CreatePostDialog({
     super.key,
     required this.success,
+    required this.category,
   });
 
   final void Function(Post post) success;
+  final Category category;
 
   @override
   State<CreatePostDialog> createState() => _CreatePostDialogState();
@@ -21,8 +23,6 @@ class _CreatePostDialogState extends State<CreatePostDialog> {
 
   @override
   Widget build(BuildContext context) {
-    // String categoryId = 'discussion'; // TODO , still ongoing
-    String categoryName = 'Discussion'; // TODO , still ongoing
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Post'),
@@ -31,7 +31,7 @@ class _CreatePostDialogState extends State<CreatePostDialog> {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-            child: Text('Category: $categoryName'),
+            child: Text('Category: ${widget.category.name}'), // TODO pass category id
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, right: 16.0),
@@ -70,9 +70,13 @@ class _CreatePostDialogState extends State<CreatePostDialog> {
             children: [
               ElevatedButton(
                 child: const Text('Post'),
-                onPressed: () {
-                  // PostService
-                  debugPrint('Posting it');
+                onPressed: () async {
+                  final post = await PostService.instance.createPost(
+                    categoryId: widget.category.id,
+                    title: title.text,
+                    content: content.text,
+                  );
+                  debugPrint('Posting it $post');
                 },
               ),
             ],

@@ -22,7 +22,7 @@ describe("Post Update Test", () => {
       name: "Test",
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      addedBy: "test-uid-admin",
+      createdBy: "test-uid-admin",
     });
 
     // create post
@@ -52,7 +52,7 @@ describe("Post Update Test", () => {
       name: "Test",
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      addedBy: "test-uid-admin",
+      createdBy: "test-uid-admin",
     });
 
     // create post
@@ -100,7 +100,7 @@ describe("Post Update Test", () => {
       name: "Test",
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      addedBy: "test-uid-admin",
+      createdBy: "test-uid-admin",
     });
 
     // create post
@@ -131,7 +131,7 @@ describe("Post Update Test", () => {
       name: "Test",
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      addedBy: "test-uid-admin",
+      createdBy: "test-uid-admin",
     });
 
     // create post
@@ -162,7 +162,7 @@ describe("Post Update Test", () => {
       name: "Test",
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      addedBy: "test-uid-admin",
+      createdBy: "test-uid-admin",
     });
 
     // create post
@@ -201,7 +201,7 @@ describe("Post Update Test", () => {
       name: "Test",
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      addedBy: "test-uid-admin",
+      createdBy: "test-uid-admin",
     });
 
     // create post

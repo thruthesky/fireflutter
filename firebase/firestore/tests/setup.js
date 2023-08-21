@@ -150,7 +150,7 @@ async function createCategory() {
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
     // TODO - change addBy to uid.
-    addedBy: "test-uid-admin",
+    createdBy: "test-uid-admin",
   });
 
   return admin().collection(categoriesColName).doc(id);

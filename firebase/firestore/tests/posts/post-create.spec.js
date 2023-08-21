@@ -21,7 +21,7 @@ describe("Post Create Test", () => {
       name: "Test",
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      addedBy: "test-uid-admin",
+      createdBy: "test-uid-admin",
     });
 
     // create post - successful
@@ -44,7 +44,7 @@ describe("Post Create Test", () => {
       name: "Test",
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      addedBy: "test-uid-admin",
+      createdBy: "test-uid-admin",
     });
 
     // A create post for B - fail

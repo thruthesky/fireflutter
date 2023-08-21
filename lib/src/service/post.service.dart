@@ -1,5 +1,6 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/model/post.dart';
+import 'package:fireflutter/src/widget/post/forum_dialog.dart';
 import 'package:flutter/material.dart';
 
 class PostService with FirebaseHelper {
@@ -11,12 +12,13 @@ class PostService with FirebaseHelper {
 
   showCreatePostDialog(
     BuildContext context, {
-    Category? category,
+    required Category category,
     required void Function(Post post) success,
   }) async {
     await showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) => CreatePostDialog(
+        category: category,
         success: success,
       ),
     );
@@ -28,17 +30,30 @@ class PostService with FirebaseHelper {
     required String content,
     List<String>? files,
   }) {
-    // return Post.create(
-    //   name: categoryName,
-    // );
+    return Post.create(
+      categoryId: categoryId,
+      title: title,
+      content: content,
+      files: files,
+    );
   }
 
   /// Shows the Post as a dialog
-  showPostDialog(BuildContext context, Post post) async {
-    await showGeneralDialog(
+  showPostDialog(BuildContext context, Post post) {
+    showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) => PostDialog(
         post: post,
+      ),
+    );
+  }
+
+  /// Shows the posts under a category (or forum)
+  showForumDialog(BuildContext context, Category category) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) => ForumDialog(
+        category: category,
       ),
     );
   }

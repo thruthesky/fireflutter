@@ -20,7 +20,7 @@ describe("Categories Delete Test", () => {
             'name': 'Test',
             'createdAt': firebase.firestore.FieldValue.serverTimestamp(),
             'updatedAt': firebase.firestore.FieldValue.serverTimestamp(),
-            'addedBy': 'test-uid-admin',
+            'createdBy': 'test-uid-admin',
         });
 
         // Admin tries to delete the category - succeeds (for confirmation)
@@ -35,7 +35,7 @@ describe("Categories Delete Test", () => {
             'name': 'Test',
             'createdAt': firebase.firestore.FieldValue.serverTimestamp(),
             'updatedAt': firebase.firestore.FieldValue.serverTimestamp(),
-            'addedBy': 'test-uid-admin',
+            'createdBy': 'test-uid-admin',
         });
 
         // Non-Admin tries to delete the category - failure
