@@ -17,5 +17,5 @@ It has:
 - files
 - createdAt
 - updatedAt
-- likers
+- likes
 - deleted

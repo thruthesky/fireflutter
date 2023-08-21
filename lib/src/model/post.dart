@@ -13,7 +13,7 @@ class Post with FirebaseHelper {
   final List<dynamic>? files;
   final Timestamp createdAt;
   final Timestamp updatedAt;
-  final List<dynamic> likers;
+  final List<dynamic> likes;
   final bool? deleted;
 
   Post({
@@ -25,7 +25,7 @@ class Post with FirebaseHelper {
     this.files,
     required this.createdAt,
     required this.updatedAt,
-    required this.likers,
+    required this.likes,
     this.deleted,
   });
 
@@ -43,7 +43,7 @@ class Post with FirebaseHelper {
       files: map['files'],
       createdAt: map['createdAt'] ?? Timestamp.now(),
       updatedAt: map['updatedAt'] ?? Timestamp.now(),
-      likers: map['likers'] ?? [],
+      likes: map['likes'] ?? [],
       deleted: map['deleted'],
     );
   }

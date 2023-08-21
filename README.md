@@ -359,16 +359,28 @@ tr.user.loginFirst = '로그인을 해 주세요.';
 
 Run the firebase emulators like the followings. Note that you will need to install and setup emulators if you didn't.
 
-```
+```sh
 cd firebase/firestore
 firebase emulators:start
 ```
 
-Then, run the test like below.
-```
+Then, run all the test like below.
+```sh
 npm test
 ```
 
+To run group of tests, specify folder name.
+
+```sh
+npm run mocha tests/posts
+```
+
+
+To run a single test file, specify file name.
+
+```sh
+npm run mocha tests/posts/create.spec.js
+```
 
 
 ## Testing on real Firebase
