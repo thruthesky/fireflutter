@@ -380,6 +380,7 @@ To run a single test file, specify file name.
 
 ```sh
 npm run mocha tests/posts/create.spec.js
+npm run mocha tests/posts/likes.spec.js
 ```
 
 
