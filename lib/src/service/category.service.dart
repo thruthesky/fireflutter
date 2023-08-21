@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class CategoryService with FireFlutter {
+class CategoryService with FirebaseHelper {
   static CategoryService? _instance;
   static CategoryService get instance => _instance ??= CategoryService._();
   CategoryService._();

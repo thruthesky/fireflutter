@@ -2,7 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class NoOfNewMessage extends StatelessWidget with FireFlutter {
+class NoOfNewMessage extends StatelessWidget with FirebaseHelper {
   const NoOfNewMessage({
     super.key,
     required this.room,

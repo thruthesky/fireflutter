@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fireflutter/fireflutter.dart';
 
-class Message {
+class Message with FirebaseHelper {
   final String id;
   final String? text;
   final String? imageUrl;

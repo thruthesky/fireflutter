@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:fireflutter/fireflutter.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-mixin FireFlutter {
+mixin FirebaseHelper {
   /// Firestore database instance
   FirebaseFirestore get db => FirebaseFirestore.instance;
 

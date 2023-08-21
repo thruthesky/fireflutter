@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 ///
 /// This is the model for the chat room.
 /// Don't update the property directly. The property is read-only and if you want to apply the changes, listen to the stream of the chat room document.
-class Room {
+class Room with FirebaseHelper {
   final String id;
   final String name;
 

@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 
-class ChatService with FireFlutter {
+class ChatService with FirebaseHelper {
   static ChatService? _instance;
   static ChatService get instance => _instance ??= ChatService._();
 

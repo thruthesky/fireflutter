@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/services.dart';
 
-class Post {
+class Post with FirebaseHelper {
   final String id;
   final String categoryId;
   final String title;
   final String content;
+  @override
   final String uid;
   final List<dynamic>? files;
   final Timestamp createdAt;
