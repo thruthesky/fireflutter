@@ -10,10 +10,12 @@ class ChatRoomListTile extends StatelessWidget {
     required this.room,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.onTap,
+    this.avatarSize = 40,
   });
   final Room room;
   final EdgeInsets padding;
   final Function()? onTap;
+  final double avatarSize;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class ChatRoomListTile extends StatelessWidget {
             room.isSingleChat
                 ? UserAvatar(
                     uid: otherUserUid(room.users),
-                    size: 48,
+                    size: avatarSize,
                     radius: 10,
                     borderWidth: 1,
                     borderColor: Colors.grey.shade300,
@@ -41,7 +43,11 @@ class ChatRoomListTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ChatRoomListTileName(room: room),
-                    NoOfNewMessageBadge(room: room),
+                    Text(
+                      (room.lastMessage?.text ?? '').replaceAll("\n", ' '),
+                      style: Theme.of(context).textTheme.bodySmall,
+                      maxLines: 1,
+                    ),
                   ],
                 ),
               ),
@@ -51,7 +57,7 @@ class ChatRoomListTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '10:00',
+                  room.lastMessageTime,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(height: 10),

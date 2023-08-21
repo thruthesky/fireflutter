@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/service/chat.service.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 /// Room
 ///
@@ -173,5 +174,17 @@ class Room with FirebaseHelper {
 
   Future<void> join({BuildContext? context}) async {
     await addUser(FirebaseAuth.instance.currentUser!.uid);
+  }
+
+  String get lastMessageTime {
+    if (lastMessage == null) return '';
+    final dt = lastMessage!.createdAt.toDate();
+
+    final now = DateTime.now();
+    if (dt.year == now.year && dt.month == now.month && dt.day == now.day) {
+      return DateFormat.jm().format(dt);
+    } else {
+      return DateFormat('yy.MM.dd').format(dt);
+    }
   }
 }

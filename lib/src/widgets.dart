@@ -18,7 +18,7 @@ export 'widget/chat/chat_room_app_bar.dart';
 export 'widget/chat/chat_room_app_bar_title.dart';
 export 'widget/chat/chat_room_create.dart';
 export 'widget/chat/chat_room_default_room_name_setting.dart';
-export 'widget/chat/chat_room_file_upload_bottom_sheet.dart';
+export 'widget/common/upload_selection.bottom_sheet.dart';
 export 'widget/chat/chat_room_user_invite_dialog.dart';
 export 'widget/user/user.list_view.dart';
 export 'widget/chat/chat_room_leave_button.dart';

@@ -4,20 +4,16 @@ import 'package:fireflutter/fireflutter.dart';
 class Message with FirebaseHelper {
   final String id;
   final String? text;
-  final String? imageUrl;
   final String senderUid;
   final Timestamp createdAt;
-  final String? fileUrl;
-  final String? fileName;
+  final String? url;
 
   Message({
     required this.id,
     required this.text,
-    required this.imageUrl,
+    required this.url,
     required this.senderUid,
     required this.createdAt,
-    required this.fileUrl,
-    required this.fileName,
   });
 
   factory Message.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
@@ -28,11 +24,9 @@ class Message with FirebaseHelper {
     return Message(
       id: id,
       text: map['text'],
-      imageUrl: map['imageUrl'],
+      url: map['url'],
       senderUid: map['senderUid'] ?? '',
-      createdAt: map['createdAt'],
-      fileUrl: map['fileUrl'],
-      fileName: map['fileName'],
+      createdAt: map['createdAt'] ?? Timestamp.now(),
     );
   }
 
@@ -40,15 +34,12 @@ class Message with FirebaseHelper {
     return {
       'id': id,
       'text': text,
-      'imageUrl': imageUrl,
+      'url': url,
       'senderUid': senderUid,
       'createdAt': createdAt,
-      'fileUrl': fileUrl,
-      'fileName': fileName,
     };
   }
 
   @override
-  String toString() =>
-      'Message(id: $id, text: $text,  imageUrl: $imageUrl, senderUid: $senderUid, createdAt: $createdAt, fileUrl: $fileUrl, fileName: $fileName,)';
+  String toString() => 'Message(id: $id, text: $text,  url: $url, senderUid: $senderUid, createdAt: $createdAt)';
 }
