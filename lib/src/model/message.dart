@@ -6,7 +6,7 @@ class Message with FirebaseHelper {
   final String? text;
   final String? imageUrl;
   final String senderUid;
-  final Timestamp? createdAt;
+  final Timestamp createdAt;
   final String? fileUrl;
   final String? fileName;
 
@@ -29,7 +29,7 @@ class Message with FirebaseHelper {
       id: id,
       text: map['text'],
       imageUrl: map['imageUrl'],
-      senderUid: map['senderUid'],
+      senderUid: map['senderUid'] ?? '',
       createdAt: map['createdAt'],
       fileUrl: map['fileUrl'],
       fileName: map['fileName'],

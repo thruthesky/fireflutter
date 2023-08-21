@@ -21,13 +21,13 @@ class Room with FirebaseHelper {
   final List<String> moderators;
   final List<String> blockedUsers;
 
-  @Deprecated('Delete noOfNewMessages. It is saved under rtdb.')
-  final Map<String, int> noOfNewMessages;
   final int maximumNoOfUsers;
   // TODO - 비밀번호 업데이트. EasyExtension 의 strignMatch 로 한다.
   final String? password;
 
   final Timestamp createdAt;
+
+  final Message? lastMessage;
 
   Room({
     required this.id,
@@ -39,10 +39,10 @@ class Room with FirebaseHelper {
     required this.users,
     required this.moderators,
     required this.blockedUsers,
-    required this.noOfNewMessages,
     required this.maximumNoOfUsers,
     this.password,
     required this.createdAt,
+    this.lastMessage,
   });
 
   bool get isSingleChat => users.length == 2 && group == false;
@@ -66,13 +66,13 @@ class Room with FirebaseHelper {
       users: List<String>.from((map['users'] ?? [])),
       moderators: List<String>.from(map['moderators'] ?? []),
       blockedUsers: List<String>.from(map['blockedUsers'] ?? []),
-      noOfNewMessages: Map<String, int>.from(map['noOfNewMessages'] ?? {}),
       maximumNoOfUsers:
           map['maximumNoOfUsers'] ?? 100, // TODO confirm where to put the config on default max no of users
       password: map['password'],
 
       /// Note FieldValue happens when the docuemnt is cached locally on creation and the createdAt is not set on the remote database.
       createdAt: map['createdAt'] is FieldValue ? Timestamp.now() : map['createdAt'] ?? Timestamp.now(),
+      lastMessage: map['lastMessage'] != null ? Message.fromMap(map: map['lastMessage'], id: "") : null,
     );
   }
 
@@ -87,7 +87,6 @@ class Room with FirebaseHelper {
       'users': users,
       'moderators': moderators,
       'blockedUsers': blockedUsers,
-      'noOfNewMessages': noOfNewMessages,
       'maximumNoOfUsers': maximumNoOfUsers,
       'password': password,
       'createdAt': createdAt,

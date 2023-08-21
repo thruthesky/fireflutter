@@ -28,7 +28,6 @@ export 'widget/chat/chat_room_list_view.dart';
 export 'widget/chat/chat_room_maximum_users_setting_list_tile.dart';
 export 'widget/chat/chat_room_user_list_view.dart';
 export 'widget/chat/chat_room_menu_dialog.dart';
-export 'widget/chat/chat_room_no_of_new_messages_text.dart';
 export 'widget/chat/chat_room_open_list_view.dart';
 export 'widget/chat/chat_room_open_setting_list_tile.dart';
 export 'widget/chat/chat_room_password_setting_list_tile.dart';

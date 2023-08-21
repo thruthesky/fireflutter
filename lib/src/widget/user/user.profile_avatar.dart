@@ -118,6 +118,8 @@ class _UserAvatarState extends State<UserProfileAvatar> {
             key: ValueKey(widget.user.photoUrl),
             user: widget.user,
             size: widget.size,
+            radius: 100,
+            borderWidth: 0,
           ),
           uploadProgressIndicator(),
           if (widget.upload)

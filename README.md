@@ -217,6 +217,12 @@ UserDoc(
 
 ## Avatar
 
+This is a similiar widget of the `CircleAvatar` in Material UI.
+
+```dart
+Avatar(url: 'https://picsum.photos/200/300'),
+```
+
 ## UserAvatar
 
 To display user's profile photo, use `UserAvatar`.
@@ -372,6 +378,7 @@ npm test
 To run group of tests, specify folder name.
 
 ```sh
+npm run mocha tests/rule-functions
 npm run mocha tests/posts
 ```
 

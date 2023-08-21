@@ -41,7 +41,7 @@ class ChatRoomListTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ChatRoomListTileName(room: room),
-                    ChatRoomNoOfNewMessageBadgesText(room: room),
+                    NoOfNewMessageBadge(room: room),
                   ],
                 ),
               ),
