@@ -252,7 +252,7 @@ class ChatService with FirebaseHelper {
       noOfNewMessages[uid] = ServerValue.increment(1);
     }
     noOfNewMessages[FirebaseAuth.instance.currentUser!.uid] = 0;
-    rtdb.ref('chats/${room.id}/noOfNewMessages').update(noOfNewMessages);
+    await noOfNewMessageRef(room.id).update(noOfNewMessages);
 
     //
     await roomDoc(room.id).set(

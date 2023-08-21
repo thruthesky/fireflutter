@@ -41,7 +41,7 @@ class ChatRoomListTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ChatRoomListTileName(room: room),
-                    ChatRoomNoOfNewMessagesText(room: room),
+                    ChatRoomNoOfNewMessageBadgesText(room: room),
                   ],
                 ),
               ),
@@ -55,7 +55,7 @@ class ChatRoomListTile extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(height: 10),
-                NoOfNewMessage(room: room),
+                NoOfNewMessageBadge(room: room),
               ],
             ),
           ],

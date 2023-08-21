@@ -34,5 +34,8 @@ mixin FirebaseHelper {
   DocumentReference roomRef(String roomId) => chatCol.doc(roomId);
   DocumentReference roomDoc(String roomId) => chatCol.doc(roomId);
 
-  DatabaseReference noOfNewMessageRef(String roomId, String uid) => rtdb.ref('chats/$roomId/noOfNewMessages/$uid');
+  //
+  DatabaseReference noOfNewMessageRef(String roomId) => rtdb.ref('chats/$roomId/noOfNewMessages');
+  //
+  DatabaseReference noOfNewMessageUserRef(String roomId, String uid) => noOfNewMessageRef(roomId).child(uid);
 }

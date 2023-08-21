@@ -83,7 +83,7 @@ class _TestScreenState extends State<TestUi> {
           child: Text('Run all tests', style: TextStyle(color: Colors.red.shade800)),
         ),
         ElevatedButton(
-          onPressed: testNoOfNewMessage,
+          onPressed: testNoOfNewMessageBadge,
           child: const Text('TEST noOfNewMessage - Apple & Banana'),
         ),
         ElevatedButton(
@@ -125,7 +125,7 @@ class _TestScreenState extends State<TestUi> {
   testAll() async {
     Test.start();
     await testCreateGroupChatRoom();
-    await testNoOfNewMessage();
+    await testNoOfNewMessageBadge();
     await testMaximumNoOfUsers();
     await testCreateSingleChatRoom();
     await testInviteUserIntoSingleChat();
@@ -184,7 +184,7 @@ class _TestScreenState extends State<TestUi> {
   /// Test the no of new messages.
   ///
   ///
-  testNoOfNewMessage() async {
+  testNoOfNewMessageBadge() async {
     // Sign in with apple with its password
     await Test.login(Test.apple);
 
