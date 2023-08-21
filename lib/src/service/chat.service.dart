@@ -18,8 +18,6 @@ class ChatService with FirebaseHelper {
 
   ChatRoomCustomize customize = ChatRoomCustomize();
 
-  Function(BuildContext, Room)? onChatRoomFileUpload;
-
   /// TODO: Support official localization.
   Map<String, String> texts = {};
 
@@ -225,18 +223,14 @@ class ChatService with FirebaseHelper {
   Future<void> sendMessage({
     required Room room,
     String? text,
-    String? imageUrl,
-    String? fileUrl,
-    String? fileName,
+    String? url,
   }) async {
+    if (text == null && url == null) return;
     final chatMessage = {
       if (text != null) 'text': text,
-      if (imageUrl != null) 'imageUrl': imageUrl,
-      if (fileUrl != null) 'fileUrl': fileUrl,
-      if (fileName != null) 'fileName': fileName,
+      if (url != null) 'url': url,
       'createdAt': FieldValue.serverTimestamp(),
       'senderUid': FirebaseAuth.instance.currentUser!.uid,
-      // TODO protocol
     };
     await messageCol(room.id).add(chatMessage);
     updateRoomForNewMessage(room: room, lastMessage: chatMessage);
@@ -311,73 +305,25 @@ class ChatService with FirebaseHelper {
     }
   }
 
-  /// File upload
-  ///
-  /// This method is invoked when user press button to upload a file.
-  onPressedFileUploadIcon({required BuildContext context, required Room room}) async {
-    if (onChatRoomFileUpload != null) {
-      await onChatRoomFileUpload!(context, room);
-      return;
-    }
-    final re = await showModalBottomSheet<MediaSource>(
-        context: context,
-        builder: (_) => ChatRoomFileUploadBottomSheet(
-            room: room)); // For confirmation () removed Image source because we dont have MediaSource
-    if (re == null) return; // double check
-
-    debugPrint("re: $re");
-
-    if (re == MediaSource.gallery || re == MediaSource.camera) {
-      ImageSource imageSource = re == MediaSource.gallery ? ImageSource.gallery : ImageSource.camera;
-      onPressedPhotoOption(room: room, imageSource: imageSource);
-    } else if (re == MediaSource.file) {
-      onPressedChooseFileUploadOption(room: room);
-    }
-  }
-
-  onPressedPhotoOption({required Room room, required ImageSource imageSource}) async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: imageSource);
-    if (image == null) {
-      return;
-    }
-
-    final file = File(image.path);
-    final name = sanitizeFilename(image.name, replacement: '-');
-    onFileUpload(room: room, file: file, isImage: true, fileStorageName: name);
-  }
-
-  onPressedChooseFileUploadOption({required Room room}) async {
-    late PlatformFile pickedFile;
-    final FilePickerResult? result = await FilePicker.platform.pickFiles();
-    if (result == null) return;
-    pickedFile = result.files.first;
-    final file = File(pickedFile.path!);
-    final storageName =
-        sanitizeFilename('${DateTime.now().millisecondsSinceEpoch}-${pickedFile.name}', replacement: '-');
-    final fileName = sanitizeFilename(pickedFile.name, replacement: '-');
-    onFileUpload(room: room, file: file, isImage: false, fileStorageName: storageName, fileName: fileName);
-  }
-
-  onFileUpload({
-    required Room room,
-    required File file,
-    bool isImage = true,
-    String? fileName,
-    String? fileStorageName,
-  }) async {
-    final storageRef = FirebaseStorage.instance.ref();
-    final fileRef = storageRef.child("ChatService/${ChatService.instance.uid}/$fileStorageName");
-    try {
-      await fileRef.putFile(file);
-      final url = await fileRef.getDownloadURL();
-      isImage
-          ? ChatService.instance.sendMessage(room: room, imageUrl: url)
-          : ChatService.instance.sendMessage(room: room, fileUrl: url, fileName: fileName);
-    } on FirebaseException catch (e) {
-      debugPrint('$e');
-    }
-  }
+  // onFileUpload({
+  //   required Room room,
+  //   required File file,
+  //   bool isImage = true,
+  //   String? fileName,
+  //   String? fileStorageName,
+  // }) async {
+  //   final storageRef = FirebaseStorage.instance.ref();
+  //   final fileRef = storageRef.child("ChatService/${ChatService.instance.uid}/$fileStorageName");
+  //   try {
+  //     await fileRef.putFile(file);
+  //     final url = await fileRef.getDownloadURL();
+  //     isImage
+  //         ? ChatService.instance.sendMessage(room: room, imageUrl: url)
+  //         : ChatService.instance.sendMessage(room: room, fileUrl: url, fileName: fileName);
+  //   } on FirebaseException catch (e) {
+  //     debugPrint('$e');
+  //   }
+  // }
 
   /// Show create chat room dialog
   ///

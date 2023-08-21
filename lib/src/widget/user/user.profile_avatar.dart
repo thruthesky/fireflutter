@@ -97,9 +97,9 @@ class _UserAvatarState extends State<UserProfileAvatar> {
 
         if (image == null) return;
 
-        final file = File(image.path);
+        // final file = File(image.path);
         final url = await StorageService.instance.upload(
-          file: file,
+          path: image.path,
           progress: (p) => setState(() => progress = p),
           complete: () => setState(() => progress = null),
           compressQuality: 70,
@@ -118,6 +118,8 @@ class _UserAvatarState extends State<UserProfileAvatar> {
             key: ValueKey(widget.user.photoUrl),
             user: widget.user,
             size: widget.size,
+            radius: 100,
+            borderWidth: 0,
           ),
           uploadProgressIndicator(),
           if (widget.upload)
