@@ -25,6 +25,10 @@ A free, open source, complete, rapid development package for creating Social app
 - [Customization](#customization)
   - [Chat Customization](#chat-customization)
 - [Translation](#translation)
+- [Unit Testing](#unit-testing)
+  - [Testing on Local Emulators and Firebase](#testing-on-local-emulators-and-firebase)
+  - [Testing security rules](#testing-security-rules)
+  - [Testing on real Firebase](#testing-on-real-firebase)
 - [Developer](#developer)
   - [Development Tips](#development-tips)
 - [Contribution](#contribution)
@@ -70,11 +74,7 @@ A free, open source, complete, rapid development package for creating Social app
 - [Developers](#developers)
   - [How to add the easychat package as subtree into your project as the repo master](#how-to-add-the-easychat-package-as-subtree-into-your-project-as-the-repo-master)
   - [Deploy](#deploy)
-  - [Unit Testing](#unit-testing)
-    - [Testing on Local Emulators](#testing-on-local-emulators)
-    - [Testing on real Firebase](#testing-on-real-firebase)
   - [Tips](#tips)
-  - [Security rules](#security-rules-2)
 
 ## Features
 
@@ -344,6 +344,67 @@ Here is an example of updating the translation.
 ```dart
 tr.user.loginFirst = '로그인을 해 주세요.';
 ```
+
+
+
+
+# Unit Testing
+
+## Testing on Local Emulators and Firebase
+
+- We do unit testing on both of local emulator and on real Firebase. It depends on how the test structure is formed.
+
+
+## Testing security rules
+
+Run the firebase emulators like the followings. Note that you will need to install and setup emulators if you didn't.
+
+```sh
+cd firebase/firestore
+firebase emulators:start
+```
+
+Then, run all the test like below.
+```sh
+npm test
+```
+
+To run group of tests, specify folder name.
+
+```sh
+npm run mocha tests/posts
+```
+
+
+To run a single test file, specify file name.
+
+```sh
+npm run mocha tests/posts/create.spec.js
+npm run mocha tests/posts/likes.spec.js
+```
+
+
+## Testing on real Firebase
+
+- Test files are under `functions/tests`. This test files work with real Firebase. So, you may need provide a Firebase for test use.
+
+  - You can run the emulator on the same folder where `functions/firebase.json` resides, and run the tests on the same folder.
+
+- To run the sample test,
+
+  - `npm run test:index`
+
+- To run all the tests
+
+  - `npm run test`
+
+- To run a test by specifying a test script,
+  - `npm run mocha -- tests/**/*.ts`
+  - `npm run mocha -- tests/update_custom_claims/get_set.spec.ts`
+  - `npm run mocha -- tests/update_custom_claims/update.spec.ts`
+
+
+
 
 # Developer
 
@@ -1008,41 +1069,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
 - To deploy to functions, run the command below.
   - `npm run deploy`
-
-## Unit Testing
-
-### Testing on Local Emulators
-
-- We do unit testing on local emulator and on real Firebase.
-
-- To test the input of the configuration based on extension.yaml, run the following
-  - `cd functions/integration_tests && firebase emulators:start`
-  - You can open `https://localhost:4000` to see everything works fine especially with the configuration of `*.env` based on the `extension.yaml` settings.
-
-### Testing on real Firebase
-
-- Test files are under `functions/tests`. This test files work with real Firebase. So, you may need provide a Firebase for test use.
-
-  - You can run the emulator on the same folder where `functions/firebase.json` resides, and run the tests on the same folder.
-
-- To run the sample test,
-
-  - `npm run test:index`
-
-- To run all the tests
-
-  - `npm run test`
-
-- To run a test by specifying a test script,
-  - `npm run mocha -- tests/**/*.ts`
-  - `npm run mocha -- tests/update_custom_claims/get_set.spec.ts`
-  - `npm run mocha -- tests/update_custom_claims/update.spec.ts`
-
 ## Tips
 
 - If you want, you can add `timestamp` field for listing.
-
-## Security rules
-
-- The `/easy-commands` collection should be protected by the admin users.
-- See the [sample security rules](https://github.com/easy-extension/firestore.rules) that you may copy and use for the seurity rules of easy-extension.

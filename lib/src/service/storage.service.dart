@@ -3,7 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
-class StorageService with FireFlutter {
+class StorageService with FirebaseHelper {
   static StorageService? _instance;
   static StorageService get instance => _instance ??= StorageService._();
 

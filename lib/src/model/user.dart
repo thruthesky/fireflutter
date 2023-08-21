@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fireflutter/fireflutter.dart';
 
-class User {
+class User with FirebaseHelper {
   static const String collectionName = 'users';
 
+  @override
   final String uid;
 
   /// [isAdmin] is set to true if the logged in user is an admin.

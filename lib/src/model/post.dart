@@ -1,17 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/services.dart';
 
-class Post {
+class Post with FirebaseHelper {
   final String id;
   final String categoryId;
   final String title;
   final String content;
+  @override
   final String uid;
   final List<dynamic>? files;
   final Timestamp createdAt;
   final Timestamp updatedAt;
-  final List<dynamic> likers;
+  final List<dynamic> likes;
   final bool? deleted;
 
   Post({
@@ -23,7 +25,7 @@ class Post {
     this.files,
     required this.createdAt,
     required this.updatedAt,
-    required this.likers,
+    required this.likes,
     this.deleted,
   });
 
@@ -41,7 +43,7 @@ class Post {
       files: map['files'],
       createdAt: map['createdAt'] ?? Timestamp.now(),
       updatedAt: map['updatedAt'] ?? Timestamp.now(),
-      likers: map['likers'] ?? [],
+      likes: map['likes'] ?? [],
       deleted: map['deleted'],
     );
   }
