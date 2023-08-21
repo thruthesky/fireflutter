@@ -134,7 +134,9 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
           return ChatRoomListTile(
             room: room,
             avatarSize: widget.avatarSize,
-            onTap: () => ChatService.instance.showChatRoom(context: context, room: room),
+            onTap: () {
+              ChatService.instance.showChatRoom(context: context, room: room);
+            },
           );
         }
       },

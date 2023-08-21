@@ -136,7 +136,8 @@ class Room with FirebaseHelper {
   }
 
   @override
-  String toString() => 'Room(id: $id, name: $name, group: $group, open: $open, master: $master, users: $users)';
+  String toString() =>
+      'Room(id: $id, name: $name, group: $group, open: $open, master: $master, users: $users, moderators: $moderators, blockedUsers: $blockedUsers, maximumNoOfUsers: $maximumNoOfUsers, password: $password, createdAt: $createdAt, lastMessage: $lastMessage)';
 
   String get otherUserUid {
     assert(users.length == 2 && group == false, "This is not a single chat room");

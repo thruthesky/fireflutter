@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 
 /// UserDoc
 ///
+/// [uid] 만약 [uid] 가 설정되면, 해당 사용자 문서를 listen(또는 get) 한다. [uid] 가 설정 안되면 로그인한
+/// 사용자의 문서를 읽어오거나 listen(또는 get) 한다.
+///
 /// [builder] 로그인이 되어있는 경우 있고, 사용자 문서가 존재하는 경우 호출되는 콜백 함수.
 ///
 ///
@@ -24,12 +27,14 @@ import 'package:flutter/material.dart';
 class UserDoc extends StatelessWidget {
   const UserDoc({
     super.key,
+    this.uid,
     required this.builder,
     this.notLoggedInBuilder,
     this.documentNotExistBuilder,
     this.onLoading,
     this.live = true,
   });
+  final String? uid;
   final Widget Function(User) builder;
   final Widget Function()? notLoggedInBuilder;
   final Widget Function()? documentNotExistBuilder;
