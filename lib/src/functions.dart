@@ -2,6 +2,16 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+/// Shows a [SnackBar] at the bottom of the screen.
+Future<void> showSnackBar(BuildContext context, String message) async {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message),
+      duration: const Duration(seconds: 3),
+    ),
+  );
+}
+
 Future<ImageSource?> chooseUploadSource(BuildContext context) async {
   final source = await showModalBottomSheet<ImageSource>(
     context: context,
@@ -105,4 +115,11 @@ String sanitizeFilename(String input, {String replacement = ''}) {
       .replaceFirst(RegExp(r'[\. ]+$'), replacement);
 
   return result.length > 255 ? result.substring(0, 255) : result;
+}
+
+/// Alias of [ChatService.instance.getOtherUserUid]
+///
+/// Returns the other user's uid from a list of users.
+String otherUserUid(List<String> users) {
+  return ChatService.instance.getOtherUserUid(users);
 }

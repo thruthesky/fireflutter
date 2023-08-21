@@ -11,6 +11,7 @@ const d = { uid: "uid-D", email: "durian@gmail.com" };
 
 const postsColName = "posts";
 const categoriesColName = "categories";
+const chatsColName = "chats";
 
 // Connect to Firestore with a user permission.
 function db(auth = null) {
@@ -64,7 +65,7 @@ function tempChatRoomData(options = {}) {
  * - const roomRef = await createChatRoom(a, { master: a.uid, users: [a.uid, b.uid] });
  */
 function createChatRoom(masterAuth, options = {}) {
-  return db(masterAuth).collection("easychat").add(tempChatRoomData(options));
+  return db(masterAuth).collection(chatsColName).add(tempChatRoomData(options));
 }
 
 async function createOpenGroupChat(masterAuth) {
@@ -85,7 +86,7 @@ async function createOpenGroupChat(masterAuth) {
  */
 async function invite(a, b, roomId) {
   await db(a)
-    .collection("easychat")
+    .collection(chatsColName)
     .doc(roomId)
     .update({ users: firebase.firestore.FieldValue.arrayUnion(b.uid) });
 }
@@ -99,7 +100,7 @@ async function invite(a, b, roomId) {
  */
 async function block(blockerAuth, blockedAuth, roomId) {
   await db(blockerAuth)
-    .collection("easychat")
+    .collection(chatsColName)
     .doc(roomId)
     .update({
       blockedUsers: firebase.firestore.FieldValue.arrayUnion(blockedAuth.uid),
@@ -115,7 +116,7 @@ async function block(blockerAuth, blockedAuth, roomId) {
  */
 async function unblock(unblockerAuth, blockedAuth, roomId) {
   await db(unblockerAuth)
-    .collection("easychat")
+    .collection(chatsColName)
     .doc(roomId)
     .update({
       blockedUsers: firebase.firestore.FieldValue.arrayRemove(blockedAuth.uid),
@@ -131,13 +132,12 @@ async function unblock(unblockerAuth, blockedAuth, roomId) {
  */
 async function setAsModerator(setterAuth, userAuth, roomId) {
   await db(setterAuth)
-    .collection("easychat")
+    .collection(chatsColName)
     .doc(roomId)
     .update({
       moderators: firebase.firestore.FieldValue.arrayUnion(userAuth.uid),
     });
 }
-
 
 exports.db = db;
 exports.admin = admin;
@@ -149,6 +149,7 @@ exports.c = c;
 exports.d = d;
 exports.postsColName = postsColName;
 exports.categoriesColName = categoriesColName;
+exports.chatsColName = chatsColName;
 exports.TEST_PROJECT_ID = TEST_PROJECT_ID;
 exports.createOpenGroupChat = createOpenGroupChat;
 exports.invite = invite;

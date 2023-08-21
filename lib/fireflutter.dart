@@ -1,5 +1,5 @@
-export 'src/fireflutter.dart';
 export 'src/functions.dart';
+export 'src/mixin/fireflutter.mixin.dart';
 export 'src/models.dart';
 export 'src/widgets.dart';
 export 'src/services.dart';

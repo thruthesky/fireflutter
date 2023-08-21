@@ -1,4 +1,4 @@
-export 'models/user.dart';
-export 'models/room.dart';
-export 'models/category.dart';
-export 'models/message.dart';
+export 'model/user.dart';
+export 'model/room.dart';
+export 'model/category.dart';
+export 'model/message.dart';

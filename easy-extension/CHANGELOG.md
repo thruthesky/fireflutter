@@ -1,3 +1,8 @@
+## Version 0.1.5
+
+- Change. User collection path is now required.
+- 
+
 ## Version 0.1.4
 
 Update README document.

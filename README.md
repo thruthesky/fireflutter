@@ -5,7 +5,9 @@ A free, open source, complete, rapid development package for creating Social app
 - [FireFlutter](#fireflutter)
   - [Features](#features)
   - [Getting started](#getting-started)
-    - [Setup](#setup)
+- [Installation](#installation)
+  - [Security rules](#security-rules)
+    - [Security rule for admin](#security-rule-for-admin)
 - [Usage](#usage)
   - [UserService](#userservice)
   - [ChatService](#chatservice)
@@ -18,10 +20,15 @@ A free, open source, complete, rapid development package for creating Social app
   - [UserAvatar](#useravatar)
   - [UserProfileAvatar](#userprofileavatar)
   - [User List View](#user-list-view)
+- [Chat Feature](#chat-feature)
+  - [No of new message](#no-of-new-message)
 - [Customization](#customization)
   - [Chat Customization](#chat-customization)
 - [Translation](#translation)
+- [Developer](#developer)
+  - [Development Tips](#development-tips)
 - [Contribution](#contribution)
+  - [Coding Guideline](#coding-guideline)
 - [OLD README](#old-readme)
   - [TODO](#todo)
   - [Overview](#overview)
@@ -30,8 +37,8 @@ A free, open source, complete, rapid development package for creating Social app
   - [Environment](#environment)
   - [Basic Features](#basic-features)
   - [Example](#example)
-  - [Installation](#installation)
-  - [Setup](#setup-1)
+  - [Installation](#installation-1)
+  - [Setup](#setup)
     - [Firebase Setup](#firebase-setup)
       - [Firebase Users collection](#firebase-users-collection)
     - [Updating auth custom claims](#updating-auth-custom-claims)
@@ -45,7 +52,7 @@ A free, open source, complete, rapid development package for creating Social app
     - [Additional information](#additional-information)
     - [How to test \& UI work Chat room screen](#how-to-test--ui-work-chat-room-screen)
   - [Firebase](#firebase)
-    - [Security Rules](#security-rules)
+    - [Security Rules](#security-rules-1)
   - [Logic](#logic)
     - [Fields](#fields)
       - [Chat Room fields](#chat-room-fields)
@@ -67,7 +74,7 @@ A free, open source, complete, rapid development package for creating Social app
     - [Testing on Local Emulators](#testing-on-local-emulators)
     - [Testing on real Firebase](#testing-on-real-firebase)
   - [Tips](#tips)
-  - [Security rules](#security-rules-1)
+  - [Security rules](#security-rules-2)
 
 ## Features
 
@@ -80,7 +87,39 @@ A free, open source, complete, rapid development package for creating Social app
 
 If you want to build an app using FireFlutter, the best way is to copy codes from the example project.
 
-### Setup
+# Installation
+
+
+## Security rules
+
+
+### Security rule for admin
+
+You can add your uid (or other user's uid) to the `adminUIDs` variable in `isAdmin` function in the security rule. With this way, you don't have to pay extra money for validating the user is admin or not.
+
+```dart
+function isAdmin() {
+  let adminUIDs = ['root', 'admin', 'CYKk5Q79AmYKQEzw8A95UyEahiz1'];
+  return request.auth.uid in adminUIDs || request.auth.token.admin == true;
+}
+```
+
+
+Once the admin is set, you can customize your security rules to restrict some docuemnts to write access from other users. By doing this way, you can add sub-admin(s) from client app (without editing the security rules on every time when you add subadmin)
+
+For instance, you may write security rules like below and add the uids of sub-admin users. then, add a security rule function to check if the user is sub-admin.
+
+```ts
+  /setttings/sub-admins {
+    allow read, write: if isAdmin();
+  }
+  function isSubAdmin() {
+    ...
+  }
+```
+
+
+
 
 # Usage
 
@@ -146,6 +185,12 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 ```
 
 # Widgets
+
+
+* The widgets in fireflutter can be a small piece of UI representation or it can be a full screen dialog.
+
+* The file names and the class names of the widgets must match.
+* The user widgets are inside `widgets/user` and the file name is in the form of `user.xxxx.dart` or `user.xxxx.dialog.dart`. And it goes the same to chat and forum.
 
 ## UserDoc
 
@@ -260,6 +305,16 @@ onPressed() async {
 ```
 
 
+# Chat Feature
+
+## No of new message
+
+We save the no of new messages of each users in RTDB. If we save the no of new messages of all users of the room in the chat room document like `{ noOfNewMessages: { uid-A: 1, uid-B 2, ... }}`, there will be performance issue and it will cost more. The problem is the chat room must be listened as a stream for realtime update. And if a user chats there are other users who read. Everytime a user reads a messgae, the chat room docuemnt will be fetched for every user with no reason. This is jus tan extra cost. So, we put the number of new messages under `/chats/{roomId}/noOfNewMessages/{uid}` in RTDB.
+
+
+
+
+
 # Customization
 
 `fireflutter` supports full customization from the i18n to the complete UI.
@@ -267,9 +322,13 @@ onPressed() async {
 
 ## Chat Customization
 
-See the chapters for chat service and chat widgets.
+The fireflutter gives full customization of the chat feature. It has a lot of widgets and texts to customize and they are nested deep inside the widget layers. So, the fireflutter lets developers to register the builder functions to display(customize) the widgets that are being used in deep place of the chat feature.
 
+Registering the build functions do not cause any performance issues since it only registers the build functions at app booting time. It does not build any widgets while registering.
 
+```dart
+ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoomAppBar(room: room);
+```
 
 
 # Translation
@@ -286,9 +345,71 @@ Here is an example of updating the translation.
 tr.user.loginFirst = '로그인을 해 주세요.';
 ```
 
+# Developer
+
+## Development Tips
+
+Most often, you would click, and click, and click over, and over again, and again to see what you have changed on the UI. Then, you change the UI again. And you would click, and click over again, and again, ...
+Yes, this is the reality.
+
+To avoid this, you can display the UI part immediately after hot-restart (with keyboard shortcut) like below. This is merely a sample code. You can test any part of the app like below.
+
+Below is an example of openning chat room menu dialog.
+I copied the `Room` properties manually from the Firestore document and I edited some of the values of the properties for test purpose. You may code a line to get the real room model data.
+
+```dart
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    Timer(const Duration(milliseconds: 200), () {
+      ChatService.instance.openChatRoomMenuDialog(
+        context: context,
+        room: Room(
+          id: 'DHZWDyeuAlgmKxFxbMbF',
+          name: 'Here we are in Manila. Lets celebrate this beautiful day.',
+          group: true,
+          open: true,
+          master: 'ojxsBLMSS6UIegzixHyP4zWaVm13',
+          users: [
+            '15ZXRtt5I2Vr2xo5SJBjAVWaZ0V2',
+            '23TE0SWd8Mejv0Icv6vhSDRHe183',
+            'JAekM4AyPTW1fD9NCwqyLuBCTrI3',
+            'X5ps2UhgbbfUd7UH1JBoUedBzim2',
+            'lyCxEC0oGtUcGi0KKMAs8Y7ihSl2',
+            'ojxsBLMSS6UIegzixHyP4zWaVm13',
+            'aaa', // not existing user
+            't1fAVTeN5oMshEPYn9VvB8TuZUy2',
+            'bbb', // not existing user
+            'ccc', // not existing user
+            'ddd', // not existing user
+            'eee', // not existing user
+          ],
+          moderators: ['lyCxEC0oGtUcGi0KKMAs8Y7ihSl2', '15ZXRtt5I2Vr2xo5SJBjAVWaZ0V2'],
+          blockedUsers: [],
+          noOfNewMessages: {},
+          maximumNoOfUsers: 3,
+          rename: {
+            FirebaseAuth.instance.currentUser!.uid: 'I renamed this chat room',
+          },
+          createdAt: Timestamp.now(),
+        ),
+      );
+```
+
+
+
+
 # Contribution
 
 Fork the fireflutter and create your own branch. Then update code and push, then pull request.
+
+## Coding Guideline
+
+fireflutter uses sigular form in its file name and variable name, class name. For instance, it alwasy `user` over `users` unless there is good reason.
+
+
 
 # OLD README
 
@@ -402,7 +523,7 @@ EasyChat.instance.initialize(usersCollection: 'users', displayNameField: 'displa
 
 ![Image Link](https://github.com/thruthesky/easy-extension/blob/main/docs/command-update_custom_claims_output.jpg?raw=true "This is image title")
 
-- `SYNC_CUSTOM_CLAIMS_TO_USER_DOCUMENT` option only works with `update_custom_claims` command.
+- `SYNC_CUSTOM_CLAIMS` option only works with `update_custom_claims` command.
   - When it is set to `yes`, the claims of the user will be set to user's document.
   - By knowing user's custom claims,
     - the app can know that if the user is admin or not.
@@ -416,7 +537,7 @@ EasyChat.instance.initialize(usersCollection: 'users', displayNameField: 'displa
   - If you wish to block the user immediately, I recommend to run another command. Running `update_custom_claims` comand with `{ disabled: true }` and you can add it on security rules.
   - Additionally, you can enable `set enable field on user document` to yes. This will add `disabled` field on user documents and you can search(list) users who are disabled.
 
-- `SET_DISABLED_USER_FIELD` option only works with `disable_user` command.
+- `SYNC_USER_DISABLED_FIELD` option only works with `disable_user` command.
 
   - When it is set to yes, the `disabled` field with `true` will be set to user document.
   - Use this to know if the user is disabled.

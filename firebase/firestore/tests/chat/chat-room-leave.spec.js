@@ -1,5 +1,14 @@
 const assert = require("assert");
-const { db, a, b, c, d, tempChatRoomData, admin } = require("./../setup");
+const {
+  db,
+  a,
+  b,
+  c,
+  d,
+  tempChatRoomData,
+  admin,
+  chatsColName,
+} = require("./../setup");
 
 // load firebase-functions-test SDK
 const firebase = require("@firebase/testing");
@@ -8,14 +17,14 @@ describe("Chat room leave, and kickout", () => {
   it("Chat room leave - failure test: b removes a", async () => {
     // create a chat room
     const ref = await admin()
-      .collection("easychat")
+      .collection(chatsColName)
       .add(tempChatRoomData({ master: a.uid, users: [a.uid, b.uid] }));
     snapshot = await ref.get();
 
     // chat room leave
     await firebase.assertFails(
       db(b)
-        .collection("easychat")
+        .collection(chatsColName)
         .doc(ref.id)
         .update({
           users: firebase.firestore.FieldValue.arrayRemove(a.uid),
@@ -26,7 +35,7 @@ describe("Chat room leave, and kickout", () => {
   it("Chat room leave - failure test: b removes a from users araay that has manu muliple users. -fails", async () => {
     // create a chat room
     const ref = await admin()
-      .collection("easychat")
+      .collection(chatsColName)
       .add(
         tempChatRoomData({
           master: a.uid,
@@ -52,7 +61,7 @@ describe("Chat room leave, and kickout", () => {
     // chat room leave
     await firebase.assertFails(
       db(b)
-        .collection("easychat")
+        .collection(chatsColName)
         .doc(ref.id)
         .update({
           users: firebase.firestore.FieldValue.arrayRemove(a.uid),
@@ -63,7 +72,7 @@ describe("Chat room leave, and kickout", () => {
   it("Chat room leave - failure test: b removes b from users araay that has manu muliple users. succeeds", async () => {
     // create a chat room
     const ref = await admin()
-      .collection("easychat")
+      .collection(chatsColName)
       .add(
         tempChatRoomData({
           master: a.uid,
@@ -74,7 +83,7 @@ describe("Chat room leave, and kickout", () => {
     // chat room leave
     await firebase.assertSucceeds(
       db(b)
-        .collection("easychat")
+        .collection(chatsColName)
         .doc(ref.id)
         .update({
           users: firebase.firestore.FieldValue.arrayRemove(b.uid),
@@ -85,7 +94,7 @@ describe("Chat room leave, and kickout", () => {
   it("Master can remove a user from user list - succeed", async () => {
     // create a chat room
     const ref = await admin()
-      .collection("easychat")
+      .collection(chatsColName)
       .add(
         tempChatRoomData({
           master: a.uid,
@@ -96,7 +105,7 @@ describe("Chat room leave, and kickout", () => {
     // chat room leave
     await firebase.assertSucceeds(
       db(a)
-        .collection("easychat")
+        .collection(chatsColName)
         .doc(ref.id)
         .update({
           users: firebase.firestore.FieldValue.arrayRemove(b.uid),
@@ -107,7 +116,7 @@ describe("Chat room leave, and kickout", () => {
   it("Moderator can remove a user from user list - succeed", async () => {
     // create a chat room
     const ref = await admin()
-      .collection("easychat")
+      .collection(chatsColName)
       .add(
         tempChatRoomData({
           master: a.uid,
@@ -119,7 +128,7 @@ describe("Chat room leave, and kickout", () => {
     // chat room leave
     await firebase.assertSucceeds(
       db(d)
-        .collection("easychat")
+        .collection(chatsColName)
         .doc(ref.id)
         .update({
           users: firebase.firestore.FieldValue.arrayRemove(b.uid),
@@ -130,7 +139,7 @@ describe("Chat room leave, and kickout", () => {
   it("Moderator should not be able to remove the master from user list - fail", async () => {
     // create a chat room
     const ref = await admin()
-      .collection("easychat")
+      .collection(chatsColName)
       .add(
         tempChatRoomData({
           master: a.uid,
@@ -142,7 +151,7 @@ describe("Chat room leave, and kickout", () => {
     // chat room leave
     await firebase.assertFails(
       db(d)
-        .collection("easychat")
+        .collection(chatsColName)
         .doc(ref.id)
         .update({
           users: firebase.firestore.FieldValue.arrayRemove(a.uid),
@@ -153,7 +162,7 @@ describe("Chat room leave, and kickout", () => {
   it("Moderator should not be able to remove the master from user list - fail", async () => {
     // create a chat room
     const ref = await admin()
-      .collection("easychat")
+      .collection(chatsColName)
       .add(
         tempChatRoomData({
           master: a.uid,
@@ -165,7 +174,7 @@ describe("Chat room leave, and kickout", () => {
     // chat room leave
     await firebase.assertFails(
       db(d)
-        .collection("easychat")
+        .collection(chatsColName)
         .doc(ref.id)
         .update({
           users: firebase.firestore.FieldValue.arrayRemove(a.uid),
@@ -176,7 +185,7 @@ describe("Chat room leave, and kickout", () => {
   it("User should not be able to remove the moderator from user list - fail", async () => {
     // create a chat room
     const ref = await admin()
-      .collection("easychat")
+      .collection(chatsColName)
       .add(
         tempChatRoomData({
           master: a.uid,
@@ -188,7 +197,7 @@ describe("Chat room leave, and kickout", () => {
     // chat room leave
     await firebase.assertFails(
       db(c)
-        .collection("easychat")
+        .collection(chatsColName)
         .doc(ref.id)
         .update({
           users: firebase.firestore.FieldValue.arrayRemove(d.uid),
@@ -199,7 +208,7 @@ describe("Chat room leave, and kickout", () => {
   it("User should not be able to remove the master from user list - fail", async () => {
     // create a chat room
     const ref = await admin()
-      .collection("easychat")
+      .collection(chatsColName)
       .add(
         tempChatRoomData({
           master: a.uid,
@@ -211,7 +220,7 @@ describe("Chat room leave, and kickout", () => {
     // chat room leave
     await firebase.assertFails(
       db(c)
-        .collection("easychat")
+        .collection(chatsColName)
         .doc(ref.id)
         .update({
           users: firebase.firestore.FieldValue.arrayRemove(a.uid),
