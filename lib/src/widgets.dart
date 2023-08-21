@@ -36,6 +36,7 @@ export 'widget/chat/chat_room_settings_button.dart';
 export 'widget/chat/chat_room_settings_screen.dart';
 export 'widget/chat/chat_room_rename_setting_list_tile.dart';
 export 'widget/chat/chat_room_user_list_tile.dart';
+export 'widget/chat/no_of_new_message.dart';
 
 // Category
 export 'widget/category/category_list_view.dart';

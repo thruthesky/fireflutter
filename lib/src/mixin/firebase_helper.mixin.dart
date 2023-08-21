@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:fireflutter/fireflutter.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-mixin FireFlutter {
+mixin FirebaseHelper {
   /// Firestore database instance
   FirebaseFirestore get db => FirebaseFirestore.instance;
 
@@ -33,4 +33,9 @@ mixin FireFlutter {
   CollectionReference messageCol(String roomId) => chatCol.doc(roomId).collection('messages');
   DocumentReference roomRef(String roomId) => chatCol.doc(roomId);
   DocumentReference roomDoc(String roomId) => chatCol.doc(roomId);
+
+  //
+  DatabaseReference noOfNewMessageRef(String roomId) => rtdb.ref('chats/$roomId/noOfNewMessages');
+  //
+  DatabaseReference noOfNewMessageUserRef(String roomId, String uid) => noOfNewMessageRef(roomId).child(uid);
 }

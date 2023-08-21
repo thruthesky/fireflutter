@@ -139,6 +139,44 @@ async function setAsModerator(setterAuth, userAuth, roomId) {
     });
 }
 
+async function createCategory() {
+  const id = "test-category" + Date.now();
+
+  console.log(categoriesColName, id);
+
+  // create category
+  await admin().collection(categoriesColName).doc(id).set({
+    name: id,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    // TODO - change addBy to uid.
+    addedBy: "test-uid-admin",
+  });
+
+  return admin().collection(categoriesColName).doc(id);
+}
+
+// create post
+async function createPost(options = {}) {
+  if (!options.auth) {
+    options.auth = a;
+  }
+  const categoryRef = await createCategory();
+
+  // create post
+  const postRef = await db(options.auth).collection(postsColName).add({
+    categoryId: categoryRef.id,
+    title: "Sample Title",
+    content: "Sample Content",
+    uid: options.auth.uid,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    likes: [],
+  });
+
+  return postRef;
+}
+
 exports.db = db;
 exports.admin = admin;
 exports.tempChatRoomData = tempChatRoomData;
@@ -156,3 +194,5 @@ exports.invite = invite;
 exports.block = block;
 exports.unblock = unblock;
 exports.setAsModerator = setAsModerator;
+exports.createCategory = createCategory;
+exports.createPost = createPost;

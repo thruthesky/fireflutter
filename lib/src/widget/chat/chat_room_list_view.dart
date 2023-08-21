@@ -28,6 +28,9 @@ class ChatRoomListViewController {
 ///
 /// [openChatOnly] If [openChatOnly] is set to true, it will only list open chat rooms.
 ///
+/// [itemExtent] If you want to set the height of each item, use [itemExtent].
+/// It is the same as [ListView.itemExtent]. Default is 68. It can be a null.
+///
 class ChatRoomListView extends StatefulWidget {
   const ChatRoomListView({
     super.key,
@@ -47,6 +50,7 @@ class ChatRoomListView extends StatefulWidget {
     this.singleChatOnly = false,
     this.groupChatOnly = false,
     this.openChatOnly = false,
+    this.itemExtent = 68,
   });
 
   final ChatRoomListViewController controller;
@@ -67,6 +71,8 @@ class ChatRoomListView extends StatefulWidget {
   final bool groupChatOnly;
   final bool openChatOnly;
 
+  final double? itemExtent;
+
   // final void Function(Room) onTap;
 
   /// If you want to customize the app bar of chat room, you can use this builder.
@@ -86,14 +92,24 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
 
   Query get query {
     Query q = ChatService.instance.chatCol;
-    q = q.where('users', arrayContains: ChatService.instance.uid);
-    if (widget.singleChatOnly == true) {
-      q = q.where('group', isEqualTo: false);
-    } else if (widget.groupChatOnly == true) {
-      q = q.where('group', isEqualTo: true);
-    } else if (widget.openChatOnly == true) {
+
+    // Display all open chat room
+    if (widget.openChatOnly == true) {
       q = q.where('open', isEqualTo: true);
+    } else {
+      // Or display all of my rooms
+      q = q.where('users', arrayContains: ChatService.instance.uid);
+
+      // and Display 1:1 chat rooms of my rooms
+      if (widget.singleChatOnly == true) {
+        q = q.where('group', isEqualTo: false);
+      } else
+      // Or display group chat rooms of my rooms
+      if (widget.groupChatOnly == true) {
+        q = q.where('group', isEqualTo: true);
+      }
     }
+
     q = q.orderBy('lastMessage.createdAt', descending: true);
     return q;
   }
@@ -106,12 +122,16 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
 
     return FirestoreListView(
       query: query,
+      itemExtent: widget.itemExtent,
       itemBuilder: (context, QueryDocumentSnapshot snapshot) {
         final room = Room.fromDocumentSnapshot(snapshot);
         if (widget.itemBuilder != null) {
           return widget.itemBuilder!(context, room);
         } else {
-          return ChatRoomListTile(room: room);
+          return ChatRoomListTile(
+            room: room,
+            onTap: () => ChatService.instance.showChatRoom(context: context, room: room),
+          );
         }
       },
       emptyBuilder: (context) {

@@ -2,13 +2,14 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 
-class ChatService with FireFlutter {
+class ChatService with FirebaseHelper {
   static ChatService? _instance;
   static ChatService get instance => _instance ??= ChatService._();
 
@@ -238,20 +239,20 @@ class ChatService with FireFlutter {
       // TODO protocol
     };
     await messageCol(room.id).add(chatMessage);
-    updateRoomNewMessagesDetails(room: room, lastMessage: chatMessage);
+    updateRoomForNewMessage(room: room, lastMessage: chatMessage);
   }
 
   ///
   ///
   /// See "# No of new message" in README
-  Future<void> updateRoomNewMessagesDetails({required Room room, Map<String, Object>? lastMessage}) async {
+  Future<void> updateRoomForNewMessage({required Room room, Map<String, Object>? lastMessage}) async {
     // Increase the no of new message for each user in the room
     Map<String, dynamic> noOfNewMessages = {};
     for (String uid in room.users) {
-      noOfNewMessages[uid] = FieldValue.increment(1);
+      noOfNewMessages[uid] = ServerValue.increment(1);
     }
     noOfNewMessages[FirebaseAuth.instance.currentUser!.uid] = 0;
-    rtdb.ref('chats/${room.id}/noOfNewMessages').set(noOfNewMessages);
+    await noOfNewMessageRef(room.id).update(noOfNewMessages);
 
     //
     await roomDoc(room.id).set(
@@ -291,6 +292,11 @@ class ChatService with FireFlutter {
     // If it is 1:1 chat, get the chat room. (or create if it does not exist)
     if (user != null) {
       room = await ChatService.instance.getOrCreateSingleChatRoom(user.uid);
+    } else {
+      // If it is a group chat, then check if it's open room and if so, check if the user is a member of the room.
+      if (room!.open && room.users.contains(uid) == false) {
+        await room.join();
+      }
     }
 
     if (context.mounted) {
