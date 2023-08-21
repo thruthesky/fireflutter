@@ -1,10 +1,8 @@
 {
-  "indexes": [
-    {
+  "indexes": [{
       "collectionGroup": "categories",
       "queryScope": "COLLECTION",
-      "fields": [
-        {
+      "fields": [{
           "fieldPath": "displayCategoryInForm",
           "order": "ASCENDING"
         },
@@ -17,8 +15,7 @@
     {
       "collectionGroup": "chat_room_messages",
       "queryScope": "COLLECTION",
-      "fields": [
-        {
+      "fields": [{
           "fieldPath": "chatRoomDocumentReference",
           "order": "ASCENDING"
         },
@@ -31,8 +28,7 @@
     {
       "collectionGroup": "chat_rooms",
       "queryScope": "COLLECTION",
-      "fields": [
-        {
+      "fields": [{
           "fieldPath": "isOpenChat",
           "order": "ASCENDING"
         },
@@ -45,8 +41,7 @@
     {
       "collectionGroup": "chat_rooms",
       "queryScope": "COLLECTION",
-      "fields": [
-        {
+      "fields": [{
           "fieldPath": "userDocumentReferences",
           "arrayConfig": "CONTAINS"
         },
@@ -59,8 +54,7 @@
     {
       "collectionGroup": "comments",
       "queryScope": "COLLECTION",
-      "fields": [
-        {
+      "fields": [{
           "fieldPath": "postDocumentReference",
           "order": "ASCENDING"
         },
@@ -73,8 +67,7 @@
     {
       "collectionGroup": "comments",
       "queryScope": "COLLECTION",
-      "fields": [
-        {
+      "fields": [{
           "fieldPath": "postDocumentReference",
           "order": "ASCENDING"
         },
@@ -85,10 +78,9 @@
       ]
     },
     {
-      "collectionGroup": chatsColName,
+      "collectionGroup": "chats",
       "queryScope": "COLLECTION",
-      "fields": [
-        {
+      "fields": [{
           "fieldPath": "users",
           "arrayConfig": "CONTAINS"
         },
@@ -101,8 +93,7 @@
     {
       "collectionGroup": "posts",
       "queryScope": "COLLECTION",
-      "fields": [
-        {
+      "fields": [{
           "fieldPath": "category",
           "order": "ASCENDING"
         },
@@ -115,8 +106,7 @@
     {
       "collectionGroup": "posts",
       "queryScope": "COLLECTION",
-      "fields": [
-        {
+      "fields": [{
           "fieldPath": "categoryId",
           "order": "ASCENDING"
         },
@@ -129,8 +119,7 @@
     {
       "collectionGroup": "posts",
       "queryScope": "COLLECTION",
-      "fields": [
-        {
+      "fields": [{
           "fieldPath": "categoryId",
           "order": "ASCENDING"
         },
@@ -147,8 +136,7 @@
     {
       "collectionGroup": "posts",
       "queryScope": "COLLECTION",
-      "fields": [
-        {
+      "fields": [{
           "fieldPath": "deleted",
           "order": "ASCENDING"
         },
@@ -161,8 +149,7 @@
     {
       "collectionGroup": "users",
       "queryScope": "COLLECTION",
-      "fields": [
-        {
+      "fields": [{
           "fieldPath": "uid",
           "order": "ASCENDING"
         },
@@ -175,8 +162,7 @@
     {
       "collectionGroup": "users",
       "queryScope": "COLLECTION",
-      "fields": [
-        {
+      "fields": [{
           "fieldPath": "userDocumentReference",
           "order": "ASCENDING"
         },
@@ -189,8 +175,7 @@
     {
       "collectionGroup": "users_public_data",
       "queryScope": "COLLECTION",
-      "fields": [
-        {
+      "fields": [{
           "fieldPath": "hasPhoto",
           "order": "ASCENDING"
         },
@@ -203,8 +188,7 @@
     {
       "collectionGroup": "users_public_data",
       "queryScope": "COLLECTION",
-      "fields": [
-        {
+      "fields": [{
           "fieldPath": "userDocumentReference",
           "order": "ASCENDING"
         },
@@ -215,17 +199,13 @@
       ]
     }
   ],
-  "fieldOverrides": [
-    {
-      "collectionGroup": "fcm_tokens",
-      "fieldPath": "fcm_token",
-      "ttl": false,
-      "indexes": [
-        {
-          "order": "ASCENDING",
-          "queryScope": "COLLECTION_GROUP"
-        }
-      ]
-    }
-  ]
+  "fieldOverrides": [{
+    "collectionGroup": "fcm_tokens",
+    "fieldPath": "fcm_token",
+    "ttl": false,
+    "indexes": [{
+      "order": "ASCENDING",
+      "queryScope": "COLLECTION_GROUP"
+    }]
+  }]
 }
