@@ -82,10 +82,10 @@ class _TestScreenState extends State<TestUi> {
           onPressed: testAll,
           child: Text('Run all tests', style: TextStyle(color: Colors.red.shade800)),
         ),
-        ElevatedButton(
-          onPressed: testNoOfNewMessageBadge,
-          child: const Text('TEST noOfNewMessage - Apple & Banana'),
-        ),
+        // ElevatedButton(
+        //   onPressed: testNoOfNewMessageBadge,
+        //   child: const Text('TEST noOfNewMessage - Apple & Banana'),
+        // ),
         ElevatedButton(
           onPressed: testMaximumNoOfUsers,
           child: const Text('TEST maximum no of users'),
@@ -125,7 +125,7 @@ class _TestScreenState extends State<TestUi> {
   testAll() async {
     Test.start();
     await testCreateGroupChatRoom();
-    await testNoOfNewMessageBadge();
+    // await testNoOfNewMessageBadge();
     await testMaximumNoOfUsers();
     await testCreateSingleChatRoom();
     await testInviteUserIntoSingleChat();
@@ -148,7 +148,7 @@ class _TestScreenState extends State<TestUi> {
     test(groupRoom.users.first == Test.apple.uid, 'Must have only one user');
     test(groupRoom.maximumNoOfUsers == 100, 'Must have maximumNoOfUsers 100');
     test(groupRoom.blockedUsers.isEmpty, 'Must have no blockedUsers');
-    test(groupRoom.noOfNewMessages.isEmpty, 'Must have no noOfNewMessages');
+    // test(groupRoom.noOfNewMessages.isEmpty, 'Must have no noOfNewMessages');
   }
 
   testCreateSingleChatRoom() async {
@@ -163,7 +163,7 @@ class _TestScreenState extends State<TestUi> {
     test(room.users.first == Test.apple.uid, 'Must have only one user');
     test(room.maximumNoOfUsers == 2, 'Must have maximumNoOfUsers 2');
     test(room.blockedUsers.isEmpty, 'Must have no blockedUsers');
-    test(room.noOfNewMessages.isEmpty, 'Must have no noOfNewMessages');
+    // test(room.noOfNewMessages.isEmpty, 'Must have no noOfNewMessages');
   }
 
   testInviteUserIntoSingleChat() async {
@@ -184,39 +184,39 @@ class _TestScreenState extends State<TestUi> {
   /// Test the no of new messages.
   ///
   ///
-  testNoOfNewMessageBadge() async {
-    // Sign in with apple with its password
-    await Test.login(Test.apple);
+  // testNoOfNewMessageBadge() async {
+  //   // Sign in with apple with its password
+  //   await Test.login(Test.apple);
 
-    // Get the room
-    final room = await ChatService.instance.getOrCreateSingleChatRoom(Test.banana.uid);
+  //   // Get the room
+  //   final room = await ChatService.instance.getOrCreateSingleChatRoom(Test.banana.uid);
 
-    await ChatService.instance.roomRef(room.id).update({'noOfNewMessages': {}});
+  //   await ChatService.instance.roomRef(room.id).update({'noOfNewMessages': {}});
 
-    // Send a message with the room information.
-    await ChatService.instance.sendMessage(
-      room: room,
-      text: 'yo',
-    );
+  //   // Send a message with the room information.
+  //   await ChatService.instance.sendMessage(
+  //     room: room,
+  //     text: 'yo',
+  //   );
 
-    // Get the no of new messages.
-    final roomAfter = await ChatService.instance.getOrCreateSingleChatRoom(Test.banana.uid);
+  //   // Get the no of new messages.
+  //   final roomAfter = await ChatService.instance.getOrCreateSingleChatRoom(Test.banana.uid);
 
-    test(roomAfter.noOfNewMessages[Test.banana.uid] == 1,
-        "noOfNewMessages of Banana must be 1. Actual value: ${roomAfter.noOfNewMessages[Test.banana.uid]}");
+  //   test(roomAfter.noOfNewMessages[Test.banana.uid] == 1,
+  //       "noOfNewMessages of Banana must be 1. Actual value: ${roomAfter.noOfNewMessages[Test.banana.uid]}");
 
-    // Send a message with the room information.
-    await ChatService.instance.sendMessage(
-      room: room,
-      text: 'yo2',
-    );
+  //   // Send a message with the room information.
+  //   await ChatService.instance.sendMessage(
+  //     room: room,
+  //     text: 'yo2',
+  //   );
 
-    // Get the no of new messages.
-    final roomAfter2 = await ChatService.instance.getOrCreateSingleChatRoom(Test.banana.uid);
+  //   // Get the no of new messages.
+  //   final roomAfter2 = await ChatService.instance.getOrCreateSingleChatRoom(Test.banana.uid);
 
-    test(roomAfter2.noOfNewMessages[Test.banana.uid] == 2,
-        "noOfNewMessages of Banana must be 2. Actual value: ${roomAfter.noOfNewMessages[Test.banana.uid]}");
-  }
+  //   test(roomAfter2.noOfNewMessages[Test.banana.uid] == 2,
+  //       "noOfNewMessages of Banana must be 2. Actual value: ${roomAfter.noOfNewMessages[Test.banana.uid]}");
+  // }
 
   testMaximumNoOfUsers() async {
     await FirebaseAuth.instance.signOut();

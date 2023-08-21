@@ -51,6 +51,7 @@ class ChatRoomListView extends StatefulWidget {
     this.groupChatOnly = false,
     this.openChatOnly = false,
     this.itemExtent = 68,
+    this.avatarSize = 46,
   });
 
   final ChatRoomListViewController controller;
@@ -72,6 +73,8 @@ class ChatRoomListView extends StatefulWidget {
   final bool openChatOnly;
 
   final double? itemExtent;
+
+  final double avatarSize;
 
   // final void Function(Room) onTap;
 
@@ -130,6 +133,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
         } else {
           return ChatRoomListTile(
             room: room,
+            avatarSize: widget.avatarSize,
             onTap: () => ChatService.instance.showChatRoom(context: context, room: room),
           );
         }

@@ -20,8 +20,8 @@ class UserAvatar extends StatefulWidget {
     this.uid,
     this.size = 32,
     this.defaultIcon,
-    this.borderWidth = 1,
-    this.borderColor = Colors.grey,
+    this.borderWidth = 0,
+    this.borderColor = Colors.transparent,
     this.radius = 10,
     this.onTap,
   }) : assert(user != null || uid != null);

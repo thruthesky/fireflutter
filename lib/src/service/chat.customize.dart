@@ -3,4 +3,5 @@ import 'package:flutter/material.dart';
 
 class ChatRoomCustomize {
   PreferredSizeWidget? Function(Room)? chatRoomAppBarBuilder;
+  Function(BuildContext, Room)? onChatRoomFileUpload;
 }

@@ -23,7 +23,7 @@ class ChatMessagesListView extends StatelessWidget {
         reverse: true,
         query: chatMessageQuery,
         itemBuilder: (BuildContext context, QueryDocumentSnapshot<dynamic> doc) {
-          return ChatMessageBubble(chatMessage: Message.fromDocumentSnapshot(doc));
+          return ChatMessageBubble(message: Message.fromDocumentSnapshot(doc));
         },
         errorBuilder: (context, error, stackTrace) {
           debugPrint(error.toString());

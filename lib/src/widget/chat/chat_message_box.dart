@@ -1,3 +1,4 @@
+import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/model/room.dart';
 import 'package:fireflutter/src/service/chat.service.dart';
 import 'package:flutter/material.dart';
@@ -29,8 +30,11 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
               size: 28,
             ),
             padding: EdgeInsets.zero,
-            onPressed: () {
-              ChatService.instance.onPressedFileUploadIcon(context: context, room: widget.room);
+            onPressed: () async {
+              // ChatService.instance.onPressedFileUploadIcon(context: context, room: widget.room);
+              final url = await StorageService.instance.ask(context: context);
+              print('url; $url');
+              await ChatService.instance.sendMessage(room: widget.room, url: url);
             },
           ),
           Expanded(
