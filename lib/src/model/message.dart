@@ -26,7 +26,7 @@ class Message with FirebaseHelper {
       text: map['text'],
       url: map['url'],
       senderUid: map['senderUid'] ?? '',
-      createdAt: map['createdAt'] ?? Timestamp.now(),
+      createdAt: map['createdAt'] is FieldValue ? Timestamp.now() : map['createdAt'],
     );
   }
 

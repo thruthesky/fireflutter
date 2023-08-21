@@ -45,7 +45,12 @@ class ChatRoomAppBarState extends State<ChatRoomAppBar> {
 
         return AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: room.isGroupChat ? Text(room.name) : UserDoc(builder: (user) => Text(user.name)),
+          title: room.isGroupChat
+              ? Text(room.name)
+              : UserDoc(
+                  builder: (user) => Text(user.name),
+                  uid: otherUserUid(room.users),
+                ),
           actions: [
             IconButton(
               icon: const Icon(Icons.settings),

@@ -42,7 +42,7 @@ class ChatRoomListTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ChatRoomListTileName(room: room),
+                    Text(room.name),
                     Text(
                       (room.lastMessage?.text ?? '').replaceAll("\n", ' '),
                       style: Theme.of(context).textTheme.bodySmall,

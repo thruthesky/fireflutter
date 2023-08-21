@@ -23,7 +23,6 @@ export 'widget/chat/chat_room_user_invite_dialog.dart';
 export 'widget/user/user.list_view.dart';
 export 'widget/chat/chat_room_leave_button.dart';
 export 'widget/chat/chat_room_list_tile.dart';
-export 'widget/chat/chat_room_list_tile_name.dart';
 export 'widget/chat/chat_room_list_view.dart';
 export 'widget/chat/chat_room_maximum_users_setting_list_tile.dart';
 export 'widget/chat/chat_room_user_list_view.dart';
