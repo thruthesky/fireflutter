@@ -34,7 +34,33 @@ class ChatRoomListTile extends StatelessWidget {
                     borderWidth: 1,
                     borderColor: Colors.grey.shade300,
                   )
-                : const Icon(Icons.group),
+                : SizedBox(
+                    width: avatarSize,
+                    height: avatarSize,
+                    child: Stack(
+                      children: [
+                        UserAvatar(
+                          uid: room.users.last,
+                          size: avatarSize / 1.6,
+                          radius: 10,
+                          borderWidth: 1,
+                          borderColor: Colors.grey.shade300,
+                        ),
+                        if (room.lastMessage != null)
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: UserAvatar(
+                              uid: room.lastMessage?.senderUid,
+                              size: avatarSize / 1.4,
+                              radius: 10,
+                              borderWidth: 1,
+                              borderColor: Colors.white,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
             const SizedBox(width: 10),
             Expanded(
               child: Padding(
@@ -58,24 +84,18 @@ class ChatRoomListTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
-            NoOfNewMessageBadge(
-              room: room,
-              builder: (no) => Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    room.lastMessageTime,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  const SizedBox(height: 2),
-                  no == 0
-                      ? const SizedBox.shrink()
-                      : Badge(
-                          backgroundColor: Colors.orange.shade900,
-                          label: Text('$no'),
-                        )
-                ],
-              ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  room.lastMessageTime,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: 2),
+                NoOfNewMessageBadge(
+                  room: room,
+                ),
+              ],
             ),
           ],
         ),
