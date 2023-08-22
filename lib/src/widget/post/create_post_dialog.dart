@@ -31,13 +31,17 @@ class _CreatePostDialogState extends State<CreatePostDialog> {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-            child: Text('Category: ${widget.category.name}'),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text('Category: ${widget.category.name}'), // TODO
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, right: 16.0),
             child: TextFormField(
               controller: title,
               decoration: const InputDecoration(
+                border: OutlineInputBorder(),
                 labelText: 'Title',
               ),
             ),
@@ -57,10 +61,13 @@ class _CreatePostDialogState extends State<CreatePostDialog> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
             child: TextFormField(
               controller: content,
+              minLines: 2,
+              maxLines: 5,
               decoration: const InputDecoration(
+                border: OutlineInputBorder(),
                 labelText: 'Content',
               ),
             ),
@@ -68,6 +75,7 @@ class _CreatePostDialogState extends State<CreatePostDialog> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // TODO allow submit only when title and content is not empty
               ElevatedButton(
                 child: const Text('Post'),
                 onPressed: () async {
@@ -79,6 +87,8 @@ class _CreatePostDialogState extends State<CreatePostDialog> {
                   )
                       .then((post) {
                     /// TODO go to the post
+                    Navigator.pop(context);
+                    PostService.instance.showPostDialog(context, post);
                     debugPrint("Go to ${post.id}");
                   });
                 },

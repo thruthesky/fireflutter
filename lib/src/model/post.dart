@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:flutter/material.dart';
 
 class Post with FirebaseHelper {
   final String id;
@@ -70,4 +69,8 @@ class Post with FirebaseHelper {
     postData['updatedAt'] = Timestamp.now();
     return Post.fromMap(map: postData, id: postId);
   }
+
+  @override
+  String toString() =>
+      'Post(id: $id, categoryId: $categoryId, title: $title, content: $content, uid: $uid, files: $files, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted)';
 }

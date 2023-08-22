@@ -3,15 +3,14 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/model/comment.dart';
 import 'package:fireflutter/src/model/post.dart';
+import 'package:fireflutter/src/service/comment.service.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-/// PostListView
-///
-/// Dispaly posts in a list view.
-class PostListView extends StatelessWidget {
-  const PostListView({
+class CommentListView extends StatelessWidget {
+  const CommentListView({
     super.key,
     this.itemBuilder,
     this.emptyBuilder,
@@ -24,11 +23,11 @@ class PostListView extends StatelessWidget {
     this.dragStartBehavior = DragStartBehavior.start,
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.clipBehavior = Clip.hardEdge,
-    this.category,
+    required this.post,
   });
 
   final int pageSize;
-  final Widget Function(BuildContext, Post)? itemBuilder;
+  final Widget Function(BuildContext, Comment)? itemBuilder;
   final Widget Function(BuildContext)? emptyBuilder;
   final ScrollController? scrollController;
   final bool? primary;
@@ -39,38 +38,25 @@ class PostListView extends StatelessWidget {
   final DragStartBehavior dragStartBehavior;
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final Clip clipBehavior;
-  final Category? category;
+  final Post post;
 
   @override
   Widget build(BuildContext context) {
     return FirestoreListView(
-      query: category == null // TODO review because it will display a full list first before adding the category filter
-          ? PostService.instance.postCol
-          : PostService.instance.postCol.where('categoryId', isEqualTo: category!.id),
+      query: CommentService.instance.commentCol.where("postId", isEqualTo: post.id).orderBy("createdAt"),
       itemBuilder: (context, QueryDocumentSnapshot snapshot) {
-        final post = Post.fromDocumentSnapshot(snapshot);
+        final comment = Comment.fromDocumentSnapshot(snapshot);
         if (itemBuilder != null) {
-          return itemBuilder!(context, post);
+          return itemBuilder!(context, comment);
         } else {
-          return ListTile(
-            title: Text(post.title),
-            onTap: () {
-              PostService.instance.showPostDialog(context, post);
-            },
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(post.content),
-              ],
-            ),
-          );
+          return CommentTile(comment: comment);
         }
       },
       emptyBuilder: (context) {
         if (emptyBuilder != null) {
           return emptyBuilder!(context);
         } else {
-          return Center(child: Text(tr.post.noPost));
+          return Center(child: Text(tr.comment.noPost));
         }
       },
       errorBuilder: (context, error, stackTrace) {
