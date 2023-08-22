@@ -19,3 +19,11 @@ It has:
 - updatedAt
 - likes
 - deleted
+
+## Widgets
+
+### Post List View
+
+Post List View displays a list for the posts.
+
+To
