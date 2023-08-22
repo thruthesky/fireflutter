@@ -1,6 +1,7 @@
 {
   "projects": {
-    "test": "withcenter-test-2"
+    "test": "withcenter-test-2",
+    "default": "withcenter-test-2"
   },
   "targets": {},
   "etags": {
