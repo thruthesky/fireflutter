@@ -89,7 +89,11 @@ class UserService with FirebaseHelper {
   /// If the user does not exist, it returns null.
   ///
   /// [reload] is a flag to force reload from Firestore.
-  Future<User?> get(String uid, [bool reload = false]) async {
+  Future<User?> get(
+    String uid, {
+    bool reload = false,
+    bool sync = true,
+  }) async {
     /// 캐시되어져 있으면, 그 캐시된 값(User)을 리턴
     if (reload == false && _userCache.containsKey(uid)) {
       /// Mark that the user data is cached
@@ -97,10 +101,16 @@ class UserService with FirebaseHelper {
       return _userCache[uid];
     }
 
-    /// 아니면, Firestore 에서 불러와서 User 을 만들어 리턴.
+    /// 아니면, Firestore 또는 RTDB 에서 사용자 문서를 가져와 User 을 만들어 리턴.
     /// * 주의: 만약, 사용자 문서가 존재하지 않으면 null 을 리턴하며, 캐시에도 저장하지 않는다. 즉, 다음 호출시 다시
     /// * 로드 시도한다. 이것은 UserService.instance.nullableUser 가 null 이 되는 것과 다른 것이다.
-    final u = await User.get(uid);
+
+    late final User? u;
+    if (sync) {
+      u = await User.getFromDatabaseSync(uid);
+    } else {
+      u = await User.get(uid);
+    }
     if (u == null) return null;
     _userCache[uid] = u;
     return _userCache[uid];

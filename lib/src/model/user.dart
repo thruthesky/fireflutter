@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 
 class User with FirebaseHelper {
@@ -152,6 +153,15 @@ class User with FirebaseHelper {
       return null;
     }
     return User.fromDocumentSnapshot(snapshot);
+  }
+
+  /// 사용자 문서를 Realtime Database 에 Sync 된 문서를 읽어 온다.
+  static Future<User?> getFromDatabaseSync(String uid) async {
+    final snapshot = await FirebaseDatabase.instance.ref().child(collectionName).child(uid).get();
+    if (!snapshot.exists) {
+      return null;
+    }
+    return User.fromMap(map: snapshot.value as Map<String, dynamic>, id: uid);
   }
 
   /// 사용자 문서를 생성한다.
