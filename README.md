@@ -347,7 +347,8 @@ If user not exists, the status will be error.
 
 User information is very important. And unfortunately most of apps don't seem to care about it. If you save the email or phone number or any critical user information in a document that is in publicly opened (without proper security rules), that is a huge mistake.
 
-You may save all of user information in `/users` document and the searchable fields in `/user_search_data` folder. And only open the `/user_search_data` to public. And this extension with `userSync` option, it will automatically sync some fields of `/users` into `/user_search_data`. You can change the users collection by the extension option.
+You may save all of user information in `/users` documents. And the easy extension will sync the searchable fields in `/user_search_data` collection. And only open the security rules for the documents in `/user_search_data` to public.
+Note that, the easy extension will not only sync the searchable fields into `/user_search_data` in firestore but also sync to `/users/{uid}` node in realtime database.
 
 When the documents under `/users` collection had created or updated, it will sync the searchable fields into `/user_search_data` in firestore. And when it is deleted in `/users`, it will also delete the same (synced) document from `/user_search_data` field.
 
@@ -356,7 +357,7 @@ You can search `hasPhotoUrl` if you sync the `photoUrl` field. Or `hasPhotoUrl` 
 
 Note that, even if the searchable field is set to blank, the `userSync` function will be called. The function may not do anything but costs. As you may know it costs $0.4 USD per each 2 million time call with the free tier of 2 million call every month. We are in the way of finding a way for not wasting any single dime.
 
-
+It is recommended to cache in the memory with the documents under `/user_search_data` collection in the client end to prevent the extra pulling from Firestore. If you wish, you can use `/users` in realtime database to observe or to display since it costs less than firestore.
 
 # Forum management
 
