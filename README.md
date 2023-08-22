@@ -100,6 +100,8 @@ We built a firebase extension for the easy management of firebase. Install the f
 
 [Install Easy Extension Beta (0.1.8-beta.2)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.8-beta.2)
 
+This is a must firebase extension for the fireflutter to work properly.
+
 ## Security rules
 
 Copy [the security rules of fireflutter](https://raw.githubusercontent.com/thruthesky/fireflutter/main/firebase/firestore/firestore.rules) and paste it in your firebase project. You may need to copy only the parts of the necessary security rules.

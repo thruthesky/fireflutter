@@ -50,6 +50,7 @@ class ChatRoomAppBarState extends State<ChatRoomAppBar> {
               : UserDoc(
                   builder: (user) => Text(user.name),
                   uid: otherUserUid(room.users),
+                  live: false,
                 ),
           actions: [
             IconButton(
