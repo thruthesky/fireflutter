@@ -29,8 +29,11 @@ class _PostDialogState extends State<PostDialog> {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-              child: Text(
-                widget.post.title,
+              child: Text.rich(
+                TextSpan(
+                  text: widget.post.title,
+                  style: const TextStyle(fontSize: 18),
+                ), // TODO Customizable
               ),
             ),
             if (widget.post.uid.isNotEmpty)
