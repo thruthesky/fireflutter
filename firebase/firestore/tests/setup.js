@@ -11,6 +11,7 @@ const d = { uid: "uid-D", email: "durian@gmail.com" };
 
 const postsColName = "posts";
 const categoriesColName = "categories";
+const commentsColsName = "comments";
 const chatsColName = "chats";
 
 // Connect to Firestore with a user permission.
@@ -187,6 +188,7 @@ exports.c = c;
 exports.d = d;
 exports.postsColName = postsColName;
 exports.categoriesColName = categoriesColName;
+exports.commentsColsName = commentsColsName;
 exports.chatsColName = chatsColName;
 exports.TEST_PROJECT_ID = TEST_PROJECT_ID;
 exports.createOpenGroupChat = createOpenGroupChat;
