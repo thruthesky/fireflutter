@@ -29,7 +29,12 @@
 
 The easy extension helps you to manage your firebase easily. It supports some features that client SDK does not. For instance, you can do the custom claims management with this easy extension where you cannot do it with the client SDK.
 
-It also supports some features to simplify the client end work. And 
+It supports some work that is not easy to achieve. Like the count of posts. It should be incremented when there is new post. But the permission must be locked to users since a hacker and fix this value if it's open.
+
+It also supports some features to simplify the client end work.
+
+The principle of using this extension is that you should only use this extension if you cannot make the same feature on client-end.
+
 
 # TODO
 
@@ -38,7 +43,11 @@ It also supports some features to simplify the client end work. And
 
 # Installation
 
+ Install Link
+
+
 To install the easy extension, click one of the version linke below. See the change logs for the change of each version.
+- [Beta (0.1.6-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.6-beta.0)
 - [Beta (0.1.5-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.5-beta.0)
 - [Beta (0.1.4-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.4-beta.0)
 - [Beta (0.1.0-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.0-beta.0)

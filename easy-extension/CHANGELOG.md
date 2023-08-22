@@ -1,3 +1,8 @@
+## Version 0.1.7
+
+- Fix. user sync disabled by default.
+
+
 ## Version 0.1.6
 
 - Fix. the user collection for sync.
