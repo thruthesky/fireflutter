@@ -4,7 +4,7 @@
 # Identifier for your extension
 # TODO: Replace this with an descriptive name for your extension.
 name: easy-extension
-version: 0.1.5 # Follow semver versioning
+version: 0.1.6 # Follow semver versioning
 specVersion: v1beta # Version of the Firebase Extensions specification
 
 # Friendly display name for your extension (~3-5 words)
@@ -66,7 +66,7 @@ resources:
       location: ${LOCATION}
       eventTrigger:
         eventType: providers/cloud.firestore/eventTypes/document.write
-        resource: projects/${PROJECT_ID}/databases/(default)/documents/users/{documentId}
+        resource: projects/${PROJECT_ID}/databases/(default)/documents/${USER_COLLECTION_NAME}/{documentId}
       runtime: "nodejs18"
 
   - name: createUserDocument

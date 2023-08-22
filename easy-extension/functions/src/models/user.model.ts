@@ -170,17 +170,11 @@ export class UserModel {
       data['hasPhotoUrl'] = false;
     }
 
-    //
-    // sync to user_search_data and users
-    await Promise.all([
-      admin.firestore().collection('user_search_data').doc(uid).set(data),
-      admin.database().ref(`users/${uid}`).set(data),
-    ]);
-
+    await admin.firestore().collection('user_search_data').doc(uid).set(data);
   }
+
   static async deleteSync(uid: string) {
     await admin.firestore().collection('user_search_data').doc(uid).delete();
-    await admin.database().ref(`users/${uid}`).remove();
   }
 
 }
