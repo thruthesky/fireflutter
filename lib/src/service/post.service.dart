@@ -1,6 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/model/post.dart';
-import 'package:fireflutter/src/widget/post/forum_dialog.dart';
 import 'package:flutter/material.dart';
 
 class PostService with FirebaseHelper {
@@ -24,7 +23,7 @@ class PostService with FirebaseHelper {
     );
   }
 
-  createPost({
+  Future<Post> createPost({
     required String categoryId,
     required String title,
     required String content,

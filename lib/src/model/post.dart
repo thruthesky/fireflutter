@@ -64,10 +64,8 @@ class Post with FirebaseHelper {
       'updatedAt': FieldValue.serverTimestamp(),
       'uid': myUid,
     };
-    // TODO review
-    debugPrint("weh t");
     final postId = PostService.instance.postCol.doc().id;
-    await PostService.instance.categoryCol.doc(postId).set(postData);
+    await PostService.instance.postCol.doc(postId).set(postData);
     postData['createdAt'] = Timestamp.now();
     postData['updatedAt'] = Timestamp.now();
     return Post.fromMap(map: postData, id: postId);

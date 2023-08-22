@@ -39,9 +39,7 @@ class CategoryListView extends StatefulWidget {
   final DragStartBehavior dragStartBehavior;
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final Clip clipBehavior;
-  final Function()? onTap;
-
-  // final void Function(Category) onTap; // TODO onTap custom
+  final Function(Category category)? onTap;
 
   @override
   State<CategoryListView> createState() => CategoryListViewState();
@@ -67,9 +65,8 @@ class CategoryListViewState extends State<CategoryListView> {
             title: Text(category.name),
             onTap: () {
               if (widget.onTap != null) {
-                widget.onTap!.call();
+                widget.onTap!.call(category);
               } else {
-                // CategoryService.instance.showCategoryDialog(context, category);
                 PostService.instance.showForumDialog(context, category);
               }
             },
