@@ -48,11 +48,11 @@ class PostService with FirebaseHelper {
   }
 
   /// Shows the posts under a category (or forum)
-  showForumDialog(BuildContext context, Category category) {
+  showPostListDialog(BuildContext context, Category category) {
     showGeneralDialog(
       context: context,
-      pageBuilder: (context, _, __) => ForumDialog(
-        category: category,
+      pageBuilder: (context, _, __) => PostListDialog(
+        categoryId: category.id,
       ),
     );
   }
