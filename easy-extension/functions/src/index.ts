@@ -27,9 +27,10 @@ export const easyCommand = functions.firestore.document("easy-commands/{document
     return null;
   });
 
-export const userSync = functions.firestore.document("users/{documentId}")
+export const userSync = functions.firestore.document(Config.userCollectionName + "/{documentId}")
   .onWrite(async (change: functions.Change<DocumentSnapshot>): Promise<WriteResult | void | null> => {
     const changeType = getChangeType(change);
+
 
     if (changeType == ChangeType.CREATE || changeType == ChangeType.UPDATE) {
       return UserModel.sync(change.after);

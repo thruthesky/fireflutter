@@ -161,6 +161,7 @@ export class UserModel {
         data[field] = user[field];
       }
     }
+    data['uid'] = uid;
 
     // has photo url?
     if (data['photoUrl'] !== void 0 && data['photoUrl'] !== null && data['photoUrl'] !== '') {
@@ -170,10 +171,8 @@ export class UserModel {
     }
 
     //
-    // await UserModel.update(uid, data);
-
+    // sync to user_search_data and users
     await Promise.all([
-      UserModel.update(uid, data),
       admin.firestore().collection('user_search_data').doc(uid).set(data),
       admin.database().ref(`users/${uid}`).set(data),
     ]);

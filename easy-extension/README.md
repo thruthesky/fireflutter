@@ -334,7 +334,8 @@ For this reason, we save all the user information in `/users` collection and syn
 
 When the documents under `/users` collection in firestore changes, it will sync the searchable fields into `/user_search_data` in firestore and `/users/{uid}` node in RTDB and then you can use it for search or refering. `/users/{uid}` in RTDB is cheaper than the one in firestore.
 
-You can choose what fields to sync for search. And don't forget to include `uid` and `photoUrl` since these will not be used for direct search but will give you benefits on search. You can search `hasPhotoUrl` if you sync the `photoUrl` field.
+You can choose what fields to sync for search. And don't forget to include `uid` and `photoUrl` since these will not be used for direct search but will give you benefits on search.
+You can search `hasPhotoUrl` if you sync the `photoUrl` field. Or `hasPhotoUrl` will always be false.
 
 
 
@@ -400,6 +401,13 @@ You can choose what fields to sync for search. And don't forget to include `uid`
 
 - You can open `http://127.0.0.1:4000/` to see everything works fine especially with the configuration of `*.env` based on the `extension.yaml` settings.
 
+- Check points
+  - See if all the functions are loaded in `functions: Loaded functions definitions from source:...`.
+  - See the extension options in the `Extension` tab. See all the settings in `easy-extention.env` has applied.
+  - Manually create a user account on the `Authentication` tap in Local Emulator UI.
+    - Then, based on the option, the firestore `/users` document would be created.
+  - Manually create a user document under `/users` in Firestore
+    - Then, based on the user sync option, there will be a document to be created or updated under `/user_search_data` firestore and `/users` in RTDB.
 
 ## Testing on real Firebase
 
