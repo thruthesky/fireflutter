@@ -79,6 +79,8 @@ class _CreatePostDialogState extends State<CreatePostDialog> {
                   )
                       .then((post) {
                     /// TODO go to the post
+                    Navigator.pop(context);
+                    PostService.instance.showPostDialog(context, post);
                     debugPrint("Go to ${post.id}");
                   });
                 },
