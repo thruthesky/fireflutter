@@ -18,36 +18,47 @@ class ChatRoomAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class ChatRoomAppBarState extends State<ChatRoomAppBar> {
-  String title = '';
+  late Room room;
+
   List<Widget>? actions;
+
+  @override
+  void initState() {
+    super.initState();
+    room = widget.room;
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
       stream: ChatService.instance.roomDoc(widget.room.id).snapshots(),
       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        //
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          title = 'Loading...';
-        } else if (snapshot.hasError) {
-          //
-          title = snapshot.error.toString();
-        } else {
-          //
-          final Room room = Room.fromDocumentSnapshot(snapshot.data!);
-          title = room.name;
-          actions = [
+        // error
+        if (snapshot.hasError) {
+          return AppBar(title: Text(snapshot.error.toString()));
+        }
+
+        // Got the chat room data? or use the param data.
+        if (snapshot.hasData) {
+          room = Room.fromDocumentSnapshot(snapshot.data!);
+        }
+
+        return AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: room.isGroupChat
+              ? Text(room.name)
+              : UserDoc(
+                  builder: (user) => Text(user.name),
+                  uid: otherUserUid(room.users),
+                ),
+          actions: [
             IconButton(
               icon: const Icon(Icons.settings),
               onPressed: () async {
                 return ChatService.instance.openChatRoomMenuDialog(context: context, room: widget.room);
               },
             ),
-          ];
-        }
-        return AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(title),
-          actions: actions,
+          ],
         );
       },
     );

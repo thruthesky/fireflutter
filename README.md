@@ -428,7 +428,7 @@ Yes, this is the reality.
 
 To avoid this, you can display the UI part immediately after hot-restart (with keyboard shortcut) like below. This is merely a sample code. You can test any part of the app like below.
 
-Below is an example of openning chat room menu dialog.
+Below is an example of openning a group chat room menu dialog.
 I copied the `Room` properties manually from the Firestore document and I edited some of the values of the properties for test purpose. You may code a line to get the real room model data.
 
 ```dart
@@ -470,6 +470,28 @@ class _HomeScreenState extends State<HomeScreen> {
           createdAt: Timestamp.now(),
         ),
       );
+```
+
+
+Below is  an example of opening a single chat room. I got the room data by calling `print` on a chat room.
+
+```dart
+ChatService.instance.showChatRoom(
+  context: context,
+  room: Room(
+    id: '23TE0SWd8Mejv0Icv6vhSDRHe183-ojxsBLMSS6UIegzixHyP4zWaVm13',
+    name: '',
+    group: false,
+    open: false,
+    master: '23TE0SWd8Mejv0Icv6vhSDRHe183',
+    users: ['23TE0SWd8Mejv0Icv6vhSDRHe183', 'ojxsBLMSS6UIegzixHyP4zWaVm13'],
+    rename: {},
+    moderators: [],
+    maximumNoOfUsers: 2,
+    createdAt: Timestamp.now(),
+    blockedUsers: [],
+  ),
+);
 ```
 
 

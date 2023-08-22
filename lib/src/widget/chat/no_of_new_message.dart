@@ -26,7 +26,7 @@ class NoOfNewMessageBadge extends StatelessWidget with FirebaseHelper {
         if (no == 0) return const SizedBox.shrink();
 
         return Badge(
-          backgroundColor: Theme.of(context).colorScheme.error,
+          backgroundColor: Colors.orange.shade900,
           label: Text('$no'),
         );
       },
