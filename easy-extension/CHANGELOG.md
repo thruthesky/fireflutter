@@ -1,3 +1,7 @@
+## Version 0.1.8
+
+- Add. sync user data to realtime database.
+
 ## Version 0.1.7
 
 - Fix. user sync disabled by default.

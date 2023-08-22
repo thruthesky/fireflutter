@@ -354,8 +354,7 @@ When the documents under `/users` collection had created or updated, it will syn
 You can choose what fields to sync in the extension option. If you leave it blank, then no document will be synced. And don't forget to include `uid` and `photoUrl` even if these fields are not used for direct search. These fields will give you benefits on search.
 You can search `hasPhotoUrl` if you sync the `photoUrl` field. Or `hasPhotoUrl` will always be false.
 
-
-
+Note that, even if the searchable field is set to blank, the `userSync` function will be called. The function may not do anything but costs. As you may know it costs $0.4 USD per each 2 million time call with the free tier of 2 million call every month. We are in the way of finding a way for not wasting any single dime.
 
 
 
