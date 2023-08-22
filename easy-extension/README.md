@@ -14,6 +14,7 @@
   - [Delete user](#delete-user)
   - [Get user](#get-user)
 - [User management](#user-management)
+  - [User Sync](#user-sync)
 - [Forum management](#forum-management)
 - [Error handling](#error-handling)
 - [Deploy](#deploy)
@@ -341,17 +342,16 @@ If user not exists, the status will be error.
 
 # User management
 
-User information is very important. There are many people who is jailed due to the failure of keeping user information safely.
-And unfortunately most of (more than 90%) apps are ignorant to it. They seems to not be care about it.
-If you save the email or phone number or any critical data of users in publicly opened docuemnts, that is a huge mistake. You may put it for searching, but that's a failure already.
 
-We save user name in the user document. So, the app can search. Then, user email and phone number must not be in the same docuemnt since the document is searchable. It means, it is open.
+## User Sync
 
-For this reason, we save all the user information in `/users` collection and sync to `/user_search_data` for the searchable fields only. And we sync the `/user_search_data` into `/users` of RTDB for better cost management.
+User information is very important. And unfortunately most of apps don't seem to care about it. If you save the email or phone number or any critical user information in a document that is in publicly opened (without proper security rules), that is a huge mistake.
 
-When the documents under `/users` collection in firestore changes, it will sync the searchable fields into `/user_search_data` in firestore and `/users/{uid}` node in RTDB and then you can use it for search or refering. `/users/{uid}` in RTDB is cheaper than the one in firestore.
+You may save all of user information in `/users` document and the searchable fields in `/user_search_data` folder. And only open the `/user_search_data` to public. And this extension with `userSync` option, it will automatically sync some fields of `/users` into `/user_search_data`. You can change the users collection by the extension option.
 
-You can choose what fields to sync for search. And don't forget to include `uid` and `photoUrl` since these will not be used for direct search but will give you benefits on search.
+When the documents under `/users` collection had created or updated, it will sync the searchable fields into `/user_search_data` in firestore. And when it is deleted in `/users`, it will also delete the same (synced) document from `/user_search_data` field.
+
+You can choose what fields to sync in the extension option. If you leave it blank, then no document will be synced. And don't forget to include `uid` and `photoUrl` even if these fields are not used for direct search. These fields will give you benefits on search.
 You can search `hasPhotoUrl` if you sync the `photoUrl` field. Or `hasPhotoUrl` will always be false.
 
 

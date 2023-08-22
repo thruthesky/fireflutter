@@ -151,6 +151,7 @@ export class UserModel {
   static async sync(snapshot: DocumentSnapshot): Promise<void> {
     // If the field is empty, then skip.
     if (Config.userSyncFields.trim() === '') {
+      console.log('user sync fields is empty');
       return;
     }
     //
@@ -167,6 +168,8 @@ export class UserModel {
     }
     data['uid'] = uid;
 
+
+
     // has photo url?
     if (data['photoUrl'] !== void 0 && data['photoUrl'] !== null && data['photoUrl'] !== '') {
       data['hasPhotoUrl'] = true;
@@ -174,11 +177,24 @@ export class UserModel {
       data['hasPhotoUrl'] = false;
     }
 
+    // save it to user_search_data
     await admin.firestore().collection('user_search_data').doc(uid).set(data);
+
+    // save it to realtime database
+    if (data['createdAt']) {
+      data['createdAt'] = data['createdAt']['_seconds'] * 1000;
+    }
+    await admin.database().ref('users').child(uid).set(data);
+
   }
 
+  /**
+   * Delete user data that is synced to Firestore and Realtime Database.
+   * @param uid user uid
+   */
   static async deleteSync(uid: string) {
     await admin.firestore().collection('user_search_data').doc(uid).delete();
+    await admin.database().ref('users').child(uid).remove();
   }
 
 }
