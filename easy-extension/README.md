@@ -48,7 +48,7 @@ The principle of using this extension is that you should only use this extension
 
 
 To install the easy extension, click one of the version linke below. See the change logs for the change of each version.
-- [Beta (0.1.6-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.6-beta.0)
+- [Beta (0.1.8-beta.2)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.8-beta.2)
 - [Beta (0.1.5-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.5-beta.0)
 - [Beta (0.1.4-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.4-beta.0)
 - [Beta (0.1.0-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.0-beta.0)
@@ -340,6 +340,7 @@ If user not exists, the status will be error.
 
 
 
+
 # User management
 
 
@@ -358,6 +359,8 @@ You can search `hasPhotoUrl` if you sync the `photoUrl` field. Or `hasPhotoUrl` 
 Note that, even if the searchable field is set to blank, the `userSync` function will be called. The function may not do anything but costs. As you may know it costs $0.4 USD per each 2 million time call with the free tier of 2 million call every month. We are in the way of finding a way for not wasting any single dime.
 
 It is recommended to cache in the memory with the documents under `/user_search_data` collection in the client end to prevent the extra pulling from Firestore. If you wish, you can use `/users` in realtime database to observe or to display since it costs less than firestore.
+
+
 
 # Forum management
 
