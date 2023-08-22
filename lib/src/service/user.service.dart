@@ -166,7 +166,6 @@ class UserService with FirebaseHelper {
       middleName: middleName,
       displayName: displayName,
       photoUrl: photoUrl,
-      hasPhotoUrl: hasPhotoUrl,
       idVerifiedCode: idVerifiedCode,
       phoneNumber: phoneNumber,
       email: email,
