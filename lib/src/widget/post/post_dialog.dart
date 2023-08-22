@@ -64,6 +64,13 @@ class _PostDialogState extends State<PostDialog> {
                 ),
               ],
             ),
+            ListView(
+              // TODO Comment list view
+              shrinkWrap: true,
+            ),
+            CommentBox(
+              post: widget.post,
+            ),
           ],
         ),
       ),

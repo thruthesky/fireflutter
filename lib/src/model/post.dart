@@ -69,4 +69,8 @@ class Post with FirebaseHelper {
     postData['updatedAt'] = Timestamp.now();
     return Post.fromMap(map: postData, id: postId);
   }
+
+  @override
+  String toString() =>
+      'Post(id: $id, categoryId: $categoryId, title: $title, content: $content, uid: $uid, files: $files, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted)';
 }

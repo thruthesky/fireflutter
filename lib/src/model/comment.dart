@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/src/mixin/firebase_helper.mixin.dart';
+import 'package:fireflutter/src/service/comment.service.dart';
 
 class Comment with FirebaseHelper {
   final String id;
@@ -42,6 +44,27 @@ class Comment with FirebaseHelper {
       likes: map['likes'] ?? [],
       deleted: map['deleted'],
     );
+  }
+
+  static Future<Comment> create({
+    required String postId,
+    required String content,
+    List<String>? files,
+  }) async {
+    String myUid = FirebaseAuth.instance.currentUser!.uid;
+    final Map<String, dynamic> commentData = {
+      'content': content,
+      'postId': postId,
+      if (files != null) 'files': files,
+      'createdAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
+      'uid': myUid,
+    };
+    final commentId = CommentService.instance.commentCol.doc().id;
+    await CommentService.instance.commentCol.doc(commentId).set(commentData);
+    commentData['createdAt'] = Timestamp.now();
+    commentData['updatedAt'] = Timestamp.now();
+    return Comment.fromMap(map: commentData, id: postId);
   }
 
   @override

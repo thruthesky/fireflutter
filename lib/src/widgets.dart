@@ -47,3 +47,6 @@ export 'widget/post/post_list_view.dart';
 export 'widget/post/create_post_dialog.dart';
 export 'widget/post/post_dialog.dart';
 export 'widget/post/post_list.dialog.dart';
+
+// Comment
+export 'widget/comment/comment_box.dart';

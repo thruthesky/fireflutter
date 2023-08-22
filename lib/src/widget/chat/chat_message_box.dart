@@ -1,6 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/room.dart';
-import 'package:fireflutter/src/service/chat.service.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomMessageBox extends StatefulWidget {
