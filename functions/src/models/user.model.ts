@@ -24,7 +24,7 @@ export class UserModel {
 
 
   /**
-   * 
+   * Returns user document and returns in JSON.
    * @param uid uid
    * @returns Promise<{ ... }>
    */
