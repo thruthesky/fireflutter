@@ -50,3 +50,5 @@ export 'widget/post/post_list.dialog.dart';
 
 // Comment
 export 'widget/comment/comment_box.dart';
+export 'widget/comment/comment_list_view.dart';
+export 'widget/comment/comment_tile.dart';
