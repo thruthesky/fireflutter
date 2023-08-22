@@ -149,6 +149,10 @@ export class UserModel {
 
 
   static async sync(snapshot: DocumentSnapshot): Promise<void> {
+    // If the field is empty, then skip.
+    if (Config.userSyncFields.trim() === '') {
+      return;
+    }
     //
     const user = snapshot.data() as Record<string, any>;
     const uid = snapshot.id;
