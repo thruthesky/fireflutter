@@ -16,7 +16,8 @@ It has:
 - description
 - createdAt
 - updatedAt
-- createdBy
+- uid
+  - This is used for the uid of the creator of the category.
 
 ## Security
 
@@ -33,6 +34,53 @@ To use, follow this simple code:
 ```dart
 CategoryListView(),
 ```
+
+Sometimes we want to modify the action when the user tapped the
+category in the list view. For example, showing Update Category dialog
+to an admin after tapping.
+
+This is an example of list view that opens the editing dialog for the category:
+
+```dart
+CategoryListView(
+  onTap: (category) {
+    CategoryService.instance.showUpdateDialog(context, category);
+  },
+),
+```
+
+### Category List Dialog
+
+Category List Dialog is a full screen dialog that displays the list of categories.
+To use, simply follow these code:
+
+```dart
+CategoryListDialog(),
+```
+
+The onTapCategory parameter can be used to modify the action if the user tapped the category. By dafault, it will go to the list of posts.
+
+```dart
+ElevatedButton(
+  onPressed: () => CategoryService.instance.showListDialog(
+    context,
+    onTapCategory: (category) =>
+      showGeneralDialog(
+        context: context,
+        pageBuilder: (context, _, __) {
+          return CategoryListDialog(
+            onTapCategory: (category) {
+              CategoryService.instance.showUpdateDialog(context, category);
+            },
+          );
+        },
+      ),
+    ),
+  child: const Text('Categories'),
+),
+```
+
+See [Displaying Category List using CategoryService](#displaying-category-list-using-categoryservice) to check how to display the list using service.
 
 ### Category Create Dialog
 
@@ -57,6 +105,22 @@ IconButton(
 ```
 
 ## Category Service Usage
+
+### Displaying Category List using CategoryService
+
+This is an example of applying a Categories list that will open the update category dialog
+for every category on tap:
+
+```dart
+ElevatedButton(
+  onPressed: () => CategoryService.instance.showListDialog(
+    context,
+    onTapCategory: (category) =>
+        CategoryService.instance.showUpdateDialog(context, category),
+  ),
+  child: const Text('Categories'),
+),
+```
 
 ### Updating the category details
 

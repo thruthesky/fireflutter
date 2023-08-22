@@ -34,15 +34,46 @@ class ChatRoomListTile extends StatelessWidget {
                     borderWidth: 1,
                     borderColor: Colors.grey.shade300,
                   )
-                : const Icon(Icons.group),
+                : SizedBox(
+                    width: avatarSize,
+                    height: avatarSize,
+                    child: Stack(
+                      children: [
+                        UserAvatar(
+                          uid: room.users.last,
+                          size: avatarSize / 1.6,
+                          radius: 10,
+                          borderWidth: 1,
+                          borderColor: Colors.grey.shade300,
+                        ),
+                        if (room.lastMessage != null)
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: UserAvatar(
+                              uid: room.lastMessage?.senderUid,
+                              size: avatarSize / 1.4,
+                              radius: 10,
+                              borderWidth: 1,
+                              borderColor: Colors.white,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
             const SizedBox(width: 10),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(room.name),
+                    room.isGroupChat
+                        ? Text(room.name, style: Theme.of(context).textTheme.bodyLarge)
+                        : UserDoc(
+                            builder: (_) => Text(_.name, style: Theme.of(context).textTheme.bodyLarge),
+                            uid: otherUserUid(room.users)),
                     Text(
                       (room.lastMessage?.text ?? '').replaceAll("\n", ' '),
                       style: Theme.of(context).textTheme.bodySmall,
@@ -60,8 +91,10 @@ class ChatRoomListTile extends StatelessWidget {
                   room.lastMessageTime,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
-                const SizedBox(height: 10),
-                NoOfNewMessageBadge(room: room),
+                const SizedBox(height: 2),
+                NoOfNewMessageBadge(
+                  room: room,
+                ),
               ],
             ),
           ],

@@ -28,6 +28,10 @@ mixin FirebaseHelper {
   CollectionReference get postCol => FirebaseFirestore.instance.collection('posts');
   DocumentReference postDoc(String postId) => postCol.doc(postId);
 
+  /// comment
+  CollectionReference get commentCol => FirebaseFirestore.instance.collection('comments');
+  DocumentReference commentDoc(String postId) => postCol.doc(postId);
+
   /// chat
   CollectionReference get chatCol => FirebaseFirestore.instance.collection('chats');
   CollectionReference messageCol(String roomId) => chatCol.doc(roomId).collection('messages');

@@ -16,5 +16,8 @@
   },
   "extensions": {
     "easy-extension": "../.."
+  },
+  "database": {
+    "rules": "database.rules.json"
   }
 }

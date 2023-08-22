@@ -1,8 +1,9 @@
 # Easy Extension
 
+
 - [Easy Extension](#easy-extension)
-<<<<<<< HEAD
 - [Overview](#overview)
+- [TODO](#todo)
 - [Installation](#installation)
   - [Installation Options](#installation-options)
 - [Setting admin](#setting-admin)
@@ -12,6 +13,9 @@
   - [Enable user](#enable-user)
   - [Delete user](#delete-user)
   - [Get user](#get-user)
+- [User management](#user-management)
+  - [User Sync](#user-sync)
+- [Forum management](#forum-management)
 - [Error handling](#error-handling)
 - [Deploy](#deploy)
 - [Unit Testing](#unit-testing)
@@ -20,38 +24,32 @@
 - [Tips](#tips)
 - [Security rules](#security-rules)
 - [Developer installation](#developer-installation)
-=======
-  - [Overview](#overview)
-  - [Installation](#installation)
-  - [Options](#options)
-  - [Command list](#command-list)
-    - [Updating auth custom claims](#updating-auth-custom-claims)
-    - [Disable user](#disable-user)
-    - [Enable user](#enable-user)
-    - [Delete user](#delete-user)
-    - [Get user](#get-user)
-  - [Error handling](#error-handling)
-  - [Deploy](#deploy)
-  - [Unit Testing](#unit-testing)
-    - [Testing on Local Emulators](#testing-on-local-emulators)
-    - [Testing on real Firebase](#testing-on-real-firebase)
-  - [Tips](#tips)
-  - [Security rules](#security-rules)
-  - [Developer installation](#developer-installation)
-
-
-## Overview
->>>>>>> fbafc6c6f47b5b250316188c2c3b241a3d964acb
 
 
 # Overview
 
-The easy extension is a firebase extension that helps you to manage your firebase.
+The easy extension helps you to manage your firebase easily. It supports some features that client SDK does not. For instance, you can do the custom claims management with this easy extension where you cannot do it with the client SDK.
+
+It supports some work that is not easy to achieve. Like the count of posts. It should be incremented when there is new post. But the permission must be locked to users since a hacker and fix this value if it's open.
+
+It also supports some features to simplify the client end work.
+
+The principle of using this extension is that you should only use this extension if you cannot make the same feature on client-end.
+
+
+# TODO
+
+- update user password
+- delete `userSync` because it can be by client end.
 
 # Installation
 
-To install the easy extension, click one of the version linke below. See the change logs for the change of each version.
+ Install Link
 
+
+To install the easy extension, click one of the version linke below. See the change logs for the change of each version.
+- [Beta (0.1.8-beta.2)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.8-beta.2)
+- [Beta (0.1.5-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.5-beta.0)
 - [Beta (0.1.4-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.4-beta.0)
 - [Beta (0.1.0-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.0-beta.0)
 - [Alpha (0.0.21-alpha.1)](https://console.firebase.google.com/u/0/project/_/extensions/install?ref=jaehosong%2Feasy-extension@0.0.22-alpha.0)
@@ -340,6 +338,34 @@ If user not exists, the status will be error.
 }
 ```
 
+
+
+
+# User management
+
+
+## User Sync
+
+User information is very important. And unfortunately most of apps don't seem to care about it. If you save the email or phone number or any critical user information in a document that is in publicly opened (without proper security rules), that is a huge mistake.
+
+You may save all of user information in `/users` documents. And the easy extension will sync the searchable fields in `/user_search_data` collection. And only open the security rules for the documents in `/user_search_data` to public.
+Note that, the easy extension will not only sync the searchable fields into `/user_search_data` in firestore but also sync to `/users/{uid}` node in realtime database.
+
+When the documents under `/users` collection had created or updated, it will sync the searchable fields into `/user_search_data` in firestore. And when it is deleted in `/users`, it will also delete the same (synced) document from `/user_search_data` field.
+
+You can choose what fields to sync in the extension option. If you leave it blank, then no document will be synced. And don't forget to include `uid` and `photoUrl` even if these fields are not used for direct search. These fields will give you benefits on search.
+You can search `hasPhotoUrl` if you sync the `photoUrl` field. Or `hasPhotoUrl` will always be false.
+
+Note that, even if the searchable field is set to blank, the `userSync` function will be called. The function may not do anything but costs. As you may know it costs $0.4 USD per each 2 million time call with the free tier of 2 million call every month. We are in the way of finding a way for not wasting any single dime.
+
+It is recommended to cache in the memory with the documents under `/user_search_data` collection in the client end to prevent the extra pulling from Firestore. If you wish, you can use `/users` in realtime database to observe or to display since it costs less than firestore.
+
+
+
+# Forum management
+
+
+
 # Error handling
 
 - When there is an error, the `status` will be `error` and `errorInfo` has Firebase error information like below.
@@ -383,19 +409,32 @@ If user not exists, the status will be error.
 # Unit Testing
 
 
+- We do unit testing on both of local emulator and on real Firebase.
+
 ## Testing on Local Emulators
 
-- We do unit testing on local emulator and on real Firebase.
 
 - To test the input of the configuration based on extension.yaml, run the following
-  - `cd functions/integration_tests && firebase emulators:start`
-  - You can open `https://localhost:4000` to see everything works fine especially with the configuration of `*.env` based on the `extension.yaml` settings.
+`cd functions`
+`cd integration-tests`
+`firebase emulators:start`
 
+- You can open `http://127.0.0.1:4000/` to see everything works fine especially with the configuration of `*.env` based on the `extension.yaml` settings.
+
+- Check points on how to test the result.
+  - See if all the functions are loaded in `functions: Loaded functions definitions from source:...`.
+  - See the extension options in the `Extension` tab. See all the settings in `easy-extention.env` has applied.
+  - Manually create a user account on the `Authentication` tap in Local Emulator UI.
+    - Then, based on the option, the firestore `/users` document would be created.
+  - Manually create a user document under `/users` in Firestore
+    - Then, based on the user sync option, there will be a document to be created or updated under `/user_search_data` firestore and `/users` in RTDB.
 
 ## Testing on real Firebase
 
 - Test files are under `functions/tests`. This test files work with real Firebase. So, you may need provide a Firebase for test use.
   - You can run the emulator on the same folder where `functions/firebase.json` resides, and run the tests on the same folder.
+
+- You may need to add the service account into your environment. See the [Deeloper Installation](#developer-installation)
 
 - To run the sample test,
   - `npm run test:index`

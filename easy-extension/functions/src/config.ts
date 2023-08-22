@@ -8,6 +8,7 @@ export class Config {
     static syncCustomClaimsToUserDocument: boolean = process.env.SYNC_CUSTOM_CLAIMS === 'yes';
     static createUserDocument: boolean = process.env.CREATE_USER_DOCUMENT === 'yes';
     static deleteUserDocument: boolean = process.env.DELETE_USER_DOCUMENT === 'yes';
+    static userSyncFields: string = process.env.USER_SYNC_FIELDS || '';
 
 
     static json(): Record<string, any> {

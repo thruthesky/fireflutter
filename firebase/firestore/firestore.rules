@@ -56,6 +56,22 @@ service cloud.firestore {
       allow update: if isMyPost() || addOrRemove('likes', request.auth.uid);
       allow delete: if false;
     }
+
+
+    match /comments/{documentId} {
+
+      function willBeMyComment() {
+        return willBeMyDoc();
+      }
+      function isMyComment() {
+        return isMyDoc();
+      }
+
+      allow read: if true; // Anyone should be able to read comments
+      allow create: if willBeMyComment();
+      allow update: if isMyComment() || addOrRemove('likes', request.auth.uid);
+      allow delete: if false; // Prevent hard delete in comments
+    }
   
 
     // Master can change all the fields.

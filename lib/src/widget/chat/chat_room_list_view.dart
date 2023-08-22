@@ -52,6 +52,7 @@ class ChatRoomListView extends StatefulWidget {
     this.openChatOnly = false,
     this.itemExtent = 68,
     this.avatarSize = 46,
+    this.scrollDirection = Axis.vertical,
   });
 
   final ChatRoomListViewController controller;
@@ -75,6 +76,8 @@ class ChatRoomListView extends StatefulWidget {
   final double? itemExtent;
 
   final double avatarSize;
+
+  final Axis scrollDirection;
 
   // final void Function(Room) onTap;
 
@@ -132,6 +135,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
           return widget.itemBuilder!(context, room);
         } else {
           return ChatRoomListTile(
+            key: ValueKey(room.id),
             room: room,
             avatarSize: widget.avatarSize,
             onTap: () {
@@ -161,6 +165,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
       dragStartBehavior: widget.dragStartBehavior,
       keyboardDismissBehavior: widget.keyboardDismissBehavior,
       clipBehavior: widget.clipBehavior,
+      scrollDirection: widget.scrollDirection,
     );
   }
 }

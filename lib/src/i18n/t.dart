@@ -4,6 +4,7 @@ class I18N {
   UploadTranslations upload = UploadTranslations();
   CategoryTranslations category = CategoryTranslations();
   PostTranslations post = PostTranslations();
+  CommentTranslations comment = CommentTranslations();
 }
 
 class UserTranslations {
@@ -24,6 +25,10 @@ class CategoryTranslations {
 }
 
 class PostTranslations {
+  String noPost = 'No post';
+}
+
+class CommentTranslations {
   String noPost = 'No post';
 }
 

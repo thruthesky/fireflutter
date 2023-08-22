@@ -3,6 +3,7 @@ import { UpdateCustomClaimsOptions } from "../interfaces/command.interface";
 import { Config } from "../config";
 import { DocumentReference, WriteResult } from "firebase-admin/firestore";
 import { UserRecord } from "firebase-admin/auth";
+import { DocumentSnapshot } from "firebase-functions/v1/firestore";
 
 /**
  * UserModel
@@ -23,7 +24,7 @@ export class UserModel {
 
 
   /**
-   * 
+   * Returns user document and returns in JSON.
    * @param uid uid
    * @returns Promise<{ ... }>
    */
@@ -145,4 +146,55 @@ export class UserModel {
     const ref = UserModel.ref(uid);
     return await ref.delete();
   }
+
+
+  static async sync(snapshot: DocumentSnapshot): Promise<void> {
+    // If the field is empty, then skip.
+    if (Config.userSyncFields.trim() === '') {
+      console.log('user sync fields is empty');
+      return;
+    }
+    //
+    const user = snapshot.data() as Record<string, any>;
+    const uid = snapshot.id;
+    const fields = Config.userSyncFields.split(",").map((field) => field.trim());
+    const data: Record<string, any> = {};
+
+    //
+    for (const field of fields) {
+      if (user[field] !== void 0) {
+        data[field] = user[field];
+      }
+    }
+    data['uid'] = uid;
+
+
+
+    // has photo url?
+    if (data['photoUrl'] !== void 0 && data['photoUrl'] !== null && data['photoUrl'] !== '') {
+      data['hasPhotoUrl'] = true;
+    } else {
+      data['hasPhotoUrl'] = false;
+    }
+
+    // save it to user_search_data
+    await admin.firestore().collection('user_search_data').doc(uid).set(data);
+
+    // save it to realtime database
+    if (data['createdAt']) {
+      data['createdAt'] = data['createdAt']['_seconds'] * 1000;
+    }
+    await admin.database().ref('users').child(uid).set(data);
+
+  }
+
+  /**
+   * Delete user data that is synced to Firestore and Realtime Database.
+   * @param uid user uid
+   */
+  static async deleteSync(uid: string) {
+    await admin.firestore().collection('user_search_data').doc(uid).delete();
+    await admin.database().ref('users').child(uid).remove();
+  }
+
 }

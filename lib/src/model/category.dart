@@ -9,8 +9,6 @@ class Category with FirebaseHelper {
   final String? description;
   final Timestamp createdAt;
   final Timestamp updatedAt;
-  // TODO for confirmation, since FirebaseHelper already uses uid, we might have problems with tracing what uid are we using.
-  // uid should be uid but FirebaseHelper already has it.
   @override
   final String uid;
 
@@ -64,8 +62,6 @@ class Category with FirebaseHelper {
       'updatedAt': FieldValue.serverTimestamp(),
       'uid': myUid,
     };
-    // TODO review
-    // final categoryId = CategoryService.instance.categoryCol.doc().id;
     await CategoryService.instance.categoryCol.doc(categoryId).set(categoryData);
     categoryData['createdAt'] = Timestamp.now();
     categoryData['updatedAt'] = Timestamp.now();

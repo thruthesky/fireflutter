@@ -54,10 +54,21 @@ class CategoryService with FirebaseHelper {
     );
   }
 
-  showListDialog(BuildContext context) async {
+  /// Displays a full screen dialog that will show a list of all categories.
+  /// By default, upon tapping a category, it will list all the posts.
+  /// Use [onTapCategory] to replace the default action upon tapping.
+  showListDialog(BuildContext context, {Function(Category category)? onTapCategory}) async {
     await showGeneralDialog(
       context: context,
-      pageBuilder: (context, _, __) => const CategoryListDialog(),
+      pageBuilder: (context, _, __) => CategoryListDialog(
+        onTapCategory: (category) {
+          if (onTapCategory != null) {
+            onTapCategory.call(category);
+          } else {
+            PostService.instance.showPostListDialog(context, category);
+          }
+        },
+      ),
     );
   }
 }

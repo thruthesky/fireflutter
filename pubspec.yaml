@@ -16,11 +16,12 @@ dependencies:
   firebase_database: ^10.2.5
   firebase_storage: ^11.2.5
   firebase_ui_firestore: ^1.5.4
+  firebase_ui_localizations: ^1.5.0
   flutter:
     sdk: flutter
   flutter_image_compress: ^2.0.4
   image_picker: ^1.0.2
-  intl: ^0.18.1
+  intl: ^0.18.0
   rxdart: ^0.27.7
   url_launcher: ^6.1.12
 
