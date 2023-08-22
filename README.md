@@ -1,7 +1,7 @@
 # Easy Extension
 
+
 - [Easy Extension](#easy-extension)
-<<<<<<< HEAD
 - [Overview](#overview)
 - [Installation](#installation)
   - [Installation Options](#installation-options)
@@ -12,6 +12,8 @@
   - [Enable user](#enable-user)
   - [Delete user](#delete-user)
   - [Get user](#get-user)
+- [User management](#user-management)
+- [Forum management](#forum-management)
 - [Error handling](#error-handling)
 - [Deploy](#deploy)
 - [Unit Testing](#unit-testing)
@@ -20,28 +22,6 @@
 - [Tips](#tips)
 - [Security rules](#security-rules)
 - [Developer installation](#developer-installation)
-=======
-  - [Overview](#overview)
-  - [Installation](#installation)
-  - [Options](#options)
-  - [Command list](#command-list)
-    - [Updating auth custom claims](#updating-auth-custom-claims)
-    - [Disable user](#disable-user)
-    - [Enable user](#enable-user)
-    - [Delete user](#delete-user)
-    - [Get user](#get-user)
-  - [Error handling](#error-handling)
-  - [Deploy](#deploy)
-  - [Unit Testing](#unit-testing)
-    - [Testing on Local Emulators](#testing-on-local-emulators)
-    - [Testing on real Firebase](#testing-on-real-firebase)
-  - [Tips](#tips)
-  - [Security rules](#security-rules)
-  - [Developer installation](#developer-installation)
-
-
-## Overview
->>>>>>> fbafc6c6f47b5b250316188c2c3b241a3d964acb
 
 
 # Overview
@@ -340,6 +320,31 @@ If user not exists, the status will be error.
 }
 ```
 
+
+
+# User management
+
+User information is very important. There are many people who is jailed due to the failure of keeping user information safely.
+And unfortunately most of (more than 90%) apps are ignorant to it. They seems to not be care about it.
+If you save the email or phone number or any critical data of users in publicly opened docuemnts, that is a huge mistake. You may put it for searching, but that's a failure already.
+
+We save user name in the user document. So, the app can search. Then, user email and phone number must not be in the same docuemnt since the document is searchable. It means, it is open.
+
+For this reason, we save all the user information in `/users` collection and sync to `/user_search_data` for the searchable fields only. And we sync the `/user_search_data` into `/users` of RTDB for better cost management.
+
+When the documents under `/users` collection in firestore changes, it will sync the searchable fields into `/user_search_data` in firestore and `/users/{uid}` node in RTDB and then you can use it for search or refering. `/users/{uid}` in RTDB is cheaper than the one in firestore.
+
+You can choose what fields to sync for search. And don't forget to include `uid` and `photoUrl` since these will not be used for direct search but will give you benefits on search. You can search `hasPhotoUrl` if you sync the `photoUrl` field.
+
+
+
+
+
+
+# Forum management
+
+
+
 # Error handling
 
 - When there is an error, the `status` will be `error` and `errorInfo` has Firebase error information like below.
@@ -383,13 +388,17 @@ If user not exists, the status will be error.
 # Unit Testing
 
 
+- We do unit testing on both of local emulator and on real Firebase.
+
 ## Testing on Local Emulators
 
-- We do unit testing on local emulator and on real Firebase.
 
 - To test the input of the configuration based on extension.yaml, run the following
-  - `cd functions/integration_tests && firebase emulators:start`
-  - You can open `https://localhost:4000` to see everything works fine especially with the configuration of `*.env` based on the `extension.yaml` settings.
+`cd functions`
+`cd integration-tests`
+`firebase emulators:start`
+
+- You can open `http://127.0.0.1:4000/` to see everything works fine especially with the configuration of `*.env` based on the `extension.yaml` settings.
 
 
 ## Testing on real Firebase

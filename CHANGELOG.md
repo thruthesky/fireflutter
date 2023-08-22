@@ -1,7 +1,7 @@
 ## Version 0.1.5
 
 - Change. User collection path is now required.
-- 
+- Add. User sync has added.
 
 ## Version 0.1.4
 

@@ -3,6 +3,7 @@ import { UpdateCustomClaimsOptions } from "../interfaces/command.interface";
 import { Config } from "../config";
 import { DocumentReference, WriteResult } from "firebase-admin/firestore";
 import { UserRecord } from "firebase-admin/auth";
+import { DocumentSnapshot } from "firebase-functions/v1/firestore";
 
 /**
  * UserModel
@@ -145,4 +146,42 @@ export class UserModel {
     const ref = UserModel.ref(uid);
     return await ref.delete();
   }
+
+
+  static async sync(snapshot: DocumentSnapshot): Promise<void> {
+    //
+    const user = snapshot.data() as Record<string, any>;
+    const uid = snapshot.id;
+    const fields = Config.userSyncFields.split(",").map((field) => field.trim());
+    const data: Record<string, any> = {};
+
+    //
+    for (const field of fields) {
+      if (user[field] !== void 0) {
+        data[field] = user[field];
+      }
+    }
+
+    // has photo url?
+    if (data['photoUrl'] !== void 0 && data['photoUrl'] !== null && data['photoUrl'] !== '') {
+      data['hasPhotoUrl'] = true;
+    } else {
+      data['hasPhotoUrl'] = false;
+    }
+
+    //
+    // await UserModel.update(uid, data);
+
+    await Promise.all([
+      UserModel.update(uid, data),
+      admin.firestore().collection('user_search_data').doc(uid).set(data),
+      admin.database().ref(`users/${uid}`).set(data),
+    ]);
+
+  }
+  static async deleteSync(uid: string) {
+    await admin.firestore().collection('user_search_data').doc(uid).delete();
+    await admin.database().ref(`users/${uid}`).remove();
+  }
+
 }
