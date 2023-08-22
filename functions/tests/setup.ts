@@ -28,7 +28,7 @@ export function initFirebaseAdminSDK() {
  * @param options optoins
  * @returns user
  */
-export async function createTestUser(options?: { email?: string | null; password?: string | null, phoneNumber?: string | null })
+export async function createTestUser(options?: { email?: string | null; password?: string | null, phoneNumber?: string | null, displayName?: string | null })
     : Promise<admin.auth.UserRecord> {
     if (!options) options = {};
 
@@ -48,7 +48,10 @@ export async function createTestUser(options?: { email?: string | null; password
 
     const user = await admin
         .auth()
-        .createUser({ email: options.email, password, phoneNumber: options.phoneNumber });
+        .createUser({
+            email: options.email, password, phoneNumber: options.phoneNumber,
+            displayName: options.displayName,
+        });
 
     //
     return user;
@@ -59,7 +62,7 @@ export async function createTestUser(options?: { email?: string | null; password
 /**
  * Create a user document under /users collection in Firestore and return the user document as in JSON.
  */
-export async function createTestUserDocument(options?: { email?: string | null; password?: string | null, phoneNumber?: string | null })
+export async function createTestUserDocument(options?: { email?: string | null; password?: string | null, phoneNumber?: string | null, displayName?: string | null })
     : Promise<Record<string, any>> {
     const user = await createTestUser(options);
     const data = {
