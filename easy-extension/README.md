@@ -401,7 +401,7 @@ You can search `hasPhotoUrl` if you sync the `photoUrl` field. Or `hasPhotoUrl` 
 
 - You can open `http://127.0.0.1:4000/` to see everything works fine especially with the configuration of `*.env` based on the `extension.yaml` settings.
 
-- Check points
+- Check points on how to test the result.
   - See if all the functions are loaded in `functions: Loaded functions definitions from source:...`.
   - See the extension options in the `Extension` tab. See all the settings in `easy-extention.env` has applied.
   - Manually create a user account on the `Authentication` tap in Local Emulator UI.
@@ -413,6 +413,8 @@ You can search `hasPhotoUrl` if you sync the `photoUrl` field. Or `hasPhotoUrl` 
 
 - Test files are under `functions/tests`. This test files work with real Firebase. So, you may need provide a Firebase for test use.
   - You can run the emulator on the same folder where `functions/firebase.json` resides, and run the tests on the same folder.
+
+- You may need to add the service account into your environment. See the [Deeloper Installation](#developer-installation)
 
 - To run the sample test,
   - `npm run test:index`
