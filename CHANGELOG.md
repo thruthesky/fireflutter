@@ -1,3 +1,7 @@
+## Version 0.1.6
+
+- Fix. the user collection for sync.
+
 ## Version 0.1.5
 
 - Change. User collection path is now required.

@@ -3,6 +3,7 @@
 
 - [Easy Extension](#easy-extension)
 - [Overview](#overview)
+- [TODO](#todo)
 - [Installation](#installation)
   - [Installation Options](#installation-options)
 - [Setting admin](#setting-admin)
@@ -26,12 +27,19 @@
 
 # Overview
 
-The easy extension is a firebase extension that helps you to manage your firebase.
+The easy extension helps you to manage your firebase easily. It supports some features that client SDK does not. For instance, you can do the custom claims management with this easy extension where you cannot do it with the client SDK.
+
+It also supports some features to simplify the client end work. And 
+
+# TODO
+
+- update user password
+- delete `userSync` because it can be by client end.
 
 # Installation
 
 To install the easy extension, click one of the version linke below. See the change logs for the change of each version.
-
+- [Beta (0.1.5-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.5-beta.0)
 - [Beta (0.1.4-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.4-beta.0)
 - [Beta (0.1.0-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.0-beta.0)
 - [Alpha (0.0.21-alpha.1)](https://console.firebase.google.com/u/0/project/_/extensions/install?ref=jaehosong%2Feasy-extension@0.0.22-alpha.0)
