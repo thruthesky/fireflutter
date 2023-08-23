@@ -241,7 +241,7 @@ class _TestScreenState extends State<TestUi> {
     await Test.assertExceptionCode(room.invite(Test.durian.uid), Code.roomIsFull);
 
     // Get the room
-    final roomAfter = await ChatService.instance.getRoom(room.id);
+    final roomAfter = (await ChatService.instance.getRoom(room.id) as Room);
 
     test(roomAfter.users.length == 3,
         "maximumNoOfUsers must be limited to 3. Actual value: ${roomAfter.users.length}. Expected: ${roomAfter.maximumNoOfUsers}");

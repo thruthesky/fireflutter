@@ -50,7 +50,7 @@ class ChatRoomListView extends StatefulWidget {
     this.singleChatOnly = false,
     this.groupChatOnly = false,
     this.openChatOnly = false,
-    this.itemExtent = 68,
+    this.itemExtent = 64,
     this.avatarSize = 46,
     this.scrollDirection = Axis.vertical,
   });

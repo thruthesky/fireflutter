@@ -123,3 +123,26 @@ String sanitizeFilename(String input, {String replacement = ''}) {
 String otherUserUid(List<String> users) {
   return ChatService.instance.getOtherUserUid(users);
 }
+
+/// Returns the indent value for the given [no].
+///
+/// Use this to display the indent for comment reply.
+/// The indent(depth) start with 1.
+double indent(int? no) {
+  if (no == null) return 0;
+  if (no == 0 || no == 1) {
+    return 0;
+  } else if (no == 2) {
+    return 32;
+  } else if (no == 3) {
+    return 64;
+  } else if (no == 4) {
+    return 80;
+  } else if (no == 5) {
+    return 96;
+  } else if (no == 6) {
+    return 106;
+  } else {
+    return 112;
+  }
+}

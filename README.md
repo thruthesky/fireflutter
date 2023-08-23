@@ -698,6 +698,21 @@ ChatRoomListView(
 ),
 ```
 
+
+You can customsize the chat room item in the list like below. You can replace the `ChatRoomListTile` or you can customize the onTap behavior.
+
+```dart
+ChatRoomListView(
+  singleChatOnly: true,
+  controller: controller,
+  itemBuilder: (context, room) => ChatRoomListTile(
+    room: room,
+    onTap: () => controller.showChatRoom(context: context, room: room),
+  ),
+)
+```
+
+
 ### Create a chat room
 
 - To create a chat room, add a button and display `ChatRoomCreate` widget. You may copy the code from `ChatRoomCreate` and apply your own design.

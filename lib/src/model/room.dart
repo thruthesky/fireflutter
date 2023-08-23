@@ -30,6 +30,11 @@ class Room with FirebaseHelper {
 
   final Message? lastMessage;
 
+  /// This will be false if the room does not exists on the firestore server.
+  ///
+  /// Use this to check if the room exists or not after calling [get] method.
+  // bool exists = true;
+
   Room({
     required this.id,
     required this.name,
@@ -77,6 +82,24 @@ class Room with FirebaseHelper {
     );
   }
 
+  // factory Room.notExists(String roomId) {
+  //   return Room(
+  //     id: roomId,
+  //     name: '',
+  //     rename: {},
+  //     group: false,
+  //     open: false,
+  //     master: '',
+  //     users: [],
+  //     moderators: [],
+  //     blockedUsers: [],
+  //     maximumNoOfUsers: 100,
+  //     password: null,
+  //     createdAt: Timestamp.now(),
+  //     lastMessage: null,
+  //   );
+  // }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -92,6 +115,18 @@ class Room with FirebaseHelper {
       'password': password,
       'createdAt': createdAt,
     };
+  }
+
+  /// Get chat room
+  ///
+  /// Note, this will produce a missing or insufficient permission error if
+  ///   - the room does not exists.
+  ///   - the user does not have permission to read the room. (he is not a member of the chat room)
+  /// This error is handled on parent, but if you enable "All Exception" on the VSCode debugger,
+  /// you will see the error.
+  static Future<Room> get(String roomId) async {
+    final snapshot = await ChatService.instance.roomDoc(roomId).get();
+    return Room.fromDocumentSnapshot(snapshot);
   }
 
   /// Creates a chat room and returns the chat room.

@@ -239,13 +239,4 @@ class UserService with FirebaseHelper {
           (event) => event.data(),
         );
   }
-
-  /// open user public profile dialog
-  openPublicProfileDialog(BuildContext context, User user) {
-    showGeneralDialog(
-        context: context,
-        pageBuilder: (context, anim1, anim2) {
-          return UserPublicProfileDialog(user: user);
-        });
-  }
 }
