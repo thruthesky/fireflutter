@@ -168,8 +168,6 @@ export class UserModel {
     }
     data['uid'] = uid;
 
-
-
     // has photo url?
     if (data['photoUrl'] !== void 0 && data['photoUrl'] !== null && data['photoUrl'] !== '') {
       data['hasPhotoUrl'] = true;
@@ -195,6 +193,38 @@ export class UserModel {
   static async deleteSync(uid: string) {
     await admin.firestore().collection('user_search_data').doc(uid).delete();
     await admin.database().ref('users').child(uid).remove();
+  }
+
+
+  /**
+   * Sync backfill
+   * 
+   * It will sync all existing users to user_search_data and users in realtime database.
+   * Note that, Promise.allSettled() supports more than 2 million promises at once.
+   * 
+   * Note that, this function will not sync user data that is already synced.
+   */
+  static async syncBackfill(): Promise<PromiseSettledResult<void>[]> {
+
+    // Delete existing user documents in 'user_search_data' firestore collection
+    // and in '/users' realtime database.
+    const userSearchDataSnapshot = await admin.firestore().collection('user_search_data').get();
+    const promiseUserSearchDataDelete = [];
+    for (const doc of userSearchDataSnapshot.docs) {
+      promiseUserSearchDataDelete.push(doc.ref.delete());
+    }
+    await Promise.all(promiseUserSearchDataDelete);
+    await admin.database().ref('users').remove();
+
+    // Get all users
+    const snapshot = await admin.firestore().collection(Config.userCollectionName).get();
+
+    // Sync all users
+    const promises = [];
+    for (const doc of snapshot.docs) {
+      promises.push(this.sync(doc));
+    }
+    return await Promise.allSettled(promises);
   }
 
 }
