@@ -34,11 +34,25 @@ service cloud.firestore {
     // *
     // * Belore are the FireFlutter Security Rules. Put your own rules above.
     // *
+
+
+    match /users/{documentId} {
+      allow read: if request.auth.uid == documentId;
+      allow create: if request.auth.uid == documentId;
+      allow update: if request.auth.uid == documentId;
+      allow delete: if false;
+    }
+
+    match /user_search_data/{documentId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
     match /categories/{documentId} {
       allow read: if true;
       allow write: if isAdmin();
     }
-    
+
     // Only allow write if
     // it's my post
     // only updating [likes]
@@ -191,9 +205,7 @@ service cloud.firestore {
       allow read: if true;
       allow write: if false;
     }
-    match /users/{documentId} {
-      allow read, write: if true;
-    }
+
 
     match /rule-test-onlyUpdating/{documentId} {
       allow read: if true;
