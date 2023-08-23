@@ -53,12 +53,13 @@ export const userSyncBackFillingTask = functions.tasks.taskQueue()
       return;
     }
 
+    await UserModel.syncBackfill();
 
     // When processing is complete, report status to the user (see below).
     //
     await runtime.setProcessingState(
       "PROCESSING_COMPLETE",
-      `Successfully resized $successCount images.`
+      `Successfully re-synced all the documents.`
     );
 
     functions.logger.info("Done backfilling to user searchable fields from /users firestore collection");

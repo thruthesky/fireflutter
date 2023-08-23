@@ -1,3 +1,7 @@
+## Version 0.1.9
+
+- Add. Backfills on user sync data.
+
 ## Version 0.1.8
 
 - Add. sync user data to realtime database.
