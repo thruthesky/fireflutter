@@ -1,15 +1,22 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/post.dart';
 import 'package:fireflutter/src/service/comment.service.dart';
 import 'package:flutter/material.dart';
 
 class CommentBox extends StatefulWidget {
   const CommentBox({
     super.key,
-    required this.post,
+    required this.postId,
+    this.replyTo,
+    this.labelText,
+    this.hintText,
+    this.onSubmit,
   });
 
-  final Post post;
+  final String postId;
+  final String? replyTo;
+  final String? labelText;
+  final String? hintText;
+  final Function()? onSubmit;
 
   @override
   State<CommentBox> createState() => _CommentBoxState();
@@ -17,6 +24,7 @@ class CommentBox extends StatefulWidget {
 
 class _CommentBoxState extends State<CommentBox> {
   TextEditingController content = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -25,19 +33,20 @@ class _CommentBoxState extends State<CommentBox> {
           children: [
             UserAvatar(
               uid: UserService.instance.uid,
-              key: ValueKey(widget.post.uid),
+              key: ValueKey(UserService.instance.uid),
             ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: TextFormField(
+                  autofocus: true,
                   controller: content,
                   minLines: 1,
                   maxLines: 2,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Comment',
-                    hintText: 'Write a comment...',
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    labelText: widget.labelText ?? 'Comment',
+                    hintText: widget.hintText ?? 'Write a comment...',
                   ),
                 ),
               ),
@@ -58,9 +67,11 @@ class _CommentBoxState extends State<CommentBox> {
               onPressed: () {
                 if (content.text.isNotEmpty) {
                   // TODO send comment service
-                  CommentService.instance.createComment(postId: widget.post.id, content: content.text);
+                  CommentService.instance
+                      .createComment(postId: widget.postId, content: content.text, replyTo: widget.replyTo);
                   // TODO show the comment blink, scroll to the comment
                   content.text = '';
+                  widget.onSubmit?.call();
                 }
               },
             ),

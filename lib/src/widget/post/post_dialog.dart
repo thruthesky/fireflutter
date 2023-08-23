@@ -17,6 +17,7 @@ class PostDialog extends StatefulWidget {
 
 class _PostDialogState extends State<PostDialog> {
   Post? post;
+  bool _showCommentBox = false;
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
@@ -73,10 +74,6 @@ class _PostDialogState extends State<PostDialog> {
                     }
                   },
                 ),
-                // IconButton(
-                //   icon: const Icon(Icons.more_horiz),
-                //   onPressed: () {},
-                // )
               ],
             ),
             body: Padding(
@@ -128,29 +125,46 @@ class _PostDialogState extends State<PostDialog> {
                                   debugPrint('Liking it');
                                 },
                               ),
+                              TextButton(
+                                child: const Text('Comment'),
+                                onPressed: () {
+                                  setState(() {
+                                    _showCommentBox = true;
+                                    // TODO Hide other
+                                  });
+                                  debugPrint('Comment Open it');
+                                },
+                              ),
                             ],
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
-                          child: Text(
-                            "Comments",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
                         CommentListView(
+                          label: 'Comments',
                           postId: widget.post.id,
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
+                          onShowReplyBox: () {
+                            setState(() {
+                              _showCommentBox = false;
+                            });
+                          },
                         ),
                       ],
                     ),
                   ),
-                  SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
-                      child: CommentBox(
-                        post: widget.post,
+                  Visibility(
+                    visible: _showCommentBox,
+                    child: SafeArea(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
+                        child: CommentBox(
+                          postId: widget.post.id,
+                          onSubmit: () {
+                            setState(() {
+                              _showCommentBox = false;
+                            });
+                          },
+                        ),
                       ),
                     ),
                   ),
