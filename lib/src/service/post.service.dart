@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/model/post.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,10 @@ class PostService with FirebaseHelper {
   PostService._();
 
   get col => postCol;
+
+  bool isMine(Post post) {
+    return UserService.instance.uid == post.uid;
+  }
 
   showCreateDialog(
     BuildContext context, {
@@ -21,6 +26,10 @@ class PostService with FirebaseHelper {
         success: success,
       ),
     );
+  }
+
+  Stream<DocumentSnapshot> snapshot({required String postId}) {
+    return PostService.instance.col.doc(postId).snapshots();
   }
 
   Future<Post> createPost({
@@ -37,11 +46,35 @@ class PostService with FirebaseHelper {
     );
   }
 
+  Future<void> editPost({
+    required String postId,
+    required String title,
+    required String content,
+    List<String>? files,
+  }) {
+    return Post.update(
+      postId: postId,
+      title: title,
+      content: content,
+      files: files,
+    );
+  }
+
   /// Shows the Post as a dialog
   showPostDialog(BuildContext context, Post post) {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) => PostDialog(
+        post: post,
+      ),
+    );
+  }
+
+  /// Shows the Edit Post as a dialog
+  showEditPostDialog(BuildContext context, Post post) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) => EditPostDialog(
         post: post,
       ),
     );

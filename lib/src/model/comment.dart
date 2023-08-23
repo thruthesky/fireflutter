@@ -15,6 +15,7 @@ class Comment with FirebaseHelper {
   final Timestamp updatedAt;
   final List<dynamic> likes;
   final bool? deleted;
+  final String? replyTo;
 
   Comment({
     required this.id,
@@ -26,6 +27,7 @@ class Comment with FirebaseHelper {
     required this.updatedAt,
     required this.likes,
     this.deleted,
+    this.replyTo,
   });
 
   factory Comment.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
@@ -43,6 +45,7 @@ class Comment with FirebaseHelper {
       updatedAt: map['updatedAt'] ?? Timestamp.now(),
       likes: map['likes'] ?? [],
       deleted: map['deleted'],
+      replyTo: map['replyTo'],
     );
   }
 
@@ -50,6 +53,7 @@ class Comment with FirebaseHelper {
     required String postId,
     required String content,
     List<String>? files,
+    String? replyTo,
   }) async {
     String myUid = FirebaseAuth.instance.currentUser!.uid;
     final Map<String, dynamic> commentData = {
@@ -59,6 +63,7 @@ class Comment with FirebaseHelper {
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
       'uid': myUid,
+      if (replyTo != null) 'replyTo': replyTo,
     };
     final commentId = CommentService.instance.commentCol.doc().id;
     await CommentService.instance.commentCol.doc(commentId).set(commentData);
@@ -69,5 +74,5 @@ class Comment with FirebaseHelper {
 
   @override
   String toString() =>
-      'Comment(id: $id, postId: $postId, content: $content, uid: $uid, files: $files, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted)';
+      'Comment(id: $id, postId: $postId, content: $content, uid: $uid, files: $files, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted, replyTo: $replyTo)';
 }

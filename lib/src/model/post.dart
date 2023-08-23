@@ -70,6 +70,22 @@ class Post with FirebaseHelper {
     return Post.fromMap(map: postData, id: postId);
   }
 
+  static Future<void> update({
+    required String postId,
+    required String title,
+    required String content,
+    List<String>? files,
+  }) async {
+    final Map<String, dynamic> postUpdateData = {
+      'title': title,
+      'content': content,
+      if (files != null) 'files': files,
+      if (files == null) 'files': FieldValue.delete(),
+      'updatedAt': FieldValue.serverTimestamp(),
+    };
+    await PostService.instance.postCol.doc(postId).update(postUpdateData);
+  }
+
   @override
   String toString() =>
       'Post(id: $id, categoryId: $categoryId, title: $title, content: $content, uid: $uid, files: $files, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted)';
