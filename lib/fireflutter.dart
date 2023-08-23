@@ -1,4 +1,4 @@
-export 'src/functions.dart';
+export 'src/functions/functions.dart';
 export 'src/mixin/firebase_helper.mixin.dart';
 export 'src/models.dart';
 export 'src/widgets.dart';
