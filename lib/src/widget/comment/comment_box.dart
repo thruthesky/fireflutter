@@ -24,7 +24,7 @@ class _CommentBoxState extends State<CommentBox> {
         Row(
           children: [
             UserAvatar(
-              uid: widget.post.uid,
+              uid: UserService.instance.uid,
               key: ValueKey(widget.post.uid),
             ),
             Expanded(
@@ -59,6 +59,7 @@ class _CommentBoxState extends State<CommentBox> {
                 if (content.text.isNotEmpty) {
                   // TODO send comment service
                   CommentService.instance.createComment(postId: widget.post.id, content: content.text);
+                  // TODO show the comment blink, scroll to the comment
                   content.text = '';
                 }
               },

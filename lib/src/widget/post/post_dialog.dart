@@ -22,6 +22,16 @@ class _PostDialogState extends State<PostDialog> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Post'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.more_horiz),
+            onPressed: () {},
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -35,7 +45,7 @@ class _PostDialogState extends State<PostDialog> {
                     child: Text.rich(
                       TextSpan(
                         text: widget.post.title,
-                        style: const TextStyle(fontSize: 18),
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
                       ), // TODO Customizable
                     ),
                   ),
@@ -51,25 +61,36 @@ class _PostDialogState extends State<PostDialog> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('${widget.post.createdAt.toDate()}'),
+                          TimestampText(
+                            timestamp: widget.post.createdAt,
+                          ),
                         ],
                       ),
                     ),
-                  Padding(padding: const EdgeInsets.all(16.0), child: Text(widget.post.content)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      TextButton(
-                        child: const Text('Like'),
-                        onPressed: () {
-                          debugPrint('Liking it');
-                        },
-                      ),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                    child: Text(widget.post.content),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextButton(
+                          child: const Text('Like'),
+                          onPressed: () {
+                            debugPrint('Liking it');
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                   const Padding(
                     padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
-                    child: Text("Comments"),
+                    child: Text(
+                      "Comments",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
                   CommentListView(
                     post: widget.post,

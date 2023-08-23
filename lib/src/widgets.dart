@@ -52,3 +52,6 @@ export 'widget/post/post_list.dialog.dart';
 export 'widget/comment/comment_box.dart';
 export 'widget/comment/comment_list_view.dart';
 export 'widget/comment/comment_tile.dart';
+
+// Common
+export 'widget/common/timestamp.text.dart';

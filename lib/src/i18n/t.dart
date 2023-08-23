@@ -29,7 +29,7 @@ class PostTranslations {
 }
 
 class CommentTranslations {
-  String noPost = 'No post';
+  String noPost = 'No comments yet.';
 }
 
 final tr = I18N();
