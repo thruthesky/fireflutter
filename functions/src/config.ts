@@ -9,6 +9,7 @@ export class Config {
     static createUserDocument: boolean = process.env.CREATE_USER_DOCUMENT === 'yes';
     static deleteUserDocument: boolean = process.env.DELETE_USER_DOCUMENT === 'yes';
     static userSyncFields: string = process.env.USER_SYNC_FIELDS || '';
+    static userSyncFieldsBackfill: boolean = process.env.USER_SYNC_FIELDS_BACKFILL === 'yes';
 
 
     static json(): Record<string, any> {
