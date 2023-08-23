@@ -7,10 +7,12 @@ class CommentTile extends StatelessWidget {
     super.key,
     required this.comment,
     this.onTap,
+    this.replyItemBuilder,
   });
 
   final Comment comment;
   final Function(Comment comment)? onTap;
+  final Widget Function(BuildContext, Comment)? replyItemBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +58,10 @@ class CommentTile extends StatelessWidget {
                         onPressed: () {},
                       ),
                     ],
+                  ),
+                  CommentListView(
+                    postId: comment.postId,
+                    replyingTo: comment.id,
                   )
                 ],
               )

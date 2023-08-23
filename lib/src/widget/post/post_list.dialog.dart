@@ -65,12 +65,12 @@ class _PostListDialogState extends State<PostListDialog> {
                   child: Text("Adjust text size"),
                 ),
               );
-              popupMenuItemList.add(
-                const PopupMenuDivider(
-                  height: 20,
-                ),
-              );
               if (UserService.instance.isAdmin) {
+                popupMenuItemList.add(
+                  const PopupMenuDivider(
+                    height: 20,
+                  ),
+                );
                 if (category != null) {
                   popupMenuItemList.add(
                     const PopupMenuItem(

@@ -1,41 +1,37 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/model/post.dart';
 import 'package:flutter/material.dart';
 
-class CreatePostDialog extends StatefulWidget {
-  const CreatePostDialog({
+class EditPostDialog extends StatefulWidget {
+  const EditPostDialog({
     super.key,
-    required this.success,
-    required this.category,
+    required this.post,
   });
 
-  final void Function(Post post) success;
-  final Category category;
+  final Post post;
 
   @override
-  State<CreatePostDialog> createState() => _CreatePostDialogState();
+  State<EditPostDialog> createState() => _EditPostDialogState();
 }
 
-class _CreatePostDialogState extends State<CreatePostDialog> {
+class _EditPostDialogState extends State<EditPostDialog> {
   TextEditingController title = TextEditingController();
   TextEditingController content = TextEditingController();
   // TODO file upload
 
   @override
   Widget build(BuildContext context) {
+    title.text = widget.post.title;
+    content.text = widget.post.content;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Post'),
+        title: const Text('Edit Post'), // TODO tr
       ),
       body: ListView(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text('Category: ${widget.category.name}'), // TODO
-            ),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text('Category'),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, right: 16.0),
@@ -57,7 +53,9 @@ class _CreatePostDialogState extends State<CreatePostDialog> {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${Timestamp.now().toDate()}'),
+                TimestampText(
+                  timestamp: widget.post.createdAt,
+                ),
               ],
             ),
           ),
@@ -77,18 +75,17 @@ class _CreatePostDialogState extends State<CreatePostDialog> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                child: const Text('Post'),
+                child: const Text('Update'),
                 onPressed: () async {
                   if (title.text.isNotEmpty && content.text.isNotEmpty) {
                     PostService.instance
-                        .createPost(
-                      categoryId: widget.category.id,
+                        .editPost(
+                      postId: widget.post.id,
                       title: title.text,
                       content: content.text,
                     )
-                        .then((post) {
+                        .then((value) {
                       Navigator.pop(context);
-                      PostService.instance.showPostDialog(context, post);
                     });
                   }
                 },

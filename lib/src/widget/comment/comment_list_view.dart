@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/model/comment.dart';
-import 'package:fireflutter/src/model/post.dart';
 import 'package:fireflutter/src/service/comment.service.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +22,8 @@ class CommentListView extends StatelessWidget {
     this.dragStartBehavior = DragStartBehavior.start,
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.clipBehavior = Clip.hardEdge,
-    required this.post,
+    required this.postId,
+    this.replyingTo,
   });
 
   final int pageSize;
@@ -38,12 +38,16 @@ class CommentListView extends StatelessWidget {
   final DragStartBehavior dragStartBehavior;
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final Clip clipBehavior;
-  final Post post;
+  final String postId;
+
+  final String? replyingTo;
 
   @override
   Widget build(BuildContext context) {
     return FirestoreListView(
-      query: CommentService.instance.commentCol.where("postId", isEqualTo: post.id).orderBy("createdAt"),
+      query: replyingTo == null
+          ? CommentService.instance.commentCol.where("postId", isEqualTo: postId).orderBy("createdAt")
+          : CommentService.instance.commentCol.where("replyTo", isEqualTo: replyingTo).orderBy("createdAt"),
       itemBuilder: (context, QueryDocumentSnapshot snapshot) {
         final comment = Comment.fromDocumentSnapshot(snapshot);
         if (itemBuilder != null) {
@@ -56,7 +60,7 @@ class CommentListView extends StatelessWidget {
         if (emptyBuilder != null) {
           return emptyBuilder!(context);
         } else {
-          return Center(child: Text(tr.comment.noPost));
+          return Center(child: Text(tr.comment.noComment));
         }
       },
       errorBuilder: (context, error, stackTrace) {
