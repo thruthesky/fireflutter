@@ -6,8 +6,6 @@ import { expect } from "chai";
 import { initFirebaseAdminSDK } from "../setup";
 import { Config } from "../../src/config";
 import { UserModel } from "../../src/models/user.model";
-// import { UserModel } from "../../src/models/user.model";
-// import { Config } from "../../src/config";
 
 
 
@@ -32,8 +30,6 @@ describe("User sync backfill", () => {
         // Check if all users are synced to user_search_data
         const syncedSnapshot = await admin.firestore().collection('user_search_data').get();
         expect(syncedSnapshot.docs.length).to.be.eq(snapshot.docs.length);
-
-
 
     });
 
