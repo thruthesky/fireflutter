@@ -1,17 +1,32 @@
 
 rules_version = '2';
 
+// ****************************** COPY FROM ***********************************
 // Add admin UID's here
 function isAdmin() {
   let adminUIDs = ['root-uid', 'uid-A', 'uid-B'];
   return request.auth.uid in adminUIDs;
 }
+// ****************************** COPY UNTIL HERE *****************************
 
 service cloud.firestore {
   match /databases/{database}/documents {
-
+// ****************************** COPY FROM ***********************************
     match /easy-commands/{documentId} {
       allow read, write: if isAdmin();
     }
+
+    match /users/{documentId} {
+      allow read: if request.auth.uid == documentId;
+      allow create: if request.auth.uid == documentId;
+      allow update: if request.auth.uid == documentId;
+      allow delete: if false;
+    }
+
+    match /user_search_data/{documentId} {
+      allow read: if true;
+      allow write: if false;
+    }
+// ****************************** COPY UNTIL HERE *****************************
   }
 }

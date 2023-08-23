@@ -5,7 +5,6 @@ export 'widget/user/user.profile_avatar.dart';
 export 'widget/user/user.doc.dart';
 export 'widget/user/user.ready.dart';
 export 'widget/common/avatar.dart';
-export 'widget/user/user.public_profile.dialog.dart';
 
 // Chat
 export 'widget/chat/chat_room.dart';
