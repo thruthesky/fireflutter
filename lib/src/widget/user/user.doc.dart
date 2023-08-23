@@ -61,14 +61,7 @@ class UserDoc extends StatelessWidget {
     return live ?? uid == null
         // live update
         ? StreamBuilder<User?>(
-            stream: uid == null
-                ? UserService.instance.col.doc(currentUserUid).snapshots().map((doc) => User.fromDocumentSnapshot(doc))
-                : UserService.instance.rtdb.ref().child('/users/$uid').onValue.map(
-                    (event) {
-                      return User.fromMap(
-                          map: Map<String, dynamic>.from((event.snapshot.value ?? {}) as Map), id: uid!);
-                    },
-                  ),
+            stream: uid == null ? UserService.instance.snapshot : UserService.instance.snapshotOther(uid!),
             builder: buildStreamWidget,
           )
         // update one time

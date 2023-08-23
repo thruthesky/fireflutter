@@ -81,6 +81,28 @@ class UserService with FirebaseHelper {
     ///
   }
 
+  /// Returns the stream of the user model for the current login user.
+  ///
+  /// Use this to display widgets lively that depends on the user model. When
+  /// the user document is updated, this stream will fire an event.
+  Stream<User> get snapshot {
+    return UserService.instance.col.doc(uid).snapshots().map((doc) => User.fromDocumentSnapshot(doc));
+  }
+
+  /// Returns the stream of the user model for the user uid.
+  ///
+  /// This method stream the update of the user document from realtime database and returns
+  /// the stream of the user model.
+  ///
+  /// Note that, '/users' collection in firestore is secured by security rules.
+  Stream<User> snapshotOther(String uid) {
+    return UserService.instance.rtdb.ref().child('/users/$uid').onValue.map(
+      (event) {
+        return User.fromMap(map: Map<String, dynamic>.from((event.snapshot.value ?? {}) as Map), id: uid);
+      },
+    );
+  }
+
   /// Get user
   ///
   /// It does memory cache.
