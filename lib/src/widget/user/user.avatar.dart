@@ -84,8 +84,11 @@ class _UserAvatarState extends State<UserAvatar> {
           width: widget.size,
           height: widget.size,
           decoration: BoxDecoration(
-            color: Colors.grey[300],
-            shape: BoxShape.circle,
+            borderRadius: BorderRadius.circular(widget.radius),
+            border: Border.all(
+              color: widget.borderColor,
+              width: widget.borderWidth,
+            ),
           ),
           child: Icon(
             Icons.person,
