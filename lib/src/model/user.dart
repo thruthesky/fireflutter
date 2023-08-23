@@ -35,9 +35,13 @@ class User with FirebaseHelper {
   final int birthMonth;
   final int birthDay;
 
-  /// DB 에 저장되는 값. 그래야 검색이 가능.
-  /// 주의: DB 검색용으로만 써야 한다. 왜냐하면, photoUrl 값이 삭제되면, 이 값이 false 가 되어야하는데,
-  /// (실수로 그렇지 않고 계속) true 값을 가질 수 있다. 예를 들면, 테스트 할 때, 수동으로 photoUrl 만 삭제 할 때, 등...
+  /// Indicates whether the user has a photoUrl.
+  ///
+  /// Note this value is automatically set to true when the user uploads a photo by the easy-extension
+  /// So, don't set this value manually.
+  /// And this is available only on `/search-user-data` in Firestore or `/users` in Realtime Database.
+  /// It does not exists in `/users` in Firestore.
+  ///
   final bool hasPhotoUrl;
 
   /// 사용자 문서가 생성된 시간. 항상 존재 해야 함. Firestore 서버 시간
@@ -168,7 +172,6 @@ class User with FirebaseHelper {
     String? middleName,
     String? displayName,
     String? photoUrl,
-    bool? hasPhotoUrl,
     String? idVerifiedCode,
     String? phoneNumber,
     String? email,
@@ -189,7 +192,6 @@ class User with FirebaseHelper {
       if (middleName != null) 'middleName': middleName,
       if (displayName != null) 'displayName': displayName,
       if (photoUrl != null) 'photoUrl': photoUrl,
-      if (hasPhotoUrl != null) 'hasPhotoUrl': hasPhotoUrl,
       if (idVerifiedCode != null) 'idVerifiedCode': idVerifiedCode,
       if (phoneNumber != null) 'phoneNumber': phoneNumber,
       if (email != null) 'email': email,

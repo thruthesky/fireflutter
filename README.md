@@ -6,6 +6,7 @@ A free, open source, complete, rapid development package for creating Social app
   - [Features](#features)
   - [Getting started](#getting-started)
 - [Installation](#installation)
+  - [Install the easy extension](#install-the-easy-extension)
   - [Security rules](#security-rules)
     - [Security rule for admin](#security-rule-for-admin)
   - [Admin settings](#admin-settings)
@@ -91,7 +92,20 @@ If you want to build an app using FireFlutter, the best way is to copy codes fro
 # Installation
 
 
+Please follow the instructions below to install the fireflutter.
+
+## Install the easy extension
+
+We built a firebase extension for the easy management of firebase. Install the following version.
+
+[Install Easy Extension Beta (0.1.8-beta.2)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.8-beta.2)
+
+This is a must firebase extension for the fireflutter to work properly.
+
 ## Security rules
+
+Copy [the security rules of fireflutter](https://raw.githubusercontent.com/thruthesky/fireflutter/main/firebase/firestore/firestore.rules) and paste it in your firebase project. You may need to copy only the parts of the necessary security rules.
+
 
 
 ### Security rule for admin
