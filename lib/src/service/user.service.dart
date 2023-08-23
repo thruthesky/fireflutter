@@ -4,6 +4,13 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
+/// [my] is an alias of [UserService.instance.user].
+///
+/// 예제
+/// UserService.instance.documentChanges.listen((user) => user == null ? null : print(my));
+/// my.update(state: stateController.text);
+User get my => UserService.instance.user;
+
 class UserService with FirebaseHelper {
   static UserService? _instance;
   static UserService get instance => _instance ??= UserService._();
@@ -66,9 +73,14 @@ class UserService with FirebaseHelper {
   /// - if `exists: false`, it means, the user has logged in, and the app tried to load the docuemnt, but document does not exist.
   User? nullableUser;
 
-  /// nullableUser 의 getter 로 null operator 가 강제 적용된 것이다. 즉, nullableUser 이 null 이면
-  /// Null check operator used on a null value 에러가 발생한다. 만약, 이 에러를 피하려면, 그냥
-  /// nullableUser 을 쓰면 된다.
+  /// [nullableUser] 의 getter 로 물음표(?) 없이 간단하게 쓰기 위한 것으로 null operator 가 강제 적용된
+  /// 것이다. 따라서, [nullableUser] 이 null 인데, [user] 를 사용하면, Null check operator used
+  /// on a null value 에러가 발생한다. 만약, 이 에러를 피하려면, 그냥 nullableUser 을 쓰거나,
+  /// [documentChanges] 를 통해서 값이 있는 경우만 쓰면 된다.
+  ///
+  /// 예를 들면 아래의 코드와 같다. 앱이 최초 로딩 할 때, [my] 또는 [user] 를 쓰면 nullableUser 가 null 이므로
+  /// 에러가 나는데, 아래와 같이 하면 에러가 발생하지 않는다.
+  /// UserService.instance.documentChanges.listen((user) => user == null ? null : print(my));
   ///
   User get user => nullableUser!;
 

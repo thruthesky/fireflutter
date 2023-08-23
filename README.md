@@ -98,7 +98,7 @@ Please follow the instructions below to install the fireflutter.
 
 We built a firebase extension for the easy management of firebase. Install the following version.
 
-[Install Easy Extension Beta (0.1.8-beta.2)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.8-beta.2)
+[Install Easy Extension Beta (0.1.9-beta.1)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.9-beta.1)
 
 This is a must firebase extension for the fireflutter to work properly.
 

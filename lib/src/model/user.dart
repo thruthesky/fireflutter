@@ -29,7 +29,8 @@ class User with FirebaseHelper {
   final String phoneNumber;
   final String email;
 
-  /// 상태. 개인의 상태. 예를 들어, 휴가중. 또는 모토. 인생은 모험이 아니면 아무것도 아닙니다.
+  /// User state. It's like user's status or mood, motto. You can save whatever here.
+  /// 상태. 개인의 상태, 무드, 인사말 등. 예를 들어, 휴가중. 또는 모토. 인생은 모험이 아니면 아무것도 아닙니다.
   final String state;
 
   final int birthYear;
