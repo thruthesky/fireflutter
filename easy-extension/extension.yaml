@@ -101,6 +101,27 @@ resources:
         resource: projects/${PROJECT_ID}
       runtime: "nodejs18"
 
+  - name: userSyncBackFillingTask
+    type: firebaseextensions.v1beta.function
+    description: >-
+      This function will backfill(sync) the user documents in firestore /user collection
+      into /user_search_data in firestore and /users node in reatime database.
+    properties:
+      location: ${LOCATION}
+      timeout: 540s
+      runtime: "nodejs18"
+      taskQueueTrigger: {}
+lifecycleEvents:
+  onInstall:
+    function: userSyncBackFillingTask
+    processingMessage: Backfills user searchable fields on install
+  onUpdate:
+    function: userSyncBackFillingTask
+    processingMessage: Backfills user searchable fields on install
+  onConfigure:
+    function: userSyncBackFillingTask
+    processingMessage: Backfills user searchable fields on install
+
 # In the `params` field, set up your extension's user-configured parameters.
 # Learn more in the docs:
 # https://firebase.google.com/docs/extensions/reference/extension-yaml#params-field
@@ -122,6 +143,18 @@ params:
     type: string
     default: name,firstName,photoUrl,birthYear,birthMonth,birthDay,createdAt
     required: true
+
+  - param: USER_SYNC_FIELDS_BACKFILL
+    label: Backfill existing user documents
+    description: >
+      Should existing documents backfill(sync) to /user_search_data in firestore and /users in realtime database?
+    type: select
+    options:
+      - label: Yes
+        value: yes
+      - label: No
+        value: no
+    default: yes
 
   - param: CREATE_USER_DOCUMENT
     label: Create user document on user create

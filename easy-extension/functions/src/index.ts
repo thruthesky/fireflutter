@@ -1,6 +1,7 @@
 
 
 import { initializeApp } from "firebase-admin/app";
+import { getExtensions } from "firebase-admin/extensions";
 import {
   DocumentSnapshot,
   WriteResult,
@@ -39,6 +40,29 @@ export const userSync = functions.firestore.document(Config.userCollectionName +
     return null;
   });
 
+export const userSyncBackFillingTask = functions.tasks.taskQueue()
+  .onDispatch(async () => {
+
+    const runtime = getExtensions().runtime();
+    if (Config.userSyncFieldsBackfill == false) {
+      await runtime.setProcessingState(
+        "PROCESSING_COMPLETE",
+        "Existing documents were not backfilled because 'Backfill options' was configured to no." +
+        " If you want to backfill existing documents, reconfigure this instance."
+      );
+      return;
+    }
+
+
+    // When processing is complete, report status to the user (see below).
+    //
+    await runtime.setProcessingState(
+      "PROCESSING_COMPLETE",
+      `Successfully resized $successCount images.`
+    );
+
+    functions.logger.info("Done backfilling to user searchable fields from /users firestore collection");
+  });
 
 
 /**
