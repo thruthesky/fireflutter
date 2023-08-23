@@ -15,6 +15,7 @@
   - [Get user](#get-user)
 - [User management](#user-management)
   - [User Sync](#user-sync)
+  - [User Sync Backfill](#user-sync-backfill)
 - [Forum management](#forum-management)
 - [Error handling](#error-handling)
 - [Deploy](#deploy)
@@ -359,6 +360,12 @@ You can search `hasPhotoUrl` if you sync the `photoUrl` field. Or `hasPhotoUrl` 
 Note that, even if the searchable field is set to blank, the `userSync` function will be called. The function may not do anything but costs. As you may know it costs $0.4 USD per each 2 million time call with the free tier of 2 million call every month. We are in the way of finding a way for not wasting any single dime.
 
 It is recommended to cache in the memory with the documents under `/user_search_data` collection in the client end to prevent the extra pulling from Firestore. If you wish, you can use `/users` in realtime database to observe or to display since it costs less than firestore.
+
+
+## User Sync Backfill
+
+To re-sync existing user documents when you install/update/re-configure the easy-extension, set the backfill option to 'yes'. If the option is set to 'yes', it will delete all the synced data and re-sync.
+
 
 
 
