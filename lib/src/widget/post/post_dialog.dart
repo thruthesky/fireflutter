@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/functions/comment_sort_string.dart';
 import 'package:fireflutter/src/model/comment.dart';
 import 'package:fireflutter/src/model/post.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class PostDialog extends StatefulWidget {
 class _PostDialogState extends State<PostDialog> {
   Post? post;
   bool _showCommentBox = false; // TODO
+  Map<int, String> lastSortPerDepth = {};
 
   CommentBoxController commentBox = CommentBoxController();
 
@@ -146,6 +148,16 @@ class _PostDialogState extends State<PostDialog> {
                         onShowReplyBox: (comment) {
                           showCommentBox(comment: comment);
                         },
+                        onCommentDisplay: (comment) {
+                          // commentBox.lastRootComment = comment; // TODO list of the lasts
+                          if (lastSortPerDepth[comment.depth]?.compareTo(comment.sort) == -1) {
+                            lastSortPerDepth[comment.depth] = comment.sort;
+                          }
+                          // TODO continue here.. ian
+                          debugPrint('DARTSTRING ---->>> ${("1".compareTo("2"))}');
+                          debugPrint(
+                              'Got last sort ${comment.sort} expected next is ${generateCommentSort(sortString: comment.sort)}');
+                        },
                       ),
                     ],
                   ),
@@ -160,7 +172,8 @@ class _PostDialogState extends State<PostDialog> {
                         controller: commentBox,
                         postId: widget.post.id,
                         onSubmit: () {
-                          showCommentBox();
+                          // TODO get last sort
+                          hideCommentBox();
                         },
                       ),
                     ),
@@ -177,10 +190,17 @@ class _PostDialogState extends State<PostDialog> {
   void showCommentBox({Comment? comment}) {
     setState(() {
       _showCommentBox = true;
-      if (comment != null) {
-        commentBox.labelText = 'Reply';
-        commentBox.hintText = 'Replying to a Comment';
-      }
+    });
+    if (comment != null) {
+      commentBox.labelText = 'Reply';
+      commentBox.hintText = 'Replying to a Comment ${comment.content}';
+      commentBox.replyTo = comment;
+    }
+  }
+
+  void hideCommentBox() {
+    setState(() {
+      _showCommentBox = false;
     });
   }
 }

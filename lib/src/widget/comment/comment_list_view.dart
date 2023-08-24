@@ -26,6 +26,7 @@ class CommentListView extends StatefulWidget {
     this.replyingTo,
     this.label,
     this.onShowReplyBox,
+    this.onCommentDisplay,
   });
 
   final int pageSize;
@@ -45,6 +46,7 @@ class CommentListView extends StatefulWidget {
   final String? replyingTo;
   final String? label;
   final Function(Comment comment)? onShowReplyBox;
+  final Function(Comment comment)? onCommentDisplay;
 
   @override
   State<CommentListView> createState() => CommentListViewState();
@@ -70,7 +72,7 @@ class CommentListViewState extends State<CommentListView> {
           query: CommentService.instance.commentCol.where("postId", isEqualTo: widget.postId).orderBy("sort"),
           itemBuilder: (context, QueryDocumentSnapshot snapshot) {
             final comment = Comment.fromDocumentSnapshot(snapshot);
-            if (widget.replyingTo == null && comment.replyTo != null) return const SizedBox.shrink();
+            widget.onCommentDisplay?.call(comment);
             if (widget.itemBuilder != null) {
               return widget.itemBuilder!(context, comment);
             } else {

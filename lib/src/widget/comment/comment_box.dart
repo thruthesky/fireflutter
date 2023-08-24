@@ -53,11 +53,11 @@ class CommentBoxState extends State<CommentBox> {
 
   @override
   void initState() {
+    super.initState();
     widget.controller?.state = this;
     widget.controller?.addListener(() {
-      setState(() {});
+      // listener for updates in the controller
     });
-    super.initState();
   }
 
   @override
@@ -108,8 +108,8 @@ class CommentBoxState extends State<CommentBox> {
               onPressed: () {
                 if (content.text.isNotEmpty) {
                   // TODO send comment service
-                  CommentService.instance
-                      .createComment(postId: widget.postId, content: content.text, replyTo: widget.replyTo);
+                  // CommentService.instance.createComment(
+                  //     postId: widget.postId, content: content.text, replyTo: replyTo, lastRootComment: lastRootComment);
                   // TODO show the comment blink, scroll to the comment
                   content.text = '';
                   widget.onSubmit?.call();
