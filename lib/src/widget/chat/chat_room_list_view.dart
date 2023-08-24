@@ -31,6 +31,10 @@ class ChatRoomListViewController {
 /// [itemExtent] If you want to set the height of each item, use [itemExtent].
 /// It is the same as [ListView.itemExtent]. Default is 68. It can be a null.
 ///
+/// [visibility] If you want to hide the list, set [visibility] to false.
+/// Note that, if you set [itemExtent] and [visibility] together, it will not
+/// work and an assertion will happen.
+///
 class ChatRoomListView extends StatefulWidget {
   const ChatRoomListView({
     super.key,
@@ -53,7 +57,8 @@ class ChatRoomListView extends StatefulWidget {
     this.itemExtent = 64,
     this.avatarSize = 46,
     this.scrollDirection = Axis.vertical,
-  });
+    this.visibility,
+  }) : assert(itemExtent == null || visibility == null, "You can't set both itemExtent and visibility");
 
   final ChatRoomListViewController controller;
   final int pageSize;
@@ -78,6 +83,8 @@ class ChatRoomListView extends StatefulWidget {
   final double avatarSize;
 
   final Axis scrollDirection;
+
+  final bool Function(Room)? visibility;
 
   // final void Function(Room) onTap;
 
@@ -131,6 +138,11 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
       itemExtent: widget.itemExtent,
       itemBuilder: (context, QueryDocumentSnapshot snapshot) {
         final room = Room.fromDocumentSnapshot(snapshot);
+
+        if (widget.visibility != null && widget.visibility!(room) == false) {
+          return const SizedBox();
+        }
+
         if (widget.itemBuilder != null) {
           return widget.itemBuilder!(context, room);
         } else {

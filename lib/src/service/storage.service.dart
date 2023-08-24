@@ -31,11 +31,12 @@ class StorageService with FirebaseHelper {
   /// 이 값이 22 이면, 10M 짜리 파일이 140Kb 로 작아진다.
   /// 이 값이 70 이면, 30M 짜리 파일이 1M 로 작아진다.
   /// 이 값이 80 이면, 10M 짜리 파일이 700Kb 로 작아진다. 80 이면 충분하다. 기본 값이다.
-  /// 이 값이 0 이면, compress 를 하지 않는다.
+  /// 이 값이 0 이면, compress 를 하지 않는다. 즉, 원본 사진을 그대로 올린다.
   ///
   /// [saveAs] is the path for the uploaded file to be saved in Firebase Storage.
   /// If it is null, it will be uploaded to the default path.
   ///
+  /// TODO support 'error' handler.
   ///
   Future<String?> upload({
     Function(double)? progress,
@@ -69,7 +70,7 @@ class StorageService with FirebaseHelper {
     /// 업로드 완료 할 때까지 기다림
     await uploadTask.whenComplete(() => complete?.call());
     final url = await fileRef.getDownloadURL();
-    print(fileRef.fullPath);
+    // print(fileRef.fullPath);
 
     return url;
   }

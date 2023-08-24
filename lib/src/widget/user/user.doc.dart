@@ -18,6 +18,12 @@ import 'package:flutter/material.dart';
 ///
 /// [user] 화면 반짝임을 줄이기 위해서, 사용자 model 이 있으면 전달하면 된다. 이 때, onLoaing 은 호출되지 않고,
 /// 입력된 user model 을 사용해서 화면에 그린다.
+/// ```dart
+/// UserDoc(
+///   user: widget.user,
+///   builder: (user) {
+///```
+/// 주의, [user] 에 값을 지정하고, [uid] 값을 지정하지 않으면, [user] 의 uid 를 사용해서 화면을 그린다.
 ///
 /// [documentNotExistBuilder] 사용자 문서 존재하지 않는 경우 호출되는 콜백 함수
 /// 문서를 읽고 있는 동안에는 이 함수가 호출되지 않고, 완전히 읽고 난 다음 문서가 없으면, 호출된다.
@@ -34,6 +40,14 @@ import 'package:flutter/material.dart';
 /// false 가 되어 실시간 업데이트를 하지 않는다.
 /// 명시적으로 live 업데이트를 하고 싶다면
 ///
+/// 조건
+/// live == true && uid == null 이면, 내 정보 실시간 업데이트
+/// live == true && uid != null 이면, 다른 사용자 정보 실시간 업데이트
+///
+/// live == false && uid == null 이면, 내 정보 한번만 가져와 표시
+/// live == false && uid != null 이면, 다른 사용자 정보 한번만 가져와 표시
+///
+/// user != null 이면, uid 가 user.uid 값으로 설정된다. 즉, uid 지정을 안해도 user.uid 값으로 사용한다.
 ///
 ///
 class UserDoc extends StatelessWidget {
@@ -43,7 +57,7 @@ class UserDoc extends StatelessWidget {
     required this.builder,
     this.documentNotExistBuilder,
     this.onLoading,
-    this.live,
+    this.live = false,
     this.user,
   });
   final String? uid;
@@ -52,21 +66,23 @@ class UserDoc extends StatelessWidget {
   final Widget? onLoading;
   final User? user;
 
-  final bool? live;
+  final bool live;
 
   String get currentUserUid => fa.FirebaseAuth.instance.currentUser!.uid;
 
+  String? get userUid => user?.uid ?? uid;
+
   @override
   Widget build(BuildContext context) {
-    return live ?? uid == null
+    return live != true || userUid == null
         // live update
         ? StreamBuilder<User?>(
-            stream: uid == null ? UserService.instance.snapshot : UserService.instance.snapshotOther(uid!),
+            stream: userUid == null ? UserService.instance.snapshot : UserService.instance.snapshotOther(userUid!),
             builder: buildStreamWidget,
           )
         // update one time
         : FutureBuilder<User?>(
-            future: UserService.instance.get(uid ?? currentUserUid, sync: uid != null),
+            future: UserService.instance.get(userUid ?? currentUserUid, sync: userUid != null),
             builder: buildStreamWidget,
           );
   }
