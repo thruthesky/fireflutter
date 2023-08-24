@@ -53,11 +53,11 @@ class CommentBoxState extends State<CommentBox> {
 
   @override
   void initState() {
-    super.initState();
-    labelText = widget.labelText;
-    replyTo = widget.replyTo;
-    hintText = widget.hintText;
     widget.controller?.state = this;
+    widget.controller?.addListener(() {
+      setState(() {});
+    });
+    super.initState();
   }
 
   @override

@@ -18,9 +18,9 @@ class PostDialog extends StatefulWidget {
 
 class _PostDialogState extends State<PostDialog> {
   Post? post;
-  bool _showCommentBox = false;
+  bool _showCommentBox = false; // TODO
 
-  CommentBoxController? commentBox;
+  CommentBoxController commentBox = CommentBoxController();
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +139,6 @@ class _PostDialogState extends State<PostDialog> {
                         ),
                       ),
                       CommentListView(
-                        // TODO controller to close all the reply boxes
                         label: 'Comments',
                         postId: widget.post.id,
                         shrinkWrap: true,
@@ -153,6 +152,7 @@ class _PostDialogState extends State<PostDialog> {
                 ),
                 Visibility(
                   visible: _showCommentBox,
+                  maintainState: true,
                   child: SafeArea(
                     child: Padding(
                       padding: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
@@ -160,9 +160,7 @@ class _PostDialogState extends State<PostDialog> {
                         controller: commentBox,
                         postId: widget.post.id,
                         onSubmit: () {
-                          setState(() {
-                            _showCommentBox = false;
-                          });
+                          showCommentBox();
                         },
                       ),
                     ),
@@ -177,13 +175,12 @@ class _PostDialogState extends State<PostDialog> {
   }
 
   void showCommentBox({Comment? comment}) {
-    commentBox?.labelText = 'Reply';
     setState(() {
       _showCommentBox = true;
+      if (comment != null) {
+        commentBox.labelText = 'Reply';
+        commentBox.hintText = 'Replying to a Comment';
+      }
     });
-    debugPrint("Replying to ${comment?.content}");
-    debugPrint("Label Text ${commentBox?.labelText}");
-
-    /// TODO controll the comment box labels
   }
 }
