@@ -86,8 +86,8 @@ class CommentBoxState extends State<CommentBox> {
                   maxLines: 2,
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
-                    labelText: widget.labelText ?? 'Comment',
-                    hintText: widget.hintText ?? 'Write a comment...',
+                    labelText: labelText ?? 'Comment',
+                    hintText: hintText ?? 'Write a comment...',
                   ),
                 ),
               ),

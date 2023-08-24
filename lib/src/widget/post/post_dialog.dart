@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/model/comment.dart';
 import 'package:fireflutter/src/model/post.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,9 @@ class PostDialog extends StatefulWidget {
 class _PostDialogState extends State<PostDialog> {
   Post? post;
   bool _showCommentBox = false;
+
+  CommentBoxController? commentBox;
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
@@ -128,11 +132,7 @@ class _PostDialogState extends State<PostDialog> {
                             TextButton(
                               child: const Text('Comment'),
                               onPressed: () {
-                                setState(() {
-                                  _showCommentBox = true;
-                                  // TODO Hide other
-                                });
-                                debugPrint('Comment Open it');
+                                showCommentBox();
                               },
                             ),
                           ],
@@ -145,10 +145,7 @@ class _PostDialogState extends State<PostDialog> {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         onShowReplyBox: (comment) {
-                          // TODO use this comment to reply to it
-                          setState(() {
-                            _showCommentBox = false;
-                          });
+                          showCommentBox(comment: comment);
                         },
                       ),
                     ],
@@ -160,6 +157,7 @@ class _PostDialogState extends State<PostDialog> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
                       child: CommentBox(
+                        controller: commentBox,
                         postId: widget.post.id,
                         onSubmit: () {
                           setState(() {
@@ -176,5 +174,16 @@ class _PostDialogState extends State<PostDialog> {
         );
       },
     );
+  }
+
+  void showCommentBox({Comment? comment}) {
+    commentBox?.labelText = 'Reply';
+    setState(() {
+      _showCommentBox = true;
+    });
+    debugPrint("Replying to ${comment?.content}");
+    debugPrint("Label Text ${commentBox?.labelText}");
+
+    /// TODO controll the comment box labels
   }
 }
