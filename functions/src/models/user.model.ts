@@ -175,6 +175,8 @@ export class UserModel {
       data['hasPhotoUrl'] = false;
     }
 
+
+
     // save it to user_search_data
     await admin.firestore().collection('user_search_data').doc(uid).set(data);
 
