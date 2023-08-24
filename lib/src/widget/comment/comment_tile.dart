@@ -7,17 +7,17 @@ class CommentTileControlller extends ChangeNotifier {
   CommentTileState? state;
 
   showReplyBox() {
-    state?._showReply = true;
+    state?.showReplyBox();
     notifyListeners();
   }
 
   hideReplyBox() {
-    state?._showReply = false;
+    state?.hideReplyBox();
     notifyListeners();
   }
 
   toggleReplyBox() {
-    state?._showReply = !(state?._showReply ?? true);
+    state?.toggleReplyBox();
     notifyListeners();
   }
 }
@@ -29,13 +29,15 @@ class CommentTile extends StatefulWidget {
     this.onTap,
     this.replyItemBuilder,
     this.onShowReplyBox,
+    this.onHideReplyBox,
     this.controller,
   });
 
   final Comment comment;
   final Function(Comment comment)? onTap;
   final Widget Function(BuildContext, Comment)? replyItemBuilder;
-  final Function()? onShowReplyBox;
+  final Function(Comment comment)? onShowReplyBox;
+  final Function(Comment comment)? onHideReplyBox;
   final CommentTileControlller? controller;
 
   @override
@@ -98,10 +100,7 @@ class CommentTileState extends State<CommentTile> {
                     TextButton(
                       child: const Text('Reply'),
                       onPressed: () {
-                        widget.onShowReplyBox?.call();
-                        setState(() {
-                          _showReply = !_showReply;
-                        });
+                        showReplyBox();
                       },
                     ),
                     // TODO make bottom action buttons customizer
@@ -111,62 +110,26 @@ class CommentTileState extends State<CommentTile> {
             )
           ],
         ),
-
-        // TODO replyItemBuilder
-
-        // TODO default comment tree
-
-        Row(
-          children: [
-            SizedBox.fromSize(
-              size: const Size(30, 0),
-            ),
-            Expanded(
-              child: CommentListView(
-                postId: widget.comment.postId,
-                replyingTo: widget.comment.id,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                emptyBuilder: (context) {
-                  return const SizedBox.shrink();
-                },
-                itemBuilder: widget.replyItemBuilder,
-                onShowReplyBox: () {
-                  // On show Reply
-                  widget.onShowReplyBox?.call();
-                },
-              ),
-            ),
-          ],
-        ),
-        // TODO comment box here
-        Visibility(
-          visible: _showReply,
-          child: Row(
-            children: [
-              SizedBox.fromSize(
-                size: const Size(30, 0),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                  child: CommentBox(
-                    postId: widget.comment.postId,
-                    replyTo: widget.comment.id,
-                    labelText: 'Reply',
-                    hintText: 'Write a reply...',
-                    onSubmit: () {
-                      setState(() {
-                        _showReply = false;
-                      });
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
       ],
     );
+  }
+
+  showReplyBox() {
+    setState(() {
+      _showReply = true;
+    });
+    widget.onShowReplyBox?.call(widget.comment);
+  }
+
+  hideReplyBox() {
+    setState(() {
+      _showReply = false;
+    });
+    widget.onHideReplyBox?.call(widget.comment);
+  }
+
+  toggleReplyBox() {
+    _showReply = !_showReply;
+    _showReply ? widget.onShowReplyBox?.call(widget.comment) : widget.onHideReplyBox?.call(widget.comment);
   }
 }

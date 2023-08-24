@@ -8,14 +8,6 @@ import 'package:fireflutter/src/service/comment.service.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class CommentListViewController extends ChangeNotifier {
-  CommentListViewState? state;
-
-  hideAllReplyBox() {
-    // TODO hide all reply box
-  }
-}
-
 class CommentListView extends StatefulWidget {
   const CommentListView({
     super.key,
@@ -34,7 +26,6 @@ class CommentListView extends StatefulWidget {
     this.replyingTo,
     this.label,
     this.onShowReplyBox,
-    this.controller,
   });
 
   final int pageSize;
@@ -51,11 +42,9 @@ class CommentListView extends StatefulWidget {
   final Clip clipBehavior;
   final String postId;
 
-  final CommentListViewController? controller;
-
   final String? replyingTo;
   final String? label;
-  final Function()? onShowReplyBox;
+  final Function(Comment comment)? onShowReplyBox;
 
   @override
   State<CommentListView> createState() => CommentListViewState();
@@ -77,9 +66,8 @@ class CommentListViewState extends State<CommentListView> {
           ),
         ],
         FirestoreListView(
-          query: widget.replyingTo == null
-              ? CommentService.instance.commentCol.where("postId", isEqualTo: widget.postId).orderBy("createdAt")
-              : CommentService.instance.commentCol.where("replyTo", isEqualTo: widget.replyingTo).orderBy("createdAt"),
+          // todo indentation
+          query: CommentService.instance.commentCol.where("postId", isEqualTo: widget.postId).orderBy("sort"),
           itemBuilder: (context, QueryDocumentSnapshot snapshot) {
             final comment = Comment.fromDocumentSnapshot(snapshot);
             if (widget.replyingTo == null && comment.replyTo != null) return const SizedBox.shrink();
@@ -88,8 +76,8 @@ class CommentListViewState extends State<CommentListView> {
             } else {
               return CommentTile(
                 comment: comment,
-                onShowReplyBox: () {
-                  widget.onShowReplyBox?.call();
+                onShowReplyBox: (comment) {
+                  widget.onShowReplyBox?.call(comment);
                 },
               );
             }

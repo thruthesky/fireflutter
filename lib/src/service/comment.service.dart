@@ -10,13 +10,13 @@ class CommentService with FirebaseHelper {
     required String postId,
     required String content,
     List<String>? files,
-    String? replyTo,
+    Comment? replyTo,
   }) {
     return Comment.create(
       postId: postId,
       content: content,
       files: files,
-      replyTo: replyTo,
+      replyTo: replyTo?.id,
     );
   }
 }

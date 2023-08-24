@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fireflutter/src/functions/comment_sort_string.dart';
 import 'package:fireflutter/src/mixin/firebase_helper.mixin.dart';
 import 'package:fireflutter/src/service/comment.service.dart';
 
@@ -16,6 +17,8 @@ class Comment with FirebaseHelper {
   final List<dynamic> likes;
   final bool? deleted;
   final String? replyTo;
+  final String sort;
+  final int depth;
 
   Comment({
     required this.id,
@@ -28,6 +31,8 @@ class Comment with FirebaseHelper {
     required this.likes,
     this.deleted,
     this.replyTo,
+    required this.sort,
+    required this.depth,
   });
 
   factory Comment.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
@@ -46,6 +51,9 @@ class Comment with FirebaseHelper {
       likes: map['likes'] ?? [],
       deleted: map['deleted'],
       replyTo: map['replyTo'],
+      // TODO put the last sort here? so that the dirty records go down? or not?
+      sort: map['sort'] ?? fillBlocksIfEmpty(blocks: sortBlocks),
+      depth: map['depth'] ?? 0,
     );
   }
 
@@ -54,6 +62,8 @@ class Comment with FirebaseHelper {
     required String content,
     List<String>? files,
     String? replyTo,
+    String? sort, // sort Of which comment to reply
+    int depth = 0,
   }) async {
     String myUid = FirebaseAuth.instance.currentUser!.uid;
     final Map<String, dynamic> commentData = {
@@ -64,6 +74,8 @@ class Comment with FirebaseHelper {
       'updatedAt': FieldValue.serverTimestamp(),
       'uid': myUid,
       if (replyTo != null) 'replyTo': replyTo,
+      'sort': generateCommentSort(sortString: sort, depth: depth),
+      'depth': depth,
     };
     final commentId = CommentService.instance.commentCol.doc().id;
     await CommentService.instance.commentCol.doc(commentId).set(commentData);
@@ -74,5 +86,5 @@ class Comment with FirebaseHelper {
 
   @override
   String toString() =>
-      'Comment(id: $id, postId: $postId, content: $content, uid: $uid, files: $files, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted, replyTo: $replyTo)';
+      'Comment(id: $id, postId: $postId, content: $content, uid: $uid, files: $files, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted, replyTo: $replyTo, sort: $sort, depth: $depth)';
 }

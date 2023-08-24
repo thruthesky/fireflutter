@@ -1,29 +1,70 @@
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/model/comment.dart';
 import 'package:fireflutter/src/service/comment.service.dart';
 import 'package:flutter/material.dart';
 
+class CommentBoxController extends ChangeNotifier {
+  CommentBoxState? state;
+
+  String? get labelText => state?.labelText;
+  String? get hintText => state?.hintText;
+  Comment? get replyTo => state?.replyTo;
+
+  set labelText(String? labelText) {
+    state?.labelText = labelText;
+    notifyListeners();
+  }
+
+  set hintText(String? hintText) {
+    state?.hintText = hintText;
+    notifyListeners();
+  }
+
+  set replyTo(Comment? replyTo) {
+    state?.replyTo = replyTo;
+    notifyListeners();
+  }
+
+  // TODO blink animate? or show dance (to show the user that reply is added)?
+}
+
 class CommentBox extends StatefulWidget {
-  const CommentBox({
-    super.key,
-    required this.postId,
-    this.replyTo,
-    this.labelText,
-    this.hintText,
-    this.onSubmit,
-  });
+  const CommentBox(
+      {super.key, required this.postId, this.replyTo, this.labelText, this.hintText, this.onSubmit, this.controller});
 
   final String postId;
-  final String? replyTo;
+  final Comment? replyTo;
   final String? labelText;
   final String? hintText;
   final Function()? onSubmit;
 
+  final CommentBoxController? controller;
+
   @override
-  State<CommentBox> createState() => _CommentBoxState();
+  State<CommentBox> createState() => CommentBoxState();
 }
 
-class _CommentBoxState extends State<CommentBox> {
+class CommentBoxState extends State<CommentBox> {
   TextEditingController content = TextEditingController();
+
+  String? labelText;
+  String? hintText;
+  Comment? replyTo;
+
+  @override
+  void initState() {
+    super.initState();
+    labelText = widget.labelText;
+    replyTo = widget.replyTo;
+    hintText = widget.hintText;
+    widget.controller?.state = this;
+  }
+
+  @override
+  void dispose() {
+    widget.controller?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
