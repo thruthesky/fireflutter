@@ -2,13 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/functions/comment_sort_string.dart';
-import 'package:fireflutter/src/mixin/firebase_helper.mixin.dart';
 import 'package:fireflutter/src/service/comment.service.dart';
 
 class Comment with FirebaseHelper {
   final String id;
   final String postId;
-  // TODO reply comment ID
   final String content;
   @override
   final String uid;
@@ -60,12 +58,12 @@ class Comment with FirebaseHelper {
     );
   }
 
-  static Future<Comment> create({
+  static Comment create({
     required Post post,
     Comment? parent,
     required String content,
     List<String>? files,
-  }) async {
+  }) {
     String myUid = FirebaseAuth.instance.currentUser!.uid;
     final Map<String, dynamic> commentData = {
       'content': content,
@@ -79,10 +77,8 @@ class Comment with FirebaseHelper {
           getCommentSortString(noOfComments: post.noOfComments, depth: parent?.depth ?? 0, sortString: parent?.sort),
       'depth': parent == null ? 1 : parent.depth + 1,
     };
-    await CommentService.instance.commentCol.add(commentData);
-    await PostService.instance.postCol.doc(post.id).update({
-      'noOfComments': FieldValue.increment(1),
-    });
+    CommentService.instance.commentCol.add(commentData);
+    PostService.instance.postCol.doc(post.id).update({'noOfComments': FieldValue.increment(1)});
     return Comment.fromMap(map: commentData, id: post.id);
   }
 

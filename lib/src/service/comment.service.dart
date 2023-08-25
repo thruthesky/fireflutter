@@ -6,7 +6,7 @@ class CommentService with FirebaseHelper {
   static CommentService get instance => _instance ??= CommentService._();
   CommentService._();
 
-  Future<Comment> createComment({
+  Comment createComment({
     required Post post,
     required String content,
     List<String>? files,
