@@ -34,7 +34,8 @@ class UserService with FirebaseHelper {
           if (!documentSnapshot.exists || documentSnapshot.data() == null) {
             nullableUser = User(uid: '', exists: false);
           } else {
-            nullableUser = User.fromDocumentSnapshot(documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
+            nullableUser = User.fromDocumentSnapshot(
+                documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
           }
           documentChanges.add(nullableUser);
         });
@@ -97,7 +98,10 @@ class UserService with FirebaseHelper {
   /// Use this to display widgets lively that depends on the user model. When
   /// the user document is updated, this stream will fire an event.
   Stream<User> get snapshot {
-    return UserService.instance.col.doc(uid).snapshots().map((doc) => User.fromDocumentSnapshot(doc));
+    return UserService.instance.col
+        .doc(uid)
+        .snapshots()
+        .map((doc) => User.fromDocumentSnapshot(doc));
   }
 
   /// Returns the stream of the user model for the user uid.
@@ -109,7 +113,8 @@ class UserService with FirebaseHelper {
   Stream<User> snapshotOther(String uid) {
     return UserService.instance.rtdb.ref().child('/users/$uid').onValue.map(
       (event) {
-        return User.fromMap(map: Map<String, dynamic>.from((event.snapshot.value ?? {}) as Map), id: uid);
+        return User.fromMap(
+            map: Map<String, dynamic>.from((event.snapshot.value ?? {}) as Map), id: uid);
       },
     );
   }
@@ -228,4 +233,29 @@ class UserService with FirebaseHelper {
 
     return nullableUser;
   }
-}
+
+  /// Returns a Stream of User model for the current login user.
+  ///
+  /// Use this with [StreamBuilder] for real time update(listen) of the login user document.
+  ///
+  /// Example
+  /// ```dart
+  /// StreamBuilder<User?>(
+  ///   stream: UserService.instance.listen(widget.user.uid),
+  ///   builder: (context, snapshot) {
+  ///     user = snapshot.data!;
+  /// ```
+  ///
+  /// Note that, you can use [UserDoc] for real time update of the user document.
+  Stream<User?> listen() {
+    return doc
+        .withConverter<User>(
+          fromFirestore: (snapshot, _) => User.fromDocumentSnapshot(snapshot),
+          toFirestore: (user, _) => user.toMap(),
+        )
+        .snapshots()
+        .map(
+          (event) => event.data(),
+        );
+  }
+} // EO UserService
