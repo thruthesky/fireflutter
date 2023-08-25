@@ -25,7 +25,6 @@ class _PostDialogState extends State<PostViewDialog> {
         if (snapshot.hasError) return Text(snapshot.error.toString());
 
         if (snapshot.connectionState == ConnectionState.waiting) post = widget.post;
-
         if (snapshot.hasData) post = Post.fromDocumentSnapshot(snapshot.data!);
 
         return Scaffold(
@@ -75,9 +74,10 @@ class _PostDialogState extends State<PostViewDialog> {
           ),
           body: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                  padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
                   child: Text.rich(
                     TextSpan(
                       text: post.title,

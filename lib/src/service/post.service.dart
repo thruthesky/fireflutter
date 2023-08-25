@@ -46,13 +46,13 @@ class PostService with FirebaseHelper {
   }
 
   Future<void> editPost({
-    required String postId,
+    required Post post,
     required String title,
     required String content,
     List<String>? files,
   }) {
     return Post.update(
-      postId: postId,
+      post: post,
       title: title,
       content: content,
       files: files,

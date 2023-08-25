@@ -76,17 +76,14 @@ class _EditPostDialogState extends State<EditPostDialog> {
             children: [
               ElevatedButton(
                 child: const Text('Update'),
-                onPressed: () async {
+                onPressed: () {
                   if (title.text.isNotEmpty && content.text.isNotEmpty) {
-                    PostService.instance
-                        .editPost(
-                      postId: widget.post.id,
+                    PostService.instance.editPost(
+                      post: widget.post,
                       title: title.text,
                       content: content.text,
-                    )
-                        .then((value) {
-                      Navigator.pop(context);
-                    });
+                    );
+                    Navigator.pop(context);
                   }
                 },
               ),

@@ -80,7 +80,7 @@ class Post with FirebaseHelper {
   }
 
   static Future<void> update({
-    required String postId,
+    required Post post,
     required String title,
     required String content,
     List<String>? files,
@@ -92,7 +92,7 @@ class Post with FirebaseHelper {
       if (files == null) 'files': FieldValue.delete(),
       'updatedAt': FieldValue.serverTimestamp(),
     };
-    await PostService.instance.postCol.doc(postId).update(postUpdateData);
+    await PostService.instance.postCol.doc(post.id).update(postUpdateData);
   }
 
   @override
