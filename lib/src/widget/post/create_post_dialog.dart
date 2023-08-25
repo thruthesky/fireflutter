@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/post.dart';
 import 'package:flutter/material.dart';
 
 class CreatePostDialog extends StatefulWidget {
@@ -78,18 +77,15 @@ class _CreatePostDialogState extends State<CreatePostDialog> {
             children: [
               ElevatedButton(
                 child: const Text('Post'),
-                onPressed: () async {
+                onPressed: () {
                   if (title.text.isNotEmpty && content.text.isNotEmpty) {
-                    PostService.instance
-                        .createPost(
+                    final post = PostService.instance.createPost(
                       categoryId: widget.category.id,
                       title: title.text,
                       content: content.text,
-                    )
-                        .then((post) {
-                      Navigator.pop(context);
-                      PostService.instance.showPostViewDialog(context, post);
-                    });
+                    );
+                    Navigator.pop(context);
+                    PostService.instance.showPostViewDialog(context, post);
                   }
                 },
               ),
