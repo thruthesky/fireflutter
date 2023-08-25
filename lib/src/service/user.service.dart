@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:fireflutter/fireflutter.dart';
-import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// [my] is an alias of [UserService.instance.user].
@@ -195,6 +194,7 @@ class UserService with FirebaseHelper {
     String? phoneNumber,
     String? email,
     String? state,
+    String? stateImageUrl,
     int? birthYear,
     int? birthMonth,
     int? birthDay,
@@ -217,6 +217,7 @@ class UserService with FirebaseHelper {
       phoneNumber: phoneNumber,
       email: email,
       state: state,
+      stateImageUrl: stateImageUrl,
       birthYear: birthYear,
       birthMonth: birthMonth,
       birthDay: birthDay,
@@ -226,29 +227,5 @@ class UserService with FirebaseHelper {
     );
 
     return nullableUser;
-  }
-
-  /// Returns a Stream of User model for the user uid.
-  ///
-  /// Use this with [StreamBuilder] for real time update(listen) of the user document.
-  ///
-  /// Example
-  /// ```dart
-  /// StreamBuilder<User?>(
-  ///   stream: UserService.instance.listen(widget.user.uid),
-  ///   builder: (context, snapshot) {
-  ///     user = snapshot.data!;
-  /// ```
-  Stream<User?> listen(String uid) {
-    return col
-        .doc(uid)
-        .withConverter<User>(
-          fromFirestore: (snapshot, _) => User.fromDocumentSnapshot(snapshot),
-          toFirestore: (user, _) => user.toMap(),
-        )
-        .snapshots()
-        .map(
-          (event) => event.data(),
-        );
   }
 }

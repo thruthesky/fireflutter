@@ -10,7 +10,7 @@ class ChatRoomListTile extends StatelessWidget {
     required this.room,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.onTap,
-    this.avatarSize = 40,
+    this.avatarSize = 42,
   });
   final Room room;
   final EdgeInsets padding;
@@ -31,7 +31,7 @@ class ChatRoomListTile extends StatelessWidget {
                     uid: otherUserUid(room.users),
                     size: avatarSize,
                     radius: 10,
-                    borderWidth: 1,
+                    borderWidth: 0,
                     borderColor: Colors.grey.shade300,
                   )
                 : SizedBox(

@@ -33,6 +33,9 @@ class User with FirebaseHelper {
   /// 상태. 개인의 상태, 무드, 인사말 등. 예를 들어, 휴가중. 또는 모토. 인생은 모험이 아니면 아무것도 아닙니다.
   final String state;
 
+  /// User public profile title image
+  final String stateImageUrl;
+
   final int birthYear;
   final int birthMonth;
   final int birthDay;
@@ -79,6 +82,7 @@ class User with FirebaseHelper {
     this.phoneNumber = '',
     this.email = '',
     this.state = '',
+    this.stateImageUrl = '',
     this.birthYear = 0,
     this.birthMonth = 0,
     this.birthDay = 0,
@@ -119,6 +123,7 @@ class User with FirebaseHelper {
       phoneNumber: map['phoneNumber'] ?? '',
       email: map['email'] ?? '',
       state: map['state'] ?? '',
+      stateImageUrl: map['stateImageUrl'] ?? '',
       birthYear: map['birthYear'] ?? 0,
       birthMonth: map['birthMonth'] ?? 0,
       birthDay: map['birthDay'] ?? 0,
@@ -141,6 +146,8 @@ class User with FirebaseHelper {
       'idVerifiedCode': idVerifiedCode,
       'phoneNumber': phoneNumber,
       'email': email,
+      'state': state,
+      'stateImageUrl': stateImageUrl,
       'birthYear': birthYear,
       'birthMonth': birthMonth,
       'birthDay': birthDay,
@@ -151,7 +158,7 @@ class User with FirebaseHelper {
 
   @override
   String toString() =>
-      '''User(uid: $uid, isAdmin: $isAdmin, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, idVerifiedCode: $idVerifiedCode, phoneNumber: $phoneNumber, email: $email, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, cached: $cached)''';
+      '''User(uid: $uid, isAdmin: $isAdmin, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, idVerifiedCode: $idVerifiedCode, phoneNumber: $phoneNumber, email: $email, state: $state, stateImageUrl: $stateImageUrl, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, cached: $cached)''';
 
   /// 사용자 문서를 읽어온다.
   ///
@@ -196,6 +203,7 @@ class User with FirebaseHelper {
     String? phoneNumber,
     String? email,
     String? state,
+    String? stateImageUrl,
     int? birthYear,
     int? birthMonth,
     int? birthDay,
@@ -216,6 +224,7 @@ class User with FirebaseHelper {
       if (phoneNumber != null) 'phoneNumber': phoneNumber,
       if (email != null) 'email': email,
       if (state != null) 'state': state,
+      if (stateImageUrl != null) 'stateImageUrl': stateImageUrl,
       if (birthYear != null) 'birthYear': birthYear,
       if (birthMonth != null) 'birthMonth': birthMonth,
       if (birthDay != null) 'birthDay': birthDay,

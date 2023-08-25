@@ -26,6 +26,8 @@ A free, open source, complete, rapid development package for creating Social app
   - [User List View](#user-list-view)
 - [Chat Feature](#chat-feature)
   - [No of new message](#no-of-new-message)
+- [Upload](#upload)
+  - [Photo upload](#photo-upload)
 - [Customization](#customization)
   - [Chat Customization](#chat-customization)
 - [Translation](#translation)
@@ -340,6 +342,19 @@ onPressed() async {
 We save the no of new messages of each users in RTDB. If we save the no of new messages of all users of the room in the chat room document like `{ noOfNewMessages: { uid-A: 1, uid-B 2, ... }}`, there will be performance issue and it will cost more. The problem is the chat room must be listened as a stream for realtime update. And if a user chats there are other users who read. Everytime a user reads a messgae, the chat room docuemnt will be fetched for every user with no reason. This is jus tan extra cost. So, we put the number of new messages under `/chats/{roomId}/noOfNewMessages/{uid}` in RTDB.
 
 
+
+# Upload
+
+## Photo upload
+
+You can upload photo like below. It will display a dialog to choose photo from photo gallery or camera.
+
+```dart
+final url = await StorageService.instance.ask(context: context);
+print(url);
+```
+
+It has options like displaying a progressive percentage.
 
 
 

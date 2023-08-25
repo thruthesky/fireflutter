@@ -60,6 +60,8 @@ class _UserAvatarState extends State<UserAvatar> {
 
   @override
   Widget build(BuildContext context) {
+    // if onTap is null, then, don't capture the gesture event. Just return avatar.
+    if (widget.onTap == null) return _buildAvatar();
     return GestureDetector(
       onTap: widget.onTap,
       child: _buildAvatar(),
