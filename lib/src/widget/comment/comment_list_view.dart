@@ -73,6 +73,8 @@ class CommentListViewState extends State<CommentListView> {
           itemBuilder: (context, QueryDocumentSnapshot snapshot) {
             final comment = Comment.fromDocumentSnapshot(snapshot);
             widget.onCommentDisplay?.call(comment);
+            // Will we have a problem in comments if this paginates?
+            // Since the last comment may not show yet upon loading the screen.
             if (widget.itemBuilder != null) {
               return widget.itemBuilder!(context, comment);
             } else {

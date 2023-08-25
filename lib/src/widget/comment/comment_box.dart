@@ -1,6 +1,7 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/model/comment.dart';
 import 'package:fireflutter/src/service/comment.service.dart';
+import 'package:fireflutter/src/types/last_comment_sort_by_depth.dart';
 import 'package:flutter/material.dart';
 
 class CommentBoxController extends ChangeNotifier {
@@ -9,6 +10,8 @@ class CommentBoxController extends ChangeNotifier {
   String? get labelText => state?.labelText;
   String? get hintText => state?.hintText;
   Comment? get replyTo => state?.replyTo;
+
+  LastChildCommentSort get lastChildCommentSort => state?.lastChildCommentSort ?? {};
 
   set labelText(String? labelText) {
     state?.labelText = labelText;
@@ -50,6 +53,7 @@ class CommentBoxState extends State<CommentBox> {
   String? labelText;
   String? hintText;
   Comment? replyTo;
+  LastChildCommentSort lastChildCommentSort = {};
 
   @override
   void initState() {
@@ -109,7 +113,10 @@ class CommentBoxState extends State<CommentBox> {
                 if (content.text.isNotEmpty) {
                   // TODO send comment service
                   // CommentService.instance.createComment(
-                  //     postId: widget.postId, content: content.text, replyTo: replyTo, lastRootComment: lastRootComment);
+                  //     postId: widget.postId,
+                  //     content: content.text,
+                  //     replyTo: replyTo,
+                  //     lastChildCommentSort: lastChildCommentSort);
                   // TODO show the comment blink, scroll to the comment
                   content.text = '';
                   widget.onSubmit?.call();
