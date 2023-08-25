@@ -1,12 +1,12 @@
 # This is a generated file; do not edit or check into version control.
-cloud_firestore=/Users/thruthesky/.pub-cache/hosted/pub.dev/cloud_firestore-4.8.5/
-cloud_firestore_web=/Users/thruthesky/.pub-cache/hosted/pub.dev/cloud_firestore_web-3.6.4/
+cloud_firestore=/Users/thruthesky/.pub-cache/hosted/pub.dev/cloud_firestore-4.9.0/
+cloud_firestore_web=/Users/thruthesky/.pub-cache/hosted/pub.dev/cloud_firestore_web-3.7.0/
 file_picker=/Users/thruthesky/.pub-cache/hosted/pub.dev/file_picker-5.3.3/
 file_selector_linux=/Users/thruthesky/.pub-cache/hosted/pub.dev/file_selector_linux-0.9.2/
 file_selector_macos=/Users/thruthesky/.pub-cache/hosted/pub.dev/file_selector_macos-0.9.3+1/
 file_selector_windows=/Users/thruthesky/.pub-cache/hosted/pub.dev/file_selector_windows-0.9.3/
-firebase_auth=/Users/thruthesky/.pub-cache/hosted/pub.dev/firebase_auth-4.7.3/
-firebase_auth_web=/Users/thruthesky/.pub-cache/hosted/pub.dev/firebase_auth_web-5.6.3/
+firebase_auth=/Users/thruthesky/.pub-cache/hosted/pub.dev/firebase_auth-4.8.0/
+firebase_auth_web=/Users/thruthesky/.pub-cache/hosted/pub.dev/firebase_auth_web-5.7.0/
 firebase_core=/Users/thruthesky/.pub-cache/hosted/pub.dev/firebase_core-2.15.1/
 firebase_core_web=/Users/thruthesky/.pub-cache/hosted/pub.dev/firebase_core_web-2.7.0/
 firebase_database=/Users/thruthesky/.pub-cache/hosted/pub.dev/firebase_database-10.2.5/
@@ -20,7 +20,7 @@ flutter_plugin_android_lifecycle=/Users/thruthesky/.pub-cache/hosted/pub.dev/flu
 image_picker=/Users/thruthesky/.pub-cache/hosted/pub.dev/image_picker-1.0.2/
 image_picker_android=/Users/thruthesky/.pub-cache/hosted/pub.dev/image_picker_android-0.8.7+4/
 image_picker_for_web=/Users/thruthesky/.pub-cache/hosted/pub.dev/image_picker_for_web-3.0.0/
-image_picker_ios=/Users/thruthesky/.pub-cache/hosted/pub.dev/image_picker_ios-0.8.8/
+image_picker_ios=/Users/thruthesky/.pub-cache/hosted/pub.dev/image_picker_ios-0.8.8+1/
 image_picker_linux=/Users/thruthesky/.pub-cache/hosted/pub.dev/image_picker_linux-0.2.1/
 image_picker_macos=/Users/thruthesky/.pub-cache/hosted/pub.dev/image_picker_macos-0.2.1/
 image_picker_windows=/Users/thruthesky/.pub-cache/hosted/pub.dev/image_picker_windows-0.2.1/
