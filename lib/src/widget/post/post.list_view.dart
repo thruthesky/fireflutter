@@ -41,12 +41,21 @@ class PostListView extends StatelessWidget {
   final Clip clipBehavior;
   final Category? category;
 
+  Query get query {
+    Query q = PostService.instance.postCol;
+    if (category != null) {
+      q = q.where('categoryId', isEqualTo: category!.id);
+    }
+
+    q = q.orderBy('createdAt', descending: true);
+
+    return q;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FirestoreListView(
-      query: category == null // TODO review because it will display a full list first before adding the category filter
-          ? PostService.instance.postCol
-          : PostService.instance.postCol.where('categoryId', isEqualTo: category!.id),
+      query: query,
       itemBuilder: (context, QueryDocumentSnapshot snapshot) {
         final post = Post.fromDocumentSnapshot(snapshot);
         if (itemBuilder != null) {
@@ -55,7 +64,8 @@ class PostListView extends StatelessWidget {
           return ListTile(
             title: Text(post.title),
             onTap: () {
-              PostService.instance.showPostDialog(context, post);
+              // print(post);
+              PostService.instance.showPostViewDialog(context, post);
             },
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -14,9 +14,8 @@ import 'package:flutter/material.dart';
 /// /users 컬렉션이 security permission 으로 막혀 있어서 rtdb 에서 가져온다.
 ///
 ///
-/// 주의, [uid] 과 [user] 둘다 지정되지 않고, 현재 사용자가 로그인 되지 않은 상태이면,
-/// 에러 Text 가 화면에 표시된다. 이 때, [notLoggedIn] 콜백이 주어지면, 에러가 발생하지
-/// 않고, [notLoggedIn] 콜백이 호출된다.
+/// 주의, [uid] 과 [user] 둘다 지정되지 않고, 현재 사용자가 로그인 되지 않은 상태이면, null check operator
+/// 에러가 발생한다.
 ///
 /// [builder] 사용자 문서가 존재하는 경우 호출되는 콜백 함수.
 ///
@@ -63,14 +62,12 @@ class UserDoc extends StatelessWidget {
     this.onLoading,
     this.live = false,
     this.user,
-    this.notLoggedIn,
   });
   final String? uid;
   final Widget Function(User) builder;
   final Widget Function()? documentNotExistBuilder;
   final Widget? onLoading;
   final User? user;
-  final Widget Function()? notLoggedIn;
 
   final bool live;
 
@@ -80,18 +77,10 @@ class UserDoc extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (uid == null && user == null && fa.FirebaseAuth.instance.currentUser == null) {
-      return notLoggedIn?.call() ??
-          const Text(
-              'Error: one of the uid, user, notLoggedIn must be provided. Or the user must be logged in.');
-    }
-
     return live != true || userUid == null
         // live update
         ? StreamBuilder<User?>(
-            stream: userUid == null
-                ? UserService.instance.snapshot
-                : UserService.instance.snapshotOther(userUid!),
+            stream: userUid == null ? UserService.instance.snapshot : UserService.instance.snapshotOther(userUid!),
             builder: buildStreamWidget,
           )
         // update one time

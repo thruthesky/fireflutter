@@ -527,6 +527,14 @@ ChatService.instance.showChatRoom(
 ```
 
 
+Below is to show post view screen.
+
+```dart
+WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+  PostService.instance.showPostViewDialog(context, await Post.get('Wqdje1wU1IDVs7Uus936'));
+});
+```
+
 
 
 # Contribution

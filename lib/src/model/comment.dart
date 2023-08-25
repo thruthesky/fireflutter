@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/functions/comment_sort_string.dart';
 import 'package:fireflutter/src/mixin/firebase_helper.mixin.dart';
 import 'package:fireflutter/src/service/comment.service.dart';
@@ -16,7 +17,10 @@ class Comment with FirebaseHelper {
   final Timestamp updatedAt;
   final List<dynamic> likes;
   final bool? deleted;
-  final String? replyTo;
+
+  /// Parent ID is the comment ID of the comment that this comment is replying to.
+  /// It will be null if this comment is not a reply (or the first level of comment)
+  final String? parentId;
   final String sort;
   final int depth;
 
@@ -30,7 +34,7 @@ class Comment with FirebaseHelper {
     required this.updatedAt,
     required this.likes,
     this.deleted,
-    this.replyTo,
+    this.parentId,
     required this.sort,
     required this.depth,
   });
@@ -46,45 +50,43 @@ class Comment with FirebaseHelper {
       content: map['content'] ?? '',
       uid: map['uid'] ?? '',
       files: map['files'],
-      createdAt: map['createdAt'] ?? Timestamp.now(),
-      updatedAt: map['updatedAt'] ?? Timestamp.now(),
+      createdAt: (map['createdAt'] is Timestamp) ? map['createdAt'] : Timestamp.now(),
+      updatedAt: (map['updatedAt'] is Timestamp) ? map['updatedAt'] : Timestamp.now(),
       likes: map['likes'] ?? [],
       deleted: map['deleted'],
-      replyTo: map['replyTo'],
-      // TODO put the last sort here? so that the dirty records go down? or not?
-      sort: map['sort'] ?? fillBlocksIfEmpty(blocks: sortBlocks),
+      parentId: map['parentId'],
+      sort: map['sort'],
       depth: map['depth'] ?? 0,
     );
   }
 
   static Future<Comment> create({
-    required String postId,
+    required Post post,
+    Comment? parent,
     required String content,
     List<String>? files,
-    String? replyTo,
-    String? sort, // sort Of which comment to reply
-    int depth = 0,
   }) async {
     String myUid = FirebaseAuth.instance.currentUser!.uid;
     final Map<String, dynamic> commentData = {
       'content': content,
-      'postId': postId,
+      'postId': post.id,
       if (files != null) 'files': files,
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
       'uid': myUid,
-      if (replyTo != null) 'replyTo': replyTo,
-      'sort': generateCommentSort(sortString: sort, depth: depth),
-      'depth': depth,
+      if (parent != null) 'parentId': parent.id,
+      'sort':
+          getCommentSortString(noOfComments: post.noOfComments, depth: parent?.depth ?? 0, sortString: parent?.sort),
+      'depth': parent == null ? 1 : parent.depth + 1,
     };
-    final commentId = CommentService.instance.commentCol.doc().id;
-    await CommentService.instance.commentCol.doc(commentId).set(commentData);
-    commentData['createdAt'] = Timestamp.now();
-    commentData['updatedAt'] = Timestamp.now();
-    return Comment.fromMap(map: commentData, id: postId);
+    await CommentService.instance.commentCol.add(commentData);
+    await PostService.instance.postCol.doc(post.id).update({
+      'noOfComments': FieldValue.increment(1),
+    });
+    return Comment.fromMap(map: commentData, id: post.id);
   }
 
   @override
   String toString() =>
-      'Comment(id: $id, postId: $postId, content: $content, uid: $uid, files: $files, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted, replyTo: $replyTo, sort: $sort, depth: $depth)';
+      'Comment(id: $id, postId: $postId, content: $content, uid: $uid, files: $files, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted, parentId: $parentId, sort: $sort, depth: $depth)';
 }

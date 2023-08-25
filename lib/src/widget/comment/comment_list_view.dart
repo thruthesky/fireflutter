@@ -22,9 +22,8 @@ class CommentListView extends StatefulWidget {
     this.dragStartBehavior = DragStartBehavior.start,
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.clipBehavior = Clip.hardEdge,
-    required this.postId,
+    required this.post,
     this.replyingTo,
-    this.label,
     this.onShowReplyBox,
     this.onCommentDisplay,
   });
@@ -41,10 +40,10 @@ class CommentListView extends StatefulWidget {
   final DragStartBehavior dragStartBehavior;
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final Clip clipBehavior;
-  final String postId;
+
+  final Post post;
 
   final String? replyingTo;
-  final String? label;
   final Function(Comment comment)? onShowReplyBox;
   final Function(Comment comment)? onCommentDisplay;
 
@@ -58,18 +57,9 @@ class CommentListViewState extends State<CommentListView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.label != null) ...[
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
-            child: Text(
-              widget.label ?? '',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
         FirestoreListView(
           // todo indentation
-          query: CommentService.instance.commentCol.where("postId", isEqualTo: widget.postId).orderBy("sort"),
+          query: CommentService.instance.commentCol.where("postId", isEqualTo: widget.post.id).orderBy("sort"),
           itemBuilder: (context, QueryDocumentSnapshot snapshot) {
             final comment = Comment.fromDocumentSnapshot(snapshot);
             widget.onCommentDisplay?.call(comment);
@@ -78,11 +68,9 @@ class CommentListViewState extends State<CommentListView> {
             if (widget.itemBuilder != null) {
               return widget.itemBuilder!(context, comment);
             } else {
-              return CommentTile(
+              return CommentListTile(
+                post: widget.post,
                 comment: comment,
-                onShowReplyBox: (comment) {
-                  widget.onShowReplyBox?.call(comment);
-                },
               );
             }
           },

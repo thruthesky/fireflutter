@@ -88,7 +88,7 @@ class _CreatePostDialogState extends State<CreatePostDialog> {
                     )
                         .then((post) {
                       Navigator.pop(context);
-                      PostService.instance.showPostDialog(context, post);
+                      PostService.instance.showPostViewDialog(context, post);
                     });
                   }
                 },

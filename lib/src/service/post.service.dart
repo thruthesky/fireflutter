@@ -60,18 +60,18 @@ class PostService with FirebaseHelper {
     );
   }
 
-  /// Shows the Post as a dialog
-  showPostDialog(BuildContext context, Post post) {
+  /// Shows the Post view as a dialog
+  showPostViewDialog(BuildContext context, Post post) {
     showGeneralDialog(
       context: context,
-      pageBuilder: (context, _, __) => PostDialog(
+      pageBuilder: (context, _, __) => PostViewDialog(
         post: post,
       ),
     );
   }
 
   /// Shows the Edit Post as a dialog
-  showEditPostDialog(BuildContext context, Post post) {
+  showPostEditDialog(BuildContext context, Post post) {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) => EditPostDialog(

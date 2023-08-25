@@ -42,16 +42,16 @@ export 'widget/category/category_create_dialog.dart';
 export 'widget/category/category_list.dialog.dart';
 
 // Post
-export 'widget/post/post_list_view.dart';
+export 'widget/post/post.list_view.dart';
 export 'widget/post/create_post_dialog.dart';
-export 'widget/post/post_dialog.dart';
+export 'widget/post/post_view.dialog.dart';
 export 'widget/post/edit_post_dialog.dart';
 export 'widget/post/post_list.dialog.dart';
 
 // Comment
-export 'widget/comment/comment_box.dart';
+export 'widget/comment/comment_edit.bottom_sheet.dart';
 export 'widget/comment/comment_list_view.dart';
-export 'widget/comment/comment_tile.dart';
+export 'widget/comment/comment.list_tile.dart';
 
 // Common
 export 'widget/common/timestamp.text.dart';

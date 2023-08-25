@@ -31,7 +31,6 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
             onPressed: () async {
               // ChatService.instance.onPressedFileUploadIcon(context: context, room: widget.room);
               final url = await StorageService.instance.ask(context: context);
-              print('url; $url');
               await ChatService.instance.sendMessage(room: widget.room, url: url);
             },
           ),

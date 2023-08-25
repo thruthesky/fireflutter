@@ -14,6 +14,7 @@ class Post with FirebaseHelper {
   final Timestamp updatedAt;
   final List<dynamic> likes;
   final bool? deleted;
+  final int noOfComments;
 
   Post({
     required this.id,
@@ -26,6 +27,7 @@ class Post with FirebaseHelper {
     required this.updatedAt,
     required this.likes,
     this.deleted,
+    required this.noOfComments,
   });
 
   factory Post.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
@@ -44,7 +46,16 @@ class Post with FirebaseHelper {
       updatedAt: map['updatedAt'] ?? Timestamp.now(),
       likes: map['likes'] ?? [],
       deleted: map['deleted'],
+      noOfComments: map['noOfComments'] ?? 0,
     );
+  }
+
+  static Future<Post> get(String? id) async {
+    if (id == null) {
+      throw Exception('Post id is null');
+    }
+    final DocumentSnapshot documentSnapshot = await PostService.instance.postCol.doc(id).get();
+    return Post.fromDocumentSnapshot(documentSnapshot);
   }
 
   static Future<Post> create({
@@ -88,5 +99,5 @@ class Post with FirebaseHelper {
 
   @override
   String toString() =>
-      'Post(id: $id, categoryId: $categoryId, title: $title, content: $content, uid: $uid, files: $files, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted)';
+      'Post(id: $id, categoryId: $categoryId, noOfComments: $noOfComments, title: $title, content: $content, uid: $uid, files: $files, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted)';
 }

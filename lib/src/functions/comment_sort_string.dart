@@ -1,105 +1,47 @@
-/// [sortCharLenth] is the length of each block in the sort string.
-/// Each block is a base32 number. If it is 2, then it supports up to
-/// 32^2 = 1024 comments in that depth.
-/// If it is 3, then it supports up to 32^4 = 1,048,576 comments in that depth.
-/// If the number of comments exceeds, then it will start with 0.
-const int sortCharLenth = 4;
-
-/// [sortBlocks] is the number of blocks in the sort string. If it's 10,
-/// It will support 10 depth of comments.
-/// if the [sortCharLength] is 4, then it will support up to 1,048,576 comments
-/// on each depth.
-const int sortBlocks = 10;
-
-/// Return a string which order the comments
+/// Gets the sort sortString string
 ///
-/// [sortString] is the sort string of the comment. If it is null, it will be
-/// generated. If it is not null, it will be increased by 1 on its depth.
-/// [sortString] can be set to null for the first comment of a post.
+/// [sortString] is the sort string. It must come from the parent's comment.
 ///
-/// [depth] is the depth of the comment. It starts with 0.
+/// [depth] is the depth of the comment. Just pass the parent's depth as it is.
+/// No need to +1 before passing to this function.
+/// Instead, you must save the depth of the new comment by adding +1 on the
+/// depth of parent comment when it is being created.
 ///
+/// [noOfComments] is the number of comments of the post. It must come from the post.
 ///
-/// @param sortString a sort string of last sibling comment. If the sibiling comments are not exist, then it must be the parents sort string.
-/// If there is parent(or parentId) of the comment, then return the sort of last first-level-comment's sort.
-/// @param depth parents depth.
-/// @returns
-String generateCommentSort({String? sortString, int depth = 0}) {
-  //
-  sortString = fillBlocksIfEmpty(order: sortString, blocks: sortBlocks);
-  // exceed the limit of blocks?
-  if (depth >= sortBlocks) return sortString;
-  final List<String> parts = splitBy(inputString: sortString, len: sortCharLenth);
-  final String base32Str = parts[depth];
-  parts[depth] = increaseBase32By(str: base32Str).padLeft(sortCharLenth, '0');
-  sortString = parts.join('');
-  return sortString;
-}
-
-String increaseBase32By({required String str, int by = 1}) {
-  final num = base32ToNum(str: str) + by;
-  return numToBase32(num: num);
-}
-
-/// Returns a string which order the comments
-///
-/// @param str string of base32
-/// @returns number
-int base32ToNum({required String str}) {
-  if (str.isEmpty) return 0;
-  const base32Chars = '0123456789ABCDEFGHIJKLMNOPQRSTUV';
-  const base = 32;
-
-  // Convert base32 string to decimal number
-  int num = 0;
-  str = str.toUpperCase().trim();
-  for (int i = 0; i < str.length; i++) {
-    final char = str[i];
-    final digit = base32Chars.indexOf(char);
-    num = num * base + digit;
+/// example
+/// ```dart
+/// FirebaseFirestore.instance.collection('comments').add({
+///     'sort': getCommentSortString(noOfComments: post.noOfComments, depth: parent?.depth ?? 0, sortString: parentComment?.sort),
+///     'depth': parent == null ? 1 : parent.depth + 1,
+/// });
+/// ```
+String getCommentSortString({
+  required int depth,
+  int? noOfComments,
+  String? sortString,
+}) {
+  /// 맨 첫 번째 코멘트란, 글에 최초로 작성되는 코멘트. 1번째 코멘트.
+  /// 첫번째 레벨 코멘트란, 글 바로 아래에 작성되는 코멘트로, 부모 코멘트가 없는 코멘트이다. 이 경우 depth=0 이다.
+  /// noOfComments 는 부모의 noOfComments 이다. 첫번째 레벨 코멘트는 글의 noOfComments, 하위 코멘트는 상위(부모) 코멘트의 noOfComments. (예: 부모 comment 가 있으면, 부모 comment 의 것을 사용. 하니면 글의 것을 사용).
+  /// 참고, 맨 첫번째 코멘트를 작성할 때는 noOfComments 값을 그냥 0의 값(또는 NULL)을 입력하면 된다.
+  /// [sortString] 는 부모 코멘트의 sortString string 이다. 첫번째 레벨 코멘트의 경우, 빈 NULL (또는 빈문자열)을 입력하면 된다.
+  /// [depth] 는 부모 코멘트의 depth 이다. depth 를 부모의 것을 그대로 입력하면 된다. 함수로 전달하기 전에 +1 을 할 필요 없다.
+  /// ( 예: 부모 코멘트가 존재하면, 부모의 것을(기본 값은 0) 아니면, 글의 것을 사용(기본 값은 0) )
+  /// 주의: 여기서 depth 는 sortString 구분 문자열의 칸을 말하는 것이며 0 부터 시작한다.
+  /// 하지만, 실제 코멘트 문서에 저장되는 depth 는 1부터 시작해야 한다.
+  /// (예를 들면, depth 값을 1 증가 시키기 위해서, +1 증가시키는 함수(IncreaseInteger)를 써야 하는데, 첫번째 레벨의 경우, IncreaseInteger 함수에 0(NULL)을 지정하면 +1을 해서, 1 값이 리턴된다. 그 값을 comment 문서의 depth 에 저장하므로, 자연스럽게 1 부터 시작하는 것이다. 또는 첫번째 레벨의 코멘트는 그냥 depth=1 로 지정하면 된다. 그리고 사실은 0으로 시작하든 1로 시작하던, UI 랜더링 할 때, depth 만 잘 표현하면 된다. 개발방법: 부모가 있으면 부모depth+1 아니면 1.)
+  noOfComments ??= 0;
+  sortString ??= "";
+  if (sortString == "" || depth == 0) {
+    final firstPart = 100000 + noOfComments;
+    return '$firstPart.100000.100000.100000.100000.100000.100000.100000.100000.100000';
+  } else {
+    List<String> parts = sortString.split('.');
+    String block = parts[depth];
+    int computed = int.parse(block) + noOfComments + 1; // 처음이 0일 수 있다. 0이면, 부모와 같아서 안됨.
+    parts[depth] = computed.toString();
+    sortString = parts.join('.');
+    return sortString;
   }
-  return num;
-}
-
-/// Returns a string which order the comments
-///
-/// @param str string of base32
-/// @returns number
-String numToBase32({int? num}) {
-  if (num == null) return '0';
-  const base32Chars = '0123456789ABCDEFGHIJKLMNOPQRSTUV';
-  const base = 32;
-
-  // Convert decimal number to base32 string
-  String result = '';
-  while (num! > 0) {
-    final digit = num % base;
-    result = base32Chars[digit] + result;
-    num = (num / base).floor();
-  }
-  return result;
-}
-
-/// Returns a string which order the comments
-///
-/// @param inputString input string
-/// @param len length of each part
-/// @returns array of string
-List<String> splitBy({required String inputString, int? len}) {
-  len ??= sortCharLenth;
-  List<String> result = [];
-  inputString = inputString.trim();
-
-  for (int i = 0; i < inputString.length; i += len) {
-    result.add(inputString.substring(i, i + len));
-  }
-  return result;
-}
-
-/// Fills the sort string with 0 if it is empty.
-///
-/// [order] is the sort stirng. if it has value, then it will be returned as it
-/// is. If it is null, then it will be filled with 0.
-String fillBlocksIfEmpty({String? order, int blocks = 8}) {
-  return order ?? List.filled(blocks, ''.padLeft(sortCharLenth, '0')).join("");
 }

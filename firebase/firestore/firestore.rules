@@ -67,7 +67,7 @@ service cloud.firestore {
 
       allow read: if true; // Anyone should be able to read.
       allow create: if willBeMyPost();
-      allow update: if isMyPost() || addOrRemove('likes', request.auth.uid);
+      allow update: if isMyPost() || addOrRemove('likes', request.auth.uid) || onlyUpdating(['noOfComments']);
       allow delete: if false;
     }
 
