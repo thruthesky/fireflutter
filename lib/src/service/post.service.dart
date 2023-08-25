@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/post.dart';
 import 'package:flutter/material.dart';
 
 class PostService with FirebaseHelper {
@@ -32,7 +31,7 @@ class PostService with FirebaseHelper {
     return PostService.instance.col.doc(postId).snapshots();
   }
 
-  Future<Post> createPost({
+  Post createPost({
     required String categoryId,
     required String title,
     required String content,

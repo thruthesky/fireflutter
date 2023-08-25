@@ -42,8 +42,8 @@ class Post with FirebaseHelper {
       content: map['content'] ?? '',
       uid: map['uid'] ?? '',
       files: map['files'],
-      createdAt: map['createdAt'] ?? Timestamp.now(),
-      updatedAt: map['updatedAt'] ?? Timestamp.now(),
+      createdAt: (map['createdAt'] is Timestamp) ? map['createdAt'] : Timestamp.now(),
+      updatedAt: (map['updatedAt'] is Timestamp) ? map['updatedAt'] : Timestamp.now(),
       likes: map['likes'] ?? [],
       deleted: map['deleted'],
       noOfComments: map['noOfComments'] ?? 0,
@@ -58,12 +58,12 @@ class Post with FirebaseHelper {
     return Post.fromDocumentSnapshot(documentSnapshot);
   }
 
-  static Future<Post> create({
+  static Post create({
     required String categoryId,
     required String title,
     required String content,
     List<String>? files,
-  }) async {
+  }) {
     String myUid = FirebaseAuth.instance.currentUser!.uid;
     final Map<String, dynamic> postData = {
       'title': title,
@@ -75,9 +75,7 @@ class Post with FirebaseHelper {
       'uid': myUid,
     };
     final postId = PostService.instance.postCol.doc().id;
-    await PostService.instance.postCol.doc(postId).set(postData);
-    postData['createdAt'] = Timestamp.now();
-    postData['updatedAt'] = Timestamp.now();
+    PostService.instance.postCol.doc(postId).set(postData);
     return Post.fromMap(map: postData, id: postId);
   }
 
