@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/comment.dart';
 import 'package:fireflutter/src/service/comment.service.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +22,6 @@ class CommentListView extends StatefulWidget {
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.clipBehavior = Clip.hardEdge,
     required this.post,
-    this.replyingTo,
-    this.onShowReplyBox,
-    this.onCommentDisplay,
   });
 
   final int pageSize;
@@ -43,10 +39,6 @@ class CommentListView extends StatefulWidget {
 
   final Post post;
 
-  final String? replyingTo;
-  final Function(Comment comment)? onShowReplyBox;
-  final Function(Comment comment)? onCommentDisplay;
-
   @override
   State<CommentListView> createState() => CommentListViewState();
 }
@@ -58,29 +50,18 @@ class CommentListViewState extends State<CommentListView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         FirestoreListView(
-          // todo indentation
           query: CommentService.instance.commentCol.where("postId", isEqualTo: widget.post.id).orderBy("sort"),
           itemBuilder: (context, QueryDocumentSnapshot snapshot) {
             final comment = Comment.fromDocumentSnapshot(snapshot);
-            widget.onCommentDisplay?.call(comment);
-            // Will we have a problem in comments if this paginates?
-            // Since the last comment may not show yet upon loading the screen.
-            if (widget.itemBuilder != null) {
-              return widget.itemBuilder!(context, comment);
-            } else {
-              return CommentListTile(
-                post: widget.post,
-                comment: comment,
-              );
-            }
+            if (widget.itemBuilder != null) return widget.itemBuilder!(context, comment);
+            return CommentListTile(
+              post: widget.post,
+              comment: comment,
+            );
           },
           emptyBuilder: (context) {
-            if (widget.emptyBuilder != null) {
-              return widget.emptyBuilder!(context);
-            } else {
-              if (widget.replyingTo != null) return Center(child: Text(tr.comment.noReply));
-              return Center(child: Text(tr.comment.noComment));
-            }
+            if (widget.emptyBuilder != null) return widget.emptyBuilder!(context);
+            return Center(child: Text(tr.comment.noComment));
           },
           errorBuilder: (context, error, stackTrace) {
             log(error.toString(), stackTrace: stackTrace);

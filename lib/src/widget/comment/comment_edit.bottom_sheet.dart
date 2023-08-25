@@ -1,7 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/comment.dart';
-import 'package:fireflutter/src/service/comment.service.dart';
-import 'package:fireflutter/src/types/last_comment_sort_by_depth.dart';
 import 'package:flutter/material.dart';
 
 class CommentEditBottomSheet extends StatefulWidget {
@@ -29,37 +26,35 @@ class CommentEditBottomSheet extends StatefulWidget {
 class CommentBoxState extends State<CommentEditBottomSheet> {
   TextEditingController content = TextEditingController();
 
-  String? labelText;
-  String? hintText;
-  Comment? parentId;
-  LastChildCommentSort lastChildCommentSort = {};
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          children: [
-            UserAvatar(
-              uid: UserService.instance.uid,
-              key: ValueKey(UserService.instance.uid),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: TextField(
-                  controller: content,
-                  minLines: 1,
-                  maxLines: 2,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    labelText: labelText ?? 'Comment',
-                    hintText: hintText ?? 'Write a comment...',
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+          child: Row(
+            children: [
+              UserAvatar(
+                uid: UserService.instance.uid,
+                key: ValueKey(UserService.instance.uid),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: TextField(
+                    controller: content,
+                    minLines: 1,
+                    maxLines: 2,
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: widget.labelText ?? 'Comment',
+                      hintText: widget.hintText ?? 'Write a comment...',
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -74,16 +69,14 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
               icon: const Icon(Icons.send),
               onPressed: () async {
                 if (content.text.isNotEmpty) {
+                  // TODO should we remove "await"?
                   final comment = await Comment.create(
                     post: widget.post,
                     parent: widget.parent,
                     content: content.text,
                   );
-
                   content.text = '';
-                  if (widget.onEdited != null) {
-                    widget.onEdited!(comment);
-                  }
+                  if (widget.onEdited != null) widget.onEdited!(comment);
                 }
               },
             ),

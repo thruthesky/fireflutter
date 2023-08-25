@@ -1,6 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/comment.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CommentService with FirebaseHelper {
@@ -40,6 +38,7 @@ class CommentService with FirebaseHelper {
         // This padding is important to prevent the bottom sheet from being hidden by the keyboard.
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: SafeArea(
+          // TODO should we add a display what comment is being replied to.
           // SafeArea is needed for Simulator
           child: Column(
             mainAxisSize: MainAxisSize.min,

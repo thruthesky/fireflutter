@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/post.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -43,13 +42,8 @@ class PostListView extends StatelessWidget {
 
   Query get query {
     Query q = PostService.instance.postCol;
-    if (category != null) {
-      q = q.where('categoryId', isEqualTo: category!.id);
-    }
-
-    q = q.orderBy('createdAt', descending: true);
-
-    return q;
+    if (category != null) q = q.where('categoryId', isEqualTo: category!.id);
+    return q.orderBy('createdAt', descending: true);
   }
 
   @override
@@ -58,30 +52,23 @@ class PostListView extends StatelessWidget {
       query: query,
       itemBuilder: (context, QueryDocumentSnapshot snapshot) {
         final post = Post.fromDocumentSnapshot(snapshot);
-        if (itemBuilder != null) {
-          return itemBuilder!(context, post);
-        } else {
-          return ListTile(
-            title: Text(post.title),
-            onTap: () {
-              // print(post);
-              PostService.instance.showPostViewDialog(context, post);
-            },
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(post.content),
-              ],
-            ),
-          );
-        }
+        if (itemBuilder != null) return itemBuilder!(context, post);
+        return ListTile(
+          title: Text(post.title),
+          onTap: () {
+            PostService.instance.showPostViewDialog(context, post);
+          },
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(post.content),
+            ],
+          ),
+        );
       },
       emptyBuilder: (context) {
-        if (emptyBuilder != null) {
-          return emptyBuilder!(context);
-        } else {
-          return Center(child: Text(tr.post.noPost));
-        }
+        if (emptyBuilder != null) return emptyBuilder!(context);
+        return Center(child: Text(tr.post.noPost));
       },
       errorBuilder: (context, error, stackTrace) {
         log(error.toString(), stackTrace: stackTrace);

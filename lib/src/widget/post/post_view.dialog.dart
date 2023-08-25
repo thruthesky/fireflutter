@@ -1,10 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/functions/comment_sort_string.dart';
-import 'package:fireflutter/src/model/comment.dart';
-import 'package:fireflutter/src/model/post.dart';
 import 'package:fireflutter/src/service/comment.service.dart';
-import 'package:fireflutter/src/types/last_comment_sort_by_depth.dart';
 import 'package:flutter/material.dart';
 
 class PostViewDialog extends StatefulWidget {
@@ -20,25 +16,17 @@ class PostViewDialog extends StatefulWidget {
 }
 
 class _PostDialogState extends State<PostViewDialog> {
-  Map<int, String> lastSortPerDepth = {}; // TODO remove this
-  LastChildCommentSort lastChildCommentSort = {};
-
   @override
   Widget build(BuildContext context) {
     late Post post;
     return StreamBuilder<DocumentSnapshot>(
       stream: PostService.instance.snapshot(postId: widget.post.id),
       builder: (context, snapshot) {
-        // error
-        if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          post = widget.post;
-        }
-        if (snapshot.hasData) {
-          post = Post.fromDocumentSnapshot(snapshot.data!);
-        }
+        if (snapshot.hasError) return Text(snapshot.error.toString());
+
+        if (snapshot.connectionState == ConnectionState.waiting) post = widget.post;
+
+        if (snapshot.hasData) post = Post.fromDocumentSnapshot(snapshot.data!);
 
         return Scaffold(
           appBar: AppBar(
@@ -75,7 +63,6 @@ class _PostDialogState extends State<PostViewDialog> {
                   switch (value) {
                     case "adjust_text_size":
                       // TODO adjust Test size
-                      // context.push('/adjust_text_size');
                       break;
                     case "delete_post":
                       // TODO delete post
@@ -147,8 +134,6 @@ class _PostDialogState extends State<PostViewDialog> {
                   post: post,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  onShowReplyBox: (comment) {},
-                  onCommentDisplay: (comment) {},
                 ),
               ],
             ),
