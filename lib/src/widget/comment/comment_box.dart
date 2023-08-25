@@ -1,29 +1,74 @@
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/model/comment.dart';
 import 'package:fireflutter/src/service/comment.service.dart';
+import 'package:fireflutter/src/types/last_comment_sort_by_depth.dart';
 import 'package:flutter/material.dart';
 
+class CommentBoxController extends ChangeNotifier {
+  CommentBoxState? state;
+
+  String? get labelText => state?.labelText;
+  String? get hintText => state?.hintText;
+  Comment? get replyTo => state?.replyTo;
+
+  LastChildCommentSort get lastChildCommentSort => state?.lastChildCommentSort ?? {};
+
+  set labelText(String? labelText) {
+    state?.labelText = labelText;
+    notifyListeners();
+  }
+
+  set hintText(String? hintText) {
+    state?.hintText = hintText;
+    notifyListeners();
+  }
+
+  set replyTo(Comment? replyTo) {
+    state?.replyTo = replyTo;
+    notifyListeners();
+  }
+
+  // TODO blink animate? or show dance (to show the user that reply is added)?
+}
+
 class CommentBox extends StatefulWidget {
-  const CommentBox({
-    super.key,
-    required this.postId,
-    this.replyTo,
-    this.labelText,
-    this.hintText,
-    this.onSubmit,
-  });
+  const CommentBox(
+      {super.key, required this.postId, this.replyTo, this.labelText, this.hintText, this.onSubmit, this.controller});
 
   final String postId;
-  final String? replyTo;
+  final Comment? replyTo;
   final String? labelText;
   final String? hintText;
   final Function()? onSubmit;
 
+  final CommentBoxController? controller;
+
   @override
-  State<CommentBox> createState() => _CommentBoxState();
+  State<CommentBox> createState() => CommentBoxState();
 }
 
-class _CommentBoxState extends State<CommentBox> {
+class CommentBoxState extends State<CommentBox> {
   TextEditingController content = TextEditingController();
+
+  String? labelText;
+  String? hintText;
+  Comment? replyTo;
+  LastChildCommentSort lastChildCommentSort = {};
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller?.state = this;
+    widget.controller?.addListener(() {
+      // listener for updates in the controller
+    });
+  }
+
+  @override
+  void dispose() {
+    widget.controller?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +90,8 @@ class _CommentBoxState extends State<CommentBox> {
                   maxLines: 2,
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
-                    labelText: widget.labelText ?? 'Comment',
-                    hintText: widget.hintText ?? 'Write a comment...',
+                    labelText: labelText ?? 'Comment',
+                    hintText: hintText ?? 'Write a comment...',
                   ),
                 ),
               ),
@@ -67,8 +112,11 @@ class _CommentBoxState extends State<CommentBox> {
               onPressed: () {
                 if (content.text.isNotEmpty) {
                   // TODO send comment service
-                  CommentService.instance
-                      .createComment(postId: widget.postId, content: content.text, replyTo: widget.replyTo);
+                  // CommentService.instance.createComment(
+                  //     postId: widget.postId,
+                  //     content: content.text,
+                  //     replyTo: replyTo,
+                  //     lastChildCommentSort: lastChildCommentSort);
                   // TODO show the comment blink, scroll to the comment
                   content.text = '';
                   widget.onSubmit?.call();
