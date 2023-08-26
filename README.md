@@ -862,7 +862,7 @@ Scafolld(
 - `noOfNewMessages: Map<string, number>` - This contains the uid of the chat room users as key and the number of new messages as value.
 - `lastMessage: Map` is the last message in the room.
   - `createdAt: [timestamp|date]` is the time that the last message was sent.
-  - `senderUid: [string]` is the sender Uid
+  - `uid: [string]` is the sender Uid
   - `text: [string]` is the text in the message
 - `maximumNoOfUsers: [int]` is the maximum no of users in the group.
 
@@ -870,7 +870,7 @@ Scafolld(
 
 - `text` is the text message [Optional] - Optional, meaning, a message can be sent without the text.
 - `createdAt` is the time that the message was sent.
-- `senderUid` is the sender Uid
+- `uid` is the sender Uid
 - `imageUrl [String]` is the image's URL added to the message. [Optional]
 - `fileUrl [String]` is the file's URL added to the message. [Optional]
 - `fileName` is the file name of the file from `fileUrl`. [Optional]

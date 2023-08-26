@@ -14,8 +14,8 @@ bool _isVideoPath(String path) => _kSupportedVideoMimes.contains(mime(path.split
 
 bool _isImagePath(String path) => mime(path.split('?').first)?.startsWith('image/') ?? false;
 
-class FlutterFlowMediaDisplay extends StatelessWidget {
-  const FlutterFlowMediaDisplay({
+class MediaDisplayType extends StatelessWidget {
+  const MediaDisplayType({
     Key? key,
     required this.path,
     required this.imageBuilder,
@@ -51,8 +51,8 @@ enum VideoType {
 
 Set<VideoPlayerController> _videoPlayers = {};
 
-class FlutterFlowVideoPlayer extends StatefulWidget {
-  const FlutterFlowVideoPlayer({
+class FFVideoPlayer extends StatefulWidget {
+  const FFVideoPlayer({
     Key? key,
     required this.path,
     this.videoType = VideoType.network,
@@ -80,10 +80,10 @@ class FlutterFlowVideoPlayer extends StatefulWidget {
   final bool lazyLoad;
 
   @override
-  State<StatefulWidget> createState() => _FlutterFlowVideoPlayerState();
+  State<StatefulWidget> createState() => _FFVideoPlayerState();
 }
 
-class _FlutterFlowVideoPlayerState extends State<FlutterFlowVideoPlayer> {
+class _FFVideoPlayerState extends State<FFVideoPlayer> {
   VideoPlayerController? _videoPlayerController;
   ChewieController? _chewieController;
   bool _loggedError = false;
@@ -219,7 +219,7 @@ class UploadedMediaState extends State<DisplayMedia> {
   Widget build(BuildContext context) {
     return Container(
       key: ValueKey(widget.url),
-      child: FlutterFlowMediaDisplay(
+      child: MediaDisplayType(
         path: widget.url,
         imageBuilder: (path) => CachedNetworkImage(
           imageUrl: path,
@@ -228,7 +228,7 @@ class UploadedMediaState extends State<DisplayMedia> {
           width: MediaQuery.of(context).size.width,
           fit: BoxFit.cover,
         ),
-        videoPlayerBuilder: (path) => FlutterFlowVideoPlayer(
+        videoPlayerBuilder: (path) => FFVideoPlayer(
           path: path,
           width: widget.width,
           height: widget.height,

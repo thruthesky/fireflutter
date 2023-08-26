@@ -198,7 +198,7 @@ service cloud.firestore {
         }
 
         allow read: if isRoomUser() && !isBlocked();
-        allow create: if willBeMyMessage() && isRoomUser()  && !isBlocked();
+        allow create: if required(['uid']) && willBeMyMessage() && isRoomUser()  && !isBlocked();
         allow update: if isMyMessage() && !isBlocked();
         allow delete: if isMyMessage() && !isBlocked();
       }
@@ -233,6 +233,8 @@ service cloud.firestore {
 // ****************************** COPY FROM ***********************************
 // * Warning : It's check the fields after save.
 // * Warning : !!! It's not checking the incoming data fields !!!
+// @example
+// required(['master', 'createdAt', 'group', 'open', 'users'])
 function required(fields) {
   return request.resource.data.keys().hasAll( fields );
 }

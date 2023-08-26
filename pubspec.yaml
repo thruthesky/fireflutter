@@ -11,6 +11,7 @@ dependencies:
   cached_network_image: ^3.1.0
   chewie: ^1.7.0
   cloud_firestore: ^4.8.4
+  crypto: ^3.0.3
   file_picker: ^5.3.2
   firebase_auth: ^4.7.2
   firebase_core: ^2.15.0
@@ -21,10 +22,16 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_image_compress: ^2.0.4
+  flutter_linkify: ^6.0.0
+  html: ^0.15.4
+  http: ^1.1.0
   image_picker: ^1.0.2
   intl: ^0.18.0
+  linkify: ^5.0.0
   mime_type: ^1.0.0
+  path: ^1.8.3
   rxdart: ^0.27.7
+  shared_preferences: ^2.2.0
   url_launcher: ^6.1.12
   video_player: ^2.7.0
 

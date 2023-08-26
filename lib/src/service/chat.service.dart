@@ -232,10 +232,25 @@ class ChatService with FirebaseHelper {
       if (url != null) 'url': url,
       if (protocol != null) 'protocol': protocol,
       'createdAt': FieldValue.serverTimestamp(),
-      'senderUid': FirebaseAuth.instance.currentUser!.uid,
+      'uid': FirebaseAuth.instance.currentUser!.uid,
     };
-    await messageCol(room.id).add(chatMessage);
+    final ref = await messageCol(room.id).add(chatMessage);
+
     updateRoomForNewMessage(room: room, lastMessage: chatMessage);
+
+    /// Update url preview
+    final model = UrlPreviewModel();
+    await model.load(text ?? '');
+
+    if (model.hasData) {
+      final data = {
+        'previewUrl': model.firstLink!,
+        if (model.title != null) 'previewTitle': model.title,
+        if (model.description != null) 'previewDescription': model.description,
+        if (model.image != null) 'previewImageUrl': model.image,
+      };
+      await ref.update(data);
+    }
   }
 
   /// Send a welcome message to himeself

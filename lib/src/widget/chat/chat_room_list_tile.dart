@@ -50,7 +50,7 @@ class ChatRoomListTile extends StatelessWidget {
                           right: 0,
                           bottom: 0,
                           child: UserAvatar(
-                            uid: room.lastMessage?.senderUid,
+                            uid: room.lastMessage?.uid,
                             size: avatarSize / 1.4,
                             radius: 10,
                             borderWidth: 1,

@@ -4,7 +4,8 @@ import 'package:fireflutter/fireflutter.dart';
 class Message with FirebaseHelper {
   final String id;
   final String? text;
-  final String senderUid;
+  @override
+  final String uid;
   final Timestamp createdAt;
   final String? url;
 
@@ -12,7 +13,7 @@ class Message with FirebaseHelper {
     required this.id,
     required this.text,
     required this.url,
-    required this.senderUid,
+    required this.uid,
     required this.createdAt,
   });
 
@@ -25,7 +26,7 @@ class Message with FirebaseHelper {
       id: id,
       text: map['text'],
       url: map['url'],
-      senderUid: map['senderUid'] ?? '',
+      uid: map['uid'] ?? '',
       createdAt: (map['createdAt'] == null || map['createdAt'] is FieldValue) ? Timestamp.now() : map['createdAt'],
     );
   }
@@ -35,11 +36,11 @@ class Message with FirebaseHelper {
       'id': id,
       'text': text,
       'url': url,
-      'senderUid': senderUid,
+      'uid': uid,
       'createdAt': createdAt,
     };
   }
 
   @override
-  String toString() => 'Message(id: $id, text: $text,  url: $url, senderUid: $senderUid, createdAt: $createdAt)';
+  String toString() => 'Message(id: $id, text: $text,  url: $url, uid: $uid, createdAt: $createdAt)';
 }

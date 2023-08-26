@@ -38,7 +38,7 @@ describe("Sending messages in a chat room", () => {
         .collection(chatsColName)
         .doc(roomRef.id)
         .collection("messages")
-        .add({ message: "test" })
+        .add({ uid: c.uid, message: "test" })
     );
   });
   it("A sends B message pretending as B  -> fails", async () => {
@@ -52,6 +52,26 @@ describe("Sending messages in a chat room", () => {
         .doc(roomRef.id)
         .collection("messages")
         .add({ uid: b.uid, message: "test" })
+    );
+  });
+
+  it("Updating my message -> succeeds", async () => {
+    const roomRef = await createChatRoom(a, {
+      master: a.uid,
+      users: [a.uid, b.uid],
+    });
+    const messageRef = await db(a)
+      .collection(chatsColName)
+      .doc(roomRef.id)
+      .collection("messages")
+      .add({ uid: a.uid, message: "test" });
+    await firebase.assertSucceeds(
+      db(a)
+        .collection(chatsColName)
+        .doc(roomRef.id)
+        .collection("messages")
+        .doc(messageRef.id)
+        .update({ message: "updated" })
     );
   });
 });
