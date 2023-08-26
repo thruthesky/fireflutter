@@ -46,18 +46,17 @@ class ChatRoomListTile extends StatelessWidget {
                           borderWidth: 1,
                           borderColor: Colors.grey.shade300,
                         ),
-                        if (room.lastMessage != null)
-                          Positioned(
-                            right: 0,
-                            bottom: 0,
-                            child: UserAvatar(
-                              uid: room.lastMessage?.senderUid,
-                              size: avatarSize / 1.4,
-                              radius: 10,
-                              borderWidth: 1,
-                              borderColor: Colors.white,
-                            ),
+                        Positioned(
+                          right: 0,
+                          bottom: 0,
+                          child: UserAvatar(
+                            uid: room.lastMessage?.senderUid,
+                            size: avatarSize / 1.4,
+                            radius: 10,
+                            borderWidth: 1,
+                            borderColor: Colors.white,
                           ),
+                        ),
                       ],
                     ),
                   ),

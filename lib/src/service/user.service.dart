@@ -17,6 +17,7 @@ class UserService with FirebaseHelper {
   /// null 이면 아직 로드를 안했다는 뜻이다. 즉, 로딩중이라는 뜻이다. 로그인을 했는지 하지 않았는지 여부는 알 수 없다.
   /// 만약, 로그인을 했는지 여부를 알고 싶다면, [nullableUser] 가 null 인지 아닌지를 확인하면 된다.
   ///
+  /// UserService.instance.documentChanges.listen((user) => user == null ? null : print(my));
   final BehaviorSubject<User?> documentChanges = BehaviorSubject<User?>.seeded(null);
 
   ///
@@ -34,8 +35,7 @@ class UserService with FirebaseHelper {
           if (!documentSnapshot.exists || documentSnapshot.data() == null) {
             nullableUser = User(uid: '', exists: false);
           } else {
-            nullableUser = User.fromDocumentSnapshot(
-                documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
+            nullableUser = User.fromDocumentSnapshot(documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
           }
           documentChanges.add(nullableUser);
         });
@@ -98,10 +98,7 @@ class UserService with FirebaseHelper {
   /// Use this to display widgets lively that depends on the user model. When
   /// the user document is updated, this stream will fire an event.
   Stream<User> get snapshot {
-    return UserService.instance.col
-        .doc(uid)
-        .snapshots()
-        .map((doc) => User.fromDocumentSnapshot(doc));
+    return UserService.instance.col.doc(uid).snapshots().map((doc) => User.fromDocumentSnapshot(doc));
   }
 
   /// Returns the stream of the user model for the user uid.
@@ -113,8 +110,7 @@ class UserService with FirebaseHelper {
   Stream<User> snapshotOther(String uid) {
     return UserService.instance.rtdb.ref().child('/users/$uid').onValue.map(
       (event) {
-        return User.fromMap(
-            map: Map<String, dynamic>.from((event.snapshot.value ?? {}) as Map), id: uid);
+        return User.fromMap(map: Map<String, dynamic>.from((event.snapshot.value ?? {}) as Map), id: uid);
       },
     );
   }

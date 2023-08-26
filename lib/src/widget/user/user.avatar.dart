@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 /// [user] is the user model.
 ///
 /// [uid] is the user uid.
-/// If [user] is null, [uid] is required.
+///
+/// If [user] and [uid] is null, then, it will show [defaultIcon].
 ///
 /// [size] is the avatar size.
 ///
@@ -24,7 +25,7 @@ class UserAvatar extends StatefulWidget {
     this.borderColor = Colors.transparent,
     this.radius = 10,
     this.onTap,
-  }) : assert(user != null || uid != null);
+  });
 
   final User? user;
   final String? uid;
@@ -47,7 +48,8 @@ class _UserAvatarState extends State<UserAvatar> {
     super.initState();
     if (widget.user != null) {
       user = widget.user;
-    } else {
+    }
+    if (widget.uid != null && widget.uid != '') {
       UserService.instance.get(widget.uid!).then((value) {
         if (mounted) {
           setState(() {

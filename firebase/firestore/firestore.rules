@@ -178,8 +178,11 @@ service cloud.firestore {
       allow delete: if false;
 
       match /messages/{messageId} {
-        function isMyMessage() {
+        function willBeMyMessage() {
           return 'uid' in request.resource.data && request.resource.data.uid == request.auth.uid;
+        }
+        function isMyMessage() {
+          return 'uid' in resource.data && resource.data.uid == request.auth.uid;
         }
         function roomData() {
           return get(/$(prefix())/chats/$(roomId)).data;
@@ -195,7 +198,7 @@ service cloud.firestore {
         }
 
         allow read: if isRoomUser() && !isBlocked();
-        allow create: if isRoomUser() && !isBlocked();
+        allow create: if willBeMyMessage() && isRoomUser()  && !isBlocked();
         allow update: if isMyMessage() && !isBlocked();
         allow delete: if isMyMessage() && !isBlocked();
       }

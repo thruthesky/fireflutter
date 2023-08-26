@@ -4,6 +4,14 @@ import 'package:flutter/material.dart';
 
 /// UserDoc
 ///
+/// TODO 보다 간소화하고, 코드를 길게 하더라고 이해하기 쉽게 할 것. 아래의 로직을 하나의 함수로 하려하지말고, 여러 함수로 잘게 나누어서 할 것.
+/// TODO [uid] 와 [user] 둘다 지정되지 않으면, 현재 사용자를 바탕으로한다. 현재 사용자가 로그인 되지 않은 상태이면, notLoggedIn 콜백을 호출 한다.
+/// TODO 현재 사용자 정보를 보여주는 경우, live=true 이면, FirebaseAuth.instance.authChanges 를 바탕으로 로그인/아웃시 위젯을 다시 그린다.
+/// TODO [uid] 와 [user] 둘중 하나가 입력되면, 해당 입력값의 사용자를 바탕으로 한다.
+/// TODO [uid] 와 [user] 둘다 입력되면, [uid] 를 우선한다.
+/// TODO [user] 가 입력되면, onLoading 위젯은 사용하지 않고, [user] 정보를 바탕으로 화면에 보여준다. 즉, 화면 깜박임을 없앤다.
+///
+///
 /// 활용도가 매우 높은 위젯이다.
 ///
 /// [uid] 만약 [uid] 가 설정되면, 해당 사용자 문서를 listen(또는 get) 한다. [uid] 가 설정 안되면 로그인한
