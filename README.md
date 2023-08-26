@@ -11,6 +11,7 @@ A free, open source, complete, rapid development package for creating Social app
   - [Install the easy extension](#install-the-easy-extension)
   - [Security rules](#security-rules)
     - [Security rule for admin](#security-rule-for-admin)
+  - [Cloud functions](#cloud-functions)
   - [Admin settings](#admin-settings)
 - [Usage](#usage)
   - [UserService](#userservice)
@@ -25,6 +26,7 @@ A free, open source, complete, rapid development package for creating Social app
   - [UserProfileAvatar](#userprofileavatar)
   - [User List View](#user-list-view)
 - [Chat Feature](#chat-feature)
+  - [Welcome message](#welcome-message)
   - [No of new message](#no-of-new-message)
 - [Upload](#upload)
   - [Photo upload](#photo-upload)
@@ -106,7 +108,11 @@ We built a firebase extension for the easy management of firebase. Install the f
 
 This is a must firebase extension for the fireflutter to work properly.
 
+
+
 ## Security rules
+
+Security rules are under `/firebase/firestore/firestore.rules`.
 
 Copy [the security rules of fireflutter](https://raw.githubusercontent.com/thruthesky/fireflutter/main/firebase/firestore/firestore.rules) and paste it in your firebase project. You may need to copy only the parts of the necessary security rules.
 
@@ -136,6 +142,12 @@ For instance, you may write security rules like below and add the uids of sub-ad
     ...
   }
 ```
+
+
+## Cloud functions
+
+Instead of building and managing cloud functions code, we choose to use it as firebase extension. The `easy-extension` has all the functions that fireflutter needs. See the [Install the easy extension](#install-the-easy-extension).
+
 
 ## Admin settings
 
@@ -337,6 +349,11 @@ onPressed() async {
 
 
 # Chat Feature
+
+
+## Welcome message
+
+To send a welcome chat message to a user who just registered, use `UserService.instance.sendWelcomeMessage`. See details on the comments of the source.
 
 ## No of new message
 

@@ -4,8 +4,8 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ChatMessagesListView extends StatelessWidget {
-  const ChatMessagesListView({super.key, required this.room});
+class ChatRoomMessageListView extends StatelessWidget {
+  const ChatRoomMessageListView({super.key, required this.room});
 
   final Room room;
 
@@ -21,7 +21,7 @@ class ChatMessagesListView extends StatelessWidget {
         reverse: true,
         query: chatMessageQuery,
         itemBuilder: (BuildContext context, QueryDocumentSnapshot<dynamic> doc) {
-          return ChatMessageBubble(message: Message.fromDocumentSnapshot(doc));
+          return ChatRoomMessageListItem(message: Message.fromDocumentSnapshot(doc));
         },
         errorBuilder: (context, error, stackTrace) {
           debugPrint(error.toString());

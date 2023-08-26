@@ -14,6 +14,8 @@ class UserService with FirebaseHelper {
   static UserService? _instance;
   static UserService get instance => _instance ??= UserService._();
 
+  late final String adminUid;
+
   /// null 이면 아직 로드를 안했다는 뜻이다. 즉, 로딩중이라는 뜻이다. 로그인을 했는지 하지 않았는지 여부는 알 수 없다.
   /// 만약, 로그인을 했는지 여부를 알고 싶다면, [nullableUser] 가 null 인지 아닌지를 확인하면 된다.
   ///
@@ -89,8 +91,10 @@ class UserService with FirebaseHelper {
   String? get photoUrl => nullableUser?.photoUrl;
 
   /// 미리 한번 호출 해서, Singleton 을 초기화 해 둔다. 그래야 user 를 사용 할 때, 에러가 발생하지 않는다.
-  init() {
-    ///
+  init({
+    required String adminUid,
+  }) {
+    this.adminUid = adminUid;
   }
 
   /// Returns the stream of the user model for the current login user.
@@ -253,5 +257,26 @@ class UserService with FirebaseHelper {
         .map(
           (event) => event.data(),
         );
+  }
+
+  /// Send a welcome message on registration
+  ///
+  /// Send a welcome message to the user when the user registers by creating
+  /// a 1:1 chat room with admin.
+  ///
+  /// Since there is no way to send a message from the admin to the login user
+  /// automatically, the app just sends a welcome message to the user himself
+  /// and put the protocol as 'register'. Then, the app will show the welcome
+  /// post card on the chat room.
+  ///
+  Future<void> sendWelcomeMessage({required String message}) async {
+    final room = await ChatService.instance.createChatRoom(
+      otherUserUid: adminUid,
+    );
+    return ChatService.instance.sendWelcomeMessage(
+      room: room,
+      message: message,
+      protocol: 'register',
+    );
   }
 } // EO UserService

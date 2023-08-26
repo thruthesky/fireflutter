@@ -16,7 +16,7 @@ class ChatRoom extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: ChatMessagesListView(
+            child: ChatRoomMessageListView(
               room: room,
             ),
           ),

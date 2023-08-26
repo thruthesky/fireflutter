@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   cached_network_image: ^3.1.0
+  chewie: ^1.7.0
   cloud_firestore: ^4.8.4
   file_picker: ^5.3.2
   firebase_auth: ^4.7.2
@@ -22,8 +23,10 @@ dependencies:
   flutter_image_compress: ^2.0.4
   image_picker: ^1.0.2
   intl: ^0.18.0
+  mime_type: ^1.0.0
   rxdart: ^0.27.7
   url_launcher: ^6.1.12
+  video_player: ^2.7.0
 
 dev_dependencies:
   flutter_test:

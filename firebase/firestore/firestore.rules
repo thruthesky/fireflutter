@@ -37,7 +37,7 @@ service cloud.firestore {
 
 
     match /users/{documentId} {
-      allow read: if request.auth.uid == documentId;
+      allow read: if request.a== documentId;
       allow create: if request.auth.uid == documentId;
       allow update: if request.auth.uid == documentId;
       allow delete: if false;

@@ -224,16 +224,32 @@ class ChatService with FirebaseHelper {
     required Room room,
     String? text,
     String? url,
+    String? protocol,
   }) async {
     if (text == null && url == null) return;
     final chatMessage = {
       if (text != null) 'text': text,
       if (url != null) 'url': url,
+      if (protocol != null) 'protocol': protocol,
       'createdAt': FieldValue.serverTimestamp(),
       'senderUid': FirebaseAuth.instance.currentUser!.uid,
     };
     await messageCol(room.id).add(chatMessage);
     updateRoomForNewMessage(room: room, lastMessage: chatMessage);
+  }
+
+  /// Send a welcome message to himeself
+  ///
+  /// Purpose: When a user registers, send a message to himself by creating a 1:1 chat room with admin user.
+  ///
+  /// Welcome message is a chat message with the protocol 'welcome' with the given message.
+  /// Since it is a message to himself, it will display 1 as no of new message.
+  Future<void> sendWelcomeMessage({required room, required String message, String? protocol}) async {
+    await sendMessage(room: room, protocol: protocol, text: message);
+    await noOfNewMessageRef(room.id).update({
+      uid: 1,
+    });
+    return;
   }
 
   ///
