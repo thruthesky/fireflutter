@@ -554,6 +554,21 @@ WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
 
 
 
+The code below shows how to open a 1:1 chat room and send a message to the other user.
+
+```dart
+UserService.instance.get(UserService.instance.adminUid).then(
+  (user) async {
+    ChatService.instance.showChatRoom(context: context, user: user);
+    ChatService.instance.sendMessage(
+      room: await ChatService.instance.getSingleChatRoom(UserService.instance.adminUid),
+      text: "https://naver.com",
+    );
+  },
+);
+```
+
+
 # Contribution
 
 Fork the fireflutter and create your own branch. Then update code and push, then pull request.

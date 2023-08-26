@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 /// [exemptedUsers] Array of uids who are exempted in search results
 ///
 /// TODO: Display only users who open their profile.
-class UserListView extends StatelessWidget {
+class UserListView extends StatelessWidget with FirebaseHelper {
   const UserListView({
     super.key,
     this.searchText,
@@ -35,12 +35,9 @@ class UserListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late final Query query;
-    if (searchText == null) {
-      query = FirebaseFirestore.instance.collection('users');
-    } else {
-      // ! Currently we can only search using exact display name
-      query = FirebaseFirestore.instance.collection('users').where(field, isEqualTo: searchText);
+    Query query = userSearchCol;
+    if (searchText != null && searchText != '') {
+      query = query.where(field, isEqualTo: searchText);
     }
     return FirestoreListView(
       query: query,

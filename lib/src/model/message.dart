@@ -9,13 +9,25 @@ class Message with FirebaseHelper {
   final Timestamp createdAt;
   final String? url;
 
+  final String? previewUrl;
+  final String? previewTitle;
+  final String? previewDescription;
+  final String? previewImageUrl;
+
   Message({
     required this.id,
     required this.text,
     required this.url,
     required this.uid,
     required this.createdAt,
+    this.previewUrl,
+    this.previewTitle,
+    this.previewDescription,
+    this.previewImageUrl,
   });
+
+  bool get hasUrl => url != null && url != '';
+  bool get hasPreview => previewUrl != null && previewUrl != '';
 
   factory Message.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     return Message.fromMap(map: documentSnapshot.data() as Map<String, dynamic>, id: documentSnapshot.id);
@@ -28,6 +40,10 @@ class Message with FirebaseHelper {
       url: map['url'],
       uid: map['uid'] ?? '',
       createdAt: (map['createdAt'] == null || map['createdAt'] is FieldValue) ? Timestamp.now() : map['createdAt'],
+      previewUrl: map['previewUrl'],
+      previewTitle: map['previewTitle'],
+      previewDescription: map['previewDescription'],
+      previewImageUrl: map['previewImageUrl'],
     );
   }
 
@@ -38,9 +54,14 @@ class Message with FirebaseHelper {
       'url': url,
       'uid': uid,
       'createdAt': createdAt,
+      if (previewUrl != null) 'previewUrl': previewUrl,
+      if (previewTitle != null) 'previewTitle': previewTitle,
+      if (previewDescription != null) 'previewDescription': previewDescription,
+      if (previewImageUrl != null) 'previewImageUrl': previewImageUrl,
     };
   }
 
   @override
-  String toString() => 'Message(id: $id, text: $text,  url: $url, uid: $uid, createdAt: $createdAt)';
+  String toString() =>
+      'Message(id: $id, text: $text,  url: $url, uid: $uid, createdAt: $createdAt, previewUrl: $previewUrl, previewTitle: $previewTitle, previewDescription: $previewDescription, previewImageUrl: $previewImageUrl)';
 }

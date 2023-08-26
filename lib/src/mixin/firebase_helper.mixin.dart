@@ -20,6 +20,8 @@ mixin FirebaseHelper {
   DocumentReference userDoc(String uid) => userCol.doc(uid);
   DocumentReference get myDoc => userDoc(FirebaseAuth.instance.currentUser!.uid);
 
+  CollectionReference get userSearchCol => FirebaseFirestore.instance.collection('user_search_data');
+
   // categories
   CollectionReference get categoryCol => FirebaseFirestore.instance.collection(Category.collectionName);
   DocumentReference categoryDoc(String categoryId) => categoryCol.doc(categoryId);
