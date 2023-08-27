@@ -17,6 +17,19 @@ class ChatService with FirebaseHelper {
   /// TODO: Support official localization.
   Map<String, String> texts = {};
 
+  /// Last message of the chat room
+  ///
+  ///
+  /// When the user opens the chat room, this will be reset to the last message
+  /// of the current chat room. And this will be updated when any user sends
+  /// a message in chat room list view, since that will be the last message of
+  /// the chat room.
+  ///
+  /// This is used to keep track of last user who sent message to check if the
+  /// user has changed from previous message. So the app can optionally display
+  /// the user avatar in the chat room list view.
+  Message? lastMessage;
+
   getSingleChatRoomId(String? otherUserUid) {
     if (otherUserUid == null) return null;
     final currentUserUid = FirebaseAuth.instance.currentUser!.uid;
@@ -227,16 +240,18 @@ class ChatService with FirebaseHelper {
     String? protocol,
   }) async {
     if (text == null && url == null) return;
+
     final chatMessage = {
       if (text != null) 'text': text,
       if (url != null) 'url': url,
       if (protocol != null) 'protocol': protocol,
       'createdAt': FieldValue.serverTimestamp(),
       'uid': FirebaseAuth.instance.currentUser!.uid,
+      'isUserChanged': lastMessage?.uid != uid,
     };
     final ref = await messageCol(room.id).add(chatMessage);
 
-    updateRoomForNewMessage(room: room, lastMessage: chatMessage);
+    updateNoOfNewMessages(room: room, lastMessage: chatMessage);
 
     /// Update url preview
     final model = UrlPreviewModel();
@@ -267,10 +282,10 @@ class ChatService with FirebaseHelper {
     return;
   }
 
-  ///
+  /// Update no of new message for all users in the room
   ///
   /// See "# No of new message" in README
-  Future<void> updateRoomForNewMessage({required Room room, Map<String, Object>? lastMessage}) async {
+  Future<void> updateNoOfNewMessages({required Room room, Map<String, Object>? lastMessage}) async {
     // Increase the no of new message for each user in the room
     Map<String, dynamic> noOfNewMessages = {};
     for (String uid in room.users) {
@@ -284,6 +299,13 @@ class ChatService with FirebaseHelper {
       {'lastMessage': lastMessage},
       SetOptions(merge: true),
     );
+  }
+
+  /// Reset my "no of new message" to 0 for the chat room
+  Future<void> resetNoOfNewMessage({required Room room}) async {
+    await noOfNewMessageRef(room.id).update({
+      uid: 0,
+    });
   }
 
   /// Get other user uid
@@ -383,5 +405,15 @@ class ChatService with FirebaseHelper {
         );
       },
     );
+  }
+
+  clearLastMessage() {
+    lastMessage = null;
+  }
+
+  setLastMessage(Message message) {
+    if (message.createdAt.microsecondsSinceEpoch > (lastMessage?.createdAt.microsecondsSinceEpoch ?? 0)) {
+      lastMessage = message;
+    }
   }
 }

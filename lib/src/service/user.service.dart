@@ -129,7 +129,14 @@ class UserService with FirebaseHelper {
   /// [reload] is a flag to force reload from Firestore.
   ///
   /// [sync] if [sync] is set to true, then it gets user data from realtime database.
-  /// Or it will get the user_search_data document from firestore.
+  /// Or if [sync] is set to false, it will get the user data under '/users'
+  /// collection from firestore.
+  ///
+  /// Example
+  /// ```
+  /// UserService.instance.get(UserService.instance.uid, reload: true, sync: false);
+  /// ```
+  /// The above example is same as [User.get]
   Future<User?> get(
     String uid, {
     bool reload = false,

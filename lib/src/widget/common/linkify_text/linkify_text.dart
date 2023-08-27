@@ -7,9 +7,13 @@ class LinkifyText extends StatelessWidget {
     Key? key,
     required this.text,
     this.style,
+    this.maxLines,
+    this.overflow,
   }) : super(key: key);
   final String text;
   final TextStyle? style;
+  final int? maxLines;
+  final TextOverflow? overflow;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +28,8 @@ class LinkifyText extends StatelessWidget {
       },
       text: text,
       style: style,
+      maxLines: maxLines,
+      overflow: overflow,
     );
   }
 }
