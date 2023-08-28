@@ -30,7 +30,7 @@ class ChatRoomListTile extends StatelessWidget {
                 ? UserAvatar(
                     uid: otherUserUid(room.users),
                     size: avatarSize,
-                    radius: 10,
+                    radius: 16,
                     borderWidth: 0,
                     borderColor: Colors.grey.shade300,
                   )

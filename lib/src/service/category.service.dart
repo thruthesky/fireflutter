@@ -45,11 +45,11 @@ class CategoryService with FirebaseHelper {
     });
   }
 
-  showUpdateDialog(BuildContext context, Category category) async {
+  showUpdateDialog(BuildContext context, String categoryId) async {
     await showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) => CategoryDialog(
-        category: category,
+        categoryId: categoryId,
       ),
     );
   }

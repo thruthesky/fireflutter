@@ -7,11 +7,11 @@ class CreatePostDialog extends StatefulWidget {
   const CreatePostDialog({
     super.key,
     required this.success,
-    required this.category,
+    this.categoryId,
   });
 
   final void Function(Post post) success;
-  final Category category;
+  final String? categoryId;
 
   @override
   State<CreatePostDialog> createState() => _CreatePostDialogState();
@@ -20,7 +20,22 @@ class CreatePostDialog extends StatefulWidget {
 class _CreatePostDialogState extends State<CreatePostDialog> {
   TextEditingController title = TextEditingController();
   TextEditingController content = TextEditingController();
+
+  String categoryName = '';
   // TODO file upload
+
+  @override
+  void initState() {
+    super.initState();
+    categoryName = widget.categoryId ?? '@t Post Create';
+    if (widget.categoryId != null) {
+      CategoryService.instance.get(widget.categoryId!).then((cat) {
+        setState(() {
+          categoryName = cat!.name;
+        });
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +49,7 @@ class _CreatePostDialogState extends State<CreatePostDialog> {
             padding: const EdgeInsets.all(16.0),
             child: Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text('Category: ${widget.category.name}'), // TODO
+              child: Text('Category: $categoryName'), // TODO
             ),
           ),
           Padding(
@@ -82,7 +97,7 @@ class _CreatePostDialogState extends State<CreatePostDialog> {
                   if (title.text.isNotEmpty && content.text.isNotEmpty) {
                     PostService.instance
                         .createPost(
-                      categoryId: widget.category.id,
+                      categoryId: widget.categoryId!,
                       title: title.text,
                       content: content.text,
                     )

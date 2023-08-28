@@ -19,36 +19,36 @@ class PostListDialog extends StatefulWidget {
 }
 
 class _PostListDialogState extends State<PostListDialog> {
-  Category? category;
+  // Category? category;
 
   @override
   void initState() {
     super.initState();
-    if (widget.categoryId != null && category == null) {
-      CategoryService.instance.get(widget.categoryId!).then((value) {
-        setState(() {
-          category = value;
-        });
-      });
-    }
+    // if (widget.categoryId != null && category == null) {
+    //   CategoryService.instance.get(widget.categoryId!).then((value) {
+    //     setState(() {
+    //       category = value;
+    //     });
+    // });
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.categoryId != null && category == null) {
-      return const SizedBox.shrink();
-    }
+    // if (widget.categoryId != null && category == null) {
+    //   return const SizedBox.shrink();
+    // }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title ?? category?.name ?? ''),
+        title: Text(widget.title ?? widget.categoryId ?? "@t - Post List"),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
               PostService.instance.showCreateDialog(
                 context,
-                category: category!,
+                categoryId: widget.categoryId,
                 success: (val) {
                   Navigator.pop(context);
                 },
@@ -71,7 +71,7 @@ class _PostListDialogState extends State<PostListDialog> {
                     height: 20,
                   ),
                 );
-                if (category != null) {
+                if (widget.categoryId != null) {
                   popupMenuItemList.add(
                     const PopupMenuItem(
                       value: "category_settings",
@@ -96,12 +96,13 @@ class _PostListDialogState extends State<PostListDialog> {
             onSelected: (value) {
               switch (value) {
                 case "category_settings":
-                  if (category != null) {
-                    CategoryService.instance.showUpdateDialog(context, category!);
+                  if (widget.categoryId != null) {
+                    CategoryService.instance.showUpdateDialog(context, widget.categoryId!);
                   } else {
                     CategoryService.instance.showListDialog(
                       context,
-                      onTapCategory: (category) => CategoryService.instance.showUpdateDialog(context, category),
+                      onTapCategory: (category) =>
+                          CategoryService.instance.showUpdateDialog(context, widget.categoryId!),
                     );
                   }
                   break;
@@ -109,7 +110,7 @@ class _PostListDialogState extends State<PostListDialog> {
                 case "category_list":
                   CategoryService.instance.showListDialog(
                     context,
-                    onTapCategory: (category) => CategoryService.instance.showUpdateDialog(context, category),
+                    onTapCategory: (category) => CategoryService.instance.showUpdateDialog(context, category.id),
                   );
                   break;
 
@@ -121,9 +122,7 @@ class _PostListDialogState extends State<PostListDialog> {
           )
         ],
       ),
-      body: PostListView(
-        category: category,
-      ),
+      body: const PostListView(),
     );
   }
 }

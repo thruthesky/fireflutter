@@ -16,13 +16,13 @@ class PostService with FirebaseHelper {
 
   showCreateDialog(
     BuildContext context, {
-    required Category category,
+    String? categoryId,
     required void Function(Post post) success,
   }) async {
     await showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) => CreatePostDialog(
-        category: category,
+        categoryId: categoryId,
         success: success,
       ),
     );

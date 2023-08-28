@@ -92,6 +92,7 @@ class UserAvatar extends StatelessWidget {
           width: size,
           height: size,
           decoration: BoxDecoration(
+            color: Colors.grey.shade100,
             borderRadius: BorderRadius.circular(radius),
             border: Border.all(
               color: borderColor,

@@ -24,7 +24,7 @@ class CategoryListDialog extends StatelessWidget {
                 context,
                 success: (category) {
                   Navigator.pop(context);
-                  CategoryService.instance.showUpdateDialog(context, category);
+                  CategoryService.instance.showUpdateDialog(context, category.id);
                 },
               );
             },
