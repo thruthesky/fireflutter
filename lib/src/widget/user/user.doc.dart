@@ -67,14 +67,15 @@ class UserDoc extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // uid 와 user 가 지정되지 않으면, 현재 로그인 사용자
+    // 현재 사용자 (uid 와 user 가 null)
     if (uid == null && user == null) {
       // 실시간 업데이트가 아니면,
       if (live == false) {
-        // 현재 사용자가 로그인을 안했으면, Not logged in 위젯 표시
+        // 현재 사용자, 실시간 아님, 로그인 안 했음. Not logged in 위젯 표시
         if (fa.FirebaseAuth.instance.currentUser == null) {
-          return documentNotExistBuilder?.call() ?? const SizedBox.shrink();
+          return notLoggedInBuilder?.call() ?? const SizedBox.shrink();
         } else {
+          // 현재 사용자, 실시간 아님, 로그인 했음
           // 로그인을 했으면, firestore /users collection 에서 데이터를 가져와 biuld 한다.
           return FutureBuilder<User?>(
             future: User.get(currentUserUid),
@@ -82,7 +83,7 @@ class UserDoc extends StatelessWidget {
           );
         }
       } else {
-        // 실시간 업데이트이면, 현재 사용자 로그인/로그아웃 할 때 마다 감시해서 다시 빌드
+        // 현재 사용자, 실시간 업데이트이면, 로그인/로그아웃 할 때 마다 감시해서 다시 빌드
         return StreamBuilder(
             stream: fa.FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
@@ -94,11 +95,12 @@ class UserDoc extends StatelessWidget {
               else if (snapshot.hasError) {
                 return Text('Something went wrong - ${snapshot.error}');
               }
-              // 로그인을 안했으면, Not logged in 위젯 표시
+              // 현재 사용자, 실시간, 로그인을 안했으면, Not logged in 위젯 표시
               else if (snapshot.data == null) {
                 return notLoggedInBuilder?.call() ?? const SizedBox.shrink();
               }
-              // 로그인 했으면,
+
+              // 현재, 사용자, 실시간, 로그인 했으면,
               else {
                 // 현재 사용자의 문서를 실시간으로 Firestore /users collection 에서 데이터를 가져와 biuld 한다.
                 return StreamBuilder<User?>(
@@ -126,24 +128,13 @@ class UserDoc extends StatelessWidget {
         );
       }
     }
-
-    // return live != true || userUid == null
-    //     // live update
-    //     ? StreamBuilder<User?>(
-    //         stream: userUid == null ? UserService.instance.snapshot : UserService.instance.snapshotOther(userUid!),
-    //         builder: buildStreamWidget,
-    //       )
-    //     // update one time
-    //     : FutureBuilder<User?>(
-    //         future: UserService.instance.get(userUid ?? currentUserUid, sync: userUid != null),
-    //         builder: buildStreamWidget,
-    //       );
   }
 
   Widget buildStreamWidget(BuildContext _, AsyncSnapshot<User?> snapshot) {
     /// 주의: 로딩 중, 반짝임(깜빡거림)이 발생할 수 있다.
     if (snapshot.connectionState == ConnectionState.waiting) {
       // 로딩 중이면, 반짝임을 없애고, 빠르게 랜더링을 하기 위해서, 입력된 user model 로 화면을 그린다.
+
       if (user != null) {
         return builder(user!);
       } else {
@@ -159,6 +150,7 @@ class UserDoc extends StatelessWidget {
     }
 
     /// 로그인 했고, 사용자 문서가 존재하는 경우,
+
     return builder(userModel);
   }
 }
