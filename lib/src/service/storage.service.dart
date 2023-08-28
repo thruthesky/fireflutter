@@ -88,6 +88,7 @@ class StorageService with FirebaseHelper {
   /// Ask user to upload a photo or a file
   ///
   /// Call this method when the user presses the button to upload a photo or a file.
+  /// TODO error handler
   Future<String?> upload({
     required BuildContext context,
     Function(double)? progress,

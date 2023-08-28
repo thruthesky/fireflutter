@@ -548,11 +548,32 @@ ChatService.instance.showChatRoom(
 Below is to show post view screen.
 
 ```dart
+/// Example 1
+Post.get('Uc2TKInQ9oBJeKtSJpBq').then((p) => PostService.instance.showPostViewDialog(context, p));
+
+/// Example 2
 WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
   PostService.instance.showPostViewDialog(context, await Post.get('Wqdje1wU1IDVs7Uus936'));
 });
 ```
 
+Below is to show post edit dialog.
+
+```dart
+Post.get('Uc2TKInQ9oBJeKtSJpBq').then((p) => PostService.instance.showPostEditDialog(context, post: p));
+```
+
+
+
+The code below shows how to open a post create dialog.
+
+```dart
+PostService.instance.showCreateDialog(
+  context,
+  categoryId: 'buyandsell',
+  success: (p) => print(p),
+);
+```
 
 
 The code below shows how to open a 1:1 chat room and send a message to the other user.
@@ -568,6 +589,8 @@ UserService.instance.get(UserService.instance.adminUid).then(
   },
 );
 ```
+
+
 
 
 # Contribution

@@ -38,6 +38,7 @@ class FormTranslations {
   String title = 'Title';
   String content = 'Content';
   String postCreate = 'CREATE';
+  String postUpdate = 'UPDATE';
   String titleRequired = 'Title is required';
   String contentRequired = 'Content is required';
 }

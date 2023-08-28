@@ -45,14 +45,14 @@ class _PostListDialogState extends State<PostListDialog> {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {
-              PostService.instance.showCreateDialog(
+            onPressed: () async {
+              await PostService.instance.showCreateDialog(
                 context,
                 categoryId: widget.categoryId,
-                success: (val) {
-                  Navigator.pop(context);
-                },
               );
+              if (mounted) {
+                Navigator.pop(context);
+              }
             },
           ),
           PopupMenuButton(
