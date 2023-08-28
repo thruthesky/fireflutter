@@ -38,7 +38,7 @@ class StorageService with FirebaseHelper {
   ///
   /// TODO support 'error' handler.
   ///
-  Future<String?> upload({
+  Future<String?> putFile({
     Function(double)? progress,
     Function? complete,
     int compressQuality = 80,
@@ -88,7 +88,7 @@ class StorageService with FirebaseHelper {
   /// Ask user to upload a photo or a file
   ///
   /// Call this method when the user presses the button to upload a photo or a file.
-  Future<String?> ask({
+  Future<String?> upload({
     required BuildContext context,
     Function(double)? progress,
     Function? complete,
@@ -110,7 +110,7 @@ class StorageService with FirebaseHelper {
       path = image?.path;
     }
 
-    return await upload(
+    return await putFile(
       path: path,
       saveAs: saveAs,
       progress: progress,

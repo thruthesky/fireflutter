@@ -5,6 +5,7 @@ class I18N {
   CategoryTranslations category = CategoryTranslations();
   PostTranslations post = PostTranslations();
   CommentTranslations comment = CommentTranslations();
+  FormTranslations form = FormTranslations();
 }
 
 class UserTranslations {
@@ -31,6 +32,14 @@ class PostTranslations {
 class CommentTranslations {
   String noComment = 'No comment yet.';
   String noReply = 'No reply yet.';
+}
+
+class FormTranslations {
+  String title = 'Title';
+  String content = 'Content';
+  String postCreate = 'CREATE';
+  String titleRequired = 'Title is required';
+  String contentRequired = 'Content is required';
 }
 
 final tr = I18N();

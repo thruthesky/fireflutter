@@ -146,3 +146,13 @@ double indent(int? no) {
     return 112;
   }
 }
+
+void warningSnackbar(BuildContext context, String message) async {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message),
+      duration: const Duration(seconds: 3),
+      backgroundColor: Theme.of(context).colorScheme.error,
+    ),
+  );
+}

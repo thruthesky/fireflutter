@@ -369,7 +369,7 @@ We save the no of new messages of each users in RTDB. If we save the no of new m
 You can upload photo like below. It will display a dialog to choose photo from photo gallery or camera.
 
 ```dart
-final url = await StorageService.instance.ask(context: context);
+final url = await StorageService.instance.upload(context: context);
 print(url);
 ```
 

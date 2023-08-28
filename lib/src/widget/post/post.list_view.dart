@@ -24,7 +24,7 @@ class PostListView extends StatelessWidget {
     this.dragStartBehavior = DragStartBehavior.start,
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.clipBehavior = Clip.hardEdge,
-    this.category,
+    this.categoryId,
   });
 
   final int pageSize;
@@ -39,12 +39,12 @@ class PostListView extends StatelessWidget {
   final DragStartBehavior dragStartBehavior;
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final Clip clipBehavior;
-  final Category? category;
+  final String? categoryId;
 
   Query get query {
     Query q = PostService.instance.postCol;
-    if (category != null) {
-      q = q.where('categoryId', isEqualTo: category!.id);
+    if (categoryId != null) {
+      q = q.where('categoryId', isEqualTo: categoryId);
     }
 
     q = q.orderBy('createdAt', descending: true);
@@ -63,16 +63,16 @@ class PostListView extends StatelessWidget {
         } else {
           return ListTile(
             title: Text(post.title),
+            subtitle: Text(
+              post.content.replaceAll('\n', ' '),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            trailing: const Icon(Icons.chevron_right),
             onTap: () {
               // print(post);
               PostService.instance.showPostViewDialog(context, post);
             },
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(post.content),
-              ],
-            ),
           );
         }
       },

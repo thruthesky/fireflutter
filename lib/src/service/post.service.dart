@@ -32,6 +32,7 @@ class PostService with FirebaseHelper {
     return PostService.instance.col.doc(postId).snapshots();
   }
 
+  @Deprecated('use Post.create')
   Future<Post> createPost({
     required String categoryId,
     required String title,
