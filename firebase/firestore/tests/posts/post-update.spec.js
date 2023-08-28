@@ -155,36 +155,20 @@ describe("Post Update Test", () => {
         })
     );
   });
-  it("User B removes C  in likes from post by A - failure", async () => {
-    // Prepare
-    // create category
-    const categoryRef = await admin().collection(categoriesColName).add({
-      name: "Test",
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      createdBy: "test-uid-admin",
-    });
 
-    // create post
-    const postRef = await db(a).collection(postsColName).add({
-      categoryId: categoryRef.id,
-      title: "Sample Title",
-      content: "Sample Content",
-      uid: a.uid,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      likes: [],
-    });
+  it("User B removes C  in likes from post by A - failure", async () => {
+    const postRef = await createPost({ prefix: "likes-" });
 
     // C liked the post
-    db(c)
+
+    await db(c)
       .collection(postsColName)
       .doc(postRef.id)
       .update({
         likes: firebase.firestore.FieldValue.arrayUnion(c.uid),
       });
 
-    // B update A's post and adds C in likes - fail
+    // B remove C. fails. Updating A's post and removing C in likes - fail
     await firebase.assertFails(
       db(b)
         .collection(postsColName)
@@ -194,6 +178,7 @@ describe("Post Update Test", () => {
         })
     );
   });
+
   it("User B removes himself in likes from post by A - success", async () => {
     // Prepare
     // create category

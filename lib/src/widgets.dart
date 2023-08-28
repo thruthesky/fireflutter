@@ -11,8 +11,8 @@ export 'widget/chat/chat_room.dart';
 export 'widget/user/user.display_name.dart';
 export 'widget/chat/chat_friend_list.dart';
 export 'widget/chat/chat_message_box.dart';
-export 'widget/chat/chat_message_bubble.dart';
-export 'widget/chat/chat_messages_list_view.dart';
+export 'widget/chat/chat_room.message.list_item.dart';
+export 'widget/chat/chat_room.message.list_view.dart';
 export 'widget/chat/chat_room_app_bar.dart';
 export 'widget/chat/chat_room_app_bar_title.dart';
 export 'widget/chat/chat_room_create.dart';
@@ -55,3 +55,7 @@ export 'widget/comment/comment.list_tile.dart';
 
 // Common
 export 'widget/common/timestamp.text.dart';
+export 'widget/common/linkify_text/linkify_text.dart';
+export 'widget/common/display_media/display_media.dart';
+export 'widget/common/url_preview/url_preview.dart';
+export 'widget/common/url_preview/url_preview.model.dart';

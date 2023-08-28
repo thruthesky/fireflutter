@@ -5,6 +5,10 @@ import 'package:fireflutter/fireflutter.dart';
 class User with FirebaseHelper {
   static const String collectionName = 'users';
 
+  /// This holds the original JSON document data of the user document. This is
+  /// useful when you want to save custom data in the user document.
+  late Map<String, dynamic> data;
+
   @override
   final String uid;
 
@@ -89,6 +93,7 @@ class User with FirebaseHelper {
     this.createdAt,
     this.complete = false,
     this.exists = true,
+    this.data = const {},
   }) : createdAtDateTime = createdAt?.toDate();
 
   factory User.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
@@ -109,6 +114,7 @@ class User with FirebaseHelper {
     } else {
       map['createdAt'] = null;
     }
+
     return User(
       uid: id,
       isAdmin: map['isAdmin'] ?? false,
@@ -129,6 +135,7 @@ class User with FirebaseHelper {
       birthDay: map['birthDay'] ?? 0,
       createdAt: map['createdAt'],
       complete: map['complete'] ?? false,
+      data: map,
     );
   }
 

@@ -65,7 +65,7 @@ class Room with FirebaseHelper {
     return Room(
       id: id,
       name: map['name'] ?? '',
-      rename: map['rename'] ?? {},
+      rename: Map<String, String>.from(map['rename'] ?? {}),
       group: map['group'],
       open: map['open'],
       master: map['master'],

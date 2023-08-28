@@ -7,11 +7,15 @@ import 'package:flutter/material.dart';
 /// [user] is the user model.
 ///
 /// [uid] is the user uid.
-/// If [user] is null, [uid] is required.
+///
+/// If [user] and [uid] is null, then, it will show [defaultIcon].
 ///
 /// [size] is the avatar size.
 ///
 /// [defaultIcon] is the default icon when user photoUrl is null.
+///
+/// [padding] is the padding of the avatar. Default is EdgeInsets.all(0). See
+/// the details on [Avatar]
 ///
 class UserAvatar extends StatefulWidget {
   const UserAvatar({
@@ -23,8 +27,9 @@ class UserAvatar extends StatefulWidget {
     this.borderWidth = 0,
     this.borderColor = Colors.transparent,
     this.radius = 10,
+    this.padding = const EdgeInsets.all(0),
     this.onTap,
-  }) : assert(user != null || uid != null);
+  });
 
   final User? user;
   final String? uid;
@@ -33,6 +38,7 @@ class UserAvatar extends StatefulWidget {
   final double borderWidth;
   final Color borderColor;
   final double radius;
+  final EdgeInsets padding;
   final Function()? onTap;
 
   @override
@@ -47,7 +53,8 @@ class _UserAvatarState extends State<UserAvatar> {
     super.initState();
     if (widget.user != null) {
       user = widget.user;
-    } else {
+    }
+    if (widget.uid != null && widget.uid != '') {
       UserService.instance.get(widget.uid!).then((value) {
         if (mounted) {
           setState(() {
@@ -77,6 +84,7 @@ class _UserAvatarState extends State<UserAvatar> {
       borderWidth: widget.borderWidth,
       borderColor: widget.borderColor,
       radius: widget.radius,
+      padding: widget.padding,
     );
   }
 

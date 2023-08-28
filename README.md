@@ -11,6 +11,7 @@ A free, open source, complete, rapid development package for creating Social app
   - [Install the easy extension](#install-the-easy-extension)
   - [Security rules](#security-rules)
     - [Security rule for admin](#security-rule-for-admin)
+  - [Cloud functions](#cloud-functions)
   - [Admin settings](#admin-settings)
 - [Usage](#usage)
   - [UserService](#userservice)
@@ -25,6 +26,7 @@ A free, open source, complete, rapid development package for creating Social app
   - [UserProfileAvatar](#userprofileavatar)
   - [User List View](#user-list-view)
 - [Chat Feature](#chat-feature)
+  - [Welcome message](#welcome-message)
   - [No of new message](#no-of-new-message)
 - [Upload](#upload)
   - [Photo upload](#photo-upload)
@@ -106,7 +108,11 @@ We built a firebase extension for the easy management of firebase. Install the f
 
 This is a must firebase extension for the fireflutter to work properly.
 
+
+
 ## Security rules
+
+Security rules are under `/firebase/firestore/firestore.rules`.
 
 Copy [the security rules of fireflutter](https://raw.githubusercontent.com/thruthesky/fireflutter/main/firebase/firestore/firestore.rules) and paste it in your firebase project. You may need to copy only the parts of the necessary security rules.
 
@@ -136,6 +142,12 @@ For instance, you may write security rules like below and add the uids of sub-ad
     ...
   }
 ```
+
+
+## Cloud functions
+
+Instead of building and managing cloud functions code, we choose to use it as firebase extension. The `easy-extension` has all the functions that fireflutter needs. See the [Install the easy extension](#install-the-easy-extension).
+
 
 ## Admin settings
 
@@ -338,6 +350,11 @@ onPressed() async {
 
 # Chat Feature
 
+
+## Welcome message
+
+To send a welcome chat message to a user who just registered, use `UserService.instance.sendWelcomeMessage`. See details on the comments of the source.
+
 ## No of new message
 
 We save the no of new messages of each users in RTDB. If we save the no of new messages of all users of the room in the chat room document like `{ noOfNewMessages: { uid-A: 1, uid-B 2, ... }}`, there will be performance issue and it will cost more. The problem is the chat room must be listened as a stream for realtime update. And if a user chats there are other users who read. Everytime a user reads a messgae, the chat room docuemnt will be fetched for every user with no reason. This is jus tan extra cost. So, we put the number of new messages under `/chats/{roomId}/noOfNewMessages/{uid}` in RTDB.
@@ -535,6 +552,21 @@ WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
 });
 ```
 
+
+
+The code below shows how to open a 1:1 chat room and send a message to the other user.
+
+```dart
+UserService.instance.get(UserService.instance.adminUid).then(
+  (user) async {
+    ChatService.instance.showChatRoom(context: context, user: user);
+    ChatService.instance.sendMessage(
+      room: await ChatService.instance.getSingleChatRoom(UserService.instance.adminUid),
+      text: "https://naver.com",
+    );
+  },
+);
+```
 
 
 # Contribution
@@ -845,7 +877,7 @@ Scafolld(
 - `noOfNewMessages: Map<string, number>` - This contains the uid of the chat room users as key and the number of new messages as value.
 - `lastMessage: Map` is the last message in the room.
   - `createdAt: [timestamp|date]` is the time that the last message was sent.
-  - `senderUid: [string]` is the sender Uid
+  - `uid: [string]` is the sender Uid
   - `text: [string]` is the text in the message
 - `maximumNoOfUsers: [int]` is the maximum no of users in the group.
 
@@ -853,7 +885,7 @@ Scafolld(
 
 - `text` is the text message [Optional] - Optional, meaning, a message can be sent without the text.
 - `createdAt` is the time that the message was sent.
-- `senderUid` is the sender Uid
+- `uid` is the sender Uid
 - `imageUrl [String]` is the image's URL added to the message. [Optional]
 - `fileUrl [String]` is the file's URL added to the message. [Optional]
 - `fileName` is the file name of the file from `fileUrl`. [Optional]

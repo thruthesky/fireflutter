@@ -63,7 +63,13 @@ function tempChatRoomData(options = {}) {
  * @param {*} options
  * @returns chat room ref
  * @example
- * - const roomRef = await createChatRoom(a, { master: a.uid, users: [a.uid, b.uid] });
+ * ```
+ * const roomRef = await createChatRoom(a, { master: a.uid, users: [a.uid, b.uid] }); // create a 1:1 chat room by A(master) with B.
+ * ```
+ * The above example creates a chat room by A with B. It is short for:
+ * ```
+ * const roomRef = await db(a).collection(chatsColName).add(tempChatRoomData({ master: a.uid, users: [a.uid, b.uid] }));
+ * ```
  */
 function createChatRoom(masterAuth, options = {}) {
   return db(masterAuth).collection(chatsColName).add(tempChatRoomData(options));
@@ -140,10 +146,12 @@ async function setAsModerator(setterAuth, userAuth, roomId) {
     });
 }
 
-async function createCategory() {
-  const id = "test-category" + Date.now();
-
-  console.log(categoriesColName, id);
+async function createCategory(options = {}) {
+  const id =
+    (options?.prefix ?? "") +
+    "test-category" +
+    Date.now() +
+    Math.floor(Math.random() * 10000);
 
   // create category
   await admin().collection(categoriesColName).doc(id).set({
@@ -158,11 +166,15 @@ async function createCategory() {
 }
 
 // create post
+// example
+// ```
+// const postRef = await createPost({ auth: a, prefix: "likes-"});
+// ```
 async function createPost(options = {}) {
   if (!options.auth) {
     options.auth = a;
   }
-  const categoryRef = await createCategory();
+  const categoryRef = await createCategory(options);
 
   // create post
   const postRef = await db(options.auth).collection(postsColName).add({

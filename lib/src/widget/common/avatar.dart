@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 /// Avatar
 ///
-/// [size] is the avatar size including the border width. Default is 24.
+/// [size] is the avatar size including the border width and padding. Default is 24.
 ///
 /// [borderWidth] is the border width. Default is 0.
 /// If [borderWidth] is 1, then, the avatar size is 22. The border width is included in the size.
@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 /// [radius] is the border radius. Default is null.
 ///
 /// [padding] is the padding of the avatar. Default is EdgeInsets.all(0). If border is given,
-/// then, there will be padding between the border and the avatar.
+/// then, this padding will be added between the border and the avatar.
 class Avatar extends StatelessWidget {
   const Avatar({
     super.key,

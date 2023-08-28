@@ -1,4 +1,11 @@
-## 0.3.2
+## 0.3.4
+
+* Update. Chat service and features.
+* Update. UserDoc.
+
+
+
+## 0.3.3
 
 * Adding forum features.
 
