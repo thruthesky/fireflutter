@@ -40,6 +40,7 @@ A free, open source, complete, rapid development package for creating Social app
 - [Developer](#developer)
   - [Development Tips](#development-tips)
 - [Contribution](#contribution)
+  - [Install FireFlutter and Example Project](#install-fireflutter-and-example-project)
   - [Coding Guideline](#coding-guideline)
 - [OLD README](#old-readme)
   - [TODO](#todo)
@@ -572,6 +573,19 @@ UserService.instance.get(UserService.instance.adminUid).then(
 # Contribution
 
 Fork the fireflutter and create your own branch. Then update code and push, then pull request.
+
+## Install FireFlutter and Example Project
+
+
+```sh
+git clone https://github.com/thruthesky/fireflutter
+cd fireflutter
+mkdir apps
+cd apps
+git clone https://github.com/thruthesky/example
+cd example
+flutter run
+```
 
 ## Coding Guideline
 
