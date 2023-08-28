@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 /// [padding] is the padding of the avatar. Default is EdgeInsets.all(0). See
 /// the details on [Avatar]
 ///
-class UserAvatar extends StatefulWidget {
+class UserAvatar extends StatelessWidget {
   const UserAvatar({
     super.key,
     this.user,
@@ -29,7 +29,7 @@ class UserAvatar extends StatefulWidget {
     this.radius = 10,
     this.padding = const EdgeInsets.all(0),
     this.onTap,
-  });
+  }) : assert(user == null || uid == null);
 
   final User? user;
   final String? uid;
@@ -42,67 +42,65 @@ class UserAvatar extends StatefulWidget {
   final Function()? onTap;
 
   @override
-  State<UserAvatar> createState() => _UserAvatarState();
-}
-
-class _UserAvatarState extends State<UserAvatar> {
-  User? user;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.user != null) {
-      user = widget.user;
-    }
-    if (widget.uid != null && widget.uid != '') {
-      UserService.instance.get(widget.uid!).then((value) {
-        if (mounted) {
-          setState(() {
-            user = value;
-          });
-        }
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     // if onTap is null, then, don't capture the gesture event. Just return avatar.
-    if (widget.onTap == null) return _buildAvatar();
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: _buildAvatar(),
-    );
+    if (user != null) {
+      return _buildAvatar(user!);
+    } else {
+      return FutureBuilder<User?>(
+        future: UserService.instance.get(uid!),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return _buildAvatar(snapshot.data!);
+          } else {
+            return buildDefaultIcon();
+          }
+        },
+      );
+    }
   }
 
-  _buildAvatar() {
-    if (user == null) return defaultIcon();
-    if (user?.photoUrl == null || user?.photoUrl == '') return defaultIcon();
-    return Avatar(
-      url: user!.photoUrl,
-      size: widget.size,
-      borderWidth: widget.borderWidth,
-      borderColor: widget.borderColor,
-      radius: widget.radius,
-      padding: widget.padding,
-    );
+  _buildAvatar(User user) {
+    Widget child;
+    if (user.photoUrl == '') {
+      child = buildDefaultIcon();
+    } else {
+      child = Avatar(
+        url: user.photoUrl,
+        size: size,
+        borderWidth: borderWidth,
+        borderColor: borderColor,
+        radius: radius,
+        padding: padding,
+      );
+    }
+
+    if (onTap == null) {
+      return child;
+    } else {
+      return GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: child,
+      );
+    }
   }
 
-  Widget defaultIcon() {
-    return widget.defaultIcon ??
+  Widget buildDefaultIcon() {
+    return defaultIcon ??
         Container(
-          width: widget.size,
-          height: widget.size,
+          width: size,
+          height: size,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(widget.radius),
+            borderRadius: BorderRadius.circular(radius),
             border: Border.all(
-              color: widget.borderColor,
-              width: widget.borderWidth,
+              color: borderColor,
+              width: borderWidth,
             ),
           ),
           child: Icon(
             Icons.person,
-            size: widget.size / 2,
+            size: size / 2,
           ),
         );
   }
