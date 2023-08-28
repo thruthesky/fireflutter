@@ -1,3 +1,8 @@
+## 0.3.5
+
+* Update. Forum feature.
+
+
 ## 0.3.4
 
 * Update. Chat service and features.
