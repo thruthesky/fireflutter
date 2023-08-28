@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/post.dart';
 import 'package:flutter/material.dart';
 
 class PostService with FirebaseHelper {
@@ -10,6 +9,7 @@ class PostService with FirebaseHelper {
 
   get col => postCol;
 
+  @Deprecated('User post.isMine() instead')
   bool isMine(Post post) {
     return UserService.instance.uid == post.uid;
   }
@@ -21,7 +21,7 @@ class PostService with FirebaseHelper {
   }) async {
     await showGeneralDialog(
       context: context,
-      pageBuilder: (context, _, __) => CreatePostDialog(
+      pageBuilder: (context, _, __) => PostCreateDialog(
         categoryId: categoryId,
         success: success,
       ),
@@ -74,7 +74,7 @@ class PostService with FirebaseHelper {
   showPostEditDialog(BuildContext context, Post post) {
     showGeneralDialog(
       context: context,
-      pageBuilder: (context, _, __) => EditPostDialog(
+      pageBuilder: (context, _, __) => PostEditDialog(
         post: post,
       ),
     );

@@ -42,8 +42,8 @@ class Post with FirebaseHelper {
       content: map['content'] ?? '',
       uid: map['uid'] ?? '',
       files: map['files'],
-      createdAt: map['createdAt'] ?? Timestamp.now(),
-      updatedAt: map['updatedAt'] ?? Timestamp.now(),
+      createdAt: (map['createdAt'] is Timestamp) ? map['createdAt'] : Timestamp.now(),
+      updatedAt: (map['updatedAt'] is Timestamp) ? map['updatedAt'] : Timestamp.now(),
       likes: map['likes'] ?? [],
       deleted: map['deleted'],
       noOfComments: map['noOfComments'] ?? 0,
@@ -64,7 +64,6 @@ class Post with FirebaseHelper {
     required String content,
     List<String>? files,
   }) async {
-    String myUid = FirebaseAuth.instance.currentUser!.uid;
     final Map<String, dynamic> postData = {
       'title': title,
       'content': content,
@@ -72,12 +71,10 @@ class Post with FirebaseHelper {
       if (files != null) 'files': files,
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
-      'uid': myUid,
+      'uid': UserService.instance.uid,
     };
     final postId = PostService.instance.postCol.doc().id;
     await PostService.instance.postCol.doc(postId).set(postData);
-    postData['createdAt'] = Timestamp.now();
-    postData['updatedAt'] = Timestamp.now();
     return Post.fromMap(map: postData, id: postId);
   }
 
