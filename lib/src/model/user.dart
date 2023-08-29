@@ -44,6 +44,12 @@ class User with FirebaseHelper {
   final int birthMonth;
   final int birthDay;
 
+  /// [type] is a string value that can be used to categorize the user. You can
+  /// think of it as a member type. For example, you can set it to 'player' or
+  /// 'coach' or 'admin' or 'manager' or 'staff' or 'parent' or 'fan' or
+  /// 'student', 'guest', etc...
+  final String type;
+
   /// Indicates whether the user has a photoUrl.
   ///
   /// Note this value is automatically set to true when the user uploads a photo by the easy-extension
@@ -90,6 +96,7 @@ class User with FirebaseHelper {
     this.birthYear = 0,
     this.birthMonth = 0,
     this.birthDay = 0,
+    this.type = '',
     this.createdAt,
     this.complete = false,
     this.exists = true,
@@ -133,6 +140,7 @@ class User with FirebaseHelper {
       birthYear: map['birthYear'] ?? 0,
       birthMonth: map['birthMonth'] ?? 0,
       birthDay: map['birthDay'] ?? 0,
+      type: map['type'] ?? '',
       createdAt: map['createdAt'],
       complete: map['complete'] ?? false,
       data: map,
@@ -158,6 +166,7 @@ class User with FirebaseHelper {
       'birthYear': birthYear,
       'birthMonth': birthMonth,
       'birthDay': birthDay,
+      'type': type,
       'createdAt': createdAt ?? FieldValue.serverTimestamp(),
       'complete': complete,
     };
@@ -165,7 +174,7 @@ class User with FirebaseHelper {
 
   @override
   String toString() =>
-      '''User(uid: $uid, isAdmin: $isAdmin, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, idVerifiedCode: $idVerifiedCode, phoneNumber: $phoneNumber, email: $email, state: $state, stateImageUrl: $stateImageUrl, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, cached: $cached)''';
+      '''User(uid: $uid, isAdmin: $isAdmin, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, idVerifiedCode: $idVerifiedCode, phoneNumber: $phoneNumber, email: $email, state: $state, stateImageUrl: $stateImageUrl, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, type: $type, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, cached: $cached)''';
 
   /// 사용자 문서를 읽어온다.
   ///
@@ -214,6 +223,7 @@ class User with FirebaseHelper {
     int? birthYear,
     int? birthMonth,
     int? birthDay,
+    String? type,
     bool? complete,
     String? field,
     dynamic value,
@@ -235,6 +245,7 @@ class User with FirebaseHelper {
       if (birthYear != null) 'birthYear': birthYear,
       if (birthMonth != null) 'birthMonth': birthMonth,
       if (birthDay != null) 'birthDay': birthDay,
+      if (type != null) 'type': type,
       if (complete != null) 'complete': complete,
       if (field != null && value != null) field: value,
     });

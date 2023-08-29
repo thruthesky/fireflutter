@@ -370,7 +370,30 @@ You can upload photo like below. It will display a dialog to choose photo from p
 
 ```dart
 final url = await StorageService.instance.upload(context: context);
-print(url);
+```
+
+The code below displays a button and do the file upload process.
+
+```dart
+IconButton(
+  onPressed: () async {
+    final url = await StorageService.instance.upload(
+      context: context,
+      progress: (p) => setState(() => progress = p),
+      complete: () => setState(() => progress = null),
+    );
+    print('url: $url');
+    if (url != null && mounted) {
+      setState(() {
+        urls.add(url);
+      });
+    }
+  },
+  icon: const Icon(
+    Icons.camera_alt,
+    size: 36,
+  ),
+),
 ```
 
 It has options like displaying a progressive percentage.
