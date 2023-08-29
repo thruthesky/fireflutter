@@ -194,6 +194,7 @@ class UserService with FirebaseHelper {
   /// Update a user document under /users/{uid} for the login user.
   ///
   /// This automatically updates the [nullableUser] value.
+  @Deprecated('Use User.update() instead')
   Future<User?> update({
     String? name,
     String? firstName,
