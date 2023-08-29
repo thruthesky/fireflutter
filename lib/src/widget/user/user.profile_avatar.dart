@@ -96,7 +96,7 @@ class _UserAvatarState extends State<UserProfileAvatar> {
         if (image == null) return;
 
         // final file = File(image.path);
-        final url = await StorageService.instance.upload(
+        final url = await StorageService.instance.putFile(
           path: image.path,
           progress: (p) => setState(() => progress = p),
           complete: () => setState(() => progress = null),

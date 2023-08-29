@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/post.dart';
 import 'package:flutter/material.dart';
 
 class PostService with FirebaseHelper {
@@ -10,21 +9,29 @@ class PostService with FirebaseHelper {
 
   get col => postCol;
 
+  @Deprecated('User post.isMine() instead')
   bool isMine(Post post) {
     return UserService.instance.uid == post.uid;
   }
 
   showCreateDialog(
     BuildContext context, {
-    required Category category,
-    required void Function(Post post) success,
+    String? categoryId,
   }) async {
     await showGeneralDialog(
       context: context,
-      pageBuilder: (context, _, __) => CreatePostDialog(
-        category: category,
-        success: success,
-      ),
+      pageBuilder: (context, _, __) => PostEditDialog(categoryId: categoryId),
+    );
+  }
+
+  /// Shows the Edit Post as a dialog
+  showPostEditDialog(
+    BuildContext context, {
+    required Post post,
+  }) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) => PostEditDialog(post: post),
     );
   }
 
@@ -32,17 +39,18 @@ class PostService with FirebaseHelper {
     return PostService.instance.col.doc(postId).snapshots();
   }
 
+  @Deprecated('use Post.create')
   Future<Post> createPost({
     required String categoryId,
     required String title,
     required String content,
-    List<String>? files,
+    List<String>? urls,
   }) {
     return Post.create(
       categoryId: categoryId,
       title: title,
       content: content,
-      files: files,
+      urls: urls,
     );
   }
 
@@ -50,13 +58,13 @@ class PostService with FirebaseHelper {
     required String postId,
     required String title,
     required String content,
-    List<String>? files,
+    List<String>? urls,
   }) {
     return Post.update(
       postId: postId,
       title: title,
       content: content,
-      files: files,
+      urls: urls,
     );
   }
 
@@ -65,16 +73,6 @@ class PostService with FirebaseHelper {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) => PostViewDialog(
-        post: post,
-      ),
-    );
-  }
-
-  /// Shows the Edit Post as a dialog
-  showPostEditDialog(BuildContext context, Post post) {
-    showGeneralDialog(
-      context: context,
-      pageBuilder: (context, _, __) => EditPostDialog(
         post: post,
       ),
     );

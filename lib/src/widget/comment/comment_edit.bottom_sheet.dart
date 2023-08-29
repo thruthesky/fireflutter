@@ -1,6 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/comment.dart';
-import 'package:fireflutter/src/service/comment.service.dart';
 import 'package:fireflutter/src/types/last_comment_sort_by_depth.dart';
 import 'package:flutter/material.dart';
 

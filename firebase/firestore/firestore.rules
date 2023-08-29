@@ -230,6 +230,7 @@ service cloud.firestore {
 // ****************************** COPY UNTIL HERE *****************************
   }
 }
+
 // ****************************** COPY FROM ***********************************
 // * Warning : It's check the fields after save.
 // * Warning : !!! It's not checking the incoming data fields !!!

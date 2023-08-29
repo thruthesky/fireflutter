@@ -1,6 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/comment.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CommentService with FirebaseHelper {
