@@ -58,21 +58,31 @@ class UserService with FirebaseHelper {
 
   /// Current user model
   ///
-  /// It will be initialized whenever the user is logged in and whenever
-  /// the user document is updated. Use [UserDoc] widget if you want to
-  /// show the user document in real time.
+  /// [nullableUser] is the user model and it is null when the user signed out.
+  /// If it is not null, then it means the user has signed in.
+  /// if [nullableUser.exists] is false, it menas user has signed in but has no
+  /// user document in the firestore.
   ///
-  /// 사용자가 로그인 할 때 마다 해당 사용자의 값으로 바뀌고, 그리고 실시간 자동 업데이트를 한다.
+  /// [nullableUser] will be updated whenever the user document is updated.
+  ///
+  /// Use [UserDoc] widget if you want to show the user document in real time.
+  ///
+  /// 사용자가 로그인 할 때 마다 해당 사용자의 문서 값으로 바뀌고, 그리고 실시간 자동 업데이트를 한다.
   /// 실시간 자동 문서를 화면에 보여주어야 한다면 [UserDoc] 위젯을 사용하면 된다.
   ///
+  /// 예) UserService.instance.nullableUser?.photoUrl
   ///
-  /// 예) EasyUser.instance.nullableUser?.photoUrl
+  /// 참고,
+  /// 사용자가 로그인을 했어도, [nullableUser] 는 null 일 수 있다. 이 것은 Auth 에 로그인 한 다음,
+  /// Firestore 의 /users 컬렉션으로 부터 사용자 문서를 가져오는데 시간이 걸릴 수 있는데, 그 사이에
+  /// [nullableUser] 를 참조하면, 로그인 했지만 null 이다. 하지만, 이 시간 사이에 [documentChanges]
+  /// 이벤트가 발생하지 않는다.
   ///
-  /// Note, that [exists: false] is only applied to [documentChanges] event.
-  /// This means,
-  /// - even if the user is logged in, [nullableUser] may be null (while app boots and loads the user document)
-  /// - if [nullableUser] is not null, it means, the user has logged in and the docuemnt has loaded. But the document may not exist.
-  /// - if `exists: false`, it means, the user has logged in, and the app tried to load the docuemnt, but document does not exist.
+  /// 따라서, FirebaseAuth 에 사용자가 로그인을 했는지 안했는지 빠르게 확인을 해야한다면,
+  /// [FirebaseAuth.authStateChanges] 를 통해서 하고, 천천히 확인을 해도 된다면,
+  /// [UserService.instance.documentChanges] 이벤트를 리슨해서, null 이 아니면, 로그인 한 것이며,
+  /// [exists: false] 이 아니면, 사용자 문서가 존재하는 것으로 판단하면 된다.
+  ///
   User? nullableUser;
 
   /// [nullableUser] 의 getter 로 물음표(?) 없이 간단하게 쓰기 위한 것으로 null operator 가 강제 적용된
