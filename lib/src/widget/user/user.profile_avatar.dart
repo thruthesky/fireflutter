@@ -104,7 +104,7 @@ class _UserAvatarState extends State<UserProfileAvatar> {
         );
 
         final oldUrl = UserService.instance.photoUrl;
-        await UserService.instance.update(
+        await widget.user.update(
           photoUrl: url,
           hasPhotoUrl: true,
         );
@@ -137,11 +137,13 @@ class _UserAvatarState extends State<UserProfileAvatar> {
               child: IconButton(
                   onPressed: () async {
                     await StorageService.instance.delete(UserService.instance.user.photoUrl);
-                    await UserService.instance.update(
+
+                    await widget.user.update(
                       field: 'photoUrl',
                       value: FieldValue.delete(),
                       hasPhotoUrl: false,
                     );
+
                     widget.onDeleteSuccess?.call();
                   },
                   padding: EdgeInsets.zero,
