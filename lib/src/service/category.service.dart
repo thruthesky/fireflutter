@@ -7,6 +7,20 @@ class CategoryService with FirebaseHelper {
   static CategoryService get instance => _instance ??= CategoryService._();
   CategoryService._();
 
+  /// [categoriesOnCreate] is a list of categories that will be shown on the
+  /// post create form. You can display and limit the categories that a user
+  /// can create a post under. To not show any categories, set this to an empty
+  /// map which is the default. When you design your app, you may open a post
+  /// create from without specifying the default category.
+  ///
+  Map<String, String> categoriesOnCreate = {};
+
+  init({
+    Map<String, String> categoriesOnCreate = const {},
+  }) {
+    this.categoriesOnCreate = categoriesOnCreate;
+  }
+
   Future<Category?> get(String categoryId) {
     return Category.get(categoryId);
   }
@@ -45,11 +59,11 @@ class CategoryService with FirebaseHelper {
     });
   }
 
-  showUpdateDialog(BuildContext context, Category category) async {
+  showUpdateDialog(BuildContext context, String categoryId) async {
     await showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) => CategoryDialog(
-        category: category,
+        categoryId: categoryId,
       ),
     );
   }
