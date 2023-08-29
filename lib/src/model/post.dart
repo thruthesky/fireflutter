@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 
 class Post with FirebaseHelper {
@@ -9,10 +8,10 @@ class Post with FirebaseHelper {
   final String content;
   @override
   final String uid;
-  final List<dynamic>? files;
+  final List<String> urls;
   final Timestamp createdAt;
   final Timestamp updatedAt;
-  final List<dynamic> likes;
+  final List<String> likes;
   final bool? deleted;
   final int noOfComments;
 
@@ -22,7 +21,7 @@ class Post with FirebaseHelper {
     required this.title,
     required this.content,
     required this.uid,
-    this.files,
+    required this.urls,
     required this.createdAt,
     required this.updatedAt,
     required this.likes,
@@ -41,7 +40,7 @@ class Post with FirebaseHelper {
       title: map['title'] ?? '',
       content: map['content'] ?? '',
       uid: map['uid'] ?? '',
-      files: map['files'],
+      urls: List<String>.from(map['urls'] ?? []),
       createdAt: (map['createdAt'] is Timestamp) ? map['createdAt'] : Timestamp.now(),
       updatedAt: (map['updatedAt'] is Timestamp) ? map['updatedAt'] : Timestamp.now(),
       likes: map['likes'] ?? [],
@@ -62,13 +61,13 @@ class Post with FirebaseHelper {
     required String categoryId,
     required String title,
     required String content,
-    List<String>? files,
+    List<String>? urls,
   }) async {
     final Map<String, dynamic> postData = {
       'title': title,
       'content': content,
       'categoryId': categoryId,
-      if (files != null) 'files': files,
+      if (urls != null) 'urls': urls,
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
       'uid': UserService.instance.uid,
@@ -82,13 +81,13 @@ class Post with FirebaseHelper {
     required String postId,
     required String title,
     required String content,
-    List<String>? files,
+    List<String>? urls,
   }) async {
     final Map<String, dynamic> postUpdateData = {
       'title': title,
       'content': content,
-      if (files != null) 'files': files,
-      if (files == null) 'files': FieldValue.delete(),
+      if (urls != null) 'urls': urls,
+      if (urls == null) 'urls': FieldValue.delete(),
       'updatedAt': FieldValue.serverTimestamp(),
     };
     await PostService.instance.postCol.doc(postId).update(postUpdateData);
@@ -96,5 +95,9 @@ class Post with FirebaseHelper {
 
   @override
   String toString() =>
-      'Post(id: $id, categoryId: $categoryId, noOfComments: $noOfComments, title: $title, content: $content, uid: $uid, files: $files, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted)';
+      'Post(id: $id, categoryId: $categoryId, noOfComments: $noOfComments, title: $title, content: $content, uid: $uid, urls: $urls, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted)';
+
+  bool get isMine {
+    return UserService.instance.uid == uid;
+  }
 }

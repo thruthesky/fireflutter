@@ -1,8 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/functions/comment_sort_string.dart';
-import 'package:fireflutter/src/model/comment.dart';
-import 'package:fireflutter/src/model/post.dart';
 import 'package:fireflutter/src/service/comment.service.dart';
 import 'package:fireflutter/src/types/last_comment_sort_by_depth.dart';
 import 'package:flutter/material.dart';
@@ -44,11 +41,11 @@ class _PostDialogState extends State<PostViewDialog> {
           appBar: AppBar(
             title: const Text('Post'),
             actions: [
-              if (PostService.instance.isMine(widget.post))
+              if (widget.post.isMine)
                 IconButton(
                   icon: const Icon(Icons.edit),
                   onPressed: () {
-                    PostService.instance.showPostEditDialog(context, widget.post);
+                    PostService.instance.showPostEditDialog(context, post: widget.post);
                   },
                 ),
               PopupMenuButton(
@@ -61,7 +58,7 @@ class _PostDialogState extends State<PostViewDialog> {
                       child: Text("Adjust text size"),
                     ),
                   );
-                  if (PostService.instance.isMine(widget.post)) {
+                  if (widget.post.isMine) {
                     popupMenuItemList.add(
                       const PopupMenuItem(
                         value: "delete_post",
@@ -116,10 +113,18 @@ class _PostDialogState extends State<PostViewDialog> {
                       ],
                     ),
                   ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                Container(
+                  margin: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
                   child: Text(post.content),
                 ),
+                const Divider(),
+                if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
                   child: Row(
@@ -138,6 +143,13 @@ class _PostDialogState extends State<PostViewDialog> {
                         child: const Text('Like'),
                         onPressed: () {
                           debugPrint('Liking it');
+                        },
+                      ),
+                      const Spacer(),
+                      TextButton(
+                        child: const Text('Edit'),
+                        onPressed: () {
+                          PostService.instance.showPostEditDialog(context, post: post);
                         },
                       ),
                     ],

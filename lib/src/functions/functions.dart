@@ -156,3 +156,13 @@ String platformName() {
     return defaultTargetPlatform.name.toLowerCase();
   }
 }
+
+void warningSnackbar(BuildContext context, String message) async {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message),
+      duration: const Duration(seconds: 3),
+      backgroundColor: Theme.of(context).colorScheme.error,
+    ),
+  );
+}

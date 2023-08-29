@@ -43,9 +43,8 @@ export 'widget/category/category_list.dialog.dart';
 
 // Post
 export 'widget/post/post.list_view.dart';
-export 'widget/post/post_create.dialog.dart';
-export 'widget/post/post_view.dialog.dart';
 export 'widget/post/post_edit.dialog.dart';
+export 'widget/post/post_view.dialog.dart';
 export 'widget/post/post_list.dialog.dart';
 
 // Comment
