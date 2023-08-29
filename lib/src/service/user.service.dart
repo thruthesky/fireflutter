@@ -189,59 +189,6 @@ class UserService with FirebaseHelper {
     nullableUser = await model.create();
   }
 
-  /// Login user's document update
-  ///
-  /// Update a user document under /users/{uid} for the login user.
-  ///
-  /// This automatically updates the [nullableUser] value.
-  // @Deprecated('Use User.update() instead')
-  // Future<User?> update({
-  //   String? name,
-  //   String? firstName,
-  //   String? lastName,
-  //   String? middleName,
-  //   String? displayName,
-  //   String? photoUrl,
-  //   bool? hasPhotoUrl,
-  //   String? idVerifiedCode,
-  //   String? phoneNumber,
-  //   String? email,
-  //   String? state,
-  //   String? stateImageUrl,
-  //   int? birthYear,
-  //   int? birthMonth,
-  //   int? birthDay,
-  //   bool? complete,
-  //   String? field,
-  //   dynamic value,
-  // }) async {
-  //   if (nullableUser == null) {
-  //     throw Exception(Code.notLoggedIn);
-  //   }
-
-  //   nullableUser = await nullableUser!.update(
-  //     name: name,
-  //     firstName: firstName,
-  //     lastName: lastName,
-  //     middleName: middleName,
-  //     displayName: displayName,
-  //     photoUrl: photoUrl,
-  //     idVerifiedCode: idVerifiedCode,
-  //     phoneNumber: phoneNumber,
-  //     email: email,
-  //     state: state,
-  //     stateImageUrl: stateImageUrl,
-  //     birthYear: birthYear,
-  //     birthMonth: birthMonth,
-  //     birthDay: birthDay,
-  //     complete: complete,
-  //     field: field,
-  //     value: value,
-  //   );
-
-  //   return nullableUser;
-  // }
-
   /// Returns a Stream of User model for the current login user.
   ///
   /// Use this with [StreamBuilder] for real time update(listen) of the login user document.
