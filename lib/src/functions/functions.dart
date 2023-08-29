@@ -1,4 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -144,5 +145,14 @@ double indent(int? no) {
     return 106;
   } else {
     return 112;
+  }
+}
+
+/// It returns one of 'web', 'android', 'fuchsia', 'ios', 'linux', 'macos', 'windows'.
+String platformName() {
+  if (kIsWeb) {
+    return 'web';
+  } else {
+    return defaultTargetPlatform.name.toLowerCase();
   }
 }
