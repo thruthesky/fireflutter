@@ -57,12 +57,12 @@ class Post with FirebaseHelper {
     return Post.fromDocumentSnapshot(documentSnapshot);
   }
 
-  static Future<Post> create({
+  static Post create({
     required String categoryId,
     required String title,
     required String content,
     List<String>? urls,
-  }) async {
+  }) {
     final Map<String, dynamic> postData = {
       'title': title,
       'content': content,
@@ -73,12 +73,12 @@ class Post with FirebaseHelper {
       'uid': UserService.instance.uid,
     };
     final postId = PostService.instance.postCol.doc().id;
-    await PostService.instance.postCol.doc(postId).set(postData);
+    PostService.instance.postCol.doc(postId).set(postData);
     return Post.fromMap(map: postData, id: postId);
   }
 
   static Future<void> update({
-    required String postId,
+    required Post post,
     required String title,
     required String content,
     List<String>? urls,
@@ -90,7 +90,7 @@ class Post with FirebaseHelper {
       if (urls == null) 'urls': FieldValue.delete(),
       'updatedAt': FieldValue.serverTimestamp(),
     };
-    await PostService.instance.postCol.doc(postId).update(postUpdateData);
+    await PostService.instance.postCol.doc(post.id).update(postUpdateData);
   }
 
   @override

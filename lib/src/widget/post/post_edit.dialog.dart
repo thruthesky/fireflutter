@@ -141,7 +141,7 @@ class _PostEditDialogState extends State<PostEditDialog> {
                       }
                       Post post;
                       if (isCreate) {
-                        post = await Post.create(
+                        post = Post.create(
                           categoryId: categoryId,
                           title: title.text,
                           content: content.text,
@@ -149,7 +149,7 @@ class _PostEditDialogState extends State<PostEditDialog> {
                         );
                       } else {
                         await Post.update(
-                          postId: widget.post!.id,
+                          post: widget.post!,
                           title: title.text,
                           content: content.text,
                           urls: urls,
