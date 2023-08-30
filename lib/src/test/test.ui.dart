@@ -138,7 +138,7 @@ class _TestScreenState extends State<TestUi> {
 
   testCreateGroupChatRoom() async {
     await Test.login(Test.apple);
-    final groupRoom = await ChatService.instance.createChatRoom(roomName: 'Group Room 1');
+    final groupRoom = await Room.create(name: 'Group Room 1');
     test(groupRoom.name == 'Group Room 1', 'Must be Group Room 1');
     test(groupRoom.group == true, 'Must be a group chat room');
     test(groupRoom.open == false, 'Must be a private group chat room');
@@ -153,7 +153,7 @@ class _TestScreenState extends State<TestUi> {
 
   testCreateSingleChatRoom() async {
     await Test.login(Test.apple);
-    final room = await ChatService.instance.createChatRoom(roomName: 'Single Room 2', otherUserUid: Test.banana.uid);
+    final room = await Room.create(name: 'Single Room 2', otherUserUid: Test.banana.uid);
     test(room.name == 'Single Room 2', 'Must be Single Room 2');
     test(room.group == false, 'Must be a single chat room');
     test(room.open == false, 'Must be a private a chat room');
@@ -168,13 +168,13 @@ class _TestScreenState extends State<TestUi> {
 
   testInviteUserIntoSingleChat() async {
     await Test.login(Test.apple);
-    final room = await ChatService.instance.createChatRoom(roomName: 'Single Room 2', otherUserUid: Test.banana.uid);
+    final room = await Room.create(name: 'Single Room 2', otherUserUid: Test.banana.uid);
     await Test.assertExceptionCode(room.invite(Test.cherry.uid), Code.singleChatRoomCannotInvite);
   }
 
   testInviteUserIntoGroupChat() async {
     await Test.login(Test.apple);
-    final room = await ChatService.instance.createChatRoom(roomName: 'Single Room 2', maximumNoOfUsers: 3);
+    final room = await Room.create(name: 'Single Room 2', maximumNoOfUsers: 3);
     await Test.assertFuture(room.invite(Test.banana.uid));
     await Test.assertFuture(room.invite(Test.cherry.uid));
     await Test.assertExceptionCode(room.invite(Test.cherry.uid), Code.userAlreadyInRoom);
@@ -228,7 +228,7 @@ class _TestScreenState extends State<TestUi> {
     await Test.login(Test.apple);
 
     // Get the room
-    Room room = await ChatService.instance.createChatRoom(roomName: 'Testing Room');
+    Room room = await Room.create(name: 'Testing Room');
 
     // update the setting
     await ChatService.instance.updateRoomSetting(room: room, setting: 'maximumNoOfUsers', value: 3);
@@ -257,7 +257,7 @@ class _TestScreenState extends State<TestUi> {
     await Test.login(Test.apple);
 
     // Get the room
-    Room room = await ChatService.instance.createChatRoom(roomName: 'Testing Room');
+    Room room = await Room.create(name: 'Testing Room');
 
     // add the users
     await room.invite(Test.banana.uid);
@@ -285,7 +285,7 @@ class _TestScreenState extends State<TestUi> {
     await Test.login(Test.apple);
 
     // Get the room
-    Room room = await ChatService.instance.createChatRoom(roomName: 'Testing Room');
+    Room room = await Room.create(name: 'Testing Room');
 
     // add the users
     await room.invite(Test.banana.uid);
@@ -327,7 +327,7 @@ class _TestScreenState extends State<TestUi> {
     // await Test.login(Test.apple);
 
     // // Get the room
-    // Room room = await ChatService.instance.createChatRoom(roomName: 'Testing Room');
+    // Room room = await Room.create(name: 'Testing Room');
 
     // // There must be no password upon creating the room
     // test(room.password == null,

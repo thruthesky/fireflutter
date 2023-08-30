@@ -1,5 +1,4 @@
 import 'package:fireflutter/src/model/room.dart';
-import 'package:fireflutter/src/service/chat.service.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomCreate extends StatefulWidget {
@@ -48,9 +47,9 @@ class _ChatRoomCreateState extends State<ChatRoomCreate> {
         ),
         TextButton(
           onPressed: () async {
-            final createdChatRoom = await ChatService.instance.createChatRoom(
-              roomName: name.text,
-              isOpen: isOpen,
+            final createdChatRoom = await Room.create(
+              name: name.text,
+              open: isOpen,
             );
             widget.success(createdChatRoom);
           },

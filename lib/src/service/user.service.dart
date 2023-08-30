@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/enum/protocol.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// [my] is an alias of [UserService.instance.user].
@@ -235,13 +236,13 @@ class UserService with FirebaseHelper {
   /// post card on the chat room.
   ///
   Future<void> sendWelcomeMessage({required String message}) async {
-    final room = await ChatService.instance.createChatRoom(
+    final room = await Room.create(
       otherUserUid: adminUid,
     );
     return ChatService.instance.sendWelcomeMessage(
       room: room,
       message: message,
-      protocol: 'register',
+      protocol: Protocol.register.name,
     );
   }
 } // EO UserService

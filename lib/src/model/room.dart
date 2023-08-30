@@ -76,24 +76,6 @@ class Room with FirebaseHelper {
     );
   }
 
-  // factory Room.notExists(String roomId) {
-  //   return Room(
-  //     id: roomId,
-  //     name: '',
-  //     rename: {},
-  //     group: false,
-  //     open: false,
-  //     master: '',
-  //     users: [],
-  //     moderators: [],
-  //     blockedUsers: [],
-  //     maximumNoOfUsers: 100,
-  //     password: null,
-  //     createdAt: Timestamp.now(),
-  //     lastMessage: null,
-  //   );
-  // }
-
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -125,32 +107,29 @@ class Room with FirebaseHelper {
   /// Creates a chat room and returns the chat room.
   ///
   /// [otherUserUid] If [otherUserUid] is set, it will create a 1:1 chat. Or it will create a group chat.
-  /// [isOpen] If [isOpen] is set, it will create an open chat room. Or it will create a private chat room.
-  /// [roomName] If [roomName] is set, it will create a chat room with the given name. Or it will create a chat room with empty name.
+  /// [open] If [open] is set, it will create an open chat room. Or it will create a private chat room.
+  /// [name] If [name] is set, it will create a chat room with the given name. Or it will create a chat room with empty name.
   /// [maximumNoOfUsers] If [maximumNoOfUsers] is set, it will create a chat room with the given maximum number of users. Or it will create a chat room with no limit.
   static Future<Room> create({
-    String? roomName,
+    String? name,
     String? otherUserUid,
-    bool isOpen = false,
+    bool open = false,
     int? maximumNoOfUsers,
   }) async {
     // prepare
-    String myUid = FirebaseAuth.instance.currentUser!.uid;
     bool isSingleChat = otherUserUid != null;
-    bool isGroupChat = !isSingleChat;
-    List<String> users = [myUid];
+    List<String> users = [my.uid];
     if (isSingleChat) users.add(otherUserUid);
 
     // room data
-    final roomData = {
-      'master': myUid,
-      'name': roomName ?? '',
-      'createdAt': FieldValue.serverTimestamp(),
-      'group': isGroupChat,
-      'open': isOpen,
-      'users': users,
-      'maximumNoOfUsers': maximumNoOfUsers ?? (isSingleChat ? 2 : 100),
-    };
+    final roomData = toCreate(
+      master: my.uid,
+      name: name,
+      group: !isSingleChat,
+      open: open,
+      users: users,
+      maximumNoOfUsers: maximumNoOfUsers ?? (isSingleChat ? 2 : ChatService.instance.maximumNoOfUsers),
+    );
 
     final roomId =
         isSingleChat ? ChatService.instance.getSingleChatRoomId(otherUserUid) : ChatService.instance.chatCol.doc().id;
@@ -162,6 +141,30 @@ class Room with FirebaseHelper {
   @override
   String toString() =>
       'Room(id: $id, name: $name, group: $group, open: $open, master: $master, users: $users, moderators: $moderators, blockedUsers: $blockedUsers, maximumNoOfUsers: $maximumNoOfUsers, createdAt: $createdAt, lastMessage: $lastMessage)';
+
+  static Map<String, dynamic> toCreate({
+    required String master,
+    String? name,
+    required bool group,
+    required bool open,
+    required List<String> users,
+    int? maximumNoOfUsers,
+    bool isSingleChat = false,
+  }) {
+    return {
+      'master': my.uid,
+      'name': name ?? '',
+      'createdAt': FieldValue.serverTimestamp(),
+      'group': group,
+      'open': open,
+      'users': users,
+      'maximumNoOfUsers': maximumNoOfUsers ?? (isSingleChat ? 2 : 100),
+      'lastMessage': {
+        'createdAt': FieldValue.serverTimestamp(),
+        'protocol': 'system',
+      }
+    };
+  }
 
   String get otherUserUid {
     assert(users.length == 2 && group == false, "This is not a single chat room");

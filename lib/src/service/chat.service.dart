@@ -13,6 +13,9 @@ class ChatService with FirebaseHelper {
 
   ChatRoomCustomize customize = ChatRoomCustomize();
 
+  /// TODO - Make this customizable by init()
+  int maximumNoOfUsers = 500;
+
   /// Last message of the chat room
   ///
   ///
@@ -49,7 +52,7 @@ class ChatService with FirebaseHelper {
     try {
       return await ChatService.instance.getSingleChatRoom(uid);
     } on FirebaseException {
-      return await ChatService.instance.createChatRoom(
+      return await Room.create(
         otherUserUid: uid,
       );
     }
@@ -68,19 +71,19 @@ class ChatService with FirebaseHelper {
   /// [isOpen] If [isOpen] is set, it will create an open chat room. Or it will create a private chat room.
   /// [roomName] If [roomName] is set, it will create a chat room with the given name. Or it will create a chat room with empty name.
   /// [maximumNoOfUsers] If [maximumNoOfUsers] is set, it will create a chat room with the given maximum number of users. Or it will create a chat room with no limit.
-  Future<Room> createChatRoom({
-    String? roomName,
-    String? otherUserUid,
-    bool isOpen = false,
-    int? maximumNoOfUsers,
-  }) async {
-    return Room.create(
-      roomName: roomName,
-      otherUserUid: otherUserUid,
-      isOpen: isOpen,
-      maximumNoOfUsers: maximumNoOfUsers,
-    );
-  }
+  // Future<Room> createChatRoom({
+  //   String? roomName,
+  //   String? otherUserUid,
+  //   bool isOpen = false,
+  //   int? maximumNoOfUsers,
+  // }) async {
+  //   return Room.create(
+  //     name: roomName,
+  //     otherUserUid: otherUserUid,
+  //     open: isOpen,
+  //     maximumNoOfUsers: maximumNoOfUsers,
+  //   );
+  // }
 
   @Deprecated('Use model')
   Future<void> leaveRoom({required Room room, Function()? callback}) async {
