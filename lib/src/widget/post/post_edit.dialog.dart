@@ -170,46 +170,14 @@ class _PostEditDialogState extends State<PostEditDialog> {
                 LinearProgressIndicator(value: progress),
                 const SizedBox(height: 20),
               ],
-              GridView.count(
-                crossAxisCount: 3,
-                shrinkWrap: true,
-                mainAxisSpacing: 4,
-                crossAxisSpacing: 4,
-                children: urls
-                    .map(
-                      (e) => Stack(
-                        children: [
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            top: 0,
-                            bottom: 0,
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.all(Radius.circular(10)),
-                              child: DisplayMedia(url: e),
-                            ),
-                          ),
-                          Positioned(
-                            top: 8,
-                            right: 8,
-                            child: IconButton(
-                              style: IconButton.styleFrom(
-                                backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-                              ),
-                              onPressed: () async {
-                                await StorageService.instance.delete(e);
-                                setState(() {
-                                  urls.remove(e);
-                                });
-                              },
-                              icon: const Icon(Icons.delete),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                    .toList(),
-              ),
+              EditMultipleMedia(
+                  urls: urls,
+                  onDelete: (e) async {
+                    await StorageService.instance.delete(e);
+                    setState(() {
+                      urls.remove(e);
+                    });
+                  }),
             ],
           ),
         ),

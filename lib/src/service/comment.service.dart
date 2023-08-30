@@ -9,13 +9,13 @@ class CommentService with FirebaseHelper {
   Future<Comment> createComment({
     required Post post,
     required String content,
-    List<String>? files,
+    List<String>? urls,
     Comment? parent,
   }) async {
     return await Comment.create(
       post: post,
       content: content,
-      files: files,
+      urls: urls,
       parent: parent,
     );
   }

@@ -9,10 +9,10 @@ class Comment with FirebaseHelper {
   final String content;
   @override
   final String uid;
-  final List<dynamic>? files;
+  final List<String> urls;
   final Timestamp createdAt;
   final Timestamp updatedAt;
-  final List<dynamic> likes;
+  final List<String> likes;
   final bool? deleted;
 
   /// Parent ID is the comment ID of the comment that this comment is replying to.
@@ -26,7 +26,7 @@ class Comment with FirebaseHelper {
     required this.postId,
     required this.content,
     required this.uid,
-    this.files,
+    required this.urls,
     required this.createdAt,
     required this.updatedAt,
     required this.likes,
@@ -46,10 +46,10 @@ class Comment with FirebaseHelper {
       postId: map['postId'] ?? '',
       content: map['content'] ?? '',
       uid: map['uid'] ?? '',
-      files: map['files'],
+      urls: List<String>.from(map['urls'] ?? []),
       createdAt: (map['createdAt'] is Timestamp) ? map['createdAt'] : Timestamp.now(),
       updatedAt: (map['updatedAt'] is Timestamp) ? map['updatedAt'] : Timestamp.now(),
-      likes: map['likes'] ?? [],
+      likes: List<String>.from(map['likes'] ?? []),
       deleted: map['deleted'],
       parentId: map['parentId'],
       sort: map['sort'],
@@ -59,19 +59,19 @@ class Comment with FirebaseHelper {
 
   @override
   String toString() =>
-      'Comment(id: $id, postId: $postId, content: $content, uid: $uid, files: $files, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted, parentId: $parentId, sort: $sort, depth: $depth)';
+      'Comment(id: $id, postId: $postId, content: $content, uid: $uid, urls: $urls, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted, parentId: $parentId, sort: $sort, depth: $depth)';
 
   static Future<Comment> create({
     required Post post,
     Comment? parent,
     required String content,
-    List<String>? files,
+    List<String>? urls,
   }) async {
     String myUid = FirebaseAuth.instance.currentUser!.uid;
     final Map<String, dynamic> commentData = {
       'content': content,
       'postId': post.id,
-      if (files != null) 'files': files,
+      if (urls != null) 'urls': urls,
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
       'uid': myUid,
@@ -94,11 +94,11 @@ class Comment with FirebaseHelper {
 
   Future<Comment> update({
     required String content,
-    List<String>? files,
+    List<String>? urls,
   }) async {
     final Map<String, dynamic> commentData = {
       'content': content,
-      if (files != null) 'files': files,
+      if (urls != null) 'urls': urls,
       'updatedAt': FieldValue.serverTimestamp(),
     };
     await commentCol.doc(id).update(commentData);
@@ -113,7 +113,7 @@ class Comment with FirebaseHelper {
       postId: postId,
       content: map['content'] ?? content,
       uid: uid,
-      files: map['files'] ?? files,
+      urls: map['urls'] ?? urls,
       createdAt: createdAt,
       updatedAt:
           map['updatedAt'] == null ? updatedAt : ((map['updatedAt'] is Timestamp) ? map['updatedAt'] : Timestamp.now()),

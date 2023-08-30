@@ -48,6 +48,16 @@ class CommentTileState extends State<CommentListTile> {
                   ],
                 ),
                 Text(widget.comment.content),
+                widget.comment.urls.isNotEmpty
+                    ? Column(
+                        children: widget.comment.urls
+                            .map((e) => Padding(
+                                  padding: const EdgeInsets.fromLTRB(0, 4, 10, 0),
+                                  child: DisplayMedia(url: e),
+                                ))
+                            .toList(),
+                      )
+                    : const SizedBox.shrink(),
                 Row(
                   children: [
                     TextButton(
