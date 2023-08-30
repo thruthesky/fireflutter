@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart' hide User;
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/enum/protocol.dart';
 import 'package:rxdart/rxdart.dart';
@@ -16,27 +16,60 @@ class UserService with FirebaseHelper {
   static UserService get instance => _instance ??= UserService._();
 
   /// Return true if the user signed with real account. Not anonymous.
-  bool get notSignedIn => isAnonymous || FirebaseAuth.instance.currentUser == null;
+  bool get notSignedIn => isAnonymous || auth.FirebaseAuth.instance.currentUser == null;
 
   bool get signedIn => !notSignedIn;
-  bool get isAnonymous => FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+  bool get isAnonymous => auth.FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
 
   late final String adminUid;
 
+  /// [documentChanges] fires event for when
+  /// - app boots.
+  ///   - when app boots, if user didn't login in, it will be null.
+  ///   - while the app is loading(reading) the user document, it will be null. (it will be null for a short time.)
+  /// - user document is updated.
+  /// - the event data will be
+  ///   - null if the user signed out.
+  ///   - null for the short time when the app is loading(reading) the user document.
+  ///   - [event.data.exists] will be false if the user document does not exist.
+  ///
   /// null 이면 아직 로드를 안했다는 뜻이다. 즉, 로딩중이라는 뜻이다. 로그인을 했는지 하지 않았는지 여부는 알 수 없다.
   /// 만약, 로그인을 했는지 여부를 알고 싶다면, [nullableUser] 가 null 인지 아닌지를 확인하면 된다.
   ///
+  /// Example;
+  /// ```dart
   /// UserService.instance.documentChanges.listen((user) => user == null ? null : print(my));
+  /// ```
+  ///
   final BehaviorSubject<User?> documentChanges = BehaviorSubject<User?>.seeded(null);
+
+  /// [userChanges] fires when
+  /// - app boots
+  ///   - when app boots, if user didn't login in, it will be null.
+  /// - when user login
+  /// - when user logout. (it will be null)
+  ///
+  /// Note that, the difference from [documentChanges] is that this happens
+  /// when user logs in or out while [documentChanges] happens when the user
+  /// document changes.
+  final BehaviorSubject<auth.User?> userChanges = BehaviorSubject<auth.User?>.seeded(null);
 
   ///
   UserService._() {
     /// 로그인을 할 때, nullableUser 초기가 값 지정
-    FirebaseAuth.instance.authStateChanges().listen((user) {
-      if (user == null) {
+    auth.FirebaseAuth.instance
+        .authStateChanges()
+
+        /// To prevent for the login event firing muliple times.
+        .distinct((p, n) => p?.uid == n?.uid)
+        .listen((firebaseUser) {
+      if (firebaseUser == null) {
         nullableUser = null;
         documentChanges.add(nullableUser);
+        userChanges.add(null);
       } else {
+        userChanges.add(firebaseUser);
+
         /// 이 후, 사용자 문서가 업데이트 될 때 마다, nullableUser 업데이트
         UserService.instance.doc.snapshots().listen((documentSnapshot) {
           /// 사용자 문서가 존재하지 않는 경우,
@@ -86,7 +119,7 @@ class UserService with FirebaseHelper {
   /// 이벤트가 발생하지 않는다.
   ///
   /// 따라서, FirebaseAuth 에 사용자가 로그인을 했는지 안했는지 빠르게 확인을 해야한다면,
-  /// [FirebaseAuth.authStateChanges] 를 통해서 하고, 천천히 확인을 해도 된다면,
+  /// [auth.FirebaseAuth.authStateChanges] 를 통해서 하고, 천천히 확인을 해도 된다면,
   /// [UserService.instance.documentChanges] 이벤트를 리슨해서, null 이 아니면, 로그인 한 것이며,
   /// [exists: false] 이 아니면, 사용자 문서가 존재하는 것으로 판단하면 된다.
   ///
@@ -183,7 +216,7 @@ class UserService with FirebaseHelper {
 
   /// Sign out from Firebase Auth
   Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
+    await auth.FirebaseAuth.instance.signOut();
   }
 
   /// Create user document
@@ -196,7 +229,7 @@ class UserService with FirebaseHelper {
       throw Exception(Code.documentAlreadyExists);
     }
 
-    final u = FirebaseAuth.instance.currentUser!;
+    final u = auth.FirebaseAuth.instance.currentUser!;
 
     nullableUser = await User.create(uid: u.uid);
   }
