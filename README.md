@@ -10,6 +10,7 @@ A free, open source, complete, rapid development package for creating Social app
   - [Getting started](#getting-started)
 - [Installation](#installation)
   - [Install the easy extension](#install-the-easy-extension)
+  - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
     - [Security rule for admin](#security-rule-for-admin)
   - [Cloud functions](#cloud-functions)
@@ -114,6 +115,19 @@ We built a firebase extension for the easy management of firebase. Install the f
 [Install Easy Extension Beta (0.1.9-beta.1)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.9-beta.1)
 
 This is a must firebase extension for the fireflutter to work properly.
+
+
+## Install cloud functions
+
+Since the firebase extension does not support sending push notification with node.js SDK, we just made it as cloud function.
+To install,
+
+```sh
+cd firebase/cloud-functions/functions
+npm i
+firebase use add <project>
+firebase run deploy
+```
 
 
 
