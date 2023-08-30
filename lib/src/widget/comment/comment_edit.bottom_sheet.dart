@@ -5,15 +5,17 @@ import 'package:flutter/material.dart';
 class CommentEditBottomSheet extends StatefulWidget {
   const CommentEditBottomSheet({
     super.key,
-    required this.post,
+    this.post,
     this.parent,
+    this.comment,
     this.labelText,
     this.hintText,
     this.onEdited,
   });
 
-  final Post post;
+  final Post? post;
   final Comment? parent;
+  final Comment? comment;
   final String? labelText;
   final String? hintText;
 
@@ -32,6 +34,17 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
   Comment? parentId;
   LastChildCommentSort lastChildCommentSort = {};
 
+  bool get isCreate => widget.post != null;
+  bool get isUpdate => !isCreate;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.comment != null) {
+      content.text = widget.comment!.content;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -47,8 +60,8 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
                 padding: const EdgeInsets.only(left: 8.0),
                 child: TextField(
                   controller: content,
-                  minLines: 1,
-                  maxLines: 2,
+                  minLines: 2,
+                  maxLines: 5,
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
                     labelText: labelText ?? 'Comment',
@@ -71,17 +84,25 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
             IconButton(
               icon: const Icon(Icons.send),
               onPressed: () async {
-                if (content.text.isNotEmpty) {
-                  final comment = await Comment.create(
-                    post: widget.post,
+                if (content.text.isEmpty) {
+                  return warningSnackbar(context, 'Please input a comment.');
+                }
+
+                Comment comment;
+                if (isCreate) {
+                  comment = await Comment.create(
+                    post: widget.post!,
                     parent: widget.parent,
                     content: content.text,
                   );
-
-                  content.text = '';
-                  if (widget.onEdited != null) {
-                    widget.onEdited!(comment);
-                  }
+                } else {
+                  comment = await widget.comment!.update(
+                    content: content.text,
+                  );
+                }
+                content.text = '';
+                if (widget.onEdited != null) {
+                  widget.onEdited!(comment);
                 }
               },
             ),

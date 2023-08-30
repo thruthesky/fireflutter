@@ -5,6 +5,7 @@
 A free, open source, complete, rapid development package for creating Social apps, Chat apps, Community(Forum) apps, Shopping mall apps, and much more based on Firebase
 
 - [FireFlutter](#fireflutter)
+  - [Overview](#overview)
   - [Features](#features)
   - [Getting started](#getting-started)
 - [Installation](#installation)
@@ -44,7 +45,7 @@ A free, open source, complete, rapid development package for creating Social app
   - [Coding Guideline](#coding-guideline)
 - [OLD README](#old-readme)
   - [TODO](#todo)
-  - [Overview](#overview)
+  - [Overview](#overview-1)
     - [Principle of Design](#principle-of-design)
     - [Chat Room Features](#chat-room-features)
   - [Environment](#environment)
@@ -84,6 +85,11 @@ A free, open source, complete, rapid development package for creating Social app
   - [How to add the easychat package as subtree into your project as the repo master](#how-to-add-the-easychat-package-as-subtree-into-your-project-as-the-repo-master)
   - [Deploy](#deploy)
   - [Tips](#tips)
+
+
+## Overview
+
+- We don't use `json_serializable` since the field should be dynamically added or edited. And the model class has not only the json serialized data, but also basic functionalities for the model.
 
 ## Features
 

@@ -21,7 +21,6 @@ class _ChatRoomPasswordSettingListTileState extends State<ChatRoomPasswordSettin
   @override
   void initState() {
     super.initState();
-    password.text = widget.room.password ?? '';
   }
 
   @override
@@ -45,8 +44,6 @@ class _ChatRoomPasswordSettingListTileState extends State<ChatRoomPasswordSettin
         ),
         onFieldSubmitted: (value) async {
           if (value.isNotEmpty) {
-            // TODO review this because user may want to remove the password
-            // TODO testing
             await ChatService.instance.updateRoomSetting(
               room: widget.room,
               setting: 'password',

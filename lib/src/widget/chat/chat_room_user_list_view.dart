@@ -1,5 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/room.dart';
 import 'package:flutter/material.dart';
 
 /// Chat Room User List View

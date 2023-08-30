@@ -22,10 +22,14 @@ class CommentService with FirebaseHelper {
 
   /// Show bottom sheet to create or update a comment.
   ///
-  Future<Comment?> showCommentBottomSheet({
+  /// [post] is the post to which the comment is created or updated under.
+  /// [parent] is the parent comment of the comment to be created.
+  /// [comment] is the comment to be updated.
+  Future<Comment?> showCommentEditBottomSheet({
     required BuildContext context,
-    required Post post,
+    Post? post,
     Comment? parent,
+    Comment? comment,
   }) {
     return showModalBottomSheet<Comment?>(
       context: context,
@@ -46,6 +50,7 @@ class CommentService with FirebaseHelper {
               CommentEditBottomSheet(
                 post: post,
                 parent: parent,
+                comment: comment,
                 onEdited: (comment) => Navigator.of(context).pop(comment),
               ),
               // This is for simulator

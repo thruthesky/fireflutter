@@ -207,7 +207,15 @@ class User with FirebaseHelper {
     return (await get(uid))!;
   }
 
+  /// Updaet user document
+  ///
   /// Update the user document under /users/{uid} for the login user.
+  ///
+  /// Note that, the document update for your profile information update is
+  /// not an expensive work. So, it gets the user document from Firestore
+  /// after update the document and it returns the user model from the updated
+  /// user document. but there might be some fields that are not updated by
+  /// the cloud (background) function.
   Future<User> update({
     String? name,
     String? firstName,
@@ -215,6 +223,7 @@ class User with FirebaseHelper {
     String? middleName,
     String? displayName,
     String? photoUrl,
+    bool? hasPhotoUrl,
     String? idVerifiedCode,
     String? phoneNumber,
     String? email,
@@ -237,6 +246,7 @@ class User with FirebaseHelper {
       if (middleName != null) 'middleName': middleName,
       if (displayName != null) 'displayName': displayName,
       if (photoUrl != null) 'photoUrl': photoUrl,
+      if (hasPhotoUrl != null) 'hasPhotoUrl': hasPhotoUrl,
       if (idVerifiedCode != null) 'idVerifiedCode': idVerifiedCode,
       if (phoneNumber != null) 'phoneNumber': phoneNumber,
       if (email != null) 'email': email,

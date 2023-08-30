@@ -55,7 +55,7 @@ class CategoryListViewState extends State<CategoryListView> {
   @override
   Widget build(BuildContext context) {
     return FirestoreListView(
-      query: CategoryService.instance.categoryCol, // TODO conditions of category
+      query: CategoryService.instance.categoryCol,
       itemBuilder: (context, QueryDocumentSnapshot snapshot) {
         final category = Category.fromDocumentSnapshot(snapshot);
         if (widget.itemBuilder != null) {
