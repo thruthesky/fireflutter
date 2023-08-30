@@ -176,7 +176,7 @@ void warningSnackbar(BuildContext context, String message) async {
 ///     x();
 /// });
 /// ```
-ScaffoldFeatureController actionSnackbar({
+ScaffoldFeatureController tapSnackbar({
   required BuildContext context,
   required String title,
   required String message,
