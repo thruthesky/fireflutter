@@ -1,5 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/types/last_comment_sort_by_depth.dart';
 import 'package:flutter/material.dart';
 
 class CommentEditBottomSheet extends StatefulWidget {
@@ -32,7 +31,6 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
   String? labelText;
   String? hintText;
   Comment? parentId;
-  LastChildCommentSort lastChildCommentSort = {};
 
   bool get isCreate => widget.post != null;
   bool get isUpdate => !isCreate;

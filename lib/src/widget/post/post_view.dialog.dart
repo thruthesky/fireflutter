@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/service/comment.service.dart';
-import 'package:fireflutter/src/types/last_comment_sort_by_depth.dart';
 import 'package:flutter/material.dart';
 
 class PostViewDialog extends StatefulWidget {
@@ -17,9 +16,6 @@ class PostViewDialog extends StatefulWidget {
 }
 
 class _PostDialogState extends State<PostViewDialog> {
-  Map<int, String> lastSortPerDepth = {}; // TODO remove this
-  LastChildCommentSort lastChildCommentSort = {};
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
@@ -85,9 +81,10 @@ class _PostDialogState extends State<PostViewDialog> {
           ),
           body: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                  padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
                   child: Text.rich(
                     TextSpan(
                       text: post.title,
@@ -159,8 +156,6 @@ class _PostDialogState extends State<PostViewDialog> {
                   post: post,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  onShowReplyBox: (comment) {},
-                  onCommentDisplay: (comment) {},
                 ),
               ],
             ),

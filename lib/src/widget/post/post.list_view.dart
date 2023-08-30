@@ -42,13 +42,8 @@ class PostListView extends StatelessWidget {
 
   Query get query {
     Query q = PostService.instance.postCol;
-    if (categoryId != null) {
-      q = q.where('categoryId', isEqualTo: categoryId);
-    }
-
-    q = q.orderBy('createdAt', descending: true);
-
-    return q;
+    if (categoryId != null) q = q.where('categoryId', isEqualTo: categoryId);
+    return q.orderBy('createdAt', descending: true);
   }
 
   @override
@@ -76,11 +71,8 @@ class PostListView extends StatelessWidget {
         }
       },
       emptyBuilder: (context) {
-        if (emptyBuilder != null) {
-          return emptyBuilder!(context);
-        } else {
-          return Center(child: Text(tr.post.noPost));
-        }
+        if (emptyBuilder != null) return emptyBuilder!(context);
+        return Center(child: Text(tr.post.noPost));
       },
       errorBuilder: (context, error, stackTrace) {
         log(error.toString(), stackTrace: stackTrace);

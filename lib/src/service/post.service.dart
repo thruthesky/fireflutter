@@ -40,7 +40,7 @@ class PostService with FirebaseHelper {
   }
 
   @Deprecated('use Post.create')
-  Future<Post> createPost({
+  Post createPost({
     required String categoryId,
     required String title,
     required String content,
@@ -55,13 +55,13 @@ class PostService with FirebaseHelper {
   }
 
   Future<void> editPost({
-    required String postId,
+    required Post post,
     required String title,
     required String content,
     List<String>? urls,
   }) {
     return Post.update(
-      postId: postId,
+      post: post,
       title: title,
       content: content,
       urls: urls,
