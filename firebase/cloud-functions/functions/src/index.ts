@@ -7,13 +7,21 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-import {onRequest} from "firebase-functions/v2/https";
+import { onDocumentCreated, FirestoreEvent } from "firebase-functions/v2/firestore";
+
 import * as logger from "firebase-functions/logger";
+import { QueryDocumentSnapshot } from "firebase-admin/firestore";
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
+exports.uppercase = onDocumentCreated("my-collection/{docId}", (event: FirestoreEvent<QueryDocumentSnapshot | undefined>) => {
+    /* ... */
+    logger.info("Hello logs!", { structuredData: true });
 
-// export const helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+    if (event === undefined || typeof event === 'undefined') {
+        return;
+    }
+
+    return event.data?.ref.set({
+        uppercase: event.data?.data().original.toUpperCase()
+    });
+});
+
