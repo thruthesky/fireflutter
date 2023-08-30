@@ -21,7 +21,6 @@ class TimestampText extends StatelessWidget {
   }
 
   _toAgoDate(Timestamp timestamp) {
-    // TODO better datetme
     DateTime date = timestamp.toDate();
     Duration diff = DateTime.now().difference(date);
     if (diff.inDays >= 2) {

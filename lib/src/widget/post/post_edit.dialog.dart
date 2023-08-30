@@ -117,7 +117,6 @@ class _PostEditDialogState extends State<PostEditDialog> {
                         progress: (p) => setState(() => progress = p),
                         complete: () => setState(() => progress = null),
                       );
-                      print('url: $url');
                       if (url != null && mounted) {
                         setState(() {
                           urls.add(url);

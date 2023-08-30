@@ -60,8 +60,8 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
                 padding: const EdgeInsets.only(left: 8.0),
                 child: TextField(
                   controller: content,
-                  minLines: 1,
-                  maxLines: 2,
+                  minLines: 2,
+                  maxLines: 5,
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
                     labelText: labelText ?? 'Comment',

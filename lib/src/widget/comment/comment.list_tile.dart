@@ -40,7 +40,7 @@ class CommentTileState extends State<CommentListTile> {
                   children: [
                     UserDisplayName(
                       uid: widget.comment.uid,
-                      textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17), // TODO customization
+                      textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),

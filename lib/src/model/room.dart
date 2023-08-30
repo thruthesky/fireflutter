@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/service/chat.service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -23,8 +22,6 @@ class Room with FirebaseHelper {
   final List<String> blockedUsers;
 
   final int maximumNoOfUsers;
-  // TODO - 비밀번호 업데이트. EasyExtension 의 strignMatch 로 한다.
-  final String? password;
 
   final Timestamp createdAt;
 
@@ -46,7 +43,6 @@ class Room with FirebaseHelper {
     required this.moderators,
     required this.blockedUsers,
     required this.maximumNoOfUsers,
-    this.password,
     required this.createdAt,
     this.lastMessage,
   });
@@ -72,9 +68,7 @@ class Room with FirebaseHelper {
       users: List<String>.from((map['users'] ?? [])),
       moderators: List<String>.from(map['moderators'] ?? []),
       blockedUsers: List<String>.from(map['blockedUsers'] ?? []),
-      maximumNoOfUsers:
-          map['maximumNoOfUsers'] ?? 100, // TODO confirm where to put the config on default max no of users
-      password: map['password'],
+      maximumNoOfUsers: map['maximumNoOfUsers'] ?? 0,
 
       /// Note FieldValue happens when the docuemnt is cached locally on creation and the createdAt is not set on the remote database.
       createdAt: map['createdAt'] is FieldValue ? Timestamp.now() : map['createdAt'] ?? Timestamp.now(),
@@ -112,7 +106,6 @@ class Room with FirebaseHelper {
       'moderators': moderators,
       'blockedUsers': blockedUsers,
       'maximumNoOfUsers': maximumNoOfUsers,
-      'password': password,
       'createdAt': createdAt,
     };
   }
@@ -157,10 +150,6 @@ class Room with FirebaseHelper {
       'open': isOpen,
       'users': users,
       'maximumNoOfUsers': maximumNoOfUsers ?? (isSingleChat ? 2 : 100),
-      'lastMessage': {
-        'createdAt': FieldValue.serverTimestamp(),
-        // TODO make a protocol
-      }
     };
 
     final roomId =
@@ -172,7 +161,7 @@ class Room with FirebaseHelper {
 
   @override
   String toString() =>
-      'Room(id: $id, name: $name, group: $group, open: $open, master: $master, users: $users, moderators: $moderators, blockedUsers: $blockedUsers, maximumNoOfUsers: $maximumNoOfUsers, password: $password, createdAt: $createdAt, lastMessage: $lastMessage)';
+      'Room(id: $id, name: $name, group: $group, open: $open, master: $master, users: $users, moderators: $moderators, blockedUsers: $blockedUsers, maximumNoOfUsers: $maximumNoOfUsers, createdAt: $createdAt, lastMessage: $lastMessage)';
 
   String get otherUserUid {
     assert(users.length == 2 && group == false, "This is not a single chat room");
