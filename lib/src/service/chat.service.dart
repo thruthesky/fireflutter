@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -13,9 +12,6 @@ class ChatService with FirebaseHelper {
   ChatService._();
 
   ChatRoomCustomize customize = ChatRoomCustomize();
-
-  /// TODO: Support official localization.
-  Map<String, String> texts = {};
 
   /// Last message of the chat room
   ///

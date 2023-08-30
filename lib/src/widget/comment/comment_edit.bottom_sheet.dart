@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 class CommentEditBottomSheet extends StatefulWidget {
   const CommentEditBottomSheet({
     super.key,
-    required this.post,
+    this.post,
     this.parent,
+    this.comment,
     this.labelText,
     this.hintText,
     this.onEdited,
   });
 
-  final Post post;
+  final Post? post;
   final Comment? parent;
+  final Comment? comment;
   final String? labelText;
   final String? hintText;
 
@@ -26,35 +28,47 @@ class CommentEditBottomSheet extends StatefulWidget {
 class CommentBoxState extends State<CommentEditBottomSheet> {
   TextEditingController content = TextEditingController();
 
+  String? labelText;
+  String? hintText;
+  Comment? parentId;
+
+  bool get isCreate => widget.post != null;
+  bool get isUpdate => !isCreate;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.comment != null) {
+      content.text = widget.comment!.content;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-          child: Row(
-            children: [
-              UserAvatar(
-                uid: UserService.instance.uid,
-                key: ValueKey(UserService.instance.uid),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: TextField(
-                    controller: content,
-                    minLines: 1,
-                    maxLines: 2,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      labelText: widget.labelText ?? 'Comment',
-                      hintText: widget.hintText ?? 'Write a comment...',
-                    ),
+        Row(
+          children: [
+            UserAvatar(
+              uid: UserService.instance.uid,
+              key: ValueKey(UserService.instance.uid),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: TextField(
+                  controller: content,
+                  minLines: 2,
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    labelText: labelText ?? 'Comment',
+                    hintText: hintText ?? 'Write a comment...',
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -68,15 +82,25 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
             IconButton(
               icon: const Icon(Icons.send),
               onPressed: () async {
-                if (content.text.isNotEmpty) {
-                  // TODO should we remove "await"?
-                  final comment = await Comment.create(
-                    post: widget.post,
+                if (content.text.isEmpty) {
+                  return warningSnackbar(context, 'Please input a comment.');
+                }
+
+                Comment comment;
+                if (isCreate) {
+                  comment = await Comment.create(
+                    post: widget.post!,
                     parent: widget.parent,
                     content: content.text,
                   );
-                  content.text = '';
-                  if (widget.onEdited != null) widget.onEdited!(comment);
+                } else {
+                  comment = await widget.comment!.update(
+                    content: content.text,
+                  );
+                }
+                content.text = '';
+                if (widget.onEdited != null) {
+                  widget.onEdited!(comment);
                 }
               },
             ),

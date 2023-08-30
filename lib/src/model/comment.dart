@@ -58,7 +58,11 @@ class Comment with FirebaseHelper {
     );
   }
 
-  static Comment create({
+  @override
+  String toString() =>
+      'Comment(id: $id, postId: $postId, content: $content, uid: $uid, files: $files, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted, parentId: $parentId, sort: $sort, depth: $depth)';
+
+  static Future<Comment> create({
     required Post post,
     Comment? parent,
     required String content,
@@ -82,7 +86,36 @@ class Comment with FirebaseHelper {
     return Comment.fromMap(map: commentData, id: post.id);
   }
 
-  @override
-  String toString() =>
-      'Comment(id: $id, postId: $postId, content: $content, uid: $uid, files: $files, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted, parentId: $parentId, sort: $sort, depth: $depth)';
+  Future<Comment> update({
+    required String content,
+    List<String>? files,
+  }) async {
+    final Map<String, dynamic> commentData = {
+      'content': content,
+      if (files != null) 'files': files,
+      'updatedAt': FieldValue.serverTimestamp(),
+    };
+    await commentCol.doc(id).update(commentData);
+    return copyWith(commentData);
+  }
+
+  /// Copy the properties of [map] into current Comment model and returns a new Comment model.
+  ///
+  copyWith(Map<String, dynamic> map) {
+    return Comment(
+      id: id,
+      postId: postId,
+      content: map['content'] ?? content,
+      uid: uid,
+      files: map['files'] ?? files,
+      createdAt: createdAt,
+      updatedAt:
+          map['updatedAt'] == null ? updatedAt : ((map['updatedAt'] is Timestamp) ? map['updatedAt'] : Timestamp.now()),
+      likes: map['likes'] ?? likes,
+      deleted: map['deleted'] ?? deleted,
+      parentId: map['parentId'] ?? parentId,
+      sort: map['sort'] ?? sort,
+      depth: map['depth'] ?? depth,
+    );
+  }
 }

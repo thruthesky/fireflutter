@@ -374,7 +374,7 @@ class _TestScreenState extends State<TestUi> {
 
     // const String cherryPassword = 'cherry';
 
-    // // TODO for confirmation: how do we handle other exceptions
+    //
     // const permissionDeniedError =
     //     '[cloud_firestore/permission-denied] The caller does not have permission to execute the specified operation.';
 

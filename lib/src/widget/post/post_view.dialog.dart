@@ -18,14 +18,22 @@ class PostViewDialog extends StatefulWidget {
 class _PostDialogState extends State<PostViewDialog> {
   @override
   Widget build(BuildContext context) {
-    late Post post;
     return StreamBuilder<DocumentSnapshot>(
       stream: PostService.instance.snapshot(postId: widget.post.id),
       builder: (context, snapshot) {
-        if (snapshot.hasError) return Text(snapshot.error.toString());
+        late Post post;
+        // error
+        if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          post = widget.post;
+        }
+        if (snapshot.hasData) {
+          post = Post.fromDocumentSnapshot(snapshot.data!);
+        }
 
-        if (snapshot.connectionState == ConnectionState.waiting) post = widget.post;
-        if (snapshot.hasData) post = Post.fromDocumentSnapshot(snapshot.data!);
+        // print('post.id: ${post.id}');
 
         return Scaffold(
           appBar: AppBar(
@@ -82,7 +90,7 @@ class _PostDialogState extends State<PostViewDialog> {
                     TextSpan(
                       text: post.title,
                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
-                    ), // TODO Customizable
+                    ),
                   ),
                 ),
                 if (widget.post.uid.isNotEmpty)
@@ -98,7 +106,7 @@ class _PostDialogState extends State<PostViewDialog> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TimestampText(
-                          timestamp: widget.post.createdAt, // TODO updated at
+                          timestamp: widget.post.createdAt,
                         ),
                       ],
                     ),
@@ -123,7 +131,7 @@ class _PostDialogState extends State<PostViewDialog> {
                       TextButton(
                         child: const Text('Reply'),
                         onPressed: () async {
-                          await CommentService.instance.showCommentBottomSheet(
+                          await CommentService.instance.showCommentEditBottomSheet(
                             context: context,
                             post: post,
                           );

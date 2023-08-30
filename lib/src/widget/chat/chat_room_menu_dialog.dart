@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/room.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomMenuDialog extends StatelessWidget {

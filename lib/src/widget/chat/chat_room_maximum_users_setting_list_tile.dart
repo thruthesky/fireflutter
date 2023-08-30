@@ -1,7 +1,6 @@
 import 'package:fireflutter/src/model/room.dart';
 import 'package:fireflutter/src/service/chat.service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class ChatRoomMaximumUsersSettingListTile extends StatefulWidget {
   const ChatRoomMaximumUsersSettingListTile({
@@ -27,9 +26,7 @@ class _ChatRoomMaximumUsersSettingListTileState extends State<ChatRoomMaximumUse
       title: const Text("Maximum Number of Users"),
       subtitle: TextFormField(
         controller: maxNumberOfUsers,
-        // keyboardType: TextInputType.number,
-        // TODO | question, do we have better UI for inputing integer? like better keyboard
-        inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+        keyboardType: TextInputType.number,
         textInputAction: TextInputAction.done,
         decoration: const InputDecoration(hintText: 'Enter the limit number of user who can join.'),
         onFieldSubmitted: (value) async {

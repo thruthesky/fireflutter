@@ -15,7 +15,6 @@ class ChatRoomUserListTile extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        // TODO 전체 화면으로 공개 프로필을 보여줄 것.
         showSnackBar(context, '${user.displayName} 전체화면으로 사용자 공개 프로필을 보여줄 것.');
       },
       child: Container(
