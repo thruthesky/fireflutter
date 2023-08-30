@@ -214,6 +214,7 @@ class UserService with FirebaseHelper {
     bool? complete,
     String? field,
     dynamic value,
+    String? type,
   }) async {
     if (nullableUser == null) {
       throw Exception(Code.notLoggedIn);
@@ -237,6 +238,7 @@ class UserService with FirebaseHelper {
       complete: complete,
       field: field,
       value: value,
+      type: type,
     );
 
     return nullableUser;
