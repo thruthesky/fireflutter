@@ -158,11 +158,7 @@ class Room with FirebaseHelper {
       'group': group,
       'open': open,
       'users': users,
-      'maximumNoOfUsers': maximumNoOfUsers ?? (isSingleChat ? 2 : 100),
-      'lastMessage': {
-        'createdAt': FieldValue.serverTimestamp(),
-        'protocol': 'system',
-      }
+      'maximumNoOfUsers': maximumNoOfUsers ?? (isSingleChat ? 2 : 100)
     };
   }
 

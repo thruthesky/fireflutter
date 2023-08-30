@@ -275,10 +275,18 @@ class ChatService with FirebaseHelper {
   /// Since it is a message to himself, it will display 1 as no of new message.
   Future<void> sendWelcomeMessage({required room, required String message, String? protocol}) async {
     await sendMessage(room: room, protocol: protocol, text: message);
-    await noOfNewMessageRef(room.id).update({
-      uid: 1,
-    });
     return;
+  }
+
+  /// Send protocol message to chat room
+  ///
+  /// Any member can send a protocol message to chat room.
+  ///
+  /// Example;
+  /// When a user registers, send a welcome message to the user. See [UserService.instance.sendWelcomeMessage]
+  ///
+  Future<void> sendProtocolMessage({required Room room, required String protocol, String? text}) async {
+    await sendMessage(room: room, protocol: protocol, text: text);
   }
 
   /// Update no of new message for all users in the room

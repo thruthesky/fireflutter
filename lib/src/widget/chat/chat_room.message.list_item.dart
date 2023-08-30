@@ -82,7 +82,7 @@ class ChatRoomMessageListItem extends StatelessWidget {
             color: Theme.of(context).colorScheme.inversePrimary,
             borderRadius: const BorderRadius.all(Radius.circular(8.0)),
           ),
-          child: LinkifyText(text: message.text ?? ''),
+          child: LinkifyText(text: message.text ?? message.protocol ?? ''),
         ),
         chatBubbleDateTime(
             short: false,

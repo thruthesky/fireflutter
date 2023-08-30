@@ -239,10 +239,13 @@ class UserService with FirebaseHelper {
     final room = await Room.create(
       otherUserUid: adminUid,
     );
-    return ChatService.instance.sendWelcomeMessage(
+    await ChatService.instance.sendWelcomeMessage(
       room: room,
       message: message,
       protocol: Protocol.register.name,
     );
+    await noOfNewMessageRef(room.id).update({
+      uid: 1,
+    });
   }
 } // EO UserService
