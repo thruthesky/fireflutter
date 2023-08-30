@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/enum/protocol.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -135,6 +136,9 @@ class Room with FirebaseHelper {
         isSingleChat ? ChatService.instance.getSingleChatRoomId(otherUserUid) : ChatService.instance.chatCol.doc().id;
 
     await ChatService.instance.chatCol.doc(roomId).set(roomData);
+
+    // await sendProtocolMessage(roomId, Protocol.createdAt.name);
+
     return Room.fromMap(map: roomData, id: roomId);
   }
 
