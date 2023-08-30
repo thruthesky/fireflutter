@@ -62,7 +62,7 @@ class Comment with FirebaseHelper {
   String toString() =>
       'Comment(id: $id, postId: $postId, content: $content, uid: $uid, files: $files, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted, parentId: $parentId, sort: $sort, depth: $depth)';
 
-  static Future<Comment> create({
+  static Comment create({
     required Post post,
     Comment? parent,
     required String content,
