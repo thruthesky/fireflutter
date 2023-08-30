@@ -201,8 +201,18 @@ class User with FirebaseHelper {
   ///
   /// 사용자 문서가 이미 존재하는 경우, 문서를 덮어쓴다.
   /// 참고: README.md
-  Future<User> create() async {
-    await FirebaseFirestore.instance.collection(User.collectionName).doc(uid).set(toMap());
+  ///
+  /// Example;
+  /// ```dart
+  /// User.create(uid: 'xxx');
+  /// ```
+  static Future<User> create({required String uid}) async {
+    await FirebaseFirestore.instance.collection(User.collectionName).doc(uid).set({
+      'uid': uid,
+      'email': '',
+      'displayName': '',
+      'createdAt': FieldValue.serverTimestamp(),
+    });
 
     return (await get(uid))!;
   }

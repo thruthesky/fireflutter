@@ -73,24 +73,29 @@ class ChatRoomMessageListItem extends StatelessWidget {
   Widget protocolBubble(BuildContext context) {
     if (message.isProtocol == false) return const SizedBox.shrink();
 
-    return Column(
-      children: [
-        Container(
-          margin: const EdgeInsets.only(top: 4, bottom: 4),
-          padding: const EdgeInsets.all(_kBubblePadding),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.inversePrimary,
-            borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 4, bottom: 4),
+            padding: const EdgeInsets.all(_kBubblePadding),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.inversePrimary,
+              borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+            ),
+            child: LinkifyText(text: message.text ?? message.protocol ?? ''),
           ),
-          child: LinkifyText(text: message.text ?? message.protocol ?? ''),
-        ),
-        chatBubbleDateTime(
+          chatBubbleDateTime(
             short: false,
             padding: const EdgeInsets.only(
               top: 0,
               bottom: _kBubblePadding,
-            )),
-      ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 

@@ -238,7 +238,7 @@ class ChatService with FirebaseHelper {
     String? url,
     String? protocol,
   }) async {
-    if (text == null && url == null) return;
+    if (text == null && url == null && protocol == null) return;
 
     final chatMessage = {
       if (text != null) 'text': text,
@@ -273,17 +273,18 @@ class ChatService with FirebaseHelper {
   ///
   /// Welcome message is a chat message with the protocol 'welcome' with the given message.
   /// Since it is a message to himself, it will display 1 as no of new message.
-  Future<void> sendWelcomeMessage({required room, required String message, String? protocol}) async {
-    await sendMessage(room: room, protocol: protocol, text: message);
-    return;
-  }
+  // Future<void> sendWelcomeMessage({required room, required String message, String? protocol}) async {
+  //   await sendMessage(room: room, protocol: protocol, text: message);
+  //   return;
+  // }
 
-  /// Send protocol message to chat room
+  /// Send a protocol message to chat room
   ///
-  /// Any member can send a protocol message to chat room.
+  /// Any member can send a protocol message to his chat room.
   ///
   /// Example;
-  /// When a user registers, send a welcome message to the user. See [UserService.instance.sendWelcomeMessage]
+  /// - When a user registers, send a welcome message to the user. See [UserService.instance.sendWelcomeMessage]
+  /// - When a user creates a chat room, send a chat room creation protocol message to the chat room. See [Room.create]
   ///
   Future<void> sendProtocolMessage({required Room room, required String protocol, String? text}) async {
     await sendMessage(room: room, protocol: protocol, text: text);

@@ -1,4 +1,4 @@
 enum Protocol {
   register,
-  createdAt,
+  chatRoomCreated,
 }

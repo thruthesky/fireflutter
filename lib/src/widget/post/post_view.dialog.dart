@@ -73,11 +73,9 @@ class _PostDialogState extends State<PostViewDialog> {
                 onSelected: (value) {
                   switch (value) {
                     case "adjust_text_size":
-                      // TODO adjust Test size
                       // context.push('/adjust_text_size');
                       break;
                     case "delete_post":
-                      // TODO delete post
                       debugPrint('deleting post');
                       break;
                   }

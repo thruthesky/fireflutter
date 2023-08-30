@@ -135,9 +135,14 @@ class Room with FirebaseHelper {
     final roomId =
         isSingleChat ? ChatService.instance.getSingleChatRoomId(otherUserUid) : ChatService.instance.chatCol.doc().id;
 
+    // create
     await ChatService.instance.chatCol.doc(roomId).set(roomData);
 
-    // await sendProtocolMessage(roomId, Protocol.createdAt.name);
+    // start
+    await ChatService.instance.sendProtocolMessage(
+      room: Room.fromMap(map: roomData, id: roomId),
+      protocol: Protocol.chatRoomCreated.name,
+    );
 
     return Room.fromMap(map: roomData, id: roomId);
   }
@@ -162,7 +167,7 @@ class Room with FirebaseHelper {
       'group': group,
       'open': open,
       'users': users,
-      'maximumNoOfUsers': maximumNoOfUsers ?? (isSingleChat ? 2 : 100)
+      'maximumNoOfUsers': maximumNoOfUsers ?? (isSingleChat ? 2 : 100),
     };
   }
 

@@ -180,6 +180,8 @@ class UserService with FirebaseHelper {
     await FirebaseAuth.instance.signOut();
   }
 
+  /// Create user document
+  ///
   /// Create a user document under /users/{uid} for the login user with the Firebase Auth user data.
   ///
   /// If the user document already exists, it throws an exception.
@@ -190,14 +192,7 @@ class UserService with FirebaseHelper {
 
     final u = FirebaseAuth.instance.currentUser!;
 
-    final model = User(
-      uid: u.uid,
-      email: u.email ?? '',
-      displayName: u.displayName ?? '',
-      photoUrl: u.photoURL ?? '',
-      createdAt: null,
-    );
-    nullableUser = await model.create();
+    nullableUser = await User.create(uid: u.uid);
   }
 
   /// Returns a Stream of User model for the current login user.
@@ -239,9 +234,9 @@ class UserService with FirebaseHelper {
     final room = await Room.create(
       otherUserUid: adminUid,
     );
-    await ChatService.instance.sendWelcomeMessage(
+    await ChatService.instance.sendProtocolMessage(
       room: room,
-      message: message,
+      text: message,
       protocol: Protocol.register.name,
     );
     await noOfNewMessageRef(room.id).update({
