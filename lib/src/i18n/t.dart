@@ -15,6 +15,7 @@ class UserTranslations {
 class ChatTranslations {
   String noChatRooms = 'No chat rooms';
   String roomMenu = 'Chat Room Menu';
+  String chatRoomCreated = 'New chat room created. You can invite more users. Enjoy chatting!';
 }
 
 class UploadTranslations {

@@ -142,6 +142,7 @@ class Room with FirebaseHelper {
     await ChatService.instance.sendProtocolMessage(
       room: Room.fromMap(map: roomData, id: roomId),
       protocol: Protocol.chatRoomCreated.name,
+      text: tr.chat.chatRoomCreated,
     );
 
     return Room.fromMap(map: roomData, id: roomId);

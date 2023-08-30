@@ -96,7 +96,7 @@ class MessagingService with FirebaseHelper {
     FirebaseAuth.instance.authStateChanges().listen((user) => _updateToken(token));
 
     ///
-    tokenChange.listen((token) => _updateToken(token));
+    tokenChange.listen(_updateToken);
 
     /// Permission request for iOS only. For Android, the permission is granted by default.
 
@@ -120,13 +120,6 @@ class MessagingService with FirebaseHelper {
       }
     }
 
-    // Get the token each time the application loads and save it to database.
-    token = await FirebaseMessaging.instance.getToken() ?? '';
-    // log('---> device token: $token');
-    // print(token);
-    tokenChange.add(token);
-    // debugPrint(token);
-
     // Handler, when app is on Foreground.
     FirebaseMessaging.onMessage.listen(onForegroundMessage);
 
@@ -141,6 +134,12 @@ class MessagingService with FirebaseHelper {
       onMessageOpenedFromBackground(message);
     });
 
+    // Get the token each time the application loads and save it to database.
+    token = await FirebaseMessaging.instance.getToken() ?? '';
+    // log('---> device token: $token');
+    // print(token);
+    await _updateToken(token);
+    // debugPrint(token);
     // Any time the token refreshes, store this in the database too.
     FirebaseMessaging.instance.onTokenRefresh.listen((token) => tokenChange.add(token));
   }
