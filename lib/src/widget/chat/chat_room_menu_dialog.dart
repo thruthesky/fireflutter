@@ -74,9 +74,7 @@ class ChatRoomMenuDialog extends StatelessWidget {
               if (value == 0) {
                 // 방 나가기
                 if (isMaster == false) {
-                  ChatService.instance.leaveRoom(
-                    room: room,
-                  );
+                  room.leave();
                 }
               } else if (value == 1) {
                 showSnackBar(context, 'Alarm is not implemented yet.');

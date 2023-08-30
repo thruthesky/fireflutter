@@ -210,6 +210,13 @@ class Room with FirebaseHelper {
     await addUser(FirebaseAuth.instance.currentUser!.uid);
   }
 
+  Future<void> leave() async {
+    await roomDoc(id).update({
+      'moderators': FieldValue.arrayRemove([uid]),
+      'users': FieldValue.arrayRemove([uid])
+    });
+  }
+
   String get lastMessageTime {
     if (lastMessage == null) return '';
     final dt = lastMessage!.createdAt.toDate();

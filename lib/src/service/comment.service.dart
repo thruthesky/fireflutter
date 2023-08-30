@@ -6,13 +6,13 @@ class CommentService with FirebaseHelper {
   static CommentService get instance => _instance ??= CommentService._();
   CommentService._();
 
-  Comment createComment({
+  Future<Comment> createComment({
     required Post post,
     required String content,
     List<String>? files,
     Comment? parent,
-  }) {
-    return Comment.create(
+  }) async {
+    return await Comment.create(
       post: post,
       content: content,
       files: files,
@@ -42,7 +42,6 @@ class CommentService with FirebaseHelper {
         // This padding is important to prevent the bottom sheet from being hidden by the keyboard.
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: SafeArea(
-          // TODO should we add a display what comment is being replied to.
           // SafeArea is needed for Simulator
           child: Column(
             mainAxisSize: MainAxisSize.min,

@@ -100,7 +100,7 @@ class ChatRoomMessageListItem extends StatelessWidget {
   }
 
   Widget messageBubble(BuildContext context) {
-    if (message.text == null || message.text!.trim() == '') return const SizedBox.shrink();
+    if (message.isProtocol || message.text == null || message.text!.trim() == '') return const SizedBox.shrink();
     final double factor = MediaQuery.of(context).size.width < 400 ? .64 : (isMyMessage ? .76 : .68);
 
     return Row(

@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 /// [searchText] Use this to search in a list of users
 /// [exemptedUsers] Array of uids who are exempted in search results
 ///
-/// TODO: Display only users who open their profile.
 class UserListView extends StatelessWidget with FirebaseHelper {
   const UserListView({
     super.key,

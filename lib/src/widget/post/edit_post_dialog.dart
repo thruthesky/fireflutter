@@ -16,7 +16,6 @@ class EditPostDialog extends StatefulWidget {
 class _EditPostDialogState extends State<EditPostDialog> {
   TextEditingController title = TextEditingController();
   TextEditingController content = TextEditingController();
-  // TODO file upload
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,7 @@ class _EditPostDialogState extends State<EditPostDialog> {
     content.text = widget.post.content;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Post'), // TODO tr
+        title: const Text('Edit Post'),
       ),
       body: ListView(
         children: [

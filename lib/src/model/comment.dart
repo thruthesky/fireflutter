@@ -62,12 +62,12 @@ class Comment with FirebaseHelper {
   String toString() =>
       'Comment(id: $id, postId: $postId, content: $content, uid: $uid, files: $files, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted, parentId: $parentId, sort: $sort, depth: $depth)';
 
-  static Comment create({
+  static Future<Comment> create({
     required Post post,
     Comment? parent,
     required String content,
     List<String>? files,
-  }) {
+  }) async {
     String myUid = FirebaseAuth.instance.currentUser!.uid;
     final Map<String, dynamic> commentData = {
       'content': content,
@@ -81,21 +81,23 @@ class Comment with FirebaseHelper {
           getCommentSortString(noOfComments: post.noOfComments, depth: parent?.depth ?? 0, sortString: parent?.sort),
       'depth': parent == null ? 1 : parent.depth + 1,
     };
-    CommentService.instance.commentCol.add(commentData);
+
+    await CommentService.instance.commentCol.add(commentData);
     PostService.instance.postCol.doc(post.id).update({'noOfComments': FieldValue.increment(1)});
+
     return Comment.fromMap(map: commentData, id: post.id);
   }
 
-  Comment update({
+  Future<Comment> update({
     required String content,
     List<String>? files,
-  }) {
+  }) async {
     final Map<String, dynamic> commentData = {
       'content': content,
       if (files != null) 'files': files,
       'updatedAt': FieldValue.serverTimestamp(),
     };
-    commentCol.doc(id).update(commentData);
+    await commentCol.doc(id).update(commentData);
     return copyWith(commentData);
   }
 

@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 ///
 /// It can be used in any where for any cases as long as the chat room model is given.
 ///
-/// TODO support all the listview option, so the parent widget can use it as a normal listview.
 class ChatRoomUserListView extends StatefulWidget {
   const ChatRoomUserListView({
     super.key,
