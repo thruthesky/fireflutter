@@ -37,8 +37,13 @@ class _PostEditDialogState extends State<PostEditDialog> {
       title.text = widget.post!.title;
       content.text = widget.post!.content;
       urls = widget.post!.urls;
-    }
-    if (widget.categoryId != null) {
+      debugPrint('Category: ${widget.post!.categoryId}');
+      CategoryService.instance.get(widget.post!.categoryId).then((cat) {
+        setState(() {
+          categoryName = cat!.name;
+        });
+      });
+    } else if (widget.categoryId != null) {
       CategoryService.instance.get(widget.categoryId!).then((cat) {
         setState(() {
           categoryName = cat!.name;
