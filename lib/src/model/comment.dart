@@ -86,16 +86,16 @@ class Comment with FirebaseHelper {
     return Comment.fromMap(map: commentData, id: post.id);
   }
 
-  Future<Comment> update({
+  Comment update({
     required String content,
     List<String>? files,
-  }) async {
+  }) {
     final Map<String, dynamic> commentData = {
       'content': content,
       if (files != null) 'files': files,
       'updatedAt': FieldValue.serverTimestamp(),
     };
-    await commentCol.doc(id).update(commentData);
+    commentCol.doc(id).update(commentData);
     return copyWith(commentData);
   }
 
