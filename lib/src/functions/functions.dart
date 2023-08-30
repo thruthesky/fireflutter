@@ -166,3 +166,51 @@ void warningSnackbar(BuildContext context, String message) async {
     ),
   );
 }
+
+/// Display a snackbar
+///
+/// When the body of the snackbar is tapped, [onTap] will be called with a callback that will hide the snackbar.
+///
+/// ```dart
+/// snackbar( title: 'title',  message: 'message',  onTap: (x) {
+///     x();
+/// });
+/// ```
+ScaffoldFeatureController actionSnackbar({
+  required BuildContext context,
+  required String title,
+  required String message,
+  Widget? icon,
+  int duration = 8,
+  required Function(Function) onTap,
+}) {
+  return ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      duration: Duration(seconds: duration),
+      content: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => onTap(() => ScaffoldMessenger.of(context).hideCurrentSnackBar()),
+        child: Row(
+          children: [
+            if (icon != null) ...[icon, const SizedBox(width: 8)],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(title),
+                  Text(message),
+                ],
+              ),
+            ),
+            TextButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                },
+                child: const Text('Dismiss'))
+          ],
+        ),
+      ),
+    ),
+  );
+}
