@@ -15,6 +15,12 @@ class UserService with FirebaseHelper {
   static UserService? _instance;
   static UserService get instance => _instance ??= UserService._();
 
+  /// Return true if the user signed with real account. Not anonymous.
+  bool get notSignedIn => isAnonymous || FirebaseAuth.instance.currentUser == null;
+
+  bool get signedIn => !notSignedIn;
+  bool get isAnonymous => FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+
   late final String adminUid;
 
   /// null 이면 아직 로드를 안했다는 뜻이다. 즉, 로딩중이라는 뜻이다. 로그인을 했는지 하지 않았는지 여부는 알 수 없다.

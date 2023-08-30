@@ -5,3 +5,5 @@ export 'service/category.service.dart';
 export 'service/post.service.dart';
 
 export 'service/chat.customize.dart';
+
+export 'service/messaging.service.dart';

@@ -44,4 +44,8 @@ mixin FirebaseHelper {
   DatabaseReference noOfNewMessageRef(String roomId) => rtdb.ref('chats/$roomId/noOfNewMessages');
   //
   DatabaseReference noOfNewMessageUserRef(String roomId, String uid) => noOfNewMessageRef(roomId).child(uid);
+
+  DocumentReference tokenDoc(String token) {
+    return myDoc.collection('fcm_tokens').doc(token);
+  }
 }
