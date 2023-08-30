@@ -63,37 +63,38 @@ class _PostEditDialogState extends State<PostEditDialog> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              InputDecorator(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.zero,
-                  isDense: true,
+              if (CategoryService.instance.categoriesOnCreate.isNotEmpty)
+                InputDecorator(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.zero,
+                    isDense: true,
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                        isDense: false,
+                        padding: const EdgeInsets.only(left: 12, top: 4, right: 4, bottom: 4),
+                        isExpanded: true,
+                        items: [
+                          const DropdownMenuItem(
+                            value: '',
+                            child: Text('Select Category'),
+                          ),
+                          ...CategoryService.instance.categoriesOnCreate.entries.map((e) {
+                            return DropdownMenuItem(
+                              value: e.key,
+                              child: Text(e.value),
+                            );
+                          }).toList(),
+                        ],
+                        value: categoryId,
+                        onChanged: (value) {
+                          setState(() {
+                            categoryId = value ?? '';
+                          });
+                        }),
+                  ),
                 ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                      isDense: false,
-                      padding: const EdgeInsets.only(left: 12, top: 4, right: 4, bottom: 4),
-                      isExpanded: true,
-                      items: [
-                        const DropdownMenuItem(
-                          value: '',
-                          child: Text('Select Category'),
-                        ),
-                        ...CategoryService.instance.categoriesOnCreate.entries.map((e) {
-                          return DropdownMenuItem(
-                            value: e.key,
-                            child: Text(e.value),
-                          );
-                        }).toList(),
-                      ],
-                      value: categoryId,
-                      onChanged: (value) {
-                        setState(() {
-                          categoryId = value ?? '';
-                        });
-                      }),
-                ),
-              ),
               const SizedBox(height: 20),
               TextField(
                 controller: title,
@@ -162,7 +163,7 @@ class _PostEditDialogState extends State<PostEditDialog> {
                         post = await Post.get(widget.post!.id);
                       }
                       if (mounted) {
-                        Navigator.pop(context);
+                        Navigator.pop(context, post);
                         PostService.instance.showPostViewDialog(context, post);
                       }
                     },

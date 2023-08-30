@@ -24,20 +24,10 @@ class _PostListDialogState extends State<PostListDialog> {
   @override
   void initState() {
     super.initState();
-    // if (widget.categoryId != null && category == null) {
-    //   CategoryService.instance.get(widget.categoryId!).then((value) {
-    //     setState(() {
-    //       category = value;
-    //     });
-    // });
-    // }
   }
 
   @override
   Widget build(BuildContext context) {
-    // if (widget.categoryId != null && category == null) {
-    //   return const SizedBox.shrink();
-    // }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -46,12 +36,15 @@ class _PostListDialogState extends State<PostListDialog> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () async {
-              await PostService.instance.showCreateDialog(
+              final post = await PostService.instance.showEditDialog(
                 context,
                 categoryId: widget.categoryId,
               );
               if (mounted) {
                 Navigator.pop(context);
+                if (post != null) {
+                  PostService.instance.showPostViewDialog(context, post);
+                }
               }
             },
           ),

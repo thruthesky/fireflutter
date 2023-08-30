@@ -42,7 +42,7 @@ class _PostDialogState extends State<PostViewDialog> {
                 IconButton(
                   icon: const Icon(Icons.edit),
                   onPressed: () {
-                    PostService.instance.showPostEditDialog(context, post: widget.post);
+                    PostService.instance.showEditDialog(context, post: widget.post);
                   },
                 ),
               PopupMenuButton(
@@ -145,7 +145,7 @@ class _PostDialogState extends State<PostViewDialog> {
                       TextButton(
                         child: const Text('Edit'),
                         onPressed: () {
-                          PostService.instance.showPostEditDialog(context, post: post);
+                          PostService.instance.showEditDialog(context, post: post);
                         },
                       ),
                     ],

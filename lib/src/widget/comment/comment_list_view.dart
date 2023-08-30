@@ -60,7 +60,12 @@ class CommentListViewState extends State<CommentListView> {
           },
           emptyBuilder: (context) {
             if (widget.emptyBuilder != null) return widget.emptyBuilder!(context);
-            return Center(child: Text(tr.comment.noComment));
+            return Column(
+              children: [
+                Center(child: Text(tr.comment.noComment)),
+                const SizedBox(height: 60),
+              ],
+            );
           },
           errorBuilder: (context, error, stackTrace) {
             log(error.toString(), stackTrace: stackTrace);

@@ -14,24 +14,15 @@ class PostService with FirebaseHelper {
     return UserService.instance.uid == post.uid;
   }
 
-  showCreateDialog(
+  /// Shows the Edit Post as a dialog
+  Future<Post?> showEditDialog(
     BuildContext context, {
     String? categoryId,
-  }) async {
-    await showGeneralDialog(
-      context: context,
-      pageBuilder: (context, _, __) => PostEditDialog(categoryId: categoryId),
-    );
-  }
-
-  /// Shows the Edit Post as a dialog
-  showPostEditDialog(
-    BuildContext context, {
-    required Post post,
+    Post? post,
   }) {
-    showGeneralDialog(
+    return showGeneralDialog<Post?>(
       context: context,
-      pageBuilder: (context, _, __) => PostEditDialog(post: post),
+      pageBuilder: (context, _, __) => PostEditDialog(categoryId: categoryId, post: post),
     );
   }
 
