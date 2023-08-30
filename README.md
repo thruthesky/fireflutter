@@ -635,6 +635,19 @@ UserService.instance.get(UserService.instance.adminUid).then(
 
 
 
+The code below shows how to open a comment edit bottom sheet. Use this for commet edit bottom sheet UI.
+
+```dart
+PostService.instance.showPostViewDialog(context, await Post.get('PoxnpxpcC2lnYv0jqI4f'));
+if (mounted) {
+  CommentService.instance.showCommentEditBottomSheet(
+    context,
+    comment: await Comment.get('bvCJk4RFK79yexAKfAYs'),
+  );
+}
+```
+
+
 
 # Contribution
 

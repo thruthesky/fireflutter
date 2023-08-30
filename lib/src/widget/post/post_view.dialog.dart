@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/service/comment.service.dart';
 import 'package:flutter/material.dart';
 
 class PostViewDialog extends StatefulWidget {
@@ -131,7 +130,7 @@ class _PostDialogState extends State<PostViewDialog> {
                         child: const Text('Reply'),
                         onPressed: () async {
                           await CommentService.instance.showCommentEditBottomSheet(
-                            context: context,
+                            context,
                             post: post,
                           );
                         },

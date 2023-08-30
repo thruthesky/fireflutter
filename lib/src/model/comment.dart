@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/functions/comment_sort_string.dart';
-import 'package:fireflutter/src/service/comment.service.dart';
 
 class Comment with FirebaseHelper {
   final String id;
@@ -86,6 +85,11 @@ class Comment with FirebaseHelper {
     PostService.instance.postCol.doc(post.id).update({'noOfComments': FieldValue.increment(1)});
 
     return Comment.fromMap(map: commentData, id: post.id);
+  }
+
+  static Future<Comment> get(String id) async {
+    final DocumentSnapshot documentSnapshot = await CommentService.instance.commentCol.doc(id).get();
+    return Comment.fromDocumentSnapshot(documentSnapshot);
   }
 
   Future<Comment> update({

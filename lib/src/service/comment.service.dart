@@ -25,8 +25,8 @@ class CommentService with FirebaseHelper {
   /// [post] is the post to which the comment is created or updated under.
   /// [parent] is the parent comment of the comment to be created.
   /// [comment] is the comment to be updated.
-  Future<Comment?> showCommentEditBottomSheet({
-    required BuildContext context,
+  Future<Comment?> showCommentEditBottomSheet(
+    BuildContext context, {
     Post? post,
     Comment? parent,
     Comment? comment,
