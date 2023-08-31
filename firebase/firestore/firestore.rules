@@ -42,7 +42,7 @@ service cloud.firestore {
       allow update: if
         request.auth.uid == documentId
         ||
-        ( onlyUpdating(['followers']) && ( onlyAdding('followers', request.auth.uid) || onlyRemoving('followers', request.auth.uid) ) )
+        ( onlyUpdating(['followers']) && (  onlyAdding('followers', request.auth.uid)  || onlyRemoving('followers', request.auth.uid) ) )
         ;
       allow delete: if false;
     }
