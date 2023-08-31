@@ -209,8 +209,11 @@ class User with FirebaseHelper {
   ///
   /// If the user document does not exist, it will return null. It does not throw an exception.
   ///
-  /// It does not
-  static Future<User?> get(String uid) async {
+  /// [uid] is the user's uid. If it's null, it will get the login user's document.
+  ///
+  /// Note, that It gets data from /users collections. It does not get data from /search-user-data collection.
+  static Future<User?> get([String? uid]) async {
+    uid ??= UserService.instance.uid;
     final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(uid).get();
     if (snapshot.exists == false) {
       return null;
@@ -247,20 +250,17 @@ class User with FirebaseHelper {
     return (await get(uid))!;
   }
 
-  /// Updaet user document
+  /// Update user document
   ///
-  /// Update the user document under /users/{uid} for the login user.
+  /// Update the user document under /users/{uid} NOT only for the login user
+  /// but also other user document as long as the permission allows.
   ///
-  /// Note that, the document update for your profile information update is
-  /// not an expensive work. So, it gets the user document from Firestore
-  /// after update the document and it returns the user model from the updated
-  /// user document. but there might be some fields that are not updated by
-  /// the cloud (background) function.
+  /// Note that, it only updates. It does not return the updated user document.
   ///
   /// It sets with merge true option just incase if the user document may not
   /// exists. And it uses [UserService.instance.uid] as the user's uid just
   /// incase if the uid is not provided.
-  Future<User> update({
+  Future<void> update({
     String? name,
     String? firstName,
     String? lastName,
@@ -286,39 +286,41 @@ class User with FirebaseHelper {
     dynamic value,
     Map<String, dynamic> data = const {},
   }) async {
-    final doc = FirebaseFirestore.instance.collection('users').doc(UserService.instance.uid);
-
-    await doc.set({
-      ...{
-        if (name != null) 'name': name,
-        if (firstName != null) 'firstName': firstName,
-        if (lastName != null) 'lastName': lastName,
-        if (middleName != null) 'middleName': middleName,
-        if (displayName != null) 'displayName': displayName,
-        if (photoUrl != null) 'photoUrl': photoUrl,
-        if (hasPhotoUrl != null) 'hasPhotoUrl': hasPhotoUrl,
-        if (idVerifiedCode != null) 'idVerifiedCode': idVerifiedCode,
-        if (phoneNumber != null) 'phoneNumber': phoneNumber,
-        if (email != null) 'email': email,
-        if (state != null) 'state': state,
-        if (stateImageUrl != null) 'stateImageUrl': stateImageUrl,
-        if (birthYear != null) 'birthYear': birthYear,
-        if (birthMonth != null) 'birthMonth': birthMonth,
-        if (birthDay != null) 'birthDay': birthDay,
-        if (noOfPosts != null) 'noOfPosts': noOfPosts,
-        if (noOfComments != null) 'noOfComments': noOfComments,
-        if (type != null) 'type': type,
-        if (complete != null) 'complete': complete,
-        if (field != null && value != null) field: value,
+    print('going to update: $uid');
+    return await userDoc(uid).set(
+      {
+        ...{
+          if (name != null) 'name': name,
+          if (firstName != null) 'firstName': firstName,
+          if (lastName != null) 'lastName': lastName,
+          if (middleName != null) 'middleName': middleName,
+          if (displayName != null) 'displayName': displayName,
+          if (photoUrl != null) 'photoUrl': photoUrl,
+          if (hasPhotoUrl != null) 'hasPhotoUrl': hasPhotoUrl,
+          if (idVerifiedCode != null) 'idVerifiedCode': idVerifiedCode,
+          if (phoneNumber != null) 'phoneNumber': phoneNumber,
+          if (email != null) 'email': email,
+          if (state != null) 'state': state,
+          if (stateImageUrl != null) 'stateImageUrl': stateImageUrl,
+          if (birthYear != null) 'birthYear': birthYear,
+          if (birthMonth != null) 'birthMonth': birthMonth,
+          if (birthDay != null) 'birthDay': birthDay,
+          if (noOfPosts != null) 'noOfPosts': noOfPosts,
+          if (noOfComments != null) 'noOfComments': noOfComments,
+          if (type != null) 'type': type,
+          if (complete != null) 'complete': complete,
+          if (followings != null) 'followings': followings,
+          if (followers != null) 'followers': followers,
+          if (field != null && value != null) field: value,
+        },
+        ...data
       },
-      ...data
-    }, SetOptions(merge: true));
-
-    return (await get(uid))!;
+      SetOptions(merge: true),
+    );
   }
 
   /// If the user has completed the profile, set the complete field to true.
-  Future<User> updateComplete(bool complete) async {
+  Future<void> updateComplete(bool complete) async {
     return await update(complete: complete);
   }
 
