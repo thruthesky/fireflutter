@@ -47,7 +47,9 @@ service cloud.firestore {
       allow update: if
         request.auth.uid == documentId
         ||
-        ( onlyUpdating(['followers']) && (  onlyAdding('followers', request.auth.uid)  || onlyRemoving('followers', request.auth.uid) ) )
+        onlyAdding('followers', request.auth.uid)
+        ||
+        onlyRemoving('followers', request.auth.uid)
         ;
       allow delete: if false;
       match /fcm_tokens/{docId} {
@@ -294,28 +296,43 @@ function notRemoving(field, element) {
 //
 // arrayField is an array
 // [element] is an element to be removed from the arrayField
-function onlyRemoving(arryField, element) {
+//
+// ! Warning - it will fail if it try to remove an element which does not exists in the array.
+function onlyRemoving(arrayField, element) {
+
+  let oldSet = (arrayField in resource.data ? resource.data[arrayField] : []).toSet();
+  let newSet = request.resource.data[arrayField].toSet();
+
   return
-    resource.data[arryField].toSet().difference(request.resource.data[arryField].toSet()) == [element].toSet() 
+    oldSet.difference(newSet) == [element].toSet() 
     &&
-    resource.data[arryField].toSet().intersection(request.resource.data[arryField].toSet()) == request.resource.data[arryField].toSet()
+    oldSet.intersection(newSet) == newSet
   ;
 }
 
+
 // Returns true if the array field in the document is adding only the element.
 // It must not replace any other element.
+//
 // ! Warning - it must not update(delete) any other field in the document
+//
+// ! Waring - it will fail if it try to add an element which exists already in the array.
 function onlyAdding(arrayField, element) {
+  
+  let oldSet = (arrayField in resource.data ? resource.data[arrayField] : []).toSet();
+  let newSet = request.resource.data[arrayField].toSet();
+
   return
     onlyUpdating([arrayField])
-    &&
+    &&    
     // anything else has deleted?
-    resource.data[arrayField].toSet().intersection(request.resource.data[arrayField].toSet()) == resource.data[arrayField].toSet()
+    oldSet.intersection(newSet) == oldSet
     &&
     // only the element has added?
-    request.resource.data[arrayField].toSet().difference(resource.data[arrayField].toSet()) == [element].toSet()
+    newSet.difference(oldSet) == [element].toSet()
   ;
 }
+
 
 
 // Returns true if it adds only one element to the array field.

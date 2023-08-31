@@ -15,6 +15,8 @@ A free, open source, complete, rapid development package for creating Social app
     - [Security rule for admin](#security-rule-for-admin)
   - [Cloud functions](#cloud-functions)
   - [Admin settings](#admin-settings)
+  - [Setup the base code](#setup-the-base-code)
+    - [Global key](#global-key)
 - [Usage](#usage)
   - [UserService](#userservice)
   - [ChatService](#chatservice)
@@ -179,6 +181,22 @@ Instead of building and managing cloud functions code, we choose to use it as fi
 
 See the [Security rules for admin](#security-rule-for-admin) chapter to set admin in the security rules. After this, you can set the `isAdmin` field to true on the admin's user document.
 
+
+
+## Setup the base code
+
+
+### Global key
+
+Since, fireflutter uses snackbars, it needs global key (or global build context). Put the global key into the `FireFlutterService.instance.init(context: ...)`.
+
+For instance, if you are using go_route, you can pass the global build context like below.
+
+```dart
+WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  FireFlutterService.instance.init(context: router.routerDelegate.navigatorKey.currentContext!);
+}
+```
 
 
 
@@ -467,6 +485,7 @@ CommentService.instance.init(
 - To display the users who you follow, use `FollowingListView`.
 
 - A feed is a post that user can create on the forum in whatever category.
+
 
 
 
