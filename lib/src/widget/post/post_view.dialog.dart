@@ -148,7 +148,6 @@ class _PostDialogState extends State<PostViewDialog> {
                               final re = await FeedService.instance.follow(post.uid);
                               if (mounted) {
                                 toast(
-                                  context: context,
                                   title: re ? 'Followed' : 'Unfollowed',
                                   message: re ? 'You have followed this user' : 'You have unfollowed this user',
                                 );
