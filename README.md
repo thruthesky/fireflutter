@@ -35,6 +35,8 @@ A free, open source, complete, rapid development package for creating Social app
   - [Customizing source](#customizing-source)
 - [Following and Follower](#following-and-follower)
   - [Feed listing logic](#feed-listing-logic)
+  - [How to follow](#how-to-follow)
+  - [How to unfollow](#how-to-unfollow)
 - [Customization](#customization)
   - [Chat Customization](#chat-customization)
 - [Translation](#translation)
@@ -500,6 +502,14 @@ Displaying_Feeds-->Get_All_Feed_Sort_By_Minus_Date
 
 
 
+## How to follow
+
+Use `FeedService.instance.follow`. This will produce a permission error if you are going to follow a user that you are already following.
+
+
+## How to unfollow
+
+Use `FeedService.instance.unfollow`. This will produce a permission error if you try to unfollow a user that you are not following.
 
 # Customization
 

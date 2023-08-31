@@ -13,6 +13,7 @@ const postsColName = "posts";
 const categoriesColName = "categories";
 const commentsColsName = "comments";
 const chatsColName = "chats";
+const usersColName = "users";
 
 // Connect to Firestore with a user permission.
 function db(auth = null) {
@@ -190,6 +191,15 @@ async function createPost(options = {}) {
   return postRef;
 }
 
+// Add create or update to user collection
+async function editUser(user) {
+  await db(user).collection(usersColName).doc(user.uid).set({
+    uid: user.uid,
+    email: user.email,
+    followers: []
+  });
+}
+
 exports.db = db;
 exports.admin = admin;
 exports.tempChatRoomData = tempChatRoomData;
@@ -202,6 +212,7 @@ exports.postsColName = postsColName;
 exports.categoriesColName = categoriesColName;
 exports.commentsColsName = commentsColsName;
 exports.chatsColName = chatsColName;
+exports.usersColName = usersColName;
 exports.TEST_PROJECT_ID = TEST_PROJECT_ID;
 exports.createOpenGroupChat = createOpenGroupChat;
 exports.invite = invite;
@@ -210,3 +221,4 @@ exports.unblock = unblock;
 exports.setAsModerator = setAsModerator;
 exports.createCategory = createCategory;
 exports.createPost = createPost;
+exports.editUser = editUser;
