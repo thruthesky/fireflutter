@@ -8,3 +8,4 @@ export 'service/comment.service.dart';
 export 'service/chat.customize.dart';
 
 export 'service/messaging.service.dart';
+export 'service/feed.service.dart';

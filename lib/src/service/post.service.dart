@@ -39,14 +39,21 @@ class PostService with FirebaseHelper {
     return PostService.instance.col.doc(postId).snapshots();
   }
 
-  Future<void> editPost({
+  /// Update the post
+  ///
+  /// [post] is the post to be updated
+  ///
+  /// [title] is the new title
+  ///
+  /// [content] is the new content
+  @Deprecated("Don't use this. Use Post.update() instead.")
+  Future<void> edit({
     required Post post,
     required String title,
     required String content,
     List<String>? urls,
   }) {
-    return Post.update(
-      post: post,
+    return post.update(
       title: title,
       content: content,
       urls: urls,
@@ -71,5 +78,30 @@ class PostService with FirebaseHelper {
         categoryId: category.id,
       ),
     );
+  }
+
+  /// Get multiple posts
+  ///
+  ///
+  Future<List<Post>> gets({
+    String? uid,
+    String? category,
+    int limit = 10,
+  }) async {
+    Query q = postCol;
+    if (uid != null) {
+      q = q.where('uid', isEqualTo: uid);
+    }
+    if (category != null) {
+      q = q.where('category', isEqualTo: category);
+    }
+    q = q.limit(limit);
+    q = q.orderBy('createdAt', descending: true);
+
+    final querySnapshot = await q.get();
+
+    if (querySnapshot.size == 0) return [];
+
+    return querySnapshot.docs.map((e) => Post.fromDocumentSnapshot(e)).toList();
   }
 }

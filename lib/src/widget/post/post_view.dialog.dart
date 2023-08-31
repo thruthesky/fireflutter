@@ -141,6 +141,17 @@ class _PostDialogState extends State<PostViewDialog> {
                           debugPrint('Liking it');
                         },
                       ),
+                      TextButton(
+                        child: const Text('Follow'),
+                        onPressed: () {
+                          FeedService.instance.follow(post.uid);
+                          tapSnackbar(
+                              context: context,
+                              title: 'Followed',
+                              message: 'You have followedthis user',
+                              onTap: (close) => close());
+                        },
+                      ),
                       const Spacer(),
                       TextButton(
                         child: const Text('Edit'),

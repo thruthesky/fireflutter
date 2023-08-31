@@ -75,6 +75,9 @@ class User with FirebaseHelper {
   /// 이 값이 false 이면, 앱에서 회원 정보를 입력하라는 메시지를 표시하거나 기타 동작을 하게 할 수 있다.
   final bool complete;
 
+  final List<String> followers;
+  final List<String> followings;
+
   /// 사용자 문서가 존재하지 않는 경우, 이 값이 false 이다.
   /// 특히, 이 값이 false 이면 사용자 로그인을 했는데, 사용자 문서가 존재하지 않는 경우이다.
   final bool exists;
@@ -105,11 +108,20 @@ class User with FirebaseHelper {
     this.exists = true,
     this.noOfPosts = 0,
     this.noOfComments = 0,
+    this.followers = const [],
+    this.followings = const [],
     this.data = const {},
   }) : createdAtDateTime = createdAt?.toDate();
 
   factory User.notExists() {
     return User(uid: '', exists: false);
+  }
+
+  /// Returns a user with uid. All other properties are empty.
+  ///
+  ///
+  factory User.fromUid(String uid) {
+    return User(uid: uid);
   }
 
   factory User.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
@@ -154,6 +166,8 @@ class User with FirebaseHelper {
       complete: map['complete'] ?? false,
       noOfPosts: map['noOfPosts'] ?? 0,
       noOfComments: map['noOfComments'] ?? 0,
+      followers: List<String>.from(map['followers'] ?? []),
+      followings: List<String>.from(map['followings'] ?? []),
       data: map,
     );
   }
@@ -182,12 +196,14 @@ class User with FirebaseHelper {
       'type': type,
       'createdAt': createdAt ?? FieldValue.serverTimestamp(),
       'complete': complete,
+      'followers': followers,
+      'followings': followings,
     };
   }
 
   @override
   String toString() =>
-      '''User(uid: $uid, isAdmin: $isAdmin, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, idVerifiedCode: $idVerifiedCode, phoneNumber: $phoneNumber, email: $email, state: $state, stateImageUrl: $stateImageUrl, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, noOfPosts: $noOfPosts, noOfComments: $noOfComments, type: $type, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, cached: $cached)''';
+      '''User(uid: $uid, isAdmin: $isAdmin, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, idVerifiedCode: $idVerifiedCode, phoneNumber: $phoneNumber, email: $email, state: $state, stateImageUrl: $stateImageUrl, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, noOfPosts: $noOfPosts, noOfComments: $noOfComments, type: $type, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, followers: $followers, followings: $followings, cached: $cached)''';
 
   /// Get user document
   ///
@@ -264,6 +280,8 @@ class User with FirebaseHelper {
     FieldValue? noOfComments,
     String? type,
     bool? complete,
+    FieldValue? followings,
+    FieldValue? followers,
     String? field,
     dynamic value,
     Map<String, dynamic> data = const {},
@@ -302,5 +320,19 @@ class User with FirebaseHelper {
   /// If the user has completed the profile, set the complete field to true.
   Future<User> updateComplete(bool complete) async {
     return await update(complete: complete);
+  }
+
+  /// I am going to follow a user.
+  Future<void> follow(String uid) {
+    return update(
+      followings: FieldValue.arrayUnion([uid]),
+    );
+  }
+
+  /// A user is following me. I am being followed by that user.
+  Future<void> followed(String uid) {
+    return update(
+      followers: FieldValue.arrayUnion([uid]),
+    );
   }
 }
