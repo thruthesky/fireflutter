@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/functions/comment_sort_string.dart';
-import 'package:fireflutter/src/service/comment.service.dart';
 
 class Comment with FirebaseHelper {
   final String id;
@@ -10,10 +9,10 @@ class Comment with FirebaseHelper {
   final String content;
   @override
   final String uid;
-  final List<dynamic>? files;
+  final List<String> urls;
   final Timestamp createdAt;
   final Timestamp updatedAt;
-  final List<dynamic> likes;
+  final List<String> likes;
   final bool? deleted;
 
   /// Parent ID is the comment ID of the comment that this comment is replying to.
@@ -27,7 +26,7 @@ class Comment with FirebaseHelper {
     required this.postId,
     required this.content,
     required this.uid,
-    this.files,
+    required this.urls,
     required this.createdAt,
     required this.updatedAt,
     required this.likes,
@@ -47,10 +46,10 @@ class Comment with FirebaseHelper {
       postId: map['postId'] ?? '',
       content: map['content'] ?? '',
       uid: map['uid'] ?? '',
-      files: map['files'],
+      urls: List<String>.from(map['urls'] ?? []),
       createdAt: (map['createdAt'] is Timestamp) ? map['createdAt'] : Timestamp.now(),
       updatedAt: (map['updatedAt'] is Timestamp) ? map['updatedAt'] : Timestamp.now(),
-      likes: map['likes'] ?? [],
+      likes: List<String>.from(map['likes'] ?? []),
       deleted: map['deleted'],
       parentId: map['parentId'],
       sort: map['sort'],
@@ -60,19 +59,19 @@ class Comment with FirebaseHelper {
 
   @override
   String toString() =>
-      'Comment(id: $id, postId: $postId, content: $content, uid: $uid, files: $files, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted, parentId: $parentId, sort: $sort, depth: $depth)';
+      'Comment(id: $id, postId: $postId, content: $content, uid: $uid, urls: $urls, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted, parentId: $parentId, sort: $sort, depth: $depth)';
 
-  static Comment create({
+  static Future<Comment> create({
     required Post post,
     Comment? parent,
     required String content,
-    List<String>? files,
-  }) {
+    List<String>? urls,
+  }) async {
     String myUid = FirebaseAuth.instance.currentUser!.uid;
     final Map<String, dynamic> commentData = {
       'content': content,
       'postId': post.id,
-      if (files != null) 'files': files,
+      if (urls != null) 'urls': urls,
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
       'uid': myUid,
@@ -81,21 +80,34 @@ class Comment with FirebaseHelper {
           getCommentSortString(noOfComments: post.noOfComments, depth: parent?.depth ?? 0, sortString: parent?.sort),
       'depth': parent == null ? 1 : parent.depth + 1,
     };
-    CommentService.instance.commentCol.add(commentData);
+
+    await CommentService.instance.commentCol.add(commentData);
     PostService.instance.postCol.doc(post.id).update({'noOfComments': FieldValue.increment(1)});
+    my.update(
+      noOfComments: FieldValue.increment(1),
+    );
+    Category.fromId(post.categoryId).update(
+      noOfComments: FieldValue.increment(1),
+    );
+
     return Comment.fromMap(map: commentData, id: post.id);
   }
 
-  Comment update({
+  static Future<Comment> get(String id) async {
+    final DocumentSnapshot documentSnapshot = await CommentService.instance.commentCol.doc(id).get();
+    return Comment.fromDocumentSnapshot(documentSnapshot);
+  }
+
+  Future<Comment> update({
     required String content,
-    List<String>? files,
-  }) {
+    List<String>? urls,
+  }) async {
     final Map<String, dynamic> commentData = {
       'content': content,
-      if (files != null) 'files': files,
+      if (urls != null) 'urls': urls,
       'updatedAt': FieldValue.serverTimestamp(),
     };
-    commentCol.doc(id).update(commentData);
+    await commentCol.doc(id).update(commentData);
     return copyWith(commentData);
   }
 
@@ -107,7 +119,7 @@ class Comment with FirebaseHelper {
       postId: postId,
       content: map['content'] ?? content,
       uid: uid,
-      files: map['files'] ?? files,
+      urls: map['urls'] ?? urls,
       createdAt: createdAt,
       updatedAt:
           map['updatedAt'] == null ? updatedAt : ((map['updatedAt'] is Timestamp) ? map['updatedAt'] : Timestamp.now()),

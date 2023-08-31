@@ -13,11 +13,14 @@ class ChatService with FirebaseHelper {
 
   ChatRoomCustomize customize = ChatRoomCustomize();
 
-  /// TODO - Make this customizable by init()
+  /// [maximumNoOfUsers] is the maximum number of users in a group chat room.
+  ///
+  /// The default value is 500 and can be reset by [ChatService.instance.init]
   int maximumNoOfUsers = 500;
 
   /// Last message of the chat room
   ///
+  /// This is used for tracking the profile display order of the chat messages.
   ///
   /// When the user opens the chat room, this will be reset to the last message
   /// of the current chat room. And this will be updated when any user sends
@@ -28,6 +31,23 @@ class ChatService with FirebaseHelper {
   /// user has changed from previous message. So the app can optionally display
   /// the user avatar in the chat room list view.
   Message? lastMessage;
+
+  bool uploadFromCamera = true;
+  bool uploadFromGallery = true;
+  bool uploadFromFile = true;
+
+  init({
+    int maximumNoOfUsers = 500,
+    bool uploadFromGallery = true,
+    bool uploadFromCamera = true,
+    bool uploadFromFile = true,
+  }) {
+    this.maximumNoOfUsers = maximumNoOfUsers;
+
+    this.uploadFromGallery = uploadFromGallery;
+    this.uploadFromCamera = uploadFromCamera;
+    this.uploadFromFile = uploadFromFile;
+  }
 
   getSingleChatRoomId(String? otherUserUid) {
     if (otherUserUid == null) return null;
@@ -84,15 +104,6 @@ class ChatService with FirebaseHelper {
   //     maximumNoOfUsers: maximumNoOfUsers,
   //   );
   // }
-
-  @Deprecated('Use model')
-  Future<void> leaveRoom({required Room room, Function()? callback}) async {
-    await roomDoc(room.id).update({
-      'moderators': FieldValue.arrayRemove([uid]),
-      'users': FieldValue.arrayRemove([uid])
-    });
-    callback?.call();
-  }
 
   Future<void> removeUserFromRoom({required Room room, required String uid, Function()? callback}) async {
     await roomDoc(room.id).update({

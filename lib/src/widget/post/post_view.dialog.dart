@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/service/comment.service.dart';
 import 'package:flutter/material.dart';
 
 class PostViewDialog extends StatefulWidget {
@@ -43,7 +42,7 @@ class _PostDialogState extends State<PostViewDialog> {
                 IconButton(
                   icon: const Icon(Icons.edit),
                   onPressed: () {
-                    PostService.instance.showPostEditDialog(context, post: widget.post);
+                    PostService.instance.showEditDialog(context, post: widget.post);
                   },
                 ),
               PopupMenuButton(
@@ -131,7 +130,7 @@ class _PostDialogState extends State<PostViewDialog> {
                         child: const Text('Reply'),
                         onPressed: () async {
                           await CommentService.instance.showCommentEditBottomSheet(
-                            context: context,
+                            context,
                             post: post,
                           );
                         },
@@ -142,11 +141,22 @@ class _PostDialogState extends State<PostViewDialog> {
                           debugPrint('Liking it');
                         },
                       ),
+                      TextButton(
+                        child: const Text('Follow'),
+                        onPressed: () {
+                          FeedService.instance.follow(post.uid);
+                          tapSnackbar(
+                              context: context,
+                              title: 'Followed',
+                              message: 'You have followedthis user',
+                              onTap: (close) => close());
+                        },
+                      ),
                       const Spacer(),
                       TextButton(
                         child: const Text('Edit'),
                         onPressed: () {
-                          PostService.instance.showPostEditDialog(context, post: post);
+                          PostService.instance.showEditDialog(context, post: post);
                         },
                       ),
                     ],

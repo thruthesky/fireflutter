@@ -36,9 +36,9 @@ class StorageService with FirebaseHelper {
   /// [saveAs] is the path for the uploaded file to be saved in Firebase Storage.
   /// If it is null, it will be uploaded to the default path.
   ///
-  /// TODO support 'error' handler.
+  /// This method does not handle any exception. You may handle it outisde if you want.
   ///
-  Future<String?> putFile({
+  Future<String?> uploadFile({
     Function(double)? progress,
     Function? complete,
     int compressQuality = 80,
@@ -88,7 +88,8 @@ class StorageService with FirebaseHelper {
   /// Ask user to upload a photo or a file
   ///
   /// Call this method when the user presses the button to upload a photo or a file.
-  /// TODO error handler
+  ///
+  /// This method does not handle any exception. You may handle it outisde if you want.
   Future<String?> upload({
     required BuildContext context,
     Function(double)? progress,
@@ -96,22 +97,30 @@ class StorageService with FirebaseHelper {
     int compressQuality = 80,
     String? path,
     String? saveAs,
+    bool gallery = true,
+    bool camera = true,
+    bool file = true,
   }) async {
     final re = await showModalBottomSheet(
       context: context,
-      builder: (_) => const UploadSelectionBottomSheet(),
+      builder: (_) => UploadSelectionBottomSheet(
+        gallery: gallery,
+        camera: camera,
+        file: file,
+      ),
     );
     if (re == null) return null;
     late String? path;
     if (re == 'file') {
       final FilePickerResult? result = await FilePicker.platform.pickFiles();
       path = result?.files.first.path;
+      // path = result?.files.single.path;
     } else {
       final XFile? image = await ImagePicker().pickImage(source: re);
       path = image?.path;
     }
 
-    return await putFile(
+    return await uploadFile(
       path: path,
       saveAs: saveAs,
       progress: progress,

@@ -6,16 +6,30 @@ class CommentService with FirebaseHelper {
   static CommentService get instance => _instance ??= CommentService._();
   CommentService._();
 
-  Comment createComment({
+  bool uploadFromCamera = true;
+  bool uploadFromGallery = true;
+  bool uploadFromFile = true;
+
+  init({
+    bool uploadFromGallery = true,
+    bool uploadFromCamera = true,
+    bool uploadFromFile = true,
+  }) {
+    this.uploadFromGallery = uploadFromGallery;
+    this.uploadFromCamera = uploadFromCamera;
+    this.uploadFromFile = uploadFromFile;
+  }
+
+  Future<Comment> createComment({
     required Post post,
     required String content,
-    List<String>? files,
+    List<String>? urls,
     Comment? parent,
-  }) {
-    return Comment.create(
+  }) async {
+    return await Comment.create(
       post: post,
       content: content,
-      files: files,
+      urls: urls,
       parent: parent,
     );
   }
@@ -25,8 +39,8 @@ class CommentService with FirebaseHelper {
   /// [post] is the post to which the comment is created or updated under.
   /// [parent] is the parent comment of the comment to be created.
   /// [comment] is the comment to be updated.
-  Future<Comment?> showCommentEditBottomSheet({
-    required BuildContext context,
+  Future<Comment?> showCommentEditBottomSheet(
+    BuildContext context, {
     Post? post,
     Comment? parent,
     Comment? comment,
@@ -42,7 +56,6 @@ class CommentService with FirebaseHelper {
         // This padding is important to prevent the bottom sheet from being hidden by the keyboard.
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: SafeArea(
-          // TODO should we add a display what comment is being replied to.
           // SafeArea is needed for Simulator
           child: Column(
             mainAxisSize: MainAxisSize.min,

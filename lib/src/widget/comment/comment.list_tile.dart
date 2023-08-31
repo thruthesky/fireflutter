@@ -1,5 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/service/comment.service.dart';
 
 import 'package:flutter/material.dart';
 
@@ -49,13 +48,23 @@ class CommentTileState extends State<CommentListTile> {
                   ],
                 ),
                 Text(widget.comment.content),
+                widget.comment.urls.isNotEmpty
+                    ? Column(
+                        children: widget.comment.urls
+                            .map((e) => Padding(
+                                  padding: const EdgeInsets.fromLTRB(0, 4, 10, 0),
+                                  child: DisplayMedia(url: e),
+                                ))
+                            .toList(),
+                      )
+                    : const SizedBox.shrink(),
                 Row(
                   children: [
                     TextButton(
                       child: const Text('Reply'),
                       onPressed: () async {
                         await CommentService.instance.showCommentEditBottomSheet(
-                          context: context,
+                          context,
                           post: widget.post,
                           parent: widget.comment,
                         );
@@ -68,8 +77,7 @@ class CommentTileState extends State<CommentListTile> {
                     const Spacer(),
                     TextButton(
                       onPressed: () async {
-                        await CommentService.instance
-                            .showCommentEditBottomSheet(context: context, comment: widget.comment);
+                        await CommentService.instance.showCommentEditBottomSheet(context, comment: widget.comment);
                       },
                       child: const Text('Edit'),
                     ),

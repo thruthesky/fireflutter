@@ -44,6 +44,9 @@ class User with FirebaseHelper {
   final int birthMonth;
   final int birthDay;
 
+  final int noOfPosts;
+  final int noOfComments;
+
   /// [type] is a string value that can be used to categorize the user. You can
   /// think of it as a member type. For example, you can set it to 'player' or
   /// 'coach' or 'admin' or 'manager' or 'staff' or 'parent' or 'fan' or
@@ -71,6 +74,9 @@ class User with FirebaseHelper {
   /// 사용자가 회원 정보를 업데이트 할 때, 이 값을 true 또는 false 로 지정한다.
   /// 이 값이 false 이면, 앱에서 회원 정보를 입력하라는 메시지를 표시하거나 기타 동작을 하게 할 수 있다.
   final bool complete;
+
+  final List<String> followers;
+  final List<String> followings;
 
   /// 사용자 문서가 존재하지 않는 경우, 이 값이 false 이다.
   /// 특히, 이 값이 false 이면 사용자 로그인을 했는데, 사용자 문서가 존재하지 않는 경우이다.
@@ -100,8 +106,23 @@ class User with FirebaseHelper {
     this.createdAt,
     this.complete = false,
     this.exists = true,
+    this.noOfPosts = 0,
+    this.noOfComments = 0,
+    this.followers = const [],
+    this.followings = const [],
     this.data = const {},
   }) : createdAtDateTime = createdAt?.toDate();
+
+  factory User.notExists() {
+    return User(uid: '', exists: false);
+  }
+
+  /// Returns a user with uid. All other properties are empty.
+  ///
+  ///
+  factory User.fromUid(String uid) {
+    return User(uid: uid);
+  }
 
   factory User.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     return User.fromMap(
@@ -111,7 +132,7 @@ class User with FirebaseHelper {
   }
 
   factory User.fromMap({required Map<String, dynamic> map, required String id}) {
-    final displayName = map['displayName'] ?? '';
+    final String displayName = map['displayName'] ?? '';
 
     // The createdAt may be int (from RTDB) or Timestamp (from Fireestore), or null.
     if (map['createdAt'] is int) {
@@ -125,7 +146,7 @@ class User with FirebaseHelper {
     return User(
       uid: id,
       isAdmin: map['isAdmin'] ?? false,
-      displayName: displayName == '' ? id.toUpperCase().substring(0, 2) : displayName,
+      displayName: (displayName == '' && displayName.length < 2) ? id.toUpperCase().substring(0, 2) : displayName,
       name: map['name'] ?? '',
       firstName: map['firstName'] ?? '',
       lastName: map['lastName'] ?? '',
@@ -143,6 +164,10 @@ class User with FirebaseHelper {
       type: map['type'] ?? '',
       createdAt: map['createdAt'],
       complete: map['complete'] ?? false,
+      noOfPosts: map['noOfPosts'] ?? 0,
+      noOfComments: map['noOfComments'] ?? 0,
+      followers: List<String>.from(map['followers'] ?? []),
+      followings: List<String>.from(map['followings'] ?? []),
       data: map,
     );
   }
@@ -166,23 +191,28 @@ class User with FirebaseHelper {
       'birthYear': birthYear,
       'birthMonth': birthMonth,
       'birthDay': birthDay,
+      'noOfPosts': noOfPosts,
+      'noOfComments': noOfComments,
       'type': type,
       'createdAt': createdAt ?? FieldValue.serverTimestamp(),
       'complete': complete,
+      'followers': followers,
+      'followings': followings,
     };
   }
 
   @override
   String toString() =>
-      '''User(uid: $uid, isAdmin: $isAdmin, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, idVerifiedCode: $idVerifiedCode, phoneNumber: $phoneNumber, email: $email, state: $state, stateImageUrl: $stateImageUrl, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, type: $type, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, cached: $cached)''';
+      '''User(uid: $uid, isAdmin: $isAdmin, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, idVerifiedCode: $idVerifiedCode, phoneNumber: $phoneNumber, email: $email, state: $state, stateImageUrl: $stateImageUrl, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, noOfPosts: $noOfPosts, noOfComments: $noOfComments, type: $type, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, followers: $followers, followings: $followings, cached: $cached)''';
 
-  /// 사용자 문서를 읽어온다.
+  /// Get user document
   ///
-  /// 사용자 문서가 존재하지 않는 경우, null 을 리턴한다.
-  /// 캐시하지 않는다.
+  /// If the user document does not exist, it will return null. It does not throw an exception.
+  ///
+  /// It does not
   static Future<User?> get(String uid) async {
     final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(uid).get();
-    if (!snapshot.exists) {
+    if (snapshot.exists == false) {
       return null;
     }
     return User.fromDocumentSnapshot(snapshot);
@@ -226,6 +256,10 @@ class User with FirebaseHelper {
   /// after update the document and it returns the user model from the updated
   /// user document. but there might be some fields that are not updated by
   /// the cloud (background) function.
+  ///
+  /// It sets with merge true option just incase if the user document may not
+  /// exists. And it uses [UserService.instance.uid] as the user's uid just
+  /// incase if the uid is not provided.
   Future<User> update({
     String? name,
     String? firstName,
@@ -242,33 +276,43 @@ class User with FirebaseHelper {
     int? birthYear,
     int? birthMonth,
     int? birthDay,
+    FieldValue? noOfPosts,
+    FieldValue? noOfComments,
     String? type,
     bool? complete,
+    FieldValue? followings,
+    FieldValue? followers,
     String? field,
     dynamic value,
+    Map<String, dynamic> data = const {},
   }) async {
-    final doc = FirebaseFirestore.instance.collection('users').doc(uid);
+    final doc = FirebaseFirestore.instance.collection('users').doc(UserService.instance.uid);
 
-    await doc.update({
-      if (name != null) 'name': name,
-      if (firstName != null) 'firstName': firstName,
-      if (lastName != null) 'lastName': lastName,
-      if (middleName != null) 'middleName': middleName,
-      if (displayName != null) 'displayName': displayName,
-      if (photoUrl != null) 'photoUrl': photoUrl,
-      if (hasPhotoUrl != null) 'hasPhotoUrl': hasPhotoUrl,
-      if (idVerifiedCode != null) 'idVerifiedCode': idVerifiedCode,
-      if (phoneNumber != null) 'phoneNumber': phoneNumber,
-      if (email != null) 'email': email,
-      if (state != null) 'state': state,
-      if (stateImageUrl != null) 'stateImageUrl': stateImageUrl,
-      if (birthYear != null) 'birthYear': birthYear,
-      if (birthMonth != null) 'birthMonth': birthMonth,
-      if (birthDay != null) 'birthDay': birthDay,
-      if (type != null) 'type': type,
-      if (complete != null) 'complete': complete,
-      if (field != null && value != null) field: value,
-    });
+    await doc.set({
+      ...{
+        if (name != null) 'name': name,
+        if (firstName != null) 'firstName': firstName,
+        if (lastName != null) 'lastName': lastName,
+        if (middleName != null) 'middleName': middleName,
+        if (displayName != null) 'displayName': displayName,
+        if (photoUrl != null) 'photoUrl': photoUrl,
+        if (hasPhotoUrl != null) 'hasPhotoUrl': hasPhotoUrl,
+        if (idVerifiedCode != null) 'idVerifiedCode': idVerifiedCode,
+        if (phoneNumber != null) 'phoneNumber': phoneNumber,
+        if (email != null) 'email': email,
+        if (state != null) 'state': state,
+        if (stateImageUrl != null) 'stateImageUrl': stateImageUrl,
+        if (birthYear != null) 'birthYear': birthYear,
+        if (birthMonth != null) 'birthMonth': birthMonth,
+        if (birthDay != null) 'birthDay': birthDay,
+        if (noOfPosts != null) 'noOfPosts': noOfPosts,
+        if (noOfComments != null) 'noOfComments': noOfComments,
+        if (type != null) 'type': type,
+        if (complete != null) 'complete': complete,
+        if (field != null && value != null) field: value,
+      },
+      ...data
+    }, SetOptions(merge: true));
 
     return (await get(uid))!;
   }
@@ -276,5 +320,19 @@ class User with FirebaseHelper {
   /// If the user has completed the profile, set the complete field to true.
   Future<User> updateComplete(bool complete) async {
     return await update(complete: complete);
+  }
+
+  /// I am going to follow a user.
+  Future<void> follow(String uid) {
+    return update(
+      followings: FieldValue.arrayUnion([uid]),
+    );
+  }
+
+  /// A user is following me. I am being followed by that user.
+  Future<void> followed(String uid) {
+    return update(
+      followers: FieldValue.arrayUnion([uid]),
+    );
   }
 }

@@ -171,9 +171,10 @@ void warningSnackbar(BuildContext context, String message) async {
 ///
 /// When the body of the snackbar is tapped, [onTap] will be called with a callback that will hide the snackbar.
 ///
+/// Call the function parameter passed on the callback to close the snackbar.
 /// ```dart
-/// snackbar( title: 'title',  message: 'message',  onTap: (x) {
-///     x();
+/// snackbar( title: 'title',  message: 'message',  onTap: (close) {
+///     close();
 /// });
 /// ```
 ScaffoldFeatureController tapSnackbar({

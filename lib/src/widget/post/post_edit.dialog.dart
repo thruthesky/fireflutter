@@ -37,8 +37,13 @@ class _PostEditDialogState extends State<PostEditDialog> {
       title.text = widget.post!.title;
       content.text = widget.post!.content;
       urls = widget.post!.urls;
-    }
-    if (widget.categoryId != null) {
+      debugPrint('Category: ${widget.post!.categoryId}');
+      CategoryService.instance.get(widget.post!.categoryId).then((cat) {
+        setState(() {
+          categoryName = cat!.name;
+        });
+      });
+    } else if (widget.categoryId != null) {
       CategoryService.instance.get(widget.categoryId!).then((cat) {
         setState(() {
           categoryName = cat!.name;
@@ -58,37 +63,38 @@ class _PostEditDialogState extends State<PostEditDialog> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              InputDecorator(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.zero,
-                  isDense: true,
+              if (CategoryService.instance.categoriesOnCreate.isNotEmpty)
+                InputDecorator(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.zero,
+                    isDense: true,
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                        isDense: false,
+                        padding: const EdgeInsets.only(left: 12, top: 4, right: 4, bottom: 4),
+                        isExpanded: true,
+                        items: [
+                          const DropdownMenuItem(
+                            value: '',
+                            child: Text('Select Category'),
+                          ),
+                          ...CategoryService.instance.categoriesOnCreate.entries.map((e) {
+                            return DropdownMenuItem(
+                              value: e.key,
+                              child: Text(e.value),
+                            );
+                          }).toList(),
+                        ],
+                        value: categoryId,
+                        onChanged: (value) {
+                          setState(() {
+                            categoryId = value ?? '';
+                          });
+                        }),
+                  ),
                 ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                      isDense: false,
-                      padding: const EdgeInsets.only(left: 12, top: 4, right: 4, bottom: 4),
-                      isExpanded: true,
-                      items: [
-                        const DropdownMenuItem(
-                          value: '',
-                          child: Text('Select Category'),
-                        ),
-                        ...CategoryService.instance.categoriesOnCreate.entries.map((e) {
-                          return DropdownMenuItem(
-                            value: e.key,
-                            child: Text(e.value),
-                          );
-                        }).toList(),
-                      ],
-                      value: categoryId,
-                      onChanged: (value) {
-                        setState(() {
-                          categoryId = value ?? '';
-                        });
-                      }),
-                ),
-              ),
               const SizedBox(height: 20),
               TextField(
                 controller: title,
@@ -116,6 +122,9 @@ class _PostEditDialogState extends State<PostEditDialog> {
                         context: context,
                         progress: (p) => setState(() => progress = p),
                         complete: () => setState(() => progress = null),
+                        camera: PostService.instance.uploadFromCamera,
+                        gallery: PostService.instance.uploadFromGallery,
+                        file: PostService.instance.uploadFromFile,
                       );
                       if (url != null && mounted) {
                         setState(() {
@@ -141,15 +150,14 @@ class _PostEditDialogState extends State<PostEditDialog> {
                       }
                       Post post;
                       if (isCreate) {
-                        post = Post.create(
+                        post = await Post.create(
                           categoryId: categoryId,
                           title: title.text,
                           content: content.text,
                           urls: urls,
                         );
                       } else {
-                        await Post.update(
-                          post: widget.post!,
+                        await widget.post!.update(
                           title: title.text,
                           content: content.text,
                           urls: urls,
@@ -157,7 +165,7 @@ class _PostEditDialogState extends State<PostEditDialog> {
                         post = await Post.get(widget.post!.id);
                       }
                       if (mounted) {
-                        Navigator.pop(context);
+                        Navigator.pop(context, post);
                         PostService.instance.showPostViewDialog(context, post);
                       }
                     },
@@ -170,46 +178,14 @@ class _PostEditDialogState extends State<PostEditDialog> {
                 LinearProgressIndicator(value: progress),
                 const SizedBox(height: 20),
               ],
-              GridView.count(
-                crossAxisCount: 3,
-                shrinkWrap: true,
-                mainAxisSpacing: 4,
-                crossAxisSpacing: 4,
-                children: urls
-                    .map(
-                      (e) => Stack(
-                        children: [
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            top: 0,
-                            bottom: 0,
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.all(Radius.circular(10)),
-                              child: DisplayMedia(url: e),
-                            ),
-                          ),
-                          Positioned(
-                            top: 8,
-                            right: 8,
-                            child: IconButton(
-                              style: IconButton.styleFrom(
-                                backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-                              ),
-                              onPressed: () async {
-                                await StorageService.instance.delete(e);
-                                setState(() {
-                                  urls.remove(e);
-                                });
-                              },
-                              icon: const Icon(Icons.delete),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                    .toList(),
-              ),
+              EditMultipleMedia(
+                  urls: urls,
+                  onDelete: (e) async {
+                    await StorageService.instance.delete(e);
+                    setState(() {
+                      urls.remove(e);
+                    });
+                  }),
             ],
           ),
         ),

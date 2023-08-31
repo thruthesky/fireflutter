@@ -32,6 +32,9 @@ A free, open source, complete, rapid development package for creating Social app
   - [No of new message](#no-of-new-message)
 - [Upload](#upload)
   - [Photo upload](#photo-upload)
+  - [Customizing source](#customizing-source)
+- [Following and Follower](#following-and-follower)
+  - [Feed listing logic](#feed-listing-logic)
 - [Customization](#customization)
   - [Chat Customization](#chat-customization)
 - [Translation](#translation)
@@ -420,6 +423,84 @@ It has options like displaying a progressive percentage.
 
 
 
+## Customizing source
+
+
+You can limit the uploaded sources. You can choose camera, gallery, or files like below.
+
+```dart
+ChatService.instance.init(
+  uploadFromCamera: true,
+  uploadFromGallery: true,
+  uploadFromFile: false,
+);
+PostService.instance.init(
+  uploadFromCamera: false,
+  uploadFromGallery: true,
+  uploadFromFile: false,
+);
+CommentService.instance.init(
+  uploadFromCamera: true,
+  uploadFromGallery: false,
+  uploadFromFile: false,
+);
+```
+
+
+# Following and Follower
+
+
+- When A follows B,
+  - B's uid will be added into `followings` field of A's document.
+  - And A's uid will be added into `followers` field in B's document.
+  - Get the last 20 posts of B and save title, content, photo, createAt into `/feeds/{uid}` in RTDB.
+  - See the security rules for this logic.
+
+- When A unfollow B, all the relative data will be removed.
+  - `followings`, `followers`, RTDB.
+
+
+- When A open's his wall(it could be home, profile or any screen), A can display the posts who he follows with `FeedListView` widget.
+- To display the followers use `FollowerListView`.
+- To display the users who you follow, use `FollowingListView`.
+
+- A feed is a post that user can create on the forum in whatever category.
+
+
+
+## Feed listing logic
+
+- Terms
+  - `follow` is an action that I am following other user.
+  - `followed` is an action that I am being followed by other user.
+  - `followers` is a field that contains a list of uid that are follow me. For instance, C and D follow me. then `followers` will contain `[C, D]`.
+  - `folowings` is a field that contains a list of uid that I am the one who follow other user. For instance, I follow E and F, then `followings` will contain `[E, F]`
+
+- Since the `in` filter is limited into 30 element, we cannot use it to query the posts of `followings`.
+
+```mermaid
+flowchart TD
+Follow-->UpdateFollower[Update Follower]-->UpdateFollowing[Update Following]-->UpdateFeed[Get last 20 feed and save in rtdb]
+
+Unfollow-->Remove_Follower-->Remove_Following-->Remove_Feeds
+
+NewFeed-->SaveNewFeedToAllFollower[Where there is a new feed, save all in all follower's feed list.]-->Push_Notification
+```
+
+```mermaid
+flowchart TD
+Edit_or_Delete_Feed-->Update_RTDB
+```
+
+
+```mermaid
+flowchart TD
+Displaying_Feeds-->Get_All_Feed_Sort_By_Minus_Date
+```
+
+
+
+
 # Customization
 
 `fireflutter` supports full customization from the i18n to the complete UI.
@@ -633,6 +714,19 @@ UserService.instance.get(UserService.instance.adminUid).then(
 );
 ```
 
+
+
+The code below shows how to open a comment edit bottom sheet. Use this for commet edit bottom sheet UI.
+
+```dart
+PostService.instance.showPostViewDialog(context, await Post.get('PoxnpxpcC2lnYv0jqI4f'));
+if (mounted) {
+  CommentService.instance.showCommentEditBottomSheet(
+    context,
+    comment: await Comment.get('bvCJk4RFK79yexAKfAYs'),
+  );
+}
+```
 
 
 

@@ -9,29 +9,29 @@ class PostService with FirebaseHelper {
 
   get col => postCol;
 
-  @Deprecated('User post.isMine() instead')
-  bool isMine(Post post) {
-    return UserService.instance.uid == post.uid;
-  }
+  bool uploadFromCamera = true;
+  bool uploadFromGallery = true;
+  bool uploadFromFile = true;
 
-  showCreateDialog(
-    BuildContext context, {
-    String? categoryId,
-  }) async {
-    await showGeneralDialog(
-      context: context,
-      pageBuilder: (context, _, __) => PostEditDialog(categoryId: categoryId),
-    );
+  init({
+    bool uploadFromGallery = true,
+    bool uploadFromCamera = true,
+    bool uploadFromFile = true,
+  }) {
+    this.uploadFromGallery = uploadFromGallery;
+    this.uploadFromCamera = uploadFromCamera;
+    this.uploadFromFile = uploadFromFile;
   }
 
   /// Shows the Edit Post as a dialog
-  showPostEditDialog(
+  Future<Post?> showEditDialog(
     BuildContext context, {
-    required Post post,
+    String? categoryId,
+    Post? post,
   }) {
-    showGeneralDialog(
+    return showGeneralDialog<Post?>(
       context: context,
-      pageBuilder: (context, _, __) => PostEditDialog(post: post),
+      pageBuilder: (context, _, __) => PostEditDialog(categoryId: categoryId, post: post),
     );
   }
 
@@ -39,29 +39,21 @@ class PostService with FirebaseHelper {
     return PostService.instance.col.doc(postId).snapshots();
   }
 
-  @Deprecated('use Post.create')
-  Post createPost({
-    required String categoryId,
-    required String title,
-    required String content,
-    List<String>? urls,
-  }) {
-    return Post.create(
-      categoryId: categoryId,
-      title: title,
-      content: content,
-      urls: urls,
-    );
-  }
-
-  Future<void> editPost({
+  /// Update the post
+  ///
+  /// [post] is the post to be updated
+  ///
+  /// [title] is the new title
+  ///
+  /// [content] is the new content
+  @Deprecated("Don't use this. Use Post.update() instead.")
+  Future<void> edit({
     required Post post,
     required String title,
     required String content,
     List<String>? urls,
   }) {
-    return Post.update(
-      post: post,
+    return post.update(
       title: title,
       content: content,
       urls: urls,
@@ -86,5 +78,30 @@ class PostService with FirebaseHelper {
         categoryId: category.id,
       ),
     );
+  }
+
+  /// Get multiple posts
+  ///
+  ///
+  Future<List<Post>> gets({
+    String? uid,
+    String? category,
+    int limit = 10,
+  }) async {
+    Query q = postCol;
+    if (uid != null) {
+      q = q.where('uid', isEqualTo: uid);
+    }
+    if (category != null) {
+      q = q.where('category', isEqualTo: category);
+    }
+    q = q.limit(limit);
+    q = q.orderBy('createdAt', descending: true);
+
+    final querySnapshot = await q.get();
+
+    if (querySnapshot.size == 0) return [];
+
+    return querySnapshot.docs.map((e) => Post.fromDocumentSnapshot(e)).toList();
   }
 }

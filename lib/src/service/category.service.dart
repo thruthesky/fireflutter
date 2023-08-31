@@ -43,6 +43,7 @@ class CategoryService with FirebaseHelper {
     );
   }
 
+  @Deprecated('Use Category.create() instead')
   create({required String categoryId, required String categoryName}) {
     return Category.create(
       categoryId: categoryId,
@@ -51,6 +52,7 @@ class CategoryService with FirebaseHelper {
   }
 
   /// Update Category
+  @Deprecated('Use Category.update() instead')
   update(String categoryId, Map<String, dynamic> categoryUpdates) async {
     await categoryDoc(categoryId).update({
       'name': categoryUpdates['name'],

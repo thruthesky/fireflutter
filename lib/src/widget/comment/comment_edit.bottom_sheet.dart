@@ -28,18 +28,18 @@ class CommentEditBottomSheet extends StatefulWidget {
 class CommentBoxState extends State<CommentEditBottomSheet> {
   TextEditingController content = TextEditingController();
 
-  String? labelText;
-  String? hintText;
-  Comment? parentId;
-
   bool get isCreate => widget.post != null;
   bool get isUpdate => !isCreate;
+
+  double? progress;
+  List<String> urls = [];
 
   @override
   void initState() {
     super.initState();
     if (widget.comment != null) {
       content.text = widget.comment!.content;
+      urls = widget.comment!.urls;
     }
   }
 
@@ -62,8 +62,8 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
                   maxLines: 5,
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
-                    labelText: labelText ?? 'Comment',
-                    hintText: hintText ?? 'Write a comment...',
+                    labelText: widget.labelText ?? 'Comment',
+                    hintText: widget.hintText ?? 'Write a comment...',
                   ),
                 ),
               ),
@@ -75,8 +75,23 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
           children: [
             IconButton(
               icon: const Icon(Icons.photo),
-              onPressed: () {
-                // TODO send photo comment service
+              onPressed: () async {
+                final url = await StorageService.instance.upload(
+                  context: context,
+                  progress: (p) => setState(() => progress = p),
+                  complete: () {
+                    progress = null;
+                  },
+                  camera: CommentService.instance.uploadFromCamera,
+                  gallery: CommentService.instance.uploadFromGallery,
+                  file: CommentService.instance.uploadFromFile,
+                );
+
+                if (url != null && mounted) {
+                  setState(() {
+                    urls.add(url);
+                  });
+                }
               },
             ),
             IconButton(
@@ -92,10 +107,12 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
                     post: widget.post!,
                     parent: widget.parent,
                     content: content.text,
+                    urls: urls,
                   );
                 } else {
                   comment = await widget.comment!.update(
                     content: content.text,
+                    urls: urls,
                   );
                 }
                 content.text = '';
@@ -105,6 +122,21 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
               },
             ),
           ],
+        ),
+        // uploading pregress bar
+        if (progress != null) ...[
+          const SizedBox(height: 4),
+          LinearProgressIndicator(value: progress),
+          const SizedBox(height: 20),
+        ],
+        EditMultipleMedia(
+          urls: urls,
+          onDelete: (e) async {
+            await StorageService.instance.delete(e);
+            setState(() {
+              urls.remove(e);
+            });
+          },
         ),
       ],
     );

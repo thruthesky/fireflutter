@@ -33,6 +33,11 @@ class Room with FirebaseHelper {
   /// Use this to check if the room exists or not after calling [get] method.
   // bool exists = true;
 
+  /// It must be [FirebaseAuth.instance.currentUser!.uid]. [my.uid] will throw
+  /// an error if Room is accessed earlier than the user document initlization.
+  ///
+  static String get myUid => FirebaseAuth.instance.currentUser!.uid;
+
   Room({
     required this.id,
     required this.name,
@@ -118,13 +123,14 @@ class Room with FirebaseHelper {
     int? maximumNoOfUsers,
   }) async {
     // prepare
+
     bool isSingleChat = otherUserUid != null;
-    List<String> users = [my.uid];
+    List<String> users = [myUid];
     if (isSingleChat) users.add(otherUserUid);
 
     // room data
     final roomData = toCreate(
-      master: my.uid,
+      master: myUid,
       name: name,
       group: !isSingleChat,
       open: open,
@@ -162,7 +168,7 @@ class Room with FirebaseHelper {
     bool isSingleChat = false,
   }) {
     return {
-      'master': my.uid,
+      'master': myUid,
       'name': name ?? '',
       'createdAt': FieldValue.serverTimestamp(),
       'group': group,
@@ -208,6 +214,13 @@ class Room with FirebaseHelper {
 
   Future<void> join({BuildContext? context}) async {
     await addUser(FirebaseAuth.instance.currentUser!.uid);
+  }
+
+  Future<void> leave() async {
+    await roomDoc(id).update({
+      'moderators': FieldValue.arrayRemove([uid]),
+      'users': FieldValue.arrayRemove([uid])
+    });
   }
 
   String get lastMessageTime {
