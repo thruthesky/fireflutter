@@ -33,18 +33,7 @@ class _ChatRoomState extends State<ChatRoom> {
               room: widget.room,
             ),
           ),
-          SafeArea(
-            top: false,
-            child: Column(
-              children: [
-                const Divider(height: 0),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                  child: ChatRoomMessageBox(room: widget.room),
-                ),
-              ],
-            ),
-          ),
+          ChatRoomMessageBox(room: widget.room),
         ],
       ),
     );

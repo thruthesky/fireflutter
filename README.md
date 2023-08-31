@@ -602,6 +602,17 @@ Yes, this is the reality.
 
 To avoid this, you can display the UI part immediately after hot-restart (with keyboard shortcut) like below. This is merely a sample code. You can test any part of the app like below.
 
+
+
+Below is an example of openning a chat room
+
+```dart
+ChatService.instance.showChatRoom(
+  context: context,
+  room: await Room.get('hQnhAosriiewigr4vWFx'),
+);
+```
+
 Below is an example of openning a group chat room menu dialog.
 I copied the `Room` properties manually from the Firestore document and I edited some of the values of the properties for test purpose. You may code a line to get the real room model data.
 

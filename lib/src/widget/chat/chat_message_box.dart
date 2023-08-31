@@ -15,52 +15,68 @@ class ChatRoomMessageBox extends StatefulWidget {
 
 class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
   final TextEditingController message = TextEditingController();
+  double? progress;
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
+    return SafeArea(
+      top: false,
+      child: Column(
         children: [
-          IconButton(
-            icon: const Icon(
-              Icons.camera_alt,
-              size: 28,
+          if (progress != null)
+            LinearProgressIndicator(
+              value: progress,
             ),
-            padding: EdgeInsets.zero,
-            onPressed: () async {
-              // ChatService.instance.onPressedFileUploadIcon(context: context, room: widget.room);
-              final url = await StorageService.instance.upload(
-                context: context,
-                camera: ChatService.instance.uploadFromCamera,
-                gallery: ChatService.instance.uploadFromGallery,
-                file: ChatService.instance.uploadFromFile,
-              );
-              await ChatService.instance.sendMessage(room: widget.room, url: url);
-            },
-          ),
-          Expanded(
-            child: TextField(
-              controller: message,
-              decoration: const InputDecoration(
-                hintText: 'Message',
-                border: InputBorder.none,
-              ),
-              maxLines: 5,
-              minLines: 1,
+          const Divider(),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.camera_alt,
+                    size: 28,
+                  ),
+                  padding: EdgeInsets.zero,
+                  onPressed: () async {
+                    // ChatService.instance.onPressedFileUploadIcon(context: context, room: widget.room);
+                    final url = await StorageService.instance.upload(
+                      context: context,
+                      camera: ChatService.instance.uploadFromCamera,
+                      gallery: ChatService.instance.uploadFromGallery,
+                      file: ChatService.instance.uploadFromFile,
+                      progress: (p) => setState(() => progress = p),
+                      complete: () => setState(() => progress = null),
+                    );
+                    await ChatService.instance.sendMessage(room: widget.room, url: url);
+                  },
+                ),
+                Expanded(
+                  child: TextField(
+                    controller: message,
+                    decoration: const InputDecoration(
+                      hintText: 'Message',
+                      border: InputBorder.none,
+                    ),
+                    maxLines: 5,
+                    minLines: 1,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () async {
+                    if (message.text.isEmpty) return;
+                    final text = message.text;
+                    message.text = '';
+                    await ChatService.instance.sendMessage(
+                      room: widget.room,
+                      text: text,
+                    );
+                  },
+                  icon: const Icon(Icons.send),
+                ),
+              ],
             ),
-          ),
-          IconButton(
-            onPressed: () async {
-              if (message.text.isEmpty) return;
-              final text = message.text;
-              message.text = '';
-              await ChatService.instance.sendMessage(
-                room: widget.room,
-                text: text,
-              );
-            },
-            icon: const Icon(Icons.send),
           ),
         ],
       ),

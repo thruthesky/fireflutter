@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -49,16 +48,6 @@ class CategoryService with FirebaseHelper {
       categoryId: categoryId,
       name: categoryName,
     );
-  }
-
-  /// Update Category
-  @Deprecated('Use Category.update() instead')
-  update(String categoryId, Map<String, dynamic> categoryUpdates) async {
-    await categoryDoc(categoryId).update({
-      'name': categoryUpdates['name'],
-      'description': categoryUpdates['description'],
-      'updatedAt': FieldValue.serverTimestamp(),
-    });
   }
 
   showUpdateDialog(BuildContext context, String categoryId) async {
