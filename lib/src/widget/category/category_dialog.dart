@@ -71,6 +71,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
                             'name': categoryName.text,
                             'description': description.text,
                           };
+
                           CategoryService.instance.update(category.id, updatedCategory);
                         },
                       ),
