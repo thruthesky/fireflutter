@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
+import 'package:photo_view/photo_view.dart';
 
 const double _kBubblePadding = 10.0;
 
@@ -150,27 +151,58 @@ class ChatRoomMessageListItem extends StatelessWidget {
   Widget mediaBubble(BuildContext context) {
     if (message.hasUrl == false) return const SizedBox.shrink();
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(minWidth: 100, maxWidth: MediaQuery.of(context).size.width * 0.8),
-      child: Row(
-        children: [
-          if (isMyMessage) chatBubbleDateTime(),
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.only(top: 4, bottom: 4),
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: const Radius.circular(8.0),
-                  bottomRight: const Radius.circular(8.0),
-                  topLeft: Radius.circular(isMyMessage ? 8 : 0),
-                  topRight: Radius.circular(isMyMessage ? 0.0 : 8),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => Stack(
+            children: [
+              PhotoView(
+                imageProvider: CachedNetworkImageProvider(message.url!),
+                heroAttributes: PhotoViewHeroAttributes(tag: 'image-${message.id}'),
+                // onTapDown: (context, details, controllerValue) => Navigator.of(context).pop(),
+              ),
+              SafeArea(
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
-                child: DisplayMedia(url: message.url!),
+              ),
+            ],
+          ),
+        ),
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minWidth: 100, maxWidth: MediaQuery.of(context).size.width * 0.8),
+        child: Row(
+          children: [
+            if (isMyMessage) chatBubbleDateTime(),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(top: 4, bottom: 4),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: const Radius.circular(8.0),
+                    bottomRight: const Radius.circular(8.0),
+                    topLeft: Radius.circular(isMyMessage ? 8 : 0),
+                    topRight: Radius.circular(isMyMessage ? 0.0 : 8),
+                  ),
+                  child: Hero(
+                    tag: 'image-${message.id}',
+                    child: CachedNetworkImage(
+                      imageUrl: message.url!,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-          if (isOtherMessage) chatBubbleDateTime(),
-        ],
+            if (isOtherMessage) chatBubbleDateTime(),
+          ],
+        ),
       ),
     );
   }

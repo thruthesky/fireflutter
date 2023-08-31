@@ -16,6 +16,7 @@ dependencies:
   firebase_auth: ^4.7.2
   firebase_core: ^2.15.0
   firebase_database: ^10.2.5
+  firebase_messaging: ^14.6.7
   firebase_storage: ^11.2.5
   firebase_ui_firestore: ^1.5.4
   firebase_ui_localizations: ^1.5.0
@@ -30,11 +31,11 @@ dependencies:
   linkify: ^5.0.0
   mime_type: ^1.0.0
   path: ^1.8.3
+  photo_view: ^0.14.0
   rxdart: ^0.27.7
   shared_preferences: ^2.2.0
   url_launcher: ^6.1.12
   video_player: ^2.7.0
-  firebase_messaging: ^14.6.7
 
 dev_dependencies:
   flutter_test:

@@ -198,6 +198,7 @@ class _FFVideoPlayerState extends State<FFVideoPlayer> {
 /// Videos are displayed with [Chewie]. It will not display the controller
 /// if the width is less than 160.
 ///
+@Deprecated("Use individual widget for each file update.")
 class DisplayMedia extends StatefulWidget {
   const DisplayMedia({
     Key? key,
