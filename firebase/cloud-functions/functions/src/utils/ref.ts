@@ -30,7 +30,7 @@ export class Ref {
     return this.users.doc(uid);
   }
 
-  static get userSettings() {
+  static get userSettings(): admin.firestore.CollectionReference {
     return this.db.collection("user_settings");
   }
 
@@ -38,6 +38,11 @@ export class Ref {
     uid: string
   ): admin.firestore.DocumentReference<admin.firestore.DocumentData> {
     return this.userSettings.doc(uid);
+  }
+
+  static usersSettingsSearch(action: string, categorId: string) {
+    return this.userSettings.where("action", "==", action)
+      .where("category", "==", categorId);
   }
 
   static get usersPublicDataCol() {
@@ -51,13 +56,6 @@ export class Ref {
     return this.usersPublicDataCol.doc(uid);
   }
 
-  static get userSettingsCol(): admin.firestore.CollectionReference {
-    return this.db.collection("user_settings");
-  }
-
-  static userSettingsDoc(uid: string): admin.firestore.DocumentReference {
-    return this.userSettingsCol.doc(uid);
-  }
 
   static get categoryCol() {
     return this.db.collection("categories");

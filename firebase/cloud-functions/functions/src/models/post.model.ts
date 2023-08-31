@@ -57,9 +57,9 @@ export class Post {
       if (!data.noOfComments || data.noOfComments == 0) {
         return after.ref.delete();
       } else {
-        if (data.files && data.files.length > 0) {
+        if (data.urls && data.urls.length > 0) {
           // delete files in firebase storage from data.files array
-          for (const url of data.files) {
+          for (const url of data.urls) {
             const path = Library.getPathFromUrl(url);
             const fileRef = admin.storage().bucket().file(path);
             await fileRef.delete();
