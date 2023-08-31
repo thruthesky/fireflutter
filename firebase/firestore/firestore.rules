@@ -300,6 +300,7 @@ function onlyRemoving(arrayField, element) {
 
 // Returns true if the array field in the document is adding only the element.
 // It must not replace any other element.
+//
 // ! Warning - it must not update(delete) any other field in the document
 //
 // ! Waring - it will fail if it try to add an element which exists already in the array.
@@ -307,7 +308,7 @@ function onlyAdding(arrayField, element) {
   
   let oldSet = (arrayField in resource.data ? resource.data[arrayField] : []).toSet();
   let newSet = request.resource.data[arrayField].toSet();
-  
+
   return
     onlyUpdating([arrayField])
     &&    
