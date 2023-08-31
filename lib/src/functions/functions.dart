@@ -167,6 +167,18 @@ void warningSnackbar(BuildContext context, String message) async {
   );
 }
 
+@Deprecated('Use [toast] instead')
+tapSnackbar({
+  required BuildContext context,
+  required String title,
+  required String message,
+  Widget? icon,
+  int duration = 8,
+  required Function(Function) onTap,
+}) {
+  return toast(context: context, title: title, message: message, onTap: onTap);
+}
+
 /// Display a snackbar
 ///
 /// When the body of the snackbar is tapped, [onTap] will be called with a callback that will hide the snackbar.
@@ -177,20 +189,22 @@ void warningSnackbar(BuildContext context, String message) async {
 ///     close();
 /// });
 /// ```
-ScaffoldFeatureController tapSnackbar({
+ScaffoldFeatureController toast({
   required BuildContext context,
   required String title,
   required String message,
   Widget? icon,
   int duration = 8,
-  required Function(Function) onTap,
+  Function(Function)? onTap,
 }) {
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       duration: Duration(seconds: duration),
       content: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () => onTap(() => ScaffoldMessenger.of(context).hideCurrentSnackBar()),
+        onTap: () => onTap == null
+            ? () => ScaffoldMessenger.of(context).hideCurrentSnackBar()
+            : onTap(() => ScaffoldMessenger.of(context).hideCurrentSnackBar()),
         child: Row(
           children: [
             if (icon != null) ...[icon, const SizedBox(width: 8)],

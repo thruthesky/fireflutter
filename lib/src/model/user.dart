@@ -323,17 +323,31 @@ class User with FirebaseHelper {
     return await update(complete: complete);
   }
 
-  /// I am going to follow a user.
-  Future<void> follow(String uid) {
-    return update(
-      followings: FieldValue.arrayUnion([uid]),
-    );
-  }
+  /// I am going to follow or unfolow the user of the uid.
+  ///
+  /// Returns true if followed a user. Returns false if unfollowed a user.
+  ///
+  /// When the login user follows the user of [otherUid], the [myUid] needs to be added in the array the other user's followers.
+  ///
+  Future<bool> follow(String otherUid) async {
+    final myUid = UserService.instance.uid;
+    if (followings.contains(otherUid)) {
+      await update(
+        followings: FieldValue.arrayRemove([otherUid]),
+      );
+      await userDoc(otherUid).update({
+        'followers': FieldValue.arrayRemove([myUid])
+      });
 
-  /// A user is following me. I am being followed by that user.
-  Future<void> followed(String uid) {
-    return update(
-      followers: FieldValue.arrayUnion([uid]),
-    );
+      return false;
+    } else {
+      await update(
+        followings: FieldValue.arrayUnion([otherUid]),
+      );
+      await userDoc(otherUid).update({
+        'followers': FieldValue.arrayUnion([myUid])
+      });
+      return true;
+    }
   }
 }

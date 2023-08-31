@@ -143,24 +143,18 @@ class _PostDialogState extends State<PostViewDialog> {
                       ),
                       UserDoc(
                         live: true,
-                        uid: post.uid,
-                        builder: (user) {
-                          debugPrint("Followers: ${user.followers}");
-                          if (!user.followers.contains(my.uid)) {
-                            return TextButton(
-                              child: const Text('Follow'),
-                              onPressed: () {
-                                FeedService.instance.follow(post.uid);
-                                tapSnackbar(
-                                    context: context,
-                                    title: 'Followed',
-                                    message: 'You have followedthis user',
-                                    onTap: (close) => close());
-                              },
-                            );
-                          }
-                          return const SizedBox.shrink();
-                        },
+                        builder: (user) => TextButton(
+                            onPressed: () async {
+                              final re = await FeedService.instance.follow(post.uid);
+                              if (mounted) {
+                                toast(
+                                  context: context,
+                                  title: re ? 'Followed' : 'Unfollowed',
+                                  message: re ? 'You have followed this user' : 'You have unfollowed this user',
+                                );
+                              }
+                            },
+                            child: Text(user.followings.contains(post.uid) ? 'Unfollow' : 'Follow')),
                       ),
                       const Spacer(),
                       TextButton(
