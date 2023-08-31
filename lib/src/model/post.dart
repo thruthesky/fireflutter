@@ -74,6 +74,12 @@ class Post with FirebaseHelper {
     };
     final postId = PostService.instance.postCol.doc().id;
     PostService.instance.postCol.doc(postId).set(postData);
+    my.update(
+      noOfPosts: FieldValue.increment(1),
+    );
+    Category.fromId(categoryId).update(
+      noOfPosts: FieldValue.increment(1),
+    );
     return Post.fromMap(map: postData, id: postId);
   }
 

@@ -32,6 +32,7 @@ A free, open source, complete, rapid development package for creating Social app
   - [No of new message](#no-of-new-message)
 - [Upload](#upload)
   - [Photo upload](#photo-upload)
+  - [Customizing source](#customizing-source)
 - [Customization](#customization)
   - [Chat Customization](#chat-customization)
 - [Translation](#translation)
@@ -417,6 +418,31 @@ IconButton(
 ```
 
 It has options like displaying a progressive percentage.
+
+
+
+## Customizing source
+
+
+You can limit the uploaded sources. You can choose camera, gallery, or files like below.
+
+```dart
+ChatService.instance.init(
+  uploadFromCamera: true,
+  uploadFromGallery: true,
+  uploadFromFile: false,
+);
+PostService.instance.init(
+  uploadFromCamera: false,
+  uploadFromGallery: true,
+  uploadFromFile: false,
+);
+CommentService.instance.init(
+  uploadFromCamera: true,
+  uploadFromGallery: false,
+  uploadFromFile: false,
+);
+```
 
 
 

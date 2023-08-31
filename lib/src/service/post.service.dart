@@ -9,9 +9,18 @@ class PostService with FirebaseHelper {
 
   get col => postCol;
 
-  @Deprecated('User post.isMine() instead')
-  bool isMine(Post post) {
-    return UserService.instance.uid == post.uid;
+  bool uploadFromCamera = true;
+  bool uploadFromGallery = true;
+  bool uploadFromFile = true;
+
+  init({
+    bool uploadFromGallery = true,
+    bool uploadFromCamera = true,
+    bool uploadFromFile = true,
+  }) {
+    this.uploadFromGallery = uploadFromGallery;
+    this.uploadFromCamera = uploadFromCamera;
+    this.uploadFromFile = uploadFromFile;
   }
 
   /// Shows the Edit Post as a dialog
@@ -28,21 +37,6 @@ class PostService with FirebaseHelper {
 
   Stream<DocumentSnapshot> snapshot({required String postId}) {
     return PostService.instance.col.doc(postId).snapshots();
-  }
-
-  @Deprecated('use Post.create')
-  Post createPost({
-    required String categoryId,
-    required String title,
-    required String content,
-    List<String>? urls,
-  }) {
-    return Post.create(
-      categoryId: categoryId,
-      title: title,
-      content: content,
-      urls: urls,
-    );
   }
 
   Future<void> editPost({

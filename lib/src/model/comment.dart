@@ -83,6 +83,12 @@ class Comment with FirebaseHelper {
 
     await CommentService.instance.commentCol.add(commentData);
     PostService.instance.postCol.doc(post.id).update({'noOfComments': FieldValue.increment(1)});
+    my.update(
+      noOfComments: FieldValue.increment(1),
+    );
+    Category.fromId(post.categoryId).update(
+      noOfComments: FieldValue.increment(1),
+    );
 
     return Comment.fromMap(map: commentData, id: post.id);
   }

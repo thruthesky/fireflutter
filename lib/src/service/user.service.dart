@@ -21,6 +21,7 @@ class UserService with FirebaseHelper {
   bool get signedIn => !notSignedIn;
   bool get isAnonymous => auth.FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
 
+  /// 환영 인사 메시지를 보낼 때 등에 사용된다.
   late final String adminUid;
 
   /// [documentChanges] fires event for when
@@ -55,35 +56,7 @@ class UserService with FirebaseHelper {
   final BehaviorSubject<auth.User?> userChanges = BehaviorSubject<auth.User?>.seeded(null);
 
   ///
-  UserService._() {
-    /// 로그인을 할 때, nullableUser 초기가 값 지정
-    auth.FirebaseAuth.instance
-        .authStateChanges()
-
-        /// To prevent for the login event firing muliple times.
-        .distinct((p, n) => p?.uid == n?.uid)
-        .listen((firebaseUser) {
-      if (firebaseUser == null) {
-        nullableUser = null;
-        documentChanges.add(nullableUser);
-        userChanges.add(null);
-      } else {
-        userChanges.add(firebaseUser);
-
-        /// 이 후, 사용자 문서가 업데이트 될 때 마다, nullableUser 업데이트
-        UserService.instance.doc.snapshots().listen((documentSnapshot) {
-          /// 사용자 문서가 존재하지 않는 경우,
-          /// * exists: false 는 오직, documentChanges 이벤트에만 적용된다.
-          if (!documentSnapshot.exists || documentSnapshot.data() == null) {
-            nullableUser = User(uid: '', exists: false);
-          } else {
-            nullableUser = User.fromDocumentSnapshot(documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
-          }
-          documentChanges.add(nullableUser);
-        });
-      }
-    });
-  }
+  UserService._();
 
   /// Users collection reference
   CollectionReference get col => userCol;
@@ -140,19 +113,47 @@ class UserService with FirebaseHelper {
   bool get isAdmin => nullableUser?.isAdmin ?? false;
   String? get photoUrl => nullableUser?.photoUrl;
 
-  /// 미리 한번 호출 해서, Singleton 을 초기화 해 둔다. 그래야 user 를 사용 할 때, 에러가 발생하지 않는다.
-  init({
-    required String adminUid,
-  }) {
-    this.adminUid = adminUid;
-  }
-
   /// Returns the stream of the user model for the current login user.
   ///
   /// Use this to display widgets lively that depends on the user model. When
   /// the user document is updated, this stream will fire an event.
   Stream<User> get snapshot {
     return UserService.instance.col.doc(uid).snapshots().map((doc) => User.fromDocumentSnapshot(doc));
+  }
+
+  /// 미리 한번 호출 해서, Singleton 을 초기화 해 둔다. 그래야 user 를 사용 할 때, 에러가 발생하지 않는다.
+  init({
+    required String adminUid,
+  }) {
+    this.adminUid = adminUid;
+
+    /// 로그인을 할 때, nullableUser 초기가 값 지정
+    auth.FirebaseAuth.instance
+        .authStateChanges()
+
+        /// To prevent for the login event firing muliple times.
+        .distinct((p, n) => p?.uid == n?.uid)
+        .listen((firebaseUser) {
+      if (firebaseUser == null) {
+        nullableUser = null;
+        documentChanges.add(nullableUser);
+        userChanges.add(null);
+      } else {
+        userChanges.add(firebaseUser);
+
+        /// 이 후, 사용자 문서가 업데이트 될 때 마다, nullableUser 업데이트
+        UserService.instance.doc.snapshots().listen((documentSnapshot) {
+          /// 사용자 문서가 존재하지 않는 경우,
+          /// * exists: false 는 오직, documentChanges 이벤트에만 적용된다.
+          if (!documentSnapshot.exists || documentSnapshot.data() == null) {
+            nullableUser = User.notExists();
+          } else {
+            nullableUser = User.fromDocumentSnapshot(documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
+          }
+          documentChanges.add(nullableUser);
+        });
+      }
+    });
   }
 
   /// Returns the stream of the user model for the user uid.
@@ -192,6 +193,8 @@ class UserService with FirebaseHelper {
     bool reload = false,
     bool sync = true,
   }) async {
+    if (uid == '') return null;
+
     /// 캐시되어져 있으면, 그 캐시된 값(User)을 리턴
     if (reload == false && _userCache.containsKey(uid)) {
       /// Mark that the user data is cached

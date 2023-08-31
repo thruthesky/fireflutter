@@ -32,10 +32,21 @@ class ChatService with FirebaseHelper {
   /// the user avatar in the chat room list view.
   Message? lastMessage;
 
+  bool uploadFromCamera = true;
+  bool uploadFromGallery = true;
+  bool uploadFromFile = true;
+
   init({
     int maximumNoOfUsers = 500,
+    bool uploadFromGallery = true,
+    bool uploadFromCamera = true,
+    bool uploadFromFile = true,
   }) {
     this.maximumNoOfUsers = maximumNoOfUsers;
+
+    this.uploadFromGallery = uploadFromGallery;
+    this.uploadFromCamera = uploadFromCamera;
+    this.uploadFromFile = uploadFromFile;
   }
 
   getSingleChatRoomId(String? otherUserUid) {

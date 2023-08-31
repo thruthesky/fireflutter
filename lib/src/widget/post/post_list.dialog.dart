@@ -40,9 +40,10 @@ class _PostListDialogState extends State<PostListDialog> {
                 context,
                 categoryId: widget.categoryId,
               );
-              if (mounted) {
-                Navigator.pop(context);
-                if (post != null) {
+
+              if (post != null) {
+                if (mounted) {
+                  Navigator.pop(context);
                   PostService.instance.showPostViewDialog(context, post);
                 }
               }

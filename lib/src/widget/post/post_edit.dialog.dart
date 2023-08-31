@@ -122,6 +122,9 @@ class _PostEditDialogState extends State<PostEditDialog> {
                         context: context,
                         progress: (p) => setState(() => progress = p),
                         complete: () => setState(() => progress = null),
+                        camera: PostService.instance.uploadFromCamera,
+                        gallery: PostService.instance.uploadFromGallery,
+                        file: PostService.instance.uploadFromFile,
                       );
                       if (url != null && mounted) {
                         setState(() {

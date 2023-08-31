@@ -97,16 +97,24 @@ class StorageService with FirebaseHelper {
     int compressQuality = 80,
     String? path,
     String? saveAs,
+    bool gallery = true,
+    bool camera = true,
+    bool file = true,
   }) async {
     final re = await showModalBottomSheet(
       context: context,
-      builder: (_) => const UploadSelectionBottomSheet(),
+      builder: (_) => UploadSelectionBottomSheet(
+        gallery: gallery,
+        camera: camera,
+        file: file,
+      ),
     );
     if (re == null) return null;
     late String? path;
     if (re == 'file') {
       final FilePickerResult? result = await FilePicker.platform.pickFiles();
       path = result?.files.first.path;
+      // path = result?.files.single.path;
     } else {
       final XFile? image = await ImagePicker().pickImage(source: re);
       path = image?.path;

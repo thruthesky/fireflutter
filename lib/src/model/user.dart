@@ -44,6 +44,9 @@ class User with FirebaseHelper {
   final int birthMonth;
   final int birthDay;
 
+  final int noOfPosts;
+  final int noOfComments;
+
   /// [type] is a string value that can be used to categorize the user. You can
   /// think of it as a member type. For example, you can set it to 'player' or
   /// 'coach' or 'admin' or 'manager' or 'staff' or 'parent' or 'fan' or
@@ -100,8 +103,14 @@ class User with FirebaseHelper {
     this.createdAt,
     this.complete = false,
     this.exists = true,
+    this.noOfPosts = 0,
+    this.noOfComments = 0,
     this.data = const {},
   }) : createdAtDateTime = createdAt?.toDate();
+
+  factory User.notExists() {
+    return User(uid: '', exists: false);
+  }
 
   factory User.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     return User.fromMap(
@@ -111,7 +120,7 @@ class User with FirebaseHelper {
   }
 
   factory User.fromMap({required Map<String, dynamic> map, required String id}) {
-    final displayName = map['displayName'] ?? '';
+    final String displayName = map['displayName'] ?? '';
 
     // The createdAt may be int (from RTDB) or Timestamp (from Fireestore), or null.
     if (map['createdAt'] is int) {
@@ -125,7 +134,7 @@ class User with FirebaseHelper {
     return User(
       uid: id,
       isAdmin: map['isAdmin'] ?? false,
-      displayName: displayName == '' ? id.toUpperCase().substring(0, 2) : displayName,
+      displayName: (displayName == '' && displayName.length < 2) ? id.toUpperCase().substring(0, 2) : displayName,
       name: map['name'] ?? '',
       firstName: map['firstName'] ?? '',
       lastName: map['lastName'] ?? '',
@@ -143,6 +152,8 @@ class User with FirebaseHelper {
       type: map['type'] ?? '',
       createdAt: map['createdAt'],
       complete: map['complete'] ?? false,
+      noOfPosts: map['noOfPosts'] ?? 0,
+      noOfComments: map['noOfComments'] ?? 0,
       data: map,
     );
   }
@@ -166,6 +177,8 @@ class User with FirebaseHelper {
       'birthYear': birthYear,
       'birthMonth': birthMonth,
       'birthDay': birthDay,
+      'noOfPosts': noOfPosts,
+      'noOfComments': noOfComments,
       'type': type,
       'createdAt': createdAt ?? FieldValue.serverTimestamp(),
       'complete': complete,
@@ -174,7 +187,7 @@ class User with FirebaseHelper {
 
   @override
   String toString() =>
-      '''User(uid: $uid, isAdmin: $isAdmin, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, idVerifiedCode: $idVerifiedCode, phoneNumber: $phoneNumber, email: $email, state: $state, stateImageUrl: $stateImageUrl, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, type: $type, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, cached: $cached)''';
+      '''User(uid: $uid, isAdmin: $isAdmin, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, idVerifiedCode: $idVerifiedCode, phoneNumber: $phoneNumber, email: $email, state: $state, stateImageUrl: $stateImageUrl, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, noOfPosts: $noOfPosts, noOfComments: $noOfComments, type: $type, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, cached: $cached)''';
 
   /// Get user document
   ///
@@ -227,6 +240,10 @@ class User with FirebaseHelper {
   /// after update the document and it returns the user model from the updated
   /// user document. but there might be some fields that are not updated by
   /// the cloud (background) function.
+  ///
+  /// It sets with merge true option just incase if the user document may not
+  /// exists. And it uses [UserService.instance.uid] as the user's uid just
+  /// incase if the uid is not provided.
   Future<User> update({
     String? name,
     String? firstName,
@@ -243,15 +260,17 @@ class User with FirebaseHelper {
     int? birthYear,
     int? birthMonth,
     int? birthDay,
+    FieldValue? noOfPosts,
+    FieldValue? noOfComments,
     String? type,
     bool? complete,
     String? field,
     dynamic value,
     Map<String, dynamic> data = const {},
   }) async {
-    final doc = FirebaseFirestore.instance.collection('users').doc(uid);
+    final doc = FirebaseFirestore.instance.collection('users').doc(UserService.instance.uid);
 
-    await doc.update({
+    await doc.set({
       ...{
         if (name != null) 'name': name,
         if (firstName != null) 'firstName': firstName,
@@ -268,12 +287,14 @@ class User with FirebaseHelper {
         if (birthYear != null) 'birthYear': birthYear,
         if (birthMonth != null) 'birthMonth': birthMonth,
         if (birthDay != null) 'birthDay': birthDay,
+        if (noOfPosts != null) 'noOfPosts': noOfPosts,
+        if (noOfComments != null) 'noOfComments': noOfComments,
         if (type != null) 'type': type,
         if (complete != null) 'complete': complete,
         if (field != null && value != null) field: value,
       },
       ...data
-    });
+    }, SetOptions(merge: true));
 
     return (await get(uid))!;
   }

@@ -50,7 +50,9 @@ service cloud.firestore {
 
     match /categories/{documentId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow create: if isAdmin();
+      allow update: if isAdmin() || onlyUpdating(['noOfPosts', 'noOfComments']);
+      allow delete: if isAdmin();
     }
 
     // Only allow write if

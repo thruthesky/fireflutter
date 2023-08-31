@@ -6,6 +6,20 @@ class CommentService with FirebaseHelper {
   static CommentService get instance => _instance ??= CommentService._();
   CommentService._();
 
+  bool uploadFromCamera = true;
+  bool uploadFromGallery = true;
+  bool uploadFromFile = true;
+
+  init({
+    bool uploadFromGallery = true,
+    bool uploadFromCamera = true,
+    bool uploadFromFile = true,
+  }) {
+    this.uploadFromGallery = uploadFromGallery;
+    this.uploadFromCamera = uploadFromCamera;
+    this.uploadFromFile = uploadFromFile;
+  }
+
   Future<Comment> createComment({
     required Post post,
     required String content,
