@@ -15,13 +15,12 @@ class FeedService with FirebaseHelper {
     // get last 20 posts and save it under rtdb
     final posts = await PostService.instance.gets(uid: uid, limit: 20);
 
-    //
-    posts.map((post) async {
-      await rtdb.ref('feeds').child(my.uid).child(post.id).set({
+    for (var post in posts) {
+      rtdb.ref('feeds').child(my.uid).child(post.id).set({
         'uid': post.uid,
         'postId': post.id,
         'createdAt': 0 - post.createdAt.millisecondsSinceEpoch,
       });
-    });
+    }
   }
 }

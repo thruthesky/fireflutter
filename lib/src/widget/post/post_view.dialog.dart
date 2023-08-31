@@ -141,15 +141,25 @@ class _PostDialogState extends State<PostViewDialog> {
                           debugPrint('Liking it');
                         },
                       ),
-                      TextButton(
-                        child: const Text('Follow'),
-                        onPressed: () {
-                          FeedService.instance.follow(post.uid);
-                          tapSnackbar(
-                              context: context,
-                              title: 'Followed',
-                              message: 'You have followedthis user',
-                              onTap: (close) => close());
+                      UserDoc(
+                        live: true,
+                        uid: post.uid,
+                        builder: (user) {
+                          debugPrint("Followers: ${user.followers}");
+                          if (!user.followers.contains(my.uid)) {
+                            return TextButton(
+                              child: const Text('Follow'),
+                              onPressed: () {
+                                FeedService.instance.follow(post.uid);
+                                tapSnackbar(
+                                    context: context,
+                                    title: 'Followed',
+                                    message: 'You have followedthis user',
+                                    onTap: (close) => close());
+                              },
+                            );
+                          }
+                          return const SizedBox.shrink();
                         },
                       ),
                       const Spacer(),
