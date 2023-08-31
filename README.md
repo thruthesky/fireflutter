@@ -480,9 +480,9 @@ CommentService.instance.init(
 
 ```mermaid
 flowchart TD
-Follow-->UpdateFollower[Update Follower]-->UpdateFollowing[Update Following]-->UpdateFeed[Get last 20 feed and save in rtdb]
+When_Follow-->UpdateFollower[Update Follower]-->UpdateFollowing[Update Following]-->UpdateFeed[Get last 20 feed and save in rtdb]
 
-Unfollow-->Remove_Follower-->Remove_Following-->Remove_Feeds
+When_Unfollow-->Remove_Follower-->Remove_Following-->Remove_Feeds
 
 NewFeed-->SaveNewFeedToAllFollower[Where there is a new feed, save all in all follower's feed list.]-->Push_Notification
 ```
