@@ -195,8 +195,7 @@ async function createPost(options = {}) {
 async function editUser(user) {
   await db(user).collection(usersColName).doc(user.uid).set({
     uid: user.uid,
-    email: user.email,
-    followers: []
+    email: user.email
   });
 }
 

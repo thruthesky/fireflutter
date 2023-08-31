@@ -16,8 +16,8 @@ const firebase = require("@firebase/testing");
 describe("User Follow/Unfollow Test (follow-unfollow.spec.js)", () => {
     it("User A follow B - successful", async () => {
         // Prepare user records
-        editUser(a);
-        editUser(b);
+        await editUser(a);
+        await editUser(b);
         // A follows B
         await firebase.assertSucceeds(
             db(a).collection(usersColName).doc(b.uid).update({
@@ -25,6 +25,27 @@ describe("User Follow/Unfollow Test (follow-unfollow.spec.js)", () => {
             })
         );
     });
+
+    // it("User A follow B - failure since he is already following?", async () => {
+    //     // Prepare user records
+    //     await editUser(a);
+    //     await editUser(b);
+    //     // A follows B
+    //     await firebase.assertSucceeds(
+    //         db(a).collection(usersColName).doc(b.uid).update({
+    //             followers: firebase.firestore.FieldValue.arrayUnion(a.uid),
+    //         })
+    //     );
+    //     await firebase.assertSucceeds(
+    //         db(a).collection(usersColName).doc(b.uid).update({
+    //             followers: firebase.firestore.FieldValue.arrayUnion(a.uid),
+    //         })
+    //     );
+    // });
+
+
+
+
     it("User A asigned C as follower by B - failure", async () => {
         // Prepare user records
         editUser(a);
@@ -68,4 +89,5 @@ describe("User Follow/Unfollow Test (follow-unfollow.spec.js)", () => {
             })
         );
     });
+
 });
