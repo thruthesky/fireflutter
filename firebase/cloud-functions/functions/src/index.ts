@@ -6,25 +6,13 @@
  *
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
+import * as admin from "firebase-admin";
 
-import {onDocumentCreated, FirestoreEvent}
-  from "firebase-functions/v2/firestore";
+admin.initializeApp();
 
-import * as logger from "firebase-functions/logger";
-import {QueryDocumentSnapshot} from "firebase-admin/firestore";
+admin.firestore().settings({ignoreUndefinedProperties: true});
 
-exports.uppercase = onDocumentCreated("my-collection/{docId}",
-  (event: FirestoreEvent<QueryDocumentSnapshot | undefined>) => {
-    /* ... */
-    logger.info("Hello logs!", {structuredData: true});
+export * from "./controllers/messaging.controller";
+export * from "./controllers/test.controller";
 
-    if (event === undefined || typeof event === "undefined") {
-      return;
-    }
-
-    return event.data?.ref.update({
-      doneAt: new Date(),
-      uppercase: event.data?.data().original.toUpperCase(),
-    });
-  });
 
