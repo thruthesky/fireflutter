@@ -247,7 +247,7 @@ class User with FirebaseHelper {
     return (await get(uid))!;
   }
 
-  /// Updaet user document
+  /// Update user document
   ///
   /// Update the user document under /users/{uid} for the login user.
   ///
@@ -260,7 +260,7 @@ class User with FirebaseHelper {
   /// It sets with merge true option just incase if the user document may not
   /// exists. And it uses [UserService.instance.uid] as the user's uid just
   /// incase if the uid is not provided.
-  Future<User> update({
+  Future<User?> update({
     String? name,
     String? firstName,
     String? lastName,
@@ -286,7 +286,7 @@ class User with FirebaseHelper {
     dynamic value,
     Map<String, dynamic> data = const {},
   }) async {
-    final doc = FirebaseFirestore.instance.collection('users').doc(UserService.instance.uid);
+    final doc = FirebaseFirestore.instance.collection('users').doc(uid);
 
     await doc.set({
       ...{
@@ -309,17 +309,20 @@ class User with FirebaseHelper {
         if (noOfComments != null) 'noOfComments': noOfComments,
         if (type != null) 'type': type,
         if (complete != null) 'complete': complete,
+        if (followings != null) 'followings': followings,
+        if (followers != null) 'followers': followers,
         if (field != null && value != null) field: value,
       },
       ...data
     }, SetOptions(merge: true));
 
+    if (uid != my.uid) return null; // Will remove this // this was for checking purpose
     return (await get(uid))!;
   }
 
   /// If the user has completed the profile, set the complete field to true.
   Future<User> updateComplete(bool complete) async {
-    return await update(complete: complete);
+    return (await update(complete: complete))!;
   }
 
   /// I am going to follow a user.
