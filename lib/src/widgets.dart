@@ -46,6 +46,8 @@ export 'widget/post/post.list_view.dart';
 export 'widget/post/post_edit.dialog.dart';
 export 'widget/post/post_view.dialog.dart';
 export 'widget/post/post_list.dialog.dart';
+export 'widget/post/post_list.push_notification.icon.dart';
+export 'widget/post/post_list.category_subscription.dart';
 
 // Comment
 export 'widget/comment/comment_edit.bottom_sheet.dart';
