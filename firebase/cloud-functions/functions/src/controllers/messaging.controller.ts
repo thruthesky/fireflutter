@@ -15,14 +15,17 @@ import {QueryDocumentSnapshot} from "firebase-admin/firestore";
 
 exports.messagingOnPostCreate = onDocumentCreated("posts/{postId}",
   (event: FirestoreEvent<QueryDocumentSnapshot | undefined>) => {
-    if (event === undefined || typeof event === "undefined") {
+    if (event === undefined ||
+            typeof event === "undefined" ||
+            event.data === undefined ||
+            typeof event.data === "undefined") {
       return;
     }
 
-    const post: PostDocument = event.data?.data() as PostDocument;
+    const post: PostDocument = event.data.data() as PostDocument;
     const data: SendMessage = {
       ...post,
-      id: event.data?.id,
+      id: event.data.id,
       action: EventName.postCreate,
       type: EventType.post,
       senderUid: post.uid,
@@ -33,14 +36,17 @@ exports.messagingOnPostCreate = onDocumentCreated("posts/{postId}",
 
 exports.messagingOnCommentCreate = onDocumentCreated("comments/{commentId}",
   (event: FirestoreEvent<QueryDocumentSnapshot | undefined>) => {
-    if (event === undefined || typeof event === "undefined") {
+    if (event === undefined ||
+            typeof event === "undefined" ||
+            event.data === undefined ||
+            typeof event.data === "undefined") {
       return;
     }
 
-    const comment: CommentDocument = event.data?.data() as CommentDocument;
+    const comment: CommentDocument = event.data.data() as CommentDocument;
     const data: SendMessage = {
       ...comment,
-      id: event.data?.id,
+      id: event.data.id,
       action: EventName.commentCreate,
       type: EventType.post,
       senderUid: comment.uid,
@@ -52,7 +58,10 @@ exports.messagingOnCommentCreate = onDocumentCreated("comments/{commentId}",
 exports.pushNotificationQueue =
     onDocumentCreated("push-notifications-queue/{docId}",
       async (event: FirestoreEvent<QueryDocumentSnapshot | undefined>) => {
-        if (event === undefined || typeof event === "undefined") {
+        if (event === undefined ||
+                typeof event === "undefined" ||
+                event.data === undefined ||
+                typeof event.data === "undefined") {
           return;
         }
 
@@ -71,7 +80,10 @@ exports.pushNotificationQueue =
 exports.messagingOnChatMessageCreate =
     onDocumentCreated("chat_room_messages/{documentId}",
       async (event: FirestoreEvent<QueryDocumentSnapshot | undefined>) => {
-        if (event === undefined || typeof event === "undefined") {
+        if (event === undefined ||
+                typeof event === "undefined" ||
+                event.data === undefined ||
+                typeof event.data === "undefined") {
           return;
         }
 
@@ -79,7 +91,7 @@ exports.messagingOnChatMessageCreate =
 
         futures.push(
           Messaging.sendChatNotificationToOtherUsers(
-                    event.data?.data() as ChatMessageDocument
+                    event.data.data() as ChatMessageDocument
           )
         );
         return Promise.all(futures);
