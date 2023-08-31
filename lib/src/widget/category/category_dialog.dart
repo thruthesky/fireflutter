@@ -14,7 +14,7 @@ class CategoryDialog extends StatefulWidget {
 }
 
 class _CategoryDialogState extends State<CategoryDialog> {
-  TextEditingController categoryName = TextEditingController();
+  TextEditingController name = TextEditingController();
   TextEditingController description = TextEditingController();
 
   @override
@@ -28,7 +28,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
 
         final Category category = snapshot.data!;
 
-        categoryName.text = category.name;
+        name.text = category.name;
         description.text = category.description ?? '';
 
         return Scaffold(
@@ -52,7 +52,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
                   ),
                 ),
                 TextFormField(
-                  controller: categoryName,
+                  controller: name,
                   decoration: const InputDecoration(labelText: 'Name'),
                 ),
                 TextFormField(
@@ -67,12 +67,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
                       child: ElevatedButton(
                         child: const Text('Update'),
                         onPressed: () {
-                          Map<String, dynamic> updatedCategory = {
-                            'name': categoryName.text,
-                            'description': description.text,
-                          };
-
-                          CategoryService.instance.update(category.id, updatedCategory);
+                          Category.fromId(category.id).update(name: name.text, description: description.text);
                         },
                       ),
                     ),
