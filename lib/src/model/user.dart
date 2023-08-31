@@ -209,7 +209,7 @@ class User with FirebaseHelper {
   ///
   /// If the user document does not exist, it will return null. It does not throw an exception.
   ///
-  /// It does not
+  /// Note, that It gets data from /users collections. It does not get data from /search-user-data collection.
   static Future<User?> get(String uid) async {
     final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(uid).get();
     if (snapshot.exists == false) {
