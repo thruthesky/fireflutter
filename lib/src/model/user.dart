@@ -286,7 +286,6 @@ class User with FirebaseHelper {
     dynamic value,
     Map<String, dynamic> data = const {},
   }) async {
-    print('going to update: $uid');
     return await userDoc(uid).set(
       {
         ...{
