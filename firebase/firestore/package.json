@@ -8,6 +8,7 @@
     "test:posts": "mocha tests/posts/*.spec.js --watch",
     "test:categories": "mocha tests/categories/*.spec.js --watch",
     "test:comments": "mocha tests/comments/*.spec.js --watch",
+    "test:users": "mocha tests/users/*.spec.js --watch",
     "mocha": "mocha --watch",
     "deploy": "firebase deploy --only firestore:rules"
   },
