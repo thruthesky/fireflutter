@@ -8,20 +8,29 @@ class FeedService with FirebaseHelper {
 
   FeedService._();
 
-  Future follow(String uid) async {
-    await User.fromUid(uid).followed(my.uid);
-    await my.follow(uid);
+  Future<bool> follow(String otherUid) async {
+    final re = await my.follow(otherUid);
 
-    // get last 20 posts and save it under rtdb
-    final posts = await PostService.instance.gets(uid: uid, limit: 20);
+    if (re) {
+      // get last 20 posts and save it under rtdb
+      final posts = await PostService.instance.gets(uid: otherUid, limit: 20);
 
-    //
-    posts.map((post) async {
-      await rtdb.ref('feeds').child(my.uid).child(post.id).set({
-        'uid': post.uid,
-        'postId': post.id,
-        'createdAt': 0 - post.createdAt.millisecondsSinceEpoch,
+      for (final post in posts) {
+        rtdb.ref('feeds').child(my.uid).child(post.id).set({
+          'uid': post.uid,
+          'postId': post.id,
+          'createdAt': 0 - post.createdAt.millisecondsSinceEpoch,
+        });
+      }
+    } else {
+      // remove all posts from rtdb
+      rtdb.ref('feeds').child(my.uid).orderByChild('uid').equalTo(otherUid).once().then((value) {
+        for (final node in value.snapshot.children) {
+          node.ref.remove();
+        }
       });
-    });
+    }
+
+    return re;
   }
 }
