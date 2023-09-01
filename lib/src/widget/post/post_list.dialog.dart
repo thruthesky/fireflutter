@@ -33,6 +33,7 @@ class _PostListDialogState extends State<PostListDialog> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title ?? widget.categoryId ?? "@t - Post List"),
         actions: [
+          if (widget.categoryId != null) PostListCategorySubscription(widget.categoryId!),
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () async {

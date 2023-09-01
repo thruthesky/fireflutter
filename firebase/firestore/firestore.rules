@@ -30,6 +30,11 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    match /push-notifications-queue/{docId} {
+      allow read: if resource.data.senderUid == request.auth.uid;
+      allow write: if request.resource.data.senderUid == request.auth.uid;
+    }
+
 // ****************************** COPY FROM ***********************************
     // *
     // * Belore are the FireFlutter Security Rules. Put your own rules above.
@@ -47,6 +52,14 @@ service cloud.firestore {
         onlyRemoving('followers', request.auth.uid)
         ;
       allow delete: if false;
+      match /fcm_tokens/{docId} {
+      	allow read: if true;
+        allow write: if (request.auth.uid == documentId);
+      }
+      match /user_settings/{docId} {
+      	allow read: if true;
+        allow write: if (request.auth.uid == documentId);
+      }
     }
 
     match /user_search_data/{documentId} {
