@@ -93,3 +93,10 @@ export interface SendMessageToDocument {
     batch_index?: number;
     num_batches?: number;
 }
+
+
+
+export interface SendMessageResult {
+    success: number;
+    error: number;
+};

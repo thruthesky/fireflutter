@@ -1,22 +1,22 @@
 import * as admin from "firebase-admin";
-import {EventName, EventType} from "../utils/event-name";
+import { EventName, EventType } from "../utils/event-name";
 import {
   MessagePayload,
   SendMessage,
   SendMessageToDocument,
 } from "../interfaces/messaging.interface";
-import {Ref} from "../utils/ref";
-import {Library} from "../utils/library";
+import { Ref } from "../utils/ref";
+import { Library } from "../utils/library";
 
-import {Comment} from "../models/comment.model";
-import {User} from "./user.model";
-import {Post} from "./post.model";
-import {UserSettingsDocument} from "../interfaces/user.interface";
-import {ChatMessageDocument} from "../interfaces/chat.interface";
-import {Chat} from "./chat.model";
+import { Comment } from "../models/comment.model";
+import { User } from "./user.model";
+import { Post } from "./post.model";
+import { UserSettingsDocument } from "../interfaces/user.interface";
+import { ChatMessageDocument } from "../interfaces/chat.interface";
+import { Chat } from "./chat.model";
 
 import * as functions from "firebase-functions";
-import {MulticastMessage} from "firebase-admin/lib/messaging/messaging-api";
+import { MulticastMessage } from "firebase-admin/lib/messaging/messaging-api";
 
 export class Messaging {
   /**
@@ -31,9 +31,13 @@ export class Messaging {
                * @param data information of sending message
                * @return results
                */
-  static async sendMessage(data: SendMessage): Promise<any> {
+  static async sendMessage(data: SendMessage): Promise<{
+    success: number;
+    error: number;
+  }> {
     if (data.topic) {
       // / see TODO in README.md
+      return { success: 0, error: 0 };
     } else if (data.tokens) {
       return this.sendMessageToTokens(data.tokens.split(","), data);
     } else if (data.uids) {
@@ -127,7 +131,7 @@ export class Messaging {
     console.log(`sendMessageToTokens() token.length: ${tokens.length}`);
     if (tokens.length == 0) {
       console.log("sendMessageToTokens() no tokens. so, just return results.");
-      return {success: 0, error: 0};
+      return { success: 0, error: 0 };
     }
 
     // add login user uid
@@ -145,8 +149,8 @@ export class Messaging {
     for (const _500Tokens of chunks) {
       const newPayload: admin.messaging.MulticastMessage = Object.assign(
         {},
-        {tokens: _500Tokens},
-                payload as any
+        { tokens: _500Tokens },
+        payload as any
       );
       multicastPromise.push(admin.messaging().sendEachForMulticast(newPayload));
     }
@@ -187,7 +191,7 @@ export class Messaging {
       await this.removeTokens(failedTokens);
 
       // 결과 리턴
-      const results = {success: successCount, error: failureCount};
+      const results = { success: successCount, error: failureCount };
       console.log(`sendMessageToTokens() results: ${JSON.stringify(results)}`);
       return results;
     } catch (e) {
@@ -237,8 +241,8 @@ export class Messaging {
   static isInvalidTokenErrorCode(code: string) {
     if (
       code === "messaging/invalid-registration-token" ||
-            code === "messaging/registration-token-not-registered" ||
-            code === "messaging/invalid-argument"
+      code === "messaging/registration-token-not-registered" ||
+      code === "messaging/invalid-argument"
     ) {
       return true;
     }
@@ -352,9 +356,9 @@ export class Messaging {
 
     if (res.notification.body != "") {
       res.notification.body =
-                Library.removeHtmlTags(res.notification.body) ?? "";
+        Library.removeHtmlTags(res.notification.body) ?? "";
       res.notification.body =
-                Library.decodeHTMLEntities(res.notification.body) ?? "";
+        Library.decodeHTMLEntities(res.notification.body) ?? "";
       if (res.notification.body.length > 255) {
         res.notification.body = res.notification.body.substring(0, 255);
       }
@@ -453,13 +457,13 @@ export class Messaging {
 
     // Get tokens of all users.
     const userTokens: admin.firestore
-            .QuerySnapshot<admin.firestore.DocumentData> =
-            await Ref.tokenCollectionGroup.get();
+      .QuerySnapshot<admin.firestore.DocumentData> =
+      await Ref.tokenCollectionGroup.get();
 
     userTokens.docs.forEach((token) => {
       const data = token.data();
       const audienceMatches =
-                targetAudience === "All" || data.device_type === targetAudience;
+        targetAudience === "All" || data.device_type === targetAudience;
       if (audienceMatches || typeof data.fcm_token !== undefined) {
         tokens.add(data.fcm_token);
       }
@@ -476,7 +480,7 @@ export class Messaging {
         notification: {
           title,
           body,
-          ...(imageUrl && {imageUrl: imageUrl}),
+          ...(imageUrl && { imageUrl: imageUrl }),
         },
         data: {
           initialPageName,
@@ -484,13 +488,13 @@ export class Messaging {
         },
         android: {
           notification: {
-            ...(sound && {sound: sound}),
+            ...(sound && { sound: sound }),
           },
         },
         apns: {
           payload: {
             aps: {
-              ...(sound && {sound: sound}),
+              ...(sound && { sound: sound }),
             },
           },
         },
@@ -504,12 +508,12 @@ export class Messaging {
       messageBatches.map(async (messages) => {
         const response = await admin
           .messaging()
-        // .sendMulticast(messages as MulticastMessage); // deprecated
+          // .sendMulticast(messages as MulticastMessage); // deprecated
           .sendEachForMulticast(messages as MulticastMessage);
         numSent += response.successCount;
       })
     );
 
-    await snapshot.ref.update({status: "succeeded", num_sent: numSent});
+    await snapshot.ref.update({ status: "succeeded", num_sent: numSent });
   }
 }

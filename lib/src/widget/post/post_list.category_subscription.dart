@@ -14,8 +14,7 @@ class PostListCategorySubscription extends StatelessWidget {
     return PostListPushNotificationIcon(
       categoryId,
       onChanged: (String postOrComment, bool subscribed) {
-        tapSnackbar(
-          context: context,
+        toast(
           title: subscribed ? 'Subscription' : 'Unsubscription',
           message:
               'You have ${subscribed ? 'subscribed' : 'unsubscribed'} the $categoryId $postOrComment subscription.',

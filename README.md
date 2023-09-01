@@ -179,6 +179,9 @@ For instance, you may write security rules like below and add the uids of sub-ad
 Instead of building and managing cloud functions code, we choose to use it as firebase extension. The `easy-extension` has all the functions that fireflutter needs. See the [Install the easy extension](#install-the-easy-extension).
 
 
+All cloud functions must go under `firebase/cloud-functions/functions` folder.
+
+
 ## Admin settings
 
 See the [Security rules for admin](#security-rule-for-admin) chapter to set admin in the security rules. After this, you can set the `isAdmin` field to true on the admin's user document.
