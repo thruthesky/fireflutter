@@ -5,6 +5,7 @@ export 'widget/user/user.profile_avatar.dart';
 export 'widget/user/user.doc.dart';
 export 'widget/user/user.ready.dart';
 export 'widget/common/avatar.dart';
+export 'widget/user/admin.dart';
 
 // Chat
 export 'widget/chat/chat_room.dart';
@@ -47,6 +48,8 @@ export 'widget/post/post.list_view.dart';
 export 'widget/post/post_edit.dialog.dart';
 export 'widget/post/post_view.dialog.dart';
 export 'widget/post/post_list.dialog.dart';
+export 'widget/post/post_list.push_notification.icon.dart';
+export 'widget/post/post_list.category_subscription.dart';
 
 // Comment
 export 'widget/comment/comment_edit.bottom_sheet.dart';

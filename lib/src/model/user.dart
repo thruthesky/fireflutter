@@ -28,6 +28,7 @@ class User with FirebaseHelper {
   ///
   /// 이 값은 다양하게 응용해서 활용하면 된다. 예) 신분증 업로드 후, 신분증 경로 URL 을 저장하거나, 파일 이름 또는 기타 코드를 입력하면 된다.
   final String idVerifiedCode;
+  final bool verified;
 
   ///
   final String phoneNumber;
@@ -37,7 +38,10 @@ class User with FirebaseHelper {
   /// 상태. 개인의 상태, 무드, 인사말 등. 예를 들어, 휴가중. 또는 모토. 인생은 모험이 아니면 아무것도 아닙니다.
   final String state;
 
-  /// User public profile title image
+  /// User state image (or public profile title image).
+  ///
+  /// Use this for any purpose to display user's current state. Good example of
+  /// using this is to display user's public profile title image.
   final String stateImageUrl;
 
   final int birthYear;
@@ -95,6 +99,7 @@ class User with FirebaseHelper {
     this.photoUrl = '',
     this.hasPhotoUrl = false,
     this.idVerifiedCode = '',
+    this.verified = false,
     this.phoneNumber = '',
     this.email = '',
     this.state = '',
@@ -154,6 +159,7 @@ class User with FirebaseHelper {
       photoUrl: (map['photoUrl'] ?? '') as String,
       hasPhotoUrl: map['hasPhotoUrl'] ?? false,
       idVerifiedCode: map['idVerifiedCode'] ?? '',
+      verified: map['verified'] ?? false,
       phoneNumber: map['phoneNumber'] ?? '',
       email: map['email'] ?? '',
       state: map['state'] ?? '',
@@ -184,6 +190,7 @@ class User with FirebaseHelper {
       'photoUrl': photoUrl,
       'hasPhotoUrl': hasPhotoUrl,
       'idVerifiedCode': idVerifiedCode,
+      'verified': verified,
       'phoneNumber': phoneNumber,
       'email': email,
       'state': state,
@@ -203,7 +210,7 @@ class User with FirebaseHelper {
 
   @override
   String toString() =>
-      '''User(uid: $uid, isAdmin: $isAdmin, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, idVerifiedCode: $idVerifiedCode, phoneNumber: $phoneNumber, email: $email, state: $state, stateImageUrl: $stateImageUrl, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, noOfPosts: $noOfPosts, noOfComments: $noOfComments, type: $type, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, followers: $followers, followings: $followings, cached: $cached)''';
+      '''User(uid: $uid, isAdmin: $isAdmin, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, idVerifiedCode: $idVerifiedCode, verified: $verified, phoneNumber: $phoneNumber, email: $email, state: $state, stateImageUrl: $stateImageUrl, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, noOfPosts: $noOfPosts, noOfComments: $noOfComments, type: $type, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, followers: $followers, followings: $followings, cached: $cached)''';
 
   /// Get user document
   ///
@@ -269,6 +276,7 @@ class User with FirebaseHelper {
     String? photoUrl,
     bool? hasPhotoUrl,
     String? idVerifiedCode,
+    bool? verified,
     String? phoneNumber,
     String? email,
     String? state,
@@ -297,6 +305,7 @@ class User with FirebaseHelper {
           if (photoUrl != null) 'photoUrl': photoUrl,
           if (hasPhotoUrl != null) 'hasPhotoUrl': hasPhotoUrl,
           if (idVerifiedCode != null) 'idVerifiedCode': idVerifiedCode,
+          if (verified != null) 'verified': verified,
           if (phoneNumber != null) 'phoneNumber': phoneNumber,
           if (email != null) 'email': email,
           if (state != null) 'state': state,
@@ -320,7 +329,7 @@ class User with FirebaseHelper {
 
   /// If the user has completed the profile, set the complete field to true.
   Future<void> updateComplete(bool complete) async {
-    return await update(complete: complete);
+    return await update(complete: complete, verified: false);
   }
 
   /// I am going to follow or unfolow the user of the uid.

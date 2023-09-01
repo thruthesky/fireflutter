@@ -32,8 +32,10 @@ A free, open source, complete, rapid development package for creating Social app
 - [Chat Feature](#chat-feature)
   - [Welcome message](#welcome-message)
   - [No of new message](#no-of-new-message)
+- [User](#user)
 - [Upload](#upload)
   - [Photo upload](#photo-upload)
+- [Push notifications](#push-notifications)
   - [Customizing source](#customizing-source)
 - [Following and Follower](#following-and-follower)
   - [Feed listing logic](#feed-listing-logic)
@@ -46,6 +48,7 @@ A free, open source, complete, rapid development package for creating Social app
   - [Testing on Local Emulators and Firebase](#testing-on-local-emulators-and-firebase)
   - [Testing security rules](#testing-security-rules)
   - [Testing on real Firebase](#testing-on-real-firebase)
+  - [Testing on Cloud Functions](#testing-on-cloud-functions)
 - [Developer](#developer)
   - [Development Tips](#development-tips)
 - [Contribution](#contribution)
@@ -175,6 +178,9 @@ For instance, you may write security rules like below and add the uids of sub-ad
 ## Cloud functions
 
 Instead of building and managing cloud functions code, we choose to use it as firebase extension. The `easy-extension` has all the functions that fireflutter needs. See the [Install the easy extension](#install-the-easy-extension).
+
+
+All cloud functions must go under `firebase/cloud-functions/functions` folder.
 
 
 ## Admin settings
@@ -404,6 +410,15 @@ To send a welcome chat message to a user who just registered, use `UserService.i
 We save the no of new messages of each users in RTDB. If we save the no of new messages of all users of the room in the chat room document like `{ noOfNewMessages: { uid-A: 1, uid-B 2, ... }}`, there will be performance issue and it will cost more. The problem is the chat room must be listened as a stream for realtime update. And if a user chats there are other users who read. Everytime a user reads a messgae, the chat room docuemnt will be fetched for every user with no reason. This is jus tan extra cost. So, we put the number of new messages under `/chats/{roomId}/noOfNewMessages/{uid}` in RTDB.
 
 
+# User
+
+`idVerifiedCode` is the code of user's authentication id code. This is used to save user's id code when the user uploaded his id card like passport and the AI (Firebase AI Extension) detect user's information and the verification succeed, the file path is being hsave in `idVerificationCoce`. You may use it on your own purpose.
+
+`complete` is a boolean field to indicate that the user completed updating his profile information.
+
+`verified` is a boolean field to indicate that the user's identification has fully verified by the system. Note that, this is not secured by the rules as of now. Meaning, user can edit it by himself.
+
+
 
 # Upload
 
@@ -442,6 +457,39 @@ IconButton(
 It has options like displaying a progressive percentage.
 
 
+# Push notifications
+
+
+```dart
+    // init here
+    MessagingService.instance.init(
+      // while the app is close and notification arrive you can use this to do small work
+      // example are changing the badge count or informing backend.
+      onBackgroundMessage: onTerminatedMessage,
+
+      ///
+      onForegroundMessage: (RemoteMessage message) {
+        onForegroundMessage(message);
+      },
+      onMessageOpenedFromTerminated: (message) {
+        // this will triggered when the notification on tray was tap while the app is closed
+        // if you change screen right after the app is open it display only white screen.
+        WidgetsBinding.instance.addPostFrameCallback((duration) {
+          onTapMessage(message);
+        });
+      },
+      // this will triggered when the notification on tray was tap while the app is open but in background state.
+      onMessageOpenedFromBackground: (message) {
+        onTapMessage(message);
+      },
+      onNotificationPermissionDenied: () {
+        // print('onNotificationPermissionDenied()');
+      },
+      onNotificationPermissionNotDetermined: () {
+        // print('onNotificationPermissionNotDetermined()');
+      },
+    );
+```
 
 ## Customizing source
 
@@ -619,6 +667,24 @@ npm run mocha tests/posts/likes.spec.js
   - `npm run mocha -- tests/update_custom_claims/get_set.spec.ts`
   - `npm run mocha -- tests/update_custom_claims/update.spec.ts`
 
+
+## Testing on Cloud Functions
+
+All of the cloud functions are tested directly on remote firebase (not in emulator). So, you need to save the account service in `firebase/service-account.json`. The service account file is listed in .gitignore. So, It won't be added into git.
+
+To run all the test,
+```sh
+cd firebase/functions
+npm i
+run test
+```
+
+To run a single test,
+
+```sh
+npm run mocha **/save-token*
+npm run mocha **/save-token.test.ts
+```
 
 
 

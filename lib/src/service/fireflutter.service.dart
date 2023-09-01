@@ -1,4 +1,3 @@
-import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class FireFlutterService {
@@ -11,9 +10,7 @@ class FireFlutterService {
 
   void init({
     required BuildContext context,
-    String adminUid = '',
   }) {
     this.context = context;
-    UserService.instance.init(adminUid: adminUid);
   }
 }
