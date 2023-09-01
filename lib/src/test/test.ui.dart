@@ -158,6 +158,11 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
     test(afterFollow.followings.contains(Test.banana.uid), "a follows b");
     test(afterFollow.followings.length == 1, "there must be only 1 followings");
     test(afterFollow.followings.contains(Test.cherry.uid) == false, "apple is not following cherry");
+
+    /// Have 3 followers and create a new post
+    /// Check all of them has my new post
+    /// One unfollow me and check if he has no posts of me.
+    ///
   }
 
   Future testCreateGroupChatRoom() async {
