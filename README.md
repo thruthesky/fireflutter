@@ -32,6 +32,7 @@ A free, open source, complete, rapid development package for creating Social app
 - [Chat Feature](#chat-feature)
   - [Welcome message](#welcome-message)
   - [No of new message](#no-of-new-message)
+- [User](#user)
 - [Upload](#upload)
   - [Photo upload](#photo-upload)
   - [Customizing source](#customizing-source)
@@ -402,6 +403,15 @@ To send a welcome chat message to a user who just registered, use `UserService.i
 ## No of new message
 
 We save the no of new messages of each users in RTDB. If we save the no of new messages of all users of the room in the chat room document like `{ noOfNewMessages: { uid-A: 1, uid-B 2, ... }}`, there will be performance issue and it will cost more. The problem is the chat room must be listened as a stream for realtime update. And if a user chats there are other users who read. Everytime a user reads a messgae, the chat room docuemnt will be fetched for every user with no reason. This is jus tan extra cost. So, we put the number of new messages under `/chats/{roomId}/noOfNewMessages/{uid}` in RTDB.
+
+
+# User
+
+`idVerifiedCode` is the code of user's authentication id code. This is used to save user's id code when the user uploaded his id card like passport and the AI (Firebase AI Extension) detect user's information and the verification succeed, the file path is being hsave in `idVerificationCoce`. You may use it on your own purpose.
+
+`complete` is a boolean field to indicate that the user completed updating his profile information.
+
+`verified` is a boolean field to indicate that the user's identification has fully verified by the system. Note that, this is not secured by the rules as of now. Meaning, user can edit it by himself.
 
 
 

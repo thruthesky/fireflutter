@@ -167,26 +167,13 @@ void warningSnackbar(BuildContext context, String message) async {
   );
 }
 
-@Deprecated('Use [toast] instead')
-tapSnackbar({
-  required BuildContext context,
-  required String title,
-  required String message,
-  Widget? icon,
-  int duration = 8,
-}) {
-  return toast(title: title, message: message);
-}
-
 /// Display a snackbar
 ///
 /// When the body of the snackbar is tapped, [onTap] will be called with a callback that will hide the snackbar.
 ///
 /// Call the function parameter passed on the callback to close the snackbar.
 /// ```dart
-/// snackbar( title: 'title',  message: 'message',  onTap: (close) {
-///     close();
-/// });
+/// snackbar( title: 'title',  message: 'message');
 /// ```
 ScaffoldFeatureController toast({
   required String title,
