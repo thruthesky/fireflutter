@@ -304,8 +304,8 @@ function onlyRemoving(arrayField, element) {
   let newSet = request.resource.data[arrayField].toSet();
 
   return
-    element in oldSet == false
-    ||
+    // element in oldSet == false
+    // ||
     (
       oldSet.difference(newSet) == [element].toSet() 
       &&

@@ -71,4 +71,33 @@ describe("Rule tests", () => {
       docRef.update({ users: firebase.firestore.FieldValue.arrayUnion("b") })
     );
   });
+
+  it("add an element that is already exist in the array - success", async () => {
+    // Set doc by admin
+    const ref = await admin()
+      .collection("rule-test-onlyAdding")
+      .add({ users: ["b"] });
+
+    await firebase.assertSucceeds(
+      db(a)
+        .collection("rule-test-onlyAdding")
+        .doc(ref.id)
+        .update({ users: firebase.firestore.FieldValue.arrayUnion("b") })
+    );
+  });
+
+  it("remove an element that is not exist in the array - success", async () => {
+    // Set doc by admin
+    const ref = await admin()
+      .collection("rule-test-onlyRemoving")
+      .add({ users: ["a"] });
+
+    // Connect to doc by user
+    const docRef = db(a).collection("rule-test-onlyRemoving").doc(ref.id);
+
+    // Update other field(s)
+    await firebase.assertFails(
+      docRef.update({ users: firebase.firestore.FieldValue.arrayRemove("b") })
+    );
+  });
 });
