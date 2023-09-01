@@ -42,10 +42,12 @@ service cloud.firestore {
 
 
     match /users/{documentId} {
-      allow read: if request.auth.uid == documentId;
+      allow read: if request.auth.uid == documentId || isAdmin();
       allow create: if request.auth.uid == documentId;
       allow update: if
-        request.auth.uid == documentId
+        isAdmin()
+        ||
+        ( request.auth.uid == documentId && notUpdating(['disabled', 'isAdmin', 'isVerified']) )
         ||
         onlyAdding('followers', request.auth.uid)
         ||
