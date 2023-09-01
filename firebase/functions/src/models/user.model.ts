@@ -67,9 +67,9 @@ export class User {
    * @return boolean
    */
   static async commentNotification(uid: string): Promise<boolean> {
-    const userPath = Ref.userDoc(uid).path;
-    const querySnapshot = await Ref.userSettings
-      .where("userDocumentReference", "==", userPath)
+
+    const querySnapshot = await Ref.userSettings(uid)
+      // .where("userDocumentReference", "==", userPath)
       .where("type", "==", "settings")
       .where(notifyNewComments, "==", true)
       .limit(1)
@@ -187,11 +187,13 @@ export class User {
     } catch (e) {
       console.log(e);
     }
-    try {
-      await Ref.userSettingDoc(uid).delete();
-    } catch (e) {
-      console.log(e);
-    }
+
+    // under users collection
+    // try {
+    //   await Ref.userSettingDoc(uid).delete();
+    // } catch (e) {
+    //   console.log(e);
+    // }
   }
 
   /**
@@ -270,13 +272,14 @@ export class User {
     uid: string,
     data: {
       action?: string;
-      category?: string;
+      categoryId?: string;
       type?: string;
       [key: string]: any;
     }
   ): Promise<admin.firestore.WriteResult> {
-    data["userDocumentReference"] = Ref.userDoc(uid);
-    return Ref.userSettingDoc(uid).set(data, { merge: true });
+    data["uid"] = uid;
+    const settingName = (data.action ? data.action + "." : '') + data.categoryId ?? '';
+    return Ref.userSettingDoc(uid, settingName).set(data, { merge: true });
   }
 
   /**

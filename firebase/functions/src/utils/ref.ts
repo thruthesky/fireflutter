@@ -30,19 +30,20 @@ export class Ref {
     return this.users.doc(uid);
   }
 
-  static get userSettings(): admin.firestore.CollectionReference {
-    return this.db.collection("user_settings");
+  static userSettings(uid: string): admin.firestore.CollectionReference {
+    return this.users.doc(uid).collection("user_settings");
   }
 
   static userSettingDoc(
-    uid: string
+    uid: string,
+    docId: string
   ): admin.firestore.DocumentReference<admin.firestore.DocumentData> {
-    return this.userSettings.doc(uid);
+    return this.userSettings(uid).doc(docId);
   }
 
   static usersSettingsSearch(action: string, categorId: string) {
-    return this.userSettings.where("action", "==", action)
-      .where("category", "==", categorId);
+    return this.db.collectionGroup("user_settings").where("action", "==", action)
+      .where("categoryId", "==", categorId);
   }
 
   static get usersPublicDataCol() {

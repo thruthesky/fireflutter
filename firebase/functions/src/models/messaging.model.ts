@@ -24,17 +24,17 @@ export class Messaging {
 
 
   /**
-               * Send push messages
-               *
-               * For forum category subscription,
-               *  'data.action' and 'data.category' has the information.
-               * For topics like
-               *  `allUsers`, `webUsers`, `androidUsers`, `iosUsers`
-               *      will follow on next version.
-               *
-               * @param data information of sending message
-               * @return results
-               */
+   * Send push messages
+   *
+   * For forum category subscription,
+   *  'data.action' and 'data.category' has the information.
+   * For topics like
+   *  `allUsers`, `webUsers`, `androidUsers`, `iosUsers`
+   *      will follow on next version.
+   *
+   * @param data information of sending message
+   * @return results
+   */
   static async sendMessage(data: SendMessage): Promise<{
     success: number;
     error: number;
@@ -55,13 +55,13 @@ export class Messaging {
   }
 
   /**
-               *
-               * @param data
-               *  'action' can be one of 'post-create', 'comment-create',
-               *  'uid' is the uid of the user
-               *  'category' is the category of the post.
-               * @returns
-               */
+   *
+   * @param data
+   *  'action' can be one of 'post-create', 'comment-create',
+   *  'uid' is the uid of the user
+   *  'category' is the category of the post.
+   * @returns
+   */
   static async sendMessageByAction(data: SendMessage) {
     console.log(`sendMessageByAction(${JSON.stringify(data)})`);
 
@@ -84,19 +84,20 @@ export class Messaging {
     }
 
     // Get users who subscribed the subscription
-    const snap = await Ref.db
-      .collection("user_settings")
-      .where("action", "==", data.action)
-      .where("category", "==", data.categoryId)
+    // const snap = await Ref.db
+    //   .collection("user_settings")
+    //   .where("action", "==", data.action)
+    //   .where("category", "==", data.categoryId)
+    //   .get();
+    const snap = await Ref.usersSettingsSearch(data.action, data.categoryId!)
       .get();
-
     console.log("snap.size", snap.size);
 
     // get uids
     if (snap.size != 0) {
       for (const doc of snap.docs) {
         const s = doc.data() as UserSettingsDocument;
-        const uid = s.userDocumentReference.id;
+        const uid = s.uid;
         if (uid != data.senderUid) uids.push(uid);
       }
     }
@@ -132,7 +133,7 @@ export class Messaging {
     tokens: string[],
     data: any
   ): Promise<{ success: number; error: number }> {
-    console.log(`sendMessageToTokens() token.length: ${tokens.length}`);
+    // console.log(`sendMessageToTokens() token.length: ${tokens.length}`);
     if (tokens.length == 0) {
       console.log("sendMessageToTokens() no tokens. so, just return results.");
       return { success: 0, error: 0 };
@@ -146,7 +147,7 @@ export class Messaging {
     // sendMulticast() supports 500 tokens at a time. Chunk and send by batches.
     const chunks = Library.chunk(tokens, 500);
 
-    console.log(`sendMessageToTokens() chunks.length: ${chunks.length}`);
+    // console.log(`sendMessageToTokens() chunks.length: ${chunks.length}`);
 
     const multicastPromise = [];
     // Save [sendMulticast()] into a promise.
@@ -196,7 +197,7 @@ export class Messaging {
 
       // 결과 리턴
       const results = { success: successCount, error: failureCount };
-      console.log(`sendMessageToTokens() results: ${JSON.stringify(results)}`);
+      // console.log(`sendMessageToTokens() results: ${JSON.stringify(results)}`);
       return results;
     } catch (e) {
       console.log(
@@ -290,7 +291,7 @@ export class Messaging {
                * @return an object of payload
                */
   static completePayload(query: SendMessage): MessagePayload {
-    console.log(`completePayload(${JSON.stringify(query)})`);
+    // console.log(`completePayload(${JSON.stringify(query)})`);
 
     if (!query.title) {
       console.log("completePayload() throws error: title-is-empty.)");
@@ -372,7 +373,7 @@ export class Messaging {
       res.apns.payload.aps["badge"] = parseInt(query.badge);
     }
 
-    console.log(`--> completePayload() return value: ${JSON.stringify(res)}`);
+    // console.log(`--> completePayload() return value: ${JSON.stringify(res)}`);
 
     return res;
   }
