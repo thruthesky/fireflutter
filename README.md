@@ -553,12 +553,12 @@ When_Follow-->UpdateFollower[Update Follower]-->UpdateFollowing[Update Following
 
 When_Unfollow-->Remove_Follower-->Remove_Following-->Remove_Feeds
 
-NewFeed-->SaveNewFeedToAllFollower[Where there is a new feed, save all in all follower's feed list.]-->Push_Notification
+NewFeed_From_Follower-->SaveNewFeedToAllFollower[Where there is a new feed, save all in all follower's feed list.]-->Push_Notification-->Messaging
 ```
 
 ```mermaid
 flowchart TD
-Edit_or_Delete_Feed-->Update_RTDB
+Delete_Feed-->Update_RTDB
 ```
 
 
