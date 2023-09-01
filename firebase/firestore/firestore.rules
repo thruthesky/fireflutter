@@ -297,23 +297,23 @@ function notRemoving(field, element) {
 // arrayField is an array
 // [element] is an element to be removed from the arrayField
 //
-// ! Warning - it will fail if it try to remove an element which does not exists in the array.
+// ! Warning - it will return true when it try to remove an element which does not exists in the array.
 function onlyRemoving(arrayField, element) {
 
   let oldSet = (arrayField in resource.data ? resource.data[arrayField] : []).toSet();
   let newSet = request.resource.data[arrayField].toSet();
 
   return
-    // element in oldSet == false
-    // ||
+    (element in oldSet) == false
+    ||
     (
-      oldSet.difference(newSet) == [element].toSet() 
+      oldSet.difference(newSet) == [element].toSet()
       &&
       oldSet.intersection(newSet) == newSet
     )
-
   ;
 }
+
 
 
 // Returns true if the array field in the document is adding only the element.
