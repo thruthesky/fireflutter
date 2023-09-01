@@ -1,7 +1,0 @@
-{
-  "projects": {
-    "default": "withcenter-test-2",
-    "staging": "withcenter-test-2"
-  },
-  "targets": {}
-}
