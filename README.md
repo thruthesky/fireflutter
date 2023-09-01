@@ -16,7 +16,6 @@ A free, open source, complete, rapid development package for creating Social app
   - [Cloud functions](#cloud-functions)
   - [Admin settings](#admin-settings)
   - [Setup the base code](#setup-the-base-code)
-    - [Global key](#global-key)
 - [Usage](#usage)
   - [UserService](#userservice)
   - [ChatService](#chatservice)
@@ -191,18 +190,24 @@ See the [Security rules for admin](#security-rule-for-admin) chapter to set admi
 
 ## Setup the base code
 
+Fireflutter has many features and each feature has a signleton service class. You need to initialize each of the singleton on yor needs.
 
-### Global key
 
 Since, fireflutter uses snackbars, it needs global key (or global build context). Put the global key into the `FireFlutterService.instance.init(context: ...)`.
 
 For instance, if you are using go_route, you can pass the global build context like below.
 
 ```dart
+UserService.instance.init(adminUid: 'xxx');
+
 WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
   FireFlutterService.instance.init(context: router.routerDelegate.navigatorKey.currentContext!);
 }
 ```
+
+
+
+
 
 
 
