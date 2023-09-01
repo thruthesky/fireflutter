@@ -193,7 +193,7 @@ See the [Security rules for admin](#security-rule-for-admin) chapter to set admi
 Fireflutter has many features and each feature has a signleton service class. You need to initialize each of the singleton on yor needs.
 
 
-Since, fireflutter uses snackbars, it needs global key (or global build context). Put the global key into the `FireFlutterService.instance.init(context: ...)`.
+Since, fireflutter uses snackbars, it needs global key (or global build context). Put the global key into the `FireFlutterService.instance.init(context: ...)`. If you are not going to use the global key, you may not need to initialzie it like when you are only doing unit test.
 
 For instance, if you are using go_route, you can pass the global build context like below.
 
@@ -206,6 +206,13 @@ WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
 ```
 
 
+
+By defualt, feed feature is disabled. To use feed features, add the following in app widget.
+
+
+```dart
+FeedService.instance.init(enable: true);
+```
 
 
 

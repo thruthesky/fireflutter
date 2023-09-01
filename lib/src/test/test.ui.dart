@@ -1,4 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,7 @@ class TestUi extends StatefulWidget {
   State<TestUi> createState() => _TestScreenState();
 }
 
-class _TestScreenState extends State<TestUi> {
+class _TestScreenState extends State<TestUi> with FirebaseHelper {
   @override
   void initState() {
     super.initState();
@@ -43,7 +44,9 @@ class _TestScreenState extends State<TestUi> {
     Test.users[2].uid = 'i2l14MKy12bNLJk7E4J9JuLvIrj2';
     Test.users[3].uid = 'DiBndQah89TQu7EHUzu2hDH5gC62';
 
-    await testAll();
+    // await User.fromUid(Test.banana.uid).update(field: 'uid', value: Test.banana.uid);
+
+    // await testAll();
   }
 
   @override
@@ -115,43 +118,64 @@ class _TestScreenState extends State<TestUi> {
           child: const Text('TEST - Rename Chat Room Name'),
         ),
         ElevatedButton(
-          onPressed: testChatRoomPasswordUpdate,
-          child: const Text('TEST - Update Chat Room Password'),
+          onPressed: () => testSingle(testFeed),
+          child: const Text('TEST - Feed'),
         ),
       ],
     );
   }
 
+  testSingle(func) async {
+    Test.start();
+    await func();
+    Test.report();
+  }
+
   testAll() async {
     Test.start();
+    await testFeed();
     await testCreateGroupChatRoom();
     // await testNoOfNewMessageBadge();
-    await testMaximumNoOfUsers();
     await testCreateSingleChatRoom();
+    await testMaximumNoOfUsers();
     await testInviteUserIntoSingleChat();
     await testInviteUserIntoGroupChat();
     await testChangeDefaultChatRoomName();
     await testRenameChatRoomOwnSide();
-    await testChatRoomPasswordUpdate();
     Test.report();
   }
 
-  testCreateGroupChatRoom() async {
+  testFeed() async {
+    await Test.login(Test.apple);
+    User me = await User.get() as User;
+    await me.update(followers: FieldValue.delete(), followings: FieldValue.delete());
+    if (me.followings.contains(Test.banana.uid)) {
+      await User.fromUid(Test.banana.uid).update(followers: FieldValue.arrayRemove([Test.apple.uid]));
+    }
+    me = await User.get() as User;
+    test(await me.follow(Test.banana.uid) == true, "a follows b");
+    final User afterFollow = (await User.get())!;
+    test(afterFollow.followings.contains(Test.banana.uid), "a follows b");
+    test(afterFollow.followings.length == 1, "there must be only 1 followings");
+    test(afterFollow.followings.contains(Test.cherry.uid) == false, "apple is not following cherry");
+  }
+
+  Future testCreateGroupChatRoom() async {
     await Test.login(Test.apple);
     final groupRoom = await Room.create(name: 'Group Room 1');
-    test(groupRoom.name == 'Group Room 1', 'Must be Group Room 1');
-    test(groupRoom.group == true, 'Must be a group chat room');
-    test(groupRoom.open == false, 'Must be a private group chat room');
-    test(groupRoom.master == Test.apple.uid, 'Must be apple');
-    test(groupRoom.moderators.isEmpty, 'Must have no moderators');
-    test(groupRoom.users.length == 1, 'Must have only one user');
-    test(groupRoom.users.first == Test.apple.uid, 'Must have only one user');
-    test(groupRoom.maximumNoOfUsers == 100, 'Must have maximumNoOfUsers 100');
-    test(groupRoom.blockedUsers.isEmpty, 'Must have no blockedUsers');
+    await test(groupRoom.name == 'Group Room 1', 'Must be Group Room 1');
+    await test(groupRoom.group == true, 'Must be a group chat room');
+    await test(groupRoom.open == false, 'Must be a private group chat room');
+    await test(groupRoom.master == Test.apple.uid, 'Must be apple');
+    await test(groupRoom.moderators.isEmpty, 'Must have no moderators');
+    await test(groupRoom.users.length == 1, 'Must have only one user');
+    await test(groupRoom.users.first == Test.apple.uid, 'Must have only one user');
+    await test(groupRoom.maximumNoOfUsers == ChatService.instance.maximumNoOfUsers, 'Must have maximumNoOfUsers 100');
+    await test(groupRoom.blockedUsers.isEmpty, 'Must have no blockedUsers');
     // test(groupRoom.noOfNewMessages.isEmpty, 'Must have no noOfNewMessages');
   }
 
-  testCreateSingleChatRoom() async {
+  Future testCreateSingleChatRoom() async {
     await Test.login(Test.apple);
     final room = await Room.create(name: 'Single Room 2', otherUserUid: Test.banana.uid);
     test(room.name == 'Single Room 2', 'Must be Single Room 2');
@@ -166,13 +190,42 @@ class _TestScreenState extends State<TestUi> {
     // test(room.noOfNewMessages.isEmpty, 'Must have no noOfNewMessages');
   }
 
-  testInviteUserIntoSingleChat() async {
+  Future testMaximumNoOfUsers() async {
+    await FirebaseAuth.instance.signOut();
+
+    // Wait until logout is complete or you may see firestore permission denied error.
+    await Test.wait();
+
+    // Sign in with apple with its password
+    await Test.login(Test.apple);
+
+    // Get the room
+    Room room = await Room.create(name: 'Testing Room');
+
+    // update the setting
+    await ChatService.instance.updateRoomSetting(room: room, setting: 'maximumNoOfUsers', value: 3);
+
+    // add the users
+    await room.invite(Test.banana.uid);
+    await room.invite(Test.cherry.uid);
+
+    // This should not work because the max is 3
+    await Test.assertExceptionCode(room.invite(Test.durian.uid), Code.roomIsFull);
+
+    // Get the room
+    final roomAfter = await ChatService.instance.getRoom(room.id);
+
+    test(roomAfter.users.length == 3,
+        "maximumNoOfUsers must be limited to 3. Actual value: ${roomAfter.users.length}. Expected: ${roomAfter.maximumNoOfUsers}");
+  }
+
+  Future testInviteUserIntoSingleChat() async {
     await Test.login(Test.apple);
     final room = await Room.create(name: 'Single Room 2', otherUserUid: Test.banana.uid);
     await Test.assertExceptionCode(room.invite(Test.cherry.uid), Code.singleChatRoomCannotInvite);
   }
 
-  testInviteUserIntoGroupChat() async {
+  Future testInviteUserIntoGroupChat() async {
     await Test.login(Test.apple);
     final room = await Room.create(name: 'Single Room 2', maximumNoOfUsers: 3);
     await Test.assertFuture(room.invite(Test.banana.uid));
@@ -218,36 +271,7 @@ class _TestScreenState extends State<TestUi> {
   //       "noOfNewMessages of Banana must be 2. Actual value: ${roomAfter.noOfNewMessages[Test.banana.uid]}");
   // }
 
-  testMaximumNoOfUsers() async {
-    await FirebaseAuth.instance.signOut();
-
-    // Wait until logout is complete or you may see firestore permission denied error.
-    await Test.wait();
-
-    // Sign in with apple with its password
-    await Test.login(Test.apple);
-
-    // Get the room
-    Room room = await Room.create(name: 'Testing Room');
-
-    // update the setting
-    await ChatService.instance.updateRoomSetting(room: room, setting: 'maximumNoOfUsers', value: 3);
-
-    // add the users
-    await room.invite(Test.banana.uid);
-    await room.invite(Test.cherry.uid);
-
-    // This should not work because the max is 3
-    await Test.assertExceptionCode(room.invite(Test.durian.uid), Code.roomIsFull);
-
-    // Get the room
-    final roomAfter = await ChatService.instance.getRoom(room.id);
-
-    test(roomAfter.users.length == 3,
-        "maximumNoOfUsers must be limited to 3. Actual value: ${roomAfter.users.length}. Expected: ${roomAfter.maximumNoOfUsers}");
-  }
-
-  testChangeDefaultChatRoomName() async {
+  Future testChangeDefaultChatRoomName() async {
     await FirebaseAuth.instance.signOut();
 
     // Wait until logout is complete or you may see firestore permission denied error.
@@ -275,7 +299,7 @@ class _TestScreenState extends State<TestUi> {
     test(roomAfter.name == newName, "The room must have the new name \"$newName\". Actual value: ${roomAfter.name}");
   }
 
-  testRenameChatRoomOwnSide() async {
+  Future testRenameChatRoomOwnSide() async {
     await FirebaseAuth.instance.signOut();
 
     // Wait until logout is complete or you may see firestore permission denied error.
@@ -312,96 +336,5 @@ class _TestScreenState extends State<TestUi> {
     // Test if it clears the value. It must delete the value.
     test(roomAfter.rename[UserService.instance.uid] == null,
         "The room must not have a rename. Actual Value: ${roomAfter.rename[UserService.instance.uid]}. Expected: Null");
-  }
-
-  /// PASSWORD MUST NOT BE READABLE.
-  ///
-  /// It must be protected by the security rule.
-  testChatRoomPasswordUpdate() async {
-    // await FirebaseAuth.instance.signOut();
-
-    // // Wait until logout is complete or you may see firestore permission denied error.
-    // await Test.wait();
-
-    // // Sign in with apple with its password
-    // await Test.login(Test.apple);
-
-    // // Get the room
-    // Room room = await Room.create(name: 'Testing Room');
-
-    // // There must be no password upon creating the room
-    // test(room.password == null,
-    //     "The room must not have a password upon creation. Actual Value: ${room.password}. Expected: null");
-
-    // // add the users
-    // await room.invite(Test.banana.uid);
-    // await room.invite(Test.cherry.uid);
-
-    // // Master Apple updates the chat room password.
-    // const String password = 'sample';
-    // await ChatService.instance.updateRoomSetting(room: room, setting: 'password', value: password);
-
-    // // Get the room update
-    // room = await ChatService.instance.getRoom(room.id);
-
-    // // TEST: The chat room password must be updated.
-    // test(room.password == password,
-    //     "The chat room password can be updated by Master. Actual Value: ${room.password}. Expected: $password");
-
-    // // Master Apple set Banana as Moderator
-    // await ChatService.instance.setUserAsModerator(room: room, uid: Test.banana.uid);
-
-    // // Sign out Master Apple, Sign in with Moderator Banana with its password
-    // await FirebaseAuth.instance.signOut();
-    // await Test.wait(); // Wait until logout is complete or you may see firestore permission denied error.
-    // await Test.login(Test.banana);
-
-    // // Moderator Banana updates the password
-    // const String bananaPassword = 'bananapass';
-    // await ChatService.instance.updateRoomSetting(room: room, setting: 'password', value: bananaPassword);
-
-    // // Get the room update
-    // room = await ChatService.instance.getRoom(room.id);
-
-    // // TEST: The chat room password must be updated.
-    // test(room.password == bananaPassword,
-    //     "The chat room password can be updated by Moderator. Actual Value: ${room.password}. Expected: $bananaPassword");
-
-    // // Sign out Moderator Banana, Sign in with Cherry with its password
-    // await FirebaseAuth.instance.signOut();
-    // await Test.wait(); // Wait until logout is complete or you may see firestore permission denied error.
-    // await Test.login(Test.cherry);
-
-    // const String cherryPassword = 'cherry';
-
-    //
-    // const permissionDeniedError =
-    //     '[cloud_firestore/permission-denied] The caller does not have permission to execute the specified operation.';
-
-    // // This should not work because the member is non admin
-    // await Test.assertExceptionCode(
-    //     ChatService.instance.updateRoomSetting(room: room, setting: 'password', value: cherryPassword),
-    //     permissionDeniedError);
-
-    // // Get the room update
-    // room = await ChatService.instance.getRoom(room.id);
-
-    // // TEST: The chat room password should not be updated.
-    // test(room.password != cherryPassword,
-    //     "The chat room password should not be updated by non-admin member. Actual Value: ${room.password}. Expected: $bananaPassword");
-
-    // // Sign out Cherry, Sign in with Master Apple with its password
-    // await FirebaseAuth.instance.signOut();
-    // await Test.wait(); // Wait until logout is complete or you may see firestore permission denied error.
-    // await Test.login(Test.apple);
-
-    // // Master Apple clears the password
-    // await ChatService.instance.updateRoomSetting(room: room, setting: 'password', value: '');
-
-    // // Get the room update
-    // room = await ChatService.instance.getRoom(room.id);
-
-    // // TEST: The updated password must be null.
-    // test(room.password == null, "The password can be cleared. Actual Value: ${room.password}. Expected: null");
   }
 }

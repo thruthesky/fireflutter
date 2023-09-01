@@ -261,8 +261,6 @@ class ChatService with FirebaseHelper {
     };
     final ref = await messageCol(room.id).add(chatMessage);
 
-    updateNoOfNewMessages(room: room, lastMessage: chatMessage);
-
     /// Update url preview
     final model = UrlPreviewModel();
     await model.load(text ?? '');
@@ -276,6 +274,9 @@ class ChatService with FirebaseHelper {
       };
       await ref.update(data);
     }
+
+    /// * This must be called with "await". Or unit tests may fail.
+    await updateNoOfNewMessages(room: room, lastMessage: chatMessage);
   }
 
   /// Send a welcome message to himeself

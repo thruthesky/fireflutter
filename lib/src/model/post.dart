@@ -83,7 +83,7 @@ class Post with FirebaseHelper {
     );
     final post = Post.fromMap(map: postData, id: postId);
     // TODO check if correct
-    FeedService.instance.updateFeeds(followers: my.followers, post: post);
+    FeedService.instance.create(post: post);
     return post;
   }
 

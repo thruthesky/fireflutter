@@ -5,11 +5,20 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "FireFlutter Example - Simulator (J)",
+      "name": "FireFlutter Example App - Simulator (J)",
       "request": "launch",
       "type": "dart",
       "cwd": "apps/example",
       "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "iPhone 14 Pro Max"
+    },
+    {
+      "name": "FireFlutter Test App - Simulator (J)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/example",
+      "program": "lib/test.dart",
       "flutterMode": "debug",
       "deviceId": "iPhone 14 Pro Max"
     },
