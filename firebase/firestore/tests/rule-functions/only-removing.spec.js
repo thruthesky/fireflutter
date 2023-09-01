@@ -133,7 +133,7 @@ describe("Only removing tests", () => {
     );
   });
 
-  it("remove an element that is not exist in the array - success", async () => {
+  it("remove an element that is not exist in the array - fail", async () => {
     // Set doc by admin
     const ref = await admin()
       .collection("rule-test-onlyRemoving")
@@ -145,7 +145,7 @@ describe("Only removing tests", () => {
     console.log((await docRef.get()).data());
 
     // Update other field(s)
-    await firebase.assertSucceeds(
+    await firebase.assertFails(
       docRef.update({ users: firebase.firestore.FieldValue.arrayRemove("b") })
     );
   });

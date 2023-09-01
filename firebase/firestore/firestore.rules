@@ -49,7 +49,7 @@ service cloud.firestore {
         ||
         onlyAdding('followers', request.auth.uid)
         ||
-        onlyRemoving('followers', request.auth.uid)
+        debug(onlyRemoving('followers', request.auth.uid))
         ;
       allow delete: if false;
       match /fcm_tokens/{docId} {
@@ -277,51 +277,14 @@ function onlyUpdating(fields) {
   return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
 }
 
-// 입력된 fields 중 하나라도 업데이트 되면 false. 즉, 업데이트 안되어야 성공.
-// 예) 기존: {a: 1, b: 2, c: 3}, 업데이트: {a: 10, b: 20} 인 경우, a 와 b 필드가 업데이트된다.
-// 이 때, 입력 필드 fields 가 ['a', 'c'] 인 경우,
-// a 와 c 필드가 업데이트 되지 않기를 원하는데, 실제로는 b 가 업데이트 되었다. 그래서, false 리턴
-function notUpdating(fields) {
-  return !request.resource.data.diff(resource.data).affectedKeys().hasAny(fields);
-}
-
-// Return true if the array field in the document is not removing the element.
-//
-// Usage: notRemoving('users', resource.data.master) - for blocking moderator to remove master.
-function notRemoving(field, element) {
-  return request.resource.data[field].hasAny([element]);
-}
-
-// Return true if the array field in the document is removing only the the element. It must maintain other elements.
-//
-// arrayField is an array
-// [element] is an element to be removed from the arrayField
-//
-// ! Warning - it will return true when it try to remove an element which does not exists in the array.
-function onlyRemoving(arrayField, element) {
-
-  let oldSet = (arrayField in resource.data ? resource.data[arrayField] : []).toSet();
-  let newSet = request.resource.data[arrayField].toSet();
-
-  return
-    (element in oldSet) == false
-    ||
-    (
-      oldSet.difference(newSet) == [element].toSet()
-      &&
-      oldSet.intersection(newSet) == newSet
-    )
-  ;
-}
-
-
 
 // Returns true if the array field in the document is adding only the element.
 // It must not replace any other element.
 //
 // ! Warning - it must not update(delete) any other field in the document
 //
-// ! Waring - it will fail if it try to add an element which exists already in the array.
+// ! Waring - it must add the element, or it must fail.
+// * It will make a problem if it returns true when it try to add an element that is already in the array.
 function onlyAdding(arrayField, element) {
   
   let oldSet = (arrayField in resource.data ? resource.data[arrayField] : []).toSet();
@@ -341,6 +304,48 @@ function onlyAdding(arrayField, element) {
     )
   ;
 }
+
+
+// Return true if the array field in the document is removing only the the element. It must maintain other elements.
+//
+// arrayField is an array
+// [element] is an element to be removed from the arrayField
+//
+// ! Warning - it must remove the element or it must fail.
+// * It will make a problem if it returns true when it try to remove an element that is not in the array.
+function onlyRemoving(arrayField, element) {
+
+  let oldSet = (arrayField in resource.data ? resource.data[arrayField] : []).toSet();
+  let newSet = request.resource.data[arrayField].toSet();
+
+  return
+      onlyUpdating([arrayField])
+      &&
+      oldSet.difference(newSet) == [element].toSet()
+      &&
+      oldSet.intersection(newSet) == newSet
+    
+  ;
+}
+
+
+
+// 입력된 fields 중 하나라도 업데이트 되면 false. 즉, 업데이트 안되어야 성공.
+// 예) 기존: {a: 1, b: 2, c: 3}, 업데이트: {a: 10, b: 20} 인 경우, a 와 b 필드가 업데이트된다.
+// 이 때, 입력 필드 fields 가 ['a', 'c'] 인 경우,
+// a 와 c 필드가 업데이트 되지 않기를 원하는데, 실제로는 b 가 업데이트 되었다. 그래서, false 리턴
+function notUpdating(fields) {
+  return !request.resource.data.diff(resource.data).affectedKeys().hasAny(fields);
+}
+
+// Return true if the array field in the document is not removing the element.
+//
+// Usage: notRemoving('users', resource.data.master) - for blocking moderator to remove master.
+function notRemoving(field, element) {
+  return request.resource.data[field].hasAny([element]);
+}
+
+
 
 
 

@@ -43,21 +43,35 @@ describe("User Follow/Unfollow Test (follow-unfollow.spec.js)", async () => {
     );
   });
 
-  it("User A asigned C as follower by B - failure", async () => {
+  it("User A asigned C as following B - failure", async () => {
     // Prepare user records
     await createUser(a);
     await createUser(b);
     await createUser(c);
+    const ref = db(a).collection(usersColName).doc(b.uid);
+
+    // console.log(
+    //   "-------> before update; ",
+    //   (await admin().collection(usersColName).doc(b.uid).get()).data()
+    // );
+
+    // await ref.update({
+    //   followers: firebase.firestore.FieldValue.arrayUnion(c.uid),
+    // });
+
+    // console.log(
+    //   "-------> after update; ",
+    //   (await admin().collection(usersColName).doc(b.uid).get()).data()
+    // );
+
     // A assigned C to follow B
     await firebase.assertFails(
-      db(a)
-        .collection(usersColName)
-        .doc(b.uid)
-        .update({
-          followers: firebase.firestore.FieldValue.arrayUnion(c.uid),
-        })
+      ref.update({
+        followers: firebase.firestore.FieldValue.arrayUnion(c.uid),
+      })
     );
   });
+
   it("User A unfollow B - successful", async () => {
     // Prepare user records
     await createUser(a);
