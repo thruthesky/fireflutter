@@ -192,10 +192,10 @@ async function createPost(options = {}) {
 }
 
 // Add create or update to user collection
-async function editUser(user) {
+async function createUser(user) {
   await db(user).collection(usersColName).doc(user.uid).set({
     uid: user.uid,
-    email: user.email
+    email: user.email,
   });
 }
 
@@ -220,4 +220,4 @@ exports.unblock = unblock;
 exports.setAsModerator = setAsModerator;
 exports.createCategory = createCategory;
 exports.createPost = createPost;
-exports.editUser = editUser;
+exports.createUser = createUser;

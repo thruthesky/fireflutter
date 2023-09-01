@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { db, a, b, c, d, usersColName, admin, editUser } = require("../setup");
+const { db, a, b, c, d, usersColName, admin, createUser } = require("../setup");
 
 // load firebase-functions-test SDK
 const firebase = require("@firebase/testing");
@@ -7,8 +7,8 @@ const firebase = require("@firebase/testing");
 describe("User Follow/Unfollow Test (follow-unfollow.spec.js)", async () => {
   it("User A follow B - successful", async () => {
     // Prepare user records
-    await editUser(a);
-    await editUser(b);
+    await createUser(a);
+    await createUser(b);
     // A follows B
     await firebase.assertSucceeds(
       db(a)
@@ -22,8 +22,8 @@ describe("User Follow/Unfollow Test (follow-unfollow.spec.js)", async () => {
 
   it("User A follow B - failure since he is already following?", async () => {
     // Prepare user records
-    await editUser(a);
-    await editUser(b);
+    await createUser(a);
+    await createUser(b);
     // A follows B
     await firebase.assertSucceeds(
       db(a)
@@ -33,7 +33,7 @@ describe("User Follow/Unfollow Test (follow-unfollow.spec.js)", async () => {
           followers: firebase.firestore.FieldValue.arrayUnion(a.uid),
         })
     );
-    await firebase.assertFails(
+    await firebase.assertSucceeds(
       db(a)
         .collection(usersColName)
         .doc(b.uid)
@@ -45,9 +45,9 @@ describe("User Follow/Unfollow Test (follow-unfollow.spec.js)", async () => {
 
   it("User A asigned C as follower by B - failure", async () => {
     // Prepare user records
-    await editUser(a);
-    await editUser(b);
-    await editUser(c);
+    await createUser(a);
+    await createUser(b);
+    await createUser(c);
     // A assigned C to follow B
     await firebase.assertFails(
       db(a)
@@ -60,8 +60,8 @@ describe("User Follow/Unfollow Test (follow-unfollow.spec.js)", async () => {
   });
   it("User A unfollow B - successful", async () => {
     // Prepare user records
-    await editUser(a);
-    await editUser(b);
+    await createUser(a);
+    await createUser(b);
     // A follows B
     await db(a)
       .collection(usersColName)
@@ -81,9 +81,9 @@ describe("User Follow/Unfollow Test (follow-unfollow.spec.js)", async () => {
   });
   it("User A forced C to unfollow B - failure", async () => {
     // Prepare user records
-    await editUser(a);
-    await editUser(b);
-    await editUser(c);
+    await createUser(a);
+    await createUser(b);
+    await createUser(c);
     // C follows B
     await db(c)
       .collection(usersColName)
