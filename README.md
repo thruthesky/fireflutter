@@ -48,6 +48,7 @@ A free, open source, complete, rapid development package for creating Social app
   - [Testing on Local Emulators and Firebase](#testing-on-local-emulators-and-firebase)
   - [Testing security rules](#testing-security-rules)
   - [Testing on real Firebase](#testing-on-real-firebase)
+  - [Testing on Cloud Functions](#testing-on-cloud-functions)
 - [Developer](#developer)
   - [Development Tips](#development-tips)
 - [Contribution](#contribution)
@@ -666,6 +667,16 @@ npm run mocha tests/posts/likes.spec.js
   - `npm run mocha -- tests/update_custom_claims/get_set.spec.ts`
   - `npm run mocha -- tests/update_custom_claims/update.spec.ts`
 
+
+## Testing on Cloud Functions
+
+All of the cloud functions are tested directly on remote firebase (not in emulator). So, you need to save the account service in `firebase/service-account.json`. The service account file is listed in .gitignore. So, It won't be added into git.
+
+To run the test,
+```sh
+cd firebase/functions
+run test
+```
 
 
 
