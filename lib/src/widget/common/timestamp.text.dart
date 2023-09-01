@@ -14,7 +14,6 @@ class TimestampText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FeedService.instance.getAllByMinusDate();
     if (builder != null) return builder!(timestamp);
     return Text(
       _toAgoDate(timestamp),
