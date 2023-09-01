@@ -2,12 +2,13 @@
   "name": "functions",
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
+    "lint:fix": "eslint --fix --ext .js,.ts .",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "npm run lint -- --fix && firebase deploy --only functions:uppercase",
+    "deploy": "npm run lint -- --fix && firebase deploy --only functions:uppercase,functions:messagingOnPostCreate,functions:messagingOnCommentCreate",
     "logs": "firebase functions:log"
   },
   "engines": {
