@@ -1,9 +1,12 @@
 import * as admin from "firebase-admin";
-import {DocumentReference} from "firebase-admin/firestore";
-import {UserRecord} from "firebase-functions/v1/auth";
-import {PostDocument} from "../interfaces/forum.interface";
-import {UserDocument} from "../interfaces/user.interface";
-import {Ref} from "../utils/ref";
+import { DocumentReference } from "firebase-admin/firestore";
+import { UserRecord } from "firebase-functions/v1/auth";
+import { PostDocument } from "../interfaces/forum.interface";
+import { UserDocument } from "../interfaces/user.interface";
+import { Ref } from "../utils/ref";
+import { Messaging } from "./messaging.model";
+import { FcmToken } from "../interfaces/messaging.interface";
+
 
 /**
  * user_settings field name that will holds the boolean value
@@ -25,18 +28,22 @@ export class User {
   }
 
   /**
-   * Create the profile document.
+   * Create the user documment under /users collection
+   * 
+   * 
    * @param uid uid of the user
    * @param data data to update as the user profile
+   * 
+   * @return UserDocument - it does not return null.
    *
    */
-  static async create(uid: string, data: any): Promise<UserDocument | null> {
+  static async create(uid: string, data: any): Promise<UserDocument> {
     data.created_time = admin.firestore.FieldValue.serverTimestamp();
     const user = await this.get(uid);
     if (user) throw Error("user-exists");
     data["uid"] = uid;
     await Ref.userDoc(uid).set(data);
-    return this.get(uid);
+    return this.get(uid) as Promise<UserDocument>;
   }
 
   static async get(uid: string): Promise<UserDocument | null> {
@@ -144,18 +151,18 @@ export class User {
     otherUid: string
   ): Promise<UserRecord> {
     this.checkAdmin(adminUid);
-    const user = await Ref.auth.updateUser(otherUid, {disabled: true});
+    const user = await Ref.auth.updateUser(otherUid, { disabled: true });
     if (user.disabled == true) {
-      await Ref.userDoc(otherUid).set({disabled: true}, {merge: true});
+      await Ref.userDoc(otherUid).set({ disabled: true }, { merge: true });
     }
     return user;
   }
 
   static async enableUser(adminUid: string, otherUid: string) {
     this.checkAdmin(adminUid);
-    const user = await Ref.auth.updateUser(otherUid, {disabled: false});
+    const user = await Ref.auth.updateUser(otherUid, { disabled: false });
     if (user.disabled == false) {
-      await Ref.userDoc(otherUid).set({disabled: false}, {merge: true});
+      await Ref.userDoc(otherUid).set({ disabled: false }, { merge: true });
     }
     return user;
   }
@@ -215,7 +222,7 @@ export class User {
         hasPhoto: hasPhoto,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       },
-      {merge: true}
+      { merge: true }
     );
   }
 
@@ -240,12 +247,23 @@ export class User {
     });
   }
 
-  static async setToken(data: {
-    fcm_token: string;
-    device_type: string;
-    uid: string;
-  }): Promise<admin.firestore.WriteResult> {
-    return Ref.tokenDoc(data.uid, data.fcm_token).set(data);
+
+  /**
+   * 
+   * @param data user
+   * @returns 
+   */
+  static async SetFcmToken(data: FcmToken): Promise<admin.firestore.WriteResult> {
+    return await Messaging.saveToken(data);
+  }
+
+  /**
+   * 
+   * @param data user
+   * @returns 
+   */
+  static async GetFcmToken(data: Partial<FcmToken>): Promise<FcmToken> {
+    return await Messaging.getToken(data as FcmToken);
   }
 
   static async setUserSettingsSubscription(
@@ -258,7 +276,7 @@ export class User {
     }
   ): Promise<admin.firestore.WriteResult> {
     data["userDocumentReference"] = Ref.userDoc(uid);
-    return Ref.userSettingDoc(uid).set(data, {merge: true});
+    return Ref.userSettingDoc(uid).set(data, { merge: true });
   }
 
   /**
@@ -304,7 +322,7 @@ export class User {
     const recentPosts = [];
     for (const doc of snapshot.docs) {
       const data = doc.data() as PostDocument;
-      recentPosts.push({id: doc.id, timestamp: data.createdAt.seconds});
+      recentPosts.push({ id: doc.id, timestamp: data.createdAt.seconds });
     }
 
     // update the recentPosts field in /users_public_data/{uid} document.

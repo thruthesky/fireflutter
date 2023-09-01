@@ -19,6 +19,12 @@ export class Test {
   // three push tokens. two are real. one is fake.
   static tokens = ["fake-token"];
 
+
+  /**
+   * Get a test uid
+   * 
+   * @returns Returns a test uid
+   */
   static id(): string {
     return new Date().getTime() + "-" + this.testCount++;
   }
@@ -34,7 +40,7 @@ export class Test {
    * @example create a user.
    * test.createTestUser(userA).then((v) => console.log(v));
    */
-  static async createUser(uid?: string, data?: any): Promise<UserDocument | null> {
+  static async createUser(uid?: string, data?: any): Promise<UserDocument> {
     // check if the user of uid exists, then return null
 
     const timestamp = new Date().getTime();

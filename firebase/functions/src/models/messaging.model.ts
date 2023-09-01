@@ -1,6 +1,7 @@
 import * as admin from "firebase-admin";
 import { EventName, EventType } from "../utils/event-name";
 import {
+  FcmToken,
   MessagePayload,
   SendMessage,
   SendMessageToDocument,
@@ -19,6 +20,9 @@ import * as functions from "firebase-functions";
 import { MulticastMessage } from "firebase-admin/lib/messaging/messaging-api";
 
 export class Messaging {
+
+
+
   /**
                * Send push messages
                *
@@ -515,5 +519,29 @@ export class Messaging {
     );
 
     await snapshot.ref.update({ status: "succeeded", num_sent: numSent });
+  }
+
+
+  /**
+   * Save a token under the user's fcm_tokens collection.
+   * 
+   * @param uid uid
+   * @param token token
+   * @param device_type device type
+   * @returns Promise<WriteResult>
+   */
+  static async saveToken(data: FcmToken): Promise<admin.firestore.WriteResult> {
+    return await Ref.tokenDoc(data.uid, data.fcm_token).set(data);
+  }
+  /**
+   * Returns the document document (Not the token as string) under the user's fcm_tokens collection.
+   * 
+   * @param uid uid
+   * @param token token
+   * @param device_type device type
+   * @returns Promise<WriteResult>
+   */
+  static async getToken(data: FcmToken): Promise<FcmToken> {
+    return (await Ref.tokenDoc(data.uid, data.fcm_token).get()).data() as FcmToken;
   }
 }

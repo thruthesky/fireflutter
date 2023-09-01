@@ -16,3 +16,6 @@ export interface ChatRoomDocument {
   users: Array<admin.firestore.DocumentReference>;
   notificationDisabledUsers: Array<admin.firestore.DocumentReference>;
 }
+
+
+

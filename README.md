@@ -672,11 +672,18 @@ npm run mocha tests/posts/likes.spec.js
 
 All of the cloud functions are tested directly on remote firebase (not in emulator). So, you need to save the account service in `firebase/service-account.json`. The service account file is listed in .gitignore. So, It won't be added into git.
 
-To run the test,
+To run all the test,
 ```sh
 cd firebase/functions
 npm i
 run test
+```
+
+To run a single test,
+
+```sh
+npm run mocha **/save-token*
+npm run mocha **/save-token.test.ts
 ```
 
 

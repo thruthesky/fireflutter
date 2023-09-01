@@ -100,3 +100,11 @@ export interface SendMessageResult {
     success: number;
     error: number;
 };
+
+
+export interface FcmToken {
+    fcm_token: string;
+    device_type: 'ios' | 'android' | 'web';
+    uid: string;
+};
+
