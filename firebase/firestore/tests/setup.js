@@ -192,13 +192,49 @@ async function createPost(options = {}) {
 }
 
 // Add create or update to user collection
-async function createUser(user) {
-  await db(user).collection(usersColName).doc(user.uid).set({
-    uid: user.uid,
-    email: user.email,
-  });
+/**
+ * 
+ * @param {*} user 
+ * @param {*} options 
+ * 
+ * example
+ * await createUser(b, {
+      col: "only-adding",
+      data: {
+        uid: b.uid,
+        name: "abc",
+      },
+    });
+ */
+async function createUser(user, options = {}) {
+  await db(user)
+    .collection(options.col ?? usersColName)
+    .doc(user.uid)
+    .set(
+      options.data ?? {
+        uid: user.uid,
+        email: user.email,
+        followers: [],
+        following: [],
+      }
+    );
 }
 
+// create a function named 'randomString' which returns a random string.
+function randomString() {
+  return Math.random().toString(36).substring(7);
+}
+exports.createUserOnlyXxx = async (data = {}) => {
+  const uid = randomString();
+  await db({ uid })
+    .collection("only-xxx")
+    .doc(uid)
+    .set({
+      uid: uid,
+      ...data,
+    });
+  return uid;
+};
 exports.db = db;
 exports.admin = admin;
 exports.tempChatRoomData = tempChatRoomData;
@@ -221,3 +257,4 @@ exports.setAsModerator = setAsModerator;
 exports.createCategory = createCategory;
 exports.createPost = createPost;
 exports.createUser = createUser;
+exports.randomString = randomString;
