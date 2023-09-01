@@ -675,6 +675,7 @@ All of the cloud functions are tested directly on remote firebase (not in emulat
 To run the test,
 ```sh
 cd firebase/functions
+npm i
 run test
 ```
 
