@@ -35,6 +35,7 @@ A free, open source, complete, rapid development package for creating Social app
 - [User](#user)
 - [Upload](#upload)
   - [Photo upload](#photo-upload)
+- [Push notifications](#push-notifications)
   - [Customizing source](#customizing-source)
 - [Following and Follower](#following-and-follower)
   - [Feed listing logic](#feed-listing-logic)
@@ -452,6 +453,39 @@ IconButton(
 It has options like displaying a progressive percentage.
 
 
+# Push notifications
+
+
+```dart
+    // init here
+    MessagingService.instance.init(
+      // while the app is close and notification arrive you can use this to do small work
+      // example are changing the badge count or informing backend.
+      onBackgroundMessage: onTerminatedMessage,
+
+      ///
+      onForegroundMessage: (RemoteMessage message) {
+        onForegroundMessage(message);
+      },
+      onMessageOpenedFromTerminated: (message) {
+        // this will triggered when the notification on tray was tap while the app is closed
+        // if you change screen right after the app is open it display only white screen.
+        WidgetsBinding.instance.addPostFrameCallback((duration) {
+          onTapMessage(message);
+        });
+      },
+      // this will triggered when the notification on tray was tap while the app is open but in background state.
+      onMessageOpenedFromBackground: (message) {
+        onTapMessage(message);
+      },
+      onNotificationPermissionDenied: () {
+        // print('onNotificationPermissionDenied()');
+      },
+      onNotificationPermissionNotDetermined: () {
+        // print('onNotificationPermissionNotDetermined()');
+      },
+    );
+```
 
 ## Customizing source
 

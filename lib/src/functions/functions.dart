@@ -173,13 +173,14 @@ void warningSnackbar(BuildContext context, String message) async {
 ///
 /// Call the function parameter passed on the callback to close the snackbar.
 /// ```dart
-/// snackbar( title: 'title',  message: 'message');
+/// toast( title: 'title',  message: 'message', onTap: (close) => close());
 /// ```
 ScaffoldFeatureController toast({
   required String title,
   required String message,
   Widget? icon,
   int duration = 8,
+  Function(Function)? onTap,
 }) {
   final context = FireFlutterService.instance.context;
   return ScaffoldMessenger.of(context).showSnackBar(
@@ -187,15 +188,29 @@ ScaffoldFeatureController toast({
       duration: Duration(seconds: duration),
       content: Row(
         children: [
-          if (icon != null) ...[icon, const SizedBox(width: 8)],
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(title),
-                Text(message),
-              ],
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                if (onTap == null) return;
+
+                onTap(() {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                });
+              },
+              child: Row(children: [
+                if (icon != null) ...[icon, const SizedBox(width: 8)],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(title),
+                      Text(message),
+                    ],
+                  ),
+                ),
+              ]),
             ),
           ),
           TextButton(
