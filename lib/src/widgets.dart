@@ -43,6 +43,7 @@ export 'widget/category/category_create_dialog.dart';
 export 'widget/category/category_list.dialog.dart';
 
 // Post
+export 'widget/post/feed.list_view.dart';
 export 'widget/post/post.list_view.dart';
 export 'widget/post/post_edit.dialog.dart';
 export 'widget/post/post_view.dialog.dart';
