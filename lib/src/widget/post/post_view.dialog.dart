@@ -21,18 +21,10 @@ class _PostDialogState extends State<PostViewDialog> {
       stream: PostService.instance.snapshot(postId: widget.post.id),
       builder: (context, snapshot) {
         late Post post;
-        // error
-        if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          post = widget.post;
-        }
-        if (snapshot.hasData) {
-          post = Post.fromDocumentSnapshot(snapshot.data!);
-        }
+        if (snapshot.hasError) return Text(snapshot.error.toString());
 
-        // print('post.id: ${post.id}');
+        if (snapshot.connectionState == ConnectionState.waiting) post = widget.post;
+        if (snapshot.hasData) post = Post.fromDocumentSnapshot(snapshot.data!);
 
         return Scaffold(
           appBar: AppBar(

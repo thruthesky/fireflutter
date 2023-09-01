@@ -1,3 +1,4 @@
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -13,6 +14,7 @@ class TimestampText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FeedService.instance.getAllByMinusDate();
     if (builder != null) return builder!(timestamp);
     return Text(
       _toAgoDate(timestamp),

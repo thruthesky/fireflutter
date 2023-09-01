@@ -33,4 +33,13 @@ class FeedService with FirebaseHelper {
 
     return re;
   }
+
+  Future<List<Post>> getAllByMinusDate() async {
+    final feeds = await rtdb.ref('feeds').child(my.uid).orderByChild('createdAt').once();
+    List<Future<Post>> posts = [];
+    for (final feed in feeds.snapshot.children) {
+      posts.add(Post.get((feed.value as Map)['postId']));
+    }
+    return await Future.wait(posts);
+  }
 }
