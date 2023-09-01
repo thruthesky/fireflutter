@@ -81,7 +81,10 @@ class Post with FirebaseHelper {
     Category.fromId(categoryId).update(
       noOfPosts: FieldValue.increment(1),
     );
-    return Post.fromMap(map: postData, id: postId);
+    final post = Post.fromMap(map: postData, id: postId);
+    // TODO check if correct
+    FeedService.instance.create(post: post);
+    return post;
   }
 
   Future<void> update({

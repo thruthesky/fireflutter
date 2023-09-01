@@ -5,8 +5,15 @@ class FeedService with FirebaseHelper {
 
   static FeedService? _instance;
   static FeedService get instance => _instance ??= FeedService._();
-
   FeedService._();
+
+  bool enable = false;
+
+  init({
+    required bool enable,
+  }) {
+    this.enable = enable;
+  }
 
   Future<bool> follow(String otherUid) async {
     final re = await my.follow(otherUid);
@@ -14,7 +21,6 @@ class FeedService with FirebaseHelper {
     if (re) {
       // get last 20 posts and save it under rtdb
       final posts = await PostService.instance.gets(uid: otherUid, limit: 20);
-
       for (final post in posts) {
         rtdb.ref('feeds').child(my.uid).child(post.id).set({
           'uid': post.uid,
@@ -30,16 +36,39 @@ class FeedService with FirebaseHelper {
         }
       });
     }
-
     return re;
   }
 
-  Future<List<Post>> getAllByMinusDate() async {
-    final feeds = await rtdb.ref('feeds').child(my.uid).orderByChild('createdAt').once();
-    List<Future<Post>> posts = [];
-    for (final feed in feeds.snapshot.children) {
-      posts.add(Post.get((feed.value as Map)['postId']));
+  // TODO Will be removed
+  // Future<List<Post>> getAllByMinusDate() async {
+  //   final feeds = await rtdb.ref('feeds').child(my.uid).orderByChild('createdAt').once();
+  //   List<Future<Post>> posts = [];
+  //   for (final feed in feeds.snapshot.children) {
+  //     posts.add(Post.get((feed.value as Map)['postId']));
+  //   }
+  //   return await Future.wait(posts);
+  // }
+
+  /// Adding posts into the feeds of the followers.
+  Future create({required Post post}) async {
+    if (enable == false) return;
+    List<Future> feedUpdates = [];
+    for (String followerUid in my.followers) {
+      feedUpdates.add(rtdb.ref('feeds').child(followerUid).child(post.id).set({
+        'uid': post.uid,
+        'postId': post.id,
+        'createdAt': 0 - post.createdAt.millisecondsSinceEpoch,
+      }));
     }
-    return await Future.wait(posts);
+    await Future.wait(feedUpdates);
+  }
+
+  /// Used for updating RTDB feeds to followers' feed
+  Future delete({required Post post}) async {
+    List<Future> feedDeletes = [];
+    for (String followerUid in my.followers) {
+      feedDeletes.add(rtdb.ref('feeds').child(followerUid).child(post.id).remove());
+    }
+    return await Future.wait(feedDeletes);
   }
 }

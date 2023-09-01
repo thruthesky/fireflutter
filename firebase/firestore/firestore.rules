@@ -304,9 +304,14 @@ function onlyRemoving(arrayField, element) {
   let newSet = request.resource.data[arrayField].toSet();
 
   return
-    oldSet.difference(newSet) == [element].toSet() 
-    &&
-    oldSet.intersection(newSet) == newSet
+    element in oldSet == false
+    ||
+    (
+      oldSet.difference(newSet) == [element].toSet() 
+      &&
+      oldSet.intersection(newSet) == newSet
+    )
+
   ;
 }
 
@@ -323,13 +328,17 @@ function onlyAdding(arrayField, element) {
   let newSet = request.resource.data[arrayField].toSet();
 
   return
-    onlyUpdating([arrayField])
-    &&    
-    // anything else has deleted?
-    oldSet.intersection(newSet) == oldSet
-    &&
-    // only the element has added?
-    newSet.difference(oldSet) == [element].toSet()
+    element in oldSet
+    ||
+    (
+      onlyUpdating([arrayField])
+      &&    
+      // anything else has deleted?
+      oldSet.intersection(newSet) == oldSet
+      &&
+      // only the element has added?
+      newSet.difference(oldSet) == [element].toSet()
+    )
   ;
 }
 

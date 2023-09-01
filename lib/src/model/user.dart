@@ -262,11 +262,13 @@ class User with FirebaseHelper {
   /// Update the user document under /users/{uid} NOT only for the login user
   /// but also other user document as long as the permission allows.
   ///
-  /// Note that, it only updates. It does not return the updated user document.
+  /// To update other user's data, you may use "User.fromUid().update(...)".
+  ///
+  /// Note that, it only updates. It does not return the updated user document,
+  /// Nor it update the object itself.
   ///
   /// It sets with merge true option just incase if the user document may not
-  /// exists. And it uses [UserService.instance.uid] as the user's uid just
-  /// incase if the uid is not provided.
+  /// exists.
   Future<void> update({
     String? name,
     String? firstName,
@@ -294,35 +296,37 @@ class User with FirebaseHelper {
     dynamic value,
     Map<String, dynamic> data = const {},
   }) async {
-    return await userDoc(uid).set(
-      {
-        ...{
-          if (name != null) 'name': name,
-          if (firstName != null) 'firstName': firstName,
-          if (lastName != null) 'lastName': lastName,
-          if (middleName != null) 'middleName': middleName,
-          if (displayName != null) 'displayName': displayName,
-          if (photoUrl != null) 'photoUrl': photoUrl,
-          if (hasPhotoUrl != null) 'hasPhotoUrl': hasPhotoUrl,
-          if (idVerifiedCode != null) 'idVerifiedCode': idVerifiedCode,
-          if (verified != null) 'verified': verified,
-          if (phoneNumber != null) 'phoneNumber': phoneNumber,
-          if (email != null) 'email': email,
-          if (state != null) 'state': state,
-          if (stateImageUrl != null) 'stateImageUrl': stateImageUrl,
-          if (birthYear != null) 'birthYear': birthYear,
-          if (birthMonth != null) 'birthMonth': birthMonth,
-          if (birthDay != null) 'birthDay': birthDay,
-          if (noOfPosts != null) 'noOfPosts': noOfPosts,
-          if (noOfComments != null) 'noOfComments': noOfComments,
-          if (type != null) 'type': type,
-          if (complete != null) 'complete': complete,
-          if (followings != null) 'followings': followings,
-          if (followers != null) 'followers': followers,
-          if (field != null && value != null) field: value,
-        },
-        ...data
+    final docData = {
+      ...{
+        if (name != null) 'name': name,
+        if (firstName != null) 'firstName': firstName,
+        if (lastName != null) 'lastName': lastName,
+        if (middleName != null) 'middleName': middleName,
+        if (displayName != null) 'displayName': displayName,
+        if (photoUrl != null) 'photoUrl': photoUrl,
+        if (hasPhotoUrl != null) 'hasPhotoUrl': hasPhotoUrl,
+        if (idVerifiedCode != null) 'idVerifiedCode': idVerifiedCode,
+        if (verified != null) 'verified': verified,
+        if (phoneNumber != null) 'phoneNumber': phoneNumber,
+        if (email != null) 'email': email,
+        if (state != null) 'state': state,
+        if (stateImageUrl != null) 'stateImageUrl': stateImageUrl,
+        if (birthYear != null) 'birthYear': birthYear,
+        if (birthMonth != null) 'birthMonth': birthMonth,
+        if (birthDay != null) 'birthDay': birthDay,
+        if (noOfPosts != null) 'noOfPosts': noOfPosts,
+        if (noOfComments != null) 'noOfComments': noOfComments,
+        if (type != null) 'type': type,
+        if (complete != null) 'complete': complete,
+        if (followings != null) 'followings': followings,
+        if (followers != null) 'followers': followers,
+        if (field != null && value != null) field: value,
       },
+      ...data
+    };
+
+    return await userDoc(uid).set(
+      docData,
       SetOptions(merge: true),
     );
   }
@@ -344,18 +348,18 @@ class User with FirebaseHelper {
       await update(
         followings: FieldValue.arrayRemove([otherUid]),
       );
-      await userDoc(otherUid).update({
+      await userDoc(otherUid).set({
         'followers': FieldValue.arrayRemove([myUid])
-      });
+      }, SetOptions(merge: true));
 
       return false;
     } else {
       await update(
         followings: FieldValue.arrayUnion([otherUid]),
       );
-      await userDoc(otherUid).update({
+      await userDoc(otherUid).set({
         'followers': FieldValue.arrayUnion([myUid])
-      });
+      }, SetOptions(merge: true));
       return true;
     }
   }

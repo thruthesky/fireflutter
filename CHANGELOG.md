@@ -1,3 +1,8 @@
+## 0.3.6
+
+* Update. Feed feature.
+
+
 ## 0.3.5
 
 * Update. Forum feature.

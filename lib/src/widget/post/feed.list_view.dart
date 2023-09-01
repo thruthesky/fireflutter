@@ -22,6 +22,7 @@ class FeedListView extends StatelessWidget with FirebaseHelper {
                 return ListTile(
                   title: Text(post.title),
                   subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       UserDoc(
                           builder: (user) => Column(
@@ -34,6 +35,9 @@ class FeedListView extends StatelessWidget with FirebaseHelper {
                       Text(post.content),
                     ],
                   ),
+                  onTap: () {
+                    PostService.instance.showPostViewDialog(context, post);
+                  },
                 );
               }
               return const SizedBox.shrink();
