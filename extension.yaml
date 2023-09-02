@@ -158,7 +158,7 @@ params:
     default: yes
 
   - param: CREATE_USER_DOCUMENT
-    label: Create user document on user create
+    label: Create the user document on user account creation
     description: >-
       If set to \"Yes\", the extension will automatically create the
       Firestore user document when the user is created on Firebase
