@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -222,4 +224,15 @@ ScaffoldFeatureController toast({
       ),
     ),
   );
+}
+
+/// randomString that returns a random string of length [length].
+String randomString([length = 12]) {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  final rnd = Random(DateTime.now().millisecondsSinceEpoch);
+  final buf = StringBuffer();
+  for (var x = 0; x < length; x++) {
+    buf.write(chars[rnd.nextInt(chars.length)]);
+  }
+  return buf.toString();
 }

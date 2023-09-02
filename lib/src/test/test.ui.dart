@@ -47,6 +47,7 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
     // await User.fromUid(Test.banana.uid).update(field: 'uid', value: Test.banana.uid);
 
     // await testAll();
+    await testSingle(testUser);
   }
 
   @override
@@ -143,6 +144,29 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
     await testChangeDefaultChatRoomName();
     await testRenameChatRoomOwnSide();
     Test.report();
+  }
+
+  Future testUser() async {
+    // create empty object
+    final user = User(uid: 'uid');
+    test(user.uid == 'uid', 'uid must be uid');
+
+    // create object from json
+    final fromJsonUser = User.fromJson(json: {'uid': 'uid'}, id: 'id');
+    test(fromJsonUser.createdAt.millisecondsSinceEpoch > 0, 'createdAt is: ${fromJsonUser.createdAt}');
+
+    // Create a user
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    print('uid; $uid');
+    await User.doc(uid).delete();
+    await User.create2(User(uid: uid, displayName: 'displayName$uid', email: '$uid@email.com'));
+    final user2 = await User.get(uid) as User;
+    test(user2.uid == uid, 'uid must be $uid');
+    test(user2.displayName == 'displayName$uid', 'displayName must be displayName$uid');
+    test(user2.email == '$uid@email.com', 'email must be $uid@email.com');
+
+    await Future.delayed(const Duration(milliseconds: 10));
+    return;
   }
 
   testFeed() async {

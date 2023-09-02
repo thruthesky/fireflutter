@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +53,7 @@ class AdminUserListView extends StatelessWidget with FirebaseHelper {
 
         return ListTile(
           title: titleBuilder?.call(user) ?? Text(user.uid),
-          subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAtDateTime.toString()),
+          subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
           leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
           trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
           onTap: () async {
