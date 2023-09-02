@@ -28,7 +28,7 @@ class User with FirebaseHelper {
   ///
   /// 이 값은 다양하게 응용해서 활용하면 된다. 예) 신분증 업로드 후, 신분증 경로 URL 을 저장하거나, 파일 이름 또는 기타 코드를 입력하면 된다.
   final String idVerifiedCode;
-  final bool verified;
+  final bool isVerified;
 
   ///
   final String phoneNumber;
@@ -77,7 +77,7 @@ class User with FirebaseHelper {
   ///
   /// 사용자가 회원 정보를 업데이트 할 때, 이 값을 true 또는 false 로 지정한다.
   /// 이 값이 false 이면, 앱에서 회원 정보를 입력하라는 메시지를 표시하거나 기타 동작을 하게 할 수 있다.
-  final bool complete;
+  final bool isComplete;
 
   final List<String> followers;
   final List<String> followings;
@@ -99,7 +99,7 @@ class User with FirebaseHelper {
     this.photoUrl = '',
     this.hasPhotoUrl = false,
     this.idVerifiedCode = '',
-    this.verified = false,
+    this.isVerified = false,
     this.phoneNumber = '',
     this.email = '',
     this.state = '',
@@ -109,7 +109,7 @@ class User with FirebaseHelper {
     this.birthDay = 0,
     this.type = '',
     this.createdAt,
-    this.complete = false,
+    this.isComplete = false,
     this.exists = true,
     this.noOfPosts = 0,
     this.noOfComments = 0,
@@ -159,7 +159,7 @@ class User with FirebaseHelper {
       photoUrl: (map['photoUrl'] ?? '') as String,
       hasPhotoUrl: map['hasPhotoUrl'] ?? false,
       idVerifiedCode: map['idVerifiedCode'] ?? '',
-      verified: map['verified'] ?? false,
+      isVerified: map['isVerified'] ?? false,
       phoneNumber: map['phoneNumber'] ?? '',
       email: map['email'] ?? '',
       state: map['state'] ?? '',
@@ -169,7 +169,7 @@ class User with FirebaseHelper {
       birthDay: map['birthDay'] ?? 0,
       type: map['type'] ?? '',
       createdAt: map['createdAt'],
-      complete: map['complete'] ?? false,
+      isComplete: map['isComplete'] ?? false,
       noOfPosts: map['noOfPosts'] ?? 0,
       noOfComments: map['noOfComments'] ?? 0,
       followers: List<String>.from(map['followers'] ?? []),
@@ -190,7 +190,7 @@ class User with FirebaseHelper {
       'photoUrl': photoUrl,
       'hasPhotoUrl': hasPhotoUrl,
       'idVerifiedCode': idVerifiedCode,
-      'verified': verified,
+      'isVerified': isVerified,
       'phoneNumber': phoneNumber,
       'email': email,
       'state': state,
@@ -202,7 +202,7 @@ class User with FirebaseHelper {
       'noOfComments': noOfComments,
       'type': type,
       'createdAt': createdAt ?? FieldValue.serverTimestamp(),
-      'complete': complete,
+      'isComplete': isComplete,
       'followers': followers,
       'followings': followings,
     };
@@ -210,7 +210,7 @@ class User with FirebaseHelper {
 
   @override
   String toString() =>
-      '''User(uid: $uid, isAdmin: $isAdmin, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, idVerifiedCode: $idVerifiedCode, verified: $verified, phoneNumber: $phoneNumber, email: $email, state: $state, stateImageUrl: $stateImageUrl, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, noOfPosts: $noOfPosts, noOfComments: $noOfComments, type: $type, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, followers: $followers, followings: $followings, cached: $cached)''';
+      '''User(uid: $uid, isAdmin: $isAdmin, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, idVerifiedCode: $idVerifiedCode, isVerified: $isVerified, phoneNumber: $phoneNumber, email: $email, state: $state, stateImageUrl: $stateImageUrl, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, noOfPosts: $noOfPosts, noOfComments: $noOfComments, type: $type, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, isComplete: $isComplete, exists: $exists, followers: $followers, followings: $followings, cached: $cached)''';
 
   /// Get user document
   ///
@@ -278,7 +278,7 @@ class User with FirebaseHelper {
     String? photoUrl,
     bool? hasPhotoUrl,
     String? idVerifiedCode,
-    bool? verified,
+    // bool? isVerified,
     String? phoneNumber,
     String? email,
     String? state,
@@ -289,7 +289,7 @@ class User with FirebaseHelper {
     FieldValue? noOfPosts,
     FieldValue? noOfComments,
     String? type,
-    bool? complete,
+    bool? isComplete,
     FieldValue? followings,
     FieldValue? followers,
     String? field,
@@ -306,7 +306,7 @@ class User with FirebaseHelper {
         if (photoUrl != null) 'photoUrl': photoUrl,
         if (hasPhotoUrl != null) 'hasPhotoUrl': hasPhotoUrl,
         if (idVerifiedCode != null) 'idVerifiedCode': idVerifiedCode,
-        if (verified != null) 'verified': verified,
+        // if (isVerified != null) 'isVerified': isVerified,
         if (phoneNumber != null) 'phoneNumber': phoneNumber,
         if (email != null) 'email': email,
         if (state != null) 'state': state,
@@ -317,7 +317,7 @@ class User with FirebaseHelper {
         if (noOfPosts != null) 'noOfPosts': noOfPosts,
         if (noOfComments != null) 'noOfComments': noOfComments,
         if (type != null) 'type': type,
-        if (complete != null) 'complete': complete,
+        if (isComplete != null) 'isComplete': isComplete,
         if (followings != null) 'followings': followings,
         if (followers != null) 'followers': followers,
         if (field != null && value != null) field: value,
@@ -331,9 +331,9 @@ class User with FirebaseHelper {
     );
   }
 
-  /// If the user has completed the profile, set the complete field to true.
-  Future<void> updateComplete(bool complete) async {
-    return await update(complete: complete, verified: false);
+  /// If the user has completed the profile, set the isComplete field to true.
+  Future<void> updateComplete(bool isComplete) async {
+    return await update(isComplete: isComplete);
   }
 
   /// I am going to follow or unfolow the user of the uid.
