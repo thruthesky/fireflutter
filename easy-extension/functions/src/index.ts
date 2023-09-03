@@ -1,5 +1,5 @@
 
-
+import * as admin from "firebase-admin";
 import { initializeApp } from "firebase-admin/app";
 import { getExtensions } from "firebase-admin/extensions";
 import {
@@ -79,10 +79,12 @@ export const createUserDocument = functions.auth
 
     // @thruthesky - Test needed. Put this code in User model and test.
     // 
-    let data = {};
+    let data: Record<string, any> = {};
     if (Config.userDefaultFields) {
       data = JSON.parse(Config.userDefaultFields);
     }
+    // Add createdAt firestore timestamp
+    data['createdAt'] = admin.firestore.FieldValue.serverTimestamp();
     return UserModel.createDocument(user.uid, { ...UserModel.popuplateUserFields(user), ...data });
   });
 
