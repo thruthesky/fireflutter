@@ -178,7 +178,8 @@ params:
       Input a JSON object to set default fields on your user document creation.
       Example) { "isVerified": false, "createdBy": "easy-extension" }
     type: string
-    default: { "isVerified": false, "createdBy": "easy-extension" }
+    default: >-
+      { "isVerified": false, "createdBy": "easy-extension" }
     required: true
 
   - param: DELETE_USER_DOCUMENT
