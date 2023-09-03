@@ -40,7 +40,7 @@ class Message with FirebaseHelper {
     this.previewTitle,
     this.previewDescription,
     this.previewImageUrl,
-    required this.isUserChanged,
+    this.isUserChanged = true,
   }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   bool get hasUrl => url != null && url != '';

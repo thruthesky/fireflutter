@@ -17,7 +17,7 @@ Message _$MessageFromJson(Map<String, dynamic> json) => Message(
       previewTitle: json['previewTitle'] as String?,
       previewDescription: json['previewDescription'] as String?,
       previewImageUrl: json['previewImageUrl'] as String?,
-      isUserChanged: json['isUserChanged'] as bool,
+      isUserChanged: json['isUserChanged'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$MessageToJson(Message instance) => <String, dynamic>{

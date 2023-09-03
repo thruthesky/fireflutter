@@ -5,36 +5,50 @@ import 'package:flutter/material.dart';
 
 /// Display users who are not inside the room
 ///
-/// [searchText] Use this to search in a list of users
-/// [exemptedUsers] Array of uids who are exempted in search results
+/// [displayName] is to search users by that display name. You may put search
+/// box on the parent widget and when the box is submitted, pass the display
+/// name to this widget to search users by display name.
+///
+///
 ///
 class AdminUserListView extends StatelessWidget with FirebaseHelper {
   const AdminUserListView({
     super.key,
-    this.searchText,
-    this.field = 'displayName',
     this.onTap,
     this.avatarBuilder,
     this.titleBuilder,
     this.subtitleBuilder,
     this.trailingBuilder,
+    this.displayName,
+    this.isCompleted,
+    this.isVerified,
   });
 
-  final String? searchText;
   final Function(User)? onTap;
-  final String field;
   final Widget Function(User?)? avatarBuilder;
   final Widget Function(User?)? titleBuilder;
   final Widget Function(User?)? subtitleBuilder;
   final Widget Function(User?)? trailingBuilder;
+
+  final String? displayName;
+  final bool? isCompleted;
+  final bool? isVerified;
 
   Query get query {
     final db = FirebaseFirestore.instance;
 
     Query query = db.collection(User.collectionName);
 
-    if (searchText != null && searchText != '') {
-      query = query.where(field, isEqualTo: searchText);
+    if (displayName != null) {
+      query = query.where('displayName', isEqualTo: displayName);
+    }
+
+    if (isCompleted != null) {
+      query = query.where('isCompleted', isEqualTo: isCompleted);
+    }
+
+    if (isVerified != null) {
+      query = query.where('isVerified', isEqualTo: isVerified);
     }
 
     // query = query.where('uid', isEqualTo: UserService.instance.uid);
