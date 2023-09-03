@@ -78,6 +78,7 @@ export const createUserDocument = functions.auth
     }
 
     // @thruthesky - Test needed. Put this code in User model and test.
+    // 
     let data = {};
     if (Config.userDefaultFields) {
       data = JSON.parse(Config.userDefaultFields);
