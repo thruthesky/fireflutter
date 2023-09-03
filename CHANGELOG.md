@@ -1,3 +1,30 @@
+## Version 0.1.10
+
+- Add. USER_DEFAULT_FIELDS for setting default fields.
+
+
+## Version 0.1.9
+
+- Add. Backfills on user sync data.
+
+## Version 0.1.8
+
+- Add. sync user data to realtime database.
+
+## Version 0.1.7
+
+- Fix. user sync disabled by default.
+
+
+## Version 0.1.6
+
+- Fix. the user collection for sync.
+
+## Version 0.1.5
+
+- Change. User collection path is now required.
+- Add. User sync has added.
+
 ## Version 0.1.4
 
 Update README document.

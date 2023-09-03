@@ -1,18 +1,12 @@
 
-import * as logger from "firebase-functions/logger";
 
 import { initializeApp } from "firebase-admin/app";
+import { getExtensions } from "firebase-admin/extensions";
 import {
   DocumentSnapshot,
-  // DocumentSnapshot,
-  // QueryDocumentSnapshot,
   WriteResult,
-  // getFirestore,
 } from "firebase-admin/firestore";
-// import {
-//   // FirestoreEvent,
-//   onDocumentCreated,
-// } from "firebase-functions/v2/firestore";
+
 
 import * as functions from "firebase-functions";
 import { CommandModel } from "./models/command.model";
@@ -20,35 +14,56 @@ import { ChangeType, getChangeType } from "./utils";
 import { Config } from "./config";
 import { UserModel } from "./models/user.model";
 import { UserRecord } from "firebase-admin/auth";
-// import { FirestoreEventType } from "./defines";
 
 
 initializeApp();
-// const db = getFirestore();
 
-
-//
+// easy command
 export const easyCommand = functions.firestore.document("easy-commands/{documentId}")
   .onWrite(async (change: functions.Change<DocumentSnapshot>): Promise<WriteResult | undefined | null> => {
     const changeType = getChangeType(change);
+    if (changeType == ChangeType.CREATE) {
+      return CommandModel.execute(change.after);
+    }
+    return null;
+  });
 
-    logger.info('--> onDocumentCreated(easy-commands/{documentId}) onWrite() start with changeType;', changeType);
+// user sync
+export const userSync = functions.firestore.document(Config.userCollectionName + "/{documentId}")
+  .onWrite(async (change: functions.Change<DocumentSnapshot>): Promise<WriteResult | void | null> => {
+    const changeType = getChangeType(change);
+    if (changeType == ChangeType.CREATE || changeType == ChangeType.UPDATE) {
+      return UserModel.sync(change.after);
+    } else if (changeType == ChangeType.DELETE) {
+      return UserModel.deleteSync(change.before.id);
+    }
+    return null;
+  });
 
-    switch (changeType) {
-      case ChangeType.CREATE: {
-        logger.info("--> onDocumentCreated(easy-commands/{documentId}) onWrite() create -> change.after.id;", change.after.id, change.after.data());
-        return CommandModel.execute(change.after);
-      }
-      case ChangeType.DELETE:
-        break;
-      case ChangeType.UPDATE:
-        break;
-      default: {
-        throw new Error(`Invalid change type: ${changeType}`);
-      }
+// user sync backfill
+export const userSyncBackFillingTask = functions.tasks.taskQueue()
+  .onDispatch(async () => {
+
+    const runtime = getExtensions().runtime();
+    if (Config.userSyncFieldsBackfill == false) {
+      await runtime.setProcessingState(
+        "PROCESSING_COMPLETE",
+        "Existing documents were not backfilled because 'Backfill options' was configured to no." +
+        " If you want to backfill existing documents, reconfigure this instance."
+      );
+      return;
     }
 
-    return null;
+    await UserModel.syncBackfill();
+
+    // When processing is complete, report status to the user (see below).
+    //
+    await runtime.setProcessingState(
+      "PROCESSING_COMPLETE",
+      `Successfully re-synced all the documents.`
+    );
+
+    functions.logger.info("Done backfilling to user searchable fields from /users firestore collection");
   });
 
 
@@ -61,10 +76,14 @@ export const createUserDocument = functions.auth
     if (Config.createUserDocument == false) {
       return;
     }
-    /// TODO - 'generatedBy' is now added, check if it's working.
-    return UserModel.createDocument(user.uid, { ...UserModel.popuplateUserFields(user), ...{ generatedBy: 'easy-extension' } });
+    let data = {};
+    if (Config.userDefaultFields) {
+      data = JSON.parse(Config.userDefaultFields);
+    }
+    return UserModel.createDocument(user.uid, { ...UserModel.popuplateUserFields(user), ...data });
   });
 
+// User delete
 export const deleteUserDocument = functions.auth
   .user()
   .onDelete(async (user: UserRecord): Promise<WriteResult | void> => {
