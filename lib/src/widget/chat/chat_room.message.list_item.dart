@@ -141,8 +141,8 @@ class ChatRoomMessageListItem extends StatelessWidget {
       padding: padding,
       child: Text(
         short
-            ? message.createdAt.toDate().toLocal().toString().substring(11, 16)
-            : message.createdAt.toDate().toLocal().toString().substring(0, 16),
+            ? message.createdAt.toLocal().toString().substring(11, 16)
+            : message.createdAt.toLocal().toString().substring(0, 16),
         style: const TextStyle(fontSize: 10, color: Colors.grey),
       ),
     );

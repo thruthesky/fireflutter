@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+/// Convert DateTime from RTDB timestamp or from Firestore timestamp
+///
 class FirebaseDateTimeConverter implements JsonConverter<DateTime, int> {
   const FirebaseDateTimeConverter();
 
@@ -10,10 +12,9 @@ class FirebaseDateTimeConverter implements JsonConverter<DateTime, int> {
       return DateTime.now();
     }
     // The createdAt may be int (from RTDB) or Timestamp (from Fireestore), or null.
-    if (data is int) {
+    else if (data is int) {
       return DateTime.fromMillisecondsSinceEpoch(data);
-    }
-    if (data is Timestamp) {
+    } else if (data is Timestamp) {
       return data.toDate();
     } else {
       return DateTime.now();

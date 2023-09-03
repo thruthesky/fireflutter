@@ -1,4 +1,4 @@
-import 'package:fireflutter/src/model/room.dart';
+import 'package:fireflutter/src/model/chat/room.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomCreate extends StatefulWidget {

@@ -47,8 +47,8 @@ class AdminUserListView extends StatelessWidget with FirebaseHelper {
     return FirestoreListView(
       query: query,
       itemBuilder: (context, snapshot) {
-        print(snapshot.reference.path);
-        print(snapshot.data());
+        // print(snapshot.reference.path);
+        // print(snapshot.data());
         final user = User.fromDocumentSnapshot(snapshot);
 
         return ListTile(

@@ -1,25 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'category.g.dart';
+
+@JsonSerializable()
 class Category with FirebaseHelper {
   static const String collectionName = 'categories';
+  static DocumentReference doc(String categoryId) => CategoryService.instance.categoryCol.doc(categoryId);
   final String id;
+  @JsonKey(defaultValue: '')
   final String name;
   final String? description;
-  final Timestamp createdAt;
-  final Timestamp updatedAt;
-  @override
-  final String uid;
+
+  @FirebaseDateTimeConverter()
+  final DateTime createdAt;
 
   Category({
     required this.id,
     required this.name,
     this.description,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.uid,
-  });
+    dynamic createdAt,
+  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory Category.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     return Category.fromMap(map: documentSnapshot.data() as Map<String, dynamic>, id: documentSnapshot.id);
@@ -33,37 +36,34 @@ class Category with FirebaseHelper {
       id: id,
       name: '',
       description: '',
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
-      uid: '',
+      createdAt: DateTime.now(),
     );
   }
 
+  @Deprecated('Use fromJson instead')
   factory Category.fromMap({required Map<String, dynamic> map, required id}) {
-    return Category(
-      id: id,
-      name: map['name'] ?? '',
-      description: map['description'],
-      createdAt: (map['createdAt'] is Timestamp) ? map['createdAt'] : Timestamp.now(),
-      updatedAt: (map['updatedAt'] is Timestamp) ? map['createdAt'] : Timestamp.now(),
-      uid: map['uid'] ?? '',
-    );
+    map['id'] = id;
+    return Category.fromJson(map);
+    // return Category(
+    //   id: id,
+    //   name: map['name'] ?? '',
+    //   description: map['description'],
+    //   createdAt: (map['createdAt'] is Timestamp) ? map['createdAt'] : Timestamp.now(),
+    //   uid: map['uid'] ?? '',
+    // );
   }
 
+  factory Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json);
+  Map<String, dynamic> toJson() => _$CategoryToJson(this);
+
+  @Deprecated('Use toJson instead')
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
-      'uid': uid,
-    };
+    return toJson();
   }
 
   /// Creates a category and returns the category.
   ///
-  static Future<Category> create({
+  static Future create({
     required String categoryId,
     required String name,
     String? description,
@@ -73,13 +73,9 @@ class Category with FirebaseHelper {
       'name': name,
       if (description != null) 'description': description,
       'createdAt': FieldValue.serverTimestamp(),
-      'updatedAt': FieldValue.serverTimestamp(),
       'uid': myUid,
     };
-    await CategoryService.instance.categoryCol.doc(categoryId).set(categoryData);
-    categoryData['createdAt'] = Timestamp.now();
-    categoryData['updatedAt'] = Timestamp.now();
-    return Category.fromMap(map: categoryData, id: categoryId);
+    return await doc(categoryId).set(categoryData);
   }
 
   /// Updates a category
@@ -103,15 +99,18 @@ class Category with FirebaseHelper {
     await CategoryService.instance.categoryCol.doc(id).update(data);
   }
 
-  static Future<Category?> get(String categoryId) async {
+  /// Get the category or throw an exception if it does not exist.
+  ///
+  static Future<Category> get(String categoryId) async {
     final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(categoryId).get();
-    if (!snapshot.exists) {
-      return null;
-    }
+    if (snapshot.exists == false) throw Exception('Category $categoryId does not exist');
     return Category.fromDocumentSnapshot(snapshot);
   }
 
+  Future delete() async {
+    return await doc(id).delete();
+  }
+
   @override
-  String toString() =>
-      'Category(id: $id, name: $name, description: $description, createdAt: $createdAt, updatedAt: $updatedAt, uid: $uid)';
+  String toString() => 'Category(${toJson()})';
 }

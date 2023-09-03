@@ -17,6 +17,8 @@ import 'package:flutter/material.dart';
 /// [padding] is the padding of the avatar. Default is EdgeInsets.all(0). See
 /// the details on [Avatar]
 ///
+/// * If [uid] and [user] is null, then it will return [defaultIcon].
+///
 class UserAvatar extends StatelessWidget {
   const UserAvatar({
     super.key,
@@ -46,7 +48,7 @@ class UserAvatar extends StatelessWidget {
     // if onTap is null, then, don't capture the gesture event. Just return avatar.
     if (user != null) {
       return _buildAvatar(user!);
-    } else {
+    } else if (uid != null) {
       return FutureBuilder<User?>(
         future: UserService.instance.get(uid!),
         builder: (context, snapshot) {
@@ -57,6 +59,8 @@ class UserAvatar extends StatelessWidget {
           }
         },
       );
+    } else {
+      return buildDefaultIcon();
     }
   }
 

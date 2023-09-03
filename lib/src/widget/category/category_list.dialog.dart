@@ -36,7 +36,7 @@ class CategoryListDialog extends StatelessWidget {
           if (onTapCategory != null) {
             onTapCategory?.call(category);
           } else {
-            PostService.instance.showPostListDialog(context, category);
+            PostService.instance.showPostListDialog(context, category.id);
           }
         },
       ),

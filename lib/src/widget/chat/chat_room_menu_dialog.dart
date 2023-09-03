@@ -105,7 +105,7 @@ class ChatRoomMenuDialog extends StatelessWidget {
                   ),
                 ],
                 Text("${room.users.length} joined"),
-                Text("Created on ${room.createdAt.toDate().toString().split(' ').first}"),
+                Text("Created on ${room.createdAt.toString().split(' ').first}"),
                 const SizedBox(height: 16),
                 const Divider(),
                 const SizedBox(height: 16),

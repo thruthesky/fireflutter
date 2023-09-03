@@ -58,7 +58,7 @@ export 'widget/comment/comment_list_view.dart';
 export 'widget/comment/comment.list_tile.dart';
 
 // Common
-export 'widget/common/timestamp.text.dart';
+export 'widget/common/date_time_text.dart';
 export 'widget/common/linkify_text/linkify_text.dart';
 export 'widget/common/display_media/display_media.dart';
 export 'widget/common/url_preview/url_preview.dart';

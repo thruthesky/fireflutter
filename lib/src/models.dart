@@ -1,6 +1,6 @@
 export 'model/user/user.dart';
-export 'model/room.dart';
-export 'model/category.dart';
-export 'model/message.dart';
-export 'model/post.dart';
-export 'model/comment.dart';
+export 'model/chat/room.dart';
+export 'model/category/category.dart';
+export 'model/chat/message.dart';
+export 'model/post/post.dart';
+export 'model/comment/comment.dart';

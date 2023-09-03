@@ -83,11 +83,8 @@ class User with FirebaseHelper {
 
   /// 사용자 문서가 생성된 시간. 항상 존재 해야 함. Firestore 서버 시간
   @FirebaseDateTimeConverter()
-  @JsonKey(name: 'createdAt', includeFromJson: false, includeToJson: false)
-  final DateTime? internalCreatedAt;
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  late final DateTime createdAt;
+  @JsonKey(includeFromJson: false, includeToJson: true)
+  final DateTime createdAt;
 
   /// Set this to true when the user has completed the profile.
   /// This should be set when the user submit the profile form.
@@ -125,7 +122,7 @@ class User with FirebaseHelper {
     this.birthMonth = 0,
     this.birthDay = 0,
     this.type = '',
-    this.internalCreatedAt,
+    dynamic createdAt,
     this.isComplete = false,
     this.exists = true,
     this.noOfPosts = 0,
@@ -134,7 +131,7 @@ class User with FirebaseHelper {
     this.followings = const [],
     this.data = const {},
     this.cached = false,
-  });
+  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory User.notExists() {
     return User(uid: '', exists: false);
@@ -162,7 +159,6 @@ class User with FirebaseHelper {
   factory User.fromJson({required Map<String, dynamic> json, required String id}) {
     json['uid'] = id;
     final user = _$UserFromJson(json);
-    user.createdAt = user.internalCreatedAt ?? DateTime.now();
     return user;
   }
 
@@ -230,9 +226,9 @@ class User with FirebaseHelper {
     data.remove('exists');
     data.remove('cached');
     data['createdAt'] = FieldValue.serverTimestamp();
-    print(data);
+    // print(data);
 
-    print(User.doc(user.uid).path);
+    // print(User.doc(user.uid).path);
     return await User.doc(user.uid).set(data);
   }
 
@@ -248,6 +244,12 @@ class User with FirebaseHelper {
   ///
   /// It sets with merge true option just incase if the user document may not
   /// exists.
+  ///
+  /// Example
+  /// ```dart
+  /// my.update( noOfPosts: FieldValue.increment(1) ); // when UserService.instance.init() is called
+  /// User.fromUid(FirebaseAuth.instance.currentUser!.uid).update( noOfPosts: FieldValue.increment(1) ); // when UserService.instance.init() is not called
+  /// ```
   Future<void> update({
     String? name,
     String? firstName,

@@ -1,4 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/widget/common/date_time_text.dart';
 
 import 'package:flutter/material.dart';
 
@@ -37,13 +38,15 @@ class CommentTileState extends State<CommentListTile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    UserDisplayName(
-                      uid: widget.comment.uid,
-                      textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                    Expanded(
+                      child: UserDisplayName(
+                        uid: widget.comment.uid,
+                        textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: TimestampText(timestamp: widget.comment.createdAt),
+                      child: DateTimeText(dateTime: widget.comment.createdAt),
                     ),
                   ],
                 ),
