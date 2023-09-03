@@ -11,7 +11,7 @@ Message _$MessageFromJson(Map<String, dynamic> json) => Message(
       text: json['text'] as String?,
       url: json['url'] as String?,
       protocol: json['protocol'] as String?,
-      uid: json['uid'] as String,
+      uid: json['uid'] as String? ?? "",
       createdAt: json['createdAt'],
       previewUrl: json['previewUrl'] as String?,
       previewTitle: json['previewTitle'] as String?,

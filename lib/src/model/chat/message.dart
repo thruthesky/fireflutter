@@ -32,7 +32,7 @@ class Message with FirebaseHelper {
     required this.text,
     required this.url,
     required this.protocol,
-    required this.uid,
+    this.uid = "",
     dynamic createdAt,
     this.previewUrl,
     this.previewTitle,
