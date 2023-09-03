@@ -67,7 +67,7 @@ class CategoryListViewState extends State<CategoryListView> {
               if (widget.onTap != null) {
                 widget.onTap!.call(category);
               } else {
-                PostService.instance.showPostListDialog(context, category);
+                PostService.instance.showPostListDialog(context, category.id);
               }
             },
             subtitle: Column(

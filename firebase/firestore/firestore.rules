@@ -55,7 +55,7 @@ service cloud.firestore {
         ||
         onlyRemoving('followers', request.auth.uid)
         ;
-      allow delete: if false;
+      allow delete: if request.auth.uid == documentId || isAdmin();
       match /fcm_tokens/{docId} {
       	allow read: if true;
         allow write: if (request.auth.uid == documentId);

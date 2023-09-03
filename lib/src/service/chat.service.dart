@@ -81,6 +81,7 @@ class ChatService with FirebaseHelper {
   /// Returns a chat room module with the given chat room id.
   ///
   /// See [Room.get] for details for missing or insufficient permission error.
+  @Deprecated('Use Room.get() instead')
   Future<Room> getRoom(String roomId) async {
     return await Room.get(roomId);
   }

@@ -50,11 +50,11 @@ class _CategoryCreateDialogState extends State<CategoryCreateDialog> {
         ),
         TextButton(
           onPressed: () async {
-            final createdCategory = await CategoryService.instance.create(
+            await Category.create(
               categoryId: categoryId.text,
-              categoryName: name.text,
+              name: name.text,
             );
-            widget.success(createdCategory);
+            widget.success(await Category.get(categoryId.text));
           },
           child: const Text('Create'),
         ),
