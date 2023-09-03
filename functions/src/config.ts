@@ -20,6 +20,9 @@ export class Config {
             syncCustomClaimsToUserDocument: this.syncCustomClaimsToUserDocument,
             createUserDocument: this.createUserDocument,
             deleteUserDocument: this.deleteUserDocument,
+            userSyncFields: this.userSyncFields,
+            userSyncFieldsBackfill: this.userSyncFieldsBackfill,
+            userDefaultFields: this.userDefaultFields,
         };
     }
 };
