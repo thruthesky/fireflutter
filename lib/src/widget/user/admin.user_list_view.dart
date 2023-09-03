@@ -20,7 +20,7 @@ class AdminUserListView extends StatelessWidget with FirebaseHelper {
     this.subtitleBuilder,
     this.trailingBuilder,
     this.displayName,
-    this.isCompleted,
+    this.isComplete,
     this.isVerified,
   });
 
@@ -31,7 +31,7 @@ class AdminUserListView extends StatelessWidget with FirebaseHelper {
   final Widget Function(User?)? trailingBuilder;
 
   final String? displayName;
-  final bool? isCompleted;
+  final bool? isComplete;
   final bool? isVerified;
 
   Query get query {
@@ -43,8 +43,8 @@ class AdminUserListView extends StatelessWidget with FirebaseHelper {
       query = query.where('displayName', isEqualTo: displayName);
     }
 
-    if (isCompleted != null) {
-      query = query.where('isCompleted', isEqualTo: isCompleted);
+    if (isComplete != null) {
+      query = query.where('isComplete', isEqualTo: isComplete);
     }
 
     if (isVerified != null) {
@@ -66,7 +66,7 @@ class AdminUserListView extends StatelessWidget with FirebaseHelper {
         final user = User.fromDocumentSnapshot(snapshot);
 
         return ListTile(
-          title: titleBuilder?.call(user) ?? Text(user.uid),
+          title: titleBuilder?.call(user) ?? Text(user.displayName),
           subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
           leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
           trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
