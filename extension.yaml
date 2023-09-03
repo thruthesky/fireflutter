@@ -176,7 +176,7 @@ params:
     label: Default fields on your user document creation
     description: >-
       Input a JSON object to set default fields on your user document creation.
-      Example) {"createdAt": "2021-01-01", "state": "active"}
+      Example) { "isVerified": false, "createdBy": "easy-extension" }
     type: string
     default: { "isVerified": false, "createdBy": "easy-extension" }
     required: true
