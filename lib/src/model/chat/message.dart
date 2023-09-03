@@ -4,6 +4,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'message.g.dart';
 
+/// Message model
+///
 @JsonSerializable()
 class Message with FirebaseHelper {
   /// [id] is the document id of the message.
