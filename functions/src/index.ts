@@ -40,6 +40,7 @@ export const userSync = functions.firestore.document(Config.userCollectionName +
     return null;
   });
 
+// user sync backfill
 export const userSyncBackFillingTask = functions.tasks.taskQueue()
   .onDispatch(async () => {
 
@@ -75,10 +76,14 @@ export const createUserDocument = functions.auth
     if (Config.createUserDocument == false) {
       return;
     }
-    /// TODO - 'generatedBy' is now added, check if it's working.
-    return UserModel.createDocument(user.uid, { ...UserModel.popuplateUserFields(user), ...{ generatedBy: 'easy-extension' } });
+    let data = {};
+    if (Config.userDefaultFields) {
+      data = JSON.parse(Config.userDefaultFields);
+    }
+    return UserModel.createDocument(user.uid, { ...UserModel.popuplateUserFields(user), ...data });
   });
 
+// User delete
 export const deleteUserDocument = functions.auth
   .user()
   .onDelete(async (user: UserRecord): Promise<WriteResult | void> => {

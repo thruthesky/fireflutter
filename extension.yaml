@@ -4,7 +4,7 @@
 # Identifier for your extension
 # TODO: Replace this with an descriptive name for your extension.
 name: easy-extension
-version: 0.1.9 # Follow semver versioning
+version: 0.1.10 # Follow semver versioning
 specVersion: v1beta # Version of the Firebase Extensions specification
 
 # Friendly display name for your extension (~3-5 words)
@@ -170,6 +170,15 @@ params:
       - label: No
         value: no
     default: yes
+    required: true
+
+  - param: USER_DEFAULT_FIELDS
+    label: Default fields on your user document creation
+    description: >-
+      Input a JSON object to set default fields on your user document creation.
+      Example) {"createdAt": "2021-01-01", "state": "active"}
+    type: string
+    default: { "isVerified": false, "createdBy": "easy-extension" }
     required: true
 
   - param: DELETE_USER_DOCUMENT

@@ -14,6 +14,7 @@
   - [Delete user](#delete-user)
   - [Get user](#get-user)
 - [User management](#user-management)
+  - [User document creation](#user-document-creation)
   - [User Sync](#user-sync)
   - [User Sync Backfill](#user-sync-backfill)
 - [Forum management](#forum-management)
@@ -344,6 +345,12 @@ If user not exists, the status will be error.
 
 # User management
 
+
+## User document creation
+
+When the `Create the user document on user account creation` is set to "yes", the user document will be created under the `User collection path` on registration(account creation).
+
+You can set default fields 
 
 ## User Sync
 

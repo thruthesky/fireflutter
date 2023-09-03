@@ -1,3 +1,8 @@
+## Version 0.1.10
+
+- Add. USER_DEFAULT_FIELDS for setting default fields.
+
+
 ## Version 0.1.9
 
 - Add. Backfills on user sync data.
