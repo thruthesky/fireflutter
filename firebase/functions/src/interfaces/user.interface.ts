@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import { DocumentReference } from "firebase-admin/firestore";
+import {DocumentReference} from "firebase-admin/firestore";
 export interface UserDocument {
   uid: string;
   display_name: string;
