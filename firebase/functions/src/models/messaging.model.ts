@@ -89,6 +89,7 @@ export class Messaging {
     //   .where("action", "==", data.action)
     //   .where("category", "==", data.categoryId)
     //   .get();
+    console.log('action:: ', data.action, "categoryId:: ", data.categoryId)
     const snap = await Ref.usersSettingsSearch(data.action, data.categoryId!)
       .get();
     console.log("snap.size", snap.size);

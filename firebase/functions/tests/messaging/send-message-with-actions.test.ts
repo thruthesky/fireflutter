@@ -39,6 +39,7 @@ describe("Send message by actions", () => {
 
         const user = await Test.createUser();
 
+        // subscribe to given topic
         const settings = await User.setUserSettingsSubscription(user.uid, { action: action, categoryId: categoryId, type: type });
         console.log(settings)
 

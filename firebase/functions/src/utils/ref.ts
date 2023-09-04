@@ -41,9 +41,9 @@ export class Ref {
     return this.userSettings(uid).doc(docId);
   }
 
-  static usersSettingsSearch(action: string, categorId: string) {
+  static usersSettingsSearch(action: string, categoryId: string) {
     return this.db.collectionGroup("user_settings").where("action", "==", action)
-      .where("categoryId", "==", categorId);
+      .where("categoryId", "==", categoryId);
   }
 
   static get usersPublicDataCol() {

@@ -190,7 +190,7 @@ class _PostListPushNotificationIconState extends State<PostListPushNotificationI
     if (subscribe) {
       await UserSettings.doc(topic).update({
         'action': '$selection-create',
-        'category': widget.categoryId,
+        'categoryId': widget.categoryId,
       });
     } else {
       await UserSettings.doc(topic).delete();
