@@ -13,6 +13,10 @@ class Category with FirebaseHelper {
   final String name;
   final String? description;
 
+  /// This holds the original JSON document data of the user document. This is
+  /// useful when you want to save custom data in the user document.
+  late Map<String, dynamic> data;
+
   @FirebaseDateTimeConverter()
   final DateTime createdAt;
 
@@ -45,7 +49,7 @@ class Category with FirebaseHelper {
     return Category.fromJson(map);
   }
 
-  factory Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json);
+  factory Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json)..data = json;
   Map<String, dynamic> toJson() => _$CategoryToJson(this);
 
   @Deprecated('Use toJson instead')
