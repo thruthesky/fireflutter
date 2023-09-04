@@ -1,3 +1,9 @@
+## 0.3.7
+
+* Change. All model is now using json_serializable
+* Update. document.
+
+
 ## 0.3.6
 
 * Update. Feed feature.

@@ -14,6 +14,10 @@ class Post with FirebaseHelper {
   final String title;
   final String content;
 
+  /// This holds the original JSON document data of the user document. This is
+  /// useful when you want to save custom data in the user document.
+  late Map<String, dynamic> data;
+
   @override
   final String uid;
 
@@ -25,6 +29,9 @@ class Post with FirebaseHelper {
   final List<String> likes;
   final bool? deleted;
   final int noOfComments;
+
+  bool get iLiked => likes.contains(my.uid);
+  int get noOfLikes => likes.length;
 
   Post({
     required this.id,
@@ -48,7 +55,7 @@ class Post with FirebaseHelper {
     );
   }
 
-  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
+  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json)..data = json;
   Map<String, dynamic> toJson() => _$PostToJson(this);
 
   static Future<Post> get(String? id) async {
@@ -110,6 +117,24 @@ class Post with FirebaseHelper {
       'updatedAt': FieldValue.serverTimestamp(),
     };
     await PostService.instance.postCol.doc(id).update(postUpdateData);
+  }
+
+  // TODO Test
+  /// Likes or Unlikes the post
+  ///
+  /// If I already liked (iLiked == true)
+  /// it will add my uid to the likes...
+  /// otherwise, it will remove my uid from the likes.
+  Future<void> likeOrUnlike() async {
+    if (iLiked) {
+      await PostService.instance.postCol.doc(id).update({
+        'likes': FieldValue.arrayRemove([my.uid]),
+      });
+    } else {
+      await PostService.instance.postCol.doc(id).update({
+        'likes': FieldValue.arrayUnion([my.uid]),
+      });
+    }
   }
 
   @override

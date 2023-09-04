@@ -158,8 +158,7 @@ class User with FirebaseHelper {
   }
   factory User.fromJson({required Map<String, dynamic> json, required String id}) {
     json['uid'] = id;
-    final user = _$UserFromJson(json);
-    return user;
+    return _$UserFromJson(json)..data = json;
   }
 
   Map<String, dynamic> toMap() {
