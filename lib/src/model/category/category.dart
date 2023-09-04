@@ -10,7 +10,6 @@ class Category with FirebaseHelper {
   static const String collectionName = 'categories';
   static DocumentReference doc(String categoryId) => CategoryService.instance.categoryCol.doc(categoryId);
   final String id;
-  @JsonKey(defaultValue: '')
   final String name;
   final String? description;
 
@@ -19,7 +18,7 @@ class Category with FirebaseHelper {
 
   Category({
     required this.id,
-    required this.name,
+    this.name = '',
     this.description,
     dynamic createdAt,
   }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
@@ -44,13 +43,6 @@ class Category with FirebaseHelper {
   factory Category.fromMap({required Map<String, dynamic> map, required id}) {
     map['id'] = id;
     return Category.fromJson(map);
-    // return Category(
-    //   id: id,
-    //   name: map['name'] ?? '',
-    //   description: map['description'],
-    //   createdAt: (map['createdAt'] is Timestamp) ? map['createdAt'] : Timestamp.now(),
-    //   uid: map['uid'] ?? '',
-    // );
   }
 
   factory Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json);
