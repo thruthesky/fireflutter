@@ -89,19 +89,12 @@ class PostService with FirebaseHelper {
     int limit = 10,
   }) async {
     Query q = postCol;
-    if (uid != null) {
-      q = q.where('uid', isEqualTo: uid);
-    }
-    if (category != null) {
-      q = q.where('category', isEqualTo: category);
-    }
+    if (uid != null) q = q.where('uid', isEqualTo: uid);
+    if (category != null) q = q.where('category', isEqualTo: category);
     q = q.limit(limit);
     q = q.orderBy('createdAt', descending: true);
-
     final querySnapshot = await q.get();
-
     if (querySnapshot.size == 0) return [];
-
     return querySnapshot.docs.map((e) => Post.fromDocumentSnapshot(e)).toList();
   }
 }

@@ -26,6 +26,9 @@ class Post with FirebaseHelper {
   final bool? deleted;
   final int noOfComments;
 
+  bool get iLiked => likes.contains(my.uid);
+  int get noOfLikes => likes.length;
+
   Post({
     required this.id,
     this.categoryId = '',
@@ -110,6 +113,24 @@ class Post with FirebaseHelper {
       'updatedAt': FieldValue.serverTimestamp(),
     };
     await PostService.instance.postCol.doc(id).update(postUpdateData);
+  }
+
+  // TODO Test
+  /// Likes or Unlikes the post
+  ///
+  /// If I already liked (iLiked == true)
+  /// it will add my uid to the likes...
+  /// otherwise, it will remove my uid from the likes.
+  Future<void> likeOrUnlike() async {
+    if (iLiked) {
+      await PostService.instance.postCol.doc(id).update({
+        'likes': FieldValue.arrayRemove([my.uid]),
+      });
+    } else {
+      await PostService.instance.postCol.doc(id).update({
+        'likes': FieldValue.arrayUnion([my.uid]),
+      });
+    }
   }
 
   @override
