@@ -130,22 +130,22 @@ class _PostDialogState extends State<PostViewDialog> {
                         },
                       ),
                       TextButton(
-                        child: const Text('Like'),
-                        onPressed: () {
-                          debugPrint('Liking it');
-                        },
+                        child: Text(
+                          'Like (${post.noOfLikes})',
+                          style: post.iLiked ? const TextStyle(fontWeight: FontWeight.bold) : null,
+                        ),
+                        onPressed: () => post.likeOrUnlike(),
                       ),
                       UserDoc(
                         live: true,
                         builder: (user) => TextButton(
                             onPressed: () async {
                               final re = await FeedService.instance.follow(post.uid);
-                              if (mounted) {
-                                toast(
-                                  title: re ? 'Followed' : 'Unfollowed',
-                                  message: re ? 'You have followed this user' : 'You have unfollowed this user',
-                                );
-                              }
+                              if (!mounted) return;
+                              toast(
+                                title: re ? 'Followed' : 'Unfollowed',
+                                message: re ? 'You have followed this user' : 'You have unfollowed this user',
+                              );
                             },
                             child: Text(user.followings.contains(post.uid) ? 'Unfollow' : 'Follow')),
                       ),

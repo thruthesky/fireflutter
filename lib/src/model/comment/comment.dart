@@ -26,6 +26,9 @@ class Comment with FirebaseHelper {
   final String sort;
   final int depth;
 
+  bool get iLiked => likes.contains(my.uid);
+  int get noOfLikes => likes.length;
+
   Comment({
     required this.id,
     required this.postId,
@@ -110,6 +113,24 @@ class Comment with FirebaseHelper {
     };
     await commentCol.doc(id).update(commentData);
     return copyWith(commentData);
+  }
+
+  // TODO Test
+  /// Likes or Unlikes the comment
+  ///
+  /// If I already liked (iLiked == true)
+  /// it will add my uid to the likes...
+  /// otherwise, it will remove my uid from the likes.
+  Future<void> likeOrUnlike() async {
+    if (iLiked) {
+      await PostService.instance.postCol.doc(id).update({
+        'likes': FieldValue.arrayRemove([my.uid]),
+      });
+    } else {
+      await PostService.instance.postCol.doc(id).update({
+        'likes': FieldValue.arrayUnion([my.uid]),
+      });
+    }
   }
 
   /// Copy the properties of [map] into current Comment model and returns a new Comment model.
