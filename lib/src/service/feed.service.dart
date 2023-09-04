@@ -17,7 +17,6 @@ class FeedService with FirebaseHelper {
 
   Future<bool> follow(String otherUid) async {
     final re = await my.follow(otherUid);
-
     if (re) {
       // get last 20 posts and save it under rtdb
       final posts = await PostService.instance.gets(uid: otherUid, limit: 20);
@@ -38,16 +37,6 @@ class FeedService with FirebaseHelper {
     }
     return re;
   }
-
-  // TODO Will be removed
-  // Future<List<Post>> getAllByMinusDate() async {
-  //   final feeds = await rtdb.ref('feeds').child(my.uid).orderByChild('createdAt').once();
-  //   List<Future<Post>> posts = [];
-  //   for (final feed in feeds.snapshot.children) {
-  //     posts.add(Post.get((feed.value as Map)['postId']));
-  //   }
-  //   return await Future.wait(posts);
-  // }
 
   /// Adding posts into the feeds of the followers.
   Future create({required Post post}) async {
