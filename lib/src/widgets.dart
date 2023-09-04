@@ -51,6 +51,7 @@ export 'widget/post/post_view.dialog.dart';
 export 'widget/post/post_list.dialog.dart';
 export 'widget/post/post_list.push_notification.icon.dart';
 export 'widget/post/post_list.category_subscription.dart';
+export 'widget/post/post_doc.dart';
 
 // Comment
 export 'widget/comment/comment_edit.bottom_sheet.dart';

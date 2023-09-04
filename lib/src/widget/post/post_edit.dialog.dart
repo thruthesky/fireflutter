@@ -156,6 +156,10 @@ class _PostEditDialogState extends State<PostEditDialog> {
                           content: content.text,
                           urls: urls,
                         );
+                        if (mounted) {
+                          Navigator.pop(context, post);
+                          PostService.instance.showPostViewDialog(context, post);
+                        }
                       } else {
                         await widget.post!.update(
                           title: title.text,
@@ -163,10 +167,9 @@ class _PostEditDialogState extends State<PostEditDialog> {
                           urls: urls,
                         );
                         post = await Post.get(widget.post!.id);
-                      }
-                      if (mounted) {
-                        Navigator.pop(context, post);
-                        PostService.instance.showPostViewDialog(context, post);
+                        if (mounted) {
+                          Navigator.pop(context, post);
+                        }
                       }
                     },
                   ),
