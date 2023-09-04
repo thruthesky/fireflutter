@@ -31,7 +31,7 @@ class Post with FirebaseHelper {
   final int noOfComments;
 
   bool get iLiked => likes.contains(my.uid);
-  int get noOfLikes => likes.length;
+  String get noOfLikes => likes.isNotEmpty ? '(${likes.length})' : '';
 
   Post({
     required this.id,

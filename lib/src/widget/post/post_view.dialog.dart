@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/widget/common/date_time_text.dart';
 import 'package:flutter/material.dart';
 
 class PostViewDialog extends StatefulWidget {
@@ -12,163 +10,163 @@ class PostViewDialog extends StatefulWidget {
   final Post post;
 
   @override
-  State<PostViewDialog> createState() => _PostDialogState();
+  State<PostViewDialog> createState() => _PostViewDialogState();
 }
 
-class _PostDialogState extends State<PostViewDialog> {
+class _PostViewDialogState extends State<PostViewDialog> {
+  late Post post;
+
+  @override
+  void initState() {
+    super.initState();
+    post = widget.post;
+  }
+
+  onEdit() async {
+    final updated = await PostService.instance.showEditDialog(context, post: post);
+    if (updated != null) {
+      setState(() {
+        post = updated;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<DocumentSnapshot>(
-      stream: PostService.instance.snapshot(postId: widget.post.id),
-      builder: (context, snapshot) {
-        late Post post;
-        if (snapshot.hasError) return Text(snapshot.error.toString());
-
-        if (snapshot.connectionState == ConnectionState.waiting) post = widget.post;
-        if (snapshot.hasData) post = Post.fromDocumentSnapshot(snapshot.data!);
-
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Post'),
-            actions: [
-              if (widget.post.isMine)
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () {
-                    PostService.instance.showEditDialog(context, post: widget.post);
-                  },
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Post'),
+        actions: [
+          if (post.isMine) IconButton(icon: const Icon(Icons.edit), onPressed: onEdit),
+          PopupMenuButton(
+            icon: const Icon(Icons.more_horiz),
+            itemBuilder: (context) {
+              List<PopupMenuEntry<Object>> popupMenuItemList = [];
+              popupMenuItemList.add(
+                const PopupMenuItem(
+                  value: "adjust_text_size",
+                  child: Text("Adjust text size"),
                 ),
-              PopupMenuButton(
-                icon: const Icon(Icons.more_horiz),
-                itemBuilder: (context) {
-                  List<PopupMenuEntry<Object>> popupMenuItemList = [];
-                  popupMenuItemList.add(
-                    const PopupMenuItem(
-                      value: "adjust_text_size",
-                      child: Text("Adjust text size"),
-                    ),
-                  );
-                  if (widget.post.isMine) {
-                    popupMenuItemList.add(
-                      const PopupMenuItem(
-                        value: "delete_post",
-                        child: Text("Delete"),
-                      ),
-                    );
-                  }
-                  return popupMenuItemList;
-                },
-                onSelected: (value) {
-                  switch (value) {
-                    case "adjust_text_size":
-                      // context.push('/adjust_text_size');
-                      break;
-                    case "delete_post":
-                      debugPrint('deleting post');
-                      break;
-                  }
-                },
-              ),
-            ],
+              );
+              if (post.isMine) {
+                popupMenuItemList.add(
+                  const PopupMenuItem(
+                    value: "delete_post",
+                    child: Text("Delete"),
+                  ),
+                );
+              }
+              return popupMenuItemList;
+            },
+            onSelected: (value) {
+              switch (value) {
+                case "adjust_text_size":
+                  // context.push('/adjust_text_size');
+                  break;
+                case "delete_post":
+                  debugPrint('deleting post');
+                  break;
+              }
+            },
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-                  child: Text.rich(
-                    TextSpan(
-                      text: post.title,
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
-                    ),
-                  ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+              child: Text.rich(
+                TextSpan(
+                  text: post.title,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
                 ),
-                if (widget.post.uid.isNotEmpty)
-                  ListTile(
-                    leading: UserAvatar(
-                      uid: widget.post.uid,
-                      key: ValueKey(widget.post.uid),
-                    ),
-                    title: UserDisplayName(
-                      uid: widget.post.uid,
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        DateTimeText(
-                          dateTime: widget.post.createdAt,
-                          type: DateTimeTextType.short,
-                        ),
-                      ],
-                    ),
-                  ),
-                Container(
-                  margin: const EdgeInsets.all(16),
-                  padding: const EdgeInsets.all(16),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Text(post.content),
+              ),
+            ),
+            if (post.uid.isNotEmpty)
+              ListTile(
+                leading: UserAvatar(
+                  uid: post.uid,
+                  key: ValueKey(post.uid),
                 ),
-                const Divider(),
-                if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      TextButton(
-                        child: const Text('Reply'),
+                title: UserDisplayName(
+                  uid: post.uid,
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DateTimeText(
+                      dateTime: post.createdAt,
+                      type: DateTimeTextType.short,
+                    ),
+                  ],
+                ),
+              ),
+            Container(
+              margin: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Text(post.content),
+            ),
+            const Divider(),
+            if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  TextButton(
+                    child: const Text('Reply'),
+                    onPressed: () async {
+                      await CommentService.instance.showCommentEditBottomSheet(
+                        context,
+                        post: post,
+                      );
+                    },
+                  ),
+                  PostDoc(
+                    post: post,
+                    builder: (post) => TextButton(
+                      child: Text(
+                        'Like ${post.noOfLikes}',
+                        style: post.iLiked ? const TextStyle(fontWeight: FontWeight.bold) : null,
+                      ),
+                      onPressed: () => post.likeOrUnlike(),
+                    ),
+                  ),
+                  UserDoc(
+                    live: true,
+                    builder: (user) => TextButton(
                         onPressed: () async {
-                          await CommentService.instance.showCommentEditBottomSheet(
-                            context,
-                            post: post,
+                          final re = await FeedService.instance.follow(post.uid);
+                          toast(
+                            title: re ? 'Followed' : 'Unfollowed',
+                            message: re ? 'You have followed this user' : 'You have unfollowed this user',
                           );
                         },
-                      ),
-                      TextButton(
-                        child: Text(
-                          'Like (${post.noOfLikes})',
-                          style: post.iLiked ? const TextStyle(fontWeight: FontWeight.bold) : null,
-                        ),
-                        onPressed: () => post.likeOrUnlike(),
-                      ),
-                      UserDoc(
-                        live: true,
-                        builder: (user) => TextButton(
-                            onPressed: () async {
-                              final re = await FeedService.instance.follow(post.uid);
-                              if (!mounted) return;
-                              toast(
-                                title: re ? 'Followed' : 'Unfollowed',
-                                message: re ? 'You have followed this user' : 'You have unfollowed this user',
-                              );
-                            },
-                            child: Text(user.followings.contains(post.uid) ? 'Unfollow' : 'Follow')),
-                      ),
-                      const Spacer(),
-                      TextButton(
-                        child: const Text('Edit'),
-                        onPressed: () {
-                          PostService.instance.showEditDialog(context, post: post);
-                        },
-                      ),
-                    ],
+                        child: Text(user.followings.contains(post.uid) ? 'Unfollow' : 'Follow')),
                   ),
-                ),
-                CommentListView(
-                  post: post,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                ),
-              ],
+                  const Spacer(),
+                  TextButton(
+                    onPressed: onEdit,
+                    child: const Text('Edit'),
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+            CommentListView(
+              post: post,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
