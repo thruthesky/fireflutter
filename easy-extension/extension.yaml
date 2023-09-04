@@ -4,7 +4,7 @@
 # Identifier for your extension
 # TODO: Replace this with an descriptive name for your extension.
 name: easy-extension
-version: 0.1.9 # Follow semver versioning
+version: 0.1.10 # Follow semver versioning
 specVersion: v1beta # Version of the Firebase Extensions specification
 
 # Friendly display name for your extension (~3-5 words)
@@ -158,7 +158,7 @@ params:
     default: yes
 
   - param: CREATE_USER_DOCUMENT
-    label: Create user document on user create
+    label: Create the user document on user account creation
     description: >-
       If set to \"Yes\", the extension will automatically create the
       Firestore user document when the user is created on Firebase
@@ -170,6 +170,16 @@ params:
       - label: No
         value: no
     default: yes
+    required: true
+
+  - param: USER_DEFAULT_FIELDS
+    label: Default fields on your user document creation
+    description: >-
+      Input a JSON object to set default fields on your user document creation.
+      Example) { "isVerified": false, "createdBy": "easy-extension" }
+    type: string
+    default: >-
+      { "isVerified": false, "createdBy": "easy-extension" }
     required: true
 
   - param: DELETE_USER_DOCUMENT

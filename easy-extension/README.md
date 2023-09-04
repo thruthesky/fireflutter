@@ -14,6 +14,7 @@
   - [Delete user](#delete-user)
   - [Get user](#get-user)
 - [User management](#user-management)
+  - [User document creation](#user-document-creation)
   - [User Sync](#user-sync)
   - [User Sync Backfill](#user-sync-backfill)
 - [Forum management](#forum-management)
@@ -49,6 +50,7 @@ The principle of using this extension is that you should only use this extension
 
 
 To install the easy extension, click one of the version linke below. See the change logs for the change of each version.
+- [Beta 0.1.10-beta.2](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.10-beta.2)
 - [Beta (0.1.8-beta.2)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.8-beta.2)
 - [Beta (0.1.5-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.5-beta.0)
 - [Beta (0.1.4-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.4-beta.0)
@@ -343,6 +345,18 @@ If user not exists, the status will be error.
 
 
 # User management
+
+
+## User document creation
+
+When the `Create the user document on user account creation` is set to "yes", the user document will be created under the `User collection path` on registration(account creation).
+
+You can set default fields in `Default fields on your user document creation` box. For example, you may set `{ "isVerified": false, "createdBy": "easy-extension" }` and these fields will be set to the user document. This JSON object will overwrite the default fields from Firebase Auth. If you add fields like `{"email": "", "phone_number": ""}`, then the user's email and phone number will be set to empty string instead of saving it from firebase auth.
+
+Be sure you input the complete JSON formatted text in `Default fields on your user document creation` box or it would not work. If it's not working, see the function log.
+
+The `createdAt` will be added to the user document and you cannot remove it.
+
 
 
 ## User Sync

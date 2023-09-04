@@ -4,16 +4,21 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/enum/protocol.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'room.g.dart';
 
 /// Room
 ///
 /// This is the model for the chat room.
 /// Don't update the property directly. The property is read-only and if you want to apply the changes, listen to the stream of the chat room document.
+@JsonSerializable()
 class Room with FirebaseHelper {
   final String id;
   final String name;
 
   /// [rename] Each user can rename the room. This map holds the rename of the room.
+
   final Map<String, String> rename;
   final bool group;
   final bool open;
@@ -24,7 +29,8 @@ class Room with FirebaseHelper {
 
   final int maximumNoOfUsers;
 
-  final Timestamp createdAt;
+  @FirebaseDateTimeConverter()
+  final DateTime createdAt;
 
   final Message? lastMessage;
 
@@ -41,17 +47,17 @@ class Room with FirebaseHelper {
   Room({
     required this.id,
     required this.name,
-    required this.rename,
+    this.rename = const {},
     required this.group,
     required this.open,
     required this.master,
     required this.users,
-    required this.moderators,
-    required this.blockedUsers,
+    this.moderators = const [],
+    this.blockedUsers = const [],
     required this.maximumNoOfUsers,
-    required this.createdAt,
+    dynamic createdAt,
     this.lastMessage,
-  });
+  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   bool get isSingleChat => users.length == 2 && group == false;
   bool get isGroupChat => group;
@@ -63,24 +69,17 @@ class Room with FirebaseHelper {
     return Room.fromMap(map: documentSnapshot.data() as Map<String, dynamic>, id: documentSnapshot.id);
   }
 
-  factory Room.fromMap({required Map<String, dynamic> map, required id}) {
-    return Room(
-      id: id,
-      name: map['name'] ?? '',
-      rename: Map<String, String>.from(map['rename'] ?? {}),
-      group: map['group'],
-      open: map['open'],
-      master: map['master'],
-      users: List<String>.from((map['users'] ?? [])),
-      moderators: List<String>.from(map['moderators'] ?? []),
-      blockedUsers: List<String>.from(map['blockedUsers'] ?? []),
-      maximumNoOfUsers: map['maximumNoOfUsers'] ?? 0,
+  factory Room.fromJson(Map<String, dynamic> json) => _$RoomFromJson(json);
 
-      /// Note FieldValue happens when the docuemnt is cached locally on creation and the createdAt is not set on the remote database.
-      createdAt: map['createdAt'] is FieldValue ? Timestamp.now() : map['createdAt'] ?? Timestamp.now(),
-      lastMessage: map['lastMessage'] != null ? Message.fromMap(map: map['lastMessage'], id: "") : null,
-    );
+  @Deprecated('Use fromJson instead')
+  factory Room.fromMap({required Map<String, dynamic> map, required id}) {
+    return Room.fromJson({
+      ...(map),
+      ...{'id': id}
+    });
   }
+
+  Map<String, dynamic> toJson() => _$RoomToJson(this);
 
   Map<String, dynamic> toMap() {
     return {
@@ -155,8 +154,7 @@ class Room with FirebaseHelper {
   }
 
   @override
-  String toString() =>
-      'Room(id: $id, name: $name, group: $group, open: $open, master: $master, users: $users, moderators: $moderators, blockedUsers: $blockedUsers, maximumNoOfUsers: $maximumNoOfUsers, createdAt: $createdAt, lastMessage: $lastMessage)';
+  String toString() => 'Room(${toJson()})';
 
   static Map<String, dynamic> toCreate({
     required String master,
@@ -186,7 +184,7 @@ class Room with FirebaseHelper {
   /// Add a user to the room.
   Future<void> addUser(String userUid) async {
     /// Read the chat room document to check for adding a user. (NSE: Not so expansive)
-    final room = await ChatService.instance.getRoom(id);
+    final room = await get(id);
 
     /// Check if the user is already in the room.
     if (room.users.contains(userUid)) {
@@ -225,7 +223,7 @@ class Room with FirebaseHelper {
 
   String get lastMessageTime {
     if (lastMessage == null) return '';
-    final dt = lastMessage!.createdAt.toDate();
+    final dt = lastMessage!.createdAt;
 
     final now = DateTime.now();
     if (dt.year == now.year && dt.month == now.month && dt.day == now.day) {

@@ -40,6 +40,8 @@ class _UserDisplayNameState extends State<UserDisplayName> {
         : Text(
             user!.displayName,
             style: widget.textStyle,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           );
   }
 }

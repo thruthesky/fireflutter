@@ -6,6 +6,7 @@ export 'widget/user/user.doc.dart';
 export 'widget/user/user.ready.dart';
 export 'widget/common/avatar.dart';
 export 'widget/user/admin.dart';
+export 'widget/user/admin.user_list_view.dart';
 
 // Chat
 export 'widget/chat/chat_room.dart';
@@ -57,7 +58,7 @@ export 'widget/comment/comment_list_view.dart';
 export 'widget/comment/comment.list_tile.dart';
 
 // Common
-export 'widget/common/timestamp.text.dart';
+export 'widget/common/date_time_text.dart';
 export 'widget/common/linkify_text/linkify_text.dart';
 export 'widget/common/display_media/display_media.dart';
 export 'widget/common/url_preview/url_preview.dart';

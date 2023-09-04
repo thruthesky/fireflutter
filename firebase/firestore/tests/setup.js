@@ -191,13 +191,75 @@ async function createPost(options = {}) {
   return postRef;
 }
 
-// Add create or update to user collection
-async function createUser(user) {
-  await db(user).collection(usersColName).doc(user.uid).set({
-    uid: user.uid,
-    email: user.email,
-  });
+/**
+ * Creates a random user with options.data on options.col collection.
+ * 
+ * By default, it creates a random user with random uid and email under `/users` collection.
+ * Use this to create a random user.
+ * 
+ *  Add create or update to user collection
+ * 
+ * @param {*} user 
+ * @param {*} options 
+ * 
+ * Example of creating a random user with random uid and email under `/users` collection.
+ * await createUser();
+ * 
+ * Example of creating a collection "/only-adding/{uid}" with data { uid: b.uid, name: "abc" } with user b's auth.
+ * 
+ * await createUser(b, {
+      col: "only-adding",
+      data: {
+        uid: b.uid,
+        name: "abc",
+      },
+    });
+
+ * @return user uid as string.
+ */
+async function createUser(user, options = {}) {
+  if (!user) {
+    user = {
+      uid: randomString(),
+      email: randomString() + "@gmail.com",
+    };
+  }
+
+  await db(user)
+    .collection(options.col ?? usersColName)
+    .doc(user.uid)
+    .set(
+      options.data ?? {
+        uid: user.uid,
+        email: user.email,
+        followers: [],
+        following: [],
+      }
+    );
+
+  return user.uid;
 }
+
+// create a function named 'randomString' which returns a random string.
+function randomString() {
+  return Math.random().toString(36).substring(7);
+}
+exports.createUserOnlyXxx = async (data = {}) => {
+  const uid = randomString();
+  await db({ uid, email: uid + "@gmail.com" })
+    .collection("only-xxx")
+    .doc(uid)
+    .set({
+      uid: uid,
+      ...data,
+    });
+  return uid;
+};
+
+exports.userDoc = (uid) => {
+  const auth = { uid, email: uid + "@gmail.com" };
+  return db(auth).collection(usersColName).doc(uid);
+};
 
 exports.db = db;
 exports.admin = admin;
@@ -221,3 +283,4 @@ exports.setAsModerator = setAsModerator;
 exports.createCategory = createCategory;
 exports.createPost = createPost;
 exports.createUser = createUser;
+exports.randomString = randomString;

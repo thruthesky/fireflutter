@@ -42,21 +42,25 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
     Test.users[0].uid = 'xY0P00Z5MKeYUVeXH3ZZQdOyzqt2';
     Test.users[1].uid = 'Gjv1vA0XW5MU6eRnkTt6Si1vgXt2';
     Test.users[2].uid = 'i2l14MKy12bNLJk7E4J9JuLvIrj2';
+    // admin
     Test.users[3].uid = 'DiBndQah89TQu7EHUzu2hDH5gC62';
 
     // await User.fromUid(Test.banana.uid).update(field: 'uid', value: Test.banana.uid);
 
     // await testAll();
+    // await testSingle(testUser);
+    // await testSingle(testCategory);
+    // await testSingle(testMaximumNoOfUsers);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
       children: [
         const Text('''How To TEST
-1. Wait until the users are loaded. On the [initState], it will load apple, banana, cherry, and durian user uids.
+1. Wait until the users are loaded in the [initState].
 2. Press run all tests to test all the features.
-3. Or press test button one by one to see the result of each test.
+3. Or press test button to test one by one.
 '''),
         const Divider(),
         StreamBuilder(
@@ -81,14 +85,25 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
               ),
           ],
         ),
+        const Divider(),
+        ElevatedButton(
+            onPressed: () {
+              PostService.instance.showPostListDialog(context, 'qna');
+            },
+            child: const Text('QnA Forum')),
+        const Divider(),
         ElevatedButton(
           onPressed: testAll,
           child: Text('Run all tests', style: TextStyle(color: Colors.red.shade800)),
         ),
-        // ElevatedButton(
-        //   onPressed: testNoOfNewMessageBadge,
-        //   child: const Text('TEST noOfNewMessage - Apple & Banana'),
-        // ),
+        ElevatedButton(
+          onPressed: testUser,
+          child: const Text('TEST - User'),
+        ),
+        ElevatedButton(
+          onPressed: testCategory,
+          child: const Text('TEST - Category'),
+        ),
         ElevatedButton(
           onPressed: testMaximumNoOfUsers,
           child: const Text('TEST maximum no of users'),
@@ -133,6 +148,8 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
 
   testAll() async {
     Test.start();
+    await testUser();
+    await testCategory();
     await testFeed();
     await testCreateGroupChatRoom();
     // await testNoOfNewMessageBadge();
@@ -145,7 +162,63 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
     Test.report();
   }
 
-  testFeed() async {
+  Future testUser() async {
+    // create empty object
+    final user = User(uid: 'uid');
+    test(user.uid == 'uid', 'uid must be uid');
+
+    // create object from json
+    final fromJsonUser = User.fromJson(json: {'uid': 'uid'}, id: 'id');
+    test(fromJsonUser.createdAt.millisecondsSinceEpoch > 0, 'createdAt is: ${fromJsonUser.createdAt}');
+
+    // Create a user
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    // log('uid; $uid');
+    await User.doc(uid).delete();
+    await User.create2(User(uid: uid, displayName: 'displayName$uid', email: '$uid@email.com'));
+    final user2 = await User.get(uid) as User;
+    test(user2.uid == uid, 'uid must be $uid');
+    test(user2.displayName == 'displayName$uid', 'displayName must be displayName$uid');
+    test(user2.email == '$uid@email.com', 'email must be $uid@email.com');
+
+    await Future.delayed(const Duration(milliseconds: 10));
+    return;
+  }
+
+  Future testPost() async {
+    // post crud test
+    final post = await Post.create(categoryId: 'categoryId', title: 'title', content: 'content');
+  }
+
+  Future testComment() async {
+    // comment crud test
+    final post = await Post.create(categoryId: 'categoryId', title: 'title', content: 'content');
+  }
+
+  Future testCategory() async {
+    await Test.login(Test.durian);
+    // Create a category
+    await Category.create(categoryId: 'categoryId', name: 'name');
+    final created = await Category.get('categoryId');
+    test(created.id == 'categoryId', 'id must be categoryId');
+    test(created.name == 'name', 'name must be name');
+
+    // Update a category
+    await created.update(name: 'name2');
+    final updated = await Category.get('categoryId');
+    test(updated.name == 'name2', 'name must be name2');
+
+    // Delete a category
+    await updated.delete();
+    try {
+      await Category.get('categoryId');
+      test(false, 'must throw exception');
+    } catch (e) {
+      test(e.toString().contains('does not exist'), 'must throw exception. <$e>');
+    }
+  }
+
+  Future testFeed() async {
     await Test.login(Test.apple);
     User me = await User.get() as User;
     await me.update(followers: FieldValue.delete(), followings: FieldValue.delete());
@@ -218,7 +291,7 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
     await Test.assertExceptionCode(room.invite(Test.durian.uid), Code.roomIsFull);
 
     // Get the room
-    final roomAfter = await ChatService.instance.getRoom(room.id);
+    final roomAfter = await Room.get(room.id);
 
     test(roomAfter.users.length == 3,
         "maximumNoOfUsers must be limited to 3. Actual value: ${roomAfter.users.length}. Expected: ${roomAfter.maximumNoOfUsers}");

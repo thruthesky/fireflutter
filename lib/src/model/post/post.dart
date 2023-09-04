@@ -1,7 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:fireflutter/fireflutter.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'post.g.dart';
+
+@JsonSerializable()
 class Post with FirebaseHelper {
+  static const String collectionName = 'posts';
+  static DocumentReference doc([String? postId]) => PostService.instance.postCol.doc(postId);
   final String id;
   final String categoryId;
   final String title;
@@ -9,46 +16,40 @@ class Post with FirebaseHelper {
 
   @override
   final String uid;
+
   final List<String> urls;
-  final Timestamp createdAt;
-  final Timestamp updatedAt;
+
+  @FirebaseDateTimeConverter()
+  final DateTime createdAt;
+
   final List<String> likes;
   final bool? deleted;
   final int noOfComments;
 
   Post({
     required this.id,
-    required this.categoryId,
-    required this.title,
-    required this.content,
-    required this.uid,
-    required this.urls,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.likes,
-    this.deleted,
-    required this.noOfComments,
-  });
+    this.categoryId = '',
+    this.title = '',
+    this.content = '',
+    this.uid = '',
+    this.urls = const [],
+    createdAt,
+    this.likes = const [],
+    this.deleted = false,
+    this.noOfComments = 0,
+  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory Post.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
-    return Post.fromMap(map: documentSnapshot.data() as Map<String, dynamic>, id: documentSnapshot.id);
-  }
-
-  factory Post.fromMap({required Map<String, dynamic> map, required id}) {
-    return Post(
-      id: id,
-      categoryId: map['categoryId'] ?? '',
-      title: map['title'] ?? '',
-      content: map['content'] ?? '',
-      uid: map['uid'] ?? '',
-      urls: List<String>.from(map['urls'] ?? []),
-      createdAt: (map['createdAt'] is Timestamp) ? map['createdAt'] : Timestamp.now(),
-      updatedAt: (map['updatedAt'] is Timestamp) ? map['updatedAt'] : Timestamp.now(),
-      likes: map['likes'] ?? [],
-      deleted: map['deleted'],
-      noOfComments: map['noOfComments'] ?? 0,
+    return Post.fromJson(
+      {
+        ...documentSnapshot.data() as Map<String, dynamic>,
+        ...{'id': documentSnapshot.id}
+      },
     );
   }
+
+  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
+  Map<String, dynamic> toJson() => _$PostToJson(this);
 
   static Future<Post> get(String? id) async {
     if (id == null) {
@@ -70,20 +71,29 @@ class Post with FirebaseHelper {
       'categoryId': categoryId,
       if (urls != null) 'urls': urls,
       'createdAt': FieldValue.serverTimestamp(),
-      'updatedAt': FieldValue.serverTimestamp(),
       'uid': UserService.instance.uid,
     };
-    final postId = PostService.instance.postCol.doc().id;
-    await PostService.instance.postCol.doc(postId).set(postData);
-    my.update(
+    final postId = Post.doc().id;
+    await Post.doc(postId).set(postData);
+
+    // update no of posts
+    User.fromUid(FirebaseAuth.instance.currentUser!.uid).update(
       noOfPosts: FieldValue.increment(1),
     );
     Category.fromId(categoryId).update(
       noOfPosts: FieldValue.increment(1),
     );
-    final post = Post.fromMap(map: postData, id: postId);
-    // TODO check if correct
+
+    // create feed
+    final post = Post.fromJson(
+      {
+        ...postData,
+        ...{'id': postId},
+      },
+    );
     FeedService.instance.create(post: post);
+
+    // return post
     return post;
   }
 
@@ -103,9 +113,7 @@ class Post with FirebaseHelper {
   }
 
   @override
-  String toString() =>
-      'Post(id: $id, categoryId: $categoryId, noOfComments: $noOfComments, title: $title, content: $content, uid: $uid, urls: $urls, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted)';
-
+  String toString() => 'Post(${toJson()})';
   bool get isMine {
     return UserService.instance.uid == uid;
   }

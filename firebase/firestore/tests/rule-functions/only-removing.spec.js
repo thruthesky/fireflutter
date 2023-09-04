@@ -1,5 +1,16 @@
 const assert = require("assert");
-const { db, a, b, c, d, tempChatRoomData, admin } = require("../setup");
+const {
+  db,
+  a,
+  b,
+  c,
+  d,
+  tempChatRoomData,
+  admin,
+  createUser,
+  createUserOnlyXxx,
+  randomString,
+} = require("../setup");
 
 // load firebase-functions-test SDK
 const firebase = require("@firebase/testing");
@@ -29,7 +40,7 @@ describe("Only removing tests", () => {
         .collection("rule-test-onlyRemoving")
         .doc(ref.id)
         .update({
-          users: firebase.firestore.FieldValue.arrayRemove(""),
+          users: firebase.firestore.FieldValue.arrayRemove(b.uid),
         })
     );
 
@@ -133,7 +144,21 @@ describe("Only removing tests", () => {
     );
   });
 
-  it("remove an element that is not exist in the array - fail", async () => {
+  it("remove an element from an array where the array does not exists - success", async () => {
+    // Set doc by admin
+    const ref = await admin()
+      .collection("rule-test-onlyRemoving")
+      .add({ users: [] });
+
+    // Connect to doc by user
+    const docRef = db(a).collection("rule-test-onlyRemoving").doc(ref.id);
+
+    // Update other field(s)
+    await firebase.assertSucceeds(
+      docRef.update({ users: firebase.firestore.FieldValue.arrayRemove("b") })
+    );
+  });
+  it("remove an element that is not exist in the array - success", async () => {
     // Set doc by admin
     const ref = await admin()
       .collection("rule-test-onlyRemoving")
@@ -142,11 +167,122 @@ describe("Only removing tests", () => {
     // Connect to doc by user
     const docRef = db(a).collection("rule-test-onlyRemoving").doc(ref.id);
 
-    console.log((await docRef.get()).data());
+    // Update other field(s)
+    await firebase.assertSucceeds(
+      docRef.update({ users: firebase.firestore.FieldValue.arrayRemove("b") })
+    );
+  });
+  it("remove an element that is not exist in the array with updating other field - fail", async () => {
+    // Set doc by admin
+    const ref = await admin()
+      .collection("rule-test-onlyRemoving")
+      .add({ users: ["a"] });
+
+    // Connect to doc by user
+    const docRef = db(a).collection("rule-test-onlyRemoving").doc(ref.id);
 
     // Update other field(s)
     await firebase.assertFails(
-      docRef.update({ users: firebase.firestore.FieldValue.arrayRemove("b") })
+      docRef.update({
+        users: firebase.firestore.FieldValue.arrayRemove("b"),
+        name: "test",
+      })
+    );
+  });
+
+  /// -----
+
+  it("likes remove - on a non-existen document - fails", async () => {
+    await firebase.assertFails(
+      db(a)
+        .collection("only-xxx")
+        .doc(randomString())
+        .update({
+          likes: firebase.firestore.FieldValue.arrayRemove(a.uid),
+        })
+    );
+  });
+
+  it("Add a like on an array that is not existing in the document - success", async () => {
+    const uid = await createUserOnlyXxx();
+    await firebase.assertSucceeds(
+      db(a)
+        .collection("only-xxx")
+        .doc(uid)
+        .update({
+          likes: firebase.firestore.FieldValue.arrayUnion(a.uid),
+        })
+    );
+  });
+
+  it("Remove a like of [wrong uid] on an array that is already existing - success", async () => {
+    const uid = await createUserOnlyXxx({ likes: ["xxx"] });
+    await firebase.assertSucceeds(
+      db(a)
+        .collection("only-xxx")
+        .doc(uid)
+        .update({
+          likes: firebase.firestore.FieldValue.arrayRemove(a.uid),
+        })
+    );
+  });
+
+  it("Remove a like of [wrong uid] on an array that is already existing with updating other document - fails", async () => {
+    const uid = await createUserOnlyXxx({ likes: ["xxx"] });
+    await firebase.assertFails(
+      db(a)
+        .collection("only-xxx")
+        .doc(uid)
+        .update({
+          likes: firebase.firestore.FieldValue.arrayRemove(a.uid),
+          name: "test",
+        })
+    );
+  });
+
+  it("Remove a like from an empty array field - success", async () => {
+    const uid = await createUserOnlyXxx({ likes: [] });
+    await firebase.assertSucceeds(
+      db(a)
+        .collection("only-xxx")
+        .doc(uid)
+        .update({
+          likes: firebase.firestore.FieldValue.arrayRemove(a.uid),
+        })
+    );
+  });
+
+  it("Don't remove any likes but updating other fields - fails", async () => {
+    const uid = await createUserOnlyXxx({ likes: [] });
+    await firebase.assertFails(
+      db(a).collection("only-xxx").doc(uid).update({
+        navigator: "chrome",
+      })
+    );
+  });
+
+  it("Remove an element which is already exists", async () => {
+    const uid = await createUserOnlyXxx({ likes: [a.uid] });
+    await firebase.assertSucceeds(
+      db(a)
+        .collection("only-xxx")
+        .doc(uid)
+        .update({
+          likes: firebase.firestore.FieldValue.arrayRemove(a.uid),
+        })
+    );
+  });
+
+  it("Remove an element which is already exists with other fields - fails", async () => {
+    const uid = await createUserOnlyXxx({ likes: [a.uid] });
+    await firebase.assertFails(
+      db(a)
+        .collection("only-xxx")
+        .doc(uid)
+        .update({
+          likes: firebase.firestore.FieldValue.arrayRemove(a.uid),
+          name: "update",
+        })
     );
   });
 });

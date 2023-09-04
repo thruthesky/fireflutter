@@ -7,3 +7,4 @@ export 'src/test.dart';
 export 'src/code.dart';
 export 'src/types/media_source.dart';
 export 'src/i18n/t.dart';
+export 'src/converters.dart';

@@ -30,28 +30,32 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    match /push-notifications-queue/{docId} {
-      allow read: if resource.data.senderUid == request.auth.uid;
-      allow write: if request.resource.data.senderUid == request.auth.uid;
-    }
-
 // ****************************** COPY FROM ***********************************
     // *
     // * Belore are the FireFlutter Security Rules. Put your own rules above.
     // *
 
 
+    match /push-notifications-queue/{docId} {
+      allow read: if resource.data.senderUid == request.auth.uid;
+      allow write: if request.resource.data.senderUid == request.auth.uid;
+    }
+
+
     match /users/{documentId} {
-      allow read: if request.auth.uid == documentId;
+      allow get: if request.auth.uid == documentId || isAdmin();
+      allow list: if isAdmin();
       allow create: if request.auth.uid == documentId;
       allow update: if
-        request.auth.uid == documentId
+        isAdmin()
+        ||
+        ( request.auth.uid == documentId && notUpdating(['disabled', 'isAdmin', 'isVerified']) )
         ||
         onlyAdding('followers', request.auth.uid)
         ||
-        debug(onlyRemoving('followers', request.auth.uid))
+        onlyRemoving('followers', request.auth.uid)
         ;
-      allow delete: if false;
+      allow delete: if request.auth.uid == documentId || isAdmin();
       match /fcm_tokens/{docId} {
       	allow read: if true;
         allow write: if (request.auth.uid == documentId);
@@ -248,6 +252,18 @@ service cloud.firestore {
       allow read: if true;
       allow update: if onlyAdding('users', 'b');
     }
+
+    /// 
+    match /only-xxx/{documentId} {
+      allow read: if true;
+      allow create: if request.auth.uid == documentId;
+      allow update: if 
+        request.auth.uid == documentId
+        ||
+        onlyAdding('likes', request.auth.uid) // add c
+        ||
+        onlyRemoving('likes', request.auth.uid) // 
+    }
 // ****************************** COPY UNTIL HERE *****************************
   }
 }
@@ -281,9 +297,15 @@ function onlyUpdating(fields) {
 // Returns true if the array field in the document is adding only the element.
 // It must not replace any other element.
 //
-// ! Warning - it must not update(delete) any other field in the document
-//
-// ! Waring - it must add the element, or it must fail.
+// Returns
+// - true if the array does not exists and no other fields are updated except adding the element into the arrayField.
+// - true if it try to add an element that is already in the array and no other fields are updated.
+// - false if the document does not exist (especially when you put it on "update if: ...")
+// - false if it is trying to add an wrong-item that is not the element.
+//    - For instance, the element is "user.uid" and the user is trying to add "another user uid".
+//    - For example "onlyAdding('users', 'a')" is being called but the request data is "{users: ['b']}".
+//      if "onlyAdding('users', 'a')" is being called then, it can only add "a" into the "users" array.
+// - false if it try to update other fields than the array field. Updating other fields are not allowed.
 // * It will make a problem if it returns true when it try to add an element that is already in the array.
 function onlyAdding(arrayField, element) {
   
@@ -291,11 +313,13 @@ function onlyAdding(arrayField, element) {
   let newSet = request.resource.data[arrayField].toSet();
 
   return
-    element in oldSet
+    ( !(arrayField in resource.data) && noFieldChangedExcept(arrayField) )
+    ||
+    ( element in oldSet && noFieldChanged() )
     ||
     (
       onlyUpdating([arrayField])
-      &&    
+      &&  
       // anything else has deleted?
       oldSet.intersection(newSet) == oldSet
       &&
@@ -311,20 +335,32 @@ function onlyAdding(arrayField, element) {
 // arrayField is an array
 // [element] is an element to be removed from the arrayField
 //
-// ! Warning - it must remove the element or it must fail.
-// * It will make a problem if it returns true when it try to remove an element that is not in the array.
+// Returns
+// - true if it try to remove an element that is not existing int the array and no other fields are changed.
+// - false if the document does not exsit (especially when you put it on "update if: ...").
+// 
+// Use case;
+// Other users can add or remove only their uid from the followers array of the otehr user document
+// match /users/{documentId} {
+//   allow update: if request.auth.uid == documentId || onlyAdding('followers', request.auth.uid) || onlyRemoving('followers', request.auth.uid)
+// }
 function onlyRemoving(arrayField, element) {
 
   let oldSet = (arrayField in resource.data ? resource.data[arrayField] : []).toSet();
   let newSet = request.resource.data[arrayField].toSet();
 
   return
-      onlyUpdating([arrayField])
-      &&
-      oldSet.difference(newSet) == [element].toSet()
-      &&
-      oldSet.intersection(newSet) == newSet
-    
+      ( !(arrayField in resource.data) && noFieldChangedExcept(arrayField) )
+      ||
+      ( !(element in oldSet) && noFieldChanged() )
+      ||
+      (
+        onlyUpdating([arrayField])
+        &&
+        oldSet.difference(newSet) == [element].toSet()
+        &&
+        oldSet.intersection(newSet) == newSet
+      )
   ;
 }
 
@@ -380,6 +416,16 @@ function willBeMyDoc() {
 // Returns true if the user owns the document.
 function isMyDoc() {
   return 'uid' in resource.data && resource.data.uid == request.auth.uid;
+}
+
+// Returns true if there is no fields that are updated except the specified field.
+function noFieldChangedExcept(field) {
+  return request.resource.data.diff(resource.data).affectedKeys().hasOnly([field]);
+}
+
+// Returns true if there is no fields that are updated.
+function noFieldChanged() {
+  return request.resource.data.diff(resource.data).affectedKeys().hasOnly([]);
 }
 
 

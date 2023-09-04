@@ -10,6 +10,7 @@ export class Config {
     static deleteUserDocument: boolean = process.env.DELETE_USER_DOCUMENT === 'yes';
     static userSyncFields: string = process.env.USER_SYNC_FIELDS || '';
     static userSyncFieldsBackfill: boolean = process.env.USER_SYNC_FIELDS_BACKFILL === 'yes';
+    static userDefaultFields: string = process.env.USER_DEFAULT_FIELDS || ""; // ? JSON.parse(process.env.USER_DEFAULT_FIELDS) : {};
 
 
     static json(): Record<string, any> {
@@ -19,6 +20,9 @@ export class Config {
             syncCustomClaimsToUserDocument: this.syncCustomClaimsToUserDocument,
             createUserDocument: this.createUserDocument,
             deleteUserDocument: this.deleteUserDocument,
+            userSyncFields: this.userSyncFields,
+            userSyncFieldsBackfill: this.userSyncFieldsBackfill,
+            userDefaultFields: this.userDefaultFields,
         };
     }
 };

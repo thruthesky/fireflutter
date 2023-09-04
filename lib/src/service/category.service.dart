@@ -70,7 +70,7 @@ class CategoryService with FirebaseHelper {
           if (onTapCategory != null) {
             onTapCategory.call(category);
           } else {
-            PostService.instance.showPostListDialog(context, category);
+            PostService.instance.showPostListDialog(context, category.id);
           }
         },
       ),

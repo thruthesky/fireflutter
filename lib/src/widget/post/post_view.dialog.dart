@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/widget/common/date_time_text.dart';
 import 'package:flutter/material.dart';
 
 class PostViewDialog extends StatefulWidget {
@@ -95,8 +96,9 @@ class _PostDialogState extends State<PostViewDialog> {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        TimestampText(
-                          timestamp: widget.post.createdAt,
+                        DateTimeText(
+                          dateTime: widget.post.createdAt,
+                          type: DateTimeTextType.short,
                         ),
                       ],
                     ),

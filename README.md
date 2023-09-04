@@ -119,11 +119,7 @@ Please follow the instructions below to install the fireflutter.
 
 ## Install the easy extension
 
-We built a firebase extension for the easy management of firebase. Install the following version.
-
-[Install Easy Extension Beta (0.1.9-beta.1)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.9-beta.1)
-
-This is a must firebase extension for the fireflutter to work properly.
+We built a firebase extension for the easy management of firebase and fireflutter is using this extension. Install the [latest version of easy-extension](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.10-beta.1).
 
 
 ## Install cloud functions
@@ -1486,3 +1482,5 @@ class _MyHomePageState extends State<MyHomePage> {
 ## Tips
 
 - If you want, you can add `timestamp` field for listing.
+.
+..

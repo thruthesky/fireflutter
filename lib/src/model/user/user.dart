@@ -1,9 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'user.g.dart';
+
+@JsonSerializable()
 class User with FirebaseHelper {
   static const String collectionName = 'users';
+
+  /// '/users' collection
+  static CollectionReference col = FirebaseFirestore.instance.collection(collectionName);
+
+  /// '/users/{uid}' document.
+  ///
+  /// Example
+  /// ```dart
+  /// User.doc('xxx').update({...});
+  /// ```
+  static DocumentReference doc(String uid) => col.doc(uid);
 
   /// This holds the original JSON document data of the user document. This is
   /// useful when you want to save custom data in the user document.
@@ -28,7 +43,7 @@ class User with FirebaseHelper {
   ///
   /// 이 값은 다양하게 응용해서 활용하면 된다. 예) 신분증 업로드 후, 신분증 경로 URL 을 저장하거나, 파일 이름 또는 기타 코드를 입력하면 된다.
   final String idVerifiedCode;
-  final bool verified;
+  final bool isVerified;
 
   ///
   final String phoneNumber;
@@ -67,17 +82,16 @@ class User with FirebaseHelper {
   final bool hasPhotoUrl;
 
   /// 사용자 문서가 생성된 시간. 항상 존재 해야 함. Firestore 서버 시간
-  final Timestamp? createdAt;
-
-  /// Dart 에서 사용 할 createAt 의 DateTime 값.
-  final DateTime? createdAtDateTime;
+  @FirebaseDateTimeConverter()
+  @JsonKey(includeFromJson: false, includeToJson: true)
+  final DateTime createdAt;
 
   /// Set this to true when the user has completed the profile.
   /// This should be set when the user submit the profile form.
   ///
   /// 사용자가 회원 정보를 업데이트 할 때, 이 값을 true 또는 false 로 지정한다.
   /// 이 값이 false 이면, 앱에서 회원 정보를 입력하라는 메시지를 표시하거나 기타 동작을 하게 할 수 있다.
-  final bool complete;
+  final bool isComplete;
 
   final List<String> followers;
   final List<String> followings;
@@ -86,7 +100,7 @@ class User with FirebaseHelper {
   /// 특히, 이 값이 false 이면 사용자 로그인을 했는데, 사용자 문서가 존재하지 않는 경우이다.
   final bool exists;
 
-  bool cached = false;
+  bool cached;
 
   User({
     required this.uid,
@@ -99,7 +113,7 @@ class User with FirebaseHelper {
     this.photoUrl = '',
     this.hasPhotoUrl = false,
     this.idVerifiedCode = '',
-    this.verified = false,
+    this.isVerified = false,
     this.phoneNumber = '',
     this.email = '',
     this.state = '',
@@ -108,15 +122,16 @@ class User with FirebaseHelper {
     this.birthMonth = 0,
     this.birthDay = 0,
     this.type = '',
-    this.createdAt,
-    this.complete = false,
+    dynamic createdAt,
+    this.isComplete = false,
     this.exists = true,
     this.noOfPosts = 0,
     this.noOfComments = 0,
     this.followers = const [],
     this.followings = const [],
     this.data = const {},
-  }) : createdAtDateTime = createdAt?.toDate();
+    this.cached = false,
+  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory User.notExists() {
     return User(uid: '', exists: false);
@@ -130,87 +145,29 @@ class User with FirebaseHelper {
   }
 
   factory User.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
-    return User.fromMap(
-      map: documentSnapshot.data() as Map<String, dynamic>,
+    return User.fromJson(
+      json: documentSnapshot.data() as Map<String, dynamic>,
       id: documentSnapshot.id,
     );
   }
 
+  @Deprecated('Use fromJson instead')
   factory User.fromMap({required Map<String, dynamic> map, required String id}) {
-    final String displayName = map['displayName'] ?? '';
-
-    // The createdAt may be int (from RTDB) or Timestamp (from Fireestore), or null.
-    if (map['createdAt'] is int) {
-      map['createdAt'] = Timestamp.fromMillisecondsSinceEpoch(map['createdAt'] as int);
-    } else if (map['createdAt'] is Timestamp) {
-      map['createdAt'] = map['createdAt'] as Timestamp;
-    } else {
-      map['createdAt'] = null;
-    }
-
-    return User(
-      uid: id,
-      isAdmin: map['isAdmin'] ?? false,
-      displayName: (displayName == '' && displayName.length < 2) ? id.toUpperCase().substring(0, 2) : displayName,
-      name: map['name'] ?? '',
-      firstName: map['firstName'] ?? '',
-      lastName: map['lastName'] ?? '',
-      middleName: map['middleName'] ?? '',
-      photoUrl: (map['photoUrl'] ?? '') as String,
-      hasPhotoUrl: map['hasPhotoUrl'] ?? false,
-      idVerifiedCode: map['idVerifiedCode'] ?? '',
-      verified: map['verified'] ?? false,
-      phoneNumber: map['phoneNumber'] ?? '',
-      email: map['email'] ?? '',
-      state: map['state'] ?? '',
-      stateImageUrl: map['stateImageUrl'] ?? '',
-      birthYear: map['birthYear'] ?? 0,
-      birthMonth: map['birthMonth'] ?? 0,
-      birthDay: map['birthDay'] ?? 0,
-      type: map['type'] ?? '',
-      createdAt: map['createdAt'],
-      complete: map['complete'] ?? false,
-      noOfPosts: map['noOfPosts'] ?? 0,
-      noOfComments: map['noOfComments'] ?? 0,
-      followers: List<String>.from(map['followers'] ?? []),
-      followings: List<String>.from(map['followings'] ?? []),
-      data: map,
-    );
+    map['uid'] = id;
+    return _$UserFromJson(map);
+  }
+  factory User.fromJson({required Map<String, dynamic> json, required String id}) {
+    json['uid'] = id;
+    final user = _$UserFromJson(json);
+    return user;
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'uid': uid,
-      'isAdmin': isAdmin,
-      'displayName': displayName,
-      'name': name,
-      'firstName': firstName,
-      'lastName': lastName,
-      'middleName': middleName,
-      'photoUrl': photoUrl,
-      'hasPhotoUrl': hasPhotoUrl,
-      'idVerifiedCode': idVerifiedCode,
-      'verified': verified,
-      'phoneNumber': phoneNumber,
-      'email': email,
-      'state': state,
-      'stateImageUrl': stateImageUrl,
-      'birthYear': birthYear,
-      'birthMonth': birthMonth,
-      'birthDay': birthDay,
-      'noOfPosts': noOfPosts,
-      'noOfComments': noOfComments,
-      'type': type,
-      'createdAt': createdAt ?? FieldValue.serverTimestamp(),
-      'complete': complete,
-      'followers': followers,
-      'followings': followings,
-    };
+    return _$UserToJson(this);
   }
 
   @override
-  String toString() =>
-      '''User(uid: $uid, isAdmin: $isAdmin, name: $name, firstName: $firstName, lastName: $lastName, middleName: $middleName, displayName: $displayName, photoUrl: $photoUrl, hasPhotoUrl: $hasPhotoUrl, idVerifiedCode: $idVerifiedCode, verified: $verified, phoneNumber: $phoneNumber, email: $email, state: $state, stateImageUrl: $stateImageUrl, birthYear: $birthYear, birthMonth: $birthMonth, birthDay: $birthDay, noOfPosts: $noOfPosts, noOfComments: $noOfComments, type: $type, createdAt: $createdAt, createdAtDateTime: $createdAtDateTime, complete: $complete, exists: $exists, followers: $followers, followings: $followings, cached: $cached)''';
+  String toString() => '''User(${toMap().toString().replaceAll('\n', '')}})''';
 
   /// Get user document
   ///
@@ -234,12 +191,15 @@ class User with FirebaseHelper {
     if (!snapshot.exists) {
       return null;
     }
-    return User.fromMap(map: Map<String, dynamic>.from(snapshot.value as Map), id: uid);
+    return User.fromJson(json: Map<String, dynamic>.from(snapshot.value as Map), id: uid);
   }
 
   /// 사용자 문서를 생성한다.
   ///
   /// 사용자 문서가 이미 존재하는 경우, 문서를 덮어쓴다.
+  ///
+  /// FirebaseAuth 에 먼저 로그인을 한 후, 함수를 호출해야 Security rules 를 통과 할 수 있다.
+  ///
   /// 참고: README.md
   ///
   /// Example;
@@ -257,6 +217,21 @@ class User with FirebaseHelper {
     return (await get(uid))!;
   }
 
+  static Future<void> create2(User user) async {
+    final data = user.toMap();
+    data.remove('isAdmin');
+    data.remove('disabled');
+    data.remove('isVerified');
+    data.remove('data');
+    data.remove('exists');
+    data.remove('cached');
+    data['createdAt'] = FieldValue.serverTimestamp();
+    // print(data);
+
+    // print(User.doc(user.uid).path);
+    return await User.doc(user.uid).set(data);
+  }
+
   /// Update user document
   ///
   /// Update the user document under /users/{uid} NOT only for the login user
@@ -269,6 +244,12 @@ class User with FirebaseHelper {
   ///
   /// It sets with merge true option just incase if the user document may not
   /// exists.
+  ///
+  /// Example
+  /// ```dart
+  /// my.update( noOfPosts: FieldValue.increment(1) ); // when UserService.instance.init() is called
+  /// User.fromUid(FirebaseAuth.instance.currentUser!.uid).update( noOfPosts: FieldValue.increment(1) ); // when UserService.instance.init() is not called
+  /// ```
   Future<void> update({
     String? name,
     String? firstName,
@@ -278,7 +259,7 @@ class User with FirebaseHelper {
     String? photoUrl,
     bool? hasPhotoUrl,
     String? idVerifiedCode,
-    bool? verified,
+    // bool? isVerified,
     String? phoneNumber,
     String? email,
     String? state,
@@ -289,7 +270,7 @@ class User with FirebaseHelper {
     FieldValue? noOfPosts,
     FieldValue? noOfComments,
     String? type,
-    bool? complete,
+    bool? isComplete,
     FieldValue? followings,
     FieldValue? followers,
     String? field,
@@ -306,7 +287,7 @@ class User with FirebaseHelper {
         if (photoUrl != null) 'photoUrl': photoUrl,
         if (hasPhotoUrl != null) 'hasPhotoUrl': hasPhotoUrl,
         if (idVerifiedCode != null) 'idVerifiedCode': idVerifiedCode,
-        if (verified != null) 'verified': verified,
+        // if (isVerified != null) 'isVerified': isVerified,
         if (phoneNumber != null) 'phoneNumber': phoneNumber,
         if (email != null) 'email': email,
         if (state != null) 'state': state,
@@ -317,7 +298,7 @@ class User with FirebaseHelper {
         if (noOfPosts != null) 'noOfPosts': noOfPosts,
         if (noOfComments != null) 'noOfComments': noOfComments,
         if (type != null) 'type': type,
-        if (complete != null) 'complete': complete,
+        if (isComplete != null) 'isComplete': isComplete,
         if (followings != null) 'followings': followings,
         if (followers != null) 'followers': followers,
         if (field != null && value != null) field: value,
@@ -331,9 +312,9 @@ class User with FirebaseHelper {
     );
   }
 
-  /// If the user has completed the profile, set the complete field to true.
-  Future<void> updateComplete(bool complete) async {
-    return await update(complete: complete, verified: false);
+  /// If the user has completed the profile, set the isComplete field to true.
+  Future<void> updateComplete(bool isComplete) async {
+    return await update(isComplete: isComplete);
   }
 
   /// I am going to follow or unfolow the user of the uid.

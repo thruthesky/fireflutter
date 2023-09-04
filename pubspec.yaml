@@ -29,6 +29,7 @@ dependencies:
   http: ^1.1.0
   image_picker: ^1.0.2
   intl: ^0.18.0
+  json_annotation: ^4.8.1
   linkify: ^5.0.0
   mime_type: ^1.0.0
   path: ^1.8.3
@@ -43,5 +44,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  json_serializable: ^6.7.1
+  build_runner: ^2.4.6
 
 flutter:

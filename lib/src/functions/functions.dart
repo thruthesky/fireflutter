@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'package:intl/intl.dart';
 
 /// Shows a [SnackBar] at the bottom of the screen.
 Future<void> showSnackBar(BuildContext context, String message) async {
@@ -222,4 +226,43 @@ ScaffoldFeatureController toast({
       ),
     ),
   );
+}
+
+/// randomString that returns a random string of length [length].
+String randomString([length = 12]) {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  final rnd = Random(DateTime.now().millisecondsSinceEpoch);
+  final buf = StringBuffer();
+  for (var x = 0; x < length; x++) {
+    buf.write(chars[rnd.nextInt(chars.length)]);
+  }
+  return buf.toString();
+}
+
+/// Return a string of date/time agao
+String dateTimeAgo(DateTime dateTime) {
+  final Duration diff = DateTime.now().difference(dateTime);
+  if (diff.inDays >= 31) {
+    return dateTime.toIso8601String();
+  } else if (diff.inDays >= 1) {
+    return '${diff.inDays} ${diff.inDays == 1 ? "day" : "days"} ago';
+  } else if (diff.inHours >= 1) {
+    return '${diff.inHours} ${diff.inHours == 1 ? "hour" : "hours"} ago';
+  } else if (diff.inMinutes >= 1) {
+    return '${diff.inMinutes} ${diff.inMinutes == 1 ? "minute" : "minutes"} ago';
+  } else if (diff.inSeconds >= 1) {
+    return '${diff.inSeconds} ${diff.inSeconds == 1 ? "second" : "seconds"} ago';
+  } else {
+    return 'just now';
+  }
+}
+
+/// Returns a string of "yyyy-MM-dd" or "HH:mm:ss"
+String dateTimeShort(DateTime dt) {
+  final now = DateTime.now();
+  if (dt.year == now.year && dt.month == now.month && dt.day == now.day) {
+    return DateFormat.jm().format(dt);
+  } else {
+    return DateFormat('yy.MM.dd').format(dt);
+  }
 }
