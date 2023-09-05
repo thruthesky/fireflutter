@@ -854,6 +854,15 @@ IconButton(
 
 # Push notifications
 
+Push notification tokens are saved under `/users/{uid}/fcm_tokens/{token} { uid: ..., device_type: ..., fcm_token: ... }`. If the user didn't sign in, the token will not be saved.
+
+The admin can send push notification to all the devices, or specific type/os through cloud function by creating a push notification document.
+
+
+
+
+
+
 
 ```dart
     // init here
