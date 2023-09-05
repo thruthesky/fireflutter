@@ -46,6 +46,8 @@ A free, open source, complete, rapid development package for creating Social app
   - [Chat Room Menu](#chat-room-menu)
   - [Chat Room Settings](#chat-room-settings)
 - [User](#user)
+  - [Like](#like)
+  - [Bookmark/Favorite](#bookmarkfavorite)
   - [Follow and Unfollow](#follow-and-unfollow)
 - [Upload](#upload)
   - [Photo upload](#photo-upload)
@@ -724,6 +726,37 @@ updatedRoom = await EasyChat.instance.updateRoomSetting(
 `complete` is a boolean field to indicate that the user completed updating his profile information.
 
 `verified` is a boolean field to indicate that the user's identification has fully verified by the system. Note that, this is not secured by the rules as of now. Meaning, user can edit it by himself.
+
+
+## Like
+
+The Like function does the following
+
+- When A likes B,
+  - A's uid is saved in B's `likes` field.
+- When A likes(again or remove likes),
+  - A's uid is deleted from B's `likes` field.
+
+
+- On the public profile screen of B, the number of likes will be displayed.
+
+
+
+
+## Bookmark/Favorite
+
+Bookmark is known to be `Favorite`.
+
+- When A bookmarks on B's profile,
+  - `/favorites/A/{type: profile, uid: my_uid, otherUid: ..., createdAt: ..., }` will be saved.
+
+- When A bookmarks a post
+  - `/favorites/A/{type: post, uid: my_uid, postId: ..., createdAt: ..., }` will be created.
+
+- When A bookmarks a comment,
+  - `/favorites/A/{type: comment, uid: my_uid, commentId: ..., created: ... }` will be created.
+
+When A wants to see the bookmarks, the app should display a screen to list the bookmarks by all, type, user, etc.
 
 
 

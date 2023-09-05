@@ -85,21 +85,23 @@ class _PostViewDialogState extends State<PostViewDialog> {
               ),
             ),
             // user avatar
-            if (post.uid.isNotEmpty)
-              ListTile(
-                leading: UserAvatar(
+            Row(
+              children: [
+                UserAvatar(
                   uid: post.uid,
                   key: ValueKey(post.uid),
+                  onTap: () => UserService.instance.showPublicProfile(context: context, uid: post.uid),
                 ),
-                title: UserDisplayName(
+                UserDisplayName(
                   uid: post.uid,
                 ),
-              ),
-
-            DateTimeText(
-              dateTime: post.createdAt,
-              type: DateTimeTextType.short,
+                DateTimeText(
+                  dateTime: post.createdAt,
+                  type: DateTimeTextType.short,
+                ),
+              ],
             ),
+
             Container(
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(16),

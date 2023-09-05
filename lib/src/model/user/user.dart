@@ -102,6 +102,9 @@ class User with FirebaseHelper {
 
   bool cached;
 
+  /// Likes
+  final List<String> likes;
+
   User({
     required this.uid,
     this.isAdmin = false,
@@ -131,6 +134,7 @@ class User with FirebaseHelper {
     this.followings = const [],
     this.data = const {},
     this.cached = false,
+    this.likes = const [],
   }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory User.notExists() {
@@ -272,6 +276,7 @@ class User with FirebaseHelper {
     bool? isComplete,
     FieldValue? followings,
     FieldValue? followers,
+    FieldValue? likes,
     String? field,
     dynamic value,
     Map<String, dynamic> data = const {},
@@ -300,6 +305,7 @@ class User with FirebaseHelper {
         if (isComplete != null) 'isComplete': isComplete,
         if (followings != null) 'followings': followings,
         if (followers != null) 'followers': followers,
+        if (likes != null) 'likes': likes,
         if (field != null && value != null) field: value,
       },
       ...data
@@ -343,4 +349,21 @@ class User with FirebaseHelper {
       return true;
     }
   }
+
+  /// Likes
+  ///
+  /// See README for details
+  ///
+  /// Returns true if liked a user. Returns false if unliked a user.
+  Future<bool> like(String otherUid) async {
+    if (likes.contains(otherUid)) {
+      await update(likes: FieldValue.arrayRemove([otherUid]));
+      return false;
+    } else {
+      await update(likes: FieldValue.arrayUnion([otherUid]));
+      return true;
+    }
+  }
+
+  String get noOfLikes => likes.isEmpty ? "Like" : "${likes.length} Likes";
 }
