@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
@@ -42,25 +43,33 @@ class _FeedListViewState extends State<FeedListView> with FirebaseHelper {
           builder: (_, snapshot) {
             if (snapshot.hasData) {
               final post = Post.fromDocumentSnapshot(snapshot.data!);
-              return ListTile(
-                title: Text(post.title),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              return Card(
+                child: Column(
                   children: [
-                    UserDoc(
-                        builder: (user) => Column(
-                              children: [
-                                UserAvatar(user: user, size: 40),
-                                Text(user.name),
-                              ],
-                            ),
-                        uid: post.uid),
-                    Text(post.content),
+                    YouTube(url: post.youtubeId),
+                    ...post.urls.map((e) => CachedNetworkImage(imageUrl: e)).toList(),
+                    ListTile(
+                      title: Text(post.title),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          UserDoc(
+                              builder: (user) => Column(
+                                    children: [
+                                      UserAvatar(user: user, size: 40),
+                                      Text(user.name),
+                                    ],
+                                  ),
+                              uid: post.uid),
+                          Text(post.content),
+                        ],
+                      ),
+                      onTap: () {
+                        PostService.instance.showPostViewDialog(context, post);
+                      },
+                    ),
                   ],
                 ),
-                onTap: () {
-                  PostService.instance.showPostViewDialog(context, post);
-                },
               );
             }
             return const SizedBox.shrink();

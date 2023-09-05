@@ -68,6 +68,7 @@ export 'widget/common/display_media/display_media.dart';
 export 'widget/common/url_preview/url_preview.dart';
 export 'widget/common/url_preview/url_preview.model.dart';
 export 'widget/common/display_media/edit_muliple_media.dart';
+export 'widget/common/youtube.dart';
 
 // Favorite
 

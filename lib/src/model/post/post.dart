@@ -14,6 +14,8 @@ class Post with FirebaseHelper {
   final String title;
   final String content;
 
+  final String youtubeId;
+
   /// This holds the original JSON document data of the user document. This is
   /// useful when you want to save custom data in the user document.
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -39,6 +41,7 @@ class Post with FirebaseHelper {
     this.categoryId = '',
     this.title = '',
     this.content = '',
+    this.youtubeId = '',
     this.uid = '',
     this.urls = const [],
     createdAt,
@@ -71,15 +74,19 @@ class Post with FirebaseHelper {
     required String categoryId,
     required String title,
     required String content,
+    String? youtubeId,
     List<String>? urls,
+    Map<String, dynamic> data = const {},
   }) async {
     final Map<String, dynamic> postData = {
       'title': title,
       'content': content,
       'categoryId': categoryId,
+      if (youtubeId != null) 'youtubeId': youtubeId,
       if (urls != null) 'urls': urls,
       'createdAt': FieldValue.serverTimestamp(),
       'uid': UserService.instance.uid,
+      ...data,
     };
     final postId = Post.doc().id;
     await Post.doc(postId).set(postData);

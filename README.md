@@ -824,6 +824,34 @@ IconButton(
 It has options like displaying a progressive percentage.
 
 
+
+You can choose which media source you want to upload.
+
+```dart
+IconButton(
+  onPressed: () async {
+    final url = await StorageService.instance.upload(
+      context: context,
+      progress: (p) => setState(() => progress = p),
+      complete: () => setState(() => progress = null),
+      camera: PostService.instance.uploadFromCamera,
+      gallery: PostService.instance.uploadFromGallery,
+      file: PostService.instance.uploadFromFile,
+    );
+    if (url != null && mounted) {
+      setState(() {
+        urls.add(url);
+      });
+    }
+  },
+  icon: const Icon(
+    Icons.camera_alt,
+    size: 36,
+  ),
+),
+```
+
+
 # Push notifications
 
 

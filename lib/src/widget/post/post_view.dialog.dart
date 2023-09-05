@@ -112,6 +112,7 @@ class _PostViewDialogState extends State<PostViewDialog> {
               ),
               child: Text(post.content),
             ),
+            YouTube(url: post.youtubeId, autoPlay: true),
             const Divider(),
             if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
             Padding(
