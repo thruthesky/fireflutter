@@ -11,7 +11,8 @@ Category _$CategoryFromJson(Map<String, dynamic> json) => Category(
       name: json['name'] as String? ?? '',
       description: json['description'] as String?,
       createdAt: json['createdAt'],
-    )..data = json['data'] as Map<String, dynamic>;
+      data: json['data'] as Map<String, dynamic>? ?? const {},
+    );
 
 Map<String, dynamic> _$CategoryToJson(Category instance) => <String, dynamic>{
       'id': instance.id,

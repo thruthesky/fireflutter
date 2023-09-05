@@ -11,9 +11,13 @@ Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
       postId: json['postId'] as String,
       content: json['content'] as String? ?? '',
       uid: json['uid'] as String,
-      urls: (json['urls'] as List<dynamic>?)?.map((e) => e as String).toList() ?? const [],
+      urls:
+          (json['urls'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+              const [],
       createdAt: json['createdAt'],
-      likes: (json['likes'] as List<dynamic>?)?.map((e) => e as String).toList() ?? const [],
+      likes:
+          (json['likes'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+              const [],
       deleted: json['deleted'] as bool? ?? false,
       parentId: json['parentId'] as String?,
       sort: json['sort'] as String,
