@@ -125,7 +125,7 @@ class Post with FirebaseHelper {
   /// If I already liked (iLiked == true)
   /// it will add my uid to the likes...
   /// otherwise, it will remove my uid from the likes.
-  Future<void> likeOrUnlike() async {
+  Future<void> like() async {
     if (iLiked) {
       await PostService.instance.postCol.doc(id).update({
         'likes': FieldValue.arrayRemove([my.uid]),

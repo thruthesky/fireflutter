@@ -25,8 +25,8 @@ class PublicProfileDialog extends StatelessWidget {
               UserDoc(
                 live: true,
                 builder: (user) => ElevatedButton(
-                  onPressed: () {
-                    my.like(user.uid);
+                  onPressed: () async {
+                    await my.like(user.uid);
                   },
                   child: Text(user.noOfLikes),
                 ),

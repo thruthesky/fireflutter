@@ -135,7 +135,7 @@ class _PostViewDialogState extends State<PostViewDialog> {
                         'Like ${post.noOfLikes}',
                         style: post.iLiked ? const TextStyle(fontWeight: FontWeight.bold) : null,
                       ),
-                      onPressed: () => post.likeOrUnlike(),
+                      onPressed: () => post.like(),
                     ),
                   ),
                   UserDoc(

@@ -352,6 +352,9 @@ class User with FirebaseHelper {
 
   /// Likes
   ///
+  /// I am the one who likes other users. so, the instance of the class must be
+  /// mine.
+  ///
   /// See README for details
   ///
   /// Returns true if liked a user. Returns false if unliked a user.
