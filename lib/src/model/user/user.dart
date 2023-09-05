@@ -352,18 +352,35 @@ class User with FirebaseHelper {
 
   /// Likes
   ///
-  /// I am the one who likes other users. so, the instance of the class must be
-  /// mine.
+  /// I am the one who likes other users.
+  /// ! But the user model instance must be the other user's model instance.
+  ///
   ///
   /// See README for details
   ///
   /// Returns true if liked a user. Returns false if unliked a user.
-  Future<bool> like(String otherUid) async {
-    if (likes.contains(otherUid)) {
-      await update(likes: FieldValue.arrayRemove([otherUid]));
+  Future<bool> like() async {
+    if (likes.contains(my.uid)) {
+      /// Since sync is slow, update the sync field first.
+      /// Move this code somewhere else.
+      final newLikes = likes..remove(my.uid);
+      rtdb.ref('users/$uid').update(
+        {
+          'likes': newLikes,
+        },
+      );
+      await update(likes: FieldValue.arrayRemove([my.uid]));
+
       return false;
     } else {
-      await update(likes: FieldValue.arrayUnion([otherUid]));
+      /// Since sync is slow, update the sync field first.
+      /// Move this code somewhere else.
+      rtdb.ref('users/$uid').update(
+        {
+          'likes': [...likes, my.uid],
+        },
+      );
+      await update(likes: FieldValue.arrayUnion([my.uid]));
       return true;
     }
   }

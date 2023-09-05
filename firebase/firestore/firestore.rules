@@ -67,8 +67,9 @@ service cloud.firestore {
     }
 
     match /favorites/{documentId} {
-      allow read, write: if request.resource.data.uid == request.auth.uid;
+      allow read, write: if resource.data.uid == request.auth.uid || request.resource.data.uid == request.auth.uid;
     }
+
 
 
     match /push-notifications-queue/{docId} {
