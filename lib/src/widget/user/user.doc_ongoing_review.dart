@@ -53,23 +53,21 @@ class UserDoc extends StatelessWidget {
   final Widget Function()? notLoggedInBuilder;
 
   final User? user;
-
   final bool live;
 
   String get currentUserUid => fa.FirebaseAuth.instance.currentUser!.uid;
-
   String? get userUid => user?.uid ?? uid;
 
   @override
   Widget build(BuildContext context) {
     // 현재 사용자 (uid 와 user 가 null)
     if (uid == null && user == null) {
+      // 현재 사용자, 실시간 아님, 로그인 안 했음. Not logged in 위젯 표시
+      if (fa.FirebaseAuth.instance.currentUser == null) {
+        return notLoggedInBuilder?.call() ?? const SizedBox.shrink();
+      }
       // 실시간 업데이트가 아니면,
       if (live == false) {
-        // 현재 사용자, 실시간 아님, 로그인 안 했음. Not logged in 위젯 표시
-        if (fa.FirebaseAuth.instance.currentUser == null) {
-          return notLoggedInBuilder?.call() ?? const SizedBox.shrink();
-        }
         // 현재 사용자, 실시간 아님, 로그인 했음
         // 로그인을 했으면, firestore /users collection 에서 데이터를 가져와 biuld 한다.
         return FutureBuilder<User?>(
@@ -122,21 +120,15 @@ class UserDoc extends StatelessWidget {
     /// 주의: 로딩 중, 반짝임(깜빡거림)이 발생할 수 있다.
     if (snapshot.connectionState == ConnectionState.waiting) {
       // 로딩 중이면, 반짝임을 없애고, 빠르게 랜더링을 하기 위해서, 입력된 user model 로 화면을 그린다.
-
-      if (user != null) {
-        return builder(user!);
-      } else {
-        return onLoading ?? const SizedBox.shrink();
-      }
+      if (user != null) return builder(user!);
+      return onLoading ?? const SizedBox.shrink();
     }
-
     final userModel = snapshot.data;
 
     /// 문서를 가져왔지만, 문서가 null 이거나 문서가 존재하지 않는 경우, user.exists == false 가 된다.
     if (snapshot.hasData == false || snapshot.data?.exists == false || userModel == null) {
       return builder(User.notExists());
     }
-
     return builder(userModel);
   }
 }
