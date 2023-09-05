@@ -316,11 +316,11 @@ class User with FirebaseHelper {
     return await update(isComplete: isComplete);
   }
 
-  /// I am going to follow or unfolow the user of the uid.
+  /// Follow
+  ///
+  /// See README for details
   ///
   /// Returns true if followed a user. Returns false if unfollowed a user.
-  ///
-  /// When the login user follows the user of [otherUid], the [myUid] needs to be added in the array the other user's followers.
   ///
   Future<bool> follow(String otherUid) async {
     final myUid = UserService.instance.uid;

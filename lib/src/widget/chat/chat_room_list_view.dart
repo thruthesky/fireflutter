@@ -39,6 +39,8 @@ class ChatRoomListView extends StatefulWidget {
   const ChatRoomListView({
     super.key,
     required this.controller,
+    this.orderBy = 'lastMessage.createdAt',
+    this.descending = true,
     this.itemBuilder,
     this.emptyBuilder,
     this.pageSize = 20,
@@ -61,6 +63,8 @@ class ChatRoomListView extends StatefulWidget {
   }) : assert(itemExtent == null || visibility == null, "You can't set both itemExtent and visibility");
 
   final ChatRoomListViewController controller;
+  final String orderBy;
+  final bool descending;
   final int pageSize;
   final Widget Function(BuildContext, Room)? itemBuilder;
   final Widget Function(BuildContext)? emptyBuilder;
@@ -123,7 +127,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
       }
     }
 
-    q = q.orderBy('lastMessage.createdAt', descending: true);
+    q = q.orderBy(widget.orderBy, descending: widget.descending);
     return q;
   }
 

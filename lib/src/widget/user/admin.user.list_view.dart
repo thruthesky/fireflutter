@@ -43,11 +43,11 @@ class AdminUserListView extends StatelessWidget with FirebaseHelper {
       query = query.where('displayName', isEqualTo: displayName);
     }
 
-    if (isComplete != null) {
+    if (isComplete == true) {
       query = query.where('isComplete', isEqualTo: isComplete);
     }
 
-    if (isVerified != null) {
+    if (isVerified == true) {
       query = query.where('isVerified', isEqualTo: isVerified);
     }
 

@@ -14,6 +14,8 @@ part 'room.g.dart';
 /// Don't update the property directly. The property is read-only and if you want to apply the changes, listen to the stream of the chat room document.
 @JsonSerializable()
 class Room with FirebaseHelper {
+  static CollectionReference get col => FirebaseFirestore.instance.collection('chats');
+
   final String id;
   final String name;
 

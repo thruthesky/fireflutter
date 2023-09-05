@@ -6,6 +6,7 @@ class I18N {
   PostTranslations post = PostTranslations();
   CommentTranslations comment = CommentTranslations();
   FormTranslations form = FormTranslations();
+  ToastTranslations toast = ToastTranslations();
 }
 
 class UserTranslations {
@@ -42,6 +43,10 @@ class FormTranslations {
   String postUpdate = 'UPDATE';
   String titleRequired = 'Title is required';
   String contentRequired = 'Content is required';
+}
+
+class ToastTranslations {
+  String dismiss = 'Dismiss';
 }
 
 final tr = I18N();
