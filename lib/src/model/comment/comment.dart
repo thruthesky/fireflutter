@@ -45,6 +45,7 @@ class Comment with FirebaseHelper {
     this.parentId,
     required this.sort,
     required this.depth,
+    this.data = const {},
   }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory Comment.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
