@@ -16,6 +16,7 @@ class Post with FirebaseHelper {
 
   /// This holds the original JSON document data of the user document. This is
   /// useful when you want to save custom data in the user document.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   Map<String, dynamic>? data;
 
   @override
@@ -44,7 +45,6 @@ class Post with FirebaseHelper {
     this.likes = const [],
     this.deleted = false,
     this.noOfComments = 0,
-    this.data = const {},
   }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory Post.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {

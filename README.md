@@ -737,8 +737,11 @@ The Like function does the following
 - When A likes(again or remove likes),
   - A's uid is deleted from B's `likes` field.
 
+Note that, the user document fields are synced and 
 
 - On the public profile screen of B, the number of likes will be displayed.
+
+
 
 
 

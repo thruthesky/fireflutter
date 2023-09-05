@@ -15,6 +15,7 @@ class Category with FirebaseHelper {
 
   /// This holds the original JSON document data of the user document. This is
   /// useful when you want to save custom data in the user document.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   late Map<String, dynamic> data;
 
   @FirebaseDateTimeConverter()
@@ -25,7 +26,6 @@ class Category with FirebaseHelper {
     this.name = '',
     this.description,
     dynamic createdAt,
-    this.data = const {},
   }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory Category.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {

@@ -34,6 +34,7 @@ class Comment with FirebaseHelper {
 
   /// This holds the original JSON document data of the user document. This is
   /// useful when you want to save custom data in the user document.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   late Map<String, dynamic> data;
 
   Comment({
@@ -48,7 +49,6 @@ class Comment with FirebaseHelper {
     this.parentId,
     required this.sort,
     required this.depth,
-    this.data = const {},
   }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory Comment.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
