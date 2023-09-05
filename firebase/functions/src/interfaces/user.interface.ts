@@ -28,5 +28,6 @@ export interface UserSettingsDocument {
   action: string;
   category: string;
   type?: string;
-  userDocumentReference: admin.firestore.DocumentReference;
+  uid: string;
+
 }

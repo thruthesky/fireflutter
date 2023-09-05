@@ -1,16 +1,16 @@
 import * as admin from "firebase-admin";
 // import * as functions from "firebase-functions";
 // import { RuntimeOptions } from "firebase-functions";
-import { ChatMessageDocument } from "../interfaces/chat.interface";
-import { CommentDocument, PostDocument } from "../interfaces/forum.interface";
-import { SendMessage, SendMessageResult } from "../interfaces/messaging.interface";
-import { Messaging } from "../models/messaging.model";
-import { EventName, EventType } from "../utils/event-name";
+import {ChatMessageDocument} from "../interfaces/chat.interface";
+import {CommentDocument, PostDocument} from "../interfaces/forum.interface";
+import {SendMessage, SendMessageResult} from "../interfaces/messaging.interface";
+import {Messaging} from "../models/messaging.model";
+import {EventName, EventType} from "../utils/event-name";
 
-import { onDocumentCreated, FirestoreEvent }
+import {onDocumentCreated, FirestoreEvent}
   from "firebase-functions/v2/firestore";
 
-import { QueryDocumentSnapshot } from "firebase-admin/firestore";
+import {QueryDocumentSnapshot} from "firebase-admin/firestore";
 
 
 exports.messagingOnPostCreate = onDocumentCreated("posts/{postId}",
@@ -32,7 +32,6 @@ exports.messagingOnPostCreate = onDocumentCreated("posts/{postId}",
 
 exports.messagingOnCommentCreate = onDocumentCreated("comments/{commentId}",
   async (event: FirestoreEvent<QueryDocumentSnapshot | undefined>): Promise<SendMessageResult> => {
-
     const comment: CommentDocument = event.data?.data() as CommentDocument;
     const data: SendMessage = {
       ...comment,
@@ -48,7 +47,6 @@ exports.messagingOnCommentCreate = onDocumentCreated("comments/{commentId}",
 exports.pushNotificationQueue =
   onDocumentCreated("push-notifications-queue/{docId}",
     async (event: FirestoreEvent<QueryDocumentSnapshot | undefined>) => {
-
       const re = await Messaging
         .sendMessage(event.data?.data() as SendMessage);
       console.log("re::", re);
@@ -82,7 +80,6 @@ exports.messagingOnChatMessageCreate =
     });
 
 
-
 exports.sendPushNotificationsOnCreate =
   onDocumentCreated("push_notifications/{documentId}",
     async (event: FirestoreEvent<QueryDocumentSnapshot | undefined>) => {
@@ -92,6 +89,6 @@ exports.sendPushNotificationsOnCreate =
         await Messaging.sendPushNotifications(event.data!);
       } catch (e) {
         console.log(`Error: ${e}`);
-        await event.data?.ref.update({ status: "failed", error: `${e}` });
+        await event.data?.ref.update({status: "failed", error: `${e}`});
       }
     });

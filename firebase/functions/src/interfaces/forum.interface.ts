@@ -20,7 +20,7 @@ export interface CommentDocument {
   postId: string;
   content: string;
   uid: string;
-  files: string[];
+  urls: string[];
   createdAt: admin.firestore.Timestamp;
   updatedAt: admin.firestore.Timestamp;
   likes: Array<string>;

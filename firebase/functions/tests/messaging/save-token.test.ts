@@ -23,8 +23,6 @@ describe("Save token", () => {
             fcm_token: 'a-token-1',
             uid: a.uid,
         });
-
         expect(re.device_type).to.be.eq('android');
-
     });
 });
