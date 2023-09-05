@@ -67,3 +67,7 @@ export 'widget/common/display_media/display_media.dart';
 export 'widget/common/url_preview/url_preview.dart';
 export 'widget/common/url_preview/url_preview.model.dart';
 export 'widget/common/display_media/edit_muliple_media.dart';
+
+// Favorite
+
+export 'widget/favorite/favorite.list_view.dart';

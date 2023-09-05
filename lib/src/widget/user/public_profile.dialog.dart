@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -11,35 +12,45 @@ class PublicProfileDialog extends StatelessWidget {
     return FutureBuilder<User?>(
       future: UserService.instance.get(uid),
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final user = snapshot.data;
+
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Theme.of(context).colorScheme.inversePrimary,
             title: const Text('Public Profile'),
           ),
-          body: Column(
-            children: [
-              const Center(
-                child: Text('Public Profile'),
-              ),
-              const SizedBox(height: 20),
-              UserDoc(
-                live: true,
-                user: snapshot.data,
-                builder: (user) => ElevatedButton(
-                  onPressed: () async {
-                    await my.like(user.uid);
-                  },
-                  child: Text(user.noOfLikes),
+          body: user == null
+              ? const Center(child: Text("User not found"))
+              : Column(
+                  children: [
+                    const Center(
+                      child: Text('Public Profile'),
+                    ),
+                    const SizedBox(height: 20),
+                    UserDoc(
+                        uid: uid,
+                        live: true,
+                        builder: (otherUser) {
+                          print('otheruser; $otherUser');
+                          return ElevatedButton(
+                            onPressed: () async {
+                              await otherUser.like();
+                            },
+                            child: Text(otherUser.noOfLikes),
+                          );
+                        }),
+                    ElevatedButton(
+                      onPressed: () {
+                        Favorite.toggle(type: FavoriteType.user, otherUid: uid);
+                      },
+                      child: const Text("Favorite"),
+                    ),
+                  ],
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Favorite.create(type: FavoriteType.user, otherUid: uid);
-                },
-                child: const Text("Favorite"),
-              ),
-            ],
-          ),
         );
       },
     );
