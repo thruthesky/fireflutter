@@ -11,14 +11,11 @@ class PostDoc extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
-      stream: Post.doc(post.id).snapshots(), // PostService.instance.snapshot(postId: post.id),
+      stream: Post.doc(post.id).snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) return Text(snapshot.error.toString());
-        if (snapshot.hasData) {
-          return builder(Post.fromDocumentSnapshot(snapshot.data!));
-        } else {
-          return builder(post);
-        }
+        if (snapshot.hasData) return builder(Post.fromDocumentSnapshot(snapshot.data!));
+        return builder(post);
       },
     );
   }

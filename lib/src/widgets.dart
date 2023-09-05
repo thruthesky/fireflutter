@@ -59,6 +59,7 @@ export 'widget/post/post_doc.dart';
 export 'widget/comment/comment_edit.bottom_sheet.dart';
 export 'widget/comment/comment_list_view.dart';
 export 'widget/comment/comment.list_tile.dart';
+export 'widget/comment/comment_doc.dart';
 
 // Common
 export 'widget/common/date_time_text.dart';

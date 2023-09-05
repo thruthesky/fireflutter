@@ -1,5 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/widget/common/date_time_text.dart';
 
 import 'package:flutter/material.dart';
 
@@ -73,12 +72,16 @@ class CommentTileState extends State<CommentListTile> {
                         );
                       },
                     ),
-                    TextButton(
-                      child: const Text('Like'),
-                      onPressed: () {
-                        // TODO Commeent liike
-                        // CommentDoc
-                        // Post count per category
+                    CommentDoc(
+                      comment: widget.comment,
+                      builder: (comment) {
+                        return TextButton(
+                          child: Text('Like ${comment.noOfLikes}'),
+                          onPressed: () {
+                            // TODO firestore test
+                            comment.likeOrUnlike();
+                          },
+                        );
                       },
                     ),
                     const Spacer(),

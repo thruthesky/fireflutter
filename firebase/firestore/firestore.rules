@@ -45,9 +45,9 @@ service cloud.firestore {
         ||
         ( request.auth.uid == documentId && notUpdating(['disabled', 'isAdmin', 'isVerified']) )
         ||
-        onlyAdding('followers', request.auth.uid)
-        ||
-        onlyRemoving('followers', request.auth.uid)
+        addOrRemove('followers', request.auth.uid) 
+        || 
+        addOrRemove('likes', request.auth.uid) 
         ;
       allow delete: if request.auth.uid == documentId || isAdmin();
       match /fcm_tokens/{docId} {
