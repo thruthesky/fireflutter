@@ -737,9 +737,14 @@ The Like function does the following
 - When A likes(again or remove likes),
   - A's uid is deleted from B's `likes` field.
 
-Note that, the user document fields are synced and 
+Note that, the user document fields are synced and it's slow, fireflutter saves the likes into the `/users` in rtdb for the speed up.
 
 - On the public profile screen of B, the number of likes will be displayed.
+
+TODO; @thruthesky
+Improvement needed here. Since the maximum size of a firestore document is limited in 1M bytes, saving `likes` in the user document is not a good idea. Save it under seprated collection. It will not only solve the document size limit problem but also, it will work fast.
+
+
 
 
 
