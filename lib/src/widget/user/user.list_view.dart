@@ -20,7 +20,10 @@ class UserListView extends StatelessWidget with FirebaseHelper {
     this.titleBuilder,
     this.subtitleBuilder,
     this.trailingBuilder,
+    this.itemBuilder,
   });
+
+  // TODO assert if item builder is not null, no need for avatar, title, subtitle or trailing.
 
   final String? searchText;
   final List<String> exemptedUsers;
@@ -31,6 +34,7 @@ class UserListView extends StatelessWidget with FirebaseHelper {
   final Widget Function(User?)? titleBuilder;
   final Widget Function(User?)? subtitleBuilder;
   final Widget Function(User?)? trailingBuilder;
+  final Widget Function(User?)? itemBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -42,22 +46,20 @@ class UserListView extends StatelessWidget with FirebaseHelper {
       query: query,
       itemBuilder: (context, snapshot) {
         final user = User.fromDocumentSnapshot(snapshot);
-        if (exemptedUsers.contains(user.uid)) {
-          return const SizedBox();
-        } else {
-          return ListTile(
-            title: titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
-            subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
-            leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
-            trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
-            onTap: () async {
-              onTap?.call(user);
-            },
-            onLongPress: () async {
-              onLongPress?.call(user);
-            },
-          );
-        }
+        if (exemptedUsers.contains(user.uid)) return const SizedBox();
+        if (itemBuilder != null) return itemBuilder!.call(user);
+        return ListTile(
+          title: titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
+          subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
+          leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
+          trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
+          onTap: () async {
+            onTap?.call(user);
+          },
+          onLongPress: () async {
+            onLongPress?.call(user);
+          },
+        );
       },
       loadingBuilder: (context) => const Center(
         child: CircularProgressIndicator(),
