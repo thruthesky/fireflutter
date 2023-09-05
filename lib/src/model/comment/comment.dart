@@ -8,6 +8,9 @@ part 'comment.g.dart';
 
 @JsonSerializable()
 class Comment with FirebaseHelper {
+  static const String collectionName = 'comments';
+  static DocumentReference doc([String? commentId]) => CommentService.instance.commentCol.doc(commentId);
+
   final String id;
   final String postId;
   final String content;
@@ -27,7 +30,7 @@ class Comment with FirebaseHelper {
   final int depth;
 
   bool get iLiked => likes.contains(my.uid);
-  int get noOfLikes => likes.length;
+  String get noOfLikes => likes.isNotEmpty ? '(${likes.length})' : '';
 
   /// This holds the original JSON document data of the user document. This is
   /// useful when you want to save custom data in the user document.
@@ -45,6 +48,7 @@ class Comment with FirebaseHelper {
     this.parentId,
     required this.sort,
     required this.depth,
+    this.data = const {},
   }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory Comment.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
@@ -127,11 +131,11 @@ class Comment with FirebaseHelper {
   /// otherwise, it will remove my uid from the likes.
   Future<void> likeOrUnlike() async {
     if (iLiked) {
-      await PostService.instance.postCol.doc(id).update({
+      await CommentService.instance.commentCol.doc(id).update({
         'likes': FieldValue.arrayRemove([my.uid]),
       });
     } else {
-      await PostService.instance.postCol.doc(id).update({
+      await CommentService.instance.commentCol.doc(id).update({
         'likes': FieldValue.arrayUnion([my.uid]),
       });
     }

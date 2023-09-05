@@ -35,7 +35,6 @@ class PublicProfileDialog extends StatelessWidget {
                         uid: uid,
                         live: true,
                         builder: (otherUser) {
-                          print('otheruser; $otherUser');
                           return ElevatedButton(
                             onPressed: () async {
                               await otherUser.like();

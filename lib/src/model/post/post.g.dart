@@ -21,7 +21,8 @@ Post _$PostFromJson(Map<String, dynamic> json) => Post(
               const [],
       deleted: json['deleted'] as bool? ?? false,
       noOfComments: json['noOfComments'] as int? ?? 0,
-    )..data = json['data'] as Map<String, dynamic>?;
+      data: json['data'] as Map<String, dynamic>? ?? const {},
+    );
 
 Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'id': instance.id,
