@@ -84,6 +84,7 @@ class _PostViewDialogState extends State<PostViewDialog> {
                 ),
               ),
             ),
+            // user avatar
             if (post.uid.isNotEmpty)
               ListTile(
                 leading: UserAvatar(
@@ -93,16 +94,12 @@ class _PostViewDialogState extends State<PostViewDialog> {
                 title: UserDisplayName(
                   uid: post.uid,
                 ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    DateTimeText(
-                      dateTime: post.createdAt,
-                      type: DateTimeTextType.short,
-                    ),
-                  ],
-                ),
               ),
+
+            DateTimeText(
+              dateTime: post.createdAt,
+              type: DateTimeTextType.short,
+            ),
             Container(
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(16),
