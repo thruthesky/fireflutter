@@ -22,6 +22,7 @@ class User with FirebaseHelper {
 
   /// This holds the original JSON document data of the user document. This is
   /// useful when you want to save custom data in the user document.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   late Map<String, dynamic> data;
 
   @override
@@ -102,6 +103,9 @@ class User with FirebaseHelper {
 
   bool cached;
 
+  /// Likes
+  final List<String> likes;
+
   User({
     required this.uid,
     this.isAdmin = false,
@@ -129,8 +133,8 @@ class User with FirebaseHelper {
     this.noOfComments = 0,
     this.followers = const [],
     this.followings = const [],
-    this.data = const {},
     this.cached = false,
+    this.likes = const [],
   }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory User.notExists() {
@@ -272,6 +276,7 @@ class User with FirebaseHelper {
     bool? isComplete,
     FieldValue? followings,
     FieldValue? followers,
+    FieldValue? likes,
     String? field,
     dynamic value,
     Map<String, dynamic> data = const {},
@@ -300,6 +305,7 @@ class User with FirebaseHelper {
         if (isComplete != null) 'isComplete': isComplete,
         if (followings != null) 'followings': followings,
         if (followers != null) 'followers': followers,
+        if (likes != null) 'likes': likes,
         if (field != null && value != null) field: value,
       },
       ...data
@@ -316,11 +322,11 @@ class User with FirebaseHelper {
     return await update(isComplete: isComplete);
   }
 
-  /// I am going to follow or unfolow the user of the uid.
+  /// Follow
+  ///
+  /// See README for details
   ///
   /// Returns true if followed a user. Returns false if unfollowed a user.
-  ///
-  /// When the login user follows the user of [otherUid], the [myUid] needs to be added in the array the other user's followers.
   ///
   Future<bool> follow(String otherUid) async {
     final myUid = UserService.instance.uid;
@@ -343,4 +349,41 @@ class User with FirebaseHelper {
       return true;
     }
   }
+
+  /// Likes
+  ///
+  /// I am the one who likes other users.
+  /// ! But the user model instance must be the other user's model instance.
+  ///
+  ///
+  /// See README for details
+  ///
+  /// Returns true if liked a user. Returns false if unliked a user.
+  Future<bool> like() async {
+    if (likes.contains(my.uid)) {
+      /// Since sync is slow, update the sync field first.
+      /// Move this code somewhere else.
+      final newLikes = likes..remove(my.uid);
+      rtdb.ref('users/$uid').update(
+        {
+          'likes': newLikes,
+        },
+      );
+      await update(likes: FieldValue.arrayRemove([my.uid]));
+
+      return false;
+    } else {
+      /// Since sync is slow, update the sync field first.
+      /// Move this code somewhere else.
+      rtdb.ref('users/$uid').update(
+        {
+          'likes': [...likes, my.uid],
+        },
+      );
+      await update(likes: FieldValue.arrayUnion([my.uid]));
+      return true;
+    }
+  }
+
+  String get noOfLikes => likes.isEmpty ? "Like" : "${likes.length} Likes";
 }

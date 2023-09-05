@@ -45,11 +45,12 @@ class UserAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget child;
     // if onTap is null, then, don't capture the gesture event. Just return avatar.
     if (user != null) {
-      return _buildAvatar(user!);
+      child = _buildAvatar(user!);
     } else if (uid != null) {
-      return FutureBuilder<User?>(
+      child = FutureBuilder<User?>(
         future: UserService.instance.get(uid!),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -60,32 +61,28 @@ class UserAvatar extends StatelessWidget {
         },
       );
     } else {
-      return buildDefaultIcon();
+      child = buildDefaultIcon();
     }
+    return onTap == null
+        ? child
+        : GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: onTap,
+            child: child,
+          );
   }
 
   _buildAvatar(User user) {
-    Widget child;
     if (user.photoUrl == '') {
-      child = buildDefaultIcon();
+      return buildDefaultIcon();
     } else {
-      child = Avatar(
+      return Avatar(
         url: user.photoUrl,
         size: size,
         borderWidth: borderWidth,
         borderColor: borderColor,
         radius: radius,
         padding: padding,
-      );
-    }
-
-    if (onTap == null) {
-      return child;
-    } else {
-      return GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onTap,
-        child: child,
       );
     }
   }

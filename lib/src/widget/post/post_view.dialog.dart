@@ -84,25 +84,24 @@ class _PostViewDialogState extends State<PostViewDialog> {
                 ),
               ),
             ),
-            if (post.uid.isNotEmpty)
-              ListTile(
-                leading: UserAvatar(
+            // user avatar
+            Row(
+              children: [
+                UserAvatar(
                   uid: post.uid,
                   key: ValueKey(post.uid),
+                  onTap: () => UserService.instance.showPublicProfile(context: context, uid: post.uid),
                 ),
-                title: UserDisplayName(
+                UserDisplayName(
                   uid: post.uid,
                 ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    DateTimeText(
-                      dateTime: post.createdAt,
-                      type: DateTimeTextType.short,
-                    ),
-                  ],
+                DateTimeText(
+                  dateTime: post.createdAt,
+                  type: DateTimeTextType.short,
                 ),
-              ),
+              ],
+            ),
+
             Container(
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(16),
@@ -113,6 +112,7 @@ class _PostViewDialogState extends State<PostViewDialog> {
               ),
               child: Text(post.content),
             ),
+            YouTube(url: post.youtubeId, autoPlay: true),
             const Divider(),
             if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
             Padding(
@@ -136,7 +136,7 @@ class _PostViewDialogState extends State<PostViewDialog> {
                         'Like ${post.noOfLikes}',
                         style: post.iLiked ? const TextStyle(fontWeight: FontWeight.bold) : null,
                       ),
-                      onPressed: () => post.likeOrUnlike(),
+                      onPressed: () => post.like(),
                     ),
                   ),
                   UserDoc(
