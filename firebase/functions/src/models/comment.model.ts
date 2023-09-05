@@ -1,8 +1,8 @@
 import * as admin from "firebase-admin";
-import {CommentDocument} from "../interfaces/forum.interface";
-import {Ref} from "../utils/ref";
-import {Library} from "../utils/library";
-import {Post} from "./post.model";
+import { CommentDocument } from "../interfaces/forum.interface";
+import { Ref } from "../utils/ref";
+import { Library } from "../utils/library";
+import { Post } from "./post.model";
 
 export class Comment {
   static async get(id: string): Promise<CommentDocument | null> {
@@ -84,9 +84,9 @@ export class Comment {
     if (data.deleted) {
       console.log("--> comment deleted. going to empty the document");
 
-      if (data.files && data.files.length > 0) {
+      if (data.urls && data.urls.length > 0) {
         // delete files in firebase storage from data.files array
-        for (const url of data.files) {
+        for (const url of data.urls) {
           const path = Library.getPathFromUrl(url);
           const fileRef = admin.storage().bucket().file(path);
           await fileRef.delete();
@@ -94,7 +94,7 @@ export class Comment {
       }
       return after.ref.update({
         content: "",
-        files: [],
+        urls: [],
       });
     } else {
       return null;

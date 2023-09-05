@@ -32,6 +32,15 @@
       "deviceId": "emulator-5554"
     },
     {
+      "name": "FireFlutter Example - Asus",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/example",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "J8AXB761J32888A"
+    },
+    {
       "name": "MomCafe - Simulator (J)",
       "request": "launch",
       "type": "dart",

@@ -61,7 +61,7 @@ export class Test {
     return await User.create(uid, userData);
   }
 
-  static async createPost(uid?: string, category?: string, data?: any): Promise<PostDocument> {
+  static async createPost(uid?: string, categoryId?: string, data?: any): Promise<PostDocument> {
     if (uid === void 0) {
       const user = await User.create("test" + Test.id(), {
         createdAt: amdin.firestore.FieldValue.serverTimestamp(),
@@ -69,8 +69,8 @@ export class Test {
       uid = user!.uid;
     }
     const postRef = await Ref.postCol.add({
-      userDocumentReference: Ref.userDoc(uid),
-      category: category ?? "qna",
+      uid: uid,
+      categoryId: categoryId ?? "qna",
       createdAt: amdin.firestore.FieldValue.serverTimestamp(),
       ...data,
     });
@@ -79,7 +79,7 @@ export class Test {
   /**
    * Creates a comment
    * @param uid user uid
-   * @param category forum category
+   * @param categoryId forum categoryId
    * @param data data to create
    * @returns comment document
    *
@@ -103,7 +103,7 @@ export class Test {
    */
   static async createComment(
     uid?: string,
-    category?: string,
+    categoryId?: string,
     data?: any
   ): Promise<CommentDocument> {
     if (uid === void 0) {
@@ -113,16 +113,16 @@ export class Test {
 
     // console.log("uid", uid);
     const postRef = await Ref.postCol.add({
-      userDocumentReference: Ref.userDoc(uid),
-      category: category ?? "qna",
+      uid: uid,
+      categoryId: categoryId ?? "qna",
       createdAt: amdin.firestore.FieldValue.serverTimestamp(),
       ...data,
     });
     const post = await Post.get(postRef.id);
 
     const ref = await Ref.commentCol.add({
-      userDocumentReference: Ref.userDoc(uid),
-      postDocumentReference: Ref.postDoc(post.id),
+      uid: uid,
+      postId: post.id,
       createdAt: amdin.firestore.FieldValue.serverTimestamp(),
       ...data,
     });
