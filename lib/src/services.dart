@@ -11,3 +11,4 @@ export 'service/messaging.service.dart';
 export 'service/feed.service.dart';
 
 export 'service/fireflutter.service.dart';
+export 'service/favorite.service.dart';

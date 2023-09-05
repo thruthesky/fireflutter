@@ -4,11 +4,32 @@ import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class FeedListView extends StatelessWidget with FirebaseHelper {
+class FeedListView extends StatefulWidget {
   const FeedListView({super.key});
 
   @override
+  State<FeedListView> createState() => _FeedListViewState();
+}
+
+class _FeedListViewState extends State<FeedListView> with FirebaseHelper {
+  bool noFollowers = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    UserService.instance.documentChanges.listen((user) {
+      if (user == null) return;
+      setState(() {
+        noFollowers = user.followers.isEmpty;
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (noFollowers) return const Text('You have no followers');
+
     return FirebaseDatabaseListView(
       query: rtdb.ref('feeds').child(FirebaseAuth.instance.currentUser!.uid).orderByChild('createdAt'),
       itemBuilder: (context, snapshot) {

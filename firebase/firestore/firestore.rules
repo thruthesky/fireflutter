@@ -36,12 +36,6 @@ service cloud.firestore {
     // *
 
 
-    match /push-notifications-queue/{docId} {
-      allow read: if resource.data.senderUid == request.auth.uid;
-      allow write: if request.resource.data.senderUid == request.auth.uid;
-    }
-
-
     match /users/{documentId} {
       allow get: if request.auth.uid == documentId || isAdmin();
       allow list: if isAdmin();
@@ -66,10 +60,23 @@ service cloud.firestore {
       }
     }
 
+
     match /user_search_data/{documentId} {
       allow read: if true;
       allow write: if false;
     }
+
+    match /favorites/{documentId} {
+      allow read, write: if request.resource.data.uid == request.auth.uid;
+    }
+
+
+    match /push-notifications-queue/{docId} {
+      allow read: if resource.data.senderUid == request.auth.uid;
+      allow write: if request.resource.data.senderUid == request.auth.uid;
+    }
+
+
 
     match /categories/{documentId} {
       allow read: if true;

@@ -6,7 +6,9 @@ export 'widget/user/user.doc.dart';
 export 'widget/user/user.ready.dart';
 export 'widget/common/avatar.dart';
 export 'widget/user/admin.dart';
-export 'widget/user/admin.user_list_view.dart';
+export 'widget/user/admin.user.list_view.dart';
+export 'widget/user/admin.id_card.dialog.dart';
+export 'widget/user/public_profile.dialog.dart';
 
 // Chat
 export 'widget/chat/chat_room.dart';

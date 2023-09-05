@@ -4,3 +4,4 @@ export 'model/category/category.dart';
 export 'model/chat/message.dart';
 export 'model/post/post.dart';
 export 'model/comment/comment.dart';
+export 'model/favorite/favorite.dart';

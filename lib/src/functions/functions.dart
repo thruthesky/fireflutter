@@ -221,7 +221,7 @@ ScaffoldFeatureController toast({
               onPressed: () {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
               },
-              child: const Text('Dismiss'))
+              child: Text(tr.toast.dismiss))
         ],
       ),
     ),

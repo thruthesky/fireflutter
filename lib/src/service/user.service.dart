@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/enum/protocol.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// [my] is an alias of [UserService.instance.user].
@@ -284,5 +285,12 @@ class UserService with FirebaseHelper {
     await noOfNewMessageRef(room.id).update({
       uid: 1,
     });
+  }
+
+  Future showPublicProfile({required BuildContext context, required String uid}) {
+    return showGeneralDialog(
+      context: context,
+      pageBuilder: ($, _, __) => PublicProfileDialog(uid: uid),
+    );
   }
 } // EO UserService

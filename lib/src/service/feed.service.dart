@@ -15,6 +15,9 @@ class FeedService with FirebaseHelper {
     this.enable = enable;
   }
 
+  /// follow or unfollow
+  ///
+  ///
   Future<bool> follow(String otherUid) async {
     final re = await my.follow(otherUid);
     if (re) {

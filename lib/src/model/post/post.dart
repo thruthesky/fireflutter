@@ -16,7 +16,7 @@ class Post with FirebaseHelper {
 
   /// This holds the original JSON document data of the user document. This is
   /// useful when you want to save custom data in the user document.
-  late Map<String, dynamic> data;
+  Map<String, dynamic>? data;
 
   @override
   final String uid;
