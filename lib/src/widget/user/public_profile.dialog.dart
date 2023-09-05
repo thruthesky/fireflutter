@@ -24,9 +24,10 @@ class PublicProfileDialog extends StatelessWidget {
               const SizedBox(height: 20),
               UserDoc(
                 live: true,
+                user: snapshot.data,
                 builder: (user) => ElevatedButton(
                   onPressed: () {
-                    my.like(user.uid);
+                    user.like(my.uid);
                   },
                   child: Text(user.noOfLikes),
                 ),
