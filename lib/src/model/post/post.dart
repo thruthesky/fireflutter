@@ -44,6 +44,7 @@ class Post with FirebaseHelper {
     this.likes = const [],
     this.deleted = false,
     this.noOfComments = 0,
+    this.data = const {},
   }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory Post.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {

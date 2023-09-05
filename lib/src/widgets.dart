@@ -2,7 +2,7 @@
 
 export 'widget/user/user.avatar.dart';
 export 'widget/user/user.profile_avatar.dart';
-export 'widget/user/user.doc.dart';
+export 'widget/user/user_doc.dart';
 export 'widget/user/user.ready.dart';
 export 'widget/common/avatar.dart';
 export 'widget/user/admin.dart';
@@ -59,6 +59,7 @@ export 'widget/post/post_doc.dart';
 export 'widget/comment/comment_edit.bottom_sheet.dart';
 export 'widget/comment/comment_list_view.dart';
 export 'widget/comment/comment.list_tile.dart';
+export 'widget/comment/comment_doc.dart';
 
 // Common
 export 'widget/common/date_time_text.dart';

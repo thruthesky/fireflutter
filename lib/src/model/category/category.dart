@@ -25,6 +25,7 @@ class Category with FirebaseHelper {
     this.name = '',
     this.description,
     dynamic createdAt,
+    this.data = const {},
   }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory Category.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
