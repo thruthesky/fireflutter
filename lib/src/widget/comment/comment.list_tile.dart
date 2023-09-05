@@ -75,7 +75,11 @@ class CommentTileState extends State<CommentListTile> {
                     ),
                     TextButton(
                       child: const Text('Like'),
-                      onPressed: () {},
+                      onPressed: () {
+                        // TODO Commeent liike
+                        // CommentDoc
+                        // Post count per category
+                      },
                     ),
                     const Spacer(),
                     TextButton(
