@@ -2,7 +2,7 @@
 
 export 'widget/user/user.avatar.dart';
 export 'widget/user/user.profile_avatar.dart';
-export 'widget/user/user.doc_ongoing_review.dart';
+export 'widget/user/user.doc.dart';
 export 'widget/user/user.ready.dart';
 export 'widget/common/avatar.dart';
 export 'widget/user/admin.dart';
