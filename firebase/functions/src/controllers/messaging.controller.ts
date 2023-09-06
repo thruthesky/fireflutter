@@ -1,16 +1,16 @@
 import * as admin from "firebase-admin";
 // import * as functions from "firebase-functions";
 // import { RuntimeOptions } from "firebase-functions";
-import {ChatMessageDocument} from "../interfaces/chat.interface";
-import {CommentDocument, PostDocument} from "../interfaces/forum.interface";
-import {SendMessage, SendMessageResult} from "../interfaces/messaging.interface";
-import {Messaging} from "../models/messaging.model";
-import {EventName, EventType} from "../utils/event-name";
+import { ChatMessageDocument } from "../interfaces/chat.interface";
+import { CommentDocument, PostDocument } from "../interfaces/forum.interface";
+import { SendMessage, SendMessageResult } from "../interfaces/messaging.interface";
+import { Messaging } from "../models/messaging.model";
+import { EventName, EventType } from "../utils/event-name";
 
-import {onDocumentCreated, FirestoreEvent}
+import { onDocumentCreated, FirestoreEvent }
   from "firebase-functions/v2/firestore";
 
-import {QueryDocumentSnapshot} from "firebase-admin/firestore";
+import { QueryDocumentSnapshot } from "firebase-admin/firestore";
 
 
 exports.messagingOnPostCreate = onDocumentCreated("posts/{postId}",
@@ -47,7 +47,7 @@ exports.messagingOnCommentCreate = onDocumentCreated("comments/{commentId}",
 
 
 exports.pushNotificationQueue =
-  onDocumentCreated("push-notifications-queue/{docId}",
+  onDocumentCreated("push_notifications_queue/{docId}",
     async (event: FirestoreEvent<QueryDocumentSnapshot | undefined>): Promise<admin.firestore.WriteResult | undefined> => {
       if (event === void 0) return undefined;
       const re = await Messaging
@@ -89,6 +89,6 @@ exports.sendPushNotificationsOnCreate =
         }
       } catch (e) {
         console.log(`Error: ${e}`);
-        await event.data?.ref.update({status: "failed", error: `${e}`});
+        await event.data?.ref.update({ status: "failed", error: `${e}` });
       }
     });
