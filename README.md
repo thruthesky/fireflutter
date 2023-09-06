@@ -26,6 +26,7 @@ Create an issue if you find a bug or need a help.
 - [Widgets](#widgets)
   - [EmailLoginForm](#emailloginform)
   - [UserDoc](#userdoc)
+  - [User customization](#user-customization)
   - [Avatar](#avatar)
   - [UserAvatar](#useravatar)
   - [UserProfileAvatar](#userprofileavatar)
@@ -339,6 +340,22 @@ UserDoc(
     return const SizedBox.shrink();
   },
 ),
+```
+
+## User customization
+
+
+To customize the user public profile screen, you can override the showPublicProfile function.
+
+```dart
+UserService.instance.customize.showPublicProfile =
+    (BuildContext context, {String? uid, User? user}) => showGeneralDialog<dynamic>(
+          context: context,
+          pageBuilder: ($, _, __) => MomcafePublicProfileScreen(
+            uid: uid,
+            user: user,
+          ),
+        );
 ```
 
 ## Avatar
@@ -1085,6 +1102,8 @@ Registering the build functions do not cause any performance issues since it onl
 ```dart
 ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoomAppBar(room: room);
 ```
+
+
 
 
 # Admin
