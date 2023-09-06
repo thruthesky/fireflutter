@@ -22,7 +22,7 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
     return UserDoc(
       live: true,
       builder: (user) {
-        // CachedNetworkImage()
+        // Statck(children:[ CachedNetworkImage( placeholder: .... if there is existing staet image, show that or show empty color ), Scaffold()]])
         return Container(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.secondaryContainer,
