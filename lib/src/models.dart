@@ -5,3 +5,4 @@ export 'model/chat/message.dart';
 export 'model/post/post.dart';
 export 'model/comment/comment.dart';
 export 'model/favorite/favorite.dart';
+export 'model/feed/feed.dart';

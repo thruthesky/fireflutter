@@ -46,7 +46,7 @@ export 'widget/category/category_create_dialog.dart';
 export 'widget/category/category_list.dialog.dart';
 
 // Post
-export 'widget/post/feed.list_view.dart';
+export 'widget/feed/feed.list_view.dart';
 export 'widget/post/post.list_view.dart';
 export 'widget/post/post_edit.dialog.dart';
 export 'widget/post/post_view.dialog.dart';
@@ -73,3 +73,7 @@ export 'widget/common/youtube.dart';
 // Favorite
 
 export 'widget/favorite/favorite.list_view.dart';
+export 'widget/favorite/favorite.icon.dart';
+
+// Feed
+export 'widget/feed/feed.list_view.item.dart';

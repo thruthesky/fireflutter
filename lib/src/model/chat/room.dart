@@ -68,7 +68,10 @@ class Room with FirebaseHelper {
   DocumentReference get ref => ChatService.instance.roomRef(id);
 
   factory Room.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
-    return Room.fromMap(map: documentSnapshot.data() as Map<String, dynamic>, id: documentSnapshot.id);
+    return Room.fromJson({
+      ...documentSnapshot.data() as Map<String, dynamic>,
+      ...{'id': documentSnapshot.id}
+    });
   }
 
   factory Room.fromJson(Map<String, dynamic> json) => _$RoomFromJson(json);
@@ -147,12 +150,18 @@ class Room with FirebaseHelper {
 
     // start
     await ChatService.instance.sendProtocolMessage(
-      room: Room.fromMap(map: roomData, id: roomId),
+      room: Room.fromJson({
+        ...roomData,
+        ...{'id': roomId}
+      }),
       protocol: Protocol.chatRoomCreated.name,
       text: tr.chat.chatRoomCreated,
     );
 
-    return Room.fromMap(map: roomData, id: roomId);
+    return Room.fromJson({
+      ...roomData,
+      ...{'id': roomId}
+    });
   }
 
   @override

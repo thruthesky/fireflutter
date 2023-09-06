@@ -168,7 +168,7 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
     test(user.uid == 'uid', 'uid must be uid');
 
     // create object from json
-    final fromJsonUser = User.fromJson(json: {'uid': 'uid'}, id: 'id');
+    final fromJsonUser = User.fromJson({'uid': 'uid', 'id': 'id'});
     test(fromJsonUser.createdAt.millisecondsSinceEpoch > 0, 'createdAt is: ${fromJsonUser.createdAt}');
 
     // Create a user
@@ -187,12 +187,12 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
 
   Future testPost() async {
     // post crud test
-    final post = await Post.create(categoryId: 'categoryId', title: 'title', content: 'content');
+    await Post.create(categoryId: 'categoryId', title: 'title', content: 'content');
   }
 
   Future testComment() async {
     // comment crud test
-    final post = await Post.create(categoryId: 'categoryId', title: 'title', content: 'content');
+    await Post.create(categoryId: 'categoryId', title: 'title', content: 'content');
   }
 
   Future testCategory() async {
@@ -371,7 +371,7 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
     await ChatService.instance.updateRoomSetting(room: room, setting: 'name', value: newName);
 
     // Get the room
-    final roomAfter = await ChatService.instance.getRoom(room.id);
+    final roomAfter = await Room.get(room.id);
 
     // test: check the new name
     test(roomAfter.name == newName, "The room must have the new name \"$newName\". Actual value: ${roomAfter.name}");
@@ -399,7 +399,7 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
     await ChatService.instance.updateMyRoomSetting(room: room, setting: 'rename', value: renameApple);
 
     // Get the room
-    Room roomAfter = await ChatService.instance.getRoom(room.id);
+    Room roomAfter = await Room.get(room.id);
 
     // Test if ChatService.instance.updateMyRoomSetting() function works. It must rename.
     test(roomAfter.rename[UserService.instance.uid] == renameApple,
@@ -409,7 +409,7 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
     await ChatService.instance.updateMyRoomSetting(room: room, setting: 'rename', value: '');
 
     // Get the update to the room
-    roomAfter = await ChatService.instance.getRoom(room.id);
+    roomAfter = await Room.get(room.id);
 
     // Test if it clears the value. It must delete the value.
     test(roomAfter.rename[UserService.instance.uid] == null,

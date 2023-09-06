@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -70,36 +71,14 @@ class MessagingService with FirebaseHelper {
     this.onNotificationPermissionDenied = onNotificationPermissionDenied;
     this.onNotificationPermissionNotDetermined = onNotificationPermissionNotDetermined;
     _init();
+    _initilizeToken();
   }
 
-  /// `/users/<uid>/fcm_tokens/<docId>` 에 저장을 한다.
-  _updateToken(String? token) async {
-    if (FirebaseAuth.instance.currentUser == null) return;
-    if (token == null) return;
-    final ref = tokenDoc(token);
-    debugPrint('ref; ${ref.path}');
-    await ref.set(
-      {
-        'uid': FirebaseAuth.instance.currentUser?.uid,
-        'device_type': platformName(),
-        'fcm_token': token,
-      },
-      SetOptions(merge: true),
-    );
-  }
-
-  /// Initialize Messaging
-  _init() async {
-    /// 앱이 실행되는 동안 listen 하므로, cancel 하지 않음.
-    /// `/fcm_tokens/<docId>/{token: '...', uid: '...'}`
-    /// Save(or update) token
-    FirebaseAuth.instance.authStateChanges().listen((user) => _updateToken(token));
-
+  _initilizeToken() async {
+    /// Get permission
     ///
-    tokenChange.listen(_updateToken);
-
     /// Permission request for iOS only. For Android, the permission is granted by default.
-
+    ///
     if (kIsWeb || Platform.isIOS) {
       NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
         alert: true,
@@ -120,6 +99,52 @@ class MessagingService with FirebaseHelper {
       }
     }
 
+    /// Token update on user change(login/logout)
+    ///
+    /// Run this subscription on the whole lifecycle. (No unsubscription)
+    ///
+    /// `/fcm_tokens/<docId>/{token: '...', uid: '...'}`
+    /// Save(or update) token
+    FirebaseAuth.instance.authStateChanges().listen((user) => _updateToken(token));
+
+    /// Token changed. update it.
+    ///
+    /// Run this subscription on the whole lifecycle. (No unsubscription)
+    tokenChange.listen(_updateToken);
+
+    /// Token refreshed. update it.
+    ///
+    /// Run this subscription on the whole lifecycle. (No unsubscription)
+    ///
+    // Any time the token refreshes, store this in the database too.
+    FirebaseMessaging.instance.onTokenRefresh.listen((token) => tokenChange.add(token));
+
+    /// Get token from device and save it into Firestore
+    ///
+    /// Get the token each time the application loads and save it to database.
+    token = await FirebaseMessaging.instance.getToken() ?? '';
+    log('---> device token: $token');
+    await _updateToken(token);
+  }
+
+  /// `/users/<uid>/fcm_tokens/<docId>` 에 저장을 한다.
+  _updateToken(String? token) async {
+    if (FirebaseAuth.instance.currentUser == null) return;
+    if (token == null) return;
+    final ref = tokenDoc(token);
+    debugPrint('ref; ${ref.path}');
+    await ref.set(
+      {
+        'uid': FirebaseAuth.instance.currentUser?.uid,
+        'device_type': platformName(),
+        'fcm_token': token,
+      },
+      SetOptions(merge: true),
+    );
+  }
+
+  /// Initialize Messaging
+  _init() async {
     // Handler, when app is on Foreground.
     FirebaseMessaging.onMessage.listen(onForegroundMessage);
 
@@ -133,15 +158,6 @@ class MessagingService with FirebaseHelper {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       onMessageOpenedFromBackground(message);
     });
-
-    // Get the token each time the application loads and save it to database.
-    token = await FirebaseMessaging.instance.getToken() ?? '';
-    // log('---> device token: $token');
-    // print(token);
-    await _updateToken(token);
-    // debugPrint(token);
-    // Any time the token refreshes, store this in the database too.
-    FirebaseMessaging.instance.onTokenRefresh.listen((token) => tokenChange.add(token));
   }
 
   /// [uids] 는 배열로 입력되어야 하고, 여기서 콤마로 분리된 문자열로 만들어 서버로 보낸다. 즉, 서버에서는 문자열이어야 한다.

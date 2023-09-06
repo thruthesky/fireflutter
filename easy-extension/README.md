@@ -50,7 +50,7 @@ The principle of using this extension is that you should only use this extension
 
 
 To install the easy extension, click one of the version linke below. See the change logs for the change of each version.
-- [Beta 0.1.10-beta.2](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.10-beta.2)
+- [Beta 0.1.10-beta.3](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.10-beta.3)
 - [Beta (0.1.8-beta.2)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.8-beta.2)
 - [Beta (0.1.5-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.5-beta.0)
 - [Beta (0.1.4-beta.0)](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.4-beta.0)
