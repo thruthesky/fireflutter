@@ -42,7 +42,6 @@ class UserListView extends StatelessWidget with FirebaseHelper {
   Widget build(BuildContext context) {
     Query query = userSearchCol;
     if (hasSearchText) {
-      // TODO review (Mr. Song mentioned that we might put initial results)
       query = query.where(field, isEqualTo: searchText);
     }
     return FirestoreListView(
@@ -53,11 +52,9 @@ class UserListView extends StatelessWidget with FirebaseHelper {
         if (itemBuilder != null) return itemBuilder!.call(user);
         return ListTile(
           title: titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
-          subtitle:
-              subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
+          subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
           leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
-          trailing:
-              trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
+          trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
           onTap: () {
             onTap?.call(user);
           },
