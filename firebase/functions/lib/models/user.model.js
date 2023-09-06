@@ -29,6 +29,7 @@ class User {
      * @return UserDocument - it does not return null.
      *
      */
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
     static async create(uid, data) {
         data.created_time = admin.firestore.FieldValue.serverTimestamp();
         const user = await this.get(uid);
@@ -230,6 +231,7 @@ class User {
     static async GetFcmToken(data) {
         return await messaging_model_1.Messaging.getToken(data);
     }
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
     static async setUserSettingsSubscription(uid, data) {
         var _a;
         data["uid"] = uid;

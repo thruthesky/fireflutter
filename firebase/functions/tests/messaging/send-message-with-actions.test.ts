@@ -17,7 +17,7 @@ import { Test } from "../test";
 
 
 
-const action = "comment-create-test";
+const action = "post-create-test";
 const categoryId = "qna-test";
 const type = "test-subscription";
 

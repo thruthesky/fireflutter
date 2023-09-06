@@ -51,6 +51,7 @@ class Library {
      * @param {*} text HTML string
      */
     static decodeHTMLEntities(text) {
+        /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
         const entities = {
             "amp": "&",
             "apos": "'",
@@ -74,6 +75,7 @@ class Library {
      * @param {*} arr array
      * @param {*} chunkSize chunk size
      */
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
     static chunk(arr, chunkSize) {
         if (chunkSize <= 0)
             return [];

@@ -57,37 +57,32 @@ class Messaging {
         }
         let uids = [];
         // commentCreate get post and patch data with category and title.
-        if (data.action == event_name_1.EventName.commentCreate) {
+        if (data.postId && data.action == event_name_1.EventName.commentCreate) {
             const post = await post_model_1.Post.get(data.postId);
             uids.push(post.uid); // post owner
             data.categoryId = post.categoryId;
             data.title = post.title;
-            // data.postId = post.id; //  already exist on comment
             console.log("comment::post::", JSON.stringify(post));
             console.log("comment::data::", JSON.stringify(data));
         }
-        // Get users who subscribed the subscription
-        // const snap = await Ref.db
-        //   .collection("user_settings")
-        //   .where("action", "==", data.action)
-        //   .where("category", "==", data.categoryId)
-        //   .get();
         console.log("action:: ", data.action, "categoryId:: ", data.categoryId);
-        const snap = await ref_1.Ref.usersSettingsSearch(data.action, data.categoryId)
-            .get();
-        console.log("snap.size", snap.size);
-        // get uids
-        if (snap.size != 0) {
-            for (const doc of snap.docs) {
-                const s = doc.data();
-                const uid = s.uid;
-                if (uid != data.senderUid)
-                    uids.push(uid);
+        if (data.categoryId) {
+            const snap = await ref_1.Ref.usersSettingsSearch(data.action, data.categoryId)
+                .get();
+            console.log("snap.size", snap.size);
+            // get uids
+            if (snap.size != 0) {
+                for (const doc of snap.docs) {
+                    const s = doc.data();
+                    const uid = s.uid;
+                    if (uid != data.senderUid)
+                        uids.push(uid);
+                }
             }
+            //
         }
-        //
         // Get ancestor's uid
-        if (data.action == event_name_1.EventName.commentCreate) {
+        if (data.id && data.action == event_name_1.EventName.commentCreate) {
             const ancestors = await comment_model_1.Comment.getAncestorsUid(data.id, data.uid);
             // Remove ancestors who didn't subscribe for new comment.
             const subscribers = await this.getNewCommentNotificationUids(ancestors);
@@ -101,11 +96,11 @@ class Messaging {
         return this.sendMessageToTokens(tokens, data);
     }
     /**
-                 * Send push notifications with the tokens and returns the result.
-                 *
-                 * @param tokens array of tokens.
-                 * @param data data to send push notification.
-                 */
+     * Send push notifications with the tokens and returns the result.
+     *
+     * @param tokens array of tokens.
+     * @param data data to send push notification.
+     */
     static async sendMessageToTokens(tokens, data) {
         // console.log(`sendMessageToTokens() token.length: ${tokens.length}`);
         if (tokens.length == 0) {
@@ -133,6 +128,7 @@ class Messaging {
             // Returns are in array
             for (let settledIndex = 0; settledIndex < settled.length; settledIndex++) {
                 console.log(`settled[${settledIndex}]`, settled[settledIndex]);
+                /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
                 const value = settled[settledIndex].value;
                 successCount += value.successCount;
                 failureCount += value.failureCount;
@@ -163,38 +159,39 @@ class Messaging {
         }
     }
     /**
-                 * Remove tokens from user token documents
-                 *  `/users/<uid>/fcm_tokens/<docId>`
-                 *
-                 * @param tokens tokens to remove
-                 *
-                 * Use this method to remove tokens that failed to be sent.
-                 *
-                 * Test, tests/messaging/remove-tokens.spec.ts
-                 */
+     * Remove tokens from user token documents
+     *  `/users/<uid>/fcm_tokens/<docId>`
+     *
+     * @param tokens tokens to remove
+     *
+     * Use this method to remove tokens that failed to be sent.
+     *
+     * Test, tests/messaging/remove-tokens.spec.ts
+     */
     static async removeTokens(tokens) {
+        /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
         const promises = [];
         for (const token of tokens) {
             promises.push(
-            // Get the document of the token
-            ref_1.Ref.db
-                .collectionGroup("fcm_tokens")
-                .where("fcm_token", "==", token)
-                .get()
-                .then(async (snapshot) => {
-                for (const doc of snapshot.docs) {
-                    await doc.ref.delete();
-                }
-            }));
+                // Get the document of the token
+                ref_1.Ref.db
+                    .collectionGroup("fcm_tokens")
+                    .where("fcm_token", "==", token)
+                    .get()
+                    .then(async (snapshot) => {
+                        for (const doc of snapshot.docs) {
+                            await doc.ref.delete();
+                        }
+                    }));
         }
         await Promise.all(promises);
     }
     /**
-                 * Return true if the token is invalid.
-                 *  So it can be removed from database.
-                 * There are many error codes. see
-                 * https://firebase.google.com/docs/cloud-messaging/send-message#admin
-                 */
+     * Return true if the token is invalid.
+     *  So it can be removed from database.
+     * There are many error codes. see
+     * https://firebase.google.com/docs/cloud-messaging/send-message#admin
+     */
     static isInvalidTokenErrorCode(code) {
         if (code === "messaging/invalid-registration-token" ||
             code === "messaging/registration-token-not-registered" ||
@@ -313,13 +310,13 @@ class Messaging {
         return res;
     }
     /**
-                 * Returns an array of uid of the users
-                 *  (from the input uids) who has subscribed for new comment.
-                 * The uids of the users who didn't subscribe
-                 *  will be removed on the returned array.
-                 * @param uids array of uid
-                 * @return array of uid
-                 */
+     * Returns an array of uid of the users
+     *  (from the input uids) who has subscribed for new comment.
+     * The uids of the users who didn't subscribe
+     *  will be removed on the returned array.
+     * @param uids array of uid
+     * @return array of uid
+     */
     static async getNewCommentNotificationUids(uids) {
         if (uids.length === 0)
             return [];
@@ -337,10 +334,10 @@ class Messaging {
         return re;
     }
     /**
-                 *
-                 * @param data
-                 * @returns
-                 */
+     *
+     * @param data
+     * @returns
+     */
     static async sendChatNotificationToOtherUsers(data) {
         var _a;
         const user = await user_model_1.User.get(data.senderUserDocumentReference.id);
@@ -390,8 +387,10 @@ class Messaging {
         for (let i = 0; i < tokensArr.length; i += 500) {
             const tokensBatch = tokensArr.slice(i, Math.min(i + 500, tokensArr.length));
             const messages = {
-                notification: Object.assign({ title,
-                    body }, (imageUrl && { imageUrl: imageUrl })),
+                notification: Object.assign({
+                    title,
+                    body
+                }, (imageUrl && { imageUrl: imageUrl })),
                 data: {
                     initialPageName,
                     parameterData,
