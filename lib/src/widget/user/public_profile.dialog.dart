@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
     return UserDoc(
       live: true,
       builder: (user) {
+        // Statck(children:[ CachedNetworkImage( placeholder: .... if there is existing staet image, show that or show empty color ), Scaffold()]])
         return Container(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.secondaryContainer,
@@ -48,7 +51,11 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                       progress: (p) => progressEvent.add(p),
                       complete: () => progressEvent.add(null),
                     );
+                    final previousUrl = my.stateImageUrl;
                     my.update(stateImageUrl: url);
+                    if (previousUrl.isNotEmpty) {
+                      Timer(const Duration(seconds: 2), () => StorageService.instance.delete(previousUrl));
+                    }
                   },
                   icon: const Icon(Icons.camera_alt),
                 ),

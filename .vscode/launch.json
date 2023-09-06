@@ -129,6 +129,15 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "R9ATA00LMJM"
+    },
+    {
+      "name": "Admin - Simulator - (J)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/fireflutter_admin",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "iPhone 14 Pro Max"
     }
   ]
 }

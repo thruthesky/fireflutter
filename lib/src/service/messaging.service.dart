@@ -161,22 +161,31 @@ class MessagingService with FirebaseHelper {
   }
 
   /// [uids] 는 배열로 입력되어야 하고, 여기서 콤마로 분리된 문자열로 만들어 서버로 보낸다. 즉, 서버에서는 문자열이어야 한다.
+  ///
+  /// [target] is the target of devices you want to send message to. If it's "all", then it will send messages to all users.
   Future<DocumentReference> queue({
     required String title,
     required String body,
     List<String>? uids,
+    List<String>? tokens,
+    String? platform,
+    String? target,
     String? badge,
-    required String type,
   }) {
     Json data = {
       'title': title,
       'body': body,
-      'badge': badge,
-      'type': type,
+      if (badge != null) 'badge': badge,
       'senderUid': UserService.instance.uid,
       'createdAt': FieldValue.serverTimestamp(),
+      if (uids != null) 'uids': uids,
+      if (tokens != null) 'tokens': tokens,
+      if (platform != null) 'platform': platform,
+      if (target != null) 'target': target,
     };
-    if (uids != null) data['uids'] = uids.join(',');
-    return FirebaseFirestore.instance.collection('push-notifications-queue').add(data);
+
+    // print('data; $data');
+
+    return messageQueueCol.add(data);
   }
 }

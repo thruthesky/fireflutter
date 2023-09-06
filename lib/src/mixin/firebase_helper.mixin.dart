@@ -57,4 +57,7 @@ mixin FirebaseHelper {
   // favorites
   CollectionReference get favoriteCol => db.collection('favorites');
   DocumentReference favoriteDoc(String postId) => favoriteCol.doc(postId);
+
+  /// push notifications
+  CollectionReference get messageQueueCol => db.collection('push_notification_queue');
 }

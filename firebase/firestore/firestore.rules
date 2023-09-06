@@ -70,9 +70,7 @@ service cloud.firestore {
       allow read, write: if resource.data.uid == request.auth.uid || request.resource.data.uid == request.auth.uid;
     }
 
-
-
-    match /push-notifications-queue/{docId} {
+    match /push_notification_queue/{docId} {
       allow read: if resource.data.senderUid == request.auth.uid;
       allow write: if request.resource.data.senderUid == request.auth.uid;
     }
