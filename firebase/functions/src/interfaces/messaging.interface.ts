@@ -4,12 +4,12 @@ export interface SendMessage {
     uid?: string; // / added by 'auth' in flutter.
     uids?: string; // a single uid or a list of uids seperated by comma.
     users?: string[];
-    tokens?: string;
+    tokens?: string | string[];
     topic?: string;
     title?: string;
     body?: string; // message body
     content?: string; // will be body if message body is empty.
-    type?: string;
+    type?: string; // post || chat
 
     badge?: string;
     icon?: string; // imageUrl
@@ -29,6 +29,10 @@ export interface SendMessage {
 
     // for sending messages by action. Like post-create, comment-create.
     categoryId?: string;
+
+    // choose who to send the push notification 
+    // all, ios, android, web
+    target?: string;
 }
 
 export interface MessagePayload {
@@ -97,8 +101,9 @@ export interface SendMessageToDocument {
 
 
 export interface SendMessageResult {
-    success: number;
-    error: number;
+    success?: number;
+    error?: number;
+    messageId?: string;
 }
 
 

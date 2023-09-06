@@ -125,6 +125,17 @@ class MessagingService with FirebaseHelper {
     token = await FirebaseMessaging.instance.getToken() ?? '';
     log('---> device token: $token');
     await _updateToken(token);
+
+    /// subscribe to topic on every boot
+    _subscribeToTopic();
+  }
+
+  /// subscribe to topic
+  /// default `allUsers`
+  /// platform specific `iosUsers` `androidUsers` `webUsers` `${platformName()}Users`
+  _subscribeToTopic() async {
+    await FirebaseMessaging.instance.subscribeToTopic('allUsers');
+    await FirebaseMessaging.instance.subscribeToTopic('${platformName()}Users');
   }
 
   /// `/users/<uid>/fcm_tokens/<docId>` 에 저장을 한다.
@@ -175,9 +186,9 @@ class MessagingService with FirebaseHelper {
     Json data = {
       'title': title,
       'body': body,
-      if (badge != null) 'badge': badge,
       'senderUid': UserService.instance.uid,
       'createdAt': FieldValue.serverTimestamp(),
+      if (badge != null) 'badge': badge,
       if (uids != null) 'uids': uids,
       if (tokens != null) 'tokens': tokens,
       if (platform != null) 'platform': platform,

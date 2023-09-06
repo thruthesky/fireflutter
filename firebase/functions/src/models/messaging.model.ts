@@ -1,23 +1,24 @@
 import * as admin from "firebase-admin";
-import {EventName, EventType} from "../utils/event-name";
+import { EventName, EventType } from "../utils/event-name";
 import {
   FcmToken,
   MessagePayload,
   SendMessage,
+  SendMessageResult,
   SendMessageToDocument,
 } from "../interfaces/messaging.interface";
-import {Ref} from "../utils/ref";
-import {Library} from "../utils/library";
+import { Ref } from "../utils/ref";
+import { Library } from "../utils/library";
 
-import {Comment} from "../models/comment.model";
-import {User} from "./user.model";
-import {Post} from "./post.model";
-import {UserSettingsDocument} from "../interfaces/user.interface";
-import {ChatMessageDocument} from "../interfaces/chat.interface";
-import {Chat} from "./chat.model";
+import { Comment } from "../models/comment.model";
+import { User } from "./user.model";
+import { Post } from "./post.model";
+import { UserSettingsDocument } from "../interfaces/user.interface";
+import { ChatMessageDocument } from "../interfaces/chat.interface";
+import { Chat } from "./chat.model";
 
 import * as functions from "firebase-functions";
-import {MulticastMessage} from "firebase-admin/lib/messaging/messaging-api";
+import { MulticastMessage } from "firebase-admin/lib/messaging/messaging-api";
 
 export class Messaging {
   /**
@@ -32,24 +33,47 @@ export class Messaging {
    * @param data information of sending message
    * @return results
    */
-  static async sendMessage(data: SendMessage): Promise<{
-    success: number;
-    error: number;
-  }> {
+  static async sendMessage(data: SendMessage): Promise<SendMessageResult> {
     if (data.topic) {
-      // / see TODO in README.md
-      return {success: 0, error: 0};
+      return this.sendMessageToTopic(data.topic, data);
     } else if (data.tokens) {
-      return this.sendMessageToTokens(data.tokens.split(","), data);
+      return this.sendMessageToTokens(typeof data.tokens == 'string' ? data.tokens.split(",") : data.tokens, data);
     } else if (data.uids) {
       const tokens = await this.getTokensFromUids(data.uids);
       return this.sendMessageToTokens(tokens, data);
     } else if (data.action) {
       return this.sendMessageByAction(data);
-    } else {
+    } else if (data.target) {
+      const tokens = await this.getTokensFromTarget(data.target);
+      return this.sendMessageToTokens(tokens, data);
+    }
+    else {
       throw Error("One of uids, tokens, topic must be present");
     }
   }
+
+
+  static async sendMessageToTopic(topic: string, data: SendMessage): Promise<SendMessageResult> {
+
+    // Only admin can sent message to topic `allUsers`.
+    const payload = this.topicPayload(topic, data);
+    try {
+      const res = await admin.messaging().send(payload as admin.messaging.TopicMessage);
+      return { messageId: res };
+    } catch (e) {
+      throw Error("Topic send error " + (e as Error).message);
+    }
+  }
+
+  /// Prepare topic payload
+  static topicPayload(topic: string, data: SendMessage): MessagePayload {
+    const payload = this.completePayload(data);
+    payload.topic = "/topics/" + topic;
+    return payload;
+  }
+
+
+
 
   /**
    *
@@ -59,7 +83,7 @@ export class Messaging {
    *  'category' is the category of the post.
    * @returns
    */
-  static async sendMessageByAction(data: SendMessage) {
+  static async sendMessageByAction(data: SendMessage): Promise<SendMessageResult> {
     console.log(`sendMessageByAction(${JSON.stringify(data)})`);
 
     if (!data.action) {
@@ -127,11 +151,13 @@ export class Messaging {
   static async sendMessageToTokens(
     tokens: string[],
     data: SendMessage
-  ): Promise<{ success: number; error: number }> {
+  ): Promise<SendMessageResult> {
     // console.log(`sendMessageToTokens() token.length: ${tokens.length}`);
+
+
     if (tokens.length == 0) {
       console.log("sendMessageToTokens() no tokens. so, just return results.");
-      return {success: 0, error: 0};
+      return { success: 0, error: 0 };
     }
 
     // add login user uid
@@ -149,7 +175,7 @@ export class Messaging {
     for (const _500Tokens of chunks) {
       const newPayload: admin.messaging.MulticastMessage = Object.assign(
         {},
-        {tokens: _500Tokens},
+        { tokens: _500Tokens },
         payload
       );
       multicastPromise.push(admin.messaging().sendEachForMulticast(newPayload));
@@ -192,7 +218,7 @@ export class Messaging {
       await this.removeTokens(failedTokens);
 
       // 결과 리턴
-      const results = {success: successCount, error: failureCount};
+      const results = { success: successCount, error: failureCount };
       // console.log(`sendMessageToTokens() results: ${JSON.stringify(results)}`);
       return results;
     } catch (e) {
@@ -280,6 +306,10 @@ export class Messaging {
     // return snapshot.docs.map((doc) => doc.id);
     return snapshot.docs.map((doc) => doc.get("fcm_token"));
   }
+
+
+
+
 
   /**
    * Returns complete payload from the query data from client.
@@ -482,7 +512,7 @@ export class Messaging {
         notification: {
           title,
           body,
-          ...(imageUrl && {imageUrl: imageUrl}),
+          ...(imageUrl && { imageUrl: imageUrl }),
         },
         data: {
           initialPageName,
@@ -490,13 +520,13 @@ export class Messaging {
         },
         android: {
           notification: {
-            ...(sound && {sound: sound}),
+            ...(sound && { sound: sound }),
           },
         },
         apns: {
           payload: {
             aps: {
-              ...(sound && {sound: sound}),
+              ...(sound && { sound: sound }),
             },
           },
         },
@@ -515,7 +545,30 @@ export class Messaging {
       })
     );
 
-    await snapshot.ref.update({status: "succeeded", num_sent: numSent});
+    await snapshot.ref.update({ status: "succeeded", num_sent: numSent });
+  }
+
+
+  static async getTokensFromTarget(target: string): Promise<string[]> {
+    if (!target) return [];
+    const tokens: string[] = [];
+    let userTokens: admin.firestore
+      .QuerySnapshot<admin.firestore.DocumentData>;
+
+    if (target == 'all') {
+      userTokens =
+        await Ref.tokenCollectionGroup.get();
+    } else {
+      userTokens =
+        await Ref.tokenCollectionGroup.where('device_type', '==', target).get();
+    }
+
+    userTokens.docs.forEach((token) => {
+      const data = token.data();
+      tokens.push(data.fcm_token);
+    });
+
+    return [...new Set(tokens)];
   }
 
 

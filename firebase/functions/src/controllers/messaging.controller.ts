@@ -47,19 +47,36 @@ exports.messagingOnCommentCreate = onDocumentCreated("comments/{commentId}",
 
 
 exports.pushNotificationQueue =
-  onDocumentCreated("push_notifications_queue/{docId}",
+  onDocumentCreated("push_notification_queue/{docId}",
     async (event: FirestoreEvent<QueryDocumentSnapshot | undefined>): Promise<admin.firestore.WriteResult | undefined> => {
       if (event === void 0) return undefined;
-      const re = await Messaging
+      const result = await Messaging
         .sendMessage(event.data?.data() as SendMessage);
-      console.log("re::", re);
+      console.log("result::", result);
 
 
       return await event.data?.ref.update({
-        // ...re,
+        ...result,
         sentAt: admin.firestore.FieldValue.serverTimestamp(),
       });
     });
+
+
+
+// exports.sendPushNotificationsOnCreate =
+//   onDocumentCreated("push_notifications/{documentId}",
+//     async (event: FirestoreEvent<QueryDocumentSnapshot | undefined>): Promise<void> => {
+//       if (event === void 0) return void 0;
+
+//       try {
+//         if (event.data) {
+//           await Messaging.sendPushNotifications(event.data);
+//         }
+//       } catch (e) {
+//         console.log(`Error: ${e}`);
+//         await event.data?.ref.update({ status: "failed", error: `${e}` });
+//       }
+//     });
 
 
 exports.messagingOnChatMessageCreate =
@@ -78,17 +95,4 @@ exports.messagingOnChatMessageCreate =
     });
 
 
-exports.sendPushNotificationsOnCreate =
-  onDocumentCreated("push_notifications/{documentId}",
-    async (event: FirestoreEvent<QueryDocumentSnapshot | undefined>): Promise<void> => {
-      if (event === void 0) return void 0;
 
-      try {
-        if (event.data) {
-          await Messaging.sendPushNotifications(event.data);
-        }
-      } catch (e) {
-        console.log(`Error: ${e}`);
-        await event.data?.ref.update({ status: "failed", error: `${e}` });
-      }
-    });
