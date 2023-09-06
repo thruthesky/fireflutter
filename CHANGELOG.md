@@ -1,6 +1,7 @@
 ## 0.3.7
 
-* Change. All model is now using json_serializable
+* Change. All model is now using json_serializable.
+* Add. Push notification.
 * Update. document.
 
 
