@@ -60,14 +60,14 @@ class Favorite with FirebaseHelper {
   /// Favorite
   ///
   /// Save as favorite if it's not in favorite list. Or remove it from favorite list.
-  static Future<void> toggle({required FavoriteType type, String? otherUid, String? postId, String? commentId}) async {
+  static Future<bool> toggle({required FavoriteType type, String? otherUid, String? postId, String? commentId}) async {
     assert(otherUid != null || postId != null || commentId != null, 'otherUid, postId, or commentId must be provided');
     final String id = "${my.uid}-${otherUid ?? postId ?? commentId}";
 
     final Favorite? favorite = await Favorite.get(id);
 
     if (favorite == null) {
-      return await Favorite.doc(id).set({
+      await Favorite.doc(id).set({
         'uid': my.uid,
         if (otherUid != null) 'otherUid': otherUid,
         if (postId != null) 'postId': postId,
@@ -75,8 +75,10 @@ class Favorite with FirebaseHelper {
         'type': type.name,
         'createdAt': FieldValue.serverTimestamp(),
       });
+      return true;
     } else {
-      return await Favorite.doc(id).delete();
+      await Favorite.doc(id).delete();
+      return false;
     }
   }
 }

@@ -78,7 +78,6 @@ class CommentTileState extends State<CommentListTile> {
                         return TextButton(
                           child: Text('Like ${comment.noOfLikes}'),
                           onPressed: () {
-                            // TODO firestore test
                             comment.likeOrUnlike();
                           },
                         );

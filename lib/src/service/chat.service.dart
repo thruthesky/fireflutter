@@ -62,7 +62,7 @@ class ChatService with FirebaseHelper {
   /// See [Room.get] for details for missing or insufficient permission error.
   Future<Room> getSingleChatRoom(String uid) async {
     final roomId = getSingleChatRoomId(uid);
-    return await getRoom(roomId);
+    return await Room.get(roomId);
   }
 
   /// Get Chat room if exists, or create the chatroom if not exist yet and return it.

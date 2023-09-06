@@ -100,7 +100,6 @@ class ChatRoomMenuDialog extends StatelessWidget {
                 ] else ...[
                   const Padding(
                     padding: EdgeInsets.all(16.0),
-                    // TODO 채팅방을 1:1과 그룹 메뉴로 분리 할 것.
                     child: Text('1:1 채팅방과 그룹 채팅 메뉴를  분리 할 것.'),
                   ),
                 ],

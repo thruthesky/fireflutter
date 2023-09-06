@@ -23,8 +23,6 @@ class UserListView extends StatelessWidget with FirebaseHelper {
     this.itemBuilder,
   });
 
-  // TODO assert if item builder is not null, no need for avatar, title, subtitle or trailing.
-
   final String? searchText;
   final List<String> exemptedUsers;
   final Function(User)? onTap;

@@ -127,7 +127,6 @@ class Post with FirebaseHelper {
     await PostService.instance.postCol.doc(id).update(postUpdateData);
   }
 
-  // TODO Test
   /// Likes or Unlikes the post
   ///
   /// If I already liked (iLiked == true)

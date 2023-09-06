@@ -149,10 +149,10 @@ class User with FirebaseHelper {
   }
 
   factory User.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
-    return User.fromJson(
-      json: documentSnapshot.data() as Map<String, dynamic>,
-      id: documentSnapshot.id,
-    );
+    return User.fromJson({
+      ...documentSnapshot.data() as Map<String, dynamic>,
+      ...{'id': documentSnapshot.id}
+    });
   }
 
   @Deprecated('Use fromJson instead')
@@ -160,10 +160,9 @@ class User with FirebaseHelper {
     map['uid'] = id;
     return _$UserFromJson(map);
   }
-  factory User.fromJson({required Map<String, dynamic> json, required String id}) {
-    json['uid'] = id;
-    return _$UserFromJson(json)..data = json;
-  }
+
+  ///
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json)..data = json;
 
   Map<String, dynamic> toMap() {
     return _$UserToJson(this);
@@ -194,7 +193,10 @@ class User with FirebaseHelper {
     if (!snapshot.exists) {
       return null;
     }
-    return User.fromJson(json: Map<String, dynamic>.from(snapshot.value as Map), id: uid);
+    return User.fromJson({
+      ...Map<String, dynamic>.from(snapshot.value as Map),
+      ...{'id': uid}
+    });
   }
 
   /// 사용자 문서를 생성한다.
