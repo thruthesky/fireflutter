@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
@@ -20,6 +22,7 @@ class AdminUserListView extends StatelessWidget with FirebaseHelper {
     this.subtitleBuilder,
     this.trailingBuilder,
     this.displayName,
+    this.email,
     this.isComplete,
     this.isVerified,
   });
@@ -31,6 +34,7 @@ class AdminUserListView extends StatelessWidget with FirebaseHelper {
   final Widget Function(User?)? trailingBuilder;
 
   final String? displayName;
+  final String? email;
   final bool? isComplete;
   final bool? isVerified;
 
@@ -41,6 +45,9 @@ class AdminUserListView extends StatelessWidget with FirebaseHelper {
 
     if (displayName != null) {
       query = query.where('displayName', isEqualTo: displayName);
+    }
+    if (email != null) {
+      query = query.where('email', isEqualTo: email);
     }
 
     if (isComplete == true) {
@@ -60,6 +67,10 @@ class AdminUserListView extends StatelessWidget with FirebaseHelper {
   Widget build(BuildContext context) {
     return FirestoreListView(
       query: query,
+      errorBuilder: (context, error, stackTrace) {
+        log(error.toString());
+        return Text(error.toString());
+      },
       itemBuilder: (context, snapshot) {
         // print(snapshot.reference.path);
         // print(snapshot.data());

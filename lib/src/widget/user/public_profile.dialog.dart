@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -100,7 +102,11 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                       progress: (p) => progressEvent.add(p),
                       complete: () => progressEvent.add(null),
                     );
+                    final previousUrl = my.stateImageUrl;
                     my.update(stateImageUrl: url);
+                    if (previousUrl.isNotEmpty) {
+                      Timer(const Duration(seconds: 2), () => StorageService.instance.delete(previousUrl));
+                    }
                   },
                   icon: const Icon(Icons.camera_alt),
                 ),

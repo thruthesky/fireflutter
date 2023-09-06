@@ -9,6 +9,7 @@ export 'widget/user/admin.dart';
 export 'widget/user/admin.user.list_view.dart';
 export 'widget/user/admin.id_card.dialog.dart';
 export 'widget/user/public_profile.dialog.dart';
+export 'widget/user/email_login_form.dart';
 
 // Chat
 export 'widget/chat/chat_room.dart';

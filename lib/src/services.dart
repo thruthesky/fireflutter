@@ -12,3 +12,4 @@ export 'service/feed.service.dart';
 
 export 'service/fireflutter.service.dart';
 export 'service/favorite.service.dart';
+export 'service/admin.service.dart';
