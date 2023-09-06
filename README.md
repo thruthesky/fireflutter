@@ -2,7 +2,9 @@
 
 ![Fireflutter](https://github.com/thruthesky/fireflutter/blob/main/doc/fireflutter_title_image.jpg?raw=true)
 
-A free, open source, complete, rapid development package for creating Social apps, Chat apps, Community(Forum) apps, Shopping mall apps, and much more based on Firebase
+If you are looking for a package that help you develop a full featured content management app, then you have found a right one. FireFlutter is a free, open source, complete, rapid development package for creating apps like CMS(content management system), social service, chat, community(forum), shopping mall and much more based on Firebase.
+
+Create an issue if you find a bug or need a help.
 
 - [FireFlutter](#fireflutter)
   - [Overview](#overview)
@@ -81,36 +83,48 @@ A free, open source, complete, rapid development package for creating Social app
 
 ## Overview
 
-- We don't use `json_serializable` since the field should be dynamically added or edited. And the model class has not only the json serialized data, but also basic functionalities for the model.
+I made it for reusing the most common code blocks when I am building apps. It provides the code for user management, forum(caetgory, post, comment) management, chat management, push notification management along with `like`, `favorite`, `following` features.
+
+I use `json_serializable` for the modeling providing each model can have extra fields. For instance, there are some pre-defined fields for the user document and you may add your own fields on the document. The model has also basic CRUD functionalities.
 
 ## Features
 
-- User management
+There are many features and most of them are optinal. You may turn on the extra functions by the setting.
+
+The main features are the followings;
+
+- User
 - Chat
-- Forum
+- Forum 
 - Push notification
+- Like
+- Favorite(Bookmark)
+- Following
+- Admin
 
 ## Getting started
 
-If you want to build an app using FireFlutter, the best way is to copy codes from the example project.
+To get started, you can follow the [Installation](#installation) chapter.
+
+The best way is to copy codes from the example project and paste it into your project and update the UI.
 
 # Installation
-
 
 Please follow the instructions below to install the fireflutter.
 
 ## Install the easy extension
 
-We built a firebase extension for the easy management of firebase and fireflutter is using this extension. Install the [latest version of easy-extension](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.10-beta.1).
+I built a firebase extension for the easy management on firebase. Fireflutter is using this extension. Install the [latest version of easy-extension](https://github.com/thruthesky/easy-extension).
 
 
 ## Install cloud functions
 
-Since the firebase extension does not support sending push notification with node.js SDK, we just made it as cloud function.
+Since the firebase extension does not support on sending push notification with node.js SDK, we just made this function as cloud function.
 To install,
 
 ```sh
-cd firebase/cloud-functions/functions
+git clone https://github.com/thruthesky/fireflutter
+cd fireflutter/firebase/functions
 npm i
 firebase use add <project>
 firebase run deploy
