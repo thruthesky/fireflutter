@@ -23,6 +23,7 @@ A free, open source, complete, rapid development package for creating Social app
     - [How to display chat room menu](#how-to-display-chat-room-menu)
     - [Customizing the chat header](#customizing-the-chat-header)
 - [Widgets](#widgets)
+  - [EmailLoginForm](#emailloginform)
   - [UserDoc](#userdoc)
   - [Avatar](#avatar)
   - [UserAvatar](#useravatar)
@@ -182,6 +183,41 @@ WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
 }
 ```
 
+If you are using the flutter's default `Navigator` for routing, define the global key like below first, 
+
+```dart
+import 'package:flutter/material.dart';
+
+GlobalKey<NavigatorState> globalNavigatorKey = GlobalKey();
+BuildContext get globalContext => globalNavigatorKey.currentContext as BuildContext;
+```
+
+Then connect it to MaterialApp like below
+
+```dart
+MaterialApp(
+  navigatorKey: globalNavigatorKey,
+```
+
+
+Then, store the global context into fireflutter like below
+
+```dart
+class _MainWidgetState extends State<MainWidget> {
+  int value = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      FireFlutterService.instance.init(context: globalContext);
+    });
+  }
+```
+
+
+
 
 
 By defualt, feed feature is disabled. To use feed features, add the following in app widget.
@@ -196,14 +232,15 @@ FeedService.instance.init(enable: true);
 
 
 
+
 # Usage
 
 ## UserService
 
-`UserService.instance.nullableUser` is null
+`UserService.instance.nullableUser` is null when
 
-- when the user didn't log in
-- or when the user is logged in and has document, but the `UserService` has not read the user document, yet. In this case it simply needs to wait sometime.
+- the user didn't log in
+- when the user is logged in and has document, but the `UserService` has not read the user document, yet. In this case it simply needs to wait sometime.
 
 `UserService.instance.nullableUser.exists` is false if the user has logged in but no document. In this case, the `documentNotExistBuilder` of `UserDoc` will be called.
 
@@ -221,6 +258,9 @@ UserService.instance.get(UserService.instance.uid).then((user) => ...);
 ```
 
 The `UserService.instance.user` or `UserService.instance.docuemntChanges` may be null when the user document is being loaded on app boot. So, the better way to get the user's document for sure is to use `UserService.instance.get`
+
+
+You cannot use `my` until the UserService is initialized and `UserService.instance.user` is available. Or you will see `null check operator used on a null value.`
 
 ## ChatService
 
@@ -266,6 +306,12 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 
 * The file names and the class names of the widgets must match.
 * The user widgets are inside `widgets/user` and the file name is in the form of `user.xxxx.dart` or `user.xxxx.dialog.dart`. And it goes the same to chat and forum.
+
+
+## EmailLoginForm
+
+Use this widget for creating and logging-in with email/password. This widget is designed for test use.
+
 
 ## UserDoc
 
@@ -908,6 +954,19 @@ The admin can send push notification to all the devices, or specific type/os thr
     );
 ```
 
+
+Below shows how to search a user and send a push message to the user
+
+```dart
+AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
+  final tokens = await Token.gets(uid: user.uid);
+  MessagingService.instance.queue(
+    title: 'message title',
+    body: 'message body',
+    tokens: tokens.map((e) => e.fcmToken).toList(),
+  );
+});
+```
 ## Customizing source
 
 
@@ -1012,6 +1071,18 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 
 
 # Admin
+
+To set a user as an admin, put the user's uid into `isAdmin()` in firestore security rules.
+
+```javascript
+function isAdmin() {
+  let adminUIDs = ['xxx', 'oaCInoFMGuWUAvhqHE83gIpUxEw2'];
+  return request.auth.uid in adminUIDs || request.auth.token.admin == true;
+}
+```
+
+Then, set `isAdmin` to true in the user document.
+
 
 ## Admin Widgets
 

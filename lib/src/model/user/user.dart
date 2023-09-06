@@ -107,7 +107,7 @@ class User with FirebaseHelper {
   final List<String> likes;
 
   User({
-    required this.uid,
+    this.uid = '',
     this.isAdmin = false,
     this.displayName = '',
     this.name = '',
