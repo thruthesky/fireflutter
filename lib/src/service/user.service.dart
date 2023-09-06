@@ -166,7 +166,10 @@ class UserService with FirebaseHelper {
   Stream<User> snapshotOther(String uid) {
     return UserService.instance.rtdb.ref().child('/users/$uid').onValue.map(
       (event) {
-        return User.fromMap(map: Map<String, dynamic>.from((event.snapshot.value ?? {}) as Map), id: uid);
+        return User.fromJson({
+          ...(event.snapshot.value ?? {}) as Map,
+          ...{'id': uid}
+        });
       },
     );
   }

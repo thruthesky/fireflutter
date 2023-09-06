@@ -140,9 +140,9 @@ params:
 
   - param: USER_SYNC_FIELDS
     label: User sync fields
-    description: Which fields do you want to sync? Separate fields with comma. Example) "displayName,name,firstName,photoUrl,birthYear,birthMonth,birthDay,createdAt,state,stateImageUrl". Or leave it blank to not sync.
+    description: Which fields do you want to sync? Separate fields with comma. Example) "displayName,name,firstName,photoUrl,birthYear,birthMonth,birthDay,createdAt,state,stateImageUrl,followers,followings,likes". Or leave it blank to not sync.
     type: string
-    default: displayName,name,firstName,photoUrl,birthYear,birthMonth,birthDay,createdAt,state,stateImageUrl,followers,followings
+    default: displayName,name,firstName,photoUrl,birthYear,birthMonth,birthDay,createdAt,state,stateImageUrl,followers,followings,likes
     required: true
 
   - param: USER_SYNC_FIELDS_BACKFILL

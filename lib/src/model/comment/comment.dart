@@ -123,7 +123,6 @@ class Comment with FirebaseHelper {
     return copyWith(commentData);
   }
 
-  // TODO Test
   /// Likes or Unlikes the comment
   ///
   /// If I already liked (iLiked == true)

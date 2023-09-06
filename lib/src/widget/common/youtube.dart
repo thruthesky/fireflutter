@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -58,7 +60,7 @@ class _YouTubeState extends State<YouTube> {
               handleColor: Colors.blueAccent,
             ),
             onReady: () {
-              print('Player is ready.');
+              log('Player is ready.');
             },
           );
   }

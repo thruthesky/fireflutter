@@ -29,7 +29,10 @@ class Category with FirebaseHelper {
   }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory Category.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
-    return Category.fromMap(map: documentSnapshot.data() as Map<String, dynamic>, id: documentSnapshot.id);
+    return Category.fromJson({
+      ...documentSnapshot.data() as Map<String, dynamic>,
+      ...{'id': documentSnapshot.id}
+    });
   }
 
   /// Creates a category object from an id.

@@ -112,7 +112,7 @@ class _FFVideoPlayerState extends State<FFVideoPlayer> {
 
   Future initializePlayer() async {
     _videoPlayerController = widget.videoType == VideoType.network
-        ? VideoPlayerController.network(widget.path)
+        ? VideoPlayerController.networkUrl(Uri.parse(widget.path))
         : VideoPlayerController.asset(widget.path);
     if (kIsWeb && widget.autoPlay) {
       // Browsers generally don't allow autoplay unless it's muted.
@@ -198,7 +198,6 @@ class _FFVideoPlayerState extends State<FFVideoPlayer> {
 /// Videos are displayed with [Chewie]. It will not display the controller
 /// if the width is less than 160.
 ///
-@Deprecated("Use individual widget for each file update.")
 class DisplayMedia extends StatefulWidget {
   const DisplayMedia({
     Key? key,
