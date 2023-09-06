@@ -94,6 +94,12 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                         },
                         child: const Text("Favorite"),
                       ),
+                      ElevatedButton(
+                        onPressed: () {
+                          ChatService.instance.showChatRoom(context: context, user: user);
+                        },
+                        child: const Text("Chat"),
+                      ),
                     ],
                   ),
           ),
