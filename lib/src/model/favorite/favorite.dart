@@ -36,7 +36,7 @@ class Favorite with FirebaseHelper {
   @override
   toString() => toJson().toString();
 
-  static Query query({String? postId}) {
+  static Query query({String? postId, String? commentId, String? otherUid}) {
     Query query = col.where('uid', isEqualTo: UserService.instance.uid);
     if (postId != null) {
       query = query.where('postId', isEqualTo: postId);
@@ -60,21 +60,32 @@ class Favorite with FirebaseHelper {
   /// Favorite
   ///
   /// Save as favorite if it's not in favorite list. Or remove it from favorite list.
-  static Future<bool> toggle({required FavoriteType type, String? otherUid, String? postId, String? commentId}) async {
+  static Future<bool> toggle({
+    String? otherUid,
+    String? postId,
+    String? commentId,
+  }) async {
     assert(otherUid != null || postId != null || commentId != null, 'otherUid, postId, or commentId must be provided');
     final String id = "${my.uid}-${otherUid ?? postId ?? commentId}";
 
     final Favorite? favorite = await Favorite.get(id);
 
+    final FavoriteType type = otherUid != null
+        ? FavoriteType.user
+        : postId != null
+            ? FavoriteType.post
+            : FavoriteType.comment;
+
     if (favorite == null) {
-      await Favorite.doc(id).set({
+      final data = {
         'uid': my.uid,
         if (otherUid != null) 'otherUid': otherUid,
         if (postId != null) 'postId': postId,
         if (commentId != null) 'commentId': commentId,
         'type': type.name,
         'createdAt': FieldValue.serverTimestamp(),
-      });
+      };
+      await Favorite.doc(id).set(data);
       return true;
     } else {
       await Favorite.doc(id).delete();

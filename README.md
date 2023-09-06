@@ -47,7 +47,8 @@ A free, open source, complete, rapid development package for creating Social app
   - [Chat Room Settings](#chat-room-settings)
 - [User](#user)
   - [Like](#like)
-  - [Bookmark/Favorite](#bookmarkfavorite)
+  - [Favorite/Bookmark](#favoritebookmark)
+    - [How to display icon](#how-to-display-icon)
   - [Follow and Unfollow](#follow-and-unfollow)
 - [Upload](#upload)
   - [Photo upload](#photo-upload)
@@ -751,7 +752,7 @@ Improvement needed here. Since the maximum size of a firestore document is limit
 
 
 
-## Bookmark/Favorite
+## Favorite/Bookmark
 
 Bookmark is known to be `Favorite`.
 
@@ -766,6 +767,18 @@ Bookmark is known to be `Favorite`.
 
 When A wants to see the bookmarks, the app should display a screen to list the bookmarks by all, type, user, etc.
 
+
+
+### How to display icon
+
+Use `FavoriteIcon` to display the icon.
+
+```dart
+FavoriteIcon(
+  otherUid: 'abc',
+  builder: (re) => FaIcon(re ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heartCirclePlus, size: 38),
+),
+```
 
 
 ## Follow and Unfollow
