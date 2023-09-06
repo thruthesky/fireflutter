@@ -15,6 +15,7 @@ class Favorite with FirebaseHelper {
   static CollectionReference col = FirebaseFirestore.instance.collection('favorites');
   static DocumentReference doc(String id) => col.doc(id);
   final String id;
+  final String? otherUid, postId, commentId;
   final String type;
 
   @JsonKey(includeFromJson: false, includeToJson: true)
@@ -23,6 +24,9 @@ class Favorite with FirebaseHelper {
   Favorite({
     required this.id,
     required this.type,
+    this.otherUid,
+    this.postId,
+    this.commentId,
     dynamic createdAt,
   }) : createdAt = createdAt is Timestamp ? createdAt.toDate() : DateTime.now();
 
@@ -36,10 +40,19 @@ class Favorite with FirebaseHelper {
   @override
   toString() => toJson().toString();
 
-  static Query query({String? postId, String? commentId, String? otherUid}) {
+  /// Query
+  ///
+  /// Query favorites by postId, commentId, otherUid, or type
+  static Query query({String? postId, String? commentId, String? otherUid, FavoriteType? type}) {
     Query query = col.where('uid', isEqualTo: UserService.instance.uid);
-    if (postId != null) {
+    if (otherUid != null) {
+      query = query.where('otherUid', isEqualTo: otherUid);
+    } else if (postId != null) {
       query = query.where('postId', isEqualTo: postId);
+    } else if (commentId != null) {
+      query = query.where('commentId', isEqualTo: commentId);
+    } else if (type != null) {
+      query = query.where('type', isEqualTo: type.name);
     }
     query = query.orderBy('createdAt', descending: true);
     return query;

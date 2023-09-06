@@ -6,9 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 class PublicProfileDialog extends StatefulWidget {
-  const PublicProfileDialog({super.key, required this.uid});
+  const PublicProfileDialog({super.key, this.uid, this.user});
 
-  final String uid;
+  final String? uid;
+  final User? user;
 
   @override
   State<PublicProfileDialog> createState() => _PublicProfileDialogState();
@@ -20,6 +21,8 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
   @override
   Widget build(BuildContext context) {
     return UserDoc(
+      uid: widget.uid,
+      user: widget.user,
       live: true,
       builder: (user) {
         // Statck(children:[ CachedNetworkImage( placeholder: .... if there is existing staet image, show that or show empty color ), Scaffold()]])

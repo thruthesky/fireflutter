@@ -15,7 +15,6 @@ Create an issue if you find a bug or need a help.
   - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
     - [Security rule for admin](#security-rule-for-admin)
-  - [Cloud functions](#cloud-functions)
   - [Admin settings](#admin-settings)
   - [Setup the base code](#setup-the-base-code)
 - [Usage](#usage)
@@ -164,14 +163,6 @@ For instance, you may write security rules like below and add the uids of sub-ad
     ...
   }
 ```
-
-
-## Cloud functions
-
-Instead of building and managing cloud functions code, we choose to use it as firebase extension. The `easy-extension` has all the functions that fireflutter needs. See the [Install the easy extension](#install-the-easy-extension).
-
-
-All cloud functions must go under `firebase/cloud-functions/functions` folder.
 
 
 ## Admin settings
@@ -840,6 +831,18 @@ FavoriteIcon(
 ),
 ```
 
+You can do an extra action on status changes.
+
+```dart
+FavoriteIcon(
+  otherUid: 'abc',
+  builder: (re) => Text(re ? 'Favorite' : 'Unfavorite'),
+  onChanged: (re) => toast(
+    title: re ? 'Favorited' : 'Unfavorited',
+    message: re ? 'You have favorited.' : 'You have unfavorited.',
+  ),
+),
+```
 
 ## Follow and Unfollow
 
