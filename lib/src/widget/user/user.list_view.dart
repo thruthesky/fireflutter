@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 /// [searchText] Use this to search in a list of users
 /// [exemptedUsers] Array of uids who are exempted in search results
 ///
+/// [itemBuilder] The builder when we want fully customized view per user.
+///
 class UserListView extends StatelessWidget with FirebaseHelper {
   const UserListView({
     super.key,
@@ -23,8 +25,6 @@ class UserListView extends StatelessWidget with FirebaseHelper {
     this.itemBuilder,
   });
 
-  // TODO assert if item builder is not null, no need for avatar, title, subtitle or trailing.
-
   final String? searchText;
   final List<String> exemptedUsers;
   final Function(User)? onTap;
@@ -36,10 +36,13 @@ class UserListView extends StatelessWidget with FirebaseHelper {
   final Widget Function(User?)? trailingBuilder;
   final Widget Function(User?)? itemBuilder;
 
+  bool get hasSearchText => searchText != null && searchText != '';
+
   @override
   Widget build(BuildContext context) {
     Query query = userSearchCol;
-    if (searchText != null && searchText != '') {
+    if (hasSearchText) {
+      // TODO review (Mr. Song mentioned that we might put initial results)
       query = query.where(field, isEqualTo: searchText);
     }
     return FirestoreListView(
@@ -50,13 +53,15 @@ class UserListView extends StatelessWidget with FirebaseHelper {
         if (itemBuilder != null) return itemBuilder!.call(user);
         return ListTile(
           title: titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
-          subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
+          subtitle:
+              subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
           leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
-          trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
-          onTap: () async {
+          trailing:
+              trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
+          onTap: () {
             onTap?.call(user);
           },
-          onLongPress: () async {
+          onLongPress: () {
             onLongPress?.call(user);
           },
         );
