@@ -12,6 +12,12 @@ import 'package:rxdart/rxdart.dart';
 /// my.update(state: stateController.text);
 User get my => UserService.instance.user;
 
+/// [myUid] is an alias of [FirebaseAuth.instance.currentUser?.uid].
+///
+/// You can use [myUid] as early as you can since [my.uid] is slow to be set.
+/// [my.uid] 는 사용 준비가 느린데, [myUid] 는 빠르게 사용 할 수 있다.
+String? get myUid => auth.FirebaseAuth.instance.currentUser?.uid;
+
 class UserService with FirebaseHelper {
   static UserService? _instance;
   static UserService get instance => _instance ??= UserService._();
