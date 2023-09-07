@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 /// [searchText] Use this to search in a list of users
 /// [exemptedUsers] Array of uids who are exempted in search results
 ///
+/// [itemBuilder] The builder when we want fully customized view per user.
+///
 class UserListView extends StatelessWidget with FirebaseHelper {
   const UserListView({
     super.key,
@@ -40,10 +42,12 @@ class UserListView extends StatelessWidget with FirebaseHelper {
 
   final int pageSize;
 
+  bool get hasSearchText => searchText != null && searchText != '';
+
   @override
   Widget build(BuildContext context) {
     Query query = userSearchCol;
-    if (searchText != null && searchText != '') {
+    if (hasSearchText) {
       query = query.where(field, isEqualTo: searchText);
     }
     return FirestoreQueryBuilder(
