@@ -51,10 +51,10 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
           left: 0,
           right: 0,
           child: Container(
-            height: 150,
+            height: 200,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.black.withAlpha(100), Colors.transparent],
+                colors: [Colors.black.withAlpha(80), Colors.transparent],
                 end: Alignment.bottomCenter,
                 begin: Alignment.topCenter,
               ),
@@ -66,10 +66,10 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
           right: 0,
           bottom: 0,
           child: Container(
-            height: 150,
-            decoration: const BoxDecoration(
+            height: 300,
+            decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.black, Colors.transparent],
+                colors: [Colors.black.withAlpha(150), Colors.transparent],
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
               ),
