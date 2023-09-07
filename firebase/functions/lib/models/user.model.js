@@ -231,7 +231,6 @@ class User {
     static async GetFcmToken(data) {
         return await messaging_model_1.Messaging.getToken(data);
     }
-    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
     static async setUserSettingsSubscription(uid, data) {
         var _a;
         data["uid"] = uid;

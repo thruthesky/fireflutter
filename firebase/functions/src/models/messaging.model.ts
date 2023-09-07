@@ -26,8 +26,7 @@ export class Messaging {
    *
    * For forum category subscription,
    *  'data.action' and 'data.category' has the information.
-   * For topics like
-   *  `allUsers`, `webUsers`, `androidUsers`, `iosUsers`
+   * 
    *      will follow on next version.
    *
    * @param data information of sending message
@@ -37,7 +36,7 @@ export class Messaging {
     if (data.topic) {
       return this.sendMessageToTopic(data.topic, data);
     } else if (data.tokens) {
-      return this.sendMessageToTokens(typeof data.tokens == 'string' ? data.tokens.split(",") : data.tokens, data);
+      return this.sendMessageToTokens(typeof data.tokens == "string" ? data.tokens.split(",") : data.tokens, data);
     } else if (data.uids) {
       const tokens = await this.getTokensFromUids(data.uids);
       return this.sendMessageToTokens(tokens, data);
@@ -46,15 +45,19 @@ export class Messaging {
     } else if (data.target) {
       const tokens = await this.getTokensFromTarget(data.target);
       return this.sendMessageToTokens(tokens, data);
-    }
-    else {
+    } else {
       throw Error("One of uids, tokens, topic must be present");
     }
   }
 
-
+  /**
+   * 
+   * @param topic topics like `allUsers`, `webUsers`, `androidUsers`, `iosUsers`
+   * @param data information message to send
+   * @returns Promise<SendMessageResult>
+   *    { messageId: <string> }
+   */
   static async sendMessageToTopic(topic: string, data: SendMessage): Promise<SendMessageResult> {
-
     // Only admin can sent message to topic `allUsers`.
     const payload = this.topicPayload(topic, data);
     try {
@@ -65,14 +68,12 @@ export class Messaging {
     }
   }
 
-  /// Prepare topic payload
+  // / Prepare topic payload
   static topicPayload(topic: string, data: SendMessage): MessagePayload {
     const payload = this.completePayload(data);
     payload.topic = "/topics/" + topic;
     return payload;
   }
-
-
 
 
   /**
@@ -306,9 +307,6 @@ export class Messaging {
     // return snapshot.docs.map((doc) => doc.id);
     return snapshot.docs.map((doc) => doc.get("fcm_token"));
   }
-
-
-
 
 
   /**
@@ -548,19 +546,25 @@ export class Messaging {
     await snapshot.ref.update({ status: "succeeded", num_sent: numSent });
   }
 
-
+  /**
+   * note* `only login device are included`
+   * To send to specific device type you can pass target
+   * 
+   * @param target `all` `android` `ios` `web` etc.
+   * @returns Promise<string[]>
+   */
   static async getTokensFromTarget(target: string): Promise<string[]> {
     if (!target) return [];
     const tokens: string[] = [];
     let userTokens: admin.firestore
       .QuerySnapshot<admin.firestore.DocumentData>;
 
-    if (target == 'all') {
+    if (target == "all") {
       userTokens =
         await Ref.tokenCollectionGroup.get();
     } else {
       userTokens =
-        await Ref.tokenCollectionGroup.where('device_type', '==', target).get();
+        await Ref.tokenCollectionGroup.where("device_type", "==", target).get();
     }
 
     userTokens.docs.forEach((token) => {

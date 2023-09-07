@@ -1,16 +1,16 @@
 import * as admin from "firebase-admin";
 // import * as functions from "firebase-functions";
 // import { RuntimeOptions } from "firebase-functions";
-import { ChatMessageDocument } from "../interfaces/chat.interface";
-import { CommentDocument, PostDocument } from "../interfaces/forum.interface";
-import { SendMessage, SendMessageResult } from "../interfaces/messaging.interface";
-import { Messaging } from "../models/messaging.model";
-import { EventName, EventType } from "../utils/event-name";
+import {ChatMessageDocument} from "../interfaces/chat.interface";
+import {CommentDocument, PostDocument} from "../interfaces/forum.interface";
+import {SendMessage, SendMessageResult} from "../interfaces/messaging.interface";
+import {Messaging} from "../models/messaging.model";
+import {EventName, EventType} from "../utils/event-name";
 
-import { onDocumentCreated, FirestoreEvent }
+import {onDocumentCreated, FirestoreEvent}
   from "firebase-functions/v2/firestore";
 
-import { QueryDocumentSnapshot } from "firebase-admin/firestore";
+import {QueryDocumentSnapshot} from "firebase-admin/firestore";
 
 
 exports.messagingOnPostCreate = onDocumentCreated("posts/{postId}",
@@ -62,7 +62,6 @@ exports.pushNotificationQueue =
     });
 
 
-
 // exports.sendPushNotificationsOnCreate =
 //   onDocumentCreated("push_notifications/{documentId}",
 //     async (event: FirestoreEvent<QueryDocumentSnapshot | undefined>): Promise<void> => {
@@ -93,6 +92,5 @@ exports.messagingOnChatMessageCreate =
       );
       return await Promise.all(futures);
     });
-
 
 

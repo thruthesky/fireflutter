@@ -30,7 +30,7 @@ export interface SendMessage {
     // for sending messages by action. Like post-create, comment-create.
     categoryId?: string;
 
-    // choose who to send the push notification 
+    // choose who to send the push notification
     // all, ios, android, web
     target?: string;
 }

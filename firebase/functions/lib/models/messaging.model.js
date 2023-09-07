@@ -24,11 +24,10 @@ class Messaging {
      */
     static async sendMessage(data) {
         if (data.topic) {
-            // / see TODO in README.md
-            return { success: 0, error: 0 };
+            return this.sendMessageToTopic(data.topic, data);
         }
         else if (data.tokens) {
-            return this.sendMessageToTokens(data.tokens.split(","), data);
+            return this.sendMessageToTokens(typeof data.tokens == "string" ? data.tokens.split(",") : data.tokens, data);
         }
         else if (data.uids) {
             const tokens = await this.getTokensFromUids(data.uids);
@@ -37,9 +36,30 @@ class Messaging {
         else if (data.action) {
             return this.sendMessageByAction(data);
         }
+        else if (data.target) {
+            const tokens = await this.getTokensFromTarget(data.target);
+            return this.sendMessageToTokens(tokens, data);
+        }
         else {
             throw Error("One of uids, tokens, topic must be present");
         }
+    }
+    static async sendMessageToTopic(topic, data) {
+        // Only admin can sent message to topic `allUsers`.
+        const payload = this.topicPayload(topic, data);
+        try {
+            const res = await admin.messaging().send(payload);
+            return { messageId: res };
+        }
+        catch (e) {
+            throw Error("Topic send error " + e.message);
+        }
+    }
+    // / Prepare topic payload
+    static topicPayload(topic, data) {
+        const payload = this.completePayload(data);
+        payload.topic = "/topics/" + topic;
+        return payload;
     }
     /**
      *
@@ -173,16 +193,16 @@ class Messaging {
         const promises = [];
         for (const token of tokens) {
             promises.push(
-                // Get the document of the token
-                ref_1.Ref.db
-                    .collectionGroup("fcm_tokens")
-                    .where("fcm_token", "==", token)
-                    .get()
-                    .then(async (snapshot) => {
-                        for (const doc of snapshot.docs) {
-                            await doc.ref.delete();
-                        }
-                    }));
+            // Get the document of the token
+            ref_1.Ref.db
+                .collectionGroup("fcm_tokens")
+                .where("fcm_token", "==", token)
+                .get()
+                .then(async (snapshot) => {
+                for (const doc of snapshot.docs) {
+                    await doc.ref.delete();
+                }
+            }));
         }
         await Promise.all(promises);
     }
@@ -201,11 +221,11 @@ class Messaging {
         return false;
     }
     /**
-                 * Returns tokens of multiple users.
-                 *
-                 * @param uids array of user uid
-                 * @return array of tokens
-                 */
+     * Returns tokens of multiple users.
+     *
+     * @param uids array of user uid
+     * @return array of tokens
+     */
     static async getTokensFromUids(uids) {
         if (!uids)
             return [];
@@ -214,11 +234,11 @@ class Messaging {
         return (await Promise.all(promises)).flat();
     }
     /**
-                 * Returns tokens of a user.
-                 *
-                 * @param uid user uid
-                 * @return array of tokens
-                 */
+     * Returns tokens of a user.
+     *
+     * @param uid user uid
+     * @return array of tokens
+     */
     static async getTokens(uid) {
         if (!uid)
             return [];
@@ -230,11 +250,11 @@ class Messaging {
         return snapshot.docs.map((doc) => doc.get("fcm_token"));
     }
     /**
-                 * Returns complete payload from the query data from client.
-                 *
-                 * @param query query data that has payload information
-                 * @return an object of payload
-                 */
+     * Returns complete payload from the query data from client.
+     *
+     * @param query query data that has payload information
+     * @return an object of payload
+     */
     static completePayload(query) {
         // console.log(`completePayload(${JSON.stringify(query)})`);
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
@@ -387,10 +407,8 @@ class Messaging {
         for (let i = 0; i < tokensArr.length; i += 500) {
             const tokensBatch = tokensArr.slice(i, Math.min(i + 500, tokensArr.length));
             const messages = {
-                notification: Object.assign({
-                    title,
-                    body
-                }, (imageUrl && { imageUrl: imageUrl })),
+                notification: Object.assign({ title,
+                    body }, (imageUrl && { imageUrl: imageUrl })),
                 data: {
                     initialPageName,
                     parameterData,
@@ -411,11 +429,29 @@ class Messaging {
         await Promise.all(messageBatches.map(async (messages) => {
             const response = await admin
                 .messaging()
-                // .sendMulticast(messages as MulticastMessage); // deprecated
                 .sendEachForMulticast(messages);
             numSent += response.successCount;
         }));
         await snapshot.ref.update({ status: "succeeded", num_sent: numSent });
+    }
+    static async getTokensFromTarget(target) {
+        if (!target)
+            return [];
+        const tokens = [];
+        let userTokens;
+        if (target == "all") {
+            userTokens =
+                await ref_1.Ref.tokenCollectionGroup.get();
+        }
+        else {
+            userTokens =
+                await ref_1.Ref.tokenCollectionGroup.where("device_type", "==", target).get();
+        }
+        userTokens.docs.forEach((token) => {
+            const data = token.data();
+            tokens.push(data.fcm_token);
+        });
+        return [...new Set(tokens)];
     }
     /**
      * Save a token under the user's fcm_tokens collection.
