@@ -183,13 +183,13 @@ ScaffoldFeatureController toast({
   required String title,
   required String message,
   Widget? icon,
-  int duration = 8,
+  Duration duration = const Duration(seconds: 8),
   Function(Function)? onTap,
 }) {
   final context = FireFlutterService.instance.context;
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      duration: Duration(seconds: duration),
+      duration: duration,
       content: Row(
         children: [
           Expanded(

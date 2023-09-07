@@ -16,13 +16,12 @@ class DateTimeText extends StatelessWidget {
     super.key,
     required this.dateTime,
     this.type = DateTimeTextType.ago,
-    this.textStyle =
-        const TextStyle(fontWeight: FontWeight.w500, color: Colors.black45),
+    this.style = const TextStyle(fontWeight: FontWeight.w500, color: Colors.black45),
   });
 
   final DateTime dateTime;
   final DateTimeTextType type;
-  final TextStyle textStyle;
+  final TextStyle style;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +30,7 @@ class DateTimeText extends StatelessWidget {
         DateTimeTextType.short => dateTimeAgo(dateTime),
         _ => dateTimeAgo(dateTime),
       },
-      style: textStyle,
+      style: style,
     );
   }
 }
