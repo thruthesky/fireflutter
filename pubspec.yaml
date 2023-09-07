@@ -1,7 +1,7 @@
 name: fireflutter
-description: A free, open source, complete, rapid development package for creating Social apps, Chat apps, Community(Forum) apps, Shopping mall apps, and much more based on Firebase.
+description: A free, open source, complete, rapid development package for creating apps like CMS(content management system), social service, chat, community(forum), shopping mall and much more based on Firebase.
 version: 0.3.7
-homepage: https://fireflutter-site.web.app/
+homepage: https://github.com/thruthesky/fireflutter
 
 environment:
   sdk: ">=3.0.6 <4.0.0"

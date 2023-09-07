@@ -16,6 +16,8 @@ class UserService with FirebaseHelper {
   static UserService? _instance;
   static UserService get instance => _instance ??= UserService._();
 
+  UserCustomize customize = UserCustomize();
+
   /// Return true if the user signed with real account. Not anonymous.
   bool get notSignedIn => isAnonymous || auth.FirebaseAuth.instance.currentUser == null;
 
@@ -290,10 +292,15 @@ class UserService with FirebaseHelper {
     });
   }
 
-  Future showPublicProfile({required BuildContext context, required String uid}) {
-    return showGeneralDialog(
-      context: context,
-      pageBuilder: ($, _, __) => PublicProfileDialog(uid: uid),
-    );
+  /// Open public profile dialog
+  ///
+  /// It shows the public profile dialog for the user. You can customize by
+  /// setting [UserCustomize] to [UserService.instance.customize].
+  Future showPublicProfile({required BuildContext context, String? uid, User? user}) {
+    return customize.showPublicProfile?.call(context, uid: uid, user: user) ??
+        showGeneralDialog(
+          context: context,
+          pageBuilder: ($, _, __) => PublicProfileDialog(uid: uid, user: user),
+        );
   }
 } // EO UserService

@@ -8,9 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 class PublicProfileDialog extends StatefulWidget {
-  const PublicProfileDialog({super.key, required this.uid});
+  const PublicProfileDialog({super.key, this.uid, this.user});
 
-  final String uid;
+  final String? uid;
+  final User? user;
 
   @override
   State<PublicProfileDialog> createState() => _PublicProfileDialogState();

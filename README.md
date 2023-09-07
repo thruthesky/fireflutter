@@ -2,7 +2,9 @@
 
 ![Fireflutter](https://github.com/thruthesky/fireflutter/blob/main/doc/fireflutter_title_image.jpg?raw=true)
 
-A free, open source, complete, rapid development package for creating Social apps, Chat apps, Community(Forum) apps, Shopping mall apps, and much more based on Firebase
+If you are looking for a package that help you develop a full featured content management app, then you have found a right one. FireFlutter is a free, open source, complete, rapid development package for creating apps like CMS(content management system), social service, chat, community(forum), shopping mall and much more based on Firebase.
+
+Create an issue if you find a bug or need a help.
 
 - [FireFlutter](#fireflutter)
   - [Overview](#overview)
@@ -13,7 +15,6 @@ A free, open source, complete, rapid development package for creating Social app
   - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
     - [Security rule for admin](#security-rule-for-admin)
-  - [Cloud functions](#cloud-functions)
   - [Admin settings](#admin-settings)
   - [Setup the base code](#setup-the-base-code)
 - [Usage](#usage)
@@ -25,6 +26,7 @@ A free, open source, complete, rapid development package for creating Social app
 - [Widgets](#widgets)
   - [EmailLoginForm](#emailloginform)
   - [UserDoc](#userdoc)
+  - [User customization](#user-customization)
   - [Avatar](#avatar)
   - [UserAvatar](#useravatar)
   - [UserProfileAvatar](#userprofileavatar)
@@ -81,36 +83,48 @@ A free, open source, complete, rapid development package for creating Social app
 
 ## Overview
 
-- We don't use `json_serializable` since the field should be dynamically added or edited. And the model class has not only the json serialized data, but also basic functionalities for the model.
+I made it for reusing the most common code blocks when I am building apps. It provides the code for user management, forum(caetgory, post, comment) management, chat management, push notification management along with `like`, `favorite`, `following` features.
+
+I use `json_serializable` for the modeling providing each model can have extra fields. For instance, there are some pre-defined fields for the user document and you may add your own fields on the document. The model has also basic CRUD functionalities.
 
 ## Features
 
-- User management
+There are many features and most of them are optinal. You may turn on the extra functions by the setting.
+
+The main features are the followings;
+
+- User
 - Chat
-- Forum
+- Forum 
 - Push notification
+- Like
+- Favorite(Bookmark)
+- Following
+- Admin
 
 ## Getting started
 
-If you want to build an app using FireFlutter, the best way is to copy codes from the example project.
+To get started, you can follow the [Installation](#installation) chapter.
+
+The best way is to copy codes from the example project and paste it into your project and update the UI.
 
 # Installation
-
 
 Please follow the instructions below to install the fireflutter.
 
 ## Install the easy extension
 
-We built a firebase extension for the easy management of firebase and fireflutter is using this extension. Install the [latest version of easy-extension](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/easy-extension@0.1.10-beta.1).
+I built a firebase extension for the easy management on firebase. Fireflutter is using this extension. Install the [latest version of easy-extension](https://github.com/thruthesky/easy-extension).
 
 
 ## Install cloud functions
 
-Since the firebase extension does not support sending push notification with node.js SDK, we just made it as cloud function.
+Since the firebase extension does not support on sending push notification with node.js SDK, we just made this function as cloud function.
 To install,
 
 ```sh
-cd firebase/cloud-functions/functions
+git clone https://github.com/thruthesky/fireflutter
+cd fireflutter/firebase/functions
 npm i
 firebase use add <project>
 firebase run deploy
@@ -150,14 +164,6 @@ For instance, you may write security rules like below and add the uids of sub-ad
     ...
   }
 ```
-
-
-## Cloud functions
-
-Instead of building and managing cloud functions code, we choose to use it as firebase extension. The `easy-extension` has all the functions that fireflutter needs. See the [Install the easy extension](#install-the-easy-extension).
-
-
-All cloud functions must go under `firebase/cloud-functions/functions` folder.
 
 
 ## Admin settings
@@ -334,6 +340,22 @@ UserDoc(
     return const SizedBox.shrink();
   },
 ),
+```
+
+## User customization
+
+
+To customize the user public profile screen, you can override the showPublicProfile function.
+
+```dart
+UserService.instance.customize.showPublicProfile =
+    (BuildContext context, {String? uid, User? user}) => showGeneralDialog<dynamic>(
+          context: context,
+          pageBuilder: ($, _, __) => MomcafePublicProfileScreen(
+            uid: uid,
+            user: user,
+          ),
+        );
 ```
 
 ## Avatar
@@ -826,6 +848,18 @@ FavoriteIcon(
 ),
 ```
 
+You can do an extra action on status changes.
+
+```dart
+FavoriteIcon(
+  otherUid: 'abc',
+  builder: (re) => Text(re ? 'Favorite' : 'Unfavorite'),
+  onChanged: (re) => toast(
+    title: re ? 'Favorited' : 'Unfavorited',
+    message: re ? 'You have favorited.' : 'You have unfavorited.',
+  ),
+),
+```
 
 ## Follow and Unfollow
 
@@ -1068,6 +1102,8 @@ Registering the build functions do not cause any performance issues since it onl
 ```dart
 ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoomAppBar(room: room);
 ```
+
+
 
 
 # Admin
