@@ -42,11 +42,39 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                         : CachedNetworkImage(
                             imageUrl: previousUrl,
                             fit: BoxFit.cover,
-                            placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                            errorWidget: (context, url, error) => const SizedBox.shrink(),
                           ),
                   ),
                 ),
+        ),
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            height: 150,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.black.withAlpha(100), Colors.transparent],
+                end: Alignment.bottomCenter,
+                begin: Alignment.topCenter,
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: Container(
+            height: 150,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.black, Colors.transparent],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+              ),
+            ),
+          ),
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
@@ -99,23 +127,37 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                             upload: isMyProfile,
                           ),
                           const SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: () async {
-                              await user.like();
-                            },
-                            child: Text(user.noOfLikes),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              Favorite.toggle(otherUid: widget.uid);
-                            },
-                            child: const Text("Favorite"),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              ChatService.instance.showChatRoom(context: context, user: user);
-                            },
-                            child: const Text("Chat"),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              TextButton(
+                                onPressed: () async {
+                                  await user.like();
+                                },
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                                ),
+                                child: Text(user.noOfLikes),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Favorite.toggle(otherUid: widget.uid);
+                                },
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                                ),
+                                child: const Text("Favorite"),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  ChatService.instance.showChatRoom(context: context, user: user);
+                                },
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                                ),
+                                child: const Text("Chat"),
+                              ),
+                            ],
                           ),
                         ],
                       ),
