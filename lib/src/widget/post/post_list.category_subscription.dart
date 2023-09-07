@@ -22,7 +22,7 @@ class PostListCategorySubscription extends StatelessWidget {
             subscribed ? Icons.notification_add : Icons.notifications_off,
             color: Colors.white,
           ),
-          duration: 20,
+          duration: const Duration(seconds: 20),
           onTap: (x) => x(),
         );
       },
