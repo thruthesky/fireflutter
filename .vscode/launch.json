@@ -59,6 +59,15 @@
       "deviceId": "iPhone 14 Pro Max"
     },
     {
+      "name": "MomCafe - iPhone11 - (J)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "iPhone11MaxPro"
+    },
+    {
       "name": "MomCafe - iPhone14MaxPro (J)",
       "request": "launch",
       "type": "dart",

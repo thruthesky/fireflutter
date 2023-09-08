@@ -13,6 +13,7 @@ class FavoriteListView extends StatelessWidget {
     this.shrinkWrap = false,
     this.physics,
     this.itemBuilder,
+    this.itemExtent,
   });
 
   final int pageSize;
@@ -23,6 +24,7 @@ class FavoriteListView extends StatelessWidget {
   final ScrollPhysics? physics;
 
   final Widget Function(Favorite)? itemBuilder;
+  final double? itemExtent;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +33,7 @@ class FavoriteListView extends StatelessWidget {
       physics: physics,
       pageSize: pageSize,
       query: Favorite.query(type: type),
+      itemExtent: itemExtent,
       itemBuilder: (context, doc) {
         final favorite = Favorite.fromDocumentSnapshot(doc);
         if (itemBuilder != null) return itemBuilder!(favorite);

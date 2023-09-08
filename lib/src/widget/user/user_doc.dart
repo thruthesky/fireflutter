@@ -35,6 +35,9 @@ import 'package:flutter/material.dart';
 /// [onLoading] is the widget to be used when the data is being loaded. It's not a callback.
 ///
 /// [live] 는 기본 값이 false 이다. true 이면 실시간 업데이트를 화면에 표시하며, false 이면 실시간으로 화면에 표시하지 않는다.
+///
+/// [notLoggedInBuilder] is the callback function to be called when the user is
+/// not logged in. This callback works only when [uid] and [user] is null.
 class UserDoc extends StatelessWidget {
   const UserDoc({
     super.key,
@@ -55,11 +58,12 @@ class UserDoc extends StatelessWidget {
 
   String get currentUserUid => fa.FirebaseAuth.instance.currentUser!.uid;
   String? get userUid => user?.uid ?? uid;
+  bool get isCurrentUser => uid == null && user == null;
 
   @override
   Widget build(BuildContext context) {
     // 현재 사용자 (uid 와 user 가 null)
-    if (uid == null && user == null) {
+    if (isCurrentUser) {
       // 실시간 업데이트가 아니면,
       if (live == false) {
         // 현재 사용자, 실시간 아님, 로그인 안 했음. Not logged in 위젯 표시
@@ -92,6 +96,9 @@ class UserDoc extends StatelessWidget {
         },
       );
     }
+    //
+    // 다른 사용자
+    //
     // uid 또는 user 가 지정되면, RTDB 의 /users 에서 해당 사용자 문서를 가져와서 build 한다.
     // 참고로, uid 또는 user 가 현재 사용자 일 수 있다. uid/user 가 현재 사용자 값이라 해도, RTDB 에서 가져온다.
     if (live == false) {

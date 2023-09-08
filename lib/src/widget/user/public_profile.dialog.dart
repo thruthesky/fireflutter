@@ -20,77 +20,69 @@ class PublicProfileDialog extends StatefulWidget {
 class _PublicProfileDialogState extends State<PublicProfileDialog> {
   final BehaviorSubject<double?> progressEvent = BehaviorSubject<double?>.seeded(null);
 
-  bool get isItMe => widget.uid == my.uid;
+  bool get isMyProfile => widget.uid == my.uid;
 
   String? currentLoadedImageUrl;
+  String previousUrl = '';
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        UserDoc(
-          // The background doesn't have to be live if it is not me
-          live: isItMe,
-          uid: widget.uid,
-          builder: (user) {
-            return CachedNetworkImage(
-              // Transition is a bit difficult because the UserDoc clears and rebuilds this part
-              fadeInDuration: Duration.zero,
-              fadeOutDuration: Duration.zero,
-              fit: BoxFit.cover,
-              height: double.infinity,
-              width: double.infinity,
-              alignment: Alignment.center,
-              imageUrl:
-                  user.stateImageUrl.isEmpty ? "https://picsum.photos/id/${user.birthDay}/600/400" : user.stateImageUrl,
-              cacheKey:
-                  user.stateImageUrl.isEmpty ? "https://picsum.photos/id/${user.birthDay}/600/400" : user.stateImageUrl,
-              progressIndicatorBuilder: (context, str, progress) {
-                currentLoadedImageUrl ??= user.stateImageUrl;
-                log('Downloading ${progress.totalSize}/${progress.downloaded}');
-                if (progress.totalSize == progress.downloaded) {
-                  log('Should update previous URL. current url: $currentLoadedImageUrl');
-                  // This should happen last
-                  String previousUrl = currentLoadedImageUrl!;
-                  currentLoadedImageUrl = user.stateImageUrl;
-                  return CachedNetworkImage(
-                    fadeInDuration: Duration.zero,
-                    fadeOutDuration: Duration.zero,
+        Container(color: Theme.of(context).colorScheme.background),
+        doc(
+          (user) => user.stateImageUrl.isEmpty
+              ? const SizedBox.shrink()
+              : SizedBox.expand(
+                  child: CachedNetworkImage(
+                    imageUrl: user.stateImageUrl,
                     fit: BoxFit.cover,
-                    height: double.infinity,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    imageUrl: previousUrl,
-                    cacheKey: previousUrl,
-                  );
-                }
-                return CachedNetworkImage(
-                  fadeInDuration: Duration.zero,
-                  fadeOutDuration: Duration.zero,
-                  fit: BoxFit.cover,
-                  height: double.infinity,
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  imageUrl: currentLoadedImageUrl!,
-                  cacheKey: currentLoadedImageUrl!,
-                );
-              },
-            );
-          },
-          // For confirmation, should we add onReloading so that we can have better transition?
+                    placeholder: (context, url) => previousUrl.isEmpty
+                        ? const Center(child: CircularProgressIndicator())
+                        : CachedNetworkImage(
+                            imageUrl: previousUrl,
+                            fit: BoxFit.cover,
+                          ),
+                  ),
+                ),
+        ),
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            height: 200,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.black.withAlpha(80), Colors.transparent],
+                end: Alignment.bottomCenter,
+                begin: Alignment.topCenter,
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: Container(
+            height: 300,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.black.withAlpha(150), Colors.transparent],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+              ),
+            ),
+          ),
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
-            title: UserDoc(
-              live: isItMe,
-              builder: (user) {
-                return Text(user.name, style: TextStyle(color: Theme.of(context).colorScheme.secondary));
-              },
-            ),
+            title: doc((user) => Text(user.name, style: TextStyle(color: Theme.of(context).colorScheme.secondary))),
             actions: [
-              if (isItMe)
+              if (isMyProfile)
                 IconButton(
                   style: IconButton.styleFrom(
                     foregroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -103,7 +95,7 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                       progress: (p) => progressEvent.add(p),
                       complete: () => progressEvent.add(null),
                     );
-                    final previousUrl = my.stateImageUrl;
+                    previousUrl = my.stateImageUrl;
                     my.update(stateImageUrl: url);
                     if (previousUrl.isNotEmpty) {
                       Timer(const Duration(seconds: 2), () => StorageService.instance.delete(previousUrl));
@@ -113,9 +105,8 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                 ),
             ],
           ),
-          body: UserDoc(
-            live: false,
-            builder: (user) {
+          body: doc(
+            (user) {
               return user.exists == false
                   ? const Center(child: Text("User not found"))
                   : SafeArea(
@@ -131,40 +122,42 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                             child: Text('Public Profile'),
                           ),
                           const SizedBox(height: 20),
-                          UserDoc(
-                            uid: widget.uid,
-                            live: isItMe,
-                            builder: (user) {
-                              return UserProfileAvatar(
-                                user: user,
-                                upload: isItMe,
-                              );
-                            },
+                          UserProfileAvatar(
+                            user: user,
+                            upload: isMyProfile,
                           ),
                           const SizedBox(height: 20),
-                          UserDoc(
-                            uid: widget.uid,
-                            live: true,
-                            builder: (otherUser) {
-                              return ElevatedButton(
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              TextButton(
                                 onPressed: () async {
-                                  await otherUser.like();
+                                  await user.like();
                                 },
-                                child: Text(otherUser.noOfLikes),
-                              );
-                            },
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              Favorite.toggle(otherUid: widget.uid);
-                            },
-                            child: const Text("Favorite"),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              ChatService.instance.showChatRoom(context: context, user: user);
-                            },
-                            child: const Text("Chat"),
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                                ),
+                                child: Text(user.noOfLikes),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Favorite.toggle(otherUid: widget.uid);
+                                },
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                                ),
+                                child: const Text("Favorite"),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  ChatService.instance.showChatRoom(context: context, user: user);
+                                },
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                                ),
+                                child: const Text("Chat"),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -173,6 +166,16 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
           ),
         ),
       ],
+    );
+  }
+
+  doc(Function(User) builder) {
+    return UserDoc(
+      // The background doesn't have to be live if it is not me
+      live: isMyProfile,
+      uid: widget.uid,
+      user: widget.user,
+      builder: (user) => builder(user),
     );
   }
 }
