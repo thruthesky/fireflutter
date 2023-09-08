@@ -8,11 +8,11 @@
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "npm run lint -- --fix && firebase deploy --only functions:uppercase,functions:messagingOnPostCreate,functions:messagingOnCommentCreate",
+    "deploy": "npm run lint -- --fix && firebase deploy --only functions:uppercase,functions:messagingOnPostCreate,functions:messagingOnCommentCreate,functions:pushNotificationQueue",
     "logs": "firebase functions:log",
     "test": "mocha --require ts-node/register tests/**/*.test.ts",
     "test:watch": "npm run test -- --watch",
-    "mocha": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts"
+    "mocha": "mocha -t 20000 --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts"
   },
   "engines": {
     "node": "18"

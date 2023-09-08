@@ -165,6 +165,15 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "iPhone 14 Pro Max"
-    }
+    },
+    {
+      "name": "FireFlutter admin - Emulator",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/fireflutter_admin",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "emulator-5554"
+    },
   ]
 }

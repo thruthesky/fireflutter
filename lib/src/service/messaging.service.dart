@@ -125,6 +125,17 @@ class MessagingService with FirebaseHelper {
     token = await FirebaseMessaging.instance.getToken() ?? '';
     log('---> device token: $token');
     await _updateToken(token);
+
+    /// subscribe to topic on every boot
+    _subscribeToTopic();
+  }
+
+  /// subscribe to topic
+  /// default `allUsers`
+  /// platform specific `iosUsers` `androidUsers` `webUsers` `${platformName()}Users`
+  _subscribeToTopic() async {
+    await FirebaseMessaging.instance.subscribeToTopic('allUsers');
+    await FirebaseMessaging.instance.subscribeToTopic('${platformName()}Users');
   }
 
   /// `/users/<uid>/fcm_tokens/<docId>` 에 저장을 한다.
@@ -163,25 +174,29 @@ class MessagingService with FirebaseHelper {
   /// [uids] 는 배열로 입력되어야 하고, 여기서 콤마로 분리된 문자열로 만들어 서버로 보낸다. 즉, 서버에서는 문자열이어야 한다.
   ///
   /// [target] is the target of devices you want to send message to. If it's "all", then it will send messages to all users.
+  /// [type] is the kind of push notification `post` `chat`
+  /// [id] is can be use to determined the landing page when notification is clicked
   Future<DocumentReference> queue({
     required String title,
     required String body,
     List<String>? uids,
     List<String>? tokens,
-    String? platform,
-    String? target,
+    String? type,
+    String? topic,
+    String? id,
     String? badge,
   }) {
     Json data = {
       'title': title,
       'body': body,
-      if (badge != null) 'badge': badge,
       'senderUid': UserService.instance.uid,
       'createdAt': FieldValue.serverTimestamp(),
-      if (uids != null) 'uids': uids,
-      if (tokens != null) 'tokens': tokens,
-      if (platform != null) 'platform': platform,
-      if (target != null) 'target': target,
+      if (uids != null && uids.isNotEmpty) 'uids': uids,
+      if (tokens != null && tokens.isNotEmpty) 'tokens': tokens,
+      if (type != null && type.isNotEmpty) 'type': type,
+      if (topic != null && topic.isNotEmpty) 'topic': topic,
+      if (id != null && id.isNotEmpty) 'id': id,
+      if (badge != null && badge.isNotEmpty) 'badge': badge,
     };
 
     // print('data; $data');

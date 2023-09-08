@@ -130,6 +130,7 @@ class _PostViewDialogState extends State<PostViewDialog> {
                     },
                   ),
                   PostDoc(
+                    postId: post.id,
                     post: post,
                     builder: (post) => TextButton(
                       child: Text(

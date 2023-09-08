@@ -36,7 +36,7 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                     imageUrl: user.stateImageUrl,
                     fit: BoxFit.cover,
                     placeholder: (context, url) => previousUrl.isEmpty
-                        ? const Center(child: CircularProgressIndicator())
+                        ? const Center(child: CircularProgressIndicator.adaptive())
                         : CachedNetworkImage(
                             imageUrl: previousUrl,
                             fit: BoxFit.cover,
@@ -44,41 +44,13 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                   ),
                 ),
         ),
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: Container(
-            height: 200,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.black.withAlpha(80), Colors.transparent],
-                end: Alignment.bottomCenter,
-                begin: Alignment.topCenter,
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          left: 0,
-          right: 0,
-          bottom: 0,
-          child: Container(
-            height: 300,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.black.withAlpha(150), Colors.transparent],
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-              ),
-            ),
-          ),
-        ),
+        const TopDownGraident(height: 200),
+        const BottomUpGraident(height: 300),
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
-            title: doc((user) => Text(user.name, style: TextStyle(color: Theme.of(context).colorScheme.secondary))),
+            title: doc((user) => Text(user.name, style: TextStyle(color: Theme.of(context).colorScheme.onSecondary))),
             actions: [
               if (isMyProfile)
                 IconButton(
@@ -133,7 +105,7 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                                   await user.like();
                                 },
                                 style: TextButton.styleFrom(
-                                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                                  foregroundColor: Theme.of(context).colorScheme.onSecondary,
                                 ),
                                 child: Text(user.noOfLikes),
                               ),
@@ -142,7 +114,7 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                                   Favorite.toggle(otherUid: widget.uid);
                                 },
                                 style: TextButton.styleFrom(
-                                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                                  foregroundColor: Theme.of(context).colorScheme.onSecondary,
                                 ),
                                 child: const Text("Favorite"),
                               ),
@@ -151,7 +123,7 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                                   ChatService.instance.showChatRoom(context: context, user: user);
                                 },
                                 style: TextButton.styleFrom(
-                                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                                  foregroundColor: Theme.of(context).colorScheme.onSecondary,
                                 ),
                                 child: const Text("Chat"),
                               ),

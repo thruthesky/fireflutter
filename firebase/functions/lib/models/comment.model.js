@@ -71,9 +71,9 @@ class Comment {
         const data = after.data();
         if (data.deleted) {
             console.log("--> comment deleted. going to empty the document");
-            if (data.files && data.files.length > 0) {
+            if (data.urls && data.urls.length > 0) {
                 // delete files in firebase storage from data.files array
-                for (const url of data.files) {
+                for (const url of data.urls) {
                     const path = library_1.Library.getPathFromUrl(url);
                     const fileRef = admin.storage().bucket().file(path);
                     await fileRef.delete();
@@ -81,7 +81,7 @@ class Comment {
             }
             return after.ref.update({
                 content: "",
-                files: [],
+                urls: [],
             });
         }
         else {

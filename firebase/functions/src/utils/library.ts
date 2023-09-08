@@ -51,6 +51,7 @@ export class Library {
    * @param {*} text HTML string
    */
   static decodeHTMLEntities(text: string) {
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
     const entities: any = {
       "amp": "&",
       "apos": "'",
@@ -75,6 +76,7 @@ export class Library {
    * @param {*} arr array
    * @param {*} chunkSize chunk size
    */
+  /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
   static chunk(arr: Array<any>, chunkSize: number) {
     if (chunkSize <= 0) return [];
     const chunks = [];

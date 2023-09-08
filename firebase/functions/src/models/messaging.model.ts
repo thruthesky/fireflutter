@@ -4,7 +4,7 @@ import {
   FcmToken,
   MessagePayload,
   SendMessage,
-  SendMessageToDocument,
+  SendMessageResult,
 } from "../interfaces/messaging.interface";
 import {Ref} from "../utils/ref";
 import {Library} from "../utils/library";
@@ -16,7 +16,6 @@ import {UserSettingsDocument} from "../interfaces/user.interface";
 import {ChatMessageDocument} from "../interfaces/chat.interface";
 import {Chat} from "./chat.model";
 
-import * as functions from "firebase-functions";
 import {MulticastMessage} from "firebase-admin/lib/messaging/messaging-api";
 
 export class Messaging {
@@ -25,22 +24,17 @@ export class Messaging {
    *
    * For forum category subscription,
    *  'data.action' and 'data.category' has the information.
-   * For topics like
-   *  `allUsers`, `webUsers`, `androidUsers`, `iosUsers`
+   *
    *      will follow on next version.
    *
    * @param data information of sending message
    * @return results
    */
-  static async sendMessage(data: SendMessage): Promise<{
-    success: number;
-    error: number;
-  }> {
+  static async sendMessage(data: SendMessage): Promise<SendMessageResult> {
     if (data.topic) {
-      // / see TODO in README.md
-      return {success: 0, error: 0};
+      return this.sendMessageToTopic(data.topic, data);
     } else if (data.tokens) {
-      return this.sendMessageToTokens(data.tokens.split(","), data);
+      return this.sendMessageToTokens(data.tokens, data);
     } else if (data.uids) {
       const tokens = await this.getTokensFromUids(data.uids);
       return this.sendMessageToTokens(tokens, data);
@@ -53,13 +47,39 @@ export class Messaging {
 
   /**
    *
+   * @param topic topics like `allUsers`, `webUsers`, `androidUsers`, `iosUsers`
+   * @param data information message to send
+   * @returns Promise<SendMessageResult>
+   *    { messageId: <string> }
+   */
+  static async sendMessageToTopic(topic: string, data: SendMessage): Promise<SendMessageResult> {
+    // Only admin can sent message to topic `allUsers`.
+    const payload = this.topicPayload(topic, data);
+    try {
+      const res = await admin.messaging().send(payload as admin.messaging.TopicMessage);
+      return {messageId: res};
+    } catch (e) {
+      throw Error("Topic send error " + (e as Error).message);
+    }
+  }
+
+  // / Prepare topic payload
+  static topicPayload(topic: string, data: SendMessage): MessagePayload {
+    const payload = this.completePayload(data);
+    payload.topic = "/topics/" + topic;
+    return payload;
+  }
+
+
+  /**
+   *
    * @param data
    *  'action' can be one of 'post-create', 'comment-create',
    *  'uid' is the uid of the user
    *  'category' is the category of the post.
    * @returns
    */
-  static async sendMessageByAction(data: SendMessage) {
+  static async sendMessageByAction(data: SendMessage): Promise<SendMessageResult> {
     console.log(`sendMessageByAction(${JSON.stringify(data)})`);
 
     if (!data.action) {
@@ -70,40 +90,37 @@ export class Messaging {
     let uids: string[] = [];
 
     // commentCreate get post and patch data with category and title.
-    if (data.action == EventName.commentCreate) {
-      const post = await Post.get(data.postId!);
+    if (data.postId && data.action == EventName.commentCreate) {
+      const post = await Post.get(data.postId);
       uids.push(post.uid); // post owner
       data.categoryId = post.categoryId;
       data.title = post.title;
-      // data.postId = post.id; //  already exist on comment
       console.log("comment::post::", JSON.stringify(post));
       console.log("comment::data::", JSON.stringify(data));
     }
 
-    // Get users who subscribed the subscription
-    // const snap = await Ref.db
-    //   .collection("user_settings")
-    //   .where("action", "==", data.action)
-    //   .where("category", "==", data.categoryId)
-    //   .get();
-    console.log("action:: ", data.action, "categoryId:: ", data.categoryId);
-    const snap = await Ref.usersSettingsSearch(data.action, data.categoryId!)
-      .get();
-    console.log("snap.size", snap.size);
 
-    // get uids
-    if (snap.size != 0) {
-      for (const doc of snap.docs) {
-        const s = doc.data() as UserSettingsDocument;
-        const uid = s.uid;
-        if (uid != data.senderUid) uids.push(uid);
+    console.log("action:: ", data.action, "categoryId:: ", data.categoryId);
+    if (data.categoryId) {
+      const snap = await Ref.usersSettingsSearch(data.action, data.categoryId)
+        .get();
+      console.log("snap.size", snap.size);
+
+      // get uids
+      if (snap.size != 0) {
+        for (const doc of snap.docs) {
+          const s = doc.data() as UserSettingsDocument;
+          const uid = s.uid;
+          if (uid != data.senderUid) uids.push(uid);
+        }
       }
+      //
     }
-    //
+
 
     // Get ancestor's uid
-    if (data.action == EventName.commentCreate) {
-      const ancestors = await Comment.getAncestorsUid(data.id!, data.uid);
+    if (data.id && data.action == EventName.commentCreate) {
+      const ancestors = await Comment.getAncestorsUid(data.id, data.uid);
 
       // Remove ancestors who didn't subscribe for new comment.
       const subscribers = await this.getNewCommentNotificationUids(ancestors);
@@ -122,16 +139,19 @@ export class Messaging {
   }
 
   /**
-               * Send push notifications with the tokens and returns the result.
-               *
-               * @param tokens array of tokens.
-               * @param data data to send push notification.
-               */
+   * Send push notifications with the tokens and returns the result.
+   *
+   * @param tokens array of tokens.
+   * @param data data to send push notification.
+   */
   static async sendMessageToTokens(
-    tokens: string[],
-    data: any
-  ): Promise<{ success: number; error: number }> {
+    tokens: string[] | string,
+    data: SendMessage
+  ): Promise<SendMessageResult> {
     // console.log(`sendMessageToTokens() token.length: ${tokens.length}`);
+    // make it list of string if it is string
+    const _tokens: string[] = typeof data.tokens == "string" ? data.tokens.split(",") : tokens as string[];
+
     if (tokens.length == 0) {
       console.log("sendMessageToTokens() no tokens. so, just return results.");
       return {success: 0, error: 0};
@@ -143,17 +163,17 @@ export class Messaging {
     const payload = this.completePayload(data);
 
     // sendMulticast() supports 500 tokens at a time. Chunk and send by batches.
-    const chunks = Library.chunk(tokens, 500);
+    const chunks = Library.chunk(_tokens, 500);
 
     // console.log(`sendMessageToTokens() chunks.length: ${chunks.length}`);
 
     const multicastPromise = [];
     // Save [sendMulticast()] into a promise.
     for (const _500Tokens of chunks) {
-      const newPayload: admin.messaging.MulticastMessage = Object.assign(
+      const newPayload: MulticastMessage = Object.assign(
         {},
         {tokens: _500Tokens},
-        payload as any
+        payload
       );
       multicastPromise.push(admin.messaging().sendEachForMulticast(newPayload));
     }
@@ -171,6 +191,7 @@ export class Messaging {
         settledIndex++
       ) {
         console.log(`settled[${settledIndex}]`, settled[settledIndex]);
+        /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
         const value = (settled[settledIndex] as any).value;
         successCount += value.successCount;
         failureCount += value.failureCount;
@@ -207,16 +228,17 @@ export class Messaging {
   }
 
   /**
-               * Remove tokens from user token documents
-               *  `/users/<uid>/fcm_tokens/<docId>`
-               *
-               * @param tokens tokens to remove
-               *
-               * Use this method to remove tokens that failed to be sent.
-               *
-               * Test, tests/messaging/remove-tokens.spec.ts
-               */
+   * Remove tokens from user token documents
+   *  `/users/<uid>/fcm_tokens/<docId>`
+   *
+   * @param tokens tokens to remove
+   *
+   * Use this method to remove tokens that failed to be sent.
+   *
+   * Test, tests/messaging/remove-tokens.spec.ts
+   */
   static async removeTokens(tokens: string[]) {
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
     const promises: Promise<any>[] = [];
     for (const token of tokens) {
       promises.push(
@@ -236,11 +258,11 @@ export class Messaging {
   }
 
   /**
-               * Return true if the token is invalid.
-               *  So it can be removed from database.
-               * There are many error codes. see
-               * https://firebase.google.com/docs/cloud-messaging/send-message#admin
-               */
+   * Return true if the token is invalid.
+   *  So it can be removed from database.
+   * There are many error codes. see
+   * https://firebase.google.com/docs/cloud-messaging/send-message#admin
+   */
   static isInvalidTokenErrorCode(code: string) {
     if (
       code === "messaging/invalid-registration-token" ||
@@ -253,24 +275,27 @@ export class Messaging {
   }
 
   /**
-               * Returns tokens of multiple users.
-               *
-               * @param uids array of user uid
-               * @return array of tokens
-               */
-  static async getTokensFromUids(uids: string): Promise<string[]> {
+   * Returns tokens of multiple users.
+   *
+   * @param uids array of user uid
+   * @return array of tokens
+   */
+  static async getTokensFromUids(uids: string | string[]): Promise<string[]> {
     if (!uids) return [];
     const promises: Promise<string[]>[] = [];
-    uids.split(",").forEach((uid) => promises.push(this.getTokens(uid)));
+
+    const _uids: string[] = typeof uids == "string" ? uids.split(",") : uids as string[];
+
+    _uids.forEach((uid) => promises.push(this.getTokens(uid)));
     return (await Promise.all(promises)).flat();
   }
 
   /**
-               * Returns tokens of a user.
-               *
-               * @param uid user uid
-               * @return array of tokens
-               */
+   * Returns tokens of a user.
+   *
+   * @param uid user uid
+   * @return array of tokens
+   */
   static async getTokens(uid: string): Promise<string[]> {
     if (!uid) return [];
     const snapshot = await Ref.tokenCol(uid).get();
@@ -282,12 +307,13 @@ export class Messaging {
     return snapshot.docs.map((doc) => doc.get("fcm_token"));
   }
 
+
   /**
-               * Returns complete payload from the query data from client.
-               *
-               * @param query query data that has payload information
-               * @return an object of payload
-               */
+   * Returns complete payload from the query data from client.
+   *
+   * @param query query data that has payload information
+   * @return an object of payload
+   */
   static completePayload(query: SendMessage): MessagePayload {
     // console.log(`completePayload(${JSON.stringify(query)})`);
 
@@ -377,13 +403,13 @@ export class Messaging {
   }
 
   /**
-               * Returns an array of uid of the users
-               *  (from the input uids) who has subscribed for new comment.
-               * The uids of the users who didn't subscribe
-               *  will be removed on the returned array.
-               * @param uids array of uid
-               * @return array of uid
-               */
+   * Returns an array of uid of the users
+   *  (from the input uids) who has subscribed for new comment.
+   * The uids of the users who didn't subscribe
+   *  will be removed on the returned array.
+   * @param uids array of uid
+   * @return array of uid
+   */
   static async getNewCommentNotificationUids(
     uids: string[]
   ): Promise<string[]> {
@@ -403,10 +429,10 @@ export class Messaging {
   }
 
   /**
-               *
-               * @param data
-               * @returns
-               */
+   *
+   * @param data
+   * @returns
+   */
   static async sendChatNotificationToOtherUsers(data: ChatMessageDocument) {
     const user = await User.get(data.senderUserDocumentReference.id);
     const messageData: SendMessage = {
@@ -419,105 +445,6 @@ export class Messaging {
       senderUid: data.senderUserDocumentReference.id,
     };
     return this.sendMessage(messageData);
-  }
-
-  static async sendPushNotifications(
-    snapshot: functions.firestore.QueryDocumentSnapshot
-  ) {
-    const data = snapshot.data() as SendMessageToDocument;
-    const title = data.title || "";
-    const body = data.body || "";
-    const imageUrl = data.image_url || "";
-    const sound = data.sound || "";
-    const parameterData = data.parameter_data || "";
-    const targetAudience = data.target_audience || "";
-    const initialPageName = data.initial_page_name || "";
-    const status = data.status || "";
-
-    //
-    if (status !== "" && status !== "started") {
-      console.log(`Already processed ${snapshot.ref.path}. Skipping...`);
-      return;
-    }
-
-    if (title === "" || body === "") {
-      console.log(`Title: ${title} or Body: ${body} are empty`);
-      await snapshot.ref.update({
-        status: "failed",
-        error: `Title: ${title} or Body: ${body} are empty`,
-      });
-      return;
-    }
-
-    const tokens = new Set();
-
-    // Send message to specific users by `user_refs` option.
-    // Note, that we don't use `user_refs` option anymore,
-    // but we keep it here for the posibility to enable in the future.
-
-    // Send message to all user
-    // Note, we don't send by `batch` while FF deos it.
-
-    // Get tokens of all users.
-    const userTokens: admin.firestore
-      .QuerySnapshot<admin.firestore.DocumentData> =
-      await Ref.tokenCollectionGroup.get();
-
-    userTokens.docs.forEach((token) => {
-      const data = token.data();
-      const audienceMatches =
-        targetAudience === "All" || data.device_type === targetAudience;
-      if (audienceMatches || typeof data.fcm_token !== undefined) {
-        tokens.add(data.fcm_token);
-      }
-    });
-
-    const tokensArr = Array.from(tokens);
-    const messageBatches = [];
-    for (let i = 0; i < tokensArr.length; i += 500) {
-      const tokensBatch = tokensArr.slice(
-        i,
-        Math.min(i + 500, tokensArr.length)
-      );
-      const messages = {
-        notification: {
-          title,
-          body,
-          ...(imageUrl && {imageUrl: imageUrl}),
-        },
-        data: {
-          initialPageName,
-          parameterData,
-        },
-        android: {
-          notification: {
-            ...(sound && {sound: sound}),
-          },
-        },
-        apns: {
-          payload: {
-            aps: {
-              ...(sound && {sound: sound}),
-            },
-          },
-        },
-        tokens: tokensBatch,
-      };
-      messageBatches.push(messages);
-    }
-
-    let numSent = 0;
-    await Promise.all(
-      messageBatches.map(async (messages) => {
-        const response = await admin
-          .messaging()
-          // .sendMulticast(messages as MulticastMessage); // deprecated
-          .sendEachForMulticast(messages as MulticastMessage);
-        numSent += response.successCount;
-      })
-    );
-
-    await snapshot.ref.update({status: "succeeded", num_sent: numSent});
   }
 
 

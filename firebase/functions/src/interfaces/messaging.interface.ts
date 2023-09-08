@@ -2,14 +2,14 @@ export interface SendMessage {
     id?: string; // / postId
     postId?: string; // postId from comment.
     uid?: string; // / added by 'auth' in flutter.
-    uids?: string; // a single uid or a list of uids seperated by comma.
+    uids?: string | string[]; // a single uid or a list of uids seperated by comma.
     users?: string[];
-    tokens?: string;
+    tokens?: string | string[];
     topic?: string;
     title?: string;
     body?: string; // message body
     content?: string; // will be body if message body is empty.
-    type?: string;
+    type?: string; // post || chat
 
     badge?: string;
     icon?: string; // imageUrl
@@ -29,6 +29,7 @@ export interface SendMessage {
 
     // for sending messages by action. Like post-create, comment-create.
     categoryId?: string;
+
 }
 
 export interface MessagePayload {
@@ -40,6 +41,7 @@ export interface MessagePayload {
         senderUserDocumentReference?: string;
         chatRoomDocumentReference?: string;
         badge?: string;
+        /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
         [key: string]: any;
     };
     notification: {
@@ -80,24 +82,25 @@ export interface MessagePayload {
 
 
 export interface SendMessageToDocument {
-    title?: string;
-    body?: string;
-    image_url?: string;
-    sound?: string;
-    parameter_data?: string;
-    target_audience?: string;
-    initial_page_name?: string;
-    user_refs?: string;
-    status?: string;
-    error?: string;
-    batch_index?: number;
-    num_batches?: number;
+    title: string;
+    body: string;
+    image_url: string;
+    sound: string;
+    parameter_data: string;
+    target_audience: string;
+    initial_page_name: string;
+    user_refs: string;
+    status: string;
+    error: string;
+    batch_index: number;
+    num_batches: number;
 }
 
 
 export interface SendMessageResult {
-    success: number;
-    error: number;
+    success?: number;
+    error?: number;
+    messageId?: string;
 }
 
 

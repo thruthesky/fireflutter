@@ -49,6 +49,10 @@ mixin FirebaseHelper {
     return myDoc.collection('fcm_tokens').doc(token);
   }
 
+  CollectionReference tokensCol(String uid) {
+    return userCol.doc(uid).collection('fcm_tokens');
+  }
+
   /// User setting
   /// Note, for the sign-in user's setting, you should use `UserService.instance.settings`
   /// Note, for other user settings, you should use `UserSettings(otherUid, docId)`.
