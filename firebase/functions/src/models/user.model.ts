@@ -37,6 +37,7 @@ export class User {
    * @return UserDocument - it does not return null.
    *
    */
+  /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
   static async create(uid: string, data: any): Promise<UserDocument> {
     data.created_time = admin.firestore.FieldValue.serverTimestamp();
     const user = await this.get(uid);
@@ -267,12 +268,14 @@ export class User {
     return await Messaging.getToken(data as FcmToken);
   }
 
+
   static async setUserSettingsSubscription(
     uid: string,
     data: {
       action?: string;
       categoryId?: string;
       type?: string;
+      /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
       [key: string]: any;
     }
   ): Promise<admin.firestore.WriteResult> {

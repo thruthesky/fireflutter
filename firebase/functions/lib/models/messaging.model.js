@@ -15,8 +15,7 @@ class Messaging {
      *
      * For forum category subscription,
      *  'data.action' and 'data.category' has the information.
-     * For topics like
-     *  `allUsers`, `webUsers`, `androidUsers`, `iosUsers`
+     *
      *      will follow on next version.
      *
      * @param data information of sending message
@@ -24,11 +23,10 @@ class Messaging {
      */
     static async sendMessage(data) {
         if (data.topic) {
-            // / see TODO in README.md
-            return { success: 0, error: 0 };
+            return this.sendMessageToTopic(data.topic, data);
         }
         else if (data.tokens) {
-            return this.sendMessageToTokens(data.tokens.split(","), data);
+            return this.sendMessageToTokens(data.tokens, data);
         }
         else if (data.uids) {
             const tokens = await this.getTokensFromUids(data.uids);
@@ -40,6 +38,30 @@ class Messaging {
         else {
             throw Error("One of uids, tokens, topic must be present");
         }
+    }
+    /**
+     *
+     * @param topic topics like `allUsers`, `webUsers`, `androidUsers`, `iosUsers`
+     * @param data information message to send
+     * @returns Promise<SendMessageResult>
+     *    { messageId: <string> }
+     */
+    static async sendMessageToTopic(topic, data) {
+        // Only admin can sent message to topic `allUsers`.
+        const payload = this.topicPayload(topic, data);
+        try {
+            const res = await admin.messaging().send(payload);
+            return { messageId: res };
+        }
+        catch (e) {
+            throw Error("Topic send error " + e.message);
+        }
+    }
+    // / Prepare topic payload
+    static topicPayload(topic, data) {
+        const payload = this.completePayload(data);
+        payload.topic = "/topics/" + topic;
+        return payload;
     }
     /**
      *
@@ -57,37 +79,32 @@ class Messaging {
         }
         let uids = [];
         // commentCreate get post and patch data with category and title.
-        if (data.action == event_name_1.EventName.commentCreate) {
+        if (data.postId && data.action == event_name_1.EventName.commentCreate) {
             const post = await post_model_1.Post.get(data.postId);
             uids.push(post.uid); // post owner
             data.categoryId = post.categoryId;
             data.title = post.title;
-            // data.postId = post.id; //  already exist on comment
             console.log("comment::post::", JSON.stringify(post));
             console.log("comment::data::", JSON.stringify(data));
         }
-        // Get users who subscribed the subscription
-        // const snap = await Ref.db
-        //   .collection("user_settings")
-        //   .where("action", "==", data.action)
-        //   .where("category", "==", data.categoryId)
-        //   .get();
         console.log("action:: ", data.action, "categoryId:: ", data.categoryId);
-        const snap = await ref_1.Ref.usersSettingsSearch(data.action, data.categoryId)
-            .get();
-        console.log("snap.size", snap.size);
-        // get uids
-        if (snap.size != 0) {
-            for (const doc of snap.docs) {
-                const s = doc.data();
-                const uid = s.uid;
-                if (uid != data.senderUid)
-                    uids.push(uid);
+        if (data.categoryId) {
+            const snap = await ref_1.Ref.usersSettingsSearch(data.action, data.categoryId)
+                .get();
+            console.log("snap.size", snap.size);
+            // get uids
+            if (snap.size != 0) {
+                for (const doc of snap.docs) {
+                    const s = doc.data();
+                    const uid = s.uid;
+                    if (uid != data.senderUid)
+                        uids.push(uid);
+                }
             }
+            //
         }
-        //
         // Get ancestor's uid
-        if (data.action == event_name_1.EventName.commentCreate) {
+        if (data.id && data.action == event_name_1.EventName.commentCreate) {
             const ancestors = await comment_model_1.Comment.getAncestorsUid(data.id, data.uid);
             // Remove ancestors who didn't subscribe for new comment.
             const subscribers = await this.getNewCommentNotificationUids(ancestors);
@@ -101,13 +118,15 @@ class Messaging {
         return this.sendMessageToTokens(tokens, data);
     }
     /**
-                 * Send push notifications with the tokens and returns the result.
-                 *
-                 * @param tokens array of tokens.
-                 * @param data data to send push notification.
-                 */
+     * Send push notifications with the tokens and returns the result.
+     *
+     * @param tokens array of tokens.
+     * @param data data to send push notification.
+     */
     static async sendMessageToTokens(tokens, data) {
         // console.log(`sendMessageToTokens() token.length: ${tokens.length}`);
+        // make it list of string if it is string
+        const _tokens = typeof data.tokens == "string" ? data.tokens.split(",") : tokens;
         if (tokens.length == 0) {
             console.log("sendMessageToTokens() no tokens. so, just return results.");
             return { success: 0, error: 0 };
@@ -116,7 +135,7 @@ class Messaging {
         // data.senderUid = data.uid; // already inside the completePayload
         const payload = this.completePayload(data);
         // sendMulticast() supports 500 tokens at a time. Chunk and send by batches.
-        const chunks = library_1.Library.chunk(tokens, 500);
+        const chunks = library_1.Library.chunk(_tokens, 500);
         // console.log(`sendMessageToTokens() chunks.length: ${chunks.length}`);
         const multicastPromise = [];
         // Save [sendMulticast()] into a promise.
@@ -133,6 +152,7 @@ class Messaging {
             // Returns are in array
             for (let settledIndex = 0; settledIndex < settled.length; settledIndex++) {
                 console.log(`settled[${settledIndex}]`, settled[settledIndex]);
+                /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
                 const value = settled[settledIndex].value;
                 successCount += value.successCount;
                 failureCount += value.failureCount;
@@ -163,16 +183,17 @@ class Messaging {
         }
     }
     /**
-                 * Remove tokens from user token documents
-                 *  `/users/<uid>/fcm_tokens/<docId>`
-                 *
-                 * @param tokens tokens to remove
-                 *
-                 * Use this method to remove tokens that failed to be sent.
-                 *
-                 * Test, tests/messaging/remove-tokens.spec.ts
-                 */
+     * Remove tokens from user token documents
+     *  `/users/<uid>/fcm_tokens/<docId>`
+     *
+     * @param tokens tokens to remove
+     *
+     * Use this method to remove tokens that failed to be sent.
+     *
+     * Test, tests/messaging/remove-tokens.spec.ts
+     */
     static async removeTokens(tokens) {
+        /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
         const promises = [];
         for (const token of tokens) {
             promises.push(
@@ -190,11 +211,11 @@ class Messaging {
         await Promise.all(promises);
     }
     /**
-                 * Return true if the token is invalid.
-                 *  So it can be removed from database.
-                 * There are many error codes. see
-                 * https://firebase.google.com/docs/cloud-messaging/send-message#admin
-                 */
+     * Return true if the token is invalid.
+     *  So it can be removed from database.
+     * There are many error codes. see
+     * https://firebase.google.com/docs/cloud-messaging/send-message#admin
+     */
     static isInvalidTokenErrorCode(code) {
         if (code === "messaging/invalid-registration-token" ||
             code === "messaging/registration-token-not-registered" ||
@@ -204,24 +225,25 @@ class Messaging {
         return false;
     }
     /**
-                 * Returns tokens of multiple users.
-                 *
-                 * @param uids array of user uid
-                 * @return array of tokens
-                 */
+     * Returns tokens of multiple users.
+     *
+     * @param uids array of user uid
+     * @return array of tokens
+     */
     static async getTokensFromUids(uids) {
         if (!uids)
             return [];
         const promises = [];
-        uids.split(",").forEach((uid) => promises.push(this.getTokens(uid)));
+        const _uids = typeof uids == "string" ? uids.split(",") : uids;
+        _uids.forEach((uid) => promises.push(this.getTokens(uid)));
         return (await Promise.all(promises)).flat();
     }
     /**
-                 * Returns tokens of a user.
-                 *
-                 * @param uid user uid
-                 * @return array of tokens
-                 */
+     * Returns tokens of a user.
+     *
+     * @param uid user uid
+     * @return array of tokens
+     */
     static async getTokens(uid) {
         if (!uid)
             return [];
@@ -233,11 +255,11 @@ class Messaging {
         return snapshot.docs.map((doc) => doc.get("fcm_token"));
     }
     /**
-                 * Returns complete payload from the query data from client.
-                 *
-                 * @param query query data that has payload information
-                 * @return an object of payload
-                 */
+     * Returns complete payload from the query data from client.
+     *
+     * @param query query data that has payload information
+     * @return an object of payload
+     */
     static completePayload(query) {
         // console.log(`completePayload(${JSON.stringify(query)})`);
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
@@ -313,13 +335,13 @@ class Messaging {
         return res;
     }
     /**
-                 * Returns an array of uid of the users
-                 *  (from the input uids) who has subscribed for new comment.
-                 * The uids of the users who didn't subscribe
-                 *  will be removed on the returned array.
-                 * @param uids array of uid
-                 * @return array of uid
-                 */
+     * Returns an array of uid of the users
+     *  (from the input uids) who has subscribed for new comment.
+     * The uids of the users who didn't subscribe
+     *  will be removed on the returned array.
+     * @param uids array of uid
+     * @return array of uid
+     */
     static async getNewCommentNotificationUids(uids) {
         if (uids.length === 0)
             return [];
@@ -337,86 +359,15 @@ class Messaging {
         return re;
     }
     /**
-                 *
-                 * @param data
-                 * @returns
-                 */
+     *
+     * @param data
+     * @returns
+     */
     static async sendChatNotificationToOtherUsers(data) {
         var _a;
         const user = await user_model_1.User.get(data.senderUserDocumentReference.id);
         const messageData = Object.assign(Object.assign({}, data), { type: event_name_1.EventType.chat, title: `${(_a = user === null || user === void 0 ? void 0 : user.display_name) !== null && _a !== void 0 ? _a : ""} send you a message.`, body: data.text, uids: await chat_model_1.Chat.getOtherUserUidsFromChatMessageDocument(data), chatRoomId: data.chatRoomDocumentReference.id, senderUid: data.senderUserDocumentReference.id });
         return this.sendMessage(messageData);
-    }
-    static async sendPushNotifications(snapshot) {
-        const data = snapshot.data();
-        const title = data.title || "";
-        const body = data.body || "";
-        const imageUrl = data.image_url || "";
-        const sound = data.sound || "";
-        const parameterData = data.parameter_data || "";
-        const targetAudience = data.target_audience || "";
-        const initialPageName = data.initial_page_name || "";
-        const status = data.status || "";
-        //
-        if (status !== "" && status !== "started") {
-            console.log(`Already processed ${snapshot.ref.path}. Skipping...`);
-            return;
-        }
-        if (title === "" || body === "") {
-            console.log(`Title: ${title} or Body: ${body} are empty`);
-            await snapshot.ref.update({
-                status: "failed",
-                error: `Title: ${title} or Body: ${body} are empty`,
-            });
-            return;
-        }
-        const tokens = new Set();
-        // Send message to specific users by `user_refs` option.
-        // Note, that we don't use `user_refs` option anymore,
-        // but we keep it here for the posibility to enable in the future.
-        // Send message to all user
-        // Note, we don't send by `batch` while FF deos it.
-        // Get tokens of all users.
-        const userTokens = await ref_1.Ref.tokenCollectionGroup.get();
-        userTokens.docs.forEach((token) => {
-            const data = token.data();
-            const audienceMatches = targetAudience === "All" || data.device_type === targetAudience;
-            if (audienceMatches || typeof data.fcm_token !== undefined) {
-                tokens.add(data.fcm_token);
-            }
-        });
-        const tokensArr = Array.from(tokens);
-        const messageBatches = [];
-        for (let i = 0; i < tokensArr.length; i += 500) {
-            const tokensBatch = tokensArr.slice(i, Math.min(i + 500, tokensArr.length));
-            const messages = {
-                notification: Object.assign({ title,
-                    body }, (imageUrl && { imageUrl: imageUrl })),
-                data: {
-                    initialPageName,
-                    parameterData,
-                },
-                android: {
-                    notification: Object.assign({}, (sound && { sound: sound })),
-                },
-                apns: {
-                    payload: {
-                        aps: Object.assign({}, (sound && { sound: sound })),
-                    },
-                },
-                tokens: tokensBatch,
-            };
-            messageBatches.push(messages);
-        }
-        let numSent = 0;
-        await Promise.all(messageBatches.map(async (messages) => {
-            const response = await admin
-                .messaging()
-                // .sendMulticast(messages as MulticastMessage); // deprecated
-                .sendEachForMulticast(messages);
-            numSent += response.successCount;
-        }));
-        await snapshot.ref.update({ status: "succeeded", num_sent: numSent });
     }
     /**
      * Save a token under the user's fcm_tokens collection.

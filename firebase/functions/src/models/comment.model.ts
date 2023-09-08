@@ -1,8 +1,8 @@
 import * as admin from "firebase-admin";
-import { CommentDocument } from "../interfaces/forum.interface";
-import { Ref } from "../utils/ref";
-import { Library } from "../utils/library";
-import { Post } from "./post.model";
+import {CommentDocument} from "../interfaces/forum.interface";
+import {Ref} from "../utils/ref";
+import {Library} from "../utils/library";
+import {Post} from "./post.model";
 
 export class Comment {
   static async get(id: string): Promise<CommentDocument | null> {

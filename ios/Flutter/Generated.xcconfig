@@ -2,7 +2,7 @@
 FLUTTER_ROOT=/Users/thruthesky/bin/flutter
 FLUTTER_APPLICATION_PATH=/Users/thruthesky/apps/flutter/packages/fireflutter
 COCOAPODS_PARALLEL_CODE_SIGN=true
-FLUTTER_TARGET=lib/main.dart
+FLUTTER_TARGET=lib\main.dart
 FLUTTER_BUILD_DIR=build
 FLUTTER_BUILD_NAME=0.3.7
 FLUTTER_BUILD_NUMBER=0.3.7
