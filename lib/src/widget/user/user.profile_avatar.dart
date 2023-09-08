@@ -135,24 +135,25 @@ class _UserAvatarState extends State<UserProfileAvatar> {
               top: 0,
               left: 0,
               child: IconButton(
-                  onPressed: () async {
-                    await StorageService.instance.delete(UserService.instance.user.photoUrl);
+                onPressed: () async {
+                  await StorageService.instance.delete(UserService.instance.user.photoUrl);
 
-                    await widget.user.update(
-                      field: 'photoUrl',
-                      value: FieldValue.delete(),
-                      hasPhotoUrl: false,
-                    );
+                  await widget.user.update(
+                    field: 'photoUrl',
+                    value: FieldValue.delete(),
+                    hasPhotoUrl: false,
+                  );
 
-                    widget.onDeleteSuccess?.call();
-                  },
-                  padding: EdgeInsets.zero,
-                  visualDensity: VisualDensity.compact,
-                  icon: Icon(
-                    Icons.remove_circle,
-                    color: Colors.grey.shade600,
-                    size: 30,
-                  )),
+                  widget.onDeleteSuccess?.call();
+                },
+                padding: EdgeInsets.zero,
+                visualDensity: VisualDensity.compact,
+                icon: Icon(
+                  Icons.remove_circle,
+                  color: Colors.grey.shade600,
+                  size: 30,
+                ),
+              ),
             ),
         ],
       ),
