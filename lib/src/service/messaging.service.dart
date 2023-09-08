@@ -175,6 +175,7 @@ class MessagingService with FirebaseHelper {
   ///
   /// [target] is the target of devices you want to send message to. If it's "all", then it will send messages to all users.
   /// [type] is the kind of push notification `post` `chat`
+  /// [id] is can be use to determined the landing page when notification is clicked
   Future<DocumentReference> queue({
     required String title,
     required String body,
@@ -185,6 +186,7 @@ class MessagingService with FirebaseHelper {
     String? badge,
     String? type,
     String? topic,
+    String? id,
   }) {
     Json data = {
       'title': title,
@@ -198,6 +200,7 @@ class MessagingService with FirebaseHelper {
       if (type != null && type.isNotEmpty) 'type': type,
       if (badge != null && badge.isNotEmpty) 'badge': badge,
       if (topic != null && topic.isNotEmpty) 'topic': topic,
+      if (id != null && id.isNotEmpty) 'id': id,
     };
 
     // print('data; $data');

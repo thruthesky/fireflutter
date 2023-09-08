@@ -15,8 +15,7 @@ class Messaging {
      *
      * For forum category subscription,
      *  'data.action' and 'data.category' has the information.
-     * For topics like
-     *  `allUsers`, `webUsers`, `androidUsers`, `iosUsers`
+     *
      *      will follow on next version.
      *
      * @param data information of sending message
@@ -27,7 +26,7 @@ class Messaging {
             return this.sendMessageToTopic(data.topic, data);
         }
         else if (data.tokens) {
-            return this.sendMessageToTokens(typeof data.tokens == "string" ? data.tokens.split(",") : data.tokens, data);
+            return this.sendMessageToTokens(data.tokens, data);
         }
         else if (data.uids) {
             const tokens = await this.getTokensFromUids(data.uids);
@@ -44,6 +43,13 @@ class Messaging {
             throw Error("One of uids, tokens, topic must be present");
         }
     }
+    /**
+     *
+     * @param topic topics like `allUsers`, `webUsers`, `androidUsers`, `iosUsers`
+     * @param data information message to send
+     * @returns Promise<SendMessageResult>
+     *    { messageId: <string> }
+     */
     static async sendMessageToTopic(topic, data) {
         // Only admin can sent message to topic `allUsers`.
         const payload = this.topicPayload(topic, data);
@@ -123,6 +129,8 @@ class Messaging {
      */
     static async sendMessageToTokens(tokens, data) {
         // console.log(`sendMessageToTokens() token.length: ${tokens.length}`);
+        // make it list of string if it is string
+        const _tokens = typeof data.tokens == "string" ? data.tokens.split(",") : tokens;
         if (tokens.length == 0) {
             console.log("sendMessageToTokens() no tokens. so, just return results.");
             return { success: 0, error: 0 };
@@ -131,7 +139,7 @@ class Messaging {
         // data.senderUid = data.uid; // already inside the completePayload
         const payload = this.completePayload(data);
         // sendMulticast() supports 500 tokens at a time. Chunk and send by batches.
-        const chunks = library_1.Library.chunk(tokens, 500);
+        const chunks = library_1.Library.chunk(_tokens, 500);
         // console.log(`sendMessageToTokens() chunks.length: ${chunks.length}`);
         const multicastPromise = [];
         // Save [sendMulticast()] into a promise.
@@ -230,7 +238,8 @@ class Messaging {
         if (!uids)
             return [];
         const promises = [];
-        uids.split(",").forEach((uid) => promises.push(this.getTokens(uid)));
+        const _uids = typeof uids == "string" ? uids.split(",") : uids;
+        _uids.forEach((uid) => promises.push(this.getTokens(uid)));
         return (await Promise.all(promises)).flat();
     }
     /**
@@ -434,6 +443,13 @@ class Messaging {
         }));
         await snapshot.ref.update({ status: "succeeded", num_sent: numSent });
     }
+    /**
+     * note* `only login device are included`
+     * To send to specific device type you can pass target
+     *
+     * @param target `all` `android` `ios` `web` etc.
+     * @returns Promise<string[]>
+     */
     static async getTokensFromTarget(target) {
         if (!target)
             return [];

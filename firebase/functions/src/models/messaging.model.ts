@@ -26,7 +26,7 @@ export class Messaging {
    *
    * For forum category subscription,
    *  'data.action' and 'data.category' has the information.
-   * 
+   *
    *      will follow on next version.
    *
    * @param data information of sending message
@@ -36,7 +36,7 @@ export class Messaging {
     if (data.topic) {
       return this.sendMessageToTopic(data.topic, data);
     } else if (data.tokens) {
-      return this.sendMessageToTokens(typeof data.tokens == "string" ? data.tokens.split(",") : data.tokens, data);
+      return this.sendMessageToTokens(data.tokens, data);
     } else if (data.uids) {
       const tokens = await this.getTokensFromUids(data.uids);
       return this.sendMessageToTokens(tokens, data);
@@ -51,7 +51,7 @@ export class Messaging {
   }
 
   /**
-   * 
+   *
    * @param topic topics like `allUsers`, `webUsers`, `androidUsers`, `iosUsers`
    * @param data information message to send
    * @returns Promise<SendMessageResult>
@@ -150,11 +150,12 @@ export class Messaging {
    * @param data data to send push notification.
    */
   static async sendMessageToTokens(
-    tokens: string[],
+    tokens: string[] | string,
     data: SendMessage
   ): Promise<SendMessageResult> {
     // console.log(`sendMessageToTokens() token.length: ${tokens.length}`);
-
+    // make it list of string if it is string
+    const _tokens: string[] = typeof data.tokens == "string" ? data.tokens.split(",") : tokens as string[];
 
     if (tokens.length == 0) {
       console.log("sendMessageToTokens() no tokens. so, just return results.");
@@ -167,7 +168,7 @@ export class Messaging {
     const payload = this.completePayload(data);
 
     // sendMulticast() supports 500 tokens at a time. Chunk and send by batches.
-    const chunks = Library.chunk(tokens, 500);
+    const chunks = Library.chunk(_tokens, 500);
 
     // console.log(`sendMessageToTokens() chunks.length: ${chunks.length}`);
 
@@ -284,10 +285,13 @@ export class Messaging {
    * @param uids array of user uid
    * @return array of tokens
    */
-  static async getTokensFromUids(uids: string): Promise<string[]> {
+  static async getTokensFromUids(uids: string | string[]): Promise<string[]> {
     if (!uids) return [];
     const promises: Promise<string[]>[] = [];
-    uids.split(",").forEach((uid) => promises.push(this.getTokens(uid)));
+
+    const _uids: string[] = typeof uids == "string" ? uids.split(",") : uids as string[];
+
+    _uids.forEach((uid) => promises.push(this.getTokens(uid)));
     return (await Promise.all(promises)).flat();
   }
 
@@ -549,7 +553,7 @@ export class Messaging {
   /**
    * note* `only login device are included`
    * To send to specific device type you can pass target
-   * 
+   *
    * @param target `all` `android` `ios` `web` etc.
    * @returns Promise<string[]>
    */
