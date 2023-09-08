@@ -35,10 +35,6 @@ class Messaging {
         else if (data.action) {
             return this.sendMessageByAction(data);
         }
-        else if (data.target) {
-            const tokens = await this.getTokensFromTarget(data.target);
-            return this.sendMessageToTokens(tokens, data);
-        }
         else {
             throw Error("One of uids, tokens, topic must be present");
         }
@@ -372,102 +368,6 @@ class Messaging {
         const user = await user_model_1.User.get(data.senderUserDocumentReference.id);
         const messageData = Object.assign(Object.assign({}, data), { type: event_name_1.EventType.chat, title: `${(_a = user === null || user === void 0 ? void 0 : user.display_name) !== null && _a !== void 0 ? _a : ""} send you a message.`, body: data.text, uids: await chat_model_1.Chat.getOtherUserUidsFromChatMessageDocument(data), chatRoomId: data.chatRoomDocumentReference.id, senderUid: data.senderUserDocumentReference.id });
         return this.sendMessage(messageData);
-    }
-    static async sendPushNotifications(snapshot) {
-        const data = snapshot.data();
-        const title = data.title || "";
-        const body = data.body || "";
-        const imageUrl = data.image_url || "";
-        const sound = data.sound || "";
-        const parameterData = data.parameter_data || "";
-        const targetAudience = data.target_audience || "";
-        const initialPageName = data.initial_page_name || "";
-        const status = data.status || "";
-        //
-        if (status !== "" && status !== "started") {
-            console.log(`Already processed ${snapshot.ref.path}. Skipping...`);
-            return;
-        }
-        if (title === "" || body === "") {
-            console.log(`Title: ${title} or Body: ${body} are empty`);
-            await snapshot.ref.update({
-                status: "failed",
-                error: `Title: ${title} or Body: ${body} are empty`,
-            });
-            return;
-        }
-        const tokens = new Set();
-        // Send message to specific users by `user_refs` option.
-        // Note, that we don't use `user_refs` option anymore,
-        // but we keep it here for the posibility to enable in the future.
-        // Send message to all user
-        // Note, we don't send by `batch` while FF deos it.
-        // Get tokens of all users.
-        const userTokens = await ref_1.Ref.tokenCollectionGroup.get();
-        userTokens.docs.forEach((token) => {
-            const data = token.data();
-            const audienceMatches = targetAudience === "All" || data.device_type === targetAudience;
-            if (audienceMatches || typeof data.fcm_token !== undefined) {
-                tokens.add(data.fcm_token);
-            }
-        });
-        const tokensArr = Array.from(tokens);
-        const messageBatches = [];
-        for (let i = 0; i < tokensArr.length; i += 500) {
-            const tokensBatch = tokensArr.slice(i, Math.min(i + 500, tokensArr.length));
-            const messages = {
-                notification: Object.assign({ title,
-                    body }, (imageUrl && { imageUrl: imageUrl })),
-                data: {
-                    initialPageName,
-                    parameterData,
-                },
-                android: {
-                    notification: Object.assign({}, (sound && { sound: sound })),
-                },
-                apns: {
-                    payload: {
-                        aps: Object.assign({}, (sound && { sound: sound })),
-                    },
-                },
-                tokens: tokensBatch,
-            };
-            messageBatches.push(messages);
-        }
-        let numSent = 0;
-        await Promise.all(messageBatches.map(async (messages) => {
-            const response = await admin
-                .messaging()
-                .sendEachForMulticast(messages);
-            numSent += response.successCount;
-        }));
-        await snapshot.ref.update({ status: "succeeded", num_sent: numSent });
-    }
-    /**
-     * note* `only login device are included`
-     * To send to specific device type you can pass target
-     *
-     * @param target `all` `android` `ios` `web` etc.
-     * @returns Promise<string[]>
-     */
-    static async getTokensFromTarget(target) {
-        if (!target)
-            return [];
-        const tokens = [];
-        let userTokens;
-        if (target == "all") {
-            userTokens =
-                await ref_1.Ref.tokenCollectionGroup.get();
-        }
-        else {
-            userTokens =
-                await ref_1.Ref.tokenCollectionGroup.where("device_type", "==", target).get();
-        }
-        userTokens.docs.forEach((token) => {
-            const data = token.data();
-            tokens.push(data.fcm_token);
-        });
-        return [...new Set(tokens)];
     }
     /**
      * Save a token under the user's fcm_tokens collection.

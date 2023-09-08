@@ -62,22 +62,6 @@ exports.pushNotificationQueue =
     });
 
 
-// exports.sendPushNotificationsOnCreate =
-//   onDocumentCreated("push_notifications/{documentId}",
-//     async (event: FirestoreEvent<QueryDocumentSnapshot | undefined>): Promise<void> => {
-//       if (event === void 0) return void 0;
-
-//       try {
-//         if (event.data) {
-//           await Messaging.sendPushNotifications(event.data);
-//         }
-//       } catch (e) {
-//         console.log(`Error: ${e}`);
-//         await event.data?.ref.update({ status: "failed", error: `${e}` });
-//       }
-//     });
-
-
 exports.messagingOnChatMessageCreate =
   onDocumentCreated("chat_room_messages/{documentId}",
     async (event: FirestoreEvent<QueryDocumentSnapshot | undefined>) => {

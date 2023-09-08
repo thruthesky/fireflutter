@@ -181,12 +181,10 @@ class MessagingService with FirebaseHelper {
     required String body,
     List<String>? uids,
     List<String>? tokens,
-    String? platform,
-    String? target,
-    String? badge,
     String? type,
     String? topic,
     String? id,
+    String? badge,
   }) {
     Json data = {
       'title': title,
@@ -195,12 +193,10 @@ class MessagingService with FirebaseHelper {
       'createdAt': FieldValue.serverTimestamp(),
       if (uids != null && uids.isNotEmpty) 'uids': uids,
       if (tokens != null && tokens.isNotEmpty) 'tokens': tokens,
-      if (platform != null && platform.isNotEmpty) 'platform': platform,
-      if (target != null && target.isNotEmpty) 'target': target,
       if (type != null && type.isNotEmpty) 'type': type,
-      if (badge != null && badge.isNotEmpty) 'badge': badge,
       if (topic != null && topic.isNotEmpty) 'topic': topic,
       if (id != null && id.isNotEmpty) 'id': id,
+      if (badge != null && badge.isNotEmpty) 'badge': badge,
     };
 
     // print('data; $data');

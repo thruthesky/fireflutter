@@ -1,24 +1,22 @@
 import * as admin from "firebase-admin";
-import { EventName, EventType } from "../utils/event-name";
+import {EventName, EventType} from "../utils/event-name";
 import {
   FcmToken,
   MessagePayload,
   SendMessage,
   SendMessageResult,
-  SendMessageToDocument,
 } from "../interfaces/messaging.interface";
-import { Ref } from "../utils/ref";
-import { Library } from "../utils/library";
+import {Ref} from "../utils/ref";
+import {Library} from "../utils/library";
 
-import { Comment } from "../models/comment.model";
-import { User } from "./user.model";
-import { Post } from "./post.model";
-import { UserSettingsDocument } from "../interfaces/user.interface";
-import { ChatMessageDocument } from "../interfaces/chat.interface";
-import { Chat } from "./chat.model";
+import {Comment} from "../models/comment.model";
+import {User} from "./user.model";
+import {Post} from "./post.model";
+import {UserSettingsDocument} from "../interfaces/user.interface";
+import {ChatMessageDocument} from "../interfaces/chat.interface";
+import {Chat} from "./chat.model";
 
-import * as functions from "firebase-functions";
-import { MulticastMessage } from "firebase-admin/lib/messaging/messaging-api";
+import {MulticastMessage} from "firebase-admin/lib/messaging/messaging-api";
 
 export class Messaging {
   /**
@@ -42,9 +40,6 @@ export class Messaging {
       return this.sendMessageToTokens(tokens, data);
     } else if (data.action) {
       return this.sendMessageByAction(data);
-    } else if (data.target) {
-      const tokens = await this.getTokensFromTarget(data.target);
-      return this.sendMessageToTokens(tokens, data);
     } else {
       throw Error("One of uids, tokens, topic must be present");
     }
@@ -62,7 +57,7 @@ export class Messaging {
     const payload = this.topicPayload(topic, data);
     try {
       const res = await admin.messaging().send(payload as admin.messaging.TopicMessage);
-      return { messageId: res };
+      return {messageId: res};
     } catch (e) {
       throw Error("Topic send error " + (e as Error).message);
     }
@@ -159,7 +154,7 @@ export class Messaging {
 
     if (tokens.length == 0) {
       console.log("sendMessageToTokens() no tokens. so, just return results.");
-      return { success: 0, error: 0 };
+      return {success: 0, error: 0};
     }
 
     // add login user uid
@@ -175,9 +170,9 @@ export class Messaging {
     const multicastPromise = [];
     // Save [sendMulticast()] into a promise.
     for (const _500Tokens of chunks) {
-      const newPayload: admin.messaging.MulticastMessage = Object.assign(
+      const newPayload: MulticastMessage = Object.assign(
         {},
-        { tokens: _500Tokens },
+        {tokens: _500Tokens},
         payload
       );
       multicastPromise.push(admin.messaging().sendEachForMulticast(newPayload));
@@ -220,7 +215,7 @@ export class Messaging {
       await this.removeTokens(failedTokens);
 
       // 결과 리턴
-      const results = { success: successCount, error: failureCount };
+      const results = {success: successCount, error: failureCount};
       // console.log(`sendMessageToTokens() results: ${JSON.stringify(results)}`);
       return results;
     } catch (e) {
@@ -450,133 +445,6 @@ export class Messaging {
       senderUid: data.senderUserDocumentReference.id,
     };
     return this.sendMessage(messageData);
-  }
-
-  static async sendPushNotifications(
-    snapshot: functions.firestore.QueryDocumentSnapshot
-  ) {
-    const data = snapshot.data() as Partial<SendMessageToDocument>;
-    const title = data.title || "";
-    const body = data.body || "";
-    const imageUrl = data.image_url || "";
-    const sound = data.sound || "";
-    const parameterData = data.parameter_data || "";
-    const targetAudience = data.target_audience || "";
-    const initialPageName = data.initial_page_name || "";
-    const status = data.status || "";
-
-    //
-    if (status !== "" && status !== "started") {
-      console.log(`Already processed ${snapshot.ref.path}. Skipping...`);
-      return;
-    }
-
-    if (title === "" || body === "") {
-      console.log(`Title: ${title} or Body: ${body} are empty`);
-      await snapshot.ref.update({
-        status: "failed",
-        error: `Title: ${title} or Body: ${body} are empty`,
-      });
-      return;
-    }
-
-    const tokens = new Set();
-
-    // Send message to specific users by `user_refs` option.
-    // Note, that we don't use `user_refs` option anymore,
-    // but we keep it here for the posibility to enable in the future.
-
-    // Send message to all user
-    // Note, we don't send by `batch` while FF deos it.
-
-    // Get tokens of all users.
-    const userTokens: admin.firestore
-      .QuerySnapshot<admin.firestore.DocumentData> =
-      await Ref.tokenCollectionGroup.get();
-
-    userTokens.docs.forEach((token) => {
-      const data = token.data();
-      const audienceMatches =
-        targetAudience === "All" || data.device_type === targetAudience;
-      if (audienceMatches || typeof data.fcm_token !== undefined) {
-        tokens.add(data.fcm_token);
-      }
-    });
-
-    const tokensArr = Array.from(tokens);
-    const messageBatches = [];
-    for (let i = 0; i < tokensArr.length; i += 500) {
-      const tokensBatch = tokensArr.slice(
-        i,
-        Math.min(i + 500, tokensArr.length)
-      );
-      const messages = {
-        notification: {
-          title,
-          body,
-          ...(imageUrl && { imageUrl: imageUrl }),
-        },
-        data: {
-          initialPageName,
-          parameterData,
-        },
-        android: {
-          notification: {
-            ...(sound && { sound: sound }),
-          },
-        },
-        apns: {
-          payload: {
-            aps: {
-              ...(sound && { sound: sound }),
-            },
-          },
-        },
-        tokens: tokensBatch,
-      };
-      messageBatches.push(messages);
-    }
-
-    let numSent = 0;
-    await Promise.all(
-      messageBatches.map(async (messages) => {
-        const response = await admin
-          .messaging()
-          .sendEachForMulticast(messages as MulticastMessage);
-        numSent += response.successCount;
-      })
-    );
-
-    await snapshot.ref.update({ status: "succeeded", num_sent: numSent });
-  }
-
-  /**
-   * note* `only login device are included`
-   * To send to specific device type you can pass target
-   *
-   * @param target `all` `android` `ios` `web` etc.
-   * @returns Promise<string[]>
-   */
-  static async getTokensFromTarget(target: string): Promise<string[]> {
-    if (!target) return [];
-    const tokens: string[] = [];
-    let userTokens: admin.firestore
-      .QuerySnapshot<admin.firestore.DocumentData>;
-
-    if (target == "all") {
-      userTokens =
-        await Ref.tokenCollectionGroup.get();
-    } else {
-      userTokens =
-        await Ref.tokenCollectionGroup.where("device_type", "==", target).get();
-    }
-
-    userTokens.docs.forEach((token) => {
-      const data = token.data();
-      tokens.push(data.fcm_token);
-    });
-
-    return [...new Set(tokens)];
   }
 
 

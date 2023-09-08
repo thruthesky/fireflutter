@@ -30,19 +30,6 @@ exports.pushNotificationQueue =
         console.log("result::", result);
         return await ((_b = event.data) === null || _b === void 0 ? void 0 : _b.ref.update(Object.assign(Object.assign({}, result), { sentAt: admin.firestore.FieldValue.serverTimestamp() })));
     });
-// exports.sendPushNotificationsOnCreate =
-//   onDocumentCreated("push_notifications/{documentId}",
-//     async (event: FirestoreEvent<QueryDocumentSnapshot | undefined>): Promise<void> => {
-//       if (event === void 0) return void 0;
-//       try {
-//         if (event.data) {
-//           await Messaging.sendPushNotifications(event.data);
-//         }
-//       } catch (e) {
-//         console.log(`Error: ${e}`);
-//         await event.data?.ref.update({ status: "failed", error: `${e}` });
-//       }
-//     });
 exports.messagingOnChatMessageCreate =
     (0, firestore_1.onDocumentCreated)("chat_room_messages/{documentId}", async (event) => {
         var _a;

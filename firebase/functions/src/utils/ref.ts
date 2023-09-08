@@ -24,6 +24,10 @@ export class Ref {
     return this.db.collection("users");
   }
 
+  static get pushNotificationQueue() {
+    return this.db.collection('push_notification_queue');
+  }
+
   static userDoc(
     uid: string
   ): admin.firestore.DocumentReference<admin.firestore.DocumentData> {
