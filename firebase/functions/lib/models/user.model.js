@@ -29,6 +29,7 @@ class User {
      * @return UserDocument - it does not return null.
      *
      */
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
     static async create(uid, data) {
         data.created_time = admin.firestore.FieldValue.serverTimestamp();
         const user = await this.get(uid);
