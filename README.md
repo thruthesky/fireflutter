@@ -53,6 +53,7 @@ Create an issue if you find a bug or need a help.
   - [Favorite/Bookmark](#favoritebookmark)
     - [How to display icon](#how-to-display-icon)
   - [Follow and Unfollow](#follow-and-unfollow)
+- [Settings](#settings)
 - [Upload](#upload)
   - [Photo upload](#photo-upload)
 - [Push notifications](#push-notifications)
@@ -799,6 +800,12 @@ updatedRoom = await EasyChat.instance.updateRoomSetting(
 
 ## Like
 
+The `likes` of users (or user's profiles) are saved under `/settings/{uid}/likes` in RTDB. See the settings for details.
+
+It is managed with `User.like()` or `SettingService.instance.likes.add()`.
+
+
+
 The Like function does the following
 
 - When A likes B,
@@ -815,6 +822,8 @@ Improvement needed here. Since the maximum size of a firestore document is limit
 
 
 
+
+The `likes` for posts and comments are saved inside the documents of the posts and the comments. 
 
 
 
@@ -875,6 +884,17 @@ When it follows or unfollows,
 Note that you may use it with or without the feed service. See the `Feed Service` for the details on how to follow to see the posts of the users that you are following. But you can use it without the feed system.
 
 
+
+
+# Settings
+
+User settings are saved under `/settings/{uid}/...` in RTDB and it is open to public for read only. The login user can write his settings but others can only read. So, don't save private information in settings.
+
+Settings are managed by `SettingService`. It provides two handy function `setSetting('path/to/setting', { ... data ... })`, `getSetting('path/to/setting')`.
+
+There is also a helper widget to live update on a setting.
+
+`Setting(uid?: uid, path: 'path/to/setting', build: (data) => ... )` rebuild its child widget whenever there is update on the ndoe.
 
 
 
