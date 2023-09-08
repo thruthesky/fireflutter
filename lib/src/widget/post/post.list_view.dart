@@ -24,6 +24,7 @@ class PostListView extends StatelessWidget {
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.clipBehavior = Clip.hardEdge,
     this.categoryId,
+    this.uid,
   });
 
   final int pageSize;
@@ -39,10 +40,12 @@ class PostListView extends StatelessWidget {
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final Clip clipBehavior;
   final String? categoryId;
+  final String? uid;
 
   Query get query {
     Query q = PostService.instance.postCol;
     if (categoryId != null) q = q.where('categoryId', isEqualTo: categoryId);
+    if (uid != null) q = q.where('uid', isEqualTo: uid);
     return q.orderBy('createdAt', descending: true);
   }
 
