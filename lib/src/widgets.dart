@@ -70,6 +70,7 @@ export 'widget/common/url_preview/url_preview.dart';
 export 'widget/common/url_preview/url_preview.model.dart';
 export 'widget/common/display_media/edit_muliple_media.dart';
 export 'widget/common/youtube.dart';
+export 'widget/common/gradients.dart';
 
 // Favorite
 

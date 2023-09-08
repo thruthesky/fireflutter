@@ -45,7 +45,6 @@ class UserAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('FriendScreen build 2');
     Widget child;
     // if onTap is null, then, don't capture the gesture event. Just return avatar.
     if (user != null) {
