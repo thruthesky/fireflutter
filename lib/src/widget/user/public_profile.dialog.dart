@@ -101,31 +101,25 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               TextButton(
-                                onPressed: () async {
-                                  await like(user.uid);
-                                },
-                                style: TextButton.styleFrom(
-                                  foregroundColor: Theme.of(context).colorScheme.onSecondary,
-                                ),
-                                child: Setting(
-                                  path: 'likes',
-                                  uid: user.uid,
-                                  builder: (value) {
-                                    if (value == null) {
-                                      return const Text('Like');
-                                    }
-                                    return Text('${(value as Map).length} Likes');
-                                  },
+                                style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.onSecondary),
+                                onPressed: () => like(user.uid),
+                                child: Databae(
+                                  path: 'likes/${user.uid}',
+                                  builder: (value) => Text(value == null ? 'Like' : '${(value as Map).length} Likes'),
                                 ),
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  Favorite.toggle(otherUid: widget.uid);
-                                },
-                                style: TextButton.styleFrom(
-                                  foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                              FavoriteButton(
+                                otherUid: user.uid,
+                                builder: (re) => Text(
+                                  re ? 'Unfavorite' : 'Favorite',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onSecondary,
+                                  ),
                                 ),
-                                child: const Text("Favorite"),
+                                onChanged: (re) => toast(
+                                  title: re ? 'Favorite' : 'Unfavorite',
+                                  message: re ? 'You have favorited this user.' : 'You have unfavorited this user.',
+                                ),
                               ),
                               TextButton(
                                 onPressed: () {
@@ -135,6 +129,28 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                                   foregroundColor: Theme.of(context).colorScheme.onSecondary,
                                 ),
                                 child: const Text("Chat"),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  final blocked = await toggle('/settings/$myUid/blocks/${user.uid}');
+                                  toast(
+                                      title: blocked ? 'Blocked' : 'Unblocked',
+                                      message: 'The user has been ${blocked ? 'blocked' : 'unblocked'} by you');
+                                },
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                                ),
+                                child: Databae(
+                                  path: 'settings/$myUid/blocks/${user.uid}',
+                                  builder: (value) => Text(value == null ? 'Block' : 'Unblock'),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {},
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                                ),
+                                child: const Text('Report'),
                               ),
                             ],
                           ),

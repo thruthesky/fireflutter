@@ -56,10 +56,9 @@ Create an issue if you find a bug or need a help.
     - [How to display icon](#how-to-display-icon)
   - [Follow and Unfollow](#follow-and-unfollow)
 - [Database](#database)
-  - [Get/Set](#getset)
+  - [Get/Set/Update/Toggle](#getsetupdatetoggle)
+  - [Database widget](#database-widget)
 - [Settings](#settings)
-  - [toggle()](#toggle)
-  - [Setting widget](#setting-widget)
 - [Upload](#upload)
   - [Photo upload](#photo-upload)
 - [Push notifications](#push-notifications)
@@ -68,6 +67,7 @@ Create an issue if you find a bug or need a help.
   - [Feed listing logic](#feed-listing-logic)
   - [How to follow](#how-to-follow)
   - [How to unfollow](#how-to-unfollow)
+- [Block](#block)
 - [Customization](#customization)
   - [Chat Customization](#chat-customization)
 - [Admin](#admin)
@@ -835,35 +835,36 @@ updatedRoom = await EasyChat.instance.updateRoomSetting(
 
 ## Like
 
-The `likes` of users (or user's profiles) are saved under `/settings/{other_user_uid}/likes/{ my_uid: true }` in RTDB. See the settings for details.
-
-The `likes` for posts and comments are saved inside the documents of the posts and the comments. 
+The `likes` data saved under `/likes` in RTDB. Not that, the `likes` for posts and comments are saved inside the documents of the posts and the comments. 
 
 See the following example how to display the no of likes of a user and how to increase or decrease the number of the `like`.
 
+Example of text button with like
+
 ```dart
 TextButton(
-  onPressed: () async {
-    await like(user.uid);
-    // or you may use this code
-    // await toggle('likes/$myUid', uid: user.uid);
-  },
-  style: TextButton.styleFrom(
-    foregroundColor: Theme.of(context).colorScheme.onSecondary,
-  ),
-  child: Setting(
-    path: 'likes',
-    uid: user.uid,
-    builder: (value) {
-      if (value == null) {
-        return const Text('Like');
-      }
-      return Text('${(value as Map).length} Likes');
-    },
-  ),
+  onPressed: () => like(user.uid),
+  child: Databae(
+    path: 'likes/${user.uid}',
+    builder: (value) => return Text(value == null ? 'Like' : '${(value as Map).length} Likes'),
+  )
 ),
 ```
 
+Example of icon button with like
+
+```dart
+IconButton(
+  onPressed: () => like(user.uid),
+  icon: Databae(
+    path: 'likes/${user.uid}',
+    builder: (value) => Icon(
+      Icons.favorite_border,
+      color: value == null ? null : Theme.of(context).colorScheme.tertiary,
+    ),
+  ),
+),
+```
 
 
 
@@ -886,19 +887,32 @@ When A wants to see the bookmarks, the app should display a screen to list the b
 
 ### How to display icon
 
-Use `FavoriteIcon` to display the icon.
+Use `FavoriteButton` to display the icon.
 
 ```dart
-FavoriteIcon(
+FavoriteButton(
   otherUid: 'abc',
   builder: (re) => FaIcon(re ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heartCirclePlus, size: 38),
+),
+```
+
+You can use the `Text` widget as child instead of an icon widget.
+
+```dart
+FavoriteButton(
+  otherUid: user.uid,
+  builder: (re) => Text(re ? 'Unfavorite' : 'Favorite'),
+  onChanged: (re) => toast(
+    title: re ? 'Favorite' : 'Unfavorite',
+    message: re ? 'You have favorited this user.' : 'You have unfavorited this user.',
+  ),
 ),
 ```
 
 You can do an extra action on status changes.
 
 ```dart
-FavoriteIcon(
+FavoriteButton(
   otherUid: 'abc',
   builder: (re) => Text(re ? 'Favorite' : 'Unfavorite'),
   onChanged: (re) => toast(
@@ -927,19 +941,17 @@ Note that you may use it with or without the feed service. See the `Feed Service
 # Database
 
 
-## Get/Set
+## Get/Set/Update/Toggle
 
 
-We have a handy function in `functions/database.dart` to `get, set, update` the node data from/to firebase realtime database.
+We have a handy function in `functions/database.dart` to `get, set, update, toogle` the node data from/to firebase realtime database.
 
 - `get('path')` gets the node data of the path from database.
 - `set('path', data)` sets the data at the node of the path into database.
 - `update('path', { data })` updates the node of the path. The value must be a Map.
+- `toogle('path')` switches on/off the value of the node. If the node of the [path] does not exist, create it and return true. Or if the node exists, then remove it and return false.
 
-Note that, these functions may arise an exception if the security rules are not proeprty set on the paths. You need to set the security rules by yourself for the path.
-
-If you want to save data into firebase with security, you may use `Settings`.
-
+Note that, these functions may arise an exception if the security rules are not proeprty set on the paths. You need to set the security rules by yourself. When you meet an error like `[firebase_database/permission-denied] Client doesn't have permission to access the desired data.`, then check the security rules.
 
 Example of `get()`
 ```dart
@@ -958,56 +970,37 @@ await update(path, {'k': 'hello', 'v': 'world'});
 print(await get(path));
 ```
 
-# Settings
-
-User settings are saved under `/settings/{uid}/...` in RTDB and it is open to public for read only. The login user can write his settings but others can only read. So, don't save private information in settings.
-
-Settings are managed by `SettingService`. It provides two handy function `get('path/to/setting')`, `set('path/to/setting', { ... data ... })`,`toggle('path/to/node/extra')`.
-
-There is also a helper widget to live update on a setting.
-
-`Setting(uid?: uid, path: 'path/to/setting', build: (data) => ... )` rebuild its child widget whenever there is update on the ndoe.
 
 
-## toggle()
+## Database widget
 
-`toogle()` methods toggles the node on/off. It's like a switch. If the node of the [path] does not exist, create it and return true. Or if the node exists, then remove it and return false. See the following example code.
+`Database` widget rebuilds the widget when the node is changed. Becareful to use the narrowest path of the node or it would download a lot of data.
 
 ```dart
-ElevatedButton(
-  onPressed: () async {
-    final re = await toggle('likes/abc');
-    print('re; $re');
-  },
-  child: const Text('toggle'),
-),
-```
-
-If you don't have permission on `toogle()`, you would meet an error like `[firebase_database/permission-denied] Client doesn't have permission to access the desired data.`
-
-
-
-## Setting widget
-
-`Setting` widget listens the change of the node in the path and rebuild the widget.
-
-One thing to note is that, the value of `Setting(builder: (value) ...)` will be null if the node does not exists. So, when the `toggle()` return false, it means, the node does not exists. So the value of `Setting(builder: (value) ...)` becomes null.
-
-```dart
-Setting(
-  path: 'likes/abc',
+Databae(
+  path: 'tmp/a/b/c',
   builder: (value) {
     return Text('value: $value');
   },
 ),
 ElevatedButton(
   onPressed: () async {
-    final re = await toggle('likes/abc');
-    print('re; $re');
+    String path = 'tmp/a/b/c';
+    await set(path, 'Time: ${DateTime.now()}');
+    print(await get(path));
   },
   child: const Text('toggle'),
 ),
 ```
+
+# Settings
+
+User settings are saved under `/settings/{uid}/...` in RTDB and the security rules are set to the login user. It is closed and only the login user can read/write from/to the `/settings/{uid}/...` node.
+
+You can manage the node data with database functions described in [the database chaper](#database).
+
+See [the block chapter](#block) to know how to use(manage) the user settings and how to use `Database` widget with it.
+
 
 
 
@@ -1218,6 +1211,35 @@ Use `FeedService.instance.follow`. This will produce a permission error if you a
 ## How to unfollow
 
 Use `FeedService.instance.unfollow`. This will produce a permission error if you try to unfollow a user that you are not following.
+
+
+
+
+# Block
+
+A user can block other users. When the login user A blocks other user B, B's posts, comments, and other content generated by B won't be seen by A.
+
+The list of block is saved under `/settings/{my_uid}/{other_uid}`. It is set and removed by `toogle()` function.
+
+Example of the code to block or unblock a user.
+
+```dart
+TextButton(
+  onPressed: () async {
+    final blocked = await toggle('/settings/$myUid/blocks/${user.uid}');
+    toast(
+        title: blocked ? 'Blocked' : 'Unblocked',
+        message: 'The user has been ${blocked ? 'blocked' : 'unblocked'} by you');
+  },
+  style: TextButton.styleFrom(
+    foregroundColor: Theme.of(context).colorScheme.onSecondary,
+  ),
+  child: Databae(
+    path: 'settings/$myUid/blocks/${user.uid}',
+    builder: (value) => Text(value == null ? 'Block' : 'Unblock'),
+  ),
+),
+```
 
 # Customization
 

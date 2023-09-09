@@ -1,35 +1,34 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-class Setting extends StatelessWidget {
-  const Setting({
-    super.key,
-    required this.path,
-    this.uid,
-    required this.builder,
-    this.loading,
-  });
+/// Database
+///
+/// Rebuild the widget when the node is changed.
+///
+/// [path] is the path of the node.
+///
+/// [builder] is the widget builder.
+///
+/// Example: below will get the snapshot of /path/to/node
+///
+/// ```dart
+/// Database(path: 'path/to/node', builder: (value) {
+///  return Text(value);
+/// });
+///
+class Databae extends StatelessWidget {
+  const Databae({super.key, required this.path, required this.builder});
 
   final String path;
-  final String? uid;
   final Widget Function(dynamic value) builder;
-  final Widget? loading;
-
-  DatabaseReference get nodePath {
-    final p =
-        FirebaseDatabase.instance.ref('settings').child(uid ?? FirebaseAuth.instance.currentUser!.uid).child(path);
-
-    return p;
-  }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: nodePath.onValue,
+      stream: FirebaseDatabase.instance.ref(path).onValue,
       builder: (context, AsyncSnapshot<DatabaseEvent> event) {
         if (event.connectionState == ConnectionState.waiting) {
-          return loading ?? const CircularProgressIndicator.adaptive();
+          return const SizedBox.shrink();
         }
         if (event.hasError) {
           return Text('Error; ${event.error}');

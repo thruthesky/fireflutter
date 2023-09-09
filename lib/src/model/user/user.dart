@@ -362,13 +362,4 @@ class User with FirebaseHelper {
   Future<bool> like(String uid) async {
     return await toggle('likes/$uid');
   }
-
-  Future<String> get noOfLikes async {
-    final snapshot = await SettingService.instance.get('likes', uid: uid);
-    if (snapshot.exists) {
-      return '${snapshot.value} Likes';
-    } else {
-      return 'Like';
-    }
-  }
 }

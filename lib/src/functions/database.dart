@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 /// Get a node data
 ///
@@ -51,4 +52,25 @@ Future<void> set<T>(String path, dynamic value) async {
 /// specified location.
 Future<void> update(String path, Map<String, Object?> value) async {
   await FirebaseDatabase.instance.ref(path).update(value);
+}
+
+/// Toogle a node
+///
+/// If the node of the [path] does not exist, create it and return true.
+/// if the node exists, then remove it and return false.
+Future<bool> toggle(String path) async {
+  final value = await get<bool?>(path);
+
+  final ref = FirebaseDatabase.instance.ref(path);
+  if (value == null) {
+    await ref.set(true);
+    return true;
+  } else {
+    await ref.remove();
+    return false;
+  }
+}
+
+Future<bool> like(String otherUid) async {
+  return await toggle('likes/$otherUid/${myUid!}');
 }

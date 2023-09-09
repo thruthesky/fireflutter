@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 /// Favorite Icon
 ///
 /// Use this to display if the user is favorited or not
-class FavoriteIcon extends StatelessWidget {
-  const FavoriteIcon({
+class FavoriteButton extends StatelessWidget {
+  const FavoriteButton({
     super.key,
     this.otherUid,
     this.postId,

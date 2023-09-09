@@ -75,10 +75,10 @@ export 'widget/common/gradients.dart';
 // Favorite
 
 export 'widget/favorite/favorite.list_view.dart';
-export 'widget/favorite/favorite.icon.dart';
+export 'widget/favorite/favorite.button.dart';
 
 // Feed
 export 'widget/feed/feed.list_view.item.dart';
 
-// Settings
-export 'widget/setting/setting.dart';
+// database
+export 'widget/database/database.dart';
