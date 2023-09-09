@@ -11,9 +11,6 @@ class PostDoc extends StatelessWidget {
     required this.builder,
   });
 
-  // TODO assert
-  // must give either post or post Id
-
   final Post? post;
   final String? postId;
   final bool live;

@@ -1,3 +1,8 @@
+## 0.3.8
+
+* Add. like, favorite, report.
+
+
 ## 0.3.7
 
 * Change. All model is now using json_serializable.

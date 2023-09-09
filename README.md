@@ -59,6 +59,7 @@ Create an issue if you find a bug or need a help.
   - [Get/Set/Update/Toggle](#getsetupdatetoggle)
   - [Database widget](#database-widget)
 - [Settings](#settings)
+- [Report](#report)
 - [Upload](#upload)
   - [Photo upload](#photo-upload)
 - [Push notifications](#push-notifications)
@@ -188,14 +189,26 @@ Copy the following and paste it into your firebase project.
       
     },
     "settings": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write" : "$uid === auth.uid"
+      }
+    },
+    "likes": {
       ".read": true,
       "$uid": {
-        "likes": {
-          "$my_uid": {
-            ".write" : "$my_uid === auth.uid && ( !data.exists() || $my_uid === auth.uid )"
-          }
+        "$other_uid": {
+            ".write" : "$other_uid === auth.uid"
         }
       }
+    },
+    "feeds": {
+      ".read": true,
+      ".write": true
+    },
+  	"tmp": {
+      ".read": true,
+      ".write": true
     }
   }
 }
@@ -1000,6 +1013,60 @@ User settings are saved under `/settings/{uid}/...` in RTDB and the security rul
 You can manage the node data with database functions described in [the database chaper](#database).
 
 See [the block chapter](#block) to know how to use(manage) the user settings and how to use `Database` widget with it.
+
+
+
+# Report
+
+The Report document is saved under `/reports/{myUid-targetUid}` in Firestore. The `targetUid` is one of the uid of the user, the post, or the comment.
+
+
+Example of reporting
+
+```dart
+ReportService.instance.showReportDialog(
+  context: context,
+  otherUid: 'AotK6Uil2YaKrqCUJnrStOKwQGl2',
+  onExists: (id, type) => toast(title: 'Already reported', message: 'You have reported this $type already.'),
+);
+```
+
+
+Example of reporting with button widget
+
+```dart
+TextButton(
+  onPressed: () {
+    ReportService.instance.showReportDialog(
+      context: context,
+      otherUid: user.uid,
+      onExists: (id, type) => toast(
+          title: 'Already reported', message: 'You have reported this $type already.'),
+    );
+  },
+  style: TextButton.styleFrom(
+    foregroundColor: Theme.of(context).colorScheme.onSecondary,
+  ),
+  child: const Text('Report'),
+),
+```
+
+```json
+{
+  "uid": "reporter-uid",
+  "type": "xxx",
+  "reason": "the reason why it is reported",
+  "otherUid": "the other user uid",
+  "commentId": "comment id",
+  "postId": "the post id",
+  "createdAt": "time of report",
+}
+```
+
+
+The type is one of 'user', 'post', or 'comment'.
+
+
 
 
 

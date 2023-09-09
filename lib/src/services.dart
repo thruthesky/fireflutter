@@ -15,4 +15,4 @@ export 'service/favorite.service.dart';
 export 'service/admin.service.dart';
 export 'service/user.customize.dart';
 
-export 'service/setting.service.dart';
+export 'service/report.service.dart';

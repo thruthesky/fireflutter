@@ -143,14 +143,26 @@ class _PostViewDialogState extends State<PostViewDialog> {
                   UserDoc(
                     live: true,
                     builder: (user) => TextButton(
-                        onPressed: () async {
-                          final re = await FeedService.instance.follow(post.uid);
-                          toast(
-                            title: re ? 'Followed' : 'Unfollowed',
-                            message: re ? 'You have followed this user' : 'You have unfollowed this user',
-                          );
-                        },
-                        child: Text(user.followings.contains(post.uid) ? 'Unfollow' : 'Follow')),
+                      onPressed: () async {
+                        final re = await FeedService.instance.follow(post.uid);
+                        toast(
+                          title: re ? 'Followed' : 'Unfollowed',
+                          message: re ? 'You have followed this user' : 'You have unfollowed this user',
+                        );
+                      },
+                      child: Text(user.followings.contains(post.uid) ? 'Unfollow' : 'Follow'),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      ReportService.instance.showReportDialog(
+                        context: context,
+                        postId: post.id,
+                        onExists: (id, type) =>
+                            toast(title: 'Already reported', message: 'You have reported this $type already.'),
+                      );
+                    },
+                    child: const Text('Report'),
                   ),
                   const Spacer(),
                   TextButton(

@@ -235,6 +235,13 @@ service cloud.firestore {
       }
     }
 
+
+    // report
+    match /reports/{documentId} {
+      allow read: if isMyDoc() || isAdmin();
+      allow write: if isMyDoc() || willBeMyDoc();
+    }
+
     match /readonly/{documentId} {
       allow read: if true;
       allow write: if false;

@@ -83,6 +83,17 @@ class CommentTileState extends State<CommentListTile> {
                         );
                       },
                     ),
+                    TextButton(
+                      onPressed: () {
+                        ReportService.instance.showReportDialog(
+                          context: context,
+                          commentId: widget.comment.id,
+                          onExists: (id, type) =>
+                              toast(title: 'Already reported', message: 'You have reported this $type already.'),
+                        );
+                      },
+                      child: const Text('Report'),
+                    ),
                     const Spacer(),
                     TextButton(
                       onPressed: () async {

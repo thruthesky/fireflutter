@@ -146,7 +146,14 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                                 ),
                               ),
                               TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  ReportService.instance.showReportDialog(
+                                    context: context,
+                                    otherUid: user.uid,
+                                    onExists: (id, type) => toast(
+                                        title: 'Already reported', message: 'You have reported this $type already.'),
+                                  );
+                                },
                                 style: TextButton.styleFrom(
                                   foregroundColor: Theme.of(context).colorScheme.onSecondary,
                                 ),
