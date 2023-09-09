@@ -102,12 +102,21 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                             children: [
                               TextButton(
                                 onPressed: () async {
-                                  await user.like();
+                                  await like(user.uid);
                                 },
                                 style: TextButton.styleFrom(
                                   foregroundColor: Theme.of(context).colorScheme.onSecondary,
                                 ),
-                                child: Text(user.noOfLikes),
+                                child: Setting(
+                                  path: 'likes',
+                                  uid: user.uid,
+                                  builder: (value) {
+                                    if (value == null) {
+                                      return const Text('Like');
+                                    }
+                                    return Text('${(value as Map).length} Likes');
+                                  },
+                                ),
                               ),
                               TextButton(
                                 onPressed: () {

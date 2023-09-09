@@ -1,0 +1,54 @@
+import 'package:firebase_database/firebase_database.dart';
+
+/// Get a node data
+///
+/// Note that, [FirebaseDatabase.instance.get] has a bug. So [once] is being
+/// used.
+///
+/// [path] is the path of the node.
+///
+/// Example: below will get the value of /settings/abc/path/to/node. If the
+/// node does not exist, it will return null.
+/// ```
+/// final value = await get('/settings/abc/path/to/node');
+/// ```
+Future<T?> get<T>(String path) async {
+  final event = await FirebaseDatabase.instance.ref(path).once(DatabaseEventType.value);
+  if (!event.snapshot.exists) {
+    return null;
+  }
+  return event.snapshot.value as T;
+}
+
+/// Set a node data
+///
+/// This will overwrite any data at this location and all child locations.
+///
+/// Data types that are allowed are String, boolean, int, double, Map, List.
+Future<void> set<T>(String path, dynamic value) async {
+  await FirebaseDatabase.instance.ref(path).set(value);
+}
+
+/// Update a node data
+///
+/// Writes multiple values to the Database at once.
+///
+/// The values argument contains multiple property-value pairs that will be
+/// written to the Database together. Each child property can either be a
+/// simple property (for example, "name") or a relative path
+/// (for example, "name/first") from the current location to the data to
+/// update.
+///
+/// As opposed to the [set] method, [update] can be use to selectively update
+/// only the referenced properties at the current location (instead of
+/// replacing all the child properties at the current location).
+///
+/// Note that modifying data with [update] will cancel any pending
+/// transactions at that location, so extreme care should be taken if mixing
+/// [update] and [runTransaction] to modify the same data.
+///
+/// Passing null to a [Map] value in [update] will remove the value at the
+/// specified location.
+Future<void> update(String path, Map<String, Object?> value) async {
+  await FirebaseDatabase.instance.ref(path).update(value);
+}

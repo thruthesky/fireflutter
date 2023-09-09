@@ -14,7 +14,9 @@ Create an issue if you find a bug or need a help.
   - [Install the easy extension](#install-the-easy-extension)
   - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
+    - [Firestore security rules](#firestore-security-rules)
     - [Security rule for admin](#security-rule-for-admin)
+    - [Realtime database security rules](#realtime-database-security-rules)
   - [Admin settings](#admin-settings)
   - [Setup the base code](#setup-the-base-code)
 - [Usage](#usage)
@@ -53,7 +55,11 @@ Create an issue if you find a bug or need a help.
   - [Favorite/Bookmark](#favoritebookmark)
     - [How to display icon](#how-to-display-icon)
   - [Follow and Unfollow](#follow-and-unfollow)
+- [Database](#database)
+  - [Get/Set](#getset)
 - [Settings](#settings)
+  - [toggle()](#toggle)
+  - [Setting widget](#setting-widget)
 - [Upload](#upload)
   - [Photo upload](#photo-upload)
 - [Push notifications](#push-notifications)
@@ -135,7 +141,9 @@ firebase run deploy
 
 ## Security rules
 
-Security rules are under `/firebase/firestore/firestore.rules`.
+### Firestore security rules
+
+Security rules for firestore are under `/firebase/firestore/firestore.rules`.
 
 Copy [the security rules of fireflutter](https://raw.githubusercontent.com/thruthesky/fireflutter/main/firebase/firestore/firestore.rules) and paste it in your firebase project. You may need to copy only the parts of the necessary security rules.
 
@@ -164,6 +172,33 @@ For instance, you may write security rules like below and add the uids of sub-ad
   function isSubAdmin() {
     ...
   }
+```
+
+
+### Realtime database security rules
+
+Copy the following and paste it into your firebase project.
+
+```json
+{
+  "rules": {
+    "users": {
+      ".read": true,
+      ".write": false
+      
+    },
+    "settings": {
+      ".read": true,
+      "$uid": {
+        "likes": {
+          "$my_uid": {
+            ".write" : "$my_uid === auth.uid && ( !data.exists() || $my_uid === auth.uid )"
+          }
+        }
+      }
+    }
+  }
+}
 ```
 
 
@@ -800,31 +835,34 @@ updatedRoom = await EasyChat.instance.updateRoomSetting(
 
 ## Like
 
-The `likes` of users (or user's profiles) are saved under `/settings/{uid}/likes` in RTDB. See the settings for details.
-
-It is managed with `User.like()` or `SettingService.instance.likes.add()`.
-
-
-
-The Like function does the following
-
-- When A likes B,
-  - A's uid is saved in B's `likes` field.
-- When A likes(again or remove likes),
-  - A's uid is deleted from B's `likes` field.
-
-Note that, the user document fields are synced and it's slow, fireflutter saves the likes into the `/users` in rtdb for the speed up.
-
-- On the public profile screen of B, the number of likes will be displayed.
-
-TODO; @thruthesky
-Improvement needed here. Since the maximum size of a firestore document is limited in 1M bytes, saving `likes` in the user document is not a good idea. Save it under seprated collection. It will not only solve the document size limit problem but also, it will work fast.
-
-
-
+The `likes` of users (or user's profiles) are saved under `/settings/{other_user_uid}/likes/{ my_uid: true }` in RTDB. See the settings for details.
 
 The `likes` for posts and comments are saved inside the documents of the posts and the comments. 
 
+See the following example how to display the no of likes of a user and how to increase or decrease the number of the `like`.
+
+```dart
+TextButton(
+  onPressed: () async {
+    await like(user.uid);
+    // or you may use this code
+    // await toggle('likes/$myUid', uid: user.uid);
+  },
+  style: TextButton.styleFrom(
+    foregroundColor: Theme.of(context).colorScheme.onSecondary,
+  ),
+  child: Setting(
+    path: 'likes',
+    uid: user.uid,
+    builder: (value) {
+      if (value == null) {
+        return const Text('Like');
+      }
+      return Text('${(value as Map).length} Likes');
+    },
+  ),
+),
+```
 
 
 
@@ -886,17 +924,90 @@ Note that you may use it with or without the feed service. See the `Feed Service
 
 
 
+# Database
+
+
+## Get/Set
+
+
+We have a handy function in `functions/database.dart` to `get, set, update` the node data from/to firebase realtime database.
+
+- `get('path')` gets the node data of the path from database.
+- `set('path', data)` sets the data at the node of the path into database.
+- `update('path', { data })` updates the node of the path. The value must be a Map.
+
+Note that, these functions may arise an exception if the security rules are not proeprty set on the paths. You need to set the security rules by yourself for the path.
+
+If you want to save data into firebase with security, you may use `Settings`.
+
+
+Example of `get()`
+```dart
+final value = await get('users/15ZXRtt5I2Vr2xo5SJBjAVWaZ0V2');
+print('value; $value');
+print('value; ${User.fromJson(Map<String, dynamic>.from(value))}');
+```
+
+Example of `set()` adn `update()`
+```dart
+String path = 'tmp/a/b/c';
+await set(path, 'hello');
+print(await get(path));
+
+await update(path, {'k': 'hello', 'v': 'world'});
+print(await get(path));
+```
+
 # Settings
 
 User settings are saved under `/settings/{uid}/...` in RTDB and it is open to public for read only. The login user can write his settings but others can only read. So, don't save private information in settings.
 
-Settings are managed by `SettingService`. It provides two handy function `setSetting('path/to/setting', { ... data ... })`, `getSetting('path/to/setting')`.
+Settings are managed by `SettingService`. It provides two handy function `get('path/to/setting')`, `set('path/to/setting', { ... data ... })`,`toggle('path/to/node/extra')`.
 
 There is also a helper widget to live update on a setting.
 
 `Setting(uid?: uid, path: 'path/to/setting', build: (data) => ... )` rebuild its child widget whenever there is update on the ndoe.
 
 
+## toggle()
+
+`toogle()` methods toggles the node on/off. It's like a switch. If the node of the [path] does not exist, create it and return true. Or if the node exists, then remove it and return false. See the following example code.
+
+```dart
+ElevatedButton(
+  onPressed: () async {
+    final re = await toggle('likes/abc');
+    print('re; $re');
+  },
+  child: const Text('toggle'),
+),
+```
+
+If you don't have permission on `toogle()`, you would meet an error like `[firebase_database/permission-denied] Client doesn't have permission to access the desired data.`
+
+
+
+## Setting widget
+
+`Setting` widget listens the change of the node in the path and rebuild the widget.
+
+One thing to note is that, the value of `Setting(builder: (value) ...)` will be null if the node does not exists. So, when the `toggle()` return false, it means, the node does not exists. So the value of `Setting(builder: (value) ...)` becomes null.
+
+```dart
+Setting(
+  path: 'likes/abc',
+  builder: (value) {
+    return Text('value: $value');
+  },
+),
+ElevatedButton(
+  onPressed: () async {
+    final re = await toggle('likes/abc');
+    print('re; $re');
+  },
+  child: const Text('toggle'),
+),
+```
 
 
 

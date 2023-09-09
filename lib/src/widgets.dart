@@ -79,3 +79,6 @@ export 'widget/favorite/favorite.icon.dart';
 
 // Feed
 export 'widget/feed/feed.list_view.item.dart';
+
+// Settings
+export 'widget/setting/setting.dart';

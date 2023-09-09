@@ -14,3 +14,5 @@ export 'service/fireflutter.service.dart';
 export 'service/favorite.service.dart';
 export 'service/admin.service.dart';
 export 'service/user.customize.dart';
+
+export 'service/setting.service.dart';
