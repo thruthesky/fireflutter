@@ -10,13 +10,16 @@ class ChatRoomMessageListView extends StatefulWidget {
   final Room room;
 
   @override
-  State<ChatRoomMessageListView> createState() => _ChatRoomMessageListViewState();
+  State<ChatRoomMessageListView> createState() =>
+      _ChatRoomMessageListViewState();
 }
 
 class _ChatRoomMessageListViewState extends State<ChatRoomMessageListView> {
   @override
   Widget build(BuildContext context) {
-    final chatMessageQuery = ChatService.instance.messageCol(widget.room.id).orderBy('createdAt', descending: true);
+    final chatMessageQuery = ChatService.instance
+        .messageCol(widget.room.id)
+        .orderBy('createdAt', descending: true);
 
     // Load all users first in the room as a map
 
@@ -25,7 +28,8 @@ class _ChatRoomMessageListViewState extends State<ChatRoomMessageListView> {
       child: FirestoreListView(
         reverse: true,
         query: chatMessageQuery,
-        itemBuilder: (BuildContext context, QueryDocumentSnapshot<dynamic> doc) {
+        itemBuilder:
+            (BuildContext context, QueryDocumentSnapshot<dynamic> doc) {
           final message = Message.fromDocumentSnapshot(doc);
           ChatService.instance.setLastMessage(message);
           return ChatRoomMessageListItem(message: message);

@@ -49,7 +49,8 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
                       progress: (p) => setState(() => progress = p),
                       complete: () => setState(() => progress = null),
                     );
-                    await ChatService.instance.sendMessage(room: widget.room, url: url);
+                    await ChatService.instance
+                        .sendMessage(room: widget.room, url: url);
                   },
                 ),
                 Expanded(

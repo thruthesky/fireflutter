@@ -17,7 +17,8 @@ class Feed {
   });
 
   factory Feed.fromSnapshot(DataSnapshot doc) {
-    return Feed.fromJson({...Map<String, dynamic>.from(doc.value as Map), 'id': doc.key});
+    return Feed.fromJson(
+        {...Map<String, dynamic>.from(doc.value as Map), 'id': doc.key});
   }
   factory Feed.fromJson(Map<String, dynamic> json) => _$FeedFromJson(json);
   Map<String, dynamic> toJson() => _$FeedToJson(this);

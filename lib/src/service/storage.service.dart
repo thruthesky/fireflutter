@@ -48,7 +48,8 @@ class StorageService with FirebaseHelper {
     if (path == null) return null;
     File file = File(path);
     final storageRef = FirebaseStorage.instance.ref();
-    final fileRef = storageRef.child(saveAs ?? "users/$uid/${file.path.split('/').last}");
+    final fileRef =
+        storageRef.child(saveAs ?? "users/$uid/${file.path.split('/').last}");
 
     if (compressQuality > 0) {
       final xfile = await FlutterImageCompress.compressAndGetFile(

@@ -20,7 +20,8 @@ class ChatRoomMessageListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: isMyMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment:
+          isMyMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         protocolBubble(context),
         if (isMyMessage) ...[
@@ -101,15 +102,22 @@ class ChatRoomMessageListItem extends StatelessWidget {
   }
 
   Widget messageBubble(BuildContext context) {
-    if (message.isProtocol || message.text == null || message.text!.trim() == '') return const SizedBox.shrink();
-    final double factor = MediaQuery.of(context).size.width < 400 ? .64 : (isMyMessage ? .76 : .68);
+    if (message.isProtocol ||
+        message.text == null ||
+        message.text!.trim() == '') return const SizedBox.shrink();
+    final double factor = MediaQuery.of(context).size.width < 400
+        ? .64
+        : (isMyMessage ? .76 : .68);
 
     return Row(
-      mainAxisAlignment: isMyMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment:
+          isMyMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         if (isMyMessage) chatBubbleDateTime(),
         Container(
-          constraints: BoxConstraints(minWidth: 100, maxWidth: MediaQuery.of(context).size.width * factor),
+          constraints: BoxConstraints(
+              minWidth: 100,
+              maxWidth: MediaQuery.of(context).size.width * factor),
           margin: const EdgeInsets.only(top: 4, bottom: 4),
           padding: const EdgeInsets.all(_kBubblePadding),
           decoration: BoxDecoration(
@@ -159,7 +167,8 @@ class ChatRoomMessageListItem extends StatelessWidget {
             children: [
               PhotoView(
                 imageProvider: CachedNetworkImageProvider(message.url!),
-                heroAttributes: PhotoViewHeroAttributes(tag: 'image-${message.id}'),
+                heroAttributes:
+                    PhotoViewHeroAttributes(tag: 'image-${message.id}'),
                 // onTapDown: (context, details, controllerValue) => Navigator.of(context).pop(),
               ),
               SafeArea(
@@ -176,7 +185,8 @@ class ChatRoomMessageListItem extends StatelessWidget {
         ),
       ),
       child: ConstrainedBox(
-        constraints: BoxConstraints(minWidth: 100, maxWidth: MediaQuery.of(context).size.width * 0.8),
+        constraints: BoxConstraints(
+            minWidth: 100, maxWidth: MediaQuery.of(context).size.width * 0.8),
         child: Row(
           children: [
             if (isMyMessage) chatBubbleDateTime(),
@@ -224,12 +234,15 @@ class ChatRoomMessageListItem extends StatelessWidget {
             if (message.previewImageUrl != null)
               ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: CachedNetworkImage(imageUrl: message.previewImageUrl!)),
+                  child:
+                      CachedNetworkImage(imageUrl: message.previewImageUrl!)),
             const SizedBox(height: 16),
             if (message.previewTitle != null)
-              Text(message.previewTitle!, style: const TextStyle(fontWeight: FontWeight.w600)),
+              Text(message.previewTitle!,
+                  style: const TextStyle(fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
-            if (message.previewDescription != null) Text(message.previewDescription!),
+            if (message.previewDescription != null)
+              Text(message.previewDescription!),
           ],
         ),
       ),

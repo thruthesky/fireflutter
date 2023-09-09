@@ -24,8 +24,9 @@ class _ChatRoomState extends State<ChatRoom> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          ChatService.instance.customize.chatRoomAppBarBuilder?.call(widget.room) ?? ChatRoomAppBar(room: widget.room),
+      appBar: ChatService.instance.customize.chatRoomAppBarBuilder
+              ?.call(widget.room) ??
+          ChatRoomAppBar(room: widget.room),
       body: Column(
         children: [
           Expanded(

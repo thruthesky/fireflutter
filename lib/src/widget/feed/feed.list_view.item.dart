@@ -18,7 +18,9 @@ class FeedListViewItem extends StatelessWidget {
             child: Column(
               children: [
                 YouTube(url: post.youtubeId),
-                ...post.urls.map((e) => CachedNetworkImage(imageUrl: e)).toList(),
+                ...post.urls
+                    .map((e) => CachedNetworkImage(imageUrl: e))
+                    .toList(),
                 ListTile(
                   title: Text(post.title),
                   subtitle: Column(

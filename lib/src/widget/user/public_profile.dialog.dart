@@ -16,7 +16,8 @@ class PublicProfileDialog extends StatefulWidget {
 }
 
 class _PublicProfileDialogState extends State<PublicProfileDialog> {
-  final BehaviorSubject<double?> progressEvent = BehaviorSubject<double?>.seeded(null);
+  final BehaviorSubject<double?> progressEvent =
+      BehaviorSubject<double?>.seeded(null);
 
   bool get isMyProfile => widget.uid == my.uid;
 
@@ -36,7 +37,8 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                     imageUrl: user.stateImageUrl,
                     fit: BoxFit.cover,
                     placeholder: (context, url) => previousUrl.isEmpty
-                        ? const Center(child: CircularProgressIndicator.adaptive())
+                        ? const Center(
+                            child: CircularProgressIndicator.adaptive())
                         : CachedNetworkImage(
                             imageUrl: previousUrl,
                             fit: BoxFit.cover,
@@ -50,13 +52,16 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
-            title: doc((user) => Text(user.name, style: TextStyle(color: Theme.of(context).colorScheme.onSecondary))),
+            title: doc((user) => Text(user.name,
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSecondary))),
             actions: [
               if (isMyProfile)
                 IconButton(
                   style: IconButton.styleFrom(
                     foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                    backgroundColor: Theme.of(context).colorScheme.secondary.withAlpha(200),
+                    backgroundColor:
+                        Theme.of(context).colorScheme.secondary.withAlpha(200),
                   ),
                   onPressed: () async {
                     final url = await StorageService.instance.upload(
@@ -68,7 +73,8 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                     previousUrl = my.stateImageUrl;
                     my.update(stateImageUrl: url);
                     if (previousUrl.isNotEmpty) {
-                      Timer(const Duration(seconds: 2), () => StorageService.instance.delete(previousUrl));
+                      Timer(const Duration(seconds: 2),
+                          () => StorageService.instance.delete(previousUrl));
                     }
                   },
                   icon: const Icon(Icons.camera_alt),
@@ -85,9 +91,11 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                         children: [
                           StreamBuilder(
                               stream: progressEvent.stream,
-                              builder: (context, snapshot) => snapshot.data == null
-                                  ? const SizedBox()
-                                  : LinearProgressIndicator(value: snapshot.data ?? 0)),
+                              builder: (context, snapshot) =>
+                                  snapshot.data == null
+                                      ? const SizedBox()
+                                      : LinearProgressIndicator(
+                                          value: snapshot.data ?? 0)),
                           const Center(
                             child: Text('Public Profile'),
                           ),
@@ -101,11 +109,16 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               TextButton(
-                                style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.onSecondary),
+                                style: TextButton.styleFrom(
+                                    foregroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .onSecondary),
                                 onPressed: () => like(user.uid),
                                 child: Databae(
                                   path: 'likes/${user.uid}',
-                                  builder: (value) => Text(value == null ? 'Like' : '${(value as Map).length} Likes'),
+                                  builder: (value) => Text(value == null
+                                      ? 'Like'
+                                      : '${(value as Map).length} Likes'),
                                 ),
                               ),
                               FavoriteButton(
@@ -113,36 +126,46 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                                 builder: (re) => Text(
                                   re ? 'Unfavorite' : 'Favorite',
                                   style: TextStyle(
-                                    color: Theme.of(context).colorScheme.onSecondary,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSecondary,
                                   ),
                                 ),
                                 onChanged: (re) => toast(
                                   title: re ? 'Favorite' : 'Unfavorite',
-                                  message: re ? 'You have favorited this user.' : 'You have unfavorited this user.',
+                                  message: re
+                                      ? 'You have favorited this user.'
+                                      : 'You have unfavorited this user.',
                                 ),
                               ),
                               TextButton(
                                 onPressed: () {
-                                  ChatService.instance.showChatRoom(context: context, user: user);
+                                  ChatService.instance.showChatRoom(
+                                      context: context, user: user);
                                 },
                                 style: TextButton.styleFrom(
-                                  foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.onSecondary,
                                 ),
                                 child: const Text("Chat"),
                               ),
                               TextButton(
                                 onPressed: () async {
-                                  final blocked = await toggle('/settings/$myUid/blocks/${user.uid}');
+                                  final blocked = await toggle(
+                                      '/settings/$myUid/blocks/${user.uid}');
                                   toast(
                                       title: blocked ? 'Blocked' : 'Unblocked',
-                                      message: 'The user has been ${blocked ? 'blocked' : 'unblocked'} by you');
+                                      message:
+                                          'The user has been ${blocked ? 'blocked' : 'unblocked'} by you');
                                 },
                                 style: TextButton.styleFrom(
-                                  foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.onSecondary,
                                 ),
                                 child: Databae(
                                   path: 'settings/$myUid/blocks/${user.uid}',
-                                  builder: (value) => Text(value == null ? 'Block' : 'Unblock'),
+                                  builder: (value) =>
+                                      Text(value == null ? 'Block' : 'Unblock'),
                                 ),
                               ),
                               TextButton(
@@ -151,11 +174,14 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                                     context: context,
                                     otherUid: user.uid,
                                     onExists: (id, type) => toast(
-                                        title: 'Already reported', message: 'You have reported this $type already.'),
+                                        title: 'Already reported',
+                                        message:
+                                            'You have reported this $type already.'),
                                   );
                                 },
                                 style: TextButton.styleFrom(
-                                  foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.onSecondary,
                                 ),
                                 child: const Text('Report'),
                               ),

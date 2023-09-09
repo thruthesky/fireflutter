@@ -9,7 +9,8 @@ part 'comment.g.dart';
 @JsonSerializable()
 class Comment with FirebaseHelper {
   static const String collectionName = 'comments';
-  static DocumentReference doc([String? commentId]) => CommentService.instance.commentCol.doc(commentId);
+  static DocumentReference doc([String? commentId]) =>
+      CommentService.instance.commentCol.doc(commentId);
 
   final String id;
   final String postId;
@@ -49,7 +50,8 @@ class Comment with FirebaseHelper {
     this.parentId,
     required this.sort,
     required this.depth,
-  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
+  }) : createdAt =
+            (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory Comment.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     return Comment.fromJson({
@@ -58,7 +60,8 @@ class Comment with FirebaseHelper {
     });
   }
 
-  factory Comment.fromJson(Map<String, dynamic> json) => _$CommentFromJson(json)..data = json;
+  factory Comment.fromJson(Map<String, dynamic> json) =>
+      _$CommentFromJson(json)..data = json;
   Map<String, dynamic> toJson() => _$CommentToJson(this);
 
   @override
@@ -80,13 +83,17 @@ class Comment with FirebaseHelper {
       'updatedAt': FieldValue.serverTimestamp(),
       'uid': myUid,
       if (parent != null) 'parentId': parent.id,
-      'sort':
-          getCommentSortString(noOfComments: post.noOfComments, depth: parent?.depth ?? 0, sortString: parent?.sort),
+      'sort': getCommentSortString(
+          noOfComments: post.noOfComments,
+          depth: parent?.depth ?? 0,
+          sortString: parent?.sort),
       'depth': parent == null ? 1 : parent.depth + 1,
     };
 
     await CommentService.instance.commentCol.add(commentData);
-    PostService.instance.postCol.doc(post.id).update({'noOfComments': FieldValue.increment(1)});
+    PostService.instance.postCol
+        .doc(post.id)
+        .update({'noOfComments': FieldValue.increment(1)});
 
     // update no of comments
     User.fromUid(UserService.instance.uid).update(
@@ -106,7 +113,8 @@ class Comment with FirebaseHelper {
   }
 
   static Future<Comment> get(String id) async {
-    final DocumentSnapshot documentSnapshot = await CommentService.instance.commentCol.doc(id).get();
+    final DocumentSnapshot documentSnapshot =
+        await CommentService.instance.commentCol.doc(id).get();
     return Comment.fromDocumentSnapshot(documentSnapshot);
   }
 

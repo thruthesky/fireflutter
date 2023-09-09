@@ -31,7 +31,8 @@ class PostService with FirebaseHelper {
   }) {
     return showGeneralDialog<Post?>(
       context: context,
-      pageBuilder: (context, _, __) => PostEditDialog(categoryId: categoryId, post: post),
+      pageBuilder: (context, _, __) =>
+          PostEditDialog(categoryId: categoryId, post: post),
     );
   }
 

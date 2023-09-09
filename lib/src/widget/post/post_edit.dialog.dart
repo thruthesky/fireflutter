@@ -73,14 +73,16 @@ class _PostEditDialogState extends State<PostEditDialog> {
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                         isDense: false,
-                        padding: const EdgeInsets.only(left: 12, top: 4, right: 4, bottom: 4),
+                        padding: const EdgeInsets.only(
+                            left: 12, top: 4, right: 4, bottom: 4),
                         isExpanded: true,
                         items: [
                           const DropdownMenuItem(
                             value: '',
                             child: Text('Select Category'),
                           ),
-                          ...CategoryService.instance.categoriesOnCreate.entries.map((e) {
+                          ...CategoryService.instance.categoriesOnCreate.entries
+                              .map((e) {
                             return DropdownMenuItem(
                               value: e.key,
                               child: Text(e.value),
@@ -140,13 +142,15 @@ class _PostEditDialogState extends State<PostEditDialog> {
                   const Spacer(),
                   // Form submit button
                   ElevatedButton(
-                    child: Text(isCreate ? tr.form.postCreate : tr.form.postUpdate),
+                    child: Text(
+                        isCreate ? tr.form.postCreate : tr.form.postUpdate),
                     onPressed: () async {
                       if (title.text.isEmpty) {
                         return warningSnackbar(context, tr.form.titleRequired);
                       }
                       if (content.text.isEmpty) {
-                        return warningSnackbar(context, tr.form.contentRequired);
+                        return warningSnackbar(
+                            context, tr.form.contentRequired);
                       }
                       Post post;
                       if (isCreate) {
@@ -158,7 +162,8 @@ class _PostEditDialogState extends State<PostEditDialog> {
                         );
                         if (mounted) {
                           Navigator.pop(context, post);
-                          PostService.instance.showPostViewDialog(context, post);
+                          PostService.instance
+                              .showPostViewDialog(context, post);
                         }
                       } else {
                         await widget.post!.update(

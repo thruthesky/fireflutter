@@ -28,7 +28,8 @@ class UserSettings with FirebaseHelper {
   String documentId = 'settings';
 
   String get path => col.doc(documentId).path;
-  Stream<DocumentSnapshot<Object?>> snapshot() => col.doc(documentId).snapshots();
+  Stream<DocumentSnapshot<Object?>> snapshot() =>
+      col.doc(documentId).snapshots();
 
   /// UserSettings 에 기본 문서 ID 를 지정해서 리턴한다.
   ///
@@ -40,8 +41,9 @@ class UserSettings with FirebaseHelper {
     return UserSettings()..documentId = id;
   }
 
-  CollectionReference get col =>
-      uid != '' ? userSettingsCol(uid) : UserService.instance.doc.collection('user_settings');
+  CollectionReference get col => uid != ''
+      ? userSettingsCol(uid)
+      : UserService.instance.doc.collection('user_settings');
 
   Future<void> update(Map<String, dynamic> data) {
     return col.doc(documentId).set(data, SetOptions(merge: true));

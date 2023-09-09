@@ -14,7 +14,8 @@ class CommentDoc extends StatelessWidget {
       stream: Comment.doc(comment.id).snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) return Text(snapshot.error.toString());
-        if (snapshot.hasData) return builder(Comment.fromDocumentSnapshot(snapshot.data!));
+        if (snapshot.hasData)
+          return builder(Comment.fromDocumentSnapshot(snapshot.data!));
         return builder(comment);
       },
     );

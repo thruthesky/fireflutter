@@ -10,15 +10,28 @@ class TestUser {
   static int errorCount = 0;
   static int successCount = 0;
   String? uid;
-  TestUser({required this.displayName, required this.email, required this.photoUrl});
+  TestUser(
+      {required this.displayName, required this.email, required this.photoUrl});
 }
 
 class Test {
   static List<TestUser> users = [
-    TestUser(displayName: 'Apple', email: 'apple@test-user.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
-    TestUser(displayName: 'Banana', email: 'banana@test-user.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
-    TestUser(displayName: 'Cherry', email: 'cherry@test-user.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
-    TestUser(displayName: 'Durian', email: 'durian@test-user.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
+    TestUser(
+        displayName: 'Apple',
+        email: 'apple@test-user.com',
+        photoUrl: 'https://picsum.photos/id/1/200/200'),
+    TestUser(
+        displayName: 'Banana',
+        email: 'banana@test-user.com',
+        photoUrl: 'https://picsum.photos/id/1/200/200'),
+    TestUser(
+        displayName: 'Cherry',
+        email: 'cherry@test-user.com',
+        photoUrl: 'https://picsum.photos/id/1/200/200'),
+    TestUser(
+        displayName: 'Durian',
+        email: 'durian@test-user.com',
+        photoUrl: 'https://picsum.photos/id/1/200/200'),
   ];
   static get apple => users[0];
   static get banana => users[1];
@@ -27,12 +40,14 @@ class Test {
 
   static Future<User> loginOrRegister(TestUser user) async {
     try {
-      final UserCredential cred =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(email: user.email, password: user.password);
+      final UserCredential cred = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: user.email, password: user.password);
       return cred.user!;
     } catch (e) {
       log(e.toString());
-      final cred = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: user.email, password: user.password);
+      final cred = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: user.email, password: user.password);
       return cred.user!;
     }
   }
@@ -45,8 +60,8 @@ class Test {
     // Wait until logout is complete or you may see firestore permission denied error.
     await Test.wait();
 
-    final UserCredential cred =
-        await FirebaseAuth.instance.signInWithEmailAndPassword(email: user.email, password: user.password);
+    final UserCredential cred = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: user.email, password: user.password);
     await Test.wait();
     return cred.user!;
   }
@@ -96,7 +111,8 @@ class Test {
       if (e.toString().split(': ').last == code) {
         test(true, 'Exception code must be $code');
       } else {
-        test(false, 'Exception code must be $code. Actual code: ${e.toString()}');
+        test(false,
+            'Exception code must be $code. Actual code: ${e.toString()}');
       }
     }
   }

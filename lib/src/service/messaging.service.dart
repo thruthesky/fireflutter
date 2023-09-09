@@ -69,7 +69,8 @@ class MessagingService with FirebaseHelper {
     this.onMessageOpenedFromTerminated = onMessageOpenedFromTerminated;
     this.onMessageOpenedFromBackground = onMessageOpenedFromBackground;
     this.onNotificationPermissionDenied = onNotificationPermissionDenied;
-    this.onNotificationPermissionNotDetermined = onNotificationPermissionNotDetermined;
+    this.onNotificationPermissionNotDetermined =
+        onNotificationPermissionNotDetermined;
     _init();
     _initilizeToken();
   }
@@ -80,7 +81,8 @@ class MessagingService with FirebaseHelper {
     /// Permission request for iOS only. For Android, the permission is granted by default.
     ///
     if (kIsWeb || Platform.isIOS) {
-      NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+      NotificationSettings settings =
+          await FirebaseMessaging.instance.requestPermission(
         alert: true,
         announcement: false,
         badge: true,
@@ -105,7 +107,9 @@ class MessagingService with FirebaseHelper {
     ///
     /// `/fcm_tokens/<docId>/{token: '...', uid: '...'}`
     /// Save(or update) token
-    FirebaseAuth.instance.authStateChanges().listen((user) => _updateToken(token));
+    FirebaseAuth.instance
+        .authStateChanges()
+        .listen((user) => _updateToken(token));
 
     /// Token changed. update it.
     ///
@@ -117,7 +121,8 @@ class MessagingService with FirebaseHelper {
     /// Run this subscription on the whole lifecycle. (No unsubscription)
     ///
     // Any time the token refreshes, store this in the database too.
-    FirebaseMessaging.instance.onTokenRefresh.listen((token) => tokenChange.add(token));
+    FirebaseMessaging.instance.onTokenRefresh
+        .listen((token) => tokenChange.add(token));
 
     /// Get token from device and save it into Firestore
     ///
@@ -160,7 +165,8 @@ class MessagingService with FirebaseHelper {
     FirebaseMessaging.onMessage.listen(onForegroundMessage);
 
     // Check if app is opened from CLOSED(TERMINATED) state and get message data.
-    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
       onMessageOpenedFromTerminated(initialMessage);
     }

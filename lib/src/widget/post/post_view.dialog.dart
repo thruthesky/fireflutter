@@ -23,7 +23,8 @@ class _PostViewDialogState extends State<PostViewDialog> {
   }
 
   onEdit() async {
-    final updated = await PostService.instance.showEditDialog(context, post: post);
+    final updated =
+        await PostService.instance.showEditDialog(context, post: post);
     if (updated != null) {
       setState(() {
         post = updated;
@@ -37,7 +38,8 @@ class _PostViewDialogState extends State<PostViewDialog> {
       appBar: AppBar(
         title: const Text('Post'),
         actions: [
-          if (post.isMine) IconButton(icon: const Icon(Icons.edit), onPressed: onEdit),
+          if (post.isMine)
+            IconButton(icon: const Icon(Icons.edit), onPressed: onEdit),
           PopupMenuButton(
             icon: const Icon(Icons.more_horiz),
             itemBuilder: (context) {
@@ -76,11 +78,13 @@ class _PostViewDialogState extends State<PostViewDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+              padding:
+                  const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
               child: Text.rich(
                 TextSpan(
                   text: post.title,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w900),
                 ),
               ),
             ),
@@ -90,7 +94,8 @@ class _PostViewDialogState extends State<PostViewDialog> {
                 UserAvatar(
                   uid: post.uid,
                   key: ValueKey(post.uid),
-                  onTap: () => UserService.instance.showPublicProfile(context: context, uid: post.uid),
+                  onTap: () => UserService.instance
+                      .showPublicProfile(context: context, uid: post.uid),
                 ),
                 UserDisplayName(
                   uid: post.uid,
@@ -114,7 +119,8 @@ class _PostViewDialogState extends State<PostViewDialog> {
             ),
             YouTube(url: post.youtubeId, autoPlay: true),
             const Divider(),
-            if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
+            if (post.urls.isNotEmpty)
+              ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
             Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
               child: Row(
@@ -135,7 +141,9 @@ class _PostViewDialogState extends State<PostViewDialog> {
                     builder: (post) => TextButton(
                       child: Text(
                         'Like ${post.noOfLikes}',
-                        style: post.iLiked ? const TextStyle(fontWeight: FontWeight.bold) : null,
+                        style: post.iLiked
+                            ? const TextStyle(fontWeight: FontWeight.bold)
+                            : null,
                       ),
                       onPressed: () => post.like(),
                     ),
@@ -147,10 +155,14 @@ class _PostViewDialogState extends State<PostViewDialog> {
                         final re = await FeedService.instance.follow(post.uid);
                         toast(
                           title: re ? 'Followed' : 'Unfollowed',
-                          message: re ? 'You have followed this user' : 'You have unfollowed this user',
+                          message: re
+                              ? 'You have followed this user'
+                              : 'You have unfollowed this user',
                         );
                       },
-                      child: Text(user.followings.contains(post.uid) ? 'Unfollow' : 'Follow'),
+                      child: Text(user.followings.contains(post.uid)
+                          ? 'Unfollow'
+                          : 'Follow'),
                     ),
                   ),
                   TextButton(
@@ -158,8 +170,9 @@ class _PostViewDialogState extends State<PostViewDialog> {
                       ReportService.instance.showReportDialog(
                         context: context,
                         postId: post.id,
-                        onExists: (id, type) =>
-                            toast(title: 'Already reported', message: 'You have reported this $type already.'),
+                        onExists: (id, type) => toast(
+                            title: 'Already reported',
+                            message: 'You have reported this $type already.'),
                       );
                     },
                     child: const Text('Report'),

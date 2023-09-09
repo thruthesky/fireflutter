@@ -17,7 +17,8 @@ class ChatRoomSettingsScreen extends StatefulWidget {
 class _ChatRoomSettingsScreenState extends State<ChatRoomSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    final Stream<DocumentSnapshot> roomStream = ChatService.instance.roomDoc(widget.room.id).snapshots();
+    final Stream<DocumentSnapshot> roomStream =
+        ChatService.instance.roomDoc(widget.room.id).snapshots();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -35,7 +36,8 @@ class _ChatRoomSettingsScreenState extends State<ChatRoomSettingsScreen> {
           return ListView(
             children: [
               if (widget.room.group) ...[
-                if (ChatService.instance.isMaster(room: roomSnapshot, uid: ChatService.instance.uid)) ...[
+                if (ChatService.instance.isMaster(
+                    room: roomSnapshot, uid: ChatService.instance.uid)) ...[
                   ChatRoomOpenSettingListTile(room: roomSnapshot),
                   ChatRoomMaximumUsersSettingListTile(room: roomSnapshot),
                   ChatRoomDefaultRoomNameSettingListTile(room: roomSnapshot),

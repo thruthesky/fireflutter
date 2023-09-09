@@ -53,7 +53,8 @@ class _UrlPreviewState extends State<UrlPreview> {
       return const SizedBox.shrink();
     }
 
-    final child = Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    final child =
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       if (model.image != null) CachedNetworkImage(imageUrl: model.image!),
       if (model.title != null) ...[
         const SizedBox(height: 8),

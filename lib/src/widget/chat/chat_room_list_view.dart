@@ -60,7 +60,8 @@ class ChatRoomListView extends StatefulWidget {
     this.avatarSize = 46,
     this.scrollDirection = Axis.vertical,
     this.visibility,
-  }) : assert(itemExtent == null || visibility == null, "You can't set both itemExtent and visibility");
+  }) : assert(itemExtent == null || visibility == null,
+            "You can't set both itemExtent and visibility");
 
   final ChatRoomListViewController controller;
   final String orderBy;
@@ -171,7 +172,8 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
         log(error.toString(), stackTrace: stackTrace);
         return Center(child: Text('Error loading chat rooms $error'));
       },
-      loadingBuilder: (context) => const Center(child: CircularProgressIndicator()),
+      loadingBuilder: (context) =>
+          const Center(child: CircularProgressIndicator()),
       pageSize: widget.pageSize,
       controller: widget.scrollController,
       primary: widget.primary,

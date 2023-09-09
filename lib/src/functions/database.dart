@@ -14,7 +14,8 @@ import 'package:fireflutter/fireflutter.dart';
 /// final value = await get('/settings/abc/path/to/node');
 /// ```
 Future<T?> get<T>(String path) async {
-  final event = await FirebaseDatabase.instance.ref(path).once(DatabaseEventType.value);
+  final event =
+      await FirebaseDatabase.instance.ref(path).once(DatabaseEventType.value);
   if (!event.snapshot.exists) {
     return null;
   }

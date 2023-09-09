@@ -8,7 +8,8 @@ part 'category.g.dart';
 @JsonSerializable()
 class Category with FirebaseHelper {
   static const String collectionName = 'categories';
-  static DocumentReference doc(String categoryId) => CategoryService.instance.categoryCol.doc(categoryId);
+  static DocumentReference doc(String categoryId) =>
+      CategoryService.instance.categoryCol.doc(categoryId);
   final String id;
   final String name;
   final String? description;
@@ -26,7 +27,8 @@ class Category with FirebaseHelper {
     this.name = '',
     this.description,
     dynamic createdAt,
-  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
+  }) : createdAt =
+            (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory Category.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     return Category.fromJson({
@@ -53,7 +55,8 @@ class Category with FirebaseHelper {
     return Category.fromJson(map);
   }
 
-  factory Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json)..data = json;
+  factory Category.fromJson(Map<String, dynamic> json) =>
+      _$CategoryFromJson(json)..data = json;
   Map<String, dynamic> toJson() => _$CategoryToJson(this);
 
   @Deprecated('Use toJson instead')
@@ -102,8 +105,12 @@ class Category with FirebaseHelper {
   /// Get the category or throw an exception if it does not exist.
   ///
   static Future<Category> get(String categoryId) async {
-    final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(categoryId).get();
-    if (snapshot.exists == false) throw Exception('Category $categoryId does not exist');
+    final snapshot = await FirebaseFirestore.instance
+        .collection(collectionName)
+        .doc(categoryId)
+        .get();
+    if (snapshot.exists == false)
+      throw Exception('Category $categoryId does not exist');
     return Category.fromDocumentSnapshot(snapshot);
   }
 

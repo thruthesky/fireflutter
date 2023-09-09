@@ -32,9 +32,13 @@ class AdminIdCardDialog extends StatelessWidget {
               children: [
                 Text(user.createdAt.toString()),
                 FutureBuilder<ListResult>(
-                    future: FirebaseStorage.instance.ref().child("ids/${user.uid}").listAll(),
+                    future: FirebaseStorage.instance
+                        .ref()
+                        .child("ids/${user.uid}")
+                        .listAll(),
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting || !snapshot.hasData) {
+                      if (snapshot.connectionState == ConnectionState.waiting ||
+                          !snapshot.hasData) {
                         return const SizedBox.shrink();
                       }
 
@@ -46,7 +50,9 @@ class AdminIdCardDialog extends StatelessWidget {
                               (e) => FutureBuilder<String>(
                                 future: e.getDownloadURL(),
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting || !snapshot.hasData) {
+                                  if (snapshot.connectionState ==
+                                          ConnectionState.waiting ||
+                                      !snapshot.hasData) {
                                     return const SizedBox.shrink();
                                   }
                                   return Image.network(snapshot.data!);
@@ -62,7 +68,8 @@ class AdminIdCardDialog extends StatelessWidget {
             onTap: () async {
               toast(
                   title: 'TODO - verification',
-                  message: 'See the user photo and ID card. And if they are the same, then set the isVerified to true');
+                  message:
+                      'See the user photo and ID card. And if they are the same, then set the isVerified to true');
             },
           );
         },

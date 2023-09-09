@@ -78,9 +78,11 @@ class AdminUserListView extends StatelessWidget with FirebaseHelper {
 
         return ListTile(
           title: titleBuilder?.call(user) ?? Text(user.displayName),
-          subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
+          subtitle:
+              subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
           leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
-          trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
+          trailing:
+              trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
           onTap: () async {
             onTap?.call(user);
           },

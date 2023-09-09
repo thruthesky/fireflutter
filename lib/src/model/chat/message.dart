@@ -41,7 +41,8 @@ class Message with FirebaseHelper {
     this.previewDescription,
     this.previewImageUrl,
     this.isUserChanged = true,
-  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
+  }) : createdAt =
+            (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   bool get hasUrl => url != null && url != '';
   bool get hasPreview => previewUrl != null && previewUrl != '';
@@ -54,7 +55,8 @@ class Message with FirebaseHelper {
     });
   }
 
-  factory Message.fromJson(Map<String, dynamic> json) => _$MessageFromJson(json);
+  factory Message.fromJson(Map<String, dynamic> json) =>
+      _$MessageFromJson(json);
   Map<String, dynamic> toJson() => _$MessageToJson(this);
 
   @override

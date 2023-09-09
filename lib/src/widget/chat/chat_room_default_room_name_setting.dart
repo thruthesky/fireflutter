@@ -20,7 +20,8 @@ class ChatRoomDefaultRoomNameSettingListTile extends StatelessWidget {
       subtitle: TextFormField(
         controller: defaultChatRoomName,
         textInputAction: TextInputAction.done,
-        decoration: const InputDecoration(hintText: 'Enter the default chat room name.'),
+        decoration: const InputDecoration(
+            hintText: 'Enter the default chat room name.'),
         onFieldSubmitted: (value) async {
           if (value.isNotEmpty) {
             await ChatService.instance.updateRoomSetting(

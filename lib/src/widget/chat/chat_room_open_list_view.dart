@@ -15,7 +15,9 @@ class ChatRoomOpenListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final query = ChatService.instance.chatCol.where('open', isEqualTo: true).where('group', isEqualTo: true);
+    final query = ChatService.instance.chatCol
+        .where('open', isEqualTo: true)
+        .where('group', isEqualTo: true);
     return FirestoreListView(
       query: query,
       itemBuilder: (BuildContext context, QueryDocumentSnapshot snapshot) {
@@ -25,7 +27,8 @@ class ChatRoomOpenListView extends StatelessWidget {
         } else {
           return ChatRoomListTile(
             room: room,
-            onTap: () => ChatService.instance.showChatRoom(context: context, room: room),
+            onTap: () =>
+                ChatService.instance.showChatRoom(context: context, room: room),
           );
         }
       },

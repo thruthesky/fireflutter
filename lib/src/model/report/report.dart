@@ -6,7 +6,8 @@ part 'report.g.dart';
 
 @JsonSerializable()
 class Report {
-  static CollectionReference col = FirebaseFirestore.instance.collection('reports');
+  static CollectionReference col =
+      FirebaseFirestore.instance.collection('reports');
   static DocumentReference doc(String id) => col.doc(id);
 
   final String id;
@@ -26,7 +27,8 @@ class Report {
   }) : createdAt = createdAt is Timestamp ? createdAt.toDate() : DateTime.now();
 
   factory Report.fromDocumentSnapshot(DocumentSnapshot doc) {
-    return Report.fromJson({...doc.data() as Map<String, dynamic>, 'id': doc.id});
+    return Report.fromJson(
+        {...doc.data() as Map<String, dynamic>, 'id': doc.id});
   }
 
   factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);

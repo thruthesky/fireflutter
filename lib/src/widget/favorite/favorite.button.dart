@@ -26,7 +26,9 @@ class FavoriteButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Favorite.query(postId: postId, otherUid: otherUid, commentId: commentId).snapshots(),
+      stream: Favorite.query(
+              postId: postId, otherUid: otherUid, commentId: commentId)
+          .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return builder(false);
@@ -37,7 +39,8 @@ class FavoriteButton extends StatelessWidget {
 
         return IconButton(
           onPressed: () async {
-            final re = await Favorite.toggle(postId: postId, otherUid: otherUid, commentId: commentId);
+            final re = await Favorite.toggle(
+                postId: postId, otherUid: otherUid, commentId: commentId);
             onChanged?.call(re);
           },
           icon: builder(snapshot.data?.size == 1),

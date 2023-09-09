@@ -2,7 +2,8 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class EditMultipleMedia extends StatelessWidget {
-  const EditMultipleMedia({super.key, required this.urls, required this.onDelete});
+  const EditMultipleMedia(
+      {super.key, required this.urls, required this.onDelete});
 
   final List<String> urls;
   final Function(String) onDelete;
@@ -33,7 +34,8 @@ class EditMultipleMedia extends StatelessWidget {
                   right: 8,
                   child: IconButton(
                     style: IconButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.secondaryContainer,
                     ),
                     onPressed: () => onDelete.call(e),
                     icon: const Icon(Icons.delete),

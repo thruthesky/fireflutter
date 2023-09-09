@@ -11,10 +11,12 @@ class ChatRoomPasswordSettingListTile extends StatefulWidget {
   final Room room;
 
   @override
-  State<ChatRoomPasswordSettingListTile> createState() => _ChatRoomPasswordSettingListTileState();
+  State<ChatRoomPasswordSettingListTile> createState() =>
+      _ChatRoomPasswordSettingListTileState();
 }
 
-class _ChatRoomPasswordSettingListTileState extends State<ChatRoomPasswordSettingListTile> {
+class _ChatRoomPasswordSettingListTileState
+    extends State<ChatRoomPasswordSettingListTile> {
   final password = TextEditingController();
   bool hidePassword = true;
 

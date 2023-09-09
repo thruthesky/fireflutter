@@ -32,10 +32,12 @@ class UserService with FirebaseHelper {
   UserCustomize customize = UserCustomize();
 
   /// Return true if the user signed with real account. Not anonymous.
-  bool get notSignedIn => isAnonymous || auth.FirebaseAuth.instance.currentUser == null;
+  bool get notSignedIn =>
+      isAnonymous || auth.FirebaseAuth.instance.currentUser == null;
 
   bool get signedIn => !notSignedIn;
-  bool get isAnonymous => auth.FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+  bool get isAnonymous =>
+      auth.FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
 
   /// 환영 인사 메시지를 보낼 때 등에 사용된다.
   late final String adminUid;
@@ -58,7 +60,8 @@ class UserService with FirebaseHelper {
   /// UserService.instance.documentChanges.listen((user) => user == null ? null : print(my));
   /// ```
   ///
-  final BehaviorSubject<User?> documentChanges = BehaviorSubject<User?>.seeded(null);
+  final BehaviorSubject<User?> documentChanges =
+      BehaviorSubject<User?>.seeded(null);
 
   /// [userChanges] fires when
   /// - app boots
@@ -69,7 +72,8 @@ class UserService with FirebaseHelper {
   /// Note that, the difference from [documentChanges] is that this happens
   /// when user logs in or out while [documentChanges] happens when the user
   /// document changes.
-  final BehaviorSubject<auth.User?> userChanges = BehaviorSubject<auth.User?>.seeded(null);
+  final BehaviorSubject<auth.User?> userChanges =
+      BehaviorSubject<auth.User?>.seeded(null);
 
   ///
   UserService._();
@@ -134,7 +138,10 @@ class UserService with FirebaseHelper {
   /// Use this to display widgets lively that depends on the user model. When
   /// the user document is updated, this stream will fire an event.
   Stream<User> get snapshot {
-    return UserService.instance.col.doc(uid).snapshots().map((doc) => User.fromDocumentSnapshot(doc));
+    return UserService.instance.col
+        .doc(uid)
+        .snapshots()
+        .map((doc) => User.fromDocumentSnapshot(doc));
   }
 
   /// 미리 한번 호출 해서, Singleton 을 초기화 해 둔다. 그래야 user 를 사용 할 때, 에러가 발생하지 않는다.
@@ -164,7 +171,8 @@ class UserService with FirebaseHelper {
           if (!documentSnapshot.exists || documentSnapshot.data() == null) {
             nullableUser = User.notExists();
           } else {
-            nullableUser = User.fromDocumentSnapshot(documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
+            nullableUser = User.fromDocumentSnapshot(
+                documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
           }
           documentChanges.add(nullableUser);
         });
@@ -309,7 +317,8 @@ class UserService with FirebaseHelper {
   ///
   /// It shows the public profile dialog for the user. You can customize by
   /// setting [UserCustomize] to [UserService.instance.customize].
-  Future showPublicProfile({required BuildContext context, String? uid, User? user}) {
+  Future showPublicProfile(
+      {required BuildContext context, String? uid, User? user}) {
     return customize.showPublicProfile?.call(context, uid: uid, user: user) ??
         showGeneralDialog(
           context: context,

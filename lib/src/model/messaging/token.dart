@@ -6,8 +6,10 @@ part 'token.g.dart';
 
 @JsonSerializable()
 class Token {
-  static CollectionReference col(String uid) => User.col.doc(uid).collection('fcm_tokens');
-  static DocumentReference doc(String uid, String fcmToken) => col(uid).doc(fcmToken);
+  static CollectionReference col(String uid) =>
+      User.col.doc(uid).collection('fcm_tokens');
+  static DocumentReference doc(String uid, String fcmToken) =>
+      col(uid).doc(fcmToken);
 
   final String id;
   final String uid;
@@ -23,7 +25,8 @@ class Token {
     required this.fcmToken,
   });
 
-  factory Token.fromDocumentSnapshot(DocumentSnapshot snapshot) => Token.fromJson(
+  factory Token.fromDocumentSnapshot(DocumentSnapshot snapshot) =>
+      Token.fromJson(
         {
           ...(snapshot.data() as Map),
           ...{'id': snapshot.id},

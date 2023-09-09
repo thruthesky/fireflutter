@@ -17,7 +17,10 @@ class TopDownGraident extends StatelessWidget {
         height: height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Theme.of(context).colorScheme.secondary.withAlpha(120), Colors.transparent],
+            colors: [
+              Theme.of(context).colorScheme.secondary.withAlpha(120),
+              Colors.transparent
+            ],
             end: Alignment.bottomCenter,
             begin: Alignment.topCenter,
           ),
@@ -45,7 +48,10 @@ class BottomUpGraident extends StatelessWidget {
         height: height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Theme.of(context).colorScheme.secondary.withAlpha(150), Colors.transparent],
+            colors: [
+              Theme.of(context).colorScheme.secondary.withAlpha(150),
+              Colors.transparent
+            ],
             begin: Alignment.bottomCenter,
             end: Alignment.topCenter,
           ),

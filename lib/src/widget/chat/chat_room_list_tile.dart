@@ -70,9 +70,11 @@ class ChatRoomListTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     room.isGroupChat
-                        ? Text(room.name, style: Theme.of(context).textTheme.bodyLarge)
+                        ? Text(room.name,
+                            style: Theme.of(context).textTheme.bodyLarge)
                         : UserDoc(
-                            builder: (_) => Text(_.name, style: Theme.of(context).textTheme.bodyLarge),
+                            builder: (_) => Text(_.name,
+                                style: Theme.of(context).textTheme.bodyLarge),
                             uid: otherUserUid(room.users)),
                     Text(
                       (room.lastMessage?.text ?? '').replaceAll("\n", ' '),

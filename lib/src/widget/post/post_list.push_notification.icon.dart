@@ -18,10 +18,12 @@ class PostListPushNotificationIcon extends StatefulWidget {
   final Function(String, bool) onChanged;
 
   @override
-  State<PostListPushNotificationIcon> createState() => _PostListPushNotificationIconState();
+  State<PostListPushNotificationIcon> createState() =>
+      _PostListPushNotificationIconState();
 }
 
-class _PostListPushNotificationIconState extends State<PostListPushNotificationIcon> {
+class _PostListPushNotificationIconState
+    extends State<PostListPushNotificationIcon> {
   bool hasSubscription = false;
   bool hasPostSubscription = false;
   bool hasCommentSubscription = false;
@@ -74,7 +76,9 @@ class _PostListPushNotificationIconState extends State<PostListPushNotificationI
           offset: Offset.fromDirection(2, 46),
           icon: Icon(
             hasSubscription ? Icons.notifications_on : Icons.notifications_off,
-            color: hasSubscription ? const Color.fromARGB(255, 74, 74, 74) : const Color.fromARGB(255, 177, 177, 177),
+            color: hasSubscription
+                ? const Color.fromARGB(255, 74, 74, 74)
+                : const Color.fromARGB(255, 177, 177, 177),
           ),
           itemBuilder: (_) => [
             PopupMenuItem(
@@ -95,7 +99,9 @@ class _PostListPushNotificationIconState extends State<PostListPushNotificationI
                   Row(
                     children: [
                       Icon(
-                        hasPostSubscription ? Icons.notifications_on : Icons.notifications_off,
+                        hasPostSubscription
+                            ? Icons.notifications_on
+                            : Icons.notifications_off,
                         color: hasPostSubscription
                             ? Theme.of(context).colorScheme.primary
                             : Theme.of(context).colorScheme.secondary,
@@ -118,7 +124,9 @@ class _PostListPushNotificationIconState extends State<PostListPushNotificationI
               child: Row(
                 children: [
                   Icon(
-                    hasCommentSubscription ? Icons.notifications_on : Icons.notifications_off,
+                    hasCommentSubscription
+                        ? Icons.notifications_on
+                        : Icons.notifications_off,
                     color: hasCommentSubscription
                         ? Theme.of(context).colorScheme.primary
                         : Theme.of(context).colorScheme.secondary,

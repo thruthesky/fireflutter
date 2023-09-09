@@ -8,7 +8,8 @@ part 'post.g.dart';
 @JsonSerializable()
 class Post with FirebaseHelper {
   static const String collectionName = 'posts';
-  static DocumentReference doc([String? postId]) => PostService.instance.postCol.doc(postId);
+  static DocumentReference doc([String? postId]) =>
+      PostService.instance.postCol.doc(postId);
   final String id;
   final String categoryId;
   final String title;
@@ -48,7 +49,8 @@ class Post with FirebaseHelper {
     this.likes = const [],
     this.deleted = false,
     this.noOfComments = 0,
-  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
+  }) : createdAt =
+            (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory Post.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     return Post.fromJson(
@@ -59,14 +61,16 @@ class Post with FirebaseHelper {
     );
   }
 
-  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json)..data = json;
+  factory Post.fromJson(Map<String, dynamic> json) =>
+      _$PostFromJson(json)..data = json;
   Map<String, dynamic> toJson() => _$PostToJson(this);
 
   static Future<Post> get(String? id) async {
     if (id == null) {
       throw Exception('Post id is null');
     }
-    final DocumentSnapshot documentSnapshot = await PostService.instance.postCol.doc(id).get();
+    final DocumentSnapshot documentSnapshot =
+        await PostService.instance.postCol.doc(id).get();
     return Post.fromDocumentSnapshot(documentSnapshot);
   }
 
