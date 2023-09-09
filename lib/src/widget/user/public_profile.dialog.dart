@@ -114,7 +114,7 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                                         .colorScheme
                                         .onSecondary),
                                 onPressed: () => like(user.uid),
-                                child: Databae(
+                                child: Database(
                                   path: 'likes/${user.uid}',
                                   builder: (value) => Text(value == null
                                       ? 'Like'
@@ -162,7 +162,7 @@ class _PublicProfileDialogState extends State<PublicProfileDialog> {
                                   foregroundColor:
                                       Theme.of(context).colorScheme.onSecondary,
                                 ),
-                                child: Databae(
+                                child: Database(
                                   path: 'settings/$myUid/blocks/${user.uid}',
                                   builder: (value) =>
                                       Text(value == null ? 'Block' : 'Unblock'),

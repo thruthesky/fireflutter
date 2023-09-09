@@ -1,7 +1,10 @@
+## 0.3.9
+
+* Add. Document update.
+
 ## 0.3.8
 
 * Add. like, favorite, report.
-
 
 ## 0.3.7
 

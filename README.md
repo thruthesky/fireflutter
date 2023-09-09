@@ -857,7 +857,7 @@ Example of text button with like
 ```dart
 TextButton(
   onPressed: () => like(user.uid),
-  child: Databae(
+  child: Database(
     path: 'likes/${user.uid}',
     builder: (value) => return Text(value == null ? 'Like' : '${(value as Map).length} Likes'),
   )
@@ -869,7 +869,7 @@ Example of icon button with like
 ```dart
 IconButton(
   onPressed: () => like(user.uid),
-  icon: Databae(
+  icon: Database(
     path: 'likes/${user.uid}',
     builder: (value) => Icon(
       Icons.favorite_border,
@@ -990,7 +990,7 @@ print(await get(path));
 `Database` widget rebuilds the widget when the node is changed. Becareful to use the narrowest path of the node or it would download a lot of data.
 
 ```dart
-Databae(
+Database(
   path: 'tmp/a/b/c',
   builder: (value) {
     return Text('value: $value');
@@ -1301,7 +1301,7 @@ TextButton(
   style: TextButton.styleFrom(
     foregroundColor: Theme.of(context).colorScheme.onSecondary,
   ),
-  child: Databae(
+  child: Database(
     path: 'settings/$myUid/blocks/${user.uid}',
     builder: (value) => Text(value == null ? 'Block' : 'Unblock'),
   ),

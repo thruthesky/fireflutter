@@ -16,8 +16,8 @@ import 'package:flutter/material.dart';
 ///  return Text(value);
 /// });
 ///
-class Databae extends StatelessWidget {
-  const Databae({super.key, required this.path, required this.builder});
+class Database extends StatelessWidget {
+  const Database({super.key, required this.path, required this.builder});
 
   final String path;
   final Widget Function(dynamic value) builder;
