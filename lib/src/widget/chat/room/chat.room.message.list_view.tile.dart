@@ -6,8 +6,8 @@ import 'package:photo_view/photo_view.dart';
 
 const double _kBubblePadding = 10.0;
 
-class ChatRoomMessageListItem extends StatelessWidget {
-  const ChatRoomMessageListItem({
+class ChatRoomMessageListViewTile extends StatelessWidget {
+  const ChatRoomMessageListViewTile({
     super.key,
     required this.message,
   });

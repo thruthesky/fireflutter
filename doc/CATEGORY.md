@@ -55,7 +55,7 @@ Category List Dialog is a full screen dialog that displays the list of categorie
 To use, simply follow these code:
 
 ```dart
-CategoryListDialog(),
+CategoryListScreen(),
 ```
 
 The onTapCategory parameter can be used to modify the action if the user tapped the category. By dafault, it will go to the list of posts.
@@ -68,7 +68,7 @@ ElevatedButton(
       showGeneralDialog(
         context: context,
         pageBuilder: (context, _, __) {
-          return CategoryListDialog(
+          return CategoryListScreen(
             onTapCategory: (category) {
               CategoryService.instance.showUpdateDialog(context, category);
             },

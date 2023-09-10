@@ -32,7 +32,7 @@ class _ChatRoomMessageListViewState extends State<ChatRoomMessageListView> {
             (BuildContext context, QueryDocumentSnapshot<dynamic> doc) {
           final message = Message.fromDocumentSnapshot(doc);
           ChatService.instance.setLastMessage(message);
-          return ChatRoomMessageListItem(message: message);
+          return ChatRoomMessageListViewTile(message: message);
         },
         errorBuilder: (context, error, stackTrace) {
           debugPrint(error.toString());

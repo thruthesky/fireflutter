@@ -2,8 +2,8 @@ import 'package:fireflutter/src/model/chat/room.dart';
 import 'package:fireflutter/src/service/chat.service.dart';
 import 'package:flutter/material.dart';
 
-class ChatRoomMaximumUsersSettingListTile extends StatefulWidget {
-  const ChatRoomMaximumUsersSettingListTile({
+class ChatRoomSettingsMaximumUserListTile extends StatefulWidget {
+  const ChatRoomSettingsMaximumUserListTile({
     super.key,
     required this.room,
     this.onUpdateMaximumNoOfUsers,
@@ -13,12 +13,12 @@ class ChatRoomMaximumUsersSettingListTile extends StatefulWidget {
   final Function(Room updatedRoom)? onUpdateMaximumNoOfUsers;
 
   @override
-  State<ChatRoomMaximumUsersSettingListTile> createState() =>
-      _ChatRoomMaximumUsersSettingListTileState();
+  State<ChatRoomSettingsMaximumUserListTile> createState() =>
+      _ChatRoomSettingsMaximumUserListTileState();
 }
 
-class _ChatRoomMaximumUsersSettingListTileState
-    extends State<ChatRoomMaximumUsersSettingListTile> {
+class _ChatRoomSettingsMaximumUserListTileState
+    extends State<ChatRoomSettingsMaximumUserListTile> {
   final maxNumberOfUsers = TextEditingController();
 
   @override

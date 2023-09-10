@@ -35,7 +35,7 @@ class CategoryService with FirebaseHelper {
   }) async {
     await showDialog(
       context: context,
-      builder: (_) => CategoryCreateDialog(
+      builder: (_) => CategoryCreateScreen(
         success: success,
         cancel: cancel,
       ),
@@ -53,7 +53,7 @@ class CategoryService with FirebaseHelper {
   showUpdateDialog(BuildContext context, String categoryId) async {
     await showGeneralDialog(
       context: context,
-      pageBuilder: (context, _, __) => CategoryDialog(
+      pageBuilder: (context, _, __) => CategoryEditScreen(
         categoryId: categoryId,
       ),
     );
@@ -66,7 +66,7 @@ class CategoryService with FirebaseHelper {
       {Function(Category category)? onTapCategory}) async {
     await showGeneralDialog(
       context: context,
-      pageBuilder: (context, _, __) => CategoryListDialog(
+      pageBuilder: (context, _, __) => CategoryListScreen(
         onTapCategory: (category) {
           if (onTapCategory != null) {
             onTapCategory.call(category);

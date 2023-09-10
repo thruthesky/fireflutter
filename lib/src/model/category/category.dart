@@ -109,8 +109,9 @@ class Category with FirebaseHelper {
         .collection(collectionName)
         .doc(categoryId)
         .get();
-    if (snapshot.exists == false)
+    if (snapshot.exists == false) {
       throw Exception('Category $categoryId does not exist');
+    }
     return Category.fromDocumentSnapshot(snapshot);
   }
 

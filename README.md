@@ -26,6 +26,7 @@ Create an issue if you find a bug or need a help.
     - [How to display chat room menu](#how-to-display-chat-room-menu)
     - [Customizing the chat header](#customizing-the-chat-header)
 - [Widgets](#widgets)
+  - [Screen widgets](#screen-widgets)
   - [EmailLoginForm](#emailloginform)
   - [UserDoc](#userdoc)
   - [User customization](#user-customization)
@@ -194,6 +195,14 @@ Copy the following and paste it into your firebase project.
         ".write" : "$uid === auth.uid"
       }
     },
+    "chats": {
+      "$roomId": {
+        "noOfNewMessages": {
+          ".read": true,
+          ".write": true
+        }
+      }
+    },
     "likes": {
       ".read": true,
       "$uid": {
@@ -340,7 +349,7 @@ showGeneralDialog(
     appBar: AppBar(
       title: const Text('Invite User'),
     ),
-    body: ChatRoomUserInviteDialog(room: room),
+    body: ChatRoomMenuUserInviteDialog(room: room),
   ),
 );
 ```
@@ -361,6 +370,26 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 
 * The file names and the class names of the widgets must match.
 * The user widgets are inside `widgets/user` and the file name is in the form of `user.xxxx.dart` or `user.xxxx.dialog.dart`. And it goes the same to chat and forum.
+
+
+## Screen widgets
+
+The name of widgets that can be used as a screen ends with `Screen`. Those widget must be work as a screen or a dialog of `showGeneralDialog()`. Which means those widgets must have a scafoold.
+
+Example of opening a screen widget with `showGeneralDialog()`
+```dart
+showGeneralDialog(
+  context: context,
+  pageBuilder: (_, __, ___) => const AdminDashboardScreen(),
+);
+```
+
+Example of opening a screen widget with `Navigator`
+```dart
+Navigator.of(context).push(
+  MaterialPageRoute(builder: (c) => const AdminDashboardScreen()),
+);
+```
 
 
 ## EmailLoginForm
@@ -550,7 +579,7 @@ ChatRoomListView(
 
 ### Create a chat room
 
-- To create a chat room, add a button and display `ChatRoomCreate` widget. You may copy the code from `ChatRoomCreate` and apply your own design.
+- To create a chat room, add a button and display `ChatRoomCreateDialog` widget. You may copy the code from `ChatRoomCreateDialog` and apply your own design.
 
 ```dart
 class _ChatRoomListreenState extends State<ChatRoomListSreen> {
@@ -564,7 +593,7 @@ class _ChatRoomListreenState extends State<ChatRoomListSreen> {
             onPressed: () async {
               showDialog(
                 context: context,
-                builder: (_) => ChatRoomCreate(
+                builder: (_) => ChatRoomCreateDialog(
                   success: (room) {
                     Navigator.of(context).pop();
                     if (context.mounted) {
@@ -756,16 +785,6 @@ To programatically, invite a user, follow these codes:
 updatedRoom = await EasyChat.instance.inviteUser(room: chatRoomModel, userUid: user.uid);
 ```
 
-- `Settings` This can open the chat room settings. To use the button that opens the settings menu:
-
-```dart
-ChatSettingsButton(
-  room: chatRoomModel,
-  onUpdateRoomSetting: (updatedRoom) {
-    debugPrint("Something was updated in the room. Setting ${updatedRoom.toString()}");
-  },
-),
-```
 
 See [Chat Room Settings](#chat-room-settings) for more details
 
@@ -776,7 +795,7 @@ See [Chat Room Settings](#chat-room-settings) for more details
 - `Open Chat Room` This setting determines if the group chat is open or private. Open means anybody can join and invite. Private means only the master or moderators can invite. See the code below to use the Default List Tile.
 
 ```dart
-ChatRoomOpenSettingListTile(
+ChatRoomSettingsOpenListTile(
   room: chatRoomModel,
   onToggleOpen: (updatedRoom) {
     debugPrint('Updated Room Open Setting. Setting: ${updatedRoom.open}');
@@ -797,7 +816,7 @@ updatedRoom = await EasyChat.instance.updateRoomSetting(
 - `Maximum Number of User` This number sets the limitation for the number of users in the chat room. If the current number of users is equal or more than this setting, it will not proceed on adding the user.
 
 ```dart
-ChatRoomMaximumUsersSettingListTile(
+ChatRoomSettingsMaximumUserListTile(
   room: chatRoomModel,
   onUpdateMaximumNoOfUsers: (updatedRoom) {
     debugPrint('Updated Maximum number of Users Setting. Setting: ${updatedRoom.maximumNoOfUsers}');
@@ -818,7 +837,7 @@ updatedRoom = await EasyChat.instance.updateRoomSetting(
 - `Default Chat Room Name` The master can use this setting to set the default name of the Group Chat.
 
 ```dart
-ChatRoomDefaultRoomNameSettingListTile(
+ChatRoomSettingsDefaultRoomNameListTile(
   room: _roomState!,
   onUpdateChatRoomName: (updatedRoom) {
     widget.onUpdateRoomSetting?.call(updatedRoom);

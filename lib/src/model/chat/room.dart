@@ -159,8 +159,8 @@ class Room with FirebaseHelper {
         ...roomData,
         ...{'id': roomId}
       }),
-      protocol: Protocol.chatRoomCreated.name,
-      text: tr.chat.chatRoomCreated,
+      protocol: Protocol.chatRoomCreateDialog.name,
+      text: tr.chat.chatRoomCreateDialog,
     );
 
     return Room.fromJson({

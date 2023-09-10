@@ -2,8 +2,8 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 /// Full screen dialog to show list of categories
-class CategoryListDialog extends StatelessWidget {
-  const CategoryListDialog({
+class CategoryListScreen extends StatelessWidget {
+  const CategoryListScreen({
     super.key,
     this.onTapCategory,
   });

@@ -2,8 +2,8 @@ import 'package:fireflutter/src/model/chat/room.dart';
 import 'package:fireflutter/src/service/chat.service.dart';
 import 'package:flutter/material.dart';
 
-class ChatRoomDefaultRoomNameSettingListTile extends StatelessWidget {
-  ChatRoomDefaultRoomNameSettingListTile({
+class ChatRoomSettingsDefaultRoomNameListTile extends StatelessWidget {
+  ChatRoomSettingsDefaultRoomNameListTile({
     super.key,
     required this.room,
   });

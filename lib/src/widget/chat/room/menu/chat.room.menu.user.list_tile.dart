@@ -1,8 +1,8 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class ChatRoomUserListTile extends StatelessWidget {
-  const ChatRoomUserListTile(
+class ChatRoomMenuUserListTile extends StatelessWidget {
+  const ChatRoomMenuUserListTile(
       {super.key, required this.room, required this.user});
 
   final Room room;

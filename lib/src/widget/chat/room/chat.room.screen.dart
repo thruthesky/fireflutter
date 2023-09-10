@@ -1,8 +1,8 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class ChatRoom extends StatefulWidget {
-  const ChatRoom({
+class ChatRoomScreen extends StatefulWidget {
+  const ChatRoomScreen({
     super.key,
     required this.room,
   });
@@ -10,10 +10,10 @@ class ChatRoom extends StatefulWidget {
   final Room room;
 
   @override
-  State<ChatRoom> createState() => _ChatRoomState();
+  State<ChatRoomScreen> createState() => _ChatRoomState();
 }
 
-class _ChatRoomState extends State<ChatRoom> {
+class _ChatRoomState extends State<ChatRoomScreen> {
   @override
   void initState() {
     super.initState();

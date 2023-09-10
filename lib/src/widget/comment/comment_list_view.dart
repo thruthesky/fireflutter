@@ -54,16 +54,18 @@ class CommentListViewState extends State<CommentListView> {
               .orderBy("sort"),
           itemBuilder: (context, QueryDocumentSnapshot snapshot) {
             final comment = Comment.fromDocumentSnapshot(snapshot);
-            if (widget.itemBuilder != null)
+            if (widget.itemBuilder != null) {
               return widget.itemBuilder!(context, comment);
+            }
             return CommentListTile(
               post: widget.post,
               comment: comment,
             );
           },
           emptyBuilder: (context) {
-            if (widget.emptyBuilder != null)
+            if (widget.emptyBuilder != null) {
               return widget.emptyBuilder!(context);
+            }
             return Column(
               children: [
                 Center(child: Text(tr.comment.noComment)),

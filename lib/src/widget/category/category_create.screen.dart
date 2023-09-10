@@ -1,8 +1,8 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class CategoryCreateDialog extends StatefulWidget {
-  const CategoryCreateDialog({
+class CategoryCreateScreen extends StatefulWidget {
+  const CategoryCreateScreen({
     super.key,
     required this.success,
     this.cancel,
@@ -12,10 +12,10 @@ class CategoryCreateDialog extends StatefulWidget {
   final void Function()? cancel;
 
   @override
-  State<CategoryCreateDialog> createState() => _CategoryCreateDialogState();
+  State<CategoryCreateScreen> createState() => _CategoryCreateScreenState();
 }
 
-class _CategoryCreateDialogState extends State<CategoryCreateDialog> {
+class _CategoryCreateScreenState extends State<CategoryCreateScreen> {
   final name = TextEditingController();
   final categoryId = TextEditingController();
   bool isOpen = false;

@@ -1,8 +1,8 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class RenameChatRoomSettingTile extends StatelessWidget {
-  RenameChatRoomSettingTile({
+class ChatRoomSettingsRenameListTile extends StatelessWidget {
+  ChatRoomSettingsRenameListTile({
     super.key,
     required this.room,
   });

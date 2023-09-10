@@ -12,39 +12,34 @@ export 'widget/user/public_profile.dialog.dart';
 export 'widget/user/email_login_form.dart';
 
 // Chat
-export 'widget/chat/chat_room.dart';
+export 'widget/chat/room/chat.room.screen.dart';
 export 'widget/user/user.display_name.dart';
-export 'widget/chat/chat_friend_list.dart';
-export 'widget/chat/chat_message_box.dart';
+export 'widget/chat/room/chat.room.message_box.dart';
 export 'widget/chat/chat_room.message.list_item.dart';
 export 'widget/chat/chat_room.message.list_view.dart';
-export 'widget/chat/chat_room_app_bar.dart';
-export 'widget/chat/chat_room_app_bar_title.dart';
-export 'widget/chat/chat_room_create.dart';
-export 'widget/chat/chat_room_default_room_name_setting.dart';
+export 'widget/chat/room/chat.room.app_bar.dart';
+export 'widget/chat/chat.room_create.dialog.dart';
+export 'widget/chat/room_settings/chat.room_settings.default_room_name.list_tile.dart';
 export 'widget/common/upload_selection.bottom_sheet.dart';
-export 'widget/chat/chat_room_user_invite_dialog.dart';
+export 'widget/chat/room/menu/chat.room.menu.user_invite.dialog.dart';
 export 'widget/user/user.list_view.dart';
-export 'widget/chat/chat_room_leave_button.dart';
-export 'widget/chat/chat_room_list_tile.dart';
-export 'widget/chat/chat_room_list_view.dart';
-export 'widget/chat/chat_room_maximum_users_setting_list_tile.dart';
-export 'widget/chat/chat_room_user_list_view.dart';
-export 'widget/chat/chat_room_menu_dialog.dart';
-export 'widget/chat/chat_room_open_list_view.dart';
-export 'widget/chat/chat_room_open_setting_list_tile.dart';
-export 'widget/chat/chat_room_password_setting_list_tile.dart';
-export 'widget/chat/chat_room_settings_button.dart';
-export 'widget/chat/chat_room_settings_screen.dart';
-export 'widget/chat/chat_room_rename_setting_list_tile.dart';
+export 'widget/chat/list/chat.room_list.tile.dart';
+export 'widget/chat/list/chat.room_list.list_view.dart';
+export 'widget/chat/room_settings/chat.room_settings.maximum_users.list_tile.dart';
+export 'widget/chat/room/menu/chat.room.menu.user.list_view.dart';
+export 'widget/chat/room/menu/chat.room.menu.screen.dart';
+export 'widget/chat/list/chat.room.open_group.list_view.dart';
+export 'widget/chat/room_settings/chat.room_settings.open.list_tile.dart';
+export 'widget/chat/room_settings/chat.room_settings.screen.dart';
+export 'widget/chat/room_settings/chat.room_settings.rename.list_tile.dart';
 export 'widget/chat/chat_room_user_list_tile.dart';
 export 'widget/chat/no_of_new_message.dart';
 
 // Category
-export 'widget/category/category_list_view.dart';
-export 'widget/category/category_dialog.dart';
-export 'widget/category/category_create_dialog.dart';
-export 'widget/category/category_list.dialog.dart';
+export 'widget/category/category.list_view.dart';
+export 'widget/category/category.edit.screen.dart';
+export 'widget/category/category_create.screen.dart';
+export 'widget/category/category.list.screen.dart';
 
 // Post
 export 'widget/feed/feed.list_view.dart';
@@ -82,3 +77,6 @@ export 'widget/feed/feed.list_view.item.dart';
 
 // database
 export 'widget/database/database.dart';
+
+// admin
+export 'widget/admin/admin.dashboard.screen.dart';

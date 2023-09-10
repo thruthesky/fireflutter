@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 ///
 /// It can be used in any where for any cases as long as the chat room model is given.
 ///
-class ChatRoomUserListView extends StatefulWidget {
-  const ChatRoomUserListView({
+class ChatRoomMenuUserListView extends StatefulWidget {
+  const ChatRoomMenuUserListView({
     super.key,
     required this.room,
   });
@@ -16,10 +16,10 @@ class ChatRoomUserListView extends StatefulWidget {
   final Room room;
 
   @override
-  State<ChatRoomUserListView> createState() => _ChatRoomUserListViewState();
+  State<ChatRoomMenuUserListView> createState() => _ChatRoomUserListViewState();
 }
 
-class _ChatRoomUserListViewState extends State<ChatRoomUserListView> {
+class _ChatRoomUserListViewState extends State<ChatRoomMenuUserListView> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -35,7 +35,7 @@ class _ChatRoomUserListViewState extends State<ChatRoomUserListView> {
             final User user = userSnapshot.data!;
 
             //
-            return ChatRoomUserListTile(
+            return ChatRoomMenuUserListTile(
               room: widget.room,
               user: user,
             );

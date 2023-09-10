@@ -292,7 +292,7 @@ class ChatService with FirebaseHelper {
     }
 
     /// * This must be called with "await". Or unit tests may fail.
-    await updateNoOfNewMessages(room: room, lastMessage: chatMessage);
+    await updateRoom(room: room, lastMessage: chatMessage);
   }
 
   /// Send a welcome message to himeself
@@ -322,8 +322,14 @@ class ChatService with FirebaseHelper {
   /// Update no of new message for all users in the room
   ///
   /// See "# No of new message" in README
-  Future<void> updateNoOfNewMessages(
+  Future<void> updateRoom(
       {required Room room, Map<String, Object>? lastMessage}) async {
+    //
+    await roomDoc(room.id).set(
+      {'lastMessage': lastMessage},
+      SetOptions(merge: true),
+    );
+
     // Increase the no of new message for each user in the room
     Map<String, dynamic> noOfNewMessages = {};
     for (String uid in room.users) {
@@ -331,12 +337,6 @@ class ChatService with FirebaseHelper {
     }
     noOfNewMessages[FirebaseAuth.instance.currentUser!.uid] = 0;
     await noOfNewMessageRef(room.id).update(noOfNewMessages);
-
-    //
-    await roomDoc(room.id).set(
-      {'lastMessage': lastMessage},
-      SetOptions(merge: true),
-    );
   }
 
   /// Reset my "no of new message" to 0 for the chat room
@@ -389,7 +389,7 @@ class ChatService with FirebaseHelper {
       showGeneralDialog(
         context: context,
         pageBuilder: (_, __, ___) {
-          return ChatRoom(
+          return ChatRoomScreen(
             room: room!,
           );
         },
@@ -427,7 +427,7 @@ class ChatService with FirebaseHelper {
   }) async {
     await showDialog(
       context: context,
-      builder: (_) => ChatRoomCreate(
+      builder: (_) => ChatRoomCreateDialog(
         success: success,
         cancel: cancel,
       ),
@@ -439,7 +439,7 @@ class ChatService with FirebaseHelper {
     return showDialog(
       context: context,
       builder: (context) {
-        return ChatRoomMenuDialog(
+        return ChatRoomMenuScreen(
           room: room,
         );
       },

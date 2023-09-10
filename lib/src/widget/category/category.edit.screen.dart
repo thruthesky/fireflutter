@@ -1,8 +1,8 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class CategoryDialog extends StatefulWidget {
-  const CategoryDialog({
+class CategoryEditScreen extends StatefulWidget {
+  const CategoryEditScreen({
     super.key,
     required this.categoryId,
   });
@@ -10,10 +10,10 @@ class CategoryDialog extends StatefulWidget {
   final String categoryId;
 
   @override
-  State<CategoryDialog> createState() => _CategoryDialogState();
+  State<CategoryEditScreen> createState() => _CategoryEditScreenState();
 }
 
-class _CategoryDialogState extends State<CategoryDialog> {
+class _CategoryEditScreenState extends State<CategoryEditScreen> {
   TextEditingController name = TextEditingController();
   TextEditingController description = TextEditingController();
 

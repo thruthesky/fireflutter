@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class ChatRoomMenuDialog extends StatelessWidget {
-  const ChatRoomMenuDialog({
+class ChatRoomMenuScreen extends StatelessWidget {
+  const ChatRoomMenuScreen({
     super.key,
     required this.room,
     // this.otherUser,
@@ -19,6 +19,7 @@ class ChatRoomMenuDialog extends StatelessWidget {
       ChatService.instance.isMaster(room: room, uid: ChatService.instance.uid);
   @override
   Widget build(BuildContext context) {
+    /// It is an intended design to wrap the entire screen with SafeArea and Padding for the best look.
     return Padding(
       padding: const EdgeInsets.fromLTRB(80, 0, 0, 0),
       child: SafeArea(
@@ -59,7 +60,7 @@ class ChatRoomMenuDialog extends StatelessWidget {
                       appBar: AppBar(
                         title: const Text('Invite User'),
                       ),
-                      body: ChatRoomUserInviteDialog(room: room),
+                      body: ChatRoomMenuUserInviteDialog(room: room),
                     ),
                   );
                 },
@@ -115,7 +116,7 @@ class ChatRoomMenuDialog extends StatelessWidget {
                 const Divider(),
                 const SizedBox(height: 16),
                 const Text('Participants', style: TextStyle(fontSize: 18)),
-                Expanded(child: ChatRoomUserListView(room: room)),
+                Expanded(child: ChatRoomMenuUserListView(room: room)),
               ],
             ),
           ),

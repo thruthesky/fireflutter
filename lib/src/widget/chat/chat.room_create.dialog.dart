@@ -1,8 +1,8 @@
 import 'package:fireflutter/src/model/chat/room.dart';
 import 'package:flutter/material.dart';
 
-class ChatRoomCreate extends StatefulWidget {
-  const ChatRoomCreate({
+class ChatRoomCreateDialog extends StatefulWidget {
+  const ChatRoomCreateDialog({
     super.key,
     required this.success,
     required this.cancel,
@@ -12,10 +12,10 @@ class ChatRoomCreate extends StatefulWidget {
   final void Function() cancel;
 
   @override
-  State<ChatRoomCreate> createState() => _ChatRoomCreateState();
+  State<ChatRoomCreateDialog> createState() => _ChatRoomCreateDialogState();
 }
 
-class _ChatRoomCreateState extends State<ChatRoomCreate> {
+class _ChatRoomCreateDialogState extends State<ChatRoomCreateDialog> {
   final name = TextEditingController();
   bool isOpen = false;
   @override
