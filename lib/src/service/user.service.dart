@@ -322,7 +322,7 @@ class UserService with FirebaseHelper {
     return customize.showPublicProfile?.call(context, uid: uid, user: user) ??
         showGeneralDialog(
           context: context,
-          pageBuilder: ($, _, __) => PublicProfileDialog(uid: uid, user: user),
+          pageBuilder: ($, _, __) => PublicProfileScreen(uid: uid, user: user),
         );
   }
 } // EO UserService

@@ -67,7 +67,7 @@ Post Dialog is a full screen dialog that display the post.
 To use the widget, add this to body, to children etc.:
 
 ```dart
-PostViewDialog(post: post)
+PostViewScreen(post: post)
 ```
 
 Take note that the code above needs the Post to display.

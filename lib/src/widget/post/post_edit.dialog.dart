@@ -1,8 +1,8 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class PostEditDialog extends StatefulWidget {
-  const PostEditDialog({
+class PostEditScreen extends StatefulWidget {
+  const PostEditScreen({
     super.key,
     this.categoryId,
     this.post,
@@ -12,10 +12,10 @@ class PostEditDialog extends StatefulWidget {
   final Post? post;
 
   @override
-  State<PostEditDialog> createState() => _PostEditDialogState();
+  State<PostEditScreen> createState() => _PostEditDialogState();
 }
 
-class _PostEditDialogState extends State<PostEditDialog> {
+class _PostEditDialogState extends State<PostEditScreen> {
   TextEditingController title = TextEditingController();
   TextEditingController content = TextEditingController();
 

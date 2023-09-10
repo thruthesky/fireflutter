@@ -5,17 +5,17 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
-class PublicProfileDialog extends StatefulWidget {
-  const PublicProfileDialog({super.key, this.uid, this.user});
+class PublicProfileScreen extends StatefulWidget {
+  const PublicProfileScreen({super.key, this.uid, this.user});
 
   final String? uid;
   final User? user;
 
   @override
-  State<PublicProfileDialog> createState() => _PublicProfileDialogState();
+  State<PublicProfileScreen> createState() => _PublicProfileScreenState();
 }
 
-class _PublicProfileDialogState extends State<PublicProfileDialog> {
+class _PublicProfileScreenState extends State<PublicProfileScreen> {
   final BehaviorSubject<double?> progressEvent =
       BehaviorSubject<double?>.seeded(null);
 

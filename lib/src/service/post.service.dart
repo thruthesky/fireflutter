@@ -32,7 +32,7 @@ class PostService with FirebaseHelper {
     return showGeneralDialog<Post?>(
       context: context,
       pageBuilder: (context, _, __) =>
-          PostEditDialog(categoryId: categoryId, post: post),
+          PostEditScreen(categoryId: categoryId, post: post),
     );
   }
 
@@ -65,7 +65,7 @@ class PostService with FirebaseHelper {
   showPostViewDialog(BuildContext context, Post post) {
     showGeneralDialog(
       context: context,
-      pageBuilder: (context, _, __) => PostViewDialog(
+      pageBuilder: (context, _, __) => PostViewScreen(
         post: post,
       ),
     );
@@ -75,7 +75,7 @@ class PostService with FirebaseHelper {
   showPostListDialog(BuildContext context, String categoryId) {
     showGeneralDialog(
       context: context,
-      pageBuilder: (context, _, __) => PostListDialog(
+      pageBuilder: (context, _, __) => PostListScreen(
         categoryId: categoryId,
       ),
     );

@@ -7,6 +7,15 @@ class AdminService {
 
   AdminService._();
 
+  showDashboard(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: ($, $$, $$$) {
+        return const AdminDashboardScreen();
+      },
+    );
+  }
+
   showUserSearchDialog(BuildContext context, {Function(User)? onTap}) {
     final input = TextEditingController();
     showGeneralDialog(

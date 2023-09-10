@@ -74,6 +74,7 @@ Create an issue if you find a bug or need a help.
   - [Chat Customization](#chat-customization)
 - [Admin](#admin)
   - [Admin Widgets](#admin-widgets)
+    - [Opening admin dashbard](#opening-admin-dashbard)
     - [AdminUserListView](#adminuserlistview)
     - [Updating auth custom claims](#updating-auth-custom-claims)
     - [Disable user](#disable-user)
@@ -370,6 +371,10 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 
 * The file names and the class names of the widgets must match.
 * The user widgets are inside `widgets/user` and the file name is in the form of `user.xxxx.dart` or `user.xxxx.dialog.dart`. And it goes the same to chat and forum.
+
+
+* There are many service methods that opens a screen. One thing to note is that, all the method that opens a screen uses `showGeneralDialog` which does not modify the navigation stack. If you want, you may open the screen with navigation(routing) like `Navigator.of(context).push...()`.
+
 
 
 ## Screen widgets
@@ -1360,6 +1365,23 @@ Then, set `isAdmin` to true in the user document.
 
 
 ## Admin Widgets
+
+
+### Opening admin dashbard
+
+To open admin dashboard, call `AdminService.instance.showDashboard()`.
+
+```dart
+AdminService.instance.showDashboard(context);
+```
+
+Or you may want to open with your own code like below
+
+```dart
+Navigator.of(context).push(
+  MaterialPageRoute(builder: (c) => const AdminDashboardScreen()),
+);
+```
 
 
 ### AdminUserListView

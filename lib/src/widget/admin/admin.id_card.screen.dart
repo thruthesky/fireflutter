@@ -4,8 +4,8 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class AdminIdCardDialog extends StatelessWidget {
-  const AdminIdCardDialog({super.key});
+class AdminIdCardScreen extends StatelessWidget {
+  const AdminIdCardScreen({super.key});
 
   Query get query {
     Query query = User.col;

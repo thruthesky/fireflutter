@@ -1,8 +1,8 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class PostViewDialog extends StatefulWidget {
-  const PostViewDialog({
+class PostViewScreen extends StatefulWidget {
+  const PostViewScreen({
     super.key,
     required this.post,
   });
@@ -10,10 +10,10 @@ class PostViewDialog extends StatefulWidget {
   final Post post;
 
   @override
-  State<PostViewDialog> createState() => _PostViewDialogState();
+  State<PostViewScreen> createState() => _PostViewDialogState();
 }
 
-class _PostViewDialogState extends State<PostViewDialog> {
+class _PostViewDialogState extends State<PostViewScreen> {
   late Post post;
 
   @override

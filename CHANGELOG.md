@@ -1,3 +1,7 @@
+## 0.3.10
+
+* Change. Refactoring file/folder names.
+
 ## 0.3.9
 
 * Add. Document update.

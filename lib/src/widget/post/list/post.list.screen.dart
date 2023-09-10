@@ -1,11 +1,11 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-/// PostListDialog
+/// PostListScreen
 ///
 /// Display a full screen dialog to show list of posts
-class PostListDialog extends StatefulWidget {
-  const PostListDialog({
+class PostListScreen extends StatefulWidget {
+  const PostListScreen({
     super.key,
     this.categoryId,
     this.title,
@@ -15,10 +15,10 @@ class PostListDialog extends StatefulWidget {
   final String? title;
 
   @override
-  State<PostListDialog> createState() => _PostListDialogState();
+  State<PostListScreen> createState() => _PostListDialogState();
 }
 
-class _PostListDialogState extends State<PostListDialog> {
+class _PostListDialogState extends State<PostListScreen> {
   // Category? category;
 
   @override
