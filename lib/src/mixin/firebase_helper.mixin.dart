@@ -50,11 +50,11 @@ mixin FirebaseHelper {
   DocumentReference roomDoc(String roomId) => chatCol.doc(roomId);
 
   //
-  DatabaseReference noOfNewMessageRef(String roomId) =>
-      rtdb.ref('chats/$roomId/noOfNewMessages');
+  // DatabaseReference noOfNewMessageRef(String roomId) =>
+  //     rtdb.ref('chats/noOfNewMessages/');
   //
-  DatabaseReference noOfNewMessageUserRef(String roomId, String uid) =>
-      noOfNewMessageRef(roomId).child(uid);
+  DatabaseReference noOfNewMessageRef({required String uid}) =>
+      rtdb.ref('chats/noOfNewMessages/$uid');
 
   DocumentReference tokenDoc(String token) {
     return myDoc.collection('fcm_tokens').doc(token);

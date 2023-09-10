@@ -42,10 +42,13 @@ class Room with FirebaseHelper {
   /// Use this to check if the room exists or not after calling [get] method.
   // bool exists = true;
 
-  /// It must be [FirebaseAuth.instance.currentUser!.uid]. [my.uid] will throw
-  /// an error if Room is accessed earlier than the user document initlization.
+  /// my rooms
   ///
-  static String get myUid => FirebaseAuth.instance.currentUser!.uid;
+  /// example
+  /// ```
+  /// Room.myRooms.snapshots().listen( ... )
+  /// ```
+  static Query get myRooms => col.where('users', arrayContains: myUid);
 
   Room({
     required this.id,
@@ -132,12 +135,12 @@ class Room with FirebaseHelper {
     // prepare
 
     bool isSingleChat = otherUserUid != null;
-    List<String> users = [myUid];
+    List<String> users = [myUid!];
     if (isSingleChat) users.add(otherUserUid);
 
     // room data
     final roomData = toCreate(
-      master: myUid,
+      master: myUid!,
       name: name,
       group: !isSingleChat,
       open: open,

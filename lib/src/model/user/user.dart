@@ -64,6 +64,7 @@ class User with FirebaseHelper {
   final int birthYear;
   final int birthMonth;
   final int birthDay;
+  final int birthDayOfYear;
 
   final int noOfPosts;
   final int noOfComments;
@@ -126,6 +127,7 @@ class User with FirebaseHelper {
     this.birthYear = 0,
     this.birthMonth = 0,
     this.birthDay = 0,
+    this.birthDayOfYear = 0,
     this.type = '',
     dynamic createdAt,
     this.isComplete = false,
@@ -326,6 +328,17 @@ class User with FirebaseHelper {
       },
       ...data
     };
+
+    /// Update the birth day of year
+    if (docData['birthYear'] != null &&
+        docData['birthMonth'] != null &&
+        docData['birthDay'] != null) {
+      final date = DateTime(
+          docData['birthYear'], docData['birthMonth'], docData['birthDay']);
+
+      docData['birthDayOfYear'] =
+          date.difference(DateTime(date.year)).inDays + 1;
+    }
 
     return await userDoc(uid).set(
       docData,

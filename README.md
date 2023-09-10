@@ -37,6 +37,7 @@ Create an issue if you find a bug or need a help.
 - [Chat Feature](#chat-feature)
   - [Welcome message](#welcome-message)
   - [No of new message](#no-of-new-message)
+  - [Total no of new message](#total-no-of-new-message)
     - [Chat Room List](#chat-room-list)
     - [Create a chat room](#create-a-chat-room)
     - [How to display a chat room](#how-to-display-a-chat-room)
@@ -547,7 +548,16 @@ To send a welcome chat message to a user who just registered, use `UserService.i
 
 ## No of new message
 
-We save the no of new messages of each users in RTDB. If we save the no of new messages of all users of the room in the chat room document like `{ noOfNewMessages: { uid-A: 1, uid-B 2, ... }}`, there will be performance issue and it will cost more. The problem is the chat room must be listened as a stream for realtime update. And if a user chats there are other users who read. Everytime a user reads a messgae, the chat room docuemnt will be fetched for every user with no reason. This is jus tan extra cost. So, we put the number of new messages under `/chats/{roomId}/noOfNewMessages/{uid}` in RTDB.
+We save the no of new messages of each users in RTDB.  `/chats/noOfNewMessages/{uid}/{roomId: true}`.
+
+
+## Total no of new message
+
+To display the total no of new messages, use the following widget. If you don't want to listen the changes of no of new message, then you can disable it with `ChatService.instance.init( ... )`
+
+```dart
+TotalNoOfNewMessage(),
+```
 
 
 ### Chat Room List
@@ -868,6 +878,10 @@ updatedRoom = await EasyChat.instance.updateRoomSetting(
 `complete` is a boolean field to indicate that the user completed updating his profile information.
 
 `verified` is a boolean field to indicate that the user's identification has fully verified by the system. Note that, this is not secured by the rules as of now. Meaning, user can edit it by himself.
+
+
+`birthDayOfYear` is the birth day of the year. It is automatically set by the `User.update()`. For instnace, if the user saves his birth day, then the app should use this kind of code; `my.update(birthYear: 1999, birthMonth: 9, birthDay: 9);` and it will automtically update the `birthDayOfYear` value.
+
 
 
 ## Like

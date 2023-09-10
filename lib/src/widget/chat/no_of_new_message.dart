@@ -11,12 +11,10 @@ class NoOfNewMessageBadge extends StatelessWidget with FirebaseHelper {
 
   final Room room;
   @override
-  String get uid => UserService.instance.uid;
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: noOfNewMessageUserRef(room.id, uid).onValue,
+      stream: noOfNewMessageRef(uid: myUid!).child(room.id).onValue,
       builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
         if (snapshot.hasData == false) const SizedBox.shrink();
         final data = snapshot.data;

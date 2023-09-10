@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 
 class ChatService with FirebaseHelper {
   static ChatService? _instance;
@@ -36,17 +39,52 @@ class ChatService with FirebaseHelper {
   bool uploadFromGallery = true;
   bool uploadFromFile = true;
 
+  final BehaviorSubject<int> totalNoOfNewMessageChanges =
+      BehaviorSubject.seeded(0);
+
+  StreamSubscription? totalNoOfNewMessageSubscription;
+
   init({
     int maximumNoOfUsers = 500,
     bool uploadFromGallery = true,
     bool uploadFromCamera = true,
     bool uploadFromFile = true,
+    bool listenTotalNoOfNewMessage = true,
   }) {
     this.maximumNoOfUsers = maximumNoOfUsers;
 
     this.uploadFromGallery = uploadFromGallery;
     this.uploadFromCamera = uploadFromCamera;
     this.uploadFromFile = uploadFromFile;
+
+    if (listenTotalNoOfNewMessage) {
+      /// change user on login/logout
+      FirebaseAuth.instance.authStateChanges().listen((user) {
+        if (user == null) {
+          totalNoOfNewMessageChanges.add(0);
+          return;
+        }
+
+        totalNoOfNewMessageSubscription?.cancel();
+        totalNoOfNewMessageSubscription = rtdb
+            .ref('chats/noOfNewMessages/${user.uid}')
+            .onValue
+            .listen((event) {
+          final data = event.snapshot.value;
+          if (data == null) {
+            totalNoOfNewMessageChanges.add(0);
+            return;
+          }
+          int no = 0;
+
+          (data as Map).entries.map((e) => e.value).forEach((v) {
+            no += int.tryParse(v.toString()) ?? 0;
+          });
+
+          totalNoOfNewMessageChanges.add(no);
+        });
+      });
+    }
   }
 
   getSingleChatRoomId(String? otherUserUid) {
@@ -331,19 +369,20 @@ class ChatService with FirebaseHelper {
     );
 
     // Increase the no of new message for each user in the room
-    Map<String, dynamic> noOfNewMessages = {};
+
     for (String uid in room.users) {
-      noOfNewMessages[uid] = ServerValue.increment(1);
+      // noOfNewMessages[uid] = ServerValue.increment(1);
+      if (uid == myUid) {
+        noOfNewMessageRef(uid: uid).update({room.id: 0});
+      } else {
+        noOfNewMessageRef(uid: uid).update({room.id: ServerValue.increment(1)});
+      }
     }
-    noOfNewMessages[FirebaseAuth.instance.currentUser!.uid] = 0;
-    await noOfNewMessageRef(room.id).update(noOfNewMessages);
   }
 
   /// Reset my "no of new message" to 0 for the chat room
   Future<void> resetNoOfNewMessage({required Room room}) async {
-    await noOfNewMessageRef(room.id).update({
-      uid: 0,
-    });
+    noOfNewMessageRef(uid: uid).update({room.id: 0});
   }
 
   /// Get other user uid
