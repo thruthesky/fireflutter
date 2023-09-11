@@ -9,6 +9,7 @@ part 'comment.g.dart';
 @JsonSerializable()
 class Comment with FirebaseHelper {
   static const String collectionName = 'comments';
+  static CollectionReference get col => CommentService.instance.commentCol;
   static DocumentReference doc([String? commentId]) =>
       CommentService.instance.commentCol.doc(commentId);
 

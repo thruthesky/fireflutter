@@ -21,6 +21,9 @@ Create an issue if you find a bug or need a help.
   - [Setup the base code](#setup-the-base-code)
 - [Usage](#usage)
   - [UserService](#userservice)
+  - [PostService](#postservice)
+    - [How to open a post](#how-to-open-a-post)
+    - [Customizing a Post View](#customizing-a-post-view)
   - [ChatService](#chatservice)
     - [How to open 1:1 chat room](#how-to-open-11-chat-room)
     - [How to display chat room menu](#how-to-display-chat-room-menu)
@@ -64,6 +67,7 @@ Create an issue if you find a bug or need a help.
 - [Report](#report)
 - [Upload](#upload)
   - [Photo upload](#photo-upload)
+- [No of view](#no-of-view)
 - [Push notifications](#push-notifications)
   - [Customizing source](#customizing-source)
 - [Following and Follower](#following-and-follower)
@@ -971,7 +975,7 @@ We have a handy function in `functions/database.dart` to `get, set, update, toog
 - `get('path')` gets the node data of the path from database.
 - `set('path', data)` sets the data at the node of the path into database.
 - `update('path', { data })` updates the node of the path. The value must be a Map.
-- `toogle('path')` switches on/off the value of the node. If the node of the [path] does not exist, create it and return true. Or if the node exists, then remove it and return false.
+- `toggle('path')` switches on/off the value of the node. If the node of the [path] does not exist, create it and return true. Or if the node exists, then remove it and return false.
 
 Note that, these functions may arise an exception if the security rules are not proeprty set on the paths. You need to set the security rules by yourself. When you meet an error like `[firebase_database/permission-denied] Client doesn't have permission to access the desired data.`, then check the security rules.
 
@@ -993,6 +997,7 @@ print(await get(path));
 await update(path, {'k': 'hello', 'v': 'world'});
 print(await get(path));
 ```
+
 
 ## Database widget
 
@@ -1131,6 +1136,21 @@ IconButton(
   ),
 ),
 ```
+
+
+# No of view
+
+By saving no of view, you know how many users have seen your profle and who viewed your profile. Not only the profile, but also it can be applied to post and more.
+
+fireflutter saves the no of view on porfile at `/noOfView/profile/{myUid}/{otherUId: true}`. And it saves no of views of profile at `/noOfView/post/{postId}/{userId: true}`.
+
+
+```dart
+set("/noOfView/profile/$myUid/$otherUid", true);
+```
+
+
+
 
 # Push notifications
 
