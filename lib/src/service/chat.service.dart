@@ -429,6 +429,7 @@ class ChatService with FirebaseHelper {
         context: context,
         pageBuilder: (_, __, ___) {
           return ChatRoomScreen(
+            // future
             room: room!,
           );
         },

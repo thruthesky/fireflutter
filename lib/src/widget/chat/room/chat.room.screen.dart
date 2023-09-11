@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 class ChatRoomScreen extends StatefulWidget {
   const ChatRoomScreen({
     super.key,
-    required this.room,
-  });
+    this.room,
+    this.futureRoom,
+  }) : assert(room != null || futureRoom != null,
+            "One of room or futureRoom must be not null");
 
-  final Room room;
+  final Room? room;
+  final Future<Room>? futureRoom;
 
   @override
   State<ChatRoomScreen> createState() => _ChatRoomState();
@@ -17,12 +20,22 @@ class _ChatRoomState extends State<ChatRoomScreen> {
   @override
   void initState() {
     super.initState();
-    ChatService.instance.resetNoOfNewMessage(room: widget.room);
-    ChatService.instance.clearLastMessage();
+    if (widget.room != null) {
+      // Do we need to reset no of new messages for future chat room
+      ChatService.instance.resetNoOfNewMessage(room: widget.room!);
+      ChatService.instance.clearLastMessage();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    PreferredSizeWidget appBar;
+    if (widget.room != null) {
+      appBar = ChatService.instance.customize.chatRoomAppBarBuilder
+              ?.call(widget.room!) ??
+          ChatRoomAppBar(room: widget.room!);
+    } else {}
+
     return Scaffold(
       appBar: ChatService.instance.customize.chatRoomAppBarBuilder
               ?.call(widget.room) ??
