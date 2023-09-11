@@ -1,4 +1,7 @@
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/widget/admin/admin.comment_list.screen.dart';
+import 'package:fireflutter/src/widget/admin/admin.post_list.screen.dart';
+import 'package:fireflutter/src/widget/admin/admin.user_list.screen.dart';
 import 'package:flutter/material.dart';
 
 class AdminDashboardScreen extends StatelessWidget {
@@ -24,13 +27,38 @@ class AdminDashboardScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          TextButton(onPressed: () {}, child: const Text('Users')),
-          TextButton(onPressed: () {}, child: const Text('Post')),
-          TextButton(onPressed: () {}, child: const Text('Comment')),
+          TextButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => const AdminUserListScreen()),
+                );
+              },
+              child: const Text('Users')),
+          TextButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => const AdminPostListScreen()),
+                );
+              },
+              child: const Text('Post')),
+          TextButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => const AdminCommentListScreen()),
+                );
+              },
+              child: const Text('Comment')),
           TextButton(onPressed: () {}, child: const Text('Photos')),
           TextButton(
               onPressed: () {
-                CategoryService.instance.showListDialog(context);
+                // CategoryService.instance.showListDialog(context);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => const AdminCategoryListScreen()),
+                );
               },
               child: const Text('Category')),
           TextButton(onPressed: () {}, child: const Text('Report')),
