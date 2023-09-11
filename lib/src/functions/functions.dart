@@ -161,7 +161,8 @@ String platformName() {
   }
 }
 
-void warningSnackbar(BuildContext context, String message) async {
+void warningSnackbar(BuildContext? context, String message) async {
+  context ??= FireFlutterService.instance.context;
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(message),
