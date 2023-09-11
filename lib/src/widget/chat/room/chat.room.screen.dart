@@ -49,11 +49,11 @@ class _ChatRoomState extends State<ChatRoomScreen> {
       appBar = AppBar(
         title: const Text("Loading"),
       );
-      body = const  Column(
+      body = const Column(
         children: [
           Text('Loading'),
         ],
-      )
+      );
     }
 
     return Scaffold(

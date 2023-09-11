@@ -414,9 +414,11 @@ class ChatService with FirebaseHelper {
     assert(
         room != null || user != null, "One of room or user must be not null");
 
+    Future<Room>? futureRoom;
     // If it is 1:1 chat, get the chat room. (or create if it does not exist)
     if (user != null) {
-      room = await ChatService.instance.getOrCreateSingleChatRoom(user.uid);
+      // room = await ChatService.instance.getOrCreateSingleChatRoom(user.uid);
+      futureRoom = ChatService.instance.getOrCreateSingleChatRoom(user.uid);
     } else {
       // If it is a group chat, then check if it's open room and if so, check if the user is a member of the room.
       if (room!.open && room.users.contains(uid) == false) {
@@ -430,7 +432,8 @@ class ChatService with FirebaseHelper {
         pageBuilder: (_, __, ___) {
           return ChatRoomScreen(
             // future
-            room: room!,
+            futureRoom: futureRoom,
+            room: room,
           );
         },
       );
