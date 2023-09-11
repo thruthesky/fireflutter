@@ -25,6 +25,8 @@ mixin FirebaseHelper {
   CollectionReference get userSearchCol =>
       FirebaseFirestore.instance.collection('user_search_data');
 
+  DocumentReference get mySearchDoc => userSearchCol.doc(uid);
+
   // categories
   CollectionReference get categoryCol =>
       FirebaseFirestore.instance.collection(Category.collectionName);

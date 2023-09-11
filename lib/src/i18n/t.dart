@@ -7,6 +7,9 @@ class I18N {
   CommentTranslations comment = CommentTranslations();
   FormTranslations form = FormTranslations();
   ToastTranslations toast = ToastTranslations();
+  ConfirmTranslations confirm = ConfirmTranslations();
+  AlertTranslations alert = AlertTranslations();
+  PromptTranslations prompt = PromptTranslations();
 }
 
 class UserTranslations {
@@ -48,6 +51,20 @@ class FormTranslations {
 
 class ToastTranslations {
   String dismiss = 'Dismiss';
+}
+
+class ConfirmTranslations {
+  String yes = 'Yes';
+  String no = 'No';
+}
+
+class AlertTranslations {
+  String ok = "OK";
+}
+
+class PromptTranslations {
+  String ok = "OK";
+  String cancel = "Cancel";
 }
 
 final tr = I18N();

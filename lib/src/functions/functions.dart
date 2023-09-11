@@ -228,6 +228,94 @@ ScaffoldFeatureController toast({
   );
 }
 
+/// Confirm dialgo
+///
+/// It requires build context where [toast] does not.
+Future<bool?> confirm(
+    {required BuildContext context,
+    required String title,
+    required String message}) {
+  return showDialog<bool?>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(tr.confirm.no),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(tr.confirm.yes),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+/// Display an alert box.
+///
+/// It requires build context where [toast] does not.
+Future alert(
+    {required BuildContext context,
+    required String title,
+    required String message}) {
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(tr.alert.ok),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+/// Prompt a dialog to get user input.
+///
+/// [context] is the build context.
+/// [title] is the title of the dialog.
+/// [message] is the message of the dialog.
+/// [initialValue] is the initial value of the input field.
+Future<String?> prompt(
+    {required BuildContext context,
+    required String title,
+    required String message,
+    String? initialValue}) {
+  final controller = TextEditingController(text: initialValue);
+  return showDialog<String?>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: TextField(
+          controller: controller,
+          decoration: InputDecoration(hintText: message),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, controller.text),
+            child: Text(tr.prompt.ok),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(tr.prompt.cancel),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 /// randomString that returns a random string of length [length].
 String randomString([length = 12]) {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
