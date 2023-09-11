@@ -146,7 +146,7 @@ class ChatService with FirebaseHelper {
 
   Future<void> removeUserFromRoom(
       {required Room room, required String uid, Function()? callback}) async {
-    await roomDoc(room.id).update({
+    await roomDoc(room.roomId).update({
       'moderators': FieldValue.arrayRemove([uid]),
       'users': FieldValue.arrayRemove([uid])
     });
@@ -155,7 +155,7 @@ class ChatService with FirebaseHelper {
 
   Future<void> setUserAsModerator(
       {required Room room, required String uid, Function()? callback}) async {
-    await roomDoc(room.id).update({
+    await roomDoc(room.roomId).update({
       'moderators': FieldValue.arrayUnion([uid])
     });
     callback?.call();
@@ -163,7 +163,7 @@ class ChatService with FirebaseHelper {
 
   Future<void> removeUserAsModerator(
       {required Room room, required String uid, Function()? callback}) async {
-    await roomDoc(room.id).update({
+    await roomDoc(room.roomId).update({
       'moderators': FieldValue.arrayRemove([uid])
     });
     callback?.call();
@@ -173,7 +173,7 @@ class ChatService with FirebaseHelper {
       {required Room room,
       required String userUid,
       Function()? callback}) async {
-    await roomDoc(room.id).update({
+    await roomDoc(room.roomId).update({
       'blockedUsers': FieldValue.arrayUnion([userUid])
     });
     callback?.call();
@@ -181,7 +181,7 @@ class ChatService with FirebaseHelper {
 
   Future<void> removeToBlockedUsers(
       {required Room room, required String uid, Function()? callback}) async {
-    await roomDoc(room.id).update({
+    await roomDoc(room.roomId).update({
       'blockedUsers': FieldValue.arrayRemove([uid])
     });
     callback?.call();
@@ -272,10 +272,10 @@ class ChatService with FirebaseHelper {
       required String setting,
       required dynamic value}) async {
     if (value == null || value == '') {
-      await roomDoc(room.id).update({setting: FieldValue.delete()});
+      await roomDoc(room.roomId).update({setting: FieldValue.delete()});
       return;
     }
-    await roomDoc(room.id).set({setting: value}, SetOptions(merge: true));
+    await roomDoc(room.roomId).set({setting: value}, SetOptions(merge: true));
   }
 
   /// Updates the a room setting on own side.
@@ -286,7 +286,7 @@ class ChatService with FirebaseHelper {
       required String setting,
       required dynamic value}) async {
     if (value == null || value == '') {
-      await roomDoc(room.id).update(
+      await roomDoc(room.roomId).update(
           {'$setting.${UserService.instance.uid}': FieldValue.delete()});
       return;
     }
@@ -313,7 +313,7 @@ class ChatService with FirebaseHelper {
       'uid': FirebaseAuth.instance.currentUser!.uid,
       'isUserChanged': lastMessage?.uid != uid,
     };
-    final ref = await messageCol(room.id).add(chatMessage);
+    final ref = await messageCol(room.roomId).add(chatMessage);
 
     /// Update url preview
     final model = UrlPreviewModel();
@@ -360,10 +360,12 @@ class ChatService with FirebaseHelper {
   /// Update no of new message for all users in the room
   ///
   /// See "# No of new message" in README
-  Future<void> updateRoom(
-      {required Room room, Map<String, Object>? lastMessage}) async {
+  Future<void> updateRoom({
+    required Room room,
+    Map<String, Object>? lastMessage,
+  }) async {
     //
-    await roomDoc(room.id).set(
+    await roomDoc(room.roomId).set(
       {'lastMessage': lastMessage},
       SetOptions(merge: true),
     );
@@ -371,18 +373,18 @@ class ChatService with FirebaseHelper {
     // Increase the no of new message for each user in the room
 
     for (String uid in room.users) {
-      // noOfNewMessages[uid] = ServerValue.increment(1);
       if (uid == myUid) {
-        noOfNewMessageRef(uid: uid).update({room.id: 0});
+        noOfNewMessageRef(uid: uid).update({room.roomId: 0});
       } else {
-        noOfNewMessageRef(uid: uid).update({room.id: ServerValue.increment(1)});
+        noOfNewMessageRef(uid: uid)
+            .update({room.roomId: ServerValue.increment(1)});
       }
     }
   }
 
   /// Reset my "no of new message" to 0 for the chat room
   Future<void> resetNoOfNewMessage({required Room room}) async {
-    noOfNewMessageRef(uid: uid).update({room.id: 0});
+    noOfNewMessageRef(uid: uid).update({room.roomId: 0});
   }
 
   /// Get other user uid
@@ -414,22 +416,13 @@ class ChatService with FirebaseHelper {
     assert(
         room != null || user != null, "One of room or user must be not null");
 
-    // If it is 1:1 chat, get the chat room. (or create if it does not exist)
-    if (user != null) {
-      room = await ChatService.instance.getOrCreateSingleChatRoom(user.uid);
-    } else {
-      // If it is a group chat, then check if it's open room and if so, check if the user is a member of the room.
-      if (room!.open && room.users.contains(uid) == false) {
-        await room.join();
-      }
-    }
-
     if (context.mounted) {
       showGeneralDialog(
         context: context,
         pageBuilder: (_, __, ___) {
           return ChatRoomScreen(
-            room: room!,
+            room: room,
+            user: user,
           );
         },
       );

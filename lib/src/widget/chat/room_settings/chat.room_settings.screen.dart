@@ -18,7 +18,7 @@ class _ChatRoomSettingsScreenState extends State<ChatRoomSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final Stream<DocumentSnapshot> roomStream =
-        ChatService.instance.roomDoc(widget.room.id).snapshots();
+        ChatService.instance.roomDoc(widget.room.roomId).snapshots();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),

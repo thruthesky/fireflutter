@@ -17,7 +17,9 @@ class Room with FirebaseHelper {
   static CollectionReference get col =>
       FirebaseFirestore.instance.collection('chats');
 
-  final String id;
+  static DocumentReference doc(roomId) => col.doc(roomId);
+
+  final String roomId;
   final String name;
 
   /// [rename] Each user can rename the room. This map holds the rename of the room.
@@ -51,7 +53,7 @@ class Room with FirebaseHelper {
   static Query get myRooms => col.where('users', arrayContains: myUid);
 
   Room({
-    required this.id,
+    required this.roomId,
     required this.name,
     this.rename = const {},
     required this.group,
@@ -70,31 +72,27 @@ class Room with FirebaseHelper {
   bool get isGroupChat => group;
 
   CollectionReference get messagesCol =>
-      ChatService.instance.roomRef(id).collection('messages');
-  DocumentReference get ref => ChatService.instance.roomRef(id);
+      ChatService.instance.roomRef(roomId).collection('messages');
+  DocumentReference get ref => ChatService.instance.roomRef(roomId);
 
   factory Room.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
-    return Room.fromJson({
-      ...documentSnapshot.data() as Map<String, dynamic>,
-      ...{'id': documentSnapshot.id}
-    });
+    return Room.fromJson(
+      documentSnapshot.data() as Map<String, dynamic>,
+    );
   }
 
   factory Room.fromJson(Map<String, dynamic> json) => _$RoomFromJson(json);
 
   @Deprecated('Use fromJson instead')
-  factory Room.fromMap({required Map<String, dynamic> map, required id}) {
-    return Room.fromJson({
-      ...(map),
-      ...{'id': id}
-    });
+  factory Room.fromMap({required Map<String, dynamic> map}) {
+    return Room.fromJson(map);
   }
 
   Map<String, dynamic> toJson() => _$RoomToJson(this);
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'roomId': roomId,
       'name': name,
       'rename': rename,
       'group': group,
@@ -138,8 +136,13 @@ class Room with FirebaseHelper {
     List<String> users = [myUid!];
     if (isSingleChat) users.add(otherUserUid);
 
+    final roomId = isSingleChat
+        ? ChatService.instance.getSingleChatRoomId(otherUserUid)
+        : ChatService.instance.chatCol.doc().id;
+
     // room data
     final roomData = toCreate(
+      roomId: roomId,
       master: myUid!,
       name: name,
       group: !isSingleChat,
@@ -149,33 +152,24 @@ class Room with FirebaseHelper {
           (isSingleChat ? 2 : ChatService.instance.maximumNoOfUsers),
     );
 
-    final roomId = isSingleChat
-        ? ChatService.instance.getSingleChatRoomId(otherUserUid)
-        : ChatService.instance.chatCol.doc().id;
-
     // create
     await ChatService.instance.chatCol.doc(roomId).set(roomData);
 
     // start
     await ChatService.instance.sendProtocolMessage(
-      room: Room.fromJson({
-        ...roomData,
-        ...{'id': roomId}
-      }),
+      room: Room.fromJson(roomData),
       protocol: Protocol.chatRoomCreateDialog.name,
       text: tr.chat.chatRoomCreateDialog,
     );
 
-    return Room.fromJson({
-      ...roomData,
-      ...{'id': roomId}
-    });
+    return Room.fromJson(roomData);
   }
 
   @override
   String toString() => 'Room(${toJson()})';
 
   static Map<String, dynamic> toCreate({
+    required String roomId,
     required String master,
     String? name,
     required bool group,
@@ -185,6 +179,7 @@ class Room with FirebaseHelper {
     bool isSingleChat = false,
   }) {
     return {
+      'roomId': roomId,
       'master': myUid,
       'name': name ?? '',
       'createdAt': FieldValue.serverTimestamp(),
@@ -204,7 +199,7 @@ class Room with FirebaseHelper {
   /// Add a user to the room.
   Future<void> addUser(String userUid) async {
     /// Read the chat room document to check for adding a user. (NSE: Not so expansive)
-    final room = await get(id);
+    final room = await get(roomId);
 
     /// Check if the user is already in the room.
     if (room.users.contains(userUid)) {
@@ -235,7 +230,7 @@ class Room with FirebaseHelper {
   }
 
   Future<void> leave() async {
-    await roomDoc(id).update({
+    await roomDoc(roomId).update({
       'moderators': FieldValue.arrayRemove([uid]),
       'users': FieldValue.arrayRemove([uid])
     });

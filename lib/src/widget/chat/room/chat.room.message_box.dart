@@ -1,13 +1,17 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/ui/utils/stream_subscriber_mixin.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomMessageBox extends StatefulWidget {
   const ChatRoomMessageBox({
     super.key,
-    required this.room,
+    required this.roomId,
   });
 
-  final Room room;
+  final String roomId;
 
   @override
   State<StatefulWidget> createState() => _ChatRoomMessageBoxState();
@@ -16,6 +20,25 @@ class ChatRoomMessageBox extends StatefulWidget {
 class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
   final TextEditingController message = TextEditingController();
   double? progress;
+
+  Room? room;
+  StreamSubscription? roomSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    //
+    roomSubscription = Room.col
+        .where('roomId', isEqualTo: widget.roomId)
+        .snapshots()
+        .listen((event) {
+      if (event.size > 0) {
+        room = Room.fromDocumentSnapshot(event.docs.first);
+        roomSubscription!.cancel();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +73,7 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
                       complete: () => setState(() => progress = null),
                     );
                     await ChatService.instance
-                        .sendMessage(room: widget.room, url: url);
+                        .sendMessage(room: room!, url: url);
                   },
                 ),
                 Expanded(
@@ -70,7 +93,7 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
                     final text = message.text;
                     message.text = '';
                     await ChatService.instance.sendMessage(
-                      room: widget.room,
+                      room: room!,
                       text: text,
                     );
                   },

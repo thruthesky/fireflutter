@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatRoomMessageListView extends StatefulWidget {
-  const ChatRoomMessageListView({super.key, required this.room});
+  const ChatRoomMessageListView({
+    super.key,
+    required this.roomId,
+  });
 
-  final Room room;
+  final String roomId;
 
   @override
   State<ChatRoomMessageListView> createState() =>
@@ -15,12 +18,12 @@ class ChatRoomMessageListView extends StatefulWidget {
 }
 
 class _ChatRoomMessageListViewState extends State<ChatRoomMessageListView> {
+  get chatMessageQuery => ChatService.instance
+      .messageCol(widget.roomId)
+      .orderBy('createdAt', descending: true);
+
   @override
   Widget build(BuildContext context) {
-    final chatMessageQuery = ChatService.instance
-        .messageCol(widget.room.id)
-        .orderBy('createdAt', descending: true);
-
     // Load all users first in the room as a map
 
     return Padding(

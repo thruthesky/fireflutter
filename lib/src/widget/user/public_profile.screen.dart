@@ -141,7 +141,9 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                               TextButton(
                                 onPressed: () {
                                   ChatService.instance.showChatRoom(
-                                      context: context, user: user);
+                                    context: context,
+                                    user: user,
+                                  );
                                 },
                                 style: TextButton.styleFrom(
                                   foregroundColor:

@@ -309,7 +309,7 @@ class UserService with FirebaseHelper {
       protocol: Protocol.register.name,
     );
     await noOfNewMessageRef(uid: myUid!).update({
-      room.id: 1,
+      room.roomId: 1,
     });
   }
 

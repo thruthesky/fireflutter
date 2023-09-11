@@ -7,7 +7,7 @@ part of 'room.dart';
 // **************************************************************************
 
 Room _$RoomFromJson(Map<String, dynamic> json) => Room(
-      id: json['id'] as String,
+      roomId: json['roomId'] as String,
       name: json['name'] as String,
       rename: (json['rename'] as Map<String, dynamic>?)?.map(
             (k, e) => MapEntry(k, e as String),
@@ -33,7 +33,7 @@ Room _$RoomFromJson(Map<String, dynamic> json) => Room(
     );
 
 Map<String, dynamic> _$RoomToJson(Room instance) => <String, dynamic>{
-      'id': instance.id,
+      'roomId': instance.roomId,
       'name': instance.name,
       'rename': instance.rename,
       'group': instance.group,
