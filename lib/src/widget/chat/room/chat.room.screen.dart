@@ -21,7 +21,6 @@ class _ChatRoomState extends State<ChatRoomScreen> {
   void initState() {
     super.initState();
     if (widget.room != null) {
-      // Do we need to reset no of new messages for future chat room
       ChatService.instance.resetNoOfNewMessage(room: widget.room!);
       ChatService.instance.clearLastMessage();
     }
@@ -30,26 +29,36 @@ class _ChatRoomState extends State<ChatRoomScreen> {
   @override
   Widget build(BuildContext context) {
     PreferredSizeWidget appBar;
+    Widget body;
+
     if (widget.room != null) {
       appBar = ChatService.instance.customize.chatRoomAppBarBuilder
               ?.call(widget.room!) ??
           ChatRoomAppBar(room: widget.room!);
-    } else {}
-
-    return Scaffold(
-      appBar: ChatService.instance.customize.chatRoomAppBarBuilder
-              ?.call(widget.room) ??
-          ChatRoomAppBar(room: widget.room),
-      body: Column(
+      body = Column(
         children: [
           Expanded(
             child: ChatRoomMessageListView(
-              room: widget.room,
+              room: widget.room!,
             ),
           ),
-          ChatRoomMessageBox(room: widget.room),
+          ChatRoomMessageBox(room: widget.room!),
         ],
-      ),
+      );
+    } else {
+      appBar = AppBar(
+        title: const Text("Loading"),
+      );
+      body = const  Column(
+        children: [
+          Text('Loading'),
+        ],
+      )
+    }
+
+    return Scaffold(
+      appBar: appBar,
+      body: body,
     );
   }
 }
