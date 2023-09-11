@@ -325,4 +325,11 @@ class UserService with FirebaseHelper {
           pageBuilder: ($, _, __) => PublicProfileScreen(uid: uid, user: user),
         );
   }
+
+  /// Delete user document
+  Future deleteDocuments() async {
+    await doc.delete();
+    await mySearchDoc.delete();
+    await rtdb.ref('users/$myUid').remove();
+  }
 } // EO UserService

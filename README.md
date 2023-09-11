@@ -188,8 +188,9 @@ Copy the following and paste it into your firebase project.
   "rules": {
     "users": {
       ".read": true,
-      ".write": false
-      
+      "$uid": {
+        ".write" : "$uid === auth.uid"
+      }
     },
     "settings": {
       "$uid": {

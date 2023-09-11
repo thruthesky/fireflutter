@@ -63,7 +63,9 @@ service cloud.firestore {
 
     match /user_search_data/{documentId} {
       allow read: if true;
-      allow write: if false;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if request.auth.uid == documentId || isAdmin();
     }
 
     match /favorites/{documentId} {
