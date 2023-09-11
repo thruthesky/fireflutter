@@ -152,7 +152,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
           return widget.itemBuilder!(context, room);
         } else {
           return ChatRoomListTile(
-            key: ValueKey(room.id),
+            key: ValueKey(room.roomId),
             room: room,
             avatarSize: widget.avatarSize,
             onTap: () {

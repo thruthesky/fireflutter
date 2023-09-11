@@ -7,7 +7,7 @@ class AdminService {
 
   AdminService._();
 
-  showDashboard(BuildContext context) {
+  showDashboard({required BuildContext context}) {
     showGeneralDialog(
       context: context,
       pageBuilder: ($, $$, $$$) {

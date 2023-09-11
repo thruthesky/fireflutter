@@ -309,7 +309,7 @@ class UserService with FirebaseHelper {
       protocol: Protocol.register.name,
     );
     await noOfNewMessageRef(uid: myUid!).update({
-      room.id: 1,
+      room.roomId: 1,
     });
   }
 
@@ -324,5 +324,12 @@ class UserService with FirebaseHelper {
           context: context,
           pageBuilder: ($, _, __) => PublicProfileScreen(uid: uid, user: user),
         );
+  }
+
+  /// Delete user document
+  Future deleteDocuments() async {
+    await doc.delete();
+    await mySearchDoc.delete();
+    await rtdb.ref('users/$myUid').remove();
   }
 } // EO UserService

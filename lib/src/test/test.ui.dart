@@ -307,7 +307,7 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
         room.invite(Test.durian.uid), Code.roomIsFull);
 
     // Get the room
-    final roomAfter = await Room.get(room.id);
+    final roomAfter = await Room.get(room.roomId);
 
     test(roomAfter.users.length == 3,
         "maximumNoOfUsers must be limited to 3. Actual value: ${roomAfter.users.length}. Expected: ${roomAfter.maximumNoOfUsers}");
@@ -392,7 +392,7 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
         .updateRoomSetting(room: room, setting: 'name', value: newName);
 
     // Get the room
-    final roomAfter = await Room.get(room.id);
+    final roomAfter = await Room.get(room.roomId);
 
     // test: check the new name
     test(roomAfter.name == newName,
@@ -422,7 +422,7 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
         .updateMyRoomSetting(room: room, setting: 'rename', value: renameApple);
 
     // Get the room
-    Room roomAfter = await Room.get(room.id);
+    Room roomAfter = await Room.get(room.roomId);
 
     // Test if ChatService.instance.updateMyRoomSetting() function works. It must rename.
     test(roomAfter.rename[UserService.instance.uid] == renameApple,
@@ -433,7 +433,7 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
         .updateMyRoomSetting(room: room, setting: 'rename', value: '');
 
     // Get the update to the room
-    roomAfter = await Room.get(room.id);
+    roomAfter = await Room.get(room.roomId);
 
     // Test if it clears the value. It must delete the value.
     test(roomAfter.rename[UserService.instance.uid] == null,

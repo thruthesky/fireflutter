@@ -21,6 +21,9 @@ Create an issue if you find a bug or need a help.
   - [Setup the base code](#setup-the-base-code)
 - [Usage](#usage)
   - [UserService](#userservice)
+  - [PostService](#postservice)
+    - [How to open a post](#how-to-open-a-post)
+    - [Customizing a Post View](#customizing-a-post-view)
   - [ChatService](#chatservice)
     - [How to open 1:1 chat room](#how-to-open-11-chat-room)
     - [How to display chat room menu](#how-to-display-chat-room-menu)
@@ -64,6 +67,7 @@ Create an issue if you find a bug or need a help.
 - [Report](#report)
 - [Upload](#upload)
   - [Photo upload](#photo-upload)
+- [No of view](#no-of-view)
 - [Push notifications](#push-notifications)
   - [Customizing source](#customizing-source)
 - [Following and Follower](#following-and-follower)
@@ -91,7 +95,6 @@ Create an issue if you find a bug or need a help.
   - [Install FireFlutter and Example Project](#install-fireflutter-and-example-project)
   - [Coding Guideline](#coding-guideline)
 
-
 ## Overview
 
 I made it for reusing the most common code blocks when I am building apps. It provides the code for user management, forum(caetgory, post, comment) management, chat management, push notification management along with `like`, `favorite`, `following` features.
@@ -106,7 +109,7 @@ The main features are the followings;
 
 - User
 - Chat
-- Forum 
+- Forum
 - Push notification
 - Like
 - Favorite(Bookmark)
@@ -127,7 +130,6 @@ Please follow the instructions below to install the fireflutter.
 
 I built a firebase extension for the easy management on firebase. Fireflutter is using this extension. Install the [latest version of easy-extension](https://github.com/thruthesky/easy-extension).
 
-
 ## Install cloud functions
 
 Since the firebase extension does not support on sending push notification with node.js SDK, we just made this function as cloud function.
@@ -141,8 +143,6 @@ firebase use add <project>
 firebase run deploy
 ```
 
-
-
 ## Security rules
 
 ### Firestore security rules
@@ -150,8 +150,6 @@ firebase run deploy
 Security rules for firestore are under `/firebase/firestore/firestore.rules`.
 
 Copy [the security rules of fireflutter](https://raw.githubusercontent.com/thruthesky/fireflutter/main/firebase/firestore/firestore.rules) and paste it in your firebase project. You may need to copy only the parts of the necessary security rules.
-
-
 
 ### Security rule for admin
 
@@ -163,7 +161,6 @@ function isAdmin() {
   return request.auth.uid in adminUIDs || request.auth.token.admin == true;
 }
 ```
-
 
 Once the admin is set, you can customize your security rules to restrict some docuemnts to write access from other users. By doing this way, you can add sub-admin(s) from client app (without editing the security rules on every time when you add subadmin)
 
@@ -178,7 +175,6 @@ For instance, you may write security rules like below and add the uids of sub-ad
   }
 ```
 
-
 ### Realtime database security rules
 
 Copy the following and paste it into your firebase project.
@@ -188,13 +184,14 @@ Copy the following and paste it into your firebase project.
   "rules": {
     "users": {
       ".read": true,
-      ".write": false
-      
+      "$uid": {
+        ".write": "$uid === auth.uid"
+      }
     },
     "settings": {
       "$uid": {
         ".read": "$uid === auth.uid",
-        ".write" : "$uid === auth.uid"
+        ".write": "$uid === auth.uid"
       }
     },
     "chats": {
@@ -209,7 +206,7 @@ Copy the following and paste it into your firebase project.
       ".read": true,
       "$uid": {
         "$other_uid": {
-            ".write" : "$other_uid === auth.uid"
+          ".write": "$other_uid === auth.uid"
         }
       }
     },
@@ -217,7 +214,7 @@ Copy the following and paste it into your firebase project.
       ".read": true,
       ".write": true
     },
-  	"tmp": {
+    "tmp": {
       ".read": true,
       ".write": true
     }
@@ -225,17 +222,13 @@ Copy the following and paste it into your firebase project.
 }
 ```
 
-
 ## Admin settings
 
 See the [Security rules for admin](#security-rule-for-admin) chapter to set admin in the security rules. After this, you can set the `isAdmin` field to true on the admin's user document.
 
-
-
 ## Setup the base code
 
 Fireflutter has many features and each feature has a signleton service class. You need to initialize each of the singleton on yor needs.
-
 
 Since, fireflutter uses snackbars, it needs global key (or global build context). Put the global key into the `FireFlutterService.instance.init(context: ...)`. If you are not going to use the global key, you may not need to initialzie it like when you are only doing unit test.
 
@@ -249,7 +242,7 @@ WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
 }
 ```
 
-If you are using the flutter's default `Navigator` for routing, define the global key like below first, 
+If you are using the flutter's default `Navigator` for routing, define the global key like below first,
 
 ```dart
 import 'package:flutter/material.dart';
@@ -264,7 +257,6 @@ Then connect it to MaterialApp like below
 MaterialApp(
   navigatorKey: globalNavigatorKey,
 ```
-
 
 Then, store the global context into fireflutter like below
 
@@ -282,22 +274,11 @@ class _MainWidgetState extends State<MainWidget> {
   }
 ```
 
-
-
-
-
 By defualt, feed feature is disabled. To use feed features, add the following in app widget.
-
 
 ```dart
 FeedService.instance.init(enable: true);
 ```
-
-
-
-
-
-
 
 # Usage
 
@@ -325,8 +306,27 @@ UserService.instance.get(UserService.instance.uid).then((user) => ...);
 
 The `UserService.instance.user` or `UserService.instance.docuemntChanges` may be null when the user document is being loaded on app boot. So, the better way to get the user's document for sure is to use `UserService.instance.get`
 
-
 You cannot use `my` until the UserService is initialized and `UserService.instance.user` is available. Or you will see `null check operator used on a null value.`
+
+## PostService
+
+### How to open a post
+
+Call the `showPostViewDialog` to show the full screen dialog that displays the post
+
+```dart
+PostService.instance.customize.postViewScreenBuilder = (post) => GRCCustomPostViewScreen(post: post);
+```
+
+### Customizing a Post View
+
+Build your own UI design of the full screen Post View like below.
+
+```dart
+PostService.instance.customize.postViewScreenBuilder = (post) => GRCCustomPostViewScreen(post: post);
+```
+
+The widget is preferrably a full screen widget. It can be a scaffold, sliver, etc.
 
 ## ChatService
 
@@ -356,7 +356,6 @@ showGeneralDialog(
 );
 ```
 
-
 ### Customizing the chat header
 
 You can build your own chat header like below.
@@ -367,22 +366,19 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 
 # Widgets
 
+- The widgets in fireflutter can be a small piece of UI representation or it can be a full screen dialog.
 
-* The widgets in fireflutter can be a small piece of UI representation or it can be a full screen dialog.
+- The file names and the class names of the widgets must match.
+- The user widgets are inside `widgets/user` and the file name is in the form of `user.xxxx.dart` or `user.xxxx.dialog.dart`. And it goes the same to chat and forum.
 
-* The file names and the class names of the widgets must match.
-* The user widgets are inside `widgets/user` and the file name is in the form of `user.xxxx.dart` or `user.xxxx.dialog.dart`. And it goes the same to chat and forum.
-
-
-* There are many service methods that opens a screen. One thing to note is that, all the method that opens a screen uses `showGeneralDialog` which does not modify the navigation stack. If you want, you may open the screen with navigation(routing) like `Navigator.of(context).push...()`.
-
-
+- There are many service methods that opens a screen. One thing to note is that, all the method that opens a screen uses `showGeneralDialog` which does not modify the navigation stack. If you want, you may open the screen with navigation(routing) like `Navigator.of(context).push...()`.
 
 ## Screen widgets
 
 The name of widgets that can be used as a screen ends with `Screen`. Those widget must be work as a screen or a dialog of `showGeneralDialog()`. Which means those widgets must have a scafoold.
 
 Example of opening a screen widget with `showGeneralDialog()`
+
 ```dart
 showGeneralDialog(
   context: context,
@@ -391,17 +387,16 @@ showGeneralDialog(
 ```
 
 Example of opening a screen widget with `Navigator`
+
 ```dart
 Navigator.of(context).push(
   MaterialPageRoute(builder: (c) => const AdminDashboardScreen()),
 );
 ```
 
-
 ## EmailLoginForm
 
 Use this widget for creating and logging-in with email/password. This widget is designed for test use.
-
 
 ## UserDoc
 
@@ -427,7 +422,6 @@ UserDoc(
 ```
 
 ## User customization
-
 
 To customize the user public profile screen, you can override the showPublicProfile function.
 
@@ -537,10 +531,7 @@ onPressed() async {
 
 ```
 
-
-
 # Chat Feature
-
 
 ## Welcome message
 
@@ -548,8 +539,7 @@ To send a welcome chat message to a user who just registered, use `UserService.i
 
 ## No of new message
 
-We save the no of new messages of each users in RTDB.  `/chats/noOfNewMessages/{uid}/{roomId: true}`.
-
+We save the no of new messages of each users in RTDB. `/chats/noOfNewMessages/{uid}/{roomId: true}`.
 
 ## Total no of new message
 
@@ -558,7 +548,6 @@ To display the total no of new messages, use the following widget. If you don't 
 ```dart
 TotalNoOfNewMessage(),
 ```
-
 
 ### Chat Room List
 
@@ -577,7 +566,6 @@ ChatRoomListView(
 ),
 ```
 
-
 You can customsize the chat room item in the list like below. You can replace the `ChatRoomListTile` or you can customize the onTap behavior.
 
 ```dart
@@ -590,7 +578,6 @@ ChatRoomListView(
   ),
 )
 ```
-
 
 ### Create a chat room
 
@@ -672,7 +659,6 @@ Scafolld(
       );
     });
 ```
-
 
 #### Chat Room fields
 
@@ -800,7 +786,6 @@ To programatically, invite a user, follow these codes:
 updatedRoom = await EasyChat.instance.inviteUser(room: chatRoomModel, userUid: user.uid);
 ```
 
-
 See [Chat Room Settings](#chat-room-settings) for more details
 
 - `Members` This is a List View of the members of the group chat. The user can be marked as [Master], [Moderator] and/or [Blocked]. Tapping the user will open a Dialog that may show options for Setting as Moderator, or Blocking on the group.
@@ -870,7 +855,6 @@ updatedRoom = await EasyChat.instance.updateRoomSetting(
 );
 ```
 
-
 # User
 
 `idVerifiedCode` is the code of user's authentication id code. This is used to save user's id code when the user uploaded his id card like passport and the AI (Firebase AI Extension) detect user's information and the verification succeed, the file path is being hsave in `idVerificationCoce`. You may use it on your own purpose.
@@ -879,14 +863,11 @@ updatedRoom = await EasyChat.instance.updateRoomSetting(
 
 `verified` is a boolean field to indicate that the user's identification has fully verified by the system. Note that, this is not secured by the rules as of now. Meaning, user can edit it by himself.
 
-
 `birthDayOfYear` is the birth day of the year. It is automatically set by the `User.update()`. For instnace, if the user saves his birth day, then the app should use this kind of code; `my.update(birthYear: 1999, birthMonth: 9, birthDay: 9);` and it will automtically update the `birthDayOfYear` value.
-
-
 
 ## Like
 
-The `likes` data saved under `/likes` in RTDB. Not that, the `likes` for posts and comments are saved inside the documents of the posts and the comments. 
+The `likes` data saved under `/likes` in RTDB. Not that, the `likes` for posts and comments are saved inside the documents of the posts and the comments.
 
 See the following example how to display the no of likes of a user and how to increase or decrease the number of the `like`.
 
@@ -917,24 +898,22 @@ IconButton(
 ),
 ```
 
-
-
 ## Favorite/Bookmark
 
 Bookmark is known to be `Favorite`.
 
 - When A bookmarks on B's profile,
+
   - `/favorites/A/{type: profile, uid: my_uid, otherUid: ..., createdAt: ..., }` will be saved.
 
 - When A bookmarks a post
+
   - `/favorites/A/{type: post, uid: my_uid, postId: ..., createdAt: ..., }` will be created.
 
 - When A bookmarks a comment,
   - `/favorites/A/{type: comment, uid: my_uid, commentId: ..., created: ... }` will be created.
 
 When A wants to see the bookmarks, the app should display a screen to list the bookmarks by all, type, user, etc.
-
-
 
 ### How to display icon
 
@@ -976,35 +955,32 @@ FavoriteButton(
 ## Follow and Unfollow
 
 This method will make follow or unfollow the user of the [otherUid].
-  - If the login user is already following [otherUid] then, it will unfollow.
-  - If the login user is not following [otherUid] then, it will follow.
+
+- If the login user is already following [otherUid] then, it will unfollow.
+- If the login user is not following [otherUid] then, it will follow.
 
 When it follows or unfollows,
-  - It will add or remove the [otherUid] in the login user's followings array.
-  - It will add or remove the login user's uid in the [otherUid]'s followers array.
 
+- It will add or remove the [otherUid] in the login user's followings array.
+- It will add or remove the login user's uid in the [otherUid]'s followers array.
 
 Note that you may use it with or without the feed service. See the `Feed Service` for the details on how to follow to see the posts of the users that you are following. But you can use it without the feed system.
 
-
-
-
 # Database
 
-
 ## Get/Set/Update/Toggle
-
 
 We have a handy function in `functions/database.dart` to `get, set, update, toogle` the node data from/to firebase realtime database.
 
 - `get('path')` gets the node data of the path from database.
 - `set('path', data)` sets the data at the node of the path into database.
 - `update('path', { data })` updates the node of the path. The value must be a Map.
-- `toogle('path')` switches on/off the value of the node. If the node of the [path] does not exist, create it and return true. Or if the node exists, then remove it and return false.
+- `toggle('path')` switches on/off the value of the node. If the node of the [path] does not exist, create it and return true. Or if the node exists, then remove it and return false.
 
 Note that, these functions may arise an exception if the security rules are not proeprty set on the paths. You need to set the security rules by yourself. When you meet an error like `[firebase_database/permission-denied] Client doesn't have permission to access the desired data.`, then check the security rules.
 
 Example of `get()`
+
 ```dart
 final value = await get('users/15ZXRtt5I2Vr2xo5SJBjAVWaZ0V2');
 print('value; $value');
@@ -1012,6 +988,7 @@ print('value; ${User.fromJson(Map<String, dynamic>.from(value))}');
 ```
 
 Example of `set()` adn `update()`
+
 ```dart
 String path = 'tmp/a/b/c';
 await set(path, 'hello');
@@ -1020,7 +997,6 @@ print(await get(path));
 await update(path, {'k': 'hello', 'v': 'world'});
 print(await get(path));
 ```
-
 
 
 ## Database widget
@@ -1052,12 +1028,9 @@ You can manage the node data with database functions described in [the database 
 
 See [the block chapter](#block) to know how to use(manage) the user settings and how to use `Database` widget with it.
 
-
-
 # Report
 
 The Report document is saved under `/reports/{myUid-targetUid}` in Firestore. The `targetUid` is one of the uid of the user, the post, or the comment.
-
 
 Example of reporting
 
@@ -1068,7 +1041,6 @@ ReportService.instance.showReportDialog(
   onExists: (id, type) => toast(title: 'Already reported', message: 'You have reported this $type already.'),
 );
 ```
-
 
 Example of reporting with button widget
 
@@ -1097,17 +1069,11 @@ TextButton(
   "otherUid": "the other user uid",
   "commentId": "comment id",
   "postId": "the post id",
-  "createdAt": "time of report",
+  "createdAt": "time of report"
 }
 ```
 
-
 The type is one of 'user', 'post', or 'comment'.
-
-
-
-
-
 
 # Upload
 
@@ -1145,8 +1111,6 @@ IconButton(
 
 It has options like displaying a progressive percentage.
 
-
-
 You can choose which media source you want to upload.
 
 ```dart
@@ -1174,17 +1138,25 @@ IconButton(
 ```
 
 
+# No of view
+
+By saving no of view, you know how many users have seen your profle and who viewed your profile. Not only the profile, but also it can be applied to post and more.
+
+fireflutter saves the no of view on porfile at `/noOfView/profile/{myUid}/{otherUId: true}`. And it saves no of views of profile at `/noOfView/post/{postId}/{userId: true}`.
+
+
+```dart
+set("/noOfView/profile/$myUid/$otherUid", true);
+```
+
+
+
+
 # Push notifications
 
 Push notification tokens are saved under `/users/{uid}/fcm_tokens/{token} { uid: ..., device_type: ..., fcm_token: ... }`. If the user didn't sign in, the token will not be saved.
 
 The admin can send push notification to all the devices, or specific type/os through cloud function by creating a push notification document.
-
-
-
-
-
-
 
 ```dart
     // init here
@@ -1217,7 +1189,6 @@ The admin can send push notification to all the devices, or specific type/os thr
     );
 ```
 
-
 Below shows how to search a user and send a push message to the user
 
 ```dart
@@ -1230,8 +1201,8 @@ AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
   );
 });
 ```
-## Customizing source
 
+## Customizing source
 
 You can limit the uploaded sources. You can choose camera, gallery, or files like below.
 
@@ -1253,19 +1224,18 @@ CommentService.instance.init(
 );
 ```
 
-
 # Following and Follower
 
-
 - When A follows B,
+
   - B's uid will be added into `followings` field of A's document.
   - And A's uid will be added into `followers` field in B's document.
   - Get the last 20 posts of B and save title, content, photo, createAt into `/feeds/{uid}` in RTDB.
   - See the security rules for this logic.
 
 - When A unfollow B, all the relative data will be removed.
-  - `followings`, `followers`, RTDB.
 
+  - `followings`, `followers`, RTDB.
 
 - When A open's his wall(it could be home, profile or any screen), A can display the posts who he follows with `FeedListView` widget.
 - To display the followers use `FollowerListView`.
@@ -1273,12 +1243,10 @@ CommentService.instance.init(
 
 - A feed is a post that user can create on the forum in whatever category.
 
-
-
-
 ## Feed listing logic
 
 - Terms
+
   - `follow` is an action that I am following other user.
   - `followed` is an action that I am being followed by other user.
   - `followers` is a field that contains a list of uid that are follow me. For instance, C and D follow me. then `followers` will contain `[C, D]`.
@@ -1300,25 +1268,18 @@ flowchart TD
 Delete_Feed-->Update_RTDB
 ```
 
-
 ```mermaid
 flowchart TD
 Displaying_Feeds-->Get_All_Feed_Sort_By_Minus_Date
 ```
 
-
-
 ## How to follow
 
 Use `FeedService.instance.follow`. This will produce a permission error if you are going to follow a user that you are already following.
 
-
 ## How to unfollow
 
 Use `FeedService.instance.unfollow`. This will produce a permission error if you try to unfollow a user that you are not following.
-
-
-
 
 # Block
 
@@ -1350,7 +1311,6 @@ TextButton(
 
 `fireflutter` supports full customization from the i18n to the complete UI.
 
-
 ## Chat Customization
 
 The fireflutter gives full customization of the chat feature. It has a lot of widgets and texts to customize and they are nested deep inside the widget layers. So, the fireflutter lets developers to register the builder functions to display(customize) the widgets that are being used in deep place of the chat feature.
@@ -1361,25 +1321,20 @@ Registering the build functions do not cause any performance issues since it onl
 ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoomAppBar(room: room);
 ```
 
-
-
-
 # Admin
 
 To set a user as an admin, put the user's uid into `isAdmin()` in firestore security rules.
 
 ```javascript
 function isAdmin() {
-  let adminUIDs = ['xxx', 'oaCInoFMGuWUAvhqHE83gIpUxEw2'];
+  let adminUIDs = ["xxx", "oaCInoFMGuWUAvhqHE83gIpUxEw2"];
   return request.auth.uid in adminUIDs || request.auth.token.admin == true;
 }
 ```
 
 Then, set `isAdmin` to true in the user document.
 
-
 ## Admin Widgets
-
 
 ### Opening admin dashbard
 
@@ -1397,11 +1352,7 @@ Navigator.of(context).push(
 );
 ```
 
-
 ### AdminUserListView
-
-
-
 
 ### Updating auth custom claims
 
@@ -1453,8 +1404,6 @@ Navigator.of(context).push(
 
 - Warning! Once a user changes his displayName and photoUrl, `EasyChat.instance.updateUser()` must be called to update user information in easychat.
 
-
-
 # Translation
 
 I feel like the standard i18n feature is a bit heavy and searched for other i18n packages. And I decided to write a simple i18n code for fireflutter.
@@ -1469,15 +1418,11 @@ Here is an example of updating the translation.
 tr.user.loginFirst = '로그인을 해 주세요.';
 ```
 
-
-
-
 # Unit Testing
 
 ## Testing on Local Emulators and Firebase
 
 - We do unit testing on both of local emulator and on real Firebase. It depends on how the test structure is formed.
-
 
 ## Testing security rules
 
@@ -1489,6 +1434,7 @@ firebase emulators:start
 ```
 
 Then, run all the test like below.
+
 ```sh
 npm test
 ```
@@ -1500,14 +1446,12 @@ npm run mocha tests/rule-functions
 npm run mocha tests/posts
 ```
 
-
 To run a single test file, specify file name.
 
 ```sh
 npm run mocha tests/posts/create.spec.js
 npm run mocha tests/posts/likes.spec.js
 ```
-
 
 ## Testing on real Firebase
 
@@ -1528,12 +1472,12 @@ npm run mocha tests/posts/likes.spec.js
   - `npm run mocha -- tests/update_custom_claims/get_set.spec.ts`
   - `npm run mocha -- tests/update_custom_claims/update.spec.ts`
 
-
 ## Testing on Cloud Functions
 
 All of the cloud functions are tested directly on remote firebase (not in emulator). So, you need to save the account service in `firebase/service-account.json`. The service account file is listed in .gitignore. So, It won't be added into git.
 
 To run all the test,
+
 ```sh
 cd firebase/functions
 npm i
@@ -1547,8 +1491,6 @@ npm run mocha **/save-token*
 npm run mocha **/save-token.test.ts
 ```
 
-
-
 # Developer
 
 ## Development Tips
@@ -1557,8 +1499,6 @@ Most often, you would click, and click, and click over, and over again, and agai
 Yes, this is the reality.
 
 To avoid this, you can display the UI part immediately after hot-restart (with keyboard shortcut) like below. This is merely a sample code. You can test any part of the app like below.
-
-
 
 Below is an example of openning a chat room
 
@@ -1613,8 +1553,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
 ```
 
-
-Below is  an example of opening a single chat room. I got the room data by calling `print` on a chat room.
+Below is an example of opening a single chat room. I got the room data by calling `print` on a chat room.
 
 ```dart
 ChatService.instance.showChatRoom(
@@ -1635,7 +1574,6 @@ ChatService.instance.showChatRoom(
 );
 ```
 
-
 Below is to show post view screen.
 
 ```dart
@@ -1654,8 +1592,6 @@ Below is to show post edit dialog.
 Post.get('Uc2TKInQ9oBJeKtSJpBq').then((p) => PostService.instance.showPostEditDialog(context, post: p));
 ```
 
-
-
 The code below shows how to open a post create dialog.
 
 ```dart
@@ -1665,7 +1601,6 @@ PostService.instance.showCreateDialog(
   success: (p) => print(p),
 );
 ```
-
 
 The code below shows how to open a 1:1 chat room and send a message to the other user.
 
@@ -1681,8 +1616,6 @@ UserService.instance.get(UserService.instance.adminUid).then(
 );
 ```
 
-
-
 The code below shows how to open a comment edit bottom sheet. Use this for commet edit bottom sheet UI.
 
 ```dart
@@ -1695,14 +1628,11 @@ if (mounted) {
 }
 ```
 
-
-
 # Contribution
 
 Fork the fireflutter and create your own branch. Then update code and push, then pull request.
 
 ## Install FireFlutter and Example Project
-
 
 ```sh
 git clone https://github.com/thruthesky/fireflutter
@@ -1717,5 +1647,3 @@ flutter run
 ## Coding Guideline
 
 fireflutter uses sigular form in its file name and variable name, class name. For instance, it alwasy `user` over `users` unless there is good reason.
-
-
