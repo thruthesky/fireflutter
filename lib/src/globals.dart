@@ -1,3 +1,3 @@
-const double spaceXxs = 4;
-const double spaceXs = 8;
-const double spaceSm = 16;
+const double sizeXxs = 4;
+const double sizeXs = 8;
+const double sizeSm = 16;

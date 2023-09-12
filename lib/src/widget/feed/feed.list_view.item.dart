@@ -8,11 +8,13 @@ class FeedListViewItem extends StatelessWidget {
     required this.feed,
     this.avatarBuilder,
     this.textBuilder,
+    this.onTap,
   });
 
   final Feed feed;
   final Widget Function(BuildContext, Post)? avatarBuilder;
   final Widget Function(BuildContext, Post)? textBuilder;
+  final Function(Post)? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +25,18 @@ class FeedListViewItem extends StatelessWidget {
           final post = Post.fromDocumentSnapshot(snapshot.data!);
           return GestureDetector(
             onTap: () {
-              PostService.instance
-                  .showPostViewDialog(context: context, post: post);
+              if (onTap != null) {
+                onTap?.call(post);
+              } else {
+                PostService.instance
+                    .showPostViewScreen(context: context, post: post);
+              }
             },
             behavior: HitTestBehavior.opaque,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                YouTube(url: post.youtubeId),
+                YouTubeThumbnail(youtubeId: post.youtubeId),
                 ...post.urls
                     .map((e) => GestureDetector(
                           behavior: HitTestBehavior.opaque,
@@ -43,14 +49,14 @@ class FeedListViewItem extends StatelessWidget {
                         ))
                     .toList(),
                 Card(
-                  margin: const EdgeInsets.all(spaceSm),
+                  margin: const EdgeInsets.all(sizeSm),
                   child: Padding(
-                    padding: const EdgeInsets.all(spaceSm),
+                    padding: const EdgeInsets.all(sizeSm),
                     child: Row(
                       children: [
                         _avatarBuilder(context, post),
                         const SizedBox(
-                          width: spaceSm,
+                          width: sizeSm,
                         ),
                         Expanded(
                           child: _textBuilder(context, post),
@@ -105,7 +111,7 @@ class FeedListViewItem extends StatelessWidget {
           post.createdAt.toString(),
           style: Theme.of(context).textTheme.labelSmall,
         ),
-        const SizedBox(height: spaceXxs),
+        const SizedBox(height: sizeXxs),
         Text(
           post.content,
         ),

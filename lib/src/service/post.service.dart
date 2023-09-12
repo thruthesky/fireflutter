@@ -1,14 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/service/post.customize.dart';
 import 'package:flutter/material.dart';
 
 class PostService with FirebaseHelper {
   static PostService? _instance;
   static PostService get instance => _instance ??= PostService._();
   PostService._();
-
-  PostCustomize customize = PostCustomize();
 
   get col => postCol;
 
@@ -65,7 +62,7 @@ class PostService with FirebaseHelper {
   }
 
   /// Shows the Post view as a dialog
-  showPostViewDialog({
+  showPostViewScreen({
     required BuildContext context,
     Post? post,
     String? postId,

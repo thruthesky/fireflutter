@@ -6,12 +6,12 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 class YouTube extends StatefulWidget {
   const YouTube({
     super.key,
-    this.url,
+    required this.youtubeId,
     this.autoPlay = false,
     this.mute = false,
   });
 
-  final String? url;
+  final String youtubeId;
   final bool autoPlay;
   final bool mute;
 
@@ -26,14 +26,10 @@ class _YouTubeState extends State<YouTube> {
   void initState() {
     super.initState();
 
-    if (widget.url == null || widget.url!.isEmpty) return;
-
-    final id = YoutubePlayer.convertUrlToId(widget.url!);
-
-    if (id == null) return;
+    if (widget.youtubeId.isEmpty) return;
 
     _controller = YoutubePlayerController(
-      initialVideoId: id,
+      initialVideoId: widget.youtubeId,
       flags: YoutubePlayerFlags(
         autoPlay: widget.autoPlay,
         mute: widget.mute,
@@ -49,6 +45,7 @@ class _YouTubeState extends State<YouTube> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.youtubeId.isEmpty) return const SizedBox.shrink();
     return _controller == null
         ? const SizedBox()
         : YoutubePlayer(
