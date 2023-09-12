@@ -185,18 +185,18 @@ Copy the following and paste it into your firebase project.
     "users": {
       ".read": true,
       "$uid": {
-        ".write": "$uid === auth.uid"
+        ".write" : "$uid === auth.uid"
       }
     },
     "settings": {
       "$uid": {
         ".read": "$uid === auth.uid",
-        ".write": "$uid === auth.uid"
+        ".write" : "$uid === auth.uid"
       }
     },
     "chats": {
-      "$roomId": {
-        "noOfNewMessages": {
+      "noOfNewMessages": {
+        "$uid": {
           ".read": true,
           ".write": true
         }
@@ -206,7 +206,7 @@ Copy the following and paste it into your firebase project.
       ".read": true,
       "$uid": {
         "$other_uid": {
-          ".write": "$other_uid === auth.uid"
+            ".write" : "$other_uid === auth.uid"
         }
       }
     },
@@ -214,7 +214,7 @@ Copy the following and paste it into your firebase project.
       ".read": true,
       ".write": true
     },
-    "tmp": {
+  	"tmp": {
       ".read": true,
       ".write": true
     }

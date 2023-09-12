@@ -41,7 +41,7 @@ export 'widget/chat/total_no_of_new_message.dart';
 export 'widget/category/category.list_view.dart';
 export 'widget/category/category.edit.screen.dart';
 export 'widget/category/category_create.screen.dart';
-export 'widget/category/category.list.screen.dart';
+export 'widget/admin/admin.category.list.screen.dart';
 
 // Post
 export 'widget/feed/feed.list_view.dart';

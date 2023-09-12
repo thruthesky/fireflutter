@@ -66,7 +66,7 @@ class CategoryService with FirebaseHelper {
       {Function(Category category)? onTapCategory}) async {
     await showGeneralDialog(
       context: context,
-      pageBuilder: (context, _, __) => CategoryListScreen(
+      pageBuilder: (context, _, __) => AdminCategoryListScreen(
         onTapCategory: (category) {
           if (onTapCategory != null) {
             onTapCategory.call(category);

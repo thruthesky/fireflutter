@@ -2,8 +2,8 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 /// Full screen dialog to show list of categories
-class CategoryListScreen extends StatelessWidget {
-  const CategoryListScreen({
+class AdminCategoryListScreen extends StatelessWidget {
+  const AdminCategoryListScreen({
     super.key,
     this.onTapCategory,
   });
@@ -14,8 +14,13 @@ class CategoryListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Categories"),
+        iconTheme: Theme.of(context)
+            .iconTheme
+            .copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
+        backgroundColor: Theme.of(context).colorScheme.inverseSurface,
+        title: Text('Admin Comment List',
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onInverseSurface)),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
