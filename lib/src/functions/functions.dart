@@ -8,7 +8,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 /// Shows a [SnackBar] at the bottom of the screen.
-Future<void> showSnackBar(BuildContext context, String message) async {
+Future<void> showSnackBar(BuildContext? context, String message) async {
+  context ??= FireFlutterService.instance.context;
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(message),
@@ -161,7 +162,8 @@ String platformName() {
   }
 }
 
-void warningSnackbar(BuildContext context, String message) async {
+void warningSnackbar(BuildContext? context, String message) async {
+  context ??= FireFlutterService.instance.context;
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(message),
