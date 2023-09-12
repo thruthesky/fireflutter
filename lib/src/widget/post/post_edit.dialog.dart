@@ -163,7 +163,7 @@ class _PostEditDialogState extends State<PostEditScreen> {
                         if (mounted) {
                           Navigator.pop(context, post);
                           PostService.instance
-                              .showPostViewDialog(context, post);
+                              .showPostViewDialog(context: context, post: post);
                         }
                       } else {
                         await widget.post!.update(

@@ -65,11 +65,16 @@ class PostService with FirebaseHelper {
   }
 
   /// Shows the Post view as a dialog
-  showPostViewDialog(BuildContext context, Post post) {
-    showGeneralDialog(
+  showPostViewDialog({
+    required BuildContext context,
+    Post? post,
+    String? postId,
+  }) {
+    return showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) => PostViewScreen(
         post: post,
+        postId: postId,
       ),
     );
   }

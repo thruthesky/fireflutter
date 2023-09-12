@@ -115,10 +115,13 @@ class Room with FirebaseHelper {
   /// you will see the error.
   static Future<Room> get(String roomId) async {
     final snapshot = await ChatService.instance.roomDoc(roomId).get();
+    if (snapshot.exists == false) throw Exception("document-not-found");
     return Room.fromDocumentSnapshot(snapshot);
   }
 
   /// Creates a chat room and returns the chat room.
+  ///
+  /// Chat room must be created by this method only.
   ///
   /// [otherUserUid] If [otherUserUid] is set, it will create a 1:1 chat. Or it will create a group chat.
   /// [open] If [open] is set, it will create an open chat room. Or it will create a private chat room.

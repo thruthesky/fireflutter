@@ -38,7 +38,8 @@ class FeedListViewItem extends StatelessWidget {
                     ],
                   ),
                   onTap: () {
-                    PostService.instance.showPostViewDialog(context, post);
+                    PostService.instance
+                        .showPostViewDialog(context: context, post: post);
                   },
                 ),
               ],

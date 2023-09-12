@@ -7,7 +7,6 @@ export 'widget/user/user.ready.dart';
 export 'widget/common/avatar.dart';
 export 'widget/user/admin.dart';
 export 'widget/admin/admin.user.list_view.dart';
-export 'widget/admin/admin.id_card.screen.dart';
 export 'widget/user/public_profile.screen.dart';
 export 'widget/user/email_login_form.dart';
 
@@ -41,7 +40,6 @@ export 'widget/chat/total_no_of_new_message.dart';
 export 'widget/category/category.list_view.dart';
 export 'widget/category/category.edit.screen.dart';
 export 'widget/category/category_create.screen.dart';
-export 'widget/admin/admin.category.list.screen.dart';
 
 // Post
 export 'widget/feed/feed.list_view.dart';
@@ -58,6 +56,7 @@ export 'widget/comment/comment_edit.bottom_sheet.dart';
 export 'widget/comment/comment_list_view.dart';
 export 'widget/comment/comment.list_tile.dart';
 export 'widget/comment/comment_doc.dart';
+export 'widget/comment/comment.view.screen.dart';
 
 // Common
 export 'widget/common/date_time_text.dart';
@@ -82,3 +81,7 @@ export 'widget/database/database.dart';
 
 // admin
 export 'widget/admin/admin.dashboard.screen.dart';
+export 'widget/admin/admin.report.list.screen.dart';
+export 'widget/admin/admin.category.list.screen.dart';
+export 'widget/admin/admin.id_card.screen.dart';
+export 'widget/admin/admin.chat.room.list.screen.dart';

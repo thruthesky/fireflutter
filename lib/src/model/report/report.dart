@@ -13,6 +13,7 @@ class Report {
   final String id;
   final String? uid, postId, commentId;
   final String reason;
+  final String type;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   final DateTime createdAt;
@@ -23,6 +24,7 @@ class Report {
     this.uid,
     this.postId,
     this.commentId,
+    required this.type,
     dynamic createdAt,
   }) : createdAt = createdAt is Timestamp ? createdAt.toDate() : DateTime.now();
 
@@ -49,7 +51,7 @@ class Report {
         ? 'user'
         : postId != null
             ? 'post'
-            : 'commnet';
+            : 'comment';
 
     return (id: id, type: type);
   }
