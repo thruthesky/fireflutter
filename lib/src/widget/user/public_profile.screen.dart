@@ -25,6 +25,13 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
   String previousUrl = '';
 
   @override
+  void initState() {
+    super.initState();
+    if (isMyProfile) return;
+    // Add view here
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
