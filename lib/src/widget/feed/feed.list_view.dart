@@ -4,9 +4,19 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class FeedListView extends StatefulWidget {
-  const FeedListView({super.key, this.itemBuilder});
+  const FeedListView({
+    super.key,
+    this.itemBuilder,
+    this.topBuilder,
+    this.textBuilder,
+    this.avatarBuilder,
+  });
 
   final Widget Function(Feed feed, int index)? itemBuilder;
+  final Widget Function(Feed feed)? topBuilder;
+
+  final Widget Function(BuildContext, Post)? avatarBuilder;
+  final Widget Function(BuildContext, Post)? textBuilder;
 
   @override
   State<FeedListView> createState() => _FeedListViewState();
@@ -55,8 +65,23 @@ class _FeedListViewState extends State<FeedListView> with FirebaseHelper {
               snapshot.fetchMore();
             }
             final feed = Feed.fromSnapshot(snapshot.docs[index]);
-            return widget.itemBuilder?.call(feed, index) ??
-                FeedListViewItem(feed: feed);
+            final child = widget.itemBuilder?.call(feed, index) ??
+                FeedListViewItem(
+                  feed: feed,
+                  textBuilder: widget.textBuilder,
+                  avatarBuilder: widget.avatarBuilder,
+                );
+
+            if (widget.topBuilder != null && index == 0) {
+              return Column(
+                children: [
+                  widget.topBuilder!.call(feed),
+                  child,
+                ],
+              );
+            } else {
+              return child;
+            }
           },
         );
       },
