@@ -312,7 +312,7 @@ You cannot use `my` until the UserService is initialized and `UserService.instan
 
 ### How to open a post
 
-Call the `showPostViewDialog` to show the full screen dialog that displays the post
+Call the `showPostViewScreen` to show the full screen dialog that displays the post
 
 ```dart
 PostService.instance.customize.postViewScreenBuilder = (post) => GRCCustomPostViewScreen(post: post);
@@ -423,10 +423,10 @@ UserDoc(
 
 ## User customization
 
-To customize the user public profile screen, you can override the showPublicProfile function.
+To customize the user public profile screen, you can override the showPublicProfileScreen function.
 
 ```dart
-UserService.instance.customize.showPublicProfile =
+UserService.instance.customize.showPublicProfileScreen =
     (BuildContext context, {String? uid, User? user}) => showGeneralDialog<dynamic>(
           context: context,
           pageBuilder: ($, _, __) => MomcafePublicProfileScreen(
@@ -1578,11 +1578,11 @@ Below is to show post view screen.
 
 ```dart
 /// Example 1
-Post.get('Uc2TKInQ9oBJeKtSJpBq').then((p) => PostService.instance.showPostViewDialog(context, p));
+Post.get('Uc2TKInQ9oBJeKtSJpBq').then((p) => PostService.instance.showPostViewScreen(context, p));
 
 /// Example 2
 WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-  PostService.instance.showPostViewDialog(context, await Post.get('Wqdje1wU1IDVs7Uus936'));
+  PostService.instance.showPostViewScreen(context, await Post.get('Wqdje1wU1IDVs7Uus936'));
 });
 ```
 
@@ -1619,7 +1619,7 @@ UserService.instance.get(UserService.instance.adminUid).then(
 The code below shows how to open a comment edit bottom sheet. Use this for commet edit bottom sheet UI.
 
 ```dart
-PostService.instance.showPostViewDialog(context, await Post.get('PoxnpxpcC2lnYv0jqI4f'));
+PostService.instance.showPostViewScreen(context, await Post.get('PoxnpxpcC2lnYv0jqI4f'));
 if (mounted) {
   CommentService.instance.showCommentEditBottomSheet(
     context,

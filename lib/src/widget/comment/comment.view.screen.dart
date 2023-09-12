@@ -50,7 +50,7 @@ class _CommentViewScreenState extends State<CommentViewScreen> {
                   children: [
                     ElevatedButton(
                         onPressed: () {
-                          PostService.instance.showPostViewDialog(
+                          PostService.instance.showPostViewScreen(
                               context: context, postId: comment!.postId);
                         },
                         child: const Text('Open post')),

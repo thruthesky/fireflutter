@@ -10,6 +10,7 @@ class FeedListView extends StatefulWidget {
     this.topBuilder,
     this.textBuilder,
     this.avatarBuilder,
+    this.onTap,
   });
 
   final Widget Function(Feed feed, int index)? itemBuilder;
@@ -17,6 +18,8 @@ class FeedListView extends StatefulWidget {
 
   final Widget Function(BuildContext, Post)? avatarBuilder;
   final Widget Function(BuildContext, Post)? textBuilder;
+
+  final void Function(Post)? onTap;
 
   @override
   State<FeedListView> createState() => _FeedListViewState();
@@ -70,6 +73,7 @@ class _FeedListViewState extends State<FeedListView> with FirebaseHelper {
                   feed: feed,
                   textBuilder: widget.textBuilder,
                   avatarBuilder: widget.avatarBuilder,
+                  onTap: widget.onTap,
                 );
 
             if (widget.topBuilder != null && index == 0) {

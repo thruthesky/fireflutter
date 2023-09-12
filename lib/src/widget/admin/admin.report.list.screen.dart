@@ -123,9 +123,9 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
             onTap: () {
               if (report.type == 'user') {
                 UserService.instance
-                    .showPublicProfile(context: context, uid: report.uid);
+                    .showPublicProfileScreen(context: context, uid: report.uid);
               } else if (report.type == 'post') {
-                PostService.instance.showPostViewDialog(
+                PostService.instance.showPostViewScreen(
                     context: context, postId: report.postId);
               } else if (report.type == 'comment') {
                 CommentService.instance.showCommentViewDialog(
