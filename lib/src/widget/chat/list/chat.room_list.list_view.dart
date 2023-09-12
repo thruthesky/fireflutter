@@ -56,6 +56,7 @@ class ChatRoomListView extends StatefulWidget {
     this.singleChatOnly = false,
     this.groupChatOnly = false,
     this.openChatOnly = false,
+    this.allChat = false,
     this.itemExtent = 64,
     this.avatarSize = 46,
     this.scrollDirection = Axis.vertical,
@@ -82,6 +83,9 @@ class ChatRoomListView extends StatefulWidget {
   final bool singleChatOnly;
   final bool groupChatOnly;
   final bool openChatOnly;
+
+  /// [allChat] if [allChat] is set to true, then it will list all the chat room. Only admin can do this.
+  final bool allChat;
 
   final double? itemExtent;
 
@@ -112,7 +116,9 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
     Query q = ChatService.instance.chatCol;
 
     // Display all open chat room
-    if (widget.openChatOnly == true) {
+    if (widget.allChat) {
+      // pass all other fitlering if [allChat] is set.
+    } else if (widget.openChatOnly == true) {
       q = q.where('open', isEqualTo: true);
     } else {
       // Or display all of my rooms

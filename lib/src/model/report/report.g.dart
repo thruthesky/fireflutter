@@ -12,6 +12,7 @@ Report _$ReportFromJson(Map<String, dynamic> json) => Report(
       uid: json['uid'] as String?,
       postId: json['postId'] as String?,
       commentId: json['commentId'] as String?,
+      type: json['type'] as String,
     );
 
 Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
@@ -20,4 +21,5 @@ Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
       'postId': instance.postId,
       'commentId': instance.commentId,
       'reason': instance.reason,
+      'type': instance.type,
     };

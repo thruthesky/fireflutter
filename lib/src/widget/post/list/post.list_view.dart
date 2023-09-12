@@ -68,7 +68,8 @@ class PostListView extends StatelessWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
               // print(post);
-              PostService.instance.showPostViewDialog(context, post);
+              PostService.instance
+                  .showPostViewDialog(context: context, post: post);
             },
           );
         }

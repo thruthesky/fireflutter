@@ -46,7 +46,8 @@ class _PostListDialogState extends State<PostListScreen> {
               if (post != null) {
                 if (mounted) {
                   Navigator.pop(context);
-                  PostService.instance.showPostViewDialog(context, post);
+                  PostService.instance
+                      .showPostViewDialog(context: context, post: post);
                 }
               }
             },

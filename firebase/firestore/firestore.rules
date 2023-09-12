@@ -177,7 +177,7 @@ service cloud.firestore {
       //   return 'group' in resource.data && resource.data.group;
       // }
 
-      allow read: if isRoomUser() || isOpen();
+      allow read: if isRoomUser() || isOpen() || isAdmin();
       allow create: if
         required(['master', 'createdAt', 'group', 'open', 'users'])
         &&

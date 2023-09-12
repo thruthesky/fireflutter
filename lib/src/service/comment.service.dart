@@ -76,4 +76,16 @@ class CommentService with FirebaseHelper {
       ),
     );
   }
+
+  /// Display a commnet view dialog
+  showCommentViewDialog(
+      {required BuildContext context, Comment? comment, String? commentId}) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) => CommentViewScreen(
+        comment: comment,
+        commentId: commentId,
+      ),
+    );
+  }
 }
