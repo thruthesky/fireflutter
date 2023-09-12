@@ -130,7 +130,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     ),
                     child: Text(post.content),
                   ),
-                  YouTube(url: post.youtubeId, autoPlay: true),
+                  YouTube(youtubeId: post.youtubeId, autoPlay: true),
                   const Divider(),
                   if (post.urls.isNotEmpty)
                     ...post.urls.map((e) => DisplayMedia(url: e)).toList(),

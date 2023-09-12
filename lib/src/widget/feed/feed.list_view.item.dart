@@ -36,7 +36,7 @@ class FeedListViewItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                YouTube(url: post.youtubeId),
+                YouTubeThumbnail(youtubeId: post.youtubeId),
                 ...post.urls
                     .map((e) => GestureDetector(
                           behavior: HitTestBehavior.opaque,
