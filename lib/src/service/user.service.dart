@@ -317,9 +317,10 @@ class UserService with FirebaseHelper {
   ///
   /// It shows the public profile dialog for the user. You can customize by
   /// setting [UserCustomize] to [UserService.instance.customize].
-  Future showPublicProfile(
+  Future showPublicProfileScreen(
       {required BuildContext context, String? uid, User? user}) {
-    return customize.showPublicProfile?.call(context, uid: uid, user: user) ??
+    return customize.showPublicProfileScreen
+            ?.call(context, uid: uid, user: user) ??
         showGeneralDialog(
           context: context,
           pageBuilder: ($, _, __) => PublicProfileScreen(uid: uid, user: user),
