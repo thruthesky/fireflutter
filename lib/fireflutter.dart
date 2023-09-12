@@ -1,3 +1,4 @@
+export 'src/globals.dart';
 export 'src/functions/functions.dart';
 export 'src/functions/database.dart';
 export 'src/mixin/firebase_helper.mixin.dart';
