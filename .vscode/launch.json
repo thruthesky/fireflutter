@@ -191,7 +191,7 @@
       "cwd": "apps/grc",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "deviceId": "emulator-5554"
+      "deviceId": "iPhone 14 Pro Max"
     },
   ]
 }
