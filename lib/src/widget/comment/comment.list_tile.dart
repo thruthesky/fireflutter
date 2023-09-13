@@ -25,11 +25,19 @@ class CommentTileState extends State<CommentListTile> {
       padding: EdgeInsets.only(
         left: indent(widget.comment.depth),
       ),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Theme.of(context).colorScheme.secondary.withAlpha(100),
+            width: 1,
+          ),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               UserAvatar(
                 size: 40,
@@ -47,16 +55,12 @@ class CommentTileState extends State<CommentListTile> {
               DateTimeText(dateTime: widget.comment.createdAt),
             ],
           ),
-          Row(
-            children: [
-              SizedBox(
-                width: 20,
-              ),
-              Text(
-                widget.comment.content,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.only(left: sizeXxl),
+            child: Text(
+              widget.comment.content,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
           ),
           widget.comment.urls.isNotEmpty
               ? Column(
