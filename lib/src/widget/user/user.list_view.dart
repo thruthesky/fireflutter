@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
@@ -14,6 +16,7 @@ class UserListView extends StatelessWidget with FirebaseHelper {
   const UserListView({
     super.key,
     this.searchText,
+    this.filter = const {},
     this.exemptedUsers = const [],
     this.field = 'displayName',
     this.onTap,
@@ -28,6 +31,7 @@ class UserListView extends StatelessWidget with FirebaseHelper {
   });
 
   final String? searchText;
+  final Map<String, dynamic> filter;
   final List<String> exemptedUsers;
   final Function(User)? onTap;
   final Function(User)? onLongPress;
@@ -49,6 +53,15 @@ class UserListView extends StatelessWidget with FirebaseHelper {
     Query query = userSearchCol;
     if (hasSearchText) {
       query = query.where(field, isEqualTo: searchText);
+    }
+    for (String filterKey in filter.keys) {
+      if (filter[filterKey] is String) {
+        query = query.where(filterKey, isEqualTo: filter[filterKey]);
+      }
+      if (filter[filterKey] is List<dynamic>) {
+        print("$filterKey, whereIn: ${filter[filterKey]}");
+        query = query.where(filterKey, arrayContainsAny: filter[filterKey]);
+      }
     }
     return FirestoreQueryBuilder(
       pageSize: pageSize,
@@ -78,13 +91,10 @@ class UserListView extends StatelessWidget with FirebaseHelper {
               if (exemptedUsers.contains(user.uid)) return const SizedBox();
               if (itemBuilder != null) return itemBuilder!.call(user, index);
               return ListTile(
-                title:
-                    titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
-                subtitle: subtitleBuilder?.call(user) ??
-                    Text(user.createdAt.toString()),
+                title: titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
+                subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
                 leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
-                trailing: trailingBuilder?.call(user) ??
-                    const Icon(Icons.chevron_right),
+                trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
                 onTap: () async {
                   onTap?.call(user);
                 },
