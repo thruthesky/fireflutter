@@ -191,6 +191,8 @@ class MessagingService with FirebaseHelper {
     String? topic,
     String? id,
     String? badge,
+    String? channelId,
+    String? sound,
   }) {
     Json data = {
       'title': title,
@@ -203,6 +205,8 @@ class MessagingService with FirebaseHelper {
       if (topic != null && topic.isNotEmpty) 'topic': topic,
       if (id != null && id.isNotEmpty) 'id': id,
       if (badge != null && badge.isNotEmpty) 'badge': badge,
+      if (channelId != null && channelId.isNotEmpty) 'channelId': channelId,
+      if (sound != null && sound.isNotEmpty) 'sound': sound,
     };
 
     // print('data; $data');

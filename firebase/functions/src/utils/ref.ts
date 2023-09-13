@@ -25,7 +25,7 @@ export class Ref {
   }
 
   static get pushNotificationQueue() {
-    return this.db.collection('push_notification_queue');
+    return this.db.collection("push_notification_queue");
   }
 
   static userDoc(

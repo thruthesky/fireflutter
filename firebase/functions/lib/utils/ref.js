@@ -21,6 +21,9 @@ class Ref {
     static get users() {
         return this.db.collection("users");
     }
+    static get pushNotificationQueue() {
+        return this.db.collection("push_notification_queue");
+    }
     static userDoc(uid) {
         return this.users.doc(uid);
     }
