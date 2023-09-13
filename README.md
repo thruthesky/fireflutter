@@ -61,6 +61,8 @@ Create an issue if you find a bug or need a help.
   - [Favorite/Bookmark](#favoritebookmark)
     - [How to display icon](#how-to-display-icon)
   - [Follow and Unfollow](#follow-and-unfollow)
+- [Post](#post)
+  - [Post view screen custom design](#post-view-screen-custom-design)
 - [Database](#database)
   - [Get/Set/Update/Toggle](#getsetupdatetoggle)
   - [Database widget](#database-widget)
@@ -1007,6 +1009,46 @@ When it follows or unfollows,
 - It will add or remove the login user's uid in the [otherUid]'s followers array.
 
 Note that you may use it with or without the feed service. See the `Feed Service` for the details on how to follow to see the posts of the users that you are following. But you can use it without the feed system.
+
+
+# Post
+
+
+## Post view screen custom design
+
+If you want to design the whole screen of post view,
+- you can copy the whole code insode `fireflutter/lib/src/widget/post/view/post.view.screen.dart` into a new screen
+- and connect it to `PostService.instance.customize.postViewScreen`,
+- and you can start to design your own screen.
+
+
+Example of connecting your own screen to post view.
+
+```dart
+PostService.instance.customize.showPostViewScreen =
+    (context, {String? postId, Post? post}) => showGeneralDialog(
+          context: context,
+          pageBuilder: (context, $, $$) =>
+              MomcafePostViewScreen(postId: postId, post: post),
+        );
+```
+
+If you want to customize of a portion of the existing ui, you may use `PostService.instance.customize.postViewXxxx`. For instance, if you want to add a button on the post view screen, simply do the following.
+
+```dart
+PostService.instance.customize.postViewButtons = (post) => PostViewButtons(
+      post: post,
+      middle: [
+        TextButton(
+          onPressed: () {},
+          child: const Text("New Button"),
+        ),
+      ],
+    );
+```
+
+You can actullay rebuild the whole buttons by providing new widget instead of the `PostViewButtons`.
+
 
 # Database
 

@@ -52,6 +52,9 @@ export 'widget/post/post_list.push_notification.icon.dart';
 export 'widget/post/post_list.category_subscription.dart';
 export 'widget/post/post_doc.dart';
 export 'widget/post/view/post.view.title.dart';
+export 'widget/post/view/post.view.meta.dart';
+export 'widget/post/view/post.view.content.dart';
+export 'widget/post/view/post.view.buttons.dart';
 
 // Comment
 export 'widget/comment/comment_edit.bottom_sheet.dart';
