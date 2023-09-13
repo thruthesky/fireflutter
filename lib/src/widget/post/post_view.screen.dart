@@ -48,7 +48,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
       appBar: AppBar(
         title: const Text('Post'),
         actions: [
-          if (post.isMine)
+          if (_post != null && post.isMine)
             IconButton(icon: const Icon(Icons.edit), onPressed: onEdit),
           PopupMenuButton(
             icon: const Icon(Icons.more_horiz),
@@ -134,73 +134,77 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   const Divider(),
                   if (post.urls.isNotEmpty)
                     ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        TextButton(
-                          child: const Text('Reply'),
-                          onPressed: () async {
-                            await CommentService.instance
-                                .showCommentEditBottomSheet(
-                              context,
-                              post: post,
-                            );
-                          },
-                        ),
-                        PostDoc(
-                          postId: post.id,
-                          post: post,
-                          builder: (post) => TextButton(
-                            child: Text(
-                              'Like ${post.noOfLikes}',
-                              style: post.iLiked
-                                  ? const TextStyle(fontWeight: FontWeight.bold)
-                                  : null,
-                            ),
-                            onPressed: () => post.like(),
-                          ),
-                        ),
-                        UserDoc(
-                          live: true,
-                          builder: (user) => TextButton(
+
+                  const LoginFirst(),
+                  if (loggedIn)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          TextButton(
+                            child: const Text('Reply'),
                             onPressed: () async {
-                              final re =
-                                  await FeedService.instance.follow(post.uid);
-                              toast(
-                                title: re ? 'Followed' : 'Unfollowed',
-                                message: re
-                                    ? 'You have followed this user'
-                                    : 'You have unfollowed this user',
+                              await CommentService.instance
+                                  .showCommentEditBottomSheet(
+                                context,
+                                post: post,
                               );
                             },
-                            child: Text(user.followings.contains(post.uid)
-                                ? 'Unfollow'
-                                : 'Follow'),
                           ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            ReportService.instance.showReportDialog(
-                              context: context,
-                              postId: post.id,
-                              onExists: (id, type) => toast(
-                                  title: 'Already reported',
-                                  message:
-                                      'You have reported this $type already.'),
-                            );
-                          },
-                          child: const Text('Report'),
-                        ),
-                        const Spacer(),
-                        TextButton(
-                          onPressed: onEdit,
-                          child: const Text('Edit'),
-                        ),
-                      ],
+                          PostDoc(
+                            postId: post.id,
+                            post: post,
+                            builder: (post) => TextButton(
+                              child: Text(
+                                'Like ${post.noOfLikes}',
+                                style: post.iLiked
+                                    ? const TextStyle(
+                                        fontWeight: FontWeight.bold)
+                                    : null,
+                              ),
+                              onPressed: () => post.like(),
+                            ),
+                          ),
+                          UserDoc(
+                            live: true,
+                            builder: (user) => TextButton(
+                              onPressed: () async {
+                                final re =
+                                    await FeedService.instance.follow(post.uid);
+                                toast(
+                                  title: re ? 'Followed' : 'Unfollowed',
+                                  message: re
+                                      ? 'You have followed this user'
+                                      : 'You have unfollowed this user',
+                                );
+                              },
+                              child: Text(user.followings.contains(post.uid)
+                                  ? 'Unfollow'
+                                  : 'Follow'),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              ReportService.instance.showReportDialog(
+                                context: context,
+                                postId: post.id,
+                                onExists: (id, type) => toast(
+                                    title: 'Already reported',
+                                    message:
+                                        'You have reported this $type already.'),
+                              );
+                            },
+                            child: const Text('Report'),
+                          ),
+                          const Spacer(),
+                          TextButton(
+                            onPressed: onEdit,
+                            child: const Text('Edit'),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
                   CommentListView(
                     post: post,
                     shrinkWrap: true,

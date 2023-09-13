@@ -65,12 +65,14 @@ class Post with FirebaseHelper {
       _$PostFromJson(json)..data = json;
   Map<String, dynamic> toJson() => _$PostToJson(this);
 
+  /// If the post is not found, it throws an Exception.
   static Future<Post> get(String? id) async {
     if (id == null) {
       throw Exception('Post id is null');
     }
     final DocumentSnapshot documentSnapshot =
         await PostService.instance.postCol.doc(id).get();
+    if (documentSnapshot.exists == false) throw Exception('Post not found');
     return Post.fromDocumentSnapshot(documentSnapshot);
   }
 
@@ -151,6 +153,6 @@ class Post with FirebaseHelper {
   @override
   String toString() => 'Post(${toJson()})';
   bool get isMine {
-    return UserService.instance.uid == uid;
+    return loggedIn && UserService.instance.uid == uid;
   }
 }

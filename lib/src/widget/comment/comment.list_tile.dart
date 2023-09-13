@@ -62,53 +62,56 @@ class CommentTileState extends State<CommentListTile> {
                             .toList(),
                       )
                     : const SizedBox.shrink(),
-                Row(
-                  children: [
-                    TextButton(
-                      child: const Text('Reply'),
-                      onPressed: () async {
-                        await CommentService.instance
-                            .showCommentEditBottomSheet(
-                          context,
-                          post: widget.post,
-                          parent: widget.comment,
-                        );
-                      },
-                    ),
-                    CommentDoc(
-                      comment: widget.comment,
-                      builder: (comment) {
-                        return TextButton(
-                          child: Text('Like ${comment.noOfLikes}'),
-                          onPressed: () {
-                            comment.likeOrUnlike();
-                          },
-                        );
-                      },
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        ReportService.instance.showReportDialog(
-                          context: context,
-                          commentId: widget.comment.id,
-                          onExists: (id, type) => toast(
-                              title: 'Already reported',
-                              message: 'You have reported this $type already.'),
-                        );
-                      },
-                      child: const Text('Report'),
-                    ),
-                    const Spacer(),
-                    TextButton(
-                      onPressed: () async {
-                        await CommentService.instance
-                            .showCommentEditBottomSheet(context,
-                                comment: widget.comment);
-                      },
-                      child: const Text('Edit'),
-                    ),
-                  ],
-                ),
+                const LoginFirst(),
+                if (loggedIn)
+                  Row(
+                    children: [
+                      TextButton(
+                        child: const Text('Reply'),
+                        onPressed: () async {
+                          await CommentService.instance
+                              .showCommentEditBottomSheet(
+                            context,
+                            post: widget.post,
+                            parent: widget.comment,
+                          );
+                        },
+                      ),
+                      CommentDoc(
+                        comment: widget.comment,
+                        builder: (comment) {
+                          return TextButton(
+                            child: Text('Like ${comment.noOfLikes}'),
+                            onPressed: () {
+                              comment.likeOrUnlike();
+                            },
+                          );
+                        },
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          ReportService.instance.showReportDialog(
+                            context: context,
+                            commentId: widget.comment.id,
+                            onExists: (id, type) => toast(
+                                title: 'Already reported',
+                                message:
+                                    'You have reported this $type already.'),
+                          );
+                        },
+                        child: const Text('Report'),
+                      ),
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () async {
+                          await CommentService.instance
+                              .showCommentEditBottomSheet(context,
+                                  comment: widget.comment);
+                        },
+                        child: const Text('Edit'),
+                      ),
+                    ],
+                  ),
               ],
             ),
           )

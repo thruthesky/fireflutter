@@ -25,6 +25,16 @@ class FavoriteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (notLoggedIn) {
+      return IconButton(
+        onPressed: () async {
+          toast(
+              title: tr.user.loginFirstTitle,
+              message: tr.user.loginFirstMessage);
+        },
+        icon: builder(false),
+      );
+    }
     return StreamBuilder(
       stream: Favorite.query(
               postId: postId, otherUid: otherUid, commentId: commentId)

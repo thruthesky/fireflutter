@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:fireflutter/fireflutter.dart';
@@ -18,6 +20,8 @@ import 'package:rxdart/rxdart.dart';
 /// UserService.instance.documentChanges.listen((user) => user == null ? null : print(my));
 /// my.update(state: stateController.text);
 User get my => UserService.instance.user;
+bool get loggedIn => UserService.instance.loggedIn;
+bool get notLoggedIn => UserService.instance.notLoggedIn;
 
 /// [myUid] is an alias of [FirebaseAuth.instance.currentUser?.uid].
 ///
@@ -32,15 +36,21 @@ class UserService with FirebaseHelper {
   UserCustomize customize = UserCustomize();
 
   /// Return true if the user signed with real account. Not anonymous.
-  bool get notSignedIn =>
+  bool get notLoggedIn =>
       isAnonymous || auth.FirebaseAuth.instance.currentUser == null;
 
-  bool get signedIn => !notSignedIn;
+  @override
+  bool get loggedIn => !notLoggedIn;
   bool get isAnonymous =>
       auth.FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
 
-  /// 환영 인사 메시지를 보낼 때 등에 사용된다.
-  late final String adminUid;
+  /// Admin user model
+  ///
+  /// If [adminUid] is set on init(), then [admin] will have the admin user document model.
+  ///
+  /// It is used to send a welcome message when the user registers. Or you may
+  /// use it to let users to chage with admin.
+  User? admin;
 
   /// [documentChanges] fires event for when
   /// - app boots.
@@ -148,7 +158,9 @@ class UserService with FirebaseHelper {
   init({
     required String adminUid,
   }) {
-    this.adminUid = adminUid;
+    if (adminUid.isNotEmpty) {
+      UserService.instance.get(adminUid).then((value) => admin = value);
+    }
 
     /// 로그인을 할 때, nullableUser 초기가 값 지정
     auth.FirebaseAuth.instance
@@ -214,6 +226,9 @@ class UserService with FirebaseHelper {
   /// ```
   /// UserService.instance.get(UserService.instance.uid, reload: true, sync: false);
   /// ```
+  ///
+  /// Note that, it does not throw an Exception when the user document does not
+  /// exist. It just returns null.
   /// The above example is same as [User.get]
   Future<User?> get(
     String uid, {
@@ -300,8 +315,11 @@ class UserService with FirebaseHelper {
   /// post card on the chat room.
   ///
   Future<void> sendWelcomeMessage({required String message}) async {
+    if (admin == null) {
+      log("-----> admin is not set on UserService.instance.init() <-----");
+    }
     final room = await Room.create(
-      otherUserUid: adminUid,
+      otherUserUid: admin!.uid,
     );
     await ChatService.instance.sendProtocolMessage(
       room: room,

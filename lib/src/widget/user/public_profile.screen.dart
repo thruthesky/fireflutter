@@ -19,7 +19,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
   final BehaviorSubject<double?> progressEvent =
       BehaviorSubject<double?>.seeded(null);
 
-  bool get isMyProfile => widget.uid == my.uid;
+  bool get isMyProfile => loggedIn && widget.uid == my.uid;
 
   String? currentLoadedImageUrl;
   String previousUrl = '';
@@ -105,90 +105,105 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                             upload: isMyProfile,
                           ),
                           const SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              TextButton(
-                                style: TextButton.styleFrom(
-                                    foregroundColor: Theme.of(context)
-                                        .colorScheme
-                                        .onSecondary),
-                                onPressed: () => like(user.uid),
-                                child: Database(
-                                  path: 'likes/${user.uid}',
-                                  builder: (value) => Text(value == null
-                                      ? 'Like'
-                                      : '${(value as Map).length} Likes'),
+                          if (loggedIn)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                      foregroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .onSecondary),
+                                  onPressed: () => like(user.uid),
+                                  child: Database(
+                                    path: 'likes/${user.uid}',
+                                    builder: (value) => Text(value == null
+                                        ? 'Like'
+                                        : '${(value as Map).length} Likes'),
+                                  ),
                                 ),
-                              ),
-                              FavoriteButton(
-                                otherUid: user.uid,
-                                builder: (re) => Text(
-                                  re ? 'Unfavorite' : 'Favorite',
-                                  style: TextStyle(
-                                    color: Theme.of(context)
+                                FavoriteButton(
+                                  otherUid: user.uid,
+                                  builder: (re) => Text(
+                                    re ? 'Unfavorite' : 'Favorite',
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSecondary,
+                                    ),
+                                  ),
+                                  onChanged: (re) => toast(
+                                    title: re ? 'Favorite' : 'Unfavorite',
+                                    message: re
+                                        ? 'You have favorited this user.'
+                                        : 'You have unfavorited this user.',
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    ChatService.instance.showChatRoom(
+                                      context: context,
+                                      user: user,
+                                    );
+                                  },
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Theme.of(context)
                                         .colorScheme
                                         .onSecondary,
                                   ),
+                                  child: const Text("Chat"),
                                 ),
-                                onChanged: (re) => toast(
-                                  title: re ? 'Favorite' : 'Unfavorite',
-                                  message: re
-                                      ? 'You have favorited this user.'
-                                      : 'You have unfavorited this user.',
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  ChatService.instance.showChatRoom(
-                                    context: context,
-                                    user: user,
-                                  );
-                                },
-                                style: TextButton.styleFrom(
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.onSecondary,
-                                ),
-                                child: const Text("Chat"),
-                              ),
-                              TextButton(
-                                onPressed: () async {
-                                  final blocked = await toggle(
-                                      '/settings/$myUid/blocks/${user.uid}');
-                                  toast(
-                                      title: blocked ? 'Blocked' : 'Unblocked',
-                                      message:
-                                          'The user has been ${blocked ? 'blocked' : 'unblocked'} by you');
-                                },
-                                style: TextButton.styleFrom(
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.onSecondary,
-                                ),
-                                child: Database(
-                                  path: 'settings/$myUid/blocks/${user.uid}',
-                                  builder: (value) =>
-                                      Text(value == null ? 'Block' : 'Unblock'),
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  ReportService.instance.showReportDialog(
-                                    context: context,
-                                    otherUid: user.uid,
-                                    onExists: (id, type) => toast(
-                                        title: 'Already reported',
+                                TextButton(
+                                  onPressed: () async {
+                                    final blocked = await toggle(
+                                        '/settings/$myUid/blocks/${user.uid}');
+                                    toast(
+                                        title:
+                                            blocked ? 'Blocked' : 'Unblocked',
                                         message:
-                                            'You have reported this $type already.'),
-                                  );
-                                },
-                                style: TextButton.styleFrom(
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.onSecondary,
+                                            'The user has been ${blocked ? 'blocked' : 'unblocked'} by you');
+                                  },
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .onSecondary,
+                                  ),
+                                  child: Database(
+                                    path: 'settings/$myUid/blocks/${user.uid}',
+                                    builder: (value) => Text(
+                                        value == null ? 'Block' : 'Unblock'),
+                                  ),
                                 ),
-                                child: const Text('Report'),
-                              ),
-                            ],
-                          ),
+                                TextButton(
+                                  onPressed: () {
+                                    ReportService.instance.showReportDialog(
+                                      context: context,
+                                      otherUid: user.uid,
+                                      onExists: (id, type) => toast(
+                                          title: 'Already reported',
+                                          message:
+                                              'You have reported this $type already.'),
+                                    );
+                                  },
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .onSecondary,
+                                  ),
+                                  child: const Text('Report'),
+                                ),
+                              ],
+                            ),
+                          if (notLoggedIn)
+                            TextButton(
+                              onPressed: () {
+                                toast(
+                                  title: tr.user.loginFirstTitle,
+                                  message: tr.user.loginFirstMessage,
+                                );
+                              },
+                              child: Text(tr.user.loginFirstMessage),
+                            ),
                         ],
                       ),
                     );

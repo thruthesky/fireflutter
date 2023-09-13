@@ -104,11 +104,7 @@ class PostService with FirebaseHelper {
     return querySnapshot.docs.map((e) => Post.fromDocumentSnapshot(e)).toList();
   }
 
-  Future<Post?> get(String uid) async {
-    DocumentSnapshot snapshot = await postDoc(uid).get();
-    if (!snapshot.exists) {
-      return null;
-    }
-    return Post.fromDocumentSnapshot(snapshot);
+  Future<Post> get(String postId) async {
+    return await Post.get(postId);
   }
 }

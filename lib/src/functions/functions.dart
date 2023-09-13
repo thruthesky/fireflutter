@@ -230,6 +230,20 @@ ScaffoldFeatureController toast({
   );
 }
 
+ScaffoldFeatureController loginFirstToast({
+  Widget? icon,
+  Duration duration = const Duration(seconds: 8),
+  Function(Function)? onTap,
+}) {
+  return toast(
+    title: tr.user.loginFirstTitle,
+    message: tr.user.loginFirstMessage,
+    icon: icon,
+    duration: duration,
+    onTap: onTap,
+  );
+}
+
 /// Confirm dialgo
 ///
 /// It requires build context where [toast] does not.
