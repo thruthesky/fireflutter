@@ -175,7 +175,7 @@ class _PostListPushNotificationIconState
 
   /// Anonymous users can use subscription, but the user must sign-in as anonymous or as a real user.
   onNotificationSelected(dynamic selection) async {
-    if (UserService.instance.notSignedIn) {
+    if (UserService.instance.notLoggedIn) {
       // if (UserService.instance.notSignedInAtAll) {
       // ffError(ERROR_SIGN_IN_FIRST_FOR_FORUM_CAETGORY_SUBSCRIPTION);
       return;

@@ -36,27 +36,27 @@ service cloud.firestore {
     // *
 
 
-    match /users/{documentId} {
-      allow get: if request.auth.uid == documentId || isAdmin();
+    match /users/{userDocumentId} {
+      allow get: if request.auth.uid == userDocumentId || isAdmin();
       allow list: if isAdmin();
-      allow create: if request.auth.uid == documentId;
+      allow create: if request.auth.uid == userDocumentId;
       allow update: if
         isAdmin()
         ||
-        ( request.auth.uid == documentId && notUpdating(['disabled', 'isAdmin', 'isVerified']) )
+        ( request.auth.uid == userDocumentId && notUpdating(['disabled', 'isAdmin', 'isVerified']) )
         ||
         addOrRemove('followers', request.auth.uid) 
         || 
         addOrRemove('likes', request.auth.uid) 
         ;
-      allow delete: if request.auth.uid == documentId || isAdmin();
+      allow delete: if request.auth.uid == userDocumentId || isAdmin();
       match /fcm_tokens/{docId} {
-      	allow read: if true;
-        allow write: if (request.auth.uid == documentId);
+      	allow read:  if (request.auth.uid == userDocumentId) || isAdmin();
+        allow write: if (request.auth.uid == userDocumentId);
       }
       match /user_settings/{docId} {
-      	allow read: if true;
-        allow write: if (request.auth.uid == documentId);
+      	allow read:  if (request.auth.uid == userDocumentId) || isAdmin();
+        allow write: if (request.auth.uid == userDocumentId);
       }
     }
 

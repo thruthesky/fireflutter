@@ -86,6 +86,15 @@
       "deviceId": "emulator-5554"
     },
     {
+      "name": "MomCafe - SamSung2023 (J)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "R9ATA00LMJM"
+    },
+    {
       "name": "GRC - Simulator (J)",
       "request": "launch",
       "type": "dart",
@@ -174,6 +183,6 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "emulator-5554"
-    },
+    }
   ]
 }

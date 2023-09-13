@@ -37,6 +37,7 @@ Create an issue if you find a bug or need a help.
   - [UserAvatar](#useravatar)
   - [UserProfileAvatar](#userprofileavatar)
   - [User List View](#user-list-view)
+  - [When user is not logged in](#when-user-is-not-logged-in)
 - [Chat Feature](#chat-feature)
   - [Welcome message](#welcome-message)
   - [No of new message](#no-of-new-message)
@@ -186,12 +187,6 @@ Copy the following and paste it into your firebase project.
     "users": {
       ".read": true,
       "$uid": {
-        ".write" : "$uid === auth.uid"
-      }
-    },
-    "settings": {
-      "$uid": {
-        ".read": "$uid === auth.uid",
         ".write" : "$uid === auth.uid"
       }
     },
@@ -531,6 +526,52 @@ onPressed() async {
   );
 
 ```
+
+
+## When user is not logged in
+
+This is one way of how to dsplay widgets safely for not logged in users.
+
+```dart
+class FavoriteButton extends StatelessWidget {
+  const FavoriteButton({
+    super.key,
+    // ...
+  });
+
+
+  @override
+  Widget build(BuildContext context) {
+    // If the user has not logged in yet, display an icon with a warning toast.
+    if (notLoggedIn) {
+      return IconButton(
+        onPressed: () async {
+          toast(
+              title: tr.user.loginFirstTitle,
+              message: tr.user.loginFirstMessage);
+        },
+        icon: builder(false),
+      );
+    }
+    return StreamBuilder(
+      stream: ....snapshots(),
+      builder: (context, snapshot) {
+        return IconButton(
+          onPressed: () async {
+            final re = await Favorite.toggle(
+                postId: postId, otherUid: otherUid, commentId: commentId);
+            onChanged?.call(re);
+          },
+          icon: builder(snapshot.data?.size == 1),
+        );
+      },
+    );
+  }
+}
+
+```
+
+
 
 # Chat Feature
 
@@ -1023,9 +1064,7 @@ ElevatedButton(
 
 # Settings
 
-User settings are saved under `/settings/{uid}/...` in RTDB and the security rules are set to the login user. It is closed and only the login user can read/write from/to the `/settings/{uid}/...` node.
-
-You can manage the node data with database functions described in [the database chaper](#database).
+The system settings are saved under `/settings` collection while  the user settings are saved under `/users/{uid}/user_settings/{settingId}/...` in Firestore and the security rules are set to the login user.
 
 See [the block chapter](#block) to know how to use(manage) the user settings and how to use `Database` widget with it.
 

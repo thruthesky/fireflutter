@@ -13,7 +13,8 @@ class I18N {
 }
 
 class UserTranslations {
-  String loginFirst = 'Please login first';
+  String loginFirstTitle = 'Login first';
+  String loginFirstMessage = 'Please login first.';
 }
 
 class ChatTranslations {
