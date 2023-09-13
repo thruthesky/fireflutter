@@ -10,6 +10,7 @@ class I18N {
   ConfirmTranslations confirm = ConfirmTranslations();
   AlertTranslations alert = AlertTranslations();
   PromptTranslations prompt = PromptTranslations();
+  MenuTranslations menu = MenuTranslations();
 }
 
 class UserTranslations {
@@ -66,6 +67,25 @@ class AlertTranslations {
 class PromptTranslations {
   String ok = "OK";
   String cancel = "Cancel";
+}
+
+class MenuTranslations {
+  String like = "Like";
+  String likes = "#no Likes";
+  String favorite = "Favorite";
+  String unfavorite = "Unfavorite";
+  String favoriteMessage = "You have favorited this user.";
+  String unfavoriteMessage = "You have unfavorited this user.";
+  String chat = "Chat";
+  String block = "Block";
+  String unblock = "Unblock";
+  String blockMessage = "This user is blocked.";
+  String unblockMessage = "This user is unblocked.";
+  String alreadyBlockedTitle = "Already blocked";
+  String alreadyBlockedMessage = "This user is already blocked.";
+  String report = "Report";
+  String alreadyReportedTitle = "Already reported";
+  String alreadyReportedMessage = "You have reported this #type already.";
 }
 
 final tr = I18N();
