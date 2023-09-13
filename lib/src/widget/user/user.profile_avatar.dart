@@ -72,6 +72,15 @@ class UserProfileAvatar extends StatefulWidget {
 class _UserAvatarState extends State<UserProfileAvatar> {
   double? progress;
 
+  late User user;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    user = widget.user;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -104,17 +113,19 @@ class _UserAvatarState extends State<UserProfileAvatar> {
         );
 
         final oldUrl = UserService.instance.photoUrl;
+
         await widget.user.update(
           photoUrl: url,
           hasPhotoUrl: true,
         );
+        User.get(user.uid).then((value) => setState(() => user = value!));
         await StorageService.instance.delete(oldUrl);
       },
       child: Stack(
         children: [
           UserAvatar(
-            key: ValueKey(widget.user.photoUrl),
-            user: widget.user,
+            key: ValueKey(user.photoUrl),
+            user: user,
             size: widget.size,
             radius: 100,
             borderWidth: 0,

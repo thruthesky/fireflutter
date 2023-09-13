@@ -20,12 +20,17 @@ class CommentTileState extends State<CommentListTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 16),
-      padding: EdgeInsets.only(left: indent(widget.comment.depth)),
+      margin: const EdgeInsets.only(
+          left: sizeSm, right: sizeSm, top: sizeXs, bottom: sizeSm),
+      padding: EdgeInsets.only(
+        left: indent(widget.comment.depth),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           UserAvatar(
+            size: 40,
+            radius: 20,
             uid: widget.comment.uid,
             key: ValueKey(widget.comment.id),
           ),
