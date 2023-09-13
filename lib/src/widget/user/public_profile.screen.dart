@@ -25,6 +25,13 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
   String previousUrl = '';
 
   @override
+  void initState() {
+    super.initState();
+    if (isMyProfile) return;
+    // Add view here
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
@@ -105,6 +112,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                             upload: isMyProfile,
                           ),
                           const SizedBox(height: 20),
+                          const LoginFirst(),
                           if (loggedIn)
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -117,15 +125,18 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                                   onPressed: () => like(user.uid),
                                   child: Database(
                                     path: 'likes/${user.uid}',
-                                    builder: (value) => Text(value == null
-                                        ? 'Like'
-                                        : '${(value as Map).length} Likes'),
+                                    builder: (value) => Text(
+                                      value == null
+                                          ? tr.menu.like
+                                          : tr.menu.likes.replaceAll(
+                                              '#no', value.length.toString()),
+                                    ),
                                   ),
                                 ),
                                 FavoriteButton(
                                   otherUid: user.uid,
                                   builder: (re) => Text(
-                                    re ? 'Unfavorite' : 'Favorite',
+                                    re ? tr.menu.unfavorite : tr.menu.favorite,
                                     style: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -133,10 +144,12 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                                     ),
                                   ),
                                   onChanged: (re) => toast(
-                                    title: re ? 'Favorite' : 'Unfavorite',
+                                    title: re
+                                        ? tr.menu.favorite
+                                        : tr.menu.unfavorite,
                                     message: re
-                                        ? 'You have favorited this user.'
-                                        : 'You have unfavorited this user.',
+                                        ? tr.menu.favoriteMessage
+                                        : tr.menu.unfavoriteMessage,
                                   ),
                                 ),
                                 TextButton(
@@ -151,17 +164,20 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                                         .colorScheme
                                         .onSecondary,
                                   ),
-                                  child: const Text("Chat"),
+                                  child: Text(tr.menu.chat),
                                 ),
                                 TextButton(
                                   onPressed: () async {
                                     final blocked = await toggle(
                                         '/settings/$myUid/blocks/${user.uid}');
                                     toast(
-                                        title:
-                                            blocked ? 'Blocked' : 'Unblocked',
-                                        message:
-                                            'The user has been ${blocked ? 'blocked' : 'unblocked'} by you');
+                                      title: blocked
+                                          ? tr.menu.block
+                                          : tr.menu.unblock,
+                                      message: blocked
+                                          ? tr.menu.blockMessage
+                                          : tr.menu.unblockMessage,
+                                    );
                                   },
                                   style: TextButton.styleFrom(
                                     foregroundColor: Theme.of(context)
@@ -170,8 +186,9 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                                   ),
                                   child: Database(
                                     path: 'settings/$myUid/blocks/${user.uid}',
-                                    builder: (value) => Text(
-                                        value == null ? 'Block' : 'Unblock'),
+                                    builder: (value) => Text(value == null
+                                        ? tr.menu.block
+                                        : tr.menu.unblock),
                                   ),
                                 ),
                                 TextButton(
@@ -180,9 +197,10 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                                       context: context,
                                       otherUid: user.uid,
                                       onExists: (id, type) => toast(
-                                          title: 'Already reported',
-                                          message:
-                                              'You have reported this $type already.'),
+                                        title: tr.menu.alreadyReportedTitle,
+                                        message: tr.menu.alreadyReportedMessage
+                                            .replaceAll('#type', type),
+                                      ),
                                     );
                                   },
                                   style: TextButton.styleFrom(
@@ -190,19 +208,9 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                                         .colorScheme
                                         .onSecondary,
                                   ),
-                                  child: const Text('Report'),
+                                  child: Text(tr.menu.report),
                                 ),
                               ],
-                            ),
-                          if (notLoggedIn)
-                            TextButton(
-                              onPressed: () {
-                                toast(
-                                  title: tr.user.loginFirstTitle,
-                                  message: tr.user.loginFirstMessage,
-                                );
-                              },
-                              child: Text(tr.user.loginFirstMessage),
                             ),
                         ],
                       ),

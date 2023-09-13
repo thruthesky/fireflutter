@@ -61,6 +61,8 @@ Create an issue if you find a bug or need a help.
   - [Favorite/Bookmark](#favoritebookmark)
     - [How to display icon](#how-to-display-icon)
   - [Follow and Unfollow](#follow-and-unfollow)
+- [Post](#post)
+  - [Post view screen custom design](#post-view-screen-custom-design)
 - [Database](#database)
   - [Get/Set/Update/Toggle](#getsetupdatetoggle)
   - [Database widget](#database-widget)
@@ -86,6 +88,7 @@ Create an issue if you find a bug or need a help.
     - [Updating auth custom claims](#updating-auth-custom-claims)
     - [Disable user](#disable-user)
 - [Translation](#translation)
+- [Customization](#customization-1)
 - [Unit Testing](#unit-testing)
   - [Testing on Local Emulators and Firebase](#testing-on-local-emulators-and-firebase)
   - [Testing security rules](#testing-security-rules)
@@ -1008,6 +1011,46 @@ When it follows or unfollows,
 
 Note that you may use it with or without the feed service. See the `Feed Service` for the details on how to follow to see the posts of the users that you are following. But you can use it without the feed system.
 
+
+# Post
+
+
+## Post view screen custom design
+
+If you want to design the whole screen of post view,
+- you can copy the whole code insode `fireflutter/lib/src/widget/post/view/post.view.screen.dart` into a new screen
+- and connect it to `PostService.instance.customize.postViewScreen`,
+- and you can start to design your own screen.
+
+
+Example of connecting your own screen to post view.
+
+```dart
+PostService.instance.customize.showPostViewScreen =
+    (context, {String? postId, Post? post}) => showGeneralDialog(
+          context: context,
+          pageBuilder: (context, $, $$) =>
+              MomcafePostViewScreen(postId: postId, post: post),
+        );
+```
+
+If you want to customize of a portion of the existing ui, you may use `PostService.instance.customize.postViewXxxx`. For instance, if you want to add a button on the post view screen, simply do the following.
+
+```dart
+PostService.instance.customize.postViewButtons = (post) => PostViewButtons(
+      post: post,
+      middle: [
+        TextButton(
+          onPressed: () {},
+          child: const Text("New Button"),
+        ),
+      ],
+    );
+```
+
+You can actullay rebuild the whole buttons by providing new widget instead of the `PostViewButtons`.
+
+
 # Database
 
 ## Get/Set/Update/Toggle
@@ -1621,6 +1664,17 @@ Here is an example of updating the translation.
 ```dart
 tr.user.loginFirst = '로그인을 해 주세요.';
 ```
+
+
+
+
+# Customization
+
+One feature that fireflutter does not have is shar. There is no limitation how you can build your app. You can simply use Firebase Dynamic Link with share_plus package to share posts or profiles. You may customize the UI and add a share button to post view screen.
+
+
+
+
 
 # Unit Testing
 
