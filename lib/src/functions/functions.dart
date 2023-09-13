@@ -30,7 +30,7 @@ Future<ImageSource?> chooseUploadSource(BuildContext context) async {
             const SizedBox(
               height: 20,
             ),
-            Text(tr.upload.chooseFrom),
+            Text(tr.chooseUploadFrom),
             ListTile(
               leading: const Icon(Icons.photo_camera),
               title: const Text('Camera'),
@@ -223,7 +223,7 @@ ScaffoldFeatureController toast({
               onPressed: () {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
               },
-              child: Text(tr.toast.dismiss))
+              child: Text(tr.dismiss))
         ],
       ),
     ),
@@ -236,8 +236,8 @@ ScaffoldFeatureController loginFirstToast({
   Function(Function)? onTap,
 }) {
   return toast(
-    title: tr.user.loginFirstTitle,
-    message: tr.user.loginFirstMessage,
+    title: tr.loginFirstTitle,
+    message: tr.loginFirstMessage,
     icon: icon,
     duration: duration,
     onTap: onTap,
@@ -260,11 +260,11 @@ Future<bool?> confirm(
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text(tr.confirm.no),
+            child: Text(tr.no),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text(tr.confirm.yes),
+            child: Text(tr.yes),
           ),
         ],
       );
@@ -288,7 +288,7 @@ Future alert(
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(tr.alert.ok),
+            child: Text(tr.ok),
           ),
         ],
       );
@@ -320,11 +320,11 @@ Future<String?> prompt(
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, controller.text),
-            child: Text(tr.prompt.ok),
+            child: Text(tr.ok),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(tr.prompt.cancel),
+            child: Text(tr.cancel),
           ),
         ],
       );

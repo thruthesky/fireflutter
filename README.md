@@ -32,7 +32,7 @@ Create an issue if you find a bug or need a help.
   - [Screen widgets](#screen-widgets)
   - [EmailLoginForm](#emailloginform)
   - [UserDoc](#userdoc)
-  - [User customization](#user-customization)
+  - [User public screen customization](#user-public-screen-customization)
   - [Avatar](#avatar)
   - [UserAvatar](#useravatar)
   - [UserProfileAvatar](#userprofileavatar)
@@ -420,7 +420,7 @@ UserDoc(
 ),
 ```
 
-## User customization
+## User public screen customization
 
 To customize the user public profile screen, you can override the showPublicProfileScreen function.
 
@@ -434,6 +434,79 @@ UserService.instance.customize.showPublicProfileScreen =
           ),
         );
 ```
+
+
+You may partly want to customize the public profile screen instead of rewriting the whole code.
+
+You may hide or add buttons like below.
+
+```dart
+
+    // Public profile custom design
+
+    // Add menu(s) on top of public screen
+    UserService.instance.customize.publicScreenActions = (context, user) => [
+          FavoriteButton(
+            otherUid: user.uid,
+            builder: (re) => FaIcon(
+              re
+                  ? FontAwesomeIcons.circleStar
+                  : FontAwesomeIcons.lightCircleStar,
+              color: re ? Colors.yellow : null,
+            ),
+            onChanged: (re) => toast(
+              title: re ? tr.favorite : tr.unfavorite,
+              message: re ? tr.favoriteMessage : tr.unfavoriteMessage,
+            ),
+          ),
+          PopupMenuButton(
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'report',
+                child: Text(tr.report),
+              ),
+              PopupMenuItem(
+                value: 'block',
+                child: Database(
+                  path: 'settings/$myUid/blocks/${user.uid}',
+                  builder: (value) =>
+                      Text(value == null ? tr.block : tr.unblock),
+                ),
+              ),
+            ],
+            icon: const FaIcon(FontAwesomeIcons.circleEllipsis),
+            onSelected: (value) {
+              switch (value) {
+                case 'report':
+                  ReportService.instance.showReportDialog(
+                    context: context,
+                    otherUid: user.uid,
+                    onExists: (id, type) => toast(
+                      title: tr.alreadyReportedTitle,
+                      message:
+                          tr.alreadyReportedMessage.replaceAll('#type', type),
+                    ),
+                  );
+                  break;
+                case 'block':
+                  toggle('/settings/$myUid/blocks/${user.uid}');
+                  toast(
+                    title: tr.block,
+                    message: tr.blockMessage,
+                  );
+                  break;
+              }
+            },
+          ),
+        ];
+
+    /// Hide some buttons on bottom.
+    UserService.instance.customize.publicScreenBlockButton =
+        (context, user) => const SizedBox.shrink();
+    UserService.instance.customize.publicScreenReportButton =
+        (context, user) => const SizedBox.shrink();
+```
+
 
 ## Avatar
 
@@ -1653,18 +1726,47 @@ Navigator.of(context).push(
 
 # Translation
 
-I feel like the standard i18n feature is a bit heavy and searched for other i18n packages. And I decided to write a simple i18n code for fireflutter.
+The text translation for i18n is in `lib/i18n/i18nt.dart`.
 
-The i18n code is in `lib/i18n/t.dart`.
+By default, it supports English and you can overwrite the texts to whatever language.
 
-By default, it supports English and you can change it to any language.
-
-Here is an example of updating the translation.
+Below show you how to customize texts in your language. If you want to support multi-languages, you may overwrite the texts on device language.
 
 ```dart
-tr.user.loginFirst = '로그인을 해 주세요.';
+TextService.instance.texts = I18nTexts(
+  reply: "답변",
+  loginFirstTitle: '로그인 필요',
+  loginFirstMessage: '로그인을 해 주세요.',
+  roomMenu: '채팅방 설정',
+  noChatRooms: '채팅방이 없습니다. 채팅방을 만들어 보세요.',
+  chooseUploadFrom: "업로드할 파일(또는 사진)을 선택하세요.",
+  dismiss: "닫기",
+  like: '좋아요',
+  likes: '좋아요(#no)',
+  favorite: "즐겨찾기",
+  unfavorite: "즐겨찾기해제",
+  favoriteMessage: "즐겨찾기를 하였습니다.",
+  unfavoriteMessage: "즐겨찾기를 해제하였습니다.",
+  chat: "채팅",
+  report: "신고",
+  block: "차단",
+  unblock: "차단해제",
+  blockMessage: "차단 하였습니다.",
+  unblockMessage: "차단 해제 하였습니다.",
+  alreadyReportedTitle: "신고",
+  alreadyReportedMessage: "회원님께서는 본 #type을 이미 신고하셨습니다.",
+);
 ```
 
+You can use the langauge like below,
+
+```dart
+ Text(
+  noOfLikes == null
+      ? tr.like
+      : tr.likes.replaceAll(
+          '#no', noOfLikes.length.toString()),
+```
 
 
 

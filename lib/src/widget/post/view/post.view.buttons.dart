@@ -37,7 +37,7 @@ class PostViewButtons extends StatelessWidget {
             children: [
               ...?leading,
               TextButton(
-                child: Text(tr.menu.reply),
+                child: Text(tr.reply),
                 onPressed: () async {
                   await CommentService.instance.showCommentEditBottomSheet(
                     context,
@@ -51,8 +51,8 @@ class PostViewButtons extends StatelessWidget {
                 builder: (post) => TextButton(
                   child: Text(
                     post.likes.isEmpty
-                        ? tr.menu.like
-                        : tr.menu.likes
+                        ? tr.like
+                        : tr.likes
                             .replaceAll('#no', post.likes.length.toString()),
                   ),
                   onPressed: () => post.like(),
@@ -64,15 +64,13 @@ class PostViewButtons extends StatelessWidget {
                   onPressed: () async {
                     final re = await FeedService.instance.follow(post!.uid);
                     toast(
-                      title: re ? tr.menu.favorite : tr.menu.unfavorite,
-                      message: re
-                          ? tr.menu.favoriteMessage
-                          : tr.menu.unfavoriteMessage,
+                      title: re ? tr.favorite : tr.unfavorite,
+                      message: re ? tr.favoriteMessage : tr.unfavoriteMessage,
                     );
                   },
                   child: Text(user.followings.contains(post!.uid)
-                      ? 'Unfollow'
-                      : 'Follow'),
+                      ? tr.unfollow
+                      : tr.follow),
                 ),
               ),
               ...?middle,
@@ -86,7 +84,7 @@ class PostViewButtons extends StatelessWidget {
                     child: Database(
                       path: 'settings/$myUid/blocks/${post!.uid}',
                       builder: (value) =>
-                          Text(value == null ? tr.menu.block : tr.menu.unblock),
+                          Text(value == null ? tr.block : tr.unblock),
                     ),
                   ),
                   ...?trailing,
@@ -111,10 +109,8 @@ class PostViewButtons extends StatelessWidget {
                     final blocked =
                         await toggle('/settings/$myUid/blocks/${post!.uid}');
                     toast(
-                      title: blocked ? tr.menu.block : tr.menu.unblock,
-                      message: blocked
-                          ? tr.menu.blockMessage
-                          : tr.menu.unblockMessage,
+                      title: blocked ? tr.block : tr.unblock,
+                      message: blocked ? tr.blockMessage : tr.unblockMessage,
                     );
                   }
                 },

@@ -28,9 +28,7 @@ class FavoriteButton extends StatelessWidget {
     if (notLoggedIn) {
       return IconButton(
         onPressed: () async {
-          toast(
-              title: tr.user.loginFirstTitle,
-              message: tr.user.loginFirstMessage);
+          toast(title: tr.loginFirstTitle, message: tr.loginFirstMessage);
         },
         icon: builder(false),
       );
