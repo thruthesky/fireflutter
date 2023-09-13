@@ -46,11 +46,12 @@ export 'widget/category/category_create.screen.dart';
 export 'widget/feed/feed.list_view.dart';
 export 'widget/post/list/post.list_view.dart';
 export 'widget/post/post_edit.dialog.dart';
-export 'widget/post/post.view.screen.dart';
+export 'widget/post/view/post.view.screen.dart';
 export 'widget/post/list/post.list.screen.dart';
 export 'widget/post/post_list.push_notification.icon.dart';
 export 'widget/post/post_list.category_subscription.dart';
 export 'widget/post/post_doc.dart';
+export 'widget/post/view/post.view.title.dart';
 
 // Comment
 export 'widget/comment/comment_edit.bottom_sheet.dart';

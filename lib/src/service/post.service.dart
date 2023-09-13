@@ -7,6 +7,8 @@ class PostService with FirebaseHelper {
   static PostService get instance => _instance ??= PostService._();
   PostService._();
 
+  PostCustomize customize = PostCustomize();
+
   get col => postCol;
 
   bool uploadFromCamera = true;
@@ -67,13 +69,15 @@ class PostService with FirebaseHelper {
     Post? post,
     String? postId,
   }) {
-    return showGeneralDialog(
-      context: context,
-      pageBuilder: (context, _, __) => PostViewScreen(
-        post: post,
-        postId: postId,
-      ),
-    );
+    return customize.showPostViewScreen
+            ?.call(context, postId: postId, post: post) ??
+        showGeneralDialog(
+          context: context,
+          pageBuilder: (context, _, __) => PostViewScreen(
+            post: post,
+            postId: postId,
+          ),
+        );
   }
 
   /// Shows the posts under a category (or forum)

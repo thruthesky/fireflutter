@@ -46,7 +46,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Post'),
+        title: PostViewTitle(post: _post),
         actions: [
           if (_post != null && post.isMine)
             IconButton(icon: const Icon(Icons.edit), onPressed: onEdit),
@@ -197,28 +197,49 @@ class _PostViewScreenState extends State<PostViewScreen> {
                                 : 'Follow'),
                           ),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            ReportService.instance.showReportDialog(
-                              context: context,
-                              postId: post.id,
-                              onExists: (id, type) => toast(
-                                  title: 'Already reported',
-                                  message:
-                                      'You have reported this $type already.'),
-                            );
-                          },
-                          child: const Text('Report'),
-                        ),
                         const Spacer(),
                         PopupMenuButton<String>(
-                          itemBuilder: (_) => const [
-                            PopupMenuItem(value: 'edit', child: Text('Edit')),
+                          itemBuilder: (_) => [
+                            const PopupMenuItem(
+                                value: 'edit', child: Text('Edit')),
+                            const PopupMenuItem(
+                                value: 'report', child: Text('Report')),
+                            PopupMenuItem(
+                              value: 'block',
+                              child: Database(
+                                path: 'settings/$myUid/blocks/${post.uid}',
+                                builder: (value) => Text(value == null
+                                    ? tr.menu.block
+                                    : tr.menu.unblock),
+                              ),
+                            ),
                           ],
-                          child: const Icon(Icons.more_horiz),
-                          onSelected: (v) {
+                          child: const Padding(
+                            padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                            child: Icon(Icons.more_horiz),
+                          ),
+                          onSelected: (v) async {
                             if (v == 'edit') {
                               onEdit();
+                            } else if (v == 'report') {
+                              ReportService.instance.showReportDialog(
+                                context: context,
+                                postId: post.id,
+                                onExists: (id, type) => toast(
+                                    title: 'Already reported',
+                                    message:
+                                        'You have reported this $type already.'),
+                              );
+                            } else if (v == 'block') {
+                              final blocked = await toggle(
+                                  '/settings/$myUid/blocks/${post.uid}');
+                              toast(
+                                title:
+                                    blocked ? tr.menu.block : tr.menu.unblock,
+                                message: blocked
+                                    ? tr.menu.blockMessage
+                                    : tr.menu.unblockMessage,
+                              );
                             }
                           },
                         ),
