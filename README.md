@@ -85,6 +85,7 @@ Create an issue if you find a bug or need a help.
     - [Updating auth custom claims](#updating-auth-custom-claims)
     - [Disable user](#disable-user)
 - [Translation](#translation)
+- [Customization](#customization-1)
 - [Unit Testing](#unit-testing)
   - [Testing on Local Emulators and Firebase](#testing-on-local-emulators-and-firebase)
   - [Testing security rules](#testing-security-rules)
@@ -1456,6 +1457,17 @@ Here is an example of updating the translation.
 ```dart
 tr.user.loginFirst = '로그인을 해 주세요.';
 ```
+
+
+
+
+# Customization
+
+One feature that fireflutter does not have is shar. There is no limitation how you can build your app. You can simply use Firebase Dynamic Link with share_plus package to share posts or profiles. You may customize the UI and add a share button to post view screen.
+
+
+
+
 
 # Unit Testing
 
