@@ -27,7 +27,7 @@ describe("send message on queue", () => {
         const userC = await Test.createUser();
         const post = await Test.createPost();
         const data: SendMessage = {
-            title: 'Notification title',
+            title: 'Notification title allUsers',
             body: 'Notification body',
             id: post.id,
             type: 'post',
@@ -49,12 +49,59 @@ describe("send message on queue", () => {
         const userC = await Test.createUser();
         const post = await Test.createPost();
         const data: SendMessage = {
-            title: 'Notification title',
+            title: 'Notification title androidUsers',
             body: 'Notification body',
             id: post.id,
             type: 'post',
             senderUid: userC.uid,
             topic: 'androidUsers'
+        }
+
+        try {
+            const res = await Ref.pushNotificationQueue.add(data);
+            await Library.delay(2000);
+            const after = await res.get()
+            expect(after.data()!.messageId).to.be.include('projects/');
+        } catch (e) {
+            console.log((e as HttpsError).code, (e as HttpsError).message);
+            expect.fail("Must success on sending a message to a token");
+        }
+    });
+
+
+    it("send message via iosUsers topic", async () => {
+        const userC = await Test.createUser();
+        const post = await Test.createPost();
+        const data: SendMessage = {
+            title: 'Notification title iosUsers',
+            body: 'Notification body',
+            id: post.id,
+            type: 'post',
+            senderUid: userC.uid,
+            topic: 'iosUsers'
+        }
+
+        try {
+            const res = await Ref.pushNotificationQueue.add(data);
+            await Library.delay(2000);
+            const after = await res.get()
+            expect(after.data()!.messageId).to.be.include('projects/');
+        } catch (e) {
+            console.log((e as HttpsError).code, (e as HttpsError).message);
+            expect.fail("Must success on sending a message to a token");
+        }
+    });
+
+    it("send message via iosUsers topic", async () => {
+        const userC = await Test.createUser();
+        const post = await Test.createPost();
+        const data: SendMessage = {
+            title: 'Notification title webUsers',
+            body: 'Notification body',
+            id: post.id,
+            type: 'post',
+            senderUid: userC.uid,
+            topic: 'webUsers'
         }
 
         try {
