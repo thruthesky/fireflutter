@@ -198,6 +198,17 @@ class _PostViewScreenState extends State<PostViewScreen> {
                             child: const Text('Report'),
                           ),
                           const Spacer(),
+                          PopupMenuButton<String>(
+                            itemBuilder: (_) => const [
+                              PopupMenuItem(value: 'edit', child: Text('Edit')),
+                            ],
+                            child: const Icon(Icons.more_horiz),
+                            onSelected: (v) {
+                              if (v == 'edit') {
+                                onEdit();
+                              }
+                            },
+                          ),
                           TextButton(
                             onPressed: onEdit,
                             child: const Text('Edit'),
