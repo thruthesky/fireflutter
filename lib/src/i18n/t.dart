@@ -70,6 +70,7 @@ class PromptTranslations {
 }
 
 class MenuTranslations {
+  String reply = "Reply";
   String like = "Like";
   String likes = "#no Likes";
   String favorite = "Favorite";

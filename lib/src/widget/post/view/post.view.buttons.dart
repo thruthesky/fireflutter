@@ -37,7 +37,7 @@ class PostViewButtons extends StatelessWidget {
             children: [
               ...?leading,
               TextButton(
-                child: const Text('Reply'),
+                child: Text(tr.menu.reply),
                 onPressed: () async {
                   await CommentService.instance.showCommentEditBottomSheet(
                     context,
@@ -50,10 +50,10 @@ class PostViewButtons extends StatelessWidget {
                 post: post,
                 builder: (post) => TextButton(
                   child: Text(
-                    'Like ${post.noOfLikes}',
-                    style: post.iLiked
-                        ? const TextStyle(fontWeight: FontWeight.bold)
-                        : null,
+                    post.likes.isEmpty
+                        ? tr.menu.like
+                        : tr.menu.likes
+                            .replaceAll('#no', post.likes.length.toString()),
                   ),
                   onPressed: () => post.like(),
                 ),
@@ -64,10 +64,10 @@ class PostViewButtons extends StatelessWidget {
                   onPressed: () async {
                     final re = await FeedService.instance.follow(post!.uid);
                     toast(
-                      title: re ? 'Followed' : 'Unfollowed',
+                      title: re ? tr.menu.favorite : tr.menu.unfavorite,
                       message: re
-                          ? 'You have followed this user'
-                          : 'You have unfollowed this user',
+                          ? tr.menu.favoriteMessage
+                          : tr.menu.unfavoriteMessage,
                     );
                   },
                   child: Text(user.followings.contains(post!.uid)
