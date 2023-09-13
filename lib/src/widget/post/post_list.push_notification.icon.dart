@@ -199,6 +199,7 @@ class _PostListPushNotificationIconState
       await UserSettings.doc(topic).update({
         'action': '$selection-create',
         'categoryId': widget.categoryId,
+        'uid': myUid
       });
     } else {
       await UserSettings.doc(topic).delete();

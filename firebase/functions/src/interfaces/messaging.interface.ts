@@ -30,6 +30,14 @@ export interface SendMessage {
     // for sending messages by action. Like post-create, comment-create.
     categoryId?: string;
 
+    // if you want to specify the channel id on android
+    // by default it will use `DEFAULT_CHANNEL`
+    channelId?: string;
+    // default value `default`
+    // for ios sound must also includes ext file.
+    // e.g. `warning.wav`
+    sound?: string;
+
 }
 
 export interface MessagePayload {

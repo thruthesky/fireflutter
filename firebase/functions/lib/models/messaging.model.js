@@ -306,6 +306,7 @@ class Messaging {
             android: {
                 notification: {
                     sound: "default",
+                    channel_id: "DEFAULT_CHANNEL",
                 },
             },
             apns: {
@@ -329,7 +330,14 @@ class Messaging {
             }
         }
         if (query.badge != null) {
-            res.apns.payload.aps["badge"] = parseInt(query.badge);
+            res.apns.payload.aps.badge = parseInt(query.badge);
+        }
+        if (query.channelId != null) {
+            res.android.notification.channel_id = query.channelId;
+        }
+        if (query.sound != null) {
+            res.apns.payload.aps.sound = query.sound;
+            res.android.notification.sound = query.sound;
         }
         // console.log(`--> completePayload() return value: ${JSON.stringify(res)}`);
         return res;
