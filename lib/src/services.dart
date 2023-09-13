@@ -16,3 +16,4 @@ export 'service/admin.service.dart';
 export 'service/user.customize.dart';
 
 export 'service/report.service.dart';
+export 'service/post.customize.dart';
