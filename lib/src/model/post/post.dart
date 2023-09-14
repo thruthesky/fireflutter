@@ -78,6 +78,11 @@ class Post with FirebaseHelper {
     return Post.fromDocumentSnapshot(documentSnapshot);
   }
 
+  /// Create a post
+  ///
+  /// All the post must be created by this method.
+  ///
+  /// This method will create a post, update the no of posts of the user and the category.
   static Future<Post> create({
     required String categoryId,
     required String title,
