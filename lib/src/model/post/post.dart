@@ -78,6 +78,11 @@ class Post with FirebaseHelper {
     return Post.fromDocumentSnapshot(documentSnapshot);
   }
 
+  /// Create a post
+  ///
+  /// All the post must be created by this method.
+  ///
+  /// This method will create a post, update the no of posts of the user and the category.
   static Future<Post> create({
     required String categoryId,
     required String title,
@@ -99,6 +104,17 @@ class Post with FirebaseHelper {
     final postId = Post.doc().id;
     await Post.doc(postId).set(postData);
 
+    // Assemble the post without getting it from the server since it takes time.
+    final post = Post.fromJson(
+      {
+        ...postData,
+        'id': postId,
+        'createdAt': DateTime.now(),
+      },
+    );
+
+    PostService.instance.onCreate?.call(post);
+
     // update no of posts
     User.fromUid(FirebaseAuth.instance.currentUser!.uid).update(
       noOfPosts: FieldValue.increment(1),
@@ -107,19 +123,15 @@ class Post with FirebaseHelper {
       noOfPosts: FieldValue.increment(1),
     );
 
-    // create feed
-    final post = Post.fromJson(
-      {
-        ...postData,
-        ...{'id': postId},
-      },
-    );
     FeedService.instance.create(post: post);
 
     // return post
     return post;
   }
 
+  /// Post udpate
+  ///
+  ///
   Future<void> update({
     required String title,
     required String content,
@@ -133,6 +145,17 @@ class Post with FirebaseHelper {
       'updatedAt': FieldValue.serverTimestamp(),
     };
     await PostService.instance.postCol.doc(id).update(postUpdateData);
+
+    /// Assemble the updated post without getting it from the server since it takes time.
+    final updatedPost = Post.fromJson(
+      {
+        ...toJson(),
+        ...postUpdateData,
+        'updatedAt': DateTime.now(),
+      },
+    );
+
+    PostService.instance.onUpdate?.call(updatedPost);
   }
 
   /// Likes or Unlikes the post

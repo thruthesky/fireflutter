@@ -16,38 +16,29 @@ mixin FirebaseHelper {
   bool get loggedIn => FirebaseAuth.instance.currentUser != null;
 
   /// user
-  CollectionReference get userCol =>
-      FirebaseFirestore.instance.collection(User.collectionName);
+  CollectionReference get userCol => FirebaseFirestore.instance.collection(User.collectionName);
   DocumentReference userDoc(String uid) => userCol.doc(uid);
-  DocumentReference get myDoc =>
-      userDoc(FirebaseAuth.instance.currentUser!.uid);
+  DocumentReference get myDoc => userDoc(FirebaseAuth.instance.currentUser!.uid);
 
-  CollectionReference get userSearchCol =>
-      FirebaseFirestore.instance.collection('user_search_data');
+  CollectionReference get userSearchCol => FirebaseFirestore.instance.collection('user_search_data');
 
   DocumentReference get mySearchDoc => userSearchCol.doc(uid);
 
   // categories
-  CollectionReference get categoryCol =>
-      FirebaseFirestore.instance.collection(Category.collectionName);
-  DocumentReference categoryDoc(String categoryId) =>
-      categoryCol.doc(categoryId);
+  CollectionReference get categoryCol => FirebaseFirestore.instance.collection(Category.collectionName);
+  DocumentReference categoryDoc(String categoryId) => categoryCol.doc(categoryId);
 
   /// post
-  CollectionReference get postCol =>
-      FirebaseFirestore.instance.collection('posts');
+  CollectionReference get postCol => FirebaseFirestore.instance.collection('posts');
   DocumentReference postDoc(String postId) => postCol.doc(postId);
 
   /// comment
-  CollectionReference get commentCol =>
-      FirebaseFirestore.instance.collection('comments');
+  CollectionReference get commentCol => FirebaseFirestore.instance.collection('comments');
   DocumentReference commentDoc(String postId) => postCol.doc(postId);
 
   /// chat
-  CollectionReference get chatCol =>
-      FirebaseFirestore.instance.collection('chats');
-  CollectionReference messageCol(String roomId) =>
-      chatCol.doc(roomId).collection('messages');
+  CollectionReference get chatCol => FirebaseFirestore.instance.collection('chats');
+  CollectionReference messageCol(String roomId) => chatCol.doc(roomId).collection('messages');
   DocumentReference roomRef(String roomId) => chatCol.doc(roomId);
   DocumentReference roomDoc(String roomId) => chatCol.doc(roomId);
 
@@ -55,8 +46,7 @@ mixin FirebaseHelper {
   // DatabaseReference noOfNewMessageRef(String roomId) =>
   //     rtdb.ref('chats/noOfNewMessages/');
   //
-  DatabaseReference noOfNewMessageRef({required String uid}) =>
-      rtdb.ref('chats/noOfNewMessages/$uid');
+  DatabaseReference noOfNewMessageRef({required String uid}) => rtdb.ref('chats/noOfNewMessages/$uid');
 
   DocumentReference tokenDoc(String token) {
     return myDoc.collection('fcm_tokens').doc(token);
@@ -69,14 +59,17 @@ mixin FirebaseHelper {
   /// User setting
   /// Note, for the sign-in user's setting, you should use `UserService.instance.settings`
   /// Note, for other user settings, you should use `UserSettings(otherUid, docId)`.
-  CollectionReference userSettingsCol(String uid) =>
-      userDoc(uid).collection('user_settings');
+  CollectionReference userSettingsCol(String uid) => userDoc(uid).collection('user_settings');
 
   // favorites
   CollectionReference get favoriteCol => db.collection('favorites');
   DocumentReference favoriteDoc(String postId) => favoriteCol.doc(postId);
 
   /// push notifications
-  CollectionReference get messageQueueCol =>
-      db.collection('push_notification_queue');
+  CollectionReference get messageQueueCol => db.collection('push_notification_queue');
+
+  ///
+  CollectionReference get noOfProfileViewCol => db.collection('no_of_profile_view_history');
+  DocumentReference noOfProfileViewDoc({required String myUid, required String otherUid}) =>
+      noOfProfileViewCol.doc('$myUid-$otherUid');
 }

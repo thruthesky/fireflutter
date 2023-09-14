@@ -61,6 +61,7 @@ Create an issue if you find a bug or need a help.
   - [Favorite/Bookmark](#favoritebookmark)
     - [How to display icon](#how-to-display-icon)
   - [Follow and Unfollow](#follow-and-unfollow)
+  - [No of profile view](#no-of-profile-view)
 - [Post](#post)
   - [Post view screen custom design](#post-view-screen-custom-design)
 - [Database](#database)
@@ -80,6 +81,7 @@ Create an issue if you find a bug or need a help.
   - [How to unfollow](#how-to-unfollow)
 - [Block](#block)
 - [Customization](#customization)
+- [Callbacks](#callbacks)
   - [Chat Customization](#chat-customization)
 - [Admin](#admin)
   - [Admin Widgets](#admin-widgets)
@@ -1085,6 +1087,33 @@ When it follows or unfollows,
 Note that you may use it with or without the feed service. See the `Feed Service` for the details on how to follow to see the posts of the users that you are following. But you can use it without the feed system.
 
 
+
+
+## No of profile view
+
+A user can see other user's profile. Fireflutter provides a way of count the no of users who saw my profile. It is turned off by default and you can turn it on with `UserService.instance.init(enableNoOfProfileView)`. The history is saved under `/no_of_profile_view_history` collection so you can list and sort.
+
+
+
+
+```json
+{
+  "uid": "uid_of_profile",
+  "seenBy": "uid_of_viewer",
+  "type": "user_type of viewer",
+  "lastViewdAt": "...",
+  "year": "year of view",
+  "month": "month of view",
+  "day": "day of view",
+}
+```
+
+The type is the viewer's type. So, the app can display users by type who viewed my profile.
+Note that, the year, month, day is the time of the client app. This may be incorrect. The year, month, day is the date information of last view. So, they changes on every view.
+
+
+
+
 # Post
 
 
@@ -1630,6 +1659,96 @@ TextButton(
 # Customization
 
 `fireflutter` supports full customization from the i18n to the complete UI.
+
+
+
+
+# Callbacks
+
+
+Fireflutter provides callback functions to handle on user document create, update, delete. And create and update for the posts and comments.
+
+
+Below is an example of how to index user name, post title, content and comment into supabase.
+
+
+
+```dart
+UserService.instance.init(
+  onCreate: (User user) async {
+    await supabase.from('table').insert({
+      'type': 'user',
+      'documentId': user.uid,
+      'uid': user.uid,
+      'name': user.name,
+    });
+  },
+  onUpdate: (User user) async {
+    await supabase.from('table').upsert(
+      {
+        'type': 'user',
+        'documentId': user.uid,
+        'uid': user.uid,
+        'name': user.name,
+      },
+      onConflict: 'documentId',
+    );
+  },
+  onDelete: (User user) async {
+    await supabase.from('table').delete().eq('documentId', user.uid);
+  },
+);
+
+PostService.instance.init(
+  uploadFromFile: false,
+  onCreate: (Post post) async {
+    await supabase.from('table').insert({
+      'type': 'post',
+      'documentId': post.id,
+      'title': post.title,
+      'content': post.content,
+      'uid': post.uid,
+      'category': post.categoryId,
+    });
+  },
+  onUpdate: (Post post) async {
+    await supabase.from('table').upsert(
+      {
+        'type': 'post',
+        'documentId': post.id,
+        'title': post.title,
+        'content': post.content,
+        'uid': post.uid,
+        'category': post.categoryId
+      },
+      onConflict: 'documentId',
+    );
+  },
+);
+
+CommentService.instance.init(
+  uploadFromFile: false,
+  onCreate: (Comment comment) async {
+    await supabase.from('table').insert({
+      'type': 'comment',
+      'documentId': comment.id,
+      'content': comment.content,
+      'uid': comment.uid,
+    });
+  },
+  onUpdate: (Comment comment) async {
+    await supabase.from('table').upsert(
+      {
+        'type': 'comment',
+        'documentId': comment.id,
+        'content': comment.content,
+      },
+      onConflict: 'documentId',
+    );
+  },
+);
+```
+
 
 ## Chat Customization
 

@@ -214,9 +214,13 @@ class User with FirebaseHelper {
 
   /// 사용자 문서를 생성한다.
   ///
-  /// 사용자 문서가 이미 존재하는 경우, 문서를 덮어쓴다.
+  /// 사용자 문서가 이미 존재하는 경우, 문서를 덮어쓰지 않고, 업데이트한다.
   ///
   /// FirebaseAuth 에 먼저 로그인을 한 후, 함수를 호출해야 Security rules 를 통과 할 수 있다.
+  ///
+  /// Note that, the user document may be created by cloud function and the app
+  /// may not call this method to create user document. In that case, the
+  /// [onCreate] event handler will not be invoked.
   ///
   /// 참고: README.md
   ///
@@ -233,24 +237,13 @@ class User with FirebaseHelper {
       'email': '',
       'displayName': '',
       'createdAt': FieldValue.serverTimestamp(),
-    });
+    }, SetOptions(merge: true));
 
-    return (await get(uid))!;
-  }
+    final createdUser = (await get(uid))!;
 
-  static Future<void> create2(User user) async {
-    final data = user.toMap();
-    data.remove('isAdmin');
-    data.remove('disabled');
-    data.remove('isVerified');
-    data.remove('data');
-    data.remove('exists');
-    data.remove('cached');
-    data['createdAt'] = FieldValue.serverTimestamp();
-    // print(data);
+    UserService.instance.onCreate?.call(createdUser);
 
-    // print(User.doc(user.uid).path);
-    return await User.doc(user.uid).set(data);
+    return createdUser;
   }
 
   /// Update user document
@@ -340,10 +333,15 @@ class User with FirebaseHelper {
           date.difference(DateTime(date.year)).inDays + 1;
     }
 
-    return await userDoc(uid).set(
+    await userDoc(uid).set(
       docData,
       SetOptions(merge: true),
     );
+
+    /// Get real data from the server. Assembling the user updated object won't work due to FieldValues.
+    if (UserService.instance.onUpdate != null) {
+      get(uid).then((user) => UserService.instance.onUpdate!(user!));
+    }
   }
 
   /// If the user has completed the profile, set the isComplete field to true.
@@ -388,5 +386,12 @@ class User with FirebaseHelper {
   /// Returns true if liked a user. Returns false if unliked a user.
   Future<bool> like(String uid) async {
     return await toggle('likes/$uid');
+  }
+
+  /// Deletes the user document of current object.
+  ///
+  Future delete() async {
+    await userDoc(uid).delete();
+    UserService.instance.onDelete?.call(this);
   }
 }

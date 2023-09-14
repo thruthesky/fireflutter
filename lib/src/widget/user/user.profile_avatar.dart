@@ -76,7 +76,6 @@ class _UserAvatarState extends State<UserProfileAvatar> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     user = widget.user;
   }

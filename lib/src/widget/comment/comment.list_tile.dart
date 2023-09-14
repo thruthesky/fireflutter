@@ -44,16 +44,15 @@ class CommentTileState extends State<CommentListTile> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               UserAvatar(
-                size: 40,
-                radius: 20,
-                uid: widget.comment.uid,
-                key: ValueKey(widget.comment.id),
-              ),
-              const SizedBox(width: 10),
+                  key: ValueKey(widget.comment.id),
+                  size: 40,
+                  radius: 20,
+                  uid: widget.comment.uid,
+                  onTap: () => UserService.instance.showPublicProfileScreen(context: context, uid: widget.comment.uid)),
+              const SizedBox(width: 8),
               UserDisplayName(
                 uid: widget.comment.uid,
-                textStyle:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
               ),
               const Spacer(),
               DateTimeText(dateTime: widget.comment.createdAt),
@@ -82,11 +81,8 @@ class CommentTileState extends State<CommentListTile> {
               TextButton(
                 child: const Text('Reply'),
                 onPressed: () async {
-                  await CommentService.instance.showCommentEditBottomSheet(
-                    context,
-                    post: widget.post,
-                    parent: widget.comment,
-                  );
+                  await CommentService.instance
+                      .showCommentEditBottomSheet(context, post: widget.post, parent: widget.comment);
                 },
               ),
               CommentDoc(
@@ -105,9 +101,8 @@ class CommentTileState extends State<CommentListTile> {
                   ReportService.instance.showReportDialog(
                     context: context,
                     commentId: widget.comment.id,
-                    onExists: (id, type) => toast(
-                        title: 'Already reported',
-                        message: 'You have reported this $type already.'),
+                    onExists: (id, type) =>
+                        toast(title: 'Already reported', message: 'You have reported this $type already.'),
                   );
                 },
                 child: const Text('Report'),
@@ -115,9 +110,7 @@ class CommentTileState extends State<CommentListTile> {
               const Spacer(),
               TextButton(
                 onPressed: () async {
-                  await CommentService.instance.showCommentEditBottomSheet(
-                      context,
-                      comment: widget.comment);
+                  await CommentService.instance.showCommentEditBottomSheet(context, comment: widget.comment);
                 },
                 child: const Text('Edit'),
               ),
