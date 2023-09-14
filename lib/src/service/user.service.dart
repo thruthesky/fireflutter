@@ -366,6 +366,34 @@ class UserService with FirebaseHelper {
         );
   }
 
+  showFollowersScreen({required BuildContext context, required User user}) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Followers'),
+          ),
+          body: UserListView.builder(uids: user.followers),
+        );
+      },
+    );
+  }
+
+  showFollowingScreen({required BuildContext context, required User user}) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Following'),
+          ),
+          body: UserListView.builder(uids: user.followings),
+        );
+      },
+    );
+  }
+
   /// Delete user document
   Future deleteDocuments() async {
     await my.delete();

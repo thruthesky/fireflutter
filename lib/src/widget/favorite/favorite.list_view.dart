@@ -37,7 +37,6 @@ class FavoriteListView extends StatelessWidget {
       itemBuilder: (context, doc) {
         final favorite = Favorite.fromDocumentSnapshot(doc);
         if (itemBuilder != null) return itemBuilder!(favorite);
-
         return Card(
           child: Column(
             children: [
