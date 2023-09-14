@@ -17,6 +17,7 @@ import { ChatMessageDocument } from "../interfaces/chat.interface";
 import { Chat } from "./chat.model";
 
 import { MulticastMessage } from "firebase-admin/lib/messaging/messaging-api";
+import { DocumentSnapshot } from "firebase-functions/v1/firestore";
 
 export class Messaging {
   /**
@@ -90,7 +91,7 @@ export class Messaging {
     let uids: string[] = [];
 
     // commentCreate get post and patch data with category and title.
-    if (data.postId && data.action == EventName.commentCreate) {
+    if (data.action == EventName.commentCreate && data.postId) {
       const post = await Post.get(data.postId);
       uids.push(post.uid); // post owner
       data.categoryId = post.categoryId;
@@ -101,8 +102,9 @@ export class Messaging {
 
 
     console.log("action:: ", data.action, "categoryId:: ", data.categoryId);
+    // post and comment
     if (data.categoryId) {
-      const snap = await Ref.usersSettingsSearch(data.action, data.categoryId)
+      const snap = await Ref.usersSettingsSearch({ action: data.action, categoryId: data.categoryId })
         .get();
       console.log("snap.size", snap.size);
 
@@ -119,13 +121,35 @@ export class Messaging {
 
 
     // Get ancestor's uid
-    if (data.id && data.action == EventName.commentCreate) {
+    if (data.action == EventName.commentCreate && data.id) {
       const ancestors = await Comment.getAncestorsUid(data.id, data.uid);
 
       // Remove ancestors who didn't subscribe for new comment.
       const subscribers = await this.getNewCommentNotificationUids(ancestors);
 
       uids = [...uids, ...subscribers];
+    }
+
+
+    if (data.action == EventName.chatCreate && data.roomId && uids.length) {
+
+      const snap = await Ref.userSettingGroup.where('action', '==', EventName.chatDisabled).where('roomId', '==', data.roomId)
+        .get();
+      console.log("snap.size", snap.size);
+
+      // get uids of chat disable user
+      let pusDisableUid: string[] = [];
+      if (snap.size != 0) {
+        for (const doc of snap.docs) {
+          const s = doc.data() as UserSettingsDocument;
+          pusDisableUid.push(s.uid);
+        }
+      }
+      // filter user with chatDisabled
+      uids = uids.filter(
+        (uid) => !pusDisableUid.includes(uid)
+      );
+
     }
 
     // / remove duplicates
@@ -347,7 +371,7 @@ export class Messaging {
         id: query.id ?? "",
         type: query.type ?? "",
         senderUid: query.senderUid ?? "",
-        chatRoomId: query.chatRoomId ?? "",
+        roomId: query.roomId ?? "",
         badge: query.badge ?? "",
       },
       notification: {
@@ -443,11 +467,13 @@ export class Messaging {
    * @param data
    * @returns
    */
-  static async sendChatNotificationToOtherUsers(data: ChatMessageDocument) {
+  static async sendChatNotificationToOtherUsers(data: ChatMessageDocument): Promise<SendMessageResult | undefined> {
     const user = await User.get(data.uid);
+
     const messageData: SendMessage = {
       ...data,
       type: EventType.chat,
+      action: EventName.chatCreate,
       title: `${user?.display_name ?? ""} send you a message.`,
       body: data.text,
       uids: await Chat.getOtherUserUidsFromChatMessageDocument(data),
