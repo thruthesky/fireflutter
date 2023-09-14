@@ -73,17 +73,14 @@ class Ref {
     static commentDoc(commentId) {
         return this.commentCol.doc(commentId);
     }
-    static get chatRoomsCol() {
-        return this.db.collection("chat_rooms");
+    static get chatCol() {
+        return this.db.collection("chats");
     }
-    static chatRoomsDoc(docId) {
-        return this.chatRoomsCol.doc(docId);
+    static chatDoc(docId) {
+        return this.chatCol.doc(docId);
     }
-    static chatRoomDoc(docId) {
-        return this.chatRoomsDoc(docId);
-    }
-    static get chatRoomMessagesCol() {
-        return this.db.collection("chat_room_messages");
+    static chatMessageCol(docId) {
+        return this.chatDoc(docId).collection("messages");
     }
     /** *************** MESSAGING References **************/
     static get tokenCollectionGroup() {

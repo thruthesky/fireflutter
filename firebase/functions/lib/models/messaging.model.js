@@ -373,8 +373,8 @@ class Messaging {
      */
     static async sendChatNotificationToOtherUsers(data) {
         var _a;
-        const user = await user_model_1.User.get(data.senderUserDocumentReference.id);
-        const messageData = Object.assign(Object.assign({}, data), { type: event_name_1.EventType.chat, title: `${(_a = user === null || user === void 0 ? void 0 : user.display_name) !== null && _a !== void 0 ? _a : ""} send you a message.`, body: data.text, uids: await chat_model_1.Chat.getOtherUserUidsFromChatMessageDocument(data), chatRoomId: data.chatRoomDocumentReference.id, senderUid: data.senderUserDocumentReference.id });
+        const user = await user_model_1.User.get(data.uid);
+        const messageData = Object.assign(Object.assign({}, data), { type: event_name_1.EventType.chat, title: `${(_a = user === null || user === void 0 ? void 0 : user.display_name) !== null && _a !== void 0 ? _a : ""} send you a message.`, body: data.text, uids: await chat_model_1.Chat.getOtherUserUidsFromChatMessageDocument(data), id: data.roomId, senderUid: data.uid });
         return this.sendMessage(messageData);
     }
     /**

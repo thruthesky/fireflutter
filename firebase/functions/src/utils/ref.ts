@@ -96,24 +96,22 @@ export class Ref {
     return this.commentCol.doc(commentId);
   }
 
-  static get chatRoomsCol() {
-    return this.db.collection("chat_rooms");
+  static get chatCol() {
+    return this.db.collection("chats");
   }
 
-  static chatRoomsDoc(
+  static chatDoc(
     docId: string
   ): admin.firestore.DocumentReference<admin.firestore.DocumentData> {
-    return this.chatRoomsCol.doc(docId);
-  }
-  static chatRoomDoc(
-    docId: string
-  ): admin.firestore.DocumentReference<admin.firestore.DocumentData> {
-    return this.chatRoomsDoc(docId);
+    return this.chatCol.doc(docId);
   }
 
-  static get chatRoomMessagesCol() {
-    return this.db.collection("chat_room_messages");
+  static chatMessageCol(
+    docId: string
+  ): admin.firestore.CollectionReference {
+    return this.chatDoc(docId).collection("messages");
   }
+
 
   /** *************** MESSAGING References **************/
   static get tokenCollectionGroup() {
