@@ -15,8 +15,7 @@ class ChatRoomMenuScreen extends StatelessWidget {
 
   // Stream<DocumentSnapshot<Object?>> get roomStream => ChatService.instance.roomDoc(widget.room.id).snapshots();
 
-  bool get isMaster =>
-      ChatService.instance.isMaster(room: room, uid: ChatService.instance.uid);
+  bool get isMaster => ChatService.instance.isMaster(room: room, uid: ChatService.instance.uid);
   @override
   Widget build(BuildContext context) {
     /// It is an intended design to wrap the entire screen with SafeArea and Padding for the best look.
@@ -34,45 +33,51 @@ class ChatRoomMenuScreen extends StatelessWidget {
             ),
             actions: [
               const Spacer(),
+
               // 즐겨찾기
-              IconButton(
-                icon: const Icon(Icons.favorite_border),
-                onPressed: () {
-                  showSnackBar(context, 'Favorite is not implemented yet.');
-                },
-              ),
+              // IconButton(
+              //   icon: const Icon(Icons.favorite_border),
+              //   onPressed: () {
+              //     showSnackBar(context, 'Favorite is not implemented yet.');
+              //   },
+              // ),
 
               // 공유
+              // IconButton(
+              //   onPressed: () {
+              //     showSnackBar(context, 'Share is not implemented yet.');
+              //   },
+              //   icon: Icon(
+              //       Platform.isAndroid ? Icons.share : Icons.ios_share_rounded),
+              // ),
+
               IconButton(
-                onPressed: () {
-                  showSnackBar(context, 'Share is not implemented yet.');
-                },
-                icon: Icon(
-                    Platform.isAndroid ? Icons.share : Icons.ios_share_rounded),
+                onPressed: () {},
+                icon: const Icon(Icons.notifications_active),
               ),
 
               // 친구초대
-              IconButton(
-                onPressed: () {
-                  showGeneralDialog(
-                    context: context,
-                    pageBuilder: (context, _, __) => Scaffold(
-                      appBar: AppBar(
-                        title: const Text('Invite User'),
+              if (room.isGroupChat)
+                IconButton(
+                  onPressed: () {
+                    showGeneralDialog(
+                      context: context,
+                      pageBuilder: (context, _, __) => Scaffold(
+                        appBar: AppBar(
+                          title: const Text('Invite User'),
+                        ),
+                        body: ChatRoomMenuUserInviteDialog(room: room),
                       ),
-                      body: ChatRoomMenuUserInviteDialog(room: room),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.person_add),
-              ),
+                    );
+                  },
+                  icon: const Icon(Icons.person_add),
+                ),
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(
             items: const [
               BottomNavigationBarItem(icon: Icon(Icons.logout), label: 'Leave'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications_off), label: 'Alarm'),
+              BottomNavigationBarItem(icon: Icon(Icons.notifications_off), label: 'Alarm'),
             ],
             onTap: (value) {
               if (value == 0) {
@@ -93,15 +98,13 @@ class ChatRoomMenuScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 if (room.group) ...[
                   if (room.rename[UserService.instance.uid] == null)
-                    Text(room.name,
-                        style: Theme.of(context).textTheme.titleLarge)
+                    Text(room.name, style: Theme.of(context).textTheme.titleLarge)
                   else ...[
                     Text(
                       room.rename[UserService.instance.uid]!,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    Text(room.name,
-                        style: Theme.of(context).textTheme.titleSmall)
+                    Text(room.name, style: Theme.of(context).textTheme.titleSmall)
                   ],
                 ] else ...[
                   const Padding(
@@ -110,8 +113,7 @@ class ChatRoomMenuScreen extends StatelessWidget {
                   ),
                 ],
                 Text("${room.users.length} joined"),
-                Text(
-                    "Created on ${room.createdAt.toString().split(' ').first}"),
+                Text("Created on ${room.createdAt.toString().split(' ').first}"),
                 const SizedBox(height: 16),
                 const Divider(),
                 const SizedBox(height: 16),
