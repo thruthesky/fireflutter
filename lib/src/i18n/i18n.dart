@@ -1,4 +1,3 @@
-import 'package:fireflutter/fireflutter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'i18n.g.dart';

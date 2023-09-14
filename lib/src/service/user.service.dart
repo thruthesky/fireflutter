@@ -36,13 +36,11 @@ class UserService with FirebaseHelper {
   UserCustomize customize = UserCustomize();
 
   /// Return true if the user signed with real account. Not anonymous.
-  bool get notLoggedIn =>
-      isAnonymous || auth.FirebaseAuth.instance.currentUser == null;
+  bool get notLoggedIn => isAnonymous || auth.FirebaseAuth.instance.currentUser == null;
 
   @override
   bool get loggedIn => !notLoggedIn;
-  bool get isAnonymous =>
-      auth.FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+  bool get isAnonymous => auth.FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
 
   /// Admin user model
   ///
@@ -70,8 +68,7 @@ class UserService with FirebaseHelper {
   /// UserService.instance.documentChanges.listen((user) => user == null ? null : print(my));
   /// ```
   ///
-  final BehaviorSubject<User?> documentChanges =
-      BehaviorSubject<User?>.seeded(null);
+  final BehaviorSubject<User?> documentChanges = BehaviorSubject<User?>.seeded(null);
 
   /// [userChanges] fires when
   /// - app boots
@@ -82,8 +79,7 @@ class UserService with FirebaseHelper {
   /// Note that, the difference from [documentChanges] is that this happens
   /// when user logs in or out while [documentChanges] happens when the user
   /// document changes.
-  final BehaviorSubject<auth.User?> userChanges =
-      BehaviorSubject<auth.User?>.seeded(null);
+  final BehaviorSubject<auth.User?> userChanges = BehaviorSubject<auth.User?>.seeded(null);
 
   ///
   UserService._();
@@ -148,19 +144,35 @@ class UserService with FirebaseHelper {
   /// Use this to display widgets lively that depends on the user model. When
   /// the user document is updated, this stream will fire an event.
   Stream<User> get snapshot {
-    return UserService.instance.col
-        .doc(uid)
-        .snapshots()
-        .map((doc) => User.fromDocumentSnapshot(doc));
+    return UserService.instance.col.doc(uid).snapshots().map((doc) => User.fromDocumentSnapshot(doc));
   }
+
+  Function(User user)? onCreate;
+
+  /// If any of the user document field updates, then this callback will be called.
+  /// For instance, when a user creates a post or a comment, the no of posts or
+  /// comments are updated in user document. Hence [onUpdate] will be called.
+  Function(User user)? onUpdate;
+  Function(User user)? onDelete;
+
+  bool enableNoOfProfileView = false;
 
   /// 미리 한번 호출 해서, Singleton 을 초기화 해 둔다. 그래야 user 를 사용 할 때, 에러가 발생하지 않는다.
   init({
     required String adminUid,
+    bool enableNoOfProfileView = false,
+    Function(User user)? onCreate,
+    Function(User user)? onUpdate,
+    Function(User user)? onDelete,
   }) {
     if (adminUid.isNotEmpty) {
       UserService.instance.get(adminUid).then((value) => admin = value);
     }
+
+    this.enableNoOfProfileView = enableNoOfProfileView;
+    this.onCreate = onCreate;
+    this.onUpdate = onUpdate;
+    this.onDelete = onDelete;
 
     /// 로그인을 할 때, nullableUser 초기가 값 지정
     auth.FirebaseAuth.instance
@@ -183,8 +195,7 @@ class UserService with FirebaseHelper {
           if (!documentSnapshot.exists || documentSnapshot.data() == null) {
             nullableUser = User.notExists();
           } else {
-            nullableUser = User.fromDocumentSnapshot(
-                documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
+            nullableUser = User.fromDocumentSnapshot(documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
           }
           documentChanges.add(nullableUser);
         });
@@ -335,10 +346,21 @@ class UserService with FirebaseHelper {
   ///
   /// It shows the public profile dialog for the user. You can customize by
   /// setting [UserCustomize] to [UserService.instance.customize].
-  Future showPublicProfileScreen(
-      {required BuildContext context, String? uid, User? user}) {
-    return customize.showPublicProfileScreen
-            ?.call(context, uid: uid, user: user) ??
+  Future showPublicProfileScreen({required BuildContext context, String? uid, User? user}) {
+    final String otherUid = uid ?? user!.uid;
+    final now = DateTime.now();
+    if (enableNoOfProfileView) {
+      noOfProfileViewDoc(myUid: my.uid, otherUid: otherUid).set({
+        "uid": otherUid,
+        "seenBy": my.uid,
+        "type": my.type,
+        "lastViewdAt": FieldValue.serverTimestamp(),
+        "year": now.year,
+        "month": now.month,
+        "day": now.day,
+      }, SetOptions(merge: true));
+    }
+    return customize.showPublicProfileScreen?.call(context, uid: uid, user: user) ??
         showGeneralDialog(
           context: context,
           pageBuilder: ($, _, __) => PublicProfileScreen(uid: uid, user: user),
@@ -347,7 +369,7 @@ class UserService with FirebaseHelper {
 
   /// Delete user document
   Future deleteDocuments() async {
-    await doc.delete();
+    await my.delete();
     await mySearchDoc.delete();
     await rtdb.ref('users/$myUid').remove();
   }

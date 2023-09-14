@@ -61,6 +61,7 @@ Create an issue if you find a bug or need a help.
   - [Favorite/Bookmark](#favoritebookmark)
     - [How to display icon](#how-to-display-icon)
   - [Follow and Unfollow](#follow-and-unfollow)
+  - [No of profile view](#no-of-profile-view)
 - [Post](#post)
   - [Post view screen custom design](#post-view-screen-custom-design)
 - [Database](#database)
@@ -1083,6 +1084,33 @@ When it follows or unfollows,
 - It will add or remove the login user's uid in the [otherUid]'s followers array.
 
 Note that you may use it with or without the feed service. See the `Feed Service` for the details on how to follow to see the posts of the users that you are following. But you can use it without the feed system.
+
+
+
+
+## No of profile view
+
+A user can see other user's profile. Fireflutter provides a way of count the no of users who saw my profile. It is turned off by default and you can turn it on with `UserService.instance.init(enableNoOfProfileView)`. The history is saved under `/no_of_profile_view_history` collection so you can list and sort.
+
+
+
+
+```json
+{
+  "uid": "uid_of_profile",
+  "seenBy": "uid_of_viewer",
+  "type": "user_type of viewer",
+  "lastViewdAt": "...",
+  "year": "year of view",
+  "month": "month of view",
+  "day": "day of view",
+}
+```
+
+The type is the viewer's type. So, the app can display users by type who viewed my profile.
+Note that, the year, month, day is the time of the client app. This may be incorrect. The year, month, day is the date information of last view. So, they changes on every view.
+
+
 
 
 # Post

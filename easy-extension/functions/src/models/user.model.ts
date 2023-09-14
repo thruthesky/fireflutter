@@ -142,6 +142,11 @@ export class UserModel {
     return await ref.set(data);
   }
 
+
+  /**
+   * Delete a user document.
+   * 
+   */
   static async deleteDocument(uid: string): Promise<WriteResult> {
     const ref = UserModel.ref(uid);
     return await ref.delete();

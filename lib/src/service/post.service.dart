@@ -15,14 +15,24 @@ class PostService with FirebaseHelper {
   bool uploadFromGallery = true;
   bool uploadFromFile = true;
 
+  /// Callback functions on post create and update. Note that, we don't support
+  /// post delete.
+  Function(Post)? onCreate;
+  Function(Post)? onUpdate;
+
   init({
     bool uploadFromGallery = true,
     bool uploadFromCamera = true,
     bool uploadFromFile = true,
+    void Function(Post)? onCreate,
+    void Function(Post)? onUpdate,
   }) {
     this.uploadFromGallery = uploadFromGallery;
     this.uploadFromCamera = uploadFromCamera;
     this.uploadFromFile = uploadFromFile;
+
+    this.onCreate = onCreate;
+    this.onUpdate = onUpdate;
   }
 
   /// Shows the Edit Post as a dialog
@@ -40,27 +50,6 @@ class PostService with FirebaseHelper {
 
   Stream<DocumentSnapshot> snapshot({required String postId}) {
     return PostService.instance.col.doc(postId).snapshots();
-  }
-
-  /// Update the post
-  ///
-  /// [post] is the post to be updated
-  ///
-  /// [title] is the new title
-  ///
-  /// [content] is the new content
-  @Deprecated("Don't use this. Use Post.update() instead.")
-  Future<void> edit({
-    required Post post,
-    required String title,
-    required String content,
-    List<String>? urls,
-  }) {
-    return post.update(
-      title: title,
-      content: content,
-      urls: urls,
-    );
   }
 
   /// Shows the Post view as a dialog

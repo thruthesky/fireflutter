@@ -69,6 +69,7 @@ class Comment with FirebaseHelper {
   String toString() => '';
   // 'Comment(id: $id, postId: $postId, content: $content, uid: $uid, urls: $urls, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted, parentId: $parentId, sort: $sort, depth: $depth)';
 
+  /// Create a comment
   static Future<Comment> create({
     required Post post,
     Comment? parent,
@@ -91,7 +92,8 @@ class Comment with FirebaseHelper {
       'depth': parent == null ? 1 : parent.depth + 1,
     };
 
-    await CommentService.instance.commentCol.add(commentData);
+    final ref = await col.add(commentData);
+
     PostService.instance.postCol
         .doc(post.id)
         .update({'noOfComments': FieldValue.increment(1)});
@@ -106,11 +108,18 @@ class Comment with FirebaseHelper {
       noOfComments: FieldValue.increment(1),
     );
 
-    //
-    return Comment.fromJson({
+    // Assemble the comment without getting from server since it takes time.
+    final createdComment = Comment.fromJson({
       ...commentData,
-      ...{'id': post.id}
+      'id': ref.id,
+      'createdAt': DateTime.now(),
+      'updatedAt': DateTime.now(),
     });
+
+    // Invoite the callback for comment creation.
+    CommentService.instance.onCreate?.call(createdComment);
+
+    return createdComment;
   }
 
   static Future<Comment> get(String id) async {
@@ -119,6 +128,9 @@ class Comment with FirebaseHelper {
     return Comment.fromDocumentSnapshot(documentSnapshot);
   }
 
+  /// Update a comment
+  ///
+  /// This method is the only method to be used for updating a comment.
   Future<Comment> update({
     required String content,
     List<String>? urls,
@@ -129,7 +141,11 @@ class Comment with FirebaseHelper {
       'updatedAt': FieldValue.serverTimestamp(),
     };
     await commentCol.doc(id).update(commentData);
-    return copyWith(commentData);
+    final updatedComment = copyWith(commentData);
+
+    // Invoite the callback for comment creation.
+    CommentService.instance.onUpdate?.call(updatedComment);
+    return updatedComment;
   }
 
   /// Likes or Unlikes the comment

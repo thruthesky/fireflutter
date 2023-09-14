@@ -163,6 +163,21 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
     Test.report();
   }
 
+  Future createTestUser(User user) async {
+    final data = user.toMap();
+    data.remove('isAdmin');
+    data.remove('disabled');
+    data.remove('isVerified');
+    data.remove('data');
+    data.remove('exists');
+    data.remove('cached');
+    data['createdAt'] = FieldValue.serverTimestamp();
+    // print(data);
+
+    // print(User.doc(user.uid).path);
+    return await User.doc(user.uid).set(data);
+  }
+
   Future testUser() async {
     // create empty object
     final user = User(uid: 'uid');
@@ -177,7 +192,7 @@ class _TestScreenState extends State<TestUi> with FirebaseHelper {
     String uid = FirebaseAuth.instance.currentUser!.uid;
     // log('uid; $uid');
     await User.doc(uid).delete();
-    await User.create2(User(
+    await createTestUser(User(
         uid: uid, displayName: 'displayName$uid', email: '$uid@email.com'));
     final user2 = await User.get(uid) as User;
     test(user2.uid == uid, 'uid must be $uid');

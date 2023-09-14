@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
@@ -59,7 +57,7 @@ class UserListView extends StatelessWidget with FirebaseHelper {
         query = query.where(filterKey, isEqualTo: filter[filterKey]);
       }
       if (filter[filterKey] is List<dynamic>) {
-        print("$filterKey, whereIn: ${filter[filterKey]}");
+        debugPrint("---> $filterKey, whereIn: ${filter[filterKey]}");
         query = query.where(filterKey, arrayContainsAny: filter[filterKey]);
       }
     }
@@ -91,10 +89,13 @@ class UserListView extends StatelessWidget with FirebaseHelper {
               if (exemptedUsers.contains(user.uid)) return const SizedBox();
               if (itemBuilder != null) return itemBuilder!.call(user, index);
               return ListTile(
-                title: titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
-                subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
+                title:
+                    titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
+                subtitle: subtitleBuilder?.call(user) ??
+                    Text(user.createdAt.toString()),
                 leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
-                trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
+                trailing: trailingBuilder?.call(user) ??
+                    const Icon(Icons.chevron_right),
                 onTap: () async {
                   onTap?.call(user);
                 },

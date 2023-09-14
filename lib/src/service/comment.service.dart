@@ -10,14 +10,22 @@ class CommentService with FirebaseHelper {
   bool uploadFromGallery = true;
   bool uploadFromFile = true;
 
+  Function(Comment)? onCreate;
+  Function(Comment)? onUpdate;
+
   init({
     bool uploadFromGallery = true,
     bool uploadFromCamera = true,
     bool uploadFromFile = true,
+    void Function(Comment)? onCreate,
+    void Function(Comment)? onUpdate,
   }) {
     this.uploadFromGallery = uploadFromGallery;
     this.uploadFromCamera = uploadFromCamera;
     this.uploadFromFile = uploadFromFile;
+
+    this.onCreate = onCreate;
+    this.onUpdate = onUpdate;
   }
 
   Future<Comment> createComment({

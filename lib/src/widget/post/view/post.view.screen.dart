@@ -43,16 +43,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
     });
   }
 
-  onEdit() async {
-    final updated =
-        await PostService.instance.showEditDialog(context, post: post);
-    if (updated != null) {
-      setState(() {
-        _post = updated;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -68,6 +68,11 @@ service cloud.firestore {
       allow delete: if request.auth.uid == documentId || isAdmin();
     }
 
+    match /no_of_profile_view_history/{documentId} {
+      allow read: if true;
+      allow write: if request.resource.data.seenBy == request.auth.uid;
+    }
+
     match /favorites/{documentId} {
       allow read, write: if resource.data.uid == request.auth.uid || request.resource.data.uid == request.auth.uid;
     }
