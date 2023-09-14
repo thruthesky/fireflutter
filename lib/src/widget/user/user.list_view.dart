@@ -105,6 +105,7 @@ class UserListView extends StatelessWidget with FirebaseHelper {
     );
   }
 
+  /// Use this builder when you already got a list of uids.
   static Widget builder({
     required List<String> uids,
     Widget Function(User? user)? itemBuilder,

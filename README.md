@@ -73,7 +73,7 @@ Create an issue if you find a bug or need a help.
   - [Photo upload](#photo-upload)
 - [No of view](#no-of-view)
 - [Push notifications](#push-notifications)
-    - [Push notifcation sound](#push-notifcation-sound)
+  - [Push notifcation sound](#push-notifcation-sound)
   - [Customizing source](#customizing-source)
 - [Following and Follower](#following-and-follower)
   - [Feed listing logic](#feed-listing-logic)
@@ -191,7 +191,7 @@ Copy the following and paste it into your firebase project.
     "users": {
       ".read": true,
       "$uid": {
-        ".write" : "$uid === auth.uid"
+        ".write": "$uid === auth.uid"
       }
     },
     "chats": {
@@ -206,7 +206,7 @@ Copy the following and paste it into your firebase project.
       ".read": true,
       "$uid": {
         "$other_uid": {
-            ".write" : "$other_uid === auth.uid"
+          ".write": "$other_uid === auth.uid"
         }
       }
     },
@@ -214,7 +214,7 @@ Copy the following and paste it into your firebase project.
       ".read": true,
       ".write": true
     },
-  	"tmp": {
+    "tmp": {
       ".read": true,
       ".write": true
     }
@@ -436,7 +436,6 @@ UserService.instance.customize.showPublicProfileScreen =
         );
 ```
 
-
 You may partly want to customize the public profile screen instead of rewriting the whole code.
 
 You may hide or add buttons like below.
@@ -507,7 +506,6 @@ You may hide or add buttons like below.
     UserService.instance.customize.publicScreenReportButton =
         (context, user) => const SizedBox.shrink();
 ```
-
 
 ## Avatar
 
@@ -604,6 +602,16 @@ onPressed() async {
 
 ```
 
+### UserListView.builder
+
+You may use the `UserListView.builder` if you already have the `List<String>` of uids
+
+```dart
+List<String> friends = ['uid1', 'uid2']
+
+UserListView.builder(uids: friends)
+
+```
 
 ## When user is not logged in
 
@@ -647,8 +655,6 @@ class FavoriteButton extends StatelessWidget {
 }
 
 ```
-
-
 
 # Chat Feature
 
@@ -1085,15 +1091,9 @@ When it follows or unfollows,
 
 Note that you may use it with or without the feed service. See the `Feed Service` for the details on how to follow to see the posts of the users that you are following. But you can use it without the feed system.
 
-
-
-
 ## No of profile view
 
 A user can see other user's profile. Fireflutter provides a way of count the no of users who saw my profile. It is turned off by default and you can turn it on with `UserService.instance.init(enableNoOfProfileView)`. The history is saved under `/no_of_profile_view_history` collection so you can list and sort.
-
-
-
 
 ```json
 {
@@ -1103,26 +1103,22 @@ A user can see other user's profile. Fireflutter provides a way of count the no 
   "lastViewdAt": "...",
   "year": "year of view",
   "month": "month of view",
-  "day": "day of view",
+  "day": "day of view"
 }
 ```
 
 The type is the viewer's type. So, the app can display users by type who viewed my profile.
 Note that, the year, month, day is the time of the client app. This may be incorrect. The year, month, day is the date information of last view. So, they changes on every view.
 
-
-
-
 # Post
-
 
 ## Post view screen custom design
 
 If you want to design the whole screen of post view,
+
 - you can copy the whole code insode `fireflutter/lib/src/widget/post/view/post.view.screen.dart` into a new screen
 - and connect it to `PostService.instance.customize.postViewScreen`,
 - and you can start to design your own screen.
-
 
 Example of connecting your own screen to post view.
 
@@ -1150,7 +1146,6 @@ PostService.instance.customize.postViewButtons = (post) => PostViewButtons(
 ```
 
 You can actullay rebuild the whole buttons by providing new widget instead of the `PostViewButtons`.
-
 
 # Database
 
@@ -1184,7 +1179,6 @@ await update(path, {'k': 'hello', 'v': 'world'});
 print(await get(path));
 ```
 
-
 ## Database widget
 
 `Database` widget rebuilds the widget when the node is changed. Becareful to use the narrowest path of the node or it would download a lot of data.
@@ -1208,7 +1202,7 @@ ElevatedButton(
 
 # Settings
 
-The system settings are saved under `/settings` collection while  the user settings are saved under `/users/{uid}/user_settings/{settingId}/...` in Firestore and the security rules are set to the login user.
+The system settings are saved under `/settings` collection while the user settings are saved under `/users/{uid}/user_settings/{settingId}/...` in Firestore and the security rules are set to the login user.
 
 See [the block chapter](#block) to know how to use(manage) the user settings and how to use `Database` widget with it.
 
@@ -1321,20 +1315,15 @@ IconButton(
 ),
 ```
 
-
 # No of view
 
 By saving no of view, you know how many users have seen your profle and who viewed your profile. Not only the profile, but also it can be applied to post and more.
 
 fireflutter saves the no of view on porfile at `/noOfView/profile/{myUid}/{otherUId: true}`. And it saves no of views of profile at `/noOfView/post/{postId}/{userId: true}`.
 
-
 ```dart
 set("/noOfView/profile/$myUid/$otherUid", true);
 ```
-
-
-
 
 # Push notifications
 
@@ -1392,11 +1381,11 @@ Android Setup
 
 Sound file must exist on `android/app/src/main/res/raw` directory
 
-Android below 8.0 (API < 26)  providing the sound `filename` on the push notification payload will work already.
+Android below 8.0 (API < 26) providing the sound `filename` on the push notification payload will work already.
 
 android payload
 
-```ts 
+```ts
     android: {
       notification: {
         sound: "sound_file_name",
@@ -1406,7 +1395,7 @@ android payload
 
 Android 8.0 and above(API >= 26) need to setup a channel and provide the `channel_id` on the payload
 
-```ts 
+```ts
     android: {
       notification: {
         channel_id: "CHANNEL_ID",
@@ -1415,7 +1404,8 @@ Android 8.0 and above(API >= 26) need to setup a channel and provide the `channe
 ```
 
 Simply provide both to support old and new API
-```ts 
+
+```ts
     android: {
       notification: {
         channel_id: "CHANNEL_ID",
@@ -1423,7 +1413,6 @@ Simply provide both to support old and new API
       },
     },
 ```
-
 
 main.dart
 
@@ -1452,10 +1441,9 @@ main.dart
   }
 ```
 
-
 MainActivity.kt
 
-```kotlin 
+```kotlin
 import io.flutter.embedding.android.FlutterActivity
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.FlutterEngine
@@ -1476,7 +1464,7 @@ class MainActivity: FlutterActivity() {
     // Note: this should be the same as the string we will pass on MethodChannel
     // when we init the channel create on main.dart
     private val CHANNEL = "com.fireflutter.example/push_notification"
-    
+
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
@@ -1532,13 +1520,13 @@ class MainActivity: FlutterActivity() {
 
 Setting the importance to `NotificationManager.IMPORTANCE_HIGH` will shows the notification everywhere, makes noise and peeks. May use full screen intents.
 
-
 iOS Setup
 
 Sound file must be add on the XCode main bundle
 
 iOS Payload
-```ts 
+
+```ts
     apns: {
       payload: {
         aps: {
@@ -1547,8 +1535,6 @@ iOS Payload
       },
     },
 ```
-
-
 
 ## Customizing source
 
@@ -1796,15 +1782,9 @@ You can use the langauge like below,
           '#no', noOfLikes.length.toString()),
 ```
 
-
-
 # Customization
 
 One feature that fireflutter does not have is shar. There is no limitation how you can build your app. You can simply use Firebase Dynamic Link with share_plus package to share posts or profiles. You may customize the UI and add a share button to post view screen.
-
-
-
-
 
 # Unit Testing
 
