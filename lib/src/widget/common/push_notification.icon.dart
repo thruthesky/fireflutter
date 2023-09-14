@@ -14,10 +14,15 @@ class PushNotificationIcon extends StatelessWidget {
     required this.action,
     this.roomId,
     this.categoryId,
+    this.onIcon,
+    this.offIcon,
   }) : assert(roomId != null || categoryId != null, 'roomId or categoryId must be not null');
   final String action;
   final String? roomId;
   final String? categoryId;
+
+  final Widget? onIcon;
+  final Widget? offIcon;
 
   String get id => roomId ?? (action + categoryId!);
 
@@ -34,7 +39,9 @@ class PushNotificationIcon extends StatelessWidget {
             categoryId: categoryId,
           );
         },
-        icon: Icon(setting == null ? Icons.notifications_active : Icons.notifications_off),
+        icon: setting == null
+            ? offIcon ?? Icon(Icons.notifications_off, color: Theme.of(context).colorScheme.secondary.withAlpha(100))
+            : onIcon ?? Icon(Icons.notifications_active, color: Theme.of(context).colorScheme.secondary),
       ),
     );
   }

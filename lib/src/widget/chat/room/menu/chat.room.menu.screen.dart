@@ -50,7 +50,14 @@ class ChatRoomMenuScreen extends StatelessWidget {
               //       Platform.isAndroid ? Icons.share : Icons.ios_share_rounded),
               // ),
 
-              PushNotificationIcon(action: ActionType.chatDisabled.name, roomId: room.roomId),
+              /// Note that, for chat room push notification, if the setting document exists, it is unsubscribed.
+              /// So, the icon should be reserved.
+              PushNotificationIcon(
+                action: ActionType.chatDisabled.name,
+                roomId: room.roomId,
+                onIcon: const Icon(Icons.notifications_off),
+                offIcon: const Icon(Icons.notifications_active),
+              ),
 
               // 친구초대
               if (room.isGroupChat)
