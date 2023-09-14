@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/enum/protocol.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -14,8 +13,7 @@ part 'room.g.dart';
 /// Don't update the property directly. The property is read-only and if you want to apply the changes, listen to the stream of the chat room document.
 @JsonSerializable()
 class Room with FirebaseHelper {
-  static CollectionReference get col =>
-      FirebaseFirestore.instance.collection('chats');
+  static CollectionReference get col => FirebaseFirestore.instance.collection('chats');
 
   static DocumentReference doc(roomId) => col.doc(roomId);
 
@@ -65,14 +63,12 @@ class Room with FirebaseHelper {
     required this.maximumNoOfUsers,
     dynamic createdAt,
     this.lastMessage,
-  }) : createdAt =
-            (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
+  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   bool get isSingleChat => users.length == 2 && group == false;
   bool get isGroupChat => group;
 
-  CollectionReference get messagesCol =>
-      ChatService.instance.roomRef(roomId).collection('messages');
+  CollectionReference get messagesCol => ChatService.instance.roomRef(roomId).collection('messages');
   DocumentReference get ref => ChatService.instance.roomRef(roomId);
 
   factory Room.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
@@ -139,9 +135,8 @@ class Room with FirebaseHelper {
     List<String> users = [myUid!];
     if (isSingleChat) users.add(otherUserUid);
 
-    final roomId = isSingleChat
-        ? ChatService.instance.getSingleChatRoomId(otherUserUid)
-        : ChatService.instance.chatCol.doc().id;
+    final roomId =
+        isSingleChat ? ChatService.instance.getSingleChatRoomId(otherUserUid) : ChatService.instance.chatCol.doc().id;
 
     // room data
     final roomData = toCreate(
@@ -151,8 +146,7 @@ class Room with FirebaseHelper {
       group: !isSingleChat,
       open: open,
       users: users,
-      maximumNoOfUsers: maximumNoOfUsers ??
-          (isSingleChat ? 2 : ChatService.instance.maximumNoOfUsers),
+      maximumNoOfUsers: maximumNoOfUsers ?? (isSingleChat ? 2 : ChatService.instance.maximumNoOfUsers),
     );
 
     // create
@@ -161,7 +155,7 @@ class Room with FirebaseHelper {
     // start
     await ChatService.instance.sendProtocolMessage(
       room: Room.fromJson(roomData),
-      protocol: Protocol.chatRoomCreateDialog.name,
+      protocol: Protocol.chatRoomCreated.name,
       text: tr.chatRoomCreateDialog,
     );
 
@@ -194,8 +188,7 @@ class Room with FirebaseHelper {
   }
 
   String get otherUserUid {
-    assert(
-        users.length == 2 && group == false, "This is not a single chat room");
+    assert(users.length == 2 && group == false, "This is not a single chat room");
     return ChatService.instance.getOtherUserUid(users);
   }
 

@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/widget/common/push_notification.icon.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomMenuScreen extends StatelessWidget {
@@ -51,10 +50,7 @@ class ChatRoomMenuScreen extends StatelessWidget {
               //       Platform.isAndroid ? Icons.share : Icons.ios_share_rounded),
               // ),
 
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.notifications_active),
-              ),
+              PushNotificationIcon(action: ActionType.chatDisabled.name, roomId: room.roomId),
 
               // 친구초대
               if (room.isGroupChat)

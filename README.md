@@ -73,6 +73,7 @@ Create an issue if you find a bug or need a help.
   - [Photo upload](#photo-upload)
 - [No of view](#no-of-view)
 - [Push notifications](#push-notifications)
+  - [Push notification settings](#push-notification-settings)
     - [Push notifcation sound](#push-notifcation-sound)
   - [Customizing source](#customizing-source)
 - [Following and Follower](#following-and-follower)
@@ -1386,6 +1387,33 @@ AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
   );
 });
 ```
+
+
+## Push notification settings
+
+
+Each of push notification option is saved as a single document under `/users/{uid}/user_settings/{settingDocumentId}`. And it is protected by the security rules. Only the user can access this document. The option is saved in a separate document for the search. To give convinience on search and getting tokens of users who subscrid to the service.
+
+The format of the document is in
+
+```json
+{
+  "id": "The document ID",
+  "uid": "the login user's uid",
+  "action": "post.create or comment.create or chat.disable",
+  "categoryId": "for post only",
+  "roomId": "for chat only",
+}
+```
+
+
+
+For chat room, when a user enters into a chat room, the push notification is enabled by default unless the user turn off the push notification manually. When the user turns off the push notification, `chat.disable` action will be saved in the setting document.
+
+
+
+
+
 
 ### Push notifcation sound
 

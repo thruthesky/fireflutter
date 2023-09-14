@@ -74,6 +74,7 @@ export 'widget/common/display_media/edit_muliple_media.dart';
 export 'widget/common/youtube.dart';
 export 'widget/common/youtube.thumbnail.dart';
 export 'widget/common/gradients.dart';
+export 'widget/common/push_notification.setting.dart';
 
 // Favorite
 
@@ -92,3 +93,6 @@ export 'widget/admin/admin.report.list.screen.dart';
 export 'widget/admin/admin.category.list.screen.dart';
 export 'widget/admin/admin.id_card.screen.dart';
 export 'widget/admin/admin.chat.room.list.screen.dart';
+
+// settings
+export 'widget/setting/my_setting.dart';
