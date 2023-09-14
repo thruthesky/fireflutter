@@ -1,8 +1,12 @@
+import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-/// Full screen dialog to show list of categories
-class AdminCategoryListScreen extends StatelessWidget {
+/// Admin chat room list
+///
+/// Note that, it may be an illegal operation to view chat messages of users.
+///
+class AdminCategoryListScreen extends StatelessWidget with FirebaseHelper {
   const AdminCategoryListScreen({
     super.key,
     this.onTapCategory,
@@ -14,13 +18,9 @@ class AdminCategoryListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: Theme.of(context)
-            .iconTheme
-            .copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
+        iconTheme: Theme.of(context).iconTheme.copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
         backgroundColor: Theme.of(context).colorScheme.inverseSurface,
-        title: Text('Admin Comment List',
-            style: TextStyle(
-                color: Theme.of(context).colorScheme.onInverseSurface)),
+        title: Text('Admin Chat List', style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface)),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -29,23 +29,22 @@ class AdminCategoryListScreen extends StatelessWidget {
                 context,
                 success: (category) {
                   Navigator.pop(context);
-                  CategoryService.instance
-                      .showUpdateDialog(context, category.id);
+                  CategoryService.instance.showUpdateDialog(context, category.id);
                 },
               );
             },
           ),
         ],
       ),
-      body: CategoryListView(
-        onTap: (category) {
-          if (onTapCategory != null) {
-            onTapCategory?.call(category);
-          } else {
-            PostService.instance.showPostListDialog(context, category.id);
-          }
-        },
-      ),
+      body: FirestoreListView(
+          query: chatCol,
+          itemBuilder: (context, snapshot) {
+            final room = Room.fromDocumentSnapshot(snapshot);
+            return ListTile(
+              title: Text("TODO - display player and coach name and display chat time, ${room.roomId}${room.name}"),
+              onTap: () {},
+            );
+          }),
     );
   }
 }

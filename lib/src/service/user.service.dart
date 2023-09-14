@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/enum/protocol.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -365,6 +364,34 @@ class UserService with FirebaseHelper {
           context: context,
           pageBuilder: ($, _, __) => PublicProfileScreen(uid: uid, user: user),
         );
+  }
+
+  showFollowersScreen({required BuildContext context, required User user}) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Followers'),
+          ),
+          body: UserListView.builder(uids: user.followers),
+        );
+      },
+    );
+  }
+
+  showFollowingScreen({required BuildContext context, required User user}) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Following'),
+          ),
+          body: UserListView.builder(uids: user.followings),
+        );
+      },
+    );
   }
 
   /// Delete user document

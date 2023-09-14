@@ -89,13 +89,10 @@ class UserListView extends StatelessWidget with FirebaseHelper {
               if (exemptedUsers.contains(user.uid)) return const SizedBox();
               if (itemBuilder != null) return itemBuilder!.call(user, index);
               return ListTile(
-                title:
-                    titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
-                subtitle: subtitleBuilder?.call(user) ??
-                    Text(user.createdAt.toString()),
+                title: titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
+                subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
                 leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
-                trailing: trailingBuilder?.call(user) ??
-                    const Icon(Icons.chevron_right),
+                trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
                 onTap: () async {
                   onTap?.call(user);
                 },
@@ -104,6 +101,38 @@ class UserListView extends StatelessWidget with FirebaseHelper {
                 },
               );
             });
+      },
+    );
+  }
+
+  /// Use this builder when you already got a list of uids.
+  static Widget builder({
+    required List<String> uids,
+    Widget Function(User? user)? itemBuilder,
+    Widget Function()? loadingBuilder,
+  }) {
+    return ListView.builder(
+      itemCount: uids.length,
+      itemBuilder: (context, index) {
+        return UserDoc(
+          uid: uids[index],
+          onLoading: loadingBuilder?.call() ??
+              const ListTile(
+                leading: CircularProgressIndicator(),
+                title: Text('Loading...'),
+              ),
+          builder: (user) {
+            return itemBuilder?.call(user) ??
+                ListTile(
+                  leading: UserAvatar(user: user),
+                  title: Text(user.name),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {
+                    UserService.instance.showPublicProfileScreen(context: context, user: user);
+                  },
+                );
+          },
+        );
       },
     );
   }
