@@ -75,6 +75,7 @@ export 'widget/common/youtube.dart';
 export 'widget/common/youtube.thumbnail.dart';
 export 'widget/common/gradients.dart';
 export 'widget/common/push_notification.setting.dart';
+export 'widget/common/push_notification.icon.dart';
 
 // Favorite
 

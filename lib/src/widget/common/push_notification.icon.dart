@@ -34,7 +34,7 @@ class PushNotificationIcon extends StatelessWidget {
             categoryId: categoryId,
           );
         },
-        icon: Icon(setting == null ? Icons.notifications_active : Icons.notifications_off),
+        icon: Icon(setting == null ? Icons.notifications_off : Icons.notifications_active),
       ),
     );
   }
