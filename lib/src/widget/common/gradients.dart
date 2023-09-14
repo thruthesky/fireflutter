@@ -4,7 +4,13 @@ class TopDownGraident extends StatelessWidget {
   const TopDownGraident({
     super.key,
     this.height = 200,
+    this.colors = const [
+      Color(0x88222222),
+      Colors.transparent,
+    ],
   });
+
+  final List<Color> colors;
 
   final double height;
   @override
@@ -17,10 +23,7 @@ class TopDownGraident extends StatelessWidget {
         height: height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Theme.of(context).colorScheme.secondary.withAlpha(120),
-              Colors.transparent
-            ],
+            colors: colors,
             end: Alignment.bottomCenter,
             begin: Alignment.topCenter,
           ),
@@ -34,9 +37,14 @@ class BottomUpGraident extends StatelessWidget {
   const BottomUpGraident({
     super.key,
     this.height = 300,
+    this.colors = const [
+      Color(0x88222222),
+      Colors.transparent,
+    ],
   });
 
   final double height;
+  final List<Color> colors;
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +56,7 @@ class BottomUpGraident extends StatelessWidget {
         height: height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Theme.of(context).colorScheme.secondary.withAlpha(150),
-              Colors.transparent
-            ],
+            colors: colors,
             begin: Alignment.bottomCenter,
             end: Alignment.topCenter,
           ),

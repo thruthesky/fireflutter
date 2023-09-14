@@ -83,7 +83,7 @@ class CategoryListViewState extends State<CategoryListView> {
         if (widget.emptyBuilder != null) {
           return widget.emptyBuilder!(context);
         } else {
-          return Center(child: Text(tr.category.noCategory));
+          return Center(child: Text(tr.noCategory));
         }
       },
       errorBuilder: (context, error, stackTrace) {

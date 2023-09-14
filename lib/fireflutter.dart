@@ -1,3 +1,4 @@
+export 'src/extensions.dart';
 export 'src/globals.dart';
 export 'src/functions/functions.dart';
 export 'src/functions/database.dart';
@@ -8,5 +9,5 @@ export 'src/services.dart';
 export 'src/test.dart';
 export 'src/code.dart';
 export 'src/types/media_source.dart';
-export 'src/i18n/t.dart';
+export 'src/i18n/i18n.dart';
 export 'src/converters.dart';

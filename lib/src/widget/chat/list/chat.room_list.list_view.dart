@@ -141,7 +141,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
   @override
   Widget build(BuildContext context) {
     if (ChatService.instance.loggedIn == false) {
-      return Center(child: Text(tr.user.loginFirstMessage));
+      return Center(child: Text(tr.loginFirstMessage));
     }
 
     return FirestoreListView(
@@ -171,7 +171,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
         if (widget.emptyBuilder != null) {
           return widget.emptyBuilder!(context);
         } else {
-          return Center(child: Text(tr.chat.noChatRooms));
+          return Center(child: Text(tr.noChatRooms));
         }
       },
       errorBuilder: (context, error, stackTrace) {

@@ -1,0 +1,22 @@
+extension FireFlutterStringExtension on String {
+  int? tryInt() {
+    return int.tryParse(this);
+  }
+
+  double? tryDouble() {
+    return double.parse(this);
+  }
+
+  bool get isEmail =>
+      RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(this);
+
+  /// Return value if the current string is empty.
+  ///
+  /// example
+  /// ```dart
+  /// ''.ifEmpty('This is empty!') // result: 'This is empty!'
+  /// String? uid; uid?.ifEmpty('UID is empty!') // result: null
+  ///
+  /// ```
+  String ifEmpty(String value) => isEmpty ? value : this;
+}

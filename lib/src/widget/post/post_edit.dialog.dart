@@ -102,7 +102,7 @@ class _PostEditDialogState extends State<PostEditScreen> {
                 controller: title,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
-                  labelText: tr.form.title,
+                  labelText: tr.title,
                 ),
               ),
               const SizedBox(height: 20),
@@ -112,7 +112,7 @@ class _PostEditDialogState extends State<PostEditScreen> {
                 maxLines: 8,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
-                  labelText: tr.form.content,
+                  labelText: tr.content,
                 ),
               ),
               const SizedBox(height: 20),
@@ -142,15 +142,13 @@ class _PostEditDialogState extends State<PostEditScreen> {
                   const Spacer(),
                   // Form submit button
                   ElevatedButton(
-                    child: Text(
-                        isCreate ? tr.form.postCreate : tr.form.postUpdate),
+                    child: Text(isCreate ? tr.postCreate : tr.postUpdate),
                     onPressed: () async {
                       if (title.text.isEmpty) {
-                        return warningSnackbar(context, tr.form.titleRequired);
+                        return warningSnackbar(context, tr.titleRequired);
                       }
                       if (content.text.isEmpty) {
-                        return warningSnackbar(
-                            context, tr.form.contentRequired);
+                        return warningSnackbar(context, tr.contentRequired);
                       }
                       Post post;
                       if (isCreate) {

@@ -76,7 +76,7 @@ class PostListView extends StatelessWidget {
       },
       emptyBuilder: (context) {
         if (emptyBuilder != null) return emptyBuilder!(context);
-        return Center(child: Text(tr.post.noPost));
+        return Center(child: Text(tr.noPost));
       },
       errorBuilder: (context, error, stackTrace) {
         log(error.toString(), stackTrace: stackTrace);

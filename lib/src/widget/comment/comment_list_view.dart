@@ -68,7 +68,7 @@ class CommentListViewState extends State<CommentListView> {
             }
             return Column(
               children: [
-                Center(child: Text(tr.comment.noComment)),
+                Center(child: Text(tr.noComment)),
                 const SizedBox(height: 60),
               ],
             );

@@ -162,7 +162,7 @@ class Room with FirebaseHelper {
     await ChatService.instance.sendProtocolMessage(
       room: Room.fromJson(roomData),
       protocol: Protocol.chatRoomCreateDialog.name,
-      text: tr.chat.chatRoomCreateDialog,
+      text: tr.chatRoomCreateDialog,
     );
 
     return Room.fromJson(roomData);

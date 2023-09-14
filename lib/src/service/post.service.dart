@@ -144,8 +144,7 @@ class PostService with FirebaseHelper {
             value: 'block',
             child: Database(
               path: 'settings/$myUid/blocks/${post.uid}',
-              builder: (value) =>
-                  Text(value == null ? tr.menu.block : tr.menu.unblock),
+              builder: (value) => Text(value == null ? tr.block : tr.unblock),
             ),
           ),
         ],
@@ -176,9 +175,8 @@ class PostService with FirebaseHelper {
               final blocked =
                   await toggle('/settings/$myUid/blocks/${post.uid}');
               toast(
-                title: blocked ? tr.menu.block : tr.menu.unblock,
-                message:
-                    blocked ? tr.menu.blockMessage : tr.menu.unblockMessage,
+                title: blocked ? tr.block : tr.unblock,
+                message: blocked ? tr.blockMessage : tr.unblockMessage,
               );
               break;
           }
