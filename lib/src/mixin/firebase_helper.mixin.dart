@@ -59,7 +59,10 @@ mixin FirebaseHelper {
   /// User setting
   /// Note, for the sign-in user's setting, you should use `UserService.instance.settings`
   /// Note, for other user settings, you should use `UserSettings(otherUid, docId)`.
-  CollectionReference userSettingsCol(String uid) => userDoc(uid).collection('user_settings');
+  CollectionReference userSettingCol(String uid) => userDoc(uid).collection('user_settings');
+  CollectionReference get mySettingCol => userSettingCol(myUid!);
+
+  DocumentReference mySettingDoc(String documentid) => mySettingCol.doc(documentid);
 
   // favorites
   CollectionReference get favoriteCol => db.collection('favorites');

@@ -62,19 +62,18 @@ exports.pushNotificationQueue =
     });
 
 
-exports.messagingOnChatMessageCreate =
-  onDocumentCreated("chat_room_messages/{documentId}",
-    async (event: FirestoreEvent<QueryDocumentSnapshot | undefined>) => {
-      if (event === void 0) return;
+exports.messagingOnChatMessageCreate = onDocumentCreated("chats/{chatId}/messages/{messageId}",
+  async (
+    event: FirestoreEvent<QueryDocumentSnapshot | undefined,
+      { chatId: string; messageId: string; }>
+  ): Promise<SendMessageResult | undefined> => {
+    if (event === void 0) return undefined;
+    console.log(event.params);
 
-      const futures = [];
-
-      futures.push(
-        Messaging.sendChatNotificationToOtherUsers(
-          event.data?.data() as ChatMessageDocument
-        )
-      );
-      return await Promise.all(futures);
-    });
-
+    const chatData = event.data?.data() as ChatMessageDocument;
+    chatData.roomId = event.params.chatId;
+    return Messaging.sendChatNotificationToOtherUsers(
+      chatData
+    );
+  });
 

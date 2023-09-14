@@ -73,7 +73,8 @@ Create an issue if you find a bug or need a help.
   - [Photo upload](#photo-upload)
 - [No of view](#no-of-view)
 - [Push notifications](#push-notifications)
-  - [Push notifcation sound](#push-notifcation-sound)
+  - [Push notification settings](#push-notification-settings)
+    - [Push notifcation sound](#push-notifcation-sound)
   - [Customizing source](#customizing-source)
 - [Following and Follower](#following-and-follower)
   - [Feed listing logic](#feed-listing-logic)
@@ -81,6 +82,7 @@ Create an issue if you find a bug or need a help.
   - [How to unfollow](#how-to-unfollow)
 - [Block](#block)
 - [Customization](#customization)
+- [Callbacks](#callbacks)
   - [Chat Customization](#chat-customization)
 - [Admin](#admin)
   - [Admin Widgets](#admin-widgets)
@@ -1375,6 +1377,24 @@ AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
 });
 ```
 
+## Push notification settings
+
+Each of push notification option is saved as a single document under `/users/{uid}/user_settings/{settingDocumentId}`. And it is protected by the security rules. Only the user can access this document. The option is saved in a separate document for the search. To give convinience on search and getting tokens of users who subscrid to the service.
+
+The format of the document is in
+
+```json
+{
+  "id": "The document ID",
+  "uid": "the login user's uid",
+  "action": "post.create or comment.create or chat.disable",
+  "categoryId": "for post only",
+  "roomId": "for chat only"
+}
+```
+
+For chat room, when a user enters into a chat room, the push notification is enabled by default unless the user turn off the push notification manually. When the user turns off the push notification, `chat.disable` action will be saved in the setting document.
+
 ### Push notifcation sound
 
 Android Setup
@@ -1644,6 +1664,88 @@ TextButton(
 # Customization
 
 `fireflutter` supports full customization from the i18n to the complete UI.
+
+# Callbacks
+
+Fireflutter provides callback functions to handle on user document create, update, delete. And create and update for the posts and comments.
+
+Below is an example of how to index user name, post title, content and comment into supabase.
+
+```dart
+UserService.instance.init(
+  onCreate: (User user) async {
+    await supabase.from('table').insert({
+      'type': 'user',
+      'documentId': user.uid,
+      'uid': user.uid,
+      'name': user.name,
+    });
+  },
+  onUpdate: (User user) async {
+    await supabase.from('table').upsert(
+      {
+        'type': 'user',
+        'documentId': user.uid,
+        'uid': user.uid,
+        'name': user.name,
+      },
+      onConflict: 'documentId',
+    );
+  },
+  onDelete: (User user) async {
+    await supabase.from('table').delete().eq('documentId', user.uid);
+  },
+);
+
+PostService.instance.init(
+  uploadFromFile: false,
+  onCreate: (Post post) async {
+    await supabase.from('table').insert({
+      'type': 'post',
+      'documentId': post.id,
+      'title': post.title,
+      'content': post.content,
+      'uid': post.uid,
+      'category': post.categoryId,
+    });
+  },
+  onUpdate: (Post post) async {
+    await supabase.from('table').upsert(
+      {
+        'type': 'post',
+        'documentId': post.id,
+        'title': post.title,
+        'content': post.content,
+        'uid': post.uid,
+        'category': post.categoryId
+      },
+      onConflict: 'documentId',
+    );
+  },
+);
+
+CommentService.instance.init(
+  uploadFromFile: false,
+  onCreate: (Comment comment) async {
+    await supabase.from('table').insert({
+      'type': 'comment',
+      'documentId': comment.id,
+      'content': comment.content,
+      'uid': comment.uid,
+    });
+  },
+  onUpdate: (Comment comment) async {
+    await supabase.from('table').upsert(
+      {
+        'type': 'comment',
+        'documentId': comment.id,
+        'content': comment.content,
+      },
+      onConflict: 'documentId',
+    );
+  },
+);
+```
 
 ## Chat Customization
 
