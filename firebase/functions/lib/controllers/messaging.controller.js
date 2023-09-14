@@ -30,13 +30,13 @@ exports.pushNotificationQueue =
         console.log("result::", result);
         return await ((_b = event.data) === null || _b === void 0 ? void 0 : _b.ref.update(Object.assign(Object.assign({}, result), { sentAt: admin.firestore.FieldValue.serverTimestamp() })));
     });
-exports.messagingOnChatMessageCreate =
-    (0, firestore_1.onDocumentCreated)("chat_room_messages/{documentId}", async (event) => {
-        var _a;
-        if (event === void 0)
-            return;
-        const futures = [];
-        futures.push(messaging_model_1.Messaging.sendChatNotificationToOtherUsers((_a = event.data) === null || _a === void 0 ? void 0 : _a.data()));
-        return await Promise.all(futures);
-    });
+exports.messagingOnChatMessageCreate = (0, firestore_1.onDocumentCreated)("chats/{chatId}/messages/{messageId}", async (event) => {
+    var _a;
+    if (event === void 0)
+        return undefined;
+    console.log(event.params);
+    const chatData = (_a = event.data) === null || _a === void 0 ? void 0 : _a.data();
+    chatData.roomId = event.params.chatId;
+    return messaging_model_1.Messaging.sendChatNotificationToOtherUsers(chatData);
+});
 //# sourceMappingURL=messaging.controller.js.map

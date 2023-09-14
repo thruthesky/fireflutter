@@ -1,22 +1,22 @@
 import * as admin from "firebase-admin";
-import {EventName, EventType} from "../utils/event-name";
+import { EventName, EventType } from "../utils/event-name";
 import {
   FcmToken,
   MessagePayload,
   SendMessage,
   SendMessageResult,
 } from "../interfaces/messaging.interface";
-import {Ref} from "../utils/ref";
-import {Library} from "../utils/library";
+import { Ref } from "../utils/ref";
+import { Library } from "../utils/library";
 
-import {Comment} from "../models/comment.model";
-import {User} from "./user.model";
-import {Post} from "./post.model";
-import {UserSettingsDocument} from "../interfaces/user.interface";
-import {ChatMessageDocument} from "../interfaces/chat.interface";
-import {Chat} from "./chat.model";
+import { Comment } from "../models/comment.model";
+import { User } from "./user.model";
+import { Post } from "./post.model";
+import { UserSettingsDocument } from "../interfaces/user.interface";
+import { ChatMessageDocument } from "../interfaces/chat.interface";
+import { Chat } from "./chat.model";
 
-import {MulticastMessage} from "firebase-admin/lib/messaging/messaging-api";
+import { MulticastMessage } from "firebase-admin/lib/messaging/messaging-api";
 
 export class Messaging {
   /**
@@ -31,15 +31,15 @@ export class Messaging {
    * @return results
    */
   static async sendMessage(data: SendMessage): Promise<SendMessageResult> {
-    if (data.topic) {
+    if (data.action) {
+      return this.sendMessageByAction(data);
+    } else if (data.topic) {
       return this.sendMessageToTopic(data.topic, data);
     } else if (data.tokens) {
       return this.sendMessageToTokens(data.tokens, data);
     } else if (data.uids) {
       const tokens = await this.getTokensFromUids(data.uids);
       return this.sendMessageToTokens(tokens, data);
-    } else if (data.action) {
-      return this.sendMessageByAction(data);
     } else {
       throw Error("One of uids, tokens, topic must be present");
     }
@@ -57,7 +57,7 @@ export class Messaging {
     const payload = this.topicPayload(topic, data);
     try {
       const res = await admin.messaging().send(payload as admin.messaging.TopicMessage);
-      return {messageId: res};
+      return { messageId: res };
     } catch (e) {
       throw Error("Topic send error " + (e as Error).message);
     }
@@ -154,7 +154,7 @@ export class Messaging {
 
     if (tokens.length == 0) {
       console.log("sendMessageToTokens() no tokens. so, just return results.");
-      return {success: 0, error: 0};
+      return { success: 0, error: 0 };
     }
 
     // add login user uid
@@ -172,7 +172,7 @@ export class Messaging {
     for (const _500Tokens of chunks) {
       const newPayload: MulticastMessage = Object.assign(
         {},
-        {tokens: _500Tokens},
+        { tokens: _500Tokens },
         payload
       );
       multicastPromise.push(admin.messaging().sendEachForMulticast(newPayload));
@@ -215,7 +215,7 @@ export class Messaging {
       await this.removeTokens(failedTokens);
 
       // 결과 리턴
-      const results = {success: successCount, error: failureCount};
+      const results = { success: successCount, error: failureCount };
       // console.log(`sendMessageToTokens() results: ${JSON.stringify(results)}`);
       return results;
     } catch (e) {
@@ -444,15 +444,15 @@ export class Messaging {
    * @returns
    */
   static async sendChatNotificationToOtherUsers(data: ChatMessageDocument) {
-    const user = await User.get(data.senderUserDocumentReference.id);
+    const user = await User.get(data.uid);
     const messageData: SendMessage = {
       ...data,
       type: EventType.chat,
       title: `${user?.display_name ?? ""} send you a message.`,
       body: data.text,
       uids: await Chat.getOtherUserUidsFromChatMessageDocument(data),
-      chatRoomId: data.chatRoomDocumentReference.id,
-      senderUid: data.senderUserDocumentReference.id,
+      id: data.roomId,
+      senderUid: data.uid,
     };
     return this.sendMessage(messageData);
   }
