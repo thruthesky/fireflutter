@@ -18,7 +18,9 @@ export interface SendMessage {
     // userDocumentReference?: admin.firestore.DocumentReference;
 
     clickAction?: string; // customize web click action
+
     chatRoomId?: string;
+
     senderUid?: string;
 
     //
