@@ -4,9 +4,10 @@ exports.EventType = exports.EventName = void 0;
 class EventName {
 }
 exports.EventName = EventName;
-EventName.postCreate = "post-create";
-EventName.commentCreate = "comment-create";
-EventName.chatCreate = "chat-create";
+EventName.postCreate = "postCreate";
+EventName.commentCreate = "commentCreate";
+EventName.chatCreate = "chatCreate";
+EventName.chatDisabled = "chatDisabled";
 class EventType {
 }
 exports.EventType = EventType;

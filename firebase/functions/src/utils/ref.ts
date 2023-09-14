@@ -39,7 +39,7 @@ export class Ref {
   }
 
   static get userSettingGroup(): admin.firestore.CollectionGroup {
-    return this.db.collectionGroup("user_settings")
+    return this.db.collectionGroup("user_settings");
   }
 
   static userSettingDoc(

@@ -30,12 +30,19 @@ class Ref {
     static userSettings(uid) {
         return this.users.doc(uid).collection("user_settings");
     }
+    static get userSettingGroup() {
+        return this.db.collectionGroup("user_settings");
+    }
     static userSettingDoc(uid, docId) {
         return this.userSettings(uid).doc(docId);
     }
-    static usersSettingsSearch(action, categoryId) {
-        return this.db.collectionGroup("user_settings").where("action", "==", action)
-            .where("categoryId", "==", categoryId);
+    static usersSettingsSearch(data) {
+        let query = this.db.collectionGroup("user_settings").where("action", "==", data.action);
+        if (data.categoryId != null && data.categoryId)
+            query = query.where("categoryId", "==", data.categoryId);
+        if (data.roomId != null && data.roomId)
+            query = query.where("roomId", "==", data.roomId);
+        return query;
     }
     static get usersPublicDataCol() {
         return this.db.collection("users_public_data");
