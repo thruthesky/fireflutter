@@ -81,6 +81,7 @@ Create an issue if you find a bug or need a help.
   - [How to unfollow](#how-to-unfollow)
 - [Block](#block)
 - [Customization](#customization)
+- [Callbacks](#callbacks)
   - [Chat Customization](#chat-customization)
 - [Admin](#admin)
   - [Admin Widgets](#admin-widgets)
@@ -1658,6 +1659,96 @@ TextButton(
 # Customization
 
 `fireflutter` supports full customization from the i18n to the complete UI.
+
+
+
+
+# Callbacks
+
+
+Fireflutter provides callback functions to handle on user document create, update, delete. And create and update for the posts and comments.
+
+
+Below is an example of how to index user name, post title, content and comment into supabase.
+
+
+
+```dart
+UserService.instance.init(
+  onCreate: (User user) async {
+    await supabase.from('table').insert({
+      'type': 'user',
+      'documentId': user.uid,
+      'uid': user.uid,
+      'name': user.name,
+    });
+  },
+  onUpdate: (User user) async {
+    await supabase.from('table').upsert(
+      {
+        'type': 'user',
+        'documentId': user.uid,
+        'uid': user.uid,
+        'name': user.name,
+      },
+      onConflict: 'documentId',
+    );
+  },
+  onDelete: (User user) async {
+    await supabase.from('table').delete().eq('documentId', user.uid);
+  },
+);
+
+PostService.instance.init(
+  uploadFromFile: false,
+  onCreate: (Post post) async {
+    await supabase.from('table').insert({
+      'type': 'post',
+      'documentId': post.id,
+      'title': post.title,
+      'content': post.content,
+      'uid': post.uid,
+      'category': post.categoryId,
+    });
+  },
+  onUpdate: (Post post) async {
+    await supabase.from('table').upsert(
+      {
+        'type': 'post',
+        'documentId': post.id,
+        'title': post.title,
+        'content': post.content,
+        'uid': post.uid,
+        'category': post.categoryId
+      },
+      onConflict: 'documentId',
+    );
+  },
+);
+
+CommentService.instance.init(
+  uploadFromFile: false,
+  onCreate: (Comment comment) async {
+    await supabase.from('table').insert({
+      'type': 'comment',
+      'documentId': comment.id,
+      'content': comment.content,
+      'uid': comment.uid,
+    });
+  },
+  onUpdate: (Comment comment) async {
+    await supabase.from('table').upsert(
+      {
+        'type': 'comment',
+        'documentId': comment.id,
+        'content': comment.content,
+      },
+      onConflict: 'documentId',
+    );
+  },
+);
+```
+
 
 ## Chat Customization
 
