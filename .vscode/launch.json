@@ -130,6 +130,17 @@
       "flutterMode": "debug",
       "deviceId": "emulator-5554"
     },
+
+    {
+      "name": "GRC - Samsung External (J)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "R9ATA00LMJM"
+    },
+
     {
       "name": "fireflutter example - Simulator (C)",
       "request": "launch",

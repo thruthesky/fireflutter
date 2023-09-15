@@ -37,6 +37,7 @@ Create an issue if you find a bug or need a help.
   - [UserAvatar](#useravatar)
   - [UserProfileAvatar](#userprofileavatar)
   - [User List View](#user-list-view)
+    - [UserListView.builder](#userlistviewbuilder)
   - [When user is not logged in](#when-user-is-not-logged-in)
 - [Chat Feature](#chat-feature)
   - [Welcome message](#welcome-message)
@@ -214,7 +215,10 @@ Copy the following and paste it into your firebase project.
     },
     "feeds": {
       ".read": true,
-      ".write": true
+      ".write": true,
+      "$uid": {
+        ".indexOn": ["createdAt"]
+      }
     },
     "tmp": {
       ".read": true,
