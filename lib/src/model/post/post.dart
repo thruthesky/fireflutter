@@ -25,6 +25,7 @@ class Post with FirebaseHelper {
   final String uid;
 
   final List<String> urls;
+  bool get hasPhoto => urls.isNotEmpty;
 
   @FirebaseDateTimeConverter()
   final DateTime createdAt;

@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 ///
 /// [builder] is the widget builder.
 ///
+/// [onWaiting] is the widget to show when waiting for the data.
+///
 /// Example: below will get the snapshot of /path/to/node
 ///
 /// ```dart
@@ -17,10 +19,16 @@ import 'package:flutter/material.dart';
 /// });
 ///
 class Database extends StatelessWidget {
-  const Database({super.key, required this.path, required this.builder});
+  const Database({
+    super.key,
+    required this.path,
+    required this.builder,
+    this.onWaiting,
+  });
 
   final String path;
   final Widget Function(dynamic value) builder;
+  final Widget? onWaiting;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +36,7 @@ class Database extends StatelessWidget {
       stream: FirebaseDatabase.instance.ref(path).onValue,
       builder: (context, AsyncSnapshot<DatabaseEvent> event) {
         if (event.connectionState == ConnectionState.waiting) {
-          return const SizedBox.shrink();
+          return onWaiting ?? const SizedBox.shrink();
         }
         if (event.hasError) {
           return Text('Error; ${event.error}');

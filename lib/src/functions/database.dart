@@ -1,6 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:flutter/foundation.dart';
 
 /// Get a node data
 ///
@@ -17,7 +16,6 @@ import 'package:flutter/foundation.dart';
 Future<T?> get<T>(String path) async {
   final event = await FirebaseDatabase.instance.ref(path).once(DatabaseEventType.value);
   if (!event.snapshot.exists) {
-    debugPrint("---> snapshot does not exists at $path");
     return null;
   }
   return event.snapshot.value as T;

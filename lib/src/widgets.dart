@@ -56,6 +56,7 @@ export 'widget/post/view/post.view.title.dart';
 export 'widget/post/view/post.view.meta.dart';
 export 'widget/post/view/post.view.content.dart';
 export 'widget/post/view/post.view.buttons.dart';
+export 'widget/post/post.card.dart';
 
 // Comment
 export 'widget/comment/comment_edit.bottom_sheet.dart';
@@ -88,6 +89,7 @@ export 'widget/feed/feed.list_view.item.dart';
 
 // database
 export 'widget/database/database.dart';
+export 'widget/database/database.count.dart';
 
 // admin
 export 'widget/admin/admin.dashboard.screen.dart';

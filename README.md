@@ -70,6 +70,7 @@ Create an issue if you find a bug or need a help.
 - [Database](#database)
   - [Get/Set/Update/Toggle](#getsetupdatetoggle)
   - [Database widget](#database-widget)
+  - [DatabaseCount widget](#databasecount-widget)
 - [Settings](#settings)
 - [Report](#report)
 - [Upload](#upload)
@@ -87,6 +88,8 @@ Create an issue if you find a bug or need a help.
 - [Customization](#customization)
 - [Callbacks](#callbacks)
   - [Chat Customization](#chat-customization)
+- [Services](#services)
+  - [ShareService](#shareservice)
 - [Admin](#admin)
   - [Admin Widgets](#admin-widgets)
     - [Opening admin dashbard](#opening-admin-dashbard)
@@ -223,10 +226,10 @@ Copy the following and paste it into your firebase project.
       }
     },
     "posts": {
+      ".read": true,
       "$post_id": {
         "seenBy": {
           "$uid": {
-            ".read": true,
             ".write": "$uid == auth.uid"
           }
         }
@@ -1252,6 +1255,39 @@ ElevatedButton(
 ),
 ```
 
+
+## DatabaseCount widget
+
+With database count widget, you may display no of views like below.
+
+```dart
+DatabaseCount(
+  path: 'posts/${post.id}/seenBy',
+  builder: (n) => n == 0 ? const SizedBox.shrink() : Text("No of views $n"),
+),
+```
+
+where you would code like below if you don't want use database count widget.
+
+```dart
+FutureBuilder(
+  future: get('posts/${post.id}/seenBy'),
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) return const SizedBox.shrink();
+    if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+
+    if (snapshot.data is! Map) return const SizedBox.shrink();
+
+    int no = (snapshot.data as Map).keys.length;
+    if (no == 0) {
+      return const SizedBox.shrink();
+    }
+
+    return Text("No of views ${(snapshot.data as Map).keys.length}");
+  },
+),
+```
+
 # Settings
 
 The system settings are saved under `/settings` collection while the user settings are saved under `/users/{uid}/user_settings/{settingId}/...` in Firestore and the security rules are set to the login user.
@@ -1805,6 +1841,30 @@ Registering the build functions do not cause any performance issues since it onl
 
 ```dart
 ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoomAppBar(room: room);
+```
+
+
+# Services
+
+## ShareService
+
+
+ShareService is a helper library that gives some convinient untility for sharing. It has `showBotomSheet` method that displays a bottom sheet showing some UI elements for sharing. You may get an idea seeing the look and the code of the method.
+
+
+It also has a method `dyamicLink` that returns a short dyanmic link. You may see the source code of the method to get an insight how you would copy and paste in your project.
+
+```dart
+Share.share(
+  await ShareService.instance.dynamicLink(
+    link: "https://grcapp.page.link/?type=feed&id=${post.id}",
+    uriPrefix: "https://grcapp.page.link",
+    appId: "com.grc.grc",
+    title: post.title,
+    description: post.content.upTo(255),
+  ),
+  subject: post.title,
+);
 ```
 
 # Admin

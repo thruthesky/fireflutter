@@ -1,5 +1,7 @@
-import 'package:fireflutter/fireflutter.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+
+import 'package:fireflutter/fireflutter.dart';
 
 class ShareService {
   static ShareService? _instance;
@@ -59,5 +61,39 @@ class ShareService {
         ),
       ),
     );
+  }
+
+  /// Generate short dynamic link.
+  ///
+  /// Note that, when [forceRedirectEnabled] is true, it will open the app
+  /// without showing the preview page on iOS. But it shows page not found
+  /// when the link is shared and tapped in Discord app. It was working
+  /// fine on other apps so far.
+  ///
+  Future<String> dynamicLink({
+    required String link,
+    required String uriPrefix,
+    required appId,
+    String title = "Title",
+    String description = "Description",
+    String? imageUrl,
+  }) async {
+    final dynamicLinkParams = DynamicLinkParameters(
+        link: Uri.parse(link),
+        uriPrefix: uriPrefix,
+        androidParameters: AndroidParameters(packageName: appId),
+        iosParameters: IOSParameters(bundleId: appId),
+        socialMetaTagParameters: SocialMetaTagParameters(
+          title: title,
+          description: description,
+          imageUrl: imageUrl == null ? null : Uri.parse(imageUrl),
+        ),
+        navigationInfoParameters: const NavigationInfoParameters(
+          forcedRedirectEnabled: true,
+        ));
+
+    final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
+
+    return dynamicLink.shortUrl.toString();
   }
 }

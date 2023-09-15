@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 class FeedListView extends StatefulWidget {
   const FeedListView({
     super.key,
+    this.itemExtent,
     this.itemBuilder,
     this.topBuilder,
     this.textBuilder,
@@ -13,6 +14,7 @@ class FeedListView extends StatefulWidget {
     this.onTap,
   });
 
+  final double? itemExtent;
   final Widget Function(Feed feed, int index)? itemBuilder;
   final Widget Function(Feed feed)? topBuilder;
 
@@ -55,7 +57,7 @@ class _FeedListViewState extends State<FeedListView> with FirebaseHelper {
         }
 
         return ListView.builder(
-          // itemExtent: 200,
+          itemExtent: widget.itemExtent,
           itemCount: snapshot.docs.length,
           itemBuilder: (context, index) {
             // if we reached the end of the currently obtained items, we try to
