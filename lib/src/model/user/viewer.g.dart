@@ -21,7 +21,8 @@ Map<String, dynamic> _$ViewerToJson(Viewer instance) => <String, dynamic>{
       'type': instance.type,
       'uid': instance.uid,
       'postId': instance.postId,
-      'lastViewedAt': const FirebaseDateTimeConverter().toJson(instance.lastViewedAt),
+      'lastViewedAt':
+          const FirebaseDateTimeConverter().toJson(instance.lastViewedAt),
       'year': instance.year,
       'month': instance.month,
       'day': instance.day,
