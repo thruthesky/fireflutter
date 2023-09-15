@@ -1867,6 +1867,40 @@ Share.share(
 );
 ```
 
+
+Dispaly a share bottom sheet.
+
+```dart
+ShareService.instance.showBottomSheet(actions: [
+  IconTextButton(
+    icon: const Icon(Icons.share),
+    label: "Share",
+    onTap: () async {
+      Share.share(
+        await dynamicLink(
+          type: 'feed',
+          id: post.id,
+          title: post.title,
+          description: post.content.upTo(255),
+        ),
+      );
+    },
+  ),
+  IconTextButton(
+    icon: const Icon(Icons.copy),
+    label: "Copy Link",
+    onTap: () {},
+  ),
+  IconTextButton(
+    icon: const Icon(Icons.comment),
+    label: "Message",
+    onTap: () {},
+  ),
+]),
+```
+
+
+
 # Admin
 
 To set a user as an admin, put the user's uid into `isAdmin()` in firestore security rules.

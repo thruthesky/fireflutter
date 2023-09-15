@@ -28,6 +28,7 @@ class PostCard extends StatelessWidget {
     this.semanticContainer = true,
     required this.post,
     this.padding = const EdgeInsets.all(16),
+    required this.onTapShareButton,
   });
 
   final Color? color;
@@ -42,6 +43,9 @@ class PostCard extends StatelessWidget {
 
   final Post post;
   final EdgeInsetsGeometry? padding;
+
+  /// Callback function for share button
+  final Function(Post post) onTapShareButton;
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +139,6 @@ class PostCard extends StatelessWidget {
                       onPressed: () => post.like(),
                       icon: const Icon(Icons.thumb_up),
                     ),
-
                     FavoriteButton(
                       postId: post.id,
                       builder: (didIFavorite) {
@@ -143,33 +146,9 @@ class PostCard extends StatelessWidget {
                       },
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () => onTapShareButton(post),
                       icon: const Icon(Icons.share),
                     ),
-                    // IconButton(
-                    //   onPressed: () {
-                    //     ShareService.instance.showBottomSheet(actions: [
-                    //       IconTextButton(
-                    //         icon: const Icon(Icons.share),
-                    //         label: "Share",
-                    //         onTap: () async {
-                    //           Share.share(
-                    //             await ShareService.instance.dynamicLink(
-                    //               link: "https://grcapp.page.link/?type=feed&id=${post.id}",
-                    //               uriPrefix: "https://grcapp.page.link",
-                    //               appId: "com.grc.grc",
-                    //               title: post.title,
-                    //               description: post.content.upTo(255),
-                    //             ),
-                    //             subject: post.title,
-                    //           );
-                    //         },
-                    //       ),
-                    //     ]);
-                    //   },
-                    //   icon: const Icon(Icons.airplanemode_on),
-                    // ),
-                    const Spacer(),
                   ],
                 ),
               ),
