@@ -65,6 +65,7 @@ Create an issue if you find a bug or need a help.
   - [No of profile view](#no-of-profile-view)
 - [Post](#post)
   - [Post view screen custom design](#post-view-screen-custom-design)
+  - [List of viewer on each post](#list-of-viewer-on-each-post)
 - [Database](#database)
   - [Get/Set/Update/Toggle](#getsetupdatetoggle)
   - [Database widget](#database-widget)
@@ -218,6 +219,16 @@ Copy the following and paste it into your firebase project.
       ".write": true,
       "$uid": {
         ".indexOn": ["createdAt"]
+      }
+    },
+    "posts": {
+      "$post_id": {
+        "seenBy": {
+          "$uid": {
+            ".read": true,
+            ".write": "$uid == auth.uid"
+          }
+        }
       }
     },
     "tmp": {
@@ -1152,6 +1163,14 @@ PostService.instance.customize.postViewButtons = (post) => PostViewButtons(
 ```
 
 You can actullay rebuild the whole buttons by providing new widget instead of the `PostViewButtons`.
+
+
+## List of viewer on each post
+
+Fireflutter saves the list of users who view each post under `/posts/{post_id}/seenBy/{uid}`. So, you can display how many users viewed the post. If the user who didn't log in views the post, then the user will not be added into the list of view.
+
+Note that, saving the uid is done by `Post.fromDocumentSnapshot`. 
+
 
 # Database
 

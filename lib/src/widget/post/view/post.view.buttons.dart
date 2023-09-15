@@ -68,12 +68,6 @@ class PostViewButtons extends StatelessWidget {
                   child: Text(user.followings.contains(post!.uid) ? tr.unfollow : tr.follow),
                 ),
               ),
-              TextButton(
-                child: const Text('Viewers'),
-                onPressed: () {
-                  PostService.instance.showPostViewersScreen(context: context, postId: post!.id);
-                },
-              ),
               ...?middle,
               const Spacer(),
               PopupMenuButton<String>(

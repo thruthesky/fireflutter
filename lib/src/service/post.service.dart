@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/widget/post/view/post.viewers.screen.dart';
 import 'package:flutter/material.dart';
 
 class PostService with FirebaseHelper {
@@ -58,8 +57,6 @@ class PostService with FirebaseHelper {
     Post? post,
     String? postId,
   }) {
-    addPostViewDoc(postId: postId ?? post!.id);
-
     return customize.showPostViewScreen?.call(context, postId: postId, post: post) ??
         showGeneralDialog(
           context: context,
@@ -68,30 +65,6 @@ class PostService with FirebaseHelper {
             postId: postId,
           ),
         );
-  }
-
-  addPostViewDoc({required String postId}) async {
-    final now = DateTime.now();
-    debugPrint('Adding view');
-    await noOfPostViewDoc(myUid: my.uid, postId: postId).set({
-      "postId": postId,
-      "seenBy": my.uid,
-      "type": my.type,
-      "lastViewdAt": FieldValue.serverTimestamp(),
-      "year": now.year,
-      "month": now.month,
-      "day": now.day,
-    }, SetOptions(merge: true));
-    debugPrint('Added view');
-  }
-
-  showPostViewersScreen({required BuildContext context, required String postId}) {
-    showGeneralDialog(
-      context: context,
-      pageBuilder: (context, _, __) {
-        return PostViewersScreen(postId: postId);
-      },
-    );
   }
 
   /// Shows the posts under a category (or forum)

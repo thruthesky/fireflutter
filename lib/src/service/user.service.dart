@@ -349,7 +349,7 @@ class UserService with FirebaseHelper {
     final String otherUid = uid ?? user!.uid;
     final now = DateTime.now();
     if (enableNoOfProfileView) {
-      noOfProfileViewDoc(myUid: my.uid, otherUid: otherUid).set({
+      profileViewHistoryDoc(myUid: my.uid, otherUid: otherUid).set({
         "uid": otherUid,
         "seenBy": my.uid,
         "type": my.type,
