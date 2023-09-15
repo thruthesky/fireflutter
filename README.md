@@ -1167,7 +1167,11 @@ You can actullay rebuild the whole buttons by providing new widget instead of th
 
 ## List of viewer on each post
 
-Fireflutter saves the list of users who view each post under `/posts/{post_id}/seenBy/{uid}`. So, you can display how many users viewed the post. If the user who didn't log in views the post, then the user will not be added into the list of view.
+Firelfutter provides a way of display who viewed which posts. It may be used for dsiplaying the viewers of the post or simple display the no of viewers.
+
+The list of viewers is saved uner `/posts/{post_id}/seenBy/{uid}`. If the user who didn't log in views the post, then the user will not be added into the list of view.
+
+Note that, this is disabled by default. To turn it on, `init(enableSeenBy: true)` on service initialization.
 
 Note that, saving the uid is done by `Post.fromDocumentSnapshot`. 
 

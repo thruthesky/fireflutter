@@ -15,6 +15,8 @@ class PostService with FirebaseHelper {
   bool uploadFromGallery = true;
   bool uploadFromFile = true;
 
+  bool enableSeenBy = false;
+
   /// Callback functions on post create and update. Note that, we don't support
   /// post delete.
   Function(Post)? onCreate;
@@ -24,12 +26,15 @@ class PostService with FirebaseHelper {
     bool uploadFromGallery = true,
     bool uploadFromCamera = true,
     bool uploadFromFile = true,
+    bool enableSeenBy = false,
     void Function(Post)? onCreate,
     void Function(Post)? onUpdate,
   }) {
     this.uploadFromGallery = uploadFromGallery;
     this.uploadFromCamera = uploadFromCamera;
     this.uploadFromFile = uploadFromFile;
+
+    this.enableSeenBy = enableSeenBy;
 
     this.onCreate = onCreate;
     this.onUpdate = onUpdate;

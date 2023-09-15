@@ -54,12 +54,10 @@ class Post with FirebaseHelper {
 
   factory Post.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     /// Save the list of uids who saw the post.
-    if (loggedIn) {
-      (() async {
-        final p = 'posts/${documentSnapshot.id}/seenBy/$myUid';
-        set(p, true);
-      })();
+    if (PostService.instance.enableSeenBy && loggedIn) {
+      set('posts/${documentSnapshot.id}/seenBy/$myUid', true);
     }
+
     return Post.fromJson(
       {
         ...documentSnapshot.data() as Map<String, dynamic>,

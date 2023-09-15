@@ -63,6 +63,7 @@ export 'widget/comment/comment_list_view.dart';
 export 'widget/comment/comment.list_tile.dart';
 export 'widget/comment/comment_doc.dart';
 export 'widget/comment/comment.view.screen.dart';
+export 'widget/common/icon_text_button.dart';
 
 // Common
 export 'widget/common/date_time_text.dart';
