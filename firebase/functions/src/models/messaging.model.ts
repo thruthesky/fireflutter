@@ -100,12 +100,12 @@ export class Messaging {
     }
 
 
-    console.log("action:: ", data.action, "categoryId:: ", data.categoryId);
+    // console.log("action:: ", data.action, "categoryId:: ", data.categoryId);
     // post and comment
     if (data.categoryId) {
       const snap = await Ref.usersSettingsSearch({action: data.action, categoryId: data.categoryId})
         .get();
-      console.log("snap.size", snap.size);
+      console.log("data.categoryId::snap.size::", snap.size);
 
       // get uids
       if (snap.size != 0) {
@@ -129,11 +129,12 @@ export class Messaging {
       uids = [...uids, ...subscribers];
     }
 
-
-    if (data.action == EventName.chatCreate && data.roomId && uids.length) {
+    // console.log("action:: ", data.action, "data.roomId:: ", data.roomId, 'data.uids.lenght::', data.uids?.length);
+    if (data.action == EventName.chatCreate && data.roomId && data.uids?.length) {
+      uids = [...uids, ...data.uids];
       const snap = await Ref.userSettingGroup.where("action", "==", EventName.chatDisabled).where("roomId", "==", data.roomId)
         .get();
-      console.log("snap.size", snap.size);
+      console.log("EventName.chatCreate::snap.size::", snap.size);
 
       // get uids of chat disable user
       const pusDisableUid: string[] = [];

@@ -72,6 +72,7 @@ class Messaging {
      * @returns
      */
     static async sendMessageByAction(data) {
+        var _a;
         console.log(`sendMessageByAction(${JSON.stringify(data)})`);
         if (!data.action) {
             console.log("---> no action. throw error.");
@@ -87,12 +88,12 @@ class Messaging {
             console.log("comment::post::", JSON.stringify(post));
             console.log("comment::data::", JSON.stringify(data));
         }
-        console.log("action:: ", data.action, "categoryId:: ", data.categoryId);
+        // console.log("action:: ", data.action, "categoryId:: ", data.categoryId);
         // post and comment
         if (data.categoryId) {
             const snap = await ref_1.Ref.usersSettingsSearch({ action: data.action, categoryId: data.categoryId })
                 .get();
-            console.log("snap.size", snap.size);
+            console.log("data.categoryId::snap.size::", snap.size);
             // get uids
             if (snap.size != 0) {
                 for (const doc of snap.docs) {
@@ -111,10 +112,12 @@ class Messaging {
             const subscribers = await this.getNewCommentNotificationUids(ancestors);
             uids = [...uids, ...subscribers];
         }
-        if (data.action == event_name_1.EventName.chatCreate && data.roomId && uids.length) {
+        // console.log("action:: ", data.action, "data.roomId:: ", data.roomId, 'data.uids.lenght::', data.uids?.length);
+        if (data.action == event_name_1.EventName.chatCreate && data.roomId && ((_a = data.uids) === null || _a === void 0 ? void 0 : _a.length)) {
+            uids = [...uids, ...data.uids];
             const snap = await ref_1.Ref.userSettingGroup.where("action", "==", event_name_1.EventName.chatDisabled).where("roomId", "==", data.roomId)
                 .get();
-            console.log("snap.size", snap.size);
+            console.log("EventName.chatCreate::snap.size::", snap.size);
             // get uids of chat disable user
             const pusDisableUid = [];
             if (snap.size != 0) {

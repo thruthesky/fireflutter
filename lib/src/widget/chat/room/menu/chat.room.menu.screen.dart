@@ -1,5 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/widget/common/push_notification.icon.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomMenuScreen extends StatelessWidget {
