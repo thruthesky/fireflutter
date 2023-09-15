@@ -39,6 +39,7 @@ Create an issue if you find a bug or need a help.
   - [User List View](#user-list-view)
     - [UserListView.builder](#userlistviewbuilder)
   - [When user is not logged in](#when-user-is-not-logged-in)
+  - [IconTextButton](#icontextbutton)
 - [Chat Feature](#chat-feature)
   - [Welcome message](#welcome-message)
   - [No of new message](#no-of-new-message)
@@ -673,6 +674,24 @@ class FavoriteButton extends StatelessWidget {
 
 ```
 
+
+## IconTextButton
+
+```dart
+IconTextButton(
+  icon: const FaIcon(FontAwesomeIcons.arrowUpFromBracket, size: 22),
+  iconBackgroundColor: Theme.of(context).colorScheme.secondary.withAlpha(20),
+  iconRadius: 20,
+  iconPadding: const EdgeInsets.all(12),
+  runSpacing: 4,
+  label: "SHARE",
+  labelStyle: Theme.of(context).textTheme.labelSmall!.copyWith(
+        fontSize: 10,
+        color: Theme.of(context).colorScheme.secondary,
+      ),
+  onTap: () {},
+),
+```
 # Chat Feature
 
 ## Welcome message
