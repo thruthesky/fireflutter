@@ -9,9 +9,9 @@ class ShareService {
   ShareService._();
 
   showBottomSheet({
-    required BuildContext context,
     List<Widget> actions = const [],
   }) {
+    final context = FireFlutterService.instance.context;
     showModalBottomSheet(
       context: context,
       barrierColor: Theme.of(context).colorScheme.secondary.withOpacity(.5).withAlpha(110),
