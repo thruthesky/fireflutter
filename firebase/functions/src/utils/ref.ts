@@ -50,7 +50,7 @@ export class Ref {
   }
 
   static usersSettingsSearch(data: { action: string, categoryId?: string, roomId?: string }) {
-    let query: admin.firestore.Query = this.db.collectionGroup("user_settings").where("action", "==", data.action);
+    let query: admin.firestore.Query = this.userSettingGroup.where("action", "==", data.action);
 
     if (data.categoryId != null && data.categoryId) query = query.where("categoryId", "==", data.categoryId);
 
