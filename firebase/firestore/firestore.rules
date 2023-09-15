@@ -73,6 +73,11 @@ service cloud.firestore {
       allow write: if request.resource.data.seenBy == request.auth.uid;
     }
 
+    match /no_of_post_view_history/{documentId} {
+      allow read: if true;
+      allow write: if request.resource.data.seenBy == request.auth.uid;
+    }
+
     match /favorites/{documentId} {
       allow read, write: if resource.data.uid == request.auth.uid || request.resource.data.uid == request.auth.uid;
     }
