@@ -39,6 +39,7 @@ Create an issue if you find a bug or need a help.
   - [User List View](#user-list-view)
     - [UserListView.builder](#userlistviewbuilder)
   - [When user is not logged in](#when-user-is-not-logged-in)
+  - [IconTextButton](#icontextbutton)
 - [Chat Feature](#chat-feature)
   - [Welcome message](#welcome-message)
   - [No of new message](#no-of-new-message)
@@ -673,6 +674,24 @@ class FavoriteButton extends StatelessWidget {
 
 ```
 
+
+## IconTextButton
+
+```dart
+IconTextButton(
+  icon: const FaIcon(FontAwesomeIcons.arrowUpFromBracket, size: 22),
+  iconBackgroundColor: Theme.of(context).colorScheme.secondary.withAlpha(20),
+  iconRadius: 20,
+  iconPadding: const EdgeInsets.all(12),
+  runSpacing: 4,
+  label: "SHARE",
+  labelStyle: Theme.of(context).textTheme.labelSmall!.copyWith(
+        fontSize: 10,
+        color: Theme.of(context).colorScheme.secondary,
+      ),
+  onTap: () {},
+),
+```
 # Chat Feature
 
 ## Welcome message
@@ -1167,7 +1186,11 @@ You can actullay rebuild the whole buttons by providing new widget instead of th
 
 ## List of viewer on each post
 
-Fireflutter saves the list of users who view each post under `/posts/{post_id}/seenBy/{uid}`. So, you can display how many users viewed the post. If the user who didn't log in views the post, then the user will not be added into the list of view.
+Firelfutter provides a way of display who viewed which posts. It may be used for dsiplaying the viewers of the post or simple display the no of viewers.
+
+The list of viewers is saved uner `/posts/{post_id}/seenBy/{uid}`. If the user who didn't log in views the post, then the user will not be added into the list of view.
+
+Note that, this is disabled by default. To turn it on, `init(enableSeenBy: true)` on service initialization.
 
 Note that, saving the uid is done by `Post.fromDocumentSnapshot`. 
 
