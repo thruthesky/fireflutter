@@ -102,12 +102,7 @@ class PostListPushNotificationIcon extends StatelessWidget with FirebaseHelper {
             categoryId: categoryId,
           );
 
-          /// toast
-          if (re) {
-            toast(title: 'Subscribed', message: 'You have subscribed ...');
-          } else {
-            toast(title: 'Un-subscribed', message: 'You have un-subscribed ...');
-          }
+          onChanged(value, re);
         });
   }
 }

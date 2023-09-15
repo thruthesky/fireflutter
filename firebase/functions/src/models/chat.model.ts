@@ -2,7 +2,7 @@ import {
   ChatDocument,
   ChatMessageDocument,
 } from "../interfaces/chat.interface";
-import { Ref } from "../utils/ref";
+import {Ref} from "../utils/ref";
 
 /**
  * User class

@@ -22,7 +22,10 @@ class Messaging {
      * @return results
      */
     static async sendMessage(data) {
-        if (data.topic) {
+        if (data.action) {
+            return this.sendMessageByAction(data);
+        }
+        else if (data.topic) {
             return this.sendMessageToTopic(data.topic, data);
         }
         else if (data.tokens) {
@@ -31,9 +34,6 @@ class Messaging {
         else if (data.uids) {
             const tokens = await this.getTokensFromUids(data.uids);
             return this.sendMessageToTokens(tokens, data);
-        }
-        else if (data.action) {
-            return this.sendMessageByAction(data);
         }
         else {
             throw Error("One of uids, tokens, topic must be present");
@@ -72,6 +72,7 @@ class Messaging {
      * @returns
      */
     static async sendMessageByAction(data) {
+        var _a;
         console.log(`sendMessageByAction(${JSON.stringify(data)})`);
         if (!data.action) {
             console.log("---> no action. throw error.");
@@ -79,7 +80,7 @@ class Messaging {
         }
         let uids = [];
         // commentCreate get post and patch data with category and title.
-        if (data.postId && data.action == event_name_1.EventName.commentCreate) {
+        if (data.action == event_name_1.EventName.commentCreate && data.postId) {
             const post = await post_model_1.Post.get(data.postId);
             uids.push(post.uid); // post owner
             data.categoryId = post.categoryId;
@@ -87,11 +88,12 @@ class Messaging {
             console.log("comment::post::", JSON.stringify(post));
             console.log("comment::data::", JSON.stringify(data));
         }
-        console.log("action:: ", data.action, "categoryId:: ", data.categoryId);
+        // console.log("action:: ", data.action, "categoryId:: ", data.categoryId);
+        // post and comment
         if (data.categoryId) {
-            const snap = await ref_1.Ref.usersSettingsSearch(data.action, data.categoryId)
+            const snap = await ref_1.Ref.usersSettingsSearch({ action: data.action, categoryId: data.categoryId })
                 .get();
-            console.log("snap.size", snap.size);
+            console.log("data.categoryId::snap.size::", snap.size);
             // get uids
             if (snap.size != 0) {
                 for (const doc of snap.docs) {
@@ -104,11 +106,28 @@ class Messaging {
             //
         }
         // Get ancestor's uid
-        if (data.id && data.action == event_name_1.EventName.commentCreate) {
+        if (data.action == event_name_1.EventName.commentCreate && data.id) {
             const ancestors = await comment_model_1.Comment.getAncestorsUid(data.id, data.uid);
             // Remove ancestors who didn't subscribe for new comment.
             const subscribers = await this.getNewCommentNotificationUids(ancestors);
             uids = [...uids, ...subscribers];
+        }
+        // console.log("action:: ", data.action, "data.roomId:: ", data.roomId, 'data.uids.lenght::', data.uids?.length);
+        if (data.action == event_name_1.EventName.chatCreate && data.roomId && ((_a = data.uids) === null || _a === void 0 ? void 0 : _a.length)) {
+            uids = [...uids, ...data.uids];
+            const snap = await ref_1.Ref.usersSettingsSearch({ action: event_name_1.EventName.chatDisabled, roomId: data.roomId })
+                .get();
+            console.log("EventName.chatCreate::snap.size::", snap.size);
+            // get uids of chat disable user
+            const pusDisableUid = [];
+            if (snap.size != 0) {
+                for (const doc of snap.docs) {
+                    const s = doc.data();
+                    pusDisableUid.push(s.uid);
+                }
+                // filter user with chatDisabled
+                uids = uids.filter((uid) => !pusDisableUid.includes(uid));
+            }
         }
         // / remove duplicates
         uids = [...new Set(uids)];
@@ -285,7 +304,7 @@ class Messaging {
                 id: (_a = query.id) !== null && _a !== void 0 ? _a : "",
                 type: (_b = query.type) !== null && _b !== void 0 ? _b : "",
                 senderUid: (_c = query.senderUid) !== null && _c !== void 0 ? _c : "",
-                chatRoomId: (_d = query.chatRoomId) !== null && _d !== void 0 ? _d : "",
+                roomId: (_d = query.roomId) !== null && _d !== void 0 ? _d : "",
                 badge: (_e = query.badge) !== null && _e !== void 0 ? _e : "",
             },
             notification: {
@@ -372,9 +391,9 @@ class Messaging {
      * @returns
      */
     static async sendChatNotificationToOtherUsers(data) {
-        var _a;
+        var _a, _b;
         const user = await user_model_1.User.get(data.uid);
-        const messageData = Object.assign(Object.assign({}, data), { type: event_name_1.EventType.chat, title: `${(_a = user === null || user === void 0 ? void 0 : user.display_name) !== null && _a !== void 0 ? _a : ""} send you a message.`, body: data.text, uids: await chat_model_1.Chat.getOtherUserUidsFromChatMessageDocument(data), id: data.roomId, senderUid: data.uid });
+        const messageData = Object.assign(Object.assign({}, data), { type: event_name_1.EventType.chat, action: event_name_1.EventName.chatCreate, title: `${(_b = (_a = user === null || user === void 0 ? void 0 : user.display_name) !== null && _a !== void 0 ? _a : user === null || user === void 0 ? void 0 : user.name) !== null && _b !== void 0 ? _b : ""} send you a message.`, body: data.text, uids: await chat_model_1.Chat.getOtherUserUidsFromChatMessageDocument(data), id: data.roomId, senderUid: data.uid });
         return this.sendMessage(messageData);
     }
     /**
