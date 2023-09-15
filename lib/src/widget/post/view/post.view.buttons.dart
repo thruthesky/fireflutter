@@ -50,10 +50,7 @@ class PostViewButtons extends StatelessWidget {
                 post: post,
                 builder: (post) => TextButton(
                   child: Text(
-                    post.likes.isEmpty
-                        ? tr.like
-                        : tr.likes
-                            .replaceAll('#no', post.likes.length.toString()),
+                    post.likes.isEmpty ? tr.like : tr.likes.replaceAll('#no', post.likes.length.toString()),
                   ),
                   onPressed: () => post.like(),
                 ),
@@ -68,9 +65,7 @@ class PostViewButtons extends StatelessWidget {
                       message: re ? tr.favoriteMessage : tr.unfavoriteMessage,
                     );
                   },
-                  child: Text(user.followings.contains(post!.uid)
-                      ? tr.unfollow
-                      : tr.follow),
+                  child: Text(user.followings.contains(post!.uid) ? tr.unfollow : tr.follow),
                 ),
               ),
               ...?middle,
@@ -83,8 +78,7 @@ class PostViewButtons extends StatelessWidget {
                     value: 'block',
                     child: Database(
                       path: 'settings/$myUid/blocks/${post!.uid}',
-                      builder: (value) =>
-                          Text(value == null ? tr.block : tr.unblock),
+                      builder: (value) => Text(value == null ? tr.block : tr.unblock),
                     ),
                   ),
                   ...?trailing,
@@ -95,19 +89,16 @@ class PostViewButtons extends StatelessWidget {
                 ),
                 onSelected: (v) async {
                   if (v == 'edit') {
-                    await PostService.instance
-                        .showEditDialog(context, post: post);
+                    await PostService.instance.showEditDialog(context, post: post);
                   } else if (v == 'report') {
                     ReportService.instance.showReportDialog(
                       context: context,
                       postId: post!.id,
-                      onExists: (id, type) => toast(
-                          title: 'Already reported',
-                          message: 'You have reported this $type already.'),
+                      onExists: (id, type) =>
+                          toast(title: 'Already reported', message: 'You have reported this $type already.'),
                     );
                   } else if (v == 'block') {
-                    final blocked =
-                        await toggle('/settings/$myUid/blocks/${post!.uid}');
+                    final blocked = await toggle('/settings/$myUid/blocks/${post!.uid}');
                     toast(
                       title: blocked ? tr.block : tr.unblock,
                       message: blocked ? tr.blockMessage : tr.unblockMessage,

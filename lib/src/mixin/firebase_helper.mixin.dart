@@ -71,8 +71,8 @@ mixin FirebaseHelper {
   /// push notifications
   CollectionReference get messageQueueCol => db.collection('push_notification_queue');
 
-  ///
-  CollectionReference get noOfProfileViewCol => db.collection('no_of_profile_view_history');
-  DocumentReference noOfProfileViewDoc({required String myUid, required String otherUid}) =>
-      noOfProfileViewCol.doc('$myUid-$otherUid');
+  /// Number of Profile View
+  CollectionReference get profileViewHistoryCol => db.collection('profile_view_history');
+  DocumentReference profileViewHistoryDoc({required String myUid, required String otherUid}) =>
+      profileViewHistoryCol.doc('$myUid-$otherUid');
 }

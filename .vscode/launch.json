@@ -141,6 +141,15 @@
       "deviceId": "J8AXB761J32888A"
     },
     {
+      "name": "GRC - Samsung External (J)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "R9ATA00LMJM"
+    },
+    {
       "name": "fireflutter example - Simulator (C)",
       "request": "launch",
       "type": "dart",

@@ -8,8 +8,7 @@ part 'post.g.dart';
 @JsonSerializable()
 class Post with FirebaseHelper {
   static const String collectionName = 'posts';
-  static DocumentReference doc([String? postId]) =>
-      PostService.instance.postCol.doc(postId);
+  static DocumentReference doc([String? postId]) => PostService.instance.postCol.doc(postId);
   final String id;
   final String categoryId;
   final String title;
@@ -51,10 +50,16 @@ class Post with FirebaseHelper {
     this.likes = const [],
     this.deleted = false,
     this.noOfComments = 0,
-  }) : createdAt =
-            (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
+  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory Post.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
+    /// Save the list of uids who saw the post.
+    if (loggedIn) {
+      (() async {
+        final p = 'posts/${documentSnapshot.id}/seenBy/$myUid';
+        set(p, true);
+      })();
+    }
     return Post.fromJson(
       {
         ...documentSnapshot.data() as Map<String, dynamic>,
@@ -63,8 +68,7 @@ class Post with FirebaseHelper {
     );
   }
 
-  factory Post.fromJson(Map<String, dynamic> json) =>
-      _$PostFromJson(json)..data = json;
+  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json)..data = json;
   Map<String, dynamic> toJson() => _$PostToJson(this);
 
   /// If the post is not found, it throws an Exception.
@@ -72,8 +76,7 @@ class Post with FirebaseHelper {
     if (id == null) {
       throw Exception('Post id is null');
     }
-    final DocumentSnapshot documentSnapshot =
-        await PostService.instance.postCol.doc(id).get();
+    final DocumentSnapshot documentSnapshot = await PostService.instance.postCol.doc(id).get();
     if (documentSnapshot.exists == false) throw Exception('Post not found');
     return Post.fromDocumentSnapshot(documentSnapshot);
   }
