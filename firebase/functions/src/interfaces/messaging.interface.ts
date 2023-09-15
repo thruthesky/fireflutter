@@ -19,7 +19,7 @@ export interface SendMessage {
 
     clickAction?: string; // customize web click action
 
-    chatRoomId?: string;
+    roomId?: string;
 
     senderUid?: string;
 
@@ -48,8 +48,8 @@ export interface MessagePayload {
     data: {
         id?: string;
         type?: string;
-        senderUserDocumentReference?: string;
-        chatRoomDocumentReference?: string;
+        senderUid?: string;
+        roomId?: string;
         badge?: string;
         /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
         [key: string]: any;

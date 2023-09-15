@@ -3,6 +3,7 @@ import {DocumentReference} from "firebase-admin/firestore";
 export interface UserDocument {
   uid: string;
   display_name: string;
+  name?: string;
   phone_number?: string;
   email?: string;
   created_time: admin.firestore.Timestamp;

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class PostService with FirebaseHelper {
   static PostService? _instance;
@@ -139,6 +140,11 @@ class PostService with FirebaseHelper {
               builder: (value) => Text(value == null ? tr.block : tr.unblock),
             ),
           ),
+          if (UserService.instance.isAdmin)
+            const PopupMenuItem(
+              value: "copyId",
+              child: Text("Copy Id to clipboard"),
+            ),
         ],
         onSelected: (value) async {
           switch (value) {
@@ -169,6 +175,9 @@ class PostService with FirebaseHelper {
                 message: blocked ? tr.blockMessage : tr.unblockMessage,
               );
               break;
+            case 'copyId':
+              await Clipboard.setData(ClipboardData(text: post.id));
+              toast(title: 'Copy to clipboard', message: "${post.id} was copy to clipboard");
           }
         },
       ),

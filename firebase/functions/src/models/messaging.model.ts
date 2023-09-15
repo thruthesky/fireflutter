@@ -1,22 +1,22 @@
 import * as admin from "firebase-admin";
-import { EventName, EventType } from "../utils/event-name";
+import {EventName, EventType} from "../utils/event-name";
 import {
   FcmToken,
   MessagePayload,
   SendMessage,
   SendMessageResult,
 } from "../interfaces/messaging.interface";
-import { Ref } from "../utils/ref";
-import { Library } from "../utils/library";
+import {Ref} from "../utils/ref";
+import {Library} from "../utils/library";
 
-import { Comment } from "../models/comment.model";
-import { User } from "./user.model";
-import { Post } from "./post.model";
-import { UserSettingsDocument } from "../interfaces/user.interface";
-import { ChatMessageDocument } from "../interfaces/chat.interface";
-import { Chat } from "./chat.model";
+import {Comment} from "../models/comment.model";
+import {User} from "./user.model";
+import {Post} from "./post.model";
+import {UserSettingsDocument} from "../interfaces/user.interface";
+import {ChatMessageDocument} from "../interfaces/chat.interface";
+import {Chat} from "./chat.model";
 
-import { MulticastMessage } from "firebase-admin/lib/messaging/messaging-api";
+import {MulticastMessage} from "firebase-admin/lib/messaging/messaging-api";
 
 export class Messaging {
   /**
@@ -57,7 +57,7 @@ export class Messaging {
     const payload = this.topicPayload(topic, data);
     try {
       const res = await admin.messaging().send(payload as admin.messaging.TopicMessage);
-      return { messageId: res };
+      return {messageId: res};
     } catch (e) {
       throw Error("Topic send error " + (e as Error).message);
     }
@@ -90,7 +90,7 @@ export class Messaging {
     let uids: string[] = [];
 
     // commentCreate get post and patch data with category and title.
-    if (data.postId && data.action == EventName.commentCreate) {
+    if (data.action == EventName.commentCreate && data.postId) {
       const post = await Post.get(data.postId);
       uids.push(post.uid); // post owner
       data.categoryId = post.categoryId;
@@ -100,11 +100,12 @@ export class Messaging {
     }
 
 
-    console.log("action:: ", data.action, "categoryId:: ", data.categoryId);
+    // console.log("action:: ", data.action, "categoryId:: ", data.categoryId);
+    // post and comment
     if (data.categoryId) {
-      const snap = await Ref.usersSettingsSearch(data.action, data.categoryId)
+      const snap = await Ref.usersSettingsSearch({action: data.action, categoryId: data.categoryId})
         .get();
-      console.log("snap.size", snap.size);
+      console.log("data.categoryId::snap.size::", snap.size);
 
       // get uids
       if (snap.size != 0) {
@@ -119,13 +120,34 @@ export class Messaging {
 
 
     // Get ancestor's uid
-    if (data.id && data.action == EventName.commentCreate) {
+    if (data.action == EventName.commentCreate && data.id) {
       const ancestors = await Comment.getAncestorsUid(data.id, data.uid);
 
       // Remove ancestors who didn't subscribe for new comment.
       const subscribers = await this.getNewCommentNotificationUids(ancestors);
 
       uids = [...uids, ...subscribers];
+    }
+
+    // console.log("action:: ", data.action, "data.roomId:: ", data.roomId, 'data.uids.lenght::', data.uids?.length);
+    if (data.action == EventName.chatCreate && data.roomId && data.uids?.length) {
+      uids = [...uids, ...data.uids];
+      const snap = await Ref.usersSettingsSearch({action: EventName.chatDisabled, roomId: data.roomId})
+        .get();
+      console.log("EventName.chatCreate::snap.size::", snap.size);
+
+      // get uids of chat disable user
+      const pusDisableUid: string[] = [];
+      if (snap.size != 0) {
+        for (const doc of snap.docs) {
+          const s = doc.data() as UserSettingsDocument;
+          pusDisableUid.push(s.uid);
+        }
+        // filter user with chatDisabled
+        uids = uids.filter(
+          (uid) => !pusDisableUid.includes(uid)
+        );
+      }
     }
 
     // / remove duplicates
@@ -154,7 +176,7 @@ export class Messaging {
 
     if (tokens.length == 0) {
       console.log("sendMessageToTokens() no tokens. so, just return results.");
-      return { success: 0, error: 0 };
+      return {success: 0, error: 0};
     }
 
     // add login user uid
@@ -172,7 +194,7 @@ export class Messaging {
     for (const _500Tokens of chunks) {
       const newPayload: MulticastMessage = Object.assign(
         {},
-        { tokens: _500Tokens },
+        {tokens: _500Tokens},
         payload
       );
       multicastPromise.push(admin.messaging().sendEachForMulticast(newPayload));
@@ -215,7 +237,7 @@ export class Messaging {
       await this.removeTokens(failedTokens);
 
       // 결과 리턴
-      const results = { success: successCount, error: failureCount };
+      const results = {success: successCount, error: failureCount};
       // console.log(`sendMessageToTokens() results: ${JSON.stringify(results)}`);
       return results;
     } catch (e) {
@@ -347,7 +369,7 @@ export class Messaging {
         id: query.id ?? "",
         type: query.type ?? "",
         senderUid: query.senderUid ?? "",
-        chatRoomId: query.chatRoomId ?? "",
+        roomId: query.roomId ?? "",
         badge: query.badge ?? "",
       },
       notification: {
@@ -443,12 +465,14 @@ export class Messaging {
    * @param data
    * @returns
    */
-  static async sendChatNotificationToOtherUsers(data: ChatMessageDocument) {
+  static async sendChatNotificationToOtherUsers(data: ChatMessageDocument): Promise<SendMessageResult | undefined> {
     const user = await User.get(data.uid);
+
     const messageData: SendMessage = {
       ...data,
       type: EventType.chat,
-      title: `${user?.display_name ?? ""} send you a message.`,
+      action: EventName.chatCreate,
+      title: `${user?.display_name ?? user?.name ?? ""} send you a message.`,
       body: data.text,
       uids: await Chat.getOtherUserUidsFromChatMessageDocument(data),
       id: data.roomId,

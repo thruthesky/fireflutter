@@ -38,6 +38,10 @@ export class Ref {
     return this.users.doc(uid).collection("user_settings");
   }
 
+  static get userSettingGroup(): admin.firestore.CollectionGroup {
+    return this.db.collectionGroup("user_settings");
+  }
+
   static userSettingDoc(
     uid: string,
     docId: string
@@ -45,9 +49,14 @@ export class Ref {
     return this.userSettings(uid).doc(docId);
   }
 
-  static usersSettingsSearch(action: string, categoryId: string) {
-    return this.db.collectionGroup("user_settings").where("action", "==", action)
-      .where("categoryId", "==", categoryId);
+  static usersSettingsSearch(data: { action: string, categoryId?: string, roomId?: string }) {
+    let query: admin.firestore.Query = this.userSettingGroup.where("action", "==", data.action);
+
+    if (data.categoryId != null && data.categoryId) query = query.where("categoryId", "==", data.categoryId);
+
+    if (data.roomId != null && data.roomId) query = query.where("roomId", "==", data.roomId);
+
+    return query;
   }
 
   static get usersPublicDataCol() {
