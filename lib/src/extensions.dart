@@ -7,8 +7,7 @@ extension FireFlutterStringExtension on String {
     return double.parse(this);
   }
 
-  bool get isEmail =>
-      RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(this);
+  bool get isEmail => RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(this);
 
   /// Return value if the current string is empty.
   ///
@@ -19,4 +18,6 @@ extension FireFlutterStringExtension on String {
   ///
   /// ```
   String ifEmpty(String value) => isEmpty ? value : this;
+
+  String upTo(int len) => length <= len ? this : substring(0, len);
 }
