@@ -1,4 +1,5 @@
 export 'model/user/user.dart';
+export 'model/user/viewer.dart';
 export 'model/chat/room.dart';
 export 'model/category/category.dart';
 export 'model/chat/message.dart';
