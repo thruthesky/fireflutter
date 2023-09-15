@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class PostService with FirebaseHelper {
   static PostService? _instance;
@@ -43,8 +44,7 @@ class PostService with FirebaseHelper {
   }) {
     return showGeneralDialog<Post?>(
       context: context,
-      pageBuilder: (context, _, __) =>
-          PostEditScreen(categoryId: categoryId, post: post),
+      pageBuilder: (context, _, __) => PostEditScreen(categoryId: categoryId, post: post),
     );
   }
 
@@ -58,8 +58,7 @@ class PostService with FirebaseHelper {
     Post? post,
     String? postId,
   }) {
-    return customize.showPostViewScreen
-            ?.call(context, postId: postId, post: post) ??
+    return customize.showPostViewScreen?.call(context, postId: postId, post: post) ??
         showGeneralDialog(
           context: context,
           pageBuilder: (context, _, __) => PostViewScreen(
@@ -136,6 +135,11 @@ class PostService with FirebaseHelper {
               builder: (value) => Text(value == null ? tr.block : tr.unblock),
             ),
           ),
+          if (UserService.instance.isAdmin)
+            const PopupMenuItem(
+              value: "copyId",
+              child: Text("Copy Id to clipboard"),
+            ),
         ],
         onSelected: (value) async {
           switch (value) {
@@ -154,20 +158,21 @@ class PostService with FirebaseHelper {
                 ReportService.instance.showReportDialog(
                   context: context,
                   postId: post.id,
-                  onExists: (id, type) => toast(
-                      title: 'Already reported',
-                      message: 'You have reported this $type already.'),
+                  onExists: (id, type) =>
+                      toast(title: 'Already reported', message: 'You have reported this $type already.'),
                 );
               }
               break;
             case 'block':
-              final blocked =
-                  await toggle('/settings/$myUid/blocks/${post.uid}');
+              final blocked = await toggle('/settings/$myUid/blocks/${post.uid}');
               toast(
                 title: blocked ? tr.block : tr.unblock,
                 message: blocked ? tr.blockMessage : tr.unblockMessage,
               );
               break;
+            case 'copyId':
+              await Clipboard.setData(ClipboardData(text: post.id));
+              toast(title: 'Copy to clipboard', message: "${post.id} was copy to clipboard");
           }
         },
       ),

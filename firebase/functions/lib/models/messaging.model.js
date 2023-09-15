@@ -115,7 +115,7 @@ class Messaging {
         // console.log("action:: ", data.action, "data.roomId:: ", data.roomId, 'data.uids.lenght::', data.uids?.length);
         if (data.action == event_name_1.EventName.chatCreate && data.roomId && ((_a = data.uids) === null || _a === void 0 ? void 0 : _a.length)) {
             uids = [...uids, ...data.uids];
-            const snap = await ref_1.Ref.userSettingGroup.where("action", "==", event_name_1.EventName.chatDisabled).where("roomId", "==", data.roomId)
+            const snap = await ref_1.Ref.usersSettingsSearch({ action: event_name_1.EventName.chatDisabled, roomId: data.roomId })
                 .get();
             console.log("EventName.chatCreate::snap.size::", snap.size);
             // get uids of chat disable user
@@ -391,9 +391,9 @@ class Messaging {
      * @returns
      */
     static async sendChatNotificationToOtherUsers(data) {
-        var _a;
+        var _a, _b;
         const user = await user_model_1.User.get(data.uid);
-        const messageData = Object.assign(Object.assign({}, data), { type: event_name_1.EventType.chat, action: event_name_1.EventName.chatCreate, title: `${(_a = user === null || user === void 0 ? void 0 : user.display_name) !== null && _a !== void 0 ? _a : ""} send you a message.`, body: data.text, uids: await chat_model_1.Chat.getOtherUserUidsFromChatMessageDocument(data), id: data.roomId, senderUid: data.uid });
+        const messageData = Object.assign(Object.assign({}, data), { type: event_name_1.EventType.chat, action: event_name_1.EventName.chatCreate, title: `${(_b = (_a = user === null || user === void 0 ? void 0 : user.display_name) !== null && _a !== void 0 ? _a : user === null || user === void 0 ? void 0 : user.name) !== null && _b !== void 0 ? _b : ""} send you a message.`, body: data.text, uids: await chat_model_1.Chat.getOtherUserUidsFromChatMessageDocument(data), id: data.roomId, senderUid: data.uid });
         return this.sendMessage(messageData);
     }
     /**

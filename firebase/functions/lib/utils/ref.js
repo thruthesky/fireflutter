@@ -37,7 +37,7 @@ class Ref {
         return this.userSettings(uid).doc(docId);
     }
     static usersSettingsSearch(data) {
-        let query = this.db.collectionGroup("user_settings").where("action", "==", data.action);
+        let query = this.userSettingGroup.where("action", "==", data.action);
         if (data.categoryId != null && data.categoryId)
             query = query.where("categoryId", "==", data.categoryId);
         if (data.roomId != null && data.roomId)
