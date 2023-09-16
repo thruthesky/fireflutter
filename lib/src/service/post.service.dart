@@ -142,7 +142,7 @@ class PostService {
             value: 'block',
             child: Database(
               path: pathBlock(post.uid),
-              builder: (value) => Text(value == null ? tr.block : tr.unblock),
+              builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
             ),
           ),
           if (UserService.instance.isAdmin)

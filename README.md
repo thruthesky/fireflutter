@@ -213,6 +213,7 @@ Copy the following and paste it into your firebase project.
         }
       }
     },
+    // User profile likes
     "likes": {
       ".read": true,
       "$uid": {
@@ -232,6 +233,12 @@ Copy the following and paste it into your firebase project.
       ".read": true,
       "$post_id": {
         "seenBy": {
+          "$uid": {
+            ".write": "$uid == auth.uid"
+          }
+        },
+        // post likes
+        "likedBy": {
           "$uid": {
             ".write": "$uid == auth.uid"
           }
@@ -1282,22 +1289,32 @@ print(await get(path));
 
 `Database` widget rebuilds the widget when the node is changed. Becareful to use the narrowest path of the node or it would download a lot of data.
 
+
+
 ```dart
+// Displaying a Text value
 Database(
   path: 'tmp/a/b/c',
-  builder: (value) {
-    return Text('value: $value');
-  },
+  builder: (value) => Text('value: $value'),
 ),
-ElevatedButton(
-  onPressed: () async {
-    String path = 'tmp/a/b/c';
-    await set(path, 'Time: ${DateTime.now()}');
-    print(await get(path));
-  },
-  child: const Text('toggle'),
+
+// Displaying a Text widget with dynamic text.
+Database(
+  path: pathBlock(post.uid),
+  builder: (value, path) => Text(value == null ? tr.block : tr.unblock),
+),
+
+// Displaying a toggle IconButton.
+Database(
+  path: pathLikedBy(post.id),
+  builder: (v, p) => IconButton(
+    onPressed: () => toggle(p),
+    icon: Icon(v != null ? Icons.thumb_up : Icons.thumb_up_outlined),
+  ),
 ),
 ```
+
+
 
 
 ## DatabaseCount widget

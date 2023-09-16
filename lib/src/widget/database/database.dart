@@ -27,7 +27,7 @@ class Database extends StatelessWidget {
   });
 
   final String path;
-  final Widget Function(dynamic value) builder;
+  final Widget Function(dynamic value, String path) builder;
   final Widget? onWaiting;
 
   @override
@@ -42,9 +42,9 @@ class Database extends StatelessWidget {
           return Text('Error; ${event.error}');
         }
         if (event.hasData && event.data!.snapshot.exists) {
-          return builder(event.data!.snapshot.value);
+          return builder(event.data!.snapshot.value, path);
         } else {
-          return builder(null);
+          return builder(null, path);
         }
       },
     );

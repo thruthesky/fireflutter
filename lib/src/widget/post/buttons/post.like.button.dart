@@ -10,22 +10,21 @@ class PostLikeButton extends StatelessWidget {
   });
 
   final Post post;
-  final Widget Function(Post post) builder;
+  final Widget Function(int n) builder;
   final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
-    return PostDoc(
-      postId: post.id,
-      post: post,
-      builder: (post) => InkWell(
-        borderRadius: BorderRadius.circular(50),
-        child: Padding(
-          padding: padding ?? const EdgeInsets.all(0),
-          child: builder(post),
-        ),
-        onTap: () => post.like(),
-      ),
+    return Database(
+      path: pathLikedBy(post.id, all: true),
+      builder: (v, p) => builder(v),
+
+      //  n == 0
+      //     ? const SizedBox.shrink()
+      //     : Text(
+      //         " view: $n",
+      //         style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11),
+      //       ),
     );
   }
 }

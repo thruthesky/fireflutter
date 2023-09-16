@@ -32,7 +32,7 @@ class _PublicProfileButtonsState extends State<PublicProfileButtons> {
               onPressed: () => like(user.uid),
               child: Database(
                 path: 'likes/${user.uid}',
-                builder: (value) => Text(
+                builder: (value, p) => Text(
                   value == null ? tr.like : tr.likes.replaceAll('#no', value.length.toString()),
                 ),
               ),
@@ -90,7 +90,7 @@ class _PublicProfileButtonsState extends State<PublicProfileButtons> {
               style: buttonStyle,
               child: Database(
                 path: pathBlock(user.uid),
-                builder: (value) => Text(value == null ? tr.block : tr.unblock),
+                builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
               ),
             ),
         UserService.instance.customize.publicScreenReportButton?.call(context, user) ??

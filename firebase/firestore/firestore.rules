@@ -44,8 +44,9 @@ service cloud.firestore {
         ( request.auth.uid == userDocumentId && notUpdating(['disabled', 'isAdmin', 'isVerified']) )
         ||
         addOrRemove('followers', request.auth.uid) 
-        || 
-        addOrRemove('likes', request.auth.uid) 
+        // Likes are moved into rtdb by setp 16, 2023.
+        // || 
+        // addOrRemove('likes', request.auth.uid) 
         ;
       allow delete: if request.auth.uid == userDocumentId || isAdmin();
       match /fcm_tokens/{docId} {
@@ -105,7 +106,13 @@ service cloud.firestore {
 
       allow read: if true; // Anyone should be able to read.
       allow create: if willBeMyPost();
-      allow update: if isMyPost() || addOrRemove('likes', request.auth.uid) || onlyUpdating(['noOfComments']);
+      allow update: if 
+        isMyPost()
+        
+        // Likes on post moved into RTDB by Sept, 16, 2023.
+        // || addOrRemove('likes', request.auth.uid)
+        
+        || onlyUpdating(['noOfComments']);
       allow delete: if false;
     }
 

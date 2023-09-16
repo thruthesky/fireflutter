@@ -92,7 +92,7 @@ class PostCard extends StatelessWidget {
                                 style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11),
                               ),
                               DatabaseCount(
-                                path: 'posts/${post.id}/seenBy',
+                                path: pathSeenBy(post.id), // 'posts/${post.id}/seenBy',
                                 builder: (n) => n < 2
                                     ? const SizedBox.shrink()
                                     : Text(
@@ -109,17 +109,31 @@ class PostCard extends StatelessWidget {
                 ),
                 const Spacer(),
                 PopupMenuButton<String>(
-                    itemBuilder: (context) => const [
-                          PopupMenuItem(
-                            value: "report",
-                            child: Text("Report"),
-                          ),
-                          PopupMenuItem(
-                            value: "block",
-                            child: Text("Block"),
-                          ),
-                        ],
-                    onSelected: (value) => toast(title: '@todo', message: 'report or block post'))
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: "report",
+                      child: Text("Report"),
+                    ),
+                    PopupMenuItem(
+                      value: 'block',
+                      child: Database(
+                        path: pathBlock(post.uid),
+                        builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
+                      ),
+                    ),
+                  ],
+                  onSelected: (value) async {
+                    if (value == 'report') {
+                      ReportService.instance.showReportDialog(context: context, postId: post.id);
+                    } else if (value == 'block') {
+                      final blocked = await toggle(pathBlock(post.uid));
+                      toast(
+                        title: blocked ? tr.block : tr.unblock,
+                        message: blocked ? tr.blockMessage : tr.unblockMessage,
+                      );
+                    }
+                  },
+                )
               ],
             ),
             YouTubeThumbnail(youtubeId: post.youtubeId),
@@ -146,10 +160,12 @@ class PostCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: sizeXs),
               child: Row(
                 children: [
-                  PostLikeButton(
-                    padding: const EdgeInsets.all(sizeXs),
-                    post: post,
-                    builder: (post) => Icon(post.iLiked ? Icons.thumb_up : Icons.thumb_up_outlined),
+                  Database(
+                    path: pathLikedBy(post.id),
+                    builder: (n, p) => IconButton(
+                      onPressed: () => toggle(p),
+                      icon: Icon(n != null ? Icons.thumb_up : Icons.thumb_up_outlined),
+                    ),
                   ),
                   FavoriteButton(
                     postId: post.id,
@@ -163,6 +179,9 @@ class PostCard extends StatelessWidget {
                 ],
               ),
             ),
+            DatabaseCount(
+                path: pathLikedBy(post.id, all: true),
+                builder: (n) => n == 0 ? const SizedBox.shrink() : Text("$n likes")),
             Text(post.content.replaceAll("\n", " "), style: Theme.of(context).textTheme.bodyMedium),
             Row(
               children: [

@@ -82,3 +82,15 @@ String pathBlock(String? otherUid) {
     return 'blocks/$myUid/$otherUid';
   }
 }
+
+String pathSeenBy(String id) {
+  return 'posts/$id/seenBy';
+}
+
+String pathLikedBy(String id, {bool all = false}) {
+  if (all) {
+    return 'posts/$id/likedBy';
+  } else {
+    return 'posts/$id/likedBy/$myUid';
+  }
+}
