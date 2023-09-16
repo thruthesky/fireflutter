@@ -394,6 +394,17 @@ class UserService with FirebaseHelper {
     );
   }
 
+  showViewersScreen({required BuildContext context, Widget Function(User)? itemBuilder}) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) {
+        return ProfileViewersListScreen(
+          itemBuilder: itemBuilder,
+        );
+      },
+    );
+  }
+
   /// Delete user document
   Future deleteDocuments() async {
     await my.delete();

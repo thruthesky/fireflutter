@@ -10,6 +10,8 @@ export 'widget/admin/admin.user.list_view.dart';
 export 'widget/user/public_profile/public_profile.screen.dart';
 export 'widget/user/email_login_form.dart';
 export 'widget/user/login_first.dart';
+export 'widget/user/profile.no_of_view.dart';
+export 'widget/user/profile_viewers.screen.dart';
 export 'widget/user/public_profile/public_profile.buttons.dart';
 
 // Chat
