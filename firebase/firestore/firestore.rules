@@ -1,7 +1,5 @@
 // FireFlutter Security Rules
 //
-// TODO: User blocking for each chat room.
-// TODO: User blocking for the whole app. Use /easy-setting/user/block/{uid} to store the blocked users.
 //
 // Admin UID is hard coded. This is to reduce the pricing of Firestore document read.
 // It is a good idea to check the admin with custom claims.

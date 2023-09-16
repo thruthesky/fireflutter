@@ -7,7 +7,8 @@ class FeedListView extends StatefulWidget {
   const FeedListView({
     super.key,
     this.itemExtent,
-    this.itemBuilder,
+    this.cacheExtent,
+    required this.itemBuilder,
     this.topBuilder,
     this.textBuilder,
     this.avatarBuilder,
@@ -15,7 +16,8 @@ class FeedListView extends StatefulWidget {
   });
 
   final double? itemExtent;
-  final Widget Function(Feed feed, int index)? itemBuilder;
+  final double? cacheExtent;
+  final Widget Function(Post feed, int index) itemBuilder;
   final Widget Function(Feed feed)? topBuilder;
 
   final Widget Function(BuildContext, Post)? avatarBuilder;
@@ -57,7 +59,9 @@ class _FeedListViewState extends State<FeedListView> with FirebaseHelper {
         }
 
         return ListView.builder(
+          physics: const RangeMaintainingScrollPhysics(),
           itemExtent: widget.itemExtent,
+          cacheExtent: widget.cacheExtent,
           itemCount: snapshot.docs.length,
           itemBuilder: (context, index) {
             // if we reached the end of the currently obtained items, we try to
@@ -68,14 +72,22 @@ class _FeedListViewState extends State<FeedListView> with FirebaseHelper {
               snapshot.fetchMore();
             }
             final feed = Feed.fromSnapshot(snapshot.docs[index]);
-            final child = widget.itemBuilder?.call(feed, index) ??
-                FeedListViewItem(
-                  feed: feed,
-                  textBuilder: widget.textBuilder,
-                  avatarBuilder: widget.avatarBuilder,
-                  onTap: widget.onTap,
-                );
 
+            final child = StreamBuilder(
+              stream: Post.doc(feed.postId).snapshots(),
+              builder: (_, snapshot) {
+                if (!snapshot.hasData) return const SizedBox.shrink();
+                final post = Post.fromDocumentSnapshot(snapshot.data!);
+
+                return GestureDetector(
+                  onTap: () {
+                    PostService.instance.showPostViewScreen(context: context, post: post);
+                  },
+                  behavior: HitTestBehavior.opaque,
+                  child: widget.itemBuilder.call(post, index),
+                );
+              },
+            );
             if (widget.topBuilder != null && index == 0) {
               return Column(
                 children: [

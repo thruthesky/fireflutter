@@ -11,3 +11,4 @@ export 'src/test.dart';
 export 'src/code.dart';
 export 'src/i18n/i18n.dart';
 export 'src/converters.dart';
+export 'src/functions/ref.dart';

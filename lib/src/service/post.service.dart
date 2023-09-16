@@ -136,7 +136,7 @@ class PostService with FirebaseHelper {
           PopupMenuItem(
             value: 'block',
             child: Database(
-              path: 'settings/$myUid/blocks/${post.uid}',
+              path: pathBlock(post.uid),
               builder: (value) => Text(value == null ? tr.block : tr.unblock),
             ),
           ),
@@ -169,7 +169,7 @@ class PostService with FirebaseHelper {
               }
               break;
             case 'block':
-              final blocked = await toggle('/settings/$myUid/blocks/${post.uid}');
+              final blocked = await toggle(pathBlock(post.uid));
               toast(
                 title: blocked ? tr.block : tr.unblock,
                 message: blocked ? tr.blockMessage : tr.unblockMessage,

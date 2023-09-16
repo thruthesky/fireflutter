@@ -81,7 +81,7 @@ class _PublicProfileButtonsState extends State<PublicProfileButtons> {
         UserService.instance.customize.publicScreenBlockButton?.call(context, user) ??
             TextButton(
               onPressed: () async {
-                final blocked = await toggle('/settings/$myUid/blocks/${user.uid}');
+                final blocked = await toggle(pathBlock(user.uid));
                 toast(
                   title: blocked ? tr.block : tr.unblock,
                   message: blocked ? tr.blockMessage : tr.unblockMessage,
@@ -89,7 +89,7 @@ class _PublicProfileButtonsState extends State<PublicProfileButtons> {
               },
               style: buttonStyle,
               child: Database(
-                path: 'settings/$myUid/blocks/${user.uid}',
+                path: pathBlock(user.uid),
                 builder: (value) => Text(value == null ? tr.block : tr.unblock),
               ),
             ),

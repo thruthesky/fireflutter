@@ -235,6 +235,12 @@ Copy the following and paste it into your firebase project.
         }
       }
     },
+    "blocks": {
+      "$my_uid": {
+        ".read":  "$my_uid == auth.uid",
+        ".write": "$my_uid == auth.uid"
+      }
+    },
     "tmp": {
       ".read": true,
       ".write": true
@@ -491,7 +497,7 @@ You may hide or add buttons like below.
               PopupMenuItem(
                 value: 'block',
                 child: Database(
-                  path: 'settings/$myUid/blocks/${user.uid}',
+                  path: pathBlock(user.uid),
                   builder: (value) =>
                       Text(value == null ? tr.block : tr.unblock),
                 ),
@@ -512,7 +518,7 @@ You may hide or add buttons like below.
                   );
                   break;
                 case 'block':
-                  toggle('/settings/$myUid/blocks/${user.uid}');
+                  toggle(pathBlock(user.uid));
                   toast(
                     title: tr.block,
                     message: tr.blockMessage,
@@ -1732,7 +1738,7 @@ Example of the code to block or unblock a user.
 ```dart
 TextButton(
   onPressed: () async {
-    final blocked = await toggle('/settings/$myUid/blocks/${user.uid}');
+    final blocked = await toggle(pathBlock(user.uid));
     toast(
         title: blocked ? 'Blocked' : 'Unblocked',
         message: 'The user has been ${blocked ? 'blocked' : 'unblocked'} by you');
@@ -1741,7 +1747,7 @@ TextButton(
     foregroundColor: Theme.of(context).colorScheme.onSecondary,
   ),
   child: Database(
-    path: 'settings/$myUid/blocks/${user.uid}',
+    path: pathBlock(user.uid),
     builder: (value) => Text(value == null ? 'Block' : 'Unblock'),
   ),
 ),
@@ -1849,7 +1855,7 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 ## ShareService
 
 
-ShareService is a helper library that gives some convinient untility for sharing. It has `showBotomSheet` method that displays a bottom sheet showing some UI elements for sharing. You may get an idea seeing the look and the code of the method.
+ShareService is a helper library that gives some feature untility for sharing. It has `showBotomSheet` method that displays a bottom sheet showing some UI elements for sharing. You may get an idea seeing the look and the code of the method.
 
 
 It also has a method `dyamicLink` that returns a short dyanmic link. You may see the source code of the method to get an insight how you would copy and paste in your project.

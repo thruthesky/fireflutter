@@ -10,8 +10,6 @@ import 'package:flutter/material.dart';
 /// Since it is a card wigdet, it supports all card properties (except [child])
 /// and plus some additional properties for post view widget.
 ///
-/// Note that, the height of the card is fixed based on the content. If the
-/// post has photo, then the height is 300, otherwise it is 200.
 ///
 ///
 class PostCard extends StatelessWidget {
@@ -49,121 +47,127 @@ class PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: post.hasPhoto ? 380 : 240,
-      child: Card(
-        color: color,
-        shadowColor: shadowColor,
-        surfaceTintColor: surfaceTintColor,
-        elevation: elevation,
-        shape: shape,
-        borderOnForeground: borderOnForeground,
-        margin: margin ?? const EdgeInsets.fromLTRB(16, 16, 16, 0),
-        clipBehavior: clipBehavior,
-        semanticContainer: semanticContainer,
-        child: Padding(
-          padding: padding ?? const EdgeInsets.all(0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => UserService.instance.showPublicProfileScreen(context: context, uid: post.uid),
-                    child: Row(
-                      children: [
-                        UserAvatar(
-                          uid: post.uid,
-                          radius: 20,
-                          size: 40,
-                        ),
-                        const SizedBox(width: sizeXs),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            UserDoc(
-                              uid: post.uid,
-                              builder: (user) => Text(
-                                user.name,
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
+    return Card(
+      color: color,
+      shadowColor: shadowColor,
+      surfaceTintColor: surfaceTintColor,
+      elevation: elevation,
+      shape: shape,
+      borderOnForeground: borderOnForeground,
+      margin: margin ?? const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      clipBehavior: clipBehavior,
+      semanticContainer: semanticContainer,
+      child: Padding(
+        padding: padding ?? const EdgeInsets.all(0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => UserService.instance.showPublicProfileScreen(context: context, uid: post.uid),
+                  child: Row(
+                    children: [
+                      UserAvatar(
+                        uid: post.uid,
+                        radius: 20,
+                        size: 40,
+                      ),
+                      const SizedBox(width: sizeXs),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          UserDoc(
+                            uid: post.uid,
+                            builder: (user) => Text(
+                              user.name,
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
-                            DateTimeText(
-                              dateTime: post.createdAt,
-                              style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Spacer(),
-                  PopupMenuButton<String>(
-                      itemBuilder: (context) => const [
-                            PopupMenuItem(
-                              value: "report",
-                              child: Text("Report"),
-                            ),
-                            PopupMenuItem(
-                              value: "block",
-                              child: Text("Block"),
-                            ),
-                          ],
-                      onSelected: (value) => toast(title: '@todo', message: 'report or block post'))
-                ],
-              ),
-              YouTubeThumbnail(youtubeId: post.youtubeId),
-              if (post.hasPhoto)
-                SizedBox(
-                  height: 160,
-                  child: ListView(scrollDirection: Axis.horizontal, children: [
-                    ...post.urls
-                        .map(
-                          (e) => GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () {
-                              toast(title: '@todo gallery carousel', message: 'make this photos as carouse widget');
-                            },
-                            child: CachedNetworkImage(imageUrl: e),
                           ),
-                        )
-                        .toList(),
-                  ]),
-                ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: sizeXs),
-                child: Row(
-                  children: [
-                    IconButton(
-                      onPressed: () => post.like(),
-                      icon: const Icon(Icons.thumb_up),
-                    ),
-                    FavoriteButton(
-                      postId: post.id,
-                      builder: (didIFavorite) {
-                        return Icon(didIFavorite ? Icons.favorite : Icons.favorite_border);
-                      },
-                    ),
-                    IconButton(
-                      onPressed: () => onTapShareButton(post),
-                      icon: const Icon(Icons.share),
-                    ),
-                  ],
-                ),
-              ),
-              Text(post.content.replaceAll("\n", " "), style: Theme.of(context).textTheme.bodySmall),
-              Row(
-                children: [
-                  DatabaseCount(
-                    path: 'posts/${post.id}/seenBy',
-                    builder: (n) => n == 0 ? const SizedBox.shrink() : Text("View: $n"),
+                          Row(
+                            children: [
+                              DateTimeText(
+                                dateTime: post.createdAt,
+                                style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11),
+                              ),
+                              DatabaseCount(
+                                path: 'posts/${post.id}/seenBy',
+                                builder: (n) => n < 2
+                                    ? const SizedBox.shrink()
+                                    : Text(
+                                        " view: $n",
+                                        style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11),
+                                      ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  if (post.noOfComments > 0) Text("comments ${post.noOfComments}"),
+                ),
+                const Spacer(),
+                PopupMenuButton<String>(
+                    itemBuilder: (context) => const [
+                          PopupMenuItem(
+                            value: "report",
+                            child: Text("Report"),
+                          ),
+                          PopupMenuItem(
+                            value: "block",
+                            child: Text("Block"),
+                          ),
+                        ],
+                    onSelected: (value) => toast(title: '@todo', message: 'report or block post'))
+              ],
+            ),
+            YouTubeThumbnail(youtubeId: post.youtubeId),
+            if (post.hasPhoto)
+              SizedBox(
+                height: 160,
+                child: ListView(scrollDirection: Axis.horizontal, children: [
+                  ...post.urls
+                      .map(
+                        (e) => GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            toast(title: '@todo gallery carousel', message: 'make this photos as carouse widget');
+                          },
+                          child: CachedNetworkImage(imageUrl: e),
+                        ),
+                      )
+                      .toList(),
+                ]),
+              ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: sizeXs),
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () => post.like(),
+                    icon: const Icon(Icons.thumb_up),
+                  ),
+                  FavoriteButton(
+                    postId: post.id,
+                    builder: (didIFavorite) {
+                      return Icon(didIFavorite ? Icons.favorite : Icons.favorite_border);
+                    },
+                  ),
+                  IconButton(
+                    onPressed: () => onTapShareButton(post),
+                    icon: const Icon(Icons.share),
+                  ),
                 ],
               ),
-            ],
-          ),
+            ),
+            Text(post.content.replaceAll("\n", " "), style: Theme.of(context).textTheme.bodyMedium),
+            Row(
+              children: [
+                if (post.noOfComments > 0) Text("comments ${post.noOfComments}"),
+              ],
+            ),
+          ],
         ),
       ),
     );
