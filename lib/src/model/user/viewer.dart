@@ -10,7 +10,6 @@ class Viewer with FirebaseHelper {
     required this.seenBy,
     this.type,
     this.uid = '',
-    this.postId = '',
     dynamic lastViewedAt,
     required this.year,
     required this.month,
@@ -21,7 +20,6 @@ class Viewer with FirebaseHelper {
 
   @override
   final String uid;
-  final String postId;
 
   /// 사용자 문서가 생성된 시간. 항상 존재 해야 함. Firestore 서버 시간
   @FirebaseDateTimeConverter()
@@ -31,4 +29,10 @@ class Viewer with FirebaseHelper {
   final int year;
   final int month;
   final int day;
+
+  factory Viewer.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
+    return Viewer.fromJson(documentSnapshot.data() as Map<String, dynamic>);
+  }
+
+  factory Viewer.fromJson(Map<String, dynamic> json) => _$ViewerFromJson(json);
 }
