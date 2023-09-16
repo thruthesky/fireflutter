@@ -355,7 +355,7 @@ So, the lifecyle will be the following when the app users `UserDoc`.
 Right way of getting a user document.
 
 ```dart
-UserService.instance.get(UserService.instance.uid).then((user) => ...);
+UserService.instance.get(myUid!).then((user) => ...);
 ```
 
 The `UserService.instance.user` or `UserService.instance.docuemntChanges` may be null when the user document is being loaded on app boot. So, the better way to get the user's document for sure is to use `UserService.instance.get`

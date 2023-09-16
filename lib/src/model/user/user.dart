@@ -6,12 +6,11 @@ import 'package:json_annotation/json_annotation.dart';
 part 'user.g.dart';
 
 @JsonSerializable()
-class User with FirebaseHelper {
+class User {
   static const String collectionName = 'users';
 
   /// '/users' collection
-  static CollectionReference col =
-      FirebaseFirestore.instance.collection(collectionName);
+  static CollectionReference col = FirebaseFirestore.instance.collection(collectionName);
 
   /// '/users/{uid}' document.
   ///
@@ -26,7 +25,6 @@ class User with FirebaseHelper {
   @JsonKey(includeFromJson: false, includeToJson: false)
   late Map<String, dynamic> data;
 
-  @override
   final String uid;
 
   /// [isAdmin] is set to true if the logged in user is an admin.
@@ -138,8 +136,7 @@ class User with FirebaseHelper {
     this.followings = const [],
     this.cached = false,
     this.likes = const [],
-  }) : createdAt =
-            (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
+  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory User.notExists() {
     return User(uid: '', exists: false);
@@ -160,15 +157,13 @@ class User with FirebaseHelper {
   }
 
   @Deprecated('Use fromJson instead')
-  factory User.fromMap(
-      {required Map<String, dynamic> map, required String id}) {
+  factory User.fromMap({required Map<String, dynamic> map, required String id}) {
     map['uid'] = id;
     return _$UserFromJson(map);
   }
 
   ///
-  factory User.fromJson(Map<String, dynamic> json) =>
-      _$UserFromJson(json)..data = json;
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json)..data = json;
 
   Map<String, dynamic> toMap() {
     return _$UserToJson(this);
@@ -185,11 +180,8 @@ class User with FirebaseHelper {
   ///
   /// Note, that It gets data from /users collections. It does not get data from /search-user-data collection.
   static Future<User?> get([String? uid]) async {
-    uid ??= UserService.instance.uid;
-    final snapshot = await FirebaseFirestore.instance
-        .collection(collectionName)
-        .doc(uid)
-        .get();
+    uid ??= myUid!;
+    final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(uid).get();
     if (snapshot.exists == false) {
       return null;
     }
@@ -198,11 +190,7 @@ class User with FirebaseHelper {
 
   /// 사용자 문서를 Realtime Database 에 Sync 된 문서를 읽어 온다.
   static Future<User?> getFromDatabaseSync(String uid) async {
-    final snapshot = await FirebaseDatabase.instance
-        .ref()
-        .child(collectionName)
-        .child(uid)
-        .get();
+    final snapshot = await FirebaseDatabase.instance.ref().child(collectionName).child(uid).get();
     if (!snapshot.exists) {
       return null;
     }
@@ -229,10 +217,7 @@ class User with FirebaseHelper {
   /// User.create(uid: 'xxx');
   /// ```
   static Future<User> create({required String uid}) async {
-    await FirebaseFirestore.instance
-        .collection(User.collectionName)
-        .doc(uid)
-        .set({
+    await FirebaseFirestore.instance.collection(userCollectionName).doc(uid).set({
       'uid': uid,
       'email': '',
       'displayName': '',
@@ -323,14 +308,10 @@ class User with FirebaseHelper {
     };
 
     /// Update the birth day of year
-    if (docData['birthYear'] != null &&
-        docData['birthMonth'] != null &&
-        docData['birthDay'] != null) {
-      final date = DateTime(
-          docData['birthYear'], docData['birthMonth'], docData['birthDay']);
+    if (docData['birthYear'] != null && docData['birthMonth'] != null && docData['birthDay'] != null) {
+      final date = DateTime(docData['birthYear'], docData['birthMonth'], docData['birthDay']);
 
-      docData['birthDayOfYear'] =
-          date.difference(DateTime(date.year)).inDays + 1;
+      docData['birthDayOfYear'] = date.difference(DateTime(date.year)).inDays + 1;
     }
 
     await userDoc(uid).set(
@@ -356,7 +337,6 @@ class User with FirebaseHelper {
   /// Returns true if followed a user. Returns false if unfollowed a user.
   ///
   Future<bool> follow(String otherUid) async {
-    final myUid = UserService.instance.uid;
     if (followings.contains(otherUid)) {
       await update(
         followings: FieldValue.arrayRemove([otherUid]),

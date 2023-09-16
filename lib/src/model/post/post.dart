@@ -6,9 +6,9 @@ import 'package:json_annotation/json_annotation.dart';
 part 'post.g.dart';
 
 @JsonSerializable()
-class Post with FirebaseHelper {
+class Post {
   static const String collectionName = 'posts';
-  static DocumentReference doc([String? postId]) => PostService.instance.postCol.doc(postId);
+  static DocumentReference doc([String? postId]) => postCol.doc(postId);
   final String id;
   final String categoryId;
   final String title;
@@ -21,7 +21,6 @@ class Post with FirebaseHelper {
   @JsonKey(includeFromJson: false, includeToJson: false)
   Map<String, dynamic>? data;
 
-  @override
   final String uid;
 
   final List<String> urls;
@@ -75,7 +74,7 @@ class Post with FirebaseHelper {
     if (id == null) {
       throw Exception('Post id is null');
     }
-    final DocumentSnapshot documentSnapshot = await PostService.instance.postCol.doc(id).get();
+    final DocumentSnapshot documentSnapshot = await postCol.doc(id).get();
     if (documentSnapshot.exists == false) throw Exception('Post not found');
     return Post.fromDocumentSnapshot(documentSnapshot);
   }
@@ -100,7 +99,7 @@ class Post with FirebaseHelper {
       if (youtubeId != null) 'youtubeId': youtubeId,
       if (urls != null) 'urls': urls,
       'createdAt': FieldValue.serverTimestamp(),
-      'uid': UserService.instance.uid,
+      'uid': myUid!,
       ...data,
     };
     final postId = Post.doc().id;
@@ -146,7 +145,7 @@ class Post with FirebaseHelper {
       if (urls == null) 'urls': FieldValue.delete(),
       'updatedAt': FieldValue.serverTimestamp(),
     };
-    await PostService.instance.postCol.doc(id).update(postUpdateData);
+    await postCol.doc(id).update(postUpdateData);
 
     /// Assemble the updated post without getting it from the server since it takes time.
     final updatedPost = Post.fromJson(
@@ -167,11 +166,11 @@ class Post with FirebaseHelper {
   /// otherwise, it will remove my uid from the likes.
   Future<void> like() async {
     if (iLiked) {
-      await PostService.instance.postCol.doc(id).update({
+      await postCol.doc(id).update({
         'likes': FieldValue.arrayRemove([my.uid]),
       });
     } else {
-      await PostService.instance.postCol.doc(id).update({
+      await postCol.doc(id).update({
         'likes': FieldValue.arrayUnion([my.uid]),
       });
     }
@@ -180,6 +179,6 @@ class Post with FirebaseHelper {
   @override
   String toString() => 'Post(${toJson()})';
   bool get isMine {
-    return loggedIn && UserService.instance.uid == uid;
+    return loggedIn && myUid! == uid;
   }
 }

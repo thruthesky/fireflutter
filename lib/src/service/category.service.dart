@@ -1,7 +1,7 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class CategoryService with FirebaseHelper {
+class CategoryService {
   static CategoryService? _instance;
   static CategoryService get instance => _instance ??= CategoryService._();
   CategoryService._();
@@ -62,8 +62,7 @@ class CategoryService with FirebaseHelper {
   /// Displays a full screen dialog that will show a list of all categories.
   /// By default, upon tapping a category, it will list all the posts.
   /// Use [onTapCategory] to replace the default action upon tapping.
-  showListDialog(BuildContext context,
-      {Function(Category category)? onTapCategory}) async {
+  showListDialog(BuildContext context, {Function(Category category)? onTapCategory}) async {
     await showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) => AdminCategoryListScreen(

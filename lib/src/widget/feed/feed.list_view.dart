@@ -29,7 +29,7 @@ class FeedListView extends StatefulWidget {
   State<FeedListView> createState() => _FeedListViewState();
 }
 
-class _FeedListViewState extends State<FeedListView> with FirebaseHelper {
+class _FeedListViewState extends State<FeedListView> {
   bool noFollowings = false;
 
   @override

@@ -1,9 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/model/report/report.dart';
 import 'package:flutter/material.dart';
 
-class ReportService with FirebaseHelper {
+class ReportService {
   static ReportService? _instance;
   static ReportService get instance => _instance ?? ReportService._();
 
@@ -73,11 +72,7 @@ class ReportService with FirebaseHelper {
                 ),
                 TextButton(
                   onPressed: () async {
-                    await Report.create(
-                        reason: reason.text,
-                        otherUid: otherUid,
-                        postId: postId,
-                        commentId: commentId);
+                    await Report.create(reason: reason.text, otherUid: otherUid, postId: postId, commentId: commentId);
                     if (context.mounted) {
                       return Navigator.of(context).pop(true);
                     }

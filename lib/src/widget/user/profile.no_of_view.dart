@@ -14,7 +14,7 @@ class ProfileNoOfViewButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: UserService.instance.profileViewHistoryCol.where('uid', isEqualTo: uid).count().get().asStream(),
+        stream: profileViewHistoryCol.where('uid', isEqualTo: uid).count().get().asStream(),
         builder: (context, snapshot) {
           return TextButton(
             onPressed: () {

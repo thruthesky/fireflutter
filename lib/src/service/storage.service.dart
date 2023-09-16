@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 
-class StorageService with FirebaseHelper {
+class StorageService {
   static StorageService? _instance;
   static StorageService get instance => _instance ??= StorageService._();
 
@@ -48,8 +48,7 @@ class StorageService with FirebaseHelper {
     if (path == null) return null;
     File file = File(path);
     final storageRef = FirebaseStorage.instance.ref();
-    final fileRef =
-        storageRef.child(saveAs ?? "users/$uid/${file.path.split('/').last}");
+    final fileRef = storageRef.child(saveAs ?? "users/${myUid!}/${file.path.split('/').last}");
 
     if (compressQuality > 0) {
       final xfile = await FlutterImageCompress.compressAndGetFile(

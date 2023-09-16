@@ -7,13 +7,13 @@ part 'message.g.dart';
 /// Message model
 ///
 @JsonSerializable()
-class Message with FirebaseHelper {
+class Message {
   /// [id] is the document id of the message.
   ///
   /// * This may be null since the lastMessage of chat room has no id.
   final String id;
   final String? text;
-  @override
+
   final String uid;
 
   @FirebaseDateTimeConverter()
@@ -41,8 +41,7 @@ class Message with FirebaseHelper {
     this.previewDescription,
     this.previewImageUrl,
     this.isUserChanged = true,
-  }) : createdAt =
-            (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
+  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   bool get hasUrl => url != null && url != '';
   bool get hasPreview => previewUrl != null && previewUrl != '';
@@ -55,8 +54,7 @@ class Message with FirebaseHelper {
     });
   }
 
-  factory Message.fromJson(Map<String, dynamic> json) =>
-      _$MessageFromJson(json);
+  factory Message.fromJson(Map<String, dynamic> json) => _$MessageFromJson(json);
   Map<String, dynamic> toJson() => _$MessageToJson(this);
 
   @override

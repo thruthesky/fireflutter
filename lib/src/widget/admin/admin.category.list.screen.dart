@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 ///
 /// Note that, it may be an illegal operation to view chat messages of users.
 ///
-class AdminCategoryListScreen extends StatelessWidget with FirebaseHelper {
+class AdminCategoryListScreen extends StatelessWidget {
   const AdminCategoryListScreen({
     super.key,
     this.onTapCategory,

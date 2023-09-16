@@ -11,9 +11,8 @@ enum FavoriteType {
 }
 
 @JsonSerializable()
-class Favorite with FirebaseHelper {
-  static CollectionReference col =
-      FirebaseFirestore.instance.collection('favorites');
+class Favorite {
+  static CollectionReference col = FirebaseFirestore.instance.collection('favorites');
   static DocumentReference doc(String id) => col.doc(id);
   final String id;
   final String? otherUid, postId, commentId;
@@ -32,12 +31,10 @@ class Favorite with FirebaseHelper {
   }) : createdAt = createdAt is Timestamp ? createdAt.toDate() : DateTime.now();
 
   factory Favorite.fromDocumentSnapshot(DocumentSnapshot doc) {
-    return Favorite.fromJson(
-        {...doc.data() as Map<String, dynamic>, 'id': doc.id});
+    return Favorite.fromJson({...doc.data() as Map<String, dynamic>, 'id': doc.id});
   }
 
-  factory Favorite.fromJson(Map<String, dynamic> json) =>
-      _$FavoriteFromJson(json);
+  factory Favorite.fromJson(Map<String, dynamic> json) => _$FavoriteFromJson(json);
   Map<String, dynamic> toJson() => _$FavoriteToJson(this);
 
   @override
@@ -46,12 +43,8 @@ class Favorite with FirebaseHelper {
   /// Query
   ///
   /// Query favorites by postId, commentId, otherUid, or type
-  static Query query(
-      {String? postId,
-      String? commentId,
-      String? otherUid,
-      FavoriteType? type}) {
-    Query query = col.where('uid', isEqualTo: UserService.instance.uid);
+  static Query query({String? postId, String? commentId, String? otherUid, FavoriteType? type}) {
+    Query query = col.where('uid', isEqualTo: myUid!);
     if (otherUid != null) {
       query = query.where('otherUid', isEqualTo: otherUid);
     } else if (postId != null) {
@@ -85,8 +78,7 @@ class Favorite with FirebaseHelper {
     String? postId,
     String? commentId,
   }) async {
-    assert(otherUid != null || postId != null || commentId != null,
-        'otherUid, postId, or commentId must be provided');
+    assert(otherUid != null || postId != null || commentId != null, 'otherUid, postId, or commentId must be provided');
     final String id = "${my.uid}-${otherUid ?? postId ?? commentId}";
 
     final Favorite? favorite = await Favorite.get(id);

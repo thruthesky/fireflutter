@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 /// Display a bell icon with two small ball indicating the subscription of new post and comment.
 /// Note, anonymous can use subscriptions.
-class PostListPushNotificationIcon extends StatelessWidget with FirebaseHelper {
+class PostListPushNotificationIcon extends StatelessWidget {
   const PostListPushNotificationIcon(
     this.categoryId, {
     super.key,

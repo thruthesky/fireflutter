@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 ///
 ///
 ///
-class AdminUserListView extends StatelessWidget with FirebaseHelper {
+class AdminUserListView extends StatelessWidget {
   const AdminUserListView({
     super.key,
     this.onTap,
@@ -41,7 +41,7 @@ class AdminUserListView extends StatelessWidget with FirebaseHelper {
   Query get query {
     final db = FirebaseFirestore.instance;
 
-    Query query = db.collection(User.collectionName);
+    Query query = db.collection(userCollectionName);
 
     if (displayName != null) {
       query = query.where('displayName', isEqualTo: displayName);
@@ -58,7 +58,7 @@ class AdminUserListView extends StatelessWidget with FirebaseHelper {
       query = query.where('isVerified', isEqualTo: isVerified);
     }
 
-    // query = query.where('uid', isEqualTo: UserService.instance.uid);
+    // query = query.where('uid', isEqualTo: myUid!);
     // query = query.orderBy('createdAt', descending: true);
     return query;
   }
@@ -78,11 +78,9 @@ class AdminUserListView extends StatelessWidget with FirebaseHelper {
 
         return ListTile(
           title: titleBuilder?.call(user) ?? Text(user.displayName),
-          subtitle:
-              subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
+          subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
           leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
-          trailing:
-              trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
+          trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
           onTap: () async {
             onTap?.call(user);
           },

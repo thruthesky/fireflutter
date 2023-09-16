@@ -20,7 +20,7 @@ mixin FirebaseHelper {
   bool get loggedIn => FirebaseAuth.instance.currentUser != null;
 
   /// user
-  CollectionReference get userCol => FirebaseFirestore.instance.collection(User.collectionName);
+  CollectionReference get userCol => FirebaseFirestore.instance.collection(userCollectionName);
   DocumentReference userDoc(String uid) => userCol.doc(uid);
   DocumentReference get myDoc => userDoc(FirebaseAuth.instance.currentUser!.uid);
 

@@ -13,7 +13,7 @@ class ChatRoomSettingsRenameListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    chatRoomName.text = room.rename[UserService.instance.uid] ?? '';
+    chatRoomName.text = room.rename[myUid] ?? '';
     return ListTile(
       title: const Text("Rename Chat Room"),
       subtitle: Column(
@@ -23,11 +23,9 @@ class ChatRoomSettingsRenameListTile extends StatelessWidget {
           TextFormField(
             controller: chatRoomName,
             textInputAction: TextInputAction.done,
-            decoration:
-                const InputDecoration(hintText: 'Enter the chat room name.'),
+            decoration: const InputDecoration(hintText: 'Enter the chat room name.'),
             onFieldSubmitted: (value) async {
-              await ChatService.instance.updateMyRoomSetting(
-                  room: room, setting: 'rename', value: value);
+              await ChatService.instance.updateMyRoomSetting(room: room, setting: 'rename', value: value);
             },
           ),
         ],

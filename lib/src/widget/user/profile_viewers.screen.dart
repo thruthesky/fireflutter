@@ -17,7 +17,7 @@ class ProfileViewersListScreen extends StatelessWidget {
         title: const Text('Profile Viewers List'),
       ),
       body: FirestoreListView(
-        query: UserService.instance.profileViewHistoryCol.where('uid', isEqualTo: myUid),
+        query: profileViewHistoryCol.where('uid', isEqualTo: myUid),
         itemBuilder: (context, doc) {
           final viewer = Viewer.fromDocumentSnapshot(doc);
           return UserDoc(

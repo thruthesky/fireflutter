@@ -7,16 +7,14 @@ import 'package:json_annotation/json_annotation.dart';
 part 'comment.g.dart';
 
 @JsonSerializable()
-class Comment with FirebaseHelper {
+class Comment {
   static const String collectionName = 'comments';
-  static CollectionReference get col => CommentService.instance.commentCol;
-  static DocumentReference doc([String? commentId]) =>
-      CommentService.instance.commentCol.doc(commentId);
+  static CollectionReference get col => commentCol;
+  static DocumentReference doc([String? commentId]) => commentCol.doc(commentId);
 
   final String id;
   final String postId;
   final String content;
-  @override
   final String uid;
   final List<String> urls;
 
@@ -51,8 +49,7 @@ class Comment with FirebaseHelper {
     this.parentId,
     required this.sort,
     required this.depth,
-  }) : createdAt =
-            (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
+  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory Comment.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     return Comment.fromJson({
@@ -61,8 +58,7 @@ class Comment with FirebaseHelper {
     });
   }
 
-  factory Comment.fromJson(Map<String, dynamic> json) =>
-      _$CommentFromJson(json)..data = json;
+  factory Comment.fromJson(Map<String, dynamic> json) => _$CommentFromJson(json)..data = json;
   Map<String, dynamic> toJson() => _$CommentToJson(this);
 
   @override
@@ -85,21 +81,17 @@ class Comment with FirebaseHelper {
       'updatedAt': FieldValue.serverTimestamp(),
       'uid': myUid,
       if (parent != null) 'parentId': parent.id,
-      'sort': getCommentSortString(
-          noOfComments: post.noOfComments,
-          depth: parent?.depth ?? 0,
-          sortString: parent?.sort),
+      'sort':
+          getCommentSortString(noOfComments: post.noOfComments, depth: parent?.depth ?? 0, sortString: parent?.sort),
       'depth': parent == null ? 1 : parent.depth + 1,
     };
 
     final ref = await col.add(commentData);
 
-    PostService.instance.postCol
-        .doc(post.id)
-        .update({'noOfComments': FieldValue.increment(1)});
+    postCol.doc(post.id).update({'noOfComments': FieldValue.increment(1)});
 
     // update no of comments
-    User.fromUid(UserService.instance.uid).update(
+    User.fromUid(myUid).update(
       noOfComments: FieldValue.increment(1),
     );
 
@@ -123,8 +115,7 @@ class Comment with FirebaseHelper {
   }
 
   static Future<Comment> get(String id) async {
-    final DocumentSnapshot documentSnapshot =
-        await CommentService.instance.commentCol.doc(id).get();
+    final DocumentSnapshot documentSnapshot = await commentCol.doc(id).get();
     return Comment.fromDocumentSnapshot(documentSnapshot);
   }
 
@@ -155,11 +146,11 @@ class Comment with FirebaseHelper {
   /// otherwise, it will remove my uid from the likes.
   Future<void> likeOrUnlike() async {
     if (iLiked) {
-      await CommentService.instance.commentCol.doc(id).update({
+      await commentCol.doc(id).update({
         'likes': FieldValue.arrayRemove([my.uid]),
       });
     } else {
-      await CommentService.instance.commentCol.doc(id).update({
+      await commentCol.doc(id).update({
         'likes': FieldValue.arrayUnion([my.uid]),
       });
     }

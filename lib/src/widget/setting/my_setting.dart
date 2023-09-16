@@ -3,7 +3,7 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/model/user_setting/user_setting.dart';
 import 'package:flutter/material.dart';
 
-class MySetting extends StatelessWidget with FirebaseHelper {
+class MySetting extends StatelessWidget {
   const MySetting({
     super.key,
     required this.id,

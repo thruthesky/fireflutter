@@ -61,8 +61,7 @@ class ChatRoomListView extends StatefulWidget {
     this.avatarSize = 46,
     this.scrollDirection = Axis.vertical,
     this.visibility,
-  }) : assert(itemExtent == null || visibility == null,
-            "You can't set both itemExtent and visibility");
+  }) : assert(itemExtent == null || visibility == null, "You can't set both itemExtent and visibility");
 
   final ChatRoomListViewController controller;
   final String orderBy;
@@ -113,7 +112,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
   }
 
   Query get query {
-    Query q = ChatService.instance.chatCol;
+    Query q = chatCol;
 
     // Display all open chat room
     if (widget.allChat) {
@@ -122,7 +121,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
       q = q.where('open', isEqualTo: true);
     } else {
       // Or display all of my rooms
-      q = q.where('users', arrayContains: ChatService.instance.uid);
+      q = q.where('users', arrayContains: myUid!);
 
       // and Display 1:1 chat rooms of my rooms
       if (widget.singleChatOnly == true) {
@@ -140,7 +139,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
 
   @override
   Widget build(BuildContext context) {
-    if (ChatService.instance.loggedIn == false) {
+    if (loggedIn == false) {
       return Center(child: Text(tr.loginFirstMessage));
     }
 
@@ -178,8 +177,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
         log(error.toString(), stackTrace: stackTrace);
         return Center(child: Text('Error loading chat rooms $error'));
       },
-      loadingBuilder: (context) =>
-          const Center(child: CircularProgressIndicator()),
+      loadingBuilder: (context) => const Center(child: CircularProgressIndicator()),
       pageSize: widget.pageSize,
       controller: widget.scrollController,
       primary: widget.primary,

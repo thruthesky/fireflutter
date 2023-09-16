@@ -1,6 +1,6 @@
 import 'package:fireflutter/fireflutter.dart';
 
-class FeedService with FirebaseHelper {
+class FeedService {
   /// create singleton
 
   static FeedService? _instance;
@@ -32,13 +32,7 @@ class FeedService with FirebaseHelper {
       }
     } else {
       // remove all posts from rtdb
-      rtdb
-          .ref('feeds')
-          .child(my.uid)
-          .orderByChild('uid')
-          .equalTo(otherUid)
-          .once()
-          .then((value) {
+      rtdb.ref('feeds').child(my.uid).orderByChild('uid').equalTo(otherUid).once().then((value) {
         for (final node in value.snapshot.children) {
           node.ref.remove();
         }
@@ -65,8 +59,7 @@ class FeedService with FirebaseHelper {
   Future delete({required Post post}) async {
     List<Future> feedDeletes = [];
     for (String followerUid in my.followers) {
-      feedDeletes
-          .add(rtdb.ref('feeds').child(followerUid).child(post.id).remove());
+      feedDeletes.add(rtdb.ref('feeds').child(followerUid).child(post.id).remove());
     }
     return await Future.wait(feedDeletes);
   }

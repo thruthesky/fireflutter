@@ -3,7 +3,7 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class PostService with FirebaseHelper {
+class PostService {
   static PostService? _instance;
   static PostService get instance => _instance ??= PostService._();
   PostService._();

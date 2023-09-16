@@ -1,6 +1,4 @@
-import 'package:fireflutter/fireflutter.dart';
-
-class UserSettingService with FirebaseHelper {
+class UserSettingService {
   static UserSettingService? _instance;
   static UserSettingService get instance => _instance ?? UserSettingService._();
 

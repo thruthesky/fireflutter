@@ -1,7 +1,7 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class CommentService with FirebaseHelper {
+class CommentService {
   static CommentService? _instance;
   static CommentService get instance => _instance ??= CommentService._();
   CommentService._();
@@ -62,8 +62,7 @@ class CommentService with FirebaseHelper {
       isDismissible: true,
       builder: (context) => Padding(
         // This padding is important to prevent the bottom sheet from being hidden by the keyboard.
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: SafeArea(
           // SafeArea is needed for Simulator
           child: Column(
@@ -86,8 +85,7 @@ class CommentService with FirebaseHelper {
   }
 
   /// Display a commnet view dialog
-  showCommentViewDialog(
-      {required BuildContext context, Comment? comment, String? commentId}) {
+  showCommentViewDialog({required BuildContext context, Comment? comment, String? commentId}) {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) => CommentViewScreen(

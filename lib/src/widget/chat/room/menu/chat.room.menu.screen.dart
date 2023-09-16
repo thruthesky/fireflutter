@@ -13,7 +13,7 @@ class ChatRoomMenuScreen extends StatelessWidget {
 
   // Stream<DocumentSnapshot<Object?>> get roomStream => ChatService.instance.roomDoc(widget.room.id).snapshots();
 
-  bool get isMaster => ChatService.instance.isMaster(room: room, uid: ChatService.instance.uid);
+  bool get isMaster => ChatService.instance.isMaster(room: room, uid: myUid!);
   @override
   Widget build(BuildContext context) {
     /// It is an intended design to wrap the entire screen with SafeArea and Padding for the best look.
@@ -99,11 +99,11 @@ class ChatRoomMenuScreen extends StatelessWidget {
               children: [
                 const SizedBox(height: 16),
                 if (room.group) ...[
-                  if (room.rename[UserService.instance.uid] == null)
+                  if (room.rename[myUid] == null)
                     Text(room.name, style: Theme.of(context).textTheme.titleLarge)
                   else ...[
                     Text(
-                      room.rename[UserService.instance.uid]!,
+                      room.rename[myUid]!,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     Text(room.name, style: Theme.of(context).textTheme.titleSmall)
