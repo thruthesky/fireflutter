@@ -57,6 +57,7 @@ export 'widget/post/view/post.view.meta.dart';
 export 'widget/post/view/post.view.content.dart';
 export 'widget/post/view/post.view.buttons.dart';
 export 'widget/post/post.card.dart';
+export 'widget/post/buttons/post.like.button.dart';
 
 // Comment
 export 'widget/comment/comment_edit.bottom_sheet.dart';

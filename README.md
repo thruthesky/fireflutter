@@ -18,6 +18,8 @@ Create an issue if you find a bug or need a help.
     - [Security rule for admin](#security-rule-for-admin)
     - [Realtime database security rules](#realtime-database-security-rules)
   - [Admin settings](#admin-settings)
+  - [Firebase Extension](#firebase-extension)
+    - [Resize image](#resize-image)
   - [Setup the base code](#setup-the-base-code)
 - [Usage](#usage)
   - [UserService](#userservice)
@@ -29,6 +31,7 @@ Create an issue if you find a bug or need a help.
     - [How to display chat room menu](#how-to-display-chat-room-menu)
     - [Customizing the chat header](#customizing-the-chat-header)
 - [Widgets](#widgets)
+  - [PostLikeButton](#postlikebutton)
   - [Screen widgets](#screen-widgets)
   - [EmailLoginForm](#emailloginform)
   - [UserDoc](#userdoc)
@@ -249,9 +252,31 @@ Copy the following and paste it into your firebase project.
 }
 ```
 
+
+
 ## Admin settings
 
 See the [Security rules for admin](#security-rule-for-admin) chapter to set admin in the security rules. After this, you can set the `isAdmin` field to true on the admin's user document.
+
+
+## Firebase Extension
+
+
+Aside from `easy-exnteion`, you will need to install the following extensions
+
+
+### Resize image
+
+`Deletion of original file` - Don't delete
+`Make resized images public` - yes
+`Cache-Control header for resized images` - "max-age=86400"
+`Convert image to preferred types` - select `webp` only.
+And choose `backfill` if you have an existing images.
+
+All other options are on your choice.
+
+To dispaly the thumbnail image, you may use `.thumbnail` String extension method. `CachedNetworkImage(imageUrl: url.thumbnail)`
+
 
 ## Setup the base code
 
@@ -401,6 +426,19 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 - The user widgets are inside `widgets/user` and the file name is in the form of `user.xxxx.dart` or `user.xxxx.dialog.dart`. And it goes the same to chat and forum.
 
 - There are many service methods that opens a screen. One thing to note is that, all the method that opens a screen uses `showGeneralDialog` which does not modify the navigation stack. If you want, you may open the screen with navigation(routing) like `Navigator.of(context).push...()`.
+
+## PostLikeButton
+
+Use this widget for like and unlike.
+
+```dart
+PostLikeButton(
+  padding: const EdgeInsets.all(sizeXs),
+  post: post,
+  builder: (post) => Icon(post.iLiked ? Icons.thumb_up : Icons.thumb_up_outlined),
+),
+```
+
 
 ## Screen widgets
 
@@ -1755,7 +1793,40 @@ TextButton(
 
 # Customization
 
-`fireflutter` supports full customization from the i18n to the complete UI.
+Fireflow supports the full customization for using its features.
+
+For UI customization, there are two main way of updating the UI.
+
+- You can customize the UI/UX with registration on service customize initialization
+- You can also customize the UI/UX with each widget.
+
+For instance, to customize the share button, you can do one of the followings
+
+Customizing on the service
+
+```dart
+PostService.instance.init(
+  customize: PostCustomize(
+    shareButtonBuilder: (post) => ShareButton(post: post),
+  ),
+);
+```
+
+
+Customizing on the widget
+
+```dart
+PostCard(
+  post: post,
+  shareButtonBuilder: (post) => ShareButton(post: post),
+),
+```
+
+
+When you customize the UI/UX with the service initialization, it may not update on realtime when you edit and hot-reload.
+
+
+
 
 # Callbacks
 

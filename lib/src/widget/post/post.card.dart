@@ -26,7 +26,7 @@ class PostCard extends StatelessWidget {
     this.semanticContainer = true,
     required this.post,
     this.padding = const EdgeInsets.all(16),
-    required this.onTapShareButton,
+    this.shareButtonBuilder,
   });
 
   final Color? color;
@@ -43,7 +43,7 @@ class PostCard extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
 
   /// Callback function for share button
-  final Function(Post post) onTapShareButton;
+  final Widget Function(Post post)? shareButtonBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -132,9 +132,11 @@ class PostCard extends StatelessWidget {
                         (e) => GestureDetector(
                           behavior: HitTestBehavior.opaque,
                           onTap: () {
-                            toast(title: '@todo gallery carousel', message: 'make this photos as carouse widget');
+                            toast(
+                                title: '@todo gallery carousel',
+                                message: 'make this photos as carouse widget, ${e.thumbnail}');
                           },
-                          child: CachedNetworkImage(imageUrl: e),
+                          child: CachedNetworkImage(imageUrl: e.thumbnail),
                         ),
                       )
                       .toList(),
@@ -144,9 +146,10 @@ class PostCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: sizeXs),
               child: Row(
                 children: [
-                  IconButton(
-                    onPressed: () => post.like(),
-                    icon: const Icon(Icons.thumb_up),
+                  PostLikeButton(
+                    padding: const EdgeInsets.all(sizeXs),
+                    post: post,
+                    builder: (post) => Icon(post.iLiked ? Icons.thumb_up : Icons.thumb_up_outlined),
                   ),
                   FavoriteButton(
                     postId: post.id,
@@ -154,10 +157,9 @@ class PostCard extends StatelessWidget {
                       return Icon(didIFavorite ? Icons.favorite : Icons.favorite_border);
                     },
                   ),
-                  IconButton(
-                    onPressed: () => onTapShareButton(post),
-                    icon: const Icon(Icons.share),
-                  ),
+                  shareButtonBuilder?.call(post) ??
+                      PostService.instance.customize.shareButtonBuilder?.call(post) ??
+                      const SizedBox.shrink(),
                 ],
               ),
             ),

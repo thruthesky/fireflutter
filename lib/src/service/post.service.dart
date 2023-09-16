@@ -30,6 +30,7 @@ class PostService with FirebaseHelper {
     bool enableSeenBy = false,
     void Function(Post)? onCreate,
     void Function(Post)? onUpdate,
+    PostCustomize? customize,
   }) {
     this.uploadFromGallery = uploadFromGallery;
     this.uploadFromCamera = uploadFromCamera;
@@ -39,6 +40,10 @@ class PostService with FirebaseHelper {
 
     this.onCreate = onCreate;
     this.onUpdate = onUpdate;
+
+    if (customize != null) {
+      this.customize = customize;
+    }
   }
 
   /// Shows the Edit Post as a dialog
