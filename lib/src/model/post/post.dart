@@ -120,9 +120,11 @@ class Post {
     User.fromUid(FirebaseAuth.instance.currentUser!.uid).update(
       noOfPosts: FieldValue.increment(1),
     );
-    Category.fromId(categoryId).update(
-      noOfPosts: FieldValue.increment(1),
-    );
+    if (categoryId.isNotEmpty) {
+      Category.fromId(categoryId).update(
+        noOfPosts: FieldValue.increment(1),
+      );
+    }
 
     FeedService.instance.create(post: post);
 
@@ -164,6 +166,7 @@ class Post {
   /// If I already liked (iLiked == true)
   /// it will add my uid to the likes...
   /// otherwise, it will remove my uid from the likes.
+  @Deprecated("Use database toggle")
   Future<void> like() async {
     if (iLiked) {
       await postCol.doc(id).update({

@@ -87,10 +87,18 @@ String pathSeenBy(String id) {
   return 'posts/$id/seenBy';
 }
 
-String pathLikedBy(String id, {bool all = false}) {
+String pathPostLikedBy(String id, {bool all = false}) {
   if (all) {
     return 'posts/$id/likedBy';
   } else {
     return 'posts/$id/likedBy/$myUid';
+  }
+}
+
+String pathCommentLikedBy(String id, {bool all = false}) {
+  if (all) {
+    return 'comments/$id/likedBy';
+  } else {
+    return 'comments/$id/likedBy/$myUid';
   }
 }

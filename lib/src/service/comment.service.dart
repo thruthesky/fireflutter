@@ -93,12 +93,28 @@ class CommentService {
   }
 
   /// Display a commnet view dialog
+  ///
+  /// This displays a single comments.
   showCommentViewDialog({required BuildContext context, Comment? comment, String? commentId}) {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) => CommentViewScreen(
         comment: comment,
         commentId: commentId,
+      ),
+    );
+  }
+
+  /// Display a bottom sheet for the comment list of the post
+  ///
+  showCommentListBottomSheet({
+    required BuildContext context,
+    required Post post,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => CommentListBottomSheet(
+        post: post,
       ),
     );
   }

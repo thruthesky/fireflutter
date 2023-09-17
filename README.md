@@ -22,6 +22,9 @@ Create an issue if you find a bug or need a help.
     - [Resize image](#resize-image)
   - [Setup the base code](#setup-the-base-code)
   - [url\_launcher Optional](#url_launcher-optional)
+- [Pub.dev Packages](#pubdev-packages)
+  - [timeago](#timeago)
+  - [Parsed\_ReadMore](#parsed_readmore)
 - [Usage](#usage)
   - [UserService](#userservice)
   - [PostService](#postservice)
@@ -31,7 +34,10 @@ Create an issue if you find a bug or need a help.
     - [How to open 1:1 chat room](#how-to-open-11-chat-room)
     - [How to display chat room menu](#how-to-display-chat-room-menu)
     - [Customizing the chat header](#customizing-the-chat-header)
-- [Widgets](#widgets)
+- [Widgets and UI functions](#widgets-and-ui-functions)
+  - [CommentListBottomSheet](#commentlistbottomsheet)
+  - [UserLikeListScreen](#userlikelistscreen)
+  - [toast](#toast)
   - [PostLikeButton](#postlikebutton)
   - [Screen widgets](#screen-widgets)
   - [EmailLoginForm](#emailloginform)
@@ -246,6 +252,17 @@ Copy the following and paste it into your firebase project.
         }
       }
     },
+    "comments": {
+      ".read": true,
+      "$comment_id": {
+        // comment likes
+        "likedBy": {
+          "$uid": {
+            ".write": "$uid == auth.uid"
+          }
+        }
+      }
+    },
     "blocks": {
       "$my_uid": {
         ".read":  "$my_uid == auth.uid",
@@ -361,6 +378,23 @@ if (re) {
 ```
 
 
+# Pub.dev Packages
+
+In this chapter, some of the notable packages that are used by firelfutter are explained.
+
+
+## timeago
+
+[timeago](https://pub.dev/packages/timeago) to show date and time in i18n.
+
+
+## Parsed_ReadMore
+
+[parsed_readmore](https://pub.dev/packages/parsed_readmore) to show/hide when the content text is long.
+
+
+
+
 # Usage
 
 ## UserService
@@ -445,7 +479,7 @@ You can build your own chat header like below.
 ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoomAppBar(room: room);
 ```
 
-# Widgets
+# Widgets and UI functions
 
 - The widgets in fireflutter can be a small piece of UI representation or it can be a full screen dialog.
 
@@ -453,6 +487,32 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 - The user widgets are inside `widgets/user` and the file name is in the form of `user.xxxx.dart` or `user.xxxx.dialog.dart`. And it goes the same to chat and forum.
 
 - There are many service methods that opens a screen. One thing to note is that, all the method that opens a screen uses `showGeneralDialog` which does not modify the navigation stack. If you want, you may open the screen with navigation(routing) like `Navigator.of(context).push...()`.
+
+
+
+## CommentListBottomSheet
+
+This widget shows the comment list of the post in a bottom sheet UI style.
+Use this widget with [showModalBottomSheet].
+
+
+## UserLikeListScreen
+
+This screen shows a list of users who liked a post, comment, or a profile.
+ Use this screen to show a user list and when it is tapped, show public profile.
+
+## toast
+
+```dart
+toast(
+  icon: const Icon(Icons.link),
+  title: url,
+  message: 'Open the link?',
+  onTap: (p0) => launchUrl(Uri.parse(url)),
+  hideCloseButton: true,
+);
+```
+
 
 ## PostLikeButton
 
@@ -1326,7 +1386,7 @@ Database(
 
 // Displaying a toggle IconButton.
 Database(
-  path: pathLikedBy(post.id),
+  path: pathPostLikedBy(post.id),
   builder: (v, p) => IconButton(
     onPressed: () => toggle(p),
     icon: Icon(v != null ? Icons.thumb_up : Icons.thumb_up_outlined),

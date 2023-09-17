@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -30,6 +29,7 @@ class PostCard extends StatelessWidget {
     required this.post,
     this.padding = const EdgeInsets.all(16),
     this.shareButtonBuilder,
+    this.commentSize = 5,
   });
 
   final Color? color;
@@ -47,6 +47,9 @@ class PostCard extends StatelessWidget {
 
   /// Callback function for share button
   final Widget Function(Post post)? shareButtonBuilder;
+
+  /// The number of comments to show
+  final int commentSize;
 
   @override
   Widget build(BuildContext context) {
@@ -168,10 +171,10 @@ class PostCard extends StatelessWidget {
               child: Row(
                 children: [
                   Database(
-                    path: pathLikedBy(post.id),
-                    builder: (n, p) => IconButton(
+                    path: pathPostLikedBy(post.id),
+                    builder: (v, p) => IconButton(
                       onPressed: () => toggle(p),
-                      icon: Icon(n != null ? Icons.thumb_up : Icons.thumb_up_outlined),
+                      icon: Icon(v != null ? Icons.thumb_up : Icons.thumb_up_outlined),
                     ),
                   ),
                   FavoriteButton(
@@ -186,21 +189,24 @@ class PostCard extends StatelessWidget {
                 ],
               ),
             ),
+            // like button
             DatabaseCount(
-              path: pathLikedBy(post.id, all: true),
+              path: pathPostLikedBy(post.id, all: true),
               builder: (n) => n == 0 ? const SizedBox.shrink() : Text("$n likes"),
             ),
-            Text(post.content.replaceAll("\n", " "), style: Theme.of(context).textTheme.bodyMedium),
-            Row(
-              children: [
-                if (post.noOfComments > 0) Text("comments ${post.noOfComments}"),
-              ],
-            ),
+
+            /// post content
+            if (post.content.length < 60)
+              Text(post.content.replaceAll("\n", " "), style: Theme.of(context).textTheme.bodyMedium)
+            else
+              PostContentShowMore(post: post),
+
+            // list of comment
             StreamBuilder(
               stream: commentCol
                   .where('postId', isEqualTo: post.id)
                   .orderBy('createdAt', descending: false)
-                  .limitToLast(5)
+                  .limitToLast(commentSize)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
@@ -213,9 +219,17 @@ class PostCard extends StatelessWidget {
                     final comment = Comment.fromDocumentSnapshot(doc);
 
                     children.add(
-                      OnlineComment(comment: comment),
+                      CommentOneLineListTile(
+                        contentMargin: const EdgeInsets.only(bottom: 8),
+                        contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
+                        post: post,
+                        comment: comment,
+                        onTapContent: () =>
+                            CommentService.instance.showCommentListBottomSheet(context: context, post: post),
+                      ),
                     );
                   }
+                  //
                   return Column(
                     children: children,
                   );
@@ -224,12 +238,26 @@ class PostCard extends StatelessWidget {
                 return const SizedBox.shrink();
               },
             ),
-            ElevatedButton(
-              onPressed: () async {
-                final comment = await CommentService.instance.showCommentEditBottomSheet(context, post: post);
-                print(comment.toString());
-              },
-              child: const Text('Create comment'),
+
+            // post & comment buttons
+            Row(
+              children: [
+                // show more
+                if (post.noOfComments > commentSize)
+                  TextButton(
+                    onPressed: () {
+                      CommentService.instance.showCommentListBottomSheet(context: context, post: post);
+                    },
+                    child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
+                  ),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: () async {
+                    await CommentService.instance.showCommentEditBottomSheet(context, post: post);
+                  },
+                  child: const Text('Create comment'),
+                ),
+              ],
             )
           ],
         ),

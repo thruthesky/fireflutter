@@ -21,6 +21,23 @@ Future<T?> get<T>(String path) async {
   return event.snapshot.value as T;
 }
 
+/// Get a list of keys of a node
+///
+/// [path] is the path of the node.
+///
+/// ! It returns an empty list if the node does not exist.
+Future<List<String>> getKeys(String path) async {
+  final event = await FirebaseDatabase.instance.ref(path).once(DatabaseEventType.value);
+  if (!event.snapshot.exists) {
+    return [];
+  }
+  final value = event.snapshot.value;
+  if (value is Map) {
+    return value.keys.cast<String>().toList();
+  }
+  return [];
+}
+
 /// Set a node data
 ///
 /// This will overwrite any data at this location and all child locations.

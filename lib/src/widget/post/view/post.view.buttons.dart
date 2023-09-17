@@ -52,7 +52,7 @@ class PostViewButtons extends StatelessWidget {
                   child: Text(
                     post.likes.isEmpty ? tr.like : tr.likes.replaceAll('#no', post.likes.length.toString()),
                   ),
-                  onPressed: () => post.like(),
+                  onPressed: () => toggle(pathPostLikedBy(post.id)), // post.like(),
                 ),
               ),
               UserDoc(

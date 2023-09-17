@@ -16,7 +16,7 @@ class PostLikeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Database(
-      path: pathLikedBy(post.id, all: true),
+      path: pathPostLikedBy(post.id, all: true),
       builder: (v, p) => builder(v),
 
       //  n == 0

@@ -409,4 +409,13 @@ class UserService {
     await mySearchDoc.delete();
     await rtdb.ref('users/$myUid').remove();
   }
+
+  showLikedByListScreen({required BuildContext context, required List<String> uids}) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) {
+        return UserLikedByListScreen(uids: uids);
+      },
+    );
+  }
 } // EO UserService

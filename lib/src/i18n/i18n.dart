@@ -52,6 +52,14 @@ class I18nTexts {
   String copyLink;
   String copyLinkMessage;
 
+  String showMoreComments;
+
+  String askOpenLink;
+  String readLess;
+  String readMore;
+
+  String noOfLikes;
+
   I18nTexts({
     this.loginFirstTitle = 'Login first',
     this.loginFirstMessage = 'Please login first.',
@@ -99,6 +107,11 @@ class I18nTexts {
     this.noStateMessage = "No state message, yet. Create one!",
     this.copyLink = "Copy Link",
     this.copyLinkMessage = "Link copied to clipboard",
+    this.showMoreComments = "Show #no comments",
+    this.askOpenLink = "Do you want to open this link?",
+    this.readLess = "Read less",
+    this.readMore = "Read more",
+    this.noOfLikes = "Likes #no",
   });
 
   factory I18nTexts.fromJson(Map<String, dynamic> json) => _$I18nTextsFromJson(json);

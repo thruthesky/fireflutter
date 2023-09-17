@@ -10,6 +10,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:timeago/timeago.dart' as timeago;
+
 /// Shows a [SnackBar] at the bottom of the screen.
 Future<void> showSnackBar(BuildContext? context, String message) async {
   context ??= FireFlutterService.instance.context;
@@ -187,14 +189,21 @@ void warningSnackbar(BuildContext? context, String message) async {
 ScaffoldFeatureController toast({
   required String title,
   required String message,
-  Widget? icon,
+  Icon? icon,
   Duration duration = const Duration(seconds: 8),
   Function(Function)? onTap,
+  bool hideCloseButton = false,
+  Color? backgroundColor,
+  Color? forgroundColor,
+  double runSpacing = 12,
 }) {
   final context = FireFlutterService.instance.context;
+  backgroundColor ??= Theme.of(context).colorScheme.primary;
+  forgroundColor ??= Theme.of(context).colorScheme.onPrimary;
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       duration: duration,
+      backgroundColor: backgroundColor,
       content: Row(
         children: [
           Expanded(
@@ -208,7 +217,15 @@ ScaffoldFeatureController toast({
                 });
               },
               child: Row(children: [
-                if (icon != null) ...[icon, const SizedBox(width: 8)],
+                if (icon != null) ...[
+                  Theme(
+                    data: Theme.of(context).copyWith(
+                      iconTheme: IconThemeData(color: forgroundColor),
+                    ),
+                    child: icon,
+                  ),
+                  SizedBox(width: runSpacing),
+                ],
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -222,11 +239,13 @@ ScaffoldFeatureController toast({
               ]),
             ),
           ),
-          TextButton(
+          if (hideCloseButton == false)
+            TextButton(
               onPressed: () {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
               },
-              child: Text(tr.dismiss))
+              child: Text(tr.dismiss, style: TextStyle(color: forgroundColor)),
+            )
         ],
       ),
     ),
@@ -234,7 +253,7 @@ ScaffoldFeatureController toast({
 }
 
 ScaffoldFeatureController loginFirstToast({
-  Widget? icon,
+  Icon? icon,
   Duration duration = const Duration(seconds: 8),
   Function(Function)? onTap,
 }) {
@@ -339,20 +358,7 @@ String randomString([length = 12]) {
 
 /// Return a string of date/time agao
 String dateTimeAgo(DateTime dateTime) {
-  final Duration diff = DateTime.now().difference(dateTime);
-  if (diff.inDays >= 31) {
-    return dateTime.toIso8601String();
-  } else if (diff.inDays >= 1) {
-    return '${diff.inDays} ${diff.inDays == 1 ? "day" : "days"} ago';
-  } else if (diff.inHours >= 1) {
-    return '${diff.inHours} ${diff.inHours == 1 ? "hour" : "hours"} ago';
-  } else if (diff.inMinutes >= 1) {
-    return '${diff.inMinutes} ${diff.inMinutes == 1 ? "minute" : "minutes"} ago';
-  } else if (diff.inSeconds >= 1) {
-    return '${diff.inSeconds} ${diff.inSeconds == 1 ? "second" : "seconds"} ago';
-  } else {
-    return 'just now';
-  }
+  return timeago.format(dateTime);
 }
 
 /// Returns a string of "yyyy-MM-dd" or "HH:mm:ss"
