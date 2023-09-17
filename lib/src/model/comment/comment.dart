@@ -62,7 +62,7 @@ class Comment {
   Map<String, dynamic> toJson() => _$CommentToJson(this);
 
   @override
-  String toString() => '';
+  String toString() => 'Comment( ${toJson()})';
   // 'Comment(id: $id, postId: $postId, content: $content, uid: $uid, urls: $urls, createdAt: $createdAt, updatedAt: $updatedAt, likes: $likes, deleted: $deleted, parentId: $parentId, sort: $sort, depth: $depth)';
 
   /// Create a comment
@@ -95,10 +95,12 @@ class Comment {
       noOfComments: FieldValue.increment(1),
     );
 
-    //
-    Category.fromId(post.categoryId).update(
-      noOfComments: FieldValue.increment(1),
-    );
+    // For some apps, they don't use category at all.
+    if (post.categoryId.isNotEmpty) {
+      Category.fromId(post.categoryId).update(
+        noOfComments: FieldValue.increment(1),
+      );
+    }
 
     // Assemble the comment without getting from server since it takes time.
     final createdComment = Comment.fromJson({

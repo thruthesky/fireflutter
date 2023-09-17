@@ -21,6 +21,7 @@ Create an issue if you find a bug or need a help.
   - [Firebase Extension](#firebase-extension)
     - [Resize image](#resize-image)
   - [Setup the base code](#setup-the-base-code)
+  - [url\_launcher Optional](#url_launcher-optional)
 - [Usage](#usage)
   - [UserService](#userservice)
   - [PostService](#postservice)
@@ -340,6 +341,25 @@ By defualt, feed feature is disabled. To use feed features, add the following in
 ```dart
 FeedService.instance.init(enable: true);
 ```
+
+
+
+## url_launcher Optional
+
+`url_lancher` package is added by fireflutter and it is being used to open url. If you wish to let users share links by sms, you need to setup in `AndroidManifest.xml` and `Info.plist`. See the [url_launch Configuration](https://pub.dev/packages/url_launcher#configuration).
+
+
+Fireflutter exposes a method `launchSMS` to open the SMS app. Here is an example of how to send sms. You can build your own code, of course.
+
+```dart
+final re = await launchSMS(phnumber: '', msg: link);
+if (re) {
+  toast(title: 'SMS', message: 'Link sent by SMS');
+} else {
+  toast(title: 'SMS', message: 'Cannot open SMS');
+}
+```
+
 
 # Usage
 
@@ -1951,15 +1971,28 @@ It also has a method `dyamicLink` that returns a short dyanmic link. You may see
 ```dart
 Share.share(
   await ShareService.instance.dynamicLink(
-    link: "https://grcapp.page.link/?type=feed&id=${post.id}",
-    uriPrefix: "https://grcapp.page.link",
-    appId: "com.grc.grc",
+    link: "https://xxx.page.link/?type=feed&id=${post.id}",
+    uriPrefix: "https://xxx.page.link",
+    appId: "com.xxx.xxx",
     title: post.title,
     description: post.content.upTo(255),
   ),
   subject: post.title,
 );
 ```
+
+Often, the `dynamicLink` method is called deep inside the widget tree. So, we provide a customization for building dynmaic links. You can set the `uriPrefix` and the `appId`. And the fireflutter will use this setting to generator custom build.
+
+```dart
+ShareService.instance.init(
+  uriPrefix: "https://xxx.page.link",
+  appId: "xxx.xxx.xxx",
+);
+```
+
+When the dyanmic link is build, it has one of the `type` between `user`, `post`. When it is a `user`, you may show the user's profile. If it is `post`, you may show the post. We don't support the link for `chat` yet. Because the user needs to register first before entering the chat room while user profile and post view can be seen without login. But we are planning to support for `chat` link soon.
+
+
 
 
 Dispaly a share bottom sheet.
@@ -1971,12 +2004,14 @@ ShareService.instance.showBottomSheet(actions: [
     label: "Share",
     onTap: () async {
       Share.share(
-        await dynamicLink(
-          type: 'feed',
-          id: post.id,
-          title: post.title,
-          description: post.content.upTo(255),
+        await ShareService.instance.dynamicLink(
+          link: "https://xxxx.page.link/?type=xxx&id=xxx",
+          uriPrefix: "https://xxxx.page.link",
+          appId: "xxx",
+          title: 'title',
+          description: 'description..',
         ),
+        subject: 'subject',
       );
     },
   ),
@@ -1989,6 +2024,83 @@ ShareService.instance.showBottomSheet(actions: [
     icon: const Icon(Icons.comment),
     label: "Message",
     onTap: () {},
+  ),
+]),
+```
+
+
+
+
+Example of copying the dynamic link to clipboard
+
+```dart
+IconTextButton(
+  icon: const Icon(Icons.copy),
+  label: "Copy Link",
+  onTap: () async {
+    final link = await ShareService.instance.dynamicLink(
+      type: DynamicLink.post.name,
+      id: 'post.id',
+      title: 'title',
+      description: 'description..',
+    );
+    Clipboard.setData(ClipboardData(text: link));
+    toast(title: tr.copyLink, message: tr.copyLinkMessage);
+  },
+),
+```
+
+
+Below is an example of how to use `ShareBottomSheet` widget. You can insert this widget in home screen and do some UI work. Then, apply it.
+
+```dart
+ShareBottomSheet(actions: [
+  IconTextButton(
+    icon: const Icon(Icons.share),
+    label: "Share",
+    onTap: () async {
+      Share.share(
+        await ShareService.instance.dynamicLink(
+          type: DynamicLink.feed.name,
+          id: 'post.id',
+          title: 'title',
+          description: 'description..',
+        ),
+        subject: 'subject',
+      );
+    },
+  ),
+  IconTextButton(
+    icon: const Icon(Icons.copy),
+    label: "Copy Link",
+    onTap: () async {
+      final link = await ShareService.instance.dynamicLink(
+        type: DynamicLink.post.name,
+        id: 'post.id',
+        title: 'title',
+        description: 'description..',
+      );
+      Clipboard.setData(ClipboardData(text: link));
+      toast(title: tr.copyLink, message: tr.copyLinkMessage);
+    },
+  ),
+  IconTextButton(
+    icon: const Icon(Icons.comment),
+    label: "Message",
+    onTap: () async {
+      final link = await ShareService.instance.dynamicLink(
+        type: DynamicLink.post.name,
+        id: 'post.id',
+        title: 'title',
+        description: 'description..',
+      );
+      final re = await launchSMS(phnumber: '', msg: link);
+      if (re) {
+        toast(title: 'SMS', message: 'Link sent by SMS');
+      } else {
+        toast(title: 'SMS', message: 'Cannot open SMS');
+      }
+    },
   ),
 ]),
 ```

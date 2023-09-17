@@ -49,13 +49,15 @@ class I18nTexts {
   String unfollowMessage;
   String noStateMessage;
 
+  String copyLink;
+  String copyLinkMessage;
+
   I18nTexts({
     this.loginFirstTitle = 'Login first',
     this.loginFirstMessage = 'Please login first.',
     this.noOfChatRooms = 'No chat rooms, yet. Create one!',
     this.roomMenu = 'Chat Room Menu',
-    this.chatRoomCreateDialog =
-        'New chat room created. You can invite more users. Enjoy chatting!',
+    this.chatRoomCreateDialog = 'New chat room created. You can invite more users. Enjoy chatting!',
     this.chooseUploadFrom = "Choose upload from...",
     this.noCategory = "No category, yet. Create one!",
     this.noPost = "No post yet. Create one!",
@@ -95,10 +97,11 @@ class I18nTexts {
     this.followMessage = "You are following this user.",
     this.unfollowMessage = "You are not following this user anymore.",
     this.noStateMessage = "No state message, yet. Create one!",
+    this.copyLink = "Copy Link",
+    this.copyLinkMessage = "Link copied to clipboard",
   });
 
-  factory I18nTexts.fromJson(Map<String, dynamic> json) =>
-      _$I18nTextsFromJson(json);
+  factory I18nTexts.fromJson(Map<String, dynamic> json) => _$I18nTextsFromJson(json);
 
   Map<String, dynamic> toJson() => _$I18nTextsToJson(this);
 }

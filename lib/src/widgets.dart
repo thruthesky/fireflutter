@@ -67,7 +67,7 @@ export 'widget/comment/comment_list_view.dart';
 export 'widget/comment/comment.list_tile.dart';
 export 'widget/comment/comment_doc.dart';
 export 'widget/comment/comment.view.screen.dart';
-export 'widget/common/icon_text_button.dart';
+export 'widget/comment/one_line_comment.list_tile.dart';
 
 // Common
 export 'widget/common/date_time_text.dart';
@@ -81,6 +81,10 @@ export 'widget/common/youtube.thumbnail.dart';
 export 'widget/common/gradients.dart';
 export 'widget/common/push_notification.setting.dart';
 export 'widget/common/push_notification.icon.dart';
+export 'widget/common/carousel.screen.dart';
+
+export 'widget/common/icon_text_button.dart';
+export 'widget/common/share.bottom_sheet.dart';
 
 // Favorite
 

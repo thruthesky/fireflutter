@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/model/report/report.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +30,11 @@ class ReportService {
     try {
       final re = await Report.get(info.id);
       if (re != null) {
-        onExists?.call(info.id, info.type);
+        onExists?.call(info.id, info.type) ??
+            toast(
+              title: tr.alreadyReportedTitle,
+              message: tr.alreadyReportedMessage.replaceAll("#type", info.type),
+            );
         return null;
       }
     } on FirebaseException catch (e) {

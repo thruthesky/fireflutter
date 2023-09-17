@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'dart:math';
 
 import 'package:fireflutter/fireflutter.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Shows a [SnackBar] at the bottom of the screen.
 Future<void> showSnackBar(BuildContext? context, String message) async {
@@ -247,10 +250,7 @@ ScaffoldFeatureController loginFirstToast({
 /// Confirm dialgo
 ///
 /// It requires build context where [toast] does not.
-Future<bool?> confirm(
-    {required BuildContext context,
-    required String title,
-    required String message}) {
+Future<bool?> confirm({required BuildContext context, required String title, required String message}) {
   return showDialog<bool?>(
     context: context,
     builder: (BuildContext context) {
@@ -275,10 +275,7 @@ Future<bool?> confirm(
 /// Display an alert box.
 ///
 /// It requires build context where [toast] does not.
-Future alert(
-    {required BuildContext context,
-    required String title,
-    required String message}) {
+Future alert({required BuildContext context, required String title, required String message}) {
   return showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -303,10 +300,7 @@ Future alert(
 /// [message] is the message of the dialog.
 /// [initialValue] is the initial value of the input field.
 Future<String?> prompt(
-    {required BuildContext context,
-    required String title,
-    required String message,
-    String? initialValue}) {
+    {required BuildContext context, required String title, required String message, String? initialValue}) {
   final controller = TextEditingController(text: initialValue);
   return showDialog<String?>(
     context: context,
@@ -381,14 +375,10 @@ String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
   if (trimWhitespaces) url = url.trim();
 
   for (var exp in [
-    RegExp(
-        r"^https:\/\/(?:www\.|m\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
-    RegExp(
-        r"^https:\/\/(?:music\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
-    RegExp(
-        r"^https:\/\/(?:www\.|m\.)?youtube\.com\/shorts\/([_\-a-zA-Z0-9]{11}).*$"),
-    RegExp(
-        r"^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/([_\-a-zA-Z0-9]{11}).*$"),
+    RegExp(r"^https:\/\/(?:www\.|m\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
+    RegExp(r"^https:\/\/(?:music\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
+    RegExp(r"^https:\/\/(?:www\.|m\.)?youtube\.com\/shorts\/([_\-a-zA-Z0-9]{11}).*$"),
+    RegExp(r"^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/([_\-a-zA-Z0-9]{11}).*$"),
     RegExp(r"^https:\/\/youtu\.be\/([_\-a-zA-Z0-9]{11}).*$")
   ]) {
     Match? match = exp.firstMatch(url);
@@ -396,4 +386,35 @@ String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
   }
 
   return null;
+}
+
+///
+Future<bool> launchSMS({required String phnumber, required String msg}) async {
+  // Android 'sms:+39 348 060 888?body=hello%20there';
+  String body = Uri.encodeComponent(msg);
+
+  String androidPh = phnumber.replaceAll("(", "").replaceAll(")", "");
+  String androidUri = 'sms:$androidPh?body=$body';
+
+  String iosPh = phnumber
+      .replaceAll("+", "00")
+      .replaceAll("(", "")
+      .replaceAll(")", ""); //'sms:0039-222-060-888?body=hello%20there';
+  String iosUri = 'sms:$iosPh&body=$body';
+
+  if (Platform.isIOS) {
+    if (await canLaunchUrl(Uri.parse(iosUri))) {
+      return await launchUrl(Uri.parse(iosUri));
+    } else {
+      return false;
+    }
+  } else if (Platform.isAndroid) {
+    if (await canLaunchUrl(Uri.parse(androidUri))) {
+      return await launchUrl(Uri.parse(androidUri));
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
 }

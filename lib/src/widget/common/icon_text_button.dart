@@ -46,13 +46,22 @@ class IconTextButton extends StatelessWidget {
       onTap: onTap,
       child: Column(
         children: [
-          Container(
-            padding: iconPadding,
-            decoration: BoxDecoration(
+          Material(
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(iconRadius),
-              color: iconBackgroundColor ?? Theme.of(context).colorScheme.secondary.withAlpha(20),
             ),
-            child: icon,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(iconRadius),
+              onTap: onTap,
+              child: Container(
+                padding: iconPadding,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(iconRadius),
+                  color: iconBackgroundColor ?? Theme.of(context).colorScheme.secondary.withAlpha(20),
+                ),
+                child: icon,
+              ),
+            ),
           ),
           SizedBox(height: runSpacing),
           if (label != null)

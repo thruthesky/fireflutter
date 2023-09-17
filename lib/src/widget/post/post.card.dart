@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -146,11 +149,15 @@ class PostCard extends StatelessWidget {
                         (e) => GestureDetector(
                           behavior: HitTestBehavior.opaque,
                           onTap: () {
-                            toast(
-                                title: '@todo gallery carousel',
-                                message: 'make this photos as carouse widget, ${e.thumbnail}');
+                            StorageService.instance.showUploads(
+                              context,
+                              post.urls,
+                            );
                           },
-                          child: CachedNetworkImage(imageUrl: e.thumbnail),
+                          child: CachedNetworkImage(
+                            imageUrl: e.thumbnail,
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       )
                       .toList(),
@@ -180,14 +187,50 @@ class PostCard extends StatelessWidget {
               ),
             ),
             DatabaseCount(
-                path: pathLikedBy(post.id, all: true),
-                builder: (n) => n == 0 ? const SizedBox.shrink() : Text("$n likes")),
+              path: pathLikedBy(post.id, all: true),
+              builder: (n) => n == 0 ? const SizedBox.shrink() : Text("$n likes"),
+            ),
             Text(post.content.replaceAll("\n", " "), style: Theme.of(context).textTheme.bodyMedium),
             Row(
               children: [
                 if (post.noOfComments > 0) Text("comments ${post.noOfComments}"),
               ],
             ),
+            StreamBuilder(
+              stream: commentCol
+                  .where('postId', isEqualTo: post.id)
+                  .orderBy('createdAt', descending: false)
+                  .limitToLast(5)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  log(snapshot.error.toString());
+                  return Text('Something went wrong; ${snapshot.error.toString()}');
+                }
+                if (snapshot.hasData) {
+                  List<Widget> children = [];
+                  for (final doc in snapshot.data!.docs) {
+                    final comment = Comment.fromDocumentSnapshot(doc);
+
+                    children.add(
+                      OnlineComment(comment: comment),
+                    );
+                  }
+                  return Column(
+                    children: children,
+                  );
+                }
+
+                return const SizedBox.shrink();
+              },
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final comment = await CommentService.instance.showCommentEditBottomSheet(context, post: post);
+                print(comment.toString());
+              },
+              child: const Text('Create comment'),
+            )
           ],
         ),
       ),

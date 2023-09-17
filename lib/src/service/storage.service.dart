@@ -13,6 +13,16 @@ class StorageService {
   ///
   StorageService._();
 
+  StorageCustomize customize = StorageCustomize();
+
+  init({
+    StorageCustomize? customize,
+  }) {
+    if (customize != null) {
+      this.customize = customize;
+    }
+  }
+
   /// Upload a file (or an image) to Firebase Storage.
   /// 범용 업로드 함수이며, 모든 곳에서 사용하면 된다.
   ///
@@ -127,5 +137,13 @@ class StorageService {
       complete: complete,
       compressQuality: compressQuality,
     );
+  }
+
+  showUploads(BuildContext context, List<String> urls) {
+    if (customize.showUploads != null) {
+      return customize.showUploads!(context, urls);
+    }
+
+    showGeneralDialog(context: context, pageBuilder: (context, _, __) => CarouselScreen(urls: urls));
   }
 }
