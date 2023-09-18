@@ -6,12 +6,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 
-class StorageService with FirebaseHelper {
+class StorageService {
   static StorageService? _instance;
   static StorageService get instance => _instance ??= StorageService._();
 
   ///
   StorageService._();
+
+  StorageCustomize customize = StorageCustomize();
+
+  init({
+    StorageCustomize? customize,
+  }) {
+    if (customize != null) {
+      this.customize = customize;
+    }
+  }
 
   /// Upload a file (or an image) to Firebase Storage.
   /// 범용 업로드 함수이며, 모든 곳에서 사용하면 된다.
@@ -48,8 +58,7 @@ class StorageService with FirebaseHelper {
     if (path == null) return null;
     File file = File(path);
     final storageRef = FirebaseStorage.instance.ref();
-    final fileRef =
-        storageRef.child(saveAs ?? "users/$uid/${file.path.split('/').last}");
+    final fileRef = storageRef.child(saveAs ?? "users/${myUid!}/${file.path.split('/').last}");
 
     if (compressQuality > 0) {
       final xfile = await FlutterImageCompress.compressAndGetFile(
@@ -128,5 +137,13 @@ class StorageService with FirebaseHelper {
       complete: complete,
       compressQuality: compressQuality,
     );
+  }
+
+  showUploads(BuildContext context, List<String> urls) {
+    if (customize.showUploads != null) {
+      return customize.showUploads!(context, urls);
+    }
+
+    showGeneralDialog(context: context, pageBuilder: (context, _, __) => CarouselScreen(urls: urls));
   }
 }

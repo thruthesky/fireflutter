@@ -1,10 +1,12 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class CommentService with FirebaseHelper {
+class CommentService {
   static CommentService? _instance;
   static CommentService get instance => _instance ??= CommentService._();
   CommentService._();
+
+  CommentCustomize customize = CommentCustomize();
 
   bool uploadFromCamera = true;
   bool uploadFromGallery = true;
@@ -19,6 +21,7 @@ class CommentService with FirebaseHelper {
     bool uploadFromFile = true,
     void Function(Comment)? onCreate,
     void Function(Comment)? onUpdate,
+    CommentCustomize? customize,
   }) {
     this.uploadFromGallery = uploadFromGallery;
     this.uploadFromCamera = uploadFromCamera;
@@ -26,6 +29,10 @@ class CommentService with FirebaseHelper {
 
     this.onCreate = onCreate;
     this.onUpdate = onUpdate;
+
+    if (customize != null) {
+      this.customize = customize;
+    }
   }
 
   Future<Comment> createComment({
@@ -53,46 +60,61 @@ class CommentService with FirebaseHelper {
     Comment? parent,
     Comment? comment,
   }) {
-    return showModalBottomSheet<Comment?>(
-      context: context,
-      // To prevent the bottom sheet from being hidden by the keyboard.
-      isScrollControlled: true,
-      // backgroundColor: primaryContainer,
-      // barrierColor: secondary.withOpacity(.5).withAlpha(110),
-      isDismissible: true,
-      builder: (context) => Padding(
-        // This padding is important to prevent the bottom sheet from being hidden by the keyboard.
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: SafeArea(
-          // SafeArea is needed for Simulator
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 20),
-              CommentEditBottomSheet(
-                post: post,
-                parent: parent,
-                comment: comment,
-                onEdited: (comment) => Navigator.of(context).pop(comment),
+    return customize.showCommentEditBottomSheet?.call(context, post: post, parent: parent, comment: comment) ??
+        showModalBottomSheet<Comment?>(
+          context: context,
+          // To prevent the bottom sheet from being hidden by the keyboard.
+          isScrollControlled: true,
+          // backgroundColor: primaryContainer,
+          // barrierColor: secondary.withOpacity(.5).withAlpha(110),
+          isDismissible: true,
+          builder: (context) => Padding(
+            // This padding is important to prevent the bottom sheet from being hidden by the keyboard.
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: SafeArea(
+              // SafeArea is needed for Simulator
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 20),
+                  CommentEditBottomSheet(
+                    post: post,
+                    parent: parent,
+                    comment: comment,
+                    onEdited: (comment) => Navigator.of(context).pop(comment),
+                  ),
+                  // This is for simulator
+                  const SizedBox(height: 20),
+                ],
               ),
-              // This is for simulator
-              const SizedBox(height: 20),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
+        );
   }
 
   /// Display a commnet view dialog
-  showCommentViewDialog(
-      {required BuildContext context, Comment? comment, String? commentId}) {
+  ///
+  /// This displays a single comments.
+  showCommentViewDialog({required BuildContext context, Comment? comment, String? commentId}) {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) => CommentViewScreen(
         comment: comment,
         commentId: commentId,
+      ),
+    );
+  }
+
+  /// Display a bottom sheet for the comment list of the post
+  ///
+  showCommentListBottomSheet({
+    required BuildContext context,
+    required Post post,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => CommentListBottomSheet(
+        post: post,
       ),
     );
   }

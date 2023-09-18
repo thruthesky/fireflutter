@@ -102,6 +102,8 @@ class UserDoc extends StatelessWidget {
         },
       );
     }
+    // end of isCurrentUser
+
     //
     // 다른 사용자
     //
@@ -113,6 +115,7 @@ class UserDoc extends StatelessWidget {
         builder: buildStreamWidget,
       );
     }
+
     // 실시간 업데이트
     return StreamBuilder<User?>(
       stream: UserService.instance.snapshotOther(userUid!),
@@ -131,9 +134,7 @@ class UserDoc extends StatelessWidget {
     final userModel = snapshot.data;
 
     /// 문서를 가져왔지만, 문서가 null 이거나 문서가 존재하지 않는 경우, user.exists == false 가 된다.
-    if (snapshot.hasData == false ||
-        snapshot.data?.exists == false ||
-        userModel == null) {
+    if (snapshot.hasData == false || snapshot.data?.exists == false || userModel == null) {
       return builder(User.notExists());
     }
     return builder(userModel);

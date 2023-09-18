@@ -3,7 +3,7 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class PostService with FirebaseHelper {
+class PostService {
   static PostService? _instance;
   static PostService get instance => _instance ??= PostService._();
   PostService._();
@@ -30,6 +30,7 @@ class PostService with FirebaseHelper {
     bool enableSeenBy = false,
     void Function(Post)? onCreate,
     void Function(Post)? onUpdate,
+    PostCustomize? customize,
   }) {
     this.uploadFromGallery = uploadFromGallery;
     this.uploadFromCamera = uploadFromCamera;
@@ -39,6 +40,10 @@ class PostService with FirebaseHelper {
 
     this.onCreate = onCreate;
     this.onUpdate = onUpdate;
+
+    if (customize != null) {
+      this.customize = customize;
+    }
   }
 
   /// Shows the Edit Post as a dialog
@@ -136,8 +141,8 @@ class PostService with FirebaseHelper {
           PopupMenuItem(
             value: 'block',
             child: Database(
-              path: 'settings/$myUid/blocks/${post.uid}',
-              builder: (value) => Text(value == null ? tr.block : tr.unblock),
+              path: pathBlock(post.uid),
+              builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
             ),
           ),
           if (UserService.instance.isAdmin)
@@ -169,7 +174,7 @@ class PostService with FirebaseHelper {
               }
               break;
             case 'block':
-              final blocked = await toggle('/settings/$myUid/blocks/${post.uid}');
+              final blocked = await toggle(pathBlock(post.uid));
               toast(
                 title: blocked ? tr.block : tr.unblock,
                 message: blocked ? tr.blockMessage : tr.unblockMessage,

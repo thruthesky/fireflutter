@@ -20,3 +20,6 @@ export 'service/post.customize.dart';
 export 'service/user_setting.service.dart';
 
 export 'service/share.service.dart';
+
+export 'service/storage.customize.dart';
+export 'service/comment.customize.dart';

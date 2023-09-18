@@ -31,7 +31,7 @@ class ChatRoomAppBarState extends State<ChatRoomAppBar> {
   Widget build(BuildContext context) {
     if (widget.room != null) {
       return StreamBuilder<DocumentSnapshot>(
-        stream: ChatService.instance.roomDoc(widget.room!.roomId).snapshots(),
+        stream: roomDoc(widget.room!.roomId).snapshots(),
         builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           late Room room;
           // error
@@ -60,8 +60,7 @@ class ChatRoomAppBarState extends State<ChatRoomAppBar> {
               IconButton(
                 icon: const Icon(Icons.settings),
                 onPressed: () async {
-                  return ChatService.instance
-                      .openChatRoomMenuDialog(context: context, room: room);
+                  return ChatService.instance.openChatRoomMenuDialog(context: context, room: room);
                 },
               ),
             ],
@@ -76,8 +75,7 @@ class ChatRoomAppBarState extends State<ChatRoomAppBar> {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () async {
-              return ChatService.instance
-                  .openChatRoomMenuDialog(context: context, room: widget.room!);
+              return ChatService.instance.openChatRoomMenuDialog(context: context, room: widget.room!);
             },
           ),
         ],

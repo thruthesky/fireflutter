@@ -7,7 +7,7 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
-class ChatService with FirebaseHelper {
+class ChatService {
   static ChatService? _instance;
   static ChatService get instance => _instance ??= ChatService._();
 
@@ -195,7 +195,7 @@ class ChatService with FirebaseHelper {
 
   /// Is the user is master or moderator of the room?
   bool isAdmin(Room room) {
-    return room.master == uid || room.moderators.contains(uid);
+    return room.master == myUid || room.moderators.contains(myUid);
   }
 
   bool isBlocked({required Room room, required String uid}) {
@@ -206,7 +206,7 @@ class ChatService with FirebaseHelper {
   ///
   bool canRemove({required Room room, required String userUid}) {
     // One cannot remove himself
-    if (userUid == uid) return false;
+    if (userUid == myUid) return false;
 
     // Only master and moderator can remove
     if (isAdmin(room)) {
@@ -221,7 +221,7 @@ class ChatService with FirebaseHelper {
 
   bool canSetUserAsModerator({required Room room, required String userUid}) {
     // If the current user is not a master, don't allow
-    if (!isMaster(room: room, uid: uid)) return false;
+    if (!isMaster(room: room, uid: myUid!)) return false;
 
     // If the user to set as moderator is not a master, and the user is not a moderator yet, allow
     if (!isMaster(room: room, uid: userUid) && !isModerator(room: room, uid: userUid)) return true;
@@ -231,7 +231,7 @@ class ChatService with FirebaseHelper {
 
   bool canRemoveUserAsModerator({required Room room, required String userUid}) {
     // If the current user is not a master, don't allow
-    if (!isMaster(room: room, uid: uid)) return false;
+    if (!isMaster(room: room, uid: myUid!)) return false;
 
     // If the user is a moderator, can remove
     if (isModerator(room: room, uid: userUid)) return true;
@@ -275,13 +275,13 @@ class ChatService with FirebaseHelper {
   /// This will clear the setting if the [value] is null
   Future<void> updateMyRoomSetting({required Room room, required String setting, required dynamic value}) async {
     if (value == null || value == '') {
-      await roomDoc(room.roomId).update({'$setting.${UserService.instance.uid}': FieldValue.delete()});
+      await roomDoc(room.roomId).update({'$setting.${myUid!}': FieldValue.delete()});
       return;
     }
     await ChatService.instance.updateRoomSetting(
       room: room,
       setting: setting,
-      value: {UserService.instance.uid: value},
+      value: {myUid!: value},
     );
   }
 
@@ -299,7 +299,7 @@ class ChatService with FirebaseHelper {
       if (protocol != null) 'protocol': protocol,
       'createdAt': FieldValue.serverTimestamp(),
       'uid': FirebaseAuth.instance.currentUser!.uid,
-      'isUserChanged': lastMessage?.uid != uid,
+      'isUserChanged': lastMessage?.uid != myUid!,
     };
     final ref = await messageCol(room.roomId).add(chatMessage);
 
@@ -370,7 +370,7 @@ class ChatService with FirebaseHelper {
 
   /// Reset my "no of new message" to 0 for the chat room
   Future<void> resetNoOfNewMessage({required Room room}) async {
-    noOfNewMessageRef(uid: uid).update({room.roomId: 0});
+    noOfNewMessageRef(uid: myUid!).update({room.roomId: 0});
   }
 
   /// Get other user uid

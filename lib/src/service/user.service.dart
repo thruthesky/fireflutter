@@ -19,8 +19,13 @@ import 'package:rxdart/rxdart.dart';
 /// UserService.instance.documentChanges.listen((user) => user == null ? null : print(my));
 /// my.update(state: stateController.text);
 User get my => UserService.instance.user;
-bool get loggedIn => UserService.instance.loggedIn;
-bool get notLoggedIn => UserService.instance.notLoggedIn;
+
+bool get isAnonymous => auth.FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+
+/// Return true if the user signed with real account. Not anonymous.
+bool get notLoggedIn => isAnonymous || auth.FirebaseAuth.instance.currentUser == null;
+
+bool get loggedIn => !notLoggedIn;
 
 /// [myUid] is an alias of [FirebaseAuth.instance.currentUser?.uid].
 ///
@@ -28,18 +33,11 @@ bool get notLoggedIn => UserService.instance.notLoggedIn;
 /// [my.uid] 는 사용 준비가 느린데, [myUid] 는 빠르게 사용 할 수 있다.
 String? get myUid => auth.FirebaseAuth.instance.currentUser?.uid;
 
-class UserService with FirebaseHelper {
+class UserService {
   static UserService? _instance;
   static UserService get instance => _instance ??= UserService._();
 
   UserCustomize customize = UserCustomize();
-
-  /// Return true if the user signed with real account. Not anonymous.
-  bool get notLoggedIn => isAnonymous || auth.FirebaseAuth.instance.currentUser == null;
-
-  @override
-  bool get loggedIn => !notLoggedIn;
-  bool get isAnonymous => auth.FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
 
   /// Admin user model
   ///
@@ -87,7 +85,7 @@ class UserService with FirebaseHelper {
   CollectionReference get col => userCol;
 
   /// User document reference of the currently login user
-  DocumentReference get doc => col.doc(uid);
+  DocumentReference get doc => col.doc(myUid);
 
   /// [_userCache] is a memory cache for [User].
   ///
@@ -143,7 +141,7 @@ class UserService with FirebaseHelper {
   /// Use this to display widgets lively that depends on the user model. When
   /// the user document is updated, this stream will fire an event.
   Stream<User> get snapshot {
-    return UserService.instance.col.doc(uid).snapshots().map((doc) => User.fromDocumentSnapshot(doc));
+    return UserService.instance.col.doc(myUid).snapshots().map((doc) => User.fromDocumentSnapshot(doc));
   }
 
   Function(User user)? onCreate;
@@ -209,7 +207,7 @@ class UserService with FirebaseHelper {
   ///
   /// Note that, '/users' collection in firestore is secured by security rules.
   Stream<User> snapshotOther(String uid) {
-    return UserService.instance.rtdb.ref().child('/users/$uid').onValue.map(
+    return rtdb.ref().child('/users/$uid').onValue.map(
       (event) {
         return User.fromJson({
           ...(event.snapshot.value ?? {}) as Map,
@@ -234,7 +232,7 @@ class UserService with FirebaseHelper {
   ///
   /// Example
   /// ```
-  /// UserService.instance.get(UserService.instance.uid, reload: true, sync: false);
+  /// UserService.instance.get(myUid!, reload: true, sync: false);
   /// ```
   ///
   /// Note that, it does not throw an Exception when the user document does not
@@ -410,5 +408,14 @@ class UserService with FirebaseHelper {
     await my.delete();
     await mySearchDoc.delete();
     await rtdb.ref('users/$myUid').remove();
+  }
+
+  showLikedByListScreen({required BuildContext context, required List<String> uids}) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) {
+        return UserLikedByListScreen(uids: uids);
+      },
+    );
   }
 } // EO UserService

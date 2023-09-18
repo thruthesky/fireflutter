@@ -52,7 +52,7 @@ class PostViewButtons extends StatelessWidget {
                   child: Text(
                     post.likes.isEmpty ? tr.like : tr.likes.replaceAll('#no', post.likes.length.toString()),
                   ),
-                  onPressed: () => post.like(),
+                  onPressed: () => toggle(pathPostLikedBy(post.id)), // post.like(),
                 ),
               ),
               UserDoc(
@@ -77,8 +77,8 @@ class PostViewButtons extends StatelessWidget {
                   PopupMenuItem(
                     value: 'block',
                     child: Database(
-                      path: 'settings/$myUid/blocks/${post!.uid}',
-                      builder: (value) => Text(value == null ? tr.block : tr.unblock),
+                      path: pathBlock(post!.uid),
+                      builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
                     ),
                   ),
                   ...?trailing,
@@ -98,7 +98,7 @@ class PostViewButtons extends StatelessWidget {
                           toast(title: 'Already reported', message: 'You have reported this $type already.'),
                     );
                   } else if (v == 'block') {
-                    final blocked = await toggle('/settings/$myUid/blocks/${post!.uid}');
+                    final blocked = await toggle(pathBlock(post!.uid));
                     toast(
                       title: blocked ? tr.block : tr.unblock,
                       message: blocked ? tr.blockMessage : tr.unblockMessage,

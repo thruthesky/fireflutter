@@ -11,6 +11,7 @@ firebase_core=/Users/jaehosong/.pub-cache/hosted/pub.dev/firebase_core-2.15.1/
 firebase_core_web=/Users/jaehosong/.pub-cache/hosted/pub.dev/firebase_core_web-2.7.0/
 firebase_database=/Users/jaehosong/.pub-cache/hosted/pub.dev/firebase_database-10.2.5/
 firebase_database_web=/Users/jaehosong/.pub-cache/hosted/pub.dev/firebase_database_web-0.2.3+5/
+firebase_dynamic_links=/Users/jaehosong/.pub-cache/hosted/pub.dev/firebase_dynamic_links-5.3.5/
 firebase_messaging=/Users/jaehosong/.pub-cache/hosted/pub.dev/firebase_messaging-14.6.7/
 firebase_messaging_web=/Users/jaehosong/.pub-cache/hosted/pub.dev/firebase_messaging_web-3.5.6/
 firebase_storage=/Users/jaehosong/.pub-cache/hosted/pub.dev/firebase_storage-11.2.6/

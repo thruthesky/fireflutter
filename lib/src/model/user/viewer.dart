@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'viewer.g.dart';
 
 @JsonSerializable()
-class Viewer with FirebaseHelper {
+class Viewer {
   Viewer({
     required this.seenBy,
     this.type,
@@ -18,7 +18,6 @@ class Viewer with FirebaseHelper {
   final String seenBy;
   final String? type;
 
-  @override
   final String uid;
 
   /// 사용자 문서가 생성된 시간. 항상 존재 해야 함. Firestore 서버 시간
@@ -35,4 +34,5 @@ class Viewer with FirebaseHelper {
   }
 
   factory Viewer.fromJson(Map<String, dynamic> json) => _$ViewerFromJson(json);
+  Map<String, dynamic> toJson() => _$ViewerToJson(this);
 }

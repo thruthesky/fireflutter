@@ -3,7 +3,7 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/model/report/report.dart';
 import 'package:flutter/material.dart';
 
-class ReportService with FirebaseHelper {
+class ReportService {
   static ReportService? _instance;
   static ReportService get instance => _instance ?? ReportService._();
 
@@ -30,7 +30,11 @@ class ReportService with FirebaseHelper {
     try {
       final re = await Report.get(info.id);
       if (re != null) {
-        onExists?.call(info.id, info.type);
+        onExists?.call(info.id, info.type) ??
+            toast(
+              title: tr.alreadyReportedTitle,
+              message: tr.alreadyReportedMessage.replaceAll("#type", info.type),
+            );
         return null;
       }
     } on FirebaseException catch (e) {
@@ -73,11 +77,7 @@ class ReportService with FirebaseHelper {
                 ),
                 TextButton(
                   onPressed: () async {
-                    await Report.create(
-                        reason: reason.text,
-                        otherUid: otherUid,
-                        postId: postId,
-                        commentId: commentId);
+                    await Report.create(reason: reason.text, otherUid: otherUid, postId: postId, commentId: commentId);
                     if (context.mounted) {
                       return Navigator.of(context).pop(true);
                     }

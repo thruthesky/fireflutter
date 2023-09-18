@@ -43,7 +43,7 @@ class PostListView extends StatelessWidget {
   final String? uid;
 
   Query get query {
-    Query q = PostService.instance.postCol;
+    Query q = postCol;
     if (categoryId != null) q = q.where('categoryId', isEqualTo: categoryId);
     if (uid != null) q = q.where('uid', isEqualTo: uid);
     return q.orderBy('createdAt', descending: true);
@@ -68,8 +68,7 @@ class PostListView extends StatelessWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
               debugPrint("---> $post");
-              PostService.instance
-                  .showPostViewScreen(context: context, post: post);
+              PostService.instance.showPostViewScreen(context: context, post: post);
             },
           );
         }

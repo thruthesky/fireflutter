@@ -50,8 +50,8 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
         Row(
           children: [
             UserAvatar(
-              uid: UserService.instance.uid,
-              key: ValueKey(UserService.instance.uid),
+              uid: myUid!,
+              key: ValueKey(myUid!),
             ),
             Expanded(
               child: Padding(

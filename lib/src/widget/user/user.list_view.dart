@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 ///
 /// [itemBuilder] The builder when we want fully customized view per user.
 ///
-class UserListView extends StatelessWidget with FirebaseHelper {
+class UserListView extends StatelessWidget {
   const UserListView({
     super.key,
     this.searchText,

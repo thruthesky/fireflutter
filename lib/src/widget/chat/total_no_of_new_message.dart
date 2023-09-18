@@ -1,7 +1,7 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class TotalNoOfNewMessage extends StatelessWidget with FirebaseHelper {
+class TotalNoOfNewMessage extends StatelessWidget {
   const TotalNoOfNewMessage({super.key});
 
   @override

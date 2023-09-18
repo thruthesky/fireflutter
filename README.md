@@ -18,7 +18,13 @@ Create an issue if you find a bug or need a help.
     - [Security rule for admin](#security-rule-for-admin)
     - [Realtime database security rules](#realtime-database-security-rules)
   - [Admin settings](#admin-settings)
+  - [Firebase Extension](#firebase-extension)
+    - [Resize image](#resize-image)
   - [Setup the base code](#setup-the-base-code)
+  - [url\_launcher Optional](#url_launcher-optional)
+- [Pub.dev Packages](#pubdev-packages)
+  - [timeago](#timeago)
+  - [Parsed\_ReadMore](#parsed_readmore)
 - [Usage](#usage)
   - [UserService](#userservice)
   - [PostService](#postservice)
@@ -28,7 +34,11 @@ Create an issue if you find a bug or need a help.
     - [How to open 1:1 chat room](#how-to-open-11-chat-room)
     - [How to display chat room menu](#how-to-display-chat-room-menu)
     - [Customizing the chat header](#customizing-the-chat-header)
-- [Widgets](#widgets)
+- [Widgets and UI functions](#widgets-and-ui-functions)
+  - [CommentListBottomSheet](#commentlistbottomsheet)
+  - [UserLikeListScreen](#userlikelistscreen)
+  - [toast](#toast)
+  - [PostLikeButton](#postlikebutton)
   - [Screen widgets](#screen-widgets)
   - [EmailLoginForm](#emailloginform)
   - [UserDoc](#userdoc)
@@ -70,6 +80,7 @@ Create an issue if you find a bug or need a help.
 - [Database](#database)
   - [Get/Set/Update/Toggle](#getsetupdatetoggle)
   - [Database widget](#database-widget)
+  - [DatabaseCount widget](#databasecount-widget)
 - [Settings](#settings)
 - [Report](#report)
 - [Upload](#upload)
@@ -87,6 +98,8 @@ Create an issue if you find a bug or need a help.
 - [Customization](#customization)
 - [Callbacks](#callbacks)
   - [Chat Customization](#chat-customization)
+- [Services](#services)
+  - [ShareService](#shareservice)
 - [Admin](#admin)
   - [Admin Widgets](#admin-widgets)
     - [Opening admin dashbard](#opening-admin-dashbard)
@@ -207,6 +220,7 @@ Copy the following and paste it into your firebase project.
         }
       }
     },
+    // User profile likes
     "likes": {
       ".read": true,
       "$uid": {
@@ -223,13 +237,36 @@ Copy the following and paste it into your firebase project.
       }
     },
     "posts": {
+      ".read": true,
       "$post_id": {
         "seenBy": {
           "$uid": {
-            ".read": true,
+            ".write": "$uid == auth.uid"
+          }
+        },
+        // post likes
+        "likedBy": {
+          "$uid": {
             ".write": "$uid == auth.uid"
           }
         }
+      }
+    },
+    "comments": {
+      ".read": true,
+      "$comment_id": {
+        // comment likes
+        "likedBy": {
+          "$uid": {
+            ".write": "$uid == auth.uid"
+          }
+        }
+      }
+    },
+    "blocks": {
+      "$my_uid": {
+        ".read":  "$my_uid == auth.uid",
+        ".write": "$my_uid == auth.uid"
       }
     },
     "tmp": {
@@ -240,9 +277,31 @@ Copy the following and paste it into your firebase project.
 }
 ```
 
+
+
 ## Admin settings
 
 See the [Security rules for admin](#security-rule-for-admin) chapter to set admin in the security rules. After this, you can set the `isAdmin` field to true on the admin's user document.
+
+
+## Firebase Extension
+
+
+Aside from `easy-exnteion`, you will need to install the following extensions
+
+
+### Resize image
+
+`Deletion of original file` - Don't delete
+`Make resized images public` - yes
+`Cache-Control header for resized images` - "max-age=86400"
+`Convert image to preferred types` - select `webp` only.
+And choose `backfill` if you have an existing images.
+
+All other options are on your choice.
+
+To dispaly the thumbnail image, you may use `.thumbnail` String extension method. `CachedNetworkImage(imageUrl: url.thumbnail)`
+
 
 ## Setup the base code
 
@@ -300,6 +359,42 @@ By defualt, feed feature is disabled. To use feed features, add the following in
 FeedService.instance.init(enable: true);
 ```
 
+
+
+## url_launcher Optional
+
+`url_lancher` package is added by fireflutter and it is being used to open url. If you wish to let users share links by sms, you need to setup in `AndroidManifest.xml` and `Info.plist`. See the [url_launch Configuration](https://pub.dev/packages/url_launcher#configuration).
+
+
+Fireflutter exposes a method `launchSMS` to open the SMS app. Here is an example of how to send sms. You can build your own code, of course.
+
+```dart
+final re = await launchSMS(phnumber: '', msg: link);
+if (re) {
+  toast(title: 'SMS', message: 'Link sent by SMS');
+} else {
+  toast(title: 'SMS', message: 'Cannot open SMS');
+}
+```
+
+
+# Pub.dev Packages
+
+In this chapter, some of the notable packages that are used by firelfutter are explained.
+
+
+## timeago
+
+[timeago](https://pub.dev/packages/timeago) to show date and time in i18n.
+
+
+## Parsed_ReadMore
+
+[parsed_readmore](https://pub.dev/packages/parsed_readmore) to show/hide when the content text is long.
+
+
+
+
 # Usage
 
 ## UserService
@@ -321,7 +416,7 @@ So, the lifecyle will be the following when the app users `UserDoc`.
 Right way of getting a user document.
 
 ```dart
-UserService.instance.get(UserService.instance.uid).then((user) => ...);
+UserService.instance.get(myUid!).then((user) => ...);
 ```
 
 The `UserService.instance.user` or `UserService.instance.docuemntChanges` may be null when the user document is being loaded on app boot. So, the better way to get the user's document for sure is to use `UserService.instance.get`
@@ -384,7 +479,7 @@ You can build your own chat header like below.
 ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoomAppBar(room: room);
 ```
 
-# Widgets
+# Widgets and UI functions
 
 - The widgets in fireflutter can be a small piece of UI representation or it can be a full screen dialog.
 
@@ -392,6 +487,45 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 - The user widgets are inside `widgets/user` and the file name is in the form of `user.xxxx.dart` or `user.xxxx.dialog.dart`. And it goes the same to chat and forum.
 
 - There are many service methods that opens a screen. One thing to note is that, all the method that opens a screen uses `showGeneralDialog` which does not modify the navigation stack. If you want, you may open the screen with navigation(routing) like `Navigator.of(context).push...()`.
+
+
+
+## CommentListBottomSheet
+
+This widget shows the comment list of the post in a bottom sheet UI style.
+Use this widget with [showModalBottomSheet].
+
+
+## UserLikeListScreen
+
+This screen shows a list of users who liked a post, comment, or a profile.
+ Use this screen to show a user list and when it is tapped, show public profile.
+
+## toast
+
+```dart
+toast(
+  icon: const Icon(Icons.link),
+  title: url,
+  message: 'Open the link?',
+  onTap: (p0) => launchUrl(Uri.parse(url)),
+  hideCloseButton: true,
+);
+```
+
+
+## PostLikeButton
+
+Use this widget for like and unlike.
+
+```dart
+PostLikeButton(
+  padding: const EdgeInsets.all(sizeXs),
+  post: post,
+  builder: (post) => Icon(post.iLiked ? Icons.thumb_up : Icons.thumb_up_outlined),
+),
+```
+
 
 ## Screen widgets
 
@@ -488,7 +622,7 @@ You may hide or add buttons like below.
               PopupMenuItem(
                 value: 'block',
                 child: Database(
-                  path: 'settings/$myUid/blocks/${user.uid}',
+                  path: pathBlock(user.uid),
                   builder: (value) =>
                       Text(value == null ? tr.block : tr.unblock),
                 ),
@@ -509,7 +643,7 @@ You may hide or add buttons like below.
                   );
                   break;
                 case 'block':
-                  toggle('/settings/$myUid/blocks/${user.uid}');
+                  toggle(pathBlock(user.uid));
                   toast(
                     title: tr.block,
                     message: tr.blockMessage,
@@ -1235,20 +1369,63 @@ print(await get(path));
 
 `Database` widget rebuilds the widget when the node is changed. Becareful to use the narrowest path of the node or it would download a lot of data.
 
+
+
 ```dart
+// Displaying a Text value
 Database(
   path: 'tmp/a/b/c',
-  builder: (value) {
-    return Text('value: $value');
-  },
+  builder: (value) => Text('value: $value'),
 ),
-ElevatedButton(
-  onPressed: () async {
-    String path = 'tmp/a/b/c';
-    await set(path, 'Time: ${DateTime.now()}');
-    print(await get(path));
+
+// Displaying a Text widget with dynamic text.
+Database(
+  path: pathBlock(post.uid),
+  builder: (value, path) => Text(value == null ? tr.block : tr.unblock),
+),
+
+// Displaying a toggle IconButton.
+Database(
+  path: pathPostLikedBy(post.id),
+  builder: (v, p) => IconButton(
+    onPressed: () => toggle(p),
+    icon: Icon(v != null ? Icons.thumb_up : Icons.thumb_up_outlined),
+  ),
+),
+```
+
+
+
+
+## DatabaseCount widget
+
+With database count widget, you may display no of views like below.
+
+```dart
+DatabaseCount(
+  path: 'posts/${post.id}/seenBy',
+  builder: (n) => n == 0 ? const SizedBox.shrink() : Text("No of views $n"),
+),
+```
+
+where you would code like below if you don't want use database count widget.
+
+```dart
+FutureBuilder(
+  future: get('posts/${post.id}/seenBy'),
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) return const SizedBox.shrink();
+    if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+
+    if (snapshot.data is! Map) return const SizedBox.shrink();
+
+    int no = (snapshot.data as Map).keys.length;
+    if (no == 0) {
+      return const SizedBox.shrink();
+    }
+
+    return Text("No of views ${(snapshot.data as Map).keys.length}");
   },
-  child: const Text('toggle'),
 ),
 ```
 
@@ -1696,7 +1873,7 @@ Example of the code to block or unblock a user.
 ```dart
 TextButton(
   onPressed: () async {
-    final blocked = await toggle('/settings/$myUid/blocks/${user.uid}');
+    final blocked = await toggle(pathBlock(user.uid));
     toast(
         title: blocked ? 'Blocked' : 'Unblocked',
         message: 'The user has been ${blocked ? 'blocked' : 'unblocked'} by you');
@@ -1705,7 +1882,7 @@ TextButton(
     foregroundColor: Theme.of(context).colorScheme.onSecondary,
   ),
   child: Database(
-    path: 'settings/$myUid/blocks/${user.uid}',
+    path: pathBlock(user.uid),
     builder: (value) => Text(value == null ? 'Block' : 'Unblock'),
   ),
 ),
@@ -1713,7 +1890,40 @@ TextButton(
 
 # Customization
 
-`fireflutter` supports full customization from the i18n to the complete UI.
+Fireflow supports the full customization for using its features.
+
+For UI customization, there are two main way of updating the UI.
+
+- You can customize the UI/UX with registration on service customize initialization
+- You can also customize the UI/UX with each widget.
+
+For instance, to customize the share button, you can do one of the followings
+
+Customizing on the service
+
+```dart
+PostService.instance.init(
+  customize: PostCustomize(
+    shareButtonBuilder: (post) => ShareButton(post: post),
+  ),
+);
+```
+
+
+Customizing on the widget
+
+```dart
+PostCard(
+  post: post,
+  shareButtonBuilder: (post) => ShareButton(post: post),
+),
+```
+
+
+When you customize the UI/UX with the service initialization, it may not update on realtime when you edit and hot-reload.
+
+
+
 
 # Callbacks
 
@@ -1806,6 +2016,156 @@ Registering the build functions do not cause any performance issues since it onl
 ```dart
 ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoomAppBar(room: room);
 ```
+
+
+# Services
+
+## ShareService
+
+
+ShareService is a helper library that gives some feature untility for sharing. It has `showBotomSheet` method that displays a bottom sheet showing some UI elements for sharing. You may get an idea seeing the look and the code of the method.
+
+
+It also has a method `dyamicLink` that returns a short dyanmic link. You may see the source code of the method to get an insight how you would copy and paste in your project.
+
+```dart
+Share.share(
+  await ShareService.instance.dynamicLink(
+    link: "https://xxx.page.link/?type=feed&id=${post.id}",
+    uriPrefix: "https://xxx.page.link",
+    appId: "com.xxx.xxx",
+    title: post.title,
+    description: post.content.upTo(255),
+  ),
+  subject: post.title,
+);
+```
+
+Often, the `dynamicLink` method is called deep inside the widget tree. So, we provide a customization for building dynmaic links. You can set the `uriPrefix` and the `appId`. And the fireflutter will use this setting to generator custom build.
+
+```dart
+ShareService.instance.init(
+  uriPrefix: "https://xxx.page.link",
+  appId: "xxx.xxx.xxx",
+);
+```
+
+When the dyanmic link is build, it has one of the `type` between `user`, `post`. When it is a `user`, you may show the user's profile. If it is `post`, you may show the post. We don't support the link for `chat` yet. Because the user needs to register first before entering the chat room while user profile and post view can be seen without login. But we are planning to support for `chat` link soon.
+
+
+
+
+Dispaly a share bottom sheet.
+
+```dart
+ShareService.instance.showBottomSheet(actions: [
+  IconTextButton(
+    icon: const Icon(Icons.share),
+    label: "Share",
+    onTap: () async {
+      Share.share(
+        await ShareService.instance.dynamicLink(
+          link: "https://xxxx.page.link/?type=xxx&id=xxx",
+          uriPrefix: "https://xxxx.page.link",
+          appId: "xxx",
+          title: 'title',
+          description: 'description..',
+        ),
+        subject: 'subject',
+      );
+    },
+  ),
+  IconTextButton(
+    icon: const Icon(Icons.copy),
+    label: "Copy Link",
+    onTap: () {},
+  ),
+  IconTextButton(
+    icon: const Icon(Icons.comment),
+    label: "Message",
+    onTap: () {},
+  ),
+]),
+```
+
+
+
+
+Example of copying the dynamic link to clipboard
+
+```dart
+IconTextButton(
+  icon: const Icon(Icons.copy),
+  label: "Copy Link",
+  onTap: () async {
+    final link = await ShareService.instance.dynamicLink(
+      type: DynamicLink.post.name,
+      id: 'post.id',
+      title: 'title',
+      description: 'description..',
+    );
+    Clipboard.setData(ClipboardData(text: link));
+    toast(title: tr.copyLink, message: tr.copyLinkMessage);
+  },
+),
+```
+
+
+Below is an example of how to use `ShareBottomSheet` widget. You can insert this widget in home screen and do some UI work. Then, apply it.
+
+```dart
+ShareBottomSheet(actions: [
+  IconTextButton(
+    icon: const Icon(Icons.share),
+    label: "Share",
+    onTap: () async {
+      Share.share(
+        await ShareService.instance.dynamicLink(
+          type: DynamicLink.feed.name,
+          id: 'post.id',
+          title: 'title',
+          description: 'description..',
+        ),
+        subject: 'subject',
+      );
+    },
+  ),
+  IconTextButton(
+    icon: const Icon(Icons.copy),
+    label: "Copy Link",
+    onTap: () async {
+      final link = await ShareService.instance.dynamicLink(
+        type: DynamicLink.post.name,
+        id: 'post.id',
+        title: 'title',
+        description: 'description..',
+      );
+      Clipboard.setData(ClipboardData(text: link));
+      toast(title: tr.copyLink, message: tr.copyLinkMessage);
+    },
+  ),
+  IconTextButton(
+    icon: const Icon(Icons.comment),
+    label: "Message",
+    onTap: () async {
+      final link = await ShareService.instance.dynamicLink(
+        type: DynamicLink.post.name,
+        id: 'post.id',
+        title: 'title',
+        description: 'description..',
+      );
+      final re = await launchSMS(phnumber: '', msg: link);
+      if (re) {
+        toast(title: 'SMS', message: 'Link sent by SMS');
+      } else {
+        toast(title: 'SMS', message: 'Cannot open SMS');
+      }
+    },
+  ),
+]),
+```
+
+
 
 # Admin
 

@@ -3,7 +3,7 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 ///
-class NoOfNewMessageBadge extends StatelessWidget with FirebaseHelper {
+class NoOfNewMessageBadge extends StatelessWidget {
   const NoOfNewMessageBadge({
     super.key,
     required this.room,

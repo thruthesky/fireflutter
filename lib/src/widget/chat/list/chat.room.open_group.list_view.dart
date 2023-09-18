@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
-import 'package:fireflutter/src/model/chat/room.dart';
-import 'package:fireflutter/src/service/chat.service.dart';
-import 'package:fireflutter/src/widget/chat/list/chat.room_list.tile.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomOpenGroupListView extends StatelessWidget {
@@ -15,9 +13,7 @@ class ChatRoomOpenGroupListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final query = ChatService.instance.chatCol
-        .where('open', isEqualTo: true)
-        .where('group', isEqualTo: true);
+    final query = chatCol.where('open', isEqualTo: true).where('group', isEqualTo: true);
     return FirestoreListView(
       query: query,
       itemBuilder: (BuildContext context, QueryDocumentSnapshot snapshot) {
@@ -27,8 +23,7 @@ class ChatRoomOpenGroupListView extends StatelessWidget {
         } else {
           return ChatRoomListTile(
             room: room,
-            onTap: () =>
-                ChatService.instance.showChatRoom(context: context, room: room),
+            onTap: () => ChatService.instance.showChatRoom(context: context, room: room),
           );
         }
       },

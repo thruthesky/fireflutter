@@ -6,8 +6,8 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class CommentListView extends StatefulWidget {
-  const CommentListView({
+class CommentOneLineListView extends StatefulWidget {
+  const CommentOneLineListView({
     super.key,
     this.itemBuilder,
     this.emptyBuilder,
@@ -39,10 +39,10 @@ class CommentListView extends StatefulWidget {
   final Post post;
 
   @override
-  State<CommentListView> createState() => CommentListViewState();
+  State<CommentOneLineListView> createState() => CommentOneLineListViewState();
 }
 
-class CommentListViewState extends State<CommentListView> {
+class CommentOneLineListViewState extends State<CommentOneLineListView> {
   @override
   Widget build(BuildContext context) {
     return FirestoreListView(
@@ -52,9 +52,11 @@ class CommentListViewState extends State<CommentListView> {
         if (widget.itemBuilder != null) {
           return widget.itemBuilder!(context, comment);
         }
-        return CommentListTile(
+
+        return CommentOneLineListTile(
           post: widget.post,
           comment: comment,
+          padding: const EdgeInsets.all(8),
         );
       },
       emptyBuilder: (context) {

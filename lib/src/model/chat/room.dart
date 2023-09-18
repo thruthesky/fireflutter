@@ -12,7 +12,7 @@ part 'room.g.dart';
 /// This is the model for the chat room.
 /// Don't update the property directly. The property is read-only and if you want to apply the changes, listen to the stream of the chat room document.
 @JsonSerializable()
-class Room with FirebaseHelper {
+class Room {
   static CollectionReference get col => FirebaseFirestore.instance.collection('chats');
 
   static DocumentReference doc(roomId) => col.doc(roomId);
@@ -68,8 +68,8 @@ class Room with FirebaseHelper {
   bool get isSingleChat => users.length == 2 && group == false;
   bool get isGroupChat => group;
 
-  CollectionReference get messagesCol => ChatService.instance.roomRef(roomId).collection('messages');
-  DocumentReference get ref => ChatService.instance.roomRef(roomId);
+  CollectionReference get messagesCol => roomRef(roomId).collection('messages');
+  DocumentReference get ref => roomRef(roomId);
 
   factory Room.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     return Room.fromJson(
@@ -110,7 +110,7 @@ class Room with FirebaseHelper {
   /// This error is handled on parent, but if you enable "All Exception" on the VSCode debugger,
   /// you will see the error.
   static Future<Room> get(String roomId) async {
-    final snapshot = await ChatService.instance.roomDoc(roomId).get();
+    final snapshot = await roomDoc(roomId).get();
     if (snapshot.exists == false) throw Exception("document-not-found");
     return Room.fromDocumentSnapshot(snapshot);
   }
@@ -135,8 +135,7 @@ class Room with FirebaseHelper {
     List<String> users = [myUid!];
     if (isSingleChat) users.add(otherUserUid);
 
-    final roomId =
-        isSingleChat ? ChatService.instance.getSingleChatRoomId(otherUserUid) : ChatService.instance.chatCol.doc().id;
+    final roomId = isSingleChat ? ChatService.instance.getSingleChatRoomId(otherUserUid) : chatCol.doc().id;
 
     // room data
     final roomData = toCreate(
@@ -150,7 +149,7 @@ class Room with FirebaseHelper {
     );
 
     // create
-    await ChatService.instance.chatCol.doc(roomId).set(roomData);
+    await chatCol.doc(roomId).set(roomData);
 
     // start
     await ChatService.instance.sendProtocolMessage(
@@ -227,8 +226,8 @@ class Room with FirebaseHelper {
 
   Future<void> leave() async {
     await roomDoc(roomId).update({
-      'moderators': FieldValue.arrayRemove([uid]),
-      'users': FieldValue.arrayRemove([uid])
+      'moderators': FieldValue.arrayRemove([myUid]),
+      'users': FieldValue.arrayRemove([myUid]),
     });
   }
 

@@ -65,7 +65,7 @@ class UserSetting {
   }
 
   Future delete() async {
-    await UserSettingService.instance.mySettingDoc(id).delete();
+    await mySettingDoc(id).delete();
   }
 
   static Future create({
