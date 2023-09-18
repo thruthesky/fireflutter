@@ -7,7 +7,7 @@ class StorageCustomize {
   ///
   /// The purpose of this function is to show the upload widget in carousel.
   /// The uploaded url may contain image or file from chat, post, profile, etc.
-  Future Function(BuildContext context, List<String>? urls)? showUploads;
+  Future Function(BuildContext context, List<String>? urls, {int index})? showUploads;
 
   StorageCustomize({
     this.showUploads,

@@ -78,14 +78,7 @@ class _FeedListViewState extends State<FeedListView> {
               builder: (_, snapshot) {
                 if (!snapshot.hasData) return const SizedBox.shrink();
                 final post = Post.fromDocumentSnapshot(snapshot.data!);
-
-                return GestureDetector(
-                  onTap: () {
-                    PostService.instance.showPostViewScreen(context: context, post: post);
-                  },
-                  behavior: HitTestBehavior.opaque,
-                  child: widget.itemBuilder.call(post, index),
-                );
+                return widget.itemBuilder.call(post, index);
               },
             );
             if (widget.topBuilder != null && index == 0) {

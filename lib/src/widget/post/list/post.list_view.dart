@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 class PostListView extends StatelessWidget {
   const PostListView({
     super.key,
+    this.itemExtent,
+    this.cacheExtent,
     this.itemBuilder,
     this.emptyBuilder,
     this.pageSize = 10,
@@ -27,6 +29,8 @@ class PostListView extends StatelessWidget {
     this.uid,
   });
 
+  final double? itemExtent;
+  final double? cacheExtent;
   final int pageSize;
   final Widget Function(BuildContext, Post)? itemBuilder;
   final Widget Function(BuildContext)? emptyBuilder;
@@ -52,6 +56,8 @@ class PostListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FirestoreListView(
+      itemExtent: itemExtent,
+      cacheExtent: cacheExtent,
       query: query,
       itemBuilder: (context, QueryDocumentSnapshot snapshot) {
         final post = Post.fromDocumentSnapshot(snapshot);
