@@ -35,6 +35,7 @@ Create an issue if you find a bug or need a help.
     - [How to display chat room menu](#how-to-display-chat-room-menu)
     - [Customizing the chat header](#customizing-the-chat-header)
 - [Widgets and UI functions](#widgets-and-ui-functions)
+  - [CommentOneLineListTile](#commentonelinelisttile)
   - [CommentListBottomSheet](#commentlistbottomsheet)
   - [UserLikeListScreen](#userlikelistscreen)
   - [toast](#toast)
@@ -489,6 +490,34 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 - There are many service methods that opens a screen. One thing to note is that, all the method that opens a screen uses `showGeneralDialog` which does not modify the navigation stack. If you want, you may open the screen with navigation(routing) like `Navigator.of(context).push...()`.
 
 
+## CommentOneLineListTile
+
+Below is a sample code how to use and cusomizing `CommentOneLineListTile` widget.
+
+```dart
+Theme(
+  data: Theme.of(context).copyWith(
+    textTheme: TextTheme(
+      bodySmall: Theme.of(context).textTheme.bodySmall!.copyWith(
+            fontSize: 12,
+            color: Colors.red,
+          ),
+    ),
+  ),
+  child: CommentOneLineListTile(
+    post: Post.fromJson({'id': '1'}),
+    comment: Comment.fromJson({
+      'id': '2',
+      'postId': '1',
+      'uid': '2ItnEzERcwO4DQ9wxLsWEOan9OU2',
+      'sort': '...',
+      'depth': 1,
+      'content': "This is a test content.\nHello, there.\nYo!",
+      'urls': ['https://picsum.photos/id/100/100/100', 'https://picsum.photos/id/101/100/100'],
+    }),
+  ),
+),
+```
 
 ## CommentListBottomSheet
 

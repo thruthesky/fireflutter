@@ -107,15 +107,22 @@ class CommentService {
 
   /// Display a bottom sheet for the comment list of the post
   ///
-  showCommentListBottomSheet({
-    required BuildContext context,
-    required Post post,
-  }) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => CommentListBottomSheet(
-        post: post,
-      ),
-    );
+  showCommentListBottomSheet(
+    BuildContext context,
+    Post post,
+  ) {
+    customize.showCommentListBottomSheet?.call(context, post) ??
+        showModalBottomSheet(
+          context: context,
+          builder: (context) => CommentListBottomSheet(
+            post: post,
+          ),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+        );
   }
 }
