@@ -37,7 +37,15 @@ class CommentOneLineListTile extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          UserAvatar(uid: comment.uid, radius: 10, size: 24),
+          UserAvatar(
+            uid: comment.uid,
+            radius: 10,
+            size: 24,
+            onTap: () => UserService.instance.showPublicProfileScreen(
+              context: context,
+              uid: comment.uid,
+            ),
+          ),
           SizedBox(width: runSpacing),
           Expanded(
             child: Column(
@@ -60,7 +68,32 @@ class CommentOneLineListTile extends StatelessWidget {
                     ),
                   ],
                 ),
-                ...comment.urls.map((url) => CachedNetworkImage(imageUrl: url)).toList(),
+
+                // photos of the comment
+                if (comment.urls.isNotEmpty)
+                  SizedBox(
+                    height: 120,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: comment.urls
+                          .asMap()
+                          .entries
+                          .map(
+                            (e) => GestureDetector(
+                              onTap: () => StorageService.instance.showUploads(
+                                context,
+                                comment.urls,
+                                index: e.key,
+                              ),
+                              child: CachedNetworkImage(
+                                imageUrl: e.value.thumbnail,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: onTapContent,

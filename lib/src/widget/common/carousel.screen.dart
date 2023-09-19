@@ -2,23 +2,25 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CarouselScreen extends StatefulWidget {
-  const CarouselScreen({super.key, required this.urls});
+  const CarouselScreen({super.key, required this.urls, this.index = 0});
 
   final List<String> urls;
+  final int index;
 
   @override
   State<CarouselScreen> createState() => _CarouselScreenState();
 }
 
 class _CarouselScreenState extends State<CarouselScreen> {
-  final controller = PageController();
+  late PageController controller;
 
-  int pageNo = 1;
+  late int pageNo;
 
   @override
   void initState() {
     super.initState();
-
+    controller = PageController(initialPage: widget.index);
+    pageNo = widget.index + 1;
     controller.addListener(func);
   }
 
