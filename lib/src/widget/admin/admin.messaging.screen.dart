@@ -428,7 +428,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                       ),
                       if (notificationType == NotificationType.post.name) ...[
                         IconButton(
-                          visualDensity: const VisualDensity(vertical: sizeXxs),
+                          // visualDensity: const VisualDensity(vertical: sizeXxs),
                           onPressed: () async {
                             if (landingPage.text.isEmpty) {
                               return warningSnackbar(null, '$notificationType Id is not set');
@@ -444,11 +444,13 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                           icon: const Icon(Icons.refresh_outlined),
                         ),
                         IconButton(
-                          visualDensity: const VisualDensity(vertical: sizeXxs),
+                          // visualDensity: const VisualDensity(vertical: sizeXxs),
                           onPressed: () async {
                             // PostService.instance.showPostListDialog(context, '');
                             AdminService.instance.showPostListDialog(context, onTap: (post) async {
                               landingPage.text = post.id;
+                              title.text = post.title;
+                              body.text = post.content;
 
                               Navigator.of(context).pop();
                             });
