@@ -1,4 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/widget/admin/admin.post_list.screen.dart';
 import 'package:flutter/material.dart';
 
 class AdminService {
@@ -43,6 +44,45 @@ class AdminService {
             ),
             body: AdminUserListView(
               displayName: input.text,
+              onTap: onTap,
+            ),
+          );
+        });
+      },
+    );
+  }
+
+  showPostListDialog(BuildContext context, {Function(Post)? onTap}) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: ($, $$, $$$) {
+        return StatefulBuilder(builder: (context, setState) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Choose Post'),
+            ),
+            body: PostListView(
+              onTap: onTap,
+            ),
+          );
+        });
+      },
+    );
+  }
+
+  showChatRoomListDialog(BuildContext context, {Function(Room)? onTap}) {
+    final controller = ChatRoomListViewController();
+    showGeneralDialog(
+      context: context,
+      pageBuilder: ($, $$, $$$) {
+        return StatefulBuilder(builder: (context, setState) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Choose Chatroom'),
+            ),
+            body: ChatRoomListView(
+              controller: controller,
+              allChat: true,
               onTap: onTap,
             ),
           );

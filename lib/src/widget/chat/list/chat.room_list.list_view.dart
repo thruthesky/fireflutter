@@ -61,6 +61,7 @@ class ChatRoomListView extends StatefulWidget {
     this.avatarSize = 46,
     this.scrollDirection = Axis.vertical,
     this.visibility,
+    this.onTap,
   }) : assert(itemExtent == null || visibility == null, "You can't set both itemExtent and visibility");
 
   final ChatRoomListViewController controller;
@@ -94,7 +95,7 @@ class ChatRoomListView extends StatefulWidget {
 
   final bool Function(Room)? visibility;
 
-  // final void Function(Room) onTap;
+  final Function(Room)? onTap;
 
   /// If you want to customize the app bar of chat room, you can use this builder.
   /// If you return null, the default app bar will be used.
@@ -161,7 +162,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
             room: room,
             avatarSize: widget.avatarSize,
             onTap: () {
-              ChatService.instance.showChatRoom(context: context, room: room);
+              widget.onTap?.call(room) ?? ChatService.instance.showChatRoom(context: context, room: room);
             },
           );
         }
