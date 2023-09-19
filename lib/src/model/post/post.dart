@@ -33,6 +33,8 @@ class Post {
   final bool? deleted;
   final int noOfComments;
 
+  final List<String> hashtags;
+
   bool get iLiked => likes.contains(my.uid);
 
   @Deprecated('Do not use this')
@@ -50,6 +52,7 @@ class Post {
     this.likes = const [],
     this.deleted = false,
     this.noOfComments = 0,
+    this.hashtags = const [];
   }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory Post.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
