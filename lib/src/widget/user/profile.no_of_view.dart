@@ -18,7 +18,6 @@ class ProfileNoOfViewButton extends StatelessWidget {
       // Asking for help on our other options for live count
       stream: profileViewHistoryCol.where('uid', isEqualTo: uid).count().get().asStream(),
       builder: (context, snapshot) {
-        debugPrint('Streaming?');
         return TextButton(
           onPressed: () {
             UserService.instance.showViewersScreen(

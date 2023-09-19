@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -65,6 +64,7 @@ class PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // TODO documentation Read Me
     return customContainer?.call(content(context, post)) ??
         Card(
           color: color,
@@ -73,7 +73,7 @@ class PostCard extends StatelessWidget {
           elevation: elevation,
           shape: shape,
           borderOnForeground: borderOnForeground,
-          margin: margin ?? const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
+          margin: margin ?? const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeSm),
           clipBehavior: clipBehavior,
           semanticContainer: semanticContainer,
           child: content(context, post),
@@ -84,16 +84,14 @@ class PostCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        // custom Header
         customHeaderBuilder?.call(context, post) ?? defaultHeader(context, post),
-        // main content
+        // custom main content
         customMainContentBuilder?.call(context, post) ?? defaultMainContent(context, post),
-
         // Custom Middle content
         customMiddleContentBuilder?.call(context, post) ?? const SizedBox.shrink(),
-
         // custom actions Builder
         customActionsBuilder?.call(context, post) ?? defaultActions(context, post),
-
         // custom footer builder
         customFooterBuilder?.call(context, post) ?? defaultFooter(context, post),
       ],
@@ -183,32 +181,7 @@ class PostCard extends StatelessWidget {
       children: [
         YouTubeThumbnail(youtubeId: post.youtubeId),
         // photos of the post
-        if (post.hasPhoto)
-          SizedBox(
-            height: 160,
-            child: ListView(scrollDirection: Axis.horizontal, children: [
-              ...post.urls
-                  .asMap()
-                  .entries
-                  .map(
-                    (e) => GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () {
-                        StorageService.instance.showUploads(
-                          context,
-                          post.urls,
-                          index: e.key,
-                        );
-                      },
-                      child: CachedNetworkImage(
-                        imageUrl: e.value.thumbnail,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ]),
-          ),
+        if (post.hasPhoto) CarouselView(urls: post.urls),
 
         /// post content
         Container(
@@ -307,24 +280,27 @@ class PostCard extends StatelessWidget {
         ),
 
         // post & comment buttons
-        Row(
-          children: [
-            // show more
-            if (post.noOfComments > commentSize)
-              TextButton(
-                onPressed: () {
-                  CommentService.instance.showCommentListBottomSheet(context, post);
+        Padding(
+          padding: const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeSm),
+          child: Row(
+            children: [
+              // show more
+              if (post.noOfComments > commentSize)
+                TextButton(
+                  onPressed: () {
+                    CommentService.instance.showCommentListBottomSheet(context, post);
+                  },
+                  child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
+                ),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: () async {
+                  await CommentService.instance.showCommentEditBottomSheet(context, post: post);
                 },
-                child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
+                child: Text(tr.reply),
               ),
-            const Spacer(),
-            ElevatedButton(
-              onPressed: () async {
-                await CommentService.instance.showCommentEditBottomSheet(context, post: post);
-              },
-              child: Text(tr.reply),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );
