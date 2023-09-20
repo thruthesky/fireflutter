@@ -461,7 +461,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                       if (notificationType == NotificationType.chat.name)
                         IconButton(
                           onPressed: () {
-                            AdminService.instance.showChatRoomListDialog(context, onTap: (room) async {
+                            AdminService.instance.showChooseChatRoomScreen(context, onTap: (room) async {
                               landingPage.text = room.roomId;
                               Navigator.of(context).pop();
                               // setState(() {});

@@ -36,7 +36,7 @@ class _CategoryEditScreenState extends State<CategoryEditScreen> {
             title: Text('Category (${category.name})'),
           ),
           body: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(sizeSm),
             child: ListView(
               children: [
                 Text.rich(
@@ -51,24 +51,31 @@ class _CategoryEditScreenState extends State<CategoryEditScreen> {
                     ],
                   ),
                 ),
-                TextFormField(
-                  controller: name,
-                  decoration: const InputDecoration(labelText: 'Name'),
+                Padding(
+                  padding: const EdgeInsets.only(top: sizeSm),
+                  child: TextFormField(
+                    controller: name,
+                    decoration: const InputDecoration(labelText: 'Name'),
+                  ),
                 ),
-                TextFormField(
-                  controller: description,
-                  decoration: const InputDecoration(labelText: 'Description'),
+                Padding(
+                  padding: const EdgeInsets.only(top: sizeSm),
+                  child: TextFormField(
+                    controller: description,
+                    minLines: 3,
+                    maxLines: 6,
+                    decoration: const InputDecoration(labelText: 'Description'),
+                  ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(sizeMd),
                       child: ElevatedButton(
                         child: const Text('Update'),
                         onPressed: () {
-                          Category.fromId(category.id).update(
-                              name: name.text, description: description.text);
+                          Category.fromId(category.id).update(name: name.text, description: description.text);
                         },
                       ),
                     ),

@@ -20,7 +20,7 @@ class AdminCategoryListScreen extends StatelessWidget {
       appBar: AppBar(
         iconTheme: Theme.of(context).iconTheme.copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
         backgroundColor: Theme.of(context).colorScheme.inverseSurface,
-        title: Text('Admin Chat List', style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface)),
+        title: Text('Category List', style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface)),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -36,35 +36,11 @@ class AdminCategoryListScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: FirestoreListView(
-          query: chatCol,
-          itemBuilder: (context, snapshot) {
-            final room = Room.fromDocumentSnapshot(snapshot);
-            return InkWell(
-              onTap: () {},
-              child: Padding(
-                padding: const EdgeInsets.all(sizeSm),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      room.roomId,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                    if (room.name.isNotEmpty) Text('Chat Room Name: ${room.name}'),
-                    Text('Last Activity: ${room.lastMessage?.createdAt ?? room.createdAt}'),
-                    const SizedBox(height: sizeXs),
-                    const Text('Members:'),
-                    for (String uid in room.users) Text(uid),
-                  ],
-                ),
-              ),
-            );
-            // return ListTile(
-            //   title: Text("TODO - display player and coach name and display chat time, ${room.roomId}${room.name}"),
-            //   onTap: () {},
-            // );
-          }),
+      body: CategoryListView(
+        onTap: (category) {
+          CategoryService.instance.showUpdateDialog(context, category.id);
+        },
+      ),
     );
   }
 }

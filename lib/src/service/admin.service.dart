@@ -1,5 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/widget/admin/admin.post_list.screen.dart';
 import 'package:flutter/material.dart';
 
 class AdminService {
@@ -52,7 +51,7 @@ class AdminService {
     );
   }
 
-  showPostListDialog(BuildContext context, {Function(Post)? onTap}) {
+  showChoosePostScreen(BuildContext context, {Function(Post)? onTap}) {
     showGeneralDialog(
       context: context,
       pageBuilder: ($, $$, $$$) {
@@ -70,7 +69,7 @@ class AdminService {
     );
   }
 
-  showChatRoomListDialog(BuildContext context, {Function(Room)? onTap}) {
+  showChooseChatRoomScreen(BuildContext context, {Function(Room)? onTap}) {
     final controller = ChatRoomListViewController();
     showGeneralDialog(
       context: context,
@@ -89,6 +88,23 @@ class AdminService {
         });
       },
     );
+  }
+
+  showChatRoomDetails(BuildContext context, {required Room room}) {
+    showGeneralDialog(
+        context: context,
+        pageBuilder: (context, _, __) {
+          // return Full screen for Chat Details
+          return Scaffold(
+            body: Column(
+              children: [
+                const SizedBox(height: sizeXs),
+                const Text('Members:'),
+                for (String uid in room.users) Text(uid),
+              ],
+            ),
+          );
+        });
   }
 
   // TODO show Chat Room Details
