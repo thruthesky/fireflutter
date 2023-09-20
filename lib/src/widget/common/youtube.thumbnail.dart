@@ -7,30 +7,41 @@ class YouTubeThumbnail extends StatelessWidget {
     super.key,
     this.youtubeId,
     this.youtubeUrl,
+    this.stackFit = StackFit.loose,
+    this.boxFit,
   });
 
   final String? youtubeId;
   final String? youtubeUrl;
+  final StackFit stackFit;
+  final BoxFit? boxFit;
 
   @override
   Widget build(BuildContext context) {
     final id = youtubeId ?? YoutubePlayer.convertUrlToId(youtubeUrl!);
     if ((id ?? '').isEmpty) return const SizedBox.shrink();
-    return Stack(children: [
-      CachedNetworkImage(imageUrl: YoutubePlayer.getThumbnail(videoId: id!)),
-      Positioned(
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        child: Center(
-          child: Icon(
-            Icons.play_circle,
-            size: 100,
-            color: Colors.white.withOpacity(.8),
+    return Stack(
+      fit: stackFit,
+      children: [
+        CachedNetworkImage(
+          imageUrl: YoutubePlayer.getThumbnail(videoId: id!),
+          fit: boxFit,
+        ),
+        // TODO review
+        Positioned(
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+          child: Center(
+            child: Icon(
+              Icons.play_circle,
+              size: 80,
+              color: Colors.white.withOpacity(.8),
+            ),
           ),
         ),
-      ),
-    ]);
+      ],
+    );
   }
 }

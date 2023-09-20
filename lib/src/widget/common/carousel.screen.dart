@@ -2,10 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CarouselScreen extends StatefulWidget {
-  const CarouselScreen({super.key, required this.urls, this.index = 0});
+  // TODO update read me
+  const CarouselScreen({super.key, this.urls, this.index = 0, this.widgets}) : assert(urls != null || widgets != null);
 
-  final List<String> urls;
+  final List<String>? urls;
   final int index;
+
+  final List<Widget>? widgets;
 
   @override
   State<CarouselScreen> createState() => _CarouselScreenState();
@@ -52,13 +55,13 @@ class _CarouselScreenState extends State<CarouselScreen> {
           children: [
             const Text('Images'),
             const Spacer(),
-            Text('$pageNo/${widget.urls.length}'),
+            Text('$pageNo/${widget.widgets?.length ?? widget.urls!.length}'),
           ],
         ),
       ),
       body: PageView(
         controller: controller,
-        children: widget.urls.map((e) => CachedNetworkImage(imageUrl: e)).toList(),
+        children: widget.widgets ?? widget.urls!.map((e) => CachedNetworkImage(imageUrl: e)).toList(),
       ),
     );
   }
