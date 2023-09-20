@@ -21,30 +21,30 @@ class _AdminChatRoomListScreenState extends State<AdminChatRoomListScreen> {
         title: Text('Admin Chat Room List', style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface)),
       ),
       body: FirestoreListView(
-          query: chatCol,
-          itemBuilder: (context, snapshot) {
-            final room = Room.fromDocumentSnapshot(snapshot);
-            return InkWell(
-              onTap: () {
-                /// Show chat room details
-                AdminService.instance.showChatRoomDetails(context, room: room);
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(sizeSm),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      room.roomId,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                    if (room.name.isNotEmpty) Text('Chat Room Name: ${room.name}'),
-                    Text('Last Activity: ${room.lastMessage?.createdAt ?? room.createdAt}'),
-                  ],
-                ),
+        query: chatCol,
+        itemBuilder: (context, snapshot) {
+          final room = Room.fromDocumentSnapshot(snapshot);
+          return InkWell(
+            onTap: () {
+              AdminService.instance.showChatRoomDetails(context, room: room);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(sizeSm),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    room.roomId,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  if (room.name.isNotEmpty) Text('Chat Room Name: ${room.name}'),
+                  Text('Last Activity: ${room.lastMessage?.createdAt ?? room.createdAt}'),
+                ],
               ),
-            );
-          }),
+            ),
+          );
+        },
+      ),
     );
   }
 }

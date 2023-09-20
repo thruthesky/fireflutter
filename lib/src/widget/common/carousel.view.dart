@@ -65,6 +65,7 @@ class _CarouselViewState extends State<CarouselView> {
                       child: CachedNetworkImage(
                         imageUrl: e.value,
                         fit: BoxFit.cover,
+                        placeholder: (context, url) => const SizedBox(height: 400),
                       ),
                     ))
                 .toList(),

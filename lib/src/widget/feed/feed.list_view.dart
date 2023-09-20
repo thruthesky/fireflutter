@@ -32,6 +32,8 @@ class FeedListView extends StatefulWidget {
 class _FeedListViewState extends State<FeedListView> {
   bool noFollowings = false;
 
+  final scrollBarControlller = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -58,40 +60,44 @@ class _FeedListViewState extends State<FeedListView> {
           return Text('Something went wrong! ${snapshot.error}');
         }
 
-        return ListView.builder(
-          physics: const RangeMaintainingScrollPhysics(),
-          itemExtent: widget.itemExtent,
-          cacheExtent: widget.cacheExtent,
-          itemCount: snapshot.docs.length,
-          itemBuilder: (context, index) {
-            // if we reached the end of the currently obtained items, we try to
-            // obtain more items
-            if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
-              // Tell FirebaseDatabaseQueryBuilder to try to obtain more items.
-              // It is safe to call this function from within the build method.
-              snapshot.fetchMore();
-            }
-            final feed = Feed.fromSnapshot(snapshot.docs[index]);
+        return Scrollbar(
+          controller: scrollBarControlller,
+          child: ListView.builder(
+            controller: scrollBarControlller,
+            physics: const RangeMaintainingScrollPhysics(),
+            itemExtent: widget.itemExtent,
+            cacheExtent: widget.cacheExtent,
+            itemCount: snapshot.docs.length,
+            itemBuilder: (context, index) {
+              // if we reached the end of the currently obtained items, we try to
+              // obtain more items
+              if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+                // Tell FirebaseDatabaseQueryBuilder to try to obtain more items.
+                // It is safe to call this function from within the build method.
+                snapshot.fetchMore();
+              }
+              final feed = Feed.fromSnapshot(snapshot.docs[index]);
 
-            final child = StreamBuilder(
-              stream: Post.doc(feed.postId).snapshots(),
-              builder: (_, snapshot) {
-                if (!snapshot.hasData) return const SizedBox.shrink();
-                final post = Post.fromDocumentSnapshot(snapshot.data!);
-                return widget.itemBuilder.call(post, index);
-              },
-            );
-            if (widget.topBuilder != null && index == 0) {
-              return Column(
-                children: [
-                  widget.topBuilder!.call(feed),
-                  child,
-                ],
+              final child = StreamBuilder(
+                stream: Post.doc(feed.postId).snapshots(),
+                builder: (_, snapshot) {
+                  if (!snapshot.hasData) return const SizedBox.shrink();
+                  final post = Post.fromDocumentSnapshot(snapshot.data!);
+                  return widget.itemBuilder.call(post, index);
+                },
               );
-            } else {
-              return child;
-            }
-          },
+              if (widget.topBuilder != null && index == 0) {
+                return Column(
+                  children: [
+                    widget.topBuilder!.call(feed),
+                    child,
+                  ],
+                );
+              } else {
+                return child;
+              }
+            },
+          ),
         );
       },
     );
