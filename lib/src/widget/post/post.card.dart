@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -182,14 +183,73 @@ class PostCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        // TODO Proper Youtube
-        YouTubeThumbnail(youtubeId: post.youtubeId),
-        // photos of the post
-        if (post.hasPhoto)
+        if (post.hasPhoto || post.youtubeId.isNotEmpty) //TODO review logic to lessen Operations
           Padding(
             padding: const EdgeInsets.only(top: sizeSm),
-            child: CarouselView(urls: post.urls),
+            child: CarouselView(
+              widgets: [
+                if (post.youtubeId.isNotEmpty)
+                  GestureDetector(
+                    onTap: () => showPreview(context, 0),
+                    child: YouTubeThumbnail(
+                      youtubeId: post.youtubeId,
+                      stackFit: StackFit.passthrough,
+                      boxFit: BoxFit.cover,
+                    ),
+                  ),
+                if (post.hasPhoto)
+                  ...post.urls
+                      .asMap()
+                      .entries
+                      .map(
+                        (e) => GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          // onTap: () {
+                          //   StorageService.instance.showUploads(
+                          //     context,
+                          //     post.urls,
+                          //     index: e.key,
+                          //   );
+                          // },
+                          onTap: () => showPreview(context, post.youtubeId.isNotEmpty ? e.key + 1 : e.key),
+                          child: CachedNetworkImage(
+                            imageUrl: e.value,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => const SizedBox(height: 400),
+                          ),
+                        ),
+                      )
+                      .toList()
+              ],
+            ),
           ),
+        // if (post.youtubeId.isNotEmpty)
+        //   GestureDetector(
+        //     onTap: () => showPreview(0),
+        //     child: SizedBox(
+        //       width: 100,
+        //       height: 100,
+        //       child: YouTubeThumbnail(
+        //         // TODO reduce repeated code
+        //         key: ValueKey(post.youtubeId),
+        //         youtubeId: convertUrlToId(post.youtubeId)!,
+        //         stackFit: StackFit.expand,
+        //         boxFit: BoxFit.cover,
+        //       ),
+        //     ),
+        //   ),
+        // // TODO limit URLs
+        // if (urls.isNotEmpty)
+        //   for (int index = 0; index < urls.length; index++)
+        //     GestureDetector(
+        //       onTap: () => showPreview(youtubeUrl.text.isNotEmpty ? index + 1 : index),
+        //       child: CachedNetworkImage(
+        //         imageUrl: urls[index],
+        //         fit: BoxFit.cover,
+        //         width: 100,
+        //         height: 100,
+        //       ),
+        //     ),
 
         /// post content
         Container(
@@ -201,6 +261,47 @@ class PostCard extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  // TODO move this to bottomost
+  void showPreview(BuildContext context, int index) {
+    // TODO check for exisiting codes
+    // TODO add this on a Service to share code (same code in new post)
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) {
+        return CarouselScreen(
+          widgets: listMedia(context),
+          index: index,
+        );
+      },
+    );
+  }
+
+  List<Widget> listMedia(BuildContext context) {
+    return [
+      if (post.youtubeId.isNotEmpty)
+        GestureDetector(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  insetPadding: const EdgeInsets.all(0),
+                  contentPadding: const EdgeInsets.all(0),
+                  content: YouTube(youtubeId: post.youtubeId),
+                );
+              },
+            );
+          },
+          child: YouTubeThumbnail(
+            key: ValueKey(post.youtubeId),
+            youtubeId: post.youtubeId,
+            stackFit: StackFit.passthrough,
+          ),
+        ),
+      ...post.urls.map((e) => CachedNetworkImage(imageUrl: e)).toList()
+    ];
   }
 
   Widget defaultActions(BuildContext context, Post post) {
