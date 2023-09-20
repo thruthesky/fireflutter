@@ -40,10 +40,30 @@ class AdminCategoryListScreen extends StatelessWidget {
           query: chatCol,
           itemBuilder: (context, snapshot) {
             final room = Room.fromDocumentSnapshot(snapshot);
-            return ListTile(
-              title: Text("TODO - display player and coach name and display chat time, ${room.roomId}${room.name}"),
+            return InkWell(
               onTap: () {},
+              child: Padding(
+                padding: const EdgeInsets.all(sizeSm),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      room.roomId,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    if (room.name.isNotEmpty) Text('Chat Room Name: ${room.name}'),
+                    Text('Last Activity: ${room.lastMessage?.createdAt ?? room.createdAt}'),
+                    const SizedBox(height: sizeXs),
+                    const Text('Members:'),
+                    for (String uid in room.users) Text(uid),
+                  ],
+                ),
+              ),
             );
+            // return ListTile(
+            //   title: Text("TODO - display player and coach name and display chat time, ${room.roomId}${room.name}"),
+            //   onTap: () {},
+            // );
           }),
     );
   }
