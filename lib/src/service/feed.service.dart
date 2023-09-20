@@ -15,6 +15,19 @@ class FeedService {
     this.enable = enable;
   }
 
+  Map<String, dynamic> convertIntoFeedData(Post post) {
+    return {
+      'uid': post.uid,
+      'postId': post.id,
+      'createdAt': 0 - post.createdAt.millisecondsSinceEpoch,
+      'title': post.title,
+      'content': post.content,
+      'categoryId': post.categoryId,
+      'youtubeId': post.youtubeId,
+      'urls': post.urls,
+    };
+  }
+
   /// follow or unfollow
   ///
   ///
@@ -24,11 +37,7 @@ class FeedService {
       // get last 20 posts and save it under rtdb
       final posts = await PostService.instance.gets(uid: otherUid, limit: 20);
       for (final post in posts) {
-        rtdb.ref('feeds').child(my.uid).child(post.id).set({
-          'uid': post.uid,
-          'postId': post.id,
-          'createdAt': 0 - post.createdAt.millisecondsSinceEpoch,
-        });
+        rtdb.ref('feeds').child(my.uid).child(post.id).set(convertIntoFeedData(post));
       }
     } else {
       // remove all posts from rtdb
@@ -46,11 +55,7 @@ class FeedService {
     if (enable == false) return;
     List<Future> feedUpdates = [];
     for (String followerUid in my.followers) {
-      feedUpdates.add(rtdb.ref('feeds').child(followerUid).child(post.id).set({
-        'uid': post.uid,
-        'postId': post.id,
-        'createdAt': 0 - post.createdAt.millisecondsSinceEpoch,
-      }));
+      feedUpdates.add(rtdb.ref('feeds').child(followerUid).child(post.id).set(convertIntoFeedData(post)));
     }
     await Future.wait(feedUpdates);
   }

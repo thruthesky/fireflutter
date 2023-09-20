@@ -11,11 +11,23 @@ Feed _$FeedFromJson(Map<String, dynamic> json) => Feed(
       postId: json['postId'] as String,
       uid: json['uid'] as String,
       createdAt: json['createdAt'] as int,
+      title: json['title'] as String? ?? '',
+      content: json['content'] as String? ?? '',
+      categoryId: json['categoryId'] as String? ?? '',
+      youtubeId: json['youtubeId'] as String? ?? '',
+      urls:
+          (json['urls'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+              const [],
     );
 
 Map<String, dynamic> _$FeedToJson(Feed instance) => <String, dynamic>{
       'id': instance.id,
       'postId': instance.postId,
       'uid': instance.uid,
+      'title': instance.title,
+      'content': instance.content,
+      'categoryId': instance.categoryId,
+      'youtubeId': instance.youtubeId,
+      'urls': instance.urls,
       'createdAt': instance.createdAt,
     };
