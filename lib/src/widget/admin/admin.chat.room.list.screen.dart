@@ -27,6 +27,7 @@ class _AdminChatRoomListScreenState extends State<AdminChatRoomListScreen> {
             return InkWell(
               onTap: () {
                 /// Show chat room details
+                AdminService.instance.showChatRoomDetails(context, room: room);
               },
               child: Padding(
                 padding: const EdgeInsets.all(sizeSm),

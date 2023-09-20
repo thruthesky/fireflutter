@@ -447,7 +447,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                           // visualDensity: const VisualDensity(vertical: sizeXxs),
                           onPressed: () async {
                             // PostService.instance.showPostListDialog(context, '');
-                            AdminService.instance.showPostListDialog(context, onTap: (post) async {
+                            AdminService.instance.showChoosePostScreen(context, onTap: (post) async {
                               landingPage.text = post.id;
                               title.text = post.title;
                               body.text = post.content;

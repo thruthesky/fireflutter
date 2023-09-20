@@ -92,19 +92,12 @@ class AdminService {
 
   showChatRoomDetails(BuildContext context, {required Room room}) {
     showGeneralDialog(
-        context: context,
-        pageBuilder: (context, _, __) {
-          // return Full screen for Chat Details
-          return Scaffold(
-            body: Column(
-              children: [
-                const SizedBox(height: sizeXs),
-                const Text('Members:'),
-                for (String uid in room.users) Text(uid),
-              ],
-            ),
-          );
-        });
+      context: context,
+      pageBuilder: (context, _, __) {
+        // return Full screen for Chat Details
+        return AdminChatRoomDetailsScreen(room: room);
+      },
+    );
   }
 
   // TODO show Chat Room Details

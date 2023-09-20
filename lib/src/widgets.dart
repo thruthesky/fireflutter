@@ -108,6 +108,7 @@ export 'widget/admin/admin.report.list.screen.dart';
 export 'widget/admin/admin.category.list.screen.dart';
 export 'widget/admin/admin.id_card.screen.dart';
 export 'widget/admin/admin.chat.room.list.screen.dart';
+export 'widget/admin/admin.chat_room.details.screen.dart';
 export 'widget/admin/admin.messaging.screen.dart';
 
 // settings
