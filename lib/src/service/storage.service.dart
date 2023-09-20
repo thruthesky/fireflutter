@@ -132,7 +132,9 @@ class StorageService {
 
   /// Call this if method of uploading (like, from camera) is already known.
   ///
-  /// [fromWhere] can be ImageSource.camera, ImageSource.gallery, 'file'
+  /// [fromWhere] can be 'file', 'camera', 'gallery', ImageSource.camera, ImageSource.gallery
+  ///
+  /// may return null if fromWhere is invalid.
   Future<String?> uploadFrom({
     required dynamic fromWhere,
     Function(double)? progress,
@@ -142,6 +144,8 @@ class StorageService {
     String? saveAs,
   }) async {
     late String? path;
+    if (fromWhere == 'camera') fromWhere = ImageSource.camera;
+    if (fromWhere == 'gallery') fromWhere = ImageSource.gallery;
     if (fromWhere == 'file') {
       final FilePickerResult? result = await FilePicker.platform.pickFiles();
       path = result?.files.first.path;

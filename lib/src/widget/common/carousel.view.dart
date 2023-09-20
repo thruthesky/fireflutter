@@ -4,9 +4,15 @@ import 'package:flutter/material.dart';
 
 // TODO Read Me
 class CarouselView extends StatefulWidget {
-  const CarouselView({super.key, required this.urls, this.index = 0});
+  const CarouselView({
+    super.key,
+    this.urls,
+    this.widgets,
+    this.index = 0,
+  }): assert(urls != null || widgets != null);
 
-  final List<String> urls;
+  final List<String>? urls;
+  final List<Widget>? widgets;
   final int index;
 
   @override
@@ -50,25 +56,26 @@ class _CarouselViewState extends State<CarouselView> {
         children: [
           PageView(
             controller: controller,
-            children: widget.urls
-                .asMap()
-                .entries
-                .map((e) => GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () {
-                        StorageService.instance.showUploads(
-                          context,
-                          widget.urls,
-                          index: e.key,
-                        );
-                      },
-                      child: CachedNetworkImage(
-                        imageUrl: e.value,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => const SizedBox(height: 400),
-                      ),
-                    ))
-                .toList(),
+            children: widget.widgets ??
+                widget.urls!
+                    .asMap()
+                    .entries
+                    .map((e) => GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            StorageService.instance.showUploads(
+                              context,
+                              widget.urls!,
+                              index: e.key,
+                            );
+                          },
+                          child: CachedNetworkImage(
+                            imageUrl: e.value,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => const SizedBox(height: 400),
+                          ),
+                        ))
+                    .toList(),
           ),
         ],
       ),
