@@ -204,13 +204,6 @@ class PostCard extends StatelessWidget {
                       .map(
                         (e) => GestureDetector(
                           behavior: HitTestBehavior.opaque,
-                          // onTap: () {
-                          //   StorageService.instance.showUploads(
-                          //     context,
-                          //     post.urls,
-                          //     index: e.key,
-                          //   );
-                          // },
                           onTap: () => showPreview(context, post.youtubeId.isNotEmpty ? e.key + 1 : e.key),
                           child: CachedNetworkImage(
                             imageUrl: e.value,
@@ -223,33 +216,6 @@ class PostCard extends StatelessWidget {
               ],
             ),
           ),
-        // if (post.youtubeId.isNotEmpty)
-        //   GestureDetector(
-        //     onTap: () => showPreview(0),
-        //     child: SizedBox(
-        //       width: 100,
-        //       height: 100,
-        //       child: YouTubeThumbnail(
-        //         // TODO reduce repeated code
-        //         key: ValueKey(post.youtubeId),
-        //         youtubeId: convertUrlToId(post.youtubeId)!,
-        //         stackFit: StackFit.expand,
-        //         boxFit: BoxFit.cover,
-        //       ),
-        //     ),
-        //   ),
-        // // TODO limit URLs
-        // if (urls.isNotEmpty)
-        //   for (int index = 0; index < urls.length; index++)
-        //     GestureDetector(
-        //       onTap: () => showPreview(youtubeUrl.text.isNotEmpty ? index + 1 : index),
-        //       child: CachedNetworkImage(
-        //         imageUrl: urls[index],
-        //         fit: BoxFit.cover,
-        //         width: 100,
-        //         height: 100,
-        //       ),
-        //     ),
 
         /// post content
         Container(
