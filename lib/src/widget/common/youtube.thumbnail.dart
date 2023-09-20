@@ -5,17 +5,19 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 class YouTubeThumbnail extends StatelessWidget {
   const YouTubeThumbnail({
     super.key,
-    required this.youtubeId,
+    this.youtubeId,
+    this.youtubeUrl,
   });
 
-  final String youtubeId;
+  final String? youtubeId;
+  final String? youtubeUrl;
 
   @override
   Widget build(BuildContext context) {
-    if (youtubeId.isEmpty) return const SizedBox.shrink();
+    final id = youtubeId ?? YoutubePlayer.convertUrlToId(youtubeUrl!);
+    if ((id ?? '').isEmpty) return const SizedBox.shrink();
     return Stack(children: [
-      CachedNetworkImage(
-          imageUrl: YoutubePlayer.getThumbnail(videoId: youtubeId)),
+      CachedNetworkImage(imageUrl: YoutubePlayer.getThumbnail(videoId: id!)),
       Positioned(
         left: 0,
         right: 0,
