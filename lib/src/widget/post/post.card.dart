@@ -28,14 +28,14 @@ class PostCard extends StatelessWidget {
       this.shareButtonBuilder,
       this.commentSize = 5,
       this.contentBackground,
-    this.customContainer,
-    this.customHeaderBuilder,
-    this.customMainContentBuilder,
-    this.customMiddleContentBuilder,
-    this.customActionsBuilder,
-    this.customFooterBuilder,
+      this.customContainer,
+      this.customHeaderBuilder,
+      this.customMainContentBuilder,
+      this.customMiddleContentBuilder,
+      this.customActionsBuilder,
+      this.customFooterBuilder,
       this.headerPadding = const EdgeInsets.all(sizeSm),
-      this.bottomButtonPadding =  const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeSm)});
+      this.bottomButtonPadding = const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeSm)});
 
   final Color? color;
   final Color? shadowColor;
@@ -282,31 +282,30 @@ class PostCard extends StatelessWidget {
           },
         ),
 
-          // post & comment buttons
-          Padding(
-            padding: bottomButtonPadding,
-            child: Row(
-              children: [
-                // show more
-                if (post.noOfComments > commentSize)
-                  TextButton(
-                    onPressed: () {
-                      CommentService.instance.showCommentListBottomSheet(context, post);
-                    },
-                    child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
-                  ),
-                const Spacer(),
-                ElevatedButton(
-                  onPressed: () async {
-                    await CommentService.instance.showCommentEditBottomSheet(context, post: post);
+        // post & comment buttons
+        Padding(
+          padding: bottomButtonPadding,
+          child: Row(
+            children: [
+              // show more
+              if (post.noOfComments > commentSize)
+                TextButton(
+                  onPressed: () {
+                    CommentService.instance.showCommentListBottomSheet(context, post);
                   },
-                  child: Text(tr.reply),
+                  child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
                 ),
-              ],
-            ),
-          )
-        ],
-      ),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: () async {
+                  await CommentService.instance.showCommentEditBottomSheet(context, post: post);
+                },
+                child: Text(tr.reply),
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 }
