@@ -21,7 +21,7 @@ class PostCard extends StatelessWidget {
       this.elevation,
       this.shape,
       this.borderOnForeground = true,
-      this.margin,
+      this.margin = const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
       this.clipBehavior,
       this.semanticContainer = true,
       required this.post,
@@ -34,7 +34,7 @@ class PostCard extends StatelessWidget {
       this.customMiddleContentBuilder,
       this.customActionsBuilder,
       this.customFooterBuilder,
-      this.headerPadding = const EdgeInsets.all(sizeSm),
+      this.headerPadding = const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
       this.bottomButtonPadding = const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeSm)});
 
   final Color? color;
@@ -76,7 +76,7 @@ class PostCard extends StatelessWidget {
           elevation: elevation,
           shape: shape,
           borderOnForeground: borderOnForeground,
-          margin: margin ?? const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeSm),
+          margin: margin,
           clipBehavior: clipBehavior,
           semanticContainer: semanticContainer,
           child: content(context, post),
@@ -182,9 +182,14 @@ class PostCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
+        // TODO Proper Youtube
         YouTubeThumbnail(youtubeId: post.youtubeId),
         // photos of the post
-        if (post.hasPhoto) CarouselView(urls: post.urls),
+        if (post.hasPhoto)
+          Padding(
+            padding: const EdgeInsets.only(top: sizeSm),
+            child: CarouselView(urls: post.urls),
+          ),
 
         /// post content
         Container(

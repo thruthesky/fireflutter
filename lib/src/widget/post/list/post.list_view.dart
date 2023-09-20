@@ -64,27 +64,23 @@ class PostListView extends StatelessWidget {
       query: query,
       itemBuilder: (context, QueryDocumentSnapshot snapshot) {
         final post = Post.fromDocumentSnapshot(snapshot);
-        if (itemBuilder != null) {
-          return itemBuilder!(context, post);
-        } else {
-          return ListTile(
-            title: Text(post.title),
-            subtitle: Text(
-              post.content.replaceAll('\n', ' '),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              debugPrint("---> $post");
-              onTap?.call(post) ??
-                  PostService.instance.showPostViewScreen(
-                    context: context,
-                    post: post,
-                  );
-            },
-          );
-        }
+        if (itemBuilder != null) return itemBuilder!(context, post);
+        return ListTile(
+          title: Text(post.title),
+          subtitle: Text(
+            post.content.replaceAll('\n', ' '),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () {
+            onTap?.call(post) ??
+                PostService.instance.showPostViewScreen(
+                  context: context,
+                  post: post,
+                );
+          },
+        );
       },
       emptyBuilder: (context) {
         if (emptyBuilder != null) return emptyBuilder!(context);

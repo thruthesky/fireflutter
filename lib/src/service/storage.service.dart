@@ -120,16 +120,33 @@ class StorageService {
       ),
     );
     if (re == null) return null;
+    return uploadFrom(fromWhere: re);
+  }
+
+  /// Call this if method of uploading (like, from camera) is already known.
+  ///
+  /// [fromWhere] can be ImageSource.camera, ImageSource.gallery, 'file'
+  Future<String?> uploadFrom({
+    required dynamic fromWhere,
+    Function(double)? progress,
+    Function? complete,
+    int compressQuality = 80,
+    String? path,
+    String? saveAs,
+    bool gallery = true,
+    bool camera = true,
+    bool file = true,
+  }) async {
     late String? path;
-    if (re == 'file') {
+    if (fromWhere == 'file') {
       final FilePickerResult? result = await FilePicker.platform.pickFiles();
       path = result?.files.first.path;
-      // path = result?.files.single.path;
-    } else {
-      final XFile? image = await ImagePicker().pickImage(source: re);
+    } else if ([ImageSource.camera, ImageSource.gallery].contains(fromWhere)) {
+      final XFile? image = await ImagePicker().pickImage(source: fromWhere);
       path = image?.path;
+    } else {
+      return null;
     }
-
     return await uploadFile(
       path: path,
       saveAs: saveAs,
@@ -140,10 +157,7 @@ class StorageService {
   }
 
   showUploads(BuildContext context, List<String> urls, {int index = 0}) {
-    if (customize.showUploads != null) {
-      return customize.showUploads!(context, urls, index: index);
-    }
-
+    if (customize.showUploads != null) return customize.showUploads!(context, urls, index: index);
     showGeneralDialog(context: context, pageBuilder: (context, _, __) => CarouselScreen(urls: urls, index: index));
   }
 }
