@@ -38,7 +38,6 @@ export 'widget/chat/room_settings/chat.room_settings.screen.dart';
 export 'widget/chat/room_settings/chat.room_settings.rename.list_tile.dart';
 export 'widget/chat/room/menu/chat.room.menu.user.list_tile.dart';
 export 'widget/chat/no_of_new_message.dart';
-
 export 'widget/chat/total_no_of_new_message.dart';
 
 // Category
@@ -86,6 +85,7 @@ export 'widget/common/gradients.dart';
 export 'widget/common/push_notification.setting.dart';
 export 'widget/common/push_notification.icon.dart';
 export 'widget/common/carousel.screen.dart';
+export 'widget/common/carousel.view.dart';
 
 export 'widget/common/icon_text_button.dart';
 export 'widget/common/share.bottom_sheet.dart';
