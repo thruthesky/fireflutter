@@ -15,22 +15,23 @@ import 'package:flutter/material.dart';
 ///
 ///
 class PostCard extends StatelessWidget {
-  const PostCard({
-    super.key,
-    this.color,
-    this.shadowColor,
-    this.surfaceTintColor,
-    this.elevation,
-    this.shape,
-    this.borderOnForeground = true,
-    this.margin,
-    this.clipBehavior,
-    this.semanticContainer = true,
-    required this.post,
-    this.shareButtonBuilder,
-    this.commentSize = 5,
-    this.contentBackground,
-  });
+  const PostCard(
+      {super.key,
+      this.color,
+      this.shadowColor,
+      this.surfaceTintColor,
+      this.elevation,
+      this.shape,
+      this.borderOnForeground = true,
+      this.margin,
+      this.clipBehavior,
+      this.semanticContainer = true,
+      required this.post,
+      this.shareButtonBuilder,
+      this.commentSize = 5,
+      this.contentBackground,
+      this.headerPadding = const EdgeInsets.all(sizeSm),
+      this.bottomButtonPadding = const EdgeInsets.all(0)});
 
   final Color? color;
   final Color? shadowColor;
@@ -40,6 +41,8 @@ class PostCard extends StatelessWidget {
   final bool borderOnForeground;
   final Clip? clipBehavior;
   final EdgeInsetsGeometry? margin;
+  final EdgeInsetsGeometry headerPadding;
+  final EdgeInsetsGeometry bottomButtonPadding;
   final bool semanticContainer;
 
   final Color? contentBackground;
@@ -73,7 +76,7 @@ class PostCard extends StatelessWidget {
                 behavior: HitTestBehavior.opaque,
                 onTap: () => UserService.instance.showPublicProfileScreen(context: context, uid: post.uid),
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
+                  padding: headerPadding,
                   child: Row(
                     children: [
                       UserAvatar(
@@ -256,24 +259,27 @@ class PostCard extends StatelessWidget {
           ),
 
           // post & comment buttons
-          Row(
-            children: [
-              // show more
-              if (post.noOfComments > commentSize)
-                TextButton(
-                  onPressed: () {
-                    CommentService.instance.showCommentListBottomSheet(context, post);
+          Padding(
+            padding: bottomButtonPadding,
+            child: Row(
+              children: [
+                // show more
+                if (post.noOfComments > commentSize)
+                  TextButton(
+                    onPressed: () {
+                      CommentService.instance.showCommentListBottomSheet(context, post);
+                    },
+                    child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
+                  ),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: () async {
+                    await CommentService.instance.showCommentEditBottomSheet(context, post: post);
                   },
-                  child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
+                  child: Text(tr.reply),
                 ),
-              const Spacer(),
-              ElevatedButton(
-                onPressed: () async {
-                  await CommentService.instance.showCommentEditBottomSheet(context, post: post);
-                },
-                child: Text(tr.reply),
-              ),
-            ],
+              ],
+            ),
           )
         ],
       ),
