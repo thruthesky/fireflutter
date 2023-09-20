@@ -120,7 +120,14 @@ class StorageService {
       ),
     );
     if (re == null) return null;
-    return uploadFrom(fromWhere: re);
+    return uploadFrom(
+      fromWhere: re,
+      progress: progress,
+      complete: complete,
+      compressQuality: compressQuality,
+      path: path,
+      saveAs: saveAs,
+    );
   }
 
   /// Call this if method of uploading (like, from camera) is already known.
@@ -133,9 +140,6 @@ class StorageService {
     int compressQuality = 80,
     String? path,
     String? saveAs,
-    bool gallery = true,
-    bool camera = true,
-    bool file = true,
   }) async {
     late String? path;
     if (fromWhere == 'file') {
