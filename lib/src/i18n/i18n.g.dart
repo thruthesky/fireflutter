@@ -67,6 +67,16 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
           "You are not following this user anymore.",
       noStateMessage: json['noStateMessage'] as String? ??
           "No state message, yet. Create one!",
+      copyLink: json['copyLink'] as String? ?? "Copy Link",
+      copyLinkMessage:
+          json['copyLinkMessage'] as String? ?? "Link copied to clipboard",
+      showMoreComments:
+          json['showMoreComments'] as String? ?? "Show #no comments",
+      askOpenLink:
+          json['askOpenLink'] as String? ?? "Do you want to open this link?",
+      readLess: json['readLess'] as String? ?? "Read less",
+      readMore: json['readMore'] as String? ?? "Read more",
+      noOfLikes: json['noOfLikes'] as String? ?? "Likes #no",
     );
 
 Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
@@ -114,4 +124,11 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
       'followMessage': instance.followMessage,
       'unfollowMessage': instance.unfollowMessage,
       'noStateMessage': instance.noStateMessage,
+      'copyLink': instance.copyLink,
+      'copyLinkMessage': instance.copyLinkMessage,
+      'showMoreComments': instance.showMoreComments,
+      'askOpenLink': instance.askOpenLink,
+      'readLess': instance.readLess,
+      'readMore': instance.readMore,
+      'noOfLikes': instance.noOfLikes,
     };

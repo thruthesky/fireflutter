@@ -1864,6 +1864,8 @@ CommentService.instance.init(
 
 - Since the `in` filter is limited into 30 element, we cannot use it to query the posts of `followings`.
 
+- When there is a new feed genereated, fireflutter save all a copy of the post into the feed node of the followers. When the feed is updated, it should be synced. and when it is deleted, it should be removed from the node. Note that, if someone has 10K followers, then the post will have 10K copies and it overuse the space of RTDB. And this is the way we choose.
+
 ```mermaid
 flowchart TD
 When_Follow-->UpdateFollower[Update Follower]-->UpdateFollowing[Update Following]-->UpdateFeed[Get last 20 feed and save in rtdb]

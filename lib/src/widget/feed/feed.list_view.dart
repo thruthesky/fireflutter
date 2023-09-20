@@ -76,16 +76,12 @@ class _FeedListViewState extends State<FeedListView> {
                 // It is safe to call this function from within the build method.
                 snapshot.fetchMore();
               }
-              final feed = Feed.fromSnapshot(snapshot.docs[index]);
 
-              final child = StreamBuilder(
-                stream: Post.doc(feed.postId).snapshots(),
-                builder: (_, snapshot) {
-                  if (!snapshot.hasData) return const SizedBox.shrink();
-                  final post = Post.fromDocumentSnapshot(snapshot.data!);
-                  return widget.itemBuilder.call(post, index);
-                },
-              );
+              final feed = Feed.fromSnapshot(snapshot.docs[index]);
+              final post = Post.fromJson(feed.toJson());
+
+              final child = widget.itemBuilder.call(post, index);
+
               if (widget.topBuilder != null && index == 0) {
                 return Column(
                   children: [
