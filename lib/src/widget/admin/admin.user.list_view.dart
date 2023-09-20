@@ -43,10 +43,10 @@ class AdminUserListView extends StatelessWidget {
 
     Query query = db.collection(userCollectionName);
 
-    if (displayName != null) {
+    if (displayName != null && displayName!.isNotEmpty) {
       query = query.where('displayName', isEqualTo: displayName);
     }
-    if (email != null) {
+    if (email != null && email!.isNotEmpty) {
       query = query.where('email', isEqualTo: email);
     }
 

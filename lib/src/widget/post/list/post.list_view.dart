@@ -27,6 +27,7 @@ class PostListView extends StatelessWidget {
     this.clipBehavior = Clip.hardEdge,
     this.categoryId,
     this.uid,
+    this.onTap,
   });
 
   final double? itemExtent;
@@ -45,6 +46,8 @@ class PostListView extends StatelessWidget {
   final Clip clipBehavior;
   final String? categoryId;
   final String? uid;
+
+  final Function(Post)? onTap;
 
   Query get query {
     Query q = postCol;
@@ -74,7 +77,11 @@ class PostListView extends StatelessWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
               debugPrint("---> $post");
-              PostService.instance.showPostViewScreen(context: context, post: post);
+              onTap?.call(post) ??
+                  PostService.instance.showPostViewScreen(
+                    context: context,
+                    post: post,
+                  );
             },
           );
         }
