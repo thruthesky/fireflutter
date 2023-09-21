@@ -154,6 +154,12 @@ class UserService {
 
   bool enableNoOfProfileView = false;
 
+  /// If set to true it will send push notification
+  /// when showPublicProfileScreen is called
+  /// this will send a push notification to the visited profile
+  /// and indicating that the current user visited that profile
+  bool enablePushMessagingOnShowPublicProfile = false;
+
   /// 미리 한번 호출 해서, Singleton 을 초기화 해 둔다. 그래야 user 를 사용 할 때, 에러가 발생하지 않는다.
   init({
     required String adminUid,
@@ -161,12 +167,19 @@ class UserService {
     Function(User user)? onCreate,
     Function(User user)? onUpdate,
     Function(User user)? onDelete,
+    UserCustomize? customize,
+    bool enablePushMessagingOnShowPublicProfile = false,
   }) {
     if (adminUid.isNotEmpty) {
       UserService.instance.get(adminUid).then((value) => admin = value);
     }
 
+    if (customize != null) {
+      this.customize = customize;
+    }
+
     this.enableNoOfProfileView = enableNoOfProfileView;
+    this.enablePushMessagingOnShowPublicProfile = enablePushMessagingOnShowPublicProfile;
     this.onCreate = onCreate;
     this.onUpdate = onUpdate;
     this.onDelete = onDelete;
@@ -343,7 +356,11 @@ class UserService {
   ///
   /// It shows the public profile dialog for the user. You can customize by
   /// setting [UserCustomize] to [UserService.instance.customize].
-  Future showPublicProfileScreen({required BuildContext context, String? uid, User? user}) {
+  ///
+  /// Send notification even if enablePushMessagingOnShowPublicProfile is set to false
+  /// set `sendNotification` to `true` to send push notification
+  Future showPublicProfileScreen({required BuildContext context, String? uid, User? user, bool? sendNotification}) {
+    log("showPublicProfileScreen:::");
     final String otherUid = uid ?? user!.uid;
     final now = DateTime.now();
     if (enableNoOfProfileView) {
@@ -357,6 +374,20 @@ class UserService {
         "day": now.day,
       }, SetOptions(merge: true));
     }
+
+    if (sendNotification == false) {
+      // dont send push notification
+      // this will bypass the enablePushMessagingOnShowPublicProfile
+    } else if ((enablePushMessagingOnShowPublicProfile || sendNotification == true) && myUid != otherUid) {
+      MessagingService.instance.queue(
+        title: "Someone visit your profile",
+        body: "${my.name} visit your profile",
+        id: myUid,
+        uids: [otherUid],
+        type: NotificationType.user.name,
+      );
+    }
+
     return customize.showPublicProfileScreen?.call(context, uid: uid, user: user) ??
         showGeneralDialog(
           context: context,

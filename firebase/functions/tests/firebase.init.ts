@@ -5,7 +5,7 @@ if (!admin.apps.length) {
     credential: admin.credential.cert(
       "../service-account.json"
     ),
-    databaseURL: "https://withcenter-test-2-default-rtdb.asia-southeast1.firebasedatabase.app",
-    storageBucket: "gs://withcenter-test-2.appspot.com",
+    databaseURL: "https://grc-30ca7-default-rtdb.firebaseio.com",
+    storageBucket: "gs://grc-30ca7.appspot.com",
   });
 }
