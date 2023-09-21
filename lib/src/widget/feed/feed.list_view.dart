@@ -53,13 +53,8 @@ class _FeedListViewState extends State<FeedListView> {
     return FirebaseDatabaseQueryBuilder(
       query: rtdb.ref('feeds').child(FirebaseAuth.instance.currentUser!.uid).orderByChild('createdAt'),
       builder: (context, snapshot, _) {
-        if (snapshot.isFetching) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Text('Something went wrong! ${snapshot.error}');
-        }
-
+        if (snapshot.isFetching) return const Center(child: CircularProgressIndicator());
+        if (snapshot.hasError) return Text('Something went wrong! ${snapshot.error}');
         return Scrollbar(
           controller: scrollBarControlller,
           child: ListView.builder(
@@ -76,7 +71,6 @@ class _FeedListViewState extends State<FeedListView> {
                 // It is safe to call this function from within the build method.
                 snapshot.fetchMore();
               }
-
               final feed = Feed.fromSnapshot(snapshot.docs[index]);
               final post = Post.fromJson(feed.toJson());
 
@@ -89,9 +83,8 @@ class _FeedListViewState extends State<FeedListView> {
                     child,
                   ],
                 );
-              } else {
-                return child;
               }
+              return child;
             },
           ),
         );
