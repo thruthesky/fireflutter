@@ -38,7 +38,15 @@ Create an issue if you find a bug or need a help.
   - [CommentOneLineListTile](#commentonelinelisttile)
   - [CommentListBottomSheet](#commentlistbottomsheet)
   - [UserLikeListScreen](#userlikelistscreen)
+  - [alert](#alert)
   - [toast](#toast)
+  - [warning](#warning)
+  - [prompt](#prompt)
+  - [input](#input)
+  - [randomString](#randomstring)
+  - [timeago](#timeago-1)
+  - [convertUrlToYoutubeId](#converturltoyoutubeid)
+  - [getYoutubeThumbnail](#getyoutubethumbnail)
   - [PostLikeButton](#postlikebutton)
   - [Screen widgets](#screen-widgets)
   - [EmailLoginForm](#emailloginform)
@@ -530,7 +538,22 @@ Use this widget with [showModalBottomSheet].
 This screen shows a list of users who liked a post, comment, or a profile.
  Use this screen to show a user list and when it is tapped, show public profile.
 
+
+## alert
+
+Use [alert] method to display a dialog to alert(alarm) the user.
+
+```dart
+await alert(
+  context: context,
+  title: '회원 탈퇴',
+  message: '회원 탈퇴를 하였습니다.');
+```
+
+
 ## toast
+
+Use [toast] to display a snackbar at the bottom
 
 ```dart
 toast(
@@ -541,6 +564,44 @@ toast(
   hideCloseButton: true,
 );
 ```
+
+## warning
+
+## prompt
+
+Use [prompt] to get a string value from user.
+
+```dart
+final password = await prompt(
+  context: context,
+  title: 'Resign',
+  message: 'Please input your password to resign.',
+);
+```
+
+## input
+
+[input] is an aliash of [prompt].
+
+
+## randomString
+
+Returns a random string.
+
+## timeago
+
+Returns a string of human readable time ago string. It supports i18n.
+
+
+## convertUrlToYoutubeId
+
+Use this method to get youtube id from the youtube url.
+
+
+## getYoutubeThumbnail
+
+Use this method to get the YouTube video's thumbnail from the yotube id.
+
 
 
 ## PostLikeButton

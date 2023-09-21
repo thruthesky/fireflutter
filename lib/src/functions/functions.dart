@@ -318,8 +318,12 @@ Future alert({required BuildContext context, required String title, required Str
 /// [title] is the title of the dialog.
 /// [message] is the message of the dialog.
 /// [initialValue] is the initial value of the input field.
-Future<String?> prompt(
-    {required BuildContext context, required String title, required String message, String? initialValue}) {
+Future<String?> prompt({
+  required BuildContext context,
+  required String title,
+  required String message,
+  String? initialValue,
+}) {
   final controller = TextEditingController(text: initialValue);
   return showDialog<String?>(
     context: context,
@@ -342,6 +346,21 @@ Future<String?> prompt(
         ],
       );
     },
+  );
+}
+
+/// Alias of [prompt]
+Future<String?> input({
+  required BuildContext context,
+  required String title,
+  required String message,
+  String? initialValue,
+}) {
+  return prompt(
+    context: context,
+    title: title,
+    message: message,
+    initialValue: initialValue,
   );
 }
 
@@ -371,12 +390,15 @@ String dateTimeShort(DateTime dt) {
   }
 }
 
+/// [YoutubeThumbnailQuality], [getYoutubeThumbnail], [convertUrlToYoutubeId]
+/// are coming from [youtube_player_flutter](https://pub.dev/packages/youtube_player_flutter).
+///
+///
 /// Converts fully qualified YouTube Url to video id.
 ///
 /// If videoId is passed as url then no conversion is done.
 ///
-/// Note, this code is copied from [youtube_player_flutter] package.
-String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
+String? convertUrlToYoutubeId(String url, {bool trimWhitespaces = true}) {
   if (!url.contains("http") && (url.length == 11)) return url;
   if (trimWhitespaces) url = url.trim();
 
@@ -394,6 +416,35 @@ String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
   return null;
 }
 
+/// Quality of YouTube video thumbnail.
+class YoutubeThumbnailQuality {
+  /// 120*90
+  static const String defaultQuality = 'default';
+
+  /// 320*180
+  static const String medium = 'mqdefault';
+
+  /// 480*360
+  static const String high = 'hqdefault';
+
+  /// 640*480
+  static const String standard = 'sddefault';
+
+  /// Unscaled thumbnail
+  static const String max = 'maxresdefault';
+}
+
+/// Grabs YouTube video's thumbnail for provided video id.
+String getYoutubeThumbnail({
+  required String videoId,
+  String quality = YoutubeThumbnailQuality.standard,
+  bool webp = true,
+}) =>
+    webp ? 'https://i3.ytimg.com/vi_webp/$videoId/$quality.webp' : 'https://i3.ytimg.com/vi/$videoId/$quality.jpg';
+
+/// It opens the SMS app with the number and message.
+///
+/// Use this to open SMS with default number and text message.
 ///
 Future<bool> launchSMS({required String phnumber, required String msg}) async {
   // Android 'sms:+39 348 060 888?body=hello%20there';
