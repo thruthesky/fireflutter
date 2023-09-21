@@ -60,6 +60,21 @@ class FeedService {
     await Future.wait(feedUpdates);
   }
 
+  /// Updates the feeds
+  Future update({required Post post}) async {
+    if (enable == false) return;
+    List<Future> feedUpdates = [];
+    for (String followerUid in my.followers) {
+      feedUpdates.add(rtdb.ref('feeds').child(followerUid).child(post.id).update({
+        'title': post.title,
+        'content': post.content,
+        'urls': post.urls,
+        'youtubeId': post.youtubeId,
+      }));
+    }
+    await Future.wait(feedUpdates);
+  }
+
   /// Used for updating RTDB feeds to followers' feed
   Future delete({required Post post}) async {
     List<Future> feedDeletes = [];

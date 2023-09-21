@@ -70,7 +70,7 @@ class CategoryService {
           if (onTapCategory != null) {
             onTapCategory.call(category);
           } else {
-            PostService.instance.showPostListDialog(context, category.id);
+            PostService.instance.showPostListScreen(context, category.id);
           }
         },
       ),
