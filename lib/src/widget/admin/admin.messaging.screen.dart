@@ -12,8 +12,8 @@ class AdminMessagingScreen extends StatefulWidget {
 }
 
 class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
-  final title = TextEditingController(text: 'post title ....');
-  final body = TextEditingController(text: 'post content .....');
+  final title = TextEditingController(text: '');
+  final body = TextEditingController(text: '');
   final landingPage = TextEditingController(text: '');
   final tokenString = TextEditingController(text: '');
 
@@ -48,6 +48,9 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
 
   Widget get spaceBetweenWidgetGroup => SizedBox(height: widget.spaceBetweenWidgetGroup ?? sizeLg);
 
+  bool moreExplanation = false;
+  bool minimizeExplanation = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,41 +64,117 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: sizeSm),
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(sizeSm),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Send push notification by user, post, token, platform, all Guideline;",
-                          style: textStyle,
-                        ),
-                        Text(
-                          '1. Select the target, `Users`, `Token` or `Platform` that you want to send message to.',
-                          style: textStyle,
-                        ),
-                        Text(
-                          "2. Select notification type, `Post` or `Chat` this will determine the landing page. when the user tap the message.",
-                          style: textStyle,
-                        ),
-                        Text(
-                          '3. Input body and title.',
-                          style: textStyle,
-                        ),
-                        Text(
-                          '4. Submit the push notification',
-                          style: textStyle,
-                        ),
-                      ],
+              Row(
+                children: [
+                  const Text(
+                    "Push notification guideline",
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        moreExplanation = !moreExplanation;
+                        minimizeExplanation = false;
+                      });
+                    },
+                    icon: Icon(
+                      moreExplanation
+                          ? Icons.keyboard_double_arrow_up_outlined
+                          : Icons.keyboard_double_arrow_down_outlined,
+                    ),
+                  ),
+                  if (!minimizeExplanation)
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          minimizeExplanation = true;
+                          moreExplanation = false;
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.close_outlined,
+                      ),
+                    ),
+                ],
+              ),
+              if (!minimizeExplanation)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: sizeSm),
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(sizeSm),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Send push notification by user, post, token, platform, all",
+                            style: textStyle,
+                          ),
+                          Text(
+                            '1. Choose the target, `Users`, `Token` or `Platform` that you want to send message to.',
+                            style: textStyle,
+                          ),
+                          if (moreExplanation)
+                            Padding(
+                              padding: const EdgeInsets.only(left: sizeSm),
+                              child: Column(children: [
+                                Text(
+                                  '1.1 For `Platform`, you can choose which platform will receive the notification or simply choose all to send to all users.',
+                                  style: textStyle,
+                                ),
+                                Text(
+                                  '1.2 For `Users`, `Token` you can search the user by clicking the search icon.',
+                                  style: textStyle,
+                                ),
+                                Text(
+                                  '1.3 For `Token` by clicking the + icon you can also input the tokens separated by comma',
+                                  style: textStyle,
+                                ),
+                              ]),
+                            ),
+                          Text(
+                            "2. Choose notification type, `Post` or `Chat` or `User` this will determine the landing page. when the user tap the message.",
+                            style: textStyle,
+                          ),
+                          if (moreExplanation)
+                            Padding(
+                              padding: const EdgeInsets.only(left: sizeSm),
+                              child: Text(
+                                "2.1 Input the corresponding PostId, RoomID or UserId. You can also click the search button to choose from the list of Post,Chat,User.",
+                                style: textStyle,
+                              ),
+                            ),
+                          if (moreExplanation)
+                            Padding(
+                              padding: const EdgeInsets.only(left: sizeSm),
+                              child: Text(
+                                "2.2 For post you can input the post id and click the load button to patch the title and content base from the post.",
+                                style: textStyle,
+                              ),
+                            ),
+                          Text(
+                            '3. Input/Modify body and title.',
+                            style: textStyle,
+                          ),
+                          Text(
+                            '4. For android you can input specific channel to trigger the push notification channel setup. Default value is `DEFAULT_CHANNEL`',
+                            style: textStyle,
+                          ),
+                          Text(
+                            '5. Input sound file name, must exist on the app. Default value is `default`',
+                            style: textStyle,
+                          ),
+                          Text(
+                            '6. Submit the push notification',
+                            style: textStyle,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
               Text(
-                'Select Target',
+                'Choose Target',
                 style: textStyle,
               ),
               Row(
@@ -186,7 +265,11 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                       onPressed: () {
                         AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
                           users[user.uid] = user;
-                          toast(title: 'Users add', message: "${user.displayName} was added on the list");
+                          toast(
+                            title: 'Users add',
+                            message: "${user.displayName} was added on the list",
+                            duration: const Duration(seconds: 2),
+                          );
                           setState(() {});
                         });
                       },
@@ -242,7 +325,11 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                       onTap: () {
                         AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
                           users[user.uid] = user;
-                          // toast(title: 'Users add', message: "${user.displayName} was added on the list");
+                          toast(
+                            title: 'Users add',
+                            message: "${user.displayName} was added on the list",
+                            duration: const Duration(seconds: 2),
+                          );
                           setState(() {});
                         });
                       },
@@ -264,7 +351,11 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                       onPressed: () {
                         AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
                           final querySnapshot = await tokensCol(user.uid).get();
-                          toast(title: 'Token added: ', message: "added new token # ${querySnapshot.size}");
+                          toast(
+                            title: 'Token added: ',
+                            message: "added new token # ${querySnapshot.size}",
+                            duration: const Duration(seconds: 2),
+                          );
                           if (querySnapshot.size == 0) return;
                           tokens = ([...tokens, ...querySnapshot.docs.map((e) => e.id).toList()]).toSet().toList();
                           setState(() {});
@@ -339,7 +430,11 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                       onTap: () {
                         AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
                           final querySnapshot = await tokensCol(user.uid).get();
-                          toast(title: 'Token added: ', message: "added new token # ${querySnapshot.size}");
+                          toast(
+                            title: 'Token added: ',
+                            message: "added new token # ${querySnapshot.size}",
+                            duration: const Duration(seconds: 2),
+                          );
                           if (querySnapshot.size == 0) return;
                           tokens = ([...tokens, ...querySnapshot.docs.map((e) => e.id).toList()]).toSet().toList();
                           setState(() {});
@@ -397,16 +492,13 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
               Column(
                 children: [
                   Stack(
-                    // alignment: AlignmentDirectional.center,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextField(
                         controller: landingPage,
                         style: textStyle,
                         decoration: InputDecoration(
                           label: Text(
-                            "Landing $notificationType Id",
-                            // style: textStyle,
+                            "Input $notificationType Id",
                           ),
                           hintText: 'Input $notificationType Id',
                           helperText: notificationType == NotificationType.post.name
@@ -439,9 +531,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                                 icon: const Icon(Icons.refresh_outlined),
                               ),
                               IconButton(
-                                // visualDensity: const VisualDensity(vertical: sizeXxs),
                                 onPressed: () async {
-                                  // PostService.instance.showPostListScreen(context, '');
                                   AdminService.instance.showChoosePostScreen(context, onTap: (post) async {
                                     landingPage.text = post.id;
                                     title.text = post.title;
@@ -459,7 +549,6 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                                   AdminService.instance.showChooseChatRoomScreen(context, onTap: (room) async {
                                     landingPage.text = room.roomId;
                                     Navigator.of(context).pop();
-                                    // setState(() {});
                                   });
                                 },
                                 icon: const Icon(Icons.search),
@@ -470,7 +559,6 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                                   AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
                                     landingPage.text = user.uid;
                                     Navigator.of(context).pop();
-                                    // setState(() {});
                                   });
                                 },
                                 icon: const Icon(Icons.search),
@@ -530,7 +618,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                         return warningSnackbar(context, 'Title and body cant be both empty');
                       }
                       if (landingPage.text.isEmpty) {
-                        return warningSnackbar(context, 'Landing id is missing');
+                        return warningSnackbar(context, '$notificationType id is missing');
                       }
 
                       await MessagingService.instance.queue(
@@ -550,6 +638,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                       toast(
                         title: 'Messaging',
                         message: 'Push notification was created.',
+                        duration: const Duration(seconds: 5),
                       );
                     },
                     child: const Text('Send Push Message'),
