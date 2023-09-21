@@ -159,6 +159,8 @@ class Post {
     );
 
     PostService.instance.onUpdate?.call(updatedPost);
+
+    FeedService.instance.update(post: updatedPost);
   }
 
   /// Likes or Unlikes the post

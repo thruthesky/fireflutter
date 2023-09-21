@@ -33,12 +33,11 @@ class _PostListDialogState extends State<PostListScreen> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title ?? widget.categoryId ?? "@t - Post List"),
         actions: [
-          if (widget.categoryId != null)
-            PostListCategorySubscription(widget.categoryId!),
+          if (widget.categoryId != null) PostListCategorySubscription(widget.categoryId!),
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () async {
-              final post = await PostService.instance.showEditDialog(
+              final post = await PostService.instance.showEditScreen(
                 context,
                 categoryId: widget.categoryId,
               );
@@ -46,8 +45,7 @@ class _PostListDialogState extends State<PostListScreen> {
               if (post != null) {
                 if (mounted) {
                   Navigator.pop(context);
-                  PostService.instance
-                      .showPostViewScreen(context: context, post: post);
+                  PostService.instance.showPostViewScreen(context: context, post: post);
                 }
               }
             },
@@ -94,13 +92,12 @@ class _PostListDialogState extends State<PostListScreen> {
               switch (value) {
                 case "category_settings":
                   if (widget.categoryId != null) {
-                    CategoryService.instance
-                        .showUpdateDialog(context, widget.categoryId!);
+                    CategoryService.instance.showUpdateDialog(context, widget.categoryId!);
                   } else {
                     CategoryService.instance.showListDialog(
                       context,
-                      onTapCategory: (category) => CategoryService.instance
-                          .showUpdateDialog(context, widget.categoryId!),
+                      onTapCategory: (category) =>
+                          CategoryService.instance.showUpdateDialog(context, widget.categoryId!),
                     );
                   }
                   break;
@@ -108,8 +105,7 @@ class _PostListDialogState extends State<PostListScreen> {
                 case "category_list":
                   CategoryService.instance.showListDialog(
                     context,
-                    onTapCategory: (category) => CategoryService.instance
-                        .showUpdateDialog(context, category.id),
+                    onTapCategory: (category) => CategoryService.instance.showUpdateDialog(context, category.id),
                   );
                   break;
 

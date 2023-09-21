@@ -47,15 +47,16 @@ class PostService {
   }
 
   /// Shows the Edit Post as a dialog
-  Future<Post?> showEditDialog(
+  Future<Post?> showEditScreen(
     BuildContext context, {
     String? categoryId,
     Post? post,
   }) {
-    return showGeneralDialog<Post?>(
-      context: context,
-      pageBuilder: (context, _, __) => PostEditScreen(categoryId: categoryId, post: post),
-    );
+    return customize.showEditScreen?.call(context, categoryId: categoryId, post: post) ??
+        showGeneralDialog<Post?>(
+          context: context,
+          pageBuilder: (context, _, __) => PostEditScreen(categoryId: categoryId, post: post),
+        );
   }
 
   Stream<DocumentSnapshot> snapshot({required String postId}) {
@@ -79,7 +80,7 @@ class PostService {
   }
 
   /// Shows the posts under a category (or forum)
-  showPostListDialog(BuildContext context, String categoryId) {
+  showPostListScreen(BuildContext context, String categoryId) {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) => PostListScreen(
@@ -160,7 +161,7 @@ class PostService {
               debugPrint('deleting post');
               break;
             case "edit":
-              await PostService.instance.showEditDialog(context, post: post);
+              await PostService.instance.showEditScreen(context, post: post);
               break;
 
             case 'report':

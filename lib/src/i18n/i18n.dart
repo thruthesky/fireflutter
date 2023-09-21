@@ -24,6 +24,7 @@ class I18nTexts {
   String yes;
   String no;
   String ok;
+  String edit;
   String cancel;
   String reply;
   String like;
@@ -81,6 +82,7 @@ class I18nTexts {
     this.yes = "Yes",
     this.no = "No",
     this.ok = "OK",
+    this.edit = 'Edit',
     this.cancel = "Cancel",
     this.reply = "Reply",
     this.like = "Like",
