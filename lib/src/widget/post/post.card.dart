@@ -150,6 +150,7 @@ class PostCard extends StatelessWidget {
         const Spacer(),
         PopupMenuButton<String>(
           itemBuilder: (context) => [
+            if (post.isMine) PopupMenuItem(value: "edit", child: Text(tr.edit)),
             const PopupMenuItem(
               value: "report",
               child: Text("Report"),
@@ -163,7 +164,9 @@ class PostCard extends StatelessWidget {
             ),
           ],
           onSelected: (value) async {
-            if (value == 'report') {
+            if (value == "edit") {
+              PostService.instance.showEditScreen(context, post: post);
+            } else if (value == 'report') {
               ReportService.instance.showReportDialog(context: context, postId: post.id);
             } else if (value == 'block') {
               final blocked = await toggle(pathBlock(post.uid));

@@ -89,7 +89,7 @@ class PostViewButtons extends StatelessWidget {
                 ),
                 onSelected: (v) async {
                   if (v == 'edit') {
-                    await PostService.instance.showEditDialog(context, post: post);
+                    await PostService.instance.showEditScreen(context, post: post);
                   } else if (v == 'report') {
                     ReportService.instance.showReportDialog(
                       context: context,

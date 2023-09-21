@@ -135,17 +135,21 @@ class Post {
   /// Post udpate
   ///
   ///
-  Future<void> update({
+  /// Returns a Future<Post>
+  Future<Post> update({
     required String title,
     required String content,
     List<String>? urls,
+    String? youtubeId,
+    Map<String, dynamic> data = const {},
   }) async {
     final Map<String, dynamic> postUpdateData = {
       'title': title,
       'content': content,
       if (urls != null) 'urls': urls,
-      if (urls == null) 'urls': FieldValue.delete(),
+      if (youtubeId != null) 'youtubeId': youtubeId,
       'updatedAt': FieldValue.serverTimestamp(),
+      ...data,
     };
     await postCol.doc(id).update(postUpdateData);
 
@@ -159,6 +163,10 @@ class Post {
     );
 
     PostService.instance.onUpdate?.call(updatedPost);
+
+    FeedService.instance.update(post: updatedPost);
+
+    return updatedPost;
   }
 
   /// Likes or Unlikes the post

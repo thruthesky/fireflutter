@@ -88,7 +88,7 @@ class _TestScreenState extends State<TestUi> {
         const Divider(),
         ElevatedButton(
             onPressed: () {
-              PostService.instance.showPostListDialog(context, 'qna');
+              PostService.instance.showPostListScreen(context, 'qna');
             },
             child: const Text('QnA Forum')),
         const Divider(),
