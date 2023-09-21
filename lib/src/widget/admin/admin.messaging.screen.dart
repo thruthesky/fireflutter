@@ -46,7 +46,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
 
   TextStyle textStyle = const TextStyle(fontSize: 10);
 
-  Widget get spaceBetweenWidgetGroup => SizedBox(height: widget.spaceBetweenWidgetGroup ?? 16);
+  Widget get spaceBetweenWidgetGroup => SizedBox(height: widget.spaceBetweenWidgetGroup ?? sizeLg);
 
   @override
   Widget build(BuildContext context) {
@@ -195,40 +195,46 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                   ],
                 ),
                 if (users.isNotEmpty) ...[
-                  SizedBox(
-                    height: 80,
-                    child: ListView(
-                      children: [
-                        for (String uid in users.keys)
-                          Row(
-                            children: [
-                              Text(
-                                users[uid]!.displayName.isNotEmpty
-                                    ? users[uid]!.displayName
-                                    : users[uid]!.name.isNotEmpty
-                                        ? users[uid]!.name
-                                        : uid,
-                                overflow: TextOverflow.ellipsis,
-                                style: textStyle,
-                              ),
-                              const Spacer(),
-                              InkWell(
-                                  onTap: () {
-                                    users.remove(uid);
-                                    setState(() {});
-                                  },
-                                  child: const Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: sizeXs, vertical: sizeXxs),
-                                    child: Icon(
-                                      Icons.delete_forever_outlined,
-                                    ),
-                                  ))
-                            ],
-                          ),
-                      ],
+                  Container(
+                    constraints: const BoxConstraints(maxHeight: 100),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (String uid in users.keys)
+                            Row(
+                              children: [
+                                Text(
+                                  users[uid]!.displayName.isNotEmpty
+                                      ? users[uid]!.displayName
+                                      : users[uid]!.name.isNotEmpty
+                                          ? users[uid]!.name
+                                          : uid,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: textStyle,
+                                ),
+                                const Spacer(),
+                                InkWell(
+                                    onTap: () {
+                                      users.remove(uid);
+                                      setState(() {});
+                                    },
+                                    child: const Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: sizeXs, vertical: sizeXxs),
+                                      child: Icon(
+                                        Icons.delete_forever_outlined,
+                                      ),
+                                    ))
+                              ],
+                            ),
+                        ],
+                      ),
                     ),
                   ),
-                  const Divider(),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 16.0),
+                    child: Divider(),
+                  ),
                 ] else
                   Padding(
                     padding: const EdgeInsets.only(bottom: 32.0),
@@ -236,7 +242,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                       onTap: () {
                         AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
                           users[user.uid] = user;
-                          toast(title: 'Users add', message: "${user.displayName} was added on the list");
+                          // toast(title: 'Users add', message: "${user.displayName} was added on the list");
                           setState(() {});
                         });
                       },
@@ -290,10 +296,11 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                   ],
                 ),
                 if (tokens.isNotEmpty)
-                  SizedBox(
-                    height: 80,
+                  Container(
+                    constraints: const BoxConstraints(maxHeight: 100),
                     child: SingleChildScrollView(
                       child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           for (String token in tokens)
                             Row(
@@ -344,22 +351,6 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                       ),
                     ),
                   ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: sizeSm),
-                  child: TextField(
-                    controller: tokenString,
-                    style: textStyle,
-                    decoration: InputDecoration(
-                      label: Text(
-                        'Or Input tokens',
-                        style: textStyle,
-                      ),
-                      hintText: 'Multiple token must be separated by comma',
-                      hintStyle: textStyle,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ),
               ],
               spaceBetweenWidgetGroup,
               Text(
@@ -405,81 +396,88 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
               spaceBetweenWidgetGroup,
               Column(
                 children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Stack(
+                    // alignment: AlignmentDirectional.center,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: TextField(
-                          controller: landingPage,
-                          style: textStyle,
-                          decoration: InputDecoration(
-                            label: Text(
-                              "Landing $notificationType Id",
-                              // style: textStyle,
-                            ),
-                            hintText: 'Input $notificationType Id',
-                            helperText: notificationType == NotificationType.post.name
-                                ? 'Click the load botton to patch the title and body base on the post id'
-                                : null,
-                            helperMaxLines: 2,
-                            helperStyle: textStyle,
+                      TextField(
+                        controller: landingPage,
+                        style: textStyle,
+                        decoration: InputDecoration(
+                          label: Text(
+                            "Landing $notificationType Id",
+                            // style: textStyle,
                           ),
+                          hintText: 'Input $notificationType Id',
+                          helperText: notificationType == NotificationType.post.name
+                              ? 'Click the load botton to patch the title and body base on the post id'
+                              : null,
+                          helperMaxLines: 2,
+                          helperStyle: textStyle,
                         ),
                       ),
-                      if (notificationType == NotificationType.post.name) ...[
-                        IconButton(
-                          // visualDensity: const VisualDensity(vertical: sizeXxs),
-                          onPressed: () async {
-                            if (landingPage.text.isEmpty) {
-                              return warningSnackbar(null, '$notificationType Id is not set');
-                            }
+                      Positioned(
+                        right: 0,
+                        top: 4,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (notificationType == NotificationType.post.name) ...[
+                              IconButton(
+                                onPressed: () async {
+                                  if (landingPage.text.isEmpty) {
+                                    return warningSnackbar(null, '$notificationType Id is not set');
+                                  }
 
-                            Post post = await PostService.instance.get(landingPage.text);
+                                  Post post = await PostService.instance.get(landingPage.text);
 
-                            showSnackBar(null, 'Post was loaded, title and body was patch');
+                                  showSnackBar(null, 'Post was loaded, title and body was patch');
 
-                            title.text = post.title;
-                            body.text = post.content;
-                          },
-                          icon: const Icon(Icons.refresh_outlined),
-                        ),
-                        IconButton(
-                          // visualDensity: const VisualDensity(vertical: sizeXxs),
-                          onPressed: () async {
-                            // PostService.instance.showPostListDialog(context, '');
-                            AdminService.instance.showChoosePostScreen(context, onTap: (post) async {
-                              landingPage.text = post.id;
-                              title.text = post.title;
-                              body.text = post.content;
+                                  title.text = post.title;
+                                  body.text = post.content;
+                                },
+                                icon: const Icon(Icons.refresh_outlined),
+                              ),
+                              IconButton(
+                                // visualDensity: const VisualDensity(vertical: sizeXxs),
+                                onPressed: () async {
+                                  // PostService.instance.showPostListDialog(context, '');
+                                  AdminService.instance.showChoosePostScreen(context, onTap: (post) async {
+                                    landingPage.text = post.id;
+                                    title.text = post.title;
+                                    body.text = post.content;
 
-                              Navigator.of(context).pop();
-                            });
-                          },
-                          icon: const Icon(Icons.search),
+                                    Navigator.of(context).pop();
+                                  });
+                                },
+                                icon: const Icon(Icons.search),
+                              ),
+                            ],
+                            if (notificationType == NotificationType.chat.name)
+                              IconButton(
+                                onPressed: () {
+                                  AdminService.instance.showChooseChatRoomScreen(context, onTap: (room) async {
+                                    landingPage.text = room.roomId;
+                                    Navigator.of(context).pop();
+                                    // setState(() {});
+                                  });
+                                },
+                                icon: const Icon(Icons.search),
+                              ),
+                            if (notificationType == NotificationType.user.name)
+                              IconButton(
+                                onPressed: () {
+                                  AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
+                                    landingPage.text = user.uid;
+                                    Navigator.of(context).pop();
+                                    // setState(() {});
+                                  });
+                                },
+                                icon: const Icon(Icons.search),
+                              ),
+                          ],
                         ),
-                      ],
-                      if (notificationType == NotificationType.chat.name)
-                        IconButton(
-                          onPressed: () {
-                            AdminService.instance.showChooseChatRoomScreen(context, onTap: (room) async {
-                              landingPage.text = room.roomId;
-                              Navigator.of(context).pop();
-                              // setState(() {});
-                            });
-                          },
-                          icon: const Icon(Icons.search),
-                        ),
-                      if (notificationType == NotificationType.user.name)
-                        IconButton(
-                          onPressed: () {
-                            AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
-                              landingPage.text = user.uid;
-                              Navigator.of(context).pop();
-                              // setState(() {});
-                            });
-                          },
-                          icon: const Icon(Icons.search),
-                        ),
+                      ),
                     ],
                   ),
                   spaceBetweenWidgetGroup,

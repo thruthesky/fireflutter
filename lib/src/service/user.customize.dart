@@ -2,8 +2,7 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class UserCustomize {
-  Future Function(BuildContext context, {String? uid, User? user})?
-      showPublicProfileScreen;
+  Future Function(BuildContext context, {String? uid, User? user})? showPublicProfileScreen;
 
   List<Widget> Function(BuildContext context, User user)? publicScreenActions;
 
@@ -13,6 +12,5 @@ class UserCustomize {
   Widget Function(BuildContext context, User user)? publicScreenFollowButton;
   Widget Function(BuildContext context, User user)? publicScreenBlockButton;
   Widget Function(BuildContext context, User user)? publicScreenReportButton;
-  List<Widget> Function(BuildContext context, User user)?
-      publicScreenTrailingButtons;
+  List<Widget> Function(BuildContext context, User user)? publicScreenTrailingButtons;
 }
