@@ -88,6 +88,8 @@ class StorageService {
   /// Delete the uploaded file in Firebase Storage by the url.
   ///
   /// If the url is null, it does nothing.
+  ///
+  /// It will produce an Exception on error.
   Future<void> delete(String? url) async {
     if (url == null || url == '') return;
     final storageRef = FirebaseStorage.instance.refFromURL(url);
