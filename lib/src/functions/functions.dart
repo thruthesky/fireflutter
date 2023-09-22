@@ -390,7 +390,7 @@ String dateTimeShort(DateTime dt) {
   }
 }
 
-/// [YoutubeThumbnailQuality], [getYoutubeThumbnail], [convertUrlToYoutubeId]
+/// [YoutubeThumbnailQuality], [getYoutubeThumbnail], [getYoutubeIdFromUrl]
 /// are coming from [youtube_player_flutter](https://pub.dev/packages/youtube_player_flutter).
 ///
 ///
@@ -398,7 +398,7 @@ String dateTimeShort(DateTime dt) {
 ///
 /// If videoId is passed as url then no conversion is done.
 ///
-String? convertUrlToYoutubeId(String url, {bool trimWhitespaces = true}) {
+String? getYoutubeIdFromUrl(String url, {bool trimWhitespaces = true}) {
   if (!url.contains("http") && (url.length == 11)) return url;
   if (trimWhitespaces) url = url.trim();
 

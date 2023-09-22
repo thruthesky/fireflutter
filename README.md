@@ -45,7 +45,7 @@ Create an issue if you find a bug or need a help.
   - [input](#input)
   - [randomString](#randomstring)
   - [timeago](#timeago-1)
-  - [convertUrlToYoutubeId](#converturltoyoutubeid)
+  - [getYoutubeIdFromUrl](#converturltoyoutubeid)
   - [getYoutubeThumbnail](#getyoutubethumbnail)
   - [PostLikeButton](#postlikebutton)
   - [Screen widgets](#screen-widgets)
@@ -595,7 +595,7 @@ Returns a random string.
 Returns a string of human readable time ago string. It supports i18n.
 
 
-## convertUrlToYoutubeId
+## getYoutubeIdFromUrl
 
 Use this method to get youtube id from the youtube url.
 
