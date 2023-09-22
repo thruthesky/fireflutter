@@ -52,7 +52,7 @@ class PostViewButtons extends StatelessWidget {
                   child: Text(
                     post.likes.isEmpty ? tr.like : tr.likes.replaceAll('#no', post.likes.length.toString()),
                   ),
-                  onPressed: () => toggle(pathPostLikedBy(post.id)), // post.like(),
+                  onPressed: () => post.like(),
                 ),
               ),
               UserDoc(
@@ -72,15 +72,16 @@ class PostViewButtons extends StatelessWidget {
               const Spacer(),
               PopupMenuButton<String>(
                 itemBuilder: (_) => [
-                  const PopupMenuItem(value: 'edit', child: Text('Edit')),
+                  if (post!.isMine) const PopupMenuItem(value: 'edit', child: Text('Edit')),
                   const PopupMenuItem(value: 'report', child: Text('Report')),
-                  PopupMenuItem(
-                    value: 'block',
-                    child: Database(
-                      path: pathBlock(post!.uid),
-                      builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
+                  if (loggedIn)
+                    PopupMenuItem(
+                      value: 'block',
+                      child: Database(
+                        path: pathBlock(post!.uid),
+                        builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
+                      ),
                     ),
-                  ),
                   ...?trailing,
                 ],
                 child: const Padding(

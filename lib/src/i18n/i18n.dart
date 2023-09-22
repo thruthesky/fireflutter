@@ -6,6 +6,7 @@ part 'i18n.g.dart';
 class I18nTexts {
   String loginFirstTitle;
   String loginFirstMessage;
+  String loginFirstToUseCompleteFunctionality;
   String noOfChatRooms;
   String roomMenu;
   String chatRoomCreateDialog;
@@ -61,6 +62,10 @@ class I18nTexts {
 
   String noOfLikes;
 
+  String share;
+  String home;
+  String profile;
+
   I18nTexts({
     this.loginFirstTitle = 'Login first',
     this.loginFirstMessage = 'Please login first.',
@@ -114,6 +119,10 @@ class I18nTexts {
     this.readLess = "Read less",
     this.readMore = "Read more",
     this.noOfLikes = "Likes #no",
+    this.share = "Share",
+    this.loginFirstToUseCompleteFunctionality = "Login first to use the complete functionality.",
+    this.home = "Home",
+    this.profile = "Profile",
   });
 
   factory I18nTexts.fromJson(Map<String, dynamic> json) => _$I18nTextsFromJson(json);

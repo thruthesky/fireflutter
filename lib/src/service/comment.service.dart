@@ -59,7 +59,11 @@ class CommentService {
     Post? post,
     Comment? parent,
     Comment? comment,
-  }) {
+  }) async {
+    if (notLoggedIn) {
+      toast(title: tr.loginFirstTitle, message: tr.loginFirstMessage);
+      return null;
+    }
     return customize.showCommentEditBottomSheet?.call(context, post: post, parent: parent, comment: comment) ??
         showModalBottomSheet<Comment?>(
           context: context,

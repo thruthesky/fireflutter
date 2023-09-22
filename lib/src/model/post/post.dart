@@ -169,22 +169,22 @@ class Post {
     return updatedPost;
   }
 
-  /// Likes or Unlikes the post
+  /// Like or unline the post
   ///
-  /// If I already liked (iLiked == true)
-  /// it will add my uid to the likes...
-  /// otherwise, it will remove my uid from the likes.
-  @Deprecated("Use database toggle")
-  Future<void> like() async {
-    if (iLiked) {
-      await postCol.doc(id).update({
-        'likes': FieldValue.arrayRemove([my.uid]),
-      });
-    } else {
-      await postCol.doc(id).update({
-        'likes': FieldValue.arrayUnion([my.uid]),
-      });
+  /// This method must be the only method to like or unlike. Don't it in
+  /// another way.
+  ///
+  /// This method do extra works that are necessary for like and unlike.
+  ///
+  /// Returns true on like and false on unlike. It returns null if the user
+  /// didn't logged int.
+  ///
+  Future<bool?> like() async {
+    if (notLoggedIn) {
+      toast(title: tr.loginFirstTitle, message: tr.loginFirstMessage);
+      return null;
     }
+    return await toggle(pathPostLikedBy(id));
   }
 
   @override

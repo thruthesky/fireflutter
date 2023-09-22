@@ -39,7 +39,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
     // This is for updating the post when it is edited without flickering.
     Post.doc(post.id).snapshots().listen((event) {
       _post = Post.fromDocumentSnapshot(event);
-      setState(() {});
+      if (mounted) setState(() {});
     });
   }
 

@@ -154,11 +154,13 @@ class UserService {
 
   bool enableNoOfProfileView = false;
 
-  /// If set to true it will send push notification
+  /// If [enableMessagingOnPublicProfileVisit] is set to true it will send push notification
   /// when showPublicProfileScreen is called
   /// this will send a push notification to the visited profile
   /// and indicating that the current user visited that profile
-  bool enablePushMessagingOnShowPublicProfile = false;
+  ///
+  ///
+  bool enableMessagingOnPublicProfileVisit = false;
 
   /// 미리 한번 호출 해서, Singleton 을 초기화 해 둔다. 그래야 user 를 사용 할 때, 에러가 발생하지 않는다.
   init({
@@ -168,7 +170,7 @@ class UserService {
     Function(User user)? onUpdate,
     Function(User user)? onDelete,
     UserCustomize? customize,
-    bool enablePushMessagingOnShowPublicProfile = false,
+    bool enableMessagingOnPublicProfileVisit = false,
   }) {
     if (adminUid.isNotEmpty) {
       UserService.instance.get(adminUid).then((value) => admin = value);
@@ -179,7 +181,7 @@ class UserService {
     }
 
     this.enableNoOfProfileView = enableNoOfProfileView;
-    this.enablePushMessagingOnShowPublicProfile = enablePushMessagingOnShowPublicProfile;
+    this.enableMessagingOnPublicProfileVisit = enableMessagingOnPublicProfileVisit;
     this.onCreate = onCreate;
     this.onUpdate = onUpdate;
     this.onDelete = onDelete;
@@ -357,28 +359,34 @@ class UserService {
   /// It shows the public profile dialog for the user. You can customize by
   /// setting [UserCustomize] to [UserService.instance.customize].
   ///
-  /// Send notification even if enablePushMessagingOnShowPublicProfile is set to false
+  /// Send notification even if enableMessagingOnPublicProfileVisit is set to false
   /// set `sendNotification` to `true` to send push notification
-  Future showPublicProfileScreen({required BuildContext context, String? uid, User? user, bool? sendNotification}) {
-    log("showPublicProfileScreen:::");
+  Future showPublicProfileScreen({required BuildContext context, String? uid, User? user}) {
     final String otherUid = uid ?? user!.uid;
     final now = DateTime.now();
-    if (enableNoOfProfileView) {
-      profileViewHistoryDoc(myUid: my.uid, otherUid: otherUid).set({
-        "uid": otherUid,
-        "seenBy": my.uid,
-        "type": my.type,
-        "lastViewdAt": FieldValue.serverTimestamp(),
-        "year": now.year,
-        "month": now.month,
-        "day": now.day,
-      }, SetOptions(merge: true));
+
+    /// @withcenter.dev3 - ERROR - This produces error on dynamic link.
+    /// Steps to reproduce
+    /// 1. logout
+    /// 2. click on dynamic link for public profile screen.
+    ///
+    /// Dynamic link is especially for users who are not install and not signed users.
+    if (loggedIn && enableNoOfProfileView) {
+      profileViewHistoryDoc(myUid: my.uid, otherUid: otherUid).set(
+        {
+          "uid": otherUid,
+          "seenBy": my.uid,
+          "type": my.type,
+          "lastViewdAt": FieldValue.serverTimestamp(),
+          "year": now.year,
+          "month": now.month,
+          "day": now.day,
+        },
+        SetOptions(merge: true),
+      );
     }
 
-    if (sendNotification == false) {
-      // dont send push notification
-      // this will bypass the enablePushMessagingOnShowPublicProfile
-    } else if ((enablePushMessagingOnShowPublicProfile || sendNotification == true) && myUid != otherUid) {
+    if (loggedIn && (enableMessagingOnPublicProfileVisit) && myUid != otherUid) {
       MessagingService.instance.queue(
         title: "Someone visit your profile",
         body: "${my.name} visit your profile",

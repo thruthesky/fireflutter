@@ -167,7 +167,7 @@ class CommentOneLineListTile extends StatelessWidget {
           Database(
             path: pathCommentLikedBy(comment.id),
             builder: (value, path) => IconButton(
-              onPressed: () => toggle(path),
+              onPressed: () => comment.like(),
               icon: Icon(
                 value == null ? Icons.favorite_border : Icons.favorite,
                 size: 16,
