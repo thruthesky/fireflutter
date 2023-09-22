@@ -85,60 +85,7 @@ class StorageService {
     return url;
   }
 
-  // TODO Read me
-  // TODO currently ongoing
-  // Will need to review
-  Future<String?> uploadFileFromBase64(String base64, {String? saveAs}) async {
-    final storageRef = FirebaseStorage.instance.ref();
-    final fileRef = storageRef.child(saveAs ??
-        "users/${myUid!}/${DateTime.now().millisecondsSinceEpoch.toString()}${getBase64FileExtension(base64)}");
-    fileRef
-        .putString(base64,
-            format: PutStringFormat.base64, metadata: SettableMetadata(contentType: getBase64ContentType(base64)))
-        .then((snapshot) {
-      debugPrint('Uploaded a data_url string!');
-    });
-    final url = await fileRef.getDownloadURL();
-    return url;
-  }
-
-  String getBase64ContentType(String base64String) {
-    // TODO update to new flutter switch
-    switch (base64String.characters.first) {
-      case '/':
-        return 'image/jpeg';
-      case 'i':
-        return 'image/png';
-      case 'R':
-        return 'image/gif';
-      case 'U':
-        return 'image/webp';
-      case 'J':
-        return 'file/pdf';
-      default:
-        return 'unknown';
-    }
-  }
-
-  String getBase64FileExtension(String base64String) {
-    // TODO update to new flutter switch
-    switch (base64String.characters.first) {
-      case '/':
-        return '.jpeg';
-      case 'i':
-        return '.png';
-      case 'R':
-        return '.gif';
-      case 'U':
-        return '.webp';
-      case 'J':
-        return '.pdf';
-      default:
-        return '';
-    }
-  }
-
-  // TODO ongoing
+  // TODO ongoing --- will review to lessen (preventing premature optimization)
   Future<String?> uploadFutureFile({
     Function(double)? progress,
     Function? complete,
