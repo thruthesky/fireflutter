@@ -85,6 +85,99 @@ class StorageService {
     return url;
   }
 
+  // TODO Read me
+  // TODO currently ongoing
+  // Will need to review
+  Future<String?> uploadFileFromBase64(String base64, {String? saveAs}) async {
+    final storageRef = FirebaseStorage.instance.ref();
+    final fileRef = storageRef.child(saveAs ??
+        "users/${myUid!}/${DateTime.now().millisecondsSinceEpoch.toString()}${getBase64FileExtension(base64)}");
+    fileRef
+        .putString(base64,
+            format: PutStringFormat.base64, metadata: SettableMetadata(contentType: getBase64ContentType(base64)))
+        .then((snapshot) {
+      debugPrint('Uploaded a data_url string!');
+    });
+    final url = await fileRef.getDownloadURL();
+    return url;
+  }
+
+  String getBase64ContentType(String base64String) {
+    // TODO update to new flutter switch
+    switch (base64String.characters.first) {
+      case '/':
+        return 'image/jpeg';
+      case 'i':
+        return 'image/png';
+      case 'R':
+        return 'image/gif';
+      case 'U':
+        return 'image/webp';
+      case 'J':
+        return 'file/pdf';
+      default:
+        return 'unknown';
+    }
+  }
+
+  String getBase64FileExtension(String base64String) {
+    // TODO update to new flutter switch
+    switch (base64String.characters.first) {
+      case '/':
+        return '.jpeg';
+      case 'i':
+        return '.png';
+      case 'R':
+        return '.gif';
+      case 'U':
+        return '.webp';
+      case 'J':
+        return '.pdf';
+      default:
+        return '';
+    }
+  }
+
+  // TODO ongoing
+  Future<String?> uploadFutureFile({
+    Function(double)? progress,
+    Function? complete,
+    int compressQuality = 80,
+    Future<File?>? futureFile,
+    String? saveAs,
+  }) async {
+    if (futureFile == null) return null;
+    File? file = await futureFile;
+    if (file == null) return null;
+    final storageRef = FirebaseStorage.instance.ref();
+    // final fileRef = storageRef.child(saveAs ?? "users/${myUid!}/${file.path.split('/').last}");
+    final fileRef = storageRef.child(saveAs ?? "test1/${file.path.split('/').last}");
+
+    if (compressQuality > 0) {
+      final xfile = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path,
+        '${file.absolute.path}.compressed.jpg',
+        quality: 80,
+        // rotate: 180,
+      );
+      file = File(xfile!.path);
+    }
+
+    final uploadTask = fileRef.putFile(file);
+    if (progress != null) {
+      uploadTask.snapshotEvents.listen((event) {
+        progress(event.bytesTransferred / event.totalBytes);
+      });
+    }
+
+    /// 업로드 완료 할 때까지 기다림
+    await uploadTask.whenComplete(() => complete?.call());
+    final url = await fileRef.getDownloadURL();
+    // print(fileRef.fullPath);
+
+    return url;
+  }
+
   /// Delete the uploaded file in Firebase Storage by the url.
   ///
   /// If the url is null, it does nothing.
