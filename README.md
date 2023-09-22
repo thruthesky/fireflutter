@@ -105,10 +105,13 @@ Create an issue if you find a bug or need a help.
   - [How to unfollow](#how-to-unfollow)
 - [Block](#block)
 - [Customization](#customization)
+  - [User profile screen customization](#user-profile-screen-customization)
+  - [Share](#share)
 - [Callbacks](#callbacks)
   - [Chat Customization](#chat-customization)
 - [Services](#services)
   - [ShareService](#shareservice)
+    - [Customizing share button on public profile](#customizing-share-button-on-public-profile)
 - [Admin](#admin)
   - [Admin Widgets](#admin-widgets)
     - [Opening admin dashbard](#opening-admin-dashbard)
@@ -116,7 +119,6 @@ Create an issue if you find a bug or need a help.
     - [Updating auth custom claims](#updating-auth-custom-claims)
     - [Disable user](#disable-user)
 - [Translation](#translation)
-- [Customization](#customization-1)
 - [Unit Testing](#unit-testing)
   - [Testing on Local Emulators and Firebase](#testing-on-local-emulators-and-firebase)
   - [Testing security rules](#testing-security-rules)
@@ -1984,6 +1986,8 @@ TextButton(
 
 Fireflow supports the full customization for using its features.
 
+
+
 For UI customization, there are two main way of updating the UI.
 
 - You can customize the UI/UX with registration on service customize initialization
@@ -2014,6 +2018,94 @@ PostCard(
 
 When you customize the UI/UX with the service initialization, it may not update on realtime when you edit and hot-reload.
 
+
+
+## User profile screen customization
+
+
+You can hide some of the buttons on public profile and add your own buttons like share button.
+
+```dart
+UserService.instance.customize.publicScreenBlockButton = (context, user) => const SizedBox.shrink();
+UserService.instance.customize.publicScreenReportButton = (context, user) => const SizedBox.shrink();
+
+UserService.instance.customize.publicScreenTrailingButtons = (context, user) => [
+      TextButton(
+        onPressed: () async {
+          final link = await ShareService.instance.dynamicLink(
+              type: 'user',
+              id: user.uid,
+              title: "${user.name}님의 프로필을 보시려면 클릭해주세요.",
+              description: "필리핀 생활에 든든한 힘이 되는 대한민국 여성의 파워 맘카페!",
+              imageUrl: user.photoUrl);
+          Share.share(link, subject: "${user.name}님의 프로필");
+        },
+        child: Text(
+          "공유",
+          style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),
+        ),
+      ),
+    ];
+```
+
+
+You can add top header buttons like below.
+
+```dart
+UserService.instance.customize.publicScreenActions = (context, user) => [
+          FavoriteButton(
+            otherUid: user.uid,
+            builder: (re) => FaIcon(
+              re ? FontAwesomeIcons.circleStar : FontAwesomeIcons.lightCircleStar,
+              color: re ? Colors.yellow : null,
+            ),
+          ),
+          PopupMenuButton(
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'report',
+                child: Text(tr.report),
+              ),
+              PopupMenuItem(
+                value: 'block',
+                child: Database(
+                  path: pathBlock(user.uid),
+                  builder: (value, path) => Text(value == null ? tr.block : tr.unblock),
+                ),
+              ),
+            ],
+            icon: const FaIcon(FontAwesomeIcons.circleEllipsis),
+            onSelected: (value) async {
+              switch (value) {
+                case 'report':
+                  ReportService.instance.showReportDialog(
+                    context: context,
+                    otherUid: user.uid,
+                    onExists: (id, type) => toast(
+                      title: tr.alreadyReportedTitle,
+                      message: tr.alreadyReportedMessage.replaceAll('#type', type),
+                    ),
+                  );
+                  break;
+                case 'block':
+                  final blocked = await toggle(pathBlock(user.uid));
+                  toast(
+                    title: blocked ? tr.block : tr.unblock,
+                    message: blocked ? tr.blockMessage : tr.unblockMessage,
+                  );
+
+                  break;
+              }
+            },
+          ),
+        ];
+```
+
+
+## Share
+
+
+One feature that fireflutter does not have is share. There is no limitation how you can build your app. You can simply use Firebase Dynamic Link with share_plus package to share posts or profiles. You may customize the UI and add a share button to post view screen.
 
 
 
@@ -2258,6 +2350,11 @@ ShareBottomSheet(actions: [
 ```
 
 
+### Customizing share button on public profile
+
+See public profile screen customization
+
+
 
 # Admin
 
@@ -2385,10 +2482,6 @@ You can use the langauge like below,
       : tr.likes.replaceAll(
           '#no', noOfLikes.length.toString()),
 ```
-
-# Customization
-
-One feature that fireflutter does not have is shar. There is no limitation how you can build your app. You can simply use Firebase Dynamic Link with share_plus package to share posts or profiles. You may customize the UI and add a share button to post view screen.
 
 # Unit Testing
 

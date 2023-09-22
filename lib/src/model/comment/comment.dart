@@ -146,16 +146,12 @@ class Comment {
   /// If I already liked (iLiked == true)
   /// it will add my uid to the likes...
   /// otherwise, it will remove my uid from the likes.
-  Future<void> likeOrUnlike() async {
-    if (iLiked) {
-      await commentCol.doc(id).update({
-        'likes': FieldValue.arrayRemove([my.uid]),
-      });
-    } else {
-      await commentCol.doc(id).update({
-        'likes': FieldValue.arrayUnion([my.uid]),
-      });
+  Future<bool?> like() async {
+    if (notLoggedIn) {
+      toast(title: tr.loginFirstTitle, message: tr.loginFirstMessage);
+      return null;
     }
+    return await toggle(pathCommentLikedBy(id));
   }
 
   /// Copy the properties of [map] into current Comment model and returns a new Comment model.

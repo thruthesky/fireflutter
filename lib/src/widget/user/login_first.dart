@@ -11,10 +11,11 @@ class LoginFirst extends StatelessWidget {
   Widget build(BuildContext context) {
     return loggedIn
         ? const SizedBox.shrink()
-        : const Padding(
-            padding: EdgeInsets.all(16.0),
+        : Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Please login to use the full functionality of this app.',
+              tr.loginFirstToUseCompleteFunctionality,
+              style: TextStyle(color: Theme.of(context).colorScheme.onSecondary.withAlpha(120)),
             ),
           );
   }

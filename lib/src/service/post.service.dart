@@ -139,13 +139,14 @@ class PostService {
               child: Text("Delete"),
             ),
           const PopupMenuItem(value: 'report', child: Text('Report')),
-          PopupMenuItem(
-            value: 'block',
-            child: Database(
-              path: pathBlock(post.uid),
-              builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
+          if (loggedIn)
+            PopupMenuItem(
+              value: 'block',
+              child: Database(
+                path: pathBlock(post.uid),
+                builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
+              ),
             ),
-          ),
           if (UserService.instance.isAdmin)
             const PopupMenuItem(
               value: "copyId",

@@ -91,7 +91,7 @@ class CommentTileState extends State<CommentListTile> {
                   return TextButton(
                     child: Text('Like ${comment.noOfLikes}'),
                     onPressed: () {
-                      comment.likeOrUnlike();
+                      comment.like();
                     },
                   );
                 },

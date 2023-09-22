@@ -20,6 +20,10 @@ class ReportService {
     Function(String id, String type)? onExists,
   }) async {
     assert(otherUid != null || postId != null || commentId != null);
+    if (notLoggedIn) {
+      toast(title: tr.loginFirstTitle, message: tr.loginFirstMessage);
+      return null;
+    }
 
     final info = Report.info(
       commentId: commentId,
