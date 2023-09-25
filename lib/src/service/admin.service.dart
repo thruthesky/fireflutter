@@ -99,6 +99,4 @@ class AdminService {
       },
     );
   }
-
-  // TODO show Chat Room Details
 }
