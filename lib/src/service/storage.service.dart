@@ -178,7 +178,7 @@ class StorageService {
     for (XFile xFilePick in xFilePicks) {
       uploads.add(uploadFile(
         path: xFilePick.path,
-        progress: progress, // TODO proper progress
+        progress: progress,
         complete: complete,
         compressQuality: compressQuality,
       ));

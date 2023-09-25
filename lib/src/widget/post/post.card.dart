@@ -232,21 +232,6 @@ class PostCard extends StatelessWidget {
     );
   }
 
-  // TODO move this to bottomost
-  void showPreview(BuildContext context, int index) {
-    // TODO check for exisiting codes
-    // TODO add this on a Service to share code (same code in new post)
-    showGeneralDialog(
-      context: context,
-      pageBuilder: (context, _, __) {
-        return CarouselScreen(
-          widgets: listMedia(context),
-          index: index,
-        );
-      },
-    );
-  }
-
   List<Widget> listMedia(BuildContext context) {
     return [
       if (post.youtubeId.isNotEmpty)
@@ -381,6 +366,20 @@ class PostCard extends StatelessWidget {
           ),
         )
       ],
+    );
+  }
+
+  void showPreview(BuildContext context, int index) {
+    // TODO check for exisiting codes
+    // TODO add this on a Service to share code (same code in new post)
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) {
+        return CarouselScreen(
+          widgets: listMedia(context),
+          index: index,
+        );
+      },
     );
   }
 }

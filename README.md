@@ -450,7 +450,7 @@ Fireflutter has many features and each feature has a signleton service class. Yo
 
 Since, fireflutter uses `snackbars`, `dialog`, `bottom sheet`, it needs global key (or global build context). Put the global key into the `FireFlutterService.instance.init(context: ...)`. If you are not going to use the global key, you may not need to initialzie it like when you are only doing unit test.
 
-If you meet an error like `No MaterialLocalizations found. Xxxx widgets require MaterialLocalizations to be provided by a Localizations widget ancestor.`, then you may think a widget is not under MaterialApp or no localization provided. In this case, the context from global key will be used. See https://docs.flutter.dev/release/breaking-changes/text-field-material-localizations for details.
+If you meet an error like `No MaterialLocalizations found. Xxxx widgets require MaterialLocalizations to be provided by a Localizations widget ancestor.`, then you may think a widget is not under MaterialApp or no localization provided. In this case, the context from global key will be used. See <https://docs.flutter.dev/release/breaking-changes/text-field-material-localizations> for details.
 
 For instance, if you are using go_route, you can pass the global build context like below.
 
@@ -1036,6 +1036,46 @@ IconTextButton(
         color: Theme.of(context).colorScheme.secondary,
       ),
   onTap: () {},
+),
+```
+
+## CarouselView
+
+This can be used to display multiple pictures (or media as widgets) as a carousel like in other social media postings.
+
+To use, check this example code below
+
+```dart
+CarouselView(
+  widgets: [
+    CachedNetworkImage(
+      imageUrl: e1.url,
+      fit: BoxFit.cover,
+      placeholder: (context, url) => const SizedBox(height: 400),
+    ),
+    CachedNetworkImage(
+      imageUrl: e2.url,
+      fit: BoxFit.cover,
+      placeholder: (context, url) => const SizedBox(height: 400),
+    ),
+    CachedNetworkImage(
+      imageUrl: e3.url,
+      fit: BoxFit.cover,
+      placeholder: (context, url) => const SizedBox(height: 400),
+    ),
+  ],
+),
+```
+
+You can also use a List of URLs to display in carousel as shown below.
+
+```dart
+CarouselView(
+  urls: [
+    'picsum.photos/id/223/200/300',
+    'picsum.photos/id/224/200/300',
+    'picsum.photos/id/225/200/300',
+  ],
 ),
 ```
 
