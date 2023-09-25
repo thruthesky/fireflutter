@@ -42,10 +42,10 @@ class UserDoc extends StatelessWidget {
   const UserDoc({
     super.key,
     this.uid,
+    this.user,
     required this.builder,
     this.onLoading,
     this.live = false,
-    this.user,
     this.notLoggedInBuilder,
   });
   final String? uid;
