@@ -12,6 +12,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:timeago/timeago.dart' as timeago;
 
+bool get isAndroid => !kIsWeb && Platform.isAndroid;
+bool get isIOS => !kIsWeb && Platform.isIOS;
+bool get isWeb => kIsWeb;
+
 /// Shows a [SnackBar] at the bottom of the screen.
 Future<void> showSnackBar(BuildContext? context, String message) async {
   context ??= FireFlutterService.instance.context;
