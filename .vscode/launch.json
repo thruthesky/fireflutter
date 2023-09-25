@@ -5,13 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "FireFlutter Example App - Simulator (J)",
+      "name": "Example - Simulator (J) iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
       "cwd": "apps/example",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "deviceId": "iPhone 14 Pro Max"
+      "deviceId": "FF043B3E-9E36-405F-9719-D5A535B7729B"
     },
     {
       "name": "FireFlutter Example App - iPhone11 (J)",
@@ -50,13 +50,13 @@
       "deviceId": "J8AXB761J32888A"
     },
     {
-      "name": "MomCafe - Simulator (J)",
+      "name": "MomCafe - Simulator (J) - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "deviceId": "iPhone 14 Pro Max"
+      "deviceId": "FF043B3E-9E36-405F-9719-D5A535B7729B"
     },
     {
       "name": "MomCafe - iPhone11 - (J)",
@@ -104,13 +104,13 @@
       "deviceId": "iPhone 14 Pro Max"
     },
     {
-      "name": "GRC - Simulator - iMac (J)",
+      "name": "GRC - Simulator - iMac (J) - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
       "cwd": "apps/grc",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "deviceId": "F9C3E82F-C978-4271-8528-F75B5A7A3BD3"
+      "deviceId": "FF043B3E-9E36-405F-9719-D5A535B7729B"
     },
     {
       "name": "GRC - iPhone11 (J)",
