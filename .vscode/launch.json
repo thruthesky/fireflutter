@@ -149,6 +149,16 @@
       "flutterMode": "debug",
       "deviceId": "J8AXB761J32888A"
     },
+
+    {
+      "name": "GRC - Chrome",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "chrome"
+    },
     {
       "name": "GRC - Samsung External (J)",
       "request": "launch",

@@ -21,10 +21,10 @@ Create an issue if you find a bug or need a help.
   - [Firebase Extension](#firebase-extension)
     - [Resize image](#resize-image)
   - [Setup the base code](#setup-the-base-code)
-  - [url\_launcher Optional](#url_launcher-optional)
+  - [url_launcher Optional](#url_launcher-optional)
 - [Pub.dev Packages](#pubdev-packages)
   - [timeago](#timeago)
-  - [Parsed\_ReadMore](#parsed_readmore)
+  - [Parsed_ReadMore](#parsed_readmore)
 - [Usage](#usage)
   - [UserService](#userservice)
   - [PostService](#postservice)
@@ -45,7 +45,7 @@ Create an issue if you find a bug or need a help.
   - [input](#input)
   - [randomString](#randomstring)
   - [timeago](#timeago-1)
-  - [getYoutubeIdFromUrl](#converturltoyoutubeid)
+  - [getYoutubeIdFromUrl](#getyoutubeidfromurl)
   - [getYoutubeThumbnail](#getyoutubethumbnail)
   - [PostLikeButton](#postlikebutton)
   - [Screen widgets](#screen-widgets)
@@ -276,7 +276,7 @@ Copy the following and paste it into your firebase project.
     },
     "blocks": {
       "$my_uid": {
-        ".read":  "$my_uid == auth.uid",
+        ".read": "$my_uid == auth.uid",
         ".write": "$my_uid == auth.uid"
       }
     },
@@ -288,18 +288,13 @@ Copy the following and paste it into your firebase project.
 }
 ```
 
-
-
 ## Admin settings
 
 See the [Security rules for admin](#security-rule-for-admin) chapter to set admin in the security rules. After this, you can set the `isAdmin` field to true on the admin's user document.
 
-
 ## Firebase Extension
 
-
 Aside from `easy-exnteion`, you will need to install the following extensions
-
 
 ### Resize image
 
@@ -312,7 +307,6 @@ And choose `backfill` if you have an existing images.
 All other options are on your choice.
 
 To dispaly the thumbnail image, you may use `.thumbnail` String extension method. `CachedNetworkImage(imageUrl: url.thumbnail)`
-
 
 ## Setup the base code
 
@@ -370,12 +364,9 @@ By defualt, feed feature is disabled. To use feed features, add the following in
 FeedService.instance.init(enable: true);
 ```
 
-
-
 ## url_launcher Optional
 
 `url_lancher` package is added by fireflutter and it is being used to open url. If you wish to let users share links by sms, you need to setup in `AndroidManifest.xml` and `Info.plist`. See the [url_launch Configuration](https://pub.dev/packages/url_launcher#configuration).
-
 
 Fireflutter exposes a method `launchSMS` to open the SMS app. Here is an example of how to send sms. You can build your own code, of course.
 
@@ -388,23 +379,17 @@ if (re) {
 }
 ```
 
-
 # Pub.dev Packages
 
 In this chapter, some of the notable packages that are used by firelfutter are explained.
-
 
 ## timeago
 
 [timeago](https://pub.dev/packages/timeago) to show date and time in i18n.
 
-
 ## Parsed_ReadMore
 
 [parsed_readmore](https://pub.dev/packages/parsed_readmore) to show/hide when the content text is long.
-
-
-
 
 # Usage
 
@@ -499,7 +484,6 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 
 - There are many service methods that opens a screen. One thing to note is that, all the method that opens a screen uses `showGeneralDialog` which does not modify the navigation stack. If you want, you may open the screen with navigation(routing) like `Navigator.of(context).push...()`.
 
-
 ## CommentOneLineListTile
 
 Below is a sample code how to use and cusomizing `CommentOneLineListTile` widget.
@@ -534,12 +518,10 @@ Theme(
 This widget shows the comment list of the post in a bottom sheet UI style.
 Use this widget with [showModalBottomSheet].
 
-
 ## UserLikeListScreen
 
 This screen shows a list of users who liked a post, comment, or a profile.
- Use this screen to show a user list and when it is tapped, show public profile.
-
+Use this screen to show a user list and when it is tapped, show public profile.
 
 ## alert
 
@@ -551,7 +533,6 @@ await alert(
   title: '회원 탈퇴',
   message: '회원 탈퇴를 하였습니다.');
 ```
-
 
 ## toast
 
@@ -585,7 +566,6 @@ final password = await prompt(
 
 [input] is an aliash of [prompt].
 
-
 ## randomString
 
 Returns a random string.
@@ -594,17 +574,13 @@ Returns a random string.
 
 Returns a string of human readable time ago string. It supports i18n.
 
-
 ## getYoutubeIdFromUrl
 
 Use this method to get youtube id from the youtube url.
 
-
 ## getYoutubeThumbnail
 
 Use this method to get the YouTube video's thumbnail from the yotube id.
-
-
 
 ## PostLikeButton
 
@@ -617,7 +593,6 @@ PostLikeButton(
   builder: (post) => Icon(post.iLiked ? Icons.thumb_up : Icons.thumb_up_outlined),
 ),
 ```
-
 
 ## Screen widgets
 
@@ -902,7 +877,6 @@ class FavoriteButton extends StatelessWidget {
 
 ```
 
-
 ## IconTextButton
 
 ![IconTextImage](https://github.com/thruthesky/fireflutter/blob/main/doc/img/icon_text_button.jpg?raw=true)
@@ -922,6 +896,7 @@ IconTextButton(
   onTap: () {},
 ),
 ```
+
 # Chat Feature
 
 ## Welcome message
@@ -1413,7 +1388,6 @@ PostService.instance.customize.postViewButtons = (post) => PostViewButtons(
 
 You can actullay rebuild the whole buttons by providing new widget instead of the `PostViewButtons`.
 
-
 ## List of viewer on each post
 
 Firelfutter provides a way of display who viewed which posts. It may be used for dsiplaying the viewers of the post or simple display the no of viewers.
@@ -1422,8 +1396,7 @@ The list of viewers is saved uner `/posts/{post_id}/seenBy/{uid}`. If the user w
 
 Note that, this is disabled by default. To turn it on, `init(enableSeenBy: true)` on service initialization.
 
-Note that, saving the uid is done by `Post.fromDocumentSnapshot`. 
-
+Note that, saving the uid is done by `Post.fromDocumentSnapshot`.
 
 # Database
 
@@ -1461,8 +1434,6 @@ print(await get(path));
 
 `Database` widget rebuilds the widget when the node is changed. Becareful to use the narrowest path of the node or it would download a lot of data.
 
-
-
 ```dart
 // Displaying a Text value
 Database(
@@ -1485,9 +1456,6 @@ Database(
   ),
 ),
 ```
-
-
-
 
 ## DatabaseCount widget
 
@@ -1759,7 +1727,7 @@ main.dart
   @override
   void initState() {
     super.initState();
-    if (Platform.isAndroid) initNotificationChannel();
+    if (!kIsWeb && Platform.isAndroid) initNotificationChannel();
   }
 
   initNotificationChannel() async {
@@ -1986,8 +1954,6 @@ TextButton(
 
 Fireflow supports the full customization for using its features.
 
-
-
 For UI customization, there are two main way of updating the UI.
 
 - You can customize the UI/UX with registration on service customize initialization
@@ -2005,7 +1971,6 @@ PostService.instance.init(
 );
 ```
 
-
 Customizing on the widget
 
 ```dart
@@ -2015,13 +1980,9 @@ PostCard(
 ),
 ```
 
-
 When you customize the UI/UX with the service initialization, it may not update on realtime when you edit and hot-reload.
 
-
-
 ## User profile screen customization
-
 
 You can hide some of the buttons on public profile and add your own buttons like share button.
 
@@ -2047,7 +2008,6 @@ UserService.instance.customize.publicScreenTrailingButtons = (context, user) => 
       ),
     ];
 ```
-
 
 You can add top header buttons like below.
 
@@ -2101,13 +2061,9 @@ UserService.instance.customize.publicScreenActions = (context, user) => [
         ];
 ```
 
-
 ## Share
 
-
 One feature that fireflutter does not have is share. There is no limitation how you can build your app. You can simply use Firebase Dynamic Link with share_plus package to share posts or profiles. You may customize the UI and add a share button to post view screen.
-
-
 
 # Callbacks
 
@@ -2201,14 +2157,11 @@ Registering the build functions do not cause any performance issues since it onl
 ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoomAppBar(room: room);
 ```
 
-
 # Services
 
 ## ShareService
 
-
 ShareService is a helper library that gives some feature untility for sharing. It has `showBotomSheet` method that displays a bottom sheet showing some UI elements for sharing. You may get an idea seeing the look and the code of the method.
-
 
 It also has a method `dyamicLink` that returns a short dyanmic link. You may see the source code of the method to get an insight how you would copy and paste in your project.
 
@@ -2235,9 +2188,6 @@ ShareService.instance.init(
 ```
 
 When the dyanmic link is build, it has one of the `type` between `user`, `post`. When it is a `user`, you may show the user's profile. If it is `post`, you may show the post. We don't support the link for `chat` yet. Because the user needs to register first before entering the chat room while user profile and post view can be seen without login. But we are planning to support for `chat` link soon.
-
-
-
 
 Dispaly a share bottom sheet.
 
@@ -2272,9 +2222,6 @@ ShareService.instance.showBottomSheet(actions: [
 ]),
 ```
 
-
-
-
 Example of copying the dynamic link to clipboard
 
 ```dart
@@ -2293,7 +2240,6 @@ IconTextButton(
   },
 ),
 ```
-
 
 Below is an example of how to use `ShareBottomSheet` widget. You can insert this widget in home screen and do some UI work. Then, apply it.
 
@@ -2349,12 +2295,9 @@ ShareBottomSheet(actions: [
 ]),
 ```
 
-
 ### Customizing share button on public profile
 
 See public profile screen customization
-
-
 
 # Admin
 
