@@ -17,6 +17,7 @@ Create an issue if you find a bug or need a help.
     - [Firestore security rules](#firestore-security-rules)
     - [Security rule for admin](#security-rule-for-admin)
     - [Realtime database security rules](#realtime-database-security-rules)
+  - [Cloud functions](#cloud-functions)
   - [Admin settings](#admin-settings)
   - [Firebase Extension](#firebase-extension)
     - [Resize image](#resize-image)
@@ -25,6 +26,9 @@ Create an issue if you find a bug or need a help.
 - [Pub.dev Packages](#pubdev-packages)
   - [timeago](#timeago)
   - [Parsed\_ReadMore](#parsed_readmore)
+- [How to build a user profile page](#how-to-build-a-user-profile-page)
+- [How to build a chat app](#how-to-build-a-chat-app)
+- [How to build a forum app](#how-to-build-a-forum-app)
 - [Usage](#usage)
   - [UserService](#userservice)
   - [PostService](#postservice)
@@ -45,7 +49,7 @@ Create an issue if you find a bug or need a help.
   - [input](#input)
   - [randomString](#randomstring)
   - [timeago](#timeago-1)
-  - [getYoutubeIdFromUrl](#converturltoyoutubeid)
+  - [getYoutubeIdFromUrl](#getyoutubeidfromurl)
   - [getYoutubeThumbnail](#getyoutubethumbnail)
   - [PostLikeButton](#postlikebutton)
   - [Screen widgets](#screen-widgets)
@@ -125,6 +129,7 @@ Create an issue if you find a bug or need a help.
   - [Testing on real Firebase](#testing-on-real-firebase)
   - [Testing on Cloud Functions](#testing-on-cloud-functions)
 - [Developer](#developer)
+  - [Installing your app with fireflutter](#installing-your-app-with-fireflutter)
   - [Development Tips](#development-tips)
 - [Contribution](#contribution)
   - [Install FireFlutter and Example Project](#install-fireflutter-and-example-project)
@@ -157,9 +162,13 @@ To get started, you can follow the [Installation](#installation) chapter.
 
 The best way is to copy codes from the example project and paste it into your project and update the UI.
 
+
+
+
+
 # Installation
 
-Please follow the instructions below to install the fireflutter.
+Please follow the instructions below to install the fireflutter. If you want to clone(fork) and build your app while updating the fireflutter, then see the [Developer](#developer) section.
 
 ## Install the easy extension
 
@@ -289,6 +298,9 @@ Copy the following and paste it into your firebase project.
 ```
 
 
+## Cloud functions
+
+
 
 ## Admin settings
 
@@ -296,7 +308,6 @@ See the [Security rules for admin](#security-rule-for-admin) chapter to set admi
 
 
 ## Firebase Extension
-
 
 Aside from `easy-exnteion`, you will need to install the following extensions
 
@@ -402,6 +413,19 @@ In this chapter, some of the notable packages that are used by firelfutter are e
 ## Parsed_ReadMore
 
 [parsed_readmore](https://pub.dev/packages/parsed_readmore) to show/hide when the content text is long.
+
+
+
+# How to build a user profile page
+
+
+# How to build a chat app
+
+
+# How to build a forum app
+
+
+
 
 
 
@@ -2556,7 +2580,27 @@ npm run mocha **/save-token*
 npm run mocha **/save-token.test.ts
 ```
 
+
+
 # Developer
+
+In this chapter, you will learn how to develop fireflutter. If you would like to develop your app while you are updating(fixing) fireflutter, you can follow this developer's guide.
+
+
+
+## Installing your app with fireflutter
+
+- Fork the fireflutter
+  - Go to `https://github.com/thruthesky/fireflutter` and press `Fork` button.
+- Clone it
+  - `git clone https://github.com/your-account/fireflutter`.
+- Create a branch in fireflutter local repository
+- Create `apps` folder
+- Create your app in `apps` folder
+- Add the fireflutter as dependency with path `../..`.
+- Then, setup the fireflutter. See the [Installation](#installation) chapter.
+
+
 
 ## Development Tips
 
