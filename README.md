@@ -2555,15 +2555,21 @@ npm run mocha **/save-token.test.ts
 
 # Developer
 
-In this chapter, you will learn how to develop fireflutter. If you would like to develop your app while you are updating(fixing) fireflutter, you can follow this developer's guide.
+In this chapter, you will learn how to develop fireflutter. You would also continue developing your app while developing(fixing) the fireflutter.
 
 ## Installing your app with fireflutter
 
 - Fork the fireflutter
-  - Go to `https://github.com/thruthesky/fireflutter` and press `Fork` button.
-- Clone it
+  - Go to `https://github.com/thruthesky/fireflutter` and fork it.
+- Then, clone it
   - `git clone https://github.com/your-account/fireflutter`.
 - Create a branch in fireflutter local repository
+  - `cd fireflutter`
+  - `git checkout -b work`
+- For `Pull Request`, update any file, commit, push and request for pulling your code.
+  - `echo "Hi" >> README.md`
+  - `git commit -a -m "updating README.md"`
+  - `git push --set-upstream origin work`
 - Create `apps` folder
 - Create your app in `apps` folder
 - Add the fireflutter as dependency with path `../..`.
