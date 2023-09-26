@@ -2,145 +2,24 @@
 
 ![Fireflutter](https://github.com/thruthesky/fireflutter/blob/main/doc/fireflutter_title_image.jpg?raw=true)
 
-If you are looking for a package that help you develop a full featured content management app, then you have found a right one. FireFlutter is a free, open source, complete, rapid development package for creating apps like CMS(content management system), social service, chat, community(forum), shopping mall and much more based on Firebase.
 
-Create an issue if you find a bug or need a help.
+This package helps you to develop a full featured content management app. FireFlutter is an open source, complete and rapid development package for creating apps like CMS(content management system), social service, chat, community(forum), shopping mall and much more based on Firebase.
 
-- [FireFlutter](#fireflutter)
-  - [Overview](#overview)
-  - [Features](#features)
-  - [Getting started](#getting-started)
-- [Installation](#installation)
-  - [Install the easy extension](#install-the-easy-extension)
-  - [Install cloud functions](#install-cloud-functions)
-  - [Security rules](#security-rules)
-    - [Firestore security rules](#firestore-security-rules)
-    - [Security rule for admin](#security-rule-for-admin)
-    - [Realtime database security rules](#realtime-database-security-rules)
-  - [Admin settings](#admin-settings)
-  - [Firebase Extension](#firebase-extension)
-    - [Resize image](#resize-image)
-  - [Setup the base code](#setup-the-base-code)
-  - [url\_launcher Optional](#url_launcher-optional)
-- [Pub.dev Packages](#pubdev-packages)
-  - [timeago](#timeago)
-  - [Parsed\_ReadMore](#parsed_readmore)
-- [Usage](#usage)
-  - [UserService](#userservice)
-  - [PostService](#postservice)
-    - [How to open a post](#how-to-open-a-post)
-    - [Customizing a Post View](#customizing-a-post-view)
-  - [ChatService](#chatservice)
-    - [How to open 1:1 chat room](#how-to-open-11-chat-room)
-    - [How to display chat room menu](#how-to-display-chat-room-menu)
-    - [Customizing the chat header](#customizing-the-chat-header)
-- [Widgets and UI functions](#widgets-and-ui-functions)
-  - [CommentOneLineListTile](#commentonelinelisttile)
-  - [CommentListBottomSheet](#commentlistbottomsheet)
-  - [UserLikeListScreen](#userlikelistscreen)
-  - [alert](#alert)
-  - [toast](#toast)
-  - [warning](#warning)
-  - [prompt](#prompt)
-  - [input](#input)
-  - [randomString](#randomstring)
-  - [timeago](#timeago-1)
-  - [getYoutubeIdFromUrl](#converturltoyoutubeid)
-  - [getYoutubeThumbnail](#getyoutubethumbnail)
-  - [PostLikeButton](#postlikebutton)
-  - [Screen widgets](#screen-widgets)
-  - [EmailLoginForm](#emailloginform)
-  - [UserDoc](#userdoc)
-  - [User public screen customization](#user-public-screen-customization)
-  - [Avatar](#avatar)
-  - [UserAvatar](#useravatar)
-  - [UserProfileAvatar](#userprofileavatar)
-  - [User List View](#user-list-view)
-    - [UserListView.builder](#userlistviewbuilder)
-  - [When user is not logged in](#when-user-is-not-logged-in)
-  - [IconTextButton](#icontextbutton)
-- [Chat Feature](#chat-feature)
-  - [Welcome message](#welcome-message)
-  - [No of new message](#no-of-new-message)
-  - [Total no of new message](#total-no-of-new-message)
-    - [Chat Room List](#chat-room-list)
-    - [Create a chat room](#create-a-chat-room)
-    - [How to display a chat room](#how-to-display-a-chat-room)
-    - [Additional information](#additional-information)
-    - [How to test \& UI work Chat room screen](#how-to-test--ui-work-chat-room-screen)
-      - [Chat Room fields](#chat-room-fields)
-      - [Chat Message fields](#chat-message-fields)
-    - [Counting no of new messages](#counting-no-of-new-messages)
-    - [Displaying chat rooms that has new message (unread messages)](#displaying-chat-rooms-that-has-new-message-unread-messages)
-    - [1:1 Chat and Multi user chat](#11-chat-and-multi-user-chat)
-  - [UI Customization](#ui-customization)
-    - [Chat room list](#chat-room-list-1)
-  - [Chat Room Menu](#chat-room-menu)
-  - [Chat Room Settings](#chat-room-settings)
-- [User](#user)
-  - [Like](#like)
-  - [Favorite/Bookmark](#favoritebookmark)
-    - [How to display icon](#how-to-display-icon)
-  - [Follow and Unfollow](#follow-and-unfollow)
-  - [No of profile view](#no-of-profile-view)
-- [Post](#post)
-  - [Post view screen custom design](#post-view-screen-custom-design)
-  - [List of viewer on each post](#list-of-viewer-on-each-post)
-- [Database](#database)
-  - [Get/Set/Update/Toggle](#getsetupdatetoggle)
-  - [Database widget](#database-widget)
-  - [DatabaseCount widget](#databasecount-widget)
-- [Settings](#settings)
-- [Report](#report)
-- [Upload](#upload)
-  - [Photo upload](#photo-upload)
-- [No of view](#no-of-view)
-- [Push notifications](#push-notifications)
-  - [Push notification settings](#push-notification-settings)
-    - [Push notifcation sound](#push-notifcation-sound)
-  - [Customizing source](#customizing-source)
-- [Following and Follower](#following-and-follower)
-  - [Feed listing logic](#feed-listing-logic)
-  - [How to follow](#how-to-follow)
-  - [How to unfollow](#how-to-unfollow)
-- [Block](#block)
-- [Customization](#customization)
-  - [User profile screen customization](#user-profile-screen-customization)
-  - [Share](#share)
-- [Callbacks](#callbacks)
-  - [Chat Customization](#chat-customization)
-- [Services](#services)
-  - [ShareService](#shareservice)
-    - [Customizing share button on public profile](#customizing-share-button-on-public-profile)
-- [Admin](#admin)
-  - [Admin Widgets](#admin-widgets)
-    - [Opening admin dashbard](#opening-admin-dashbard)
-    - [AdminUserListView](#adminuserlistview)
-    - [Updating auth custom claims](#updating-auth-custom-claims)
-    - [Disable user](#disable-user)
-- [Translation](#translation)
-- [Unit Testing](#unit-testing)
-  - [Testing on Local Emulators and Firebase](#testing-on-local-emulators-and-firebase)
-  - [Testing security rules](#testing-security-rules)
-  - [Testing on real Firebase](#testing-on-real-firebase)
-  - [Testing on Cloud Functions](#testing-on-cloud-functions)
-- [Developer](#developer)
-  - [Development Tips](#development-tips)
-- [Contribution](#contribution)
-  - [Install FireFlutter and Example Project](#install-fireflutter-and-example-project)
-  - [Coding Guideline](#coding-guideline)
+To report an issue or needs a help. Go to 
+[**FireFlutter Repository**](https://github.com/thruthesky/fireflutter/issues) and report an issue.
 
-## Overview
+# Overview
+
 
 I made it for reusing the most common code blocks when I am building apps. It provides the code for user management, forum(caetgory, post, comment) management, chat management, push notification management along with `like`, `favorite`, `following` features.
 
 I use `json_serializable` for the modeling providing each model can have extra fields. For instance, there are some pre-defined fields for the user document and you may add your own fields on the document. The model has also basic CRUD functionalities.
 
-## Features
+# Features
 
-There are many features and most of them are optinal. You may turn on the extra functions by the setting.
+There are many features and most of them are optional. You may turn on the extra functions by the setting.
 
-The main features are the followings;
+## Main features
 
 - User
 - Chat
@@ -151,13 +30,13 @@ The main features are the followings;
 - Following
 - Admin
 
-## Getting started
+# Getting started
 
 To get started, you can follow the [Installation](#installation) chapter.
 
 The best way is to copy codes from the example project and paste it into your project and update the UI.
 
-# Installation
+## Installation
 
 Please follow the instructions below to install the fireflutter.
 
