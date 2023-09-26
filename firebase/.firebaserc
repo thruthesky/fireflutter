@@ -1,7 +1,8 @@
 {
   "projects": {
     "default": "withcenter-test-2",
-    "grc": "grc-30ca7"
+    "grc": "grc-30ca7",
+    "firebug": "firebug-study"
   },
   "targets": {},
   "etags": {}

@@ -11,14 +11,15 @@ Create an issue if you find a bug or need a help.
   - [Features](#features)
   - [Getting started](#getting-started)
 - [Installation](#installation)
+  - [Create a Firebase](#create-a-firebase)
   - [Install the easy extension](#install-the-easy-extension)
   - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
     - [Firestore security rules](#firestore-security-rules)
     - [Security rule for admin](#security-rule-for-admin)
+    - [Admin settings](#admin-settings)
     - [Realtime database security rules](#realtime-database-security-rules)
-  - [Cloud functions](#cloud-functions)
-  - [Admin settings](#admin-settings)
+    - [Security Rules for Stroage](#security-rules-for-stroage)
   - [Firebase Extension](#firebase-extension)
     - [Resize image](#resize-image)
   - [Setup the base code](#setup-the-base-code)
@@ -165,11 +166,17 @@ The best way is to copy codes from the example project and paste it into your pr
 
 # Installation
 
-Please follow the instructions below to install the fireflutter. If you want to clone(fork) and build your app while updating the fireflutter, then see the [Developer](#developer) section.
+Please follow the instructions below to install the fireflutter into your app.
+
+## Create a Firebase
+
+If you have your own firebase project, then you can use that. If you don't have one, create one first.
+
 
 ## Install the easy extension
 
-I built a firebase extension for the easy management on firebase. Fireflutter is using this extension. Install the [latest version of easy-extension](https://github.com/thruthesky/easy-extension).
+We built a firebase extension for the easy management on firebase. Fireflutter is using this extension. Install the [latest version of easy-extension](https://github.com/thruthesky/easy-extension).
+
 
 ## Install cloud functions
 
@@ -181,8 +188,13 @@ git clone https://github.com/thruthesky/fireflutter
 cd fireflutter/firebase/functions
 npm i
 firebase use add <project>
-firebase run deploy
+npm run deploy
 ```
+
+Note, if you see error like `v2 function name(s) can only contain lower case letters, numbers, hyphens, and not exceed 62 characters in length`, then install the latest version of npm, nodejs, firebase.
+
+Note, if you see warnings like `functions: Since this is your first time using 2nd gen functions, we need a little bit longer to finish setting everything up. Retry the deployment in a few minutes.`, then take 5 minutes break and re-deploy.
+
 
 ## Security rules
 
@@ -215,6 +227,12 @@ For instance, you may write security rules like below and add the uids of sub-ad
     ...
   }
 ```
+
+
+### Admin settings
+
+See the [Security rules for admin](#security-rule-for-admin) chapter to set admin in the security rules. After this, you can set the `isAdmin` field to true on the admin's user document.
+
 
 ### Realtime database security rules
 
@@ -294,11 +312,15 @@ Copy the following and paste it into your firebase project.
 }
 ```
 
-## Cloud functions
 
-## Admin settings
+### Security Rules for Stroage
 
-See the [Security rules for admin](#security-rule-for-admin) chapter to set admin in the security rules. After this, you can set the `isAdmin` field to true on the admin's user document.
+You can copy this rules and paste into the rules of storage.
+
+```json
+```
+
+
 
 ## Firebase Extension
 
@@ -317,6 +339,42 @@ All other options are on your choice.
 To dispaly the thumbnail image, you may use `.thumbnail` String extension method. `CachedNetworkImage(imageUrl: url.thumbnail)`
 
 ## Setup the base code
+
+Fireflutter needs the app to initialize with the Firebase before using it.
+
+Do the settings to connect to firebase.
+`flutterfire configure`
+
+Add firebase dependencies
+`flutter pub add firebase_core`
+`flutter pub add firebase_auth`
+
+
+Then, connect your app to firebase.
+
+```dart
+import 'package:firebase_core/firebase_core.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const MyApp());
+}
+```
+
+Then, initialize Fireflutter like below
+
+```dart
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+
+    /// Initialize FireFlutter
+    FireFlutterService.instance.init(context: ...);
+  }
+```
+
 
 Fireflutter has many features and each feature has a signleton service class. You need to initialize each of the singleton on yor needs.
 
@@ -2570,10 +2628,21 @@ In this chapter, you will learn how to develop fireflutter. You would also conti
   - `echo "Hi" >> README.md`
   - `git commit -a -m "updating README.md"`
   - `git push --set-upstream origin work`
-- Create `apps` folder
-- Create your app in `apps` folder
-- Add the fireflutter as dependency with path `../..`.
-- Then, setup the fireflutter. See the [Installation](#installation) chapter.
+- Create `apps` folder and create your app inside `apps` folder.
+  - `cd apps`
+  - `flutter create your_porject`
+
+- Since your project add the fireflutter from your computer folder, you need to add the path of the dependency as `../..`. Add the firefluter dependenicy like below.
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  fireflutter:
+    path: ../..
+```
+
+- Then, follow the step of the [fireflutte Installation](#installation) chapter.
 
 ## Development Tips
 
@@ -2729,4 +2798,5 @@ flutter run
 ## Coding Guideline
 
 fireflutter uses sigular form in its file name and variable name, class name. For instance, it alwasy `user` over `users` unless there is good reason.
-Hi
+
+
