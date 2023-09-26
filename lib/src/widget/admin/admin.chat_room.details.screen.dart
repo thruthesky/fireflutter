@@ -43,7 +43,6 @@ class AdminChatRoomDetailsScreen extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
               child: Text('Members:'),
             ),
-            // TODO confirm what other details needed
             for (String uid in room.users)
               UserDoc(
                 uid: uid,

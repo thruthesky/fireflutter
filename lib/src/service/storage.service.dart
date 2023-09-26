@@ -59,7 +59,6 @@ class StorageService {
     File file = File(path);
     final storageRef = FirebaseStorage.instance.ref();
     final fileRef = storageRef.child(saveAs ?? "users/${myUid!}/${file.path.split('/').last}");
-
     if (compressQuality > 0) {
       final xfile = await FlutterImageCompress.compressAndGetFile(
         file.absolute.path,
@@ -69,7 +68,6 @@ class StorageService {
       );
       file = File(xfile!.path);
     }
-
     final uploadTask = fileRef.putFile(file);
     if (progress != null) {
       uploadTask.snapshotEvents.listen((event) {
@@ -145,6 +143,7 @@ class StorageService {
     String? path,
     String? saveAs,
   }) async {
+    if (fromWhere == null) return null;
     late String? path;
     if (fromWhere == 'camera') fromWhere = ImageSource.camera;
     if (fromWhere == 'gallery') fromWhere = ImageSource.gallery;
@@ -164,6 +163,27 @@ class StorageService {
       complete: complete,
       compressQuality: compressQuality,
     );
+  }
+
+  Future<List<String?>?> uploadMultiple({
+    Function(double)? progress,
+    Function? complete,
+    int compressQuality = 80,
+  }) async {
+    final pickedFiles = await ImagePicker().pickMultiImage(imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
+    List<XFile> xFilePicks = pickedFiles;
+
+    if (xFilePicks.isEmpty) return null;
+    List<Future<String?>> uploads = [];
+    for (XFile xFilePick in xFilePicks) {
+      uploads.add(uploadFile(
+        path: xFilePick.path,
+        progress: progress,
+        complete: complete,
+        compressQuality: compressQuality,
+      ));
+    }
+    return Future.wait(uploads);
   }
 
   showUploads(BuildContext context, List<String> urls, {int index = 0}) {
