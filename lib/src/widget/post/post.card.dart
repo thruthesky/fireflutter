@@ -370,8 +370,6 @@ class PostCard extends StatelessWidget {
   }
 
   void showPreview(BuildContext context, int index) {
-    // TODO check for exisiting codes
-    // TODO add this on a Service to share code (same code in new post)
     showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) {

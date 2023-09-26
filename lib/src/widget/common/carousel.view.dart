@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-// TODO Read Me
 class CarouselView extends StatefulWidget {
   const CarouselView({super.key, this.urls, this.widgets, this.index = 0, this.showPageCounter = true})
       : assert(urls != null || widgets != null);
