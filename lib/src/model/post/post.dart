@@ -79,6 +79,19 @@ class Post {
     return Post.fromDocumentSnapshot(documentSnapshot);
   }
 
+  /// Get post via url
+  /// If the post is not found, it throws an Exception.
+  static Future<Post> getByUrl(String? url) async {
+    if (url == null) {
+      throw Exception('Post id is null');
+    }
+    final QuerySnapshot documentSnapshot = await postCol.where('urls', arrayContains: url).get();
+
+    if (documentSnapshot.docs.isEmpty) throw Exception('Post not found');
+
+    return Post.fromDocumentSnapshot(documentSnapshot.docs.first);
+  }
+
   /// Create a post
   ///
   /// All the post must be created by this method.
