@@ -1,15 +1,13 @@
-import 'dart:async';
-
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomMessageBox extends StatefulWidget {
   const ChatRoomMessageBox({
     super.key,
-    required this.roomId,
+    required this.room,
   });
 
-  final String roomId;
+  final Room room;
 
   @override
   State<StatefulWidget> createState() => _ChatRoomMessageBoxState();
@@ -18,25 +16,6 @@ class ChatRoomMessageBox extends StatefulWidget {
 class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
   final TextEditingController message = TextEditingController();
   double? progress;
-
-  Room? room;
-  StreamSubscription? roomSubscription;
-
-  @override
-  void initState() {
-    super.initState();
-
-    //
-    roomSubscription = Room.col
-        .where('roomId', isEqualTo: widget.roomId)
-        .snapshots()
-        .listen((event) {
-      if (event.size > 0) {
-        room = Room.fromDocumentSnapshot(event.docs.first);
-        roomSubscription!.cancel();
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,8 +49,7 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
                       progress: (p) => setState(() => progress = p),
                       complete: () => setState(() => progress = null),
                     );
-                    await ChatService.instance
-                        .sendMessage(room: room!, url: url);
+                    await ChatService.instance.sendMessage(room: widget.room, url: url);
                   },
                 ),
                 Expanded(
@@ -91,7 +69,7 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
                     final text = message.text;
                     message.text = '';
                     await ChatService.instance.sendMessage(
-                      room: room!,
+                      room: widget.room,
                       text: text,
                     );
                   },
