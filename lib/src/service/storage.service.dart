@@ -24,6 +24,10 @@ class StorageService {
   }
 
   /// Upload a file (or an image) to Firebase Storage.
+  ///
+  /// This method must be the only method that upload a file/photo into Storage
+  /// or, the listing photos from `/storage` will not work properly.
+  ///
   /// 범용 업로드 함수이며, 모든 곳에서 사용하면 된다.
   ///
   /// [path] is the file path on mobile phone(local storage) to upload.
@@ -54,6 +58,7 @@ class StorageService {
     int compressQuality = 80,
     String? path,
     String? saveAs,
+    String? type,
   }) async {
     if (path == null) return null;
     File file = File(path);
@@ -80,6 +85,8 @@ class StorageService {
     final url = await fileRef.getDownloadURL();
     // print(fileRef.fullPath);
 
+    // don't await. create a document in /storage
+
     return url;
   }
 
@@ -92,6 +99,9 @@ class StorageService {
     if (url == null || url == '') return;
     final storageRef = FirebaseStorage.instance.refFromURL(url);
     await storageRef.delete();
+
+    // don't await. but delete the document in /storage
+
     return;
   }
 
