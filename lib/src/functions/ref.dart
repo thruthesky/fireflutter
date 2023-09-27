@@ -102,3 +102,7 @@ String pathCommentLikedBy(String id, {bool all = false}) {
     return 'comments/$id/likedBy/$myUid';
   }
 }
+
+/// storage
+CollectionReference get storageCol => FirebaseFirestore.instance.collection('storages');
+DocumentReference storageDoc(String storageId) => storageCol.doc(storageId);
