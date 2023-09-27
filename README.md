@@ -147,7 +147,7 @@ I use `json_serializable` for the modeling providing each model can have extra f
 
 There are many features and most of them are optinal. You may turn on the extra functions by the setting.
 
-The main features are the followings;
+### Main Features
 
 - User
 - Chat
@@ -166,7 +166,8 @@ The best way is to copy codes from the example project and paste it into your pr
 
 ## Installation
 
-Please follow the instructions below to install the fireflutter into your app.
+Follow the instruction below to install FireFlutter into your app
+<!-- Please follow the instructions below to install the fireflutter into your app. -->
 
 ## Create a Firebase
 
@@ -177,6 +178,9 @@ If you have your own firebase project, then you can use that. If you don't have 
 
 We built a firebase extension for the easy management on firebase. Fireflutter is using this extension. Install the [latest version of easy-extension](https://github.com/thruthesky/easy-extension).
 
+![easy_extension](/doc/img/easy_extension.png)
+
+Choose Easy Extension version and it will redirect you to Firebase. Choose the project you want Easy Extension to be installed.
 
 ## Install cloud functions
 
@@ -217,9 +221,9 @@ function isAdmin() {
 }
 ```
 
-After setting the admin, you can now customize your security rules to restrict some write access from other user. 
+After setting the admin, you can now customize your security rules to restrict some write access from other user. You can add sub-admin/s from client app without editing the security rules everytime.
 
-Once the admin is set, you can customize your security rules to restrict some documents to write access from other users. By doing this way, you can add sub-admin(s) from client app (without editing the security rules on every time when you add subadmin)
+<!-- Once the admin is set, you can customize your security rules to restrict some documents to write access from other users. By doing this way, you can add sub-admin(s) from client app (without editing the security rules on every time when you add subadmin) -->
 
 For instance, you may write security rules like below and add the uids of sub-admin users. then, add a security rule function to check if the user is sub-admin.
 
@@ -232,15 +236,14 @@ For instance, you may write security rules like below and add the uids of sub-ad
   }
 ```
 
+<!-- ### Admin settings
 
-### Admin settings
-
-See the [Security rules for admin](#security-rule-for-admin) chapter to set admin in the security rules. After this, you can set the `isAdmin` field to true on the admin's user document.
+See the [Security rules for admin](#security-rule-for-admin) chapter to set admin in the security rules. After this, you can set the `isAdmin` field to true on the admin's user document. -->
 
 
 ### Realtime database security rules
 
-Copy the following and paste it into your firebase project.
+Enable Realtime Database on firebase and copy the following and paste it into your firebase project.
 
 ```json
 {
@@ -358,11 +361,15 @@ To display the thumbnail image, you may use `.thumbnail` String extension method
 Fireflutter needs the app to initialize with the Firebase before using it.
 
 Do the settings to connect to firebase.
-`flutterfire configure`
+```
+flutterfire configure
+```
 
 Add firebase dependencies
-`flutter pub add firebase_core`
-`flutter pub add firebase_auth`
+``` 
+flutter pub add firebase_core
+flutter pub add firebase_auth
+```
 
 
 Then, connect your app to firebase.
@@ -388,23 +395,31 @@ class _MyAppState extends State<MyApp> {
     /// Initialize FireFlutter
     FireFlutterService.instance.init(context: ...);
   }
+}
 ```
 
 
-Fireflutter has many features and each feature has a signleton service class. You need to initialize each of the singleton on yor needs.
+Fireflutter has many features and each feature has a singleton service class. You need to initialize each of the singleton on your needs.
 
-Since, fireflutter uses `snackbars`, `dialog`, `bottom sheet`, it needs global key (or global build context). Put the global key into the `FireFlutterService.instance.init(context: ...)`. If you are not going to use the global key, you may not need to initialzie it like when you are only doing unit test.
+Fireflutter needs **Global Key** since it uses `snackbars`, `dialog`, `bottom sheet`. Use the **`FireFlutterService.instance.init(context : ...)`**
 
+**Note:**
+You don't have to initialize when you are only doing unit test.
+
+<!-- Since, fireflutter uses `snackbars`, `dialog`, `bottom sheet`, it needs global key (or global build context). Put the global key into the `FireFlutterService.instance.init(context: ...)`. If you are not going to use the global key, you may not need to initialzie it like when you are only doing unit test. -->
+
+**Note:**
 If you meet an error like `No MaterialLocalizations found. Xxxx widgets require MaterialLocalizations to be provided by a Localizations widget ancestor.`, then you may think a widget is not under MaterialApp or no localization provided. In this case, the context from global key will be used. See <https://docs.flutter.dev/release/breaking-changes/text-field-material-localizations> for details.
 
 For instance, if you are using go_route, you can pass the global build context like below.
 
 ```dart
+//  initialize admin 
 UserService.instance.init(adminUid: 'xxx');
 
 WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
   FireFlutterService.instance.init(context: router.routerDelegate.navigatorKey.currentContext!);
-}
+})
 ```
 
 If you are using the flutter's default `Navigator` for routing, define the global key like below first,
@@ -421,6 +436,7 @@ Then connect it to MaterialApp like below
 ```dart
 MaterialApp(
   navigatorKey: globalNavigatorKey,
+)
 ```
 
 Then, store the global context into fireflutter like below
@@ -437,6 +453,7 @@ class _MainWidgetState extends State<MainWidget> {
       FireFlutterService.instance.init(context: globalContext);
     });
   }
+}
 ```
 
 By defualt, feed feature is disabled. To use feed features, add the following in app widget.
