@@ -338,16 +338,18 @@ Aside from `easy-extension`, you will need to install the following extensions
 
 `Deletion of original file` - Don't delete  
 `Make resized images public` - yes
+
 ![resize_image_settings](/doc/img/resize_option_1.png)
 
 `Cache-Control header for resized images` - "max-age=86400"
 `Convert image to preferred types` - select `webp` only.
+
 ![resize_image_settings](/doc/img/resize_option_2.png)
 
 And choose `backfill` if you have an existing images.
+
 ![resize_image_settings](/doc/img/resize_option_3.png)
 
-And choose `backfill` if you have an existing images.
 
 All other options are on your choice.
 
@@ -442,8 +444,7 @@ MaterialApp(
 Then, store the global context into fireflutter like below
 
 ```dart
-class _MainWidgetState extends State<MainWidget> {
-  int value = 0;
+class _MainWidgetState extends State<MainWidget>{
 
   @override
   void initState() {
@@ -456,13 +457,13 @@ class _MainWidgetState extends State<MainWidget> {
 }
 ```
 
-By defualt, feed feature is disabled. To use feed features, add the following in app widget.
+By default, feed feature is disabled. To use feed features, add the following in app widget.
 
 ```dart
 FeedService.instance.init(enable: true);
 ```
 
-## url_launcher Optional
+## url_launcher (Optional)
 
 `url_lancher` package is added by fireflutter and it is being used to open url. If you wish to let users share links by sms, you need to setup in `AndroidManifest.xml` and `Info.plist`. See the [url_launch Configuration](https://pub.dev/packages/url_launcher#configuration).
 
@@ -482,7 +483,7 @@ if (re) {
 In this chapter, some of the notable packages that are used by firelfutter are explained.
 
 ## timeago
-
+<!-- TODO: Learn this and modify-->
 [timeago](https://pub.dev/packages/timeago) to show date and time in i18n.
 
 ## Parsed_ReadMore
