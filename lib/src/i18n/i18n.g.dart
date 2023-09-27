@@ -33,6 +33,7 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
       yes: json['yes'] as String? ?? "Yes",
       no: json['no'] as String? ?? "No",
       ok: json['ok'] as String? ?? "OK",
+      edit: json['edit'] as String? ?? 'Edit',
       cancel: json['cancel'] as String? ?? "Cancel",
       reply: json['reply'] as String? ?? "Reply",
       like: json['like'] as String? ?? "Like",
@@ -77,11 +78,19 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
       readLess: json['readLess'] as String? ?? "Read less",
       readMore: json['readMore'] as String? ?? "Read more",
       noOfLikes: json['noOfLikes'] as String? ?? "Likes #no",
+      share: json['share'] as String? ?? "Share",
+      loginFirstToUseCompleteFunctionality:
+          json['loginFirstToUseCompleteFunctionality'] as String? ??
+              "Login first to use the complete functionality.",
+      home: json['home'] as String? ?? "Home",
+      profile: json['profile'] as String? ?? "Profile",
     );
 
 Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
       'loginFirstTitle': instance.loginFirstTitle,
       'loginFirstMessage': instance.loginFirstMessage,
+      'loginFirstToUseCompleteFunctionality':
+          instance.loginFirstToUseCompleteFunctionality,
       'noOfChatRooms': instance.noOfChatRooms,
       'roomMenu': instance.roomMenu,
       'chatRoomCreateDialog': instance.chatRoomCreateDialog,
@@ -100,6 +109,7 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
       'yes': instance.yes,
       'no': instance.no,
       'ok': instance.ok,
+      'edit': instance.edit,
       'cancel': instance.cancel,
       'reply': instance.reply,
       'like': instance.like,
@@ -131,4 +141,7 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
       'readLess': instance.readLess,
       'readMore': instance.readMore,
       'noOfLikes': instance.noOfLikes,
+      'share': instance.share,
+      'home': instance.home,
+      'profile': instance.profile,
     };

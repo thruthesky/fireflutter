@@ -94,7 +94,7 @@ service cloud.firestore {
 
 
     // Listing files/photos from storage cllection.
-    match /storage/{documentId} {
+    match /storages/{documentId} {
       allow read: if true;
       allow create: if isAdmin() || willBeMyDoc();
       allow update: if isAdmin() || isMyDoc();

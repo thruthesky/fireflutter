@@ -87,6 +87,29 @@ class StorageService {
 
     // don't await. create a document in /storage
 
+    await fileRef.getMetadata().then((FullMetadata value) {
+      final contentType = value.contentType;
+      final fullPath = value.fullPath;
+      final name = value.name;
+      final size = value.size;
+      final timeCreated = value.timeCreated;
+
+      Storage.create(
+        type: type,
+        url: url,
+        // contentType: contentType, // image/jpeg, image/gif, image/png, image....
+        // fullPath: fullPath,
+        // name: name,
+        // size: size,
+        // timeCreated: timeCreated,
+        // isImage: contentType?.startsWith('image') ?? false
+        // isVideo: contentType?.startsWith('video') ?? false
+        // isAudio: contentType?.startsWith('audio') ?? false
+        // isText: contentType?.startsWith('text') ?? false
+        // isApplication: contentType?.startsWith('application') ?? false
+      );
+    });
+
     return url;
   }
 
@@ -101,6 +124,7 @@ class StorageService {
     await storageRef.delete();
 
     // don't await. but delete the document in /storage
+    Storage.delete(url);
 
     return;
   }
@@ -152,6 +176,7 @@ class StorageService {
     int compressQuality = 80,
     String? path,
     String? saveAs,
+    String? type,
   }) async {
     if (fromWhere == null) return null;
     late String? path;
@@ -172,6 +197,7 @@ class StorageService {
       progress: progress,
       complete: complete,
       compressQuality: compressQuality,
+      type: type,
     );
   }
 
@@ -179,6 +205,7 @@ class StorageService {
     Function(double)? progress,
     Function? complete,
     int compressQuality = 80,
+    String? type,
   }) async {
     final pickedFiles = await ImagePicker().pickMultiImage(imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
     List<XFile> xFilePicks = pickedFiles;
@@ -191,6 +218,7 @@ class StorageService {
         progress: progress,
         complete: complete,
         compressQuality: compressQuality,
+        type: type,
       ));
     }
     return Future.wait(uploads);

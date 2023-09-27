@@ -1,6 +1,6 @@
 # FireFlutter
 
-![Fireflutter](https://github.com/thruthesky/fireflutter/blob/main/doc/fireflutter_title_image.jpg?raw=true)
+![FireFlutter](https://github.com/thruthesky/fireflutter/blob/main/doc/fireflutter_title_image.jpg?raw=true)
 
 If you are looking for a package that help you develop a full featured content management app, then you have found a right one. FireFlutter is a free, open source, complete, rapid development package for creating apps like CMS(content management system), social service, chat, community(forum), shopping mall and much more based on Firebase.
 
@@ -19,14 +19,14 @@ Create an issue if you find a bug or need a help.
     - [Security rule for admin](#security-rule-for-admin)
     - [Admin settings](#admin-settings)
     - [Realtime database security rules](#realtime-database-security-rules)
-    - [Security Rules for Stroage](#security-rules-for-stroage)
+    - [Security Rules for Storage](#security-rules-for-stroage)
   - [Firebase Extension](#firebase-extension)
     - [Resize image](#resize-image)
   - [Setup the base code](#setup-the-base-code)
-  - [url\_launcher Optional](#url_launcher-optional)
+  - [url_launcher Optional](#url_launcher-optional)
 - [Pub.dev Packages](#pubdev-packages)
   - [timeago](#timeago)
-  - [Parsed\_ReadMore](#parsed_readmore)
+  - [Parsed_ReadMore](#parsed_readmore)
 - [How to build a user profile page](#how-to-build-a-user-profile-page)
 - [How to build a chat app](#how-to-build-a-chat-app)
 - [How to build a forum app](#how-to-build-a-forum-app)
@@ -147,7 +147,7 @@ I use `json_serializable` for the modeling providing each model can have extra f
 
 There are many features and most of them are optinal. You may turn on the extra functions by the setting.
 
-The main features are the followings;
+### Main Features
 
 - User
 - Chat
@@ -158,25 +158,28 @@ The main features are the followings;
 - Following
 - Admin
 
-## Getting started
+# Getting started
 
 To get started, you can follow the [Installation](#installation) chapter.
 
 The best way is to copy codes from the example project and paste it into your project and update the UI.
 
-# Installation
+## Installation
 
-Please follow the instructions below to install the fireflutter into your app.
+Follow the instruction below to install FireFlutter into your app
+<!-- Please follow the instructions below to install the fireflutter into your app. -->
 
 ## Create a Firebase
 
-If you have your own firebase project, then you can use that. If you don't have one, create one first.
+If you have your own firebase project, then you can use that. If you don't have one, create one first. Visit [Firebase Website](https://firebase.google.com).
 
 
 ## Install the easy extension
 
-We built a firebase extension for the easy management on firebase. Fireflutter is using this extension. Install the [latest version of easy-extension](https://github.com/thruthesky/easy-extension).
+We built a firebase extension for the easy management on firebase. FireFlutter is using this extension. Install the [latest version of easy-extension](https://github.com/thruthesky/easy-extension).
+![easy_extension](/doc/img/easy_extension.png)
 
+Choose Easy Extension version and it will redirect you to Firebase. Choose the project you want Easy Extension to be installed.
 
 ## Install cloud functions
 
@@ -191,10 +194,11 @@ firebase use add <project>
 npm run deploy
 ```
 
-Note, if you see error like `v2 function name(s) can only contain lower case letters, numbers, hyphens, and not exceed 62 characters in length`, then install the latest version of npm, nodejs, firebase.
+**Note:**
+if you see error like `v2 function name(s) can only contain lower case letters, numbers, hyphens, and not exceed 62 characters in length`, then install the latest version of npm, nodejs, firebase.
 
-Note, if you see warnings like `functions: Since this is your first time using 2nd gen functions, we need a little bit longer to finish setting everything up. Retry the deployment in a few minutes.`, then take 5 minutes break and re-deploy.
-
+**Note:**
+if you see warnings like `functions: Since this is your first time using 2nd gen functions, we need a little bit longer to finish setting everything up. Retry the deployment in a few minutes.`, then take 5 minutes break and re-deploy.
 
 ## Security rules
 
@@ -215,28 +219,27 @@ function isAdmin() {
 }
 ```
 
-Once the admin is set, you can customize your security rules to restrict some docuemnts to write access from other users. By doing this way, you can add sub-admin(s) from client app (without editing the security rules on every time when you add subadmin)
+After setting the admin, you can now customize your security rules to restrict some write access from other user. You can add sub-admin/s from client app without editing the security rules everytime.
+
+<!-- Once the admin is set, you can customize your security rules to restrict some documents to write access from other users. By doing this way, you can add sub-admin(s) from client app (without editing the security rules on every time when you add subadmin) -->
 
 For instance, you may write security rules like below and add the uids of sub-admin users. then, add a security rule function to check if the user is sub-admin.
 
 ```ts
-  /setttings/sub-admins {
+  /settings/sub-admins {
     allow read, write: if isAdmin();
   }
   function isSubAdmin() {
     ...
   }
 ```
+<!-- ### Admin settings
 
-
-### Admin settings
-
-See the [Security rules for admin](#security-rule-for-admin) chapter to set admin in the security rules. After this, you can set the `isAdmin` field to true on the admin's user document.
-
+See the [Security rules for admin](#security-rule-for-admin) chapter to set admin in the security rules. After this, you can set the `isAdmin` field to true on the admin's user document. -->
 
 ### Realtime database security rules
 
-Copy the following and paste it into your firebase project.
+Enable Realtime Database on firebase and copy the following and paste it into your firebase project.
 
 ```json
 {
@@ -311,44 +314,58 @@ Copy the following and paste it into your firebase project.
   }
 }
 ```
-
-
-### Security Rules for Stroage
+<!-- Commented out -->
+<!-- ### Security Rules for Stroage
 
 You can copy this rules and paste into the rules of storage.
 
 ```json
-```
 
-
+``` -->
 
 ## Firebase Extension
 
-Aside from `easy-exnteion`, you will need to install the following extensions
+Aside from `easy-extension`, you will need to install the following extensions
 
 ### Resize image
 
-`Deletion of original file` - Don't delete
+
+`Deletion of original file` - Don't delete  
 `Make resized images public` - yes
+
+![resize_image_settings](/doc/img/resize_option_1.png)
+
 `Cache-Control header for resized images` - "max-age=86400"
 `Convert image to preferred types` - select `webp` only.
+
+![resize_image_settings](/doc/img/resize_option_2.png)
+
 And choose `backfill` if you have an existing images.
+
+![resize_image_settings](/doc/img/resize_option_3.png)
+
 
 All other options are on your choice.
 
-To dispaly the thumbnail image, you may use `.thumbnail` String extension method. `CachedNetworkImage(imageUrl: url.thumbnail)`
+To display the thumbnail image, you may use `.thumbnail` String extension method. `CachedNetworkImage(imageUrl: url.thumbnail)`
 
 ## Setup the base code
 
-Fireflutter needs the app to initialize with the Firebase before using it.
+
+
+
+FireFlutter needs the app to initialize with the Firebase before using it.
 
 Do the settings to connect to firebase.
-`flutterfire configure`
+```
+flutterfire configure
+```
 
 Add firebase dependencies
-`flutter pub add firebase_core`
-`flutter pub add firebase_auth`
-
+``` 
+flutter pub add firebase_core
+flutter pub add firebase_auth
+```
 
 Then, connect your app to firebase.
 
@@ -362,7 +379,7 @@ void main() async {
 }
 ```
 
-Then, initialize Fireflutter like below
+Then, initialize FireFlutter like below
 
 ```dart
 class _MyAppState extends State<MyApp> {
@@ -373,23 +390,30 @@ class _MyAppState extends State<MyApp> {
     /// Initialize FireFlutter
     FireFlutterService.instance.init(context: ...);
   }
+}
 ```
 
+FireFlutter has many features and each feature has a singleton service class. You need to initialize each of the singleton on your needs.
 
-Fireflutter has many features and each feature has a signleton service class. You need to initialize each of the singleton on yor needs.
+FireFlutter needs **Global Key** since it uses `snackbars`, `dialog`, `bottom sheet`. Use the **`FireFlutterService.instance.init(context : ...)`**
 
-Since, fireflutter uses `snackbars`, `dialog`, `bottom sheet`, it needs global key (or global build context). Put the global key into the `FireFlutterService.instance.init(context: ...)`. If you are not going to use the global key, you may not need to initialzie it like when you are only doing unit test.
+**Note:**
+You don't have to initialize when you are only doing unit test.
 
-If you meet an error like `No MaterialLocalizations found. Xxxx widgets require MaterialLocalizations to be provided by a Localizations widget ancestor.`, then you may think a widget is not under MaterialApp or no localization provided. In this case, the context from global key will be used. See <https://docs.flutter.dev/release/breaking-changes/text-field-material-localizations> for details.
+<!-- Since, fireflutter uses `snackbars`, `dialog`, `bottom sheet`, it needs global key (or global build context). Put the global key into the `FireFlutterService.instance.init(context: ...)`. If you are not going to use the global key, you may not need to initialzie it like when you are only doing unit test. -->
 
-For instance, if you are using go_route, you can pass the global build context like below.
+**Note:**
+If you meet an error like `No MaterialLocalizations found. Xxxx widgets require MaterialLocalizations to be provided by a Localizations widget ancestor.`, then you may think a widget is not under MaterialApp or no localization provided. In this case, the context from global key will be used. For more details, See <https://docs.flutter.dev/release/breaking-changes/text-field-material-localizations>.
+
+For instance, if you are using [go_route package](https://pub.dev/packages/go_router), you can pass the global build context like below.
 
 ```dart
+//  initialize admin 
 UserService.instance.init(adminUid: 'xxx');
 
 WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
   FireFlutterService.instance.init(context: router.routerDelegate.navigatorKey.currentContext!);
-}
+})
 ```
 
 If you are using the flutter's default `Navigator` for routing, define the global key like below first,
@@ -406,35 +430,38 @@ Then connect it to MaterialApp like below
 ```dart
 MaterialApp(
   navigatorKey: globalNavigatorKey,
+)
 ```
 
 Then, store the global context into fireflutter like below
 
 ```dart
-class _MainWidgetState extends State<MainWidget> {
-  int value = 0;
+class _MainWidgetState extends State<MainWidget>{
 
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      FireFlutterService.instance.init(context: globalContext);
+      FireFlutterService.instance.init(
+        context: globalContext,
+      );
     });
   }
+}
 ```
 
-By defualt, feed feature is disabled. To use feed features, add the following in app widget.
+By default, feed feature is disabled. To use feed features, add the following in app widget.
 
 ```dart
 FeedService.instance.init(enable: true);
 ```
 
-## url_launcher Optional
+## url_launcher (Optional)
 
 `url_lancher` package is added by fireflutter and it is being used to open url. If you wish to let users share links by sms, you need to setup in `AndroidManifest.xml` and `Info.plist`. See the [url_launch Configuration](https://pub.dev/packages/url_launcher#configuration).
 
-Fireflutter exposes a method `launchSMS` to open the SMS app. Here is an example of how to send sms. You can build your own code, of course.
+FireFlutter exposes a method `launchSMS` to open the SMS app. Here is an example of how to send sms. You can build your own code, of course.
 
 ```dart
 final re = await launchSMS(phnumber: '', msg: link);
@@ -447,10 +474,10 @@ if (re) {
 
 # Pub.dev Packages
 
-In this chapter, some of the notable packages that are used by firelfutter are explained.
+In this chapter, some of the notable packages that are used by FireFlutter are explained.
 
 ## timeago
-
+<!-- TODO: Learn this and modify-->
 [timeago](https://pub.dev/packages/timeago) to show date and time in i18n.
 
 ## Parsed_ReadMore
@@ -466,20 +493,27 @@ In this chapter, some of the notable packages that are used by firelfutter are e
 # Usage
 
 ## UserService
+<!-- #section removed 
+  reason: documentNotExistBuilder has been removed
+-->
+<!-- In this case, the `documentNotExistBuilder` of `UserDoc` will be called. -->
 
-`UserService.instance.nullableUser` is null when
+<!-- So, the lifecyle will be the following when the app users `UserDoc`. -->
 
-- the user didn't log in
-- when the user is logged in and has document, but the `UserService` has not read the user document, yet. In this case it simply needs to wait sometime.
-
-`UserService.instance.nullableUser.exists` is false if the user has logged in but no document. In this case, the `documentNotExistBuilder` of `UserDoc` will be called.
-
-So, the lifecyle will be the following when the app users `UserDoc`.
-
-- `UserService.instance.nullableUser` will be null on app boot
-- `UserService.instance.nullableUser` will have an instance of `User`
+<!-- - `UserService.instance.nullableUser` will have an instance of `User`
   - If the user document does not exists, `exists` will be `false` causing `documentNotExistsBuilder` to be called.
-  - If the user document exsist, then it will have right data and `builder` will be called.
+  - If the user document exist, then it will have right data and `builder` will be called. -->
+
+`UserService.instance.nullableUser` is *null* when
+- on app boot
+- the user don't have documents
+- when user has document but `UserService` has not read the user document yet.
+
+<!-- **Note:** Use ***async*** to wait UserService to load the data -->
+
+`UserService.instance.nullableUser.exists` is *null* if the user has logged in but no document. 
+
+The `UserService.instance.user` or `UserService.instance.documentChanges` may be null when the user document is being loaded on app boot. So, the better way to get the user's document for sure is to use `UserService.instance.get`
 
 Right way of getting a user document.
 
@@ -487,14 +521,18 @@ Right way of getting a user document.
 UserService.instance.get(myUid!).then((user) => ...);
 ```
 
-The `UserService.instance.user` or `UserService.instance.docuemntChanges` may be null when the user document is being loaded on app boot. So, the better way to get the user's document for sure is to use `UserService.instance.get`
-
 You cannot use `my` until the UserService is initialized and `UserService.instance.user` is available. Or you will see `null check operator used on a null value.`
 
-## PostService
+<!-- .customize does not exist, 
 
-### How to open a post
+TODO: Learning it more so i can replace it
+  
+  might remove since there is already a section of Post Below
+-->
 
+<!-- ## PostService
+
+### How to open a post 
 Call the `showPostViewScreen` to show the full screen dialog that displays the post
 
 ```dart
@@ -509,13 +547,13 @@ Build your own UI design of the full screen Post View like below.
 PostService.instance.customize.postViewScreenBuilder = (post) => GRCCustomPostViewScreen(post: post);
 ```
 
-The widget is preferrably a full screen widget. It can be a scaffold, sliver, etc.
+The widget is preferrably a full screen widget. It can be a scaffold, sliver, etc. -->
 
 ## ChatService
 
 ### How to open 1:1 chat room
 
-Call the `showChatRoom` method anywhere with user model.
+Use the `showChatRoom` method anywhere with user model.
 
 ```dart
 ChatService.instance.showChatRoom(context: context, user: user);
@@ -523,7 +561,9 @@ ChatService.instance.showChatRoom(context: context, user: user);
 
 ### How to display chat room menu
 
-By default, it has a full screen dialog with default buttons. Since all apps have difference features and design, you will need to customize it or rebuild it. But see the code inside and copy and paste them into your project.
+Since all app have different features and design, you can customize or rebuild it. See the code below and paste them into your project.
+
+<!-- By default, it has a full screen dialog with default buttons. Since all apps have difference features and design, you will need to customize it or rebuild it. But see the code inside and copy and paste them into your project. -->
 
 How to show chat room dialog.
 
@@ -534,10 +574,11 @@ showGeneralDialog(
     appBar: AppBar(
       title: const Text('Invite User'),
     ),
-    body: ChatRoomMenuUserInviteDialog(room: room),
+    body: CustomChatWidget(),
   ),
 );
 ```
+    <!-- body: ChatRoomMenuUserInviteDialog(room: room), -->
 
 ### Customizing the chat header
 
@@ -597,18 +638,21 @@ Use this screen to show a user list and when it is tapped, show public profile.
 
 ## alert
 
-Use [alert] method to display a dialog to alert(alarm) the user.
+Use `alert` method to display a dialog to alert(alarm) the user.
 
 ```dart
 await alert(
   context: context,
-  title: '회원 탈퇴',
-  message: '회원 탈퇴를 하였습니다.');
+  title: 'Withdrawal',
+  message: 'I have canceled my membership.');
 ```
-
+  <!-- 
+  translated into english
+  title: '회원 탈퇴',
+  message: '회원 탈퇴를 하였습니다.'); -->
 ## toast
 
-Use [toast] to display a snackbar at the bottom
+Use `toast` to display a snackbar at the bottom
 
 ```dart
 toast(
@@ -636,7 +680,7 @@ final password = await prompt(
 
 ## input
 
-[input] is an aliash of [prompt].
+[input] is an alias of [prompt].
 
 ## randomString
 
@@ -691,6 +735,42 @@ Navigator.of(context).push(
 
 Use this widget for creating and logging-in with email/password. This widget is designed for test use.
 
+***EmailLoginForm()*** structure:
+
+
+```dart
+class EmailLoginForm extends StatefulWidget {
+  const EmailLoginForm({
+    super.key,
+    this.register = true,
+    this.onLogin,
+  });
+
+  final bool register;
+  final VoidCallback? onLogin;
+}
+```
+
+You can use `Theme()` to design the widgets. Example below:
+
+``` dart
+Theme(
+  data: ThemeData(
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Theme.of(context).primaryColor.withAlpha(200),
+                    ),
+                ),
+              ),
+              child: EmailLoginForm(
+                // a function that will trigger if login is successful
+                onLogin: () => context.push(HomePage.routeName),
+                // removing the register button
+                register: false,
+              ),
+            ),
+```
+
 ## UserDoc
 
 To display user's profile photo, use like below.
@@ -706,13 +786,17 @@ UserDoc(
     defaultIcon: const FaIcon(FontAwesomeIcons.lightCircleUser, size: 38),
     backgroundColor: Theme.of(context).colorScheme.inversePrimary,
   ),
-  documentNotExistBuilder: () {
+),
+```
+
+<!--   
+Not exist anymore:
+documentNotExistBuilder: () {
     // Create user document if not exists.
     UserService.instance.create();
     return const SizedBox.shrink();
   },
-),
-```
+   -->
 
 ## User public screen customization
 
@@ -1446,7 +1530,7 @@ Note that you may use it with or without the feed service. See the `Feed Service
 
 ## No of profile view
 
-A user can see other user's profile. Fireflutter provides a way of count the no of users who saw my profile. It is turned off by default and you can turn it on with `UserService.instance.init(enableNoOfProfileView)`. The history is saved under `/no_of_profile_view_history` collection so you can list and sort.
+A user can see other user's profile. FireFlutter provides a way of count the no of users who saw my profile. It is turned off by default and you can turn it on with `UserService.instance.init(enableNoOfProfileView)`. The history is saved under `/no_of_profile_view_history` collection so you can list and sort.
 
 ```json
 {
@@ -1476,7 +1560,7 @@ If you want to design the whole screen of post view,
 Example of connecting your own screen to post view.
 
 ```dart
-PostService.instance.customize.showPostViewScreen =
+PostService.instance.showPostViewScreen =
     (context, {String? postId, Post? post}) => showGeneralDialog(
           context: context,
           pageBuilder: (context, $, $$) =>
@@ -2092,6 +2176,35 @@ PostCard(
 ),
 ```
 
+We can also customize by parts of the PostCart
+
+```dart
+PostCard(
+  post: post,
+  color: Theme.of(context).colorScheme.secondary.withAlpha(20),
+  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+  contentBackground: Theme.of(context).colorScheme.secondary.withAlpha(20),
+  shareButtonBuilder: (post) => ShareButton(post: post),
+  customMiddleContentBuilder: (context, post) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeXs),
+      child: Text('This Content is in the lower of main content, upper of the Actions'),
+      ),
+    );
+  },
+),
+```
+
+Use these to customize by part:
+
+- shareButtonBuilder
+- customContainer
+- customHeaderBuilder
+- customMainContentBuilder
+- customMiddleContentBuilder
+- customActionsBuilder
+- customFooterBuilder
+
 When you customize the UI/UX with the service initialization, it may not update on realtime when you edit and hot-reload.
 
 ## User profile screen customization
@@ -2179,7 +2292,7 @@ One feature that fireflutter does not have is share. There is no limitation how 
 
 # Callbacks
 
-Fireflutter provides callback functions to handle on user document create, update, delete. And create and update for the posts and comments.
+FireFlutter provides callback functions to handle on user document create, update, delete. And create and update for the posts and comments.
 
 Below is an example of how to index user name, post title, content and comment into supabase.
 
@@ -2629,10 +2742,12 @@ In this chapter, you will learn how to develop fireflutter. You would also conti
   - `git commit -a -m "updating README.md"`
   - `git push --set-upstream origin work`
 - Create `apps` folder and create your app inside `apps` folder.
+
   - `cd apps`
   - `flutter create your_porject`
 
 - Since your project add the fireflutter from your computer folder, you need to add the path of the dependency as `../..`. Add the firefluter dependenicy like below.
+
 ```yaml
 dependencies:
   flutter:
@@ -2798,5 +2913,3 @@ flutter run
 ## Coding Guideline
 
 fireflutter uses sigular form in its file name and variable name, class name. For instance, it alwasy `user` over `users` unless there is good reason.
-
-
