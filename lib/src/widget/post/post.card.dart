@@ -14,29 +14,56 @@ import 'package:flutter/material.dart';
 ///
 ///
 class PostCard extends StatelessWidget {
-  const PostCard(
-      {super.key,
-      this.color,
-      this.shadowColor,
-      this.surfaceTintColor,
-      this.elevation,
-      this.shape,
-      this.borderOnForeground = true,
-      this.margin = const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
-      this.clipBehavior,
-      this.semanticContainer = true,
-      required this.post,
-      this.shareButtonBuilder,
-      this.commentSize = 5,
-      this.contentBackground,
-      this.customContainer,
-      this.customHeaderBuilder,
-      this.customMainContentBuilder,
-      this.customMiddleContentBuilder,
-      this.customActionsBuilder,
-      this.customFooterBuilder,
-      this.headerPadding = const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
-      this.bottomButtonPadding = const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeSm)});
+  const PostCard({
+    super.key,
+    this.color,
+    this.shadowColor,
+    this.surfaceTintColor,
+    this.elevation,
+    this.shape,
+    this.borderOnForeground = true,
+    this.margin = const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
+    this.clipBehavior,
+    this.semanticContainer = true,
+    required this.post,
+    this.shareButtonBuilder,
+    this.commentSize = 5,
+    this.contentBackground,
+
+    /// Can be used to change the container of the post
+    this.customContainer,
+
+    /// The topmost part of the post
+    /// Custom Header Builder can be used to fully change the header of the post
+    this.customHeaderBuilder,
+
+    /// The main content of the post
+    /// Custom Main Content Builder can be used to fully change the main content of the post
+    this.customMainContentBuilder,
+
+    /// The middle content of the post
+    /// Use this to add content under main content and above the action buttons
+    this.customMiddleContentBuilder,
+
+    /// The action buttons of the post
+    /// Custom Actions Builder can be used to fully change the action buttons of the post
+    ///
+    /// The default action buttons are:
+    /// - Like button
+    /// - Favorite button
+    /// - Share button
+    this.customActionsBuilder,
+
+    /// The footer of the post
+    /// Custom Footer Builder can be used to fully change the footer of the post
+    ///
+    /// The default footer is:
+    /// - List of comments
+    /// - Show more comments button
+    this.customFooterBuilder,
+    this.headerPadding = const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
+    this.bottomButtonPadding = const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeSm),
+  });
 
   final Color? color;
   final Color? shadowColor;
@@ -68,7 +95,6 @@ class PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO documentation Read Me
     return customContainer?.call(content(context, post)) ??
         Card(
           color: color,
@@ -186,7 +212,7 @@ class PostCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (post.hasPhoto || post.youtubeId.isNotEmpty) //TODO review logic to lessen Operations
+        if (post.hasPhoto || post.youtubeId.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: sizeSm),
             child: CarouselView(
@@ -220,14 +246,23 @@ class PostCard extends StatelessWidget {
             ),
           ),
 
+        /// post titile
+        if (post.title.isNotEmpty)
+          Container(
+            padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
+            color: contentBackground,
+            child: Text(post.title.replaceAll("\n", " "), style: Theme.of(context).textTheme.titleMedium),
+          ),
+
         /// post content
-        Container(
-          padding: const EdgeInsets.all(sizeSm),
-          color: contentBackground,
-          child: post.content.length < 60
-              ? Text(post.content.replaceAll("\n", " "), style: Theme.of(context).textTheme.bodyMedium)
-              : PostContentShowMore(post: post),
-        ),
+        if (post.content.isNotEmpty)
+          Container(
+            padding: const EdgeInsets.all(sizeSm),
+            color: contentBackground,
+            child: post.content.length < 60
+                ? Text(post.content.replaceAll("\n", " "), style: Theme.of(context).textTheme.bodyMedium)
+                : PostContentShowMore(post: post),
+          ),
       ],
     );
   }
