@@ -723,6 +723,38 @@ Navigator.of(context).push(
 
 Use this widget for creating and logging-in with email/password. This widget is designed for test use.
 
+***EmailLoginForm()*** params:
+``` dart
+class EmailLoginForm extends StatefulWidget {
+  const EmailLoginForm({
+    super.key,
+    this.register = true,
+    this.onLogin,
+  });
+
+  final bool register;
+  final VoidCallback? onLogin;
+```
+
+You can use `Theme()` to design the widgets. Example below:
+``` dart
+Theme(
+  data: ThemeData(
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Theme.of(context).primaryColor.withAlpha(200),
+                    ),
+                ),
+              ),
+              child: EmailLoginForm(
+                // a function that will trigger if login is successful
+                onLogin: () => context.push(HomePage.routeName),
+                // removing the register button
+                register: false,
+              ),
+            ),
+```
+
 ## UserDoc
 
 To display user's profile photo, use like below.
