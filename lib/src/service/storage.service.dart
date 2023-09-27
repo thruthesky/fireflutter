@@ -86,6 +86,7 @@ class StorageService {
     // print(fileRef.fullPath);
 
     // don't await. create a document in /storage
+    Storage.create(type: type, url: url);
 
     return url;
   }
@@ -101,6 +102,7 @@ class StorageService {
     await storageRef.delete();
 
     // don't await. but delete the document in /storage
+    Storage.delete(url);
 
     return;
   }
@@ -152,6 +154,7 @@ class StorageService {
     int compressQuality = 80,
     String? path,
     String? saveAs,
+    String? type,
   }) async {
     if (fromWhere == null) return null;
     late String? path;
@@ -172,6 +175,7 @@ class StorageService {
       progress: progress,
       complete: complete,
       compressQuality: compressQuality,
+      type: type,
     );
   }
 
@@ -179,6 +183,7 @@ class StorageService {
     Function(double)? progress,
     Function? complete,
     int compressQuality = 80,
+    String? type,
   }) async {
     final pickedFiles = await ImagePicker().pickMultiImage(imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
     List<XFile> xFilePicks = pickedFiles;
@@ -191,6 +196,7 @@ class StorageService {
         progress: progress,
         complete: complete,
         compressQuality: compressQuality,
+        type: type,
       ));
     }
     return Future.wait(uploads);

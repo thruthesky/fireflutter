@@ -199,18 +199,36 @@ class PhotoFileData {
   PhotoFileData({
     required this.userDocumentReference,
     required this.url,
-    // this.customMetaData,
+    this.customMetaData,
   });
 
   String userDocumentReference;
   String url;
-  // CustomMetaData? customMetaData;
+  CustomMetaData? customMetaData;
 
   factory PhotoFileData.fromJSON(Map<String, dynamic> json) {
     return PhotoFileData(
       userDocumentReference: json['userDocumentReference'] ?? '',
       url: json['url'] ?? '',
-      // customMetaData: CustomMetaData.fromJSON(json['customMetaData'] ?? {}),
+      customMetaData: CustomMetaData.fromJSON(json['customMetaData'] ?? {}),
+    );
+  }
+}
+
+class CustomMetaData {
+  CustomMetaData({this.targetReferencePath, this.documentId, this.type, this.collectionName});
+
+  String? targetReferencePath;
+  String? documentId;
+  String? type;
+  String? collectionName;
+
+  factory CustomMetaData.fromJSON(Map<String, dynamic> json) {
+    return CustomMetaData(
+      targetReferencePath: json['targetReferencePath'] ?? '',
+      documentId: json['documentId'] ?? '',
+      type: json['type'] ?? '',
+      collectionName: json['collectionName'] ?? '',
     );
   }
 }
