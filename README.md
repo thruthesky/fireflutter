@@ -11,21 +11,22 @@ Create an issue if you find a bug or need a help.
   - [Features](#features)
   - [Getting started](#getting-started)
 - [Installation](#installation)
+  - [Create a Firebase](#create-a-firebase)
   - [Install the easy extension](#install-the-easy-extension)
   - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
     - [Firestore security rules](#firestore-security-rules)
     - [Security rule for admin](#security-rule-for-admin)
+    - [Admin settings](#admin-settings)
     - [Realtime database security rules](#realtime-database-security-rules)
-  - [Cloud functions](#cloud-functions)
-  - [Admin settings](#admin-settings)
+    - [Security Rules for Stroage](#security-rules-for-stroage)
   - [Firebase Extension](#firebase-extension)
     - [Resize image](#resize-image)
   - [Setup the base code](#setup-the-base-code)
-  - [url_launcher Optional](#url_launcher-optional)
+  - [url\_launcher Optional](#url_launcher-optional)
 - [Pub.dev Packages](#pubdev-packages)
   - [timeago](#timeago)
-  - [Parsed_ReadMore](#parsed_readmore)
+  - [Parsed\_ReadMore](#parsed_readmore)
 - [How to build a user profile page](#how-to-build-a-user-profile-page)
 - [How to build a chat app](#how-to-build-a-chat-app)
 - [How to build a forum app](#how-to-build-a-forum-app)
@@ -63,135 +64,7 @@ Create an issue if you find a bug or need a help.
     - [UserListView.builder](#userlistviewbuilder)
   - [When user is not logged in](#when-user-is-not-logged-in)
   - [IconTextButton](#icontextbutton)
-- [Chat Feature](#chat-feature)
-  - [Welcome message](#welcome-message)
-  - [No of new message](#no-of-new-message)
-  - [Total no of new message](#total-no-of-new-message)
-    - [Chat Room List](#chat-room-list)
-    - [Create a chat room](#create-a-chat-room)
-    - [How to display a chat room](#how-to-display-a-chat-room)
-    - [Additional information](#additional-information)
-    - [How to test \& UI work Chat room screen](#how-to-test--ui-work-chat-room-screen)
-      - [Chat Room fields](#chat-room-fields)
-      - [Chat Message fields](#chat-message-fields)
-    - [Counting no of new messages](#counting-no-of-new-messages)
-    - [Displaying chat rooms that has new message (unread messages)](#displaying-chat-rooms-that-has-new-message-unread-messages)
-    - [1:1 Chat and Multi user chat](#11-chat-and-multi-user-chat)
-  - [UI Customization](#ui-customization)
-    - [Chat room list](#chat-room-list-1)
-  - [Chat Room Menu](#chat-room-menu)
-  - [Chat Room Settings](#chat-room-settings)
-- [User](#user)
-  - [Like](#like)
-  - [Favorite/Bookmark](#favoritebookmark)
-    - [How to display icon](#how-to-display-icon)
-  - [Follow and Unfollow](#follow-and-unfollow)
-  - [No of profile view](#no-of-profile-view)
-- [Post](#post)
-  - [Post view screen custom design](#post-view-screen-custom-design)
-  - [List of viewer on each post](#list-of-viewer-on-each-post)
-- [Database](#database)
-  - [Get/Set/Update/Toggle](#getsetupdatetoggle)
-  - [Database widget](#database-widget)
-  - [DatabaseCount widget](#databasecount-widget)
-- [Settings](#settings)
-- [Report](#report)
-- [Upload](#upload)
-  - [Photo upload](#photo-upload)
-- [No of view](#no-of-view)
-- [Push notifications](#push-notifications)
-  - [Push notification settings](#push-notification-settings)
-    - [Push notifcation sound](#push-notifcation-sound)
-  - [Customizing source](#customizing-source)
-- [Following and Follower](#following-and-follower)
-  - [Feed listing logic](#feed-listing-logic)
-  - [How to follow](#how-to-follow)
-  - [How to unfollow](#how-to-unfollow)
-- [Block](#block)
-- [Customization](#customization)
-  - [User profile screen customization](#user-profile-screen-customization)
-  - [Share](#share)
-- [Callbacks](#callbacks)
-  - [Chat Customization](#chat-customization)
-- [Services](#services)
-  - [ShareService](#shareservice)
-    - [Customizing share button on public profile](#customizing-share-button-on-public-profile)
-- [Admin](#admin)
-  - [Admin Widgets](#admin-widgets)
-    - [Opening admin dashbard](#opening-admin-dashbard)
-    - [AdminUserListView](#adminuserlistview)
-    - [Updating auth custom claims](#updating-auth-custom-claims)
-    - [Disable user](#disable-user)
-- [Translation](#translation)
-- [Unit Testing](#unit-testing)
-  - [Testing on Local Emulators and Firebase](#testing-on-local-emulators-and-firebase)
-  - [Testing security rules](#testing-security-rules)
-  - [Testing on real Firebase](#testing-on-real-firebase)
-  - [Testing on Cloud Functions](#testing-on-cloud-functions)
-- [Developer](#developer)
-  - [Installing your app with fireflutter](#installing-your-app-with-fireflutter)
-  - [Development Tips](#development-tips)
-- [Contribution](#contribution)
-  - [Install FireFlutter and Example Project](#install-fireflutter-and-example-project)
-  - [Coding Guideline](#coding-guideline)
-    > > > > > > > 89e8aaf0b0029d80ac1ff4f9033e860562f700bd
-- [FireFlutter](#fireflutter)
-  - [Overview](#overview)
-  - [Features](#features)
-  - [Getting started](#getting-started)
-- [Installation](#installation)
-  - [Install the easy extension](#install-the-easy-extension)
-  - [Install cloud functions](#install-cloud-functions)
-  - [Security rules](#security-rules)
-    - [Firestore security rules](#firestore-security-rules)
-    - [Security rule for admin](#security-rule-for-admin)
-    - [Realtime database security rules](#realtime-database-security-rules)
-  - [Cloud functions](#cloud-functions)
-  - [Admin settings](#admin-settings)
-  - [Firebase Extension](#firebase-extension)
-    - [Resize image](#resize-image)
-  - [Setup the base code](#setup-the-base-code)
-  - [url_launcher Optional](#url_launcher-optional)
-- [Pub.dev Packages](#pubdev-packages)
-  - [timeago](#timeago)
-  - [Parsed_ReadMore](#parsed_readmore)
-- [How to build a user profile page](#how-to-build-a-user-profile-page)
-- [How to build a chat app](#how-to-build-a-chat-app)
-- [How to build a forum app](#how-to-build-a-forum-app)
-- [Usage](#usage)
-  - [UserService](#userservice)
-  - [PostService](#postservice)
-    - [How to open a post](#how-to-open-a-post)
-    - [Customizing a Post View](#customizing-a-post-view)
-  - [ChatService](#chatservice)
-    - [How to open 1:1 chat room](#how-to-open-11-chat-room)
-    - [How to display chat room menu](#how-to-display-chat-room-menu)
-    - [Customizing the chat header](#customizing-the-chat-header)
-- [Widgets and UI functions](#widgets-and-ui-functions)
-  - [CommentOneLineListTile](#commentonelinelisttile)
-  - [CommentListBottomSheet](#commentlistbottomsheet)
-  - [UserLikeListScreen](#userlikelistscreen)
-  - [alert](#alert)
-  - [toast](#toast)
-  - [warning](#warning)
-  - [prompt](#prompt)
-  - [input](#input)
-  - [randomString](#randomstring)
-  - [timeago](#timeago-1)
-  - [getYoutubeIdFromUrl](#getyoutubeidfromurl)
-  - [getYoutubeThumbnail](#getyoutubethumbnail)
-  - [PostLikeButton](#postlikebutton)
-  - [Screen widgets](#screen-widgets)
-  - [EmailLoginForm](#emailloginform)
-  - [UserDoc](#userdoc)
-  - [User public screen customization](#user-public-screen-customization)
-  - [Avatar](#avatar)
-  - [UserAvatar](#useravatar)
-  - [UserProfileAvatar](#userprofileavatar)
-  - [User List View](#user-list-view)
-    - [UserListView.builder](#userlistviewbuilder)
-  - [When user is not logged in](#when-user-is-not-logged-in)
-  - [IconTextButton](#icontextbutton)
+  - [CarouselView](#carouselview)
 - [Chat Feature](#chat-feature)
   - [Welcome message](#welcome-message)
   - [No of new message](#no-of-new-message)
@@ -293,11 +166,17 @@ The best way is to copy codes from the example project and paste it into your pr
 
 # Installation
 
-Please follow the instructions below to install the fireflutter. If you want to clone(fork) and build your app while updating the fireflutter, then see the [Developer](#developer) section.
+Please follow the instructions below to install the fireflutter into your app.
+
+## Create a Firebase
+
+If you have your own firebase project, then you can use that. If you don't have one, create one first.
+
 
 ## Install the easy extension
 
-I built a firebase extension for the easy management on firebase. Fireflutter is using this extension. Install the [latest version of easy-extension](https://github.com/thruthesky/easy-extension).
+We built a firebase extension for the easy management on firebase. Fireflutter is using this extension. Install the [latest version of easy-extension](https://github.com/thruthesky/easy-extension).
+
 
 ## Install cloud functions
 
@@ -309,8 +188,13 @@ git clone https://github.com/thruthesky/fireflutter
 cd fireflutter/firebase/functions
 npm i
 firebase use add <project>
-firebase run deploy
+npm run deploy
 ```
+
+Note, if you see error like `v2 function name(s) can only contain lower case letters, numbers, hyphens, and not exceed 62 characters in length`, then install the latest version of npm, nodejs, firebase.
+
+Note, if you see warnings like `functions: Since this is your first time using 2nd gen functions, we need a little bit longer to finish setting everything up. Retry the deployment in a few minutes.`, then take 5 minutes break and re-deploy.
+
 
 ## Security rules
 
@@ -343,6 +227,12 @@ For instance, you may write security rules like below and add the uids of sub-ad
     ...
   }
 ```
+
+
+### Admin settings
+
+See the [Security rules for admin](#security-rule-for-admin) chapter to set admin in the security rules. After this, you can set the `isAdmin` field to true on the admin's user document.
+
 
 ### Realtime database security rules
 
@@ -422,11 +312,15 @@ Copy the following and paste it into your firebase project.
 }
 ```
 
-## Cloud functions
 
-## Admin settings
+### Security Rules for Stroage
 
-See the [Security rules for admin](#security-rule-for-admin) chapter to set admin in the security rules. After this, you can set the `isAdmin` field to true on the admin's user document.
+You can copy this rules and paste into the rules of storage.
+
+```json
+```
+
+
 
 ## Firebase Extension
 
@@ -445,6 +339,42 @@ All other options are on your choice.
 To dispaly the thumbnail image, you may use `.thumbnail` String extension method. `CachedNetworkImage(imageUrl: url.thumbnail)`
 
 ## Setup the base code
+
+Fireflutter needs the app to initialize with the Firebase before using it.
+
+Do the settings to connect to firebase.
+`flutterfire configure`
+
+Add firebase dependencies
+`flutter pub add firebase_core`
+`flutter pub add firebase_auth`
+
+
+Then, connect your app to firebase.
+
+```dart
+import 'package:firebase_core/firebase_core.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const MyApp());
+}
+```
+
+Then, initialize Fireflutter like below
+
+```dart
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+
+    /// Initialize FireFlutter
+    FireFlutterService.instance.init(context: ...);
+  }
+```
+
 
 Fireflutter has many features and each feature has a signleton service class. You need to initialize each of the singleton on yor needs.
 
@@ -2683,19 +2613,36 @@ npm run mocha **/save-token.test.ts
 
 # Developer
 
-In this chapter, you will learn how to develop fireflutter. If you would like to develop your app while you are updating(fixing) fireflutter, you can follow this developer's guide.
+In this chapter, you will learn how to develop fireflutter. You would also continue developing your app while developing(fixing) the fireflutter.
 
 ## Installing your app with fireflutter
 
 - Fork the fireflutter
-  - Go to `https://github.com/thruthesky/fireflutter` and press `Fork` button.
-- Clone it
+  - Go to `https://github.com/thruthesky/fireflutter` and fork it.
+- Then, clone it
   - `git clone https://github.com/your-account/fireflutter`.
 - Create a branch in fireflutter local repository
-- Create `apps` folder
-- Create your app in `apps` folder
-- Add the fireflutter as dependency with path `../..`.
-- Then, setup the fireflutter. See the [Installation](#installation) chapter.
+  - `cd fireflutter`
+  - `git checkout -b work`
+- For `Pull Request`, update any file, commit, push and request for pulling your code.
+  - `echo "Hi" >> README.md`
+  - `git commit -a -m "updating README.md"`
+  - `git push --set-upstream origin work`
+- Create `apps` folder and create your app inside `apps` folder.
+  - `cd apps`
+  - `flutter create your_porject`
+
+- Since your project add the fireflutter from your computer folder, you need to add the path of the dependency as `../..`. Add the firefluter dependenicy like below.
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  fireflutter:
+    path: ../..
+```
+
+- Then, follow the step of the [fireflutte Installation](#installation) chapter.
 
 ## Development Tips
 
@@ -2851,3 +2798,5 @@ flutter run
 ## Coding Guideline
 
 fireflutter uses sigular form in its file name and variable name, class name. For instance, it alwasy `user` over `users` unless there is good reason.
+
+
