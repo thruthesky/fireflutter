@@ -113,6 +113,15 @@
       "deviceId": "FF043B3E-9E36-405F-9719-D5A535B7729B"
     },
     {
+      "name": "GRC - Simulator - iMac (J) - iPhone 13 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "ECE40623-ACC2-4729-8DD4-B3DBB46D4B25"
+    },
+    {
       "name": "GRC - iPhone11 (J)",
       "request": "launch",
       "type": "dart",
