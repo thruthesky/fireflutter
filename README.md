@@ -1,6 +1,6 @@
 # FireFlutter
 
-![Fireflutter](https://github.com/thruthesky/fireflutter/blob/main/doc/fireflutter_title_image.jpg?raw=true)
+![FireFlutter](https://github.com/thruthesky/fireflutter/blob/main/doc/fireflutter_title_image.jpg?raw=true)
 
 If you are looking for a package that help you develop a full featured content management app, then you have found a right one. FireFlutter is a free, open source, complete, rapid development package for creating apps like CMS(content management system), social service, chat, community(forum), shopping mall and much more based on Firebase.
 
@@ -19,7 +19,7 @@ Create an issue if you find a bug or need a help.
     - [Security rule for admin](#security-rule-for-admin)
     - [Admin settings](#admin-settings)
     - [Realtime database security rules](#realtime-database-security-rules)
-    - [Security Rules for Stroage](#security-rules-for-stroage)
+    - [Security Rules for Storage](#security-rules-for-stroage)
   - [Firebase Extension](#firebase-extension)
     - [Resize image](#resize-image)
   - [Setup the base code](#setup-the-base-code)
@@ -176,7 +176,7 @@ If you have your own firebase project, then you can use that. If you don't have 
 
 ## Install the easy extension
 
-We built a firebase extension for the easy management on firebase. Fireflutter is using this extension. Install the [latest version of easy-extension](https://github.com/thruthesky/easy-extension).
+We built a firebase extension for the easy management on firebase. FireFlutter is using this extension. Install the [latest version of easy-extension](https://github.com/thruthesky/easy-extension).
 
 ![easy_extension](/doc/img/easy_extension.png)
 
@@ -360,7 +360,7 @@ To display the thumbnail image, you may use `.thumbnail` String extension method
 
 
 
-Fireflutter needs the app to initialize with the Firebase before using it.
+FireFlutter needs the app to initialize with the Firebase before using it.
 
 Do the settings to connect to firebase.
 ```
@@ -386,7 +386,7 @@ void main() async {
 }
 ```
 
-Then, initialize Fireflutter like below
+Then, initialize FireFlutter like below
 
 ```dart
 class _MyAppState extends State<MyApp> {
@@ -401,9 +401,9 @@ class _MyAppState extends State<MyApp> {
 ```
 
 
-Fireflutter has many features and each feature has a singleton service class. You need to initialize each of the singleton on your needs.
+FireFlutter has many features and each feature has a singleton service class. You need to initialize each of the singleton on your needs.
 
-Fireflutter needs **Global Key** since it uses `snackbars`, `dialog`, `bottom sheet`. Use the **`FireFlutterService.instance.init(context : ...)`**
+FireFlutter needs **Global Key** since it uses `snackbars`, `dialog`, `bottom sheet`. Use the **`FireFlutterService.instance.init(context : ...)`**
 
 **Note:**
 You don't have to initialize when you are only doing unit test.
@@ -413,7 +413,7 @@ You don't have to initialize when you are only doing unit test.
 **Note:**
 If you meet an error like `No MaterialLocalizations found. Xxxx widgets require MaterialLocalizations to be provided by a Localizations widget ancestor.`, then you may think a widget is not under MaterialApp or no localization provided. In this case, the context from global key will be used. For more details, See <https://docs.flutter.dev/release/breaking-changes/text-field-material-localizations>.
 
-For instance, if you are using go_route, you can pass the global build context like below.
+For instance, if you are using [go_route package](https://pub.dev/packages/go_router), you can pass the global build context like below.
 
 ```dart
 //  initialize admin 
@@ -469,7 +469,7 @@ FeedService.instance.init(enable: true);
 
 `url_lancher` package is added by fireflutter and it is being used to open url. If you wish to let users share links by sms, you need to setup in `AndroidManifest.xml` and `Info.plist`. See the [url_launch Configuration](https://pub.dev/packages/url_launcher#configuration).
 
-Fireflutter exposes a method `launchSMS` to open the SMS app. Here is an example of how to send sms. You can build your own code, of course.
+FireFlutter exposes a method `launchSMS` to open the SMS app. Here is an example of how to send sms. You can build your own code, of course.
 
 ```dart
 final re = await launchSMS(phnumber: '', msg: link);
@@ -501,7 +501,9 @@ In this chapter, some of the notable packages that are used by FireFlutter are e
 # Usage
 
 ## UserService
-<!-- #section removed -->
+<!-- #section removed 
+  reason: documentNotExistBuilder has been removed
+-->
 <!-- In this case, the `documentNotExistBuilder` of `UserDoc` will be called. -->
 
 <!-- So, the lifecyle will be the following when the app users `UserDoc`. -->
@@ -511,11 +513,11 @@ In this chapter, some of the notable packages that are used by FireFlutter are e
   - If the user document exist, then it will have right data and `builder` will be called. -->
 
 `UserService.instance.nullableUser` is *null* when
+- on app boot
 - the user don't have documents
-- will be null on app boot
-- when the user is logged in and has document, but the `UserService` has not read the user document, yet. In this case it simply needs to wait sometime.
+- when user has document but `UserService` has not read the user document yet.
 
-**Note:** Use *async()* to wait UserService to load the data
+<!-- **Note:** Use ***async*** to wait UserService to load the data -->
 
 `UserService.instance.nullableUser.exists` is *null* if the user has logged in but no document. 
 
@@ -529,10 +531,16 @@ UserService.instance.get(myUid!).then((user) => ...);
 
 You cannot use `my` until the UserService is initialized and `UserService.instance.user` is available. Or you will see `null check operator used on a null value.`
 
-## PostService
+<!-- .customize does not exist, 
 
-### How to open a post
+TODO: Learning it more so i can replace it
+  
+  might remove since there is already a section of Post Below
+-->
 
+<!-- ## PostService
+
+### How to open a post 
 Call the `showPostViewScreen` to show the full screen dialog that displays the post
 
 ```dart
@@ -547,13 +555,13 @@ Build your own UI design of the full screen Post View like below.
 PostService.instance.customize.postViewScreenBuilder = (post) => GRCCustomPostViewScreen(post: post);
 ```
 
-The widget is preferrably a full screen widget. It can be a scaffold, sliver, etc.
+The widget is preferrably a full screen widget. It can be a scaffold, sliver, etc. -->
 
 ## ChatService
 
 ### How to open 1:1 chat room
 
-Call the `showChatRoom` method anywhere with user model.
+Use the `showChatRoom` method anywhere with user model.
 
 ```dart
 ChatService.instance.showChatRoom(context: context, user: user);
@@ -561,7 +569,9 @@ ChatService.instance.showChatRoom(context: context, user: user);
 
 ### How to display chat room menu
 
-By default, it has a full screen dialog with default buttons. Since all apps have difference features and design, you will need to customize it or rebuild it. But see the code inside and copy and paste them into your project.
+Since all app have different features and design, you can customize or rebuild it. See the code below and paste them into your project.
+
+<!-- By default, it has a full screen dialog with default buttons. Since all apps have difference features and design, you will need to customize it or rebuild it. But see the code inside and copy and paste them into your project. -->
 
 How to show chat room dialog.
 
@@ -572,10 +582,11 @@ showGeneralDialog(
     appBar: AppBar(
       title: const Text('Invite User'),
     ),
-    body: ChatRoomMenuUserInviteDialog(room: room),
+    body: CustomChatWidget(),
   ),
 );
 ```
+    <!-- body: ChatRoomMenuUserInviteDialog(room: room), -->
 
 ### Customizing the chat header
 
@@ -635,18 +646,21 @@ Use this screen to show a user list and when it is tapped, show public profile.
 
 ## alert
 
-Use [alert] method to display a dialog to alert(alarm) the user.
+Use `alert` method to display a dialog to alert(alarm) the user.
 
 ```dart
 await alert(
   context: context,
-  title: '회원 탈퇴',
-  message: '회원 탈퇴를 하였습니다.');
+  title: 'Withdrawal',
+  message: 'I have canceled my membership.');
 ```
-
+  <!-- 
+  translated into english
+  title: '회원 탈퇴',
+  message: '회원 탈퇴를 하였습니다.'); -->
 ## toast
 
-Use [toast] to display a snackbar at the bottom
+Use `toast` to display a snackbar at the bottom
 
 ```dart
 toast(
@@ -1524,7 +1538,7 @@ Note that you may use it with or without the feed service. See the `Feed Service
 
 ## No of profile view
 
-A user can see other user's profile. Fireflutter provides a way of count the no of users who saw my profile. It is turned off by default and you can turn it on with `UserService.instance.init(enableNoOfProfileView)`. The history is saved under `/no_of_profile_view_history` collection so you can list and sort.
+A user can see other user's profile. FireFlutter provides a way of count the no of users who saw my profile. It is turned off by default and you can turn it on with `UserService.instance.init(enableNoOfProfileView)`. The history is saved under `/no_of_profile_view_history` collection so you can list and sort.
 
 ```json
 {
@@ -1554,7 +1568,7 @@ If you want to design the whole screen of post view,
 Example of connecting your own screen to post view.
 
 ```dart
-PostService.instance.customize.showPostViewScreen =
+PostService.instance.showPostViewScreen =
     (context, {String? postId, Post? post}) => showGeneralDialog(
           context: context,
           pageBuilder: (context, $, $$) =>
@@ -2257,7 +2271,7 @@ One feature that fireflutter does not have is share. There is no limitation how 
 
 # Callbacks
 
-Fireflutter provides callback functions to handle on user document create, update, delete. And create and update for the posts and comments.
+FireFlutter provides callback functions to handle on user document create, update, delete. And create and update for the posts and comments.
 
 Below is an example of how to index user name, post title, content and comment into supabase.
 
