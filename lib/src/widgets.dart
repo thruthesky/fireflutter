@@ -110,6 +110,7 @@ export 'widget/admin/admin.id_card.screen.dart';
 export 'widget/admin/admin.chat.room.list.screen.dart';
 export 'widget/admin/admin.chat_room.details.screen.dart';
 export 'widget/admin/admin.messaging.screen.dart';
+export 'widget/admin/admin.file_list.screen.dart';
 
 // settings
 export 'widget/setting/my_setting.dart';
