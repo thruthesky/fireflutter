@@ -411,7 +411,7 @@ You don't have to initialize when you are only doing unit test.
 <!-- Since, fireflutter uses `snackbars`, `dialog`, `bottom sheet`, it needs global key (or global build context). Put the global key into the `FireFlutterService.instance.init(context: ...)`. If you are not going to use the global key, you may not need to initialzie it like when you are only doing unit test. -->
 
 **Note:**
-If you meet an error like `No MaterialLocalizations found. Xxxx widgets require MaterialLocalizations to be provided by a Localizations widget ancestor.`, then you may think a widget is not under MaterialApp or no localization provided. In this case, the context from global key will be used. See <https://docs.flutter.dev/release/breaking-changes/text-field-material-localizations> for details.
+If you meet an error like `No MaterialLocalizations found. Xxxx widgets require MaterialLocalizations to be provided by a Localizations widget ancestor.`, then you may think a widget is not under MaterialApp or no localization provided. In this case, the context from global key will be used. For more details, See <https://docs.flutter.dev/release/breaking-changes/text-field-material-localizations>.
 
 For instance, if you are using go_route, you can pass the global build context like below.
 
@@ -451,7 +451,9 @@ class _MainWidgetState extends State<MainWidget>{
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      FireFlutterService.instance.init(context: globalContext);
+      FireFlutterService.instance.init(
+        context: globalContext,
+      );
     });
   }
 }
@@ -480,7 +482,7 @@ if (re) {
 
 # Pub.dev Packages
 
-In this chapter, some of the notable packages that are used by firelfutter are explained.
+In this chapter, some of the notable packages that are used by FireFlutter are explained.
 
 ## timeago
 <!-- TODO: Learn this and modify-->
@@ -499,28 +501,31 @@ In this chapter, some of the notable packages that are used by firelfutter are e
 # Usage
 
 ## UserService
+<!-- #section removed -->
+<!-- In this case, the `documentNotExistBuilder` of `UserDoc` will be called. -->
 
-`UserService.instance.nullableUser` is null when
+<!-- So, the lifecyle will be the following when the app users `UserDoc`. -->
 
-- the user didn't log in
+<!-- - `UserService.instance.nullableUser` will have an instance of `User`
+  - If the user document does not exists, `exists` will be `false` causing `documentNotExistsBuilder` to be called.
+  - If the user document exist, then it will have right data and `builder` will be called. -->
+
+`UserService.instance.nullableUser` is *null* when
+- the user don't have documents
+- will be null on app boot
 - when the user is logged in and has document, but the `UserService` has not read the user document, yet. In this case it simply needs to wait sometime.
 
-`UserService.instance.nullableUser.exists` is false if the user has logged in but no document. In this case, the `documentNotExistBuilder` of `UserDoc` will be called.
+**Note:** Use *async()* to wait UserService to load the data
 
-So, the lifecyle will be the following when the app users `UserDoc`.
+`UserService.instance.nullableUser.exists` is *null* if the user has logged in but no document. 
 
-- `UserService.instance.nullableUser` will be null on app boot
-- `UserService.instance.nullableUser` will have an instance of `User`
-  - If the user document does not exists, `exists` will be `false` causing `documentNotExistsBuilder` to be called.
-  - If the user document exsist, then it will have right data and `builder` will be called.
+The `UserService.instance.user` or `UserService.instance.documentChanges` may be null when the user document is being loaded on app boot. So, the better way to get the user's document for sure is to use `UserService.instance.get`
 
 Right way of getting a user document.
 
 ```dart
 UserService.instance.get(myUid!).then((user) => ...);
 ```
-
-The `UserService.instance.user` or `UserService.instance.docuemntChanges` may be null when the user document is being loaded on app boot. So, the better way to get the user's document for sure is to use `UserService.instance.get`
 
 You cannot use `my` until the UserService is initialized and `UserService.instance.user` is available. Or you will see `null check operator used on a null value.`
 
@@ -669,7 +674,7 @@ final password = await prompt(
 
 ## input
 
-[input] is an aliash of [prompt].
+[input] is an alias of [prompt].
 
 ## randomString
 
@@ -737,6 +742,7 @@ class EmailLoginForm extends StatefulWidget {
 
   final bool register;
   final VoidCallback? onLogin;
+}
 ```
 
 You can use `Theme()` to design the widgets. Example below:
@@ -774,13 +780,17 @@ UserDoc(
     defaultIcon: const FaIcon(FontAwesomeIcons.lightCircleUser, size: 38),
     backgroundColor: Theme.of(context).colorScheme.inversePrimary,
   ),
-  documentNotExistBuilder: () {
+),
+```
+
+<!--   
+Not exist anymore:
+documentNotExistBuilder: () {
     // Create user document if not exists.
     UserService.instance.create();
     return const SizedBox.shrink();
   },
-),
-```
+   -->
 
 ## User public screen customization
 
