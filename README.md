@@ -724,8 +724,10 @@ Navigator.of(context).push(
 
 Use this widget for creating and logging-in with email/password. This widget is designed for test use.
 
-***EmailLoginForm()*** params:
-``` dart
+***EmailLoginForm()*** structure:
+
+
+```dart
 class EmailLoginForm extends StatefulWidget {
   const EmailLoginForm({
     super.key,
@@ -738,6 +740,7 @@ class EmailLoginForm extends StatefulWidget {
 ```
 
 You can use `Theme()` to design the widgets. Example below:
+
 ``` dart
 Theme(
   data: ThemeData(
