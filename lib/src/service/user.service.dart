@@ -431,6 +431,20 @@ class UserService {
     );
   }
 
+  showLikedByListScreen({required BuildContext context, required User user}) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Likers'),
+          ),
+          body: UserListView.builder(uids: user.followings),
+        );
+      },
+    );
+  }
+
   showViewersScreen({required BuildContext context, Widget Function(User)? itemBuilder}) {
     showGeneralDialog(
       context: context,
@@ -447,14 +461,5 @@ class UserService {
     await my.delete();
     await mySearchDoc.delete();
     await rtdb.ref('users/$myUid').remove();
-  }
-
-  showLikedByListScreen({required BuildContext context, required List<String> uids}) {
-    showGeneralDialog(
-      context: context,
-      pageBuilder: (context, _, __) {
-        return UserLikedByListScreen(uids: uids);
-      },
-    );
   }
 } // EO UserService
