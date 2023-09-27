@@ -158,19 +158,19 @@ The main features are the followings;
 - Following
 - Admin
 
-## Getting started
+# Getting started
 
 To get started, you can follow the [Installation](#installation) chapter.
 
 The best way is to copy codes from the example project and paste it into your project and update the UI.
 
-# Installation
+## Installation
 
 Please follow the instructions below to install the fireflutter into your app.
 
 ## Create a Firebase
 
-If you have your own firebase project, then you can use that. If you don't have one, create one first.
+If you have your own firebase project, then you can use that. If you don't have one, create one first. Visit [Firebase Website](https://firebase.google.com).
 
 
 ## Install the easy extension
@@ -191,9 +191,11 @@ firebase use add <project>
 npm run deploy
 ```
 
-Note, if you see error like `v2 function name(s) can only contain lower case letters, numbers, hyphens, and not exceed 62 characters in length`, then install the latest version of npm, nodejs, firebase.
+**Note:**
+if you see error like `v2 function name(s) can only contain lower case letters, numbers, hyphens, and not exceed 62 characters in length`, then install the latest version of npm, nodejs, firebase.
 
-Note, if you see warnings like `functions: Since this is your first time using 2nd gen functions, we need a little bit longer to finish setting everything up. Retry the deployment in a few minutes.`, then take 5 minutes break and re-deploy.
+**Note:**
+if you see warnings like `functions: Since this is your first time using 2nd gen functions, we need a little bit longer to finish setting everything up. Retry the deployment in a few minutes.`, then take 5 minutes break and re-deploy.
 
 
 ## Security rules
@@ -215,12 +217,14 @@ function isAdmin() {
 }
 ```
 
-Once the admin is set, you can customize your security rules to restrict some docuemnts to write access from other users. By doing this way, you can add sub-admin(s) from client app (without editing the security rules on every time when you add subadmin)
+After setting the admin, you can now customize your security rules to restrict some write access from other user. 
+
+Once the admin is set, you can customize your security rules to restrict some documents to write access from other users. By doing this way, you can add sub-admin(s) from client app (without editing the security rules on every time when you add subadmin)
 
 For instance, you may write security rules like below and add the uids of sub-admin users. then, add a security rule function to check if the user is sub-admin.
 
 ```ts
-  /setttings/sub-admins {
+  /settings/sub-admins {
     allow read, write: if isAdmin();
   }
   function isSubAdmin() {
@@ -312,33 +316,44 @@ Copy the following and paste it into your firebase project.
 }
 ```
 
-
-### Security Rules for Stroage
+<!-- Commented out -->
+<!-- ### Security Rules for Stroage
 
 You can copy this rules and paste into the rules of storage.
 
 ```json
-```
+``` -->
 
 
 
 ## Firebase Extension
 
-Aside from `easy-exnteion`, you will need to install the following extensions
+Aside from `easy-extension`, you will need to install the following extensions
 
 ### Resize image
 
-`Deletion of original file` - Don't delete
+
+`Deletion of original file` - Don't delete  
 `Make resized images public` - yes
+![resize_image_settings](/doc/img/resize_option_1.png)
+
 `Cache-Control header for resized images` - "max-age=86400"
 `Convert image to preferred types` - select `webp` only.
+![resize_image_settings](/doc/img/resize_option_2.png)
+
+And choose `backfill` if you have an existing images.
+![resize_image_settings](/doc/img/resize_option_3.png)
+
 And choose `backfill` if you have an existing images.
 
 All other options are on your choice.
 
-To dispaly the thumbnail image, you may use `.thumbnail` String extension method. `CachedNetworkImage(imageUrl: url.thumbnail)`
+To display the thumbnail image, you may use `.thumbnail` String extension method. `CachedNetworkImage(imageUrl: url.thumbnail)`
 
 ## Setup the base code
+
+
+
 
 Fireflutter needs the app to initialize with the Firebase before using it.
 
