@@ -23,10 +23,10 @@ Create an issue if you find a bug or need a help.
   - [Firebase Extension](#firebase-extension)
     - [Resize image](#resize-image)
   - [Setup the base code](#setup-the-base-code)
-  - [url\_launcher Optional](#url_launcher-optional)
+  - [url_launcher Optional](#url_launcher-optional)
 - [Pub.dev Packages](#pubdev-packages)
   - [timeago](#timeago)
-  - [Parsed\_ReadMore](#parsed_readmore)
+  - [Parsed_ReadMore](#parsed_readmore)
 - [How to build a user profile page](#how-to-build-a-user-profile-page)
 - [How to build a chat app](#how-to-build-a-chat-app)
 - [How to build a forum app](#how-to-build-a-forum-app)
@@ -177,7 +177,6 @@ If you have your own firebase project, then you can use that. If you don't have 
 ## Install the easy extension
 
 We built a firebase extension for the easy management on firebase. FireFlutter is using this extension. Install the [latest version of easy-extension](https://github.com/thruthesky/easy-extension).
-
 ![easy_extension](/doc/img/easy_extension.png)
 
 Choose Easy Extension version and it will redirect you to Firebase. Choose the project you want Easy Extension to be installed.
@@ -200,7 +199,6 @@ if you see error like `v2 function name(s) can only contain lower case letters, 
 
 **Note:**
 if you see warnings like `functions: Since this is your first time using 2nd gen functions, we need a little bit longer to finish setting everything up. Retry the deployment in a few minutes.`, then take 5 minutes break and re-deploy.
-
 
 ## Security rules
 
@@ -235,11 +233,9 @@ For instance, you may write security rules like below and add the uids of sub-ad
     ...
   }
 ```
-
 <!-- ### Admin settings
 
 See the [Security rules for admin](#security-rule-for-admin) chapter to set admin in the security rules. After this, you can set the `isAdmin` field to true on the admin's user document. -->
-
 
 ### Realtime database security rules
 
@@ -318,16 +314,14 @@ Enable Realtime Database on firebase and copy the following and paste it into yo
   }
 }
 ```
-
 <!-- Commented out -->
 <!-- ### Security Rules for Stroage
 
 You can copy this rules and paste into the rules of storage.
 
 ```json
+
 ``` -->
-
-
 
 ## Firebase Extension
 
@@ -373,7 +367,6 @@ flutter pub add firebase_core
 flutter pub add firebase_auth
 ```
 
-
 Then, connect your app to firebase.
 
 ```dart
@@ -399,7 +392,6 @@ class _MyAppState extends State<MyApp> {
   }
 }
 ```
-
 
 FireFlutter has many features and each feature has a singleton service class. You need to initialize each of the singleton on your needs.
 
@@ -2184,6 +2176,35 @@ PostCard(
 ),
 ```
 
+We can also customize by parts of the PostCart
+
+```dart
+PostCard(
+  post: post,
+  color: Theme.of(context).colorScheme.secondary.withAlpha(20),
+  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+  contentBackground: Theme.of(context).colorScheme.secondary.withAlpha(20),
+  shareButtonBuilder: (post) => ShareButton(post: post),
+  customMiddleContentBuilder: (context, post) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeXs),
+      child: Text('This Content is in the lower of main content, upper of the Actions'),
+      ),
+    );
+  },
+),
+```
+
+Use these to customize by part:
+
+- shareButtonBuilder
+- customContainer
+- customHeaderBuilder
+- customMainContentBuilder
+- customMiddleContentBuilder
+- customActionsBuilder
+- customFooterBuilder
+
 When you customize the UI/UX with the service initialization, it may not update on realtime when you edit and hot-reload.
 
 ## User profile screen customization
@@ -2721,10 +2742,12 @@ In this chapter, you will learn how to develop fireflutter. You would also conti
   - `git commit -a -m "updating README.md"`
   - `git push --set-upstream origin work`
 - Create `apps` folder and create your app inside `apps` folder.
+
   - `cd apps`
   - `flutter create your_porject`
 
 - Since your project add the fireflutter from your computer folder, you need to add the path of the dependency as `../..`. Add the firefluter dependenicy like below.
+
 ```yaml
 dependencies:
   flutter:
@@ -2890,5 +2913,3 @@ flutter run
 ## Coding Guideline
 
 fireflutter uses sigular form in its file name and variable name, class name. For instance, it alwasy `user` over `users` unless there is good reason.
-
-

@@ -1,15 +1,27 @@
-import 'dart:async';
-
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
+/// Chat Room Message Box
+///
+/// Use this widget to display chat input box on chat room screen.
+///
+/// Note that, the [room] property is required, but it cannbe nullable.
+/// The [room] property is not used until user input a message and send it or
+/// upload a file. So, the [room] must be ready when user send a message or
+/// upload a file.
+/// This is because to display the message input box as fast as possible even
+/// if the room does not exist, it will display the input box first and then
+/// on the parent widget, the app must create a chat room and deliver the
+/// [room] value to this widget if the room does not exist.
+///
+///
 class ChatRoomMessageBox extends StatefulWidget {
   const ChatRoomMessageBox({
     super.key,
-    required this.roomId,
+    required this.room,
   });
 
-  final String roomId;
+  final Room? room;
 
   @override
   State<StatefulWidget> createState() => _ChatRoomMessageBoxState();
@@ -18,25 +30,6 @@ class ChatRoomMessageBox extends StatefulWidget {
 class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
   final TextEditingController message = TextEditingController();
   double? progress;
-
-  Room? room;
-  StreamSubscription? roomSubscription;
-
-  @override
-  void initState() {
-    super.initState();
-
-    //
-    roomSubscription = Room.col
-        .where('roomId', isEqualTo: widget.roomId)
-        .snapshots()
-        .listen((event) {
-      if (event.size > 0) {
-        room = Room.fromDocumentSnapshot(event.docs.first);
-        roomSubscription!.cancel();
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +54,10 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
                   ),
                   padding: EdgeInsets.zero,
                   onPressed: () async {
-                    // ChatService.instance.onPressedFileUploadIcon(context: context, room: widget.room);
+                    if (widget.room == null) {
+                      toast(title: 'Wait...', message: 'The room is not ready yet.');
+                      return;
+                    }
                     final url = await StorageService.instance.upload(
                       context: context,
                       camera: ChatService.instance.uploadFromCamera,
@@ -70,8 +66,7 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
                       progress: (p) => setState(() => progress = p),
                       complete: () => setState(() => progress = null),
                     );
-                    await ChatService.instance
-                        .sendMessage(room: room!, url: url);
+                    await ChatService.instance.sendMessage(room: widget.room!, url: url);
                   },
                 ),
                 Expanded(
@@ -87,11 +82,15 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
                 ),
                 IconButton(
                   onPressed: () async {
+                    if (widget.room == null) {
+                      toast(title: 'Wait...', message: 'The room is not ready yet.');
+                      return;
+                    }
                     if (message.text.isEmpty) return;
                     final text = message.text;
                     message.text = '';
                     await ChatService.instance.sendMessage(
-                      room: room!,
+                      room: widget.room!,
                       text: text,
                     );
                   },
