@@ -22,17 +22,23 @@ class Messaging {
      * @return results
      */
     static async sendMessage(data) {
+        // console.log('sendMessage::data:: ', data)
         if (data.action) {
+            console.log("sendMessage::action");
             return this.sendMessageByAction(data);
         }
         else if (data.topic) {
+            console.log("sendMessage::topics");
             return this.sendMessageToTopic(data.topic, data);
         }
         else if (data.tokens) {
+            console.log("sendMessage::tokens");
             return this.sendMessageToTokens(data.tokens, data);
         }
         else if (data.uids) {
+            console.log("sendMessage::uids", data.uids);
             const tokens = await this.getTokensFromUids(data.uids);
+            console.log("sendMessage::tokens", tokens);
             return this.sendMessageToTokens(tokens, data);
         }
         else {
