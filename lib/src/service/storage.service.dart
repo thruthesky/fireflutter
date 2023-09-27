@@ -86,7 +86,29 @@ class StorageService {
     // print(fileRef.fullPath);
 
     // don't await. create a document in /storage
-    Storage.create(type: type, url: url);
+
+    await fileRef.getMetadata().then((FullMetadata value) {
+      final contentType = value.contentType;
+      final fullPath = value.fullPath;
+      final name = value.name;
+      final size = value.size;
+      final timeCreated = value.timeCreated;
+
+      Storage.create(
+        type: type,
+        url: url,
+        // contentType: contentType, // image/jpeg, image/gif, image/png, image....
+        // fullPath: fullPath,
+        // name: name,
+        // size: size,
+        // timeCreated: timeCreated,
+        // isImage: contentType?.startsWith('image') ?? false
+        // isVideo: contentType?.startsWith('video') ?? false
+        // isAudio: contentType?.startsWith('audio') ?? false
+        // isText: contentType?.startsWith('text') ?? false
+        // isApplication: contentType?.startsWith('application') ?? false
+      );
+    });
 
     return url;
   }

@@ -20,6 +20,37 @@ class _AdminFileListScreenState extends State<AdminFileListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('AdminFileList'),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(60),
+          child: SizedBox(
+            height: 60,
+            child: Row(
+              children: [
+                TextButton(
+                  onPressed: () {},
+                  child: const Text('ALL'),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text('Photos'),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text('Videos'),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text('Others'),
+                ),
+                const Spacer(),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text('Search User'),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       body: FirestoreQueryBuilder(
         query: storageCol.orderBy('createdAt', descending: true),

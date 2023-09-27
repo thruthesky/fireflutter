@@ -57,7 +57,7 @@ class _ChatRoomState extends State<ChatRoomScreen> {
                     roomId: roomId,
                   ),
           ),
-          if (room != null) ChatRoomMessageBox(room: room!),
+          ChatRoomMessageBox(room: room),
         ],
       ),
     );
