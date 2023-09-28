@@ -62,8 +62,7 @@ class PostCard extends StatelessWidget {
     /// - Show more comments button
     this.customFooterBuilder,
     this.headerPadding = const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
-    this.bottomButtonPadding =
-        const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeSm),
+    this.bottomButtonPadding = const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeSm),
   });
 
   final Color? color;
@@ -86,10 +85,8 @@ class PostCard extends StatelessWidget {
   final Widget Function(Post post)? shareButtonBuilder;
   final Widget Function(Widget content)? customContainer;
   final Widget Function(BuildContext context, Post post)? customHeaderBuilder;
-  final Widget Function(BuildContext context, Post post)?
-      customMainContentBuilder;
-  final Widget Function(BuildContext context, Post post)?
-      customMiddleContentBuilder;
+  final Widget Function(BuildContext context, Post post)? customMainContentBuilder;
+  final Widget Function(BuildContext context, Post post)? customMiddleContentBuilder;
   final Widget Function(BuildContext context, Post post)? customActionsBuilder;
   final Widget Function(BuildContext context, Post post)? customFooterBuilder;
 
@@ -118,20 +115,15 @@ class PostCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // custom Header
-        customHeaderBuilder?.call(context, post) ??
-            defaultHeader(context, post),
+        customHeaderBuilder?.call(context, post) ?? defaultHeader(context, post),
         // custom main content
-        customMainContentBuilder?.call(context, post) ??
-            defaultMainContent(context, post),
+        customMainContentBuilder?.call(context, post) ?? defaultMainContent(context, post),
         // Custom Middle content
-        customMiddleContentBuilder?.call(context, post) ??
-            const SizedBox.shrink(),
+        customMiddleContentBuilder?.call(context, post) ?? const SizedBox.shrink(),
         // custom actions Builder
-        customActionsBuilder?.call(context, post) ??
-            defaultActions(context, post),
+        customActionsBuilder?.call(context, post) ?? defaultActions(context, post),
         // custom footer builder
-        customFooterBuilder?.call(context, post) ??
-            defaultFooter(context, post),
+        customFooterBuilder?.call(context, post) ?? defaultFooter(context, post),
       ],
     );
   }
@@ -141,8 +133,7 @@ class PostCard extends StatelessWidget {
       children: [
         GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () => UserService.instance
-              .showPublicProfileScreen(context: context, uid: post.uid),
+          onTap: () => UserService.instance.showPublicProfileScreen(context: context, uid: post.uid),
           child: Padding(
             padding: headerPadding,
             child: Row(
@@ -158,28 +149,20 @@ class PostCard extends StatelessWidget {
                   children: [
                     UserDoc(
                       uid: post.uid,
-                      builder: (user) => Text(user.name,
-                          style: Theme.of(context).textTheme.titleMedium),
+                      builder: (user) => Text(user.name, style: Theme.of(context).textTheme.titleMedium),
                     ),
                     Row(
                       children: [
                         DateTimeText(
                             dateTime: post.createdAt,
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.secondary,
-                                fontSize: 11)),
+                            style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11)),
                         DatabaseCount(
-                          path:
-                              pathSeenBy(post.id), // 'posts/${post.id}/seenBy',
+                          path: pathSeenBy(post.id), // 'posts/${post.id}/seenBy',
                           builder: (n) => n < 2
                               ? const SizedBox.shrink()
                               : Text(
                                   " | Views: $n",
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
-                                      fontSize: 11),
+                                  style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11),
                                 ),
                         ),
                       ],
@@ -192,7 +175,9 @@ class PostCard extends StatelessWidget {
         ),
         const Spacer(),
         PopupMenuButton<String>(
+          icon: const Icon(Icons.more_vert),
           itemBuilder: (context) => [
+            const PopupMenuItem(value: "reply", child: Text("Reply")),
             if (post.isMine) PopupMenuItem(value: "edit", child: Text(tr.edit)),
             const PopupMenuItem(value: "report", child: Text("Report")),
             if (!post.isMine)
@@ -200,17 +185,17 @@ class PostCard extends StatelessWidget {
                 value: 'block',
                 child: Database(
                   path: pathBlock(post.uid),
-                  builder: (value, p) =>
-                      Text(value == null ? tr.block : tr.unblock),
+                  builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
                 ),
               ),
           ],
           onSelected: (value) async {
-            if (value == "edit") {
+            if (value == "reply") {
+              CommentService.instance.showCommentEditBottomSheet(context, post: post);
+            } else if (value == "edit") {
               PostService.instance.showEditScreen(context, post: post);
             } else if (value == 'report') {
-              ReportService.instance
-                  .showReportDialog(context: context, postId: post.id);
+              ReportService.instance.showReportDialog(context: context, postId: post.id);
             } else if (value == 'block') {
               final blocked = await toggle(pathBlock(post.uid));
               toast(
@@ -250,13 +235,11 @@ class PostCard extends StatelessWidget {
                       .map(
                         (e) => GestureDetector(
                           behavior: HitTestBehavior.opaque,
-                          onTap: () => showPreview(context,
-                              post.youtubeId.isNotEmpty ? e.key + 1 : e.key),
+                          onTap: () => showPreview(context, post.youtubeId.isNotEmpty ? e.key + 1 : e.key),
                           child: CachedNetworkImage(
                             imageUrl: e.value,
                             fit: BoxFit.cover,
-                            placeholder: (context, url) =>
-                                const SizedBox(height: 400),
+                            placeholder: (context, url) => const SizedBox(height: 400),
                           ),
                         ),
                       )
@@ -270,8 +253,7 @@ class PostCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
             color: contentBackground,
-            child: Text(post.title.replaceAll("\n", " "),
-                style: Theme.of(context).textTheme.titleMedium),
+            child: Text(post.title.replaceAll("\n", " "), style: Theme.of(context).textTheme.titleMedium),
           ),
 
         /// post content
@@ -280,8 +262,7 @@ class PostCard extends StatelessWidget {
             padding: const EdgeInsets.all(sizeSm),
             color: contentBackground,
             child: post.content.length < 60
-                ? Text(post.content.replaceAll("\n", " "),
-                    style: Theme.of(context).textTheme.bodyMedium)
+                ? Text(post.content.replaceAll("\n", " "), style: Theme.of(context).textTheme.bodyMedium)
                 : PostContentShowMore(post: post),
           ),
       ],
@@ -322,24 +303,24 @@ class PostCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: sizeXs),
           child: Row(
             children: [
+              IconButton(
+                  onPressed: () => CommentService.instance.showCommentEditBottomSheet(context, post: post),
+                  icon: const Icon(Icons.reply)),
               Database(
                 path: pathPostLikedBy(post.id),
                 builder: (v, p) => IconButton(
                   onPressed: () => toggle(p),
-                  icon: Icon(
-                      v != null ? Icons.thumb_up : Icons.thumb_up_outlined),
+                  icon: Icon(v != null ? Icons.thumb_up : Icons.thumb_up_outlined),
                 ),
               ),
               FavoriteButton(
                 postId: post.id,
                 builder: (didIFavorite) {
-                  return Icon(
-                      didIFavorite ? Icons.favorite : Icons.favorite_border);
+                  return Icon(didIFavorite ? Icons.favorite : Icons.favorite_border);
                 },
               ),
               shareButtonBuilder?.call(post) ??
-                  PostService.instance.customize.shareButtonBuilder
-                      ?.call(post) ??
+                  PostService.instance.customize.shareButtonBuilder?.call(post) ??
                   const SizedBox.shrink(),
             ],
           ),
@@ -383,15 +364,12 @@ class PostCard extends StatelessWidget {
 
                 children.add(
                   CommentOneLineListTile(
-                    padding:
-                        const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
+                    padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
                     contentMargin: const EdgeInsets.only(bottom: 8),
-                    contentBorderRadius:
-                        const BorderRadius.all(Radius.circular(8)),
+                    contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
                     post: post,
                     comment: comment,
-                    onTapContent: () => CommentService.instance
-                        .showCommentListBottomSheet(context, post),
+                    onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
                   ),
                 );
               }
@@ -413,20 +391,17 @@ class PostCard extends StatelessWidget {
               if (post.noOfComments > commentSize)
                 TextButton(
                   onPressed: () {
-                    CommentService.instance
-                        .showCommentListBottomSheet(context, post);
+                    CommentService.instance.showCommentListBottomSheet(context, post);
                   },
-                  child: Text(tr.showMoreComments
-                      .replaceAll("#no", post.noOfComments.toString())),
+                  child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
                 ),
               const Spacer(),
-              ElevatedButton(
-                onPressed: () async {
-                  await CommentService.instance
-                      .showCommentEditBottomSheet(context, post: post);
-                },
-                child: Text(tr.reply),
-              ),
+              // ElevatedButton(
+              //   onPressed: () async {
+              //     await CommentService.instance.showCommentEditBottomSheet(context, post: post);
+              //   },
+              //   child: Text(tr.reply),
+              // ),
             ],
           ),
         )
