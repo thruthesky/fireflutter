@@ -64,7 +64,9 @@ class CommentOneLineListTile extends StatelessWidget {
                     SizedBox(width: runSpacing),
                     DateTimeText(
                       dateTime: comment.createdAt,
-                      style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontSize: 11),
                     ),
                   ],
                 ),
@@ -122,13 +124,16 @@ class CommentOneLineListTile extends StatelessWidget {
                           ? const SizedBox.shrink()
                           : TextButton(
                               style: TextButton.styleFrom(
-                                padding: const EdgeInsets.only(left: 0, right: 8),
+                                padding:
+                                    const EdgeInsets.only(left: 0, right: 8),
                                 minimumSize: Size.zero,
                                 visualDensity: VisualDensity.compact,
                               ),
-                              onPressed: () async => UserService.instance.showLikedByListScreen(
+                              onPressed: () async =>
+                                  UserService.instance.showLikedByListScreen(
                                 context: context,
-                                uids: await getKeys(pathCommentLikedBy(comment.id, all: true)),
+                                uids: await getKeys(
+                                    pathCommentLikedBy(comment.id, all: true)),
                               ),
                               child: Text(
                                 n == 0
@@ -171,7 +176,8 @@ class CommentOneLineListTile extends StatelessWidget {
               icon: Icon(
                 value == null ? Icons.favorite_border : Icons.favorite,
                 size: 16,
-                color: value == null ? null : Theme.of(context).colorScheme.error,
+                color:
+                    value == null ? null : Theme.of(context).colorScheme.error,
               ),
             ),
           ),

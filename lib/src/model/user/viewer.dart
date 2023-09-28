@@ -14,7 +14,9 @@ class Viewer {
     required this.year,
     required this.month,
     required this.day,
-  }) : lastViewedAt = (lastViewedAt is Timestamp) ? lastViewedAt.toDate() : DateTime.now();
+  }) : lastViewedAt = (lastViewedAt is Timestamp)
+            ? lastViewedAt.toDate()
+            : DateTime.now();
   final String seenBy;
   final String? type;
 

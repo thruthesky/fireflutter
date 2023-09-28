@@ -57,7 +57,8 @@ class IconTextButton extends StatelessWidget {
                 padding: iconPadding,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(iconRadius),
-                  color: iconBackgroundColor ?? Theme.of(context).colorScheme.secondary.withAlpha(20),
+                  color: iconBackgroundColor ??
+                      Theme.of(context).colorScheme.secondary.withAlpha(20),
                 ),
                 child: icon,
               ),

@@ -63,7 +63,8 @@ class StorageService {
     if (path == null) return null;
     File file = File(path);
     final storageRef = FirebaseStorage.instance.ref();
-    final fileRef = storageRef.child(saveAs ?? "users/${myUid!}/${file.path.split('/').last}");
+    final fileRef = storageRef
+        .child(saveAs ?? "users/${myUid!}/${file.path.split('/').last}");
     if (compressQuality > 0) {
       final xfile = await FlutterImageCompress.compressAndGetFile(
         file.absolute.path,
@@ -202,7 +203,8 @@ class StorageService {
     int compressQuality = 80,
     String? type,
   }) async {
-    final pickedFiles = await ImagePicker().pickMultiImage(imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
+    final pickedFiles = await ImagePicker()
+        .pickMultiImage(imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
     List<XFile> xFilePicks = pickedFiles;
 
     if (xFilePicks.isEmpty) return null;
@@ -220,7 +222,11 @@ class StorageService {
   }
 
   showUploads(BuildContext context, List<String> urls, {int index = 0}) {
-    if (customize.showUploads != null) return customize.showUploads!(context, urls, index: index);
-    showGeneralDialog(context: context, pageBuilder: (context, _, __) => CarouselScreen(urls: urls, index: index));
+    if (customize.showUploads != null)
+      return customize.showUploads!(context, urls, index: index);
+    showGeneralDialog(
+        context: context,
+        pageBuilder: (context, _, __) =>
+            CarouselScreen(urls: urls, index: index));
   }
 }

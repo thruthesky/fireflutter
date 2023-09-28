@@ -60,7 +60,8 @@ class ChatRoomAppBarState extends State<ChatRoomAppBar> {
               IconButton(
                 icon: const Icon(Icons.settings),
                 onPressed: () async {
-                  return ChatService.instance.openChatRoomMenuDialog(context: context, room: room);
+                  return ChatService.instance
+                      .openChatRoomMenuDialog(context: context, room: room);
                 },
               ),
             ],
@@ -75,7 +76,8 @@ class ChatRoomAppBarState extends State<ChatRoomAppBar> {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () async {
-              return ChatService.instance.openChatRoomMenuDialog(context: context, room: widget.room!);
+              return ChatService.instance
+                  .openChatRoomMenuDialog(context: context, room: widget.room!);
             },
           ),
         ],

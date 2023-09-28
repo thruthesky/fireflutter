@@ -65,10 +65,14 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
           const Text("Friends"),
           Expanded(
             child: StreamBuilder<String?>(
-                stream: nameChanged.stream.debounceTime(const Duration(milliseconds: 500)).distinct((a, b) => a == b),
+                stream: nameChanged.stream
+                    .debounceTime(const Duration(milliseconds: 500))
+                    .distinct((a, b) => a == b),
                 builder: (context, snapshot) {
                   return FirestoreListView(
-                    query: name.text.isEmpty ? userCol : userCol.where("displayName", isEqualTo: name.text),
+                    query: name.text.isEmpty
+                        ? userCol
+                        : userCol.where("displayName", isEqualTo: name.text),
                     itemBuilder: (context, snapshot) {
                       final user = User.fromDocumentSnapshot(snapshot);
                       return ListTile(

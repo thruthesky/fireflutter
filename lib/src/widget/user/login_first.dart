@@ -15,7 +15,9 @@ class LoginFirst extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               tr.loginFirstToUseCompleteFunctionality,
-              style: TextStyle(color: Theme.of(context).colorScheme.onSecondary.withAlpha(120)),
+              style: TextStyle(
+                  color:
+                      Theme.of(context).colorScheme.onSecondary.withAlpha(120)),
             ),
           );
   }

@@ -20,10 +20,12 @@ import 'package:rxdart/rxdart.dart';
 /// my.update(state: stateController.text);
 User get my => UserService.instance.user;
 
-bool get isAnonymous => auth.FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+bool get isAnonymous =>
+    auth.FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
 
 /// Return true if the user signed with real account. Not anonymous.
-bool get notLoggedIn => isAnonymous || auth.FirebaseAuth.instance.currentUser == null;
+bool get notLoggedIn =>
+    isAnonymous || auth.FirebaseAuth.instance.currentUser == null;
 
 bool get loggedIn => !notLoggedIn;
 
@@ -65,7 +67,8 @@ class UserService {
   /// UserService.instance.documentChanges.listen((user) => user == null ? null : print(my));
   /// ```
   ///
-  final BehaviorSubject<User?> documentChanges = BehaviorSubject<User?>.seeded(null);
+  final BehaviorSubject<User?> documentChanges =
+      BehaviorSubject<User?>.seeded(null);
 
   /// [userChanges] fires when
   /// - app boots
@@ -76,7 +79,8 @@ class UserService {
   /// Note that, the difference from [documentChanges] is that this happens
   /// when user logs in or out while [documentChanges] happens when the user
   /// document changes.
-  final BehaviorSubject<auth.User?> userChanges = BehaviorSubject<auth.User?>.seeded(null);
+  final BehaviorSubject<auth.User?> userChanges =
+      BehaviorSubject<auth.User?>.seeded(null);
 
   ///
   UserService._();
@@ -141,7 +145,10 @@ class UserService {
   /// Use this to display widgets lively that depends on the user model. When
   /// the user document is updated, this stream will fire an event.
   Stream<User> get snapshot {
-    return UserService.instance.col.doc(myUid).snapshots().map((doc) => User.fromDocumentSnapshot(doc));
+    return UserService.instance.col
+        .doc(myUid)
+        .snapshots()
+        .map((doc) => User.fromDocumentSnapshot(doc));
   }
 
   Function(User user)? onCreate;
@@ -181,7 +188,8 @@ class UserService {
     }
 
     this.enableNoOfProfileView = enableNoOfProfileView;
-    this.enableMessagingOnPublicProfileVisit = enableMessagingOnPublicProfileVisit;
+    this.enableMessagingOnPublicProfileVisit =
+        enableMessagingOnPublicProfileVisit;
     this.onCreate = onCreate;
     this.onUpdate = onUpdate;
     this.onDelete = onDelete;
@@ -207,7 +215,8 @@ class UserService {
           if (!documentSnapshot.exists || documentSnapshot.data() == null) {
             nullableUser = User.notExists();
           } else {
-            nullableUser = User.fromDocumentSnapshot(documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
+            nullableUser = User.fromDocumentSnapshot(
+                documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
           }
           documentChanges.add(nullableUser);
         });
@@ -361,7 +370,8 @@ class UserService {
   ///
   /// Send notification even if enableMessagingOnPublicProfileVisit is set to false
   /// set `sendNotification` to `true` to send push notification
-  Future showPublicProfileScreen({required BuildContext context, String? uid, User? user}) {
+  Future showPublicProfileScreen(
+      {required BuildContext context, String? uid, User? user}) {
     final String otherUid = uid ?? user!.uid;
     final now = DateTime.now();
 
@@ -386,7 +396,9 @@ class UserService {
       );
     }
 
-    if (loggedIn && (enableMessagingOnPublicProfileVisit) && myUid != otherUid) {
+    if (loggedIn &&
+        (enableMessagingOnPublicProfileVisit) &&
+        myUid != otherUid) {
       MessagingService.instance.queue(
         title: "Someone visit your profile",
         body: "${my.name} visit your profile",
@@ -396,7 +408,8 @@ class UserService {
       );
     }
 
-    return customize.showPublicProfileScreen?.call(context, uid: uid, user: user) ??
+    return customize.showPublicProfileScreen
+            ?.call(context, uid: uid, user: user) ??
         showGeneralDialog(
           context: context,
           pageBuilder: ($, _, __) => PublicProfileScreen(uid: uid, user: user),
@@ -431,7 +444,8 @@ class UserService {
     );
   }
 
-  showViewersScreen({required BuildContext context, Widget Function(User)? itemBuilder}) {
+  showViewersScreen(
+      {required BuildContext context, Widget Function(User)? itemBuilder}) {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) {
@@ -449,7 +463,8 @@ class UserService {
     await rtdb.ref('users/$myUid').remove();
   }
 
-  showLikedByListScreen({required BuildContext context, required List<String> uids}) {
+  showLikedByListScreen(
+      {required BuildContext context, required List<String> uids}) {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) {

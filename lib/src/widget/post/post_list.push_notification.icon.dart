@@ -24,18 +24,23 @@ class PostListPushNotificationIcon extends StatelessWidget {
           children: [
             StreamBuilder<QuerySnapshot>(
                 stream: mySettingCol
-                    .where('action', whereIn: [ActionType.postCreate.name, ActionType.commentCreate.name])
+                    .where('action', whereIn: [
+                      ActionType.postCreate.name,
+                      ActionType.commentCreate.name
+                    ])
                     .where(
                       'categoryId',
                       isEqualTo: categoryId,
                     )
                     .snapshots(),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) return const SizedBox.shrink();
+                  if (snapshot.connectionState == ConnectionState.waiting)
+                    return const SizedBox.shrink();
 
                   return snapshot.data!.size > 0
                       ? const Icon(Icons.notifications)
-                      : Icon(Icons.notifications_off, color: Theme.of(context).colorScheme.secondary);
+                      : Icon(Icons.notifications_off,
+                          color: Theme.of(context).colorScheme.secondary);
                 }),
             PushNotificationSetting(
                 action: ActionType.postCreate.name,
@@ -77,7 +82,9 @@ class PostListPushNotificationIcon extends StatelessWidget {
                   categoryId: categoryId,
                   toogleValue: false,
                   builder: (setting) => ListTile(
-                    leading: Icon(setting == null ? Icons.notifications_off : Icons.notifications),
+                    leading: Icon(setting == null
+                        ? Icons.notifications_off
+                        : Icons.notifications),
                     title: const Text('Post'),
                   ),
                 ),
@@ -89,7 +96,9 @@ class PostListPushNotificationIcon extends StatelessWidget {
                   categoryId: categoryId,
                   toogleValue: false,
                   builder: (setting) => ListTile(
-                    leading: Icon(setting == null ? Icons.notifications_off : Icons.notifications),
+                    leading: Icon(setting == null
+                        ? Icons.notifications_off
+                        : Icons.notifications),
                     title: const Text('Comment'),
                   ),
                 ),

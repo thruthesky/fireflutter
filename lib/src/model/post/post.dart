@@ -53,7 +53,8 @@ class Post {
     this.likes = const [],
     this.deleted = false,
     this.noOfComments = 0,
-  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
+  }) : createdAt =
+            (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory Post.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     /// Save the list of uids who saw the post.
@@ -69,7 +70,8 @@ class Post {
     );
   }
 
-  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json)..data = json;
+  factory Post.fromJson(Map<String, dynamic> json) =>
+      _$PostFromJson(json)..data = json;
   Map<String, dynamic> toJson() => _$PostToJson(this);
 
   /// If the post is not found, it throws an Exception.
@@ -88,7 +90,8 @@ class Post {
     if (url == null) {
       throw Exception('Post id is null');
     }
-    final QuerySnapshot documentSnapshot = await postCol.where('urls', arrayContains: url).get();
+    final QuerySnapshot documentSnapshot =
+        await postCol.where('urls', arrayContains: url).get();
 
     if (documentSnapshot.docs.isEmpty) throw Exception('Post not found');
 

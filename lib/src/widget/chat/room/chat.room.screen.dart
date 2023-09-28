@@ -30,7 +30,8 @@ class _ChatRoomState extends State<ChatRoomScreen> {
         }
       } else {
         // If this take time, provide the room model without await. It may be passed from the previous of previous screen, Or it can be saved in a state.
-        room = await ChatService.instance.getOrCreateSingleChatRoom(widget.user!.uid);
+        room = await ChatService.instance
+            .getOrCreateSingleChatRoom(widget.user!.uid);
         setState(() {});
       }
 
@@ -41,12 +42,15 @@ class _ChatRoomState extends State<ChatRoomScreen> {
     })();
   }
 
-  String get roomId => widget.user != null ? ChatService.instance.getSingleChatRoomId(widget.user!.uid) : room!.roomId;
+  String get roomId => widget.user != null
+      ? ChatService.instance.getSingleChatRoomId(widget.user!.uid)
+      : room!.roomId;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ChatService.instance.customize.chatRoomAppBarBuilder?.call(room: room, user: widget.user) ??
+      appBar: ChatService.instance.customize.chatRoomAppBarBuilder
+              ?.call(room: room, user: widget.user) ??
           ChatRoomAppBar(room: room, user: widget.user),
       body: Column(
         children: [
