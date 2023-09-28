@@ -34,8 +34,9 @@ class PostListPushNotificationIcon extends StatelessWidget {
                     )
                     .snapshots(),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting)
+                  if (snapshot.connectionState == ConnectionState.waiting) {
                     return const SizedBox.shrink();
+                  }
 
                   return snapshot.data!.size > 0
                       ? const Icon(Icons.notifications)

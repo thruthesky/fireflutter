@@ -39,8 +39,9 @@ class _YouTubeState extends State<YouTube> {
 
   @override
   void dispose() {
-    if (_controller != null && _controller!.value.isPlaying)
+    if (_controller != null && _controller!.value.isPlaying) {
       _controller!.pause();
+    }
     _controller?.dispose();
     super.dispose();
   }

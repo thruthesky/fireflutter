@@ -16,8 +16,9 @@ class CommentDoc extends StatelessWidget {
       stream: Comment.doc(comment?.id ?? commentId!).snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) return Text(snapshot.error.toString());
-        if (snapshot.hasData)
+        if (snapshot.hasData) {
           return builder(Comment.fromDocumentSnapshot(snapshot.data!));
+        }
         if (comment != null) return builder(comment!);
         return const CircularProgressIndicator();
       },

@@ -82,8 +82,9 @@ class UserListView extends StatelessWidget {
       query: query,
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) return const CircularProgressIndicator();
-        if (snapshot.hasError)
+        if (snapshot.hasError) {
           return Text('Something went wrong! ${snapshot.error}');
+        }
         if (customViewBuilder != null) return customViewBuilder!.call(snapshot);
         return ListView.builder(
           scrollDirection: scrollDirection,
