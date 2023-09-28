@@ -88,6 +88,7 @@ Create an issue if you find a bug or need a help.
   - [Follow and Unfollow](#follow-and-unfollow)
   - [No of profile view](#no-of-profile-view)
 - [Post](#post)
+  - [Post Document Strucutre](#post-document-strucutre)
   - [Post view screen custom design](#post-view-screen-custom-design)
   - [List of viewer on each post](#list-of-viewer-on-each-post)
 - [Database](#database)
@@ -1560,6 +1561,12 @@ The type is the viewer's type. So, the app can display users by type who viewed 
 Note that, the year, month, day is the time of the client app. This may be incorrect. The year, month, day is the date information of last view. So, they changes on every view.
 
 # Post
+
+## Post Document Strucutre
+
+Posts are saved in `/posts/{postId}`.
+
+- `hashtags` is an array of string that has the hash tags for the post.
 
 ## Post view screen custom design
 
