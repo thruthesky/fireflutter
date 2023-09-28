@@ -97,7 +97,7 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
             IconButton(
               icon: const Icon(Icons.send),
               onPressed: () async {
-                if (content.text.isEmpty) {
+                if (content.text.isEmpty && urls.isEmpty) {
                   return warningSnackbar(context, 'Please input a comment.');
                 }
 
