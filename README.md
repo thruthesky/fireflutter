@@ -135,11 +135,19 @@ Create an issue if you find a bug or need a help.
   - [Install FireFlutter and Example Project](#install-fireflutter-and-example-project)
   - [Coding Guideline](#coding-guideline)
 
-## Overview
 
-I made it for reusing the most common code blocks when I am building apps. It provides the code for user management, forum(caetgory, post, comment) management, chat management, push notification management along with `like`, `favorite`, `following` features.
+# Overview
+Fireflutter made for reusing the common code blocks. Provides code for user, forum, chat and push notificiation management with `like`, `favorite`, `follow`, `post` and `comment` features.
 
-I use `json_serializable` for the modeling providing each model can have extra fields. For instance, there are some pre-defined fields for the user document and you may add your own fields on the document. The model has also basic CRUD functionalities.
+There are some pre-defined fields for the user document and using `json_serializable` for providing each model extra fields.
+
+The model has also basic CRUD functionalities.
+
+<!-- paraphrased for readability, feel free to edit -->
+
+<!-- I made it for reusing the most common code blocks when I am building apps. It provides the code for user management, forum(caetgory, post, comment) management, chat management, push notification management along with `like`, `favorite`, `following` features.
+
+I use `json_serializable` for the modeling providing each model can have extra fields. For instance, there are some pre-defined fields for the user document and you may add your own fields on the document. The model has also basic CRUD functionalities. -->
 
 ## Features
 
@@ -665,7 +673,7 @@ toast(
 );
 ```
 
-## warning
+## warning <!-- TODO: -->
 
 ## prompt
 
