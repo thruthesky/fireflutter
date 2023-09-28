@@ -16,6 +16,8 @@ class UserListView extends StatelessWidget {
     this.searchText,
     this.filter = const {},
     this.exemptedUsers = const [],
+
+    /// [field] is the field to be used in the search
     this.field = 'displayName',
     this.onTap,
     this.onLongPress,
@@ -24,6 +26,7 @@ class UserListView extends StatelessWidget {
     this.subtitleBuilder,
     this.trailingBuilder,
     this.itemBuilder,
+    this.customViewBuilder,
     this.pageSize = 10,
     this.scrollDirection = Axis.vertical,
   });
@@ -39,6 +42,19 @@ class UserListView extends StatelessWidget {
   final Widget Function(User)? subtitleBuilder;
   final Widget Function(User)? trailingBuilder;
   final Widget Function(User, int)? itemBuilder;
+
+  /// Use this [customViewBuilder] to customize what view (listView, gridView, etc) to use.
+  /// If decided to use this, [avatarBuilder], [titleBuilder], [subtitleBuilder],
+  /// [trailingBuilder], [itemBuilder], [scrollDirection], [pageSize], [onTap], and [onLongPress]
+  ///  will have no effect.
+  ///
+  /// Must add these codes to the customViewBuilder if you want to fetch more items:
+  /// ```dart
+  /// if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+  ///   snapshot.fetchMore();
+  /// }
+  /// ```
+  final Widget Function(FirestoreQueryBuilderSnapshot<Object?> snapshot)? customViewBuilder;
 
   final Axis scrollDirection;
 
@@ -57,7 +73,6 @@ class UserListView extends StatelessWidget {
         query = query.where(filterKey, isEqualTo: filter[filterKey]);
       }
       if (filter[filterKey] is List<dynamic>) {
-        debugPrint("---> $filterKey, whereIn: ${filter[filterKey]}");
         query = query.where(filterKey, arrayContainsAny: filter[filterKey]);
       }
     }
@@ -65,42 +80,37 @@ class UserListView extends StatelessWidget {
       pageSize: pageSize,
       query: query,
       builder: (context, snapshot, _) {
-        if (snapshot.isFetching) {
-          return const CircularProgressIndicator();
-        }
-
-        if (snapshot.hasError) {
-          return Text('Something went wrong! ${snapshot.error}');
-        }
-
+        if (snapshot.isFetching) return const CircularProgressIndicator();
+        if (snapshot.hasError) return Text('Something went wrong! ${snapshot.error}');
+        if (customViewBuilder != null) return customViewBuilder!.call(snapshot);
         return ListView.builder(
-            scrollDirection: scrollDirection,
-            itemCount: snapshot.docs.length,
-            itemBuilder: (context, index) {
-              // if we reached the end of the currently obtained items, we try to
-              // obtain more items
-              if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
-                // Tell FirestoreQueryBuilder to try to obtain more items.
-                // It is safe to call this function from within the build method.
-                snapshot.fetchMore();
-              }
-
-              final user = User.fromDocumentSnapshot(snapshot.docs[index]);
-              if (exemptedUsers.contains(user.uid)) return const SizedBox();
-              if (itemBuilder != null) return itemBuilder!.call(user, index);
-              return ListTile(
-                title: titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
-                subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
-                leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
-                trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
-                onTap: () async {
-                  onTap?.call(user);
-                },
-                onLongPress: () async {
-                  onLongPress?.call(user);
-                },
-              );
-            });
+          scrollDirection: scrollDirection,
+          itemCount: snapshot.docs.length,
+          itemBuilder: (context, index) {
+            // if we reached the end of the currently obtained items, we try to
+            // obtain more items
+            if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+              // Tell FirestoreQueryBuilder to try to obtain more items.
+              // It is safe to call this function from within the build method.
+              snapshot.fetchMore();
+            }
+            final user = User.fromDocumentSnapshot(snapshot.docs[index]);
+            if (exemptedUsers.contains(user.uid)) return const SizedBox();
+            if (itemBuilder != null) return itemBuilder!.call(user, index);
+            return ListTile(
+              title: titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
+              subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
+              leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
+              trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
+              onTap: () async {
+                onTap?.call(user);
+              },
+              onLongPress: () async {
+                onLongPress?.call(user);
+              },
+            );
+          },
+        );
       },
     );
   }
