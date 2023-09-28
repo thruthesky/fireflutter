@@ -103,6 +103,11 @@ String pathCommentLikedBy(String id, {bool all = false}) {
   }
 }
 
-/// storage
+/// storages
 CollectionReference get storageCol => FirebaseFirestore.instance.collection('storages');
 DocumentReference storageDoc(String storageId) => storageCol.doc(storageId);
+
+/// reports
+CollectionReference get reportCol => FirebaseFirestore.instance.collection('reports');
+
+DocumentReference reportDoc(String id) => reportCol.doc(id);

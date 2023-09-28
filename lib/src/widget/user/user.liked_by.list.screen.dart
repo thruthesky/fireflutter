@@ -22,7 +22,7 @@ class UserLikedByListScreen extends StatelessWidget {
         children: uids
             .map(
               (id) => FutureBuilder(
-                future: User.get(id),
+                future: User.getFromDatabaseSync(id),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator.adaptive();
@@ -33,7 +33,7 @@ class UserLikedByListScreen extends StatelessWidget {
                   final user = snapshot.data as User;
                   return ListTile(
                     leading: UserAvatar(user: user),
-                    title: Text(user.displayName),
+                    title: Text(user.displayName.isEmpty ? user.name : user.displayName),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => UserService.instance.showPublicProfileScreen(
                       context: context,

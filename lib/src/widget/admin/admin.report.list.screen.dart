@@ -13,13 +13,12 @@ class AdminReportListScreen extends StatefulWidget {
 }
 
 class _AdminReportListScreenState extends State<AdminReportListScreen> {
-  style(context) =>
-      TextStyle(color: Theme.of(context).colorScheme.onInverseSurface);
+  style(context) => TextStyle(color: Theme.of(context).colorScheme.onInverseSurface);
 
   String? type;
 
   get query {
-    Query q = Report.col;
+    Query q = reportCol;
     if (type == 'user') {
       q = q.where('type', isEqualTo: 'user');
     } else if (type == 'post') {
@@ -37,8 +36,7 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
-            color: Theme.of(context).colorScheme.onInverseSurface),
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onInverseSurface),
         backgroundColor: Theme.of(context).colorScheme.inverseSurface,
         title: Text(
           'Admin Report List',
@@ -109,27 +107,18 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
               children: [
                 Text(report.type),
                 Text(report.createdAt.toString()),
-                if (report.type == 'user')
-                  ElevatedButton(
-                      onPressed: () {}, child: const Text('Block User')),
-                if (report.type == 'post')
-                  ElevatedButton(
-                      onPressed: () {}, child: const Text('Delete Post')),
-                if (report.type == 'comment')
-                  ElevatedButton(
-                      onPressed: () {}, child: const Text('Delete Comment'))
+                if (report.type == 'user') ElevatedButton(onPressed: () {}, child: const Text('Block User')),
+                if (report.type == 'post') ElevatedButton(onPressed: () {}, child: const Text('Delete Post')),
+                if (report.type == 'comment') ElevatedButton(onPressed: () {}, child: const Text('Delete Comment'))
               ],
             ),
             onTap: () {
               if (report.type == 'user') {
-                UserService.instance
-                    .showPublicProfileScreen(context: context, uid: report.uid);
+                UserService.instance.showPublicProfileScreen(context: context, uid: report.uid);
               } else if (report.type == 'post') {
-                PostService.instance.showPostViewScreen(
-                    context: context, postId: report.postId);
+                PostService.instance.showPostViewScreen(context: context, postId: report.postId);
               } else if (report.type == 'comment') {
-                CommentService.instance.showCommentViewDialog(
-                    context: context, commentId: report.commentId);
+                CommentService.instance.showCommentViewDialog(context: context, commentId: report.commentId);
               }
             },
           );

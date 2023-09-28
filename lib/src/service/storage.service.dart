@@ -97,16 +97,11 @@ class StorageService {
       Storage.create(
         type: type,
         url: url,
-        // contentType: contentType, // image/jpeg, image/gif, image/png, image....
-        // fullPath: fullPath,
-        // name: name,
-        // size: size,
-        // timeCreated: timeCreated,
-        // isImage: contentType?.startsWith('image') ?? false
-        // isVideo: contentType?.startsWith('video') ?? false
-        // isAudio: contentType?.startsWith('audio') ?? false
-        // isText: contentType?.startsWith('text') ?? false
-        // isApplication: contentType?.startsWith('application') ?? false
+        contentType: contentType, // image/jpeg, image/gif, image/png, image....
+        fullPath: fullPath,
+        name: name,
+        size: size,
+        timeCreated: timeCreated,
       );
     });
 
