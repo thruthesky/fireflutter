@@ -8,6 +8,8 @@ class Feed {
   final String id, postId, uid, title, content, categoryId, youtubeId;
   final List<String> urls;
 
+  final Map<String, dynamic> data;
+
   final int createdAt;
 
   Feed({
@@ -20,6 +22,7 @@ class Feed {
     this.categoryId = '',
     this.youtubeId = '',
     this.urls = const [],
+    this.data = const {},
   });
 
   factory Feed.fromSnapshot(DataSnapshot doc) {
