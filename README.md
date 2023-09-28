@@ -719,6 +719,13 @@ final password = await prompt(
 ## input
 
 `input` is an alias of `prompt`.
+```dart
+onTap: () => input(
+  context: context,
+  title: 'this is input()',
+  message: 'Hello World!',
+),
+```
 
 ## randomString
 
