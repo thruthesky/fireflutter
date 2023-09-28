@@ -139,7 +139,7 @@ Create an issue if you find a bug or need a help.
 # Overview
 Fireflutter made for reusing the common code blocks. Provides code for user, forum, chat and push notificiation management with `like`, `favorite`, `follow`, `post` and `comment` features.
 
-There are some pre-defined fields for the user document and using `json_serializable` for providing each model extra fields.
+There are some pre-defined fields for the user document. You can use `json_serializable` for providing each model extra fields.
 
 The model has also basic CRUD functionalities.
 
@@ -151,7 +151,7 @@ I use `json_serializable` for the modeling providing each model can have extra f
 
 ## Features
 
-There are many features and most of them are optinal. You may turn on the extra functions by the setting.
+There are many features and most of them are optional. You may turn on the extra functions by the setting.
 
 ### Main Features
 
@@ -485,13 +485,25 @@ In this chapter, some of the notable packages that are used by FireFlutter are e
 
 ## timeago
 <!-- TODO: Learn this and modify-->
-[timeago](https://pub.dev/packages/timeago) to show date and time in i18n.
+Converts date into a humanized text.
+```dart
+    final fifteenAgo = DateTime.now().subtract(Duration(minutes: 15));
+
+    print(timeago.format(fifteenAgo)); // 15 minutes ago
+    print(timeago.format(fifteenAgo, locale: 'en_short')); // 15m
+    print(timeago.format(fifteenAgo, locale: 'es')); // hace 15 minutos
+```
+
+Visit [timeago](https://pub.dev/packages/timeago) to read more.
 
 ## Parsed_ReadMore
 
-[parsed_readmore](https://pub.dev/packages/parsed_readmore) to show/hide when the content text is long.
+Allows the text to collapsed or expanded and automatically parse the url text to hyperlinks.
 
-# How to build a user profile page
+Visit [parsed_readmore](https://pub.dev/packages/parsed_readmore) to read more.
+
+<!-- TODO: -->
+# How to build a user profile page 
 
 # How to build a chat app
 
@@ -604,7 +616,10 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 
 - There are many service methods that opens a screen. One thing to note is that, all the method that opens a screen uses `showGeneralDialog` which does not modify the navigation stack. If you want, you may open the screen with navigation(routing) like `Navigator.of(context).push...()`.
 
+**Note:** you can use **`Theme()`** to style the widget 
+
 ## CommentOneLineListTile
+
 
 Below is a sample code how to use and customizing `CommentOneLineListTile` widget.
 
@@ -632,20 +647,31 @@ Theme(
   ),
 ),
 ```
-
-<!-- #region FIXME: Removed? -->
-
-<!-- ## CommentListBottomSheet
+<!-- Fixed -->
+## CommentListBottomSheet
 
 This widget shows the comment list of the post in a bottom sheet UI style.
-Use this widget with [showModalBottomSheet]. -->
+Use this widget with `showModalBottomSheet`.
 
-<!-- ## UserLikeListScreen
+```dart
+Post post = Post(id: 'xxx');
+await showModalBottomSheet(
+  context: context,
+  builder: (ctx) => CommentListBottomSheet(post: post),
+);
+```
+
+## UserLikeListScreen
 
 This screen shows a list of users who liked a post, comment, or a profile.
-Use this screen to show a user list and when it is tapped, show public profile. -->
+Use this screen to show a user list and when it is tapped, show public profile.
 
-<!-- #endregion -->
+```dart
+UserLikedByListScreen(
+    uids: ['xxx''xxx''xxx'],
+  ),
+```
+
 ## alert
 
 Use `alert` method to display a dialog to alert(alarm) the user.
@@ -662,7 +688,7 @@ await alert(
   message: '회원 탈퇴를 하였습니다.'); -->
 ## toast
 
-Use `toast` to display a snackbar at the bottom
+Use `toast` to display a toast notification
 
 ```dart
 toast(
@@ -673,11 +699,14 @@ toast(
 );
 ```
 
-## warning <!-- TODO: -->
-
+## warningSnackBar
+Use `warningSnackbar` to display a warning message
+```dart
+warningSnackbar(context, 'Message');
+```
 ## prompt
 
-Use [prompt] to get a string value from user.
+Use `prompt` to get a string value from user.
 
 ```dart
 final password = await prompt(
@@ -2650,7 +2679,7 @@ TextService.instance.texts = I18nTexts(
 );
 ```
 
-You can use the langauge like below,
+You can use the language like below,
 
 ```dart
  Text(
@@ -2759,14 +2788,11 @@ In this chapter, you will learn how to develop fireflutter. You would also conti
 
 ```yaml
 dependencies:
-  flutter:
-    sdk: flutter
-  cupertino_icons: ^1.0.2
   fireflutter:
     path: ../..
 ```
 
-- Then, follow the step of the [fireflutte Installation](#installation) chapter.
+- Then, follow the step of the [fireflutter Installation](#installation) chapter.
 
 ## Development Tips
 
