@@ -668,7 +668,7 @@ Use this screen to show a user list and when it is tapped, show public profile.
 
 ```dart
 UserLikedByListScreen(
-    uids: ['xxx''xxx''xxx'],
+    uids: ['xxx''xxx''xxx'], // list of ids
   ),
 ```
 
@@ -702,7 +702,7 @@ toast(
 ## warningSnackBar
 Use `warningSnackbar` to display a warning message
 ```dart
-warningSnackbar(context, 'Message');
+warningSnackbar(context, 'Warning message');
 ```
 ## prompt
 
@@ -718,7 +718,7 @@ final password = await prompt(
 
 ## input
 
-[input] is an alias of [prompt].
+`input` is an alias of `prompt`.
 
 ## randomString
 
