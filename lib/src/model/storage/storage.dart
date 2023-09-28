@@ -49,12 +49,27 @@ class Storage {
   static Future<Storage?> create({
     required String url,
     String? type,
+    String? contentType, // image/jpeg, image/gif, image/png, image....
+    String? fullPath,
+    String? name,
+    int? size,
+    DateTime? timeCreated,
   }) async {
     final Map<String, dynamic> storageData = {
       'uid': myUid!,
       'url': url,
       'type': type ?? StorageType.upload.name,
       'createdAt': FieldValue.serverTimestamp(),
+      'contentType': contentType, // image/jpeg, image/gif, image/png, image....
+      'fullPath': fullPath,
+      'name': name,
+      'size': size,
+      'timeCreated': timeCreated,
+      'isImage': contentType?.startsWith('image') ?? false,
+      'isVideo': contentType?.startsWith('video') ?? false,
+      'isAudio': contentType?.startsWith('audio') ?? false,
+      'isText': contentType?.startsWith('text') ?? false,
+      'isApplication': contentType?.startsWith('application') ?? false,
     };
     final storageId = Storage.doc().id;
     await Storage.doc(storageId).set(storageData);
