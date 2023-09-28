@@ -177,17 +177,15 @@ class PostCard extends StatelessWidget {
         PopupMenuButton<String>(
           itemBuilder: (context) => [
             if (post.isMine) PopupMenuItem(value: "edit", child: Text(tr.edit)),
-            const PopupMenuItem(
-              value: "report",
-              child: Text("Report"),
-            ),
-            PopupMenuItem(
-              value: 'block',
-              child: Database(
-                path: pathBlock(post.uid),
-                builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
+            const PopupMenuItem(value: "report", child: Text("Report")),
+            if (!post.isMine)
+              PopupMenuItem(
+                value: 'block',
+                child: Database(
+                  path: pathBlock(post.uid),
+                  builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
+                ),
               ),
-            ),
           ],
           onSelected: (value) async {
             if (value == "edit") {
