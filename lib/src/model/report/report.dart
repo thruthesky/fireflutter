@@ -6,10 +6,6 @@ part 'report.g.dart';
 
 @JsonSerializable()
 class Report {
-  static CollectionReference col =
-      FirebaseFirestore.instance.collection('reports');
-  static DocumentReference doc(String id) => col.doc(id);
-
   final String id;
   final String? uid, postId, commentId;
   final String reason;
@@ -29,8 +25,7 @@ class Report {
   }) : createdAt = createdAt is Timestamp ? createdAt.toDate() : DateTime.now();
 
   factory Report.fromDocumentSnapshot(DocumentSnapshot doc) {
-    return Report.fromJson(
-        {...doc.data() as Map<String, dynamic>, 'id': doc.id});
+    return Report.fromJson({...doc.data() as Map<String, dynamic>, 'id': doc.id});
   }
 
   factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);
@@ -59,7 +54,7 @@ class Report {
 // UserReview
 
   static Future<Report?> get(String id) async {
-    final snapshot = await doc(id).get();
+    final snapshot = await reportDoc(id).get();
     if (snapshot.exists == false) {
       return null;
     }
@@ -112,7 +107,7 @@ class Report {
 
     // print('data; $data');
 
-    await Report.doc(info.id).set(data);
+    await reportDoc(info.id).set(data);
     return info.id;
   }
 }

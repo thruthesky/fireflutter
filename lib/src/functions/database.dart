@@ -88,6 +88,8 @@ Future<bool> toggle(String path) async {
   }
 }
 
+/// Like other user
+///
 Future<bool> like(String otherUid) async {
   return await toggle('likes/$otherUid/${myUid!}');
 }
