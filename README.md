@@ -32,7 +32,7 @@ Create an issue if you find a bug or need a help.
 - [How to build a forum app](#how-to-build-a-forum-app)
 - [Usage](#usage)
   - [UserService](#userservice)
-  - [PostService](#postservice)
+  - [PostService](#postservice) <!-- TODO: REVIEW -->
     - [How to open a post](#how-to-open-a-post)
     - [Customizing a Post View](#customizing-a-post-view)
   - [ChatService](#chatservice)
@@ -41,8 +41,6 @@ Create an issue if you find a bug or need a help.
     - [Customizing the chat header](#customizing-the-chat-header)
 - [Widgets and UI functions](#widgets-and-ui-functions)
   - [CommentOneLineListTile](#commentonelinelisttile)
-  - [CommentListBottomSheet](#commentlistbottomsheet)
-  - [UserLikeListScreen](#userlikelistscreen)
   - [alert](#alert)
   - [toast](#toast)
   - [warning](#warning)
@@ -180,6 +178,32 @@ We built a firebase extension for the easy management on firebase. FireFlutter i
 ![easy_extension](/doc/img/easy_extension.png)
 
 Choose Easy Extension version and it will redirect you to Firebase. Choose the project you want Easy Extension to be installed.
+
+## Firebase Extension
+
+Aside from `easy-extension`, you will need to install the following extensions
+
+### Resize image
+
+
+`Deletion of original file` - Don't delete  
+`Make resized images public` - yes
+
+![resize_image_settings](/doc/img/resize_option_1.png)
+
+`Cache-Control header for resized images` - "max-age=86400"
+`Convert image to preferred types` - select `webp` only.
+
+![resize_image_settings](/doc/img/resize_option_2.png)
+
+And choose `backfill` if you have an existing images.
+
+![resize_image_settings](/doc/img/resize_option_3.png)
+
+
+All other options are on your choice.
+
+To display the thumbnail image, you may use `.thumbnail` String extension method. `CachedNetworkImage(imageUrl: url.thumbnail)`
 
 ## Install cloud functions
 
@@ -323,31 +347,6 @@ You can copy this rules and paste into the rules of storage.
 
 ``` -->
 
-## Firebase Extension
-
-Aside from `easy-extension`, you will need to install the following extensions
-
-### Resize image
-
-
-`Deletion of original file` - Don't delete  
-`Make resized images public` - yes
-
-![resize_image_settings](/doc/img/resize_option_1.png)
-
-`Cache-Control header for resized images` - "max-age=86400"
-`Convert image to preferred types` - select `webp` only.
-
-![resize_image_settings](/doc/img/resize_option_2.png)
-
-And choose `backfill` if you have an existing images.
-
-![resize_image_settings](/doc/img/resize_option_3.png)
-
-
-All other options are on your choice.
-
-To display the thumbnail image, you may use `.thumbnail` String extension method. `CachedNetworkImage(imageUrl: url.thumbnail)`
 
 ## Setup the base code
 
@@ -564,6 +563,7 @@ ChatService.instance.showChatRoom(context: context, user: user);
 Since all app have different features and design, you can customize or rebuild it. See the code below and paste them into your project.
 
 <!-- By default, it has a full screen dialog with default buttons. Since all apps have difference features and design, you will need to customize it or rebuild it. But see the code inside and copy and paste them into your project. -->
+<!-- body: ChatRoomMenuUserInviteDialog(room: room), -->
 
 How to show chat room dialog.
 
@@ -578,7 +578,6 @@ showGeneralDialog(
   ),
 );
 ```
-    <!-- body: ChatRoomMenuUserInviteDialog(room: room), -->
 
 ### Customizing the chat header
 
@@ -599,7 +598,7 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 
 ## CommentOneLineListTile
 
-Below is a sample code how to use and cusomizing `CommentOneLineListTile` widget.
+Below is a sample code how to use and customizing `CommentOneLineListTile` widget.
 
 ```dart
 Theme(
@@ -626,16 +625,19 @@ Theme(
 ),
 ```
 
-## CommentListBottomSheet
+<!-- #region FIXME: Removed? -->
+
+<!-- ## CommentListBottomSheet
 
 This widget shows the comment list of the post in a bottom sheet UI style.
-Use this widget with [showModalBottomSheet].
+Use this widget with [showModalBottomSheet]. -->
 
-## UserLikeListScreen
+<!-- ## UserLikeListScreen
 
 This screen shows a list of users who liked a post, comment, or a profile.
-Use this screen to show a user list and when it is tapped, show public profile.
+Use this screen to show a user list and when it is tapped, show public profile. -->
 
+<!-- #endregion -->
 ## alert
 
 Use `alert` method to display a dialog to alert(alarm) the user.
@@ -660,7 +662,6 @@ toast(
   title: url,
   message: 'Open the link?',
   onTap: (p0) => launchUrl(Uri.parse(url)),
-  hideCloseButton: true,
 );
 ```
 
