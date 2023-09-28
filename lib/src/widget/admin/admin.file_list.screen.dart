@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -15,45 +16,96 @@ class AdminFileListScreen extends StatefulWidget {
 class _AdminFileListScreenState extends State<AdminFileListScreen> {
   final scrollBarControlller = ScrollController();
 
+  String filter = 'all';
+  String uid = '';
+
+  get query {
+    Query q = storageCol.orderBy('createdAt', descending: true);
+
+    if (uid.isNotEmpty) {
+      q = q.where('uid', isEqualTo: uid);
+    }
+
+    if (filter == 'all') {
+    } else if (filter == 'images') {
+      q = q.where('isImage', isEqualTo: true);
+    } else if (filter == 'videos') {
+      q = q.where('isVideo', isEqualTo: true);
+    } else if (filter == 'others') {
+      q = q.where('isImage', isEqualTo: false).where('isVideo', isEqualTo: false);
+    }
+
+    return q;
+  }
+
+  get textButtonBackgroudColor => MaterialStateProperty.all<Color>(Theme.of(context).primaryColor.withOpacity(0.2));
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('AdminFileList'),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(60),
-          child: SizedBox(
-            height: 60,
-            child: Row(
-              children: [
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('ALL'),
+          preferredSize: const Size.fromHeight(64),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 32,
+                child: Row(
+                  children: [
+                    selectionButton('all', 'All'),
+                    selectionButton('images', 'Images'),
+                    selectionButton('videos', 'Videos'),
+                    selectionButton('others', 'Others'),
+                    const Spacer(),
+                    TextButton(
+                      style: const ButtonStyle(
+                        visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                      ),
+                      onPressed: () {
+                        AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
+                          uid = user.uid;
+                          Navigator.of(context).pop();
+                          setState(() {});
+                        });
+                      },
+                      child: const Text('Search User'),
+                    ),
+                  ],
                 ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('Photos'),
+              ),
+              SizedBox(
+                height: 32,
+                child: Row(
+                  children: [
+                    if (uid.isNotEmpty) ...[
+                      const Padding(
+                        padding: EdgeInsets.only(left: 16, top: 6, bottom: 6),
+                        child: Text("Search by uid: "),
+                      ),
+                      TextButton(
+                        style: ButtonStyle(
+                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Theme.of(context).primaryColor.withOpacity(0.2)),
+                        ),
+                        child: Text(uid),
+                        onPressed: () {
+                          uid = '';
+                          setState(() {});
+                        },
+                      ),
+                    ]
+                  ],
                 ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('Videos'),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('Others'),
-                ),
-                const Spacer(),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('Search User'),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
       body: FirestoreQueryBuilder(
-        query: storageCol.orderBy('createdAt', descending: true),
+        query: query,
         builder: (_, snapshots, __) {
           if (snapshots.isFetching) return const Center(child: CircularProgressIndicator());
           if (snapshots.hasError) return Text('Something went wrong! ${snapshots.error}');
@@ -87,6 +139,20 @@ class _AdminFileListScreenState extends State<AdminFileListScreen> {
           );
         },
       ),
+    );
+  }
+
+  selectionButton(String filter, String label) {
+    return TextButton(
+      style: ButtonStyle(
+        visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+        backgroundColor: filter == this.filter ? textButtonBackgroudColor : null,
+      ),
+      onPressed: () {
+        this.filter = filter;
+        setState(() {});
+      },
+      child: Text(label),
     );
   }
 }
