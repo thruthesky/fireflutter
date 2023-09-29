@@ -53,6 +53,14 @@ export class User {
     return snapshot.data() as UserDocument;
   }
 
+
+  static async getAdminsUid(): Promise<string[]> {
+    const snapshot = await Ref.users.where("isAdmin", "==", true).get();
+    const adminsUid = snapshot.docs.map((doc) => doc.id);
+    if (!adminsUid) return [];
+    return adminsUid;
+  }
+
   // / Returns user's point. 0 if it's not exists.
   static async point(uid: string): Promise<number> {
     const data = (

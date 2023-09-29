@@ -16,3 +16,8 @@ enum NotificationTarget {
   users,
   tokens,
 }
+
+enum AdminNotificationOptions {
+  notifyOnNewUser,
+  notifyOnNewReport,
+}

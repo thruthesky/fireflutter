@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import {EventName, EventType} from "../utils/event-name";
+import {AdminNotificationOptions, EventName, EventType} from "../utils/event-name";
 import {
   FcmToken,
   MessagePayload,
@@ -143,15 +143,59 @@ export class Messaging {
       console.log("EventName.chatCreate::snap.size::", snap.size);
 
       // get uids of chat disable user
-      const pusDisableUid: string[] = [];
+      const pushDisableUid: string[] = [];
       if (snap.size != 0) {
         for (const doc of snap.docs) {
           const s = doc.data() as UserSettingsDocument;
-          pusDisableUid.push(s.uid);
+          pushDisableUid.push(s.uid);
         }
         // filter user with chatDisabled
         uids = uids.filter(
-          (uid) => !pusDisableUid.includes(uid)
+          (uid) => !pushDisableUid.includes(uid)
+        );
+      }
+    }
+
+    // remove uid if admin disable the notification new users
+    if (data.action == EventName.userCreate) {
+      const admins = await User.getAdminsUid();
+      uids = [...uids, ...admins];
+      const snap = await Ref.usersSettingsSearch({
+        action: EventName.userCreate,
+        categoryId: AdminNotificationOptions.notifyOnNewUser,
+      }).get();
+
+      const pushDisableUid: string[] = [];
+      if (snap.size != 0) {
+        for (const doc of snap.docs) {
+          const s = doc.data() as UserSettingsDocument;
+          pushDisableUid.push(s.uid);
+        }
+        // filter user with Messaging Option Disabled
+        uids = uids.filter(
+          (uid) => !pushDisableUid.includes(uid)
+        );
+      }
+    }
+
+    // remove uid if admin disable the notification for new reports
+    if (data.action == EventName.reportCreate) {
+      const admins = await User.getAdminsUid();
+      uids = [...uids, ...admins];
+      const snap = await Ref.usersSettingsSearch({
+        action: EventName.reportCreate,
+        categoryId: AdminNotificationOptions.notifyOnNewReport,
+      }).get();
+
+      const pushDisableUid: string[] = [];
+      if (snap.size != 0) {
+        for (const doc of snap.docs) {
+          const s = doc.data() as UserSettingsDocument;
+          pushDisableUid.push(s.uid);
+        }
+        // filter user with Messaging Option Disabled
+        uids = uids.filter(
+          (uid) => !pushDisableUid.includes(uid)
         );
       }
     }

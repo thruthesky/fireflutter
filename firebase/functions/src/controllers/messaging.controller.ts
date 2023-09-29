@@ -10,6 +10,7 @@ import {EventName, EventType} from "../utils/event-name";
 import {onDocumentCreated, FirestoreEvent} from "firebase-functions/v2/firestore";
 
 import {QueryDocumentSnapshot} from "firebase-admin/firestore";
+import {UserDocument} from "../interfaces/user.interface";
 
 exports.messagingOnPostCreate = onDocumentCreated(
   "posts/{postId}",
@@ -76,5 +77,25 @@ exports.messagingOnChatMessageCreate = onDocumentCreated(
     const chatData = event.data?.data() as ChatMessageDocument;
     chatData.roomId = event.params.chatId;
     return Messaging.sendChatNotificationToOtherUsers(chatData);
+  }
+);
+
+
+exports.messagingOnUserCreate = onDocumentCreated(
+  "users/{uid}",
+  async (
+    event: FirestoreEvent<QueryDocumentSnapshot | undefined>
+  ): Promise<SendMessageResult | undefined> => {
+    if (event === void 0) return undefined;
+
+    const user: UserDocument = event.data?.data() as UserDocument;
+    const data: SendMessage = {
+      ...user,
+      id: event.data?.id,
+      action: EventName.userCreate,
+      type: EventType.user,
+      senderUid: event.data?.id,
+    };
+    return await Messaging.sendMessage(data);
   }
 );

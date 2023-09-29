@@ -15,8 +15,7 @@ class PushNotificationSetting extends StatelessWidget {
     this.categoryId,
     required this.builder,
     this.toogleValue = true,
-  }) : assert(roomId != null || categoryId != null,
-            'roomId or categoryId must be not null');
+  }) : assert(roomId != null || categoryId != null, 'roomId or categoryId must be not null');
   final String action;
   final String? roomId;
   final String? categoryId;
@@ -33,8 +32,7 @@ class PushNotificationSetting extends StatelessWidget {
     return MySetting(
       id: id,
       builder: (setting) => toogleValue
-          ? GestureDetector(
-              behavior: HitTestBehavior.opaque,
+          ? InkWell(
               onTap: () async {
                 await UserSetting.toggle(
                   id: id,
