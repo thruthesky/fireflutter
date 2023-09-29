@@ -64,9 +64,7 @@ class CommentOneLineListTile extends StatelessWidget {
                     SizedBox(width: runSpacing),
                     DateTimeText(
                       dateTime: comment.createdAt,
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontSize: 11),
+                      style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11),
                     ),
                   ],
                 ),
@@ -124,16 +122,13 @@ class CommentOneLineListTile extends StatelessWidget {
                           ? const SizedBox.shrink()
                           : TextButton(
                               style: TextButton.styleFrom(
-                                padding:
-                                    const EdgeInsets.only(left: 0, right: 8),
+                                padding: const EdgeInsets.only(left: 0, right: 8),
                                 minimumSize: Size.zero,
                                 visualDensity: VisualDensity.compact,
                               ),
-                              onPressed: () async =>
-                                  UserService.instance.showLikedByListScreen(
+                              onPressed: () async => UserService.instance.showLikedByListScreen(
                                 context: context,
-                                uids: await getKeys(
-                                    pathCommentLikedBy(comment.id, all: true)),
+                                uids: await getKeys(pathCommentLikedBy(comment.id, all: true)),
                               ),
                               child: Text(
                                 n == 0
@@ -147,23 +142,34 @@ class CommentOneLineListTile extends StatelessWidget {
                             ),
                     ),
                     // reply
+                    // TODO make sure the post to pass to reply comment is the latest
+                    // TODO really need to review because sort is not working properly
+                    // Added a git issue. Remove the TODOs above only if resolved -dev2
+                    // https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=40127135
                     TextButton(
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.only(left: 0, right: 8),
-                          minimumSize: Size.zero,
-                          visualDensity: VisualDensity.compact,
-                        ),
-                        onPressed: () {
-                          CommentService.instance.showCommentEditBottomSheet(
-                            context,
-                            post: post,
-                            parent: comment,
-                          );
-                        },
-                        child: Text(
-                          tr.reply,
-                          style: Theme.of(context).textTheme.bodySmall,
-                        )),
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.only(left: 0, right: 8),
+                        minimumSize: Size.zero,
+                        visualDensity: VisualDensity.compact,
+                      ),
+                      onPressed: () {
+                        CommentService.instance.showCommentEditBottomSheet(
+                          context,
+                          post: post,
+                          parent: comment,
+                        );
+                      },
+                      child: Text(
+                        tr.reply,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await CommentService.instance.showCommentEditBottomSheet(context, comment: comment, post: post);
+                      },
+                      child: Text(tr.edit),
+                    ),
                   ],
                 ),
               ],
@@ -176,8 +182,7 @@ class CommentOneLineListTile extends StatelessWidget {
               icon: Icon(
                 value == null ? Icons.favorite_border : Icons.favorite,
                 size: 16,
-                color:
-                    value == null ? null : Theme.of(context).colorScheme.error,
+                color: value == null ? null : Theme.of(context).colorScheme.error,
               ),
             ),
           ),
