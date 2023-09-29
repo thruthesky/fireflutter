@@ -14,6 +14,10 @@ class CommentEditBottomSheet extends StatefulWidget {
 
   final Post? post;
   final Comment? parent;
+
+  /// The comment to be updated.
+  /// Add this if you want to update a comment.
+  /// [post] should be null if this is not null.
   final Comment? comment;
   final String? labelText;
   final String? hintText;

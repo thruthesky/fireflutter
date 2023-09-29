@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// A widget that display comment in one line.
 ///
 ///
-class CommentOneLineListTile extends StatelessWidget {
+class CommentOneLineListTile extends StatefulWidget {
   const CommentOneLineListTile({
     super.key,
     required this.post,
@@ -30,23 +30,29 @@ class CommentOneLineListTile extends StatelessWidget {
   final void Function()? onTapContent;
 
   @override
+  State<CommentOneLineListTile> createState() => _CommentOneLineListTileState();
+}
+
+class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
+  bool? iLiked;
+  @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: indent(comment.depth)),
-      padding: padding ?? const EdgeInsets.all(0),
+      margin: EdgeInsets.only(left: indent(widget.comment.depth)),
+      padding: widget.padding ?? const EdgeInsets.all(0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           UserAvatar(
-            uid: comment.uid,
+            uid: widget.comment.uid,
             radius: 10,
             size: 24,
             onTap: () => UserService.instance.showPublicProfileScreen(
               context: context,
-              uid: comment.uid,
+              uid: widget.comment.uid,
             ),
           ),
-          SizedBox(width: runSpacing),
+          SizedBox(width: widget.runSpacing),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,36 +61,34 @@ class CommentOneLineListTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     UserDoc(
-                      uid: comment.uid,
+                      uid: widget.comment.uid,
                       builder: (user) => Text(
                         user.name,
                         style: Theme.of(context).textTheme.labelMedium,
                       ),
                     ),
-                    SizedBox(width: runSpacing),
+                    SizedBox(width: widget.runSpacing),
                     DateTimeText(
-                      dateTime: comment.createdAt,
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontSize: 11),
+                      dateTime: widget.comment.createdAt,
+                      style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11),
                     ),
                   ],
                 ),
 
                 // photos of the comment
-                if (comment.urls.isNotEmpty)
+                if (widget.comment.urls.isNotEmpty)
                   SizedBox(
                     height: 120,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
-                      children: comment.urls
+                      children: widget.comment.urls
                           .asMap()
                           .entries
                           .map(
                             (e) => GestureDetector(
                               onTap: () => StorageService.instance.showUploads(
                                 context,
-                                comment.urls,
+                                widget.comment.urls,
                                 index: e.key,
                               ),
                               child: CachedNetworkImage(
@@ -98,17 +102,17 @@ class CommentOneLineListTile extends StatelessWidget {
                   ),
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: onTapContent,
+                  onTap: widget.onTapContent,
                   child: Container(
-                    margin: contentMargin ?? const EdgeInsets.all(0),
-                    padding: contentPadding ?? const EdgeInsets.all(0),
+                    margin: widget.contentMargin ?? const EdgeInsets.all(0),
+                    padding: widget.contentPadding ?? const EdgeInsets.all(0),
                     width: double.infinity,
                     // decoration: BoxDecoration(
                     //   color: Theme.of(context).colorScheme.surface,
                     //   borderRadius: contentBorderRadius ?? BorderRadius.circular(8),
                     // ),
                     child: Text(
-                      comment.content,
+                      widget.comment.content,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
@@ -119,21 +123,18 @@ class CommentOneLineListTile extends StatelessWidget {
                   children: [
                     // no of likes
                     DatabaseCount(
-                      path: pathCommentLikedBy(comment.id, all: true),
+                      path: pathCommentLikedBy(widget.comment.id, all: true),
                       builder: (n) => n == 0
                           ? const SizedBox.shrink()
                           : TextButton(
                               style: TextButton.styleFrom(
-                                padding:
-                                    const EdgeInsets.only(left: 0, right: 8),
+                                padding: const EdgeInsets.only(left: 0, right: 8),
                                 minimumSize: Size.zero,
                                 visualDensity: VisualDensity.compact,
                               ),
-                              onPressed: () async =>
-                                  UserService.instance.showLikedByListScreen(
+                              onPressed: () async => UserService.instance.showLikedByListScreen(
                                 context: context,
-                                uids: await getKeys(
-                                    pathCommentLikedBy(comment.id, all: true)),
+                                uids: await getKeys(pathCommentLikedBy(widget.comment.id, all: true)),
                               ),
                               child: Text(
                                 n == 0
@@ -147,41 +148,60 @@ class CommentOneLineListTile extends StatelessWidget {
                             ),
                     ),
                     // reply
+                    // TODO make sure the post to pass to reply comment is the latest
+                    // TODO really need to review because sort is not working properly
+                    // Added a git issue. Remove the TODOs above only if resolved -dev2
+                    // https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=40127135
                     TextButton(
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.only(left: 0, right: 8),
-                          minimumSize: Size.zero,
-                          visualDensity: VisualDensity.compact,
-                        ),
-                        onPressed: () {
-                          CommentService.instance.showCommentEditBottomSheet(
-                            context,
-                            post: post,
-                            parent: comment,
-                          );
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.only(left: 0, right: 8),
+                        minimumSize: Size.zero,
+                        visualDensity: VisualDensity.compact,
+                      ),
+                      onPressed: () {
+                        CommentService.instance.showCommentEditBottomSheet(
+                          context,
+                          post: widget.post,
+                          parent: widget.comment,
+                        );
+                      },
+                      child: Text(
+                        tr.reply,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                    if (widget.comment.uid == myUid)
+                      ElevatedButton(
+                        onPressed: () async {
+                          await CommentService.instance.showCommentEditBottomSheet(context, comment: widget.comment);
                         },
-                        child: Text(
-                          tr.reply,
-                          style: Theme.of(context).textTheme.bodySmall,
-                        )),
+                        child: Text(tr.edit),
+                      ),
                   ],
                 ),
               ],
             ),
           ),
           Database(
-            path: pathCommentLikedBy(comment.id),
-            builder: (value, path) => IconButton(
-              onPressed: () => comment.like(),
-              icon: Icon(
-                value == null ? Icons.favorite_border : Icons.favorite,
-                size: 16,
-                color:
-                    value == null ? null : Theme.of(context).colorScheme.error,
-              ),
-            ),
+            path: pathCommentLikedBy(widget.comment.id),
+            builder: (value, path) {
+              iLiked = value == null;
+              return likeButton();
+            },
+            onWaiting: iLiked == null ? const SizedBox.shrink() : likeButton(),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget likeButton() {
+    return IconButton(
+      onPressed: () => widget.comment.like(),
+      icon: Icon(
+        iLiked! ? Icons.favorite_border : Icons.favorite,
+        size: 16,
+        color: iLiked! ? null : Theme.of(context).colorScheme.error,
       ),
     );
   }

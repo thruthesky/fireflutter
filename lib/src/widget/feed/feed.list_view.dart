@@ -31,19 +31,19 @@ class FeedListView extends StatefulWidget {
 
 class _FeedListViewState extends State<FeedListView> {
   bool noFollowings = false;
-
   final scrollBarControlller = ScrollController();
 
   @override
   void initState() {
     super.initState();
-
     UserService.instance.documentChanges.listen((user) {
       if (user == null) return;
+      noFollowings = user.followings.isEmpty;
+      // Currently, [noFollowings] is only useful when user have not followed anyone.
+      // This will prevent rebuilding everytime user has been updated.
+      if (!noFollowings) return;
       if (mounted) {
-        setState(() {
-          noFollowings = user.followings.isEmpty;
-        });
+        setState(() {});
       }
     });
   }

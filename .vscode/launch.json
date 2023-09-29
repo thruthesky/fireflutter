@@ -5,6 +5,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Fireflutter_Project",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/fireflutter_project",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "C79F2C44-AB98-4B0B-A727-8C5E8B50C595"
+    },
+    {
       "name": "Example - Simulator (J) iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",

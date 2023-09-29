@@ -16,6 +16,7 @@ class FeedService {
   }
 
   Map<String, dynamic> convertIntoFeedData(Post post) {
+    post.data?.remove('createdAt');
     return {
       'uid': post.uid,
       'postId': post.id,

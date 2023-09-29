@@ -486,7 +486,6 @@ if (re) {
 In this chapter, some of the notable packages that are used by FireFlutter are explained.
 
 ## timeago
-<!-- TODO: Learn this and modify-->
 Converts date into a humanized text.
 ```dart
     final fifteenAgo = DateTime.now().subtract(Duration(minutes: 15));
@@ -544,7 +543,7 @@ UserService.instance.get(myUid!).then((user) => ...);
 
 You cannot use `my` until the UserService is initialized and `UserService.instance.user` is available. Or you will see `null check operator used on a null value.`
 
-<!-- .customize does not exist, 
+<!-- .customize does not exist[???], 
 
 TODO: Learning it more so i can replace it
   
@@ -618,25 +617,40 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 
 - There are many service methods that opens a screen. One thing to note is that, all the method that opens a screen uses `showGeneralDialog` which does not modify the navigation stack. If you want, you may open the screen with navigation(routing) like `Navigator.of(context).push...()`.
 
-
-## TopDownGraident
-
-
-
-
-
-## BottomUpGraident
-
-
-
-
-
-
 **Note:** you can use **`Theme()`** to style the widget 
+
+## TopDownGraident and BottomUpGraident
+
+`TopDownGraident()` and `BottomUpGraident()` provides 
+gradient on top and bottom part of the app. You can use this to design your entry screen or the splash screen.
+
+Using them inside of the `Row()` or `Column()` will return an error below
+
+
+```sh
+Another exception was thrown: Incorrect use of ParentDataWidget.
+```
+You can use this widgets like this
+
+``` dart
+Stack(
+  children: [
+    TopDownGraident(
+      height: 150,
+    ),
+    BottomUpGraident(
+      height: 100,
+    ),
+  ],
+),
+```
 
 ## CommentOneLineListTile
 
-
+<!-- TODO: 
+  - code errors permission_denied is the reason why not working properly,
+  - Note: I added the id as an admin
+ -->
 Below is a sample code how to use and customizing `CommentOneLineListTile` widget.
 
 ```dart
@@ -676,8 +690,8 @@ await showModalBottomSheet(
   builder: (ctx) => CommentListBottomSheet(post: post),
 );
 ```
-
-## UserLikeListScreen
+<!-- renamed from UserLikeListScreen to UserLikedByListScreen -->
+## UserLikedByListScreen
 
 This screen shows a list of users who liked a post, comment, or a profile.
 Use this screen to show a user list and when it is tapped, show public profile.
@@ -747,17 +761,61 @@ onTap: () => input(
 
 Returns a random string.
 
+```dart
+// randomString() has default length value of 12
+// define the length of the String result
+int length = 5;
+onTap: () {
+  String result = randomString(length); // or randomString()
+  setState(() {
+    text = result;
+  });
+},
+```
+
 ## timeago
 
-Returns a string of human readable time ago string. It supports i18n.
+Returns a string of human readable time ago string. It supports i18n. See [**timeago**](#timeago) above.
 
 ## getYoutubeIdFromUrl
 
-Use this method to get youtube id from the youtube url.
+Returns the Youtube ID of a URL
+<!-- Use this method to get youtube id from the youtube url. -->
+
+```dart
+onTap: () {
+  String? result = getYoutube("url");
+  setState(() {
+    ytId = result ?? 'url has no ID';
+  });
+},
+```
 
 ## getYoutubeThumbnail
 
-Use this method to get the YouTube video's thumbnail from the yotube id.
+Returns the url of Youtube Thumbnail from ID
+<!-- Use this method to get the YouTube video's thumbnail from the yotube id. -->
+
+```dart
+onTap: () {
+  // you can use the getYoutubeIdFromUrl() to get the Youtube ID
+  String? result = getYoutubeIdFromUrl(url);
+  String thumbNail = getYoutubeThumbnail(
+    videoId: result ?? '', // required field
+    quality: YoutubeThumbnailQuality.high,
+    webp: false, 
+  );
+  setState(() {
+    ytThumbNail = thumbNail;
+  });
+},
+```
+
+<!-- TODO: 
+  - post returns an int 
+  - getter iLiked is gone or replaced [???]
+  - relearn
+ -->
 
 ## PostLikeButton
 
@@ -773,7 +831,7 @@ PostLikeButton(
 
 ## Screen widgets
 
-The name of widgets that can be used as a screen ends with `Screen`. Those widget must be work as a screen or a dialog of `showGeneralDialog()`. Which means those widgets must have a scafoold.
+The name of widgets that can be used as a screen ends with `Screen`. Those widget must be work as a screen or a dialog of `showGeneralDialog()`. Which means those widgets must have a scaffold.
 
 Example of opening a screen widget with `showGeneralDialog()`
 
@@ -826,7 +884,7 @@ Theme(
               child: EmailLoginForm(
                 // a function that will trigger if login is successful
                 onLogin: () => context.push(HomePage.routeName),
-                // removing the register button
+                // removes the register button
                 register: false,
               ),
             ),
@@ -835,7 +893,7 @@ Theme(
 ## UserDoc
 
 To display user's profile photo, use like below.
-See the comment for the details.
+<!-- See the comment for the details. -->
 
 ```dart
 UserDoc(
@@ -1037,7 +1095,7 @@ onPressed() async {
       });
     },
   );
-
+}
 ```
 
 ### UserListView.builder
