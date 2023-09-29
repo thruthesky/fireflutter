@@ -323,7 +323,7 @@ class Messaging {
      */
     static completePayload(query) {
         // console.log(`completePayload(${JSON.stringify(query)})`);
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
         if (!query.title) {
             console.log("completePayload() throws error: title-is-empty.)");
             throw Error("title-is-empty");
@@ -348,20 +348,21 @@ class Messaging {
                 senderUid: (_c = query.senderUid) !== null && _c !== void 0 ? _c : "",
                 roomId: (_d = query.roomId) !== null && _d !== void 0 ? _d : "",
                 badge: (_e = query.badge) !== null && _e !== void 0 ? _e : "",
+                action: (_f = query.action) !== null && _f !== void 0 ? _f : "",
             },
             notification: {
-                title: (_f = query.title) !== null && _f !== void 0 ? _f : "",
-                body: (_g = query.body) !== null && _g !== void 0 ? _g : "",
+                title: (_g = query.title) !== null && _g !== void 0 ? _g : "",
+                body: (_h = query.body) !== null && _h !== void 0 ? _h : "",
             },
             webpush: {
                 notification: {
-                    title: (_h = query.title) !== null && _h !== void 0 ? _h : "",
-                    body: (_j = query.body) !== null && _j !== void 0 ? _j : "",
-                    icon: (_k = query.icon) !== null && _k !== void 0 ? _k : "",
-                    click_action: (_l = query.clickAction) !== null && _l !== void 0 ? _l : "/",
+                    title: (_j = query.title) !== null && _j !== void 0 ? _j : "",
+                    body: (_k = query.body) !== null && _k !== void 0 ? _k : "",
+                    icon: (_l = query.icon) !== null && _l !== void 0 ? _l : "",
+                    click_action: (_m = query.clickAction) !== null && _m !== void 0 ? _m : "/",
                 },
                 fcm_options: {
-                    link: (_m = query.clickAction) !== null && _m !== void 0 ? _m : "/",
+                    link: (_o = query.clickAction) !== null && _o !== void 0 ? _o : "/",
                 },
             },
             android: {
@@ -383,9 +384,9 @@ class Messaging {
         }
         if (res.notification.body != "") {
             res.notification.body =
-                (_o = library_1.Library.removeHtmlTags(res.notification.body)) !== null && _o !== void 0 ? _o : "";
+                (_p = library_1.Library.removeHtmlTags(res.notification.body)) !== null && _p !== void 0 ? _p : "";
             res.notification.body =
-                (_p = library_1.Library.decodeHTMLEntities(res.notification.body)) !== null && _p !== void 0 ? _p : "";
+                (_q = library_1.Library.decodeHTMLEntities(res.notification.body)) !== null && _q !== void 0 ? _q : "";
             if (res.notification.body.length > 255) {
                 res.notification.body = res.notification.body.substring(0, 255);
             }

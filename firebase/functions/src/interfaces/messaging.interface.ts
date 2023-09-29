@@ -51,6 +51,7 @@ export interface MessagePayload {
         senderUid?: string;
         roomId?: string;
         badge?: string;
+        action?: string;
         /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
         [key: string]: any;
     };

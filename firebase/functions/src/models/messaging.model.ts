@@ -421,6 +421,7 @@ export class Messaging {
         senderUid: query.senderUid ?? "",
         roomId: query.roomId ?? "",
         badge: query.badge ?? "",
+        action: query.action ?? "",
       },
       notification: {
         title: query.title ?? "",
