@@ -33,7 +33,9 @@ class UserLikedByListScreen extends StatelessWidget {
                   final user = snapshot.data as User;
                   return ListTile(
                     leading: UserAvatar(user: user),
-                    title: Text(user.displayName.isEmpty ? user.name : user.displayName),
+                    title: Text(user.displayName.isEmpty
+                        ? user.name
+                        : user.displayName),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => UserService.instance.showPublicProfileScreen(
                       context: context,

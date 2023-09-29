@@ -48,7 +48,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
     return Scaffold(
       appBar: AppBar(
         title: PostViewTitle(post: _post),
-        actions: PostService.instance.postViewActions(context: context, post: _post),
+        actions:
+            PostService.instance.postViewActions(context: context, post: _post),
       ),
       body: _post == null
           ? const CircularProgressIndicator.adaptive()
@@ -66,10 +67,12 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   YouTube(youtubeId: post.youtubeId, autoPlay: true),
 
                   const Divider(),
-                  if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
+                  if (post.urls.isNotEmpty)
+                    ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
 
                   //
-                  PostService.instance.customize.postViewButtonBuilder?.call(_post) ??
+                  PostService.instance.customize.postViewButtonBuilder
+                          ?.call(_post) ??
                       PostViewButtons(post: _post, middle: const []),
 
                   const Divider(),

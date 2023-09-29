@@ -9,7 +9,8 @@ class CommentCustomize {
     Comment? comment,
   })? showCommentEditBottomSheet;
 
-  Future<void> Function(BuildContext context, Post post)? showCommentListBottomSheet;
+  Future<void> Function(BuildContext context, Post post)?
+      showCommentListBottomSheet;
 
   CommentCustomize({
     this.showCommentEditBottomSheet,

@@ -30,7 +30,8 @@ class MySetting extends StatelessWidget {
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return builder(null);
         } else {
-          return builder(UserSetting.fromJson(snapshot.data!.docs.first.data() as Map<String, dynamic>));
+          return builder(UserSetting.fromJson(
+              snapshot.data!.docs.first.data() as Map<String, dynamic>));
         }
       },
     );

@@ -15,9 +15,13 @@ class _AdminPostListScreenState extends State<AdminPostListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: Theme.of(context).iconTheme.copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
+        iconTheme: Theme.of(context)
+            .iconTheme
+            .copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
         backgroundColor: Theme.of(context).colorScheme.inverseSurface,
-        title: Text('Admin Post List', style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface)),
+        title: Text('Admin Post List',
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onInverseSurface)),
       ),
       body: PostListView(
         onTap: widget.onTap,

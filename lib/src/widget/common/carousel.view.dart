@@ -3,7 +3,12 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class CarouselView extends StatefulWidget {
-  const CarouselView({super.key, this.urls, this.widgets, this.index = 0, this.showPageCounter = true})
+  const CarouselView(
+      {super.key,
+      this.urls,
+      this.widgets,
+      this.index = 0,
+      this.showPageCounter = true})
       : assert(urls != null || widgets != null);
 
   final List<String>? urls;
@@ -69,7 +74,8 @@ class _CarouselViewState extends State<CarouselView> {
                           child: CachedNetworkImage(
                             imageUrl: e.value,
                             fit: BoxFit.cover,
-                            placeholder: (context, url) => const SizedBox(height: 400),
+                            placeholder: (context, url) =>
+                                const SizedBox(height: 400),
                           ),
                         ))
                     .toList(),
@@ -80,13 +86,18 @@ class _CarouselViewState extends State<CarouselView> {
               right: 0,
               child: Container(
                 margin: const EdgeInsets.only(top: sizeXs, right: sizeXs),
-                padding: const EdgeInsets.symmetric(vertical: sizeXxs - 1, horizontal: sizeXs),
+                padding: const EdgeInsets.symmetric(
+                    vertical: sizeXxs - 1, horizontal: sizeXs),
                 decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.onBackground.withAlpha(150),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onBackground
+                        .withAlpha(150),
                     borderRadius: BorderRadius.circular(20)),
                 child: Text(
                   '$pageNo/${widget.widgets?.length ?? widget.urls!.length}',
-                  style: TextStyle(color: Theme.of(context).colorScheme.background),
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.background),
                 ),
               ),
             ),

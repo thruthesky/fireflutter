@@ -13,6 +13,10 @@ Post _$PostFromJson(Map<String, dynamic> json) => Post(
       content: json['content'] as String? ?? '',
       youtubeId: json['youtubeId'] as String? ?? '',
       uid: json['uid'] as String? ?? '',
+      hashtags: (json['hashtags'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       urls:
           (json['urls'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
@@ -31,6 +35,7 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'content': instance.content,
       'youtubeId': instance.youtubeId,
       'uid': instance.uid,
+      'hashtags': instance.hashtags,
       'urls': instance.urls,
       'createdAt': const FirebaseDateTimeConverter().toJson(instance.createdAt),
       'likes': instance.likes,

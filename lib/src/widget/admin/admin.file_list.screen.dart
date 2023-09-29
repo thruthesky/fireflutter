@@ -107,10 +107,16 @@ class _AdminFileListScreenState extends State<AdminFileListScreen> {
       body: FirestoreQueryBuilder(
         query: query,
         builder: (_, snapshots, __) {
-          if (snapshots.isFetching) return const Center(child: CircularProgressIndicator.adaptive());
-          if (snapshots.hasError) return Center(child: Text('Something went wrong! ${snapshots.error}'));
+          if (snapshots.isFetching) {
+            return const Center(child: CircularProgressIndicator.adaptive());
+          }
+          if (snapshots.hasError) {
+            return Center(child: Text('Something went wrong! ${snapshots.error}'));
+          }
 
-          if (snapshots.docs.isEmpty) return const Center(child: Text('No files found!'));
+          if (snapshots.docs.isEmpty) {
+            return const Center(child: Text('No files found!'));
+          }
 
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(

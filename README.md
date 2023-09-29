@@ -9,24 +9,23 @@ Create an issue if you find a bug or need a help.
 - [FireFlutter](#fireflutter)
   - [Overview](#overview)
   - [Features](#features)
-  - [Getting started](#getting-started)
-- [Installation](#installation)
+    - [Main Features](#main-features)
+- [Getting started](#getting-started)
+  - [Installation](#installation)
   - [Create a Firebase](#create-a-firebase)
   - [Install the easy extension](#install-the-easy-extension)
   - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
     - [Firestore security rules](#firestore-security-rules)
     - [Security rule for admin](#security-rule-for-admin)
-    - [Admin settings](#admin-settings)
     - [Realtime database security rules](#realtime-database-security-rules)
-    - [Security Rules for Storage](#security-rules-for-stroage)
   - [Firebase Extension](#firebase-extension)
     - [Resize image](#resize-image)
   - [Setup the base code](#setup-the-base-code)
-  - [url_launcher Optional](#url_launcher-optional)
+  - [url\_launcher (Optional)](#url_launcher-optional)
 - [Pub.dev Packages](#pubdev-packages)
   - [timeago](#timeago)
-  - [Parsed_ReadMore](#parsed_readmore)
+  - [Parsed\_ReadMore](#parsed_readmore)
 - [How to build a user profile page](#how-to-build-a-user-profile-page)
 - [How to build a chat app](#how-to-build-a-chat-app)
 - [How to build a forum app](#how-to-build-a-forum-app)
@@ -40,6 +39,8 @@ Create an issue if you find a bug or need a help.
     - [How to display chat room menu](#how-to-display-chat-room-menu)
     - [Customizing the chat header](#customizing-the-chat-header)
 - [Widgets and UI functions](#widgets-and-ui-functions)
+  - [TopDownGraident](#topdowngraident)
+  - [BottomUpGraident](#bottomupgraident)
   - [CommentOneLineListTile](#commentonelinelisttile)
   - [alert](#alert)
   - [toast](#toast)
@@ -88,6 +89,7 @@ Create an issue if you find a bug or need a help.
   - [Follow and Unfollow](#follow-and-unfollow)
   - [No of profile view](#no-of-profile-view)
 - [Post](#post)
+  - [Post Document Strucutre](#post-document-strucutre)
   - [Post view screen custom design](#post-view-screen-custom-design)
   - [List of viewer on each post](#list-of-viewer-on-each-post)
 - [Database](#database)
@@ -615,6 +617,20 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 - The user widgets are inside `widgets/user` and the file name is in the form of `user.xxxx.dart` or `user.xxxx.dialog.dart`. And it goes the same to chat and forum.
 
 - There are many service methods that opens a screen. One thing to note is that, all the method that opens a screen uses `showGeneralDialog` which does not modify the navigation stack. If you want, you may open the screen with navigation(routing) like `Navigator.of(context).push...()`.
+
+
+## TopDownGraident
+
+
+
+
+
+## BottomUpGraident
+
+
+
+
+
 
 **Note:** you can use **`Theme()`** to style the widget 
 
@@ -1593,6 +1609,12 @@ The type is the viewer's type. So, the app can display users by type who viewed 
 Note that, the year, month, day is the time of the client app. This may be incorrect. The year, month, day is the date information of last view. So, they changes on every view.
 
 # Post
+
+## Post Document Strucutre
+
+Posts are saved in `/posts/{postId}`.
+
+- `hashtags` is an array of string that has the hash tags for the post.
 
 ## Post view screen custom design
 

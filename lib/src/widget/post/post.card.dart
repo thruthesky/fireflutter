@@ -175,7 +175,9 @@ class PostCard extends StatelessWidget {
         ),
         const Spacer(),
         PopupMenuButton<String>(
+          icon: const Icon(Icons.more_vert),
           itemBuilder: (context) => [
+            const PopupMenuItem(value: "reply", child: Text("Reply")),
             if (post.isMine) PopupMenuItem(value: "edit", child: Text(tr.edit)),
             const PopupMenuItem(value: "report", child: Text("Report")),
             if (!post.isMine)
@@ -188,7 +190,9 @@ class PostCard extends StatelessWidget {
               ),
           ],
           onSelected: (value) async {
-            if (value == "edit") {
+            if (value == "reply") {
+              CommentService.instance.showCommentEditBottomSheet(context, post: post);
+            } else if (value == "edit") {
               PostService.instance.showEditScreen(context, post: post);
             } else if (value == 'report') {
               ReportService.instance.showReportDialog(context: context, postId: post.id);
@@ -299,6 +303,9 @@ class PostCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: sizeXs),
           child: Row(
             children: [
+              IconButton(
+                  onPressed: () => CommentService.instance.showCommentEditBottomSheet(context, post: post),
+                  icon: const Icon(Icons.reply)),
               Database(
                 path: pathPostLikedBy(post.id),
                 builder: (v, p) => IconButton(
@@ -389,12 +396,12 @@ class PostCard extends StatelessWidget {
                   child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
                 ),
               const Spacer(),
-              ElevatedButton(
-                onPressed: () async {
-                  await CommentService.instance.showCommentEditBottomSheet(context, post: post);
-                },
-                child: Text(tr.reply),
-              ),
+              // ElevatedButton(
+              //   onPressed: () async {
+              //     await CommentService.instance.showCommentEditBottomSheet(context, post: post);
+              //   },
+              //   child: Text(tr.reply),
+              // ),
             ],
           ),
         )

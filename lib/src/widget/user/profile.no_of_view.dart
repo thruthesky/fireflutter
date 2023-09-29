@@ -16,7 +16,11 @@ class ProfileNoOfViewButton extends StatelessWidget {
     return StreamBuilder(
       // TODO change logic because this is not live count
       // Asking for help on our other options for live count
-      stream: profileViewHistoryCol.where('uid', isEqualTo: uid).count().get().asStream(),
+      stream: profileViewHistoryCol
+          .where('uid', isEqualTo: uid)
+          .count()
+          .get()
+          .asStream(),
       builder: (context, snapshot) {
         return TextButton(
           onPressed: () {
