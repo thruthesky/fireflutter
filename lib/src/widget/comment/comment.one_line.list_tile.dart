@@ -164,12 +164,13 @@ class CommentOneLineListTile extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        await CommentService.instance.showCommentEditBottomSheet(context, comment: comment, post: post);
-                      },
-                      child: Text(tr.edit),
-                    ),
+                    if (comment.uid == myUid)
+                      ElevatedButton(
+                        onPressed: () async {
+                          await CommentService.instance.showCommentEditBottomSheet(context, comment: comment);
+                        },
+                        child: Text(tr.edit),
+                      ),
                   ],
                 ),
               ],
