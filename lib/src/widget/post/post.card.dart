@@ -353,7 +353,6 @@ class PostCard extends StatelessWidget {
         StreamBuilder(
           stream: commentCol
               .where('postId', isEqualTo: post.id)
-              // TODO check the sort
               .orderBy('sort', descending: false)
               .limitToLast(commentSize)
               .snapshots(),
@@ -399,13 +398,6 @@ class PostCard extends StatelessWidget {
                   child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
                 ),
               const Spacer(),
-              // TODO check edit comment
-              // ElevatedButton(
-              //   onPressed: () async {
-              //     await CommentService.instance.showCommentEditBottomSheet(context, post: post);
-              //   },
-              //   child: Text(tr.reply),
-              // ),
             ],
           ),
         )
