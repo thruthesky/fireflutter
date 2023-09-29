@@ -13,6 +13,7 @@ Report _$ReportFromJson(Map<String, dynamic> json) => Report(
       postId: json['postId'] as String?,
       commentId: json['commentId'] as String?,
       type: json['type'] as String,
+      createdAt: json['createdAt'],
     );
 
 Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
@@ -22,4 +23,5 @@ Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
       'commentId': instance.commentId,
       'reason': instance.reason,
       'type': instance.type,
+      'createdAt': const FirebaseDateTimeConverter().toJson(instance.createdAt),
     };
