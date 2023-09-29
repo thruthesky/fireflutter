@@ -51,10 +51,17 @@ class _FeedListViewState extends State<FeedListView> {
     if (noFollowings) return const Text('You have not followed anyone');
 
     return FirebaseDatabaseQueryBuilder(
-      query: rtdb.ref('feeds').child(FirebaseAuth.instance.currentUser!.uid).orderByChild('createdAt'),
+      query: rtdb
+          .ref('feeds')
+          .child(FirebaseAuth.instance.currentUser!.uid)
+          .orderByChild('createdAt'),
       builder: (context, snapshot, _) {
-        if (snapshot.isFetching) return const Center(child: CircularProgressIndicator());
-        if (snapshot.hasError) return Text('Something went wrong! ${snapshot.error}');
+        if (snapshot.isFetching) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Text('Something went wrong! ${snapshot.error}');
+        }
         return Scrollbar(
           controller: scrollBarControlller,
           child: ListView.builder(

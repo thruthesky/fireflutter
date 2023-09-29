@@ -7,7 +7,8 @@ part 'storage.g.dart';
 @JsonSerializable()
 class Storage {
   static const String collectionName = 'storages';
-  static DocumentReference doc([String? storageId]) => storageCol.doc(storageId);
+  static DocumentReference doc([String? storageId]) =>
+      storageCol.doc(storageId);
   final String uid;
 
   final String type;
@@ -30,7 +31,8 @@ class Storage {
     });
   }
 
-  factory Storage.fromJson(Map<String, dynamic> json) => _$StorageFromJson(json)..data = json;
+  factory Storage.fromJson(Map<String, dynamic> json) =>
+      _$StorageFromJson(json)..data = json;
   Map<String, dynamic> toJson() => _$StorageToJson(this);
 
   static Future<Storage> get(String? storageId) async {
@@ -38,7 +40,8 @@ class Storage {
       throw Exception('Storage id is null');
     }
 
-    final DocumentSnapshot documentSnapshot = await storageCol.doc(storageId).get();
+    final DocumentSnapshot documentSnapshot =
+        await storageCol.doc(storageId).get();
     if (documentSnapshot.exists == false) {
       throw Exception('Storage  not found');
     }

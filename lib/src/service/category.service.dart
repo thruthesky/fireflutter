@@ -62,7 +62,8 @@ class CategoryService {
   /// Displays a full screen dialog that will show a list of all categories.
   /// By default, upon tapping a category, it will list all the posts.
   /// Use [onTapCategory] to replace the default action upon tapping.
-  showListDialog(BuildContext context, {Function(Category category)? onTapCategory}) async {
+  showListDialog(BuildContext context,
+      {Function(Category category)? onTapCategory}) async {
     await showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) => AdminCategoryListScreen(

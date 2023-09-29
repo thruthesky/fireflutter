@@ -75,7 +75,8 @@ class _CategoryEditScreenState extends State<CategoryEditScreen> {
                       child: ElevatedButton(
                         child: const Text('Update'),
                         onPressed: () {
-                          Category.fromId(category.id).update(name: name.text, description: description.text);
+                          Category.fromId(category.id).update(
+                              name: name.text, description: description.text);
                         },
                       ),
                     ),

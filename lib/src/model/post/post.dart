@@ -23,6 +23,8 @@ class Post {
 
   final String uid;
 
+  final List<String> hashtags;
+
   final List<String> urls;
   bool get hasPhoto => urls.isNotEmpty;
 
@@ -45,12 +47,14 @@ class Post {
     this.content = '',
     this.youtubeId = '',
     this.uid = '',
+    this.hashtags = const [],
     this.urls = const [],
     createdAt,
     this.likes = const [],
     this.deleted = false,
     this.noOfComments = 0,
-  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
+  }) : createdAt =
+            (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory Post.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     /// Save the list of uids who saw the post.
@@ -66,7 +70,8 @@ class Post {
     );
   }
 
-  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json)..data = json;
+  factory Post.fromJson(Map<String, dynamic> json) =>
+      _$PostFromJson(json)..data = json;
   Map<String, dynamic> toJson() => _$PostToJson(this);
 
   /// If the post is not found, it throws an Exception.
@@ -85,7 +90,8 @@ class Post {
     if (url == null) {
       throw Exception('Post id is null');
     }
-    final QuerySnapshot documentSnapshot = await postCol.where('urls', arrayContains: url).get();
+    final QuerySnapshot documentSnapshot =
+        await postCol.where('urls', arrayContains: url).get();
 
     if (documentSnapshot.docs.isEmpty) throw Exception('Post not found');
 
@@ -103,6 +109,7 @@ class Post {
     required String content,
     String? youtubeId,
     List<String>? urls,
+    List<String>? hashtags,
     Map<String, dynamic> data = const {},
   }) async {
     final Map<String, dynamic> postData = {
@@ -113,6 +120,7 @@ class Post {
       if (urls != null) 'urls': urls,
       'createdAt': FieldValue.serverTimestamp(),
       'uid': myUid!,
+      if (hashtags != null) 'hashtags': hashtags,
       ...data,
     };
     final postId = Post.doc().id;
@@ -154,6 +162,7 @@ class Post {
     required String content,
     List<String>? urls,
     String? youtubeId,
+    List<String>? hashtags,
     Map<String, dynamic> data = const {},
   }) async {
     final Map<String, dynamic> postUpdateData = {
@@ -161,6 +170,7 @@ class Post {
       'content': content,
       if (urls != null) 'urls': urls,
       if (youtubeId != null) 'youtubeId': youtubeId,
+      if (hashtags != null) 'hashtags': hashtags,
       'updatedAt': FieldValue.serverTimestamp(),
       ...data,
     };

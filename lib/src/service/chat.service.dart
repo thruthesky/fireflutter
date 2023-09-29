@@ -39,7 +39,8 @@ class ChatService {
   bool uploadFromGallery = true;
   bool uploadFromFile = true;
 
-  final BehaviorSubject<int> totalNoOfNewMessageChanges = BehaviorSubject.seeded(0);
+  final BehaviorSubject<int> totalNoOfNewMessageChanges =
+      BehaviorSubject.seeded(0);
 
   StreamSubscription? totalNoOfNewMessageSubscription;
 
@@ -65,7 +66,10 @@ class ChatService {
         }
 
         totalNoOfNewMessageSubscription?.cancel();
-        totalNoOfNewMessageSubscription = rtdb.ref('chats/noOfNewMessages/${user.uid}').onValue.listen((event) {
+        totalNoOfNewMessageSubscription = rtdb
+            .ref('chats/noOfNewMessages/${user.uid}')
+            .onValue
+            .listen((event) {
           final data = event.snapshot.value;
           if (data == null) {
             totalNoOfNewMessageChanges.add(0);
@@ -147,7 +151,8 @@ class ChatService {
   //   );
   // }
 
-  Future<void> removeUserFromRoom({required Room room, required String uid, Function()? callback}) async {
+  Future<void> removeUserFromRoom(
+      {required Room room, required String uid, Function()? callback}) async {
     await roomDoc(room.roomId).update({
       'moderators': FieldValue.arrayRemove([uid]),
       'users': FieldValue.arrayRemove([uid])
@@ -155,28 +160,34 @@ class ChatService {
     callback?.call();
   }
 
-  Future<void> setUserAsModerator({required Room room, required String uid, Function()? callback}) async {
+  Future<void> setUserAsModerator(
+      {required Room room, required String uid, Function()? callback}) async {
     await roomDoc(room.roomId).update({
       'moderators': FieldValue.arrayUnion([uid])
     });
     callback?.call();
   }
 
-  Future<void> removeUserAsModerator({required Room room, required String uid, Function()? callback}) async {
+  Future<void> removeUserAsModerator(
+      {required Room room, required String uid, Function()? callback}) async {
     await roomDoc(room.roomId).update({
       'moderators': FieldValue.arrayRemove([uid])
     });
     callback?.call();
   }
 
-  Future<void> addToBlockedUsers({required Room room, required String userUid, Function()? callback}) async {
+  Future<void> addToBlockedUsers(
+      {required Room room,
+      required String userUid,
+      Function()? callback}) async {
     await roomDoc(room.roomId).update({
       'blockedUsers': FieldValue.arrayUnion([userUid])
     });
     callback?.call();
   }
 
-  Future<void> removeToBlockedUsers({required Room room, required String uid, Function()? callback}) async {
+  Future<void> removeToBlockedUsers(
+      {required Room room, required String uid, Function()? callback}) async {
     await roomDoc(room.roomId).update({
       'blockedUsers': FieldValue.arrayRemove([uid])
     });
@@ -224,7 +235,8 @@ class ChatService {
     if (!isMaster(room: room, uid: myUid!)) return false;
 
     // If the user to set as moderator is not a master, and the user is not a moderator yet, allow
-    if (!isMaster(room: room, uid: userUid) && !isModerator(room: room, uid: userUid)) return true;
+    if (!isMaster(room: room, uid: userUid) &&
+        !isModerator(room: room, uid: userUid)) return true;
 
     return false;
   }
@@ -262,7 +274,10 @@ class ChatService {
     return false;
   }
 
-  Future<void> updateRoomSetting({required Room room, required String setting, required dynamic value}) async {
+  Future<void> updateRoomSetting(
+      {required Room room,
+      required String setting,
+      required dynamic value}) async {
     if (value == null || value == '') {
       await roomDoc(room.roomId).update({setting: FieldValue.delete()});
       return;
@@ -273,9 +288,13 @@ class ChatService {
   /// Updates the a room setting on own side.
   ///
   /// This will clear the setting if the [value] is null
-  Future<void> updateMyRoomSetting({required Room room, required String setting, required dynamic value}) async {
+  Future<void> updateMyRoomSetting(
+      {required Room room,
+      required String setting,
+      required dynamic value}) async {
     if (value == null || value == '') {
-      await roomDoc(room.roomId).update({'$setting.${myUid!}': FieldValue.delete()});
+      await roomDoc(room.roomId)
+          .update({'$setting.${myUid!}': FieldValue.delete()});
       return;
     }
     await ChatService.instance.updateRoomSetting(
@@ -340,7 +359,8 @@ class ChatService {
   /// - When a user registers, send a welcome message to the user. See [UserService.instance.sendWelcomeMessage]
   /// - When a user creates a chat room, send a chat room creation protocol message to the chat room. See [Room.create]
   ///
-  Future<void> sendProtocolMessage({required Room room, required String protocol, String? text}) async {
+  Future<void> sendProtocolMessage(
+      {required Room room, required String protocol, String? text}) async {
     await sendMessage(room: room, protocol: protocol, text: text);
   }
 
@@ -363,7 +383,8 @@ class ChatService {
       if (uid == myUid) {
         noOfNewMessageRef(uid: uid).update({room.roomId: 0});
       } else {
-        noOfNewMessageRef(uid: uid).update({room.roomId: ServerValue.increment(1)});
+        noOfNewMessageRef(uid: uid)
+            .update({room.roomId: ServerValue.increment(1)});
       }
     }
   }
@@ -399,7 +420,8 @@ class ChatService {
     Room? room,
     User? user,
   }) async {
-    assert(room != null || user != null, "One of room or user must be not null");
+    assert(
+        room != null || user != null, "One of room or user must be not null");
 
     if (context.mounted) {
       showGeneralDialog(
@@ -468,7 +490,8 @@ class ChatService {
   }
 
   setLastMessage(Message message) {
-    if (message.createdAt.microsecondsSinceEpoch > (lastMessage?.createdAt.microsecondsSinceEpoch ?? 0)) {
+    if (message.createdAt.microsecondsSinceEpoch >
+        (lastMessage?.createdAt.microsecondsSinceEpoch ?? 0)) {
       lastMessage = message;
     }
   }

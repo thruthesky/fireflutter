@@ -26,7 +26,7 @@ class FeedService {
       'categoryId': post.categoryId,
       'youtubeId': post.youtubeId,
       'urls': post.urls,
-      'data': post.data,
+      'hashtags': post.hashtags,
     };
   }
 
@@ -72,6 +72,7 @@ class FeedService {
         'content': post.content,
         'urls': post.urls,
         'youtubeId': post.youtubeId,
+        'hashtags': post.hashtags,
       }));
     }
     await Future.wait(feedUpdates);

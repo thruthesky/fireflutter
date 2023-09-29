@@ -13,7 +13,8 @@ part 'room.g.dart';
 /// Don't update the property directly. The property is read-only and if you want to apply the changes, listen to the stream of the chat room document.
 @JsonSerializable()
 class Room {
-  static CollectionReference get col => FirebaseFirestore.instance.collection('chats');
+  static CollectionReference get col =>
+      FirebaseFirestore.instance.collection('chats');
 
   static DocumentReference doc(roomId) => col.doc(roomId);
 
@@ -63,7 +64,8 @@ class Room {
     required this.maximumNoOfUsers,
     dynamic createdAt,
     this.lastMessage,
-  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
+  }) : createdAt =
+            (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   bool get isSingleChat => users.length == 2 && group == false;
   bool get isGroupChat => group;
@@ -135,7 +137,9 @@ class Room {
     List<String> users = [myUid!];
     if (isSingleChat) users.add(otherUserUid);
 
-    final roomId = isSingleChat ? ChatService.instance.getSingleChatRoomId(otherUserUid) : chatCol.doc().id;
+    final roomId = isSingleChat
+        ? ChatService.instance.getSingleChatRoomId(otherUserUid)
+        : chatCol.doc().id;
 
     // room data
     final roomData = toCreate(
@@ -145,7 +149,8 @@ class Room {
       group: !isSingleChat,
       open: open,
       users: users,
-      maximumNoOfUsers: maximumNoOfUsers ?? (isSingleChat ? 2 : ChatService.instance.maximumNoOfUsers),
+      maximumNoOfUsers: maximumNoOfUsers ??
+          (isSingleChat ? 2 : ChatService.instance.maximumNoOfUsers),
     );
 
     // create
@@ -187,7 +192,8 @@ class Room {
   }
 
   String get otherUserUid {
-    assert(users.length == 2 && group == false, "This is not a single chat room");
+    assert(
+        users.length == 2 && group == false, "This is not a single chat room");
     return ChatService.instance.getOtherUserUid(users);
   }
 

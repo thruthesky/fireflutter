@@ -220,7 +220,9 @@ class StorageService {
   }
 
   showUploads(BuildContext context, List<String> urls, {int index = 0}) {
-    if (customize.showUploads != null) return customize.showUploads!(context, urls, index: index);
+    if (customize.showUploads != null) {
+      return customize.showUploads!(context, urls, index: index);
+    }
     showGeneralDialog(context: context, pageBuilder: (context, _, __) => CarouselScreen(urls: urls, index: index));
   }
 }

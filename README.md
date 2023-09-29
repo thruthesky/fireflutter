@@ -9,30 +9,29 @@ Create an issue if you find a bug or need a help.
 - [FireFlutter](#fireflutter)
   - [Overview](#overview)
   - [Features](#features)
-  - [Getting started](#getting-started)
-- [Installation](#installation)
+    - [Main Features](#main-features)
+- [Getting started](#getting-started)
+  - [Installation](#installation)
   - [Create a Firebase](#create-a-firebase)
   - [Install the easy extension](#install-the-easy-extension)
   - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
     - [Firestore security rules](#firestore-security-rules)
     - [Security rule for admin](#security-rule-for-admin)
-    - [Admin settings](#admin-settings)
     - [Realtime database security rules](#realtime-database-security-rules)
-    - [Security Rules for Storage](#security-rules-for-stroage)
   - [Firebase Extension](#firebase-extension)
     - [Resize image](#resize-image)
   - [Setup the base code](#setup-the-base-code)
-  - [url_launcher Optional](#url_launcher-optional)
+  - [url\_launcher (Optional)](#url_launcher-optional)
 - [Pub.dev Packages](#pubdev-packages)
   - [timeago](#timeago)
-  - [Parsed_ReadMore](#parsed_readmore)
+  - [Parsed\_ReadMore](#parsed_readmore)
 - [How to build a user profile page](#how-to-build-a-user-profile-page)
 - [How to build a chat app](#how-to-build-a-chat-app)
 - [How to build a forum app](#how-to-build-a-forum-app)
 - [Usage](#usage)
   - [UserService](#userservice)
-  - [PostService](#postservice)
+  - [PostService](#postservice) <!-- TODO: REVIEW -->
     - [How to open a post](#how-to-open-a-post)
     - [Customizing a Post View](#customizing-a-post-view)
   - [ChatService](#chatservice)
@@ -40,9 +39,9 @@ Create an issue if you find a bug or need a help.
     - [How to display chat room menu](#how-to-display-chat-room-menu)
     - [Customizing the chat header](#customizing-the-chat-header)
 - [Widgets and UI functions](#widgets-and-ui-functions)
+  - [TopDownGraident](#topdowngraident)
+  - [BottomUpGraident](#bottomupgraident)
   - [CommentOneLineListTile](#commentonelinelisttile)
-  - [CommentListBottomSheet](#commentlistbottomsheet)
-  - [UserLikeListScreen](#userlikelistscreen)
   - [alert](#alert)
   - [toast](#toast)
   - [warning](#warning)
@@ -90,6 +89,7 @@ Create an issue if you find a bug or need a help.
   - [Follow and Unfollow](#follow-and-unfollow)
   - [No of profile view](#no-of-profile-view)
 - [Post](#post)
+  - [Post Document Strucutre](#post-document-strucutre)
   - [Post view screen custom design](#post-view-screen-custom-design)
   - [List of viewer on each post](#list-of-viewer-on-each-post)
 - [Database](#database)
@@ -137,15 +137,23 @@ Create an issue if you find a bug or need a help.
   - [Install FireFlutter and Example Project](#install-fireflutter-and-example-project)
   - [Coding Guideline](#coding-guideline)
 
-## Overview
 
-I made it for reusing the most common code blocks when I am building apps. It provides the code for user management, forum(caetgory, post, comment) management, chat management, push notification management along with `like`, `favorite`, `following` features.
+# Overview
+Fireflutter made for reusing the common code blocks. Provides code for user, forum, chat and push notificiation management with `like`, `favorite`, `follow`, `post` and `comment` features.
 
-I use `json_serializable` for the modeling providing each model can have extra fields. For instance, there are some pre-defined fields for the user document and you may add your own fields on the document. The model has also basic CRUD functionalities.
+There are some pre-defined fields for the user document. You can use `json_serializable` for providing each model extra fields.
+
+The model has also basic CRUD functionalities.
+
+<!-- paraphrased for readability, feel free to edit -->
+
+<!-- I made it for reusing the most common code blocks when I am building apps. It provides the code for user management, forum(caetgory, post, comment) management, chat management, push notification management along with `like`, `favorite`, `following` features.
+
+I use `json_serializable` for the modeling providing each model can have extra fields. For instance, there are some pre-defined fields for the user document and you may add your own fields on the document. The model has also basic CRUD functionalities. -->
 
 ## Features
 
-There are many features and most of them are optinal. You may turn on the extra functions by the setting.
+There are many features and most of them are optional. You may turn on the extra functions by the setting.
 
 ### Main Features
 
@@ -180,6 +188,32 @@ We built a firebase extension for the easy management on firebase. FireFlutter i
 ![easy_extension](/doc/img/easy_extension.png)
 
 Choose Easy Extension version and it will redirect you to Firebase. Choose the project you want Easy Extension to be installed.
+
+## Firebase Extension
+
+Aside from `easy-extension`, you will need to install the following extensions
+
+### Resize image
+
+
+`Deletion of original file` - Don't delete  
+`Make resized images public` - yes
+
+![resize_image_settings](/doc/img/resize_option_1.png)
+
+`Cache-Control header for resized images` - "max-age=86400"
+`Convert image to preferred types` - select `webp` only.
+
+![resize_image_settings](/doc/img/resize_option_2.png)
+
+And choose `backfill` if you have an existing images.
+
+![resize_image_settings](/doc/img/resize_option_3.png)
+
+
+All other options are on your choice.
+
+To display the thumbnail image, you may use `.thumbnail` String extension method. `CachedNetworkImage(imageUrl: url.thumbnail)`
 
 ## Install cloud functions
 
@@ -323,31 +357,6 @@ You can copy this rules and paste into the rules of storage.
 
 ``` -->
 
-## Firebase Extension
-
-Aside from `easy-extension`, you will need to install the following extensions
-
-### Resize image
-
-
-`Deletion of original file` - Don't delete  
-`Make resized images public` - yes
-
-![resize_image_settings](/doc/img/resize_option_1.png)
-
-`Cache-Control header for resized images` - "max-age=86400"
-`Convert image to preferred types` - select `webp` only.
-
-![resize_image_settings](/doc/img/resize_option_2.png)
-
-And choose `backfill` if you have an existing images.
-
-![resize_image_settings](/doc/img/resize_option_3.png)
-
-
-All other options are on your choice.
-
-To display the thumbnail image, you may use `.thumbnail` String extension method. `CachedNetworkImage(imageUrl: url.thumbnail)`
 
 ## Setup the base code
 
@@ -478,13 +487,25 @@ In this chapter, some of the notable packages that are used by FireFlutter are e
 
 ## timeago
 <!-- TODO: Learn this and modify-->
-[timeago](https://pub.dev/packages/timeago) to show date and time in i18n.
+Converts date into a humanized text.
+```dart
+    final fifteenAgo = DateTime.now().subtract(Duration(minutes: 15));
+
+    print(timeago.format(fifteenAgo)); // 15 minutes ago
+    print(timeago.format(fifteenAgo, locale: 'en_short')); // 15m
+    print(timeago.format(fifteenAgo, locale: 'es')); // hace 15 minutos
+```
+
+Visit [timeago](https://pub.dev/packages/timeago) to read more.
 
 ## Parsed_ReadMore
 
-[parsed_readmore](https://pub.dev/packages/parsed_readmore) to show/hide when the content text is long.
+Allows the text to collapsed or expanded and automatically parse the url text to hyperlinks.
 
-# How to build a user profile page
+Visit [parsed_readmore](https://pub.dev/packages/parsed_readmore) to read more.
+
+<!-- TODO: -->
+# How to build a user profile page 
 
 # How to build a chat app
 
@@ -564,6 +585,7 @@ ChatService.instance.showChatRoom(context: context, user: user);
 Since all app have different features and design, you can customize or rebuild it. See the code below and paste them into your project.
 
 <!-- By default, it has a full screen dialog with default buttons. Since all apps have difference features and design, you will need to customize it or rebuild it. But see the code inside and copy and paste them into your project. -->
+<!-- body: ChatRoomMenuUserInviteDialog(room: room), -->
 
 How to show chat room dialog.
 
@@ -578,7 +600,6 @@ showGeneralDialog(
   ),
 );
 ```
-    <!-- body: ChatRoomMenuUserInviteDialog(room: room), -->
 
 ### Customizing the chat header
 
@@ -597,9 +618,26 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 
 - There are many service methods that opens a screen. One thing to note is that, all the method that opens a screen uses `showGeneralDialog` which does not modify the navigation stack. If you want, you may open the screen with navigation(routing) like `Navigator.of(context).push...()`.
 
+
+## TopDownGraident
+
+
+
+
+
+## BottomUpGraident
+
+
+
+
+
+
+**Note:** you can use **`Theme()`** to style the widget 
+
 ## CommentOneLineListTile
 
-Below is a sample code how to use and cusomizing `CommentOneLineListTile` widget.
+
+Below is a sample code how to use and customizing `CommentOneLineListTile` widget.
 
 ```dart
 Theme(
@@ -625,16 +663,30 @@ Theme(
   ),
 ),
 ```
-
+<!-- Fixed -->
 ## CommentListBottomSheet
 
 This widget shows the comment list of the post in a bottom sheet UI style.
-Use this widget with [showModalBottomSheet].
+Use this widget with `showModalBottomSheet`.
+
+```dart
+Post post = Post(id: 'xxx');
+await showModalBottomSheet(
+  context: context,
+  builder: (ctx) => CommentListBottomSheet(post: post),
+);
+```
 
 ## UserLikeListScreen
 
 This screen shows a list of users who liked a post, comment, or a profile.
 Use this screen to show a user list and when it is tapped, show public profile.
+
+```dart
+UserLikedByListScreen(
+    uids: ['xxx''xxx''xxx'], // list of ids
+  ),
+```
 
 ## alert
 
@@ -652,7 +704,7 @@ await alert(
   message: '회원 탈퇴를 하였습니다.'); -->
 ## toast
 
-Use `toast` to display a snackbar at the bottom
+Use `toast` to display a toast notification
 
 ```dart
 toast(
@@ -660,15 +712,17 @@ toast(
   title: url,
   message: 'Open the link?',
   onTap: (p0) => launchUrl(Uri.parse(url)),
-  hideCloseButton: true,
 );
 ```
 
-## warning
-
+## warningSnackBar
+Use `warningSnackbar` to display a warning message
+```dart
+warningSnackbar(context, 'Warning message');
+```
 ## prompt
 
-Use [prompt] to get a string value from user.
+Use `prompt` to get a string value from user.
 
 ```dart
 final password = await prompt(
@@ -680,7 +734,14 @@ final password = await prompt(
 
 ## input
 
-[input] is an alias of [prompt].
+`input` is an alias of `prompt`.
+```dart
+onTap: () => input(
+  context: context,
+  title: 'this is input()',
+  message: 'Hello World!',
+),
+```
 
 ## randomString
 
@@ -1548,6 +1609,12 @@ The type is the viewer's type. So, the app can display users by type who viewed 
 Note that, the year, month, day is the time of the client app. This may be incorrect. The year, month, day is the date information of last view. So, they changes on every view.
 
 # Post
+
+## Post Document Strucutre
+
+Posts are saved in `/posts/{postId}`.
+
+- `hashtags` is an array of string that has the hash tags for the post.
 
 ## Post view screen custom design
 
@@ -2641,7 +2708,7 @@ TextService.instance.texts = I18nTexts(
 );
 ```
 
-You can use the langauge like below,
+You can use the language like below,
 
 ```dart
  Text(
@@ -2750,14 +2817,11 @@ In this chapter, you will learn how to develop fireflutter. You would also conti
 
 ```yaml
 dependencies:
-  flutter:
-    sdk: flutter
-  cupertino_icons: ^1.0.2
   fireflutter:
     path: ../..
 ```
 
-- Then, follow the step of the [fireflutte Installation](#installation) chapter.
+- Then, follow the step of the [fireflutter Installation](#installation) chapter.
 
 ## Development Tips
 

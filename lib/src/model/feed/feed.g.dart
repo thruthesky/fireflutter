@@ -18,6 +18,10 @@ Feed _$FeedFromJson(Map<String, dynamic> json) => Feed(
       urls:
           (json['urls'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
+      hashtags: (json['hashtags'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$FeedToJson(Feed instance) => <String, dynamic>{
@@ -29,5 +33,6 @@ Map<String, dynamic> _$FeedToJson(Feed instance) => <String, dynamic>{
       'categoryId': instance.categoryId,
       'youtubeId': instance.youtubeId,
       'urls': instance.urls,
+      'hashtags': instance.hashtags,
       'createdAt': instance.createdAt,
     };

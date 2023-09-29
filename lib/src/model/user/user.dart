@@ -10,7 +10,8 @@ class User {
   static const String collectionName = 'users';
 
   /// '/users' collection
-  static CollectionReference col = FirebaseFirestore.instance.collection(collectionName);
+  static CollectionReference col =
+      FirebaseFirestore.instance.collection(collectionName);
 
   /// '/users/{uid}' document.
   ///
@@ -136,7 +137,8 @@ class User {
     this.followings = const [],
     this.cached = false,
     this.likes = const [],
-  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
+  }) : createdAt =
+            (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
   factory User.notExists() {
     return User(uid: '', exists: false);
@@ -157,13 +159,15 @@ class User {
   }
 
   @Deprecated('Use fromJson instead')
-  factory User.fromMap({required Map<String, dynamic> map, required String id}) {
+  factory User.fromMap(
+      {required Map<String, dynamic> map, required String id}) {
     map['uid'] = id;
     return _$UserFromJson(map);
   }
 
   ///
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json)..data = json;
+  factory User.fromJson(Map<String, dynamic> json) =>
+      _$UserFromJson(json)..data = json;
 
   Map<String, dynamic> toMap() {
     return _$UserToJson(this);
@@ -181,7 +185,10 @@ class User {
   /// Note, that It gets data from /users collections. It does not get data from /search-user-data collection.
   static Future<User?> get([String? uid]) async {
     uid ??= myUid!;
-    final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(uid).get();
+    final snapshot = await FirebaseFirestore.instance
+        .collection(collectionName)
+        .doc(uid)
+        .get();
     if (snapshot.exists == false) {
       return null;
     }
@@ -190,7 +197,11 @@ class User {
 
   /// 사용자 문서를 Realtime Database 에 Sync 된 문서를 읽어 온다.
   static Future<User?> getFromDatabaseSync(String uid) async {
-    final snapshot = await FirebaseDatabase.instance.ref().child(collectionName).child(uid).get();
+    final snapshot = await FirebaseDatabase.instance
+        .ref()
+        .child(collectionName)
+        .child(uid)
+        .get();
     if (!snapshot.exists) {
       return null;
     }
@@ -217,7 +228,10 @@ class User {
   /// User.create(uid: 'xxx');
   /// ```
   static Future<User> create({required String uid}) async {
-    await FirebaseFirestore.instance.collection(userCollectionName).doc(uid).set({
+    await FirebaseFirestore.instance
+        .collection(userCollectionName)
+        .doc(uid)
+        .set({
       'uid': uid,
       'email': '',
       'displayName': '',
@@ -308,10 +322,14 @@ class User {
     };
 
     /// Update the birth day of year
-    if (docData['birthYear'] != null && docData['birthMonth'] != null && docData['birthDay'] != null) {
-      final date = DateTime(docData['birthYear'], docData['birthMonth'], docData['birthDay']);
+    if (docData['birthYear'] != null &&
+        docData['birthMonth'] != null &&
+        docData['birthDay'] != null) {
+      final date = DateTime(
+          docData['birthYear'], docData['birthMonth'], docData['birthDay']);
 
-      docData['birthDayOfYear'] = date.difference(DateTime(date.year)).inDays + 1;
+      docData['birthDayOfYear'] =
+          date.difference(DateTime(date.year)).inDays + 1;
     }
 
     await userDoc(uid).set(

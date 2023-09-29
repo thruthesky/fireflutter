@@ -1,3 +1,9 @@
+## 0.3.11
+
+* Add. Admin dashboarsd.
+* Update. Push notification.
+* Refactoring. Save more data in realtime database.
+
 ## 0.3.10
 
 * Change. Refactoring file/folder names.

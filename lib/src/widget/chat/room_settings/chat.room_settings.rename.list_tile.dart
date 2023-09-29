@@ -23,9 +23,11 @@ class ChatRoomSettingsRenameListTile extends StatelessWidget {
           TextFormField(
             controller: chatRoomName,
             textInputAction: TextInputAction.done,
-            decoration: const InputDecoration(hintText: 'Enter the chat room name.'),
+            decoration:
+                const InputDecoration(hintText: 'Enter the chat room name.'),
             onFieldSubmitted: (value) async {
-              await ChatService.instance.updateMyRoomSetting(room: room, setting: 'rename', value: value);
+              await ChatService.instance.updateMyRoomSetting(
+                  room: room, setting: 'rename', value: value);
             },
           ),
         ],
