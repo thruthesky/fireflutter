@@ -31,18 +31,18 @@ class FeedListView extends StatefulWidget {
 
 class _FeedListViewState extends State<FeedListView> {
   bool noFollowings = false;
-
   final scrollBarControlller = ScrollController();
 
   @override
   void initState() {
     super.initState();
-
     UserService.instance.documentChanges.listen((user) {
       if (user == null) return;
-      setState(() {
-        noFollowings = user.followings.isEmpty;
-      });
+      noFollowings = user.followings.isEmpty;
+      // Currently, [noFollowings] is only useful when user have not followed anyone.
+      // This will prevent rebuilding everytime user has been updated.
+      if (!noFollowings) return;
+      setState(() {});
     });
   }
 
@@ -51,10 +51,7 @@ class _FeedListViewState extends State<FeedListView> {
     if (noFollowings) return const Text('You have not followed anyone');
 
     return FirebaseDatabaseQueryBuilder(
-      query: rtdb
-          .ref('feeds')
-          .child(FirebaseAuth.instance.currentUser!.uid)
-          .orderByChild('createdAt'),
+      query: rtdb.ref('feeds').child(FirebaseAuth.instance.currentUser!.uid).orderByChild('createdAt'),
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
           return const Center(child: CircularProgressIndicator());

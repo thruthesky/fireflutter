@@ -303,6 +303,10 @@ class PostCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: sizeXs),
           child: Row(
             children: [
+              // TODO make sure the post to pass to edit comment is the latest
+              // TODO reaaly need to review because sort is not working properly
+              // Added a git issue. Remove the TODOs above only if resolved -dev2
+              // https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=40127135
               IconButton(
                   onPressed: () => CommentService.instance.showCommentEditBottomSheet(context, post: post),
                   icon: const Icon(Icons.reply)),
@@ -349,7 +353,8 @@ class PostCard extends StatelessWidget {
         StreamBuilder(
           stream: commentCol
               .where('postId', isEqualTo: post.id)
-              .orderBy('createdAt', descending: false)
+              // TODO check the sort
+              .orderBy('sort', descending: false)
               .limitToLast(commentSize)
               .snapshots(),
           builder: (context, snapshot) {
@@ -374,9 +379,7 @@ class PostCard extends StatelessWidget {
                 );
               }
               //
-              return Column(
-                children: children,
-              );
+              return Column(children: children);
             }
             return const SizedBox.shrink();
           },
@@ -396,6 +399,7 @@ class PostCard extends StatelessWidget {
                   child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
                 ),
               const Spacer(),
+              // TODO check edit comment
               // ElevatedButton(
               //   onPressed: () async {
               //     await CommentService.instance.showCommentEditBottomSheet(context, post: post);
