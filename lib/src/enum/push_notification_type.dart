@@ -2,6 +2,7 @@ enum NotificationType {
   post,
   chat,
   user,
+  report,
 }
 
 enum NotificationPlatform {

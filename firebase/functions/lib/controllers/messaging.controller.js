@@ -37,4 +37,20 @@ exports.messagingOnChatMessageCreate = (0, firestore_1.onDocumentCreated)("chats
     chatData.roomId = event.params.chatId;
     return messaging_model_1.Messaging.sendChatNotificationToOtherUsers(chatData);
 });
+exports.messagingOnUserCreate = (0, firestore_1.onDocumentCreated)("users/{userUid}", async (event) => {
+    var _a, _b, _c, _d;
+    if (event === void 0)
+        return undefined;
+    const user = (_a = event.data) === null || _a === void 0 ? void 0 : _a.data();
+    const data = Object.assign(Object.assign({}, user), { title: "New Registration", content: "New User " + ((_b = event.data) === null || _b === void 0 ? void 0 : _b.id), id: (_c = event.data) === null || _c === void 0 ? void 0 : _c.id, action: event_name_1.EventName.userCreate, type: event_name_1.EventType.user, senderUid: (_d = event.data) === null || _d === void 0 ? void 0 : _d.id });
+    return await messaging_model_1.Messaging.sendMessage(data);
+});
+exports.messagingOnReportCreate = (0, firestore_1.onDocumentCreated)("reports/{reportId}", async (event) => {
+    var _a, _b;
+    if (event === void 0)
+        return undefined;
+    const report = (_a = event.data) === null || _a === void 0 ? void 0 : _a.data();
+    const data = Object.assign(Object.assign({}, report), { title: "Report: " + report.type, body: report.reason, id: (_b = event.data) === null || _b === void 0 ? void 0 : _b.id, action: event_name_1.EventName.reportCreate, type: event_name_1.EventType.report, senderUid: report.uid });
+    return await messaging_model_1.Messaging.sendMessage(data);
+});
 //# sourceMappingURL=messaging.controller.js.map

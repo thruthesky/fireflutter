@@ -45,6 +45,13 @@ class User {
             return null;
         return snapshot.data();
     }
+    static async getAdminsUid() {
+        const snapshot = await ref_1.Ref.users.where("isAdmin", "==", true).get();
+        const adminsUid = snapshot.docs.map((doc) => doc.id);
+        if (!adminsUid)
+            return [];
+        return adminsUid;
+    }
     // / Returns user's point. 0 if it's not exists.
     static async point(uid) {
         var _a;

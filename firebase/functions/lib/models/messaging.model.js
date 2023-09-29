@@ -125,14 +125,50 @@ class Messaging {
                 .get();
             console.log("EventName.chatCreate::snap.size::", snap.size);
             // get uids of chat disable user
-            const pusDisableUid = [];
+            const pushDisableUid = [];
             if (snap.size != 0) {
                 for (const doc of snap.docs) {
                     const s = doc.data();
-                    pusDisableUid.push(s.uid);
+                    pushDisableUid.push(s.uid);
                 }
                 // filter user with chatDisabled
-                uids = uids.filter((uid) => !pusDisableUid.includes(uid));
+                uids = uids.filter((uid) => !pushDisableUid.includes(uid));
+            }
+        }
+        // remove uid if admin disable the notification new users
+        if (data.action == event_name_1.EventName.userCreate) {
+            const admins = await user_model_1.User.getAdminsUid();
+            uids = [...uids, ...admins];
+            const snap = await ref_1.Ref.usersSettingsSearch({
+                action: event_name_1.EventName.userCreate,
+                categoryId: event_name_1.AdminNotificationOptions.notifyOnNewUser,
+            }).get();
+            const pushDisableUid = [];
+            if (snap.size != 0) {
+                for (const doc of snap.docs) {
+                    const s = doc.data();
+                    pushDisableUid.push(s.uid);
+                }
+                // filter user with Messaging Option Disabled
+                uids = uids.filter((uid) => !pushDisableUid.includes(uid));
+            }
+        }
+        // remove uid if admin disable the notification for new reports
+        if (data.action == event_name_1.EventName.reportCreate) {
+            const admins = await user_model_1.User.getAdminsUid();
+            uids = [...uids, ...admins];
+            const snap = await ref_1.Ref.usersSettingsSearch({
+                action: event_name_1.EventName.reportCreate,
+                categoryId: event_name_1.AdminNotificationOptions.notifyOnNewReport,
+            }).get();
+            const pushDisableUid = [];
+            if (snap.size != 0) {
+                for (const doc of snap.docs) {
+                    const s = doc.data();
+                    pushDisableUid.push(s.uid);
+                }
+                // filter user with Messaging Option Disabled
+                uids = uids.filter((uid) => !pushDisableUid.includes(uid));
             }
         }
         // / remove duplicates

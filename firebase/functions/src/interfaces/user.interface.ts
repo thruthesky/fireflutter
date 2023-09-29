@@ -1,5 +1,4 @@
 import * as admin from "firebase-admin";
-import {DocumentReference} from "firebase-admin/firestore";
 export interface UserDocument {
   uid: string;
   display_name: string;
@@ -11,7 +10,7 @@ export interface UserDocument {
   coverPhotoUrl?: string;
   gender: string;
   birth_date: admin.firestore.Timestamp;
-  blockedUserList?: Array<DocumentReference>;
+  blockedUserList?: Array<string>;
   command?: "delete" | "disable";
 }
 export interface UserPublicDataDocument {
@@ -21,7 +20,7 @@ export interface UserPublicDataDocument {
   photo_url: string;
   gender: string;
   birth_date: admin.firestore.Timestamp;
-  blockedUserList?: Array<DocumentReference>;
+  blockedUserList?: Array<string>;
   command?: "delete" | "disable";
 }
 

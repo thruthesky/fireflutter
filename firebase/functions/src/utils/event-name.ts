@@ -11,6 +11,7 @@ export class EventType {
   static post = "post";
   static chat = "chat";
   static user = "user";
+  static report = "report";
 }
 
 

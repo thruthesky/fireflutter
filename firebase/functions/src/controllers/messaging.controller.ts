@@ -11,6 +11,7 @@ import {onDocumentCreated, FirestoreEvent} from "firebase-functions/v2/firestore
 
 import {QueryDocumentSnapshot} from "firebase-admin/firestore";
 import {UserDocument} from "../interfaces/user.interface";
+import {ReportDocument} from "../interfaces/report.interface";
 
 exports.messagingOnPostCreate = onDocumentCreated(
   "posts/{postId}",
@@ -82,7 +83,7 @@ exports.messagingOnChatMessageCreate = onDocumentCreated(
 
 
 exports.messagingOnUserCreate = onDocumentCreated(
-  "users/{uid}",
+  "users/{userUid}",
   async (
     event: FirestoreEvent<QueryDocumentSnapshot | undefined>
   ): Promise<SendMessageResult | undefined> => {
@@ -91,10 +92,33 @@ exports.messagingOnUserCreate = onDocumentCreated(
     const user: UserDocument = event.data?.data() as UserDocument;
     const data: SendMessage = {
       ...user,
+      title: "New Registration",
+      content: "New User " + event.data?.id,
       id: event.data?.id,
       action: EventName.userCreate,
       type: EventType.user,
       senderUid: event.data?.id,
+    };
+    return await Messaging.sendMessage(data);
+  }
+);
+
+exports.messagingOnReportCreate = onDocumentCreated(
+  "reports/{reportId}",
+  async (
+    event: FirestoreEvent<QueryDocumentSnapshot | undefined>
+  ): Promise<SendMessageResult | undefined> => {
+    if (event === void 0) return undefined;
+
+    const report: ReportDocument = event.data?.data() as ReportDocument;
+    const data: SendMessage = {
+      ...report,
+      title: "Report: " + report.type,
+      body: report.reason,
+      id: event.data?.id,
+      action: EventName.reportCreate,
+      type: EventType.report,
+      senderUid: report.uid,
     };
     return await Messaging.sendMessage(data);
   }

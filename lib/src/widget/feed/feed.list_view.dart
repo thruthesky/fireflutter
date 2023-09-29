@@ -40,9 +40,11 @@ class _FeedListViewState extends State<FeedListView> {
 
     UserService.instance.documentChanges.listen((user) {
       if (user == null) return;
-      setState(() {
-        noFollowings = user.followings.isEmpty;
-      });
+      if (mounted) {
+        setState(() {
+          noFollowings = user.followings.isEmpty;
+        });
+      }
     });
   }
 
@@ -51,10 +53,7 @@ class _FeedListViewState extends State<FeedListView> {
     if (noFollowings) return const Text('You have not followed anyone');
 
     return FirebaseDatabaseQueryBuilder(
-      query: rtdb
-          .ref('feeds')
-          .child(FirebaseAuth.instance.currentUser!.uid)
-          .orderByChild('createdAt'),
+      query: rtdb.ref('feeds').child(FirebaseAuth.instance.currentUser!.uid).orderByChild('createdAt'),
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
           return const Center(child: CircularProgressIndicator());
