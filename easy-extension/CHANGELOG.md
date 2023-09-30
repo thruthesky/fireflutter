@@ -1,3 +1,8 @@
+## Version 0.1.11
+
+- Fix. Update the existing user document when the user account is created. Just in case that the user document already exists.
+
+
 ## Version 0.1.10
 
 - Add. USER_DEFAULT_FIELDS for setting default fields.
