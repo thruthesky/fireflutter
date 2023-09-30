@@ -139,7 +139,7 @@ export class UserModel {
    */
   static async createDocument(uid: string, data: Record<string, any>): Promise<WriteResult> {
     const ref = UserModel.ref(uid);
-    return await ref.set(data);
+    return await ref.set(data, { merge: true });
   }
 
 

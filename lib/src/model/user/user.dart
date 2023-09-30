@@ -241,17 +241,17 @@ class User {
   ///
   /// To update other user's data, you may use "User.fromUid().update(...)".
   ///
-  /// Note that, it only updates. It does not return the updated user document,
-  /// Nor it update the object itself.
+  /// Note that, It does not return the updated user document.
   ///
-  /// It sets with merge true option just incase if the user document may not
-  /// exists.
+  /// Note, It create the document if it does not exists.
   ///
   /// Example
   /// ```dart
   /// my.update( noOfPosts: FieldValue.increment(1) ); // when UserService.instance.init() is called
   /// User.fromUid(FirebaseAuth.instance.currentUser!.uid).update( noOfPosts: FieldValue.increment(1) ); // when UserService.instance.init() is not called
   /// ```
+  ///
+  ///
   Future<void> update({
     String? name,
     String? firstName,

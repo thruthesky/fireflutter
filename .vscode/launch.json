@@ -74,7 +74,7 @@
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "deviceId": "iPhone11MaxPro"
+      "deviceId": "00008030-000904C80290802E"
     },
     {
       "name": "MomCafe - iPhone14MaxPro (J)",
@@ -131,13 +131,13 @@
       "deviceId": "ECE40623-ACC2-4729-8DD4-B3DBB46D4B25"
     },
     {
-      "name": "GRC - iPhone11 (J)",
+      "name": "GRC - iPhone11ProMax (J)",
       "request": "launch",
       "type": "dart",
       "cwd": "apps/grc",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "deviceId": "iPhone11MaxPro"
+      "deviceId": "iPhone11ProMax"
     },
     {
       "name": "GRC - iPhoneSE (J)",
