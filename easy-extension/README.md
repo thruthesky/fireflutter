@@ -349,9 +349,9 @@ If user not exists, the status will be error.
 
 ## User document creation
 
-When the `Create the user document on user account creation` is set to "yes", the user document will be created under the `User collection path` on registration(account creation).
+When the `Create the user document on user account creation` is set to "yes", the user document will be created under the `User collection path` on registration(account creation). If the user document already exists, then it will update the user document.
 
-You can set default fields in `Default fields on your user document creation` box. For example, you may set `{ "isVerified": false, "createdBy": "easy-extension" }` and these fields will be set to the user document. This JSON object will overwrite the default fields from Firebase Auth. If you add fields like `{"email": "", "phone_number": ""}`, then the user's email and phone number will be set to empty string instead of saving it from firebase auth.
+You can set default fields in `Default fields on your user document creation` box. For example, you may set `{ "isVerified": false, "createdBy": "easy-extension" }` and these fields will be set to the user document. This JSON object will overwrite the default fields from Firebase Auth. So, if you add fields like `{"email": "", "phone_number": ""}`, then the user's email and phone number will be set to empty string instead of saving it from firebase auth.
 
 Be sure you input the complete JSON formatted text in `Default fields on your user document creation` box or it would not work. If it's not working, see the function log.
 
