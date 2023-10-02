@@ -23,6 +23,11 @@ class PostService {
   Function(Post)? onCreate;
   Function(Post)? onUpdate;
 
+  /// Callback function on toggle like
+  /// This will be called when the user click the like button on the post view
+  /// This can be use like if you want to send push notification to the post owner
+  Function(bool)? onToggleLike;
+
   init({
     bool uploadFromGallery = true,
     bool uploadFromCamera = true,
@@ -30,6 +35,7 @@ class PostService {
     bool enableSeenBy = false,
     void Function(Post)? onCreate,
     void Function(Post)? onUpdate,
+    void Function(bool)? onToggleLike,
     PostCustomize? customize,
   }) {
     this.uploadFromGallery = uploadFromGallery;
@@ -40,6 +46,8 @@ class PostService {
 
     this.onCreate = onCreate;
     this.onUpdate = onUpdate;
+
+    this.onToggleLike = onToggleLike;
 
     if (customize != null) {
       this.customize = customize;
@@ -52,12 +60,10 @@ class PostService {
     String? categoryId,
     Post? post,
   }) {
-    return customize.showEditScreen
-            ?.call(context, categoryId: categoryId, post: post) ??
+    return customize.showEditScreen?.call(context, categoryId: categoryId, post: post) ??
         showGeneralDialog<Post?>(
           context: context,
-          pageBuilder: (context, _, __) =>
-              PostEditScreen(categoryId: categoryId, post: post),
+          pageBuilder: (context, _, __) => PostEditScreen(categoryId: categoryId, post: post),
         );
   }
 
@@ -71,8 +77,7 @@ class PostService {
     Post? post,
     String? postId,
   }) {
-    return customize.showPostViewScreen
-            ?.call(context, postId: postId, post: post) ??
+    return customize.showPostViewScreen?.call(context, postId: postId, post: post) ??
         showGeneralDialog(
           context: context,
           pageBuilder: (context, _, __) => PostViewScreen(
@@ -147,8 +152,7 @@ class PostService {
               value: 'block',
               child: Database(
                 path: pathBlock(post.uid),
-                builder: (value, p) =>
-                    Text(value == null ? tr.block : tr.unblock),
+                builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
               ),
             ),
           if (UserService.instance.isAdmin)
@@ -174,9 +178,8 @@ class PostService {
                 ReportService.instance.showReportDialog(
                   context: context,
                   postId: post.id,
-                  onExists: (id, type) => toast(
-                      title: 'Already reported',
-                      message: 'You have reported this $type already.'),
+                  onExists: (id, type) =>
+                      toast(title: 'Already reported', message: 'You have reported this $type already.'),
                 );
               }
               break;
@@ -189,9 +192,7 @@ class PostService {
               break;
             case 'copyId':
               await Clipboard.setData(ClipboardData(text: post.id));
-              toast(
-                  title: 'Copy to clipboard',
-                  message: "${post.id} was copy to clipboard");
+              toast(title: 'Copy to clipboard', message: "${post.id} was copy to clipboard");
           }
         },
       ),
