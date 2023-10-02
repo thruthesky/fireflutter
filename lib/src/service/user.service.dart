@@ -141,7 +141,7 @@ class UserService {
   /// Use this to display widgets lively that depends on the user model. When
   /// the user document is updated, this stream will fire an event.
   Stream<User> get snapshot {
-    return UserService.instance.col.doc(myUid).snapshots().map((doc) => User.fromDocumentSnapshot(doc));
+    return myDoc.snapshots().map((doc) => User.fromDocumentSnapshot(doc));
   }
 
   Function(User user)? onCreate;
@@ -215,21 +215,10 @@ class UserService {
     });
   }
 
-  /// Returns the stream of the user model for the user uid.
+  /// Returns the stream of the user model of the user document for the user uid.
   ///
-  /// This method stream the update of the user document from realtime database and returns
-  /// the stream of the user model.
-  ///
-  /// Note that, '/users' collection in firestore is secured by security rules.
   Stream<User> snapshotOther(String uid) {
-    return rtdb.ref().child('/users/$uid').onValue.map(
-      (event) {
-        return User.fromJson({
-          ...(event.snapshot.value ?? {}) as Map,
-          ...{'id': uid}
-        });
-      },
-    );
+    return userDoc(uid).snapshots().map((doc) => User.fromDocumentSnapshot(doc));
   }
 
   /// Get user
@@ -256,7 +245,6 @@ class UserService {
   Future<User?> get(
     String uid, {
     bool reload = false,
-    bool sync = true,
   }) async {
     if (uid == '') return null;
 
@@ -271,12 +259,8 @@ class UserService {
     /// * 주의: 만약, 사용자 문서가 존재하지 않으면 null 을 리턴하며, 캐시에도 저장하지 않는다. 즉, 다음 호출시 다시
     /// * 로드 시도한다. 이것은 UserService.instance.nullableUser 가 null 이 되는 것과 다른 것이다.
 
-    late final User? u;
-    if (sync) {
-      u = await User.getFromDatabaseSync(uid);
-    } else {
-      u = await User.get(uid);
-    }
+    final User? u = await User.get(uid);
+
     if (u == null) return null;
     _userCache[uid] = u;
     return _userCache[uid];

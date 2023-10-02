@@ -25,6 +25,7 @@ class AdminUserListView extends StatelessWidget {
     this.email,
     this.isComplete,
     this.isVerified,
+    this.createdAtDescending,
   });
 
   final Function(User)? onTap;
@@ -37,6 +38,7 @@ class AdminUserListView extends StatelessWidget {
   final String? email;
   final bool? isComplete;
   final bool? isVerified;
+  final bool? createdAtDescending;
 
   Query get query {
     final db = FirebaseFirestore.instance;
@@ -59,7 +61,10 @@ class AdminUserListView extends StatelessWidget {
     }
 
     // query = query.where('uid', isEqualTo: myUid!);
-    // query = query.orderBy('createdAt', descending: true);
+    if (createdAtDescending == true) {
+      query = query.orderBy('createdAt', descending: true);
+    }
+
     return query;
   }
 
@@ -78,11 +83,9 @@ class AdminUserListView extends StatelessWidget {
 
         return ListTile(
           title: titleBuilder?.call(user) ?? Text(user.displayName),
-          subtitle:
-              subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
+          subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
           leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
-          trailing:
-              trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
+          trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
           onTap: () async {
             onTap?.call(user);
           },

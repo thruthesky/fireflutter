@@ -151,7 +151,9 @@ class Comment {
       toast(title: tr.loginFirstTitle, message: tr.loginFirstMessage);
       return null;
     }
-    return await toggle(pathCommentLikedBy(id));
+    bool isLiked = await toggle(pathCommentLikedBy(id));
+    CommentService.instance.onToggleLike(this, isLiked);
+    return isLiked;
   }
 
   /// Copy the properties of [map] into current Comment model and returns a new Comment model.

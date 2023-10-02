@@ -1,6 +1,19 @@
+import 'dart:async';
+
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
+/// CommentEditBottomSheet
+///
+/// Display a bottom shee for createing or updating a comment.
+///
+/// Get the post from [widget.post] or postId from the [widget.parent] or
+/// [widget.comment] to reflect the latest update of the post. It maybe needed
+/// if the post is updated by other users like no of comments.
+///
+///
+///
+///
 class CommentEditBottomSheet extends StatefulWidget {
   const CommentEditBottomSheet({
     super.key,
@@ -17,7 +30,7 @@ class CommentEditBottomSheet extends StatefulWidget {
 
   /// The comment to be updated.
   /// Add this if you want to update a comment.
-  /// [post] should be null if this is not null.
+  /// [post] should be null if this has value.
   final Comment? comment;
   final String? labelText;
   final String? hintText;
@@ -32,11 +45,15 @@ class CommentEditBottomSheet extends StatefulWidget {
 class CommentBoxState extends State<CommentEditBottomSheet> {
   TextEditingController content = TextEditingController();
 
-  bool get isCreate => widget.post != null;
+  bool get isCreate => widget.comment == null;
   bool get isUpdate => !isCreate;
 
   double? progress;
   List<String> urls = [];
+
+  /// On comment creation, the latest [noOfComments] is needed. Or [the issue](https://github.com/thruthesky/grc/issues/22) will happen.
+  Post? post;
+  StreamSubscription? postSubscription;
 
   @override
   void initState() {
@@ -45,6 +62,24 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
       content.text = widget.comment!.content;
       urls = widget.comment!.urls;
     }
+
+    /// [widget.post] has value on comment creation.
+    ///
+    /// See [the issue](https://github.com/thruthesky/grc/issues/22)
+    if (widget.post != null) {
+      post = widget.post;
+      postSubscription = postDoc(post!.id).snapshots().listen((event) {
+        if (event.exists) {
+          post = Post.fromDocumentSnapshot(event);
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    postSubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -108,7 +143,7 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
                 Comment comment;
                 if (isCreate) {
                   comment = await Comment.create(
-                    post: widget.post!,
+                    post: post!,
                     parent: widget.parent,
                     content: content.text,
                     urls: urls,

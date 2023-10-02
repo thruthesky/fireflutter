@@ -70,7 +70,6 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'noOfComments': instance.noOfComments,
       'type': instance.type,
       'hasPhotoUrl': instance.hasPhotoUrl,
-      'createdAt': const FirebaseDateTimeConverter().toJson(instance.createdAt),
       'isComplete': instance.isComplete,
       'followers': instance.followers,
       'followings': instance.followings,
