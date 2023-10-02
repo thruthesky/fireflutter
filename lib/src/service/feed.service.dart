@@ -9,10 +9,14 @@ class FeedService {
 
   bool enable = false;
 
+  bool sendNotificationOnFollow = true;
+
   init({
     required bool enable,
+    bool sendNotificationOnFollow = true,
   }) {
     this.enable = enable;
+    this.sendNotificationOnFollow = sendNotificationOnFollow;
   }
 
   Map<String, dynamic> convertIntoFeedData(Post post) {
@@ -31,11 +35,28 @@ class FeedService {
     };
   }
 
+  /// When a user follows another user, we will send push notification to that user
+  Future onToggleFollow(String otherUid, isLiked) async {
+    if (!sendNotificationOnFollow) return;
+    if (!isLiked) return;
+    if (!loggedIn) return;
+
+    MessagingService.instance.queue(
+      title: 'New Follower',
+      body: "${my.name} is following you.",
+      id: myUid,
+      uids: [otherUid],
+      type: NotificationType.user.name,
+    );
+  }
+
   /// follow or unfollow
   ///
   ///
   Future<bool> follow(String otherUid) async {
     final re = await my.follow(otherUid);
+    onToggleFollow(otherUid, re);
+
     if (re) {
       // get last 20 posts and save it under rtdb
       final posts = await PostService.instance.gets(uid: otherUid, limit: 20);

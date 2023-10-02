@@ -207,7 +207,8 @@ class Post {
     bool isLiked = await toggle(pathPostLikedBy(id));
 
     // call back when the post is liked or unliked
-    PostService.instance.onToggleLike(this, isLiked);
+    PostService.instance.sendNotificationOnLike(this, isLiked);
+    PostService.instance.onLike?.call(this, isLiked);
 
     return isLiked;
   }
