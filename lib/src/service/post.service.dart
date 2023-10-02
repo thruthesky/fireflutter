@@ -203,6 +203,7 @@ class PostService {
     if (!sendNotificationOnLike) return;
     if (!isLiked) return;
     if (!loggedIn) return;
+
     MessagingService.instance.queue(
       title: post.title,
       body: "${my.name} liked your post",

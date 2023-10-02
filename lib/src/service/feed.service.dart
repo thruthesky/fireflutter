@@ -9,10 +9,14 @@ class FeedService {
 
   bool enable = false;
 
+  bool sendNotificationOnFollow = true;
+
   init({
     required bool enable,
+    bool sendNotificationOnFollow = true,
   }) {
     this.enable = enable;
+    this.sendNotificationOnFollow = sendNotificationOnFollow;
   }
 
   Map<String, dynamic> convertIntoFeedData(Post post) {
@@ -30,30 +34,36 @@ class FeedService {
     };
   }
 
+  Future onToggleFollow(String otherUid, isLiked) async {
+    if (!sendNotificationOnFollow) return;
+    if (!isLiked) return;
+    if (!loggedIn) return;
+
+    MessagingService.instance.queue(
+      title: 'New Follower',
+      body: "${my.name} is following you.",
+      id: myUid,
+      uids: [otherUid],
+      type: NotificationType.post.name,
+    );
+  }
+
   /// follow or unfollow
   ///
   ///
   Future<bool> follow(String otherUid) async {
     final re = await my.follow(otherUid);
+    onToggleFollow(otherUid, re);
+
     if (re) {
       // get last 20 posts and save it under rtdb
       final posts = await PostService.instance.gets(uid: otherUid, limit: 20);
       for (final post in posts) {
-        rtdb
-            .ref('feeds')
-            .child(my.uid)
-            .child(post.id)
-            .set(convertIntoFeedData(post));
+        rtdb.ref('feeds').child(my.uid).child(post.id).set(convertIntoFeedData(post));
       }
     } else {
       // remove all posts from rtdb
-      rtdb
-          .ref('feeds')
-          .child(my.uid)
-          .orderByChild('uid')
-          .equalTo(otherUid)
-          .once()
-          .then((value) {
+      rtdb.ref('feeds').child(my.uid).orderByChild('uid').equalTo(otherUid).once().then((value) {
         for (final node in value.snapshot.children) {
           node.ref.remove();
         }
@@ -67,11 +77,7 @@ class FeedService {
     if (enable == false) return;
     List<Future> feedUpdates = [];
     for (String followerUid in my.followers) {
-      feedUpdates.add(rtdb
-          .ref('feeds')
-          .child(followerUid)
-          .child(post.id)
-          .set(convertIntoFeedData(post)));
+      feedUpdates.add(rtdb.ref('feeds').child(followerUid).child(post.id).set(convertIntoFeedData(post)));
     }
     await Future.wait(feedUpdates);
   }
@@ -81,8 +87,7 @@ class FeedService {
     if (enable == false) return;
     List<Future> feedUpdates = [];
     for (String followerUid in my.followers) {
-      feedUpdates
-          .add(rtdb.ref('feeds').child(followerUid).child(post.id).update({
+      feedUpdates.add(rtdb.ref('feeds').child(followerUid).child(post.id).update({
         'title': post.title,
         'content': post.content,
         'urls': post.urls,
@@ -97,8 +102,7 @@ class FeedService {
   Future delete({required Post post}) async {
     List<Future> feedDeletes = [];
     for (String followerUid in my.followers) {
-      feedDeletes
-          .add(rtdb.ref('feeds').child(followerUid).child(post.id).remove());
+      feedDeletes.add(rtdb.ref('feeds').child(followerUid).child(post.id).remove());
     }
     return await Future.wait(feedDeletes);
   }

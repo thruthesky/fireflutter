@@ -143,7 +143,7 @@ class CommentService {
     if (!loggedIn) return;
     MessagingService.instance.queue(
       title: comment.content,
-      body: "${my.name} liked your post",
+      body: "${my.name} liked your comment",
       id: myUid,
       uids: [comment.uid],
       type: NotificationType.post.name,
