@@ -35,6 +35,7 @@ class FeedService {
     };
   }
 
+  /// When a user follows another user, we will send push notification to that user
   Future onToggleFollow(String otherUid, isLiked) async {
     if (!sendNotificationOnFollow) return;
     if (!isLiked) return;
@@ -45,7 +46,7 @@ class FeedService {
       body: "${my.name} is following you.",
       id: myUid,
       uids: [otherUid],
-      type: NotificationType.post.name,
+      type: NotificationType.user.name,
     );
   }
 

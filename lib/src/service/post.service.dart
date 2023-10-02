@@ -206,7 +206,7 @@ class PostService {
 
     MessagingService.instance.queue(
       title: post.title,
-      body: "${my.name} liked your post",
+      body: "${my.name} liked your post.",
       id: myUid,
       uids: [post.uid],
       type: NotificationType.post.name,
