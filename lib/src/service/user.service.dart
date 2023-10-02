@@ -215,21 +215,10 @@ class UserService {
     });
   }
 
-  /// Returns the stream of the user model for the user uid.
+  /// Returns the stream of the user model of the user document for the user uid.
   ///
-  /// This method stream the update of the user document from realtime database and returns
-  /// the stream of the user model.
-  ///
-  /// Note that, '/users' collection in firestore is secured by security rules.
   Stream<User> snapshotOther(String uid) {
-    return rtdb.ref().child('/users/$uid').onValue.map(
-      (event) {
-        return User.fromJson({
-          ...(event.snapshot.value ?? {}) as Map,
-          ...{'id': uid}
-        });
-      },
-    );
+    return userDoc(uid).snapshots().map((doc) => User.fromDocumentSnapshot(doc));
   }
 
   /// Get user
