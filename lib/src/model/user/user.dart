@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -84,10 +83,9 @@ class User {
   ///
   final bool hasPhotoUrl;
 
-  /// 사용자 문서가 생성된 시간. 항상 존재 해야 함. Firestore 서버 시간
-  @FirebaseDateTimeConverter()
-  @JsonKey(includeFromJson: false, includeToJson: true)
-  final DateTime createdAt;
+  /// 사용자 문서가 생성된 시간. 항상 존재 해야 함.
+  /// LocalSttroage 에 캐시된 경우, 현재 시간, 아니면, Firestore 서버 시간
+  DateTime get createdAt => data['createdAt'] is Timestamp ? (data['createdAt'] as Timestamp).toDate() : DateTime.now();
 
   /// Set this to true when the user has completed the profile.
   /// This should be set when the user submit the profile form.
@@ -130,7 +128,6 @@ class User {
     this.birthDayOfYear = 0,
     this.gender = '',
     this.type = '',
-    dynamic createdAt,
     this.isComplete = false,
     this.exists = true,
     this.noOfPosts = 0,
@@ -139,7 +136,7 @@ class User {
     this.followings = const [],
     this.cached = false,
     this.likes = const [],
-  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
+  });
 
   factory User.notExists() {
     return User(uid: '', exists: false);
@@ -154,8 +151,8 @@ class User {
 
   factory User.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     return User.fromJson({
-      ...Map<String, dynamic>.from((documentSnapshot.data() ?? {}) as Map),
-      ...{'id': documentSnapshot.id}
+      ...documentSnapshot.data() as Map<String, dynamic>,
+      'id': documentSnapshot.id,
     });
   }
 
@@ -189,18 +186,6 @@ class User {
       return null;
     }
     return User.fromDocumentSnapshot(snapshot);
-  }
-
-  /// 사용자 문서를 Realtime Database 에 Sync 된 문서를 읽어 온다.
-  static Future<User?> getFromDatabaseSync(String uid) async {
-    final snapshot = await FirebaseDatabase.instance.ref().child(collectionName).child(uid).get();
-    if (!snapshot.exists) {
-      return null;
-    }
-    return User.fromJson({
-      ...Map<String, dynamic>.from(snapshot.value as Map),
-      ...{'id': uid}
-    });
   }
 
   /// 사용자 문서를 생성한다.
