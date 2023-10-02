@@ -3,6 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 /// Convert DateTime from RTDB timestamp or from Firestore timestamp
 ///
+@Deprecated('Use custom converter or ...')
 class FirebaseDateTimeConverter implements JsonConverter<DateTime, int> {
   const FirebaseDateTimeConverter();
 
