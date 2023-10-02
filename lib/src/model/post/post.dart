@@ -204,12 +204,12 @@ class Post {
       toast(title: tr.loginFirstTitle, message: tr.loginFirstMessage);
       return null;
     }
-    bool res = await toggle(pathPostLikedBy(id));
+    bool isLiked = await toggle(pathPostLikedBy(id));
 
     // call back when the post is liked or unliked
-    PostService.instance.onToggleLike?.call(res);
+    PostService.instance.onToggleLike(this, isLiked);
 
-    return res;
+    return isLiked;
   }
 
   @override

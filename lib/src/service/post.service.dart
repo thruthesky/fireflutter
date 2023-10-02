@@ -23,10 +23,8 @@ class PostService {
   Function(Post)? onCreate;
   Function(Post)? onUpdate;
 
-  /// Callback function on toggle like
-  /// This will be called when the user click the like button on the post view
-  /// This can be use like if you want to send push notification to the post owner
-  Function(bool)? onToggleLike;
+  // Enable/Disable push notification when post is liked
+  bool sendNotificationOnLike = true;
 
   init({
     bool uploadFromGallery = true,
@@ -35,8 +33,8 @@ class PostService {
     bool enableSeenBy = false,
     void Function(Post)? onCreate,
     void Function(Post)? onUpdate,
-    void Function(bool)? onToggleLike,
     PostCustomize? customize,
+    bool sendNotificationOnLike = true,
   }) {
     this.uploadFromGallery = uploadFromGallery;
     this.uploadFromCamera = uploadFromCamera;
@@ -47,7 +45,7 @@ class PostService {
     this.onCreate = onCreate;
     this.onUpdate = onUpdate;
 
-    this.onToggleLike = onToggleLike;
+    this.sendNotificationOnLike = sendNotificationOnLike;
 
     if (customize != null) {
       this.customize = customize;
@@ -197,5 +195,20 @@ class PostService {
         },
       ),
     ];
+  }
+
+  /// Callback function when a post is liked or unliked.
+  /// send only when user liked the post.
+  Future onToggleLike(Post post, bool isLiked) async {
+    if (!sendNotificationOnLike) return;
+    if (!isLiked) return;
+    if (!loggedIn) return;
+    MessagingService.instance.queue(
+      title: post.title,
+      body: "${my.name} liked your post",
+      id: myUid,
+      uids: [post.uid],
+      type: NotificationType.post.name,
+    );
   }
 }
