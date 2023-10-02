@@ -7,20 +7,20 @@ If you are looking for a package that help you develop a full featured content m
 Create an issue if you find a bug or need a help.
 
 - [FireFlutter](#fireflutter)
-  - [Overview](#overview)
+- [Overview](#overview)
   - [Features](#features)
     - [Main Features](#main-features)
 - [Getting started](#getting-started)
   - [Installation](#installation)
   - [Create a Firebase](#create-a-firebase)
   - [Install the easy extension](#install-the-easy-extension)
+  - [Firebase Extension](#firebase-extension)
+    - [Resize image](#resize-image)
   - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
     - [Firestore security rules](#firestore-security-rules)
     - [Security rule for admin](#security-rule-for-admin)
     - [Realtime database security rules](#realtime-database-security-rules)
-  - [Firebase Extension](#firebase-extension)
-    - [Resize image](#resize-image)
   - [Setup the base code](#setup-the-base-code)
   - [url\_launcher (Optional)](#url_launcher-optional)
 - [Pub.dev Packages](#pubdev-packages)
@@ -31,20 +31,18 @@ Create an issue if you find a bug or need a help.
 - [How to build a forum app](#how-to-build-a-forum-app)
 - [Usage](#usage)
   - [UserService](#userservice)
-  - [PostService](#postservice) <!-- TODO: REVIEW -->
-    - [How to open a post](#how-to-open-a-post)
-    - [Customizing a Post View](#customizing-a-post-view)
   - [ChatService](#chatservice)
     - [How to open 1:1 chat room](#how-to-open-11-chat-room)
     - [How to display chat room menu](#how-to-display-chat-room-menu)
     - [Customizing the chat header](#customizing-the-chat-header)
 - [Widgets and UI functions](#widgets-and-ui-functions)
-  - [TopDownGraident](#topdowngraident)
-  - [BottomUpGraident](#bottomupgraident)
+  - [TopDownGraident and BottomUpGraident](#topdowngraident-and-bottomupgraident)
   - [CommentOneLineListTile](#commentonelinelisttile)
+  - [CommentListBottomSheet](#commentlistbottomsheet)
+  - [UserLikedByListScreen](#userlikedbylistscreen)
   - [alert](#alert)
   - [toast](#toast)
-  - [warning](#warning)
+  - [warningSnackBar](#warningsnackbar)
   - [prompt](#prompt)
   - [input](#input)
   - [randomString](#randomstring)
@@ -118,6 +116,7 @@ Create an issue if you find a bug or need a help.
 - [Services](#services)
   - [ShareService](#shareservice)
     - [Customizing share button on public profile](#customizing-share-button-on-public-profile)
+- [Error handling](#error-handling)
 - [Admin](#admin)
   - [Admin Widgets](#admin-widgets)
     - [Opening admin dashbard](#opening-admin-dashbard)
@@ -2648,6 +2647,24 @@ ShareBottomSheet(actions: [
 ### Customizing share button on public profile
 
 See public profile screen customization
+
+
+
+# Error handling
+
+
+There are some cases that you don't want to wait for the async work to be finished since it takes time to save data into the database. But you must show user if there is an error.
+
+Then, you may use some code like below. It's waiting for the async to be finished and it displays error to user if there is any.
+
+```dart
+my.update(type: type).catchError(
+  (e) => toast(
+    title: 'Error',
+    message: e.toString(),
+  ),
+);
+```
 
 # Admin
 

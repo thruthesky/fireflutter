@@ -304,7 +304,7 @@ class PostCard extends StatelessWidget {
           child: Row(
             children: [
               // TODO make sure the post to pass to edit comment is the latest
-              // TODO reaaly need to review because sort is not working properly
+              // reaaly need to review because sort is not working properly
               // Added a git issue. Remove the TODOs above only if resolved -dev2
               // https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=40127135
               IconButton(
