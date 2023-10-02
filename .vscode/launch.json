@@ -8,7 +8,7 @@
       "name": "Fireflutter_Project",
       "request": "launch",
       "type": "dart",
-      "cwd": "apps/fireflutter_project",
+      "cwd": "apps/brewsko",
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "C79F2C44-AB98-4B0B-A727-8C5E8B50C595"

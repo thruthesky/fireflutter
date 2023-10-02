@@ -13,7 +13,6 @@ Create an issue if you find a bug or need a help.
 - [Getting started](#getting-started)
   - [Installation](#installation)
   - [Create a Firebase](#create-a-firebase)
-  - [Install the easy extension](#install-the-easy-extension)
   - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
     - [Firestore security rules](#firestore-security-rules)
@@ -182,16 +181,16 @@ Follow the instruction below to install FireFlutter into your app
 If you have your own firebase project, then you can use that. If you don't have one, create one first. Visit [Firebase Website](https://firebase.google.com).
 
 
-## Install the easy extension
+<!-- ## Install the easy extension
 
 We built a firebase extension for the easy management on firebase. FireFlutter is using this extension. Install the [latest version of easy-extension](https://github.com/thruthesky/easy-extension).
 ![easy_extension](/doc/img/easy_extension.png)
 
-Choose Easy Extension version and it will redirect you to Firebase. Choose the project you want Easy Extension to be installed.
+Choose Easy Extension version and it will redirect you to Firebase. Choose the project you want Easy Extension to be installed. -->
 
-## Firebase Extension
+# Firebase Extension
 
-Aside from `easy-extension`, you will need to install the following extensions
+<!-- Aside from `easy-extension`, you will need to install the following extensions -->
 
 ### Resize image
 
@@ -239,6 +238,8 @@ if you see warnings like `functions: Since this is your first time using 2nd gen
 ### Firestore security rules
 
 Security rules for firestore are under `/firebase/firestore/firestore.rules`.
+
+<!-- TODO: Firestore rule complete update -->
 
 Copy [the security rules of fireflutter](https://raw.githubusercontent.com/thruthesky/fireflutter/main/firebase/firestore/firestore.rules) and paste it in your firebase project. You may need to copy only the parts of the necessary security rules.
 
@@ -506,6 +507,79 @@ Visit [parsed_readmore](https://pub.dev/packages/parsed_readmore) to read more.
 <!-- TODO: -->
 # How to build a user profile page 
 
+<!-- will revised this continously while studying fireflutter -->
+
+Here is an example of how to build simple user profile page.
+
+### 1. Create Scaffold widgets
+Build your own design of your app.
+```dart
+@override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size; // get device's size
+    return Scaffold(
+      appBar: _myOwnAppBar(context), //custom AppBar
+      body: SizedBox(
+        width: size.width,
+        child: const Column(
+          children: [
+            UserBuilder(), // Profile image Builder
+            /*
+             * ... Other Widgets here
+             */
+          ],
+        ),
+      ),
+    );
+  }
+```
+
+### 2. UserBuilder()
+
+[**UserDoc**](#userdoc) is responsible for taking all the documents of user from the database. With the help of [**UserProfileAvatar**](#userprofileavatar) we can display the user's profile photo to our app.   
+
+```dart
+class UserBuilder extends StatelessWidget {
+  const UserBuilder({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return UserDoc(builder: (user) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          UserProfileAvatar( // displays the user's profile photo
+            radius: 20,
+            user: user,
+            size: 100,
+            upload: true,
+          ),
+          const SizedBox(width: 20),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              // you can change this based on your needs
+              _textBuilder(context, my.email),
+              _textBuilder(context, my.uid),
+              _textBuilder(context, my.hasPhotoUrl.toString()),
+            ],
+          ),
+        ],
+      );
+    });
+  }
+}
+```
+
+## Result
+Here is a sample result
+
+***Note:*** [**UserProfileAvatar**](#userprofileavatar) returns an icon that will serve as a default profile picture if the user doesn't have any picture uploaded.
+
+![user_profile](/doc/img/user_profile.png)
+
+
 # How to build a chat app
 
 # How to build a forum app
@@ -515,12 +589,12 @@ Visit [parsed_readmore](https://pub.dev/packages/parsed_readmore) to read more.
 ## UserService
 <!-- #section removed 
   reason: documentNotExistBuilder has been removed
--->
-<!-- In this case, the `documentNotExistBuilder` of `UserDoc` will be called. -->
+  
+In this case, the `documentNotExistBuilder` of `UserDoc` will be called. 
 
-<!-- So, the lifecyle will be the following when the app users `UserDoc`. -->
+So, the lifecyle will be the following when the app users `UserDoc`. 
 
-<!-- - `UserService.instance.nullableUser` will have an instance of `User`
+- `UserService.instance.nullableUser` will have an instance of `User`
   - If the user document does not exists, `exists` will be `false` causing `documentNotExistsBuilder` to be called.
   - If the user document exist, then it will have right data and `builder` will be called. -->
 
@@ -1292,6 +1366,8 @@ class _ChatRoomListreenState extends State<ChatRoomListSreen> {
           ),
         ],
       ),
+      ),
+  }
 ```
 
 - You need to create only one screen to use the easychat.
