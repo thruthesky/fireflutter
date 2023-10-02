@@ -162,6 +162,9 @@ class UserService {
   ///
   bool enableMessagingOnPublicProfileVisit = false;
 
+  // Enable/Disable push notification when profile was liked
+  bool enableNotificationOnLike = true;
+
   /// 미리 한번 호출 해서, Singleton 을 초기화 해 둔다. 그래야 user 를 사용 할 때, 에러가 발생하지 않는다.
   init({
     required String adminUid,
@@ -171,6 +174,7 @@ class UserService {
     Function(User user)? onDelete,
     UserCustomize? customize,
     bool enableMessagingOnPublicProfileVisit = false,
+    bool enableNotificationOnLike = true,
   }) {
     if (adminUid.isNotEmpty) {
       UserService.instance.get(adminUid).then((value) => admin = value);
@@ -185,6 +189,8 @@ class UserService {
     this.onCreate = onCreate;
     this.onUpdate = onUpdate;
     this.onDelete = onDelete;
+
+    this.enableNotificationOnLike = enableNotificationOnLike;
 
     /// 로그인을 할 때, nullableUser 초기가 값 지정
     auth.FirebaseAuth.instance
@@ -439,6 +445,22 @@ class UserService {
       pageBuilder: (context, _, __) {
         return UserLikedByListScreen(uids: uids);
       },
+    );
+  }
+
+  /// Callback function when a user was liked or unliked.
+  /// send only when user liked the post.
+  Future onToggleLike(User user, bool isLiked) async {
+    if (!enableNotificationOnLike) return;
+    if (!isLiked) return;
+    if (!loggedIn) return;
+
+    MessagingService.instance.queue(
+      title: 'Liked your profile...',
+      body: "${my.name} liked your profile",
+      id: myUid,
+      uids: [user.uid],
+      type: NotificationType.user.name,
     );
   }
 } // EO UserService
