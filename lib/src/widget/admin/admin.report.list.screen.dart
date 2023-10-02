@@ -13,8 +13,7 @@ class AdminReportListScreen extends StatefulWidget {
 }
 
 class _AdminReportListScreenState extends State<AdminReportListScreen> {
-  style(context) =>
-      TextStyle(color: Theme.of(context).colorScheme.onInverseSurface);
+  style(context) => TextStyle(color: Theme.of(context).colorScheme.onInverseSurface);
 
   String? type;
 
@@ -37,8 +36,7 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
-            color: Theme.of(context).colorScheme.onInverseSurface),
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onInverseSurface),
         backgroundColor: Theme.of(context).colorScheme.inverseSurface,
         title: Text(
           'Admin Report List',
@@ -101,7 +99,6 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
         query: query,
         itemBuilder: (context, snapshot) {
           final report = Report.fromDocumentSnapshot(snapshot);
-
           return ListTile(
             title: Text(report.reason),
             subtitle: Column(
@@ -111,30 +108,73 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
                 Text(report.createdAt.toString()),
                 if (report.type == 'user')
                   ElevatedButton(
-                      onPressed: () {}, child: const Text('Block User')),
+                    onPressed: () => showDeleteDialog(report),
+                    child: const Text('Block User'),
+                  ),
                 if (report.type == 'post')
                   ElevatedButton(
-                      onPressed: () {}, child: const Text('Delete Post')),
+                    onPressed: () => showDeleteDialog(report),
+                    child: const Text('Delete Post'),
+                  ),
                 if (report.type == 'comment')
                   ElevatedButton(
-                      onPressed: () {}, child: const Text('Delete Comment'))
+                    onPressed: () => showDeleteDialog(report),
+                    child: const Text('Delete Comment'),
+                  )
               ],
             ),
             onTap: () {
               if (report.type == 'user') {
-                UserService.instance
-                    .showPublicProfileScreen(context: context, uid: report.uid);
+                UserService.instance.showPublicProfileScreen(context: context, uid: report.uid);
               } else if (report.type == 'post') {
-                PostService.instance.showPostViewScreen(
-                    context: context, postId: report.postId);
+                PostService.instance.showPostViewScreen(context: context, postId: report.postId);
               } else if (report.type == 'comment') {
-                CommentService.instance.showCommentViewDialog(
-                    context: context, commentId: report.commentId);
+                CommentService.instance.showCommentViewDialog(context: context, commentId: report.commentId);
               }
             },
           );
         },
       ),
+    );
+  }
+
+  showDeleteDialog(Report report) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final reasonController = TextEditingController();
+        reasonController.text = 'This ${report.type} was deleted due to violation.';
+        return AlertDialog(
+          title: Text('Deleting ${report.type}.'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: reasonController,
+                decoration: InputDecoration(
+                  labelText: 'Reason',
+                  hintText: 'This may appear on the ${report.type}.',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Cancel')),
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  // TODO: Delete the post
+                  // report.deleteContent(reason: reasonController.text);
+                },
+                child: const Text('Delete')),
+          ],
+        );
+      },
     );
   }
 }
