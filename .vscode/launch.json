@@ -205,7 +205,7 @@
       "deviceId": "R9ATA00LMJM"
     },
     {
-      "name": "GRC - Simulator (C)",
+      "name": "GRC - Simulator - debug (C)",
       "request": "launch",
       "type": "dart",
       "cwd": "apps/grc",
@@ -214,12 +214,21 @@
       "deviceId": "798DF7C4-34CF-42DD-A1CE-8B183C27F50C"
     },
     {
-      "name": "GRC - Samsung External (C)",
+      "name": "GRC - Samsung External - debug (C)",
       "request": "launch",
       "type": "dart",
       "cwd": "apps/grc",
       "program": "lib/main.dart",
       "flutterMode": "debug",
+      "deviceId": "R9ATA00LMJM"
+    },
+    {
+      "name": "GRC - Samsung External - profile (C)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "lib/main.dart",
+      "flutterMode": "profile",
       "deviceId": "R9ATA00LMJM"
     },
     {
