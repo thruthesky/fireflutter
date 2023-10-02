@@ -70,36 +70,54 @@ class CommentService {
       toast(title: tr.loginFirstTitle, message: tr.loginFirstMessage);
       return null;
     }
-    return customize.showCommentEditBottomSheet?.call(context, post: post, parent: parent, comment: comment) ??
-        showModalBottomSheet<Comment?>(
-          context: context,
-          // To prevent the bottom sheet from being hidden by the keyboard.
-          isScrollControlled: true,
-          // backgroundColor: primaryContainer,
-          // barrierColor: secondary.withOpacity(.5).withAlpha(110),
-          isDismissible: true,
-          builder: (context) => Padding(
-            // This padding is important to prevent the bottom sheet from being hidden by the keyboard.
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: SafeArea(
-              // SafeArea is needed for Simulator
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 20),
-                  CommentEditBottomSheet(
-                    post: post,
-                    parent: parent,
-                    comment: comment,
-                    onEdited: (comment) => Navigator.of(context).pop(comment),
-                  ),
-                  // This is for simulator
-                  const SizedBox(height: 20),
-                ],
+    if (customize.showCommentEditBottomSheet != null) {
+      return customize.showCommentEditBottomSheet!(
+        context,
+        post: post,
+        parent: parent,
+        comment: comment,
+        next: () => nextShowCommentEditBottomSheet(context, post: post, parent: parent, comment: comment),
+      );
+    } else {
+      return nextShowCommentEditBottomSheet(context, post: post, parent: parent, comment: comment);
+    }
+  }
+
+  Future<Comment?> nextShowCommentEditBottomSheet(
+    BuildContext context, {
+    Post? post,
+    Comment? parent,
+    Comment? comment,
+  }) {
+    return showModalBottomSheet<Comment?>(
+      context: context,
+      // To prevent the bottom sheet from being hidden by the keyboard.
+      isScrollControlled: true,
+      // backgroundColor: primaryContainer,
+      // barrierColor: secondary.withOpacity(.5).withAlpha(110),
+      isDismissible: true,
+      builder: (context) => Padding(
+        // This padding is important to prevent the bottom sheet from being hidden by the keyboard.
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: SafeArea(
+          // SafeArea is needed for Simulator
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 20),
+              CommentEditBottomSheet(
+                post: post,
+                parent: parent,
+                comment: comment,
+                onEdited: (comment) => Navigator.of(context).pop(comment),
               ),
-            ),
+              // This is for simulator
+              const SizedBox(height: 20),
+            ],
           ),
-        );
+        ),
+      ),
+    );
   }
 
   /// Display a commnet view dialog

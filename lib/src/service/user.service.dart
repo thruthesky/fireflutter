@@ -15,7 +15,7 @@ import 'package:rxdart/rxdart.dart';
 /// suspect that [my] or [UserService.instance.user] is null due to the latency
 /// of loading user document from the firestore.
 ///
-/// 예제
+/// Example
 /// UserService.instance.documentChanges.listen((user) => user == null ? null : print(my));
 /// my.update(state: stateController.text);
 User get my => UserService.instance.user;
@@ -94,7 +94,9 @@ class UserService {
 
   /// Current user model
   ///
-  /// [nullableUser] is the user model and it is null when the user signed out.
+  /// [nullableUser] is updated when the user document is updated. And
+  /// [nullableUser] will be null when the user signed out.
+  ///
   /// If it is not null, then it means the user has signed in.
   /// if [nullableUser.exists] is false, it menas user has signed in but has no
   /// user document in the firestore.
