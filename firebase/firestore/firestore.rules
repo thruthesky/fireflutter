@@ -35,8 +35,7 @@ service cloud.firestore {
 
 
     match /users/{userDocumentId} {
-      allow get: if request.auth.uid == userDocumentId || isAdmin();
-      allow list: if isAdmin();
+      allow read: if true;
       allow create: if request.auth.uid == userDocumentId;
       allow update: if
         isAdmin()
@@ -60,11 +59,8 @@ service cloud.firestore {
     }
 
 
-    match /user_search_data/{documentId} {
-      allow read: if true;
-      allow create: if false;
-      allow update: if false;
-      allow delete: if request.auth.uid == documentId || isAdmin();
+    match /user_private_data/{documentId} {
+      allow read, write: if isAdmin() || request.auth.uid == documentId;
     }
 
     match /profile_view_history/{documentId} {

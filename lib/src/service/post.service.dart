@@ -23,6 +23,9 @@ class PostService {
   Function(Post)? onCreate;
   Function(Post)? onUpdate;
 
+  // Enable/Disable push notification when post is liked
+  bool sendNotificationOnLike = true;
+
   init({
     bool uploadFromGallery = true,
     bool uploadFromCamera = true,
@@ -31,6 +34,7 @@ class PostService {
     void Function(Post)? onCreate,
     void Function(Post)? onUpdate,
     PostCustomize? customize,
+    bool sendNotificationOnLike = true,
   }) {
     this.uploadFromGallery = uploadFromGallery;
     this.uploadFromCamera = uploadFromCamera;
@@ -40,6 +44,8 @@ class PostService {
 
     this.onCreate = onCreate;
     this.onUpdate = onUpdate;
+
+    this.sendNotificationOnLike = sendNotificationOnLike;
 
     if (customize != null) {
       this.customize = customize;
@@ -52,12 +58,10 @@ class PostService {
     String? categoryId,
     Post? post,
   }) {
-    return customize.showEditScreen
-            ?.call(context, categoryId: categoryId, post: post) ??
+    return customize.showEditScreen?.call(context, categoryId: categoryId, post: post) ??
         showGeneralDialog<Post?>(
           context: context,
-          pageBuilder: (context, _, __) =>
-              PostEditScreen(categoryId: categoryId, post: post),
+          pageBuilder: (context, _, __) => PostEditScreen(categoryId: categoryId, post: post),
         );
   }
 
@@ -71,8 +75,7 @@ class PostService {
     Post? post,
     String? postId,
   }) {
-    return customize.showPostViewScreen
-            ?.call(context, postId: postId, post: post) ??
+    return customize.showPostViewScreen?.call(context, postId: postId, post: post) ??
         showGeneralDialog(
           context: context,
           pageBuilder: (context, _, __) => PostViewScreen(
@@ -147,8 +150,7 @@ class PostService {
               value: 'block',
               child: Database(
                 path: pathBlock(post.uid),
-                builder: (value, p) =>
-                    Text(value == null ? tr.block : tr.unblock),
+                builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
               ),
             ),
           if (UserService.instance.isAdmin)
@@ -174,9 +176,8 @@ class PostService {
                 ReportService.instance.showReportDialog(
                   context: context,
                   postId: post.id,
-                  onExists: (id, type) => toast(
-                      title: 'Already reported',
-                      message: 'You have reported this $type already.'),
+                  onExists: (id, type) =>
+                      toast(title: 'Already reported', message: 'You have reported this $type already.'),
                 );
               }
               break;
@@ -189,12 +190,26 @@ class PostService {
               break;
             case 'copyId':
               await Clipboard.setData(ClipboardData(text: post.id));
-              toast(
-                  title: 'Copy to clipboard',
-                  message: "${post.id} was copy to clipboard");
+              toast(title: 'Copy to clipboard', message: "${post.id} was copy to clipboard");
           }
         },
       ),
     ];
+  }
+
+  /// Callback function when a post is liked or unliked.
+  /// send only when user liked the post.
+  Future onToggleLike(Post post, bool isLiked) async {
+    if (!sendNotificationOnLike) return;
+    if (!isLiked) return;
+    if (!loggedIn) return;
+
+    MessagingService.instance.queue(
+      title: post.title,
+      body: "${my.name} liked your post.",
+      id: myUid,
+      uids: [post.uid],
+      type: NotificationType.post.name,
+    );
   }
 }
