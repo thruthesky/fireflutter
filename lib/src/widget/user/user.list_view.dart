@@ -64,7 +64,7 @@ class UserListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Query query = userSearchCol;
+    Query query = userCol;
     if (hasSearchText) {
       query = query.where(field, isEqualTo: searchText);
     }

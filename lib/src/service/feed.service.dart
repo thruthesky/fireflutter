@@ -31,6 +31,7 @@ class FeedService {
       'youtubeId': post.youtubeId,
       'urls': post.urls,
       'hashtags': post.hashtags,
+      'noOfComments': post.noOfComments,
     };
   }
 
@@ -93,6 +94,7 @@ class FeedService {
         'urls': post.urls,
         'youtubeId': post.youtubeId,
         'hashtags': post.hashtags,
+        'noOfComments': post.noOfComments,
       }));
     }
     await Future.wait(feedUpdates);

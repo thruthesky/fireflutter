@@ -88,6 +88,7 @@ class CommentService {
                 children: [
                   const SizedBox(height: 20),
                   CommentEditBottomSheet(
+                    post: post,
                     parent: parent,
                     comment: comment,
                     onEdited: (comment) => Navigator.of(context).pop(comment),
