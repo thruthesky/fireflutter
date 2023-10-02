@@ -154,7 +154,7 @@ class User {
 
   factory User.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     return User.fromJson({
-      ...documentSnapshot.data() as Map<String, dynamic>,
+      ...Map<String, dynamic>.from((documentSnapshot.data() ?? {}) as Map),
       ...{'id': documentSnapshot.id}
     });
   }

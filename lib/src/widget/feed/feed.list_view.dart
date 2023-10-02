@@ -41,6 +41,7 @@ class _FeedListViewState extends State<FeedListView> {
       noFollowings = user.followings.isEmpty;
       // Currently, [noFollowings] is only useful when user have not followed anyone.
       // This will prevent rebuilding everytime user has been updated.
+
       if (!noFollowings) return;
       setState(() {});
     });
@@ -48,7 +49,17 @@ class _FeedListViewState extends State<FeedListView> {
 
   @override
   Widget build(BuildContext context) {
-    if (noFollowings) return const Text('You have not followed anyone');
+    if (noFollowings) {
+      return const Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('You have not followed anyone'),
+          ],
+        ),
+      );
+    }
 
     return FirebaseDatabaseQueryBuilder(
       query: rtdb.ref('feeds').child(FirebaseAuth.instance.currentUser!.uid).orderByChild('createdAt'),
