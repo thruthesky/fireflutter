@@ -38,14 +38,12 @@ class _FeedListViewState extends State<FeedListView> {
     super.initState();
     UserService.instance.documentChanges.listen((user) {
       if (user == null) return;
-      noFollowings = user.followings.isEmpty;
       // Currently, [noFollowings] is only useful when user have not followed anyone.
       // This will prevent rebuilding everytime user has been updated.
-
-      if (!noFollowings) return;
-      if (mounted) {
-        setState(() {});
-      }
+      if (noFollowings == user.followings.isEmpty) return;
+      noFollowings = user.followings.isEmpty;
+      if (!mounted) return;
+      setState(() {});
     });
   }
 
