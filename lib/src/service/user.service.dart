@@ -385,7 +385,7 @@ class UserService {
 
     if (loggedIn && (enableMessagingOnPublicProfileVisit) && myUid != otherUid) {
       MessagingService.instance.queue(
-        title: "Someone visit your profile",
+        title: "Your profile was visited.",
         body: "${my.name} visit your profile",
         id: myUid,
         uids: [otherUid],
@@ -442,7 +442,7 @@ class UserService {
   /// Delete user document
   Future deleteDocuments() async {
     await my.delete();
-    await mySearchDoc.delete();
+    await myPrivateDoc.delete();
     await rtdb.ref('users/$myUid').remove();
   }
 
@@ -462,8 +462,8 @@ class UserService {
     if (isLiked == false) return;
 
     MessagingService.instance.queue(
-      title: "${my.name} liked your profile",
-      body: 'Liked your profile...',
+      title: 'New likes on your profile.',
+      body: "${my.name} liked your profile",
       id: myUid,
       uids: [user.uid],
       type: NotificationType.user.name,

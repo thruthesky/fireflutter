@@ -17,7 +17,7 @@ DocumentReference userDoc(String uid) => userCol.doc(uid);
 DocumentReference get myDoc => userDoc(FirebaseAuth.instance.currentUser!.uid);
 
 CollectionReference get userPrivateCol => FirebaseFirestore.instance.collection('user_private_data');
-DocumentReference get mySearchDoc => userPrivateCol.doc(myUid);
+DocumentReference get myPrivateDoc => userPrivateCol.doc(myUid);
 
 // categories
 CollectionReference get categoryCol => FirebaseFirestore.instance.collection(Category.collectionName);

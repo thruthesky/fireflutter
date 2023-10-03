@@ -13,7 +13,7 @@ rules_version = '2';
 //
 // Return true if the use is root user.
 function isAdmin() {
-  let adminUIDs = ['root', 'admin', 'CYKk5Q79AmYKQEzw8A95UyEahiz1', 'DiBndQah89TQu7EHUzu2hDH5gC62', 'oaCInoFMGuWUAvhqHE83gIpUxEw2', 'ZhiuNFzR4BNULdY2XvWSx5RaxGl1'];
+  let adminUIDs = ['root', 'admin', 'CYKk5Q79AmYKQEzw8A95UyEahiz1', 'DiBndQah89TQu7EHUzu2hDH5gC62', 'oaCInoFMGuWUAvhqHE83gIpUxEw2', 'ZhiuNFzR4BNULdY2XvWSx5RaxGl1', 'GuVDmHEC8xXnEGFwHg95S8bNZuG2', 'yuHuZAmdBRPq14TFV8wfgZ5Tuay2' ];
   return request.auth.uid in adminUIDs || request.auth.token.admin == true;
 }
 // ****************************** COPY UNTIL HERE *****************************

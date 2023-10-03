@@ -355,7 +355,7 @@ class User {
   ///
   /// Returns true if liked a user. Returns false if unliked a user.
   Future<bool> like(String uid) async {
-    bool isLiked = await toggle('likes/$uid');
+    bool isLiked = await toggle(pathUserLiked(uid));
 
     UserService.instance.sendNotificationOnLike(this, isLiked);
     UserService.instance.onLike?.call(this, isLiked);
