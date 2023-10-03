@@ -443,7 +443,7 @@ class UserService {
   Future deleteDocuments() async {
     await my.delete();
     await myPrivateDoc.delete();
-    await rtdb.ref('users/$myUid').remove();
+    // await rtdb.ref('users/$myUid').remove();
   }
 
   showLikedByListScreen({required BuildContext context, required List<String> uids}) {
