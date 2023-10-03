@@ -1,4 +1,4 @@
-import 'package:fireflutter/src/model/chat/room.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomCreateDialog extends StatefulWidget {
@@ -21,7 +21,7 @@ class _ChatRoomCreateDialogState extends State<ChatRoomCreateDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Create Chat Room'),
+      title: Text(tr.createChatRoom),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

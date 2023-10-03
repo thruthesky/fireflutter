@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -69,8 +68,7 @@ class MessagingService {
     this.onMessageOpenedFromTerminated = onMessageOpenedFromTerminated;
     this.onMessageOpenedFromBackground = onMessageOpenedFromBackground;
     this.onNotificationPermissionDenied = onNotificationPermissionDenied;
-    this.onNotificationPermissionNotDetermined =
-        onNotificationPermissionNotDetermined;
+    this.onNotificationPermissionNotDetermined = onNotificationPermissionNotDetermined;
     _init();
     _initilizeToken();
   }
@@ -81,8 +79,7 @@ class MessagingService {
     /// Permission request for iOS only. For Android, the permission is granted by default.
     ///
     if (kIsWeb || Platform.isIOS) {
-      NotificationSettings settings =
-          await FirebaseMessaging.instance.requestPermission(
+      NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
         alert: true,
         announcement: false,
         badge: true,
@@ -107,9 +104,7 @@ class MessagingService {
     ///
     /// `/fcm_tokens/<docId>/{token: '...', uid: '...'}`
     /// Save(or update) token
-    FirebaseAuth.instance
-        .authStateChanges()
-        .listen((user) => _updateToken(token));
+    FirebaseAuth.instance.authStateChanges().listen((user) => _updateToken(token));
 
     /// Token changed. update it.
     ///
@@ -121,14 +116,13 @@ class MessagingService {
     /// Run this subscription on the whole lifecycle. (No unsubscription)
     ///
     // Any time the token refreshes, store this in the database too.
-    FirebaseMessaging.instance.onTokenRefresh
-        .listen((token) => tokenChange.add(token));
+    FirebaseMessaging.instance.onTokenRefresh.listen((token) => tokenChange.add(token));
 
     /// Get token from device and save it into Firestore
     ///
     /// Get the token each time the application loads and save it to database.
     token = await FirebaseMessaging.instance.getToken() ?? '';
-    log('---> device token: $token');
+    // log('---> device token: $token');
     await _updateToken(token);
 
     /// subscribe to topic on every boot
@@ -148,7 +142,7 @@ class MessagingService {
     if (FirebaseAuth.instance.currentUser == null) return;
     if (token == null) return;
     final ref = tokenDoc(token);
-    debugPrint('ref; ${ref.path}');
+    // debugPrint('ref; ${ref.path}');
     await ref.set(
       {
         'uid': FirebaseAuth.instance.currentUser?.uid,
@@ -165,8 +159,7 @@ class MessagingService {
     FirebaseMessaging.onMessage.listen(onForegroundMessage);
 
     // Check if app is opened from CLOSED(TERMINATED) state and get message data.
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
       onMessageOpenedFromTerminated(initialMessage);
     }
