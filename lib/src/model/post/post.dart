@@ -191,8 +191,7 @@ class Post {
 
   /// Like or unline the post
   ///
-  /// This method must be the only method to like or unlike. Don't it in
-  /// another way.
+  /// ! This method must be the only method to like or unlike. Don't it in another way.
   ///
   /// This method do extra works that are necessary for like and unlike.
   ///
