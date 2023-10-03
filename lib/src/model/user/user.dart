@@ -106,6 +106,9 @@ class User {
   /// Likes
   final List<String> likes;
 
+  /// disabled user
+  final bool isDisabled;
+
   User({
     this.uid = '',
     this.isAdmin = false,
@@ -136,6 +139,7 @@ class User {
     this.followings = const [],
     this.cached = false,
     this.likes = const [],
+    this.isDisabled = false,
   });
 
   factory User.notExists({String uid = ''}) {
@@ -265,6 +269,7 @@ class User {
     FieldValue? likes,
     String? field,
     dynamic value,
+    bool? isDisabled,
     Map<String, dynamic> data = const {},
   }) async {
     final docData = {
@@ -294,6 +299,7 @@ class User {
         if (followers != null) 'followers': followers,
         if (likes != null) 'likes': likes,
         if (field != null && value != null) field: value,
+        if (isDisabled != null) 'isDisabled': isDisabled,
       },
       ...data
     };
