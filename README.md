@@ -222,7 +222,7 @@ To install,
 git clone https://github.com/thruthesky/fireflutter
 cd fireflutter/firebase/functions
 npm i
-firebase use add <project>
+firebase use --add <project>
 npm run deploy
 ```
 
