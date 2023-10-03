@@ -17,7 +17,7 @@ DocumentReference userDoc(String uid) => userCol.doc(uid);
 DocumentReference get myDoc => userDoc(FirebaseAuth.instance.currentUser!.uid);
 
 CollectionReference get userPrivateCol => FirebaseFirestore.instance.collection('user_private_data');
-DocumentReference get mySearchDoc => userPrivateCol.doc(myUid);
+DocumentReference get myPrivateDoc => userPrivateCol.doc(myUid);
 
 // categories
 CollectionReference get categoryCol => FirebaseFirestore.instance.collection(Category.collectionName);
@@ -99,6 +99,14 @@ String pathCommentLikedBy(String id, {bool all = false}) {
     return 'comments/$id/likedBy';
   } else {
     return 'comments/$id/likedBy/$myUid';
+  }
+}
+
+String pathUserLiked(String id, {bool all = false}) {
+  if (all) {
+    return 'likes/$id';
+  } else {
+    return 'likes/$id/$myUid';
   }
 }
 

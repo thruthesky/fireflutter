@@ -138,8 +138,8 @@ class User {
     this.likes = const [],
   });
 
-  factory User.notExists() {
-    return User(uid: '', exists: false);
+  factory User.notExists({String uid = ''}) {
+    return User(uid: uid, exists: false);
   }
 
   /// Returns a user with uid. All other properties are empty.
@@ -151,8 +151,8 @@ class User {
 
   factory User.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     return User.fromJson({
-      ...documentSnapshot.data() as Map<String, dynamic>,
-      'id': documentSnapshot.id,
+      ...(documentSnapshot.data() ?? Map<String, dynamic>.from({})) as Map<String, dynamic>,
+      'uid': documentSnapshot.id,
     });
   }
 
@@ -179,9 +179,10 @@ class User {
   /// [uid] is the user's uid. If it's null, it will get the login user's document.
   ///
   /// Note, that It gets data from /users collections. It does not get data from /search-user-data collection.
-  static Future<User?> get([String? uid]) async {
-    uid ??= myUid!;
-    final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(uid).get();
+  static Future<User?> get([String? userUid]) async {
+    userUid ??= myUid!;
+    if (userUid.isEmpty) userUid = myUid!;
+    final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(userUid).get();
     if (snapshot.exists == false) {
       return null;
     }
@@ -355,9 +356,10 @@ class User {
   ///
   /// Returns true if liked a user. Returns false if unliked a user.
   Future<bool> like(String uid) async {
-    bool isLiked = await toggle('likes/$uid');
+    bool isLiked = await toggle(pathUserLiked(uid));
 
-    UserService.instance.onToggleLike(this, isLiked);
+    UserService.instance.sendNotificationOnLike(this, isLiked);
+    UserService.instance.onLike?.call(this, isLiked);
 
     return isLiked;
   }
