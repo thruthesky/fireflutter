@@ -40,12 +40,9 @@ service cloud.firestore {
       allow update: if
         isAdmin()
         ||
-        ( request.auth.uid == userDocumentId && notUpdating(['disabled', 'isAdmin', 'isVerified']) )
+        ( request.auth.uid == userDocumentId && notUpdating(['isDisabled', 'isAdmin', 'isVerified']) )
         ||
         addOrRemove('followers', request.auth.uid) 
-        // Likes are moved into rtdb by setp 16, 2023.
-        // || 
-        // addOrRemove('likes', request.auth.uid) 
         ;
       allow delete: if request.auth.uid == userDocumentId || isAdmin();
       match /fcm_tokens/{docId} {
@@ -109,17 +106,12 @@ service cloud.firestore {
         return isMyDoc();
       }
 
-      allow read: if true; // Anyone should be able to read.
-      allow create: if willBeMyPost();
-      allow update: if 
-        isMyPost()
-        
-        // Likes on post moved into RTDB by Sept, 16, 2023.
-        // || addOrRemove('likes', request.auth.uid)
-        
-        || onlyUpdating(['noOfComments']);
+      allow read: if true;
+      allow create: if willBeMyPost() && isEnabled();
+      allow update: if isEnabled() && ( isMyPost() || onlyUpdating(['noOfComments']) );
       allow delete: if false;
     }
+
 
 
     match /comments/{documentId} {
@@ -459,6 +451,22 @@ function noFieldChangedExcept(field) {
 function noFieldChanged() {
   return request.resource.data.diff(resource.data).affectedKeys().hasOnly([]);
 }
+
+// Get login user's document
+function myData() {
+  return get(/$(prefix())/users/$(request.auth.uid)).data;
+}
+
+// Return true if the user is disabled.
+function isDisabled() {
+  return 'isDisabled' in myData() && myData().isDisabled;
+}
+
+// Reeturn true if the user is not disabled.
+function isEnabled() {
+  return !isDisabled();
+}
+
 
 
 // If the user is disabled by the admin in Firebase Auth, they cannot login and they don't have request.auth.uid.
