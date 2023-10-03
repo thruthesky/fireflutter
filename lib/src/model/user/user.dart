@@ -357,7 +357,8 @@ class User {
   Future<bool> like(String uid) async {
     bool isLiked = await toggle('likes/$uid');
 
-    UserService.instance.onToggleLike(this, isLiked);
+    UserService.instance.sendNotificationOnLike(this, isLiked);
+    UserService.instance.onLike?.call(this, isLiked);
 
     return isLiked;
   }

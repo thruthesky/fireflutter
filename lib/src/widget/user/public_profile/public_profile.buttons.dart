@@ -11,7 +11,7 @@ class PublicProfileButtons extends StatefulWidget {
 }
 
 class _PublicProfileButtonsState extends State<PublicProfileButtons> {
-  get user => widget.user;
+  User get user => widget.user;
   get buttonStyle => TextButton.styleFrom(
         foregroundColor: Theme.of(context).colorScheme.onSecondary,
       );
@@ -30,7 +30,7 @@ class _PublicProfileButtonsState extends State<PublicProfileButtons> {
           UserService.instance.customize.publicScreenLikeButton?.call(context, user) ??
               TextButton(
                 style: buttonStyle,
-                onPressed: () => like(user.uid),
+                onPressed: () => user.like(user.uid),
                 child: Database(
                   path: 'likes/${user.uid}',
                   builder: (value, p) => Text(

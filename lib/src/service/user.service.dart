@@ -164,8 +164,11 @@ class UserService {
   ///
   bool enableMessagingOnPublicProfileVisit = false;
 
+  /// [onLike] is called when a post is liked or unliked by the login user.
+  void Function(User user, bool isLiked)? onLike;
+
   // Enable/Disable push notification when profile was liked
-  bool enableNotificationOnLike = true;
+  bool enableNotificationOnLike = false;
 
   /// 미리 한번 호출 해서, Singleton 을 초기화 해 둔다. 그래야 user 를 사용 할 때, 에러가 발생하지 않는다.
   init({
@@ -176,7 +179,8 @@ class UserService {
     Function(User user)? onDelete,
     UserCustomize? customize,
     bool enableMessagingOnPublicProfileVisit = false,
-    bool enableNotificationOnLike = true,
+    void Function(User user, bool isLiked)? onLike,
+    bool enableNotificationOnLike = false,
   }) {
     if (adminUid.isNotEmpty) {
       UserService.instance.get(adminUid).then((value) => admin = value);
@@ -192,6 +196,7 @@ class UserService {
     this.onUpdate = onUpdate;
     this.onDelete = onDelete;
 
+    this.onLike = onLike;
     this.enableNotificationOnLike = enableNotificationOnLike;
 
     /// 로그인을 할 때, nullableUser 초기가 값 지정
@@ -451,15 +456,14 @@ class UserService {
   }
 
   /// Callback function when a user was liked or unliked.
-  /// send only when user liked the post.
-  Future onToggleLike(User user, bool isLiked) async {
-    if (!enableNotificationOnLike) return;
-    if (!isLiked) return;
-    if (!loggedIn) return;
+  /// send only when user liked the other user.
+  Future sendNotificationOnLike(User user, bool isLiked) async {
+    if (enableNotificationOnLike == false) return;
+    if (isLiked == false) return;
 
     MessagingService.instance.queue(
-      title: 'Liked your profile...',
-      body: "${my.name} liked your profile",
+      title: "${my.name} liked your profile",
+      body: 'Liked your profile...',
       id: myUid,
       uids: [user.uid],
       type: NotificationType.user.name,

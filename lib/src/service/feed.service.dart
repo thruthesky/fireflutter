@@ -9,14 +9,18 @@ class FeedService {
 
   bool enable = false;
 
-  bool sendNotificationOnFollow = true;
+  bool enableNotificationOnFollow = false;
+
+  void Function(String otherUid, bool isFollowed)? onFollow;
 
   init({
     required bool enable,
-    bool sendNotificationOnFollow = true,
+    bool enableNotificationOnFollow = false,
+    void Function(String otherUid, bool isFollowed)? onFollow,
   }) {
     this.enable = enable;
-    this.sendNotificationOnFollow = sendNotificationOnFollow;
+    this.enableNotificationOnFollow = enableNotificationOnFollow;
+    this.onFollow = onFollow;
   }
 
   Map<String, dynamic> convertIntoFeedData(Post post) {
@@ -36,14 +40,13 @@ class FeedService {
   }
 
   /// When a user follows another user, we will send push notification to that user
-  Future onToggleFollow(String otherUid, isLiked) async {
-    if (!sendNotificationOnFollow) return;
-    if (!isLiked) return;
-    if (!loggedIn) return;
+  Future sendNotificationOnFollow(String otherUid, isFollowed) async {
+    if (enableNotificationOnFollow == false) return;
+    if (isFollowed == false) return;
 
     MessagingService.instance.queue(
-      title: 'New Follower',
-      body: "${my.name} is following you.",
+      title: "${my.name} is following you.",
+      body: 'You have new follower',
       id: myUid,
       uids: [otherUid],
       type: NotificationType.user.name,
@@ -55,7 +58,6 @@ class FeedService {
   ///
   Future<bool> follow(String otherUid) async {
     final re = await my.follow(otherUid);
-    onToggleFollow(otherUid, re);
 
     if (re) {
       // get last 20 posts and save it under rtdb
@@ -71,6 +73,11 @@ class FeedService {
         }
       });
     }
+
+    /// callback function when this user follows another user.
+    sendNotificationOnFollow(otherUid, re);
+    onFollow?.call(otherUid, re);
+
     return re;
   }
 

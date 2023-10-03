@@ -309,7 +309,7 @@ class PostCard extends StatelessWidget {
               Database(
                 path: pathPostLikedBy(post.id),
                 builder: (v, p) => IconButton(
-                  onPressed: () => toggle(p),
+                  onPressed: () => post.like(),
                   icon: Icon(v != null ? Icons.thumb_up : Icons.thumb_up_outlined),
                 ),
               ),
