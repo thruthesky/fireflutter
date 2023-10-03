@@ -148,10 +148,6 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                             ),
                     ),
                     // reply
-                    // TODO make sure the post to pass to reply comment is the latest
-                    // TODO really need to review because sort is not working properly
-                    // Added a git issue. Remove the TODOs above only if resolved -dev2
-                    // https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=40127135
                     TextButton(
                       style: TextButton.styleFrom(
                         padding: const EdgeInsets.only(left: 0, right: 8),
