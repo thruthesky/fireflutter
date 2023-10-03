@@ -40,6 +40,8 @@ Create an issue if you find a bug or need a help.
     - [How to display chat room menu](#how-to-display-chat-room-menu)
     - [Customizing the chat header](#customizing-the-chat-header)
 - [Widgets and UI functions](#widgets-and-ui-functions)
+  - [AuthChanges](#authchanges)
+  - [UserDocReady](#userdocready)
   - [TopDownGraident and BottomUpGraident](#topdowngraident-and-bottomupgraident)
   - [CommentOneLineListTile](#commentonelinelisttile)
   - [CommentListBottomSheet](#commentlistbottomsheet)
@@ -768,6 +770,38 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 - There are many service methods that opens a screen. One thing to note is that, all the method that opens a screen uses `showGeneralDialog` which does not modify the navigation stack. If you want, you may open the screen with navigation(routing) like `Navigator.of(context).push...()`.
 
 **Note:** you can use **`Theme()`** to style the widget 
+
+
+
+## AuthChanges
+
+
+```dart
+AuthChange(
+  builder: (u) => u == null ?
+    Text('Register') : Text('uid: ${user.uid}'),
+);
+```
+
+## UserDocReady
+
+
+```dart
+UserDocReady(builder: (my) {
+  return Row(
+    children: [
+      UserProfileAvatar( user: my ),
+      Column(
+        children: [
+          Text(my.name),
+          Text("${my.birthYear}-${my.birthMonth}-${my.birthDay}"),
+        ],
+      ),
+    ],
+  );
+}),
+```
+
 
 ## TopDownGraident and BottomUpGraident
 
