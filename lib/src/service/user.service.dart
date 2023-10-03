@@ -213,7 +213,7 @@ class UserService {
           /// 사용자 문서가 존재하지 않는 경우,
           /// * exists: false 는 오직, documentChanges 이벤트에만 적용된다.
           if (!documentSnapshot.exists || documentSnapshot.data() == null) {
-            nullableUser = User.notExists();
+            nullableUser = User.notExists(uid: documentSnapshot.id);
           } else {
             nullableUser = User.fromDocumentSnapshot(documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
           }
