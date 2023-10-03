@@ -80,14 +80,13 @@ class StorageService {
       });
     }
 
-    /// 업로드 완료 할 때까지 기다림
+    /// wait until upload-complete
     await uploadTask.whenComplete(() => complete?.call());
     final url = await fileRef.getDownloadURL();
     // print(fileRef.fullPath);
 
     // don't await. create a document in /storage
-
-    await fileRef.getMetadata().then((FullMetadata value) {
+    fileRef.getMetadata().then((FullMetadata value) {
       final contentType = value.contentType;
       final fullPath = value.fullPath;
       final name = value.name;

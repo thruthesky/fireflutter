@@ -141,6 +141,21 @@ class Comment {
     return updatedComment;
   }
 
+  Future<Comment> delete({String? reason}) async {
+    final deletedCommentData = {
+      'deleted': true,
+      'deletedReason': reason ?? '',
+      'deletedAt': FieldValue.serverTimestamp(),
+    };
+    await commentCol.doc(id).update(deletedCommentData);
+    final deletedComment = copyWith(deletedCommentData);
+
+    // Invoite the callback for comment creation.
+    // TODO custom onDelete
+    // CommentService.instance.onDelete?.call(deletedComment);
+    return deletedComment;
+  }
+
   /// Likes or Unlikes the comment
   ///
   /// If I already liked (iLiked == true)

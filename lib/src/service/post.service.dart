@@ -20,11 +20,14 @@ class PostService {
 
   /// Callback functions on post create and update. Note that, we don't support
   /// post delete.
-  Function(Post)? onCreate;
-  Function(Post)? onUpdate;
+  void Function(Post)? onCreate;
+  void Function(Post)? onUpdate;
+
+  /// [onLike] is called when a post is liked or unliked by the login user.
+  void Function(Post post, bool isLiked)? onLike;
 
   // Enable/Disable push notification when post is liked
-  bool sendNotificationOnLike = true;
+  bool enableNotificationOnLike = true;
 
   init({
     bool uploadFromGallery = true,
@@ -33,8 +36,9 @@ class PostService {
     bool enableSeenBy = false,
     void Function(Post)? onCreate,
     void Function(Post)? onUpdate,
+    void Function(Post post, bool isLiked)? onLike,
     PostCustomize? customize,
-    bool sendNotificationOnLike = true,
+    bool enableNotificationOnLike = false,
   }) {
     this.uploadFromGallery = uploadFromGallery;
     this.uploadFromCamera = uploadFromCamera;
@@ -44,8 +48,9 @@ class PostService {
 
     this.onCreate = onCreate;
     this.onUpdate = onUpdate;
+    this.onLike = onLike;
 
-    this.sendNotificationOnLike = sendNotificationOnLike;
+    this.enableNotificationOnLike = enableNotificationOnLike;
 
     if (customize != null) {
       this.customize = customize;
@@ -199,10 +204,9 @@ class PostService {
 
   /// Callback function when a post is liked or unliked.
   /// send only when user liked the post.
-  Future onToggleLike(Post post, bool isLiked) async {
-    if (!sendNotificationOnLike) return;
-    if (!isLiked) return;
-    if (!loggedIn) return;
+  Future sendNotificationOnLike(Post post, bool isLiked) async {
+    if (enableNotificationOnLike == false) return;
+    if (isLiked == false) return;
 
     MessagingService.instance.queue(
       title: post.title,

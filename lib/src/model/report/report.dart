@@ -111,4 +111,18 @@ class Report {
     await reportDoc(info.id).set(data);
     return info.id;
   }
+
+  /// Used to delete the post/comment/user
+  /// Note: these will be soft delete. Not actually deleted.
+  Future<void> deleteContent(String reason) async {
+    if (type == 'comment') {
+      //  const comment = Comment
+    } else if (type == 'post') {
+      // TODO post delete
+      // await postDoc(id).delete();
+    } else if (type == 'user') {
+      // TODO user delete
+      // await userDoc(id).delete();
+    }
+  }
 }
