@@ -13,6 +13,8 @@ Create an issue if you find a bug or need a help.
 - [Getting started](#getting-started)
   - [Installation](#installation)
   - [Create a Firebase](#create-a-firebase)
+- [Firebase Extension](#firebase-extension)
+    - [Resize image](#resize-image)
   - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
     - [Firestore security rules](#firestore-security-rules)
@@ -24,6 +26,9 @@ Create an issue if you find a bug or need a help.
   - [timeago](#timeago)
   - [Parsed\_ReadMore](#parsed_readmore)
 - [How to build a user profile page](#how-to-build-a-user-profile-page)
+    - [1. Create Scaffold widgets](#1-create-scaffold-widgets)
+    - [2. UserBuilder()](#2-userbuilder)
+  - [Result](#result)
 - [How to build a chat app](#how-to-build-a-chat-app)
 - [How to build a forum app](#how-to-build-a-forum-app)
 - [Usage](#usage)
@@ -1178,6 +1183,26 @@ UserProfileAvatar(
   size: 120,
   upload: true,
   delete: true,
+),
+```
+
+
+To customize the look of `UserProfileAvartar`.
+
+```dart
+UserProfileAvatar(
+  user: my,
+  size: 128,
+  radius: 16, // radius
+  upload: true,
+  uploadIcon: const Padding( // upload icon
+    padding: EdgeInsets.all(8.0),
+    child: FaIcon(
+      FontAwesomeIcons.thinPenCircle,
+      size: 32,
+      color: Colors.white,
+    ),
+  ),
 ),
 ```
 
