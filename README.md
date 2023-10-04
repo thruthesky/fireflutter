@@ -229,7 +229,7 @@ To install,
 git clone https://github.com/thruthesky/fireflutter
 cd fireflutter/firebase/functions
 npm i
-firebase use add <project>
+firebase use --add <project>
 npm run deploy
 ```
 
@@ -248,6 +248,12 @@ Security rules for firestore are under `/firebase/firestore/firestore.rules`.
 <!-- TODO: Firestore rule complete update -->
 
 Copy [the security rules of fireflutter](https://raw.githubusercontent.com/thruthesky/fireflutter/main/firebase/firestore/firestore.rules) and paste it in your firebase project. You may need to copy only the parts of the necessary security rules.
+
+<!-- 
+TODO:
+deploy rules on firebase using cli
+ firebase deploy --only <name>.rules
+ -->
 
 ### Security rule for admin
 
@@ -1500,7 +1506,7 @@ class _ChatRoomListreenState extends State<ChatRoomListSreen> {
   }
 ```
 
-- You need to create only one screen to use the easychat.
+<!-- - You need to create only one screen to use the easychat.
 
 ```dart
 Scafolld(
@@ -1508,7 +1514,7 @@ Scafolld(
     title:
   )
 )
-```
+``` -->
 
 ### How to display a chat room
 
@@ -1605,8 +1611,8 @@ Scafolld(
 - The `inviting` means, the invitor will add the `invitee`'s uid into `users` field.
 
   - It is same as `joining`. If the user who wants to join the room, he will simply add his uid into `users` field. That's called `joining`.
-
-- Any one can join the chat room if `/easychat/{id}/{ open: true }`.
+<!-- 
+- Any one can join the chat room if `/easychat/{id}/{ open: true }`. -->
 
   - 1:1 chat room must not have `{open: false}`.
 
@@ -1667,11 +1673,11 @@ InviteUserButton(
 ),
 ```
 
-To programatically, invite a user, follow these codes:
+<!-- To programatically, invite a user, follow these codes:
 
 ```dart
 updatedRoom = await EasyChat.instance.inviteUser(room: chatRoomModel, userUid: user.uid);
-```
+``` -->
 
 See [Chat Room Settings](#chat-room-settings) for more details
 
@@ -1692,13 +1698,13 @@ ChatRoomSettingsOpenListTile(
 
 To programatically update the setting, follow the code below. It will return the room with updated setting.
 
-```dart
+<!-- ```dart
 updatedRoom = await EasyChat.instance.updateRoomSetting(
   room: chatRoomModel,
   setting: 'open',
   value: updatedBoolValue,
 );
-```
+``` -->
 
 - `Maximum Number of User` This number sets the limitation for the number of users in the chat room. If the current number of users is equal or more than this setting, it will not proceed on adding the user.
 
@@ -1713,13 +1719,13 @@ ChatRoomSettingsMaximumUserListTile(
 
 To programatically update the setting, follow the code below. It will return the room with updated setting.
 
-```dart
+<!-- ```dart
 updatedRoom = await EasyChat.instance.updateRoomSetting(
   room: chatRoomModel,
   setting: 'maximumNoOfUsers',
   value: updatedIntValue
 );
-```
+``` -->
 
 - `Default Chat Room Name` The master can use this setting to set the default name of the Group Chat.
 
@@ -1732,7 +1738,7 @@ ChatRoomSettingsDefaultRoomNameListTile(
 ),
 ```
 
-To programatically update the default chat room name, follow the code below. It will return the room with updated setting.
+<!-- To programatically update the default chat room name, follow the code below. It will return the room with updated setting.
 
 ```dart
 updatedRoom = await EasyChat.instance.updateRoomSetting(
@@ -1740,7 +1746,7 @@ updatedRoom = await EasyChat.instance.updateRoomSetting(
   setting: 'name',
   value: updatedName
 );
-```
+``` -->
 
 # User
 
@@ -2954,7 +2960,7 @@ Navigator.of(context).push(
 }
 ```
 
-- Warning! Once a user changes his displayName and photoUrl, `EasyChat.instance.updateUser()` must be called to update user information in easychat.
+<!-- - Warning! Once a user changes his displayName and photoUrl, `EasyChat.instance.updateUser()` must be called to update user information in easychat. -->
 
 # Translation
 

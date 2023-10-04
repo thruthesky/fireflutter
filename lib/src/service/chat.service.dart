@@ -404,6 +404,7 @@ class ChatService {
     required BuildContext context,
     Room? room,
     User? user,
+    String? setMessage,
   }) async {
     assert(
       room != null || user != null,
@@ -422,6 +423,7 @@ class ChatService {
           return ChatRoomScreen(
             room: room,
             user: user,
+            setMessage: setMessage,
           );
         },
       );
