@@ -1,4 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
 
 class FeedService {
   /// create singleton
@@ -109,9 +110,9 @@ class FeedService {
   }
 
   /// Used for updating RTDB feeds to followers' feed
-  Future delete({required Post post}) async {
+  Future delete({required Post post, List<String>? fromUids}) async {
     List<Future> feedDeletes = [];
-    for (String followerUid in my.followers) {
+    for (String followerUid in fromUids ?? my.followers) {
       feedDeletes.add(rtdb.ref('feeds').child(followerUid).child(post.id).remove());
     }
     return await Future.wait(feedDeletes);

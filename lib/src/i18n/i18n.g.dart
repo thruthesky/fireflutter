@@ -84,6 +84,7 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
               "Login first to use the complete functionality.",
       home: json['home'] as String? ?? "Home",
       profile: json['profile'] as String? ?? "Profile",
+      createChatRoom: json['createChatRoom'] as String? ?? "Create chat room",
     );
 
 Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
@@ -144,4 +145,5 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
       'share': instance.share,
       'home': instance.home,
       'profile': instance.profile,
+      'createChatRoom': instance.createChatRoom,
     };

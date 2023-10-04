@@ -48,42 +48,40 @@ class _PostViewScreenState extends State<PostViewScreen> {
     return Scaffold(
       appBar: AppBar(
         title: PostViewTitle(post: _post),
-        actions:
-            PostService.instance.postViewActions(context: context, post: _post),
+        actions: PostService.instance.postViewActions(context: context, post: _post),
       ),
       body: _post == null
           ? const CircularProgressIndicator.adaptive()
-          : SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  PostViewTitle(post: _post),
+          : _post?.deleted == true
+              ? Center(child: Text(_post?.reason ?? 'This post has been deleted.'))
+              : SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PostViewTitle(post: _post),
+                      // user avatar
+                      PostViewMeta(post: _post),
 
-                  // user avatar
-                  PostViewMeta(post: _post),
+                      PostViewContent(post: _post),
 
-                  PostViewContent(post: _post),
+                      YouTube(youtubeId: post.youtubeId, autoPlay: true),
 
-                  YouTube(youtubeId: post.youtubeId, autoPlay: true),
+                      const Divider(),
+                      if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
 
-                  const Divider(),
-                  if (post.urls.isNotEmpty)
-                    ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
+                      //
+                      PostService.instance.customize.postViewButtonBuilder?.call(_post) ??
+                          PostViewButtons(post: _post, middle: const []),
 
-                  //
-                  PostService.instance.customize.postViewButtonBuilder
-                          ?.call(_post) ??
-                      PostViewButtons(post: _post, middle: const []),
-
-                  const Divider(),
-                  CommentListView(
-                    post: post,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
+                      const Divider(),
+                      CommentListView(
+                        post: post,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
+                ),
     );
   }
 }

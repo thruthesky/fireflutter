@@ -33,6 +33,7 @@ class Post {
 
   final List<String> likes;
   final bool? deleted;
+  final String? reason;
   final int noOfComments;
 
   bool get iLiked => likes.contains(my.uid);
@@ -52,6 +53,7 @@ class Post {
     createdAt,
     this.likes = const [],
     this.deleted = false,
+    this.reason,
     this.noOfComments = 0,
   }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
 
@@ -187,6 +189,25 @@ class Post {
     FeedService.instance.update(post: updatedPost);
 
     return updatedPost;
+  }
+
+  /// Delete the post.
+  ///
+  /// This method will delete the post, update the no of posts of the user and the category.
+  /// It will also delete all the feeds of the post.
+  Future<void> delete({String? reason, List<String>? fromUids}) async {
+    await FeedService.instance.delete(post: this, fromUids: fromUids);
+    await update(
+      title: '',
+      content: '',
+      urls: [],
+      youtubeId: '',
+      hashtags: [],
+      data: {
+        'deleted': true,
+        'reason': reason ?? 'Deleted',
+      },
+    );
   }
 
   /// Like or unline the post
