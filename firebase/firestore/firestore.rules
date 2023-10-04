@@ -108,7 +108,10 @@ service cloud.firestore {
 
       allow read: if true;
       allow create: if willBeMyPost() && isEnabled();
-      allow update: if isEnabled() && ( isMyPost() || onlyUpdating(['noOfComments']) );
+      allow update: if 
+        isAdmin() 
+        ||
+        (isEnabled() && ( isMyPost() || onlyUpdating(['noOfComments']) ));
       allow delete: if false;
     }
 
@@ -125,7 +128,7 @@ service cloud.firestore {
 
       allow read: if true; // Anyone should be able to read comments
       allow create: if willBeMyComment();
-      allow update: if isMyComment() || addOrRemove('likes', request.auth.uid);
+      allow update: if isMyComment() || addOrRemove('likes', request.auth.uid) || isAdmin();
       allow delete: if false; // Prevent hard delete in comments
     }
   
@@ -250,7 +253,7 @@ service cloud.firestore {
     // report
     match /reports/{documentId} {
       allow read: if isMyDoc() || isAdmin();
-      allow write: if isMyDoc() || willBeMyDoc();
+      allow write: if isMyDoc() || willBeMyDoc() || isAdmin();
     }
 
     match /readonly/{documentId} {

@@ -22,6 +22,7 @@ Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
       parentId: json['parentId'] as String?,
       sort: json['sort'] as String,
       depth: json['depth'] as int,
+      deletedReason: json['deletedReason'] as String?,
     );
 
 Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
@@ -33,6 +34,7 @@ Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
       'createdAt': const FirebaseDateTimeConverter().toJson(instance.createdAt),
       'likes': instance.likes,
       'deleted': instance.deleted,
+      'deletedReason': instance.deletedReason,
       'parentId': instance.parentId,
       'sort': instance.sort,
       'depth': instance.depth,

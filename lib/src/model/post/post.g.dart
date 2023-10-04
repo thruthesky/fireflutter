@@ -25,6 +25,7 @@ Post _$PostFromJson(Map<String, dynamic> json) => Post(
           (json['likes'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
       deleted: json['deleted'] as bool? ?? false,
+      reason: json['reason'] as String?,
       noOfComments: json['noOfComments'] as int? ?? 0,
     );
 
@@ -40,5 +41,6 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'createdAt': const FirebaseDateTimeConverter().toJson(instance.createdAt),
       'likes': instance.likes,
       'deleted': instance.deleted,
+      'reason': instance.reason,
       'noOfComments': instance.noOfComments,
     };

@@ -56,58 +56,60 @@ class _PostViewScreenState extends State<PostViewScreen> {
       ),
       body: _post == null
           ? const CircularProgressIndicator.adaptive()
-          : SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  PostCard(
-                    headerPadding: widget.headerPadding,
-                    post: _post!,
-                    customMainContentBuilder: (context, post) => CarouselView(
-                      widgets: [
-                        if (post.youtubeId.isNotEmpty) YouTube(youtubeId: post.youtubeId, autoPlay: true),
-                        if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
-                      ],
-                    ),
-                    customMiddleContentBuilder: (context, post) => Column(
-                      crossAxisAlignment: widget.customMiddleContentCrossAxisAlignment,
-                      children: [
-                        PostViewTitle(post: _post),
-                        PostViewContent(post: _post),
-                      ],
-                    ),
-                    customFooterBuilder: (context, post) => CommentListView(
-                      post: post,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                    ),
+          : _post?.deleted == true
+              ? Center(child: Text(_post?.reason ?? 'This post has been deleted.'))
+              : SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PostCard(
+                        headerPadding: widget.headerPadding,
+                        post: _post!,
+                        customMainContentBuilder: (context, post) => CarouselView(
+                          widgets: [
+                            if (post.youtubeId.isNotEmpty) YouTube(youtubeId: post.youtubeId, autoPlay: true),
+                            if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
+                          ],
+                        ),
+                        customMiddleContentBuilder: (context, post) => Column(
+                          crossAxisAlignment: widget.customMiddleContentCrossAxisAlignment,
+                          children: [
+                            PostViewTitle(post: _post),
+                            PostViewContent(post: _post),
+                          ],
+                        ),
+                        customFooterBuilder: (context, post) => CommentListView(
+                          post: post,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                        ),
+                      ),
+                      // PostViewTitle(post: _post),
+
+                      // // user avatar
+                      // PostViewMeta(post: _post),
+
+                      // PostViewContent(post: _post),
+
+                      // CarouselView(
+                      //   widgets: [
+                      //     YouTube(youtubeId: post.youtubeId, autoPlay: true),
+                      //     if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
+                      //   ],
+                      // ),
+
+                      // PostService.instance.customize.postViewButtonBuilder?.call(_post) ??
+                      //     PostViewButtons(post: _post, middle: const []),
+
+                      // const Divider(),
+                      // CommentListView(
+                      //   post: post,
+                      //   shrinkWrap: true,
+                      //   physics: const NeverScrollableScrollPhysics(),
+                      // ),
+                    ],
                   ),
-                  // PostViewTitle(post: _post),
-
-                  // // user avatar
-                  // PostViewMeta(post: _post),
-
-                  // PostViewContent(post: _post),
-
-                  // CarouselView(
-                  //   widgets: [
-                  //     YouTube(youtubeId: post.youtubeId, autoPlay: true),
-                  //     if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
-                  //   ],
-                  // ),
-
-                  // PostService.instance.customize.postViewButtonBuilder?.call(_post) ??
-                  //     PostViewButtons(post: _post, middle: const []),
-
-                  // const Divider(),
-                  // CommentListView(
-                  //   post: post,
-                  //   shrinkWrap: true,
-                  //   physics: const NeverScrollableScrollPhysics(),
-                  // ),
-                ],
-              ),
-            ),
+                ),
     );
   }
 }
