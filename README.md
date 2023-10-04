@@ -249,6 +249,12 @@ Security rules for firestore are under `/firebase/firestore/firestore.rules`.
 
 Copy [the security rules of fireflutter](https://raw.githubusercontent.com/thruthesky/fireflutter/main/firebase/firestore/firestore.rules) and paste it in your firebase project. You may need to copy only the parts of the necessary security rules.
 
+<!-- 
+TODO:
+deploy rules on firebase using cli
+ firebase deploy --only <name>.rules
+ -->
+
 ### Security rule for admin
 
 You can add your uid (or other user's uid) to the `adminUIDs` variable in `isAdmin` function in the security rule. With this way, you don't have to pay extra money for validating the user is admin or not.
