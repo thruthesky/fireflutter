@@ -7,9 +7,11 @@ class ShareBottomSheet extends StatefulWidget {
   const ShareBottomSheet({
     super.key,
     this.actions = const [],
+    this.text,
   });
 
   final List<Widget> actions;
+  final String? text;
 
   @override
   State<ShareBottomSheet> createState() => _ShareBottomSheetState();
@@ -38,7 +40,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
           TextField(
             controller: name,
             decoration: InputDecoration(
-              hintText: "Search friends",
+              hintText: "Search user...",
               prefixIcon: const Icon(Icons.search),
               border: InputBorder.none,
               filled: true,
@@ -62,28 +64,30 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
           const SizedBox(
             height: sizeMd,
           ),
-          const Text("Friends"),
+          StreamBuilder<String?>(
+            stream: nameChanged.stream.debounceTime(const Duration(milliseconds: 500)).distinct((a, b) => a == b),
+            builder: (context, snapshot) {
+              return Text(name.text.isEmpty ? "Users I follow" : "Search result");
+            },
+          ),
           Expanded(
             child: StreamBuilder<String?>(
-                stream: nameChanged.stream
-                    .debounceTime(const Duration(milliseconds: 500))
-                    .distinct((a, b) => a == b),
+                stream: nameChanged.stream.debounceTime(const Duration(milliseconds: 500)).distinct((a, b) => a == b),
                 builder: (context, snapshot) {
-                  return FirestoreListView(
-                    query: name.text.isEmpty
-                        ? userCol
-                        : userCol.where("displayName", isEqualTo: name.text),
-                    itemBuilder: (context, snapshot) {
-                      final user = User.fromDocumentSnapshot(snapshot);
-                      return ListTile(
-                        leading: UserAvatar(
-                          user: user,
-                          size: 32,
-                        ),
-                        title: Text(user.displayName),
-                        subtitle: Text(user.email),
-                        trailing: const Icon(Icons.check),
-                      );
+                  if (name.text.isNotEmpty) {
+                    return FirestoreListView(
+                      query: userCol.where("displayName", isEqualTo: name.text),
+                      itemBuilder: (context, snapshot) {
+                        final user = User.fromDocumentSnapshot(snapshot);
+                        return itemTile(user);
+                      },
+                    );
+                  }
+                  return UserListView.builder(
+                    uids: my.followings,
+                    itemBuilder: (user) {
+                      if (user == null) return const SizedBox();
+                      return itemTile(user);
                     },
                   );
                 }),
@@ -98,6 +102,23 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
           ))
         ],
       ),
+    );
+  }
+
+  Widget itemTile(User user) {
+    return ListTile(
+      leading: UserAvatar(
+        user: user,
+        size: 32,
+      ),
+      title: Text(user.displayName),
+      subtitle: Text(user.email),
+      trailing: const Icon(Icons.check),
+      onTap: () {
+        // TODO other share chat function without showing chat room
+        // Cannot proceed because dynamic link is not working within the app.
+        ChatService.instance.showChatRoom(context: context, user: user, setMessage: widget.text ?? 'Sharing this...');
+      },
     );
   }
 }

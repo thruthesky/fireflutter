@@ -19,9 +19,11 @@ class ChatRoomMessageBox extends StatefulWidget {
   const ChatRoomMessageBox({
     super.key,
     required this.room,
+    this.setMessage,
   });
 
   final Room? room;
+  final String? setMessage;
 
   @override
   State<StatefulWidget> createState() => _ChatRoomMessageBoxState();
@@ -30,6 +32,12 @@ class ChatRoomMessageBox extends StatefulWidget {
 class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
   final TextEditingController message = TextEditingController();
   double? progress;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.setMessage != null) message.text = widget.setMessage!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +63,7 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
                   padding: EdgeInsets.zero,
                   onPressed: () async {
                     if (widget.room == null) {
-                      toast(
-                          title: 'Wait...',
-                          message: 'The room is not ready yet.');
+                      toast(title: 'Wait...', message: 'The room is not ready yet.');
                       return;
                     }
                     final url = await StorageService.instance.upload(
@@ -68,8 +74,7 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
                       progress: (p) => setState(() => progress = p),
                       complete: () => setState(() => progress = null),
                     );
-                    await ChatService.instance
-                        .sendMessage(room: widget.room!, url: url);
+                    await ChatService.instance.sendMessage(room: widget.room!, url: url);
                   },
                 ),
                 Expanded(
@@ -86,9 +91,7 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
                 IconButton(
                   onPressed: () async {
                     if (widget.room == null) {
-                      toast(
-                          title: 'Wait...',
-                          message: 'The room is not ready yet.');
+                      toast(title: 'Wait...', message: 'The room is not ready yet.');
                       return;
                     }
                     if (message.text.isEmpty) return;
