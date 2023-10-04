@@ -25,64 +25,62 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
   final password = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    // TODO needs review because this might be needed
-    return const SizedBox.shrink();
-    // return AuthChange(
-    //   builder: (user) => user == null
-    //       ? Column(
-    //           mainAxisSize: MainAxisSize.min,
-    //           children: [
-    //             Padding(
-    //               padding: widget.emailPadding,
-    //               child: TextField(
-    //                 controller: email,
-    //                 decoration: const InputDecoration(label: Text('Email')),
-    //                 keyboardType: TextInputType.emailAddress,
-    //               ),
-    //             ),
-    //             Padding(
-    //               padding: widget.passwordPadding,
-    //               child: TextField(
-    //                 controller: password,
-    //                 decoration: const InputDecoration(label: Text('Password')),
-    //               ),
-    //             ),
-    //             Row(
-    //               children: [
-    //                 if (widget.register)
-    //                   ElevatedButton(
-    //                     onPressed: () async {
-    //                       await FirebaseAuth.instance
-    //                           .createUserWithEmailAndPassword(email: email.text, password: password.text);
-    //                       widget.onLogin?.call();
-    //                     },
-    //                     child: const Text(
-    //                       'Register',
-    //                     ),
-    //                   ),
-    //                 const Spacer(),
-    //                 ElevatedButton(
-    //                   onPressed: () async {
-    //                     await FirebaseAuth.instance
-    //                         .signInWithEmailAndPassword(email: email.text, password: password.text);
-    //                     widget.onLogin?.call();
-    //                   },
-    //                   child: const Text(
-    //                     'Login',
-    //                   ),
-    //                 ),
-    //               ],
-    //             ),
-    //           ],
-    //         )
-    //       : Column(
-    //           mainAxisSize: MainAxisSize.min,
-    //           children: [
-    //             const Text('You have logged in'),
-    //             Text('uid: ${user.uid}'),
-    //             ElevatedButton(onPressed: () => UserService.instance.signOut(), child: const Text('Logout'))
-    //           ],
-    //         ),
-    // );
+    return AuthChange(
+      builder: (user) => user == null
+          ? Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: widget.emailPadding,
+                  child: TextField(
+                    controller: email,
+                    decoration: const InputDecoration(label: Text('Email')),
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                ),
+                Padding(
+                  padding: widget.passwordPadding,
+                  child: TextField(
+                    controller: password,
+                    decoration: const InputDecoration(label: Text('Password')),
+                  ),
+                ),
+                Row(
+                  children: [
+                    if (widget.register)
+                      ElevatedButton(
+                        onPressed: () async {
+                          await FirebaseAuth.instance
+                              .createUserWithEmailAndPassword(email: email.text, password: password.text);
+                          widget.onLogin?.call();
+                        },
+                        child: const Text(
+                          'Register',
+                        ),
+                      ),
+                    const Spacer(),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await FirebaseAuth.instance
+                            .signInWithEmailAndPassword(email: email.text, password: password.text);
+                        widget.onLogin?.call();
+                      },
+                      child: const Text(
+                        'Login',
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            )
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('You have logged in'),
+                Text('uid: ${user.uid}'),
+                ElevatedButton(onPressed: () => UserService.instance.signOut(), child: const Text('Logout'))
+              ],
+            ),
+    );
   }
 }
