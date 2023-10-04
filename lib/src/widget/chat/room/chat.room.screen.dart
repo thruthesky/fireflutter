@@ -6,10 +6,12 @@ class ChatRoomScreen extends StatefulWidget {
     super.key,
     this.room,
     this.user,
+    this.setMessage,
   });
 
   final Room? room;
   final User? user;
+  final String? setMessage;
 
   @override
   State<ChatRoomScreen> createState() => _ChatRoomState();
@@ -30,27 +32,19 @@ class _ChatRoomState extends State<ChatRoomScreen> {
         }
       } else {
         // If this take time, provide the room model without await. It may be passed from the previous of previous screen, Or it can be saved in a state.
-        room = await ChatService.instance
-            .getOrCreateSingleChatRoom(widget.user!.uid);
+        room = await ChatService.instance.getOrCreateSingleChatRoom(widget.user!.uid);
         setState(() {});
       }
-
       ChatService.instance.resetNoOfNewMessage(room: room!);
-
-      // Why do we need to clear last message when somebody enters the chat room?
-      // ChatService.instance.clearLastMessage();
     })();
   }
 
-  String get roomId => widget.user != null
-      ? ChatService.instance.getSingleChatRoomId(widget.user!.uid)
-      : room!.roomId;
+  String get roomId => widget.user != null ? ChatService.instance.getSingleChatRoomId(widget.user!.uid) : room!.roomId;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ChatService.instance.customize.chatRoomAppBarBuilder
-              ?.call(room: room, user: widget.user) ??
+      appBar: ChatService.instance.customize.chatRoomAppBarBuilder?.call(room: room, user: widget.user) ??
           ChatRoomAppBar(room: room, user: widget.user),
       body: Column(
         children: [
@@ -61,7 +55,10 @@ class _ChatRoomState extends State<ChatRoomScreen> {
                     roomId: roomId,
                   ),
           ),
-          ChatRoomMessageBox(room: room),
+          ChatRoomMessageBox(
+            room: room,
+            setMessage: widget.setMessage,
+          ),
         ],
       ),
     );
