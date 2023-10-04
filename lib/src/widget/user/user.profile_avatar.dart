@@ -38,6 +38,7 @@ class UserProfileAvatar extends StatefulWidget {
     this.badgeNumber,
     this.upload = false,
     this.delete = false,
+    this.uploadIcon,
     this.onUploadSuccess,
     this.onDeleteSuccess,
     this.uploadStrokeWidth = 6,
@@ -55,6 +56,7 @@ class UserProfileAvatar extends StatefulWidget {
   final int? badgeNumber;
   final bool upload;
   final bool delete;
+  final Widget? uploadIcon;
   final double uploadStrokeWidth;
   final double shadowBlurRadius;
   final Widget? defaultIcon;
@@ -134,11 +136,12 @@ class _UserAvatarState extends State<UserProfileAvatar> {
             Positioned(
               right: 0,
               bottom: 0,
-              child: Icon(
-                Icons.camera_alt,
-                color: Colors.grey.shade800,
-                size: 32,
-              ),
+              child: widget.uploadIcon ??
+                  Icon(
+                    Icons.camera_alt,
+                    color: Colors.grey.shade800,
+                    size: 32,
+                  ),
             ),
           if (widget.delete && widget.user.photoUrl.isNotEmpty)
             Positioned(

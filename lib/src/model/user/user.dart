@@ -87,6 +87,12 @@ class User {
   /// LocalSttroage 에 캐시된 경우, 현재 시간, 아니면, Firestore 서버 시간
   DateTime get createdAt => data['createdAt'] is Timestamp ? (data['createdAt'] as Timestamp).toDate() : DateTime.now();
 
+  /// Gets the birthdate using the birthYear, birthMonth, and birthDay of the user
+  DateTime get birthdate => DateTime(birthYear, birthMonth, birthDay);
+
+  /// Gets the age of the user
+  int get age => DateTime.now().difference(birthdate).inDays ~/ 365;
+
   /// Set this to true when the user has completed the profile.
   /// This should be set when the user submit the profile form.
   ///
@@ -356,9 +362,10 @@ class User {
   ///
   /// Returns true if liked a user. Returns false if unliked a user.
   Future<bool> like(String uid) async {
-    bool isLiked = await toggle('likes/$uid');
+    bool isLiked = await toggle(pathUserLiked(uid));
 
-    UserService.instance.onToggleLike(this, isLiked);
+    UserService.instance.sendNotificationOnLike(this, isLiked);
+    UserService.instance.onLike?.call(this, isLiked);
 
     return isLiked;
   }

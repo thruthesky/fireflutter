@@ -15,8 +15,11 @@ class CommentService {
   Function(Comment)? onCreate;
   Function(Comment)? onUpdate;
 
+  /// [onLike] is called when a comment is liked or unliked by the login user.
+  void Function(Comment comment, bool isLiked)? onLike;
+
   // Enable/Disable push notification when post is liked
-  bool enableNotificationOnLike = true;
+  bool enableNotificationOnLike = false;
 
   init({
     bool uploadFromGallery = true,
@@ -24,8 +27,9 @@ class CommentService {
     bool uploadFromFile = true,
     void Function(Comment)? onCreate,
     void Function(Comment)? onUpdate,
+    void Function(Comment comment, bool isLiked)? onLike,
     CommentCustomize? customize,
-    bool enableNotificationOnLike = true,
+    bool enableNotificationOnLike = false,
   }) {
     this.uploadFromGallery = uploadFromGallery;
     this.uploadFromCamera = uploadFromCamera;
@@ -33,6 +37,8 @@ class CommentService {
 
     this.onCreate = onCreate;
     this.onUpdate = onUpdate;
+
+    this.onLike = onLike;
 
     this.enableNotificationOnLike = enableNotificationOnLike;
 
@@ -156,14 +162,14 @@ class CommentService {
 
   /// Callback function when a comment is liked or unliked.
   /// send only when user liked the comment.
-  Future onToggleLike(Comment comment, bool isLiked) async {
-    if (!enableNotificationOnLike) return;
-    if (!isLiked) return;
-    if (!loggedIn) return;
+  Future sendNotificationOnLike(Comment comment, bool isLiked) async {
+    if (enableNotificationOnLike == false) return;
+    if (isLiked == false) return;
+
     MessagingService.instance.queue(
-      title: comment.content,
-      body: "${my.name} liked your comment",
-      id: myUid,
+      title: "${my.name} liked your comment",
+      body: comment.content,
+      id: comment.postId,
       uids: [comment.uid],
       type: NotificationType.post.name,
     );

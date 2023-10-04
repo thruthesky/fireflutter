@@ -3,3 +3,4 @@ export 'enum/action.dart';
 export 'enum/dynamic_link.dart';
 export 'enum/push_notification_type.dart';
 export 'enum/storage.dart';
+export 'enum/gender.dart';

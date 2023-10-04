@@ -14,8 +14,7 @@ import 'package:fireflutter/fireflutter.dart';
 /// final value = await get('/settings/abc/path/to/node');
 /// ```
 Future<T?> get<T>(String path) async {
-  final event =
-      await FirebaseDatabase.instance.ref(path).once(DatabaseEventType.value);
+  final event = await FirebaseDatabase.instance.ref(path).once(DatabaseEventType.value);
   if (!event.snapshot.exists) {
     return null;
   }
@@ -28,8 +27,7 @@ Future<T?> get<T>(String path) async {
 ///
 /// ! It returns an empty list if the node does not exist.
 Future<List<String>> getKeys(String path) async {
-  final event =
-      await FirebaseDatabase.instance.ref(path).once(DatabaseEventType.value);
+  final event = await FirebaseDatabase.instance.ref(path).once(DatabaseEventType.value);
   if (!event.snapshot.exists) {
     return [];
   }
@@ -77,6 +75,8 @@ Future<void> update(String path, Map<String, Object?> value) async {
 ///
 /// If the node of the [path] does not exist, create it and return true.
 /// if the node exists, then remove it and return false.
+///
+/// Note* dont use directly, must be called from model or service
 Future<bool> toggle(String path) async {
   final value = await get<bool?>(path);
 

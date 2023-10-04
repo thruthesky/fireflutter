@@ -156,6 +156,9 @@ class Comment {
     return deletedComment;
   }
 
+  /// This method must be the only method to like or unlike Comment. Don't it in
+  /// another way.
+  ///
   /// Likes or Unlikes the comment
   ///
   /// If I already liked (iLiked == true)
@@ -167,7 +170,12 @@ class Comment {
       return null;
     }
     bool isLiked = await toggle(pathCommentLikedBy(id));
-    CommentService.instance.onToggleLike(this, isLiked);
+
+    /// call back when the comment is liked or unliked
+    CommentService.instance.sendNotificationOnLike(this, isLiked);
+
+    CommentService.instance.onLike?.call(this, isLiked);
+
     return isLiked;
   }
 

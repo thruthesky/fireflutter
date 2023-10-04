@@ -27,7 +27,7 @@ class PostService {
   void Function(Post post, bool isLiked)? onLike;
 
   // Enable/Disable push notification when post is liked
-  bool enableNotificationOnLike = true;
+  bool enableNotificationOnLike = false;
 
   init({
     bool uploadFromGallery = true,
@@ -209,9 +209,9 @@ class PostService {
     if (isLiked == false) return;
 
     MessagingService.instance.queue(
-      title: post.title,
-      body: "${my.name} liked your post.",
-      id: myUid,
+      title: "${my.name} liked your post.",
+      body: post.title,
+      id: post.id,
       uids: [post.uid],
       type: NotificationType.post.name,
     );

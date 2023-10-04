@@ -1,26 +1,27 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-/// UserReady
+/// AuthChange
 ///
-/// Builder widget that returns a [User] object when the "authStateChanges"
-/// event fires.
+/// Builder widget that returns a firebase [User] object when the
+/// [authStateChanges] event fires.
 ///
-/// This widget is useful for determining if the user is logged in or not.
-/// If the user is logged in, the [User] object will be returned. Or else,
-/// the [User] object will be null and it means the user is not logged in.
+/// This is useful for determining if the user is logged in or not from/to the
+/// firebase authentication.
+/// If the user is logged in, the [User] object will be passwd over the
+/// parameter. Or else, null will be passed.
 ///
 /// Example:
 /// ```dart
-/// UserReady(builder: (user) {
+/// AuthChange(builder: (user) {
 ///   if (user == null) {
 ///     return const Text('User is not logged in.');
 ///   }
 ///   return const Text('User is logged in.');
 /// }
 /// ```
-class UserReady extends StatelessWidget {
-  const UserReady({super.key, required this.builder});
+class AuthChange extends StatelessWidget {
+  const AuthChange({super.key, required this.builder});
 
   final Widget Function(User?) builder;
 

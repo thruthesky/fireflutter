@@ -273,10 +273,7 @@ ScaffoldFeatureController loginFirstToast({
 /// Confirm dialgo
 ///
 /// It requires build context where [toast] does not.
-Future<bool?> confirm(
-    {required BuildContext context,
-    required String title,
-    required String message}) {
+Future<bool?> confirm({required BuildContext context, required String title, required String message}) {
   return showDialog<bool?>(
     context: context,
     builder: (BuildContext context) {
@@ -301,10 +298,7 @@ Future<bool?> confirm(
 /// Display an alert box.
 ///
 /// It requires build context where [toast] does not.
-Future alert(
-    {required BuildContext context,
-    required String title,
-    required String message}) {
+Future alert({required BuildContext context, required String title, required String message}) {
   return showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -413,14 +407,10 @@ String? getYoutubeIdFromUrl(String url, {bool trimWhitespaces = true}) {
   if (trimWhitespaces) url = url.trim();
 
   for (var exp in [
-    RegExp(
-        r"^https:\/\/(?:www\.|m\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
-    RegExp(
-        r"^https:\/\/(?:music\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
-    RegExp(
-        r"^https:\/\/(?:www\.|m\.)?youtube\.com\/shorts\/([_\-a-zA-Z0-9]{11}).*$"),
-    RegExp(
-        r"^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/([_\-a-zA-Z0-9]{11}).*$"),
+    RegExp(r"^https:\/\/(?:www\.|m\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
+    RegExp(r"^https:\/\/(?:music\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
+    RegExp(r"^https:\/\/(?:www\.|m\.)?youtube\.com\/shorts\/([_\-a-zA-Z0-9]{11}).*$"),
+    RegExp(r"^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/([_\-a-zA-Z0-9]{11}).*$"),
     RegExp(r"^https:\/\/youtu\.be\/([_\-a-zA-Z0-9]{11}).*$")
   ]) {
     Match? match = exp.firstMatch(url);
@@ -454,22 +444,20 @@ String getYoutubeThumbnail({
   String quality = YoutubeThumbnailQuality.standard,
   bool webp = true,
 }) =>
-    webp
-        ? 'https://i3.ytimg.com/vi_webp/$videoId/$quality.webp'
-        : 'https://i3.ytimg.com/vi/$videoId/$quality.jpg';
+    webp ? 'https://i3.ytimg.com/vi_webp/$videoId/$quality.webp' : 'https://i3.ytimg.com/vi/$videoId/$quality.jpg';
 
 /// It opens the SMS app with the number and message.
 ///
 /// Use this to open SMS with default number and text message.
 ///
-Future<bool> launchSMS({required String phnumber, required String msg}) async {
+Future<bool> launchSMS({required String phoneNumber, required String msg}) async {
   // Android 'sms:+39 348 060 888?body=hello%20there';
   String body = Uri.encodeComponent(msg);
 
-  String androidPh = phnumber.replaceAll("(", "").replaceAll(")", "");
+  String androidPh = phoneNumber.replaceAll("(", "").replaceAll(")", "");
   String androidUri = 'sms:$androidPh?body=$body';
 
-  String iosPh = phnumber
+  String iosPh = phoneNumber
       .replaceAll("+", "00")
       .replaceAll("(", "")
       .replaceAll(")", ""); //'sms:0039-222-060-888?body=hello%20there';
