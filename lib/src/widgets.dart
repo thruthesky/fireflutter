@@ -3,8 +3,9 @@
 export 'widget/user/user.avatar.dart';
 export 'widget/user/user.profile_avatar.dart';
 export 'widget/user/user_doc.dart';
-export 'widget/user/auth_change.dart';
-export 'widget/user/user_doc.ready.dart';
+// TODO review because these might be needed
+// export 'widget/user/auth_change.dart';
+// export 'widget/user/user_doc.ready.dart';
 export 'widget/common/avatar.dart';
 export 'widget/user/admin.dart';
 export 'widget/admin/admin.user.list_view.dart';
