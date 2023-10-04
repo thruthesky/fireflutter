@@ -83,9 +83,11 @@ class User {
   ///
   final bool hasPhotoUrl;
 
-  /// 사용자 문서가 생성된 시간. 항상 존재 해야 함.
-  /// LocalSttroage 에 캐시된 경우, 현재 시간, 아니면, Firestore 서버 시간
-  DateTime get createdAt => data['createdAt'] is Timestamp ? (data['createdAt'] as Timestamp).toDate() : DateTime.now();
+  /// TODO - Since we removed easy-extension, We don't know when the document is being created.
+  /// TODO - Check user document creation time in UserService and if there is not [createdAt], add one.
+  ///
+  @FirebaseDateTimeConverter()
+  final DateTime createdAt;
 
   /// Gets the birthdate using the birthYear, birthMonth, and birthDay of the user
   DateTime get birthdate => DateTime(birthYear, birthMonth, birthDay);
@@ -142,17 +144,18 @@ class User {
     this.followings = const [],
     this.cached = false,
     this.likes = const [],
+    required this.createdAt,
   });
 
   factory User.notExists({String uid = ''}) {
-    return User(uid: uid, exists: false);
+    return User(uid: uid, exists: false, createdAt: DateTime.now());
   }
 
   /// Returns a user with uid. All other properties are empty.
   ///
   ///
   factory User.fromUid(String uid) {
-    return User(uid: uid);
+    return User(uid: uid, createdAt: DateTime.now());
   }
 
   factory User.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {

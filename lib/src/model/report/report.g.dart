@@ -13,7 +13,7 @@ Report _$ReportFromJson(Map<String, dynamic> json) => Report(
       postId: json['postId'] as String?,
       commentId: json['commentId'] as String?,
       type: json['type'] as String,
-      createdAt: json['createdAt'],
+      createdAt: const FirebaseDateTimeConverter().fromJson(json['createdAt']),
     );
 
 Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{

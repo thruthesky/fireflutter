@@ -49,11 +49,11 @@ class Post {
     this.uid = '',
     this.hashtags = const [],
     this.urls = const [],
-    createdAt,
+    required this.createdAt,
     this.likes = const [],
     this.deleted = false,
     this.noOfComments = 0,
-  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
+  });
 
   factory Post.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     /// Save the list of uids who saw the post.

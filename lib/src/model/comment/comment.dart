@@ -43,13 +43,13 @@ class Comment {
     this.content = '',
     required this.uid,
     this.urls = const [],
-    dynamic createdAt,
+    required this.createdAt,
     this.likes = const [],
     this.deleted = false,
     this.parentId,
     required this.sort,
     required this.depth,
-  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
+  });
 
   factory Comment.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     return Comment.fromJson({

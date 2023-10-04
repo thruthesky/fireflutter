@@ -179,7 +179,7 @@ class _TestScreenState extends State<TestUi> {
 
   Future testUser() async {
     // create empty object
-    final user = User(uid: 'uid');
+    final user = User(uid: 'uid', createdAt: DateTime.now());
     test(user.uid == 'uid', 'uid must be uid');
 
     // create object from json
@@ -191,7 +191,8 @@ class _TestScreenState extends State<TestUi> {
     String uid = FirebaseAuth.instance.currentUser!.uid;
     // log('uid; $uid');
     await User.doc(uid).delete();
-    await createTestUser(User(uid: uid, displayName: 'displayName$uid', email: '$uid@email.com'));
+    await createTestUser(
+        User(uid: uid, displayName: 'displayName$uid', email: '$uid@email.com', createdAt: DateTime.now()));
     final user2 = await User.get(uid) as User;
     test(user2.uid == uid, 'uid must be $uid');
     test(user2.displayName == 'displayName$uid', 'displayName must be displayName$uid');

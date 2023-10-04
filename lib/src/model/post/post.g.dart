@@ -20,7 +20,7 @@ Post _$PostFromJson(Map<String, dynamic> json) => Post(
       urls:
           (json['urls'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
-      createdAt: json['createdAt'],
+      createdAt: const FirebaseDateTimeConverter().fromJson(json['createdAt']),
       likes:
           (json['likes'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],

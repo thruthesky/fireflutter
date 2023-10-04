@@ -10,7 +10,7 @@ Category _$CategoryFromJson(Map<String, dynamic> json) => Category(
       id: json['id'] as String,
       name: json['name'] as String? ?? '',
       description: json['description'] as String?,
-      createdAt: json['createdAt'],
+      createdAt: const FirebaseDateTimeConverter().fromJson(json['createdAt']),
     );
 
 Map<String, dynamic> _$CategoryToJson(Category instance) => <String, dynamic>{

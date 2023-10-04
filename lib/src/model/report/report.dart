@@ -12,7 +12,6 @@ class Report {
   final String type;
 
   @FirebaseDateTimeConverter()
-  @JsonKey(includeFromJson: true, includeToJson: true)
   final DateTime createdAt;
 
   Report({
@@ -22,8 +21,8 @@ class Report {
     this.postId,
     this.commentId,
     required this.type,
-    dynamic createdAt,
-  }) : createdAt = createdAt is Timestamp ? createdAt.toDate() : DateTime.now();
+    required this.createdAt,
+  });
 
   factory Report.fromDocumentSnapshot(DocumentSnapshot doc) {
     return Report.fromJson({...doc.data() as Map<String, dynamic>, 'id': doc.id});

@@ -44,6 +44,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       likes:
           (json['likes'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
+      createdAt: const FirebaseDateTimeConverter().fromJson(json['createdAt']),
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -70,6 +71,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'noOfComments': instance.noOfComments,
       'type': instance.type,
       'hasPhotoUrl': instance.hasPhotoUrl,
+      'createdAt': const FirebaseDateTimeConverter().toJson(instance.createdAt),
       'isComplete': instance.isComplete,
       'followers': instance.followers,
       'followings': instance.followings,

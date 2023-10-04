@@ -12,7 +12,7 @@ Message _$MessageFromJson(Map<String, dynamic> json) => Message(
       url: json['url'] as String?,
       protocol: json['protocol'] as String?,
       uid: json['uid'] as String? ?? "",
-      createdAt: json['createdAt'],
+      createdAt: const FirebaseDateTimeConverter().fromJson(json['createdAt']),
       previewUrl: json['previewUrl'] as String?,
       previewTitle: json['previewTitle'] as String?,
       previewDescription: json['previewDescription'] as String?,
