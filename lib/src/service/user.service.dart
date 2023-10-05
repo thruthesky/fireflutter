@@ -200,6 +200,9 @@ class UserService {
     this.enableNoOfProfileView = enableNoOfProfileView;
     this.enableMessagingOnPublicProfileVisit = enableMessagingOnPublicProfileVisit;
     this.onCreate = onCreate;
+
+    /// [onUpdate] will be triggered every time user is being updated.
+    /// See user.dart and check the [update] method.
     this.onUpdate = onUpdate;
     this.onDelete = onDelete;
     this.onSignout = onSignout;
