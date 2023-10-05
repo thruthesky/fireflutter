@@ -21,6 +21,9 @@ class CommentListView extends StatefulWidget {
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.clipBehavior = Clip.hardEdge,
     required this.post,
+    this.commentTileRunSpacing = 8,
+    this.commentTilePadding,
+    this.commentTileTopSpacing = 8,
   });
 
   final int pageSize;
@@ -35,7 +38,9 @@ class CommentListView extends StatefulWidget {
   final DragStartBehavior dragStartBehavior;
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final Clip clipBehavior;
-
+  final double commentTileRunSpacing;
+  final EdgeInsetsGeometry? commentTilePadding;
+  final double commentTileTopSpacing;
   final Post post;
 
   @override
@@ -52,7 +57,9 @@ class CommentListViewState extends State<CommentListView> {
         if (widget.itemBuilder != null) {
           return widget.itemBuilder!(context, comment);
         }
-        return CommentListTile(
+        return CommentOneLineListTile(
+          runSpacing: widget.commentTileRunSpacing,
+          padding: widget.commentTilePadding,
           post: widget.post,
           comment: comment,
         );
