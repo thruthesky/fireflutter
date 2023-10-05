@@ -60,11 +60,13 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    UserDoc(
-                      uid: widget.comment.uid,
-                      builder: (user) => Text(
-                        user.name,
-                        style: Theme.of(context).textTheme.labelMedium,
+                    Flexible(
+                      child: UserDoc(
+                        uid: widget.comment.uid,
+                        builder: (user) => Text(
+                          user.name,
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
                       ),
                     ),
                     SizedBox(width: widget.runSpacing),

@@ -20,7 +20,6 @@ class CommentTileState extends State<CommentListTile> {
   @override
   Widget build(BuildContext context) {
     if (widget.comment.deleted == true) {
-      // TODO really need to review logic for customizer
       return Container(
         margin: const EdgeInsets.only(
           left: sizeSm,
