@@ -100,7 +100,7 @@ export class Messaging {
       const post = await Post.get(data.postId);
       uids.push(post.uid); // post owner
       data.categoryId = post.categoryId;
-      data.title = post.title;
+      data.title = post.deleted == true ? "Deleted post..." : post.title ?? "Comment on post...";
       console.log("comment::post::", JSON.stringify(post));
       console.log("comment::data::", JSON.stringify(data));
     }
