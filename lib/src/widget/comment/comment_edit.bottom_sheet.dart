@@ -156,7 +156,7 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
                 }
                 content.text = '';
                 if (widget.onEdited != null) {
-                  widget.onEdited!(comment);
+                  await widget.onEdited!(comment);
                 }
               },
             ),

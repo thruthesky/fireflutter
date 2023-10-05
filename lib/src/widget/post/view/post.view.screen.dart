@@ -7,7 +7,7 @@ class PostViewScreen extends StatefulWidget {
     this.post,
     this.postId,
     this.customMiddleContentCrossAxisAlignment = CrossAxisAlignment.start,
-    this.headerPadding = const EdgeInsets.only(bottom: sizeSm, left: sizeSm, right: sizeSm),
+    this.headerPadding = const EdgeInsets.all(sizeSm),
   });
 
   final Post? post;
@@ -79,11 +79,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
                             PostViewContent(post: _post),
                           ],
                         ),
-                        customActionsBuilder: (context, post) =>
-                            PostService.instance.customize.postViewButtonBuilder?.call(_post) ??
-                            PostViewButtons(post: _post, middle: const []),
                         customFooterBuilder: (context, post) => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: sizeSm),
+                          padding: const EdgeInsets.only(left: sizeSm, top: sizeSm),
                           child: CommentListView(
                             commentTileTopSpacing: 8,
                             post: post,

@@ -10,12 +10,12 @@ class PostViewTitle extends StatelessWidget {
       right: sizeSm,
       top: sizeSm,
     ),
-    this.contentBackground = Colors.white,
+    this.contentBackground,
   });
 
   final Post? post;
   final EdgeInsetsGeometry padding;
-  final Color contentBackground;
+  final Color? contentBackground;
 
   @override
   Widget build(BuildContext context) {
