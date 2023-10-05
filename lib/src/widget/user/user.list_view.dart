@@ -80,7 +80,11 @@ class UserListView extends StatelessWidget {
       pageSize: pageSize,
       query: query,
       builder: (context, snapshot, _) {
-        if (snapshot.isFetching) return const CircularProgressIndicator();
+        if (snapshot.isFetching) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         if (snapshot.hasError) {
           return Text('Something went wrong! ${snapshot.error}');
         }
