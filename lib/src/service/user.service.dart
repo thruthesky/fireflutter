@@ -235,7 +235,7 @@ class UserService {
       ///
       if (!documentSnapshot.exists || documentSnapshot.data() == null) {
         await User.create(uid: myUid!);
-        _listenUserDocument();
+        // _listenUserDocument();
       } else {
         nullableUser = User.fromDocumentSnapshot(documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
       }
