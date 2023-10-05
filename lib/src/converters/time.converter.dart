@@ -10,7 +10,7 @@ class FirebaseDateTimeConverter implements JsonConverter<DateTime, dynamic> {
   DateTime fromJson(dynamic data) {
     // The createdAt may be int (from RTDB) or Timestamp (from Fireestore), or null.
     if (data is int) {
-      return DateTime.fromMillisecondsSinceEpoch(data);
+      return DateTime.fromMillisecondsSinceEpoch((data).abs());
     } else if (data is Timestamp) {
       return data.toDate();
     } else {
