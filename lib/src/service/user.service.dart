@@ -20,6 +20,9 @@ import 'package:rxdart/rxdart.dart';
 /// my.update(state: stateController.text);
 User get my => UserService.instance.user;
 
+auth.User get currentUser => auth.FirebaseAuth.instance.currentUser!;
+String get providerId => currentUser.providerData.first.providerId;
+
 bool get isAnonymous => auth.FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
 
 /// Return true if the user signed with real account. Not anonymous.
@@ -155,6 +158,8 @@ class UserService {
   Function(User user)? onUpdate;
   Function(User user)? onDelete;
 
+  Function(User user)? onSignout;
+
   bool enableNoOfProfileView = false;
 
   /// If [enableMessagingOnPublicProfileVisit] is set to true it will send push notification
@@ -178,6 +183,7 @@ class UserService {
     Function(User user)? onCreate,
     Function(User user)? onUpdate,
     Function(User user)? onDelete,
+    Function(User user)? onSignout,
     UserCustomize? customize,
     bool enableMessagingOnPublicProfileVisit = false,
     void Function(User user, bool isLiked)? onLike,
@@ -194,8 +200,12 @@ class UserService {
     this.enableNoOfProfileView = enableNoOfProfileView;
     this.enableMessagingOnPublicProfileVisit = enableMessagingOnPublicProfileVisit;
     this.onCreate = onCreate;
+
+    /// [onUpdate] will be triggered every time user is being updated.
+    /// See user.dart and check the [update] method.
     this.onUpdate = onUpdate;
     this.onDelete = onDelete;
+    this.onSignout = onSignout;
 
     this.onLike = onLike;
     this.enableNotificationOnLike = enableNotificationOnLike;
@@ -296,6 +306,7 @@ class UserService {
 
   /// Sign out from Firebase Auth
   Future<void> signOut() async {
+    await onSignout?.call(my);
     await auth.FirebaseAuth.instance.signOut();
   }
 
@@ -458,7 +469,6 @@ class UserService {
   Future deleteDocuments() async {
     await my.delete();
     await myPrivateDoc.delete();
-    // await rtdb.ref('users/$myUid').remove();
   }
 
   showLikedByListScreen({required BuildContext context, required List<String> uids}) {

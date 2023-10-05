@@ -1,3 +1,6 @@
+/// depth and maxDepth must not be more than 9
+const int maxDepth = 9;
+
 /// Gets the sort sortString string
 ///
 /// [sortString] is the sort string. It must come from the parent's comment.
@@ -37,10 +40,10 @@ String getCommentSortString({
     final firstPart = 100000 + noOfComments;
     return '$firstPart.100000.100000.100000.100000.100000.100000.100000.100000.100000';
   } else {
+    if (depth > maxDepth) depth = maxDepth;
     List<String> parts = sortString.split('.');
     String block = parts[depth];
-    int computed =
-        int.parse(block) + noOfComments + 1; // 처음이 0일 수 있다. 0이면, 부모와 같아서 안됨.
+    int computed = int.parse(block) + noOfComments + 1; // 처음이 0일 수 있다. 0이면, 부모와 같아서 안됨.
     parts[depth] = computed.toString();
     sortString = parts.join('.');
     return sortString;

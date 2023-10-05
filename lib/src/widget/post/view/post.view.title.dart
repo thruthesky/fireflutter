@@ -22,7 +22,8 @@ class PostViewTitle extends StatelessWidget {
     return Container(
       padding: padding,
       color: contentBackground,
-      child: Text(post!.title.replaceAll("\n", " "), style: Theme.of(context).textTheme.titleMedium),
+      child:
+          Text(post != null ? post!.title.replaceAll("\n", " ") : '', style: Theme.of(context).textTheme.titleMedium),
     );
   }
 }

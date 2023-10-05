@@ -117,6 +117,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
       onTap: () {
         // TODO other share chat function without showing chat room
         // Cannot proceed because dynamic link is not working within the app.
+        // https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=40666571
         ChatService.instance.showChatRoom(context: context, user: user, setMessage: widget.text ?? 'Sharing this...');
       },
     );

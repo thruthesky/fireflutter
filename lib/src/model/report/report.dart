@@ -144,16 +144,15 @@ class Report {
       await comment.delete(reason: reason);
       debugPrint("Deleting comment");
       toast(title: 'Deleted', message: 'Comment was deleted successfully');
-      // TODO comment view delete
     } else if (type == 'post') {
       final post = await Post.get(postId!);
       final otherUser = await User.get(post.uid);
       post.delete(reason: reason, fromUids: otherUser!.followers);
       debugPrint("Deleting post");
       toast(title: 'Deleted', message: 'Post was deleted successfully');
-      // TODO post view delete
     } else if (type == 'user') {
       // TODO user block/disable
+      // github task https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=40666380
       // await userDoc(id).delete();
     } else {
       // means the type is not handled yet

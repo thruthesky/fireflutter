@@ -10,7 +10,7 @@ class FirebaseDateTimeConverter implements JsonConverter<DateTime, dynamic> {
   DateTime fromJson(dynamic data) {
     // The createdAt may be int (from RTDB) or Timestamp (from Fireestore), or null.
     if (data is int) {
-      return DateTime.fromMillisecondsSinceEpoch(data);
+      return DateTime.fromMillisecondsSinceEpoch((data).abs());
     } else if (data is Timestamp) {
       return data.toDate();
     } else {
@@ -18,7 +18,7 @@ class FirebaseDateTimeConverter implements JsonConverter<DateTime, dynamic> {
     }
   }
 
-  /// Warning, this will return an integer of the milliseconds since epoch.
+  /// ! Warning, this will return an integer of the milliseconds since epoch.
   /// So, you cannot directly save it as a timestamp in Firestore or RTDB.
   @override
   int toJson(DateTime object) => object.millisecondsSinceEpoch;

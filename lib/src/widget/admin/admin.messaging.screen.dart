@@ -119,7 +119,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                       topic: sendTarget == NotificationTarget.platform.name
                           ? platformTarget
                           : sendTarget == NotificationTarget.topic.name
-                              ? topic
+                              ? MessagingService.instance.prefixCustomTopic + topic
                               : null,
                       type: notificationType,
                       id: landingPage.text,

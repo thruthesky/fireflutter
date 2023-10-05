@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -57,10 +58,7 @@ class MessagingService {
   String? token;
   final BehaviorSubject<String?> tokenChange = BehaviorSubject.seeded(null);
 
-  String defaultTopic = 'defaultTopic';
-  bool doneDefaultTopic = false;
-
-  // StreamSubscription? sub;
+  final String prefixCustomTopic = 'customTopic';
 
   List<CustomizeMessagingTopic>? customizeTopic;
 
@@ -154,11 +152,16 @@ class MessagingService {
   }
 
   subscribeToCustomTopic(String topic) async {
-    await FirebaseMessaging.instance.subscribeToTopic('custom_$topic');
+    await FirebaseMessaging.instance.subscribeToTopic('$prefixCustomTopic$topic');
   }
 
   unsubscribeToCustomTopic(String topic) async {
-    await FirebaseMessaging.instance.unsubscribeFromTopic('custom_$topic');
+    try {
+      await FirebaseMessaging.instance.unsubscribeFromTopic('$prefixCustomTopic$topic');
+    } catch (e) {
+      /// error will be thrown if the topic is not subscribed.
+      log('unsubscribeToCustomTopic error: ${e.toString()}');
+    }
   }
 
   /// `/users/<uid>/fcm_tokens/<docId>` 에 저장을 한다.
