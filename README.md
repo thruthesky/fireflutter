@@ -1905,13 +1905,23 @@ If you want to design the whole screen of post view,
 Example of connecting your own screen to post view.
 
 ```dart
+Post.create(categoryId: categoryId.text, title: title.text, content: content.text).then(
+  (post) {
+    context.pop();
+    return PostService.instance.showPostViewScreen(context: context, post: post);
+  },
+);
+
+```
+
+<!-- Outdated [???]
 PostService.instance.showPostViewScreen =
     (context, {String? postId, Post? post}) => showGeneralDialog(
           context: context,
           pageBuilder: (context, $, $$) =>
               MomcafePostViewScreen(postId: postId, post: post),
         );
-```
+ -->
 
 If you want to customize of a portion of the existing ui, you may use `PostService.instance.customize.postViewXxxx`. For instance, if you want to add a button on the post view screen, simply do the following.
 
