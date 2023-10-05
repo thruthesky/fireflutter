@@ -44,6 +44,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       likes:
           (json['likes'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
+      isDisabled: json['isDisabled'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -76,4 +77,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'exists': instance.exists,
       'cached': instance.cached,
       'likes': instance.likes,
+      'isDisabled': instance.isDisabled,
     };

@@ -24,6 +24,22 @@ service cloud.firestore {
       return /databases/$(database)/documents;
     }
 
+    // Get login user's document
+    function myData() {
+      return get(/$(prefix())/users/$(request.auth.uid)).data;
+    }
+    
+
+    // Return true if the user is disabled.
+    function isDisabled() {
+      return 'isDisabled' in myData() && myData().isDisabled;
+    }
+
+    // Return true if the user is not disabled.
+    function isEnabled() {
+      return !isDisabled();
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
@@ -453,19 +469,19 @@ function noFieldChanged() {
 }
 
 // Get login user's document
-function myData() {
-  return get(/$(prefix())/users/$(request.auth.uid)).data;
-}
+// function myData() {
+//   return get(/$(prefix())/users/$(request.auth.uid)).data;
+// }
 
-// Return true if the user is disabled.
-function isDisabled() {
-  return 'isDisabled' in myData() && myData().isDisabled;
-}
+// // Return true if the user is disabled.
+// function isDisabled() {
+//   return 'isDisabled' in myData() && myData().isDisabled;
+// }
 
-// Reeturn true if the user is not disabled.
-function isEnabled() {
-  return !isDisabled();
-}
+// // Reeturn true if the user is not disabled.
+// function isEnabled() {
+//   return !isDisabled();
+// }
 
 
 
