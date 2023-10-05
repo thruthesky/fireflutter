@@ -78,6 +78,8 @@ Take note that the code above needs the Post to display.
 
 PostService provies showCreateDialog function that can be used to show a Create Post Form. Below is an example of usage:
 
+<!-- showCreateDialog doesn't exists [??] -->
+
 ```dart
 IconButton(
     icon: const Icon(Icons.add),
