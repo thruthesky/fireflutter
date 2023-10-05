@@ -146,6 +146,7 @@ class UserService {
     return myDoc.snapshots().map((doc) => User.fromDocumentSnapshot(doc));
   }
 
+  /// User create event. It fires when a user document is created.
   Function(User user)? onCreate;
 
   /// If any of the user document field updates, then this callback will be called.
@@ -199,7 +200,11 @@ class UserService {
     this.onLike = onLike;
     this.enableNotificationOnLike = enableNotificationOnLike;
 
-    /// 로그인을 할 때, nullableUser 초기가 값 지정
+    /// Listener for the login event
+    ///
+    /// This listens the user login and logout event. And sets the [nullableUser].
+    ///
+    /// Note that, it will create the user document if it does not exist.
     auth.FirebaseAuth.instance
         .authStateChanges()
 
@@ -207,24 +212,34 @@ class UserService {
         .distinct((p, n) => p?.uid == n?.uid)
         .listen((firebaseUser) {
       if (firebaseUser == null) {
+        // User logged out. Set nullableUser to null.
         nullableUser = null;
         documentChanges.add(nullableUser);
         userChanges.add(null);
       } else {
+        // User logged in.
+        //
+
+        // Fire user login event
         userChanges.add(firebaseUser);
 
-        /// 이 후, 사용자 문서가 업데이트 될 때 마다, nullableUser 업데이트
-        UserService.instance.doc.snapshots().listen((documentSnapshot) {
-          /// 사용자 문서가 존재하지 않는 경우,
-          /// * exists: false 는 오직, documentChanges 이벤트에만 적용된다.
-          if (!documentSnapshot.exists || documentSnapshot.data() == null) {
-            nullableUser = User.notExists(uid: documentSnapshot.id);
-          } else {
-            nullableUser = User.fromDocumentSnapshot(documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
-          }
-          documentChanges.add(nullableUser);
-        });
+        _listenUserDocument();
       }
+    });
+  }
+
+  /// Listen the login user's document
+  _listenUserDocument() {
+    doc.snapshots().listen((documentSnapshot) async {
+      /// User document does not exist. Create the user document.
+      ///
+      if (!documentSnapshot.exists || documentSnapshot.data() == null) {
+        await User.create(uid: myUid!);
+        _listenUserDocument();
+      } else {
+        nullableUser = User.fromDocumentSnapshot(documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
+      }
+      documentChanges.add(nullableUser);
     });
   }
 
