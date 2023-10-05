@@ -16,6 +16,7 @@ enum NotificationTarget {
   platform,
   users,
   tokens,
+  topic,
 }
 
 enum AdminNotificationOptions {

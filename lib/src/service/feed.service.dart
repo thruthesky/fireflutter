@@ -1,5 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:flutter/material.dart';
 
 class FeedService {
   /// create singleton

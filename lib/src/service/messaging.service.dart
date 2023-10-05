@@ -8,6 +8,16 @@ import 'package:rxdart/subjects.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fireflutter/fireflutter.dart';
 
+class CustomizeMessagingTopic {
+  final String topic;
+  final String title;
+
+  CustomizeMessagingTopic({
+    required this.topic,
+    required this.title,
+  });
+}
+
 /// MessagingService
 ///
 /// Push notification will be appears on system tray(or on the top of the mobile device)
@@ -52,6 +62,8 @@ class MessagingService {
 
   // StreamSubscription? sub;
 
+  List<CustomizeMessagingTopic>? customizeTopic;
+
   init({
     required Future<void> Function(RemoteMessage)? onBackgroundMessage,
     required Function(RemoteMessage) onForegroundMessage,
@@ -59,6 +71,7 @@ class MessagingService {
     required Function(RemoteMessage) onMessageOpenedFromBackground,
     required Function onNotificationPermissionDenied,
     required Function onNotificationPermissionNotDetermined,
+    List<CustomizeMessagingTopic>? customizeTopic,
   }) {
     if (onBackgroundMessage != null) {
       FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
@@ -69,6 +82,9 @@ class MessagingService {
     this.onMessageOpenedFromBackground = onMessageOpenedFromBackground;
     this.onNotificationPermissionDenied = onNotificationPermissionDenied;
     this.onNotificationPermissionNotDetermined = onNotificationPermissionNotDetermined;
+
+    this.customizeTopic = customizeTopic;
+
     _init();
     _initilizeToken();
   }
@@ -135,6 +151,14 @@ class MessagingService {
   _subscribeToTopic() async {
     await FirebaseMessaging.instance.subscribeToTopic('allUsers');
     await FirebaseMessaging.instance.subscribeToTopic('${platformName()}Users');
+  }
+
+  subscribeToCustomTopic(String topic) async {
+    await FirebaseMessaging.instance.subscribeToTopic('custom_$topic');
+  }
+
+  unsubscribeToCustomTopic(String topic) async {
+    await FirebaseMessaging.instance.unsubscribeFromTopic('custom_$topic');
   }
 
   /// `/users/<uid>/fcm_tokens/<docId>` 에 저장을 한다.
