@@ -105,10 +105,6 @@ class User {
   final List<String> followers;
   final List<String> followings;
 
-  /// 사용자 문서가 존재하지 않는 경우, 이 값이 false 이다.
-  /// 특히, 이 값이 false 이면 사용자 로그인을 했는데, 사용자 문서가 존재하지 않는 경우이다.
-  final bool exists;
-
   bool cached;
 
   /// Likes
@@ -140,7 +136,6 @@ class User {
     this.gender = '',
     this.type = '',
     this.isComplete = false,
-    this.exists = true,
     this.noOfPosts = 0,
     this.noOfComments = 0,
     this.followers = const [],
@@ -151,9 +146,9 @@ class User {
     required this.createdAt,
   });
 
-  factory User.notExists({String uid = ''}) {
-    return User(uid: uid, exists: false, createdAt: DateTime.now());
-  }
+  // factory User.notExists({String uid = ''}) {
+  //   return User(uid: uid, exists: false, createdAt: DateTime.now());
+  // }
 
   /// Returns a user with uid. All other properties are empty.
   ///
@@ -202,7 +197,9 @@ class User {
     return User.fromDocumentSnapshot(snapshot);
   }
 
-  /// 사용자 문서를 생성한다.
+  /// Create user document.
+  ///
+  /// Note, it creates the document if it does not exists. If it exists, it will update.
   ///
   /// 사용자 문서가 이미 존재하는 경우, 문서를 덮어쓰지 않고, 업데이트한다.
   ///
@@ -212,17 +209,21 @@ class User {
   /// may not call this method to create user document. In that case, the
   /// [onCreate] event handler will not be invoked.
   ///
-  /// 참고: README.md
+  /// For security reason, don't put private information like email, phoneNumber, etc...
+  ///
+  /// See: README.md
   ///
   /// Example;
   /// ```dart
   /// User.create(uid: 'xxx');
   /// ```
-  static Future<User> create({required String uid}) async {
-    await FirebaseFirestore.instance.collection(userCollectionName).doc(uid).set({
+  static Future<User> create({
+    required String uid,
+    String? displayName,
+  }) async {
+    await userDoc(uid).set({
       'uid': uid,
-      'email': '',
-      'displayName': '',
+      if (displayName != null) 'displayName': displayName,
       'createdAt': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
 
