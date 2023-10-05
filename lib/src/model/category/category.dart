@@ -8,8 +8,7 @@ part 'category.g.dart';
 @JsonSerializable()
 class Category {
   static const String collectionName = 'categories';
-  static DocumentReference doc(String categoryId) =>
-      categoryCol.doc(categoryId);
+  static DocumentReference doc(String categoryId) => categoryCol.doc(categoryId);
   final String id;
   final String name;
   final String? description;
@@ -26,9 +25,8 @@ class Category {
     required this.id,
     this.name = '',
     this.description,
-    dynamic createdAt,
-  }) : createdAt =
-            (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
+    required this.createdAt,
+  });
 
   factory Category.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     return Category.fromJson({
@@ -55,8 +53,7 @@ class Category {
     return Category.fromJson(map);
   }
 
-  factory Category.fromJson(Map<String, dynamic> json) =>
-      _$CategoryFromJson(json)..data = json;
+  factory Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json)..data = json;
   Map<String, dynamic> toJson() => _$CategoryToJson(this);
 
   @Deprecated('Use toJson instead')
@@ -105,10 +102,7 @@ class Category {
   /// Get the category or throw an exception if it does not exist.
   ///
   static Future<Category> get(String categoryId) async {
-    final snapshot = await FirebaseFirestore.instance
-        .collection(collectionName)
-        .doc(categoryId)
-        .get();
+    final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(categoryId).get();
     if (snapshot.exists == false) {
       throw Exception('Category $categoryId does not exist');
     }

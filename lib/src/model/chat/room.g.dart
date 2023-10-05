@@ -26,7 +26,7 @@ Room _$RoomFromJson(Map<String, dynamic> json) => Room(
               .toList() ??
           const [],
       maximumNoOfUsers: json['maximumNoOfUsers'] as int,
-      createdAt: json['createdAt'],
+      createdAt: const FirebaseDateTimeConverter().fromJson(json['createdAt']),
       lastMessage: json['lastMessage'] == null
           ? null
           : Message.fromJson(json['lastMessage'] as Map<String, dynamic>),

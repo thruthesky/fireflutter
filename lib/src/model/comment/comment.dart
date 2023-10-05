@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/functions/comment_sort_string.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:path/path.dart';
 
 part 'comment.g.dart';
 
@@ -20,8 +21,11 @@ class Comment {
 
   @FirebaseDateTimeConverter()
   final DateTime createdAt;
+
   final List<String> likes;
-  final bool? deleted;
+  final bool deleted;
+  final String? deletedReason;
+  // final DateTime? deletedAt;
 
   /// Parent ID is the comment ID of the comment that this comment is replying to.
   /// It will be null if this comment is not a reply (or the first level of comment)
@@ -43,13 +47,15 @@ class Comment {
     this.content = '',
     required this.uid,
     this.urls = const [],
-    dynamic createdAt,
+    required this.createdAt,
     this.likes = const [],
     this.deleted = false,
     this.parentId,
     required this.sort,
     required this.depth,
-  }) : createdAt = (createdAt is Timestamp) ? createdAt.toDate() : DateTime.now();
+    this.deletedReason,
+    // this.deletedAt,
+  });
 
   factory Comment.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     return Comment.fromJson({
@@ -141,18 +147,23 @@ class Comment {
     return updatedComment;
   }
 
+  /// Delete a comment
+  /// This is soft delete: Contents are removed. But the document is still there.
   Future<Comment> delete({String? reason}) async {
+    // delete the comment's photos
+    // no need to await
+    for (var url in urls) {
+      StorageService.instance.delete(url).catchError((e) => toast(title: 'Error', message: e.toString()));
+    }
     final deletedCommentData = {
+      'content': '',
+      'urls': [],
       'deleted': true,
-      'deletedReason': reason ?? '',
+      'deletedReason': reason ?? 'Deleted',
       'deletedAt': FieldValue.serverTimestamp(),
     };
     await commentCol.doc(id).update(deletedCommentData);
     final deletedComment = copyWith(deletedCommentData);
-
-    // Invoite the callback for comment creation.
-    // TODO custom onDelete
-    // CommentService.instance.onDelete?.call(deletedComment);
     return deletedComment;
   }
 

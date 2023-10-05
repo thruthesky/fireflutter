@@ -10,19 +10,19 @@ class PostViewTitle extends StatelessWidget {
       right: sizeSm,
       top: sizeSm,
     ),
+    this.contentBackground = Colors.white,
   });
 
   final Post? post;
   final EdgeInsetsGeometry padding;
+  final Color contentBackground;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: padding,
-      child: Text(
-        post?.title ?? '...',
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
+      color: contentBackground,
+      child: Text(post!.title.replaceAll("\n", " "), style: Theme.of(context).textTheme.titleMedium),
     );
   }
 }

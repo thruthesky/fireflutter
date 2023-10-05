@@ -6,10 +6,14 @@ class PostViewScreen extends StatefulWidget {
     super.key,
     this.post,
     this.postId,
+    this.customMiddleContentCrossAxisAlignment = CrossAxisAlignment.start,
+    this.headerPadding = const EdgeInsets.only(bottom: sizeSm),
   });
 
   final Post? post;
   final String? postId;
+  final CrossAxisAlignment customMiddleContentCrossAxisAlignment;
+  final EdgeInsetsGeometry headerPadding;
 
   @override
   State<PostViewScreen> createState() => _PostViewScreenState();
@@ -48,42 +52,64 @@ class _PostViewScreenState extends State<PostViewScreen> {
     return Scaffold(
       appBar: AppBar(
         title: PostViewTitle(post: _post),
-        actions:
-            PostService.instance.postViewActions(context: context, post: _post),
+        actions: PostService.instance.postViewActions(context: context, post: _post),
       ),
       body: _post == null
           ? const CircularProgressIndicator.adaptive()
-          : SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  PostViewTitle(post: _post),
+          : _post?.deleted == true
+              ? Center(child: Text(_post?.reason ?? 'This post has been deleted.'))
+              : SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PostCard(
+                        headerPadding: widget.headerPadding,
+                        post: _post!,
+                        customMainContentBuilder: (context, post) => CarouselView(
+                          widgets: [
+                            if (post.youtubeId.isNotEmpty) YouTube(youtubeId: post.youtubeId, autoPlay: true),
+                            if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
+                          ],
+                        ),
+                        customMiddleContentBuilder: (context, post) => Column(
+                          crossAxisAlignment: widget.customMiddleContentCrossAxisAlignment,
+                          children: [
+                            PostViewTitle(post: _post),
+                            PostViewContent(post: _post),
+                          ],
+                        ),
+                        customFooterBuilder: (context, post) => CommentListView(
+                          post: post,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                        ),
+                      ),
+                      // PostViewTitle(post: _post),
 
-                  // user avatar
-                  PostViewMeta(post: _post),
+                      // // user avatar
+                      // PostViewMeta(post: _post),
 
-                  PostViewContent(post: _post),
+                      // PostViewContent(post: _post),
 
-                  YouTube(youtubeId: post.youtubeId, autoPlay: true),
+                      // CarouselView(
+                      //   widgets: [
+                      //     YouTube(youtubeId: post.youtubeId, autoPlay: true),
+                      //     if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
+                      //   ],
+                      // ),
 
-                  const Divider(),
-                  if (post.urls.isNotEmpty)
-                    ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
+                      // PostService.instance.customize.postViewButtonBuilder?.call(_post) ??
+                      //     PostViewButtons(post: _post, middle: const []),
 
-                  //
-                  PostService.instance.customize.postViewButtonBuilder
-                          ?.call(_post) ??
-                      PostViewButtons(post: _post, middle: const []),
-
-                  const Divider(),
-                  CommentListView(
-                    post: post,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
+                      // const Divider(),
+                      // CommentListView(
+                      //   post: post,
+                      //   shrinkWrap: true,
+                      //   physics: const NeverScrollableScrollPhysics(),
+                      // ),
+                    ],
                   ),
-                ],
-              ),
-            ),
+                ),
     );
   }
 }

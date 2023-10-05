@@ -5,23 +5,21 @@ class PostViewContent extends StatelessWidget {
   const PostViewContent({
     super.key,
     required this.post,
+    this.contentBackground = Colors.white,
   });
 
   final Post? post;
-
+  final Color contentBackground;
   @override
   Widget build(BuildContext context) {
     return post == null
         ? const SizedBox.shrink()
         : Container(
-            margin: const EdgeInsets.all(16),
-            padding: const EdgeInsets.all(16),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: Text(post!.content),
+            padding: const EdgeInsets.all(sizeSm),
+            color: contentBackground,
+            child: post!.content.length < 60
+                ? Text(post!.content.replaceAll("\n", " "), style: Theme.of(context).textTheme.bodyMedium)
+                : PostContentShowMore(post: post!),
           );
   }
 }

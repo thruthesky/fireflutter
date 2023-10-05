@@ -26,7 +26,6 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
     } else if (type == 'comment') {
       q = q.where('type', isEqualTo: 'comment');
     }
-
     q = q.orderBy('createdAt', descending: true);
 
     return q;
@@ -106,26 +105,35 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
               children: [
                 Text(report.type),
                 Text(report.createdAt.toString()),
-                if (report.type == 'user')
+                if (report.resolved) ...[
+                  const Text('Resolved'),
+                  Text('Admin Notes: ${report.adminNotes}')
+                ] else ...[
+                  if (report.type == 'user')
+                    ElevatedButton(
+                      onPressed: () => showDeleteDialog(report),
+                      child: const Text('Block User'),
+                    ),
+                  if (report.type == 'post')
+                    ElevatedButton(
+                      onPressed: () => showDeleteDialog(report),
+                      child: const Text('Delete Post'),
+                    ),
+                  if (report.type == 'comment')
+                    ElevatedButton(
+                      onPressed: () => showDeleteDialog(report),
+                      child: const Text('Delete Comment'),
+                    ),
                   ElevatedButton(
-                    onPressed: () => showDeleteDialog(report),
-                    child: const Text('Block User'),
+                    onPressed: () => showResolveDialog(report),
+                    child: const Text('Mark as Resolved'),
                   ),
-                if (report.type == 'post')
-                  ElevatedButton(
-                    onPressed: () => showDeleteDialog(report),
-                    child: const Text('Delete Post'),
-                  ),
-                if (report.type == 'comment')
-                  ElevatedButton(
-                    onPressed: () => showDeleteDialog(report),
-                    child: const Text('Delete Comment'),
-                  )
+                ],
               ],
             ),
             onTap: () {
               if (report.type == 'user') {
-                UserService.instance.showPublicProfileScreen(context: context, uid: report.uid);
+                UserService.instance.showPublicProfileScreen(context: context, uid: report.otherUid);
               } else if (report.type == 'post') {
                 PostService.instance.showPostViewScreen(context: context, postId: report.postId);
               } else if (report.type == 'comment') {
@@ -144,34 +152,103 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
       builder: (context) {
         final reasonController = TextEditingController();
         reasonController.text = 'This ${report.type} was deleted due to violation.';
+        final adminNotesController = TextEditingController();
         return AlertDialog(
-          title: Text('Deleting ${report.type}.'),
+          title: Text('Deleting ${report.type}'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextField(
                 controller: reasonController,
+                minLines: 2,
+                maxLines: 3,
                 decoration: InputDecoration(
-                  labelText: 'Reason',
+                  labelText: 'Reason (will show on app)',
                   hintText: 'This may appear on the ${report.type}.',
+                ),
+              ),
+              TextField(
+                controller: adminNotesController,
+                minLines: 2,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  labelText: 'Admin Notes (for admins only)',
+                  hintText: 'Please write notes for documentation...',
                 ),
               ),
             ],
           ),
           actions: [
             TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Cancel')),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
             TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  // TODO: Delete the post
-                  // report.deleteContent(reason: reasonController.text);
-                },
-                child: const Text('Delete')),
+              onPressed: () {
+                Navigator.pop(context);
+                report.deleteContent(reasonController.text, adminNotesController.text);
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// The report will be marked as resolved without deleting or blocking content of the user.
+  /// This can be used if the report is a false alarm.
+  /// Admin can also verify and clarify the report first by chatting and/or investigating more.
+  showResolveDialog(Report report) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final reasonController = TextEditingController();
+        reasonController.text = 'This ${report.type} will not be deleted as reviewed by admin.';
+        final adminNotesController = TextEditingController();
+        return AlertDialog(
+          title: const Text('Marking as Resolved'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: reasonController,
+                minLines: 2,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  labelText: 'Reason (will show on app)',
+                  hintText: 'This will be read by the reporter.',
+                ),
+              ),
+              TextField(
+                controller: adminNotesController,
+                minLines: 2,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  labelText: 'Admin Notes (for admins only)',
+                  hintText: 'Please write notes for documentation...',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                report.markAsResove();
+              },
+              child: const Text('Mark as Resolved'),
+            ),
           ],
         );
       },

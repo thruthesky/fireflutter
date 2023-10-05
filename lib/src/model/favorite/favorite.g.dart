@@ -12,6 +12,7 @@ Favorite _$FavoriteFromJson(Map<String, dynamic> json) => Favorite(
       otherUid: json['otherUid'] as String?,
       postId: json['postId'] as String?,
       commentId: json['commentId'] as String?,
+      createdAt: const FirebaseDateTimeConverter().fromJson(json['createdAt']),
     );
 
 Map<String, dynamic> _$FavoriteToJson(Favorite instance) => <String, dynamic>{
@@ -20,5 +21,5 @@ Map<String, dynamic> _$FavoriteToJson(Favorite instance) => <String, dynamic>{
       'postId': instance.postId,
       'commentId': instance.commentId,
       'type': instance.type,
-      'createdAt': instance.createdAt.toIso8601String(),
+      'createdAt': const FirebaseDateTimeConverter().toJson(instance.createdAt),
     };
