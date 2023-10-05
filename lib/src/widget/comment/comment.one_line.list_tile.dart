@@ -208,7 +208,17 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                           }
 
                           //need delete function
-                          if (value == 'delete') {}
+                          if (value == 'delete') {
+                            if (!mounted) return;
+                            final re = await confirm(
+                                context: context,
+                                title: 'Delete Comment',
+                                message: 'Are you sure on deleting this comment?');
+                            if (re == true) {
+                              await widget.comment.delete(reason: 'The comment was deleted by the user.');
+                              toast(title: 'Comment deleted', message: 'Comment deleted successfully.');
+                            }
+                          }
                         }),
                   ],
                 ),
