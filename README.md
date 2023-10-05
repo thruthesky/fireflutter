@@ -3196,14 +3196,18 @@ Below is to show post view screen.
 
 ```dart
 /// Example 1
-Post.get('Uc2TKInQ9oBJeKtSJpBq').then((p) => PostService.instance.showPostViewScreen(context, p));
+Post.get('Uc2TKInQ9oBJeKtSJpBq').then((p) => PostService.instance.showPostViewScreen(context: context, post: post));
 
+
+```
+<!-- 
+ TODO: For Checking
 /// Example 2
 WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
   PostService.instance.showPostViewScreen(context, await Post.get('Wqdje1wU1IDVs7Uus936'));
 });
-```
 
+ -->
 Below is to show post edit dialog.
 
 ```dart
