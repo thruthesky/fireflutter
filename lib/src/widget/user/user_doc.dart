@@ -130,8 +130,10 @@ class UserDoc extends StatelessWidget {
     final userModel = snapshot.data;
 
     /// 문서를 가져왔지만, 문서가 null 이거나 문서가 존재하지 않는 경우, user.exists == false 가 된다.
-    if (snapshot.hasData == false || snapshot.data?.exists == false || userModel == null) {
-      return builder(User.notExists());
+    if (snapshot.hasData == false || userModel == null) {
+      ///
+      /// It passes the user model with the current time when there is no user document.
+      return builder(User(createdAt: DateTime.now()));
     }
     return builder(userModel);
   }

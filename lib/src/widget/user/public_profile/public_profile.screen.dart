@@ -17,12 +17,10 @@ class PublicProfileScreen extends StatefulWidget {
 }
 
 class _PublicProfileScreenState extends State<PublicProfileScreen> {
-  final BehaviorSubject<double?> progressEvent =
-      BehaviorSubject<double?>.seeded(null);
+  final BehaviorSubject<double?> progressEvent = BehaviorSubject<double?>.seeded(null);
 
   bool get isMyProfile =>
-      loggedIn && (widget.uid == my.uid || widget.user?.uid == my.uid) ||
-      (widget.uid == null && widget.user == null);
+      loggedIn && (widget.uid == my.uid || widget.user?.uid == my.uid) || (widget.uid == null && widget.user == null);
 
   String? currentLoadedImageUrl;
   String previousUrl = '';
@@ -51,8 +49,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                     imageUrl: user.stateImageUrl,
                     fit: BoxFit.cover,
                     placeholder: (context, url) => previousUrl.isEmpty
-                        ? const Center(
-                            child: CircularProgressIndicator.adaptive())
+                        ? const Center(child: CircularProgressIndicator.adaptive())
                         : CachedNetworkImage(
                             imageUrl: previousUrl,
                             fit: BoxFit.cover,
@@ -72,19 +69,13 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                   color: Theme.of(context).colorScheme.onSecondary,
                 ),
                 backgroundColor: Colors.transparent,
-                title: Text(user.name,
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSecondary)),
+                title: Text(user.name, style: TextStyle(color: Theme.of(context).colorScheme.onSecondary)),
                 actions: [
                   if (isMyProfile)
                     IconButton(
                       style: IconButton.styleFrom(
-                        foregroundColor:
-                            Theme.of(context).colorScheme.onPrimary,
-                        backgroundColor: Theme.of(context)
-                            .colorScheme
-                            .secondary
-                            .withAlpha(200),
+                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                        backgroundColor: Theme.of(context).colorScheme.secondary.withAlpha(200),
                       ),
                       onPressed: () async {
                         final url = await StorageService.instance.upload(
@@ -96,63 +87,52 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                         previousUrl = my.stateImageUrl;
                         my.update(stateImageUrl: url);
                         if (previousUrl.isNotEmpty) {
-                          Timer(
-                              const Duration(seconds: 2),
-                              () =>
-                                  StorageService.instance.delete(previousUrl));
+                          Timer(const Duration(seconds: 2), () => StorageService.instance.delete(previousUrl));
                         }
                       },
                       icon: const Icon(Icons.camera_alt),
                     ),
-                  ...?UserService.instance.customize.publicScreenActions
-                      ?.call(context, user),
+                  ...?UserService.instance.customize.publicScreenActions?.call(context, user),
                 ],
               ),
             ),
           ),
           body: doc(
             (user) {
-              return user.exists == false
-                  ? const Center(child: Text("User not found"))
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        StreamBuilder(
-                            stream: progressEvent.stream,
-                            builder: (context, snapshot) =>
-                                snapshot.data == null
-                                    ? const SizedBox()
-                                    : LinearProgressIndicator(
-                                        value: snapshot.data ?? 0)),
-                        const SizedBox(height: sizeLg),
-                        UserProfileAvatar(
-                          user: user,
-                          upload: isMyProfile,
-                          size: 140,
-                          radius: 54,
-                        ),
-                        const SizedBox(height: sizeLg),
-                        Center(
-                          child: Text(
-                            user.state.ifEmpty(tr.noStateMessage),
-                            style: textStyle,
-                          ),
-                        ),
-                        const SizedBox(height: sizeLg),
-                        Divider(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .shadow
-                              .withAlpha(80),
-                        ),
-                        const SizedBox(height: sizeLg),
-                        const LoginFirst(),
-                        if (loggedIn) PublicProfileButtons(user: user),
-                        const SafeArea(
-                          child: SizedBox(height: sizeLg),
-                        ),
-                      ],
-                    );
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  StreamBuilder(
+                      stream: progressEvent.stream,
+                      builder: (context, snapshot) => snapshot.data == null
+                          ? const SizedBox()
+                          : LinearProgressIndicator(value: snapshot.data ?? 0)),
+                  const SizedBox(height: sizeLg),
+                  UserProfileAvatar(
+                    user: user,
+                    upload: isMyProfile,
+                    size: 140,
+                    radius: 54,
+                  ),
+                  const SizedBox(height: sizeLg),
+                  Center(
+                    child: Text(
+                      user.state.ifEmpty(tr.noStateMessage),
+                      style: textStyle,
+                    ),
+                  ),
+                  const SizedBox(height: sizeLg),
+                  Divider(
+                    color: Theme.of(context).colorScheme.shadow.withAlpha(80),
+                  ),
+                  const SizedBox(height: sizeLg),
+                  const LoginFirst(),
+                  if (loggedIn) PublicProfileButtons(user: user),
+                  const SafeArea(
+                    child: SizedBox(height: sizeLg),
+                  ),
+                ],
+              );
             },
           ),
         ),

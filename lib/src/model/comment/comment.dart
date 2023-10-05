@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/functions/comment_sort_string.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:path/path.dart';
 
 part 'comment.g.dart';
 

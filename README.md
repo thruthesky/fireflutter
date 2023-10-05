@@ -14,20 +14,20 @@ Create an issue if you find a bug or need a help.
   - [Installation](#installation)
   - [Create a Firebase](#create-a-firebase)
 - [Firebase Extension](#firebase-extension)
-    - [Resize image](#resize-image)
+  - [Resize image](#resize-image)
   - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
     - [Firestore security rules](#firestore-security-rules)
     - [Security rule for admin](#security-rule-for-admin)
     - [Realtime database security rules](#realtime-database-security-rules)
   - [Setup the base code](#setup-the-base-code)
-  - [url\_launcher (Optional)](#url_launcher-optional)
+  - [url_launcher (Optional)](#url_launcher-optional)
 - [Pub.dev Packages](#pubdev-packages)
   - [timeago](#timeago)
-  - [Parsed\_ReadMore](#parsed_readmore)
+  - [Parsed_ReadMore](#parsed_readmore)
 - [How to build a user profile page](#how-to-build-a-user-profile-page)
-    - [1. Create Scaffold widgets](#1-create-scaffold-widgets)
-    - [2. UserBuilder()](#2-userbuilder)
+  - [1. Create Scaffold widgets](#1-create-scaffold-widgets)
+  - [2. UserBuilder()](#2-userbuilder)
   - [Result](#result)
 - [How to build a chat app](#how-to-build-a-chat-app)
 - [How to build a forum app](#how-to-build-a-forum-app)
@@ -108,6 +108,7 @@ Create an issue if you find a bug or need a help.
 - [Push notifications](#push-notifications)
   - [Push notification settings](#push-notification-settings)
     - [Push notifcation sound](#push-notifcation-sound)
+  - [Send push notification to custom topic](#send-push-notification-to-custom-topic)
   - [Customizing source](#customizing-source)
 - [Following and Follower](#following-and-follower)
   - [Feed listing logic](#feed-listing-logic)
@@ -142,8 +143,8 @@ Create an issue if you find a bug or need a help.
   - [Install FireFlutter and Example Project](#install-fireflutter-and-example-project)
   - [Coding Guideline](#coding-guideline)
 
-
 # Overview
+
 Fireflutter made for reusing the common code blocks. Provides code for user, forum, chat and push notificiation management with `like`, `favorite`, `follow`, `post` and `comment` features.
 
 There are some pre-defined fields for the user document. You can use `json_serializable` for providing each model extra fields.
@@ -180,12 +181,12 @@ The best way is to copy codes from the example project and paste it into your pr
 ## Installation
 
 Follow the instruction below to install FireFlutter into your app
+
 <!-- Please follow the instructions below to install the fireflutter into your app. -->
 
 ## Create a Firebase
 
 If you have your own firebase project, then you can use that. If you don't have one, create one first. Visit [Firebase Website](https://firebase.google.com).
-
 
 <!-- ## Install the easy extension
 
@@ -200,7 +201,6 @@ Choose Easy Extension version and it will redirect you to Firebase. Choose the p
 
 ### Resize image
 
-
 `Deletion of original file` - Don't delete  
 `Make resized images public` - yes
 
@@ -214,7 +214,6 @@ Choose Easy Extension version and it will redirect you to Firebase. Choose the p
 And choose `backfill` if you have an existing images.
 
 ![resize_image_settings](/doc/img/resize_option_3.png)
-
 
 All other options are on your choice.
 
@@ -249,7 +248,7 @@ Security rules for firestore are under `/firebase/firestore/firestore.rules`.
 
 Copy [the security rules of fireflutter](https://raw.githubusercontent.com/thruthesky/fireflutter/main/firebase/firestore/firestore.rules) and paste it in your firebase project. You may need to copy only the parts of the necessary security rules.
 
-<!-- 
+<!--
 TODO:
 deploy rules on firebase using cli
  firebase deploy --only <name>.rules
@@ -280,6 +279,7 @@ For instance, you may write security rules like below and add the uids of sub-ad
     ...
   }
 ```
+
 <!-- ### Admin settings
 
 See the [Security rules for admin](#security-rule-for-admin) chapter to set admin in the security rules. After this, you can set the `isAdmin` field to true on the admin's user document. -->
@@ -361,6 +361,7 @@ Enable Realtime Database on firebase and copy the following and paste it into yo
   }
 }
 ```
+
 <!-- Commented out -->
 <!-- ### Security Rules for Stroage
 
@@ -370,21 +371,19 @@ You can copy this rules and paste into the rules of storage.
 
 ``` -->
 
-
 ## Setup the base code
-
-
-
 
 FireFlutter needs the app to initialize with the Firebase before using it.
 
 Do the settings to connect to firebase.
+
 ```
 flutterfire configure
 ```
 
 Add firebase dependencies
-``` 
+
+```
 flutter pub add firebase_core
 flutter pub add firebase_auth
 ```
@@ -430,7 +429,7 @@ If you meet an error like `No MaterialLocalizations found. Xxxx widgets require 
 For instance, if you are using [go_route package](https://pub.dev/packages/go_router), you can pass the global build context like below.
 
 ```dart
-//  initialize admin 
+//  initialize admin
 UserService.instance.init(adminUid: 'xxx');
 
 WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -499,7 +498,9 @@ if (re) {
 In this chapter, some of the notable packages that are used by FireFlutter are explained.
 
 ## timeago
+
 Converts date into a humanized text.
+
 ```dart
     final fifteenAgo = DateTime.now().subtract(Duration(minutes: 15));
 
@@ -517,14 +518,17 @@ Allows the text to collapsed or expanded and automatically parse the url text to
 Visit [parsed_readmore](https://pub.dev/packages/parsed_readmore) to read more.
 
 <!-- TODO: -->
-# How to build a user profile page 
+
+# How to build a user profile page
 
 <!-- will revised this continously while studying fireflutter -->
 
 Here is an example of how to build simple user profile page.
 
 ### 1. Create Scaffold widgets
+
 Build your own design of your app.
+
 ```dart
 @override
   Widget build(BuildContext context) {
@@ -548,7 +552,7 @@ Build your own design of your app.
 
 ### 2. UserBuilder()
 
-[**UserDoc**](#userdoc) is responsible for taking all the documents of user from the database. With the help of [**UserProfileAvatar**](#userprofileavatar) we can display the user's profile photo to our app.   
+[**UserDoc**](#userdoc) is responsible for taking all the documents of user from the database. With the help of [**UserProfileAvatar**](#userprofileavatar) we can display the user's profile photo to our app.
 
 ```dart
 class UserBuilder extends StatelessWidget {
@@ -585,12 +589,12 @@ class UserBuilder extends StatelessWidget {
 ```
 
 ## Result
+
 Here is a sample result
 
-***Note:*** [**UserProfileAvatar**](#userprofileavatar) returns an icon that will serve as a default profile picture if the user doesn't have any picture uploaded.
+**_Note:_** [**UserProfileAvatar**](#userprofileavatar) returns an icon that will serve as a default profile picture if the user doesn't have any picture uploaded.
 
 ![user_profile](/doc/img/user_profile.png)
-
 
 # How to build a chat app
 
@@ -599,25 +603,27 @@ Here is a sample result
 # Usage
 
 ## UserService
-<!-- #section removed 
-  reason: documentNotExistBuilder has been removed
-  
-In this case, the `documentNotExistBuilder` of `UserDoc` will be called. 
 
-So, the lifecyle will be the following when the app users `UserDoc`. 
+<!-- #section removed
+  reason: documentNotExistBuilder has been removed
+
+In this case, the `documentNotExistBuilder` of `UserDoc` will be called.
+
+So, the lifecyle will be the following when the app users `UserDoc`.
 
 - `UserService.instance.nullableUser` will have an instance of `User`
   - If the user document does not exists, `exists` will be `false` causing `documentNotExistsBuilder` to be called.
   - If the user document exist, then it will have right data and `builder` will be called. -->
 
-`UserService.instance.nullableUser` is *null* when
+`UserService.instance.nullableUser` is _null_ when
+
 - on app boot
 - the user don't have documents
 - when user has document but `UserService` has not read the user document yet.
 
 <!-- **Note:** Use ***async*** to wait UserService to load the data -->
 
-`UserService.instance.nullableUser.exists` is *null* if the user has logged in but no document. 
+`UserService.instance.nullableUser.exists` is _null_ if the user has logged in but no document.
 
 The `UserService.instance.user` or `UserService.instance.documentChanges` may be null when the user document is being loaded on app boot. So, the better way to get the user's document for sure is to use `UserService.instance.get`
 
@@ -629,16 +635,16 @@ UserService.instance.get(myUid!).then((user) => ...);
 
 You cannot use `my` until the UserService is initialized and `UserService.instance.user` is available. Or you will see `null check operator used on a null value.`
 
-<!-- .customize does not exist[???], 
+<!-- .customize does not exist[???],
 
 TODO: Learning it more so i can replace it
-  
+
   might remove since there is already a section of Post Below
 -->
 
 <!-- ## PostService
 
-### How to open a post 
+### How to open a post
 Call the `showPostViewScreen` to show the full screen dialog that displays the post
 
 ```dart
@@ -675,9 +681,7 @@ PostService.instance.init(
   enableNotificationOnLike: true,
 ```
 
-
 ## CommentService
-
 
 You can customize the `showCommentEditBottomSheet` how to comment edit(create or update) box appears.
 
@@ -722,10 +726,6 @@ CommentService.instance.init(
 ```
 
 Or you can do the UI/UX by yourself since it delivers everything you need to show comment edit box.
-
-
-
-
 
 ## ChatService
 
@@ -775,12 +775,9 @@ ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoom
 
 - There are many service methods that opens a screen. One thing to note is that, all the method that opens a screen uses `showGeneralDialog` which does not modify the navigation stack. If you want, you may open the screen with navigation(routing) like `Navigator.of(context).push...()`.
 
-**Note:** you can use **`Theme()`** to style the widget 
-
-
+**Note:** you can use **`Theme()`** to style the widget
 
 ## AuthChanges
-
 
 ```dart
 AuthChange(
@@ -790,7 +787,6 @@ AuthChange(
 ```
 
 ## UserDocReady
-
 
 ```dart
 UserDocReady(builder: (my) {
@@ -808,21 +804,20 @@ UserDocReady(builder: (my) {
 }),
 ```
 
-
 ## TopDownGraident and BottomUpGraident
 
-`TopDownGraident()` and `BottomUpGraident()` provides 
+`TopDownGraident()` and `BottomUpGraident()` provides
 gradient on top and bottom part of the app. You can use this to design your entry screen or the splash screen.
 
 Using them inside of the `Row()` or `Column()` will return an error below
 
-
 ```sh
 Another exception was thrown: Incorrect use of ParentDataWidget.
 ```
+
 You can use this widgets like this
 
-``` dart
+```dart
 Stack(
   children: [
     TopDownGraident(
@@ -837,10 +832,11 @@ Stack(
 
 ## CommentOneLineListTile
 
-<!-- TODO: 
+<!-- TODO:
   - code errors permission_denied is the reason why not working properly,
   - Note: I added the id as an admin
  -->
+
 Below is a sample code how to use and customizing `CommentOneLineListTile` widget.
 
 ```dart
@@ -867,7 +863,9 @@ Theme(
   ),
 ),
 ```
+
 <!-- Fixed -->
+
 ## CommentListBottomSheet
 
 This widget shows the comment list of the post in a bottom sheet UI style.
@@ -880,7 +878,9 @@ await showModalBottomSheet(
   builder: (ctx) => CommentListBottomSheet(post: post),
 );
 ```
+
 <!-- renamed from UserLikeListScreen to UserLikedByListScreen -->
+
 ## UserLikedByListScreen
 
 This screen shows a list of users who liked a post, comment, or a profile.
@@ -902,10 +902,12 @@ await alert(
   title: 'Withdrawal',
   message: 'I have canceled my membership.');
 ```
+
   <!-- 
   translated into english
   title: '회원 탈퇴',
   message: '회원 탈퇴를 하였습니다.'); -->
+
 ## toast
 
 Use `toast` to display a toast notification
@@ -920,10 +922,13 @@ toast(
 ```
 
 ## warningSnackBar
+
 Use `warningSnackbar` to display a warning message
+
 ```dart
 warningSnackbar(context, 'Warning message');
 ```
+
 ## prompt
 
 Use `prompt` to get a string value from user.
@@ -939,6 +944,7 @@ final password = await prompt(
 ## input
 
 `input` is an alias of `prompt`.
+
 ```dart
 onTap: () => input(
   context: context,
@@ -970,6 +976,7 @@ Returns a string of human readable time ago string. It supports i18n. See [**tim
 ## getYoutubeIdFromUrl
 
 Returns the Youtube ID of a URL
+
 <!-- Use this method to get youtube id from the youtube url. -->
 
 ```dart
@@ -984,6 +991,7 @@ onTap: () {
 ## getYoutubeThumbnail
 
 Returns the url of Youtube Thumbnail from ID
+
 <!-- Use this method to get the YouTube video's thumbnail from the yotube id. -->
 
 ```dart
@@ -993,7 +1001,7 @@ onTap: () {
   String thumbNail = getYoutubeThumbnail(
     videoId: result ?? '', // required field
     quality: YoutubeThumbnailQuality.high,
-    webp: false, 
+    webp: false,
   );
   setState(() {
     ytThumbNail = thumbNail;
@@ -1001,8 +1009,8 @@ onTap: () {
 },
 ```
 
-<!-- TODO: 
-  - post returns an int 
+<!-- TODO:
+  - post returns an int
   - getter iLiked is gone or replaced [???]
   - relearn
  -->
@@ -1044,8 +1052,7 @@ Navigator.of(context).push(
 
 Use this widget for creating and logging-in with email/password. This widget is designed for test use.
 
-***EmailLoginForm()*** structure:
-
+**_EmailLoginForm()_** structure:
 
 ```dart
 class EmailLoginForm extends StatefulWidget {
@@ -1062,7 +1069,7 @@ class EmailLoginForm extends StatefulWidget {
 
 You can use `Theme()` to design the widgets. Example below:
 
-``` dart
+```dart
 Theme(
   data: ThemeData(
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -1083,6 +1090,7 @@ Theme(
 ## UserDoc
 
 To display user's profile photo, use like below.
+
 <!-- See the comment for the details. -->
 
 ```dart
@@ -1098,7 +1106,7 @@ UserDoc(
 ),
 ```
 
-<!--   
+<!--
 Not exist anymore:
 documentNotExistBuilder: () {
     // Create user document if not exists.
@@ -1225,7 +1233,6 @@ UserProfileAvatar(
   delete: true,
 ),
 ```
-
 
 To customize the look of `UserProfileAvartar`.
 
@@ -1611,7 +1618,8 @@ Scafolld(
 - The `inviting` means, the invitor will add the `invitee`'s uid into `users` field.
 
   - It is same as `joining`. If the user who wants to join the room, he will simply add his uid into `users` field. That's called `joining`.
-<!-- 
+  <!--
+
 - Any one can join the chat room if `/easychat/{id}/{ open: true }`. -->
 
   - 1:1 chat room must not have `{open: false}`.
@@ -2376,6 +2384,56 @@ iOS Payload
     },
 ```
 
+## Send push notification to custom topic
+
+Initialize custom topic by providing a list of `CustomizeMessagingTopic` to `customizeTopic` on init().
+Subscribe to topic base on your business logic and base from the customizeTopic list.
+Under the AdminMessagingScreen, you will see the list of topic you initialized and you can send push notification to the topic.
+
+```dart
+  initMessagingService() {
+    MessagingService.instance.init(
+      customizeTopic: [
+        CustomizeMessagingTopic(
+          topic: 'allUsers',
+          title: 'All',
+        ),
+        CustomizeMessagingTopic(
+          topic: 'coach',
+          title: 'Coachs',
+        ),
+        CustomizeMessagingTopic(
+          topic: 'player',
+          title: 'Players',
+        ),
+      ],
+    )
+  }
+```
+
+Subscribe to topic according to business logic
+
+```dart
+  initUserService() {
+    UserService.instance.init(
+      onCreate: (User user) async {
+        MessagingService.instance.subscribeToCustomTopic('allUsers');
+      },
+      onUpdate: (User user) async {
+        /// unsubscribe to all topics except the current user type.
+        for (final type in ['coach', 'player']) {
+          if (type != user.type) {
+            MessagingService.instance.unsubscribeToCustomTopic(type);
+          }
+        }
+        /// subscribe to the current user type.
+        if (user.type.isNotEmpty) {
+          MessagingService.instance.subscribeToCustomTopic(user.type);
+        }
+      },
+    );
+```
+
 ## Customizing source
 
 You can limit the uploaded sources. You can choose camera, gallery, or files like below.
@@ -2861,10 +2919,7 @@ ShareBottomSheet(actions: [
 
 See public profile screen customization
 
-
-
 # Error handling
-
 
 There are some cases that you don't want to wait for the async work to be finished since it takes time to save data into the database. But you must show user if there is an error.
 
