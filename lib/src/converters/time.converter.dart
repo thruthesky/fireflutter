@@ -18,7 +18,7 @@ class FirebaseDateTimeConverter implements JsonConverter<DateTime, dynamic> {
     }
   }
 
-  /// Warning, this will return an integer of the milliseconds since epoch.
+  /// ! Warning, this will return an integer of the milliseconds since epoch.
   /// So, you cannot directly save it as a timestamp in Firestore or RTDB.
   @override
   int toJson(DateTime object) => object.millisecondsSinceEpoch;
