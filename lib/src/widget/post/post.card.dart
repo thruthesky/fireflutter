@@ -310,14 +310,16 @@ class PostCard extends StatelessWidget {
                 path: pathPostLikedBy(post.id),
                 builder: (v, p) => IconButton(
                   onPressed: () => post.like(),
-                  icon: Icon(v != null ? Icons.thumb_up : Icons.thumb_up_outlined),
+                  icon: Icon(v != null ? Icons.favorite : Icons.favorite_outline),
                 ),
               ),
               FavoriteButton(
                 postId: post.id,
-                builder: (didIFavorite) {
-                  return Icon(didIFavorite ? Icons.favorite : Icons.favorite_border);
-                },
+                builder: (re) => Icon(re ? Icons.bookmark : Icons.bookmark_border),
+                onChanged: (re) => toast(
+                  title: re ? tr.favorite : tr.unfavorite,
+                  message: re ? tr.favoriteMessage : tr.unfavoriteMessage,
+                ),
               ),
               shareButtonBuilder?.call(post) ??
                   PostService.instance.customize.shareButtonBuilder?.call(post) ??

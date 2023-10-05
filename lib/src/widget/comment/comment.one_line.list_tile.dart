@@ -168,13 +168,48 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ),
-                    if (widget.comment.uid == myUid)
-                      ElevatedButton(
-                        onPressed: () async {
-                          await CommentService.instance.showCommentEditBottomSheet(context, comment: widget.comment);
+
+                    PopupMenuButton(
+                        icon: const Icon(
+                          Icons.more_horiz,
+                          size: 16,
+                        ),
+                        itemBuilder: (context) {
+                          return [
+                            const PopupMenuItem(
+                              value: 'report',
+                              child: Text('Report'),
+                            ),
+                            if (widget.comment.uid == myUid)
+                              const PopupMenuItem(
+                                value: 'edit',
+                                child: Text('Edit'),
+                              ),
+                            if (widget.comment.uid == myUid)
+                              const PopupMenuItem(
+                                value: 'delete',
+                                child: Text('Delete'),
+                              )
+                          ];
                         },
-                        child: Text(tr.edit),
-                      ),
+                        onSelected: (value) async {
+                          if (value == 'edit') {
+                            await CommentService.instance.showCommentEditBottomSheet(context, comment: widget.comment);
+                          }
+                          if (value == 'report') {
+                            if (context.mounted) {
+                              ReportService.instance.showReportDialog(
+                                context: context,
+                                commentId: widget.comment.id,
+                                onExists: (id, type) =>
+                                    toast(title: 'Already reported', message: 'You have reported this $type already.'),
+                              );
+                            }
+                          }
+
+                          //need delete function
+                          if (value == 'delete') {}
+                        }),
                   ],
                 ),
               ],
@@ -187,7 +222,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
               return likeButton();
             },
             onWaiting: iLiked == null ? const SizedBox.shrink() : likeButton(),
-          ),
+          )
         ],
       ),
     );

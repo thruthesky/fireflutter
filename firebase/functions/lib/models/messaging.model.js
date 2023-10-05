@@ -78,7 +78,7 @@ class Messaging {
      * @returns
      */
     static async sendMessageByAction(data) {
-        var _a;
+        var _a, _b;
         console.log(`sendMessageByAction(${JSON.stringify(data)})`);
         if (!data.action) {
             console.log("---> no action. throw error.");
@@ -90,7 +90,7 @@ class Messaging {
             const post = await post_model_1.Post.get(data.postId);
             uids.push(post.uid); // post owner
             data.categoryId = post.categoryId;
-            data.title = post.title;
+            data.title = post.deleted == true ? "Deleted post..." : (_a = post.title) !== null && _a !== void 0 ? _a : "Comment on post...";
             console.log("comment::post::", JSON.stringify(post));
             console.log("comment::data::", JSON.stringify(data));
         }
@@ -119,7 +119,7 @@ class Messaging {
             uids = [...uids, ...subscribers];
         }
         // console.log("action:: ", data.action, "data.roomId:: ", data.roomId, 'data.uids.lenght::', data.uids?.length);
-        if (data.action == event_name_1.EventName.chatCreate && data.roomId && ((_a = data.uids) === null || _a === void 0 ? void 0 : _a.length)) {
+        if (data.action == event_name_1.EventName.chatCreate && data.roomId && ((_b = data.uids) === null || _b === void 0 ? void 0 : _b.length)) {
             uids = [...uids, ...data.uids];
             const snap = await ref_1.Ref.usersSettingsSearch({ action: event_name_1.EventName.chatDisabled, roomId: data.roomId })
                 .get();

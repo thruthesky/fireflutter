@@ -5,11 +5,11 @@ class PostViewContent extends StatelessWidget {
   const PostViewContent({
     super.key,
     required this.post,
-    this.contentBackground = Colors.white,
+    this.contentBackground,
   });
 
   final Post? post;
-  final Color contentBackground;
+  final Color? contentBackground;
   @override
   Widget build(BuildContext context) {
     return post == null

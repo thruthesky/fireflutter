@@ -7,7 +7,7 @@ class PostViewScreen extends StatefulWidget {
     this.post,
     this.postId,
     this.customMiddleContentCrossAxisAlignment = CrossAxisAlignment.start,
-    this.headerPadding = const EdgeInsets.only(bottom: sizeSm),
+    this.headerPadding = const EdgeInsets.all(sizeSm),
   });
 
   final Post? post;
@@ -63,7 +63,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       PostCard(
-                        headerPadding: widget.headerPadding,
+                        customHeaderBuilder: (context, post) =>
+                            PostViewMeta(post: _post, headerPadding: widget.headerPadding),
                         post: _post!,
                         customMainContentBuilder: (context, post) => CarouselView(
                           widgets: [
@@ -78,10 +79,14 @@ class _PostViewScreenState extends State<PostViewScreen> {
                             PostViewContent(post: _post),
                           ],
                         ),
-                        customFooterBuilder: (context, post) => CommentListView(
-                          post: post,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
+                        customFooterBuilder: (context, post) => Padding(
+                          padding: const EdgeInsets.only(left: sizeSm, top: sizeSm),
+                          child: CommentListView(
+                            commentTileTopSpacing: 8,
+                            post: post,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                          ),
                         ),
                       ),
                       // PostViewTitle(post: _post),
