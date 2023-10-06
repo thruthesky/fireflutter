@@ -465,6 +465,17 @@ class UserService {
     );
   }
 
+  showPushNotificationSettingScreen({
+    required BuildContext context,
+  }) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) {
+        return const PushNotificationSettingScreen();
+      },
+    );
+  }
+
   /// Delete user document
   Future deleteDocuments() async {
     await my.delete();
