@@ -112,8 +112,8 @@ Create an issue if you find a bug or need a help.
   - [Customizing source](#customizing-source)
 - [Following and Follower](#following-and-follower)
   - [Feed listing logic](#feed-listing-logic)
-  - [How to follow](#how-to-follow)
-  - [How to unfollow](#how-to-unfollow)
+  <!-- - [How to follow](#how-to-follow)
+  - [How to unfollow](#how-to-unfollow) -->
 - [Block](#block)
 - [Customization](#customization)
   - [User profile screen customization](#user-profile-screen-customization)
@@ -820,12 +820,14 @@ You can use this widgets like this
 ```dart
 Stack(
   children: [
+    // gradients are always on top so it will be the first to draw
     TopDownGraident(
       height: 150,
     ),
     BottomUpGraident(
       height: 100,
     ),
+    // .... your widgets here
   ],
 ),
 ```
@@ -2517,13 +2519,15 @@ flowchart TD
 Displaying_Feeds-->Get_All_Feed_Sort_By_Minus_Date
 ```
 
-## How to follow
+<!-- REMOVED for inaccessibility -->
+
+<!-- ## How to follow
 
 Use `FeedService.instance.follow`. This will produce a permission error if you are going to follow a user that you are already following.
 
 ## How to unfollow
 
-Use `FeedService.instance.unfollow`. This will produce a permission error if you try to unfollow a user that you are not following.
+Use `FeedService.instance.unfollow`. This will produce a permission error if you try to unfollow a user that you are not following. -->
 
 # Block
 
