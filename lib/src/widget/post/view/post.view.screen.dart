@@ -63,15 +63,20 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       PostCard(
+                        color: Theme.of(context).colorScheme.secondary.withAlpha(20),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                         customHeaderBuilder: (context, post) =>
                             PostViewMeta(post: _post, headerPadding: widget.headerPadding),
                         post: _post!,
-                        customMainContentBuilder: (context, post) => CarouselView(
-                          widgets: [
-                            if (post.youtubeId.isNotEmpty) YouTube(youtubeId: post.youtubeId, autoPlay: true),
-                            if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
-                          ],
-                        ),
+                        customMainContentBuilder: (context, post) {
+                          if (post.youtubeId.isEmpty && post.urls.isEmpty) return const SizedBox.shrink();
+                          return CarouselView(
+                            widgets: [
+                              if (post.youtubeId.isNotEmpty) YouTube(youtubeId: post.youtubeId, autoPlay: true),
+                              if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
+                            ],
+                          );
+                        },
                         customMiddleContentBuilder: (context, post) => Column(
                           crossAxisAlignment: widget.customMiddleContentCrossAxisAlignment,
                           children: [
