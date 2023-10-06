@@ -79,6 +79,7 @@ class PostService {
     required BuildContext context,
     Post? post,
     String? postId,
+    Function(BuildContext, Post)? onPressBackButton,
   }) {
     return customize.showPostViewScreen?.call(context, postId: postId, post: post) ??
         showGeneralDialog(
@@ -86,6 +87,7 @@ class PostService {
           pageBuilder: (context, _, __) => PostViewScreen(
             post: post,
             postId: postId,
+            onPressBackButton: onPressBackButton,
           ),
         );
   }

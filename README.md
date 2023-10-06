@@ -3257,22 +3257,17 @@ ChatService.instance.showChatRoom(
 );
 ```
 
-Below is to show post view screen.
+Below is to show post view screen. Since apps do routings differently, we can use onPressedBackButton to go to the proper screen.
 
 ```dart
 /// Example 1
-Post.get('Uc2TKInQ9oBJeKtSJpBq').then((p) => PostService.instance.showPostViewScreen(context: context, post: post));
+Post.get('Uc2TKInQ9oBJeKtSJpBq').then((p) => PostService.instance.showPostViewScreen(context: context, post: post, onPressedBackButton: () {
+  context.go(RouterLogic.go('My Home'));
+}));
 
 
 ```
-<!-- 
- TODO: For Checking
-/// Example 2
-WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-  PostService.instance.showPostViewScreen(context, await Post.get('Wqdje1wU1IDVs7Uus936'));
-});
 
- -->
 Below is to show post edit dialog.
 
 ```dart

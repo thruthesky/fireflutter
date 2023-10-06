@@ -8,12 +8,15 @@ class PostViewScreen extends StatefulWidget {
     this.postId,
     this.customMiddleContentCrossAxisAlignment = CrossAxisAlignment.start,
     this.headerPadding = const EdgeInsets.all(sizeSm),
+    this.onPressBackButton,
   });
 
   final Post? post;
   final String? postId;
   final CrossAxisAlignment customMiddleContentCrossAxisAlignment;
   final EdgeInsetsGeometry headerPadding;
+
+  final Function(BuildContext, Post)? onPressBackButton;
 
   @override
   State<PostViewScreen> createState() => _PostViewScreenState();
@@ -53,6 +56,12 @@ class _PostViewScreenState extends State<PostViewScreen> {
       appBar: AppBar(
         title: PostViewTitle(post: _post),
         actions: PostService.instance.postViewActions(context: context, post: _post),
+        leading: widget.onPressBackButton == null
+            ? null
+            : IconButton(
+                icon: const Icon(Icons.arrow_back_ios),
+                onPressed: () => widget.onPressBackButton!(context, _post!),
+              ),
       ),
       body: _post == null
           ? const CircularProgressIndicator.adaptive()
@@ -63,6 +72,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       PostCard(
+                        // TODO proper customization of Post View Screen
                         color: Theme.of(context).colorScheme.secondary.withAlpha(20),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                         customHeaderBuilder: (context, post) =>
@@ -94,29 +104,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
                           ),
                         ),
                       ),
-                      // PostViewTitle(post: _post),
-
-                      // // user avatar
-                      // PostViewMeta(post: _post),
-
-                      // PostViewContent(post: _post),
-
-                      // CarouselView(
-                      //   widgets: [
-                      //     YouTube(youtubeId: post.youtubeId, autoPlay: true),
-                      //     if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
-                      //   ],
-                      // ),
-
-                      // PostService.instance.customize.postViewButtonBuilder?.call(_post) ??
-                      //     PostViewButtons(post: _post, middle: const []),
-
-                      // const Divider(),
-                      // CommentListView(
-                      //   post: post,
-                      //   shrinkWrap: true,
-                      //   physics: const NeverScrollableScrollPhysics(),
-                      // ),
                     ],
                   ),
                 ),

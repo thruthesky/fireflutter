@@ -110,6 +110,15 @@ String pathUserLiked(String id, {bool all = false}) {
   }
 }
 
+/// For the path to the users' blocked list
+String pathUserBlocked(String id, {bool all = false}) {
+  if (all) {
+    return 'blocks/$id';
+  } else {
+    return 'blocks/$id/$myUid';
+  }
+}
+
 /// storages
 CollectionReference get storageCol => FirebaseFirestore.instance.collection('storages');
 DocumentReference storageDoc(String storageId) => storageCol.doc(storageId);

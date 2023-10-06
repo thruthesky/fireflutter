@@ -76,7 +76,7 @@ Future<void> update(String path, Map<String, Object?> value) async {
 /// If the node of the [path] does not exist, create it and return true.
 /// if the node exists, then remove it and return false.
 ///
-/// Note* dont use directly, must be called from model or service
+/// ! NOTE - dont use directly, must be called from model or service
 Future<bool> toggle(String path) async {
   final value = await get<bool?>(path);
 

@@ -454,6 +454,25 @@ class UserService {
     );
   }
 
+  showBlockedListScreen({required BuildContext context, required User user, Widget Function(User?)? itemBuilder}) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Blocked List'),
+          ),
+          body: FutureBuilder(
+            future: user.blockedList,
+            builder: (context, snapshot) {
+              return UserListView.builder(uids: (snapshot.data ?? []), itemBuilder: itemBuilder);
+            },
+          ),
+        );
+      },
+    );
+  }
+
   showViewersScreen({required BuildContext context, Widget Function(User)? itemBuilder}) {
     showGeneralDialog(
       context: context,

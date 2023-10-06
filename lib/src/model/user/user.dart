@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -387,5 +388,48 @@ class User {
   Future delete() async {
     await userDoc(uid).delete();
     UserService.instance.onDelete?.call(this);
+  }
+
+  /// check if user blocks the other user
+  Future<bool> hadBlocked(String otherUid) async {
+    final event = await FirebaseDatabase.instance.ref(pathUserBlocked(otherUid)).once(DatabaseEventType.value);
+    if (!event.snapshot.exists) return false;
+    return event.snapshot.value as bool;
+  }
+
+  /// get the list of blocked users
+  Future<List<String>> get blockedList async {
+    final event = await FirebaseDatabase.instance.ref(pathUserBlocked(uid, all: true)).once(DatabaseEventType.value);
+    if (!event.snapshot.exists) return [];
+    return (Map<String, dynamic>.from((event.snapshot.value as Map<dynamic, dynamic>?) ?? {})).keys.toList();
+  }
+
+  /// Use this to block this user. The currently logged in user will block thus user.
+  Future<bool> block() async {
+    // Logged out user can't block.
+    // I can't block myself.
+    if (myUid == null || uid == myUid) return false;
+    final blocked = await toggle('blocks/$myUid/$uid');
+    if (blocked) {
+      // If I blocked the user, I should unfollow the user.
+      if (my.followings.contains(uid)) await FeedService.instance.follow(uid);
+      // Also, the user should unfollow me, if this user currently follows me.
+      // and remove all my posts from the user's feed.
+      if (followings.contains(myUid!)) {
+        // TODO must review firestore security rules
+        // I must be able to remove my uid into others' following list
+        // ! this will produce an error related to firestore rules
+        // git hub issue https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=40781402
+        await follow(myUid!);
+        rtdb.ref('feeds').child(uid).orderByChild('uid').equalTo(myUid).once().then((value) {
+          for (final node in value.snapshot.children) {
+            node.ref.remove();
+          }
+        });
+      }
+    }
+    // TODO for other custom blocking actions
+    // UserService.instance.onBlock?.call(this, blocked);
+    return blocked;
   }
 }

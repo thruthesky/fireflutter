@@ -78,7 +78,7 @@ class _PublicProfileButtonsState extends State<PublicProfileButtons> {
           UserService.instance.customize.publicScreenBlockButton?.call(context, user) ??
               TextButton(
                 onPressed: () async {
-                  final blocked = await toggle(pathBlock(user.uid));
+                  final blocked = await user.block();
                   toast(
                     title: blocked ? tr.block : tr.unblock,
                     message: blocked ? tr.blockMessage : tr.unblockMessage,

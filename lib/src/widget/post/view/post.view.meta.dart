@@ -19,10 +19,13 @@ class PostViewMeta extends StatelessWidget {
             padding: headerPadding,
             child: Row(
               children: [
-                UserAvatar(
-                  uid: post!.uid,
-                  radius: 20,
-                  size: 40,
+                GestureDetector(
+                  onTap: () => UserService.instance.showPublicProfileScreen(context: context, uid: post!.uid),
+                  child: UserAvatar(
+                    uid: post!.uid,
+                    radius: 20,
+                    size: 40,
+                  ),
                 ),
                 const SizedBox(width: sizeXs),
                 Column(
