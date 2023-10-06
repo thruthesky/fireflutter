@@ -12,19 +12,21 @@ class PushNotificationIcon extends StatelessWidget {
   const PushNotificationIcon({
     super.key,
     required this.action,
+    this.settingId,
     this.roomId,
     this.categoryId,
     this.onIcon,
     this.offIcon,
-  }) : assert(roomId != null || categoryId != null, 'roomId or categoryId must be not null');
+  }) : assert(settingId != null || roomId != null || categoryId != null, 'roomId or categoryId must be not null');
   final String action;
+  final String? settingId;
   final String? roomId;
   final String? categoryId;
 
   final Widget? onIcon;
   final Widget? offIcon;
 
-  String get id => roomId ?? ('$action.${categoryId!}');
+  String get id => settingId ?? roomId ?? ('$action.${categoryId!}');
 
   @override
   Widget build(BuildContext context) {

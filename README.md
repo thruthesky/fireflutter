@@ -2219,7 +2219,17 @@ AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
 
 ## Push notification settings
 
-Each of push notification option is saved as a single document under `/users/{uid}/user_settings/{settingDocumentId}`. And it is protected by the security rules. Only the user can access this document. The option is saved in a separate document for the search. To give convinience on search and getting tokens of users who subscrid to the service.
+Each of push notification option is saved as a single document under `/users/{uid}/user_settings/{settingDocumentId}` with fields consist of {action: comment-create, category: qna, uid: userUid}. And it is protected by the security rules. Only the user can access this document. The option is saved in a separate document for the search. To give convinience on search and getting tokens of users who subscribe to the service.
+
+- One thing to note, the field name must be unique due to the limit of 200 Firestore query index. So, a field name should not be like `{comment-create.qna: true}`. It should be like separated as `action` and `category`.
+- But `subscriptionDocumentId` can be a unique document id like `comment-create.qna`, `post-create.discussion`.
+  - Be careful not to save any document which has `action` and `category` on other setting document aside from the subscription settings document. It would work if the `action` field does not contain `post-create` or `comment-create` thought.
+- So, the subscription document would be `/users/<uid>/user_settings/comment-create.qna {action: comment-create, category: qna}`.
+- if `{action: comment-create, category: qna}` is set, there will be a new message on a new comment in qna category.
+- if `{action: post-create, category: discussion}` is set, then there will be a messgae on new post on discussion category.
+
+- User options for receiving all the comments under the user's posts or comments is saved like below
+  - `/users/<uid>/user_settings/settings {notify-new-comment-under-my-posts-and-comments: true}`
 
 The format of the document is in
 
@@ -3269,7 +3279,8 @@ Post.get('Uc2TKInQ9oBJeKtSJpBq').then((p) => PostService.instance.showPostViewSc
 
 
 ```
-<!-- 
+
+<!--
  TODO: For Checking
 /// Example 2
 WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -3277,6 +3288,7 @@ WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
 });
 
  -->
+
 Below is to show post edit dialog.
 
 ```dart
