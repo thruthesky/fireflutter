@@ -5,7 +5,16 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Fireflutter_Project",
+      "name": "android_Fireflutter_Project",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/new_app",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "emulator-5554"
+    },
+    {
+      "name": "ios_Fireflutter_Project",
       "request": "launch",
       "type": "dart",
       "cwd": "apps/new_app",

@@ -23,3 +23,7 @@ enum AdminNotificationOptions {
   notifyOnNewUser,
   notifyOnNewReport,
 }
+
+enum NotificationSettingConfig {
+  notifyNewCommentsUnderMyPostsAndComments,
+}
