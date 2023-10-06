@@ -1,6 +1,7 @@
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 /// Favorite List View
 ///
@@ -14,6 +15,7 @@ class FavoriteListView extends StatelessWidget {
     this.physics,
     this.itemBuilder,
     this.itemExtent,
+    this.scrollDirection = Axis.vertical,
   });
 
   final int pageSize;
@@ -25,10 +27,12 @@ class FavoriteListView extends StatelessWidget {
 
   final Widget Function(Favorite)? itemBuilder;
   final double? itemExtent;
+  final Axis scrollDirection;
 
   @override
   Widget build(BuildContext context) {
     return FirestoreListView(
+      scrollDirection: scrollDirection,
       shrinkWrap: shrinkWrap,
       physics: physics,
       pageSize: pageSize,
