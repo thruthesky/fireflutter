@@ -44,8 +44,10 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (widget.comment.deleted) ...[
-            Text(widget.comment.deletedReason ?? 'The comment was deleted by the user.',
-                style: Theme.of(context).textTheme.bodyMedium),
+            Flexible(
+              child: Text(widget.comment.deletedReason ?? 'The comment was deleted by the user.',
+                  textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium!),
+            ),
           ] else ...[
             UserAvatar(
               uid: widget.comment.uid,
