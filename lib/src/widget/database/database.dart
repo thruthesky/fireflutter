@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +20,7 @@ import 'package:flutter/material.dart';
 ///  return Text(value);
 /// });
 ///
-class Database extends StatelessWidget {
+class Database extends StatefulWidget {
   const Database({
     super.key,
     required this.path,
@@ -31,20 +33,29 @@ class Database extends StatelessWidget {
   final Widget? onWaiting;
 
   @override
+  State<Database> createState() => _DatabaseState();
+}
+
+class _DatabaseState extends State<Database> {
+  AsyncSnapshot<DatabaseEvent>? snapshotData;
+
+  @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: FirebaseDatabase.instance.ref(path).onValue,
+      stream: FirebaseDatabase.instance.ref(widget.path).onValue,
       builder: (context, AsyncSnapshot<DatabaseEvent> event) {
         if (event.connectionState == ConnectionState.waiting) {
-          return onWaiting ?? const SizedBox.shrink();
+          if (snapshotData != null) return widget.builder(snapshotData!.data!.snapshot.value, widget.path);
+          return widget.onWaiting ?? const SizedBox.shrink();
         }
         if (event.hasError) {
           return Text('Error; ${event.error}');
         }
+        snapshotData = event;
         if (event.hasData && event.data!.snapshot.exists) {
-          return builder(event.data!.snapshot.value, path);
+          return widget.builder(event.data!.snapshot.value, widget.path);
         } else {
-          return builder(null, path);
+          return widget.builder(null, widget.path);
         }
       },
     );

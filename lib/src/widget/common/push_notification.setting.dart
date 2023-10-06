@@ -11,12 +11,14 @@ class PushNotificationSetting extends StatelessWidget {
   const PushNotificationSetting({
     super.key,
     required this.action,
+    this.settingId,
     this.roomId,
     this.categoryId,
     required this.builder,
     this.toogleValue = true,
-  }) : assert(roomId != null || categoryId != null, 'roomId or categoryId must be not null');
+  }) : assert(settingId != null || roomId != null || categoryId != null, 'roomId or categoryId must be not null');
   final String action;
+  final String? settingId;
   final String? roomId;
   final String? categoryId;
 
@@ -25,7 +27,7 @@ class PushNotificationSetting extends StatelessWidget {
   /// Disable tap on the setting.
   final bool toogleValue;
 
-  String get id => roomId ?? ('$action.${categoryId!}');
+  String get id => settingId ?? roomId ?? ('$action.${categoryId!}');
 
   @override
   Widget build(BuildContext context) {

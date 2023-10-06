@@ -107,7 +107,8 @@ export class Messaging {
 
 
     // console.log("action:: ", data.action, "categoryId:: ", data.categoryId);
-    // post and comment
+    // post and comment get uid who subscribe for new post or comment.
+    // those who want to notified for new post or comment.
     if (data.categoryId) {
       const snap = await Ref.usersSettingsSearch({ action: data.action, categoryId: data.categoryId })
         .get();
@@ -126,11 +127,14 @@ export class Messaging {
 
 
     // Get ancestor's uid
+    // and remove uid who didn't subscribe for new comment.
     if (data.action == EventName.commentCreate && data.id) {
       const ancestors = await Comment.getAncestorsUid(data.id, data.uid);
+      console.log("ancestors::", ancestors);
 
       // Remove ancestors who didn't subscribe for new comment.
       const subscribers = await this.getNewCommentNotificationUids(ancestors);
+      console.log("subscribers::", subscribers);
 
       uids = [...uids, ...subscribers];
     }

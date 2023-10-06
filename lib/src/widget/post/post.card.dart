@@ -328,16 +328,28 @@ class PostCard extends StatelessWidget {
           ),
         ),
         // like button
-        DatabaseCount(
+        Database(
           path: pathPostLikedBy(post.id, all: true),
-          builder: (n) => n == 0
-              ? const SizedBox.shrink()
-              : Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: sizeSm,
-                  ),
-                  child: Text("$n likes"),
-                ),
+          builder: (n, str) {
+            final likes = Map<String, bool?>.from(n ?? {});
+
+            return likes.isEmpty
+                ? const SizedBox.shrink()
+                : Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: sizeSm,
+                    ),
+                    child: GestureDetector(
+                      child: Text("${likes.length} likes"),
+                      onTap: () {
+                        UserService.instance.showLikedByListScreen(
+                          context: context,
+                          uids: likes.keys.toList(),
+                        );
+                      },
+                    ),
+                  );
+          },
         ),
       ],
     );

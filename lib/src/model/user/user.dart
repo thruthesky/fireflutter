@@ -371,6 +371,8 @@ class User {
   /// See README for details
   ///
   /// Returns true if liked a user. Returns false if unliked a user.
+  ///
+  /// Put the uid of the User to be liked in the [uid] parameter.
   Future<bool> like(String uid) async {
     bool isLiked = await toggle(pathUserLiked(uid));
 
