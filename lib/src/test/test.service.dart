@@ -10,44 +10,43 @@ class TestUser {
   static int errorCount = 0;
   static int successCount = 0;
   String? uid;
-  TestUser(
-      {required this.displayName, required this.email, required this.photoUrl});
+  TestUser({required this.displayName, required this.email, required this.photoUrl});
 }
 
 class Test {
   static List<TestUser> users = [
-    TestUser(
-        displayName: 'Apple',
-        email: 'apple@test-user.com',
-        photoUrl: 'https://picsum.photos/id/1/200/200'),
-    TestUser(
-        displayName: 'Banana',
-        email: 'banana@test-user.com',
-        photoUrl: 'https://picsum.photos/id/1/200/200'),
-    TestUser(
-        displayName: 'Cherry',
-        email: 'cherry@test-user.com',
-        photoUrl: 'https://picsum.photos/id/1/200/200'),
-    TestUser(
-        displayName: 'Durian',
-        email: 'durian@test-user.com',
-        photoUrl: 'https://picsum.photos/id/1/200/200'),
+    TestUser(displayName: 'Apple', email: 'apple@test-user.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
+    TestUser(displayName: 'Banana', email: 'banana@test-user.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
+    TestUser(displayName: 'Cherry', email: 'cherry@test-user.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
+    TestUser(displayName: 'Durian', email: 'durian@test-user.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
   ];
   static get apple => users[0];
   static get banana => users[1];
   static get cherry => users[2];
   static get durian => users[3];
 
+  /// Login or register
+  ///
+  /// Creating a random user
+  ///
+  /// ```dart
+  /// final email = "${randomString()}@gmail.com";
+  /// final randomUser = await Test.loginOrRegister(
+  ///   TestUser(
+  ///     displayName: email,
+  ///     email: email,
+  ///     photoUrl: 'https://picsum.photos/id/1/200/200'
+  ///   ),
+  /// );
+  /// ```
   static Future<User> loginOrRegister(TestUser user) async {
     try {
-      final UserCredential cred = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-              email: user.email, password: user.password);
+      final UserCredential cred =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(email: user.email, password: user.password);
       return cred.user!;
     } catch (e) {
-      log(e.toString());
-      final cred = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: user.email, password: user.password);
+      final cred =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(email: user.email, password: user.password);
       return cred.user!;
     }
   }
@@ -60,8 +59,8 @@ class Test {
     // Wait until logout is complete or you may see firestore permission denied error.
     await Test.wait();
 
-    final UserCredential cred = await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: user.email, password: user.password);
+    final UserCredential cred =
+        await FirebaseAuth.instance.signInWithEmailAndPassword(email: user.email, password: user.password);
     await Test.wait();
     return cred.user!;
   }
@@ -111,26 +110,37 @@ class Test {
       if (e.toString().split(': ').last == code) {
         test(true, 'Exception code must be $code');
       } else {
-        test(false,
-            'Exception code must be $code. Actual code: ${e.toString()}');
+        test(false, 'Exception code must be $code. Actual code: ${e.toString()}');
       }
     }
   }
 
-  /// Assert future is completed.
+  /// Assert future must completed without error.
   ///
   /// [future] The future that must be completed.
   /// This will test if the future is completed or not.
-  static Future<void> assertFuture(Future future) {
+  static Future<void> assertFuture(Future future, [String? reason]) {
     return future.then((value) {
-      test(true, 'Future must be completed');
+      test(true, reason ?? 'Future has completed');
     }).catchError((e) {
-      test(false, 'Future must be completed. Actual exception: $e');
+      test(false, '${reason ?? 'Future must be completed.'}, Actual exception: $e');
     });
   }
+}
+
+Future assertFuture(Future future, [String? reason]) {
+  return Test.assertFuture(future, reason);
 }
 
 /// Test
 test(bool cond, [String? reason]) {
   Test.test(cond, reason);
+}
+
+testFailed(String reason) {
+  Test.test(false, reason);
+}
+
+testSuccess(String reason) {
+  Test.test(true, reason);
 }

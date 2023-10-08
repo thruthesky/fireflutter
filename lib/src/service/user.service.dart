@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -239,14 +240,20 @@ class UserService {
     });
   }
 
-  /// Listen the login user's document
+  /// Listen the login user's document and set the [nullableUser] when the
+  /// document is updated.
+  ///
+  /// The app may initialize the [UserService] more than once, so we need to
+  /// cancel the previous subscription. Meaning, the app can initialize the
+  /// [UserService] multiple times.
+  StreamSubscription? _userDocuementSubscription;
   _listenUserDocument() {
-    doc.snapshots().listen((documentSnapshot) async {
+    _userDocuementSubscription?.cancel();
+    _userDocuementSubscription = doc.snapshots().listen((documentSnapshot) async {
       /// User document does not exist. Create the user document.
       ///
       if (!documentSnapshot.exists || documentSnapshot.data() == null) {
         await User.create(uid: myUid!);
-        // _listenUserDocument();
       } else {
         nullableUser = User.fromDocumentSnapshot(documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
       }

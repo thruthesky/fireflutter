@@ -7,6 +7,7 @@ If you are looking for a package that help you develop a full featured content m
 Create an issue if you find a bug or need a help.
 
 - [FireFlutter](#fireflutter)
+- [Changes](#changes)
 - [Overview](#overview)
   - [Features](#features)
     - [Main Features](#main-features)
@@ -14,20 +15,20 @@ Create an issue if you find a bug or need a help.
   - [Installation](#installation)
   - [Create a Firebase](#create-a-firebase)
 - [Firebase Extension](#firebase-extension)
-  - [Resize image](#resize-image)
+    - [Resize image](#resize-image)
   - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
     - [Firestore security rules](#firestore-security-rules)
     - [Security rule for admin](#security-rule-for-admin)
     - [Realtime database security rules](#realtime-database-security-rules)
   - [Setup the base code](#setup-the-base-code)
-  - [url_launcher (Optional)](#url_launcher-optional)
+  - [url\_launcher (Optional)](#url_launcher-optional)
 - [Pub.dev Packages](#pubdev-packages)
   - [timeago](#timeago)
-  - [Parsed_ReadMore](#parsed_readmore)
+  - [Parsed\_ReadMore](#parsed_readmore)
 - [How to build a user profile page](#how-to-build-a-user-profile-page)
-  - [1. Create Scaffold widgets](#1-create-scaffold-widgets)
-  - [2. UserBuilder()](#2-userbuilder)
+    - [1. Create Scaffold widgets](#1-create-scaffold-widgets)
+    - [2. UserBuilder()](#2-userbuilder)
   - [Result](#result)
 - [How to build a chat app](#how-to-build-a-chat-app)
 - [How to build a forum app](#how-to-build-a-forum-app)
@@ -112,8 +113,6 @@ Create an issue if you find a bug or need a help.
   - [Customizing source](#customizing-source)
 - [Following and Follower](#following-and-follower)
   - [Feed listing logic](#feed-listing-logic)
-  <!-- - [How to follow](#how-to-follow)
-  - [How to unfollow](#how-to-unfollow) -->
 - [Block](#block)
 - [Customization](#customization)
   - [User profile screen customization](#user-profile-screen-customization)
@@ -142,6 +141,12 @@ Create an issue if you find a bug or need a help.
 - [Contribution](#contribution)
   - [Install FireFlutter and Example Project](#install-fireflutter-and-example-project)
   - [Coding Guideline](#coding-guideline)
+
+# Changes
+
+- Oct 6, easy-extension was removed.
+- Oct 8, Test app was added. you can add it in apps folder. https://github.com/thruthesky/fireflutter_test
+  - New test is introduced.
 
 # Overview
 

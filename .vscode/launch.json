@@ -5,6 +5,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "TEST - iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/fireflutter_test",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "iPhone 15 Pro Max"
+    },
+    {
       "name": "android_Fireflutter_Project",
       "request": "launch",
       "type": "dart",
