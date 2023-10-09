@@ -1874,6 +1874,51 @@ When it follows or unfollows,
 
 Note that you may use it with or without the feed service. See the `Feed Service` for the details on how to follow to see the posts of the users that you are following. But you can use it without the feed system.
 
+### Display Followers
+To display users followers you can use these following builders:
+- `UserService.instance.showFollowersScreen()` will open a new dialog to display the user's follower. Example:
+```dart
+// custom button
+buttonBuilder('Followers', 
+  onTap: () {
+  UserService.instance.showFollowersScreen(
+    context: context,
+      user: my,
+      // [Optional]
+      // use itemBuilder to customize 
+      itemBuilder: (user) => Scaffold( 
+        body: ListTile(
+          leading: UserAvatar(user: user),
+          title: Text(user.displayName),
+        ),
+    ),
+  );
+}),
+```
+- `UserListView.builder()` To use this you must have a collection or list of uids of the user's followers then follow the example below:
+
+```dart
+List<String> followers = my.followers.toList(); // list of current user's followers
+
+SizedBox( // setting a constraints 
+  height: size.height / 6,
+  child: followers.isEmpty
+      ? const Text('No Followers') // display when no followers
+      : UserListView.builder(
+          uids: followers,
+          // customize your widgets 
+          itemBuilder: (user) => ListTile(
+            leading: UserAvatar(user: user),
+            title: Text(user!.name),
+            trailing: const FaIcon(FontAwesomeIcons.ban),
+          ),
+        ),
+);
+```
+
+<!-- TODO: Modify followers from code and display it here 
+ -->
+
 ## No of profile view
 
 A user can see other user's profile. FireFlutter provides a way of count the no of users who saw my profile. It is turned off by default and you can turn it on with `UserService.instance.init(enableNoOfProfileView)`. The history is saved under `/no_of_profile_view_history` collection so you can list and sort.
