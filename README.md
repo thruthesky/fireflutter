@@ -15,20 +15,20 @@ Create an issue if you find a bug or need a help.
   - [Installation](#installation)
   - [Create a Firebase](#create-a-firebase)
 - [Firebase Extension](#firebase-extension)
-  - [Resize image](#resize-image)
+    - [Resize image](#resize-image)
   - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
     - [Firestore security rules](#firestore-security-rules)
     - [Security rule for admin](#security-rule-for-admin)
     - [Realtime database security rules](#realtime-database-security-rules)
   - [Setup the base code](#setup-the-base-code)
-  - [url_launcher (Optional)](#url_launcher-optional)
+  - [url\_launcher (Optional)](#url_launcher-optional)
 - [Pub.dev Packages](#pubdev-packages)
   - [timeago](#timeago)
-  - [Parsed_ReadMore](#parsed_readmore)
+  - [Parsed\_ReadMore](#parsed_readmore)
 - [How to build a user profile page](#how-to-build-a-user-profile-page)
-  - [1. Create Scaffold widgets](#1-create-scaffold-widgets)
-  - [2. UserBuilder()](#2-userbuilder)
+    - [1. Create Scaffold widgets](#1-create-scaffold-widgets)
+    - [2. UserBuilder()](#2-userbuilder)
   - [Result](#result)
 - [How to build a chat app](#how-to-build-a-chat-app)
     - [1. initState](#1-initstate)
@@ -142,6 +142,7 @@ Create an issue if you find a bug or need a help.
   - [Testing on real Firebase](#testing-on-real-firebase)
   - [Testing on Cloud Functions](#testing-on-cloud-functions)
 - [Logic test](#logic-test)
+  - [TestUi Widget](#testui-widget)
 - [Developer](#developer)
   - [Installing your app with fireflutter](#installing-your-app-with-fireflutter)
   - [Development Tips](#development-tips)
@@ -152,8 +153,7 @@ Create an issue if you find a bug or need a help.
 # Changes
 
 - Oct 6, easy-extension was removed.
-- Oct 8, Test app was added. you can add it in apps folder. <https://github.com/thruthesky/fireflutter_test>
-  - New test is introduced.
+- Oct 8, Test app was added. you can add it in apps folder. <https://github.com/thruthesky/fireflutter_test> See TestUi Widget
 
 # Overview
 
@@ -3321,6 +3321,13 @@ npm run mocha **/save-token.test.ts
 To test the functionality of fireflutter, it needs a custom way of testing. For instance, fireflutter listens user login and creates the user's document if it does not exists. And what will happen if the user document is deleted by accident? To prove that there will be no bug on this case, it need to be tested and the test must work based on the real firebase events and monitor if the docuemnt is being recreated. Unit test, widget test and integration test will not work for this.
 
 We wrote some test code and saved it in `TestUi` widget. To run the test in `TestUi`, you will need to initialize firebase. But don't initialize fireflutter nor other services in fireflutter.
+
+
+## TestUi Widget
+
+This has custom maid test code for fireflutter. You may learn more teachniques on using fireflutter by seeing the test code.
+
+
 
 # Developer
 
