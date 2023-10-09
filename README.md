@@ -135,6 +135,7 @@ Create an issue if you find a bug or need a help.
   - [Testing security rules](#testing-security-rules)
   - [Testing on real Firebase](#testing-on-real-firebase)
   - [Testing on Cloud Functions](#testing-on-cloud-functions)
+- [Logic test](#logic-test)
 - [Developer](#developer)
   - [Installing your app with fireflutter](#installing-your-app-with-fireflutter)
   - [Development Tips](#development-tips)
@@ -3162,6 +3163,18 @@ To run a single test,
 npm run mocha **/save-token*
 npm run mocha **/save-token.test.ts
 ```
+
+
+# Logic test
+
+To test the functionality of fireflutter, it needs a custom way of testing. For instance, fireflutter listens user login and creates the user's document if it does not exists. And what will happen if the user document is deleted by accident? To prove that there will be no bug on this case, it need to be tested and the test must work based on the real firebase events and monitor if the docuemnt is being recreated. Unit test, widget test and integration test will not work for this.
+
+We wrote some test code and saved it in `TestUi` widget. To run the test in `TestUi`, you will need to initialize firebase. But don't initialize fireflutter nor other services in fireflutter.
+
+
+
+
+
 
 # Developer
 
