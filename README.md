@@ -595,14 +595,55 @@ class UserBuilder extends StatelessWidget {
 
 ## Result
 
-Here is a sample result
-
 **_Note:_** [**UserProfileAvatar**](#userprofileavatar) returns an icon that will serve as a default profile picture if the user doesn't have any picture uploaded.
 
 ![user_profile](/doc/img/user_profile.png)
 
 # How to build a chat app
 
+Here is an instruction on how to create a simple chat app
+
+### 1. Stateful Widget
+Create a stateful widget and add an `initState()`
+
+```dart
+@override
+void initState() {
+  super.initState();
+  // using the code below you can customize the AppBar of chats
+  // Note: this will be created only on the chat Room
+  ChatService.instance.customize.chatRoomAppBarBuilder = ({room, user}) => customAppBa(context, room);
+}
+```
+
+### 2. ChatRoomListView Widget
+Add the FireFlutter controller 
+```dart
+final ChatRoomListViewController controller = ChatRoomListViewController();
+```
+Add a `Scaffold()` and create your own UI design. Inside the body add the `ChatRoomListView()`. See [Chat Features](#chat-feature) for more info.
+```dart
+Scaffold(
+  appBar: appBar('Chats'),
+  bottomNavigationBar: const BottomNavBar(index: 1),
+  body: ChatRoomListView(
+    controller: controller, // ChatRoomListViewController controller;
+    singleChatOnly: false,
+    itemBuilder: (context, room) => ChatRoomListTile(
+      room: room,
+      onTap: () {
+        controller.showChatRoom(context: context, room: room); // display the chat room on tap... the appbar from initState() will apply to this.
+      },
+    ),
+  ),
+)
+```
+
+## Result
+
+![chat_app](/doc/img/chat_app.png)
+
+***Note:*** Admins will automatically send a welcome message when `UserService.instance.sendWelcomeMessage(message: 'Welcome!')` is being used.
 # How to build a forum app
 
 # Usage
