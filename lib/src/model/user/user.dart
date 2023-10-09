@@ -395,7 +395,7 @@ class User {
 
   /// check if user blocks the other user
   Future<bool> hadBlocked(String otherUid) async {
-    final event = await FirebaseDatabase.instance.ref(pathUserBlocked(otherUid)).once(DatabaseEventType.value);
+    final event = await FirebaseDatabase.instance.ref('blocks/$uid/$otherUid').once(DatabaseEventType.value);
     if (!event.snapshot.exists) return false;
     return event.snapshot.value as bool;
   }

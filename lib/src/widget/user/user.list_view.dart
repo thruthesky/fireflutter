@@ -90,6 +90,16 @@ class UserListView extends StatelessWidget {
         if (snapshot.hasError) {
           return Text('Something went wrong! ${snapshot.error}');
         }
+        snapshot.docs.removeWhere((doc) => exemptedUsers.contains(doc.id));
+        // TODO I should not be able to see the users who blocked me.
+        // The next commented lines of code are not working
+        // for (QueryDocumentSnapshot doc in snapshot.docs) {
+        //   User.fromDocumentSnapshot(doc).hadBlocked(myUid!).then((hadBlocked) {
+        //     debugPrint('--------> Had Blocked: $hadBlocked');
+        //     if (!hadBlocked) return;
+        //     snapshot.docs.remove(doc);
+        //   });
+        // }
         if (customViewBuilder != null) return customViewBuilder!.call(snapshot);
         return ListView.builder(
           scrollDirection: scrollDirection,
@@ -103,7 +113,6 @@ class UserListView extends StatelessWidget {
               snapshot.fetchMore();
             }
             final user = User.fromDocumentSnapshot(snapshot.docs[index]);
-            if (exemptedUsers.contains(user.uid)) return const SizedBox();
             if (itemBuilder != null) return itemBuilder!.call(user, index);
             return ListTile(
               contentPadding: contentPadding,
