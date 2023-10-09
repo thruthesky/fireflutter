@@ -29,6 +29,7 @@ class UserListView extends StatelessWidget {
     this.customViewBuilder,
     this.pageSize = 10,
     this.scrollDirection = Axis.vertical,
+    this.contentPadding,
   });
 
   final String? searchText;
@@ -42,6 +43,7 @@ class UserListView extends StatelessWidget {
   final Widget Function(User)? subtitleBuilder;
   final Widget Function(User)? trailingBuilder;
   final Widget Function(User, int)? itemBuilder;
+  final EdgeInsetsGeometry? contentPadding;
 
   /// Use this [customViewBuilder] to customize what view (listView, gridView, etc) to use.
   /// If decided to use this, [avatarBuilder], [titleBuilder], [subtitleBuilder],
@@ -104,6 +106,7 @@ class UserListView extends StatelessWidget {
             if (exemptedUsers.contains(user.uid)) return const SizedBox();
             if (itemBuilder != null) return itemBuilder!.call(user, index);
             return ListTile(
+              contentPadding: contentPadding,
               title: titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
               subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
               leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
