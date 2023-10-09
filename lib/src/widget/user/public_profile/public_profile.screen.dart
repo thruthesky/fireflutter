@@ -99,6 +99,14 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
           ),
           body: doc(
             (user) {
+              if (!user.exists) {
+                return Center(
+                  child: Text(
+                    'The user does not exist.',
+                    style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface),
+                  ),
+                );
+              }
               return Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

@@ -26,6 +26,7 @@ class I18nTexts {
   String no;
   String ok;
   String edit;
+  String delete;
   String cancel;
   String reply;
   String like;
@@ -89,6 +90,7 @@ class I18nTexts {
     this.no = "No",
     this.ok = "OK",
     this.edit = 'Edit',
+    this.delete = 'Delete',
     this.cancel = "Cancel",
     this.reply = "Reply",
     this.like = "Like",

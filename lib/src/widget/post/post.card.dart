@@ -178,9 +178,12 @@ class PostCard extends StatelessWidget {
           icon: const Icon(Icons.more_vert),
           itemBuilder: (context) => [
             const PopupMenuItem(value: "reply", child: Text("Reply")),
-            if (post.isMine) PopupMenuItem(value: "edit", child: Text(tr.edit)),
-            const PopupMenuItem(value: "report", child: Text("Report")),
-            if (!post.isMine)
+            if (post.isMine) ...[
+              PopupMenuItem(value: "edit", child: Text(tr.edit)),
+              PopupMenuItem(value: "delete", child: Text(tr.delete)),
+            ],
+            if (!post.isMine) ...[
+              const PopupMenuItem(value: "report", child: Text("Report")),
               PopupMenuItem(
                 value: 'block',
                 child: Database(
@@ -188,10 +191,19 @@ class PostCard extends StatelessWidget {
                   builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
                 ),
               ),
+            ],
           ],
           onSelected: (value) async {
             if (value == "reply") {
               CommentService.instance.showCommentEditBottomSheet(context, post: post);
+            } else if (value == "delete") {
+              final re = await confirm(
+                  context: context, title: 'Deleting Post', message: 'Are you sure you want to delete this?');
+              // ! Post.delete() does not work because it does not fully remove the post in the feeds.
+              if (re == true) {
+                await post.delete();
+                toast(title: tr.delete, message: '@todo tr.deleteMessage');
+              }
             } else if (value == "edit") {
               PostService.instance.showEditScreen(context, post: post);
             } else if (value == 'report') {

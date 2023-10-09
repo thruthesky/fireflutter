@@ -88,7 +88,6 @@ class _FeedListViewState extends State<FeedListView> {
               }
               final feed = Feed.fromSnapshot(snapshot.docs[index]);
               final post = Post.fromJson(feed.toJson());
-
               final child = widget.itemBuilder.call(post, index);
 
               if (widget.topBuilder != null && index == 0) {

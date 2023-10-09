@@ -15,20 +15,20 @@ Create an issue if you find a bug or need a help.
   - [Installation](#installation)
   - [Create a Firebase](#create-a-firebase)
 - [Firebase Extension](#firebase-extension)
-    - [Resize image](#resize-image)
+  - [Resize image](#resize-image)
   - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
     - [Firestore security rules](#firestore-security-rules)
     - [Security rule for admin](#security-rule-for-admin)
     - [Realtime database security rules](#realtime-database-security-rules)
   - [Setup the base code](#setup-the-base-code)
-  - [url\_launcher (Optional)](#url_launcher-optional)
+  - [url_launcher (Optional)](#url_launcher-optional)
 - [Pub.dev Packages](#pubdev-packages)
   - [timeago](#timeago)
-  - [Parsed\_ReadMore](#parsed_readmore)
+  - [Parsed_ReadMore](#parsed_readmore)
 - [How to build a user profile page](#how-to-build-a-user-profile-page)
-    - [1. Create Scaffold widgets](#1-create-scaffold-widgets)
-    - [2. UserBuilder()](#2-userbuilder)
+  - [1. Create Scaffold widgets](#1-create-scaffold-widgets)
+  - [2. UserBuilder()](#2-userbuilder)
   - [Result](#result)
 - [How to build a chat app](#how-to-build-a-chat-app)
 - [How to build a forum app](#how-to-build-a-forum-app)
@@ -145,7 +145,7 @@ Create an issue if you find a bug or need a help.
 # Changes
 
 - Oct 6, easy-extension was removed.
-- Oct 8, Test app was added. you can add it in apps folder. https://github.com/thruthesky/fireflutter_test
+- Oct 8, Test app was added. you can add it in apps folder. <https://github.com/thruthesky/fireflutter_test>
   - New test is introduced.
 
 # Overview
@@ -604,6 +604,7 @@ class UserBuilder extends StatelessWidget {
 Here is an instruction on how to create a simple chat app
 
 ### 1. Stateful Widget
+
 Create a stateful widget and add an `initState()`
 
 ```dart
@@ -617,11 +618,15 @@ void initState() {
 ```
 
 ### 2. ChatRoomListView Widget
-Add the FireFlutter controller 
+
+Add the FireFlutter controller
+
 ```dart
 final ChatRoomListViewController controller = ChatRoomListViewController();
 ```
+
 Add a `Scaffold()` and create your own UI design. Inside the body add the `ChatRoomListView()`. See [Chat Features](#chat-feature) for more info.
+
 ```dart
 Scaffold(
   appBar: appBar('Chats'),
@@ -643,7 +648,8 @@ Scaffold(
 
 ![chat_app](/doc/img/chat_app.png)
 
-***Note:*** Admins will automatically send a welcome message when `UserService.instance.sendWelcomeMessage(message: 'Welcome!')` is being used.
+**_Note:_** Admins will automatically send a welcome message when `UserService.instance.sendWelcomeMessage(message: 'Welcome!')` is being used.
+
 # How to build a forum app
 
 # Usage
@@ -1374,6 +1380,30 @@ UserListView.builder(uids: friends)
 
 ```
 
+In using `UserListView.builder`, must check the user if exists to prevent error like the following code:
+
+```dart
+UserListView.builder(
+  uids: user.followers,
+  itemBuilder: (user) {
+    // The uid of a User will be null if it doesn't exist in the database.
+    // This can happen if the user has been deleted completely in database.
+    // This should never happen.
+    if (!(user?.exists ?? false)) return const SizedBox();
+    return ListTile(
+      contentPadding: const EdgeInsets.only(left: sm, right: 0),
+      leading: UserAvatar(
+        user: user,
+        size: 50,
+        radius: 30,
+      ),
+      ...
+    );
+  },
+),
+
+```
+
 ## When user is not logged in
 
 This is one way of how to dsplay widgets safely for not logged in users.
@@ -1916,18 +1946,21 @@ When it follows or unfollows,
 Note that you may use it with or without the feed service. See the `Feed Service` for the details on how to follow to see the posts of the users that you are following. But you can use it without the feed system.
 
 ### Display Followers
+
 To display users followers you can use these following builders:
+
 - `UserService.instance.showFollowersScreen()` will open a new dialog to display the user's follower. Example:
+
 ```dart
 // custom button
-buttonBuilder('Followers', 
+buttonBuilder('Followers',
   onTap: () {
   UserService.instance.showFollowersScreen(
     context: context,
       user: my,
       // [Optional]
-      // use itemBuilder to customize 
-      itemBuilder: (user) => Scaffold( 
+      // use itemBuilder to customize
+      itemBuilder: (user) => Scaffold(
         body: ListTile(
           leading: UserAvatar(user: user),
           title: Text(user.displayName),
@@ -1936,18 +1969,19 @@ buttonBuilder('Followers',
   );
 }),
 ```
+
 - `UserListView.builder()` To use this you must have a collection or list of uids of the user's followers then follow the example below:
 
 ```dart
 List<String> followers = my.followers.toList(); // list of current user's followers
 
-SizedBox( // setting a constraints 
+SizedBox( // setting a constraints
   height: size.height / 6,
   child: followers.isEmpty
       ? const Text('No Followers') // display when no followers
       : UserListView.builder(
           uids: followers,
-          // customize your widgets 
+          // customize your widgets
           itemBuilder: (user) => ListTile(
             leading: UserAvatar(user: user),
             title: Text(user!.name),
@@ -1957,7 +1991,7 @@ SizedBox( // setting a constraints
 );
 ```
 
-<!-- TODO: Modify followers from code and display it here 
+<!-- TODO: Modify followers from code and display it here
  -->
 
 ## No of profile view
