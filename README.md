@@ -31,7 +31,13 @@ Create an issue if you find a bug or need a help.
     - [2. UserBuilder()](#2-userbuilder)
   - [Result](#result)
 - [How to build a chat app](#how-to-build-a-chat-app)
+    - [1. initState](#1-initstate)
+    - [2. ChatRoomListView Widget](#2-chatroomlistview-widget)
+  - [Result](#result-1)
 - [How to build a forum app](#how-to-build-a-forum-app)
+    - [1. initState](#1-initstate-1)
+    - [2. PostListView](#2-postlistview)
+  - [Result](#result-2)
 - [Usage](#usage)
   - [UserService](#userservice)
   - [PostService](#postservice)
@@ -92,6 +98,7 @@ Create an issue if you find a bug or need a help.
   - [Favorite/Bookmark](#favoritebookmark)
     - [How to display icon](#how-to-display-icon)
   - [Follow and Unfollow](#follow-and-unfollow)
+    - [Display Followers](#display-followers)
   - [No of profile view](#no-of-profile-view)
 - [Post](#post)
   - [Post Document Strucutre](#post-document-strucutre)
@@ -112,7 +119,6 @@ Create an issue if you find a bug or need a help.
   - [Send push notification to custom topic](#send-push-notification-to-custom-topic)
   - [Customizing source](#customizing-source)
 - [Following and Follower](#following-and-follower)
-  - [Feed listing logic](#feed-listing-logic)
 - [Block](#block)
 - [Customization](#customization)
   - [User profile screen customization](#user-profile-screen-customization)
@@ -318,13 +324,6 @@ Enable Realtime Database on firebase and copy the following and paste it into yo
         "$other_uid": {
           ".write": "$other_uid === auth.uid"
         }
-      }
-    },
-    "feeds": {
-      ".read": true,
-      ".write": true,
-      "$uid": {
-        ".indexOn": ["createdAt"]
       }
     },
     "posts": {
@@ -2638,63 +2637,23 @@ CommentService.instance.init(
 # Following and Follower
 
 - When A follows B,
+  - B is added into `followings` in A's document.
+  - A is added into `followers` in B's document.
+  - Get the last 50 posts of B and add A into `followers`.
 
-  - B's uid will be added into `followings` field of A's document.
-  - And A's uid will be added into `followers` field in B's document.
-  - Get the last 20 posts of B and save title, content, photo, createAt into `/feeds/{uid}` in RTDB.
-  - See the security rules for this logic.
+- When A unfollow B,
+  - B is removed from `followings` in A's document.
+  - A is removed from `followers` in B's document.
+  - Get the all posts of B and remove A from `followers`.
 
-- When A unfollow B, all the relative data will be removed.
+- When listing feeds,
+  - Search all posts that has your uid in `followers`.
 
-  - `followings`, `followers`, RTDB.
 
-- When A open's his wall(it could be home, profile or any screen), A can display the posts who he follows with `FeedListView` widget.
-- To display the followers use `FollowerListView`.
-- To display the users who you follow, use `FollowingListView`.
+This does not scale well. But don't do this in Cloud Functions to save the downloading data over network.
+If you are concerned about pricing, limit last 6 months on updating the `followers` in posts and limit searching posts  within last 6 months.
 
-- A feed is a post that user can create on the forum in whatever category.
 
-## Feed listing logic
-
-- Terms
-
-  - `follow` is an action that I am following other user.
-  - `followed` is an action that I am being followed by other user.
-  - `followers` is a field that contains a list of uid that are follow me. For instance, C and D follow me. then `followers` will contain `[C, D]`.
-  - `folowings` is a field that contains a list of uid that I am the one who follow other user. For instance, I follow E and F, then `followings` will contain `[E, F]`
-
-- Since the `in` filter is limited into 30 element, we cannot use it to query the posts of `followings`.
-
-- When there is a new feed genereated, fireflutter save all a copy of the post into the feed node of the followers. When the feed is updated, it should be synced. and when it is deleted, it should be removed from the node. Note that, if someone has 10K followers, then the post will have 10K copies and it overuse the space of RTDB. And this is the way we choose.
-
-```mermaid
-flowchart TD
-When_Follow-->UpdateFollower[Update Follower]-->UpdateFollowing[Update Following]-->UpdateFeed[Get last 20 feed and save in rtdb]
-
-When_Unfollow-->Remove_Follower-->Remove_Following-->Remove_Feeds
-
-NewFeed_From_Follower-->SaveNewFeedToAllFollower[Where there is a new feed, save all in all follower's feed list.]-->Push_Notification-->Messaging
-```
-
-```mermaid
-flowchart TD
-Delete_Feed-->Update_RTDB
-```
-
-```mermaid
-flowchart TD
-Displaying_Feeds-->Get_All_Feed_Sort_By_Minus_Date
-```
-
-<!-- REMOVED for inaccessibility -->
-
-<!-- ## How to follow
-
-Use `FeedService.instance.follow`. This will produce a permission error if you are going to follow a user that you are already following.
-
-## How to unfollow
-
-Use `FeedService.instance.unfollow`. This will produce a permission error if you try to unfollow a user that you are not following. -->
 
 # Block
 

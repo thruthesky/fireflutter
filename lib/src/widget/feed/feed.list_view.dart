@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
+import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,7 @@ class FeedListView extends StatefulWidget {
   final double? itemExtent;
   final double? cacheExtent;
   final Widget Function(Post feed, int index) itemBuilder;
-  final Widget Function(Feed feed)? topBuilder;
+  final Widget Function(Post feed)? topBuilder;
 
   final Widget Function(BuildContext, Post)? avatarBuilder;
   final Widget Function(BuildContext, Post)? textBuilder;
@@ -61,13 +62,15 @@ class _FeedListViewState extends State<FeedListView> {
       );
     }
 
-    return FirebaseDatabaseQueryBuilder(
-      query: rtdb.ref('feeds').child(FirebaseAuth.instance.currentUser!.uid).orderByChild('createdAt'),
+    return FirestoreQueryBuilder(
+      query: postCol.where('followers', arrayContains: myUid).orderBy('createdAt', descending: true),
+      pageSize: 40,
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
+          dog(snapshot.error.toString());
           return Text('Something went wrong! ${snapshot.error}');
         }
         return Scrollbar(
@@ -86,15 +89,15 @@ class _FeedListViewState extends State<FeedListView> {
                 // It is safe to call this function from within the build method.
                 snapshot.fetchMore();
               }
-              final feed = Feed.fromSnapshot(snapshot.docs[index]);
-              final post = Post.fromJson(feed.toJson());
+
+              final post = Post.fromDocumentSnapshot(snapshot.docs[index]);
 
               final child = widget.itemBuilder.call(post, index);
 
               if (widget.topBuilder != null && index == 0) {
                 return Column(
                   children: [
-                    widget.topBuilder!.call(feed),
+                    widget.topBuilder!.call(post),
                     child,
                   ],
                 );

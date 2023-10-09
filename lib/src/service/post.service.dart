@@ -104,7 +104,7 @@ class PostService {
 
   /// Get multiple posts
   ///
-  ///
+  /// [limit] is the number of posts to get. If [limit] is 0, it will get all posts.
   Future<List<Post>> gets({
     String? uid,
     String? category,
@@ -113,7 +113,9 @@ class PostService {
     Query q = postCol;
     if (uid != null) q = q.where('uid', isEqualTo: uid);
     if (category != null) q = q.where('category', isEqualTo: category);
-    q = q.limit(limit);
+    if (limit > 0) {
+      q = q.limit(limit);
+    }
     q = q.orderBy('createdAt', descending: true);
     final querySnapshot = await q.get();
     if (querySnapshot.size == 0) return [];

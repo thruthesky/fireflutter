@@ -103,23 +103,24 @@ class Post {
   ///
   /// This method will create a post, update the no of posts of the user and the category.
   static Future<Post> create({
-    required String categoryId,
-    required String title,
-    required String content,
+    String? categoryId,
+    String? title,
+    String? content,
     String? youtubeId,
     List<String>? urls,
     List<String>? hashtags,
     Map<String, dynamic> data = const {},
   }) async {
     final Map<String, dynamic> postData = {
-      'title': title,
-      'content': content,
-      'categoryId': categoryId,
+      if (title != null) 'title': title,
+      if (content != null) 'content': content,
+      if (categoryId != null) 'categoryId': categoryId,
       if (youtubeId != null) 'youtubeId': youtubeId,
       if (urls != null) 'urls': urls,
       'createdAt': FieldValue.serverTimestamp(),
       'uid': myUid!,
       if (hashtags != null) 'hashtags': hashtags,
+      if (my.followers.isNotEmpty) 'followers': my.followers,
       ...data,
     };
     final postId = Post.doc().id;
@@ -140,13 +141,11 @@ class Post {
     User.fromUid(FirebaseAuth.instance.currentUser!.uid).update(
       noOfPosts: FieldValue.increment(1),
     );
-    if (categoryId.isNotEmpty) {
+    if (categoryId != null && categoryId.isNotEmpty) {
       Category.fromId(categoryId).update(
         noOfPosts: FieldValue.increment(1),
       );
     }
-
-    FeedService.instance.create(post: post);
 
     // return post
     return post;
@@ -156,17 +155,20 @@ class Post {
   ///
   ///
   /// Returns a Future<Post>
+  ///
+  /// Note, it updates the [updatedAt] field automatically.
+  /// For security reason, the admin and the author can only use this method.
   Future<Post> update({
-    required String title,
-    required String content,
+    String? title,
+    String? content,
     List<String>? urls,
     String? youtubeId,
     List<String>? hashtags,
     Map<String, dynamic> data = const {},
   }) async {
     final Map<String, dynamic> postUpdateData = {
-      'title': title,
-      'content': content,
+      if (title != null) 'title': title,
+      if (content != null) 'content': content,
       if (urls != null) 'urls': urls,
       if (youtubeId != null) 'youtubeId': youtubeId,
       if (hashtags != null) 'hashtags': hashtags,
@@ -186,9 +188,14 @@ class Post {
 
     PostService.instance.onUpdate?.call(updatedPost);
 
-    FeedService.instance.update(post: updatedPost);
-
     return updatedPost;
+  }
+
+  /// Update the list of followers
+  ///
+  /// For the security reason, it can't use the [update] method.
+  Future updateFollowers(FieldValue followers) async {
+    await postCol.doc(id).update({'followers': followers});
   }
 
   /// Delete the post.
@@ -196,7 +203,6 @@ class Post {
   /// This method will delete the post, update the no of posts of the user and the category.
   /// It will also delete all the feeds of the post.
   Future<void> delete({String? reason, List<String>? fromUids}) async {
-    await FeedService.instance.delete(post: this, fromUids: fromUids);
     await update(
       title: '',
       content: '',

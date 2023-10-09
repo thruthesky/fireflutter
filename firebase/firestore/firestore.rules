@@ -58,7 +58,7 @@ service cloud.firestore {
         ||
         ( request.auth.uid == userDocumentId && notUpdating(['isDisabled', 'isAdmin', 'isVerified']) )
         ||
-        addOrRemove('followers', request.auth.uid) 
+        addOrRemove('followers', request.auth.uid)
         ;
       allow delete: if request.auth.uid == userDocumentId || isAdmin();
       match /fcm_tokens/{docId} {
@@ -124,10 +124,13 @@ service cloud.firestore {
 
       allow read: if true;
       allow create: if willBeMyPost() && isEnabled();
-      allow update: if 
-        isAdmin() 
+      allow update: if
+        isAdmin()
         ||
-        (isEnabled() && ( isMyPost() || onlyUpdating(['noOfComments']) ));
+        (isEnabled() && ( isMyPost() || onlyUpdating(['noOfComments']) ))
+        ||
+        addOrRemove('followers', request.auth.uid)
+      ;
       allow delete: if false;
     }
 
