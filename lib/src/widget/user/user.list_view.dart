@@ -71,7 +71,7 @@ class UserListView extends StatelessWidget {
       query = query.where(field, isEqualTo: searchText);
     }
     for (String filterKey in filter.keys) {
-      if (filter[filterKey] is String) {
+      if (filter[filterKey] is String || filter[filterKey] is int) {
         query = query.where(filterKey, isEqualTo: filter[filterKey]);
       }
       if (filter[filterKey] is List<dynamic>) {

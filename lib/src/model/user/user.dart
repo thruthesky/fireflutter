@@ -412,8 +412,6 @@ class User {
     // Logged out user can't block.
     // I can't block myself.
     if (myUid == null || uid == myUid) return false;
-    final blocked = await toggle('blocks/$myUid/$uid');
-
-    return blocked;
+    return await toggle('blocks/$myUid/$uid');
   }
 }
