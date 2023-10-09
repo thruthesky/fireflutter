@@ -1,8 +1,8 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class ProfileFollowerSceen extends StatelessWidget {
-  const ProfileFollowerSceen({super.key, this.itemBuilder, this.user});
+class ProfileFollowingScreen extends StatelessWidget {
+  const ProfileFollowingScreen({super.key, this.itemBuilder, this.user});
 
   final Widget Function(User)? itemBuilder;
   final User? user;
@@ -10,9 +10,9 @@ class ProfileFollowerSceen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Followers'),
+        title: const Text('Following'),
       ),
-      body: itemBuilder?.call(user!) ?? UserListView.builder(uids: user!.followers),
+      body: itemBuilder?.call(user!) ?? UserListView.builder(uids: user!.followings),
     );
   }
 }

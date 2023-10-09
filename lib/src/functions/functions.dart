@@ -1,5 +1,5 @@
+import 'dart:developer' as developer;
 import 'dart:io';
-
 import 'dart:math';
 
 import 'package:fireflutter/fireflutter.dart';
@@ -15,6 +15,10 @@ import 'package:timeago/timeago.dart' as timeago;
 bool get isAndroid => !kIsWeb && Platform.isAndroid;
 bool get isIOS => !kIsWeb && Platform.isIOS;
 bool get isWeb => kIsWeb;
+
+void dog(String msg) {
+  developer.log('--> $msg', time: DateTime.now(), name: '🐶', level: 2000);
+}
 
 /// Shows a [SnackBar] at the bottom of the screen.
 Future<void> showSnackBar(BuildContext? context, String message) async {

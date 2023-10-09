@@ -133,7 +133,7 @@ class UserDoc extends StatelessWidget {
     if (snapshot.hasData == false || userModel == null) {
       ///
       /// It passes the user model with the current time when there is no user document.
-      return builder(User(createdAt: DateTime.now()));
+      return builder(User.nonExistent());
     }
     return builder(userModel);
   }
