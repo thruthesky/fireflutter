@@ -54,7 +54,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: PostViewTitle(post: _post),
+        title: PostViewTitle(padding: const EdgeInsets.only(top: 0), post: _post),
+        centerTitle: true,
         actions: PostService.instance.postViewActions(context: context, post: _post),
         leading: widget.onPressBackButton == null
             ? null

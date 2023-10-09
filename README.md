@@ -596,15 +596,121 @@ class UserBuilder extends StatelessWidget {
 
 ## Result
 
-Here is a sample result
-
 **_Note:_** [**UserProfileAvatar**](#userprofileavatar) returns an icon that will serve as a default profile picture if the user doesn't have any picture uploaded.
 
 ![user_profile](/doc/img/user_profile.png)
 
 # How to build a chat app
 
+Here is an instruction on how to create a simple chat app
+
+### 1. initState
+Create a stateful widget and add an `initState()`
+
+```dart
+@override
+void initState() {
+  super.initState();
+  // using the code below you can customize the AppBar of chats
+  // Note: this will be created only on the chat Room
+  ChatService.instance.customize.chatRoomAppBarBuilder = ({room, user}) => customAppBa(context, room);
+}
+```
+
+### 2. ChatRoomListView Widget
+Add the FireFlutter controller 
+```dart
+final ChatRoomListViewController controller = ChatRoomListViewController();
+```
+Add a `Scaffold()` and create your own UI design. Inside the body add the `ChatRoomListView()`. See [Chat Features](#chat-feature) for more info.
+```dart
+Scaffold(
+  appBar: appBar('Chats'),
+  bottomNavigationBar: const BottomNavBar(index: 1),
+  body: ChatRoomListView(
+    controller: controller, // ChatRoomListViewController controller;
+    singleChatOnly: false,
+    itemBuilder: (context, room) => ChatRoomListTile(
+      room: room,
+      onTap: () {
+        controller.showChatRoom(context: context, room: room); // display the chat room on tap... the appbar from initState() will apply to this.
+      },
+    ),
+  ),
+)
+```
+
+## Result
+
+![chat_app](/doc/img/chat_app.png)
+
+***Note:*** Admins will automatically send a welcome message when `UserService.instance.sendWelcomeMessage(message: 'Welcome!')` is being used.
 # How to build a forum app
+Here is a simple forum app
+<!-- FIXME: Not sure if I implemented this correctly -->
+
+### 1. initState
+```dart
+@override
+void initState() {
+  super.initState();
+  PostService.instance.enableNotificationOnLike = true; // set to true to enable notification
+  PostService.instance.init( // This will send a notif to the owner of the post
+      enableNotificationOnLike: true,
+      onLike: (Post post, bool isLiked) async {
+        if (!isLiked) return;
+        MessagingService.instance.queue(
+          title: post.title,
+          body: '${my.name} liked your post',
+          id: myUid,
+          uids: [post.uid],
+          type: NotificationType.post.name,
+        );
+      });
+  // This will provide a custom design for showPostViewScreen()
+  PostService.instance.customize.showPostViewScreen = (context, {post, postIdasync}) => showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) {
+        final dateAgo = dateTimeAgo(post!.createdAt);
+        return  CustomPostViewScreen(
+                    dateAgo: dateAgo,
+                    post: post,
+                    snapshot: snapshot,
+                  ),
+        }
+      ),
+}
+```
+### 2. PostListView
+`PostListView()` builder works like a `ListView()`. It can display widgets with the posts details in a scrollable manner.
+
+```dart
+PostListView(
+  itemBuilder: (context,post) => CustomTile(post: post)
+)
+```
+You can use `PostCard()` to generate a default style of the post
+```dart
+PostListView(
+    itemBuilder: (context, post) => InkWell(
+      onTap: () => PostService.instance.showPostViewScreen(context: context, post: post),
+      child: PostCard(
+        post: post,
+        shareButtonBuilder: (post) => IconButton(
+          onPressed: () {
+            ShareService.instance.showBottomSheet();
+          },
+          icon: const Icon(Icons.share, size: sizeSm), // FireFlutter provides sizes
+        ),
+      ),
+    ),
+  ),
+```
+***Note:*** Aside from `Theme()`, there are many builders inside the `PostCard()` that you can use for customizing UI Design.
+
+## Result
+
+![forum_result](/doc/img/forum.png)
 
 # Usage
 
@@ -1874,6 +1980,51 @@ When it follows or unfollows,
 - It will add or remove the login user's uid in the [otherUid]'s followers array.
 
 Note that you may use it with or without the feed service. See the `Feed Service` for the details on how to follow to see the posts of the users that you are following. But you can use it without the feed system.
+
+### Display Followers
+To display users followers you can use these following builders:
+- `UserService.instance.showFollowersScreen()` will open a new dialog to display the user's follower. Example:
+```dart
+// custom button
+buttonBuilder('Followers', 
+  onTap: () {
+  UserService.instance.showFollowersScreen(
+    context: context,
+      user: my,
+      // [Optional]
+      // use itemBuilder to customize 
+      itemBuilder: (user) => Scaffold( 
+        body: ListTile(
+          leading: UserAvatar(user: user),
+          title: Text(user.displayName),
+        ),
+    ),
+  );
+}),
+```
+- `UserListView.builder()` To use this you must have a collection or list of uids of the user's followers then follow the example below:
+
+```dart
+List<String> followers = my.followers.toList(); // list of current user's followers
+
+SizedBox( // setting a constraints 
+  height: size.height / 6,
+  child: followers.isEmpty
+      ? const Text('No Followers') // display when no followers
+      : UserListView.builder(
+          uids: followers,
+          // customize your widgets 
+          itemBuilder: (user) => ListTile(
+            leading: UserAvatar(user: user),
+            title: Text(user!.name),
+            trailing: const FaIcon(FontAwesomeIcons.ban),
+          ),
+        ),
+);
+```
+
+<!-- TODO: Modify followers from code and display it here 
+ -->
 
 ## No of profile view
 

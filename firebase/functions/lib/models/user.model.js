@@ -9,7 +9,7 @@ const messaging_model_1 = require("./messaging.model");
  * when user want to get notified if new comments
  *  is created under user created posts/comments
  */
-const notifyNewComments = "notify-new-comments";
+const notifyNewCommentsUnderMyPostsAndComments = "notifyNewCommentsUnderMyPostsAndComments";
 /**
  * User class
  *
@@ -62,20 +62,17 @@ class User {
      * Returns true if the user has subscribed to the
      * notification when there is a new comment under his post or comment.
      * @param uid user uid
-     * @return boolean
+     * @return boolean return true if the user has turn on the setting.
+     * otherwise false will be returned.
+     *
      */
     static async commentNotification(uid) {
         const querySnapshot = await ref_1.Ref.userSettings(uid)
-            // .where("userDocumentReference", "==", userPath)
-            .where("type", "==", "settings")
-            .where(notifyNewComments, "==", true)
+            .where("action", "==", notifyNewCommentsUnderMyPostsAndComments)
             .limit(1)
             .get();
         if (querySnapshot.size == 0)
             return false;
-        // const data = querySnapshot.docs[0].data();
-        // if (data === void 0) return false;
-        // return data[notifyNewComments] ?? false;
         return true;
     }
     // /**

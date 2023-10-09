@@ -71,6 +71,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                           uid: widget.comment.uid,
                           builder: (user) => Text(
                             user.name,
+                            overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.labelMedium,
                           ),
                         ),

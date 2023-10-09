@@ -95,7 +95,8 @@ class Messaging {
             console.log("comment::data::", JSON.stringify(data));
         }
         // console.log("action:: ", data.action, "categoryId:: ", data.categoryId);
-        // post and comment
+        // post and comment get uid who subscribe for new post or comment.
+        // those who want to notified for new post or comment.
         if (data.categoryId) {
             const snap = await ref_1.Ref.usersSettingsSearch({ action: data.action, categoryId: data.categoryId })
                 .get();
@@ -109,13 +110,18 @@ class Messaging {
                         uids.push(uid);
                 }
             }
+            console.log("data.categoryId::uid after user settings::", snap.size);
             //
         }
-        // Get ancestor's uid
+        // / comment within comments then the parent and ancestors comment owner will get notification.
+        // / Get ancestor's uid
+        // and remove uid who didn't subscribe for new comment.
         if (data.action == event_name_1.EventName.commentCreate && data.id) {
             const ancestors = await comment_model_1.Comment.getAncestorsUid(data.id, data.uid);
+            console.log("get::ancestors::", ancestors);
             // Remove ancestors who didn't subscribe for new comment.
             const subscribers = await this.getNewCommentNotificationUids(ancestors);
+            console.log("after removing not subscribers::", subscribers);
             uids = [...uids, ...subscribers];
         }
         // console.log("action:: ", data.action, "data.roomId:: ", data.roomId, 'data.uids.lenght::', data.uids?.length);
@@ -401,7 +407,7 @@ class Messaging {
             res.apns.payload.aps.sound = query.sound;
             res.android.notification.sound = query.sound;
         }
-        // console.log(`--> completePayload() return value: ${JSON.stringify(res)}`);
+        console.log(`--> completePayload() return value: ${JSON.stringify(res)}`);
         return res;
     }
     /**
