@@ -78,4 +78,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'cached': instance.cached,
       'likes': instance.likes,
       'isDisabled': instance.isDisabled,
+      'exists': instance.exists,
     };

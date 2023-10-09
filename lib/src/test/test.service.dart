@@ -39,6 +39,8 @@ class Test {
   ///   ),
   /// );
   /// ```
+  ///
+  /// @return User of firebase auth
   static Future<User> loginOrRegister(TestUser user) async {
     try {
       final UserCredential cred =

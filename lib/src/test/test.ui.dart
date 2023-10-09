@@ -240,7 +240,8 @@ class _TestScreenState extends State<TestUi> {
     User me = await User.get() as User;
     await me.update(followers: FieldValue.delete(), followings: FieldValue.delete());
     if (me.followings.contains(Test.banana.uid)) {
-      await User.fromUid(Test.banana.uid).update(followers: FieldValue.arrayRemove([Test.apple.uid]));
+      // await User.fromUid(Test.banana.uid).update(followers: FieldValue.arrayRemove([Test.apple.uid]));
+      await FeedService.instance.removeFromFollowers(Test.banana.uid);
     }
     me = await User.get() as User;
     test(await me.follow(Test.banana.uid) == true, "a follows b");

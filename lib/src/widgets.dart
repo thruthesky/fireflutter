@@ -3,6 +3,7 @@
 export 'widget/user/user.avatar.dart';
 export 'widget/user/user.profile_avatar.dart';
 export 'widget/user/user_doc.dart';
+export 'widget/user/my_doc.dart';
 export 'widget/user/auth_change.dart';
 export 'widget/user/user_doc.ready.dart';
 export 'widget/common/avatar.dart';

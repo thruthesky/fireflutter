@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 
 class FeedService {
@@ -79,6 +80,15 @@ class FeedService {
     onFollow?.call(otherUid, re);
 
     return re;
+  }
+
+  /// Remove my uid from the followers field of the other user document in /users document collection.
+  Future<void> removeFromFollowers(String otherUid) async {
+    dog('begin - removeFromFollowers: $otherUid');
+    await userDoc(otherUid).update({
+      'followers': FieldValue.arrayRemove([myUid]),
+    });
+    dog('end - removeFromFollowers: $otherUid');
   }
 
   /// Adding posts into the feeds of the followers.
