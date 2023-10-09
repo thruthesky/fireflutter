@@ -158,12 +158,12 @@ class User {
   ///
   ///
   factory User.fromUid(String uid) {
-    return User(uid: uid, createdAt: DateTime(0));
+    return User(uid: uid, createdAt: DateTime(1970));
   }
 
   // Use this to create a user model object indicating that the user document does not exist.
   factory User.nonExistent() {
-    return User(uid: '', createdAt: DateTime(0))..exists = false;
+    return User(uid: '', createdAt: DateTime(1970))..exists = false;
   }
 
   factory User.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
@@ -250,6 +250,7 @@ class User {
   ///
   /// Example
   /// ```dart
+  /// User.fromUid('abc').update({ ... });
   /// my.update( noOfPosts: FieldValue.increment(1) ); // when UserService.instance.init() is called
   /// User.fromUid(FirebaseAuth.instance.currentUser!.uid).update( noOfPosts: FieldValue.increment(1) ); // when UserService.instance.init() is not called
   /// ```
@@ -347,6 +348,14 @@ class User {
   ///
   /// Returns true if followed a user. Returns false if unfollowed a user.
   ///
+  /// Example
+  /// ```dart
+  /// final User me = await UserService.instance.get(myUid!, reload: true) as User;
+  /// final re = await me.follow(otherUid);
+  /// ```
+  ///
+  /// ! This method does not update the feed. It only updates `followings` and `followers` fields.
+  /// ! Use [FeedService.instance.follow] to update with feed.
   Future<bool> follow(String otherUid) async {
     if (followings.contains(otherUid)) {
       await update(

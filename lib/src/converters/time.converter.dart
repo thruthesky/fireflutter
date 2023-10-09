@@ -14,7 +14,7 @@ class FirebaseDateTimeConverter implements JsonConverter<DateTime, dynamic> {
     } else if (data is Timestamp) {
       return data.toDate();
     } else {
-      return DateTime(0);
+      return DateTime(1973);
     }
   }
 

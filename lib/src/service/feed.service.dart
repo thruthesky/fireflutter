@@ -55,11 +55,16 @@ class FeedService {
     );
   }
 
-  /// follow or unfollow
+  /// Follow or unfollow
   ///
-  ///
+  /// Returns true if followed, false if unfollowed.
   Future<bool> follow(String otherUid) async {
-    final re = await my.follow(otherUid);
+    if (enable == false) return false;
+
+    /// Don't use [my] on unit testing due to the latency of the sync with
+    /// firestore, it would have a wrong value.
+    final User me = await UserService.instance.get(myUid!, reload: true) as User;
+    final re = await me.follow(otherUid);
 
     if (re) {
       // get last 50 and put my uid into followers

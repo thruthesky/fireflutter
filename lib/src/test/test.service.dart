@@ -1,6 +1,7 @@
 import 'dart:developer';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fa;
+import 'package:fireflutter/fireflutter.dart';
 
 class TestUser {
   final String displayName;
@@ -41,28 +42,28 @@ class Test {
   /// ```
   ///
   /// @return User of firebase auth
-  static Future<User> loginOrRegister(TestUser user) async {
+  static Future<fa.User> loginOrRegister(TestUser user) async {
     try {
-      final UserCredential cred =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(email: user.email, password: user.password);
+      final fa.UserCredential cred =
+          await fa.FirebaseAuth.instance.signInWithEmailAndPassword(email: user.email, password: user.password);
       return cred.user!;
     } catch (e) {
       final cred =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(email: user.email, password: user.password);
+          await fa.FirebaseAuth.instance.createUserWithEmailAndPassword(email: user.email, password: user.password);
       return cred.user!;
     }
   }
 
   /// Test login
-  static Future<User> login(TestUser user) async {
+  static Future<fa.User> login(TestUser user) async {
     //
-    await FirebaseAuth.instance.signOut();
+    await fa.FirebaseAuth.instance.signOut();
 
     // Wait until logout is complete or you may see firestore permission denied error.
     await Test.wait();
 
-    final UserCredential cred =
-        await FirebaseAuth.instance.signInWithEmailAndPassword(email: user.email, password: user.password);
+    final fa.UserCredential cred =
+        await fa.FirebaseAuth.instance.signInWithEmailAndPassword(email: user.email, password: user.password);
     await Test.wait();
     return cred.user!;
   }
@@ -75,10 +76,10 @@ class Test {
   static test(bool cond, [String? reason]) async {
     if (cond) {
       TestUser.successCount++;
-      log('--> OK [${TestUser.successCount}]: $reason');
+      dog('OK [${TestUser.successCount}]: $reason');
     } else {
       TestUser.errorCount++;
-      log('====>>>> ERROR [${TestUser.errorCount}]: $reason');
+      dog('>>>> ERROR [${TestUser.errorCount}]: $reason');
       log(StackTrace.current.toString());
     }
   }

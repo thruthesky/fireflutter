@@ -12,11 +12,16 @@ import 'package:rxdart/rxdart.dart';
 /// [my] is an alias of [UserService.instance.user].
 ///
 /// [my] is updated with the latest user document but it is a bad idea to use it
-/// on the app booting process. Because, it takes time to load the document from
-/// the firestore. In the case of a 'null check operator used in a null value'
-/// error especially on the test(test UI design) in root widget, you would
-/// suspect that [my] or [UserService.instance.user] is null due to the latency
-/// of loading user document from the firestore.
+/// on the app booting process. But don't use it immediately after login,
+/// because it takes time to load the document from the firestore. In the case
+/// of a 'null check operator used in a null value' error happens especially on
+/// the test(test UI design) in root widget, you would suspect that [my] or
+/// [UserService.instance.user] is null due to the latency of loading user
+/// document from the firestore.
+///
+/// Don't use [my] on unit testing due to the latency of the sync with
+/// firestore, it would have a wrong value.
+///
 ///
 /// Example
 /// UserService.instance.documentChanges.listen((user) => user == null ? null : print(my));
@@ -32,6 +37,9 @@ bool get isAnonymous => auth.FirebaseAuth.instance.currentUser?.isAnonymous ?? f
 bool get notLoggedIn => isAnonymous || auth.FirebaseAuth.instance.currentUser == null;
 
 bool get loggedIn => !notLoggedIn;
+
+/// Use this to check if the user document is ready.
+bool get myDocumentReady => UserService.instance.nullableUser != null;
 
 /// [myUid] is an alias of [FirebaseAuth.instance.currentUser?.uid].
 ///

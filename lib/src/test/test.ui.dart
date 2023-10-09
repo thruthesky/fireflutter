@@ -1,5 +1,7 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart' hide User;
+import 'package:firebase_auth/firebase_auth.dart' as fa;
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -67,21 +69,46 @@ class _TestScreenState extends State<TestUi> {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        const Text('''How To TEST
-1. Wait until the users are loaded in the [initState].
-2. Press run all tests to test all the features.
-3. Or press test button to test one by one.
-'''),
+        const Text('''See README for TestUi widget.'''),
         const Divider(),
-        StreamBuilder(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (_, snapshot) {
-              final user = snapshot.data;
-              if (user == null) {
-                return const Text('Logged out');
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+          ),
+          child: StreamBuilder<fa.User?>(
+            stream: fa.FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData && snapshot.data != null) {
+                final user = snapshot.data as fa.User;
+                return Text(
+                    'Firebase Auth User - logged in.\nDisplay name: ${user.displayName}, Email: ${user.email},  UID: ${user.uid}');
+              } else {
+                return const Text('User is logged out');
               }
-              return Text('User: ${user.email ?? 'null'}');
-            }),
+            },
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 8),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+          ),
+          child: Column(
+            children: [
+              MyDoc(
+                builder: (my) {
+                  if (my.exists) {
+                    return Text('MyDoc() - User document exists.\n${my.createdAt}');
+                  } else {
+                    return const Text('MyDoc() - User document does NOT exist');
+                  }
+                },
+                notLoggedInBuilder: () => const Text("User NOT logged in. So, MyDoc() is not available."),
+              ),
+            ],
+          ),
+        ),
         Wrap(
           children: [
             for (final user in Test.users)
@@ -93,58 +120,101 @@ class _TestScreenState extends State<TestUi> {
                 },
                 child: Text('Login w/ ${user.displayName}'),
               ),
+            ElevatedButton(
+                onPressed: () async {
+                  await testRandomLogin();
+                },
+                child: const Text("Random Login")),
+            ElevatedButton(
+                onPressed: () async {
+                  await UserService.instance.signOut();
+                },
+                child: const Text("Logout")),
           ],
         ),
         const Divider(),
-        ElevatedButton(
-            onPressed: () {
-              PostService.instance.showPostListScreen(context, 'qna');
-            },
-            child: const Text('QnA Forum')),
+        Wrap(
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                FireFlutterService.instance.init(
+                  context: context,
+                );
+              },
+              child: const Text("FireFlutter Init()"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await UserService.instance.init();
+              },
+              child: const Text("UserService init()"),
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  PostService.instance.showPostListScreen(context, 'qna');
+                },
+                child: const Text('QnA Forum')),
+            ElevatedButton(
+                onPressed: () {
+                  PostService.instance.showPostListScreen(context, 'qna');
+                },
+                child: const Text('Chat')),
+          ],
+        ),
         const Divider(),
         ElevatedButton(
           onPressed: testAll,
           child: Text('Run all tests', style: TextStyle(color: Colors.red.shade800)),
         ),
-        ElevatedButton(
-          onPressed: testUser,
-          child: const Text('TEST - User'),
-        ),
-        ElevatedButton(
-          onPressed: testCategory,
-          child: const Text('TEST - Category'),
-        ),
-        ElevatedButton(
-          onPressed: testMaximumNoOfUsers,
-          child: const Text('TEST maximum no of users'),
-        ),
-        ElevatedButton(
-          onPressed: testCreateGroupChatRoom,
-          child: const Text('TEST - create group chat room'),
-        ),
-        ElevatedButton(
-          onPressed: testCreateSingleChatRoom,
-          child: const Text('TEST - create single chat room'),
-        ),
-        ElevatedButton(
-          onPressed: testInviteUserIntoSingleChat,
-          child: const Text('TEST - invite user into single chat'),
-        ),
-        ElevatedButton(
-          onPressed: testInviteUserIntoGroupChat,
-          child: const Text('TEST - invite user into group chat'),
-        ),
-        ElevatedButton(
-          onPressed: testChangeDefaultChatRoomName,
-          child: const Text('TEST - Change Default Chat Room Name'),
-        ),
-        ElevatedButton(
-          onPressed: testRenameChatRoomOwnSide,
-          child: const Text('TEST - Rename Chat Room Name'),
-        ),
-        ElevatedButton(
-          onPressed: () => testSingle(testFeed),
-          child: const Text('TEST - Feed'),
+        const Text('Individual tests', style: TextStyle(color: Color.fromARGB(255, 83, 4, 4))),
+        Wrap(
+          children: [
+            ElevatedButton(
+              onPressed: () => testToast(context),
+              child: const Text('Toast'),
+            ),
+            ElevatedButton(
+              onPressed: testUser,
+              child: const Text('User'),
+            ),
+            ElevatedButton(onPressed: testUserDocument, child: const Text('User Document')),
+            ElevatedButton(
+              onPressed: () => testSingle(testFeed),
+              child: const Text('Feed'),
+            ),
+            ElevatedButton(
+              onPressed: testCategory,
+              child: const Text('Category'),
+            ),
+            ElevatedButton(
+              onPressed: testMaximumNoOfUsers,
+              child: const Text('Maximum no of users'),
+            ),
+            ElevatedButton(
+              onPressed: testCreateGroupChatRoom,
+              child: const Text('Create group chat room'),
+            ),
+            ElevatedButton(
+              onPressed: testCreateSingleChatRoom,
+              child: const Text('Create single chat room'),
+            ),
+            ElevatedButton(
+              onPressed: testInviteUserIntoSingleChat,
+              child: const Text('Invite user into single chat'),
+            ),
+            ElevatedButton(
+              onPressed: testInviteUserIntoGroupChat,
+              child: const Text('Invite user into group chat'),
+            ),
+            ElevatedButton(
+              onPressed: testChangeDefaultChatRoomName,
+              child: const Text('Change Default Chat Room Name'),
+            ),
+            ElevatedButton(
+              onPressed: testRenameChatRoomOwnSide,
+              child: const Text('Rename Chat Room Name'),
+            ),
+          ],
         ),
       ],
     );
@@ -189,16 +259,15 @@ class _TestScreenState extends State<TestUi> {
 
   Future testUser() async {
     // create empty object
-    final user = User(uid: 'uid', createdAt: DateTime.now());
+    final user = User.fromUid('uid');
     test(user.uid == 'uid', 'uid must be uid');
 
     // create object from json
     final fromJsonUser = User.fromJson({'uid': 'uid', 'id': 'id'});
-    // test(fromJsonUser.createdAt.millisecondsSinceEpoch > 0,
-    //     'createdAt is: ${fromJsonUser.createdAt}');
+    test(fromJsonUser.createdAt.millisecondsSinceEpoch >= 0, 'createdAt is: ${fromJsonUser.createdAt}');
 
     // Create a user
-    String uid = FirebaseAuth.instance.currentUser!.uid;
+    String uid = fa.FirebaseAuth.instance.currentUser!.uid;
     // log('uid; $uid');
     await User.doc(uid).delete();
     await createTestUser(
@@ -245,20 +314,32 @@ class _TestScreenState extends State<TestUi> {
     }
   }
 
+  ///
   Future testFeed() async {
+    ///
     await Test.login(Test.apple);
+
+    /// Get my user object. Don't use global [my] immediately after login.
     User me = await User.get() as User;
-    await me.update(followers: FieldValue.delete(), followings: FieldValue.delete());
-    if (me.followings.contains(Test.banana.uid)) {
-      // await User.fromUid(Test.banana.uid).update(followers: FieldValue.arrayRemove([Test.apple.uid]));
-      // await FeedService.instance.removeFromFollowers(Test.banana.uid);
-    }
+
+    /// delete all my followings.
+    await me.update(followings: FieldValue.delete());
+
+    /// follow banana
+    test(await FeedService.instance.follow(Test.banana.uid) == true, 'a follows b');
+
+    /// get my data again
     me = await User.get() as User;
-    test(await me.follow(Test.banana.uid) == true, "a follows b");
+
+    /// check
+    test(me.followings.contains(Test.banana.uid), "a followed b");
+    test(me.followings.length == 1, "there must be only 1 followings");
+
+    /// follow again -> un-following
+    test(await FeedService.instance.follow(Test.banana.uid) == false, "a un-follows b");
     final User afterFollow = (await User.get())!;
-    test(afterFollow.followings.contains(Test.banana.uid), "a follows b");
-    test(afterFollow.followings.length == 1, "there must be only 1 followings");
-    test(afterFollow.followings.contains(Test.cherry.uid) == false, "apple is not following cherry");
+    test(afterFollow.followings.contains(Test.banana.uid) == false, "a un-followed b");
+    test(afterFollow.followings.isEmpty, "there must be no followings");
 
     /// Have 3 followers and create a new post
     /// Check all of them has my new post
@@ -297,7 +378,7 @@ class _TestScreenState extends State<TestUi> {
   }
 
   Future testMaximumNoOfUsers() async {
-    await FirebaseAuth.instance.signOut();
+    await fa.FirebaseAuth.instance.signOut();
 
     // Wait until logout is complete or you may see firestore permission denied error.
     await Test.wait();
@@ -378,7 +459,7 @@ class _TestScreenState extends State<TestUi> {
   // }
 
   Future testChangeDefaultChatRoomName() async {
-    await FirebaseAuth.instance.signOut();
+    await fa.FirebaseAuth.instance.signOut();
 
     // Wait until logout is complete or you may see firestore permission denied error.
     await Test.wait();
@@ -406,7 +487,7 @@ class _TestScreenState extends State<TestUi> {
   }
 
   Future testRenameChatRoomOwnSide() async {
-    await FirebaseAuth.instance.signOut();
+    await fa.FirebaseAuth.instance.signOut();
 
     // Wait until logout is complete or you may see firestore permission denied error.
     await Test.wait();
@@ -442,5 +523,111 @@ class _TestScreenState extends State<TestUi> {
     // Test if it clears the value. It must delete the value.
     test(roomAfter.rename[myUid!] == null,
         "The room must not have a rename. Actual Value: ${roomAfter.rename[myUid!]}. Expected: Null");
+  }
+
+  Future testToast(BuildContext context) {
+    final completer = Completer();
+    FireFlutterService.instance.unInit();
+    try {
+      toast(title: 'FireFlutter Toast', message: 'This is a toast message');
+      completer.completeError('FireFlutterService.instance.unInit() must throw an exception');
+      return completer.future;
+    } catch (e) {
+      if (e.toString().contains('Null check operator used on a null value') == false) {
+        completer.completeError('error: $e');
+        return completer.future;
+      }
+    }
+
+    FireFlutterService.instance.init(context: context);
+    try {
+      toast(
+          title: 'FireFlutter Toast', message: 'This is a toast message', duration: const Duration(milliseconds: 100));
+      completer.complete('toast() succeed');
+    } catch (e) {
+      completer.completeError('toast() must throw an exception; $e');
+    }
+
+    return completer.future;
+  }
+
+  /// Test user document
+  ///
+  /// This test will create a user document and listen to the document changes.
+  StreamSubscription? _testUserDocumentSubscription;
+  Future testUserDocument() async {
+    // logout before testing
+    await fa.FirebaseAuth.instance.signOut();
+
+    //
+    final completer = Completer();
+
+    // Random user
+    final email = "${randomString()}@gmail.com";
+    final randomUser = await Test.loginOrRegister(
+      TestUser(
+        displayName: email,
+        email: email,
+        photoUrl: 'https://picsum.photos/id/1/200/200',
+      ),
+    );
+
+    // A Random user just has registered. By this time, the user document must not exist.
+    try {
+      final user = await User.get(randomUser.uid);
+      if (user == null) {
+      } else {
+        completer.completeError('User document must NOT found');
+        return completer.future;
+      }
+    } catch (e) {
+      completer.completeError('Unknown error happened. Maybe a permission denied error: $e');
+      return completer.future;
+    }
+
+    // Initialize the user service and create user document by the service.
+    UserService.instance.init(adminUid: 'adminUid');
+
+    // Check if the user document is created.
+    bool deleted = false;
+    _testUserDocumentSubscription?.cancel();
+    _testUserDocumentSubscription = UserService.instance.documentChanges.listen((user) async {
+      if (user != null) {
+        // User document is created. Fine.
+        // Well then, delete the user document and see what happens.
+        if (deleted == false) {
+          // print('uid; ${user.uid}, createdAt: ${user.createdAt}');
+          deleted = true;
+          await user.delete();
+          return;
+        }
+
+        // After deleting the user document, the user document must be created
+        // again by the [UserService] since the user is logged in and listennig
+        // to the user document changes.
+        // If the user is logged out and the document is deleted by admin, then
+        // the user document must not exist.
+        if (deleted == true && completer.isCompleted == false) {
+          // print('uid; ${user.uid}, createdAt: ${user.createdAt}');
+          completer.complete('testUserDocument() succeed');
+        }
+      }
+    });
+
+    return completer.future;
+  }
+
+  /// Returns firebase auth User after login.
+  Future<fa.User> testRandomLogin() async {
+    // Random user
+    final email = "${randomString()}@gmail.com";
+    final randomUser = await Test.loginOrRegister(
+      TestUser(
+        displayName: email,
+        email: email,
+        photoUrl: 'https://picsum.photos/id/1/200/200',
+      ),
+    );
+    return randomUser;
   }
 }
