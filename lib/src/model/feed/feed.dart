@@ -13,9 +13,9 @@ class Feed {
 
   Feed({
     required this.id,
-    required this.postId,
-    required this.uid,
-    required this.createdAt,
+    this.postId = '',
+    this.uid = '',
+    this.createdAt = 0,
     this.title = '',
     this.content = '',
     this.categoryId = '',

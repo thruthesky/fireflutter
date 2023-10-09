@@ -3,6 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
+/// TestUi
+///
+/// This is a test screen for testing all the features of FireFlutter.
+///
+/// You can run all the tests by pressing the [Run all tests] button.
+/// Or you can run each test by pressing each test button.
+///
+/// See README.md for details of TestUi widget.
+///
+///
 class TestUi extends StatefulWidget {
   const TestUi({super.key});
 
@@ -21,12 +31,12 @@ class _TestScreenState extends State<TestUi> {
   initTest() async {
     /// This is one time initialization for creating the test account.
     /// Once you have created accounts, you can simply hard code the uid into the Test.users.
-    // for (final user in Test.users) {
-    //   if (user.uid == null) {
-    //     final login = await Test.loginOrRegister(user);
-    //     user.uid = login.uid;
-    //   }
-    // }
+    for (final user in Test.users) {
+      if (user.uid == null) {
+        final login = await Test.loginOrRegister(user);
+        user.uid = login.uid;
+      }
+    }
 
     // for (var e in Test.users) {
     //   print('${e.displayName}:${e.uid}');

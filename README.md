@@ -135,6 +135,7 @@ Create an issue if you find a bug or need a help.
   - [Testing security rules](#testing-security-rules)
   - [Testing on real Firebase](#testing-on-real-firebase)
   - [Testing on Cloud Functions](#testing-on-cloud-functions)
+- [Logic test](#logic-test)
 - [Developer](#developer)
   - [Installing your app with fireflutter](#installing-your-app-with-fireflutter)
   - [Development Tips](#development-tips)
@@ -603,7 +604,7 @@ class UserBuilder extends StatelessWidget {
 
 Here is an instruction on how to create a simple chat app
 
-### 1. Stateful Widget
+### 1. initState
 
 Create a stateful widget and add an `initState()`
 
@@ -651,6 +652,79 @@ Scaffold(
 **_Note:_** Admins will automatically send a welcome message when `UserService.instance.sendWelcomeMessage(message: 'Welcome!')` is being used.
 
 # How to build a forum app
+
+Here is a simple forum app
+
+<!-- FIXME: Not sure if I implemented this correctly -->
+
+### 1. initState
+
+```dart
+@override
+void initState() {
+  super.initState();
+  PostService.instance.enableNotificationOnLike = true; // set to true to enable notification
+  PostService.instance.init( // This will send a notif to the owner of the post
+      enableNotificationOnLike: true,
+      onLike: (Post post, bool isLiked) async {
+        if (!isLiked) return;
+        MessagingService.instance.queue(
+          title: post.title,
+          body: '${my.name} liked your post',
+          id: myUid,
+          uids: [post.uid],
+          type: NotificationType.post.name,
+        );
+      });
+  // This will provide a custom design for showPostViewScreen()
+  PostService.instance.customize.showPostViewScreen = (context, {post, postIdasync}) => showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) {
+        final dateAgo = dateTimeAgo(post!.createdAt);
+        return  CustomPostViewScreen(
+                    dateAgo: dateAgo,
+                    post: post,
+                    snapshot: snapshot,
+                  ),
+        }
+      ),
+}
+```
+
+### 2. PostListView
+
+`PostListView()` builder works like a `ListView()`. It can display widgets with the posts details in a scrollable manner.
+
+```dart
+PostListView(
+  itemBuilder: (context,post) => CustomTile(post: post)
+)
+```
+
+You can use `PostCard()` to generate a default style of the post
+
+```dart
+PostListView(
+    itemBuilder: (context, post) => InkWell(
+      onTap: () => PostService.instance.showPostViewScreen(context: context, post: post),
+      child: PostCard(
+        post: post,
+        shareButtonBuilder: (post) => IconButton(
+          onPressed: () {
+            ShareService.instance.showBottomSheet();
+          },
+          icon: const Icon(Icons.share, size: sizeSm), // FireFlutter provides sizes
+        ),
+      ),
+    ),
+  ),
+```
+
+**_Note:_** Aside from `Theme()`, there are many builders inside the `PostCard()` that you can use for customizing UI Design.
+
+## Result
+
+![forum_result](/doc/img/forum.png)
 
 # Usage
 
@@ -3282,6 +3356,12 @@ To run a single test,
 npm run mocha **/save-token*
 npm run mocha **/save-token.test.ts
 ```
+
+# Logic test
+
+To test the functionality of fireflutter, it needs a custom way of testing. For instance, fireflutter listens user login and creates the user's document if it does not exists. And what will happen if the user document is deleted by accident? To prove that there will be no bug on this case, it need to be tested and the test must work based on the real firebase events and monitor if the docuemnt is being recreated. Unit test, widget test and integration test will not work for this.
+
+We wrote some test code and saved it in `TestUi` widget. To run the test in `TestUi`, you will need to initialize firebase. But don't initialize fireflutter nor other services in fireflutter.
 
 # Developer
 

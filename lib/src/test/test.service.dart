@@ -15,10 +15,10 @@ class TestUser {
 
 class Test {
   static List<TestUser> users = [
-    TestUser(displayName: 'Apple', email: 'apple@test-user.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
-    TestUser(displayName: 'Banana', email: 'banana@test-user.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
-    TestUser(displayName: 'Cherry', email: 'cherry@test-user.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
-    TestUser(displayName: 'Durian', email: 'durian@test-user.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
+    TestUser(displayName: 'Apple', email: 'apple@test3.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
+    TestUser(displayName: 'Banana', email: 'banana@test3.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
+    TestUser(displayName: 'Cherry', email: 'cherry@test3.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
+    TestUser(displayName: 'Durian', email: 'durian@test3.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
   ];
   static get apple => users[0];
   static get banana => users[1];
