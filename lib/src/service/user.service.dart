@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/widget/user/profile_followers.screen.dart';
+import 'package:fireflutter/src/widget/user/profile_following.screen.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -443,15 +444,13 @@ class UserService {
     );
   }
 
-  showFollowingScreen({required BuildContext context, required User user}) {
+  showFollowingScreen({required BuildContext context, User? user, Widget Function(User)? itemBuilder}) {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Following'),
-          ),
-          body: UserListView.builder(uids: user.followings),
+        return ProfileFollowingScreen(
+          user: user ?? my,
+          itemBuilder: itemBuilder,
         );
       },
     );
