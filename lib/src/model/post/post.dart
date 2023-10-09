@@ -131,6 +131,8 @@ class Post {
       {
         ...postData,
         'id': postId,
+        // ! The time is having problems on simulator
+        // the created at becomes 62167248000000
         'createdAt': DateTime.now(),
       },
     );

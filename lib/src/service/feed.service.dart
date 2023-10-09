@@ -25,10 +25,11 @@ class FeedService {
   }
 
   Map<String, dynamic> convertIntoFeedData(Post post) {
-    post.data?.remove('createdAt');
+    // post.data?.remove('createdAt');
     return {
       'uid': post.uid,
       'postId': post.id,
+      // ! This is wrong because devices will have different time.
       'createdAt': 0 - post.createdAt.millisecondsSinceEpoch,
       'title': post.title,
       'content': post.content,

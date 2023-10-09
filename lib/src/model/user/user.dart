@@ -94,7 +94,7 @@ class User {
   DateTime get birthdate => DateTime(birthYear, birthMonth, birthDay);
 
   /// Gets the age of the user
-  int get age => DateTime.now().difference(birthdate).inDays ~/ 365;
+  int? get age => birthYear != 0 ? DateTime.now().difference(birthdate).inDays ~/ 365 : null;
 
   /// Set this to true when the user has completed the profile.
   /// This should be set when the user submit the profile form.

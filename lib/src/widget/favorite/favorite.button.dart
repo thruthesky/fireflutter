@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 /// Favorite Icon
 ///
 /// Use this to display if the user is favorited or not
-class FavoriteButton extends StatelessWidget {
+class FavoriteButton extends StatefulWidget {
   const FavoriteButton({
     super.key,
     this.otherUid,
@@ -16,6 +16,7 @@ class FavoriteButton extends StatelessWidget {
     this.onChanged,
     this.padding,
     this.visualDensity,
+    this.onWaiting,
   }) : assert(otherUid != null || postId != null || commentId != null,
             "One of 'otherUid, postId, commentId' must have value");
 
@@ -23,9 +24,17 @@ class FavoriteButton extends StatelessWidget {
   final String? postId;
   final String? commentId;
   final Widget Function(bool) builder;
+  final Widget Function()? onWaiting;
   final void Function(bool)? onChanged;
   final EdgeInsetsGeometry? padding;
   final VisualDensity? visualDensity;
+
+  @override
+  State<FavoriteButton> createState() => _FavoriteButtonState();
+}
+
+class _FavoriteButtonState extends State<FavoriteButton> {
+  bool? favoritedData;
 
   @override
   Widget build(BuildContext context) {
@@ -34,29 +43,43 @@ class FavoriteButton extends StatelessWidget {
         onPressed: () async {
           toast(title: tr.loginFirstTitle, message: tr.loginFirstMessage);
         },
-        icon: builder(false),
+        icon: widget.builder(false),
       );
     }
     return StreamBuilder(
-      stream: Favorite.query(postId: postId, otherUid: otherUid, commentId: commentId).snapshots(),
+      stream: Favorite.query(postId: widget.postId, otherUid: widget.otherUid, commentId: widget.commentId).snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return builder(false);
-        } else if (snapshot.hasError) {
-          log(snapshot.error.toString());
-          return builder(false);
+          if (favoritedData == null) {
+            return favoritedData != null
+                ? favoriteIconButton(favoritedData!)
+                : (widget.onWaiting?.call() ?? favoriteIconButton(false));
+          }
+          return favoriteIconButton(favoritedData!);
         }
-
-        return IconButton(
-          padding: padding,
-          visualDensity: visualDensity,
+        if (snapshot.hasError) {
+          log(snapshot.error.toString());
+          return favoriteIconButton(favoritedData ?? false);
+        }
+        favoritedData = snapshot.data?.size == 1;
+        return favoriteIconButton(
+          favoritedData!,
           onPressed: () async {
-            final re = await Favorite.toggle(postId: postId, otherUid: otherUid, commentId: commentId);
-            onChanged?.call(re);
+            final re =
+                await Favorite.toggle(postId: widget.postId, otherUid: widget.otherUid, commentId: widget.commentId);
+            widget.onChanged?.call(re);
           },
-          icon: builder(snapshot.data?.size == 1),
         );
       },
+    );
+  }
+
+  Widget favoriteIconButton(bool favorited, {Function()? onPressed}) {
+    return IconButton(
+      padding: widget.padding,
+      visualDensity: widget.visualDensity,
+      icon: widget.builder(favorited),
+      onPressed: onPressed,
     );
   }
 }
