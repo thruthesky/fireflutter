@@ -114,6 +114,9 @@ class User {
   /// disabled user
   final bool isDisabled;
 
+  @JsonKey(includeFromJson: false, includeToJson: true)
+  bool exists = true;
+
   User({
     this.uid = '',
     this.isAdmin = false,
@@ -155,7 +158,12 @@ class User {
   ///
   ///
   factory User.fromUid(String uid) {
-    return User(uid: uid, createdAt: DateTime.now());
+    return User(uid: uid, createdAt: DateTime(0));
+  }
+
+  // Use this to create a user model object indicating that the user document does not exist.
+  factory User.nonExistent() {
+    return User(uid: '', createdAt: DateTime(0))..exists = false;
   }
 
   factory User.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
@@ -163,12 +171,6 @@ class User {
       ...(documentSnapshot.data() ?? Map<String, dynamic>.from({})) as Map<String, dynamic>,
       'uid': documentSnapshot.id,
     });
-  }
-
-  @Deprecated('Use fromJson instead')
-  factory User.fromMap({required Map<String, dynamic> map, required String id}) {
-    map['uid'] = id;
-    return _$UserFromJson(map);
   }
 
   ///
@@ -322,6 +324,7 @@ class User {
       docData['birthDayOfYear'] = date.difference(DateTime(date.year)).inDays + 1;
     }
 
+    dog("User.update(); me: $myUid, who: $uid, path: ${userDoc(uid).path}, docData: $docData");
     await userDoc(uid).set(
       docData,
       SetOptions(merge: true),
@@ -410,26 +413,7 @@ class User {
     // I can't block myself.
     if (myUid == null || uid == myUid) return false;
     final blocked = await toggle('blocks/$myUid/$uid');
-    if (blocked) {
-      // If I blocked the user, I should unfollow the user.
-      if (my.followings.contains(uid)) await FeedService.instance.follow(uid);
-      // Also, the user should unfollow me, if this user currently follows me.
-      // and remove all my posts from the user's feed.
-      if (followings.contains(myUid!)) {
-        // TODO must review firestore security rules
-        // I must be able to remove my uid into others' following list
-        // ! this will produce an error related to firestore rules
-        // git hub issue https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=40781402
-        await follow(myUid!);
-        rtdb.ref('feeds').child(uid).orderByChild('uid').equalTo(myUid).once().then((value) {
-          for (final node in value.snapshot.children) {
-            node.ref.remove();
-          }
-        });
-      }
-    }
-    // TODO for other custom blocking actions
-    // UserService.instance.onBlock?.call(this, blocked);
+
     return blocked;
   }
 }

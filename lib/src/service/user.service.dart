@@ -149,7 +149,9 @@ class UserService {
   /// Use this to display widgets lively that depends on the user model. When
   /// the user document is updated, this stream will fire an event.
   Stream<User> get snapshot {
-    return myDoc.snapshots().map((doc) => User.fromDocumentSnapshot(doc));
+    return myDoc.snapshots().map(
+          (DocumentSnapshot doc) => doc.exists ? User.fromDocumentSnapshot(doc) : User.nonExistent(),
+        );
   }
 
   /// User create event. It fires when a user document is created.
@@ -181,7 +183,7 @@ class UserService {
 
   /// 미리 한번 호출 해서, Singleton 을 초기화 해 둔다. 그래야 user 를 사용 할 때, 에러가 발생하지 않는다.
   init({
-    required String adminUid,
+    String? adminUid,
     bool enableNoOfProfileView = false,
     Function(User user)? onCreate,
     Function(User user)? onUpdate,
@@ -192,7 +194,9 @@ class UserService {
     void Function(User user, bool isLiked)? onLike,
     bool enableNotificationOnLike = false,
   }) {
-    if (adminUid.isNotEmpty) {
+    dog('UserService.instance.init() - adminUid: $adminUid');
+
+    if (adminUid != null && adminUid.isNotEmpty) {
       UserService.instance.get(adminUid).then((value) => admin = value);
     }
 
@@ -231,11 +235,9 @@ class UserService {
         userChanges.add(null);
       } else {
         // User logged in.
-        //
-
+        dog('UserService.instance.init() - User logged in: ${firebaseUser.uid}');
         // Fire user login event
         userChanges.add(firebaseUser);
-
         _listenUserDocument();
       }
     });
@@ -254,6 +256,7 @@ class UserService {
       /// User document does not exist. Create the user document.
       ///
       if (!documentSnapshot.exists || documentSnapshot.data() == null) {
+        dog('user.service.dart _listenUserDocument() - User document does not exist. Create the user document for the user $myUid');
         await User.create(uid: myUid!);
       } else {
         nullableUser = User.fromDocumentSnapshot(documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
