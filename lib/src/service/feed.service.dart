@@ -95,7 +95,8 @@ class FeedService {
   Future create({required Post post}) async {
     if (enable == false) return;
     List<Future> feedUpdates = [];
-    for (String followerUid in my.followers) {
+    // My feed should be also viewable by me.
+    for (String followerUid in [...my.followers, myUid!]) {
       feedUpdates.add(rtdb.ref('feeds').child(followerUid).child(post.id).set(convertIntoFeedData(post)));
     }
     await Future.wait(feedUpdates);
@@ -105,7 +106,8 @@ class FeedService {
   Future update({required Post post}) async {
     if (enable == false) return;
     List<Future> feedUpdates = [];
-    for (String followerUid in my.followers) {
+    // My feed should be also viewable by me.
+    for (String followerUid in [...my.followers, myUid!]) {
       feedUpdates.add(rtdb.ref('feeds').child(followerUid).child(post.id).update({
         'title': post.title,
         'content': post.content,
