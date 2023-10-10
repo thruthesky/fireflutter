@@ -1,6 +1,18 @@
-# Chat Feature
+# Chat
+
  
 ## ChatService
+You can use `ChatService` to enable chat features of the app or even customize the widget builder.
+
+**Customize header**
+```dart
+ChatService.instance.customize.chatRoomAppBarBuilder ({room, user}) => customAppBar(context, room);
+```
+
+**Open chat room**
+```dart
+ChatService.instance.showChatroom(context:context, room:room);
+```
 
 ### How to open 1:1 chat room
 

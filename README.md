@@ -6,8 +6,26 @@ If you are looking for a package that help you develop a full featured content m
 
 Create an issue if you find a bug or need a help.
 
-<!-- Table of Contents -->
-* [Changes](#changes)
+# Changes
+<!-- You can see [CHANGELOG.md](/CHANGELOG.md) for the updated log. -->
+
+### Oct 10 0.3.12
+* Refactoring on user, feed.
+* Refine widgets and services.
+
+### Sept 28 0.3.11
+* Add. Admin dashboarsd.
+* Update. Push notification.
+* Refactoring. Save more data in realtime database.
+
+### Sept 10 0.3.10
+
+* Change. Refactoring file/folder names.
+
+Go to [CHANGELOG.md](/CHANGELOG.md) for more.
+<br>
+<br>
+# Table of Contents
 * [Overview](#overview)
 * [Features](#features)
   * [Main Features](#main-features)
@@ -30,26 +48,13 @@ Create an issue if you find a bug or need a help.
   * [Chat](#how-to-build-a-chat-app)
   * [Forum](#how-to-build-a-forum-app)
 * [Usage](#usage)
-    * [Users](/doc/USER.md#overview)
-      * [UserService](#userservice)
-    * [Post](/doc/POST.md#post)
-      * [PostService](#postservice)
-    * [CommentService](#commentservice)
-  * [ChatService](#chatservice)
-    * [1:1 Chat Room](#how-to-open-11-chat-room)
-    * [Chat Room Menu](#how-to-display-chat-room-menu)
-    * [Chat Room Dialog](#how-to-show-chat-room-dialog)
-    * [Customizing Chat Header](#customizing-the-chat-header)
-
-
-
-
-# Changes
-You can see [CHANGELOG.md](/CHANGELOG.md) for the updated log.
-
-- Oct 10, Refactoring on user, feed.
-- Oct 6, easy-extension was removed.
-- Oct 8, Test app was added. you can add it in apps folder. <https://github.com/thruthesky/fireflutter_test> See TestUi Widget
+  * [Users](#user)
+  * [Post](#post)
+  * [Comment](#comment)
+  * [Chat](#chat)
+  * [Share](#share)
+* [Push Notification](#push-notifications)
+* [Error Handling](#error-handling)
 
 # Overview
 
@@ -67,7 +72,7 @@ I use `json_serializable` for the modeling providing each model can have extra f
 
 ## Features
 
-There are many features and most of them are optional. You may turn on the extra functions by the setting.
+There are many features and most of them are optional. You may turn on the extra functions by creating an instance.
 
 ### Main Features
 
@@ -449,16 +454,16 @@ See [WIDGETS.md](/doc/WIDGETS.md) for more widget example.
 
 # Usage
 Fireflutter updates in real time no matter what users do. Here are common uses of widgets and builders of each features.
-# Chat
+## Chat
 With FireFlutter you can easily create a customizable chat room. 
-### Features
+<!-- ### Features
 - Group Chat
 - 1:1 Chat
 - Image Upload
-- Customizable Chat room
+- Customizable Chat room -->
 
+Display user's chats using [ChatService.instance](/doc/CHAT.md#chatservice) or if you're using `ChatRoomListView` you can use a controller [ChatRoomListViewController](/doc/CHAT.md#chat-room-list)
 
-Display user's chats using `ChatService.instance` or if you're using `ChatRoomListView` you can use a controller `ChatRoomListViewController`
 ```dart
 final controller = ChatRoomListViewController();
 ChatRoomListView(
@@ -475,19 +480,19 @@ ChatRoomListView(
 ),
 ```
 ***Go to [Chat.md](/doc/CHAT.md) for more feature builders and detailed explanation***
-# User
-## UserService
+## User
 
 See [USER.md](/doc/USER.md) for details.
 
-# Post
-## PostService
+## Post
 See [POST.md](/doc/POST.md) for details.
+
+## Comment
+
+## Share
 
 # Push notifications
 See [PUSH_NOTIFICATION.md](/doc/PUSH_NOTIFICATION.md) for details.
-
-# Share
 # Error handling
 
 There are some cases that you don't want to wait for the async work to be finished since it takes time to save data into the database. But you must show user if there is an error.
@@ -502,3 +507,27 @@ my.update(type: type).catchError(
   ),
 );
 ```
+
+# Admin
+
+To set a user as an admin, put the user's uid into `isAdmin()` in [Firestore Security Rules](#firestore-security-rules).
+
+```javascript
+function isAdmin() {
+  let adminUIDs = ["xxx", "oaCInoFMGuWUAvhqHE83gIpUxEw2"];
+  return request.auth.uid in adminUIDs || request.auth.token.admin == true;
+}
+```
+
+Then, set `isAdmin` to true in the user document. 
+
+**Features**
+- [AdminService](doc/ADMIN.md#admin-service)
+- [Admin Widgets](doc/ADMIN.md#admin-widgets)
+- [Translation](doc/ADMIN.md#translation)
+- [Unit Testing](doc/ADMIN.md#unit-testing)
+- [Logic Test](doc/ADMIN.md#logic-test)
+
+For more information, see [**ADMIN.md**](/doc/ADMIN.md).
+# [Developer Section](doc/DEVELOPER.md#developer)
+

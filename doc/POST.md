@@ -46,6 +46,32 @@ It has:
 
 ## Widgets
 
+<!-- .customize does not exist[???],
+
+TODO: Learning it more so i can replace it
+
+  might remove since there is already a section of Post Below
+-->
+
+<!-- ## PostService
+
+### How to open a post
+Call the `showPostViewScreen` to show the full screen dialog that displays the post
+
+```dart
+PostService.instance.customize.postViewScreenBuilder = (post) => GRCCustomPostViewScreen(post: post);
+```
+
+### Customizing a Post View
+
+Build your own UI design of the full screen Post View like below.
+
+```dart
+PostService.instance.customize.postViewScreenBuilder = (post) => GRCCustomPostViewScreen(post: post);
+```
+
+The widget is preferrably a full screen widget. It can be a scaffold, sliver, etc. -->
+
 ## PostService
 
 If `enableNotificationOnLike` is set to true, then it will send push notification to the author when there is a like. You would do the work by adding `onLike` callback.
@@ -66,49 +92,7 @@ PostService.instance.init(
   enableNotificationOnLike: true,
 ```
 
-## CommentService
 
-You can customize the `showCommentEditBottomSheet` how to comment edit(create or update) box appears.
-
-The code below simply call `next()` function which does exactly the same as the default logic from `fireflutter`.
-
-```dart
-CommentService.instance.init(
-  customize: CommentCustomize(
-    showCommentEditBottomSheet: (
-      BuildContext context, {
-      Comment? comment,
-      required Future<Comment?> Function() next,
-      Comment? parent,
-      Post? post,
-    }) {
-      return next();
-    },
-  ),
-);
-```
-
-You may add some custom code like below.
-
-```dart
-CommentService.instance.init(
-  customize: CommentCustomize(
-    showCommentEditBottomSheet: (
-      BuildContext context, {
-      Comment? comment,
-      required Future<Comment?> Function() next,
-      Comment? parent,
-      Post? post,
-    }) {
-      if (my.isComplete == false) {
-        warning(context, title: '본인 인증', message: '본인 인증을 하셔야 댓글을 쓸 수 있습니다.');
-        return Future.value(null);
-      }
-      return next();
-    },
-  ),
-);
-```
 
 Or you can do the UI/UX by yourself since it delivers everything you need to show comment edit box.
 
@@ -236,7 +220,7 @@ You can actullay rebuild the whole buttons by providing new widget instead of th
 
 ## List of viewer on each post
 
-Firelfutter provides a way of display who viewed which posts. It may be used for dsiplaying the viewers of the post or simple display the no of viewers.
+FireFlutter provides a way of display who viewed which posts. It may be used for dsiplaying the viewers of the post or simple display the no of viewers.
 
 The list of viewers is saved uner `/posts/{post_id}/seenBy/{uid}`. If the user who didn't log in views the post, then the user will not be added into the list of view.
 
@@ -566,9 +550,9 @@ Use these to customize by part:
 
 When you customize the UI/UX with the service initialization, it may not update on realtime when you edit and hot-reload.
 
-## Share
+<!-- ## Share
 
-One feature that fireflutter does not have is share. There is no limitation how you can build your app. You can simply use Firebase Dynamic Link with share_plus package to share posts or profiles. You may customize the UI and add a share button to post view screen.
+One feature that fireflutter does not have is share. There is no limitation how you can build your app. You can simply use Firebase Dynamic Link with share_plus package to share posts or profiles. You may customize the UI and add a share button to post view screen. -->
 
 # Callbacks
 
