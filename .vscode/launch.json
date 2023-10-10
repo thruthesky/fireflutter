@@ -32,6 +32,15 @@
       "deviceId": "C79F2C44-AB98-4B0B-A727-8C5E8B50C595"
     },
     {
+      "name": "New Example - iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "example",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "iPhone 15 Pro Max"
+    },
+    {
       "name": "Example - Simulator (J) iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
