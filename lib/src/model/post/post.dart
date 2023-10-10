@@ -122,7 +122,8 @@ class Post {
       'createdAt': FieldValue.serverTimestamp(),
       'uid': myUid!,
       if (hashtags != null) 'hashtags': hashtags,
-      if (my.followers.isNotEmpty) 'followers': my.followers,
+      // I also want to see my own post in the feed, so I add myUid too.
+      if (my.followers.isNotEmpty) 'followers': [...my.followers, myUid],
       ...data,
     };
     final postId = Post.doc().id;
@@ -133,8 +134,6 @@ class Post {
       {
         ...postData,
         'id': postId,
-        // ! The time is having problems on simulator
-        // the created at becomes 62167248000000
         'createdAt': DateTime.now(),
       },
     );

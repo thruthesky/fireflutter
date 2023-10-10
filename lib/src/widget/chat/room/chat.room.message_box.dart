@@ -40,6 +40,12 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
   }
 
   @override
+  void dispose() {
+    message.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       top: false,
