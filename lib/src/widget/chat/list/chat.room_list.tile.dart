@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 /// ChatRoomListTile
 ///
 /// It is not the material [ListTile] since it does not support flexibilities.
-class ChatRoomListTile extends StatelessWidget {
+class ChatRoomListTile extends StatefulWidget {
   const ChatRoomListTile({
     super.key,
     required this.room,
@@ -18,31 +18,38 @@ class ChatRoomListTile extends StatelessWidget {
   final double avatarSize;
 
   @override
+  State<ChatRoomListTile> createState() => _ChatRoomListTileState();
+}
+
+class _ChatRoomListTileState extends State<ChatRoomListTile> {
+  User? otherUserData;
+
+  @override
   Widget build(BuildContext context) {
     // print("---> $room");
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Padding(
-        padding: padding,
+        padding: widget.padding,
         child: Row(
           children: [
-            room.isSingleChat
+            widget.room.isSingleChat
                 ? UserAvatar(
-                    uid: otherUserUid(room.users),
-                    size: avatarSize,
+                    uid: otherUserUid(widget.room.users),
+                    size: widget.avatarSize,
                     radius: 16,
                     borderWidth: 0,
                     borderColor: Colors.grey.shade300,
                   )
                 : SizedBox(
-                    width: avatarSize,
-                    height: avatarSize,
+                    width: widget.avatarSize,
+                    height: widget.avatarSize,
                     child: Stack(
                       children: [
                         UserAvatar(
-                          uid: room.users.last,
-                          size: avatarSize / 1.6,
+                          uid: widget.room.users.last,
+                          size: widget.avatarSize / 1.6,
                           radius: 10,
                           borderWidth: 1,
                           borderColor: Colors.grey.shade300,
@@ -51,8 +58,8 @@ class ChatRoomListTile extends StatelessWidget {
                           right: 0,
                           bottom: 0,
                           child: UserAvatar(
-                            uid: room.lastMessage?.uid,
-                            size: avatarSize / 1.4,
+                            uid: widget.room.lastMessage?.uid,
+                            size: widget.avatarSize / 1.4,
                             radius: 10,
                             borderWidth: 1,
                             borderColor: Colors.white,
@@ -69,15 +76,20 @@ class ChatRoomListTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    room.isGroupChat
-                        ? Text(room.name,
-                            style: Theme.of(context).textTheme.bodyLarge)
+                    widget.room.isGroupChat
+                        ? Text(widget.room.name, style: Theme.of(context).textTheme.bodyLarge)
                         : UserDoc(
-                            builder: (_) => Text(_.name,
-                                style: Theme.of(context).textTheme.bodyLarge),
-                            uid: otherUserUid(room.users)),
+                            uid: otherUserUid(widget.room.users),
+                            builder: (_) {
+                              otherUserData = _;
+                              return Text(_.name, style: Theme.of(context).textTheme.bodyLarge);
+                            },
+                            onLoading: otherUserData != null
+                                ? Text(otherUserData!.name, style: Theme.of(context).textTheme.bodyLarge)
+                                : null,
+                          ),
                     Text(
-                      (room.lastMessage?.text ?? '').replaceAll("\n", ' '),
+                      (widget.room.lastMessage?.text ?? '').replaceAll("\n", ' '),
                       style: Theme.of(context).textTheme.bodySmall,
                       maxLines: 1,
                     ),
@@ -90,12 +102,12 @@ class ChatRoomListTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  room.lastMessageTime,
+                  widget.room.lastMessageTime,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(height: 2),
                 NoOfNewMessageBadge(
-                  room: room,
+                  room: widget.room,
                 ),
               ],
             ),

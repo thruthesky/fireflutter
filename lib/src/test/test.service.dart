@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart' as fa;
 import 'package:fireflutter/fireflutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TestUser {
   final String displayName;
@@ -11,33 +12,75 @@ class TestUser {
   static int errorCount = 0;
   static int successCount = 0;
   String? uid;
-  TestUser(
-      {required this.displayName, required this.email, required this.photoUrl});
+  TestUser({required this.displayName, required this.email, required this.photoUrl});
 }
 
+/// Test
+///
+///
 class Test {
+  /// [accountSalt] is the salt string for test accounts.
+  ///
+  /// You can change the [accountSalt] to generate(use) new test accounts.
+  static String accountSalt = '5';
   static List<TestUser> users = [
     TestUser(
-        displayName: 'Apple',
-        email: 'apple@test3.com',
-        photoUrl: 'https://picsum.photos/id/1/200/200'),
+      displayName: 'Apple',
+      email: 'apple@test$accountSalt.com',
+      photoUrl: 'https://picsum.photos/id/1/200/200',
+    ),
     TestUser(
-        displayName: 'Banana',
-        email: 'banana@test3.com',
-        photoUrl: 'https://picsum.photos/id/1/200/200'),
+      displayName: 'Banana',
+      email: 'banana@test$accountSalt.com',
+      photoUrl: 'https://picsum.photos/id/2/200/200',
+    ),
     TestUser(
-        displayName: 'Cherry',
-        email: 'cherry@test3.com',
-        photoUrl: 'https://picsum.photos/id/1/200/200'),
+      displayName: 'Cherry',
+      email: 'cherry@test$accountSalt.com',
+      photoUrl: 'https://picsum.photos/id/3/200/200',
+    ),
     TestUser(
-        displayName: 'Durian',
-        email: 'durian@test3.com',
-        photoUrl: 'https://picsum.photos/id/1/200/200'),
+      displayName: 'Durian',
+      email: 'durian@test$accountSalt.com',
+      photoUrl: 'https://picsum.photos/id/4/200/200',
+    ),
+    TestUser(
+      displayName: 'Eggplant',
+      email: 'eggplant@test$accountSalt.com',
+      photoUrl: 'https://picsum.photos/id/5/200/200',
+    ),
   ];
   static get apple => users[0];
   static get banana => users[1];
   static get cherry => users[2];
   static get durian => users[3];
+  static get eggplant => users[4];
+
+  /// Prepare the test accounts
+  ///
+  /// The purpose of this method is to generate(or get) the uid of the test accounts.
+  ///
+  /// It will save the uid of the accounts and it will reuse the uid for the next test.
+  ///
+  /// This function will create test accounts if the account does not exist.
+  static Future generateTestAccounts() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    for (final user in Test.users) {
+      final uid = prefs.getString(user.email);
+      if (uid == null) {
+        dog('Generating uid of ${user.email}');
+        final login = await Test.loginOrRegister(user);
+        user.uid = login.uid;
+        await prefs.setString(user.email, user.uid!);
+
+        await User.create(uid: user.uid!, email: user.email, displayName: user.displayName, photoUrl: user.photoUrl);
+      } else {
+        dog('Reusing uid: $uid of ${user.email}');
+        user.uid = uid;
+      }
+    }
+  }
 
   /// Login or register
   ///
@@ -57,14 +100,12 @@ class Test {
   /// @return User of firebase auth
   static Future<fa.User> loginOrRegister(TestUser user) async {
     try {
-      final fa.UserCredential cred = await fa.FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-              email: user.email, password: user.password);
+      final fa.UserCredential cred =
+          await fa.FirebaseAuth.instance.signInWithEmailAndPassword(email: user.email, password: user.password);
       return cred.user!;
     } catch (e) {
-      final cred = await fa.FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: user.email, password: user.password);
+      final cred =
+          await fa.FirebaseAuth.instance.createUserWithEmailAndPassword(email: user.email, password: user.password);
       return cred.user!;
     }
   }
@@ -77,8 +118,8 @@ class Test {
     // Wait until logout is complete or you may see firestore permission denied error.
     await Test.wait();
 
-    final fa.UserCredential cred = await fa.FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: user.email, password: user.password);
+    final fa.UserCredential cred =
+        await fa.FirebaseAuth.instance.signInWithEmailAndPassword(email: user.email, password: user.password);
     await Test.wait();
     return cred.user!;
   }
@@ -128,8 +169,7 @@ class Test {
       if (e.toString().split(': ').last == code) {
         test(true, 'Exception code must be $code');
       } else {
-        test(false,
-            'Exception code must be $code. Actual code: ${e.toString()}');
+        test(false, 'Exception code must be $code. Actual code: ${e.toString()}');
       }
     }
   }
@@ -142,9 +182,19 @@ class Test {
     return future.then((value) {
       test(true, reason ?? 'Future has completed');
     }).catchError((e) {
-      test(false,
-          '${reason ?? 'Future must be completed.'}, Actual exception: $e');
+      test(false, '${reason ?? 'Future must be completed.'}, Actual exception: $e');
     });
+  }
+
+  /// TODO 여기서 부터 다시 시작
+  static Future<User> createRandomUser() {
+    final email = "${randomString()}@gmail.com";
+    return User.create(
+      uid: randomString(),
+      email: email,
+      displayName: email,
+      photoUrl: 'https://picsum.photos/id/100/200/200',
+    );
   }
 }
 
