@@ -1,30 +1,35 @@
-# Table of Contents
-<!-- vscode-markdown-toc -->
-* [Admin Service](#AdminService)
-* [Admin Widgets](#AdminWidgets)
-	* [Opening admin dashbard](#Openingadmindashbard)
-	* [AdminUserListView](#AdminUserListView)
-	* [Updating auth custom claims](#Updatingauthcustomclaims)
-	* [Disable user](#Disableuser)
-* [Testing on Local Emulators and Firebase](#TestingonLocalEmulatorsandFirebase)
-* [Testing security rules](#Testingsecurityrules)
-* [Testing on real Firebase](#TestingonrealFirebase)
-* [Testing on Cloud Functions](#TestingonCloudFunctions)
-* [TestUi Widget](#TestUiWidget)
+# Table of Contents {ignore=true}
 
-<!-- vscode-markdown-toc-config
-	numbering=false
-	autoSave=true
-	/vscode-markdown-toc-config -->
-<!-- /vscode-markdown-toc -->
 
-## <a name='AdminService'></a>Admin Service
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+<!-- code_chunk_output -->
+
+  - [Admin Service](#admin-service)
+  - [Admin Widgets](#admin-widgets)
+    - [Opening admin dashbard](#opening-admin-dashbard)
+    - [AdminUserListView](#adminuserlistview)
+    - [Updating auth custom claims](#updating-auth-custom-claims)
+    - [Disable user](#disable-user)
+- [Translation](#translation)
+- [Unit Testing](#unit-testing)
+  - [Testing on Local Emulators and Firebase](#testing-on-local-emulators-and-firebase)
+  - [Testing security rules](#testing-security-rules)
+  - [Testing on real Firebase](#testing-on-real-firebase)
+  - [Testing on Cloud Functions](#testing-on-cloud-functions)
+- [Logic test](#logic-test)
+  - [TestUi Widget](#testui-widget)
+
+<!-- /code_chunk_output -->
+
+[TOC]
+
+## Admin Service
 
 <!-- TODO: learn admin service -->
 
-## <a name='AdminWidgets'></a>Admin Widgets
+## Admin Widgets
 
-### <a name='Openingadmindashbard'></a>Opening admin dashbard
+### Opening admin dashbard
 
 To open admin dashboard, call `AdminService.instance.showDashboard()`.
 
@@ -40,9 +45,9 @@ Navigator.of(context).push(
 );
 ```
 
-### <a name='AdminUserListView'></a>AdminUserListView
+### AdminUserListView
 
-### <a name='Updatingauthcustomclaims'></a>Updating auth custom claims
+### Updating auth custom claims
 
 - Required properties
 
@@ -69,7 +74,7 @@ Navigator.of(context).push(
       - If the user is admin, then the app can show admin menu to the user.
     - Security rules can work better.
 
-### <a name='Disableuser'></a>Disable user
+### Disable user
 
 - Disabling a user means that they can't sign in anymore, nor refresh their ID token. In practice this means that within an hour of disabling the user they can no longer have a request.auth.uid in your security rules.
 
@@ -138,11 +143,11 @@ You can use the language like below,
 
 # Unit Testing
 
-## <a name='TestingonLocalEmulatorsandFirebase'></a>Testing on Local Emulators and Firebase
+## Testing on Local Emulators and Firebase
 
 - We do unit testing on both of local emulator and on real Firebase. It depends on how the test structure is formed.
 
-## <a name='Testingsecurityrules'></a>Testing security rules
+## Testing security rules
 
 Run the firebase emulators like the followings. Note that you will need to install and setup emulators if you didn't.
 
@@ -171,7 +176,7 @@ npm run mocha tests/posts/create.spec.js
 npm run mocha tests/posts/likes.spec.js
 ```
 
-## <a name='TestingonrealFirebase'></a>Testing on real Firebase
+## Testing on real Firebase
 
 - Test files are under `functions/tests`. This test files work with real Firebase. So, you may need provide a Firebase for test use.
 
@@ -190,7 +195,7 @@ npm run mocha tests/posts/likes.spec.js
   - `npm run mocha -- tests/update_custom_claims/get_set.spec.ts`
   - `npm run mocha -- tests/update_custom_claims/update.spec.ts`
 
-## <a name='TestingonCloudFunctions'></a>Testing on Cloud Functions
+## Testing on Cloud Functions
 
 All of the cloud functions are tested directly on remote firebase (not in emulator). So, you need to save the account service in `firebase/service-account.json`. The service account file is listed in .gitignore. So, It won't be added into git.
 
@@ -216,7 +221,7 @@ To test the functionality of fireflutter, it needs a custom way of testing. For 
 We wrote some test code and saved it in `TestUi` widget. To run the test in `TestUi`, you will need to initialize firebase. But don't initialize fireflutter nor other services in fireflutter.
 
 
-## <a name='TestUiWidget'></a>TestUi Widget
+## TestUi Widget
 
 This has custom maid test code for fireflutter. You may learn more teachniques on using fireflutter by seeing the test code.
 

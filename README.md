@@ -5,28 +5,55 @@
 If you are looking for a package that help you develop a full featured content management app, then you have found a right one. FireFlutter is a free, open source, complete, rapid development package for creating apps like CMS(content management system), social service, chat, community(forum), shopping mall and much more based on Firebase.
 
 Create an issue if you find a bug or need a help.
-
-# Changes
-<!-- You can see [CHANGELOG.md](/CHANGELOG.md) for the updated log. -->
-
-### Oct 10 0.3.12
-* Refactoring on user, feed.
-* Refine widgets and services.
-
-### Sept 28 0.3.11
-* Add. Admin dashboarsd.
-* Update. Push notification.
-* Refactoring. Save more data in realtime database.
-
-### Sept 10 0.3.10
-
-* Change. Refactoring file/folder names.
-
-Go to [CHANGELOG.md](/CHANGELOG.md) for more.
 <br>
 <br>
-# Table of Contents
-* [Overview](#overview)
+# Table of Contents {ignore=true}
+
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [FireFlutter](#fireflutter)
+- [Overview](#overview)
+- [Changes](#changes)
+  - [Features](#features)
+    - [Main Features](#main-features)
+- [Getting started](#getting-started)
+  - [Installation](#installation)
+    - [Create a Firebase](#create-a-firebase)
+- [Firebase Extension](#firebase-extension)
+    - [Resize image](#resize-image)
+  - [Install cloud functions](#install-cloud-functions)
+  - [Security rules](#security-rules)
+    - [Firestore security rules](#firestore-security-rules)
+    - [Security rule for admin](#security-rule-for-admin)
+    - [Realtime database security rules](#realtime-database-security-rules)
+  - [Setup the base code](#setup-the-base-code)
+- [Pub.dev Packages](#pubdev-packages)
+  - [url_launcher (Optional)](#url_launcher-optional)
+  - [timeago](#timeago)
+  - [Parsed_ReadMore](#parsed_readmore)
+- [Build Sample](#build-sample)
+    - [User Profile Page](#user-profile-page)
+    - [Chat App](#chat-app)
+    - [Forum App](#forum-app)
+- [Widgets and UI functions](#widgets-and-ui-functions)
+- [Usage](#usage)
+  - [Chat](#chat)
+  - [User](#user)
+  - [Post](#post)
+  - [Comment](#comment)
+  - [Share](#share)
+- [Push notifications](#push-notifications)
+- [Error handling](#error-handling)
+- [Admin](#admin)
+- [Developer Section](#developer-sectiondocdevelopermddeveloper)
+
+<!-- /code_chunk_output -->
+
+<!-- * [Overview](#overview)
+* [Changes](#changes)
 * [Features](#features)
   * [Main Features](#main-features)
 * [Getting Started](#getting-started)
@@ -54,7 +81,7 @@ Go to [CHANGELOG.md](/CHANGELOG.md) for more.
   * [Chat](#chat)
   * [Share](#share)
 * [Push Notification](#push-notifications)
-* [Error Handling](#error-handling)
+* [Error Handling](#error-handling) -->
 
 # Overview
 
@@ -63,7 +90,23 @@ Fireflutter made for reusing the common code blocks. Provides code for user, for
 There are some pre-defined fields for the user document. You can use `json_serializable` for providing each model extra fields.
 
 The model has also basic CRUD functionalities.
+# Changes
+<!-- You can see [CHANGELOG.md](/CHANGELOG.md) for the updated log. -->
 
+### Oct 10 0.3.12 {ignore=true}
+* Refactoring on user, feed.
+* Refine widgets and services.
+
+### Sept 28 0.3.11 {ignore=true}
+* Add. Admin dashboarsd.
+* Update. Push notification.
+* Refactoring. Save more data in realtime database.
+
+### Sept 10 0.3.10 {ignore=true}
+
+* Change. Refactoring file/folder names.
+
+Go to [CHANGELOG.md](/CHANGELOG.md) for more.
 <!-- paraphrased for readability, feel free to edit -->
 
 <!-- I made it for reusing the most common code blocks when I am building apps. It provides the code for user management, forum(caetgory, post, comment) management, chat management, push notification management along with `like`, `favorite`, `following` features.

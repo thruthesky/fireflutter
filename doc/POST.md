@@ -1,28 +1,38 @@
-# Post
-<!-- vscode-markdown-toc -->
-* [Features](#Features)
-* [Model](#Model)
-* [Widgets](#Widgets)
-	* [Post List View](#PostListView)
-	* [Post Dialog](#PostDialog)
-* [Post Service Usage](#PostServiceUsage)
-	* [Displaying the create dialog](#Displayingthecreatedialog)
-* [Post Document Strucutre](#PostDocumentStrucutre)
-* [Post view screen custom design](#Postviewscreencustomdesign)
-* [List of viewer on each post](#Listofvieweroneachpost)
-* [Get/Set/Update/Toggle](#GetSetUpdateToggle)
-* [Database widget](#Databasewidget)
-* [DatabaseCount widget](#DatabaseCountwidget)
-* [Photo upload](#Photoupload)
+# Table of Contents {ignore=true}
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
-<!-- vscode-markdown-toc-config
-	numbering=false
-	autoSave=true
-	/vscode-markdown-toc-config -->
-<!-- /vscode-markdown-toc -->
+<!-- code_chunk_output -->
+
+- [Post](#post)
+  - [Widgets](#widgets)
+  - [PostService](#postservice)
+    - [Post List View](#post-list-view)
+    - [Post Dialog](#post-dialog)
+  - [Post Service Usage](#post-service-usage)
+    - [Displaying the create dialog](#displaying-the-create-dialog)
+  - [Post Document Strucutre](#post-document-strucutre)
+  - [Post view screen custom design](#post-view-screen-custom-design)
+  - [List of viewer on each post](#list-of-viewer-on-each-post)
+- [Database](#database)
+  - [Get/Set/Update/Toggle](#getsetupdatetoggle)
+  - [Database widget](#database-widget)
+  - [DatabaseCount widget](#databasecount-widget)
+- [Settings](#settings)
+- [Report](#report)
+- [Upload](#upload)
+  - [Photo upload](#photo-upload)
+- [No of view](#no-of-view)
+- [Following and Follower](#following-and-follower)
+- [Block](#block)
+- [Customization](#customization)
+- [Callbacks](#callbacks)
+
+<!-- /code_chunk_output -->
 
 
-## Features
+# Post 
+
+<!-- ## Features
 
 - Create Posts
 
@@ -42,7 +52,7 @@ It has:
 - createdAt
 - updatedAt
 - likes
-- deleted
+- deleted -->
 
 ## Widgets
 
@@ -72,7 +82,7 @@ PostService.instance.customize.postViewScreenBuilder = (post) => GRCCustomPostVi
 
 The widget is preferrably a full screen widget. It can be a scaffold, sliver, etc. -->
 
-## PostService
+### PostService
 
 If `enableNotificationOnLike` is set to true, then it will send push notification to the author when there is a like. You would do the work by adding `onLike` callback.
 
@@ -319,13 +329,13 @@ FutureBuilder(
 ),
 ```
 
-# Settings
+## Settings
 
 The system settings are saved under `/settings` collection while the user settings are saved under `/users/{uid}/user_settings/{settingId}/...` in Firestore and the security rules are set to the login user.
 
 See [the block chapter](#block) to know how to use(manage) the user settings and how to use `Database` widget with it.
 
-# Report
+## Report
 
 The Report document is saved under `/reports/{myUid-targetUid}` in Firestore. The `targetUid` is one of the uid of the user, the post, or the comment.
 

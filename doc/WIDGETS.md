@@ -1,8 +1,8 @@
 ## AuthChanges
-
+`AuthChanges` is a builder which runs when Firebase `authStateChanges`. It return `User` and will rebuild itself everytime the user signed in or out.  
 ```dart
 AuthChange(
-  builder: (u) => u == null ?
+  builder: (user) => user == null ? // check if user is null then 
     Text('Register') : Text('uid: ${user.uid}'),
 );
 ```
