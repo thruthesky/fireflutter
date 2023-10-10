@@ -1,40 +1,54 @@
 # Chat Feature
  
-<!-- vscode-markdown-toc -->
-* [Welcome message](#Welcomemessage)
-* [No of new message](#Noofnewmessage)
-* [Total no of new message](#Totalnoofnewmessage)
-	* [Chat Room List](#ChatRoomList)
-	* [Create a chat room](#Createachatroom)
-	* [How to display a chat room](#Howtodisplayachatroom)
-	* [Additional information](#Additionalinformation)
-	* [How to test & UI work Chat room screen](#HowtotestUIworkChatroomscreen)
-		* [Chat Room fields](#ChatRoomfields)
-		* [Chat Message fields](#ChatMessagefields)
-	* [Counting no of new messages](#Countingnoofnewmessages)
-	* [Displaying chat rooms that has new message (unread messages)](#Displayingchatroomsthathasnewmessageunreadmessages)
-	* [1:1 Chat and Multi user chat](#ChatandMultiuserchat)
-* [UI Customization](#UICustomization)
-	* [Chat room list](#Chatroomlist)
-* [Chat Room Menu](#ChatRoomMenu)
-* [Chat Room Settings](#ChatRoomSettings)
+## ChatService
 
-<!-- vscode-markdown-toc-config
-	numbering=false
-	autoSave=true
-	/vscode-markdown-toc-config -->
-<!-- /vscode-markdown-toc -->
+### How to open 1:1 chat room
+
+Use the `showChatRoom` method anywhere with user model.
+
+```dart
+ChatService.instance.showChatRoom(context: context, user: user);
+```
+
+### How to display chat room menu
+
+Since all app have different features and design, you can customize or rebuild it. See the code below and paste them into your project.
+
+<!-- By default, it has a full screen dialog with default buttons. Since all apps have difference features and design, you will need to customize it or rebuild it. But see the code inside and copy and paste them into your project. -->
+<!-- body: ChatRoomMenuUserInviteDialog(room: room), -->
+
+### How to show chat room dialog.
+
+```dart
+showGeneralDialog(
+  context: context,
+  pageBuilder: (context, _, __) => Scaffold(
+    appBar: AppBar(
+      title: const Text('Invite User'),
+    ),
+    body: CustomChatWidget(),
+  ),
+);
+```
+
+### Customizing the chat header
+
+You can build your own chat header like below.
+
+```dart
+ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoomAppBar(room: room);
+```
 
 
-## <a name='Welcomemessage'></a>Welcome message
+## Welcome message
 
 To send a welcome chat message to a user who just registered, use `UserService.instance.sendWelcomeMessage`. See details on the comments of the source.
 
-## <a name='Noofnewmessage'></a>No of new message
+## No of new message
 
 We save the no of new messages of each users in RTDB. `/chats/noOfNewMessages/{uid}/{roomId: true}`.
 
-## <a name='Totalnoofnewmessage'></a>Total no of new message
+## Total no of new message
 
 To display the total no of new messages, use the following widget. If you don't want to listen the changes of no of new message, then you can disable it with `ChatService.instance.init( ... )`
 
@@ -42,7 +56,7 @@ To display the total no of new messages, use the following widget. If you don't 
 TotalNoOfNewMessage(),
 ```
 
-### <a name='ChatRoomList'></a>Chat Room List
+### Chat Room List
 
 - The beginning point would be chat room list screen.
 
@@ -72,7 +86,7 @@ ChatRoomListView(
 )
 ```
 
-### <a name='Createachatroom'></a>Create a chat room
+### Create a chat room
 
 - To create a chat room, add a button and display `ChatRoomCreateDialog` widget. You may copy the code from `ChatRoomCreateDialog` and apply your own design.
 
@@ -118,7 +132,7 @@ Scafolld(
 )
 ``` -->
 
-### <a name='Howtodisplayachatroom'></a>How to display a chat room
+### How to display a chat room
 
 - In the chat room, there should be a header, a message list view as a body, and message input box.
 - To display the chat room, you need to have a chat room model.
@@ -126,11 +140,11 @@ Scafolld(
   - Then, you will get it on the app by accessing the database or you may compose it using `ChatRoomModel.fromMap()`.
   - Then, pass the chat room model into the chat room (or you can compose a chat room manually with the chat room model.)
 
-### <a name='Additionalinformation'></a>Additional information
+### Additional information
 
 - Please create issues.
 
-### <a name='HowtotestUIworkChatroomscreen'></a>How to test & UI work Chat room screen
+### How to test & UI work Chat room screen
 
 ```dart
 
@@ -155,7 +169,7 @@ Scafolld(
     });
 ```
 
-#### <a name='ChatRoomfields'></a>Chat Room fields
+#### Chat Room fields
 
 - `master: [string]` is the master. root of the chat room.
 - `moderators: Array[uid]` is the moderators.
@@ -170,7 +184,7 @@ Scafolld(
   - `text: [string]` is the text in the message
 - `maximumNoOfUsers: [int]` is the maximum no of users in the group.
 
-#### <a name='ChatMessagefields'></a>Chat Message fields
+#### Chat Message fields
 
 - `text` is the text message [Optional] - Optional, meaning, a message can be sent without the text.
 - `createdAt` is the time that the message was sent.
@@ -179,7 +193,7 @@ Scafolld(
 - `fileUrl [String]` is the file's URL added to the message. [Optional]
 - `fileName` is the file name of the file from `fileUrl`. [Optional]
 
-### <a name='Countingnoofnewmessages'></a>Counting no of new messages
+### Counting no of new messages
 
 - We don't seprate the storage of the no of new message from the chat room document. We have thought about it and finalized that that is not worth. It does not have any money and the logic isn't any simple.
 - noOfNewMessages will have the uid and no. like `{uid-a: 5, uid-b: 0, uid-c: 2}`
@@ -187,12 +201,12 @@ Scafolld(
 - Wehn somebody receives a message in a chat room, make his no of new message to 0.
 - When somebody enters the chat room, make his no of new message to 0.
 
-### <a name='Displayingchatroomsthathasnewmessageunreadmessages'></a>Displaying chat rooms that has new message (unread messages)
+### Displaying chat rooms that has new message (unread messages)
 
 - Get whole list of chat room.
 - Filter chat rooms that has 0 of noOfNewmessage of my uid.
 
-### <a name='ChatandMultiuserchat'></a>1:1 Chat and Multi user chat
+### 1:1 Chat and Multi user chat
 
 - 1:1 chat room id must be consisted with `uid-uid` pattern in alphabetically sorted.
 
@@ -224,11 +238,11 @@ Scafolld(
 - group chat room must have `{group: true, open: [boolean]}`. This is for searching purpose in Firestore.
   - For 1:1 chat room, it must be `{group: false, open: false}`. This is for searching purpose in Firestore.
 
-## <a name='UICustomization'></a>UI Customization
+## UI Customization
 
 UI can be customized
 <!-- TODO: Display an example of ui customization using chatservice -->
-### <a name='Chatroomlist'></a>Chat room list
+### Chat room list
 
 - To list chat rooms, use the code below.
 
@@ -250,7 +264,7 @@ ChatRoomListView(
 )
 ```
 
-## <a name='ChatRoomMenu'></a>Chat Room Menu
+## Chat Room Menu
 
 The chat room menu can be accessed by the Chat Room Menu Button. This will open the Chat Room Menu Screen.
 
@@ -286,7 +300,7 @@ See [Chat Room Settings](#chat-room-settings) for more details
 
 - `Members` This is a List View of the members of the group chat. The user can be marked as [Master], [Moderator] and/or [Blocked]. Tapping the user will open a Dialog that may show options for Setting as Moderator, or Blocking on the group.
 
-## <a name='ChatRoomSettings'></a>Chat Room Settings
+## Chat Room Settings
 
 - `Open Chat Room` This setting determines if the group chat is open or private. Open means anybody can join and invite. Private means only the master or moderators can invite. See the code below to use the Default List Tile.
 

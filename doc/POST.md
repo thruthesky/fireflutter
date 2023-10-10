@@ -46,6 +46,72 @@ It has:
 
 ## Widgets
 
+## PostService
+
+If `enableNotificationOnLike` is set to true, then it will send push notification to the author when there is a like. You would do the work by adding `onLike` callback.
+
+```dart
+PostService.instance.init(
+  onLike: (Post post, bool isLiked) async {
+    if (!isLiked) return;
+    MessagingService.instance.queue(
+      title: post.title,
+      body: "${my.name} liked your post.",
+      id: myUid,
+      uids: [post.uid],
+      type: NotificationType.post.name,
+    );
+  },
+  // When it is set to true, you don't have add `onLike` callback to send push notification.
+  enableNotificationOnLike: true,
+```
+
+## CommentService
+
+You can customize the `showCommentEditBottomSheet` how to comment edit(create or update) box appears.
+
+The code below simply call `next()` function which does exactly the same as the default logic from `fireflutter`.
+
+```dart
+CommentService.instance.init(
+  customize: CommentCustomize(
+    showCommentEditBottomSheet: (
+      BuildContext context, {
+      Comment? comment,
+      required Future<Comment?> Function() next,
+      Comment? parent,
+      Post? post,
+    }) {
+      return next();
+    },
+  ),
+);
+```
+
+You may add some custom code like below.
+
+```dart
+CommentService.instance.init(
+  customize: CommentCustomize(
+    showCommentEditBottomSheet: (
+      BuildContext context, {
+      Comment? comment,
+      required Future<Comment?> Function() next,
+      Comment? parent,
+      Post? post,
+    }) {
+      if (my.isComplete == false) {
+        warning(context, title: '본인 인증', message: '본인 인증을 하셔야 댓글을 쓸 수 있습니다.');
+        return Future.value(null);
+      }
+      return next();
+    },
+  ),
+);
+```
+
+Or you can do the UI/UX by yourself since it delivers everything you need to show comment edit box.
+
 ### Post List View
 
 Post List View displays a list for the posts.

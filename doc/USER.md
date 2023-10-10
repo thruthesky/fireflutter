@@ -2,12 +2,16 @@
 
 <!-- vscode-markdown-toc -->
 * [Overview](#Overview)
+* [UserService](#UserService)
+	* [How to open a post](#Howtoopenapost)
+	* [Customizing a Post View](#CustomizingaPostView)
 * [Like](#Like)
 * [Favorite/Bookmark](#FavoriteBookmark)
 	* [How to display icon](#Howtodisplayicon)
 * [Follow and Unfollow](#FollowandUnfollow)
 	* [Display Followers](#DisplayFollowers)
 * [No of profile view](#Noofprofileview)
+* [User profile screen customization](#Userprofilescreencustomization)
 
 <!-- vscode-markdown-toc-config
 	numbering=false
@@ -15,9 +19,7 @@
 	/vscode-markdown-toc-config -->
 <!-- /vscode-markdown-toc -->
 
-
-
-## Overview
+## <a name='Overview'></a>Overview
 
 `idVerifiedCode` is the code of user's authentication id code. This is used to save user's id code when the user uploaded his id card like passport and the AI (Firebase AI Extension) detect user's information and the verification succeed, the file path is being hsave in `idVerificationCoce`. You may use it on your own purpose.
 
@@ -27,7 +29,67 @@
 
 `birthDayOfYear` is the birth day of the year. It is automatically set by the `User.update()`. For instnace, if the user saves his birth day, then the app should use this kind of code; `my.update(birthYear: 1999, birthMonth: 9, birthDay: 9);` and it will automtically update the `birthDayOfYear` value.
 
-## Like
+## <a name='UserService'></a>UserService
+
+<!-- #section removed
+  reason: documentNotExistBuilder has been removed
+
+In this case, the `documentNotExistBuilder` of `UserDoc` will be called.
+
+So, the lifecyle will be the following when the app users `UserDoc`.
+
+- `UserService.instance.nullableUser` will have an instance of `User`
+  - If the user document does not exists, `exists` will be `false` causing `documentNotExistsBuilder` to be called.
+  - If the user document exist, then it will have right data and `builder` will be called. -->
+
+`UserService.instance.nullableUser` is _null_ when
+
+- on app boot
+- the user don't have documents
+- when user has document but `UserService` has not read the user document yet.
+
+<!-- **Note:** Use ***async*** to wait UserService to load the data -->
+
+`UserService.instance.nullableUser.exists` is _null_ if the user has logged in but no document.
+
+The `UserService.instance.user` or `UserService.instance.documentChanges` may be null when the user document is being loaded on app boot. So, the better way to get the user's document for sure is to use `UserService.instance.get`
+
+Right way of getting a user document.
+
+```dart
+UserService.instance.get(myUid!).then((user) => ...);
+```
+
+You cannot use `my` until the UserService is initialized and `UserService.instance.user` is available. Or you will see `null check operator used on a null value.`
+
+<!-- .customize does not exist[???],
+
+TODO: Learning it more so i can replace it
+
+  might remove since there is already a section of Post Below
+-->
+
+<!-- ## PostService
+
+### <a name='Howtoopenapost'></a>How to open a post
+Call the `showPostViewScreen` to show the full screen dialog that displays the post
+
+```dart
+PostService.instance.customize.postViewScreenBuilder = (post) => GRCCustomPostViewScreen(post: post);
+```
+
+### <a name='CustomizingaPostView'></a>Customizing a Post View
+
+Build your own UI design of the full screen Post View like below.
+
+```dart
+PostService.instance.customize.postViewScreenBuilder = (post) => GRCCustomPostViewScreen(post: post);
+```
+
+The widget is preferrably a full screen widget. It can be a scaffold, sliver, etc. -->
+
+
+## <a name='Like'></a>Like
 
 The `likes` data saved under `/likes` in RTDB. Not that, the `likes` for posts and comments are saved inside the documents of the posts and the comments.
 
@@ -59,7 +121,7 @@ IconButton(
   ),
 ),
 ```
-## Favorite/Bookmark
+## <a name='FavoriteBookmark'></a>Favorite/Bookmark
 
 Bookmark is known to be `Favorite`.
 
@@ -76,7 +138,7 @@ Bookmark is known to be `Favorite`.
 
 When A wants to see the bookmarks, the app should display a screen to list the bookmarks by all, type, user, etc.
 
-### How to display icon
+### <a name='Howtodisplayicon'></a>How to display icon
 
 Use `FavoriteButton` to display the icon.
 
@@ -113,7 +175,7 @@ FavoriteButton(
 ),
 ```
 
-## Follow and Unfollow
+## <a name='FollowandUnfollow'></a>Follow and Unfollow
 
 This method will make follow or unfollow the user of the [otherUid].
 
@@ -127,7 +189,7 @@ When it follows or unfollows,
 
 Note that you may use it with or without the feed service. See the `Feed Service` for the details on how to follow to see the posts of the users that you are following. But you can use it without the feed system.
 
-### Display Followers
+### <a name='DisplayFollowers'></a>Display Followers
 
 To display users followers you can use these following builders:
 
@@ -176,7 +238,7 @@ SizedBox( // setting a constraints
 <!-- TODO: Modify followers from code and display it here
  -->
 
-## No of profile view
+## <a name='Noofprofileview'></a>No of profile view
 
 A user can see other user's profile. FireFlutter provides a way of count the no of users who saw my profile. It is turned off by default and you can turn it on with `UserService.instance.init(enableNoOfProfileView)`. The history is saved under `/no_of_profile_view_history` collection so you can list and sort.
 
@@ -195,7 +257,7 @@ A user can see other user's profile. FireFlutter provides a way of count the no 
 The type is the viewer's type. So, the app can display users by type who viewed my profile.
 Note that, the year, month, day is the time of the client app. This may be incorrect. The year, month, day is the date information of last view. So, they changes on every view.
 
-## User profile screen customization
+## <a name='Userprofilescreencustomization'></a>User profile screen customization
 
 You can hide some of the buttons on public profile and add your own buttons like share button.
 

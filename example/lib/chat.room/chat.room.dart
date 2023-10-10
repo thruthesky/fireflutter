@@ -55,18 +55,13 @@ class _CustomChatRoomState extends State<CustomChatRoom> {
         itemBuilder: (context, room) => ChatRoomListTile(
           room: room,
           onTap: () {
-            // , user: user
-            ChatService.instance.showChatRoom(context: context);
-            showGeneralDialog(
-              context: context,
-              pageBuilder: (context, _, __) => controller.showChatRoom(context: context, room: room),
-            );
+            // ChatService.instance.showChatRoom(context: context);
+            controller.showChatRoom(context: context, room: room);
           },
         ),
       ),
       floatingActionButton: CustomFloatingButton(
         onPressed: () {
-          // ChatService.instance.
           showGeneralDialog(
             context: context,
             pageBuilder: (context, _, __) => ChatRoomCreateDialog(
