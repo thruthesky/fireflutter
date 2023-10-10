@@ -43,9 +43,9 @@ class _DatabaseState extends State<Database> {
       stream: FirebaseDatabase.instance.ref(widget.path).onValue,
       builder: (context, AsyncSnapshot<DatabaseEvent> event) {
         if (event.connectionState == ConnectionState.waiting) {
-          if (snapshotData != null)
-            return widget.builder(
-                snapshotData!.data!.snapshot.value, widget.path);
+          if (snapshotData != null) {
+            return widget.builder(snapshotData!.data!.snapshot.value, widget.path);
+          }
           return widget.onWaiting ?? const SizedBox.shrink();
         }
         if (event.hasError) {

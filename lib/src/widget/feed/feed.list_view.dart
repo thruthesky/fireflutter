@@ -1,5 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
@@ -63,9 +61,7 @@ class _FeedListViewState extends State<FeedListView> {
     }
 
     return FirestoreQueryBuilder(
-      query: postCol
-          .where('followers', arrayContains: myUid)
-          .orderBy('createdAt', descending: true),
+      query: postCol.where('followers', arrayContains: myUid).orderBy('createdAt', descending: true),
       pageSize: 40,
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
