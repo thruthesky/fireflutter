@@ -56,8 +56,7 @@ class UserListView extends StatelessWidget {
   ///   snapshot.fetchMore();
   /// }
   /// ```
-  final Widget Function(FirestoreQueryBuilderSnapshot<Object?> snapshot)?
-      customViewBuilder;
+  final Widget Function(FirestoreQueryBuilderSnapshot<Object?> snapshot)? customViewBuilder;
 
   final Axis scrollDirection;
 
@@ -67,12 +66,13 @@ class UserListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    dog(filter.toString());
     Query query = userCol;
     if (hasSearchText) {
       query = query.where(field, isEqualTo: searchText);
     }
     for (String filterKey in filter.keys) {
-      if (filter[filterKey] is String || filter[filterKey] is int) {
+      if (filter[filterKey].toString().isNotEmpty && (filter[filterKey] is String || filter[filterKey] is int)) {
         query = query.where(filterKey, isEqualTo: filter[filterKey]);
       }
       if (filter[filterKey] is List<dynamic>) {
@@ -108,13 +108,10 @@ class UserListView extends StatelessWidget {
             if (itemBuilder != null) return itemBuilder!.call(user, index);
             return ListTile(
               contentPadding: contentPadding,
-              title:
-                  titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
-              subtitle: subtitleBuilder?.call(user) ??
-                  Text(user.createdAt.toString()),
+              title: titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
+              subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
               leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
-              trailing: trailingBuilder?.call(user) ??
-                  const Icon(Icons.chevron_right),
+              trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
               onTap: () async {
                 onTap?.call(user);
               },
@@ -151,8 +148,7 @@ class UserListView extends StatelessWidget {
                   title: Text(user.name),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
-                    UserService.instance
-                        .showPublicProfileScreen(context: context, user: user);
+                    UserService.instance.showPublicProfileScreen(context: context, user: user);
                   },
                 );
           },

@@ -31,12 +31,10 @@ User get my => UserService.instance.user;
 auth.User get currentUser => auth.FirebaseAuth.instance.currentUser!;
 String get providerId => currentUser.providerData.first.providerId;
 
-bool get isAnonymous =>
-    auth.FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+bool get isAnonymous => auth.FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
 
 /// Return true if the user signed with real account. Not anonymous.
-bool get notLoggedIn =>
-    isAnonymous || auth.FirebaseAuth.instance.currentUser == null;
+bool get notLoggedIn => isAnonymous || auth.FirebaseAuth.instance.currentUser == null;
 
 bool get loggedIn => !notLoggedIn;
 
@@ -81,8 +79,7 @@ class UserService {
   /// UserService.instance.documentChanges.listen((user) => user == null ? null : print(my));
   /// ```
   ///
-  final BehaviorSubject<User?> documentChanges =
-      BehaviorSubject<User?>.seeded(null);
+  final BehaviorSubject<User?> documentChanges = BehaviorSubject<User?>.seeded(null);
 
   /// [userChanges] fires when
   /// - app boots
@@ -93,8 +90,7 @@ class UserService {
   /// Note that, the difference from [documentChanges] is that this happens
   /// when user logs in or out while [documentChanges] happens when the user
   /// document changes.
-  final BehaviorSubject<auth.User?> userChanges =
-      BehaviorSubject<auth.User?>.seeded(null);
+  final BehaviorSubject<auth.User?> userChanges = BehaviorSubject<auth.User?>.seeded(null);
 
   ///
   UserService._();
@@ -162,8 +158,7 @@ class UserService {
   /// the user document is updated, this stream will fire an event.
   Stream<User> get snapshot {
     return myDoc.snapshots().map(
-          (DocumentSnapshot doc) =>
-              doc.exists ? User.fromDocumentSnapshot(doc) : User.nonExistent(),
+          (DocumentSnapshot doc) => doc.exists ? User.fromDocumentSnapshot(doc) : User.nonExistent(),
         );
   }
 
@@ -218,8 +213,7 @@ class UserService {
     }
 
     this.enableNoOfProfileView = enableNoOfProfileView;
-    this.enableMessagingOnPublicProfileVisit =
-        enableMessagingOnPublicProfileVisit;
+    this.enableMessagingOnPublicProfileVisit = enableMessagingOnPublicProfileVisit;
     this.onCreate = onCreate;
 
     /// [onUpdate] will be triggered every time user is being updated.
@@ -266,16 +260,14 @@ class UserService {
   StreamSubscription? _userDocuementSubscription;
   _listenUserDocument() {
     _userDocuementSubscription?.cancel();
-    _userDocuementSubscription =
-        doc.snapshots().listen((documentSnapshot) async {
+    _userDocuementSubscription = doc.snapshots().listen((documentSnapshot) async {
       /// User document does not exist. Create the user document.
       ///
       if (!documentSnapshot.exists || documentSnapshot.data() == null) {
         dog('user.service.dart _listenUserDocument() - User document does not exist. Create the user document for the user $myUid');
         await User.create(uid: myUid!);
       } else {
-        nullableUser = User.fromDocumentSnapshot(
-            documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
+        nullableUser = User.fromDocumentSnapshot(documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
       }
       documentChanges.add(nullableUser);
     });
@@ -284,9 +276,7 @@ class UserService {
   /// Returns the stream of the user model of the user document for the user uid.
   ///
   Stream<User> snapshotOther(String uid) {
-    return userDoc(uid)
-        .snapshots()
-        .map((doc) => User.fromDocumentSnapshot(doc));
+    return userDoc(uid).snapshots().map((doc) => User.fromDocumentSnapshot(doc));
   }
 
   /// Get user
@@ -414,16 +404,10 @@ class UserService {
   ///
   /// Send notification even if enableMessagingOnPublicProfileVisit is set to false
   /// set `sendNotification` to `true` to send push notification
-  Future showPublicProfileScreen(
-      {required BuildContext context, String? uid, User? user}) {
+  Future showPublicProfileScreen({required BuildContext context, String? uid, User? user}) {
     final String otherUid = uid ?? user!.uid;
     final now = DateTime.now();
 
-    /// @withcenter.dev3 - ERROR - This produces error on dynamic link.
-    /// Steps to reproduce
-    /// 1. logout
-    /// 2. click on dynamic link for public profile screen.
-    ///
     /// Dynamic link is especially for users who are not install and not signed users.
     if (loggedIn && enableNoOfProfileView) {
       profileViewHistoryDoc(myUid: my.uid, otherUid: otherUid).set(
@@ -440,9 +424,7 @@ class UserService {
       );
     }
 
-    if (loggedIn &&
-        (enableMessagingOnPublicProfileVisit) &&
-        myUid != otherUid) {
+    if (loggedIn && (enableMessagingOnPublicProfileVisit) && myUid != otherUid) {
       MessagingService.instance.queue(
         title: "Your profile was visited.",
         body: "${my.name} visit your profile",
@@ -452,18 +434,14 @@ class UserService {
       );
     }
 
-    return customize.showPublicProfileScreen
-            ?.call(context, uid: uid, user: user) ??
+    return customize.showPublicProfileScreen?.call(context, uid: uid, user: user) ??
         showGeneralDialog(
           context: context,
           pageBuilder: ($, _, __) => PublicProfileScreen(uid: uid, user: user),
         );
   }
 
-  showFollowersScreen(
-      {required BuildContext context,
-      User? user,
-      Widget Function(User)? itemBuilder}) {
+  showFollowersScreen({required BuildContext context, User? user, Widget Function(User)? itemBuilder}) {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) {
@@ -472,10 +450,7 @@ class UserService {
     );
   }
 
-  showFollowingScreen(
-      {required BuildContext context,
-      User? user,
-      Widget Function(User)? itemBuilder}) {
+  showFollowingScreen({required BuildContext context, User? user, Widget Function(User)? itemBuilder}) {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) {
@@ -487,10 +462,7 @@ class UserService {
     );
   }
 
-  showBlockedListScreen(
-      {required BuildContext context,
-      required User user,
-      Widget Function(User?)? itemBuilder}) {
+  showBlockedListScreen({required BuildContext context, required User user, Widget Function(User?)? itemBuilder}) {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) {
@@ -501,8 +473,7 @@ class UserService {
           body: FutureBuilder(
             future: user.blockedList,
             builder: (context, snapshot) {
-              return UserListView.builder(
-                  uids: (snapshot.data ?? []), itemBuilder: itemBuilder);
+              return UserListView.builder(uids: (snapshot.data ?? []), itemBuilder: itemBuilder);
             },
           ),
         );
@@ -510,8 +481,7 @@ class UserService {
     );
   }
 
-  showViewersScreen(
-      {required BuildContext context, Widget Function(User)? itemBuilder}) {
+  showViewersScreen({required BuildContext context, Widget Function(User)? itemBuilder}) {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) {
@@ -539,8 +509,7 @@ class UserService {
     await myPrivateDoc.delete();
   }
 
-  showLikedByListScreen(
-      {required BuildContext context, required List<String> uids}) {
+  showLikedByListScreen({required BuildContext context, required List<String> uids}) {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) {

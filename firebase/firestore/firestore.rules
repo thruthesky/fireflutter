@@ -36,7 +36,7 @@ service cloud.firestore {
     }
 
     // Return true if the user is not disabled.
-    function isEnabled() {
+    function notDisabled() {
       return !isDisabled();
     }
 
@@ -105,9 +105,9 @@ service cloud.firestore {
     // Listing files/photos from storage cllection.
     match /storages/{documentId} {
       allow read: if true;
-      allow create: if isAdmin() || willBeMyDoc();
-      allow update: if isAdmin() || isMyDoc();
-      allow delete: if isAdmin() || isMyDoc();
+      allow create: if isAdmin() || willBeMyDoc() && notDisabled();
+      allow update: if isAdmin() || isMyDoc() && notDisabled();
+      allow delete: if isAdmin() || isMyDoc() && notDisabled();
     }
 
     // Only allow write if
@@ -123,11 +123,11 @@ service cloud.firestore {
       }
 
       allow read: if true;
-      allow create: if willBeMyPost() && isEnabled();
+      allow create: if willBeMyPost() && notDisabled();
       allow update: if
         isAdmin()
         ||
-        (isEnabled() && ( isMyPost() || onlyUpdating(['noOfComments']) ))
+        (notDisabled() && ( isMyPost() || onlyUpdating(['noOfComments']) ))
         ||
         addOrRemove('followers', request.auth.uid)
       ;
@@ -146,8 +146,8 @@ service cloud.firestore {
       }
 
       allow read: if true; // Anyone should be able to read comments
-      allow create: if willBeMyComment();
-      allow update: if isMyComment() || addOrRemove('likes', request.auth.uid) || isAdmin();
+      allow create: if willBeMyComment() && notDisabled;
+      allow update: if (isMyComment() && notDisabled())  || addOrRemove('likes', request.auth.uid) || isAdmin();
       allow delete: if false; // Prevent hard delete in comments
     }
   
@@ -222,21 +222,22 @@ service cloud.firestore {
         request.resource.data.users.hasAny([request.resource.data.master])
         &&
         // The master uid must be the creator.
-        request.resource.data.master == request.auth.uid;
-      
+        request.resource.data.master == request.auth.uid
+        && notDisabled();
+
       allow update: if
-        ( isMaster() && notRemovingMaster() )
+        ( isMaster() && notRemovingMaster() && notDisabled() )
         ||
-        ( isModerator() && notUpdatingMaster() && notRemovingMaster() )
+        ( isModerator() && notUpdatingMaster() && notRemovingMaster() && notDisabled() )
         ||
-        isLeaving()
+        (isLeaving() && notDisabled())
         ||
-        ( isRoomUser() && onlyUpdating(['lastMessage', 'rename']) )
+        ( isRoomUser() && onlyUpdating(['lastMessage', 'rename']) && notDisabled())
         ||
-        ( isOpen() && isJoining() )
+        ( isOpen() && isJoining() && notDisabled())
         ||
         // If the group chat is private, then users cannot invite others.
-        ( isOpen() && isRoomUser() && onlyAddingOneElement('users') )
+        ( isOpen() && isRoomUser() && onlyAddingOneElement('users') && notDisabled())
       ;
 
       allow delete: if false;
@@ -261,10 +262,14 @@ service cloud.firestore {
           return 'blockedUsers' in roomData() && roomData().blockedUsers.hasAny([request.auth.uid]);
         }
 
-        allow read: if isRoomUser() && !isBlocked();
-        allow create: if required(['uid']) && willBeMyMessage() && isRoomUser()  && !isBlocked();
-        allow update: if isMyMessage() && !isBlocked();
-        allow delete: if isMyMessage() && !isBlocked();
+        function notBlocked() {
+          return !isBlocked();
+        }
+
+        allow read: if isRoomUser() && notBlocked();
+        allow create: if willBeMyMessage() && isRoomUser()  && notBlocked() && notDisabled();
+        allow update: if isMyMessage() && notBlocked() && notDisabled();
+        allow delete: if isMyMessage() && notBlocked() && notDisabled();
       }
     }
 
@@ -485,7 +490,7 @@ function noFieldChanged() {
 // }
 
 // // Reeturn true if the user is not disabled.
-// function isEnabled() {
+// function notDisabled() {
 //   return !isDisabled();
 // }
 
