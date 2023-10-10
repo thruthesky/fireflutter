@@ -58,6 +58,7 @@ class _UserProfileState extends State<UserProfile> {
                 buttonBuilder('Show Profile', () {
                   UserService.instance.showPublicProfileScreen(context: context, user: my);
                 }),
+                const TotalNoOfNewMessage(),
               ],
             ),
           );
