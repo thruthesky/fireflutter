@@ -16,6 +16,8 @@ class UserListView extends StatelessWidget {
     this.searchText,
     this.filter = const {},
     this.exemptedUsers = const [],
+    this.orderBy,
+    this.descending = false,
 
     /// [field] is the field to be used in the search
     this.field = 'displayName',
@@ -35,6 +37,8 @@ class UserListView extends StatelessWidget {
   final String? searchText;
   final Map<String, dynamic> filter;
   final List<String> exemptedUsers;
+  final String? orderBy;
+  final bool descending;
   final Function(User)? onTap;
   final Function(User)? onLongPress;
   final String field;
@@ -64,6 +68,7 @@ class UserListView extends StatelessWidget {
   final int pageSize;
 
   bool get hasSearchText => searchText != null && searchText != '';
+  bool get hasOrderBy => orderBy != null && orderBy != '';
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +84,9 @@ class UserListView extends StatelessWidget {
         query = query.where(filterKey, arrayContainsAny: filter[filterKey]);
       }
     }
+    if (hasOrderBy) {
+      query = query.orderBy(orderBy!, descending: descending);
+    }
     return FirestoreQueryBuilder(
       pageSize: pageSize,
       query: query,
@@ -92,6 +100,7 @@ class UserListView extends StatelessWidget {
           return Text('Something went wrong! ${snapshot.error}');
         }
         snapshot.docs.removeWhere((doc) => exemptedUsers.contains(doc.id));
+        snapshot.docs.removeWhere((doc) => !(User.fromDocumentSnapshot(doc).exists));
         if (customViewBuilder != null) return customViewBuilder!.call(snapshot);
         return ListView.builder(
           scrollDirection: scrollDirection,

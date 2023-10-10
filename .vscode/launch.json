@@ -258,6 +258,15 @@
       "deviceId": "R9ATA00LMJM"
     },
     {
+      "name": "GRC - Samsung External - release (C)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "lib/main.dart",
+      "flutterMode": "release",
+      "deviceId": "R9ATA00LMJM"
+    },
+    {
       "name": "Admin - Simulator - (J)",
       "request": "launch",
       "type": "dart",
