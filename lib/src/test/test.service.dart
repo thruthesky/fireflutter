@@ -22,7 +22,7 @@ class Test {
   /// [accountSalt] is the salt string for test accounts.
   ///
   /// You can change the [accountSalt] to generate(use) new test accounts.
-  static String accountSalt = '2';
+  static String accountSalt = '5';
   static List<TestUser> users = [
     TestUser(
       displayName: 'Apple',
@@ -72,7 +72,9 @@ class Test {
         dog('Generating uid of ${user.email}');
         final login = await Test.loginOrRegister(user);
         user.uid = login.uid;
-        prefs.setString(user.email, user.uid!);
+        await prefs.setString(user.email, user.uid!);
+
+        await User.create(uid: user.uid!, email: user.email, displayName: user.displayName, photoUrl: user.photoUrl);
       } else {
         dog('Reusing uid: $uid of ${user.email}');
         user.uid = uid;
@@ -182,6 +184,17 @@ class Test {
     }).catchError((e) {
       test(false, '${reason ?? 'Future must be completed.'}, Actual exception: $e');
     });
+  }
+
+  /// TODO 여기서 부터 다시 시작
+  static Future<User> createRandomUser() {
+    final email = "${randomString()}@gmail.com";
+    return User.create(
+      uid: randomString(),
+      email: email,
+      displayName: email,
+      photoUrl: 'https://picsum.photos/id/100/200/200',
+    );
   }
 }
 
