@@ -63,7 +63,8 @@ class FeedService {
 
     /// Don't use [my] on unit testing due to the latency of the sync with
     /// firestore, it would have a wrong value.
-    final User me = await UserService.instance.get(myUid!, reload: true) as User;
+    final User me =
+        await UserService.instance.get(myUid!, reload: true) as User;
     final re = await me.follow(otherUid);
 
     if (re) {

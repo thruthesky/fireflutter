@@ -63,7 +63,9 @@ class _FeedListViewState extends State<FeedListView> {
     }
 
     return FirestoreQueryBuilder(
-      query: postCol.where('followers', arrayContains: myUid).orderBy('createdAt', descending: true),
+      query: postCol
+          .where('followers', arrayContains: myUid)
+          .orderBy('createdAt', descending: true),
       pageSize: 40,
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {

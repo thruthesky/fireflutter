@@ -28,7 +28,11 @@ class ShareService {
     final context = FireFlutterService.instance.context;
     showModalBottomSheet(
       context: context,
-      barrierColor: Theme.of(context).colorScheme.secondary.withOpacity(.5).withAlpha(110),
+      barrierColor: Theme.of(context)
+          .colorScheme
+          .secondary
+          .withOpacity(.5)
+          .withAlpha(110),
       isDismissible: true,
       enableDrag: true,
       constraints: BoxConstraints(
@@ -76,7 +80,8 @@ class ShareService {
           forcedRedirectEnabled: true,
         ));
 
-    final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
+    final dynamicLink =
+        await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
 
     return dynamicLink.shortUrl.toString();
   }

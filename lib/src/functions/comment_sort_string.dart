@@ -43,7 +43,8 @@ String getCommentSortString({
     if (depth > maxDepth) depth = maxDepth;
     List<String> parts = sortString.split('.');
     String block = parts[depth];
-    int computed = int.parse(block) + noOfComments + 1; // 처음이 0일 수 있다. 0이면, 부모와 같아서 안됨.
+    int computed =
+        int.parse(block) + noOfComments + 1; // 처음이 0일 수 있다. 0이면, 부모와 같아서 안됨.
     parts[depth] = computed.toString();
     sortString = parts.join('.');
     return sortString;

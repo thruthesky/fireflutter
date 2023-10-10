@@ -65,14 +65,19 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
             height: sizeMd,
           ),
           StreamBuilder<String?>(
-            stream: nameChanged.stream.debounceTime(const Duration(milliseconds: 500)).distinct((a, b) => a == b),
+            stream: nameChanged.stream
+                .debounceTime(const Duration(milliseconds: 500))
+                .distinct((a, b) => a == b),
             builder: (context, snapshot) {
-              return Text(name.text.isEmpty ? "Users I follow" : "Search result");
+              return Text(
+                  name.text.isEmpty ? "Users I follow" : "Search result");
             },
           ),
           Expanded(
             child: StreamBuilder<String?>(
-                stream: nameChanged.stream.debounceTime(const Duration(milliseconds: 500)).distinct((a, b) => a == b),
+                stream: nameChanged.stream
+                    .debounceTime(const Duration(milliseconds: 500))
+                    .distinct((a, b) => a == b),
                 builder: (context, snapshot) {
                   if (name.text.isNotEmpty) {
                     return FirestoreListView(
@@ -118,7 +123,10 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
         // TODO other share chat function without showing chat room
         // Cannot proceed because dynamic link is not working within the app.
         // https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=40666571
-        ChatService.instance.showChatRoom(context: context, user: user, setMessage: widget.text ?? 'Sharing this...');
+        ChatService.instance.showChatRoom(
+            context: context,
+            user: user,
+            setMessage: widget.text ?? 'Sharing this...');
       },
     );
   }

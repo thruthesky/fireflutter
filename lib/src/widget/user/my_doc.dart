@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 ///
 /// myDoc is a wrapper widget of UserDoc widget.
 class MyDoc extends StatelessWidget {
-  const MyDoc({super.key, required this.builder, this.my, this.notLoggedInBuilder});
+  const MyDoc(
+      {super.key, required this.builder, this.my, this.notLoggedInBuilder});
 
   final Widget Function(User) builder;
   final User? my;

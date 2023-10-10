@@ -82,10 +82,12 @@ class CommentService {
         post: post,
         parent: parent,
         comment: comment,
-        next: () => nextShowCommentEditBottomSheet(context, post: post, parent: parent, comment: comment),
+        next: () => nextShowCommentEditBottomSheet(context,
+            post: post, parent: parent, comment: comment),
       );
     } else {
-      return nextShowCommentEditBottomSheet(context, post: post, parent: parent, comment: comment);
+      return nextShowCommentEditBottomSheet(context,
+          post: post, parent: parent, comment: comment);
     }
   }
 
@@ -104,7 +106,8 @@ class CommentService {
       isDismissible: true,
       builder: (context) => Padding(
         // This padding is important to prevent the bottom sheet from being hidden by the keyboard.
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: SafeArea(
           // SafeArea is needed for Simulator
           child: Column(
@@ -129,7 +132,8 @@ class CommentService {
   /// Display a commnet view dialog
   ///
   /// This displays a single comments.
-  showCommentViewDialog({required BuildContext context, Comment? comment, String? commentId}) {
+  showCommentViewDialog(
+      {required BuildContext context, Comment? comment, String? commentId}) {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) => CommentViewScreen(

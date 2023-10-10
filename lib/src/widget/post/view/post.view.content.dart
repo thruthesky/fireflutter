@@ -18,7 +18,8 @@ class PostViewContent extends StatelessWidget {
             padding: const EdgeInsets.all(sizeSm),
             color: contentBackground,
             child: post!.content.length < 60
-                ? Text(post!.content.replaceAll("\n", " "), style: Theme.of(context).textTheme.bodyMedium)
+                ? Text(post!.content.replaceAll("\n", " "),
+                    style: Theme.of(context).textTheme.bodyMedium)
                 : PostContentShowMore(post: post!),
           );
   }

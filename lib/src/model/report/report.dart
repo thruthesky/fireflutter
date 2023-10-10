@@ -50,7 +50,8 @@ class Report {
   });
 
   factory Report.fromDocumentSnapshot(DocumentSnapshot doc) {
-    return Report.fromJson({...doc.data() as Map<String, dynamic>, 'id': doc.id});
+    return Report.fromJson(
+        {...doc.data() as Map<String, dynamic>, 'id': doc.id});
   }
 
   factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);

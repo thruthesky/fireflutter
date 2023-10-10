@@ -10,7 +10,8 @@ class User {
   static const String collectionName = 'users';
 
   /// '/users' collection
-  static CollectionReference col = FirebaseFirestore.instance.collection(collectionName);
+  static CollectionReference col =
+      FirebaseFirestore.instance.collection(collectionName);
 
   /// '/users/{uid}' document.
   ///
@@ -94,7 +95,9 @@ class User {
   DateTime get birthdate => DateTime(birthYear, birthMonth, birthDay);
 
   /// Gets the age of the user
-  int? get age => birthYear != 0 ? DateTime.now().difference(birthdate).inDays ~/ 365 : null;
+  int? get age => birthYear != 0
+      ? DateTime.now().difference(birthdate).inDays ~/ 365
+      : null;
 
   /// Set this to true when the user has completed the profile.
   /// This should be set when the user submit the profile form.
@@ -168,13 +171,15 @@ class User {
 
   factory User.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     return User.fromJson({
-      ...(documentSnapshot.data() ?? Map<String, dynamic>.from({})) as Map<String, dynamic>,
+      ...(documentSnapshot.data() ?? Map<String, dynamic>.from({}))
+          as Map<String, dynamic>,
       'uid': documentSnapshot.id,
     });
   }
 
   ///
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json)..data = json;
+  factory User.fromJson(Map<String, dynamic> json) =>
+      _$UserFromJson(json)..data = json;
 
   Map<String, dynamic> toMap() {
     return _$UserToJson(this);
@@ -192,7 +197,10 @@ class User {
   ///
   /// Note, that It gets data from /users collections. It does not get data from /search-user-data collection.
   static Future<User?> get([String? userUid]) async {
-    final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(userUid ?? myUid).get();
+    final snapshot = await FirebaseFirestore.instance
+        .collection(collectionName)
+        .doc(userUid ?? myUid)
+        .get();
     if (snapshot.exists == false || snapshot.data() == null) return null;
     return User.fromDocumentSnapshot(snapshot);
   }
@@ -319,10 +327,14 @@ class User {
     };
 
     /// Update the birth day of year
-    if (docData['birthYear'] != null && docData['birthMonth'] != null && docData['birthDay'] != null) {
-      final date = DateTime(docData['birthYear'], docData['birthMonth'], docData['birthDay']);
+    if (docData['birthYear'] != null &&
+        docData['birthMonth'] != null &&
+        docData['birthDay'] != null) {
+      final date = DateTime(
+          docData['birthYear'], docData['birthMonth'], docData['birthDay']);
 
-      docData['birthDayOfYear'] = date.difference(DateTime(date.year)).inDays + 1;
+      docData['birthDayOfYear'] =
+          date.difference(DateTime(date.year)).inDays + 1;
     }
 
     dog("User.update(); me: $myUid, who: $uid, path: ${userDoc(uid).path}, docData: $docData");
@@ -404,16 +416,23 @@ class User {
 
   /// check if user blocks the other user
   Future<bool> hadBlocked(String otherUid) async {
-    final event = await FirebaseDatabase.instance.ref('blocks/$uid/$otherUid').once(DatabaseEventType.value);
+    final event = await FirebaseDatabase.instance
+        .ref('blocks/$uid/$otherUid')
+        .once(DatabaseEventType.value);
     if (!event.snapshot.exists) return false;
     return event.snapshot.value as bool;
   }
 
   /// get the list of blocked users
   Future<List<String>> get blockedList async {
-    final event = await FirebaseDatabase.instance.ref(pathUserBlocked(uid, all: true)).once(DatabaseEventType.value);
+    final event = await FirebaseDatabase.instance
+        .ref(pathUserBlocked(uid, all: true))
+        .once(DatabaseEventType.value);
     if (!event.snapshot.exists) return [];
-    return (Map<String, dynamic>.from((event.snapshot.value as Map<dynamic, dynamic>?) ?? {})).keys.toList();
+    return (Map<String, dynamic>.from(
+            (event.snapshot.value as Map<dynamic, dynamic>?) ?? {}))
+        .keys
+        .toList();
   }
 
   /// Use this to block this user. The currently logged in user will block thus user.

@@ -16,7 +16,8 @@ class PushNotificationSetting extends StatelessWidget {
     this.categoryId,
     required this.builder,
     this.toogleValue = true,
-  }) : assert(settingId != null || roomId != null || categoryId != null, 'roomId or categoryId must be not null');
+  }) : assert(settingId != null || roomId != null || categoryId != null,
+            'roomId or categoryId must be not null');
   final String action;
   final String? settingId;
   final String? roomId;

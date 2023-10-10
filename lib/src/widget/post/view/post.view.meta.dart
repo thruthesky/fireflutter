@@ -5,7 +5,8 @@ class PostViewMeta extends StatelessWidget {
   const PostViewMeta({
     super.key,
     this.post,
-    this.headerPadding = const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, sizeXs),
+    this.headerPadding =
+        const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, sizeXs),
   });
 
   final Post? post;
@@ -20,7 +21,8 @@ class PostViewMeta extends StatelessWidget {
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () => UserService.instance.showPublicProfileScreen(context: context, uid: post!.uid),
+                  onTap: () => UserService.instance.showPublicProfileScreen(
+                      context: context, uid: post!.uid),
                   child: UserAvatar(
                     uid: post!.uid,
                     radius: 20,
@@ -33,20 +35,28 @@ class PostViewMeta extends StatelessWidget {
                   children: [
                     UserDoc(
                       uid: post!.uid,
-                      builder: (user) => Text(user.name, style: Theme.of(context).textTheme.titleMedium),
+                      builder: (user) => Text(user.name,
+                          style: Theme.of(context).textTheme.titleMedium),
                     ),
                     Row(
                       children: [
                         DateTimeText(
                             dateTime: post!.createdAt,
-                            style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11)),
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontSize: 11)),
                         DatabaseCount(
-                          path: pathSeenBy(post!.id), // 'posts/${post.id}/seenBy',
+                          path: pathSeenBy(
+                              post!.id), // 'posts/${post.id}/seenBy',
                           builder: (n) => n < 2
                               ? const SizedBox.shrink()
                               : Text(
                                   " | Views: $n",
-                                  style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11),
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                      fontSize: 11),
                                 ),
                         ),
                       ],

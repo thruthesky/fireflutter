@@ -27,9 +27,11 @@ class UserDocReady extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: UserService.instance.documentChanges.distinct((prev, next) => next == null || prev?.uid == next.uid),
+      stream: UserService.instance.documentChanges
+          .distinct((prev, next) => next == null || prev?.uid == next.uid),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null) {
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            snapshot.data == null) {
           return const SizedBox.shrink();
         }
 

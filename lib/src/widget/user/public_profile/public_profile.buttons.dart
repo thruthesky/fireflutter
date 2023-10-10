@@ -27,18 +27,22 @@ class _PublicProfileButtonsState extends State<PublicProfileButtons> {
       runAlignment: WrapAlignment.center,
       children: [
         if (user.uid != myUid) ...[
-          UserService.instance.customize.publicScreenLikeButton?.call(context, user) ??
+          UserService.instance.customize.publicScreenLikeButton
+                  ?.call(context, user) ??
               TextButton(
                 style: buttonStyle,
                 onPressed: () => user.like(user.uid),
                 child: Database(
                   path: 'likes/${user.uid}',
                   builder: (value, p) => Text(
-                    value == null ? tr.like : tr.likes.replaceAll('#no', value.length.toString()),
+                    value == null
+                        ? tr.like
+                        : tr.likes.replaceAll('#no', value.length.toString()),
                   ),
                 ),
               ),
-          UserService.instance.customize.publicScreenFavoriteButton?.call(context, user) ??
+          UserService.instance.customize.publicScreenFavoriteButton
+                  ?.call(context, user) ??
               FavoriteButton(
                 otherUid: user.uid,
                 builder: (re) => Text(
@@ -50,7 +54,8 @@ class _PublicProfileButtonsState extends State<PublicProfileButtons> {
                   message: re ? tr.favoriteMessage : tr.unfavoriteMessage,
                 ),
               ),
-          UserService.instance.customize.publicScreenChatButton?.call(context, user) ??
+          UserService.instance.customize.publicScreenChatButton
+                  ?.call(context, user) ??
               TextButton(
                 onPressed: () {
                   ChatService.instance.showChatRoom(
@@ -61,7 +66,8 @@ class _PublicProfileButtonsState extends State<PublicProfileButtons> {
                 style: buttonStyle,
                 child: Text(tr.chat),
               ),
-          UserService.instance.customize.publicScreenFollowButton?.call(context, user) ??
+          UserService.instance.customize.publicScreenFollowButton
+                  ?.call(context, user) ??
               UserDoc(
                 live: true,
                 user: user,
@@ -75,7 +81,8 @@ class _PublicProfileButtonsState extends State<PublicProfileButtons> {
                   ),
                 ),
               ),
-          UserService.instance.customize.publicScreenBlockButton?.call(context, user) ??
+          UserService.instance.customize.publicScreenBlockButton
+                  ?.call(context, user) ??
               TextButton(
                 onPressed: () async {
                   final blocked = await user.block();
@@ -87,10 +94,12 @@ class _PublicProfileButtonsState extends State<PublicProfileButtons> {
                 style: buttonStyle,
                 child: Database(
                   path: pathBlock(user.uid),
-                  builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
+                  builder: (value, p) =>
+                      Text(value == null ? tr.block : tr.unblock),
                 ),
               ),
-          UserService.instance.customize.publicScreenReportButton?.call(context, user) ??
+          UserService.instance.customize.publicScreenReportButton
+                  ?.call(context, user) ??
               TextButton(
                 onPressed: () {
                   ReportService.instance.showReportDialog(
@@ -98,7 +107,8 @@ class _PublicProfileButtonsState extends State<PublicProfileButtons> {
                     otherUid: user.uid,
                     onExists: (id, type) => toast(
                       title: tr.alreadyReportedTitle,
-                      message: tr.alreadyReportedMessage.replaceAll('#type', type),
+                      message:
+                          tr.alreadyReportedMessage.replaceAll('#type', type),
                     ),
                   );
                 },
@@ -106,7 +116,8 @@ class _PublicProfileButtonsState extends State<PublicProfileButtons> {
                 child: Text(tr.report),
               ),
         ],
-        ...?UserService.instance.customize.publicScreenTrailingButtons?.call(context, user),
+        ...?UserService.instance.customize.publicScreenTrailingButtons
+            ?.call(context, user),
       ],
     );
   }

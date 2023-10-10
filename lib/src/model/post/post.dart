@@ -71,7 +71,8 @@ class Post {
     );
   }
 
-  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json)..data = json;
+  factory Post.fromJson(Map<String, dynamic> json) =>
+      _$PostFromJson(json)..data = json;
   Map<String, dynamic> toJson() => _$PostToJson(this);
 
   /// If the post is not found, it throws an Exception.
@@ -90,7 +91,8 @@ class Post {
     if (url == null) {
       throw Exception('Post id is null');
     }
-    final QuerySnapshot documentSnapshot = await postCol.where('urls', arrayContains: url).get();
+    final QuerySnapshot documentSnapshot =
+        await postCol.where('urls', arrayContains: url).get();
 
     if (documentSnapshot.docs.isEmpty) throw Exception('Post not found');
 

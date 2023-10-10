@@ -13,7 +13,8 @@ class AdminReportListScreen extends StatefulWidget {
 }
 
 class _AdminReportListScreenState extends State<AdminReportListScreen> {
-  style(context) => TextStyle(color: Theme.of(context).colorScheme.onInverseSurface);
+  style(context) =>
+      TextStyle(color: Theme.of(context).colorScheme.onInverseSurface);
 
   String? type;
 
@@ -35,7 +36,8 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onInverseSurface),
+        iconTheme: IconThemeData(
+            color: Theme.of(context).colorScheme.onInverseSurface),
         backgroundColor: Theme.of(context).colorScheme.inverseSurface,
         title: Text(
           'Admin Report List',
@@ -133,11 +135,14 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
             ),
             onTap: () {
               if (report.type == 'user') {
-                UserService.instance.showPublicProfileScreen(context: context, uid: report.otherUid);
+                UserService.instance.showPublicProfileScreen(
+                    context: context, uid: report.otherUid);
               } else if (report.type == 'post') {
-                PostService.instance.showPostViewScreen(context: context, postId: report.postId);
+                PostService.instance.showPostViewScreen(
+                    context: context, postId: report.postId);
               } else if (report.type == 'comment') {
-                CommentService.instance.showCommentViewDialog(context: context, commentId: report.commentId);
+                CommentService.instance.showCommentViewDialog(
+                    context: context, commentId: report.commentId);
               }
             },
           );
@@ -151,7 +156,8 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
       context: context,
       builder: (context) {
         final reasonController = TextEditingController();
-        reasonController.text = 'This ${report.type} was deleted due to violation.';
+        reasonController.text =
+            'This ${report.type} was deleted due to violation.';
         final adminNotesController = TextEditingController();
         return AlertDialog(
           title: Text('Deleting ${report.type}'),
@@ -189,7 +195,8 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                report.deleteContent(reasonController.text, adminNotesController.text);
+                report.deleteContent(
+                    reasonController.text, adminNotesController.text);
               },
               child: const Text('Delete'),
             ),
@@ -207,7 +214,8 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
       context: context,
       builder: (context) {
         final reasonController = TextEditingController();
-        reasonController.text = 'This ${report.type} will not be deleted as reviewed by admin.';
+        reasonController.text =
+            'This ${report.type} will not be deleted as reviewed by admin.';
         final adminNotesController = TextEditingController();
         return AlertDialog(
           title: const Text('Marking as Resolved'),

@@ -149,7 +149,8 @@ class _UserAvatarState extends State<UserProfileAvatar> {
               left: 0,
               child: IconButton(
                 onPressed: () async {
-                  await StorageService.instance.delete(UserService.instance.user.photoUrl);
+                  await StorageService.instance
+                      .delete(UserService.instance.user.photoUrl);
 
                   await widget.user.update(
                     field: 'photoUrl',
@@ -157,7 +158,8 @@ class _UserAvatarState extends State<UserProfileAvatar> {
                     hasPhotoUrl: false,
                   );
 
-                  User.get(user.uid).then((value) => setState(() => user = value!));
+                  User.get(user.uid)
+                      .then((value) => setState(() => user = value!));
 
                   widget.onDeleteSuccess?.call();
                 },
@@ -188,7 +190,8 @@ class _UserAvatarState extends State<UserProfileAvatar> {
         height: widget.size,
         child: CircularProgressIndicator(
           strokeWidth: widget.uploadStrokeWidth,
-          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+          valueColor:
+              AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
           value: progress,
         ),
       ),

@@ -1,3 +1,9 @@
+## 0.3.12
+
+* Refactoring on user, feed.
+* Refine widgets and services.
+
+
 ## 0.3.11
 
 * Add. Admin dashboarsd.

@@ -11,15 +11,28 @@ class TestUser {
   static int errorCount = 0;
   static int successCount = 0;
   String? uid;
-  TestUser({required this.displayName, required this.email, required this.photoUrl});
+  TestUser(
+      {required this.displayName, required this.email, required this.photoUrl});
 }
 
 class Test {
   static List<TestUser> users = [
-    TestUser(displayName: 'Apple', email: 'apple@test3.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
-    TestUser(displayName: 'Banana', email: 'banana@test3.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
-    TestUser(displayName: 'Cherry', email: 'cherry@test3.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
-    TestUser(displayName: 'Durian', email: 'durian@test3.com', photoUrl: 'https://picsum.photos/id/1/200/200'),
+    TestUser(
+        displayName: 'Apple',
+        email: 'apple@test3.com',
+        photoUrl: 'https://picsum.photos/id/1/200/200'),
+    TestUser(
+        displayName: 'Banana',
+        email: 'banana@test3.com',
+        photoUrl: 'https://picsum.photos/id/1/200/200'),
+    TestUser(
+        displayName: 'Cherry',
+        email: 'cherry@test3.com',
+        photoUrl: 'https://picsum.photos/id/1/200/200'),
+    TestUser(
+        displayName: 'Durian',
+        email: 'durian@test3.com',
+        photoUrl: 'https://picsum.photos/id/1/200/200'),
   ];
   static get apple => users[0];
   static get banana => users[1];
@@ -44,12 +57,14 @@ class Test {
   /// @return User of firebase auth
   static Future<fa.User> loginOrRegister(TestUser user) async {
     try {
-      final fa.UserCredential cred =
-          await fa.FirebaseAuth.instance.signInWithEmailAndPassword(email: user.email, password: user.password);
+      final fa.UserCredential cred = await fa.FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: user.email, password: user.password);
       return cred.user!;
     } catch (e) {
-      final cred =
-          await fa.FirebaseAuth.instance.createUserWithEmailAndPassword(email: user.email, password: user.password);
+      final cred = await fa.FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: user.email, password: user.password);
       return cred.user!;
     }
   }
@@ -62,8 +77,8 @@ class Test {
     // Wait until logout is complete or you may see firestore permission denied error.
     await Test.wait();
 
-    final fa.UserCredential cred =
-        await fa.FirebaseAuth.instance.signInWithEmailAndPassword(email: user.email, password: user.password);
+    final fa.UserCredential cred = await fa.FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: user.email, password: user.password);
     await Test.wait();
     return cred.user!;
   }
@@ -113,7 +128,8 @@ class Test {
       if (e.toString().split(': ').last == code) {
         test(true, 'Exception code must be $code');
       } else {
-        test(false, 'Exception code must be $code. Actual code: ${e.toString()}');
+        test(false,
+            'Exception code must be $code. Actual code: ${e.toString()}');
       }
     }
   }
@@ -126,7 +142,8 @@ class Test {
     return future.then((value) {
       test(true, reason ?? 'Future has completed');
     }).catchError((e) {
-      test(false, '${reason ?? 'Future must be completed.'}, Actual exception: $e');
+      test(false,
+          '${reason ?? 'Future must be completed.'}, Actual exception: $e');
     });
   }
 }
