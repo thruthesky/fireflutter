@@ -199,10 +199,9 @@ class PostCard extends StatelessWidget {
             } else if (value == "delete") {
               final re = await confirm(
                   context: context, title: 'Deleting Post', message: 'Are you sure you want to delete this?');
-              // ! Post.delete() does not work because it does not fully remove the post in the feeds.
               if (re == true) {
-                await post.delete();
-                toast(title: tr.delete, message: '@todo tr.deleteMessage');
+                await post.delete(reason: 'This post has been deleted by user.');
+                toast(title: tr.delete, message: tr.delete);
               }
             } else if (value == "edit") {
               PostService.instance.showEditScreen(context, post: post);

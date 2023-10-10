@@ -111,8 +111,8 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
                 ] else ...[
                   if (report.type == 'user')
                     ElevatedButton(
-                      onPressed: () => showDeleteDialog(report),
-                      child: const Text('Block User'),
+                      onPressed: () => showDisableDialog(report),
+                      child: const Text('Disable User'),
                     ),
                   if (report.type == 'post')
                     ElevatedButton(
@@ -144,6 +144,12 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
         },
       ),
     );
+  }
+
+  showDisableDialog(Report report) {
+    // TODO disable user
+    // Github issue https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=40666380
+    toast(title: 'Ongoing', message: '@todo disable user');
   }
 
   showDeleteDialog(Report report) {
