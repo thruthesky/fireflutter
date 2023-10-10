@@ -5,11 +5,18 @@
 If you are looking for a package that help you develop a full featured content management app, then you have found a right one. FireFlutter is a free, open source, complete, rapid development package for creating apps like CMS(content management system), social service, chat, community(forum), shopping mall and much more based on Firebase.
 
 Create an issue if you find a bug or need a help.
+<br>
+<br>
+# Table of Contents {ignore=true}
 
-<!-- Table of Contents -->
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
 - [FireFlutter](#fireflutter)
-- [Changes](#changes)
 - [Overview](#overview)
+- [Changes](#changes)
   - [Features](#features)
     - [Main Features](#main-features)
 - [Getting started](#getting-started)
@@ -24,49 +31,60 @@ Create an issue if you find a bug or need a help.
     - [Realtime database security rules](#realtime-database-security-rules)
   - [Setup the base code](#setup-the-base-code)
 - [Pub.dev Packages](#pubdev-packages)
-  - [url\_launcher (Optional)](#url_launcher-optional)
+  - [url_launcher (Optional)](#url_launcher-optional)
   - [timeago](#timeago)
-  - [Parsed\_ReadMore](#parsed_readmore)
+  - [Parsed_ReadMore](#parsed_readmore)
 - [Build Sample](#build-sample)
     - [User Profile Page](#user-profile-page)
     - [Chat App](#chat-app)
     - [Forum App](#forum-app)
 - [Widgets and UI functions](#widgets-and-ui-functions)
 - [Usage](#usage)
-- [Chat](#chat)
-    - [Features](#features-1)
-- [User](#user)
-  - [UserService](#userservice)
-- [Post](#post)
-  - [PostService](#postservice)
+  - [Chat](#chat)
+  - [User](#user)
+  - [Post](#post)
+  - [Comment](#comment)
+  - [Share](#share)
 - [Push notifications](#push-notifications)
-- [Share](#share)
 - [Error handling](#error-handling)
 - [Admin](#admin)
-  - [Admin Widgets](#admin-widgets)
-    - [Opening admin dashbard](#opening-admin-dashbard)
-    - [AdminUserListView](#adminuserlistview)
-    - [Updating auth custom claims](#updating-auth-custom-claims)
-    - [Disable user](#disable-user)
-- [Translation](#translation)
-- [Test](#test)
-- [Developer](#developer)
-  - [Installing your app with fireflutter](#installing-your-app-with-fireflutter)
-  - [Development Tips](#development-tips)
-- [Contribution](#contribution)
-  - [Install FireFlutter and Example Project](#install-fireflutter-and-example-project)
-  - [Coding Guideline](#coding-guideline)
-- [fireflutter uses sigular form in its file name and variable name, class name. For instance, it alwasy `user` over `users` unless there is good reason.](#fireflutter-uses-sigular-form-in-its-file-name-and-variable-name-class-name-for-instance-it-alwasy-user-over-users-unless-there-is-good-reason)
+- [Developers](#developersdocdevelopermddeveloper)
+
+<!-- /code_chunk_output -->
 
 
 
 
-# Changes
-You can see [CHANGELOG.md](/CHANGELOG.md) for the updated log.
-
-- Oct 10, Refactoring on user, feed.
-- Oct 6, easy-extension was removed.
-- Oct 8, Test app was added. you can add it in apps folder. <https://github.com/thruthesky/fireflutter_test> See TestUi Widget
+<!-- * [Overview](#overview)
+* [Changes](#changes)
+* [Features](#features)
+  * [Main Features](#main-features)
+* [Getting Started](#getting-started)
+  * [Installation](#installation)
+* [Firebase Extension](#firebase-extension)
+  * [Resize image](#resize-image)
+* [Install cloud functions](#install-cloud-functions)
+* [Security Rules](#security-rules)
+  * [Firestore](#firestore-security-rules)
+  * [Admin](#security-rule-for-admin)
+  * [Realtime Database](#realtime-database-security-rules)
+* [Setup the base code](#setup-the-base-code)
+* [Packages](#pubdev-packages)
+  * [url_launcher](#url_launcher-optional)
+  * [timeago](#timeago)
+  * [Parsed_ReadMore](#parsed_readmore)
+* [Build Sample](#build-sample)
+  * [User Profile](#how-to-build-a-user-profile-page)
+  * [Chat](#how-to-build-a-chat-app)
+  * [Forum](#how-to-build-a-forum-app)
+* [Usage](#usage)
+  * [Users](#user)
+  * [Post](#post)
+  * [Comment](#comment)
+  * [Chat](#chat)
+  * [Share](#share)
+* [Push Notification](#push-notifications)
+* [Error Handling](#error-handling) -->
 
 # Overview
 
@@ -75,7 +93,23 @@ Fireflutter made for reusing the common code blocks. Provides code for user, for
 There are some pre-defined fields for the user document. You can use `json_serializable` for providing each model extra fields.
 
 The model has also basic CRUD functionalities.
+# Changes
+<!-- You can see [CHANGELOG.md](/CHANGELOG.md) for the updated log. -->
 
+### Oct 10 0.3.12 {ignore=true}
+* Refactoring on user, feed.
+* Refine widgets and services.
+
+### Sept 28 0.3.11 {ignore=true}
+* Add. Admin dashboarsd.
+* Update. Push notification.
+* Refactoring. Save more data in realtime database.
+
+### Sept 10 0.3.10 {ignore=true}
+
+* Change. Refactoring file/folder names.
+
+Go to [CHANGELOG.md](/CHANGELOG.md) for more.
 <!-- paraphrased for readability, feel free to edit -->
 
 <!-- I made it for reusing the most common code blocks when I am building apps. It provides the code for user management, forum(caetgory, post, comment) management, chat management, push notification management along with `like`, `favorite`, `following` features.
@@ -84,7 +118,7 @@ I use `json_serializable` for the modeling providing each model can have extra f
 
 ## Features
 
-There are many features and most of them are optional. You may turn on the extra functions by the setting.
+There are many features and most of them are optional. You may turn on the extra functions by creating an instance.
 
 ### Main Features
 
@@ -466,16 +500,16 @@ See [WIDGETS.md](/doc/WIDGETS.md) for more widget example.
 
 # Usage
 Fireflutter updates in real time no matter what users do. Here are common uses of widgets and builders of each features.
-# Chat
+## Chat
 With FireFlutter you can easily create a customizable chat room. 
-### Features
+<!-- ### Features
 - Group Chat
 - 1:1 Chat
 - Image Upload
-- Customizable Chat room
+- Customizable Chat room -->
 
+Display user's chats using [ChatService.instance](/doc/CHAT.md#chatservice) or if you're using `ChatRoomListView` you can use a controller [ChatRoomListViewController](/doc/CHAT.md#chat-room-list)
 
-Display user's chats using `ChatService.instance` or if you're using `ChatRoomListView` you can use a controller `ChatRoomListViewController`
 ```dart
 final controller = ChatRoomListViewController();
 ChatRoomListView(
@@ -492,19 +526,19 @@ ChatRoomListView(
 ),
 ```
 ***Go to [Chat.md](/doc/CHAT.md) for more feature builders and detailed explanation***
-# User
-## UserService
+## User
 
 See [USER.md](/doc/USER.md) for details.
 
-# Post
-## PostService
+## Post
 See [POST.md](/doc/POST.md) for details.
+
+## Comment
+
+## Share
 
 # Push notifications
 See [PUSH_NOTIFICATION.md](/doc/PUSH_NOTIFICATION.md) for details.
-
-# Share
 # Error handling
 
 There are some cases that you don't want to wait for the async work to be finished since it takes time to save data into the database. But you must show user if there is an error.
@@ -518,12 +552,11 @@ my.update(type: type).catchError(
     message: e.toString(),
   ),
 );
-<<<<<<< HEAD
 ```
 
 # Admin
 
-To set a user as an admin, put the user's uid into `isAdmin()` in firestore security rules.
+To set a user as an admin, put the user's uid into `isAdmin()` in [Firestore Security Rules](#firestore-security-rules).
 
 ```javascript
 function isAdmin() {
@@ -532,308 +565,18 @@ function isAdmin() {
 }
 ```
 
-Then, set `isAdmin` to true in the user document.
+Then, set `isAdmin` to true in the user document. 
 
-## Admin Widgets
+**Features**
+- [AdminService](doc/ADMIN.md#admin-service)
+- [Admin Widgets](doc/ADMIN.md#admin-widgets)
+- [Translation](doc/ADMIN.md#translation)
+- [Unit Testing](doc/ADMIN.md#unit-testing)
+- [Logic Test](doc/ADMIN.md#logic-test)
 
-### Opening admin dashbard
+For more information, see [**ADMIN.md**](/doc/ADMIN.md).
 
-To open admin dashboard, call `AdminService.instance.showDashboard()`.
 
-```dart
-AdminService.instance.showDashboard(context);
-```
+# [Developers](doc/DEVELOPER.md#developer)
 
-Or you may want to open with your own code like below
-
-```dart
-Navigator.of(context).push(
-  MaterialPageRoute(builder: (c) => const AdminDashboardScreen()),
-);
-```
-
-### AdminUserListView
-
-### Updating auth custom claims
-
-- Required properties
-
-  - `{ command: 'update_custom_claims' }` - the command.
-  - `{ uid: 'xxx' }` - the user's uid that the claims will be applied to.
-  - `{ claims: { key: value, xxx: xxx, ... } }` - other keys and values for the claims.
-
-- example of document creation for update_custom claims
-
-![Image Link](https://github.com/thruthesky/easy-extension/blob/main/docs/command-update_custom_claims_input.jpg?raw=true "This is image title")
-
-- Response
-  - `{ config: ... }` - the configuration of the extension
-  - `{ response: { status: 'success' } }` - success respones
-  - `{ response: { timestamp: xxxx } }` - the time that the executino had finished.
-  - `{ response: { claims: { ..., ... } } }` - the claims that the user currently has. Not the claims that were requested for updating.
-
-![Image Link](https://github.com/thruthesky/easy-extension/blob/main/docs/command-update_custom_claims_output.jpg?raw=true "This is image title")
-
-- `SYNC_CUSTOM_CLAIMS` option only works with `update_custom_claims` command.
-  - When it is set to `yes`, the claims of the user will be set to user's document.
-  - By knowing user's custom claims,
-    - the app can know that if the user is admin or not.
-      - If the user is admin, then the app can show admin menu to the user.
-    - Security rules can work better.
-
-### Disable user
-
-- Disabling a user means that they can't sign in anymore, nor refresh their ID token. In practice this means that within an hour of disabling the user they can no longer have a request.auth.uid in your security rules.
-
-  - If you wish to block the user immediately, I recommend to run another command. Running `update_custom_claims` comand with `{ disabled: true }` and you can add it on security rules.
-  - Additionally, you can enable `set enable field on user document` to yes. This will add `disabled` field on user documents and you can search(list) users who are disabled.
-
-- `SYNC_USER_DISABLED_FIELD` option only works with `disable_user` command.
-
-  - When it is set to yes, the `disabled` field with `true` will be set to user document.
-  - Use this to know if the user is disabled.
-
-- Request
-
-```ts
-{
-  command: 'delete_user',
-  uid: '--user-uid--',
-}
-```
-
-<!-- - Warning! Once a user changes his displayName and photoUrl, `EasyChat.instance.updateUser()` must be called to update user information in easychat. -->
-
-# Translation
-
-The text translation for i18n is in `lib/i18n/i18nt.dart`.
-
-By default, it supports English and you can overwrite the texts to whatever language.
-
-Below show you how to customize texts in your language. If you want to support multi-languages, you may overwrite the texts on device language.
-
-```dart
-TextService.instance.texts = I18nTexts(
-  reply: "답변",
-  loginFirstTitle: '로그인 필요',
-  loginFirstMessage: '로그인을 해 주세요.',
-  roomMenu: '채팅방 설정',
-  noChatRooms: '채팅방이 없습니다. 채팅방을 만들어 보세요.',
-  chooseUploadFrom: "업로드할 파일(또는 사진)을 선택하세요.",
-  dismiss: "닫기",
-  like: '좋아요',
-  likes: '좋아요(#no)',
-  favorite: "즐겨찾기",
-  unfavorite: "즐겨찾기해제",
-  favoriteMessage: "즐겨찾기를 하였습니다.",
-  unfavoriteMessage: "즐겨찾기를 해제하였습니다.",
-  chat: "채팅",
-  report: "신고",
-  block: "차단",
-  unblock: "차단해제",
-  blockMessage: "차단 하였습니다.",
-  unblockMessage: "차단 해제 하였습니다.",
-  alreadyReportedTitle: "신고",
-  alreadyReportedMessage: "회원님께서는 본 #type을 이미 신고하셨습니다.",
-);
-```
-
-You can use the language like below,
-
-```dart
- Text(
-  noOfLikes == null
-      ? tr.like
-      : tr.likes.replaceAll(
-          '#no', noOfLikes.length.toString()),
-```
-# Test
-
-See the [TEST.md](doc/TEST.md) for details.
-
-# Developer
-
-In this chapter, you will learn how to develop fireflutter. You would also continue developing your app while developing(fixing) the fireflutter.
-
-## Installing your app with fireflutter
-
-- Fork the fireflutter
-  - Go to `https://github.com/thruthesky/fireflutter` and fork it.
-- Then, clone it
-  - `git clone https://github.com/your-account/fireflutter`.
-- Create a branch in fireflutter local repository
-  - `cd fireflutter`
-  - `git checkout -b work`
-- For `Pull Request`, update any file, commit, push and request for pulling your code.
-  - `echo "Hi" >> README.md`
-  - `git commit -a -m "updating README.md"`
-  - `git push --set-upstream origin work`
-- Create `apps` folder and create your app inside `apps` folder.
-
-  - `cd apps`
-  - `flutter create your_porject`
-
-- Since your project add the fireflutter from your computer folder, you need to add the path of the dependency as `../..`. Add the firefluter dependenicy like below.
-
-```yaml
-dependencies:
-  fireflutter:
-    path: ../..
-```
-
-- Then, follow the step of the [fireflutter Installation](#installation) chapter.
-
-## Development Tips
-
-Most often, you would click, and click, and click over, and over again, and again to see what you have changed on the UI. Then, you change the UI again. And you would click, and click over again, and again, ...
-Yes, this is the reality.
-
-To avoid this, you can display the UI part immediately after hot-restart (with keyboard shortcut) like below. This is merely a sample code. You can test any part of the app like below.
-
-Below is an example of openning a chat room
-
-```dart
-ChatService.instance.showChatRoom(
-  context: context,
-  room: await Room.get('hQnhAosriiewigr4vWFx'),
-);
-```
-
-Below is an example of openning a group chat room menu dialog.
-I copied the `Room` properties manually from the Firestore document and I edited some of the values of the properties for test purpose. You may code a line to get the real room model data.
-
-```dart
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-
-    Timer(const Duration(milliseconds: 200), () {
-      ChatService.instance.openChatRoomMenuDialog(
-        context: context,
-        room: Room(
-          id: 'DHZWDyeuAlgmKxFxbMbF',
-          name: 'Here we are in Manila. Lets celebrate this beautiful day.',
-          group: true,
-          open: true,
-          master: 'ojxsBLMSS6UIegzixHyP4zWaVm13',
-          users: [
-            '15ZXRtt5I2Vr2xo5SJBjAVWaZ0V2',
-            '23TE0SWd8Mejv0Icv6vhSDRHe183',
-            'JAekM4AyPTW1fD9NCwqyLuBCTrI3',
-            'X5ps2UhgbbfUd7UH1JBoUedBzim2',
-            'lyCxEC0oGtUcGi0KKMAs8Y7ihSl2',
-            'ojxsBLMSS6UIegzixHyP4zWaVm13',
-            'aaa', // not existing user
-            't1fAVTeN5oMshEPYn9VvB8TuZUy2',
-            'bbb', // not existing user
-            'ccc', // not existing user
-            'ddd', // not existing user
-            'eee', // not existing user
-          ],
-          moderators: ['lyCxEC0oGtUcGi0KKMAs8Y7ihSl2', '15ZXRtt5I2Vr2xo5SJBjAVWaZ0V2'],
-          blockedUsers: [],
-          noOfNewMessages: {},
-          maximumNoOfUsers: 3,
-          rename: {
-            FirebaseAuth.instance.currentUser!.uid: 'I renamed this chat room',
-          },
-          createdAt: Timestamp.now(),
-        ),
-      );
-```
-
-Below is an example of opening a single chat room. I got the room data by calling `print` on a chat room.
-
-```dart
-ChatService.instance.showChatRoom(
-  context: context,
-  room: Room(
-    id: '23TE0SWd8Mejv0Icv6vhSDRHe183-ojxsBLMSS6UIegzixHyP4zWaVm13',
-    name: '',
-    group: false,
-    open: false,
-    master: '23TE0SWd8Mejv0Icv6vhSDRHe183',
-    users: ['23TE0SWd8Mejv0Icv6vhSDRHe183', 'ojxsBLMSS6UIegzixHyP4zWaVm13'],
-    rename: {},
-    moderators: [],
-    maximumNoOfUsers: 2,
-    createdAt: Timestamp.now(),
-    blockedUsers: [],
-  ),
-);
-```
-
-Below is to show post view screen. Since apps do routings differently, we can use onPressedBackButton to go to the proper screen.
-
-```dart
-/// Example 1
-Post.get('Uc2TKInQ9oBJeKtSJpBq').then((p) => PostService.instance.showPostViewScreen(context: context, post: post, onPressedBackButton: () {
-  context.go(RouterLogic.go('My Home'));
-}));
-```
-
-Below is to show post edit dialog.
-
-```dart
-Post.get('Uc2TKInQ9oBJeKtSJpBq').then((p) => PostService.instance.showPostEditDialog(context, post: p));
-```
-
-The code below shows how to open a post create dialog.
-
-```dart
-PostService.instance.showCreateDialog(
-  context,
-  categoryId: 'buyandsell',
-  success: (p) => print(p),
-);
-```
-
-The code below shows how to open a 1:1 chat room and send a message to the other user.
-
-```dart
-UserService.instance.get(UserService.instance.adminUid).then(
-  (user) async {
-    ChatService.instance.showChatRoom(context: context, user: user);
-    ChatService.instance.sendMessage(
-      room: await ChatService.instance.getSingleChatRoom(UserService.instance.adminUid),
-      text: "https://naver.com",
-    );
-  },
-);
-```
-
-The code below shows how to open a comment edit bottom sheet. Use this for commet edit bottom sheet UI.
-
-```dart
-PostService.instance.showPostViewScreen(context, await Post.get('PoxnpxpcC2lnYv0jqI4f'));
-if (mounted) {
-  CommentService.instance.showCommentEditBottomSheet(
-    context,
-    comment: await Comment.get('bvCJk4RFK79yexAKfAYs'),
-  );
-}
-```
-
-# Contribution
-
-Fork the fireflutter and create your own branch. Then update code and push, then pull request.
-
-## Install FireFlutter and Example Project
-
-```sh
-git clone https://github.com/thruthesky/fireflutter
-cd fireflutter
-mkdir apps
-cd apps
-git clone https://github.com/thruthesky/example
-cd example
-flutter run
-```
-
-## Coding Guideline
-
-fireflutter uses sigular form in its file name and variable name, class name. For instance, it alwasy `user` over `users` unless there is good reason.
-=======
-```
->>>>>>> 35fb356ffc62360580bf40ab04e6b6d104e5f083
+You can go to [Developer.md](/doc/DEVELOPER.md). This section gives a tips and detailed instruction on how to use the FireFlutter completely.

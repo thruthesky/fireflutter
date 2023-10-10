@@ -6,7 +6,7 @@ import 'package:photo_view/photo_view.dart';
 
 const double _kBubblePadding = 10.0;
 
-class ChatRoomMessageListViewTile extends StatelessWidget {
+class ChatRoomMessageListViewTile extends StatefulWidget {
   const ChatRoomMessageListViewTile({
     super.key,
     required this.message,
@@ -14,14 +14,21 @@ class ChatRoomMessageListViewTile extends StatelessWidget {
 
   final Message message;
 
-  bool get isMyMessage => message.uid == FirebaseAuth.instance.currentUser!.uid;
+  @override
+  State<ChatRoomMessageListViewTile> createState() => _ChatRoomMessageListViewTileState();
+}
+
+class _ChatRoomMessageListViewTileState extends State<ChatRoomMessageListViewTile> {
+  User? otherUserData;
+
+  bool get isMyMessage => widget.message.uid == FirebaseAuth.instance.currentUser!.uid;
+
   bool get isOtherMessage => !isMyMessage;
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-          isMyMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment: isMyMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         protocolBubble(context),
         if (isMyMessage) ...[
@@ -34,10 +41,10 @@ class ChatRoomMessageListViewTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              message.isUserChanged
+              widget.message.isUserChanged
                   ? UserAvatar(
                       padding: const EdgeInsets.fromLTRB(0, 0, 6, 6),
-                      uid: message.uid,
+                      uid: widget.message.uid,
                       size: 40,
                       radius: 10,
                       borderWidth: 0,
@@ -48,17 +55,28 @@ class ChatRoomMessageListViewTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    message.isUserChanged
-                        ? UserDoc(
-                            uid: message.uid,
-                            builder: (user) => Text(
-                              user.name,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          )
+                    widget.message.isUserChanged
+                        ? (otherUserData == null
+                            ? UserDoc(
+                                uid: widget.message.uid,
+                                builder: (user) {
+                                  otherUserData = user;
+                                  return Text(
+                                    user.name,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  );
+                                },
+                              )
+                            : Text(
+                                otherUserData!.name,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ))
                         : const SizedBox.shrink(),
                     mediaBubble(context),
                     messageBubble(context),
@@ -73,7 +91,7 @@ class ChatRoomMessageListViewTile extends StatelessWidget {
   }
 
   Widget protocolBubble(BuildContext context) {
-    if (message.isProtocol == false) return const SizedBox.shrink();
+    if (widget.message.isProtocol == false) return const SizedBox.shrink();
 
     return SizedBox(
       width: double.infinity,
@@ -87,7 +105,7 @@ class ChatRoomMessageListViewTile extends StatelessWidget {
               color: Theme.of(context).colorScheme.inversePrimary,
               borderRadius: const BorderRadius.all(Radius.circular(8.0)),
             ),
-            child: LinkifyText(text: message.text ?? message.protocol ?? ''),
+            child: LinkifyText(text: widget.message.text ?? widget.message.protocol ?? ''),
           ),
           chatBubbleDateTime(
             short: false,
@@ -102,22 +120,17 @@ class ChatRoomMessageListViewTile extends StatelessWidget {
   }
 
   Widget messageBubble(BuildContext context) {
-    if (message.isProtocol ||
-        message.text == null ||
-        message.text!.trim() == '') return const SizedBox.shrink();
-    final double factor = MediaQuery.of(context).size.width < 400
-        ? .64
-        : (isMyMessage ? .76 : .68);
+    if (widget.message.isProtocol || widget.message.text == null || widget.message.text!.trim() == '') {
+      return const SizedBox.shrink();
+    }
+    final double factor = MediaQuery.of(context).size.width < 400 ? .64 : (isMyMessage ? .76 : .68);
 
     return Row(
-      mainAxisAlignment:
-          isMyMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment: isMyMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         if (isMyMessage) chatBubbleDateTime(),
         Container(
-          constraints: BoxConstraints(
-              minWidth: 100,
-              maxWidth: MediaQuery.of(context).size.width * factor),
+          constraints: BoxConstraints(minWidth: 100, maxWidth: MediaQuery.of(context).size.width * factor),
           margin: const EdgeInsets.only(top: 4, bottom: 4),
           padding: const EdgeInsets.all(_kBubblePadding),
           decoration: BoxDecoration(
@@ -130,7 +143,7 @@ class ChatRoomMessageListViewTile extends StatelessWidget {
             ),
           ),
           child: LinkifyText(
-            text: message.text ?? '',
+            text: widget.message.text ?? '',
             maxLines: 10,
             overflow: TextOverflow.ellipsis,
           ),
@@ -149,15 +162,15 @@ class ChatRoomMessageListViewTile extends StatelessWidget {
       padding: padding,
       child: Text(
         short
-            ? message.createdAt.toLocal().toString().substring(11, 16)
-            : message.createdAt.toLocal().toString().substring(0, 16),
+            ? widget.message.createdAt.toLocal().toString().substring(11, 16)
+            : widget.message.createdAt.toLocal().toString().substring(0, 16),
         style: const TextStyle(fontSize: 10, color: Colors.grey),
       ),
     );
   }
 
   Widget mediaBubble(BuildContext context) {
-    if (message.hasUrl == false) return const SizedBox.shrink();
+    if (widget.message.hasUrl == false) return const SizedBox.shrink();
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -166,9 +179,8 @@ class ChatRoomMessageListViewTile extends StatelessWidget {
           builder: (_) => Stack(
             children: [
               PhotoView(
-                imageProvider: CachedNetworkImageProvider(message.url!),
-                heroAttributes:
-                    PhotoViewHeroAttributes(tag: 'image-${message.id}'),
+                imageProvider: CachedNetworkImageProvider(widget.message.url!),
+                heroAttributes: PhotoViewHeroAttributes(tag: 'image-${widget.message.id}'),
                 // onTapDown: (context, details, controllerValue) => Navigator.of(context).pop(),
               ),
               SafeArea(
@@ -185,8 +197,7 @@ class ChatRoomMessageListViewTile extends StatelessWidget {
         ),
       ),
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-            minWidth: 100, maxWidth: MediaQuery.of(context).size.width * 0.8),
+        constraints: BoxConstraints(minWidth: 100, maxWidth: MediaQuery.of(context).size.width * 0.8),
         child: Row(
           children: [
             if (isMyMessage) chatBubbleDateTime(),
@@ -201,9 +212,9 @@ class ChatRoomMessageListViewTile extends StatelessWidget {
                     topRight: Radius.circular(isMyMessage ? 0.0 : 8),
                   ),
                   child: Hero(
-                    tag: 'image-${message.id}',
+                    tag: 'image-${widget.message.id}',
                     child: CachedNetworkImage(
-                      imageUrl: message.url!,
+                      imageUrl: widget.message.url!,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -218,7 +229,7 @@ class ChatRoomMessageListViewTile extends StatelessWidget {
   }
 
   Widget displaySitePreview() {
-    if (message.hasPreview == false) return const SizedBox.shrink();
+    if (widget.message.hasPreview == false) return const SizedBox.shrink();
     return Container(
       margin: const EdgeInsets.only(bottom: 4),
       width: 220,
@@ -231,18 +242,15 @@ class ChatRoomMessageListViewTile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (message.previewImageUrl != null)
+            if (widget.message.previewImageUrl != null)
               ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child:
-                      CachedNetworkImage(imageUrl: message.previewImageUrl!)),
+                  child: CachedNetworkImage(imageUrl: widget.message.previewImageUrl!)),
             const SizedBox(height: 16),
-            if (message.previewTitle != null)
-              Text(message.previewTitle!,
-                  style: const TextStyle(fontWeight: FontWeight.w600)),
+            if (widget.message.previewTitle != null)
+              Text(widget.message.previewTitle!, style: const TextStyle(fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
-            if (message.previewDescription != null)
-              Text(message.previewDescription!),
+            if (widget.message.previewDescription != null) Text(widget.message.previewDescription!),
           ],
         ),
       ),
