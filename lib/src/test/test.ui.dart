@@ -77,7 +77,8 @@ class _TestScreenState extends State<TestUi> {
               MyDoc(
                 builder: (my) {
                   if (my.exists) {
-                    return Text('MyDoc() - User document exists.\n${my.createdAt}');
+                    return Text(
+                        'MyDoc() - User document exists.\nUID: ${my.uid}, displayName: ${my.displayName}, email: ${my.email}, createdAt: ${my.createdAt}');
                   } else {
                     return const Text('MyDoc() - User document does NOT exist');
                   }
@@ -245,6 +246,7 @@ class _TestScreenState extends State<TestUi> {
     test(fromJsonUser.createdAt.millisecondsSinceEpoch >= 0, 'createdAt is: ${fromJsonUser.createdAt}');
 
     // Create a user
+    final randomUser = await Test.createRandomUser();
     String uid = fa.FirebaseAuth.instance.currentUser!.uid;
     // log('uid; $uid');
     await User.doc(uid).delete();
