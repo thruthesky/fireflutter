@@ -140,13 +140,13 @@
       "deviceId": "iPhone 14 Pro Max"
     },
     {
-      "name": "GRC - Simulator - iPhone 15 Pro Max",
+      "name": "GRC - iPhone15ProMax",
       "request": "launch",
       "type": "dart",
       "cwd": "apps/grc",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "deviceId": "iPhone 15 Pro Max"
+      "deviceId": "iPhone15ProMax"
     },
 
     {
@@ -312,6 +312,14 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "iPhone 14 Pro Max"
+    },{
+      "name": "GRC - Emulator (N)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "emulator-5554"
     }
   ]
 }

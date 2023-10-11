@@ -477,6 +477,11 @@ class UserService {
       pageBuilder: (context, _, __) {
         return Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+              key: const Key('ProfileBlockBack'),
+              icon: const Icon(Icons.arrow_back_outlined),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
             title: const Text('Blocked List'),
           ),
           body: FutureBuilder(
