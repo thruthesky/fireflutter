@@ -33,6 +33,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                 Padding(
                   padding: widget.emailPadding,
                   child: TextField(
+                    key: const Key('EmailTextField'),
                     controller: email,
                     decoration: const InputDecoration(label: Text('Email')),
                     keyboardType: TextInputType.emailAddress,
@@ -41,6 +42,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                 Padding(
                   padding: widget.passwordPadding,
                   child: TextField(
+                    key: const Key('PasswordTextField'),
                     controller: password,
                     decoration: const InputDecoration(label: Text('Password')),
                   ),
@@ -51,8 +53,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       ElevatedButton(
                         onPressed: () async {
                           await FirebaseAuth.instance
-                              .createUserWithEmailAndPassword(
-                                  email: email.text, password: password.text);
+                              .createUserWithEmailAndPassword(email: email.text, password: password.text);
                           widget.onLogin?.call();
                         },
                         child: const Text(
@@ -61,9 +62,10 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       ),
                     const Spacer(),
                     ElevatedButton(
+                      key: const Key('LoginButton'),
                       onPressed: () async {
-                        await FirebaseAuth.instance.signInWithEmailAndPassword(
-                            email: email.text, password: password.text);
+                        await FirebaseAuth.instance
+                            .signInWithEmailAndPassword(email: email.text, password: password.text);
                         widget.onLogin?.call();
                       },
                       child: const Text(
@@ -79,9 +81,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
               children: [
                 const Text('You have logged in'),
                 Text('uid: ${user.uid}'),
-                ElevatedButton(
-                    onPressed: () => UserService.instance.signOut(),
-                    child: const Text('Logout'))
+                ElevatedButton(onPressed: () => UserService.instance.signOut(), child: const Text('Logout'))
               ],
             ),
     );
