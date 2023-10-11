@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:new_app/chat.room/chat.room.dart';
 import 'package:new_app/firebase_options.dart';
-import 'package:new_app/home.screen/main.page.dart';
 import 'package:new_app/login.widgets/login.form.dart';
 import 'package:new_app/router/router.dart';
 
@@ -61,7 +61,7 @@ class LoginPageBody extends StatelessWidget {
                   child: LoginForm(),
                 ),
               )
-            : const MainPageBody(),
+            : const CustomChatRoom(),
       ),
     );
   }

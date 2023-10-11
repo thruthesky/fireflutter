@@ -53,9 +53,10 @@ class _LoginFormState extends State<LoginForm> {
             if (!isHighlight) {
               await FirebaseAuth.instance
                   .createUserWithEmailAndPassword(email: email.text, password: password.text)
-                  .then(
-                    (value) => UserService.instance.sendWelcomeMessage(message: 'Welcome!'),
-                  );
+                  .then((value) {
+                UserService.instance.sendWelcomeMessage(message: 'Welcome!');
+                // toast(title: title, message: message)
+              });
             } else {
               await FirebaseAuth.instance.signInWithEmailAndPassword(email: email.text, password: password.text);
             }

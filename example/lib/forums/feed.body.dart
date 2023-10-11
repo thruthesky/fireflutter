@@ -25,6 +25,13 @@ class _FeedBodyState extends State<FeedBody> {
     super.initState();
     customizePostInit(categName);
     ChatService.instance.customize.chatRoomAppBarBuilder = ({room, user}) => customAppBar(context, room);
+    PostService.instance.init(
+      enableSeenBy: true,
+    );
+    // PostService.instance.customize.postViewButtonBuilder = (post) => IconButton(
+    //       onPressed: () {},
+    //       icon: const FaIcon(FontAwesomeIcons.share),
+    //     );
   }
 
   @override
@@ -39,14 +46,13 @@ class _FeedBodyState extends State<FeedBody> {
       builder: (context, constraints) => Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          topBarWidgets(context),
+          // topBarWidgets(context),
           const SizedBox(height: sizeXs),
           Expanded(
             child: PostListView(
               itemBuilder: (context, post) => InkWell(
                 onTap: () {
                   PostService.instance.showPostViewScreen(context: context, post: post);
-                  // CommentListView(post: post);
                 },
                 child: PostCard(
                   post: post,
@@ -54,15 +60,6 @@ class _FeedBodyState extends State<FeedBody> {
                   shareButtonBuilder: (post) => IconButton(
                     onPressed: () {
                       // ShareService.instance.showBottomSheet();
-                      // showDialog(
-                      //   context: context,
-                      //   builder: (cnx) => Dialog(
-                      //     child: Padding(
-                      //       padding: const EdgeInsets.all(sizeSm),
-                      //       child: CommentListView(post: post),
-                      //     ),
-                      //   ),
-                      // );
                     },
                     icon: const Icon(Icons.share, size: sizeSm),
                   ),
@@ -74,6 +71,17 @@ class _FeedBodyState extends State<FeedBody> {
       ),
     );
   }
+  // showDialog(
+  //   context: context,
+  //   builder: (cnx) => Dialog(
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(sizeSm),
+  //       child: CommentListView(post: post),
+  //     ),
+  //   ),
+  // );
+  // launchSMS(phoneNumber: "0039-222-060-888", msg: "hello there");
+  // confirm(context: context, title: 'confirm', message: 'confirm message');
 
   Padding topBarWidgets(BuildContext context) {
     return Padding(

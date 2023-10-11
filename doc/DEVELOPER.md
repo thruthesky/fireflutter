@@ -1,3 +1,19 @@
+# Table of Contents 
+
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Installing your app with fireflutter](#installing-your-app-with-fireflutter)
+- [Development Tips](#development-tips)
+- [Install FireFlutter and Example Project](#install-fireflutter-and-example-project)
+- [Coding Guideline](#coding-guideline)
+
+<!-- /code_chunk_output -->
+
+
+
 # Developer
 
 In this chapter, you will learn how to develop fireflutter. You would also continue developing your app while developing(fixing) the fireflutter.
