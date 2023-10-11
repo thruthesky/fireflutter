@@ -138,6 +138,7 @@ class UserListView extends StatelessWidget {
   static Widget builder({
     required List<String> uids,
     Widget Function(User? user)? itemBuilder,
+    Widget Function(User? user)? notExistBuilder,
     Widget Function()? loadingBuilder,
   }) {
     return ListView.builder(
@@ -151,6 +152,7 @@ class UserListView extends StatelessWidget {
                 title: Text('Loading...'),
               ),
           builder: (user) {
+            if (!user.exists) return notExistBuilder?.call(user) ?? const SizedBox.shrink();
             return itemBuilder?.call(user) ??
                 ListTile(
                   leading: UserAvatar(user: user),

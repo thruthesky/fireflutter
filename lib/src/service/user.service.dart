@@ -418,31 +418,31 @@ class UserService {
     /// 2. click on dynamic link for public profile screen.
     ///
     /// Dynamic link is especially for users who are not install and not signed users.
-    if (loggedIn && enableNoOfProfileView) {
-      profileViewHistoryDoc(myUid: my.uid, otherUid: otherUid).set(
-        {
-          "uid": otherUid,
-          "seenBy": my.uid,
-          "type": my.type,
-          "lastViewdAt": FieldValue.serverTimestamp(),
-          "year": now.year,
-          "month": now.month,
-          "day": now.day,
-        },
-        SetOptions(merge: true),
-      );
+    if (loggedIn && myUid != otherUid) {
+      if (enableNoOfProfileView) {
+        profileViewHistoryDoc(myUid: my.uid, otherUid: otherUid).set(
+          {
+            "uid": otherUid,
+            "seenBy": my.uid,
+            "type": my.type,
+            "lastViewdAt": FieldValue.serverTimestamp(),
+            "year": now.year,
+            "month": now.month,
+            "day": now.day,
+          },
+          SetOptions(merge: true),
+        );
+      }
+      if (enableMessagingOnPublicProfileVisit) {
+        MessagingService.instance.queue(
+          title: "Your profile was visited.",
+          body: "${my.name} visit your profile",
+          id: myUid,
+          uids: [otherUid],
+          type: NotificationType.user.name,
+        );
+      }
     }
-
-    if (loggedIn && (enableMessagingOnPublicProfileVisit) && myUid != otherUid) {
-      MessagingService.instance.queue(
-        title: "Your profile was visited.",
-        body: "${my.name} visit your profile",
-        id: myUid,
-        uids: [otherUid],
-        type: NotificationType.user.name,
-      );
-    }
-
     return customize.showPublicProfileScreen?.call(context, uid: uid, user: user) ??
         showGeneralDialog(
           context: context,
