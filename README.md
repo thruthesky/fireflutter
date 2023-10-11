@@ -48,9 +48,12 @@ Create an issue if you find a bug or need a help.
 - [Push notifications](#push-notifications)
 - [Error handling](#error-handling)
 - [Admin](#admin)
-- [Developer Section](#developer-sectiondocdevelopermddeveloper)
+- [Developers](#developersdocdevelopermddeveloper)
 
 <!-- /code_chunk_output -->
+
+
+
 
 <!-- * [Overview](#overview)
 * [Changes](#changes)
@@ -572,5 +575,8 @@ Then, set `isAdmin` to true in the user document.
 - [Logic Test](doc/ADMIN.md#logic-test)
 
 For more information, see [**ADMIN.md**](/doc/ADMIN.md).
-# [Developer Section](doc/DEVELOPER.md#developer)
 
+
+# [Developers](doc/DEVELOPER.md#developer)
+
+You can go to [Developer.md](/doc/DEVELOPER.md). This section gives a tips and detailed instruction on how to use the FireFlutter completely.

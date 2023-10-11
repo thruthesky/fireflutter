@@ -40,6 +40,10 @@ class _CustomChatRoomState extends State<CustomChatRoom> {
   void initState() {
     super.initState();
     ChatService.instance.customize.chatRoomAppBarBuilder = ({room, user}) => customAppBar(context, room);
+    // ChatService.instance.totalNoOfNewMessageChanges;
+    // ChatService.instance.init(
+    //   listenTotalNoOfNewMessage: false,
+    // );
   }
 
   final ChatRoomListViewController controller = ChatRoomListViewController();
