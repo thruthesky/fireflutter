@@ -148,6 +148,17 @@
       "flutterMode": "debug",
       "deviceId": "iPhone 15 Pro Max"
     },
+
+    {
+      "name": "GRC - Integration Test - iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "integration_test/nav_test.dart",
+      "flutterMode": "debug",
+      "deviceId": "iPhone 15 Pro Max"
+    },
+
     {
       "name": "GRC - Simulator - iMac (J) - iPhone 13 Pro Max",
       "request": "launch",
@@ -255,6 +266,15 @@
       "cwd": "apps/grc",
       "program": "lib/main.dart",
       "flutterMode": "profile",
+      "deviceId": "R9ATA00LMJM"
+    },
+    {
+      "name": "GRC - Samsung External - release (C)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "lib/main.dart",
+      "flutterMode": "release",
       "deviceId": "R9ATA00LMJM"
     },
     {

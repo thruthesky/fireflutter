@@ -21,9 +21,12 @@ class ChatRoomAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class ChatRoomAppBarState extends State<ChatRoomAppBar> {
   List<Widget>? actions;
+  Room? roomData;
+  User? otherUserData;
 
   @override
   void initState() {
+    roomData = widget.room;
     super.initState();
   }
 
@@ -33,35 +36,31 @@ class ChatRoomAppBarState extends State<ChatRoomAppBar> {
       return StreamBuilder<DocumentSnapshot>(
         stream: roomDoc(widget.room!.roomId).snapshots(),
         builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          late Room room;
+          // late Room room;
           // error
-          if (snapshot.hasError) {
-            return AppBar(title: Text(snapshot.error.toString()));
+          if (snapshot.hasError) return AppBar(title: Text(snapshot.error.toString()));
+          if (snapshot.connectionState == ConnectionState.waiting && roomData == null) {
+            return AppBar(title: const CircularProgressIndicator());
           }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            room = widget.room!;
-          } else
-
-          // Got the chat room data? or use the param data.
-          if (snapshot.hasData) {
-            room = Room.fromDocumentSnapshot(snapshot.data!);
-          }
-
+          if (snapshot.hasData) roomData = Room.fromDocumentSnapshot(snapshot.data!);
           return AppBar(
             backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            title: room.isGroupChat
-                ? Text(room.name)
+            title: roomData!.isGroupChat
+                ? Text(roomData!.name)
                 : UserDoc(
-                    builder: (user) => Text(user.name),
-                    uid: otherUserUid(room.users),
+                    builder: (user) {
+                      otherUserData = user;
+                      return Text(user.name);
+                    },
+                    uid: otherUserUid(roomData!.users),
                     live: false,
+                    onLoading: Text(otherUserData?.name ?? ''),
                   ),
             actions: [
               IconButton(
                 icon: const Icon(Icons.settings),
                 onPressed: () async {
-                  return ChatService.instance
-                      .openChatRoomMenuDialog(context: context, room: room);
+                  return ChatService.instance.openChatRoomMenuDialog(context: context, room: roomData!);
                 },
               ),
             ],
@@ -76,8 +75,7 @@ class ChatRoomAppBarState extends State<ChatRoomAppBar> {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () async {
-              return ChatService.instance
-                  .openChatRoomMenuDialog(context: context, room: widget.room!);
+              return ChatService.instance.openChatRoomMenuDialog(context: context, room: widget.room!);
             },
           ),
         ],

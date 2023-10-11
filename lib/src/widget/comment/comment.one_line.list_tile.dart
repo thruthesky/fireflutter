@@ -185,67 +185,60 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ),
-
-                      PopupMenuButton(
-                          icon: const Icon(
-                            Icons.more_horiz,
-                            size: 16,
-                          ),
-                          itemBuilder: (context) {
-                            return [
-                              const PopupMenuItem(
-                                value: 'report',
-                                child: Text('Report'),
-                              ),
-                              if (widget.comment.uid == myUid)
+                      Flexible(
+                        child: PopupMenuButton(
+                            icon: const Icon(
+                              Icons.more_horiz,
+                              size: 16,
+                            ),
+                            itemBuilder: (context) {
+                              return [
                                 const PopupMenuItem(
-                                  value: 'edit',
-                                  child: Text('Edit'),
+                                  value: 'report',
+                                  child: Text('Report'),
                                 ),
-                              if (widget.comment.uid == myUid)
-                                const PopupMenuItem(
-                                  value: 'delete',
-                                  child: Text('Delete'),
-                                )
-                            ];
-                          },
-                          onSelected: (value) async {
-                            if (value == 'edit') {
-                              await CommentService.instance
-                                  .showCommentEditBottomSheet(context,
-                                      comment: widget.comment);
-                            }
-                            if (value == 'report') {
-                              if (context.mounted) {
-                                ReportService.instance.showReportDialog(
-                                  context: context,
-                                  commentId: widget.comment.id,
-                                  onExists: (id, type) => toast(
-                                      title: 'Already reported',
-                                      message:
-                                          'You have reported this $type already.'),
-                                );
+                                if (widget.comment.uid == myUid)
+                                  const PopupMenuItem(
+                                    value: 'edit',
+                                    child: Text('Edit'),
+                                  ),
+                                if (widget.comment.uid == myUid)
+                                  const PopupMenuItem(
+                                    value: 'delete',
+                                    child: Text('Delete'),
+                                  )
+                              ];
+                            },
+                            onSelected: (value) async {
+                              if (value == 'edit') {
+                                await CommentService.instance
+                                    .showCommentEditBottomSheet(context, comment: widget.comment);
                               }
-                            }
+                              if (value == 'report') {
+                                if (context.mounted) {
+                                  ReportService.instance.showReportDialog(
+                                    context: context,
+                                    commentId: widget.comment.id,
+                                    onExists: (id, type) => toast(
+                                        title: 'Already reported', message: 'You have reported this $type already.'),
+                                  );
+                                }
+                              }
 
-                            //need delete function
-                            if (value == 'delete') {
-                              if (!mounted) return;
-                              final re = await confirm(
-                                  context: context,
-                                  title: 'Delete Comment',
-                                  message:
-                                      'Are you sure on deleting this comment?');
-                              if (re == true) {
-                                await widget.comment.delete(
-                                    reason:
-                                        'The comment was deleted by the user.');
-                                toast(
-                                    title: 'Comment deleted',
-                                    message: 'Comment deleted successfully.');
+                              //need delete function
+                              if (value == 'delete') {
+                                if (!mounted) return;
+                                final re = await confirm(
+                                    context: context,
+                                    title: 'Delete Comment',
+                                    message: 'Are you sure on deleting this comment?');
+                                if (re == true) {
+                                  await widget.comment.delete(reason: 'The comment was deleted by the user.');
+                                  toast(title: 'Comment deleted', message: 'Comment deleted successfully.');
+                                }
                               }
-                            }
-                          }),
+                            }),
+                      ),
                     ],
                   ),
                 ],
