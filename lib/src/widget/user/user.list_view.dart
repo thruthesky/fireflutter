@@ -32,6 +32,7 @@ class UserListView extends StatelessWidget {
     this.pageSize = 10,
     this.scrollDirection = Axis.vertical,
     this.contentPadding,
+    this.separatorBuilder,
   });
 
   final String? searchText;
@@ -48,6 +49,7 @@ class UserListView extends StatelessWidget {
   final Widget Function(User)? trailingBuilder;
   final Widget Function(User, int)? itemBuilder;
   final EdgeInsetsGeometry? contentPadding;
+  final Widget Function(int)? separatorBuilder;
 
   /// Use this [customViewBuilder] to customize what view (listView, gridView, etc) to use.
   /// If decided to use this, [avatarBuilder], [titleBuilder], [subtitleBuilder],
@@ -102,7 +104,12 @@ class UserListView extends StatelessWidget {
         snapshot.docs.removeWhere((doc) => exemptedUsers.contains(doc.id));
         snapshot.docs.removeWhere((doc) => !(User.fromDocumentSnapshot(doc).exists));
         if (customViewBuilder != null) return customViewBuilder!.call(snapshot);
-        return ListView.builder(
+        return ListView.separated(
+          separatorBuilder: (context, index) =>
+              separatorBuilder?.call(index) ??
+              Divider(
+                color: Theme.of(context).colorScheme.secondary.withAlpha(40),
+              ),
           scrollDirection: scrollDirection,
           itemCount: snapshot.docs.length,
           itemBuilder: (context, index) {
@@ -119,7 +126,7 @@ class UserListView extends StatelessWidget {
               contentPadding: contentPadding,
               title: titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
               subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
-              leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
+              leading: avatarBuilder?.call(user) ?? UserAvatar(user: user, size: 48),
               trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
               onTap: () async {
                 onTap?.call(user);
