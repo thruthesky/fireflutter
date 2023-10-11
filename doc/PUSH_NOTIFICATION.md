@@ -1,4 +1,20 @@
-# Push notifications
+# Table of Contents
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Push notifications](#push-notifications)
+  - [Push notification settings](#push-notification-settings)
+  - [Push notifcation sound](#push-notifcation-sound)
+- [Send push notification to custom topic](#send-push-notification-to-custom-topic)
+- [Customizing source](#customizing-source)
+
+<!-- /code_chunk_output -->
+
+
+
+## Push notifications
 
 Push notification tokens are saved under `/users/{uid}/fcm_tokens/{token} { uid: ..., device_type: ..., fcm_token: ... }`. If the user didn't sign in, the token will not be saved.
 
@@ -48,7 +64,7 @@ AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
 });
 ```
 
-## Push notification settings
+### Push notification settings
 
 Each of push notification option is saved as a single document under `/users/{uid}/user_settings/{settingDocumentId}` with fields consist of {action: comment-create, category: qna, uid: userUid}. And it is protected by the security rules. Only the user can access this document. The option is saved in a separate document for the search. To give convinience on search and getting tokens of users who subscribe to the service.
 

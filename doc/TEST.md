@@ -1,14 +1,28 @@
+# Table of Contents
+
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Unit Testing](#unit-testing)
+  - [Testing on Local Emulators and Firebase](#testing-on-local-emulators-and-firebase)
+  - [Testing security rules](#testing-security-rules)
+  - [Testing on real Firebase](#testing-on-real-firebase)
+  - [Testing on Cloud Functions](#testing-on-cloud-functions)
+- [TestUi Widget](#testui-widget)
+
+<!-- /code_chunk_output -->
+
 # Test
 
+## Unit Testing
 
-
-# Unit Testing
-
-## Testing on Local Emulators and Firebase
+### Testing on Local Emulators and Firebase
 
 - We do unit testing on both of local emulator and on real Firebase. It depends on how the test structure is formed.
 
-## Testing security rules
+### Testing security rules
 
 Run the firebase emulators like the followings. 
 
@@ -39,7 +53,7 @@ npm run mocha tests/posts/create.spec.js
 npm run mocha tests/posts/likes.spec.js
 ```
 
-## Testing on real Firebase
+### Testing on real Firebase
 
 - Test files are under `functions/tests`. This test files work with real Firebase. So, you may need provide a Firebase for test use.
 
@@ -58,7 +72,7 @@ npm run mocha tests/posts/likes.spec.js
   - `npm run mocha -- tests/update_custom_claims/get_set.spec.ts`
   - `npm run mocha -- tests/update_custom_claims/update.spec.ts`
 
-## Testing on Cloud Functions
+### Testing on Cloud Functions
 
 All of the cloud functions are tested directly on remote firebase (not in emulator). So, you need to save the account service in `firebase/service-account.json`. The service account file is listed in .gitignore. So, It won't be added into git.
 
@@ -95,7 +109,7 @@ To test the functionality of fireflutter, it needs a custom way of testing. For 
 We wrote some test code and saved it in `TestUi` widget. To run the test in `TestUi`, you will need to initialize firebase. But don't initialize fireflutter nor other services in fireflutter.
 
 
-# TestUi Widget
+## TestUi Widget
 
 This has custom maid test code for fireflutter. You may learn more techniques on using fireflutter by seeing the test code.
 

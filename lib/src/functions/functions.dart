@@ -331,6 +331,7 @@ Future alert({required BuildContext context, required String title, required Str
 Future<String?> prompt({
   required BuildContext context,
   required String title,
+  String text = '',
   required String message,
   String? initialValue,
 }) {
@@ -340,9 +341,15 @@ Future<String?> prompt({
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text(title),
-        content: TextField(
-          controller: controller,
-          decoration: InputDecoration(hintText: message),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (text.isNotEmpty) ...[Text(text), const SizedBox(height: sizeMd)],
+            TextField(
+              controller: controller,
+              decoration: InputDecoration(hintText: message),
+            ),
+          ],
         ),
         actions: <Widget>[
           TextButton(
@@ -363,12 +370,14 @@ Future<String?> prompt({
 Future<String?> input({
   required BuildContext context,
   required String title,
+  String text = '',
   required String message,
   String? initialValue,
 }) {
   return prompt(
     context: context,
     title: title,
+    text: text,
     message: message,
     initialValue: initialValue,
   );

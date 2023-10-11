@@ -1,3 +1,24 @@
+# Table of Contents
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Overview](#overview)
+- [UserService](#userservice)
+- [Like](#like)
+- [Favorite/Bookmark](#favoritebookmark)
+  - [How to display icon](#how-to-display-icon)
+- [Follow and Unfollow](#follow-and-unfollow)
+  - [Display Followers](#display-followers)
+- [No of profile view](#no-of-profile-view)
+- [User profile screen customization](#user-profile-screen-customization)
+
+<!-- /code_chunk_output -->
+
+
+
+
 # User
 
 ## Overview
@@ -11,18 +32,6 @@
 `birthDayOfYear` is the birth day of the year. It is automatically set by the `User.update()`. For instnace, if the user saves his birth day, then the app should use this kind of code; `my.update(birthYear: 1999, birthMonth: 9, birthDay: 9);` and it will automtically update the `birthDayOfYear` value.
 
 ## UserService
-
-<!-- #section removed
-  reason: documentNotExistBuilder has been removed
-
-In this case, the `documentNotExistBuilder` of `UserDoc` will be called.
-
-So, the lifecyle will be the following when the app users `UserDoc`.
-
-- `UserService.instance.nullableUser` will have an instance of `User`
-  - If the user document does not exists, `exists` will be `false` causing `documentNotExistsBuilder` to be called.
-  - If the user document exist, then it will have right data and `builder` will be called. -->
-
 `UserService.instance.nullableUser` is _null_ when
 
 - on app boot

@@ -34,6 +34,10 @@ class _MainPageBodyState extends State<MainPageBody> {
   @override
   void initState() {
     super.initState();
+    String uid = myUid!;
+    dog('my $uid');
+    UserService.instance.init(adminUid: uid);
+    UserService.instance.get(uid);
     // Add menu(s) on top of public screen
     // UserService.instance.customize.publicScreenActions = (context, user) => [
     //       FavoriteButton(
