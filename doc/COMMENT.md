@@ -7,6 +7,7 @@
 
 - [Overview](#overview)
 - [Comment Service](#comment-service)
+  - [Comment Doc](#comment-doc)
   - [CommentListView](#commentlistview)
 
 <!-- /code_chunk_output -->
@@ -55,6 +56,23 @@ CommentService.instance.init(
 );
 ```
 
+### Comment Doc
+A builder that will make a widget from the comment's document
+
+```dart
+CommentDoc(
+  comment: widget.comment,
+  builder: (comment) {
+    return TextButton(
+      child: Text('Like ${comment.noOfLikes}'),
+      onPressed: () {
+        comment.like();
+      },
+    );
+  },
+),
+```
+
 ### CommentListView
 A List View of Comments on top of FirestoreListView.
 
@@ -66,27 +84,3 @@ Dialog(
   ),
 ),
 ```
-<!-- 
-## CommentService
-
-You can customize the `showCommentEditBottomSheet` how to comment edit(create or update) box appears.
-
-The code below simply call `next()` function which does exactly the same as the default logic from `fireflutter`.
-
-```dart
-CommentService.instance.init(
-  customize: CommentCustomize(
-    showCommentEditBottomSheet: (
-      BuildContext context, {
-      Comment? comment,
-      required Future<Comment?> Function() next,
-      Comment? parent,
-      Post? post,
-    }) {
-      return next();
-    },
-  ),
-);
-``` -->
-
-<!-- TODO: continue to add widgets here -->

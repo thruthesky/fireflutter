@@ -1,3 +1,58 @@
+
+<!-- This widget may be removed since Widgets section will be added for each markdown file -->
+# Table of Contents {ignore = true}
+
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Widgets](#widgets)
+  - [UserDoc](#userdoc)
+  - [AuthChanges](#authchanges)
+  - [UserDocReady](#userdocready)
+  - [TopDownGraident and BottomUpGraident](#topdowngraident-and-bottomupgraident)
+  - [CommentOneLineListTile](#commentonelinelisttile)
+  - [CommentListBottomSheet](#commentlistbottomsheet)
+  - [UserLikedByListScreen](#userlikedbylistscreen)
+  - [Functions](#functions)
+  - [PostLikeButton](#postlikebutton)
+  - [Screen widgets](#screen-widgets)
+  - [EmailLoginForm](#emailloginform)
+  - [IconTextButton](#icontextbutton)
+  - [CarouselView](#carouselview)
+
+<!-- /code_chunk_output -->
+
+
+# Widgets
+
+## UserDoc
+`UserDoc` builds a widget based on the user document changes. This will check the Firestore `/users` or get the `FirebaseAuth.instance.currentUser`.
+
+```dart
+return UserDoc(builder: (user) {
+    List<String> followers = user.followers.toList();
+    List<String> following = user.followings.toList();
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        children: [
+          userInfo(user, context),
+          const SizedBox(height: sizeLg),
+          Text('Viewers: ${following.length}'),
+          ProfileViewers(size: size),
+          const SizedBox(height: sizeLg),
+          Text('Followers: ${followers.length}'),
+          ProfileFollowers(size: size, followers: followers),
+        ],
+      ),
+    ),
+  }
+),
+```
+
+
 ## AuthChanges
 `AuthChanges` is a builder with listener of Firebase `authStateChanges`. It return `User` and will rebuild itself everytime the user signed in or out.  
 ```dart
@@ -8,7 +63,7 @@ AuthChange(
 ```
 <!-- TODO: Explanation of authchange and userdocready -->
 ## UserDocReady
-
+This will return a `User` object document when it is ready. This will run only once and will not rebuild itself even if user change documents. 
 ```dart
 UserDocReady(builder: (my) {
   return Row(
@@ -131,9 +186,9 @@ PostLikeButton(
 
 ## Screen widgets
 
-The name of widgets that can be used as a screen ends with `Screen`. Those widget must be work as a screen or a dialog of `showGeneralDialog()`. Which means those widgets must have a scaffold.
+The name of widgets that can be used as a screen ends with `Screen`. Those widget must be work as a screen or a dialog of `showGeneralDialog`. Which means those widgets must have a scaffold.
 
-Example of opening a screen widget with `showGeneralDialog()`
+Example of opening a screen widget with `showGeneralDialog`
 
 ```dart
 showGeneralDialog(
@@ -188,313 +243,6 @@ Theme(
               ),
             ),
 ```
-
-## UserDoc
-
-To display user's profile photo, use like below.
-
-<!-- See the comment for the details. -->
-
-```dart
-UserDoc(
-  builder: (user) => UserProfileAvatar(
-    user: user,
-    size: 38,
-    shadowBlurRadius: 0.0,
-    onTap: () => context.push(ProfileScreen.routeName),
-    defaultIcon: const FaIcon(FontAwesomeIcons.lightCircleUser, size: 38),
-    backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-  ),
-),
-```
-
-<!--
-Not exist anymore:
-documentNotExistBuilder: () {
-    // Create user document if not exists.
-    UserService.instance.create();
-    return const SizedBox.shrink();
-  },
-   -->
-
-## User public screen customization
-
-To customize the user public profile screen, you can override the showPublicProfileScreen function.
-
-```dart
-UserService.instance.customize.showPublicProfileScreen =
-    (BuildContext context, {String? uid, User? user}) => showGeneralDialog<dynamic>(
-          context: context,
-          pageBuilder: ($, _, __) => MomcafePublicProfileScreen(
-            uid: uid,
-            user: user,
-          ),
-        );
-```
-
-You may partly want to customize the public profile screen instead of rewriting the whole code.
-
-You may hide or add buttons like below.
-
-```dart
-
-    // Public profile custom design
-
-    // Add menu(s) on top of public screen
-    UserService.instance.customize.publicScreenActions = (context, user) => [
-          FavoriteButton(
-            otherUid: user.uid,
-            builder: (re) => FaIcon(
-              re
-                  ? FontAwesomeIcons.circleStar
-                  : FontAwesomeIcons.lightCircleStar,
-              color: re ? Colors.yellow : null,
-            ),
-            onChanged: (re) => toast(
-              title: re ? tr.favorite : tr.unfavorite,
-              message: re ? tr.favoriteMessage : tr.unfavoriteMessage,
-            ),
-          ),
-          PopupMenuButton(
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 'report',
-                child: Text(tr.report),
-              ),
-              PopupMenuItem(
-                value: 'block',
-                child: Database(
-                  path: pathBlock(user.uid),
-                  builder: (value) =>
-                      Text(value == null ? tr.block : tr.unblock),
-                ),
-              ),
-            ],
-            icon: const FaIcon(FontAwesomeIcons.circleEllipsis),
-            onSelected: (value) {
-              switch (value) {
-                case 'report':
-                  ReportService.instance.showReportDialog(
-                    context: context,
-                    otherUid: user.uid,
-                    onExists: (id, type) => toast(
-                      title: tr.alreadyReportedTitle,
-                      message:
-                          tr.alreadyReportedMessage.replaceAll('#type', type),
-                    ),
-                  );
-                  break;
-                case 'block':
-                  toggle(pathBlock(user.uid));
-                  toast(
-                    title: tr.block,
-                    message: tr.blockMessage,
-                  );
-                  break;
-              }
-            },
-          ),
-        ];
-
-    /// Hide some buttons on bottom.
-    UserService.instance.customize.publicScreenBlockButton =
-        (context, user) => const SizedBox.shrink();
-    UserService.instance.customize.publicScreenReportButton =
-        (context, user) => const SizedBox.shrink();
-```
-
-## Avatar
-
-This is a similiar widget of the `CircleAvatar` in Material UI.
-
-```dart
-Avatar(url: 'https://picsum.photos/200/300'),
-```
-
-## UserAvatar
-
-To display user's profile photo, use `UserAvatar`.
-Not that, `UserAvatar` does not update the user photo in realtime. So, you may need to give a key when you want it to dsiplay new photo url.
-
-```dart
-UserAvatar(
-  user: user,
-  size: 120,
-),
-```
-
-## UserProfileAvatar
-
-To let user update or delete the profile photo, use like below.
-
-```dart
-UserProfileAvatar(
-  user: user,
-  size: 120,
-  upload: true,
-  delete: true,
-),
-```
-
-To customize the look of `UserProfileAvartar`.
-
-```dart
-UserProfileAvatar(
-  user: my,
-  size: 128,
-  radius: 16, // radius
-  upload: true,
-  uploadIcon: const Padding( // upload icon
-    padding: EdgeInsets.all(8.0),
-    child: FaIcon(
-      FontAwesomeIcons.thinPenCircle,
-      size: 32,
-      color: Colors.white,
-    ),
-  ),
-),
-```
-
-## User List View
-
-Use this widget to list users. By default, it will list all users. This widget can also
-be used to search users by filtering a field with a string value.
-
-This widget is a list view that has a `ListTile` in each item. So, it supports the properties of `ListView` and `ListTile` at the same time.
-
-```dart
-UserListView(
-  searchText: 'nameValue',
-  field: 'name',
-),
-```
-
-Example of complete code for displaying the `UserListView` in a dialog with search box
-
-```dart
-onPressed() async {
-  final user = await showGeneralDialog<User>(
-    context: context,
-    pageBuilder: (context, _, __) {
-      TextEditingController search = TextEditingController();
-      return StatefulBuilder(builder: (context, setState) {
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            title: const Text('Find friends'),
-          ),
-          body: Container(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                TextField(
-                  controller: search,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Search',
-                  ),
-                  onSubmitted: (value) => setState(() => search.text = value),
-                ),
-                Expanded(
-                  child: UserListView(
-                    key: ValueKey(search.text),
-                    searchText: search.text,
-                    field: 'name',
-                    avatarBuilder: (user) => const Text('Photo'),
-                    titleBuilder: (user) => Text(user?.uid ?? ''),
-                    subtitleBuilder: (user) => Text(user?.phoneNumber ?? ''),
-                    trailingBuilder: (user) => const Icon(Icons.add),
-                    onTap: (user) => context.pop(user),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      });
-    },
-  );
-}
-```
-
-### UserListView.builder
-
-You may use the `UserListView.builder` if you already have the `List<String>` of uids
-
-```dart
-List<String> friends = ['uid1', 'uid2']
-
-UserListView.builder(uids: friends)
-
-```
-
-In using `UserListView.builder`, must check the user if exists to prevent error like the following code:
-
-```dart
-UserListView.builder(
-  uids: user.followers,
-  itemBuilder: (user) {
-    // The uid of a User will be null if it doesn't exist in the database.
-    // This can happen if the user has been deleted completely in database.
-    // This should never happen.
-    if (!(user?.exists ?? false)) return const SizedBox();
-    return ListTile(
-      contentPadding: const EdgeInsets.only(left: sm, right: 0),
-      leading: UserAvatar(
-        user: user,
-        size: 50,
-        radius: 30,
-      ),
-      ...
-    );
-  },
-),
-
-```
-
-## When user is not logged in
-
-This is one way of how to dsplay widgets safely for not logged in users.
-
-```dart
-class FavoriteButton extends StatelessWidget {
-  const FavoriteButton({
-    super.key,
-    // ...
-  });
-
-
-  @override
-  Widget build(BuildContext context) {
-    // If the user has not logged in yet, display an icon with a warning toast.
-    if (notLoggedIn) {
-      return IconButton(
-        onPressed: () async {
-          toast(
-              title: tr.user.loginFirstTitle,
-              message: tr.user.loginFirstMessage);
-        },
-        icon: builder(false),
-      );
-    }
-    return StreamBuilder(
-      stream: ....snapshots(),
-      builder: (context, snapshot) {
-        return IconButton(
-          onPressed: () async {
-            final re = await Favorite.toggle(
-                postId: postId, otherUid: otherUid, commentId: commentId);
-            onChanged?.call(re);
-          },
-          icon: builder(snapshot.data?.size == 1),
-        );
-      },
-    );
-  }
-}
-
-```
-
 ## IconTextButton
 
 ![IconTextImage](https://github.com/thruthesky/fireflutter/blob/main/doc/img/icon_text_button.jpg?raw=true)

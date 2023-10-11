@@ -1,39 +1,75 @@
+# Table of Contents {ignore = true}
+
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Category](#category)
+  - [Overview](#overview)
+  - [CategoryServices](#categoryservices)
+    - [Category Create Screen](#category-create-screen)
+    - [Category List View](#category-list-view)
+    - [Category Edit Screen](#category-edit-screen)
+
+<!-- /code_chunk_output -->
+
+
+
 # Category
 
-Categories are used for posts. This can be access by Admin.
+## Overview
+Categories are managed by Admins.
+## CategoryServices
+`CategoryServices` is responsible for managing categories on app. You can create or limit users on which categories they can use. See below for more
 
-## Features
+```dart
+final service = ChatService.instance;
 
-- Admins can do basic create, and update categories functions.
+// get category from Id
+service.get(categoryId); // returns Future<Category?>
 
-## Model
+// open category create dialog
+// [success] is required, it is a type if Function()
+service.showCreateDialog(
+  context, success: () => toast(title: 'Successful', message: 'Category Created'),
+);
+```
 
-Category class is the model for categories.
-It has:
+### Category Create Screen
 
-- id
-- name
-- description
-- createdAt
-- updatedAt
-- uid
-  - This is used for the uid of the creator of the category.
+`CategoryCreateScreen` is used for creating a dialog. To do this follow the sample code below;
 
-## Security
+```dart 
+CategoryService.instance.showCreateDialog(context, success: (cat) => debugPrint('$cat'));
+```
+or use this
+```dart
+showDialog(
+  context: context,
+  builder: (cnx) => CategoryCreateScreen(
+    success: (cat) => debugPrint('$cat'),
+  ),
+),
+```
 
-- All users can read in category.
-- Only Admins can write in category.
 
-## Widgets
 
 ### Category List View
 
-Category List View can be used to display the list of categories in list tiles.
+`CategoryListView` can be used to display the list of categories in list tiles.
 To use, follow this simple code:
 
 ```dart
-CategoryListView(),
+showDialog(
+  context: context,
+  builder: (cnx) => const Dialog(
+    child: CategoryListView(),
+  ),
+),
 ```
+
+### Category Edit Screen
 
 Sometimes we want to modify the action when the user tapped the
 category in the list view. For example, showing Update Category dialog
@@ -48,96 +84,3 @@ CategoryListView(
   },
 ),
 ```
-
-### Category List Dialog
-
-Category List Dialog is a full screen dialog that displays the list of categories.
-To use, simply follow these code:
-
-```dart
-CategoryListScreen(),
-```
-
-The onTapCategory parameter can be used to modify the action if the user tapped the category. By dafault, it will go to the list of posts.
-
-```dart
-ElevatedButton(
-  onPressed: () => CategoryService.instance.showListDialog(
-    context,
-    onTapCategory: (category) =>
-      showGeneralDialog(
-        context: context,
-        pageBuilder: (context, _, __) {
-          return CategoryListScreen(
-            onTapCategory: (category) {
-              CategoryService.instance.showUpdateDialog(context, category);
-            },
-          );
-        },
-      ),
-    ),
-  child: const Text('Categories'),
-),
-```
-
-See [Displaying Category List using CategoryService](#displaying-category-list-using-categoryservice) to check how to display the list using service.
-
-### Category Create Dialog
-
-Category Create Dialog is for a dialog that will ask for a category name and create the category.
-
-Cancel Text Button will simply close the dialog by default.
-
-To use, follow this code:
-
-```dart
-IconButton(
-  icon: const Icon(Icons.add),
-  onPressed: () {
-    CategoryService.instance.showCreateCategoryDialog(
-      context,
-      success: (val) {
-        Navigator.pop(context);
-      },
-    );
-  },
-),
-```
-
-## Category Service Usage
-
-### Displaying Category List using CategoryService
-
-This is an example of applying a Categories list that will open the update category dialog
-for every category on tap:
-
-```dart
-ElevatedButton(
-  onPressed: () => CategoryService.instance.showListDialog(
-    context,
-    onTapCategory: (category) =>
-        CategoryService.instance.showUpdateDialog(context, category),
-  ),
-  child: const Text('Categories'),
-),
-```
-
-### Updating the category details
-
-To update the category details use [updateCategory] in the service.
-
-Check the sample code:
-
-```dart
-() {
-    Map<String, dynamic> updatedCategory = {
-        'name': categoryName.text,
-        'description': description.text,
-    };
-    CategoryService.instance.updateCategory(widget.category.id, updatedCategory);
-},
-```
-
-## Tests
-
-Testing Category Service

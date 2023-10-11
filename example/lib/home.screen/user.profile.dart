@@ -27,10 +27,10 @@ class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    List<String> followers = my.followers.toList();
-    List<String> following = my.followings.toList();
-    return UserDocReady(
-      builder: (user) => Padding(
+    return UserDoc(builder: (user) {
+      List<String> followers = user.followers.toList();
+      List<String> following = user.followings.toList();
+      return Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
@@ -73,54 +73,33 @@ class _UserProfileState extends State<UserProfile> {
                         ),
                       ),
                     ),
+                    buttonBuilder(
+                      'Show Category List View',
+                      () => showDialog(
+                        context: context,
+                        builder: (cnx) => Dialog(
+                          child: CategoryListView(
+                            onTap: (cat) => CategoryService.instance.showUpdateDialog(context, cat.id),
+                          ),
+                        ),
+                      ),
+                    ),
+                    buttonBuilder(
+                      'Show Category Create',
+                      () => showDialog(
+                        context: context,
+                        builder: (cnx) => CategoryCreateScreen(
+                          success: (cat) => debugPrint('$cat'),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
             )
           ],
         ),
-      ),
-    );
+      );
+    });
   }
 }
-
-
-
-
-
-// class Followers extends StatelessWidget {
-//   const Followers({
-//     super.key,
-//     required this.followers,
-//   });
-
-//   final List<String> followers;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: appBar('Followers', hasLeading: true, hasActions: false),
-//       body: ListView.builder(
-//         itemCount: followers.length,
-//         itemBuilder: (context, i) => UserDoc(
-//             uid: followers[i],
-//             builder: (follower) {
-//               return ListTile(
-//                 onTap: () => UserService.instance.showPublicProfileScreen(context: context, user: follower),
-//                 leading: UserAvatar(
-//                   user: follower,
-//                   size: sizeXl,
-//                 ),
-//                 title: Text(follower.name),
-//                 trailing: const FaIcon(FontAwesomeIcons.chevronRight),
-//               );
-//             }),
-//       ),
-//     );
-//   }
-// }
-/// display category
-// const Text('Categories'),
-// const Expanded(
-//   child: CategoryListView(),
-// ),
