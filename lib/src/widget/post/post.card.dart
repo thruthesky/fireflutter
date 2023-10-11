@@ -370,6 +370,22 @@ class PostCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        // post & comment buttons
+        if (post.noOfComments > commentSize) ...[
+          Padding(
+            padding: const EdgeInsets.only(left: 4.0),
+            child: Row(
+              children: [
+                TextButton(
+                  onPressed: () {
+                    CommentService.instance.showCommentListBottomSheet(context, post);
+                  },
+                  child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
+                ),
+              ],
+            ),
+          ),
+        ],
         // list of comment
         StreamBuilder(
           stream: commentCol
@@ -404,21 +420,12 @@ class PostCard extends StatelessWidget {
             return const SizedBox.shrink();
           },
         ),
-
         // post & comment buttons
         Padding(
           padding: bottomButtonPadding,
-          child: Row(
+          child: const Row(
             children: [
-              // show more
-              if (post.noOfComments > commentSize)
-                TextButton(
-                  onPressed: () {
-                    CommentService.instance.showCommentListBottomSheet(context, post);
-                  },
-                  child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
-                ),
-              const Spacer(),
+              //
             ],
           ),
         )
