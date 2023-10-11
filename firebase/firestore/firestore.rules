@@ -56,11 +56,11 @@ service cloud.firestore {
       allow update: if
         isAdmin()
         ||
-        ( request.auth.uid == userDocumentId && notUpdating(['isDisabled', 'isAdmin', 'isVerified']) )
+        ( request.auth.uid == userDocumentId && notUpdating(['isDisabled', 'isAdmin', 'isVerified']) && notDisabled() )
         ||
-        addOrRemove('followers', request.auth.uid)
+        (addOrRemove('followers', request.auth.uid) && notDisabled())
         ;
-      allow delete: if request.auth.uid == userDocumentId || isAdmin();
+      allow delete: if isAdmin() || (request.auth.uid == userDocumentId && notDisabled());
       match /fcm_tokens/{docId} {
       	allow read:  if (request.auth.uid == userDocumentId) || isAdmin();
         allow write: if (request.auth.uid == userDocumentId);
@@ -127,9 +127,9 @@ service cloud.firestore {
       allow update: if
         isAdmin()
         ||
-        (notDisabled() && ( isMyPost() || onlyUpdating(['noOfComments']) ))
+        (addOrRemove('followers', request.auth.uid) && notDisabled())
         ||
-        addOrRemove('followers', request.auth.uid)
+        ((isMyPost() || onlyUpdating(['noOfComments']) ) && notDisabled()) 
       ;
       allow delete: if false;
     }
@@ -146,8 +146,8 @@ service cloud.firestore {
       }
 
       allow read: if true; // Anyone should be able to read comments
-      allow create: if willBeMyComment() && notDisabled;
-      allow update: if (isMyComment() && notDisabled())  || addOrRemove('likes', request.auth.uid) || isAdmin();
+      allow create: if willBeMyComment() && notDisabled();
+      allow update: if isAdmin() || (addOrRemove('likes', request.auth.uid) && notDisabled()) || (isMyComment() && notDisabled());
       allow delete: if false; // Prevent hard delete in comments
     }
   
@@ -277,7 +277,7 @@ service cloud.firestore {
     // report
     match /reports/{documentId} {
       allow read: if isMyDoc() || isAdmin();
-      allow write: if isMyDoc() || willBeMyDoc() || isAdmin();
+      allow write: if  isAdmin() || willBeMyDoc() && notDisabled() || isMyDoc() && notDisabled();
     }
 
     match /readonly/{documentId} {

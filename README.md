@@ -7,23 +7,27 @@ If you are looking for a package that help you develop a full featured content m
 Create an issue if you find a bug or need a help.
 <br>
 <br>
-# Table of Contents {ignore=true}
 
+# Table of Contents {ignore=true}
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
 - [FireFlutter](#fireflutter)
+- [Table of Contents {ignore=true}](#table-of-contents-ignoretrue)
 - [Overview](#overview)
 - [Changes](#changes)
+  - [Oct 10 0.3.12 {ignore=true}](#oct-10-0312-ignoretrue)
+  - [Sept 28 0.3.11 {ignore=true}](#sept-28-0311-ignoretrue)
+  - [Sept 10 0.3.10 {ignore=true}](#sept-10-0310-ignoretrue)
   - [Features](#features)
     - [Main Features](#main-features)
 - [Getting started](#getting-started)
   - [Installation](#installation)
     - [Create a Firebase](#create-a-firebase)
 - [Firebase Extension](#firebase-extension)
-    - [Resize image](#resize-image)
+  - [Resize image](#resize-image)
   - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
     - [Firestore security rules](#firestore-security-rules)
@@ -35,9 +39,9 @@ Create an issue if you find a bug or need a help.
   - [timeago](#timeago)
   - [Parsed_ReadMore](#parsed_readmore)
 - [Build Sample](#build-sample)
-    - [User Profile Page](#user-profile-page)
-    - [Chat App](#chat-app)
-    - [Forum App](#forum-app)
+  - [User Profile Page](#user-profile-page)
+  - [Chat App](#chat-app)
+  - [Forum App](#forum-app)
 - [Widgets and UI functions](#widgets-and-ui-functions)
 - [Usage](#usage)
   - [Chat](#chat)
@@ -48,12 +52,9 @@ Create an issue if you find a bug or need a help.
 - [Push notifications](#push-notifications)
 - [Error handling](#error-handling)
 - [Admin](#admin)
-- [Developers](#developersdocdevelopermddeveloper)
+- [Developers](#developers)
 
 <!-- /code_chunk_output -->
-
-
-
 
 <!-- * [Overview](#overview)
 * [Changes](#changes)
@@ -93,23 +94,28 @@ Fireflutter made for reusing the common code blocks. Provides code for user, for
 There are some pre-defined fields for the user document. You can use `json_serializable` for providing each model extra fields.
 
 The model has also basic CRUD functionalities.
+
 # Changes
+
 <!-- You can see [CHANGELOG.md](/CHANGELOG.md) for the updated log. -->
 
 ### Oct 10 0.3.12 {ignore=true}
-* Refactoring on user, feed.
-* Refine widgets and services.
+
+- Refactoring on user, feed.
+- Refine widgets and services.
 
 ### Sept 28 0.3.11 {ignore=true}
-* Add. Admin dashboarsd.
-* Update. Push notification.
-* Refactoring. Save more data in realtime database.
+
+- Add. Admin dashboarsd.
+- Update. Push notification.
+- Refactoring. Save more data in realtime database.
 
 ### Sept 10 0.3.10 {ignore=true}
 
-* Change. Refactoring file/folder names.
+- Change. Refactoring file/folder names.
 
 Go to [CHANGELOG.md](/CHANGELOG.md) for more.
+
 <!-- paraphrased for readability, feel free to edit -->
 
 <!-- I made it for reusing the most common code blocks when I am building apps. It provides the code for user management, forum(caetgory, post, comment) management, chat management, push notification management along with `like`, `favorite`, `following` features.
@@ -210,7 +216,7 @@ Copy [the security rules of fireflutter](https://raw.githubusercontent.com/thrut
 <!--
 TODO:
 deploy rules on firebase using cli
- firebase deploy --only <name>.rules
+ firebase deploy --only firestore:rules
  -->
 
 ### Security rule for admin
@@ -429,7 +435,9 @@ By default, feed feature is disabled. To use feed features, add the following in
 ```dart
 FeedService.instance.init(enable: true);
 ```
+
 # Pub.dev Packages
+
 ## url_launcher (Optional)
 
 `url_lancher` package is added by fireflutter and it is being used to open url. If you wish to let users share links by sms, you need to setup in `AndroidManifest.xml` and `Info.plist`. See the [url_launch Configuration](https://pub.dev/packages/url_launcher#configuration).
@@ -444,7 +452,6 @@ if (re) {
   toast(title: 'SMS', message: 'Cannot open SMS');
 }
 ```
-
 
 In this chapter, some of the notable packages that are used by FireFlutter are explained.
 
@@ -471,17 +478,22 @@ Visit [parsed_readmore](https://pub.dev/packages/parsed_readmore) to read more.
 <!-- TODO: -->
 
 # Build Sample
+
 ### User Profile Page
-Here is an example of how to build simple user profile page. 
+
+Here is an example of how to build simple user profile page.
 ![user_profile](/doc/img/user_profile.png)
 
 ### Chat App
-Here is an example of how to build simple user profile page. 
+
+Here is an example of how to build simple user profile page.
 ![chat_app](/doc/img/chat_app.png)
 
 ### Forum App
+
 <!-- FIXME: Not sure if I implemented this correctly -->
-Here is a simple forum app. 
+
+Here is a simple forum app.
 ![forum_result](/doc/img/forum.png)
 
 See [User Profile](/doc/SAMPLES.md#how-to-build-a-user-profile-page) for source code and detailed explanation.
@@ -499,9 +511,13 @@ See [WIDGETS.md](/doc/WIDGETS.md) for more widget example.
 **Note:** you can use **`Theme()`** to style the widget
 
 # Usage
+
 Fireflutter updates in real time no matter what users do. Here are common uses of widgets and builders of each features.
+
 ## Chat
-With FireFlutter you can easily create a customizable chat room. 
+
+With FireFlutter you can easily create a customizable chat room.
+
 <!-- ### Features
 - Group Chat
 - 1:1 Chat
@@ -525,12 +541,15 @@ ChatRoomListView(
   ),
 ),
 ```
-***Go to [Chat.md](/doc/CHAT.md) for more feature builders and detailed explanation***
+
+**_Go to [Chat.md](/doc/CHAT.md) for more feature builders and detailed explanation_**
+
 ## User
 
 See [USER.md](/doc/USER.md) for details.
 
 ## Post
+
 See [POST.md](/doc/POST.md) for details.
 
 ## Comment
@@ -538,7 +557,9 @@ See [POST.md](/doc/POST.md) for details.
 ## Share
 
 # Push notifications
+
 See [PUSH_NOTIFICATION.md](/doc/PUSH_NOTIFICATION.md) for details.
+
 # Error handling
 
 There are some cases that you don't want to wait for the async work to be finished since it takes time to save data into the database. But you must show user if there is an error.
@@ -565,9 +586,10 @@ function isAdmin() {
 }
 ```
 
-Then, set `isAdmin` to true in the user document. 
+Then, set `isAdmin` to true in the user document.
 
 **Features**
+
 - [AdminService](doc/ADMIN.md#admin-service)
 - [Admin Widgets](doc/ADMIN.md#admin-widgets)
 - [Translation](doc/ADMIN.md#translation)
@@ -575,7 +597,6 @@ Then, set `isAdmin` to true in the user document.
 - [Logic Test](doc/ADMIN.md#logic-test)
 
 For more information, see [**ADMIN.md**](/doc/ADMIN.md).
-
 
 # [Developers](doc/DEVELOPER.md#developer)
 
