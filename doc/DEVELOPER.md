@@ -4,23 +4,33 @@ In this chapter, you will learn how to develop fireflutter. You would also conti
 
 ## Installing your app with fireflutter
 
-- Fork the fireflutter
-  - Go to `https://github.com/thruthesky/fireflutter` and fork it.
+- Fork the fireflutter. Go to `https://github.com/thruthesky/fireflutter` and fork it.
 - Then, clone it
-  - `git clone https://github.com/your-account/fireflutter`.
+```sh
+git clone https://github.com/your-account/fireflutter
+```
+
 - Create a branch in fireflutter local repository
-  - `cd fireflutter`
-  - `git checkout -b work`
+```sh
+cd fireflutter
+git checkout -b work
+```
 - For `Pull Request`, update any file, commit, push and request for pulling your code.
-  - `echo "Hi" >> README.md`
-  - `git commit -a -m "updating README.md"`
-  - `git push --set-upstream origin work`
+
+```sh
+echo "Hi" >> README.md
+git commit -a -m "updating README.md"
+git push --set-upstream origin work
+```
+
+
 - Create `apps` folder and create your app inside `apps` folder.
+```dart
+cd apps
+flutter create your_project
+```
 
-  - `cd apps`
-  - `flutter create your_porject`
-
-- Since your project add the fireflutter from your computer folder, you need to add the path of the dependency as `../..`. Add the firefluter dependenicy like below.
+- Since your project add the fireflutter from your computer folder, you need to add the path of the dependency as `../..`. Add the firefluter dependency like below.
 
 ```yaml
 dependencies:
@@ -28,16 +38,13 @@ dependencies:
     path: ../..
 ```
 
-- Then, follow the step of the [fireflutter Installation](#installation) chapter.
+- Then, follow the step of the [fireflutter Installation](/README.md#installation) chapter.
 
 ## Development Tips
 
-Most often, you would click, and click, and click over, and over again, and again to see what you have changed on the UI. Then, you change the UI again. And you would click, and click over again, and again, ...
-Yes, this is the reality.
+While developing, you often click over and over againt to update the UI. To avoid this, you can display the UI part immediately after the hot-restart like below.
 
-To avoid this, you can display the UI part immediately after hot-restart (with keyboard shortcut) like below. This is merely a sample code. You can test any part of the app like below.
-
-Below is an example of openning a chat room
+Below is an example of opening a chat room
 
 ```dart
 ChatService.instance.showChatRoom(
@@ -46,8 +53,8 @@ ChatService.instance.showChatRoom(
 );
 ```
 
-Below is an example of openning a group chat room menu dialog.
 I copied the `Room` properties manually from the Firestore document and I edited some of the values of the properties for test purpose. You may code a line to get the real room model data.
+Below is an example of openning a group chat room menu dialog.
 
 ```dart
 class _HomeScreenState extends State<HomeScreen> {
@@ -88,6 +95,10 @@ class _HomeScreenState extends State<HomeScreen> {
           createdAt: Timestamp.now(),
         ),
       );
+    }
+    )
+  }
+}
 ```
 
 Below is an example of opening a single chat room. I got the room data by calling `print` on a chat room.
@@ -180,4 +191,4 @@ flutter run
 
 ## Coding Guideline
 
-fireflutter uses sigular form in its file name and variable name, class name. For instance, it alwasy `user` over `users` unless there is good reason.
+fireflutter uses `singular form` in its file name and variable name, class name. For instance, it alwasy `user` over `users` unless there is good reason.

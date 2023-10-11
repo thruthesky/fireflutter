@@ -14,18 +14,18 @@
 - [Total no of new message](#total-no-of-new-message)
   - [Chat Room List](#chat-room-list)
   - [Create a chat room](#create-a-chat-room)
-  - [How to display a chat room](#how-to-display-a-chat-room)
+  - [Display a Chat Room](#display-a-chat-room)
   - [Test UI Chat room screen](#test-ui-chat-room-screen)
     - [Chat Room fields](#chat-room-fields)
     - [Chat Message fields](#chat-message-fields)
 - [UI Customization](#ui-customization)
+  - [Chat Customization](#chat-customization)
 - [Chat room list](#chat-room-list-1)
 - [Chat Room Menu](#chat-room-menu)
 - [Chat Room Settings](#chat-room-settings)
-- [Chat Customization](#chat-customization)
   - [Counting no of new messages](#counting-no-of-new-messages)
-  - [Displaying chat rooms that has new message (unread messages)](#displaying-chat-rooms-that-has-new-message-unread-messages)
-  - [1:1 Chat and Multi user chat](#11-chat-and-multi-user-chat)
+- [Displaying chat rooms that has new message (unread messages)](#displaying-chat-rooms-that-has-new-message-unread-messages)
+- [1:1 Chat and Multi user chat](#11-chat-and-multi-user-chat)
 - [Chat Customization](#chat-customization)
 <!-- /code_chunk_output -->
 
@@ -215,7 +215,7 @@ class _ChatRoomListreenState extends State<ChatRoomListSreen> {
 }
 ```
 
-### How to display a chat room
+### Display a Chat Room
 
 - In the chat room, there should be a header, a message list view as a body, and message input box.
 - To display the chat room, you need to have a chat room model.
@@ -315,6 +315,19 @@ Message(
 ## UI Customization
 
 UI can be customized or personalized using the `ChatService.instance.customize` or if you're using a widget from FireFlutter you can use the `Theme()` to style.
+
+### Chat Customization
+
+The fireflutter gives full customization of the chat feature. It has a lot of widgets and texts to customize and they are nested deep inside the widget layers. So, the fireflutter lets developers to register the builder functions to display(customize) the widgets that are being used in deep place of the chat feature.
+
+Registering the build functions do not cause any performance issues since it only registers the build functions at app booting time. It does not build any widgets while registering.
+
+Customize your own Chat Room header like this
+
+```dart
+ChatService.instance.customize.chatRoomAppBarBuilder ({room, user}) => customAppBar(context, room);
+```
+
 ## Chat room list
 
 - To list chat rooms, use the code below.
@@ -403,17 +416,7 @@ ChatRoomSettingsDefaultRoomNameListTile(
   },
 ),
 ```
-## Chat Customization
 
-The fireflutter gives full customization of the chat feature. It has a lot of widgets and texts to customize and they are nested deep inside the widget layers. So, the fireflutter lets developers to register the builder functions to display(customize) the widgets that are being used in deep place of the chat feature.
-
-Registering the build functions do not cause any performance issues since it only registers the build functions at app booting time. It does not build any widgets while registering.
-
-Customize your own Chat Room header like this
-
-```dart
-ChatService.instance.customize.chatRoomAppBarBuilder ({room, user}) => customAppBar(context, room);
-```
 
 ### Counting no of new messages
 
@@ -423,12 +426,12 @@ ChatService.instance.customize.chatRoomAppBarBuilder ({room, user}) => customApp
 - Wehn somebody receives a message in a chat room, make his no of new message to 0.
 - When somebody enters the chat room, make his no of new message to 0.
 
-### Displaying chat rooms that has new message (unread messages)
+## Displaying chat rooms that has new message (unread messages)
 
 - Get whole list of chat room.
 - Filter chat rooms that has 0 of noOfNewmessage of my uid.
 
-### 1:1 Chat and Multi user chat
+## 1:1 Chat and Multi user chat
 
 - 1:1 chat room id must be consisted with `uid-uid` pattern in alphabetically sorted.
 
