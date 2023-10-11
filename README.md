@@ -5,8 +5,6 @@
 If you are looking for a package that help you develop a full featured content management app, then you have found a right one. FireFlutter is a free, open source, complete, rapid development package for creating apps like CMS(content management system), social service, chat, community(forum), shopping mall and much more based on Firebase.
 
 Create an issue if you find a bug or need a help.
-<br>
-<br>
 # Table of Contents {ignore=true}
 
 

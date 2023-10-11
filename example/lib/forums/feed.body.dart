@@ -44,13 +44,25 @@ class _FeedBodyState extends State<FeedBody> {
           Expanded(
             child: PostListView(
               itemBuilder: (context, post) => InkWell(
-                onTap: () => PostService.instance.showPostViewScreen(context: context, post: post),
+                onTap: () {
+                  PostService.instance.showPostViewScreen(context: context, post: post);
+                  // CommentListView(post: post);
+                },
                 child: PostCard(
                   post: post,
                   commentSize: 3,
                   shareButtonBuilder: (post) => IconButton(
                     onPressed: () {
-                      ShareService.instance.showBottomSheet();
+                      // ShareService.instance.showBottomSheet();
+                      // showDialog(
+                      //   context: context,
+                      //   builder: (cnx) => Dialog(
+                      //     child: Padding(
+                      //       padding: const EdgeInsets.all(sizeSm),
+                      //       child: CommentListView(post: post),
+                      //     ),
+                      //   ),
+                      // );
                     },
                     icon: const Icon(Icons.share, size: sizeSm),
                   ),
