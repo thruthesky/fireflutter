@@ -21,6 +21,27 @@ class CustomPostViewScreen extends StatelessWidget {
         child: PostCard(
           post: post,
           customHeaderBuilder: (context, post) => customHeader(context, post),
+          customMainContentBuilder: (context, post) => Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeXs),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      post.title,
+                      style: const TextStyle(
+                        fontSize: sizeSm,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: sizeSm),
+                    Text(post.content),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -40,11 +61,39 @@ class CustomPostViewScreen extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                snapshot.data!.name,
-                style: TextStyle(
-                  color: Theme.of(context).shadowColor,
-                  fontWeight: FontWeight.w600,
+              SizedBox(
+                height: 30,
+                width: 200,
+                child: Row(
+                  children: [
+                    Text(
+                      snapshot.data!.name,
+                      style: TextStyle(
+                        color: Theme.of(context).shadowColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    // BLOCK / UNBLOCK HERE
+                    if (snapshot.data!.uid != myUid)
+                      TextButton(
+                        style: ButtonStyle(
+                          textStyle: MaterialStateTextStyle.resolveWith(
+                            (states) => const TextStyle(fontWeight: FontWeight.bold, fontSize: sizeXs + 2),
+                          ),
+                          minimumSize: const MaterialStatePropertyAll(Size(sizeSm, sizeXs)),
+                        ),
+                        onPressed: () async {
+                          final result = await toggle(pathBlock(snapshot.data!.uid));
+                          toast(
+                              title: result ? 'Blocked' : 'Unblocked',
+                              message: "User has ${result ? 'Blocked' : 'Unblocked'}");
+                        },
+                        child: Database(
+                          path: pathBlock(snapshot.data!.uid),
+                          builder: (value, path) => Text(value == null ? 'Block' : 'Unblock'),
+                        ),
+                      ),
+                  ],
                 ),
               ),
               Text(

@@ -18,11 +18,9 @@ class _UserProfileState extends State<UserProfile> {
   @override
   void initState() {
     super.initState();
-    UserService.instance.get(myUid!);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       FireFlutterService.instance.init(context: router.routerDelegate.navigatorKey.currentContext!);
     });
-    // UserService.instance.customize.
   }
 
   final test = ChatService.instance;
@@ -52,7 +50,7 @@ class _UserProfileState extends State<UserProfile> {
                     buttonBuilder('Followers', () {
                       UserService.instance.showFollowersScreen(
                         context: context,
-                        user: my,
+                        user: user,
                         itemBuilder: (user) => ListTile(
                           leading: UserAvatar(user: user),
                           title: Text(user.displayName),

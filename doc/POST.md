@@ -4,21 +4,16 @@
 <!-- code_chunk_output -->
 
 - [Post](#post)
-  - [Widgets](#widgets)
-  - [PostService](#postservice)
+  - [Overview](#overview)
+  - [Post Service](#post-service)
+    - [Create Post](#create-post)
     - [Post List View](#post-list-view)
     - [Post Dialog](#post-dialog)
-  - [Post Service Usage](#post-service-usage)
-    - [Displaying the create dialog](#displaying-the-create-dialog)
-  - [Post Document Strucutre](#post-document-strucutre)
+    - [Post Card](#post-card)
   - [Post view screen custom design](#post-view-screen-custom-design)
   - [List of viewer on each post](#list-of-viewer-on-each-post)
-- [Database](#database)
-  - [Get/Set/Update/Toggle](#getsetupdatetoggle)
-  - [Database widget](#database-widget)
-  - [DatabaseCount widget](#databasecount-widget)
-- [Settings](#settings)
-- [Report](#report)
+  - [Settings](#settings)
+  - [Report](#report)
 - [Upload](#upload)
   - [Photo upload](#photo-upload)
 - [No of view](#no-of-view)
@@ -32,61 +27,15 @@
 
 # Post 
 
-<!-- ## Features
-
-- Create Posts
-
-## Model
-
-Post class is the model for posts.
-It has:
-
-- id
-- categoryId
-- title
-- content
-- uid
-  - the uid of the creator of the post
-- files
-  - the list of file URLs.
-- createdAt
-- updatedAt
-- likes
-- deleted -->
-
-## Widgets
-
-<!-- .customize does not exist[???],
-
-TODO: Learning it more so i can replace it
-
-  might remove since there is already a section of Post Below
--->
-
-<!-- ## PostService
-
-### How to open a post
-Call the `showPostViewScreen` to show the full screen dialog that displays the post
-
-```dart
-PostService.instance.customize.postViewScreenBuilder = (post) => GRCCustomPostViewScreen(post: post);
-```
-
-### Customizing a Post View
-
-Build your own UI design of the full screen Post View like below.
-
-```dart
-PostService.instance.customize.postViewScreenBuilder = (post) => GRCCustomPostViewScreen(post: post);
-```
-
-The widget is preferrably a full screen widget. It can be a scaffold, sliver, etc. -->
-
-### PostService
+## Overview
+## Post Service
 
 If `enableNotificationOnLike` is set to true, then it will send push notification to the author when there is a like. You would do the work by adding `onLike` callback.
 
 ```dart
+// When it is set to true, you don't have add `onLike` callback to send push notification.
+enableNotificationOnLike: true,
+  
 PostService.instance.init(
   onLike: (Post post, bool isLiked) async {
     if (!isLiked) return;
@@ -98,13 +47,26 @@ PostService.instance.init(
       type: NotificationType.post.name,
     );
   },
-  // When it is set to true, you don't have add `onLike` callback to send push notification.
-  enableNotificationOnLike: true,
 ```
 
-
-
 Or you can do the UI/UX by yourself since it delivers everything you need to show comment edit box.
+
+### Create Post
+
+PostService provies showCreateDialog function that can be used to show a Create Post Form. Below is an example of usage:
+
+<!-- showCreateDialog doesn't exists [??] -->
+
+```dart
+ButtonRow( // custom buttons
+label: 'Create Post',
+onTap: () {
+  // use Post.create() to create Post
+  Post.create(categoryId: categoryId.text, title: title.text, content: content.text).then(
+    (post) => PostService.instance.showPostViewScreen(context: context, post: post) // open the post after create
+  );
+},
+```
 
 ### Post List View
 
@@ -113,7 +75,11 @@ Post List View displays a list for the posts.
 To list all posts, simply follow the code:
 
 ```dart
-PostListView(),
+Scaffold(
+  body: Expanded(
+    child: PostListView(),
+  )
+)
 ```
 
 In the above example, the list will be all posts regardless of their category.
@@ -149,40 +115,44 @@ Post Dialog is a full screen dialog that display the post.
 To use the widget, add this to body, to children etc.:
 
 ```dart
-PostViewScreen(post: post)
+PostListView(
+  itemBuilder: (context, post) => InkWell(
+    onTap: () {
+      PostService.instance.showPostViewScreen(context: context, post: post);
+    },
+    child: PostCard(post:post),
+  )
 ```
-
 Take note that the code above needs the Post to display.
 
-## Post Service Usage
+### Post Card
+Post Card is a placeholder for each post. It has a default widgets for `comment`,`like`,`favorite` and more that is customizable. 
 
-### Displaying the create dialog
-
-PostService provies showCreateDialog function that can be used to show a Create Post Form. Below is an example of usage:
-
-<!-- showCreateDialog doesn't exists [??] -->
+Use it inside the `PostListView` builder 
 
 ```dart
-IconButton(
-    icon: const Icon(Icons.add),
-    onPressed: () {
-        PostService.instance.showCreateDialog(
-        context,
-        category: category!,
-        success: (val) {
-            Navigator.pop(context);
-        },
-    );
-    },
+Expanded(
+  child: PostListView(
+    itemBuilder: (context, post) => InkWell(
+      onTap: () {
+        PostService.instance.showPostViewScreen(context: context, post: post);
+      },
+      child: PostCard( // You can use Theme() to style UI
+        post: post,
+        commentSize: 3,
+        shareButtonBuilder: (post) => IconButton(
+          onPressed: () {
+            ShareService.instance.showBottomSheet();
+          },
+          icon: const Icon(Icons.share, size: sizeSm),
+        ),
+      ),
+    ),
+  ),
 ),
 ```
+
 <!-- From README.md -->
-## Post Document Strucutre
-
-Posts are saved in `/posts/{postId}`.
-
-- `hashtags` is an array of string that has the hash tags for the post.
-
 ## Post view screen custom design
 
 If you want to design the whole screen of post view,
@@ -203,15 +173,6 @@ Post.create(categoryId: categoryId.text, title: title.text, content: content.tex
 
 ```
 
-<!-- Outdated [???]
-PostService.instance.showPostViewScreen =
-    (context, {String? postId, Post? post}) => showGeneralDialog(
-          context: context,
-          pageBuilder: (context, $, $$) =>
-              MomcafePostViewScreen(postId: postId, post: post),
-        );
- -->
-
 If you want to customize of a portion of the existing ui, you may use `PostService.instance.customize.postViewXxxx`. For instance, if you want to add a button on the post view screen, simply do the following.
 
 ```dart
@@ -226,7 +187,7 @@ PostService.instance.customize.postViewButtons = (post) => PostViewButtons(
     );
 ```
 
-You can actullay rebuild the whole buttons by providing new widget instead of the `PostViewButtons`.
+You can actully rebuild the whole buttons by providing new widget instead of the `PostViewButtons`.
 
 ## List of viewer on each post
 
@@ -237,97 +198,6 @@ The list of viewers is saved uner `/posts/{post_id}/seenBy/{uid}`. If the user w
 Note that, this is disabled by default. To turn it on, `init(enableSeenBy: true)` on service initialization.
 
 Note that, saving the uid is done by `Post.fromDocumentSnapshot`.
-
-# Database
-
-## Get/Set/Update/Toggle
-
-We have a handy function in `functions/database.dart` to `get, set, update, toogle` the node data from/to firebase realtime database.
-
-- `get('path')` gets the node data of the path from database.
-- `set('path', data)` sets the data at the node of the path into database.
-- `update('path', { data })` updates the node of the path. The value must be a Map.
-- `toggle('path')` switches on/off the value of the node. If the node of the [path] does not exist, create it and return true. Or if the node exists, then remove it and return false.
-
-Note that, these functions may arise an exception if the security rules are not proeprty set on the paths. You need to set the security rules by yourself. When you meet an error like `[firebase_database/permission-denied] Client doesn't have permission to access the desired data.`, then check the security rules.
-
-Example of `get()`
-
-```dart
-final value = await get('users/15ZXRtt5I2Vr2xo5SJBjAVWaZ0V2');
-print('value; $value');
-print('value; ${User.fromJson(Map<String, dynamic>.from(value))}');
-```
-
-Example of `set()` adn `update()`
-
-```dart
-String path = 'tmp/a/b/c';
-await set(path, 'hello');
-print(await get(path));
-
-await update(path, {'k': 'hello', 'v': 'world'});
-print(await get(path));
-```
-
-## Database widget
-
-`Database` widget rebuilds the widget when the node is changed. Becareful to use the narrowest path of the node or it would download a lot of data.
-
-```dart
-// Displaying a Text value
-Database(
-  path: 'tmp/a/b/c',
-  builder: (value) => Text('value: $value'),
-),
-
-// Displaying a Text widget with dynamic text.
-Database(
-  path: pathBlock(post.uid),
-  builder: (value, path) => Text(value == null ? tr.block : tr.unblock),
-),
-
-// Displaying a toggle IconButton.
-Database(
-  path: pathPostLikedBy(post.id),
-  builder: (v, p) => IconButton(
-    onPressed: () => toggle(p),
-    icon: Icon(v != null ? Icons.thumb_up : Icons.thumb_up_outlined),
-  ),
-),
-```
-
-## DatabaseCount widget
-
-With database count widget, you may display no of views like below.
-
-```dart
-DatabaseCount(
-  path: 'posts/${post.id}/seenBy',
-  builder: (n) => n == 0 ? const SizedBox.shrink() : Text("No of views $n"),
-),
-```
-
-where you would code like below if you don't want use database count widget.
-
-```dart
-FutureBuilder(
-  future: get('posts/${post.id}/seenBy'),
-  builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) return const SizedBox.shrink();
-    if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-
-    if (snapshot.data is! Map) return const SizedBox.shrink();
-
-    int no = (snapshot.data as Map).keys.length;
-    if (no == 0) {
-      return const SizedBox.shrink();
-    }
-
-    return Text("No of views ${(snapshot.data as Map).keys.length}");
-  },
-),
-```
 
 ## Settings
 
@@ -529,7 +399,7 @@ PostCard(
 ),
 ```
 
-We can also customize by parts of the PostCart
+We can also customize by parts of the PostCard
 
 ```dart
 PostCard(
@@ -543,8 +413,8 @@ PostCard(
       padding: const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeXs),
       child: Text('This Content is in the lower of main content, upper of the Actions'),
       ),
-    );
-  },
+    },
+  );
 ),
 ```
 
