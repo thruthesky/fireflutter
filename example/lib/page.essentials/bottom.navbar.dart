@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:new_app/chat.room/chat.room.dart';
 import 'package:new_app/forums/land.page.dart';
 import 'package:new_app/home.screen/main.page.dart';
-import 'package:new_app/inits.dart';
+import 'package:new_app/page.essentials/app.bar.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key, required this.index});
@@ -19,7 +19,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   void initState() {
     super.initState();
-    userInit();
   }
 
   final double iconSize = sizeSm;
@@ -45,7 +44,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
           icon: IconButton(
             onPressed: () {
               context.go(ChatRoom.routeName);
-              // ChatService.instance.showChatRoom(context: context, user: my);
             },
             icon: const FaIcon(
               FontAwesomeIcons.solidMessage,
@@ -66,18 +64,35 @@ class _BottomNavBarState extends State<BottomNavBar> {
           ),
           label: '',
         ),
+        BottomNavigationBarItem(
+          icon: IconButton(
+            onPressed: () {
+              // context.go(MainPage.routeName);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Scaffold(
+                    appBar: appBar('TestUi', hasLeading: true),
+                    body: const TestUi(),
+                  ),
+                ),
+              );
+            },
+            icon: const FaIcon(
+              FontAwesomeIcons.shield,
+              // size: iconSize,
+            ),
+          ),
+          label: '',
+        ),
       ],
       elevation: 5,
-      iconSize: sizeMd - 4,
+      iconSize: iconSize,
+      fixedColor: Theme.of(context).shadowColor,
+      unselectedItemColor: Theme.of(context).hintColor,
     );
   }
 }
-
-// Row(
-//       mainAxisAlignment: MainAxisAlignment.center,
-//       children: [
-//       ],
-//     );
 
 class FloatingButton extends StatelessWidget {
   const FloatingButton({super.key});
