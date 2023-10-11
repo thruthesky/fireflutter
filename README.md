@@ -13,8 +13,12 @@ Create an issue if you find a bug or need a help.
 <!-- code_chunk_output -->
 
 - [FireFlutter](#fireflutter)
+- [Table of Contents {ignore=true}](#table-of-contents-ignoretrue)
 - [Overview](#overview)
 - [Changes](#changes)
+    - [Oct 10 0.3.12 {ignore=true}](#oct-10-0312-ignoretrue)
+    - [Sept 28 0.3.11 {ignore=true}](#sept-28-0311-ignoretrue)
+    - [Sept 10 0.3.10 {ignore=true}](#sept-10-0310-ignoretrue)
   - [Features](#features)
     - [Main Features](#main-features)
 - [Getting started](#getting-started)
@@ -29,9 +33,9 @@ Create an issue if you find a bug or need a help.
     - [Realtime database security rules](#realtime-database-security-rules)
   - [Setup the base code](#setup-the-base-code)
 - [Pub.dev Packages](#pubdev-packages)
-  - [url_launcher (Optional)](#url_launcher-optional)
+  - [url\_launcher (Optional)](#url_launcher-optional)
   - [timeago](#timeago)
-  - [Parsed_ReadMore](#parsed_readmore)
+  - [Parsed\_ReadMore](#parsed_readmore)
 - [Build Sample](#build-sample)
     - [User Profile Page](#user-profile-page)
     - [Chat App](#chat-app)
@@ -47,7 +51,8 @@ Create an issue if you find a bug or need a help.
 - [Push notifications](#push-notifications)
 - [Error handling](#error-handling)
 - [Admin](#admin-1)
-- [Developers](#developersdocdevelopermddeveloper)
+- [Developers](#developers)
+- [Things to improve](#things-to-improve)
 
 <!-- /code_chunk_output -->
 
@@ -531,3 +536,12 @@ For more information, see [**ADMIN.md**](/doc/ADMIN.md).
 # [Developers](doc/DEVELOPER.md#developer)
 
 You can go to [Developer.md](/doc/DEVELOPER.md). This section gives a tips and detailed instruction on how to use the FireFlutter completely.
+
+
+
+# Things to improve
+
+
+- The follower's UIDs of A are saved in `followers` field of the all posts created by A.
+  - If A has many followers like 10,000 followers, the size of the post document becomes very big. Saving posts in RTDB won't solve this issue since you cannot get posts that you're following. RTDB does not support for this search.
+
