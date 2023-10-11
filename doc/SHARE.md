@@ -1,8 +1,23 @@
+# Table of Contents
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=5 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Overview](#overview)
+- [ShareService](#shareservice)
+
+<!-- /code_chunk_output -->
+
+
+
 # Share
+
+## Overview
 
 ## ShareService
 
-ShareService is a helper library that gives some feature utility for sharing. It has `showBotomSheet` method that displays a bottom sheet showing some UI elements for sharing. You may get an idea seeing the look and the code of the method.
+ShareService is a helper library that gives some feature utility for sharing. It has `showBottomSheet` method that displays a bottom sheet showing some UI elements for sharing. You may get an idea seeing the look and the code of the method.
 
 It also has a method `dyamicLink` that returns a short dyanmic link. You may see the source code of the method to get an insight how you would copy and paste in your project.
 
@@ -18,7 +33,6 @@ Share.share(
   subject: post.title,
 );
 ```
-
 Often, the `dynamicLink` method is called deep inside the widget tree. So, we provide a customization for building dynmaic links. You can set the `uriPrefix` and the `appId`. And the fireflutter will use this setting to generator custom build.
 
 ```dart

@@ -1,3 +1,58 @@
+# Table of Contents
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Overview](#overview)
+- [UserService](#userservice)
+- [Like](#like)
+- [Favorite/Bookmark](#favoritebookmark)
+  - [How to display icon](#how-to-display-icon)
+- [Follow and Unfollow](#follow-and-unfollow)
+  - [Display Followers](#display-followers)
+- [No of profile view](#no-of-profile-view)
+- [User profile screen customization](#user-profile-screen-customization)
+- [User public screen customization](#user-public-screen-customization)
+- [Avatar](#avatar)
+- [UserAvatar](#useravatar)
+- [UserProfileAvatar](#userprofileavatar)
+- [User List View](#user-list-view)
+  - [UserListView.builder](#userlistviewbuilder)
+- [When user is not logged in](#when-user-is-not-logged-in)
+
+<!-- /code_chunk_output -->
+
+
+
+
+# Table of Contents {ignore=true}
+
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Overview](#overview)
+- [UserService](#userservice)
+- [Like](#like)
+- [Favorite/Bookmark](#favoritebookmark)
+  - [How to display icon](#how-to-display-icon)
+- [Follow and Unfollow](#follow-and-unfollow)
+  - [Display Followers](#display-followers)
+- [No of profile view](#no-of-profile-view)
+- [User profile screen customization](#user-profile-screen-customization)
+- [User public screen customization](#user-public-screen-customization)
+- [Avatar](#avatar)
+- [UserAvatar](#useravatar)
+- [UserProfileAvatar](#userprofileavatar)
+- [User List View](#user-list-view)
+  - [UserListView.builder](#userlistviewbuilder)
+- [When user is not logged in](#when-user-is-not-logged-in)
+
+<!-- /code_chunk_output -->
+
+
 # User
 
 ## Overview
@@ -11,18 +66,6 @@
 `birthDayOfYear` is the birth day of the year. It is automatically set by the `User.update()`. For instnace, if the user saves his birth day, then the app should use this kind of code; `my.update(birthYear: 1999, birthMonth: 9, birthDay: 9);` and it will automtically update the `birthDayOfYear` value.
 
 ## UserService
-
-<!-- #section removed
-  reason: documentNotExistBuilder has been removed
-
-In this case, the `documentNotExistBuilder` of `UserDoc` will be called.
-
-So, the lifecyle will be the following when the app users `UserDoc`.
-
-- `UserService.instance.nullableUser` will have an instance of `User`
-  - If the user document does not exists, `exists` will be `false` causing `documentNotExistsBuilder` to be called.
-  - If the user document exist, then it will have right data and `builder` will be called. -->
-
 `UserService.instance.nullableUser` is _null_ when
 
 - on app boot
@@ -288,4 +331,282 @@ UserService.instance.customize.publicScreenActions = (context, user) => [
             },
           ),
         ];
+```
+
+## User public screen customization
+
+To customize the user public profile screen, you can override the showPublicProfileScreen function.
+
+```dart
+UserService.instance.customize.showPublicProfileScreen =
+    (BuildContext context, {String? uid, User? user}) => showGeneralDialog<dynamic>(
+          context: context,
+          pageBuilder: ($, _, __) => MomcafePublicProfileScreen(
+            uid: uid,
+            user: user,
+          ),
+        );
+```
+
+You may partly want to customize the public profile screen instead of rewriting the whole code.
+
+You may hide or add buttons like below.
+
+```dart
+
+    // Public profile custom design
+
+    // Add menu(s) on top of public screen
+    UserService.instance.customize.publicScreenActions = (context, user) => [
+          FavoriteButton(
+            otherUid: user.uid,
+            builder: (re) => FaIcon(
+              re
+                  ? FontAwesomeIcons.circleStar
+                  : FontAwesomeIcons.lightCircleStar,
+              color: re ? Colors.yellow : null,
+            ),
+            onChanged: (re) => toast(
+              title: re ? tr.favorite : tr.unfavorite,
+              message: re ? tr.favoriteMessage : tr.unfavoriteMessage,
+            ),
+          ),
+          PopupMenuButton(
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'report',
+                child: Text(tr.report),
+              ),
+              PopupMenuItem(
+                value: 'block',
+                child: Database(
+                  path: pathBlock(user.uid),
+                  builder: (value) =>
+                      Text(value == null ? tr.block : tr.unblock),
+                ),
+              ),
+            ],
+            icon: const FaIcon(FontAwesomeIcons.circleEllipsis),
+            onSelected: (value) {
+              switch (value) {
+                case 'report':
+                  ReportService.instance.showReportDialog(
+                    context: context,
+                    otherUid: user.uid,
+                    onExists: (id, type) => toast(
+                      title: tr.alreadyReportedTitle,
+                      message:
+                          tr.alreadyReportedMessage.replaceAll('#type', type),
+                    ),
+                  );
+                  break;
+                case 'block':
+                  toggle(pathBlock(user.uid));
+                  toast(
+                    title: tr.block,
+                    message: tr.blockMessage,
+                  );
+                  break;
+              }
+            },
+          ),
+        ];
+
+    /// Hide some buttons on bottom.
+    UserService.instance.customize.publicScreenBlockButton =
+        (context, user) => const SizedBox.shrink();
+    UserService.instance.customize.publicScreenReportButton =
+        (context, user) => const SizedBox.shrink();
+```
+
+## Avatar
+
+This is a similiar widget of the `CircleAvatar` in Material UI.
+
+```dart
+Avatar(url: 'https://picsum.photos/200/300'),
+```
+
+## UserAvatar
+
+To display user's profile photo, use `UserAvatar`.
+Not that, `UserAvatar` does not update the user photo in realtime. So, you may need to give a key when you want it to dsiplay new photo url.
+
+```dart
+UserAvatar(
+  user: user,
+  size: 120,
+),
+```
+
+## UserProfileAvatar
+
+To let user update or delete the profile photo, use like below.
+
+```dart
+UserProfileAvatar(
+  user: user,
+  size: 120,
+  upload: true,
+  delete: true,
+),
+```
+
+To customize the look of `UserProfileAvartar`.
+
+```dart
+UserProfileAvatar(
+  user: my,
+  size: 128,
+  radius: 16, // radius
+  upload: true,
+  uploadIcon: const Padding( // upload icon
+    padding: EdgeInsets.all(8.0),
+    child: FaIcon(
+      FontAwesomeIcons.thinPenCircle,
+      size: 32,
+      color: Colors.white,
+    ),
+  ),
+),
+```
+
+## User List View
+
+Use this widget to list users. By default, it will list all users. This widget can also
+be used to search users by filtering a field with a string value.
+
+This widget is a list view that has a `ListTile` in each item. So, it supports the properties of `ListView` and `ListTile` at the same time.
+
+```dart
+UserListView(
+  searchText: 'nameValue',
+  field: 'name',
+),
+```
+
+Example of complete code for displaying the `UserListView` in a dialog with search box
+
+```dart
+onPressed() async {
+  final user = await showGeneralDialog<User>(
+    context: context,
+    pageBuilder: (context, _, __) {
+      TextEditingController search = TextEditingController();
+      return StatefulBuilder(builder: (context, setState) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: const Text('Find friends'),
+          ),
+          body: Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                TextField(
+                  controller: search,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Search',
+                  ),
+                  onSubmitted: (value) => setState(() => search.text = value),
+                ),
+                Expanded(
+                  child: UserListView(
+                    key: ValueKey(search.text),
+                    searchText: search.text,
+                    field: 'name',
+                    avatarBuilder: (user) => const Text('Photo'),
+                    titleBuilder: (user) => Text(user?.uid ?? ''),
+                    subtitleBuilder: (user) => Text(user?.phoneNumber ?? ''),
+                    trailingBuilder: (user) => const Icon(Icons.add),
+                    onTap: (user) => context.pop(user),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      });
+    },
+  );
+}
+```
+
+### UserListView.builder
+
+You may use the `UserListView.builder` if you already have the `List<String>` of uids
+
+```dart
+List<String> friends = ['uid1', 'uid2']
+
+UserListView.builder(uids: friends)
+
+```
+
+In using `UserListView.builder`, must check the user if exists to prevent error like the following code:
+
+```dart
+UserListView.builder(
+  uids: user.followers,
+  itemBuilder: (user) {
+    // The uid of a User will be null if it doesn't exist in the database.
+    // This can happen if the user has been deleted completely in database.
+    // This should never happen.
+    if (!(user?.exists ?? false)) return const SizedBox();
+    return ListTile(
+      contentPadding: const EdgeInsets.only(left: sm, right: 0),
+      leading: UserAvatar(
+        user: user,
+        size: 50,
+        radius: 30,
+      ),
+      ...
+    );
+  },
+),
+
+```
+
+## When user is not logged in
+
+This is one way of how to dsplay widgets safely for not logged in users.
+
+```dart
+class FavoriteButton extends StatelessWidget {
+  const FavoriteButton({
+    super.key,
+    // ...
+  });
+
+
+  @override
+  Widget build(BuildContext context) {
+    // If the user has not logged in yet, display an icon with a warning toast.
+    if (notLoggedIn) {
+      return IconButton(
+        onPressed: () async {
+          toast(
+              title: tr.user.loginFirstTitle,
+              message: tr.user.loginFirstMessage);
+        },
+        icon: builder(false),
+      );
+    }
+    return StreamBuilder(
+      stream: ....snapshots(),
+      builder: (context, snapshot) {
+        return IconButton(
+          onPressed: () async {
+            final re = await Favorite.toggle(
+                postId: postId, otherUid: otherUid, commentId: commentId);
+            onChanged?.call(re);
+          },
+          icon: builder(snapshot.data?.size == 1),
+        );
+      },
+    );
+  }
+}
+
 ```
