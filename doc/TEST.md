@@ -10,7 +10,9 @@
 
 ## Testing security rules
 
-Run the firebase emulators like the followings. Note that you will need to install and setup emulators if you didn't.
+Run the firebase emulators like the followings. 
+
+***Note:*** You need to install and setup emulators if you don't have any.
 
 ```sh
 cd firebase/firestore
@@ -65,7 +67,7 @@ To run all the test,
 ```sh
 cd firebase/functions
 npm i
-run test
+npm run test
 ```
 
 To run a single test,
@@ -74,6 +76,17 @@ To run a single test,
 npm run mocha **/save-token*
 npm run mocha **/save-token.test.ts
 ```
+
+If you meet an error `../service-account.json not found` you need to generate a new private key from firebase and place it in `/firebase/` rename it as `service-account.json` then try the test again
+
+Steps to follow:
+
+1. Go to Firebase and open `Project Settings > Service Account` 
+2. Click `Generate new private key`. This will generate a new private key and will automatically download.
+3. Go to your `Downloads` and rename the file to `service-account.json`
+4. Cut or Copy the `service-acount.json` and Go to `../fireflutter/firebase`. Paste the file into the folder.
+5. Run `npm run test` 
+
 
 # Logic test
 
@@ -84,7 +97,7 @@ We wrote some test code and saved it in `TestUi` widget. To run the test in `Tes
 
 # TestUi Widget
 
-This has custom maid test code for fireflutter. You may learn more teachniques on using fireflutter by seeing the test code.
+This has custom maid test code for fireflutter. You may learn more techniques on using fireflutter by seeing the test code.
 
 
 To use this test,

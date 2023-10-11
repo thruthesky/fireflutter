@@ -5,8 +5,6 @@
 If you are looking for a package that help you develop a full featured content management app, then you have found a right one. FireFlutter is a free, open source, complete, rapid development package for creating apps like CMS(content management system), social service, chat, community(forum), shopping mall and much more based on Firebase.
 
 Create an issue if you find a bug or need a help.
-<br>
-<br>
 # Table of Contents {ignore=true}
 
 
@@ -40,51 +38,18 @@ Create an issue if you find a bug or need a help.
     - [Forum App](#forum-app)
 - [Widgets and UI functions](#widgets-and-ui-functions)
 - [Usage](#usage)
-  - [Chat](#chat)
   - [User](#user)
+  - [Admin](#admin)
+  - [Chat](#chat)
   - [Post](#post)
   - [Comment](#comment)
   - [Share](#share)
 - [Push notifications](#push-notifications)
 - [Error handling](#error-handling)
-- [Admin](#admin)
+- [Admin](#admin-1)
 - [Developers](#developersdocdevelopermddeveloper)
 
 <!-- /code_chunk_output -->
-
-
-
-
-<!-- * [Overview](#overview)
-* [Changes](#changes)
-* [Features](#features)
-  * [Main Features](#main-features)
-* [Getting Started](#getting-started)
-  * [Installation](#installation)
-* [Firebase Extension](#firebase-extension)
-  * [Resize image](#resize-image)
-* [Install cloud functions](#install-cloud-functions)
-* [Security Rules](#security-rules)
-  * [Firestore](#firestore-security-rules)
-  * [Admin](#security-rule-for-admin)
-  * [Realtime Database](#realtime-database-security-rules)
-* [Setup the base code](#setup-the-base-code)
-* [Packages](#pubdev-packages)
-  * [url_launcher](#url_launcher-optional)
-  * [timeago](#timeago)
-  * [Parsed_ReadMore](#parsed_readmore)
-* [Build Sample](#build-sample)
-  * [User Profile](#how-to-build-a-user-profile-page)
-  * [Chat](#how-to-build-a-chat-app)
-  * [Forum](#how-to-build-a-forum-app)
-* [Usage](#usage)
-  * [Users](#user)
-  * [Post](#post)
-  * [Comment](#comment)
-  * [Chat](#chat)
-  * [Share](#share)
-* [Push Notification](#push-notifications)
-* [Error Handling](#error-handling) -->
 
 # Overview
 
@@ -110,11 +75,6 @@ The model has also basic CRUD functionalities.
 * Change. Refactoring file/folder names.
 
 Go to [CHANGELOG.md](/CHANGELOG.md) for more.
-<!-- paraphrased for readability, feel free to edit -->
-
-<!-- I made it for reusing the most common code blocks when I am building apps. It provides the code for user management, forum(caetgory, post, comment) management, chat management, push notification management along with `like`, `favorite`, `following` features.
-
-I use `json_serializable` for the modeling providing each model can have extra fields. For instance, there are some pre-defined fields for the user document and you may add your own fields on the document. The model has also basic CRUD functionalities. -->
 
 ## Features
 
@@ -147,16 +107,8 @@ Follow the instruction below to install FireFlutter into your app
 
 If you have your own firebase project, then you can use that. If you don't have one, create one first. Visit [Firebase Website](https://firebase.google.com).
 
-<!-- ## Install the easy extension
-
-We built a firebase extension for the easy management on firebase. FireFlutter is using this extension. Install the [latest version of easy-extension](https://github.com/thruthesky/easy-extension).
-![easy_extension](/doc/img/easy_extension.png)
-
-Choose Easy Extension version and it will redirect you to Firebase. Choose the project you want Easy Extension to be installed. -->
 
 # Firebase Extension
-
-<!-- Aside from `easy-extension`, you will need to install the following extensions -->
 
 ### Resize image
 
@@ -203,10 +155,12 @@ if you see warnings like `functions: Since this is your first time using 2nd gen
 
 Security rules for firestore are under `/firebase/firestore/firestore.rules`.
 
-<!-- TODO: Firestore rule complete update -->
-
 Copy [the security rules of fireflutter](https://raw.githubusercontent.com/thruthesky/fireflutter/main/firebase/firestore/firestore.rules) and paste it in your firebase project. You may need to copy only the parts of the necessary security rules.
 
+To deploy firestore rules, follow this
+```sh
+ firebase deploy --only <name>.rules
+```
 <!--
 TODO:
 deploy rules on firebase using cli
@@ -226,7 +180,6 @@ function isAdmin() {
 
 After setting the admin, you can now customize your security rules to restrict some write access from other user. You can add sub-admin/s from client app without editing the security rules everytime.
 
-<!-- Once the admin is set, you can customize your security rules to restrict some documents to write access from other users. By doing this way, you can add sub-admin(s) from client app (without editing the security rules on every time when you add subadmin) -->
 
 For instance, you may write security rules like below and add the uids of sub-admin users. then, add a security rule function to check if the user is sub-admin.
 
@@ -238,10 +191,6 @@ For instance, you may write security rules like below and add the uids of sub-ad
     ...
   }
 ```
-
-<!-- ### Admin settings
-
-See the [Security rules for admin](#security-rule-for-admin) chapter to set admin in the security rules. After this, you can set the `isAdmin` field to true on the admin's user document. -->
 
 ### Realtime database security rules
 
@@ -370,13 +319,9 @@ FireFlutter has many features and each feature has a singleton service class. Yo
 
 FireFlutter needs **Global Key** since it uses `snackbars`, `dialog`, `bottom sheet`. Use the **`FireFlutterService.instance.init(context : ...)`**
 
-**Note:**
-You don't have to initialize when you are only doing unit test.
+**Note:** You don't have to initialize when you are only doing unit test.
 
-<!-- Since, fireflutter uses `snackbars`, `dialog`, `bottom sheet`, it needs global key (or global build context). Put the global key into the `FireFlutterService.instance.init(context: ...)`. If you are not going to use the global key, you may not need to initialzie it like when you are only doing unit test. -->
-
-**Note:**
-If you meet an error like `No MaterialLocalizations found. Xxxx widgets require MaterialLocalizations to be provided by a Localizations widget ancestor.`, then you may think a widget is not under MaterialApp or no localization provided. In this case, the context from global key will be used. For more details, See <https://docs.flutter.dev/release/breaking-changes/text-field-material-localizations>.
+**Note:** If you meet an error like `No MaterialLocalizations found. Xxxx widgets require MaterialLocalizations to be provided by a Localizations widget ancestor.`, then you may think a widget is not under MaterialApp or no localization provided. In this case, the context from global key will be used. For more details, See <https://docs.flutter.dev/release/breaking-changes/text-field-material-localizations>.
 
 For instance, if you are using [go_route package](https://pub.dev/packages/go_router), you can pass the global build context like below.
 
@@ -500,6 +445,14 @@ See [WIDGETS.md](/doc/WIDGETS.md) for more widget example.
 
 # Usage
 Fireflutter updates in real time no matter what users do. Here are common uses of widgets and builders of each features.
+
+## User
+
+See [USER.md](/doc/USER.md) for details.
+
+## Admin
+
+See [ADMIN.md](/doc/ADMIN.md) for details.
 ## Chat
 With FireFlutter you can easily create a customizable chat room. 
 <!-- ### Features
@@ -526,9 +479,7 @@ ChatRoomListView(
 ),
 ```
 ***Go to [Chat.md](/doc/CHAT.md) for more feature builders and detailed explanation***
-## User
 
-See [USER.md](/doc/USER.md) for details.
 
 ## Post
 See [POST.md](/doc/POST.md) for details.
