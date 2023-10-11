@@ -29,66 +29,58 @@ class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    List<String> followers = my.followers.toList();
+    List<String> following = my.followings.toList();
     return UserDocReady(
-      builder: (user) => StreamBuilder(
-        stream: UserService.instance.documentChanges,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
-          }
-          List<String> followers = my.followers.toList();
-          List<String> following = my.followings.toList();
-          return Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              children: [
-                userInfo(snapshot, context),
-                const SizedBox(height: sizeLg),
-                Text('Viewers: ${following.length}'),
-                ProfileViewers(size: size),
-                const SizedBox(height: sizeLg),
-                Text('Followers: ${followers.length}'),
-                ProfileFollowers(size: size, followers: followers),
-                const Spacer(),
-                SizedBox(
-                  height: size.height / 6 - 10,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        buttonBuilder('Followers', () {
-                          UserService.instance.showFollowersScreen(
-                            context: context,
-                            user: my,
-                            itemBuilder: (user) => ListTile(
-                              leading: UserAvatar(user: user),
-                              title: Text(user.displayName),
-                            ),
-                          );
-                        }),
-                        buttonBuilder('Show Profile', () {
-                          UserService.instance.showPublicProfileScreen(context: context, user: my);
-                        }),
-                        buttonBuilder(
-                          'Show Admin Dashboard',
-                          () => AdminService.instance.showDashboard(context: context),
+      builder: (user) => Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: [
+            userInfo(user, context),
+            const SizedBox(height: sizeLg),
+            Text('Viewers: ${following.length}'),
+            ProfileViewers(size: size),
+            const SizedBox(height: sizeLg),
+            Text('Followers: ${followers.length}'),
+            ProfileFollowers(size: size, followers: followers),
+            const Spacer(),
+            SizedBox(
+              height: size.height / 6 - 10,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    buttonBuilder('Followers', () {
+                      UserService.instance.showFollowersScreen(
+                        context: context,
+                        user: my,
+                        itemBuilder: (user) => ListTile(
+                          leading: UserAvatar(user: user),
+                          title: Text(user.displayName),
                         ),
-                        buttonBuilder(
-                          'Show Admin User List View',
-                          () => showDialog(
-                            context: context,
-                            builder: (cnx) => const Dialog(
-                              child: AdminUserListView(),
-                            ),
-                          ),
-                        ),
-                      ],
+                      );
+                    }),
+                    buttonBuilder('Show Profile', () {
+                      UserService.instance.showPublicProfileScreen(context: context, user: my);
+                    }),
+                    buttonBuilder(
+                      'Show Admin Dashboard',
+                      () => AdminService.instance.showDashboard(context: context),
                     ),
-                  ),
-                )
-              ],
-            ),
-          );
-        },
+                    buttonBuilder(
+                      'Show Admin User List View',
+                      () => showDialog(
+                        context: context,
+                        builder: (cnx) => const Dialog(
+                          child: AdminUserListView(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

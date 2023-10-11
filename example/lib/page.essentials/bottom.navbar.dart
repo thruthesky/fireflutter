@@ -89,7 +89,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       elevation: 5,
       iconSize: iconSize,
       fixedColor: Theme.of(context).shadowColor,
-      unselectedItemColor: Theme.of(context).hintColor,
+      unselectedItemColor: Theme.of(context).hintColor.withAlpha(100),
     );
   }
 }
