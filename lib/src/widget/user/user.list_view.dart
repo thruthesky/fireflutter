@@ -60,8 +60,7 @@ class UserListView extends StatelessWidget {
   ///   snapshot.fetchMore();
   /// }
   /// ```
-  final Widget Function(FirestoreQueryBuilderSnapshot<Object?> snapshot)?
-      customViewBuilder;
+  final Widget Function(FirestoreQueryBuilderSnapshot<Object?> snapshot)? customViewBuilder;
 
   final Axis scrollDirection;
 
@@ -97,6 +96,7 @@ class UserListView extends StatelessWidget {
           );
         }
         if (snapshot.hasError) {
+          debugPrint('Error: ${snapshot.error}');
           return Text('Something went wrong! ${snapshot.error}');
         }
         snapshot.docs.removeWhere((doc) => exemptedUsers.contains(doc.id));
@@ -117,13 +117,10 @@ class UserListView extends StatelessWidget {
             if (itemBuilder != null) return itemBuilder!.call(user, index);
             return ListTile(
               contentPadding: contentPadding,
-              title:
-                  titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
-              subtitle: subtitleBuilder?.call(user) ??
-                  Text(user.createdAt.toString()),
+              title: titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
+              subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
               leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
-              trailing: trailingBuilder?.call(user) ??
-                  const Icon(Icons.chevron_right),
+              trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
               onTap: () async {
                 onTap?.call(user);
               },
@@ -160,8 +157,7 @@ class UserListView extends StatelessWidget {
                   title: Text(user.name),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
-                    UserService.instance
-                        .showPublicProfileScreen(context: context, user: user);
+                    UserService.instance.showPublicProfileScreen(context: context, user: user);
                   },
                 );
           },
