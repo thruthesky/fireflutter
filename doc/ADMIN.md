@@ -1,37 +1,47 @@
 # Table of Contents {ignore=true}
 
 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
 <!-- code_chunk_output -->
-[toc]
-  - [Overview](#overview)
-  - [Admin Service](#admin-service)
-  - [Admin Widgets](#admin-widgets)
-    - [Opening admin dashbard](#opening-admin-dashbard)
-    - [AdminUserListView](#adminuserlistview)
-    - [Updating auth custom claims](#updating-auth-custom-claims)
-    - [Disable user](#disable-user)
-- [Translation](#translation)
-- [Unit Testing](#unit-testing)
-  - [Testing on Local Emulators and Firebase](#testing-on-local-emulators-and-firebase)
-  - [Testing security rules](#testing-security-rules)
-  - [Testing on real Firebase](#testing-on-real-firebase)
-  - [Testing on Cloud Functions](#testing-on-cloud-functions)
-- [Logic test](#logic-test)
-  - [TestUi Widget](#testui-widget)
+<!-- [toc] -->
+- [Overview](#overview)
+- [Admin Service](#admin-service)
+- [Admin Widgets](#admin-widgets)
+  - [Opening admin dashboard](#opening-admin-dashboard)
+  - [AdminUserListView](#adminuserlistview)
+  - [Updating auth custom claims](#updating-auth-custom-claims)
+  - [Disable user](#disable-user)
 
 <!-- /code_chunk_output -->
 
-# Admin {ignore = true}
+# Admin 
 
 ## Overview
+
+FireFlutter has an Admin Builders and Widgets so you don't have to create your own and deploy them at once. This helps for User Management and more.
+
 ## Admin Service
 
-<!-- TODO: learn admin service -->
+You can access some features using the `AdminService.instance`. Here are few example of how to use `AdminService`
+
+```dart
+final service = AdminService.instance;
+
+/// Display the Chat Room details
+/// [Room] room is required
+service.showChatRoomDetails(context, room: room); // returns Widget
+
+/// Display a screen where you can see all post and open it
+/// onTap is optional
+service.showChoosePostScreen(context, onTap: (post){ // returns a Scaffold widget
+  // your code here
+});
+```
 
 ## Admin Widgets
+Here are the Admin widgets that you can use on your app.
 
-### Opening admin dashbard
+### Opening admin dashboard
 
 To open admin dashboard, call `AdminService.instance.showDashboard()`.
 
@@ -48,7 +58,20 @@ Navigator.of(context).push(
 ```
 
 ### AdminUserListView
+To display all users on Admin's side you can use this widget `AdminUserListView`
 
+```dart
+buttonBuilder(
+  'Show Admin User List View',
+  () => showDialog(
+    context: context,
+    builder: (cnx) => const Dialog(
+      child: AdminUserListView(),
+    ),
+  ),
+),
+```
+<!-- TODO: Ask Sir Song if this is outdated -->
 ### Updating auth custom claims
 
 - Required properties
@@ -108,29 +131,68 @@ By default, it supports English and you can overwrite the texts to whatever lang
 Below show you how to customize texts in your language. If you want to support multi-languages, you may overwrite the texts on device language.
 
 ```dart
-TextService.instance.texts = I18nTexts(
-  reply: "답변",
-  loginFirstTitle: '로그인 필요',
-  loginFirstMessage: '로그인을 해 주세요.',
-  roomMenu: '채팅방 설정',
-  noChatRooms: '채팅방이 없습니다. 채팅방을 만들어 보세요.',
-  chooseUploadFrom: "업로드할 파일(또는 사진)을 선택하세요.",
-  dismiss: "닫기",
-  like: '좋아요',
-  likes: '좋아요(#no)',
-  favorite: "즐겨찾기",
-  unfavorite: "즐겨찾기해제",
-  favoriteMessage: "즐겨찾기를 하였습니다.",
-  unfavoriteMessage: "즐겨찾기를 해제하였습니다.",
-  chat: "채팅",
-  report: "신고",
-  block: "차단",
-  unblock: "차단해제",
-  blockMessage: "차단 하였습니다.",
-  unblockMessage: "차단 해제 하였습니다.",
-  alreadyReportedTitle: "신고",
-  alreadyReportedMessage: "회원님께서는 본 #type을 이미 신고하셨습니다.",
-);
+TextService.instance.texts = I18nTexts({
+    this.loginFirstTitle = 'Login first',
+    this.loginFirstMessage = 'Please login first.',
+    this.noOfChatRooms = 'No chat rooms, yet. Create one!',
+    this.roomMenu = 'Chat Room Menu',
+    this.chatRoomCreateDialog =
+        'New chat room created. You can invite more users. Enjoy chatting!',
+    this.chooseUploadFrom = "Choose upload from...",
+    this.noCategory = "No category, yet. Create one!",
+    this.noPost = "No post yet. Create one!",
+    this.noComment = "No comment, yet. Create one!",
+    this.noReply = "No reply",
+    this.title = "Title",
+    this.content = "Content",
+    this.postCreate = "Post created",
+    this.postUpdate = "Post updated",
+    this.titleRequired = "Title is required",
+    this.contentRequired = "Content is required",
+    this.dismiss = "Dismiss",
+    this.yes = "Yes",
+    this.no = "No",
+    this.ok = "OK",
+    this.edit = 'Edit',
+    this.delete = 'Delete',
+    this.cancel = "Cancel",
+    this.reply = "Reply",
+    this.like = "Like",
+    this.likes = "Likes(#no)",
+    this.favorite = "Favorite",
+    this.unfavorite = "Unfavorite",
+    this.favoriteMessage = "Added to favorite",
+    this.unfavoriteMessage = "Removed from favorite",
+    this.chat = "Chat",
+    this.block = "Block",
+    this.unblock = "Unblock",
+    this.blockMessage = "Blocked",
+    this.unblockMessage = "Unblocked",
+    this.alreadyBlockedTitle = "Already blocked",
+    this.alreadyBlockedMessage = "You have blocked this user already.",
+    this.report = "Report",
+    this.alreadyReportedTitle = "Already reported",
+    this.alreadyReportedMessage = "You have reported this #type already.",
+    this.noChatRooms = "No chat rooms, yet. Create one!",
+    this.follow = "Follow",
+    this.unfollow = "Unfollow",
+    this.followMessage = "You are following this user.",
+    this.unfollowMessage = "You are not following this user anymore.",
+    this.noStateMessage = "No state message, yet. Create one!",
+    this.copyLink = "Copy Link",
+    this.copyLinkMessage = "Link copied to clipboard",
+    this.showMoreComments = "Show #no comments",
+    this.askOpenLink = "Do you want to open this link?",
+    this.readLess = "Read less",
+    this.readMore = "Read more",
+    this.noOfLikes = "Likes #no",
+    this.share = "Share",
+    this.loginFirstToUseCompleteFunctionality =
+        "Login first to use the complete functionality.",
+    this.home = "Home",
+    this.profile = "Profile",
+    this.createChatRoom = "Create chat room",
+  });
 ```
 
 You can use the language like below,
@@ -141,91 +203,5 @@ You can use the language like below,
       ? tr.like
       : tr.likes.replaceAll(
           '#no', noOfLikes.length.toString()),
+ ),
 ```
-
-# Unit Testing
-
-## Testing on Local Emulators and Firebase
-
-- We do unit testing on both of local emulator and on real Firebase. It depends on how the test structure is formed.
-
-## Testing security rules
-
-Run the firebase emulators like the followings. Note that you will need to install and setup emulators if you didn't.
-
-```sh
-cd firebase/firestore
-firebase emulators:start
-```
-
-Then, run all the test like below.
-
-```sh
-npm test
-```
-
-To run group of tests, specify folder name.
-
-```sh
-npm run mocha tests/rule-functions
-npm run mocha tests/posts
-```
-
-To run a single test file, specify file name.
-
-```sh
-npm run mocha tests/posts/create.spec.js
-npm run mocha tests/posts/likes.spec.js
-```
-
-## Testing on real Firebase
-
-- Test files are under `functions/tests`. This test files work with real Firebase. So, you may need provide a Firebase for test use.
-
-  - You can run the emulator on the same folder where `functions/firebase.json` resides, and run the tests on the same folder.
-
-- To run the sample test,
-
-  - `npm run test:index`
-
-- To run all the tests
-
-  - `npm run test`
-
-- To run a test by specifying a test script,
-  - `npm run mocha -- tests/**/*.ts`
-  - `npm run mocha -- tests/update_custom_claims/get_set.spec.ts`
-  - `npm run mocha -- tests/update_custom_claims/update.spec.ts`
-
-## Testing on Cloud Functions
-
-All of the cloud functions are tested directly on remote firebase (not in emulator). So, you need to save the account service in `firebase/service-account.json`. The service account file is listed in .gitignore. So, It won't be added into git.
-
-To run all the test,
-
-```sh
-cd firebase/functions
-npm i
-run test
-```
-
-To run a single test,
-
-```sh
-npm run mocha **/save-token*
-npm run mocha **/save-token.test.ts
-```
-
-# Logic test
-
-To test the functionality of fireflutter, it needs a custom way of testing. For instance, fireflutter listens user login and creates the user's document if it does not exists. And what will happen if the user document is deleted by accident? To prove that there will be no bug on this case, it need to be tested and the test must work based on the real firebase events and monitor if the docuemnt is being recreated. Unit test, widget test and integration test will not work for this.
-
-We wrote some test code and saved it in `TestUi` widget. To run the test in `TestUi`, you will need to initialize firebase. But don't initialize fireflutter nor other services in fireflutter.
-
-
-## TestUi Widget
-
-This has custom maid test code for fireflutter. You may learn more teachniques on using fireflutter by seeing the test code.
-
-
-

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:new_app/home.screen/user.features/viewers.dart';
 import 'package:new_app/page.essentials/simple.builders.dart';
 import 'package:new_app/home.screen/user.features/followers.dart';
+import 'package:new_app/router/router.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -18,11 +19,13 @@ class _UserProfileState extends State<UserProfile> {
   void initState() {
     super.initState();
     UserService.instance.get(myUid!);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      FireFlutterService.instance.init(context: router.routerDelegate.navigatorKey.currentContext!);
+    });
     // UserService.instance.customize.
   }
 
   final test = ChatService.instance;
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -47,20 +50,41 @@ class _UserProfileState extends State<UserProfile> {
                 Text('Followers: ${followers.length}'),
                 ProfileFollowers(size: size, followers: followers),
                 const Spacer(),
-                buttonBuilder('Followers', () {
-                  UserService.instance.showFollowersScreen(
-                    context: context,
-                    user: my,
-                    itemBuilder: (user) => ListTile(
-                      leading: UserAvatar(user: user),
-                      title: Text(user.displayName),
+                SizedBox(
+                  height: size.height / 6 - 10,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        buttonBuilder('Followers', () {
+                          UserService.instance.showFollowersScreen(
+                            context: context,
+                            user: my,
+                            itemBuilder: (user) => ListTile(
+                              leading: UserAvatar(user: user),
+                              title: Text(user.displayName),
+                            ),
+                          );
+                        }),
+                        buttonBuilder('Show Profile', () {
+                          UserService.instance.showPublicProfileScreen(context: context, user: my);
+                        }),
+                        buttonBuilder(
+                          'Show Admin Dashboard',
+                          () => AdminService.instance.showDashboard(context: context),
+                        ),
+                        buttonBuilder(
+                          'Show Admin User List View',
+                          () => showDialog(
+                            context: context,
+                            builder: (cnx) => const Dialog(
+                              child: AdminUserListView(),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  );
-                }),
-                buttonBuilder('Show Profile', () {
-                  UserService.instance.showPublicProfileScreen(context: context, user: my);
-                }),
-                // const TotalNoOfNewMessage(),
+                  ),
+                )
               ],
             ),
           );
