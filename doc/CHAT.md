@@ -1,35 +1,32 @@
 # Table of Contents {ignore=true}
 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=8 orderedList=false} -->
 
 <!-- code_chunk_output -->
-
-- [Chat](#chat)
-  - [Overview](#overview)
-  - [ChatService](#chatservice)
-      - [Customize header](#customize-header)
-      - [Open chat room](#open-chat-room)
-    - [How to display chat room menu](#how-to-display-chat-room-menu)
-    - [How to show chat room dialog.](#how-to-show-chat-room-dialog)
-    - [Customizing the chat header](#customizing-the-chat-header)
-  - [Welcome message](#welcome-message)
-  - [No of new message](#no-of-new-message)
-  - [Total no of new message](#total-no-of-new-message)
-    - [Chat Room List](#chat-room-list)
-    - [Create a chat room](#create-a-chat-room)
-    - [How to display a chat room](#how-to-display-a-chat-room)
-    - [How to test & UI work Chat room screen](#how-to-test--ui-work-chat-room-screen)
-      - [Chat Room fields](#chat-room-fields)
-      - [Chat Message fields](#chat-message-fields)
-    - [Counting no of new messages](#counting-no-of-new-messages)
-    - [Displaying chat rooms that has new message (unread messages)](#displaying-chat-rooms-that-has-new-message-unread-messages)
-    - [1:1 Chat and Multi user chat](#11-chat-and-multi-user-chat)
-  - [UI Customization](#ui-customization)
-    - [Chat room list](#chat-room-list-1)
-  - [Chat Room Menu](#chat-room-menu)
-  - [Chat Room Settings](#chat-room-settings)
-  - [Chat Customization](#chat-customization)
-
+<!-- [toc] -->
+- [Overview](#overview)
+- [ChatService](#chatservice)
+  - [Open chat room](#open-chat-room)
+  - [Display Chat Room Menu](#display-chat-room-menu)
+  - [Chat Room Dialog.](#chat-room-dialog)
+- [Welcome Message](#welcome-message)
+- [No of new message](#no-of-new-message)
+- [Total no of new message](#total-no-of-new-message)
+  - [Chat Room List](#chat-room-list)
+  - [Create a chat room](#create-a-chat-room)
+  - [How to display a chat room](#how-to-display-a-chat-room)
+  - [Test UI Chat room screen](#test-ui-chat-room-screen)
+    - [Chat Room fields](#chat-room-fields)
+    - [Chat Message fields](#chat-message-fields)
+- [UI Customization](#ui-customization)
+- [Chat room list](#chat-room-list-1)
+- [Chat Room Menu](#chat-room-menu)
+- [Chat Room Settings](#chat-room-settings)
+- [Chat Customization](#chat-customization)
+  - [Counting no of new messages](#counting-no-of-new-messages)
+  - [Displaying chat rooms that has new message (unread messages)](#displaying-chat-rooms-that-has-new-message-unread-messages)
+  - [1:1 Chat and Multi user chat](#11-chat-and-multi-user-chat)
+- [Chat Customization](#chat-customization)
 <!-- /code_chunk_output -->
 
 
@@ -42,11 +39,21 @@ Fireflutter offers a chat feature for your app. You can simply display a Chat ro
 ## ChatService
 You can use `ChatService` to enable chat features of the app or even customize the widget builder.
 
-#### Customize header
+Here is a few example:
+
 ```dart
-ChatService.instance.customize.chatRoomAppBarBuilder ({room, user}) => customAppBar(context, room);
+final service = ChatService.instance;
+
+/// get other's uid in 1:1 Chat Room; Parameter is optional
+service.getSingleChatRoomId(otherUserId); // returns [String]
+
+/// Get or Create a 1:1 Chat Room
+service.getOrCreateSingleChatRoom(uid); // returns Future<Room>
+
+/// Sends a message in room 
+service.sendMessage(room: room, text: message); // returns Future<void>
 ```
-#### Open chat room
+### Open chat room
 Use the `showChatRoom` method anywhere with user model. 
 
   **1:1 Chat Rom** 
@@ -58,9 +65,9 @@ ChatService.instance.showChatroom(context:context, room:room);
 ChatService.instance.showChatRoom(context: context, user: user);
 ```
 
-***Note:*** `showChatRoom()` has params of `showChatRoom(context: required BuildContext, user: User?, room: Room?)` nulling either the user or room will differ in results. If your using `ChatRoomListView()` better specify what type of chats you will display so prevent errors and bugs.
+***Note:*** `showChatRoom()` has params of `showChatRoom(context: required BuildContext, user: User?, room: Room?)` _nulling_ either the ***user or room*** will differ in results. If your using `ChatRoomListView()` better specify what type of chats you will display to prevent errors and bugs.
 
-### How to display chat room menu
+### Display Chat Room Menu
 
 To open default chat room menu see the code below and paste them into your project.
 
@@ -77,7 +84,7 @@ IconButton(
 <!-- By default, it has a full screen dialog with default buttons. Since all apps have difference features and design, you will need to customize it or rebuild it. But see the code inside and copy and paste them into your project. -->
 <!-- body: ChatRoomMenuUserInviteDialog(room: room), -->
 
-### How to show chat room dialog.
+### Chat Room Dialog.
 You can use dialog builders so you can open pages immediately.
 ```dart
 showGeneralDialog(
@@ -93,16 +100,7 @@ showGeneralDialog(
 
 ***Note:*** If your app throws an error `No Material Widget found...`, wrap your widgets inside of the `Scaffold()` or `SafeArea()`
 
-### Customizing the chat header
-
-You can build your own chat header like below.
-
-```dart
-ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoomAppBar(room: room);
-```
-
-
-## Welcome message
+## Welcome Message
 
 To send a welcome chat message to a user who just registered, use `UserService.instance.sendWelcomeMessage`. See details on the comments of the source.
 
@@ -214,17 +212,8 @@ class _ChatRoomListreenState extends State<ChatRoomListSreen> {
       ),
       ),
   }
+}
 ```
-
-<!-- - You need to create only one screen to use the easychat.
-
-```dart
-Scafolld(
-  appBar: AppBar(
-    title:
-  )
-)
-``` -->
 
 ### How to display a chat room
 
@@ -234,12 +223,8 @@ Scafolld(
   - Then, you will get it on the app by accessing the database or you may compose it using `ChatRoomModel.fromMap()`.
   - Then, pass the chat room model into the chat room (or you can compose a chat room manually with the chat room model.)
 
-<!-- ### Additional information
-
-- Please create issues. -->
-
-### How to test & UI work Chat room screen
-
+### Test UI Chat room screen
+Follow this to test your Chat Room Screen UI. Modify this depends on your needs.
 ```dart
 
     Timer.run(() {
@@ -327,6 +312,109 @@ Message(
 - `previewImageUrl` Image preview of the sent media
 - `isUserChanged` use to check if the message is from the current user or from other user. You can use this to create a chat bubble from different users.
 
+## UI Customization
+
+UI can be customized or personalized using the `ChatService.instance.customize` or if you're using a widget from FireFlutter you can use the `Theme()` to style.
+## Chat room list
+
+- To list chat rooms, use the code below.
+
+```dart
+ChatRoomListView(
+  controller: controller,
+  itemBuilder: (context, room) {
+    return ListTile(
+        leading: const Icon(Icons.chat),
+        title: ChatRoomListTileName(
+          room: room,
+          style: const TextStyle(color: Colors.blue),
+        ),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () {
+          controller.showChatRoom(context: context, room: room);
+        });
+  },
+)
+```
+## Chat Room Menu
+
+The chat room menu can be accessed by the Chat Room Menu Button. This will open the Chat Room Menu Screen.
+
+```dart
+ChatRoomMenuButton(
+  room: chatRoomModel,
+  onUpdateRoomSetting: (updatedRoom) {
+    debugPrint("If a setting was updated. Setting: ${updatedRoom.toString()}");
+  },
+),
+```
+
+The Chat Room Menu consists the following:
+
+- `Invite User` This button opens a List View of users that can be invited to the group chat. To use Invite User Button for List View, follow the code:
+
+```dart
+InviteUserButton(
+  room: chatRoomModel,
+  onInvite: (invitedUserUid) {
+    debugPrint("You have just invited a user with a uid of $invitedUserUid");
+  },
+),
+```
+See [Chat Room Settings](#chat-room-settings) for more details
+
+- `Members` This is a List View of the members of the group chat. The user can be marked as [Master], [Moderator] and/or [Blocked]. Tapping the user will open a Dialog that may show options for Setting as Moderator, or Blocking on the group.
+
+## Chat Room Settings
+
+- `Open Chat Room` This setting determines if the group chat is open or private. Open means anybody can join and invite. Private means only the master or moderators can invite. See the code below to use the Default List Tile.
+
+```dart
+ChatRoomSettingsOpenListTile(
+  room: chatRoomModel,
+  onToggleOpen: (updatedRoom) {
+    debugPrint('Updated Room Open Setting. Setting: ${updatedRoom.open}');
+  },
+),
+```
+
+To programatically update the setting, follow the code below. It will return the room with updated setting.
+
+- `Maximum Number of User` This number sets the limitation for the number of users in the chat room. If the current number of users is equal or more than this setting, it will not proceed on adding the user.
+
+```dart
+ChatRoomSettingsMaximumUserListTile(
+  room: chatRoomModel,
+  onUpdateMaximumNoOfUsers: (updatedRoom) {
+    debugPrint('Updated Maximum number of Users Setting. Setting: ${updatedRoom.maximumNoOfUsers}');
+  },
+),
+```
+
+To programatically update the setting, follow the code below. It will return the room with updated setting.
+
+- `Default Chat Room Name` The master can use this setting to set the default name of the Group Chat.
+
+```dart
+ChatRoomSettingsDefaultRoomNameListTile(
+  room: _roomState!,
+  onUpdateChatRoomName: (updatedRoom) {
+    widget.onUpdateRoomSetting?.call(updatedRoom);
+  },
+),
+```
+## Chat Customization
+
+The fireflutter gives full customization of the chat feature. It has a lot of widgets and texts to customize and they are nested deep inside the widget layers. So, the fireflutter lets developers to register the builder functions to display(customize) the widgets that are being used in deep place of the chat feature.
+
+Registering the build functions do not cause any performance issues since it only registers the build functions at app booting time. It does not build any widgets while registering.
+
+Customize your own Chat Room header like this
+
+```dart
+ChatService.instance.customize.chatRoomAppBarBuilder ({room, user}) => customAppBar(context, room);
+```
+
 ### Counting no of new messages
 
 - We don't seprate the storage of the no of new message from the chat room document. We have thought about it and finalized that that is not worth. It does not have any money and the logic isn't any simple.
@@ -372,139 +460,3 @@ Message(
 - group chat room must have `{group: true, open: [boolean]}`. This is for searching purpose in Firestore.
   - For 1:1 chat room, it must be `{group: false, open: false}`. This is for searching purpose in Firestore.
 
-## UI Customization
-
-UI can be customized
-<!-- TODO: Display an example of ui customization using chatservice -->
-### Chat room list
-
-- To list chat rooms, use the code below.
-
-```dart
-ChatRoomListView(
-  controller: controller,
-  itemBuilder: (context, room) {
-    return ListTile(
-        leading: const Icon(Icons.chat),
-        title: ChatRoomListTileName(
-          room: room,
-          style: const TextStyle(color: Colors.blue),
-        ),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: () {
-          controller.showChatRoom(context: context, room: room);
-        });
-  },
-)
-```
-
-## Chat Room Menu
-
-The chat room menu can be accessed by the Chat Room Menu Button. This will open the Chat Room Menu Screen.
-
-```dart
-ChatRoomMenuButton(
-  room: chatRoomModel,
-  onUpdateRoomSetting: (updatedRoom) {
-    debugPrint("If a setting was updated. Setting: ${updatedRoom.toString()}");
-  },
-),
-```
-
-The Chat Room Menu consists the following:
-
-- `Invite User` This button opens a List View of users that can be invited to the group chat. To use Invite User Button for List View, follow the code:
-
-```dart
-InviteUserButton(
-  room: chatRoomModel,
-  onInvite: (invitedUserUid) {
-    debugPrint("You have just invited a user with a uid of $invitedUserUid");
-  },
-),
-```
-
-<!-- To programatically, invite a user, follow these codes:
-
-```dart
-updatedRoom = await EasyChat.instance.inviteUser(room: chatRoomModel, userUid: user.uid);
-``` -->
-
-See [Chat Room Settings](#chat-room-settings) for more details
-
-- `Members` This is a List View of the members of the group chat. The user can be marked as [Master], [Moderator] and/or [Blocked]. Tapping the user will open a Dialog that may show options for Setting as Moderator, or Blocking on the group.
-
-## Chat Room Settings
-
-- `Open Chat Room` This setting determines if the group chat is open or private. Open means anybody can join and invite. Private means only the master or moderators can invite. See the code below to use the Default List Tile.
-
-```dart
-ChatRoomSettingsOpenListTile(
-  room: chatRoomModel,
-  onToggleOpen: (updatedRoom) {
-    debugPrint('Updated Room Open Setting. Setting: ${updatedRoom.open}');
-  },
-),
-```
-
-To programatically update the setting, follow the code below. It will return the room with updated setting.
-
-<!-- ```dart
-updatedRoom = await EasyChat.instance.updateRoomSetting(
-  room: chatRoomModel,
-  setting: 'open',
-  value: updatedBoolValue,
-);
-``` -->
-
-- `Maximum Number of User` This number sets the limitation for the number of users in the chat room. If the current number of users is equal or more than this setting, it will not proceed on adding the user.
-
-```dart
-ChatRoomSettingsMaximumUserListTile(
-  room: chatRoomModel,
-  onUpdateMaximumNoOfUsers: (updatedRoom) {
-    debugPrint('Updated Maximum number of Users Setting. Setting: ${updatedRoom.maximumNoOfUsers}');
-  },
-),
-```
-
-To programatically update the setting, follow the code below. It will return the room with updated setting.
-
-<!-- ```dart
-updatedRoom = await EasyChat.instance.updateRoomSetting(
-  room: chatRoomModel,
-  setting: 'maximumNoOfUsers',
-  value: updatedIntValue
-);
-``` -->
-
-- `Default Chat Room Name` The master can use this setting to set the default name of the Group Chat.
-
-```dart
-ChatRoomSettingsDefaultRoomNameListTile(
-  room: _roomState!,
-  onUpdateChatRoomName: (updatedRoom) {
-    widget.onUpdateRoomSetting?.call(updatedRoom);
-  },
-),
-```
-
-<!-- To programatically update the default chat room name, follow the code below. It will return the room with updated setting.
-
-```dart
-updatedRoom = await EasyChat.instance.updateRoomSetting(
-  room: chatRoomModel,
-  setting: 'name',
-  value: updatedName
-);
-``` -->
-
-## Chat Customization
-
-The fireflutter gives full customization of the chat feature. It has a lot of widgets and texts to customize and they are nested deep inside the widget layers. So, the fireflutter lets developers to register the builder functions to display(customize) the widgets that are being used in deep place of the chat feature.
-
-Registering the build functions do not cause any performance issues since it only registers the build functions at app booting time. It does not build any widgets while registering.
-
-```dart
-ChatService.instance.customize.chatRoomAppBarBuilder = (room) => MomCafeChatRoomAppBar(room: room);
-```

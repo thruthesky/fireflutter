@@ -326,7 +326,11 @@ class UserService {
 
   /// Sign out from Firebase Auth
   Future<void> signOut() async {
-    await onSignout?.call(my);
+    if (auth.FirebaseAuth.instance.currentUser == null) return;
+    dog('UserService.instance.signOut() - User signing out: ${auth.FirebaseAuth.instance.currentUser!.uid}');
+    if (UserService.instance.nullableUser != null) {
+      await onSignout?.call(my);
+    }
     await auth.FirebaseAuth.instance.signOut();
   }
 

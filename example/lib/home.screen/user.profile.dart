@@ -21,6 +21,8 @@ class _UserProfileState extends State<UserProfile> {
     // UserService.instance.customize.
   }
 
+  final test = ChatService.instance;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -58,7 +60,7 @@ class _UserProfileState extends State<UserProfile> {
                 buttonBuilder('Show Profile', () {
                   UserService.instance.showPublicProfileScreen(context: context, user: my);
                 }),
-                const TotalNoOfNewMessage(),
+                // const TotalNoOfNewMessage(),
               ],
             ),
           );
