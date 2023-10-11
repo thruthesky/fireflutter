@@ -25,13 +25,6 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
   String? currentLoadedImageUrl;
   String previousUrl = '';
 
-  @override
-  void initState() {
-    super.initState();
-    if (isMyProfile) return;
-    // Add view here
-  }
-
   get textStyle => TextStyle(
         color: Theme.of(context).colorScheme.onSecondary,
       );
