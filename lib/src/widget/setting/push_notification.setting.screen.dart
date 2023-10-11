@@ -14,7 +14,7 @@ class _PushPushNotificationSettingScreenState extends State<PushNotificationSett
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          key: const Key('PushNotificationSettingBack'),
+          key: const Key('PushNotificationSettingBackButton'),
           icon: const Icon(Icons.arrow_back_outlined),
           onPressed: () => Navigator.of(context).pop(),
         ),

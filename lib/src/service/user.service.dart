@@ -478,7 +478,7 @@ class UserService {
         return Scaffold(
           appBar: AppBar(
             leading: IconButton(
-              key: const Key('ProfileBlockBack'),
+              key: const Key('ProfileBlockBackButton'),
               icon: const Icon(Icons.arrow_back_outlined),
               onPressed: () => Navigator.of(context).pop(),
             ),
