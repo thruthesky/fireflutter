@@ -45,22 +45,20 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
         children: [
           if (widget.comment.deleted) ...[
             Flexible(
-              child: Text(
-                  widget.comment.deletedReason ??
-                      'The comment was deleted by the user.',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium!),
+              child: Text(widget.comment.deletedReason ?? 'The comment was deleted by the user.',
+                  textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium!),
             ),
           ] else ...[
-            UserAvatar(
-              uid: widget.comment.uid,
-              radius: 10,
-              size: 24,
-              onTap: () => UserService.instance.showPublicProfileScreen(
-                context: context,
-                uid: widget.comment.uid,
-              ),
-            ),
+            // TODO ongoing checking if this cause movement in scroll
+            // UserAvatar(
+            //   uid: widget.comment.uid,
+            //   radius: 10,
+            //   size: 24,
+            //   onTap: () => UserService.instance.showPublicProfileScreen(
+            //     context: context,
+            //     uid: widget.comment.uid,
+            //   ),
+            // ),
             SizedBox(width: widget.runSpacing),
             Expanded(
               child: Column(
@@ -69,22 +67,21 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Flexible(
-                        child: UserDoc(
-                          uid: widget.comment.uid,
-                          builder: (user) => Text(
-                            user.name,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                        ),
-                      ),
+                      // TODO ongoing checking if this cause movement in scroll
+                      // Flexible(
+                      //   child: UserDoc(
+                      //     uid: widget.comment.uid,
+                      //     builder: (user) => Text(
+                      //       user.name,
+                      //       overflow: TextOverflow.ellipsis,
+                      //       style: Theme.of(context).textTheme.labelMedium,
+                      //     ),
+                      //   ),
+                      // ),
                       SizedBox(width: widget.runSpacing),
                       DateTimeText(
                         dateTime: widget.comment.createdAt,
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                            fontSize: 11),
+                        style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11),
                       ),
                     ],
                   ),
@@ -100,8 +97,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                             .entries
                             .map(
                               (e) => GestureDetector(
-                                onTap: () =>
-                                    StorageService.instance.showUploads(
+                                onTap: () => StorageService.instance.showUploads(
                                   context,
                                   widget.comment.urls,
                                   index: e.key,
@@ -137,35 +133,33 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                   Row(
                     children: [
                       // no of likes
-                      DatabaseCount(
-                        path: pathCommentLikedBy(widget.comment.id, all: true),
-                        builder: (n) => n == 0
-                            ? const SizedBox.shrink()
-                            : TextButton(
-                                style: TextButton.styleFrom(
-                                  padding:
-                                      const EdgeInsets.only(left: 0, right: 8),
-                                  minimumSize: Size.zero,
-                                  visualDensity: VisualDensity.compact,
-                                ),
-                                onPressed: () async =>
-                                    UserService.instance.showLikedByListScreen(
-                                  context: context,
-                                  uids: await getKeys(pathCommentLikedBy(
-                                      widget.comment.id,
-                                      all: true)),
-                                ),
-                                child: Text(
-                                  n == 0
-                                      ? tr.like
-                                      : tr.noOfLikes.replaceAll(
-                                          '#no',
-                                          n.toString(),
-                                        ),
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                              ),
-                      ),
+
+                      // TODO ongoing checking if this cause movement in scroll
+                      // DatabaseCount(
+                      //   path: pathCommentLikedBy(widget.comment.id, all: true),
+                      //   builder: (n) => n == 0
+                      //       ? const SizedBox.shrink()
+                      //       : TextButton(
+                      //           style: TextButton.styleFrom(
+                      //             padding: const EdgeInsets.only(left: 0, right: 8),
+                      //             minimumSize: Size.zero,
+                      //             visualDensity: VisualDensity.compact,
+                      //           ),
+                      //           onPressed: () async => UserService.instance.showLikedByListScreen(
+                      //             context: context,
+                      //             uids: await getKeys(pathCommentLikedBy(widget.comment.id, all: true)),
+                      //           ),
+                      //           child: Text(
+                      //             n == 0
+                      //                 ? tr.like
+                      //                 : tr.noOfLikes.replaceAll(
+                      //                     '#no',
+                      //                     n.toString(),
+                      //                   ),
+                      //             style: Theme.of(context).textTheme.bodySmall,
+                      //           ),
+                      //         ),
+                      // ),
                       // reply
                       TextButton(
                         style: TextButton.styleFrom(
@@ -244,15 +238,16 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                 ],
               ),
             ),
-            Database(
-              path: pathCommentLikedBy(widget.comment.id),
-              builder: (value, path) {
-                iLiked = value == null;
-                return likeButton();
-              },
-              onWaiting:
-                  iLiked == null ? const SizedBox.shrink() : likeButton(),
-            )
+            // TODO ongoing checking if this cause movement in scroll
+            // Database(
+            //   path: pathCommentLikedBy(widget.comment.id),
+            //   builder: (value, path) {
+            //     iLiked = value == null;
+            //     return likeButton();
+            //   },
+            //   onWaiting:
+            //       iLiked == null ? const SizedBox.shrink() : likeButton(),
+            // )
           ]
         ],
       ),
