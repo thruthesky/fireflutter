@@ -11,6 +11,8 @@ import 'package:rxdart/rxdart.dart';
 
 /// [my] is an alias of [UserService.instance.user].
 ///
+///
+///
 /// [my] is updated with the latest user document but it is a bad idea to use it
 /// on the app booting process. But don't use it immediately after login,
 /// because it takes time to load the document from the firestore. In the case

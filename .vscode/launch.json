@@ -131,13 +131,13 @@
       "deviceId": "R9ATA00LMJM"
     },
     {
-      "name": "GRC - Simulator (J)",
+      "name": "GRC - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
       "cwd": "apps/grc",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "deviceId": "iPhone 14 Pro Max"
+      "deviceId": "iPhone 15 Pro Max"
     },
     {
       "name": "GRC - iPhone15ProMax",
