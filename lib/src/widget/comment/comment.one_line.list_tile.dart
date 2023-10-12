@@ -223,7 +223,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                                     title: 'Delete Comment',
                                     message: 'Are you sure on deleting this comment?');
                                 if (re == true) {
-                                  await widget.comment.delete(reason: 'The comment was deleted by the user.');
+                                  await widget.comment.delete();
                                   toast(title: 'Comment deleted', message: 'Comment deleted successfully.');
                                 }
                               }

@@ -165,6 +165,7 @@ class Post {
     List<String>? urls,
     String? youtubeId,
     List<String>? hashtags,
+    bool? deleted,
     Map<String, dynamic> data = const {},
   }) async {
     final Map<String, dynamic> postUpdateData = {
@@ -173,6 +174,7 @@ class Post {
       if (urls != null) 'urls': urls,
       if (youtubeId != null) 'youtubeId': youtubeId,
       if (hashtags != null) 'hashtags': hashtags,
+      if (deleted != null) 'deleted': deleted,
       'updatedAt': FieldValue.serverTimestamp(),
       ...data,
     };
@@ -203,16 +205,16 @@ class Post {
   ///
   /// This method will delete the post, update the no of posts of the user and the category.
   /// It will also delete all the feeds of the post.
-  Future<void> delete({String? reason, List<String>? fromUids}) async {
+  Future<void> delete({String? deletedReason}) async {
     await update(
       title: '',
       content: '',
       urls: [],
       youtubeId: '',
       hashtags: [],
+      deleted: true,
       data: {
-        'deleted': true,
-        'reason': reason ?? 'Deleted',
+        'deletedReason': deletedReason ?? 'Deleted',
       },
     );
   }

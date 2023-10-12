@@ -148,7 +148,7 @@ class Comment {
 
   /// Delete a comment
   /// This is soft delete: Contents are removed. But the document is still there.
-  Future<Comment> delete({String? reason}) async {
+  Future<Comment> delete() async {
     // delete the comment's photos
     // no need to await
     for (var url in urls) {
@@ -158,7 +158,6 @@ class Comment {
       'content': '',
       'urls': [],
       'deleted': true,
-      'deletedReason': reason ?? 'Deleted',
       'deletedAt': FieldValue.serverTimestamp(),
     };
     await commentCol.doc(id).update(deletedCommentData);

@@ -9,43 +9,28 @@ part 'report.g.dart';
 class Report {
   final String id;
 
-  /// The reporter's uid
-  final String? uid;
+  /// Save the list of uid who reported.
+  final List<String> reporters;
 
   /// the id of the post/comment/user that was reported.
   final String? otherUid, postId, commentId;
 
-  /// The user's reason why the post/comment/user was reported.
-  final String reason;
-
-  /// The status if the report was already resolved by the admin.
-  final bool resolved;
-
   /// The type of the report. Can be post, comment, or user.
   final String type;
 
-  /// The admin's notes about the post/comment/user.
-  /// This will only be shown to admins.
-  final String? adminNotes;
-
-  /// The admin's reason why the post/comment/user was deleted/block.
-  /// This will show to the publc.
-  final String? adminReason;
+  final Map<String, String> reportedBy;
 
   @FirebaseDateTimeConverter()
   final DateTime createdAt;
 
   Report({
     required this.id,
-    required this.reason,
-    this.resolved = false,
-    this.uid,
+    this.reporters = const [],
     this.otherUid,
     this.postId,
     this.commentId,
     required this.type,
-    this.adminNotes = '',
-    this.adminReason = '',
+    this.reportedBy = const {},
     required this.createdAt,
   });
 
@@ -65,7 +50,8 @@ class Report {
     String? postId,
     String? commentId,
   }) {
-    String id = '$myUid-${postId ?? commentId ?? otherUid ?? ''}';
+    assert(postId != null || commentId != null || otherUid != null);
+    String id = postId ?? commentId ?? otherUid!;
 
     String type = otherUid != null
         ? 'user'
@@ -104,23 +90,11 @@ class Report {
       postId: postId,
     );
 
-    // check if the user has already reported on this object.
-    try {
-      final re = await get(info.id);
-      if (re != null) {
-        return null;
-      }
-    } on FirebaseException catch (e) {
-      if (e.code != 'permission-denied') {
-        rethrow;
-      }
-    }
-
     final data = <String, dynamic>{
-      'uid': myUid,
       'type': info.type,
-      'reason': reason,
       'createdAt': FieldValue.serverTimestamp(),
+      myUid!: reason,
+      'reporters': FieldValue.arrayUnion([myUid]),
     };
     if (postId != null) {
       data['postId'] = postId;
@@ -132,22 +106,21 @@ class Report {
 
     // print('data; $data');
 
-    await reportDoc(info.id).set(data);
+    await reportDoc(info.id).set(data, SetOptions(merge: true));
     return info.id;
   }
 
   /// Used to delete the post/comment/user
   /// Note: these will be soft delete. Not actually deleted.
-  Future<void> deleteContent(String reason, String adminNotes) async {
+  Future<void> deleteContent() async {
     if (type == 'comment') {
       final comment = await Comment.get(commentId!);
-      await comment.delete(reason: reason);
+      await comment.delete();
       debugPrint("Deleting comment");
       toast(title: 'Deleted', message: 'Comment was deleted successfully');
     } else if (type == 'post') {
       final post = await Post.get(postId!);
-      final otherUser = await User.get(post.uid);
-      post.delete(reason: reason, fromUids: otherUser!.followers);
+      post.delete();
       debugPrint("Deleting post");
       toast(title: 'Deleted', message: 'Post was deleted successfully');
     } else if (type == 'user') {
@@ -158,14 +131,10 @@ class Report {
       toast(title: 'Error', message: 'Unknown Type: $type');
       return;
     }
-    await markAsResove(adminNotes: adminNotes, adminReason: reason);
+    await markAsResove();
   }
 
-  Future<void> markAsResove({String? adminNotes, String? adminReason}) async {
-    await reportDoc(id).update({
-      'resolved': true,
-      'adminNotes': adminNotes ?? '',
-      'adminReason': adminReason ?? '',
-    });
+  Future<void> markAsResove() async {
+    await reportDoc(id).delete();
   }
 }

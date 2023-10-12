@@ -31,70 +31,63 @@ class ReportService {
       postId: postId,
     );
 
-    try {
-      final re = await Report.get(info.id);
-      if (re != null) {
-        onExists?.call(info.id, info.type) ??
-            toast(
-              title: tr.alreadyReportedTitle,
-              message: tr.alreadyReportedMessage.replaceAll("#type", info.type),
-            );
-        return null;
-      }
-    } on FirebaseException catch (e) {
-      if (e.code != 'permission-denied') {
-        rethrow;
-      }
+    final re = await Report.get(info.id);
+
+    // If the user has already reported?
+    if (re?.reporters.contains(myUid) == true) {
+      onExists?.call(info.id, info.type) ??
+          toast(
+            title: tr.alreadyReportedTitle,
+            message: tr.alreadyReportedMessage.replaceAll("#type", info.type),
+          );
+      return null;
     }
 
     if (context.mounted) {
       return await showDialog<bool?>(
-          context: context,
-          builder: (context) {
-            final reason = TextEditingController();
+        context: context,
+        builder: (context) {
+          final reason = TextEditingController();
 
-            return AlertDialog(
-              title: const Text('Report'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Why do you want to report this ${info.type}? (optional)',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
+          return AlertDialog(
+            title: const Text('Report'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Why do you want to report this ${info.type}? (optional)',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
-                  TextField(
-                    controller: reason,
-                    decoration: const InputDecoration(
-                      label: Text('Reason'),
-                    ),
-                    minLines: 2,
-                    maxLines: 5,
-                  )
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('Cancel'),
                 ),
-                TextButton(
-                  onPressed: () async {
-                    await Report.create(
-                        reason: reason.text,
-                        otherUid: otherUid,
-                        postId: postId,
-                        commentId: commentId);
-                    if (context.mounted) {
-                      return Navigator.of(context).pop(true);
-                    }
-                  },
-                  child: const Text('Report'),
-                ),
+                TextField(
+                  controller: reason,
+                  decoration: const InputDecoration(
+                    label: Text('Reason'),
+                  ),
+                  minLines: 2,
+                  maxLines: 5,
+                )
               ],
-            );
-          });
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await Report.create(reason: reason.text, otherUid: otherUid, postId: postId, commentId: commentId);
+                  if (context.mounted) {
+                    return Navigator.of(context).pop(true);
+                  }
+                },
+                child: const Text('Report'),
+              ),
+            ],
+          );
+        },
+      );
     }
     return null;
   }

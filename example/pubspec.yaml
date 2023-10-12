@@ -15,6 +15,7 @@ dependencies:
   fireflutter:
     path: ../
   font_awesome_flutter: ^10.5.0
+  firebase_auth: ^4.10.1
 
 dev_dependencies:
   flutter_test:

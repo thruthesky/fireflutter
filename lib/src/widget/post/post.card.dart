@@ -209,7 +209,7 @@ class _PostCardState extends State<PostCard> {
               final re = await confirm(
                   context: context, title: 'Deleting Post', message: 'Are you sure you want to delete this?');
               if (re == true) {
-                await post.delete(reason: 'This post has been deleted by user.');
+                await post.delete(deletedReason: 'This post has been deleted by user.');
                 toast(title: tr.delete, message: tr.delete);
               }
             } else if (value == "edit") {

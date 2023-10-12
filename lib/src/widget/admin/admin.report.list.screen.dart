@@ -99,36 +99,31 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
         itemBuilder: (context, snapshot) {
           final report = Report.fromDocumentSnapshot(snapshot);
           return ListTile(
-            title: Text(report.reason),
+            title: const Text('report.reason'),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(report.type),
                 Text(report.createdAt.toString()),
-                if (report.resolved) ...[
-                  const Text('Resolved'),
-                  Text('Admin Notes: ${report.adminNotes}')
-                ] else ...[
-                  if (report.type == 'user')
-                    ElevatedButton(
-                      onPressed: () => showDisableDialog(report),
-                      child: const Text('Disable User'),
-                    ),
-                  if (report.type == 'post')
-                    ElevatedButton(
-                      onPressed: () => showDeleteDialog(report),
-                      child: const Text('Delete Post'),
-                    ),
-                  if (report.type == 'comment')
-                    ElevatedButton(
-                      onPressed: () => showDeleteDialog(report),
-                      child: const Text('Delete Comment'),
-                    ),
+                if (report.type == 'user')
                   ElevatedButton(
-                    onPressed: () => showResolveDialog(report),
-                    child: const Text('Mark as Resolved'),
+                    onPressed: () => showDisableDialog(report),
+                    child: const Text('Disable User'),
                   ),
-                ],
+                if (report.type == 'post')
+                  ElevatedButton(
+                    onPressed: () => showDeleteDialog(report),
+                    child: const Text('Delete Post'),
+                  ),
+                if (report.type == 'comment')
+                  ElevatedButton(
+                    onPressed: () => showDeleteDialog(report),
+                    child: const Text('Delete Comment'),
+                  ),
+                ElevatedButton(
+                  onPressed: () => showResolveDialog(report),
+                  child: const Text('Mark as Resolved'),
+                ),
               ],
             ),
             onTap: () {
@@ -155,35 +150,8 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        final reasonController = TextEditingController();
-        reasonController.text = 'This ${report.type} was deleted due to violation.';
-        final adminNotesController = TextEditingController();
         return AlertDialog(
-          title: Text('Deleting ${report.type}'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextField(
-                controller: reasonController,
-                minLines: 2,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  labelText: 'Reason (will show on app)',
-                  hintText: 'This may appear on the ${report.type}.',
-                ),
-              ),
-              TextField(
-                controller: adminNotesController,
-                minLines: 2,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: 'Admin Notes (for admins only)',
-                  hintText: 'Please write notes for documentation...',
-                ),
-              ),
-            ],
-          ),
+          title: Text('Deleting ${report.type}?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -194,7 +162,7 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                report.deleteContent(reasonController.text, adminNotesController.text);
+                report.deleteContent();
               },
               child: const Text('Delete'),
             ),
@@ -211,35 +179,8 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        final reasonController = TextEditingController();
-        reasonController.text = 'This ${report.type} will not be deleted as reviewed by admin.';
-        final adminNotesController = TextEditingController();
         return AlertDialog(
-          title: const Text('Marking as Resolved'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextField(
-                controller: reasonController,
-                minLines: 2,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: 'Reason (will show on app)',
-                  hintText: 'This will be read by the reporter.',
-                ),
-              ),
-              TextField(
-                controller: adminNotesController,
-                minLines: 2,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: 'Admin Notes (for admins only)',
-                  hintText: 'Please write notes for documentation...',
-                ),
-              ),
-            ],
-          ),
+          title: const Text('Marking as resolved without deleting or blocking?'),
           actions: [
             TextButton(
               onPressed: () {
