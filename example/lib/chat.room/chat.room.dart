@@ -52,7 +52,7 @@ class _CustomChatRoomState extends State<CustomChatRoom> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar('Chats'),
-      bottomNavigationBar: const BottomNavBar(index: 1),
+      bottomNavigationBar: const BottomNavBar(selectedIndex: 1),
       body: ChatRoomListView(
         controller: controller,
         singleChatOnly: false,

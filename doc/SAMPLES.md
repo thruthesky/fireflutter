@@ -109,9 +109,9 @@ Create a stateful widget and add an `initState()`
 @override
 void initState() {
   super.initState();
-  // using the code below you can customize the AppBar of chats
-  // Note: this will be created only on the chat Room
-  ChatService.instance.customize.chatRoomAppBarBuilder = ({room, user}) => customAppBa(context, room);
+  // using the code below you can customize the AppBar of Chat Room
+  // Note: this will be created only of the Chat Room
+  ChatService.instance.customize.chatRoomAppBarBuilder = ({room, user}) => customAppBar(context, room);
 }
 ```
 

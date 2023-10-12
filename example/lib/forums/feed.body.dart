@@ -46,13 +46,20 @@ class _FeedBodyState extends State<FeedBody> {
       builder: (context, constraints) => Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // topBarWidgets(context),
           const SizedBox(height: sizeXs),
           Expanded(
             child: PostListView(
               itemBuilder: (context, post) => InkWell(
                 onTap: () {
-                  PostService.instance.showPostViewScreen(context: context, post: post);
+                  showGeneralDialog(
+                    context: context,
+                    pageBuilder: (context, _, __) => Dialog(
+                      child: CommentListView(
+                        post: post,
+                        itemBuilder: (context, comment) => CommentOneLineListTile(comment: comment, post: post),
+                      ),
+                    ),
+                  );
                 },
                 child: PostCard(
                   post: post,

@@ -610,3 +610,6 @@ class FavoriteButton extends StatelessWidget {
 }
 
 ```
+<!-- ADDITIONAL: 
+  - LoginFirst
+ -->
