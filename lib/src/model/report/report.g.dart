@@ -21,10 +21,16 @@ Report _$ReportFromJson(Map<String, dynamic> json) => Report(
           ) ??
           const {},
       createdAt: const FirebaseDateTimeConverter().fromJson(json['createdAt']),
+      title: json['title'] as String? ?? '',
+      photoUrl: json['photoUrl'] as String? ?? '',
+      name: json['name'] as String? ?? '',
     );
 
 Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
       'id': instance.id,
+      'title': instance.title,
+      'photoUrl': instance.photoUrl,
+      'name': instance.name,
       'reporters': instance.reporters,
       'otherUid': instance.otherUid,
       'postId': instance.postId,

@@ -7,7 +7,20 @@ part 'report.g.dart';
 
 @JsonSerializable()
 class Report {
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  Map<String, dynamic> data = {};
   final String id;
+
+  // for post [title] is the post title.
+  // for comment [title] is the comment content.
+  // for user [title] is the user name.
+  final String title;
+
+  /// the photo url of the post/comment/user that was reported.
+  final String photoUrl;
+
+  /// the name of the user whose post/comment/profile that was reported.
+  final String name;
 
   /// Save the list of uid who reported.
   final List<String> reporters;
@@ -32,13 +45,16 @@ class Report {
     required this.type,
     this.reportedBy = const {},
     required this.createdAt,
+    this.title = '',
+    this.photoUrl = '',
+    this.name = '',
   });
 
   factory Report.fromDocumentSnapshot(DocumentSnapshot doc) {
     return Report.fromJson({...doc.data() as Map<String, dynamic>, 'id': doc.id});
   }
 
-  factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);
+  factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json)..data = json;
 
   Map<String, dynamic> toJson() => _$ReportToJson(this);
 

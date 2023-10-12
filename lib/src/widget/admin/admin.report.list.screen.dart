@@ -98,43 +98,64 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
         query: query,
         itemBuilder: (context, snapshot) {
           final report = Report.fromDocumentSnapshot(snapshot);
-          return ListTile(
-            title: const Text('report.reason'),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(report.type),
-                Text(report.createdAt.toString()),
-                if (report.type == 'user')
-                  ElevatedButton(
-                    onPressed: () => showDisableDialog(report),
-                    child: const Text('Disable User'),
-                  ),
-                if (report.type == 'post')
-                  ElevatedButton(
-                    onPressed: () => showDeleteDialog(report),
-                    child: const Text('Delete Post'),
-                  ),
-                if (report.type == 'comment')
-                  ElevatedButton(
-                    onPressed: () => showDeleteDialog(report),
-                    child: const Text('Delete Comment'),
-                  ),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(report.type),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () {
+                      if (report.type == 'user') {
+                        UserService.instance.showPublicProfileScreen(context: context, uid: report.otherUid);
+                      } else if (report.type == 'post') {
+                        PostService.instance.showPostViewScreen(context: context, postId: report.postId);
+                      } else if (report.type == 'comment') {
+                        CommentService.instance.showCommentViewDialog(context: context, commentId: report.commentId);
+                      }
+                    },
+                    icon: const Icon(Icons.open_in_browser),
+                  )
+                ],
+              ),
+              Text(report.title),
+              const Text('Reporters'),
+              ...report.reporters
+                  .map((e) => Column(
+                        children: [
+                          UserDoc(
+                            uid: e,
+                            builder: (u) => Text(
+                              u.name,
+                            ),
+                          ),
+                          report.data[e] != null ? Text(report.data[e]) : const SizedBox.shrink(),
+                        ],
+                      ))
+                  .toList(),
+              const Divider(),
+              Text(report.createdAt.toString()),
+              if (report.type == 'user')
                 ElevatedButton(
-                  onPressed: () => showResolveDialog(report),
-                  child: const Text('Mark as Resolved'),
+                  onPressed: () => showDisableDialog(report),
+                  child: const Text('Disable User'),
                 ),
-              ],
-            ),
-            onTap: () {
-              if (report.type == 'user') {
-                UserService.instance.showPublicProfileScreen(context: context, uid: report.otherUid);
-              } else if (report.type == 'post') {
-                PostService.instance.showPostViewScreen(context: context, postId: report.postId);
-              } else if (report.type == 'comment') {
-                CommentService.instance.showCommentViewDialog(context: context, commentId: report.commentId);
-              }
-            },
+              if (report.type == 'post')
+                ElevatedButton(
+                  onPressed: () => showDeleteDialog(report),
+                  child: const Text('Delete Post'),
+                ),
+              if (report.type == 'comment')
+                ElevatedButton(
+                  onPressed: () => showDeleteDialog(report),
+                  child: const Text('Delete Comment'),
+                ),
+              ElevatedButton(
+                onPressed: () => showResolveDialog(report),
+                child: const Text('Mark as Resolved'),
+              ),
+            ],
           );
         },
       ),
