@@ -101,7 +101,7 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   final _commentBoxKey = GlobalKey();
   // final _boxConstraintsKey = GlobalKey();
-  final BoxConstraints _commentBoxConstraints = const BoxConstraints(minHeight: 0);
+  // BoxConstraints _commentBoxConstraints = const BoxConstraints(minHeight: 500);
 
   @override
   Widget build(BuildContext context) {
@@ -327,14 +327,13 @@ class _PostCardState extends State<PostCard> {
               IconButton(
                   onPressed: () => CommentService.instance.showCommentEditBottomSheet(context, post: post),
                   icon: const Icon(Icons.reply)),
-              // TODO ongoing checking if this cause movement in scroll
-              // Database(
-              //   path: pathPostLikedBy(post.id),
-              //   builder: (v, p) => IconButton(
-              //     onPressed: () => post.like(),
-              //     icon: Icon(v != null ? Icons.favorite : Icons.favorite_outline),
-              //   ),
-              // ),
+              Database(
+                path: pathPostLikedBy(post.id),
+                builder: (v, p) => IconButton(
+                  onPressed: () => post.like(),
+                  icon: Icon(v != null ? Icons.favorite : Icons.favorite_outline),
+                ),
+              ),
               FavoriteButton(
                 postId: post.id,
                 builder: (re) => Icon(re ? Icons.bookmark : Icons.bookmark_border),
@@ -350,31 +349,29 @@ class _PostCardState extends State<PostCard> {
           ),
         ),
         // like button
+        Database(
+          path: pathPostLikedBy(post.id, all: true),
+          builder: (n, str) {
+            final likes = Map<String, bool?>.from(n ?? {});
 
-        // TODO ongoing checking if this cause movement in scroll
-        // Database(
-        //   path: pathPostLikedBy(post.id, all: true),
-        //   builder: (n, str) {
-        //     final likes = Map<String, bool?>.from(n ?? {});
-
-        //     return likes.isEmpty
-        //         ? const SizedBox.shrink()
-        //         : Padding(
-        //             padding: const EdgeInsets.symmetric(
-        //               horizontal: sizeSm,
-        //             ),
-        //             child: GestureDetector(
-        //               child: Text("${likes.length} likes"),
-        //               onTap: () {
-        //                 UserService.instance.showLikedByListScreen(
-        //                   context: context,
-        //                   uids: likes.keys.toList(),
-        //                 );
-        //               },
-        //             ),
-        //           );
-        //   },
-        // ),
+            return likes.isEmpty
+                ? const SizedBox.shrink()
+                : Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: sizeSm,
+                    ),
+                    child: GestureDetector(
+                      child: Text("${likes.length} likes"),
+                      onTap: () {
+                        UserService.instance.showLikedByListScreen(
+                          context: context,
+                          uids: likes.keys.toList(),
+                        );
+                      },
+                    ),
+                  );
+          },
+        ),
       ],
     );
   }
@@ -400,59 +397,38 @@ class _PostCardState extends State<PostCard> {
           ),
         ],
         // list of comment
-        // TODO reviewing if this cause movement in scroll
-        // Although I am sure this causes it.
         StatefulBuilder(
           builder: (context, setCommentState) {
-            return ConstrainedBox(
-              key: _commentBoxKey,
-              constraints: _commentBoxConstraints,
-              child: StreamBuilder(
-                stream: commentCol
-                    .where('postId', isEqualTo: post.id)
-                    .orderBy('sort', descending: false)
-                    .limitToLast(widget.commentSize)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    log(snapshot.error.toString());
-                    return Text('Something went wrong; ${snapshot.error.toString()}');
+            return StreamBuilder(
+              stream: commentCol
+                  .where('postId', isEqualTo: post.id)
+                  .orderBy('sort', descending: false)
+                  .limitToLast(widget.commentSize)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  log(snapshot.error.toString());
+                  return Text('Something went wrong; ${snapshot.error.toString()}');
+                }
+                if (snapshot.hasData) {
+                  List<Widget> children = [];
+                  for (final doc in snapshot.data!.docs) {
+                    final comment = Comment.fromDocumentSnapshot(doc);
+                    children.add(
+                      CommentOneLineListTile(
+                        padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
+                        contentMargin: const EdgeInsets.only(bottom: 8),
+                        contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
+                        post: post,
+                        comment: comment,
+                        onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
+                      ),
+                    );
                   }
-                  if (snapshot.hasData) {
-                    List<Widget> children = [];
-                    for (final doc in snapshot.data!.docs) {
-                      final comment = Comment.fromDocumentSnapshot(doc);
-                      children.add(
-                        CommentOneLineListTile(
-                          padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
-                          contentMargin: const EdgeInsets.only(bottom: 8),
-                          contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
-                          post: post,
-                          comment: comment,
-                          onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
-                        ),
-                      );
-                    }
-                    //
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      debugPrint('commentBoxKey: ${_commentBoxKey.currentContext?.size}');
-                      // debugPrint(
-                      //     'commentBoxKey: ${_commentBoxKey.currentContext?.size} constraints: $_commentBoxConstraints');
-                      // if (_commentBoxConstraints.minHeight < (_commentBoxKey.currentContext?.size?.height ?? 0)) {
-                      // if (!mounted) return;
-                      // setCommentState(() {
-                      //   // _commentBoxConstraints = BoxConstraints(
-                      //   //   minHeight: _commentBoxKey.currentContext?.size?.height ?? 0,
-                      //   // );
-                      // }
-                      // );
-                      // }
-                    });
-                    return Column(children: children);
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
+                  return Column(children: children);
+                }
+                return const SizedBox.shrink();
+              },
             );
           },
         ),
