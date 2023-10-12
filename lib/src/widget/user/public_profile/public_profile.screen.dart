@@ -17,22 +17,13 @@ class PublicProfileScreen extends StatefulWidget {
 }
 
 class _PublicProfileScreenState extends State<PublicProfileScreen> {
-  final BehaviorSubject<double?> progressEvent =
-      BehaviorSubject<double?>.seeded(null);
+  final BehaviorSubject<double?> progressEvent = BehaviorSubject<double?>.seeded(null);
 
   bool get isMyProfile =>
-      loggedIn && (widget.uid == my.uid || widget.user?.uid == my.uid) ||
-      (widget.uid == null && widget.user == null);
+      loggedIn && (widget.uid == my.uid || widget.user?.uid == my.uid) || (widget.uid == null && widget.user == null);
 
   String? currentLoadedImageUrl;
   String previousUrl = '';
-
-  @override
-  void initState() {
-    super.initState();
-    if (isMyProfile) return;
-    // Add view here
-  }
 
   get textStyle => TextStyle(
         color: Theme.of(context).colorScheme.onSecondary,
@@ -51,8 +42,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                     imageUrl: user.stateImageUrl,
                     fit: BoxFit.cover,
                     placeholder: (context, url) => previousUrl.isEmpty
-                        ? const Center(
-                            child: CircularProgressIndicator.adaptive())
+                        ? const Center(child: CircularProgressIndicator.adaptive())
                         : CachedNetworkImage(
                             imageUrl: previousUrl,
                             fit: BoxFit.cover,
@@ -68,23 +58,22 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
             preferredSize: const Size.fromHeight(kToolbarHeight),
             child: doc(
               (user) => AppBar(
+                leading: IconButton(
+                  key: const Key('PublicProfileBackButton'),
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
                 iconTheme: IconThemeData(
                   color: Theme.of(context).colorScheme.onSecondary,
                 ),
                 backgroundColor: Colors.transparent,
-                title: Text(user.name,
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSecondary)),
+                title: Text(user.name, style: TextStyle(color: Theme.of(context).colorScheme.onSecondary)),
                 actions: [
                   if (isMyProfile)
                     IconButton(
                       style: IconButton.styleFrom(
-                        foregroundColor:
-                            Theme.of(context).colorScheme.onPrimary,
-                        backgroundColor: Theme.of(context)
-                            .colorScheme
-                            .secondary
-                            .withAlpha(200),
+                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                        backgroundColor: Theme.of(context).colorScheme.secondary.withAlpha(200),
                       ),
                       onPressed: () async {
                         final url = await StorageService.instance.upload(
@@ -96,16 +85,12 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                         previousUrl = my.stateImageUrl;
                         my.update(stateImageUrl: url);
                         if (previousUrl.isNotEmpty) {
-                          Timer(
-                              const Duration(seconds: 2),
-                              () =>
-                                  StorageService.instance.delete(previousUrl));
+                          Timer(const Duration(seconds: 2), () => StorageService.instance.delete(previousUrl));
                         }
                       },
                       icon: const Icon(Icons.camera_alt),
                     ),
-                  ...?UserService.instance.customize.publicScreenActions
-                      ?.call(context, user),
+                  ...?UserService.instance.customize.publicScreenActions?.call(context, user),
                 ],
               ),
             ),
@@ -116,8 +101,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                 return Center(
                   child: Text(
                     'The user does not exist.',
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onInverseSurface),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface),
                   ),
                 );
               }

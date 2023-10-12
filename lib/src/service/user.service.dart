@@ -415,33 +415,31 @@ class UserService {
     final now = DateTime.now();
 
     /// Dynamic link is especially for users who are not install and not signed users.
-    if (loggedIn && enableNoOfProfileView) {
-      profileViewHistoryDoc(myUid: my.uid, otherUid: otherUid).set(
-        {
-          "uid": otherUid,
-          "seenBy": my.uid,
-          "type": my.type,
-          "lastViewdAt": FieldValue.serverTimestamp(),
-          "year": now.year,
-          "month": now.month,
-          "day": now.day,
-        },
-        SetOptions(merge: true),
-      );
+    if (loggedIn && myUid != otherUid) {
+      if (enableNoOfProfileView) {
+        profileViewHistoryDoc(myUid: my.uid, otherUid: otherUid).set(
+          {
+            "uid": otherUid,
+            "seenBy": my.uid,
+            "type": my.type,
+            "lastViewdAt": FieldValue.serverTimestamp(),
+            "year": now.year,
+            "month": now.month,
+            "day": now.day,
+          },
+          SetOptions(merge: true),
+        );
+      }
+      if (enableMessagingOnPublicProfileVisit) {
+        MessagingService.instance.queue(
+          title: "Your profile was visited.",
+          body: "${my.name} visit your profile",
+          id: myUid,
+          uids: [otherUid],
+          type: NotificationType.user.name,
+        );
+      }
     }
-
-    if (loggedIn && (enableMessagingOnPublicProfileVisit) && myUid != otherUid) {
-      MessagingService.instance.queue(
-        title: "Your profile was visited.",
-        body: "${my.name} visit your profile",
-        id: myUid,
-        uids: [otherUid],
-        type: NotificationType.user.name,
-      );
-    }
-
-    /// log user when he/she visit other user profile
-    ActivityService.instance.onUserViewedProfile(otherUid);
 
     return customize.showPublicProfileScreen?.call(context, uid: uid, user: user) ??
         showGeneralDialog(
@@ -477,6 +475,11 @@ class UserService {
       pageBuilder: (context, _, __) {
         return Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+              key: const Key('ProfileBlockBackButton'),
+              icon: const Icon(Icons.arrow_back_outlined),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
             title: const Text('Blocked List'),
           ),
           body: FutureBuilder(

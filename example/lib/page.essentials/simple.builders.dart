@@ -10,11 +10,11 @@ Widget buttonBuilder(String text, VoidCallback? onPressed) {
   );
 }
 
-Widget userInfo(AsyncSnapshot<User?> snapshot, BuildContext context) {
+Widget userInfo(User user, BuildContext context) {
   return Row(
     children: [
       UserProfileAvatar(
-        user: snapshot.data!,
+        user: user,
         radius: 30,
         upload: true,
         uploadIcon: SizedBox(
@@ -33,9 +33,9 @@ Widget userInfo(AsyncSnapshot<User?> snapshot, BuildContext context) {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _textBuilder(context, snapshot.data!.displayName, true),
-          _textBuilder(context, snapshot.data!.name, false),
-          _textBuilder(context, snapshot.data!.gender, false),
+          _textBuilder(context, user.displayName, true),
+          _textBuilder(context, user.name, false),
+          _textBuilder(context, user.gender, false),
         ],
       ),
       const Spacer(),

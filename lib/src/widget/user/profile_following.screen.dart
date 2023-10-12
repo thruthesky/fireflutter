@@ -10,10 +10,14 @@ class ProfileFollowingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          key: const Key('ProfileFollowingBack'),
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: const Text('Following'),
       ),
-      body: itemBuilder?.call(user!) ??
-          UserListView.builder(uids: user!.followings),
+      body: itemBuilder?.call(user!) ?? UserListView.builder(uids: user!.followings),
     );
   }
 }

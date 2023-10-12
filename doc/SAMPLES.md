@@ -1,33 +1,34 @@
+# Table of Contents
 
 
-<!-- vscode-markdown-toc -->
-* [Build Profile Page](#Profilepage)
-    * [Create Scaffold widgets](#CreateScaffoldwidgets)
-    * [UserBuilder()](#UserBuilder)
-        * [Result](#Result)
-* [Build Chat Page](#how-to-build-a-chat-app)
-    * [initState](#initState)
-    * [ChatRoomListView Widget](#ChatRoomListViewWidget)
-        * [Result](#Result-1)
-* [Build Chat Page](#how-to-build-a-forum-app)
-    * [initState](#initState-1)
-    * [PostListView](#PostListView)
-        * [Result](#Result-1)
+<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
 
-<!-- vscode-markdown-toc-config
-	numbering=false
-	autoSave=true
-	/vscode-markdown-toc-config -->
-<!-- /vscode-markdown-toc -->
+<!-- code_chunk_output -->
+
+- [How to build a user profile page](#how-to-build-a-user-profile-page)
+  - [Create Scaffold widgets](#create-scaffold-widgets)
+  - [UserBuilder()](#userbuilder)
+  - [Result](#result)
+- [How to build a chat app](#how-to-build-a-chat-app)
+  - [initState](#initstate)
+  - [ChatRoomListView Widget](#chatroomlistview-widget)
+  - [Result](#result-1)
+- [How to build a forum app](#how-to-build-a-forum-app)
+  - [initState](#initstate-1)
+  - [PostListView](#postlistview)
+  - [Result](#result-2)
+
+<!-- /code_chunk_output -->
 
 
-#  How to build a user profile page 
+
+## How to build a user profile page 
 
 <!-- will revised this continously while studying fireflutter -->
 
 Here is an example of how to build simple user profile page.
 
-## Create Scaffold widgets
+### Create Scaffold widgets
 
 Build your own design of your app.
 
@@ -52,7 +53,7 @@ Build your own design of your app.
   }
 ```
 
-## UserBuilder()
+### UserBuilder()
 
 [**UserDoc**](/README.md#userdoc) is responsible for taking all the documents of user from the database. With the help of [**UserProfileAvatar**](#userprofileavatar) we can display the user's profile photo to our app.
 
@@ -96,11 +97,11 @@ class UserBuilder extends StatelessWidget {
 
 ![user_profile](/doc/img/user_profile.png)
 
-# How to build a chat app
+## How to build a chat app
 
 Here is an instruction on how to create a simple chat app
 
-## initState
+### initState
 
 Create a stateful widget and add an `initState()`
 
@@ -114,7 +115,7 @@ void initState() {
 }
 ```
 
-## ChatRoomListView Widget
+### ChatRoomListView Widget
 
 Add the FireFlutter controller
 
@@ -147,8 +148,8 @@ Scaffold(
 
 **_Note:_** Admins will automatically send a welcome message when `UserService.instance.sendWelcomeMessage(message: 'Welcome!')` is being used.
 
-# How to build a forum app
-## initState
+## How to build a forum app
+### initState
 
 ```dart
 @override
@@ -182,7 +183,7 @@ void initState() {
 }
 ```
 
-## PostListView
+### PostListView
 
 `PostListView()` builder works like a `ListView()`. It can display widgets with the posts details in a scrollable manner.
 

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,7 @@ import 'package:flutter/material.dart';
 /// and plus some additional properties for post view widget.
 ///
 ///
-class PostCard extends StatelessWidget {
+class PostCard extends StatefulWidget {
   const PostCard({
     super.key,
     this.color,
@@ -94,19 +95,28 @@ class PostCard extends StatelessWidget {
   final int commentSize;
 
   @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard> {
+  final _commentBoxKey = GlobalKey();
+  // final _boxConstraintsKey = GlobalKey();
+  // BoxConstraints _commentBoxConstraints = const BoxConstraints(minHeight: 500);
+
+  @override
   Widget build(BuildContext context) {
-    return customContainer?.call(content(context, post)) ??
+    return widget.customContainer?.call(content(context, widget.post)) ??
         Card(
-          color: color,
-          shadowColor: shadowColor,
-          surfaceTintColor: surfaceTintColor,
-          elevation: elevation,
-          shape: shape,
-          borderOnForeground: borderOnForeground,
-          margin: margin,
-          clipBehavior: clipBehavior,
-          semanticContainer: semanticContainer,
-          child: content(context, post),
+          color: widget.color,
+          shadowColor: widget.shadowColor,
+          surfaceTintColor: widget.surfaceTintColor,
+          elevation: widget.elevation,
+          shape: widget.shape,
+          borderOnForeground: widget.borderOnForeground,
+          margin: widget.margin,
+          clipBehavior: widget.clipBehavior,
+          semanticContainer: widget.semanticContainer,
+          child: content(context, widget.post),
         );
   }
 
@@ -115,15 +125,15 @@ class PostCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // custom Header
-        customHeaderBuilder?.call(context, post) ?? defaultHeader(context, post),
+        widget.customHeaderBuilder?.call(context, post) ?? defaultHeader(context, post),
         // custom main content
-        customMainContentBuilder?.call(context, post) ?? defaultMainContent(context, post),
+        widget.customMainContentBuilder?.call(context, post) ?? defaultMainContent(context, post),
         // Custom Middle content
-        customMiddleContentBuilder?.call(context, post) ?? const SizedBox.shrink(),
+        widget.customMiddleContentBuilder?.call(context, post) ?? const SizedBox.shrink(),
         // custom actions Builder
-        customActionsBuilder?.call(context, post) ?? defaultActions(context, post),
+        widget.customActionsBuilder?.call(context, post) ?? defaultActions(context, post),
         // custom footer builder
-        customFooterBuilder?.call(context, post) ?? defaultFooter(context, post),
+        widget.customFooterBuilder?.call(context, post) ?? defaultFooter(context, post),
       ],
     );
   }
@@ -135,7 +145,7 @@ class PostCard extends StatelessWidget {
           behavior: HitTestBehavior.opaque,
           onTap: () => UserService.instance.showPublicProfileScreen(context: context, uid: post.uid),
           child: Padding(
-            padding: headerPadding,
+            padding: widget.headerPadding,
             child: Row(
               children: [
                 UserAvatar(
@@ -263,7 +273,7 @@ class PostCard extends StatelessWidget {
         if (post.title.isNotEmpty)
           Container(
             padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
-            color: contentBackground,
+            color: widget.contentBackground,
             child: Text(post.title.replaceAll("\n", " "), style: Theme.of(context).textTheme.titleMedium),
           ),
 
@@ -271,7 +281,7 @@ class PostCard extends StatelessWidget {
         if (post.content.isNotEmpty)
           Container(
             padding: const EdgeInsets.all(sizeSm),
-            color: contentBackground,
+            color: widget.contentBackground,
             child: post.content.length < 60
                 ? Text(post.content.replaceAll("\n", " "), style: Theme.of(context).textTheme.bodyMedium)
                 : PostContentShowMore(post: post),
@@ -282,7 +292,7 @@ class PostCard extends StatelessWidget {
 
   List<Widget> listMedia(BuildContext context) {
     return [
-      if (post.youtubeId.isNotEmpty)
+      if (widget.post.youtubeId.isNotEmpty)
         GestureDetector(
           onTap: () {
             showDialog(
@@ -291,18 +301,18 @@ class PostCard extends StatelessWidget {
                 return AlertDialog(
                   insetPadding: const EdgeInsets.all(0),
                   contentPadding: const EdgeInsets.all(0),
-                  content: YouTube(youtubeId: post.youtubeId),
+                  content: YouTube(youtubeId: widget.post.youtubeId),
                 );
               },
             );
           },
           child: YouTubeThumbnail(
-            key: ValueKey(post.youtubeId),
-            youtubeId: post.youtubeId,
+            key: ValueKey(widget.post.youtubeId),
+            youtubeId: widget.post.youtubeId,
             stackFit: StackFit.passthrough,
           ),
         ),
-      ...post.urls.map((e) => CachedNetworkImage(imageUrl: e)).toList()
+      ...widget.post.urls.map((e) => CachedNetworkImage(imageUrl: e)).toList()
     ];
   }
 
@@ -332,7 +342,7 @@ class PostCard extends StatelessWidget {
                   message: re ? tr.favoriteMessage : tr.unfavoriteMessage,
                 ),
               ),
-              shareButtonBuilder?.call(post) ??
+              widget.shareButtonBuilder?.call(post) ??
                   PostService.instance.customize.shareButtonBuilder?.call(post) ??
                   const SizedBox.shrink(),
             ],
@@ -370,55 +380,64 @@ class PostCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // list of comment
-        StreamBuilder(
-          stream: commentCol
-              .where('postId', isEqualTo: post.id)
-              .orderBy('sort', descending: false)
-              .limitToLast(commentSize)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              log(snapshot.error.toString());
-              return Text('Something went wrong; ${snapshot.error.toString()}');
-            }
-            if (snapshot.hasData) {
-              List<Widget> children = [];
-              for (final doc in snapshot.data!.docs) {
-                final comment = Comment.fromDocumentSnapshot(doc);
-
-                children.add(
-                  CommentOneLineListTile(
-                    padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
-                    contentMargin: const EdgeInsets.only(bottom: 8),
-                    contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
-                    post: post,
-                    comment: comment,
-                    onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
-                  ),
-                );
-              }
-              //
-              return Column(children: children);
-            }
-            return const SizedBox.shrink();
-          },
-        ),
-
         // post & comment buttons
-        Padding(
-          padding: bottomButtonPadding,
-          child: Row(
-            children: [
-              // show more
-              if (post.noOfComments > commentSize)
+        if (post.noOfComments > widget.commentSize) ...[
+          Padding(
+            padding: const EdgeInsets.only(left: 4.0),
+            child: Row(
+              children: [
                 TextButton(
                   onPressed: () {
                     CommentService.instance.showCommentListBottomSheet(context, post);
                   },
                   child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
                 ),
-              const Spacer(),
+              ],
+            ),
+          ),
+        ],
+        // list of comment
+        StatefulBuilder(
+          builder: (context, setCommentState) {
+            return StreamBuilder(
+              stream: commentCol
+                  .where('postId', isEqualTo: post.id)
+                  .orderBy('sort', descending: false)
+                  .limitToLast(widget.commentSize)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  log(snapshot.error.toString());
+                  return Text('Something went wrong; ${snapshot.error.toString()}');
+                }
+                if (snapshot.hasData) {
+                  List<Widget> children = [];
+                  for (final doc in snapshot.data!.docs) {
+                    final comment = Comment.fromDocumentSnapshot(doc);
+                    children.add(
+                      CommentOneLineListTile(
+                        padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
+                        contentMargin: const EdgeInsets.only(bottom: 8),
+                        contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
+                        post: post,
+                        comment: comment,
+                        onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
+                      ),
+                    );
+                  }
+                  return Column(children: children);
+                }
+                return const SizedBox.shrink();
+              },
+            );
+          },
+        ),
+        // post & comment buttons
+        Padding(
+          padding: widget.bottomButtonPadding,
+          child: const Row(
+            children: [
+              //
             ],
           ),
         )

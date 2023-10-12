@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:new_app/chat.room/chat.room.dart';
 import 'package:new_app/forums/land.page.dart';
 import 'package:new_app/home.screen/main.page.dart';
-import 'package:new_app/page.essentials/app.bar.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key, required this.index});
@@ -67,16 +66,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         BottomNavigationBarItem(
           icon: IconButton(
             onPressed: () {
-              // context.go(MainPage.routeName);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Scaffold(
-                    appBar: appBar('TestUi', hasLeading: true),
-                    body: const TestUi(),
-                  ),
-                ),
-              );
+              context.go('/TestUi');
             },
             icon: const FaIcon(
               FontAwesomeIcons.shield,
@@ -89,7 +79,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       elevation: 5,
       iconSize: iconSize,
       fixedColor: Theme.of(context).shadowColor,
-      unselectedItemColor: Theme.of(context).hintColor,
+      unselectedItemColor: Theme.of(context).hintColor.withAlpha(100),
     );
   }
 }
