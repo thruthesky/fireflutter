@@ -102,7 +102,7 @@ class _MainPageBodyState extends State<MainPageBody> {
     return Scaffold(
       appBar: appBar('Profile'),
       body: const UserProfile(),
-      bottomNavigationBar: const BottomNavBar(index: 2),
+      bottomNavigationBar: const BottomNavBar(selectedIndex: 2),
     );
   }
 }

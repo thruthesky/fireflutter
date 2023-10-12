@@ -7,8 +7,8 @@ import 'package:new_app/forums/land.page.dart';
 import 'package:new_app/home.screen/main.page.dart';
 
 class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({super.key, required this.index});
-  final int index;
+  const BottomNavBar({super.key, required this.selectedIndex});
+  final int selectedIndex;
 
   @override
   State<BottomNavBar> createState() => _BottomNavBarState();
@@ -21,69 +21,108 @@ class _BottomNavBarState extends State<BottomNavBar> {
   }
 
   final double iconSize = sizeSm;
+  double top = 0;
+  double left = 135;
+  double right = 240;
+
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: widget.index,
-      onTap: (value) => setState(() {}),
-      items: [
-        BottomNavigationBarItem(
-          icon: IconButton(
-            onPressed: () {
-              context.go(PostHome.routeName);
-            },
-            icon: const FaIcon(
-              FontAwesomeIcons.peopleGroup,
-              // size: iconSize,
+    switch (widget.selectedIndex) {
+      case 0:
+        setState(() {
+          left = 24;
+          right = 350;
+        });
+        break;
+      case 2:
+        setState(() {
+          left = 240;
+          right = 135;
+        });
+        break;
+      case 3:
+        setState(() {
+          right = 24;
+          left = 350;
+        });
+        break;
+      case 1:
+      default:
+        break;
+    }
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: SizedBox(
+        height: 60,
+        child: Stack(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _iconButtonBuilder(FontAwesomeIcons.peopleGroup, 0,
+                    onPressed: () => context.push(PostHome.routeName)), // 0
+                _iconButtonBuilder(FontAwesomeIcons.solidMessage, 1,
+                    onPressed: () => context.push(ChatRoom.routeName)), // 1
+                _iconButtonBuilder(FontAwesomeIcons.solidUser, 2,
+                    onPressed: () => context.push(MainPage.routeName)), // 2
+                _iconButtonBuilder(FontAwesomeIcons.shield, 3, onPressed: () => context.push('/TestUi')), // 3
+              ],
             ),
-          ),
-          label: '',
-        ),
-        BottomNavigationBarItem(
-          icon: IconButton(
-            onPressed: () {
-              context.go(ChatRoom.routeName);
-            },
-            icon: const FaIcon(
-              FontAwesomeIcons.solidMessage,
-              // size: iconSize,
+            AnimatedPositioned(
+              duration: const Duration(seconds: 1),
+              top: top,
+              right: right,
+              left: left,
+              child: Container(
+                height: 3,
+                width: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40),
+                  color: Theme.of(context).shadowColor,
+                ),
+              ),
             ),
-          ),
-          label: '',
+          ],
         ),
-        BottomNavigationBarItem(
-          icon: IconButton(
-            onPressed: () {
-              context.go(MainPage.routeName);
-            },
-            icon: const FaIcon(
-              FontAwesomeIcons.solidUser,
-              // size: iconSize,
-            ),
-          ),
-          label: '',
-        ),
-        BottomNavigationBarItem(
-          icon: IconButton(
-            onPressed: () {
-              context.go('/TestUi');
-            },
-            icon: const FaIcon(
-              FontAwesomeIcons.shield,
-              // size: iconSize,
-            ),
-          ),
-          label: '',
-        ),
-      ],
-      elevation: 5,
-      iconSize: iconSize,
-      fixedColor: Theme.of(context).shadowColor,
-      unselectedItemColor: Theme.of(context).hintColor.withAlpha(100),
+      ),
+    );
+  }
+
+  Widget _iconButtonBuilder(IconData icon, int index, {VoidCallback? onPressed}) {
+    return IconButton(
+      onPressed: () {
+        onPressed?.call();
+        setState(() {});
+      },
+      icon: FaIcon(
+        icon,
+        size: sizeSm,
+        color: index == widget.selectedIndex
+            ? Theme.of(context).shadowColor
+            : Theme.of(context).shadowColor.withAlpha(100),
+      ),
     );
   }
 }
 
+// AnimatedPositioned(
+//           duration: const Duration(seconds: 3),
+//           top: 0,
+//           right: 5,
+//           left: 5,
+//           child: Visibility(
+//             visible: index == widget.selectedIndex,
+//             maintainAnimation: true,
+//             maintainState: true,
+//             child: Container(
+//               height: 3,
+//               decoration: BoxDecoration(
+//                 borderRadius: BorderRadius.circular(40),
+//                 color: Theme.of(context).shadowColor,
+//               ),
+//             ),
+//           ),
+//         ),
 class FloatingButton extends StatelessWidget {
   const FloatingButton({super.key});
 
