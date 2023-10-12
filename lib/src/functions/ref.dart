@@ -129,4 +129,4 @@ CollectionReference get reportCol => FirebaseFirestore.instance.collection('repo
 DocumentReference reportDoc(String id) => reportCol.doc(id);
 
 /// Activity logs
-DatabaseReference activityLogRef() => rtdb.ref('activity_logs');
+DatabaseReference get activityLogRef => rtdb.ref('activity_logs/');

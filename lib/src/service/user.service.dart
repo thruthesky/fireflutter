@@ -328,6 +328,8 @@ class UserService {
   Future<void> signOut() async {
     if (auth.FirebaseAuth.instance.currentUser == null) return;
     dog('UserService.instance.signOut() - User signing out: ${auth.FirebaseAuth.instance.currentUser!.uid}');
+
+    ActivityService.instance.onSignout(my);
     if (UserService.instance.nullableUser != null) {
       await onSignout?.call(my);
     }
@@ -437,6 +439,9 @@ class UserService {
         type: NotificationType.user.name,
       );
     }
+
+    /// log user when he/she visit other user profile
+    ActivityService.instance.onUserViewedProfile(otherUid);
 
     return customize.showPublicProfileScreen?.call(context, uid: uid, user: user) ??
         showGeneralDialog(

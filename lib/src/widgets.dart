@@ -117,3 +117,6 @@ export 'widget/admin/admin.file_list.screen.dart';
 // settings
 export 'widget/setting/my_setting.dart';
 export 'widget/setting/push_notification.setting.screen.dart';
+
+// activity
+export 'widget/activity/activity.list_view.screen.dart';

@@ -269,6 +269,10 @@ Enable Realtime Database on firebase and copy the following and paste it into yo
     "tmp": {
       ".read": true,
       ".write": true
+    },
+    "activity_logs": {
+      ".read": true,
+      ".write": true
     }
   }
 }

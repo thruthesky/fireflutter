@@ -238,6 +238,9 @@ class User {
 
     UserService.instance.onCreate?.call(createdUser);
 
+    /// log new user
+    ActivityService.instance.onUserCreate(createdUser);
+
     return createdUser;
   }
 
@@ -339,6 +342,16 @@ class User {
     if (UserService.instance.onUpdate != null) {
       get(uid).then((user) => UserService.instance.onUpdate!(user!));
     }
+
+    // /// log user update but this might not be necessary.
+    // get(uid).then((user) {
+    //   if (UserService.instance.onUpdate != null) {
+    //     UserService.instance.onUpdate!(user!);
+    //   }
+
+    //   /// log user update
+    //   ActivityService.instance.onUserUpdate(user!);
+    // });
   }
 
   /// If the user has completed the profile, set the isComplete field to true.
@@ -361,6 +374,7 @@ class User {
   /// ! This method does not update the feed. It only updates `followings` and `followers` fields.
   /// ! Use [FeedService.instance.follow] to update with feed.
   Future<bool> follow(String otherUid) async {
+    late bool isFollow;
     if (followings.contains(otherUid)) {
       await update(
         followings: FieldValue.arrayRemove([otherUid]),
@@ -369,7 +383,7 @@ class User {
         'followers': FieldValue.arrayRemove([myUid])
       }, SetOptions(merge: true));
 
-      return false;
+      isFollow = false;
     } else {
       await update(
         followings: FieldValue.arrayUnion([otherUid]),
@@ -377,8 +391,11 @@ class User {
       await userDoc(otherUid).set({
         'followers': FieldValue.arrayUnion([myUid])
       }, SetOptions(merge: true));
-      return true;
+      isFollow = true;
     }
+
+    ActivityService.instance.onUserFollow(otherUid, isFollow);
+    return isFollow;
   }
 
   /// Likes
@@ -395,7 +412,7 @@ class User {
 
     UserService.instance.sendNotificationOnLike(this, isLiked);
     UserService.instance.onLike?.call(this, isLiked);
-
+    ActivityService.instance.onUserLike(uid, isLiked);
     return isLiked;
   }
 
