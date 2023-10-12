@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "TEST - iPhone 15 Pro Max",
+      "name": "FireFlutter TEST - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
       "cwd": "apps/fireflutter_test",

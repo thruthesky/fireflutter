@@ -17,8 +17,8 @@ class _EditFormState extends State<EditForm> {
   // final name = TextEditingController();
   // final gender = TextEditingController();
 
-  String displayName = my.displayName;
-  String name = my.name;
+  String displayName = my!.displayName;
+  String name = my!.name;
   String gender = 'Male';
   Gender genVal = Gender.M;
   @override
@@ -48,10 +48,9 @@ class _EditFormState extends State<EditForm> {
             width: 400,
             child: Column(
               children: [
-                _textFieldBuilder('Display Name', my.displayName == '' ? displayName : my.displayName, isDisplay: true),
-                _textFieldBuilder('Name', my.name == '' ? name : my.name, isName: true),
-
-                /// TODO: Design dropdown button
+                _textFieldBuilder('Display Name', my?.displayName == '' ? displayName : my!.displayName,
+                    isDisplay: true),
+                _textFieldBuilder('Name', my?.name == '' ? name : my!.name, isName: true),
                 DropdownButton(
                   value: genVal,
                   items: const [
@@ -84,7 +83,7 @@ class _EditFormState extends State<EditForm> {
                   label1: 'Update',
                   action1: () async {
                     await my
-                        .update(
+                        ?.update(
                       displayName: displayName,
                       name: name,
                       gender: gender,
@@ -97,7 +96,7 @@ class _EditFormState extends State<EditForm> {
                         message: 'Profile has been updated successfully',
                       );
                     });
-                    await my.updateComplete(true);
+                    await my?.updateComplete(true);
                   },
                   label2: 'Cancel',
                   action2: () => context.pop(),
@@ -118,19 +117,19 @@ class _EditFormState extends State<EditForm> {
         onChanged: (value) => setState(() {
           if (isDisplay) {
             displayName = value;
-            name = name == '' ? my.name : name;
-            gender = gender == '' ? my.gender : gender;
+            name = name == '' ? my!.name : name;
+            gender = gender == '' ? my!.gender : gender;
             return;
           }
           if (isName) {
             name = value;
-            displayName = displayName == '' ? my.displayName : displayName;
-            gender = gender == '' ? my.gender : gender;
+            displayName = displayName == '' ? my!.displayName : displayName;
+            gender = gender == '' ? my!.gender : gender;
             return;
           }
           gender = value;
-          name = name == '' ? my.name : name;
-          displayName = displayName == '' ? my.displayName : displayName;
+          name = name == '' ? my!.name : name;
+          displayName = displayName == '' ? my!.displayName : displayName;
         }),
         decoration: InputDecoration(
           border: const OutlineInputBorder(

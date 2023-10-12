@@ -20,7 +20,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
   final BehaviorSubject<double?> progressEvent = BehaviorSubject<double?>.seeded(null);
 
   bool get isMyProfile =>
-      loggedIn && (widget.uid == my.uid || widget.user?.uid == my.uid) || (widget.uid == null && widget.user == null);
+      loggedIn && (widget.uid == myUid || widget.user?.uid == myUid) || (widget.uid == null && widget.user == null);
 
   String? currentLoadedImageUrl;
   String previousUrl = '';
@@ -82,8 +82,8 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                           progress: (p) => progressEvent.add(p),
                           complete: () => progressEvent.add(null),
                         );
-                        previousUrl = my.stateImageUrl;
-                        my.update(stateImageUrl: url);
+                        previousUrl = my!.stateImageUrl;
+                        my?.update(stateImageUrl: url);
                         if (previousUrl.isNotEmpty) {
                           Timer(const Duration(seconds: 2), () => StorageService.instance.delete(previousUrl));
                         }

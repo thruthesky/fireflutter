@@ -36,7 +36,7 @@ class Post {
   final String? reason;
   final int noOfComments;
 
-  bool get iLiked => likes.contains(my.uid);
+  bool get iLiked => likes.contains(myUid);
 
   @Deprecated('Do not use this')
   String get noOfLikes => likes.isNotEmpty ? '(${likes.length})' : '';
@@ -71,8 +71,7 @@ class Post {
     );
   }
 
-  factory Post.fromJson(Map<String, dynamic> json) =>
-      _$PostFromJson(json)..data = json;
+  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json)..data = json;
   Map<String, dynamic> toJson() => _$PostToJson(this);
 
   /// If the post is not found, it throws an Exception.
@@ -91,8 +90,7 @@ class Post {
     if (url == null) {
       throw Exception('Post id is null');
     }
-    final QuerySnapshot documentSnapshot =
-        await postCol.where('urls', arrayContains: url).get();
+    final QuerySnapshot documentSnapshot = await postCol.where('urls', arrayContains: url).get();
 
     if (documentSnapshot.docs.isEmpty) throw Exception('Post not found');
 
@@ -123,7 +121,7 @@ class Post {
       'uid': myUid!,
       if (hashtags != null) 'hashtags': hashtags,
       // I also want to see my own post in the feed, so I add myUid too.
-      if (my.followers.isNotEmpty) 'followers': [...my.followers, myUid],
+      if (my!.followers.isNotEmpty) 'followers': [...my!.followers, myUid],
       ...data,
     };
     final postId = Post.doc().id;

@@ -11,7 +11,6 @@ class NewsFeed extends StatefulWidget {
   State<NewsFeed> createState() => _NewsFeedState();
 }
 
-// TODO: follow has an error (Failed assertion: line 116 pos 14: 'path.isNotEmpty')
 class _NewsFeedState extends State<NewsFeed> {
   @override
   void initState() {
@@ -23,7 +22,7 @@ class _NewsFeedState extends State<NewsFeed> {
           if (!isLiked) return;
           MessagingService.instance.queue(
             title: post.title,
-            body: '${my.name} liked your post',
+            body: '${my?.name} liked your post',
             id: myUid,
             uids: [post.uid],
             type: NotificationType.post.name,

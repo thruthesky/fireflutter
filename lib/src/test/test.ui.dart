@@ -245,8 +245,6 @@ class _TestScreenState extends State<TestUi> {
     final fromJsonUser = User.fromJson({'uid': 'uid', 'id': 'id'});
     test(fromJsonUser.createdAt.millisecondsSinceEpoch >= 0, 'createdAt is: ${fromJsonUser.createdAt}');
 
-    // Create a user
-    final randomUser = await Test.createRandomUser();
     String uid = fa.FirebaseAuth.instance.currentUser!.uid;
     // log('uid; $uid');
     await User.doc(uid).delete();

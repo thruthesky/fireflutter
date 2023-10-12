@@ -79,7 +79,7 @@ class Favorite {
     String? commentId,
   }) async {
     assert(otherUid != null || postId != null || commentId != null, 'otherUid, postId, or commentId must be provided');
-    final String id = "${my.uid}-${otherUid ?? postId ?? commentId}";
+    final String id = "$myUid-${otherUid ?? postId ?? commentId}";
 
     final Favorite? favorite = await Favorite.get(id);
 
@@ -91,7 +91,7 @@ class Favorite {
     bool isFavorite;
     if (favorite == null) {
       final data = {
-        'uid': my.uid,
+        'uid': myUid,
         if (otherUid != null) 'otherUid': otherUid,
         if (postId != null) 'postId': postId,
         if (commentId != null) 'commentId': commentId,

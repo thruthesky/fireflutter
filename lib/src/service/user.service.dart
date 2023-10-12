@@ -11,7 +11,8 @@ import 'package:rxdart/rxdart.dart';
 
 /// [my] is an alias of [UserService.instance.user].
 ///
-///
+/// You cannot use [my] while the app is booting or the user document is loading.
+/// It will be ready when it will be ready. So, use it with care.
 ///
 /// [my] is updated with the latest user document but it is a bad idea to use it
 /// on the app booting process. But don't use it immediately after login,
@@ -28,7 +29,7 @@ import 'package:rxdart/rxdart.dart';
 /// Example
 /// UserService.instance.documentChanges.listen((user) => user == null ? null : print(my));
 /// my.update(state: stateController.text);
-User get my => UserService.instance.user;
+User? get my => UserService.instance.user;
 
 auth.User get currentUser => auth.FirebaseAuth.instance.currentUser!;
 String get providerId => currentUser.providerData.first.providerId;
@@ -41,7 +42,7 @@ bool get notLoggedIn => isAnonymous || auth.FirebaseAuth.instance.currentUser ==
 bool get loggedIn => !notLoggedIn;
 
 /// Use this to check if the user document is ready.
-bool get myDocumentReady => UserService.instance.nullableUser != null;
+bool get myDocumentReady => UserService.instance.user != null;
 
 /// [myUid] is an alias of [FirebaseAuth.instance.currentUser?.uid].
 ///
@@ -108,51 +109,11 @@ class UserService {
   /// Firestore 에서 한번 불러온 유저는 다시 불러오지 않는다. Offline DB 라서, 속도 향상은 크게 느끼지 못하지만, 접속을 아껴 비용을 절약한다.
   final Map<String, User> _userCache = {};
 
-  /// Current user model
-  ///
-  /// [nullableUser] is updated when the user document is updated. And
-  /// [nullableUser] will be null when the user signed out.
-  ///
-  /// If it is not null, then it means the user has signed in.
-  /// if [nullableUser.exists] is false, it menas user has signed in but has no
-  /// user document in the firestore.
-  ///
-  /// [nullableUser] will be updated whenever the user document is updated.
-  ///
-  /// Use [UserDoc] widget if you want to show the user document in real time.
-  ///
-  /// 사용자가 로그인 할 때 마다 해당 사용자의 문서 값으로 바뀌고, 그리고 실시간 자동 업데이트를 한다.
-  /// 실시간 자동 문서를 화면에 보여주어야 한다면 [UserDoc] 위젯을 사용하면 된다.
-  ///
-  /// 예) UserService.instance.nullableUser?.photoUrl
-  ///
-  /// 참고,
-  /// 사용자가 로그인을 했어도, [nullableUser] 는 null 일 수 있다. 이 것은 Auth 에 로그인 한 다음,
-  /// Firestore 의 /users 컬렉션으로 부터 사용자 문서를 가져오는데 시간이 걸릴 수 있는데, 그 사이에
-  /// [nullableUser] 를 참조하면, 로그인 했지만 null 이다. 하지만, 이 시간 사이에 [documentChanges]
-  /// 이벤트가 발생하지 않는다.
-  ///
-  /// 따라서, FirebaseAuth 에 사용자가 로그인을 했는지 안했는지 빠르게 확인을 해야한다면,
-  /// [auth.FirebaseAuth.authStateChanges] 를 통해서 하고, 천천히 확인을 해도 된다면,
-  /// [UserService.instance.documentChanges] 이벤트를 리슨해서, null 이 아니면, 로그인 한 것이며,
-  /// [exists: false] 이 아니면, 사용자 문서가 존재하는 것으로 판단하면 된다.
-  ///
-  User? nullableUser;
-
-  /// [nullableUser] 의 getter 로 물음표(?) 없이 간단하게 쓰기 위한 것으로 null operator 가 강제 적용된
-  /// 것이다. 따라서, [nullableUser] 이 null 인데, [user] 를 사용하면, Null check operator used
-  /// on a null value 에러가 발생한다. 만약, 이 에러를 피하려면, 그냥 nullableUser 을 쓰거나,
-  /// [documentChanges] 를 통해서 값이 있는 경우만 쓰면 된다.
-  ///
-  /// 예를 들면 아래의 코드와 같다. 앱이 최초 로딩 할 때, [my] 또는 [user] 를 쓰면 nullableUser 가 null 이므로
-  /// 에러가 나는데, 아래와 같이 하면 에러가 발생하지 않는다.
-  /// UserService.instance.documentChanges.listen((user) => user == null ? null : print(my));
-  ///
-  User get user => nullableUser!;
+  User? user;
 
   ///
-  bool get isAdmin => nullableUser?.isAdmin ?? false;
-  String? get photoUrl => nullableUser?.photoUrl;
+  bool get isAdmin => user?.isAdmin ?? false;
+  String? get photoUrl => user?.photoUrl;
 
   /// Returns the stream of the user model for the current login user.
   ///
@@ -240,8 +201,8 @@ class UserService {
         .listen((firebaseUser) {
       if (firebaseUser == null) {
         // User logged out. Set nullableUser to null.
-        nullableUser = null;
-        documentChanges.add(nullableUser);
+        user = null;
+        documentChanges.add(user);
         userChanges.add(null);
       } else {
         // User logged in.
@@ -269,9 +230,9 @@ class UserService {
         dog('user.service.dart _listenUserDocument() - User document does not exist. Create the user document for the user $myUid');
         await User.create(uid: myUid!);
       } else {
-        nullableUser = User.fromDocumentSnapshot(documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
+        user = User.fromDocumentSnapshot(documentSnapshot as DocumentSnapshot<Map<String, dynamic>>);
       }
-      documentChanges.add(nullableUser);
+      documentChanges.add(user);
     });
   }
 
@@ -331,9 +292,9 @@ class UserService {
     if (auth.FirebaseAuth.instance.currentUser == null) return;
     dog('UserService.instance.signOut() - User signing out: ${auth.FirebaseAuth.instance.currentUser!.uid}');
 
-    ActivityService.instance.onSignout(my);
-    if (UserService.instance.nullableUser != null) {
-      await onSignout?.call(my);
+    if (my != null) {
+      ActivityService.instance.onSignout(my!);
+      await onSignout?.call(my!);
     }
     await auth.FirebaseAuth.instance.signOut();
   }
@@ -350,7 +311,7 @@ class UserService {
 
     final u = auth.FirebaseAuth.instance.currentUser!;
 
-    nullableUser = await User.create(uid: u.uid);
+    user = await User.create(uid: u.uid);
   }
 
   /// Returns a Stream of User model for the current login user.
@@ -419,11 +380,11 @@ class UserService {
     /// Dynamic link is especially for users who are not install and not signed users.
     if (loggedIn && myUid != otherUid) {
       if (enableNoOfProfileView) {
-        profileViewHistoryDoc(myUid: my.uid, otherUid: otherUid).set(
+        profileViewHistoryDoc(myUid: myUid!, otherUid: otherUid).set(
           {
             "uid": otherUid,
-            "seenBy": my.uid,
-            "type": my.type,
+            "seenBy": my!.uid,
+            "type": my!.type,
             "lastViewdAt": FieldValue.serverTimestamp(),
             "year": now.year,
             "month": now.month,
@@ -435,7 +396,7 @@ class UserService {
       if (enableMessagingOnPublicProfileVisit) {
         MessagingService.instance.queue(
           title: "Your profile was visited.",
-          body: "${my.name} visit your profile",
+          body: "${my!.name} visit your profile",
           id: myUid,
           uids: [otherUid],
           type: NotificationType.user.name,
@@ -519,7 +480,7 @@ class UserService {
 
   /// Delete user document
   Future deleteDocuments() async {
-    await my.delete();
+    await my!.delete();
     await myPrivateDoc.delete();
   }
 
@@ -540,7 +501,7 @@ class UserService {
 
     MessagingService.instance.queue(
       title: 'New likes on your profile.',
-      body: "${my.name} liked your profile",
+      body: "${my!.name} liked your profile",
       id: myUid,
       uids: [user.uid],
       type: NotificationType.user.name,

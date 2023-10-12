@@ -13,7 +13,7 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
-  late String followers = my.followers.toList().length.toString();
+  late String followers = my!.followers.toList().length.toString();
 
   @override
   void initState() {

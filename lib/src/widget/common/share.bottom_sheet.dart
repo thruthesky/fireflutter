@@ -84,7 +84,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
                     );
                   }
                   return UserListView.builder(
-                    uids: my.followings,
+                    uids: my!.followings,
                     itemBuilder: (user) {
                       if (user == null) return const SizedBox();
                       return itemTile(user);
@@ -115,7 +115,6 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
       // subtitle: Text(user.email),
       trailing: const Icon(Icons.check),
       onTap: () {
-        // TODO other share chat function without showing chat room
         // Cannot proceed because dynamic link is not working within the app.
         // https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=40666571
         ChatService.instance.showChatRoom(context: context, user: user, setMessage: widget.text ?? 'Sharing this...');

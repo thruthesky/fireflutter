@@ -21,7 +21,7 @@ class ActivityService {
 
   /// only use this for logging activity
   ///
-  log({
+  _log({
     required String action,
     required String type,
     String? uid,
@@ -31,7 +31,6 @@ class ActivityService {
     String? roomId,
     String? title,
     String? otherUid,
-    String? otherDisplayName,
   }) {
     if (enableActivityLog == false) return;
 
@@ -51,21 +50,21 @@ class ActivityService {
   }
 
   /// user login
-  onUserCreate(User user) => log(
+  onUserCreate(User user) => _log(
         action: 'create',
         type: 'user',
         uid: user.uid,
         name: user.name,
       );
 
-  onUserUpdate(User user) => log(
+  onUserUpdate(User user) => _log(
         action: 'update',
         type: 'user',
         uid: user.uid,
         name: user.name,
       );
 
-  onSignout(User user) => log(
+  onSignout(User user) => _log(
         action: 'signout',
         type: 'user',
         uid: user.uid,
@@ -73,7 +72,7 @@ class ActivityService {
       );
 
   /// user visit other user's profile
-  onUserViewedProfile(String otherUid) => log(
+  onUserViewedProfile(String otherUid) => _log(
         action: 'viewProfile',
         type: 'user',
         otherUid: otherUid,
@@ -81,7 +80,7 @@ class ActivityService {
 
   /// user follow other user
   onUserFollow(String otherUid, bool isFollow) {
-    log(
+    _log(
       action: isFollow == true ? 'follow' : 'unfollow',
       type: 'user',
       otherUid: otherUid,
@@ -90,7 +89,7 @@ class ActivityService {
 
   /// user like other user
   onUserLike(String otherUid, bool isLike) {
-    log(
+    _log(
       action: isLike == true ? 'like' : 'unlike',
       type: 'user',
       otherUid: otherUid,
@@ -100,7 +99,7 @@ class ActivityService {
   /// type can be any of the following:
   /// 'post', 'comment', 'user', 'chat'
   onFavorite({required String id, required bool isFavorite, required String type}) {
-    log(
+    _log(
       action: isFavorite == true ? 'favorite' : 'unfavorite',
       type: type,
       postId: type == ActivityType.post.name ? id : null,
@@ -112,7 +111,7 @@ class ActivityService {
 
   /// type can be any of the following:
   /// 'post', 'comment', 'user', 'chat', 'feed'
-  onShare({required String id, required String type}) => log(
+  onShare({required String id, required String type}) => _log(
         action: 'share',
         type: type,
         postId: type == ActivityType.post.name ? id : null,
@@ -123,7 +122,7 @@ class ActivityService {
 
   /// user open a room or 1:1 chat
   onChatRoomOpened(Room room) {
-    log(
+    _log(
       action: 'openChatRoom',
       type: 'chat',
       roomId: room.roomId,

@@ -9,7 +9,6 @@ class LoginForm extends StatefulWidget {
   State<LoginForm> createState() => _LoginFormState();
 }
 
-// TODO: catch exception on login and register
 class _LoginFormState extends State<LoginForm> {
   final email = TextEditingController();
   final password = TextEditingController();

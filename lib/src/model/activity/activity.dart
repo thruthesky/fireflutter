@@ -51,8 +51,8 @@ class Activity {
     final Map<String, dynamic> data = {
       'action': action,
       'type': type, // 'post', 'comment', 'user', 'chat'
-      'uid': uid ?? my.uid,
-      'name': name ?? my.name,
+      'uid': uid ?? myUid,
+      'name': name ?? my!.name,
       if (postId != null) 'postId': postId,
       if (commentId != null) 'commentId': commentId,
       if (roomId != null) 'roomId': roomId,
