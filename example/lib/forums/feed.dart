@@ -35,7 +35,7 @@ class _NewsFeedState extends State<NewsFeed> {
     return Scaffold(
       appBar: appBar('Forum'),
       body: const FeedBody(),
-      bottomNavigationBar: const BottomNavBar(index: 0),
+      bottomNavigationBar: const BottomNavBar(selectedIndex: 0),
     );
   }
 }

@@ -42,7 +42,7 @@ final router = GoRouter(
           home: Scaffold(
             appBar: appBar('TestUi', hasLeading: true),
             body: const TestUi(),
-            bottomNavigationBar: const BottomNavBar(index: 3),
+            bottomNavigationBar: const BottomNavBar(selectedIndex: 3),
           ),
         ),
       ),
