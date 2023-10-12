@@ -330,6 +330,8 @@ class UserService {
   Future<void> signOut() async {
     if (auth.FirebaseAuth.instance.currentUser == null) return;
     dog('UserService.instance.signOut() - User signing out: ${auth.FirebaseAuth.instance.currentUser!.uid}');
+
+    ActivityService.instance.onSignout(my);
     if (UserService.instance.nullableUser != null) {
       await onSignout?.call(my);
     }
@@ -414,11 +416,6 @@ class UserService {
     final String otherUid = uid ?? user!.uid;
     final now = DateTime.now();
 
-    /// @withcenter.dev3 - ERROR - This produces error on dynamic link.
-    /// Steps to reproduce
-    /// 1. logout
-    /// 2. click on dynamic link for public profile screen.
-    ///
     /// Dynamic link is especially for users who are not install and not signed users.
     if (loggedIn && myUid != otherUid) {
       if (enableNoOfProfileView) {
@@ -445,6 +442,7 @@ class UserService {
         );
       }
     }
+
     return customize.showPublicProfileScreen?.call(context, uid: uid, user: user) ??
         showGeneralDialog(
           context: context,

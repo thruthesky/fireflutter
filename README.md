@@ -5,8 +5,10 @@
 If you are looking for a package that help you develop a full featured content management app, then you have found a right one. FireFlutter is a free, open source, complete, rapid development package for creating apps like CMS(content management system), social service, chat, community(forum), shopping mall and much more based on Firebase.
 
 Create an issue if you find a bug or need a help.
+
 # Table of Contents {ignore=true}
 
+# Table of Contents {ignore=true}
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
@@ -14,18 +16,19 @@ Create an issue if you find a bug or need a help.
 
 - [FireFlutter](#fireflutter)
 - [Table of Contents {ignore=true}](#table-of-contents-ignoretrue)
+- [Table of Contents {ignore=true}](#table-of-contents-ignoretrue-1)
 - [Overview](#overview)
 - [Changes](#changes)
-    - [Oct 10 0.3.12 {ignore=true}](#oct-10-0312-ignoretrue)
-    - [Sept 28 0.3.11 {ignore=true}](#sept-28-0311-ignoretrue)
-    - [Sept 10 0.3.10 {ignore=true}](#sept-10-0310-ignoretrue)
+  - [Oct 10 0.3.12 {ignore=true}](#oct-10-0312-ignoretrue)
+  - [Sept 28 0.3.11 {ignore=true}](#sept-28-0311-ignoretrue)
+  - [Sept 10 0.3.10 {ignore=true}](#sept-10-0310-ignoretrue)
   - [Features](#features)
     - [Main Features](#main-features)
 - [Getting started](#getting-started)
   - [Installation](#installation)
     - [Create a Firebase](#create-a-firebase)
 - [Firebase Extension](#firebase-extension)
-    - [Resize image](#resize-image)
+  - [Resize image](#resize-image)
   - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
     - [Firestore security rules](#firestore-security-rules)
@@ -33,13 +36,13 @@ Create an issue if you find a bug or need a help.
     - [Realtime database security rules](#realtime-database-security-rules)
   - [Setup the base code](#setup-the-base-code)
 - [Pub.dev Packages](#pubdev-packages)
-  - [url\_launcher (Optional)](#url_launcher-optional)
+  - [url_launcher (Optional)](#url_launcher-optional)
   - [timeago](#timeago)
-  - [Parsed\_ReadMore](#parsed_readmore)
+  - [Parsed_ReadMore](#parsed_readmore)
 - [Build Sample](#build-sample)
-    - [User Profile Page](#user-profile-page)
-    - [Chat App](#chat-app)
-    - [Forum App](#forum-app)
+  - [User Profile Page](#user-profile-page)
+  - [Chat App](#chat-app)
+  - [Forum App](#forum-app)
 - [Widgets and UI functions](#widgets-and-ui-functions)
 - [Usage](#usage)
   - [User](#user)
@@ -63,21 +66,25 @@ Fireflutter made for reusing the common code blocks. Provides code for user, for
 There are some pre-defined fields for the user document. You can use `json_serializable` for providing each model extra fields.
 
 The model has also basic CRUD functionalities.
+
 # Changes
+
 <!-- You can see [CHANGELOG.md](/CHANGELOG.md) for the updated log. -->
 
 ### Oct 10 0.3.12 {ignore=true}
-* Refactoring on user, feed.
-* Refine widgets and services.
+
+- Refactoring on user, feed.
+- Refine widgets and services.
 
 ### Sept 28 0.3.11 {ignore=true}
-* Add. Admin dashboarsd.
-* Update. Push notification.
-* Refactoring. Save more data in realtime database.
+
+- Add. Admin dashboarsd.
+- Update. Push notification.
+- Refactoring. Save more data in realtime database.
 
 ### Sept 10 0.3.10 {ignore=true}
 
-* Change. Refactoring file/folder names.
+- Change. Refactoring file/folder names.
 
 Go to [CHANGELOG.md](/CHANGELOG.md) for more.
 
@@ -111,7 +118,6 @@ Follow the instruction below to install FireFlutter into your app
 ### Create a Firebase
 
 If you have your own firebase project, then you can use that. If you don't have one, create one first. Visit [Firebase Website](https://firebase.google.com).
-
 
 # Firebase Extension
 
@@ -163,13 +169,15 @@ Security rules for firestore are under `/firebase/firestore/firestore.rules`.
 Copy [the security rules of fireflutter](https://raw.githubusercontent.com/thruthesky/fireflutter/main/firebase/firestore/firestore.rules) and paste it in your firebase project. You may need to copy only the parts of the necessary security rules.
 
 To deploy firestore rules, follow this
+
 ```sh
  firebase deploy --only <name>.rules
 ```
+
 <!--
 TODO:
 deploy rules on firebase using cli
- firebase deploy --only <name>.rules
+ firebase deploy --only firestore:rules
  -->
 
 ### Security rule for admin
@@ -184,7 +192,6 @@ function isAdmin() {
 ```
 
 After setting the admin, you can now customize your security rules to restrict some write access from other user. You can add sub-admin/s from client app without editing the security rules everytime.
-
 
 For instance, you may write security rules like below and add the uids of sub-admin users. then, add a security rule function to check if the user is sub-admin.
 
@@ -261,6 +268,10 @@ Enable Realtime Database on firebase and copy the following and paste it into yo
       }
     },
     "tmp": {
+      ".read": true,
+      ".write": true
+    },
+    "activity_logs": {
       ".read": true,
       ".write": true
     }
@@ -379,7 +390,9 @@ By default, feed feature is disabled. To use feed features, add the following in
 ```dart
 FeedService.instance.init(enable: true);
 ```
+
 # Pub.dev Packages
+
 ## url_launcher (Optional)
 
 `url_lancher` package is added by fireflutter and it is being used to open url. If you wish to let users share links by sms, you need to setup in `AndroidManifest.xml` and `Info.plist`. See the [url_launch Configuration](https://pub.dev/packages/url_launcher#configuration).
@@ -394,7 +407,6 @@ if (re) {
   toast(title: 'SMS', message: 'Cannot open SMS');
 }
 ```
-
 
 In this chapter, some of the notable packages that are used by FireFlutter are explained.
 
@@ -421,17 +433,22 @@ Visit [parsed_readmore](https://pub.dev/packages/parsed_readmore) to read more.
 <!-- TODO: -->
 
 # Build Sample
+
 ### User Profile Page
-Here is an example of how to build simple user profile page. 
+
+Here is an example of how to build simple user profile page.
 ![user_profile](/doc/img/user_profile.png)
 
 ### Chat App
-Here is an example of how to build simple user profile page. 
+
+Here is an example of how to build simple user profile page.
 ![chat_app](/doc/img/chat_app.png)
 
 ### Forum App
+
 <!-- FIXME: Not sure if I implemented this correctly -->
-Here is a simple forum app. 
+
+Here is a simple forum app.
 ![forum_result](/doc/img/forum.png)
 
 See [User Profile](/doc/SAMPLES.md#how-to-build-a-user-profile-page) for source code and detailed explanation.
@@ -449,6 +466,7 @@ See [WIDGETS.md](/doc/WIDGETS.md) for more widget example.
 **Note:** you can use **`Theme()`** to style the widget
 
 # Usage
+
 Fireflutter updates in real time no matter what users do. Here are common uses of widgets and builders of each features.
 
 ## User
@@ -458,8 +476,11 @@ See [USER.md](/doc/USER.md) for details.
 ## Admin
 
 See [ADMIN.md](/doc/ADMIN.md) for details.
+
 ## Chat
-With FireFlutter you can easily create a customizable chat room. 
+
+With FireFlutter you can easily create a customizable chat room.
+
 <!-- ### Features
 - Group Chat
 - 1:1 Chat
@@ -483,10 +504,11 @@ ChatRoomListView(
   ),
 ),
 ```
-***Go to [Chat.md](/doc/CHAT.md) for more feature builders and detailed explanation***
 
+**_Go to [Chat.md](/doc/CHAT.md) for more feature builders and detailed explanation_**
 
 ## Post
+
 See [POST.md](/doc/POST.md) for details.
 
 ## Comment
@@ -494,7 +516,9 @@ See [POST.md](/doc/POST.md) for details.
 ## Share
 
 # Push notifications
+
 See [PUSH_NOTIFICATION.md](/doc/PUSH_NOTIFICATION.md) for details.
+
 # Error handling
 
 There are some cases that you don't want to wait for the async work to be finished since it takes time to save data into the database. But you must show user if there is an error.
@@ -521,9 +545,10 @@ function isAdmin() {
 }
 ```
 
-Then, set `isAdmin` to true in the user document. 
+Then, set `isAdmin` to true in the user document.
 
 **Features**
+
 - [AdminService](doc/ADMIN.md#admin-service)
 - [Admin Widgets](doc/ADMIN.md#admin-widgets)
 - [Translation](doc/ADMIN.md#translation)
@@ -532,16 +557,11 @@ Then, set `isAdmin` to true in the user document.
 
 For more information, see [**ADMIN.md**](/doc/ADMIN.md).
 
-
 # [Developers](doc/DEVELOPER.md#developer)
 
 You can go to [Developer.md](/doc/DEVELOPER.md). This section gives a tips and detailed instruction on how to use the FireFlutter completely.
 
-
-
 # Things to improve
-
 
 - The follower's UIDs of A are saved in `followers` field of the all posts created by A.
   - If A has many followers like 10,000 followers, the size of the post document becomes very big. Saving posts in RTDB won't solve this issue since you cannot get posts that you're following. RTDB does not support for this search.
-

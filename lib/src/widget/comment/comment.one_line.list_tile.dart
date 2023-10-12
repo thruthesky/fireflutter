@@ -49,16 +49,15 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                   textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium!),
             ),
           ] else ...[
-            // TODO ongoing checking if this cause movement in scroll
-            // UserAvatar(
-            //   uid: widget.comment.uid,
-            //   radius: 10,
-            //   size: 24,
-            //   onTap: () => UserService.instance.showPublicProfileScreen(
-            //     context: context,
-            //     uid: widget.comment.uid,
-            //   ),
-            // ),
+            UserAvatar(
+              uid: widget.comment.uid,
+              radius: 10,
+              size: 24,
+              onTap: () => UserService.instance.showPublicProfileScreen(
+                context: context,
+                uid: widget.comment.uid,
+              ),
+            ),
             SizedBox(width: widget.runSpacing),
             Expanded(
               child: Column(
@@ -67,17 +66,16 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // TODO ongoing checking if this cause movement in scroll
-                      // Flexible(
-                      //   child: UserDoc(
-                      //     uid: widget.comment.uid,
-                      //     builder: (user) => Text(
-                      //       user.name,
-                      //       overflow: TextOverflow.ellipsis,
-                      //       style: Theme.of(context).textTheme.labelMedium,
-                      //     ),
-                      //   ),
-                      // ),
+                      Flexible(
+                        child: UserDoc(
+                          uid: widget.comment.uid,
+                          builder: (user) => Text(
+                            user.name,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
+                        ),
+                      ),
                       SizedBox(width: widget.runSpacing),
                       DateTimeText(
                         dateTime: widget.comment.createdAt,
@@ -133,33 +131,31 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                   Row(
                     children: [
                       // no of likes
-
-                      // TODO ongoing checking if this cause movement in scroll
-                      // DatabaseCount(
-                      //   path: pathCommentLikedBy(widget.comment.id, all: true),
-                      //   builder: (n) => n == 0
-                      //       ? const SizedBox.shrink()
-                      //       : TextButton(
-                      //           style: TextButton.styleFrom(
-                      //             padding: const EdgeInsets.only(left: 0, right: 8),
-                      //             minimumSize: Size.zero,
-                      //             visualDensity: VisualDensity.compact,
-                      //           ),
-                      //           onPressed: () async => UserService.instance.showLikedByListScreen(
-                      //             context: context,
-                      //             uids: await getKeys(pathCommentLikedBy(widget.comment.id, all: true)),
-                      //           ),
-                      //           child: Text(
-                      //             n == 0
-                      //                 ? tr.like
-                      //                 : tr.noOfLikes.replaceAll(
-                      //                     '#no',
-                      //                     n.toString(),
-                      //                   ),
-                      //             style: Theme.of(context).textTheme.bodySmall,
-                      //           ),
-                      //         ),
-                      // ),
+                      DatabaseCount(
+                        path: pathCommentLikedBy(widget.comment.id, all: true),
+                        builder: (n) => n == 0
+                            ? const SizedBox.shrink()
+                            : TextButton(
+                                style: TextButton.styleFrom(
+                                  padding: const EdgeInsets.only(left: 0, right: 8),
+                                  minimumSize: Size.zero,
+                                  visualDensity: VisualDensity.compact,
+                                ),
+                                onPressed: () async => UserService.instance.showLikedByListScreen(
+                                  context: context,
+                                  uids: await getKeys(pathCommentLikedBy(widget.comment.id, all: true)),
+                                ),
+                                child: Text(
+                                  n == 0
+                                      ? tr.like
+                                      : tr.noOfLikes.replaceAll(
+                                          '#no',
+                                          n.toString(),
+                                        ),
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ),
+                      ),
                       // reply
                       TextButton(
                         style: TextButton.styleFrom(
@@ -238,16 +234,14 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                 ],
               ),
             ),
-            // TODO ongoing checking if this cause movement in scroll
-            // Database(
-            //   path: pathCommentLikedBy(widget.comment.id),
-            //   builder: (value, path) {
-            //     iLiked = value == null;
-            //     return likeButton();
-            //   },
-            //   onWaiting:
-            //       iLiked == null ? const SizedBox.shrink() : likeButton(),
-            // )
+            Database(
+              path: pathCommentLikedBy(widget.comment.id),
+              builder: (value, path) {
+                iLiked = value == null;
+                return likeButton();
+              },
+              onWaiting: iLiked == null ? const SizedBox.shrink() : likeButton(),
+            )
           ]
         ],
       ),
