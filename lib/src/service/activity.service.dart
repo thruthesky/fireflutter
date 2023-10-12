@@ -10,7 +10,7 @@ class ActivityService {
   bool enableActivityLog = false;
 
   ActivityService() {
-    dog('ActivityService::constructor');
+    // dog('ActivityService::constructor');
   }
 
   init({
