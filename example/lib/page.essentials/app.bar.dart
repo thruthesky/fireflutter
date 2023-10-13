@@ -40,7 +40,7 @@ class AppBarAction extends StatelessWidget {
         ),
         onPressed: () {
           UserService.instance.signOut();
-          context.go(LoginPage.routeName);
+          context.go(MainApp.routeName);
           // context.pop();
         },
         child: const Text(
@@ -69,6 +69,7 @@ class LeadingButton extends StatelessWidget {
   }
 }
 
+// custom app bar of an app
 AppBar appBar(String text, {bool hasLeading = false, bool hasActions = true}) {
   return AppBar(
     leading: hasLeading ? const LeadingButton() : const SizedBox.shrink(),
@@ -81,6 +82,7 @@ AppBar appBar(String text, {bool hasLeading = false, bool hasActions = true}) {
   );
 }
 
+// custom app bar for chat room
 AppBar customAppBar(BuildContext context, Room? room) {
   return AppBar(
     forceMaterialTransparency: true,
@@ -125,7 +127,6 @@ AppBar customAppBar(BuildContext context, Room? room) {
               );
             }),
           );
-          // return ChatService.instance.openChatRoomMenuDialog(context: context, room: room);
         },
       ),
     ],

@@ -3,12 +3,11 @@
 
 <!-- code_chunk_output -->
 
-- [Post](#post)
   - [Overview](#overview)
   - [Post Service](#post-service)
     - [Create Post](#create-post)
     - [Post List View](#post-list-view)
-    - [Post Dialog](#post-dialog)
+    - [Post as Dialog](#post-as-dialog)
     - [Post Card](#post-card)
   - [Post view screen custom design](#post-view-screen-custom-design)
   - [List of viewer on each post](#list-of-viewer-on-each-post)
@@ -25,7 +24,7 @@
 <!-- /code_chunk_output -->
 
 
-# Post 
+# Post {ignore=true}
 
 ## Overview
 ## Post Service
@@ -53,26 +52,25 @@ Or you can do the UI/UX by yourself since it delivers everything you need to sho
 
 ### Create Post
 
-PostService provies showCreateDialog function that can be used to show a Create Post Form. Below is an example of usage:
+PostService provides showCreateDialog function that can be used to show a Create Post Form. Below is an example of usage:
 
 <!-- showCreateDialog doesn't exists [??] -->
 
 ```dart
 ButtonRow( // custom buttons
-label: 'Create Post',
-onTap: () {
-  // use Post.create() to create Post
-  Post.create(categoryId: categoryId.text, title: title.text, content: content.text).then(
-    (post) => PostService.instance.showPostViewScreen(context: context, post: post) // open the post after create
-  );
-},
+  label: 'Create Post',
+  onTap: () {
+    // use Post.create() to create Post
+    Post.create(categoryId: categoryId.text, title: title.text, content: content.text).then(
+      (post) => PostService.instance.showPostViewScreen(context: context, post: post) // open the post after create
+    );
+  },
+)
 ```
 
 ### Post List View
 
-Post List View displays a list for the posts.
-
-To list all posts, simply follow the code:
+Post List View displays a list of posts regardless of their category.
 
 ```dart
 Scaffold(
@@ -81,9 +79,6 @@ Scaffold(
   )
 )
 ```
-
-In the above example, the list will be all posts regardless of their category.
-
 To filter by category, add the category argument like below:
 
 ```dart
@@ -108,7 +103,7 @@ PostListView(
 
 The above code will list all the post under the category
 
-### Post Dialog
+### Post as Dialog
 
 Post Dialog is a full screen dialog that display the post.
 
@@ -123,7 +118,7 @@ PostListView(
     child: PostCard(post:post),
   )
 ```
-Take note that the code above needs the Post to display.
+***Note:*** The code above needs the `Post` to display.
 
 ### Post Card
 Post Card is a placeholder for each post. It has a default widgets for `comment`,`like`,`favorite` and more that is customizable. 
@@ -203,7 +198,7 @@ Note that, saving the uid is done by `Post.fromDocumentSnapshot`.
 
 The system settings are saved under `/settings` collection while the user settings are saved under `/users/{uid}/user_settings/{settingId}/...` in Firestore and the security rules are set to the login user.
 
-See [the block chapter](#block) to know how to use(manage) the user settings and how to use `Database` widget with it.
+See [the block chapter](#block) to know how to use (manage) the user settings and how to use `Database` widget with it.
 
 ## Report
 

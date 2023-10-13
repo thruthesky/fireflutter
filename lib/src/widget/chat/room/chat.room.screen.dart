@@ -36,7 +36,7 @@ class _ChatRoomState extends State<ChatRoomScreen> {
         setState(() {});
       }
       ChatService.instance.resetNoOfNewMessage(room: room!);
-      ActivityService.instance.onChatRoomOpened(room!);
+      // ActivityService.instance.onChatRoomOpened(room!);
     })();
   }
 
