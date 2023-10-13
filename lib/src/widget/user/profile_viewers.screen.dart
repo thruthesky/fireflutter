@@ -22,7 +22,9 @@ class ProfileViewersListScreen extends StatelessWidget {
         title: const Text('Profile Viewers List'),
       ),
       body: FirestoreListView(
-        query: profileViewHistoryCol.where('uid', isEqualTo: myUid).orderBy('lastViewdAt', descending: true),
+        query: profileViewHistoryCol
+            .where('uid', isEqualTo: myUid)
+            .orderBy('lastViewdAt', descending: true),
         itemBuilder: (context, doc) {
           final viewer = Viewer.fromDocumentSnapshot(doc);
           return UserDoc(
@@ -30,7 +32,8 @@ class ProfileViewersListScreen extends StatelessWidget {
             builder: (user) {
               return itemBuilder?.call(user) ??
                   ListTile(
-                    onTap: () => UserService.instance.showPublicProfileScreen(context: context, user: user),
+                    onTap: () => UserService.instance
+                        .showPublicProfileScreen(context: context, user: user),
                     leading: UserAvatar(
                       user: user,
                     ),
@@ -40,7 +43,8 @@ class ProfileViewersListScreen extends StatelessWidget {
             },
           );
         },
-        errorBuilder: (context, error, stackTrace) => Text('Error; ${error.toString()}'),
+        errorBuilder: (context, error, stackTrace) =>
+            Text('Error; ${error.toString()}'),
       ),
     );
   }

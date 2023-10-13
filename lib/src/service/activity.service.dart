@@ -100,7 +100,8 @@ class ActivityService {
 
   /// type can be any of the following:
   /// 'post', 'comment', 'user', 'chat'
-  onFavorite({required String id, required bool isFavorite, required String type}) {
+  onFavorite(
+      {required String id, required bool isFavorite, required String type}) {
     _log(
       action: isFavorite == true ? 'favorite' : 'unfavorite',
       type: type,

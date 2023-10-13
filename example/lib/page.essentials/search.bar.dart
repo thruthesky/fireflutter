@@ -23,9 +23,11 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             leading: const FaIcon(FontAwesomeIcons.magnifyingGlass),
             hintText: 'Search',
             elevation: const MaterialStatePropertyAll(0),
-            backgroundColor: MaterialStatePropertyAll(Theme.of(context).splashColor),
+            backgroundColor:
+                MaterialStatePropertyAll(Theme.of(context).splashColor),
             // side: MaterialStatePropertyAll(BorderSide.),
-            padding: const MaterialStatePropertyAll(EdgeInsets.only(left: 8, right: 8)),
+            padding: const MaterialStatePropertyAll(
+                EdgeInsets.only(left: 8, right: 8)),
 
             // onSubmitted: (value) => setState(() => searchController.text = value),
           ),

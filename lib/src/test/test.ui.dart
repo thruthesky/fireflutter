@@ -83,7 +83,8 @@ class _TestScreenState extends State<TestUi> {
                     return const Text('MyDoc() - User document does NOT exist');
                   }
                 },
-                notLoggedInBuilder: () => const Text("User NOT logged in. So, MyDoc() is not available."),
+                notLoggedInBuilder: () => const Text(
+                    "User NOT logged in. So, MyDoc() is not available."),
               ),
             ],
           ),
@@ -143,9 +144,11 @@ class _TestScreenState extends State<TestUi> {
         const Divider(),
         ElevatedButton(
           onPressed: testAll,
-          child: Text('Run all tests', style: TextStyle(color: Colors.red.shade800)),
+          child: Text('Run all tests',
+              style: TextStyle(color: Colors.red.shade800)),
         ),
-        const Text('Individual tests', style: TextStyle(color: Color.fromARGB(255, 83, 4, 4))),
+        const Text('Individual tests',
+            style: TextStyle(color: Color.fromARGB(255, 83, 4, 4))),
         Wrap(
           children: [
             ElevatedButton(
@@ -156,7 +159,9 @@ class _TestScreenState extends State<TestUi> {
               onPressed: testUser,
               child: const Text('User'),
             ),
-            ElevatedButton(onPressed: testUserDocument, child: const Text('User Document')),
+            ElevatedButton(
+                onPressed: testUserDocument,
+                child: const Text('User Document')),
             ElevatedButton(
               onPressed: () => testSingle(testFeed),
               child: const Text('Feed'),
@@ -243,16 +248,21 @@ class _TestScreenState extends State<TestUi> {
 
     // create object from json
     final fromJsonUser = User.fromJson({'uid': 'uid', 'id': 'id'});
-    test(fromJsonUser.createdAt.millisecondsSinceEpoch >= 0, 'createdAt is: ${fromJsonUser.createdAt}');
+    test(fromJsonUser.createdAt.millisecondsSinceEpoch >= 0,
+        'createdAt is: ${fromJsonUser.createdAt}');
 
     String uid = fa.FirebaseAuth.instance.currentUser!.uid;
     // log('uid; $uid');
     await User.doc(uid).delete();
-    await createTestUser(
-        User(uid: uid, displayName: 'displayName$uid', email: '$uid@email.com', createdAt: DateTime.now()));
+    await createTestUser(User(
+        uid: uid,
+        displayName: 'displayName$uid',
+        email: '$uid@email.com',
+        createdAt: DateTime.now()));
     final user2 = await User.get(uid) as User;
     test(user2.uid == uid, 'uid must be $uid');
-    test(user2.displayName == 'displayName$uid', 'displayName must be displayName$uid');
+    test(user2.displayName == 'displayName$uid',
+        'displayName must be displayName$uid');
     test(user2.email == '$uid@email.com', 'email must be $uid@email.com');
 
     await Future.delayed(const Duration(milliseconds: 10));
@@ -261,12 +271,14 @@ class _TestScreenState extends State<TestUi> {
 
   Future testPost() async {
     // post crud test
-    await Post.create(categoryId: 'categoryId', title: 'title', content: 'content');
+    await Post.create(
+        categoryId: 'categoryId', title: 'title', content: 'content');
   }
 
   Future testComment() async {
     // comment crud test
-    await Post.create(categoryId: 'categoryId', title: 'title', content: 'content');
+    await Post.create(
+        categoryId: 'categoryId', title: 'title', content: 'content');
   }
 
   Future testCategory() async {
@@ -288,7 +300,8 @@ class _TestScreenState extends State<TestUi> {
       await Category.get('categoryId');
       test(false, 'must throw exception');
     } catch (e) {
-      test(e.toString().contains('does not exist'), 'must throw exception. <$e>');
+      test(e.toString().contains('does not exist'),
+          'must throw exception. <$e>');
     }
   }
 
@@ -304,7 +317,8 @@ class _TestScreenState extends State<TestUi> {
     await me.update(followings: FieldValue.delete());
 
     /// follow banana
-    test(await FeedService.instance.follow(Test.banana.uid) == true, 'a follows b');
+    test(await FeedService.instance.follow(Test.banana.uid) == true,
+        'a follows b');
 
     /// get my data again
     me = await User.get() as User;
@@ -314,9 +328,11 @@ class _TestScreenState extends State<TestUi> {
     test(me.followings.length == 1, "there must be only 1 followings");
 
     /// follow again -> un-following
-    test(await FeedService.instance.follow(Test.banana.uid) == false, "a un-follows b");
+    test(await FeedService.instance.follow(Test.banana.uid) == false,
+        "a un-follows b");
     final User afterFollow = (await User.get())!;
-    test(afterFollow.followings.contains(Test.banana.uid) == false, "a un-followed b");
+    test(afterFollow.followings.contains(Test.banana.uid) == false,
+        "a un-followed b");
     test(afterFollow.followings.isEmpty, "there must be no followings");
 
     /// Have 3 followers and create a new post
@@ -334,15 +350,19 @@ class _TestScreenState extends State<TestUi> {
     await test(groupRoom.master == Test.apple.uid, 'Must be apple');
     await test(groupRoom.moderators.isEmpty, 'Must have no moderators');
     await test(groupRoom.users.length == 1, 'Must have only one user');
-    await test(groupRoom.users.first == Test.apple.uid, 'Must have only one user');
-    await test(groupRoom.maximumNoOfUsers == ChatService.instance.maximumNoOfUsers, 'Must have maximumNoOfUsers 100');
+    await test(
+        groupRoom.users.first == Test.apple.uid, 'Must have only one user');
+    await test(
+        groupRoom.maximumNoOfUsers == ChatService.instance.maximumNoOfUsers,
+        'Must have maximumNoOfUsers 100');
     await test(groupRoom.blockedUsers.isEmpty, 'Must have no blockedUsers');
     // test(groupRoom.noOfNewMessages.isEmpty, 'Must have no noOfNewMessages');
   }
 
   Future testCreateSingleChatRoom() async {
     await Test.login(Test.apple);
-    final room = await Room.create(name: 'Single Room 2', otherUserUid: Test.banana.uid);
+    final room =
+        await Room.create(name: 'Single Room 2', otherUserUid: Test.banana.uid);
     test(room.name == 'Single Room 2', 'Must be Single Room 2');
     test(room.group == false, 'Must be a single chat room');
     test(room.open == false, 'Must be a private a chat room');
@@ -368,14 +388,16 @@ class _TestScreenState extends State<TestUi> {
     Room room = await Room.create(name: 'Testing Room');
 
     // update the setting
-    await ChatService.instance.updateRoomSetting(room: room, setting: 'maximumNoOfUsers', value: 3);
+    await ChatService.instance
+        .updateRoomSetting(room: room, setting: 'maximumNoOfUsers', value: 3);
 
     // add the users
     await room.invite(Test.banana.uid);
     await room.invite(Test.cherry.uid);
 
     // This should not work because the max is 3
-    await Test.assertExceptionCode(room.invite(Test.durian.uid), Code.roomIsFull);
+    await Test.assertExceptionCode(
+        room.invite(Test.durian.uid), Code.roomIsFull);
 
     // Get the room
     final roomAfter = await Room.get(room.roomId);
@@ -386,8 +408,10 @@ class _TestScreenState extends State<TestUi> {
 
   Future testInviteUserIntoSingleChat() async {
     await Test.login(Test.apple);
-    final room = await Room.create(name: 'Single Room 2', otherUserUid: Test.banana.uid);
-    await Test.assertExceptionCode(room.invite(Test.cherry.uid), Code.singleChatRoomCannotInvite);
+    final room =
+        await Room.create(name: 'Single Room 2', otherUserUid: Test.banana.uid);
+    await Test.assertExceptionCode(
+        room.invite(Test.cherry.uid), Code.singleChatRoomCannotInvite);
   }
 
   Future testInviteUserIntoGroupChat() async {
@@ -395,8 +419,10 @@ class _TestScreenState extends State<TestUi> {
     final room = await Room.create(name: 'Single Room 2', maximumNoOfUsers: 3);
     await Test.assertFuture(room.invite(Test.banana.uid));
     await Test.assertFuture(room.invite(Test.cherry.uid));
-    await Test.assertExceptionCode(room.invite(Test.cherry.uid), Code.userAlreadyInRoom);
-    await Test.assertExceptionCode(room.invite(Test.durian.uid), Code.roomIsFull);
+    await Test.assertExceptionCode(
+        room.invite(Test.cherry.uid), Code.userAlreadyInRoom);
+    await Test.assertExceptionCode(
+        room.invite(Test.durian.uid), Code.roomIsFull);
   }
 
   /// Test the no of new messages.
@@ -455,13 +481,15 @@ class _TestScreenState extends State<TestUi> {
     const newName = 'Updated Name';
 
     // rename the room
-    await ChatService.instance.updateRoomSetting(room: room, setting: 'name', value: newName);
+    await ChatService.instance
+        .updateRoomSetting(room: room, setting: 'name', value: newName);
 
     // Get the room
     final roomAfter = await Room.get(room.roomId);
 
     // test: check the new name
-    test(roomAfter.name == newName, "The room must have the new name \"$newName\". Actual value: ${roomAfter.name}");
+    test(roomAfter.name == newName,
+        "The room must have the new name \"$newName\". Actual value: ${roomAfter.name}");
   }
 
   Future testRenameChatRoomOwnSide() async {
@@ -483,7 +511,8 @@ class _TestScreenState extends State<TestUi> {
     const renameApple = "Apple's place";
 
     // rename the room
-    await ChatService.instance.updateMyRoomSetting(room: room, setting: 'rename', value: renameApple);
+    await ChatService.instance
+        .updateMyRoomSetting(room: room, setting: 'rename', value: renameApple);
 
     // Get the room
     Room roomAfter = await Room.get(room.roomId);
@@ -493,7 +522,8 @@ class _TestScreenState extends State<TestUi> {
         "The room must have a rename for user. Actual Value: ${roomAfter.rename[myUid!]}. Expected: $renameApple");
 
     // rename the room
-    await ChatService.instance.updateMyRoomSetting(room: room, setting: 'rename', value: '');
+    await ChatService.instance
+        .updateMyRoomSetting(room: room, setting: 'rename', value: '');
 
     // Get the update to the room
     roomAfter = await Room.get(room.roomId);
@@ -508,10 +538,12 @@ class _TestScreenState extends State<TestUi> {
     FireFlutterService.instance.unInit();
     try {
       toast(title: 'FireFlutter Toast', message: 'This is a toast message');
-      completer.completeError('FireFlutterService.instance.unInit() must throw an exception');
+      completer.completeError(
+          'FireFlutterService.instance.unInit() must throw an exception');
       return completer.future;
     } catch (e) {
-      if (e.toString().contains('Null check operator used on a null value') == false) {
+      if (e.toString().contains('Null check operator used on a null value') ==
+          false) {
         completer.completeError('error: $e');
         return completer.future;
       }
@@ -520,7 +552,9 @@ class _TestScreenState extends State<TestUi> {
     FireFlutterService.instance.init(context: context);
     try {
       toast(
-          title: 'FireFlutter Toast', message: 'This is a toast message', duration: const Duration(milliseconds: 100));
+          title: 'FireFlutter Toast',
+          message: 'This is a toast message',
+          duration: const Duration(milliseconds: 100));
       completer.complete('toast() succeed');
     } catch (e) {
       completer.completeError('toast() must throw an exception; $e');
@@ -559,7 +593,8 @@ class _TestScreenState extends State<TestUi> {
         return completer.future;
       }
     } catch (e) {
-      completer.completeError('Unknown error happened. Maybe a permission denied error: $e');
+      completer.completeError(
+          'Unknown error happened. Maybe a permission denied error: $e');
       return completer.future;
     }
 
@@ -569,7 +604,8 @@ class _TestScreenState extends State<TestUi> {
     // Check if the user document is created.
     bool deleted = false;
     _testUserDocumentSubscription?.cancel();
-    _testUserDocumentSubscription = UserService.instance.documentChanges.listen((user) async {
+    _testUserDocumentSubscription =
+        UserService.instance.documentChanges.listen((user) async {
       if (user != null) {
         // User document is created. Fine.
         // Well then, delete the user document and see what happens.

@@ -38,11 +38,14 @@ class ChatRoomAppBarState extends State<ChatRoomAppBar> {
         builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           // late Room room;
           // error
-          if (snapshot.hasError) return AppBar(title: Text(snapshot.error.toString()));
-          if (snapshot.connectionState == ConnectionState.waiting && roomData == null) {
+          if (snapshot.hasError)
+            return AppBar(title: Text(snapshot.error.toString()));
+          if (snapshot.connectionState == ConnectionState.waiting &&
+              roomData == null) {
             return AppBar(title: const CircularProgressIndicator());
           }
-          if (snapshot.hasData) roomData = Room.fromDocumentSnapshot(snapshot.data!);
+          if (snapshot.hasData)
+            roomData = Room.fromDocumentSnapshot(snapshot.data!);
           return AppBar(
             backgroundColor: Theme.of(context).colorScheme.inversePrimary,
             title: roomData!.isGroupChat
@@ -60,7 +63,8 @@ class ChatRoomAppBarState extends State<ChatRoomAppBar> {
               IconButton(
                 icon: const Icon(Icons.settings),
                 onPressed: () async {
-                  return ChatService.instance.openChatRoomMenuDialog(context: context, room: roomData!);
+                  return ChatService.instance.openChatRoomMenuDialog(
+                      context: context, room: roomData!);
                 },
               ),
             ],
@@ -75,7 +79,8 @@ class ChatRoomAppBarState extends State<ChatRoomAppBar> {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () async {
-              return ChatService.instance.openChatRoomMenuDialog(context: context, room: widget.room!);
+              return ChatService.instance
+                  .openChatRoomMenuDialog(context: context, room: widget.room!);
             },
           ),
         ],

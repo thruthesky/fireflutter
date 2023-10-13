@@ -77,7 +77,11 @@ class ReportService {
               ),
               TextButton(
                 onPressed: () async {
-                  await Report.create(reason: reason.text, otherUid: otherUid, postId: postId, commentId: commentId);
+                  await Report.create(
+                      reason: reason.text,
+                      otherUid: otherUid,
+                      postId: postId,
+                      commentId: commentId);
                   if (context.mounted) {
                     return Navigator.of(context).pop(true);
                   }

@@ -26,7 +26,8 @@ class _FeedBodyState extends State<FeedBody> {
     super.initState();
     UserService.instance.init(adminUid: myUid);
     customizePostInit(categName);
-    ChatService.instance.customize.chatRoomAppBarBuilder = ({room, user}) => customAppBar(context, room);
+    ChatService.instance.customize.chatRoomAppBarBuilder =
+        ({room, user}) => customAppBar(context, room);
     PostService.instance.init(
       enableSeenBy: true,
     );
@@ -55,7 +56,10 @@ class _FeedBodyState extends State<FeedBody> {
                 onTap: () async {
                   // var test = await get(favoriteDoc(post.id).toString());
                   // debugPrint('$test');
-                  showGeneralDialog(context: context, pageBuilder: (context, _, __) => PostViewScreen(post: post));
+                  showGeneralDialog(
+                      context: context,
+                      pageBuilder: (context, _, __) =>
+                          PostViewScreen(post: post));
                 },
                 child: PostCard(
                   post: post,
@@ -98,7 +102,8 @@ class _FeedBodyState extends State<FeedBody> {
           const SizedBox(width: sizeXs),
           IconButton(
             onPressed: () async {
-              final url = await StorageService.instance.upload(context: context);
+              final url =
+                  await StorageService.instance.upload(context: context);
               debugPrint('url: $url');
               if (url != null && mounted) {
                 setState(() {});

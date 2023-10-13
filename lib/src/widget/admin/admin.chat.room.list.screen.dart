@@ -7,7 +7,8 @@ class AdminChatRoomListScreen extends StatefulWidget {
   const AdminChatRoomListScreen({super.key});
 
   @override
-  State<AdminChatRoomListScreen> createState() => _AdminChatRoomListScreenState();
+  State<AdminChatRoomListScreen> createState() =>
+      _AdminChatRoomListScreenState();
 }
 
 class _AdminChatRoomListScreenState extends State<AdminChatRoomListScreen> {
@@ -21,9 +22,13 @@ class _AdminChatRoomListScreenState extends State<AdminChatRoomListScreen> {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back),
         ),
-        iconTheme: Theme.of(context).iconTheme.copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
+        iconTheme: Theme.of(context)
+            .iconTheme
+            .copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
         backgroundColor: Theme.of(context).colorScheme.inverseSurface,
-        title: Text('Admin Chat Room List', style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface)),
+        title: Text('Admin Chat Room List',
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onInverseSurface)),
       ),
       body: FirestoreListView(
         query: chatCol,
@@ -42,8 +47,10 @@ class _AdminChatRoomListScreenState extends State<AdminChatRoomListScreen> {
                     room.roomId,
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
-                  if (room.name.isNotEmpty) Text('Chat Room Name: ${room.name}'),
-                  Text('Last Activity: ${room.lastMessage?.createdAt ?? room.createdAt}'),
+                  if (room.name.isNotEmpty)
+                    Text('Chat Room Name: ${room.name}'),
+                  Text(
+                      'Last Activity: ${room.lastMessage?.createdAt ?? room.createdAt}'),
                 ],
               ),
             ),

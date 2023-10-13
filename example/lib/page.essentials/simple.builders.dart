@@ -59,7 +59,9 @@ Widget _textBuilder(BuildContext context, String? label, bool isHighlight) {
   return Text(
     label ?? '',
     style: TextStyle(
-      color: isHighlight ? Colors.black : Theme.of(context).shadowColor.withAlpha(150),
+      color: isHighlight
+          ? Colors.black
+          : Theme.of(context).shadowColor.withAlpha(150),
       fontSize: isHighlight ? sizeMd : sizeSm - 3,
     ),
   );

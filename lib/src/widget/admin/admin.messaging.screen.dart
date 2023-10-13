@@ -50,7 +50,8 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
 
   TextStyle textStyle = const TextStyle(fontSize: 10);
 
-  Widget get spaceBetweenWidgetGroup => SizedBox(height: widget.spaceBetweenWidgetGroup ?? sizeLg);
+  Widget get spaceBetweenWidgetGroup =>
+      SizedBox(height: widget.spaceBetweenWidgetGroup ?? sizeLg);
 
   String guideView = GuideView.minimize.name;
 
@@ -85,10 +86,14 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
             children: [
               ...notificationGuide,
               ...chooseTarget,
-              if (sendTarget == NotificationTarget.platform.name) ...notificationTargetPlatform,
-              if (sendTarget == NotificationTarget.users.name) ...notificationTargetUsers,
-              if (sendTarget == NotificationTarget.tokens.name) ...notificationTargetTokens,
-              if (sendTarget == NotificationTarget.topic.name && MessagingService.instance.customizeTopic != null)
+              if (sendTarget == NotificationTarget.platform.name)
+                ...notificationTargetPlatform,
+              if (sendTarget == NotificationTarget.users.name)
+                ...notificationTargetUsers,
+              if (sendTarget == NotificationTarget.tokens.name)
+                ...notificationTargetTokens,
+              if (sendTarget == NotificationTarget.topic.name &&
+                  MessagingService.instance.customizeTopic != null)
                 ...notificationTargetCustomizeTopic,
               spaceBetweenWidgetGroup,
               ...selectNotificationType,
@@ -100,31 +105,39 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
               Center(
                 child: ElevatedButton(
                   onPressed: () async {
-                    if (sendTarget == NotificationTarget.users.name && users.isEmpty) {
+                    if (sendTarget == NotificationTarget.users.name &&
+                        users.isEmpty) {
                       return warningSnackbar(context, 'Users list is empty.');
                     }
-                    if (sendTarget == NotificationTarget.tokens.name && tokens.isEmpty && tokenString.text.isEmpty) {
+                    if (sendTarget == NotificationTarget.tokens.name &&
+                        tokens.isEmpty &&
+                        tokenString.text.isEmpty) {
                       return warningSnackbar(context, 'Tokens is empty.');
                     }
 
                     if (title.text.isEmpty && body.text.isEmpty) {
-                      return warningSnackbar(context, 'Title and body cant be both empty');
+                      return warningSnackbar(
+                          context, 'Title and body cant be both empty');
                     }
                     if (landingPage.text.isEmpty) {
-                      return warningSnackbar(context, '$notificationType id is missing');
+                      return warningSnackbar(
+                          context, '$notificationType id is missing');
                     }
 
                     await MessagingService.instance.queue(
                       title: title.text,
                       body: body.text,
-                      uids: sendTarget == NotificationTarget.users.name ? users.keys.toList() : null,
+                      uids: sendTarget == NotificationTarget.users.name
+                          ? users.keys.toList()
+                          : null,
                       tokens: sendTarget == NotificationTarget.tokens.name
                           ? [...tokens, ...(tokenString.text.split(","))]
                           : null,
                       topic: sendTarget == NotificationTarget.platform.name
                           ? platformTarget
                           : sendTarget == NotificationTarget.topic.name
-                              ? MessagingService.instance.prefixCustomTopic + topic
+                              ? MessagingService.instance.prefixCustomTopic +
+                                  topic
                               : null,
                       type: notificationType,
                       id: landingPage.text,
@@ -353,7 +366,8 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
             ),
             IconButton(
               onPressed: () {
-                AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
+                AdminService.instance.showUserSearchDialog(context,
+                    onTap: (user) async {
                   users[user.uid] = user;
                   toast(
                     title: 'Users add',
@@ -393,7 +407,8 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                               setState(() {});
                             },
                             child: const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: sizeXs, vertical: sizeXxs),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: sizeXs, vertical: sizeXxs),
                               child: Icon(
                                 Icons.delete_forever_outlined,
                               ),
@@ -413,7 +428,8 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
             padding: const EdgeInsets.only(bottom: 32.0),
             child: InkWell(
               onTap: () {
-                AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
+                AdminService.instance.showUserSearchDialog(context,
+                    onTap: (user) async {
                   users[user.uid] = user;
                   toast(
                     title: 'Users add',
@@ -440,7 +456,8 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
             ),
             IconButton(
               onPressed: () {
-                AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
+                AdminService.instance.showUserSearchDialog(context,
+                    onTap: (user) async {
                   final querySnapshot = await tokensCol(user.uid).get();
                   toast(
                     title: 'Token added: ',
@@ -448,7 +465,10 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                     duration: const Duration(seconds: 2),
                   );
                   if (querySnapshot.size == 0) return;
-                  tokens = ([...tokens, ...querySnapshot.docs.map((e) => e.id).toList()]).toSet().toList();
+                  tokens = ([
+                    ...tokens,
+                    ...querySnapshot.docs.map((e) => e.id).toList()
+                  ]).toSet().toList();
                   setState(() {});
                 });
               },
@@ -519,7 +539,8 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
             padding: const EdgeInsets.only(bottom: sizeXs),
             child: InkWell(
               onTap: () {
-                AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
+                AdminService.instance.showUserSearchDialog(context,
+                    onTap: (user) async {
                   final querySnapshot = await tokensCol(user.uid).get();
                   toast(
                     title: 'Token added: ',
@@ -527,7 +548,10 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                     duration: const Duration(seconds: 2),
                   );
                   if (querySnapshot.size == 0) return;
-                  tokens = ([...tokens, ...querySnapshot.docs.map((e) => e.id).toList()]).toSet().toList();
+                  tokens = ([
+                    ...tokens,
+                    ...querySnapshot.docs.map((e) => e.id).toList()
+                  ]).toSet().toList();
                   setState(() {});
                 });
               },
@@ -652,12 +676,15 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                   IconButton(
                     onPressed: () async {
                       if (landingPage.text.isEmpty) {
-                        return warningSnackbar(null, '$notificationType Id is not set');
+                        return warningSnackbar(
+                            null, '$notificationType Id is not set');
                       }
 
-                      Post post = await PostService.instance.get(landingPage.text);
+                      Post post =
+                          await PostService.instance.get(landingPage.text);
 
-                      showSnackBar(null, 'Post was loaded, title and body was patch');
+                      showSnackBar(
+                          null, 'Post was loaded, title and body was patch');
 
                       title.text = post.title;
                       body.text = post.content;
@@ -666,7 +693,8 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                   ),
                   IconButton(
                     onPressed: () async {
-                      AdminService.instance.showChoosePostScreen(context, onTap: (post) async {
+                      AdminService.instance.showChoosePostScreen(context,
+                          onTap: (post) async {
                         landingPage.text = post.id;
                         title.text = post.title;
                         body.text = post.content;
@@ -680,7 +708,8 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                 if (notificationType == NotificationType.chat.name)
                   IconButton(
                     onPressed: () {
-                      AdminService.instance.showChooseChatRoomScreen(context, onTap: (room) async {
+                      AdminService.instance.showChooseChatRoomScreen(context,
+                          onTap: (room) async {
                         landingPage.text = room.roomId;
                         Navigator.of(context).pop();
                       });
@@ -690,7 +719,8 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                 if (notificationType == NotificationType.user.name)
                   IconButton(
                     onPressed: () {
-                      AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
+                      AdminService.instance.showUserSearchDialog(context,
+                          onTap: (user) async {
                         landingPage.text = user.uid;
                         Navigator.of(context).pop();
                       });
@@ -739,7 +769,8 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
           style: textStyle,
           decoration: const InputDecoration(
             label: Text('Sound'),
-            hintText: 'Input sound file name, must include ext. Sound file must be attached to the app.',
+            hintText:
+                'Input sound file name, must include ext. Sound file must be attached to the app.',
             floatingLabelBehavior: FloatingLabelBehavior.always,
           ),
         ),

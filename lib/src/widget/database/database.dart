@@ -44,7 +44,8 @@ class _DatabaseState extends State<Database> {
       builder: (context, AsyncSnapshot<DatabaseEvent> event) {
         if (event.connectionState == ConnectionState.waiting) {
           if (snapshotData != null) {
-            return widget.builder(snapshotData!.data!.snapshot.value, widget.path);
+            return widget.builder(
+                snapshotData!.data!.snapshot.value, widget.path);
           }
           return widget.onWaiting ?? const SizedBox.shrink();
         }

@@ -54,9 +54,11 @@ class _PostViewScreenState extends State<PostViewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: PostViewTitle(padding: const EdgeInsets.only(top: 0), post: _post),
+        title:
+            PostViewTitle(padding: const EdgeInsets.only(top: 0), post: _post),
         centerTitle: true,
-        actions: PostService.instance.postViewActions(context: context, post: _post),
+        actions:
+            PostService.instance.postViewActions(context: context, post: _post),
         leading: widget.onPressBackButton == null
             ? null
             : IconButton(
@@ -67,16 +69,21 @@ class _PostViewScreenState extends State<PostViewScreen> {
       body: _post == null
           ? const CircularProgressIndicator.adaptive()
           : _post?.deleted == true
-              ? Center(child: Text(_post?.reason ?? 'This post has been deleted.'))
+              ? Center(
+                  child: Text(_post?.reason ?? 'This post has been deleted.'))
               : SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       PostCard(
-                        color: Theme.of(context).colorScheme.secondary.withAlpha(20),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                        customHeaderBuilder: (context, post) =>
-                            PostViewMeta(post: _post, headerPadding: widget.headerPadding),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .secondary
+                            .withAlpha(20),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6)),
+                        customHeaderBuilder: (context, post) => PostViewMeta(
+                            post: _post, headerPadding: widget.headerPadding),
                         post: _post!,
                         customMainContentBuilder: (context, post) {
                           if (post.youtubeId.isEmpty && post.urls.isEmpty) {
@@ -84,20 +91,27 @@ class _PostViewScreenState extends State<PostViewScreen> {
                           }
                           return CarouselView(
                             widgets: [
-                              if (post.youtubeId.isNotEmpty) YouTube(youtubeId: post.youtubeId, autoPlay: true),
-                              if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
+                              if (post.youtubeId.isNotEmpty)
+                                YouTube(
+                                    youtubeId: post.youtubeId, autoPlay: true),
+                              if (post.urls.isNotEmpty)
+                                ...post.urls
+                                    .map((e) => DisplayMedia(url: e))
+                                    .toList(),
                             ],
                           );
                         },
                         customMiddleContentBuilder: (context, post) => Column(
-                          crossAxisAlignment: widget.customMiddleContentCrossAxisAlignment,
+                          crossAxisAlignment:
+                              widget.customMiddleContentCrossAxisAlignment,
                           children: [
                             PostViewTitle(post: _post),
                             PostViewContent(post: _post),
                           ],
                         ),
                         customFooterBuilder: (context, post) => Padding(
-                          padding: const EdgeInsets.only(left: sizeSm, top: sizeSm),
+                          padding:
+                              const EdgeInsets.only(left: sizeSm, top: sizeSm),
                           child: CommentListView(
                             commentTileTopSpacing: 8,
                             post: post,

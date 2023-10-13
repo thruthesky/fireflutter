@@ -17,7 +17,8 @@ class ProfileFollowerSceen extends StatelessWidget {
         ),
         title: const Text('Followers'),
       ),
-      body: itemBuilder?.call(user!) ?? UserListView.builder(uids: user!.followers),
+      body: itemBuilder?.call(user!) ??
+          UserListView.builder(uids: user!.followers),
     );
   }
 }

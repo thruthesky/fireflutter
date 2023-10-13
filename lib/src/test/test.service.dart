@@ -12,7 +12,8 @@ class TestUser {
   static int errorCount = 0;
   static int successCount = 0;
   String? uid;
-  TestUser({required this.displayName, required this.email, required this.photoUrl});
+  TestUser(
+      {required this.displayName, required this.email, required this.photoUrl});
 }
 
 /// Test
@@ -74,7 +75,11 @@ class Test {
         user.uid = login.uid;
         await prefs.setString(user.email, user.uid!);
 
-        await User.create(uid: user.uid!, email: user.email, displayName: user.displayName, photoUrl: user.photoUrl);
+        await User.create(
+            uid: user.uid!,
+            email: user.email,
+            displayName: user.displayName,
+            photoUrl: user.photoUrl);
       } else {
         dog('Reusing uid: $uid of ${user.email}');
         user.uid = uid;
@@ -100,12 +105,14 @@ class Test {
   /// @return User of firebase auth
   static Future<fa.User> loginOrRegister(TestUser user) async {
     try {
-      final fa.UserCredential cred =
-          await fa.FirebaseAuth.instance.signInWithEmailAndPassword(email: user.email, password: user.password);
+      final fa.UserCredential cred = await fa.FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: user.email, password: user.password);
       return cred.user!;
     } catch (e) {
-      final cred =
-          await fa.FirebaseAuth.instance.createUserWithEmailAndPassword(email: user.email, password: user.password);
+      final cred = await fa.FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: user.email, password: user.password);
       return cred.user!;
     }
   }
@@ -118,8 +125,8 @@ class Test {
     // Wait until logout is complete or you may see firestore permission denied error.
     await Test.wait();
 
-    final fa.UserCredential cred =
-        await fa.FirebaseAuth.instance.signInWithEmailAndPassword(email: user.email, password: user.password);
+    final fa.UserCredential cred = await fa.FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: user.email, password: user.password);
     await Test.wait();
     return cred.user!;
   }
@@ -169,7 +176,8 @@ class Test {
       if (e.toString().split(': ').last == code) {
         test(true, 'Exception code must be $code');
       } else {
-        test(false, 'Exception code must be $code. Actual code: ${e.toString()}');
+        test(false,
+            'Exception code must be $code. Actual code: ${e.toString()}');
       }
     }
   }
@@ -182,7 +190,8 @@ class Test {
     return future.then((value) {
       test(true, reason ?? 'Future has completed');
     }).catchError((e) {
-      test(false, '${reason ?? 'Future must be completed.'}, Actual exception: $e');
+      test(false,
+          '${reason ?? 'Future must be completed.'}, Actual exception: $e');
     });
   }
 
