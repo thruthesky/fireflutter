@@ -31,6 +31,7 @@ class ActivityService {
     String? roomId,
     String? title,
     String? otherUid,
+    String? otherDisplayName,
   }) {
     if (enableActivityLog == false) return;
 
@@ -45,7 +46,7 @@ class ActivityService {
       roomId: roomId,
       title: title,
       otherUid: otherUid,
-      otherDisplayName: otherUid,
+      otherDisplayName: otherDisplayName,
     );
   }
 
@@ -72,10 +73,11 @@ class ActivityService {
       );
 
   /// user visit other user's profile
-  onUserViewedProfile(String otherUid) => _log(
+  onUserViewedProfile(String otherUid, User? user) => _log(
         action: 'viewProfile',
         type: 'user',
         otherUid: otherUid,
+        otherDisplayName: user?.name,
       );
 
   /// user follow other user
@@ -121,12 +123,32 @@ class ActivityService {
       );
 
   /// user open a room or 1:1 chat
-  onChatRoomOpened(Room room) {
+  onChatRoomOpened(Room? room, User? user) {
     _log(
-      action: 'openChatRoom',
+      action: 'chatRoomOpened',
+      type: 'chat',
+      roomId: room?.roomId,
+      title: room?.name,
+      otherUid: user?.uid,
+      otherDisplayName: user?.name,
+    );
+  }
+
+  onChatMessageSent(Room room) {
+    _log(
+      action: 'chatMessageSent',
       type: 'chat',
       roomId: room.roomId,
       title: room.name,
+    );
+  }
+
+  /// user follow other user
+  onFeedFollow(String otherUid, bool isFollow) {
+    _log(
+      action: isFollow == true ? 'follow' : 'unfollow',
+      type: 'feed',
+      otherUid: otherUid,
     );
   }
 }

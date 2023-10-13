@@ -383,7 +383,7 @@ class UserService {
         profileViewHistoryDoc(myUid: myUid!, otherUid: otherUid).set(
           {
             "uid": otherUid,
-            "seenBy": my!.uid,
+            "seenBy": myUid,
             "type": my!.type,
             "lastViewdAt": FieldValue.serverTimestamp(),
             "year": now.year,
@@ -403,6 +403,8 @@ class UserService {
         );
       }
     }
+
+    ActivityService.instance.onUserViewedProfile(otherUid, user);
 
     return customize.showPublicProfileScreen?.call(context, uid: uid, user: user) ??
         showGeneralDialog(

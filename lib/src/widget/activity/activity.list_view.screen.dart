@@ -31,7 +31,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
       ),
       body: FirebaseDatabaseListView(
         query: activityLogRef.orderByChild('type').equalTo('user'),
-        reverse: true,
+        // reverse: true,
         itemBuilder: (context, snapshot) {
           final activity = Activity.fromDocumentSnapshot(snapshot);
           return ListTile(
