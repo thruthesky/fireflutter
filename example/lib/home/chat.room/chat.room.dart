@@ -1,5 +1,6 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:new_app/page.essentials/app.bar.dart';
 
 class ChatRoom extends StatefulWidget {
   static const String routeName = '/ChatRoom';
@@ -11,6 +12,13 @@ class ChatRoom extends StatefulWidget {
 
 class _ChatRoomState extends State<ChatRoom> {
   final ChatRoomListViewController controller = ChatRoomListViewController();
+
+  @override
+  void initState() {
+    super.initState();
+    ChatService.instance.customize.chatRoomAppBarBuilder = ({room, user}) => customAppBar(context, room);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChatRoomListView(

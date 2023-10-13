@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -18,6 +20,10 @@ class _FeedBodyState extends State<FeedBody> {
   final controller = TextEditingController();
   String categName = '';
 
+  Future<Comment?> commentGet() {
+    return Comment.get('5QCeocnLyx210J83Hw30');
+  }
+
   @override
   void initState() {
     super.initState();
@@ -25,6 +31,14 @@ class _FeedBodyState extends State<FeedBody> {
     ChatService.instance.customize.chatRoomAppBarBuilder = ({room, user}) => customAppBar(context, room);
     PostService.instance.init(
       enableSeenBy: true,
+    );
+
+    CommentService.instance.init(
+      customize: CommentCustomize(
+          // showCommentListBottomSheet: (context, post) {
+          //   // your code here
+          //   }
+          ),
     );
   }
 
@@ -50,7 +64,8 @@ class _FeedBodyState extends State<FeedBody> {
                     pageBuilder: (context, _, __) => Dialog(
                       child: CommentListView(
                         post: post,
-                        itemBuilder: (context, comment) => CommentOneLineListTile(comment: comment, post: post),
+                        itemBuilder: (context, comment) => PostViewScreen(post: post),
+                        // CommentOneLineListTile(comment: comment, post: post),
                       ),
                     ),
                   );
