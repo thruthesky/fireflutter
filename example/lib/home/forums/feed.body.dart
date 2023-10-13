@@ -2,8 +2,8 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:new_app/forums/post/create.post.dart';
-import 'package:new_app/home.screen/main.page.dart';
+import 'package:new_app/home/forums/post/create.post.dart';
+import 'package:new_app/home/user_profile/main.page.dart';
 import 'package:new_app/inits.dart';
 import 'package:new_app/page.essentials/app.bar.dart';
 

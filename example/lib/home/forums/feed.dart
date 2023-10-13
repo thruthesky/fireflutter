@@ -1,6 +1,6 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
-import 'package:new_app/forums/feed.body.dart';
+import 'package:new_app/home/forums/feed.body.dart';
 import 'package:new_app/page.essentials/app.bar.dart';
 import 'package:new_app/page.essentials/bottom.navbar.dart';
 

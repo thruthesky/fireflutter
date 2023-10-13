@@ -147,6 +147,6 @@ onTap: (){
 When you go to Firestore and navigate to `comments/{commentId}/` and look at the `order` and you can see the numbers `10000.100010....100000`. This represents the `depths` of each comment from its `parentId`. FireFlutter use this to sort the comments and can be easily displayed on Flutter.
 
 ``` dart
--> {parent comment} // depth 2, order: 100000.100000.100000.
+-> {parent comment} // depth 1, order: 100000.100000.100000.
   -> {}
 ```

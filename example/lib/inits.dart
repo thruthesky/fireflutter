@@ -1,7 +1,7 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
-import 'package:new_app/forums/post/custom.post.edit.dart';
-import 'package:new_app/forums/post/custom.post.view.dart';
+import 'package:new_app/home/forums/post/custom.post.edit.dart';
+import 'package:new_app/home/forums/post/custom.post.view.dart';
 import 'package:new_app/page.essentials/app.bar.dart';
 
 Future<User?> findUser(String uid) async => await UserService.instance.get(uid);

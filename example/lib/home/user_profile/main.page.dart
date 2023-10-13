@@ -1,7 +1,7 @@
 // import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
-import 'package:new_app/home.screen/user.profile.dart';
+import 'package:new_app/home/user_profile/user.profile.dart';
 import 'package:new_app/page.essentials/app.bar.dart';
 import 'package:new_app/page.essentials/bottom.navbar.dart';
 import 'package:new_app/router/router.dart';
