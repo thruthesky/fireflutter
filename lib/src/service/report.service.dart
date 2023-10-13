@@ -72,6 +72,7 @@ class ReportService {
             ),
             actions: [
               TextButton(
+                key: const Key('ReportModalCancel'),
                 onPressed: () => Navigator.of(context).pop(false),
                 child: const Text('Cancel'),
               ),

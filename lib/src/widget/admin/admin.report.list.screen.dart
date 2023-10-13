@@ -35,6 +35,11 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          key: const Key('AdminReportListBackButton'),
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back),
+        ),
         iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onInverseSurface),
         backgroundColor: Theme.of(context).colorScheme.inverseSurface,
         title: Text(

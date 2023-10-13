@@ -184,15 +184,16 @@ class _PostCardState extends State<PostCard> {
         ),
         const Spacer(),
         PopupMenuButton<String>(
+          key: const Key('PostCardPopupMenuButton'),
           icon: const Icon(Icons.more_vert),
           itemBuilder: (context) => [
-            const PopupMenuItem(value: "reply", child: Text("Reply")),
+            const PopupMenuItem(key: Key('PostCardPopUpReplyButton'), value: "reply", child: Text("Reply")),
             if (post.isMine) ...[
-              PopupMenuItem(value: "edit", child: Text(tr.edit)),
-              PopupMenuItem(value: "delete", child: Text(tr.delete)),
+              PopupMenuItem(key: const Key('PostCardPopUpEditButton'), value: "edit", child: Text(tr.edit)),
+              PopupMenuItem(key: const Key('PostCardPopUpDeleteButton'), value: "delete", child: Text(tr.delete)),
             ],
             if (!post.isMine) ...[
-              const PopupMenuItem(value: "report", child: Text("Report")),
+              const PopupMenuItem(key: Key('PostCardPopUpReportButton'), value: "report", child: Text("Report")),
               PopupMenuItem(
                 value: 'block',
                 child: Database(
@@ -254,6 +255,7 @@ class _PostCardState extends State<PostCard> {
                       .entries
                       .map(
                         (e) => GestureDetector(
+                          key: const Key('PostCardViewImage'),
                           behavior: HitTestBehavior.opaque,
                           onTap: () => showPreview(context, post.youtubeId.isNotEmpty ? e.key + 1 : e.key),
                           child: CachedNetworkImage(
@@ -386,6 +388,7 @@ class _PostCardState extends State<PostCard> {
             child: Row(
               children: [
                 TextButton(
+                  key: const Key('PostCardShowMoreCommentsButton'),
                   onPressed: () {
                     CommentService.instance.showCommentListBottomSheet(context, post);
                   },

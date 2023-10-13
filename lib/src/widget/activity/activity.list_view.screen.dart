@@ -15,6 +15,11 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          key: const Key('AdminActivityLogBackButton'),
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back),
+        ),
         title: const Text('Activity logs'),
         actions: [
           IconButton(
