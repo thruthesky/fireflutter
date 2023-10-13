@@ -1,10 +1,8 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
-import 'package:new_app/home/forums/post/create.post.dart';
-import 'package:new_app/home/user_profile/main.page.dart';
-import 'package:new_app/inits.dart';
+import 'package:new_app/home/forum/post/create.post.dart';
+import 'package:new_app/page.essentials/inits.dart';
 import 'package:new_app/page.essentials/app.bar.dart';
 
 class FeedBody extends StatefulWidget {
@@ -28,10 +26,6 @@ class _FeedBodyState extends State<FeedBody> {
     PostService.instance.init(
       enableSeenBy: true,
     );
-    // PostService.instance.customize.postViewButtonBuilder = (post) => IconButton(
-    //       onPressed: () {},
-    //       icon: const FaIcon(FontAwesomeIcons.share),
-    //     );
   }
 
   @override
@@ -78,17 +72,6 @@ class _FeedBodyState extends State<FeedBody> {
       ),
     );
   }
-  // showDialog(
-  //   context: context,
-  //   builder: (cnx) => Dialog(
-  //     child: Padding(
-  //       padding: const EdgeInsets.all(sizeSm),
-  //       child: CommentListView(post: post),
-  //     ),
-  //   ),
-  // );
-  // launchSMS(phoneNumber: "0039-222-060-888", msg: "hello there");
-  // confirm(context: context, title: 'confirm', message: 'confirm message');
 
   Padding topBarWidgets(BuildContext context) {
     return Padding(
@@ -99,7 +82,7 @@ class _FeedBodyState extends State<FeedBody> {
             user: my,
             radius: sizeXl,
             size: sizeXl,
-            onTap: () => context.push(MainPage.routeName),
+            // onTap: () => context.push(UserPage.routeName),
           ),
           const SizedBox(width: sizeSm),
           PostField(

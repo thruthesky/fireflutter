@@ -1,11 +1,12 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
-import 'package:new_app/home/user_profile/user.features/viewers.dart';
+import 'package:new_app/home/user.profile/user.features/followers.dart';
+import 'package:new_app/home/user.profile/user.features/viewers.dart';
 import 'package:new_app/page.essentials/simple.builders.dart';
-import 'package:new_app/home/user_profile/user.features/followers.dart';
 import 'package:new_app/router/router.dart';
 
 class UserProfile extends StatefulWidget {
+  static const String routeName = '/UserProfile';
   const UserProfile({super.key});
 
   @override

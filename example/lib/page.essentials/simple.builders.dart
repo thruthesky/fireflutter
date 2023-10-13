@@ -1,7 +1,7 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:new_app/home/user_profile/forms/edit.form.dart';
+import 'package:new_app/home/user.profile/forms/edit.form.dart';
 
 Widget buttonBuilder(String text, VoidCallback? onPressed) {
   return ElevatedButton(
