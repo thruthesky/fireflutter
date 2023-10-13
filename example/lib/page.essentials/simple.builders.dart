@@ -43,7 +43,7 @@ Widget userInfo(User user, BuildContext context) {
         onPressed: () {
           showDialog(
             context: context,
-            builder: (context) => const EditForm(),
+            builder: (context) => EditForm(user: user),
           );
         },
         icon: const FaIcon(

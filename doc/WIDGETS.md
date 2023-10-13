@@ -21,6 +21,7 @@
   - [EmailLoginForm](#emailloginform)
   - [IconTextButton](#icontextbutton)
   - [CarouselView](#carouselview)
+  - [Avatar](#avatar)
 
 <!-- /code_chunk_output -->
 
@@ -306,3 +307,49 @@ CarouselView(
 <!-- ADDITIONAL: 
  - DateTimeText
  -->
+
+ ## DateTimeText
+This display a text like `dateTimeAgo()` function
+ ## MyDoc
+A builder widget that wraps the UserDoc and will return a `User` object and use it to display user's profile.  
+```dart
+MyDoc(
+  builder: (user) => Row(
+    children: [
+      UserAvatar(
+        user: user,
+        radius: sizeLg
+      ),
+      Text(user.displayName),
+    ],
+  ),
+),
+```
+`MyDoc` are using `StreamBuilder` only and will rebuild itself when user logged in or out, use `UserDoc` instead and set the `live : false` so it would use `FutureBuilder` and won't rebuild itself over again.
+```dart
+UserDoc(
+  live: false // set this to change builder type
+  builder: (user) => Row(
+    children: [
+      UserAvatar(
+        user: user,
+        radius: sizeLg
+      ),
+      Text(user.displayName),
+    ],
+  ),
+),
+```
+
+## Avatar
+This widget can be use to display users profile or images from the network. `Avatar` are like `CircleAvatar` but with more simplier things.
+
+```dart
+UserDoc(
+  builder: (user) => Avatar(
+    url: user.photoUrl,
+    radius: sizeSm,
+  ),
+),
+```
+

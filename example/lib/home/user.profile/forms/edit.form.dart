@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:new_app/page.essentials/button_row.dart';
 
 class EditForm extends StatefulWidget {
-  const EditForm({super.key});
+  const EditForm({super.key, required this.user});
 
-  // final User? user;
+  final User user;
 
   @override
   State<EditForm> createState() => _EditFormState();
@@ -16,15 +16,18 @@ class _EditFormState extends State<EditForm> {
   // final displayName = TextEditingController();
   // final name = TextEditingController();
   // final gender = TextEditingController();
-
-  String displayName = my!.displayName;
-  String name = my!.name;
-  String gender = 'Male';
-  Gender genVal = Gender.M;
+  late String displayName;
+  late String name;
+  late String gender;
+  late Gender genVal;
   @override
   void initState() {
     super.initState();
     UserService.instance.get(myUid ?? '');
+    displayName = widget.user.displayName;
+    name = widget.user.name;
+    gender = 'Male';
+    genVal = Gender.M;
   }
 
   // @override
@@ -48,9 +51,9 @@ class _EditFormState extends State<EditForm> {
             width: 400,
             child: Column(
               children: [
-                _textFieldBuilder('Display Name', my?.displayName == '' ? displayName : my!.displayName,
+                _textFieldBuilder('Display Name', widget.user.displayName == '' ? displayName : widget.user.displayName,
                     isDisplay: true),
-                _textFieldBuilder('Name', my?.name == '' ? name : my!.name, isName: true),
+                _textFieldBuilder('Name', widget.user.name == '' ? name : widget.user.name, isName: true),
                 DropdownButton(
                   value: genVal,
                   items: const [
@@ -82,8 +85,8 @@ class _EditFormState extends State<EditForm> {
                 ButtonRow(
                   label1: 'Update',
                   action1: () async {
-                    await my
-                        ?.update(
+                    await widget.user
+                        .update(
                       displayName: displayName,
                       name: name,
                       gender: gender,
@@ -96,7 +99,7 @@ class _EditFormState extends State<EditForm> {
                         message: 'Profile has been updated successfully',
                       );
                     });
-                    await my?.updateComplete(true);
+                    await widget.user.updateComplete(true);
                   },
                   label2: 'Cancel',
                   action2: () => context.pop(),
@@ -117,19 +120,19 @@ class _EditFormState extends State<EditForm> {
         onChanged: (value) => setState(() {
           if (isDisplay) {
             displayName = value;
-            name = name == '' ? my!.name : name;
-            gender = gender == '' ? my!.gender : gender;
+            name = name == '' ? widget.user.name : name;
+            gender = gender == '' ? widget.user.gender : gender;
             return;
           }
           if (isName) {
             name = value;
-            displayName = displayName == '' ? my!.displayName : displayName;
-            gender = gender == '' ? my!.gender : gender;
+            displayName = displayName == '' ? widget.user.displayName : displayName;
+            gender = gender == '' ? widget.user.gender : gender;
             return;
           }
           gender = value;
-          name = name == '' ? my!.name : name;
-          displayName = displayName == '' ? my!.displayName : displayName;
+          name = name == '' ? widget.user.name : name;
+          displayName = displayName == '' ? widget.user.displayName : displayName;
         }),
         decoration: InputDecoration(
           border: const OutlineInputBorder(

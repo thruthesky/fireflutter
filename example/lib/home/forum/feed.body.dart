@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -19,7 +17,6 @@ class FeedBody extends StatefulWidget {
 class _FeedBodyState extends State<FeedBody> {
   final controller = TextEditingController();
   String categName = '';
-
   Future<Comment?> commentGet() {
     return Comment.get('5QCeocnLyx210J83Hw30');
   }
@@ -27,6 +24,7 @@ class _FeedBodyState extends State<FeedBody> {
   @override
   void initState() {
     super.initState();
+    UserService.instance.init(adminUid: myUid);
     customizePostInit(categName);
     ChatService.instance.customize.chatRoomAppBarBuilder = ({room, user}) => customAppBar(context, room);
     PostService.instance.init(
@@ -34,11 +32,7 @@ class _FeedBodyState extends State<FeedBody> {
     );
 
     CommentService.instance.init(
-      customize: CommentCustomize(
-          // showCommentListBottomSheet: (context, post) {
-          //   // your code here
-          //   }
-          ),
+      customize: CommentCustomize(),
     );
   }
 
@@ -58,17 +52,10 @@ class _FeedBodyState extends State<FeedBody> {
           Expanded(
             child: PostListView(
               itemBuilder: (context, post) => InkWell(
-                onTap: () {
-                  showGeneralDialog(
-                    context: context,
-                    pageBuilder: (context, _, __) => Dialog(
-                      child: CommentListView(
-                        post: post,
-                        itemBuilder: (context, comment) => PostViewScreen(post: post),
-                        // CommentOneLineListTile(comment: comment, post: post),
-                      ),
-                    ),
-                  );
+                onTap: () async {
+                  // var test = await get(favoriteDoc(post.id).toString());
+                  // debugPrint('$test');
+                  showGeneralDialog(context: context, pageBuilder: (context, _, __) => PostViewScreen(post: post));
                 },
                 child: PostCard(
                   post: post,

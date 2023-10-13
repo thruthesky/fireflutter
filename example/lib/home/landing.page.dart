@@ -17,15 +17,14 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
-  Widget child = const ChatRoom();
-  int index = 1;
-  String appBarName = 'Chat Room';
+  Widget child = const UserProfile();
+  int index = 2;
+  String appBarName = 'Profile';
   final double iconSize = sizeSm;
-  double top = 0;
-  double left = 135;
-  double right = 240;
+  double left = 240;
+  double right = 135;
 
-  void state(Widget? child, String appBarName, int index, {double left = 135, double right = 240}) {
+  void state(Widget? child, String appBarName, int index, {double left = 240, double right = 135}) {
     setState(() {
       this.child = child ?? const SizedBox.shrink();
       this.appBarName = appBarName;
@@ -55,7 +54,7 @@ class _LandingPageState extends State<LandingPage> {
             _icons(context),
             AnimatedPositioned(
               duration: const Duration(milliseconds: 200),
-              top: top,
+              top: 0,
               right: right,
               left: left,
               child: Container(
@@ -81,6 +80,7 @@ class _LandingPageState extends State<LandingPage> {
         _iconButtonBuilder(FontAwesomeIcons.solidMessage, 1), // 1
         _iconButtonBuilder(FontAwesomeIcons.solidUser, 2), // 2
         _iconButtonBuilder(FontAwesomeIcons.shield, 3, onPressed: () => context.push('/TestUi')), // 3
+        // _iconButtonBuilder(FontAwesomeIcons.stackOverflow, 4), // 4
       ],
     );
   }
@@ -93,7 +93,7 @@ class _LandingPageState extends State<LandingPage> {
             state(const FeedBody(), 'Forum', index, left: 24, right: 350);
             break;
           case 1:
-            state(const ChatRoom(), 'Chats', index);
+            state(const ChatRoom(), 'Chats', index, left: 135, right: 240);
             break;
           case 2:
             state(const UserProfile(), 'Profile', index, left: 240, right: 135);
@@ -101,6 +101,9 @@ class _LandingPageState extends State<LandingPage> {
           case 3:
             state(const TestUi(), 'Admin', index, left: 350, right: 24);
             break;
+          // case 4:
+          //   state(const MyDocSample(), 'Forum', index, left: 24, right: 350);
+          // break;
           default:
             child = const SizedBox.shrink();
             break;
@@ -113,4 +116,8 @@ class _LandingPageState extends State<LandingPage> {
       ),
     );
   }
+}
+
+class MyDocSample {
+  const MyDocSample();
 }
