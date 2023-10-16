@@ -48,8 +48,13 @@ class AdminUserListView extends StatelessWidget {
     Query query = db.collection(userCollectionName);
 
     if (name != null && name!.isNotEmpty) {
-      query = query.where(Filter.or(Filter('firstName', isEqualTo: name), Filter('middleName', isEqualTo: name),
-          Filter('lastName', isEqualTo: name)));
+      query = query.where(
+        Filter.or(
+          Filter('firstName', isEqualTo: name),
+          Filter('middleName', isEqualTo: name),
+          Filter('lastName', isEqualTo: name),
+        ),
+      );
     }
 
     if (displayName != null && displayName!.isNotEmpty) {
