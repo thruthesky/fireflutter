@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 class UserListView extends StatelessWidget {
   const UserListView({
     super.key,
+    this.shrinkWrap = false,
+    this.physics,
     this.searchText,
     this.query,
     this.exemptedUsers = const [],
@@ -35,6 +37,8 @@ class UserListView extends StatelessWidget {
     this.separatorBuilder,
   });
 
+  final bool shrinkWrap;
+  final ScrollPhysics? physics;
   final String? searchText;
   final Query? query;
   final List<String> exemptedUsers;
@@ -91,7 +95,7 @@ class UserListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return FirestoreQueryBuilder(
       pageSize: pageSize,
-      query: searchQuery ?? query ?? userCol,
+      query: query ?? searchQuery ?? userCol,
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
           return const Center(
@@ -106,6 +110,8 @@ class UserListView extends StatelessWidget {
         snapshot.docs.removeWhere((doc) => !(User.fromDocumentSnapshot(doc).exists));
         if (customViewBuilder != null) return customViewBuilder!.call(snapshot);
         return ListView.separated(
+          physics: physics,
+          shrinkWrap: shrinkWrap,
           separatorBuilder: (context, index) =>
               separatorBuilder?.call(index) ??
               Divider(
