@@ -53,6 +53,9 @@ String? get myUid => auth.FirebaseAuth.instance.currentUser?.uid;
 /// Alias of [UserService.instance.adminUid].
 String? get adminUid => UserService.instance.adminUid;
 
+/// Alias of [UserService.instance.isAdmin].
+bool get isAdmin => UserService.instance.isAdmin;
+
 class UserService {
   static UserService? _instance;
   static UserService get instance => _instance ??= UserService._();
