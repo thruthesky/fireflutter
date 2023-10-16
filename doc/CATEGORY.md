@@ -1,10 +1,11 @@
-# Table of Contents {ignore = true}
+# Table of Contents  
 
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
+- [Table of Contents](#table-of-contents)
 - [Category](#category)
   - [Overview](#overview)
   - [CategoryServices](#categoryservices)
