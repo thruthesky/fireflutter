@@ -80,6 +80,7 @@ class UserListView extends StatelessWidget {
           Filter('firstName', isEqualTo: searchText),
           Filter('middleName', isEqualTo: searchText),
           Filter('lastName', isEqualTo: searchText),
+          Filter('name', isEqualTo: searchText),
         ),
       );
     }
