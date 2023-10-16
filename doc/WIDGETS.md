@@ -325,7 +325,7 @@ MyDoc(
   ),
 ),
 ```
-`MyDoc` are using `StreamBuilder` only and will rebuild itself when user logged in or out, use `UserDoc` instead and set the `live : false` so it would use `FutureBuilder` and won't rebuild itself over again.
+`MyDoc` are using `StreamBuilder` ***only*** and will rebuild itself when user logged in or out, use `UserDoc` instead and set the `live : false` so it would use `FutureBuilder` and won't rebuild itself over again.
 ```dart
 UserDoc(
   live: false // set this to change builder type

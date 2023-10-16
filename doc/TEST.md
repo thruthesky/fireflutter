@@ -11,6 +11,16 @@
   - [Testing on real Firebase](#testing-on-real-firebase)
   - [Testing on Cloud Functions](#testing-on-cloud-functions)
 - [TestUi Widget](#testui-widget)
+    - [Login w/ [name]](#login-w-name)
+    - [FireFlutter init()](#fireflutter-init)
+    - [UserService init()](#userservice-init)
+    - [QnA Forum](#qna-forum)
+    - [Chat](#chat)
+  - [Individual Test](#individual-test)
+    - [Toast](#toast)
+    - [User](#user)
+    - [User Document](#user-document)
+    - [Feed](#feed)
 
 <!-- /code_chunk_output -->
 
@@ -121,3 +131,31 @@ To use this test,
 3. Press the `Run all tests` button to see everything works fine.
 
 You don't need to initialize anything to test.
+#### Login w/ [name]
+Login using the account from the name of each button, it will create a new account if its not existing. `Random Login` will log in random accounts
+
+![logins](/doc/img/login_buttons.png)
+
+#### FireFlutter init()
+Use this to test the `init` of `FireFlutterService` instance.
+
+#### UserService init()
+Use this to test the `init` of `UserService` instance.
+
+#### QnA Forum
+Display all the post into a new screen.
+
+#### Chat
+
+### Individual Test
+
+#### Toast
+Display toast notification
+
+#### User 
+This will test the process of creating a user.
+
+#### User Document
+This will create a user document and listen to the document changes. If a random user has registered, the document must not exist.
+
+#### Feed

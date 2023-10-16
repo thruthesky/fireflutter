@@ -78,25 +78,23 @@ class CustomPostViewScreen extends StatelessWidget {
                       TextButton(
                         style: ButtonStyle(
                           textStyle: MaterialStateTextStyle.resolveWith(
-                            (states) => const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: sizeXs + 2),
+                            (states) => const TextStyle(fontWeight: FontWeight.bold, fontSize: sizeXs + 2),
                           ),
                           minimumSize: const MaterialStatePropertyAll(
-                              Size(sizeSm, sizeXs)),
+                            Size(sizeSm, sizeXs),
+                          ),
                         ),
                         onPressed: () async {
-                          final result =
-                              await toggle(pathBlock(snapshot.data!.uid));
+                          final result = await toggle(
+                            pathBlock(snapshot.data!.uid),
+                          );
                           toast(
                               title: result ? 'Blocked' : 'Unblocked',
-                              message:
-                                  "User has ${result ? 'Blocked' : 'Unblocked'}");
+                              message: "User has ${result ? 'Blocked' : 'Unblocked'}");
                         },
                         child: Database(
                           path: pathBlock(snapshot.data!.uid),
-                          builder: (value, path) =>
-                              Text(value == null ? 'Block' : 'Unblock'),
+                          builder: (value, path) => Text(value == null ? 'Block' : 'Unblock'),
                         ),
                       ),
                   ],
@@ -115,8 +113,7 @@ class CustomPostViewScreen extends StatelessWidget {
           const Spacer(),
           if (snapshot.data!.uid == myUid)
             IconButton(
-              onPressed: () => PostService.instance.showEditScreen(context,
-                  categoryId: post.categoryId, post: post),
+              onPressed: () => PostService.instance.showEditScreen(context, categoryId: post.categoryId, post: post),
               icon: const FaIcon(FontAwesomeIcons.pen),
             )
           else
@@ -138,20 +135,17 @@ class CustomPostViewScreen extends StatelessWidget {
             value: 'block',
             child: Database(
               path: pathBlock(post.uid),
-              builder: (value, p) =>
-                  Text(value == null ? tr.block : tr.unblock),
+              builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
             ),
           ),
       ],
       onSelected: (value) async {
         if (value == "reply") {
-          CommentService.instance
-              .showCommentEditBottomSheet(context, post: post);
+          CommentService.instance.showCommentEditBottomSheet(context, post: post);
         } else if (value == "edit") {
           PostService.instance.showEditScreen(context, post: post);
         } else if (value == 'report') {
-          ReportService.instance
-              .showReportDialog(context: context, postId: post.id);
+          ReportService.instance.showReportDialog(context: context, postId: post.id);
         } else if (value == 'block') {
           final blocked = await toggle(pathBlock(post.uid));
           toast(

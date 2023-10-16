@@ -32,10 +32,12 @@
 If `enableNotificationOnLike` is set to true, then it will send push notification to the author when there is a like. You would do the work by adding `onLike` callback.
 
 ```dart
-// When it is set to true, you don't have add `onLike` callback to send push notification.
-enableNotificationOnLike: true,
+
   
 PostService.instance.init(
+  // When it is set to true, you don't have add `onLike` callback to send push notification.
+  enableNotificationOnLike: true,
+
   onLike: (Post post, bool isLiked) async {
     if (!isLiked) return;
     MessagingService.instance.queue(
@@ -46,6 +48,7 @@ PostService.instance.init(
       type: NotificationType.post.name,
     );
   },
+)
 ```
 
 Or you can do the UI/UX by yourself since it delivers everything you need to show comment edit box.

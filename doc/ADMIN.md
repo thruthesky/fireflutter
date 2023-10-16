@@ -205,3 +205,5 @@ You can use the language like below,
           '#no', noOfLikes.length.toString()),
  ),
 ```
+
+<!-- Disabling user -->
