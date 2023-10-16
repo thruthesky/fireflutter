@@ -73,6 +73,16 @@ class UserListView extends StatelessWidget {
 
   Query? get searchQuery {
     if (searchText == null) return null;
+    if (searchText!.isEmpty) return null;
+    if (field == 'name') {
+      return userCol.where(
+        Filter.or(
+          Filter('firstName', isEqualTo: searchText),
+          Filter('middleName', isEqualTo: searchText),
+          Filter('lastName', isEqualTo: searchText),
+        ),
+      );
+    }
     return userCol.where(field, isEqualTo: searchText);
   }
 
