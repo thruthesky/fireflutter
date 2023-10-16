@@ -361,15 +361,25 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
             ),
             IconButton(
               onPressed: () {
-                AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
-                  users[user.uid] = user;
-                  toast(
-                    title: 'Users add',
-                    message: "${userDisplayName(user)} was added on the list",
-                    duration: const Duration(seconds: 2),
-                  );
-                  setState(() {});
-                });
+                AdminService.instance.showUserSearchDialog(
+                  context,
+                  field: 'name',
+                  onTap: (user) async {
+                    users[user.uid] = user;
+                    toast(
+                      title: 'Users add',
+                      message: "${userDisplayName(user)} was added on the list",
+                      duration: const Duration(seconds: 2),
+                    );
+                    setState(() {});
+                  },
+                  titleBuilder: (user) => Text(
+                    userDisplayName(user!),
+                  ),
+                  subtitleBuilder: (user) => Text(
+                    dateTimeShort(user!.createdAt),
+                  ),
+                );
               },
               icon: const Icon(Icons.search),
             ),
