@@ -95,7 +95,7 @@ class UserBuilder extends StatelessWidget {
 
 **_Note:_** [**UserProfileAvatar**](/README.md#UserProfileAvatar) returns an icon that will serve as a default profile picture if the user doesn't have any picture uploaded.
 
-![user_profile](/doc/img/user_profile.png)
+![user_profile](https://github.com/thruthesky/fireflutter/blob/main/doc/img/user_profile.png?raw=true)
 
 ## How to build a chat app
 
@@ -123,12 +123,11 @@ Add the FireFlutter controller
 final ChatRoomListViewController controller = ChatRoomListViewController();
 ```
 
-Add a `Scaffold()` and create your own UI design. Inside the body add the `ChatRoomListView()`. See [Chat Features](#chat-feature) for more info.
+Add a `Scaffold` and create your own UI design. Inside the body add the `ChatRoomListView`. See [Chat Features](#chat-feature) for more info.
 
 ```dart
 Scaffold(
   appBar: appBar('Chats'),
-  bottomNavigationBar: const BottomNavBar(index: 1),
   body: ChatRoomListView(
     controller: controller, // ChatRoomListViewController controller;
     singleChatOnly: false,
@@ -139,12 +138,13 @@ Scaffold(
       },
     ),
   ),
+  bottomNavigationBar: const BottomNavBar(index: 1),
 )
 ```
 
 ### Result
 
-![chat_app](/doc/img/chat_app.png)
+![chat_app](https://github.com/thruthesky/fireflutter/blob/main/doc/img/chat_app.png?raw=true)
 
 **_Note:_** Admins will automatically send a welcome message when `UserService.instance.sendWelcomeMessage(message: 'Welcome!')` is being used.
 
@@ -185,7 +185,7 @@ void initState() {
 
 ### PostListView
 
-`PostListView()` builder works like a `ListView()`. It can display widgets with the posts details in a scrollable manner.
+`PostListView` builder works like a `ListView`. It can display widgets with the posts details in a scrollable manner.
 
 ```dart
 PostListView(
@@ -193,7 +193,7 @@ PostListView(
 )
 ```
 
-You can use `PostCard()` to generate a default style of the post
+You can use `PostCard` to generate a default style of the post
 
 ```dart
 PostListView(
@@ -212,8 +212,8 @@ PostListView(
   ),
 ```
 
-**_Note:_** Aside from `Theme()`, there are many builders inside the `PostCard()` that you can use for customizing UI Design.
+**_Note:_** Aside from `Theme`, there are many builders inside the `PostCard` that you can use for customizing UI Design.
 
 ### Result
 
-![forum_result](/doc/img/forum.png)
+![forum_result](https://github.com/thruthesky/fireflutter/blob/main/doc/img/forum.png?raw=true)

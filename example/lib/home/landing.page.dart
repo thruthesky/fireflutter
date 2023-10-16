@@ -24,8 +24,7 @@ class _LandingPageState extends State<LandingPage> {
   double left = 240;
   double right = 135;
 
-  void state(Widget? child, String appBarName, int index,
-      {double left = 240, double right = 135}) {
+  void state(Widget? child, String appBarName, int index, {double left = 240, double right = 135}) {
     setState(() {
       this.child = child ?? const SizedBox.shrink();
       this.appBarName = appBarName;
@@ -80,15 +79,12 @@ class _LandingPageState extends State<LandingPage> {
         _iconButtonBuilder(FontAwesomeIcons.peopleGroup, 0), // 0
         _iconButtonBuilder(FontAwesomeIcons.solidMessage, 1), // 1
         _iconButtonBuilder(FontAwesomeIcons.solidUser, 2), // 2
-        _iconButtonBuilder(FontAwesomeIcons.shield, 3,
-            onPressed: () => context.push('/TestUi')), // 3
-        // _iconButtonBuilder(FontAwesomeIcons.stackOverflow, 4), // 4
+        _iconButtonBuilder(FontAwesomeIcons.shield, 3, onPressed: () => context.push('/TestUi')), // 3
       ],
     );
   }
 
-  Widget _iconButtonBuilder(IconData icon, int index,
-      {VoidCallback? onPressed}) {
+  Widget _iconButtonBuilder(IconData icon, int index, {VoidCallback? onPressed}) {
     return IconButton(
       onPressed: () {
         switch (index) {
@@ -104,9 +100,6 @@ class _LandingPageState extends State<LandingPage> {
           case 3:
             state(const TestUi(), 'Admin', index, left: 350, right: 24);
             break;
-          // case 4:
-          //   state(const MyDocSample(), 'Forum', index, left: 24, right: 350);
-          // break;
           default:
             child = const SizedBox.shrink();
             break;
@@ -115,14 +108,8 @@ class _LandingPageState extends State<LandingPage> {
       icon: FaIcon(
         icon,
         size: sizeSm,
-        color: this.index == index
-            ? Theme.of(context).shadowColor
-            : Theme.of(context).shadowColor.withAlpha(100),
+        color: this.index == index ? Theme.of(context).shadowColor : Theme.of(context).shadowColor.withAlpha(100),
       ),
     );
   }
-}
-
-class MyDocSample {
-  const MyDocSample();
 }

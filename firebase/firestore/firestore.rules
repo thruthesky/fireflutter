@@ -58,7 +58,7 @@ service cloud.firestore {
         ||
         ( request.auth.uid == userDocumentId && notUpdating(['isDisabled', 'isAdmin', 'isVerified']) && notDisabled() )
         ||
-        (addOrRemove('followers', request.auth.uid) && notDisabled())
+        addOrRemove('followers', request.auth.uid)
         ;
       allow delete: if isAdmin() || (request.auth.uid == userDocumentId && notDisabled());
       match /fcm_tokens/{docId} {
@@ -127,9 +127,11 @@ service cloud.firestore {
       allow update: if
         isAdmin()
         ||
-        (addOrRemove('followers', request.auth.uid) && notDisabled())
+        addOrRemove('followers', request.auth.uid)
         ||
-        ((isMyPost() || onlyUpdating(['noOfComments']) ) && notDisabled()) 
+        onlyUpdating(['noOfComments'])
+        ||
+        (isMyPost() && notDisabled())
       ;
       allow delete: if false;
     }
@@ -147,7 +149,12 @@ service cloud.firestore {
 
       allow read: if true; // Anyone should be able to read comments
       allow create: if willBeMyComment() && notDisabled();
-      allow update: if isAdmin() || (addOrRemove('likes', request.auth.uid) && notDisabled()) || (isMyComment() && notDisabled());
+      allow update: if
+        isAdmin()
+        ||
+        addOrRemove('likes', request.auth.uid)
+        ||
+        (isMyComment() && notDisabled());
       allow delete: if false; // Prevent hard delete in comments
     }
   
@@ -208,7 +215,7 @@ service cloud.firestore {
       //   return 'group' in resource.data && resource.data.group;
       // }
 
-      allow read: if isRoomUser() || isOpen() || isAdmin();
+      allow read: if isAdmin() || isRoomUser() || isOpen();
       allow create: if
         required(['master', 'createdAt', 'group', 'open', 'users'])
         &&
@@ -226,18 +233,19 @@ service cloud.firestore {
         && notDisabled();
 
       allow update: if
+        isLeaving()
+        ||
         ( isMaster() && notRemovingMaster() && notDisabled() )
         ||
         ( isModerator() && notUpdatingMaster() && notRemovingMaster() && notDisabled() )
         ||
-        (isLeaving() && notDisabled())
-        ||
-        ( isRoomUser() && onlyUpdating(['lastMessage', 'rename']) && notDisabled())
+        ( isRoomUser() && onlyUpdating(['lastMessage', 'rename']) && notDisabled() )
         ||
         ( isOpen() && isJoining() && notDisabled())
         ||
-        // If the group chat is private, then users cannot invite others.
-        ( isOpen() && isRoomUser() && onlyAddingOneElement('users') && notDisabled())
+        // invite, If the group chat is private, then users cannot invite others.
+        // Can a user invites himself? It's not a big issue anyway.
+        ( isOpen() && isRoomUser() && onlyAddingOneElement('users') && notDisabled() )
       ;
 
       allow delete: if false;
@@ -277,7 +285,7 @@ service cloud.firestore {
     // report
     match /reports/{documentId} {
       allow read: if isMyDoc() || isAdmin();
-      allow write: if  isAdmin() || willBeMyDoc() && notDisabled() || isMyDoc() && notDisabled();
+      allow write: if isAdmin() || willBeMyDoc() || isMyDoc();
     }
 
     match /readonly/{documentId} {

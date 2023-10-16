@@ -1,32 +1,5 @@
-# Table of Contents
 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
-
-<!-- code_chunk_output -->
-
-- [Overview](#overview)
-- [UserService](#userservice)
-- [Like](#like)
-- [Favorite/Bookmark](#favoritebookmark)
-  - [How to display icon](#how-to-display-icon)
-- [Follow and Unfollow](#follow-and-unfollow)
-  - [Display Followers](#display-followers)
-- [No of profile view](#no-of-profile-view)
-- [User profile screen customization](#user-profile-screen-customization)
-- [User public screen customization](#user-public-screen-customization)
-- [Avatar](#avatar)
-- [UserAvatar](#useravatar)
-- [UserProfileAvatar](#userprofileavatar)
-- [User List View](#user-list-view)
-  - [UserListView.builder](#userlistviewbuilder)
-- [When user is not logged in](#when-user-is-not-logged-in)
-
-<!-- /code_chunk_output -->
-
-
-
-
-# Table of Contents {ignore=true}
+# Table of Contents  
 
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
@@ -57,13 +30,13 @@
 
 ## Overview
 
-`idVerifiedCode` is the code of user's authentication id code. This is used to save user's id code when the user uploaded his id card like passport and the AI (Firebase AI Extension) detect user's information and the verification succeed, the file path is being save in `idVerificationCoce`. You may use it on your own purpose.
+`idVerifiedCode` is the code of user's authentication id code. This is used to save user's id code when the user uploaded his id card like passport and the AI (Firebase AI Extension) detect user's information and the verification succeed, the file path is being save in `idVerificationCode`. You may use it on your own purpose.
 
 `complete` is a boolean field to indicate that the user completed updating his profile information.
 
 `verified` is a boolean field to indicate that the user's identification has fully verified by the system. Note that, this is not secured by the rules as of now. Meaning, user can edit it by himself.
 
-`birthDayOfYear` is the birth day of the year. It is automatically set by the `User.update()`. For instnace, if the user saves his birth day, then the app should use this kind of code; `my.update(birthYear: 1999, birthMonth: 9, birthDay: 9);` and it will automtically update the `birthDayOfYear` value.
+`birthDayOfYear` is the birth day of the year. It is automatically set by the `User.update()`. For instance, if the user saves his birth day, then the app should use this kind of code; `my.update(birthYear: 1999, birthMonth: 9, birthDay: 9);` and it will automtically update the `birthDayOfYear` value.
 
 ## UserService
 `UserService.instance.nullableUser` is _null_ when
@@ -71,8 +44,6 @@
 - on app boot
 - the user don't have documents
 - when user has document but `UserService` has not read the user document yet.
-
-<!-- **Note:** Use ***async*** to wait UserService to load the data -->
 
 `UserService.instance.nullableUser.exists` is _null_ if the user has logged in but no document.
 
@@ -84,7 +55,7 @@ Right way of getting a user document.
 UserService.instance.get(myUid!).then((user) => ...);
 ```
 
-You cannot use `my` until the UserService is initialized and `UserService.instance.user` is available. Or you will see `null check operator used on a null value.`
+***Note:*** You cannot use `my` until the UserService is initialized and `UserService.instance.user` is available. Or you will see `null check operator used on a null value.` You can use `MyDoc` from [WIDGETS.md](/doc/WIDGETS.md) instead.
 
 ## Like
 
