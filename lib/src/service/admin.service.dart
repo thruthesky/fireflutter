@@ -16,7 +16,22 @@ class AdminService {
     );
   }
 
-  showUserSearchDialog(BuildContext context, {Function(User)? onTap}) {
+  /// Show user search dialog
+  /// [field] is the field to search. It can be 'name', 'displayName', or 'email'
+  /// [onTap] is the function to call when the user is tapped.
+  /// [avatarBuilder] is the function to build avatar.
+  /// [titleBuilder] is the function to build title.
+  /// [subtitleBuilder] is the function to build subtitle.
+  /// [trailingBuilder] is the function to build trailing.
+  showUserSearchDialog(
+    BuildContext context, {
+    Function(User)? onTap,
+    Widget Function(User?)? avatarBuilder,
+    Widget Function(User?)? titleBuilder,
+    Widget Function(User?)? subtitleBuilder,
+    Widget Function(User?)? trailingBuilder,
+    String field = 'displayName',
+  }) {
     final input = TextEditingController();
     showGeneralDialog(
       context: context,
@@ -27,23 +42,32 @@ class AdminService {
               title: const Text('Choose User'),
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(60),
-                child: TextField(
-                  controller: input,
-                  decoration: InputDecoration(
-                    label: const Text('Search'),
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {});
-                      },
-                      icon: const Icon(Icons.send),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: sizeSm),
+                  child: TextField(
+                    controller: input,
+                    decoration: InputDecoration(
+                      label: const Text('Search'),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {});
+                        },
+                        icon: const Icon(Icons.send),
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
             body: AdminUserListView(
-              displayName: input.text,
+              name: field == 'name' ? input.text : null,
+              displayName: field == 'displayName' ? input.text : null,
+              email: field == 'email' ? input.text : null,
               onTap: onTap,
+              avatarBuilder: avatarBuilder,
+              titleBuilder: titleBuilder,
+              subtitleBuilder: subtitleBuilder,
+              trailingBuilder: trailingBuilder,
             ),
           );
         });
