@@ -233,11 +233,11 @@ service cloud.firestore {
         && notDisabled();
 
       allow update: if
+        isLeaving()
+        ||
         ( isMaster() && notRemovingMaster() && notDisabled() )
         ||
         ( isModerator() && notUpdatingMaster() && notRemovingMaster() && notDisabled() )
-        ||
-        isLeaving()
         ||
         ( isRoomUser() && onlyUpdating(['lastMessage', 'rename']) && notDisabled() )
         ||
