@@ -27,15 +27,18 @@ class AdminService {
               title: const Text('Choose User'),
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(60),
-                child: TextField(
-                  controller: input,
-                  decoration: InputDecoration(
-                    label: const Text('Search'),
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {});
-                      },
-                      icon: const Icon(Icons.send),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: sizeSm),
+                  child: TextField(
+                    controller: input,
+                    decoration: InputDecoration(
+                      label: const Text('Search'),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {});
+                        },
+                        icon: const Icon(Icons.send),
+                      ),
                     ),
                   ),
                 ),

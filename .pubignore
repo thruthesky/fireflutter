@@ -3,6 +3,7 @@ apps/
 .flutter-plugins-dependencies
 
 firebase_options.dart
+GoogleService-Info.plist
 
 # Miscellaneous
 *.class
