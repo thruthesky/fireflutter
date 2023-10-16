@@ -4,29 +4,31 @@
 
 <!-- code_chunk_output -->
 <!-- [toc] -->
-- [Overview](#overview)
-- [ChatService](#chatservice)
-  - [Open chat room](#open-chat-room)
-  - [Display Chat Room Menu](#display-chat-room-menu)
-  - [Chat Room Dialog.](#chat-room-dialog)
-- [Welcome Message](#welcome-message)
-- [No of new message](#no-of-new-message)
-- [Total no of new message](#total-no-of-new-message)
-  - [Chat Room List](#chat-room-list)
-  - [Create a chat room](#create-a-chat-room)
-  - [Display a Chat Room](#display-a-chat-room)
-  - [Test UI Chat room screen](#test-ui-chat-room-screen)
-    - [Chat Room fields](#chat-room-fields)
-    - [Chat Message fields](#chat-message-fields)
-- [UI Customization](#ui-customization)
-  - [Chat Customization](#chat-customization)
-- [Chat room list](#chat-room-list-1)
-- [Chat Room Menu](#chat-room-menu)
-- [Chat Room Settings](#chat-room-settings)
-  - [Counting no of new messages](#counting-no-of-new-messages)
-- [Displaying chat rooms that has new message (unread messages)](#displaying-chat-rooms-that-has-new-message-unread-messages)
-- [1:1 Chat and Multi user chat](#11-chat-and-multi-user-chat)
-- [Chat Customization](#chat-customization)
+- [Table of Contents {ignore=true}](#table-of-contents-ignoretrue)
+- [Chat](#chat)
+  - [Overview](#overview)
+  - [ChatService](#chatservice)
+    - [Open chat room](#open-chat-room)
+    - [Display Chat Room Menu](#display-chat-room-menu)
+    - [Chat Room Dialog.](#chat-room-dialog)
+  - [Welcome Message](#welcome-message)
+  - [No of new message](#no-of-new-message)
+  - [Total no of new message](#total-no-of-new-message)
+    - [Chat Room List](#chat-room-list)
+    - [Create a chat room](#create-a-chat-room)
+    - [Display a Chat Room](#display-a-chat-room)
+    - [Test UI Chat room screen](#test-ui-chat-room-screen)
+      - [Chat Room fields](#chat-room-fields)
+      - [Chat Message fields](#chat-message-fields)
+  - [UI Customization](#ui-customization)
+    - [Chat Customization](#chat-customization)
+  - [Chat room list](#chat-room-list-1)
+  - [Chat Room Menu](#chat-room-menu)
+  - [Chat Room Settings](#chat-room-settings)
+    - [Counting no of new messages](#counting-no-of-new-messages)
+  - [Displaying chat rooms that has new message (unread messages)](#displaying-chat-rooms-that-has-new-message-unread-messages)
+  - [1:1 Chat and Multi user chat](#11-chat-and-multi-user-chat)
+  - [How to hook chat room open and check if the user has permission](#how-to-hook-chat-room-open-and-check-if-the-user-has-permission)
 <!-- /code_chunk_output -->
 
 
@@ -328,6 +330,13 @@ Customize your own Chat Room header like this
 ChatService.instance.customize.chatRoomAppBarBuilder ({room, user}) => customAppBar(context, room);
 ```
 
+
+
+
+
+
+
+
 ## Chat room list
 
 - To list chat rooms, use the code below.
@@ -463,3 +472,30 @@ ChatRoomSettingsDefaultRoomNameListTile(
 - group chat room must have `{group: true, open: [boolean]}`. This is for searching purpose in Firestore.
   - For 1:1 chat room, it must be `{group: false, open: false}`. This is for searching purpose in Firestore.
 
+
+## How to hook chat room open and check if the user has permission
+
+
+```dart
+initChatService() {
+    ChatService.instance.init(
+      customize: ChatCustomize(
+        showChatRoom: ({required BuildContext context, Room? room, User? user}) {
+          if (my!.isComplete || (user != null && user.uid == adminUid)) {
+            return showGeneralDialog(
+              context: context,
+              pageBuilder: (_, __, ___) {
+                return ChatRoomScreen(
+                  room: room,
+                  user: user,
+                );
+              },
+            );
+          } else {
+            warning(context, title: 'User verification', message: 'Please verify your identity before using chat service.');
+          }
+        },
+      ),
+    );
+  }
+```
