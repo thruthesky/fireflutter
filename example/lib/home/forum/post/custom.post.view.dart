@@ -1,6 +1,7 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:new_app/home/forum/post/block.button.dart';
 
 class CustomPostViewScreen extends StatelessWidget {
   const CustomPostViewScreen({
@@ -11,7 +12,7 @@ class CustomPostViewScreen extends StatelessWidget {
   });
   final AsyncSnapshot<User?> snapshot;
   final Post post;
-  final String dateAgo;
+  final DateTime dateAgo;
 
   @override
   Widget build(BuildContext context) {
@@ -74,38 +75,15 @@ class CustomPostViewScreen extends StatelessWidget {
                       ),
                     ),
                     // BLOCK / UNBLOCK HERE
-                    if (snapshot.data!.uid != myUid)
-                      TextButton(
-                        style: ButtonStyle(
-                          textStyle: MaterialStateTextStyle.resolveWith(
-                            (states) => const TextStyle(fontWeight: FontWeight.bold, fontSize: sizeXs + 2),
-                          ),
-                          minimumSize: const MaterialStatePropertyAll(
-                            Size(sizeSm, sizeXs),
-                          ),
-                        ),
-                        onPressed: () async {
-                          final result = await toggle(
-                            pathBlock(snapshot.data!.uid),
-                          );
-                          toast(
-                              title: result ? 'Blocked' : 'Unblocked',
-                              message: "User has ${result ? 'Blocked' : 'Unblocked'}");
-                        },
-                        child: Database(
-                          path: pathBlock(snapshot.data!.uid),
-                          builder: (value, path) => Text(value == null ? 'Block' : 'Unblock'),
-                        ),
-                      ),
+                    if (snapshot.data!.uid != myUid) BlockUnblock(snapshot: snapshot),
                   ],
                 ),
               ),
-              Text(
-                dateAgo,
+              DateTimeText(
+                dateTime: dateAgo,
                 style: TextStyle(
-                  color: Theme.of(context).shadowColor.withAlpha(150),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w300,
+                  color: Theme.of(context).hintColor,
+                  fontSize: sizeSm - 5,
                 ),
               ),
             ],

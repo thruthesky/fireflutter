@@ -1,4 +1,4 @@
-# Table of Contents {ignore=true}
+# Table of Contents  
 
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
@@ -61,15 +61,15 @@ Navigator.of(context).push(
 To display all users on Admin's side you can use this widget `AdminUserListView`
 
 ```dart
-buttonBuilder(
-  'Show Admin User List View',
-  () => showDialog(
+ElevatedButton(
+  onTap: () => showDialog(
     context: context,
     builder: (cnx) => const Dialog(
       child: AdminUserListView(),
     ),
   ),
-),
+  child: Text('Show Admin User List View'),
+)
 ```
 <!-- TODO: Ask Sir Song if this is outdated -->
 ### Updating auth custom claims

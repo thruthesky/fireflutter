@@ -88,11 +88,11 @@ Display a bottom sheet of comments for each post
 
 ```dart
 // call it as a widget
-onTap: () => showGeneralDialog(
+showGeneralDialog(
   pageBuilder: (context,_,__) => CommentEditBottomSheet(post: post),
 ) 
 // or use a service
-onTap: () => CommentService.instance.showCommentEditBottomSheet(post:post),
+CommentService.instance.showCommentEditBottomSheet(post:post),
 ```
 
 

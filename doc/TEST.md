@@ -1,28 +1,33 @@
 # Table of Contents
 
 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
+<!-- ***@import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->***
 
-<!-- code_chunk_output -->
+<!-- ***code_chunk_output -->***
 
-- [Unit Testing](#unit-testing)
-  - [Testing on Local Emulators and Firebase](#testing-on-local-emulators-and-firebase)
-  - [Testing security rules](#testing-security-rules)
-  - [Testing on real Firebase](#testing-on-real-firebase)
-  - [Testing on Cloud Functions](#testing-on-cloud-functions)
-- [TestUi Widget](#testui-widget)
-    - [Login w/ [name]](#login-w-name)
-    - [FireFlutter init()](#fireflutter-init)
-    - [UserService init()](#userservice-init)
-    - [QnA Forum](#qna-forum)
-    - [Chat](#chat)
-  - [Individual Test](#individual-test)
-    - [Toast](#toast)
-    - [User](#user)
-    - [User Document](#user-document)
-    - [Feed](#feed)
+- ***[Unit Testing](#unit-testing)***
+  - ***[Testing on Local Emulators and Firebase](#testing-on-local-emulators-and-firebase)***
+  - ***[Testing security rules](#testing-security-rules)***
+  - ***[Testing on real Firebase](#testing-on-real-firebase)***
+  - ***[Testing on Cloud Functions](#testing-on-cloud-functions)***
+- ***[TestUi Widget](#testui-widget)***
+    - ***[Login w/ [name]](#login-w-name)***
+    - ***[FireFlutter init()](#fireflutter-init)***
+    - ***[UserService init()](#userservice-init)***
+    - ***[QnA Forum](#qna-forum)***
+    - ***[Chat](#chat)***
+  - ***[Individual Test](#individual-test)***
+    - ***[Toast](#toast)***
+    - ***[User](#user)***
+    - ***[User Document](#user-document)***
+    - ***[Feed](#feed)***
+    - ***[Category](#category)***
+    - ***[Maximum No of users](#maximum-no-of-users)***
+    - ***[Invite user into single chat](#invite-user-into-single-chat)***
+    - ***[Invite user into group chat](#invite-user-into-group-chat)***
+    - ***[Change Default Chat Room Name](#change-default-chat-room-name)***
 
-<!-- /code_chunk_output -->
+<!-- ***/code_chunk_output -->***
 
 # Test
 
@@ -30,13 +35,13 @@
 
 ### Testing on Local Emulators and Firebase
 
-- We do unit testing on both of local emulator and on real Firebase. It depends on how the test structure is formed.
+- ***We do unit testing on both of local emulator and on real Firebase. It depends on how the test structure is formed.***
 
 ### Testing security rules
 
 Run the firebase emulators like the followings. 
 
-***Note:*** You need to install and setup emulators if you don't have any.
+***Note:*** You need to install and setup emulators if you don't have any.***
 
 ```sh
 cd firebase/firestore
@@ -65,22 +70,22 @@ npm run mocha tests/posts/likes.spec.js
 
 ### Testing on real Firebase
 
-- Test files are under `functions/tests`. This test files work with real Firebase. So, you may need provide a Firebase for test use.
+- ***Test files are under `functions/tests`. This test files work with real Firebase. So, you may need provide a Firebase for test use.***
 
-  - You can run the emulator on the same folder where `functions/firebase.json` resides, and run the tests on the same folder.
+  - ***You can run the emulator on the same folder where `functions/firebase.json` resides, and run the tests on the same folder.***
 
-- To run the sample test,
+- ***To run the sample test,***
 
-  - `npm run test:index`
+  - ***`npm run test:index`***
 
-- To run all the tests
+- ***To run all the tests***
 
-  - `npm run test`
+  - ***`npm run test`***
 
-- To run a test by specifying a test script,
-  - `npm run mocha -- tests/**/*.ts`
-  - `npm run mocha -- tests/update_custom_claims/get_set.spec.ts`
-  - `npm run mocha -- tests/update_custom_claims/update.spec.ts`
+- ***To run a test by specifying a test script,***
+  - ***`npm run mocha -- ***tests/**/*.ts`***
+  - ***`npm run mocha -- ***tests/update_custom_claims/get_set.spec.ts`***
+  - ***`npm run mocha -- ***tests/update_custom_claims/update.spec.ts`***
 
 ### Testing on Cloud Functions
 
@@ -131,31 +136,34 @@ To use this test,
 3. Press the `Run all tests` button to see everything works fine.
 
 You don't need to initialize anything to test.
-#### Login w/ [name]
-Login using the account from the name of each button, it will create a new account if its not existing. `Random Login` will log in random accounts
+- ***Login w/ [name]*** Login using the account from the name of each button, it will create a new account if its not existing. `Random Login` will log in random accounts
 
 ![logins](/doc/img/login_buttons.png)
 
-#### FireFlutter init()
-Use this to test the `init` of `FireFlutterService` instance.
+- ***FireFlutter init()*** Use this to test the `init` of `FireFlutterService` instance.
 
-#### UserService init()
-Use this to test the `init` of `UserService` instance.
+- ***UserService init()*** Use this to test the `init` of `UserService` instance.
 
-#### QnA Forum
-Display all the post into a new screen.
+- ***QnA Forum*** Display all the post into a new screen.
 
-#### Chat
+- ***Chat***
 
 ### Individual Test
 
-#### Toast
-Display toast notification
+- ***Toast*** Display toast notification
 
-#### User 
-This will test the process of creating a user.
+- ***User*** This will test the process of creating a user.
 
-#### User Document
-This will create a user document and listen to the document changes. If a random user has registered, the document must not exist.
+- ***User Document*** This will create a user document and listen to the document changes. If a random user has registered, the document must not exist.
 
-#### Feed
+- ***Feed*** Tests the `follow` function from the `FeedService`
+
+- ***Category*** This tests the `create`, `update` and `delete` of the `Category`.
+
+- ***Maximum No of users*** This will create a new Chat Room and will set the maximum users and expected to follow the set.
+
+- ***Invite user into single chat*** Test how Chat Room behave during 1:1 chat creation and user invitation.
+
+- ***Invite user into group chat*** Test how Group Chat Room behave during creation and user invitation. This must follow the `maximum` users.
+
+- ***Change Default Chat Room Name*** Test for changing the default Chat Room Name of the app. The result must be 'Updated Name'.

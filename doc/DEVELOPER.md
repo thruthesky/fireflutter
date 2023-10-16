@@ -5,7 +5,6 @@
 
 <!-- code_chunk_output -->
 
-- [Installing your app with fireflutter](#installing-your-app-with-fireflutter)
 - [Development Tips](#development-tips)
 - [Install FireFlutter and Example Project](#install-fireflutter-and-example-project)
 - [Coding Guideline](#coding-guideline)
@@ -17,44 +16,6 @@
 # Developer
 
 In this chapter, you will learn how to develop fireflutter. You would also continue developing your app while developing(fixing) the fireflutter.
-
-## Installing your app with fireflutter
-
-- Fork the fireflutter. Go to `https://github.com/thruthesky/fireflutter` and fork it.
-- Then, clone it
-```sh
-git clone https://github.com/your-account/fireflutter
-```
-
-- Create a branch in fireflutter local repository
-```sh
-cd fireflutter
-git checkout -b work
-```
-- For `Pull Request`, update any file, commit, push and request for pulling your code.
-
-```sh
-echo "Hi" >> README.md
-git commit -a -m "updating README.md"
-git push --set-upstream origin work
-```
-
-
-- Create `apps` folder and create your app inside `apps` folder.
-```dart
-cd apps
-flutter create your_project
-```
-
-- Since your project add the fireflutter from your computer folder, you need to add the path of the dependency as `../..`. Add the firefluter dependency like below.
-
-```yaml
-dependencies:
-  fireflutter:
-    path: ../..
-```
-
-- Then, follow the step of the [fireflutter Installation](/README.md#installation) chapter.
 
 ## Development Tips
 

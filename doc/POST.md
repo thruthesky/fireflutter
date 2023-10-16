@@ -1,8 +1,10 @@
-# Table of Contents {ignore=true}
+# Table of Contents  
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
+- [Table of Contents](#table-of-contents)
+- [Post](#post)
   - [Overview](#overview)
   - [Post Service](#post-service)
     - [Create Post](#create-post)
@@ -24,7 +26,7 @@
 <!-- /code_chunk_output -->
 
 
-# Post {ignore=true}
+# Post  
 
 ## Overview
 ## Post Service

@@ -6,29 +6,27 @@ If you are looking for a package that help you develop a full featured content m
 
 Create an issue if you find a bug or need a help.
 
-# Table of Contents {ignore=true}
-
-# Table of Contents {ignore=true}
+# Table of Contents 
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
 - [FireFlutter](#fireflutter)
-- [Table of Contents {ignore=true}](#table-of-contents-ignoretrue)
-- [Table of Contents {ignore=true}](#table-of-contents-ignoretrue-1)
+- [Table of Contents](#table-of-contents)
 - [Overview](#overview)
 - [Changes](#changes)
-  - [Oct 10 0.3.12 {ignore=true}](#oct-10-0312-ignoretrue)
-  - [Sept 28 0.3.11 {ignore=true}](#sept-28-0311-ignoretrue)
-  - [Sept 10 0.3.10 {ignore=true}](#sept-10-0310-ignoretrue)
+    - [Oct 10 0.3.12](#oct-10-0312)
+    - [Sept 28 0.3.11](#sept-28-0311)
+    - [Sept 10 0.3.10](#sept-10-0310)
   - [Features](#features)
     - [Main Features](#main-features)
 - [Getting started](#getting-started)
   - [Installation](#installation)
+  - [Installing your app with fireflutter](#installing-your-app-with-fireflutter)
     - [Create a Firebase](#create-a-firebase)
 - [Firebase Extension](#firebase-extension)
-  - [Resize image](#resize-image)
+    - [Resize image](#resize-image)
   - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
     - [Firestore security rules](#firestore-security-rules)
@@ -40,9 +38,9 @@ Create an issue if you find a bug or need a help.
   - [timeago](#timeago)
   - [Parsed_ReadMore](#parsed_readmore)
 - [Build Sample](#build-sample)
-  - [User Profile Page](#user-profile-page)
-  - [Chat App](#chat-app)
-  - [Forum App](#forum-app)
+    - [User Profile Page](#user-profile-page)
+    - [Chat App](#chat-app)
+    - [Forum App](#forum-app)
 - [Widgets and UI functions](#widgets-and-ui-functions)
 - [Usage](#usage)
   - [User](#user)
@@ -54,7 +52,7 @@ Create an issue if you find a bug or need a help.
 - [Push notifications](#push-notifications)
 - [Error handling](#error-handling)
 - [Admin](#admin-1)
-- [Developers](#developers)
+- [Developers](#developersdocdevelopermddeveloper)
 - [Things to improve](#things-to-improve)
 
 <!-- /code_chunk_output -->
@@ -71,18 +69,18 @@ The model has also basic CRUD functionalities.
 
 <!-- You can see [CHANGELOG.md](/CHANGELOG.md) for the updated log. -->
 
-### Oct 10 0.3.12 {ignore=true}
+### Oct 10 0.3.12 
 
 - Refactoring on user, feed.
 - Refine widgets and services.
 
-### Sept 28 0.3.11 {ignore=true}
+### Sept 28 0.3.11 
 
 - Add. Admin dashboarsd.
 - Update. Push notification.
 - Refactoring. Save more data in realtime database.
 
-### Sept 10 0.3.10 {ignore=true}
+### Sept 10 0.3.10 
 
 - Change. Refactoring file/folder names.
 
@@ -113,7 +111,41 @@ The best way is to copy codes from the example project and paste it into your pr
 
 Follow the instruction below to install FireFlutter into your app
 
-<!-- Please follow the instructions below to install the fireflutter into your app. -->
+## Installing your app with fireflutter
+
+- Fork the fireflutter. Go to `https://github.com/thruthesky/fireflutter` and fork it.
+- Then, clone it
+```sh
+git clone https://github.com/your-account/fireflutter
+```
+
+- Create a branch in fireflutter local repository
+```sh
+cd fireflutter
+git checkout -b work
+```
+- For `Pull Request`, update any file, commit, push and request for pulling your code.
+
+```sh
+echo "Hi" >> README.md
+git commit -a -m "updating README.md"
+git push --set-upstream origin work
+```
+
+
+- Create `apps` folder and create your app inside `apps` folder.
+```dart
+cd apps
+flutter create your_project
+```
+
+- Since your project add the fireflutter from your computer folder, you need to add the path of the dependency as `../..`. Add the firefluter dependency like below.
+
+```yaml
+dependencies:
+  fireflutter:
+    path: ../..
+```
 
 ### Create a Firebase
 
@@ -171,15 +203,8 @@ Copy [the security rules of fireflutter](https://raw.githubusercontent.com/thrut
 To deploy firestore rules, follow this
 
 ```sh
- firebase deploy --only <name>.rules
-```
-
-<!--
-TODO:
-deploy rules on firebase using cli
  firebase deploy --only firestore:rules
- -->
-
+```
 ### Security rule for admin
 
 You can add your uid (or other user's uid) to the `adminUIDs` variable in `isAdmin` function in the security rule. With this way, you don't have to pay extra money for validating the user is admin or not.
@@ -278,15 +303,6 @@ Enable Realtime Database on firebase and copy the following and paste it into yo
   }
 }
 ```
-
-<!-- Commented out -->
-<!-- ### Security Rules for Stroage
-
-You can copy this rules and paste into the rules of storage.
-
-```json
-
-``` -->
 
 ## Setup the base code
 

@@ -123,12 +123,11 @@ Add the FireFlutter controller
 final ChatRoomListViewController controller = ChatRoomListViewController();
 ```
 
-Add a `Scaffold()` and create your own UI design. Inside the body add the `ChatRoomListView()`. See [Chat Features](#chat-feature) for more info.
+Add a `Scaffold` and create your own UI design. Inside the body add the `ChatRoomListView`. See [Chat Features](#chat-feature) for more info.
 
 ```dart
 Scaffold(
   appBar: appBar('Chats'),
-  bottomNavigationBar: const BottomNavBar(index: 1),
   body: ChatRoomListView(
     controller: controller, // ChatRoomListViewController controller;
     singleChatOnly: false,
@@ -139,6 +138,7 @@ Scaffold(
       },
     ),
   ),
+  bottomNavigationBar: const BottomNavBar(index: 1),
 )
 ```
 
@@ -185,7 +185,7 @@ void initState() {
 
 ### PostListView
 
-`PostListView()` builder works like a `ListView()`. It can display widgets with the posts details in a scrollable manner.
+`PostListView` builder works like a `ListView`. It can display widgets with the posts details in a scrollable manner.
 
 ```dart
 PostListView(
@@ -193,7 +193,7 @@ PostListView(
 )
 ```
 
-You can use `PostCard()` to generate a default style of the post
+You can use `PostCard` to generate a default style of the post
 
 ```dart
 PostListView(
@@ -212,7 +212,7 @@ PostListView(
   ),
 ```
 
-**_Note:_** Aside from `Theme()`, there are many builders inside the `PostCard()` that you can use for customizing UI Design.
+**_Note:_** Aside from `Theme`, there are many builders inside the `PostCard` that you can use for customizing UI Design.
 
 ### Result
 
