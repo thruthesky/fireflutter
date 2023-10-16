@@ -158,16 +158,16 @@ If you have your own firebase project, then you can use that. If you don't have 
 `Deletion of original file` - Don't delete  
 `Make resized images public` - yes
 
-![resize_image_settings](/doc/img/resize_option_1.png)
+![resize_image_settings](https://github.com/thruthesky/fireflutter/blob/main/doc/img/resize_option_1.png?raw=true)
 
 `Cache-Control header for resized images` - "max-age=86400"
 `Convert image to preferred types` - select `webp` only.
 
-![resize_image_settings](/doc/img/resize_option_2.png)
+![resize_image_settings](https://github.com/thruthesky/fireflutter/blob/main/doc/img/resize_option_2.png?raw=true)
 
 And choose `backfill` if you have an existing images.
 
-![resize_image_settings](/doc/img/resize_option_3.png)
+![resize_image_settings](https://github.com/thruthesky/fireflutter/blob/main/doc/img/resize_option_3.png?raw=true)
 
 All other options are on your choice.
 
@@ -453,7 +453,7 @@ Visit [parsed_readmore](https://pub.dev/packages/parsed_readmore) to read more.
 ### User Profile Page
 
 Here is an example of how to build simple user profile page.
-![user_profile](/doc/img/user_profile.png)
+![user_profile](https://github.com/thruthesky/fireflutter/blob/main/doc/img/user_profile.png?raw=true)
 
 ### Chat App
 
@@ -467,7 +467,7 @@ Here is an example of how to build simple user profile page.
 Here is a simple forum app.
 ![forum_result](/doc/img/forum.png)
 
-See [User Profile](/doc/SAMPLES.md#how-to-build-a-user-profile-page) for source code and detailed explanation.
+See [User Profile](https://github.com/thruthesky/fireflutter/blob/main/doc/SAMPLES.md#how-to-build-a-user-profile-page?raw=true) for source code and detailed explanation.
 
 # Widgets and UI functions
 

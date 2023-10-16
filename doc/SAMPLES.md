@@ -95,7 +95,7 @@ class UserBuilder extends StatelessWidget {
 
 **_Note:_** [**UserProfileAvatar**](/README.md#UserProfileAvatar) returns an icon that will serve as a default profile picture if the user doesn't have any picture uploaded.
 
-![user_profile](/doc/img/user_profile.png)
+![user_profile](https://github.com/thruthesky/fireflutter/blob/main/doc/img/user_profile.png?raw=true)
 
 ## How to build a chat app
 
@@ -144,7 +144,7 @@ Scaffold(
 
 ### Result
 
-![chat_app](/doc/img/chat_app.png)
+![chat_app](https://github.com/thruthesky/fireflutter/blob/main/doc/img/chat_app.png?raw=true)
 
 **_Note:_** Admins will automatically send a welcome message when `UserService.instance.sendWelcomeMessage(message: 'Welcome!')` is being used.
 
@@ -216,4 +216,4 @@ PostListView(
 
 ### Result
 
-![forum_result](/doc/img/forum.png)
+![forum_result](https://github.com/thruthesky/fireflutter/blob/main/doc/img/forum.png?raw=true)
