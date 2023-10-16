@@ -14,7 +14,7 @@ class UserListView extends StatelessWidget {
   const UserListView({
     super.key,
     this.searchText,
-    this.filter = const {},
+    this.query,
     this.exemptedUsers = const [],
     this.orderBy,
     this.descending = false,
@@ -36,7 +36,7 @@ class UserListView extends StatelessWidget {
   });
 
   final String? searchText;
-  final Map<String, dynamic> filter;
+  final Query? query;
   final List<String> exemptedUsers;
   final String? orderBy;
   final bool descending;
@@ -68,30 +68,19 @@ class UserListView extends StatelessWidget {
 
   final int pageSize;
 
-  bool get hasSearchText => searchText != null && searchText != '';
+  // bool get hasSearchText => searchText != null;
   bool get hasOrderBy => orderBy != null && orderBy != '';
+
+  Query? get searchQuery {
+    if (searchText == null) return null;
+    return userCol.where(field, isEqualTo: searchText);
+  }
 
   @override
   Widget build(BuildContext context) {
-    // dog(filter.toString());
-    Query query = userCol;
-    if (hasSearchText) {
-      query = query.where(field, isEqualTo: searchText);
-    }
-    for (String filterKey in filter.keys) {
-      if (filter[filterKey].toString().isNotEmpty && (filter[filterKey] is String || filter[filterKey] is int)) {
-        query = query.where(filterKey, isEqualTo: filter[filterKey]);
-      }
-      if (filter[filterKey] is List<dynamic>) {
-        query = query.where(filterKey, arrayContainsAny: filter[filterKey]);
-      }
-    }
-    if (hasOrderBy) {
-      query = query.orderBy(orderBy!, descending: descending);
-    }
     return FirestoreQueryBuilder(
       pageSize: pageSize,
-      query: query,
+      query: searchQuery ?? query ?? userCol,
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
           return const Center(
