@@ -427,15 +427,19 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
             padding: const EdgeInsets.only(bottom: 32.0),
             child: InkWell(
               onTap: () {
-                AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
-                  users[user.uid] = user;
-                  toast(
-                    title: 'Users add',
-                    message: "${userDisplayName(user)} was added on the list",
-                    duration: const Duration(seconds: 2),
-                  );
-                  setState(() {});
-                });
+                AdminService.instance.showUserSearchDialog(
+                  context,
+                  field: 'name',
+                  onTap: (user) async {
+                    users[user.uid] = user;
+                    toast(
+                      title: 'Users add',
+                      message: "${userDisplayName(user)} was added on the list",
+                      duration: const Duration(seconds: 2),
+                    );
+                    setState(() {});
+                  },
+                );
               },
               child: Text(
                 'Choose users to send push notification',
@@ -454,17 +458,21 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
             ),
             IconButton(
               onPressed: () {
-                AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
-                  final querySnapshot = await tokensCol(user.uid).get();
-                  toast(
-                    title: 'Token added: ',
-                    message: "added new token # ${querySnapshot.size}",
-                    duration: const Duration(seconds: 2),
-                  );
-                  if (querySnapshot.size == 0) return;
-                  tokens = ([...tokens, ...querySnapshot.docs.map((e) => e.id).toList()]).toSet().toList();
-                  setState(() {});
-                });
+                AdminService.instance.showUserSearchDialog(
+                  context,
+                  field: 'name',
+                  onTap: (user) async {
+                    final querySnapshot = await tokensCol(user.uid).get();
+                    toast(
+                      title: 'Token added: ',
+                      message: "added new token # ${querySnapshot.size}",
+                      duration: const Duration(seconds: 2),
+                    );
+                    if (querySnapshot.size == 0) return;
+                    tokens = ([...tokens, ...querySnapshot.docs.map((e) => e.id).toList()]).toSet().toList();
+                    setState(() {});
+                  },
+                );
               },
               icon: const Icon(Icons.search),
             ),
@@ -533,17 +541,21 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
             padding: const EdgeInsets.only(bottom: sizeXs),
             child: InkWell(
               onTap: () {
-                AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
-                  final querySnapshot = await tokensCol(user.uid).get();
-                  toast(
-                    title: 'Token added: ',
-                    message: "added new token # ${querySnapshot.size}",
-                    duration: const Duration(seconds: 2),
-                  );
-                  if (querySnapshot.size == 0) return;
-                  tokens = ([...tokens, ...querySnapshot.docs.map((e) => e.id).toList()]).toSet().toList();
-                  setState(() {});
-                });
+                AdminService.instance.showUserSearchDialog(
+                  context,
+                  field: 'name',
+                  onTap: (user) async {
+                    final querySnapshot = await tokensCol(user.uid).get();
+                    toast(
+                      title: 'Token added: ',
+                      message: "added new token # ${querySnapshot.size}",
+                      duration: const Duration(seconds: 2),
+                    );
+                    if (querySnapshot.size == 0) return;
+                    tokens = ([...tokens, ...querySnapshot.docs.map((e) => e.id).toList()]).toSet().toList();
+                    setState(() {});
+                  },
+                );
               },
               child: Text(
                 'Choose users to get tokens and send push notification',
@@ -704,10 +716,14 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                 if (notificationType == NotificationType.user.name)
                   IconButton(
                     onPressed: () {
-                      AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
-                        landingPage.text = user.uid;
-                        Navigator.of(context).pop();
-                      });
+                      AdminService.instance.showUserSearchDialog(
+                        context,
+                        field: 'name',
+                        onTap: (user) async {
+                          landingPage.text = user.uid;
+                          Navigator.of(context).pop();
+                        },
+                      );
                     },
                     icon: const Icon(Icons.search),
                   ),
