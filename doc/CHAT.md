@@ -1,33 +1,31 @@
-# Table of Contents {ignore=true}
+# Table of Contents  
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=8 orderedList=false} -->
 
 <!-- code_chunk_output -->
 <!-- [toc] -->
-- [Table of Contents {ignore=true}](#table-of-contents-ignoretrue)
-- [Chat](#chat)
-  - [Overview](#overview)
-  - [ChatService](#chatservice)
-    - [Open chat room](#open-chat-room)
-    - [Display Chat Room Menu](#display-chat-room-menu)
-    - [Chat Room Dialog.](#chat-room-dialog)
-  - [Welcome Message](#welcome-message)
-  - [No of new message](#no-of-new-message)
-  - [Total no of new message](#total-no-of-new-message)
-    - [Chat Room List](#chat-room-list)
-    - [Create a chat room](#create-a-chat-room)
-    - [Display a Chat Room](#display-a-chat-room)
-    - [Test UI Chat room screen](#test-ui-chat-room-screen)
-      - [Chat Room fields](#chat-room-fields)
-      - [Chat Message fields](#chat-message-fields)
-  - [UI Customization](#ui-customization)
-    - [Chat Customization](#chat-customization)
-  - [Chat room list](#chat-room-list-1)
-  - [Chat Room Menu](#chat-room-menu)
-  - [Chat Room Settings](#chat-room-settings)
-    - [Counting no of new messages](#counting-no-of-new-messages)
-  - [Displaying chat rooms that has new message (unread messages)](#displaying-chat-rooms-that-has-new-message-unread-messages)
-  - [1:1 Chat and Multi user chat](#11-chat-and-multi-user-chat)
+- [Overview](#overview)
+- [ChatService](#chatservice)
+  - [Open chat room](#open-chat-room)
+  - [Display Chat Room Menu](#display-chat-room-menu)
+  - [Chat Room Dialog.](#chat-room-dialog)
+- [Welcome Message](#welcome-message)
+- [No of new message](#no-of-new-message)
+- [Total no of new message](#total-no-of-new-message)
+  - [Chat Room List](#chat-room-list)
+  - [Create a chat room](#create-a-chat-room)
+  - [Display a Chat Room](#display-a-chat-room)
+  - [Test UI Chat room screen](#test-ui-chat-room-screen)
+    - [Chat Room field](#chat-room-field)
+    - [Chat Message fields](#chat-message-fields)
+- [UI Customization](#ui-customization)
+  - [Chat Customization](#chat-customization)
+- [Chat Room Menu](#chat-room-menu)
+- [Chat Room Settings](#chat-room-settings)
+  - [Counting no of new messages](#counting-no-of-new-messages)
+- [Displaying chat rooms that has new message (unread messages)](#displaying-chat-rooms-that-has-new-message-unread-messages)
+- [1:1 Chat and Multi user chat](#11-chat-and-multi-user-chat)
+- [How to hook chat room open and check if the user has permission](#how-to-hook-chat-room-open-and-check-if-the-user-has-permission)
   - [How to hook chat room open and check if the user has permission](#how-to-hook-chat-room-open-and-check-if-the-user-has-permission)
 <!-- /code_chunk_output -->
 
@@ -89,15 +87,12 @@ IconButton(
 ### Chat Room Dialog.
 You can use dialog builders so you can open pages immediately.
 ```dart
-showGeneralDialog(
-  context: context,
-  pageBuilder: (context, _, __) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Invite User'),
-    ),
-    body: CustomChatWidget(),
+Scaffold(
+  appBar: AppBar(
+    title: const Text('Invite User'),
   ),
-);
+  body: CustomChatWidget(),
+),
 ```
 
 ***Note:*** If your app throws an error `No Material Widget found...`, wrap your widgets inside of the `Scaffold()` or `SafeArea()`
@@ -116,18 +111,18 @@ await FirebaseAuth.instance
 
 ## No of new message
 
-We save the no of new messages of each users in RTDB. `/chats/noOfNewMessages/{uid}/{roomId: true}`.
+FireFlutter save the no of new messages of users in RTDB. `/chats/noOfNewMessages/{uid}/{roomId: true}`.
 
 ```dart
 NoOfNewMessageBadge(room:room),
 
 // sample
 ChatRoomListView(
-        controller: controller,
-        singleChatOnly: false,
-        itemBuilder: (context, room) => ListTile(
-          trailing: NoOfNewMessageBadge(room: room),
-        ),
+  controller: controller,
+  singleChatOnly: false,
+  itemBuilder: (context, room) => ListTile(
+    trailing: NoOfNewMessageBadge(room: room),
+  ),
 ),
 ```
 
@@ -167,7 +162,7 @@ ChatRoomListView(
 ),
 ```
 
-You can customsize the chat room item in the list like below. You can replace the `ChatRoomListTile` or you can customize the onTap behavior.
+You can customsize the chat room item in the list like below. You can replace the `ChatRoomListTile` or you can modify the onTap behavior.
 
 ```dart
 ChatRoomListView(
@@ -185,36 +180,31 @@ ChatRoomListView(
 - To create a chat room, add a button and display `ChatRoomCreateDialog` widget. You may copy the code from `ChatRoomCreateDialog` and apply your own design.
 
 ```dart
-class _ChatRoomListreenState extends State<ChatRoomListSreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Easy Chat Room List'),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              showDialog(
-                context: context,
-                builder: (_) => ChatRoomCreateDialog(
-                  success: (room) {
-                    Navigator.of(context).pop();
-                    if (context.mounted) {
-                      controller.showChatRoom(context: context, room: room);
-                    }
-                  },
-                  cancel: () => Navigator.of(context).pop(),
-                  error: () => const ScaffoldMessenger(child: Text('Error creating chat room')),
-                ),
-              );
-            },
-            icon: const Icon(Icons.add),
-          ),
-        ],
+Scaffold(
+  appBar: AppBar(
+    title: const Text('Easy Chat Room List'),
+    actions: [
+      IconButton(
+        onPressed: () async {
+          showDialog(
+            context: context,
+            builder: (_) => ChatRoomCreateDialog(
+              success: (room) {
+                Navigator.of(context).pop();
+                if (context.mounted) {
+                  controller.showChatRoom(context: context, room: room);
+                }
+              },
+              cancel: () => Navigator.of(context).pop(),
+              error: () => const ScaffoldMessenger(child: Text('Error creating chat room')),
+            ),
+          );
+        },
+        icon: const Icon(Icons.add),
       ),
-      ),
-  }
-}
+    ],
+  ),
+),
 ```
 
 ### Display a Chat Room
@@ -249,24 +239,22 @@ Follow this to test your Chat Room Screen UI. Modify this depends on your needs.
       );
     });
 ```
-<!-- TODO: try to find a way to simplify this -->
-#### Chat Room fields
-
+#### Chat Room field
 ```dart
 Room(
-      roomId: String,
-      name: String,
-      rename: {}, // Set {String,String}
-      group: bool,
-      open: bool,
-      master: String,
-      users: [], // Array[uid]
-      moderators: [], // Array[uid]
-      blockedUsers: [], // Array[uid]
-      maximumNoOfUsers: int,
-      createdAt: DateTime,
-      lastMessage: {}, // Map<String,dynamic>
-    );
+  roomId: String,
+  name: String,
+  rename: {}, // Set {String,String}
+  group: bool,
+  open: bool,
+  master: String,
+  users: [], // Array[uid]
+  moderators: [], // Array[uid]
+  blockedUsers: [], // Array[uid]
+  maximumNoOfUsers: int,
+  createdAt: DateTime,
+  lastMessage: {}, // Map<String,dynamic>
+);
 ```
 
 - `roomId: [string]` id of the room.
@@ -290,18 +278,18 @@ Room(
 
 ```dart
 Message(
-      id: String?,
-      text: String, // required
-      url: String, // required
-      protocol: String, // required
-      uid: String?,
-      createdAt: DateTime, // required
-      previewUrl: String?,
-      previewTitle: String?,
-      previewDescription: String?,
-      previewImageUrl: String?,
-      isUserChanged: bool?,
-    );
+  id: String?,
+  text: String, // required
+  url: String, // required
+  protocol: String, // required
+  uid: String?,
+  createdAt: DateTime, // required
+  previewUrl: String?,
+  previewTitle: String?,
+  previewDescription: String?,
+  previewImageUrl: String?,
+  isUserChanged: bool?,
+);
 ```
 - `id` is the id of the current message. This may be null since the lastMessage of chat room has no id.
 - `text` is the text message [Optional] - Optional, meaning, a message can be sent without the text.
@@ -329,35 +317,6 @@ Customize your own Chat Room header like this
 ```dart
 ChatService.instance.customize.chatRoomAppBarBuilder ({room, user}) => customAppBar(context, room);
 ```
-
-
-
-
-
-
-
-
-## Chat room list
-
-- To list chat rooms, use the code below.
-
-```dart
-ChatRoomListView(
-  controller: controller,
-  itemBuilder: (context, room) {
-    return ListTile(
-        leading: const Icon(Icons.chat),
-        title: ChatRoomListTileName(
-          room: room,
-          style: const TextStyle(color: Colors.blue),
-        ),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: () {
-          controller.showChatRoom(context: context, room: room);
-        });
-  },
-)
-```
 ## Chat Room Menu
 
 The chat room menu can be accessed by the Chat Room Menu Button. This will open the Chat Room Menu Screen.
@@ -376,12 +335,7 @@ The Chat Room Menu consists the following:
 - `Invite User` This button opens a List View of users that can be invited to the group chat. To use Invite User Button for List View, follow the code:
 
 ```dart
-InviteUserButton(
-  room: chatRoomModel,
-  onInvite: (invitedUserUid) {
-    debugPrint("You have just invited a user with a uid of $invitedUserUid");
-  },
-),
+ChatRoomMenuUserInviteDialog(room: room),
 ```
 See [Chat Room Settings](#chat-room-settings) for more details
 
@@ -457,15 +411,9 @@ ChatRoomSettingsDefaultRoomNameListTile(
 
 - Any user in the chat room can invite other user unless it is password-locked.
 - Onlt the master can update the password.
-<!-- TODO for confirmation about password -->
 - The `inviting` means, the invitor will add the `invitee`'s uid into `users` field.
 
   - It is same as `joining`. If the user who wants to join the room, he will simply add his uid into `users` field. That's called `joining`.
-  <!--
-
-- Any one can join the chat room if `/easychat/{id}/{ open: true }`. -->
-
-  - 1:1 chat room must not have `{open: false}`.
 
 - If a chat room has `{open: false}`, no body can join the room except the invitation of master and moderators.
 
@@ -492,7 +440,7 @@ initChatService() {
               },
             );
           } else {
-            warning(context, title: 'User verification', message: 'Please verify your identity before using chat service.');
+            warningSnackbar(context, title: 'User verification', message: 'Please verify your identity before using chat service.');
           }
         },
       ),

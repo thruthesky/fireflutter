@@ -1,12 +1,13 @@
 
 <!-- This widget may be removed since Widgets section will be added for each markdown file -->
-# Table of Contents {ignore = true}
+# Table of Contents  
 
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
 <!-- code_chunk_output -->
 
+- [Table of Contents](#table-of-contents)
 - [Widgets](#widgets)
   - [UserDoc](#userdoc)
   - [AuthChanges](#authchanges)
@@ -15,7 +16,6 @@
   - [CommentOneLineListTile](#commentonelinelisttile)
   - [CommentListBottomSheet](#commentlistbottomsheet)
   - [UserLikedByListScreen](#userlikedbylistscreen)
-  - [Functions](#functions)
   - [PostLikeButton](#postlikebutton)
   - [Screen widgets](#screen-widgets)
   - [EmailLoginForm](#emailloginform)
@@ -33,8 +33,8 @@
 
 ```dart
 return UserDoc(builder: (user) {
-    List<String> followers = user.followers.toList();
-    List<String> following = user.followings.toList();
+    List<String> followers = user.followers.toList;
+    List<String> following = user.followings.toList;
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -62,11 +62,11 @@ AuthChange(
     Text('Register') : Text('uid: ${user.uid}'),
 );
 ```
-<!-- TODO: Explanation of authchange and userdocready -->
 ## UserDocReady
 This will return a `User` object document when it is ready. This will run only once and will not rebuild itself even if user change documents. 
 ```dart
-UserDocReady(builder: (my) {
+UserDocReady(
+  builder: (my) {
   return Row(
     children: [
       UserProfileAvatar( user: my ),
@@ -83,10 +83,10 @@ UserDocReady(builder: (my) {
 
 ## TopDownGraident and BottomUpGraident
 
-`TopDownGraident()` and `BottomUpGraident()` provides
+`TopDownGraident` and `BottomUpGraident` provides
 gradient on top and bottom part of the app. You can use this to design your entry screen or the splash screen.
 
-Using them inside of the `Row()` or `Column()` will return an error below
+Using them inside of the `Row` or `Column` will return an error below
 
 ```sh
 Another exception was thrown: Incorrect use of ParentDataWidget.
@@ -143,8 +143,6 @@ Theme(
 ),
 ```
 
-<!-- Fixed -->
-
 ## CommentListBottomSheet
 
 This widget shows the comment list of the post in a bottom sheet UI style.
@@ -170,9 +168,6 @@ UserLikedByListScreen(
     uids: ['xxx''xxx''xxx'], // list of ids
   ),
 ```
-## Functions
-See [FUNCTIONS.md](/doc/FUNCTIONS.md) for more details.
-
 ## PostLikeButton
 
 Use this widget for like and unlike.
@@ -194,7 +189,7 @@ Example of opening a screen widget with `showGeneralDialog`
 ```dart
 showGeneralDialog(
   context: context,
-  pageBuilder: (_, __, ___) => const AdminDashboardScreen(),
+  pageBuilder: (_, __, ___) => const AdminDashboardScreen,
 );
 ```
 
@@ -202,7 +197,7 @@ Example of opening a screen widget with `Navigator`
 
 ```dart
 Navigator.of(context).push(
-  MaterialPageRoute(builder: (c) => const AdminDashboardScreen()),
+  MaterialPageRoute(builder: (c) => const AdminDashboardScreen),
 );
 ```
 
@@ -210,7 +205,7 @@ Navigator.of(context).push(
 
 Use this widget for creating and logging-in with email/password. This widget is designed for test use.
 
-**_EmailLoginForm()_** structure:
+**_EmailLoginForm_** structure:
 
 ```dart
 class EmailLoginForm extends StatefulWidget {
@@ -225,7 +220,7 @@ class EmailLoginForm extends StatefulWidget {
 }
 ```
 
-You can use `Theme()` to design the widgets. Example below:
+You can use `Theme` to design the widgets. Example below:
 
 ```dart
 Theme(
@@ -238,7 +233,7 @@ Theme(
               ),
               child: EmailLoginForm(
                 // a function that will trigger if login is successful
-                onLogin: () => context.push(HomePage.routeName),
+                onLogin:  => context.push(HomePage.routeName),
                 // removes the register button
                 register: false,
               ),
@@ -260,7 +255,7 @@ IconTextButton(
         fontSize: 10,
         color: Theme.of(context).colorScheme.secondary,
       ),
-  onTap: () {},
+  onTap:  {},
 ),
 ```
 
@@ -304,12 +299,19 @@ CarouselView(
 ),
 ```
 
-<!-- ADDITIONAL: 
- - DateTimeText
- -->
-
  ## DateTimeText
-This display a text like `dateTimeAgo()` function
+This display a text like `dateTimeAgo` function
+
+```dart
+DateTimeText(
+  dateTime: dateAgo,
+  style: TextStyle(
+    color: Theme.of(context).hintColor,
+    fontSize: sizeSm - 5,
+  ),
+),
+```
+
  ## MyDoc
 A builder widget that wraps the UserDoc and will return a `User` object and use it to display user's profile.  
 ```dart
@@ -325,7 +327,7 @@ MyDoc(
   ),
 ),
 ```
-`MyDoc` are using `StreamBuilder` only and will rebuild itself when user logged in or out, use `UserDoc` instead and set the `live : false` so it would use `FutureBuilder` and won't rebuild itself over again.
+`MyDoc` are using `StreamBuilder` ***only*** and will rebuild itself when user logged in or out, use `UserDoc` instead and set the `live : false` so it would use `FutureBuilder` and won't rebuild itself over again.
 ```dart
 UserDoc(
   live: false // set this to change builder type

@@ -27,7 +27,7 @@
 
 # Functions
 
-Here are some functions that Fireflutter builds for your app. Utilize them to increase your production.  
+Here are some functions that Fireflutter built for your app. Utilize them to increase productivity and efficiency. 
 
 ## alert
 

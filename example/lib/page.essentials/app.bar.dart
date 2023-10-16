@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:new_app/main.dart';
+import 'package:new_app/page.essentials/button_row.dart';
 
 class TitleText extends StatelessWidget {
   const TitleText({super.key, required this.text});
@@ -84,6 +85,7 @@ AppBar appBar(String text, {bool hasLeading = false, bool hasActions = true}) {
 
 // custom app bar for chat room
 AppBar customAppBar(BuildContext context, Room? room) {
+  final renameValue = TextEditingController();
   return AppBar(
     forceMaterialTransparency: true,
     leading: const LeadingButton(),
@@ -105,6 +107,39 @@ AppBar customAppBar(BuildContext context, Room? room) {
             live: false,
           ),
     actions: [
+      IconButton(
+        icon: const FaIcon(FontAwesomeIcons.penToSquare),
+        color: Theme.of(context).shadowColor,
+        onPressed: () => showDialog(
+          context: context,
+          builder: (_) => Dialog(
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * .25,
+              child: Padding(
+                padding: const EdgeInsets.all(sizeSm),
+                child: Column(
+                  children: [
+                    const Text('Rename Chat Room'),
+                    TextField(
+                      controller: renameValue,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(sizeXs),
+                        ),
+                      ),
+                    ),
+                    ButtonRow(
+                      label1: 'Update',
+                      label2: 'Cancel',
+                      action2: () => context.pop(),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
       IconButton(
         icon: Icon(
           Icons.settings,

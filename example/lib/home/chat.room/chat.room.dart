@@ -16,8 +16,7 @@ class _ChatRoomState extends State<ChatRoom> {
   @override
   void initState() {
     super.initState();
-    ChatService.instance.customize.chatRoomAppBarBuilder =
-        ({room, user}) => customAppBar(context, room);
+    ChatService.instance.customize.chatRoomAppBarBuilder = ({room, user}) => customAppBar(context, room);
   }
 
   @override
@@ -28,7 +27,9 @@ class _ChatRoomState extends State<ChatRoom> {
       itemBuilder: (context, room) => ChatRoomListTile(
         room: room,
         onTap: () {
-          // ChatService.instance.showChatRoom(context: context);
+          /// You can either use this
+          /// 'ChatService.instance.showChatRoom(context: context);'
+          /// or this below
           controller.showChatRoom(context: context, room: room);
         },
       ),

@@ -9,5 +9,11 @@ final router = GoRouter(
         child: LoginPageBody(),
       ),
     ),
+    // GoRoute(
+    //   path: UserProfile.routeName,
+    //   pageBuilder: (context, state) => const NoTransitionPage(
+    //     child: UserProfileBody(),
+    //   ),
+    // ),
   ],
 );
