@@ -1,10 +1,8 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
-import 'package:new_app/forums/post/create.post.dart';
-import 'package:new_app/home.screen/main.page.dart';
-import 'package:new_app/inits.dart';
+import 'package:new_app/home/forum/post/create.post.dart';
+import 'package:new_app/page.essentials/inits.dart';
 import 'package:new_app/page.essentials/app.bar.dart';
 
 class FeedBody extends StatefulWidget {
@@ -19,19 +17,24 @@ class FeedBody extends StatefulWidget {
 class _FeedBodyState extends State<FeedBody> {
   final controller = TextEditingController();
   String categName = '';
+  Future<Comment?> commentGet() {
+    return Comment.get('5QCeocnLyx210J83Hw30');
+  }
 
   @override
   void initState() {
     super.initState();
+    UserService.instance.init(adminUid: myUid);
     customizePostInit(categName);
-    ChatService.instance.customize.chatRoomAppBarBuilder = ({room, user}) => customAppBar(context, room);
+    ChatService.instance.customize.chatRoomAppBarBuilder =
+        ({room, user}) => customAppBar(context, room);
     PostService.instance.init(
       enableSeenBy: true,
     );
-    // PostService.instance.customize.postViewButtonBuilder = (post) => IconButton(
-    //       onPressed: () {},
-    //       icon: const FaIcon(FontAwesomeIcons.share),
-    //     );
+
+    CommentService.instance.init(
+      customize: CommentCustomize(),
+    );
   }
 
   @override
@@ -50,16 +53,13 @@ class _FeedBodyState extends State<FeedBody> {
           Expanded(
             child: PostListView(
               itemBuilder: (context, post) => InkWell(
-                onTap: () {
+                onTap: () async {
+                  // var test = await get(favoriteDoc(post.id).toString());
+                  // debugPrint('$test');
                   showGeneralDialog(
-                    context: context,
-                    pageBuilder: (context, _, __) => Dialog(
-                      child: CommentListView(
-                        post: post,
-                        itemBuilder: (context, comment) => CommentOneLineListTile(comment: comment, post: post),
-                      ),
-                    ),
-                  );
+                      context: context,
+                      pageBuilder: (context, _, __) =>
+                          PostViewScreen(post: post));
                 },
                 child: PostCard(
                   post: post,
@@ -78,17 +78,6 @@ class _FeedBodyState extends State<FeedBody> {
       ),
     );
   }
-  // showDialog(
-  //   context: context,
-  //   builder: (cnx) => Dialog(
-  //     child: Padding(
-  //       padding: const EdgeInsets.all(sizeSm),
-  //       child: CommentListView(post: post),
-  //     ),
-  //   ),
-  // );
-  // launchSMS(phoneNumber: "0039-222-060-888", msg: "hello there");
-  // confirm(context: context, title: 'confirm', message: 'confirm message');
 
   Padding topBarWidgets(BuildContext context) {
     return Padding(
@@ -99,7 +88,7 @@ class _FeedBodyState extends State<FeedBody> {
             user: my,
             radius: sizeXl,
             size: sizeXl,
-            onTap: () => context.push(MainPage.routeName),
+            // onTap: () => context.push(UserPage.routeName),
           ),
           const SizedBox(width: sizeSm),
           PostField(
@@ -113,7 +102,8 @@ class _FeedBodyState extends State<FeedBody> {
           const SizedBox(width: sizeXs),
           IconButton(
             onPressed: () async {
-              final url = await StorageService.instance.upload(context: context);
+              final url =
+                  await StorageService.instance.upload(context: context);
               debugPrint('url: $url');
               if (url != null && mounted) {
                 setState(() {});

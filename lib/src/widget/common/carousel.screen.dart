@@ -48,6 +48,7 @@ class _CarouselScreenState extends State<CarouselScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
+          key: const Key('CarouselScreenCloseButton'),
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.close),
         ),

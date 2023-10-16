@@ -17,6 +17,11 @@ class _AdminChatRoomListScreenState extends State<AdminChatRoomListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          key: const Key('AdminChatRoomListBackButton'),
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back),
+        ),
         iconTheme: Theme.of(context)
             .iconTheme
             .copyWith(color: Theme.of(context).colorScheme.onInverseSurface),

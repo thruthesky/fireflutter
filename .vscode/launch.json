@@ -311,7 +311,7 @@
       "cwd": "apps/grc",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "deviceId": "iPhone 14 Pro Max"
+      "deviceId": "iPhone 15 Pro Max"
     },{
       "name": "GRC - Emulator (N)",
       "request": "launch",

@@ -1,7 +1,7 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:new_app/home.screen/forms/edit.form.dart';
+import 'package:new_app/home/user.profile/forms/edit.form.dart';
 
 Widget buttonBuilder(String text, VoidCallback? onPressed) {
   return ElevatedButton(
@@ -43,7 +43,7 @@ Widget userInfo(User user, BuildContext context) {
         onPressed: () {
           showDialog(
             context: context,
-            builder: (context) => const EditForm(),
+            builder: (context) => EditForm(user: user),
           );
         },
         icon: const FaIcon(
@@ -59,7 +59,9 @@ Widget _textBuilder(BuildContext context, String? label, bool isHighlight) {
   return Text(
     label ?? '',
     style: TextStyle(
-      color: isHighlight ? Colors.black : Theme.of(context).shadowColor.withAlpha(150),
+      color: isHighlight
+          ? Colors.black
+          : Theme.of(context).shadowColor.withAlpha(150),
       fontSize: isHighlight ? sizeMd : sizeSm - 3,
     ),
   );

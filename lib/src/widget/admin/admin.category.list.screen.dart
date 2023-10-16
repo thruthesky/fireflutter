@@ -17,6 +17,11 @@ class AdminCategoryListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          key: const Key('AdminCategoryListBackButton'),
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back),
+        ),
         iconTheme: Theme.of(context)
             .iconTheme
             .copyWith(color: Theme.of(context).colorScheme.onInverseSurface),

@@ -7,12 +7,15 @@
 
 - [Overview](#overview)
 - [Comment Service](#comment-service)
+- [Widget](#widget)
   - [Comment Doc](#comment-doc)
   - [CommentEditBottomSheet](#commenteditbottomsheet)
   - [CommentListView](#commentlistview)
   - [CommentListTile](#commentlisttile)
   - [CommentListBottomSheet](#commentlistbottomsheet)
   - [CommentViewScreen](#commentviewscreen)
+- [Customization](#customization)
+  - [CommentCustomize](#commentcustomize)
 - [Comment Sorting](#comment-sorting)
 
 <!-- /code_chunk_output -->
@@ -20,7 +23,8 @@
 
 # Comment
 ## Overview
-<!-- TODO: Overview definition -->
+
+User comments on posts so in this section will show you how to handle comments from each post. Utilizing every widgets and function calls will help you to create a `Feed Page` for your app. 
 
 ## Comment Service
 Comment Service provides a widget builder that you can use from retrieve data to display them into your app.
@@ -61,7 +65,7 @@ CommentService.instance.init(
   ),
 );
 ```
-
+## Widget
 ### Comment Doc
 A builder that will make a widget from the comment's document
 
@@ -142,11 +146,39 @@ onTap: (){
 }
 
 ```
+## Customization
+
+### CommentCustomize
+
+Using this widget you can customize the behaviour of your comment. 
+
+Use `init` from `CommentService` 
+```dart
+CommentService.instance.init(
+  customize: CommentCustomize(
+  showCommentListBottomSheet: (context, post) {
+    // code here
+    } 
+  ),
+);
+```
+or you can use the `customize`
+```dart
+CommentService.instance.customize.showCommentEditBottomSheet = (context){
+  // code here
+};
+```
 
 ## Comment Sorting
-When you go to Firestore and navigate to `comments/{commentId}/` and look at the `order` and you can see the numbers `10000.100010....100000`. This represents the `depths` of each comment from its `parentId`. FireFlutter use this to sort the comments and can be easily displayed on Flutter.
+If you go to Firestore and navigate to `comments/{commentId}/` and look at the `order` You can see the numbers `10000.100010....100000`, this represents the `depths` of each comment from its `parentId`. 
+
+Each dot on `100000.100000.100000.100000.100000.100000.100000.100000.100000.100000` represents a `depth` of a comment adding the total number of comments from a post. So if `depth = 2` and  `totalNoOfComments = 15` the sort will be `100000.100015........100000`
 
 ``` dart
--> {parent comment} // depth 2, order: 100000.100000.100000.
-  -> {}
+ [This is the original Post]
+
+-> {(A) first comment} // depth 1, order: 100000.........100000
+  -> {(a) reply on (A) comment} // depth 2, order: 100000.100002........100000 // 
+    -> {(b) reply on (a) comment} // depth 3, order: 100000.100002.100003.......100000 // 
+      -> {(c) reply on (b) comment} // depth 4, order: 100000.100002.100003.100004......100000 //
 ```

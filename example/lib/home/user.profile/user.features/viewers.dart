@@ -21,7 +21,8 @@ class ProfileViewers extends StatelessWidget {
           primaryTextTheme: const TextTheme(),
           iconButtonTheme: IconButtonThemeData(
             style: ButtonStyle(
-              iconColor: MaterialStateColor.resolveWith((states) => Theme.of(context).shadowColor),
+              iconColor: MaterialStateColor.resolveWith(
+                  (states) => Theme.of(context).shadowColor),
             ),
           ),
         ),

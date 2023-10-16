@@ -2,6 +2,8 @@ service-account.json
 apps/
 .flutter-plugins-dependencies
 
+firebase_options.dart
+
 # Miscellaneous
 *.class
 *.log

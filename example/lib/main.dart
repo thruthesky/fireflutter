@@ -1,9 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
-import 'package:new_app/chat.room/chat.room.dart';
 import 'package:new_app/firebase_options.dart';
-import 'package:new_app/login.widgets/login.form.dart';
 import 'package:new_app/router/router.dart';
 
 void main() async {
@@ -11,59 +8,22 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const LoginPage());
+  runApp(const MainApp());
 }
 
-class LoginPage extends StatefulWidget {
+class MainApp extends StatefulWidget {
   static const String routeName = '/';
-  const LoginPage({super.key});
+  const MainApp({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<MainApp> createState() => _MainAppState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  @override
-  void initState() {
-    super.initState();
-    // UserService.instance.get(myUid!);
-    // UserService.instance.init(adminUid: myUid!);
-    // UserService.instance.init(enableNoOfProfileView: true, adminUid: myUid!);
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      FireFlutterService.instance.init(context: router.routerDelegate.navigatorKey.currentContext!);
-    });
-  }
-
+class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: router,
-      theme: ThemeData.light(),
     );
   }
 }
-
-class LoginPageBody extends StatelessWidget {
-  const LoginPageBody({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: AuthChange(
-        builder: (user) => user == null
-            ? const Padding(
-                padding: EdgeInsets.only(
-                  left: 24,
-                  right: 24,
-                ),
-                child: Center(
-                  child: LoginForm(),
-                ),
-              )
-            : const CustomChatRoom(),
-      ),
-    );
-  }
-}
-// WARNING: AYUSIN FILE STRUCTURE

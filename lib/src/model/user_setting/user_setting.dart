@@ -12,8 +12,10 @@ class UserSetting {
   final String? categoryId;
   final String? roomId;
 
-  static CollectionReference get mySettingCol =>
-      FirebaseFirestore.instance.collection('users').doc(myUid!).collection('user_settings');
+  static CollectionReference get mySettingCol => FirebaseFirestore.instance
+      .collection('users')
+      .doc(myUid!)
+      .collection('user_settings');
 
   UserSetting({
     required this.id,
@@ -23,15 +25,20 @@ class UserSetting {
     this.roomId,
   });
 
-  factory UserSetting.fromJson(Map<String, dynamic> json) => _$UserSettingFromJson(json);
+  factory UserSetting.fromJson(Map<String, dynamic> json) =>
+      _$UserSettingFromJson(json);
   Map<String, dynamic> toJson() => _$UserSettingToJson(this);
 
   static Future<UserSetting?> get(String id) async {
-    final snapshot = await mySettingCol.where('uid', isEqualTo: myUid).where('id', isEqualTo: id).get();
+    final snapshot = await mySettingCol
+        .where('uid', isEqualTo: myUid)
+        .where('id', isEqualTo: id)
+        .get();
     if (snapshot.size == 0) {
       return null;
     } else {
-      return UserSetting.fromJson(snapshot.docs.first.data() as Map<String, dynamic>);
+      return UserSetting.fromJson(
+          snapshot.docs.first.data() as Map<String, dynamic>);
     }
   }
 

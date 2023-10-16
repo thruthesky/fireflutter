@@ -62,10 +62,15 @@ class _PostCreateState extends State<PostCreate> {
                 ButtonRow(
                   label1: 'Create',
                   action1: () {
-                    Post.create(categoryId: categoryId.text, title: title.text, content: content.text).then(
+                    Post.create(
+                            categoryId: categoryId.text,
+                            title: title.text,
+                            content: content.text)
+                        .then(
                       (post) {
                         context.pop();
-                        return PostService.instance.showPostViewScreen(context: context, post: post);
+                        return PostService.instance
+                            .showPostViewScreen(context: context, post: post);
                       },
                     );
                   },

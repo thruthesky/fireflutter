@@ -17,13 +17,18 @@ class CommentListBottomSheet extends StatelessWidget {
       // margin: const EdgeInsets.symmetric(horizontal: sizeSm),
       child: Column(
         children: [
-          Container(
-            height: 4,
-            width: 28,
-            margin: const EdgeInsets.symmetric(vertical: sizeMd),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: Theme.of(context).colorScheme.secondary.withAlpha(80),
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => Navigator.pop(context),
+            child: Container(
+              key: const Key('CommentListBottomSheetNotch'),
+              height: 4,
+              width: 28,
+              margin: const EdgeInsets.symmetric(vertical: sizeMd),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: Theme.of(context).colorScheme.secondary.withAlpha(80),
+              ),
             ),
           ),
           Expanded(

@@ -342,6 +342,8 @@ class ChatService {
       await ref.update(data);
     }
 
+    ActivityService.instance.onChatMessageSent(room);
+
     /// * This must be called with "await". Or unit tests may fail.
     await updateRoom(room: room, lastMessage: chatMessage);
   }
@@ -433,6 +435,8 @@ class ChatService {
     );
 
     log('---> showChatRoom: room: $room, user: $user');
+
+    ActivityService.instance.onChatRoomOpened(room, user);
 
     if (context.mounted) {
       if (customize.showChatRoom != null) {

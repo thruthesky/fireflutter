@@ -15,6 +15,11 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          key: const Key('AdminActivityLogBackButton'),
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back),
+        ),
         title: const Text('Activity logs'),
         actions: [
           IconButton(
@@ -26,12 +31,14 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60),
-          child: Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0), child: userSearch),
+          child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: userSearch),
         ),
       ),
       body: FirebaseDatabaseListView(
         query: activityLogRef.orderByChild('type').equalTo('user'),
-        reverse: true,
+        // reverse: true,
         itemBuilder: (context, snapshot) {
           final activity = Activity.fromDocumentSnapshot(snapshot);
           return ListTile(
@@ -66,7 +73,8 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
               children: [
                 IconButton(
                   onPressed: () {
-                    AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
+                    AdminService.instance.showUserSearchDialog(context,
+                        onTap: (user) async {
                       search.text = user.uid;
                       Navigator.of(context).pop();
                     });
@@ -86,13 +94,15 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
       showDragHandle: true,
       builder: (context) {
         return ConstrainedBox(
-          constraints:
-              BoxConstraints.loose(Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.80)),
+          constraints: BoxConstraints.loose(Size(
+              MediaQuery.of(context).size.width,
+              MediaQuery.of(context).size.height * 0.80)),
           child: SafeArea(
             child: StatefulBuilder(
               builder: (context, setFilterModalState) {
                 return Padding(
-                  padding: EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, MediaQuery.of(context).viewInsets.bottom),
+                  padding: EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm,
+                      MediaQuery.of(context).viewInsets.bottom),
                   child: SingleChildScrollView(
                     child: SizedBox(
                       width: double.infinity,

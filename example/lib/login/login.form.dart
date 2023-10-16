@@ -51,24 +51,32 @@ class _LoginFormState extends State<LoginForm> {
           onPressed: () async {
             if (!isHighlight) {
               await FirebaseAuth.instance
-                  .createUserWithEmailAndPassword(email: email.text, password: password.text)
+                  .createUserWithEmailAndPassword(
+                      email: email.text, password: password.text)
                   .then((value) {
                 UserService.instance.sendWelcomeMessage(message: 'Welcome!');
                 // toast(title: title, message: message)
               });
             } else {
-              await FirebaseAuth.instance.signInWithEmailAndPassword(email: email.text, password: password.text);
+              await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  email: email.text, password: password.text);
             }
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: isHighlight ? Theme.of(context).primaryColor : Theme.of(context).hintColor.withAlpha(25),
+            backgroundColor: isHighlight
+                ? Theme.of(context).primaryColor
+                : Theme.of(context).hintColor.withAlpha(25),
             elevation: 0,
-            foregroundColor: isHighlight ? Theme.of(context).canvasColor : Theme.of(context).shadowColor,
+            foregroundColor: isHighlight
+                ? Theme.of(context).canvasColor
+                : Theme.of(context).shadowColor,
             minimumSize: Size(constraints.maxWidth, 40),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
               side: BorderSide(
-                color: isHighlight ? Theme.of(context).primaryColor : Theme.of(context).shadowColor.withAlpha(100),
+                color: isHighlight
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).shadowColor.withAlpha(100),
               ),
             ),
           ),

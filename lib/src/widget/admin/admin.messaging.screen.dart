@@ -69,6 +69,11 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          key: const Key('AdminPushNotificationBackButton'),
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back),
+        ),
         title: const Text("Push Notification"),
       ),
       body: SingleChildScrollView(

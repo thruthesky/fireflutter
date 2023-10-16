@@ -20,10 +20,10 @@ We have a handy function in `functions/database.dart` to `get, set, update, toog
 
 - `get('path')` gets the node data of the path from database.
 - `set('path', data)` sets the data at the node of the path into database.
-- `update('path', { data })` updates the node of the path. The value must be a Map.
+- `update('path', { data })` updates the node of the path. The value must be a `Map`.
 - `toggle('path')` switches on/off the value of the node. If the node of the [path] does not exist, create it and return true. Or if the node exists, then remove it and return false.
 
-Note that, these functions may arise an exception if the security rules are not proeprty set on the paths. You need to set the security rules by yourself. When you meet an error like `[firebase_database/permission-denied] Client doesn't have permission to access the desired data.`, then check the security rules.
+***Note:*** These functions may arise an exception if the security rules are not properly set on the paths. You need to set the security rules by yourself. When you meet an error like `[firebase_database/permission-denied] Client doesn't have permission to access the desired data.`, then check the security rules.
 
 Example of `get()`
 
@@ -33,7 +33,7 @@ print('value; $value');
 print('value; ${User.fromJson(Map<String, dynamic>.from(value))}');
 ```
 
-Example of `set()` adn `update()`
+Example of `set()` and `update()`
 
 ```dart
 String path = 'tmp/a/b/c';
@@ -47,6 +47,8 @@ print(await get(path));
 ## Database widget
 
 `Database` widget rebuilds the widget when the node is changed. Becareful to use the narrowest path of the node or it would download a lot of data.
+
+Consider looking at the `../lib/src/functions/ref.dart`. This provides path from Firestore and Real Time Database.
 
 ```dart
 // Displaying a Text value
