@@ -24,6 +24,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
 
     if (search.text.isNotEmpty) {
       q = activityUserLogRef(search.text).orderByChild('reverseCreatedAt');
+      // q = activityLogRef.orderByChild('reverseCreatedAt').equalTo(search.text, key: 'uid');
     } else {
       q = activityLogRef.orderByChild('reverseCreatedAt');
     }
@@ -73,6 +74,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
             return const SizedBox.shrink();
           }
           return ListTile(
+            key: Key(activity.id),
             title: FutureBuilder(
               future: activity.getMessage,
               builder: (c, s) {
