@@ -9,9 +9,11 @@ class FeedListView extends StatefulWidget {
     this.itemExtent,
     this.cacheExtent,
     required this.itemBuilder,
+    this.avatarBuilder,
     this.topBuilder,
     this.textBuilder,
-    this.avatarBuilder,
+    this.bottomBuilder,
+    this.emptyBuilder,
     this.onTap,
   });
 
@@ -19,10 +21,12 @@ class FeedListView extends StatefulWidget {
   final double? itemExtent;
   final double? cacheExtent;
   final Widget Function(Post feed, int index) itemBuilder;
-  final Widget Function(Post feed)? topBuilder;
+  final Widget Function(Post feed, bool isFullFirstPage)? topBuilder;
 
   final Widget Function(BuildContext, Post)? avatarBuilder;
   final Widget Function(BuildContext, Post)? textBuilder;
+  final Widget Function(BuildContext context)? bottomBuilder;
+  final Widget Function(BuildContext context)? emptyBuilder;
 
   final void Function(Post)? onTap;
 
@@ -31,7 +35,6 @@ class FeedListView extends StatefulWidget {
 }
 
 class _FeedListViewState extends State<FeedListView> {
-  bool noFollowings = false;
   final scrollBarControlller = ScrollController();
 
   @override
@@ -39,29 +42,18 @@ class _FeedListViewState extends State<FeedListView> {
     super.initState();
     UserService.instance.documentChanges.listen((user) {
       if (user == null) return;
-      // Currently, [noFollowings] is only useful when user have not followed anyone.
-      // This will prevent rebuilding everytime user has been updated.
-      if (noFollowings == user.followings.isEmpty) return;
-      noFollowings = user.followings.isEmpty;
-      if (!mounted) return;
       setState(() {});
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    if (noFollowings) {
-      return const Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('You have not followed anyone'),
-          ],
-        ),
-      );
-    }
+  void dispose() {
+    scrollBarControlller.dispose();
+    super.dispose();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return FirestoreQueryBuilder(
       query: postCol.where('followers', arrayContains: myUid).orderBy('createdAt', descending: true),
       pageSize: widget.pageSize,
@@ -72,6 +64,10 @@ class _FeedListViewState extends State<FeedListView> {
         if (snapshot.hasError) {
           dog(snapshot.error.toString());
           return Text('Something went wrong! ${snapshot.error}');
+        }
+        if (snapshot.docs.isEmpty) {
+          // means has no more to get
+          if (widget.emptyBuilder != null) return widget.emptyBuilder!.call(context);
         }
         return Scrollbar(
           controller: scrollBarControlller,
@@ -89,13 +85,17 @@ class _FeedListViewState extends State<FeedListView> {
                 // It is safe to call this function from within the build method.
                 snapshot.fetchMore();
               }
+              if ((!snapshot.hasMore && index + 1 == snapshot.docs.length)) {
+                // means has no more to get
+                if (widget.bottomBuilder != null) return widget.bottomBuilder!.call(context);
+              }
               final post = Post.fromDocumentSnapshot(snapshot.docs[index]);
               final child = widget.itemBuilder.call(post, index);
 
               if (widget.topBuilder != null && index == 0) {
                 return Column(
                   children: [
-                    widget.topBuilder!.call(post),
+                    widget.topBuilder!.call(post, widget.pageSize == snapshot.docs.length),
                     child,
                   ],
                 );

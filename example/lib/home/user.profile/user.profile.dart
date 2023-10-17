@@ -1,5 +1,6 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+// import 'package:new_app/home/user.profile/forms/edit.form.dart';
 import 'package:new_app/home/user.profile/user.features/followers.dart';
 import 'package:new_app/home/user.profile/user.features/viewers.dart';
 import 'package:new_app/page.essentials/simple.builders.dart';
@@ -54,13 +55,11 @@ class UserProfileState extends State<UserProfile> {
                         );
                       }),
                       buttonBuilder('Show Profile', () {
-                        UserService.instance.showPublicProfileScreen(
-                            context: context, user: my);
+                        UserService.instance.showPublicProfileScreen(context: context, user: my);
                       }),
                       buttonBuilder(
                         'Show Admin Dashboard',
-                        () => AdminService.instance
-                            .showDashboard(context: context),
+                        () => AdminService.instance.showDashboard(context: context),
                       ),
                       buttonBuilder(
                         'Show Admin User List View',
@@ -77,8 +76,7 @@ class UserProfileState extends State<UserProfile> {
                           context: context,
                           builder: (cnx) => Dialog(
                             child: CategoryListView(
-                              onTap: (cat) => CategoryService.instance
-                                  .showUpdateDialog(context, cat.id),
+                              onTap: (cat) => CategoryService.instance.showUpdateDialog(context, cat.id),
                             ),
                           ),
                         ),
@@ -95,10 +93,7 @@ class UserProfileState extends State<UserProfile> {
                       buttonBuilder(
                         'Show Activity List View',
                         () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const ActivityListViewScreen())),
+                            context, MaterialPageRoute(builder: (context) => const ActivityListViewScreen())),
                       ),
                     ],
                   ),

@@ -17,24 +17,16 @@ class FeedBody extends StatefulWidget {
 class _FeedBodyState extends State<FeedBody> {
   final controller = TextEditingController();
   String categName = '';
-  Future<Comment?> commentGet() {
-    return Comment.get('5QCeocnLyx210J83Hw30');
-  }
+  // Future<Comment?> commentGet() {
+  //   return Comment.get('5QCeocnLyx210J83Hw30');
+  // }
 
   @override
   void initState() {
     super.initState();
     UserService.instance.init(adminUid: myUid);
     customizePostInit(categName);
-    ChatService.instance.customize.chatRoomAppBarBuilder =
-        ({room, user}) => customAppBar(context, room);
-    PostService.instance.init(
-      enableSeenBy: true,
-    );
-
-    CommentService.instance.init(
-      customize: CommentCustomize(),
-    );
+    ChatService.instance.customize.chatRoomAppBarBuilder = ({room, user}) => customAppBar(context, room);
   }
 
   @override
@@ -53,20 +45,13 @@ class _FeedBodyState extends State<FeedBody> {
           Expanded(
             child: PostListView(
               itemBuilder: (context, post) => InkWell(
-                onTap: () async {
-                  // var test = await get(favoriteDoc(post.id).toString());
-                  // debugPrint('$test');
-                  showGeneralDialog(
-                      context: context,
-                      pageBuilder: (context, _, __) =>
-                          PostViewScreen(post: post));
-                },
+                onTap: () => PostService.instance.showPostViewScreen(context: context, post: post),
                 child: PostCard(
                   post: post,
                   commentSize: 3,
                   shareButtonBuilder: (post) => IconButton(
                     onPressed: () {
-                      // ShareService.instance.showBottomSheet();
+                      ShareService.instance.showBottomSheet();
                     },
                     icon: const Icon(Icons.share, size: sizeSm),
                   ),
@@ -88,7 +73,6 @@ class _FeedBodyState extends State<FeedBody> {
             user: my,
             radius: sizeXl,
             size: sizeXl,
-            // onTap: () => context.push(UserPage.routeName),
           ),
           const SizedBox(width: sizeSm),
           PostField(
@@ -102,8 +86,7 @@ class _FeedBodyState extends State<FeedBody> {
           const SizedBox(width: sizeXs),
           IconButton(
             onPressed: () async {
-              final url =
-                  await StorageService.instance.upload(context: context);
+              final url = await StorageService.instance.upload(context: context);
               debugPrint('url: $url');
               if (url != null && mounted) {
                 setState(() {});
