@@ -23,7 +23,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
     Query q;
 
     if (search.text.isNotEmpty) {
-      q = activityLogRef.orderByChild('uid').equalTo(search.text);
+      q = activityUserLogRef(search.text).orderByChild('reverseCreatedAt');
     } else {
       q = activityLogRef.orderByChild('reverseCreatedAt');
     }
