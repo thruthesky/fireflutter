@@ -367,6 +367,10 @@ class User {
     return await update(isComplete: isComplete);
   }
 
+  Future complete(bool isComplete) async {
+    return await updateComplete(isComplete);
+  }
+
   /// Follow
   ///
   /// See README for details
