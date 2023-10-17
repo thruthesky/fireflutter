@@ -141,11 +141,14 @@ AppBar customAppBar(BuildContext context, Room? room) {
                     ),
                     ButtonRow(
                       label1: 'Update',
-                      action1: () async => await ChatService.instance.updateMyRoomSetting(
-                        room: room,
-                        setting: 'rename',
-                        value: {'myUid': renameValue.text},
-                      ),
+                      action1: () async {
+                        debugPrint(myUid!);
+                        await ChatService.instance.updateMyRoomSetting(
+                          room: room,
+                          setting: 'rename',
+                          value: renameValue.text,
+                        );
+                      },
                       label2: 'Cancel',
                       action2: () => context.pop(),
                     ),
