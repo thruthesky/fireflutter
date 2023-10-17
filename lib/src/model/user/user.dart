@@ -117,7 +117,7 @@ class User {
   @JsonKey(includeFromJson: false, includeToJson: true)
   bool exists = true;
 
-  String get showDisplayName {
+  String get getDisplayName {
     return displayName.isNotEmpty
         ? displayName
         : name.isNotEmpty
@@ -199,10 +199,18 @@ class User {
   /// [uid] is the user's uid. If it's null, it will get the login user's document.
   ///
   /// Note, that It gets data from /users collections. It does not get data from /search-user-data collection.
-  static Future<User?> get([String? userUid]) async {
+  static Future<User?> get([String? userUid, bool? cache]) async {
+    if (cache == true) {
+      final user = UserService.instance.usersCache[userUid ?? myUid];
+      if (user != null) return user;
+    }
+
+    /// If the userUid is null, then get the login user's document.
     final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(userUid ?? myUid).get();
     if (snapshot.exists == false || snapshot.data() == null) return null;
-    return User.fromDocumentSnapshot(snapshot);
+    User user = User.fromDocumentSnapshot(snapshot);
+    UserService.instance.usersCache[user.uid] = user;
+    return user;
   }
 
   /// Create user document.

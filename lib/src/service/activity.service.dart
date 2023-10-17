@@ -74,6 +74,14 @@ class ActivityService {
         name: user.name,
       );
 
+  /// user login
+  onUserSignin(User user) => _log(
+        action: 'signin',
+        type: ActivityType.user.name,
+        uid: user.uid,
+        name: user.name,
+      );
+
   onSignout(User user) => _log(
         action: 'signout',
         type: ActivityType.user.name,
@@ -134,7 +142,7 @@ class ActivityService {
   /// user open a room or 1:1 chat
   onChatRoomOpened(Room? room, User? user) {
     _log(
-      action: 'chatRoomOpened',
+      action: 'open',
       type: ActivityType.chat.name,
       roomId: room?.roomId,
       title: room?.name,
@@ -145,7 +153,7 @@ class ActivityService {
 
   onChatMessageSent(Room room) {
     _log(
-      action: 'chatMessageSent',
+      action: 'send',
       type: ActivityType.chat.name,
       roomId: room.roomId,
       title: room.name,

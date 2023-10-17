@@ -73,8 +73,18 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
             return const SizedBox.shrink();
           }
           return ListTile(
-            title: Text(
-                '${activity.name.isNotEmpty ? activity.name : activity.uid} ${activity.action} ${activity.type} ${activity.otherUid} '),
+            title: FutureBuilder(
+              future: activity.getMessage,
+              builder: (c, s) {
+                if (s.hasError) {
+                  return const Center(child: Text('Something went wrong.'));
+                }
+                if (s.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator.adaptive());
+                }
+                return Text(s.data!);
+              },
+            ),
             subtitle: Text(dateTimeAgo(activity.createdAt)),
           );
         },

@@ -95,7 +95,7 @@ class AdminUserListView extends StatelessWidget {
         final user = User.fromDocumentSnapshot(snapshot);
 
         return ListTile(
-          title: titleBuilder?.call(user) ?? Text(user.showDisplayName),
+          title: titleBuilder?.call(user) ?? Text(user.getDisplayName),
           subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
           leading: avatarBuilder?.call(user) ?? UserAvatar(user: user),
           trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),

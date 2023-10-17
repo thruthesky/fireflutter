@@ -360,13 +360,13 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                     users[user.uid] = user;
                     toast(
                       title: 'Users add',
-                      message: "${user.showDisplayName} was added on the list",
+                      message: "${user.getDisplayName} was added on the list",
                       duration: const Duration(seconds: 2),
                     );
                     setState(() {});
                   },
                   titleBuilder: (user) => Text(
-                    user!.showDisplayName,
+                    user!.getDisplayName,
                   ),
                   subtitleBuilder: (user) => Text(
                     dateTimeShort(user!.createdAt),
@@ -388,7 +388,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                     Row(
                       children: [
                         Text(
-                          users[uid]!.showDisplayName,
+                          users[uid]!.getDisplayName,
                           overflow: TextOverflow.ellipsis,
                           style: textStyle,
                         ),
@@ -426,7 +426,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                     users[user.uid] = user;
                     toast(
                       title: 'Users add',
-                      message: "${user.showDisplayName} was added on the list",
+                      message: "${user.getDisplayName} was added on the list",
                       duration: const Duration(seconds: 2),
                     );
                     setState(() {});
