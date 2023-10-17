@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class FeedListView extends StatefulWidget {
   const FeedListView({
     super.key,
+    this.pageSize = 20,
     this.itemExtent,
     this.cacheExtent,
     required this.itemBuilder,
@@ -14,6 +15,7 @@ class FeedListView extends StatefulWidget {
     this.onTap,
   });
 
+  final int pageSize;
   final double? itemExtent;
   final double? cacheExtent;
   final Widget Function(Post feed, int index) itemBuilder;
@@ -61,10 +63,8 @@ class _FeedListViewState extends State<FeedListView> {
     }
 
     return FirestoreQueryBuilder(
-      query: postCol
-          .where('followers', arrayContains: myUid)
-          .orderBy('createdAt', descending: true),
-      pageSize: 40,
+      query: postCol.where('followers', arrayContains: myUid).orderBy('createdAt', descending: true),
+      pageSize: widget.pageSize,
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
           return const Center(child: CircularProgressIndicator());
