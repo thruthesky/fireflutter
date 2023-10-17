@@ -12,11 +12,18 @@ class FirebaseDateTimeConverter implements JsonConverter<DateTime, dynamic> {
     if (data is int) {
       return DateTime.fromMillisecondsSinceEpoch((data).abs());
     } else if (data is Timestamp) {
+      // Firestore timestamp
       return data.toDate();
     } else if (data is DateTime) {
       return data;
+    } else if (data == null) {
+      return DateTime(1970); // The beginning of epoch.
+    } else if (data is FieldValue) {
+      // Firestore pending writes,
+      return DateTime.now();
     } else {
-      return DateTime(1973);
+      // Or whatever, just return current time.
+      return DateTime.now();
     }
   }
 

@@ -66,10 +66,7 @@ class Post {
     return Post.fromJson(
       {
         ...documentSnapshot.data() as Map<String, dynamic>,
-        ...{
-          'id': documentSnapshot.id,
-          if (documentSnapshot.metadata.hasPendingWrites) 'createdAt': DateTime.now(),
-        }
+        'id': documentSnapshot.id,
       },
     );
   }
