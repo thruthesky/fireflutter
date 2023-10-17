@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class FeedListView extends StatefulWidget {
     this.textBuilder,
     this.bottomBuilder,
     this.emptyBuilder,
+    this.query,
     this.onTap,
   });
 
@@ -21,12 +23,14 @@ class FeedListView extends StatefulWidget {
   final double? itemExtent;
   final double? cacheExtent;
   final Widget Function(Post feed, int index) itemBuilder;
-  final Widget Function(Post feed, bool isFullFirstPage)? topBuilder;
+  final Widget Function(Post feed, bool isFullPage)? topBuilder;
 
   final Widget Function(BuildContext, Post)? avatarBuilder;
   final Widget Function(BuildContext, Post)? textBuilder;
   final Widget Function(BuildContext context)? bottomBuilder;
   final Widget Function(BuildContext context)? emptyBuilder;
+
+  final Query? query;
 
   final void Function(Post)? onTap;
 
@@ -55,7 +59,7 @@ class _FeedListViewState extends State<FeedListView> {
   @override
   Widget build(BuildContext context) {
     return FirestoreQueryBuilder(
-      query: postCol.where('followers', arrayContains: myUid).orderBy('createdAt', descending: true),
+      query: widget.query ?? postCol.where('followers', arrayContains: myUid).orderBy('createdAt', descending: true),
       pageSize: widget.pageSize,
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
@@ -95,7 +99,7 @@ class _FeedListViewState extends State<FeedListView> {
               if (widget.topBuilder != null && index == 0) {
                 return Column(
                   children: [
-                    widget.topBuilder!.call(post, widget.pageSize == snapshot.docs.length),
+                    widget.topBuilder!.call(post, widget.pageSize <= snapshot.docs.length),
                     child,
                   ],
                 );

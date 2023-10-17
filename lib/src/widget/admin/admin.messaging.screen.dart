@@ -54,14 +54,6 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
 
   String guideView = GuideView.minimize.name;
 
-  String userDisplayName(User user) {
-    return user.displayName.isNotEmpty
-        ? user.displayName
-        : user.name.isNotEmpty
-            ? user.name
-            : user.uid;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -368,13 +360,13 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                     users[user.uid] = user;
                     toast(
                       title: 'Users add',
-                      message: "${userDisplayName(user)} was added on the list",
+                      message: "${user.getDisplayName} was added on the list",
                       duration: const Duration(seconds: 2),
                     );
                     setState(() {});
                   },
                   titleBuilder: (user) => Text(
-                    userDisplayName(user!),
+                    user!.getDisplayName,
                   ),
                   subtitleBuilder: (user) => Text(
                     dateTimeShort(user!.createdAt),
@@ -396,7 +388,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                     Row(
                       children: [
                         Text(
-                          userDisplayName(users[uid]!),
+                          users[uid]!.getDisplayName,
                           overflow: TextOverflow.ellipsis,
                           style: textStyle,
                         ),
@@ -434,7 +426,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                     users[user.uid] = user;
                     toast(
                       title: 'Users add',
-                      message: "${userDisplayName(user)} was added on the list",
+                      message: "${user.getDisplayName} was added on the list",
                       duration: const Duration(seconds: 2),
                     );
                     setState(() {});

@@ -117,6 +117,14 @@ class User {
   @JsonKey(includeFromJson: false, includeToJson: true)
   bool exists = true;
 
+  String get getDisplayName {
+    return displayName.isNotEmpty
+        ? displayName
+        : name.isNotEmpty
+            ? name
+            : uid;
+  }
+
   User({
     this.uid = '',
     this.isAdmin = false,
@@ -191,10 +199,18 @@ class User {
   /// [uid] is the user's uid. If it's null, it will get the login user's document.
   ///
   /// Note, that It gets data from /users collections. It does not get data from /search-user-data collection.
-  static Future<User?> get([String? userUid]) async {
+  static Future<User?> get([String? userUid, bool? cache]) async {
+    if (cache == true) {
+      final user = UserService.instance.usersCache[userUid ?? myUid];
+      if (user != null) return user;
+    }
+
+    /// If the userUid is null, then get the login user's document.
     final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(userUid ?? myUid).get();
     if (snapshot.exists == false || snapshot.data() == null) return null;
-    return User.fromDocumentSnapshot(snapshot);
+    User user = User.fromDocumentSnapshot(snapshot);
+    UserService.instance.usersCache[user.uid] = user;
+    return user;
   }
 
   /// Create user document.
@@ -328,15 +344,27 @@ class User {
     /// Update the birth day of year
     if (docData['birthYear'] != null && docData['birthMonth'] != null && docData['birthDay'] != null) {
       final date = DateTime(docData['birthYear'], docData['birthMonth'], docData['birthDay']);
-
       docData['birthDayOfYear'] = date.difference(DateTime(date.year)).inDays + 1;
     }
-
     dog("User.update(); me: $myUid, who: $uid, path: ${userDoc(uid).path}, docData: $docData");
+
+    // This is the code that actually updates the user document in DB.
     await userDoc(uid).set(
       docData,
       SetOptions(merge: true),
     );
+
+    // Added this here so that everytime we update,
+    // we have to check if the profile is complete.
+    // Added this here so that we have to maintain it only here.
+    //
+    // We only have to check the isComplete field when the user updates his own profile.
+    if (uid == myUid) {
+      final completed = UserService.instance.isCompleteProfile(my!);
+      if (my!.isComplete != completed) {
+        await update(isComplete: completed);
+      }
+    }
 
     /// Get real data from the server. Assembling the user updated object won't work due to FieldValues.
     if (UserService.instance.onUpdate != null) {
@@ -352,15 +380,6 @@ class User {
     //   /// log user update
     //   ActivityService.instance.onUserUpdate(user!);
     // });
-  }
-
-  /// If the user has completed the profile, set the isComplete field to true.
-  Future<void> updateComplete(bool isComplete) async {
-    return await update(isComplete: isComplete);
-  }
-
-  Future complete(bool isComplete) async {
-    return await updateComplete(isComplete);
   }
 
   /// Follow
@@ -422,8 +441,10 @@ class User {
 
   /// Deletes the user document of current object.
   ///
+  /// Instead of deleting the user document, it will set with {deleted: true}.
   Future delete() async {
-    await userDoc(uid).delete();
+    await userDoc(uid).set({'deleted': true});
+    await myPrivateDoc.set({'deleted': true});
     UserService.instance.onDelete?.call(this);
   }
 

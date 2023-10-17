@@ -62,6 +62,8 @@ class UserService {
 
   UserCustomize customize = UserCustomize();
 
+  Map<String, User> usersCache = {};
+
   /// Admin user model
   ///
   /// If [adminUid] is set on init(), then [admin] will have the admin user document model.
@@ -421,6 +423,16 @@ class UserService {
         );
   }
 
+  bool isCompleteProfile(User userData) {
+    if (customize.customCheckCompleteProfile != null) {
+      return customize.customCheckCompleteProfile!(userData);
+    }
+    if (userData.name.isNotEmpty && userData.photoUrl.isNotEmpty && userData.gender.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+
   showFollowersScreen({required BuildContext context, User? user, Widget Function(User)? itemBuilder}) {
     showGeneralDialog(
       context: context,
@@ -489,9 +501,10 @@ class UserService {
   }
 
   /// Delete user document
+  ///
+  ///
   Future deleteDocuments() async {
     await my!.delete();
-    await myPrivateDoc.delete();
   }
 
   showLikedByListScreen({required BuildContext context, required List<String> uids}) {
