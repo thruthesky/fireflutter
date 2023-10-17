@@ -344,15 +344,27 @@ class User {
     /// Update the birth day of year
     if (docData['birthYear'] != null && docData['birthMonth'] != null && docData['birthDay'] != null) {
       final date = DateTime(docData['birthYear'], docData['birthMonth'], docData['birthDay']);
-
       docData['birthDayOfYear'] = date.difference(DateTime(date.year)).inDays + 1;
     }
-
     dog("User.update(); me: $myUid, who: $uid, path: ${userDoc(uid).path}, docData: $docData");
+
+    // This is the code that actually updates the user document in DB.
     await userDoc(uid).set(
       docData,
       SetOptions(merge: true),
     );
+
+    // Added this here so that everytime we update,
+    // we have to check if the profile is complete.
+    // Added this here so that we have to maintain it only here.
+    //
+    // We only have to check the isComplete field when the user updates his own profile.
+    if (uid == myUid) {
+      final completed = UserService.instance.isCompleteProfile(my!);
+      if (my!.isComplete != completed) {
+        await update(isComplete: completed);
+      }
+    }
 
     /// Get real data from the server. Assembling the user updated object won't work due to FieldValues.
     if (UserService.instance.onUpdate != null) {
@@ -368,15 +380,6 @@ class User {
     //   /// log user update
     //   ActivityService.instance.onUserUpdate(user!);
     // });
-  }
-
-  /// If the user has completed the profile, set the isComplete field to true.
-  Future<void> updateComplete(bool isComplete) async {
-    return await update(isComplete: isComplete);
-  }
-
-  Future complete(bool isComplete) async {
-    return await updateComplete(isComplete);
   }
 
   /// Follow
