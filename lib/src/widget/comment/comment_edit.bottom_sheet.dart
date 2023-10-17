@@ -96,6 +96,7 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: TextField(
+                  key: const Key('CommentEditTextField'),
                   controller: content,
                   minLines: 2,
                   maxLines: 5,
@@ -134,6 +135,7 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
               },
             ),
             IconButton(
+              key: const Key('CommentEditSendButton'),
               icon: const Icon(Icons.send),
               onPressed: () async {
                 if (content.text.isEmpty && urls.isEmpty) {

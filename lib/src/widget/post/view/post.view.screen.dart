@@ -85,7 +85,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                           }
                           return CarouselView(
                             widgets: [
-                              if (post.youtubeId.isNotEmpty) YouTube(youtubeId: post.youtubeId, autoPlay: true),
+                              if (post.youtubeId.isNotEmpty) YouTube(youtubeId: post.youtubeId, autoPlay: false),
                               if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
                             ],
                           );
