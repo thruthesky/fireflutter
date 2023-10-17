@@ -115,6 +115,14 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      if (search.text.isNotEmpty)
+                        IconButton(
+                          onPressed: () {
+                            search.text = '';
+                            setState(() {});
+                          },
+                          icon: const Icon(Icons.close_outlined),
+                        ),
                       IconButton(
                         onPressed: () {
                           AdminService.instance.showUserSearchDialog(
