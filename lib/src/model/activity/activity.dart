@@ -6,6 +6,7 @@ part 'activity.g.dart';
 
 @JsonSerializable()
 class Activity {
+  final String id;
   final String action;
   final String type;
   final String uid;
@@ -21,6 +22,7 @@ class Activity {
   final DateTime createdAt;
 
   Activity({
+    required this.id,
     required this.action,
     required this.type,
     required this.uid,
