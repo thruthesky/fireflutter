@@ -49,6 +49,9 @@ Create an issue if you find a bug or need a help.
   - [Post](#post)
   - [Comment](#comment)
   - [Share](#share)
+  - [Test](#test)
+  - [Functions](#functions)
+  - [Widgets](#widgets)
 - [Push notifications](#push-notifications)
 - [Error handling](#error-handling)
 - [Admin](#admin-1)
@@ -493,6 +496,7 @@ See [USER.md](/doc/USER.md) for details.
 
 See [ADMIN.md](/doc/ADMIN.md) for details.
 
+<!-- Will make all helpers looks like the Chat -->
 ## Chat
 
 With FireFlutter you can easily create a customizable chat room.
@@ -524,15 +528,24 @@ ChatRoomListView(
 **_Go to [Chat.md](/doc/CHAT.md) for more feature builders and detailed explanation_**
 
 ## Post
-
 See [POST.md](/doc/POST.md) for details.
 
 ## Comment
+See [COMMENT.md](/doc/COMMENT.md) for details.
 
 ## Share
+See [SHARE.md](/doc/SHARE.md) for details.
+
+## Test
+See [TEST.md](/doc/TEST.md) for details.
+
+## Functions
+See [FUNCTIONS.md](/doc/FUNCTIONS.md) for details.
+
+## Widgets
+See [WIDGETS.md](/doc/WIDGETS.md) for details.
 
 # Push notifications
-
 See [PUSH_NOTIFICATION.md](/doc/PUSH_NOTIFICATION.md) for details.
 
 # Error handling
@@ -571,7 +584,7 @@ Then, set `isAdmin` to true in the user document.
 - [Unit Testing](doc/ADMIN.md#unit-testing)
 - [Logic Test](doc/ADMIN.md#logic-test)
 
-For more information, see [**ADMIN.md**](/doc/ADMIN.md).
+For more information, see [ADMIN.md](/doc/ADMIN.md).
 
 # [Developers](doc/DEVELOPER.md#developer)
 

@@ -113,23 +113,39 @@ AppBar customAppBar(BuildContext context, Room? room) {
         onPressed: () => showDialog(
           context: context,
           builder: (_) => Dialog(
+            insetAnimationDuration: const Duration(milliseconds: 250),
             child: SizedBox(
-              height: MediaQuery.of(context).size.height * .25,
+              height: MediaQuery.of(context).size.height * .20,
               child: Padding(
                 padding: const EdgeInsets.all(sizeSm),
                 child: Column(
                   children: [
-                    const Text('Rename Chat Room'),
+                    const Text(
+                      'Rename Chat Room',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: sizeSm,
+                      ),
+                    ),
+                    const SizedBox(height: sizeSm),
                     TextField(
                       controller: renameValue,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(sizeXs),
+                          borderSide: const BorderSide(
+                            width: 2,
+                          ),
                         ),
                       ),
                     ),
                     ButtonRow(
                       label1: 'Update',
+                      action1: () async => await ChatService.instance.updateMyRoomSetting(
+                        room: room,
+                        setting: 'rename',
+                        value: {'myUid': renameValue.text},
+                      ),
                       label2: 'Cancel',
                       action2: () => context.pop(),
                     ),
