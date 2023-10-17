@@ -71,8 +71,7 @@ class Post {
     );
   }
 
-  factory Post.fromJson(Map<String, dynamic> json) =>
-      _$PostFromJson(json)..data = json;
+  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json)..data = json;
   Map<String, dynamic> toJson() => _$PostToJson(this);
 
   /// If the post is not found, it throws an Exception.
@@ -91,8 +90,7 @@ class Post {
     if (url == null) {
       throw Exception('Post id is null');
     }
-    final QuerySnapshot documentSnapshot =
-        await postCol.where('urls', arrayContains: url).get();
+    final QuerySnapshot documentSnapshot = await postCol.where('urls', arrayContains: url).get();
 
     if (documentSnapshot.docs.isEmpty) throw Exception('Post not found');
 
@@ -150,6 +148,8 @@ class Post {
       );
     }
 
+    ActivityService.instance.onPostCreate(post);
+
     // return post
     return post;
   }
@@ -192,6 +192,7 @@ class Post {
     );
 
     PostService.instance.onUpdate?.call(updatedPost);
+    ActivityService.instance.onPostUpdate(updatedPost);
 
     return updatedPost;
   }
@@ -219,6 +220,8 @@ class Post {
         'deletedReason': deletedReason ?? 'Deleted',
       },
     );
+
+    ActivityService.instance.onPostDelete(this);
   }
 
   /// Like or unline the post
@@ -240,6 +243,8 @@ class Post {
     // call back when the post is liked or unliked
     PostService.instance.sendNotificationOnLike(this, isLiked);
     PostService.instance.onLike?.call(this, isLiked);
+
+    ActivityService.instance.onPostLike(this, isLiked);
 
     return isLiked;
   }

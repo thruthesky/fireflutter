@@ -61,7 +61,10 @@ class Activity {
       if (otherDisplayName != null) 'otherDisplayName': otherDisplayName,
       'createdAt': ServerValue.timestamp,
     };
-    return await activityLogRef.push().set(data);
+    final re = activityLogRef.push();
+    await re.set(data);
+    final act = await activityLogRef.child(re.key!).get();
+    re.update({'reverseCreatedAt': (act.value as dynamic)['createdAt'] * -1});
   }
 
   factory Activity.fromJson(Map<String, dynamic> json) {

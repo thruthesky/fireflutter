@@ -117,6 +117,14 @@ class User {
   @JsonKey(includeFromJson: false, includeToJson: true)
   bool exists = true;
 
+  String get showDisplayName {
+    return displayName.isNotEmpty
+        ? displayName
+        : name.isNotEmpty
+            ? name
+            : uid;
+  }
+
   User({
     this.uid = '',
     this.isAdmin = false,

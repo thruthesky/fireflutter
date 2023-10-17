@@ -17,6 +17,15 @@ class ActivityService {
     enableActivityLog = false,
   }) {
     this.enableActivityLog = enableActivityLog;
+    // activityLogRef.onChildAdded.listen((event) async {
+    //   final activity = Activity.fromDocumentSnapshot(event.snapshot);
+    //   dog('ActivityService::onChildAdded:: ${event.snapshot.key!}');
+    //   activityLogRef.child(event.snapshot.key!).update(
+    //     {
+    //       'reverseCreatedAt': activity.createdAt.millisecondsSinceEpoch * -1,
+    //     },
+    //   );
+    // });
   }
 
   /// only use this for logging activity
@@ -53,21 +62,21 @@ class ActivityService {
   /// user login
   onUserCreate(User user) => _log(
         action: 'create',
-        type: 'user',
+        type: ActivityType.user.name,
         uid: user.uid,
         name: user.name,
       );
 
   onUserUpdate(User user) => _log(
         action: 'update',
-        type: 'user',
+        type: ActivityType.user.name,
         uid: user.uid,
         name: user.name,
       );
 
   onSignout(User user) => _log(
         action: 'signout',
-        type: 'user',
+        type: ActivityType.user.name,
         uid: user.uid,
         name: user.name,
       );
@@ -75,7 +84,7 @@ class ActivityService {
   /// user visit other user's profile
   onUserViewedProfile(String otherUid, User? user) => _log(
         action: 'viewProfile',
-        type: 'user',
+        type: ActivityType.user.name,
         otherUid: otherUid,
         otherDisplayName: user?.name,
       );
@@ -84,7 +93,7 @@ class ActivityService {
   onUserFollow(String otherUid, bool isFollow) {
     _log(
       action: isFollow == true ? 'follow' : 'unfollow',
-      type: 'user',
+      type: ActivityType.user.name,
       otherUid: otherUid,
     );
   }
@@ -93,15 +102,14 @@ class ActivityService {
   onUserLike(String otherUid, bool isLike) {
     _log(
       action: isLike == true ? 'like' : 'unlike',
-      type: 'user',
+      type: ActivityType.user.name,
       otherUid: otherUid,
     );
   }
 
   /// type can be any of the following:
   /// 'post', 'comment', 'user', 'chat'
-  onFavorite(
-      {required String id, required bool isFavorite, required String type}) {
+  onFavorite({required String id, required bool isFavorite, required String type}) {
     _log(
       action: isFavorite == true ? 'favorite' : 'unfavorite',
       type: type,
@@ -127,7 +135,7 @@ class ActivityService {
   onChatRoomOpened(Room? room, User? user) {
     _log(
       action: 'chatRoomOpened',
-      type: 'chat',
+      type: ActivityType.chat.name,
       roomId: room?.roomId,
       title: room?.name,
       otherUid: user?.uid,
@@ -138,7 +146,7 @@ class ActivityService {
   onChatMessageSent(Room room) {
     _log(
       action: 'chatMessageSent',
-      type: 'chat',
+      type: ActivityType.chat.name,
       roomId: room.roomId,
       title: room.name,
     );
@@ -148,8 +156,74 @@ class ActivityService {
   onFeedFollow(String otherUid, bool isFollow) {
     _log(
       action: isFollow == true ? 'follow' : 'unfollow',
-      type: 'feed',
+      type: ActivityType.feed.name,
       otherUid: otherUid,
+    );
+  }
+
+  onPostCreate(Post post) {
+    _log(
+      action: 'create',
+      type: ActivityType.post.name,
+      postId: post.id,
+      title: post.title,
+    );
+  }
+
+  onPostUpdate(Post post) {
+    _log(
+      action: 'update',
+      type: ActivityType.post.name,
+      postId: post.id,
+      title: post.title,
+    );
+  }
+
+  onPostDelete(Post post) {
+    _log(
+      action: 'delete',
+      type: ActivityType.post.name,
+      postId: post.id,
+      title: post.title,
+    );
+  }
+
+  onPostLike(Post post, bool isLike) {
+    _log(
+      action: isLike == true ? 'like' : 'unlike',
+      type: ActivityType.post.name,
+      postId: post.id,
+      title: post.title,
+    );
+  }
+
+  onCommentCreate(Comment comment) {
+    _log(
+      action: 'create',
+      type: ActivityType.comment.name,
+      postId: comment.postId,
+      commentId: comment.id,
+      title: comment.content,
+    );
+  }
+
+  onCommentUpdate(Comment comment) {
+    _log(
+      action: 'update',
+      type: ActivityType.comment.name,
+      postId: comment.postId,
+      commentId: comment.id,
+      title: comment.content,
+    );
+  }
+
+  onCommentDelete(Comment comment) {
+    _log(
+      action: 'delete',
+      type: ActivityType.comment.name,
+      postId: comment.postId,
+      commentId: comment.id,
+      title: comment.content,
     );
   }
 }
