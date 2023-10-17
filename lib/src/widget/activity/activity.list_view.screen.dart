@@ -23,7 +23,8 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
     Query q;
 
     if (search.text.isNotEmpty) {
-      q = activityLogRef.orderByChild('uid').equalTo(search.text);
+      q = activityUserLogRef(search.text).orderByChild('reverseCreatedAt');
+      // q = activityLogRef.orderByChild('reverseCreatedAt').equalTo(search.text, key: 'uid');
     } else {
       q = activityLogRef.orderByChild('reverseCreatedAt');
     }
@@ -73,6 +74,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
             return const SizedBox.shrink();
           }
           return ListTile(
+            key: Key(activity.id),
             title: FutureBuilder(
               future: activity.getMessage,
               builder: (c, s) {
@@ -115,6 +117,14 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      if (search.text.isNotEmpty)
+                        IconButton(
+                          onPressed: () {
+                            search.text = '';
+                            setState(() {});
+                          },
+                          icon: const Icon(Icons.close_outlined),
+                        ),
                       IconButton(
                         onPressed: () {
                           AdminService.instance.showUserSearchDialog(

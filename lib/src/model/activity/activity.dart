@@ -6,6 +6,7 @@ part 'activity.g.dart';
 
 @JsonSerializable()
 class Activity {
+  final String id;
   final String action;
   final String type;
   final String uid;
@@ -21,6 +22,7 @@ class Activity {
   final DateTime createdAt;
 
   Activity({
+    required this.id,
     required this.action,
     required this.type,
     required this.uid,
@@ -65,7 +67,7 @@ class Activity {
     await re.set(data);
     final act = await activityLogRef.child(re.key!).get();
     re.update({'reverseCreatedAt': (act.value as dynamic)['createdAt'] * -1});
-    activityUserLogRef().push().set({...data, 'reverseCreatedAt': (act.value as dynamic)['createdAt'] * -1});
+    await activityUserLogRef().push().set({...data, 'reverseCreatedAt': (act.value as dynamic)['createdAt'] * -1});
   }
 
   factory Activity.fromJson(Map<String, dynamic> json) {

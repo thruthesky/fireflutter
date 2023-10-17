@@ -7,6 +7,7 @@ part of 'activity.dart';
 // **************************************************************************
 
 Activity _$ActivityFromJson(Map<String, dynamic> json) => Activity(
+      id: json['id'] as String,
       action: json['action'] as String,
       type: json['type'] as String,
       uid: json['uid'] as String,
@@ -21,6 +22,7 @@ Activity _$ActivityFromJson(Map<String, dynamic> json) => Activity(
     );
 
 Map<String, dynamic> _$ActivityToJson(Activity instance) => <String, dynamic>{
+      'id': instance.id,
       'action': instance.action,
       'type': instance.type,
       'uid': instance.uid,

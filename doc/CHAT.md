@@ -80,10 +80,6 @@ IconButton(
   },
 )
 ```
-
-<!-- By default, it has a full screen dialog with default buttons. Since all apps have difference features and design, you will need to customize it or rebuild it. But see the code inside and copy and paste them into your project. -->
-<!-- body: ChatRoomMenuUserInviteDialog(room: room), -->
-
 ### Chat Room Dialog.
 You can use dialog builders so you can open pages immediately.
 ```dart
