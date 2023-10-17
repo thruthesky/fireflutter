@@ -421,7 +421,7 @@ class UserService {
         );
   }
 
-  Future<bool> isCompleteProfile(User userData) async {
+  bool isCompleteProfile(User userData) {
     if (customize.customCheckCompleteProfile != null) {
       return customize.customCheckCompleteProfile!(userData);
     }

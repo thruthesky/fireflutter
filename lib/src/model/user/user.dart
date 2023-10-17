@@ -352,7 +352,7 @@ class User {
     //
     // We only have to check the isComplete field when the user updates his own profile.
     if (uid == myUid) {
-      final completed = await UserService.instance.isCompleteProfile(my!);
+      final completed = UserService.instance.isCompleteProfile(my!);
       if (my!.isComplete != completed) {
         await update(isComplete: completed);
       }
