@@ -501,9 +501,10 @@ class UserService {
   }
 
   /// Delete user document
+  ///
+  ///
   Future deleteDocuments() async {
     await my!.delete();
-    await myPrivateDoc.delete();
   }
 
   showLikedByListScreen({required BuildContext context, required List<String> uids}) {
