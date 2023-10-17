@@ -15,24 +15,20 @@ class ChatRoomMessageListViewTile extends StatefulWidget {
   final Message message;
 
   @override
-  State<ChatRoomMessageListViewTile> createState() =>
-      _ChatRoomMessageListViewTileState();
+  State<ChatRoomMessageListViewTile> createState() => _ChatRoomMessageListViewTileState();
 }
 
-class _ChatRoomMessageListViewTileState
-    extends State<ChatRoomMessageListViewTile> {
+class _ChatRoomMessageListViewTileState extends State<ChatRoomMessageListViewTile> {
   User? otherUserData;
 
-  bool get isMyMessage =>
-      widget.message.uid == FirebaseAuth.instance.currentUser!.uid;
+  bool get isMyMessage => widget.message.uid == FirebaseAuth.instance.currentUser!.uid;
 
   bool get isOtherMessage => !isMyMessage;
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-          isMyMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment: isMyMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         protocolBubble(context),
         if (isMyMessage) ...[
@@ -109,8 +105,7 @@ class _ChatRoomMessageListViewTileState
               color: Theme.of(context).colorScheme.inversePrimary,
               borderRadius: const BorderRadius.all(Radius.circular(8.0)),
             ),
-            child: LinkifyText(
-                text: widget.message.text ?? widget.message.protocol ?? ''),
+            child: LinkifyText(text: widget.message.text ?? widget.message.protocol ?? ''),
           ),
           chatBubbleDateTime(
             short: false,
@@ -125,24 +120,17 @@ class _ChatRoomMessageListViewTileState
   }
 
   Widget messageBubble(BuildContext context) {
-    if (widget.message.isProtocol ||
-        widget.message.text == null ||
-        widget.message.text!.trim() == '') {
+    if (widget.message.isProtocol || widget.message.text == null || widget.message.text!.trim() == '') {
       return const SizedBox.shrink();
     }
-    final double factor = MediaQuery.of(context).size.width < 400
-        ? .64
-        : (isMyMessage ? .76 : .68);
+    final double factor = MediaQuery.of(context).size.width < 400 ? .64 : (isMyMessage ? .76 : .68);
 
     return Row(
-      mainAxisAlignment:
-          isMyMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment: isMyMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         if (isMyMessage) chatBubbleDateTime(),
         Container(
-          constraints: BoxConstraints(
-              minWidth: 100,
-              maxWidth: MediaQuery.of(context).size.width * factor),
+          constraints: BoxConstraints(minWidth: 100, maxWidth: MediaQuery.of(context).size.width * factor),
           margin: const EdgeInsets.only(top: 4, bottom: 4),
           padding: const EdgeInsets.all(_kBubblePadding),
           decoration: BoxDecoration(
@@ -174,8 +162,8 @@ class _ChatRoomMessageListViewTileState
       padding: padding,
       child: Text(
         short
-            ? widget.message.createdAt.toLocal().toString().substring(11, 16)
-            : widget.message.createdAt.toLocal().toString().substring(0, 16),
+            ? (widget.message.createdAt).toLocal().toString().substring(11, 16)
+            : (widget.message.createdAt).toLocal().toString().substring(0, 16),
         style: const TextStyle(fontSize: 10, color: Colors.grey),
       ),
     );
@@ -192,8 +180,7 @@ class _ChatRoomMessageListViewTileState
             children: [
               PhotoView(
                 imageProvider: CachedNetworkImageProvider(widget.message.url!),
-                heroAttributes:
-                    PhotoViewHeroAttributes(tag: 'image-${widget.message.id}'),
+                heroAttributes: PhotoViewHeroAttributes(tag: 'image-${widget.message.id}'),
                 // onTapDown: (context, details, controllerValue) => Navigator.of(context).pop(),
               ),
               SafeArea(
@@ -210,8 +197,7 @@ class _ChatRoomMessageListViewTileState
         ),
       ),
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-            minWidth: 100, maxWidth: MediaQuery.of(context).size.width * 0.8),
+        constraints: BoxConstraints(minWidth: 100, maxWidth: MediaQuery.of(context).size.width * 0.8),
         child: Row(
           children: [
             if (isMyMessage) chatBubbleDateTime(),
@@ -259,15 +245,12 @@ class _ChatRoomMessageListViewTileState
             if (widget.message.previewImageUrl != null)
               ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: CachedNetworkImage(
-                      imageUrl: widget.message.previewImageUrl!)),
+                  child: CachedNetworkImage(imageUrl: widget.message.previewImageUrl!)),
             const SizedBox(height: 16),
             if (widget.message.previewTitle != null)
-              Text(widget.message.previewTitle!,
-                  style: const TextStyle(fontWeight: FontWeight.w600)),
+              Text(widget.message.previewTitle!, style: const TextStyle(fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
-            if (widget.message.previewDescription != null)
-              Text(widget.message.previewDescription!),
+            if (widget.message.previewDescription != null) Text(widget.message.previewDescription!),
           ],
         ),
       ),

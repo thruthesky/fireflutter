@@ -24,23 +24,6 @@ class FeedService {
     this.onFollow = onFollow;
   }
 
-  Map<String, dynamic> convertIntoFeedData(Post post) {
-    // post.data?.remove('createdAt');
-    return {
-      'uid': post.uid,
-      'postId': post.id,
-      // ! This is wrong because devices will have different time.
-      'createdAt': 0 - post.createdAt.millisecondsSinceEpoch,
-      'title': post.title,
-      'content': post.content,
-      'categoryId': post.categoryId,
-      'youtubeId': post.youtubeId,
-      'urls': post.urls,
-      'hashtags': post.hashtags,
-      'noOfComments': post.noOfComments,
-    };
-  }
-
   /// When a user follows another user, we will send push notification to that user
   Future sendNotificationOnFollow(String otherUid, isFollowed) async {
     if (enableNotificationOnFollow == false) return;
@@ -63,8 +46,7 @@ class FeedService {
 
     /// Don't use [my] on unit testing due to the latency of the sync with
     /// firestore, it would have a wrong value.
-    final User me =
-        await UserService.instance.get(myUid!, reload: true) as User;
+    final User me = await UserService.instance.get(myUid!, reload: true) as User;
     final re = await me.follow(otherUid);
 
     if (re) {

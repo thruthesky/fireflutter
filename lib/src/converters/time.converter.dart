@@ -13,6 +13,8 @@ class FirebaseDateTimeConverter implements JsonConverter<DateTime, dynamic> {
       return DateTime.fromMillisecondsSinceEpoch((data).abs());
     } else if (data is Timestamp) {
       return data.toDate();
+    } else if (data is DateTime) {
+      return data;
     } else {
       return DateTime(1973);
     }

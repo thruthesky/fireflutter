@@ -66,7 +66,10 @@ class Post {
     return Post.fromJson(
       {
         ...documentSnapshot.data() as Map<String, dynamic>,
-        ...{'id': documentSnapshot.id}
+        ...{
+          'id': documentSnapshot.id,
+          if (documentSnapshot.metadata.hasPendingWrites) 'createdAt': DateTime.now(),
+        }
       },
     );
   }
@@ -102,6 +105,8 @@ class Post {
   /// All the post must be created by this method.
   ///
   /// This method will create a post, update the no of posts of the user and the category.
+  ///
+  /// Removed async - need to review (-dev2)
   static Future<Post> create({
     String? categoryId,
     String? title,
@@ -110,7 +115,7 @@ class Post {
     List<String>? urls,
     List<String>? hashtags,
     Map<String, dynamic> data = const {},
-  }) async {
+  }) {
     final Map<String, dynamic> postData = {
       if (title != null) 'title': title,
       if (content != null) 'content': content,
@@ -125,7 +130,9 @@ class Post {
       ...data,
     };
     final postId = Post.doc().id;
-    await Post.doc(postId).set(postData);
+
+    // Removed await -  need to review
+    Post.doc(postId).set(postData);
 
     // Assemble the post without getting it from the server since it takes time.
     final post = Post.fromJson(
@@ -135,7 +142,6 @@ class Post {
         'createdAt': DateTime.now(),
       },
     );
-
     PostService.instance.onCreate?.call(post);
 
     // update no of posts
@@ -151,7 +157,7 @@ class Post {
     ActivityService.instance.onPostCreate(post);
 
     // return post
-    return post;
+    return Future.value(post);
   }
 
   /// Post udpate

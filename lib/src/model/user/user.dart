@@ -86,7 +86,6 @@ class User {
 
   /// Since we removed easy-extension, We don't know when the document is being created.
   /// Check user document creation time in UserService and if there is not [createdAt], add one.
-  ///
   @FirebaseDateTimeConverter()
   final DateTime createdAt;
 

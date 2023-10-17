@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -44,8 +45,10 @@ class _PostViewScreenState extends State<PostViewScreen> {
 
     // listen for update.
     // This is for updating the post when it is edited without flickering.
-    Post.doc(post.id).snapshots().listen((event) {
+    Post.doc(post.id).snapshots().listen((DocumentSnapshot event) {
       _post = Post.fromDocumentSnapshot(event);
+
+      dog('Does it have pending writes? ${event.metadata.hasPendingWrites}');
       if (mounted) setState(() {});
     });
   }

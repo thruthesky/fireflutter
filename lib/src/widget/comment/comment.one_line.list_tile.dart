@@ -45,11 +45,8 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
         children: [
           if (widget.comment.deleted) ...[
             Flexible(
-              child: Text(
-                  widget.comment.deletedReason ??
-                      'The comment was deleted by the user.',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium!),
+              child: Text(widget.comment.deletedReason ?? 'The comment was deleted by the user.',
+                  textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium!),
             ),
           ] else ...[
             UserAvatar(
@@ -82,9 +79,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                       SizedBox(width: widget.runSpacing),
                       DateTimeText(
                         dateTime: widget.comment.createdAt,
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                            fontSize: 11),
+                        style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11),
                       ),
                     ],
                   ),
@@ -100,8 +95,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                             .entries
                             .map(
                               (e) => GestureDetector(
-                                onTap: () =>
-                                    StorageService.instance.showUploads(
+                                onTap: () => StorageService.instance.showUploads(
                                   context,
                                   widget.comment.urls,
                                   index: e.key,
@@ -143,17 +137,13 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                             ? const SizedBox.shrink()
                             : TextButton(
                                 style: TextButton.styleFrom(
-                                  padding:
-                                      const EdgeInsets.only(left: 0, right: 8),
+                                  padding: const EdgeInsets.only(left: 0, right: 8),
                                   minimumSize: Size.zero,
                                   visualDensity: VisualDensity.compact,
                                 ),
-                                onPressed: () async =>
-                                    UserService.instance.showLikedByListScreen(
+                                onPressed: () async => UserService.instance.showLikedByListScreen(
                                   context: context,
-                                  uids: await getKeys(pathCommentLikedBy(
-                                      widget.comment.id,
-                                      all: true)),
+                                  uids: await getKeys(pathCommentLikedBy(widget.comment.id, all: true)),
                                 ),
                                 child: Text(
                                   n == 0
@@ -212,8 +202,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                             onSelected: (value) async {
                               if (value == 'edit') {
                                 await CommentService.instance
-                                    .showCommentEditBottomSheet(context,
-                                        comment: widget.comment);
+                                    .showCommentEditBottomSheet(context, comment: widget.comment);
                               }
                               if (value == 'report') {
                                 if (context.mounted) {
@@ -221,9 +210,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                                     context: context,
                                     commentId: widget.comment.id,
                                     onExists: (id, type) => toast(
-                                        title: 'Already reported',
-                                        message:
-                                            'You have reported this $type already.'),
+                                        title: 'Already reported', message: 'You have reported this $type already.'),
                                   );
                                 }
                               }
@@ -234,13 +221,10 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                                 final re = await confirm(
                                     context: context,
                                     title: 'Delete Comment',
-                                    message:
-                                        'Are you sure on deleting this comment?');
+                                    message: 'Are you sure on deleting this comment?');
                                 if (re == true) {
                                   await widget.comment.delete();
-                                  toast(
-                                      title: 'Comment deleted',
-                                      message: 'Comment deleted successfully.');
+                                  toast(title: 'Comment deleted', message: 'Comment deleted successfully.');
                                 }
                               }
                             }),
@@ -256,8 +240,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                 iLiked = value == null;
                 return likeButton();
               },
-              onWaiting:
-                  iLiked == null ? const SizedBox.shrink() : likeButton(),
+              onWaiting: iLiked == null ? const SizedBox.shrink() : likeButton(),
             )
           ]
         ],
