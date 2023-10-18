@@ -23,6 +23,7 @@ class PublicProfileButtons extends StatelessWidget {
         if (user.uid != myUid) ...[
           UserService.instance.customize.publicScreenLikeButton?.call(context, user) ??
               TextButton(
+                key: const Key('PublicProfileLikeButton'),
                 style: buttonStyle(context),
                 onPressed: () => user.like(user.uid),
                 child: Database(
