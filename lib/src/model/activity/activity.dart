@@ -69,9 +69,6 @@ class Activity {
     final reverseCreatedAt = (act.value as dynamic)['createdAt'] * -1;
     await re.update({'reverseCreatedAt': reverseCreatedAt});
     await activityUserLogRef().push().set({...data, 'reverseCreatedAt': reverseCreatedAt});
-    // final reverseCreatedAt = (act.value as dynamic)['createdAt'] * -1;
-    // await activityLogRef.child('$reverseCreatedAt-${re.key}').set(data);
-    // await activityLogRef.child(re.key!).remove();
   }
 
   factory Activity.fromJson(Map<String, dynamic> json) {
@@ -94,7 +91,7 @@ class Activity {
   Future<String> get getName async {
     String name = this.name;
     if (name.isEmpty) {
-      final user = await User.get(uid) as User;
+      final user = await UserService.instance.get(uid) as User;
       name = user.getDisplayName;
     }
     return name;
@@ -103,7 +100,7 @@ class Activity {
   Future<String> get getOtherName async {
     String otherDisplayName = this.otherDisplayName ?? '';
     if (otherDisplayName.isEmpty && otherUid != null) {
-      final user = await User.get(otherUid!) as User;
+      final user = await UserService.instance.get(otherUid!) as User;
       otherDisplayName = user.getDisplayName;
     }
     return otherDisplayName;

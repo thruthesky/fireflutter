@@ -201,18 +201,11 @@ class User {
   /// [uid] is the user's uid. If it's null, it will get the login user's document.
   ///
   /// Note, that It gets data from /users collections. It does not get data from /search-user-data collection.
-  static Future<User?> get([String? userUid, bool? cache]) async {
-    if (cache == true) {
-      final user = UserService.instance.usersCache[userUid ?? myUid];
-      if (user != null) return user;
-    }
-
+  static Future<User?> get([String? userUid]) async {
     /// If the userUid is null, then get the login user's document.
     final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(userUid ?? myUid).get();
     if (snapshot.exists == false || snapshot.data() == null) return null;
-    User user = User.fromDocumentSnapshot(snapshot);
-    UserService.instance.usersCache[user.uid] = user;
-    return user;
+    return User.fromDocumentSnapshot(snapshot);
   }
 
   /// Create user document.

@@ -62,8 +62,6 @@ class UserService {
 
   UserCustomize customize = UserCustomize();
 
-  Map<String, User> usersCache = {};
-
   /// Admin user model
   ///
   /// If [adminUid] is set on init(), then [admin] will have the admin user document model.
