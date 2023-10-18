@@ -31,135 +31,119 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return UserBlocked(
-      uid: myUid,
-      uidBy: widget.user?.uid ?? widget.uid,
-      blockedBuilder: (context) {
-        return Scaffold(
-          appBar: AppBar(title: const Text('User')),
-          body: const Center(
-            child: Text(
-              'This person is unavailable.',
-            ),
-          ),
-        );
-      },
-      notBlockedBuilder: (context) {
-        return Stack(
-          children: [
-            Container(color: Theme.of(context).colorScheme.background),
-            doc(
-              (user) => user.stateImageUrl.isEmpty
-                  ? Container(color: Theme.of(context).colorScheme.inverseSurface)
-                  : SizedBox.expand(
-                      child: CachedNetworkImage(
-                        imageUrl: user.stateImageUrl,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => previousUrl.isEmpty
-                            ? const Center(child: CircularProgressIndicator.adaptive())
-                            : CachedNetworkImage(
-                                imageUrl: previousUrl,
-                                fit: BoxFit.cover,
-                              ),
-                      ),
-                    ),
-            ),
-            const TopDownGraident(height: 200),
-            const BottomUpGraident(height: 300),
-            Scaffold(
-              backgroundColor: Colors.transparent,
-              appBar: PreferredSize(
-                preferredSize: const Size.fromHeight(kToolbarHeight),
-                child: doc(
-                  (user) => AppBar(
-                    leading: IconButton(
-                      key: const Key('PublicProfileBackButton'),
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    iconTheme: IconThemeData(
-                      color: Theme.of(context).colorScheme.onSecondary,
-                    ),
-                    backgroundColor: Colors.transparent,
-                    title: Text(user.name, style: TextStyle(color: Theme.of(context).colorScheme.onSecondary)),
-                    actions: [
-                      if (isMyProfile)
-                        IconButton(
-                          key: const Key('PublicProfileCameraButton'),
-                          style: IconButton.styleFrom(
-                            foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                            backgroundColor: Theme.of(context).colorScheme.secondary.withAlpha(200),
+    return Stack(
+      children: [
+        Container(color: Theme.of(context).colorScheme.background),
+        doc(
+          (user) => user.stateImageUrl.isEmpty
+              ? Container(color: Theme.of(context).colorScheme.inverseSurface)
+              : SizedBox.expand(
+                  child: CachedNetworkImage(
+                    imageUrl: user.stateImageUrl,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => previousUrl.isEmpty
+                        ? const Center(child: CircularProgressIndicator.adaptive())
+                        : CachedNetworkImage(
+                            imageUrl: previousUrl,
+                            fit: BoxFit.cover,
                           ),
-                          onPressed: () async {
-                            final url = await StorageService.instance.upload(
-                              context: context,
-                              file: false,
-                              progress: (p) => progressEvent.add(p),
-                              complete: () => progressEvent.add(null),
-                            );
-                            previousUrl = my!.stateImageUrl;
-                            my?.update(stateImageUrl: url);
-                            if (previousUrl.isNotEmpty) {
-                              Timer(const Duration(seconds: 2), () => StorageService.instance.delete(previousUrl));
-                            }
-                          },
-                          icon: const Icon(Icons.camera_alt),
-                        ),
-                      ...?UserService.instance.customize.publicScreenActions?.call(context, user),
-                    ],
                   ),
                 ),
-              ),
-              body: doc(
-                (user) {
-                  if (!user.exists) {
-                    return Center(
-                      child: Text(
-                        'The user does not exist.',
-                        style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface),
+        ),
+        const TopDownGraident(height: 200),
+        const BottomUpGraident(height: 300),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(kToolbarHeight),
+            child: doc(
+              (user) => AppBar(
+                leading: IconButton(
+                  key: const Key('PublicProfileBackButton'),
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+                iconTheme: IconThemeData(
+                  color: Theme.of(context).colorScheme.onSecondary,
+                ),
+                backgroundColor: Colors.transparent,
+                title: Text(user.name, style: TextStyle(color: Theme.of(context).colorScheme.onSecondary)),
+                actions: [
+                  if (isMyProfile)
+                    IconButton(
+                      key: const Key('PublicProfileCameraButton'),
+                      style: IconButton.styleFrom(
+                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                        backgroundColor: Theme.of(context).colorScheme.secondary.withAlpha(200),
                       ),
-                    );
-                  }
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      StreamBuilder(
-                          stream: progressEvent.stream,
-                          builder: (context, snapshot) => snapshot.data == null
-                              ? const SizedBox()
-                              : LinearProgressIndicator(value: snapshot.data ?? 0)),
-                      const SizedBox(height: sizeLg),
-                      UserProfileAvatar(
-                        user: user,
-                        upload: isMyProfile,
-                        size: 140,
-                        radius: 54,
-                      ),
-                      const SizedBox(height: sizeLg),
-                      Center(
-                        child: Text(
-                          user.state.ifEmpty(tr.noStateMessage),
-                          style: textStyle,
-                        ),
-                      ),
-                      const SizedBox(height: sizeLg),
-                      Divider(
-                        color: Theme.of(context).colorScheme.shadow.withAlpha(80),
-                      ),
-                      const SizedBox(height: sizeLg),
-                      const LoginFirst(),
-                      if (loggedIn) PublicProfileButtons(user: user),
-                      const SafeArea(
-                        child: SizedBox(height: sizeLg),
-                      ),
-                    ],
-                  );
-                },
+                      onPressed: () async {
+                        final url = await StorageService.instance.upload(
+                          context: context,
+                          file: false,
+                          progress: (p) => progressEvent.add(p),
+                          complete: () => progressEvent.add(null),
+                        );
+                        previousUrl = my!.stateImageUrl;
+                        my?.update(stateImageUrl: url);
+                        if (previousUrl.isNotEmpty) {
+                          Timer(const Duration(seconds: 2), () => StorageService.instance.delete(previousUrl));
+                        }
+                      },
+                      icon: const Icon(Icons.camera_alt),
+                    ),
+                  ...?UserService.instance.customize.publicScreenActions?.call(context, user),
+                ],
               ),
             ),
-          ],
-        );
-      },
+          ),
+          body: doc(
+            (user) {
+              if (!user.exists) {
+                return Center(
+                  child: Text(
+                    'The user does not exist.',
+                    style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface),
+                  ),
+                );
+              }
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  StreamBuilder(
+                      stream: progressEvent.stream,
+                      builder: (context, snapshot) => snapshot.data == null
+                          ? const SizedBox()
+                          : LinearProgressIndicator(value: snapshot.data ?? 0)),
+                  const SizedBox(height: sizeLg),
+                  UserProfileAvatar(
+                    user: user,
+                    upload: isMyProfile,
+                    size: 140,
+                    radius: 54,
+                  ),
+                  const SizedBox(height: sizeLg),
+                  Center(
+                    child: Text(
+                      user.state.ifEmpty(tr.noStateMessage),
+                      style: textStyle,
+                    ),
+                  ),
+                  const SizedBox(height: sizeLg),
+                  Divider(
+                    color: Theme.of(context).colorScheme.shadow.withAlpha(80),
+                  ),
+                  const SizedBox(height: sizeLg),
+                  const LoginFirst(),
+                  if (loggedIn) PublicProfileButtons(user: user),
+                  const SafeArea(
+                    child: SizedBox(height: sizeLg),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
