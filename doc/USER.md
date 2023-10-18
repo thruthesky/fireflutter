@@ -564,12 +564,28 @@ User i = my!;
 i.hasBlocked(userA-uid);
 ```
 
-You may use a widget to detect if you blocked the user.
+You may use a widget to detect if you blocked the user. By default, it will use the current logged in user.
 
 ```dart
 UserBlocked(
   uid?: 'user-a',
   user?: UserA,
+  blockedBuilder: (context) {
+    // display some ui if the user is blocked by login user
+  },
+  notBlockedBuilder: (context) {
+    // display some ui if the user is not blocked by the login user.
+  }
+)
+```
+
+For the same widget, we can use [userBy] to check if the user is blocked by the 'userBy'.
+
+```dart
+UserBlocked(
+  uid?: myUid,
+  uidBy?: 'user-b',
+  userBy?: UserB,
   blockedBuilder: (context) {
     // display some ui if the user is blocked by login user
   },
