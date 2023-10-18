@@ -345,9 +345,6 @@ class User {
     dog("User.update(); me: $myUid, who: $uid, path: ${userDoc(uid).path}, docData: $docData");
 
     // This is the code that actually updates the user document in DB.
-
-    // check if the profile is complete,
-
     await userDoc(uid).set(
       docData,
       SetOptions(merge: true),
@@ -357,7 +354,6 @@ class User {
     if (UserService.instance.onUpdate != null) {
       get(uid).then((user) => UserService.instance.onUpdate!(user!));
     }
-
     // /// log user update but this might not be necessary.
     // get(uid).then((user) {
     //   if (UserService.instance.onUpdate != null) {
@@ -376,7 +372,12 @@ class User {
     // whether there are changes or none, it's better to prevent it.
     // https://cloud.google.com/firestore/pricing
     if (isComplete == this.isComplete) return;
-    return await update(isComplete: isComplete);
+    // This might be safer to prevent recursive loop.
+    // rather than using update() method.
+    await userDoc(uid).set(
+      {'isComplete': isComplete},
+      SetOptions(merge: true),
+    );
   }
 
   /// Follow
