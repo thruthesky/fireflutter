@@ -6,22 +6,25 @@
 
 <!-- code_chunk_output -->
 
-- [Overview](#overview)
-- [UserService](#userservice)
-- [Like](#like)
-- [Favorite/Bookmark](#favoritebookmark)
-  - [How to display icon](#how-to-display-icon)
-- [Follow and Unfollow](#follow-and-unfollow)
-  - [Display Followers](#display-followers)
-- [No of profile view](#no-of-profile-view)
-- [User profile screen customization](#user-profile-screen-customization)
-- [User public screen customization](#user-public-screen-customization)
-- [Avatar](#avatar)
-- [UserAvatar](#useravatar)
-- [UserProfileAvatar](#userprofileavatar)
-- [User List View](#user-list-view)
-  - [UserListView.builder](#userlistviewbuilder)
-- [When user is not logged in](#when-user-is-not-logged-in)
+- [Table of Contents](#table-of-contents)
+- [User](#user)
+  - [Overview](#overview)
+  - [UserService](#userservice)
+  - [Like](#like)
+  - [Favorite/Bookmark](#favoritebookmark)
+    - [How to display icon](#how-to-display-icon)
+  - [Follow and Unfollow](#follow-and-unfollow)
+    - [Display Followers](#display-followers)
+  - [No of profile view](#no-of-profile-view)
+  - [User profile screen customization](#user-profile-screen-customization)
+  - [User public screen customization](#user-public-screen-customization)
+  - [Avatar](#avatar)
+  - [UserAvatar](#useravatar)
+  - [UserProfileAvatar](#userprofileavatar)
+  - [User List View](#user-list-view)
+    - [UserListView.builder](#userlistviewbuilder)
+  - [Block user](#block-user)
+  - [When user is not logged in](#when-user-is-not-logged-in)
 
 <!-- /code_chunk_output -->
 
@@ -538,6 +541,55 @@ UserListView.builder(
 ),
 
 ```
+
+
+
+## Block user
+
+
+- To block a user, use like below.
+
+```dart
+User i = my!;
+i.block(userA)
+```
+
+- To unblock a user, use like below
+
+```dart
+User i = my!;
+i.unblock(userA)
+```
+
+- To know if the login user blocked another user.
+
+```dart
+User i = my!;
+i.hasBlocked(userA);
+```
+
+You may use a widget to detect that the other user has blocked by you.
+
+```dart
+UserBlocked(
+  uid?: 'user-a',
+  user?: UserA,
+  blocked: () {
+    // display some ui if the user is blocked by login user
+  },
+  unblocked: () {
+    // display some ui if the user is not blocked by the login user.
+  }
+)
+```
+
+
+
+
+
+
+
+
 
 ## When user is not logged in
 
