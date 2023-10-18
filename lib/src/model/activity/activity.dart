@@ -66,8 +66,12 @@ class Activity {
     final re = activityLogRef.push();
     await re.set(data);
     final act = await activityLogRef.child(re.key!).get();
-    re.update({'reverseCreatedAt': (act.value as dynamic)['createdAt'] * -1});
-    await activityUserLogRef().push().set({...data, 'reverseCreatedAt': (act.value as dynamic)['createdAt'] * -1});
+    final reverseCreatedAt = (act.value as dynamic)['createdAt'] * -1;
+    await re.update({'reverseCreatedAt': reverseCreatedAt});
+    await activityUserLogRef().push().set({...data, 'reverseCreatedAt': reverseCreatedAt});
+    // final reverseCreatedAt = (act.value as dynamic)['createdAt'] * -1;
+    // await activityLogRef.child('$reverseCreatedAt-${re.key}').set(data);
+    // await activityLogRef.child(re.key!).remove();
   }
 
   factory Activity.fromJson(Map<String, dynamic> json) {

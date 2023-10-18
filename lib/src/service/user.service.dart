@@ -382,8 +382,14 @@ class UserService {
   /// setting [UserCustomize] to [UserService.instance.customize].
   ///
   /// Send notification even if enableMessagingOnPublicProfileVisit is set to false
-  /// set `sendNotification` to `true` to send push notification
-  Future showPublicProfileScreen({required BuildContext context, String? uid, User? user}) {
+  /// set `notify` to `false` to prevent sending push notification
+  /// used `notify` to `false` like admin visit the user profile
+  Future showPublicProfileScreen({
+    required BuildContext context,
+    String? uid,
+    User? user,
+    bool notify = true,
+  }) {
     final String otherUid = uid ?? user!.uid;
     final now = DateTime.now();
 
@@ -403,7 +409,7 @@ class UserService {
           SetOptions(merge: true),
         );
       }
-      if (enableMessagingOnPublicProfileVisit) {
+      if (enableMessagingOnPublicProfileVisit && notify) {
         MessagingService.instance.queue(
           title: "Your profile was visited.",
           body: "${my!.name} visit your profile",
@@ -421,16 +427,6 @@ class UserService {
           context: context,
           pageBuilder: ($, _, __) => PublicProfileScreen(uid: uid, user: user),
         );
-  }
-
-  bool isCompleteProfile(User userData) {
-    if (customize.customCheckCompleteProfile != null) {
-      return customize.customCheckCompleteProfile!(userData);
-    }
-    if (userData.name.isNotEmpty && userData.photoUrl.isNotEmpty && userData.gender.isNotEmpty) {
-      return true;
-    }
-    return false;
   }
 
   showFollowersScreen({required BuildContext context, User? user, Widget Function(User)? itemBuilder}) {

@@ -13,6 +13,4 @@ class UserCustomize {
   Widget Function(BuildContext context, User user)? publicScreenBlockButton;
   Widget Function(BuildContext context, User user)? publicScreenReportButton;
   List<Widget> Function(BuildContext context, User user)? publicScreenTrailingButtons;
-
-  bool Function(User user)? customCheckCompleteProfile;
 }
