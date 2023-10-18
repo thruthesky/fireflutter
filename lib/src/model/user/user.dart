@@ -116,6 +116,8 @@ class User {
   @JsonKey(includeFromJson: false, includeToJson: true)
   bool exists = true;
 
+  final List<String> blockedUsers;
+
   String get getDisplayName {
     return displayName.isNotEmpty
         ? displayName
@@ -154,6 +156,7 @@ class User {
     this.cached = false,
     this.likes = const [],
     this.isDisabled = false,
+    this.blockedUsers = const [],
     required this.createdAt,
   });
 
@@ -306,6 +309,7 @@ class User {
     String? field,
     dynamic value,
     bool? isDisabled,
+    FieldValue? blockedUsers,
     Map<String, dynamic> data = const {},
   }) async {
     final docData = {
@@ -336,6 +340,7 @@ class User {
         if (likes != null) 'likes': likes,
         if (field != null && value != null) field: value,
         if (isDisabled != null) 'isDisabled': isDisabled,
+        if (blockedUsers != null) 'blockedUsers': blockedUsers,
       },
       ...data
     };
@@ -447,13 +452,6 @@ class User {
     UserService.instance.onDelete?.call(this);
   }
 
-  /// check if user blocks the other user
-  Future<bool> hadBlocked(String otherUid) async {
-    final event = await FirebaseDatabase.instance.ref('blocks/$uid/$otherUid').once(DatabaseEventType.value);
-    if (!event.snapshot.exists) return false;
-    return event.snapshot.value as bool;
-  }
-
   /// get the list of blocked users
   Future<List<String>> get blockedList async {
     final event = await FirebaseDatabase.instance.ref(pathUserBlocked(uid, all: true)).once(DatabaseEventType.value);
@@ -462,11 +460,24 @@ class User {
   }
 
   /// Use this to block this user. The currently logged in user will block thus user.
-  Future<bool> block() async {
+  Future<void> block(String otherUid) async {
     // Logged out user can't block.
     // I can't block myself.
-    if (myUid == null || uid == myUid) return false;
-    return await toggle('blocks/$myUid/$uid');
+    if (myUid == null || uid == myUid) return;
+    await update(blockedUsers: FieldValue.arrayUnion([otherUid]));
+  }
+
+  /// Use this to block this user. The currently logged in user will block thus user.
+  Future<void> unblock(String otherUid) async {
+    // Logged out user can't block.
+    // I can't block myself.
+    if (myUid == null || uid == myUid) return;
+    await update(blockedUsers: FieldValue.arrayRemove([otherUid]));
+  }
+
+  /// check if user blocks the other user
+  Future<bool> hadBlocked(String otherUid) async {
+    return blockedUsers.contains(otherUid);
   }
 
   /// Used by admin to disable users
