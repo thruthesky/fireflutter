@@ -35,7 +35,7 @@ If `enableNotificationOnLike` is set to true, then it will send push notificatio
 
 ```dart
 
-  
+// initialize Post feature  
 PostService.instance.init(
   // When it is set to true, you don't have add `onLike` callback to send push notification.
   enableNotificationOnLike: true,

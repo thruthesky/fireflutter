@@ -56,6 +56,13 @@ Right way of getting a user document.
 UserService.instance.get(myUid!).then((user) => ...);
 ```
 
+Always initialize first to prevent errors and maximize the use of `UserService`
+
+```dart
+UserService.instance.init();
+```
+
+
 **_Note:_** You cannot use `my` until the UserService is initialized and `UserService.instance.user` is available. Or you will see `null check operator used on a null value.` You can use `MyDoc` from [WIDGETS.md](/doc/WIDGETS.md) instead.
 
 ## Like
@@ -204,9 +211,6 @@ SizedBox( // setting a constraints
         ),
 );
 ```
-
-<!-- TODO: Modify followers from code and display it here
- -->
 
 ## No of profile view
 

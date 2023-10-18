@@ -25,7 +25,9 @@ Categories are managed by Admins.
 `CategoryServices` is responsible for managing categories on app. You can create or limit users on which categories they can use. See below for more
 
 ```dart
-final service = ChatService.instance;
+final service = CategoryService.instance;
+// initialize Category feature
+service.init();
 
 // get category from Id
 service.get(categoryId); // returns Future<Category?>

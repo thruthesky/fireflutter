@@ -32,6 +32,9 @@ Comment Service provides a widget builder that you can use from retrieve data to
 ```dart
 final service = CommentService.instance;
 
+/// initialize Comment features
+service.init();
+
 // Create a comment instantly
 service.createComment(post: post, content: content); // returns Future<Comment>
 

@@ -7,6 +7,7 @@
 - [Get/Set/Update/Toggle](#getsetupdatetoggle)
 - [Database widget](#database-widget)
 - [DatabaseCount widget](#databasecount-widget)
+- [toggle()](#toggle)
 
 <!-- /code_chunk_output -->
 
@@ -103,4 +104,11 @@ FutureBuilder(
     return Text("No of views ${(snapshot.data as Map).keys.length}");
   },
 ),
+```
+
+## toggle()
+`toggle` are responsible to setting `block`, `likes`, `feeds` setting to `true`, following the format `uid: true`. Use this by specifying the path on its parameter. Follow the example below
+
+```dart
+final blocked = await toggle(pathBlock(user.uid));
 ```

@@ -18,8 +18,15 @@
 ## ShareService
 
 ShareService is a helper library that gives some feature utility for sharing. It has `showBottomSheet` method that displays a bottom sheet showing some UI elements for sharing. You may get an idea seeing the look and the code of the method.
+ Initialize `ShareService` features:
+ 
+```dart
+ShareService.instance.init(uriPrefix: uriPrefix, appId: appId);
+```
 
 It also has a method `dyamicLink` that returns a short dyanmic link. You may see the source code of the method to get an insight how you would copy and paste in your project.
+
+
 
 ```dart
 Share.share(

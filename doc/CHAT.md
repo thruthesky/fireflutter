@@ -43,6 +43,8 @@ Here is a few example:
 
 ```dart
 final service = ChatService.instance;
+/// initialize all features
+service.init()
 
 /// get other's uid in 1:1 Chat Room; Parameter is optional
 service.getSingleChatRoomId(otherUserId); // returns [String]
