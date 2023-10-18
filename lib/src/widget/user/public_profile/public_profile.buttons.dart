@@ -70,20 +70,34 @@ class PublicProfileButtons extends StatelessWidget {
                 ),
               ),
           UserService.instance.customize.publicScreenBlockButton?.call(context, user) ??
-              TextButton(
-                onPressed: () async {
-                  // TODO - @withcenter-dev2 - fix it.
-                  // final blocked = await user.block();
-                  // toast(
-                  //   title: blocked ? tr.block : tr.unblock,
-                  //   message: blocked ? tr.blockMessage : tr.unblockMessage,
-                  // );
+              UserBlocked(
+                user: user,
+                blockedBuilder: (context) {
+                  return TextButton(
+                    onPressed: () async {
+                      await my!.unblock(user.uid);
+                      toast(
+                        title: tr.unblock,
+                        message: tr.unblockMessage,
+                      );
+                    },
+                    style: buttonStyle(context),
+                    child: Text(tr.unblock),
+                  );
                 },
-                style: buttonStyle(context),
-                child: Database(
-                  path: pathBlock(user.uid),
-                  builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
-                ),
+                notBlockedBuilder: (context) {
+                  return TextButton(
+                    onPressed: () async {
+                      await my!.block(user.uid);
+                      toast(
+                        title: tr.block,
+                        message: tr.blockMessage,
+                      );
+                    },
+                    style: buttonStyle(context),
+                    child: Text(tr.block),
+                  );
+                },
               ),
           UserService.instance.customize.publicScreenReportButton?.call(context, user) ??
               TextButton(

@@ -461,12 +461,7 @@ class UserService {
             ),
             title: const Text('Blocked List'),
           ),
-          body: FutureBuilder(
-            future: user.blockedList,
-            builder: (context, snapshot) {
-              return UserListView.builder(uids: (snapshot.data ?? []), itemBuilder: itemBuilder);
-            },
-          ),
+          body: UserListView.builder(uids: (user.blockedUsers), itemBuilder: itemBuilder),
         );
       },
     );

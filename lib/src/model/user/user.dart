@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -372,6 +371,11 @@ class User {
 
   /// If the user has completed the profile, set the isComplete field to true.
   Future<void> updateComplete(bool isComplete) async {
+    // This is to prevent unnecessary update.
+    // Since firestore will count it as a write operation,
+    // whether there are changes or none, it's better to prevent it.
+    // https://cloud.google.com/firestore/pricing
+    if (isComplete == this.isComplete) return;
     return await update(isComplete: isComplete);
   }
 
@@ -441,39 +445,33 @@ class User {
     UserService.instance.onDelete?.call(this);
   }
 
-  /// get the list of blocked users
-  Future<List<String>> get blockedList async {
-    final event = await FirebaseDatabase.instance.ref(pathUserBlocked(uid, all: true)).once(DatabaseEventType.value);
-    if (!event.snapshot.exists) return [];
-    return (Map<String, dynamic>.from((event.snapshot.value as Map<dynamic, dynamic>?) ?? {})).keys.toList();
-  }
-
-  /// Use this to block this user. The currently logged in user will block thus user.
+  /// Use this to block this user.
   Future<void> block(String otherUid) async {
     // Logged out user can't block.
     // I can't block myself.
-    if (myUid == null || uid == myUid) return;
+    if (myUid == null || otherUid == myUid) return;
     await update(blockedUsers: FieldValue.arrayUnion([otherUid]));
   }
 
-  /// Use this to block this user. The currently logged in user will block thus user.
+  /// Use this to block this user.
   Future<void> unblock(String otherUid) async {
     // Logged out user can't block.
     // I can't block myself.
-    if (myUid == null || uid == myUid) return;
+    if (myUid == null || otherUid == myUid) return;
     await update(blockedUsers: FieldValue.arrayRemove([otherUid]));
   }
 
   /// check if user blocks the other user
-  Future<bool> hadBlocked(String otherUid) async {
+  bool hasBlocked(String otherUid) {
     return blockedUsers.contains(otherUid);
   }
 
-  ///
+  /// Used by admin to disable users
   Future disable() async {
     await update(isDisabled: true);
   }
 
+  /// Used by admin to revert disabling users
   Future enable() async {
     await update(isDisabled: false);
   }

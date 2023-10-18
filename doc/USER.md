@@ -1,6 +1,4 @@
-
-# Table of Contents  
-
+# Table of Contents
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=false} -->
 
@@ -28,7 +26,6 @@
 
 <!-- /code_chunk_output -->
 
-
 # User
 
 ## Overview
@@ -42,6 +39,7 @@
 `birthDayOfYear` is the birth day of the year. It is automatically set by the `User.update()`. For instance, if the user saves his birth day, then the app should use this kind of code; `my.update(birthYear: 1999, birthMonth: 9, birthDay: 9);` and it will automtically update the `birthDayOfYear` value.
 
 ## UserService
+
 `UserService.instance.nullableUser` is _null_ when
 
 - on app boot
@@ -58,7 +56,7 @@ Right way of getting a user document.
 UserService.instance.get(myUid!).then((user) => ...);
 ```
 
-***Note:*** You cannot use `my` until the UserService is initialized and `UserService.instance.user` is available. Or you will see `null check operator used on a null value.` You can use `MyDoc` from [WIDGETS.md](/doc/WIDGETS.md) instead.
+**_Note:_** You cannot use `my` until the UserService is initialized and `UserService.instance.user` is available. Or you will see `null check operator used on a null value.` You can use `MyDoc` from [WIDGETS.md](/doc/WIDGETS.md) instead.
 
 ## Like
 
@@ -92,6 +90,7 @@ IconButton(
   ),
 ),
 ```
+
 ## Favorite/Bookmark
 
 Bookmark is known to be `Favorite`.
@@ -542,54 +541,43 @@ UserListView.builder(
 
 ```
 
-
-
 ## Block user
-
 
 - To block a user, use like below.
 
 ```dart
 User i = my!;
-i.block(userA)
+i.block(userA-uid)
 ```
 
 - To unblock a user, use like below
 
 ```dart
 User i = my!;
-i.unblock(userA)
+i.unblock(userA-uid)
 ```
 
 - To know if the login user blocked another user.
 
 ```dart
 User i = my!;
-i.hasBlocked(userA);
+i.hasBlocked(userA-uid);
 ```
 
-You may use a widget to detect that the other user has blocked by you.
+You may use a widget to detect if you blocked the user.
 
 ```dart
 UserBlocked(
   uid?: 'user-a',
   user?: UserA,
-  blocked: () {
+  blockedBuilder: (context) {
     // display some ui if the user is blocked by login user
   },
-  unblocked: () {
+  notBlockedBuilder: (context) {
     // display some ui if the user is not blocked by the login user.
   }
 )
 ```
-
-
-
-
-
-
-
-
 
 ## When user is not logged in
 
@@ -633,6 +621,7 @@ class FavoriteButton extends StatelessWidget {
 }
 
 ```
-<!-- ADDITIONAL: 
+
+<!-- ADDITIONAL:
   - LoginFirst
  -->
