@@ -44,6 +44,10 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
           (json['likes'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
       isDisabled: json['isDisabled'] as bool? ?? false,
+      blockedUsers: (json['blockedUsers'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       createdAt: const FirebaseDateTimeConverter().fromJson(json['createdAt']),
     );
 
@@ -79,4 +83,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'likes': instance.likes,
       'isDisabled': instance.isDisabled,
       'exists': instance.exists,
+      'blockedUsers': instance.blockedUsers,
     };

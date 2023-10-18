@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -452,31 +451,24 @@ class User {
     UserService.instance.onDelete?.call(this);
   }
 
-  /// get the list of blocked users
-  Future<List<String>> get blockedList async {
-    final event = await FirebaseDatabase.instance.ref(pathUserBlocked(uid, all: true)).once(DatabaseEventType.value);
-    if (!event.snapshot.exists) return [];
-    return (Map<String, dynamic>.from((event.snapshot.value as Map<dynamic, dynamic>?) ?? {})).keys.toList();
-  }
-
-  /// Use this to block this user. The currently logged in user will block thus user.
+  /// Use this to block this user.
   Future<void> block(String otherUid) async {
     // Logged out user can't block.
     // I can't block myself.
-    if (myUid == null || uid == myUid) return;
+    if (myUid == null || otherUid == myUid) return;
     await update(blockedUsers: FieldValue.arrayUnion([otherUid]));
   }
 
-  /// Use this to block this user. The currently logged in user will block thus user.
+  /// Use this to block this user.
   Future<void> unblock(String otherUid) async {
     // Logged out user can't block.
     // I can't block myself.
-    if (myUid == null || uid == myUid) return;
+    if (myUid == null || otherUid == myUid) return;
     await update(blockedUsers: FieldValue.arrayRemove([otherUid]));
   }
 
   /// check if user blocks the other user
-  Future<bool> hadBlocked(String otherUid) async {
+  Future<bool> hasBlocked(String otherUid) async {
     return blockedUsers.contains(otherUid);
   }
 
