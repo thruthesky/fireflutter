@@ -112,7 +112,7 @@ class CustomPostViewScreen extends StatelessWidget {
           PopupMenuItem(
             value: 'block',
             child: UserBlocked(
-              uid: post.uid,
+              otherUid: post.uid,
               notBlockedBuilder: (context) {
                 return Text(tr.block);
               },

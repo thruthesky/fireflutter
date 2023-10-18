@@ -198,7 +198,7 @@ class _PostCardState extends State<PostCard> {
                 key: const Key('PostCardPopUpBlockButton'),
                 value: 'block',
                 child: UserBlocked(
-                  uid: post.uid,
+                  otherUid: post.uid,
                   notBlockedBuilder: (context) {
                     return Text(tr.block);
                   },

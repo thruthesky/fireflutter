@@ -467,6 +467,11 @@ class User {
     return blockedUsers.contains(otherUid);
   }
 
+  /// Alias of [hasBlocked]
+  bool haveBlocked(String otherUid) {
+    return hasBlocked(otherUid);
+  }
+
   /// Used by admin to disable users
   Future disable() async {
     await update(isDisabled: true);

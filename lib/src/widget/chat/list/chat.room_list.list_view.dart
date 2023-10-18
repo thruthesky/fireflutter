@@ -160,9 +160,9 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
               // Kindly review
               // for issue https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=40781402
               ? UserBlocked(
-                  uid: room.otherUserUid,
+                  otherUid: room.otherUserUid,
                   blockedBuilder: (context) {
-                    return const SizedBox.shrink();
+                    return const Text("*** Blocked ***");
                   },
                   notBlockedBuilder: (context) {
                     return ChatRoomListTile(
