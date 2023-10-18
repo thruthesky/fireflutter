@@ -7,14 +7,16 @@ environment:
   sdk: '>=3.1.0 <4.0.0'
 
 dependencies:
-  firebase_core: ^2.16.0
   go_router: ^11.1.2
   flutter:
     sdk: flutter  
   fireflutter:
     path: ../
   font_awesome_flutter: ^10.5.0
-  firebase_auth: ^4.10.1
+  
+  
+  firebase_auth: ^4.11.0
+  firebase_core: ^2.18.0
 
 dev_dependencies:
   flutter_test:
