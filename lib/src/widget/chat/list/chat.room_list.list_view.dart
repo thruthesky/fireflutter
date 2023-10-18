@@ -62,8 +62,7 @@ class ChatRoomListView extends StatefulWidget {
     this.scrollDirection = Axis.vertical,
     this.visibility,
     this.onTap,
-  }) : assert(itemExtent == null || visibility == null,
-            "You can't set both itemExtent and visibility");
+  }) : assert(itemExtent == null || visibility == null, "You can't set both itemExtent and visibility");
 
   final ChatRoomListViewController? controller;
   final String orderBy;
@@ -154,20 +153,29 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
         if (widget.visibility != null && widget.visibility!(room) == false) {
           return const SizedBox();
         }
-
         if (widget.itemBuilder != null) {
           return widget.itemBuilder!(context, room);
         } else {
-          return ChatRoomListTile(
-            key: ValueKey(room.roomId),
-            room: room,
-            avatarSize: widget.avatarSize,
-            onTap: () {
-              widget.onTap?.call(room) ??
-                  ChatService.instance
-                      .showChatRoom(context: context, room: room);
-            },
-          );
+          return room.isSingleChat
+              // Kindly review
+              // for issue https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=40781402
+              ? UserBlocked(
+                  uid: room.otherUserUid,
+                  blockedBuilder: (context) {
+                    return const SizedBox.shrink();
+                  },
+                  notBlockedBuilder: (context) {
+                    return ChatRoomListTile(
+                      key: ValueKey(room.roomId),
+                      room: room,
+                      avatarSize: widget.avatarSize,
+                      onTap: () {
+                        widget.onTap?.call(room) ?? ChatService.instance.showChatRoom(context: context, room: room);
+                      },
+                    );
+                  },
+                )
+              : chatRoomListTile(room, context);
         }
       },
       emptyBuilder: (context) {
@@ -181,8 +189,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
         log(error.toString(), stackTrace: stackTrace);
         return Center(child: Text('Error loading chat rooms $error'));
       },
-      loadingBuilder: (context) =>
-          const Center(child: CircularProgressIndicator()),
+      loadingBuilder: (context) => const Center(child: CircularProgressIndicator()),
       pageSize: widget.pageSize,
       controller: widget.scrollController,
       primary: widget.primary,
@@ -193,6 +200,17 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
       keyboardDismissBehavior: widget.keyboardDismissBehavior,
       clipBehavior: widget.clipBehavior,
       scrollDirection: widget.scrollDirection,
+    );
+  }
+
+  ChatRoomListTile chatRoomListTile(Room room, BuildContext context) {
+    return ChatRoomListTile(
+      key: ValueKey(room.roomId),
+      room: room,
+      avatarSize: widget.avatarSize,
+      onTap: () {
+        widget.onTap?.call(room) ?? ChatService.instance.showChatRoom(context: context, room: room);
+      },
     );
   }
 }

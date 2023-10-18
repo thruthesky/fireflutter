@@ -197,9 +197,14 @@ class _PostCardState extends State<PostCard> {
               PopupMenuItem(
                 key: const Key('PostCardPopUpBlockButton'),
                 value: 'block',
-                child: Database(
-                  path: pathBlock(post.uid),
-                  builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
+                child: UserBlocked(
+                  uid: post.uid,
+                  notBlockedBuilder: (context) {
+                    return Text(tr.block);
+                  },
+                  blockedBuilder: (context) {
+                    return Text(tr.unblock);
+                  },
                 ),
               ),
             ],
@@ -219,10 +224,16 @@ class _PostCardState extends State<PostCard> {
             } else if (value == 'report') {
               ReportService.instance.showReportDialog(context: context, postId: post.id);
             } else if (value == 'block') {
-              final blocked = await toggle(pathBlock(post.uid));
+              final blocked = my!.hasBlocked(post.uid);
+              if (blocked) {
+                await my!.unblock(post.uid);
+              } else {
+                await my!.block(post.uid);
+              }
+              final updatedBlocked = my!.hasBlocked(post.uid);
               toast(
-                title: blocked ? tr.block : tr.unblock,
-                message: blocked ? tr.blockMessage : tr.unblockMessage,
+                title: updatedBlocked ? tr.block : tr.unblock,
+                message: updatedBlocked ? tr.blockMessage : tr.unblockMessage,
               );
             }
           },
