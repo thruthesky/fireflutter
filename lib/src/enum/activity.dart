@@ -1,9 +1,9 @@
 enum ActivityType {
-  chat,
-  feed,
+  user,
   post,
   comment,
-  user,
+  chat,
+  feed,
 }
 
 enum ActivityUserAction {

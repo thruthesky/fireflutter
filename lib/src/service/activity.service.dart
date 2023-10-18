@@ -17,15 +17,6 @@ class ActivityService {
     enableActivityLog = false,
   }) {
     this.enableActivityLog = enableActivityLog;
-    // activityLogRef.onChildAdded.listen((event) async {
-    //   final activity = Activity.fromDocumentSnapshot(event.snapshot);
-    //   dog('ActivityService::onChildAdded:: ${event.snapshot.key!}');
-    //   activityLogRef.child(event.snapshot.key!).update(
-    //     {
-    //       'reverseCreatedAt': activity.createdAt.millisecondsSinceEpoch * -1,
-    //     },
-    //   );
-    // });
   }
 
   /// only use this for logging activity

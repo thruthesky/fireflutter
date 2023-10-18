@@ -51,7 +51,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
             },
           )
         ],
-        bottom: PreferredSize(preferredSize: const Size.fromHeight(90), child: userSearch),
+        bottom: userSearch,
       ),
       body: FirebaseDatabaseListView(
         key: const Key('AdminActivityLogListView'),
@@ -88,90 +88,108 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
               },
             ),
             subtitle: Text(dateTimeAgo(activity.createdAt)),
+            onTap: () {
+              if (activity.type == ActivityType.user.name) {
+                UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
+              }
+              if (activity.type == ActivityType.post.name || activity.type == ActivityType.comment.name) {
+                PostService.instance.showPostViewScreen(context: context, postId: activity.postId);
+              }
+
+              if (activity.type == ActivityType.chat.name) {
+                UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
+              }
+              if (activity.type == ActivityType.feed.name) {
+                UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
+              }
+            },
           );
         },
       ),
     );
   }
 
-  Widget get userSearch => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: sizeSm),
-            child: Stack(
-              children: [
-                TextField(
-                  controller: search,
-                  style: const TextStyle(fontSize: 10),
-                  decoration: const InputDecoration(
-                    hintText: 'Enter user id',
-                    helperMaxLines: 2,
-                    helperStyle: TextStyle(fontSize: 10),
+  PreferredSize get userSearch => PreferredSize(
+        preferredSize: const Size.fromHeight(90),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: sizeSm),
+              child: Stack(
+                children: [
+                  TextField(
+                    controller: search,
+                    style: const TextStyle(fontSize: 10),
+                    decoration: const InputDecoration(
+                      hintText: 'Enter user id',
+                      helperMaxLines: 2,
+                      helperStyle: TextStyle(fontSize: 10),
+                    ),
+                    onSubmitted: (v) => setState(() {}),
                   ),
-                  onSubmitted: (v) => setState(() {}),
-                ),
-                Positioned(
-                  right: 0,
-                  top: 4,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (search.text.isNotEmpty)
-                        IconButton(
-                          onPressed: () {
-                            search.text = '';
-                            setState(() {});
-                          },
-                          icon: const Icon(Icons.close_outlined),
-                        ),
-                      IconButton(
-                        onPressed: () {
-                          AdminService.instance.showUserSearchDialog(
-                            context,
-                            field: 'name',
-                            onTap: (user) async {
-                              search.text = user.uid;
-                              Navigator.of(context).pop();
+                  Positioned(
+                    right: 0,
+                    top: 4,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (search.text.isNotEmpty)
+                          IconButton(
+                            onPressed: () {
+                              search.text = '';
                               setState(() {});
                             },
-                          );
-                        },
-                        icon: const Icon(Icons.search),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                ...ActivityType.values
-                    .map(
-                      (t) => InkWell(
-                        onTap: () => setState(() {
-                          filter[t.name] = !filter[t.name]!;
-                        }),
-                        child: Row(
-                          children: [
-                            Checkbox(
-                              value: filter[t.name],
-                              onChanged: (b) => setState(() {
-                                filter[t.name] = b!;
-                              }),
-                            ),
-                            Text(t.name),
-                          ],
+                            icon: const Icon(Icons.close_outlined),
+                          ),
+                        IconButton(
+                          onPressed: () {
+                            AdminService.instance.showUserSearchDialog(
+                              context,
+                              field: 'name',
+                              onTap: (user) async {
+                                search.text = user.uid;
+                                Navigator.of(context).pop();
+                                setState(() {});
+                              },
+                            );
+                          },
+                          icon: const Icon(Icons.search),
                         ),
-                      ),
-                    )
-                    .toList(),
-              ],
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          )
-        ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  ...ActivityType.values
+                      .map(
+                        (t) => InkWell(
+                          onTap: () => setState(() {
+                            filter[t.name] = !filter[t.name]!;
+                          }),
+                          child: Row(
+                            children: [
+                              Checkbox(
+                                value: filter[t.name],
+                                onChanged: (b) => setState(() {
+                                  filter[t.name] = b!;
+                                }),
+                              ),
+                              Text(t.name),
+                            ],
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ],
+              ),
+            )
+          ],
+        ),
       );
 }
