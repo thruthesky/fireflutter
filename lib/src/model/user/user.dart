@@ -378,6 +378,11 @@ class User {
 
   /// If the user has completed the profile, set the isComplete field to true.
   Future<void> updateComplete(bool isComplete) async {
+    // This is to prevent unnecessary update.
+    // Since firestore will count it as a write operation,
+    // whether there are changes or none, it's better to prevent it.
+    // https://cloud.google.com/firestore/pricing
+    if (isComplete == this.isComplete) return;
     return await update(isComplete: isComplete);
   }
 
@@ -464,7 +469,7 @@ class User {
   }
 
   /// check if user blocks the other user
-  Future<bool> hasBlocked(String otherUid) async {
+  bool hasBlocked(String otherUid) {
     return blockedUsers.contains(otherUid);
   }
 

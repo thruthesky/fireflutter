@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class UserBlock extends StatelessWidget {
-  const UserBlock({
+class UserBlocked extends StatefulWidget {
+  const UserBlocked({
     super.key,
     required this.blockedBuilder,
     required this.notBlockedBuilder,
@@ -16,8 +16,26 @@ class UserBlock extends StatelessWidget {
   final User? user;
 
   @override
+  State<UserBlocked> createState() => _UserBlockState();
+}
+
+class _UserBlockState extends State<UserBlocked> {
+  User? user;
+
+  @override
+  void initState() {
+    super.initState();
+    initUser();
+  }
+
+  initUser() async {
+    user = widget.user ?? await User.get(widget.uid!);
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final user = user ?? User.get(uid!);
-    return isBlocked ? blockedBuilder(context) : notBlockedBuilder(context);
+    if (user == null) return const SizedBox.shrink();
+    return user!.hasBlocked(myUid ?? '') ? widget.blockedBuilder(context) : widget.notBlockedBuilder(context);
   }
 }
