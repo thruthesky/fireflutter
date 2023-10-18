@@ -242,6 +242,15 @@
       "deviceId": "798DF7C4-34CF-42DD-A1CE-8B183C27F50C"
     },
     {
+      "name": "GRC - Emulator - debug (C)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "emulator-5554"
+    },
+    {
       "name": "GRC - Samsung External - debug (C)",
       "request": "launch",
       "type": "dart",
@@ -303,7 +312,8 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "iPhone 15 Pro Max"
-    },{
+    },
+    {
       "name": "GRC - Emulator (N)",
       "request": "launch",
       "type": "dart",

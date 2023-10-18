@@ -64,11 +64,19 @@ class Activity {
       'createdAt': ServerValue.timestamp,
     };
     final re = activityLogRef.push();
-    await re.set(data);
-    final act = await activityLogRef.child(re.key!).get();
-    final reverseCreatedAt = (act.value as dynamic)['createdAt'] * -1;
-    await re.update({'reverseCreatedAt': reverseCreatedAt});
-    await activityUserLogRef().push().set({...data, 'reverseCreatedAt': reverseCreatedAt});
+    // await re.set(data);
+    // final act = await activityLogRef.child(re.key!).get();
+    // final reverseCreatedAt = (act.value as dynamic)['createdAt'] * -1;
+    // await re.update({'reverseCreatedAt': reverseCreatedAt});
+    // await activityUserLogRef().push().set({...data, 'reverseCreatedAt': reverseCreatedAt});
+
+    re.set(data).then((_) async {
+      dog('ActivityService::log::');
+      final act = await activityLogRef.child(re.key!).get();
+      final reverseCreatedAt = (act.value as dynamic)['createdAt'] * -1;
+      await re.update({'reverseCreatedAt': reverseCreatedAt});
+      await activityUserLogRef().push().set({...data, 'reverseCreatedAt': reverseCreatedAt});
+    });
   }
 
   factory Activity.fromJson(Map<String, dynamic> json) {
