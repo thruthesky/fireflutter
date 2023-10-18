@@ -87,7 +87,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
                 return Text(s.data!);
               },
             ),
-            subtitle: Text(dateTimeAgo(activity.createdAt)),
+            subtitle: Text('${dateTimeAgo(activity.createdAt)}:: id: ${activity.id}'),
             onTap: () {
               if (activity.type == ActivityType.user.name) {
                 UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
