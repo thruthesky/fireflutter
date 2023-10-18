@@ -427,16 +427,6 @@ class UserService {
         );
   }
 
-  bool isCompleteProfile(User userData) {
-    if (customize.customCheckCompleteProfile != null) {
-      return customize.customCheckCompleteProfile!(userData);
-    }
-    if (userData.name.isNotEmpty && userData.photoUrl.isNotEmpty && userData.gender.isNotEmpty) {
-      return true;
-    }
-    return false;
-  }
-
   showFollowersScreen({required BuildContext context, User? user, Widget Function(User)? itemBuilder}) {
     showGeneralDialog(
       context: context,
