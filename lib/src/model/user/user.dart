@@ -469,11 +469,12 @@ class User {
     return await toggle('blocks/$myUid/$uid');
   }
 
-  ///
+  /// Used by admin to disable users
   Future disable() async {
     await update(isDisabled: true);
   }
 
+  /// Used by admin to revert disabling users
   Future enable() async {
     await update(isDisabled: false);
   }
