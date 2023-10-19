@@ -64,6 +64,7 @@ export 'widget/post/view/post.view.buttons.dart';
 export 'widget/post/post.card.dart';
 export 'widget/post/buttons/post.like.button.dart';
 export 'widget/post/post.content.show_more.dart';
+export 'widget/post/post.content.dart';
 
 // Comment
 export 'widget/comment/comment_edit.bottom_sheet.dart';

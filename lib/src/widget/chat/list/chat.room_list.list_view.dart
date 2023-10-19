@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -42,7 +43,6 @@ class ChatRoomListView extends StatefulWidget {
     this.orderBy = 'lastMessage.createdAt',
     this.descending = true,
     this.itemBuilder,
-    this.blockedBuilder,
     this.emptyBuilder,
     this.pageSize = 20,
     this.scrollController,
@@ -72,11 +72,6 @@ class ChatRoomListView extends StatefulWidget {
 
   /// [itemBuilder] is used to build each item of the list.
   final Widget Function(BuildContext context, Room room)? itemBuilder;
-
-  /// [blockedBuilder] is used to show when you have blocked the user in a single chat room.
-  /// group chat rooms will not be affected.
-  /// by default, it will use simply itemBuilder.
-  final Widget Function(BuildContext context, Room room)? blockedBuilder;
 
   /// [emptyBuilder] is used to show when there is no chat room.
   /// meaning no result from the query.
@@ -117,10 +112,20 @@ class ChatRoomListView extends StatefulWidget {
 }
 
 class ChatRoomListViewState extends State<ChatRoomListView> {
+  // Needed for instant update when I just blocked somebody
+  User? myData;
+
   @override
   void initState() {
     super.initState();
     widget.controller?.state = this;
+    UserService.instance.documentChanges.listen((user) {
+      if (listEquals(myData?.blockedUsers, user?.blockedUsers)) return;
+      if (user == null) return;
+      myData = user;
+      if (!mounted) return;
+      setState(() {});
+    });
   }
 
   Query get query {
@@ -154,60 +159,47 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
     if (loggedIn == false) {
       return Center(child: Text(tr.loginFirstMessage));
     }
-    return FirestoreListView(
-      query: query,
-      itemExtent: widget.itemExtent,
-      itemBuilder: (context, QueryDocumentSnapshot snapshot) {
-        final room = Room.fromDocumentSnapshot(snapshot);
-        if (widget.visibility != null && widget.visibility!(room) == false) {
-          return const SizedBox();
-        }
-        return _chatRoomListItem(room, context);
-      },
-      emptyBuilder: (context) {
-        if (widget.emptyBuilder != null) {
-          return widget.emptyBuilder!(context);
-        } else {
-          return Center(child: Text(tr.noChatRooms));
-        }
-      },
-      errorBuilder: (context, error, stackTrace) {
-        log(error.toString(), stackTrace: stackTrace);
-        return Center(child: Text('Error loading chat rooms $error'));
-      },
-      loadingBuilder: (context) => const Center(child: CircularProgressIndicator()),
+    return FirestoreQueryBuilder(
       pageSize: widget.pageSize,
-      controller: widget.scrollController,
-      primary: widget.primary,
-      physics: widget.physics,
-      shrinkWrap: widget.shrinkWrap,
-      padding: widget.padding,
-      dragStartBehavior: widget.dragStartBehavior,
-      keyboardDismissBehavior: widget.keyboardDismissBehavior,
-      clipBehavior: widget.clipBehavior,
-      scrollDirection: widget.scrollDirection,
-    );
-  }
-
-  /// Chat room list item
-  /// Return chat room list tile by default.
-  /// If [blockedBuilder] is set, it will use [blockedBuilder] to build the list tile.
-  /// If [blockedBuilder] is not set, it will use [itemBuilder] to build the list tile.
-  /// If [itemBuilder] is set, it will use defaultChatRoomListTile [itemBuilder] to build the list tile.
-  Widget _chatRoomListItem(Room room, BuildContext context) {
-    // This is to prevent check if block when uneccesarry
-    if (widget.blockedBuilder == null || room.isGroupChat) {
-      return widget.itemBuilder?.call(context, room) ?? _defaultChatRoomListTile(room, context);
-    }
-    // Need to review because it blinks
-    // github issue https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=41997149
-    return UserBlocked(
-      otherUid: room.otherUserUid,
-      blockedBuilder: (context) {
-        return widget.blockedBuilder!.call(context, room);
-      },
-      notBlockedBuilder: (context) {
-        return widget.itemBuilder?.call(context, room) ?? _defaultChatRoomListTile(room, context);
+      query: query,
+      builder: (context, snapshot, _) {
+        if (snapshot.isFetching) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          log(snapshot.error.toString(), stackTrace: snapshot.stackTrace);
+          return Center(child: Text('Error loading chat rooms ${snapshot.error}'));
+        }
+        // Remove blocked users
+        // Will be reviewed.
+        snapshot.docs.removeWhere((element) {
+          final room = Room.fromDocumentSnapshot(element);
+          if (room.isGroupChat) return false;
+          return myData?.hasBlocked(room.otherUserUid) ?? false;
+        });
+        if (snapshot.docs.isEmpty) {
+          return widget.emptyBuilder?.call(context) ?? Center(child: Text(tr.noChatRooms));
+        }
+        return ListView.builder(
+          itemExtent: widget.itemExtent,
+          itemCount: snapshot.docs.length,
+          itemBuilder: (context, index) {
+            final room = Room.fromDocumentSnapshot(snapshot.docs[index]);
+            if (widget.visibility != null && widget.visibility!(room) == false) {
+              return const SizedBox();
+            }
+            return widget.itemBuilder?.call(context, room) ?? _defaultChatRoomListTile(room, context);
+          },
+          controller: widget.scrollController,
+          primary: widget.primary,
+          physics: widget.physics,
+          shrinkWrap: widget.shrinkWrap,
+          padding: widget.padding,
+          dragStartBehavior: widget.dragStartBehavior,
+          keyboardDismissBehavior: widget.keyboardDismissBehavior,
+          clipBehavior: widget.clipBehavior,
+          scrollDirection: widget.scrollDirection,
+        );
       },
     );
   }
