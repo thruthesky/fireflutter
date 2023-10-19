@@ -7,6 +7,7 @@ enum ActivityType {
 }
 
 enum ActivityUserAction {
+  startApp,
   create,
   update,
   delete,

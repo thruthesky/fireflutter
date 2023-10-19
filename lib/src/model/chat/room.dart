@@ -188,6 +188,8 @@ class Room {
 
   String get otherUserUid {
     assert(users.length == 2 && group == false, "This is not a single chat room");
+    // This condition checks if I am chatting to myself.
+    if (users.first == users.last) return users.first;
     return ChatService.instance.getOtherUserUid(users);
   }
 

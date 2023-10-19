@@ -1,7 +1,7 @@
 export 'src/extensions.dart';
 export 'src/globals.dart';
 export 'src/functions/functions.dart';
-export 'src/functions/database.dart';
+export 'src/functions/database.functions.dart';
 export 'src/enums.dart';
 export 'src/models.dart';
 export 'src/widgets.dart';

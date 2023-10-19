@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/functions/activity_log.functions.dart';
 import 'package:fireflutter/src/functions/comment_sort_string.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -117,7 +118,8 @@ class Comment {
 
     // Invoite the callback for comment creation.
     CommentService.instance.onCreate?.call(createdComment);
-    ActivityService.instance.onCommentCreate.call(createdComment);
+
+    activityLogCommentCreate(postId: post.id, commentId: createdComment.id);
 
     return createdComment;
   }
@@ -144,7 +146,8 @@ class Comment {
 
     // Invoite the callback for comment creation.
     CommentService.instance.onUpdate?.call(updatedComment);
-    ActivityService.instance.onCommentUpdate(updatedComment);
+
+    activityLogCommentUpdate(commentId: id);
 
     return updatedComment;
   }
@@ -166,7 +169,8 @@ class Comment {
     await commentCol.doc(id).update(deletedCommentData);
     final deletedComment = copyWith(deletedCommentData);
 
-    ActivityService.instance.onCommentDelete(deletedComment);
+    /// TODO @lancelynyrd
+    // ActivityService.instance.onCommentDelete(deletedComment);
     return deletedComment;
   }
 

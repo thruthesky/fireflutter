@@ -431,16 +431,49 @@ class _PostCardState extends State<PostCard> {
                   List<Widget> children = [];
                   for (final doc in snapshot.data!.docs) {
                     final comment = Comment.fromDocumentSnapshot(doc);
-                    children.add(
-                      CommentOneLineListTile(
-                        padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
-                        contentMargin: const EdgeInsets.only(bottom: 8),
-                        contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
-                        post: post,
-                        comment: comment,
-                        onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
-                      ),
-                    );
+                    if (my?.hasBlocked(comment.uid) ?? false) {
+                      children.add(
+                        // This is the default blocked comment tile
+                        // UI later
+                        //
+                        // Will it be better if we can provide something like this?
+                        // CommentOneLineListTile.blocked()
+                        // TODO ongoing
+                        GestureDetector(
+                          child: Container(
+                            margin: EdgeInsets.only(left: indent(comment.depth)),
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(sizeSm, sizeXs, sizeSm, sizeXs),
+                              child: Row(
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.only(right: 8.0),
+                                    child: SizedBox(
+                                      height: 24,
+                                      width: 24,
+                                      child: Icon(Icons.block),
+                                    ),
+                                  ),
+                                  Text(tr.block),
+                                ],
+                              ),
+                            ),
+                          ),
+                          onTap: () => CommentService.instance.showCommentListBottomSheet(context, post),
+                        ),
+                      );
+                    } else {
+                      children.add(
+                        CommentOneLineListTile(
+                          padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
+                          contentMargin: const EdgeInsets.only(bottom: 8),
+                          contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
+                          post: post,
+                          comment: comment,
+                          onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
+                        ),
+                      );
+                    }
                   }
                   return Column(children: children);
                 }

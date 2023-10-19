@@ -120,4 +120,4 @@ export 'widget/setting/my_setting.dart';
 export 'widget/setting/push_notification.setting.screen.dart';
 
 // activity
-export 'widget/activity/activity.list_view.screen.dart';
+export 'widget/activity_log/activity_log.list_view.screen.dart';

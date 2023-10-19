@@ -10,6 +10,7 @@ class CommentListView extends StatefulWidget {
   const CommentListView({
     super.key,
     this.itemBuilder,
+    this.blockedBuilder,
     this.emptyBuilder,
     this.pageSize = 10,
     this.scrollController,
@@ -27,8 +28,9 @@ class CommentListView extends StatefulWidget {
   });
 
   final int pageSize;
-  final Widget Function(BuildContext, Comment)? itemBuilder;
-  final Widget Function(BuildContext)? emptyBuilder;
+  final Widget Function(BuildContext context, Comment comment)? itemBuilder;
+  final Widget Function(BuildContext context, Comment comment)? blockedBuilder;
+  final Widget Function(BuildContext context)? emptyBuilder;
   final ScrollController? scrollController;
   final bool? primary;
   final ScrollPhysics? physics;
@@ -51,10 +53,24 @@ class CommentListViewState extends State<CommentListView> {
   @override
   Widget build(BuildContext context) {
     return FirestoreListView(
-      query:
-          commentCol.where("postId", isEqualTo: widget.post.id).orderBy("sort"),
+      query: commentCol.where("postId", isEqualTo: widget.post.id).orderBy("sort"),
       itemBuilder: (context, QueryDocumentSnapshot snapshot) {
         final comment = Comment.fromDocumentSnapshot(snapshot);
+        if (my?.hasBlocked(comment.uid) ?? false) {
+          if (widget.blockedBuilder != null) {
+            return widget.blockedBuilder!(context, comment);
+          }
+          // TODO ongoing review - comment list
+          if (widget.itemBuilder != null) {
+            return widget.itemBuilder!(context, comment);
+          }
+          return CommentOneLineListTile(
+            runSpacing: widget.commentTileRunSpacing,
+            padding: widget.commentTilePadding,
+            post: widget.post,
+            comment: comment,
+          );
+        }
         if (widget.itemBuilder != null) {
           return widget.itemBuilder!(context, comment);
         }

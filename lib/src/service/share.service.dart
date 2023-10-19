@@ -28,11 +28,7 @@ class ShareService {
     final context = FireFlutterService.instance.context;
     showModalBottomSheet(
       context: context,
-      barrierColor: Theme.of(context)
-          .colorScheme
-          .secondary
-          .withOpacity(.5)
-          .withAlpha(110),
+      barrierColor: Theme.of(context).colorScheme.secondary.withOpacity(.5).withAlpha(110),
       isDismissible: true,
       enableDrag: true,
       constraints: BoxConstraints(
@@ -58,8 +54,9 @@ class ShareService {
   /// fine on other apps so far.
   ///
   Future<String> dynamicLink({
-    required String type,
-    required String id,
+    String? route,
+    String? type,
+    String? id,
     String? uriPrefix,
     String? appId,
     required String title,
@@ -67,22 +64,23 @@ class ShareService {
     String? imageUrl,
   }) async {
     final dynamicLinkParams = DynamicLinkParameters(
-        link: Uri.parse("${this.uriPrefix}?type=$type&id=$id"),
+        link: Uri.parse("${this.uriPrefix}?type=$type&id=$id&route=$route"),
         uriPrefix: uriPrefix ?? this.uriPrefix,
         androidParameters: AndroidParameters(packageName: appId ?? this.appId),
         iosParameters: IOSParameters(bundleId: appId ?? this.appId),
         socialMetaTagParameters: SocialMetaTagParameters(
           title: title,
-          description: description,
+          description: description.trim().upTo(255),
           imageUrl: imageUrl == null ? null : Uri.parse(imageUrl),
         ),
         navigationInfoParameters: const NavigationInfoParameters(
           forcedRedirectEnabled: true,
         ));
 
-    final dynamicLink =
-        await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
-    ActivityService.instance.onShare(type: type, id: id);
+    final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
+
+    /// TODO @lancelynyrd - activity log
+    // ActivityService.instance.onShare(type: type, id: id, route: route);
     return dynamicLink.shortUrl.toString();
   }
 }

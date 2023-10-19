@@ -8,4 +8,3 @@ export 'model/comment/comment.dart';
 export 'model/favorite/favorite.dart';
 export 'model/messaging/token.dart';
 export 'model/storage/storage.dart';
-export 'model/activity/activity.dart';

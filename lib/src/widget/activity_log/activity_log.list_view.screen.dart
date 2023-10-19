@@ -1,7 +1,7 @@
-import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_ui_database/firebase_ui_database.dart';
 
 class ActivityListViewScreen extends StatefulWidget {
   const ActivityListViewScreen({super.key});
@@ -20,14 +20,14 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
   };
 
   get query {
-    Query q;
+    Query q = activityLogCol.orderBy('createdAt', descending: true);
 
     if (search.text.isNotEmpty) {
-      q = activityUserLogRef(search.text).orderByChild('reverseCreatedAt');
-      // q = activityLogRef.orderByChild('reverseCreatedAt').equalTo(search.text, key: 'uid');
-    } else {
-      q = activityLogRef.orderByChild('reverseCreatedAt');
+      q = q.where('uid', isEqualTo: search.text);
     }
+    dog('filter: $filter');
+    dog(filter.entries.where((e) => e.value).map((e) => e.key).toList().toString());
+    // q.where('type', whereIn: filter.entries.where((e) => e.value).map((e) => e.key).toList());
 
     return q;
   }
@@ -53,57 +53,60 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
         ],
         bottom: userSearch,
       ),
-      body: FirebaseDatabaseListView(
+      body: FirestoreListView(
         key: const Key('AdminActivityLogListView'),
         query: query,
         itemBuilder: (context, snapshot) {
-          final activity = Activity.fromDocumentSnapshot(snapshot);
-          if (activity.type == ActivityType.user.name && filter[ActivityType.user.name] == false) {
-            return const SizedBox.shrink();
-          }
-          if (activity.type == ActivityType.post.name && filter[ActivityType.post.name] == false) {
-            return const SizedBox.shrink();
-          }
-          if (activity.type == ActivityType.comment.name && filter[ActivityType.comment.name] == false) {
-            return const SizedBox.shrink();
-          }
-          if (activity.type == ActivityType.chat.name && filter[ActivityType.chat.name] == false) {
-            return const SizedBox.shrink();
-          }
-          if (activity.type == ActivityType.feed.name && filter[ActivityType.feed.name] == false) {
-            return const SizedBox.shrink();
-          }
-          return ListTile(
-            key: Key(activity.id),
-            title: FutureBuilder(
-              future: activity.getMessage,
-              builder: (c, s) {
-                if (s.hasError) {
-                  return const Center(child: Text('Something went wrong.'));
-                }
-                if (s.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator.adaptive());
-                }
-                return Text(s.data!);
-              },
-            ),
-            subtitle: Text('${dateTimeAgo(activity.createdAt)}:: id: ${activity.id}'),
-            onTap: () {
-              if (activity.type == ActivityType.user.name) {
-                UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
-              }
-              if (activity.type == ActivityType.post.name || activity.type == ActivityType.comment.name) {
-                PostService.instance.showPostViewScreen(context: context, postId: activity.postId);
-              }
+          /// TODO @lancelynyrd - activity log
+          return const Text('// TODO @lancelynyrd - activity log');
+          // final activity = Activity.fromDocumentSnapshot(snapshot);
 
-              if (activity.type == ActivityType.chat.name) {
-                UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
-              }
-              if (activity.type == ActivityType.feed.name) {
-                UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
-              }
-            },
-          );
+          // if (activity.type == ActivityType.user.name && filter[ActivityType.user.name] == false) {
+          //   return const SizedBox.shrink();
+          // }
+          // if (activity.type == ActivityType.post.name && filter[ActivityType.post.name] == false) {
+          //   return const SizedBox.shrink();
+          // }
+          // if (activity.type == ActivityType.comment.name && filter[ActivityType.comment.name] == false) {
+          //   return const SizedBox.shrink();
+          // }
+          // if (activity.type == ActivityType.chat.name && filter[ActivityType.chat.name] == false) {
+          //   return const SizedBox.shrink();
+          // }
+          // if (activity.type == ActivityType.feed.name && filter[ActivityType.feed.name] == false) {
+          //   return const SizedBox.shrink();
+          // }
+          // return ListTile(
+          //   key: Key(activity.id),
+          //   title: FutureBuilder(
+          //     future: activity.getMessage,
+          //     builder: (c, s) {
+          //       if (s.hasError) {
+          //         return const Center(child: Text('Something went wrong.'));
+          //       }
+          //       if (s.connectionState == ConnectionState.waiting) {
+          //         return const Center(child: CircularProgressIndicator.adaptive());
+          //       }
+          //       return Text(s.data!);
+          //     },
+          //   ),
+          //   subtitle: Text('${dateTimeAgo(activity.createdAt)}:: id: ${activity.id}'),
+          //   onTap: () {
+          //     if (activity.type == ActivityType.user.name) {
+          //       UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
+          //     }
+          //     if (activity.type == ActivityType.post.name || activity.type == ActivityType.comment.name) {
+          //       PostService.instance.showPostViewScreen(context: context, postId: activity.postId);
+          //     }
+
+          //     if (activity.type == ActivityType.chat.name) {
+          //       UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
+          //     }
+          //     if (activity.type == ActivityType.feed.name) {
+          //       UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
+          //     }
+          //   },
+          // );
         },
       ),
     );

@@ -24,4 +24,4 @@ export 'service/share.service.dart';
 export 'service/storage.customize.dart';
 export 'service/comment.customize.dart';
 
-export 'service/activity.service.dart';
+export 'service/activity_log.service.dart';
