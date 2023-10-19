@@ -195,17 +195,21 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
   /// If [blockedBuilder] is not set, it will use [itemBuilder] to build the list tile.
   /// If [itemBuilder] is set, it will use defaultChatRoomListTile [itemBuilder] to build the list tile.
   Widget _chatRoomListItem(Room room, BuildContext context) {
-    return room.isSingleChat
-        ? UserBlocked(
-            otherUid: room.otherUserUid,
-            blockedBuilder: (context) {
-              return widget.blockedBuilder?.call(context, room) ?? _defaultChatRoomListTile(room, context);
-            },
-            notBlockedBuilder: (context) {
-              return widget.itemBuilder?.call(context, room) ?? _defaultChatRoomListTile(room, context);
-            },
-          )
-        : _defaultChatRoomListTile(room, context);
+    // This is to prevent check if block when uneccesarry
+    if (widget.blockedBuilder == null || room.isGroupChat) {
+      return widget.itemBuilder?.call(context, room) ?? _defaultChatRoomListTile(room, context);
+    }
+    // Need to review
+    // github issue https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=41997149
+    return UserBlocked(
+      otherUid: room.otherUserUid,
+      blockedBuilder: (context) {
+        return widget.blockedBuilder!.call(context, room);
+      },
+      notBlockedBuilder: (context) {
+        return widget.itemBuilder?.call(context, room) ?? _defaultChatRoomListTile(room, context);
+      },
+    );
   }
 
   /// Default chat room list tile
