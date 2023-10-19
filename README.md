@@ -16,9 +16,9 @@ Create an issue if you find a bug or need a help.
 - [Table of Contents](#table-of-contents)
 - [Overview](#overview)
 - [Changes](#changes)
-  - [Oct 10 0.3.12](#oct-10-0312)
-  - [Sept 28 0.3.11](#sept-28-0311)
-  - [Sept 10 0.3.10](#sept-10-0310)
+    - [Oct 10 0.3.12](#oct-10-0312)
+    - [Sept 28 0.3.11](#sept-28-0311)
+    - [Sept 10 0.3.10](#sept-10-0310)
   - [Features](#features)
     - [Main Features](#main-features)
 - [Getting started](#getting-started)
@@ -26,7 +26,7 @@ Create an issue if you find a bug or need a help.
   - [Installing your app with fireflutter](#installing-your-app-with-fireflutter)
     - [Create a Firebase](#create-a-firebase)
 - [Firebase Extension](#firebase-extension)
-  - [Resize image](#resize-image)
+    - [Resize image](#resize-image)
   - [Install cloud functions](#install-cloud-functions)
   - [Security rules](#security-rules)
     - [Firestore security rules](#firestore-security-rules)
@@ -34,13 +34,13 @@ Create an issue if you find a bug or need a help.
     - [Realtime database security rules](#realtime-database-security-rules)
   - [Setup the base code](#setup-the-base-code)
 - [Pub.dev Packages](#pubdev-packages)
-  - [url_launcher (Optional)](#url_launcher-optional)
+  - [url\_launcher (Optional)](#url_launcher-optional)
   - [timeago](#timeago)
-  - [Parsed_ReadMore](#parsed_readmore)
+  - [Parsed\_ReadMore](#parsed_readmore)
 - [Build Sample](#build-sample)
-  - [User Profile Page](#user-profile-page)
-  - [Chat App](#chat-app)
-  - [Forum App](#forum-app)
+    - [User Profile Page](#user-profile-page)
+    - [Chat App](#chat-app)
+    - [Forum App](#forum-app)
 - [Widgets and UI functions](#widgets-and-ui-functions)
 - [Usage](#usage)
   - [User](#user)
@@ -62,9 +62,11 @@ Create an issue if you find a bug or need a help.
 
 # Overview
 
-Fireflutter made for reusing the common code blocks. Provides code for user, forum, chat and push notificiation management with `like`, `favorite`, `follow`, `post` and `comment` features.
+The goal of FireFlutter is to provide reusable the common code blocks encapsulating in the widgets. So, developer can quickly develop what they want using this package.
 
-There are some pre-defined fields for the user document. You can use `json_serializable` for providing each model extra fields.
+It provides code for user, forum, chat and push notificiation management that works with `like`, `favorite`, `follow`, `post` and `comment` features.
+
+There are some pre-defined fields for the common usage in the database structure. We use `json_serializable` for providing each model with the fields.
 
 The model has also basic CRUD functionalities.
 

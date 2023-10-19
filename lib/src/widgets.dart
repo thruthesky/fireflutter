@@ -17,6 +17,7 @@ export 'widget/user/profile_viewers.screen.dart';
 export 'widget/user/public_profile/public_profile.buttons.dart';
 export 'widget/user/user.liked_by.list.screen.dart';
 export 'widget/user/user_blocked.dart';
+export 'widget/user/new_user_horizontal_list.dart';
 
 // Chat
 export 'widget/chat/room/chat.room.screen.dart';
