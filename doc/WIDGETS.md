@@ -370,6 +370,6 @@ This widget displays a file or photo from the url.
 
 ## NewUserHorizontalList
 
-This widget displays lists of users in the time of newly registered order in horizontal list.
+This widget displays lists of users in the time of newly registered order in horizontal list. This will get more users as you scroll the list horizontally.
 
 ![NewUserHorizontalList](https://github.com/thruthesky/fireflutter/blob/main/doc/img/new_user_horizontal_list.jpg?raw=true)
