@@ -1,7 +1,7 @@
-import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_ui_database/firebase_ui_database.dart';
 
 class ActivityListViewScreen extends StatefulWidget {
   const ActivityListViewScreen({super.key});
@@ -20,14 +20,14 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
   };
 
   get query {
-    Query q;
+    Query q = activityLogCol.orderBy('createdAt', descending: true);
 
     if (search.text.isNotEmpty) {
-      q = activityUserLogRef(search.text).orderByChild('reverseCreatedAt');
-      // q = activityLogRef.orderByChild('reverseCreatedAt').equalTo(search.text, key: 'uid');
-    } else {
-      q = activityLogRef.orderByChild('reverseCreatedAt');
+      q = q.where('uid', isEqualTo: search.text);
     }
+    dog('filter: $filter');
+    dog(filter.entries.where((e) => e.value).map((e) => e.key).toList().toString());
+    // q.where('type', whereIn: filter.entries.where((e) => e.value).map((e) => e.key).toList());
 
     return q;
   }
@@ -53,7 +53,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
         ],
         bottom: userSearch,
       ),
-      body: FirebaseDatabaseListView(
+      body: FirestoreListView(
         key: const Key('AdminActivityLogListView'),
         query: query,
         itemBuilder: (context, snapshot) {

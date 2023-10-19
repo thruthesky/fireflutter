@@ -323,7 +323,7 @@ class ChatService {
       await ref.update(data);
     }
 
-    ActivityService.instance.onChatMessageSent(room);
+    // ActivityService.instance.onChatMessageSent(room);
 
     /// * This must be called with "await". Or unit tests may fail.
     await updateRoom(room: room, lastMessage: chatMessage);

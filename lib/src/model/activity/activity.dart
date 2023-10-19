@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -6,6 +7,8 @@ part 'activity.g.dart';
 
 @JsonSerializable()
 class Activity {
+  static DocumentReference doc([String? activityId]) => activityLogCol.doc(activityId);
+
   final String id;
   final String action;
   final String type;
@@ -38,7 +41,7 @@ class Activity {
 
   /// dont use directly,
   /// use [ActivityService.instance.log(...)] instead
-  static Future<void> create({
+  static Future<Activity> create({
     required String action,
     required String type,
     String? uid,
@@ -53,41 +56,39 @@ class Activity {
     final Map<String, dynamic> data = {
       'action': action,
       'type': type, // 'post', 'comment', 'user', 'chat'
-      'uid': uid ?? myUid,
-      'name': name ?? my!.name,
+      'uid': uid ?? myUid ?? '',
+      'name': name ?? my?.name ?? '',
       if (postId != null) 'postId': postId,
       if (commentId != null) 'commentId': commentId,
       if (roomId != null) 'roomId': roomId,
       if (title != null) 'title': title,
       if (otherUid != null) 'otherUid': otherUid,
       if (otherDisplayName != null) 'otherDisplayName': otherDisplayName,
-      'createdAt': ServerValue.timestamp,
+      'createdAt': FieldValue.serverTimestamp(),
     };
-    final re = activityLogRef.push();
-    // await re.set(data);
-    // final act = await activityLogRef.child(re.key!).get();
-    // final reverseCreatedAt = (act.value as dynamic)['createdAt'] * -1;
-    // await re.update({'reverseCreatedAt': reverseCreatedAt});
-    // await activityUserLogRef().push().set({...data, 'reverseCreatedAt': reverseCreatedAt});
+    final activityId = Post.doc().id;
 
-    re.set(data).then((_) async {
-      dog('ActivityService::log::');
-      final act = await activityLogRef.child(re.key!).get();
-      final reverseCreatedAt = (act.value as dynamic)['createdAt'] * -1;
-      await re.update({'reverseCreatedAt': reverseCreatedAt});
-      await activityUserLogRef().push().set({...data, 'reverseCreatedAt': reverseCreatedAt});
-    });
+    Activity.doc(activityId).set(data);
+
+    final activity = Activity.fromJson(
+      {
+        ...data,
+        'id': activityId,
+        'createdAt': DateTime.now(),
+      },
+    );
+    return Future.value(activity);
   }
 
   factory Activity.fromJson(Map<String, dynamic> json) {
     return _$ActivityFromJson(json);
   }
 
-  factory Activity.fromDocumentSnapshot(DataSnapshot snapshot) {
+  factory Activity.fromDocumentSnapshot(DocumentSnapshot snapshot) {
     return Activity.fromJson(
       {
-        ...(snapshot.value as Map<dynamic, dynamic>),
-        ...{'id': snapshot.key},
+        ...(snapshot.data() as Map),
+        ...{'id': snapshot.id},
       },
     );
   }
@@ -142,6 +143,9 @@ class Activity {
   }
 
   String userActivityMessage(name, otherDisplayName) {
+    if (action == ActivityUserAction.startApp.name) {
+      return '$name started app';
+    }
     if (action == ActivityUserAction.create.name) {
       return '$name created an account';
     }
