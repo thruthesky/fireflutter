@@ -1,3 +1,10 @@
+## 0.3.14
+
+* Refactoring the model and services.
+* Refactoring on activity logs.
+* Add new widget - `NewUserHorizontalList`.
+
+
 ## 0.3.13
 
 * Refactoring on user, forum.

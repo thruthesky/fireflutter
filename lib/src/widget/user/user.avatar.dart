@@ -72,7 +72,13 @@ class UserAvatar extends StatelessWidget {
           );
   }
 
+  // Build avatar for the user.
   _buildAvatar(User user) {
+    // For the blocked users,
+    if (my != null && my!.blockedUsers.contains(user.uid)) {
+      return buildDefaultIcon();
+    }
+
     if (user.photoUrl == '') {
       return buildDefaultIcon();
     } else {
@@ -102,7 +108,7 @@ class UserAvatar extends StatelessWidget {
           ),
           child: Icon(
             Icons.person,
-            size: size / 2,
+            size: size / 1.2,
           ),
         );
   }

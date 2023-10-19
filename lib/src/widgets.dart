@@ -17,6 +17,7 @@ export 'widget/user/profile_viewers.screen.dart';
 export 'widget/user/public_profile/public_profile.buttons.dart';
 export 'widget/user/user.liked_by.list.screen.dart';
 export 'widget/user/user_blocked.dart';
+export 'widget/user/new_user_horizontal_list.dart';
 
 // Chat
 export 'widget/chat/room/chat.room.screen.dart';
@@ -64,6 +65,7 @@ export 'widget/post/view/post.view.buttons.dart';
 export 'widget/post/post.card.dart';
 export 'widget/post/buttons/post.like.button.dart';
 export 'widget/post/post.content.show_more.dart';
+export 'widget/post/post.content.dart';
 
 // Comment
 export 'widget/comment/comment_edit.bottom_sheet.dart';
@@ -74,6 +76,7 @@ export 'widget/comment/comment.view.screen.dart';
 export 'widget/comment/comment.one_line.list_tile.dart';
 export 'widget/comment/comment.one_line.list_view.dart';
 export 'widget/comment/comment.list.bottom_sheet.dart';
+export 'widget/comment/comment.content.dart';
 
 // Common
 export 'widget/common/date_time_text.dart';
@@ -121,3 +124,5 @@ export 'widget/setting/push_notification.setting.screen.dart';
 
 // activity
 export 'widget/activity_log/activity_log.list_view.screen.dart';
+
+export 'widget/common/display_uploaded_file.dart';

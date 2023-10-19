@@ -79,6 +79,7 @@ final password = await prompt(
 ```
 
 ## confirm
+
 Use `confirm` to ask user for confirmation of the action
 ```dart
 confirm(context: context, title: 'Upload Image', message: 'This image will be seen by others');
@@ -160,6 +161,7 @@ setState(() {
 ```
 
 ## launchSMS
+
 Use `launchSMS` to open the SMS app with the number and message.
 
 ```dart
@@ -167,6 +169,7 @@ launchSMS(phoneNumber: "0039-999-999-999", msg: "hello there");
 ```
 
 ## loginFirstToast
+
 Use `loginFirstToast` to display snackbar when user is not logged in
 
 ```dart
@@ -174,6 +177,7 @@ loginFirstToast();
 ```
 
 ## indent
+
 Use `indent` to visually indent the comments reply based on their hierarchy. This has a depth maximum of 6.
 
 ```dart
@@ -183,12 +187,14 @@ Padding(
 ```
 
 ## platformName
+
 Use `platformName` to get the current device platform. 
 ```dart
 // it returns 'web', 'android', 'fuchsia', 'ios', 'linux', 'macos', 'windows' as String
 platformName(); 
 ```
 ## sanitizeFilename
+
 Use `sanitizeFilename` to remove unsafe characters from the files.
 
 ```dart

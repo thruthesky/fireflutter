@@ -156,9 +156,9 @@ class _PostCardState extends State<PostCard> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    UserDoc(
+                    UserDisplayName(
                       uid: post.uid,
-                      builder: (user) => Text(user.name, style: Theme.of(context).textTheme.titleMedium),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Row(
                       children: [
@@ -295,10 +295,17 @@ class _PostCardState extends State<PostCard> {
           Container(
             padding: const EdgeInsets.all(sizeSm),
             color: widget.contentBackground,
-            child: post.content.length < 60
-                ? Text(post.content.replaceAll("\n", " "), style: Theme.of(context).textTheme.bodyMedium)
-                : PostContentShowMore(post: post),
+            child: PostContent(post: post),
           ),
+        // Temporary removed
+        // will be reviewed by -dev2
+        // Container(
+        //   padding: const EdgeInsets.all(sizeSm),
+        //   color: widget.contentBackground,
+        //   child: post.content.length < 60
+        //       ? Text(post.content.replaceAll("\n", " "), style: Theme.of(context).textTheme.bodyMedium)
+        //       : PostContentShowMore(post: post),
+        // ),
       ],
     );
   }

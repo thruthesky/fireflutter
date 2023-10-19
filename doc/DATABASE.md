@@ -107,6 +107,7 @@ FutureBuilder(
 ```
 
 ## toggle()
+
 `toggle` are responsible to setting `block`, `likes`, `feeds` setting to `true`, following the format `uid: true`. Use this by specifying the path on its parameter. Follow the example below
 
 ```dart
