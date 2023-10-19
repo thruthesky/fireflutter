@@ -121,9 +121,9 @@ class ActivityService {
 
   /// type can be any of the following:
   /// 'post', 'comment', 'user', 'chat', 'feed'
-  onShare({required String id, required String type}) => _log(
+  onShare({String? id, String? type, String? route}) => _log(
         action: 'share',
-        type: type,
+        type: type ?? route ?? 'unknown',
         postId: type == ActivityType.post.name ? id : null,
         commentId: type == ActivityType.comment.name ? id : null,
         roomId: type == ActivityType.chat.name ? id : null,
