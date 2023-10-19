@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/widget/common/display_uploaded_files.dart';
 import 'package:flutter/material.dart';

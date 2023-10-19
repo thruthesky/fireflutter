@@ -62,7 +62,7 @@ Create an issue if you find a bug or need a help.
 
 # Overview
 
-The goal of FireFlutter is to provide reusable the common code blocks encapsulating in the widgets. So, developer can quickly develop what they want using this package.
+The goal of FireFlutter is to provide the reusable common code blocks encapsulating in the widgets. So, developer can quickly develop what they want using this package.
 
 It provides code for user, forum, chat and push notificiation management that works with `like`, `favorite`, `follow`, `post` and `comment` features.
 
@@ -463,14 +463,14 @@ Here is an example of how to build simple user profile page.
 ### Chat App
 
 Here is an example of how to build simple user profile page.
-![chat_app](/doc/img/chat_app.png)
+![chat_app](doc/img/chat_app.png)
 
 ### Forum App
 
 <!-- FIXME: Not sure if I implemented this correctly -->
 
 Here is a simple forum app.
-![forum_result](/doc/img/forum.png)
+![forum_result](doc/img/forum.png)
 
 See [User Profile](https://github.com/thruthesky/fireflutter/blob/main/doc/SAMPLES.md#how-to-build-a-user-profile-page?raw=true) for source code and detailed explanation.
 
@@ -483,7 +483,7 @@ See [User Profile](https://github.com/thruthesky/fireflutter/blob/main/doc/SAMPL
 
 - There are many service methods that opens a screen. One thing to note is that, all the method that opens a screen uses `showGeneralDialog` which does not modify the navigation stack. If you want, you may open the screen with navigation(routing) like `Navigator.of(context).push...()`.
 
-See [WIDGETS.md](/doc/WIDGETS.md) for more widget example.
+See [WIDGETS.md](doc/WIDGETS.md) for more widget example.
 **Note:** you can use **`Theme()`** to style the widget
 
 # Usage
@@ -492,11 +492,11 @@ Fireflutter updates in real time no matter what users do. Here are common uses o
 
 ## User
 
-See [USER.md](/doc/USER.md) for details.
+See [USER.md](doc/USER.md) for details.
 
 ## Admin
 
-See [ADMIN.md](/doc/ADMIN.md) for details.
+See [ADMIN.md](doc/ADMIN.md) for details.
 
 <!-- Will make all helpers looks like the Chat -->
 
@@ -510,7 +510,7 @@ With FireFlutter you can easily create a customizable chat room.
 - Image Upload
 - Customizable Chat room -->
 
-Display user's chats using [ChatService.instance](/doc/CHAT.md#chatservice) or if you're using `ChatRoomListView` you can use a controller [ChatRoomListViewController](/doc/CHAT.md#chat-room-list)
+Display user's chats using [ChatService.instance](doc/CHAT.md#chatservice) or if you're using `ChatRoomListView` you can use a controller [ChatRoomListViewController](doc/CHAT.md#chat-room-list)
 
 ```dart
 final controller = ChatRoomListViewController();
@@ -528,35 +528,35 @@ ChatRoomListView(
 ),
 ```
 
-**_Go to [Chat.md](/doc/CHAT.md) for more feature builders and detailed explanation_**
+**_Go to [Chat.md](doc/CHAT.md) for more feature builders and detailed explanation_**
 
 ## Post
 
-See [POST.md](/doc/POST.md) for details.
+See [POST.md](doc/POST.md) for details.
 
 ## Comment
 
-See [COMMENT.md](/doc/COMMENT.md) for details.
+See [COMMENT.md](doc/COMMENT.md) for details.
 
 ## Share
 
-See [SHARE.md](/doc/SHARE.md) for details.
+See [SHARE.md](doc/SHARE.md) for details.
 
 ## Test
 
-See [TEST.md](/doc/TEST.md) for details.
+See [TEST.md](doc/TEST.md) for details.
 
 ## Functions
 
-See [FUNCTIONS.md](/doc/FUNCTIONS.md) for details.
+See [FUNCTIONS.md](doc/FUNCTIONS.md) for details.
 
 ## Widgets
 
-See [WIDGETS.md](/doc/WIDGETS.md) for details.
+See [WIDGETS.md](doc/WIDGETS.md) for details.
 
 # Push notifications
 
-See [PUSH_NOTIFICATION.md](/doc/PUSH_NOTIFICATION.md) for details.
+See [PUSH_NOTIFICATION.md](doc/PUSH_NOTIFICATION.md) for details.
 
 # Error handling
 
@@ -594,11 +594,11 @@ Then, set `isAdmin` to true in the user document.
 - [Unit Testing](doc/ADMIN.md#unit-testing)
 - [Logic Test](doc/ADMIN.md#logic-test)
 
-For more information, see [ADMIN.md](/doc/ADMIN.md).
+For more information, see [ADMIN.md](doc/ADMIN.md).
 
 # [Developers](doc/DEVELOPER.md#developer)
 
-You can go to [Developer.md](/doc/DEVELOPER.md). This section gives a tips and detailed instruction on how to use the FireFlutter completely.
+You can go to [Developer.md](doc/DEVELOPER.md). This section gives a tips and detailed instruction on how to use the FireFlutter completely.
 
 # Things to improve
 
