@@ -75,13 +75,6 @@ class _FeedListViewState extends State<FeedListView> {
           // means has no more to get
           if (widget.emptyBuilder != null) return widget.emptyBuilder!.call(context);
         }
-        // removed posts of blocked users
-        // When we unblock the user, the post may not show the removed posts right away
-        // but this may be okay because it will show a bit later when the user scroll a bit.
-        snapshot.docs.removeWhere((element) {
-          final post = Post.fromDocumentSnapshot(element);
-          return my?.hasBlocked(post.uid) ?? false;
-        });
         return Scrollbar(
           controller: scrollBarControlller,
           child: ListView.builder(

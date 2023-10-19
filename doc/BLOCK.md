@@ -14,7 +14,6 @@ When A open P1, how the C1 should be displayed to A?
 
 The design must be consistent. So, when the developer list he comments under post view screen or post list screen or even if the developer does his own custom design, the behavior must be consistent.
 
-
 To make this one, you need to use widgets to display the parts of comment and the widgets have already the logic of visibility for the block users.
 
 The widgets are
@@ -27,4 +26,3 @@ The widgets are
 - `DisplayUploadedFiles` - to display the media(photos, files, etc..) of the url. You can use it for displaying post, comment, and whatever As long as you pass the list of url, it will work. It will also dispay the gallery if the media is being tapped.
 
 When you use these widgets, you don't have to worry about the visibilities for the contents from blocked users.
-
