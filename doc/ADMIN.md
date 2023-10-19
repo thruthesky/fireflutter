@@ -39,6 +39,7 @@ service.showChoosePostScreen(context, onTap: (post){ // returns a Scaffold widge
 ```
 
 ## Admin Widgets
+
 Here are the Admin widgets that you can use on your app.
 
 ### Opening admin dashboard
@@ -58,6 +59,7 @@ Navigator.of(context).push(
 ```
 
 ### AdminUserListView
+
 To display all users on Admin's side you can use this widget `AdminUserListView`
 
 ```dart
@@ -72,6 +74,7 @@ ElevatedButton(
 )
 ```
 <!-- TODO: Ask Sir Song if this is outdated -->
+
 ### Updating auth custom claims
 
 - Required properties

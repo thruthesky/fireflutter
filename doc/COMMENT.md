@@ -96,6 +96,7 @@ CommentDoc(
 ```
 
 ### CommentEditBottomSheet
+
 Display a bottom sheet of comments for each post 
 
 ```dart
@@ -109,6 +110,7 @@ CommentService.instance.showCommentEditBottomSheet(post:post),
 
 
 ### CommentListView
+
 A List View of Comments on top of FirestoreListView.
 
 ```dart
@@ -186,6 +188,7 @@ CommentService.instance.customize.showCommentEditBottomSheet = (context){
 ```
 
 ## Comment Sorting
+
 If you go to Firestore and navigate to `comments/{commentId}/` and look at the `order` You can see the numbers `10000.100010....100000`, this represents the `depths` of each comment from its `parentId`. 
 
 Each dot on `100000.100000.100000.100000.100000.100000.100000.100000.100000.100000` represents a `depth` of a comment adding the total number of comments from a post. So if `depth = 2` and  `totalNoOfComments = 15` the sort will be `100000.100015........100000`

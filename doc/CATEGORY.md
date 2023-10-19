@@ -20,8 +20,11 @@
 # Category
 
 ## Overview
+
 Categories are managed by Admins.
+
 ## CategoryServices
+
 `CategoryServices` is responsible for managing categories on app. You can create or limit users on which categories they can use. See below for more
 
 ```dart
