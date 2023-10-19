@@ -73,7 +73,8 @@ class FeedService {
     sendNotificationOnFollow(otherUid, re);
     onFollow?.call(otherUid, re);
 
-    ActivityService.instance.onFeedFollow(otherUid, re);
+    /// TODO @lancelynyrd - activity log
+    // ActivityService.instance.onFeedFollow(otherUid, re);
 
     return re;
   }

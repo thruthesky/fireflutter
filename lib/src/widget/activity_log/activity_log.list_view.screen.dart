@@ -57,53 +57,56 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
         key: const Key('AdminActivityLogListView'),
         query: query,
         itemBuilder: (context, snapshot) {
-          final activity = Activity.fromDocumentSnapshot(snapshot);
-          if (activity.type == ActivityType.user.name && filter[ActivityType.user.name] == false) {
-            return const SizedBox.shrink();
-          }
-          if (activity.type == ActivityType.post.name && filter[ActivityType.post.name] == false) {
-            return const SizedBox.shrink();
-          }
-          if (activity.type == ActivityType.comment.name && filter[ActivityType.comment.name] == false) {
-            return const SizedBox.shrink();
-          }
-          if (activity.type == ActivityType.chat.name && filter[ActivityType.chat.name] == false) {
-            return const SizedBox.shrink();
-          }
-          if (activity.type == ActivityType.feed.name && filter[ActivityType.feed.name] == false) {
-            return const SizedBox.shrink();
-          }
-          return ListTile(
-            key: Key(activity.id),
-            title: FutureBuilder(
-              future: activity.getMessage,
-              builder: (c, s) {
-                if (s.hasError) {
-                  return const Center(child: Text('Something went wrong.'));
-                }
-                if (s.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator.adaptive());
-                }
-                return Text(s.data!);
-              },
-            ),
-            subtitle: Text('${dateTimeAgo(activity.createdAt)}:: id: ${activity.id}'),
-            onTap: () {
-              if (activity.type == ActivityType.user.name) {
-                UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
-              }
-              if (activity.type == ActivityType.post.name || activity.type == ActivityType.comment.name) {
-                PostService.instance.showPostViewScreen(context: context, postId: activity.postId);
-              }
+          /// TODO @lancelynyrd - activity log
+          return const Text('// TODO @lancelynyrd - activity log');
+          // final activity = Activity.fromDocumentSnapshot(snapshot);
 
-              if (activity.type == ActivityType.chat.name) {
-                UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
-              }
-              if (activity.type == ActivityType.feed.name) {
-                UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
-              }
-            },
-          );
+          // if (activity.type == ActivityType.user.name && filter[ActivityType.user.name] == false) {
+          //   return const SizedBox.shrink();
+          // }
+          // if (activity.type == ActivityType.post.name && filter[ActivityType.post.name] == false) {
+          //   return const SizedBox.shrink();
+          // }
+          // if (activity.type == ActivityType.comment.name && filter[ActivityType.comment.name] == false) {
+          //   return const SizedBox.shrink();
+          // }
+          // if (activity.type == ActivityType.chat.name && filter[ActivityType.chat.name] == false) {
+          //   return const SizedBox.shrink();
+          // }
+          // if (activity.type == ActivityType.feed.name && filter[ActivityType.feed.name] == false) {
+          //   return const SizedBox.shrink();
+          // }
+          // return ListTile(
+          //   key: Key(activity.id),
+          //   title: FutureBuilder(
+          //     future: activity.getMessage,
+          //     builder: (c, s) {
+          //       if (s.hasError) {
+          //         return const Center(child: Text('Something went wrong.'));
+          //       }
+          //       if (s.connectionState == ConnectionState.waiting) {
+          //         return const Center(child: CircularProgressIndicator.adaptive());
+          //       }
+          //       return Text(s.data!);
+          //     },
+          //   ),
+          //   subtitle: Text('${dateTimeAgo(activity.createdAt)}:: id: ${activity.id}'),
+          //   onTap: () {
+          //     if (activity.type == ActivityType.user.name) {
+          //       UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
+          //     }
+          //     if (activity.type == ActivityType.post.name || activity.type == ActivityType.comment.name) {
+          //       PostService.instance.showPostViewScreen(context: context, postId: activity.postId);
+          //     }
+
+          //     if (activity.type == ActivityType.chat.name) {
+          //       UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
+          //     }
+          //     if (activity.type == ActivityType.feed.name) {
+          //       UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
+          //     }
+          //   },
+          // );
         },
       ),
     );

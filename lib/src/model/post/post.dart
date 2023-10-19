@@ -156,7 +156,8 @@ class Post {
       );
     }
 
-    ActivityService.instance.onPostCreate(post);
+    /// TODO @lancelynyrd
+    // ActivityService.instance.onPostCreate(post);
 
     // return post
     return Future.value(post);
@@ -200,7 +201,9 @@ class Post {
     );
 
     PostService.instance.onUpdate?.call(updatedPost);
-    ActivityService.instance.onPostUpdate(updatedPost);
+
+    /// TODO @lancelynyrd
+    // ActivityService.instance.onPostUpdate(updatedPost);
 
     return updatedPost;
   }
@@ -229,7 +232,8 @@ class Post {
       },
     );
 
-    ActivityService.instance.onPostDelete(this);
+    /// TODO @lancelynyrd
+    // ActivityService.instance.onPostDelete(this);
   }
 
   /// Like or unline the post
@@ -252,7 +256,8 @@ class Post {
     PostService.instance.sendNotificationOnLike(this, isLiked);
     PostService.instance.onLike?.call(this, isLiked);
 
-    ActivityService.instance.onPostLike(this, isLiked);
+    /// TODO @lancelynyrd
+    // ActivityService.instance.onPostLike(this, isLiked);
 
     return isLiked;
   }

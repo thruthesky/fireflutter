@@ -415,7 +415,8 @@ class ChatService {
 
     log('---> showChatRoom: room: $room, user: $user');
 
-    ActivityService.instance.onChatRoomOpened(room, user);
+    /// TODO @lancelynyrd
+    // ActivityService.instance.onChatRoomOpened(room, user);
 
     if (context.mounted) {
       if (customize.showChatRoom != null) {

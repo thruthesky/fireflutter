@@ -249,7 +249,9 @@ class User {
     UserService.instance.onCreate?.call(createdUser);
 
     /// log new user
-    ActivityService.instance.onUserCreate(createdUser);
+    ///
+    /// TODO @lancelynyrd
+    // ActivityService.instance.onUserCreate(createdUser);
 
     return createdUser;
   }
@@ -415,7 +417,9 @@ class User {
       isFollow = true;
     }
 
-    ActivityService.instance.onUserFollow(otherUid, isFollow);
+    /// TODO @lancelynyrd
+    // ActivityService.instance.onUserFollow(otherUid, isFollow);
+
     return isFollow;
   }
 
@@ -433,7 +437,9 @@ class User {
 
     UserService.instance.sendNotificationOnLike(this, isLiked);
     UserService.instance.onLike?.call(this, isLiked);
-    ActivityService.instance.onUserLike(uid, isLiked);
+
+    /// TODO @lancelynyrd
+    // ActivityService.instance.onUserLike(uid, isLiked);
     return isLiked;
   }
 

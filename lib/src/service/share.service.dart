@@ -78,7 +78,9 @@ class ShareService {
         ));
 
     final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
-    ActivityService.instance.onShare(type: type, id: id, route: route);
+
+    /// TODO @lancelynyrd - activity log
+    // ActivityService.instance.onShare(type: type, id: id, route: route);
     return dynamicLink.shortUrl.toString();
   }
 }

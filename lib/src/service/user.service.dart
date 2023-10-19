@@ -301,7 +301,8 @@ class UserService {
     dog('UserService.instance.signOut() - User signing out: ${auth.FirebaseAuth.instance.currentUser!.uid}');
 
     if (my != null) {
-      ActivityService.instance.onSignout(my!);
+      /// TODO @lancelynyrd - activity log
+      // ActivityService.instance.onSignout(my!);
       await onSignout?.call(my!);
     }
     await auth.FirebaseAuth.instance.signOut();
@@ -418,7 +419,8 @@ class UserService {
       }
     }
 
-    ActivityService.instance.onUserViewedProfile(otherUid, user);
+    /// TODO @lancelynyrd - activity log
+    // ActivityService.instance.onUserViewedProfile(otherUid, user);
 
     return customize.showPublicProfileScreen?.call(context, uid: uid, user: user) ??
         showGeneralDialog(
