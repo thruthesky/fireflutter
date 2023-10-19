@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/widget/common/display_uploaded_files.dart';
 import 'package:flutter/material.dart';
 
 /// A widget that display comment in one line.
@@ -35,6 +36,8 @@ class CommentOneLineListTile extends StatefulWidget {
 
 class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
   bool? iLiked;
+
+  bool get notBlocked => my != null && my!.hasBlocked(widget.comment.uid) == false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -67,13 +70,10 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Flexible(
-                        child: UserDoc(
+                        child: UserDisplayName(
                           uid: widget.comment.uid,
-                          builder: (user) => Text(
-                            user.name,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.labelMedium,
                         ),
                       ),
                       SizedBox(width: widget.runSpacing),
@@ -85,30 +85,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                   ),
 
                   // photos of the comment
-                  if (widget.comment.urls.isNotEmpty)
-                    SizedBox(
-                      height: 120,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: widget.comment.urls
-                            .asMap()
-                            .entries
-                            .map(
-                              (e) => GestureDetector(
-                                onTap: () => StorageService.instance.showUploads(
-                                  context,
-                                  widget.comment.urls,
-                                  index: e.key,
-                                ),
-                                child: CachedNetworkImage(
-                                  imageUrl: e.value.thumbnail,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ),
+                  DisplayUploadedFiles(otherUid: widget.comment.uid, urls: widget.comment.urls),
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: widget.onTapContent,
@@ -116,132 +93,132 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                       margin: widget.contentMargin ?? const EdgeInsets.all(0),
                       padding: widget.contentPadding ?? const EdgeInsets.all(0),
                       width: double.infinity,
-                      // decoration: BoxDecoration(
-                      //   color: Theme.of(context).colorScheme.surface,
-                      //   borderRadius: contentBorderRadius ?? BorderRadius.circular(8),
-                      // ),
-                      child: Text(
-                        widget.comment.content,
+                      child: CommentContent(
+                        comment: widget.comment,
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                               color: Theme.of(context).colorScheme.onSurface,
                             ),
                       ),
                     ),
                   ),
-                  Row(
-                    children: [
-                      // no of likes
-                      DatabaseCount(
-                        path: pathCommentLikedBy(widget.comment.id, all: true),
-                        builder: (n) => n == 0
-                            ? const SizedBox.shrink()
-                            : TextButton(
-                                style: TextButton.styleFrom(
-                                  padding: const EdgeInsets.only(left: 0, right: 8),
-                                  minimumSize: Size.zero,
-                                  visualDensity: VisualDensity.compact,
-                                ),
-                                onPressed: () async => UserService.instance.showLikedByListScreen(
-                                  context: context,
-                                  uids: await getKeys(pathCommentLikedBy(widget.comment.id, all: true)),
-                                ),
-                                child: Text(
-                                  n == 0
-                                      ? tr.like
-                                      : tr.noOfLikes.replaceAll(
-                                          '#no',
-                                          n.toString(),
-                                        ),
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                              ),
-                      ),
-                      // reply
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.only(left: 0, right: 8),
-                          minimumSize: Size.zero,
-                          visualDensity: VisualDensity.compact,
-                        ),
-                        onPressed: () {
-                          CommentService.instance.showCommentEditBottomSheet(
-                            context,
-                            post: widget.post,
-                            parent: widget.comment,
-                          );
-                        },
-                        child: Text(
-                          tr.reply,
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ),
-                      Flexible(
-                        child: PopupMenuButton(
-                            icon: const Icon(
-                              Icons.more_horiz,
-                              size: 16,
-                            ),
-                            itemBuilder: (context) {
-                              return [
-                                const PopupMenuItem(
-                                  value: 'report',
-                                  child: Text('Report'),
-                                ),
-                                if (widget.comment.uid == myUid)
-                                  const PopupMenuItem(
-                                    value: 'edit',
-                                    child: Text('Edit'),
-                                  ),
-                                if (widget.comment.uid == myUid)
-                                  const PopupMenuItem(
-                                    value: 'delete',
-                                    child: Text('Delete'),
-                                  )
-                              ];
-                            },
-                            onSelected: (value) async {
-                              if (value == 'edit') {
-                                await CommentService.instance
-                                    .showCommentEditBottomSheet(context, comment: widget.comment);
-                              }
-                              if (value == 'report') {
-                                if (context.mounted) {
-                                  ReportService.instance.showReportDialog(
-                                    context: context,
-                                    commentId: widget.comment.id,
-                                    onExists: (id, type) => toast(
-                                        title: 'Already reported', message: 'You have reported this $type already.'),
-                                  );
-                                }
-                              }
 
-                              //need delete function
-                              if (value == 'delete') {
-                                if (!mounted) return;
-                                final re = await confirm(
+                  // comment buttons
+                  if (notBlocked)
+                    Row(
+                      children: [
+                        // no of likes
+                        DatabaseCount(
+                          path: pathCommentLikedBy(widget.comment.id, all: true),
+                          builder: (n) => n == 0
+                              ? const SizedBox.shrink()
+                              : TextButton(
+                                  style: TextButton.styleFrom(
+                                    padding: const EdgeInsets.only(left: 0, right: 8),
+                                    minimumSize: Size.zero,
+                                    visualDensity: VisualDensity.compact,
+                                  ),
+                                  onPressed: () async => UserService.instance.showLikedByListScreen(
                                     context: context,
-                                    title: 'Delete Comment',
-                                    message: 'Are you sure on deleting this comment?');
-                                if (re == true) {
-                                  await widget.comment.delete();
-                                  toast(title: 'Comment deleted', message: 'Comment deleted successfully.');
+                                    uids: await getKeys(pathCommentLikedBy(widget.comment.id, all: true)),
+                                  ),
+                                  child: Text(
+                                    n == 0
+                                        ? tr.like
+                                        : tr.noOfLikes.replaceAll(
+                                            '#no',
+                                            n.toString(),
+                                          ),
+                                    style: Theme.of(context).textTheme.bodySmall,
+                                  ),
+                                ),
+                        ),
+                        // reply
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.only(left: 0, right: 8),
+                            minimumSize: Size.zero,
+                            visualDensity: VisualDensity.compact,
+                          ),
+                          onPressed: () {
+                            CommentService.instance.showCommentEditBottomSheet(
+                              context,
+                              post: widget.post,
+                              parent: widget.comment,
+                            );
+                          },
+                          child: Text(
+                            tr.reply,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+                        Flexible(
+                          child: PopupMenuButton(
+                              icon: const Icon(
+                                Icons.more_horiz,
+                                size: 16,
+                              ),
+                              itemBuilder: (context) {
+                                return [
+                                  const PopupMenuItem(
+                                    value: 'report',
+                                    child: Text('Report'),
+                                  ),
+                                  if (widget.comment.uid == myUid)
+                                    const PopupMenuItem(
+                                      value: 'edit',
+                                      child: Text('Edit'),
+                                    ),
+                                  if (widget.comment.uid == myUid)
+                                    const PopupMenuItem(
+                                      value: 'delete',
+                                      child: Text('Delete'),
+                                    )
+                                ];
+                              },
+                              onSelected: (value) async {
+                                if (value == 'edit') {
+                                  await CommentService.instance
+                                      .showCommentEditBottomSheet(context, comment: widget.comment);
                                 }
-                              }
-                            }),
-                      ),
-                    ],
-                  ),
+                                if (value == 'report') {
+                                  if (context.mounted) {
+                                    ReportService.instance.showReportDialog(
+                                      context: context,
+                                      commentId: widget.comment.id,
+                                      onExists: (id, type) => toast(
+                                          title: 'Already reported', message: 'You have reported this $type already.'),
+                                    );
+                                  }
+                                }
+
+                                //need delete function
+                                if (value == 'delete') {
+                                  if (!mounted) return;
+                                  final re = await confirm(
+                                      context: context,
+                                      title: 'Delete Comment',
+                                      message: 'Are you sure on deleting this comment?');
+                                  if (re == true) {
+                                    await widget.comment.delete();
+                                    toast(title: 'Comment deleted', message: 'Comment deleted successfully.');
+                                  }
+                                }
+                              }),
+                        ),
+                      ],
+                    ),
                 ],
               ),
             ),
-            Database(
-              path: pathCommentLikedBy(widget.comment.id),
-              builder: (value, path) {
-                iLiked = value == null;
-                return likeButton();
-              },
-              onWaiting: iLiked == null ? const SizedBox.shrink() : likeButton(),
-            )
+            if (notBlocked)
+              Database(
+                path: pathCommentLikedBy(widget.comment.id),
+                builder: (value, path) {
+                  iLiked = value == null;
+                  return likeButton();
+                },
+                onWaiting: iLiked == null ? const SizedBox.shrink() : likeButton(),
+              ),
           ]
         ],
       ),

@@ -21,7 +21,10 @@
   - [EmailLoginForm](#emailloginform)
   - [IconTextButton](#icontextbutton)
   - [CarouselView](#carouselview)
+  - [DateTimeText](#datetimetext)
+  - [MyDoc](#mydoc)
   - [Avatar](#avatar)
+  - [DisplayUploadedFile](#displayuploadedfile)
 
 <!-- /code_chunk_output -->
 
@@ -355,3 +358,9 @@ UserDoc(
 ),
 ```
 
+
+
+## DisplayUploadedFile
+
+
+This widget displays a file or photo from the url.

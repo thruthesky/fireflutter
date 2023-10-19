@@ -5,28 +5,32 @@
 
 <!-- code_chunk_output -->
 
-- [Overview](#overview)
-- [Comment Service](#comment-service)
-- [Widget](#widget)
-  - [Comment Doc](#comment-doc)
-  - [CommentEditBottomSheet](#commenteditbottomsheet)
-  - [CommentListView](#commentlistview)
-  - [CommentListTile](#commentlisttile)
-  - [CommentListBottomSheet](#commentlistbottomsheet)
-  - [CommentViewScreen](#commentviewscreen)
-- [Customization](#customization)
-  - [CommentCustomize](#commentcustomize)
-- [Comment Sorting](#comment-sorting)
+- [Table of Contents](#table-of-contents)
+- [Comment](#comment)
+  - [Overview](#overview)
+  - [Comment Service](#comment-service)
+  - [Widget](#widget)
+    - [Comment Doc](#comment-doc)
+    - [CommentEditBottomSheet](#commenteditbottomsheet)
+    - [CommentListView](#commentlistview)
+    - [CommentListTile](#commentlisttile)
+    - [CommentListBottomSheet](#commentlistbottomsheet)
+    - [CommentViewScreen](#commentviewscreen)
+  - [Customization](#customization)
+    - [CommentCustomize](#commentcustomize)
+  - [Comment Sorting](#comment-sorting)
 
 <!-- /code_chunk_output -->
 
 
 # Comment
+
 ## Overview
 
 User comments on posts so in this section will show you how to handle comments from each post. Utilizing every widgets and function calls will help you to create a `Feed Page` for your app. 
 
 ## Comment Service
+
 Comment Service provides a widget builder that you can use from retrieve data to display them into your app.
 
 ```dart
@@ -68,8 +72,13 @@ CommentService.instance.init(
   ),
 );
 ```
+
+
+
 ## Widget
+
 ### Comment Doc
+
 A builder that will make a widget from the comment's document
 
 ```dart
@@ -112,6 +121,7 @@ Dialog(
 ```
 
 ### CommentListTile
+
 This widget uses ListTile as its parent displaying user information and the comment from the post. It uses by CommentListView.
 
 ```dart
@@ -126,6 +136,7 @@ CommentListView(
 ```
 
 ### CommentListBottomSheet
+
 Using this you can display all comments from the post as bottom sheet.
 
 ```dart
@@ -137,7 +148,9 @@ showGeneralDialog(
 ```
 
 ### CommentViewScreen
+
 Display comments as a new screen. This will open a new `Scaffold` when used.
+
 ```dart
 onTap: (){
   Navigator.push(
