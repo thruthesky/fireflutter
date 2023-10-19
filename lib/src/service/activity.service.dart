@@ -17,6 +17,11 @@ class ActivityService {
     enableActivityLog = false,
   }) {
     this.enableActivityLog = enableActivityLog;
+    onAppStart();
+    UserService.instance.userChanges.listen((user) {
+      if (user == null) return;
+      onUserSignin();
+    });
   }
 
   /// only use this for logging activity
@@ -50,6 +55,11 @@ class ActivityService {
     );
   }
 
+  onAppStart() => _log(
+        action: 'startApp',
+        type: ActivityType.user.name,
+      );
+
   /// user login
   onUserCreate(User user) => _log(
         action: 'create',
@@ -66,11 +76,9 @@ class ActivityService {
       );
 
   /// user login
-  onUserSignin(User user) => _log(
+  onUserSignin() => _log(
         action: 'signin',
         type: ActivityType.user.name,
-        uid: user.uid,
-        name: user.name,
       );
 
   onSignout(User user) => _log(
@@ -107,19 +115,6 @@ class ActivityService {
   }
 
   /// type can be any of the following:
-  /// 'post', 'comment', 'user', 'chat'
-  onFavorite({required String id, required bool isFavorite, required String type}) {
-    _log(
-      action: isFavorite == true ? 'favorite' : 'unfavorite',
-      type: type,
-      postId: type == ActivityType.post.name ? id : null,
-      commentId: type == ActivityType.comment.name ? id : null,
-      roomId: type == ActivityType.chat.name ? id : null,
-      otherUid: type == ActivityType.user.name ? id : null,
-    );
-  }
-
-  /// type can be any of the following:
   /// 'post', 'comment', 'user', 'chat', 'feed'
   onShare({String? id, String? type, String? route}) => _log(
         action: 'share',
@@ -142,14 +137,14 @@ class ActivityService {
     );
   }
 
-  onChatMessageSent(Room room) {
-    _log(
-      action: 'send',
-      type: ActivityType.chat.name,
-      roomId: room.roomId,
-      title: room.name,
-    );
-  }
+  // onChatMessageSent(Room room) {
+  //   _log(
+  //     action: 'send',
+  //     type: ActivityType.chat.name,
+  //     roomId: room.roomId,
+  //     title: room.name,
+  //   );
+  // }
 
   /// user follow other user
   onFeedFollow(String otherUid, bool isFollow) {

@@ -46,7 +46,9 @@ class _FeedListViewState extends State<FeedListView> {
     super.initState();
     UserService.instance.documentChanges.listen((user) {
       if (user == null) return;
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
   }
 

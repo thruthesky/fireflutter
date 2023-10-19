@@ -302,18 +302,6 @@ Enable Realtime Database on firebase and copy the following and paste it into yo
     "tmp": {
       ".read": true,
       ".write": true
-    },
-    "activity_logs": {
-      ".read": true,
-      ".write": true,
-      ".indexOn": ["reverseCreatedAt"]
-    },
-    "activity_user_logs": {
-      ".read": true,
-      ".write": true,
-      "$uid": {
-        ".indexOn": ["reverseCreatedAt"]
-      }
     }
   }
 }
@@ -509,6 +497,7 @@ See [USER.md](/doc/USER.md) for details.
 See [ADMIN.md](/doc/ADMIN.md) for details.
 
 <!-- Will make all helpers looks like the Chat -->
+
 ## Chat
 
 With FireFlutter you can easily create a customizable chat room.
@@ -540,24 +529,31 @@ ChatRoomListView(
 **_Go to [Chat.md](/doc/CHAT.md) for more feature builders and detailed explanation_**
 
 ## Post
+
 See [POST.md](/doc/POST.md) for details.
 
 ## Comment
+
 See [COMMENT.md](/doc/COMMENT.md) for details.
 
 ## Share
+
 See [SHARE.md](/doc/SHARE.md) for details.
 
 ## Test
+
 See [TEST.md](/doc/TEST.md) for details.
 
 ## Functions
+
 See [FUNCTIONS.md](/doc/FUNCTIONS.md) for details.
 
 ## Widgets
+
 See [WIDGETS.md](/doc/WIDGETS.md) for details.
 
 # Push notifications
+
 See [PUSH_NOTIFICATION.md](/doc/PUSH_NOTIFICATION.md) for details.
 
 # Error handling

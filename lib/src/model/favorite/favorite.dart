@@ -104,15 +104,7 @@ class Favorite {
       await Favorite.doc(id).delete();
       isFavorite = false;
     }
-    ActivityService.instance.onFavorite(
-      id: otherUid ?? postId ?? commentId!,
-      isFavorite: isFavorite,
-      type: otherUid != null
-          ? 'user'
-          : postId != null
-              ? 'post'
-              : 'comment',
-    );
+
     return isFavorite;
   }
 }
