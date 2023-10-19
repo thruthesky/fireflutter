@@ -199,7 +199,7 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
     if (widget.blockedBuilder == null || room.isGroupChat) {
       return widget.itemBuilder?.call(context, room) ?? _defaultChatRoomListTile(room, context);
     }
-    // Need to review
+    // Need to review because it blinks
     // github issue https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=41997149
     return UserBlocked(
       otherUid: room.otherUserUid,
