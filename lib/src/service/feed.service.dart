@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/functions/activity_log.functions.dart';
 
 class FeedService {
   /// create singleton
@@ -73,8 +74,8 @@ class FeedService {
     sendNotificationOnFollow(otherUid, re);
     onFollow?.call(otherUid, re);
 
-    /// TODO @lancelynyrd - activity log
-    // ActivityService.instance.onFeedFollow(otherUid, re);
+    /// log feed follow/unfollow activity
+    activityLogFeedFollow(otherUid: otherUid, isFollow: re);
 
     return re;
   }

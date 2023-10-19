@@ -1,4 +1,5 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:fireflutter/src/functions/activity_log.functions.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fireflutter/fireflutter.dart';
@@ -79,8 +80,11 @@ class ShareService {
 
     final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
 
-    /// TODO @lancelynyrd - activity log
-    // ActivityService.instance.onShare(type: type, id: id, route: route);
+    // log share activity
+    if (id != null && type != null) {
+      activityLogShare(id: id, type: type);
+    }
+
     return dynamicLink.shortUrl.toString();
   }
 }

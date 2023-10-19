@@ -169,8 +169,8 @@ class Comment {
     await commentCol.doc(id).update(deletedCommentData);
     final deletedComment = copyWith(deletedCommentData);
 
-    /// TODO @lancelynyrd
-    // ActivityService.instance.onCommentDelete(deletedComment);
+    /// log comment delete
+    activityLogCommentDelete(commentId: id);
     return deletedComment;
   }
 

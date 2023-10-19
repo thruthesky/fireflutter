@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/functions/activity_log.functions.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'post.g.dart';
@@ -156,8 +157,8 @@ class Post {
       );
     }
 
-    /// TODO @lancelynyrd
-    // ActivityService.instance.onPostCreate(post);
+    /// log post create
+    activityLogPostCreate(postId: postId);
 
     // return post
     return Future.value(post);
@@ -202,8 +203,8 @@ class Post {
 
     PostService.instance.onUpdate?.call(updatedPost);
 
-    /// TODO @lancelynyrd
-    // ActivityService.instance.onPostUpdate(updatedPost);
+    /// log post update
+    activityLogPostUpdate(postId: id);
 
     return updatedPost;
   }
@@ -232,8 +233,8 @@ class Post {
       },
     );
 
-    /// TODO @lancelynyrd
-    // ActivityService.instance.onPostDelete(this);
+    /// log post delete
+    activityLogPostDelete(postId: id);
   }
 
   /// Like or unline the post
@@ -256,8 +257,8 @@ class Post {
     PostService.instance.sendNotificationOnLike(this, isLiked);
     PostService.instance.onLike?.call(this, isLiked);
 
-    /// TODO @lancelynyrd
-    // ActivityService.instance.onPostLike(this, isLiked);
+    /// log post like/unlike
+    activityLogPostLike(postId: id, isLiked: isLiked);
 
     return isLiked;
   }

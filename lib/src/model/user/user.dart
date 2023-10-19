@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/functions/activity_log.functions.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user.g.dart';
@@ -249,9 +250,7 @@ class User {
     UserService.instance.onCreate?.call(createdUser);
 
     /// log new user
-    ///
-    /// TODO @lancelynyrd
-    // ActivityService.instance.onUserCreate(createdUser);
+    activityLogUserCreate();
 
     return createdUser;
   }
@@ -417,8 +416,8 @@ class User {
       isFollow = true;
     }
 
-    /// TODO @lancelynyrd
-    // ActivityService.instance.onUserFollow(otherUid, isFollow);
+    /// log user follow/unfollow
+    activityLogUserFollow(otherUid: otherUid, isFollow: isFollow);
 
     return isFollow;
   }
@@ -438,8 +437,9 @@ class User {
     UserService.instance.sendNotificationOnLike(this, isLiked);
     UserService.instance.onLike?.call(this, isLiked);
 
-    /// TODO @lancelynyrd
-    // ActivityService.instance.onUserLike(uid, isLiked);
+    /// log user like/unlike
+    activityLogUserLike(otherUid: uid, isLiked: isLiked);
+
     return isLiked;
   }
 

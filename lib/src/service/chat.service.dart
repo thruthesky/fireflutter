@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/functions/activity_log.functions.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -415,8 +416,8 @@ class ChatService {
 
     log('---> showChatRoom: room: $room, user: $user');
 
-    /// TODO @lancelynyrd
-    // ActivityService.instance.onChatRoomOpened(room, user);
+    /// log chat open
+    activityLogChatOpen(roomId: room!.roomId);
 
     if (context.mounted) {
       if (customize.showChatRoom != null) {

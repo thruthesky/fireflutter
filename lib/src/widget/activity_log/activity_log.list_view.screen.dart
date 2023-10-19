@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/model/activity_log/activity_log.dart';
+import 'package:fireflutter/src/model/activity_log/log_type.dart';
 import 'package:flutter/material.dart';
 
 class ActivityListViewScreen extends StatefulWidget {
@@ -12,11 +14,11 @@ class ActivityListViewScreen extends StatefulWidget {
 
 class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
   Map<String, bool> filter = {
-    ActivityType.user.name: true,
-    ActivityType.post.name: true,
-    ActivityType.comment.name: true,
-    ActivityType.chat.name: true,
-    ActivityType.feed.name: true,
+    Log.type.user: true,
+    Log.type.post: true,
+    Log.type.comment: true,
+    Log.type.chat: true,
+    Log.type.feed: true,
   };
 
   get query {
@@ -57,56 +59,39 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
         key: const Key('AdminActivityLogListView'),
         query: query,
         itemBuilder: (context, snapshot) {
-          /// TODO @lancelynyrd - activity log
-          return const Text('// TODO @lancelynyrd - activity log');
-          // final activity = Activity.fromDocumentSnapshot(snapshot);
+          final activity = ActivityLog.fromDocumentSnapshot(snapshot);
 
-          // if (activity.type == ActivityType.user.name && filter[ActivityType.user.name] == false) {
-          //   return const SizedBox.shrink();
-          // }
-          // if (activity.type == ActivityType.post.name && filter[ActivityType.post.name] == false) {
-          //   return const SizedBox.shrink();
-          // }
-          // if (activity.type == ActivityType.comment.name && filter[ActivityType.comment.name] == false) {
-          //   return const SizedBox.shrink();
-          // }
-          // if (activity.type == ActivityType.chat.name && filter[ActivityType.chat.name] == false) {
-          //   return const SizedBox.shrink();
-          // }
-          // if (activity.type == ActivityType.feed.name && filter[ActivityType.feed.name] == false) {
-          //   return const SizedBox.shrink();
-          // }
-          // return ListTile(
-          //   key: Key(activity.id),
-          //   title: FutureBuilder(
-          //     future: activity.getMessage,
-          //     builder: (c, s) {
-          //       if (s.hasError) {
-          //         return const Center(child: Text('Something went wrong.'));
-          //       }
-          //       if (s.connectionState == ConnectionState.waiting) {
-          //         return const Center(child: CircularProgressIndicator.adaptive());
-          //       }
-          //       return Text(s.data!);
-          //     },
-          //   ),
-          //   subtitle: Text('${dateTimeAgo(activity.createdAt)}:: id: ${activity.id}'),
-          //   onTap: () {
-          //     if (activity.type == ActivityType.user.name) {
-          //       UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
-          //     }
-          //     if (activity.type == ActivityType.post.name || activity.type == ActivityType.comment.name) {
-          //       PostService.instance.showPostViewScreen(context: context, postId: activity.postId);
-          //     }
+          return ListTile(
+            key: Key(activity.id),
+            title: FutureBuilder(
+              future: activity.getMessage,
+              builder: (c, s) {
+                if (s.hasError) {
+                  return const Center(child: Text('Something went wrong.'));
+                }
+                if (s.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator.adaptive());
+                }
+                return Text(s.data!);
+              },
+            ),
+            subtitle: Text('${dateTimeAgo(activity.createdAt)}:: id: ${activity.id}'),
+            onTap: () {
+              if (activity.type == Log.type.user) {
+                UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
+              }
+              if (activity.type == Log.type.post || activity.type == Log.type.comment) {
+                PostService.instance.showPostViewScreen(context: context, postId: activity.postId);
+              }
 
-          //     if (activity.type == ActivityType.chat.name) {
-          //       UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
-          //     }
-          //     if (activity.type == ActivityType.feed.name) {
-          //       UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
-          //     }
-          //   },
-          // );
+              if (activity.type == Log.type.chat) {
+                UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
+              }
+              if (activity.type == Log.type.feed) {
+                UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
+              }
+            },
+          );
         },
       ),
     );
@@ -165,33 +150,33 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
                 ],
               ),
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  ...ActivityType.values
-                      .map(
-                        (t) => InkWell(
-                          onTap: () => setState(() {
-                            filter[t.name] = !filter[t.name]!;
-                          }),
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                value: filter[t.name],
-                                onChanged: (b) => setState(() {
-                                  filter[t.name] = b!;
-                                }),
-                              ),
-                              Text(t.name),
-                            ],
-                          ),
-                        ),
-                      )
-                      .toList(),
-                ],
-              ),
-            )
+            // SingleChildScrollView(
+            //   scrollDirection: Axis.horizontal,
+            //   child: Row(
+            //     children: [
+            //       ...Log.type
+            //           .map(
+            //             (t) => InkWell(
+            //               onTap: () => setState(() {
+            //                 filter[t.name] = !filter[t.name]!;
+            //               }),
+            //               child: Row(
+            //                 children: [
+            //                   Checkbox(
+            //                     value: filter[t.name],
+            //                     onChanged: (b) => setState(() {
+            //                       filter[t.name] = b!;
+            //                     }),
+            //                   ),
+            //                   Text(t.name),
+            //                 ],
+            //               ),
+            //             ),
+            //           )
+            //           .toList(),
+            //     ],
+            //   ),
+            // )
           ],
         ),
       );

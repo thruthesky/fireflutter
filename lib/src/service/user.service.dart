@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/functions/activity_log.functions.dart';
 import 'package:fireflutter/src/widget/user/profile_followers.screen.dart';
 import 'package:fireflutter/src/widget/user/profile_following.screen.dart';
 import 'package:flutter/material.dart';
@@ -301,8 +302,7 @@ class UserService {
     dog('UserService.instance.signOut() - User signing out: ${auth.FirebaseAuth.instance.currentUser!.uid}');
 
     if (my != null) {
-      /// TODO @lancelynyrd - activity log
-      // ActivityService.instance.onSignout(my!);
+      await activityLogSignout();
       await onSignout?.call(my!);
     }
     await auth.FirebaseAuth.instance.signOut();
@@ -419,8 +419,8 @@ class UserService {
       }
     }
 
-    /// TODO @lancelynyrd - activity log
-    // ActivityService.instance.onUserViewedProfile(otherUid, user);
+    /// log when user visit other user profile
+    activityLogUserViewProfile(otherUid: otherUid);
 
     return customize.showPublicProfileScreen?.call(context, uid: uid, user: user) ??
         showGeneralDialog(
