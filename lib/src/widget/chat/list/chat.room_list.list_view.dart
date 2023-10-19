@@ -42,6 +42,7 @@ class ChatRoomListView extends StatefulWidget {
     this.orderBy = 'lastMessage.createdAt',
     this.descending = true,
     this.itemBuilder,
+    this.blockedBuilder,
     this.emptyBuilder,
     this.pageSize = 20,
     this.scrollController,
@@ -68,8 +69,18 @@ class ChatRoomListView extends StatefulWidget {
   final String orderBy;
   final bool descending;
   final int pageSize;
-  final Widget Function(BuildContext, Room)? itemBuilder;
-  final Widget Function(BuildContext)? emptyBuilder;
+
+  /// [itemBuilder] is used to build each item of the list.
+  final Widget Function(BuildContext context, Room room)? itemBuilder;
+
+  /// [blockedBuilder] is used to show when you have blocked the user in a single chat room.
+  /// group chat rooms will not be affected.
+  /// by default, it will use simply itemBuilder.
+  final Widget Function(BuildContext context, Room room)? blockedBuilder;
+
+  /// [emptyBuilder] is used to show when there is no chat room.
+  /// meaning no result from the query.
+  final Widget Function(BuildContext context)? emptyBuilder;
   final ScrollController? scrollController;
   final bool? primary;
   final ScrollPhysics? physics;
@@ -143,40 +154,15 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
     if (loggedIn == false) {
       return Center(child: Text(tr.loginFirstMessage));
     }
-
     return FirestoreListView(
       query: query,
       itemExtent: widget.itemExtent,
       itemBuilder: (context, QueryDocumentSnapshot snapshot) {
         final room = Room.fromDocumentSnapshot(snapshot);
-
         if (widget.visibility != null && widget.visibility!(room) == false) {
           return const SizedBox();
         }
-        if (widget.itemBuilder != null) {
-          return widget.itemBuilder!(context, room);
-        } else {
-          return room.isSingleChat
-              // Kindly review
-              // for issue https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=40781402
-              ? UserBlocked(
-                  otherUid: room.otherUserUid,
-                  blockedBuilder: (context) {
-                    return const Text("*** Blocked ***");
-                  },
-                  notBlockedBuilder: (context) {
-                    return ChatRoomListTile(
-                      key: ValueKey(room.roomId),
-                      room: room,
-                      avatarSize: widget.avatarSize,
-                      onTap: () {
-                        widget.onTap?.call(room) ?? ChatService.instance.showChatRoom(context: context, room: room);
-                      },
-                    );
-                  },
-                )
-              : chatRoomListTile(room, context);
-        }
+        return _chatRoomListItem(room, context);
       },
       emptyBuilder: (context) {
         if (widget.emptyBuilder != null) {
@@ -203,7 +189,27 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
     );
   }
 
-  ChatRoomListTile chatRoomListTile(Room room, BuildContext context) {
+  /// Chat room list item
+  /// Return chat room list tile by default.
+  /// If [blockedBuilder] is set, it will use [blockedBuilder] to build the list tile.
+  /// If [blockedBuilder] is not set, it will use [itemBuilder] to build the list tile.
+  /// If [itemBuilder] is set, it will use defaultChatRoomListTile [itemBuilder] to build the list tile.
+  Widget _chatRoomListItem(Room room, BuildContext context) {
+    return room.isSingleChat
+        ? UserBlocked(
+            otherUid: room.otherUserUid,
+            blockedBuilder: (context) {
+              return widget.blockedBuilder?.call(context, room) ?? _defaultChatRoomListTile(room, context);
+            },
+            notBlockedBuilder: (context) {
+              return widget.itemBuilder?.call(context, room) ?? _defaultChatRoomListTile(room, context);
+            },
+          )
+        : _defaultChatRoomListTile(room, context);
+  }
+
+  /// Default chat room list tile
+  ChatRoomListTile _defaultChatRoomListTile(Room room, BuildContext context) {
     return ChatRoomListTile(
       key: ValueKey(room.roomId),
       room: room,
