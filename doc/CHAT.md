@@ -34,9 +34,11 @@
 # Chat
 
 ## Overview
+
 Fireflutter offers a chat feature for your app. You can simply display a Chat room using a builder and just pass the data into its children, especially on Widgets. 
  
 ## ChatService
+
 You can use `ChatService` to enable chat features of the app or even customize the widget builder.
 
 Here is a few example:
@@ -56,13 +58,16 @@ service.getOrCreateSingleChatRoom(uid); // returns Future<Room>
 service.sendMessage(room: room, text: message); // returns Future<void>
 ```
 ### Open chat room
+
 Use the `showChatRoom` method anywhere with user model. 
 
   **1:1 Chat Rom** 
+
 ```dart
 ChatService.instance.showChatroom(context:context, room:room);
 ```
 **Group Chat Room**
+
 ```dart
 ChatService.instance.showChatRoom(context: context, user: user);
 ```
@@ -83,6 +88,7 @@ IconButton(
 )
 ```
 ### Chat Room Dialog.
+
 You can use dialog builders so you can open pages immediately.
 ```dart
 Scaffold(
@@ -214,6 +220,7 @@ Scaffold(
   - Then, pass the chat room model into the chat room (or you can compose a chat room manually with the chat room model.)
 
 ### Test UI Chat room screen
+
 Follow this to test your Chat Room Screen UI. Modify this depends on your needs.
 ```dart
 
@@ -238,6 +245,7 @@ Follow this to test your Chat Room Screen UI. Modify this depends on your needs.
     });
 ```
 #### Chat Room field
+
 ```dart
 Room(
   roomId: String,

@@ -149,6 +149,7 @@ Scaffold(
 **_Note:_** Admins will automatically send a welcome message when `UserService.instance.sendWelcomeMessage(message: 'Welcome!')` is being used.
 
 ## How to build a forum app
+
 ### initState
 
 ```dart
