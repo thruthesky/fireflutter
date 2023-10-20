@@ -129,7 +129,7 @@ class User {
                 ? firstName
                 : lastName.isNotEmpty
                     ? lastName
-                    : 'No nmae';
+                    : 'No name';
   }
 
   User({

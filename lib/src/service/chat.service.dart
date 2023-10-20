@@ -417,7 +417,7 @@ class ChatService {
     log('---> showChatRoom: room: $room, user: $user');
 
     /// log chat open
-    activityLogChatOpen(roomId: room!.roomId);
+    activityLogChatOpen(roomId: room?.roomId, otherUid: user?.uid);
 
     if (context.mounted) {
       if (customize.showChatRoom != null) {

@@ -184,7 +184,7 @@ Future<DocumentReference?> activityLogCommentLike({
 
 /// *********** Chat Activity Log ***********
 
-Future<DocumentReference?> activityLogChatOpen({required String roomId}) {
+Future<DocumentReference?> activityLogChatOpen({String? roomId, String? otherUid}) {
   return activityLog(
     roomId: roomId,
     type: Log.type.chat,
