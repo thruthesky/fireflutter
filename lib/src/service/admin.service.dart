@@ -45,17 +45,19 @@ class AdminService {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: sizeSm),
                   child: TextField(
-                    controller: input,
-                    decoration: InputDecoration(
-                      label: const Text('Search'),
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {});
-                        },
-                        icon: const Icon(Icons.send),
+                      controller: input,
+                      decoration: InputDecoration(
+                        label: const Text('Search'),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {});
+                          },
+                          icon: const Icon(Icons.send),
+                        ),
                       ),
-                    ),
-                  ),
+                      onSubmitted: (v) {
+                        setState(() {});
+                      }),
                 ),
               ),
             ),

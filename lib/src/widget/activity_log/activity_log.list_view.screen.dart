@@ -70,7 +70,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
                   return const Center(child: Text('Something went wrong.'));
                 }
                 if (s.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator.adaptive());
+                  return const SizedBox.shrink();
                 }
                 return Text(s.data!);
               },
