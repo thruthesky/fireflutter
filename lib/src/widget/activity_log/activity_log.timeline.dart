@@ -11,9 +11,13 @@ class ActivityLogTimeLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (activity.type == Log.type.user) {
-      return ActivityLogTimeLineUser(activity: activity);
+      return ActivityLogTimeLineUser(key: key, activity: activity);
+      // } else if( activity.type == Log.type.post) {
+      //   return ActivityLogTimeLinePost(activity: activity);
+      // } else if (activity.type == Log.type.comment) {
+      //   return ActivityLogTimeLineComment(activity: activity);
     } else {
-      return const Text('Unknown acitivyt');
+      return const SizedBox.shrink(); //Text('Unknown acitivyt');
       // return ActivityLogTimeLineUnknown(activity: activity);
     }
   }

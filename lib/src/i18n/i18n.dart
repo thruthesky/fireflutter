@@ -69,6 +69,18 @@ class I18nTexts {
   String profile;
   String createChatRoom;
 
+  String startAppLog;
+  String signinLog;
+  String signoutLog;
+  String resignLog;
+  String createUserLog;
+  String updateUserLog;
+  String likedUserLog;
+  String unlikedUserLog;
+  String followedUserLog;
+  String unfollowedUserLog;
+  String viewProfileUserLog;
+
   I18nTexts({
     this.loginFirstTitle = 'Login first',
     this.loginFirstMessage = 'Please login first.',
@@ -129,6 +141,19 @@ class I18nTexts {
     this.home = "Home",
     this.profile = "Profile",
     this.createChatRoom = "Create chat room",
+
+    /// activity_log
+    this.startAppLog = "#a started the app",
+    this.signinLog = "#a signed in",
+    this.signoutLog = "#a signed out",
+    this.resignLog = "#a resigned",
+    this.createUserLog = "#a created an account",
+    this.updateUserLog = "#a updated profile",
+    this.likedUserLog = "#a liked #b",
+    this.unlikedUserLog = "#a unliked #b",
+    this.followedUserLog = "#a followed #b",
+    this.unfollowedUserLog = "#a unfollowed #b",
+    this.viewProfileUserLog = "#a viewed #b's profile",
   });
 
   factory I18nTexts.fromJson(Map<String, dynamic> json) => _$I18nTextsFromJson(json);

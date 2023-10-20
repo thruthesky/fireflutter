@@ -53,7 +53,7 @@ class _UserDisplayNameState extends State<UserDisplayName> {
       return const SizedBox.shrink();
     }
 
-    String displayName = user!.displayName.isEmpty ? user!.name : user!.displayName;
+    String displayName = user!.getDisplayName;
     if (my?.hasBlocked(user!.uid) ?? false) {
       displayName = 'blocked';
     }

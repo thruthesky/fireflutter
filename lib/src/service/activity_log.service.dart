@@ -11,6 +11,8 @@ class ActivityLogService {
 
   late List<String> adminListViewOptions;
 
+  ActivityLogCustomize customize = ActivityLogCustomize();
+
   init({
     List<String> adminListViewOptions = const ['user', 'post', 'comment'],
     enableActivityLog = false,

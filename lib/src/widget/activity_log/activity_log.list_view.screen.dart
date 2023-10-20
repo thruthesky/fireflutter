@@ -60,7 +60,10 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
         itemBuilder: (context, snapshot) {
           final activity = ActivityLog.fromDocumentSnapshot(snapshot);
 
-          return ActivityLogTimeLine(activity: activity);
+          return ActivityLogTimeLine(
+            key: Key(activity.id),
+            activity: activity,
+          );
         },
       ),
     );

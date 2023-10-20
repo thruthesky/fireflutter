@@ -25,3 +25,4 @@ export 'service/storage.customize.dart';
 export 'service/comment.customize.dart';
 
 export 'service/activity_log.service.dart';
+export 'service/activity_log.customize.dart';
