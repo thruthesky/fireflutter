@@ -48,6 +48,7 @@ class I18nTexts {
   String noChatRooms;
   String follow;
   String unfollow;
+  String whoFollowedWho;
   String followMessage;
   String unfollowMessage;
   String noStateMessage;
@@ -73,8 +74,7 @@ class I18nTexts {
     this.loginFirstMessage = 'Please login first.',
     this.noOfChatRooms = 'No chat rooms, yet. Create one!',
     this.roomMenu = 'Chat Room Menu',
-    this.chatRoomCreateDialog =
-        'New chat room created. You can invite more users. Enjoy chatting!',
+    this.chatRoomCreateDialog = 'New chat room created. You can invite more users. Enjoy chatting!',
     this.chooseUploadFrom = "Choose upload from...",
     this.noCategory = "No category, yet. Create one!",
     this.noPost = "No post yet. Create one!",
@@ -113,6 +113,7 @@ class I18nTexts {
     this.noChatRooms = "No chat rooms, yet. Create one!",
     this.follow = "Follow",
     this.unfollow = "Unfollow",
+    this.whoFollowedWho = "#a followed #b",
     this.followMessage = "You are following this user.",
     this.unfollowMessage = "You are not following this user anymore.",
     this.noStateMessage = "No state message, yet. Create one!",
@@ -124,15 +125,13 @@ class I18nTexts {
     this.readMore = "Read more",
     this.noOfLikes = "Likes #no",
     this.share = "Share",
-    this.loginFirstToUseCompleteFunctionality =
-        "Login first to use the complete functionality.",
+    this.loginFirstToUseCompleteFunctionality = "Login first to use the complete functionality.",
     this.home = "Home",
     this.profile = "Profile",
     this.createChatRoom = "Create chat room",
   });
 
-  factory I18nTexts.fromJson(Map<String, dynamic> json) =>
-      _$I18nTextsFromJson(json);
+  factory I18nTexts.fromJson(Map<String, dynamic> json) => _$I18nTextsFromJson(json);
 
   Map<String, dynamic> toJson() => _$I18nTextsToJson(this);
 }

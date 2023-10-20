@@ -490,11 +490,15 @@ See [WIDGETS.md](doc/WIDGETS.md) for more widget example.
 
 Fireflutter updates in real time no matter what users do. Here are common uses of widgets and builders of each features.
 
+
 ## User
+
 
 See [USER.md](doc/USER.md) for details.
 
+
 ## Admin
+
 
 See [ADMIN.md](doc/ADMIN.md) for details.
 
@@ -553,6 +557,8 @@ See [FUNCTIONS.md](doc/FUNCTIONS.md) for details.
 ## Widgets
 
 See [WIDGETS.md](doc/WIDGETS.md) for details.
+
+
 
 # Push notifications
 

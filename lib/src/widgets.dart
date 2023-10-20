@@ -126,3 +126,5 @@ export 'widget/setting/push_notification.setting.screen.dart';
 export 'widget/activity_log/activity_log.list_view.screen.dart';
 
 export 'widget/common/display_uploaded_file.dart';
+export 'widget/activity_log/activity_log.timeline.dart';
+export 'widget/activity_log/activity_log.timeline.user.dart';

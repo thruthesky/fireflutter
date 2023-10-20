@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/model/activity_log/activity_log.dart';
-import 'package:fireflutter/src/model/activity_log/log_type.dart';
+import 'package:fireflutter/src/model/activity_log/activity_log.type.dart';
 
 /// Alias of [ActivityLog.create()]
 ///
@@ -189,16 +189,6 @@ Future<DocumentReference?> activityLogChatOpen({required String roomId}) {
     roomId: roomId,
     type: Log.type.chat,
     action: Log.chat.open,
-  );
-}
-
-/// *********** Feed Activity Log ***********
-
-Future<DocumentReference?> activityLogFeedFollow({required String otherUid, required bool isFollow}) {
-  return activityLog(
-    otherUid: otherUid,
-    type: Log.type.feed,
-    action: isFollow == true ? Log.feed.follow : Log.feed.unfollow,
   );
 }
 

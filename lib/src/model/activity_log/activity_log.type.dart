@@ -4,7 +4,6 @@ class Log {
   static final post = ActivityLogPostAction();
   static final comment = ActivityLogCommentAction();
   static final chat = ActivityLogChatAction();
-  static final feed = ActivityLogFeedAction();
 }
 
 class ActivityLogType {
@@ -50,9 +49,4 @@ class ActivityLogCommentAction {
 
 class ActivityLogChatAction {
   final String open = 'open';
-}
-
-class ActivityLogFeedAction {
-  final String follow = 'follow';
-  final String unfollow = 'unfollow';
 }

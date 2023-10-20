@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/model/activity_log/activity_log.dart';
-import 'package:fireflutter/src/model/activity_log/log_type.dart';
 import 'package:flutter/material.dart';
 
 class ActivityListViewScreen extends StatefulWidget {
@@ -13,13 +12,13 @@ class ActivityListViewScreen extends StatefulWidget {
 }
 
 class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
-  Map<String, bool> filter = {
-    Log.type.user: true,
-    Log.type.post: true,
-    Log.type.comment: true,
-    Log.type.chat: true,
-    Log.type.feed: true,
-  };
+  // Map<String, bool> filter = {
+  //   Log.type.user: true,
+  //   Log.type.post: true,
+  //   Log.type.comment: true,
+  //   Log.type.chat: true,
+  //   Log.type.feed: true,
+  // };
 
   get query {
     Query q = activityLogCol.orderBy('createdAt', descending: true);
@@ -27,8 +26,8 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
     if (search.text.isNotEmpty) {
       q = q.where('uid', isEqualTo: search.text);
     }
-    dog('filter: $filter');
-    dog(filter.entries.where((e) => e.value).map((e) => e.key).toList().toString());
+    // dog('filter: $filter');
+    // dog(filter.entries.where((e) => e.value).map((e) => e.key).toList().toString());
     // q.where('type', whereIn: filter.entries.where((e) => e.value).map((e) => e.key).toList());
 
     return q;
@@ -61,37 +60,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
         itemBuilder: (context, snapshot) {
           final activity = ActivityLog.fromDocumentSnapshot(snapshot);
 
-          return ListTile(
-            key: Key(activity.id),
-            title: FutureBuilder(
-              future: activity.getMessage,
-              builder: (c, s) {
-                if (s.hasError) {
-                  return const Center(child: Text('Something went wrong.'));
-                }
-                if (s.connectionState == ConnectionState.waiting) {
-                  return const SizedBox.shrink();
-                }
-                return Text(s.data!);
-              },
-            ),
-            subtitle: Text('${dateTimeAgo(activity.createdAt)}:: id: ${activity.id}'),
-            onTap: () {
-              if (activity.type == Log.type.user) {
-                UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
-              }
-              if (activity.type == Log.type.post || activity.type == Log.type.comment) {
-                PostService.instance.showPostViewScreen(context: context, postId: activity.postId);
-              }
-
-              if (activity.type == Log.type.chat) {
-                UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
-              }
-              if (activity.type == Log.type.feed) {
-                UserService.instance.showPublicProfileScreen(context: context, uid: activity.uid);
-              }
-            },
-          );
+          return ActivityLogTimeLine(activity: activity);
         },
       ),
     );

@@ -118,12 +118,18 @@ class User {
 
   final List<String> blockedUsers;
 
+  /// Returns the user's display name. If the display name is empty, it will
+  /// return the name. If the name is empty, it will return the uid.
   String get getDisplayName {
     return displayName.isNotEmpty
         ? displayName
         : name.isNotEmpty
             ? name
-            : uid;
+            : firstName.isNotEmpty
+                ? firstName
+                : lastName.isNotEmpty
+                    ? lastName
+                    : 'No nmae';
   }
 
   User({

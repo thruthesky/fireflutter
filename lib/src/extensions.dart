@@ -7,8 +7,7 @@ extension FireFlutterStringExtension on String {
     return double.parse(this);
   }
 
-  bool get isEmail =>
-      RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(this);
+  bool get isEmail => RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(this);
 
   /// Return value if the current string is empty.
   ///
@@ -30,5 +29,14 @@ extension FireFlutterStringExtension on String {
     u = u.replaceFirst(RegExp(".PNG", caseSensitive: false), "_200x200.webp");
 
     return u;
+  }
+
+  /// Replace all the string of the map.
+  String replace(Map<String, String> map) {
+    String s = this;
+    map.forEach((key, value) {
+      s = s.replaceAll(key, value);
+    });
+    return s;
   }
 }
