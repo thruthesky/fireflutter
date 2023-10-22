@@ -458,55 +458,61 @@ This widget is a list view that has a `ListTile` in each item. So, it supports t
 ```dart
 UserListView(
   searchText: 'nameValue',
-  field: 'name',
 ),
 ```
 
-Example of complete code for displaying the `UserListView` in a dialog with search box
+Below is an example widget of complete code for displaying the `UserListView` with a search box. You can display it in a screen or in a dialog
 
 ```dart
-onPressed() async {
-  final user = await showGeneralDialog<User>(
-    context: context,
-    pageBuilder: (context, _, __) {
-      TextEditingController search = TextEditingController();
-      return StatefulBuilder(builder: (context, setState) {
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            title: const Text('Find friends'),
-          ),
-          body: Container(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                TextField(
-                  controller: search,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Search',
-                  ),
-                  onSubmitted: (value) => setState(() => search.text = value),
-                ),
-                Expanded(
-                  child: UserListView(
-                    key: ValueKey(search.text),
-                    searchText: search.text,
-                    field: 'name',
-                    avatarBuilder: (user) => const Text('Photo'),
-                    titleBuilder: (user) => Text(user?.uid ?? ''),
-                    subtitleBuilder: (user) => Text(user?.phoneNumber ?? ''),
-                    trailingBuilder: (user) => const Icon(Icons.add),
-                    onTap: (user) => context.pop(user),
-                  ),
-                ),
-              ],
+import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
+
+class UserSearch extends StatelessWidget {
+  UserSearch({
+    super.key,
+  });
+
+  final input = BehaviorSubject<String>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: TextField(
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Search',
             ),
+            onChanged: input.add,
+            onSubmitted: input.add,
           ),
-        );
-      });
-    },
-  );
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8, right: 8),
+            child: StreamBuilder<String>(
+                stream: input.debounceTime(const Duration(milliseconds: 500)).distinct((a, b) => a == b),
+                builder: (context, snapshot) {
+                  return UserListView(
+                    searchText: snapshot.data ?? '',
+                    titleBuilder: (user) => Text(user.firstName),
+                    subtitleBuilder: (user) => Text(
+                      user.state == '' ? '...' : user.state,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    trailingBuilder: (user) => const SizedBox.shrink(),
+                    onTap: (user) => UserService.instance.showPublicProfileScreen(context: context, user: user),
+                  );
+                }),
+          ),
+        ),
+      ],
+    );
+  }
 }
 ```
 

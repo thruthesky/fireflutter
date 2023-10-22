@@ -6,9 +6,16 @@ import 'package:flutter/material.dart';
 /// Display users who are not inside the room
 ///
 /// [searchText] Use this to search in a list of users
+///
+/// [field] is the field to be used in the search. If the value of [field]
+/// is 'name', then, it will search in the fields 'firstName', 'middleName',
+/// 'lastName', 'name', and 'displayName'.
+///
+///
 /// [exemptedUsers] Array of uids who are exempted in search results
 ///
 /// [itemBuilder] The builder when we want fully customized view per user.
+///
 ///
 class UserListView extends StatelessWidget {
   const UserListView({
@@ -20,9 +27,7 @@ class UserListView extends StatelessWidget {
     this.exemptedUsers = const [],
     this.orderBy,
     this.descending = false,
-
-    /// [field] is the field to be used in the search
-    this.field = 'displayName',
+    this.field = 'name',
     this.onTap,
     this.onLongPress,
     this.avatarBuilder,
@@ -40,13 +45,13 @@ class UserListView extends StatelessWidget {
   final bool shrinkWrap;
   final ScrollPhysics? physics;
   final String? searchText;
+  final String field;
   final Query? query;
   final List<String> exemptedUsers;
   final String? orderBy;
   final bool descending;
   final Function(User)? onTap;
   final Function(User)? onLongPress;
-  final String field;
   final Widget Function(User)? avatarBuilder;
   final Widget Function(User)? titleBuilder;
   final Widget Function(User)? subtitleBuilder;
@@ -85,6 +90,7 @@ class UserListView extends StatelessWidget {
           Filter('middleName', isEqualTo: searchText),
           Filter('lastName', isEqualTo: searchText),
           Filter('name', isEqualTo: searchText),
+          Filter('displayName', isEqualTo: searchText),
         ),
       );
     }

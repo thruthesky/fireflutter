@@ -368,6 +368,10 @@ class ChatService {
 
     // Increase the no of new message for each user in the room
 
+    // ! potential bug here @thruthesky
+    // - When users come and go, the room users change. But this room.users is not updated when the room users change.
+    // - When a user enters group chat, the group chat room document passed to messgae input box widget and it is not being updated.
+    // - Suggestions: convert firestore to rtdb for chat room and re-work.
     for (String uid in room.users) {
       if (uid == myUid) {
         noOfNewMessageRef(uid: uid).update({room.roomId: 0});
