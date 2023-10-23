@@ -12,8 +12,10 @@ class ActivityListViewScreen extends StatefulWidget {
 }
 
 class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
+  Map<String, int> cntMap = {};
+  int count = 0;
   get query {
-    Query q = activityLogCol.orderBy('createdAt', descending: true);
+    Query q = activityLogCol; //.orderBy('createdAt', descending: true);
 
     if (search.text.isNotEmpty) {
       q = q.where('uid', isEqualTo: search.text);
@@ -33,6 +35,13 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
   String searchType = 'all';
 
   @override
+  void initState() {
+    super.initState();
+
+    FirebaseFirestore.instance.collection('activity_logs').count().get().then((value) => print('count; $value'));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -50,17 +59,20 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
             },
           )
         ],
-        bottom: userSearch,
+        // bottom: userSearch,
       ),
       body: FirestoreListView(
-        pageSize: 2,
-        query: query,
+        pageSize: 20,
+        query: FirebaseFirestore.instance.collection('activity_logs'), // query,
         itemBuilder: (context, snapshot) {
           final activity = ActivityLog.fromDocumentSnapshot(snapshot);
-          dog('activity: itemBuilder.');
 
-          // dog('activity: itemBuilder. ${activity.id}}');
-          return const Text('abc');
+          cntMap[activity.id] ??= ++count;
+          // count++;
+
+          dog('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action}');
+          // print('setState(); ${activity.id}(${cntMap[activity.id]})');
+          return Text('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action}');
           // return ActivityLogTimeLine(
           //   activity: activity,
           // );
