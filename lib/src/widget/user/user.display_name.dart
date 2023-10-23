@@ -55,7 +55,7 @@ class _UserDisplayNameState extends State<UserDisplayName> {
 
     String displayName = user!.getDisplayName;
     if (my?.hasBlocked(user!.uid) ?? false) {
-      displayName = 'blocked';
+      displayName = tr.blocked;
     }
     return Text(
       displayName,

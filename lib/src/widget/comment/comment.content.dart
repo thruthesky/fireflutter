@@ -18,7 +18,7 @@ class CommentContent extends StatelessWidget {
       children: [
         // Comment Content
         Text(
-          my?.hasBlocked(comment.uid) ?? false ? 'blocked' : comment.content,
+          my?.hasBlocked(comment.uid) ?? false ? tr.blocked : comment.content,
           style: style,
         ),
       ],

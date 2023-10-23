@@ -80,7 +80,7 @@ class UserDoc extends StatelessWidget {
             if (snapshot.data == null || fa.FirebaseAuth.instance.currentUser?.uid == null) {
               return notLoggedInBuilder?.call() ?? const SizedBox.shrink();
             }
-            print("--> uid => .doc(${fa.FirebaseAuth.instance.currentUser?.uid})");
+            debugPrint("--> uid => .doc(${fa.FirebaseAuth.instance.currentUser?.uid})");
             // The user logged in.
             // Return stream builder to build the widget in real time.
             return StreamBuilder<User?>(

@@ -17,9 +17,8 @@ class PostContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Comment Content
-        // TODO tr for 'blocked'
         Text(
-          my?.hasBlocked(post.uid) ?? false ? 'blocked' : post.content,
+          my?.hasBlocked(post.uid) ?? false ? tr.blocked : post.content,
           style: style,
         ),
       ],

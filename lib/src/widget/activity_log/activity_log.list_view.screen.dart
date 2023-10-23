@@ -12,19 +12,15 @@ class ActivityListViewScreen extends StatefulWidget {
 }
 
 class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
-  // Map<String, bool> filter = {
-  //   Log.type.user: true,
-  //   Log.type.post: true,
-  //   Log.type.comment: true,
-  //   Log.type.chat: true,
-  //   Log.type.feed: true,
-  // };
-
   get query {
     Query q = activityLogCol.orderBy('createdAt', descending: true);
 
     if (search.text.isNotEmpty) {
       q = q.where('uid', isEqualTo: search.text);
+    }
+
+    if (searchType != 'all') {
+      q = q.where('type', isEqualTo: searchType);
     }
     // dog('filter: $filter');
     // dog(filter.entries.where((e) => e.value).map((e) => e.key).toList().toString());
@@ -33,7 +29,9 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
     return q;
   }
 
-  TextEditingController search = TextEditingController();
+  TextEditingController search = TextEditingController(text: '');
+  String searchType = 'all';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,15 +53,17 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
         bottom: userSearch,
       ),
       body: FirestoreListView(
-        key: const Key('AdminActivityLogListView'),
+        pageSize: 2,
         query: query,
         itemBuilder: (context, snapshot) {
           final activity = ActivityLog.fromDocumentSnapshot(snapshot);
+          dog('activity: itemBuilder.');
 
-          return ActivityLogTimeLine(
-            key: Key(activity.id),
-            activity: activity,
-          );
+          // dog('activity: itemBuilder. ${activity.id}}');
+          return const Text('abc');
+          // return ActivityLogTimeLine(
+          //   activity: activity,
+          // );
         },
       ),
     );
@@ -122,33 +122,48 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
                 ],
               ),
             ),
-            // SingleChildScrollView(
-            //   scrollDirection: Axis.horizontal,
-            //   child: Row(
-            //     children: [
-            //       ...Log.type
-            //           .map(
-            //             (t) => InkWell(
-            //               onTap: () => setState(() {
-            //                 filter[t.name] = !filter[t.name]!;
-            //               }),
-            //               child: Row(
-            //                 children: [
-            //                   Checkbox(
-            //                     value: filter[t.name],
-            //                     onChanged: (b) => setState(() {
-            //                       filter[t.name] = b!;
-            //                     }),
-            //                   ),
-            //                   Text(t.name),
-            //                 ],
-            //               ),
-            //             ),
-            //           )
-            //           .toList(),
-            //     ],
-            //   ),
-            // )
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  ...['all', ...ActivityLogService.instance.adminListViewOptions]
+                      .map(
+                        (type) => InkWell(
+                          onTap: () {
+                            setState(() {
+                              searchType = type;
+                            });
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Radio(
+                                value: type,
+                                groupValue: searchType,
+                                onChanged: (String? value) {
+                                  dog('value change $value');
+                                  if (value != null) {
+                                    setState(() {
+                                      searchType = value;
+                                    });
+                                  }
+                                },
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: sizeXs),
+                                child: Text(
+                                  type,
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ],
+              ),
+            )
           ],
         ),
       );

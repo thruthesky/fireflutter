@@ -178,7 +178,7 @@ class UserListView extends StatelessWidget {
             return itemBuilder?.call(user) ??
                 ListTile(
                   leading: UserAvatar(user: user),
-                  title: Text(user.name),
+                  title: Text(user.getDisplayName),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
                     UserService.instance.showPublicProfileScreen(context: context, user: user);

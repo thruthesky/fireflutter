@@ -60,7 +60,6 @@ class CommentListViewState extends State<CommentListView> {
           if (widget.blockedBuilder != null) {
             return widget.blockedBuilder!(context, comment);
           }
-          // TODO ongoing review - comment list
           if (widget.itemBuilder != null) {
             return widget.itemBuilder!(context, comment);
           }
