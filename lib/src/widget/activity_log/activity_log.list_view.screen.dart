@@ -29,7 +29,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
     return q;
   }
 
-  TextEditingController search = TextEditingController(text: 'abc');
+  TextEditingController search = TextEditingController(text: '');
   String searchType = 'all';
 
   @override
@@ -60,9 +60,10 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
           dog('activity: itemBuilder.');
 
           // dog('activity: itemBuilder. ${activity.id}}');
-          return ActivityLogTimeLine(
-            activity: activity,
-          );
+          return const Text('abc');
+          // return ActivityLogTimeLine(
+          //   activity: activity,
+          // );
         },
       ),
     );
