@@ -390,7 +390,10 @@ class ChatService {
   ///
   /// ! If there is no other user uid, it will return current user's uid. This is because one can chat with himself.
   String getOtherUserUid(List<String> users) {
-    final currentUserUid = FirebaseAuth.instance.currentUser!.uid;
+    final currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUserUid == null) {
+      throw Exception('Unable to get other user uid because the currentUserUid is null. User must be logged in.');
+    }
     return users.firstWhere(
       (uid) => uid != currentUserUid,
       orElse: () => currentUserUid,
