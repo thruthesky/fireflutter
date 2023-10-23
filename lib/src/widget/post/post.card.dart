@@ -287,7 +287,7 @@ class _PostCardState extends State<PostCard> {
           Container(
             padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
             color: widget.contentBackground,
-            child: Text(post.title.replaceAll("\n", " "), style: Theme.of(context).textTheme.titleMedium),
+            child: PostTitle(post: post, style: Theme.of(context).textTheme.titleMedium),
           ),
 
         /// post content
@@ -441,6 +441,7 @@ class _PostCardState extends State<PostCard> {
                       final comment = Comment.fromDocumentSnapshot(doc);
                       children.add(
                         CommentOneLineListTile(
+                          key: ValueKey(comment.id),
                           padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
                           contentMargin: const EdgeInsets.only(bottom: 8),
                           contentBorderRadius: const BorderRadius.all(Radius.circular(8)),

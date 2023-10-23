@@ -28,8 +28,7 @@ class ProfileFollowers extends StatelessWidget {
                     final blocked = await toggle(pathBlock(user.uid));
                     toast(
                         title: blocked ? 'Blocked' : 'Unblocked',
-                        message:
-                            '${user.name} has been ${blocked ? 'blocked' : 'unblocked'}.');
+                        message: '${user.name} has been ${blocked ? 'blocked' : 'unblocked'}.');
                   },
                   icon: const FaIcon(FontAwesomeIcons.ban),
                 ),
