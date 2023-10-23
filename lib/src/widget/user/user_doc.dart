@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fa;
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
@@ -75,13 +76,19 @@ class UserDoc extends StatelessWidget {
               return Text('Something went wrong - ${snapshot.error}');
             }
             // Login process has binished, but the user didn't logged in.
-            if (snapshot.data == null) {
+            // TODO - Critical !! - Adding [fa.FirebaseAuth.instance.currentUser?.uid == null] will affect the logic?
+            if (snapshot.data == null || fa.FirebaseAuth.instance.currentUser?.uid == null) {
               return notLoggedInBuilder?.call() ?? const SizedBox.shrink();
             }
+            print("--> uid => .doc(${fa.FirebaseAuth.instance.currentUser?.uid})");
             // The user logged in.
             // Return stream builder to build the widget in real time.
             return StreamBuilder<User?>(
-              stream: UserService.instance.snapshot,
+              stream: FirebaseFirestore.instance
+                  .collection(userCollectionName)
+                  .doc(fa.FirebaseAuth.instance.currentUser!.uid)
+                  .snapshots()
+                  .map((DocumentSnapshot doc) => doc.exists ? User.fromDocumentSnapshot(doc) : null),
               builder: buildStreamWidget,
             );
           },

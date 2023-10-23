@@ -40,6 +40,8 @@ bool get isAnonymous => auth.FirebaseAuth.instance.currentUser?.isAnonymous ?? f
 /// Return true if the user signed with real account. Not anonymous.
 bool get notLoggedIn => isAnonymous || auth.FirebaseAuth.instance.currentUser == null;
 
+/// Return true if the user has logged in with Firebase auth(Not anonymous).
+/// It will return true even if the user document is not ready, yet.
 bool get loggedIn => !notLoggedIn;
 
 /// Use this to check if the user document is ready.

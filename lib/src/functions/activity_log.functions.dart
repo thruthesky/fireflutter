@@ -15,6 +15,7 @@ Future<DocumentReference?> activityLog({
   required String action,
 }) async {
   if (ActivityLogService.instance.enableActivityLog == false) return null;
+  if (loggedIn == false) return null;
   return await ActivityLog.create(
     otherUid: otherUid,
     postId: postId,
