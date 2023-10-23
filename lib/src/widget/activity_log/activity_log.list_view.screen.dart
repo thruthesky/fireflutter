@@ -18,6 +18,10 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
     if (search.text.isNotEmpty) {
       q = q.where('uid', isEqualTo: search.text);
     }
+
+    if (searchType != 'all') {
+      q = q.where('type', isEqualTo: searchType);
+    }
     // dog('filter: $filter');
     // dog(filter.entries.where((e) => e.value).map((e) => e.key).toList().toString());
     // q.where('type', whereIn: filter.entries.where((e) => e.value).map((e) => e.key).toList());
@@ -25,7 +29,9 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
     return q;
   }
 
-  TextEditingController search = TextEditingController();
+  TextEditingController search = TextEditingController(text: 'abc');
+  String searchType = 'all';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,8 +53,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
         bottom: userSearch,
       ),
       body: FirestoreListView(
-        pageSize: 3,
-        key: const Key('AdminActivityLogListView'),
+        pageSize: 2,
         query: query,
         itemBuilder: (context, snapshot) {
           final activity = ActivityLog.fromDocumentSnapshot(snapshot);
@@ -56,7 +61,6 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
 
           // dog('activity: itemBuilder. ${activity.id}}');
           return ActivityLogTimeLine(
-            key: Key(activity.id),
             activity: activity,
           );
         },
@@ -65,7 +69,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
   }
 
   PreferredSize get userSearch => PreferredSize(
-        preferredSize: const Size.fromHeight(72),
+        preferredSize: const Size.fromHeight(90),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -117,34 +121,48 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: sizeXs),
-            // SingleChildScrollView(
-            //   scrollDirection: Axis.horizontal,
-            //   child: Row(
-            //     children: [
-            //       ...Log.type
-            //           .map(
-            //             (t) => InkWell(
-            //               onTap: () => setState(() {
-            //                 filter[t.name] = !filter[t.name]!;
-            //               }),
-            //               child: Row(
-            //                 children: [
-            //                   Checkbox(
-            //                     value: filter[t.name],
-            //                     onChanged: (b) => setState(() {
-            //                       filter[t.name] = b!;
-            //                     }),
-            //                   ),
-            //                   Text(t.name),
-            //                 ],
-            //               ),
-            //             ),
-            //           )
-            //           .toList(),
-            //     ],
-            //   ),
-            // )
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  ...['all', ...ActivityLogService.instance.adminListViewOptions]
+                      .map(
+                        (type) => InkWell(
+                          onTap: () {
+                            setState(() {
+                              searchType = type;
+                            });
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Radio(
+                                value: type,
+                                groupValue: searchType,
+                                onChanged: (String? value) {
+                                  dog('value change $value');
+                                  if (value != null) {
+                                    setState(() {
+                                      searchType = value;
+                                    });
+                                  }
+                                },
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: sizeXs),
+                                child: Text(
+                                  type,
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ],
+              ),
+            )
           ],
         ),
       );
