@@ -12,14 +12,6 @@ class ActivityListViewScreen extends StatefulWidget {
 }
 
 class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
-  // Map<String, bool> filter = {
-  //   Log.type.user: true,
-  //   Log.type.post: true,
-  //   Log.type.comment: true,
-  //   Log.type.chat: true,
-  //   Log.type.feed: true,
-  // };
-
   get query {
     Query q = activityLogCol.orderBy('createdAt', descending: true);
 
@@ -55,11 +47,14 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
         bottom: userSearch,
       ),
       body: FirestoreListView(
+        pageSize: 3,
         key: const Key('AdminActivityLogListView'),
         query: query,
         itemBuilder: (context, snapshot) {
           final activity = ActivityLog.fromDocumentSnapshot(snapshot);
+          dog('activity: itemBuilder.');
 
+          // dog('activity: itemBuilder. ${activity.id}}');
           return ActivityLogTimeLine(
             key: Key(activity.id),
             activity: activity,
@@ -70,7 +65,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
   }
 
   PreferredSize get userSearch => PreferredSize(
-        preferredSize: const Size.fromHeight(90),
+        preferredSize: const Size.fromHeight(72),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -122,6 +117,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
                 ],
               ),
             ),
+            const SizedBox(height: sizeXs),
             // SingleChildScrollView(
             //   scrollDirection: Axis.horizontal,
             //   child: Row(

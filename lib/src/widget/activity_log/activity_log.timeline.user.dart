@@ -89,16 +89,23 @@ class ActivityLogTimeLineUser extends StatelessWidget {
                     Row(
                       children: [
                         UserAvatar(user: actor),
-                        const Text(' -> '),
-                        UserAvatar(user: target),
+                        const SizedBox(width: 8),
+                        Text(
+                          getMessage(activity, actor, target),
+                        ),
                       ],
                     ),
                     Text(
-                      getMessage(activity, actor, target),
-                    ),
-                    Text(
                       dateTimeAgo(activity.createdAt),
-                    )
+                    ),
+                    ListTile(
+                      visualDensity: VisualDensity.compact,
+                      leading: UserAvatar(user: target),
+                      title: Text(target.getDisplayName),
+                      onTap: () {
+                        UserService.instance.showPublicProfileScreen(context: context, user: target);
+                      },
+                    ),
                   ],
                 );
               },
