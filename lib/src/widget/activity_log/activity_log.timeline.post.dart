@@ -8,79 +8,54 @@ class ActivityLogTimeLinePost extends StatelessWidget {
 
   final ActivityLog activity;
 
-  ActivityLogPostAction get logPostAction => Log.post;
-
   @override
   Widget build(BuildContext context) {
-    // if (ActivityLogService.instance.customize.activityLogTimelinePostBuilder != null) {
-    //   return ActivityLogService.instance.customize.activityLogTimelinePostBuilder!.call(activity);
-    // }
-
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: UserDoc(
-        uid: activity.uid,
-        onLoading: const SizedBox.shrink(),
-        builder: (actor) {
-          if ([
-            logPostAction.create,
-            logPostAction.update,
-            logPostAction.delete,
-          ].contains(activity.action)) {
-            return Row(
-              children: [
-                UserAvatar(user: actor),
-                Text(
-                  tr.startAppLog.replace(
-                    {
-                      '#a': actor.getDisplayName,
-                    },
-                  ),
-                ),
-              ],
-            );
-          }
-
-          if ([
-            logPostAction.like,
-            logPostAction.unlike,
-          ].contains(activity.action)) {
+      child: PostDoc(
+          key: Key(activity.postId!),
+          postId: activity.postId,
+          builder: (Post post) {
             return UserDoc(
-              uid: activity.otherUid,
-              onLoading: const SizedBox.shrink(),
-              builder: (target) {
+              uid: activity.uid,
+              builder: (actor) {
                 return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
                         UserAvatar(user: actor),
-                        const Text(' -> '),
-                        UserAvatar(user: target),
+                        const SizedBox(width: 8),
+                        if (activity.action == Log.post.create)
+                          Text(tr.createPostLog.replace({
+                            '#a': actor.getDisplayName,
+                          })),
+                        if (activity.action == Log.post.update)
+                          Text(tr.updatePostLog.replace({
+                            '#a': actor.getDisplayName,
+                          })),
+                        if (activity.action == Log.post.delete)
+                          Text(tr.deletePostLog.replace({
+                            '#a': actor.getDisplayName,
+                          })),
+                        if (activity.action == Log.post.like)
+                          Text(tr.likedPostLog.replace({
+                            '#a': actor.getDisplayName,
+                          })),
+                        if (activity.action == Log.post.unlike)
+                          Text(tr.unlikedPostLog.replace({
+                            '#a': actor.getDisplayName,
+                          })),
                       ],
                     ),
-                    Text(
-                      tr.whoFollowedWho.replace(
-                        {
-                          '#a': actor.getDisplayName,
-                          '#b': target.getDisplayName,
-                        },
-                      ),
-                    ),
+                    PostCard(
+                      post: post,
+                      commentSize: 0,
+                    )
                   ],
                 );
               },
             );
-          }
-
-          return Row(
-            children: [
-              UserAvatar(user: actor),
-              Text('${actor.getDisplayName} ${activity.action}'),
-            ],
-          );
-        },
-      ),
+          }),
     );
   }
 }

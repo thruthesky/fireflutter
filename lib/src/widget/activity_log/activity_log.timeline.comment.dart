@@ -8,85 +8,55 @@ class ActivityLogTimeLineComment extends StatelessWidget {
 
   final ActivityLog activity;
 
-  ActivityLogUserAction get logUser => Log.user;
-
   @override
   Widget build(BuildContext context) {
-    // if (ActivityLogService.instance.customize.activityLogTimelineCommentBuilder != null) {
-    //   return ActivityLogService.instance.customize.activityLogTimelineCommentBuilder!.call(activity);
-    // }
-
     return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: UserDoc(
-        uid: activity.uid,
-        onLoading: const SizedBox.shrink(),
-        builder: (actor) {
-          if ([
-            logUser.startApp,
-            logUser.signin,
-            logUser.signout,
-            logUser.resign,
-            logUser.create,
-            logUser.update,
-          ].contains(activity.action)) {
-            return Row(
-              children: [
-                UserAvatar(user: actor),
-                Text(
-                  tr.startAppLog.replace(
-                    {
-                      '#a': actor.getDisplayName,
-                    },
-                  ),
-                ),
-              ],
-            );
-          }
-
-          if ([
-            logUser.like,
-            logUser.unlike,
-            logUser.follow,
-            logUser.unfollow,
-            logUser.viewProfile,
-          ].contains(activity.action)) {
+        padding: const EdgeInsets.all(16.0),
+        child: PostDoc(
+          key: Key(activity.id),
+          postId: activity.postId,
+          builder: (Post post) {
             return UserDoc(
-              uid: activity.otherUid,
-              onLoading: const SizedBox.shrink(),
-              builder: (target) {
+              uid: activity.uid,
+              builder: (actor) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
                         UserAvatar(user: actor),
-                        const Text(' -> '),
-                        UserAvatar(user: target),
+                        const SizedBox(width: 8),
+                        if (activity.action == Log.comment.create)
+                          Text(tr.createCommentLog.replace({
+                            '#a': actor.getDisplayName,
+                          })),
+                        if (activity.action == Log.comment.update)
+                          Text(tr.updateCommentLog.replace({
+                            '#a': actor.getDisplayName,
+                          })),
+                        if (activity.action == Log.comment.delete)
+                          Text(tr.deleteCommentLog.replace({
+                            '#a': actor.getDisplayName,
+                          })),
+                        if (activity.action == Log.comment.like)
+                          Text(tr.likedCommentLog.replace({
+                            '#a': actor.getDisplayName,
+                          })),
+                        if (activity.action == Log.comment.unlike)
+                          Text(tr.unlikedCommentLog.replace({
+                            '#a': actor.getDisplayName,
+                          })),
                       ],
                     ),
-                    Text(
-                      tr.whoFollowedWho.replace(
-                        {
-                          '#a': actor.getDisplayName,
-                          '#b': target.getDisplayName,
-                        },
-                      ),
-                    ),
+                    PostCard(
+                      post: post,
+                      commentSize: 0,
+                    )
                   ],
                 );
               },
             );
-          }
-
-          return Row(
-            children: [
-              UserAvatar(user: actor),
-              Text('${actor.getDisplayName} ${activity.action}'),
-            ],
-          );
-        },
-      ),
-    );
+          },
+        ));
   }
 }

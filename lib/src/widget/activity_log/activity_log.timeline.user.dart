@@ -8,12 +8,40 @@ class ActivityLogTimeLineUser extends StatelessWidget {
 
   final ActivityLog activity;
 
+  String getMessage(ActivityLog activity, User actor, [User? target]) {
+    return switch (activity.action) {
+      'startApp' => tr.startAppLog.replace({'#a': actor.getDisplayName}),
+      'signin' => tr.signinLog.replace({'#a': actor.getDisplayName}),
+      'signout' => tr.signoutLog.replace({'#a': actor.getDisplayName}),
+      'resign' => tr.resignLog.replace({'#a': actor.getDisplayName}),
+      'create' => tr.createUserLog.replace({'#a': actor.getDisplayName}),
+      'update' => tr.updateUserLog.replace({'#a': actor.getDisplayName}),
+      'like' => tr.likedUserLog.replace({
+          '#a': actor.getDisplayName,
+          '#b': target!.getDisplayName,
+        }),
+      'unlike' => tr.unlikedUserLog.replace({
+          '#a': actor.getDisplayName,
+          '#b': target!.getDisplayName,
+        }),
+      'follow' => tr.followedUserLog.replace({
+          '#a': actor.getDisplayName,
+          '#b': target!.getDisplayName,
+        }),
+      'unfollow' => tr.unfollowedUserLog.replace({
+          '#a': actor.getDisplayName,
+          '#b': target!.getDisplayName,
+        }),
+      'viewProfile' => tr.viewProfileUserLog.replace({
+          '#a': actor.getDisplayName,
+          '#b': target!.getDisplayName,
+        }),
+      _ => 'actor.getDisplayName $activity.action $activity.type',
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
-    // if (ActivityLogService.instance.customize.activityLogTimelineUserBuilder != null) {
-    //   return ActivityLogService.instance.customize.activityLogTimelineUserBuilder!.call(activity);
-    // }
-
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: UserDoc(
@@ -28,23 +56,19 @@ class ActivityLogTimeLineUser extends StatelessWidget {
             Log.user.create,
             Log.user.update,
           ].contains(activity.action)) {
-            return Row(
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                UserAvatar(user: actor),
-                Text(tr.startAppLog.replace({'#a': actor.getDisplayName})
-                    // (activity.action == Log.user.startApp) ?
-                    // tr.startAppLog.replace({'#a': actor.getDisplayName}) :
-                    // (activity.action == Log.user.signin) ?
-                    // tr.signinLog.replace({'#a': actor.getDisplayName}) :
-                    // (activity.action == Log.user.signout) ?
-                    // tr.signoutLog.replace({'#a': actor.getDisplayName}) :
-                    // (activity.action == Log.user.resign) ?
-                    // tr.resignLog.replace({'#a': actor.getDisplayName}) :
-                    // (activity.action == Log.user.create) ?
-                    // tr.createUserLog.replace({'#a': actor.getDisplayName}) :
-                    // (activity.action == Log.user.update) ?
-                    // tr.updateUserLog.replace({'#a': actor.getDisplayName}) : ''
-                    ),
+                Row(
+                  children: [
+                    UserAvatar(user: actor),
+                    const SizedBox(width: 8),
+                    Text(getMessage(activity, actor)),
+                  ],
+                ),
+                Text(
+                  dateTimeAgo(activity.createdAt),
+                )
               ],
             );
           }
@@ -58,7 +82,6 @@ class ActivityLogTimeLineUser extends StatelessWidget {
           ].contains(activity.action)) {
             return UserDoc(
               uid: activity.otherUid,
-              onLoading: const SizedBox.shrink(),
               builder: (target) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,13 +94,11 @@ class ActivityLogTimeLineUser extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      tr.whoFollowedWho.replace(
-                        {
-                          '#a': actor.getDisplayName,
-                          '#b': target.getDisplayName,
-                        },
-                      ),
+                      getMessage(activity, actor, target),
                     ),
+                    Text(
+                      dateTimeAgo(activity.createdAt),
+                    )
                   ],
                 );
               },

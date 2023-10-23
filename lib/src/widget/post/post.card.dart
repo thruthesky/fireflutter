@@ -421,41 +421,42 @@ class _PostCardState extends State<PostCard> {
           ),
         ],
         // list of comment
-        StatefulBuilder(
-          builder: (context, setCommentState) {
-            return StreamBuilder(
-              stream: commentCol
-                  .where('postId', isEqualTo: post.id)
-                  .orderBy('sort', descending: false)
-                  .limitToLast(widget.commentSize)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  log(snapshot.error.toString());
-                  return Text('Something went wrong; ${snapshot.error.toString()}');
-                }
-                if (snapshot.hasData) {
-                  List<Widget> children = [];
-                  for (final doc in snapshot.data!.docs) {
-                    final comment = Comment.fromDocumentSnapshot(doc);
-                    children.add(
-                      CommentOneLineListTile(
-                        padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
-                        contentMargin: const EdgeInsets.only(bottom: 8),
-                        contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
-                        post: post,
-                        comment: comment,
-                        onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
-                      ),
-                    );
+        if (widget.commentSize > 0)
+          StatefulBuilder(
+            builder: (context, setCommentState) {
+              return StreamBuilder(
+                stream: commentCol
+                    .where('postId', isEqualTo: post.id)
+                    .orderBy('sort', descending: false)
+                    .limitToLast(widget.commentSize)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    log(snapshot.error.toString());
+                    return Text('Something went wrong; ${snapshot.error.toString()}');
                   }
-                  return Column(children: children);
-                }
-                return const SizedBox.shrink();
-              },
-            );
-          },
-        ),
+                  if (snapshot.hasData) {
+                    List<Widget> children = [];
+                    for (final doc in snapshot.data!.docs) {
+                      final comment = Comment.fromDocumentSnapshot(doc);
+                      children.add(
+                        CommentOneLineListTile(
+                          padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
+                          contentMargin: const EdgeInsets.only(bottom: 8),
+                          contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
+                          post: post,
+                          comment: comment,
+                          onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
+                        ),
+                      );
+                    }
+                    return Column(children: children);
+                  }
+                  return const SizedBox.shrink();
+                },
+              );
+            },
+          ),
         // post & comment buttons
         Padding(
           padding: widget.bottomButtonPadding,

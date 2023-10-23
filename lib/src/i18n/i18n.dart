@@ -69,6 +69,7 @@ class I18nTexts {
   String profile;
   String createChatRoom;
 
+  /// activity_log user
   String startAppLog;
   String signinLog;
   String signoutLog;
@@ -80,6 +81,20 @@ class I18nTexts {
   String followedUserLog;
   String unfollowedUserLog;
   String viewProfileUserLog;
+
+  /// activity_log post
+  String createPostLog;
+  String updatePostLog;
+  String deletePostLog;
+  String likedPostLog;
+  String unlikedPostLog;
+
+  /// activity_log comment
+  String createCommentLog;
+  String updateCommentLog;
+  String deleteCommentLog;
+  String likedCommentLog;
+  String unlikedCommentLog;
 
   I18nTexts({
     this.loginFirstTitle = 'Login first',
@@ -142,7 +157,7 @@ class I18nTexts {
     this.profile = "Profile",
     this.createChatRoom = "Create chat room",
 
-    /// activity_log
+    /// activity_log user
     this.startAppLog = "#a started the app",
     this.signinLog = "#a signed in",
     this.signoutLog = "#a signed out",
@@ -154,6 +169,20 @@ class I18nTexts {
     this.followedUserLog = "#a followed #b",
     this.unfollowedUserLog = "#a unfollowed #b",
     this.viewProfileUserLog = "#a viewed #b's profile",
+
+    /// activity_log post
+    this.createPostLog = "#a created a post",
+    this.updatePostLog = "#a updated a post",
+    this.deletePostLog = "#a deleted a post",
+    this.likedPostLog = "#a liked a post",
+    this.unlikedPostLog = "#a unliked a post",
+
+    /// activity_log comment
+    this.createCommentLog = "#a created a comment",
+    this.updateCommentLog = "#a updated a comment",
+    this.deleteCommentLog = "#a deleted a comment",
+    this.likedCommentLog = "#a liked a comment",
+    this.unlikedCommentLog = "#a unliked a comment",
   });
 
   factory I18nTexts.fromJson(Map<String, dynamic> json) => _$I18nTextsFromJson(json);
