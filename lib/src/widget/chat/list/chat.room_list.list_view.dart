@@ -114,6 +114,7 @@ class ChatRoomListView extends StatefulWidget {
 class ChatRoomListViewState extends State<ChatRoomListView> {
   // Needed for instant update when I just blocked somebody
   User? myData;
+  List<Room> roomDocs = [];
 
   @override
   void initState() {
@@ -170,21 +171,20 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
           log(snapshot.error.toString(), stackTrace: snapshot.stackTrace);
           return Center(child: Text('Error loading chat rooms ${snapshot.error}'));
         }
-        // Remove blocked users
-        // Will be reviewed.
-        snapshot.docs.removeWhere((element) {
-          final room = Room.fromDocumentSnapshot(element);
-          if (room.isGroupChat) return false;
-          return myData?.hasBlocked(room.otherUserUid) ?? false;
-        });
         if (snapshot.docs.isEmpty) {
           return widget.emptyBuilder?.call(context) ?? Center(child: Text(tr.noChatRooms));
         }
+        roomDocs = snapshot.docs.map((r) => Room.fromDocumentSnapshot(r)).toList();
+        // Remove blocked users
+        roomDocs.removeWhere((room) {
+          if (room.isGroupChat) return false;
+          return myData?.hasBlocked(room.otherUserUid) ?? false;
+        });
         return ListView.builder(
           itemExtent: widget.itemExtent,
-          itemCount: snapshot.docs.length,
+          itemCount: roomDocs.length,
           itemBuilder: (context, index) {
-            final room = Room.fromDocumentSnapshot(snapshot.docs[index]);
+            final room = roomDocs[index];
             if (widget.visibility != null && widget.visibility!(room) == false) {
               return const SizedBox();
             }

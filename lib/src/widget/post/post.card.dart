@@ -440,6 +440,7 @@ class _PostCardState extends State<PostCard> {
                     final comment = Comment.fromDocumentSnapshot(doc);
                     children.add(
                       CommentOneLineListTile(
+                        key: ValueKey(comment.id),
                         padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
                         contentMargin: const EdgeInsets.only(bottom: 8),
                         contentBorderRadius: const BorderRadius.all(Radius.circular(8)),

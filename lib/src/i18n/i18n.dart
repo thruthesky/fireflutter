@@ -37,6 +37,7 @@ class I18nTexts {
   String unfavoriteMessage;
   String chat;
   String block;
+  String blocked;
   String unblock;
   String blockMessage;
   String unblockMessage;
@@ -114,6 +115,7 @@ class I18nTexts {
     this.unfavoriteMessage = "Removed from favorite",
     this.chat = "Chat",
     this.block = "Block",
+    this.blocked = 'Blocked',
     this.unblock = "Unblock",
     this.blockMessage = "Blocked",
     this.unblockMessage = "Unblocked",
