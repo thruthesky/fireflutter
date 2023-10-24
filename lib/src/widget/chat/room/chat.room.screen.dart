@@ -44,8 +44,6 @@ class _ChatRoomState extends State<ChatRoomScreen> {
 
   @override
   Widget build(BuildContext context) {
-    dog('We are entering room $room');
-    dog('The other user is ${widget.user}');
     return Scaffold(
       appBar: ChatService.instance.customize.chatRoomAppBarBuilder?.call(room: room, user: widget.user) ??
           ChatRoomAppBar(room: room, user: widget.user),
@@ -54,9 +52,17 @@ class _ChatRoomState extends State<ChatRoomScreen> {
           Expanded(
             child: room == null
                 ? const Center(child: CircularProgressIndicator.adaptive())
-                : ChatRoomMessageListView(
-                    roomId: roomId,
-                  ),
+                : widget.room?.isGroupChat == true
+                    ? ChatRoomMessageListView(roomId: roomId)
+                    : UserBlocked(
+                        otherUid: widget.user?.uid ?? widget.room!.otherUserUid,
+                        notBlockedBuilder: (context) {
+                          return ChatRoomMessageListView(roomId: roomId);
+                        },
+                        blockedBuilder: (context) {
+                          return const Center(child: Text('You cannot chat with this user.'));
+                        },
+                      ),
           ),
           ChatRoomMessageBox(
             room: room,
