@@ -155,7 +155,7 @@ class Room {
     await ChatService.instance.sendProtocolMessage(
       room: Room.fromJson(roomData),
       protocol: Protocol.chatRoomCreated.name,
-      text: tr.chatRoomCreateDialog,
+      text: isSingleChat ? tr.chatSingleRoomCreateDialog : tr.chatRoomCreateDialog,
     );
 
     return Room.fromJson(roomData);
