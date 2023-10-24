@@ -84,15 +84,17 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
                   },
                 ),
                 Expanded(
-                  child: TextField(
-                    controller: message,
-                    decoration: const InputDecoration(
-                      hintText: 'Message',
-                      border: InputBorder.none,
-                    ),
-                    maxLines: 5,
-                    minLines: 1,
-                  ),
+                  child: widget.room?.isGroupChat == true
+                      ? chatBoxTextField(true)
+                      : UserBlocked(
+                          otherUid: widget.room?.otherUserUid ?? '',
+                          notBlockedBuilder: (context) {
+                            return chatBoxTextField(true);
+                          },
+                          blockedBuilder: (context) {
+                            return chatBoxTextField(false);
+                          },
+                        ),
                 ),
                 IconButton(
                   onPressed: () async {
@@ -115,6 +117,19 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
           ),
         ],
       ),
+    );
+  }
+
+  TextField chatBoxTextField(bool enabled) {
+    return TextField(
+      controller: message,
+      decoration: const InputDecoration(
+        hintText: 'Message',
+        border: InputBorder.none,
+      ),
+      maxLines: 5,
+      minLines: 1,
+      enabled: enabled,
     );
   }
 }
