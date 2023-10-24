@@ -18,6 +18,7 @@ class CommentContent extends StatelessWidget {
       children: [
         // Comment Content
         Text(
+          key: const Key('CommentContent'),
           my?.hasBlocked(comment.uid) ?? false ? tr.blocked : comment.content,
           style: style,
         ),
