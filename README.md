@@ -412,6 +412,8 @@ By default, feed feature is disabled. To use feed features, add the following in
 FeedService.instance.init(enable: true);
 ```
 
+
+
 # Pub.dev Packages
 
 ## url_launcher (Optional)
