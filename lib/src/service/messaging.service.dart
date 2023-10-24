@@ -154,12 +154,12 @@ class MessagingService {
     await FirebaseMessaging.instance.subscribeToTopic('${platformName()}Users');
   }
 
-  subscribeToCustomTopic(String topic) async {
+  Future subscribeToCustomTopic(String topic) async {
     if (initialized == false) return;
     await FirebaseMessaging.instance.subscribeToTopic('$prefixCustomTopic$topic');
   }
 
-  unsubscribeToCustomTopic(String topic) async {
+  Future unsubscribeToCustomTopic(String topic) async {
     if (initialized == false) return;
     try {
       await FirebaseMessaging.instance.unsubscribeFromTopic('$prefixCustomTopic$topic');

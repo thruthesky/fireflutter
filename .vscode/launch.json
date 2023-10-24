@@ -139,15 +139,6 @@
       "flutterMode": "debug",
       "deviceId": "iPhone 15 Pro Max"
     },
-    {
-      "name": "GRC - iPhone15ProMax",
-      "request": "launch",
-      "type": "dart",
-      "cwd": "apps/grc",
-      "program": "lib/main.dart",
-      "flutterMode": "debug",
-      "deviceId": "iPhone15ProMax"
-    },
 
     {
       "name": "GRC - Integration Test - iPhone 15 Pro Max",
@@ -178,13 +169,13 @@
       "deviceId": "iPhone11ProMax"
     },
     {
-      "name": "GRC - iPhoneSE (J)",
+      "name": "GRC - iPhone SE 3rd",
       "request": "launch",
       "type": "dart",
       "cwd": "apps/grc",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "deviceId": "00008030-000D445A11A3802E"
+      "deviceId": "iPhone SE (3rd generation)"
     },
     {
       "name": "GRC - Emulator (J)",

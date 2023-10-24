@@ -13,6 +13,9 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
       noOfChatRooms:
           json['noOfChatRooms'] as String? ?? 'No chat rooms, yet. Create one!',
       roomMenu: json['roomMenu'] as String? ?? 'Chat Room Menu',
+      chatSingleRoomCreateDialog:
+          json['chatSingleRoomCreateDialog'] as String? ??
+              'New chat room created. Enjoy chatting!',
       chatRoomCreateDialog: json['chatRoomCreateDialog'] as String? ??
           'New chat room created. You can invite more users. Enjoy chatting!',
       chooseUploadFrom:
@@ -47,6 +50,7 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
           json['unfavoriteMessage'] as String? ?? "Removed from favorite",
       chat: json['chat'] as String? ?? "Chat",
       block: json['block'] as String? ?? "Block",
+      blocked: json['blocked'] as String? ?? 'Blocked',
       unblock: json['unblock'] as String? ?? "Unblock",
       blockMessage: json['blockMessage'] as String? ?? "Blocked",
       unblockMessage: json['unblockMessage'] as String? ?? "Unblocked",
@@ -63,6 +67,7 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
           json['noChatRooms'] as String? ?? "No chat rooms, yet. Create one!",
       follow: json['follow'] as String? ?? "Follow",
       unfollow: json['unfollow'] as String? ?? "Unfollow",
+      whoFollowedWho: json['whoFollowedWho'] as String? ?? "#a followed #b",
       followMessage:
           json['followMessage'] as String? ?? "You are following this user.",
       unfollowMessage: json['unfollowMessage'] as String? ??
@@ -86,6 +91,35 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
       home: json['home'] as String? ?? "Home",
       profile: json['profile'] as String? ?? "Profile",
       createChatRoom: json['createChatRoom'] as String? ?? "Create chat room",
+      startAppLog: json['startAppLog'] as String? ?? "#a started the app",
+      signinLog: json['signinLog'] as String? ?? "#a signed in",
+      signoutLog: json['signoutLog'] as String? ?? "#a signed out",
+      resignLog: json['resignLog'] as String? ?? "#a resigned",
+      createUserLog:
+          json['createUserLog'] as String? ?? "#a created an account",
+      updateUserLog: json['updateUserLog'] as String? ?? "#a updated profile",
+      likedUserLog: json['likedUserLog'] as String? ?? "#a liked #b",
+      unlikedUserLog: json['unlikedUserLog'] as String? ?? "#a unliked #b",
+      followedUserLog: json['followedUserLog'] as String? ?? "#a followed #b",
+      unfollowedUserLog:
+          json['unfollowedUserLog'] as String? ?? "#a unfollowed #b",
+      viewProfileUserLog:
+          json['viewProfileUserLog'] as String? ?? "#a viewed #b's profile",
+      createPostLog: json['createPostLog'] as String? ?? "#a created a post",
+      updatePostLog: json['updatePostLog'] as String? ?? "#a updated a post",
+      deletePostLog: json['deletePostLog'] as String? ?? "#a deleted a post",
+      likedPostLog: json['likedPostLog'] as String? ?? "#a liked a post",
+      unlikedPostLog: json['unlikedPostLog'] as String? ?? "#a unliked a post",
+      createCommentLog:
+          json['createCommentLog'] as String? ?? "#a created a comment",
+      updateCommentLog:
+          json['updateCommentLog'] as String? ?? "#a updated a comment",
+      deleteCommentLog:
+          json['deleteCommentLog'] as String? ?? "#a deleted a comment",
+      likedCommentLog:
+          json['likedCommentLog'] as String? ?? "#a liked a comment",
+      unlikedCommentLog:
+          json['unlikedCommentLog'] as String? ?? "#a unliked a comment",
     );
 
 Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
@@ -95,6 +129,7 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
           instance.loginFirstToUseCompleteFunctionality,
       'noOfChatRooms': instance.noOfChatRooms,
       'roomMenu': instance.roomMenu,
+      'chatSingleRoomCreateDialog': instance.chatSingleRoomCreateDialog,
       'chatRoomCreateDialog': instance.chatRoomCreateDialog,
       'chooseUploadFrom': instance.chooseUploadFrom,
       'noCategory': instance.noCategory,
@@ -123,6 +158,7 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
       'unfavoriteMessage': instance.unfavoriteMessage,
       'chat': instance.chat,
       'block': instance.block,
+      'blocked': instance.blocked,
       'unblock': instance.unblock,
       'blockMessage': instance.blockMessage,
       'unblockMessage': instance.unblockMessage,
@@ -134,6 +170,7 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
       'noChatRooms': instance.noChatRooms,
       'follow': instance.follow,
       'unfollow': instance.unfollow,
+      'whoFollowedWho': instance.whoFollowedWho,
       'followMessage': instance.followMessage,
       'unfollowMessage': instance.unfollowMessage,
       'noStateMessage': instance.noStateMessage,
@@ -148,4 +185,25 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
       'home': instance.home,
       'profile': instance.profile,
       'createChatRoom': instance.createChatRoom,
+      'startAppLog': instance.startAppLog,
+      'signinLog': instance.signinLog,
+      'signoutLog': instance.signoutLog,
+      'resignLog': instance.resignLog,
+      'createUserLog': instance.createUserLog,
+      'updateUserLog': instance.updateUserLog,
+      'likedUserLog': instance.likedUserLog,
+      'unlikedUserLog': instance.unlikedUserLog,
+      'followedUserLog': instance.followedUserLog,
+      'unfollowedUserLog': instance.unfollowedUserLog,
+      'viewProfileUserLog': instance.viewProfileUserLog,
+      'createPostLog': instance.createPostLog,
+      'updatePostLog': instance.updatePostLog,
+      'deletePostLog': instance.deletePostLog,
+      'likedPostLog': instance.likedPostLog,
+      'unlikedPostLog': instance.unlikedPostLog,
+      'createCommentLog': instance.createCommentLog,
+      'updateCommentLog': instance.updateCommentLog,
+      'deleteCommentLog': instance.deleteCommentLog,
+      'likedCommentLog': instance.likedCommentLog,
+      'unlikedCommentLog': instance.unlikedCommentLog,
     };
