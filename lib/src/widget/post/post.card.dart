@@ -247,7 +247,7 @@ class _PostCardState extends State<PostCard> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (post.hasPhoto || post.youtubeId.isNotEmpty)
+        if ((post.hasPhoto || post.youtubeId.isNotEmpty) && my?.hasBlocked(post.uid) != true)
           Padding(
             padding: const EdgeInsets.only(top: sizeSm),
             child: CarouselView(
@@ -295,17 +295,8 @@ class _PostCardState extends State<PostCard> {
           Container(
             padding: const EdgeInsets.all(sizeSm),
             color: widget.contentBackground,
-            child: PostContent(post: post),
+            child: PostContent(post: post, style: Theme.of(context).textTheme.bodyMedium),
           ),
-        // Temporary removed
-        // will be reviewed by -dev2
-        // Container(
-        //   padding: const EdgeInsets.all(sizeSm),
-        //   color: widget.contentBackground,
-        //   child: post.content.length < 60
-        //       ? Text(post.content.replaceAll("\n", " "), style: Theme.of(context).textTheme.bodyMedium)
-        //       : PostContentShowMore(post: post),
-        // ),
       ],
     );
   }
@@ -337,6 +328,7 @@ class _PostCardState extends State<PostCard> {
   }
 
   Widget defaultActions(BuildContext context, Post post) {
+    if (my?.hasBlocked(post.uid) == true) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

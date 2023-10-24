@@ -9,6 +9,7 @@ class I18nTexts {
   String loginFirstToUseCompleteFunctionality;
   String noOfChatRooms;
   String roomMenu;
+  String chatSingleRoomCreateDialog;
   String chatRoomCreateDialog;
   String chooseUploadFrom;
   String noCategory;
@@ -102,6 +103,7 @@ class I18nTexts {
     this.loginFirstMessage = 'Please login first.',
     this.noOfChatRooms = 'No chat rooms, yet. Create one!',
     this.roomMenu = 'Chat Room Menu',
+    this.chatSingleRoomCreateDialog = 'New chat room created. Enjoy chatting!',
     this.chatRoomCreateDialog = 'New chat room created. You can invite more users. Enjoy chatting!',
     this.chooseUploadFrom = "Choose upload from...",
     this.noCategory = "No category, yet. Create one!",
