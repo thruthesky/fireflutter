@@ -8,7 +8,7 @@ class ActivityLogTimeLineUser extends StatelessWidget {
 
   final ActivityLog activity;
 
-  String getMessage(ActivityLog activity, User actor, [User? target]) {
+  String getMessage(User actor, [User? target]) {
     return switch (activity.action) {
       'startApp' => tr.startAppLog.replace({'#a': actor.getDisplayName}),
       'signin' => tr.signinLog.replace({'#a': actor.getDisplayName}),
@@ -40,10 +40,44 @@ class ActivityLogTimeLineUser extends StatelessWidget {
     };
   }
 
+  Widget displayTile({required Widget child}) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 64,
+          child: Column(
+            children: [
+              activityIcon,
+              Text(
+                dateTimeAgo(activity.createdAt),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Card(
+            margin: EdgeInsets.zero,
+            color: Colors.grey[100],
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                color: Colors.grey[300]!,
+                width: 1,
+              ),
+            ),
+            child: Padding(padding: const EdgeInsets.all(16.0), child: child),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
       child: UserDoc(
         uid: activity.uid,
         onLoading: const SizedBox.shrink(),
@@ -56,20 +90,17 @@ class ActivityLogTimeLineUser extends StatelessWidget {
             Log.user.create,
             Log.user.update,
           ].contains(activity.action)) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    UserAvatar(user: actor),
-                    const SizedBox(width: 8),
-                    Text(getMessage(activity, actor)),
-                  ],
-                ),
-                Text(
-                  dateTimeAgo(activity.createdAt),
-                )
-              ],
+            return displayTile(
+              child: Row(
+                children: [
+                  UserAvatar(
+                    user: actor,
+                    size: 52,
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(child: Text(getMessage(actor))),
+                ],
+              ),
             );
           }
 
@@ -83,30 +114,36 @@ class ActivityLogTimeLineUser extends StatelessWidget {
             return UserDoc(
               uid: activity.otherUid,
               builder: (target) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        UserAvatar(user: actor),
-                        const SizedBox(width: 8),
-                        Text(
-                          getMessage(activity, actor, target),
+                return displayTile(
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          UserAvatar(
+                            user: actor,
+                            size: 52,
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(child: Text(getMessage(actor, target))),
+                        ],
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        child: Divider(),
+                      ),
+                      ListTile(
+                        visualDensity: VisualDensity.compact,
+                        leading: UserAvatar(
+                          user: target,
+                          size: 52,
                         ),
-                      ],
-                    ),
-                    Text(
-                      dateTimeAgo(activity.createdAt),
-                    ),
-                    ListTile(
-                      visualDensity: VisualDensity.compact,
-                      leading: UserAvatar(user: target),
-                      title: Text(target.getDisplayName),
-                      onTap: () {
-                        UserService.instance.showPublicProfileScreen(context: context, user: target);
-                      },
-                    ),
-                  ],
+                        title: Text(target.getDisplayName),
+                        onTap: () {
+                          UserService.instance.showPublicProfileScreen(context: context, user: target);
+                        },
+                      )
+                    ],
+                  ),
                 );
               },
             );
@@ -122,4 +159,32 @@ class ActivityLogTimeLineUser extends StatelessWidget {
       ),
     );
   }
+
+  Widget get activityIcon => Container(
+        width: 52,
+        height: 52,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100),
+          border: Border.all(
+            color: Colors.lightBlue[300]!,
+            width: 1,
+          ),
+        ),
+        child: Icon(
+          switch (activity.action) {
+            'startApp' => Icons.home,
+            'signin' => Icons.login,
+            'signout' => Icons.logout,
+            'resign' => Icons.delete,
+            'create' => Icons.add,
+            'update' => Icons.update,
+            'like' => Icons.thumb_up,
+            'unlike' => Icons.thumb_down,
+            'follow' => Icons.add,
+            'unfollow' => Icons.remove,
+            'viewProfile' => Icons.person,
+            _ => Icons.error,
+          },
+        ),
+      );
 }

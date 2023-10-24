@@ -15,7 +15,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
   Map<String, int> cntMap = {};
   int count = 0;
   get query {
-    Query q = activityLogCol; //.orderBy('createdAt', descending: true);
+    Query q = activityLogCol.orderBy('createdAt', descending: true);
 
     if (search.text.isNotEmpty) {
       q = q.where('uid', isEqualTo: search.text);
@@ -24,9 +24,13 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
     if (searchType != 'all') {
       q = q.where('type', isEqualTo: searchType);
     }
-    // dog('filter: $filter');
-    // dog(filter.entries.where((e) => e.value).map((e) => e.key).toList().toString());
-    // q.where('type', whereIn: filter.entries.where((e) => e.value).map((e) => e.key).toList());
+
+    q = q.where('type', isEqualTo: 'post');
+    // q = q.where('uid', isEqualTo: '6TzeH9PDuJXC29GvBJEwXsv1tV93');
+    q = q.where('uid', isEqualTo: 'kxGXsfdW7HhkxwPXqmBl9A0voe22');
+
+    // q = q.where('action', whereIn: ['viewProfile']);
+    // q = q.where('id', isEqualTo: 'Dj9ot7LQeanWSwIxJsg0');
 
     return q;
   }
@@ -38,7 +42,9 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
   void initState() {
     super.initState();
 
-    FirebaseFirestore.instance.collection('activity_logs').count().get().then((value) => print('count; $value'));
+    FirebaseFirestore.instance.collection('activity_logs').count().get().then((value) => dog('count; ${value.count}'));
+
+    query.count().get().then((value) => dog('count; ${value.count}'));
   }
 
   @override
@@ -63,19 +69,19 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
       ),
       body: FirestoreListView(
         pageSize: 20,
-        query: FirebaseFirestore.instance.collection('activity_logs'), // query,
+        query: query,
         itemBuilder: (context, snapshot) {
           final activity = ActivityLog.fromDocumentSnapshot(snapshot);
 
           cntMap[activity.id] ??= ++count;
           // count++;
 
-          dog('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action}');
+          dog('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action} ${activity.uid}}');
           // print('setState(); ${activity.id}(${cntMap[activity.id]})');
-          return Text('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action}');
-          // return ActivityLogTimeLine(
-          //   activity: activity,
-          // );
+          // return Text('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action}');
+          return ActivityLogTimeLine(
+            activity: activity,
+          );
         },
       ),
     );
