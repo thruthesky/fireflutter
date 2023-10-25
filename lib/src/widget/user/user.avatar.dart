@@ -26,6 +26,7 @@ class UserAvatar extends StatelessWidget {
     this.uid,
     this.size = 32,
     this.defaultIcon,
+    this.showBlocked = false,
     this.borderWidth = 0,
     this.borderColor = Colors.transparent,
     this.radius = 10,
@@ -37,6 +38,7 @@ class UserAvatar extends StatelessWidget {
   final String? uid;
   final double size;
   final Widget? defaultIcon;
+  final bool showBlocked;
   final double borderWidth;
   final Color borderColor;
   final double radius;
@@ -75,7 +77,7 @@ class UserAvatar extends StatelessWidget {
   // Build avatar for the user.
   _buildAvatar(User user) {
     // For the blocked users,
-    if (my != null && my!.blockedUsers.contains(user.uid)) {
+    if (my != null && my!.blockedUsers.contains(user.uid) && showBlocked == false) {
       return buildDefaultIcon();
     }
 

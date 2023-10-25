@@ -14,6 +14,15 @@
       "deviceId": "iPhone 15 Pro Max"
     },
     {
+      "name": "ios_grc - iPhone SE",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "8310B424-3C27-40F7-827F-6DFFD24A19E9"
+    },
+    {
       "name": "ios_grc - iPhone 14 Pro Max",
       "request": "launch",
       "type": "dart",
@@ -21,6 +30,15 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "C79F2C44-AB98-4B0B-A727-8C5E8B50C595"
+    },
+    {
+      "name": "android_grc - G Pixel 3a",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "emulator-5554"
     },
     {
       "name": "New Example - iPhone 15 Pro Max",

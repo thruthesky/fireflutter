@@ -376,7 +376,10 @@ class _PostCardState extends State<PostCard> {
                       horizontal: sizeSm,
                     ),
                     child: GestureDetector(
-                      child: Text("${likes.length} likes"),
+                      child: Text(
+                        key: const Key('PostCardShowLikesButton'),
+                        "${likes.length} likes",
+                      ),
                       onTap: () {
                         UserService.instance.showLikedByListScreen(
                           context: context,
