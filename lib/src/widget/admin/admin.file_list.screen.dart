@@ -65,6 +65,7 @@ class _AdminFileListScreenState extends State<AdminFileListScreen> {
                     selectionButton('others', 'Others'),
                     const Spacer(),
                     TextButton(
+                      key: const Key('AdminFileListSearchUserButton'),
                       style: const ButtonStyle(
                         visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                       ),
