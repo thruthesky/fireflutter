@@ -145,6 +145,7 @@ class Post {
         'createdAt': DateTime.now(),
       },
     );
+    dog(post.toString());
     PostService.instance.onCreate?.call(post);
 
     // update no of posts

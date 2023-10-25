@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/activity_log/activity_log.dart';
-import 'package:fireflutter/src/model/activity_log/activity_log.type.dart';
 
 /// Alias of [ActivityLog.create()]
 ///
@@ -94,6 +92,14 @@ Future<DocumentReference?> activityLogUserViewProfile({required String otherUid}
   );
 }
 
+Future<DocumentReference?> activityLogUserRoomOpen({String? roomId, String? otherUid}) {
+  return activityLog(
+    roomId: roomId,
+    type: Log.type.user,
+    action: Log.user.roomOpen,
+  );
+}
+
 /// *********** Post Activity Log ***********
 
 Future<DocumentReference?> activityLogPostCreate({
@@ -180,16 +186,6 @@ Future<DocumentReference?> activityLogCommentLike({
     commentId: commentId,
     type: Log.type.comment,
     action: isLiked == true ? Log.comment.like : Log.comment.unlike,
-  );
-}
-
-/// *********** Chat Activity Log ***********
-
-Future<DocumentReference?> activityLogChatOpen({String? roomId, String? otherUid}) {
-  return activityLog(
-    roomId: roomId,
-    type: Log.type.chat,
-    action: Log.chat.open,
   );
 }
 

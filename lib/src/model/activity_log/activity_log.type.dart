@@ -3,15 +3,12 @@ class Log {
   static final user = ActivityLogUserAction();
   static final post = ActivityLogPostAction();
   static final comment = ActivityLogCommentAction();
-  static final chat = ActivityLogChatAction();
 }
 
 class ActivityLogType {
   final String user = 'user';
   final String post = 'post';
   final String comment = 'comment';
-  final String chat = 'chat';
-  final String feed = 'feed';
 }
 
 class ActivityLogUserAction {
@@ -26,6 +23,7 @@ class ActivityLogUserAction {
   final String follow = 'follow';
   final String unfollow = 'unfollow';
   final String viewProfile = 'viewProfile';
+  final String roomOpen = 'roomOpen';
   final String share = 'share';
 }
 
@@ -45,8 +43,4 @@ class ActivityLogCommentAction {
   final String like = 'like';
   final String unlike = 'unlike';
   final String share = 'share';
-}
-
-class ActivityLogChatAction {
-  final String open = 'open';
 }

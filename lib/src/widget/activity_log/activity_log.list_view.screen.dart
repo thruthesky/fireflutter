@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/activity_log/activity_log.dart';
 import 'package:flutter/material.dart';
 
 class ActivityListViewScreen extends StatefulWidget {
@@ -25,9 +24,9 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
       q = q.where('type', isEqualTo: searchType);
     }
 
-    q = q.where('type', isEqualTo: 'post');
+    // q = q.where('type', isEqualTo: 'user');
     // q = q.where('uid', isEqualTo: '6TzeH9PDuJXC29GvBJEwXsv1tV93');
-    q = q.where('uid', isEqualTo: 'kxGXsfdW7HhkxwPXqmBl9A0voe22');
+    // q = q.where('uid', isEqualTo: 'kxGXsfdW7HhkxwPXqmBl9A0voe22');
 
     // q = q.where('action', whereIn: ['viewProfile']);
     // q = q.where('id', isEqualTo: 'Dj9ot7LQeanWSwIxJsg0');

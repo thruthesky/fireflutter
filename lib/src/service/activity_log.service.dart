@@ -15,9 +15,8 @@ class ActivityLogService {
 
   init({
     List<String> adminListViewOptions = const ['user', 'post', 'comment'],
-    enableActivityLog = false,
   }) {
-    this.enableActivityLog = enableActivityLog;
+    enableActivityLog = true;
     this.adminListViewOptions = adminListViewOptions;
     activityLogAppStart();
     UserService.instance.userChanges.listen((user) {
