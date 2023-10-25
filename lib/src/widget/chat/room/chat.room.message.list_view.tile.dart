@@ -134,7 +134,11 @@ class _ChatRoomMessageListViewTileState extends State<ChatRoomMessageListViewTil
           margin: const EdgeInsets.only(top: 4, bottom: 4),
           padding: const EdgeInsets.all(_kBubblePadding),
           decoration: BoxDecoration(
-            color: isMyMessage ? Colors.amber.shade300 : Colors.grey.shade200,
+            // color: isMyMessage ? Colors.amber.shade300 : Colors.grey.shade200,
+            // Changed by dev2
+            color: isMyMessage
+                ? Theme.of(context).colorScheme.primaryContainer
+                : Theme.of(context).colorScheme.secondaryContainer,
             borderRadius: BorderRadius.only(
               bottomLeft: const Radius.circular(8.0),
               bottomRight: const Radius.circular(8.0),
@@ -146,6 +150,11 @@ class _ChatRoomMessageListViewTileState extends State<ChatRoomMessageListViewTil
             text: widget.message.text ?? '',
             maxLines: 10,
             overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: isMyMessage
+                  ? Theme.of(context).colorScheme.onPrimaryContainer
+                  : Theme.of(context).colorScheme.onSecondaryContainer,
+            ),
           ),
         ),
         if (isOtherMessage) chatBubbleDateTime(),
