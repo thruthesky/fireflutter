@@ -19,6 +19,8 @@ export 'widget/user/user.liked_by.list.screen.dart';
 export 'widget/user/user_blocked.dart';
 export 'widget/user/new_user_horizontal_list.dart';
 
+export 'widget/user/user_live_doc.dart';
+
 // Chat
 export 'widget/chat/room/chat.room.screen.dart';
 export 'widget/user/user.display_name.dart';

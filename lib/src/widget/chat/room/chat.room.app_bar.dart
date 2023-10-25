@@ -57,7 +57,6 @@ class ChatRoomAppBarState extends State<ChatRoomAppBar> {
                       return Text(user.name);
                     },
                     uid: otherUserUid(roomData!.users),
-                    live: false,
                     onLoading: Text(otherUserData?.name ?? ''),
                   ),
             actions: [

@@ -27,8 +27,7 @@ class UserBlocked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UserDoc(
-      live: true,
+    return MyDoc(
       builder: (i) {
         if (i.haveBlocked(otherUid ?? otherUser!.uid)) {
           return blockedBuilder(context);

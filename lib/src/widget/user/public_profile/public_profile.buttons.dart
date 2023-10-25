@@ -58,8 +58,7 @@ class PublicProfileButtons extends StatelessWidget {
               ),
           UserService.instance.customize.publicScreenFollowButton?.call(context, user) ??
               UserDoc(
-                live: true,
-                user: user,
+                uid: user.uid,
                 builder: (user) => TextButton(
                   onPressed: () async {
                     await FeedService.instance.follow(user.uid);
@@ -117,8 +116,7 @@ class PublicProfileButtons extends StatelessWidget {
               ),
           if (isAdmin)
             UserDoc(
-              live: true,
-              user: user,
+              uid: user.uid,
               builder: (u) => u.isDisabled
                   ? TextButton(
                       style: buttonStyle(context),

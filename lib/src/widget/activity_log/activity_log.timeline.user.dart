@@ -1,5 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/widget/activity_log/activity_log.list_view.item.dart';
 import 'package:flutter/material.dart';
 
 class ActivityLogTimeLineUser extends StatelessWidget {

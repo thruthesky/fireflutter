@@ -97,14 +97,13 @@ AppBar customAppBar(BuildContext context, Room? room) {
             ),
           )
         : UserDoc(
-            builder: (user) => Text(
-              user.name,
+            builder: (other) => Text(
+              other.name,
               style: TextStyle(
                 color: Theme.of(context).shadowColor,
               ),
             ),
             uid: otherUserUid(room.users),
-            live: false,
           ),
     actions: [
       IconButton(

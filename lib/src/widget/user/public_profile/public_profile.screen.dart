@@ -147,12 +147,12 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
     );
   }
 
+// The background doesn't have to be live if it is not me
   doc(Function(User) builder) {
+    if (isMyProfile) return MyDoc(builder: (user) => builder(user));
+
     return UserDoc(
-      // The background doesn't have to be live if it is not me
-      live: isMyProfile,
-      uid: widget.uid,
-      user: widget.user,
+      uid: widget.uid!,
       builder: (user) => builder(user),
     );
   }

@@ -50,16 +50,12 @@ class PostViewButtons extends StatelessWidget {
                 post: post,
                 builder: (post) => TextButton(
                   child: Text(
-                    post.likes.isEmpty
-                        ? tr.like
-                        : tr.likes
-                            .replaceAll('#no', post.likes.length.toString()),
+                    post.likes.isEmpty ? tr.like : tr.likes.replaceAll('#no', post.likes.length.toString()),
                   ),
                   onPressed: () => post.like(),
                 ),
               ),
-              UserDoc(
-                live: true,
+              MyDoc(
                 builder: (user) => TextButton(
                   onPressed: () async {
                     final re = await FeedService.instance.follow(post!.uid);
@@ -68,25 +64,21 @@ class PostViewButtons extends StatelessWidget {
                       message: re ? tr.favoriteMessage : tr.unfavoriteMessage,
                     );
                   },
-                  child: Text(user.followings.contains(post!.uid)
-                      ? tr.unfollow
-                      : tr.follow),
+                  child: Text(user.followings.contains(post!.uid) ? tr.unfollow : tr.follow),
                 ),
               ),
               ...?middle,
               const Spacer(),
               PopupMenuButton<String>(
                 itemBuilder: (_) => [
-                  if (post!.isMine)
-                    const PopupMenuItem(value: 'edit', child: Text('Edit')),
+                  if (post!.isMine) const PopupMenuItem(value: 'edit', child: Text('Edit')),
                   const PopupMenuItem(value: 'report', child: Text('Report')),
                   if (loggedIn)
                     PopupMenuItem(
                       value: 'block',
                       child: Database(
                         path: pathBlock(post!.uid),
-                        builder: (value, p) =>
-                            Text(value == null ? tr.block : tr.unblock),
+                        builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
                       ),
                     ),
                   ...?trailing,
@@ -97,15 +89,13 @@ class PostViewButtons extends StatelessWidget {
                 ),
                 onSelected: (v) async {
                   if (v == 'edit') {
-                    await PostService.instance
-                        .showEditScreen(context, post: post);
+                    await PostService.instance.showEditScreen(context, post: post);
                   } else if (v == 'report') {
                     ReportService.instance.showReportDialog(
                       context: context,
                       postId: post!.id,
-                      onExists: (id, type) => toast(
-                          title: 'Already reported',
-                          message: 'You have reported this $type already.'),
+                      onExists: (id, type) =>
+                          toast(title: 'Already reported', message: 'You have reported this $type already.'),
                     );
                   } else if (v == 'block') {
                     final blocked = await toggle(pathBlock(post!.uid));
