@@ -116,6 +116,7 @@ class ActivityLogListTiLeItem extends StatelessWidget {
             'user.follow' => Icons.add,
             'user.unfollow' => Icons.remove,
             'user.viewProfile' => Icons.person,
+            'user.roomOpen' => Icons.chat,
             'user.share' => Icons.share,
             'post.create' => Icons.add,
             'post.update' => Icons.update,

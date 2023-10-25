@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ActivityListViewScreen extends StatefulWidget {
   const ActivityListViewScreen({super.key});
@@ -64,17 +65,16 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
             },
           )
         ],
-        // bottom: userSearch,
+        bottom: userSearch,
       ),
       body: FirestoreListView(
+        // itemExtent: 350,
         pageSize: 20,
         query: query,
         itemBuilder: (context, snapshot) {
           final activity = ActivityLog.fromDocumentSnapshot(snapshot);
 
           cntMap[activity.id] ??= ++count;
-          // count++;
-
           dog('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action} ${activity.uid}}');
           // print('setState(); ${activity.id}(${cntMap[activity.id]})');
           // return Container(
@@ -83,42 +83,9 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
           //   child: Text('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action}'),
           // );
 
-          // return UserDoc(
-          //   key: Key(activity.id),
-          //   uid: activity.uid,
-          //   onLoading: const SizedBox(height: 120,),
-          //   // onLoading: Container(
-          //   //   padding: const EdgeInsets.all(64.0),
-          //   //   color: cntMap[activity.id]! % 2 == 1 ? Colors.grey[200] : Colors.red[200],
-          //   //   child:
-          //   //       Text('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action} loading...'),
-          //   // ),
-          //   builder: (user) => Container(
-          //     padding: const EdgeInsets.all(64.0),
-          //     color: cntMap[activity.id]! % 2 == 1 ? Colors.grey[200] : Colors.red[200],
-          //     child: Text(
-          //         'activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action} ${user.displayName}'),
-          //   ),
-          // );
-
           return ActivityLogTimeLine(
             activity: activity,
           );
-
-          // if (activity.uid == myUid) {
-          //   return const Padding(
-          //     padding: EdgeInsets.all(64),
-          //     child: Text("My UID"),
-          //   );
-          // }
-
-          // return UserDoc(
-          //   uid: activity.uid,
-          //   builder: (actor) => Padding(
-          //     padding: const EdgeInsets.all(64),
-          //     child: Text('Actor name; ${actor.displayName}'),
-          //   ),
-          // );
         },
       ),
     );
@@ -127,6 +94,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
   PreferredSize get userSearch => PreferredSize(
         preferredSize: const Size.fromHeight(90),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
@@ -207,7 +175,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
                               Padding(
                                 padding: const EdgeInsets.only(right: sizeXs),
                                 child: Text(
-                                  type,
+                                  toBeginningOfSentenceCase(type)!,
                                   style: const TextStyle(fontSize: 12),
                                 ),
                               ),

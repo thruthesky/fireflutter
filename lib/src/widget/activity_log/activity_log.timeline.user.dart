@@ -53,7 +53,7 @@ class ActivityLogTimeLineUser extends StatelessWidget {
                       child: Divider(),
                     ),
                     ListTile(
-                      visualDensity: VisualDensity.compact,
+                      contentPadding: EdgeInsets.zero,
                       leading: UserAvatar(
                         user: target,
                         size: 52,

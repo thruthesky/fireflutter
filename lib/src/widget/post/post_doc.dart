@@ -9,12 +9,14 @@ class PostDoc extends StatelessWidget {
     this.postId,
     this.live = true,
     required this.builder,
+    this.onLoading,
   });
 
   final Post? post;
   final String? postId;
   final bool live;
   final Widget Function(Post post) builder;
+  final Widget? onLoading;
 
   String get id => post?.id ?? postId!;
 
@@ -24,6 +26,7 @@ class PostDoc extends StatelessWidget {
       return StreamBuilder<DocumentSnapshot>(
         stream: Post.doc(id).snapshots(),
         builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) return onLoading ?? const SizedBox.shrink();
           if (snapshot.hasError) return Text(snapshot.error.toString());
           if (snapshot.hasData) {
             return builder(Post.fromDocumentSnapshot(snapshot.data!));
@@ -36,6 +39,7 @@ class PostDoc extends StatelessWidget {
     return FutureBuilder<Post?>(
       future: Post.get(id),
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) return onLoading ?? const SizedBox.shrink();
         if (snapshot.hasError) return Text(snapshot.error.toString());
         if (snapshot.hasData) return builder(snapshot.data!);
         if (post != null) return builder(post!);
