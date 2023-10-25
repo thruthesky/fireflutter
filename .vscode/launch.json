@@ -32,6 +32,15 @@
       "deviceId": "C79F2C44-AB98-4B0B-A727-8C5E8B50C595"
     },
     {
+      "name": "android_grc - G Pixel 3a",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "emulator-5554"
+    },
+    {
       "name": "New Example - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
