@@ -201,15 +201,9 @@ class User {
 
   /// Get user document
   ///
-  /// If the user document does not exist, it will return null. It does not throw an exception.
-  /// But if the uid is wrong, then it would throw a permission denied exception. since the security rules fails.
-  ///
-  /// [uid] is the user's uid. If it's null, it will get the login user's document.
-  ///
-  /// Note, that It gets data from /users collections. It does not get data from /search-user-data collection.
   static Future<User?> get([String? userUid]) async {
-    /// If the userUid is null, then get the login user's document.
-    final snapshot = await FirebaseFirestore.instance.collection(collectionName).doc(userUid ?? myUid).get();
+    final snapshot = await userDoc(userUid ?? myUid!).get();
+
     if (snapshot.exists == false || snapshot.data() == null) return null;
     return User.fromDocumentSnapshot(snapshot);
   }

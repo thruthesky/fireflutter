@@ -12,14 +12,13 @@ class ActivityLogTimeLine extends StatelessWidget {
   Widget build(BuildContext context) {
     if (activity.type == Log.type.user) {
       return ActivityLogTimeLineUser(activity: activity);
-    } else if (activity.type == Log.type.post) {
-      return ActivityLogTimeLinePost(activity: activity);
-    } else if (activity.type == Log.type.comment) {
-      return ActivityLogTimeLineComment(activity: activity);
-    } else {
-      return const SizedBox.shrink(); // const Text('Unknown activity');
-      // return ActivityLogTimeLineUnknown(activity: activity);
     }
+    //  else if (activity.type == Log.type.post) {
+    //   return ActivityLogTimeLinePost(activity: activity);
+    // } else if (activity.type == Log.type.comment) {
+    //   return ActivityLogTimeLineComment(activity: activity);
+    // }
+    return const Text('Unknown activity');
   }
 }
 

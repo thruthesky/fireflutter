@@ -78,8 +78,23 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
           dog('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action} ${activity.uid}}');
           // print('setState(); ${activity.id}(${cntMap[activity.id]})');
           // return Text('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action}');
-          return ActivityLogTimeLine(
-            activity: activity,
+          // return ActivityLogTimeLine(
+          //   activity: activity,
+          // );
+
+          if (activity.uid == myUid) {
+            return const Padding(
+              padding: EdgeInsets.all(64),
+              child: Text("My UID"),
+            );
+          }
+
+          return UserDoc(
+            uid: activity.uid,
+            builder: (actor) => Padding(
+              padding: const EdgeInsets.all(64),
+              child: Text('Actor naem; ${actor.displayName}'),
+            ),
           );
         },
       ),

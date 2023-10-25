@@ -80,10 +80,9 @@ class _TestScreenState extends State<TestUi> {
                     return Text(
                         'MyDoc() - User document exists.\nUID: ${my.uid}, displayName: ${my.displayName}, email: ${my.email}, createdAt: ${my.createdAt}');
                   } else {
-                    return const Text('MyDoc() - User document does NOT exist');
+                    return const Text('MyDoc() - User document does NOT exist Or the user is in the middle of login');
                   }
                 },
-                notLoggedInBuilder: () => const Text("User NOT logged in. So, MyDoc() is not available."),
               ),
             ],
           ),
