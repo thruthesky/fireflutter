@@ -179,7 +179,9 @@ class User {
 
   // Use this to create a user model object indicating that the user document does not exist.
   factory User.nonExistent() {
-    return User(uid: '', createdAt: DateTime(1970))..exists = false;
+    return User(uid: '', createdAt: DateTime(1970))
+      ..exists = false
+      ..data = {};
   }
 
   factory User.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {

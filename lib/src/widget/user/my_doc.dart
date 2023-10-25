@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 ///
 /// myDoc is a wrapper widget of UserDoc widget.
 class MyDoc extends StatelessWidget {
-  const MyDoc({super.key, required this.builder});
+  const MyDoc({super.key, required this.builder, this.onLoading});
 
   final Widget Function(User) builder;
+  final Widget? onLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class MyDoc extends StatelessWidget {
   Widget buildStreamWidget(BuildContext _, AsyncSnapshot<User?> snapshot) {
     /// 주의: 로딩 중, 반짝임(깜빡거림)이 발생할 수 있다.
     if (snapshot.connectionState == ConnectionState.waiting) {
-      return const SizedBox.shrink();
+      return onLoading ?? const SizedBox.shrink();
     }
 
     final userModel = snapshot.data;
