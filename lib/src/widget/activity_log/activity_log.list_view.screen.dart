@@ -77,25 +77,48 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
 
           dog('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action} ${activity.uid}}');
           // print('setState(); ${activity.id}(${cntMap[activity.id]})');
-          // return Text('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action}');
-          // return ActivityLogTimeLine(
-          //   activity: activity,
+          // return Container(
+          //   padding: const EdgeInsets.all(64.0),
+          //   color: cntMap[activity.id]! % 2 == 1 ? Colors.grey[200] : Colors.red[200],
+          //   child: Text('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action}'),
           // );
 
-          if (activity.uid == myUid) {
-            return const Padding(
-              padding: EdgeInsets.all(64),
-              child: Text("My UID"),
-            );
-          }
+          // return UserDoc(
+          //   key: Key(activity.id),
+          //   uid: activity.uid,
+          //   onLoading: const SizedBox(height: 120,),
+          //   // onLoading: Container(
+          //   //   padding: const EdgeInsets.all(64.0),
+          //   //   color: cntMap[activity.id]! % 2 == 1 ? Colors.grey[200] : Colors.red[200],
+          //   //   child:
+          //   //       Text('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action} loading...'),
+          //   // ),
+          //   builder: (user) => Container(
+          //     padding: const EdgeInsets.all(64.0),
+          //     color: cntMap[activity.id]! % 2 == 1 ? Colors.grey[200] : Colors.red[200],
+          //     child: Text(
+          //         'activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action} ${user.displayName}'),
+          //   ),
+          // );
 
-          return UserDoc(
-            uid: activity.uid,
-            builder: (actor) => Padding(
-              padding: const EdgeInsets.all(64),
-              child: Text('Actor naem; ${actor.displayName}'),
-            ),
+          return ActivityLogTimeLine(
+            activity: activity,
           );
+
+          // if (activity.uid == myUid) {
+          //   return const Padding(
+          //     padding: EdgeInsets.all(64),
+          //     child: Text("My UID"),
+          //   );
+          // }
+
+          // return UserDoc(
+          //   uid: activity.uid,
+          //   builder: (actor) => Padding(
+          //     padding: const EdgeInsets.all(64),
+          //     child: Text('Actor name; ${actor.displayName}'),
+          //   ),
+          // );
         },
       ),
     );

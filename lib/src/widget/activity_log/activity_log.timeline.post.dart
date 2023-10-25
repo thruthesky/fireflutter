@@ -10,13 +10,14 @@ class ActivityLogTimeLinePost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
       child: PostDoc(
         key: Key(activity.postId!),
         postId: activity.postId,
         builder: (Post post) {
           return UserDoc(
             uid: activity.uid,
+            onLoading: const SizedBox(height: 120),
             builder: (actor) {
               return ActivityLogListTiLeItem(
                 activity: activity,

@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 ///
 /// myDoc is a wrapper widget of UserDoc widget.
 class MyDoc extends StatelessWidget {
-  const MyDoc({super.key, required this.builder, this.onLoading});
+  const MyDoc({
+    super.key,
+    required this.builder,
+    this.onLoading,
+  });
 
   final Widget Function(User) builder;
   final Widget? onLoading;
