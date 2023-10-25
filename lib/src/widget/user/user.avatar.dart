@@ -110,6 +110,7 @@ class UserAvatar extends StatelessWidget {
           ),
           child: Icon(
             Icons.person,
+            color: Colors.grey.shade800,
             size: size / 1.2,
           ),
         );

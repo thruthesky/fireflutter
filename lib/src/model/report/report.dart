@@ -82,6 +82,10 @@ class Report {
 
   static Future<Report?> get(String id) async {
     final snapshot = await reportDoc(id).get();
+    // For review
+    // Github Issue
+    // https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=42599640
+    // Upon reporting report stops at await reportDoc(id).get()
     if (snapshot.exists == false) {
       return null;
     }
