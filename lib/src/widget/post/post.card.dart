@@ -64,6 +64,8 @@ class PostCard extends StatefulWidget {
     this.customFooterBuilder,
     this.headerPadding = const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
     this.bottomButtonPadding = const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeSm),
+    this.onCommentSnapshot,
+    this.initalCommentSnapShot,
   });
 
   final Color? color;
@@ -94,6 +96,9 @@ class PostCard extends StatefulWidget {
   /// The number of comments to show
   final int commentSize;
 
+  final void Function(QuerySnapshot<Object?> snapshot)? onCommentSnapshot;
+  final QuerySnapshot<Object?>? initalCommentSnapShot;
+
   @override
   State<PostCard> createState() => _PostCardState();
 }
@@ -103,7 +108,13 @@ class _PostCardState extends State<PostCard> {
   // final _boxConstraintsKey = GlobalKey();
   // BoxConstraints _commentBoxConstraints = const BoxConstraints(minHeight: 500);
 
-  final Map<String, QuerySnapshot<Object?>> _commentSnapshot = {};
+  QuerySnapshot<Object?>? _commentSnapshot;
+
+  @override
+  initState() {
+    super.initState();
+    _commentSnapshot = widget.initalCommentSnapShot;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -454,7 +465,7 @@ class _PostCardState extends State<PostCard> {
           //   },
           // ),
           FirestoreStream(
-            initialQuerySnapshot: _commentSnapshot[post.id],
+            initialQuerySnapshot: _commentSnapshot,
             snapshots: commentCol
                 .where('postId', isEqualTo: post.id)
                 .orderBy('sort', descending: false)
@@ -462,7 +473,6 @@ class _PostCardState extends State<PostCard> {
                 .snapshots(),
             builder: (context, snapshot) {
               List<Widget> children = [];
-              _commentSnapshot[post.id] = snapshot;
               for (final doc in snapshot.docs) {
                 final comment = Comment.fromDocumentSnapshot(doc);
                 children.add(
@@ -478,6 +488,10 @@ class _PostCardState extends State<PostCard> {
                 );
               }
               return Column(children: children);
+            },
+            onSnapshot: (snapshot) {
+              _commentSnapshot = snapshot;
+              widget.onCommentSnapshot?.call(snapshot);
             },
           ),
 
