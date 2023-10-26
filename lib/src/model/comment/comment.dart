@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/functions/comment_sort_string.dart';
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'comment.g.dart';
@@ -184,6 +185,10 @@ class Comment {
   Future<bool?> like() async {
     if (notLoggedIn) {
       toast(title: tr.loginFirstTitle, message: tr.loginFirstMessage);
+      return null;
+    }
+    if (my!.isDisabled) {
+      toast(title: tr.disabled, message: tr.disabledMessage);
       return null;
     }
     bool isLiked = await toggle(pathCommentLikedBy(id));

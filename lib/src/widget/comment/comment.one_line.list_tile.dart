@@ -139,6 +139,10 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                             visualDensity: VisualDensity.compact,
                           ),
                           onPressed: () {
+                            if (my?.isDisabled ?? false) {
+                              toast(title: tr.disabled, message: tr.disabledMessage);
+                              return;
+                            }
                             CommentService.instance.showCommentEditBottomSheet(
                               context,
                               post: widget.post,

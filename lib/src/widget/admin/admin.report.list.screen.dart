@@ -13,8 +13,7 @@ class AdminReportListScreen extends StatefulWidget {
 }
 
 class _AdminReportListScreenState extends State<AdminReportListScreen> {
-  style(context) =>
-      TextStyle(color: Theme.of(context).colorScheme.onInverseSurface);
+  style(context) => TextStyle(color: Theme.of(context).colorScheme.onInverseSurface);
 
   String? type;
 
@@ -41,8 +40,7 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back),
         ),
-        iconTheme: IconThemeData(
-            color: Theme.of(context).colorScheme.onInverseSurface),
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onInverseSurface),
         backgroundColor: Theme.of(context).colorScheme.inverseSurface,
         title: Text(
           'Admin Report List',
@@ -115,14 +113,11 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
                   IconButton(
                     onPressed: () {
                       if (report.type == 'user') {
-                        UserService.instance.showPublicProfileScreen(
-                            context: context, uid: report.otherUid);
+                        UserService.instance.showPublicProfileScreen(context: context, uid: report.otherUid);
                       } else if (report.type == 'post') {
-                        PostService.instance.showPostViewScreen(
-                            context: context, postId: report.postId);
+                        PostService.instance.showPostViewScreen(context: context, postId: report.postId);
                       } else if (report.type == 'comment') {
-                        CommentService.instance.showCommentViewDialog(
-                            context: context, commentId: report.commentId);
+                        CommentService.instance.showCommentViewDialog(context: context, commentId: report.commentId);
                       }
                     },
                     icon: const Icon(Icons.open_in_browser),
@@ -140,9 +135,7 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
                               u.name,
                             ),
                           ),
-                          report.data[e] != null
-                              ? Text(report.data[e])
-                              : const SizedBox.shrink(),
+                          report.data[e] != null ? Text(report.data[e]) : const SizedBox.shrink(),
                         ],
                       ))
                   .toList(),
@@ -174,9 +167,12 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
     );
   }
 
-  showDisableDialog(Report report) {
+  showDisableDialog(Report report) async {
     // Github issue https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=40666380
-    toast(title: 'Ongoing', message: '@todo disable user');
+    final user = await User.get(report.otherUid!);
+    user!.disable();
+    toast(title: 'Disable User', message: 'Disabled user.');
+    report.markAsResolved();
   }
 
   showDeleteDialog(Report report) {
@@ -213,8 +209,7 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title:
-              const Text('Marking as resolved without deleting or blocking?'),
+          title: const Text('Marking as resolved without deleting or blocking?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -225,7 +220,7 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                report.markAsResove();
+                report.markAsResolved();
               },
               child: const Text('Mark as Resolved'),
             ),

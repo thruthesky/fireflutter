@@ -251,6 +251,10 @@ class Post {
       toast(title: tr.loginFirstTitle, message: tr.loginFirstMessage);
       return null;
     }
+    if (my!.isDisabled) {
+      toast(title: tr.disabled, message: tr.disabledMessage);
+      return null;
+    }
     bool isLiked = await toggle(pathPostLikedBy(id));
 
     // call back when the post is liked or unliked

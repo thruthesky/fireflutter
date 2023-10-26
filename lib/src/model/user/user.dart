@@ -433,6 +433,14 @@ class User {
   ///
   /// Put the uid of the User to be liked in the [uid] parameter.
   Future<bool> like(String uid) async {
+    if (notLoggedIn) {
+      toast(title: tr.loginFirstTitle, message: tr.loginFirstMessage);
+      return false;
+    }
+    if (my!.isDisabled) {
+      toast(title: tr.disabled, message: tr.disabledMessage);
+      return false;
+    }
     bool isLiked = await toggle(pathUserLiked(uid));
 
     UserService.instance.sendNotificationOnLike(this, isLiked);

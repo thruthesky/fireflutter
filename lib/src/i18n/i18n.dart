@@ -44,6 +44,8 @@ class I18nTexts {
   String unblockMessage;
   String alreadyBlockedTitle;
   String alreadyBlockedMessage;
+  String disabled;
+  String disabledMessage;
   String report;
   String alreadyReportedTitle;
   String alreadyReportedMessage;
@@ -140,6 +142,8 @@ class I18nTexts {
     this.unblockMessage = "Unblocked",
     this.alreadyBlockedTitle = "Already blocked",
     this.alreadyBlockedMessage = "You have blocked this user already.",
+    this.disabled = "Disabled",
+    this.disabledMessage = "You are disabled.",
     this.report = "Report",
     this.alreadyReportedTitle = "Already reported",
     this.alreadyReportedMessage = "You have reported this #type already.",
