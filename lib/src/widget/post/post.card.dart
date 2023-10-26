@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -101,6 +102,8 @@ class _PostCardState extends State<PostCard> {
   // final _commentBoxKey = GlobalKey();
   // final _boxConstraintsKey = GlobalKey();
   // BoxConstraints _commentBoxConstraints = const BoxConstraints(minHeight: 500);
+
+  final Map<String, QuerySnapshot<Object?>> _commentSnapshot = {};
 
   @override
   Widget build(BuildContext context) {
@@ -417,42 +420,67 @@ class _PostCardState extends State<PostCard> {
         ],
         // list of comment
         if (widget.commentSize > 0)
-          StatefulBuilder(
-            builder: (context, setCommentState) {
-              return StreamBuilder(
-                stream: commentCol
-                    .where('postId', isEqualTo: post.id)
-                    .orderBy('sort', descending: false)
-                    .limitToLast(widget.commentSize)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    log(snapshot.error.toString());
-                    return Text('Something went wrong; ${snapshot.error.toString()}');
-                  }
-                  if (snapshot.hasData) {
-                    List<Widget> children = [];
-                    for (final doc in snapshot.data!.docs) {
-                      final comment = Comment.fromDocumentSnapshot(doc);
-                      children.add(
-                        CommentOneLineListTile(
-                          key: ValueKey(comment.id),
-                          padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
-                          contentMargin: const EdgeInsets.only(bottom: 8),
-                          contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
-                          post: post,
-                          comment: comment,
-                          onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
-                        ),
-                      );
-                    }
-                    return Column(children: children);
-                  }
-                  return const SizedBox.shrink();
-                },
-              );
+          // StreamBuilder(
+          //   initialData: _commentSnapshot,
+          //   stream: commentCol
+          //       .where('postId', isEqualTo: post.id)
+          //       .orderBy('sort', descending: false)
+          //       .limitToLast(widget.commentSize)
+          //       .snapshots(),
+          //   builder: (context, snapshot) {
+          //     if (snapshot.hasError) {
+          //       log(snapshot.error.toString());
+          //       return Text('Something went wrong; ${snapshot.error.toString()}');
+          //     }
+          //     if (snapshot.hasData) {
+          //       List<Widget> children = [];
+          //       for (final doc in snapshot.data!.docs) {
+          //         final comment = Comment.fromDocumentSnapshot(doc);
+          //         children.add(
+          //           CommentOneLineListTile(
+          //             key: ValueKey(comment.id),
+          //             padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
+          //             contentMargin: const EdgeInsets.only(bottom: 8),
+          //             contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
+          //             post: post,
+          //             comment: comment,
+          //             onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
+          //           ),
+          //         );
+          //       }
+          //       return Column(children: children);
+          //     }
+          //     return const SizedBox.shrink();
+          //   },
+          // ),
+          FirestoreStream(
+            initialQuerySnapshot: _commentSnapshot[post.id],
+            snapshots: commentCol
+                .where('postId', isEqualTo: post.id)
+                .orderBy('sort', descending: false)
+                .limitToLast(widget.commentSize)
+                .snapshots(),
+            builder: (context, snapshot) {
+              List<Widget> children = [];
+              _commentSnapshot[post.id] = snapshot;
+              for (final doc in snapshot.docs) {
+                final comment = Comment.fromDocumentSnapshot(doc);
+                children.add(
+                  CommentOneLineListTile(
+                    key: ValueKey(comment.id),
+                    padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
+                    contentMargin: const EdgeInsets.only(bottom: 8),
+                    contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
+                    post: post,
+                    comment: comment,
+                    onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
+                  ),
+                );
+              }
+              return Column(children: children);
             },
           ),
+
         // post & comment buttons
         Padding(
           padding: widget.bottomButtonPadding,
