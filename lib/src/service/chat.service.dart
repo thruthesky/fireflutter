@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/functions/activity_log.functions.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 

@@ -70,6 +70,7 @@ class I18nTexts {
   String home;
   String profile;
   String createChatRoom;
+  String views;
 
   /// activity_log user
   String startAppLog;
@@ -78,6 +79,7 @@ class I18nTexts {
   String resignLog;
   String createUserLog;
   String updateUserLog;
+  String roomOpenLog;
   String likedUserLog;
   String unlikedUserLog;
   String followedUserLog;
@@ -160,6 +162,7 @@ class I18nTexts {
     this.home = "Home",
     this.profile = "Profile",
     this.createChatRoom = "Create chat room",
+    this.views = "Views",
 
     /// activity_log user
     this.startAppLog = "#a started the app",
@@ -173,6 +176,7 @@ class I18nTexts {
     this.followedUserLog = "#a followed #b",
     this.unfollowedUserLog = "#a unfollowed #b",
     this.viewProfileUserLog = "#a viewed #b's profile",
+    this.roomOpenLog = "#a opened a chat room",
 
     /// activity_log post
     this.createPostLog = "#a created a post",

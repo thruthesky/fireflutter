@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/functions/activity_log.functions.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user.g.dart';

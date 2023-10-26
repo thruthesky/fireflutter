@@ -1,5 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/widget/activity_log/activity_log.list_view.item.dart';
 import 'package:flutter/material.dart';
 
 class ActivityLogTimeLinePost extends StatelessWidget {
@@ -9,8 +8,8 @@ class ActivityLogTimeLinePost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: sizeSm, right: sizeSm, bottom: sizeSm),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 200),
       child: PostDoc(
         live: false,
         onLoading: const SizedBox(height: 200),
@@ -61,7 +60,7 @@ class ActivityLogTimeLinePost extends StatelessWidget {
                                 builder: (n) => n < 2
                                     ? const SizedBox.shrink()
                                     : Text(
-                                        " | Views: $n",
+                                        " | ${tr.views}: $n",
                                         style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11),
                                       ),
                               ),
@@ -76,7 +75,7 @@ class ActivityLogTimeLinePost extends StatelessWidget {
                         ),
                     ],
                   ),
-                  const SizedBox(height: sizeXxs),
+                  const SizedBox(height: sizeSm),
                   Text(post.title,
                       maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodyMedium),
                   const SizedBox(height: sizeXxs),
@@ -87,6 +86,7 @@ class ActivityLogTimeLinePost extends StatelessWidget {
                       style: ButtonStyle(
                         padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
                         visualDensity: VisualDensity.compact,
+                        textStyle: MaterialStateProperty.all(Theme.of(context).textTheme.bodySmall),
                       ),
                       onPressed: () {
                         CommentService.instance.showCommentListBottomSheet(context, post);
