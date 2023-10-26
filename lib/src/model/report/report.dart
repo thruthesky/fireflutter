@@ -81,15 +81,19 @@ class Report {
 // UserReview
 
   static Future<Report?> get(String id) async {
-    final snapshot = await reportDoc(id).get();
-    // For review
-    // Github Issue
-    // https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=42599640
-    // Upon reporting report stops at await reportDoc(id).get()
-    if (snapshot.exists == false) {
+    try {
+      final snapshot = await reportDoc(id).get();
+      // For review
+      // Github Issue
+      // https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=42599640
+      // Upon reporting report stops at await reportDoc(id).get()
+      if (snapshot.exists == false) return null;
+      return Report.fromDocumentSnapshot(snapshot);
+    } catch (e) {
+      // if snapshot does not exist, it throws error.
+      dog('Report.get() error: $e');
       return null;
     }
-    return Report.fromDocumentSnapshot(snapshot);
   }
 
   /// Create a report
@@ -151,10 +155,10 @@ class Report {
       toast(title: 'Error', message: 'Unknown Type: $type');
       return;
     }
-    await markAsResove();
+    await markAsResolved();
   }
 
-  Future<void> markAsResove() async {
+  Future<void> markAsResolved() async {
     await reportDoc(id).delete();
   }
 }
