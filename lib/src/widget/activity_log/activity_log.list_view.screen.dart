@@ -4,14 +4,14 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class ActivityListViewScreen extends StatefulWidget {
-  const ActivityListViewScreen({super.key});
+class ActivityLogListViewScreen extends StatefulWidget {
+  const ActivityLogListViewScreen({super.key});
 
   @override
-  State<ActivityListViewScreen> createState() => _ActivityListViewScreenState();
+  State<ActivityLogListViewScreen> createState() => _ActivityLogListViewScreenState();
 }
 
-class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
+class _ActivityLogListViewScreenState extends State<ActivityLogListViewScreen> {
   Map<String, int> cntMap = {};
   int count = 0;
   get query {
@@ -25,7 +25,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
       q = q.where('type', isEqualTo: searchType);
     }
 
-    // q = q.where('type', isEqualTo: 'user');
+    // q = q.where('type', isEqualTo: 'post');
     // q = q.where('uid', isEqualTo: '6TzeH9PDuJXC29GvBJEwXsv1tV93');
     // q = q.where('uid', isEqualTo: 'kxGXsfdW7HhkxwPXqmBl9A0voe22');
 
@@ -42,9 +42,9 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
   void initState() {
     super.initState();
 
-    FirebaseFirestore.instance.collection('activity_logs').count().get().then((value) => dog('count; ${value.count}'));
+    // FirebaseFirestore.instance.collection('activity_logs').count().get().then((value) => dog('count; ${value.count}'));
 
-    query.count().get().then((value) => dog('count; ${value.count}'));
+    // query.count().get().then((value) => dog('count; ${value.count}'));
   }
 
   @override
@@ -105,7 +105,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
                     controller: search,
                     style: const TextStyle(fontSize: 10),
                     decoration: const InputDecoration(
-                      hintText: 'Enter user id',
+                      hintText: 'Enter uid',
                       helperMaxLines: 2,
                       helperStyle: TextStyle(fontSize: 10),
                     ),
@@ -149,7 +149,10 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  ...['all', ...ActivityLogService.instance.adminListViewOptions]
+                  const SizedBox(
+                    width: sizeXs,
+                  ),
+                  ...['all', ...ActivityLogService.instance.activityLogTypes]
                       .map(
                         (type) => InkWell(
                           onTap: () {
@@ -162,6 +165,7 @@ class _ActivityListViewScreenState extends State<ActivityListViewScreen> {
                             children: [
                               Radio(
                                 value: type,
+                                visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
                                 groupValue: searchType,
                                 onChanged: (String? value) {
                                   dog('value change $value');

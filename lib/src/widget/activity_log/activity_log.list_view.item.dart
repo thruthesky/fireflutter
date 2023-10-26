@@ -8,6 +8,7 @@ class ActivityLogListTiLeItem extends StatelessWidget {
     required this.activity,
     required this.actor,
     required this.message,
+    this.icon,
   });
 
   final List<Widget> children;
@@ -15,87 +16,100 @@ class ActivityLogListTiLeItem extends StatelessWidget {
   final User actor;
   final String message;
 
+  final Widget? icon;
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          children: [
-            activityIcon,
-            SizedBox(
-              width: 64,
-              child: Text(
-                dateTimeAgo(activity.createdAt),
-                textAlign: TextAlign.center,
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            children: [
+              const SizedBox(
+                height: sizeSm,
               ),
-            ),
-          ],
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Card(
-            margin: const EdgeInsets.all(0),
-            color: Colors.grey[100],
-            shape: RoundedRectangleBorder(
-              side: BorderSide(
-                color: Colors.grey[300]!,
-                width: 1,
+              activityIcon,
+              const SizedBox(height: sizeXxs),
+              SizedBox(
+                width: 64,
+                child: Text(
+                  dateTimeShort(activity.createdAt),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
               ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: children.isEmpty
-                  ? Row(
-                      children: [
-                        UserAvatar(
-                          user: actor,
-                          size: 52,
-                          onTap: () {
-                            UserService.instance.showPublicProfileScreen(context: context, user: actor);
-                          },
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Text(
-                            message,
+            ],
+          ),
+          const SizedBox(width: sizeXs),
+          Expanded(
+            child: Card(
+              margin: const EdgeInsets.all(0),
+              color: Colors.grey[100],
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  color: Colors.grey[300]!,
+                  width: 1,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16, top: 16, right: 16, bottom: 24),
+                child: children.isEmpty
+                    ? Row(
+                        children: [
+                          UserAvatar(
+                            user: actor,
+                            size: 40,
+                            radius: 20,
+                            onTap: () {
+                              UserService.instance.showPublicProfileScreen(context: context, user: actor);
+                            },
                           ),
-                        ),
-                      ],
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            UserAvatar(
-                              user: actor,
-                              size: 52,
-                              onTap: () {
-                                UserService.instance.showPublicProfileScreen(context: context, user: actor);
-                              },
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Text(
+                              message,
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Text(
-                                message,
+                          ),
+                        ],
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              UserAvatar(
+                                user: actor,
+                                size: 40,
+                                radius: 20,
+                                onTap: () {
+                                  UserService.instance.showPublicProfileScreen(context: context, user: actor);
+                                },
                               ),
-                            ),
-                          ],
-                        ),
-                        ...children,
-                      ],
-                    ),
+                              const SizedBox(width: sizeXs),
+                              Expanded(
+                                child: Text(
+                                  message,
+                                ),
+                              ),
+                            ],
+                          ),
+                          ...children,
+                        ],
+                      ),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget get activityIcon => Container(
-        width: 52,
-        height: 52,
+        width: 40,
+        height: 40,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
           border: Border.all(
@@ -103,35 +117,36 @@ class ActivityLogListTiLeItem extends StatelessWidget {
             width: 1,
           ),
         ),
-        child: Icon(
-          switch ('${activity.type}.${activity.action}') {
-            'user.startApp' => Icons.home,
-            'user.signin' => Icons.login,
-            'user.signout' => Icons.logout,
-            'user.resign' => Icons.delete,
-            'user.create' => Icons.add,
-            'user.update' => Icons.update,
-            'user.like' => Icons.thumb_up,
-            'user.unlike' => Icons.thumb_down,
-            'user.follow' => Icons.add,
-            'user.unfollow' => Icons.remove,
-            'user.viewProfile' => Icons.person,
-            'user.roomOpen' => Icons.chat,
-            'user.share' => Icons.share,
-            'post.create' => Icons.add,
-            'post.update' => Icons.update,
-            'post.delete' => Icons.delete,
-            'post.like' => Icons.thumb_up,
-            'post.unlike' => Icons.thumb_down,
-            'post.share' => Icons.share,
-            'comment.create' => Icons.add,
-            'comment.update' => Icons.update,
-            'comment.delete' => Icons.delete,
-            'comment.like' => Icons.thumb_up,
-            'comment.unlike' => Icons.thumb_down,
-            'comment.share' => Icons.share,
-            _ => Icons.error,
-          },
-        ),
+        child: icon ??
+            Icon(
+              switch ('${activity.type}.${activity.action}') {
+                'user.startApp' => Icons.home,
+                'user.signin' => Icons.login,
+                'user.signout' => Icons.logout,
+                'user.resign' => Icons.delete,
+                'user.create' => Icons.add,
+                'user.update' => Icons.update,
+                'user.like' => Icons.thumb_up,
+                'user.unlike' => Icons.thumb_down,
+                'user.follow' => Icons.bookmark_add_outlined,
+                'user.unfollow' => Icons.bookmark_remove_outlined,
+                'user.viewProfile' => Icons.person_search_outlined,
+                'user.roomOpen' => Icons.chat_bubble_outline,
+                'user.share' => Icons.share,
+                'post.create' => Icons.add,
+                'post.update' => Icons.update,
+                'post.delete' => Icons.delete,
+                'post.like' => Icons.thumb_up_outlined,
+                'post.unlike' => Icons.thumb_down_outlined,
+                'post.share' => Icons.share,
+                'comment.create' => Icons.add_comment,
+                'comment.update' => Icons.insert_comment_outlined,
+                'comment.delete' => Icons.delete_forever_outlined,
+                'comment.like' => Icons.thumb_up_outlined,
+                'comment.unlike' => Icons.thumb_down_outlined,
+                'comment.share' => Icons.share,
+                _ => Icons.help_center_outlined,
+              },
+            ),
       );
 }

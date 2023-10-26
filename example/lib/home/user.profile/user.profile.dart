@@ -93,7 +93,7 @@ class UserProfileState extends State<UserProfile> {
                       buttonBuilder(
                         'Show Activity List View',
                         () => Navigator.push(
-                            context, MaterialPageRoute(builder: (context) => const ActivityListViewScreen())),
+                            context, MaterialPageRoute(builder: (context) => const ActivityLogListViewScreen())),
                       ),
                     ],
                   ),

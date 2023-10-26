@@ -51,6 +51,6 @@ activityLog(
 
 ## Admin listing
 
-- There is a widget named `ActivityListViewScreen`. With this, you can filter by `type, action, and user` and sort by time. If you want to customize the list, you can copy the widget and make your own.
-  - The `AdminAcitivyList` also provide an input box to search by user name.
+- There is a widget named `ActivityLogListViewScreen`. With this, you can filter by `type, action, and user` and sort by time. If you want to customize the list, you can copy the widget and make your own.
+  - The `ActivityLogListViewScreen` also provide an input box to search by user name.
 - To provide more filter options, you can use `ActivityService.instance.init( adminFilterOptions: [ 'user', 'post', 'comment', 'todo', 'mall', ] )`.

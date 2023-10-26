@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/functions/activity_log.functions.dart';
 import 'package:fireflutter/src/functions/comment_sort_string.dart';
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'comment.g.dart';

@@ -1,5 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/widget/activity_log/activity_log.list_view.item.dart';
 import 'package:flutter/material.dart';
 
 class ActivityLogTimeLineUser extends StatelessWidget {
@@ -9,8 +8,8 @@ class ActivityLogTimeLineUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: sizeSm, right: sizeSm, bottom: sizeSm),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 100),
       child: UserDoc(
         uid: activity.uid,
         onLoading: const SizedBox(height: 100),
@@ -79,6 +78,7 @@ class ActivityLogTimeLineUser extends StatelessWidget {
               'resign' => tr.resignLog.replace({'#a': actor.getDisplayName}),
               'create' => tr.createUserLog.replace({'#a': actor.getDisplayName}),
               'update' => tr.updateUserLog.replace({'#a': actor.getDisplayName}),
+              'roomOpen' => tr.roomOpenLog.replace({'#a': actor.getDisplayName}),
               _ => '${actor.getDisplayName} ${activity.type} ${activity.action}',
             },
           );
