@@ -284,8 +284,12 @@ service cloud.firestore {
 
     // report
     match /reports/{documentId} {
-      allow read: if isMyDoc() || isAdmin();
-      allow write: if isAdmin() || willBeMyDoc() || isMyDoc();
+      function checkIfIReported() {
+        return request.auth.uid in resource.data;
+      }
+
+      allow read: if isAdmin() || checkIfIReported();
+      allow write: if true;
     }
 
 
