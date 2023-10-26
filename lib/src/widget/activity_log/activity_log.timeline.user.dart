@@ -10,15 +10,15 @@ class ActivityLogTimeLineUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+      padding: const EdgeInsets.only(left: sizeSm, right: sizeSm, bottom: sizeSm),
       child: UserDoc(
         uid: activity.uid,
-        onLoading: const SizedBox(height: 120),
+        onLoading: const SizedBox(height: 100),
         builder: (actor) {
           if (activity.otherUid != null && activity.otherUid!.isNotEmpty) {
             return UserDoc(
               uid: activity.otherUid!,
-              onLoading: const SizedBox(height: 120),
+              onLoading: const SizedBox(height: 100),
               builder: (target) {
                 return ActivityLogListTiLeItem(
                   key: Key(activity.id),

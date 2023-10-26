@@ -10,15 +10,15 @@ class ActivityLogTimeLinePost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+      padding: const EdgeInsets.only(left: sizeSm, right: sizeSm, bottom: sizeSm),
       child: PostDoc(
         live: false,
-        onLoading: const SizedBox(height: 284),
+        onLoading: const SizedBox(height: 200),
         postId: activity.postId,
         builder: (Post post) {
           return UserDoc(
             uid: activity.uid,
-            onLoading: const SizedBox(height: 120),
+            onLoading: const SizedBox(height: 100),
             builder: (actor) {
               return ActivityLogListTiLeItem(
                 activity: activity,
@@ -77,9 +77,11 @@ class ActivityLogTimeLinePost extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: sizeXxs),
-                  PostTitle(post: post),
+                  Text(post.title,
+                      maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodyMedium),
                   const SizedBox(height: sizeXxs),
-                  PostContent(post: post),
+                  Text(post.content,
+                      maxLines: 2, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall),
                   if (post.noOfComments > 0)
                     TextButton(
                       style: ButtonStyle(

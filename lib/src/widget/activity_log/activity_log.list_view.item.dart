@@ -35,7 +35,7 @@ class ActivityLogListTiLeItem extends StatelessWidget {
         const SizedBox(width: 16),
         Expanded(
           child: Card(
-            margin: const EdgeInsets.only(bottom: 24),
+            margin: const EdgeInsets.all(0),
             color: Colors.grey[100],
             shape: RoundedRectangleBorder(
               side: BorderSide(
