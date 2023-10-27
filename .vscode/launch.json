@@ -148,6 +148,15 @@
       "flutterMode": "debug",
       "deviceId": "iPhone 15 Pro Max"
     },
+    {
+      "name": "GRC - iPad Pro",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "iPad Pro"
+    },
 
     {
       "name": "GRC - Integration Test - iPhone 15 Pro Max",
