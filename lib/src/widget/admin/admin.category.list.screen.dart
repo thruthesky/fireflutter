@@ -22,13 +22,9 @@ class AdminCategoryListScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back),
         ),
-        iconTheme: Theme.of(context)
-            .iconTheme
-            .copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
+        iconTheme: Theme.of(context).iconTheme.copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
         backgroundColor: Theme.of(context).colorScheme.inverseSurface,
-        title: Text('Category List',
-            style: TextStyle(
-                color: Theme.of(context).colorScheme.onInverseSurface)),
+        title: Text('Category List', style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface)),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -37,8 +33,7 @@ class AdminCategoryListScreen extends StatelessWidget {
                 context,
                 success: (category) {
                   Navigator.pop(context);
-                  CategoryService.instance
-                      .showUpdateDialog(context, category.id);
+                  CategoryService.instance.showUpdateDialog(context, category.id);
                 },
               );
             },
