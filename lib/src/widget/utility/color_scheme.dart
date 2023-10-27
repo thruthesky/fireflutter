@@ -111,7 +111,7 @@ class ColorSchemeScreen extends StatelessWidget {
           GridView.count(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 4,
+            crossAxisCount: 5,
             children: [
               for (final colorUnit in colorUnits)
                 ColorUnit(
@@ -131,7 +131,7 @@ class ColorSchemeScreen extends StatelessWidget {
               builder: (context) => GridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 4,
+                crossAxisCount: 5,
                 children: [
                   for (final colorUnit in colorUnits)
                     ColorUnit(
@@ -174,7 +174,7 @@ class ColorUnit extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: [
       Container(
-        height: 100,
+        height: 80,
         color: primaryColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
