@@ -429,67 +429,39 @@ class _PostCardState extends State<PostCard> {
         ],
         // list of comment
         if (widget.commentSize > 0)
-          // StreamBuilder(
-          //   initialData: _commentSnapshot,
-          //   stream: commentCol
-          //       .where('postId', isEqualTo: post.id)
-          //       .orderBy('sort', descending: false)
-          //       .limitToLast(widget.commentSize)
-          //       .snapshots(),
-          //   builder: (context, snapshot) {
-          //     if (snapshot.hasError) {
-          //       log(snapshot.error.toString());
-          //       return Text('Something went wrong; ${snapshot.error.toString()}');
-          //     }
-          //     if (snapshot.hasData) {
-          //       List<Widget> children = [];
-          //       for (final doc in snapshot.data!.docs) {
-          //         final comment = Comment.fromDocumentSnapshot(doc);
-          //         children.add(
-          //           CommentOneLineListTile(
-          //             key: ValueKey(comment.id),
-          //             padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
-          //             contentMargin: const EdgeInsets.only(bottom: 8),
-          //             contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
-          //             post: post,
-          //             comment: comment,
-          //             onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
-          //           ),
-          //         );
-          //       }
-          //       return Column(children: children);
-          //     }
-          //     return const SizedBox.shrink();
-          //   },
-          // ),
-          FirestoreStream(
-            initialQuerySnapshot: _commentSnapshot,
-            snapshots: commentCol
+          StreamBuilder(
+            initialData: _commentSnapshot,
+            stream: commentCol
                 .where('postId', isEqualTo: post.id)
                 .orderBy('sort', descending: false)
                 .limitToLast(widget.commentSize)
                 .snapshots(),
             builder: (context, snapshot) {
-              List<Widget> children = [];
-              for (final doc in snapshot.docs) {
-                final comment = Comment.fromDocumentSnapshot(doc);
-                children.add(
-                  CommentOneLineListTile(
-                    key: ValueKey(comment.id),
-                    padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
-                    contentMargin: const EdgeInsets.only(bottom: 8),
-                    contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
-                    post: post,
-                    comment: comment,
-                    onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
-                  ),
-                );
+              if (snapshot.hasError) {
+                dog(snapshot.error.toString());
+                return Text('Something went wrong; ${snapshot.error.toString()}');
               }
-              return Column(children: children);
-            },
-            onSnapshot: (snapshot) {
-              _commentSnapshot = snapshot;
-              widget.onCommentSnapshot?.call(snapshot);
+              if (snapshot.hasData) {
+                _commentSnapshot = snapshot.data;
+                widget.onCommentSnapshot?.call(snapshot.data!);
+                List<Widget> children = [];
+                for (final doc in _commentSnapshot!.docs) {
+                  final comment = Comment.fromDocumentSnapshot(doc);
+                  children.add(
+                    CommentOneLineListTile(
+                      key: ValueKey(comment.id),
+                      padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
+                      contentMargin: const EdgeInsets.only(bottom: 8),
+                      contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
+                      post: post,
+                      comment: comment,
+                      onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
+                    ),
+                  );
+                }
+                return Column(children: children);
+              }
+              return const SizedBox.shrink();
             },
           ),
 
