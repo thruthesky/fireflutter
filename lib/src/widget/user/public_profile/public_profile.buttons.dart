@@ -57,14 +57,13 @@ class PublicProfileButtons extends StatelessWidget {
                 child: Text(tr.chat),
               ),
           UserService.instance.customize.publicScreenFollowButton?.call(context, user) ??
-              UserDoc(
-                uid: user.uid,
-                builder: (user) => TextButton(
+              MyDoc(
+                builder: (my) => TextButton(
                   onPressed: () async {
                     await FeedService.instance.follow(user.uid);
                   },
                   child: Text(
-                    my!.followings.contains(user.uid) ? tr.unfollow : tr.follow,
+                    my.followings.contains(user.uid) ? tr.unfollow : tr.follow,
                     style: textStyle(context),
                   ),
                 ),
