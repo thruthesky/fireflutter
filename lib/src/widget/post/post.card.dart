@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -63,6 +62,8 @@ class PostCard extends StatefulWidget {
     this.customFooterBuilder,
     this.headerPadding = const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
     this.bottomButtonPadding = const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeSm),
+    this.onCommentSnapshot,
+    this.initalCommentSnapShot,
   });
 
   final Color? color;
@@ -93,6 +94,9 @@ class PostCard extends StatefulWidget {
   /// The number of comments to show
   final int commentSize;
 
+  final void Function(QuerySnapshot<Object?> snapshot)? onCommentSnapshot;
+  final QuerySnapshot<Object?>? initalCommentSnapShot;
+
   @override
   State<PostCard> createState() => _PostCardState();
 }
@@ -101,6 +105,14 @@ class _PostCardState extends State<PostCard> {
   // final _commentBoxKey = GlobalKey();
   // final _boxConstraintsKey = GlobalKey();
   // BoxConstraints _commentBoxConstraints = const BoxConstraints(minHeight: 500);
+
+  QuerySnapshot<Object?>? _commentSnapshot;
+
+  @override
+  initState() {
+    super.initState();
+    _commentSnapshot = widget.initalCommentSnapShot;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -417,42 +429,42 @@ class _PostCardState extends State<PostCard> {
         ],
         // list of comment
         if (widget.commentSize > 0)
-          StatefulBuilder(
-            builder: (context, setCommentState) {
-              return StreamBuilder(
-                stream: commentCol
-                    .where('postId', isEqualTo: post.id)
-                    .orderBy('sort', descending: false)
-                    .limitToLast(widget.commentSize)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    log(snapshot.error.toString());
-                    return Text('Something went wrong; ${snapshot.error.toString()}');
-                  }
-                  if (snapshot.hasData) {
-                    List<Widget> children = [];
-                    for (final doc in snapshot.data!.docs) {
-                      final comment = Comment.fromDocumentSnapshot(doc);
-                      children.add(
-                        CommentOneLineListTile(
-                          key: ValueKey(comment.id),
-                          padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
-                          contentMargin: const EdgeInsets.only(bottom: 8),
-                          contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
-                          post: post,
-                          comment: comment,
-                          onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
-                        ),
-                      );
-                    }
-                    return Column(children: children);
-                  }
-                  return const SizedBox.shrink();
-                },
-              );
+          StreamBuilder(
+            initialData: _commentSnapshot,
+            stream: commentCol
+                .where('postId', isEqualTo: post.id)
+                .orderBy('sort', descending: false)
+                .limitToLast(widget.commentSize)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                dog(snapshot.error.toString());
+                return Text('Something went wrong; ${snapshot.error.toString()}');
+              }
+              if (snapshot.hasData) {
+                _commentSnapshot = snapshot.data;
+                widget.onCommentSnapshot?.call(snapshot.data!);
+                List<Widget> children = [];
+                for (final doc in _commentSnapshot!.docs) {
+                  final comment = Comment.fromDocumentSnapshot(doc);
+                  children.add(
+                    CommentOneLineListTile(
+                      key: ValueKey(comment.id),
+                      padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
+                      contentMargin: const EdgeInsets.only(bottom: 8),
+                      contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
+                      post: post,
+                      comment: comment,
+                      onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
+                    ),
+                  );
+                }
+                return Column(children: children);
+              }
+              return const SizedBox.shrink();
             },
           ),
+
         // post & comment buttons
         Padding(
           padding: widget.bottomButtonPadding,
