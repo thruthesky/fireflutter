@@ -266,7 +266,7 @@ class _PostCardState extends State<PostCard> {
               widgets: [
                 if (post.youtubeId.isNotEmpty)
                   GestureDetector(
-                    onTap: () => showPreview(context, 0),
+                    onTap: () => PostService.instance.showPreview(context, post, index: 0),
                     child: YouTubeThumbnail(
                       youtubeId: post.youtubeId,
                       stackFit: StackFit.passthrough,
@@ -281,7 +281,11 @@ class _PostCardState extends State<PostCard> {
                         (e) => GestureDetector(
                           key: const Key('PostCardViewImage'),
                           behavior: HitTestBehavior.opaque,
-                          onTap: () => showPreview(context, post.youtubeId.isNotEmpty ? e.key + 1 : e.key),
+                          onTap: () => PostService.instance.showPreview(
+                            context,
+                            post,
+                            index: post.youtubeId.isNotEmpty ? e.key + 1 : e.key,
+                          ),
                           child: CachedNetworkImage(
                             imageUrl: e.value,
                             fit: BoxFit.cover,
@@ -311,32 +315,6 @@ class _PostCardState extends State<PostCard> {
           ),
       ],
     );
-  }
-
-  List<Widget> listMedia(BuildContext context) {
-    return [
-      if (widget.post.youtubeId.isNotEmpty)
-        GestureDetector(
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  insetPadding: const EdgeInsets.all(0),
-                  contentPadding: const EdgeInsets.all(0),
-                  content: YouTube(youtubeId: widget.post.youtubeId),
-                );
-              },
-            );
-          },
-          child: YouTubeThumbnail(
-            key: ValueKey(widget.post.youtubeId),
-            youtubeId: widget.post.youtubeId,
-            stackFit: StackFit.passthrough,
-          ),
-        ),
-      ...widget.post.urls.map((e) => CachedNetworkImage(imageUrl: e)).toList()
-    ];
   }
 
   Widget defaultActions(BuildContext context, Post post) {
@@ -475,18 +453,6 @@ class _PostCardState extends State<PostCard> {
           ),
         )
       ],
-    );
-  }
-
-  void showPreview(BuildContext context, int index) {
-    showGeneralDialog(
-      context: context,
-      pageBuilder: (context, _, __) {
-        return CarouselScreen(
-          widgets: listMedia(context),
-          index: index,
-        );
-      },
     );
   }
 }

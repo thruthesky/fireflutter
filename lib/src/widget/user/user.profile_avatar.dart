@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 /// UserProfileAvatar
@@ -101,7 +102,19 @@ class _UserAvatarState extends State<UserProfileAvatar> {
         }
         if (source == null) return;
         final ImagePicker picker = ImagePicker();
-        final XFile? image = await picker.pickImage(source: source);
+        late final XFile? image;
+        try {
+          image = await picker.pickImage(source: source);
+        } on PlatformException catch (e) {
+          if (e.code == 'photo_access_denied') {
+            // Need to ask for permission.
+            // Do we need to use permission_handler package
+            // when this happens?
+            toast(title: 'Permission Error', message: 'User did not grant the camera permission!');
+          } else {
+            toast(title: 'Unknown Error', message: 'Unknown error: $e');
+          }
+        }
 
         if (image == null) return;
 
@@ -139,7 +152,7 @@ class _UserAvatarState extends State<UserProfileAvatar> {
               child: widget.uploadIcon ??
                   Icon(
                     Icons.camera_alt,
-                    color: Colors.grey.shade800,
+                    color: Theme.of(context).colorScheme.background.tone(55),
                     size: 32,
                   ),
             ),
@@ -157,8 +170,7 @@ class _UserAvatarState extends State<UserProfileAvatar> {
                     hasPhotoUrl: false,
                   );
 
-                  User.get(user.uid)
-                      .then((value) => setState(() => user = value!));
+                  User.get(user.uid).then((value) => setState(() => user = value!));
 
                   widget.onDeleteSuccess?.call();
                 },
@@ -189,8 +201,7 @@ class _UserAvatarState extends State<UserProfileAvatar> {
         height: widget.size,
         child: CircularProgressIndicator(
           strokeWidth: widget.uploadStrokeWidth,
-          valueColor:
-              AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
           value: progress,
         ),
       ),
