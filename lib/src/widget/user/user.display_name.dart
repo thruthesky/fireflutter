@@ -16,6 +16,7 @@ class UserDisplayName extends StatefulWidget {
     this.overflow,
     this.maxLines,
     this.style,
+    this.showBlocked = false,
   }) : assert(user != null || uid != null);
 
   final String? uid;
@@ -23,6 +24,7 @@ class UserDisplayName extends StatefulWidget {
   final TextOverflow? overflow;
   final int? maxLines;
   final TextStyle? style;
+  final bool showBlocked;
 
   @override
   State<UserDisplayName> createState() => _UserDisplayNameState();
@@ -54,7 +56,7 @@ class _UserDisplayNameState extends State<UserDisplayName> {
     }
 
     String displayName = user!.getDisplayName;
-    if (my?.hasBlocked(user!.uid) ?? false) {
+    if ((my?.hasBlocked(user!.uid) ?? false) && !widget.showBlocked) {
       displayName = tr.blocked;
     }
     return Text(
