@@ -3,6 +3,7 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/model/report/report.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class AdminReportListScreen extends StatefulWidget {
   static const String routeName = '/AdminReportList';
@@ -13,7 +14,7 @@ class AdminReportListScreen extends StatefulWidget {
 }
 
 class _AdminReportListScreenState extends State<AdminReportListScreen> {
-  String? type;
+  String type = 'all';
 
   get query {
     Query q = reportCol;
@@ -46,46 +47,37 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
           child: SizedBox(
             height: 48,
             child: ListView(scrollDirection: Axis.horizontal, children: [
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    type = null;
-                  });
-                },
-                child: const Text(
-                  "All",
+              for (final target in ['all', 'user', 'post', 'comment'])
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      type = target;
+                    });
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Radio(
+                        value: target,
+                        groupValue: type,
+                        onChanged: (String? value) {
+                          dog('value change $value');
+                          if (value != null) {
+                            setState(() {
+                              type = value;
+                            });
+                          }
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: sizeSm),
+                        child: Text(
+                          toBeginningOfSentenceCase(target)!,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    type = 'user';
-                  });
-                },
-                child: const Text(
-                  "Users",
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    type = 'post';
-                  });
-                },
-                child: const Text(
-                  "Posts",
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    type = 'comment';
-                  });
-                },
-                child: const Text(
-                  "Comments",
-                ),
-              ),
             ]),
           ),
         ),

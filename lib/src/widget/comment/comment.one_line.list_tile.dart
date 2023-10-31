@@ -16,6 +16,7 @@ class CommentOneLineListTile extends StatefulWidget {
     this.contentBorderRadius,
     this.runSpacing = 8,
     this.onTapContent,
+    this.fixedDepth,
   });
 
   final Post post;
@@ -25,6 +26,9 @@ class CommentOneLineListTile extends StatefulWidget {
   final EdgeInsetsGeometry? contentMargin;
   final BorderRadiusGeometry? contentBorderRadius;
   final double runSpacing;
+
+  /// Fixed depth of the comment. If null, the depth of the comment will be used.
+  final int? fixedDepth;
 
   /// Callback function for content tap
   final void Function()? onTapContent;
@@ -40,7 +44,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: indent(widget.comment.depth)),
+      margin: EdgeInsets.only(left: indent(widget.fixedDepth ?? widget.comment.depth)),
       padding: widget.padding ?? const EdgeInsets.all(0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
