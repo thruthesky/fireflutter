@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
@@ -47,8 +48,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
     // This is for updating the post when it is edited without flickering.
     Post.doc(post.id).snapshots().listen((DocumentSnapshot event) {
       _post = Post.fromDocumentSnapshot(event);
-
-      dog('Does it have pending writes? ${event.metadata.hasPendingWrites}');
       if (mounted) setState(() {});
     });
   }
@@ -83,13 +82,41 @@ class _PostViewScreenState extends State<PostViewScreen> {
                             PostViewMeta(post: _post, headerPadding: widget.headerPadding),
                         post: _post!,
                         customMainContentBuilder: (context, post) {
-                          if (post.youtubeId.isEmpty && post.urls.isEmpty) {
+                          if (post.youtubeId.isEmpty && post.urls.isEmpty && my?.hasBlocked(post.uid) == true) {
                             return const SizedBox.shrink();
                           }
                           return CarouselView(
                             widgets: [
-                              if (post.youtubeId.isNotEmpty) YouTube(youtubeId: post.youtubeId, autoPlay: false),
-                              if (post.urls.isNotEmpty) ...post.urls.map((e) => DisplayMedia(url: e)).toList(),
+                              if (post.youtubeId.isNotEmpty)
+                                GestureDetector(
+                                  onTap: () => PostService.instance.showPreview(context, post, index: 0),
+                                  child: YouTubeThumbnail(
+                                    youtubeId: post.youtubeId,
+                                    stackFit: StackFit.passthrough,
+                                    boxFit: BoxFit.cover,
+                                  ),
+                                ),
+                              if (post.hasPhoto)
+                                ...post.urls
+                                    .asMap()
+                                    .entries
+                                    .map(
+                                      (e) => GestureDetector(
+                                        key: const Key('PostCardViewImage'),
+                                        behavior: HitTestBehavior.opaque,
+                                        onTap: () => PostService.instance.showPreview(
+                                          context,
+                                          post,
+                                          index: post.youtubeId.isNotEmpty ? e.key + 1 : e.key,
+                                        ),
+                                        child: CachedNetworkImage(
+                                          imageUrl: e.value,
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) => const SizedBox(height: 400),
+                                        ),
+                                      ),
+                                    )
+                                    .toList()
                             ],
                           );
                         },
@@ -98,18 +125,38 @@ class _PostViewScreenState extends State<PostViewScreen> {
                           children: [
                             PostViewTitle(post: _post),
                             PostViewContent(post: _post),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeXs),
+                              child: Wrap(
+                                runSpacing: 0,
+                                spacing: sizeXxs,
+                                children: [
+                                  ...((post.data?['hashtags'] ?? []) as List),
+                                ]
+                                    .map((e) => Text(
+                                          '#$e',
+                                        ))
+                                    .toList(),
+                              ),
+                            ),
                           ],
                         ),
                         customFooterBuilder: (context, post) => Padding(
                           padding: const EdgeInsets.only(left: sizeSm, top: sizeSm),
-                          child: CommentListView(
-                            commentTileTopSpacing: 8,
-                            post: post,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: sizeSm),
+                            child: CommentListView(
+                              commentTileTopSpacing: 8,
+                              post: post,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                            ),
                           ),
                         ),
                       ),
+                      const SizedBox(
+                        height: sizeSm,
+                      )
                     ],
                   ),
                 ),

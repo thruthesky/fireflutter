@@ -1,5 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/functions/activity_log.functions.dart';
 
 class ActivityLogService {
   static ActivityLogService? _instance;
@@ -9,19 +8,28 @@ class ActivityLogService {
 
   bool enableActivityLog = false;
 
-  late List<String> adminListViewOptions;
+  List<String> activityLogTypes = ['user', 'post', 'comment'];
 
   ActivityLogCustomize customize = ActivityLogCustomize();
 
   init({
-    List<String> adminListViewOptions = const ['user', 'post', 'comment'],
+    List<String>? customLogType,
+    ActivityLogCustomize? customize,
   }) {
     enableActivityLog = true;
-    this.adminListViewOptions = adminListViewOptions;
+
     activityLogAppStart();
     UserService.instance.userChanges.listen((user) {
       if (user == null) return;
       activityLogSignin();
     });
+
+    if (customLogType != null && customLogType.isNotEmpty) {
+      activityLogTypes = [...activityLogTypes, ...customLogType];
+    }
+
+    if (customize != null) {
+      this.customize = customize;
+    }
   }
 }

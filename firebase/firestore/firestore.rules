@@ -284,8 +284,8 @@ service cloud.firestore {
 
     // report
     match /reports/{documentId} {
-      allow read: if isMyDoc() || isAdmin();
-      allow write: if isAdmin() || willBeMyDoc() || isMyDoc();
+      allow read: if true;
+      allow write: if true;
     }
 
 

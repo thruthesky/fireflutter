@@ -44,6 +44,8 @@ class I18nTexts {
   String unblockMessage;
   String alreadyBlockedTitle;
   String alreadyBlockedMessage;
+  String disabled;
+  String disabledMessage;
   String report;
   String alreadyReportedTitle;
   String alreadyReportedMessage;
@@ -70,6 +72,7 @@ class I18nTexts {
   String home;
   String profile;
   String createChatRoom;
+  String views;
 
   /// activity_log user
   String startAppLog;
@@ -78,6 +81,7 @@ class I18nTexts {
   String resignLog;
   String createUserLog;
   String updateUserLog;
+  String roomOpenLog;
   String likedUserLog;
   String unlikedUserLog;
   String followedUserLog;
@@ -138,6 +142,8 @@ class I18nTexts {
     this.unblockMessage = "Unblocked",
     this.alreadyBlockedTitle = "Already blocked",
     this.alreadyBlockedMessage = "You have blocked this user already.",
+    this.disabled = "Disabled",
+    this.disabledMessage = "You are disabled.",
     this.report = "Report",
     this.alreadyReportedTitle = "Already reported",
     this.alreadyReportedMessage = "You have reported this #type already.",
@@ -160,6 +166,7 @@ class I18nTexts {
     this.home = "Home",
     this.profile = "Profile",
     this.createChatRoom = "Create chat room",
+    this.views = "Views",
 
     /// activity_log user
     this.startAppLog = "#a started the app",
@@ -173,6 +180,7 @@ class I18nTexts {
     this.followedUserLog = "#a followed #b",
     this.unfollowedUserLog = "#a unfollowed #b",
     this.viewProfileUserLog = "#a viewed #b's profile",
+    this.roomOpenLog = "#a opened a chat room",
 
     /// activity_log post
     this.createPostLog = "#a created a post",

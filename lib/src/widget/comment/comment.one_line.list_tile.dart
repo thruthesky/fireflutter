@@ -51,6 +51,9 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                   textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium!),
             ),
           ] else ...[
+            const SizedBox(
+              width: sizeXs + 5,
+            ),
             UserAvatar(
               uid: widget.comment.uid,
               radius: 10,
@@ -139,6 +142,10 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                             visualDensity: VisualDensity.compact,
                           ),
                           onPressed: () {
+                            if (my?.isDisabled ?? false) {
+                              toast(title: tr.disabled, message: tr.disabledMessage);
+                              return;
+                            }
                             CommentService.instance.showCommentEditBottomSheet(
                               context,
                               post: widget.post,
@@ -226,6 +233,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
 
   Widget likeButton() {
     return IconButton(
+      visualDensity: VisualDensity.compact,
       onPressed: () => widget.comment.like(),
       icon: Icon(
         iLiked! ? Icons.favorite_border : Icons.favorite,

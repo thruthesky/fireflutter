@@ -15,15 +15,15 @@ import 'package:flutter/material.dart';
 ///
 ///
 class CommentEditBottomSheet extends StatefulWidget {
-  const CommentEditBottomSheet({
-    super.key,
-    this.post,
-    this.parent,
-    this.comment,
-    this.labelText,
-    this.hintText,
-    this.onEdited,
-  });
+  const CommentEditBottomSheet(
+      {super.key,
+      this.post,
+      this.parent,
+      this.comment,
+      this.labelText,
+      this.hintText,
+      this.onEdited,
+      this.padding = const EdgeInsets.all(8)});
 
   final Post? post;
   final Comment? parent;
@@ -34,6 +34,7 @@ class CommentEditBottomSheet extends StatefulWidget {
   final Comment? comment;
   final String? labelText;
   final String? hintText;
+  final EdgeInsetsGeometry padding;
 
   /// This function will be called when the comment is edited including create and update.
   final Function(Comment comment)? onEdited;
@@ -86,29 +87,32 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          children: [
-            UserAvatar(
-              uid: myUid!,
-              key: ValueKey(myUid!),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: TextField(
-                  key: const Key('CommentEditTextField'),
-                  controller: content,
-                  minLines: 2,
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    labelText: widget.labelText ?? 'Comment',
-                    hintText: widget.hintText ?? 'Write a comment...',
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              UserAvatar(
+                uid: myUid!,
+                key: ValueKey(myUid!),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: TextField(
+                    key: const Key('CommentEditTextField'),
+                    controller: content,
+                    minLines: 2,
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: widget.labelText ?? 'Comment',
+                      hintText: widget.hintText ?? 'Write a comment...',
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,

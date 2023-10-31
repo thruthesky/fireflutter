@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/functions/activity_log.functions.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user.g.dart';
@@ -179,7 +178,9 @@ class User {
 
   // Use this to create a user model object indicating that the user document does not exist.
   factory User.nonExistent() {
-    return User(uid: '', createdAt: DateTime(1970))..exists = false;
+    return User(uid: '', createdAt: DateTime(1970))
+      ..exists = false
+      ..data = {};
   }
 
   factory User.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
@@ -432,6 +433,14 @@ class User {
   ///
   /// Put the uid of the User to be liked in the [uid] parameter.
   Future<bool> like(String uid) async {
+    if (notLoggedIn) {
+      toast(title: tr.loginFirstTitle, message: tr.loginFirstMessage);
+      return false;
+    }
+    if (my!.isDisabled) {
+      toast(title: tr.disabled, message: tr.disabledMessage);
+      return false;
+    }
     bool isLiked = await toggle(pathUserLiked(uid));
 
     UserService.instance.sendNotificationOnLike(this, isLiked);

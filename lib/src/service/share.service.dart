@@ -1,5 +1,4 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:fireflutter/src/functions/activity_log.functions.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fireflutter/fireflutter.dart';

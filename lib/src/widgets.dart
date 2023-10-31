@@ -19,7 +19,7 @@ export 'widget/user/user.liked_by.list.screen.dart';
 export 'widget/user/user_blocked.dart';
 export 'widget/user/new_user_horizontal_list.dart';
 
-export 'widget/user/user_live_doc.dart';
+// export 'widget/user/user_live_doc.dart';
 
 // Chat
 export 'widget/chat/room/chat.room.screen.dart';
@@ -127,9 +127,13 @@ export 'widget/setting/push_notification.setting.screen.dart';
 
 // activity
 export 'widget/activity_log/activity_log.list_view.screen.dart';
+export 'widget/activity_log/activity_log.list_view.item.dart';
 
 export 'widget/common/display_uploaded_file.dart';
 export 'widget/activity_log/activity_log.timeline.dart';
 export 'widget/activity_log/activity_log.timeline.user.dart';
 export 'widget/activity_log/activity_log.timeline.post.dart';
 export 'widget/activity_log/activity_log.timeline.comment.dart';
+
+// utility
+export 'widget/utility/color_scheme.dart';
