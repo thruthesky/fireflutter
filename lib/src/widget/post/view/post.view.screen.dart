@@ -98,6 +98,20 @@ class _PostViewScreenState extends State<PostViewScreen> {
                           children: [
                             PostViewTitle(post: _post),
                             PostViewContent(post: _post),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeXs),
+                              child: Wrap(
+                                runSpacing: 0,
+                                spacing: sizeXxs,
+                                children: [
+                                  ...((post.data?['hashtags'] ?? []) as List),
+                                ]
+                                    .map((e) => Text(
+                                          '#$e',
+                                        ))
+                                    .toList(),
+                              ),
+                            ),
                           ],
                         ),
                         customFooterBuilder: (context, post) => Padding(
