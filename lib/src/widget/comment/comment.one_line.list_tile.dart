@@ -51,6 +51,9 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                   textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium!),
             ),
           ] else ...[
+            const SizedBox(
+              width: sizeXs + 5,
+            ),
             UserAvatar(
               uid: widget.comment.uid,
               radius: 10,
@@ -230,6 +233,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
 
   Widget likeButton() {
     return IconButton(
+      visualDensity: VisualDensity.compact,
       onPressed: () => widget.comment.like(),
       icon: Icon(
         iLiked! ? Icons.favorite_border : Icons.favorite,

@@ -143,14 +143,20 @@ class _PostViewScreenState extends State<PostViewScreen> {
                         ),
                         customFooterBuilder: (context, post) => Padding(
                           padding: const EdgeInsets.only(left: sizeSm, top: sizeSm),
-                          child: CommentListView(
-                            commentTileTopSpacing: 8,
-                            post: post,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: sizeSm),
+                            child: CommentListView(
+                              commentTileTopSpacing: 8,
+                              post: post,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                            ),
                           ),
                         ),
                       ),
+                      const SizedBox(
+                        height: sizeSm,
+                      )
                     ],
                   ),
                 ),
