@@ -107,7 +107,9 @@ class _UserAvatarState extends State<UserProfileAvatar> {
           image = await picker.pickImage(source: source);
         } on PlatformException catch (e) {
           if (e.code == 'photo_access_denied') {
-            // TODO ask for permission again
+            // Need to ask for permission.
+            // Do we need to use permission_handler package
+            // when this happens?
             toast(title: 'Permission Error', message: 'User did not grant the camera permission!');
           } else {
             toast(title: 'Unknown Error', message: 'Unknown error: $e');

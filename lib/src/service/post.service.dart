@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
@@ -126,9 +127,47 @@ class PostService {
     return await Post.get(postId);
   }
 
+  // Reutrns a list of Images and Youtube Video of the post
+  List<Widget> listMedia(BuildContext context, Post post) {
+    return [
+      if (post.youtubeId.isNotEmpty == true)
+        GestureDetector(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  insetPadding: const EdgeInsets.all(0),
+                  contentPadding: const EdgeInsets.all(0),
+                  content: YouTube(youtubeId: post.youtubeId),
+                );
+              },
+            );
+          },
+          child: YouTubeThumbnail(
+            key: ValueKey(post.youtubeId),
+            youtubeId: post.youtubeId,
+            stackFit: StackFit.passthrough,
+          ),
+        ),
+      ...post.urls.map((e) => CachedNetworkImage(imageUrl: e)).toList()
+    ];
+  }
+
+  // Shows the preview carousel of the media of the post
+  void showPreview(BuildContext context, Post post, {int index = 0}) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) {
+        return CarouselScreen(
+          widgets: listMedia(context, post),
+          index: index,
+        );
+      },
+    );
+  }
+
   /// Returns a list of menu widgets on post view screen.
-  ///
-  ///
   ///
   List<Widget> postViewActions({
     required BuildContext context,
