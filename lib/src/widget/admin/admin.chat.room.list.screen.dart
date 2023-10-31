@@ -21,9 +21,7 @@ class _AdminChatRoomListScreenState extends State<AdminChatRoomListScreen> {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back),
         ),
-        iconTheme: Theme.of(context).iconTheme.copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
-        backgroundColor: Theme.of(context).colorScheme.inverseSurface,
-        title: Text('Admin Chat Room List', style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface)),
+        title: const Text('Admin Chat Room List'),
       ),
       body: FirestoreListView(
         query: chatCol,

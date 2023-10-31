@@ -13,8 +13,6 @@ class AdminReportListScreen extends StatefulWidget {
 }
 
 class _AdminReportListScreenState extends State<AdminReportListScreen> {
-  style(context) => TextStyle(color: Theme.of(context).colorScheme.onInverseSurface);
-
   String? type;
 
   get query {
@@ -40,11 +38,8 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back),
         ),
-        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onInverseSurface),
-        backgroundColor: Theme.of(context).colorScheme.inverseSurface,
-        title: Text(
+        title: const Text(
           'Admin Report List',
-          style: style(context),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48),
@@ -57,9 +52,8 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
                     type = null;
                   });
                 },
-                child: Text(
+                child: const Text(
                   "All",
-                  style: style(context),
                 ),
               ),
               TextButton(
@@ -68,9 +62,8 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
                     type = 'user';
                   });
                 },
-                child: Text(
+                child: const Text(
                   "Users",
-                  style: style(context),
                 ),
               ),
               TextButton(
@@ -79,9 +72,8 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
                     type = 'post';
                   });
                 },
-                child: Text(
+                child: const Text(
                   "Posts",
-                  style: style(context),
                 ),
               ),
               TextButton(
@@ -90,9 +82,8 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
                     type = 'comment';
                   });
                 },
-                child: Text(
+                child: const Text(
                   "Comments",
-                  style: style(context),
                 ),
               ),
             ]),
