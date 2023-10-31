@@ -77,24 +77,19 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     widget.room.isGroupChat
-                        ? Text(widget.room.name,
-                            style: Theme.of(context).textTheme.bodyLarge)
+                        ? Text(widget.room.name, style: Theme.of(context).textTheme.titleMedium)
                         : UserDoc(
                             uid: otherUserUid(widget.room.users),
                             builder: (_) {
                               otherUserData = _;
-                              return Text(_.name,
-                                  style: Theme.of(context).textTheme.bodyLarge);
+                              return Text(_.name, style: Theme.of(context).textTheme.titleMedium);
                             },
                             onLoading: otherUserData != null
-                                ? Text(otherUserData!.name,
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge)
+                                ? Text(otherUserData!.name, style: Theme.of(context).textTheme.titleMedium)
                                 : null,
                           ),
                     Text(
-                      (widget.room.lastMessage?.text ?? '')
-                          .replaceAll("\n", ' '),
+                      (widget.room.lastMessage?.text ?? '').replaceAll("\n", ' '),
                       style: Theme.of(context).textTheme.bodySmall,
                       maxLines: 1,
                     ),
