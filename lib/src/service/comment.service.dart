@@ -103,12 +103,11 @@ class CommentService {
       context: context,
       // To prevent the bottom sheet from being hidden by the keyboard.
       isScrollControlled: true,
-      // backgroundColor: primaryContainer,
       // barrierColor: secondary.withOpacity(.5).withAlpha(110),
       isDismissible: true,
       builder: (context) => Padding(
         // This padding is important to prevent the bottom sheet from being hidden by the keyboard.
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, MediaQuery.of(context).viewInsets.bottom),
         child: SafeArea(
           // SafeArea is needed for Simulator
           child: Column(

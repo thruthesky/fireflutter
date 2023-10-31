@@ -14,7 +14,7 @@ class PostContentShowMore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ParsedReadMore(
-      post.content,
+      my?.hasBlocked(post.uid) != true ? post.content : 'Blocked',
       urlTextStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
             color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.normal,

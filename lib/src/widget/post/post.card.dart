@@ -311,7 +311,7 @@ class _PostCardState extends State<PostCard> {
           Container(
             padding: const EdgeInsets.all(sizeSm),
             color: widget.contentBackground,
-            child: PostContent(post: post, style: Theme.of(context).textTheme.bodyMedium),
+            child: PostContentShowMore(post: post),
           ),
       ],
     );
