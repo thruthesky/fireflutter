@@ -172,6 +172,7 @@ class PostService {
   List<Widget> postViewActions({
     required BuildContext context,
     required Post? post,
+    Function(bool blocked)? onBlock,
   }) {
     if (post == null) return [];
     return [
@@ -196,9 +197,14 @@ class PostService {
           if (loggedIn)
             PopupMenuItem(
               value: 'block',
-              child: Database(
-                path: pathBlock(post.uid),
-                builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
+              child: UserBlocked(
+                otherUid: post.uid,
+                notBlockedBuilder: (context) {
+                  return Text(tr.block);
+                },
+                blockedBuilder: (context) {
+                  return Text(tr.unblock);
+                },
               ),
             ),
           if (UserService.instance.isAdmin)
@@ -230,11 +236,18 @@ class PostService {
               }
               break;
             case 'block':
-              final blocked = await toggle(pathBlock(post.uid));
+              final blocked = my!.hasBlocked(post.uid);
+              if (blocked) {
+                await my!.unblock(post.uid);
+              } else {
+                await my!.block(post.uid);
+              }
+              final updatedBlocked = my!.hasBlocked(post.uid);
               toast(
-                title: blocked ? tr.block : tr.unblock,
-                message: blocked ? tr.blockMessage : tr.unblockMessage,
+                title: updatedBlocked ? tr.block : tr.unblock,
+                message: updatedBlocked ? tr.blockMessage : tr.unblockMessage,
               );
+              if (onBlock != null) onBlock(updatedBlocked);
               break;
             case 'copyId':
               await Clipboard.setData(ClipboardData(text: post.id));

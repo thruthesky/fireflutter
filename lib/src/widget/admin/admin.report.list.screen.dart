@@ -3,6 +3,7 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/model/report/report.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class AdminReportListScreen extends StatefulWidget {
   static const String routeName = '/AdminReportList';
@@ -13,9 +14,7 @@ class AdminReportListScreen extends StatefulWidget {
 }
 
 class _AdminReportListScreenState extends State<AdminReportListScreen> {
-  style(context) => TextStyle(color: Theme.of(context).colorScheme.onInverseSurface);
-
-  String? type;
+  String type = 'all';
 
   get query {
     Query q = reportCol;
@@ -40,61 +39,45 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back),
         ),
-        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onInverseSurface),
-        backgroundColor: Theme.of(context).colorScheme.inverseSurface,
-        title: Text(
+        title: const Text(
           'Admin Report List',
-          style: style(context),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48),
           child: SizedBox(
             height: 48,
             child: ListView(scrollDirection: Axis.horizontal, children: [
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    type = null;
-                  });
-                },
-                child: Text(
-                  "All",
-                  style: style(context),
+              for (final target in ['all', 'user', 'post', 'comment'])
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      type = target;
+                    });
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Radio(
+                        value: target,
+                        groupValue: type,
+                        onChanged: (String? value) {
+                          dog('value change $value');
+                          if (value != null) {
+                            setState(() {
+                              type = value;
+                            });
+                          }
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: sizeSm),
+                        child: Text(
+                          toBeginningOfSentenceCase(target)!,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    type = 'user';
-                  });
-                },
-                child: Text(
-                  "Users",
-                  style: style(context),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    type = 'post';
-                  });
-                },
-                child: Text(
-                  "Posts",
-                  style: style(context),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    type = 'comment';
-                  });
-                },
-                child: Text(
-                  "Comments",
-                  style: style(context),
-                ),
-              ),
             ]),
           ),
         ),
