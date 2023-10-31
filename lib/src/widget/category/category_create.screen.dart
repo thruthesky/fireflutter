@@ -33,6 +33,7 @@ class _CategoryCreateScreenState extends State<CategoryCreateScreen> {
               labelText: 'Category ID (Permanent)',
             ),
           ),
+          const SizedBox(height: sizeSm),
           TextField(
             controller: name,
             decoration: const InputDecoration(
