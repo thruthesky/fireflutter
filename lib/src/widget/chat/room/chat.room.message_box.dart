@@ -130,6 +130,7 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
       maxLines: 5,
       minLines: 1,
       enabled: enabled,
+      style: Theme.of(context).textTheme.bodyMedium,
     );
   }
 }

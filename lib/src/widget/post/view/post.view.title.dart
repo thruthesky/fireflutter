@@ -24,7 +24,9 @@ class PostViewTitle extends StatelessWidget {
       color: contentBackground,
       // child: Text(post != null ? post!.title.replaceAll("\n", " ") : '',
       //     style: Theme.of(context).textTheme.titleMedium),
-      child: post == null ? const SizedBox.shrink() : PostTitle(post: post!),
+      child: post == null
+          ? const SizedBox.shrink()
+          : PostTitle(post: post!, style: Theme.of(context).textTheme.titleMedium),
     );
   }
 }

@@ -30,7 +30,8 @@ class ShareService {
       context: context,
       barrierColor: Theme.of(context).colorScheme.secondary.withOpacity(.5).withAlpha(110),
       isDismissible: true,
-      enableDrag: true,
+      showDragHandle: true,
+      enableDrag: false,
       constraints: BoxConstraints(
         maxWidth: MediaQuery.of(context).size.width * 0.96,
       ),
@@ -39,10 +40,12 @@ class ShareService {
           top: Radius.circular(16),
         ),
       ),
-      builder: (context) => ShareBottomSheet(
-        actions: actions,
-        text: text,
-      ),
+      builder: (context) {
+        return ShareBottomSheet(
+          actions: actions,
+          text: text,
+        );
+      },
     );
   }
 
