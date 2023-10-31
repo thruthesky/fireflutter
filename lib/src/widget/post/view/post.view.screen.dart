@@ -47,8 +47,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
     // This is for updating the post when it is edited without flickering.
     Post.doc(post.id).snapshots().listen((DocumentSnapshot event) {
       _post = Post.fromDocumentSnapshot(event);
-
-      dog('Does it have pending writes? ${event.metadata.hasPendingWrites}');
       if (mounted) setState(() {});
     });
   }

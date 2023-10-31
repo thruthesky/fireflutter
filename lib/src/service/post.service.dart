@@ -81,7 +81,6 @@ class PostService {
     String? postId,
     Function(BuildContext, Post)? onPressBackButton,
   }) {
-    dog('${post?.title} DateTime: ${post?.createdAt}');
     return customize.showPostViewScreen?.call(context, postId: postId, post: post) ??
         showGeneralDialog(
           context: context,
