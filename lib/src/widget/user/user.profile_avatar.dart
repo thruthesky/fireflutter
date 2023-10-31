@@ -77,6 +77,11 @@ class _UserAvatarState extends State<UserProfileAvatar> {
 
   late User user;
 
+  // this initState will not work properly on widget user because
+  // it is not gonna be called for the second time when myDoc is updated.
+  // The is why we need to add a key for every rebuild
+  // for example => key: ValueKey(user.photoUrl) in UserAvatar
+  // in this way, initState will be called every time the photoUrl is updated.
   @override
   void initState() {
     super.initState();
