@@ -77,6 +77,11 @@ class _UserAvatarState extends State<UserProfileAvatar> {
 
   late User user;
 
+  // this initState will not work properly on widget user because
+  // it is not gonna be called for the second time when myDoc is updated.
+  // The is why we need to add a key for every rebuild
+  // for example => key: ValueKey(user.photoUrl) in UserAvatar
+  // in this way, initState will be called every time the photoUrl is updated.
   @override
   void initState() {
     super.initState();
@@ -107,7 +112,9 @@ class _UserAvatarState extends State<UserProfileAvatar> {
           image = await picker.pickImage(source: source);
         } on PlatformException catch (e) {
           if (e.code == 'photo_access_denied') {
-            // TODO ask for permission again
+            // Need to ask for permission.
+            // Do we need to use permission_handler package
+            // when this happens?
             toast(title: 'Permission Error', message: 'User did not grant the camera permission!');
           } else {
             toast(title: 'Unknown Error', message: 'Unknown error: $e');

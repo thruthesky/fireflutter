@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +82,6 @@ class PostService {
     String? postId,
     Function(BuildContext, Post)? onPressBackButton,
   }) {
-    dog('${post?.title} DateTime: ${post?.createdAt}');
     return customize.showPostViewScreen?.call(context, postId: postId, post: post) ??
         showGeneralDialog(
           context: context,
@@ -127,13 +127,52 @@ class PostService {
     return await Post.get(postId);
   }
 
+  // Reutrns a list of Images and Youtube Video of the post
+  List<Widget> listMedia(BuildContext context, Post post) {
+    return [
+      if (post.youtubeId.isNotEmpty == true)
+        GestureDetector(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  insetPadding: const EdgeInsets.all(0),
+                  contentPadding: const EdgeInsets.all(0),
+                  content: YouTube(youtubeId: post.youtubeId),
+                );
+              },
+            );
+          },
+          child: YouTubeThumbnail(
+            key: ValueKey(post.youtubeId),
+            youtubeId: post.youtubeId,
+            stackFit: StackFit.passthrough,
+          ),
+        ),
+      ...post.urls.map((e) => CachedNetworkImage(imageUrl: e)).toList()
+    ];
+  }
+
+  // Shows the preview carousel of the media of the post
+  void showPreview(BuildContext context, Post post, {int index = 0}) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, _, __) {
+        return CarouselScreen(
+          widgets: listMedia(context, post),
+          index: index,
+        );
+      },
+    );
+  }
+
   /// Returns a list of menu widgets on post view screen.
-  ///
-  ///
   ///
   List<Widget> postViewActions({
     required BuildContext context,
     required Post? post,
+    Function(bool blocked)? onBlock,
   }) {
     if (post == null) return [];
     return [
@@ -158,9 +197,14 @@ class PostService {
           if (loggedIn)
             PopupMenuItem(
               value: 'block',
-              child: Database(
-                path: pathBlock(post.uid),
-                builder: (value, p) => Text(value == null ? tr.block : tr.unblock),
+              child: UserBlocked(
+                otherUid: post.uid,
+                notBlockedBuilder: (context) {
+                  return Text(tr.block);
+                },
+                blockedBuilder: (context) {
+                  return Text(tr.unblock);
+                },
               ),
             ),
           if (UserService.instance.isAdmin)
@@ -192,11 +236,18 @@ class PostService {
               }
               break;
             case 'block':
-              final blocked = await toggle(pathBlock(post.uid));
+              final blocked = my!.hasBlocked(post.uid);
+              if (blocked) {
+                await my!.unblock(post.uid);
+              } else {
+                await my!.block(post.uid);
+              }
+              final updatedBlocked = my!.hasBlocked(post.uid);
               toast(
-                title: blocked ? tr.block : tr.unblock,
-                message: blocked ? tr.blockMessage : tr.unblockMessage,
+                title: updatedBlocked ? tr.block : tr.unblock,
+                message: updatedBlocked ? tr.blockMessage : tr.unblockMessage,
               );
+              if (onBlock != null) onBlock(updatedBlocked);
               break;
             case 'copyId':
               await Clipboard.setData(ClipboardData(text: post.id));
