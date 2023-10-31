@@ -46,10 +46,10 @@ class ActivityLogListTiLeItem extends StatelessWidget {
           Expanded(
             child: Card(
               margin: const EdgeInsets.all(0),
-              color: Colors.grey[100],
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05),
               shape: RoundedRectangleBorder(
                 side: BorderSide(
-                  color: Colors.grey[300]!,
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05),
                   width: 1,
                 ),
               ),
