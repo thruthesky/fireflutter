@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 /// UserDoc
 ///
 /// Build a widget with a user model.
+///
+/// To reduce the flickering(blicking), it will show the cached user data
+/// while loading the user data from the database.
 class UserDoc extends StatelessWidget {
   const UserDoc({
     super.key,
