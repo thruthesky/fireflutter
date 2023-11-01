@@ -98,6 +98,7 @@ export 'widget/common/carousel.view.dart';
 
 export 'widget/common/icon_text_button.dart';
 export 'widget/common/share.bottom_sheet.dart';
+export 'widget/common/pinned_dialog.dart';
 
 // Favorite
 

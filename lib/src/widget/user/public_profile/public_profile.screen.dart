@@ -25,7 +25,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
   String? currentLoadedImageUrl;
   String previousUrl = '';
 
-  get textStyle => TextStyle(
+  TextStyle get textStyle => TextStyle(
         color: Theme.of(context).colorScheme.onSecondary,
       );
 
@@ -122,10 +122,54 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                     radius: 54,
                   ),
                   const SizedBox(height: sizeLg),
-                  Center(
-                    child: Text(
-                      user.state.ifEmpty(tr.noStateMessage),
-                      style: textStyle,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    child: Center(
+                      child: user.uid == myUid
+                          ? TextButton(
+                              child: Text(
+                                user.state.ifEmpty(tr.noStateMessage),
+                                style: textStyle,
+                                textAlign: TextAlign.center,
+                              ),
+                              onPressed: () {
+                                final userState = TextEditingController(text: user.state);
+                                showGeneralDialog(
+                                    context: context,
+                                    pageBuilder: (context, _, __) {
+                                      return AlertDialog(
+                                        content: TextField(
+                                          controller: userState,
+                                          decoration: InputDecoration(
+                                            hintText: tr.howAreYouToday,
+                                          ),
+                                          maxLines: 3,
+                                          minLines: 1,
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            child: Text(tr.cancel),
+                                            onPressed: () => Navigator.of(context).pop(),
+                                          ),
+                                          TextButton(
+                                            child: const Text('Save'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              setState(() async {
+                                                await user.update(state: userState.text);
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              },
+                            )
+                          : Text(
+                              user.state,
+                              style: textStyle,
+                              textAlign: TextAlign.center,
+                            ),
                     ),
                   ),
                   const SizedBox(height: sizeLg),
