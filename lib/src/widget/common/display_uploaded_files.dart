@@ -21,7 +21,7 @@ class DisplayUploadedFiles extends StatelessWidget {
     }
 
     return SizedBox(
-      height: 120,
+      height: 150,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: urls
