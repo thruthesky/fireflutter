@@ -68,6 +68,8 @@ class I18nTexts {
 
   String noOfLikes;
 
+  String howAreYouToday;
+
   String share;
   String home;
   String profile;
@@ -165,6 +167,7 @@ class I18nTexts {
     this.readLess = "read less",
     this.readMore = "read more",
     this.noOfLikes = "Likes #no",
+    this.howAreYouToday = "How are you today?",
     this.share = "Share",
     this.loginFirstToUseCompleteFunctionality = "Login first to use the complete functionality.",
     this.home = "Home",
