@@ -159,6 +159,7 @@ Future<DocumentReference?> activityLogCommentCreate({
 }
 
 Future<DocumentReference?> activityLogCommentUpdate({
+  required String postId,
   required String commentId,
 }) async {
   return await activityLog(
@@ -169,6 +170,7 @@ Future<DocumentReference?> activityLogCommentUpdate({
 }
 
 Future<DocumentReference?> activityLogCommentDelete({
+  required String postId,
   required String commentId,
 }) async {
   return await activityLog(

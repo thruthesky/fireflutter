@@ -146,7 +146,7 @@ class Comment {
     // Invoite the callback for comment creation.
     CommentService.instance.onUpdate?.call(updatedComment);
 
-    activityLogCommentUpdate(commentId: id);
+    activityLogCommentUpdate(commentId: id, postId: postId);
 
     return updatedComment;
   }
@@ -169,7 +169,7 @@ class Comment {
     final deletedComment = copyWith(deletedCommentData);
 
     /// log comment delete
-    activityLogCommentDelete(commentId: id);
+    activityLogCommentDelete(commentId: id, postId: postId);
     return deletedComment;
   }
 

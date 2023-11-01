@@ -24,7 +24,7 @@ class _AdminChatRoomListScreenState extends State<AdminChatRoomListScreen> {
         title: const Text('Admin Chat Room List'),
       ),
       body: FirestoreListView(
-        itemExtent: 80,
+        // itemExtent: 80,
         query: chatCol.orderBy('lastMessage.createdAt', descending: true),
         itemBuilder: (context, snapshot) {
           final room = Room.fromDocumentSnapshot(snapshot);
@@ -33,48 +33,19 @@ class _AdminChatRoomListScreenState extends State<AdminChatRoomListScreen> {
               AdminService.instance.showChatRoomDetails(context, room: room);
             },
             child: ChatRoomListTile(
-              padding: const EdgeInsets.fromLTRB(sizeMd, 0, sizeMd, 0),
+              padding: const EdgeInsets.fromLTRB(sizeMd, 0, sizeMd, sizeMd),
               room: room,
               avatarBuilder: (room) {
-                //               ChatRoomListTile(
-                // room: room,
-                // padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, sizeSm),
-                // avatarBuilder: (room) {
-                //   return SizedBox(
-                //     width: 56,
-                //     height: 56,
-                //     child: Stack(
-                //       children: [
-                //         UserAvatar(
-                //           uid: room.users.first,
-                //           size: 56 / 1.5,
-                //           radius: 100,
-                //           borderWidth: 1,
-                //           borderColor: Colors.grey.shade300,
-                //         ),
-                //         Positioned(
-                //           right: 0,
-                //           bottom: 0,
-                //           child: UserAvatar(
-                //               uid: room.users.last,
-                //               size: 56 / 1.5,
-                //               radius: 100,
-                //               borderWidth: 1,
-                //               borderColor: Colors.white),
-                //         ),
-                //       ],
-                //     ),
-                //   );
-                // },
                 return SizedBox(
-                  width: 40,
-                  height: 40,
+                  width: 56,
+                  height: 56,
                   child: Stack(
                     children: [
                       UserAvatar(
                         uid: room.users.first,
-                        size: 40 / 1.6,
-                        radius: 10,
+                        user: UserService.instance.userCache[room.users.first],
+                        size: 56 / 1.5,
+                        radius: 16,
                         borderWidth: 1,
                         borderColor: Colors.grey.shade300,
                       ),
@@ -82,11 +53,13 @@ class _AdminChatRoomListScreenState extends State<AdminChatRoomListScreen> {
                         right: 0,
                         bottom: 0,
                         child: UserAvatar(
-                            uid: room.users.last,
-                            size: 40 / 1.4,
-                            radius: 10,
-                            borderWidth: 1,
-                            borderColor: Colors.white),
+                          uid: room.users.last,
+                          user: UserService.instance.userCache[room.users.last],
+                          size: 56 / 1.5,
+                          radius: 16,
+                          borderWidth: 1,
+                          borderColor: Colors.white,
+                        ),
                       ),
                     ],
                   ),

@@ -32,7 +32,9 @@ class UserAvatar extends StatelessWidget {
     this.radius = 10,
     this.padding = const EdgeInsets.all(0),
     this.onTap,
-  }) : assert(user == null || uid == null);
+  });
+
+  /// : assert(user == null || uid == null);
 
   final User? user;
   final String? uid;
