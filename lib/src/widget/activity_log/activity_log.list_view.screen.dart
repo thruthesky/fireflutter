@@ -69,12 +69,6 @@ class _ActivityLogListViewScreenState extends State<ActivityLogListViewScreen> {
 
           cntMap[activity.id] ??= ++count;
           dog('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action} ${activity.uid}}');
-          // print('setState(); ${activity.id}(${cntMap[activity.id]})');
-          // return Container(
-          //   padding: const EdgeInsets.all(64.0),
-          //   color: cntMap[activity.id]! % 2 == 1 ? Colors.grey[200] : Colors.red[200],
-          //   child: Text('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action}'),
-          // );
 
           return ActivityLogTimeLine(
             activity: activity,
