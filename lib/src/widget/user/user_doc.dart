@@ -12,8 +12,8 @@ class UserDoc extends StatelessWidget {
     this.onLoading,
   });
   final String uid;
-  final Widget? onLoading;
   final Widget Function(User) builder;
+  final Widget? onLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +24,15 @@ class UserDoc extends StatelessWidget {
   }
 
   Widget buildStreamWidget(BuildContext _, AsyncSnapshot<User?> snapshot) {
+    /// While loading user data
     if (snapshot.connectionState == ConnectionState.waiting) {
-      return onLoading ?? const SizedBox.shrink();
+      /// If there is a cached user data, use it.
+      if (UserService.instance.userCache.containsKey(uid)) {
+        return builder(UserService.instance.userCache[uid]!);
+      } else {
+        /// If there is no cached user data, then, show the loading widget.
+        return onLoading ?? const SizedBox.shrink();
+      }
     }
 
     /// If it can't load user data, (or there is no user document)

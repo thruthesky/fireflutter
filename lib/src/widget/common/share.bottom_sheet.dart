@@ -72,25 +72,27 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
           ),
           Expanded(
             child: StreamBuilder<String?>(
-                stream: nameChanged.stream.debounceTime(const Duration(milliseconds: 500)).distinct((a, b) => a == b),
-                builder: (context, snapshot) {
-                  if (name.text.isNotEmpty) {
-                    return FirestoreListView(
-                      query: userCol.where("name", isEqualTo: name.text),
-                      itemBuilder: (context, snapshot) {
-                        final user = User.fromDocumentSnapshot(snapshot);
-                        return itemTile(user);
-                      },
-                    );
-                  }
-                  return UserListView.builder(
-                    uids: my!.followings,
-                    itemBuilder: (user) {
-                      if (user == null) return const SizedBox();
+              stream: nameChanged.stream.debounceTime(const Duration(milliseconds: 500)).distinct((a, b) => a == b),
+              builder: (context, snapshot) {
+                if (name.text.isNotEmpty) {
+                  return FirestoreListView(
+                    query: userCol.where("name", isEqualTo: name.text),
+                    itemBuilder: (context, snapshot) {
+                      final user = User.fromDocumentSnapshot(snapshot);
                       return itemTile(user);
                     },
                   );
-                }),
+                }
+                return UserListView.builder(
+                  key: name.text.isEmpty ? const Key("followings") : const Key("search"),
+                  uids: my!.followings,
+                  itemBuilder: (user) {
+                    if (user == null) return const SizedBox();
+                    return itemTile(user);
+                  },
+                );
+              },
+            ),
           ),
           Wrap(
             spacing: 16,
