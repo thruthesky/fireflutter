@@ -28,15 +28,6 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
       margin: const EdgeInsets.symmetric(horizontal: sizeSm),
       child: Column(
         children: [
-          Container(
-            height: 4,
-            width: 28,
-            margin: const EdgeInsets.symmetric(vertical: sizeSm),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: Theme.of(context).colorScheme.secondary.withAlpha(80),
-            ),
-          ),
           TextField(
             controller: name,
             decoration: InputDecoration(
