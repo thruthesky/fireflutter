@@ -103,6 +103,7 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
                     controller: content,
                     minLines: 2,
                     maxLines: 5,
+                    style: Theme.of(context).textTheme.bodyMedium,
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(),
                       labelText: widget.labelText ?? 'Comment',

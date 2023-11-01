@@ -103,6 +103,8 @@ class I18nTexts {
   String unlikedCommentLog;
 
   String adminBackFillWarning;
+  String categoryUpdated;
+  String categoryUpdatedMessage;
 
   I18nTexts({
     this.loginFirstTitle = 'Login first',
@@ -198,6 +200,8 @@ class I18nTexts {
     this.likedCommentLog = "#a liked a comment",
     this.unlikedCommentLog = "#a unliked a comment",
     this.adminBackFillWarning = 'This will reset all data in Supabase.',
+    this.categoryUpdated = 'Category updated.',
+    this.categoryUpdatedMessage = 'Category has been updated',
   });
 
   factory I18nTexts.fromJson(Map<String, dynamic> json) => _$I18nTextsFromJson(json);

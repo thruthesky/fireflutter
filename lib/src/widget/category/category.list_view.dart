@@ -76,6 +76,7 @@ class CategoryListViewState extends State<CategoryListView> {
                 if (category.description != null) Text(category.description!),
               ],
             ),
+            trailing: const Icon(Icons.edit),
           );
         }
       },
