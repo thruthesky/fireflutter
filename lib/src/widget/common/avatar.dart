@@ -21,6 +21,7 @@ class Avatar extends StatelessWidget {
     this.size = 24,
     this.borderWidth = 0,
     this.borderColor = Colors.transparent,
+    this.backgroundColor = Colors.transparent,
     this.radius,
     this.padding = const EdgeInsets.all(0),
   });
@@ -29,6 +30,7 @@ class Avatar extends StatelessWidget {
   final double size;
   final double borderWidth;
   final Color borderColor;
+  final Color backgroundColor;
   final double? radius;
   final EdgeInsets padding;
 
@@ -43,6 +45,7 @@ class Avatar extends StatelessWidget {
           color: borderColor,
           width: borderWidth,
         ),
+        color: backgroundColor,
       ),
       child: Padding(
         padding: padding,

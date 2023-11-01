@@ -29,6 +29,7 @@ class UserAvatar extends StatelessWidget {
     this.showBlocked = false,
     this.borderWidth = 0,
     this.borderColor = Colors.transparent,
+    this.backgroundColor = Colors.transparent,
     this.radius = 10,
     this.padding = const EdgeInsets.all(0),
     this.onTap,
@@ -43,6 +44,7 @@ class UserAvatar extends StatelessWidget {
   final bool showBlocked;
   final double borderWidth;
   final Color borderColor;
+  final Color backgroundColor;
   final double radius;
   final EdgeInsets padding;
   final Function()? onTap;
@@ -91,6 +93,7 @@ class UserAvatar extends StatelessWidget {
         size: size,
         borderWidth: borderWidth,
         borderColor: borderColor,
+        backgroundColor: backgroundColor,
         radius: radius,
         padding: padding,
       );
