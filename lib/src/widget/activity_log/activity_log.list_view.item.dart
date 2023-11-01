@@ -30,7 +30,7 @@ class ActivityLogListTiLeItem extends StatelessWidget {
               const SizedBox(
                 height: sizeSm,
               ),
-              activityIcon,
+              activityIcon(context),
               const SizedBox(height: sizeXxs),
               SizedBox(
                 width: 64,
@@ -54,7 +54,7 @@ class ActivityLogListTiLeItem extends StatelessWidget {
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.only(left: 16, top: 16, right: 16, bottom: 24),
+                padding: const EdgeInsets.only(left: 16, top: 16, right: 16, bottom: 16),
                 child: children.isEmpty
                     ? Row(
                         children: [
@@ -63,7 +63,10 @@ class ActivityLogListTiLeItem extends StatelessWidget {
                             size: 40,
                             radius: 20,
                             onTap: () {
-                              UserService.instance.showPublicProfileScreen(context: context, user: actor);
+                              UserService.instance.showPublicProfileScreen(
+                                context: context,
+                                user: actor,
+                              );
                             },
                           ),
                           const SizedBox(width: 16),
@@ -85,7 +88,10 @@ class ActivityLogListTiLeItem extends StatelessWidget {
                                 size: 40,
                                 radius: 20,
                                 onTap: () {
-                                  UserService.instance.showPublicProfileScreen(context: context, user: actor);
+                                  UserService.instance.showPublicProfileScreen(
+                                    context: context,
+                                    user: actor,
+                                  );
                                 },
                               ),
                               const SizedBox(width: sizeXs),
@@ -107,14 +113,14 @@ class ActivityLogListTiLeItem extends StatelessWidget {
     );
   }
 
-  Widget get activityIcon => Container(
+  Widget activityIcon(context) => Container(
         width: 40,
         height: 40,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
           border: Border.all(
-            color: Colors.lightBlue[300]!,
-            width: 1,
+            color: Theme.of(context).colorScheme.primary.tone(70), //Colors.lightBlue[300]!,
+            width: 2,
           ),
         ),
         child: icon ??

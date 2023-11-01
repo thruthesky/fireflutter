@@ -9,10 +9,10 @@ class ActivityLogTimeLinePost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 200),
+      constraints: const BoxConstraints(minHeight: 160),
       child: PostDoc(
         live: false,
-        onLoading: const SizedBox(height: 200),
+        onLoading: const SizedBox(height: 160),
         postId: activity.postId,
         builder: (Post post) {
           return UserDoc(
@@ -35,64 +35,93 @@ class ActivityLogTimeLinePost extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 16.0),
                     child: Divider(),
                   ),
-                  Row(
-                    children: [
-                      UserAvatar(
-                        uid: post.uid,
-                        radius: 20,
-                        size: 40,
-                      ),
-                      const SizedBox(width: sizeXs),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          UserDisplayName(
-                            uid: post.uid,
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => PostService.instance.showPostViewScreen(context: context, post: post),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          children: [
+                            UserAvatar(
+                              uid: post.uid,
+                              radius: 20,
+                              size: 40,
+                              onTap: () {
+                                UserService.instance.showPublicProfileScreen(
+                                  context: context,
+                                  uid: post.uid,
+                                );
+                              },
+                            ),
+                            const SizedBox(width: sizeXs),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                UserDisplayName(
+                                  uid: post.uid,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                                Row(
+                                  children: [
+                                    DateTimeText(
+                                        dateTime: post.createdAt,
+                                        style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11)),
+                                    DatabaseCount(
+                                      path: pathSeenBy(post.id), // 'posts/${post.id}/seenBy',
+                                      builder: (n) => n < 2
+                                          ? const SizedBox.shrink()
+                                          : Text(
+                                              " | ${tr.views}: $n",
+                                              style: TextStyle(
+                                                  color: Theme.of(context).colorScheme.secondary, fontSize: 11),
+                                            ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const Spacer(),
+                            if (post.hasPhoto)
+                              const Icon(
+                                Icons.image_outlined,
+                              ),
+                          ],
+                        ),
+                        if (post.title.isNotEmpty) ...[
+                          const SizedBox(height: sizeSm),
+                          Text(
+                            post.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
-                          Row(
-                            children: [
-                              DateTimeText(
-                                  dateTime: post.createdAt,
-                                  style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11)),
-                              DatabaseCount(
-                                path: pathSeenBy(post.id), // 'posts/${post.id}/seenBy',
-                                builder: (n) => n < 2
-                                    ? const SizedBox.shrink()
-                                    : Text(
-                                        " | ${tr.views}: $n",
-                                        style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11),
-                                      ),
-                              ),
-                            ],
+                        ],
+                        if (post.content.isNotEmpty) ...[
+                          const SizedBox(height: sizeXxs),
+                          Text(
+                            post.content,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ],
-                      ),
-                      const Spacer(),
-                      if (post.hasPhoto)
-                        const Icon(
-                          Icons.image_outlined,
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: sizeSm),
-                  Text(post.title,
-                      maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodyMedium),
-                  const SizedBox(height: sizeXxs),
-                  Text(post.content,
-                      maxLines: 2, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall),
-                  if (post.noOfComments > 0)
-                    TextButton(
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
-                        visualDensity: VisualDensity.compact,
-                        textStyle: MaterialStateProperty.all(Theme.of(context).textTheme.bodySmall),
-                      ),
-                      onPressed: () {
-                        CommentService.instance.showCommentListBottomSheet(context, post);
-                      },
-                      child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
+                        if (post.noOfComments > 0)
+                          TextButton(
+                            style: ButtonStyle(
+                              padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
+                              visualDensity: VisualDensity.compact,
+                              textStyle: MaterialStateProperty.all(Theme.of(context).textTheme.bodySmall),
+                            ),
+                            onPressed: () {
+                              CommentService.instance.showCommentListBottomSheet(context, post);
+                            },
+                            child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
+                          ),
+                      ],
                     ),
+                  )
                 ],
               );
             },

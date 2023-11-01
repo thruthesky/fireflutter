@@ -171,6 +171,8 @@ class Post {
   ///
   /// Note, it updates the [updatedAt] field automatically.
   /// For security reason, the admin and the author can only use this method.
+  ///
+  /// [log] is on by default. If you don't want to log, set it to false.
   Future<Post> update({
     String? title,
     String? content,
@@ -179,6 +181,7 @@ class Post {
     List<String>? hashtags,
     bool? deleted,
     Map<String, dynamic> data = const {},
+    bool log = true,
   }) async {
     final Map<String, dynamic> postUpdateData = {
       if (title != null) 'title': title,
@@ -204,7 +207,7 @@ class Post {
     PostService.instance.onUpdate?.call(updatedPost);
 
     /// log post update
-    activityLogPostUpdate(postId: id);
+    if (log) activityLogPostUpdate(postId: id);
 
     return updatedPost;
   }
@@ -231,6 +234,7 @@ class Post {
       data: {
         'deletedReason': deletedReason ?? 'Deleted',
       },
+      log: false, // don't log for update.
     );
 
     /// log post delete

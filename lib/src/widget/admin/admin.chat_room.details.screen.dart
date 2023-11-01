@@ -54,7 +54,10 @@ class AdminChatRoomDetailsScreen extends StatelessWidget {
                     leading: UserAvatar(user: user),
                     title: Text('${user.name} $userRoomAdminDetails'),
                     subtitle: Text('${user.type} | ${user.uid}'),
-                    onTap: () => UserService.instance.showPublicProfileScreen(context: context, user: user),
+                    onTap: () => UserService.instance.showPublicProfileScreen(
+                      context: context,
+                      user: user,
+                    ),
                   );
                 },
               )

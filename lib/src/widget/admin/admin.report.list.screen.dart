@@ -98,7 +98,10 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
                     IconButton(
                       onPressed: () {
                         if (report.type == 'user') {
-                          UserService.instance.showPublicProfileScreen(context: context, uid: report.otherUid);
+                          UserService.instance.showPublicProfileScreen(
+                            context: context,
+                            uid: report.otherUid,
+                          );
                         } else if (report.type == 'post') {
                           PostService.instance.showPostViewScreen(context: context, postId: report.postId);
                         } else if (report.type == 'comment') {

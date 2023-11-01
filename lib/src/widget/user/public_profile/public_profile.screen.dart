@@ -152,7 +152,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
     if (isMyProfile) return MyDoc(builder: (user) => builder(user));
 
     return UserDoc(
-      uid: widget.uid!,
+      uid: widget.uid ?? widget.user!.uid,
       builder: (user) => builder(user),
     );
   }

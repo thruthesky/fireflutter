@@ -17,6 +17,8 @@ class CommentOneLineListTile extends StatefulWidget {
     this.runSpacing = 8,
     this.onTapContent,
     this.fixedDepth,
+    this.hideActionButton = false,
+    this.hideLikeButton = false,
   });
 
   final Post post;
@@ -29,6 +31,12 @@ class CommentOneLineListTile extends StatefulWidget {
 
   /// Fixed depth of the comment. If null, the depth of the comment will be used.
   final int? fixedDepth;
+
+  /// Option to hide action button
+  final bool hideActionButton;
+
+  /// Option to hide like button
+  final bool hideLikeButton;
 
   /// Callback function for content tap
   final void Function()? onTapContent;
@@ -138,31 +146,32 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                                   ),
                                 ),
                         ),
-                        // reply
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.only(left: 0, right: 8),
-                            minimumSize: Size.zero,
-                            visualDensity: VisualDensity.compact,
+                        if (widget.hideActionButton == false) ...[
+                          // reply
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.only(left: 0, right: 8),
+                              minimumSize: Size.zero,
+                              visualDensity: VisualDensity.compact,
+                            ),
+                            onPressed: () {
+                              if (my?.isDisabled ?? false) {
+                                toast(title: tr.disabled, message: tr.disabledMessage);
+                                return;
+                              }
+                              CommentService.instance.showCommentEditBottomSheet(
+                                context,
+                                post: widget.post,
+                                parent: widget.comment,
+                              );
+                            },
+                            child: Text(
+                              tr.reply,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
                           ),
-                          onPressed: () {
-                            if (my?.isDisabled ?? false) {
-                              toast(title: tr.disabled, message: tr.disabledMessage);
-                              return;
-                            }
-                            CommentService.instance.showCommentEditBottomSheet(
-                              context,
-                              post: widget.post,
-                              parent: widget.comment,
-                            );
-                          },
-                          child: Text(
-                            tr.reply,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ),
-                        Flexible(
-                          child: PopupMenuButton(
+                          Flexible(
+                            child: PopupMenuButton(
                               icon: const Icon(
                                 Icons.more_horiz,
                                 size: 16,
@@ -213,14 +222,16 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                                     toast(title: 'Comment deleted', message: 'Comment deleted successfully.');
                                   }
                                 }
-                              }),
-                        ),
+                              },
+                            ),
+                          ),
+                        ]
                       ],
                     ),
                 ],
               ),
             ),
-            if (notBlocked)
+            if (notBlocked && widget.hideLikeButton == false)
               Database(
                 path: pathCommentLikedBy(widget.comment.id),
                 builder: (value, path) {

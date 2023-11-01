@@ -67,8 +67,8 @@ class _ActivityLogListViewScreenState extends State<ActivityLogListViewScreen> {
         itemBuilder: (context, snapshot) {
           final activity = ActivityLog.fromDocumentSnapshot(snapshot);
 
-          // cntMap[activity.id] ??= ++count;
-          // dog('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action} ${activity.uid}}');
+          cntMap[activity.id] ??= ++count;
+          dog('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action} ${activity.uid}}');
 
           return ActivityLogTimeLine(
             activity: activity,
