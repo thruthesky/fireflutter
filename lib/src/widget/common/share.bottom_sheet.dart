@@ -21,6 +21,19 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
   final name = TextEditingController();
   final nameChanged = BehaviorSubject<String?>.seeded(null);
 
+  /// Build the user list only once. And reuse it when the user search text is empty.
+  /// - matter: It's blinking when the user list is being displayed.
+  /// - why: To limit the widget build only one time to avoid the blinking when the user list is being displayed.
+  Widget? _userList;
+  Widget get userList => _userList ??= UserListView.builder(
+        key: name.text.isEmpty ? const Key("followings") : const Key("search"),
+        uids: my!.followings,
+        itemBuilder: (user) {
+          if (user == null) return const SizedBox();
+          return itemTile(user);
+        },
+      );
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -72,25 +85,20 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
           ),
           Expanded(
             child: StreamBuilder<String?>(
-                stream: nameChanged.stream.debounceTime(const Duration(milliseconds: 500)).distinct((a, b) => a == b),
-                builder: (context, snapshot) {
-                  if (name.text.isNotEmpty) {
-                    return FirestoreListView(
-                      query: userCol.where("name", isEqualTo: name.text),
-                      itemBuilder: (context, snapshot) {
-                        final user = User.fromDocumentSnapshot(snapshot);
-                        return itemTile(user);
-                      },
-                    );
-                  }
-                  return UserListView.builder(
-                    uids: my!.followings,
-                    itemBuilder: (user) {
-                      if (user == null) return const SizedBox();
+              stream: nameChanged.stream.debounceTime(const Duration(milliseconds: 500)).distinct((a, b) => a == b),
+              builder: (context, snapshot) {
+                if (name.text.isNotEmpty) {
+                  return FirestoreListView(
+                    query: userCol.where("name", isEqualTo: name.text),
+                    itemBuilder: (context, snapshot) {
+                      final user = User.fromDocumentSnapshot(snapshot);
                       return itemTile(user);
                     },
                   );
-                }),
+                }
+                return userList;
+              },
+            ),
           ),
           Wrap(
             spacing: 16,
