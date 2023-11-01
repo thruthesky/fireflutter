@@ -113,10 +113,10 @@ class UserService {
   /// User document reference of the currently login user
   DocumentReference get doc => col.doc(myUid);
 
-  /// [_userCache] is a memory cache for [User].
+  /// [userCache] is a memory cache for [User].
   ///
   /// Firestore 에서 한번 불러온 유저는 다시 불러오지 않는다. Offline DB 라서, 속도 향상은 크게 느끼지 못하지만, 접속을 아껴 비용을 절약한다.
-  final Map<String, User> _userCache = {};
+  final Map<String, User> userCache = {};
 
   User? user;
 
@@ -280,10 +280,10 @@ class UserService {
     if (uid == '') return null;
 
     /// 캐시되어져 있으면, 그 캐시된 값(User)을 리턴
-    if (reload == false && _userCache.containsKey(uid)) {
+    if (reload == false && userCache.containsKey(uid)) {
       /// Mark that the user data is cached
-      _userCache[uid]!.cached = true;
-      return _userCache[uid];
+      userCache[uid]!.cached = true;
+      return userCache[uid];
     }
 
     /// 아니면, Firestore 또는 RTDB 에서 사용자 문서를 가져와 User 을 만들어 리턴.
@@ -293,8 +293,8 @@ class UserService {
     final User? u = await User.get(uid);
 
     if (u == null) return null;
-    _userCache[uid] = u;
-    return _userCache[uid];
+    userCache[uid] = u;
+    return userCache[uid];
   }
 
   /// Sign out from Firebase Auth
