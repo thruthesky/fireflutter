@@ -28,15 +28,6 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
       margin: const EdgeInsets.symmetric(horizontal: sizeSm),
       child: Column(
         children: [
-          Container(
-            height: 4,
-            width: 28,
-            margin: const EdgeInsets.symmetric(vertical: sizeSm),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: Theme.of(context).colorScheme.secondary.withAlpha(80),
-            ),
-          ),
           TextField(
             controller: name,
             decoration: InputDecoration(
@@ -72,25 +63,27 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
           ),
           Expanded(
             child: StreamBuilder<String?>(
-                stream: nameChanged.stream.debounceTime(const Duration(milliseconds: 500)).distinct((a, b) => a == b),
-                builder: (context, snapshot) {
-                  if (name.text.isNotEmpty) {
-                    return FirestoreListView(
-                      query: userCol.where("name", isEqualTo: name.text),
-                      itemBuilder: (context, snapshot) {
-                        final user = User.fromDocumentSnapshot(snapshot);
-                        return itemTile(user);
-                      },
-                    );
-                  }
-                  return UserListView.builder(
-                    uids: my!.followings,
-                    itemBuilder: (user) {
-                      if (user == null) return const SizedBox();
+              stream: nameChanged.stream.debounceTime(const Duration(milliseconds: 500)).distinct((a, b) => a == b),
+              builder: (context, snapshot) {
+                if (name.text.isNotEmpty) {
+                  return FirestoreListView(
+                    query: userCol.where("name", isEqualTo: name.text),
+                    itemBuilder: (context, snapshot) {
+                      final user = User.fromDocumentSnapshot(snapshot);
                       return itemTile(user);
                     },
                   );
-                }),
+                }
+                return UserListView.builder(
+                  key: name.text.isEmpty ? const Key("followings") : const Key("search"),
+                  uids: my!.followings,
+                  itemBuilder: (user) {
+                    if (user == null) return const SizedBox();
+                    return itemTile(user);
+                  },
+                );
+              },
+            ),
           ),
           Wrap(
             spacing: 16,

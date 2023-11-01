@@ -113,7 +113,7 @@ class CommentService {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 20),
+              const SizedBox(height: sizeXs),
               CommentEditBottomSheet(
                 post: post,
                 parent: parent,
