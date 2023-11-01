@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
@@ -66,8 +67,17 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
               stream: nameChanged.stream.debounceTime(const Duration(milliseconds: 500)).distinct((a, b) => a == b),
               builder: (context, snapshot) {
                 if (name.text.isNotEmpty) {
+                  final query = userCol.where(
+                    Filter.or(
+                      Filter('name', isEqualTo: name.text),
+                      Filter('displayName', isEqualTo: name.text),
+                      Filter('firstName', isEqualTo: name.text),
+                      Filter('middleName', isEqualTo: name.text),
+                      Filter('lastName', isEqualTo: name.text),
+                    ),
+                  );
                   return FirestoreListView(
-                    query: userCol.where("name", isEqualTo: name.text),
+                    query: query,
                     itemBuilder: (context, snapshot) {
                       final user = User.fromDocumentSnapshot(snapshot);
                       return itemTile(user);
