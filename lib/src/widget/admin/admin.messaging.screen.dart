@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -59,7 +57,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
     super.initState();
 
     if (MessagingService.instance.customizeTopic != null) {
-      targetMenuItem[NotificationTarget.topic.name] = 'Topic';
+      targetMenuItem = {NotificationTarget.topic.name: 'Topic', ...targetMenuItem};
       topic = MessagingService.instance.customizeTopic!.first.topic;
     }
   }
@@ -263,41 +261,43 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
           'Choose Target',
           style: textStyle,
         ),
-        Wrap(
-          children: [
-            for (final target in targetMenuItem.keys)
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    sendTarget = target;
-                  });
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Radio(
-                      value: target,
-                      groupValue: sendTarget,
-                      onChanged: (String? value) {
-                        log('value change $value');
-                        if (value != null) {
-                          setState(() {
-                            sendTarget = value;
-                          });
-                        }
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: sizeSm),
-                      child: Text(
-                        targetMenuItem[target]!,
-                        style: textStyle,
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              for (final target in targetMenuItem.keys)
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      sendTarget = target;
+                    });
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Radio(
+                        value: target,
+                        groupValue: sendTarget,
+                        onChanged: (String? value) {
+                          if (value != null) {
+                            setState(() {
+                              sendTarget = value;
+                            });
+                          }
+                        },
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(right: sizeSm),
+                        child: Text(
+                          targetMenuItem[target]!,
+                          style: textStyle,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ];
 
@@ -322,7 +322,6 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                       value: platform,
                       groupValue: platformTarget,
                       onChanged: (String? value) {
-                        log('value change $value');
                         if (value != null) {
                           setState(() {
                             platformTarget = value;
@@ -578,7 +577,6 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                       value: customTopic.topic,
                       groupValue: topic,
                       onChanged: (String? value) {
-                        log('value change $value');
                         if (value != null) {
                           setState(() {
                             topic = value;
@@ -620,7 +618,6 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                       value: type,
                       groupValue: notificationType,
                       onChanged: (String? value) {
-                        log('value change $value');
                         if (value != null) {
                           setState(() {
                             landingPage.text = '';
@@ -662,7 +659,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
           ),
           Positioned(
             right: 0,
-            top: 4,
+            top: 0,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
