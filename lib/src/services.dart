@@ -11,6 +11,7 @@ export 'service/messaging.service.dart';
 export 'service/feed.service.dart';
 
 export 'service/fireflutter.service.dart';
+export 'service/fireflutter.customize.dart';
 export 'service/favorite.service.dart';
 export 'service/admin.service.dart';
 export 'service/user.customize.dart';

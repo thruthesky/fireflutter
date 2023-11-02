@@ -473,7 +473,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                 final res = await prompt(
                   context: context,
                   title: "Input Token's",
-                  message: "Multipule token must be separated by comma",
+                  hintText: "Multipule token must be separated by comma",
                 );
                 if (res == null || res.isEmpty) return;
                 if (res.contains(',')) {

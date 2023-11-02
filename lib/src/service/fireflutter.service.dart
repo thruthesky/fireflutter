@@ -1,10 +1,10 @@
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 /// FireFlutterService
 class FireFlutterService {
   static FireFlutterService? _instance;
-  static FireFlutterService get instance =>
-      _instance ??= FireFlutterService._();
+  static FireFlutterService get instance => _instance ??= FireFlutterService._();
 
   FireFlutterService._();
 
@@ -14,10 +14,16 @@ class FireFlutterService {
   BuildContext get context => _context!;
   BuildContext? _context;
 
+  FireFlutterCustomize custom = FireFlutterCustomize();
+
   void init({
     required BuildContext context,
+    FireFlutterCustomize? custom,
   }) {
     _context = context;
+    if (custom != null) {
+      this.custom = custom;
+    }
   }
 
   void unInit() {

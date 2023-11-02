@@ -1,11 +1,8 @@
 export 'src/code.dart';
+export 'src/functions.dart';
 export 'src/converters.dart';
 export 'src/enums.dart';
 export 'src/extensions.dart';
-export 'src/functions/database.functions.dart';
-export 'src/functions/functions.dart';
-export 'src/functions/ref.dart';
-export 'src/functions/activity_log.functions.dart';
 export 'src/globals.dart';
 export 'src/i18n/i18n.dart';
 export 'src/models.dart';
