@@ -15,28 +15,25 @@ class CommentListBottomSheet extends StatelessWidget {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.7,
       // margin: const EdgeInsets.symmetric(horizontal: sizeSm),
-      // child: Column(
-      // children: [
-      //
-      // Please return this notch if you need to use it.
-      // and review the BoxDecoration for the radius because the modal already
-      // has a radius.
-      //
-      // Container(
-      //   key: const Key('CommentListBottomSheetNotch'),
-      //   height: 4,
-      //   width: 28,
-      //   margin: const EdgeInsets.symmetric(vertical: sizeMd),
-      //   decoration: const BoxDecoration(
-      //       // borderRadius: BorderRadius.circular(4),
-      //       // color: Theme.of(context).colorScheme.secondary.withAlpha(80),
-      //       ),
-      // ),
-      // Expanded(
-      child: CommentOneLineListView(post: post),
-      // )
-      // ],
-      // ),
+      child: Column(
+        children: [
+          // in testing mode we need to use this container to test the widget to be dragged to close
+          // since we uses the showDraghandle on showmodalbottomsheet on theme instead of custom notch or draghandle
+          // i can't find a way to give it a key or something to test it. so this container is the solution
+          // i came up with.
+          Container(
+            height: 4,
+            key: const Key('CommentListBottomSheet'),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              color: Colors.transparent,
+            ),
+          ),
+          Expanded(
+            child: CommentOneLineListView(post: post),
+          )
+        ],
+      ),
     );
   }
 }
