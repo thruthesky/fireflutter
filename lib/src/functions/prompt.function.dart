@@ -44,7 +44,9 @@ Future<String?> prompt({
             ],
             TextField(
               controller: controller,
-              decoration: InputDecoration(hintText: hintText),
+              decoration: InputDecoration(
+                hintText: hintText,
+              ),
             ),
           ],
         ),

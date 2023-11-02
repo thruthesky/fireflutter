@@ -127,42 +127,33 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                     child: Center(
                       child: user.uid == myUid
                           ? TextButton(
-                              child: Text(
-                                user.state.ifEmpty(tr.noStateMessage),
-                                style: textStyle,
+                              child: RichText(
+                                text: TextSpan(
+                                  style: textStyle,
+                                  children: [
+                                    TextSpan(text: '${user.state.ifEmpty(tr.noStateMessage)}  '),
+                                    WidgetSpan(
+                                      child: Icon(
+                                        Icons.edit,
+                                        size: 18,
+                                        color: Theme.of(context).colorScheme.onSecondary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 textAlign: TextAlign.center,
                               ),
-                              onPressed: () {
-                                final userState = TextEditingController(text: user.state);
-                                showGeneralDialog(
-                                    context: context,
-                                    pageBuilder: (context, _, __) {
-                                      return AlertDialog(
-                                        content: TextField(
-                                          controller: userState,
-                                          decoration: InputDecoration(
-                                            hintText: tr.howAreYouToday,
-                                          ),
-                                          maxLines: 3,
-                                          minLines: 1,
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            child: Text(tr.cancel),
-                                            onPressed: () => Navigator.of(context).pop(),
-                                          ),
-                                          TextButton(
-                                            child: const Text('Save'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                              setState(() async {
-                                                await user.update(state: userState.text);
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    });
+                              onPressed: () async {
+                                final newState = await prompt(
+                                  context: context,
+                                  title: tr.stateMessage,
+                                  hintText: tr.howAreYouToday,
+                                  initialValue: user.state,
+                                );
+                                if (newState == null) return;
+                                await user.update(state: newState);
+                                if (!mounted) return;
+                                setState(() {});
                               },
                             )
                           : Text(

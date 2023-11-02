@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/widget/user/profile_followers.screen.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -427,27 +426,6 @@ class UserService {
           context: context,
           pageBuilder: ($, _, __) => PublicProfileScreen(uid: uid, user: user),
         );
-  }
-
-  // showFollowersScreen({required BuildContext context, User? user, Widget Function(User)? itemBuilder}) {
-  //   showGeneralDialog(
-  //     context: context,
-  //     pageBuilder: (context, _, __) {
-  //       return ProfileFollowerSceen(itemBuilder: itemBuilder, user: user ?? my);
-  //     },
-  //   );
-  // }
-
-  // TODO review
-  showViewersScreen({required BuildContext context, Widget Function(User)? itemBuilder}) {
-    showGeneralDialog(
-      context: context,
-      pageBuilder: (context, _, __) {
-        return ProfileViewersListScreen(
-          itemBuilder: itemBuilder,
-        );
-      },
-    );
   }
 
   showPushNotificationSettingScreen({
