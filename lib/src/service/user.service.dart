@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/widget/user/profile_followers.screen.dart';
-import 'package:fireflutter/src/widget/user/profile_following.screen.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -430,41 +429,16 @@ class UserService {
         );
   }
 
-  showFollowersScreen({required BuildContext context, User? user, Widget Function(User)? itemBuilder}) {
-    showGeneralDialog(
-      context: context,
-      pageBuilder: (context, _, __) {
-        return ProfileFollowerSceen(itemBuilder: itemBuilder, user: user ?? my);
-      },
-    );
-  }
+  // showFollowersScreen({required BuildContext context, User? user, Widget Function(User)? itemBuilder}) {
+  //   showGeneralDialog(
+  //     context: context,
+  //     pageBuilder: (context, _, __) {
+  //       return ProfileFollowerSceen(itemBuilder: itemBuilder, user: user ?? my);
+  //     },
+  //   );
+  // }
 
-  showFollowingScreen({required BuildContext context, User? user, Widget Function(User)? itemBuilder}) {
-    showGeneralDialog(
-      context: context,
-      pageBuilder: (context, _, __) {
-        return ProfileFollowingScreen(
-          user: user ?? my,
-          itemBuilder: itemBuilder,
-        );
-      },
-    );
-  }
-
-  showBlockedListScreen({required BuildContext context, required User user, Widget Function(User?)? itemBuilder}) {
-    showGeneralDialog(
-      context: context,
-      pageBuilder: (context, _, __) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Blocked List'),
-          ),
-          body: UserListView.builder(uids: (user.blockedUsers), itemBuilder: itemBuilder),
-        );
-      },
-    );
-  }
-
+  // TODO review
   showViewersScreen({required BuildContext context, Widget Function(User)? itemBuilder}) {
     showGeneralDialog(
       context: context,

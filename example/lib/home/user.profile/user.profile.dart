@@ -44,16 +44,17 @@ class UserProfileState extends State<UserProfile> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      buttonBuilder('Followers', () {
-                        UserService.instance.showFollowersScreen(
-                          context: context,
-                          user: user,
-                          itemBuilder: (user) => ListTile(
-                            leading: UserAvatar(user: user),
-                            title: Text(user.displayName),
-                          ),
-                        );
-                      }),
+                      // TODO followers screen
+                      // buttonBuilder('Followers', () {
+                      //   UserService.instance.showFollowersScreen(
+                      //     context: context,
+                      //     user: user,
+                      //     itemBuilder: (user) => ListTile(
+                      //       leading: UserAvatar(user: user),
+                      //       title: Text(user.displayName),
+                      //     ),
+                      //   );
+                      // }),
                       buttonBuilder('Show Profile', () {
                         UserService.instance.showPublicProfileScreen(context: context, user: my);
                       }),
