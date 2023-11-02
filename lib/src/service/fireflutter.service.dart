@@ -11,22 +11,18 @@ class FireFlutterService {
   /// BuildContext
   ///
   /// This is required to use the [toast] function in Fireflutter.
-  BuildContext get context => _context!;
-  BuildContext? _context;
+  BuildContext get context => contextCallback();
+  late final BuildContext Function() contextCallback;
 
   FireFlutterCustomize custom = FireFlutterCustomize();
 
   void init({
-    required BuildContext context,
+    required BuildContext Function() context,
     FireFlutterCustomize? custom,
   }) {
-    _context = context;
+    contextCallback = context;
     if (custom != null) {
       this.custom = custom;
     }
-  }
-
-  void unInit() {
-    _context = null;
   }
 }
