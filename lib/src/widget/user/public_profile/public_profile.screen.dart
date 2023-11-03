@@ -26,7 +26,10 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
   String previousUrl = '';
 
   TextStyle get textStyle => TextStyle(
-        color: Theme.of(context).colorScheme.onSecondary,
+        // changing the color from onBackground to onInverseSurface(90) to make the text readable on together with
+        // background image and gradient. because the text color onbackground is changing from white(light mode) to black(darkmode)
+        // and when its on darkmode the text color is also black so it is not readable on darkmode
+        color: Theme.of(context).colorScheme.onInverseSurface.tone(90),
       );
 
   @override
@@ -50,8 +53,17 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                   ),
                 ),
         ),
-        const TopDownGraident(height: 200),
-        const BottomUpGraident(height: 300),
+        TopDownGraident(
+          height: 300,
+          colors: [
+            Theme.of(context).colorScheme.inverseSurface.tone(10),
+            Colors.transparent,
+          ],
+        ),
+        BottomUpGraident(height: 300, colors: [
+          Theme.of(context).colorScheme.inverseSurface.tone(10),
+          Colors.transparent,
+        ]),
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: PreferredSize(
@@ -64,10 +76,10 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 iconTheme: IconThemeData(
-                  color: Theme.of(context).colorScheme.onSecondary,
+                  color: Theme.of(context).colorScheme.onInverseSurface.tone(90),
                 ),
                 backgroundColor: Colors.transparent,
-                title: Text(user.name, style: TextStyle(color: Theme.of(context).colorScheme.onSecondary)),
+                title: Text(user.name, style: textStyle),
                 actions: [
                   if (isMyProfile)
                     IconButton(
@@ -100,10 +112,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
             (user) {
               if (!user.exists) {
                 return Center(
-                  child: Text(
-                    'The user does not exist.',
-                    style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface),
-                  ),
+                  child: Text('The user does not exist.', style: textStyle),
                 );
               }
               return Column(
@@ -131,12 +140,12 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                                 text: TextSpan(
                                   style: textStyle,
                                   children: [
-                                    TextSpan(text: '${user.state.ifEmpty(tr.noStateMessage)}  '),
+                                    TextSpan(text: '${user.state.ifEmpty(tr.noStateMessage)} '),
                                     WidgetSpan(
                                       child: Icon(
                                         Icons.edit,
                                         size: 18,
-                                        color: Theme.of(context).colorScheme.onSecondary,
+                                        color: Theme.of(context).colorScheme.onInverseSurface.tone(90),
                                       ),
                                     ),
                                   ],
@@ -165,7 +174,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                   ),
                   const SizedBox(height: sizeLg),
                   Divider(
-                    color: Theme.of(context).colorScheme.shadow.withAlpha(80),
+                    color: Theme.of(context).colorScheme.onInverseSurface.tone(90),
                   ),
                   const SizedBox(height: sizeLg),
                   const LoginFirst(),
