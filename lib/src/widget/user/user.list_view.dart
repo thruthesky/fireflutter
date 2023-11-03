@@ -156,12 +156,14 @@ class UserListView extends StatelessWidget {
 
   /// Use this builder when you already got a list of uids.
   static Widget builder({
+    Key? key,
     required List<String> uids,
     Widget Function(User? user)? itemBuilder,
     Widget Function(User? user)? notExistBuilder,
     Widget Function()? loadingBuilder,
   }) {
     return ListView.builder(
+      key: key,
       itemCount: uids.length,
       itemBuilder: (context, index) {
         return UserDoc(

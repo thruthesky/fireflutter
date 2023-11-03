@@ -44,11 +44,6 @@ class _AdminFileListScreenState extends State<AdminFileListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          key: const Key('AdminFileListBackButton'),
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back),
-        ),
         title: const Text('AdminFileList'),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(64),

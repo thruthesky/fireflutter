@@ -13,9 +13,7 @@ class AdminChatRoomDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: Theme.of(context).iconTheme.copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
-        backgroundColor: Theme.of(context).colorScheme.inverseSurface,
-        title: Text('Chat Room Details', style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface)),
+        title: const Text('Chat Room Details'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -56,7 +54,10 @@ class AdminChatRoomDetailsScreen extends StatelessWidget {
                     leading: UserAvatar(user: user),
                     title: Text('${user.name} $userRoomAdminDetails'),
                     subtitle: Text('${user.type} | ${user.uid}'),
-                    onTap: () => UserService.instance.showPublicProfileScreen(context: context, user: user),
+                    onTap: () => UserService.instance.showPublicProfileScreen(
+                      context: context,
+                      user: user,
+                    ),
                   );
                 },
               )

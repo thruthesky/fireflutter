@@ -25,8 +25,11 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
   String? currentLoadedImageUrl;
   String previousUrl = '';
 
-  get textStyle => TextStyle(
-        color: Theme.of(context).colorScheme.onSecondary,
+  TextStyle get textStyle => TextStyle(
+        // changing the color from onBackground to onInverseSurface(90) to make the text readable on together with
+        // background image and gradient. because the text color onbackground is changing from white(light mode) to black(darkmode)
+        // and when its on darkmode the text color is also black so it is not readable on darkmode
+        color: Theme.of(context).colorScheme.onInverseSurface.tone(90),
       );
 
   @override
@@ -50,8 +53,17 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                   ),
                 ),
         ),
-        const TopDownGraident(height: 200),
-        const BottomUpGraident(height: 300),
+        TopDownGraident(
+          height: 300,
+          colors: [
+            Theme.of(context).colorScheme.inverseSurface.tone(10),
+            Colors.transparent,
+          ],
+        ),
+        BottomUpGraident(height: 300, colors: [
+          Theme.of(context).colorScheme.inverseSurface.tone(10),
+          Colors.transparent,
+        ]),
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: PreferredSize(
@@ -64,10 +76,10 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 iconTheme: IconThemeData(
-                  color: Theme.of(context).colorScheme.onSecondary,
+                  color: Theme.of(context).colorScheme.onInverseSurface.tone(90),
                 ),
                 backgroundColor: Colors.transparent,
-                title: Text(user.name, style: TextStyle(color: Theme.of(context).colorScheme.onSecondary)),
+                title: Text(user.name, style: textStyle),
                 actions: [
                   if (isMyProfile)
                     IconButton(
@@ -100,10 +112,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
             (user) {
               if (!user.exists) {
                 return Center(
-                  child: Text(
-                    'The user does not exist.',
-                    style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface),
-                  ),
+                  child: Text('The user does not exist.', style: textStyle),
                 );
               }
               return Column(
@@ -122,15 +131,50 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                     radius: 54,
                   ),
                   const SizedBox(height: sizeLg),
-                  Center(
-                    child: Text(
-                      user.state.ifEmpty(tr.noStateMessage),
-                      style: textStyle,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    child: Center(
+                      child: user.uid == myUid
+                          ? TextButton(
+                              child: RichText(
+                                text: TextSpan(
+                                  style: textStyle,
+                                  children: [
+                                    TextSpan(text: '${user.state.ifEmpty(tr.noStateMessage)} '),
+                                    WidgetSpan(
+                                      child: Icon(
+                                        Icons.edit,
+                                        size: 18,
+                                        color: Theme.of(context).colorScheme.onInverseSurface.tone(90),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              onPressed: () async {
+                                final newState = await prompt(
+                                  context: context,
+                                  title: tr.stateMessage,
+                                  hintText: tr.howAreYouToday,
+                                  initialValue: user.state,
+                                );
+                                if (newState == null) return;
+                                await user.update(state: newState);
+                                if (!mounted) return;
+                                setState(() {});
+                              },
+                            )
+                          : Text(
+                              user.state,
+                              style: textStyle,
+                              textAlign: TextAlign.center,
+                            ),
                     ),
                   ),
                   const SizedBox(height: sizeLg),
                   Divider(
-                    color: Theme.of(context).colorScheme.shadow.withAlpha(80),
+                    color: Theme.of(context).colorScheme.onInverseSurface.tone(90),
                   ),
                   const SizedBox(height: sizeLg),
                   const LoginFirst(),
@@ -152,7 +196,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
     if (isMyProfile) return MyDoc(builder: (user) => builder(user));
 
     return UserDoc(
-      uid: widget.uid!,
+      uid: widget.uid ?? widget.user!.uid,
       builder: (user) => builder(user),
     );
   }

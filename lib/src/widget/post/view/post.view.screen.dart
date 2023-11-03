@@ -58,7 +58,11 @@ class _PostViewScreenState extends State<PostViewScreen> {
       appBar: AppBar(
         title: PostViewTitle(padding: const EdgeInsets.only(top: 0), post: _post),
         centerTitle: true,
-        actions: PostService.instance.postViewActions(context: context, post: _post),
+        actions: PostService.instance.postViewActions(
+          context: context,
+          post: _post,
+          onBlock: (blocked) => setState(() {}),
+        ),
         leading: widget.onPressBackButton == null
             ? null
             : IconButton(
@@ -76,13 +80,15 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       PostCard(
+                        // color: Theme.of(context).colorScheme.surface.tone(25),
+
                         color: Theme.of(context).colorScheme.secondary.withAlpha(20),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                         customHeaderBuilder: (context, post) =>
                             PostViewMeta(post: _post, headerPadding: widget.headerPadding),
                         post: _post!,
                         customMainContentBuilder: (context, post) {
-                          if (post.youtubeId.isEmpty && post.urls.isEmpty && my?.hasBlocked(post.uid) == true) {
+                          if ((post.youtubeId.isEmpty && post.urls.isEmpty) || my?.hasBlocked(post.uid) == true) {
                             return const SizedBox.shrink();
                           }
                           return CarouselView(
@@ -125,20 +131,21 @@ class _PostViewScreenState extends State<PostViewScreen> {
                           children: [
                             PostViewTitle(post: _post),
                             PostViewContent(post: _post),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeXs),
-                              child: Wrap(
-                                runSpacing: 0,
-                                spacing: sizeXxs,
-                                children: [
-                                  ...((post.data?['hashtags'] ?? []) as List),
-                                ]
-                                    .map((e) => Text(
-                                          '#$e',
-                                        ))
-                                    .toList(),
+                            if (my?.hasBlocked(post.uid) != true)
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeXs),
+                                child: Wrap(
+                                  runSpacing: 0,
+                                  spacing: sizeXxs,
+                                  children: [
+                                    ...((post.data?['hashtags'] ?? []) as List),
+                                  ]
+                                      .map((e) => Text(
+                                            '#$e',
+                                          ))
+                                      .toList(),
+                                ),
                               ),
-                            ),
                           ],
                         ),
                         customFooterBuilder: (context, post) => Padding(

@@ -26,7 +26,12 @@ class PostDoc extends StatelessWidget {
       return StreamBuilder<DocumentSnapshot>(
         stream: Post.doc(id).snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) return onLoading ?? const SizedBox.shrink();
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return onLoading ??
+                const Center(
+                  child: CircularProgressIndicator(),
+                );
+          }
           if (snapshot.hasError) return Text(snapshot.error.toString());
           if (snapshot.hasData) {
             return builder(Post.fromDocumentSnapshot(snapshot.data!));
@@ -39,7 +44,12 @@ class PostDoc extends StatelessWidget {
     return FutureBuilder<Post?>(
       future: Post.get(id),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) return onLoading ?? const SizedBox.shrink();
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return onLoading ??
+              const Center(
+                child: CircularProgressIndicator(),
+              );
+        }
         if (snapshot.hasError) return Text(snapshot.error.toString());
         if (snapshot.hasData) return builder(snapshot.data!);
         if (post != null) return builder(post!);

@@ -16,6 +16,9 @@ class CommentOneLineListTile extends StatefulWidget {
     this.contentBorderRadius,
     this.runSpacing = 8,
     this.onTapContent,
+    this.fixedDepth,
+    this.hideActionButton = false,
+    this.hideLikeButton = false,
   });
 
   final Post post;
@@ -25,6 +28,15 @@ class CommentOneLineListTile extends StatefulWidget {
   final EdgeInsetsGeometry? contentMargin;
   final BorderRadiusGeometry? contentBorderRadius;
   final double runSpacing;
+
+  /// Fixed depth of the comment. If null, the depth of the comment will be used.
+  final int? fixedDepth;
+
+  /// Option to hide action button
+  final bool hideActionButton;
+
+  /// Option to hide like button
+  final bool hideLikeButton;
 
   /// Callback function for content tap
   final void Function()? onTapContent;
@@ -40,7 +52,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: indent(widget.comment.depth)),
+      margin: EdgeInsets.only(left: indent(widget.fixedDepth ?? widget.comment.depth)),
       padding: widget.padding ?? const EdgeInsets.all(0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,31 +146,42 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                                   ),
                                 ),
                         ),
-                        // reply
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.only(left: 0, right: 8),
-                            minimumSize: Size.zero,
-                            visualDensity: VisualDensity.compact,
+                        if (widget.hideActionButton == false) ...[
+                          // reply
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.only(left: 0, right: 8),
+                              minimumSize: Size.zero,
+                              visualDensity: VisualDensity.compact,
+                            ),
+                            onPressed: () {
+                              if (my?.isDisabled ?? false) {
+                                toast(title: tr.disabled, message: tr.disabledMessage);
+                                return;
+                              }
+                              CommentService.instance.showCommentEditBottomSheet(
+                                context,
+                                post: widget.post,
+                                parent: widget.comment,
+                              );
+                            },
+                            child: Text(
+                              tr.reply,
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    // The color of the post card is actually
+                                    // comming from colorScheme.secondary
+                                    // However, it has .withAlpha(20) which make the
+                                    // actual color nearly like the background color.
+                                    // So, we need to use onBackground color here.
+                                    //
+                                    // Please review if we have to change it
+                                    color: Theme.of(context).colorScheme.onBackground,
+                                    // color: Theme.of(context).colorScheme.primary,
+                                  ),
+                            ),
                           ),
-                          onPressed: () {
-                            if (my?.isDisabled ?? false) {
-                              toast(title: tr.disabled, message: tr.disabledMessage);
-                              return;
-                            }
-                            CommentService.instance.showCommentEditBottomSheet(
-                              context,
-                              post: widget.post,
-                              parent: widget.comment,
-                            );
-                          },
-                          child: Text(
-                            tr.reply,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ),
-                        Flexible(
-                          child: PopupMenuButton(
+                          Flexible(
+                            child: PopupMenuButton(
                               icon: const Icon(
                                 Icons.more_horiz,
                                 size: 16,
@@ -209,14 +232,16 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                                     toast(title: 'Comment deleted', message: 'Comment deleted successfully.');
                                   }
                                 }
-                              }),
-                        ),
+                              },
+                            ),
+                          ),
+                        ]
                       ],
                     ),
                 ],
               ),
             ),
-            if (notBlocked)
+            if (notBlocked && widget.hideLikeButton == false)
               Database(
                 path: pathCommentLikedBy(widget.comment.id),
                 builder: (value, path) {
@@ -232,13 +257,17 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
   }
 
   Widget likeButton() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return IconButton(
       visualDensity: VisualDensity.compact,
       onPressed: () => widget.comment.like(),
       icon: Icon(
         iLiked! ? Icons.favorite_border : Icons.favorite,
         size: 16,
-        color: iLiked! ? null : Theme.of(context).colorScheme.error,
+        // Used tertiary color here
+        // originally the color uses colorScheme.error which is kinda
+        // confusing and the name is not helpful in the color.
+        color: iLiked! ? null : Theme.of(context).colorScheme.tertiary.tone(50).saturation(isDark ? 60 : 50),
       ),
     );
   }

@@ -311,7 +311,7 @@ class _PostCardState extends State<PostCard> {
           Container(
             padding: const EdgeInsets.all(sizeSm),
             color: widget.contentBackground,
-            child: PostContent(post: post, style: Theme.of(context).textTheme.bodyMedium),
+            child: PostContentShowMore(post: post),
           ),
       ],
     );
@@ -319,6 +319,7 @@ class _PostCardState extends State<PostCard> {
 
   Widget defaultActions(BuildContext context, Post post) {
     if (my?.hasBlocked(post.uid) == true) return const SizedBox.shrink();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -336,6 +337,8 @@ class _PostCardState extends State<PostCard> {
                   key: const Key('PostCardLikeButton'),
                   onPressed: () => post.like(),
                   icon: Icon(v != null ? Icons.favorite : Icons.favorite_outline),
+                  color:
+                      v != null ? Theme.of(context).colorScheme.tertiary.tone(50).saturation(isDark ? 60 : 50) : null,
                 ),
               ),
               FavoriteButton(

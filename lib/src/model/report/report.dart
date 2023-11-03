@@ -122,10 +122,13 @@ class Report {
     };
     if (postId != null) {
       data['postId'] = postId;
+      data['title'] = (await Post.get(postId)).title;
     } else if (commentId != null) {
       data['commentId'] = commentId;
+      data['title'] = (await Comment.get(commentId)).content;
     } else if (otherUid != null) {
       data['otherUid'] = otherUid;
+      data['title'] = (await User.get(otherUid))!.name;
     }
 
     // print('data; $data');

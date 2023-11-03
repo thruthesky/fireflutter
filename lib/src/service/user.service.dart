@@ -4,8 +4,6 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/widget/user/profile_followers.screen.dart';
-import 'package:fireflutter/src/widget/user/profile_following.screen.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -113,10 +111,10 @@ class UserService {
   /// User document reference of the currently login user
   DocumentReference get doc => col.doc(myUid);
 
-  /// [_userCache] is a memory cache for [User].
+  /// [userCache] is a memory cache for [User].
   ///
   /// Firestore 에서 한번 불러온 유저는 다시 불러오지 않는다. Offline DB 라서, 속도 향상은 크게 느끼지 못하지만, 접속을 아껴 비용을 절약한다.
-  final Map<String, User> _userCache = {};
+  final Map<String, User> userCache = {};
 
   User? user;
 
@@ -280,10 +278,10 @@ class UserService {
     if (uid == '') return null;
 
     /// 캐시되어져 있으면, 그 캐시된 값(User)을 리턴
-    if (reload == false && _userCache.containsKey(uid)) {
+    if (reload == false && userCache.containsKey(uid)) {
       /// Mark that the user data is cached
-      _userCache[uid]!.cached = true;
-      return _userCache[uid];
+      userCache[uid]!.cached = true;
+      return userCache[uid];
     }
 
     /// 아니면, Firestore 또는 RTDB 에서 사용자 문서를 가져와 User 을 만들어 리턴.
@@ -293,8 +291,8 @@ class UserService {
     final User? u = await User.get(uid);
 
     if (u == null) return null;
-    _userCache[uid] = u;
-    return _userCache[uid];
+    userCache[uid] = u;
+    return userCache[uid];
   }
 
   /// Sign out from Firebase Auth
@@ -428,52 +426,6 @@ class UserService {
           context: context,
           pageBuilder: ($, _, __) => PublicProfileScreen(uid: uid, user: user),
         );
-  }
-
-  showFollowersScreen({required BuildContext context, User? user, Widget Function(User)? itemBuilder}) {
-    showGeneralDialog(
-      context: context,
-      pageBuilder: (context, _, __) {
-        return ProfileFollowerSceen(itemBuilder: itemBuilder, user: user ?? my);
-      },
-    );
-  }
-
-  showFollowingScreen({required BuildContext context, User? user, Widget Function(User)? itemBuilder}) {
-    showGeneralDialog(
-      context: context,
-      pageBuilder: (context, _, __) {
-        return ProfileFollowingScreen(
-          user: user ?? my,
-          itemBuilder: itemBuilder,
-        );
-      },
-    );
-  }
-
-  showBlockedListScreen({required BuildContext context, required User user, Widget Function(User?)? itemBuilder}) {
-    showGeneralDialog(
-      context: context,
-      pageBuilder: (context, _, __) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Blocked List'),
-          ),
-          body: UserListView.builder(uids: (user.blockedUsers), itemBuilder: itemBuilder),
-        );
-      },
-    );
-  }
-
-  showViewersScreen({required BuildContext context, Widget Function(User)? itemBuilder}) {
-    showGeneralDialog(
-      context: context,
-      pageBuilder: (context, _, __) {
-        return ProfileViewersListScreen(
-          itemBuilder: itemBuilder,
-        );
-      },
-    );
   }
 
   showPushNotificationSettingScreen({

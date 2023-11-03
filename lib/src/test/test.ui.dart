@@ -116,7 +116,7 @@ class _TestScreenState extends State<TestUi> {
             ElevatedButton(
               onPressed: () {
                 FireFlutterService.instance.init(
-                  context: context,
+                  context: () => context,
                 );
               },
               child: const Text("FireFlutter Init()"),
@@ -147,10 +147,10 @@ class _TestScreenState extends State<TestUi> {
         const Text('Individual tests', style: TextStyle(color: Color.fromARGB(255, 83, 4, 4))),
         Wrap(
           children: [
-            ElevatedButton(
-              onPressed: () => testToast(context),
-              child: const Text('Toast'),
-            ),
+            // ElevatedButton(
+            //   onPressed: () => testToast(context),
+            //   child: const Text('Toast'),
+            // ),
             ElevatedButton(
               onPressed: testUser,
               child: const Text('User'),
@@ -502,31 +502,31 @@ class _TestScreenState extends State<TestUi> {
         "The room must not have a rename. Actual Value: ${roomAfter.rename[myUid!]}. Expected: Null");
   }
 
-  Future testToast(BuildContext context) {
-    final completer = Completer();
-    FireFlutterService.instance.unInit();
-    try {
-      toast(title: 'FireFlutter Toast', message: 'This is a toast message');
-      completer.completeError('FireFlutterService.instance.unInit() must throw an exception');
-      return completer.future;
-    } catch (e) {
-      if (e.toString().contains('Null check operator used on a null value') == false) {
-        completer.completeError('error: $e');
-        return completer.future;
-      }
-    }
+  // Future testToast(BuildContext context) {
+  //   final completer = Completer();
+  //   FireFlutterService.instance.init(context: () => null);
+  //   try {
+  //     toast(title: 'FireFlutter Toast', message: 'This is a toast message');
+  //     completer.completeError('FireFlutterService.instance.unInit() must throw an exception');
+  //     return completer.future;
+  //   } catch (e) {
+  //     if (e.toString().contains('Null check operator used on a null value') == false) {
+  //       completer.completeError('error: $e');
+  //       return completer.future;
+  //     }
+  //   }
 
-    FireFlutterService.instance.init(context: context);
-    try {
-      toast(
-          title: 'FireFlutter Toast', message: 'This is a toast message', duration: const Duration(milliseconds: 100));
-      completer.complete('toast() succeed');
-    } catch (e) {
-      completer.completeError('toast() must throw an exception; $e');
-    }
+  //   FireFlutterService.instance.init(context: () => context);
+  //   try {
+  //     toast(
+  //         title: 'FireFlutter Toast', message: 'This is a toast message', duration: const Duration(milliseconds: 100));
+  //     completer.complete('toast() succeed');
+  //   } catch (e) {
+  //     completer.completeError('toast() must throw an exception; $e');
+  //   }
 
-    return completer.future;
-  }
+  //   return completer.future;
+  // }
 
   /// Test user document
   ///

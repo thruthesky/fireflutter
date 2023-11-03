@@ -21,24 +21,77 @@ class _AdminChatRoomListScreenState extends State<AdminChatRoomListScreen> {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back),
         ),
-        iconTheme: Theme.of(context).iconTheme.copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
-        backgroundColor: Theme.of(context).colorScheme.inverseSurface,
-        title: Text('Admin Chat Room List', style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface)),
+        title: const Text('Admin Chat Room List'),
       ),
       body: FirestoreListView(
-        query: chatCol,
+        // itemExtent: 80,
+        query: chatCol.orderBy('lastMessage.createdAt', descending: true),
         itemBuilder: (context, snapshot) {
           final room = Room.fromDocumentSnapshot(snapshot);
           return InkWell(
             onTap: () {
               AdminService.instance.showChatRoomDetails(context, room: room);
             },
-            child: Padding(
-              padding: const EdgeInsets.all(sizeSm),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [ChatRoomListTile(room: room)],
-              ),
+            child: ChatRoomListTile(
+              padding: const EdgeInsets.fromLTRB(sizeMd, 0, sizeMd, sizeMd),
+              room: room,
+              avatarBuilder: (room) {
+                return SizedBox(
+                  width: 56,
+                  height: 56,
+                  child: Stack(
+                    children: [
+                      UserAvatar(
+                        uid: room.users.first,
+                        user: UserService.instance.userCache[room.users.first],
+                        size: 56 / 1.5,
+                        radius: 16,
+                        borderWidth: 1,
+                        borderColor: Colors.grey.shade300,
+                      ),
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: UserAvatar(
+                          uid: room.users.last,
+                          user: UserService.instance.userCache[room.users.last],
+                          size: 56 / 1.5,
+                          radius: 16,
+                          borderWidth: 1,
+                          borderColor: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              contentBuilder: (room) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    UserDoc(
+                      uid: room.users.first,
+                      builder: (_) {
+                        return Text(_.getDisplayName, style: Theme.of(context).textTheme.bodyMedium);
+                      },
+                      onLoading: const CircularProgressIndicator.adaptive(),
+                    ),
+                    UserDoc(
+                      uid: room.users.last,
+                      builder: (_) {
+                        return Text(_.getDisplayName, style: Theme.of(context).textTheme.bodyMedium);
+                      },
+                      onLoading: const CircularProgressIndicator.adaptive(),
+                    ),
+                    Text(
+                      (room.lastMessage?.text ?? '').replaceAll("\n", ' '),
+                      style: Theme.of(context).textTheme.bodySmall,
+                      maxLines: 1,
+                    ),
+                  ],
+                );
+              },
             ),
           );
         },

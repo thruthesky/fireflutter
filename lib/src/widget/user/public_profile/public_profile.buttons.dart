@@ -11,7 +11,7 @@ class PublicProfileButtons extends StatelessWidget {
       );
 
   textStyle(context) => TextStyle(
-        color: Theme.of(context).colorScheme.onSecondary,
+        color: Theme.of(context).colorScheme.onInverseSurface.tone(90),
       );
 
   @override
@@ -30,6 +30,7 @@ class PublicProfileButtons extends StatelessWidget {
                   path: 'likes/${user.uid}',
                   builder: (value, p) => Text(
                     value == null ? tr.like : tr.likes.replaceAll('#no', value.length.toString()),
+                    style: textStyle(context),
                   ),
                 ),
               ),
@@ -54,7 +55,10 @@ class PublicProfileButtons extends StatelessWidget {
                   );
                 },
                 style: buttonStyle(context),
-                child: Text(tr.chat),
+                child: Text(
+                  tr.chat,
+                  style: textStyle(context),
+                ),
               ),
           UserService.instance.customize.publicScreenFollowButton?.call(context, user) ??
               MyDoc(
@@ -81,7 +85,10 @@ class PublicProfileButtons extends StatelessWidget {
                       );
                     },
                     style: buttonStyle(context),
-                    child: Text(tr.unblock),
+                    child: Text(
+                      tr.unblock,
+                      style: textStyle(context),
+                    ),
                   );
                 },
                 notBlockedBuilder: (context) {
@@ -94,7 +101,10 @@ class PublicProfileButtons extends StatelessWidget {
                       );
                     },
                     style: buttonStyle(context),
-                    child: Text(tr.block),
+                    child: Text(
+                      tr.block,
+                      style: textStyle(context),
+                    ),
                   );
                 },
               ),
@@ -111,7 +121,10 @@ class PublicProfileButtons extends StatelessWidget {
                   );
                 },
                 style: buttonStyle(context),
-                child: Text(tr.report),
+                child: Text(
+                  tr.report,
+                  style: textStyle(context),
+                ),
               ),
           if (isAdmin)
             UserDoc(
@@ -122,8 +135,9 @@ class PublicProfileButtons extends StatelessWidget {
                       onPressed: () async {
                         await user.enable();
                       },
-                      child: const Text(
+                      child: Text(
                         'Enable',
+                        style: textStyle(context),
                       ),
                     )
                   : TextButton(
@@ -131,8 +145,9 @@ class PublicProfileButtons extends StatelessWidget {
                       onPressed: () async {
                         await user.disable();
                       },
-                      child: const Text(
+                      child: Text(
                         'Disable',
+                        style: textStyle(context),
                       ),
                     ),
             ),

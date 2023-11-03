@@ -3,6 +3,7 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/model/report/report.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class AdminReportListScreen extends StatefulWidget {
   static const String routeName = '/AdminReportList';
@@ -13,9 +14,7 @@ class AdminReportListScreen extends StatefulWidget {
 }
 
 class _AdminReportListScreenState extends State<AdminReportListScreen> {
-  style(context) => TextStyle(color: Theme.of(context).colorScheme.onInverseSurface);
-
-  String? type;
+  String type = 'all';
 
   get query {
     Query q = reportCol;
@@ -40,61 +39,45 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back),
         ),
-        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.onInverseSurface),
-        backgroundColor: Theme.of(context).colorScheme.inverseSurface,
-        title: Text(
+        title: const Text(
           'Admin Report List',
-          style: style(context),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48),
           child: SizedBox(
             height: 48,
             child: ListView(scrollDirection: Axis.horizontal, children: [
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    type = null;
-                  });
-                },
-                child: Text(
-                  "All",
-                  style: style(context),
+              for (final target in ['all', 'user', 'post', 'comment'])
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      type = target;
+                    });
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Radio(
+                        value: target,
+                        groupValue: type,
+                        onChanged: (String? value) {
+                          dog('value change $value');
+                          if (value != null) {
+                            setState(() {
+                              type = value;
+                            });
+                          }
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: sizeSm),
+                        child: Text(
+                          toBeginningOfSentenceCase(target)!,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    type = 'user';
-                  });
-                },
-                child: Text(
-                  "Users",
-                  style: style(context),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    type = 'post';
-                  });
-                },
-                child: Text(
-                  "Posts",
-                  style: style(context),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    type = 'comment';
-                  });
-                },
-                child: Text(
-                  "Comments",
-                  style: style(context),
-                ),
-              ),
             ]),
           ),
         ),
@@ -103,64 +86,115 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
         query: query,
         itemBuilder: (context, snapshot) {
           final report = Report.fromDocumentSnapshot(snapshot);
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(report.type),
-                  const Spacer(),
-                  IconButton(
-                    onPressed: () {
-                      if (report.type == 'user') {
-                        UserService.instance.showPublicProfileScreen(context: context, uid: report.otherUid);
-                      } else if (report.type == 'post') {
-                        PostService.instance.showPostViewScreen(context: context, postId: report.postId);
-                      } else if (report.type == 'comment') {
-                        CommentService.instance.showCommentViewDialog(context: context, commentId: report.commentId);
-                      }
-                    },
-                    icon: const Icon(Icons.open_in_browser),
-                  )
-                ],
-              ),
-              Text(report.title),
-              const Text('Reporters'),
-              ...report.reporters
-                  .map((e) => Column(
+          return Container(
+            padding: const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeSm),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(toBeginningOfSentenceCase(report.type) ?? '', style: Theme.of(context).textTheme.titleMedium),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () {
+                        if (report.type == 'user') {
+                          UserService.instance.showPublicProfileScreen(
+                            context: context,
+                            uid: report.otherUid,
+                          );
+                        } else if (report.type == 'post') {
+                          PostService.instance.showPostViewScreen(context: context, postId: report.postId);
+                        } else if (report.type == 'comment') {
+                          CommentService.instance.showCommentViewDialog(context: context, commentId: report.commentId);
+                        }
+                      },
+                      icon: const Row(
                         children: [
-                          UserDoc(
-                            uid: e,
-                            builder: (u) => Text(
-                              u.name,
-                            ),
-                          ),
-                          report.data[e] != null ? Text(report.data[e]) : const SizedBox.shrink(),
+                          Text('View '),
+                          Icon(Icons.open_in_browser),
                         ],
-                      ))
-                  .toList(),
-              const Divider(),
-              Text(report.createdAt.toString()),
-              if (report.type == 'user')
-                ElevatedButton(
-                  onPressed: () => showDisableDialog(report),
-                  child: const Text('Disable User'),
+                      ),
+                    )
+                  ],
                 ),
-              if (report.type == 'post')
-                ElevatedButton(
-                  onPressed: () => showDeleteDialog(report),
-                  child: const Text('Delete Post'),
+                Text('Reported ${toBeginningOfSentenceCase(report.type)}',
+                    style: Theme.of(context).textTheme.labelMedium),
+                Text(report.title,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                const SizedBox(height: sizeSm),
+                Text(
+                  'Reporters',
+                  style: Theme.of(context).textTheme.labelMedium,
                 ),
-              if (report.type == 'comment')
-                ElevatedButton(
-                  onPressed: () => showDeleteDialog(report),
-                  child: const Text('Delete Comment'),
+                ...report.reporters
+                    .map((e) => Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, sizeXxs, sizeXs, 0),
+                              child: UserAvatar(
+                                showBlocked: true,
+                                uid: e,
+                                radius: 12.5,
+                                size: 25,
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  UserDisplayName(
+                                    showBlocked: true,
+                                    uid: e,
+                                  ),
+                                  report.data[e] != null ? Text(report.data[e]) : const SizedBox.shrink(),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ))
+                    .toList(),
+                const SizedBox(height: sizeSm),
+                Row(
+                  children: [
+                    const Text('First reported at '),
+                    Expanded(
+                      child: DateTimeText(
+                        dateTime: report.createdAt,
+                        type: DateTimeTextType.short,
+                      ),
+                    ),
+                  ],
                 ),
-              ElevatedButton(
-                onPressed: () => showResolveDialog(report),
-                child: const Text('Mark as Resolved'),
-              ),
-            ],
+                const SizedBox(height: sizeSm),
+                Row(
+                  children: [
+                    if (report.type == 'user')
+                      ElevatedButton(
+                        onPressed: () => showDisableDialog(report),
+                        child: const Text('Disable User'),
+                      ),
+                    if (report.type == 'post')
+                      ElevatedButton(
+                        onPressed: () => showDeleteDialog(report),
+                        child: const Text('Delete Post'),
+                      ),
+                    if (report.type == 'comment')
+                      ElevatedButton(
+                        onPressed: () => showDeleteDialog(report),
+                        child: const Text('Delete Comment'),
+                      ),
+                    const SizedBox(width: sizeSm),
+                    ElevatedButton(
+                      onPressed: () => showResolveDialog(report),
+                      child: const Text('Mark as Resolved'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: sizeSm),
+                const Divider(),
+              ],
+            ),
           );
         },
       ),

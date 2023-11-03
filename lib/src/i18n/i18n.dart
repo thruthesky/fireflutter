@@ -44,6 +44,8 @@ class I18nTexts {
   String unblockMessage;
   String alreadyBlockedTitle;
   String alreadyBlockedMessage;
+  String noBlockedUser;
+  String noBlockedUserYet;
   String disabled;
   String disabledMessage;
   String report;
@@ -55,6 +57,10 @@ class I18nTexts {
   String whoFollowedWho;
   String followMessage;
   String unfollowMessage;
+  String noFollower;
+  String noFollowerYet;
+  String noFollowing;
+  String noFollowingYet;
   String noStateMessage;
 
   String copyLink;
@@ -67,6 +73,9 @@ class I18nTexts {
   String readMore;
 
   String noOfLikes;
+
+  String howAreYouToday;
+  String stateMessage;
 
   String share;
   String home;
@@ -101,6 +110,10 @@ class I18nTexts {
   String deleteCommentLog;
   String likedCommentLog;
   String unlikedCommentLog;
+
+  String adminBackFillWarning;
+  String categoryUpdated;
+  String categoryUpdatedMessage;
 
   I18nTexts({
     this.loginFirstTitle = 'Login first',
@@ -142,6 +155,8 @@ class I18nTexts {
     this.unblockMessage = "Unblocked",
     this.alreadyBlockedTitle = "Already blocked",
     this.alreadyBlockedMessage = "You have blocked this user already.",
+    this.noBlockedUser = "No blocked user.",
+    this.noBlockedUserYet = "You haven't blocked any user yet.",
     this.disabled = "Disabled",
     this.disabledMessage = "You are disabled.",
     this.report = "Report",
@@ -153,14 +168,20 @@ class I18nTexts {
     this.whoFollowedWho = "#a followed #b",
     this.followMessage = "You are following this user.",
     this.unfollowMessage = "You are not following this user anymore.",
+    this.noFollower = "No follower, yet.",
+    this.noFollowerYet = "Have not been followed by anyone, yet.",
+    this.noFollowing = "Have not followed anyone, yet.",
+    this.noFollowingYet = "Have not followed anyone, yet.",
     this.noStateMessage = "No state message, yet. Create one!",
     this.copyLink = "Copy Link",
     this.copyLinkMessage = "Link copied to clipboard",
     this.showMoreComments = "Show #no comments",
     this.askOpenLink = "Do you want to open this link?",
-    this.readLess = "Read less",
-    this.readMore = "Read more",
+    this.readLess = "read less",
+    this.readMore = "read more",
     this.noOfLikes = "Likes #no",
+    this.howAreYouToday = "How are you today?",
+    this.stateMessage = 'State Message',
     this.share = "Share",
     this.loginFirstToUseCompleteFunctionality = "Login first to use the complete functionality.",
     this.home = "Home",
@@ -195,6 +216,9 @@ class I18nTexts {
     this.deleteCommentLog = "#a deleted a comment",
     this.likedCommentLog = "#a liked a comment",
     this.unlikedCommentLog = "#a unliked a comment",
+    this.adminBackFillWarning = 'This will reset all data in Supabase.',
+    this.categoryUpdated = 'Category updated.',
+    this.categoryUpdatedMessage = 'Category has been updated',
   });
 
   factory I18nTexts.fromJson(Map<String, dynamic> json) => _$I18nTextsFromJson(json);

@@ -15,6 +15,10 @@ Create an issue if you find a bug or need a help.
 - [FireFlutter](#fireflutter)
 - [Table of Contents](#table-of-contents)
 - [Overview](#overview)
+  - [The principles](#the-principles)
+    - [DRY](#dry)
+    - [Abstraction](#abstraction)
+    - [Don't make it a function](#dont-make-it-a-function)
 - [Changes](#changes)
     - [Oct 10 0.3.12](#oct-10-0312)
     - [Sept 28 0.3.11](#sept-28-0311)
@@ -69,6 +73,29 @@ It provides code for user, forum, chat and push notificiation management that wo
 There are some pre-defined fields for the common usage in the database structure. We use `json_serializable` for providing each model with the fields.
 
 The model has also basic CRUD functionalities.
+
+
+
+## The principles
+
+### DRY
+
+To not repeat ourselves, we made the commonly reused code modulized as much as possible. The concept here is that we should not write the same code twice.
+
+
+
+
+### Abstraction
+
+We made abstractions and the logic gets complicated and the code gets long.
+
+
+### Don't make it a function
+
+It should be a class method or a widget instead of a plain function except the handy alias functions that simple wrap the class method or widget.
+
+
+
 
 # Changes
 

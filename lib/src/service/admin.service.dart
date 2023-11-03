@@ -30,7 +30,8 @@ class AdminService {
     Widget Function(User?)? titleBuilder,
     Widget Function(User?)? subtitleBuilder,
     Widget Function(User?)? trailingBuilder,
-    String field = 'displayName',
+    String field = 'name',
+    bool createdAtDescending = true,
   }) {
     final input = TextEditingController();
     showGeneralDialog(
@@ -70,6 +71,7 @@ class AdminService {
               titleBuilder: titleBuilder,
               subtitleBuilder: subtitleBuilder,
               trailingBuilder: trailingBuilder,
+              createdAtDescending: createdAtDescending,
             ),
           );
         });

@@ -25,13 +25,6 @@ class _ActivityLogListViewScreenState extends State<ActivityLogListViewScreen> {
       q = q.where('type', isEqualTo: searchType);
     }
 
-    // q = q.where('type', isEqualTo: 'post');
-    // q = q.where('uid', isEqualTo: '6TzeH9PDuJXC29GvBJEwXsv1tV93');
-    // q = q.where('uid', isEqualTo: 'kxGXsfdW7HhkxwPXqmBl9A0voe22');
-
-    // q = q.where('action', whereIn: ['viewProfile']);
-    // q = q.where('id', isEqualTo: 'Dj9ot7LQeanWSwIxJsg0');
-
     return q;
   }
 
@@ -76,12 +69,6 @@ class _ActivityLogListViewScreenState extends State<ActivityLogListViewScreen> {
 
           cntMap[activity.id] ??= ++count;
           dog('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action} ${activity.uid}}');
-          // print('setState(); ${activity.id}(${cntMap[activity.id]})');
-          // return Container(
-          //   padding: const EdgeInsets.all(64.0),
-          //   color: cntMap[activity.id]! % 2 == 1 ? Colors.grey[200] : Colors.red[200],
-          //   child: Text('activity: itemBuilder. ${activity.id}(${cntMap[activity.id]}) ${activity.action}'),
-          // );
 
           return ActivityLogTimeLine(
             activity: activity,
@@ -126,6 +113,7 @@ class _ActivityLogListViewScreenState extends State<ActivityLogListViewScreen> {
                             icon: const Icon(Icons.close_outlined),
                           ),
                         IconButton(
+                          visualDensity: const VisualDensity(horizontal: 2, vertical: -2),
                           onPressed: () {
                             AdminService.instance.showUserSearchDialog(
                               context,
@@ -168,7 +156,6 @@ class _ActivityLogListViewScreenState extends State<ActivityLogListViewScreen> {
                                 visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
                                 groupValue: searchType,
                                 onChanged: (String? value) {
-                                  dog('value change $value');
                                   if (value != null) {
                                     setState(() {
                                       searchType = value;

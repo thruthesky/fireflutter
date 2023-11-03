@@ -159,9 +159,11 @@ Future<DocumentReference?> activityLogCommentCreate({
 }
 
 Future<DocumentReference?> activityLogCommentUpdate({
+  required String postId,
   required String commentId,
 }) async {
   return await activityLog(
+    postId: postId,
     commentId: commentId,
     type: Log.type.comment,
     action: Log.comment.update,
@@ -169,9 +171,11 @@ Future<DocumentReference?> activityLogCommentUpdate({
 }
 
 Future<DocumentReference?> activityLogCommentDelete({
+  required String postId,
   required String commentId,
 }) async {
   return await activityLog(
+    postId: postId,
     commentId: commentId,
     type: Log.type.comment,
     action: Log.comment.delete,

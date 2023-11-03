@@ -74,9 +74,9 @@ class _CategoryEditScreenState extends State<CategoryEditScreen> {
                       padding: const EdgeInsets.all(sizeMd),
                       child: ElevatedButton(
                         child: const Text('Update'),
-                        onPressed: () {
-                          Category.fromId(category.id).update(
-                              name: name.text, description: description.text);
+                        onPressed: () async {
+                          await Category.fromId(category.id).update(name: name.text, description: description.text);
+                          toast(title: tr.categoryUpdated, message: tr.categoryUpdatedMessage);
                         },
                       ),
                     ),

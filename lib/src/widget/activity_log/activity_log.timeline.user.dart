@@ -55,11 +55,15 @@ class ActivityLogTimeLineUser extends StatelessWidget {
                       contentPadding: EdgeInsets.zero,
                       leading: UserAvatar(
                         user: target,
-                        size: 52,
+                        size: 40,
+                        radius: 20,
                       ),
                       title: Text(target.getDisplayName),
                       onTap: () {
-                        UserService.instance.showPublicProfileScreen(context: context, user: target);
+                        UserService.instance.showPublicProfileScreen(
+                          context: context,
+                          user: target,
+                        );
                       },
                     )
                   ],

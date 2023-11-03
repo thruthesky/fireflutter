@@ -31,10 +31,7 @@ class PostViewMeta extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    UserDoc(
-                      uid: post!.uid,
-                      builder: (user) => Text(user.name, style: Theme.of(context).textTheme.titleMedium),
-                    ),
+                    UserDisplayName(uid: post!.uid, style: Theme.of(context).textTheme.titleMedium),
                     Row(
                       children: [
                         DateTimeText(
