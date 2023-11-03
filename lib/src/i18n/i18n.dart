@@ -55,6 +55,8 @@ class I18nTexts {
   String whoFollowedWho;
   String followMessage;
   String unfollowMessage;
+  String noFollower;
+  String noFollowing;
   String noStateMessage;
 
   String copyLink;
@@ -160,6 +162,8 @@ class I18nTexts {
     this.whoFollowedWho = "#a followed #b",
     this.followMessage = "You are following this user.",
     this.unfollowMessage = "You are not following this user anymore.",
+    this.noFollower = "No follower, yet.",
+    this.noFollowing = "Have not followed anyone, yet.",
     this.noStateMessage = "No state message, yet. Create one!",
     this.copyLink = "Copy Link",
     this.copyLinkMessage = "Link copied to clipboard",
