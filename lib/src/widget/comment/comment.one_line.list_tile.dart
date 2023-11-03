@@ -167,7 +167,17 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                             },
                             child: Text(
                               tr.reply,
-                              style: Theme.of(context).textTheme.bodySmall,
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    // The color of the post card is actually
+                                    // comming from colorScheme.secondary
+                                    // However, it has .withAlpha(20) which make the
+                                    // actual color nearly like the background color.
+                                    // So, we need to use onBackground color here.
+                                    //
+                                    // Please review if we have to change it
+                                    color: Theme.of(context).colorScheme.onBackground,
+                                    // color: Theme.of(context).colorScheme.primary,
+                                  ),
                             ),
                           ),
                           Flexible(
@@ -247,13 +257,17 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
   }
 
   Widget likeButton() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return IconButton(
       visualDensity: VisualDensity.compact,
       onPressed: () => widget.comment.like(),
       icon: Icon(
         iLiked! ? Icons.favorite_border : Icons.favorite,
         size: 16,
-        color: iLiked! ? null : Theme.of(context).colorScheme.error,
+        // Used tertiary color here
+        // originally the color uses colorScheme.error which is kinda
+        // confusing and the name is not helpful in the color.
+        color: iLiked! ? null : Theme.of(context).colorScheme.tertiary.tone(50).saturation(isDark ? 60 : 50),
       ),
     );
   }

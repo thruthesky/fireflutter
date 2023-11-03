@@ -44,7 +44,7 @@ class UserProfileState extends State<UserProfile> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      // TODO followers screen
+                      // todo followers screen - please update example
                       // buttonBuilder('Followers', () {
                       //   UserService.instance.showFollowersScreen(
                       //     context: context,
