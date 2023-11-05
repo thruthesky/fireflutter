@@ -39,8 +39,6 @@ class FeedListView extends StatefulWidget {
 }
 
 class _FeedListViewState extends State<FeedListView> {
-  final scrollBarControlller = ScrollController();
-
   @override
   void initState() {
     super.initState();
@@ -50,12 +48,6 @@ class _FeedListViewState extends State<FeedListView> {
         setState(() {});
       }
     });
-  }
-
-  @override
-  void dispose() {
-    scrollBarControlller.dispose();
-    super.dispose();
   }
 
   @override
@@ -75,40 +67,36 @@ class _FeedListViewState extends State<FeedListView> {
           // means has no more to get
           if (widget.emptyBuilder != null) return widget.emptyBuilder!.call(context);
         }
-        return Scrollbar(
-          controller: scrollBarControlller,
-          child: ListView.builder(
-            controller: scrollBarControlller,
-            physics: const RangeMaintainingScrollPhysics(),
-            itemExtent: widget.itemExtent,
-            cacheExtent: widget.cacheExtent,
-            itemCount: snapshot.docs.length,
-            itemBuilder: (context, index) {
-              // if we reached the end of the currently obtained items, we try to
-              // obtain more items
-              if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
-                // Tell FirebaseDatabaseQueryBuilder to try to obtain more items.
-                // It is safe to call this function from within the build method.
-                snapshot.fetchMore();
-              }
-              if ((!snapshot.hasMore && index + 1 == snapshot.docs.length)) {
-                // means has no more to get
-                if (widget.bottomBuilder != null) return widget.bottomBuilder!.call(context);
-              }
-              final post = Post.fromDocumentSnapshot(snapshot.docs[index]);
-              final child = widget.itemBuilder.call(post, index);
+        return ListView.builder(
+          physics: const RangeMaintainingScrollPhysics(),
+          itemExtent: widget.itemExtent,
+          cacheExtent: widget.cacheExtent,
+          itemCount: snapshot.docs.length,
+          itemBuilder: (context, index) {
+            // if we reached the end of the currently obtained items, we try to
+            // obtain more items
+            if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+              // Tell FirebaseDatabaseQueryBuilder to try to obtain more items.
+              // It is safe to call this function from within the build method.
+              snapshot.fetchMore();
+            }
+            if ((!snapshot.hasMore && index + 1 == snapshot.docs.length)) {
+              // means has no more to get
+              if (widget.bottomBuilder != null) return widget.bottomBuilder!.call(context);
+            }
+            final post = Post.fromDocumentSnapshot(snapshot.docs[index]);
+            final child = widget.itemBuilder.call(post, index);
 
-              if (widget.topBuilder != null && index == 0) {
-                return Column(
-                  children: [
-                    widget.topBuilder!.call(post, widget.pageSize <= snapshot.docs.length),
-                    child,
-                  ],
-                );
-              }
-              return child;
-            },
-          ),
+            if (widget.topBuilder != null && index == 0) {
+              return Column(
+                children: [
+                  widget.topBuilder!.call(post, widget.pageSize <= snapshot.docs.length),
+                  child,
+                ],
+              );
+            }
+            return child;
+          },
         );
       },
     );
