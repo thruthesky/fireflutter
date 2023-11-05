@@ -3,6 +3,21 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
+/// FeedLsitView
+///
+/// Displays feed list with pagination.
+///
+/// ```dart
+/// FeedListView(
+///  pageSize: 20,
+/// itemBuilder: (feed, index) {
+///  return ListTile(
+///   title: Text(feed.title),
+///  subtitle: Text(feed.body),
+/// );
+/// },
+/// );
+/// ```
 class FeedListView extends StatefulWidget {
   const FeedListView({
     super.key,
@@ -23,7 +38,11 @@ class FeedListView extends StatefulWidget {
   final double? itemExtent;
   final double? cacheExtent;
   final Widget Function(Post feed, int index) itemBuilder;
-  final Widget Function(Post feed, bool isFullPage)? topBuilder;
+
+  /// Removed the isFullPage because there was two bugs.
+  /// 1. the value is not correct.
+  /// 2. it's not working as expected. It provides more information than what is needed.
+  final Widget Function(Post feed)? topBuilder;
 
   final Widget Function(BuildContext, Post)? avatarBuilder;
   final Widget Function(BuildContext, Post)? textBuilder;
@@ -68,6 +87,8 @@ class _FeedListViewState extends State<FeedListView> {
           if (widget.emptyBuilder != null) return widget.emptyBuilder!.call(context);
         }
         return ListView.builder(
+          /// EdgeInsets.zero is important to avoid unexpected padding for sliver NestScrollView.
+          padding: EdgeInsets.zero,
           physics: const RangeMaintainingScrollPhysics(),
           itemExtent: widget.itemExtent,
           cacheExtent: widget.cacheExtent,
@@ -89,8 +110,9 @@ class _FeedListViewState extends State<FeedListView> {
 
             if (widget.topBuilder != null && index == 0) {
               return Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  widget.topBuilder!.call(post, widget.pageSize <= snapshot.docs.length),
+                  widget.topBuilder!.call(post),
                   child,
                 ],
               );
