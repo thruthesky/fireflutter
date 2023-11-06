@@ -287,9 +287,9 @@ class _PostCardState extends State<PostCard> {
                             index: post.youtubeId.isNotEmpty ? e.key + 1 : e.key,
                           ),
                           child: CachedNetworkImage(
-                            imageUrl: e.value,
+                            imageUrl: e.value.thumbnail,
                             fit: BoxFit.cover,
-                            placeholder: (context, url) => const SizedBox(height: 400),
+                            placeholder: (context, url) => const SizedBox.shrink(),
                           ),
                         ),
                       )
