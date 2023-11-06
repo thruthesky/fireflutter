@@ -62,7 +62,6 @@ Always initialize first to prevent errors and maximize the use of `UserService`
 UserService.instance.init();
 ```
 
-
 **_Note:_** You cannot use `my` until the UserService is initialized and `UserService.instance.user` is available. Or you will see `null check operator used on a null value.` You can use `MyDoc` from [WIDGETS.md](/doc/WIDGETS.md) instead.
 
 ## Like
@@ -576,6 +575,7 @@ TextButton(
   ),
 ),
 ``` -->
+
 - To block a user, use like below.
 
 ```dart
