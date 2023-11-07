@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 /// MyDoc
 ///
 /// myDoc is a wrapper widget of UserDoc widget.
+///
+/// For the first time, it may take time to get the event data from BehaverSubject.
+/// But the second time and on, there is no delay. So, [onLoading] is optional.
 class MyDoc extends StatelessWidget {
   const MyDoc({
     super.key,
