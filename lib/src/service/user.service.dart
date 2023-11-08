@@ -386,36 +386,24 @@ class UserService {
     required BuildContext context,
     String? uid,
     User? user,
-    bool notify = true,
   }) {
     final String otherUid = uid ?? user!.uid;
     final now = DateTime.now();
 
     /// Dynamic link is especially for users who are not install and not signed users.
-    if (loggedIn && myUid != otherUid) {
-      if (enableNoOfProfileView) {
-        profileViewHistoryDoc(myUid: myUid!, otherUid: otherUid).set(
-          {
-            "uid": otherUid,
-            "seenBy": myUid,
-            "type": my!.type,
-            "lastViewdAt": FieldValue.serverTimestamp(),
-            "year": now.year,
-            "month": now.month,
-            "day": now.day,
-          },
-          SetOptions(merge: true),
-        );
-      }
-      if (enableMessagingOnPublicProfileVisit && notify) {
-        MessagingService.instance.queue(
-          title: "Your profile was visited.",
-          body: "${my!.name} visit your profile",
-          id: myUid,
-          uids: [otherUid],
-          type: NotificationType.user.name,
-        );
-      }
+    if (loggedIn && myUid != otherUid && enableNoOfProfileView) {
+      profileViewHistoryDoc(myUid: myUid!, otherUid: otherUid).set(
+        {
+          "uid": otherUid,
+          "seenBy": myUid,
+          "type": my!.type,
+          "lastViewdAt": FieldValue.serverTimestamp(),
+          "year": now.year,
+          "month": now.month,
+          "day": now.day,
+        },
+        SetOptions(merge: true),
+      );
     }
 
     /// log when user visit other user profile
