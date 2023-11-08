@@ -102,10 +102,6 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
-  // final _commentBoxKey = GlobalKey();
-  // final _boxConstraintsKey = GlobalKey();
-  // BoxConstraints _commentBoxConstraints = const BoxConstraints(minHeight: 500);
-
   QuerySnapshot<Object?>? _commentSnapshot;
 
   @override
@@ -116,7 +112,7 @@ class _PostCardState extends State<PostCard> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.customContainer?.call(content(context, widget.post)) ??
+    return widget.customContainer?.call(_content(context, widget.post)) ??
         Card(
           color: widget.color,
           shadowColor: widget.shadowColor,
@@ -127,11 +123,11 @@ class _PostCardState extends State<PostCard> {
           margin: widget.margin,
           clipBehavior: widget.clipBehavior,
           semanticContainer: widget.semanticContainer,
-          child: content(context, widget.post),
+          child: _content(context, widget.post),
         );
   }
 
-  Widget content(BuildContext context, Post post) {
+  Widget _content(BuildContext context, Post post) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

@@ -107,7 +107,6 @@ class _FeedListViewState extends State<FeedListView> {
             }
             final post = Post.fromDocumentSnapshot(snapshot.docs[index]);
             final child = widget.itemBuilder.call(post, index);
-
             if (widget.topBuilder != null && index == 0) {
               return Column(
                 mainAxisSize: MainAxisSize.min,
