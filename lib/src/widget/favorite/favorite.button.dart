@@ -17,6 +17,8 @@ class FavoriteButton extends StatefulWidget {
     this.padding,
     this.visualDensity,
     this.onWaiting,
+    this.style,
+    this.iconSize,
   }) : assert(otherUid != null || postId != null || commentId != null,
             "One of 'otherUid, postId, commentId' must have value");
 
@@ -28,6 +30,8 @@ class FavoriteButton extends StatefulWidget {
   final void Function(bool)? onChanged;
   final EdgeInsetsGeometry? padding;
   final VisualDensity? visualDensity;
+  final ButtonStyle? style;
+  final double? iconSize;
 
   @override
   State<FavoriteButton> createState() => _FavoriteButtonState();
@@ -47,11 +51,7 @@ class _FavoriteButtonState extends State<FavoriteButton> {
       );
     }
     return StreamBuilder(
-      stream: Favorite.query(
-              postId: widget.postId,
-              otherUid: widget.otherUid,
-              commentId: widget.commentId)
-          .snapshots(),
+      stream: Favorite.query(postId: widget.postId, otherUid: widget.otherUid, commentId: widget.commentId).snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           if (favoritedData == null) {
@@ -69,10 +69,8 @@ class _FavoriteButtonState extends State<FavoriteButton> {
         return favoriteIconButton(
           favoritedData!,
           onPressed: () async {
-            final re = await Favorite.toggle(
-                postId: widget.postId,
-                otherUid: widget.otherUid,
-                commentId: widget.commentId);
+            final re =
+                await Favorite.toggle(postId: widget.postId, otherUid: widget.otherUid, commentId: widget.commentId);
             widget.onChanged?.call(re);
           },
         );
@@ -86,6 +84,8 @@ class _FavoriteButtonState extends State<FavoriteButton> {
       visualDensity: widget.visualDensity,
       icon: widget.builder(favorited),
       onPressed: onPressed,
+      style: widget.style,
+      iconSize: widget.iconSize,
     );
   }
 }
