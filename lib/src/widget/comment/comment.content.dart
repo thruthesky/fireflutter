@@ -16,12 +16,19 @@ class CommentContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Comment Content
-        Text(
-          key: const Key('CommentContent'),
-          my?.hasBlocked(comment.uid) ?? false ? tr.blocked : comment.content,
-          style: style,
-        ),
+        if (comment.deleted)
+          Text(
+            comment.deletedReason ?? 'This comment has beed deleted.',
+            style: style != null
+                ? style?.copyWith(fontStyle: FontStyle.italic)
+                : const TextStyle(fontStyle: FontStyle.italic),
+          )
+        else
+          Text(
+            key: const Key('CommentContent'),
+            my?.hasBlocked(comment.uid) ?? false ? tr.blocked : comment.content,
+            style: style,
+          ),
       ],
     );
   }
