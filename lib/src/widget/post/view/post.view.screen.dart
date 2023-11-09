@@ -81,7 +81,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     children: [
                       PostCard(
                         // color: Theme.of(context).colorScheme.surface.tone(25),
-
                         color: Theme.of(context).colorScheme.secondary.withAlpha(20),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                         customHeaderBuilder: (context, post) =>
