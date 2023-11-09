@@ -9,7 +9,6 @@ enum DateTimeTextType {
   short,
 
   /// 1s, 3s, 1d, 3Mo, 1y
-  // TODO
   abbreviated,
 }
 
@@ -32,6 +31,7 @@ class DateTimeText extends StatelessWidget {
     return Text(
       switch (type) {
         DateTimeTextType.short => dateTimeShort(dateTime),
+        DateTimeTextType.abbreviated => dateTimeAbbreviated(dateTime),
         _ => dateTimeAgo(dateTime),
       },
       style: style,
