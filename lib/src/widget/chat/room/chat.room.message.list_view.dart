@@ -57,10 +57,12 @@ class _ChatRoomMessageListViewState extends State<ChatRoomMessageListView> {
                 message: message,
               );
 
-              if (snapshot.docs.length < paegSize && index == snapshot.docs.length - 1) {
+              if (index == snapshot.docs.length - 1 &&
+                  ChatService.instance.customize.chatMessageListTopBuilder != null) {
                 return Column(
                   children: [
-                    const Text("Display whtever you want here"),
+                    ChatService.instance.customize.chatMessageListTopBuilder!(
+                        context, widget.roomId, snapshot.docs.length < paegSize),
                     messageTile,
                   ],
                 );
