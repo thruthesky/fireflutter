@@ -54,7 +54,10 @@ class _ChatRoomState extends State<ChatRoomScreen> {
                 ? const Center(child: CircularProgressIndicator.adaptive())
                 : widget.room?.isGroupChat == true
                     ? ChatRoomMessageListView(roomId: roomId)
-                    : UserBlocked(
+                    :
+
+                    /// TODO : Check if this is necessary since the login user who blocked this user cannot open chat chat.
+                    UserBlocked(
                         otherUid: widget.user?.uid ?? widget.room!.otherUserUid,
                         notBlockedBuilder: (context) {
                           return ChatRoomMessageListView(roomId: roomId);
