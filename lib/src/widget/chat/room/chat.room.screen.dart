@@ -54,10 +54,14 @@ class _ChatRoomState extends State<ChatRoomScreen> {
                 ? const Center(child: CircularProgressIndicator.adaptive())
                 : widget.room?.isGroupChat == true
                     ? ChatRoomMessageListView(roomId: roomId)
-                    :
-
-                    /// TODO : Check if this is necessary since the login user who blocked this user cannot open chat chat.
-                    UserBlocked(
+                    : UserBlocked(
+                        // Review: Check if this is necessary since the login user who blocked this user cannot open chat chat.
+                        // This might be necessary if we have other ways to access the chat room.
+                        // Also, for now, we are not blocking push notification from blocked users.
+                        // So, if the user tapped on the notification, the chat room may appear.
+                        // However, logically, there should be no push notification from the start.
+                        // Moreover, there might be other ways to access the room, it might be better
+                        // if we have this especially when we don't have integration testing yet.
                         otherUid: widget.user?.uid ?? widget.room!.otherUserUid,
                         notBlockedBuilder: (context) {
                           return ChatRoomMessageListView(roomId: roomId);

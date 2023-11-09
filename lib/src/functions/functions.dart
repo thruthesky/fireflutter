@@ -317,13 +317,15 @@ String dateTimeShort(DateTime dt) {
   }
 }
 
-/// Returns 1s, 2m, 3h, 4d, 5Mo, 6y
+/// Returns now, 1s, 2m, 3h, 4d, 5Mo, 6y
 String dateTimeAbbreviated(DateTime dt) {
   final now = DateTime.now();
 
   final dateDifference = now.difference(dt);
 
-  if (dateDifference.inSeconds < 60) {
+  if (dateDifference.inSeconds < 20) {
+    return 'now';
+  } else if (dateDifference.inSeconds < 60) {
     return '${dateDifference.inSeconds}s';
   } else if (dateDifference.inMinutes < 60) {
     return '${dateDifference.inMinutes}m';

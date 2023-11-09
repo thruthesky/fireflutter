@@ -8,7 +8,7 @@ enum DateTimeTextType {
   /// 2023-03-03 or 00:00
   short,
 
-  /// 1s, 3s, 1d, 3Mo, 1y
+  /// now, 1s, 3s, 1d, 3Mo, 1y
   abbreviated,
 }
 
