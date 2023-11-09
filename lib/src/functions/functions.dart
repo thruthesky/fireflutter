@@ -317,6 +317,27 @@ String dateTimeShort(DateTime dt) {
   }
 }
 
+/// Returns 1s, 2m, 3h, 4d, 5Mo, 6y
+String dateTimeAbbreviated(DateTime dt) {
+  final now = DateTime.now();
+
+  final dateDifference = now.difference(dt);
+
+  if (dateDifference.inSeconds < 60) {
+    return '${dateDifference.inSeconds}s';
+  } else if (dateDifference.inMinutes < 60) {
+    return '${dateDifference.inMinutes}m';
+  } else if (dateDifference.inHours < 24) {
+    return '${dateDifference.inHours}h';
+  } else if (dateDifference.inDays < 30) {
+    return '${dateDifference.inDays}d';
+  } else if (dateDifference.inDays < 365) {
+    return '${dateDifference.inDays ~/ 30}Mo';
+  } else {
+    return '${dateDifference.inDays ~/ 365}y';
+  }
+}
+
 /// [YoutubeThumbnailQuality], [getYoutubeThumbnail], [getYoutubeIdFromUrl]
 /// are coming from [youtube_player_flutter](https://pub.dev/packages/youtube_player_flutter).
 ///

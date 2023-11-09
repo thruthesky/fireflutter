@@ -179,7 +179,7 @@ class I18nTexts {
     this.askOpenLink = "Do you want to open this link?",
     this.readLess = "read less",
     this.readMore = "read more",
-    this.noOfLikes = "Likes #no",
+    this.noOfLikes = "#no likes",
     this.howAreYouToday = "How are you today?",
     this.stateMessage = 'State Message',
     this.share = "Share",
