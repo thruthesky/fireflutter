@@ -76,23 +76,27 @@ class ChatRoomMenuScreen extends StatelessWidget {
                 ),
             ],
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.logout), label: 'Leave'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications_off), label: 'Alarm'),
-            ],
-            onTap: (value) {
-              if (value == 0) {
-                // 방 나가기
-                if (isMaster == false) {
-                  room.leave();
-                }
-              } else if (value == 1) {
-                showSnackBar(context, 'Alarm is not implemented yet.');
-              }
-            },
-          ),
+          // Temporarily added this because the leave is not actually
+          // needed for 1:1 chat room. And, notifications_off is not
+          // implemented yet.
+          bottomNavigationBar: room.isGroupChat
+              ? BottomNavigationBar(
+                  items: const [
+                    BottomNavigationBarItem(icon: Icon(Icons.logout), label: 'Leave'),
+                    BottomNavigationBarItem(icon: Icon(Icons.notifications_off), label: 'Alarm'),
+                  ],
+                  onTap: (value) {
+                    if (value == 0) {
+                      // 방 나가기
+                      if (isMaster == false) {
+                        room.leave();
+                      }
+                    } else if (value == 1) {
+                      showSnackBar(context, 'Alarm is not implemented yet.');
+                    }
+                  },
+                )
+              : null,
           body: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -101,15 +105,13 @@ class ChatRoomMenuScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 if (room.group) ...[
                   if (room.rename[myUid] == null)
-                    Text(room.name,
-                        style: Theme.of(context).textTheme.titleLarge)
+                    Text(room.name, style: Theme.of(context).textTheme.titleLarge)
                   else ...[
                     Text(
                       room.rename[myUid]!,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    Text(room.name,
-                        style: Theme.of(context).textTheme.titleSmall)
+                    Text(room.name, style: Theme.of(context).textTheme.titleSmall)
                   ],
                 ] else ...[
                   const Padding(
@@ -118,8 +120,7 @@ class ChatRoomMenuScreen extends StatelessWidget {
                   ),
                 ],
                 Text("${room.users.length} joined"),
-                Text(
-                    "Created on ${room.createdAt.toString().split(' ').first}"),
+                Text("Created on ${room.createdAt.toString().split(' ').first}"),
                 const SizedBox(height: 16),
                 const Divider(),
                 const SizedBox(height: 16),

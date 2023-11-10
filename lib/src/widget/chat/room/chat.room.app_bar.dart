@@ -20,7 +20,6 @@ class ChatRoomAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class ChatRoomAppBarState extends State<ChatRoomAppBar> {
-  List<Widget>? actions;
   Room? roomData;
   User? otherUserData;
 
