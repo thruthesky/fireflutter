@@ -233,7 +233,7 @@ class Room {
     });
   }
 
-  String get lastMessageTime {
+  String get lastMessageTimeText {
     if (lastMessage == null) return '';
     final dt = lastMessage!.createdAt;
 
@@ -243,5 +243,10 @@ class Room {
     } else {
       return DateFormat('yy.MM.dd').format(dt);
     }
+  }
+
+  DateTime get lastMessageTime {
+    if (lastMessage == null) return createdAt;
+    return lastMessage!.createdAt;
   }
 }
