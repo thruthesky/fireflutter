@@ -291,6 +291,21 @@ class ChatService {
     );
   }
 
+  bool _isUserChanged(
+    Message? lastMessage,
+    Message message,
+  ) {
+    // if this is a protocol, isUserChanged must be false, so that it wont show the avatar
+    if (message.protocol != null) return false;
+    // if this is not a protocol, but a chat message, and there is no previous chat/protocol, then isUserChanged must be true
+    if (lastMessage == null) return true;
+    // if this is not a protocol, but a chat message, and the previous is a protocol, then isUserChanged must be true
+    if (lastMessage.protocol != null || (lastMessage.protocol?.isNotEmpty ?? false)) return true;
+    // if this is not a protocol, but a chat message, and the previous chat is not mine, then isUserChanged must be true
+    if (lastMessage.uid != message.uid) return true;
+    return false;
+  }
+
   Future<void> sendMessage({
     required Room room,
     String? text,
@@ -299,14 +314,26 @@ class ChatService {
   }) async {
     if (text == null && url == null && protocol == null) return;
 
+    final message = Message(
+      uid: FirebaseAuth.instance.currentUser!.uid,
+      protocol: protocol,
+      text: text,
+      url: url,
+      createdAt: DateTime.now(),
+    );
+
     final chatMessage = {
       if (text != null) 'text': text,
       if (url != null) 'url': url,
       if (protocol != null) 'protocol': protocol,
       'createdAt': FieldValue.serverTimestamp(),
       'uid': FirebaseAuth.instance.currentUser!.uid,
-      'isUserChanged': lastMessage?.uid != myUid!,
+      'isUserChanged': _isUserChanged(
+        lastMessage,
+        message,
+      ),
     };
+
     final ref = await messageCol(room.roomId).add(chatMessage);
 
     /// Update url preview
