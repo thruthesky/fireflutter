@@ -3,9 +3,9 @@
 
 ![FireFlutter](https://github.com/thruthesky/fireflutter/blob/main/doc/fireflutter_title_image.jpg?raw=true)
 
-If you are looking for a package that help you develop a full featured content management app, then you have found a right one. FireFlutter is a free, open source, complete, rapid development package for creating apps like CMS(content management system), social service, chat, community(forum), shopping mall and much more based on Firebase.
+Welcome to FireFlutter – your ultimate toolkit for building dynamic, feature-rich social community and content management apps with ease! Our package, designed specifically for Flutter developers, offers a comprehensive, open-source solution to effortlessly create a variety of applications. Whether you're aiming to develop a robust CMS (Content Management System), a vibrant social networking service, an interactive chat platform, a lively community forum, or even a bustling online shopping mall, FireFlutter is your go-to resource. Powered by Firebase, this package not only simplifies the development process but also accelerates it, enabling you to bring your creative ideas to life faster than ever. Join us in revolutionizing app development – with FireFlutter, the possibilities are endless!
 
-Create an issue if you find a bug or need a help.
+Please, create an issue if you find a bug or need a help.
 
 
 ## Overview
@@ -24,7 +24,7 @@ The model has also basic CRUD functionalities.
 
 #### DRY
 
-To not repeat ourselves, we made the commonly reused code modulized as much as possible. The concept here is that we should not write the same code twice.
+To not repeat ourselves, we made the commonly reused code modulized as much as possible. The concept here is that we should not write the same code twice. We hope this goes same to you.
 
 
 
