@@ -81,6 +81,7 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
   @override
   void dispose() {
     postSubscription?.cancel();
+    content.dispose();
     super.dispose();
   }
 
