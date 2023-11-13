@@ -44,7 +44,8 @@ class ActivityLogTimeLineUser extends StatelessWidget {
                         '#a': actor.getDisplayName,
                         '#b': target.getDisplayName,
                       }),
-                    _ => '${actor.getDisplayName} ${activity.type} ${activity.action}',
+                    _ =>
+                      '${actor.getDisplayName} ${activity.type} ${activity.action}',
                   },
                   children: [
                     const Padding(
@@ -76,14 +77,19 @@ class ActivityLogTimeLineUser extends StatelessWidget {
             activity: activity,
             actor: actor,
             message: switch (activity.action) {
-              'startApp' => tr.startAppLog.replace({'#a': actor.getDisplayName}),
+              'startApp' =>
+                tr.startAppLog.replace({'#a': actor.getDisplayName}),
               'signin' => tr.signinLog.replace({'#a': actor.getDisplayName}),
               'signout' => tr.signoutLog.replace({'#a': actor.getDisplayName}),
               'resign' => tr.resignLog.replace({'#a': actor.getDisplayName}),
-              'create' => tr.createUserLog.replace({'#a': actor.getDisplayName}),
-              'update' => tr.updateUserLog.replace({'#a': actor.getDisplayName}),
-              'roomOpen' => tr.roomOpenLog.replace({'#a': actor.getDisplayName}),
-              _ => '${actor.getDisplayName} ${activity.type} ${activity.action}',
+              'create' =>
+                tr.createUserLog.replace({'#a': actor.getDisplayName}),
+              'update' =>
+                tr.updateUserLog.replace({'#a': actor.getDisplayName}),
+              'roomOpen' =>
+                tr.roomOpenLog.replace({'#a': actor.getDisplayName}),
+              _ =>
+                '${actor.getDisplayName} ${activity.type} ${activity.action}',
             },
           );
         },

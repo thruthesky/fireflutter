@@ -82,8 +82,10 @@ class ChatRoomMenuScreen extends StatelessWidget {
           bottomNavigationBar: room.isGroupChat
               ? BottomNavigationBar(
                   items: const [
-                    BottomNavigationBarItem(icon: Icon(Icons.logout), label: 'Leave'),
-                    BottomNavigationBarItem(icon: Icon(Icons.notifications_off), label: 'Alarm'),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.logout), label: 'Leave'),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.notifications_off), label: 'Alarm'),
                   ],
                   onTap: (value) {
                     if (value == 0) {
@@ -105,13 +107,15 @@ class ChatRoomMenuScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 if (room.group) ...[
                   if (room.rename[myUid] == null)
-                    Text(room.name, style: Theme.of(context).textTheme.titleLarge)
+                    Text(room.name,
+                        style: Theme.of(context).textTheme.titleLarge)
                   else ...[
                     Text(
                       room.rename[myUid]!,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    Text(room.name, style: Theme.of(context).textTheme.titleSmall)
+                    Text(room.name,
+                        style: Theme.of(context).textTheme.titleSmall)
                   ],
                 ] else ...[
                   const Padding(
@@ -120,7 +124,8 @@ class ChatRoomMenuScreen extends StatelessWidget {
                   ),
                 ],
                 Text("${room.users.length} joined"),
-                Text("Created on ${room.createdAt.toString().split(' ').first}"),
+                Text(
+                    "Created on ${room.createdAt.toString().split(' ').first}"),
                 const SizedBox(height: 16),
                 const Divider(),
                 const SizedBox(height: 16),

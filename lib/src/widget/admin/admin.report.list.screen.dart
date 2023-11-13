@@ -93,7 +93,8 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
               children: [
                 Row(
                   children: [
-                    Text(toBeginningOfSentenceCase(report.type) ?? '', style: Theme.of(context).textTheme.titleMedium),
+                    Text(toBeginningOfSentenceCase(report.type) ?? '',
+                        style: Theme.of(context).textTheme.titleMedium),
                     const Spacer(),
                     IconButton(
                       onPressed: () {
@@ -103,9 +104,11 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
                             uid: report.otherUid,
                           );
                         } else if (report.type == 'post') {
-                          PostService.instance.showPostViewScreen(context: context, postId: report.postId);
+                          PostService.instance.showPostViewScreen(
+                              context: context, postId: report.postId);
                         } else if (report.type == 'comment') {
-                          CommentService.instance.showCommentViewDialog(context: context, commentId: report.commentId);
+                          CommentService.instance.showCommentViewDialog(
+                              context: context, commentId: report.commentId);
                         }
                       },
                       icon: const Row(
@@ -120,7 +123,10 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
                 Text('Reported ${toBeginningOfSentenceCase(report.type)}',
                     style: Theme.of(context).textTheme.labelMedium),
                 Text(report.title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold)),
                 const SizedBox(height: sizeSm),
                 Text(
                   'Reporters',
@@ -131,7 +137,8 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(0, sizeXxs, sizeXs, 0),
+                              padding: const EdgeInsets.fromLTRB(
+                                  0, sizeXxs, sizeXs, 0),
                               child: UserAvatar(
                                 showBlocked: true,
                                 uid: e,
@@ -147,7 +154,9 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
                                     showBlocked: true,
                                     uid: e,
                                   ),
-                                  report.data[e] != null ? Text(report.data[e]) : const SizedBox.shrink(),
+                                  report.data[e] != null
+                                      ? Text(report.data[e])
+                                      : const SizedBox.shrink(),
                                 ],
                               ),
                             ),
@@ -243,7 +252,8 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Marking as resolved without deleting or blocking?'),
+          title:
+              const Text('Marking as resolved without deleting or blocking?'),
           actions: [
             TextButton(
               onPressed: () {

@@ -81,7 +81,9 @@ class UserAvatar extends StatelessWidget {
   // Build avatar for the user.
   _buildAvatar(User user) {
     // For the blocked users,
-    if (my != null && my!.blockedUsers.contains(user.uid) && showBlocked == false) {
+    if (my != null &&
+        my!.blockedUsers.contains(user.uid) &&
+        showBlocked == false) {
       return buildDefaultIcon();
     }
 

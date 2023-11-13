@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 /// FireFlutterService
 class FireFlutterService {
   static FireFlutterService? _instance;
-  static FireFlutterService get instance => _instance ??= FireFlutterService._();
+  static FireFlutterService get instance =>
+      _instance ??= FireFlutterService._();
 
   FireFlutterService._();
 

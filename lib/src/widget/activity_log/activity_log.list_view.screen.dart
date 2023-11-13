@@ -8,7 +8,8 @@ class ActivityLogListViewScreen extends StatefulWidget {
   const ActivityLogListViewScreen({super.key});
 
   @override
-  State<ActivityLogListViewScreen> createState() => _ActivityLogListViewScreenState();
+  State<ActivityLogListViewScreen> createState() =>
+      _ActivityLogListViewScreenState();
 }
 
 class _ActivityLogListViewScreenState extends State<ActivityLogListViewScreen> {
@@ -113,7 +114,8 @@ class _ActivityLogListViewScreenState extends State<ActivityLogListViewScreen> {
                             icon: const Icon(Icons.close_outlined),
                           ),
                         IconButton(
-                          visualDensity: const VisualDensity(horizontal: 2, vertical: -2),
+                          visualDensity:
+                              const VisualDensity(horizontal: 2, vertical: -2),
                           onPressed: () {
                             AdminService.instance.showUserSearchDialog(
                               context,
@@ -153,7 +155,8 @@ class _ActivityLogListViewScreenState extends State<ActivityLogListViewScreen> {
                             children: [
                               Radio(
                                 value: type,
-                                visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                                visualDensity: const VisualDensity(
+                                    horizontal: -4, vertical: -4),
                                 groupValue: searchType,
                                 onChanged: (String? value) {
                                   if (value != null) {

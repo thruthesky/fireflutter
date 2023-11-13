@@ -85,7 +85,8 @@ class ColorSchemeScreen extends StatelessWidget {
         nameColor: (context) => Theme.of(context).colorScheme.inverseSurface,
         nameColorCode: 'Theme.of(context).colorScheme.inverseSurface',
         onName: 'onInverseSurface',
-        onNameColor: (context) => Theme.of(context).colorScheme.onInverseSurface,
+        onNameColor: (context) =>
+            Theme.of(context).colorScheme.onInverseSurface,
         onNameColorCode: 'Theme.of(context).colorScheme.onInverseSurface'
       ),
       (

@@ -61,7 +61,8 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                       ElevatedButton(
                         onPressed: () async {
                           await FirebaseAuth.instance
-                              .createUserWithEmailAndPassword(email: email.text, password: password.text);
+                              .createUserWithEmailAndPassword(
+                                  email: email.text, password: password.text);
                           widget.onLogin?.call();
                         },
                         child: const Text(
@@ -72,8 +73,8 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                     ElevatedButton(
                       key: const Key('LoginButton'),
                       onPressed: () async {
-                        await FirebaseAuth.instance
-                            .signInWithEmailAndPassword(email: email.text, password: password.text);
+                        await FirebaseAuth.instance.signInWithEmailAndPassword(
+                            email: email.text, password: password.text);
                         widget.onLogin?.call();
                       },
                       child: const Text(
@@ -89,7 +90,9 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
               children: [
                 const Text('You have logged in'),
                 Text('uid: ${user.uid}'),
-                ElevatedButton(onPressed: () => UserService.instance.signOut(), child: const Text('Logout'))
+                ElevatedButton(
+                    onPressed: () => UserService.instance.signOut(),
+                    child: const Text('Logout'))
               ],
             ),
     );

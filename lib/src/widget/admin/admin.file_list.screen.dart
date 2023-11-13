@@ -32,13 +32,16 @@ class _AdminFileListScreenState extends State<AdminFileListScreen> {
     } else if (filter == 'videos') {
       q = q.where('isVideo', isEqualTo: true);
     } else if (filter == 'others') {
-      q = q.where('isImage', isEqualTo: false).where('isVideo', isEqualTo: false);
+      q = q
+          .where('isImage', isEqualTo: false)
+          .where('isVideo', isEqualTo: false);
     }
 
     return q;
   }
 
-  get textButtonBackgroudColor => MaterialStateProperty.all<Color>(Theme.of(context).primaryColor.withOpacity(0.2));
+  get textButtonBackgroudColor => MaterialStateProperty.all<Color>(
+      Theme.of(context).primaryColor.withOpacity(0.2));
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +65,12 @@ class _AdminFileListScreenState extends State<AdminFileListScreen> {
                     TextButton(
                       key: const Key('AdminFileListSearchUserButton'),
                       style: const ButtonStyle(
-                        visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                        visualDensity:
+                            VisualDensity(horizontal: -4, vertical: -4),
                       ),
                       onPressed: () {
-                        AdminService.instance.showUserSearchDialog(context, field: 'name', onTap: (user) async {
+                        AdminService.instance.showUserSearchDialog(context,
+                            field: 'name', onTap: (user) async {
                           uid = user.uid;
                           Navigator.of(context).pop();
                           setState(() {});
@@ -87,9 +92,10 @@ class _AdminFileListScreenState extends State<AdminFileListScreen> {
                       ),
                       TextButton(
                         style: ButtonStyle(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Theme.of(context).primaryColor.withOpacity(0.2)),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Theme.of(context).primaryColor.withOpacity(0.2)),
                         ),
                         child: Text(uid),
                         onPressed: () {
@@ -112,7 +118,8 @@ class _AdminFileListScreenState extends State<AdminFileListScreen> {
             return const Center(child: CircularProgressIndicator.adaptive());
           }
           if (snapshots.hasError) {
-            return Center(child: Text('Something went wrong! ${snapshots.error}'));
+            return Center(
+                child: Text('Something went wrong! ${snapshots.error}'));
           }
 
           if (snapshots.docs.isEmpty) {
@@ -155,7 +162,8 @@ class _AdminFileListScreenState extends State<AdminFileListScreen> {
     return TextButton(
       style: ButtonStyle(
         visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-        backgroundColor: filter == this.filter ? textButtonBackgroudColor : null,
+        backgroundColor:
+            filter == this.filter ? textButtonBackgroudColor : null,
       ),
       onPressed: () {
         this.filter = filter;

@@ -53,7 +53,8 @@ class CommentListViewState extends State<CommentListView> {
   @override
   Widget build(BuildContext context) {
     return FirestoreListView(
-      query: commentCol.where("postId", isEqualTo: widget.post.id).orderBy("sort"),
+      query:
+          commentCol.where("postId", isEqualTo: widget.post.id).orderBy("sort"),
       itemBuilder: (context, QueryDocumentSnapshot snapshot) {
         final comment = Comment.fromDocumentSnapshot(snapshot);
         if (my?.hasBlocked(comment.uid) ?? false) {

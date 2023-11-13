@@ -37,7 +37,8 @@ class ActivityLog {
     });
   }
 
-  factory ActivityLog.fromJson(Map<String, dynamic> json) => _$ActivityLogFromJson(json);
+  factory ActivityLog.fromJson(Map<String, dynamic> json) =>
+      _$ActivityLogFromJson(json);
   Map<String, dynamic> toJson() => _$ActivityLogToJson(this);
 
   static Future<DocumentReference> create({

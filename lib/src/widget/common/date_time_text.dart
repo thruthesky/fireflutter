@@ -34,7 +34,8 @@ class DateTimeText extends StatelessWidget {
         DateTimeTextType.abbreviated => dateTimeAbbreviated(dateTime),
         _ => dateTimeAgo(dateTime),
       },
-      style: style ?? const TextStyle(fontWeight: FontWeight.w500, color: Colors.black45),
+      style: style ??
+          const TextStyle(fontWeight: FontWeight.w500, color: Colors.black45),
     );
   }
 }

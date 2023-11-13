@@ -15,9 +15,13 @@ class _AdminCommentListScreenState extends State<AdminCommentListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: Theme.of(context).iconTheme.copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
+        iconTheme: Theme.of(context)
+            .iconTheme
+            .copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
         backgroundColor: Theme.of(context).colorScheme.inverseSurface,
-        title: Text('Admin Comment List', style: TextStyle(color: Theme.of(context).colorScheme.onInverseSurface)),
+        title: Text('Admin Comment List',
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onInverseSurface)),
       ),
       body: FirestoreListView(
         query: Comment.col.orderBy('createdAt', descending: true),

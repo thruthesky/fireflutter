@@ -121,7 +121,8 @@ class I18nTexts {
     this.noOfChatRooms = 'No chat rooms, yet. Create one!',
     this.roomMenu = 'Chat Room Menu',
     this.chatSingleRoomCreateDialog = 'New chat room created. Enjoy chatting!',
-    this.chatRoomCreateDialog = 'New chat room created. You can invite more users. Enjoy chatting!',
+    this.chatRoomCreateDialog =
+        'New chat room created. You can invite more users. Enjoy chatting!',
     this.chooseUploadFrom = "Choose upload from...",
     this.noCategory = "No category, yet. Create one!",
     this.noPost = "No post yet. Create one!",
@@ -183,7 +184,8 @@ class I18nTexts {
     this.howAreYouToday = "How are you today?",
     this.stateMessage = 'State Message',
     this.share = "Share",
-    this.loginFirstToUseCompleteFunctionality = "Login first to use the complete functionality.",
+    this.loginFirstToUseCompleteFunctionality =
+        "Login first to use the complete functionality.",
     this.home = "Home",
     this.profile = "Profile",
     this.createChatRoom = "Create chat room",
@@ -221,7 +223,8 @@ class I18nTexts {
     this.categoryUpdatedMessage = 'Category has been updated',
   });
 
-  factory I18nTexts.fromJson(Map<String, dynamic> json) => _$I18nTextsFromJson(json);
+  factory I18nTexts.fromJson(Map<String, dynamic> json) =>
+      _$I18nTextsFromJson(json);
 
   Map<String, dynamic> toJson() => _$I18nTextsToJson(this);
 }

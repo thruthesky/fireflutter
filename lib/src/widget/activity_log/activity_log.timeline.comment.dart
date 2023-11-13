@@ -38,7 +38,8 @@ class ActivityLogTimeLineComment extends StatelessWidget {
                   'unlike' => tr.unlikedCommentLog.replace({
                       '#a': actor.getDisplayName,
                     }),
-                  _ => '${actor.getDisplayName} ${activity.type} ${activity.action} ',
+                  _ =>
+                    '${actor.getDisplayName} ${activity.type} ${activity.action} ',
                 },
                 children: [
                   const Padding(
@@ -47,7 +48,8 @@ class ActivityLogTimeLineComment extends StatelessWidget {
                   ),
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: () => PostService.instance.showPostViewScreen(context: context, post: post),
+                    onTap: () => PostService.instance
+                        .showPostViewScreen(context: context, post: post),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,15 +73,23 @@ class ActivityLogTimeLineComment extends StatelessWidget {
                                   children: [
                                     DateTimeText(
                                         dateTime: post.createdAt,
-                                        style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11)),
+                                        style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                            fontSize: 11)),
                                     DatabaseCount(
-                                      path: pathSeenBy(post.id), // 'posts/${post.id}/seenBy',
+                                      path: pathSeenBy(post
+                                          .id), // 'posts/${post.id}/seenBy',
                                       builder: (n) => n < 2
                                           ? const SizedBox.shrink()
                                           : Text(
                                               " | ${tr.views}: $n",
                                               style: TextStyle(
-                                                  color: Theme.of(context).colorScheme.secondary, fontSize: 11),
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .secondary,
+                                                  fontSize: 11),
                                             ),
                                     ),
                                   ],
@@ -100,25 +110,32 @@ class ActivityLogTimeLineComment extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodyMedium),
                         const SizedBox(height: sizeXxs),
                         Text(post.content,
-                            maxLines: 2, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodySmall),
                         if (post.noOfComments > 0)
                           TextButton(
                             style: ButtonStyle(
-                              padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
+                              padding: MaterialStateProperty.all(
+                                  const EdgeInsets.all(0)),
                               visualDensity: VisualDensity.compact,
-                              textStyle: MaterialStateProperty.all(Theme.of(context).textTheme.bodySmall),
+                              textStyle: MaterialStateProperty.all(
+                                  Theme.of(context).textTheme.bodySmall),
                             ),
                             onPressed: () {
-                              CommentService.instance.showCommentListBottomSheet(context, post);
+                              CommentService.instance
+                                  .showCommentListBottomSheet(context, post);
                             },
-                            child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
+                            child: Text(tr.showMoreComments.replaceAll(
+                                "#no", post.noOfComments.toString())),
                           ),
                         FutureBuilder(
                           future: Comment.get(activity.commentId!),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
                               dog(snapshot.error.toString());
-                              return Text('Something went wrong; ${snapshot.error.toString()}');
+                              return Text(
+                                  'Something went wrong; ${snapshot.error.toString()}');
                             }
                             if (snapshot.hasData) {
                               Comment comment = snapshot.data!;
@@ -129,7 +146,8 @@ class ActivityLogTimeLineComment extends StatelessWidget {
                                 hideLikeButton: true,
                                 post: post,
                                 comment: comment,
-                                onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
+                                onTapContent: () => CommentService.instance
+                                    .showCommentListBottomSheet(context, post),
                               );
                             }
                             return const SizedBox(

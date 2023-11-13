@@ -51,7 +51,11 @@ class _FavoriteButtonState extends State<FavoriteButton> {
       );
     }
     return StreamBuilder(
-      stream: Favorite.query(postId: widget.postId, otherUid: widget.otherUid, commentId: widget.commentId).snapshots(),
+      stream: Favorite.query(
+              postId: widget.postId,
+              otherUid: widget.otherUid,
+              commentId: widget.commentId)
+          .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           if (favoritedData == null) {
@@ -69,8 +73,10 @@ class _FavoriteButtonState extends State<FavoriteButton> {
         return favoriteIconButton(
           favoritedData!,
           onPressed: () async {
-            final re =
-                await Favorite.toggle(postId: widget.postId, otherUid: widget.otherUid, commentId: widget.commentId);
+            final re = await Favorite.toggle(
+                postId: widget.postId,
+                otherUid: widget.otherUid,
+                commentId: widget.commentId);
             widget.onChanged?.call(re);
           },
         );

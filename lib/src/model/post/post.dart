@@ -71,12 +71,14 @@ class Post {
         // If document hasPendingWrites, the date becomes 'null' temporarily
         // thus, the converter gives DateTime(1970) instead of DateTime.now()
         // This is to display DateTime.now() to the user while post is still being saved.
-        if (documentSnapshot.metadata.hasPendingWrites) 'createdAt': DateTime.now(),
+        if (documentSnapshot.metadata.hasPendingWrites)
+          'createdAt': DateTime.now(),
       },
     );
   }
 
-  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json)..data = json;
+  factory Post.fromJson(Map<String, dynamic> json) =>
+      _$PostFromJson(json)..data = json;
   Map<String, dynamic> toJson() => _$PostToJson(this);
 
   /// If the post is not found, it throws an Exception.
@@ -95,7 +97,8 @@ class Post {
     if (url == null) {
       throw Exception('Post id is null');
     }
-    final QuerySnapshot documentSnapshot = await postCol.where('urls', arrayContains: url).get();
+    final QuerySnapshot documentSnapshot =
+        await postCol.where('urls', arrayContains: url).get();
 
     if (documentSnapshot.docs.isEmpty) throw Exception('Post not found');
 

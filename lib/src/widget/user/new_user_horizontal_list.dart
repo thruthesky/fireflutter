@@ -17,7 +17,8 @@ class NewUserHorizontalList extends StatelessWidget {
           behavior: HitTestBehavior.opaque,
           onTap: () {
             debugPrint("---> $user");
-            UserService.instance.showPublicProfileScreen(context: context, user: user);
+            UserService.instance
+                .showPublicProfileScreen(context: context, user: user);
           },
           child: Container(
             width: 56,
@@ -35,10 +36,8 @@ class NewUserHorizontalList extends StatelessWidget {
                   child: Center(
                     child: Text(
                       user.name,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: Theme.of(context).colorScheme.secondary),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.secondary),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

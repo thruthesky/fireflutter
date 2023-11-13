@@ -56,7 +56,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: PostViewTitle(padding: const EdgeInsets.only(top: 0), post: _post),
+        title:
+            PostViewTitle(padding: const EdgeInsets.only(top: 0), post: _post),
         centerTitle: true,
         actions: PostService.instance.postViewActions(
           context: context,
@@ -74,27 +75,34 @@ class _PostViewScreenState extends State<PostViewScreen> {
       body: _post == null
           ? const CircularProgressIndicator.adaptive()
           : _post?.deleted == true
-              ? Center(child: Text(_post?.reason ?? 'This post has been deleted.'))
+              ? Center(
+                  child: Text(_post?.reason ?? 'This post has been deleted.'))
               : SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       PostCard(
                         // color: Theme.of(context).colorScheme.surface.tone(25),
-                        color: Theme.of(context).colorScheme.secondary.withAlpha(20),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                        customHeaderBuilder: (context, post) =>
-                            PostViewMeta(post: _post, headerPadding: widget.headerPadding),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .secondary
+                            .withAlpha(20),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6)),
+                        customHeaderBuilder: (context, post) => PostViewMeta(
+                            post: _post, headerPadding: widget.headerPadding),
                         post: _post!,
                         customMainContentBuilder: (context, post) {
-                          if ((post.youtubeId.isEmpty && post.urls.isEmpty) || my?.hasBlocked(post.uid) == true) {
+                          if ((post.youtubeId.isEmpty && post.urls.isEmpty) ||
+                              my?.hasBlocked(post.uid) == true) {
                             return const SizedBox.shrink();
                           }
                           return CarouselView(
                             widgets: [
                               if (post.youtubeId.isNotEmpty)
                                 GestureDetector(
-                                  onTap: () => PostService.instance.showPreview(context, post, index: 0),
+                                  onTap: () => PostService.instance
+                                      .showPreview(context, post, index: 0),
                                   child: YouTubeThumbnail(
                                     youtubeId: post.youtubeId,
                                     stackFit: StackFit.passthrough,
@@ -109,15 +117,19 @@ class _PostViewScreenState extends State<PostViewScreen> {
                                       (e) => GestureDetector(
                                         key: const Key('PostCardViewImage'),
                                         behavior: HitTestBehavior.opaque,
-                                        onTap: () => PostService.instance.showPreview(
+                                        onTap: () =>
+                                            PostService.instance.showPreview(
                                           context,
                                           post,
-                                          index: post.youtubeId.isNotEmpty ? e.key + 1 : e.key,
+                                          index: post.youtubeId.isNotEmpty
+                                              ? e.key + 1
+                                              : e.key,
                                         ),
                                         child: CachedNetworkImage(
                                           imageUrl: e.value,
                                           fit: BoxFit.cover,
-                                          placeholder: (context, url) => const SizedBox(height: 400),
+                                          placeholder: (context, url) =>
+                                              const SizedBox(height: 400),
                                         ),
                                       ),
                                     )
@@ -126,13 +138,15 @@ class _PostViewScreenState extends State<PostViewScreen> {
                           );
                         },
                         customMiddleContentBuilder: (context, post) => Column(
-                          crossAxisAlignment: widget.customMiddleContentCrossAxisAlignment,
+                          crossAxisAlignment:
+                              widget.customMiddleContentCrossAxisAlignment,
                           children: [
                             PostViewTitle(post: _post),
                             PostViewContent(post: _post),
                             if (my?.hasBlocked(post.uid) != true)
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeXs),
+                                padding: const EdgeInsets.fromLTRB(
+                                    sizeSm, 0, sizeSm, sizeXs),
                                 child: Wrap(
                                   runSpacing: 0,
                                   spacing: sizeXxs,
@@ -148,7 +162,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
                           ],
                         ),
                         customFooterBuilder: (context, post) => Padding(
-                          padding: const EdgeInsets.only(left: sizeSm, top: sizeSm),
+                          padding:
+                              const EdgeInsets.only(left: sizeSm, top: sizeSm),
                           child: Padding(
                             padding: const EdgeInsets.only(right: sizeSm),
                             child: CommentListView(

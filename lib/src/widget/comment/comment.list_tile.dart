@@ -47,13 +47,15 @@ class CommentTileState extends State<CommentListTile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('${widget.comment.deletedReason}', style: Theme.of(context).textTheme.bodyLarge),
+            Text('${widget.comment.deletedReason}',
+                style: Theme.of(context).textTheme.bodyLarge),
           ],
         ),
       );
     }
     return Container(
-      margin: EdgeInsets.only(left: indent(widget.comment.depth), top: widget.tileSpacing),
+      margin: EdgeInsets.only(
+          left: indent(widget.comment.depth), top: widget.tileSpacing),
       padding: widget.padding ?? const EdgeInsets.all(0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,7 +65,8 @@ class CommentTileState extends State<CommentListTile> {
               size: 24,
               radius: 10,
               uid: widget.comment.uid,
-              onTap: () => UserService.instance.showPublicProfileScreen(context: context, uid: widget.comment.uid)),
+              onTap: () => UserService.instance.showPublicProfileScreen(
+                  context: context, uid: widget.comment.uid)),
           SizedBox(width: widget.runSpacing),
           Expanded(
             child: Column(
@@ -81,7 +84,9 @@ class CommentTileState extends State<CommentListTile> {
                     SizedBox(width: widget.runSpacing),
                     DateTimeText(
                       dateTime: widget.comment.createdAt,
-                      style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontSize: 11),
                     ),
                   ],
                 ),
@@ -93,7 +98,8 @@ class CommentTileState extends State<CommentListTile> {
                     ? Column(
                         children: widget.comment.urls
                             .map((e) => Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 4, 10, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 4, 10, 0),
                                   child: DisplayMedia(url: e),
                                 ))
                             .toList(),
@@ -106,7 +112,8 @@ class CommentTileState extends State<CommentListTile> {
                       child: const Text('Reply'),
                       onPressed: () async {
                         await CommentService.instance
-                            .showCommentEditBottomSheet(context, post: widget.post, parent: widget.comment);
+                            .showCommentEditBottomSheet(context,
+                                post: widget.post, parent: widget.comment);
                       },
                     ),
                     CommentDoc(
@@ -125,8 +132,9 @@ class CommentTileState extends State<CommentListTile> {
                         ReportService.instance.showReportDialog(
                           context: context,
                           commentId: widget.comment.id,
-                          onExists: (id, type) =>
-                              toast(title: 'Already reported', message: 'You have reported this $type already.'),
+                          onExists: (id, type) => toast(
+                              title: 'Already reported',
+                              message: 'You have reported this $type already.'),
                         );
                       },
                       child: const Text('Report'),
@@ -134,7 +142,8 @@ class CommentTileState extends State<CommentListTile> {
                     const Spacer(),
                     TextButton(
                       onPressed: () async {
-                        await CommentService.instance.showCommentEditBottomSheet(
+                        await CommentService.instance
+                            .showCommentEditBottomSheet(
                           context,
                           comment: widget.comment,
                         );

@@ -12,11 +12,13 @@ class ChatRoomMessageListView extends StatefulWidget {
   final String roomId;
 
   @override
-  State<ChatRoomMessageListView> createState() => _ChatRoomMessageListViewState();
+  State<ChatRoomMessageListView> createState() =>
+      _ChatRoomMessageListViewState();
 }
 
 class _ChatRoomMessageListViewState extends State<ChatRoomMessageListView> {
-  get chatMessageQuery => messageCol(widget.roomId).orderBy('createdAt', descending: true);
+  get chatMessageQuery =>
+      messageCol(widget.roomId).orderBy('createdAt', descending: true);
 
   final paegSize = 40;
 
@@ -57,11 +59,14 @@ class _ChatRoomMessageListViewState extends State<ChatRoomMessageListView> {
               );
 
               if (index == snapshot.docs.length - 1 &&
-                  ChatService.instance.customize.chatMessageListTopBuilder != null) {
+                  ChatService.instance.customize.chatMessageListTopBuilder !=
+                      null) {
                 return Column(
                   children: [
                     ChatService.instance.customize.chatMessageListTopBuilder!(
-                        context, widget.roomId, snapshot.docs.length < paegSize),
+                        context,
+                        widget.roomId,
+                        snapshot.docs.length < paegSize),
                     messageTile,
                   ],
                 );

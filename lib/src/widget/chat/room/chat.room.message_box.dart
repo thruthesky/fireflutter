@@ -39,7 +39,8 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
 
   @override
   Widget build(BuildContext context) {
-    return ChatService.instance.customize.chatRoomMessageBoxBuilder?.call(widget.room) ??
+    return ChatService.instance.customize.chatRoomMessageBoxBuilder
+            ?.call(widget.room) ??
         SafeArea(
           top: false,
           child: Column(
@@ -73,7 +74,9 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
                     IconButton(
                       onPressed: () async {
                         if (widget.room == null) {
-                          toast(title: 'Wait...', message: 'The room is not ready yet.');
+                          toast(
+                              title: 'Wait...',
+                              message: 'The room is not ready yet.');
                           return;
                         }
                         if (message.text.isEmpty) return;

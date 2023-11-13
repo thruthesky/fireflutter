@@ -26,7 +26,8 @@ class _FeedBodyState extends State<FeedBody> {
     super.initState();
     UserService.instance.init(adminUid: myUid);
     customizePostInit(categName);
-    ChatService.instance.customize.chatRoomAppBarBuilder = ({room, user}) => customAppBar(context, room);
+    ChatService.instance.customize.chatRoomAppBarBuilder =
+        ({room, user}) => customAppBar(context, room);
   }
 
   @override
@@ -45,7 +46,8 @@ class _FeedBodyState extends State<FeedBody> {
           Expanded(
             child: PostListView(
               itemBuilder: (context, post) => InkWell(
-                onTap: () => PostService.instance.showPostViewScreen(context: context, post: post),
+                onTap: () => PostService.instance
+                    .showPostViewScreen(context: context, post: post),
                 child: PostCard(
                   post: post,
                   commentSize: 3,
@@ -86,7 +88,8 @@ class _FeedBodyState extends State<FeedBody> {
           const SizedBox(width: sizeXs),
           IconButton(
             onPressed: () async {
-              final url = await StorageService.instance.upload(context: context);
+              final url =
+                  await StorageService.instance.upload(context: context);
               debugPrint('url: $url');
               if (url != null && mounted) {
                 setState(() {});
