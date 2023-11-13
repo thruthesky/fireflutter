@@ -21,6 +21,101 @@ ChatService.instance.init(
 ```
 
 
+For better UI, copy `lib/src/widget/chat/room/chat.room.message_box.dart` and paste it in your widget. And begin to customize from there.
+
+The following example is a copied widget from the `chat.room.message_box.dart`. You can see how it could be customized.
+
+```dart
+class GrcChatRoomMessageBox extends StatefulWidget {
+  const GrcChatRoomMessageBox({
+    super.key,
+    required this.room,
+  });
+
+  final Room? room;
+
+  @override
+  State<StatefulWidget> createState() => _ChatRoomMessageBoxState();
+}
+
+class _ChatRoomMessageBoxState extends State<GrcChatRoomMessageBox> {
+  final TextEditingController message = TextEditingController();
+  double? progress;
+
+  @override
+  void dispose() {
+    message.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Column(
+        children: [
+          if (progress != null)
+            LinearProgressIndicator(
+              value: progress,
+            ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 24),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ChatRoomMessageBoxUploadButton(
+                  room: widget.room,
+                  onProgress: (p) => setState(() => progress = p),
+                ),
+                Expanded(
+                  child: TextField(
+                    controller: message,
+                    decoration: const InputDecoration(
+                      hintText: 'Message',
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      isDense: true,
+                      contentPadding: EdgeInsets.all(0),
+                    ),
+                    maxLines: 5,
+                    minLines: 1,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () async {
+                    if (widget.room == null) {
+                      toast(title: 'Wait...', message: 'The room is not ready yet.');
+                      return;
+                    }
+                    if (message.text.isEmpty) return;
+                    final text = message.text;
+                    message.text = '';
+                    await ChatService.instance.sendMessage(
+                      room: widget.room!,
+                      text: text,
+                    );
+                  },
+                  icon: const Icon(Icons.send),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+
 
 ## ChatService
 
