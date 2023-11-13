@@ -73,7 +73,6 @@ class _ChatRoomState extends State<ChatRoomScreen> {
           ),
           ChatRoomMessageBox(
             room: room,
-            setMessage: widget.setMessage,
           ),
         ],
       ),

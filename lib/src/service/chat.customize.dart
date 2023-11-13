@@ -23,10 +23,13 @@ class ChatCustomize {
   /// You may display user profile and link it to user public profile screen.
   Widget Function(BuildContext, String roomId, bool firstPageFilled)? chatMessageListTopBuilder;
 
+  Widget Function(Room? room)? chatRoomMessageBoxBuilder;
+
   ChatCustomize({
     this.chatRoomAppBarBuilder,
     this.onChatRoomFileUpload,
     this.showChatRoom,
     this.chatMessageListTopBuilder,
+    this.chatRoomMessageBoxBuilder,
   });
 }

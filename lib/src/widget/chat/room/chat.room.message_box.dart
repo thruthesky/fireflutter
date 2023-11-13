@@ -19,11 +19,9 @@ class ChatRoomMessageBox extends StatefulWidget {
   const ChatRoomMessageBox({
     super.key,
     required this.room,
-    this.setMessage,
   });
 
   final Room? room;
-  final String? setMessage;
 
   @override
   State<StatefulWidget> createState() => _ChatRoomMessageBoxState();
@@ -34,12 +32,6 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
   double? progress;
 
   @override
-  void initState() {
-    super.initState();
-    if (widget.setMessage != null) message.text = widget.setMessage!;
-  }
-
-  @override
   void dispose() {
     message.dispose();
     super.dispose();
@@ -47,90 +39,58 @@ class _ChatRoomMessageBoxState extends State<ChatRoomMessageBox> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Column(
-        children: [
-          if (progress != null)
-            LinearProgressIndicator(
-              value: progress,
-            ),
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.camera_alt,
-                    size: 28,
-                  ),
-                  padding: EdgeInsets.zero,
-                  onPressed: () async {
-                    if (widget.room == null) {
-                      toast(title: 'Wait...', message: 'The room is not ready yet.');
-                      return;
-                    }
-                    final url = await StorageService.instance.upload(
-                      context: context,
-                      camera: ChatService.instance.uploadFromCamera,
-                      gallery: ChatService.instance.uploadFromGallery,
-                      file: ChatService.instance.uploadFromFile,
-                      progress: (p) => setState(() => progress = p),
-                      complete: () => setState(() => progress = null),
-                    );
-                    await ChatService.instance.sendMessage(room: widget.room!, url: url);
-                  },
+    return ChatService.instance.customize.chatRoomMessageBoxBuilder?.call(widget.room) ??
+        SafeArea(
+          top: false,
+          child: Column(
+            children: [
+              if (progress != null)
+                LinearProgressIndicator(
+                  value: progress,
                 ),
-                Expanded(
-                  child: widget.room?.isGroupChat == true
-                      ? chatBoxTextField(true)
-                      : UserBlocked(
-                          otherUid: widget.room?.otherUserUid ?? '',
-                          notBlockedBuilder: (context) {
-                            return chatBoxTextField(true);
-                          },
-                          blockedBuilder: (context) {
-                            return chatBoxTextField(false);
-                          },
+              const Divider(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    ChatRoomMessageBoxUploadButton(
+                      room: widget.room,
+                      onProgress: (p) => setState(() => progress = p),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: message,
+                        decoration: const InputDecoration(
+                          hintText: 'Message',
+                          border: InputBorder.none,
                         ),
+                        maxLines: 5,
+                        minLines: 1,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        if (widget.room == null) {
+                          toast(title: 'Wait...', message: 'The room is not ready yet.');
+                          return;
+                        }
+                        if (message.text.isEmpty) return;
+                        final text = message.text;
+                        message.text = '';
+                        await ChatService.instance.sendMessage(
+                          room: widget.room!,
+                          text: text,
+                        );
+                      },
+                      icon: const Icon(Icons.send),
+                    ),
+                  ],
                 ),
-                IconButton(
-                  onPressed: () async {
-                    if (widget.room == null) {
-                      toast(title: 'Wait...', message: 'The room is not ready yet.');
-                      return;
-                    }
-                    if (message.text.isEmpty) return;
-                    final text = message.text;
-                    message.text = '';
-                    await ChatService.instance.sendMessage(
-                      room: widget.room!,
-                      text: text,
-                    );
-                  },
-                  icon: const Icon(Icons.send),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
-  }
-
-  TextField chatBoxTextField(bool enabled) {
-    return TextField(
-      controller: message,
-      decoration: const InputDecoration(
-        hintText: 'Message',
-        border: InputBorder.none,
-      ),
-      maxLines: 5,
-      minLines: 1,
-      enabled: enabled,
-      style: Theme.of(context).textTheme.bodyMedium,
-    );
+        );
   }
 }
