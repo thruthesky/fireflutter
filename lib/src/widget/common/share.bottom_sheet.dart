@@ -23,6 +23,13 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
   final nameChanged = BehaviorSubject<String?>.seeded(null);
 
   @override
+  void dispose() {
+    name.dispose();
+    nameChanged.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.7,
