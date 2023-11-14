@@ -1,7 +1,11 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-enum GuideView { minimize, maximize, close }
+class GuideView {
+  static const minimize = 'minimize';
+  static const maximize = 'maximize';
+  static const close = 'close';
+}
 
 class AdminMessagingScreen extends StatefulWidget {
   const AdminMessagingScreen({super.key, this.spaceBetweenWidgetGroup});
@@ -22,46 +26,42 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
   List<String> tokens = [];
   Map<String, User> users = {};
 
-  String sendTarget = NotificationTarget.platform.name;
+  String sendTarget = NotificationTarget.platform;
   Map<String, String> targetMenuItem = {
-    NotificationTarget.platform.name: 'Platform',
-    NotificationTarget.users.name: 'Users',
-    NotificationTarget.tokens.name: 'Tokens',
+    NotificationTarget.platform: 'Platform',
+    NotificationTarget.users: 'Users',
+    NotificationTarget.tokens: 'Tokens',
   };
 
-  String platformTarget = NotificationPlatform.allUsers.name;
+  String platformTarget = NotificationPlatform.allUsers;
   Map<String, String> platformMenuItem = {
-    NotificationPlatform.allUsers.name: 'All',
-    NotificationPlatform.androidUsers.name: "Android",
-    NotificationPlatform.iosUsers.name: "iOS",
-    NotificationPlatform.webUsers.name: "Web",
+    NotificationPlatform.allUsers: 'All',
+    NotificationPlatform.androidUsers: "Android",
+    NotificationPlatform.iosUsers: "iOS",
+    NotificationPlatform.webUsers: "Web",
   };
 
-  String notificationType = NotificationType.post.name;
+  String notificationType = NotificationType.post;
   Map<String, String> notificationTypeMenuItem = {
-    NotificationType.post.name: 'Post',
-    NotificationType.chat.name: 'Chat',
-    NotificationType.user.name: 'User',
+    NotificationType.post: 'Post',
+    NotificationType.chat: 'Chat',
+    NotificationType.user: 'User',
   };
 
   String topic = '';
 
   TextStyle textStyle = const TextStyle(fontSize: 10);
 
-  Widget get spaceBetweenWidgetGroup =>
-      SizedBox(height: widget.spaceBetweenWidgetGroup ?? sizeLg);
+  Widget get spaceBetweenWidgetGroup => SizedBox(height: widget.spaceBetweenWidgetGroup ?? sizeLg);
 
-  String guideView = GuideView.minimize.name;
+  String guideView = GuideView.minimize;
 
   @override
   void initState() {
     super.initState();
 
     if (MessagingService.instance.customizeTopic != null) {
-      targetMenuItem = {
-        NotificationTarget.topic.name: 'Topic',
-        ...targetMenuItem
-      };
+      targetMenuItem = {NotificationTarget.topic: 'Topic', ...targetMenuItem};
       topic = MessagingService.instance.customizeTopic!.first.topic;
     }
   }
@@ -87,14 +87,10 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
             children: [
               ...notificationGuide,
               ...chooseTarget,
-              if (sendTarget == NotificationTarget.platform.name)
-                ...notificationTargetPlatform,
-              if (sendTarget == NotificationTarget.users.name)
-                ...notificationTargetUsers,
-              if (sendTarget == NotificationTarget.tokens.name)
-                ...notificationTargetTokens,
-              if (sendTarget == NotificationTarget.topic.name &&
-                  MessagingService.instance.customizeTopic != null)
+              if (sendTarget == NotificationTarget.platform) ...notificationTargetPlatform,
+              if (sendTarget == NotificationTarget.users) ...notificationTargetUsers,
+              if (sendTarget == NotificationTarget.tokens) ...notificationTargetTokens,
+              if (sendTarget == NotificationTarget.topic && MessagingService.instance.customizeTopic != null)
                 ...notificationTargetCustomizeTopic,
               spaceBetweenWidgetGroup,
               ...selectNotificationType,
@@ -106,39 +102,31 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
               Center(
                 child: ElevatedButton(
                   onPressed: () async {
-                    if (sendTarget == NotificationTarget.users.name &&
-                        users.isEmpty) {
+                    if (sendTarget == NotificationTarget.users && users.isEmpty) {
                       return warningSnackbar(context, 'Users list is empty.');
                     }
-                    if (sendTarget == NotificationTarget.tokens.name &&
-                        tokens.isEmpty &&
-                        tokenString.text.isEmpty) {
+                    if (sendTarget == NotificationTarget.tokens && tokens.isEmpty && tokenString.text.isEmpty) {
                       return warningSnackbar(context, 'Tokens is empty.');
                     }
 
                     if (title.text.isEmpty && body.text.isEmpty) {
-                      return warningSnackbar(
-                          context, 'Title and body cant be both empty');
+                      return warningSnackbar(context, 'Title and body cant be both empty');
                     }
                     if (landingPage.text.isEmpty) {
-                      return warningSnackbar(
-                          context, '$notificationType id is missing');
+                      return warningSnackbar(context, '$notificationType id is missing');
                     }
 
                     await MessagingService.instance.queue(
                       title: title.text,
                       body: body.text,
-                      uids: sendTarget == NotificationTarget.users.name
-                          ? users.keys.toList()
-                          : null,
-                      tokens: sendTarget == NotificationTarget.tokens.name
+                      uids: sendTarget == NotificationTarget.users ? users.keys.toList() : null,
+                      tokens: sendTarget == NotificationTarget.tokens
                           ? [...tokens, ...(tokenString.text.split(","))]
                           : null,
-                      topic: sendTarget == NotificationTarget.platform.name
+                      topic: sendTarget == NotificationTarget.platform
                           ? platformTarget
-                          : sendTarget == NotificationTarget.topic.name
-                              ? MessagingService.instance.prefixCustomTopic +
-                                  topic
+                          : sendTarget == NotificationTarget.topic
+                              ? MessagingService.instance.prefixCustomTopic + topic
                               : null,
                       type: notificationType,
                       id: landingPage.text,
@@ -175,26 +163,26 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
             IconButton(
               onPressed: () {
                 setState(() {
-                  if (guideView == GuideView.minimize.name) {
-                    guideView = GuideView.maximize.name;
-                  } else if (guideView == GuideView.maximize.name) {
-                    guideView = GuideView.close.name;
+                  if (guideView == GuideView.minimize) {
+                    guideView = GuideView.maximize;
+                  } else if (guideView == GuideView.maximize) {
+                    guideView = GuideView.close;
                   } else {
-                    guideView = GuideView.minimize.name;
+                    guideView = GuideView.minimize;
                   }
                 });
               },
               icon: Icon(
-                guideView == GuideView.minimize.name
+                guideView == GuideView.minimize
                     ? Icons.keyboard_double_arrow_down_outlined
-                    : guideView == GuideView.maximize.name
+                    : guideView == GuideView.maximize
                         ? Icons.close_outlined
                         : Icons.keyboard_arrow_down_outlined,
               ),
             ),
           ],
         ),
-        if (guideView != GuideView.close.name)
+        if (guideView != GuideView.close)
           Padding(
             padding: const EdgeInsets.only(bottom: sizeSm),
             child: Card(
@@ -211,7 +199,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                       '1. Choose the target, `Users`, `Token` or `Platform` that you want to send message to.',
                       style: textStyle,
                     ),
-                    if (guideView == GuideView.maximize.name)
+                    if (guideView == GuideView.maximize)
                       Padding(
                         padding: const EdgeInsets.only(left: sizeSm),
                         child: Column(children: [
@@ -233,7 +221,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                       "2. Choose notification type, `Post` or `Chat` or `User` this will determine the landing page. when the user tap the message.",
                       style: textStyle,
                     ),
-                    if (guideView == GuideView.maximize.name) ...[
+                    if (guideView == GuideView.maximize) ...[
                       Padding(
                         padding: const EdgeInsets.only(left: sizeSm),
                         child: Text(
@@ -414,8 +402,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                               setState(() {});
                             },
                             child: const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: sizeXs, vertical: sizeXxs),
+                              padding: EdgeInsets.symmetric(horizontal: sizeXs, vertical: sizeXxs),
                               child: Icon(
                                 Icons.delete_forever_outlined,
                               ),
@@ -477,10 +464,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                       duration: const Duration(seconds: 2),
                     );
                     if (querySnapshot.size == 0) return;
-                    tokens = ([
-                      ...tokens,
-                      ...querySnapshot.docs.map((e) => e.id).toList()
-                    ]).toSet().toList();
+                    tokens = ([...tokens, ...querySnapshot.docs.map((e) => e.id).toList()]).toSet().toList();
                     setState(() {});
                   },
                 );
@@ -563,10 +547,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                       duration: const Duration(seconds: 2),
                     );
                     if (querySnapshot.size == 0) return;
-                    tokens = ([
-                      ...tokens,
-                      ...querySnapshot.docs.map((e) => e.id).toList()
-                    ]).toSet().toList();
+                    tokens = ([...tokens, ...querySnapshot.docs.map((e) => e.id).toList()]).toSet().toList();
                     setState(() {});
                   },
                 );
@@ -673,7 +654,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                 "Input $notificationType Id",
               ),
               hintText: 'Input $notificationType Id',
-              helperText: notificationType == NotificationType.post.name
+              helperText: notificationType == NotificationType.post
                   ? 'Click the load botton to patch the title and body base on the post id'
                   : null,
               helperMaxLines: 2,
@@ -686,19 +667,16 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (notificationType == NotificationType.post.name) ...[
+                if (notificationType == NotificationType.post) ...[
                   IconButton(
                     onPressed: () async {
                       if (landingPage.text.isEmpty) {
-                        return warningSnackbar(
-                            null, '$notificationType Id is not set');
+                        return warningSnackbar(null, '$notificationType Id is not set');
                       }
 
-                      Post post =
-                          await PostService.instance.get(landingPage.text);
+                      Post post = await PostService.instance.get(landingPage.text);
 
-                      showSnackBar(
-                          null, 'Post was loaded, title and body was patch');
+                      showSnackBar(null, 'Post was loaded, title and body was patch');
 
                       title.text = post.title;
                       body.text = post.content;
@@ -707,8 +685,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                   ),
                   IconButton(
                     onPressed: () async {
-                      AdminService.instance.showChoosePostScreen(context,
-                          onTap: (post) async {
+                      AdminService.instance.showChoosePostScreen(context, onTap: (post) async {
                         landingPage.text = post.id;
                         title.text = post.title;
                         body.text = post.content;
@@ -719,18 +696,17 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                     icon: const Icon(Icons.search),
                   ),
                 ],
-                if (notificationType == NotificationType.chat.name)
+                if (notificationType == NotificationType.chat)
                   IconButton(
                     onPressed: () {
-                      AdminService.instance.showChooseChatRoomScreen(context,
-                          onTap: (room) async {
+                      AdminService.instance.showChooseChatRoomScreen(context, onTap: (room) async {
                         landingPage.text = room.roomId;
                         Navigator.of(context).pop();
                       });
                     },
                     icon: const Icon(Icons.search),
                   ),
-                if (notificationType == NotificationType.user.name)
+                if (notificationType == NotificationType.user)
                   IconButton(
                     onPressed: () {
                       AdminService.instance.showUserSearchDialog(
@@ -786,8 +762,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
           style: textStyle,
           decoration: const InputDecoration(
             label: Text('Sound'),
-            hintText:
-                'Input sound file name, must include ext. Sound file must be attached to the app.',
+            hintText: 'Input sound file name, must include ext. Sound file must be attached to the app.',
             floatingLabelBehavior: FloatingLabelBehavior.always,
           ),
         ),

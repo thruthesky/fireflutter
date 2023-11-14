@@ -91,6 +91,7 @@ class I18nTexts {
   String createUserLog;
   String updateUserLog;
   String roomOpenLog;
+  String roomOpenGroupLog;
   String likedUserLog;
   String unlikedUserLog;
   String followedUserLog;
@@ -203,7 +204,8 @@ class I18nTexts {
     this.followedUserLog = "#a followed #b",
     this.unfollowedUserLog = "#a unfollowed #b",
     this.viewProfileUserLog = "#a viewed #b's profile",
-    this.roomOpenLog = "#a opened a chat room",
+    this.roomOpenLog = "#a opened a chat room with #b",
+    this.roomOpenGroupLog = "#a opened a chat group id #b",
 
     /// activity_log post
     this.createPostLog = "#a created a post",
