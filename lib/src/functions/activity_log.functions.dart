@@ -93,10 +93,13 @@ Future<DocumentReference?> activityLogUserViewProfile({required String otherUid}
 }
 
 Future<DocumentReference?> activityLogUserRoomOpen({String? roomId, String? otherUid}) {
+  otherUid ??= ChatService.instance.getOtherUserUid(roomId!.split('-'));
+
   return activityLog(
     roomId: roomId,
     type: Log.type.user,
     action: Log.user.roomOpen,
+    otherUid: otherUid,
   );
 }
 

@@ -44,6 +44,10 @@ class ActivityLogTimeLineUser extends StatelessWidget {
                         '#a': actor.getDisplayName,
                         '#b': target.getDisplayName,
                       }),
+                    'roomOpen' => tr.roomOpenLog.replace({
+                        '#a': actor.getDisplayName,
+                        '#b': target.getDisplayName,
+                      }),
                     _ => '${actor.getDisplayName} ${activity.type} ${activity.action}',
                   },
                   children: [
@@ -82,7 +86,7 @@ class ActivityLogTimeLineUser extends StatelessWidget {
               'resign' => tr.resignLog.replace({'#a': actor.getDisplayName}),
               'create' => tr.createUserLog.replace({'#a': actor.getDisplayName}),
               'update' => tr.updateUserLog.replace({'#a': actor.getDisplayName}),
-              'roomOpen' => tr.roomOpenLog.replace({'#a': actor.getDisplayName}),
+              'roomOpen' => tr.roomOpenGroupLog.replace({'#a': actor.getDisplayName, '#b': activity.roomId!}),
               _ => '${actor.getDisplayName} ${activity.type} ${activity.action}',
             },
           );
