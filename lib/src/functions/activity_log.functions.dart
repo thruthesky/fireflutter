@@ -68,8 +68,7 @@ Future<DocumentReference?> activityLogUserUpdate() {
   );
 }
 
-Future<DocumentReference?> activityLogUserLike(
-    {required String otherUid, required bool isLiked}) {
+Future<DocumentReference?> activityLogUserLike({required String otherUid, required bool isLiked}) {
   return activityLog(
     otherUid: otherUid,
     type: Log.type.user,
@@ -77,8 +76,7 @@ Future<DocumentReference?> activityLogUserLike(
   );
 }
 
-Future<DocumentReference?> activityLogUserFollow(
-    {required String otherUid, required bool isFollow}) {
+Future<DocumentReference?> activityLogUserFollow({required String otherUid, required bool isFollow}) {
   return activityLog(
     otherUid: otherUid,
     type: Log.type.user,
@@ -86,8 +84,7 @@ Future<DocumentReference?> activityLogUserFollow(
   );
 }
 
-Future<DocumentReference?> activityLogUserViewProfile(
-    {required String otherUid}) {
+Future<DocumentReference?> activityLogUserViewProfile({required String otherUid}) {
   return activityLog(
     otherUid: otherUid,
     type: Log.type.user,
@@ -95,12 +92,14 @@ Future<DocumentReference?> activityLogUserViewProfile(
   );
 }
 
-Future<DocumentReference?> activityLogUserRoomOpen(
-    {String? roomId, String? otherUid}) {
+Future<DocumentReference?> activityLogUserRoomOpen({String? roomId, String? otherUid}) {
+  otherUid ??= ChatService.instance.getOtherUserUid(roomId!.split('-'));
+
   return activityLog(
     roomId: roomId,
     type: Log.type.user,
     action: Log.user.roomOpen,
+    otherUid: otherUid,
   );
 }
 
@@ -199,8 +198,7 @@ Future<DocumentReference?> activityLogCommentLike({
 
 // *********** Share Activity Log ***********
 
-Future<DocumentReference?> activityLogShare(
-    {required String id, required String type}) {
+Future<DocumentReference?> activityLogShare({required String id, required String type}) {
   return activityLog(
     type: Log.type.user,
     action: Log.user.share,
