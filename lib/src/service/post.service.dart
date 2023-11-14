@@ -264,7 +264,7 @@ class PostService {
     if (enableNotificationOnLike == false) return;
 
     if (isLiked == false) return;
-    if (await UserSettingService.instance.hasUserSetting(
+    if (await UserSettingService.instance.hasUserSettingId(
       otherUid: post.uid,
       id: NotificationSettingConfig.disableNotifyOnPostLiked,
     )) return;
