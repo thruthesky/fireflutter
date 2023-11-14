@@ -472,7 +472,7 @@ class UserService {
     if (enableNotificationOnLike == false) return;
     if (isLiked == false) return;
 
-    if (await UserSettingService.instance.hasUserSetting(
+    if (await UserSettingService.instance.hasUserSettingId(
       otherUid: user.uid,
       id: NotificationSettingConfig.disableNotifyOnProfileLiked,
     )) return;

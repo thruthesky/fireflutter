@@ -24,16 +24,12 @@ class UserSettingService {
     }
   }
 
-  Future<bool> hasUserSetting({
+  Future<bool> hasUserSettingId({
     String? otherUid,
     required String id,
   }) async {
-    UserSetting? hasDisabledSetting = await get(
-      uid: otherUid ?? myUid!,
-      id: id,
-    );
-    if (hasDisabledSetting == null) false;
-
-    return true;
+    DocumentSnapshot snapshot = await userSettingCol(otherUid ?? myUid!).doc(id).get();
+    if (snapshot.exists) true;
+    return false;
   }
 }
