@@ -20,7 +20,12 @@ class _ActivityLogListViewScreenState extends State<ActivityLogListViewScreen> {
     Query q = activityLogCol.orderBy('createdAt', descending: true);
 
     if (widget.myActivity == true) {
-      q = q.where('uid', isEqualTo: myUid);
+      q = q.where(
+        Filter.or(
+          Filter('uid', isEqualTo: myUid),
+          Filter('otherUid', isEqualTo: myUid),
+        ),
+      );
     } else if (search.text.isNotEmpty) {
       q = q.where('uid', isEqualTo: search.text);
     }
