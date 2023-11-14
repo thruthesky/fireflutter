@@ -63,7 +63,8 @@ class ChatRoomListView extends StatefulWidget {
     this.scrollDirection = Axis.vertical,
     this.visibility,
     this.onTap,
-  }) : assert(itemExtent == null || visibility == null, "You can't set both itemExtent and visibility");
+  }) : assert(itemExtent == null || visibility == null,
+            "You can't set both itemExtent and visibility");
 
   final ChatRoomListViewController? controller;
   final String orderBy;
@@ -169,12 +170,15 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
         }
         if (snapshot.hasError) {
           log(snapshot.error.toString(), stackTrace: snapshot.stackTrace);
-          return Center(child: Text('Error loading chat rooms ${snapshot.error}'));
+          return Center(
+              child: Text('Error loading chat rooms ${snapshot.error}'));
         }
         if (snapshot.docs.isEmpty) {
-          return widget.emptyBuilder?.call(context) ?? Center(child: Text(tr.noChatRooms));
+          return widget.emptyBuilder?.call(context) ??
+              Center(child: Text(tr.noChatRooms));
         }
-        roomDocs = snapshot.docs.map((r) => Room.fromDocumentSnapshot(r)).toList();
+        roomDocs =
+            snapshot.docs.map((r) => Room.fromDocumentSnapshot(r)).toList();
         // Remove blocked users
         roomDocs.removeWhere((room) {
           if (room.isGroupChat) return false;
@@ -185,10 +189,12 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
           itemCount: roomDocs.length,
           itemBuilder: (context, index) {
             final room = roomDocs[index];
-            if (widget.visibility != null && widget.visibility!(room) == false) {
+            if (widget.visibility != null &&
+                widget.visibility!(room) == false) {
               return const SizedBox();
             }
-            return widget.itemBuilder?.call(context, room) ?? _defaultChatRoomListTile(room, context);
+            return widget.itemBuilder?.call(context, room) ??
+                _defaultChatRoomListTile(room, context);
           },
           controller: widget.scrollController,
           primary: widget.primary,
@@ -211,7 +217,8 @@ class ChatRoomListViewState extends State<ChatRoomListView> {
       room: room,
       avatarSize: widget.avatarSize,
       onTap: () {
-        widget.onTap?.call(room) ?? ChatService.instance.showChatRoom(context: context, room: room);
+        widget.onTap?.call(room) ??
+            ChatService.instance.showChatRoom(context: context, room: room);
       },
     );
   }

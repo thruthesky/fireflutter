@@ -29,6 +29,13 @@ class _PostEditDialogState extends State<PostEditScreen> {
   bool get isUpdate => !isCreate;
 
   @override
+  void dispose() {
+    title.dispose();
+    content.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     categoryId = widget.categoryId ?? '';

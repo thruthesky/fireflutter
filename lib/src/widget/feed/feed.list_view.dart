@@ -72,7 +72,10 @@ class _FeedListViewState extends State<FeedListView> {
   @override
   Widget build(BuildContext context) {
     return FirestoreQueryBuilder(
-      query: widget.query ?? postCol.where('followers', arrayContains: myUid).orderBy('createdAt', descending: true),
+      query: widget.query ??
+          postCol
+              .where('followers', arrayContains: myUid)
+              .orderBy('createdAt', descending: true),
       pageSize: widget.pageSize,
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
@@ -84,7 +87,8 @@ class _FeedListViewState extends State<FeedListView> {
         }
         if (snapshot.docs.isEmpty) {
           // means has no more to get
-          if (widget.emptyBuilder != null) return widget.emptyBuilder!.call(context);
+          if (widget.emptyBuilder != null)
+            return widget.emptyBuilder!.call(context);
         }
         return ListView.builder(
           /// EdgeInsets.zero is important to avoid unexpected padding for sliver NestScrollView.
@@ -103,11 +107,11 @@ class _FeedListViewState extends State<FeedListView> {
             }
             if ((!snapshot.hasMore && index + 1 == snapshot.docs.length)) {
               // means has no more to get
-              if (widget.bottomBuilder != null) return widget.bottomBuilder!.call(context);
+              if (widget.bottomBuilder != null)
+                return widget.bottomBuilder!.call(context);
             }
             final post = Post.fromDocumentSnapshot(snapshot.docs[index]);
             final child = widget.itemBuilder.call(post, index);
-
             if (widget.topBuilder != null && index == 0) {
               return Column(
                 mainAxisSize: MainAxisSize.min,

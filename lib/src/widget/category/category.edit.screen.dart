@@ -75,8 +75,11 @@ class _CategoryEditScreenState extends State<CategoryEditScreen> {
                       child: ElevatedButton(
                         child: const Text('Update'),
                         onPressed: () async {
-                          await Category.fromId(category.id).update(name: name.text, description: description.text);
-                          toast(title: tr.categoryUpdated, message: tr.categoryUpdatedMessage);
+                          await Category.fromId(category.id).update(
+                              name: name.text, description: description.text);
+                          toast(
+                              title: tr.categoryUpdated,
+                              message: tr.categoryUpdatedMessage);
                         },
                       ),
                     ),

@@ -49,12 +49,14 @@ class ActivityLogListTiLeItem extends StatelessWidget {
               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05),
               shape: RoundedRectangleBorder(
                 side: BorderSide(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.05),
                   width: 1,
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.only(left: 16, top: 16, right: 16, bottom: 16),
+                padding: const EdgeInsets.only(
+                    left: 16, top: 16, right: 16, bottom: 16),
                 child: children.isEmpty
                     ? Row(
                         children: [
@@ -119,7 +121,10 @@ class ActivityLogListTiLeItem extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
           border: Border.all(
-            color: Theme.of(context).colorScheme.primary.tone(70), //Colors.lightBlue[300]!,
+            color: Theme.of(context)
+                .colorScheme
+                .primary
+                .tone(70), //Colors.lightBlue[300]!,
             width: 2,
           ),
         ),

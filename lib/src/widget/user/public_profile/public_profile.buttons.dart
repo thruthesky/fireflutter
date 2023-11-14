@@ -21,7 +21,8 @@ class PublicProfileButtons extends StatelessWidget {
       runAlignment: WrapAlignment.center,
       children: [
         if (user.uid != myUid) ...[
-          UserService.instance.customize.publicScreenLikeButton?.call(context, user) ??
+          UserService.instance.customize.publicScreenLikeButton
+                  ?.call(context, user) ??
               TextButton(
                 key: const Key('PublicProfileLikeButton'),
                 style: buttonStyle(context),
@@ -29,12 +30,15 @@ class PublicProfileButtons extends StatelessWidget {
                 child: Database(
                   path: 'likes/${user.uid}',
                   builder: (value, p) => Text(
-                    value == null ? tr.like : tr.likes.replaceAll('#no', value.length.toString()),
+                    value == null
+                        ? tr.like
+                        : tr.likes.replaceAll('#no', value.length.toString()),
                     style: textStyle(context),
                   ),
                 ),
               ),
-          UserService.instance.customize.publicScreenFavoriteButton?.call(context, user) ??
+          UserService.instance.customize.publicScreenFavoriteButton
+                  ?.call(context, user) ??
               FavoriteButton(
                 otherUid: user.uid,
                 builder: (re) => Text(
@@ -46,7 +50,8 @@ class PublicProfileButtons extends StatelessWidget {
                   message: re ? tr.favoriteMessage : tr.unfavoriteMessage,
                 ),
               ),
-          UserService.instance.customize.publicScreenChatButton?.call(context, user) ??
+          UserService.instance.customize.publicScreenChatButton
+                  ?.call(context, user) ??
               TextButton(
                 onPressed: () {
                   ChatService.instance.showChatRoom(
@@ -60,7 +65,8 @@ class PublicProfileButtons extends StatelessWidget {
                   style: textStyle(context),
                 ),
               ),
-          UserService.instance.customize.publicScreenFollowButton?.call(context, user) ??
+          UserService.instance.customize.publicScreenFollowButton
+                  ?.call(context, user) ??
               MyDoc(
                 builder: (my) => TextButton(
                   onPressed: () async {
@@ -72,7 +78,8 @@ class PublicProfileButtons extends StatelessWidget {
                   ),
                 ),
               ),
-          UserService.instance.customize.publicScreenBlockButton?.call(context, user) ??
+          UserService.instance.customize.publicScreenBlockButton
+                  ?.call(context, user) ??
               UserBlocked(
                 otherUser: user,
                 blockedBuilder: (context) {
@@ -108,7 +115,8 @@ class PublicProfileButtons extends StatelessWidget {
                   );
                 },
               ),
-          UserService.instance.customize.publicScreenReportButton?.call(context, user) ??
+          UserService.instance.customize.publicScreenReportButton
+                  ?.call(context, user) ??
               TextButton(
                 onPressed: () {
                   ReportService.instance.showReportDialog(
@@ -116,7 +124,8 @@ class PublicProfileButtons extends StatelessWidget {
                     otherUid: user.uid,
                     onExists: (id, type) => toast(
                       title: tr.alreadyReportedTitle,
-                      message: tr.alreadyReportedMessage.replaceAll('#type', type),
+                      message:
+                          tr.alreadyReportedMessage.replaceAll('#type', type),
                     ),
                   );
                 },
@@ -152,7 +161,8 @@ class PublicProfileButtons extends StatelessWidget {
                     ),
             ),
         ],
-        ...?UserService.instance.customize.publicScreenTrailingButtons?.call(context, user),
+        ...?UserService.instance.customize.publicScreenTrailingButtons
+            ?.call(context, user),
       ],
     );
   }

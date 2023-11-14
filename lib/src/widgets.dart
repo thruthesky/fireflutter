@@ -44,6 +44,7 @@ export 'widget/chat/room_settings/chat.room_settings.rename.list_tile.dart';
 export 'widget/chat/room/menu/chat.room.menu.user.list_tile.dart';
 export 'widget/chat/no_of_new_message.dart';
 export 'widget/chat/total_no_of_new_message.dart';
+export 'widget/chat/room/chat.room.message_box.upload_button.dart';
 
 // Category
 export 'widget/category/category.list_view.dart';

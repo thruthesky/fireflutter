@@ -23,6 +23,14 @@ class EmailLoginForm extends StatefulWidget {
 class _EmailLoginFormState extends State<EmailLoginForm> {
   final email = TextEditingController();
   final password = TextEditingController();
+
+  @override
+  void dispose() {
+    email.dispose();
+    password.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AuthChange(

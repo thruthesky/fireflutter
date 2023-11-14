@@ -51,9 +51,15 @@ class _EditFormState extends State<EditForm> {
             width: 400,
             child: Column(
               children: [
-                _textFieldBuilder('Display Name', widget.user.displayName == '' ? displayName : widget.user.displayName,
+                _textFieldBuilder(
+                    'Display Name',
+                    widget.user.displayName == ''
+                        ? displayName
+                        : widget.user.displayName,
                     isDisplay: true),
-                _textFieldBuilder('Name', widget.user.name == '' ? name : widget.user.name, isName: true),
+                _textFieldBuilder(
+                    'Name', widget.user.name == '' ? name : widget.user.name,
+                    isName: true),
                 DropdownButton(
                   value: genVal,
                   items: const [
@@ -111,7 +117,8 @@ class _EditFormState extends State<EditForm> {
     );
   }
 
-  Widget _textFieldBuilder(String label, String initialValue, {bool isDisplay = false, bool isName = false}) {
+  Widget _textFieldBuilder(String label, String initialValue,
+      {bool isDisplay = false, bool isName = false}) {
     return Padding(
       padding: const EdgeInsets.only(top: 4, bottom: 4),
       child: TextFormField(
@@ -125,13 +132,15 @@ class _EditFormState extends State<EditForm> {
           }
           if (isName) {
             name = value;
-            displayName = displayName == '' ? widget.user.displayName : displayName;
+            displayName =
+                displayName == '' ? widget.user.displayName : displayName;
             gender = gender == '' ? widget.user.gender : gender;
             return;
           }
           gender = value;
           name = name == '' ? widget.user.name : name;
-          displayName = displayName == '' ? widget.user.displayName : displayName;
+          displayName =
+              displayName == '' ? widget.user.displayName : displayName;
         }),
         decoration: InputDecoration(
           border: const OutlineInputBorder(

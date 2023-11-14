@@ -23,12 +23,18 @@ class ActivityLogTimeLinePost extends StatelessWidget {
                 activity: activity,
                 actor: actor,
                 message: switch (activity.action) {
-                  'create' => tr.createPostLog.replace({'#a': actor.getDisplayName}),
-                  'update' => tr.updatePostLog.replace({'#a': actor.getDisplayName}),
-                  'delete' => tr.deletePostLog.replace({'#a': actor.getDisplayName}),
-                  'like' => tr.likedPostLog.replace({'#a': actor.getDisplayName}),
-                  'unlike' => tr.unlikedPostLog.replace({'#a': actor.getDisplayName}),
-                  _ => '${actor.getDisplayName} ${activity.type} ${activity.action}',
+                  'create' =>
+                    tr.createPostLog.replace({'#a': actor.getDisplayName}),
+                  'update' =>
+                    tr.updatePostLog.replace({'#a': actor.getDisplayName}),
+                  'delete' =>
+                    tr.deletePostLog.replace({'#a': actor.getDisplayName}),
+                  'like' =>
+                    tr.likedPostLog.replace({'#a': actor.getDisplayName}),
+                  'unlike' =>
+                    tr.unlikedPostLog.replace({'#a': actor.getDisplayName}),
+                  _ =>
+                    '${actor.getDisplayName} ${activity.type} ${activity.action}',
                 },
                 children: [
                   const Padding(
@@ -37,7 +43,8 @@ class ActivityLogTimeLinePost extends StatelessWidget {
                   ),
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: () => PostService.instance.showPostViewScreen(context: context, post: post),
+                    onTap: () => PostService.instance
+                        .showPostViewScreen(context: context, post: post),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
@@ -67,15 +74,23 @@ class ActivityLogTimeLinePost extends StatelessWidget {
                                   children: [
                                     DateTimeText(
                                         dateTime: post.createdAt,
-                                        style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11)),
+                                        style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                            fontSize: 11)),
                                     DatabaseCount(
-                                      path: pathSeenBy(post.id), // 'posts/${post.id}/seenBy',
+                                      path: pathSeenBy(post
+                                          .id), // 'posts/${post.id}/seenBy',
                                       builder: (n) => n < 2
                                           ? const SizedBox.shrink()
                                           : Text(
                                               " | ${tr.views}: $n",
                                               style: TextStyle(
-                                                  color: Theme.of(context).colorScheme.secondary, fontSize: 11),
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .secondary,
+                                                  fontSize: 11),
                                             ),
                                     ),
                                   ],
@@ -110,14 +125,18 @@ class ActivityLogTimeLinePost extends StatelessWidget {
                         if (post.noOfComments > 0)
                           TextButton(
                             style: ButtonStyle(
-                              padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
+                              padding: MaterialStateProperty.all(
+                                  const EdgeInsets.all(0)),
                               visualDensity: VisualDensity.compact,
-                              textStyle: MaterialStateProperty.all(Theme.of(context).textTheme.bodySmall),
+                              textStyle: MaterialStateProperty.all(
+                                  Theme.of(context).textTheme.bodySmall),
                             ),
                             onPressed: () {
-                              CommentService.instance.showCommentListBottomSheet(context, post);
+                              CommentService.instance
+                                  .showCommentListBottomSheet(context, post);
                             },
-                            child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
+                            child: Text(tr.showMoreComments.replaceAll(
+                                "#no", post.noOfComments.toString())),
                           ),
                       ],
                     ),

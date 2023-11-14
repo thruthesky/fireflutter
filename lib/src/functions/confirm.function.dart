@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 /// Confirm dialgo
 ///
 /// It requires build context where [toast] does not.
-Future<bool?> confirm({required BuildContext context, required String title, required String message}) {
+Future<bool?> confirm(
+    {required BuildContext context,
+    required String title,
+    required String message}) {
   if (FireFlutterService.instance.custom.confirm != null) {
     return FireFlutterService.instance.custom.confirm!(
       context: context,

@@ -3,18 +3,22 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class CarouselView extends StatefulWidget {
-  const CarouselView(
-      {super.key,
-      this.urls,
-      this.widgets,
-      this.index = 0,
-      this.showPageCounter = true})
-      : assert(urls != null || widgets != null);
+  const CarouselView({
+    super.key,
+    this.urls,
+    this.widgets,
+    this.index = 0,
+    this.showPageCounter = true,
+    this.height = 400,
+    this.onPageChanged,
+  }) : assert(urls != null || widgets != null);
 
   final List<String>? urls;
   final List<Widget>? widgets;
   final int index;
   final bool showPageCounter;
+  final double height;
+  final void Function(int)? onPageChanged;
 
   @override
   State<CarouselView> createState() => _CarouselViewState();
@@ -53,11 +57,12 @@ class _CarouselViewState extends State<CarouselView> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 400,
+      height: widget.height,
       child: Stack(
         children: [
           PageView(
             controller: controller,
+            onPageChanged: widget.onPageChanged,
             children: widget.widgets ??
                 widget.urls!
                     .asMap()

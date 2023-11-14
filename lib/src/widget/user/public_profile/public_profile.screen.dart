@@ -17,10 +17,12 @@ class PublicProfileScreen extends StatefulWidget {
 }
 
 class _PublicProfileScreenState extends State<PublicProfileScreen> {
-  final BehaviorSubject<double?> progressEvent = BehaviorSubject<double?>.seeded(null);
+  final BehaviorSubject<double?> progressEvent =
+      BehaviorSubject<double?>.seeded(null);
 
   bool get isMyProfile =>
-      loggedIn && (widget.uid == myUid || widget.user?.uid == myUid) || (widget.uid == null && widget.user == null);
+      loggedIn && (widget.uid == myUid || widget.user?.uid == myUid) ||
+      (widget.uid == null && widget.user == null);
 
   String? currentLoadedImageUrl;
   String previousUrl = '';
@@ -45,7 +47,8 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                     imageUrl: user.stateImageUrl,
                     fit: BoxFit.cover,
                     placeholder: (context, url) => previousUrl.isEmpty
-                        ? const Center(child: CircularProgressIndicator.adaptive())
+                        ? const Center(
+                            child: CircularProgressIndicator.adaptive())
                         : CachedNetworkImage(
                             imageUrl: previousUrl,
                             fit: BoxFit.cover,
@@ -76,7 +79,8 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 iconTheme: IconThemeData(
-                  color: Theme.of(context).colorScheme.onInverseSurface.tone(90),
+                  color:
+                      Theme.of(context).colorScheme.onInverseSurface.tone(90),
                 ),
                 backgroundColor: Colors.transparent,
                 title: Text(user.name, style: textStyle),
@@ -85,8 +89,12 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                     IconButton(
                       key: const Key('PublicProfileCameraButton'),
                       style: IconButton.styleFrom(
-                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                        backgroundColor: Theme.of(context).colorScheme.secondary.withAlpha(200),
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .secondary
+                            .withAlpha(200),
                       ),
                       onPressed: () async {
                         final url = await StorageService.instance.upload(
@@ -98,12 +106,16 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                         previousUrl = my!.stateImageUrl;
                         my?.update(stateImageUrl: url);
                         if (previousUrl.isNotEmpty) {
-                          Timer(const Duration(seconds: 2), () => StorageService.instance.delete(previousUrl));
+                          Timer(
+                              const Duration(seconds: 2),
+                              () =>
+                                  StorageService.instance.delete(previousUrl));
                         }
                       },
                       icon: const Icon(Icons.camera_alt),
                     ),
-                  ...?UserService.instance.customize.publicScreenActions?.call(context, user),
+                  ...?UserService.instance.customize.publicScreenActions
+                      ?.call(context, user),
                 ],
               ),
             ),
@@ -140,12 +152,17 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                                 text: TextSpan(
                                   style: textStyle,
                                   children: [
-                                    TextSpan(text: '${user.state.ifEmpty(tr.noStateMessage)} '),
+                                    TextSpan(
+                                        text:
+                                            '${user.state.ifEmpty(tr.noStateMessage)} '),
                                     WidgetSpan(
                                       child: Icon(
                                         Icons.edit,
                                         size: 18,
-                                        color: Theme.of(context).colorScheme.onInverseSurface.tone(90),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onInverseSurface
+                                            .tone(90),
                                       ),
                                     ),
                                   ],
@@ -174,7 +191,8 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                   ),
                   const SizedBox(height: sizeLg),
                   Divider(
-                    color: Theme.of(context).colorScheme.onInverseSurface.tone(90),
+                    color:
+                        Theme.of(context).colorScheme.onInverseSurface.tone(90),
                   ),
                   const SizedBox(height: sizeLg),
                   const LoginFirst(),

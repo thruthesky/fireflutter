@@ -32,7 +32,8 @@ class _ChatRoomState extends State<ChatRoomScreen> {
         }
       } else {
         // If this take time, provide the room model without await. It may be passed from the previous of previous screen, Or it can be saved in a state.
-        room = await ChatService.instance.getOrCreateSingleChatRoom(widget.user!.uid);
+        room = await ChatService.instance
+            .getOrCreateSingleChatRoom(widget.user!.uid);
         if (mounted) setState(() {});
       }
       ChatService.instance.resetNoOfNewMessage(room: room!);
@@ -40,12 +41,15 @@ class _ChatRoomState extends State<ChatRoomScreen> {
     })();
   }
 
-  String get roomId => widget.user != null ? ChatService.instance.getSingleChatRoomId(widget.user!.uid) : room!.roomId;
+  String get roomId => widget.user != null
+      ? ChatService.instance.getSingleChatRoomId(widget.user!.uid)
+      : room!.roomId;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ChatService.instance.customize.chatRoomAppBarBuilder?.call(room: room, user: widget.user) ??
+      appBar: ChatService.instance.customize.chatRoomAppBarBuilder
+              ?.call(room: room, user: widget.user) ??
           ChatRoomAppBar(room: room, user: widget.user),
       body: Column(
         children: [
@@ -55,18 +59,25 @@ class _ChatRoomState extends State<ChatRoomScreen> {
                 : widget.room?.isGroupChat == true
                     ? ChatRoomMessageListView(roomId: roomId)
                     : UserBlocked(
+                        // Review: Check if this is necessary since the login user who blocked this user cannot open chat chat.
+                        // This might be necessary if we have other ways to access the chat room.
+                        // Also, for now, we are not blocking push notification from blocked users.
+                        // So, if the user tapped on the notification, the chat room may appear.
+                        // However, logically, there should be no push notification from the start.
+                        // Moreover, there might be other ways to access the room, it might be better
+                        // if we have this especially when we don't have integration testing yet.
                         otherUid: widget.user?.uid ?? widget.room!.otherUserUid,
                         notBlockedBuilder: (context) {
                           return ChatRoomMessageListView(roomId: roomId);
                         },
                         blockedBuilder: (context) {
-                          return const Center(child: Text('You cannot chat with this user.'));
+                          return const Center(
+                              child: Text('You cannot chat with this user.'));
                         },
                       ),
           ),
           ChatRoomMessageBox(
             room: room,
-            setMessage: widget.setMessage,
           ),
         ],
       ),

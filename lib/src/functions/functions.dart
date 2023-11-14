@@ -317,6 +317,29 @@ String dateTimeShort(DateTime dt) {
   }
 }
 
+/// Returns now, 1s, 2m, 3h, 4d, 5Mo, 6y
+String dateTimeAbbreviated(DateTime dt) {
+  final now = DateTime.now();
+
+  final dateDifference = now.difference(dt);
+
+  if (dateDifference.inSeconds < 20) {
+    return 'now';
+  } else if (dateDifference.inSeconds < 60) {
+    return '${dateDifference.inSeconds}s';
+  } else if (dateDifference.inMinutes < 60) {
+    return '${dateDifference.inMinutes}m';
+  } else if (dateDifference.inHours < 24) {
+    return '${dateDifference.inHours}h';
+  } else if (dateDifference.inDays < 30) {
+    return '${dateDifference.inDays}d';
+  } else if (dateDifference.inDays < 365) {
+    return '${dateDifference.inDays ~/ 30}Mo';
+  } else {
+    return '${dateDifference.inDays ~/ 365}y';
+  }
+}
+
 /// [YoutubeThumbnailQuality], [getYoutubeThumbnail], [getYoutubeIdFromUrl]
 /// are coming from [youtube_player_flutter](https://pub.dev/packages/youtube_player_flutter).
 ///
@@ -330,10 +353,14 @@ String? getYoutubeIdFromUrl(String url, {bool trimWhitespaces = true}) {
   if (trimWhitespaces) url = url.trim();
 
   for (var exp in [
-    RegExp(r"^https:\/\/(?:www\.|m\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
-    RegExp(r"^https:\/\/(?:music\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
-    RegExp(r"^https:\/\/(?:www\.|m\.)?youtube\.com\/shorts\/([_\-a-zA-Z0-9]{11}).*$"),
-    RegExp(r"^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/([_\-a-zA-Z0-9]{11}).*$"),
+    RegExp(
+        r"^https:\/\/(?:www\.|m\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
+    RegExp(
+        r"^https:\/\/(?:music\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
+    RegExp(
+        r"^https:\/\/(?:www\.|m\.)?youtube\.com\/shorts\/([_\-a-zA-Z0-9]{11}).*$"),
+    RegExp(
+        r"^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/([_\-a-zA-Z0-9]{11}).*$"),
     RegExp(r"^https:\/\/youtu\.be\/([_\-a-zA-Z0-9]{11}).*$")
   ]) {
     Match? match = exp.firstMatch(url);
@@ -367,13 +394,16 @@ String getYoutubeThumbnail({
   String quality = YoutubeThumbnailQuality.standard,
   bool webp = true,
 }) =>
-    webp ? 'https://i3.ytimg.com/vi_webp/$videoId/$quality.webp' : 'https://i3.ytimg.com/vi/$videoId/$quality.jpg';
+    webp
+        ? 'https://i3.ytimg.com/vi_webp/$videoId/$quality.webp'
+        : 'https://i3.ytimg.com/vi/$videoId/$quality.jpg';
 
 /// It opens the SMS app with the number and message.
 ///
 /// Use this to open SMS with default number and text message.
 ///
-Future<bool> launchSMS({required String phoneNumber, required String msg}) async {
+Future<bool> launchSMS(
+    {required String phoneNumber, required String msg}) async {
   // Android 'sms:+39 348 060 888?body=hello%20there';
   String body = Uri.encodeComponent(msg);
 
