@@ -168,12 +168,12 @@ class CommentService {
   Future sendNotificationOnLike(Comment comment, bool isLiked) async {
     if (enableNotificationOnLike == false) return;
 
+    if (isLiked == false) return;
+
     if (await UserSettingService.instance.hasUserSetting(
       otherUid: comment.uid,
       id: NotificationSettingConfig.disableNotifyOnCommentLiked,
     )) return;
-
-    if (isLiked == false) return;
 
     MessagingService.instance.queue(
       title: "${my!.name} liked your comment",

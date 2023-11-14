@@ -470,13 +470,12 @@ class UserService {
   /// send only when user liked the other user.
   Future sendNotificationOnLike(User user, bool isLiked) async {
     if (enableNotificationOnLike == false) return;
+    if (isLiked == false) return;
 
     if (await UserSettingService.instance.hasUserSetting(
       otherUid: user.uid,
       id: NotificationSettingConfig.disableNotifyOnProfileLiked,
     )) return;
-
-    if (isLiked == false) return;
 
     MessagingService.instance.queue(
       title: 'New likes on your profile.',
