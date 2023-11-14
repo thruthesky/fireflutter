@@ -170,7 +170,7 @@ class CommentService {
 
     if (isLiked == false) return;
 
-    if (await UserSettingService.instance.hasUserSetting(
+    if (await UserSettingService.instance.hasUserSettingId(
       otherUid: comment.uid,
       id: NotificationSettingConfig.disableNotifyOnCommentLiked,
     )) return;
