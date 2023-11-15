@@ -1,5 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/user_setting/user_setting.dart';
 import 'package:flutter/material.dart';
 
 /// Push Notification Setting
@@ -16,8 +15,7 @@ class PushNotificationSetting extends StatelessWidget {
     this.categoryId,
     required this.builder,
     this.toogleValue = true,
-  }) : assert(settingId != null || roomId != null || categoryId != null,
-            'roomId or categoryId must be not null');
+  }) : assert(settingId != null || roomId != null || categoryId != null, 'roomId or categoryId must be not null');
   final String action;
   final String? settingId;
   final String? roomId;

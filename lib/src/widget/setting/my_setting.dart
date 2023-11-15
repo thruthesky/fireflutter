@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/user_setting/user_setting.dart';
 import 'package:flutter/material.dart';
 
 class MySetting extends StatelessWidget {
@@ -30,8 +29,7 @@ class MySetting extends StatelessWidget {
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return builder(null);
         } else {
-          return builder(UserSetting.fromJson(
-              snapshot.data!.docs.first.data() as Map<String, dynamic>));
+          return builder(UserSetting.fromJson(snapshot.data!.docs.first.data() as Map<String, dynamic>));
         }
       },
     );
