@@ -32,6 +32,7 @@ class FeedListView extends StatefulWidget {
     this.emptyBuilder,
     this.query,
     this.onTap,
+    this.shrinkWrap = false,
   });
 
   final int pageSize;
@@ -52,6 +53,8 @@ class FeedListView extends StatefulWidget {
   final Query? query;
 
   final void Function(Post)? onTap;
+
+  final bool shrinkWrap;
 
   @override
   State<FeedListView> createState() => _FeedListViewState();
@@ -91,6 +94,7 @@ class _FeedListViewState extends State<FeedListView> {
         return ListView.builder(
           /// EdgeInsets.zero is important to avoid unexpected padding for sliver NestScrollView.
           padding: EdgeInsets.zero,
+          shrinkWrap: widget.shrinkWrap,
           physics: const RangeMaintainingScrollPhysics(),
           itemExtent: widget.itemExtent,
           cacheExtent: widget.cacheExtent,
@@ -102,12 +106,6 @@ class _FeedListViewState extends State<FeedListView> {
               // Tell FirebaseDatabaseQueryBuilder to try to obtain more items.
               // It is safe to call this function from within the build method.
               snapshot.fetchMore();
-            }
-            if ((!snapshot.hasMore && index + 1 == snapshot.docs.length)) {
-              // means has no more to get
-              if (widget.bottomBuilder != null) {
-                return widget.bottomBuilder!.call(context);
-              }
             }
             final post = Post.fromDocumentSnapshot(snapshot.docs[index]);
             final child = widget.itemBuilder.call(post, index);
