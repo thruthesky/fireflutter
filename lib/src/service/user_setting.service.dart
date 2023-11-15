@@ -29,7 +29,7 @@ class UserSettingService {
     required String id,
   }) async {
     DocumentSnapshot snapshot = await userSettingCol(otherUid ?? myUid!).doc(id).get();
-    if (snapshot.exists) true;
+    if (snapshot.exists) return true;
     return false;
   }
 }

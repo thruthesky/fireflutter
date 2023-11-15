@@ -22,7 +22,7 @@ class _PushPushNotificationSettingScreenState extends State<PushNotificationSett
             action: NotificationSettingConfig.notifyNewCommentsUnderMyPostsAndComments,
             toogleValue: true,
             builder: (setting) => ListTile(
-              leading: Icon(setting == null ? Icons.notifications_off : Icons.notifications_active),
+              leading: Icon(setting == null ? Icons.notifications_active : Icons.notifications_off),
               title: const Text('Receive notifications of new comments under my posts and comments'),
             ),
           ),
