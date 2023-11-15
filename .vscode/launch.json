@@ -158,6 +158,16 @@
       "deviceId": "iPad Pro"
     },
 
+    
+    {
+      "name": "GRC - Emulator - SM A045F - (J) Mackbook",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "R9ATA00LMJM"
+    },
     {
       "name": "GRC - Integration Test - iPhone 15 Pro Max",
       "request": "launch",
