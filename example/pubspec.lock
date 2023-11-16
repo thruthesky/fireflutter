@@ -153,6 +153,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.8"
+  devicelocale:
+    dependency: transitive
+    description:
+      name: devicelocale
+      sha256: c198785f937840c207bd1765769faf4fda9a611507c0f11041a860a681f3adfa
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.0"
   fake_async:
     dependency: transitive
     description:

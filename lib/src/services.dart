@@ -27,3 +27,5 @@ export 'service/comment.customize.dart';
 
 export 'service/activity_log.service.dart';
 export 'service/activity_log.customize.dart';
+
+export 'service/report.customize.dart';
