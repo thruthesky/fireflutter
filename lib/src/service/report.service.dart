@@ -4,9 +4,19 @@ import 'package:flutter/material.dart';
 
 class ReportService {
   static ReportService? _instance;
-  static ReportService get instance => _instance ?? ReportService._();
+  static ReportService get instance => _instance ??= ReportService._();
 
   ReportService._();
+
+  ReportCustomize customize = ReportCustomize();
+
+  init({
+    ReportCustomize? customize,
+  }) {
+    if (customize != null) {
+      this.customize = customize;
+    }
+  }
 
   /// Shows the Edit Post as a dialog
   ///
@@ -43,6 +53,15 @@ class ReportService {
     }
 
     if (context.mounted) {
+      if (customize.showReportDialog != null) {
+        return await customize.showReportDialog!(
+          context: context,
+          otherUid: otherUid,
+          postId: postId,
+          commentId: commentId,
+          onExists: onExists,
+        );
+      }
       return await showDialog<bool?>(
         context: context,
         builder: (context) {
@@ -77,11 +96,7 @@ class ReportService {
               ),
               TextButton(
                 onPressed: () async {
-                  await Report.create(
-                      reason: reason.text,
-                      otherUid: otherUid,
-                      postId: postId,
-                      commentId: commentId);
+                  await Report.create(reason: reason.text, otherUid: otherUid, postId: postId, commentId: commentId);
                   if (context.mounted) {
                     return Navigator.of(context).pop(true);
                   }
