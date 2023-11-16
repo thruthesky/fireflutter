@@ -62,6 +62,9 @@ class I18nTexts {
   String noFollowerYet;
   String noFollowing;
   String noFollowingYet;
+  String usersIFollow;
+  String searchResult;
+  String searchUser;
   String noStateMessage;
 
   String copyLink;
@@ -175,6 +178,9 @@ class I18nTexts {
     this.noFollowerYet = "Have not been followed by anyone, yet.",
     this.noFollowing = "Have not followed anyone, yet.",
     this.noFollowingYet = "Have not followed anyone, yet.",
+    this.usersIFollow = "Users I follow",
+    this.searchResult = "Search result",
+    this.searchUser = "Search user",
     this.noStateMessage = "No state message, yet. Create one!",
     this.copyLink = "Copy Link",
     this.copyLinkMessage = "Link copied to clipboard",

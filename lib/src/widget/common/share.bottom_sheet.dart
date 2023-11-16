@@ -39,7 +39,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
           TextField(
             controller: name,
             decoration: InputDecoration(
-              hintText: "Search user...",
+              hintText: tr.searchUser,
               prefixIcon: const Icon(Icons.search),
               border: InputBorder.none,
               filled: true,
@@ -64,19 +64,16 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
             height: sizeMd,
           ),
           StreamBuilder<String?>(
-            stream: nameChanged.stream
-                .debounceTime(const Duration(milliseconds: 500))
-                .distinct((a, b) => a == b),
+            stream: nameChanged.stream.debounceTime(const Duration(milliseconds: 500)).distinct((a, b) => a == b),
             builder: (context, snapshot) {
-              return Text(
-                  name.text.isEmpty ? "Users I follow" : "Search result");
+              // return Text(
+              //     name.text.isEmpty ? "Users I follow" : "Search result");
+              return Text(name.text.isEmpty ? tr.usersIFollow : tr.searchResult);
             },
           ),
           Expanded(
             child: StreamBuilder<String?>(
-              stream: nameChanged.stream
-                  .debounceTime(const Duration(milliseconds: 500))
-                  .distinct((a, b) => a == b),
+              stream: nameChanged.stream.debounceTime(const Duration(milliseconds: 500)).distinct((a, b) => a == b),
               builder: (context, snapshot) {
                 if (name.text.isNotEmpty) {
                   final query = userCol.where(
@@ -97,9 +94,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
                   );
                 }
                 return UserListView.builder(
-                  key: name.text.isEmpty
-                      ? const Key("followings")
-                      : const Key("search"),
+                  key: name.text.isEmpty ? const Key("followings") : const Key("search"),
                   uids: my!.followings,
                   itemBuilder: (user) {
                     if (user == null) return const SizedBox();
@@ -134,10 +129,7 @@ class _ShareBottomSheetState extends State<ShareBottomSheet> {
       onTap: () {
         // Cannot proceed because dynamic link is not working within the app.
         // https://github.com/users/thruthesky/projects/9/views/29?pane=issue&itemId=40666571
-        ChatService.instance.showChatRoom(
-            context: context,
-            user: user,
-            setMessage: widget.text ?? 'Sharing this...');
+        ChatService.instance.showChatRoom(context: context, user: user, setMessage: widget.text ?? 'Sharing this...');
       },
     );
   }
