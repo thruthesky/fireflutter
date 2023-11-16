@@ -25,7 +25,8 @@ class AdminNotificationOptions {
 }
 
 class NotificationSettingConfig {
-  static const String notifyNewCommentsUnderMyPostsAndComments = 'notifyNewCommentsUnderMyPostsAndComments';
+  static const String disableNotifyNewCommentsUnderMyPostsAndComments =
+      'disableNotifyNewCommentsUnderMyPostsAndComments';
   static const String disableNotifyOnProfileVisited = 'disableNotifyOnProfileVisited';
   static const String disableNotifyOnProfileLiked = 'disableNotifyOnProfileLiked';
   static const String disableNotifyOnPostLiked = 'disableNotifyOnPostLiked';

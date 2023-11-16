@@ -13,7 +13,6 @@ import { FcmToken } from "../interfaces/messaging.interface";
  * when user want to get notified if new comments
  *  is created under user created posts/comments
  */
-// const notifyNewCommentsUnderMyPostsAndComments = "notifyNewCommentsUnderMyPostsAndComments";
 const disableNotifyNewCommentsUnderMyPostsAndComments = "disableNotifyNewCommentsUnderMyPostsAndComments";
 
 /**
