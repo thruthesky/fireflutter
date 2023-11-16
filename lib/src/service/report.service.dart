@@ -1,5 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/model/report/report.dart';
 import 'package:flutter/material.dart';
 
 class ReportService {

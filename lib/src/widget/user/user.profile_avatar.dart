@@ -51,6 +51,7 @@ class UserProfileAvatar extends StatefulWidget {
     this.onTap,
     this.cameraOnly = false,
     this.galleryOnly = false,
+    this.progressBuilder,
   });
 
   final User user;
@@ -71,6 +72,7 @@ class UserProfileAvatar extends StatefulWidget {
   final bool galleryOnly;
   final void Function()? onUploadSuccess;
   final void Function()? onDeleteSuccess;
+  final Widget Function(double? progress)? progressBuilder;
 
   @override
   State<UserProfileAvatar> createState() => _UserAvatarState();
@@ -119,9 +121,7 @@ class _UserAvatarState extends State<UserProfileAvatar> {
             // Need to ask for permission.
             // Do we need to use permission_handler package
             // when this happens?
-            toast(
-                title: 'Permission Error',
-                message: 'User did not grant the camera permission!');
+            toast(title: 'Permission Error', message: 'User did not grant the camera permission!');
           } else {
             toast(title: 'Unknown Error', message: 'Unknown error: $e');
           }
@@ -183,8 +183,7 @@ class _UserAvatarState extends State<UserProfileAvatar> {
                     hasPhotoUrl: false,
                   );
 
-                  User.get(user.uid)
-                      .then((value) => setState(() => user = value!));
+                  User.get(user.uid).then((value) => setState(() => user = value!));
 
                   widget.onDeleteSuccess?.call();
                 },
@@ -210,15 +209,17 @@ class _UserAvatarState extends State<UserProfileAvatar> {
       left: 0,
       right: 0,
       bottom: 0,
-      child: SizedBox(
-        width: widget.size,
-        height: widget.size,
-        child: CircularProgressIndicator(
-          strokeWidth: widget.uploadStrokeWidth,
-          valueColor:
-              AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-          value: progress,
-        ),
+      child: Center(
+        child: widget.progressBuilder?.call(progress) ??
+            SizedBox(
+              width: widget.size,
+              height: widget.size,
+              child: CircularProgressIndicator(
+                strokeWidth: widget.uploadStrokeWidth,
+                valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                value: progress,
+              ),
+            ),
       ),
     );
   }

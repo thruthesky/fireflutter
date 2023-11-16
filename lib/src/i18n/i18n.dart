@@ -63,7 +63,13 @@ class I18nTexts {
   String noFollowerYet;
   String noFollowing;
   String noFollowingYet;
+  String usersIFollow;
+  String searchResult;
+  String searchUser;
   String noStateMessage;
+
+  String deletingPost;
+  String deletingPostConfirmation;
 
   String copyLink;
   String copyLinkMessage;
@@ -170,6 +176,13 @@ class I18nTexts {
   String create;
   String sendPushMessage;
 
+  // notification setting
+  String notificationSettingNewComments;
+  String notificationSettingProfileVisited;
+  String notificationSettingProfileLiked;
+  String notificationSettingPostLiked;
+  String notificationSettingCommentLiked;
+
   I18nTexts({
     this.loginFirstTitle = 'Login first',
     this.loginFirstMessage = 'Please login first.',
@@ -229,7 +242,12 @@ class I18nTexts {
     this.noFollowerYet = "Have not been followed by anyone, yet.",
     this.noFollowing = "Have not followed anyone, yet.",
     this.noFollowingYet = "Have not followed anyone, yet.",
+    this.usersIFollow = "Users I follow",
+    this.searchResult = "Search result",
+    this.searchUser = "Search user",
     this.noStateMessage = "No state message, yet. Create one!",
+    this.deletingPost = "Deleting post",
+    this.deletingPostConfirmation = "Are you sure you want to delete this post?",
     this.copyLink = "Copy Link",
     this.copyLinkMessage = "Link copied to clipboard",
     this.showMoreComments = "Show #no comments",
@@ -329,6 +347,13 @@ class I18nTexts {
     this.update = "Update",
     this.create = "Create",
     this.sendPushMessage = "Send Push Message",
+
+    // notification setting
+    this.notificationSettingNewComments = 'Receive notifications of new comments under my posts and comments',
+    this.notificationSettingProfileVisited = 'Receive notifications on profile visited',
+    this.notificationSettingProfileLiked = 'Receive notifications on profile liked',
+    this.notificationSettingPostLiked = 'Receive notifications on post liked',
+    this.notificationSettingCommentLiked = 'Receive notifications on comment liked',
   });
 
   factory I18nTexts.fromJson(Map<String, dynamic> json) => _$I18nTextsFromJson(json);
