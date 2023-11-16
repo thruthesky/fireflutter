@@ -11,3 +11,4 @@ export 'model/storage/storage.dart';
 export 'model/activity_log/activity_log.dart';
 export 'model/activity_log/activity_log.type.dart';
 export 'model/user_setting/user_setting.dart';
+export 'model/report/report.dart';

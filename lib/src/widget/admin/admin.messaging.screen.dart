@@ -311,39 +311,42 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
           'Select Platform',
           style: textStyle,
         ),
-        Row(
-          children: [
-            for (final platform in platformMenuItem.keys)
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    platformTarget = platform;
-                  });
-                },
-                child: Row(
-                  children: [
-                    Radio(
-                      value: platform,
-                      groupValue: platformTarget,
-                      onChanged: (String? value) {
-                        if (value != null) {
-                          setState(() {
-                            platformTarget = value;
-                          });
-                        }
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: sizeSm),
-                      child: Text(
-                        platformMenuItem[platform]!,
-                        style: textStyle,
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              for (final platform in platformMenuItem.keys)
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      platformTarget = platform;
+                    });
+                  },
+                  child: Row(
+                    children: [
+                      Radio(
+                        value: platform,
+                        groupValue: platformTarget,
+                        onChanged: (String? value) {
+                          if (value != null) {
+                            setState(() {
+                              platformTarget = value;
+                            });
+                          }
+                        },
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(right: sizeSm),
+                        child: Text(
+                          platformMenuItem[platform]!,
+                          style: textStyle,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ];
 
