@@ -18,8 +18,8 @@ class _PushPushNotificationSettingScreenState extends State<PushNotificationSett
       body: Column(
         children: [
           PushNotificationSetting(
-            settingId: NotificationSettingConfig.notifyNewCommentsUnderMyPostsAndComments,
-            action: NotificationSettingConfig.notifyNewCommentsUnderMyPostsAndComments,
+            settingId: NotificationSettingConfig.disableNotifyNewCommentsUnderMyPostsAndComments,
+            action: NotificationSettingConfig.disableNotifyNewCommentsUnderMyPostsAndComments,
             toogleValue: true,
             builder: (setting) => ListTile(
               leading: Icon(setting == null ? Icons.notifications_active : Icons.notifications_off),
