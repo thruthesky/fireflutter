@@ -2,7 +2,8 @@ import 'package:fireflutter/fireflutter.dart';
 
 class ActivityLogService {
   static ActivityLogService? _instance;
-  static ActivityLogService get instance => _instance ??= ActivityLogService._();
+  static ActivityLogService get instance =>
+      _instance ??= ActivityLogService._();
 
   ActivityLogService._();
 

@@ -56,11 +56,13 @@ class _CommentViewScreenState extends State<CommentViewScreen> {
           : Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, sizeMd),
+                  padding:
+                      const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, sizeMd),
                   margin: const EdgeInsets.all(sizeSm),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(sizeSm),
-                    color: Theme.of(context).colorScheme.secondary.withAlpha(20),
+                    color:
+                        Theme.of(context).colorScheme.secondary.withAlpha(20),
                   ),
                   child: Row(
                     children: [
@@ -68,7 +70,8 @@ class _CommentViewScreenState extends State<CommentViewScreen> {
                         uid: comment!.uid,
                         radius: 10,
                         size: 24,
-                        onTap: () => UserService.instance.showPublicProfileScreen(
+                        onTap: () =>
+                            UserService.instance.showPublicProfileScreen(
                           context: context,
                           uid: comment!.uid,
                         ),
@@ -84,22 +87,31 @@ class _CommentViewScreenState extends State<CommentViewScreen> {
                                 child: UserDisplayName(
                                   uid: comment!.uid,
                                   overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.labelMedium,
+                                  style:
+                                      Theme.of(context).textTheme.labelMedium,
                                 ),
                               ),
                               const SizedBox(width: sizeXs),
                               DateTimeText(
                                 dateTime: comment!.createdAt,
-                                style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11),
+                                style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                    fontSize: 11),
                               ),
                             ],
                           ),
                           // photos of the comment
-                          DisplayUploadedFiles(otherUid: comment!.uid, urls: comment!.urls),
+                          DisplayUploadedFiles(
+                              otherUid: comment!.uid, urls: comment!.urls),
                           CommentContent(
                             comment: comment!,
-                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                  color: Theme.of(context).colorScheme.onSurface,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
                                 ),
                           ),
                         ],
@@ -109,7 +121,8 @@ class _CommentViewScreenState extends State<CommentViewScreen> {
                 ),
                 ElevatedButton(
                     onPressed: () {
-                      PostService.instance.showPostViewScreen(context: context, postId: comment!.postId);
+                      PostService.instance.showPostViewScreen(
+                          context: context, postId: comment!.postId);
                     },
                     child: const Text('Open post'))
               ],

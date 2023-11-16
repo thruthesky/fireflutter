@@ -262,14 +262,19 @@ class PostService {
   /// send only when user liked the post.
   Future sendNotificationOnLike(Post post, bool isLiked) async {
     if (enableNotificationOnLike == false) return;
+
     if (isLiked == false) return;
+    if (await UserSettingService.instance.hasUserSettingId(
+      otherUid: post.uid,
+      id: NotificationSettingConfig.disableNotifyOnPostLiked,
+    )) return;
 
     MessagingService.instance.queue(
       title: "${my!.name} liked your post.",
       body: post.title,
       id: post.id,
       uids: [post.uid],
-      type: NotificationType.post.name,
+      type: NotificationType.post,
     );
   }
 }

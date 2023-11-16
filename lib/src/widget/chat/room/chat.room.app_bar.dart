@@ -20,7 +20,6 @@ class ChatRoomAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class ChatRoomAppBarState extends State<ChatRoomAppBar> {
-  List<Widget>? actions;
   Room? roomData;
   User? otherUserData;
 
@@ -41,7 +40,8 @@ class ChatRoomAppBarState extends State<ChatRoomAppBar> {
           if (snapshot.hasError) {
             return AppBar(title: Text(snapshot.error.toString()));
           }
-          if (snapshot.connectionState == ConnectionState.waiting && roomData == null) {
+          if (snapshot.connectionState == ConnectionState.waiting &&
+              roomData == null) {
             return AppBar(title: const CircularProgressIndicator());
           }
           if (snapshot.hasData) {
@@ -63,7 +63,8 @@ class ChatRoomAppBarState extends State<ChatRoomAppBar> {
               IconButton(
                 icon: const Icon(Icons.settings),
                 onPressed: () async {
-                  return ChatService.instance.openChatRoomMenuDialog(context: context, room: roomData!);
+                  return ChatService.instance.openChatRoomMenuDialog(
+                      context: context, room: roomData!);
                 },
               ),
             ],
@@ -78,7 +79,8 @@ class ChatRoomAppBarState extends State<ChatRoomAppBar> {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () async {
-              return ChatService.instance.openChatRoomMenuDialog(context: context, room: widget.room!);
+              return ChatService.instance
+                  .openChatRoomMenuDialog(context: context, room: widget.room!);
             },
           ),
         ],

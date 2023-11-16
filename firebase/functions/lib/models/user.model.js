@@ -9,7 +9,8 @@ const messaging_model_1 = require("./messaging.model");
  * when user want to get notified if new comments
  *  is created under user created posts/comments
  */
-const notifyNewCommentsUnderMyPostsAndComments = "notifyNewCommentsUnderMyPostsAndComments";
+// const notifyNewCommentsUnderMyPostsAndComments = "notifyNewCommentsUnderMyPostsAndComments";
+const disableNotifyNewCommentsUnderMyPostsAndComments = "disableNotifyNewCommentsUnderMyPostsAndComments";
 /**
  * User class
  *
@@ -66,9 +67,9 @@ class User {
      * otherwise false will be returned.
      *
      */
-    static async commentNotification(uid) {
+    static async hasDisableCommentNotification(uid) {
         const querySnapshot = await ref_1.Ref.userSettings(uid)
-            .where("action", "==", notifyNewCommentsUnderMyPostsAndComments)
+            .where("action", "==", disableNotifyNewCommentsUnderMyPostsAndComments)
             .limit(1)
             .get();
         if (querySnapshot.size == 0)

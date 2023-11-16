@@ -26,7 +26,8 @@ class PostViewTitle extends StatelessWidget {
       //     style: Theme.of(context).textTheme.titleMedium),
       child: post == null
           ? const SizedBox.shrink()
-          : PostTitle(post: post!, style: Theme.of(context).textTheme.titleMedium),
+          : PostTitle(
+              post: post!, style: Theme.of(context).textTheme.titleMedium),
     );
   }
 }

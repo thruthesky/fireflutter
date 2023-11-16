@@ -71,7 +71,8 @@ class UserListView extends StatelessWidget {
   ///   snapshot.fetchMore();
   /// }
   /// ```
-  final Widget Function(FirestoreQueryBuilderSnapshot<Object?> snapshot)? customViewBuilder;
+  final Widget Function(FirestoreQueryBuilderSnapshot<Object?> snapshot)?
+      customViewBuilder;
 
   final Axis scrollDirection;
 
@@ -113,7 +114,8 @@ class UserListView extends StatelessWidget {
           return Text('Something went wrong! ${snapshot.error}');
         }
         snapshot.docs.removeWhere((doc) => exemptedUsers.contains(doc.id));
-        snapshot.docs.removeWhere((doc) => !(User.fromDocumentSnapshot(doc).exists));
+        snapshot.docs
+            .removeWhere((doc) => !(User.fromDocumentSnapshot(doc).exists));
         if (customViewBuilder != null) return customViewBuilder!.call(snapshot);
         return ListView.separated(
           physics: physics,
@@ -137,10 +139,14 @@ class UserListView extends StatelessWidget {
             if (itemBuilder != null) return itemBuilder!.call(user, index);
             return ListTile(
               contentPadding: contentPadding,
-              title: titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
-              subtitle: subtitleBuilder?.call(user) ?? Text(user.createdAt.toString()),
-              leading: avatarBuilder?.call(user) ?? UserAvatar(user: user, size: 48),
-              trailing: trailingBuilder?.call(user) ?? const Icon(Icons.chevron_right),
+              title:
+                  titleBuilder?.call(user) ?? Text(user.toMap()[field] ?? ''),
+              subtitle: subtitleBuilder?.call(user) ??
+                  Text(user.createdAt.toString()),
+              leading:
+                  avatarBuilder?.call(user) ?? UserAvatar(user: user, size: 48),
+              trailing: trailingBuilder?.call(user) ??
+                  const Icon(Icons.chevron_right),
               onTap: () async {
                 onTap?.call(user);
               },
@@ -183,7 +189,8 @@ class UserListView extends StatelessWidget {
                   title: Text(user.getDisplayName),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
-                    UserService.instance.showPublicProfileScreen(context: context, user: user);
+                    UserService.instance
+                        .showPublicProfileScreen(context: context, user: user);
                   },
                 );
           },

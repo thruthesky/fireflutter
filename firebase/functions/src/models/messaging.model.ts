@@ -94,15 +94,27 @@ export class Messaging {
     }
 
     let uids: string[] = [];
-
     // commentCreate get post and patch data with category and title.
     if (data.action == EventName.commentCreate && data.postId) {
       const post = await Post.get(data.postId);
-      uids.push(post.uid); // post owner
       data.categoryId = post.categoryId;
       data.title = post.deleted == true ? "Deleted post..." : post.title ?? "Comment on post...";
       console.log("comment::post::", JSON.stringify(post));
       console.log("comment::data::", JSON.stringify(data));
+
+
+      // / comment within comments then the parent and ancestors comment owner will get notification.
+      // / Get ancestor's uid
+      // and remove uid who didn't subscribe for new comment.
+      if (data.id) {
+        const ancestors = await Comment.getAncestorsUid(data.id, data.uid);
+        console.log("get::ancestors::", ancestors);
+        ancestors.push(post.uid); // add post owner
+
+        // Remove ancestors/post author who turn off comment notification
+        uids = await this.getNewCommentNotificationUids(ancestors);
+        console.log("after removing not subscribers::", uids);
+      }
     }
 
 
@@ -126,20 +138,6 @@ export class Messaging {
       //
     }
 
-
-    // / comment within comments then the parent and ancestors comment owner will get notification.
-    // / Get ancestor's uid
-    // and remove uid who didn't subscribe for new comment.
-    if (data.action == EventName.commentCreate && data.id) {
-      const ancestors = await Comment.getAncestorsUid(data.id, data.uid);
-      console.log("get::ancestors::", ancestors);
-
-      // Remove ancestors who didn't subscribe for new comment.
-      const subscribers = await this.getNewCommentNotificationUids(ancestors);
-      console.log("after removing not subscribers::", subscribers);
-
-      uids = [...uids, ...subscribers];
-    }
 
     // console.log("action:: ", data.action, "data.roomId:: ", data.roomId, 'data.uids.lenght::', data.uids?.length);
     if (data.action == EventName.chatCreate && data.roomId && data.uids?.length) {
@@ -493,8 +491,8 @@ export class Messaging {
 
   /**
    * Returns an array of uid of the users
-   *  (from the input uids) who has subscribed for new comment.
-   * The uids of the users who didn't subscribe
+   *  (from the input uids) who didnt turn off for new comment.
+   * The uids of the users who turn off comment notification
    *  will be removed on the returned array.
    * @param uids array of uid
    * @return array of uid
@@ -505,15 +503,18 @@ export class Messaging {
     if (uids.length === 0) return [];
     const promises: Promise<boolean>[] = [];
     for (const uid of uids) {
-      promises.push(User.commentNotification(uid));
+      // get user settings who turn off comment notification
+      promises.push(User.hasDisableCommentNotification(uid));
     }
     const results = await Promise.all(promises);
 
     const re = [];
-    // dont add user who has turn off subscription
+    // add user who didnt turn off the notification
     for (let i = 0; i < results.length; i++) {
-      if (results[i]) re.push(uids[i]);
+      if (results[i] == false) re.push(uids[i]);
     }
+
+    // uids who didnt turn off the notification
     return re;
   }
 

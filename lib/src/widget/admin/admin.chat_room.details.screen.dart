@@ -21,7 +21,8 @@ class AdminChatRoomDetailsScreen extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
-              child: Text('Room ID: ${room.roomId}', style: const TextStyle(fontWeight: FontWeight.w800)),
+              child: Text('Room ID: ${room.roomId}',
+                  style: const TextStyle(fontWeight: FontWeight.w800)),
             ),
             if (room.name.isNotEmpty)
               Padding(
@@ -30,7 +31,8 @@ class AdminChatRoomDetailsScreen extends StatelessWidget {
               ),
             Padding(
               padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
-              child: Text('Last Activity: ${room.lastMessage?.createdAt ?? room.createdAt}'),
+              child: Text(
+                  'Last Activity: ${room.lastMessage?.createdAt ?? room.createdAt}'),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),

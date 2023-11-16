@@ -31,6 +31,7 @@ class I18nTexts {
   String cancel;
   String reply;
   String like;
+  String liked;
   String likes;
   String favorite;
   String unfavorite;
@@ -91,6 +92,7 @@ class I18nTexts {
   String createUserLog;
   String updateUserLog;
   String roomOpenLog;
+  String roomOpenGroupLog;
   String likedUserLog;
   String unlikedUserLog;
   String followedUserLog;
@@ -142,6 +144,7 @@ class I18nTexts {
     this.cancel = "Cancel",
     this.reply = "Reply",
     this.like = "Like",
+    this.liked = "Liked",
     this.likes = "Likes(#no)",
     this.favorite = "Favorite",
     this.unfavorite = "Unfavorite",
@@ -179,7 +182,7 @@ class I18nTexts {
     this.askOpenLink = "Do you want to open this link?",
     this.readLess = "read less",
     this.readMore = "read more",
-    this.noOfLikes = "Likes #no",
+    this.noOfLikes = "#no likes",
     this.howAreYouToday = "How are you today?",
     this.stateMessage = 'State Message',
     this.share = "Share",
@@ -201,7 +204,8 @@ class I18nTexts {
     this.followedUserLog = "#a followed #b",
     this.unfollowedUserLog = "#a unfollowed #b",
     this.viewProfileUserLog = "#a viewed #b's profile",
-    this.roomOpenLog = "#a opened a chat room",
+    this.roomOpenLog = "#a opened a chat room with #b",
+    this.roomOpenGroupLog = "#a opened a chat group id #b",
 
     /// activity_log post
     this.createPostLog = "#a created a post",

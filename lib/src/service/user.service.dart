@@ -386,46 +386,57 @@ class UserService {
     required BuildContext context,
     String? uid,
     User? user,
-    bool notify = true,
   }) {
     final String otherUid = uid ?? user!.uid;
     final now = DateTime.now();
 
     /// Dynamic link is especially for users who are not install and not signed users.
-    if (loggedIn && myUid != otherUid) {
-      if (enableNoOfProfileView) {
-        profileViewHistoryDoc(myUid: myUid!, otherUid: otherUid).set(
-          {
-            "uid": otherUid,
-            "seenBy": myUid,
-            "type": my!.type,
-            "lastViewdAt": FieldValue.serverTimestamp(),
-            "year": now.year,
-            "month": now.month,
-            "day": now.day,
-          },
-          SetOptions(merge: true),
-        );
-      }
-      if (enableMessagingOnPublicProfileVisit && notify) {
-        MessagingService.instance.queue(
-          title: "Your profile was visited.",
-          body: "${my!.name} visit your profile",
-          id: myUid,
-          uids: [otherUid],
-          type: NotificationType.user.name,
-        );
-      }
+    if (loggedIn && myUid != otherUid && enableNoOfProfileView) {
+      profileViewHistoryDoc(myUid: myUid!, otherUid: otherUid).set(
+        {
+          "uid": otherUid,
+          "seenBy": myUid,
+          "type": my!.type,
+          "lastViewdAt": FieldValue.serverTimestamp(),
+          "year": now.year,
+          "month": now.month,
+          "day": now.day,
+        },
+        SetOptions(merge: true),
+      );
     }
 
     /// log when user visit other user profile
     activityLogUserViewProfile(otherUid: otherUid);
 
-    return customize.showPublicProfileScreen?.call(context, uid: uid, user: user) ??
-        showGeneralDialog(
-          context: context,
-          pageBuilder: ($, _, __) => PublicProfileScreen(uid: uid, user: user),
+    if (customize.showPublicProfileScreen != null) {
+      return customize.showPublicProfileScreen!.call(context, uid: uid, user: user);
+    }
+
+    /// send notification by default when user visit other user profile
+    /// disable notification when `disableNotifyOnProfileVisited` is set on user setting
+    () async {
+      UserSetting? otherUserSettings = await UserSettingService.instance
+          .get(uid: otherUid, id: NotificationSettingConfig.disableNotifyOnProfileVisited);
+
+      /// if user setting has `disableNotifyOnProfileVisited` set then dont send notification
+      if (otherUserSettings != null) return;
+
+      if (loggedIn && myUid != otherUid) {
+        MessagingService.instance.queue(
+          title: "Your profile was visited.",
+          body: "${my!.name} visit your profile",
+          id: myUid,
+          uids: [otherUid],
+          type: NotificationType.user,
         );
+      }
+    }();
+
+    return showGeneralDialog(
+      context: context,
+      pageBuilder: ($, _, __) => PublicProfileScreen(uid: uid, user: user),
+    );
   }
 
   showPushNotificationSettingScreen({
@@ -461,12 +472,17 @@ class UserService {
     if (enableNotificationOnLike == false) return;
     if (isLiked == false) return;
 
+    if (await UserSettingService.instance.hasUserSettingId(
+      otherUid: user.uid,
+      id: NotificationSettingConfig.disableNotifyOnProfileLiked,
+    )) return;
+
     MessagingService.instance.queue(
       title: 'New likes on your profile.',
       body: "${my!.name} liked your profile",
       id: myUid,
       uids: [user.uid],
-      type: NotificationType.user.name,
+      type: NotificationType.user,
     );
   }
 } // EO UserService

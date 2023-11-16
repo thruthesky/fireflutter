@@ -7,6 +7,9 @@ enum DateTimeTextType {
 
   /// 2023-03-03 or 00:00
   short,
+
+  /// now, 1s, 3s, 1d, 3Mo, 1y
+  abbreviated,
 }
 
 /// Convert DateTime to a readable text
@@ -16,22 +19,23 @@ class DateTimeText extends StatelessWidget {
     super.key,
     required this.dateTime,
     this.type = DateTimeTextType.ago,
-    this.style =
-        const TextStyle(fontWeight: FontWeight.w500, color: Colors.black45),
+    this.style,
   });
 
   final DateTime dateTime;
   final DateTimeTextType type;
-  final TextStyle style;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       switch (type) {
         DateTimeTextType.short => dateTimeShort(dateTime),
+        DateTimeTextType.abbreviated => dateTimeAbbreviated(dateTime),
         _ => dateTimeAgo(dateTime),
       },
-      style: style,
+      style: style ??
+          const TextStyle(fontWeight: FontWeight.w500, color: Colors.black45),
     );
   }
 }

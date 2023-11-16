@@ -13,7 +13,8 @@ part 'room.g.dart';
 /// Don't update the property directly. The property is read-only and if you want to apply the changes, listen to the stream of the chat room document.
 @JsonSerializable()
 class Room {
-  static CollectionReference get col => FirebaseFirestore.instance.collection('chats');
+  static CollectionReference get col =>
+      FirebaseFirestore.instance.collection('chats');
 
   static DocumentReference doc(roomId) => col.doc(roomId);
 
@@ -135,7 +136,9 @@ class Room {
     List<String> users = [myUid!];
     if (isSingleChat) users.add(otherUserUid);
 
-    final roomId = isSingleChat ? ChatService.instance.getSingleChatRoomId(otherUserUid) : chatCol.doc().id;
+    final roomId = isSingleChat
+        ? ChatService.instance.getSingleChatRoomId(otherUserUid)
+        : chatCol.doc().id;
 
     // room data
     final roomData = toCreate(
@@ -145,7 +148,8 @@ class Room {
       group: !isSingleChat,
       open: open,
       users: users,
-      maximumNoOfUsers: maximumNoOfUsers ?? (isSingleChat ? 2 : ChatService.instance.maximumNoOfUsers),
+      maximumNoOfUsers: maximumNoOfUsers ??
+          (isSingleChat ? 2 : ChatService.instance.maximumNoOfUsers),
     );
 
     // create
@@ -155,7 +159,9 @@ class Room {
     await ChatService.instance.sendProtocolMessage(
       room: Room.fromJson(roomData),
       protocol: Protocol.chatRoomCreated.name,
-      text: isSingleChat ? tr.chatSingleRoomCreateDialog : tr.chatRoomCreateDialog,
+      text: isSingleChat
+          ? tr.chatSingleRoomCreateDialog
+          : tr.chatRoomCreateDialog,
     );
 
     return Room.fromJson(roomData);
@@ -187,7 +193,8 @@ class Room {
   }
 
   String get otherUserUid {
-    assert(users.length == 2 && group == false, "This is not a single chat room");
+    assert(
+        users.length == 2 && group == false, "This is not a single chat room");
     // This condition checks if I am chatting to myself.
     if (users.first == users.last) return users.first;
     return ChatService.instance.getOtherUserUid(users);
@@ -233,7 +240,7 @@ class Room {
     });
   }
 
-  String get lastMessageTime {
+  String get lastMessageTimeText {
     if (lastMessage == null) return '';
     final dt = lastMessage!.createdAt;
 
@@ -243,5 +250,10 @@ class Room {
     } else {
       return DateFormat('yy.MM.dd').format(dt);
     }
+  }
+
+  DateTime get lastMessageTime {
+    if (lastMessage == null) return createdAt;
+    return lastMessage!.createdAt;
   }
 }

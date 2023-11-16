@@ -170,24 +170,36 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
                 Row(
                   children: [
                     if (report.type == 'user')
-                      ElevatedButton(
-                        onPressed: () => showDisableDialog(report),
-                        child: const Text('Disable User'),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () => showDisableDialog(report),
+                          child: const Text('Disable User'),
+                        ),
                       ),
                     if (report.type == 'post')
-                      ElevatedButton(
-                        onPressed: () => showDeleteDialog(report),
-                        child: const Text('Delete Post'),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () => showDeleteDialog(report),
+                          child: const Text('Delete Post'),
+                        ),
                       ),
                     if (report.type == 'comment')
-                      ElevatedButton(
-                        onPressed: () => showDeleteDialog(report),
-                        child: const Text('Delete Comment'),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () => showDeleteDialog(report),
+                          child: const Text('Delete Comment'),
+                        ),
                       ),
                     const SizedBox(width: sizeSm),
-                    ElevatedButton(
-                      onPressed: () => showResolveDialog(report),
-                      child: const Text('Mark as Resolved'),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => showResolveDialog(report),
+                        child: const Center(
+                            child: Text(
+                          'Mark as Resolved',
+                          textAlign: TextAlign.center,
+                        )),
+                      ),
                     ),
                   ],
                 ),

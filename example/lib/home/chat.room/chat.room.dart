@@ -16,7 +16,8 @@ class _ChatRoomState extends State<ChatRoom> {
   @override
   void initState() {
     super.initState();
-    ChatService.instance.customize.chatRoomAppBarBuilder = ({room, user}) => customAppBar(context, room);
+    ChatService.instance.customize.chatRoomAppBarBuilder =
+        ({room, user}) => customAppBar(context, room);
   }
 
   @override

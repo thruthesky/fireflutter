@@ -159,6 +159,15 @@
     },
 
     {
+      "name": "GRC - Emulator - SM A045F - (J) Mackbook",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "R9ATA00LMJM"
+    },
+    {
       "name": "GRC - Integration Test - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
@@ -257,7 +266,7 @@
       "cwd": "apps/grc",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "deviceId": "798DF7C4-34CF-42DD-A1CE-8B183C27F50C"
+      "deviceId": "9538AD08-48B3-43A8-B848-31CC488FE3E9"
     },
     {
       "name": "GRC - Emulator - debug (C)",
@@ -339,8 +348,9 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "emulator-5554"
-    } ,{
-      "name": "GRC - Iphone SE (N)",
+    },
+    {
+      "name": "GRC - Iphone SE (3rd generation) (N)",
       "request": "launch",
       "type": "dart",
       "cwd": "apps/grc",

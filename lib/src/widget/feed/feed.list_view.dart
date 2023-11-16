@@ -3,6 +3,21 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
+/// FeedLsitView
+///
+/// Displays feed list with pagination.
+///
+/// ```dart
+/// FeedListView(
+///  pageSize: 20,
+/// itemBuilder: (feed, index) {
+///  return ListTile(
+///   title: Text(feed.title),
+///  subtitle: Text(feed.body),
+/// );
+/// },
+/// );
+/// ```
 class FeedListView extends StatefulWidget {
   const FeedListView({
     super.key,
@@ -17,13 +32,18 @@ class FeedListView extends StatefulWidget {
     this.emptyBuilder,
     this.query,
     this.onTap,
+    this.shrinkWrap = false,
   });
 
   final int pageSize;
   final double? itemExtent;
   final double? cacheExtent;
   final Widget Function(Post feed, int index) itemBuilder;
-  final Widget Function(Post feed, bool isFullPage)? topBuilder;
+
+  /// Removed the isFullPage because there was two bugs.
+  /// 1. the value is not correct.
+  /// 2. it's not working as expected. It provides more information than what is needed.
+  final Widget Function(Post feed)? topBuilder;
 
   final Widget Function(BuildContext, Post)? avatarBuilder;
   final Widget Function(BuildContext, Post)? textBuilder;
@@ -34,13 +54,13 @@ class FeedListView extends StatefulWidget {
 
   final void Function(Post)? onTap;
 
+  final bool shrinkWrap;
+
   @override
   State<FeedListView> createState() => _FeedListViewState();
 }
 
 class _FeedListViewState extends State<FeedListView> {
-  final scrollBarControlller = ScrollController();
-
   @override
   void initState() {
     super.initState();
@@ -50,12 +70,6 @@ class _FeedListViewState extends State<FeedListView> {
         setState(() {});
       }
     });
-  }
-
-  @override
-  void dispose() {
-    scrollBarControlller.dispose();
-    super.dispose();
   }
 
   @override
@@ -73,42 +87,39 @@ class _FeedListViewState extends State<FeedListView> {
         }
         if (snapshot.docs.isEmpty) {
           // means has no more to get
-          if (widget.emptyBuilder != null) return widget.emptyBuilder!.call(context);
+          if (widget.emptyBuilder != null) {
+            return widget.emptyBuilder!.call(context);
+          }
         }
-        return Scrollbar(
-          controller: scrollBarControlller,
-          child: ListView.builder(
-            controller: scrollBarControlller,
-            physics: const RangeMaintainingScrollPhysics(),
-            itemExtent: widget.itemExtent,
-            cacheExtent: widget.cacheExtent,
-            itemCount: snapshot.docs.length,
-            itemBuilder: (context, index) {
-              // if we reached the end of the currently obtained items, we try to
-              // obtain more items
-              if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
-                // Tell FirebaseDatabaseQueryBuilder to try to obtain more items.
-                // It is safe to call this function from within the build method.
-                snapshot.fetchMore();
-              }
-              if ((!snapshot.hasMore && index + 1 == snapshot.docs.length)) {
-                // means has no more to get
-                if (widget.bottomBuilder != null) return widget.bottomBuilder!.call(context);
-              }
-              final post = Post.fromDocumentSnapshot(snapshot.docs[index]);
-              final child = widget.itemBuilder.call(post, index);
-
-              if (widget.topBuilder != null && index == 0) {
-                return Column(
-                  children: [
-                    widget.topBuilder!.call(post, widget.pageSize <= snapshot.docs.length),
-                    child,
-                  ],
-                );
-              }
-              return child;
-            },
-          ),
+        return ListView.builder(
+          /// EdgeInsets.zero is important to avoid unexpected padding for sliver NestScrollView.
+          padding: EdgeInsets.zero,
+          shrinkWrap: widget.shrinkWrap,
+          physics: const RangeMaintainingScrollPhysics(),
+          itemExtent: widget.itemExtent,
+          cacheExtent: widget.cacheExtent,
+          itemCount: snapshot.docs.length,
+          itemBuilder: (context, index) {
+            // if we reached the end of the currently obtained items, we try to
+            // obtain more items
+            if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+              // Tell FirebaseDatabaseQueryBuilder to try to obtain more items.
+              // It is safe to call this function from within the build method.
+              snapshot.fetchMore();
+            }
+            final post = Post.fromDocumentSnapshot(snapshot.docs[index]);
+            final child = widget.itemBuilder.call(post, index);
+            if (widget.topBuilder != null && index == 0) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  widget.topBuilder!.call(post),
+                  child,
+                ],
+              );
+            }
+            return child;
+          },
         );
       },
     );

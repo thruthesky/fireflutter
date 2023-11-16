@@ -31,7 +31,8 @@ class AdminCategoryListScreen extends StatelessWidget {
                 context,
                 success: (category) {
                   Navigator.pop(context);
-                  CategoryService.instance.showUpdateDialog(context, category.id);
+                  CategoryService.instance
+                      .showUpdateDialog(context, category.id);
                 },
               );
             },

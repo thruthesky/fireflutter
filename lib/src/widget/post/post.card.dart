@@ -61,7 +61,8 @@ class PostCard extends StatefulWidget {
     /// - Show more comments button
     this.customFooterBuilder,
     this.headerPadding = const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
-    this.bottomButtonPadding = const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeSm),
+    this.bottomButtonPadding =
+        const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeSm),
     this.onCommentSnapshot,
     this.initalCommentSnapShot,
   });
@@ -86,8 +87,10 @@ class PostCard extends StatefulWidget {
   final Widget Function(Post post)? shareButtonBuilder;
   final Widget Function(Widget content)? customContainer;
   final Widget Function(BuildContext context, Post post)? customHeaderBuilder;
-  final Widget Function(BuildContext context, Post post)? customMainContentBuilder;
-  final Widget Function(BuildContext context, Post post)? customMiddleContentBuilder;
+  final Widget Function(BuildContext context, Post post)?
+      customMainContentBuilder;
+  final Widget Function(BuildContext context, Post post)?
+      customMiddleContentBuilder;
   final Widget Function(BuildContext context, Post post)? customActionsBuilder;
   final Widget Function(BuildContext context, Post post)? customFooterBuilder;
 
@@ -102,10 +105,6 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
-  // final _commentBoxKey = GlobalKey();
-  // final _boxConstraintsKey = GlobalKey();
-  // BoxConstraints _commentBoxConstraints = const BoxConstraints(minHeight: 500);
-
   QuerySnapshot<Object?>? _commentSnapshot;
 
   @override
@@ -116,7 +115,7 @@ class _PostCardState extends State<PostCard> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.customContainer?.call(content(context, widget.post)) ??
+    return widget.customContainer?.call(_content(context, widget.post)) ??
         Card(
           color: widget.color,
           shadowColor: widget.shadowColor,
@@ -127,24 +126,29 @@ class _PostCardState extends State<PostCard> {
           margin: widget.margin,
           clipBehavior: widget.clipBehavior,
           semanticContainer: widget.semanticContainer,
-          child: content(context, widget.post),
+          child: _content(context, widget.post),
         );
   }
 
-  Widget content(BuildContext context, Post post) {
+  Widget _content(BuildContext context, Post post) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // custom Header
-        widget.customHeaderBuilder?.call(context, post) ?? defaultHeader(context, post),
+        widget.customHeaderBuilder?.call(context, post) ??
+            defaultHeader(context, post),
         // custom main content
-        widget.customMainContentBuilder?.call(context, post) ?? defaultMainContent(context, post),
+        widget.customMainContentBuilder?.call(context, post) ??
+            defaultMainContent(context, post),
         // Custom Middle content
-        widget.customMiddleContentBuilder?.call(context, post) ?? const SizedBox.shrink(),
+        widget.customMiddleContentBuilder?.call(context, post) ??
+            const SizedBox.shrink(),
         // custom actions Builder
-        widget.customActionsBuilder?.call(context, post) ?? defaultActions(context, post),
+        widget.customActionsBuilder?.call(context, post) ??
+            defaultActions(context, post),
         // custom footer builder
-        widget.customFooterBuilder?.call(context, post) ?? defaultFooter(context, post),
+        widget.customFooterBuilder?.call(context, post) ??
+            defaultFooter(context, post),
       ],
     );
   }
@@ -154,7 +158,8 @@ class _PostCardState extends State<PostCard> {
       children: [
         GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () => UserService.instance.showPublicProfileScreen(context: context, uid: post.uid),
+          onTap: () => UserService.instance
+              .showPublicProfileScreen(context: context, uid: post.uid),
           child: Padding(
             padding: widget.headerPadding,
             child: Row(
@@ -176,14 +181,21 @@ class _PostCardState extends State<PostCard> {
                       children: [
                         DateTimeText(
                             dateTime: post.createdAt,
-                            style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11)),
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontSize: 11)),
                         DatabaseCount(
-                          path: pathSeenBy(post.id), // 'posts/${post.id}/seenBy',
+                          path:
+                              pathSeenBy(post.id), // 'posts/${post.id}/seenBy',
                           builder: (n) => n < 2
                               ? const SizedBox.shrink()
                               : Text(
                                   " | Views: $n",
-                                  style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11),
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                      fontSize: 11),
                                 ),
                         ),
                       ],
@@ -199,13 +211,25 @@ class _PostCardState extends State<PostCard> {
           key: const Key('PostCardPopupMenuButton'),
           icon: const Icon(Icons.more_vert),
           itemBuilder: (context) => [
-            const PopupMenuItem(key: Key('PostCardPopUpReplyButton'), value: "reply", child: Text("Reply")),
+            const PopupMenuItem(
+                key: Key('PostCardPopUpReplyButton'),
+                value: "reply",
+                child: Text("Reply")),
             if (post.isMine) ...[
-              PopupMenuItem(key: const Key('PostCardPopUpEditButton'), value: "edit", child: Text(tr.edit)),
-              PopupMenuItem(key: const Key('PostCardPopUpDeleteButton'), value: "delete", child: Text(tr.delete)),
+              PopupMenuItem(
+                  key: const Key('PostCardPopUpEditButton'),
+                  value: "edit",
+                  child: Text(tr.edit)),
+              PopupMenuItem(
+                  key: const Key('PostCardPopUpDeleteButton'),
+                  value: "delete",
+                  child: Text(tr.delete)),
             ],
             if (!post.isMine) ...[
-              const PopupMenuItem(key: Key('PostCardPopUpReportButton'), value: "report", child: Text("Report")),
+              const PopupMenuItem(
+                  key: Key('PostCardPopUpReportButton'),
+                  value: "report",
+                  child: Text("Report")),
               PopupMenuItem(
                 key: const Key('PostCardPopUpBlockButton'),
                 value: 'block',
@@ -223,18 +247,23 @@ class _PostCardState extends State<PostCard> {
           ],
           onSelected: (value) async {
             if (value == "reply") {
-              CommentService.instance.showCommentEditBottomSheet(context, post: post);
+              CommentService.instance
+                  .showCommentEditBottomSheet(context, post: post);
             } else if (value == "delete") {
               final re = await confirm(
-                  context: context, title: 'Deleting Post', message: 'Are you sure you want to delete this?');
+                  context: context,
+                  title: 'Deleting Post',
+                  message: 'Are you sure you want to delete this?');
               if (re == true) {
-                await post.delete(deletedReason: 'This post has been deleted by user.');
+                await post.delete(
+                    deletedReason: 'This post has been deleted by user.');
                 toast(title: tr.delete, message: tr.delete);
               }
             } else if (value == "edit") {
               PostService.instance.showEditScreen(context, post: post);
             } else if (value == 'report') {
-              ReportService.instance.showReportDialog(context: context, postId: post.id);
+              ReportService.instance
+                  .showReportDialog(context: context, postId: post.id);
             } else if (value == 'block') {
               final blocked = my!.hasBlocked(post.uid);
               if (blocked) {
@@ -259,14 +288,16 @@ class _PostCardState extends State<PostCard> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if ((post.hasPhoto || post.youtubeId.isNotEmpty) && my?.hasBlocked(post.uid) != true)
+        if ((post.hasPhoto || post.youtubeId.isNotEmpty) &&
+            my?.hasBlocked(post.uid) != true)
           Padding(
             padding: const EdgeInsets.only(top: sizeSm),
             child: CarouselView(
               widgets: [
                 if (post.youtubeId.isNotEmpty)
                   GestureDetector(
-                    onTap: () => PostService.instance.showPreview(context, post, index: 0),
+                    onTap: () => PostService.instance
+                        .showPreview(context, post, index: 0),
                     child: YouTubeThumbnail(
                       youtubeId: post.youtubeId,
                       stackFit: StackFit.passthrough,
@@ -284,12 +315,14 @@ class _PostCardState extends State<PostCard> {
                           onTap: () => PostService.instance.showPreview(
                             context,
                             post,
-                            index: post.youtubeId.isNotEmpty ? e.key + 1 : e.key,
+                            index:
+                                post.youtubeId.isNotEmpty ? e.key + 1 : e.key,
                           ),
                           child: CachedNetworkImage(
-                            imageUrl: e.value,
+                            imageUrl: e.value.thumbnail,
                             fit: BoxFit.cover,
-                            placeholder: (context, url) => const SizedBox(height: 400),
+                            placeholder: (context, url) =>
+                                const SizedBox.shrink(),
                           ),
                         ),
                       )
@@ -303,7 +336,8 @@ class _PostCardState extends State<PostCard> {
           Container(
             padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
             color: widget.contentBackground,
-            child: PostTitle(post: post, style: Theme.of(context).textTheme.titleMedium),
+            child: PostTitle(
+                post: post, style: Theme.of(context).textTheme.titleMedium),
           ),
 
         /// post content
@@ -329,29 +363,38 @@ class _PostCardState extends State<PostCard> {
             children: [
               IconButton(
                   key: const Key('PostCardCommentButton'),
-                  onPressed: () => CommentService.instance.showCommentEditBottomSheet(context, post: post),
+                  onPressed: () => CommentService.instance
+                      .showCommentEditBottomSheet(context, post: post),
                   icon: const Icon(Icons.reply)),
               Database(
                 path: pathPostLikedBy(post.id),
                 builder: (v, p) => IconButton(
                   key: const Key('PostCardLikeButton'),
                   onPressed: () => post.like(),
-                  icon: Icon(v != null ? Icons.favorite : Icons.favorite_outline),
-                  color:
-                      v != null ? Theme.of(context).colorScheme.tertiary.tone(50).saturation(isDark ? 60 : 50) : null,
+                  icon:
+                      Icon(v != null ? Icons.favorite : Icons.favorite_outline),
+                  color: v != null
+                      ? Theme.of(context)
+                          .colorScheme
+                          .tertiary
+                          .tone(50)
+                          .saturation(isDark ? 60 : 50)
+                      : null,
                 ),
               ),
               FavoriteButton(
                 key: const Key('PostCardFavoriteButton'),
                 postId: post.id,
-                builder: (re) => Icon(re ? Icons.bookmark : Icons.bookmark_border),
+                builder: (re) =>
+                    Icon(re ? Icons.bookmark : Icons.bookmark_border),
                 onChanged: (re) => toast(
                   title: re ? tr.favorite : tr.unfavorite,
                   message: re ? tr.favoriteMessage : tr.unfavoriteMessage,
                 ),
               ),
               widget.shareButtonBuilder?.call(post) ??
-                  PostService.instance.customize.shareButtonBuilder?.call(post) ??
+                  PostService.instance.customize.shareButtonBuilder
+                      ?.call(post) ??
                   const SizedBox.shrink(),
             ],
           ),
@@ -400,9 +443,11 @@ class _PostCardState extends State<PostCard> {
                 TextButton(
                   key: const Key('PostCardShowMoreCommentsButton'),
                   onPressed: () {
-                    CommentService.instance.showCommentListBottomSheet(context, post);
+                    CommentService.instance
+                        .showCommentListBottomSheet(context, post);
                   },
-                  child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
+                  child: Text(tr.showMoreComments
+                      .replaceAll("#no", post.noOfComments.toString())),
                 ),
               ],
             ),
@@ -420,7 +465,8 @@ class _PostCardState extends State<PostCard> {
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 dog(snapshot.error.toString());
-                return Text('Something went wrong; ${snapshot.error.toString()}');
+                return Text(
+                    'Something went wrong; ${snapshot.error.toString()}');
               }
               if (snapshot.hasData) {
                 _commentSnapshot = snapshot.data;
@@ -431,12 +477,15 @@ class _PostCardState extends State<PostCard> {
                   children.add(
                     CommentOneLineListTile(
                       key: ValueKey(comment.id),
-                      padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
+                      padding:
+                          const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
                       contentMargin: const EdgeInsets.only(bottom: 8),
-                      contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
+                      contentBorderRadius:
+                          const BorderRadius.all(Radius.circular(8)),
                       post: post,
                       comment: comment,
-                      onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
+                      onTapContent: () => CommentService.instance
+                          .showCommentListBottomSheet(context, post),
                     ),
                   );
                 }

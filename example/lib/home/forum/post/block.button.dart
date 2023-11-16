@@ -14,7 +14,8 @@ class BlockUnblock extends StatelessWidget {
     return TextButton(
       style: ButtonStyle(
         textStyle: MaterialStateTextStyle.resolveWith(
-          (states) => const TextStyle(fontWeight: FontWeight.bold, fontSize: sizeXs + 2),
+          (states) => const TextStyle(
+              fontWeight: FontWeight.bold, fontSize: sizeXs + 2),
         ),
         minimumSize: const MaterialStatePropertyAll(
           Size(sizeSm, sizeXs),
@@ -24,7 +25,9 @@ class BlockUnblock extends StatelessWidget {
         final result = await toggle(
           pathBlock(snapshot.data!.uid),
         );
-        toast(title: result ? 'Blocked' : 'Unblocked', message: "User has ${result ? 'Blocked' : 'Unblocked'}");
+        toast(
+            title: result ? 'Blocked' : 'Unblocked',
+            message: "User has ${result ? 'Blocked' : 'Unblocked'}");
       },
       child: Database(
         path: pathBlock(snapshot.data!.uid),

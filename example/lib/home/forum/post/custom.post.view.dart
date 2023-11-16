@@ -75,7 +75,8 @@ class CustomPostViewScreen extends StatelessWidget {
                       ),
                     ),
                     // BLOCK / UNBLOCK HERE
-                    if (snapshot.data!.uid != myUid) BlockUnblock(snapshot: snapshot),
+                    if (snapshot.data!.uid != myUid)
+                      BlockUnblock(snapshot: snapshot),
                   ],
                 ),
               ),
@@ -91,7 +92,8 @@ class CustomPostViewScreen extends StatelessWidget {
           const Spacer(),
           if (snapshot.data!.uid == myUid)
             IconButton(
-              onPressed: () => PostService.instance.showEditScreen(context, categoryId: post.categoryId, post: post),
+              onPressed: () => PostService.instance.showEditScreen(context,
+                  categoryId: post.categoryId, post: post),
               icon: const FaIcon(FontAwesomeIcons.pen),
             )
           else
@@ -124,11 +126,13 @@ class CustomPostViewScreen extends StatelessWidget {
       ],
       onSelected: (value) async {
         if (value == "reply") {
-          CommentService.instance.showCommentEditBottomSheet(context, post: post);
+          CommentService.instance
+              .showCommentEditBottomSheet(context, post: post);
         } else if (value == "edit") {
           PostService.instance.showEditScreen(context, post: post);
         } else if (value == 'report') {
-          ReportService.instance.showReportDialog(context: context, postId: post.id);
+          ReportService.instance
+              .showReportDialog(context: context, postId: post.id);
         } else if (value == 'block') {
           final blocked = my!.hasBlocked(post.uid);
           if (blocked) {

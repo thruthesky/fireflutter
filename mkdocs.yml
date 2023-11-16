@@ -1,0 +1,22 @@
+site_name: FireFlutter
+theme:
+  name: material
+  features:
+    - content.code.copy # 복사 버튼 표시
+
+extra:
+  social:
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/thruthesky/test
+
+copyright: Copyright &copy; 2020 - 2023 Withcenter, Inc.
+
+
+markdown_extensions: # 코드 하이라이트
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences

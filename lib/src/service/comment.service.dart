@@ -167,14 +167,20 @@ class CommentService {
   /// send only when user liked the comment.
   Future sendNotificationOnLike(Comment comment, bool isLiked) async {
     if (enableNotificationOnLike == false) return;
+
     if (isLiked == false) return;
+
+    if (await UserSettingService.instance.hasUserSettingId(
+      otherUid: comment.uid,
+      id: NotificationSettingConfig.disableNotifyOnCommentLiked,
+    )) return;
 
     MessagingService.instance.queue(
       title: "${my!.name} liked your comment",
       body: comment.content,
       id: comment.postId,
       uids: [comment.uid],
-      type: NotificationType.post.name,
+      type: NotificationType.post,
     );
   }
 }

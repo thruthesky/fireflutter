@@ -60,31 +60,36 @@ class ActivityLogTimeLineComment extends StatelessWidget {
                               size: 40,
                             ),
                             const SizedBox(width: sizeXs),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                UserDisplayName(
-                                  uid: post.uid,
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                                Row(
-                                  children: [
-                                    DateTimeText(
-                                        dateTime: post.createdAt,
-                                        style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11)),
-                                    DatabaseCount(
-                                      path: pathSeenBy(post.id), // 'posts/${post.id}/seenBy',
-                                      builder: (n) => n < 2
-                                          ? const SizedBox.shrink()
-                                          : Text(
-                                              " | ${tr.views}: $n",
-                                              style: TextStyle(
-                                                  color: Theme.of(context).colorScheme.secondary, fontSize: 11),
-                                            ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                            SizedBox(
+                              width: 150,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  UserDisplayName(
+                                    uid: post.uid,
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Row(
+                                    children: [
+                                      DateTimeText(
+                                          dateTime: post.createdAt,
+                                          style:
+                                              TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11)),
+                                      DatabaseCount(
+                                        path: pathSeenBy(post.id), // 'posts/${post.id}/seenBy',
+                                        builder: (n) => n < 2
+                                            ? const SizedBox.shrink()
+                                            : Text(
+                                                " | ${tr.views}: $n",
+                                                style: TextStyle(
+                                                    color: Theme.of(context).colorScheme.secondary, fontSize: 11),
+                                              ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                             const Spacer(),
                             if (post.hasPhoto)

@@ -76,23 +76,29 @@ class ChatRoomMenuScreen extends StatelessWidget {
                 ),
             ],
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.logout), label: 'Leave'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications_off), label: 'Alarm'),
-            ],
-            onTap: (value) {
-              if (value == 0) {
-                // 방 나가기
-                if (isMaster == false) {
-                  room.leave();
-                }
-              } else if (value == 1) {
-                showSnackBar(context, 'Alarm is not implemented yet.');
-              }
-            },
-          ),
+          // Temporarily added this because the leave is not actually
+          // needed for 1:1 chat room. And, notifications_off is not
+          // implemented yet.
+          bottomNavigationBar: room.isGroupChat
+              ? BottomNavigationBar(
+                  items: const [
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.logout), label: 'Leave'),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.notifications_off), label: 'Alarm'),
+                  ],
+                  onTap: (value) {
+                    if (value == 0) {
+                      // 방 나가기
+                      if (isMaster == false) {
+                        room.leave();
+                      }
+                    } else if (value == 1) {
+                      showSnackBar(context, 'Alarm is not implemented yet.');
+                    }
+                  },
+                )
+              : null,
           body: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(

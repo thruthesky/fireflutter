@@ -13,6 +13,8 @@ class ChatRoomListTile extends StatefulWidget {
     this.avatarSize = 42,
     this.avatarBuilder,
     this.contentBuilder,
+    this.dateTimeStyle,
+    this.dateTimeType = DateTimeTextType.ago,
   });
   final Room room;
   final EdgeInsets padding;
@@ -20,6 +22,9 @@ class ChatRoomListTile extends StatefulWidget {
   final double avatarSize;
   final Widget Function(Room room)? avatarBuilder;
   final Widget Function(Room room)? contentBuilder;
+
+  final TextStyle? dateTimeStyle;
+  final DateTimeTextType dateTimeType;
 
   @override
   State<ChatRoomListTile> createState() => _ChatRoomListTileState();
@@ -84,19 +89,27 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         widget.room.isGroupChat
-                            ? Text(widget.room.name, style: Theme.of(context).textTheme.bodyLarge)
+                            ? Text(widget.room.name,
+                                style: Theme.of(context).textTheme.bodyLarge)
                             : UserDoc(
                                 uid: otherUserUid(widget.room.users),
                                 builder: (_) {
                                   otherUserData = _;
-                                  return Text(_.name, style: Theme.of(context).textTheme.bodyLarge);
+                                  return Text(_.name,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge);
                                 },
                                 onLoading: otherUserData != null
-                                    ? Text(otherUserData!.name, style: Theme.of(context).textTheme.bodyLarge)
+                                    ? Text(otherUserData!.name,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge)
                                     : null,
                               ),
                         Text(
-                          (widget.room.lastMessage?.text ?? '').replaceAll("\n", ' '),
+                          (widget.room.lastMessage?.text ?? '')
+                              .replaceAll("\n", ' '),
                           style: Theme.of(context).textTheme.bodySmall,
                           maxLines: 1,
                         ),
@@ -108,9 +121,15 @@ class _ChatRoomListTileState extends State<ChatRoomListTile> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  widget.room.lastMessageTime,
-                  style: Theme.of(context).textTheme.bodySmall,
+                // Text(
+                //   widget.room.lastMessageTime,
+                //   style: Theme.of(context).textTheme.bodySmall,
+                // ),
+                DateTimeText(
+                  dateTime: widget.room.lastMessageTime,
+                  style: widget.dateTimeStyle ??
+                      Theme.of(context).textTheme.bodySmall,
+                  type: widget.dateTimeType,
                 ),
                 const SizedBox(height: 2),
                 NoOfNewMessageBadge(

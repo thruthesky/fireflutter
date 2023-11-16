@@ -34,7 +34,7 @@ class FeedService {
       body: 'You have new follower',
       id: myUid,
       uids: [otherUid],
-      type: NotificationType.user.name,
+      type: NotificationType.user,
     );
   }
 

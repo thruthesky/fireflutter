@@ -15,15 +15,16 @@ import 'package:flutter/material.dart';
 ///
 ///
 class CommentEditBottomSheet extends StatefulWidget {
-  const CommentEditBottomSheet(
-      {super.key,
-      this.post,
-      this.parent,
-      this.comment,
-      this.labelText,
-      this.hintText,
-      this.onEdited,
-      this.padding = const EdgeInsets.all(8)});
+  const CommentEditBottomSheet({
+    super.key,
+    this.post,
+    this.parent,
+    this.comment,
+    this.labelText,
+    this.hintText,
+    this.onEdited,
+    this.padding = const EdgeInsets.all(8),
+  });
 
   final Post? post;
   final Comment? parent;
@@ -80,6 +81,7 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
   @override
   void dispose() {
     postSubscription?.cancel();
+    content.dispose();
     super.dispose();
   }
 

@@ -119,7 +119,9 @@ class _UserAvatarState extends State<UserProfileAvatar> {
             // Need to ask for permission.
             // Do we need to use permission_handler package
             // when this happens?
-            toast(title: 'Permission Error', message: 'User did not grant the camera permission!');
+            toast(
+                title: 'Permission Error',
+                message: 'User did not grant the camera permission!');
           } else {
             toast(title: 'Unknown Error', message: 'Unknown error: $e');
           }
@@ -181,7 +183,8 @@ class _UserAvatarState extends State<UserProfileAvatar> {
                     hasPhotoUrl: false,
                   );
 
-                  User.get(user.uid).then((value) => setState(() => user = value!));
+                  User.get(user.uid)
+                      .then((value) => setState(() => user = value!));
 
                   widget.onDeleteSuccess?.call();
                 },
@@ -212,7 +215,8 @@ class _UserAvatarState extends State<UserProfileAvatar> {
         height: widget.size,
         child: CircularProgressIndicator(
           strokeWidth: widget.uploadStrokeWidth,
-          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+          valueColor:
+              AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
           value: progress,
         ),
       ),

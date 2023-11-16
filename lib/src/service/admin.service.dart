@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class AdminService {
   static AdminService? _instance;
-  static AdminService get instance => _instance ?? AdminService._();
+  static AdminService get instance => _instance ??= AdminService._();
 
   AdminService._();
 

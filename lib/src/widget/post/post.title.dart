@@ -14,7 +14,9 @@ class PostTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      my?.hasBlocked(post.uid) ?? false ? tr.blocked : post.title.replaceAll("\n", " "),
+      my?.hasBlocked(post.uid) ?? false
+          ? tr.blocked
+          : post.title.replaceAll("\n", " "),
       style: style,
     );
   }

@@ -13,4 +13,16 @@ class UserCustomize {
   Widget Function(BuildContext context, User user)? publicScreenBlockButton;
   Widget Function(BuildContext context, User user)? publicScreenReportButton;
   List<Widget> Function(BuildContext context, User user)? publicScreenTrailingButtons;
+
+  UserCustomize({
+    this.showPublicProfileScreen,
+    this.publicScreenActions,
+    this.publicScreenLikeButton,
+    this.publicScreenFavoriteButton,
+    this.publicScreenChatButton,
+    this.publicScreenFollowButton,
+    this.publicScreenBlockButton,
+    this.publicScreenReportButton,
+    this.publicScreenTrailingButtons,
+  });
 }

@@ -8,11 +8,17 @@ class YouTubeThumbnail extends StatelessWidget {
     required this.youtubeId,
     this.stackFit = StackFit.loose,
     this.boxFit,
+    this.height,
+    this.width,
+    this.icon,
   });
 
   final String youtubeId;
   final StackFit stackFit;
   final BoxFit? boxFit;
+  final double? height;
+  final double? width;
+  final Icon? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +29,8 @@ class YouTubeThumbnail extends StatelessWidget {
         CachedNetworkImage(
           imageUrl: YoutubePlayer.getThumbnail(videoId: youtubeId),
           fit: boxFit,
+          height: height,
+          width: width,
         ),
         Positioned(
           left: 0,
@@ -30,11 +38,12 @@ class YouTubeThumbnail extends StatelessWidget {
           top: 0,
           bottom: 0,
           child: Center(
-            child: Icon(
-              Icons.play_circle,
-              size: 80,
-              color: Colors.white.withOpacity(.8),
-            ),
+            child: icon ??
+                Icon(
+                  Icons.play_circle,
+                  size: 80,
+                  color: Colors.white.withOpacity(.8),
+                ),
           ),
         ),
       ],
