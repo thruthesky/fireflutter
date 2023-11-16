@@ -23,7 +23,8 @@ class _PushPushNotificationSettingScreenState extends State<PushNotificationSett
             toogleValue: true,
             builder: (setting) => ListTile(
               leading: Icon(setting == null ? Icons.notifications_active : Icons.notifications_off),
-              title: const Text('Receive notifications of new comments under my posts and comments'),
+              // title: const Text('Receive notifications of new comments under my posts and comments'),
+              title: Text(tr.notificationSettingNewComments),
             ),
           ),
           PushNotificationSetting(
@@ -32,7 +33,8 @@ class _PushPushNotificationSettingScreenState extends State<PushNotificationSett
             toogleValue: true,
             builder: (setting) => ListTile(
               leading: Icon(setting == null ? Icons.notifications_active : Icons.notifications_off),
-              title: const Text('Receive notifications on profile visited'),
+              // title: const Text('Receive notifications on profile visited'),
+              title: Text(tr.notificationSettingProfileVisited),
             ),
           ),
           PushNotificationSetting(
@@ -41,7 +43,8 @@ class _PushPushNotificationSettingScreenState extends State<PushNotificationSett
             toogleValue: true,
             builder: (setting) => ListTile(
               leading: Icon(setting == null ? Icons.notifications_active : Icons.notifications_off),
-              title: const Text('Receive notifications on profile liked'),
+              // title: const Text('Receive notifications on profile liked'),
+              title: Text(tr.notificationSettingProfileLiked),
             ),
           ),
           PushNotificationSetting(
@@ -50,7 +53,8 @@ class _PushPushNotificationSettingScreenState extends State<PushNotificationSett
             toogleValue: true,
             builder: (setting) => ListTile(
               leading: Icon(setting == null ? Icons.notifications_active : Icons.notifications_off),
-              title: const Text('Receive notifications on post liked'),
+              // title: const Text('Receive notifications on post liked'),
+              title: Text(tr.notificationSettingPostLiked),
             ),
           ),
           PushNotificationSetting(
@@ -59,7 +63,8 @@ class _PushPushNotificationSettingScreenState extends State<PushNotificationSett
             toogleValue: true,
             builder: (setting) => ListTile(
               leading: Icon(setting == null ? Icons.notifications_active : Icons.notifications_off),
-              title: const Text('Receive notifications on comment liked'),
+              // title: const Text('Receive notifications on comment liked'),
+              title: Text(tr.notificationSettingCommentLiked),
             ),
           ),
         ],
