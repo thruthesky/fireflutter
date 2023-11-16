@@ -2,14 +2,13 @@ import 'package:fireflutter/fireflutter.dart';
 
 class ActivityLogService {
   static ActivityLogService? _instance;
-  static ActivityLogService get instance =>
-      _instance ??= ActivityLogService._();
+  static ActivityLogService get instance => _instance ??= ActivityLogService._();
 
   ActivityLogService._();
 
   bool enableActivityLog = false;
 
-  List<String> activityLogTypes = ['user', 'post', 'comment'];
+  List<String> activityLogTypes = [tr.labelUser, tr.labelPost, tr.labelComment];
 
   ActivityLogCustomize customize = ActivityLogCustomize();
 

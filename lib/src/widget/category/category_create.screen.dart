@@ -23,21 +23,19 @@ class _CategoryCreateScreenState extends State<CategoryCreateScreen> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Create Category'),
+      title: Text(tr.createCategory),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
             controller: categoryId,
-            decoration: const InputDecoration(
-              labelText: 'Category ID (Permanent)',
-            ),
+            decoration: InputDecoration(labelText: tr.categoryPermanentId),
           ),
           const SizedBox(height: sizeSm),
           TextField(
             controller: name,
-            decoration: const InputDecoration(
-              labelText: 'Category Name',
+            decoration: InputDecoration(
+              labelText: tr.categoryName,
             ),
           ),
         ],
@@ -47,7 +45,7 @@ class _CategoryCreateScreenState extends State<CategoryCreateScreen> {
           onPressed: () {
             widget.cancel != null ? widget.cancel!() : Navigator.pop(context);
           },
-          child: const Text('Cancel'),
+          child: Text(tr.cancel),
         ),
         TextButton(
           onPressed: () async {
@@ -57,7 +55,7 @@ class _CategoryCreateScreenState extends State<CategoryCreateScreen> {
             );
             widget.success(await Category.get(categoryId.text));
           },
-          child: const Text('Create'),
+          child: Text(tr.create),
         ),
       ],
     );

@@ -41,7 +41,7 @@ class _CategoryEditScreenState extends State<CategoryEditScreen> {
               children: [
                 Text.rich(
                   TextSpan(
-                    text: 'Category ID: ',
+                    text: '${tr.categoryId}: ',
                     children: [
                       TextSpan(
                           text: category.id,
@@ -55,7 +55,7 @@ class _CategoryEditScreenState extends State<CategoryEditScreen> {
                   padding: const EdgeInsets.only(top: sizeSm),
                   child: TextFormField(
                     controller: name,
-                    decoration: const InputDecoration(labelText: 'Name'),
+                    decoration: InputDecoration(labelText: tr.name),
                   ),
                 ),
                 Padding(
@@ -64,7 +64,7 @@ class _CategoryEditScreenState extends State<CategoryEditScreen> {
                     controller: description,
                     minLines: 3,
                     maxLines: 6,
-                    decoration: const InputDecoration(labelText: 'Description'),
+                    decoration: InputDecoration(labelText: tr.description),
                   ),
                 ),
                 Row(
@@ -73,13 +73,10 @@ class _CategoryEditScreenState extends State<CategoryEditScreen> {
                     Padding(
                       padding: const EdgeInsets.all(sizeMd),
                       child: ElevatedButton(
-                        child: const Text('Update'),
+                        child: Text(tr.update),
                         onPressed: () async {
-                          await Category.fromId(category.id).update(
-                              name: name.text, description: description.text);
-                          toast(
-                              title: tr.categoryUpdated,
-                              message: tr.categoryUpdatedMessage);
+                          await Category.fromId(category.id).update(name: name.text, description: description.text);
+                          toast(title: tr.categoryUpdated, message: tr.categoryUpdatedMessage);
                         },
                       ),
                     ),

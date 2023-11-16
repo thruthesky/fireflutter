@@ -21,31 +21,31 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
   final landingPage = TextEditingController(text: '');
   final tokenString = TextEditingController(text: '');
 
-  final channelId = TextEditingController(text: 'DEFAULT_CHANNEL');
-  final sound = TextEditingController(text: 'default');
+  final channelId = TextEditingController(text: tr.defaultChannel);
+  final sound = TextEditingController(text: tr.defaultSound);
   List<String> tokens = [];
   Map<String, User> users = {};
 
   String sendTarget = NotificationTarget.platform;
   Map<String, String> targetMenuItem = {
-    NotificationTarget.platform: 'Platform',
-    NotificationTarget.users: 'Users',
-    NotificationTarget.tokens: 'Tokens',
+    NotificationTarget.platform: tr.labelPlatform,
+    NotificationTarget.users: tr.users,
+    NotificationTarget.tokens: tr.labelTokens,
   };
 
   String platformTarget = NotificationPlatform.allUsers;
   Map<String, String> platformMenuItem = {
-    NotificationPlatform.allUsers: 'All',
-    NotificationPlatform.androidUsers: "Android",
+    NotificationPlatform.allUsers: tr.labelAll,
+    NotificationPlatform.androidUsers: tr.andriod,
     NotificationPlatform.iosUsers: "iOS",
     NotificationPlatform.webUsers: "Web",
   };
 
   String notificationType = NotificationType.post;
   Map<String, String> notificationTypeMenuItem = {
-    NotificationType.post: 'Post',
-    NotificationType.chat: 'Chat',
-    NotificationType.user: 'User',
+    NotificationType.post: tr.labelPost,
+    NotificationType.chat: tr.chat,
+    NotificationType.user: tr.labelUser,
   };
 
   String topic = '';
@@ -61,7 +61,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
     super.initState();
 
     if (MessagingService.instance.customizeTopic != null) {
-      targetMenuItem = {NotificationTarget.topic: 'Topic', ...targetMenuItem};
+      targetMenuItem = {NotificationTarget.topic: tr.labelTopic, ...targetMenuItem};
       topic = MessagingService.instance.customizeTopic!.first.topic;
     }
   }
@@ -140,7 +140,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                       duration: const Duration(seconds: 5),
                     );
                   },
-                  child: const Text('Send Push Message'),
+                  child: Text(tr.sendPushMessage),
                 ),
               ),
               const SizedBox(
@@ -156,8 +156,8 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
   List<Widget> get notificationGuide => [
         Row(
           children: [
-            const Text(
-              "Push notification guideline",
+            Text(
+              tr.labelNotificationGuide,
             ),
             const Spacer(),
             IconButton(
@@ -262,7 +262,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
 
   List<Widget> get chooseTarget => [
         Text(
-          'Choose Target',
+          tr.labelChooseTarget,
           style: textStyle,
         ),
         SingleChildScrollView(
@@ -653,13 +653,9 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
             controller: landingPage,
             style: textStyle,
             decoration: InputDecoration(
-              label: Text(
-                "Input $notificationType Id",
-              ),
-              hintText: 'Input $notificationType Id',
-              helperText: notificationType == NotificationType.post
-                  ? 'Click the load botton to patch the title and body base on the post id'
-                  : null,
+              label: Text(tr.labelInputPostId.replaceAll("#a", notificationType.toUpperCase())),
+              hintText: tr.labelInputPostId.replaceAll("#a", notificationType.toUpperCase()),
+              helperText: notificationType == NotificationType.post ? tr.loadButtonDialog : null,
               helperMaxLines: 2,
               helperStyle: textStyle,
             ),
@@ -733,9 +729,9 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
         TextField(
           controller: title,
           style: textStyle,
-          decoration: const InputDecoration(
-            label: Text('Title'),
-            hintText: 'Input the title text',
+          decoration: InputDecoration(
+            label: Text(tr.labelTitle),
+            hintText: tr.labelInputAnyText.replaceAll("#a", tr.labelTitle),
             floatingLabelBehavior: FloatingLabelBehavior.always,
           ),
         ),
@@ -743,9 +739,9 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
         TextField(
           controller: body,
           style: textStyle,
-          decoration: const InputDecoration(
-            label: Text('Body'),
-            hintText: 'Input the body text',
+          decoration: InputDecoration(
+            label: Text(tr.labelBody),
+            hintText: tr.labelInputAnyText.replaceAll("#a", tr.labelBody),
             floatingLabelBehavior: FloatingLabelBehavior.always,
           ),
         ),
@@ -753,8 +749,8 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
         TextField(
           controller: channelId,
           style: textStyle,
-          decoration: const InputDecoration(
-            label: Text('Channel id (android only)'),
+          decoration: InputDecoration(
+            label: Text(tr.channelIdAndriod),
             hintText: 'Specify channel id(android only)',
             floatingLabelBehavior: FloatingLabelBehavior.always,
           ),
@@ -763,8 +759,8 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
         TextField(
           controller: sound,
           style: textStyle,
-          decoration: const InputDecoration(
-            label: Text('Sound'),
+          decoration: InputDecoration(
+            label: Text(tr.defaultSound),
             hintText: 'Input sound file name, must include ext. Sound file must be attached to the app.',
             floatingLabelBehavior: FloatingLabelBehavior.always,
           ),

@@ -47,7 +47,7 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
           child: SizedBox(
             height: 48,
             child: ListView(scrollDirection: Axis.horizontal, children: [
-              for (final target in ['all', 'user', 'post', 'comment'])
+              for (final target in [tr.labelAll, tr.labelUser, tr.labelPost, tr.labelComment])
                 InkWell(
                   onTap: () {
                     setState(() {
@@ -108,10 +108,10 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
                           CommentService.instance.showCommentViewDialog(context: context, commentId: report.commentId);
                         }
                       },
-                      icon: const Row(
+                      icon: Row(
                         children: [
-                          Text('View '),
-                          Icon(Icons.open_in_browser),
+                          Text(tr.labelView),
+                          const Icon(Icons.open_in_browser),
                         ],
                       ),
                     )
@@ -160,6 +160,7 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
                     const Text('First reported at '),
                     Expanded(
                       child: DateTimeText(
+                        style: Theme.of(context).textTheme.labelMedium,
                         dateTime: report.createdAt,
                         type: DateTimeTextType.short,
                       ),
@@ -187,16 +188,16 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () => showDeleteDialog(report),
-                          child: const Text('Delete Comment'),
+                          child: Text(tr.deletePost),
                         ),
                       ),
                     const SizedBox(width: sizeSm),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () => showResolveDialog(report),
-                        child: const Center(
+                        child: Center(
                             child: Text(
-                          'Mark as Resolved',
+                          tr.markAsResolve,
                           textAlign: TextAlign.center,
                         )),
                       ),
@@ -261,14 +262,14 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Cancel'),
+              child: Text(tr.cancel),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
                 report.markAsResolved();
               },
-              child: const Text('Mark as Resolved'),
+              child: Text(tr.markAsResolve),
             ),
           ],
         );

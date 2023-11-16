@@ -11,6 +11,7 @@ class I18nTexts {
   String roomMenu;
   String chatSingleRoomCreateDialog;
   String chatRoomCreateDialog;
+  String loadButtonDialog;
   String chooseUploadFrom;
   String noCategory;
   String noPost;
@@ -83,6 +84,20 @@ class I18nTexts {
   String profile;
   String createChatRoom;
   String views;
+  String users;
+  String singleChat;
+  String groupChat;
+  String openRoom;
+  String privateRoom;
+  String feedCategory;
+  String createCategory;
+  String categoryName;
+  String feedForumn;
+  String name;
+  String description;
+  String defaultChannel;
+  String defaultSound;
+  String andriod;
 
   /// activity_log user
   String startAppLog;
@@ -117,6 +132,44 @@ class I18nTexts {
   String categoryUpdated;
   String categoryUpdatedMessage;
 
+  /// label string
+  String labelAll;
+  String labelImages;
+  String labelVideos;
+  String labelOthers;
+  String labelUserSearch;
+  String labelSearch;
+  String labelUser;
+  String labelPost;
+  String labelComment;
+  String labelView;
+  String categoryPermanentId;
+  String categoryId;
+  String channelIdAndriod;
+  String labelChooseTarget;
+  String labelRoomId;
+  String labelLastActivity;
+  String labelRoomType;
+  String labelTopic;
+  String labelPlatform;
+  String labelTokens;
+  String labelSelectPlatform;
+  String labelTitle;
+  String labelBody;
+  String labelSound;
+  String labelInputPostId;
+  String labelInputAnyText;
+  String labelNotificationGuide;
+
+  /// button string
+  String deleteComment;
+  String deletePost;
+  String markAsResolve;
+  String disableUser;
+  String update;
+  String create;
+  String sendPushMessage;
+
   I18nTexts({
     this.loginFirstTitle = 'Login first',
     this.loginFirstMessage = 'Please login first.',
@@ -124,6 +177,7 @@ class I18nTexts {
     this.roomMenu = 'Chat Room Menu',
     this.chatSingleRoomCreateDialog = 'New chat room created. Enjoy chatting!',
     this.chatRoomCreateDialog = 'New chat room created. You can invite more users. Enjoy chatting!',
+    this.loadButtonDialog = 'Click the load botton to patch the title and body base on the post id',
     this.chooseUploadFrom = "Choose upload from...",
     this.noCategory = "No category, yet. Create one!",
     this.noPost = "No post yet. Create one!",
@@ -191,6 +245,19 @@ class I18nTexts {
     this.profile = "Profile",
     this.createChatRoom = "Create chat room",
     this.views = "Views",
+    this.users = "Users",
+    this.feedCategory = "Feed Category",
+    this.feedForumn = "Feed Forum",
+    this.name = "Name",
+    this.description = "Description",
+    this.createCategory = "Create Category",
+    this.singleChat = "1:1 Chat",
+    this.groupChat = "Group Chat",
+    this.openRoom = "Open Room",
+    this.privateRoom = "Private Room",
+    this.defaultChannel = "Default Channel",
+    this.defaultSound = "Default",
+    this.andriod = "Andriod",
 
     /// activity_log user
     this.startAppLog = "#a started the app",
@@ -223,6 +290,45 @@ class I18nTexts {
     this.adminBackFillWarning = 'This will reset all data in Supabase.',
     this.categoryUpdated = 'Category updated.',
     this.categoryUpdatedMessage = 'Category has been updated',
+
+    /// label string
+    this.labelAll = "All",
+    this.labelImages = "Images",
+    this.labelVideos = "Videos",
+    this.labelOthers = "Others",
+    this.labelUserSearch = "User Search",
+    this.labelSearch = "Search",
+    this.labelUser = "User",
+    this.labelPost = "Post",
+    this.labelComment = "Comment",
+    this.labelView = "View",
+    this.categoryName = "Category Name",
+    this.categoryId = 'Category ID',
+    this.categoryPermanentId = "Category (Permanent Id)",
+    this.channelIdAndriod = "Channel ID (Andriod)",
+    this.labelChooseTarget = "Choose Target",
+    this.labelRoomId = "Room ID",
+    this.labelLastActivity = "Last Activity",
+    this.labelRoomType = "Room Type",
+    this.labelTopic = "Topic",
+    this.labelPlatform = "Platform",
+    this.labelTokens = "Tokens",
+    this.labelSelectPlatform = "Select Platform",
+    this.labelTitle = "Title",
+    this.labelBody = "Body",
+    this.labelSound = "Sound",
+    this.labelInputPostId = "Input #a ID",
+    this.labelInputAnyText = "Input the #a text",
+    this.labelNotificationGuide = "Push notification guideline",
+
+    /// button
+    this.deleteComment = "Delete Comment",
+    this.disableUser = "Disable User",
+    this.markAsResolve = "Mark as Resolve",
+    this.deletePost = "Delete Post",
+    this.update = "Update",
+    this.create = "Create",
+    this.sendPushMessage = "Send Push Message",
   });
 
   factory I18nTexts.fromJson(Map<String, dynamic> json) => _$I18nTextsFromJson(json);

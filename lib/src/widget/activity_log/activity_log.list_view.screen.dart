@@ -128,7 +128,7 @@ class _ActivityLogListViewScreenState extends State<ActivityLogListViewScreen> {
                       const SizedBox(
                         width: 22,
                       ),
-                      ...['all', ...ActivityLogService.instance.activityLogTypes]
+                      ...[tr.labelAll, ...ActivityLogService.instance.activityLogTypes]
                           .map(
                             (type) => GestureDetector(
                               behavior: HitTestBehavior.opaque,
