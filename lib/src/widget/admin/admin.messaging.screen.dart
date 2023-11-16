@@ -760,7 +760,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
           controller: sound,
           style: textStyle,
           decoration: InputDecoration(
-            label: Text(tr.defaultSound),
+            label: Text(tr.sound),
             hintText: 'Input sound file name, must include ext. Sound file must be attached to the app.',
             floatingLabelBehavior: FloatingLabelBehavior.always,
           ),

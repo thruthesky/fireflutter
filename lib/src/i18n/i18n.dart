@@ -166,6 +166,7 @@ class I18nTexts {
   String labelInputPostId;
   String labelInputAnyText;
   String labelNotificationGuide;
+  String sound;
 
   /// button string
   String deleteComment;
@@ -276,6 +277,7 @@ class I18nTexts {
     this.defaultChannel = "Default Channel",
     this.defaultSound = "Default",
     this.andriod = "Andriod",
+    this.sound = "Sound",
 
     /// activity_log user
     this.startAppLog = "#a started the app",
