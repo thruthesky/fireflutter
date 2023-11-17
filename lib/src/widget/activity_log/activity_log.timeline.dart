@@ -9,20 +9,16 @@ class ActivityLogTimeLine extends StatelessWidget {
   ActivityLogCustomize get customize => ActivityLogService.instance.customize;
 
   bool get hasTimeLineBuilder => customize.timelineBuilder != null;
-  bool get isCustomLogType =>
-      ActivityLogService.instance.activityLogTypes.contains(activity.type);
+  bool get isCustomLogType => ActivityLogService.instance.activityLogTypes.contains(activity.type);
 
   @override
   Widget build(BuildContext context) {
     if (activity.type == Log.type.user) {
-      return customize.userTimelineBuilder?.call(activity) ??
-          ActivityLogTimeLineUser(activity: activity);
+      return customize.userTimelineBuilder?.call(activity) ?? ActivityLogTimeLineUser(activity: activity);
     } else if (activity.type == Log.type.post) {
-      return customize.postTimelineBuilder?.call(activity) ??
-          ActivityLogTimeLinePost(activity: activity);
+      return customize.postTimelineBuilder?.call(activity) ?? ActivityLogTimeLinePost(activity: activity);
     } else if (activity.type == Log.type.comment) {
-      return customize.commentTimelineBuilder?.call(activity) ??
-          ActivityLogTimeLineComment(activity: activity);
+      return customize.commentTimelineBuilder?.call(activity) ?? ActivityLogTimeLineComment(activity: activity);
     } else if (hasTimeLineBuilder && isCustomLogType) {
       return customize.timelineBuilder!.call(activity);
     }
@@ -34,8 +30,7 @@ class ActivityLogTimeLine extends StatelessWidget {
         return ActivityLogListTiLeItem(
           activity: activity,
           actor: actor,
-          message:
-              'Unknown ActivityLogType: ${activity.type} ${activity.action}',
+          message: 'Unknown ActivityLogType: ${activity.type} ${activity.action}',
         );
       },
     );

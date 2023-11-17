@@ -22,7 +22,7 @@ class AdminCategoryListScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back),
         ),
-        title: const Text('Category List'),
+        title: Text(tr.titleCategoryList),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -31,8 +31,7 @@ class AdminCategoryListScreen extends StatelessWidget {
                 context,
                 success: (category) {
                   Navigator.pop(context);
-                  CategoryService.instance
-                      .showUpdateDialog(context, category.id);
+                  CategoryService.instance.showUpdateDialog(context, category.id);
                 },
               );
             },

@@ -44,7 +44,7 @@ class _AdminFileListScreenState extends State<AdminFileListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AdminFileList'),
+        title: Text(tr.titleAdminFileList),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(64),
           child: Column(

@@ -38,9 +38,7 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back),
         ),
-        title: const Text(
-          'Admin Report List',
-        ),
+        title: Text(tr.titleReportList),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48),
           child: SizedBox(

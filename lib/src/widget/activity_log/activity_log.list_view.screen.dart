@@ -54,7 +54,7 @@ class _ActivityLogListViewScreenState extends State<ActivityLogListViewScreen> {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back),
         ),
-        title: const Text('Activity logs'),
+        title: Text(tr.titleActivityLog),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh_outlined),

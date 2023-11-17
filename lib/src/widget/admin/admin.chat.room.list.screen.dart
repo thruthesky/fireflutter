@@ -7,8 +7,7 @@ class AdminChatRoomListScreen extends StatefulWidget {
   const AdminChatRoomListScreen({super.key});
 
   @override
-  State<AdminChatRoomListScreen> createState() =>
-      _AdminChatRoomListScreenState();
+  State<AdminChatRoomListScreen> createState() => _AdminChatRoomListScreenState();
 }
 
 class _AdminChatRoomListScreenState extends State<AdminChatRoomListScreen> {
@@ -22,7 +21,7 @@ class _AdminChatRoomListScreenState extends State<AdminChatRoomListScreen> {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back),
         ),
-        title: const Text('Admin Chat Room List'),
+        title: Text(tr.titleChatRoomList),
       ),
       body: FirestoreListView(
         // itemExtent: 80,
@@ -74,16 +73,14 @@ class _AdminChatRoomListScreenState extends State<AdminChatRoomListScreen> {
                     UserDoc(
                       uid: room.users.first,
                       builder: (_) {
-                        return Text(_.getDisplayName,
-                            style: Theme.of(context).textTheme.bodyMedium);
+                        return Text(_.getDisplayName, style: Theme.of(context).textTheme.bodyMedium);
                       },
                       onLoading: const CircularProgressIndicator.adaptive(),
                     ),
                     UserDoc(
                       uid: room.users.last,
                       builder: (_) {
-                        return Text(_.getDisplayName,
-                            style: Theme.of(context).textTheme.bodyMedium);
+                        return Text(_.getDisplayName, style: Theme.of(context).textTheme.bodyMedium);
                       },
                       onLoading: const CircularProgressIndicator.adaptive(),
                     ),

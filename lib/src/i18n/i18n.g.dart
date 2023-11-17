@@ -88,8 +88,14 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
           json['noFollowing'] as String? ?? "Have not followed anyone, yet.",
       noFollowingYet:
           json['noFollowingYet'] as String? ?? "Have not followed anyone, yet.",
+      usersIFollow: json['usersIFollow'] as String? ?? "Users I follow",
+      searchResult: json['searchResult'] as String? ?? "Search result",
+      searchUser: json['searchUser'] as String? ?? "Search user",
       noStateMessage: json['noStateMessage'] as String? ??
           "No state message, yet. Create one!",
+      deletingPost: json['deletingPost'] as String? ?? "Deleting post",
+      deletingPostConfirmation: json['deletingPostConfirmation'] as String? ??
+          "Are you sure you want to delete this post?",
       copyLink: json['copyLink'] as String? ?? "Copy Link",
       copyLinkMessage:
           json['copyLinkMessage'] as String? ?? "Link copied to clipboard",
@@ -122,6 +128,8 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
       privateRoom: json['privateRoom'] as String? ?? "Private Room",
       defaultChannel: json['defaultChannel'] as String? ?? "Default Channel",
       defaultSound: json['defaultSound'] as String? ?? "Default",
+      andriod: json['andriod'] as String? ?? "Andriod",
+      sound: json['sound'] as String? ?? "Sound",
       startAppLog: json['startAppLog'] as String? ?? "#a started the app",
       signinLog: json['signinLog'] as String? ?? "#a signed in",
       signoutLog: json['signoutLog'] as String? ?? "#a signed out",
@@ -161,17 +169,18 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
           json['categoryUpdated'] as String? ?? 'Category updated.',
       categoryUpdatedMessage: json['categoryUpdatedMessage'] as String? ??
           'Category has been updated',
-      labelAll: json['labelAll'] as String? ?? "All",
+      labelAll: json['labelAll'] as String? ?? "all",
       labelImages: json['labelImages'] as String? ?? "Images",
       labelVideos: json['labelVideos'] as String? ?? "Videos",
       labelOthers: json['labelOthers'] as String? ?? "Others",
       labelUserSearch: json['labelUserSearch'] as String? ?? "User Search",
       labelSearch: json['labelSearch'] as String? ?? "Search",
-      labelUser: json['labelUser'] as String? ?? "User",
-      labelPost: json['labelPost'] as String? ?? "Post",
-      labelComment: json['labelComment'] as String? ?? "Comment",
+      labelUser: json['labelUser'] as String? ?? "user",
+      labelPost: json['labelPost'] as String? ?? "post",
+      labelComment: json['labelComment'] as String? ?? "comment",
       labelView: json['labelView'] as String? ?? "View",
       categoryName: json['categoryName'] as String? ?? "Category Name",
+      categoryId: json['categoryId'] as String? ?? 'Category ID',
       categoryPermanentId:
           json['categoryPermanentId'] as String? ?? "Category (Permanent Id)",
       channelIdAndriod:
@@ -191,14 +200,33 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
       labelBody: json['labelBody'] as String? ?? "Body",
       labelSound: json['labelSound'] as String? ?? "Sound",
       labelInputPostId: json['labelInputPostId'] as String? ?? "Input #a ID",
+      labelInputAnyText:
+          json['labelInputAnyText'] as String? ?? "Input the #a text",
       labelNotificationGuide: json['labelNotificationGuide'] as String? ??
           "Push notification guideline",
       deleteComment: json['deleteComment'] as String? ?? "Delete Comment",
+      disableUser: json['disableUser'] as String? ?? "Disable User",
       markAsResolve: json['markAsResolve'] as String? ?? "Mark as Resolve",
+      deletePost: json['deletePost'] as String? ?? "Delete Post",
       update: json['update'] as String? ?? "Update",
       create: json['create'] as String? ?? "Create",
       sendPushMessage:
           json['sendPushMessage'] as String? ?? "Send Push Message",
+      notificationSettingNewComments: json['notificationSettingNewComments']
+              as String? ??
+          'Receive notifications of new comments under my posts and comments',
+      notificationSettingProfileVisited:
+          json['notificationSettingProfileVisited'] as String? ??
+              'Receive notifications on profile visited',
+      notificationSettingProfileLiked:
+          json['notificationSettingProfileLiked'] as String? ??
+              'Receive notifications on profile liked',
+      notificationSettingPostLiked:
+          json['notificationSettingPostLiked'] as String? ??
+              'Receive notifications on post liked',
+      notificationSettingCommentLiked:
+          json['notificationSettingCommentLiked'] as String? ??
+              'Receive notifications on comment liked',
     );
 
 Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
@@ -262,7 +290,12 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
       'noFollowerYet': instance.noFollowerYet,
       'noFollowing': instance.noFollowing,
       'noFollowingYet': instance.noFollowingYet,
+      'usersIFollow': instance.usersIFollow,
+      'searchResult': instance.searchResult,
+      'searchUser': instance.searchUser,
       'noStateMessage': instance.noStateMessage,
+      'deletingPost': instance.deletingPost,
+      'deletingPostConfirmation': instance.deletingPostConfirmation,
       'copyLink': instance.copyLink,
       'copyLinkMessage': instance.copyLinkMessage,
       'showMoreComments': instance.showMoreComments,
@@ -290,6 +323,7 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
       'description': instance.description,
       'defaultChannel': instance.defaultChannel,
       'defaultSound': instance.defaultSound,
+      'andriod': instance.andriod,
       'startAppLog': instance.startAppLog,
       'signinLog': instance.signinLog,
       'signoutLog': instance.signoutLog,
@@ -327,6 +361,7 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
       'labelComment': instance.labelComment,
       'labelView': instance.labelView,
       'categoryPermanentId': instance.categoryPermanentId,
+      'categoryId': instance.categoryId,
       'channelIdAndriod': instance.channelIdAndriod,
       'labelChooseTarget': instance.labelChooseTarget,
       'labelRoomId': instance.labelRoomId,
@@ -340,10 +375,22 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
       'labelBody': instance.labelBody,
       'labelSound': instance.labelSound,
       'labelInputPostId': instance.labelInputPostId,
+      'labelInputAnyText': instance.labelInputAnyText,
       'labelNotificationGuide': instance.labelNotificationGuide,
+      'sound': instance.sound,
       'deleteComment': instance.deleteComment,
+      'deletePost': instance.deletePost,
       'markAsResolve': instance.markAsResolve,
+      'disableUser': instance.disableUser,
       'update': instance.update,
       'create': instance.create,
       'sendPushMessage': instance.sendPushMessage,
+      'notificationSettingNewComments': instance.notificationSettingNewComments,
+      'notificationSettingProfileVisited':
+          instance.notificationSettingProfileVisited,
+      'notificationSettingProfileLiked':
+          instance.notificationSettingProfileLiked,
+      'notificationSettingPostLiked': instance.notificationSettingPostLiked,
+      'notificationSettingCommentLiked':
+          instance.notificationSettingCommentLiked,
     };
