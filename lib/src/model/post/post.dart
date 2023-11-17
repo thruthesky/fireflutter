@@ -71,14 +71,12 @@ class Post {
         // If document hasPendingWrites, the date becomes 'null' temporarily
         // thus, the converter gives DateTime(1970) instead of DateTime.now()
         // This is to display DateTime.now() to the user while post is still being saved.
-        if (documentSnapshot.metadata.hasPendingWrites)
-          'createdAt': DateTime.now(),
+        if (documentSnapshot.metadata.hasPendingWrites) 'createdAt': DateTime.now(),
       },
     );
   }
 
-  factory Post.fromJson(Map<String, dynamic> json) =>
-      _$PostFromJson(json)..data = json;
+  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json)..data = json;
   Map<String, dynamic> toJson() => _$PostToJson(this);
 
   /// If the post is not found, it throws an Exception.
@@ -97,8 +95,7 @@ class Post {
     if (url == null) {
       throw Exception('Post id is null');
     }
-    final QuerySnapshot documentSnapshot =
-        await postCol.where('urls', arrayContains: url).get();
+    final QuerySnapshot documentSnapshot = await postCol.where('urls', arrayContains: url).get();
 
     if (documentSnapshot.docs.isEmpty) throw Exception('Post not found');
 
@@ -126,7 +123,12 @@ class Post {
       if (content != null) 'content': content,
       if (categoryId != null) 'categoryId': categoryId,
       if (youtubeId != null) 'youtubeId': youtubeId,
-      if (urls != null) 'urls': urls,
+      // We added Photo Grid View in Grc.
+      // There is no way to query if array is empty in Firestore.
+      // but we can check if it is null.
+      // so, we will save empty array as null
+      // so that we can query if post has photos or not.
+      if (urls != null && urls.isNotEmpty) 'urls': urls,
       'createdAt': FieldValue.serverTimestamp(),
       'uid': myUid!,
       if (hashtags != null) 'hashtags': hashtags,
