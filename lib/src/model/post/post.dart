@@ -123,7 +123,7 @@ class Post {
       if (content != null) 'content': content,
       if (categoryId != null) 'categoryId': categoryId,
       if (youtubeId != null) 'youtubeId': youtubeId,
-      // We added Photo Grid View.
+      // We added Photo Grid View in Grc.
       // There is no way to query if array is empty in Firestore.
       // but we can check if it is null.
       // so, we will save empty array as null
