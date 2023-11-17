@@ -13,7 +13,7 @@ class _PushPushNotificationSettingScreenState extends State<PushNotificationSett
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notification Setting'),
+        title: Text(tr.titleNotificationSetting),
       ),
       body: Column(
         children: [

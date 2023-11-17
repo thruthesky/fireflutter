@@ -105,6 +105,16 @@ class I18nTexts {
   String defaultSound;
   String andriod;
 
+  /// activity log appbar titile
+  String titleStatistic;
+  String titleReportList;
+  String titleCategoryList;
+  String titleChatRoomList;
+  String titleActivityLog;
+  String titleNotificationSetting;
+  String titleAdminFileList;
+  String titlePushNotification;
+
   /// activity_log user
   String startAppLog;
   String signinLog;
@@ -279,6 +289,16 @@ class I18nTexts {
     this.andriod = "Andriod",
     this.sound = "Sound",
 
+    /// activity log appbar titile
+    this.titleStatistic = "Admin Statistics",
+    this.titleReportList = "Admin Report List",
+    this.titleCategoryList = "Category List",
+    this.titleChatRoomList = "Admin Chat Room List",
+    this.titleActivityLog = "Activity Logs",
+    this.titleNotificationSetting = "Notification Settings",
+    this.titleAdminFileList = "Admin File List",
+    this.titlePushNotification = "Push Notification",
+
     /// activity_log user
     this.startAppLog = "#a started the app",
     this.signinLog = "#a signed in",
@@ -312,15 +332,15 @@ class I18nTexts {
     this.categoryUpdatedMessage = 'Category has been updated',
 
     /// label string
-    this.labelAll = "All",
+    this.labelAll = "all",
     this.labelImages = "Images",
     this.labelVideos = "Videos",
     this.labelOthers = "Others",
     this.labelUserSearch = "User Search",
     this.labelSearch = "Search",
-    this.labelUser = "User",
-    this.labelPost = "Post",
-    this.labelComment = "Comment",
+    this.labelUser = "user",
+    this.labelPost = "post",
+    this.labelComment = "comment",
     this.labelView = "View",
     this.categoryName = "Category Name",
     this.categoryId = 'Category ID',

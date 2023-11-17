@@ -75,7 +75,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back),
         ),
-        title: const Text("Push Notification"),
+        title: Text(tr.titlePushNotification),
       ),
       body: SingleChildScrollView(
         child: Padding(
