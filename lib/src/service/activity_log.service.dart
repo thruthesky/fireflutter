@@ -8,7 +8,7 @@ class ActivityLogService {
 
   bool enableActivityLog = false;
 
-  List<String> activityLogTypes = [tr.labelUser, tr.labelPost, tr.labelComment];
+  List<String> activityLogTypes = Log.type.toList(); //['user', 'post', 'comment'];
 
   ActivityLogCustomize customize = ActivityLogCustomize();
 

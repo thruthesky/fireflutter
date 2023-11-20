@@ -6,11 +6,22 @@ class Log {
   static final chat = ActivityLogChatAction();
 }
 
+List<String> logActivityType = [
+  Log.type.user,
+  Log.type.post,
+  Log.type.comment,
+  Log.type.chat,
+];
+
 class ActivityLogType {
   final String user = 'user';
   final String post = 'post';
   final String comment = 'comment';
   final String chat = 'chat';
+
+  List<String> toList() {
+    return [user, post, comment, chat];
+  }
 }
 
 class ActivityLogUserAction {
