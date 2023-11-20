@@ -62,16 +62,17 @@ class Post {
     if (PostService.instance.enableSeenBy && loggedIn) {
       set('posts/${documentSnapshot.id}/seenBy/$myUid', true);
     }
-
+    final docSnapshotData = documentSnapshot.data() as Map<String, dynamic>;
     return Post.fromJson(
       {
-        ...documentSnapshot.data() as Map<String, dynamic>,
+        ...docSnapshotData,
         'id': documentSnapshot.id,
         // Added this because DateTime converter still gives wrong date.
         // If document hasPendingWrites, the date becomes 'null' temporarily
         // thus, the converter gives DateTime(1970) instead of DateTime.now()
         // This is to display DateTime.now() to the user while post is still being saved.
-        if (documentSnapshot.metadata.hasPendingWrites) 'createdAt': DateTime.now(),
+        if (docSnapshotData['createdAt'] == null && documentSnapshot.metadata.hasPendingWrites)
+          'createdAt': DateTime.now(),
       },
     );
   }
