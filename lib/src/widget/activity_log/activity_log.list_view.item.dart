@@ -30,7 +30,9 @@ class ActivityLogListTiLeItem extends StatelessWidget {
               const SizedBox(
                 height: sizeSm,
               ),
-              activityIcon(context),
+              ActivityLogIcons(
+                activity: activity,
+              ),
               const SizedBox(height: sizeXxs),
               SizedBox(
                 width: 64,
@@ -112,47 +114,4 @@ class ActivityLogListTiLeItem extends StatelessWidget {
       ),
     );
   }
-
-  Widget activityIcon(context) => Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
-          border: Border.all(
-            color: Theme.of(context).colorScheme.primary.tone(70), //Colors.lightBlue[300]!,
-            width: 2,
-          ),
-        ),
-        child: icon ??
-            Icon(
-              switch ('${activity.type}.${activity.action}') {
-                'user.startApp' => Icons.home,
-                'user.signin' => Icons.login,
-                'user.signout' => Icons.logout,
-                'user.resign' => Icons.delete,
-                'user.create' => Icons.add,
-                'user.update' => Icons.update,
-                'user.like' => Icons.thumb_up,
-                'user.unlike' => Icons.thumb_down,
-                'user.follow' => Icons.bookmark_add_outlined,
-                'user.unfollow' => Icons.bookmark_remove_outlined,
-                'user.viewProfile' => Icons.person_search_outlined,
-                'user.share' => Icons.share,
-                'post.create' => Icons.add,
-                'post.update' => Icons.update,
-                'post.delete' => Icons.delete,
-                'post.like' => Icons.thumb_up_outlined,
-                'post.unlike' => Icons.thumb_down_outlined,
-                'post.share' => Icons.share,
-                'comment.create' => Icons.add_comment,
-                'comment.update' => Icons.insert_comment_outlined,
-                'comment.delete' => Icons.delete_forever_outlined,
-                'comment.like' => Icons.thumb_up_outlined,
-                'comment.unlike' => Icons.thumb_down_outlined,
-                'comment.share' => Icons.share,
-                'chat.roomOpen' => Icons.chat_bubble_outline,
-                _ => Icons.help_center_outlined,
-              },
-            ),
-      );
 }

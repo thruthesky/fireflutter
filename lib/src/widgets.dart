@@ -134,6 +134,7 @@ export 'widget/activity_log/activity_log.timeline.dart';
 export 'widget/activity_log/activity_log.timeline.user.dart';
 export 'widget/activity_log/activity_log.timeline.post.dart';
 export 'widget/activity_log/activity_log.timeline.comment.dart';
+export 'widget/activity_log/activity_log.tile.icon.dart';
 
 // utility
 export 'widget/utility/color_scheme.dart';
