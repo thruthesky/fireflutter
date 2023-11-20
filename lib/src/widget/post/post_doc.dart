@@ -10,6 +10,7 @@ class PostDoc extends StatelessWidget {
     this.live = true,
     required this.builder,
     this.onLoading,
+    this.onSnapshot,
   });
 
   final Post? post;
@@ -17,6 +18,8 @@ class PostDoc extends StatelessWidget {
   final bool live;
   final Widget Function(Post post) builder;
   final Widget? onLoading;
+
+  final Function(Post? post)? onSnapshot;
 
   String get id => post?.id ?? postId!;
 
@@ -34,7 +37,9 @@ class PostDoc extends StatelessWidget {
           }
           if (snapshot.hasError) return Text(snapshot.error.toString());
           if (snapshot.hasData) {
-            return builder(Post.fromDocumentSnapshot(snapshot.data!));
+            final post = Post.fromDocumentSnapshot(snapshot.data!);
+            onSnapshot?.call(post);
+            return builder(post);
           }
           if (post != null) return builder(post!);
           return const SizedBox.shrink();
@@ -51,7 +56,10 @@ class PostDoc extends StatelessWidget {
               );
         }
         if (snapshot.hasError) return Text(snapshot.error.toString());
-        if (snapshot.hasData) return builder(snapshot.data!);
+        if (snapshot.hasData) {
+          onSnapshot!(snapshot.data!);
+          return builder(snapshot.data!);
+        }
         if (post != null) return builder(post!);
         return const SizedBox.shrink();
       },
