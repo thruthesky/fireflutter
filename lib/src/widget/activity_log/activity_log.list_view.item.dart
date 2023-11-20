@@ -49,14 +49,12 @@ class ActivityLogListTiLeItem extends StatelessWidget {
               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05),
               shape: RoundedRectangleBorder(
                 side: BorderSide(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.05),
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05),
                   width: 1,
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 16, top: 16, right: 16, bottom: 16),
+                padding: const EdgeInsets.only(left: 16, top: 16, right: 16, bottom: 16),
                 child: children.isEmpty
                     ? Row(
                         children: [
@@ -121,10 +119,7 @@ class ActivityLogListTiLeItem extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
           border: Border.all(
-            color: Theme.of(context)
-                .colorScheme
-                .primary
-                .tone(70), //Colors.lightBlue[300]!,
+            color: Theme.of(context).colorScheme.primary.tone(70), //Colors.lightBlue[300]!,
             width: 2,
           ),
         ),
@@ -142,7 +137,6 @@ class ActivityLogListTiLeItem extends StatelessWidget {
                 'user.follow' => Icons.bookmark_add_outlined,
                 'user.unfollow' => Icons.bookmark_remove_outlined,
                 'user.viewProfile' => Icons.person_search_outlined,
-                'user.roomOpen' => Icons.chat_bubble_outline,
                 'user.share' => Icons.share,
                 'post.create' => Icons.add,
                 'post.update' => Icons.update,
@@ -156,6 +150,7 @@ class ActivityLogListTiLeItem extends StatelessWidget {
                 'comment.like' => Icons.thumb_up_outlined,
                 'comment.unlike' => Icons.thumb_down_outlined,
                 'comment.share' => Icons.share,
+                'chat.roomOpen' => Icons.chat_bubble_outline,
                 _ => Icons.help_center_outlined,
               },
             ),
