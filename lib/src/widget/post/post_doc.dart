@@ -57,7 +57,7 @@ class PostDoc extends StatelessWidget {
         }
         if (snapshot.hasError) return Text(snapshot.error.toString());
         if (snapshot.hasData) {
-          onSnapshot!(snapshot.data!);
+          onSnapshot?.call(snapshot.data!);
           return builder(snapshot.data!);
         }
         if (post != null) return builder(post!);
