@@ -8,6 +8,10 @@ part 'post.g.dart';
 @JsonSerializable()
 class Post {
   static const String collectionName = 'posts';
+
+  /// '/users' collection
+  static CollectionReference col = FirebaseFirestore.instance.collection(collectionName);
+
   static DocumentReference doc([String? postId]) => postCol.doc(postId);
   final String id;
   final String categoryId;
