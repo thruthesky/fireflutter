@@ -106,6 +106,8 @@ class I18nTexts {
   String andriod;
   String inputTokens;
   String inputTokensHint;
+  String chooseUser;
+  String searchByUid;
 
   /// activity log appbar titile
   String titleStatistic;
@@ -297,6 +299,8 @@ class I18nTexts {
     this.sound = "Sound",
     this.inputTokens = "Input token's",
     this.inputTokensHint = "Multipule token must be separated by comma (,)",
+    this.chooseUser = "Choose user",
+    this.searchByUid = "Search by uid",
 
     /// activity log appbar titile
     this.titleStatistic = "Admin Statistics",

@@ -40,7 +40,7 @@ class AdminService {
         return StatefulBuilder(builder: (context, setState) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Choose User'),
+              title: Text(tr.chooseUser),
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(60),
                 child: Padding(
@@ -48,7 +48,7 @@ class AdminService {
                   child: TextField(
                       controller: input,
                       decoration: InputDecoration(
-                        label: const Text('Search'),
+                        label: Text(tr.labelSearch),
                         suffixIcon: IconButton(
                           onPressed: () {
                             setState(() {});

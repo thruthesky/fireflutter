@@ -78,27 +78,30 @@ class _AdminFileListScreenState extends State<AdminFileListScreen> {
               ),
               SizedBox(
                 height: 32,
-                child: Row(
-                  children: [
-                    if (uid.isNotEmpty) ...[
-                      const Padding(
-                        padding: EdgeInsets.only(left: 16, top: 6, bottom: 6),
-                        child: Text("Search by uid: "),
-                      ),
-                      TextButton(
-                        style: ButtonStyle(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Theme.of(context).primaryColor.withOpacity(0.2)),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      if (uid.isNotEmpty) ...[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16, top: 6, bottom: 6),
+                          child: Text("${tr.searchByUid}: "),
                         ),
-                        child: Text(uid),
-                        onPressed: () {
-                          uid = '';
-                          setState(() {});
-                        },
-                      ),
-                    ]
-                  ],
+                        TextButton(
+                          style: ButtonStyle(
+                            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Theme.of(context).primaryColor.withOpacity(0.2)),
+                          ),
+                          child: Text(uid),
+                          onPressed: () {
+                            uid = '';
+                            setState(() {});
+                          },
+                        ),
+                      ]
+                    ],
+                  ),
                 ),
               ),
             ],
