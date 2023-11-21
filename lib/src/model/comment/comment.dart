@@ -10,8 +10,7 @@ part 'comment.g.dart';
 class Comment {
   static const String collectionName = 'comments';
   static CollectionReference get col => commentCol;
-  static DocumentReference doc([String? commentId]) =>
-      commentCol.doc(commentId);
+  static DocumentReference doc([String? commentId]) => commentCol.doc(commentId);
 
   final String id;
   final String postId;
@@ -64,8 +63,7 @@ class Comment {
     });
   }
 
-  factory Comment.fromJson(Map<String, dynamic> json) =>
-      _$CommentFromJson(json)..data = json;
+  factory Comment.fromJson(Map<String, dynamic> json) => _$CommentFromJson(json)..data = json;
   Map<String, dynamic> toJson() => _$CommentToJson(this);
 
   @override
@@ -88,10 +86,8 @@ class Comment {
       'updatedAt': FieldValue.serverTimestamp(),
       'uid': myUid,
       if (parent != null) 'parentId': parent.id,
-      'sort': getCommentSortString(
-          noOfComments: post.noOfComments,
-          depth: parent?.depth ?? 0,
-          sortString: parent?.sort),
+      'sort':
+          getCommentSortString(noOfComments: post.noOfComments, depth: parent?.depth ?? 0, sortString: parent?.sort),
       'depth': parent == null ? 1 : parent.depth + 1,
     };
 
@@ -161,9 +157,7 @@ class Comment {
     // delete the comment's photos
     // no need to await
     for (var url in urls) {
-      StorageService.instance
-          .delete(url)
-          .catchError((e) => toast(title: 'Error', message: e.toString()));
+      StorageService.instance.delete(url).catchError((e) => toast(title: 'Error', message: e.toString()));
     }
     final deletedCommentData = {
       'content': '',
@@ -202,6 +196,9 @@ class Comment {
     CommentService.instance.sendNotificationOnLike(this, isLiked);
 
     CommentService.instance.onLike?.call(this, isLiked);
+
+    // log comment like/unlike
+    activityLogCommentLike(commentId: id, isLiked: isLiked);
 
     return isLiked;
   }
