@@ -104,6 +104,8 @@ class I18nTexts {
   String defaultChannel;
   String defaultSound;
   String andriod;
+  String inputTokens;
+  String inputTokensHint;
 
   /// activity log appbar titile
   String titleStatistic;
@@ -177,6 +179,9 @@ class I18nTexts {
   String labelInputAnyText;
   String labelNotificationGuide;
   String sound;
+  String labelUserList;
+  String labelTokenList;
+  String labelNotificationType;
 
   /// button string
   String deleteComment;
@@ -193,6 +198,8 @@ class I18nTexts {
   String notificationSettingProfileLiked;
   String notificationSettingPostLiked;
   String notificationSettingCommentLiked;
+  String pushNotificationUserHint;
+  String pushNotificationTokenHint;
 
   I18nTexts({
     this.loginFirstTitle = 'Login first',
@@ -288,6 +295,8 @@ class I18nTexts {
     this.defaultSound = "Default",
     this.andriod = "Andriod",
     this.sound = "Sound",
+    this.inputTokens = "Input token's",
+    this.inputTokensHint = "Multipule token must be separated by comma (,)",
 
     /// activity log appbar titile
     this.titleStatistic = "Admin Statistics",
@@ -360,6 +369,9 @@ class I18nTexts {
     this.labelInputPostId = "Input #a ID",
     this.labelInputAnyText = "Input the #a text",
     this.labelNotificationGuide = "Push notification guideline",
+    this.labelUserList = "User list",
+    this.labelTokenList = "Token list",
+    this.labelNotificationType = "Select notification type",
 
     /// button
     this.deleteComment = "Delete Comment",
@@ -376,6 +388,8 @@ class I18nTexts {
     this.notificationSettingProfileLiked = 'Receive notifications on profile liked',
     this.notificationSettingPostLiked = 'Receive notifications on post liked',
     this.notificationSettingCommentLiked = 'Receive notifications on comment liked',
+    this.pushNotificationUserHint = "Choose users to send push notification",
+    this.pushNotificationTokenHint = "Choose users to get tokens and  send push notification.",
   });
 
   factory I18nTexts.fromJson(Map<String, dynamic> json) => _$I18nTextsFromJson(json);

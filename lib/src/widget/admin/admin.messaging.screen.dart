@@ -21,31 +21,31 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
   final landingPage = TextEditingController(text: '');
   final tokenString = TextEditingController(text: '');
 
-  final channelId = TextEditingController(text: tr.defaultChannel);
-  final sound = TextEditingController(text: tr.defaultSound);
+  final channelId = TextEditingController(text: 'DEFAULT_CHANNEL');
+  final sound = TextEditingController(text: 'default');
   List<String> tokens = [];
   Map<String, User> users = {};
 
   String sendTarget = NotificationTarget.platform;
   Map<String, String> targetMenuItem = {
-    NotificationTarget.platform: tr.labelPlatform,
-    NotificationTarget.users: tr.users,
-    NotificationTarget.tokens: tr.labelTokens,
+    NotificationTarget.platform: 'Platform',
+    NotificationTarget.users: 'Users',
+    NotificationTarget.tokens: 'Tokens',
   };
 
   String platformTarget = NotificationPlatform.allUsers;
   Map<String, String> platformMenuItem = {
-    NotificationPlatform.allUsers: tr.labelAll,
-    NotificationPlatform.androidUsers: tr.andriod,
+    NotificationPlatform.allUsers: 'All',
+    NotificationPlatform.androidUsers: "Android",
     NotificationPlatform.iosUsers: "iOS",
     NotificationPlatform.webUsers: "Web",
   };
 
   String notificationType = NotificationType.post;
   Map<String, String> notificationTypeMenuItem = {
-    NotificationType.post: tr.labelPost,
-    NotificationType.chat: tr.chat,
-    NotificationType.user: tr.labelUser,
+    NotificationType.post: 'Post',
+    NotificationType.chat: 'Chat',
+    NotificationType.user: 'User',
   };
 
   String topic = '';
@@ -61,7 +61,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
     super.initState();
 
     if (MessagingService.instance.customizeTopic != null) {
-      targetMenuItem = {NotificationTarget.topic: tr.labelTopic, ...targetMenuItem};
+      targetMenuItem = {NotificationTarget.topic: 'Topic', ...targetMenuItem};
       topic = MessagingService.instance.customizeTopic!.first.topic;
     }
   }
@@ -308,7 +308,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
   List<Widget> get notificationTargetPlatform => [
         spaceBetweenWidgetGroup,
         Text(
-          'Select Platform',
+          tr.labelPlatform,
           style: textStyle,
         ),
         SingleChildScrollView(
@@ -354,7 +354,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
         Row(
           children: [
             Text(
-              'Users list',
+              tr.labelUserList,
               style: textStyle,
             ),
             IconButton(
@@ -440,7 +440,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                 );
               },
               child: Text(
-                'Choose users to send push notification',
+                tr.pushNotificationUserHint,
                 style: textStyle,
               ),
             ),
@@ -451,7 +451,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
         Row(
           children: [
             Text(
-              'Tokens list',
+              tr.labelTokenList,
               style: textStyle,
             ),
             IconButton(
@@ -478,8 +478,8 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
               onPressed: () async {
                 final res = await prompt(
                   context: context,
-                  title: "Input Token's",
-                  hintText: "Multipule token must be separated by comma",
+                  title: tr.inputTokens,
+                  hintText: tr.inputTokensHint,
                 );
                 if (res == null || res.isEmpty) return;
                 if (res.contains(',')) {
@@ -556,7 +556,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
                 );
               },
               child: Text(
-                'Choose users to get tokens and send push notification',
+                tr.pushNotificationTokenHint,
                 style: textStyle,
               ),
             ),
@@ -607,7 +607,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
 
   List<Widget> get selectNotificationType => [
         Text(
-          'Select notification type',
+          tr.labelNotificationType,
           style: textStyle,
         ),
         Row(

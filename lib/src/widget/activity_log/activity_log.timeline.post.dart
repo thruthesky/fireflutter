@@ -56,33 +56,37 @@ class ActivityLogTimeLinePost extends StatelessWidget {
                               },
                             ),
                             const SizedBox(width: sizeXs),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                UserDisplayName(
-                                  uid: post.uid,
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                                Row(
-                                  children: [
-                                    DateTimeText(
-                                        dateTime: post.createdAt,
-                                        style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11)),
-                                    DatabaseCount(
-                                      path: pathSeenBy(post.id), // 'posts/${post.id}/seenBy',
-                                      builder: (n) => n < 2
-                                          ? const SizedBox.shrink()
-                                          : Text(
-                                              " | ${tr.views}: $n",
-                                              style: TextStyle(
-                                                  color: Theme.of(context).colorScheme.secondary, fontSize: 11),
-                                            ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  UserDisplayName(
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    uid: post.uid,
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                  Row(
+                                    children: [
+                                      DateTimeText(
+                                          dateTime: post.createdAt,
+                                          style:
+                                              TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11)),
+                                      DatabaseCount(
+                                        path: pathSeenBy(post.id), // 'posts/${post.id}/seenBy',
+                                        builder: (n) => n < 2
+                                            ? const SizedBox.shrink()
+                                            : Text(
+                                                " | ${tr.views}: $n",
+                                                style: TextStyle(
+                                                    color: Theme.of(context).colorScheme.secondary, fontSize: 11),
+                                              ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                            const Spacer(),
                             if (post.hasPhoto)
                               const Icon(
                                 Icons.image_outlined,

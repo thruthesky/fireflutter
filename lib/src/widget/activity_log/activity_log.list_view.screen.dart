@@ -128,7 +128,7 @@ class _ActivityLogListViewScreenState extends State<ActivityLogListViewScreen> {
                       const SizedBox(
                         width: 22,
                       ),
-                      ...[tr.labelAll, ...ActivityLogService.instance.activityLogTypes]
+                      ...['all', ...ActivityLogService.instance.activityLogTypes]
                           .map(
                             (type) => GestureDetector(
                               behavior: HitTestBehavior.opaque,
@@ -155,7 +155,7 @@ class _ActivityLogListViewScreenState extends State<ActivityLogListViewScreen> {
                                   Padding(
                                     padding: const EdgeInsets.only(right: sizeXs),
                                     child: Text(
-                                      toBeginningOfSentenceCase(type)!,
+                                      labelText(type),
                                       style: const TextStyle(fontSize: 12),
                                     ),
                                   ),
@@ -189,4 +189,19 @@ class _ActivityLogListViewScreenState extends State<ActivityLogListViewScreen> {
       ),
     );
   }
+}
+
+String labelText(String type) {
+  if (type == 'user') {
+    return toBeginningOfSentenceCase(tr.labelUser)!;
+  } else if (type == 'post') {
+    return toBeginningOfSentenceCase(tr.labelPost)!;
+  } else if (type == 'comment') {
+    return toBeginningOfSentenceCase(tr.labelComment)!;
+  } else if (type == 'chat') {
+    return toBeginningOfSentenceCase(tr.chat)!;
+  } else if (type == 'all') {
+    return toBeginningOfSentenceCase(tr.labelAll)!;
+  }
+  return toBeginningOfSentenceCase(type)!;
 }
