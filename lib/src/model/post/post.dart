@@ -19,6 +19,7 @@ class Post {
   final String content;
 
   final String youtubeId;
+  final String videoUrl;
 
   /// This holds the original JSON document data of the user document. This is
   /// useful when you want to save custom data in the user document.
@@ -51,6 +52,7 @@ class Post {
     this.title = '',
     this.content = '',
     this.youtubeId = '',
+    this.videoUrl = '',
     this.uid = '',
     this.hashtags = const [],
     this.urls = const [],
@@ -119,6 +121,7 @@ class Post {
     String? title,
     String? content,
     String? youtubeId,
+    String? videoUrl,
     List<String>? urls,
     List<String>? hashtags,
     Map<String, dynamic> data = const {},
@@ -128,6 +131,7 @@ class Post {
       if (content != null) 'content': content,
       if (categoryId != null) 'categoryId': categoryId,
       if (youtubeId != null) 'youtubeId': youtubeId,
+      if (videoUrl != null) 'videoUrl': videoUrl,
       // We added Photo Grid View in Grc.
       // There is no way to query if array is empty in Firestore.
       // but we can check if it is null.
@@ -188,6 +192,7 @@ class Post {
     String? content,
     List<String>? urls,
     String? youtubeId,
+    String? videoUrl,
     List<String>? hashtags,
     bool? deleted,
     Map<String, dynamic> data = const {},
@@ -198,6 +203,7 @@ class Post {
       if (content != null) 'content': content,
       if (urls != null) 'urls': urls,
       if (youtubeId != null) 'youtubeId': youtubeId,
+      if (videoUrl != null) 'videoUrl': videoUrl,
       if (hashtags != null) 'hashtags': hashtags,
       if (deleted != null) 'deleted': deleted,
       'updatedAt': FieldValue.serverTimestamp(),
@@ -239,6 +245,7 @@ class Post {
       content: '',
       urls: [],
       youtubeId: '',
+      videoUrl: '',
       hashtags: [],
       deleted: true,
       data: {

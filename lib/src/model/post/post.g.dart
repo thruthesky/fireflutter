@@ -12,6 +12,7 @@ Post _$PostFromJson(Map<String, dynamic> json) => Post(
       title: json['title'] as String? ?? '',
       content: json['content'] as String? ?? '',
       youtubeId: json['youtubeId'] as String? ?? '',
+      videoUrl: json['videoUrl'] as String? ?? '',
       uid: json['uid'] as String? ?? '',
       hashtags: (json['hashtags'] as List<dynamic>?)
               ?.map((e) => e as String)
@@ -35,6 +36,7 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'title': instance.title,
       'content': instance.content,
       'youtubeId': instance.youtubeId,
+      'videoUrl': instance.videoUrl,
       'uid': instance.uid,
       'hashtags': instance.hashtags,
       'urls': instance.urls,

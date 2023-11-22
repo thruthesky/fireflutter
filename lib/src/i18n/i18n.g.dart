@@ -130,6 +130,25 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
       defaultSound: json['defaultSound'] as String? ?? "Default",
       andriod: json['andriod'] as String? ?? "Andriod",
       sound: json['sound'] as String? ?? "Sound",
+      inputTokens: json['inputTokens'] as String? ?? "Input token's",
+      inputTokensHint: json['inputTokensHint'] as String? ??
+          "Multipule token must be separated by comma (,)",
+      chooseUser: json['chooseUser'] as String? ?? "Choose user",
+      searchByUid: json['searchByUid'] as String? ?? "Search by uid",
+      titleStatistic: json['titleStatistic'] as String? ?? "Admin Statistics",
+      titleReportList:
+          json['titleReportList'] as String? ?? "Admin Report List",
+      titleCategoryList:
+          json['titleCategoryList'] as String? ?? "Category List",
+      titleChatRoomList:
+          json['titleChatRoomList'] as String? ?? "Admin Chat Room List",
+      titleActivityLog: json['titleActivityLog'] as String? ?? "Activity Logs",
+      titleNotificationSetting: json['titleNotificationSetting'] as String? ??
+          "Notification Settings",
+      titleAdminFileList:
+          json['titleAdminFileList'] as String? ?? "Admin File List",
+      titlePushNotification:
+          json['titlePushNotification'] as String? ?? "Push Notification",
       startAppLog: json['startAppLog'] as String? ?? "#a started the app",
       signinLog: json['signinLog'] as String? ?? "#a signed in",
       signoutLog: json['signoutLog'] as String? ?? "#a signed out",
@@ -204,6 +223,10 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
           json['labelInputAnyText'] as String? ?? "Input the #a text",
       labelNotificationGuide: json['labelNotificationGuide'] as String? ??
           "Push notification guideline",
+      labelUserList: json['labelUserList'] as String? ?? "User list",
+      labelTokenList: json['labelTokenList'] as String? ?? "Token list",
+      labelNotificationType: json['labelNotificationType'] as String? ??
+          "Select notification type",
       deleteComment: json['deleteComment'] as String? ?? "Delete Comment",
       disableUser: json['disableUser'] as String? ?? "Disable User",
       markAsResolve: json['markAsResolve'] as String? ?? "Mark as Resolve",
@@ -227,6 +250,10 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
       notificationSettingCommentLiked:
           json['notificationSettingCommentLiked'] as String? ??
               'Receive notifications on comment liked',
+      pushNotificationUserHint: json['pushNotificationUserHint'] as String? ??
+          "Choose users to send push notification",
+      pushNotificationTokenHint: json['pushNotificationTokenHint'] as String? ??
+          "Choose users to get tokens and  send push notification.",
     );
 
 Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
@@ -324,6 +351,18 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
       'defaultChannel': instance.defaultChannel,
       'defaultSound': instance.defaultSound,
       'andriod': instance.andriod,
+      'inputTokens': instance.inputTokens,
+      'inputTokensHint': instance.inputTokensHint,
+      'chooseUser': instance.chooseUser,
+      'searchByUid': instance.searchByUid,
+      'titleStatistic': instance.titleStatistic,
+      'titleReportList': instance.titleReportList,
+      'titleCategoryList': instance.titleCategoryList,
+      'titleChatRoomList': instance.titleChatRoomList,
+      'titleActivityLog': instance.titleActivityLog,
+      'titleNotificationSetting': instance.titleNotificationSetting,
+      'titleAdminFileList': instance.titleAdminFileList,
+      'titlePushNotification': instance.titlePushNotification,
       'startAppLog': instance.startAppLog,
       'signinLog': instance.signinLog,
       'signoutLog': instance.signoutLog,
@@ -378,6 +417,9 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
       'labelInputAnyText': instance.labelInputAnyText,
       'labelNotificationGuide': instance.labelNotificationGuide,
       'sound': instance.sound,
+      'labelUserList': instance.labelUserList,
+      'labelTokenList': instance.labelTokenList,
+      'labelNotificationType': instance.labelNotificationType,
       'deleteComment': instance.deleteComment,
       'deletePost': instance.deletePost,
       'markAsResolve': instance.markAsResolve,
@@ -393,4 +435,6 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
       'notificationSettingPostLiked': instance.notificationSettingPostLiked,
       'notificationSettingCommentLiked':
           instance.notificationSettingCommentLiked,
+      'pushNotificationUserHint': instance.pushNotificationUserHint,
+      'pushNotificationTokenHint': instance.pushNotificationTokenHint,
     };
