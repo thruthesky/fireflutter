@@ -40,6 +40,7 @@ class Post {
   final bool? deleted;
   final String? reason;
   final int noOfComments;
+  final bool hasMedia;
 
   bool get iLiked => likes.contains(myUid);
 
@@ -56,6 +57,7 @@ class Post {
     this.uid = '',
     this.hashtags = const [],
     this.urls = const [],
+    this.hasMedia = false,
     required this.createdAt,
     this.likes = const [],
     this.deleted = false,
@@ -132,17 +134,19 @@ class Post {
       if (categoryId != null) 'categoryId': categoryId,
       if (youtubeId != null) 'youtubeId': youtubeId,
       if (videoUrl != null) 'videoUrl': videoUrl,
-      // We added Photo Grid View in Grc.
-      // There is no way to query if array is empty in Firestore.
-      // but we can check if it is null.
-      // so, we will save empty array as null
-      // so that we can query if post has photos or not.
       if (urls != null && urls.isNotEmpty) 'urls': urls,
       'createdAt': FieldValue.serverTimestamp(),
       'uid': myUid!,
       if (hashtags != null) 'hashtags': hashtags,
       // I also want to see my own post in the feed, so I add myUid too.
       if (my!.followers.isNotEmpty) 'followers': [...my!.followers, myUid],
+      // hasMedia to query if post has media or not
+      // which means if have urls/videoUrl.
+      // This is useful when showing the posts in the search screen.
+      // If the post has no media, we will not show it in the search screen.
+      // This will also help to reduce the no of reads.
+      // If the post has media, we will show it in the search screen.
+      'hasMedia': ((urls != null && urls.isNotEmpty) || (videoUrl != null && videoUrl.isNotEmpty)),
       ...data,
     };
     final postId = Post.doc().id;
@@ -206,6 +210,7 @@ class Post {
       if (videoUrl != null) 'videoUrl': videoUrl,
       if (hashtags != null) 'hashtags': hashtags,
       if (deleted != null) 'deleted': deleted,
+      'hasMedia': ((urls != null && urls.isNotEmpty) || (videoUrl != null && videoUrl.isNotEmpty)),
       'updatedAt': FieldValue.serverTimestamp(),
       ...data,
     };
@@ -250,6 +255,7 @@ class Post {
       deleted: true,
       data: {
         'deletedReason': deletedReason ?? 'Deleted',
+        'hasMedia': false,
       },
       log: false, // don't log for update.
     );

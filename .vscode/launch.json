@@ -269,6 +269,24 @@
       "deviceId": "9538AD08-48B3-43A8-B848-31CC488FE3E9"
     },
     {
+      "name": "GRC - Simulator SE - debug (C)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "04ECCC30-56E8-42BC-8F76-6EA592EC9A1F"
+    },
+    {
+      "name": "GRC - Simulator 15 - debug (C)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "570D2E37-5990-4376-9CF2-54DB0FB9161D"
+    },
+    {
       "name": "GRC - Emulator - debug (C)",
       "request": "launch",
       "type": "dart",
@@ -357,6 +375,6 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "iPhone SE (3rd generation)"
-    },
+    }
   ]
 }
