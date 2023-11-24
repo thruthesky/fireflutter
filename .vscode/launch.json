@@ -376,5 +376,14 @@
       "flutterMode": "debug",
       "deviceId": "iPhone SE (3rd generation)"
     }
+    ,{
+      "name": "GRC - Samsung real phone (N)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/grc",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "R9ATA00LMJM"
+    }
   ]
 }
