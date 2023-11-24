@@ -35,6 +35,7 @@ class UserListView extends StatelessWidget {
     this.subtitleBuilder,
     this.trailingBuilder,
     this.itemBuilder,
+    this.listViewPadding,
     this.customViewBuilder,
     this.pageSize = 10,
     this.scrollDirection = Axis.vertical,
@@ -56,7 +57,8 @@ class UserListView extends StatelessWidget {
   final Widget Function(User)? titleBuilder;
   final Widget Function(User)? subtitleBuilder;
   final Widget Function(User)? trailingBuilder;
-  final Widget Function(User, int)? itemBuilder;
+  final Widget Function(User user, int index)? itemBuilder;
+  final EdgeInsetsGeometry? listViewPadding;
   final EdgeInsetsGeometry? contentPadding;
   final Widget Function(int)? separatorBuilder;
 
@@ -118,6 +120,7 @@ class UserListView extends StatelessWidget {
         return ListView.separated(
           physics: physics,
           shrinkWrap: shrinkWrap,
+          padding: listViewPadding,
           separatorBuilder: (context, index) =>
               separatorBuilder?.call(index) ??
               Divider(

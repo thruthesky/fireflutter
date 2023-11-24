@@ -359,7 +359,7 @@ class User {
     /// Get real data from the server.
     /// Assembling the user updated object won't work due to FieldValues.
     if (UserService.instance.onUpdate != null) {
-      get(uid).then((user) => UserService.instance.onUpdate!(user!, data));
+      get(uid).then((user) => UserService.instance.onUpdate!(user!, docData));
     }
   }
 
