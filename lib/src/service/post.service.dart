@@ -155,14 +155,16 @@ class PostService {
   }
 
   /// Update all post of the user
-  void updateAllPostOfUser(String uid, {required Map<String, dynamic> data}) {
+  void updateAllPostOfUser(String uid, {required Map<String, dynamic> data}) async {
+    if (data.isEmpty) return;
     WriteBatch batch = FirebaseFirestore.instance.batch();
-    postCol.where('uid', isEqualTo: uid).get().then((snapshot) {
-      for (final doc in snapshot.docs) {
-        batch.update(doc.reference, data);
-      }
-      return batch.commit();
-    });
+    final snapshot = await postCol.where('uid', isEqualTo: uid).get();
+
+    for (final doc in snapshot.docs) {
+      batch.update(doc.reference, data);
+    }
+
+    return batch.commit();
   }
 
   // Shows the preview carousel of the media of the post

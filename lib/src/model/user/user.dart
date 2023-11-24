@@ -25,6 +25,8 @@ class User {
   late Map<String, dynamic> data;
 
   final String uid;
+
+  /// [me] will return true if this user model is for the logged in user.
   bool get me => myUid == uid;
 
   /// [isAdmin] is set to true if the logged in user is an admin.
