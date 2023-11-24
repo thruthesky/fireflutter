@@ -157,13 +157,12 @@ class PostService {
   /// Update all post of the user
   void updateAllPostOfUser(String uid, {required Map<String, dynamic> data}) async {
     if (data.isEmpty) return;
-    WriteBatch batch = FirebaseFirestore.instance.batch();
     final snapshot = await postCol.where('uid', isEqualTo: uid).get();
-
+    if (snapshot.size == 0) return;
+    WriteBatch batch = FirebaseFirestore.instance.batch();
     for (final doc in snapshot.docs) {
       batch.update(doc.reference, data);
     }
-
     return batch.commit();
   }
 
