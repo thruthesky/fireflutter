@@ -138,7 +138,16 @@ class UserService {
   /// If any of the user document field updates, then this callback will be called.
   /// For instance, when a user creates a post or a comment, the no of posts or
   /// comments are updated in user document. Hence [onUpdate] will be called.
-  Function(User user)? onUpdate;
+  /// Warning, don't call UserService.instance.update() inside this callback. It
+  /// will cause an infinite loop. You may use the firestore SDK to update the
+  /// user document.
+  ///
+  /// [user] is the user model that has new data (after update).
+  ///
+  /// [data] it has the fields and values in Map that are updated. You can use
+  /// it to know which fields are updated.
+  /// updated.
+  Function(User user, Map<String, dynamic> data)? onUpdate;
   Function(User user)? onDelete;
 
   Function(User user)? onSignout;
@@ -164,7 +173,7 @@ class UserService {
     String? adminUid,
     bool enableNoOfProfileView = false,
     Function(User user)? onCreate,
-    Function(User user)? onUpdate,
+    Function(User user, Map<String, dynamic> data)? onUpdate,
     Function(User user)? onDelete,
     Function(User user)? onSignout,
     UserCustomize? customize,

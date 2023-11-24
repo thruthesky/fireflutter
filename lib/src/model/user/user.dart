@@ -9,8 +9,7 @@ class User {
   static const String collectionName = 'users';
 
   /// '/users' collection
-  static CollectionReference col =
-      FirebaseFirestore.instance.collection(collectionName);
+  static CollectionReference col = FirebaseFirestore.instance.collection(collectionName);
 
   /// '/users/{uid}' document.
   ///
@@ -26,6 +25,7 @@ class User {
   late Map<String, dynamic> data;
 
   final String uid;
+  bool get me => myUid == uid;
 
   /// [isAdmin] is set to true if the logged in user is an admin.
   bool isAdmin = false;
@@ -93,9 +93,7 @@ class User {
   DateTime get birthdate => DateTime(birthYear, birthMonth, birthDay);
 
   /// Gets the age of the user
-  int? get age => birthYear != 0
-      ? DateTime.now().difference(birthdate).inDays ~/ 365
-      : null;
+  int? get age => birthYear != 0 ? DateTime.now().difference(birthdate).inDays ~/ 365 : null;
 
   /// Set this to true when the user has completed the profile.
   /// This should be set when the user submit the profile form.
@@ -188,15 +186,13 @@ class User {
 
   factory User.fromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
     return User.fromJson({
-      ...(documentSnapshot.data() ?? Map<String, dynamic>.from({}))
-          as Map<String, dynamic>,
+      ...(documentSnapshot.data() ?? Map<String, dynamic>.from({})) as Map<String, dynamic>,
       'uid': documentSnapshot.id,
     });
   }
 
   ///
-  factory User.fromJson(Map<String, dynamic> json) =>
-      _$UserFromJson(json)..data = json;
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json)..data = json;
 
   Map<String, dynamic> toMap() {
     return _$UserToJson(this);
@@ -279,6 +275,7 @@ class User {
   /// User.fromUid(FirebaseAuth.instance.currentUser!.uid).update( noOfPosts: FieldValue.increment(1) ); // when UserService.instance.init() is not called
   /// ```
   ///
+  /// [extra] is the extra fields to be updated.
   ///
   Future<void> update({
     String? name,
@@ -309,7 +306,7 @@ class User {
     dynamic value,
     bool? isDisabled,
     FieldValue? blockedUsers,
-    Map<String, dynamic> data = const {},
+    Map<String, dynamic> extra = const {},
   }) async {
     final docData = {
       ...{
@@ -341,17 +338,13 @@ class User {
         if (isDisabled != null) 'isDisabled': isDisabled,
         if (blockedUsers != null) 'blockedUsers': blockedUsers,
       },
-      ...data
+      ...extra
     };
 
     /// Update the birth day of year
-    if (docData['birthYear'] != null &&
-        docData['birthMonth'] != null &&
-        docData['birthDay'] != null) {
-      final date = DateTime(
-          docData['birthYear'], docData['birthMonth'], docData['birthDay']);
-      docData['birthDayOfYear'] =
-          date.difference(DateTime(date.year)).inDays + 1;
+    if (docData['birthYear'] != null && docData['birthMonth'] != null && docData['birthDay'] != null) {
+      final date = DateTime(docData['birthYear'], docData['birthMonth'], docData['birthDay']);
+      docData['birthDayOfYear'] = date.difference(DateTime(date.year)).inDays + 1;
     }
     dog("User.update(); me: $myUid, who: $uid, path: ${userDoc(uid).path}, docData: $docData");
 
@@ -361,19 +354,11 @@ class User {
       SetOptions(merge: true),
     );
 
-    /// Get real data from the server. Assembling the user updated object won't work due to FieldValues.
+    /// Get real data from the server.
+    /// Assembling the user updated object won't work due to FieldValues.
     if (UserService.instance.onUpdate != null) {
-      get(uid).then((user) => UserService.instance.onUpdate!(user!));
+      get(uid).then((user) => UserService.instance.onUpdate!(user!, data));
     }
-    // /// log user update but this might not be necessary.
-    // get(uid).then((user) {
-    //   if (UserService.instance.onUpdate != null) {
-    //     UserService.instance.onUpdate!(user!);
-    //   }
-
-    //   /// log user update
-    //   ActivityService.instance.onUserUpdate(user!);
-    // });
   }
 
   /// If the user has completed the profile, set the isComplete field to true.
