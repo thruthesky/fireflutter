@@ -1,22 +1,19 @@
 # Overview of FireFlutter
 
 
-![FireFlutter](https://github.com/thruthesky/fireflutter/blob/main/doc/fireflutter_title_image.jpg?raw=true)
+![FireFlutter](https://github.com/thruthesky/fireflutter/blob/main/docs/fireflutter_title_image.jpg?raw=true)
 
-Welcome to FireFlutter – your ultimate toolkit for building dynamic, feature-rich social community and content management apps with ease! Our package, designed specifically for Flutter developers, offers a comprehensive, open-source solution to effortlessly create a variety of applications. Whether you're aiming to develop a robust CMS (Content Management System), a vibrant social networking service, an interactive chat platform, a lively community forum, or even a bustling online shopping mall, FireFlutter is your go-to resource. Powered by Firebase, this package not only simplifies the development process but also accelerates it, enabling you to bring your creative ideas to life faster than ever. Join us in revolutionizing app development – with FireFlutter, the possibilities are endless!
+FireFlutter is a comprehensive, open-source toolkit for Flutter developers to build dynamic social community and content management apps. It simplifies and accelerates the development of various applications, from CMS and social networks to chat platforms, forums, and online malls, using Firebase. FireFlutter opens up endless possibilities for creative app development. For bugs or assistance, please create an issue
 
-Please, create an issue if you find a bug or need a help.
+## TODO
 
+- Transform all the MD files under `/doc` into `/docs`.
+- Remove all the images excepth the title image in the doc.
 
 ## Overview
 
-The goal of FireFlutter is to provide the reusable common code blocks encapsulating in the widgets. So, developer can quickly develop what they want using this package.
 
-It provides code for user, forum, chat and push notificiation management that works with `like`, `favorite`, `follow`, `post` and `comment` features.
-
-There are some pre-defined fields for the common usage in the database structure. We use `json_serializable` for providing each model with the fields.
-
-The model has also basic CRUD functionalities.
+FireFlutter offers reusable widgets with common code blocks for quick development. It includes code for user, forum, chat, and push notification management with features like liking, favoriting, following, posting, and commenting. The package uses pre-defined fields in its database structure and json_serializable for model fields, along with basic CRUD functionalities.
 
 
 
@@ -40,31 +37,6 @@ It should be a class method or a widget instead of a plain function except the h
 
 
 
-
-## Changes
-
-<!-- You can see [CHANGELOG.md](/CHANGELOG.md) for the updated log. -->
-
-### Oct 10 0.3.12
-
-- Refactoring on user, feed.
-- Refine widgets and services.
-
-### Sept 28 0.3.11
-
-- Add. Admin dashboarsd.
-- Update. Push notification.
-- Refactoring. Save more data in realtime database.
-
-### Sept 10 0.3.10
-
-- Change. Refactoring file/folder names.
-
-Go to [CHANGELOG.md](/CHANGELOG.md) for more.
-
-
-
-
 ## Features
 
 There are many features and most of them are optional. You may turn on the extra functions by creating an instance.
@@ -79,6 +51,7 @@ There are many features and most of them are optional. You may turn on the extra
 - Favorite(Bookmark)
 - Following
 - Admin
+- And more
 
 ## Getting started
 
@@ -87,48 +60,9 @@ To get started, you can follow the [Installation](#installation) chapter.
 The best way is to copy codes from the example project and paste it into your project and update the UI.
 
 
-## Pub.dev Packages
-
-### url_launcher (Optional)
-
-`url_lancher` package is added by fireflutter and it is being used to open url. If you wish to let users share links by sms, you need to setup in `AndroidManifest.xml` and `Info.plist`. See the [url_launch Configuration](https://pub.dev/packages/url_launcher#configuration).
-
-FireFlutter exposes a method `launchSMS` to open the SMS app. Here is an example of how to send sms. You can build your own code, of course.
-
-```dart
-final re = await launchSMS(phnumber: '', msg: link);
-if (re) {
-  toast(title: 'SMS', message: 'Link sent by SMS');
-} else {
-  toast(title: 'SMS', message: 'Cannot open SMS');
-}
-```
-
-In this chapter, some of the notable packages that are used by FireFlutter are explained.
-
-### timeago
-
-Converts date into a humanized text.
-
-```dart
-    final fifteenAgo = DateTime.now().subtract(Duration(minutes: 15));
-
-    print(timeago.format(fifteenAgo)); // 15 minutes ago
-    print(timeago.format(fifteenAgo, locale: 'en_short')); // 15m
-    print(timeago.format(fifteenAgo, locale: 'es')); // hace 15 minutos
-```
-
-Visit [timeago](https://pub.dev/packages/timeago) to read more.
-
-### Parsed_ReadMore
-
-Allows the text to collapsed or expanded and automatically parse the url text to hyperlinks.
-
-Visit [parsed_readmore](https://pub.dev/packages/parsed_readmore) to read more.
-
-<!-- TODO: -->
-
 ## Build Sample
+
+- TODO: move this parts into each section.
 
 ### User Profile Page
 
@@ -161,9 +95,8 @@ See [User Profile](https://github.com/thruthesky/fireflutter/blob/main/doc/SAMPL
 See [WIDGETS.md](doc/WIDGETS.md) for more widget example.
 **Note:** you can use **`Theme()`** to style the widget
 
-## Usage
 
-Fireflutter updates in real time no matter what users do. Here are common uses of widgets and builders of each features.
+## Usage
 
 
 ### User

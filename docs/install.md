@@ -3,38 +3,30 @@
 
 Follow the instruction below to install FireFlutter into your app
 
-## Installing your app with fireflutter
+## Install FireFlutter as a package
 
-- Fork the fireflutter. Go to `https://github.com/thruthesky/fireflutter` and fork it.
+Not much here. Just add the latest version of fireflutter from pub.dev
+
+## Install FireFlutter as a package developer
+
+You may wish to develop your app while building(or updating) the fireflutter pakcage together.
+
+- Fork the fireflutter from `https://github.com/thruthesky/fireflutter`
+
+
 - Then, clone it
 
-```sh
-git clone https://github.com/your-account/fireflutter
-```
+- Then, create a branch in fireflutter local repository
 
-- Create a branch in fireflutter local repository
-
-```sh
-cd fireflutter
-git checkout -b work
-```
-
-- For `Pull Request`, update any file, commit, push and request for pulling your code.
-
-```sh
-echo "Hi" >> README.md
-git commit -a -m "updating README.md"
-git push --set-upstream origin work
-```
-
-- Create `apps` folder and create your app inside `apps` folder.
+- Create `apps` folder under the root of fireflutter folder and create your app inside `apps` folder.
 
 ```dart
+mkdir apps
 cd apps
 flutter create your_project
 ```
 
-- Since your project add the fireflutter from your computer folder, you need to add the path of the dependency as `../..`. Add the firefluter dependency like below.
+- You need to add the path of the dependency as `../..`. Add the firefluter dependency like below.
 
 ```yaml
 dependencies:
@@ -42,36 +34,39 @@ dependencies:
     path: ../..
 ```
 
+
+- If you have update any code in FlutterFlow, consider to submit a `pull request`.
+
+
 ## Create a Firebase
 
-If you have your own firebase project, then you can use that. If you don't have one, create one first. Visit [Firebase Website](https://firebase.google.com).
+If you have your own firebase project, then you can use that. Or you can create one.
 
 ## Firebase Extension
 
+
 ### Resize image
+
+Flutterflow uses thumbnails. And you must provide it with the resize image extension.
+
+There are the options for the resize image extension.
+
+`Sizes of resized images` - 200x200
 
 `Deletion of original file` - Don't delete  
 `Make resized images public` - yes
 
-![resize_image_settings](https://github.com/thruthesky/fireflutter/blob/main/doc/img/resize_option_1.png?raw=true)
-
 `Cache-Control header for resized images` - "max-age=86400"
 `Convert image to preferred types` - select `webp` only.
 
-![resize_image_settings](https://github.com/thruthesky/fireflutter/blob/main/doc/img/resize_option_2.png?raw=true)
-
-And choose `backfill` if you have an existing images.
-
-![resize_image_settings](https://github.com/thruthesky/fireflutter/blob/main/doc/img/resize_option_3.png?raw=true)
+`Backfill existing images` - Yes. Choose `backfill` if you have an existing images.
 
 All other options are on your choice.
 
 To display the thumbnail image, you may use `.thumbnail` String extension method. `CachedNetworkImage(imageUrl: url.thumbnail)`
 
-## Install cloud functions
 
-Since the firebase extension does not support on sending push notification with node.js SDK, we just made this function as cloud function.
-To install,
+## Install cloud functions
 
 ```sh
 git clone https://github.com/thruthesky/fireflutter
@@ -81,13 +76,18 @@ firebase use --add <project>
 npm run deploy
 ```
 
-**Note:**
-if you see error like `v2 function name(s) can only contain lower case letters, numbers, hyphens, and not exceed 62 characters in length`, then install the latest version of npm, nodejs, firebase.
+Note that, you cannot develope push notifications with Firebase Extension. That's why we are using cloud functions.
 
-**Note:**
-if you see warnings like `functions: Since this is your first time using 2nd gen functions, we need a little bit longer to finish setting everything up. Retry the deployment in a few minutes.`, then take 5 minutes break and re-deploy.
+
+Note, if you see error like `v2 function name(s) can only contain lower case letters, numbers, hyphens, and not exceed 62 characters in length`, then install the latest version of npm, nodejs, firebase.
+
+
+Note, if you see warnings like `functions: Since this is your first time using 2nd gen functions, we need a little bit longer to finish setting everything up. Retry the deployment in a few minutes.`, then take 5 minutes break and re-deploy.
+
 
 ## Security rules
+
+You need to install security rules for Firestore, Realtime Database, Storage.
 
 ### Firestore security rules
 
@@ -243,9 +243,9 @@ FireFlutter has many features and each feature has a singleton service class. Yo
 
 FireFlutter needs **Global Key** since it uses `snackbars`, `dialog`, `bottom sheet`. Use the **`FireFlutterService.instance.init(context : ...)`**
 
-**Note:** You don't have to initialize when you are only doing unit test.
+Note, you don't have to initialize when you are only doing unit test.
 
-**Note:** If you meet an error like `No MaterialLocalizations found. Xxxx widgets require MaterialLocalizations to be provided by a Localizations widget ancestor.`, then you may think a widget is not under MaterialApp or no localization provided. In this case, the context from global key will be used. For more details, See <https://docs.flutter.dev/release/breaking-changes/text-field-material-localizations>.
+Note, if you meet an error like `No MaterialLocalizations found. Xxxx widgets require MaterialLocalizations to be provided by a Localizations widget ancestor.`, then you may think a widget is not under MaterialApp or no localization provided. In this case, the context from global key will be used. For more details, See <https://docs.flutter.dev/release/breaking-changes/text-field-material-localizations>.
 
 For instance, if you are using [go_route package](https://pub.dev/packages/go_router), you can pass the global build context like below.
 
@@ -254,7 +254,7 @@ For instance, if you are using [go_route package](https://pub.dev/packages/go_ro
 UserService.instance.init(adminUid: 'xxx');
 
 WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  FireFlutterService.instance.init(context: router.routerDelegate.navigatorKey.currentContext!);
+  FireFlutterService.instance.init(context: () => router.routerDelegate.navigatorKey.currentContext!);
 })
 ```
 
@@ -293,9 +293,11 @@ class _MainWidgetState extends State<MainWidget>{
 }
 ```
 
-By default, feed feature is disabled. To use feed features, add the following in app widget.
+By default, the feed feature is disabled. To use feed features, add the following in app widget.
 
 ```dart
 FeedService.instance.init(enable: true);
 ```
 
+
+If you have difficulty to install the fireflutter, please create an issue for help.
