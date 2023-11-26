@@ -203,6 +203,7 @@ class _UserAvatarState extends State<UserProfileAvatar> {
 
   uploadProgressIndicator() {
     if (progress == null || progress == 0) return const SizedBox.shrink();
+    if (progress!.isNaN) return const SizedBox.shrink();
 
     return Positioned(
       top: 0,

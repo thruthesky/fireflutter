@@ -9,7 +9,6 @@ const messaging_model_1 = require("./messaging.model");
  * when user want to get notified if new comments
  *  is created under user created posts/comments
  */
-// const notifyNewCommentsUnderMyPostsAndComments = "notifyNewCommentsUnderMyPostsAndComments";
 const disableNotifyNewCommentsUnderMyPostsAndComments = "disableNotifyNewCommentsUnderMyPostsAndComments";
 /**
  * User class

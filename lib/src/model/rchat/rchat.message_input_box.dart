@@ -1,0 +1,82 @@
+import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
+
+class RChatMessageInputBox extends StatefulWidget {
+  const RChatMessageInputBox({
+    super.key,
+    required this.roomId,
+    this.cameraIcon,
+    this.sendIcon,
+    this.onProgress,
+    this.onSend,
+  });
+
+  final String roomId;
+
+  final Widget? cameraIcon;
+  final Widget? sendIcon;
+
+  final Function(double?)? onProgress;
+
+  /// [double] is null when upload is completed.
+  final Function? onSend;
+
+  @override
+  State<RChatMessageInputBox> createState() => _ChatMessageInputBoxState();
+}
+
+class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
+  final inputController = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const Divider(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: TextField(
+            controller: inputController,
+            decoration: InputDecoration(
+              // isDense: true,
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              hintText: '메시지를 입력하세요.',
+              prefixIcon: IconButton(
+                icon: widget.cameraIcon ?? const Icon(Icons.camera_alt),
+                onPressed: () async {
+                  final url = await StorageService.instance.upload(
+                    context: context,
+                    camera: ChatService.instance.uploadFromCamera,
+                    gallery: ChatService.instance.uploadFromGallery,
+                    file: ChatService.instance.uploadFromFile,
+                    progress: (p) => widget.onProgress?.call(p),
+                    complete: () => widget.onProgress?.call(null),
+                  );
+                  if (url != null && url.isNotEmpty) {
+                    await sendChatMessage(roomId: widget.roomId, url: url);
+                  }
+                },
+              ),
+              suffixIcon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: widget.sendIcon ?? const Icon(Icons.send),
+                    onPressed: () async {
+                      await sendChatMessage(roomId: widget.roomId, text: inputController.text);
+                      inputController.clear();
+                      widget.onSend?.call();
+                    },
+                  ),
+                ],
+              ),
+            ),
+            minLines: 1,
+            maxLines: 5,
+          ),
+        ),
+      ],
+    );
+  }
+}

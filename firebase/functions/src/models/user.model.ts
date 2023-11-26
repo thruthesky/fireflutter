@@ -1,11 +1,11 @@
 import * as admin from "firebase-admin";
-import { DocumentReference } from "firebase-admin/firestore";
-import { UserRecord } from "firebase-functions/v1/auth";
-import { PostDocument } from "../interfaces/forum.interface";
-import { UserDocument } from "../interfaces/user.interface";
-import { Ref } from "../utils/ref";
-import { Messaging } from "./messaging.model";
-import { FcmToken } from "../interfaces/messaging.interface";
+import {DocumentReference} from "firebase-admin/firestore";
+import {UserRecord} from "firebase-functions/v1/auth";
+import {PostDocument} from "../interfaces/forum.interface";
+import {UserDocument} from "../interfaces/user.interface";
+import {Ref} from "../utils/ref";
+import {Messaging} from "./messaging.model";
+import {FcmToken} from "../interfaces/messaging.interface";
 
 
 /**
@@ -156,18 +156,18 @@ export class User {
     otherUid: string
   ): Promise<UserRecord> {
     this.checkAdmin(adminUid);
-    const user = await Ref.auth.updateUser(otherUid, { disabled: true });
+    const user = await Ref.auth.updateUser(otherUid, {disabled: true});
     if (user.disabled == true) {
-      await Ref.userDoc(otherUid).set({ disabled: true }, { merge: true });
+      await Ref.userDoc(otherUid).set({disabled: true}, {merge: true});
     }
     return user;
   }
 
   static async enableUser(adminUid: string, otherUid: string) {
     this.checkAdmin(adminUid);
-    const user = await Ref.auth.updateUser(otherUid, { disabled: false });
+    const user = await Ref.auth.updateUser(otherUid, {disabled: false});
     if (user.disabled == false) {
-      await Ref.userDoc(otherUid).set({ disabled: false }, { merge: true });
+      await Ref.userDoc(otherUid).set({disabled: false}, {merge: true});
     }
     return user;
   }
@@ -229,7 +229,7 @@ export class User {
         hasPhoto: hasPhoto,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       },
-      { merge: true }
+      {merge: true}
     );
   }
 
@@ -286,7 +286,7 @@ export class User {
   ): Promise<admin.firestore.WriteResult> {
     data["uid"] = uid;
     const settingName = (data.action ? data.action + "." : "") + data.categoryId ?? "";
-    return Ref.userSettingDoc(uid, settingName).set(data, { merge: true });
+    return Ref.userSettingDoc(uid, settingName).set(data, {merge: true});
   }
 
   /**
@@ -332,7 +332,7 @@ export class User {
     const recentPosts = [];
     for (const doc of snapshot.docs) {
       const data = doc.data() as PostDocument;
-      recentPosts.push({ id: doc.id, timestamp: data.createdAt.seconds });
+      recentPosts.push({id: doc.id, timestamp: data.createdAt.seconds});
     }
 
     // update the recentPosts field in /users_public_data/{uid} document.

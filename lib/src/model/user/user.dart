@@ -61,6 +61,7 @@ class User {
   /// using this is to display user's public profile title image.
   final String stateImageUrl;
 
+  /// @thruthesky - birthYear, birthMonth, birthDay should be null instead of 0 as the default value.
   final int birthYear;
   final int birthMonth;
   final int birthDay;

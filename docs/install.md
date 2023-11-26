@@ -196,6 +196,25 @@ Enable Realtime Database on firebase and copy the following and paste it into yo
 }
 ```
 
+## APN - iOS Push Notification Setting
+
+- Do `Upload APNs auth key` in Firebase console.
+- Enable the following by adding Capabilties in Xcode.
+  - Push Notifications
+  - `Background fetch` and `Remote notification` of Background Mode
+
+
+## Default app-environment entitlement
+
+```xml
+<key>NSCameraUsageDescription</key>
+<string>PhiLov app requires access to the camera to share the photo on profile, chat, forum.</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>PhiLov app requires access to the microphone to share vioce with other users.</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>PhiLov app requires access to the photo library to share the photo on profile, chat, forum.</string>
+```
+
 ## Setup the base code
 
 FireFlutter needs the app to initialize with the Firebase before using it.
@@ -232,9 +251,10 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
-    /// Initialize FireFlutter
-    FireFlutterService.instance.init(context: ...);
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      FireFlutterService.instance.init(
+        context: () => router.routerDelegate.navigatorKey.currentContext!,
+      );
   }
 }
 ```

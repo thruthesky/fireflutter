@@ -1,20 +1,31 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-/// UserDisplayName
+/// UserText
 ///
-/// This widget displays the user's display name. If the user's display name is empty
-/// then, it will display the name of the user.
+/// This widget displays the value of the user's field.
+///
 ///
 /// [user] is the user model. You may use this if you already have the user model
-/// and you want to display the user's display name more fast (without loader & blinking).
+/// and you want to display the value of the user's field fast (without loader & blinking).
 ///
-@Deprecated('Use UserText instead')
-class UserDisplayName extends StatefulWidget {
-  const UserDisplayName({
+/// [uid] is the user's uid. You may use this if you don't have the user model
+///
+/// Example
+/// ```dart
+/// UserText(
+///   user: message.mine ? my : null,
+///   uid: message.mine ? null : message.uid,
+///   field: 'name',
+///   style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
+/// )
+/// ```
+class UserText extends StatefulWidget {
+  const UserText({
     super.key,
     this.uid,
     this.user,
+    this.field = '',
     this.overflow,
     this.maxLines,
     this.style,
@@ -23,16 +34,17 @@ class UserDisplayName extends StatefulWidget {
 
   final String? uid;
   final User? user;
+  final String field;
   final TextOverflow? overflow;
   final int? maxLines;
   final TextStyle? style;
   final bool showBlocked;
 
   @override
-  State<UserDisplayName> createState() => _UserDisplayNameState();
+  State<UserText> createState() => _UserTextState();
 }
 
-class _UserDisplayNameState extends State<UserDisplayName> {
+class _UserTextState extends State<UserText> {
   User? user;
 
   @override
@@ -57,12 +69,12 @@ class _UserDisplayNameState extends State<UserDisplayName> {
       return const SizedBox.shrink();
     }
 
-    String displayName = user!.getDisplayName;
+    String val = user!.data[widget.field] ?? '';
     if ((my?.hasBlocked(user!.uid) ?? false) && !widget.showBlocked) {
-      displayName = tr.blocked;
+      val = tr.blocked;
     }
     return Text(
-      displayName,
+      val,
       style: widget.style ?? const TextStyle(fontWeight: FontWeight.bold),
       maxLines: widget.maxLines ?? 1,
       overflow: widget.overflow ?? TextOverflow.ellipsis,

@@ -5,3 +5,5 @@ export './functions/ref.dart';
 export './functions/activity_log.functions.dart';
 export './functions/confirm.function.dart';
 export './functions/prompt.function.dart';
+
+export 'model/rchat/rchat.functions.dart';

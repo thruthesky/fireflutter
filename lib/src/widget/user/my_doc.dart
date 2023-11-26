@@ -33,7 +33,12 @@ class MyDoc extends StatelessWidget {
 
     final userModel = snapshot.data;
 
-    /// if snapshot has no data (when connection state is no longer waiting), it means, there is no data in firestore even if the user has logged in.
+    /// Warning, the user data may be empty even if the user logged in.
+    ///
+    /// If the app is using [MyDoc] too early before the user service
+    /// gets data from firestore, it will return [User.nonExistent] which may
+    /// cause empty data of the user even if the user logged in.
+    ///
     /// Or if the userModel is null, it means, the app just started and the user has not logged in yet or in the middle of login.
     ///
     /// In these case, a user object with exists=false is passed to the builder.

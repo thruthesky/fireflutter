@@ -14,6 +14,24 @@
       "deviceId": "iPhone 15 Pro Max"
     },
     {
+      "name": "PhiLov - Emulator",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "emulator-5554"
+    },
+    {
+      "name": "PhiLov - Chrome",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "chrome"
+    },
+    {
       "name": "FireFlutter TEST - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
