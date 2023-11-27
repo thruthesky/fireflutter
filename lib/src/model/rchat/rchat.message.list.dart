@@ -26,9 +26,11 @@ class _RChatMessageListState extends State<RChatMessageList> {
       query: chatMessageRef(roomId: widget.roomId).orderByChild('order'),
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
-          dog(
-            '--> FirebaseDatabaseQueryBuilder will set snapshot.isFetcing only one time when it is first loading.',
-          );
+          /// FirebaseDatabaseQueryBuilder will set snapshot.isFetcing only one time when it is first loading.
+          dog('isFetcing');
+
+          resetChatRoomNewMessage(roomId: widget.roomId);
+
           if (list != null) return list!;
           return const Center(child: CircularProgressIndicator());
         }
@@ -36,6 +38,16 @@ class _RChatMessageListState extends State<RChatMessageList> {
         if (snapshot.hasError) {
           return Text('Something went wrong! ${snapshot.error}');
         }
+
+        dog("isFirstLoadingOrNewMessage-> ${isLoadingForNewMessage(widget.roomId, snapshot)}");
+        if (isLoadingForNewMessage(widget.roomId, snapshot)) {
+          /// newMessage 리셋
+          resetChatRoomNewMessage(roomId: widget.roomId);
+        }
+
+        /// Reset the newMessage
+        /// This is a good place to reset it since it is called when the user
+        /// enters the room and every time it gets new message.
 
         list = ListView.builder(
           reverse: true,

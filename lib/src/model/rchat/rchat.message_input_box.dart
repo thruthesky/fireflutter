@@ -59,9 +59,7 @@ class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
                         }),
                     complete: () => widget.onProgress?.call(null) ?? setState(() => progress = null),
                   );
-                  if (url != null && url.isNotEmpty) {
-                    await sendChatMessage(roomId: widget.roomId, url: url);
-                  }
+                  await sendChatMessage(roomId: widget.roomId, url: url);
                 },
               ),
               suffixIcon: Row(

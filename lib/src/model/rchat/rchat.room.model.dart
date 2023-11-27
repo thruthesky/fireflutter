@@ -1,14 +1,16 @@
 import 'package:firebase_database/firebase_database.dart';
 
 class RChatRoomModel {
-  String? key;
+  final DatabaseReference ref;
+  String key;
   String? text;
   String? url;
   int? updatedAt;
   int? newMessage;
 
   RChatRoomModel({
-    this.key,
+    required this.ref,
+    required this.key,
     this.text,
     this.url,
     this.updatedAt,
@@ -18,12 +20,14 @@ class RChatRoomModel {
   factory RChatRoomModel.fromSnapshot(DataSnapshot snapshot) {
     final json = snapshot.value as Map<dynamic, dynamic>;
     json['key'] = snapshot.key;
+    json['ref'] = snapshot.ref;
     return RChatRoomModel.fromJson(json);
   }
 
   factory RChatRoomModel.fromJson(Map<dynamic, dynamic> json) {
     return RChatRoomModel(
-      key: json['key'] as String?,
+      ref: json['ref'],
+      key: json['key'],
       text: json['text'] as String?,
       url: json['url'] as String?,
       updatedAt: json['updatedAt'] is int ? json['updatedAt'] : int.parse(json['updatedAt'] ?? '0'),
