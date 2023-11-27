@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/widget/user/user.text.dart';
 import 'package:flutter/material.dart';
 
 class RChatBubble extends StatelessWidget {
@@ -10,7 +9,7 @@ class RChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('--> RChatBubble.build() message: ${message.toJson()}');
+    // print('--> RChatBubble.build() message: ${message.toJson()}');
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Row(

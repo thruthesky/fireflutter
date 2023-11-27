@@ -26,7 +26,7 @@ class _RChatMessageListState extends State<RChatMessageList> {
       query: chatMessageRef(roomId: widget.roomId).orderByChild('order'),
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
-          print(
+          dog(
             '--> FirebaseDatabaseQueryBuilder will set snapshot.isFetcing only one time when it is first loading.',
           );
           if (list != null) return list!;

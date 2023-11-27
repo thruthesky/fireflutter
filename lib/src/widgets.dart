@@ -17,6 +17,7 @@ export 'widget/user/public_profile/public_profile.buttons.dart';
 export 'widget/user/user.liked_by.list.screen.dart';
 export 'widget/user/user_blocked.dart';
 export 'widget/user/new_user_horizontal_list.dart';
+export 'widget/user/user.text.dart';
 
 // export 'widget/user/user_live_doc.dart';
 
