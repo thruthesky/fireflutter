@@ -84,6 +84,10 @@ class UserService {
   /// null 이면 아직 로드를 안했다는 뜻이다. 즉, 로딩중이라는 뜻이다. 로그인을 했는지 하지 않았는지 여부는 알 수 없다.
   /// 만약, 로그인을 했는지 여부를 알고 싶다면, [nullableUser] 가 null 인지 아닌지를 확인하면 된다.
   ///
+  /// [documentChanges] 는 사용자 문서가 최초 로드되고, 그 후 변경될 때마다 호출된다.
+  /// 따라서, 사용자 정보가 존재하는 경우, 앱에서 읽은 경우, 위젯을 보여 주고 싶다면, 이 스트림을 사용하면 된다.
+  /// 참고로, UserDocReady() 가 이 스트림을 이용해서, 사용자 문서가 로드되면, 위젯을 보여 준다.
+  ///
   /// Example;
   /// ```dart
   /// UserService.instance.documentChanges.listen((user) => user == null ? null : print(my));

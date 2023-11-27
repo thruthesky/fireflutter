@@ -26,6 +26,16 @@ Future<void> sendChatMessage({
 }) async {
   if ((url == null || url.isEmpty) && (text == null || text.isEmpty)) return;
   chatRoomMessageOrder[roomId] = (chatRoomMessageOrder[roomId] ?? 0) - 1;
+
+  /// 참고, 실제 메시지를 보내기 전에, 채팅방 자체를 먼저 업데이트 해 버린다.
+  ///
+  /// 상황 발생, A 가 B 가 모두 채팅방에 들어가 있는 상태에서
+  /// A 가 B 에게 채팅 메시지를 보내면, 그 즉시 B 의 채팅방 목록이 업데이트되고,
+  /// B 의 채팅방의 newMessage 가 0 으로 된다.
+  /// 그리고, 나서 updateChatRoom() 을 하면, B 의 채팅 메시지가 1이 되는 것이다.
+  /// 즉, 0이 되어야하는데 1이 되는 상황이 발생한다. 그래서, updateChatRoom() 이 먼저 호출되어야 한다.
+  updateChatRoom(roomId: roomId, text: text, url: url);
+
   await chatMessageRef(roomId: roomId).push().set({
     'uid': myUid,
     if (text != null) 'text': text,
@@ -33,15 +43,13 @@ Future<void> sendChatMessage({
     'order': chatRoomMessageOrder[roomId],
     'createdAt': ServerValue.timestamp,
   });
-
-  updateChatRoom(roomId: roomId, text: text, url: url);
 }
 
-void updateChatRoom({
+Future<void> updateChatRoom({
   required String roomId,
   String? text,
   String? url,
-}) {
+}) async {
   //
   String otherUid = otherUidFromRoomId(roomId);
 
@@ -62,7 +70,6 @@ void updateChatRoom({
     'updatedAt': ServerValue.timestamp,
     'newMessage': ServerValue.increment(1),
   });
-  print('-----> update 1 on other room');
 }
 
 /// 채팅방의 메시지 순서(order)를 담고 있는 [chatRoomMessageOrder] 를 초기화 한다.
