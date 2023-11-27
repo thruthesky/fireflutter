@@ -23,6 +23,7 @@ export 'widget/user/new_user_horizontal_list.dart';
 // Chat
 export 'widget/chat/room/chat.room.screen.dart';
 export 'widget/user/user.display_name.dart';
+export 'widget/user/user.text.dart';
 export 'widget/chat/room/chat.room.message_box.dart';
 export 'widget/chat/room/chat.room.message.list_view.tile.dart';
 export 'widget/chat/room/chat.room.message.list_view.dart';

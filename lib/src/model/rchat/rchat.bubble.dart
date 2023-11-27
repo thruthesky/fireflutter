@@ -10,7 +10,6 @@ class RChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('--> RChatBubble.build() message: ${message.toJson()}');
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Row(
@@ -20,12 +19,14 @@ class RChatBubble extends StatelessWidget {
             const Spacer(),
             dateAndName(),
           ],
+          // other avtar
           if (!message.mine)
             UserAvatar(
               uid: message.uid,
               radius: 13,
             ),
           const SizedBox(width: 8),
+          // text
           if (message.text != null)
             Container(
               constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
@@ -36,23 +37,27 @@ class RChatBubble extends StatelessWidget {
               ),
               child: Text(message.text ?? ''),
             ),
+          // image
           if (message.url != null)
             ClipRRect(
               borderRadius: borderRadius(),
               child: Container(
                 constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
                 child: CachedNetworkImage(
-                  imageUrl: message.url!,
+                  imageUrl: message.url!.thumbnail,
                   fit: BoxFit.cover,
                   placeholder: (context, url) => const Padding(
                     padding: EdgeInsets.all(8.0),
                     child: CircularProgressIndicator(),
                   ),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                  // if thumbnail is not available, show original image
+                  errorWidget: (context, url, error) => CachedNetworkImage(imageUrl: message.url!),
                 ),
               ),
             ),
+
           const SizedBox(width: 8),
+          // my avtar
           if (message.mine)
             UserAvatar(
               user: my,

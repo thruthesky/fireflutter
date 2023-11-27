@@ -27,10 +27,12 @@ class RChatMessageInputBox extends StatefulWidget {
 
 class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
   final inputController = TextEditingController();
+  double? progress;
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        if (progress != null && !progress!.isNaN) LinearProgressIndicator(value: progress),
         const Divider(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -50,8 +52,12 @@ class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
                     camera: ChatService.instance.uploadFromCamera,
                     gallery: ChatService.instance.uploadFromGallery,
                     file: ChatService.instance.uploadFromFile,
-                    progress: (p) => widget.onProgress?.call(p),
-                    complete: () => widget.onProgress?.call(null),
+                    progress: (p) =>
+                        widget.onProgress?.call(p) ??
+                        setState(() {
+                          progress = p;
+                        }),
+                    complete: () => widget.onProgress?.call(null) ?? setState(() => progress = null),
                   );
                   if (url != null && url.isNotEmpty) {
                     await sendChatMessage(roomId: widget.roomId, url: url);
