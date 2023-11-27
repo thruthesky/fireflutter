@@ -70,7 +70,7 @@ resetChatRoomMessageOrder({required String roomId, required int? order}) async {
     chatRoomMessageOrder[roomId] = order;
   }
 
-  print('rchat functions resetChatRoomMessageOrder : $roomId, $order, ${chatRoomMessageOrder[roomId]}');
+  dog('rchat functions resetChatRoomMessageOrder : $roomId, $order, ${chatRoomMessageOrder[roomId]}');
 }
 
 /// 일대일 채팅방 ID 를 만든다.

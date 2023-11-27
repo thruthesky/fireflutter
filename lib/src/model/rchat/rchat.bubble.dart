@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/widget/user/user.text.dart';
 import 'package:flutter/material.dart';
 
 class RChatBubble extends StatelessWidget {

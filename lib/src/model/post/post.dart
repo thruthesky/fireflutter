@@ -12,6 +12,8 @@ class Post {
   /// '/users' collection
   static CollectionReference col = FirebaseFirestore.instance.collection(collectionName);
 
+  get userId => null;
+
   static DocumentReference doc([String? postId]) => postCol.doc(postId);
   final String id;
   final String categoryId;

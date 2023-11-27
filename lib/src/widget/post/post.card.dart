@@ -164,7 +164,8 @@ class _PostCardState extends State<PostCard> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    UserDisplayName(
+                    UserText(
+                      field: 'name',
                       uid: post.uid,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
