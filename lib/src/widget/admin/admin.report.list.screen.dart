@@ -140,9 +140,10 @@ class _AdminReportListScreenState extends State<AdminReportListScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  UserDisplayName(
+                                  UserText(
                                     showBlocked: true,
                                     uid: e,
+                                    field: 'name',
                                   ),
                                   report.data[e] != null ? Text(report.data[e]) : const SizedBox.shrink(),
                                 ],

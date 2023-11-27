@@ -48,24 +48,19 @@ class CommentOneLineListTile extends StatefulWidget {
 class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
   bool? iLiked;
 
-  bool get notBlocked =>
-      my != null && my!.hasBlocked(widget.comment.uid) == false;
+  bool get notBlocked => my != null && my!.hasBlocked(widget.comment.uid) == false;
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(
-          left: indent(widget.fixedDepth ?? widget.comment.depth)),
+      margin: EdgeInsets.only(left: indent(widget.fixedDepth ?? widget.comment.depth)),
       padding: widget.padding ?? const EdgeInsets.all(0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (widget.comment.deleted) ...[
             Flexible(
-              child: Text(
-                  widget.comment.deletedReason ??
-                      'The comment was deleted by the user.',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium!),
+              child: Text(widget.comment.deletedReason ?? 'The comment was deleted by the user.',
+                  textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium!),
             ),
           ] else ...[
             const SizedBox(
@@ -89,8 +84,14 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Flexible(
-                        child: UserDisplayName(
+                        // child: UserDisplayName(
+                        //   uid: widget.comment.uid,
+                        //   overflow: TextOverflow.ellipsis,
+                        //   style: Theme.of(context).textTheme.labelMedium,
+                        // ),
+                        child: UserText(
                           uid: widget.comment.uid,
+                          field: 'name',
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.labelMedium,
                         ),
@@ -98,16 +99,13 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                       SizedBox(width: widget.runSpacing),
                       DateTimeText(
                         dateTime: widget.comment.createdAt,
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                            fontSize: 11),
+                        style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11),
                       ),
                     ],
                   ),
 
                   // photos of the comment
-                  DisplayUploadedFiles(
-                      otherUid: widget.comment.uid, urls: widget.comment.urls),
+                  DisplayUploadedFiles(otherUid: widget.comment.uid, urls: widget.comment.urls),
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: widget.onTapContent,
@@ -130,23 +128,18 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                       children: [
                         // no of likes
                         DatabaseCount(
-                          path:
-                              pathCommentLikedBy(widget.comment.id, all: true),
+                          path: pathCommentLikedBy(widget.comment.id, all: true),
                           builder: (n) => n == 0
                               ? const SizedBox.shrink()
                               : TextButton(
                                   style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.only(
-                                        left: 0, right: 8),
+                                    padding: const EdgeInsets.only(left: 0, right: 8),
                                     minimumSize: Size.zero,
                                     visualDensity: VisualDensity.compact,
                                   ),
-                                  onPressed: () async => UserService.instance
-                                      .showLikedByListScreen(
+                                  onPressed: () async => UserService.instance.showLikedByListScreen(
                                     context: context,
-                                    uids: await getKeys(pathCommentLikedBy(
-                                        widget.comment.id,
-                                        all: true)),
+                                    uids: await getKeys(pathCommentLikedBy(widget.comment.id, all: true)),
                                   ),
                                   child: Text(
                                     n == 0
@@ -155,8 +148,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                                             '#no',
                                             n.toString(),
                                           ),
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall,
+                                    style: Theme.of(context).textTheme.bodySmall,
                                   ),
                                 ),
                         ),
@@ -170,13 +162,10 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                             ),
                             onPressed: () {
                               if (my?.isDisabled ?? false) {
-                                toast(
-                                    title: tr.disabled,
-                                    message: tr.disabledMessage);
+                                toast(title: tr.disabled, message: tr.disabledMessage);
                                 return;
                               }
-                              CommentService.instance
-                                  .showCommentEditBottomSheet(
+                              CommentService.instance.showCommentEditBottomSheet(
                                 context,
                                 post: widget.post,
                                 parent: widget.comment,
@@ -184,10 +173,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                             },
                             child: Text(
                               tr.reply,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                     // The color of the post card is actually
                                     // comming from colorScheme.secondary
                                     // However, it has .withAlpha(20) which make the
@@ -195,9 +181,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                                     // So, we need to use onBackground color here.
                                     //
                                     // Please review if we have to change it
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onBackground,
+                                    color: Theme.of(context).colorScheme.onBackground,
                                     // color: Theme.of(context).colorScheme.primary,
                                   ),
                             ),
@@ -229,8 +213,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                               onSelected: (value) async {
                                 if (value == 'edit') {
                                   await CommentService.instance
-                                      .showCommentEditBottomSheet(context,
-                                          comment: widget.comment);
+                                      .showCommentEditBottomSheet(context, comment: widget.comment);
                                 }
                                 if (value == 'report') {
                                   if (context.mounted) {
@@ -238,9 +221,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                                       context: context,
                                       commentId: widget.comment.id,
                                       onExists: (id, type) => toast(
-                                          title: 'Already reported',
-                                          message:
-                                              'You have reported this $type already.'),
+                                          title: 'Already reported', message: 'You have reported this $type already.'),
                                     );
                                   }
                                 }
@@ -251,14 +232,10 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                                   final re = await confirm(
                                       context: context,
                                       title: 'Delete Comment',
-                                      message:
-                                          'Are you sure on deleting this comment?');
+                                      message: 'Are you sure on deleting this comment?');
                                   if (re == true) {
                                     await widget.comment.delete();
-                                    toast(
-                                        title: 'Comment deleted',
-                                        message:
-                                            'Comment deleted successfully.');
+                                    toast(title: 'Comment deleted', message: 'Comment deleted successfully.');
                                   }
                                 }
                               },
@@ -277,8 +254,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                   iLiked = value == null;
                   return likeButton();
                 },
-                onWaiting:
-                    iLiked == null ? const SizedBox.shrink() : likeButton(),
+                onWaiting: iLiked == null ? const SizedBox.shrink() : likeButton(),
               ),
           ]
         ],
@@ -297,13 +273,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
         // Used tertiary color here
         // originally the color uses colorScheme.error which is kinda
         // confusing and the name is not helpful in the color.
-        color: iLiked!
-            ? null
-            : Theme.of(context)
-                .colorScheme
-                .tertiary
-                .tone(50)
-                .saturation(isDark ? 60 : 50),
+        color: iLiked! ? null : Theme.of(context).colorScheme.tertiary.tone(50).saturation(isDark ? 60 : 50),
       ),
     );
   }

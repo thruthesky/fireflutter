@@ -60,9 +60,10 @@ class ActivityLogTimeLinePost extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  UserDisplayName(
+                                  UserText(
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
+                                    field: 'name',
                                     uid: post.uid,
                                     style: Theme.of(context).textTheme.bodyMedium,
                                   ),
