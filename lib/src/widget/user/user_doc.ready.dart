@@ -29,6 +29,7 @@ class UserDocReady extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: UserService.instance.documentChanges.distinct(
+        // when the user logs out, the user document is null. So, the next is null.
         (prev, next) => next == null || prev?.uid == next.uid,
       ),
       builder: (context, snapshot) {

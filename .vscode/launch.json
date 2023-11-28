@@ -14,6 +14,15 @@
       "deviceId": "iPhone 15 Pro Max"
     },
     {
+      "name": "PhiLov - iPhone11ProMax",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "iPhone11ProMax"
+    },
+    {
       "name": "PhiLov - Emulator",
       "request": "launch",
       "type": "dart",

@@ -193,6 +193,7 @@ void warningSnackbar(BuildContext? context, String message) async {
 /// Call the function parameter passed on the callback to close the snackbar.
 /// ```dart
 /// toast( title: 'title',  message: 'message', onTap: (close) => close());
+/// toast(  title: 'error title', message: 'error message',  error: true );
 /// ```
 ScaffoldFeatureController toast({
   required String title,
@@ -200,14 +201,22 @@ ScaffoldFeatureController toast({
   Icon? icon,
   Duration duration = const Duration(seconds: 8),
   Function(Function)? onTap,
+  bool? error,
   bool hideCloseButton = false,
   Color? backgroundColor,
-  Color? forgroundColor,
+  Color? foregroundColor,
   double runSpacing = 12,
 }) {
   final context = FireFlutterService.instance.context;
-  backgroundColor ??= Theme.of(context).colorScheme.primary;
-  forgroundColor ??= Theme.of(context).colorScheme.onPrimary;
+  if (error == true) {
+    backgroundColor ??= Theme.of(context).colorScheme.error;
+    foregroundColor ??= Theme.of(context).colorScheme.onError;
+  }
+  {
+    backgroundColor ??= Theme.of(context).colorScheme.primary;
+    foregroundColor ??= Theme.of(context).colorScheme.onPrimary;
+  }
+
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       duration: duration,
@@ -228,7 +237,7 @@ ScaffoldFeatureController toast({
                 if (icon != null) ...[
                   Theme(
                     data: Theme.of(context).copyWith(
-                      iconTheme: IconThemeData(color: forgroundColor),
+                      iconTheme: IconThemeData(color: foregroundColor),
                     ),
                     child: icon,
                   ),
@@ -252,7 +261,7 @@ ScaffoldFeatureController toast({
               onPressed: () {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
               },
-              child: Text(tr.dismiss, style: TextStyle(color: forgroundColor)),
+              child: Text(tr.dismiss, style: TextStyle(color: foregroundColor)),
             )
         ],
       ),
@@ -353,14 +362,10 @@ String? getYoutubeIdFromUrl(String url, {bool trimWhitespaces = true}) {
   if (trimWhitespaces) url = url.trim();
 
   for (var exp in [
-    RegExp(
-        r"^https:\/\/(?:www\.|m\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
-    RegExp(
-        r"^https:\/\/(?:music\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
-    RegExp(
-        r"^https:\/\/(?:www\.|m\.)?youtube\.com\/shorts\/([_\-a-zA-Z0-9]{11}).*$"),
-    RegExp(
-        r"^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/([_\-a-zA-Z0-9]{11}).*$"),
+    RegExp(r"^https:\/\/(?:www\.|m\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
+    RegExp(r"^https:\/\/(?:music\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
+    RegExp(r"^https:\/\/(?:www\.|m\.)?youtube\.com\/shorts\/([_\-a-zA-Z0-9]{11}).*$"),
+    RegExp(r"^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/([_\-a-zA-Z0-9]{11}).*$"),
     RegExp(r"^https:\/\/youtu\.be\/([_\-a-zA-Z0-9]{11}).*$")
   ]) {
     Match? match = exp.firstMatch(url);
@@ -394,16 +399,13 @@ String getYoutubeThumbnail({
   String quality = YoutubeThumbnailQuality.standard,
   bool webp = true,
 }) =>
-    webp
-        ? 'https://i3.ytimg.com/vi_webp/$videoId/$quality.webp'
-        : 'https://i3.ytimg.com/vi/$videoId/$quality.jpg';
+    webp ? 'https://i3.ytimg.com/vi_webp/$videoId/$quality.webp' : 'https://i3.ytimg.com/vi/$videoId/$quality.jpg';
 
 /// It opens the SMS app with the number and message.
 ///
 /// Use this to open SMS with default number and text message.
 ///
-Future<bool> launchSMS(
-    {required String phoneNumber, required String msg}) async {
+Future<bool> launchSMS({required String phoneNumber, required String msg}) async {
   // Android 'sms:+39 348 060 888?body=hello%20there';
   String body = Uri.encodeComponent(msg);
 

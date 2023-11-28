@@ -15,8 +15,26 @@ DatabaseReference chatMessageRef({required String roomId}) =>
 /// 더 확실히 하기 위해서는 order 를 저장 할 때, 이전 order 의 -1 로 하고, 저장이 된 후, createAt 의 -1 을 해 버린다.
 final Map<String, int> chatRoomMessageOrder = {};
 
+/// 채팅방 ID 에서, 1:1 채팅방인지 확인한다.
+isSingleChat(String roomId) => roomId.split('-').length == 2;
+
+/// 채팅방 ID 에서 그룹 채팅방 ID 인지 확인한다.
+isGroupChat(String roomId) => roomId.split('-').length == 1;
+
+/// 1:1 채팅방 ID 에서 다른 사용자의 uid 를 리턴한다.
+///
+/// 주의, 자기 자신이랑 대화 할 때에는 자신의 UID 를 리턴한다.
 otherUidFromRoomId(String roomId) {
-  return roomId.split('-').firstWhere((uid) => uid != myUid);
+  return roomId.split('-').firstWhere((uid) => uid != myUid, orElse: () => myUid!);
+}
+
+/// 일대일 채팅방 ID 를 만든다.
+///
+/// [myUid] 와 [otherUserUid] 를 정렬해서 합친다.
+String singleChatRoomId(String otherUserUid) {
+  final uids = [myUid, otherUserUid];
+  uids.sort();
+  return uids.join('-');
 }
 
 Future<void> sendChatMessage({
@@ -45,6 +63,7 @@ Future<void> sendChatMessage({
   });
 }
 
+/// Update chat room
 Future<void> updateChatRoom({
   required String roomId,
   String? text,
@@ -60,6 +79,7 @@ Future<void> updateChatRoom({
     'order': chatRoomMessageOrder[roomId],
     'updatedAt': ServerValue.timestamp,
     'newMessage': 0,
+    'isGroupChat': isGroupChat(roomId),
   });
 
 // chat room info update under other user room list
@@ -69,6 +89,7 @@ Future<void> updateChatRoom({
     'order': chatRoomMessageOrder[roomId],
     'updatedAt': ServerValue.timestamp,
     'newMessage': ServerValue.increment(1),
+    'isGroupChat': isGroupChat(roomId),
   });
 }
 
@@ -91,17 +112,13 @@ int getChatRoomMessageOrder(String roomId) {
 /// 채팅방 정보 `/chat-rooms/$uid/$otherUid` 에서 newMessage 를 0 으로 초기화 한다.
 Future<void> resetChatRoomNewMessage({required String roomId}) async {
   String otherUid = otherUidFromRoomId(roomId);
-  await chatRoomRef(uid: myUid!).child(otherUid).update({'newMessage': 0});
+  await chatRoomRef(uid: myUid!).child(otherUid).update(
+    {
+      'newMessage': 0,
+      'isGroupChat': isGroupChat(roomId),
+    },
+  );
   print('--> resetChatRoomNewMessage: $roomId');
-}
-
-/// 일대일 채팅방 ID 를 만든다.
-///
-/// [myUid] 와 [otherUserUid] 를 정렬해서 합친다.
-String singleChatRoomId(String otherUserUid) {
-  final uids = [myUid, otherUserUid];
-  uids.sort();
-  return uids.join('-');
 }
 
 /// 새로운 메시지가 전달되어져 왔는지 판단하는 함수이다.
@@ -145,4 +162,17 @@ bool isLoadingForNewMessage(String roomId, FirebaseQueryBuilderSnapshot snapshot
   /// 이전에 로드된 채팅 메시지가 있지만, 새로운 채팅 메시지를 받지 않았다면, false 를 리턴한다.
   /// 위로 스크롤 하는 경우, 이 메시지가 발생 할 수 있다.
   return false;
+}
+
+/// 채팅방 나가기
+///
+/// 상대방의 채팅방 목록에서는 삭제하지 않고, 나의 채팅방 목록에서만 삭제한다.
+/// 즉, 상대방은 모르게 한다.
+leaveChatRoom({
+  required String roomId,
+}) {
+  String otherUid = otherUidFromRoomId(roomId);
+
+  /// chat room under my room list
+  chatRoomRef(uid: myUid!).child(otherUid).remove();
 }

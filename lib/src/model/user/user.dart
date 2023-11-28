@@ -47,6 +47,9 @@ class User {
   final String idVerifiedCode;
   final bool isVerified;
 
+  /// 신분증 확인에 사용된 URL. 신분증을 여러번 업로드 했으면, 마지막 URL 만 보관한다.
+  final String idUrl;
+
   ///
   final String phoneNumber;
   final String email;
@@ -146,6 +149,7 @@ class User {
     this.photoUrl = '',
     this.hasPhotoUrl = false,
     this.idVerifiedCode = '',
+    this.idUrl = '',
     this.isVerified = false,
     this.phoneNumber = '',
     this.email = '',
@@ -290,6 +294,7 @@ class User {
     bool? hasPhotoUrl,
     String? idVerifiedCode,
     // bool? isVerified,
+    String? idUrl,
     String? phoneNumber,
     String? email,
     String? state,
@@ -322,6 +327,7 @@ class User {
         if (hasPhotoUrl != null) 'hasPhotoUrl': hasPhotoUrl,
         if (idVerifiedCode != null) 'idVerifiedCode': idVerifiedCode,
         // if (isVerified != null) 'isVerified': isVerified,
+        if (idUrl != null) 'idUrl': idUrl,
         if (phoneNumber != null) 'phoneNumber': phoneNumber,
         if (email != null) 'email': email,
         if (state != null) 'state': state,
