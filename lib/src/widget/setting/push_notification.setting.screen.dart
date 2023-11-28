@@ -2,7 +2,9 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class PushNotificationSettingScreen extends StatefulWidget {
-  const PushNotificationSettingScreen({super.key});
+  const PushNotificationSettingScreen({super.key, this.titleTextStyle});
+
+  final TextStyle? titleTextStyle;
 
   @override
   State<PushNotificationSettingScreen> createState() => _PushPushNotificationSettingScreenState();
@@ -13,7 +15,7 @@ class _PushPushNotificationSettingScreenState extends State<PushNotificationSett
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(tr.titleNotificationSetting),
+        title: Text(tr.titleNotificationSetting, style: widget.titleTextStyle),
       ),
       body: Column(
         children: [
