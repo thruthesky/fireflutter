@@ -92,7 +92,7 @@ int getChatRoomMessageOrder(String roomId) {
 Future<void> resetChatRoomNewMessage({required String roomId}) async {
   String otherUid = otherUidFromRoomId(roomId);
   await chatRoomRef(uid: myUid!).child(otherUid).update({'newMessage': 0});
-  print('--> resetChatRoomNewMessage: $roomId');
+  // print('--> resetChatRoomNewMessage: $roomId');
 }
 
 /// 일대일 채팅방 ID 를 만든다.
