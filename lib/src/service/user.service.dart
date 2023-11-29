@@ -454,14 +454,11 @@ class UserService {
 
   showPushNotificationSettingScreen({
     required BuildContext context,
-    TextStyle? titleTextStyle,
   }) {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, _, __) {
-        return PushNotificationSettingScreen(
-          titleTextStyle: titleTextStyle,
-        );
+        return const PushNotificationSettingScreen();
       },
     );
   }
