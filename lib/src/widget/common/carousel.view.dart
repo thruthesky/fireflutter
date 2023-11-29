@@ -11,6 +11,7 @@ class CarouselView extends StatefulWidget {
     this.showPageCounter = true,
     this.height = 400,
     this.onPageChanged,
+    this.controller,
   }) : assert(urls != null || widgets != null);
 
   final List<String>? urls;
@@ -19,32 +20,38 @@ class CarouselView extends StatefulWidget {
   final bool showPageCounter;
   final double height;
   final void Function(int)? onPageChanged;
+  final PageController? controller;
 
   @override
   State<CarouselView> createState() => _CarouselViewState();
 }
 
 class _CarouselViewState extends State<CarouselView> {
-  late PageController controller;
+  PageController? _controller;
   late int pageNo;
   bool isVisible = false;
+
+  PageController get controller => widget.controller ?? _controller!;
 
   @override
   void initState() {
     super.initState();
-    controller = PageController(initialPage: widget.index);
+    _controller = widget.controller ?? PageController(initialPage: widget.index);
     pageNo = widget.index + 1;
-    controller.addListener(func);
+    controller.addListener(pageChange);
   }
 
   @override
   void dispose() {
+    controller.removeListener(pageChange);
+    // let the parent widget handle the disposal controller
+    if (widget.controller == null) {
+      controller.dispose();
+    }
     super.dispose();
-    controller.removeListener(func);
-    controller.dispose();
   }
 
-  func() {
+  pageChange() {
     if (controller.page == null) return;
     if (controller.page == controller.page!.roundToDouble()) {
       setState(() {
@@ -79,8 +86,7 @@ class _CarouselViewState extends State<CarouselView> {
                           child: CachedNetworkImage(
                             imageUrl: e.value,
                             fit: BoxFit.cover,
-                            placeholder: (context, url) =>
-                                const SizedBox(height: 400),
+                            placeholder: (context, url) => const SizedBox(height: 400),
                           ),
                         ))
                     .toList(),
@@ -91,18 +97,13 @@ class _CarouselViewState extends State<CarouselView> {
               right: 0,
               child: Container(
                 margin: const EdgeInsets.only(top: sizeXs, right: sizeXs),
-                padding: const EdgeInsets.symmetric(
-                    vertical: sizeXxs - 1, horizontal: sizeXs),
+                padding: const EdgeInsets.symmetric(vertical: sizeXxs - 1, horizontal: sizeXs),
                 decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onBackground
-                        .withAlpha(150),
+                    color: Theme.of(context).colorScheme.onBackground.withAlpha(150),
                     borderRadius: BorderRadius.circular(20)),
                 child: Text(
                   '$pageNo/${widget.widgets?.length ?? widget.urls!.length}',
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.background),
+                  style: TextStyle(color: Theme.of(context).colorScheme.background),
                 ),
               ),
             ),
