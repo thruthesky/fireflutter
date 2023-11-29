@@ -291,7 +291,9 @@ class Post {
     PostService.instance.onLike?.call(this, isLiked);
 
     /// log post like/unlike
-    activityLogPostLike(postId: id, isLiked: isLiked);
+    ///
+    dog(uid);
+    activityLogPostLike(postId: id, isLiked: isLiked, otherUid: uid);
 
     return isLiked;
   }

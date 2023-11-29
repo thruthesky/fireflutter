@@ -138,10 +138,12 @@ Future<DocumentReference?> activityLogPostDelete({
 Future<DocumentReference?> activityLogPostLike({
   required String postId,
   required bool isLiked,
+  String? otherUid,
 }) async {
   return await activityLog(
     postId: postId,
     type: Log.type.post,
+    otherUid: otherUid,
     action: isLiked == true ? Log.post.like : Log.post.unlike,
   );
 }
@@ -188,8 +190,10 @@ Future<DocumentReference?> activityLogCommentDelete({
 Future<DocumentReference?> activityLogCommentLike({
   required String commentId,
   required bool isLiked,
+  String? otherUid,
 }) async {
   return await activityLog(
+    otherUid: otherUid,
     commentId: commentId,
     type: Log.type.comment,
     action: isLiked == true ? Log.comment.like : Log.comment.unlike,

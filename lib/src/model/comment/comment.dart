@@ -198,7 +198,8 @@ class Comment {
     CommentService.instance.onLike?.call(this, isLiked);
 
     // log comment like/unlike
-    activityLogCommentLike(commentId: id, isLiked: isLiked);
+    dog(uid);
+    activityLogCommentLike(commentId: id, isLiked: isLiked, otherUid: uid);
 
     return isLiked;
   }
