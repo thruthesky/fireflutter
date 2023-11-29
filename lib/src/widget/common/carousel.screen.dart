@@ -3,14 +3,22 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class CarouselScreen extends StatefulWidget {
-  const CarouselScreen({super.key, this.urls, this.index = 0, this.widgets, this.title})
-      : assert(urls != null || widgets != null);
+  const CarouselScreen({
+    super.key,
+    this.urls,
+    this.index = 0,
+    this.widgets,
+    this.title,
+    this.onPageChanged,
+  }) : assert(urls != null || widgets != null);
 
   final List<String>? urls;
   final int index;
   final String? title;
 
   final List<Widget>? widgets;
+
+  final void Function(int index)? onPageChanged;
 
   @override
   State<CarouselScreen> createState() => _CarouselScreenState();
@@ -42,6 +50,9 @@ class _CarouselScreenState extends State<CarouselScreen> {
       setState(() {
         pageNo = controller.page!.round() + 1;
       });
+      if (widget.onPageChanged != null) {
+        widget.onPageChanged!(pageNo - 1);
+      }
     }
   }
 
