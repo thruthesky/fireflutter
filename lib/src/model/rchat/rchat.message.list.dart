@@ -50,6 +50,7 @@ class _RChatMessageListState extends State<RChatMessageList> {
         /// enters the room and every time it gets new message.
 
         list = ListView.builder(
+          padding: const EdgeInsets.all(0),
           reverse: true,
           itemCount: snapshot.docs.length,
           itemBuilder: (context, index) {
