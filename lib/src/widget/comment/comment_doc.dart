@@ -3,8 +3,7 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class CommentDoc extends StatelessWidget {
-  const CommentDoc(
-      {super.key, this.comment, this.commentId, required this.builder});
+  const CommentDoc({super.key, this.comment, this.commentId, required this.builder});
 
   final Comment? comment;
   final String? commentId;
@@ -20,7 +19,7 @@ class CommentDoc extends StatelessWidget {
           return builder(Comment.fromDocumentSnapshot(snapshot.data!));
         }
         if (comment != null) return builder(comment!);
-        return const CircularProgressIndicator();
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }
