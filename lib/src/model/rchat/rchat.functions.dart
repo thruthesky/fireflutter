@@ -118,7 +118,7 @@ Future<void> resetChatRoomNewMessage({required String roomId}) async {
       'isGroupChat': isGroupChat(roomId),
     },
   );
-  print('--> resetChatRoomNewMessage: $roomId');
+  // print('--> resetChatRoomNewMessage: $roomId');
 }
 
 /// 새로운 메시지가 전달되어져 왔는지 판단하는 함수이다.
