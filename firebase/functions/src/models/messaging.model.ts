@@ -161,7 +161,7 @@ export class Messaging {
     }
 
     // remove uid if admin disable the notification new users
-    if (data.action == EventName.userCreate) {
+    if (data.action == EventName.userCreate && !data.categoryId) {
       const admins = await User.getAdminsUid();
       uids = [...uids, ...admins];
       const snap = await Ref.usersSettingsSearch({
@@ -183,7 +183,7 @@ export class Messaging {
     }
 
     // remove uid if admin disable the notification for new reports
-    if (data.action == EventName.reportCreate) {
+    if (data.action == EventName.reportCreate && !data.categoryId) {
       const admins = await User.getAdminsUid();
       uids = [...uids, ...admins];
       const snap = await Ref.usersSettingsSearch({

@@ -51,9 +51,15 @@ The admin can send push notification to all the devices, or specific type/os thr
 
 
 
-## Send push notification
+## 4 Different way to send push notification
 
-Below shows how to search a user and send a push message to the user
+Sending push message using `tokens`, `uids`, `topic` will directly send the push notification.
+
+For app specific application like `forum`, using `user_settings` to on and off push message check the push message using `action`.
+
+### Send push notification with `tokens`
+
+Below shows how to search a user and send a push message to the user using tokens
 
 ```dart
 AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
@@ -66,14 +72,208 @@ AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
 });
 ```
 
+### Send push notification with `uids`
+
+Sending push notification using user uid
+
+- `uids` accept `List<String>`
+
+```dart
+AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
+  MessagingService.instance.queue(
+    title: 'message title',
+    body: 'message body',
+    uids: [user.uid],
+  );
+});
+```
+
+
+### Send push notification with `topic`
+
+Sending push notification using `topic`
+
+By default `MessagingService.instance.init()` will try to subscribe to the following topics
+ - `allUsers` topic
+ - platform specific topic `${platformName()}Users` like 
+   - `iosUsers`
+   - `androidUsers`
+   - `webUsers` 
+
+```dart
+AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
+  MessagingService.instance.queue(
+    title: 'message title',
+    body: 'message body',
+    topic: 'allUsers',
+  );
+});
+```
+
+### Send push notification with `action`
+
+App specific event `commentCreate`, `chatCreate`, `userCreate`, `reportCreate`
+
+`commentCreate` Cloud function auto generated event onDocumentCreated when comment is created
+
+```ts 
+  exports.messagingOnCommentCreate = onDocumentCreated(
+    "comments/{commentId}",
+    async ( ... ): 
+    ....
+  );
+```
+
+  - It will get the Post author with Post.get(data.postId), 
+  - It will get all ancestor uids
+  - It will filter the ancestor uids and post author if a document  in `user_settings` has
+    - `{'action': 'disableNotifyNewCommentsUnderMyPostsAndComments'}`
+  - Since `categoryId` exist from post, it will also get uids if a document `user_settings` has
+    - `{'action': 'commentCreate', categoryId: 'post.categoryId'}`
+  - Combine the filtered ancestor uids and uids who subscribe to `commentCreate` under a specific `categoryId`
+  - It will send push message to remaining uids
+
+  - `commentCreate` payload
+
+    ```ts
+    const data: SendMessage = {
+      id: event.data?.id,
+      postId: comment.postId,
+      action: EventName.commentCreate,
+      type: EventType.post,
+      senderUid: comment.uid,
+      title: post.deleted == true ? "Deleted post..." : post.title ?? "Comment on post...";
+    };
+    ```
+
+
+
+
+`chatCreate` Cloud function auto generated event onDocumentCreated when chat message is created
+
+```ts 
+  exports.messagingOnChatMessageCreate = onDocumentCreated(
+    "chats/{chatId}/messages/{messageId}",
+    async ( ... ): 
+    ....
+  );
+```
+
+  - It will filter the uids if a document in `user_settings` has
+   - `{'action': 'chatDisabled', roomId: 'data.roomId'}`
+  - It will send push message to remaining uids
+  - `chatCreate` payload
+
+    ```ts
+      const messageData: SendMessage = {
+        type: EventType.chat,
+        action: EventName.chatCreate,
+        title: `${user?.display_name ?? user?.name ?? ""} send you a message.`,
+        body: data.text,
+        uids: await Chat.getOtherUserUidsFromChatMessageDocument(data),
+        id: data.roomId,
+        senderUid: data.uid,
+      };
+    ```
+
+`userCreate`, `reportCreate` Cloud function auto generated event onDocumentCreated sending push notification to admin
+
+- `userCreate`
+
+```ts 
+  exports.messagingOnUserCreate = onDocumentCreated(
+    "users/{userUid}",
+    async ( ... ): 
+    ....
+  );
+```
+
+  - It will get users uid with `isAdmin` set to `true`
+  - It will filter the uids if a document in `user_settings` has
+    - `{'action': 'userCreate', categoryId: 'notifyOnNewUser'}`
+  - `userCreate` payload
+
+  ```ts
+    const data: SendMessage = {
+      title: "New Registration",
+      content: "New User " + event.data?.id,
+      id: event.data?.id,
+      action: EventName.userCreate,
+      type: EventType.user,
+      senderUid: event.data?.id,
+    };
+  ```
+
+- `reportCreate`
+
+```ts 
+  exports.messagingOnReportCreate = onDocumentCreated(
+    "reports/{reportId}",
+    async ( ... ): 
+    ....
+  );
+```
+  - It will get users uid with `isAdmin` set to `true`
+  - It will filter the uids if a document in `user_settings` has
+    - `{'action': 'userCreate', categoryId: 'notifyOnNewUser'}`
+  - `reportCreate` payload
+
+  ```ts
+    const data: SendMessage = {
+      title: "Report: " + report.type,
+      body: report.reason,
+      id: event.data?.id,
+      action: EventName.reportCreate,
+      type: EventType.report,
+      senderUid: report.uid,
+    };
+  ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+Using `action` and `categoryId` at the same time
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Push notification settings
 
 - All user setting's documents including push notification setting document is saved under `/user/<uid>/user_settings` collection. We call it `user_settings` collection.
   - See the settings for more information.
 
-Each of push notification option is saved as a single document under `user_settings` collection with fields consist of `action`, `category`, `uid`. For instance, `{action: comment-create, category: qna, uid: userUid}`. And it is protected by the security rules. Only the user can access this document.
+Each of push notification option is saved as a single document under `user_settings` collection with fields consist of `action`, `category`, `uid`. For instance, `{action: comment-create, category: qna, uid: userUid}`.
 
-- Be careful not to save a document under `user_settings` collection that has `action` and `category` if it's for push notification settings.
+- Security rules, 
+  - Login user can only update their own `user_settings`
+  - All users are allow to read other `user_settings`. In some cases we send push notification via `client`` and we need to filter those dont want to receive notification.
+  
+  ```ts
+      match /user_settings/{docId} {
+      	allow read:  if true;
+        allow write: if (request.auth.uid == userDocumentId);
+      }
+  ```
+
+- Be careful not to save a document under `user_settings` collection that has `action` and `category` if it's not for push notification settings.
 
 - This is an example of a push notificcation subscription document - `/users/<my-uid>/user_settings/<document-id> {action: comment-create, category: qna}`.
 

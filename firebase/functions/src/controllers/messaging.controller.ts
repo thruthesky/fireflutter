@@ -43,6 +43,7 @@ exports.messagingOnCommentCreate = onDocumentCreated(
     const data: SendMessage = {
       ...comment,
       id: event.data?.id,
+      postId: comment.postId,
       action: EventName.commentCreate,
       type: EventType.post,
       senderUid: comment.uid,
