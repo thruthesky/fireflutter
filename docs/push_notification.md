@@ -101,13 +101,11 @@ By default `MessagingService.instance.init()` will try to subscribe to the follo
    - `webUsers` 
 
 ```dart
-AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
   MessagingService.instance.queue(
     title: 'message title',
     body: 'message body',
     topic: 'allUsers',
   );
-});
 ```
 
 ### Send push notification with `action`
@@ -230,27 +228,20 @@ App specific event `commentCreate`, `chatCreate`, `userCreate`, `reportCreate`
   ```
 
 
+Customize push message via `action` and `categoryId`
+ - To send push message to user who subscribe to `customAction` and `customCategory`
+ - You can create a document in `user_settings` like
+  - `{'action': 'customAction', 'categoryId': 'customCategoryId'}`
+ - You can then use the `MessagingService.instance.queue` like below to send to all user who has settings like above
 
-
-
-
-
-
-
-
-
-
-
-Using `action` and `categoryId` at the same time
-
-
-
-
-
-
-
-
-
+ ```ts
+  MessagingService.instance.queue(
+    title: 'message title',
+    body: 'message body',
+    action: 'customAction',
+    categoryId: 'customCategoryId'
+  );
+ ```
 
 
 
@@ -260,7 +251,7 @@ Using `action` and `categoryId` at the same time
 - All user setting's documents including push notification setting document is saved under `/user/<uid>/user_settings` collection. We call it `user_settings` collection.
   - See the settings for more information.
 
-Each of push notification option is saved as a single document under `user_settings` collection with fields consist of `action`, `category`, `uid`. For instance, `{action: comment-create, category: qna, uid: userUid}`.
+Each of push notification option is saved as a single document under `user_settings` collection with fields consist of `action`, `categoryId`, `uid`. For instance, `{action: comment-create, category: qna, uid: userUid}`.
 
 - Security rules, 
   - Login user can only update their own `user_settings`
@@ -273,7 +264,7 @@ Each of push notification option is saved as a single document under `user_setti
       }
   ```
 
-- Be careful not to save a document under `user_settings` collection that has `action` and `category` if it's not for push notification settings.
+- Be careful not to save a document under `user_settings` collection that has `action` and `categoryId` if it's not for push notification settings.
 
 - This is an example of a push notificcation subscription document - `/users/<my-uid>/user_settings/<document-id> {action: comment-create, category: qna}`.
 
