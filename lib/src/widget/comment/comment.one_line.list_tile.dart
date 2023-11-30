@@ -51,6 +51,7 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
   bool get notBlocked => my != null && my!.hasBlocked(widget.comment.uid) == false;
   @override
   Widget build(BuildContext context) {
+    dog('${indent(widget.fixedDepth ?? widget.comment.depth)}');
     return Container(
       margin: EdgeInsets.only(left: indent(widget.fixedDepth ?? widget.comment.depth)),
       padding: widget.padding ?? const EdgeInsets.all(0),

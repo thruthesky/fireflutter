@@ -7,12 +7,43 @@ class PostContentShowMore extends StatelessWidget {
   const PostContentShowMore({
     super.key,
     required this.post,
+    this.onTap,
   });
 
   final Post post;
+  final Function()? onTap;
+
+  bool get isTextTooLong => post.content.length > 255;
+  TextStyle textStyle(BuildContext context) => Theme.of(context).textTheme.labelMedium!.copyWith(
+        color: Theme.of(context).colorScheme.tertiary,
+        fontWeight: FontWeight.normal,
+      );
 
   @override
   Widget build(BuildContext context) {
+    if (onTap != null) {
+      return my?.hasBlocked(post.uid) != true
+          ? GestureDetector(
+              onTap: onTap,
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: isTextTooLong ? post.content.substring(0, 140) : post.content,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    if (isTextTooLong)
+                      TextSpan(
+                        text: isTextTooLong ? ' ...read more' : '',
+                        style: textStyle(context),
+                      ),
+                  ],
+                ),
+              ),
+            )
+          : Text(tr.blocked);
+    }
+
     return ParsedReadMore(
       my?.hasBlocked(post.uid) != true ? post.content : 'Blocked',
       urlTextStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -34,11 +65,6 @@ class PostContentShowMore extends StatelessWidget {
           hideCloseButton: true,
         );
       },
-      // highlightText: TargetTextHighlight(
-      //   targetText: 'the',
-      //   style: const TextStyle(fontSize: 20.0, fontStyle: FontStyle.italic, color: Colors.purple),
-      // ),
-
       trimCollapsedText: tr.readMore, // 'expand',
       trimExpandedText: tr.readLess, // 'compress',
       moreStyle: Theme.of(context).textTheme.labelMedium!.copyWith(

@@ -64,6 +64,8 @@ class PostCard extends StatefulWidget {
     this.bottomButtonPadding = const EdgeInsets.fromLTRB(sizeSm, 0, sizeSm, sizeSm),
     this.onCommentSnapshot,
     this.initalCommentSnapShot,
+    this.onTap,
+    this.showFavoriteButton = true,
   });
 
   final Color? color;
@@ -97,6 +99,12 @@ class PostCard extends StatefulWidget {
   final void Function(QuerySnapshot<Object?> snapshot)? onCommentSnapshot;
   final QuerySnapshot<Object?>? initalCommentSnapShot;
 
+  final Function(Post post)? onTap;
+
+  /// Whether to show favorite button
+  /// Default is true
+  final bool showFavoriteButton;
+
   @override
   State<PostCard> createState() => _PostCardState();
 }
@@ -113,17 +121,20 @@ class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
     return widget.customContainer?.call(_content(context, widget.post)) ??
-        Card(
-          color: widget.color,
-          shadowColor: widget.shadowColor,
-          surfaceTintColor: widget.surfaceTintColor,
-          elevation: widget.elevation,
-          shape: widget.shape,
-          borderOnForeground: widget.borderOnForeground,
-          margin: widget.margin,
-          clipBehavior: widget.clipBehavior,
-          semanticContainer: widget.semanticContainer,
-          child: _content(context, widget.post),
+        GestureDetector(
+          onTap: () => widget.onTap?.call(widget.post),
+          child: Card(
+            color: widget.color,
+            shadowColor: widget.shadowColor,
+            surfaceTintColor: widget.surfaceTintColor,
+            elevation: widget.elevation,
+            shape: widget.shape,
+            borderOnForeground: widget.borderOnForeground,
+            margin: widget.margin,
+            clipBehavior: widget.clipBehavior,
+            semanticContainer: widget.semanticContainer,
+            child: _content(context, widget.post),
+          ),
         );
   }
 
@@ -305,9 +316,12 @@ class _PostCardState extends State<PostCard> {
         /// post content
         if (post.content.isNotEmpty)
           Container(
-            padding: const EdgeInsets.all(sizeSm),
+            padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, sizeXs),
             color: widget.contentBackground,
-            child: PostContentShowMore(post: post),
+            child: PostContentShowMore(
+              post: post,
+              onTap: () => widget.onTap?.call(post),
+            ),
           ),
       ],
     );
@@ -320,32 +334,44 @@ class _PostCardState extends State<PostCard> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: sizeXs),
+          padding: const EdgeInsets.only(left: 6.0),
           child: Row(
             children: [
-              IconButton(
+              SizedBox(
+                width: 40.0,
+                child: IconButton(
                   key: const Key('PostCardCommentButton'),
                   onPressed: () => CommentService.instance.showCommentEditBottomSheet(context, post: post),
-                  icon: const Icon(Icons.reply)),
-              Database(
-                path: pathPostLikedBy(post.id),
-                builder: (v, p) => IconButton(
-                  key: const Key('PostCardLikeButton'),
-                  onPressed: () => post.like(),
-                  icon: Icon(v != null ? Icons.favorite : Icons.favorite_outline),
-                  color:
-                      v != null ? Theme.of(context).colorScheme.tertiary.tone(50).saturation(isDark ? 60 : 50) : null,
+                  icon: const Icon(Icons.reply),
                 ),
               ),
-              FavoriteButton(
-                key: const Key('PostCardFavoriteButton'),
-                postId: post.id,
-                builder: (re) => Icon(re ? Icons.bookmark : Icons.bookmark_border),
-                onChanged: (re) => toast(
-                  title: re ? tr.favorite : tr.unfavorite,
-                  message: re ? tr.favoriteMessage : tr.unfavoriteMessage,
+              SizedBox(
+                width: 40.0,
+                child: Database(
+                  path: pathPostLikedBy(post.id),
+                  builder: (v, p) => IconButton(
+                    key: const Key('PostCardLikeButton'),
+                    padding: const EdgeInsets.all(0),
+                    onPressed: () => post.like(),
+                    icon: Icon(v != null ? Icons.favorite : Icons.favorite_outline),
+                    color:
+                        v != null ? Theme.of(context).colorScheme.tertiary.tone(50).saturation(isDark ? 60 : 50) : null,
+                  ),
                 ),
               ),
+              if (widget.showFavoriteButton)
+                SizedBox(
+                  width: 40.0,
+                  child: FavoriteButton(
+                    key: const Key('PostCardFavoriteButton'),
+                    postId: post.id,
+                    builder: (re) => Icon(re ? Icons.bookmark : Icons.bookmark_border),
+                    onChanged: (re) => toast(
+                      title: re ? tr.favorite : tr.unfavorite,
+                      message: re ? tr.favoriteMessage : tr.unfavoriteMessage,
+                    ),
+                  ),
+                ),
               widget.shareButtonBuilder?.call(post) ??
                   PostService.instance.customize.shareButtonBuilder?.call(post) ??
                   const SizedBox.shrink(),
@@ -396,6 +422,10 @@ class _PostCardState extends State<PostCard> {
                 TextButton(
                   key: const Key('PostCardShowMoreCommentsButton'),
                   onPressed: () {
+                    if (widget.onTap != null) {
+                      widget.onTap?.call(post);
+                      return;
+                    }
                     CommentService.instance.showCommentListBottomSheet(context, post);
                   },
                   child: Text(tr.showMoreComments.replaceAll("#no", post.noOfComments.toString())),
@@ -427,12 +457,14 @@ class _PostCardState extends State<PostCard> {
                   children.add(
                     CommentOneLineListTile(
                       key: ValueKey(comment.id),
-                      padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
+                      // padding: const EdgeInsets.fromLTRB(sizeSm, sizeSm, sizeSm, 0),
+                      padding: const EdgeInsets.fromLTRB(0, sizeSm, sizeXxs, 0),
                       contentMargin: const EdgeInsets.only(bottom: 8),
                       contentBorderRadius: const BorderRadius.all(Radius.circular(8)),
                       post: post,
                       comment: comment,
-                      onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
+                      // onTapContent: () => CommentService.instance.showCommentListBottomSheet(context, post),
+                      // onTapContent: () => PostService.instance.showPostViewScreen(context: context, post: post),
                     ),
                   );
                 }

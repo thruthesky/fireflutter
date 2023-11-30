@@ -31,7 +31,7 @@
       "flutterMode": "debug",
       "deviceId": "00008030-000D445A11A3802E"
     },
-    
+
     {
       "name": "PhiLov - Emulator",
       "request": "launch",
@@ -369,6 +369,15 @@
       "deviceId": "R9ATA00LMJM"
     },
     {
+      "name": "PhiLov - Simulator - debug (C)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "9538AD08-48B3-43A8-B848-31CC488FE3E9"
+    },
+    {
       "name": "Admin - Simulator - (J)",
       "request": "launch",
       "type": "dart",
@@ -421,8 +430,8 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "iPhone SE (3rd generation)"
-    }
-    ,{
+    },
+    {
       "name": "GRC - Samsung real phone (N)",
       "request": "launch",
       "type": "dart",

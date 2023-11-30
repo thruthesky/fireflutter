@@ -28,7 +28,8 @@ class PostListView extends StatelessWidget {
     this.categoryId,
     this.uid,
     this.onTap,
-  });
+  }) : assert(itemBuilder == null || onTap == null,
+            'itemBuilder and onTap cannot be used together. Add onTap to the return Widget in itemBuilder instead.');
 
   final double? itemExtent;
   final double? cacheExtent;

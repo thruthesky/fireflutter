@@ -105,7 +105,7 @@ export class Messaging {
 
       // / comment within comments then the parent and ancestors comment owner will get notification.
       // / Get ancestor's uid
-      // and remove uid who didn't subscribe for new comment.
+      // and remove uid who turn off notification for new comment.
       if (data.id) {
         const ancestors = await Comment.getAncestorsUid(data.id, data.uid);
         console.log("get::ancestors::", ancestors);
