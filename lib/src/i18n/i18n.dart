@@ -210,7 +210,7 @@ class I18nTexts {
     this.roomMenu = 'Chat Room Menu',
     this.chatSingleRoomCreateDialog = 'New chat room created. Enjoy chatting!',
     this.chatRoomCreateDialog = 'New chat room created. You can invite more users. Enjoy chatting!',
-    this.loadButtonDialog = 'Click the load botton to patch the title and body base on the post id',
+    this.loadButtonDialog = 'Click the load botton to update the title and body from the post id',
     this.chooseUploadFrom = "Choose upload from...",
     this.noCategory = "No category, yet. Create one!",
     this.noPost = "No post yet. Create one!",

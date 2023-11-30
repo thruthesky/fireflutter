@@ -4,14 +4,11 @@ import 'package:flutter/material.dart';
 class RChatMessageInputBox extends StatefulWidget {
   const RChatMessageInputBox({
     super.key,
-    required this.roomId,
     this.cameraIcon,
     this.sendIcon,
     this.onProgress,
     this.onSend,
   });
-
-  final String roomId;
 
   final Widget? cameraIcon;
   final Widget? sendIcon;
@@ -59,7 +56,7 @@ class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
                         }),
                     complete: () => widget.onProgress?.call(null) ?? setState(() => progress = null),
                   );
-                  await sendChatMessage(roomId: widget.roomId, url: url);
+                  await RChat.sendChatMessage(url: url);
                 },
               ),
               suffixIcon: Row(
@@ -68,7 +65,7 @@ class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
                   IconButton(
                     icon: widget.sendIcon ?? const Icon(Icons.send),
                     onPressed: () async {
-                      await sendChatMessage(roomId: widget.roomId, text: inputController.text);
+                      await RChat.sendChatMessage(text: inputController.text);
                       inputController.clear();
                       widget.onSend?.call();
                     },

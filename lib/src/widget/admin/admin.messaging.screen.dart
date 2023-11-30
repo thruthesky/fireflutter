@@ -675,7 +675,7 @@ class _AdminMessagingScreenState extends State<AdminMessagingScreen> {
 
                       Post post = await PostService.instance.get(landingPage.text);
 
-                      showSnackBar(null, 'Post was loaded, title and body was patch');
+                      showSnackBar(null, 'Post is loaded into the form');
 
                       title.text = post.title;
                       body.text = post.content;

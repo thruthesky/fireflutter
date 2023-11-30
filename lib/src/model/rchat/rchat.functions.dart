@@ -10,10 +10,93 @@ DatabaseReference chatRoomRef({required String uid}) => rtdb.ref().child('chat-r
 DatabaseReference chatMessageRef({required String roomId}) =>
     rtdb.ref().child('chat-messages').child(roomId).child('messages');
 
-/// 각 채팅방 마다 -1을 해서 order 한다.
+/// RChat
 ///
-/// 더 확실히 하기 위해서는 order 를 저장 할 때, 이전 order 의 -1 로 하고, 저장이 된 후, createAt 의 -1 을 해 버린다.
-final Map<String, int> chatRoomMessageOrder = {};
+class RChat {
+  ///
+  /// 참고, roomId 를 입력 받지 않고, global 영역의 변수의 것을 사용한다. 이렇게 하는 이유는 화면 깜빡임을 줄이기 위해서
+  /// 이다. roomId 가 변경 될 때 마다, 채팅 메시지 입력 창 위젯과 같은 위젯들에 roomId 를 전달하기 위해서, 해당 위젯들을
+  /// rebuild 하는 상황이 발생하는데, global 영역에 roomId 를 저장하므로서 위젯 rebuild 를 줄여, 화면 깜빡임을 줄이는
+  /// 역할을 한다.
+  static String roomId = 'all';
+
+  /// 각 채팅방 마다 -1을 해서 order 한다.
+  ///
+  /// 더 확실히 하기 위해서는 order 를 저장 할 때, 이전 order 의 -1 로 하고, 저장이 된 후, createAt 의 -1 을 해 버린다.
+  static final Map<String, int> roomMessageOrder = {};
+
+  static setRoomId(String roomId) => RChat.roomId = roomId;
+
+  /// 채팅 메시지 전송
+  ///
+  ///
+  static Future<void> sendChatMessage({
+    String? text,
+    String? url,
+  }) async {
+    if ((url == null || url.isEmpty) && (text == null || text.isEmpty)) return;
+    roomMessageOrder[roomId] = (roomMessageOrder[roomId] ?? 0) - 1;
+
+    /// 참고, 실제 메시지를 보내기 전에, 채팅방 자체를 먼저 업데이트 해 버린다.
+    ///
+    /// 상황 발생, A 가 B 가 모두 채팅방에 들어가 있는 상태에서
+    /// A 가 B 에게 채팅 메시지를 보내면, 그 즉시 B 의 채팅방 목록이 업데이트되고,
+    /// B 의 채팅방의 newMessage 가 0 으로 된다.
+    /// 그리고, 나서 updateChatRoom() 을 하면, B 의 채팅 메시지가 1이 되는 것이다.
+    /// 즉, 0이 되어야하는데 1이 되는 상황이 발생한다. 그래서, updateChatRoom() 이 먼저 호출되어야 한다.
+    updateChatRoom(text: text, url: url);
+
+    await chatMessageRef(roomId: roomId).push().set({
+      'uid': myUid,
+      if (text != null) 'text': text,
+      if (url != null) 'url': url,
+      'order': RChat.roomMessageOrder[roomId],
+      'createdAt': ServerValue.timestamp,
+    });
+  }
+
+  /// Update chat room
+  static Future<void> updateChatRoom({
+    String? text,
+    String? url,
+  }) async {
+    //
+    String otherUid = otherUidFromRoomId(roomId);
+
+    // chat room under my room list
+    chatRoomRef(uid: myUid!).child(otherUid).set({
+      'text': text,
+      'url': url,
+      'order': RChat.roomMessageOrder[roomId],
+      'updatedAt': ServerValue.timestamp,
+      'newMessage': 0,
+      'isGroupChat': isGroupChat(roomId),
+    });
+
+// chat room info update under other user room list
+    chatRoomRef(uid: otherUid).child(myUid!).update({
+      'text': text,
+      'url': url,
+      'order': RChat.roomMessageOrder[roomId],
+      'updatedAt': ServerValue.timestamp,
+      'newMessage': ServerValue.increment(1),
+      'isGroupChat': isGroupChat(roomId),
+    });
+  }
+
+  /// 채팅방 나가기
+  ///
+  /// 상대방의 채팅방 목록에서는 삭제하지 않고, 나의 채팅방 목록에서만 삭제한다.
+  /// 즉, 상대방은 모르게 한다.
+  static leaveChatRoom({
+    required String roomId,
+  }) {
+    String otherUid = otherUidFromRoomId(roomId);
+
+    /// chat room under my room list
+    chatRoomRef(uid: myUid!).child(otherUid).remove();
+  }
+} // EO RChat
 
 /// 채팅방 ID 에서, 1:1 채팅방인지 확인한다.
 isSingleChat(String roomId) => roomId.split('-').length == 2;
@@ -37,76 +120,20 @@ String singleChatRoomId(String otherUserUid) {
   return uids.join('-');
 }
 
-Future<void> sendChatMessage({
-  required String roomId,
-  String? text,
-  String? url,
-}) async {
-  if ((url == null || url.isEmpty) && (text == null || text.isEmpty)) return;
-  chatRoomMessageOrder[roomId] = (chatRoomMessageOrder[roomId] ?? 0) - 1;
-
-  /// 참고, 실제 메시지를 보내기 전에, 채팅방 자체를 먼저 업데이트 해 버린다.
-  ///
-  /// 상황 발생, A 가 B 가 모두 채팅방에 들어가 있는 상태에서
-  /// A 가 B 에게 채팅 메시지를 보내면, 그 즉시 B 의 채팅방 목록이 업데이트되고,
-  /// B 의 채팅방의 newMessage 가 0 으로 된다.
-  /// 그리고, 나서 updateChatRoom() 을 하면, B 의 채팅 메시지가 1이 되는 것이다.
-  /// 즉, 0이 되어야하는데 1이 되는 상황이 발생한다. 그래서, updateChatRoom() 이 먼저 호출되어야 한다.
-  updateChatRoom(roomId: roomId, text: text, url: url);
-
-  await chatMessageRef(roomId: roomId).push().set({
-    'uid': myUid,
-    if (text != null) 'text': text,
-    if (url != null) 'url': url,
-    'order': chatRoomMessageOrder[roomId],
-    'createdAt': ServerValue.timestamp,
-  });
-}
-
-/// Update chat room
-Future<void> updateChatRoom({
-  required String roomId,
-  String? text,
-  String? url,
-}) async {
-  //
-  String otherUid = otherUidFromRoomId(roomId);
-
-  // chat room under my room list
-  chatRoomRef(uid: myUid!).child(otherUid).set({
-    'text': text,
-    'url': url,
-    'order': chatRoomMessageOrder[roomId],
-    'updatedAt': ServerValue.timestamp,
-    'newMessage': 0,
-    'isGroupChat': isGroupChat(roomId),
-  });
-
-// chat room info update under other user room list
-  chatRoomRef(uid: otherUid).child(myUid!).update({
-    'text': text,
-    'url': url,
-    'order': chatRoomMessageOrder[roomId],
-    'updatedAt': ServerValue.timestamp,
-    'newMessage': ServerValue.increment(1),
-    'isGroupChat': isGroupChat(roomId),
-  });
-}
-
-/// 채팅방의 메시지 순서(order)를 담고 있는 [chatRoomMessageOrder] 를 초기화 한다.
+/// 채팅방의 메시지 순서(order)를 담고 있는 [RChat.roomMessageOrder] 를 초기화 한다.
 resetChatRoomMessageOrder({required String roomId, required int? order}) async {
-  if (chatRoomMessageOrder[roomId] == null) {
-    chatRoomMessageOrder[roomId] = 0;
+  if (RChat.roomMessageOrder[roomId] == null) {
+    RChat.roomMessageOrder[roomId] = 0;
   }
-  if (order != null && order < chatRoomMessageOrder[roomId]!) {
-    chatRoomMessageOrder[roomId] = order;
+  if (order != null && order < RChat.roomMessageOrder[roomId]!) {
+    RChat.roomMessageOrder[roomId] = order;
   }
 }
 
 /// 채팅방의 메시지 순서(order)를 가져온다.
-/// 만약, [chatRoomMessageOrder] 에 값이 없으면 0을 리턴한다.
+/// 만약, [RChat.roomMessageOrder] 에 값이 없으면 0을 리턴한다.
 int getChatRoomMessageOrder(String roomId) {
-  return chatRoomMessageOrder[roomId] ?? 0;
+  return RChat.roomMessageOrder[roomId] ?? 0;
 }
 
 /// 채팅방 정보 `/chat-rooms/$uid/$otherUid` 에서 newMessage 를 0 으로 초기화 한다.
@@ -162,17 +189,4 @@ bool isLoadingForNewMessage(String roomId, FirebaseQueryBuilderSnapshot snapshot
   /// 이전에 로드된 채팅 메시지가 있지만, 새로운 채팅 메시지를 받지 않았다면, false 를 리턴한다.
   /// 위로 스크롤 하는 경우, 이 메시지가 발생 할 수 있다.
   return false;
-}
-
-/// 채팅방 나가기
-///
-/// 상대방의 채팅방 목록에서는 삭제하지 않고, 나의 채팅방 목록에서만 삭제한다.
-/// 즉, 상대방은 모르게 한다.
-leaveChatRoom({
-  required String roomId,
-}) {
-  String otherUid = otherUidFromRoomId(roomId);
-
-  /// chat room under my room list
-  chatRoomRef(uid: myUid!).child(otherUid).remove();
 }
