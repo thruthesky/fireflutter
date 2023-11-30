@@ -3,9 +3,10 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class RChatBubble extends StatelessWidget {
-  const RChatBubble({super.key, required this.message});
+  const RChatBubble({super.key, required this.message, this.userAvatarBuilder});
 
   final RChatMessageModel message;
+  final Widget Function(BuildContext context)? userAvatarBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +19,17 @@ class RChatBubble extends StatelessWidget {
             const Spacer(),
             dateAndName(),
           ],
+
           // other avtar
           if (!message.mine)
-            UserAvatar(
-              uid: message.uid,
-              radius: 13,
-            ),
+
+            /// display pop on menu - noe
+            userAvatarBuilder?.call(context) ??
+                UserAvatar(
+                  uid: message.uid,
+                  radius: 13,
+                ),
+
           const SizedBox(width: 8),
           // text
           if (message.text != null)
@@ -58,10 +64,12 @@ class RChatBubble extends StatelessWidget {
           const SizedBox(width: 8),
           // my avtar
           if (message.mine)
-            UserAvatar(
-              user: my,
-              radius: 13,
-            ),
+            userAvatarBuilder?.call(context) ??
+                UserAvatar(
+                  user: my,
+                  radius: 13,
+                ),
+
           if (!message.mine) ...[
             dateAndName(),
             const Spacer(),
