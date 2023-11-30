@@ -24,6 +24,8 @@ This is to show(build) widgets that depends on the login user's document especia
 If you are going to use the global `my` variable immediately after app boots, it would cause null value error since the fireflutter `UserService` didn't loaded the user document, yet. To prevent this error, you may use `UserDocReady` widget. This widget displays `SizedBox.shrink()` until the user document is loaded. So, you can use the login user's document data safely.
 This widget will now show `SizedBox.shrink()` if the user document is already loaded. So, it's not flickering.
 
+One thing to note is that, if `setState` is called, the `UserDocReady` may cause screen flickering.
+
 
 ```dart
 class SomeScreen extends StatelessWidget {
