@@ -191,10 +191,11 @@ class PostService {
       PopupMenuButton(
         icon: const Icon(Icons.more_horiz),
         itemBuilder: (context) => [
-          const PopupMenuItem(
-            value: "adjust_text_size",
-            child: Text("Adjust text size"),
-          ),
+          // Removed temporarily. Please Uncomment when functionality is ready.
+          // const PopupMenuItem(
+          //   value: "adjust_text_size",
+          //   child: Text("Adjust text size"),
+          // ),
           if (post.isMine)
             const PopupMenuItem(
               value: "edit",
