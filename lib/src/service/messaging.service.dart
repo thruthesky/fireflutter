@@ -218,6 +218,8 @@ class MessagingService {
     String? badge,
     String? channelId,
     String? sound,
+    String? action,
+    String? categoryId,
   }) {
     Json data = {
       'title': title,
@@ -232,6 +234,8 @@ class MessagingService {
       if (badge != null && badge.isNotEmpty) 'badge': badge,
       if (channelId != null && channelId.isNotEmpty) 'channelId': channelId,
       if (sound != null && sound.isNotEmpty) 'sound': sound,
+      if (action != null && action.isNotEmpty) 'action': action,
+      if (categoryId != null && categoryId.isNotEmpty) 'categoryId': categoryId,
     };
 
     // print('data; $data');
