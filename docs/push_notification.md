@@ -47,7 +47,7 @@ The admin can send push notification to all the devices, or specific type/os thr
     );
 ```
 
-- For the `Head-up display` in Android, you need to have some extra setup.
+- For the `Head-up display` in Android, Setting the importance to `NotificationManager.IMPORTANCE_HIGH` will shows the notification everywhere, makes noise and peeks. May use full screen intents.
 
 
 ## Push notification settings
@@ -63,7 +63,7 @@ Each of push notification option is saved as a single document under `user_setti
   
   ```ts
       match /user_settings/{docId} {
-      	allow read:  if true;
+        allow read:  if true;
         allow write: if (request.auth.uid == userDocumentId);
       }
   ```
@@ -74,9 +74,6 @@ Each of push notification option is saved as a single document under `user_setti
 
 - By default, cloud function event like `commentCreate`, `chatCreate`, `userCreate`, `reportCreate` will send push message automatically unless the user turn them off by adding specific `user_settings`. [Check send push notification with action](#send-push-notification-with-action)
 
-
-- Since `commentCreate` by default will send push message to its ancestors and post owner you can disable this by adding the setting below
-  - `/users/<uid>/user_settings/settings {action: disableNotifyNewCommentsUnderMyPostsAndComments}`
 
 
 - The format of the document is in
@@ -142,7 +139,7 @@ By default `MessagingService.instance.init()` will try to subscribe the device t
     - `iosUsers`
     - `androidUsers`
     - `webUsers` 
-    - `${platformName()}Users` - other platformname will also included
+    - `${platformName()}Users` - other platform name will also included
 
 ```dart
   MessagingService.instance.queue(
@@ -154,26 +151,31 @@ By default `MessagingService.instance.init()` will try to subscribe the device t
 
 ### Send push notification with `action`
 
-App specific event like `commentCreate`, `chatCreate`, `userCreate`, `reportCreate`
+App specific event like `commentCreate`, `chatCreate`, `userCreate`, `reportCreate` will send push message automatically.
 
 #### `commentCreate`
 
-Cloud function auto generated event onDocumentCreated when comment is created
+ Cloud function `messagingOnCommentCreate` event will trigger when comment is created
 
-If a push notification is created with something like `{action: commentCreate, categoryId: qna, id: commentId}`
-
-- This will send push message to ancestors comment and post author, But if the ancestor has`/users/<my-uid>/user_settings/<document-id> {action: disableNotifyNewCommentsUnderMyPostsAndComments}` then they will be remove from list
-- This will also send push message to users who has `/users/<my-uid>/user_settings/<document-id> {action: 'commentCreate', categoryId: 'qna'}`
-- It is possible to get push notification if you disable getting push notifcation from ancestor but you enable getting push message when a comment is created to a forum with `categoryId`
-- You will only get one notification for this event
-
-```ts 
+ ```ts 
   exports.messagingOnCommentCreate = onDocumentCreated(
     "comments/{commentId}",
     async ( ... ): 
     ....
   );
 ```
+
+Since `commentCreate` by default will send push message to its ancestors and post author you can disable this by adding the setting below
+  - `/users/<uid>/user_settings/settings {action: disableNotifyNewCommentsUnderMyPostsAndComments}`
+
+If a push notification is created with something like `{action: commentCreate, categoryId: qna, id: commentId}`
+
+- This will send push message to ancestors comment and post author, But if the ancestor has`/users/<my-uid>/user_settings/<document-id> {action: disableNotifyNewCommentsUnderMyPostsAndComments}` then they will be remove from list
+- This will also send push message to users who has `/users/<my-uid>/user_settings/<document-id> {action: 'commentCreate', categoryId: 'qna'}`
+- It is possible to get push notification if you disable getting push notifcation from ancestor but you enable getting push message when a comment is created to a forum with `categoryId`
+- It will remove duplicate uid so you will only get one push message for this event
+
+
 
   - It will get the Post author with Post.get(data.postId), 
   - It will get all ancestor uids
@@ -184,24 +186,23 @@ If a push notification is created with something like `{action: commentCreate, c
   - Combine the filtered ancestor uids and uids who subscribe to `commentCreate` under a specific `categoryId`
   - It will send push message to combined uids
 
-  - `commentCreate` payload
+ `commentCreate` payload
 
-    ```ts
-    const data: SendMessage = {
-      id: event.data?.id,
-      postId: comment.postId,
-      action: EventName.commentCreate,
-      type: EventType.post,
-      senderUid: comment.uid,
-      title: post.deleted == true ? "Deleted post..." : post.title ?? "Comment on post...";
-    };
-    ```
+```ts
+  const data: SendMessage = {
+    id: event.data?.id,
+    postId: comment.postId,
+    action: EventName.commentCreate,
+    type: EventType.post,
+    senderUid: comment.uid,
+    title: post.deleted == true ? "Deleted post..." : post.title ?? "Comment on post...";
+  };
+```
 
 
 #### `chatCreate`
-Cloud function auto generated event onDocumentCreated when chat message is created
 
-- For chat room, when a user enters into a chat room, the push notification is enabled by default unless the user turn off the push notification manually. When the user turns off the push notification, `{action: chatDisabled, roomId: roomId}` action and roomId will be saved in the setting document.
+Cloud function `messagingOnChatMessageCreate` event will trigger when chat message is created.
 
 ```ts 
   exports.messagingOnChatMessageCreate = onDocumentCreated(
@@ -211,27 +212,33 @@ Cloud function auto generated event onDocumentCreated when chat message is creat
   );
 ```
 
+For chat room, when a user enters into a chat room, the push notification is enabled by default unless the user turn off the push notification manually. When the user turns off the push notification, `{action: chatDisabled, roomId: roomId}` action and roomId will be saved in the setting document.
+
+
   - It will filter the uids if a document in `user_settings` has
+
    - `{action: 'chatDisabled', roomId: 'data.roomId'}`
+
   - It will send push message to remaining uids
-  - `chatCreate` payload
 
-    ```ts
-      const messageData: SendMessage = {
-        type: EventType.chat,
-        action: EventName.chatCreate,
-        title: `${user?.display_name ?? user?.name ?? ""} send you a message.`,
-        body: data.text,
-        uids: await Chat.getOtherUserUidsFromChatMessageDocument(data),
-        id: data.roomId,
-        senderUid: data.uid,
-      };
-    ```
+`chatCreate` payload
 
-#### `userCreate`, `reportCreate`
-Cloud function auto generated event onDocumentCreated for sending push notification to admin
+```ts
+  const messageData: SendMessage = {
+    type: EventType.chat,
+    action: EventName.chatCreate,
+    title: `${user?.display_name ?? user?.name ?? ""} send you a message.`,
+    body: data.text,
+    uids: await Chat.getOtherUserUidsFromChatMessageDocument(data),
+    id: data.roomId,
+    senderUid: data.uid,
+  };
+```
 
-`userCreate`
+#### `userCreate`
+
+
+Cloud function `messagingOnUserCreate` event will trigger when new user is created.
 
 ```ts 
   exports.messagingOnUserCreate = onDocumentCreated(
@@ -241,23 +248,31 @@ Cloud function auto generated event onDocumentCreated for sending push notificat
   );
 ```
 
+`userCreate`
+
+When a new user is registered it will send push notification to admin
+
   - It will get users uid with `isAdmin` set to `true`
-  - It will filter the uids and remove uid if a document in `user_settings` has
-    - `{action: 'userCreate', categoryId: 'notifyOnNewUser'}`
-  - `userCreate` payload
+  - It will remove admin with `/users/<my-uid>/user_settings/<document-id> {action: 'userCreate', categoryId: 'notifyOnNewUser'}`
+  - Send push message to remaining admin
 
-  ```ts
-    const data: SendMessage = {
-      title: "New Registration",
-      content: "New User " + event.data?.id,
-      id: event.data?.id,
-      action: EventName.userCreate,
-      type: EventType.user,
-      senderUid: event.data?.id,
-    };
-  ```
+`userCreate` payload
 
-`reportCreate`
+```ts
+  const data: SendMessage = {
+    title: "New Registration",
+    content: "New User " + event.data?.id,
+    id: event.data?.id,
+    action: EventName.userCreate,
+    type: EventType.user,
+    senderUid: event.data?.id,
+  };
+```
+
+
+#### `reportCreate`
+
+Cloud function `messagingOnReportCreate` event will trigger when new user is created.
 
 ```ts 
   exports.messagingOnReportCreate = onDocumentCreated(
@@ -266,30 +281,33 @@ Cloud function auto generated event onDocumentCreated for sending push notificat
     ....
   );
 ```
-  - It will get users uid with `isAdmin` set to `true`
-  - It will filter the uids if a document in `user_settings` has
-    - `{action: 'userCreate', categoryId: 'notifyOnNewUser'}`
-  - `reportCreate` payload
 
-  ```ts
-    const data: SendMessage = {
-      title: "Report: " + report.type,
-      body: report.reason,
-      id: event.data?.id,
-      action: EventName.reportCreate,
-      type: EventType.report,
-      senderUid: report.uid,
-    };
-  ```
+`reportCreate`
+
+When a user create a report, it will send push message to admin
+
+  - It will get users uid with `isAdmin` set to `true`
+  - It will remove admin with `/users/<my-uid>/user_settings/<document-id> {action: 'reportCreate', categoryId: 'notifyOnNewReport'}`
+
+`reportCreate` payload
+
+```ts
+  const data: SendMessage = {
+    title: "Report: " + report.type,
+    body: report.reason,
+    id: event.data?.id,
+    action: EventName.reportCreate,
+    type: EventType.report,
+    senderUid: report.uid,
+  };
+```
 
 
 ### Sending push notification with `action` and `categoryId`
 
-Like in forum we want to have a on and off notification button for user to subscribe or unsubscribe to certain categoryId then we can use `action` and `categoryId`
+For forum we can turn on and off notification button for user to subscribe or unsubscribe to certain `categoryId` then we can use `action` and `categoryId`
 
-- If `{action: post-create, category: discussion}` is set, then there will be a messgae on new post on discussion category.
-
-By default when we create a post the cloud function invoke the 
+By default when we create a post the cloud function will invoke the  `messagingOnPostCreate`
 
 ```ts 
   exports.messagingOnPostCreate = onDocumentCreated(
@@ -299,9 +317,10 @@ By default when we create a post the cloud function invoke the
   );
 ```
 
-  - then it will get all user who has document in `user_settings` with
-    - `{action:'postCreate', 'categoryId': '${post.categoryId}'}`
-  - And it send to those user who has the setting above
+If a post is created under categoryId `discussion`
+
+  - This will get all users who has document like `/users/<my-uid>/user_settings/<document-id>{action:'postCreate', 'categoryId': 'discussion'}`
+  - And it send push message to those user who has the setting above
 
 
  
