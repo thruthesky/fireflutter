@@ -55,7 +55,7 @@ The admin can send push notification to all the devices, or specific type/os thr
 
 Sending push message using `tokens`, `uids`, `topic` will directly send the push notification to users.
 
-For app specific application like `forum`, using `user_settings` to on and off push message. [Check the Send push notification using `action` and `categoryId`](#Sending-push-notification-with-`action`-and-`categoryId`).
+For app specific application like `forum`, using `user_settings` to on and off push message. [Check the Send push notification using `action` and `categoryId`](#sending-push-notification-with-action-and-categoryid).
 
 ### Send push notification with `tokens`
 
