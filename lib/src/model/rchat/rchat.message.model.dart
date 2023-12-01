@@ -10,6 +10,7 @@ class RChatMessageModel {
   int? createdAt;
 
   bool get mine => uid == myUid;
+  bool get other => uid != myUid;
 
   RChatMessageModel({
     this.key,

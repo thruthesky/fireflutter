@@ -19,13 +19,13 @@ class _RChatMessageListState extends State<RChatMessageList> {
   Widget build(BuildContext context) {
     return FirebaseDatabaseQueryBuilder(
       pageSize: 20,
-      query: chatMessageRef(roomId: widget.roomId).orderByChild('order'),
+      query: RChat.messageRef(roomId: widget.roomId).orderByChild('order'),
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
           /// FirebaseDatabaseQueryBuilder will set snapshot.isFetcing only one time when it is first loading.
           dog('isFetcing');
 
-          resetChatRoomNewMessage(roomId: widget.roomId);
+          RChat.resetRoomNewMessage(roomId: widget.roomId);
 
           if (list != null) return list!;
           return const Center(child: CircularProgressIndicator());
@@ -35,10 +35,9 @@ class _RChatMessageListState extends State<RChatMessageList> {
           return Text('Something went wrong! ${snapshot.error}');
         }
 
-        dog("isFirstLoadingOrNewMessage-> ${isLoadingForNewMessage(widget.roomId, snapshot)}");
-        if (isLoadingForNewMessage(widget.roomId, snapshot)) {
+        if (RChat.isLoadingForNewMessage(widget.roomId, snapshot)) {
           /// newMessage 리셋
-          resetChatRoomNewMessage(roomId: widget.roomId);
+          RChat.resetRoomNewMessage(roomId: widget.roomId);
         }
 
         /// Reset the newMessage
@@ -55,7 +54,7 @@ class _RChatMessageListState extends State<RChatMessageList> {
             }
             final message = RChatMessageModel.fromSnapshot(snapshot.docs[index]);
 
-            resetChatRoomMessageOrder(roomId: widget.roomId, order: message.order);
+            RChat.resetRoomMessageOrder(roomId: widget.roomId, order: message.order);
 
             return RChatBubble(
               message: message,
