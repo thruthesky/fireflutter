@@ -303,4 +303,6 @@ class Post {
   bool get isMine {
     return loggedIn && myUid! == uid;
   }
+
+  bool get isNotMine => !isMine;
 }

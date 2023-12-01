@@ -63,14 +63,16 @@ class StorageService {
     if (path == null) return null;
     File file = File(path);
     final storageRef = FirebaseStorage.instance.ref();
-    final fileRef = storageRef
-        .child(saveAs ?? "users/${myUid!}/${file.path.split('/').last}");
+    final fileRef = storageRef.child(saveAs ?? "users/${myUid!}/${file.path.split('/').last}");
+    // Review: Here only Image can be compressed. File and Video cannot be compressed.
+    // It may cause error if you try to compress file or video.
+    // So, we should check the file type before compressing.
+    // Or... add custom compressing function for file and video, and/or image.
     if (compressQuality > 0) {
       final xfile = await FlutterImageCompress.compressAndGetFile(
         file.absolute.path,
         '${file.absolute.path}.compressed.jpg',
-        quality: 80,
-        // rotate: 180,
+        quality: 100 - compressQuality,
       );
       file = File(xfile!.path);
     }
@@ -153,7 +155,9 @@ class StorageService {
       fromWhere: re,
       progress: progress,
       complete: complete,
-      compressQuality: compressQuality,
+      // we cannot compress file or video
+      // Should we create a proper Enum for UploadType?
+      compressQuality: ['videoGallery', 'file'].contains(re) ? 0 : compressQuality,
       path: path,
       saveAs: saveAs,
     );
@@ -174,18 +178,8 @@ class StorageService {
     String? type,
   }) async {
     if (fromWhere == null) return null;
-    late String? path;
-    if (fromWhere == 'camera') fromWhere = ImageSource.camera;
-    if (fromWhere == 'gallery') fromWhere = ImageSource.gallery;
-    if (fromWhere == 'file') {
-      final FilePickerResult? result = await FilePicker.platform.pickFiles();
-      path = result?.files.first.path;
-    } else if ([ImageSource.camera, ImageSource.gallery].contains(fromWhere)) {
-      final XFile? image = await ImagePicker().pickImage(source: fromWhere);
-      path = image?.path;
-    } else {
-      return null;
-    }
+    String? path = await getPathFromPicker(fromWhere: fromWhere);
+
     return await uploadFile(
       path: path,
       saveAs: saveAs,
@@ -196,14 +190,35 @@ class StorageService {
     );
   }
 
+  getPathFromPicker({
+    required dynamic fromWhere,
+  }) async {
+    if (fromWhere == null) return null;
+    late String? path;
+    if (fromWhere == 'camera') fromWhere = ImageSource.camera;
+    if (fromWhere == 'gallery') fromWhere = ImageSource.gallery;
+    if (fromWhere == 'file') {
+      final FilePickerResult? result = await FilePicker.platform.pickFiles();
+      path = result?.files.first.path;
+    } else if ([ImageSource.camera, ImageSource.gallery].contains(fromWhere)) {
+      final XFile? image = await ImagePicker().pickImage(source: fromWhere);
+      path = image?.path;
+    } else if (fromWhere == 'videoGallery') {
+      final XFile? video = await ImagePicker().pickVideo(source: ImageSource.gallery);
+      path = video?.path;
+    } else {
+      return null;
+    }
+    return path;
+  }
+
   Future<List<String?>?> uploadMultiple({
     Function(double)? progress,
     Function? complete,
     int compressQuality = 80,
     String? type,
   }) async {
-    final pickedFiles = await ImagePicker()
-        .pickMultiImage(imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
+    final pickedFiles = await ImagePicker().pickMultiImage(imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
     List<XFile> xFilePicks = pickedFiles;
 
     if (xFilePicks.isEmpty) return null;
@@ -224,9 +239,6 @@ class StorageService {
     if (customize.showUploads != null) {
       return customize.showUploads!(context, urls, index: index);
     }
-    showGeneralDialog(
-        context: context,
-        pageBuilder: (context, _, __) =>
-            CarouselScreen(urls: urls, index: index));
+    showGeneralDialog(context: context, pageBuilder: (context, _, __) => CarouselScreen(urls: urls, index: index));
   }
 }
