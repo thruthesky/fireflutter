@@ -4,11 +4,10 @@ import 'package:fireflutter/src/model/rchat/rchat.bubble.dart';
 import 'package:flutter/material.dart';
 
 class RChatMessageList extends StatefulWidget {
-  const RChatMessageList({super.key, required this.roomId, this.builder, this.userAvatarBuilder});
+  const RChatMessageList({super.key, required this.roomId, this.builder});
 
   final String roomId;
   final Widget Function(RChatMessageModel)? builder;
-  final Widget Function(BuildContext)? userAvatarBuilder;
 
   @override
   State<RChatMessageList> createState() => _RChatMessageListState();
@@ -60,7 +59,6 @@ class _RChatMessageListState extends State<RChatMessageList> {
 
             return RChatBubble(
               message: message,
-              userAvatarBuilder: widget.userAvatarBuilder,
             );
           },
         );

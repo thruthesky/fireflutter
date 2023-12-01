@@ -12,14 +12,22 @@ class UserDoc extends StatelessWidget {
     super.key,
     required this.uid,
     required this.builder,
+    this.live = false,
     this.onLoading,
   });
   final String uid;
   final Widget Function(User) builder;
   final Widget? onLoading;
+  final bool live;
 
   @override
   Widget build(BuildContext context) {
+    if (live) {
+      return StreamBuilder<User?>(
+        stream: UserService.instance.snapshotOther(uid),
+        builder: (context, snapshot) => buildStreamWidget(context, snapshot),
+      );
+    }
     return FutureBuilder<User?>(
       future: UserService.instance.get(uid),
       builder: buildStreamWidget,

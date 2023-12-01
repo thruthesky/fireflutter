@@ -3,10 +3,12 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class RChatBubble extends StatelessWidget {
-  const RChatBubble({super.key, required this.message, this.userAvatarBuilder});
+  const RChatBubble({
+    super.key,
+    required this.message,
+  });
 
   final RChatMessageModel message;
-  final Widget Function(BuildContext context)? userAvatarBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -19,16 +21,39 @@ class RChatBubble extends StatelessWidget {
             const Spacer(),
             dateAndName(),
           ],
-
           // other avtar
           if (!message.mine)
-
-            /// display pop on menu - noe
-            userAvatarBuilder?.call(context) ??
-                UserAvatar(
-                  uid: message.uid,
-                  radius: 13,
-                ),
+            UserDoc(
+                uid: message.uid!,
+                live: true,
+                builder: (user) {
+                  return PopupMenuButton(
+                    itemBuilder: (context) {
+                      return [
+                        if (my!.isAdmin)
+                          PopupMenuItem(
+                            value: 'disable',
+                            child: Text(enableOrDisableText(user.isDisabled)),
+                          )
+                      ];
+                    },
+                    onSelected: (value) async {
+                      if (value == 'disable') {
+                        final re = await confirm(
+                          context: context,
+                          title: "${enableOrDisableText(user.isDisabled)} User",
+                          message: 'Are you sure you want to ${enableOrDisableText(user.isDisabled)} this user?',
+                        );
+                        if (re != true) return;
+                        user.isDisabled ? await user.enable() : await user.disable();
+                      }
+                    },
+                    child: UserAvatar(
+                      uid: message.uid,
+                      radius: 13,
+                    ),
+                  );
+                }),
 
           const SizedBox(width: 8),
           // text
@@ -64,11 +89,10 @@ class RChatBubble extends StatelessWidget {
           const SizedBox(width: 8),
           // my avtar
           if (message.mine)
-            userAvatarBuilder?.call(context) ??
-                UserAvatar(
-                  user: my,
-                  radius: 13,
-                ),
+            UserAvatar(
+              user: my,
+              radius: 13,
+            ),
 
           if (!message.mine) ...[
             dateAndName(),
@@ -105,5 +129,9 @@ class RChatBubble extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  String enableOrDisableText(bool isDisabled) {
+    return isDisabled ? 'Enable' : 'Disable';
   }
 }

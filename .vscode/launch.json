@@ -423,10 +423,10 @@
       "deviceId": "emulator-5554"
     },
     {
-      "name": "GRC - Iphone SE (3rd generation) (N)",
+      "name": "Philov - Iphone SE (3rd generation) (N)",
       "request": "launch",
       "type": "dart",
-      "cwd": "apps/grc",
+      "cwd": "apps/philov",
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "iPhone SE (3rd generation)"
