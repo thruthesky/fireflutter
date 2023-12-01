@@ -65,7 +65,13 @@ class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
                   IconButton(
                     icon: widget.sendIcon ?? const Icon(Icons.send),
                     onPressed: () async {
-                      await RChat.sendChatMessage(text: inputController.text);
+                      if (my!.isDisabled == true) {
+                        toast(title: 'Notice', message: 'Your account is disabled. Please contact admin.');
+                        return;
+                      }
+                      String trimText = inputController.text.trim();
+                      if (trimText.isEmpty) return;
+                      await RChat.sendChatMessage(text: trimText);
                       inputController.clear();
                       widget.onSend?.call();
                     },
