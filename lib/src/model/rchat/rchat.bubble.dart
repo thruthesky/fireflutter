@@ -23,50 +23,13 @@ class RChatBubble extends StatelessWidget {
           ],
           // other avtar
           if (message.other)
-            PopupMenuButton(
-              itemBuilder: (context) {
-                return [
-                  if (my?.isAdmin == true)
-                    PopupMenuItem(
-                      value: 'enableOrDisable',
-                      child: UserDoc(
-                        uid: message.uid!,
-                        live: true,
-                        builder: (user) => Text(
-                          enableOrDisableText(user),
-                        ),
-                      ),
-                    ),
-                  const PopupMenuItem(
-                    value: 'report',
-                    child: Text('Report'),
-                  ),
-                  const PopupMenuItem(
-                    value: 'profile',
-                    child: ListTile(
-                      leading: Icon(Icons.person),
-                      title: Text('Profile'),
-                      trailing: Icon(Icons.chevron_right),
-                    ),
-                  ),
-                ];
-              },
-              child: UserAvatar(uid: message.uid, radius: 13),
-              onSelected: (v) async {
-                if (v == 'enableOrDisable') {
-                  final user = await UserService.instance.get(message.uid!) as User;
-                  if (context.mounted) {
-                    final re = await confirm(
-                      context: context,
-                      title: enableOrDisableText(user),
-                      message: 'Are you sure you want to ${enableOrDisableText(user)} this user?',
-                    );
-
-                    if (re != true) return;
-                  }
-                  user.isDisabled ? await user.enable() : await user.disable();
-                }
-              },
+            UserAvatar(
+              uid: message.uid,
+              radius: 13,
+              onTap: () => UserService.instance.showPublicProfileScreen(
+                context: context,
+                uid: message.uid,
+              ),
             ),
 
           const SizedBox(width: 8),
