@@ -4,10 +4,16 @@ import 'package:fireflutter/src/model/rchat/rchat.bubble.dart';
 import 'package:flutter/material.dart';
 
 class RChatMessageList extends StatefulWidget {
-  const RChatMessageList({super.key, required this.roomId, this.builder});
+  const RChatMessageList({
+    super.key,
+    required this.roomId,
+    this.builder,
+    this.primary,
+  });
 
   final String roomId;
   final Widget Function(RChatMessageModel)? builder;
+  final bool? primary;
 
   @override
   State<RChatMessageList> createState() => _RChatMessageListState();
@@ -47,6 +53,7 @@ class _RChatMessageListState extends State<RChatMessageList> {
         list = ListView.builder(
           padding: const EdgeInsets.all(0),
           reverse: true,
+          primary: widget.primary,
           itemCount: snapshot.docs.length,
           itemBuilder: (context, index) {
             if (snapshot.hasMore && index + 1 == snapshot.docs.length) {

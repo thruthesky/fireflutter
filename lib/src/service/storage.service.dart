@@ -134,7 +134,7 @@ class StorageService {
   Future<String?> upload({
     required BuildContext context,
     Function(double)? progress,
-    Function? complete,
+    Function()? complete,
     int compressQuality = 80,
     String? path,
     String? saveAs,

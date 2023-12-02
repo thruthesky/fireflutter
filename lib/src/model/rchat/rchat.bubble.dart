@@ -45,23 +45,7 @@ class RChatBubble extends StatelessWidget {
               child: Text(message.text ?? ''),
             ),
           // image
-          if (message.url != null)
-            ClipRRect(
-              borderRadius: borderRadius(),
-              child: Container(
-                constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
-                child: CachedNetworkImage(
-                  imageUrl: message.url!.thumbnail,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: CircularProgressIndicator(),
-                  ),
-                  // if thumbnail is not available, show original image
-                  errorWidget: (context, url, error) => CachedNetworkImage(imageUrl: message.url!),
-                ),
-              ),
-            ),
+          if (message.url != null) cachedImage(context, message.url!),
 
           const SizedBox(width: 8),
           // my avtar
@@ -69,6 +53,11 @@ class RChatBubble extends StatelessWidget {
             UserAvatar(
               user: my,
               radius: 13,
+              onTap: () => UserService.instance.showPublicProfileScreen(
+                context: context,
+                uid: message.uid,
+                user: my,
+              ),
             ),
 
           if (!message.mine) ...[
@@ -110,5 +99,26 @@ class RChatBubble extends StatelessWidget {
 
   enableOrDisableText(User user) {
     return user.isDisabled ? 'Enable' : 'Disable';
+  }
+
+  cachedImage(BuildContext context, String url) {
+    return ClipRRect(
+      borderRadius: borderRadius(),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+        child: CachedNetworkImage(
+          imageUrl: message.url!.thumbnail,
+          fit: BoxFit.cover,
+          // progressIndicatorBuilder: (context, url, downloadProgress) =>
+          //     CircularProgressIndicator(value: downloadProgress.progress),
+          placeholder: (context, url) => const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: CircularProgressIndicator(),
+          ),
+          // if thumbnail is not available, show original image
+          errorWidget: (context, url, error) => CachedNetworkImage(imageUrl: message.url!),
+        ),
+      ),
+    );
   }
 }
