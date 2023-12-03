@@ -76,3 +76,23 @@ class _SomeScreenState extends State<SomeScreen> {
 }
 
 ```
+
+
+## User information
+
+The user documents under `users` collection are opened to public, so everyone can read and search.
+The user documents under `user_private_data` collection are closed. No one except admin and the login user himself can read or update.
+
+
+When a user registers with Google email or Phone number, fireflutter does not save these information into database since those are the most ciritical private information. If you want to save it, you must save in under `user_private_data` document, so it will not be exposed to others. You could save(update) the user's login email or phone number into `user_private_data` document anywhere in the app.
+But consider not to save those sensitive information into the database.
+
+
+
+
+## User resign
+
+When a user wants to resign, the app may call `User.delete` method to delete the user's documents.
+
+
+

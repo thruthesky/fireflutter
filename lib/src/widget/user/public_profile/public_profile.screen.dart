@@ -53,17 +53,22 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                   ),
                 ),
         ),
-        TopDownGraident(
+        GradientBox(
           height: 300,
           colors: [
             Theme.of(context).colorScheme.inverseSurface.tone(10),
             Colors.transparent,
           ],
         ),
-        BottomUpGraident(height: 300, colors: [
-          Theme.of(context).colorScheme.inverseSurface.tone(10),
-          Colors.transparent,
-        ]),
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: GradientBox(height: 300, colors: [
+            Theme.of(context).colorScheme.inverseSurface.tone(10),
+            Colors.transparent,
+          ]),
+        ),
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: PreferredSize(

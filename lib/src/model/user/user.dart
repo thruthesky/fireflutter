@@ -457,10 +457,10 @@ class User {
 
   /// Deletes the user document of current object.
   ///
-  /// Instead of deleting the user document, it will set with {deleted: true}.
+  /// @thruthesky - Dec 13, 2020. This method is now deleting the user account.
   Future delete() async {
-    await userDoc(uid).set({'deleted': true});
-    await myPrivateDoc.set({'deleted': true});
+    await userDoc(uid).delete();
+    await myPrivateDoc.delete();
     UserService.instance.onDelete?.call(this);
   }
 
