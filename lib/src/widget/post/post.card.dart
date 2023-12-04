@@ -327,7 +327,7 @@ class _PostCardState extends State<PostCard> {
             color: widget.contentBackground,
             child: PostContentShowMore(
               post: post,
-              onTap: () => widget.onTap?.call(post),
+              // onTap: () => widget.onTap?.call(post),
             ),
           ),
       ],

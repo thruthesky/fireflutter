@@ -6,10 +6,16 @@ class CommentContent extends StatelessWidget {
     super.key,
     required this.comment,
     this.style,
+    this.blockedStyle,
+    this.deletedStyle,
+    this.blockedMessage,
   });
 
   final Comment comment;
   final TextStyle? style;
+  final TextStyle? blockedStyle;
+  final TextStyle? deletedStyle;
+  final String? blockedMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +25,16 @@ class CommentContent extends StatelessWidget {
         if (comment.deleted)
           Text(
             comment.deletedReason ?? 'This comment has beed deleted.',
-            style: style != null
-                ? style?.copyWith(fontStyle: FontStyle.italic)
-                : const TextStyle(fontStyle: FontStyle.italic),
+            style: deletedStyle ??
+                style?.copyWith(fontStyle: FontStyle.italic) ??
+                const TextStyle(fontStyle: FontStyle.italic),
+          )
+        else if (my?.hasBlocked(comment.uid) ?? false)
+          Text(
+            blockedMessage ?? tr.blocked,
+            style: blockedStyle ??
+                style?.copyWith(fontStyle: FontStyle.italic) ??
+                const TextStyle(fontStyle: FontStyle.italic),
           )
         else
           Text(

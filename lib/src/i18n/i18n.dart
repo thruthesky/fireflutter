@@ -48,6 +48,7 @@ class I18nTexts {
   String alreadyBlockedMessage;
   String noBlockedUser;
   String noBlockedUserYet;
+  String messageCommingFromBlockedUser;
   String disabled;
   String disabledMessage;
   String report;
@@ -247,6 +248,7 @@ class I18nTexts {
     this.alreadyBlockedMessage = "You have blocked this user already.",
     this.noBlockedUser = "No blocked user.",
     this.noBlockedUserYet = "You haven't blocked any user yet.",
+    this.messageCommingFromBlockedUser = 'This message is comming from a blocked user',
     this.disabled = "Disabled",
     this.disabledMessage = "You are disabled.",
     this.report = "Report",
