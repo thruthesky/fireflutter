@@ -127,7 +127,7 @@ service cloud.firestore {
       allow update: if
         isAdmin()
         ||
-        addOrRemove('followers', request.auth.uid)
+        addOrRemove('likes', request.auth.uid)
         ||
         onlyUpdating(['noOfComments'])
         ||
