@@ -8,6 +8,7 @@ const a = { uid: "uid-A", email: "apple@gmail.com" };
 const b = { uid: "uid-B", email: "banana@gmail.com" };
 const c = { uid: "uid-C", email: "cherry@gmail.com" };
 const d = { uid: "uid-D", email: "durian@gmail.com" };
+const e = { uid: "uid-E", email: "eggplant@gmail.com" };
 
 const postsColName = "posts";
 const categoriesColName = "categories";

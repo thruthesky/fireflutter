@@ -115,23 +115,24 @@ describe("Chat room leave, and kickout", () => {
 
   it("Moderator can remove a user from user list - succeed", async () => {
     // create a chat room
+    // b is moderator
     const ref = await admin()
       .collection(chatsColName)
       .add(
         tempChatRoomData({
           master: a.uid,
-          moderators: [d.uid],
-          users: [a.uid, b.uid, c.uid, d.uid, b.uid, b.uid],
+          moderators: [b.uid],
+          users: [a.uid, b.uid, c.uid, d.uid],
         })
       );
 
-    // chat room leave
+    // chat room remove b
     await firebase.assertSucceeds(
-      db(d)
+      db(b)
         .collection(chatsColName)
         .doc(ref.id)
         .update({
-          users: firebase.firestore.FieldValue.arrayRemove(b.uid),
+          users: firebase.firestore.FieldValue.arrayRemove(c.uid),
         })
     );
   });
