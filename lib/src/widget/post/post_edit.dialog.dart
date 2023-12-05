@@ -80,16 +80,14 @@ class _PostEditDialogState extends State<PostEditScreen> {
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                         isDense: false,
-                        padding: const EdgeInsets.only(
-                            left: 12, top: 4, right: 4, bottom: 4),
+                        padding: const EdgeInsets.only(left: 12, top: 4, right: 4, bottom: 4),
                         isExpanded: true,
                         items: [
-                          const DropdownMenuItem(
+                          DropdownMenuItem(
                             value: '',
-                            child: Text('Select Category'),
+                            child: Text(tr.selectCategory),
                           ),
-                          ...CategoryService.instance.categoriesOnCreate.entries
-                              .map((e) {
+                          ...CategoryService.instance.categoriesOnCreate.entries.map((e) {
                             return DropdownMenuItem(
                               value: e.key,
                               child: Text(e.value),
@@ -167,8 +165,7 @@ class _PostEditDialogState extends State<PostEditScreen> {
                         );
                         if (mounted) {
                           Navigator.pop(context, post);
-                          PostService.instance
-                              .showPostViewScreen(context: context, post: post);
+                          PostService.instance.showPostViewScreen(context: context, post: post);
                         }
                       } else {
                         await widget.post!.update(
