@@ -208,19 +208,19 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                               ),
                               itemBuilder: (context) {
                                 return [
-                                  const PopupMenuItem(
+                                  PopupMenuItem(
                                     value: 'report',
-                                    child: Text('Report'),
+                                    child: Text(tr.report),
                                   ),
                                   if (widget.comment.uid == myUid)
-                                    const PopupMenuItem(
+                                    PopupMenuItem(
                                       value: 'edit',
-                                      child: Text('Edit'),
+                                      child: Text(tr.edit),
                                     ),
                                   if (widget.comment.uid == myUid)
-                                    const PopupMenuItem(
+                                    PopupMenuItem(
                                       value: 'delete',
-                                      child: Text('Delete'),
+                                      child: Text(tr.delete),
                                     )
                                 ];
                               },
