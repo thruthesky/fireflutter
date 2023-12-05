@@ -42,12 +42,7 @@ class RChatBubble extends StatelessWidget {
                 color: message.mine ? Colors.amber.shade200 : Colors.grey.shade200,
                 borderRadius: borderRadius(),
               ),
-              child: Text(
-                message.text ?? '',
-                style: const TextStyle(
-                  color: Colors.black,
-                ),
-              ),
+              child: Text(message.text ?? '', style: const TextStyle(color: Colors.black)),
             ),
           // image
           if (message.url != null) cachedImage(context, message.url!),
