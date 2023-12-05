@@ -21,3 +21,23 @@ CommentService.instance.init(
   uploadFromFile: false,
 );
 ```
+
+
+## Uploading a photo
+
+Below is an example of uploading a photo into Firebase storage. You can get the progress and the url.
+
+```dart
+IconButton(
+  onPressed: () async {
+    final url = await StorageService.instance.upload(
+      context: context,
+      file: false,
+      progress: (p) => progressEvent.add(p),
+      complete: () => progressEvent.add(null),
+    );
+    my?.update(stateImageUrl: url);
+  },
+  icon: const Icon(Icons.camera_alt),
+),
+```

@@ -85,6 +85,7 @@ export 'widget/comment/comment.one_line.list_tile.dart';
 export 'widget/comment/comment.one_line.list_view.dart';
 export 'widget/comment/comment.list.bottom_sheet.dart';
 export 'widget/comment/comment.content.dart';
+export 'widget/comment/comment.column.stream_builder.dart';
 
 // Common
 export 'widget/common/date_time_text.dart';
@@ -103,6 +104,8 @@ export 'widget/common/carousel.view.dart';
 
 export 'widget/common/icon_text_button.dart';
 export 'widget/common/share.bottom_sheet.dart';
+
+export 'widget/common/display_quilt_images.dart';
 
 // Favorite
 

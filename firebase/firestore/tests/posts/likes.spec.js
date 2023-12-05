@@ -18,7 +18,6 @@ describe("Post Update Test", () => {
   //
   it("User B updates A's post's likes (B liked the post) - successful", async () => {
     // Prepare
-
     const postRef = await createPost();
 
     // B update A's post

@@ -4,9 +4,11 @@ const {
   a,
   b,
   c,
+  d,
   tempChatRoomData,
   chatsColName,
   createChatRoom,
+  admin,
 } = require("./../setup");
 
 // load firebase-functions-test SDK
@@ -74,4 +76,29 @@ describe("Sending messages in a chat room", () => {
         .update({ message: "updated" })
     );
   });
+
+  it("Sending a message in Chat Room but user's isDisabled = true -> fails", async () => {
+    // create a chat room
+    const roomRef = await createChatRoom(a, {
+      master: a.uid,
+      users: [a.uid, d.uid],
+    });
+
+    // admin disables the user d
+    await admin()
+      .collection("users")
+      .doc(d.uid)
+      .set({ isDisabled: true }, { merge: true });
+
+    // User D sends a message and it should fail
+    await firebase.assertFails(
+      db(d)
+        .collection(chatsColName)
+        .doc(roomRef.id)
+        .collection("messages")
+        .add({ uid: d.uid, message: "test" })
+    );
+
+  });
+
 });

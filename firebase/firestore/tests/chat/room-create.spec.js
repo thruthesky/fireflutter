@@ -1,5 +1,13 @@
 const assert = require("assert");
-const { db, a, b, tempChatRoomData, chatsColName } = require("./../setup");
+const {
+  db,
+  a,
+  b,
+  d,
+  tempChatRoomData,
+  chatsColName,
+  admin,
+} = require("./../setup");
 
 // load firebase-functions-test SDK
 const firebase = require("@firebase/testing");
@@ -88,6 +96,25 @@ describe("Firestore security test chat room", () => {
           tempChatRoomData({
             master: a.uid,
             users: [a.uid, a.uid],
+            group: false,
+          })
+        )
+    );
+  });
+
+  // Disabled users should not be able to create rooms
+  it("Disabled users should not be able to create rooms -> failure", async () => {
+
+    // admin disables the user d
+    await admin().collection("users").doc(d.uid).set({ isDisabled: true }, { merge: true });
+
+    await firebase.assertFails(
+      db(d)
+        .collection(chatsColName)
+        .add(
+          tempChatRoomData({
+            master: d.uid,
+            users: [d.uid, a.uid],
             group: false,
           })
         )

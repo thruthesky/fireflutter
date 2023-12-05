@@ -1,5 +1,37 @@
 import 'package:flutter/material.dart';
 
+/// Graident Box
+///
+/// See widget.md for more info
+class GradientBox extends StatelessWidget {
+  const GradientBox({
+    super.key,
+    this.height = 200,
+    this.colors = const [
+      Color(0x88222222),
+      Colors.transparent,
+    ],
+  });
+
+  final List<Color> colors;
+
+  final double height;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: height,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: colors,
+          end: Alignment.bottomCenter,
+          begin: Alignment.topCenter,
+        ),
+      ),
+    );
+  }
+}
+
+@Deprecated('Use Flutter Gradient instead')
 class TopDownGraident extends StatelessWidget {
   const TopDownGraident({
     super.key,
@@ -33,6 +65,7 @@ class TopDownGraident extends StatelessWidget {
   }
 }
 
+@Deprecated('Use Flutter Gradient instead')
 class BottomUpGraident extends StatelessWidget {
   const BottomUpGraident({
     super.key,

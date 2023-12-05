@@ -163,4 +163,5 @@ describe("Chat room read test", () => {
       db(b).collection(chatsColName).doc(roomRef.id).get()
     );
   });
+
 });

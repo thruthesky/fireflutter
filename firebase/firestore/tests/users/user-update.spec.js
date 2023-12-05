@@ -14,10 +14,9 @@ const {
 // load firebase-functions-test SDK
 const firebase = require("@firebase/testing");
 
-describe("User update date", async () => {
-  it("Update name", async () => {
+describe("User update", async () => {
+  it("Update name -> success", async () => {
     const uid = await createUser();
-
     await firebase.assertSucceeds(
       userDoc(uid).update({
         name: "abc",
@@ -29,7 +28,7 @@ describe("User update date", async () => {
     const uid = await createUser();
     await firebase.assertFails(
       userDoc(uid).update({
-        isVerified: "abc",
+        isVerified: true,
       })
     );
   });
@@ -37,15 +36,15 @@ describe("User update date", async () => {
     const uid = await createUser();
     await firebase.assertFails(
       userDoc(uid).update({
-        isAdmin: "abc",
+        isAdmin: true,
       })
     );
   });
-  it("Update disabled -> fails", async () => {
+  it("Update isDisabled -> fails", async () => {
     const uid = await createUser();
     await firebase.assertFails(
       userDoc(uid).update({
-        disabled: "abc",
+        isDisabled: false,
       })
     );
   });
@@ -66,11 +65,11 @@ describe("User update date", async () => {
       })
     );
   });
-  it("Login as admin and update other user's disabled -> succeeds", async () => {
+  it("Login as admin and update other user's isDisabled -> succeeds", async () => {
     const uid = await createUser();
     await firebase.assertSucceeds(
       db({ uid: "admin" }).collection(usersColName).doc(uid).update({
-        isAdmin: true,
+        isDisabled: true,
       })
     );
   });

@@ -31,7 +31,15 @@
       "flutterMode": "debug",
       "deviceId": "00008030-000D445A11A3802E"
     },
-
+    {
+      "name": "PhiLov - iPad",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "iPad"
+    },
     {
       "name": "PhiLov - Emulator",
       "request": "launch",
@@ -40,6 +48,15 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "emulator-5554"
+    },
+    {
+      "name": "PhiLov - A045",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "R9ATA00LMJM"
     },
     {
       "name": "PhiLov - Chrome",
@@ -417,16 +434,16 @@
       "name": "GRC - Emulator (N)",
       "request": "launch",
       "type": "dart",
-      "cwd": "apps/grc",
+      "cwd": "apps/philov",
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "emulator-5554"
     },
     {
-      "name": "GRC - Iphone SE (3rd generation) (N)",
+      "name": "Philov - Iphone SE (3rd generation) (N)",
       "request": "launch",
       "type": "dart",
-      "cwd": "apps/grc",
+      "cwd": "apps/philov",
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "iPhone SE (3rd generation)"
@@ -435,7 +452,7 @@
       "name": "GRC - Samsung real phone (N)",
       "request": "launch",
       "type": "dart",
-      "cwd": "apps/grc",
+      "cwd": "apps/philov",
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "R9ATA00LMJM"

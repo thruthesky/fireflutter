@@ -56,7 +56,7 @@ class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
                         }),
                     complete: () => widget.onProgress?.call(null) ?? setState(() => progress = null),
                   );
-                  await RChat.sendChatMessage(url: url);
+                  await RChat.sendMessage(url: url);
                 },
               ),
               suffixIcon: Row(
@@ -65,7 +65,9 @@ class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
                   IconButton(
                     icon: widget.sendIcon ?? const Icon(Icons.send),
                     onPressed: () async {
-                      await RChat.sendChatMessage(text: inputController.text);
+                      String trimText = inputController.text.trim();
+                      if (trimText.isEmpty) return;
+                      await RChat.sendMessage(text: trimText);
                       inputController.clear();
                       widget.onSend?.call();
                     },

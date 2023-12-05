@@ -3,10 +3,12 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class RChatBubble extends StatelessWidget {
-  const RChatBubble({super.key, required this.message, this.userAvatarBuilder});
+  const RChatBubble({
+    super.key,
+    required this.message,
+  });
 
   final RChatMessageModel message;
-  final Widget Function(BuildContext context)? userAvatarBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -19,56 +21,67 @@ class RChatBubble extends StatelessWidget {
             const Spacer(),
             dateAndName(),
           ],
-
           // other avtar
-          if (!message.mine)
-
-            /// display pop on menu - noe
-            userAvatarBuilder?.call(context) ??
-                UserAvatar(
-                  uid: message.uid,
-                  radius: 13,
-                ),
+          if (message.other)
+            UserAvatar(
+              uid: message.uid,
+              radius: 13,
+              onTap: () => UserService.instance.showPublicProfileScreen(
+                context: context,
+                uid: message.uid,
+              ),
+            ),
 
           const SizedBox(width: 8),
           // text
           if (message.text != null)
-            Container(
-              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: message.mine ? Colors.amber.shade200 : Colors.grey.shade200,
-                borderRadius: borderRadius(),
-              ),
-              child: Text(message.text ?? ''),
+            UserBlocked(
+              otherUid: message.uid,
+              notBlockedBuilder: (context) {
+                return Container(
+                  constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: message.mine ? Colors.amber.shade200 : Colors.grey.shade200,
+                    borderRadius: borderRadius(),
+                  ),
+                  child: Text(message.text ?? '', style: const TextStyle(color: Colors.black)),
+                );
+              },
+              blockedBuilder: (context) {
+                return Container(
+                  constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.background,
+                    border: Border.all(color: Theme.of(context).colorScheme.onBackground.withAlpha(50)),
+                    borderRadius: borderRadius(),
+                  ),
+                  child: Text(
+                    tr.messageCommingFromBlockedUser,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onBackground.withAlpha(150),
+                          fontStyle: FontStyle.italic,
+                        ),
+                  ),
+                );
+              },
             ),
           // image
-          if (message.url != null)
-            ClipRRect(
-              borderRadius: borderRadius(),
-              child: Container(
-                constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
-                child: CachedNetworkImage(
-                  imageUrl: message.url!.thumbnail,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: CircularProgressIndicator(),
-                  ),
-                  // if thumbnail is not available, show original image
-                  errorWidget: (context, url, error) => CachedNetworkImage(imageUrl: message.url!),
-                ),
-              ),
-            ),
+          if (message.url != null) cachedImage(context, message.url!),
 
           const SizedBox(width: 8),
           // my avtar
           if (message.mine)
-            userAvatarBuilder?.call(context) ??
-                UserAvatar(
-                  user: my,
-                  radius: 13,
-                ),
+            UserAvatar(
+              user: my,
+              radius: 13,
+              onTap: () => UserService.instance.showPublicProfileScreen(
+                context: context,
+                uid: message.uid,
+                user: my,
+              ),
+            ),
 
           if (!message.mine) ...[
             dateAndName(),
@@ -104,6 +117,31 @@ class RChatBubble extends StatelessWidget {
           style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
         ),
       ],
+    );
+  }
+
+  enableOrDisableText(User user) {
+    return user.isDisabled ? 'Enable' : 'Disable';
+  }
+
+  cachedImage(BuildContext context, String url) {
+    return ClipRRect(
+      borderRadius: borderRadius(),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+        child: CachedNetworkImage(
+          imageUrl: message.url!.thumbnail,
+          fit: BoxFit.cover,
+          // progressIndicatorBuilder: (context, url, downloadProgress) =>
+          //     CircularProgressIndicator(value: downloadProgress.progress),
+          placeholder: (context, url) => const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: CircularProgressIndicator(),
+          ),
+          // if thumbnail is not available, show original image
+          errorWidget: (context, url, error) => CachedNetworkImage(imageUrl: message.url!),
+        ),
+      ),
     );
   }
 }

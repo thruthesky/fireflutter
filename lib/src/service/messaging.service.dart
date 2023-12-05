@@ -9,6 +9,15 @@ import 'package:rxdart/subjects.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fireflutter/fireflutter.dart';
 
+typedef MessageData = ({
+  dynamic badge,
+  String id,
+  String roomId,
+  String type,
+  String senderUid,
+  String action,
+});
+
 class CustomizeMessagingTopic {
   final String topic;
   final String title;
@@ -246,5 +255,20 @@ class MessagingService {
     // print('data; $data');
 
     return messageQueueCol.add(data);
+  }
+
+  /// Parse message data from [RemoteMessage.data]
+  ///
+  /// {badge: , id: so7HI41U2QfQRu86B7EF, roomId: , type: post, senderUid: 2F49sxIA3JbQPp38HHUTPR2XZ062, action: }
+  ///
+  MessageData parseMessageData(Map<String, dynamic> data) {
+    return (
+      badge: data['badge'],
+      id: data['id'],
+      roomId: data['roomId'] ?? '',
+      type: data['type'],
+      senderUid: data['senderUid'],
+      action: data['action'] ?? '',
+    );
   }
 }

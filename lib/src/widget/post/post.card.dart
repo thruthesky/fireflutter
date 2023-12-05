@@ -66,6 +66,7 @@ class PostCard extends StatefulWidget {
     this.initalCommentSnapShot,
     this.onTap,
     this.showFavoriteButton = true,
+    this.customPopupMenuButtonBuilder,
   });
 
   final Color? color;
@@ -104,6 +105,10 @@ class PostCard extends StatefulWidget {
   /// Whether to show favorite button
   /// Default is true
   final bool showFavoriteButton;
+
+  /// Custom popup menu button builder
+  /// This is used to fully customize the popup menu button
+  final Widget Function(Post post)? customPopupMenuButtonBuilder;
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -203,60 +208,62 @@ class _PostCardState extends State<PostCard> {
           ),
         ),
         const Spacer(),
-        PopupMenuButton<String>(
-          key: const Key('PostCardPopupMenuButton'),
-          icon: const Icon(Icons.more_vert),
-          itemBuilder: (context) => [
-            const PopupMenuItem(key: Key('PostCardPopUpReplyButton'), value: "reply", child: Text("Reply")),
-            if (post.isMine) ...[
-              PopupMenuItem(key: const Key('PostCardPopUpEditButton'), value: "edit", child: Text(tr.edit)),
-              PopupMenuItem(key: const Key('PostCardPopUpDeleteButton'), value: "delete", child: Text(tr.delete)),
-            ],
-            if (!post.isMine) ...[
-              const PopupMenuItem(key: Key('PostCardPopUpReportButton'), value: "report", child: Text("Report")),
-              PopupMenuItem(
-                key: const Key('PostCardPopUpBlockButton'),
-                value: 'block',
-                child: UserBlocked(
-                  otherUid: post.uid,
-                  notBlockedBuilder: (context) {
-                    return Text(tr.block);
-                  },
-                  blockedBuilder: (context) {
-                    return Text(tr.unblock);
-                  },
-                ),
-              ),
-            ],
-          ],
-          onSelected: (value) async {
-            if (value == "reply") {
-              CommentService.instance.showCommentEditBottomSheet(context, post: post);
-            } else if (value == "delete") {
-              final re = await confirm(context: context, title: tr.deletingPost, message: tr.deletingPostConfirmation);
-              if (re == true) {
-                await post.delete(deletedReason: 'This post has been deleted by user.');
-                toast(title: tr.delete, message: tr.delete);
-              }
-            } else if (value == "edit") {
-              PostService.instance.showEditScreen(context, post: post);
-            } else if (value == 'report') {
-              ReportService.instance.showReportDialog(context: context, postId: post.id);
-            } else if (value == 'block') {
-              final blocked = my!.hasBlocked(post.uid);
-              if (blocked) {
-                await my!.unblock(post.uid);
-              } else {
-                await my!.block(post.uid);
-              }
-              final updatedBlocked = my!.hasBlocked(post.uid);
-              toast(
-                title: updatedBlocked ? tr.block : tr.unblock,
-                message: updatedBlocked ? tr.blockMessage : tr.unblockMessage,
-              );
-            }
-          },
-        )
+        widget.customPopupMenuButtonBuilder?.call(post) ??
+            PopupMenuButton<String>(
+              key: const Key('PostCardPopupMenuButton'),
+              icon: const Icon(Icons.more_vert),
+              itemBuilder: (context) => [
+                const PopupMenuItem(key: Key('PostCardPopUpReplyButton'), value: "reply", child: Text("Reply")),
+                if (post.isMine) ...[
+                  PopupMenuItem(key: const Key('PostCardPopUpEditButton'), value: "edit", child: Text(tr.edit)),
+                  PopupMenuItem(key: const Key('PostCardPopUpDeleteButton'), value: "delete", child: Text(tr.delete)),
+                ],
+                if (!post.isMine) ...[
+                  const PopupMenuItem(key: Key('PostCardPopUpReportButton'), value: "report", child: Text("Report")),
+                  PopupMenuItem(
+                    key: const Key('PostCardPopUpBlockButton'),
+                    value: 'block',
+                    child: UserBlocked(
+                      otherUid: post.uid,
+                      notBlockedBuilder: (context) {
+                        return Text(tr.block);
+                      },
+                      blockedBuilder: (context) {
+                        return Text(tr.unblock);
+                      },
+                    ),
+                  ),
+                ],
+              ],
+              onSelected: (value) async {
+                if (value == "reply") {
+                  CommentService.instance.showCommentEditBottomSheet(context, post: post);
+                } else if (value == "delete") {
+                  final re =
+                      await confirm(context: context, title: tr.deletingPost, message: tr.deletingPostConfirmation);
+                  if (re == true) {
+                    await post.delete(deletedReason: 'This post has been deleted by user.');
+                    toast(title: tr.delete, message: tr.delete);
+                  }
+                } else if (value == "edit") {
+                  PostService.instance.showEditScreen(context, post: post);
+                } else if (value == 'report') {
+                  ReportService.instance.showReportDialog(context: context, postId: post.id);
+                } else if (value == 'block') {
+                  final blocked = my!.hasBlocked(post.uid);
+                  if (blocked) {
+                    await my!.unblock(post.uid);
+                  } else {
+                    await my!.block(post.uid);
+                  }
+                  final updatedBlocked = my!.hasBlocked(post.uid);
+                  toast(
+                    title: updatedBlocked ? tr.block : tr.unblock,
+                    message: updatedBlocked ? tr.blockMessage : tr.unblockMessage,
+                  );
+                }
+              },
+            ),
       ],
     );
   }
@@ -320,7 +327,7 @@ class _PostCardState extends State<PostCard> {
             color: widget.contentBackground,
             child: PostContentShowMore(
               post: post,
-              onTap: () => widget.onTap?.call(post),
+              // onTap: () => widget.onTap?.call(post),
             ),
           ),
       ],
@@ -393,7 +400,10 @@ class _PostCardState extends State<PostCard> {
                     child: GestureDetector(
                       child: Text(
                         key: const Key('PostCardShowLikesButton'),
-                        "${likes.length} likes",
+                        tr.noOfLikes.replaceAll(
+                          '#no',
+                          '${likes.length}',
+                        ),
                       ),
                       onTap: () {
                         UserService.instance.showLikedByListScreen(
