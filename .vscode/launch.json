@@ -417,7 +417,7 @@
       "name": "GRC - Emulator (N)",
       "request": "launch",
       "type": "dart",
-      "cwd": "apps/grc",
+      "cwd": "apps/philov",
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "emulator-5554"
@@ -435,7 +435,7 @@
       "name": "GRC - Samsung real phone (N)",
       "request": "launch",
       "type": "dart",
-      "cwd": "apps/grc",
+      "cwd": "apps/philov",
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "R9ATA00LMJM"
