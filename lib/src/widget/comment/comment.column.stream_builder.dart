@@ -45,19 +45,17 @@ class CommentColumnStreamBuilder extends StatelessWidget {
         } else {
           return const SizedBox.shrink();
         }
-        List<Widget> children = [];
         final comments = snapshot.data?.docs.map((doc) => Comment.fromDocumentSnapshot(doc)).toList() ?? [];
-        for (final comment in comments) {
-          children.add(
-            itemBuilder?.call(context, comment, post) ??
+        final children = comments
+            .map((comment) =>
+                itemBuilder?.call(context, comment, post) ??
                 CommentOneLineListTile(
                   key: ValueKey(comment.id),
                   padding: const EdgeInsets.fromLTRB(0, sizeSm, sizeXxs, 0),
                   post: post,
                   comment: comment,
-                ),
-          );
-        }
+                ))
+            .toList();
         return Column(children: children);
       },
     );
