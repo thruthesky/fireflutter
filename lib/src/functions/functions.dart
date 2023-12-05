@@ -312,8 +312,8 @@ String randomString([length = 12]) {
 }
 
 /// Return a string of date/time agao
-String dateTimeAgo(DateTime dateTime) {
-  return timeago.format(dateTime);
+String dateTimeAgo(DateTime dateTime, {String? locale}) {
+  return timeago.format(dateTime, locale: locale);
 }
 
 /// Returns a string of "yyyy-MM-dd" or "HH:mm:ss"
