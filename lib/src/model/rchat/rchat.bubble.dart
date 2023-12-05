@@ -35,14 +35,37 @@ class RChatBubble extends StatelessWidget {
           const SizedBox(width: 8),
           // text
           if (message.text != null)
-            Container(
-              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: message.mine ? Colors.amber.shade200 : Colors.grey.shade200,
-                borderRadius: borderRadius(),
-              ),
-              child: Text(message.text ?? '', style: const TextStyle(color: Colors.black)),
+            UserBlocked(
+              otherUid: message.uid,
+              notBlockedBuilder: (context) {
+                return Container(
+                  constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: message.mine ? Colors.amber.shade200 : Colors.grey.shade200,
+                    borderRadius: borderRadius(),
+                  ),
+                  child: Text(message.text ?? '', style: const TextStyle(color: Colors.black)),
+                );
+              },
+              blockedBuilder: (context) {
+                return Container(
+                  constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.background,
+                    border: Border.all(color: Theme.of(context).colorScheme.onBackground.withAlpha(50)),
+                    borderRadius: borderRadius(),
+                  ),
+                  child: Text(
+                    tr.messageCommingFromBlockedUser,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onBackground.withAlpha(150),
+                          fontStyle: FontStyle.italic,
+                        ),
+                  ),
+                );
+              },
             ),
           // image
           if (message.url != null) cachedImage(context, message.url!),

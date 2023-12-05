@@ -19,6 +19,10 @@ class CommentOneLineListTile extends StatefulWidget {
     this.fixedDepth,
     this.hideActionButton = false,
     this.hideLikeButton = false,
+    this.style,
+    this.blockedStyle,
+    this.deletedStyle,
+    this.blockedMessage,
   });
 
   final Post post;
@@ -40,6 +44,12 @@ class CommentOneLineListTile extends StatefulWidget {
 
   /// Callback function for content tap
   final void Function()? onTapContent;
+
+  /// Comment content style
+  final TextStyle? style;
+  final TextStyle? blockedStyle;
+  final TextStyle? deletedStyle;
+  final String? blockedMessage;
 
   @override
   State<CommentOneLineListTile> createState() => _CommentOneLineListTileState();
@@ -115,9 +125,13 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                       width: double.infinity,
                       child: CommentContent(
                         comment: widget.comment,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
+                        blockedStyle: widget.blockedStyle,
+                        deletedStyle: widget.deletedStyle,
+                        blockedMessage: widget.blockedMessage,
+                        style: widget.style ??
+                            Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                ),
                       ),
                     ),
                   ),
@@ -194,19 +208,19 @@ class _CommentOneLineListTileState extends State<CommentOneLineListTile> {
                               ),
                               itemBuilder: (context) {
                                 return [
-                                  const PopupMenuItem(
+                                  PopupMenuItem(
                                     value: 'report',
-                                    child: Text('Report'),
+                                    child: Text(tr.report),
                                   ),
                                   if (widget.comment.uid == myUid)
-                                    const PopupMenuItem(
+                                    PopupMenuItem(
                                       value: 'edit',
-                                      child: Text('Edit'),
+                                      child: Text(tr.edit),
                                     ),
                                   if (widget.comment.uid == myUid)
-                                    const PopupMenuItem(
+                                    PopupMenuItem(
                                       value: 'delete',
-                                      child: Text('Delete'),
+                                      child: Text(tr.delete),
                                     )
                                 ];
                               },

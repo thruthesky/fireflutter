@@ -327,7 +327,7 @@ class _PostCardState extends State<PostCard> {
             color: widget.contentBackground,
             child: PostContentShowMore(
               post: post,
-              onTap: () => widget.onTap?.call(post),
+              // onTap: () => widget.onTap?.call(post),
             ),
           ),
       ],
@@ -400,7 +400,10 @@ class _PostCardState extends State<PostCard> {
                     child: GestureDetector(
                       child: Text(
                         key: const Key('PostCardShowLikesButton'),
-                        "${likes.length} likes",
+                        tr.noOfLikes.replaceAll(
+                          '#no',
+                          '${likes.length}',
+                        ),
                       ),
                       onTap: () {
                         UserService.instance.showLikedByListScreen(

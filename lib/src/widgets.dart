@@ -85,6 +85,7 @@ export 'widget/comment/comment.one_line.list_tile.dart';
 export 'widget/comment/comment.one_line.list_view.dart';
 export 'widget/comment/comment.list.bottom_sheet.dart';
 export 'widget/comment/comment.content.dart';
+export 'widget/comment/comment.column.stream_builder.dart';
 
 // Common
 export 'widget/common/date_time_text.dart';
