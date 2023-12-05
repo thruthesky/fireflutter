@@ -89,9 +89,19 @@ Each of push notification option is saved as a single document under `user_setti
 ```
 
 
+##  hierarchy of sending priority 
+
+  - action >> topic >> tokens >> uids
+  - if action is not null, topic, tokens, uids will be ignored
+  - if action is null and topic is not null, then tokens and uids will be ignored
+  - if action and topic is null, and tokens is not null then uids will be ignored
+  - if action, topic, and tokens are null, then uids will be used
+
 
 
 ## 4 Different way to send push notification
+
+
 
 Sending push message using `tokens`, `uids`, `topic` will directly send the push notification to users.
 
