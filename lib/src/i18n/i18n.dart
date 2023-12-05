@@ -203,6 +203,8 @@ class I18nTexts {
   String pushNotificationUserHint;
   String pushNotificationTokenHint;
 
+  String selectCategory;
+
   I18nTexts({
     this.loginFirstTitle = 'Login first',
     this.loginFirstMessage = 'Please login first.',
@@ -214,6 +216,7 @@ class I18nTexts {
     this.chooseUploadFrom = "Choose upload from...",
     this.noCategory = "No category, yet. Create one!",
     this.noPost = "No post yet. Create one!",
+    this.selectCategory = 'Select Category',
     this.noComment = "No comment, yet. Create one!",
     this.noReply = "No reply",
     this.title = "Title",
