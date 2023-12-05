@@ -3,7 +3,26 @@
 
 ## Overview
 
-Push notification tokens are saved under `/users/{uid}/fcm_tokens/{token} { uid: ..., device_type: ..., fcm_token: ... }`. If the user didn't sign in, the token will not be saved.
+When there are any activities that the user should be informed, the fireflutter can send push notifications to the user on the phone.
+
+Flutterflow provides sending push messages with tokens. You can programmtically choose which tokens to send messages with.
+- You may send a push message to all users
+- Or just send a push message to specific user group like android, ios
+
+You can design the app to
+  - send a push message to the user when a comment is created under his post or comment.
+  - send a message to the user when there is a post under the forum category that he subscribed.
+  - send a push message to the user when there is a new chat message in the chat room that he subscribed. (default, subscribe all the chat room)
+
+You can also set the Android phone to display with head-up display.
+
+
+## Strcuture
+
+Push notification tokens are saved under `/users/{uid}/fcm_tokens/{token} { uid: ..., device_type: ..., fcm_token: ... }`.
+If the user didn't sign in, the token will not be saved. What if you want to send push notifications to the users who didn't sign in? You may do so using Firebase console.
+
+The `device_type` may be `ios` or `android`.
 
 The admin can send push notification to all the devices, or specific type/os through cloud function by creating a push notification document.
 
@@ -17,35 +36,60 @@ The admin can send push notification to all the devices, or specific type/os thr
 
 
 ```dart
-    // init here
-    MessagingService.instance.init(
-      // while the app is close and notification arrive you can use this to do small work
-      // example are changing the badge count or informing backend.
-      onBackgroundMessage: onTerminatedMessage,
+/// No push notification on web
+if (kIsWeb) {
+  return;
+}
 
-      ///
-      onForegroundMessage: (RemoteMessage message) {
-        onForegroundMessage(message);
-      },
-      onMessageOpenedFromTerminated: (message) {
-        // this will triggered when the notification on tray was tap while the app is closed
-        // if you change screen right after the app is open it display only white screen.
-        WidgetsBinding.instance.addPostFrameCallback((duration) {
-          onTapMessage(message);
-        });
-      },
-      // this will triggered when the notification on tray was tap while the app is open but in background state.
-      onMessageOpenedFromBackground: (message) {
-        onTapMessage(message);
-      },
-      onNotificationPermissionDenied: () {
-        // print('onNotificationPermissionDenied()');
-      },
-      onNotificationPermissionNotDetermined: () {
-        // print('onNotificationPermissionNotDetermined()');
-      },
+/// Push notification service init
+MessagingService.instance.init(
+  /// This method will be called, when app is in background or terminated.
+  ///
+  /// while the app is close and notification arrive you can use this to do small work
+  /// example are changing the badge count or informing backend.
+  onBackgroundMessage: (RemoteMessage message) async {
+    dog('onBackgroundMessage: ${message.notification!.body!}');
+  },
+
+  /// This method will be called, when app is in foreground.
+  onForegroundMessage: (RemoteMessage message) {
+    dog('onForegroundMessage: ${message.notification!.body!}');
+    toast(title: 'Push messag', message: message.notification!.body!);
+  },
+
+  /// This will triggered when the notification on tray was tap while the app is closed
+  /// if you change screen right after the app is open it display only white screen.
+  onMessageOpenedFromTerminated: (message) {
+    dog('onMessageOpenedFromTerminated: ${message.notification!.body!}');
+    WidgetsBinding.instance.addPostFrameCallback((duration) async {
+      onMessageTapped(message);
+    });
+  },
+
+  /// This will triggered when the notification on tray was tapped while the app is in background(The app is open but is in background status).
+  onMessageOpenedFromBackground: (message) {
+    dog('onMessageOpenedFromBackground: ${message.notification!.body!}');
+    onMessageTapped(message);
+  },
+
+  ///
+  onNotificationPermissionDenied: () {
+    toast(
+      title: 'Permission Denied',
+      message: 'Please allow notification permission to receive push notifications.',
     );
+  },
+  onNotificationPermissionNotDetermined: () {
+    toast(
+      title: 'Permission Not Determined',
+      message: 'Please allow notification permission to receive push notifications.',
+    );
+  },
+);
 ```
+
+- If everything is setup properly, the push token will be saved under `/users/<uid>/fcm_tokens/...`
+
 
 - For the `Head-up display` in Android, Setting the importance to `NotificationManager.IMPORTANCE_HIGH` will shows the notification everywhere, makes noise and peeks. May use full screen intents.
 
@@ -556,3 +600,82 @@ Subscribe to topic according to business logic
 ```
 
 
+
+
+## Testing
+
+You can test the push notification routing.
+
+```dart
+/// TEST CODE
+Timer(const Duration(seconds: 1), () {
+  routeFromMessage({
+    'badge': '',
+    'id': 'so7HI41U2QfQRu86B7EF',
+    'roomId': '',
+    'type': 'post',
+    'senderUid': '2F49sxIA3JbQPp38HHUTPR2XZ062' 'xxx',
+    'action': '',
+  });
+});
+
+  routeFromMessage(Map<String, dynamic> messageData) async {
+    final data = MessagingService.instance.parseMessageData(messageData);
+    dog(data.toString());
+
+    /**
+     * return if the the sender is also the current loggedIn user.
+     */
+    if (myUid == data.senderUid) {
+      return;
+    }
+
+    /**
+       * If the type is user then move it to public use profile.
+       */
+    if (data.type == NotificationType.user) {
+      /// if the action is userCreate then move it to public profile.
+      if (data.action == 'userCreate') {
+        // return UserService.instance.showPublicProfileScreen(context: context, uid: data.id);
+        return Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (c) => const AdminUserListView(
+              createdAtDescending: true,
+            ),
+          ),
+        );
+      }
+      // this should work but it needs tests/review.
+      // context.push does not work
+      // return GoRouter.of(context).push(MyViewersScreen.routeName);
+    }
+
+    /**
+       * If the type is post then move it to a specific post.
+       */
+    if (data.type == NotificationType.post) {
+      /// else show the viewer screen
+      return PostService.instance.showPostViewScreen(
+        context: context,
+        postId: data.id,
+      );
+    }
+
+    if (data.type == NotificationType.report) {
+      return Navigator.of(context).push(MaterialPageRoute(builder: (c) => const AdminReportListScreen()));
+    }
+
+    /**
+     * If the type is chat then move it to chat room.
+     */
+    if (data.type == NotificationType.chat) {
+      // ignore: use_build_context_synchronously
+      return ChatService.instance.showChatRoom(
+        context: context,
+        room: await Room.get(
+          data.id,
+        ),
+      );
+    }
+  }
+```
