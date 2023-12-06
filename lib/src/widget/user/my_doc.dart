@@ -28,7 +28,12 @@ class MyDoc extends StatelessWidget {
   Widget buildStreamWidget(BuildContext _, AsyncSnapshot<User?> snapshot) {
     /// 주의: 로딩 중, 반짝임(깜빡거림)이 발생할 수 있다.
     if (snapshot.connectionState == ConnectionState.waiting) {
-      return onLoading ?? const SizedBox.shrink();
+      // This is to prevent loading when the widget is rebuilt.
+      // StreamBuilder always begins with a ConnectionState.waiting.
+      // Please change the logic because there might be a better way
+      return UserService.instance.documentChanges.value != null
+          ? builder(UserService.instance.documentChanges.value!)
+          : onLoading ?? const SizedBox.shrink();
     }
 
     final userModel = snapshot.data;

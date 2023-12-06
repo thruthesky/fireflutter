@@ -395,6 +395,15 @@
       "deviceId": "9538AD08-48B3-43A8-B848-31CC488FE3E9"
     },
     {
+      "name": "PhiLov - External Samsung - debug (C)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "R9ATA00LMJM"
+    },
+    {
       "name": "Admin - Simulator - (J)",
       "request": "launch",
       "type": "dart",
