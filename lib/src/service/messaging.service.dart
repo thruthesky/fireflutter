@@ -216,6 +216,11 @@ class MessagingService {
   /// [target] is the target of devices you want to send message to. If it's "all", then it will send messages to all users.
   /// [type] is the kind of push notification `post` `chat`
   /// [id] is can be use to determined the landing page when notification is clicked
+  /// heirarchy action >> topic >> tokens >> uids
+  /// if action is not null, topic, tokens, uids will be ignored
+  /// if action is null and topic is not null, then tokens and uids will be ignored
+  /// if action and topic is null, and tokens is not null then uids will be ignored
+  /// if action, topic, and tokens are null, then uids will be used
   Future<DocumentReference> queue({
     required String title,
     required String body,
