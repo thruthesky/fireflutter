@@ -94,7 +94,7 @@ MessagingService.instance.init(
 - All user setting's documents including push notification setting document is saved under `/user/<uid>/user_settings` collection. We call it `user_settings` collection.
   - See the settings for more information.
 
-Each of push notification option is saved as a single document under `user_settings` collection with fields consist of `action`, `categoryId`, `uid`. For instance, `{action: commentCreate, category: qna, uid: userUid}`.
+Each of push notification option is saved as a single document under `user_settings` collection with fields consist of `action`, `categoryId`, `uid`. For instance, `{action: commentCreate, categoryId: qna, uid: userUid}`.
 
 - Security rules,
 
@@ -110,7 +110,7 @@ Each of push notification option is saved as a single document under `user_setti
 
 - Be careful not to save a document under `user_settings` collection that has `action` and `categoryId` if it's not for push notification settings.
 
-- This is an example of a push notification subscription document - `/users/<my-uid>/user_settings/<document-id> {action: commentCreate, category: qna}`.
+- This is an example of a push notification subscription document - `/users/<my-uid>/user_settings/<document-id> {action: commentCreate, categoryId: qna}`.
 
 - By default, cloud function event like `commentCreate`, `chatCreate`, `userCreate`, `reportCreate` will send push message automatically unless the user turn them off by adding specific `user_settings`. [Check send push notification with action](#send-push-notification-with-action)
 
