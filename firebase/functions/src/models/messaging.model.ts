@@ -23,7 +23,7 @@ export class Messaging {
    * Send push messages
    *
    * For forum category subscription,
-   *  'data.action' and 'data.category' has the information.
+   *  'data.action' and 'data.categoryId' has the information.
    *
    *      will follow on next version.
    *
@@ -82,7 +82,7 @@ export class Messaging {
    * @param data
    *  'action' can be one of 'post-create', 'comment-create',
    *  'uid' is the uid of the user
-   *  'category' is the category of the post.
+   *  'categoryId' is the category of the post.
    * @returns
    */
   static async sendMessageByAction(data: SendMessage): Promise<SendMessageResult> {
@@ -94,7 +94,7 @@ export class Messaging {
     }
 
     let uids: string[] = [];
-    // commentCreate get post and patch data with category and title.
+    // commentCreate get post and patch data with categoryId and title.
     if (data.action == EventName.commentCreate && data.postId) {
       const post = await Post.get(data.postId);
       data.categoryId = post.categoryId;
