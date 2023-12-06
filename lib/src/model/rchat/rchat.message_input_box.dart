@@ -16,7 +16,7 @@ class RChatMessageInputBox extends StatefulWidget {
   final Function(double?)? onProgress;
 
   /// [double] is null when upload is completed.
-  final Function? onSend;
+  final Function(String? messageText)? onSend;
 
   @override
   State<RChatMessageInputBox> createState() => _ChatMessageInputBoxState();
@@ -69,7 +69,7 @@ class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
                       if (trimText.isEmpty) return;
                       await RChat.sendMessage(text: trimText);
                       inputController.clear();
-                      widget.onSend?.call();
+                      widget.onSend?.call(trimText);
                     },
                   ),
                 ],

@@ -68,7 +68,8 @@ class MessagingService {
   String? token;
   final BehaviorSubject<String?> tokenChange = BehaviorSubject.seeded(null);
 
-  final String prefixCustomTopic = 'customTopic';
+  // TODO clean up
+  // final String prefixCustomTopic = 'customTopic';
 
   List<CustomizeMessagingTopic>? customizeTopic;
 
@@ -164,15 +165,19 @@ class MessagingService {
     await FirebaseMessaging.instance.subscribeToTopic('${platformName()}Users');
   }
 
+  /// Subscribe to custom topic.
+  ///
+  /// Please avoid using `allUsers`, `iosUsers`, `androidUsers`, and `webUsers`
+  /// because they are reserved for platform specific topic by FireFlutter.
   Future subscribeToCustomTopic(String topic) async {
     if (initialized == false) return;
-    await FirebaseMessaging.instance.subscribeToTopic('$prefixCustomTopic$topic');
+    await FirebaseMessaging.instance.subscribeToTopic(topic);
   }
 
   Future unsubscribeToCustomTopic(String topic) async {
     if (initialized == false) return;
     try {
-      await FirebaseMessaging.instance.unsubscribeFromTopic('$prefixCustomTopic$topic');
+      await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
     } catch (e) {
       /// error will be thrown if the topic is not subscribed.
       log('unsubscribeToCustomTopic error: ${e.toString()}');
@@ -235,6 +240,7 @@ class MessagingService {
     String? sound,
     String? action,
     String? categoryId,
+    Map<String, dynamic>? extra,
   }) {
     Json data = {
       'title': title,
@@ -251,6 +257,7 @@ class MessagingService {
       if (sound != null && sound.isNotEmpty) 'sound': sound,
       if (action != null && action.isNotEmpty) 'action': action,
       if (categoryId != null && categoryId.isNotEmpty) 'categoryId': categoryId,
+      if (extra != null && extra.isNotEmpty) ...extra,
     };
 
     // print('data; $data');

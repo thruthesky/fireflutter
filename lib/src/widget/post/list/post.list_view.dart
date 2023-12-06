@@ -83,6 +83,7 @@ class PostListView extends StatelessWidget {
           },
         );
       },
+      // loadingBuilder: (context) => const Center(child: CircularProgressIndicator()),
       emptyBuilder: (context) {
         if (emptyBuilder != null) return emptyBuilder!(context);
         return Center(child: Text(tr.noPost));
