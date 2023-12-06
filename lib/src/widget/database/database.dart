@@ -27,6 +27,9 @@ class Database extends StatefulWidget {
   });
 
   final String path;
+
+  /// [dynamic] is the value of the node.
+  /// [String] is the path of the node.
   final Widget Function(dynamic value, String path) builder;
   final Widget? onWaiting;
 
@@ -44,8 +47,7 @@ class _DatabaseState extends State<Database> {
       builder: (context, AsyncSnapshot<DatabaseEvent> event) {
         if (event.connectionState == ConnectionState.waiting) {
           if (snapshotData != null) {
-            return widget.builder(
-                snapshotData!.data!.snapshot.value, widget.path);
+            return widget.builder(snapshotData!.data!.snapshot.value, widget.path);
           }
           return widget.onWaiting ?? const SizedBox.shrink();
         }

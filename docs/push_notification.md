@@ -13,14 +13,20 @@ You can design the app to
 
 - send a push message to the user when a comment is created under his post or comment.
 - send a message to the user when there is a post under the forum category that he subscribed.
-- send a push message to the user when there is a new chat message in the chat room that he subscribed. (default, subscribe all the chat room)
+- send a push message to the user when there is a new chat message in the chat room that he subscribed.
 
-You can also set the Android phone to display with head-up display.
+You can also set the Android phone to display with head-up display. But this takes an optional code addition.
+
+## Terms
+
+- The `token` means `push notification token`.
+
+
 
 ## Strcuture
 
-Push notification tokens are saved under `/users/{uid}/fcm_tokens/{token} { uid: ..., device_type: ..., fcm_token: ... }`.
-If the user didn't sign in, the token will not be saved. What if you want to send push notifications to the users who didn't sign in? You may do so using Firebase console.
+Tokens are saved under `/users/{uid}/fcm_tokens/{token} { uid: ..., device_type: ..., fcm_token: ... }` by `Messaging.init()`.
+If the user didn't sign in, the token will not be saved. So, if you want to send push notifications to all the users including those who didn't sign in, You may do so using Firebase console.
 
 The `device_type` may be `ios` or `android`.
 
@@ -85,11 +91,26 @@ MessagingService.instance.init(
 );
 ```
 
-- If everything is setup properly, the push token will be saved under `/users/<uid>/fcm_tokens/...`
+- If everything is setup properly, the token will be saved under `/users/<uid>/fcm_tokens/...` when a user sign in.
 
-- For the `Head-up display` in Android, Setting the importance to `NotificationManager.IMPORTANCE_HIGH` will shows the notification everywhere, makes noise and peeks. May use full screen intents.
+
 
 ## Push notification settings
+
+
+### Push notification On and Off
+
+- You can design the on and off swtich setting on your own way. There is no predefined structure on it.
+  - For instance, you want to give a swtich to turn it on or off on each chat room.
+    When the user turn it on, the app can save `/chat-rooms/{my-uid}/{room-id} {messaging: boolean}`.
+    Then, when the user send a chat message, check if the room id in the chat room document is set to true.
+    If it's true, send a message. Or not just don't send a message.
+
+  - Note that, you may let users to receive all new messages by default. It is up to you how you design.
+
+
+### extra settings
+
 
 - All user setting's documents including push notification setting document is saved under `/user/<uid>/user_settings` collection. We call it `user_settings` collection.
   - See the settings for more information.
@@ -521,6 +542,11 @@ class MainActivity: FlutterActivity() {
     }
 }
 ```
+
+
+
+- For the `Head-up display` in Android, Setting the importance to `NotificationManager.IMPORTANCE_HIGH` will shows the notification everywhere, makes noise and peeks. May use full screen intents.
+
 
 Setting the importance to `NotificationManager.IMPORTANCE_HIGH` will shows the notification everywhere, makes noise and peeks. May use full screen intents.
 

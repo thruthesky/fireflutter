@@ -184,7 +184,7 @@ class MessagingService {
     }
   }
 
-  /// `/users/<uid>/fcm_tokens/<docId>` 에 저장을 한다.
+  /// Save tokens at `/users/<uid>/fcm_tokens/<docId>`
   _updateToken(String? token) async {
     if (FirebaseAuth.instance.currentUser == null) return;
     if (token == null) return;
