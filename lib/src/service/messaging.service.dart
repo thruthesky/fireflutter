@@ -68,9 +68,6 @@ class MessagingService {
   String? token;
   final BehaviorSubject<String?> tokenChange = BehaviorSubject.seeded(null);
 
-  // TODO clean up
-  // final String prefixCustomTopic = 'customTopic';
-
   List<CustomizeMessagingTopic>? customizeTopic;
 
   bool initialized = false;

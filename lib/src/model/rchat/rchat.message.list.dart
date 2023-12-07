@@ -33,8 +33,10 @@ class _RChatMessageListState extends State<RChatMessageList> {
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
           /// FirebaseDatabaseQueryBuilder will set snapshot.isFetcing only one time when it is first loading.
-          dog('isFetcing');
-          RChat.resetRoomNewMessage(roomId: widget.roomId);
+          dog('isFetcing ${widget.roomId}');
+
+          // RChat.resetRoomNewMessage(roomId: widget.roomId);
+          _resetNewMessage();
 
           if (resultingWidget != null) return resultingWidget!;
           return const Center(child: CircularProgressIndicator());
@@ -44,8 +46,12 @@ class _RChatMessageListState extends State<RChatMessageList> {
           return Text('Something went wrong! ${snapshot.error}');
         }
         if (RChat.isLoadingForNewMessage(widget.roomId, snapshot)) {
+          dog('isFetcing  still ${widget.roomId}');
+
           /// newMessage 리셋
-          RChat.resetRoomNewMessage(roomId: widget.roomId);
+          // Do not reset the newMessage here because
+          // we don't know if the room is a single chat or group chat.
+          // RChat.resetRoomNewMessage(roomId: widget.roomId);
         }
 
         if (snapshot.docs.isEmpty) {
@@ -76,5 +82,16 @@ class _RChatMessageListState extends State<RChatMessageList> {
         return resultingWidget!;
       },
     );
+  }
+
+  void _resetNewMessage() {
+    RChatRoomModel.fromRoomId(myUid!).then((room) {
+      if (room.isExists == false) return;
+      if (room.isGroupChat ?? true) {
+        RChat.resetRoomNewMessage(roomId: widget.roomId);
+      } else {
+        RChat.resetRoomNewMessage(roomId: RChat.singleChatRoomId(widget.roomId));
+      }
+    });
   }
 }

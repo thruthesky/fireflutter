@@ -9,9 +9,21 @@ class RChat {
   ///
   ///
 
-  static DatabaseReference roomRef({required String uid}) => rtdb.ref().child('chat-rooms/$uid');
+  /// This one is used for each users
+  /// /chat-rooms/{uid}/{chatRoomId}
+  static const String chatRoomsPath = 'chat-rooms';
+
+  /// This one is used for chat room details
+  /// /chat-room-details/{chatRoomId}/...
+  static const String chatRoomDetailsPath = 'chat-room-details';
+
+  static DatabaseReference userRoomsRef({required String uid}) => rtdb.ref().child('$chatRoomsPath/$uid');
+  static DatabaseReference userRoomRef({required String uid, required String roomId}) =>
+      userRoomsRef(uid: uid).child(roomId);
+  static DatabaseReference roomDetailsRef({required String roomId}) => rtdb.ref().child('$chatRoomDetailsPath/$roomId');
   static DatabaseReference messageRef({required String roomId}) =>
-      rtdb.ref().child('chat-messages').child(roomId).child('messages');
+      roomDetailsRef(roomId: roomId).child(roomId).child('messages');
+  static DatabaseReference roomUsersRef({required String roomId}) => roomDetailsRef(roomId: roomId).child('users');
 
   ///
   /// 참고, roomId 를 입력 받지 않고, global 영역의 변수의 것을 사용한다. 이렇게 하는 이유는 화면 깜빡임을 줄이기 위해서
@@ -66,11 +78,10 @@ class RChat {
     String? text,
     String? url,
   }) async {
-    //
     String otherUid = otherUidFromRoomId(roomId);
 
-    // chat room under my room list
-    roomRef(uid: myUid!).child(otherUid).set({
+    // // chat room under my room list
+    userRoomRef(uid: myUid!, roomId: roomId).set({
       'text': text,
       'url': url,
       'order': RChat.roomMessageOrder[roomId],
@@ -79,8 +90,8 @@ class RChat {
       'isGroupChat': isGroupChat(roomId),
     });
 
-// chat room info update under other user room list
-    roomRef(uid: otherUid).child(myUid!).update({
+    // // chat room info update under other user room list
+    userRoomRef(uid: otherUid, roomId: roomId).update({
       'text': text,
       'url': url,
       'order': RChat.roomMessageOrder[roomId],
@@ -110,15 +121,20 @@ class RChat {
     }
   }
 
+  /// Leaving the Group Chat means
+  /// removing myUid in /chat-rooms/{groupChatId}/users/{[uid]: true}
+  /// and removing the chat room node from /chat-rooms/{myUid}/{groupChatId}
   static leaveGroupChat({required RChatRoomModel room}) {
     /// 그룹 채팅방에서 나가기
-    roomRef(uid: myUid!).child(room.key).remove();
-    roomRef(uid: room.key).child('users').child(myUid!).remove();
+    roomUsersRef(roomId: room.key).child(myUid!).remove();
+    userRoomsRef(uid: myUid!).child(room.key).remove();
   }
 
+  /// Leaving the Single Chat means
+  /// removing the chat room node from /chat-rooms/{myUid}/{otherUid}
   static leaveSingleChat({required RChatRoomModel room}) {
     /// 1:1 채팅방에서 나가기
-    roomRef(uid: myUid!).child(room.key).remove();
+    userRoomRef(uid: myUid!, roomId: room.key).remove();
   }
 
   /// 채팅방의 메시지 순서(order)를 담고 있는 [RChat.roomMessageOrder] 를 초기화 한다.
@@ -138,9 +154,10 @@ class RChat {
   }
 
   /// 채팅방 정보 `/chat-rooms/$uid/$otherUid` 에서 newMessage 를 0 으로 초기화 한다.
+  /// Reset the newMessage to 0 in `/chat-rooms/$uid/$otherUid`
+  /// This will reset the Room New Message in chat room info `/chat-rooms/$uid/$roomId`
   static Future<void> resetRoomNewMessage({required String roomId}) async {
-    String otherUid = otherUidFromRoomId(roomId);
-    await roomRef(uid: myUid!).child(otherUid).update(
+    await userRoomRef(uid: myUid!, roomId: roomId).update(
       {
         'newMessage': 0,
         'isGroupChat': isGroupChat(roomId),
@@ -209,12 +226,18 @@ class RChat {
   ///
   static Future joinRoom({required RChatRoomModel room}) async {
     if (room.isGroupChat == true) {
-      /// 그룹 채팅방에 참여하기
-      await set(room.path, {
+      roomDetailsRef(roomId: room.key).set({
         'users': {
           myUid: true,
         },
       });
+
+      /// 그룹 채팅방에 참여하기
+      // await set(room.key, {
+      //   'users': {
+      //     myUid: true,
+      //   },
+      // });
     }
   }
 } // EO RChat

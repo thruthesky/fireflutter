@@ -35,7 +35,7 @@ class _RChatRoomEditDialogState extends State<RChatRoomEditDialog> {
       actions: [
         ElevatedButton(
           onPressed: () async {
-            DatabaseReference roomRef = rtdb.ref('chat-rooms').push();
+            DatabaseReference roomRef = rtdb.ref(RChat.chatRoomDetailsPath).push();
             roomRef.set({
               'name': roomNameController.text,
               'isGroupChat': true,

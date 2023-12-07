@@ -33,6 +33,44 @@ For group chat,
 
 The chat-rooms is used for the rooms for individual users. The structure is like this: `/chat-rooms/${uid}/${chatRoomId}`.
 
-For the messages in a chat room: `/chat-messages/${chatRoomId}/messeges/`.
+For the messages in a chat room: `/chat-room-details/${chatRoomId}/messeges/`.
 
-For room details, we put it `/chat-messages/${chatRoomId}/`.
+For room details, we put it `/chat-room-details/${chatRoomId}/`.
+
+Example record will be:
+
+```json
+chat-rooms: {
+    uid-1: {
+        chatRoomId-1: {
+            isGroupChat: false,
+            newMessageCount: 0,
+            order: -1,
+            text: 'Hello',
+            updateAt: 123456789,
+        },
+    },
+},
+chat-room-details: {
+    chatRoomId-1: {
+        createdAt: 123456789,
+        isGroupChat: false,
+        isOpenGroupChat: false,
+        text: 'Hello',
+        updateAt: 123456789,
+        name: 'John',
+        users: {
+            uid-1: true,
+            uid-2: true,
+        },
+        messages: {
+            messageId-1: {
+            createdAt: 123456789,
+            text: 'Hello',
+            uid: 'uid-1',
+            },
+        },
+    },
+}
+
+```
