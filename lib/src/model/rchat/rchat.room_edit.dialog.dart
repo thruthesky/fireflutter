@@ -44,6 +44,7 @@ class _RChatRoomEditDialogState extends State<RChatRoomEditDialog> {
               'users': {
                 myUid: true,
               },
+              'testval': 1,
             });
 
             final room = RChatRoomModel.fromSnapshot(await getSnapshot(roomRef.path));

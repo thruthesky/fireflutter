@@ -1,5 +1,7 @@
 # Realtime Database Chat
 
+## TODO
+
 For group chat,
 
 - when a user enters the group chat,
@@ -26,3 +28,11 @@ For group chat,
     - save isOpenGroupChat to true or false.
     - save room name
     - save createdAt
+
+## Structure
+
+The chat-rooms is used for the rooms for individual users. The structure is like this: `/chat-rooms/${uid}/${chatRoomId}`.
+
+For the messages in a chat room: `/chat-messages/${chatRoomId}/messeges/`.
+
+For room details, we put it `/chat-messages/${chatRoomId}/`.
