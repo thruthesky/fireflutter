@@ -39,6 +39,7 @@ class RChat {
   ///
   static String roomId = 'all';
 
+  /// isGroupChat will be important for managing the roomIds.
   static bool isGroupChat = true;
 
   /// 각 채팅방 마다 -1을 해서 order 한다.
@@ -87,59 +88,38 @@ class RChat {
     });
   }
 
+  /// get all users in the chat room (uids only)
+  /// /chat-room-details/{chatRoomId}/users/{[uid]: true}
+  static Future<List<String>> getUsersInRoom({required String roomId}) async {
+    final snapshot = await roomUsersRef(roomId: roomId).get();
+    final users = Map<String, bool>.from((snapshot.value ?? {}) as Map)
+        .entries
+        .where((element) => element.value == true)
+        .map((e) => e.key)
+        .toList();
+    return users;
+  }
+
   /// Update chat room
   static void updateRoom({
     String? text,
     String? url,
   }) async {
-    // dog('is group chat: ${isGroupChat(roomId)}');
     if (isGroupChat) {
-      /// 그룹 채팅방 업데이트
-      roomDetailsRef(roomId: roomId).update({
-        'text': text,
-        'url': url,
-        'order': RChat.roomMessageOrder[roomId],
-        'updatedAt': ServerValue.timestamp,
-        'newMessage': 0,
-        // 'isGroupChat': isGroupChat(roomId),
-        'isGroupChat': true,
-      });
-
-      // TODO send all users
-
-      // chat room under my room list
-      // userRoomRef(uid: myUid!, roomId: roomId).set({
-      //   'text': text,
-      //   'url': url,
-      //   'order': RChat.roomMessageOrder[roomId],
-      //   'updatedAt': ServerValue.timestamp,
-      //   'newMessage': 0,
-      //   // 'isGroupChat': isGroupChat(roomId),
-      //   'isGroupChat': true,
-      // });
-
-      final snapshot = await roomUsersRef(roomId: roomId).get();
-      final users = Map<String, bool>.from((snapshot.value ?? {}) as Map)
-          .entries
-          .where((element) => element.value == true)
-          .map((e) => e.key)
-          .toList();
-      //  do userRoomRef for each user
-      for (var uid in users) {
+      final uids = await getUsersInRoom(roomId: roomId);
+      for (var uid in uids) {
         userRoomRef(uid: uid, roomId: roomId).set({
           'text': text,
           'url': url,
           'order': RChat.roomMessageOrder[roomId],
           'updatedAt': ServerValue.timestamp,
-          'newMessage': 0,
-          // 'isGroupChat': isGroupChat(roomId),
+          'newMessage': uid == myUid ? 0 : ServerValue.increment(1),
           'isGroupChat': true,
         });
       }
     } else {
       String otherUid = otherUidFromRoomId(roomId);
 
-      // TODO do dry
       // chat room under my room list
       userRoomRef(uid: myUid!, roomId: otherUid).set({
         'text': text,
@@ -147,7 +127,6 @@ class RChat {
         'order': RChat.roomMessageOrder[roomId],
         'updatedAt': ServerValue.timestamp,
         'newMessage': 0,
-        // 'isGroupChat': isGroupChat(roomId),
         'isGroupChat': false,
       });
 
@@ -158,7 +137,6 @@ class RChat {
         'order': RChat.roomMessageOrder[roomId],
         'updatedAt': ServerValue.timestamp,
         'newMessage': ServerValue.increment(1),
-        // 'isGroupChat': isGroupChat(roomId),
         'isGroupChat': false,
       });
     }
@@ -220,12 +198,13 @@ class RChat {
   /// Reset the newMessage to 0 in `/chat-rooms/$uid/$otherUid`
   /// This will reset the Room New Message in chat room info `/chat-rooms/$uid/$roomId`
   static Future<void> resetRoomNewMessage({required String roomId}) async {
-    await userRoomRef(uid: myUid!, roomId: isGroupChat ? roomId : otherUidFromRoomId(roomId)).update(
-      {
-        'newMessage': 0,
-        'isGroupChat': isGroupChat,
-      },
-    );
+    // for now, we really have to get the room info from the database
+    // but please do change the logic if we have a better idea
+    final room = await RChatRoomModel.fromRoomId(roomId);
+    await userRoomRef(uid: myUid!, roomId: room.isGroupChat == true ? roomId : otherUidFromRoomId(roomId)).update({
+      'newMessage': 0,
+      'isGroupChat': isGroupChat,
+    });
     // print('--> resetRoomNewMessage: $roomId');
   }
 

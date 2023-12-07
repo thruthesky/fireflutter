@@ -91,8 +91,6 @@ class _RChatMessageListState extends State<RChatMessageList> {
       if (room.isExists == false) return;
       if (room.isGroupChat ?? true) {
         RChat.resetRoomNewMessage(roomId: widget.roomId);
-      } else {
-        RChat.resetRoomNewMessage(roomId: widget.roomId);
       }
     });
   }
