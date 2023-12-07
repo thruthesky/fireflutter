@@ -14,11 +14,16 @@ import 'package:fireflutter/fireflutter.dart';
 /// final value = await get('/settings/abc/path/to/node');
 /// ```
 Future<T?> get<T>(String path) async {
-  final event = await FirebaseDatabase.instance.ref(path).once(DatabaseEventType.value);
-  if (!event.snapshot.exists) {
+  final snapshot = await getSnapshot(path);
+  if (!snapshot.exists) {
     return null;
   }
-  return event.snapshot.value as T;
+  return snapshot.value as T;
+}
+
+Future<DataSnapshot> getSnapshot(String path) async {
+  final event = await FirebaseDatabase.instance.ref(path).once(DatabaseEventType.value);
+  return event.snapshot;
 }
 
 /// Get a list of keys of a node
@@ -27,11 +32,11 @@ Future<T?> get<T>(String path) async {
 ///
 /// ! It returns an empty list if the node does not exist.
 Future<List<String>> getKeys(String path) async {
-  final event = await FirebaseDatabase.instance.ref(path).once(DatabaseEventType.value);
-  if (!event.snapshot.exists) {
+  final snapshot = await getSnapshot(path);
+  if (!snapshot.exists) {
     return [];
   }
-  final value = event.snapshot.value;
+  final value = snapshot.value;
   if (value is Map) {
     return value.keys.cast<String>().toList();
   }

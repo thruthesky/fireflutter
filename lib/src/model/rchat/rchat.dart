@@ -94,13 +94,31 @@ class RChat {
   ///
   /// 상대방의 채팅방 목록에서는 삭제하지 않고, 나의 채팅방 목록에서만 삭제한다.
   /// 즉, 상대방은 모르게 한다.
+  ///
+  /// For 1:1 chat, just remove the chat room node from /chat-rooms/{myUid}/{otherUid}
+  /// For group chat, remove the chat room node from /chat-rooms/{myUid}/{groupChatId}
+  ///   and remove my uid from /chat-rooms/{gropChatId}/users/{myUid}
   static leaveRoom({
-    required String roomId,
+    required RChatRoomModel room,
   }) {
-    String otherUid = otherUidFromRoomId(roomId);
+    if (room.isGroupChat == true) {
+      /// 그룹 채팅방에서 나가기
+      leaveGroupChat(room: room);
+    } else {
+      /// 1:1 채팅방에서 나가기
+      leaveSingleChat(room: room);
+    }
+  }
 
-    /// chat room under my room list
-    roomRef(uid: myUid!).child(otherUid).remove();
+  static leaveGroupChat({required RChatRoomModel room}) {
+    /// 그룹 채팅방에서 나가기
+    roomRef(uid: myUid!).child(room.key).remove();
+    roomRef(uid: room.key).child('users').child(myUid!).remove();
+  }
+
+  static leaveSingleChat({required RChatRoomModel room}) {
+    /// 1:1 채팅방에서 나가기
+    roomRef(uid: myUid!).child(room.key).remove();
   }
 
   /// 채팅방의 메시지 순서(order)를 담고 있는 [RChat.roomMessageOrder] 를 초기화 한다.
@@ -172,5 +190,31 @@ class RChat {
     /// 이전에 로드된 채팅 메시지가 있지만, 새로운 채팅 메시지를 받지 않았다면, false 를 리턴한다.
     /// 위로 스크롤 하는 경우, 이 메시지가 발생 할 수 있다.
     return false;
+  }
+
+  /// 일대일 채팅방 ID 를 만든다.
+  ///
+  /// [myUid] 와 [otherUserUid] 를 정렬해서 합친다. 채팅 메시지를 저장할 /chat-messages/ 노드의 하위 노드 아이디가 된다.
+  ///
+  static String singleChatRoomId(String otherUserUid) {
+    final uids = [myUid, otherUserUid];
+    uids.sort();
+    return uids.join('-');
+  }
+
+  /// For group chat, the login user uid is added to /chat-rooms/{groupChatId}/users/{[uid]: true}
+  ///
+  /// Note, it's not that harmful to set the same uid to true again if it happens only on the chat room entering.
+  ///
+  ///
+  static Future joinRoom({required RChatRoomModel room}) async {
+    if (room.isGroupChat == true) {
+      /// 그룹 채팅방에 참여하기
+      await set(room.path, {
+        'users': {
+          myUid: true,
+        },
+      });
+    }
   }
 } // EO RChat

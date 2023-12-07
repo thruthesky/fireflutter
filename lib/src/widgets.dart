@@ -50,6 +50,7 @@ export 'widget/chat/room/chat.room.message_box.upload_button.dart';
 // Realtime database chat. 2023.11.25
 export 'model/rchat/rchat.message.list.dart';
 export 'model/rchat/rchat.message_input_box.dart';
+export 'model/rchat/rchat.room_edit.dialog.dart';
 
 // Category
 export 'widget/category/category.list_view.dart';

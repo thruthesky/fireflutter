@@ -12,12 +12,3 @@ isGroupChat(String roomId) => roomId.split('-').length == 1;
 otherUidFromRoomId(String roomId) {
   return roomId.split('-').firstWhere((uid) => uid != myUid, orElse: () => myUid!);
 }
-
-/// 일대일 채팅방 ID 를 만든다.
-///
-/// [myUid] 와 [otherUserUid] 를 정렬해서 합친다.
-String singleChatRoomId(String otherUserUid) {
-  final uids = [myUid, otherUserUid];
-  uids.sort();
-  return uids.join('-');
-}

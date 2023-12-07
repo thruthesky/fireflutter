@@ -27,7 +27,8 @@ class _RChatMessageListState extends State<RChatMessageList> {
   @override
   Widget build(BuildContext context) {
     return FirebaseDatabaseQueryBuilder(
-      pageSize: 20,
+      /// We make the pageSize big so that it will fetch less, and less flickering.
+      pageSize: 100,
       query: RChat.messageRef(roomId: widget.roomId).orderByChild('order'),
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
