@@ -4,7 +4,9 @@ import 'package:fireflutter/fireflutter.dart';
 isSingleChat(String roomId) => roomId.split('-').length == 2;
 
 /// 채팅방 ID 에서 그룹 채팅방 ID 인지 확인한다.
-isGroupChat(String roomId) => roomId.split('-').length == 1;
+/// ! This might not be effective to detect group chat room
+/// ! because it is possible to create a group chat room with with hypen in key.
+isGroupChat(String roomId) => (roomId.split('-')..remove("")).length == 1;
 
 /// 1:1 채팅방 ID 에서 다른 사용자의 uid 를 리턴한다.
 ///

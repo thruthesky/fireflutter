@@ -4,6 +4,7 @@ import 'package:fireflutter/fireflutter.dart';
 class RChatRoomModel {
   final DatabaseReference ref;
   String key;
+  String name;
   String? text;
   String? url;
   int? updatedAt;
@@ -23,6 +24,7 @@ class RChatRoomModel {
   RChatRoomModel({
     required this.ref,
     required this.key,
+    required this.name,
     this.text,
     this.url,
     this.updatedAt,
@@ -55,11 +57,14 @@ class RChatRoomModel {
   }
 
   factory RChatRoomModel.fromJson(Map<dynamic, dynamic> json) {
+    dog("json users: ${json['users']}");
+    dog("full json: $json");
     return RChatRoomModel(
       ref: json['ref'],
       key: json['key'],
       text: json['text'] as String?,
       url: json['url'] as String?,
+      name: (json['name'] ?? "") as String,
       updatedAt: json['updatedAt'] is int ? json['updatedAt'] : int.parse(json['updatedAt'] ?? '0'),
       newMessage: json['newMessage'] ?? 0,
       isGroupChat: json['isGroupChat'],

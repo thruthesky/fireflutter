@@ -31,6 +31,8 @@ For group chat,
 
 ## Structure
 
+The TODO above is not implemented yet. The current structure may be changed.
+
 The chat-rooms is used for the rooms for individual users. The structure is like this: `/chat-rooms/${uid}/${chatRoomId}`.
 
 For the messages in a chat room: `/chat-room-details/${chatRoomId}/messeges/`.

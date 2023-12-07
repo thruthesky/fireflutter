@@ -44,8 +44,9 @@ class _RChatRoomEditDialogState extends State<RChatRoomEditDialog> {
               'users': {
                 myUid: true,
               },
-              'testval': 1,
             });
+
+            dog('Pathhh ${roomRef.path}');
 
             final room = RChatRoomModel.fromSnapshot(await getSnapshot(roomRef.path));
             await RChat.joinRoom(room: room);
