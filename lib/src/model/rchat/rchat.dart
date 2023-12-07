@@ -108,17 +108,34 @@ class RChat {
       // TODO send all users
 
       // chat room under my room list
-      userRoomRef(uid: myUid!, roomId: roomId).set({
-        'text': text,
-        'url': url,
-        'order': RChat.roomMessageOrder[roomId],
-        'updatedAt': ServerValue.timestamp,
-        'newMessage': 0,
-        // 'isGroupChat': isGroupChat(roomId),
-        'isGroupChat': true,
-      });
+      // userRoomRef(uid: myUid!, roomId: roomId).set({
+      //   'text': text,
+      //   'url': url,
+      //   'order': RChat.roomMessageOrder[roomId],
+      //   'updatedAt': ServerValue.timestamp,
+      //   'newMessage': 0,
+      //   // 'isGroupChat': isGroupChat(roomId),
+      //   'isGroupChat': true,
+      // });
 
-      final users = await roomUsersRef(roomId: roomId).get();
+      final snapshot = await roomUsersRef(roomId: roomId).get();
+      final users = Map<String, bool>.from((snapshot.value ?? {}) as Map)
+          .entries
+          .where((element) => element.value == true)
+          .map((e) => e.key)
+          .toList();
+      //  do userRoomRef for each user
+      for (var uid in users) {
+        userRoomRef(uid: uid, roomId: roomId).set({
+          'text': text,
+          'url': url,
+          'order': RChat.roomMessageOrder[roomId],
+          'updatedAt': ServerValue.timestamp,
+          'newMessage': 0,
+          // 'isGroupChat': isGroupChat(roomId),
+          'isGroupChat': true,
+        });
+      }
     } else {
       String otherUid = otherUidFromRoomId(roomId);
 
@@ -203,10 +220,9 @@ class RChat {
   /// Reset the newMessage to 0 in `/chat-rooms/$uid/$otherUid`
   /// This will reset the Room New Message in chat room info `/chat-rooms/$uid/$roomId`
   static Future<void> resetRoomNewMessage({required String roomId}) async {
-    await userRoomRef(uid: myUid!, roomId: roomId).update(
+    await userRoomRef(uid: myUid!, roomId: isGroupChat ? roomId : otherUidFromRoomId(roomId)).update(
       {
         'newMessage': 0,
-        // 'isGroupChat': isGroupChat(roomId),
         'isGroupChat': isGroupChat,
       },
     );

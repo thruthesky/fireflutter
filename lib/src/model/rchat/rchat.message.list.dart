@@ -79,18 +79,20 @@ class _RChatMessageListState extends State<RChatMessageList> {
             },
           );
         }
+
+        _resetNewMessage();
         return resultingWidget!;
       },
     );
   }
 
   void _resetNewMessage() {
-    RChatRoomModel.fromRoomId(myUid!).then((room) {
+    RChatRoomModel.fromRoomId(widget.roomId).then((room) {
       if (room.isExists == false) return;
       if (room.isGroupChat ?? true) {
         RChat.resetRoomNewMessage(roomId: widget.roomId);
       } else {
-        RChat.resetRoomNewMessage(roomId: RChat.singleChatRoomId(widget.roomId));
+        RChat.resetRoomNewMessage(roomId: widget.roomId);
       }
     });
   }
