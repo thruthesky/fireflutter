@@ -12,6 +12,9 @@ class RChatRoomModel {
   bool? isGroupChat;
   bool? isExists;
 
+  /// [order] is used to sort the chat rooms in the user.
+  int? order;
+
   /// [id] It returns the chat room id.
   ///
   /// This is used to save the messages under `/chat-messages/{id}/[messages]`.
@@ -27,6 +30,7 @@ class RChatRoomModel {
     required this.name,
     this.text,
     this.url,
+    this.order,
     this.updatedAt,
     this.newMessage,
     this.isGroupChat,
@@ -57,8 +61,6 @@ class RChatRoomModel {
   }
 
   factory RChatRoomModel.fromJson(Map<dynamic, dynamic> json) {
-    dog("json users: ${json['users']}");
-    dog("full json: $json");
     return RChatRoomModel(
       ref: json['ref'],
       key: json['key'],
@@ -69,8 +71,10 @@ class RChatRoomModel {
       newMessage: json['newMessage'] ?? 0,
       isGroupChat: json['isGroupChat'],
       isExists: json['isExists'],
+      order: json['order'],
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'key': key,

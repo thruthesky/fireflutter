@@ -404,6 +404,15 @@
       "deviceId": "R9ATA00LMJM"
     },
     {
+      "name": "PhiLov - External Samsung light blue - debug (C)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "5200960c4e1e5577"
+    },
+    {
       "name": "Admin - Simulator - (J)",
       "request": "launch",
       "type": "dart",

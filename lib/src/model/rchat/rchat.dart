@@ -42,6 +42,10 @@ class RChat {
   /// isGroupChat will be important for managing the roomIds.
   static bool isGroupChat = true;
 
+  /// this value will be used to order the messages in friend screen
+  /// this per user
+  static int topmostOrder = 0;
+
   /// 각 채팅방 마다 -1을 해서 order 한다.
   ///
   /// 더 확실히 하기 위해서는 order 를 저장 할 때, 이전 order 의 -1 로 하고, 저장이 된 후, createAt 의 -1 을 해 버린다.
@@ -101,45 +105,76 @@ class RChat {
   }
 
   /// Update chat room
+  /// /chat-rooms/{uid}/{chatRoomId}
   static void updateRoom({
     String? text,
     String? url,
   }) async {
-    if (isGroupChat) {
+    final room = await RChatRoomModel.fromRoomId(roomId);
+    if (room.isGroupChat == true) {
       final uids = await getUsersInRoom(roomId: roomId);
       for (var uid in uids) {
-        userRoomRef(uid: uid, roomId: roomId).set({
-          'text': text,
-          'url': url,
-          'order': RChat.roomMessageOrder[roomId],
-          'updatedAt': ServerValue.timestamp,
-          'newMessage': uid == myUid ? 0 : ServerValue.increment(1),
-          'isGroupChat': true,
-        });
+        userRoomUpdate(
+          uid: uid,
+          roomId: roomId,
+          text: text,
+          url: url,
+          room: room,
+          newMessage: uid == myUid ? 0 : ServerValue.increment(1),
+        );
       }
     } else {
       String otherUid = otherUidFromRoomId(roomId);
 
       // chat room under my room list
-      userRoomRef(uid: myUid!, roomId: otherUid).set({
-        'text': text,
-        'url': url,
-        'order': RChat.roomMessageOrder[roomId],
-        'updatedAt': ServerValue.timestamp,
-        'newMessage': 0,
-        'isGroupChat': false,
-      });
+      userRoomUpdate(
+        uid: myUid!,
+        roomId: otherUid,
+        text: text,
+        url: url,
+        room: room,
+        newMessage: 0,
+      );
 
       // chat room info update under other user room list
-      userRoomRef(uid: otherUid, roomId: myUid!).update({
-        'text': text,
-        'url': url,
-        'order': RChat.roomMessageOrder[roomId],
-        'updatedAt': ServerValue.timestamp,
-        'newMessage': ServerValue.increment(1),
-        'isGroupChat': false,
-      });
+      userRoomUpdate(
+        uid: otherUid,
+        roomId: myUid!,
+        text: text,
+        url: url,
+        room: room,
+      );
     }
+  }
+
+  /// Update chat room in chat-rooms
+  /// /chat-rooms/{uid}/{chatRoomId}
+  static void userRoomUpdate({
+    required String uid,
+    required String roomId,
+    String? text,
+    String? url,
+    required RChatRoomModel room,
+    // new message can be int or ServerValue.increment(1)
+    dynamic newMessage,
+  }) {
+    final userRoomRefVal = userRoomRef(uid: uid, roomId: roomId);
+    userRoomRefVal.update({
+      'text': text,
+      'url': url,
+      'name': room.name,
+      // TODO QUESTION how to use this?
+      // 'order': RChat.roomMessageOrder[roomId],
+      // this will be wrong for other users
+      // 'order': topmostOrder - 1,
+      'updatedAt': ServerValue.timestamp,
+      'newMessage': newMessage ?? ServerValue.increment(1),
+      'isGroupChat': true,
+    }).then((value) async {
+      // TODO replace
+      final updatedRoom = RChatRoomModel.fromSnapshot(await userRoomRefVal.get());
+      userRoomRefVal.update({'order': -(updatedRoom.updatedAt ?? 0)});
+    });
   }
 
   /// 채팅방 나가기
