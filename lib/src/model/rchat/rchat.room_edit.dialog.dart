@@ -35,20 +35,10 @@ class _RChatRoomEditDialogState extends State<RChatRoomEditDialog> {
       actions: [
         ElevatedButton(
           onPressed: () async {
-            DatabaseReference roomRef = rtdb.ref(RChat.chatRoomDetailsPath).push();
-            roomRef.set({
-              'name': roomNameController.text,
-              'isGroupChat': true,
-              'isOpenGroupChat': open,
-              'createdAt': DateTime.now().millisecondsSinceEpoch,
-              'users': {
-                myUid: true,
-              },
-            });
-
-            dog('Pathhh ${roomRef.path}');
-
-            final room = RChatRoomModel.fromSnapshot(await getSnapshot(roomRef.path));
+            final room = await RChat.createGroup(
+              name: roomNameController.text,
+              isOpenGroupChat: open,
+            );
             await RChat.joinRoom(room: room);
 
             if (context.mounted) {

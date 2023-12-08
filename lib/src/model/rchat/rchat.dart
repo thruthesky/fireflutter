@@ -307,8 +307,27 @@ class RChat {
       if (isAlreadyJoined.value != true) {
         roomUsersRef(roomId: room.key).child(myUid!).set(true);
         updateRoom(text: room.text, url: room.url);
-        // TODO protocol
       }
     }
+  }
+
+  static Future<RChatRoomModel> createGroup({
+    required String name,
+    bool isOpenGroupChat = false,
+  }) async {
+    DatabaseReference roomRef = rtdb.ref(RChat.chatRoomDetailsPath).push();
+    await roomRef.set({
+      'name': name,
+      'isGroupChat': true,
+      'isOpenGroupChat': isOpenGroupChat,
+      'createdAt': DateTime.now().millisecondsSinceEpoch,
+      'users': {
+        myUid: true,
+      },
+    });
+
+    dog('createGroup(); ${roomRef.path}');
+
+    return RChatRoomModel.fromSnapshot(await getSnapshot(roomRef.path));
   }
 } // EO RChat
