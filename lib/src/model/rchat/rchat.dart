@@ -9,20 +9,13 @@ class RChat {
   ///
   ///
 
-  /// This one is used for each users
-  /// /chat-rooms/{uid}/{chatRoomId}
-  static const String chatRoomsPath = 'chat-rooms';
+  /// Chat room user ref at /chat-rooms/{user}
+  static userRef(uid) => rtdb.ref('chat-users/$uid');
 
-  /// This one is used for chat room details
-  /// /chat-room-details/{chatRoomId}/...
-  static const String chatRoomDetailsPath = 'chat-room-details';
+  /// Chat room ref at /chat-rooms/{user}/{room-id}
+  static DatabaseReference roomRef({required String uid, required String roomId}) => userRef(uid).child(roomId);
 
-  static DatabaseReference userRoomsRef({required String uid}) => rtdb.ref().child('$chatRoomsPath/$uid');
-  static DatabaseReference userRoomRef({required String uid, required String roomId}) =>
-      userRoomsRef(uid: uid).child(roomId);
-  static DatabaseReference roomDetailsRef({required String roomId}) => rtdb.ref().child('$chatRoomDetailsPath/$roomId');
-  static DatabaseReference messageRef({required String roomId}) => roomDetailsRef(roomId: roomId).child('messages');
-  static DatabaseReference roomUsersRef({required String roomId}) => roomDetailsRef(roomId: roomId).child('users');
+  static DatabaseReference messageRef({required String roomId}) => rtdb.ref().child('chat-messages/$roomId');
 
   ///
   /// 참고, roomId 를 입력 받지 않고, global 영역의 변수의 것을 사용한다. 이렇게 하는 이유는 화면 깜빡임을 줄이기 위해서
@@ -92,18 +85,6 @@ class RChat {
     });
   }
 
-  /// get all users in the chat room (uids only)
-  /// /chat-room-details/{chatRoomId}/users/{[uid]: true}
-  static Future<List<String>> getUsersInRoom({required String roomId}) async {
-    final snapshot = await roomUsersRef(roomId: roomId).get();
-    final users = Map<String, bool>.from((snapshot.value ?? {}) as Map)
-        .entries
-        .where((element) => element.value == true)
-        .map((e) => e.key)
-        .toList();
-    return users;
-  }
-
   /// Update chat room
   /// /chat-rooms/{uid}/{chatRoomId}
   static void updateRoom({
@@ -145,36 +126,6 @@ class RChat {
         room: room,
       );
     }
-  }
-
-  /// Update chat room in chat-rooms
-  /// /chat-rooms/{uid}/{chatRoomId}
-  static void userRoomUpdate({
-    required String uid,
-    required String roomId,
-    String? text,
-    String? url,
-    required RChatRoomModel room,
-    // new message can be int or ServerValue.increment(1)
-    dynamic newMessage,
-  }) {
-    final userRoomRefVal = userRoomRef(uid: uid, roomId: roomId);
-    userRoomRefVal.update({
-      'text': text,
-      'url': url,
-      'name': room.name,
-      // TODO QUESTION how to use this?
-      // 'order': RChat.roomMessageOrder[roomId],
-      // this will be wrong for other users
-      // 'order': topmostOrder - 1,
-      'updatedAt': ServerValue.timestamp,
-      'newMessage': newMessage ?? ServerValue.increment(1),
-      'isGroupChat': true,
-    }).then((value) async {
-      // TODO replace
-      final updatedRoom = RChatRoomModel.fromSnapshot(await userRoomRefVal.get());
-      userRoomRefVal.update({'order': -(updatedRoom.updatedAt ?? 0)});
-    });
   }
 
   /// 채팅방 나가기
