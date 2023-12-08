@@ -36,12 +36,16 @@ For group chat,
 ## Creating the RChatRoomModel
 
 
-You may create the chat room model programmatically. Just incase you know the chat room information but you want to get(load) it from database because it takes time. Then generate the room model programatically and pass it over that room list widget or chat input box widget.
+You may create the chat room model object programmatically. In case you want use the chat room model object immediately without loading it from database (since it would take time), You can use it like below.
 
 ```dart
-room = RChatRoomModel.fromJson({
-  'key': 'all',
-  'ref': RChat.roomsRef.child('all'),
-  'isGroupChat': true,
-});
+    room = RChatRoomModel.fromGroupId('all');
 ```
+
+`RChatRoomModel.fromGroupId(...)` creates a group chat room model object and make sure the chat room is really a gropu chat (Not a 1:1 chat). And after sometime later, you may load it from database like below.
+
+```dart
+    RChatRoomModel.fromReference(room.ref).then((value) => room = value);
+```
+
+The chat room object created by `RChatRoomModel.fromGroupId` or `RChatRoomModel.fromUid` is incomplete. For isntance, it does not have `users` field. So, you would loading it when you need it.

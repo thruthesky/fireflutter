@@ -25,19 +25,20 @@ class RChatMessageList extends StatefulWidget {
 class _RChatMessageListState extends State<RChatMessageList> {
   Widget? resultingWidget;
 
-  String get roomId => widget.room.key;
+  String get messageRoomId => widget.room.messageRoomId;
 
   @override
   Widget build(BuildContext context) {
     return FirebaseDatabaseQueryBuilder(
       /// We make the pageSize big so that it will fetch less, and less flickering.
       pageSize: 100,
-      query: RChat.messageRef(roomId: roomId).orderByChild('order'),
+      query: RChat.messageRef(roomId: messageRoomId).orderByChild('order'),
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
           /// FirebaseDatabaseQueryBuilder will set snapshot.isFetcing only one time when it is first loading.
-          dog('isFetcing');
-          RChat.resetRoomNewMessage(room: widget.room);
+          // dog('isFetcing');
+          //
+          RChat.resetMyRoomNewMessage(room: widget.room);
 
           if (resultingWidget != null) return resultingWidget!;
           return const Center(child: CircularProgressIndicator());
@@ -46,9 +47,10 @@ class _RChatMessageListState extends State<RChatMessageList> {
         if (snapshot.hasError) {
           return Text('Something went wrong! ${snapshot.error}');
         }
-        if (RChat.isLoadingForNewMessage(roomId, snapshot)) {
+
+        if (RChat.isLoadingNewMessage(messageRoomId, snapshot)) {
           /// newMessage 리셋
-          RChat.resetRoomNewMessage(room: widget.room);
+          RChat.resetMyRoomNewMessage(room: widget.room);
         }
 
         if (snapshot.docs.isEmpty) {
@@ -68,7 +70,7 @@ class _RChatMessageListState extends State<RChatMessageList> {
               }
               final message = RChatMessageModel.fromSnapshot(snapshot.docs[index]);
 
-              // RChat.resetRoomMessageOrder(roomId: widget.roomId, order: message.order);
+              RChat.resetRoomMessageOrder(roomId: messageRoomId, order: message.order);
 
               return RChatBubble(
                 message: message,

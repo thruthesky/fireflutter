@@ -16,8 +16,11 @@ class RChatRoomModel {
 
   /// [id] It returns the chat room id.
   ///
+  /// It is the node key of the chat room like the id in `/chat-rooms/{id}`.
+  /// To get the message node id for both of 1:1 chat and group chat for saving message, use [messageRoomId]
   ///
-  get id => key;
+  String get id => key;
+  String get messageRoomId => isSingleChat ? singleChatRoomId(id) : id;
 
   /// [path] is the path of the chat room.
   String get path => ref.path;
@@ -86,6 +89,12 @@ class RChatRoomModel {
       'master': master,
       'users': users,
     };
+  }
+
+  /// toString
+  @override
+  String toString() {
+    return 'RChatRoomModel(key: $key, text: $text, url: $url, updatedAt: $updatedAt, newMessage: $newMessage, isGroupChat: $isGroupChat, isOpenGroupChat: $isOpenGroupChat, name: $name, master: $master, users: $users)';
   }
 
   /// Returns a [RChatRoomModel] from a group id.

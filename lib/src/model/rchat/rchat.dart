@@ -36,7 +36,7 @@ class RChat {
       return;
     }
 
-    roomMessageOrder[room.id] = (roomMessageOrder[room.id] ?? 0) - 1;
+    roomMessageOrder[room.messageRoomId] = (roomMessageOrder[room.messageRoomId] ?? 0) - 1;
 
     /// 참고, 실제 메시지를 보내기 전에, 채팅방 자체를 먼저 업데이트 해 버린다.
     ///
@@ -47,11 +47,11 @@ class RChat {
     /// 즉, 0이 되어야하는데 1이 되는 상황이 발생한다. 그래서, updateRoom() 이 먼저 호출되어야 한다.
     updateRoom(room: room, text: text, url: url);
 
-    await messageRef(roomId: room.id).push().set({
+    await messageRef(roomId: room.messageRoomId).push().set({
       'uid': myUid,
       if (text != null) 'text': text,
       if (url != null) 'url': url,
-      'order': RChat.roomMessageOrder[room.id],
+      'order': RChat.roomMessageOrder[room.messageRoomId],
       'createdAt': ServerValue.timestamp,
     });
   }
@@ -83,16 +83,21 @@ class RChat {
         'isGroupChat': room.isGroupChat,
       });
     } else {
+      // Group chat rooms
       room.users?.entries.map(
-        (e) => roomRef(e.key, room.id).update(
-          {
-            'text': text,
-            'url': url,
-            'updatedAt': ServerValue.timestamp,
-            'newMessage': ServerValue.increment(1),
-            'isGroupChat': room.isGroupChat,
-          },
-        ),
+        (e) {
+          dog('user uid: ${e.key}');
+          roomRef(e.key, room.id).update(
+            {
+              'text': text,
+              'url': url,
+              'name': room.name,
+              'updatedAt': ServerValue.timestamp,
+              'newMessage': ServerValue.increment(1),
+              'isGroupChat': room.isGroupChat,
+            },
+          );
+        },
       );
     }
   }
@@ -140,12 +145,15 @@ class RChat {
 
   /// 채팅방의 메시지 순서(order)를 가져온다.
   /// 만약, [RChat.roomMessageOrder] 에 값이 없으면 0을 리턴한다.
-  static int getRoomMessageOrder(String roomId) {
-    return RChat.roomMessageOrder[roomId] ?? 0;
+  static int getRoomMessageOrder(String messageRoomId) {
+    return RChat.roomMessageOrder[messageRoomId] ?? 0;
   }
 
   /// 채팅방 정보 `/chat-rooms/$uid/$otherUid` 에서 newMessage 를 0 으로 초기화 한다.
-  static Future<void> resetRoomNewMessage({required RChatRoomModel room}) async {
+  ///
+  /// 특히, 내가 채팅방에 들어가 갈 때, 또는 내가 채팅방에 들어가 있는데, 새로운 메시지가 전달되어져 오는 경우,
+  /// 이 함수가 호출되어 그 채팅방의 새 메시지 수를 0으로 초기화 할 때 사용한다.
+  static Future<void> resetMyRoomNewMessage({required RChatRoomModel room}) async {
     await roomRef(myUid!, room.id).update(
       {
         'newMessage': 0,
@@ -154,14 +162,22 @@ class RChat {
     // print('--> resetRoomNewMessage: $roomId');
   }
 
-  /// 새로운 메시지가 전달되어져 왔는지 판단하는 함수이다.
+  /// 누군가 채팅을 해서, 새로운 메시지가 전달되어져 왔는지 판단하는 함수이다.
   ///
   /// 채팅방 목록을 하는 [RChatMessageList] 에서 사용 할 수 있으며, 새로운 메시지가 전달되었으면, newMessage 를
   /// 0 으로 저장해야 할 지, 판단하는 함수이다.
   ///
-  /// [roomId] 는 채팅방의 아이디이며, [snapshot] 은 [FirebaseDatabaseQueryBuilder] 의 snapshot 이다.
+  /// [messageRoomId] 는 채팅 메시지를 저장하는 노드 ID(채팅방 ID가 아님),
   ///
-  /// 새로운 메시가 전달되었다면 true 를 리턴한다.
+  /// [snapshot] 은 채팅방 안에서, 페이지 단위로 채팅을 로딩 할 때, 그 채팅 노드를 담고 있는
+  /// [FirebaseDatabaseQueryBuilder] 의 snapshot 이다.
+  /// 처음 채팅방 접속 또는 채팅방을 위로 스크롤 할 때, 또는 누군가 새로운 채팅을 할 때, 새로운 채팅 목록 정보를 가져와서
+  /// 화면에 보여줄 때, 이 함수가 호출된다. 이 때, [snapshot] 이 그 채팅 메시지 목록을 가지고 있다.
+  ///
+  ///
+  /// 이 함수는, 누군가 채팅을 해서, 새로운 메시가 전달되었다면 true 를 리턴한다. 화면 스크롤이나, 처음 채팅방 접속해서
+  /// 채팅 메시지를 가져오는 경우에는 false 를 리턴한다.
+  ///
   /// 처음 로딩(첫 페이지)하거나, Hot reload 를 하거나, 채팅방을 위로 스크롤 업 해서 이전 데이터 목록을 가져오는 경우에는
   /// false 를 리턴한다.
   ///
@@ -172,22 +188,23 @@ class RChat {
   /// 채팅방으로 접속을 하면, `if (currentMessageOrder == 0 ) return fales` 에 의해서 항상 false 가
   /// 리턴된다. 그래서, 처음 채팅방에 진입을 할 때에는 [snapshot.isFetching] 을 통해서 newMessage 를 초기화
   /// 해야 한다.
-  static bool isLoadingForNewMessage(String roomId, FirebaseQueryBuilderSnapshot snapshot) {
+  static bool isLoadingNewMessage(String messageRoomId, FirebaseQueryBuilderSnapshot snapshot) {
     if (snapshot.docs.isEmpty) return false;
 
     final lastMessage = RChatMessageModel.fromSnapshot(snapshot.docs.first);
     final lastMessageOrder = lastMessage.order as int;
 
-    final currentMessageOrder = getRoomMessageOrder(roomId);
+    final currentMessageOrder = getRoomMessageOrder(messageRoomId);
 
-    /// 이전에 로드된 채팅 메시지가 없는가? 그렇다면 처음 로드된 것이므로 false 를 리턴한다.
+    /// 이전에 로드된 채팅 메시지가 없는가? 누군가 채팅을 한 것이 아니라, 채팅방에 접속해서, 처음 로드된 것이므로 false 를 리턴한다.
     if (currentMessageOrder == 0) {
       return false;
     }
 
     /// 이전에 로드된 채팅 메시지가 있는가?
     /// 그렇다면 이전에 로드된 채팅 메시지의 order 와 현재 로드된 채팅 메시지의 order 를 비교한다.
-    /// 만약 이전에 로드된 채팅 메시지의 order 가 현재 로드된 채팅 메시지의 order 보다 크다면, 새로운 메시지가 있다는 것이다.
+    /// 만약 이전에 로드된 채팅 메시지의 order 가 현재 로드된 채팅 메시지의 order 보다 크다면,
+    /// 누군가 채팅을 해서 새로운 메시지가 있다는 것이다.
     if (currentMessageOrder > lastMessageOrder) {
       return true;
     }
