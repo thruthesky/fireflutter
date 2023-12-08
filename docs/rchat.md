@@ -31,3 +31,17 @@ For group chat,
 
 
 
+
+
+## Creating the RChatRoomModel
+
+
+You may create the chat room model programmatically. Just incase you know the chat room information but you want to get(load) it from database because it takes time. Then generate the room model programatically and pass it over that room list widget or chat input box widget.
+
+```dart
+room = RChatRoomModel.fromJson({
+  'key': 'all',
+  'ref': RChat.roomsRef.child('all'),
+  'isGroupChat': true,
+});
+```

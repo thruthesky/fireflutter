@@ -8,15 +8,21 @@ class RChatRoomModel {
   String? url;
   int? updatedAt;
   int? newMessage;
-  bool? isGroupChat;
+  bool isGroupChat;
+  bool isOpenGroupChat;
+  String? name;
+  String? master;
+  Map<String, bool>? users;
 
   /// [id] It returns the chat room id.
   ///
-  /// This is used to save the messages under `/chat-messages/{id}/[messages]`.
-  get id => isGroupChat == true ? key : RChat.singleChatRoomId(key);
+  ///
+  get id => key;
 
   /// [path] is the path of the chat room.
-  String get path => isGroupChat == true ? '/chat-rooms/$key' : '/chat-rooms/${RChat.singleChatRoomId(key)}';
+  String get path => ref.path;
+
+  bool get isSingleChat => !isGroupChat;
 
   RChatRoomModel({
     required this.ref,
@@ -25,7 +31,11 @@ class RChatRoomModel {
     this.url,
     this.updatedAt,
     this.newMessage,
-    this.isGroupChat,
+    required this.isGroupChat,
+    required this.isOpenGroupChat,
+    this.name,
+    this.master,
+    this.users,
   });
 
   /// [fromSnapshot] It creates a [RChatRoomModel] from a [DataSnapshot].
@@ -42,6 +52,12 @@ class RChatRoomModel {
     return RChatRoomModel.fromJson(json);
   }
 
+  /// Return RChatRoomModel from a reference
+  static Future<RChatRoomModel> fromReference(DatabaseReference ref) async {
+    final event = await ref.once();
+    return RChatRoomModel.fromSnapshot(event.snapshot);
+  }
+
   factory RChatRoomModel.fromJson(Map<dynamic, dynamic> json) {
     return RChatRoomModel(
       ref: json['ref'],
@@ -50,7 +66,11 @@ class RChatRoomModel {
       url: json['url'] as String?,
       updatedAt: json['updatedAt'] is int ? json['updatedAt'] : int.parse(json['updatedAt'] ?? '0'),
       newMessage: json['newMessage'] ?? 0,
-      isGroupChat: json['isGroupChat'],
+      isGroupChat: json['isGroupChat'] ?? false,
+      isOpenGroupChat: json['isOpenGroupChat'] ?? false,
+      name: json['name'] as String?,
+      master: json['master'] as String?,
+      users: json['users'] == null ? null : Map<String, bool>.from(json['users']),
     );
   }
   Map<String, dynamic> toJson() {
@@ -61,6 +81,62 @@ class RChatRoomModel {
       'updatedAt': updatedAt,
       'newMessage': newMessage,
       'isGroupChat': isGroupChat,
+      'isOpenGroupChat': isOpenGroupChat,
+      'name': name,
+      'master': master,
+      'users': users,
     };
+  }
+
+  /// Returns a [RChatRoomModel] from a group id.
+  ///
+  /// Note that, single chat room ref is like /chat-rooms/uidA/uidB
+  ///   while group chat room ref is like /chat-rooms/groupId.
+  ///
+  factory RChatRoomModel.fromGroupId(String id) {
+    return RChatRoomModel.fromJson({
+      'key': id,
+      'ref': RChat.roomsRef.child(id),
+      'isGroupChat': true,
+    });
+  }
+
+  /// Returns a [RChatRoomModel] from a single chat room id.
+  factory RChatRoomModel.fromUid(String uidA, String uidB) {
+    return RChatRoomModel.fromJson({
+      'key': uidB,
+      'ref': RChat.roomRef(uidA, uidB),
+      'isGroupChat': false,
+      'isOpenGroupChat': false,
+    });
+  }
+
+  /// Return uid list of chat room members except mine.
+  ///
+  /// Don't return the uid if the user unsubscribed the chat room.
+  Future<List<String>> getOtherUids() async {
+    return [];
+  }
+
+  /// This is for group chat only.
+  /// It creates the chat room information and it read and returns. Don't think about the speed of reading the data.
+  ///
+  static Future<RChatRoomModel> create({
+    required String name,
+    required bool isGroupChat,
+    required bool isOpenGroupChat,
+  }) async {
+    final ref = RChat.roomsRef.push();
+    final data = {
+      'name': name,
+      'isGroupChat': isGroupChat,
+      'isOpenGroupChat': isOpenGroupChat,
+      'createdAt': ServerValue.timestamp,
+      'users': {myUid: true},
+      'master': myUid,
+    };
+    await ref.set(data);
+
+    return fromReference(ref);
   }
 }

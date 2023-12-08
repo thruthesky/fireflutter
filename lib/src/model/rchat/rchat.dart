@@ -8,29 +8,24 @@ class RChat {
   /// Firebase Realtime Database Chat Functions
   ///
   ///
-
-  static DatabaseReference roomRef({required String uid}) => rtdb.ref().child('chat-rooms/$uid');
-  static DatabaseReference messageRef({required String roomId}) =>
-      rtdb.ref().child('chat-messages').child(roomId).child('messages');
-
   ///
-  /// 참고, roomId 를 입력 받지 않고, global 영역의 변수의 것을 사용한다. 이렇게 하는 이유는 화면 깜빡임을 줄이기 위해서
-  /// 이다. roomId 가 변경 될 때 마다, 채팅 메시지 입력 창 위젯과 같은 위젯들에 roomId 를 전달하기 위해서, 해당 위젯들을
-  /// rebuild 하는 상황이 발생하는데, global 영역에 roomId 를 저장하므로서 위젯 rebuild 를 줄여, 화면 깜빡임을 줄이는
-  /// 역할을 한다.
-  static String roomId = 'all';
+  static DatabaseReference get roomsRef => rtdb.ref().child('chat-rooms');
+  static DatabaseReference roomRef(String uidA, String uidB) => rtdb.ref().child('chat-rooms/$uidA/$uidB');
+  static DatabaseReference messageRef({required String roomId}) => rtdb.ref().child('chat-messages').child(roomId);
+
+  /// [groupUserRef] is the reference to the users node under the group chat room. Ex) /chat-rooms/{roomId}/users
+  static DatabaseReference groupUserRef(String roomId) => rtdb.ref().child('chat-rooms/$roomId/users');
 
   /// 각 채팅방 마다 -1을 해서 order 한다.
   ///
   /// 더 확실히 하기 위해서는 order 를 저장 할 때, 이전 order 의 -1 로 하고, 저장이 된 후, createAt 의 -1 을 해 버린다.
   static final Map<String, int> roomMessageOrder = {};
 
-  static setRoomId(String roomId) => RChat.roomId = roomId;
-
   /// 채팅 메시지 전송
   ///
   ///
   static Future<void> sendMessage({
+    required RChatRoomModel room,
     String? text,
     String? url,
   }) async {
@@ -41,7 +36,7 @@ class RChat {
       return;
     }
 
-    roomMessageOrder[roomId] = (roomMessageOrder[roomId] ?? 0) - 1;
+    roomMessageOrder[room.id] = (roomMessageOrder[room.id] ?? 0) - 1;
 
     /// 참고, 실제 메시지를 보내기 전에, 채팅방 자체를 먼저 업데이트 해 버린다.
     ///
@@ -50,44 +45,56 @@ class RChat {
     /// B 의 채팅방의 newMessage 가 0 으로 된다.
     /// 그리고, 나서 updateRoom() 을 하면, B 의 채팅 메시지가 1이 되는 것이다.
     /// 즉, 0이 되어야하는데 1이 되는 상황이 발생한다. 그래서, updateRoom() 이 먼저 호출되어야 한다.
-    updateRoom(text: text, url: url);
+    updateRoom(room: room, text: text, url: url);
 
-    await messageRef(roomId: roomId).push().set({
+    await messageRef(roomId: room.id).push().set({
       'uid': myUid,
       if (text != null) 'text': text,
       if (url != null) 'url': url,
-      'order': RChat.roomMessageOrder[roomId],
+      'order': RChat.roomMessageOrder[room.id],
       'createdAt': ServerValue.timestamp,
     });
   }
 
   /// Update chat room
   static Future<void> updateRoom({
+    required RChatRoomModel room,
     String? text,
     String? url,
   }) async {
     //
-    String otherUid = otherUidFromRoomId(roomId);
 
     // chat room under my room list
-    roomRef(uid: myUid!).child(otherUid).set({
+    roomRef(myUid!, room.id).set({
       'text': text,
       'url': url,
-      'order': RChat.roomMessageOrder[roomId],
       'updatedAt': ServerValue.timestamp,
       'newMessage': 0,
-      'isGroupChat': isGroupChat(roomId),
+      'isGroupChat': room.isGroupChat,
     });
 
-// chat room info update under other user room list
-    roomRef(uid: otherUid).child(myUid!).update({
-      'text': text,
-      'url': url,
-      'order': RChat.roomMessageOrder[roomId],
-      'updatedAt': ServerValue.timestamp,
-      'newMessage': ServerValue.increment(1),
-      'isGroupChat': isGroupChat(roomId),
-    });
+    if (room.isSingleChat) {
+      // chat room info update under other user room list
+      roomRef(room.id, myUid!).update({
+        'text': text,
+        'url': url,
+        'updatedAt': ServerValue.timestamp,
+        'newMessage': ServerValue.increment(1),
+        'isGroupChat': room.isGroupChat,
+      });
+    } else {
+      room.users?.entries.map(
+        (e) => roomRef(e.key, room.id).update(
+          {
+            'text': text,
+            'url': url,
+            'updatedAt': ServerValue.timestamp,
+            'newMessage': ServerValue.increment(1),
+            'isGroupChat': room.isGroupChat,
+          },
+        ),
+      );
+    }
   }
 
   /// 채팅방 나가기
@@ -112,13 +119,13 @@ class RChat {
 
   static leaveGroupChat({required RChatRoomModel room}) {
     /// 그룹 채팅방에서 나가기
-    roomRef(uid: myUid!).child(room.key).remove();
-    roomRef(uid: room.key).child('users').child(myUid!).remove();
+    roomRef(myUid!, room.key).remove();
+    groupUserRef(room.key).child(myUid!).remove();
   }
 
   static leaveSingleChat({required RChatRoomModel room}) {
     /// 1:1 채팅방에서 나가기
-    roomRef(uid: myUid!).child(room.key).remove();
+    roomRef(myUid!, room.key).remove();
   }
 
   /// 채팅방의 메시지 순서(order)를 담고 있는 [RChat.roomMessageOrder] 를 초기화 한다.
@@ -138,12 +145,10 @@ class RChat {
   }
 
   /// 채팅방 정보 `/chat-rooms/$uid/$otherUid` 에서 newMessage 를 0 으로 초기화 한다.
-  static Future<void> resetRoomNewMessage({required String roomId}) async {
-    String otherUid = otherUidFromRoomId(roomId);
-    await roomRef(uid: myUid!).child(otherUid).update(
+  static Future<void> resetRoomNewMessage({required RChatRoomModel room}) async {
+    await roomRef(myUid!, room.id).update(
       {
         'newMessage': 0,
-        'isGroupChat': isGroupChat(roomId),
       },
     );
     // print('--> resetRoomNewMessage: $roomId');
@@ -192,29 +197,51 @@ class RChat {
     return false;
   }
 
-  /// 일대일 채팅방 ID 를 만든다.
+  /// For group chat, the user uid is added to /chat-rooms/{groupChatId}/users/{[uid]: true}
+  /// For 1:1 chat, create a chat room info under my chat room list only. Not the other user's.
   ///
-  /// [myUid] 와 [otherUserUid] 를 정렬해서 합친다. 채팅 메시지를 저장할 /chat-messages/ 노드의 하위 노드 아이디가 된다.
-  ///
-  static String singleChatRoomId(String otherUserUid) {
-    final uids = [myUid, otherUserUid];
-    uids.sort();
-    return uids.join('-');
-  }
-
-  /// For group chat, the login user uid is added to /chat-rooms/{groupChatId}/users/{[uid]: true}
-  ///
-  /// Note, it's not that harmful to set the same uid to true again if it happens only on the chat room entering.
+  /// Note, it's not that harmful to set the same uid to true over again and if it happens
+  /// only one time when the user enters the chat room.
   ///
   ///
   static Future joinRoom({required RChatRoomModel room}) async {
     if (room.isGroupChat == true) {
-      /// 그룹 채팅방에 참여하기
-      await set(room.path, {
+      /// Add the login user's uid into the group chat room.
+      await update(room.path, {
         'users': {
           myUid: true,
         },
       });
+
+      /// Add the group chat info under the login user's chat room list.
+      await roomRef(myUid!, room.id).update({
+        'name': room.name,
+        'isGroupChat': true,
+        'isOpenGroupChat': room.isOpenGroupChat,
+        'updatedAt': ServerValue.timestamp,
+        'newMessage': 0,
+      });
+    } else {
+      await roomRef(myUid!, room.id).update({
+        'isGroupChat': false,
+        'isOpenGroupChat': false,
+        'updatedAt': ServerValue.timestamp,
+        'newMessage': 0,
+      });
     }
+  }
+
+  static Future createRoom({
+    required String name,
+    required bool isGroupChat,
+    required bool isOpenGroupChat,
+  }) async {
+    final room = await RChatRoomModel.create(
+      name: name,
+      isGroupChat: isGroupChat,
+      isOpenGroupChat: isOpenGroupChat,
+    );
+
+    return room;
   }
 } // EO RChat

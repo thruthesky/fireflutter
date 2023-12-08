@@ -227,7 +227,9 @@ class MessagingService {
   /// if action is null and topic is not null, then tokens and uids will be ignored
   /// if action and topic is null, and tokens is not null then uids will be ignored
   /// if action, topic, and tokens are null, then uids will be used
-  Future<DocumentReference> queue({
+  ///
+  ///
+  Future<DocumentReference?> queue({
     required String title,
     required String body,
     List<String>? uids,
@@ -241,7 +243,11 @@ class MessagingService {
     String? action,
     String? categoryId,
     Map<String, dynamic>? extra,
-  }) {
+  }) async {
+    if (uids == null && tokens == null && topic == null) {
+      return null;
+    }
+
     Json data = {
       'title': title,
       'body': body,
@@ -262,7 +268,7 @@ class MessagingService {
 
     // print('data; $data');
 
-    return messageQueueCol.add(data);
+    return await messageQueueCol.add(data);
   }
 
   /// Parse message data from [RemoteMessage.data]

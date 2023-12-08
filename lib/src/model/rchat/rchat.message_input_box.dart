@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 class RChatMessageInputBox extends StatefulWidget {
   const RChatMessageInputBox({
     super.key,
+    required this.room,
     this.cameraIcon,
     this.sendIcon,
     this.onProgress,
     this.onSend,
   });
+
+  final RChatRoomModel room;
 
   final Widget? cameraIcon;
   final Widget? sendIcon;
@@ -16,7 +19,7 @@ class RChatMessageInputBox extends StatefulWidget {
   final Function(double?)? onProgress;
 
   /// [double] is null when upload is completed.
-  final Function(String? messageText)? onSend;
+  final void Function({String? text, String? url})? onSend;
 
   @override
   State<RChatMessageInputBox> createState() => _ChatMessageInputBoxState();
@@ -56,7 +59,8 @@ class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
                         }),
                     complete: () => widget.onProgress?.call(null) ?? setState(() => progress = null),
                   );
-                  await RChat.sendMessage(url: url);
+                  await RChat.sendMessage(room: widget.room, url: url);
+                  widget.onSend?.call(text: null, url: url);
                 },
               ),
               suffixIcon: Row(
@@ -65,11 +69,11 @@ class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
                   IconButton(
                     icon: widget.sendIcon ?? const Icon(Icons.send),
                     onPressed: () async {
-                      String trimText = inputController.text.trim();
-                      if (trimText.isEmpty) return;
-                      await RChat.sendMessage(text: trimText);
+                      String text = inputController.text.trim();
+                      if (text.isEmpty) return;
+                      await RChat.sendMessage(room: widget.room, text: text);
                       inputController.clear();
-                      widget.onSend?.call(trimText);
+                      widget.onSend?.call(text: text, url: null);
                     },
                   ),
                 ],
