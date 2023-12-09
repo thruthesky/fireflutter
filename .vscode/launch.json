@@ -23,13 +23,13 @@
       "deviceId": "iPhone11ProMax"
     },
     {
-      "name": "PhiLov - iPhone SE 2nd",
+      "name": "PhiLov - iPhone SE",
       "request": "launch",
       "type": "dart",
       "cwd": "apps/philov",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "deviceId": "00008030-000D445A11A3802E"
+      "deviceId": "iPhone SE"
     },
     {
       "name": "PhiLov - iPad",

@@ -71,6 +71,10 @@ class UserService {
   User? admin;
   String? adminUid;
 
+  /// 사용자 문서 로드 완료되면 이벤트 발생
+  ///
+  /// 참고로, Firebase 로그인을 했는지 확인은 [userChanges] 를 사용하고, 문서가 준비되었는지 확인은 [documentChanges] 를 사용한다.
+  ///
   /// [documentChanges] fires event for when
   /// - app boots.
   ///   - when app boots, if user didn't login in, it will be null.
@@ -80,6 +84,7 @@ class UserService {
   ///   - null if the user signed out.
   ///   - null for the short time when the app is loading(reading) the user document.
   ///   - [event.data.exists] will be false if the user document does not exist.
+  ///
   ///
   /// null 이면 아직 로드를 안했다는 뜻이다. 즉, 로딩중이라는 뜻이다. 로그인을 했는지 하지 않았는지 여부는 알 수 없다.
   /// 만약, 로그인을 했는지 여부를 알고 싶다면, [nullableUser] 가 null 인지 아닌지를 확인하면 된다.
@@ -209,7 +214,7 @@ class UserService {
     this.onLike = onLike;
     this.enableNotificationOnLike = enableNotificationOnLike;
 
-    /// Listener for the login event
+    /// Listener for the Firebase login event. Not the user document load event.
     ///
     /// This listens the user login and logout event. And sets the [nullableUser].
     ///

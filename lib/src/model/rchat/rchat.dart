@@ -21,11 +21,15 @@ class RChat {
   /// 더 확실히 하기 위해서는 order 를 저장 할 때, 이전 order 의 -1 로 하고, 저장이 된 후, createAt 의 -1 을 해 버린다.
   static final Map<String, int> roomMessageOrder = {};
 
+  /// Set the current room.
+  static RChatRoomModel? _currentRoom;
+  static RChatRoomModel get currentRoom => _currentRoom!;
+  static setCurrentRoom(RChatRoomModel room) => _currentRoom = room;
+
   /// 채팅 메시지 전송
   ///
   ///
   static Future<void> sendMessage({
-    required RChatRoomModel room,
     String? text,
     String? url,
   }) async {
@@ -36,7 +40,7 @@ class RChat {
       return;
     }
 
-    roomMessageOrder[room.messageRoomId] = (roomMessageOrder[room.messageRoomId] ?? 0) - 1;
+    roomMessageOrder[currentRoom.messageRoomId] = (roomMessageOrder[currentRoom.messageRoomId] ?? 0) - 1;
 
     /// 참고, 실제 메시지를 보내기 전에, 채팅방 자체를 먼저 업데이트 해 버린다.
     ///
@@ -45,60 +49,73 @@ class RChat {
     /// B 의 채팅방의 newMessage 가 0 으로 된다.
     /// 그리고, 나서 updateRoom() 을 하면, B 의 채팅 메시지가 1이 되는 것이다.
     /// 즉, 0이 되어야하는데 1이 되는 상황이 발생한다. 그래서, updateRoom() 이 먼저 호출되어야 한다.
-    updateRoom(room: room, text: text, url: url);
+    updateRoom(text: text, url: url);
 
-    await messageRef(roomId: room.messageRoomId).push().set({
+    await messageRef(roomId: currentRoom.messageRoomId).push().set({
       'uid': myUid,
       if (text != null) 'text': text,
       if (url != null) 'url': url,
-      'order': RChat.roomMessageOrder[room.messageRoomId],
+      'order': RChat.roomMessageOrder[currentRoom.messageRoomId],
       'createdAt': ServerValue.timestamp,
     });
   }
 
-  /// Update chat room
-  static Future<void> updateRoom({
-    required RChatRoomModel room,
+  static _lastMessage({
     String? text,
     String? url,
-  }) async {
-    //
-
-    // chat room under my room list
-    roomRef(myUid!, room.id).set({
+    int? newMessage,
+  }) {
+    return {
+      'name': currentRoom.name,
       'text': text,
       'url': url,
       'updatedAt': ServerValue.timestamp,
-      'newMessage': 0,
-      'isGroupChat': room.isGroupChat,
-    });
+      'newMessage': newMessage ?? ServerValue.increment(1),
+      'isGroupChat': currentRoom.isGroupChat,
+      'isOpenGroupChat': currentRoom.isOpenGroupChat,
+    };
+  }
 
-    if (room.isSingleChat) {
-      // chat room info update under other user room list
-      roomRef(room.id, myUid!).update({
-        'text': text,
-        'url': url,
-        'updatedAt': ServerValue.timestamp,
-        'newMessage': ServerValue.increment(1),
-        'isGroupChat': room.isGroupChat,
-      });
-    } else {
-      // Group chat rooms
-      room.users?.entries.map(
-        (e) {
-          dog('user uid: ${e.key}');
-          roomRef(e.key, room.id).update(
-            {
-              'text': text,
-              'url': url,
-              'name': room.name,
-              'updatedAt': ServerValue.timestamp,
-              'newMessage': ServerValue.increment(1),
-              'isGroupChat': room.isGroupChat,
-            },
-          );
-        },
+  /// 나의 채팅방 정보와 상대방의 채팅방 정보를 업데이트한다.
+  ///
+  /// 그룹 챗방에서는, 채팅방에 있는 모든 사용자의 채팅방 목록을 업데이트 한다.
+  /// 즉, 이 함수에서는 그룹 채팅의 경우, 그룹 채팅방 정보를 업데이트하지는 않는다.
+  static Future<void> updateRoom({
+    String? text,
+    String? url,
+  }) async {
+    /// 일대일 채팅방의 경우, 나와 상대방의 메시지 업데이트
+    if (currentRoom.isSingleChat) {
+      /// Update last chat message under my chat room list
+      roomRef(myUid!, currentRoom.id).set(
+        _lastMessage(
+          text: text,
+          url: url,
+          newMessage: 0,
+        ),
       );
+
+      // chat room info update under other user room list
+      roomRef(currentRoom.id, myUid!).update(
+        _lastMessage(
+          text: text,
+          url: url,
+        ),
+      );
+    } else {
+      /// 그룹 채팅방의 경우, 모든 사용자(나를 포함)의 채팅방 목록을 업데이트 한다.
+      ///
+      for (final e in currentRoom.users?.entries.toList() ?? []) {
+        dog('user uid: ${e.key}');
+        final uid = e.key;
+        roomRef(uid, currentRoom.id).update(
+          _lastMessage(
+            text: text,
+            url: url,
+            newMessage: uid == myUid ? 0 : null,
+          ),
+        );
+      }
     }
   }
 
@@ -224,11 +241,13 @@ class RChat {
   static Future joinRoom({required RChatRoomModel room}) async {
     if (room.isGroupChat == true) {
       /// Add the login user's uid into the group chat room.
-      await update(room.path, {
-        'users': {
-          myUid: true,
-        },
-      });
+      // await update(room.path, {
+      //   'users': {
+      //     myUid: true,
+      //   },
+      // });
+
+      await set("${room.path}/users/$myUid", true);
 
       /// Add the group chat info under the login user's chat room list.
       await roomRef(myUid!, room.id).update({

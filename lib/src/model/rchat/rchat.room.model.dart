@@ -11,6 +11,7 @@ class RChatRoomModel {
   bool isGroupChat;
   bool isOpenGroupChat;
   String? name;
+  String? description;
   String? master;
   Map<String, bool>? users;
 
@@ -37,6 +38,7 @@ class RChatRoomModel {
     required this.isGroupChat,
     required this.isOpenGroupChat,
     this.name,
+    this.description,
     this.master,
     this.users,
   });
@@ -55,12 +57,6 @@ class RChatRoomModel {
     return RChatRoomModel.fromJson(json);
   }
 
-  /// Return RChatRoomModel from a reference
-  static Future<RChatRoomModel> fromReference(DatabaseReference ref) async {
-    final event = await ref.once();
-    return RChatRoomModel.fromSnapshot(event.snapshot);
-  }
-
   factory RChatRoomModel.fromJson(Map<dynamic, dynamic> json) {
     return RChatRoomModel(
       ref: json['ref'],
@@ -72,6 +68,7 @@ class RChatRoomModel {
       isGroupChat: json['isGroupChat'] ?? false,
       isOpenGroupChat: json['isOpenGroupChat'] ?? false,
       name: json['name'] as String?,
+      description: json['description'] as String?,
       master: json['master'] as String?,
       users: json['users'] == null ? null : Map<String, bool>.from(json['users']),
     );
@@ -86,6 +83,7 @@ class RChatRoomModel {
       'isGroupChat': isGroupChat,
       'isOpenGroupChat': isOpenGroupChat,
       'name': name,
+      'description': description,
       'master': master,
       'users': users,
     };
@@ -94,7 +92,7 @@ class RChatRoomModel {
   /// toString
   @override
   String toString() {
-    return 'RChatRoomModel(key: $key, text: $text, url: $url, updatedAt: $updatedAt, newMessage: $newMessage, isGroupChat: $isGroupChat, isOpenGroupChat: $isOpenGroupChat, name: $name, master: $master, users: $users)';
+    return 'RChatRoomModel(${toJson()})';
   }
 
   /// Returns a [RChatRoomModel] from a group id.
@@ -102,6 +100,7 @@ class RChatRoomModel {
   /// Note that, single chat room ref is like /chat-rooms/uidA/uidB
   ///   while group chat room ref is like /chat-rooms/groupId.
   ///
+  /// This is a factory. So, you can use it for creating a chat room model object programmatically.
   factory RChatRoomModel.fromGroupId(String id) {
     return RChatRoomModel.fromJson({
       'key': id,
@@ -118,6 +117,23 @@ class RChatRoomModel {
       'isGroupChat': false,
       'isOpenGroupChat': false,
     });
+  }
+
+  /// Return RChatRoomModel from a reference
+  ///
+  ///
+  static Future<RChatRoomModel> fromReference(DatabaseReference ref) async {
+    final event = await ref.once();
+    return RChatRoomModel.fromSnapshot(event.snapshot);
+  }
+
+  /// Load data from database and return a [RChatRoomModel] from a group chat room id.
+  ///
+  /// Warning, this is for group chat only.
+  ///
+  static Future<RChatRoomModel> get(String id) {
+    final ref = RChat.roomsRef.child(id);
+    return fromReference(ref);
   }
 
   /// Return uid list of chat room members except mine.
