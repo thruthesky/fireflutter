@@ -30,6 +30,10 @@ For group chat,
 
 
 
+## Database structure
+
+- `Flag string` is the string of the user value under `/chat-rooms/`
+- 
 
 
 
@@ -49,3 +53,52 @@ You may create the chat room model object programmatically. In case you want use
 ```
 
 The chat room object created by `RChatRoomModel.fromGroupId` or `RChatRoomModel.fromUid` is incomplete. For isntance, it does not have `users` field. So, you would loading it when you need it.
+
+
+## Chat room screen
+
+
+You must set the current chat room's model with `RChat.setCurrentRoom()`. This will set the current chat room model object and keep it over the whole chat flow. The reason why we need it is because Flutter can pass value over reference but unless the state is updated, the children widget cannot use the updated value. So, save the current chat room object into a global space for the value update. It is necessary for accessing updated chat room info. for instance, sending a message to all users in the room. and if a user enters into the room, all the child widget should know the update of chat room info.
+
+Example of updating chat room info.
+
+```dart
+subscription = room.ref.onValue.listen((event) {
+	if (event.snapshot.exists) {
+	RChat.setCurrentRoom(RChatRoomModel.fromSnapshot(event.snapshot));
+	}
+});
+```
+
+## Subscribing a chat room for push notification
+
+
+If the subscription flag is set on other node or firestore, it has to read another data from server. And it costs. So, it being saved as the flag string.
+
+
+
+
+## Sending a message
+
+
+When a user chats
+
+- If it's 1:1 chat room,
+  - the message will be saved under `/chat-messages/{chat-room-id}`
+  - the chat room will be updated on both of the login user and the other user.
+    - `/chat-rooms/{login-user-uid}/{other-user-uid}` for the login user's chat room list.
+    - `/chat-rooms/{other-user-uid}/{login-user-uid}` for the login user's chat room list.
+  - the chat room info will have `name` field
+    - For sender, the name will be the receiver's name.
+    - For receiver, the name will be the sender's name.
+
+
+
+
+When sending a message, 
+
+
+
+
+
+

@@ -28,6 +28,7 @@ class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         if (progress != null && !progress!.isNaN) LinearProgressIndicator(value: progress),
         const Divider(),

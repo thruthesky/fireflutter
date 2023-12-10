@@ -1,7 +1,7 @@
 {
   "dart.lineLength": 120,
   "editor.codeActionsOnSave": {
-    "source.fixAll": true
+    "source.fixAll": "explicit"
   },
   "workbench.editorAssociations": {
     "workbench.editor.highlightModifiedTab": "true"

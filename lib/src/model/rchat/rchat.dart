@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:path/path.dart';
 
 /// RChat
 ///
@@ -60,13 +61,28 @@ class RChat {
     });
   }
 
-  static _lastMessage({
+  /// see rchat.md
+  ///
+  /// [receiverUid] is the one who will receive the message.
+  static Future<Map<String, dynamic>> _lastMessage({
+    required String receiverUid,
     String? text,
     String? url,
     int? newMessage,
-  }) {
+  }) async {
+    String name;
+    if (currentRoom.isGroupChat) {
+      name = currentRoom.name ?? '';
+    } else {
+      if (receiverUid == myUid) {
+        final user = await UserService.instance.get(receiverUid);
+        name = user?.name ?? 'Receiver has no name';
+      } else {
+        name = my?.name ?? 'Sender has no name';
+      }
+    }
     return {
-      'name': currentRoom.name,
+      'name': name,
       'text': text,
       'url': url,
       'updatedAt': ServerValue.timestamp,
@@ -88,7 +104,8 @@ class RChat {
     if (currentRoom.isSingleChat) {
       /// Update last chat message under my chat room list
       roomRef(myUid!, currentRoom.id).set(
-        _lastMessage(
+        await _lastMessage(
+          receiverUid: myUid!,
           text: text,
           url: url,
           newMessage: 0,
@@ -97,7 +114,8 @@ class RChat {
 
       // chat room info update under other user room list
       roomRef(currentRoom.id, myUid!).update(
-        _lastMessage(
+        await _lastMessage(
+          receiverUid: currentRoom.id,
           text: text,
           url: url,
         ),
@@ -109,7 +127,8 @@ class RChat {
         dog('user uid: ${e.key}');
         final uid = e.key;
         roomRef(uid, currentRoom.id).update(
-          _lastMessage(
+          await _lastMessage(
+            receiverUid: uid,
             text: text,
             url: url,
             newMessage: uid == myUid ? 0 : null,
@@ -240,13 +259,6 @@ class RChat {
   ///
   static Future joinRoom({required RChatRoomModel room}) async {
     if (room.isGroupChat == true) {
-      /// Add the login user's uid into the group chat room.
-      // await update(room.path, {
-      //   'users': {
-      //     myUid: true,
-      //   },
-      // });
-
       await set("${room.path}/users/$myUid", true);
 
       /// Add the group chat info under the login user's chat room list.
