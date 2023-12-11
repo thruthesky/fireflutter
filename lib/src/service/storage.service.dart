@@ -194,9 +194,13 @@ class StorageService {
     required dynamic fromWhere,
   }) async {
     if (fromWhere == null) return null;
+
+    ///
     late String? path;
     if (fromWhere == 'camera') fromWhere = ImageSource.camera;
     if (fromWhere == 'gallery') fromWhere = ImageSource.gallery;
+
+    ////
     if (fromWhere == 'file') {
       final FilePickerResult? result = await FilePicker.platform.pickFiles();
       path = result?.files.first.path;

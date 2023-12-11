@@ -5,3 +5,10 @@ enum StorageType {
   comment,
   upload,
 }
+
+enum SourceType {
+  gallery,
+  videoGallery,
+  camera,
+  file,
+}
