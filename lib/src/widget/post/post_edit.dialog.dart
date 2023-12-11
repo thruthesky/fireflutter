@@ -6,10 +6,12 @@ class PostEditScreen extends StatefulWidget {
     super.key,
     this.categoryId,
     this.post,
+    this.beforeUpload,
   });
 
   final String? categoryId;
   final Post? post;
+  final Future<String> Function(String path, SourceType source)? beforeUpload;
 
   @override
   State<PostEditScreen> createState() => _PostEditDialogState();
@@ -129,10 +131,18 @@ class _PostEditDialogState extends State<PostEditScreen> {
                         context: context,
                         progress: (p) => setState(() => progress = p),
                         complete: () => setState(() => progress = null),
-                        // TODO
+                        // Updated from this.
                         // camera: PostService.instance.uploadFromCamera,
-                        gallery: PostService.instance.uploadFromGallery,
+                        // gallery: PostService.instance.uploadFromGallery,
+                        // file: PostService.instance.uploadFromFile,
+                        gallery: PostService.instance.uploadPhotoVideoFromGallery,
+                        photoCamera: PostService.instance.uploadPhotoFromCamera,
+                        photoGallery: PostService.instance.uploadPhotoFromGallery,
+                        videoCamera: PostService.instance.uploadVideoFromCamera,
+                        videoGallery: PostService.instance.uploadVideoFromGallery,
                         file: PostService.instance.uploadFromFile,
+
+                        beforeUpload: widget.beforeUpload,
                       );
                       if (url != null && mounted) {
                         setState(() {

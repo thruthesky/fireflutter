@@ -147,6 +147,10 @@ class StorageService {
     required BuildContext context,
     Function(double)? progress,
     Function()? complete,
+
+    /// [beforeUpload] is a callback function that is called before uploading.
+    /// You may use this to compress the image/video/file before uploading.
+    /// It must return the path of the file to upload.
     Future<String> Function(String filePath, SourceType source)? beforeUpload,
     // Updated the default into zero
     // because videos and files will have problem
@@ -154,9 +158,6 @@ class StorageService {
     int compressQuality = 0,
     String? path,
     String? saveAs,
-    // bool gallery = true,
-    // bool camera = true,
-    // bool file = true,
     bool gallery = false,
     bool photoGallery = true,
     bool videoGallery = false,
@@ -167,9 +168,6 @@ class StorageService {
     final re = await showModalBottomSheet(
       context: context,
       builder: (_) => UploadSelectionBottomSheet(
-        // gallery: gallery,
-        // camera: camera,
-        // file: file,
         gallery: gallery,
         photoGallery: photoGallery,
         photoCamera: photoCamera,
@@ -217,7 +215,6 @@ class StorageService {
     if (source == null) return null;
     String? path = await getFilePathFromPicker(source: source);
     if (path == null) return null;
-    // TODO review
     final finalPath = (await beforeUpload?.call(path, source)) ?? path;
     return await uploadFile(
       path: finalPath,

@@ -129,10 +129,16 @@ class CommentBoxState extends State<CommentEditBottomSheet> {
                   complete: () {
                     progress = null;
                   },
-                  // TODO
+                  // Updated from this.
                   // camera: CommentService.instance.uploadFromCamera,
-                  gallery: CommentService.instance.uploadFromGallery,
-                  file: CommentService.instance.uploadFromFile,
+                  // gallery: CommentService.instance.uploadFromGallery,
+                  // file: CommentService.instance.uploadFromFile,
+                  photoCamera: true,
+                  photoGallery: true,
+                  file: true,
+                  gallery: false,
+                  videoCamera: false,
+                  videoGallery: false,
                 );
 
                 if (url != null && mounted) {

@@ -34,10 +34,16 @@ class ChatRoomMessageBoxUploadButton extends StatelessWidget {
         }
         final url = await StorageService.instance.upload(
           context: context,
-          // TODO
+          // Updated from this.
           // camera: ChatService.instance.uploadFromCamera,
-          gallery: ChatService.instance.uploadFromGallery,
-          file: ChatService.instance.uploadFromFile,
+          // gallery: ChatService.instance.uploadFromGallery,
+          // file: ChatService.instance.uploadFromFile,
+          photoCamera: true,
+          photoGallery: true,
+          file: true,
+          gallery: false,
+          videoCamera: false,
+          videoGallery: false,
           progress: (p) => onProgress?.call(p),
           complete: () => onProgress?.call(null),
         );

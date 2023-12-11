@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -129,18 +129,20 @@ class RChatBubble extends StatelessWidget {
       borderRadius: borderRadius(),
       child: Container(
         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
-        child: CachedNetworkImage(
-          imageUrl: message.url!.thumbnail,
-          fit: BoxFit.cover,
-          // progressIndicatorBuilder: (context, url, downloadProgress) =>
-          //     CircularProgressIndicator(value: downloadProgress.progress),
-          placeholder: (context, url) => const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CircularProgressIndicator(),
-          ),
-          // if thumbnail is not available, show original image
-          errorWidget: (context, url, error) => CachedNetworkImage(imageUrl: message.url!),
-        ),
+        // child: CachedNetworkImage(
+        //   imageUrl: message.url!.thumbnail,
+        //   fit: BoxFit.cover,
+        //   // progressIndicatorBuilder: (context, url, downloadProgress) =>
+        //   //     CircularProgressIndicator(value: downloadProgress.progress),
+        //   placeholder: (context, url) => const Padding(
+        //     padding: EdgeInsets.all(8.0),
+        //     child: CircularProgressIndicator(),
+        //   ),
+        //   // if thumbnail is not available, show original image
+        //   errorWidget: (context, url, error) => CachedNetworkImage(imageUrl: message.url!),
+        // ),
+        // todo review
+        child: DisplayMedia(url: message.url!),
       ),
     );
   }

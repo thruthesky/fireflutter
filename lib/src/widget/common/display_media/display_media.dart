@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
+import 'package:fireflutter/src/globals.dart';
 // import 'package:fireflow/fireflow.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -10,11 +11,9 @@ import 'package:path/path.dart' as p;
 
 const _kSupportedVideoMimes = {'video/mp4', 'video/mpeg'};
 
-bool _isVideoPath(String path) =>
-    _kSupportedVideoMimes.contains(mime(path.split('?').first));
+bool _isVideoPath(String path) => _kSupportedVideoMimes.contains(mime(path.split('?').first));
 
-bool _isImagePath(String path) =>
-    mime(path.split('?').first)?.startsWith('image/') ?? false;
+bool _isImagePath(String path) => mime(path.split('?').first)?.startsWith('image/') ?? false;
 
 class MediaDisplayType extends StatelessWidget {
   const MediaDisplayType({
@@ -104,18 +103,13 @@ class _FFVideoPlayerState extends State<FFVideoPlayer> {
     super.dispose();
   }
 
-  double get width => widget.width == null || widget.width! >= double.infinity
-      ? MediaQuery.of(context).size.width
-      : widget.width!;
+  double get width =>
+      widget.width == null || widget.width! >= double.infinity ? MediaQuery.of(context).size.width : widget.width!;
 
   double get height =>
-      widget.height == null || widget.height! >= double.infinity
-          ? width / aspectRatio
-          : widget.height!;
+      widget.height == null || widget.height! >= double.infinity ? width / aspectRatio : widget.height!;
 
-  double get aspectRatio =>
-      _chewieController?.videoPlayerController.value.aspectRatio ??
-      kDefaultAspectRatio;
+  double get aspectRatio => _chewieController?.videoPlayerController.value.aspectRatio ?? kDefaultAspectRatio;
 
   Future initializePlayer() async {
     _videoPlayerController = widget.videoType == VideoType.network
@@ -155,8 +149,7 @@ class _FFVideoPlayerState extends State<FFVideoPlayer> {
         // Stop all other players when one video is playing.
         if (_videoPlayerController!.value.isPlaying) {
           for (var otherPlayer in _videoPlayers) {
-            if (otherPlayer != _videoPlayerController &&
-                otherPlayer.value.isPlaying) {
+            if (otherPlayer != _videoPlayerController && otherPlayer.value.isPlaying) {
               setState(() {
                 otherPlayer.pause();
               });
@@ -176,12 +169,9 @@ class _FFVideoPlayerState extends State<FFVideoPlayer> {
           height: height,
           width: width,
           child: _chewieController != null &&
-                  (widget.lazyLoad ||
-                      _chewieController!
-                          .videoPlayerController.value.isInitialized)
+                  (widget.lazyLoad || _chewieController!.videoPlayerController.value.isInitialized)
               ? Chewie(controller: _chewieController!)
-              : (_chewieController != null &&
-                      _chewieController!.videoPlayerController.value.hasError)
+              : (_chewieController != null && _chewieController!.videoPlayerController.value.hasError)
                   ? const Text('Error playing video')
                   : const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -234,8 +224,7 @@ class UploadedMediaState extends State<DisplayMedia> {
         path: widget.url,
         imageBuilder: (path) => CachedNetworkImage(
           imageUrl: path,
-          placeholder: (context, url) =>
-              const CircularProgressIndicator.adaptive(),
+          placeholder: (context, url) => const CircularProgressIndicator.adaptive(),
           errorWidget: (context, url, error) => const Icon(Icons.error),
           width: MediaQuery.of(context).size.width,
           fit: BoxFit.cover,
@@ -250,48 +239,66 @@ class UploadedMediaState extends State<DisplayMedia> {
           allowFullScreen: true,
           allowPlaybackSpeedMenu: false,
         ),
-        fileBuilder: (path) => SizedBox(
-          width: widget.width,
-          height: widget.height,
-          // color: Colors.blue,
-          child: Stack(
+        // fileBuilder: (path) => SizedBox(
+        //   width: widget.width,
+        //   height: widget.height,
+        //   // color: Colors.blue,
+        //   child: Stack(
+        //     children: [
+        //       Align(
+        //         alignment: Alignment.center,
+        //         child: LayoutBuilder(builder: (context, constraint) {
+        //           return Icon(Icons.insert_drive_file, size: constraint.biggest.height);
+        //         }),
+        //       ),
+        //       SizedBox(
+        //         width: widget.width,
+        //         height: widget.height,
+        //         child: Align(
+        //           child: Padding(
+        //             padding: const EdgeInsets.only(top: 36.0),
+        //             child: Column(
+        //               mainAxisSize: MainAxisSize.min,
+        //               children: [
+        //                 Text(
+        //                   path.split('.').last.split('?').first.toUpperCase(),
+        //                   style: const TextStyle(color: Colors.white, fontSize: 24),
+        //                 ),
+        //                 Text(
+        //                   p.basename(path.replaceAll('%2F', '/').split('?').first),
+        //                   style: const TextStyle(fontSize: 6, color: Colors.white),
+        //                   textAlign: TextAlign.center,
+        //                 )
+        //               ],
+        //             ),
+        //           ),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        fileBuilder: (path) => Container(
+          padding: const EdgeInsets.all(sizeMd),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
             children: [
-              Align(
-                alignment: Alignment.center,
-                child: LayoutBuilder(builder: (context, constraint) {
-                  return Icon(Icons.insert_drive_file,
-                      size: constraint.biggest.height);
-                }),
+              const Text("File"),
+              Icon(
+                Icons.insert_drive_file,
+                size: 50,
+                color: Colors.grey.shade400,
               ),
-              SizedBox(
-                width: widget.width,
-                height: widget.height,
-                child: Align(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 36.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          path.split('.').last.split('?').first.toUpperCase(),
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 24),
-                        ),
-                        Text(
-                          p.basename(
-                              path.replaceAll('%2F', '/').split('?').first),
-                          style:
-                              const TextStyle(fontSize: 6, color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              Text(
+                p.basename(path.replaceAll('%2F', '/').split('?').first),
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                textAlign: TextAlign.center,
+              )
             ],
           ),
         ),
+        // ),
       ),
     );
   }

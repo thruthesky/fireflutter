@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fireflutter/fireflutter.dart';
+// import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class DisplayQuiltImages extends StatelessWidget {
@@ -10,30 +12,39 @@ class DisplayQuiltImages extends StatelessWidget {
   Widget build(BuildContext context) {
     if (urls.isEmpty) return const SizedBox();
     if (urls.length == 1) {
-      return CachedNetworkImage(
-        imageUrl: urls[0],
-        fit: BoxFit.contain,
-      );
+      // return CachedNetworkImage(
+      //   imageUrl: urls[0],
+      //   fit: BoxFit.contain,
+      // );
+      return DisplayMedia(url: urls[0]);
     }
     if (urls.length == 2) {
       return Row(
         children: [
           Expanded(
             flex: 1,
-            child: CachedNetworkImage(
+            // todo
+            // git task https://github.com/users/thruthesky/projects/9/views/21?pane=issue&itemId=47196607
+            //
+            // child: CachedNetworkImage(
+            //   height: 200,
+            //   imageUrl: urls[0],
+            //   fit: BoxFit.cover,
+            // ),
+            child: DisplayMedia(
+              url: urls[0],
               height: 200,
-              imageUrl: urls[0],
-              fit: BoxFit.cover,
             ),
           ),
           const SizedBox(width: 2),
           Expanded(
             flex: 1,
-            child: CachedNetworkImage(
-              height: 200,
-              imageUrl: urls[1],
-              fit: BoxFit.cover,
-            ),
+            // child: CachedNetworkImage(
+            //   height: 200,
+            //   imageUrl: urls[1],
+            //   fit: BoxFit.cover,
+            // ),
+            child: DisplayMedia(url: urls[1], height: 200),
           ),
         ],
       );
@@ -46,11 +57,12 @@ class DisplayQuiltImages extends StatelessWidget {
           children: [
             Expanded(
               flex: 1,
-              child: CachedNetworkImage(
-                height: 200,
-                imageUrl: urls[0],
-                fit: BoxFit.cover,
-              ),
+              // child: CachedNetworkImage(
+              //   height: 200,
+              //   imageUrl: urls[0],
+              //   fit: BoxFit.cover,
+              // ),
+              child: DisplayMedia(url: urls[1], height: 200),
             ),
             const SizedBox(width: 2),
             Expanded(
@@ -59,19 +71,27 @@ class DisplayQuiltImages extends StatelessWidget {
                 children: [
                   Expanded(
                     flex: 1,
-                    child: CachedNetworkImage(
+                    // child: CachedNetworkImage(
+                    //   width: double.infinity,
+                    //   imageUrl: urls[1],
+                    //   fit: BoxFit.cover,
+                    // ),
+                    child: DisplayMedia(
+                      url: urls[1],
                       width: double.infinity,
-                      imageUrl: urls[1],
-                      fit: BoxFit.cover,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Expanded(
                     flex: 1,
-                    child: CachedNetworkImage(
+                    // child: CachedNetworkImage(
+                    //   width: double.infinity,
+                    //   imageUrl: urls[2],
+                    //   fit: BoxFit.cover,
+                    // ),
+                    child: DisplayMedia(
+                      url: urls[2],
                       width: double.infinity,
-                      imageUrl: urls[2],
-                      fit: BoxFit.cover,
                     ),
                   ),
                 ],

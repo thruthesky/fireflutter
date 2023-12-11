@@ -8,6 +8,7 @@ class RChatMessageInputBox extends StatefulWidget {
     this.sendIcon,
     this.onProgress,
     this.onSend,
+    this.beforeUpload,
   });
 
   final Widget? cameraIcon;
@@ -17,6 +18,8 @@ class RChatMessageInputBox extends StatefulWidget {
 
   /// [double] is null when upload is completed.
   final void Function({String? text, String? url})? onSend;
+
+  final Future<String> Function(String path, SourceType source)? beforeUpload;
 
   @override
   State<RChatMessageInputBox> createState() => _ChatMessageInputBoxState();
@@ -47,16 +50,23 @@ class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
                 onPressed: () async {
                   final url = await StorageService.instance.upload(
                     context: context,
-                    // TODO also update
+                    // Review
                     // camera: ChatService.instance.uploadFromCamera,
-                    gallery: ChatService.instance.uploadFromGallery,
-                    file: ChatService.instance.uploadFromFile,
+                    // gallery: ChatService.instance.uploadFromGallery,
+                    // file: ChatService.instance.uploadFromFile,
+                    gallery: true,
+                    photoCamera: true,
+                    videoCamera: true,
+                    file: true,
+                    photoGallery: false,
+                    videoGallery: false,
                     progress: (p) =>
                         widget.onProgress?.call(p) ??
                         setState(() {
                           progress = p;
                         }),
                     complete: () => widget.onProgress?.call(null) ?? setState(() => progress = null),
+                    beforeUpload: widget.beforeUpload,
                   );
                   await RChat.sendMessage(url: url);
                   widget.onSend?.call(text: null, url: url);
