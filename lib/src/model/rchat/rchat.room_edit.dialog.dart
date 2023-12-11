@@ -93,7 +93,6 @@ class _RChatRoomEditDialogState extends State<RChatRoomEditDialog> {
             });
 
             final room = RChatRoomModel.fromSnapshot(await getSnapshot(roomRef.path));
-            await RChat.joinRoom(room: room);
 
             if (context.mounted) {
               Navigator.pop(context, room);

@@ -4,36 +4,36 @@
 
 
 
-For group chat,
-
-- when a user enters the group chat,
-	- update room info under /chat-rooms/my-uid/group-chat-id
-	- update /chat-rooms/group-chat-id/users/{my-uid: true}
-
-- when a user leaves,
-	- delete room /chat-rooms/my-uid/group-chat-id
-	- delete /chat-rooms/group-chat-id/users/{my-uid}
-
-- when a chat message is sent,
-	- save a message under /chat-messages/group-chat-id
-	- update the last message to all the chat room member's /chat-room/uid/group-chat-id and do the following works (like incrementing new message, sending push notifications)
-	- but don't save the last message under /chat-rooms/group-chat-id/uid
-
-- When a group is being created,
-  - Update room under /chat-rooms/my-uid/groupd-id
-  - Update a document under /chat-rooms/group-id
-    - save my uid in /chat-rooms/group-id/users/{my-uid: true}
-	- save isGroupChat to true
-	- save isOpenGroupChat to true or false.
-	- save room name
-	- save createdAt
-
-
 
 ## Database structure
 
-- `Flag string` is the string of the user value under `/chat-rooms/`
-- 
+
+- 1:1 chat and group chat has same field structure.
+  - `/chat-messages` has all the messages for the chat rooms
+  - `/chat-rooms` has all the chat room info.
+  - `/chat-relations` has all the relations of who join which chat room. Consider it as my chat room list.
+
+  In this structure, 1:1 chat room can have same structure of group chat and 1:1 chat. By the this, we can have more consistent logic and the 1:1 chat can turn into a group chat.
+
+- `isGroupChat` is set to true if the chat room is for group chat.
+  - But the type of chat room is determined by the chat room id.
+    - If the chat room id has triple typen(`---`) in the middle, it is single chat. Otherwise it is a group chat.
+    - This is because, the chat room type needed to be determined before the chat room exists.
+
+
+
+- when a user leaves,
+	- delete /chat-rooms/room-id/users/{my-uid}
+	- delete /chat-relations/{my-uid}/{room-id}
+
+- when a chat message is sent,
+	- save a message under /chat-messages/room-id
+	- don't update /chat-rooms/room-id
+	- update the last message to all the chat room user's relation node /chat-relations/{my-uid}/{room-id} and do the following works (like incrementing new message, sending push notifications)
+
+
+
+
 
 
 
@@ -55,7 +55,43 @@ You may create the chat room model object programmatically. In case you want use
 The chat room object created by `RChatRoomModel.fromGroupId` or `RChatRoomModel.fromUid` is incomplete. For isntance, it does not have `users` field. So, you would loading it when you need it.
 
 
-## Chat room screen
+
+
+## Creating chat room logic
+
+
+- When a chat room is created, (for both 1:1 and group chat)
+  - Update room under /chat-rooms/{room-id}
+    - save my uid in /chat-rooms/room-id/users/{my-uid: true}
+	- save isGroupChat to true or false
+	- save isOpenGroupChat to true or false.
+	- save room name for group chat. for 1:1 chat, empty.
+	- save createdAt
+
+
+
+## Entering chat room
+
+In this chapter, the logic of entering chat room is explained.
+
+
+- To enter a chat room, the app must have the other user's uid or the chat room model object.
+
+- In the chat room screen, it should set the `currentRoom` immediately without accessing database from server.
+
+- Then, update the `currentRoom` from server and whenever there is update from server.
+  - By updating the `currentRoom` in realtime, the whole chat flow can use the latest data like when sending messages, it will use the latest `users` information.
+
+
+- when a user enters the chat,
+	- set /chat-rooms/room-id/users/{my-uid: true} if not exists.
+	- set /chat-relations/{my-uid}/{room-id} if not exists.
+
+
+
+
+
+
 
 
 You must set the current chat room's model with `RChat.setCurrentRoom()`. This will set the current chat room model object and keep it over the whole chat flow. The reason why we need it is because Flutter can pass value over reference but unless the state is updated, the children widget cannot use the updated value. So, save the current chat room object into a global space for the value update. It is necessary for accessing updated chat room info. for instance, sending a message to all users in the room. and if a user enters into the room, all the child widget should know the update of chat room info.
@@ -72,8 +108,13 @@ subscription = room.ref.onValue.listen((event) {
 
 ## Subscribing a chat room for push notification
 
+Send push messages to only the users who subscribed.
 
-If the subscription flag is set on other node or firestore, it has to read another data from server. And it costs. So, it being saved as the flag string.
+
+- The option value of subscription on/off is saved at `/chat-rooms/{room-id}/users/{uid: boolean}`. If it's true then the user is subscribed. If it's false, then it is unsubscribed.
+
+
+
 
 
 
@@ -83,22 +124,43 @@ If the subscription flag is set on other node or firestore, it has to read anoth
 
 When a user chats
 
-- If it's 1:1 chat room,
-  - the message will be saved under `/chat-messages/{chat-room-id}`
-  - the chat room will be updated on both of the login user and the other user.
-    - `/chat-rooms/{login-user-uid}/{other-user-uid}` for the login user's chat room list.
-    - `/chat-rooms/{other-user-uid}/{login-user-uid}` for the login user's chat room list.
-  - the chat room info will have `name` field
-    - For sender, the name will be the receiver's name.
-    - For receiver, the name will be the sender's name.
+- Add last message under `/chat-messages`.
+- Add last message under `/chat-relations` for all the chat room members.
+- Don't update last message under `/chat-rooms`.
+- the chat room info will have `name` field
+  - For 1:1 chat,
+    - the receiver's name is set under sender's side.
+    - the sender's name is set under receiver's side.
+  - For group chat,
+    - just save room name.
+
+
+
+- `newMessage` must be set to null instead of 0 when it is being cleared. This is because when a user peaks on a chat room, the chat room list widget will set `newMessage` and if it's set to 0, the chat room will appear in the my chat room list.
 
 
 
 
-When sending a message, 
 
 
 
 
 
+## Code
 
+
+To join to chat room,
+
+```dart
+RChat.setCurrentRoom(RChatRoomModel.fromRoomdId('all'));
+RChat.joinRoom();
+```
+
+To verify
+
+```dart
+RChat.setCurrentRoom(RChatRoomModel.fromRoomdId(singleChatRoomId('two')));
+await RChat.joinRoom();
+final r = await RChatRoomModel.fromReference(RChat.currentRoom.ref);
+assert(r.users != null && r.users!.length == 2);
+```

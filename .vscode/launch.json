@@ -14,6 +14,15 @@
       "deviceId": "iPhone 15 Pro Max"
     },
     {
+      "name": "PhiLov - RChat- iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/philov",
+      "program": "lib/main.rchat.dart",
+      "flutterMode": "debug",
+      "deviceId": "iPhone 15 Pro Max"
+    },
+    {
       "name": "PhiLov - iPhone11ProMax",
       "request": "launch",
       "type": "dart",

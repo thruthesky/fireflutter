@@ -1,7 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:path/path.dart';
 
 /// RChat
 ///
@@ -11,11 +10,13 @@ class RChat {
   ///
   ///
   static DatabaseReference get roomsRef => rtdb.ref().child('chat-rooms');
-  static DatabaseReference roomRef(String uidA, String uidB) => rtdb.ref().child('chat-rooms/$uidA/$uidB');
+  static DatabaseReference get joinsRef => rtdb.ref().child('chat-joins');
+  static DatabaseReference roomRef(String roomId) => roomsRef.child(roomId);
+  static DatabaseReference joinRef(String myUid, String roomId) => joinsRef.child(myUid).child(roomId);
   static DatabaseReference messageRef({required String roomId}) => rtdb.ref().child('chat-messages').child(roomId);
 
-  /// [groupUserRef] is the reference to the users node under the group chat room. Ex) /chat-rooms/{roomId}/users
-  static DatabaseReference groupUserRef(String roomId) => rtdb.ref().child('chat-rooms/$roomId/users');
+  /// [roomUserRef] is the reference to the users node under the group chat room. Ex) /chat-rooms/{roomId}/users/{my-uid}
+  static DatabaseReference roomUserRef(String roomId, String uid) => rtdb.ref().child('chat-rooms/$roomId/users/$uid');
 
   /// 각 채팅방 마다 -1을 해서 order 한다.
   ///
@@ -41,22 +42,22 @@ class RChat {
       return;
     }
 
-    roomMessageOrder[currentRoom.messageRoomId] = (roomMessageOrder[currentRoom.messageRoomId] ?? 0) - 1;
+    roomMessageOrder[currentRoom.id] = (roomMessageOrder[currentRoom.id] ?? 0) - 1;
 
     /// 참고, 실제 메시지를 보내기 전에, 채팅방 자체를 먼저 업데이트 해 버린다.
     ///
     /// 상황 발생, A 가 B 가 모두 채팅방에 들어가 있는 상태에서
     /// A 가 B 에게 채팅 메시지를 보내면, 그 즉시 B 의 채팅방 목록이 업데이트되고,
     /// B 의 채팅방의 newMessage 가 0 으로 된다.
-    /// 그리고, 나서 updateRoom() 을 하면, B 의 채팅 메시지가 1이 되는 것이다.
-    /// 즉, 0이 되어야하는데 1이 되는 상황이 발생한다. 그래서, updateRoom() 이 먼저 호출되어야 한다.
-    updateRoom(text: text, url: url);
+    /// 그리고, 나서 updateJoin() 을 하면, B 의 채팅 메시지가 1이 되는 것이다.
+    /// 즉, 0이 되어야하는데 1이 되는 상황이 발생한다. 그래서, updateJoin() 이 먼저 호출되어야 한다.
+    updateJoin(text: text, url: url);
 
-    await messageRef(roomId: currentRoom.messageRoomId).push().set({
+    await messageRef(roomId: currentRoom.id).push().set({
       'uid': myUid,
       if (text != null) 'text': text,
       if (url != null) 'url': url,
-      'order': RChat.roomMessageOrder[currentRoom.messageRoomId],
+      'order': RChat.roomMessageOrder[currentRoom.id],
       'createdAt': ServerValue.timestamp,
     });
   }
@@ -68,73 +69,53 @@ class RChat {
     required String receiverUid,
     String? text,
     String? url,
-    int? newMessage,
+    dynamic newMessage,
   }) async {
     String name;
     if (currentRoom.isGroupChat) {
       name = currentRoom.name ?? '';
     } else {
+      print('if ($receiverUid == $myUid) {');
       if (receiverUid == myUid) {
-        final user = await UserService.instance.get(receiverUid);
+        final user = await UserService.instance.get(currentRoom.otherUserUid!);
         name = user?.name ?? 'Receiver has no name';
       } else {
         name = my?.name ?? 'Sender has no name';
       }
     }
-    return {
+    final data = {
       'name': name,
       'text': text,
       'url': url,
       'updatedAt': ServerValue.timestamp,
-      'newMessage': newMessage ?? ServerValue.increment(1),
+      'newMessage': newMessage,
       'isGroupChat': currentRoom.isGroupChat,
       'isOpenGroupChat': currentRoom.isOpenGroupChat,
     };
+    print(data);
+    return data;
   }
 
+  /// Update last message on all the member of the chat room (chat-join relatsions)
+  ///
   /// 나의 채팅방 정보와 상대방의 채팅방 정보를 업데이트한다.
   ///
-  /// 그룹 챗방에서는, 채팅방에 있는 모든 사용자의 채팅방 목록을 업데이트 한다.
-  /// 즉, 이 함수에서는 그룹 채팅의 경우, 그룹 채팅방 정보를 업데이트하지는 않는다.
-  static Future<void> updateRoom({
+  /// 그채팅방에 있는 모든 사용자의 채팅방 목록을 업데이트 한다.
+  static Future<void> updateJoin({
     String? text,
     String? url,
   }) async {
-    /// 일대일 채팅방의 경우, 나와 상대방의 메시지 업데이트
-    if (currentRoom.isSingleChat) {
-      /// Update last chat message under my chat room list
-      roomRef(myUid!, currentRoom.id).set(
+    for (final e in currentRoom.users?.entries.toList() ?? []) {
+      dog('user uid: ${e.key}');
+      final uid = e.key;
+      joinRef(uid, currentRoom.id).update(
         await _lastMessage(
-          receiverUid: myUid!,
+          receiverUid: uid,
           text: text,
           url: url,
-          newMessage: 0,
+          newMessage: uid == myUid ? null : ServerValue.increment(1),
         ),
       );
-
-      // chat room info update under other user room list
-      roomRef(currentRoom.id, myUid!).update(
-        await _lastMessage(
-          receiverUid: currentRoom.id,
-          text: text,
-          url: url,
-        ),
-      );
-    } else {
-      /// 그룹 채팅방의 경우, 모든 사용자(나를 포함)의 채팅방 목록을 업데이트 한다.
-      ///
-      for (final e in currentRoom.users?.entries.toList() ?? []) {
-        dog('user uid: ${e.key}');
-        final uid = e.key;
-        roomRef(uid, currentRoom.id).update(
-          await _lastMessage(
-            receiverUid: uid,
-            text: text,
-            url: url,
-            newMessage: uid == myUid ? 0 : null,
-          ),
-        );
-      }
     }
   }
 
@@ -149,24 +130,8 @@ class RChat {
   static leaveRoom({
     required RChatRoomModel room,
   }) {
-    if (room.isGroupChat == true) {
-      /// 그룹 채팅방에서 나가기
-      leaveGroupChat(room: room);
-    } else {
-      /// 1:1 채팅방에서 나가기
-      leaveSingleChat(room: room);
-    }
-  }
-
-  static leaveGroupChat({required RChatRoomModel room}) {
-    /// 그룹 채팅방에서 나가기
-    roomRef(myUid!, room.key).remove();
-    groupUserRef(room.key).child(myUid!).remove();
-  }
-
-  static leaveSingleChat({required RChatRoomModel room}) {
-    /// 1:1 채팅방에서 나가기
-    roomRef(myUid!, room.key).remove();
+    joinRef(myUid!, room.id).remove();
+    roomUserRef(room.id, myUid!).remove();
   }
 
   /// 채팅방의 메시지 순서(order)를 담고 있는 [RChat.roomMessageOrder] 를 초기화 한다.
@@ -190,9 +155,9 @@ class RChat {
   /// 특히, 내가 채팅방에 들어가 갈 때, 또는 내가 채팅방에 들어가 있는데, 새로운 메시지가 전달되어져 오는 경우,
   /// 이 함수가 호출되어 그 채팅방의 새 메시지 수를 0으로 초기화 할 때 사용한다.
   static Future<void> resetMyRoomNewMessage({required RChatRoomModel room}) async {
-    await roomRef(myUid!, room.id).update(
+    await joinRef(myUid!, room.id).update(
       {
-        'newMessage': 0,
+        'newMessage': null,
       },
     );
     // print('--> resetRoomNewMessage: $roomId');
@@ -257,26 +222,36 @@ class RChat {
   /// only one time when the user enters the chat room.
   ///
   ///
-  static Future joinRoom({required RChatRoomModel room}) async {
-    if (room.isGroupChat == true) {
-      await set("${room.path}/users/$myUid", true);
+  ///
+  static Future joinRoom() async {
+    final room = currentRoom;
+    final otherUserUid = room.otherUserUid;
 
-      /// Add the group chat info under the login user's chat room list.
-      await roomRef(myUid!, room.id).update({
-        'name': room.name,
-        'isGroupChat': true,
-        'isOpenGroupChat': room.isOpenGroupChat,
-        'updatedAt': ServerValue.timestamp,
-        'newMessage': 0,
-      });
-    } else {
-      await roomRef(myUid!, room.id).update({
-        'isGroupChat': false,
-        'isOpenGroupChat': false,
-        'updatedAt': ServerValue.timestamp,
-        'newMessage': 0,
-      });
+    if (room.users?.containsKey(myUid) != true) {
+      dog('RChat.joinRoom: Not joined, yet. Joing now ...');
+      // await set("${room.path}/users/$myUid", true);
+      await room.ref.child('users').child(myUid!).set(true);
     }
+    if (room.isSingleChat) {
+      if (room.users?.containsKey(otherUserUid) != true) {
+        await room.ref.child('users').child(otherUserUid!).set(true);
+      }
+    }
+
+    final data = {
+      'name': room.isGroupChat ? room.name : '',
+      'isGroupChat': room.isGroupChat,
+      'isOpenGroupChat': room.isOpenGroupChat,
+      'newMessage': null,
+    };
+
+    /// 1:1 채팅방의 경우, 상대방의 이름을 저장한다.
+    if (otherUserUid != null) {
+      final user = await UserService.instance.get(otherUserUid);
+      data['name'] = user?.name ?? 'No name';
+    }
+
+    await joinsRef.child(myUid!).child(room.id).set(data);
   }
 
   static Future createRoom({

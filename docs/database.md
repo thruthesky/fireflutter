@@ -23,7 +23,7 @@ We have a handy function in `functions/database.dart` to `get, set, update, toog
 - `get('path')` gets the node data of the path from database.
 - `set('path', data)` sets the data at the node of the path into database.
 - `update('path', { data })` updates the node of the path. The value must be a `Map`.
-- `toggle('path')` switches on/off the value of the node. If the node of the [path] does not exist, create it and return true. Or if the node exists, then remove it and return false.
+- `toggle('path')` switches on/off the value of the node. If the node of the [path] does not exist, create it and return true. Or if the node exists, then **remove it** and return false.
 
 ***Note:*** These functions may arise an exception if the security rules are not properly set on the paths. You need to set the security rules by yourself. When you meet an error like `[firebase_database/permission-denied] Client doesn't have permission to access the desired data.`, then check the security rules.
 
@@ -46,9 +46,7 @@ await update(path, {'k': 'hello', 'v': 'world'});
 print(await get(path));
 ```
 
-
-
-`toggle` are responsible to setting `block`, `likes`, `feeds` setting to `true`, following the format `uid: true`. Use this by specifying the path on its parameter. Follow the example below
+`toggle()` can be used to swtich on/off.
 
 ```dart
 final blocked = await toggle(pathBlock(user.uid));
@@ -71,6 +69,11 @@ Database(
 ),
 ```
 
+Note that, toggle will not set the value `false`. It will simply delete the node. If you want to set it fasle, you may do so like below,
+
+```dart
+set('...path...', value == true ? false : true);
+```
 
 
 

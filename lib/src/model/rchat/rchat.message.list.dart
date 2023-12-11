@@ -25,14 +25,14 @@ class RChatMessageList extends StatefulWidget {
 class _RChatMessageListState extends State<RChatMessageList> {
   Widget? resultingWidget;
 
-  String get messageRoomId => widget.room.messageRoomId;
+  String get roomId => widget.room.id;
 
   @override
   Widget build(BuildContext context) {
     return FirebaseDatabaseQueryBuilder(
       /// We make the pageSize big so that it will fetch less, and less flickering.
       pageSize: 100,
-      query: RChat.messageRef(roomId: messageRoomId).orderByChild('order'),
+      query: RChat.messageRef(roomId: roomId).orderByChild('order'),
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
           /// FirebaseDatabaseQueryBuilder will set snapshot.isFetcing only one time when it is first loading.
@@ -48,7 +48,7 @@ class _RChatMessageListState extends State<RChatMessageList> {
           return Text('Something went wrong! ${snapshot.error}');
         }
 
-        if (RChat.isLoadingNewMessage(messageRoomId, snapshot)) {
+        if (RChat.isLoadingNewMessage(roomId, snapshot)) {
           /// newMessage 리셋
           RChat.resetMyRoomNewMessage(room: widget.room);
         }
@@ -70,7 +70,7 @@ class _RChatMessageListState extends State<RChatMessageList> {
               }
               final message = RChatMessageModel.fromSnapshot(snapshot.docs[index]);
 
-              RChat.resetRoomMessageOrder(roomId: messageRoomId, order: message.order);
+              RChat.resetRoomMessageOrder(roomId: roomId, order: message.order);
 
               return RChatBubble(
                 message: message,

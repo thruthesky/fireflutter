@@ -21,7 +21,6 @@ class RChatRoomModel {
   /// To get the message node id for both of 1:1 chat and group chat for saving message, use [messageRoomId]
   ///
   String get id => key;
-  String get messageRoomId => isSingleChat ? singleChatRoomId(id) : id;
 
   /// [path] is the path of the chat room.
   String get path => ref.path;
@@ -65,7 +64,9 @@ class RChatRoomModel {
       url: json['url'] as String?,
       updatedAt: json['updatedAt'] is int ? json['updatedAt'] : int.parse(json['updatedAt'] ?? '0'),
       newMessage: json['newMessage'] ?? 0,
-      isGroupChat: json['isGroupChat'] ?? false,
+
+      /// See, rchat.md#database structure
+      isGroupChat: isSingleChatRoom(json['key']) == false,
       isOpenGroupChat: json['isOpenGroupChat'] ?? false,
       name: json['name'] as String?,
       description: json['description'] as String?,
@@ -101,29 +102,31 @@ class RChatRoomModel {
   ///   while group chat room ref is like /chat-rooms/groupId.
   ///
   /// This is a factory. So, you can use it for creating a chat room model object programmatically.
-  factory RChatRoomModel.fromGroupId(String id) {
+  factory RChatRoomModel.fromRoomdId(String id) {
     return RChatRoomModel.fromJson({
       'key': id,
       'ref': RChat.roomsRef.child(id),
-      'isGroupChat': true,
     });
   }
 
-  /// Returns a [RChatRoomModel] from a single chat room id.
-  factory RChatRoomModel.fromUid(String uidA, String uidB) {
-    return RChatRoomModel.fromJson({
-      'key': uidB,
-      'ref': RChat.roomRef(uidA, uidB),
-      'isGroupChat': false,
-      'isOpenGroupChat': false,
-    });
-  }
+  // /// Returns a [RChatRoomModel] from a single chat room id.
+  // factory RChatRoomModel.fromUid(String otherUserUid) {
+  //   return RChatRoomModel.fromJson({
+  //     'key': singleChatRoomId(otherUserUid),
+  //     'ref': RChat.roomRef(singleChatRoomId(otherUserUid)),
+  //     'isGroupChat': false,
+  //     'isOpenGroupChat': false,
+  //   });
+  // }
 
   /// Return RChatRoomModel from a reference
   ///
   ///
   static Future<RChatRoomModel> fromReference(DatabaseReference ref) async {
     final event = await ref.once();
+    if (event.snapshot.exists == false) {
+      throw Exception('RChatRoomModel.fromReference: ${ref.path} does not exist.');
+    }
     return RChatRoomModel.fromSnapshot(event.snapshot);
   }
 
@@ -163,5 +166,10 @@ class RChatRoomModel {
     await ref.set(data);
 
     return fromReference(ref);
+  }
+
+  /// Return the first other user uid from the users list.
+  String? get otherUserUid {
+    return getOtherUserUidFromRoomId(id);
   }
 }
