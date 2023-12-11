@@ -75,7 +75,6 @@ class RChat {
     if (currentRoom.isGroupChat) {
       name = currentRoom.name ?? '';
     } else {
-      print('if ($receiverUid == $myUid) {');
       if (receiverUid == myUid) {
         final user = await UserService.instance.get(currentRoom.otherUserUid!);
         name = user?.name ?? 'Receiver has no name';
@@ -92,7 +91,6 @@ class RChat {
       'isGroupChat': currentRoom.isGroupChat,
       'isOpenGroupChat': currentRoom.isOpenGroupChat,
     };
-    print(data);
     return data;
   }
 
@@ -106,7 +104,6 @@ class RChat {
     String? url,
   }) async {
     for (final e in currentRoom.users?.entries.toList() ?? []) {
-      dog('user uid: ${e.key}');
       final uid = e.key;
       joinRef(uid, currentRoom.id).update(
         await _lastMessage(
@@ -251,7 +248,7 @@ class RChat {
       data['name'] = user?.name ?? 'No name';
     }
 
-    await joinsRef.child(myUid!).child(room.id).set(data);
+    await joinsRef.child(myUid!).child(room.id).update(data);
   }
 
   static Future createRoom({

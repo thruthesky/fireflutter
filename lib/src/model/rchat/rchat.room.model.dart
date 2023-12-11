@@ -172,4 +172,14 @@ class RChatRoomModel {
   String? get otherUserUid {
     return getOtherUserUidFromRoomId(id);
   }
+
+  /// Returns the uids of the users who subscribed the chat room.
+  List<String>? get getSubscribedUids {
+    final List<String>? uids = users?.entries.fold(
+      [],
+      (previousValue, element) => element.value ? (previousValue?..add(element.key)) : previousValue,
+    );
+    if (uids == null) return null;
+    return uids.where((element) => element != myUid).toList();
+  }
 }

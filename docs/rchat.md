@@ -4,14 +4,13 @@
 
 
 
-
 ## Database structure
 
 
 - 1:1 chat and group chat has same field structure.
   - `/chat-messages` has all the messages for the chat rooms
   - `/chat-rooms` has all the chat room info.
-  - `/chat-relations` has all the relations of who join which chat room. Consider it as my chat room list.
+  - `/chat-joins` has all the relations of who join which chat room. Consider it as my chat room list.
 
   In this structure, 1:1 chat room can have same structure of group chat and 1:1 chat. By the this, we can have more consistent logic and the 1:1 chat can turn into a group chat.
 
@@ -24,12 +23,12 @@
 
 - when a user leaves,
 	- delete /chat-rooms/room-id/users/{my-uid}
-	- delete /chat-relations/{my-uid}/{room-id}
+	- delete /chat-joins/{my-uid}/{room-id}
 
 - when a chat message is sent,
 	- save a message under /chat-messages/room-id
 	- don't update /chat-rooms/room-id
-	- update the last message to all the chat room user's relation node /chat-relations/{my-uid}/{room-id} and do the following works (like incrementing new message, sending push notifications)
+	- update the last message to all the chat room user's relation node /chat-joins/{my-uid}/{room-id} and do the following works (like incrementing new message, sending push notifications)
 
 
 
@@ -85,7 +84,7 @@ In this chapter, the logic of entering chat room is explained.
 
 - when a user enters the chat,
 	- set /chat-rooms/room-id/users/{my-uid: true} if not exists.
-	- set /chat-relations/{my-uid}/{room-id} if not exists.
+	- set /chat-joins/{my-uid}/{room-id} if not exists.
 
 
 
@@ -108,12 +107,13 @@ subscription = room.ref.onValue.listen((event) {
 
 ## Subscribing a chat room for push notification
 
-Send push messages to only the users who subscribed.
+The app must send push messages to only the users who subscribed.
 
 
-- The option value of subscription on/off is saved at `/chat-rooms/{room-id}/users/{uid: boolean}`. If it's true then the user is subscribed. If it's false, then it is unsubscribed.
+- The on/off option value of subscription is saved at `/chat-rooms/{room-id}/users/{uid: boolean}`. If it's true then the user is subscribed. If it's false, then it is unsubscribed.
 
 
+- By default, when a user joins, it becomes true. When the user turns off the subscription, it becomes false. And when the user leaves, it will be deleted.
 
 
 
@@ -125,7 +125,7 @@ Send push messages to only the users who subscribed.
 When a user chats
 
 - Add last message under `/chat-messages`.
-- Add last message under `/chat-relations` for all the chat room members.
+- Add last message under `/chat-joins` for all the chat room members.
 - Don't update last message under `/chat-rooms`.
 - the chat room info will have `name` field
   - For 1:1 chat,
