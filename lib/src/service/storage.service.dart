@@ -178,7 +178,7 @@ class StorageService {
     String? type,
   }) async {
     if (fromWhere == null) return null;
-    String? path = await getPathFromPicker(fromWhere: fromWhere);
+    // String? path = await getPathFromPicker(fromWhere: fromWhere);
 
     return await uploadFile(
       path: path,
@@ -190,30 +190,29 @@ class StorageService {
     );
   }
 
-  getPathFromPicker({
-    required dynamic fromWhere,
+  Future<String?> getFileFromPicker({
+    required SourceType? source,
   }) async {
-    if (fromWhere == null) return null;
-
-    ///
-    late String? path;
-    if (fromWhere == 'camera') fromWhere = ImageSource.camera;
-    if (fromWhere == 'gallery') fromWhere = ImageSource.gallery;
+    if (source == null) return null;
 
     ////
-    if (fromWhere == 'file') {
+    if (source == SourceType.file) {
       final FilePickerResult? result = await FilePicker.platform.pickFiles();
-      path = result?.files.first.path;
-    } else if ([ImageSource.camera, ImageSource.gallery].contains(fromWhere)) {
-      final XFile? image = await ImagePicker().pickImage(source: fromWhere);
-      path = image?.path;
-    } else if (fromWhere == 'videoGallery') {
-      final XFile? video = await ImagePicker().pickVideo(source: ImageSource.gallery);
-      path = video?.path;
-    } else {
-      return null;
+      return result?.files.first.path;
     }
-    return path;
+    return null;
+
+    //  if ([SourceType.camera, SourceType.gallery].contains(source)) {
+
+    //   final XFile? image = await ImagePicker().pickImage(source: fromWhere);
+    //   path = image?.path;
+    // } else if (fromWhere == 'videoGallery') {
+    //   final XFile? video = await ImagePicker().pickVideo(source: ImageSource.gallery);
+    //   path = video?.path;
+    // } else {
+    //   return null;
+    // }
+    // return path;
   }
 
   Future<List<String?>?> uploadMultiple({
