@@ -139,6 +139,10 @@ class StorageService {
   /// Call this method when the user presses the button to upload a photo or a file.
   ///
   /// This method does not handle any exception. You may handle it outisde if you want.
+  ///
+  /// [gallery] is for both photo and video.
+  /// [photoGallery] is for photo only.
+  /// [videoGallery] is for video only.
   Future<String?> upload({
     required BuildContext context,
     Function(double)? progress,
@@ -155,9 +159,9 @@ class StorageService {
     // bool file = true,
     bool gallery = false,
     bool photoGallery = true,
+    bool videoGallery = false,
     bool photoCamera = true,
     bool videoCamera = false,
-    bool videoGallery = false,
     bool file = false,
   }) async {
     final re = await showModalBottomSheet(
