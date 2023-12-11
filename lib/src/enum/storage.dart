@@ -8,7 +8,9 @@ enum StorageType {
 
 enum SourceType {
   gallery,
+  photoCamera,
+  photoGallery,
   videoGallery,
-  camera,
+  videoCamera,
   file,
 }

@@ -47,7 +47,8 @@ class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
                 onPressed: () async {
                   final url = await StorageService.instance.upload(
                     context: context,
-                    camera: ChatService.instance.uploadFromCamera,
+                    // TODO also update
+                    // camera: ChatService.instance.uploadFromCamera,
                     gallery: ChatService.instance.uploadFromGallery,
                     file: ChatService.instance.uploadFromFile,
                     progress: (p) =>

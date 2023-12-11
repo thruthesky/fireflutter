@@ -55,13 +55,21 @@ class StorageService {
   Future<String?> uploadFile({
     Function(double)? progress,
     Function? complete,
-    int compressQuality = 80,
+    // Updated the default into zero
+    // because videos and files will have problem
+    // if we compress them using FlutterImageCompress.
+    int compressQuality = 0,
     String? path,
     String? saveAs,
     String? type,
   }) async {
     if (path == null) return null;
     File file = File(path);
+    if (!file.existsSync()) {
+      dog('File does not exist: $path');
+      throw Exception('File does not exist: $path');
+    }
+
     final storageRef = FirebaseStorage.instance.ref();
     final fileRef = storageRef.child(saveAs ?? "users/${myUid!}/${file.path.split('/').last}");
     // Review: Here only Image can be compressed. File and Video cannot be compressed.
@@ -135,29 +143,53 @@ class StorageService {
     required BuildContext context,
     Function(double)? progress,
     Function()? complete,
-    int compressQuality = 80,
+    Future<String> Function(String filePath, SourceType source)? beforeUpload,
+    // Updated the default into zero
+    // because videos and files will have problem
+    // if we compress them using FlutterImageCompress.
+    int compressQuality = 0,
     String? path,
     String? saveAs,
-    bool gallery = true,
-    bool camera = true,
-    bool file = true,
+    // bool gallery = true,
+    // bool camera = true,
+    // bool file = true,
+    bool gallery = false,
+    bool photoGallery = true,
+    bool photoCamera = true,
+    bool videoCamera = false,
+    bool videoGallery = false,
+    bool file = false,
   }) async {
     final re = await showModalBottomSheet(
       context: context,
       builder: (_) => UploadSelectionBottomSheet(
+        // gallery: gallery,
+        // camera: camera,
+        // file: file,
         gallery: gallery,
-        camera: camera,
+        photoGallery: photoGallery,
+        photoCamera: photoCamera,
+        videoCamera: videoCamera,
+        videoGallery: videoGallery,
         file: file,
       ),
     );
     if (re == null) return null;
+
     return uploadFrom(
-      fromWhere: re,
+      source: re,
       progress: progress,
       complete: complete,
+      beforeUpload: beforeUpload,
       // we cannot compress file or video
       // Should we create a proper Enum for UploadType?
-      compressQuality: ['videoGallery', 'file'].contains(re) ? 0 : compressQuality,
+      compressQuality: [
+        SourceType.videoCamera,
+        SourceType.videoCamera,
+        SourceType.file,
+      ].contains(re)
+          ? 0
+          : compressQuality,
       path: path,
       saveAs: saveAs,
     );
@@ -165,23 +197,26 @@ class StorageService {
 
   /// Call this if method of uploading (like, from camera) is already known.
   ///
-  /// [fromWhere] can be 'file', 'camera', 'gallery', ImageSource.camera, ImageSource.gallery
-  ///
-  /// may return null if fromWhere is invalid.
+  /// [source] can be SourceType.photoGallery, SourceType.photoCamera,
+  /// SourceType.videoGallery, SourceType.videoCamera, SourceType.file
+  /// may return null if [source] is invalid.
   Future<String?> uploadFrom({
-    required dynamic fromWhere,
+    required SourceType? source,
     Function(double)? progress,
+    Future<String> Function(String filePath, SourceType source)? beforeUpload,
     Function? complete,
     int compressQuality = 80,
     String? path,
     String? saveAs,
     String? type,
   }) async {
-    if (fromWhere == null) return null;
-    // String? path = await getPathFromPicker(fromWhere: fromWhere);
-
+    if (source == null) return null;
+    String? path = await getFilePathFromPicker(source: source);
+    if (path == null) return null;
+    // TODO review
+    final finalPath = (await beforeUpload?.call(path, source)) ?? path;
     return await uploadFile(
-      path: path,
+      path: finalPath,
       saveAs: saveAs,
       progress: progress,
       complete: complete,
@@ -190,29 +225,35 @@ class StorageService {
     );
   }
 
-  Future<String?> getFileFromPicker({
+  Future<String?> getFilePathFromPicker({
     required SourceType? source,
   }) async {
     if (source == null) return null;
-
-    ////
     if (source == SourceType.file) {
       final FilePickerResult? result = await FilePicker.platform.pickFiles();
       return result?.files.first.path;
     }
+    if (source == SourceType.photoCamera) {
+      final XFile? image = await ImagePicker().pickImage(source: ImageSource.camera);
+      return image?.path;
+    }
+    if (source == SourceType.photoGallery) {
+      final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      return image?.path;
+    }
+    if (source == SourceType.videoCamera) {
+      final XFile? video = await ImagePicker().pickVideo(source: ImageSource.camera);
+      return video?.path;
+    }
+    if (source == SourceType.videoGallery) {
+      final XFile? video = await ImagePicker().pickVideo(source: ImageSource.gallery);
+      return video?.path;
+    }
+    if (source == SourceType.gallery) {
+      final XFile? image = await ImagePicker().pickMedia();
+      return image?.path;
+    }
     return null;
-
-    //  if ([SourceType.camera, SourceType.gallery].contains(source)) {
-
-    //   final XFile? image = await ImagePicker().pickImage(source: fromWhere);
-    //   path = image?.path;
-    // } else if (fromWhere == 'videoGallery') {
-    //   final XFile? video = await ImagePicker().pickVideo(source: ImageSource.gallery);
-    //   path = video?.path;
-    // } else {
-    //   return null;
-    // }
-    // return path;
   }
 
   Future<List<String?>?> uploadMultiple({
