@@ -50,6 +50,7 @@ export 'widget/chat/room/chat.room.message_box.upload_button.dart';
 // Realtime database chat. 2023.11.25
 export 'model/rchat/rchat.message.list.dart';
 export 'model/rchat/rchat.message_input_box.dart';
+export 'model/rchat/rchat.room_edit.dialog.dart';
 
 // Category
 export 'widget/category/category.list_view.dart';
@@ -85,6 +86,7 @@ export 'widget/comment/comment.one_line.list_tile.dart';
 export 'widget/comment/comment.one_line.list_view.dart';
 export 'widget/comment/comment.list.bottom_sheet.dart';
 export 'widget/comment/comment.content.dart';
+export 'widget/comment/comment.column.stream_builder.dart';
 
 // Common
 export 'widget/common/date_time_text.dart';

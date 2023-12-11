@@ -9,6 +9,16 @@ import 'package:rxdart/subjects.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fireflutter/fireflutter.dart';
 
+typedef MessageData = ({
+  dynamic badge,
+  String id,
+  String roomId,
+  String uid,
+  String type,
+  String senderUid,
+  String action,
+});
+
 class CustomizeMessagingTopic {
   final String topic;
   final String title;
@@ -58,7 +68,8 @@ class MessagingService {
   String? token;
   final BehaviorSubject<String?> tokenChange = BehaviorSubject.seeded(null);
 
-  final String prefixCustomTopic = 'customTopic';
+  // TODO clean up
+  // final String prefixCustomTopic = 'customTopic';
 
   List<CustomizeMessagingTopic>? customizeTopic;
 
@@ -154,22 +165,26 @@ class MessagingService {
     await FirebaseMessaging.instance.subscribeToTopic('${platformName()}Users');
   }
 
+  /// Subscribe to custom topic.
+  ///
+  /// Please avoid using `allUsers`, `iosUsers`, `androidUsers`, and `webUsers`
+  /// because they are reserved for platform specific topic by FireFlutter.
   Future subscribeToCustomTopic(String topic) async {
     if (initialized == false) return;
-    await FirebaseMessaging.instance.subscribeToTopic('$prefixCustomTopic$topic');
+    await FirebaseMessaging.instance.subscribeToTopic(topic);
   }
 
   Future unsubscribeToCustomTopic(String topic) async {
     if (initialized == false) return;
     try {
-      await FirebaseMessaging.instance.unsubscribeFromTopic('$prefixCustomTopic$topic');
+      await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
     } catch (e) {
       /// error will be thrown if the topic is not subscribed.
       log('unsubscribeToCustomTopic error: ${e.toString()}');
     }
   }
 
-  /// `/users/<uid>/fcm_tokens/<docId>` 에 저장을 한다.
+  /// Save tokens at `/users/<uid>/fcm_tokens/<docId>`
   _updateToken(String? token) async {
     if (FirebaseAuth.instance.currentUser == null) return;
     if (token == null) return;
@@ -207,7 +222,14 @@ class MessagingService {
   /// [target] is the target of devices you want to send message to. If it's "all", then it will send messages to all users.
   /// [type] is the kind of push notification `post` `chat`
   /// [id] is can be use to determined the landing page when notification is clicked
-  Future<DocumentReference> queue({
+  /// heirarchy action >> topic >> tokens >> uids
+  /// if action is not null, topic, tokens, uids will be ignored
+  /// if action is null and topic is not null, then tokens and uids will be ignored
+  /// if action and topic is null, and tokens is not null then uids will be ignored
+  /// if action, topic, and tokens are null, then uids will be used
+  ///
+  ///
+  Future<DocumentReference?> queue({
     required String title,
     required String body,
     List<String>? uids,
@@ -220,7 +242,12 @@ class MessagingService {
     String? sound,
     String? action,
     String? categoryId,
-  }) {
+    Map<String, dynamic>? extra,
+  }) async {
+    if (uids == null && tokens == null && topic == null) {
+      return null;
+    }
+
     Json data = {
       'title': title,
       'body': body,
@@ -236,10 +263,27 @@ class MessagingService {
       if (sound != null && sound.isNotEmpty) 'sound': sound,
       if (action != null && action.isNotEmpty) 'action': action,
       if (categoryId != null && categoryId.isNotEmpty) 'categoryId': categoryId,
+      if (extra != null && extra.isNotEmpty) ...extra,
     };
 
     // print('data; $data');
 
-    return messageQueueCol.add(data);
+    return await messageQueueCol.add(data);
+  }
+
+  /// Parse message data from [RemoteMessage.data]
+  ///
+  /// {badge: , id: so7HI41U2QfQRu86B7EF, roomId: , type: post, senderUid: 2F49sxIA3JbQPp38HHUTPR2XZ062, action: }
+  ///
+  MessageData parseMessageData(Map<String, dynamic> data) {
+    return (
+      badge: data['badge'],
+      id: data['id'],
+      roomId: data['roomId'] ?? '',
+      uid: data['uid'] ?? '',
+      type: data['type'],
+      senderUid: data['senderUid'],
+      action: data['action'] ?? '',
+    );
   }
 }

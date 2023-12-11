@@ -16,7 +16,7 @@ class RChatMessageInputBox extends StatefulWidget {
   final Function(double?)? onProgress;
 
   /// [double] is null when upload is completed.
-  final Function? onSend;
+  final void Function({String? text, String? url})? onSend;
 
   @override
   State<RChatMessageInputBox> createState() => _ChatMessageInputBoxState();
@@ -28,6 +28,7 @@ class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         if (progress != null && !progress!.isNaN) LinearProgressIndicator(value: progress),
         const Divider(),
@@ -57,6 +58,7 @@ class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
                     complete: () => widget.onProgress?.call(null) ?? setState(() => progress = null),
                   );
                   await RChat.sendMessage(url: url);
+                  widget.onSend?.call(text: null, url: url);
                 },
               ),
               suffixIcon: Row(
@@ -65,11 +67,11 @@ class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
                   IconButton(
                     icon: widget.sendIcon ?? const Icon(Icons.send),
                     onPressed: () async {
-                      String trimText = inputController.text.trim();
-                      if (trimText.isEmpty) return;
-                      await RChat.sendMessage(text: trimText);
+                      String text = inputController.text.trim();
+                      if (text.isEmpty) return;
+                      await RChat.sendMessage(text: text);
                       inputController.clear();
-                      widget.onSend?.call();
+                      widget.onSend?.call(text: text, url: null);
                     },
                   ),
                 ],

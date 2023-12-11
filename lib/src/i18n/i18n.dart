@@ -109,6 +109,7 @@ class I18nTexts {
   String inputTokensHint;
   String chooseUser;
   String searchByUid;
+  String noMessageYet;
 
   /// activity log appbar titile
   String titleStatistic;
@@ -204,6 +205,8 @@ class I18nTexts {
   String pushNotificationUserHint;
   String pushNotificationTokenHint;
 
+  String selectCategory;
+
   I18nTexts({
     this.loginFirstTitle = 'Login first',
     this.loginFirstMessage = 'Please login first.',
@@ -215,6 +218,7 @@ class I18nTexts {
     this.chooseUploadFrom = "Choose upload from...",
     this.noCategory = "No category, yet. Create one!",
     this.noPost = "No post yet. Create one!",
+    this.selectCategory = 'Select Category',
     this.noComment = "No comment, yet. Create one!",
     this.noReply = "No reply",
     this.title = "Title",
@@ -303,6 +307,7 @@ class I18nTexts {
     this.inputTokensHint = "Multipule token must be separated by comma (,)",
     this.chooseUser = "Choose user",
     this.searchByUid = "Search by uid",
+    this.noMessageYet = "No message yet",
 
     /// activity log appbar titile
     this.titleStatistic = "Admin Statistics",

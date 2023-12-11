@@ -14,6 +14,15 @@
       "deviceId": "iPhone 15 Pro Max"
     },
     {
+      "name": "PhiLov - RChat- iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/philov",
+      "program": "lib/main.rchat.dart",
+      "flutterMode": "debug",
+      "deviceId": "iPhone 15 Pro Max"
+    },
+    {
       "name": "PhiLov - iPhone11ProMax",
       "request": "launch",
       "type": "dart",
@@ -23,15 +32,23 @@
       "deviceId": "iPhone11ProMax"
     },
     {
-      "name": "PhiLov - iPhone SE 2nd",
+      "name": "PhiLov - iPhone SE",
       "request": "launch",
       "type": "dart",
       "cwd": "apps/philov",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "deviceId": "00008030-000D445A11A3802E"
+      "deviceId": "iPhone SE"
     },
-
+    {
+      "name": "PhiLov - iPad",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "iPad"
+    },
     {
       "name": "PhiLov - Emulator",
       "request": "launch",
@@ -40,6 +57,15 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "emulator-5554"
+    },
+    {
+      "name": "PhiLov - A045",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "R9ATA00LMJM"
     },
     {
       "name": "PhiLov - Chrome",
@@ -378,6 +404,15 @@
       "deviceId": "9538AD08-48B3-43A8-B848-31CC488FE3E9"
     },
     {
+      "name": "PhiLov - External Samsung - debug (C)",
+      "request": "launch",
+      "type": "dart",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "R9ATA00LMJM"
+    },
+    {
       "name": "Admin - Simulator - (J)",
       "request": "launch",
       "type": "dart",
@@ -417,7 +452,7 @@
       "name": "GRC - Emulator (N)",
       "request": "launch",
       "type": "dart",
-      "cwd": "apps/grc",
+      "cwd": "apps/philov",
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "emulator-5554"
@@ -435,7 +470,7 @@
       "name": "GRC - Samsung real phone (N)",
       "request": "launch",
       "type": "dart",
-      "cwd": "apps/grc",
+      "cwd": "apps/philov",
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "R9ATA00LMJM"

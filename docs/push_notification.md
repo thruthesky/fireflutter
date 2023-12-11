@@ -1,66 +1,127 @@
 # Push notifications
 
-
 ## Overview
 
-Push notification tokens are saved under `/users/{uid}/fcm_tokens/{token} { uid: ..., device_type: ..., fcm_token: ... }`. If the user didn't sign in, the token will not be saved.
+When there are any activities that the user should be informed, the fireflutter can send push notifications to the user on the phone.
+
+Flutterflow provides sending push messages with tokens. You can programmtically choose which tokens to send messages with.
+
+- You may send a push message to all users
+- Or just send a push message to specific user group like android, ios
+
+You can design the app to
+
+- send a push message to the user when a comment is created under his post or comment.
+- send a message to the user when there is a post under the forum category that he subscribed.
+- send a push message to the user when there is a new chat message in the chat room that he subscribed.
+
+You can also set the Android phone to display with head-up display. But this takes an optional code addition.
+
+## Terms
+
+- The `token` means `push notification token`.
+
+
+
+## Strcuture
+
+Tokens are saved under `/users/{uid}/fcm_tokens/{token} { uid: ..., device_type: ..., fcm_token: ... }` by `Messaging.init()`.
+If the user didn't sign in, the token will not be saved. So, if you want to send push notifications to all the users including those who didn't sign in, You may do so using Firebase console.
+
+The `device_type` may be `ios` or `android`.
 
 The admin can send push notification to all the devices, or specific type/os through cloud function by creating a push notification document.
-
 
 ## Initialization
 
 - For iOS, you need to setup the `Firebase Cloud Messaging` described in [the office site](https://firebase.google.com/docs/cloud-messaging/flutter/client).
 
-
 - Then, copy the code below into a place where it can be run on app boots. It would be good in `initState() { ... }` of the first widget of the app.
 
-
 ```dart
-    // init here
-    MessagingService.instance.init(
-      // while the app is close and notification arrive you can use this to do small work
-      // example are changing the badge count or informing backend.
-      onBackgroundMessage: onTerminatedMessage,
+/// No push notification on web
+if (kIsWeb) {
+  return;
+}
 
-      ///
-      onForegroundMessage: (RemoteMessage message) {
-        onForegroundMessage(message);
-      },
-      onMessageOpenedFromTerminated: (message) {
-        // this will triggered when the notification on tray was tap while the app is closed
-        // if you change screen right after the app is open it display only white screen.
-        WidgetsBinding.instance.addPostFrameCallback((duration) {
-          onTapMessage(message);
-        });
-      },
-      // this will triggered when the notification on tray was tap while the app is open but in background state.
-      onMessageOpenedFromBackground: (message) {
-        onTapMessage(message);
-      },
-      onNotificationPermissionDenied: () {
-        // print('onNotificationPermissionDenied()');
-      },
-      onNotificationPermissionNotDetermined: () {
-        // print('onNotificationPermissionNotDetermined()');
-      },
+/// Push notification service init
+MessagingService.instance.init(
+  /// This method will be called, when app is in background or terminated.
+  ///
+  /// while the app is close and notification arrive you can use this to do small work
+  /// example are changing the badge count or informing backend.
+  onBackgroundMessage: (RemoteMessage message) async {
+    dog('onBackgroundMessage: ${message.notification!.body!}');
+  },
+
+  /// This method will be called, when app is in foreground.
+  onForegroundMessage: (RemoteMessage message) {
+    dog('onForegroundMessage: ${message.notification!.body!}');
+    toast(title: 'Push messag', message: message.notification!.body!);
+  },
+
+  /// This will triggered when the notification on tray was tap while the app is closed
+  /// if you change screen right after the app is open it display only white screen.
+  onMessageOpenedFromTerminated: (message) {
+    dog('onMessageOpenedFromTerminated: ${message.notification!.body!}');
+    WidgetsBinding.instance.addPostFrameCallback((duration) async {
+      onMessageTapped(message);
+    });
+  },
+
+  /// This will triggered when the notification on tray was tapped while the app is in background(The app is open but is in background status).
+  onMessageOpenedFromBackground: (message) {
+    dog('onMessageOpenedFromBackground: ${message.notification!.body!}');
+    onMessageTapped(message);
+  },
+
+  ///
+  onNotificationPermissionDenied: () {
+    toast(
+      title: 'Permission Denied',
+      message: 'Please allow notification permission to receive push notifications.',
     );
+  },
+  onNotificationPermissionNotDetermined: () {
+    toast(
+      title: 'Permission Not Determined',
+      message: 'Please allow notification permission to receive push notifications.',
+    );
+  },
+);
 ```
 
-- For the `Head-up display` in Android, Setting the importance to `NotificationManager.IMPORTANCE_HIGH` will shows the notification everywhere, makes noise and peeks. May use full screen intents.
+- If everything is setup properly, the token will be saved under `/users/<uid>/fcm_tokens/...` when a user sign in.
+
 
 
 ## Push notification settings
 
+
+### Push notification On and Off
+
+- You can design the on and off swtich setting on your own way. There is no predefined structure on it.
+  - For instance, you want to give a swtich to turn it on or off on each chat room.
+    When the user turn it on, the app can save `/chat-rooms/{my-uid}/{room-id} {messaging: boolean}`.
+    Then, when the user send a chat message, check if the room id in the chat room document is set to true.
+    If it's true, send a message. Or not just don't send a message.
+
+  - Note that, you may let users to receive all new messages by default. It is up to you how you design.
+
+
+### extra settings
+
+
 - All user setting's documents including push notification setting document is saved under `/user/<uid>/user_settings` collection. We call it `user_settings` collection.
   - See the settings for more information.
 
-Each of push notification option is saved as a single document under `user_settings` collection with fields consist of `action`, `categoryId`, `uid`. For instance, `{action: commentCreate, category: qna, uid: userUid}`.
+Each of push notification option is saved as a single document under `user_settings` collection with fields consist of `action`, `categoryId`, `uid`. For instance, `{action: commentCreate, categoryId: qna, uid: userUid}`.
 
-- Security rules, 
+- Security rules,
+
   - Login user can only update their own `user_settings`
   - All users are allow to read other `user_settings`. In some cases we send push notification via `client device` and we need to filter those who dont want to receive push notification.
-  
+
   ```ts
       match /user_settings/{docId} {
         allow read:  if true;
@@ -70,11 +131,9 @@ Each of push notification option is saved as a single document under `user_setti
 
 - Be careful not to save a document under `user_settings` collection that has `action` and `categoryId` if it's not for push notification settings.
 
-- This is an example of a push notification subscription document - `/users/<my-uid>/user_settings/<document-id> {action: commentCreate, category: qna}`.
+- This is an example of a push notification subscription document - `/users/<my-uid>/user_settings/<document-id> {action: commentCreate, categoryId: qna}`.
 
 - By default, cloud function event like `commentCreate`, `chatCreate`, `userCreate`, `reportCreate` will send push message automatically unless the user turn them off by adding specific `user_settings`. [Check send push notification with action](#send-push-notification-with-action)
-
-
 
 - The format of the document is in
 
@@ -88,8 +147,13 @@ Each of push notification option is saved as a single document under `user_setti
 }
 ```
 
+## hierarchy of sending priority
 
-
+- action >> topic >> tokens >> uids
+- if action is not null, topic, tokens, uids will be ignored
+- if action is null and topic is not null, then tokens and uids will be ignored
+- if action and topic is null, and tokens is not null then uids will be ignored
+- if action, topic, and tokens are null, then uids will be used
 
 ## 4 Different way to send push notification
 
@@ -128,18 +192,18 @@ AdminService.instance.showUserSearchDialog(context, onTap: (user) async {
 });
 ```
 
-
 ### Send push notification with `topic`
 
 Sending push notification using `topic`
 
 By default `MessagingService.instance.init()` will try to subscribe the device to the following topics
- - `allUsers`
- - platform specific topic like 
-    - `iosUsers`
-    - `androidUsers`
-    - `webUsers` 
-    - `${platformName()}Users` - other platform name will also included
+
+- `allUsers`
+- platform specific topic like
+  - `iosUsers`
+  - `androidUsers`
+  - `webUsers`
+  - `${platformName()}Users` - other platform name will also included
 
 ```dart
   MessagingService.instance.queue(
@@ -155,18 +219,23 @@ App specific event like `commentCreate`, `chatCreate`, `userCreate`, `reportCrea
 
 #### `commentCreate`
 
- Cloud function `messagingOnCommentCreate` event will trigger when comment is created
+You may need to create an index for commentCreate Push Notification.
 
- ```ts 
-  exports.messagingOnCommentCreate = onDocumentCreated(
-    "comments/{commentId}",
-    async ( ... ): 
-    ....
-  );
+> action Ascending, categoryId Ascending, uid Ascending
+
+Cloud function `messagingOnCommentCreate` event will trigger when comment is created
+
+```ts
+ exports.messagingOnCommentCreate = onDocumentCreated(
+   "comments/{commentId}",
+   async ( ... ):
+   ....
+ );
 ```
 
 Since `commentCreate` by default will send push message to its ancestors and post author you can disable this by adding the setting below
-  - `/users/<uid>/user_settings/settings {action: disableNotifyNewCommentsUnderMyPostsAndComments}`
+
+- `/users/<uid>/user_settings/settings {action: disableNotifyNewCommentsUnderMyPostsAndComments}`
 
 If a push notification is created with something like `{action: commentCreate, categoryId: qna, id: commentId}`
 
@@ -175,18 +244,16 @@ If a push notification is created with something like `{action: commentCreate, c
 - It is possible to get push notification if you disable getting push notifcation from ancestor but you enable getting push message when a comment is created to a forum with `categoryId`
 - It will remove duplicate uid so you will only get one push message for this event
 
-
-
-  - It will get the Post author with Post.get(data.postId), 
+  - It will get the Post author with Post.get(data.postId),
   - It will get all ancestor uids
-  - It will filter the ancestor uids and post author if a document  in `user_settings` has
+  - It will filter the ancestor uids and post author if a document in `user_settings` has
     - `{action: disableNotifyNewCommentsUnderMyPostsAndComments}`
   - Since `categoryId` exist from post, it will also get uids if a document in `user_settings` has
     - `{action: 'commentCreate', categoryId: '${post.categoryId}'}`
   - Combine the filtered ancestor uids and uids who subscribe to `commentCreate` under a specific `categoryId`
   - It will send push message to combined uids
 
- `commentCreate` payload
+`commentCreate` payload
 
 ```ts
   const data: SendMessage = {
@@ -199,51 +266,48 @@ If a push notification is created with something like `{action: commentCreate, c
   };
 ```
 
-
 #### `chatCreate`
 
 Cloud function `messagingOnChatMessageCreate` event will trigger when chat message is created.
 
-```ts 
+```ts
   exports.messagingOnChatMessageCreate = onDocumentCreated(
     "chats/{chatId}/messages/{messageId}",
-    async ( ... ): 
+    async ( ... ):
     ....
   );
 ```
 
 For chat room, when a user enters into a chat room, the push notification is enabled by default unless the user turn off the push notification manually. When the user turns off the push notification, `{action: chatDisabled, roomId: roomId}` action and roomId will be saved in the setting document.
 
+- It will filter the uids if a document in `user_settings` has
 
-  - It will filter the uids if a document in `user_settings` has
+- `{action: 'chatDisabled', roomId: 'data.roomId'}`
 
-   - `{action: 'chatDisabled', roomId: 'data.roomId'}`
-
-  - It will send push message to remaining uids
+- It will send push message to remaining uids
 
 `chatCreate` payload
 
 ```ts
-  const messageData: SendMessage = {
-    type: EventType.chat,
-    action: EventName.chatCreate,
-    title: `${user?.display_name ?? user?.name ?? ""} send you a message.`,
-    body: data.text,
-    uids: await Chat.getOtherUserUidsFromChatMessageDocument(data),
-    id: data.roomId,
-    senderUid: data.uid,
-  };
+const messageData: SendMessage = {
+  type: EventType.chat,
+  action: EventName.chatCreate,
+  title: `${user?.display_name ?? user?.name ?? ""} send you a message.`,
+  body: data.text,
+  uids: await Chat.getOtherUserUidsFromChatMessageDocument(data),
+  id: data.roomId,
+  senderUid: data.uid,
+};
 ```
 
 #### `userCreate`
 
-
 Cloud function `messagingOnUserCreate` event will trigger when new user is created.
 
-```ts 
+```ts
   exports.messagingOnUserCreate = onDocumentCreated(
     "users/{userUid}",
-    async ( ... ): 
+    async ( ... ):
     ....
   );
 ```
@@ -252,32 +316,31 @@ Cloud function `messagingOnUserCreate` event will trigger when new user is creat
 
 When a new user is registered it will send push notification to admin
 
-  - It will get users uid with `isAdmin` set to `true`
-  - It will remove admin with `/users/<my-uid>/user_settings/<document-id> {action: 'userCreate', categoryId: 'notifyOnNewUser'}`
-  - Send push message to remaining admin
+- It will get users uid with `isAdmin` set to `true`
+- It will remove admin with `/users/<my-uid>/user_settings/<document-id> {action: 'userCreate', categoryId: 'notifyOnNewUser'}`
+- Send push message to remaining admin
 
 `userCreate` payload
 
 ```ts
-  const data: SendMessage = {
-    title: "New Registration",
-    content: "New User " + event.data?.id,
-    id: event.data?.id,
-    action: EventName.userCreate,
-    type: EventType.user,
-    senderUid: event.data?.id,
-  };
+const data: SendMessage = {
+  title: "New Registration",
+  content: "New User " + event.data?.id,
+  id: event.data?.id,
+  action: EventName.userCreate,
+  type: EventType.user,
+  senderUid: event.data?.id,
+};
 ```
-
 
 #### `reportCreate`
 
 Cloud function `messagingOnReportCreate` event will trigger when new user is created.
 
-```ts 
+```ts
   exports.messagingOnReportCreate = onDocumentCreated(
     "reports/{reportId}",
-    async ( ... ): 
+    async ( ... ):
     ....
   );
 ```
@@ -286,61 +349,56 @@ Cloud function `messagingOnReportCreate` event will trigger when new user is cre
 
 When a user create a report, it will send push message to admin
 
-  - It will get users uid with `isAdmin` set to `true`
-  - It will remove admin with `/users/<my-uid>/user_settings/<document-id> {action: 'reportCreate', categoryId: 'notifyOnNewReport'}`
+- It will get users uid with `isAdmin` set to `true`
+- It will remove admin with `/users/<my-uid>/user_settings/<document-id> {action: 'reportCreate', categoryId: 'notifyOnNewReport'}`
 
 `reportCreate` payload
 
 ```ts
-  const data: SendMessage = {
-    title: "Report: " + report.type,
-    body: report.reason,
-    id: event.data?.id,
-    action: EventName.reportCreate,
-    type: EventType.report,
-    senderUid: report.uid,
-  };
+const data: SendMessage = {
+  title: "Report: " + report.type,
+  body: report.reason,
+  id: event.data?.id,
+  action: EventName.reportCreate,
+  type: EventType.report,
+  senderUid: report.uid,
+};
 ```
-
 
 ### Sending push notification with `action` and `categoryId`
 
 For forum we can turn on and off notification button for user to subscribe or unsubscribe to certain `categoryId` then we can use `action` and `categoryId`
 
-By default when we create a post the cloud function will invoke the  `messagingOnPostCreate`
+By default when we create a post the cloud function will invoke the `messagingOnPostCreate`
 
-```ts 
+```ts
   exports.messagingOnPostCreate = onDocumentCreated(
     "posts/{postId}",
-    async ( ... ): 
+    async ( ... ):
     ....
   );
 ```
 
 If a post is created under categoryId `discussion`
 
-  - This will get all users who has document like `/users/<my-uid>/user_settings/<document-id>{action:'postCreate', 'categoryId': 'discussion'}`
-  - And it send push message to those user who has the setting above
+- This will get all users who has document like `/users/<my-uid>/user_settings/<document-id>{action:'postCreate', 'categoryId': 'discussion'}`
+- And it send push message to those user who has the setting above
 
-
- 
 #### You can customize push message via `action` and `categoryId`
- - To send push message to user who subscribe to `customAction` and `customCategory`
- - You can create a document in `user_settings` like
-    - `{action: 'customAction', 'categoryId': 'customCategoryId'}`
- - You can then use the `MessagingService.instance.queue` like below to send to all user who has settings like above
 
- ```ts
-  MessagingService.instance.queue(
-    title: 'message title',
-    body: 'message body',
-    action: 'customAction',
-    categoryId: 'customCategoryId'
-  );
- ```
+- To send push message to user who subscribe to `customAction` and `customCategory`
+- You can create a document in `user_settings` like
+  - `{action: 'customAction', 'categoryId': 'customCategoryId'}`
+- You can then use the `MessagingService.instance.queue` like below to send to all user who has settings like above
 
-
-
+```ts
+ MessagingService.instance.queue(
+   title: 'message title',
+   body: 'message body',
+   action: 'customAction',
+   categoryId: 'customCategoryId'
+ );
+```
 
 ### Push notifcation sound
 
@@ -485,6 +543,11 @@ class MainActivity: FlutterActivity() {
 }
 ```
 
+
+
+- For the `Head-up display` in Android, Setting the importance to `NotificationManager.IMPORTANCE_HIGH` will shows the notification everywhere, makes noise and peeks. May use full screen intents.
+
+
 Setting the importance to `NotificationManager.IMPORTANCE_HIGH` will shows the notification everywhere, makes noise and peeks. May use full screen intents.
 
 iOS Setup
@@ -555,4 +618,80 @@ Subscribe to topic according to business logic
     );
 ```
 
+## Testing
 
+You can test the push notification routing.
+
+```dart
+/// TEST CODE
+Timer(const Duration(seconds: 1), () {
+  routeFromMessage({
+    'badge': '',
+    'id': 'so7HI41U2QfQRu86B7EF',
+    'roomId': '',
+    'type': 'post',
+    'senderUid': '2F49sxIA3JbQPp38HHUTPR2XZ062' 'xxx',
+    'action': '',
+  });
+});
+
+  routeFromMessage(Map<String, dynamic> messageData) async {
+    final data = MessagingService.instance.parseMessageData(messageData);
+    dog(data.toString());
+
+    /**
+     * return if the the sender is also the current loggedIn user.
+     */
+    if (myUid == data.senderUid) {
+      return;
+    }
+
+    /**
+       * If the type is user then move it to public use profile.
+       */
+    if (data.type == NotificationType.user) {
+      /// if the action is userCreate then move it to public profile.
+      if (data.action == 'userCreate') {
+        // return UserService.instance.showPublicProfileScreen(context: context, uid: data.id);
+        return Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (c) => const AdminUserListView(
+              createdAtDescending: true,
+            ),
+          ),
+        );
+      }
+      // this should work but it needs tests/review.
+      // context.push does not work
+      // return GoRouter.of(context).push(MyViewersScreen.routeName);
+    }
+
+    /**
+       * If the type is post then move it to a specific post.
+       */
+    if (data.type == NotificationType.post) {
+      /// else show the viewer screen
+      return PostService.instance.showPostViewScreen(
+        context: context,
+        postId: data.id,
+      );
+    }
+
+    if (data.type == NotificationType.report) {
+      return Navigator.of(context).push(MaterialPageRoute(builder: (c) => const AdminReportListScreen()));
+    }
+
+    /**
+     * If the type is chat then move it to chat room.
+     */
+    if (data.type == NotificationType.chat) {
+      // ignore: use_build_context_synchronously
+      return ChatService.instance.showChatRoom(
+        context: context,
+        room: await Room.get(
+          data.id,
+        ),
+      );
+    }
+  }
+```

@@ -189,6 +189,7 @@ class _PostCardState extends State<PostCard> {
                       children: [
                         DateTimeText(
                             dateTime: post.createdAt,
+                            locale: 'ko',
                             style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11)),
                         DatabaseCount(
                           path: pathSeenBy(post.id), // 'posts/${post.id}/seenBy',
@@ -400,7 +401,10 @@ class _PostCardState extends State<PostCard> {
                     child: GestureDetector(
                       child: Text(
                         key: const Key('PostCardShowLikesButton'),
-                        "${likes.length} likes",
+                        tr.noOfLikes.replaceAll(
+                          '#no',
+                          '${likes.length}',
+                        ),
                       ),
                       onTap: () {
                         UserService.instance.showLikedByListScreen(
