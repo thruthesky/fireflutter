@@ -9,32 +9,13 @@ class DisplayQuiltImages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (urls.isEmpty) return const SizedBox();
-    if (urls.length == 1) {
-      return CachedNetworkImage(
-        imageUrl: urls[0],
-        fit: BoxFit.contain,
-      );
-    }
+    if (urls.length == 1) return _expandedCachedNetworkImage(urls[0], height: 400);
     if (urls.length == 2) {
       return Row(
         children: [
-          Expanded(
-            flex: 1,
-            child: CachedNetworkImage(
-              height: 200,
-              imageUrl: urls[0],
-              fit: BoxFit.cover,
-            ),
-          ),
+          _expandedCachedNetworkImage(urls[0], height: 200),
           const SizedBox(width: 2),
-          Expanded(
-            flex: 1,
-            child: CachedNetworkImage(
-              height: 200,
-              imageUrl: urls[1],
-              fit: BoxFit.cover,
-            ),
-          ),
+          _expandedCachedNetworkImage(urls[1], height: 200),
         ],
       );
     }
@@ -44,36 +25,14 @@ class DisplayQuiltImages extends StatelessWidget {
         height: 200,
         child: Row(
           children: [
-            Expanded(
-              flex: 1,
-              child: CachedNetworkImage(
-                height: 200,
-                imageUrl: urls[0],
-                fit: BoxFit.cover,
-              ),
-            ),
+            _expandedCachedNetworkImage(urls[0], height: 200),
             const SizedBox(width: 2),
             Expanded(
-              flex: 1,
               child: Column(
                 children: [
-                  Expanded(
-                    flex: 1,
-                    child: CachedNetworkImage(
-                      width: double.infinity,
-                      imageUrl: urls[1],
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                  _expandedCachedNetworkImage(urls[1], width: double.infinity),
                   const SizedBox(height: 2),
-                  Expanded(
-                    flex: 1,
-                    child: CachedNetworkImage(
-                      width: double.infinity,
-                      imageUrl: urls[2],
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                  _expandedCachedNetworkImage(urls[2], width: double.infinity),
                 ],
               ),
             ),
@@ -81,23 +40,35 @@ class DisplayQuiltImages extends StatelessWidget {
         ),
       );
     }
+    if (urls.length == 4) {
+      return GridView.count(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisCount: 2,
+        mainAxisSpacing: 2,
+        crossAxisSpacing: 2,
+        children: urls.asMap().entries.map((e) => CachedNetworkImage(imageUrl: e.value, fit: BoxFit.cover)).toList(),
+      );
+    }
 
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
+      crossAxisCount: 3,
       mainAxisSpacing: 2,
       crossAxisSpacing: 2,
-      children: urls
-          .asMap()
-          .entries
-          .map(
-            (e) => CachedNetworkImage(
-              imageUrl: e.value,
-              fit: BoxFit.cover,
-            ),
-          )
-          .toList(),
+      children: urls.asMap().entries.map((e) => CachedNetworkImage(imageUrl: e.value, fit: BoxFit.cover)).toList(),
+    );
+  }
+
+  _expandedCachedNetworkImage(String url, {double? height, double? width}) {
+    return Expanded(
+      child: CachedNetworkImage(
+        height: height,
+        width: width,
+        imageUrl: url,
+        fit: BoxFit.cover,
+      ),
     );
   }
 }
