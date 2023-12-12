@@ -110,6 +110,7 @@ class I18nTexts {
   String chooseUser;
   String searchByUid;
   String noMessageYet;
+  String uploadingInProgress;
 
   /// activity log appbar titile
   String titleStatistic;
@@ -308,6 +309,7 @@ class I18nTexts {
     this.chooseUser = "Choose user",
     this.searchByUid = "Search by uid",
     this.noMessageYet = "No message yet",
+    this.uploadingInProgress = "Uploading in progress",
 
     /// activity log appbar titile
     this.titleStatistic = "Admin Statistics",

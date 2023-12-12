@@ -60,12 +60,8 @@ class _ChatMessageInputBoxState extends State<RChatMessageInputBox> {
                     file: true,
                     photoGallery: false,
                     videoGallery: false,
-                    progress: (p) =>
-                        widget.onProgress?.call(p) ??
-                        setState(() {
-                          progress = p;
-                        }),
-                    complete: () => widget.onProgress?.call(null) ?? setState(() => progress = null),
+                    progress: (p) => widget.onProgress?.call(p) ?? mounted ? setState(() => progress = p) : null,
+                    complete: () => widget.onProgress?.call(null) ?? mounted ? setState(() => progress = null) : null,
                     beforeUpload: widget.beforeUpload,
                   );
                   await RChat.sendMessage(url: url);
