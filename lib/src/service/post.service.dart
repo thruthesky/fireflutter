@@ -14,15 +14,15 @@ class PostService {
   get col => postCol;
 
   // Updated from this.
-  // bool uploadFromCamera = true;
-  // bool uploadFromGallery = true;
-  // bool uploadFromFile = true;
-  bool uploadPhotoVideoFromGallery = false;
-  bool uploadPhotoFromCamera = false;
-  bool uploadPhotoFromGallery = false;
-  bool uploadVideoFromCamera = false;
-  bool uploadVideoFromGallery = false;
-  bool uploadFromFile = false;
+  bool uploadFromCamera = true;
+  bool uploadFromGallery = true;
+  bool uploadFromFile = true;
+  // bool uploadPhotoVideoFromGallery = false;
+  // bool uploadPhotoFromCamera = false;
+  // bool uploadPhotoFromGallery = false;
+  // bool uploadVideoFromCamera = false;
+  // bool uploadVideoFromGallery = false;
+  // bool uploadFromFile = false;
 
   bool enableSeenBy = false;
 
@@ -39,15 +39,15 @@ class PostService {
 
   init({
     // Updated from this.
-    // bool uploadFromGallery = true,
-    // bool uploadFromCamera = true,
-    // bool uploadFromFile = true,
-    bool uploadPhotoVideoFromGallery = false,
-    bool uploadPhotoFromCamera = false,
-    bool uploadPhotoFromGallery = true,
-    bool uploadVideoFromCamera = true,
-    bool uploadVideoFromGallery = false,
+    bool uploadFromGallery = true,
+    bool uploadFromCamera = true,
     bool uploadFromFile = true,
+    // bool uploadPhotoVideoFromGallery = false,
+    // bool uploadPhotoFromCamera = false,
+    // bool uploadPhotoFromGallery = true,
+    // bool uploadVideoFromCamera = true,
+    // bool uploadVideoFromGallery = false,
+    // bool uploadFromFile = true,
     bool enableSeenBy = false,
     void Function(Post)? onCreate,
     void Function(Post)? onUpdate,
@@ -55,14 +55,16 @@ class PostService {
     PostCustomize? customize,
     bool enableNotificationOnLike = false,
   }) {
-    // this.uploadFromGallery = uploadFromGallery;
-    // this.uploadFromCamera = uploadFromCamera;
+    this.uploadFromGallery = uploadFromGallery;
+    this.uploadFromCamera = uploadFromCamera;
 
-    this.uploadPhotoVideoFromGallery = uploadPhotoVideoFromGallery;
-    this.uploadPhotoFromCamera = uploadPhotoFromCamera;
-    this.uploadPhotoFromGallery = uploadPhotoFromGallery;
-    this.uploadVideoFromCamera = uploadVideoFromCamera;
-    this.uploadVideoFromGallery = uploadVideoFromGallery;
+    // TODO clean up
+
+    // this.uploadPhotoVideoFromGallery = uploadPhotoVideoFromGallery;
+    // this.uploadPhotoFromCamera = uploadPhotoFromCamera;
+    // this.uploadPhotoFromGallery = uploadPhotoFromGallery;
+    // this.uploadVideoFromCamera = uploadVideoFromCamera;
+    // this.uploadVideoFromGallery = uploadVideoFromGallery;
     this.uploadFromFile = uploadFromFile;
 
     this.enableSeenBy = enableSeenBy;

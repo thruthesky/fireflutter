@@ -42,6 +42,7 @@ class RChat {
       return;
     }
 
+    // This will be deleted
     roomMessageOrder[currentRoom.id] = (roomMessageOrder[currentRoom.id] ?? 0) - 1;
 
     /// 참고, 실제 메시지를 보내기 전에, 채팅방 자체를 먼저 업데이트 해 버린다.
@@ -53,13 +54,66 @@ class RChat {
     /// 즉, 0이 되어야하는데 1이 되는 상황이 발생한다. 그래서, updateJoin() 이 먼저 호출되어야 한다.
     updateJoin(text: text, url: url);
 
-    await messageRef(roomId: currentRoom.id).push().set({
+    final ref = messageRef(roomId: currentRoom.id).push();
+
+    await ref.set({
       'uid': myUid,
       if (text != null) 'text': text,
       if (url != null) 'url': url,
       'order': RChat.roomMessageOrder[currentRoom.id],
       'createdAt': ServerValue.timestamp,
     });
+
+    // get updated data then set order as -createdAt
+    final createdAt = await ref.child('createdAt').get();
+    // await ref.update({'order': (createdAt.value as int) * -1});
+
+    // TODO Change to phone datetime
+    _orderRooms(createdAt.value as int);
+  }
+
+  static void _orderRooms(int createdAt) {
+    // RChat.joinsRef.child(my.uid)
+    // currentRoom
+
+    // algo
+
+    // check if single or group
+
+    // if single, update the other user's room
+    if (currentRoom.isSingleChat) {
+      final otherUserUid = currentRoom.otherUserUid;
+      if (otherUserUid != null) {
+        joinRef(otherUserUid, currentRoom.id).update(
+          {
+            'updatedAt': ServerValue.timestamp,
+            'newMessage': ServerValue.increment(1),
+            'order': -int.parse('1$createdAt'),
+          },
+        );
+      }
+    }
+    // if group, update all the users' room
+    else {
+      for (final e in currentRoom.users?.entries.toList() ?? []) {
+        final uid = e.key;
+        joinRef(uid, currentRoom.id).update(
+          {
+            'updatedAt': ServerValue.timestamp,
+            'newMessage': ServerValue.increment(1),
+            'order': -int.parse('1$createdAt'),
+          },
+        );
+      }
+    }
+
+    joinRef(myUid!, currentRoom.id).update(
+      {
+        'updatedAt': ServerValue.timestamp,
+        'newMessage': null,
+        'order': -int.parse('$createdAt'),
+      },
+    );
   }
 
   /// see rchat.md
@@ -235,12 +289,16 @@ class RChat {
       }
     }
 
+    dog('order: ');
+
     final data = {
       'name': room.isGroupChat ? room.name : '',
       'isGroupChat': room.isGroupChat,
       'isOpenGroupChat': room.isOpenGroupChat,
       'newMessage': null,
     };
+
+    // TODO review where to set the order properly
 
     /// 1:1 채팅방의 경우, 상대방의 이름을 저장한다.
     if (otherUserUid != null) {

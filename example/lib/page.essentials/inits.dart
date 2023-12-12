@@ -43,8 +43,8 @@ customizePostInit(String categName) {
         }
         return CustomPostEdit(categName: categName, post: post);
       });
-  PostService.instance.uploadPhotoFromCamera = false;
-  PostService.instance.uploadFromFile = false;
+  PostService.instance.uploadFromCamera = true;
+  PostService.instance.uploadFromFile = true;
 
   PostService.instance.customize.postViewButtonBuilder = (post) => const Icon(Icons.add);
 }

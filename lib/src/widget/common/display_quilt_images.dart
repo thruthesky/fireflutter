@@ -2,9 +2,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class DisplayQuiltImages extends StatelessWidget {
-  const DisplayQuiltImages({super.key, required this.urls});
+  const DisplayQuiltImages({
+    super.key,
+    required this.urls,
+  });
 
   final List<String> urls;
+
+  Widget get _errorWidget => Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+      ),
+      child: const Icon(Icons.error));
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +23,7 @@ class DisplayQuiltImages extends StatelessWidget {
         height: 400,
         imageUrl: urls[0],
         fit: BoxFit.cover,
+        errorWidget: (context, url, error) => _errorWidget,
       );
     }
     if (urls.length == 2) {
@@ -53,7 +63,15 @@ class DisplayQuiltImages extends StatelessWidget {
         crossAxisCount: 2,
         mainAxisSpacing: 2,
         crossAxisSpacing: 2,
-        children: urls.asMap().entries.map((e) => CachedNetworkImage(imageUrl: e.value, fit: BoxFit.cover)).toList(),
+        children: urls
+            .asMap()
+            .entries
+            .map((e) => CachedNetworkImage(
+                  imageUrl: e.value,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) => _errorWidget,
+                ))
+            .toList(),
       );
     }
 
@@ -63,18 +81,27 @@ class DisplayQuiltImages extends StatelessWidget {
       crossAxisCount: 3,
       mainAxisSpacing: 2,
       crossAxisSpacing: 2,
-      children: urls.asMap().entries.map((e) => CachedNetworkImage(imageUrl: e.value, fit: BoxFit.cover)).toList(),
+      children: urls
+          .asMap()
+          .entries
+          .map((e) => CachedNetworkImage(
+                imageUrl: e.value,
+                fit: BoxFit.cover,
+                errorWidget: (context, url, error) => _errorWidget,
+              ))
+          .toList(),
     );
   }
 
   _expandedCachedNetworkImage(String url, {double? height, double? width}) {
-    // Should we DRY?
+    // Should we DRY like this??
     return Expanded(
       child: CachedNetworkImage(
         height: height,
         width: width,
         imageUrl: url,
         fit: BoxFit.cover,
+        errorWidget: (context, url, error) => _errorWidget,
       ),
     );
   }

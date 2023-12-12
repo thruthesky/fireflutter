@@ -132,15 +132,15 @@ class _PostEditDialogState extends State<PostEditScreen> {
                         progress: (p) => setState(() => progress = p),
                         complete: () => setState(() => progress = null),
                         // Updated from this.
-                        // camera: PostService.instance.uploadFromCamera,
-                        // gallery: PostService.instance.uploadFromGallery,
-                        // file: PostService.instance.uploadFromFile,
-                        gallery: PostService.instance.uploadPhotoVideoFromGallery,
-                        photoCamera: PostService.instance.uploadPhotoFromCamera,
-                        photoGallery: PostService.instance.uploadPhotoFromGallery,
-                        videoCamera: PostService.instance.uploadVideoFromCamera,
-                        videoGallery: PostService.instance.uploadVideoFromGallery,
+                        camera: PostService.instance.uploadFromCamera,
+                        gallery: PostService.instance.uploadFromGallery,
                         file: PostService.instance.uploadFromFile,
+                        // gallery: PostService.instance.uploadPhotoVideoFromGallery,
+                        // photoCamera: PostService.instance.uploadPhotoFromCamera,
+                        // photoGallery: PostService.instance.uploadPhotoFromGallery,
+                        // videoCamera: PostService.instance.uploadVideoFromCamera,
+                        // videoGallery: PostService.instance.uploadVideoFromGallery,
+                        // file: PostService.instance.uploadFromFile,
 
                         beforeUpload: widget.beforeUpload,
                       );

@@ -14,6 +14,7 @@ class RChatRoomModel {
   String? description;
   String? master;
   Map<String, bool>? users;
+  int? order;
 
   /// [id] It returns the chat room id.
   ///
@@ -40,6 +41,7 @@ class RChatRoomModel {
     this.description,
     this.master,
     this.users,
+    this.order,
   });
 
   /// [fromSnapshot] It creates a [RChatRoomModel] from a [DataSnapshot].
@@ -72,6 +74,7 @@ class RChatRoomModel {
       description: json['description'] as String?,
       master: json['master'] as String?,
       users: json['users'] == null ? null : Map<String, bool>.from(json['users']),
+      order: json['order'] is int ? json['order'] : int.parse(json['order'] ?? '0'),
     );
   }
   Map<String, dynamic> toJson() {
@@ -87,6 +90,7 @@ class RChatRoomModel {
       'description': description,
       'master': master,
       'users': users,
+      'order': order,
     };
   }
 
