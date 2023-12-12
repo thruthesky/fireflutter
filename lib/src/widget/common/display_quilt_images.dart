@@ -19,7 +19,6 @@ class DisplayQuiltImages extends StatelessWidget {
         ],
       );
     }
-
     if (urls.length == 3) {
       return SizedBox(
         height: 200,
