@@ -9,7 +9,13 @@ class DisplayQuiltImages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (urls.isEmpty) return const SizedBox();
-    if (urls.length == 1) return _expandedCachedNetworkImage(urls[0], height: 400);
+    if (urls.length == 1) {
+      return CachedNetworkImage(
+        height: 400,
+        imageUrl: urls[0],
+        fit: BoxFit.cover,
+      );
+    }
     if (urls.length == 2) {
       return Row(
         children: [
@@ -28,6 +34,7 @@ class DisplayQuiltImages extends StatelessWidget {
             const SizedBox(width: 2),
             Expanded(
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   _expandedCachedNetworkImage(urls[1], width: double.infinity),
                   const SizedBox(height: 2),
@@ -61,6 +68,7 @@ class DisplayQuiltImages extends StatelessWidget {
   }
 
   _expandedCachedNetworkImage(String url, {double? height, double? width}) {
+    // Should we DRY?
     return Expanded(
       child: CachedNetworkImage(
         height: height,

@@ -27,7 +27,7 @@ class UploadSelectionBottomSheet extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          const SizedBox(height: 32),
+          const SizedBox(height: 18),
           const Text('Choose a file/image from'),
           if (photoGallery)
             ListTile(

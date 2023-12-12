@@ -212,10 +212,10 @@ class DisplayMedia extends StatefulWidget {
   final String url;
 
   @override
-  UploadedMediaState createState() => UploadedMediaState();
+  DisplayMediaState createState() => DisplayMediaState();
 }
 
-class UploadedMediaState extends State<DisplayMedia> {
+class DisplayMediaState extends State<DisplayMedia> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -239,47 +239,10 @@ class UploadedMediaState extends State<DisplayMedia> {
           allowFullScreen: true,
           allowPlaybackSpeedMenu: false,
         ),
-        // fileBuilder: (path) => SizedBox(
-        //   width: widget.width,
-        //   height: widget.height,
-        //   // color: Colors.blue,
-        //   child: Stack(
-        //     children: [
-        //       Align(
-        //         alignment: Alignment.center,
-        //         child: LayoutBuilder(builder: (context, constraint) {
-        //           return Icon(Icons.insert_drive_file, size: constraint.biggest.height);
-        //         }),
-        //       ),
-        //       SizedBox(
-        //         width: widget.width,
-        //         height: widget.height,
-        //         child: Align(
-        //           child: Padding(
-        //             padding: const EdgeInsets.only(top: 36.0),
-        //             child: Column(
-        //               mainAxisSize: MainAxisSize.min,
-        //               children: [
-        //                 Text(
-        //                   path.split('.').last.split('?').first.toUpperCase(),
-        //                   style: const TextStyle(color: Colors.white, fontSize: 24),
-        //                 ),
-        //                 Text(
-        //                   p.basename(path.replaceAll('%2F', '/').split('?').first),
-        //                   style: const TextStyle(fontSize: 6, color: Colors.white),
-        //                   textAlign: TextAlign.center,
-        //                 )
-        //               ],
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //     ],
-        //   ),
         fileBuilder: (path) => Container(
           padding: const EdgeInsets.all(sizeMd),
           decoration: BoxDecoration(
-            color: Colors.grey.shade200,
+            color: Theme.of(context).colorScheme.tertiaryContainer,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Column(
@@ -288,11 +251,14 @@ class UploadedMediaState extends State<DisplayMedia> {
               Icon(
                 Icons.insert_drive_file,
                 size: 50,
-                color: Colors.grey.shade400,
+                color: Theme.of(context).colorScheme.onTertiaryContainer,
               ),
               Text(
                 p.basename(path.replaceAll('%2F', '/').split('?').first),
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onTertiaryContainer,
+                ),
                 textAlign: TextAlign.center,
               )
             ],
