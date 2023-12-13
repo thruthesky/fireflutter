@@ -42,7 +42,6 @@ class RChat {
       return;
     }
 
-    // This will be deleted
     roomMessageOrder[currentRoom.id] = (roomMessageOrder[currentRoom.id] ?? 0) - 1;
 
     /// 참고, 실제 메시지를 보내기 전에, 채팅방 자체를 먼저 업데이트 해 버린다.
