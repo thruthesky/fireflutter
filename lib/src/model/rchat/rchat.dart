@@ -56,6 +56,7 @@ class RChat {
 
     final ref = messageRef(roomId: currentRoom.id).push();
 
+    // this is setting the text/url message
     await ref.set({
       'uid': myUid,
       if (text != null) 'text': text,
@@ -63,57 +64,72 @@ class RChat {
       'order': RChat.roomMessageOrder[currentRoom.id],
       'createdAt': ServerValue.timestamp,
     });
-
-    // get updated data then set order as -createdAt
-    final createdAt = await ref.child('createdAt').get();
-    // await ref.update({'order': (createdAt.value as int) * -1});
-
-    // TODO Change to phone datetime
-    _orderRooms(createdAt.value as int);
   }
 
-  static void _orderRooms(int createdAt) {
-    // RChat.joinsRef.child(my.uid)
-    // currentRoom
-
-    // algo
-
-    // check if single or group
-
+  static Future<void> updateJoin({
+    String? text,
+    String? url,
+  }) async {
     // if single, update the other user's room
     if (currentRoom.isSingleChat) {
       final otherUserUid = currentRoom.otherUserUid;
       if (otherUserUid != null) {
-        joinRef(otherUserUid, currentRoom.id).update(
-          {
-            'updatedAt': ServerValue.timestamp,
-            'newMessage': ServerValue.increment(1),
-            'order': -int.parse('1$createdAt'),
-          },
-        );
+        final otherUserJoinRef = joinRef(otherUserUid, currentRoom.id);
+        otherUserJoinRef
+            .update(
+          await _lastMessage(
+            receiverUid: otherUserUid,
+            text: text,
+            url: url,
+            newMessage: ServerValue.increment(1),
+          ),
+        )
+            .then((v) {
+          otherUserJoinRef.child('updatedAt').get().then((updatedAt) {
+            otherUserJoinRef.update({'order': -int.parse('1${(updatedAt.value ?? "0") as int}')});
+          });
+        });
       }
     }
     // if group, update all the users' room
     else {
       for (final e in currentRoom.users?.entries.toList() ?? []) {
         final uid = e.key;
-        joinRef(uid, currentRoom.id).update(
-          {
-            'updatedAt': ServerValue.timestamp,
-            'newMessage': ServerValue.increment(1),
-            'order': -int.parse('1$createdAt'),
-          },
-        );
+        if (uid == myUid) continue;
+        final otherUserJoinRef = joinRef(uid, currentRoom.id);
+        otherUserJoinRef
+            .update(
+          await _lastMessage(
+            receiverUid: uid,
+            text: text,
+            url: url,
+            newMessage: ServerValue.increment(1),
+          ),
+        )
+            .then((v) {
+          otherUserJoinRef.child('updatedAt').get().then((updatedAt) {
+            otherUserJoinRef.update({'order': -int.parse('1${(updatedAt.value ?? "0") as int}')});
+          });
+        });
       }
     }
 
-    joinRef(myUid!, currentRoom.id).update(
-      {
-        'updatedAt': ServerValue.timestamp,
-        'newMessage': null,
-        'order': -int.parse('$createdAt'),
-      },
-    );
+    // update my room
+    final myJoinRef = joinRef(myUid!, currentRoom.id);
+    myJoinRef
+        .update(
+      await _lastMessage(
+        receiverUid: myUid!,
+        text: text,
+        url: url,
+        newMessage: null,
+      ),
+    )
+        .then((v) {
+      myJoinRef.child('updatedAt').get().then((updatedAt) {
+        myJoinRef.update({'order': -int.parse('${(updatedAt.value ?? "0") as int}')});
+      });
+    });
   }
 
   /// see rchat.md
@@ -146,28 +162,6 @@ class RChat {
       'isOpenGroupChat': currentRoom.isOpenGroupChat,
     };
     return data;
-  }
-
-  /// Update last message on all the member of the chat room (chat-join relatsions)
-  ///
-  /// 나의 채팅방 정보와 상대방의 채팅방 정보를 업데이트한다.
-  ///
-  /// 그채팅방에 있는 모든 사용자의 채팅방 목록을 업데이트 한다.
-  static Future<void> updateJoin({
-    String? text,
-    String? url,
-  }) async {
-    for (final e in currentRoom.users?.entries.toList() ?? []) {
-      final uid = e.key;
-      joinRef(uid, currentRoom.id).update(
-        await _lastMessage(
-          receiverUid: uid,
-          text: text,
-          url: url,
-          newMessage: uid == myUid ? null : ServerValue.increment(1),
-        ),
-      );
-    }
   }
 
   /// 채팅방 나가기
@@ -207,9 +201,7 @@ class RChat {
   /// 이 함수가 호출되어 그 채팅방의 새 메시지 수를 0으로 초기화 할 때 사용한다.
   static Future<void> resetMyRoomNewMessage({required RChatRoomModel room}) async {
     await joinRef(myUid!, room.id).update(
-      {
-        'newMessage': null,
-      },
+      {'newMessage': null},
     );
     // print('--> resetRoomNewMessage: $roomId');
   }
@@ -289,8 +281,6 @@ class RChat {
       }
     }
 
-    dog('order: ');
-
     final data = {
       'name': room.isGroupChat ? room.name : '',
       'isGroupChat': room.isGroupChat,
@@ -298,14 +288,16 @@ class RChat {
       'newMessage': null,
     };
 
-    // TODO review where to set the order properly
-
     /// 1:1 채팅방의 경우, 상대방의 이름을 저장한다.
     if (otherUserUid != null) {
       final user = await UserService.instance.get(otherUserUid);
       data['name'] = user?.name ?? 'No name';
     }
 
+    // set order into -updatedAt (w/out "1")
+    // it is important to know that updatedAt must not be updated
+    // before this.
+    data['order'] = -int.parse('${currentRoom.updatedAt}');
     await joinsRef.child(myUid!).child(room.id).update(data);
   }
 
