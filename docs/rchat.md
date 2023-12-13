@@ -122,3 +122,13 @@ await RChat.joinRoom();
 final r = await RChatRoomModel.fromReference(RChat.currentRoom.ref);
 assert(r.users != null && r.users!.length == 2);
 ```
+
+
+
+## Code Tips
+
+
+`RChatMessageList` can be used to display chat messages from a room without the chat input box.
+
+The `PhiLov` app displays a chat room messages in home screen and it is always in the nav stack (alive thru the whole app flow) and when ever there is a new message in that chat room, it automatically clears the necessary properties for new message.
+

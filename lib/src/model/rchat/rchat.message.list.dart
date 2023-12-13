@@ -3,6 +3,10 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/model/rchat/rchat.bubble.dart';
 import 'package:flutter/material.dart';
 
+/// Message List
+///
+/// This is a widget that will show the list of messages in a room.
+/// It does not depend on [RChat.currentRoom]
 class RChatMessageList extends StatefulWidget {
   const RChatMessageList({
     super.key,
