@@ -42,7 +42,7 @@ class _RChatMessageListState extends State<RChatMessageList> {
           /// FirebaseDatabaseQueryBuilder will set snapshot.isFetcing only one time when it is first loading.
           // dog('isFetcing');
           //
-          RChat.resetMyRoomNewMessage(room: widget.room, order: newMessage.createdAt);
+          RChat.resetMyRoomNewMessage(room: widget.room);
 
           if (resultingWidget != null) return resultingWidget!;
           return const Center(child: CircularProgressIndicator());
@@ -54,9 +54,9 @@ class _RChatMessageListState extends State<RChatMessageList> {
 
         if (RChat.isLoadingNewMessage(roomId, snapshot)) {
           final newMessage = RChatMessageModel.fromSnapshot(snapshot.docs.first);
-
-          /// newMessage 리셋
-          RChat.resetMyRoomNewMessage(room: widget.room, order: newMessage.createdAt);
+          // newMessage 리셋
+          RChat.resetMyRoomNewMessage(
+              room: widget.room, order: newMessage.createdAt != null ? -newMessage.createdAt! : null);
         }
 
         if (snapshot.docs.isEmpty) {

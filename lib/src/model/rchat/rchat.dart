@@ -15,6 +15,10 @@ class RChat {
   static DatabaseReference joinRef(String myUid, String roomId) => joinsRef.child(myUid).child(roomId);
   static DatabaseReference messageRef({required String roomId}) => rtdb.ref().child('chat-messages').child(roomId);
 
+  // This is used to update the last message in the chat room list per user in /chat-joins
+  static String _getRoomUserJoinPath(String roomId, String uid) => '/chat-joins/$uid/$roomId';
+  static String _getMessagesPath(String roomId) => '/chat-messages/$roomId';
+
   /// [roomUserRef] is the reference to the users node under the group chat room. Ex) /chat-rooms/{roomId}/users/{my-uid}
   static DatabaseReference roomUserRef(String roomId, String uid) => rtdb.ref().child('chat-rooms/$roomId/users/$uid');
 
@@ -51,82 +55,81 @@ class RChat {
     /// B 의 채팅방의 newMessage 가 0 으로 된다.
     /// 그리고, 나서 updateJoin() 을 하면, B 의 채팅 메시지가 1이 되는 것이다.
     /// 즉, 0이 되어야하는데 1이 되는 상황이 발생한다. 그래서, updateJoin() 이 먼저 호출되어야 한다.
-    updateJoin(text: text, url: url);
+    Map<String, dynamic> multiUpdateData = getMultiUpdateJoinMap(text: text, url: url);
 
-    final ref = messageRef(roomId: currentRoom.id).push();
+    // final ref = messageRef(roomId: currentRoom.id).push();
 
     // this is setting the text/url message
-    await ref.set({
+    // await ref.set({
+    //   'uid': myUid,
+    //   if (text != null) 'text': text,
+    //   if (url != null) 'url': url,
+    //   'order': RChat.roomMessageOrder[currentRoom.id],
+    //   'createdAt': ServerValue.timestamp,
+    // });
+
+    multiUpdateData['${_getMessagesPath(currentRoom.id)}/${DateTime.now().millisecondsSinceEpoch}_$myUid'] = {
       'uid': myUid,
       if (text != null) 'text': text,
       if (url != null) 'url': url,
       'order': RChat.roomMessageOrder[currentRoom.id],
       'createdAt': ServerValue.timestamp,
-    });
+    };
+
+    // It'll be better if we update all as fast as possible and at once.
+    // so that we can prevent inaccurate order.
+    // See reference for the multi-path update.
+    // Reference: https://firebase.google.com/docs/database/flutter/read-and-write#updating_or_deleting_data
+
+    // finally, update all at once
+    await rtdb.ref().update(multiUpdateData);
   }
 
-  static void updateJoin({
+  static Map<String, dynamic> getMultiUpdateJoinMap({
     String? text,
     String? url,
   }) {
-    // if single, update the other user's room
+    Map<String, dynamic> multiUpdateData = {};
+
+    // if single, update the other user's room in chat-joins
     if (currentRoom.isSingleChat) {
       final otherUserUid = currentRoom.otherUserUid;
       if (otherUserUid != null) {
-        final otherUserJoinRef = joinRef(otherUserUid, currentRoom.id);
-        otherUserJoinRef.update(
-          _lastMessage(
-            receiverUid: otherUserUid,
-            text: text,
-            url: url,
-            newMessage: ServerValue.increment(1),
-          ),
+        multiUpdateData[_getRoomUserJoinPath(currentRoom.id, otherUserUid)] = _lastMessage(
+          receiverUid: otherUserUid,
+          text: text,
+          url: url,
+          newMessage: ServerValue.increment(1),
         );
-        //     .then((v) {
-        //   otherUserJoinRef.child('updatedAt').get().then((updatedAt) {
-        //     otherUserJoinRef.update({'order': -int.parse('1${(updatedAt.value ?? "0") as int}')});
-        //   });
-        // });
       }
     }
-    // if group, update all the users' room
+    // if group, update all the users' room in chat-joins
     else {
       for (final e in currentRoom.users?.entries.toList() ?? []) {
         final uid = e.key;
         if (uid == myUid) continue;
-        final otherUserJoinRef = joinRef(uid, currentRoom.id);
-        otherUserJoinRef.update(
-          _lastMessage(
-            receiverUid: uid,
-            text: text,
-            url: url,
-            newMessage: ServerValue.increment(1),
-          ),
+        multiUpdateData[_getRoomUserJoinPath(currentRoom.id, uid)] = _lastMessage(
+          receiverUid: uid,
+          text: text,
+          url: url,
+          newMessage: ServerValue.increment(1),
         );
-        //     .then((v) {
-        //   otherUserJoinRef.child('updatedAt').get().then((updatedAt) {
-        //     otherUserJoinRef.update({'order': -int.parse('1${(updatedAt.value ?? "0") as int}')});
-        //   });
-        // })
-        // ;
       }
     }
 
-    // update my room
-    final myJoinRef = joinRef(myUid!, currentRoom.id);
-    myJoinRef.update(
-      _lastMessage(
-        receiverUid: myUid!,
-        text: text,
-        url: url,
-        newMessage: null,
-      ),
+    // update my room in chat-joins
+    multiUpdateData[_getRoomUserJoinPath(currentRoom.id, myUid!)] = _lastMessage(
+      receiverUid: myUid!,
+      text: text,
+      url: url,
+      newMessage: null,
+      order: -DateTime.now().millisecondsSinceEpoch,
     );
-    //     .then((v) {
-    //   myJoinRef.child('updatedAt').get().then((updatedAt) {
-    //     myJoinRef.update({'order': -int.parse('${(updatedAt.value ?? "0") as int}')});
-    //   });
-    // });
+
+    // finally update all at once
+    // await rtdb.ref().update(multiUpdateData);
+
+    return multiUpdateData;
   }
 
   /// see rchat.md
@@ -138,6 +141,7 @@ class RChat {
     String? text,
     String? url,
     dynamic newMessage,
+    int? order,
   }) {
     // String name;
     // if (currentRoom.isGroupChat) {
@@ -151,6 +155,10 @@ class RChat {
     //   }
     // }
     final data = {
+      // Getting the name will need to await if it is a single chat
+      // this might be a problem when updating the chat-joins
+      // because we want this to happens in an instant and in one go.
+      // It might be better if we just check the name everytime we need it
       // 'name': name,
       'text': text,
       'url': url,
@@ -158,7 +166,7 @@ class RChat {
       'newMessage': newMessage,
       'isGroupChat': currentRoom.isGroupChat,
       'isOpenGroupChat': currentRoom.isOpenGroupChat,
-      'order': -int.parse('1${DateTime.now().millisecondsSinceEpoch}'),
+      'order': order ?? -int.parse('1${DateTime.now().millisecondsSinceEpoch}'),
     };
     return data;
   }
@@ -207,10 +215,14 @@ class RChat {
     int? order,
   }) async {
     final myJoinRef = joinRef(myUid!, room.id);
+    // the problem is when this is too fast
     myJoinRef.update({
       'newMessage': null,
       'order': order ?? -int.parse('${room.updatedAt ?? room.createdAt ?? 0}'),
     });
+
+    // wait for 1 second before updating the order
+
     // .then((value) {
     //   myJoinRef.child('updatedAt').get().then((updatedAt) {
     //     myJoinRef.update({'order': -int.parse('${(updatedAt.value ?? "0") as int}')});
