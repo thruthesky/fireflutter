@@ -123,12 +123,20 @@ final r = await RChatRoomModel.fromReference(RChat.currentRoom.ref);
 assert(r.users != null && r.users!.length == 2);
 ```
 
+## Chat Room List Order
 
+The chat room list is ordered by the `order` field.
+
+Since RTDB does not support descending order, the order field is set to negative value.
+
+Moreover "1" is added to the first digit as an indication that the chat room is unseen.
+
+For instance, when updated at is 999999, the order field is set to -1999999. When the user opens/peaks on the chat room, the order field is set to -999999.
+
+This will make the chat room list ordered by unread/read and the updatedAt in descending order.
 
 ## Code Tips
-
 
 `RChatMessageList` can be used to display chat messages from a room without the chat input box.
 
 The `PhiLov` app displays a chat room messages in home screen and it is always in the nav stack (alive thru the whole app flow) and when ever there is a new message in that chat room, it automatically clears the necessary properties for new message.
-

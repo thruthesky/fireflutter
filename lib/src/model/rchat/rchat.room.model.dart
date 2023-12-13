@@ -7,6 +7,7 @@ class RChatRoomModel {
   String? text;
   String? url;
   int? updatedAt;
+  int? createdAt;
   int? newMessage;
   bool isGroupChat;
   bool isOpenGroupChat;
@@ -34,6 +35,7 @@ class RChatRoomModel {
     this.text,
     this.url,
     this.updatedAt,
+    this.createdAt,
     this.newMessage,
     required this.isGroupChat,
     required this.isOpenGroupChat,
@@ -65,6 +67,7 @@ class RChatRoomModel {
       text: json['text'] as String?,
       url: json['url'] as String?,
       updatedAt: json['updatedAt'] is int ? json['updatedAt'] : int.parse(json['updatedAt'] ?? '0'),
+      createdAt: json['createdAt'] is int ? json['createdAt'] : int.parse(json['createdAt'] ?? '0'),
       newMessage: json['newMessage'] ?? 0,
 
       /// See, rchat.md#database structure
