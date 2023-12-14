@@ -12,6 +12,7 @@ class RChatRoomModel {
   bool isGroupChat;
   bool isOpenGroupChat;
   String? name;
+  String? photoUrl;
   String? description;
   String? master;
   Map<String, bool>? users;
@@ -40,6 +41,7 @@ class RChatRoomModel {
     required this.isGroupChat,
     required this.isOpenGroupChat,
     this.name,
+    this.photoUrl,
     this.description,
     this.master,
     this.users,
@@ -74,6 +76,7 @@ class RChatRoomModel {
       isGroupChat: isSingleChatRoom(json['key']) == false,
       isOpenGroupChat: json['isOpenGroupChat'] ?? false,
       name: json['name'] as String?,
+      photoUrl: json['photoUrl'] as String?,
       description: json['description'] as String?,
       master: json['master'] as String?,
       users: json['users'] == null ? null : Map<String, bool>.from(json['users']),
@@ -90,6 +93,7 @@ class RChatRoomModel {
       'isGroupChat': isGroupChat,
       'isOpenGroupChat': isOpenGroupChat,
       'name': name,
+      'photoUrl': photoUrl,
       'description': description,
       'master': master,
       'users': users,

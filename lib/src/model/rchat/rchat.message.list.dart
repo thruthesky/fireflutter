@@ -56,7 +56,9 @@ class _RChatMessageListState extends State<RChatMessageList> {
           final newMessage = RChatMessageModel.fromSnapshot(snapshot.docs.first);
           // newMessage 리셋
           RChat.resetMyRoomNewMessage(
-              room: widget.room, order: newMessage.createdAt != null ? -newMessage.createdAt! : null);
+            room: widget.room,
+            order: newMessage.createdAt != null ? -newMessage.createdAt! : null,
+          );
         }
 
         if (snapshot.docs.isEmpty) {
@@ -76,6 +78,7 @@ class _RChatMessageListState extends State<RChatMessageList> {
               }
               final message = RChatMessageModel.fromSnapshot(snapshot.docs[index]);
 
+              /// Reset the [order] field of the message to list in time based order.
               RChat.resetRoomMessageOrder(roomId: roomId, order: message.order);
 
               return RChatBubble(

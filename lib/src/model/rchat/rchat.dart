@@ -16,7 +16,7 @@ class RChat {
   static DatabaseReference messageRef({required String roomId}) => rtdb.ref().child('chat-messages').child(roomId);
 
   // This is used to update the last message in the chat room list per user in /chat-joins
-  static String _getRoomUserJoinPath(String roomId, String uid) => '/chat-joins/$uid/$roomId';
+  static String joinPath(String roomId, String uid) => '/chat-joins/$uid/$roomId';
   static String _getMessagesPath(String roomId) => '/chat-messages/$roomId';
 
   /// [roomUserRef] is the reference to the users node under the group chat room. Ex) /chat-rooms/{roomId}/users/{my-uid}
@@ -46,6 +46,7 @@ class RChat {
       return;
     }
 
+    ///
     roomMessageOrder[currentRoom.id] = (roomMessageOrder[currentRoom.id] ?? 0) - 1;
 
     /// 참고, 실제 메시지를 보내기 전에, 채팅방 자체를 먼저 업데이트 해 버린다.
@@ -57,17 +58,7 @@ class RChat {
     /// 즉, 0이 되어야하는데 1이 되는 상황이 발생한다. 그래서, updateJoin() 이 먼저 호출되어야 한다.
     Map<String, dynamic> multiUpdateData = getMultiUpdateJoinMap(text: text, url: url);
 
-    // final ref = messageRef(roomId: currentRoom.id).push();
-
-    // this is setting the text/url message
-    // await ref.set({
-    //   'uid': myUid,
-    //   if (text != null) 'text': text,
-    //   if (url != null) 'url': url,
-    //   'order': RChat.roomMessageOrder[currentRoom.id],
-    //   'createdAt': ServerValue.timestamp,
-    // });
-
+    /// Save chat message under `/chat-messages`.
     multiUpdateData['${_getMessagesPath(currentRoom.id)}/${DateTime.now().millisecondsSinceEpoch}_$myUid'] = {
       'uid': myUid,
       if (text != null) 'text': text,
@@ -76,13 +67,19 @@ class RChat {
       'createdAt': ServerValue.timestamp,
     };
 
-    // It'll be better if we update all as fast as possible and at once.
-    // so that we can prevent inaccurate order.
     // See reference for the multi-path update.
     // Reference: https://firebase.google.com/docs/database/flutter/read-and-write#updating_or_deleting_data
-
-    // finally, update all at once
     await rtdb.ref().update(multiUpdateData);
+
+    // if it's 1:1 chat, then update other user's name and photo under the my chat room info.
+    if (currentRoom.isSingleChat) {
+      final otherUid = currentRoom.otherUserUid!;
+      final other = await UserService.instance.get(otherUid);
+      joinRef(myUid!, singleChatRoomId(otherUid)).update({
+        'name': other?.getDisplayName ?? '',
+        'photoUrl': other?.photoUrl ?? '',
+      });
+    }
   }
 
   static Map<String, dynamic> getMultiUpdateJoinMap({
@@ -90,44 +87,17 @@ class RChat {
     String? url,
   }) {
     Map<String, dynamic> multiUpdateData = {};
+    final epoch = DateTime.now().millisecondsSinceEpoch;
 
-    // if single, update the other user's room in chat-joins
-    if (currentRoom.isSingleChat) {
-      final otherUserUid = currentRoom.otherUserUid;
-      if (otherUserUid != null) {
-        multiUpdateData[_getRoomUserJoinPath(currentRoom.id, otherUserUid)] = _lastMessage(
-          receiverUid: otherUserUid,
-          text: text,
-          url: url,
-          newMessage: ServerValue.increment(1),
-        );
-      }
+    for (final e in currentRoom.users?.entries.toList() ?? []) {
+      final uid = e.key;
+      multiUpdateData[joinPath(currentRoom.id, uid)] = _lastMessage(
+        text: text,
+        url: url,
+        newMessage: uid == myUid ? null : ServerValue.increment(1),
+        order: uid == myUid ? -epoch : -int.parse("1$epoch"),
+      );
     }
-    // if group, update all the users' room in chat-joins
-    else {
-      for (final e in currentRoom.users?.entries.toList() ?? []) {
-        final uid = e.key;
-        if (uid == myUid) continue;
-        multiUpdateData[_getRoomUserJoinPath(currentRoom.id, uid)] = _lastMessage(
-          receiverUid: uid,
-          text: text,
-          url: url,
-          newMessage: ServerValue.increment(1),
-        );
-      }
-    }
-
-    // update my room in chat-joins
-    multiUpdateData[_getRoomUserJoinPath(currentRoom.id, myUid!)] = _lastMessage(
-      receiverUid: myUid!,
-      text: text,
-      url: url,
-      newMessage: null,
-      order: -DateTime.now().millisecondsSinceEpoch,
-    );
-
-    // finally update all at once
-    // await rtdb.ref().update(multiUpdateData);
 
     return multiUpdateData;
   }
@@ -137,36 +107,23 @@ class RChat {
   /// [receiverUid] is the one who will receive the message.
   // static Future<Map<String, dynamic>> _lastMessage({
   static Map<String, dynamic> _lastMessage({
-    required String receiverUid,
     String? text,
     String? url,
-    dynamic newMessage,
-    int? order,
+    required dynamic newMessage,
+    required int order,
   }) {
-    // String name;
-    // if (currentRoom.isGroupChat) {
-    //   name = currentRoom.name ?? '';
-    // } else {
-    //   if (receiverUid == myUid) {
-    //     final user = await UserService.instance.get(currentRoom.otherUserUid!);
-    //     name = user?.name ?? 'Receiver has no name';
-    //   } else {
-    //     name = my?.name ?? 'Sender has no name';
-    //   }
-    // }
+    // chat room info
     final data = {
-      // Getting the name will need to await if it is a single chat
-      // this might be a problem when updating the chat-joins
-      // because we want this to happens in an instant and in one go.
-      // It might be better if we just check the name everytime we need it
-      // 'name': name,
+      'name': currentRoom.isSingleChat ? my!.getDisplayName : (currentRoom.name ?? ''),
+      'photoUrl': my!.photoUrl,
       'text': text,
       'url': url,
       'updatedAt': ServerValue.timestamp,
       'newMessage': newMessage,
       'isGroupChat': currentRoom.isGroupChat,
       'isOpenGroupChat': currentRoom.isOpenGroupChat,
-      'order': order ?? -int.parse('1${DateTime.now().millisecondsSinceEpoch}'),
+      //
+      'order': order,
     };
     return data;
   }
@@ -244,7 +201,7 @@ class RChat {
   /// 화면에 보여줄 때, 이 함수가 호출된다. 이 때, [snapshot] 이 그 채팅 메시지 목록을 가지고 있다.
   ///
   ///
-  /// 이 함수는, 누군가 채팅을 해서, 새로운 메시가 전달되었다면 true 를 리턴한다. 화면 스크롤이나, 처음 채팅방 접속해서
+  /// 이 함수는, 누군가 채팅을 해서 (내가 채팅한 것이 아닌), 새로운 메시가 전달되었다면 true 를 리턴한다. 화면 스크롤이나, 처음 채팅방 접속해서
   /// 채팅 메시지를 가져오는 경우에는 false 를 리턴한다.
   ///
   /// 처음 로딩(첫 페이지)하거나, Hot reload 를 하거나, 채팅방을 위로 스크롤 업 해서 이전 데이터 목록을 가져오는 경우에는
@@ -266,6 +223,7 @@ class RChat {
     final currentMessageOrder = getRoomMessageOrder(messageRoomId);
 
     /// 이전에 로드된 채팅 메시지가 없는가? 누군가 채팅을 한 것이 아니라, 채팅방에 접속해서, 처음 로드된 것이므로 false 를 리턴한다.
+    ///
     if (currentMessageOrder == 0) {
       return false;
     }
@@ -274,6 +232,8 @@ class RChat {
     /// 그렇다면 이전에 로드된 채팅 메시지의 order 와 현재 로드된 채팅 메시지의 order 를 비교한다.
     /// 만약 이전에 로드된 채팅 메시지의 order 가 현재 로드된 채팅 메시지의 order 보다 크다면,
     /// 누군가 채팅을 해서 새로운 메시지가 있다는 것이다.
+    ///
+    /// This return false when I am the one who sent message.
     if (currentMessageOrder > lastMessageOrder) {
       return true;
     }
