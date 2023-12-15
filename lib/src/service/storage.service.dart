@@ -158,12 +158,6 @@ class StorageService {
     int compressQuality = 0,
     String? path,
     String? saveAs,
-    // bool gallery = false,
-    // bool photoGallery = true,
-    // bool videoGallery = false,
-    // bool photoCamera = true,
-    // bool videoCamera = false,
-
     bool camera = true,
     bool gallery = true,
     bool file = false,
@@ -171,12 +165,8 @@ class StorageService {
     final re = await showModalBottomSheet(
       context: context,
       builder: (_) => UploadSelectionBottomSheet(
-        // TODO cleanup
-        // gallery: gallery,
         photoGallery: gallery,
         photoCamera: camera,
-        // videoCamera: videoCamera,
-        // videoGallery: videoGallery,
         file: file,
       ),
     );
@@ -187,16 +177,6 @@ class StorageService {
       progress: progress,
       complete: complete,
       beforeUpload: beforeUpload,
-      // we cannot compress file or video
-      // Should we create a proper Enum for UploadType?
-      // TODO cleanup
-      // compressQuality: [
-      //   SourceType.videoCamera,
-      //   SourceType.videoCamera,
-      //   SourceType.file,
-      // ].contains(re)
-      //     ? 0
-      //     : compressQuality,
       compressQuality: compressQuality,
       path: path,
       saveAs: saveAs,

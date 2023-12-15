@@ -57,14 +57,6 @@ class PostService {
   }) {
     this.uploadFromGallery = uploadFromGallery;
     this.uploadFromCamera = uploadFromCamera;
-
-    // TODO clean up
-
-    // this.uploadPhotoVideoFromGallery = uploadPhotoVideoFromGallery;
-    // this.uploadPhotoFromCamera = uploadPhotoFromCamera;
-    // this.uploadPhotoFromGallery = uploadPhotoFromGallery;
-    // this.uploadVideoFromCamera = uploadVideoFromCamera;
-    // this.uploadVideoFromGallery = uploadVideoFromGallery;
     this.uploadFromFile = uploadFromFile;
 
     this.enableSeenBy = enableSeenBy;

@@ -5,19 +5,13 @@ import 'package:flutter/material.dart';
 class UploadSelectionBottomSheet extends StatelessWidget {
   const UploadSelectionBottomSheet({
     super.key,
-    // this.gallery = false,
     this.photoGallery = true,
     this.photoCamera = true,
-    // this.videoCamera = false,
-    // this.videoGallery = true,
     this.file = true,
   });
 
-  // final bool gallery;
   final bool photoCamera;
   final bool photoGallery;
-  // final bool videoCamera;
-  // final bool videoGallery;
   final bool file;
 
   @override
@@ -38,25 +32,6 @@ class UploadSelectionBottomSheet extends StatelessWidget {
                 Navigator.pop(context, SourceType.photoGallery);
               },
             ),
-          // TODO clean up
-          // if (videoGallery)
-          //   ListTile(
-          //     leading: const Icon(Icons.video_library),
-          //     title: const Text('Choose Video from Gallery'),
-          //     trailing: const Icon(Icons.chevron_right),
-          //     onTap: () {
-          //       Navigator.pop(context, SourceType.videoGallery);
-          //     },
-          //   ),
-          // if (gallery)
-          //   ListTile(
-          //     leading: const Icon(Icons.photo_library),
-          //     title: const Text('Choose Photo/Video from Gallery'),
-          //     trailing: const Icon(Icons.chevron_right),
-          //     onTap: () {
-          //       Navigator.pop(context, SourceType.gallery);
-          //     },
-          //   ),
           if (photoCamera)
             ListTile(
               leading: const Icon(Icons.camera_alt),
@@ -66,15 +41,6 @@ class UploadSelectionBottomSheet extends StatelessWidget {
                 Navigator.pop(context, SourceType.photoCamera);
               },
             ),
-          // if (videoCamera)
-          //   ListTile(
-          //     leading: const Icon(Icons.videocam),
-          //     title: const Text('Take Video from Camera'),
-          //     trailing: const Icon(Icons.chevron_right),
-          //     onTap: () {
-          //       Navigator.pop(context, SourceType.videoCamera);
-          //     },
-          //   ),
           if (file)
             ListTile(
               leading: const Icon(Icons.file_upload),
