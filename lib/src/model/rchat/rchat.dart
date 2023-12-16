@@ -142,6 +142,9 @@ class RChat {
   }) {
     joinRef(myUid!, room.id).remove();
     roomUserRef(room.id, myUid!).remove();
+
+    /// 채팅 방에 인원이 더 이상 없으면, 채팅 방을 삭제한다.
+    room.deleteIfNoUsers();
   }
 
   /// 채팅방의 메시지 순서(order)를 담고 있는 [RChat.roomMessageOrder] 를 초기화 한다.

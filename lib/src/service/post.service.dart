@@ -24,6 +24,9 @@ class PostService {
   // bool uploadVideoFromGallery = false;
   // bool uploadFromFile = false;
 
+  /// [enableSeenBy] enables the seen by feature. If enabled, the post will
+  /// have a list of uids who have seen the post. This is useful for displaying
+  /// the number of views of the post.
   bool enableSeenBy = false;
 
   /// Callback functions on post create and update. Note that, we don't support

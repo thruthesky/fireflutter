@@ -179,6 +179,15 @@ class RChatRoomModel {
     return fromReference(ref);
   }
 
+  /// 채팅방에 남아 있는 사람이 없으면, 방을 삭제한다.
+  Future<void> deleteIfNoUsers() async {
+    final room = await RChatRoomModel.get(id);
+
+    if (room.users == null || room.users!.isEmpty) {
+      await room.ref.remove();
+    }
+  }
+
   /// Return the first other user uid from the users list.
   String? get otherUserUid {
     return getOtherUserUidFromRoomId(id);
