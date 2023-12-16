@@ -19,18 +19,19 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
       chatRoomCreateDialog: json['chatRoomCreateDialog'] as String? ??
           'New chat room created. You can invite more users. Enjoy chatting!',
       loadButtonDialog: json['loadButtonDialog'] as String? ??
-          'Click the load botton to patch the title and body base on the post id',
+          'Click the load botton to update the title and body from the post id',
       chooseUploadFrom:
           json['chooseUploadFrom'] as String? ?? "Choose upload from...",
       noCategory:
           json['noCategory'] as String? ?? "No category, yet. Create one!",
       noPost: json['noPost'] as String? ?? "No post yet. Create one!",
+      selectCategory: json['selectCategory'] as String? ?? 'Select Category',
       noComment: json['noComment'] as String? ?? "No comment, yet. Create one!",
       noReply: json['noReply'] as String? ?? "No reply",
       title: json['title'] as String? ?? "Title",
       content: json['content'] as String? ?? "Content",
-      postCreate: json['postCreate'] as String? ?? "Post created",
-      postUpdate: json['postUpdate'] as String? ?? "Post updated",
+      postCreate: json['postCreate'] as String? ?? "Create",
+      postUpdate: json['postUpdate'] as String? ?? "Save",
       titleRequired: json['titleRequired'] as String? ?? "Title is required",
       contentRequired:
           json['contentRequired'] as String? ?? "Content is required",
@@ -38,6 +39,7 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
       yes: json['yes'] as String? ?? "Yes",
       no: json['no'] as String? ?? "No",
       ok: json['ok'] as String? ?? "OK",
+      close: json['close'] as String? ?? 'Close',
       edit: json['edit'] as String? ?? 'Edit',
       delete: json['delete'] as String? ?? 'Delete',
       cancel: json['cancel'] as String? ?? "Cancel",
@@ -64,6 +66,9 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
       noBlockedUser: json['noBlockedUser'] as String? ?? "No blocked user.",
       noBlockedUserYet: json['noBlockedUserYet'] as String? ??
           "You haven't blocked any user yet.",
+      messageCommingFromBlockedUser:
+          json['messageCommingFromBlockedUser'] as String? ??
+              'This message is comming from a blocked user',
       disabled: json['disabled'] as String? ?? "Disabled",
       disabledMessage:
           json['disabledMessage'] as String? ?? "You are disabled.",
@@ -135,6 +140,9 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
           "Multipule token must be separated by comma (,)",
       chooseUser: json['chooseUser'] as String? ?? "Choose user",
       searchByUid: json['searchByUid'] as String? ?? "Search by uid",
+      noMessageYet: json['noMessageYet'] as String? ?? "No message yet",
+      uploadingInProgress:
+          json['uploadingInProgress'] as String? ?? "Uploading in progress",
       titleStatistic: json['titleStatistic'] as String? ?? "Admin Statistics",
       titleReportList:
           json['titleReportList'] as String? ?? "Admin Report List",
@@ -254,6 +262,12 @@ I18nTexts _$I18nTextsFromJson(Map<String, dynamic> json) => I18nTexts(
           "Choose users to send push notification",
       pushNotificationTokenHint: json['pushNotificationTokenHint'] as String? ??
           "Choose users to get tokens and  send push notification.",
+      uploadTitle: json['uploadTitle'] as String? ?? "Upload Photo ...",
+      uploadFromCamera:
+          json['uploadFromCamera'] as String? ?? "Take Photo from Camera",
+      uploadFromGallery:
+          json['uploadFromGallery'] as String? ?? "Choose Photo from Gallery",
+      uploadFromFiles: json['uploadFromFiles'] as String? ?? "Choose File",
     );
 
 Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
@@ -281,6 +295,7 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
       'yes': instance.yes,
       'no': instance.no,
       'ok': instance.ok,
+      'close': instance.close,
       'edit': instance.edit,
       'delete': instance.delete,
       'cancel': instance.cancel,
@@ -302,6 +317,7 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
       'alreadyBlockedMessage': instance.alreadyBlockedMessage,
       'noBlockedUser': instance.noBlockedUser,
       'noBlockedUserYet': instance.noBlockedUserYet,
+      'messageCommingFromBlockedUser': instance.messageCommingFromBlockedUser,
       'disabled': instance.disabled,
       'disabledMessage': instance.disabledMessage,
       'report': instance.report,
@@ -355,6 +371,8 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
       'inputTokensHint': instance.inputTokensHint,
       'chooseUser': instance.chooseUser,
       'searchByUid': instance.searchByUid,
+      'noMessageYet': instance.noMessageYet,
+      'uploadingInProgress': instance.uploadingInProgress,
       'titleStatistic': instance.titleStatistic,
       'titleReportList': instance.titleReportList,
       'titleCategoryList': instance.titleCategoryList,
@@ -437,4 +455,9 @@ Map<String, dynamic> _$I18nTextsToJson(I18nTexts instance) => <String, dynamic>{
           instance.notificationSettingCommentLiked,
       'pushNotificationUserHint': instance.pushNotificationUserHint,
       'pushNotificationTokenHint': instance.pushNotificationTokenHint,
+      'selectCategory': instance.selectCategory,
+      'uploadTitle': instance.uploadTitle,
+      'uploadFromCamera': instance.uploadFromCamera,
+      'uploadFromGallery': instance.uploadFromGallery,
+      'uploadFromFiles': instance.uploadFromFiles,
     };
