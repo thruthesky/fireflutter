@@ -33,7 +33,7 @@ class Post {
   final List<String> hashtags;
 
   final List<String> urls;
-  bool get hasPhoto => urls.isNotEmpty;
+  // bool get hasPhoto => urls.isNotEmpty;
 
   @FirebaseDateTimeConverter()
   final DateTime createdAt;
@@ -43,6 +43,7 @@ class Post {
   final String? reason;
   final int noOfComments;
   final bool hasMedia;
+  final bool hasPhoto;
 
   bool get iLiked => likes.contains(myUid);
 
@@ -60,6 +61,7 @@ class Post {
     this.hashtags = const [],
     this.urls = const [],
     this.hasMedia = false,
+    this.hasPhoto = false,
     required this.createdAt,
     this.likes = const [],
     this.deleted = false,
@@ -142,13 +144,10 @@ class Post {
       if (hashtags != null) 'hashtags': hashtags,
       // I also want to see my own post in the feed, so I add myUid too.
       if (my!.followers.isNotEmpty) 'followers': [...my!.followers, myUid],
-      // hasMedia to query if post has media or not
-      // which means if have urls/videoUrl.
-      // This is useful when showing the posts in the search screen.
-      // If the post has no media, we will not show it in the search screen.
-      // This will also help to reduce the no of reads.
-      // If the post has media, we will show it in the search screen.
+      // hasMedia is useless. It does not help anything. Will be removed in the future.
+      // Use hasPhoto, hasFile, hasVideo instead.
       'hasMedia': ((urls != null && urls.isNotEmpty) || (videoUrl != null && videoUrl.isNotEmpty)),
+      'hasPhoto': urls != null && urls.isNotEmpty,
       ...data,
     };
     final postId = Post.doc().id;
@@ -213,6 +212,7 @@ class Post {
       if (hashtags != null) 'hashtags': hashtags,
       if (deleted != null) 'deleted': deleted,
       'hasMedia': ((urls != null && urls.isNotEmpty) || (videoUrl != null && videoUrl.isNotEmpty)),
+      'hasPhoto': urls != null && urls.isNotEmpty,
       'updatedAt': FieldValue.serverTimestamp(),
       ...data,
     };
@@ -252,11 +252,14 @@ class Post {
       content: '',
       urls: [],
       youtubeId: '',
+
+      /// TODO - need to review. Does it support only one video? If not, it should be an array?
       videoUrl: '',
       hashtags: [],
       deleted: true,
       data: {
         'deletedReason': deletedReason ?? 'Deleted',
+        // TODO - need to review. Is this necessary? Will it be automatically set in update() method.
         'hasMedia': false,
       },
       log: false, // don't log for update.

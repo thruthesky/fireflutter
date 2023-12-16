@@ -21,12 +21,13 @@ class UploadSelectionBottomSheet extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          const SizedBox(height: 18),
-          const Text('Choose a file/image from'),
+          const SizedBox(height: 16),
+          Text(tr.uploadTitle),
+          const SizedBox(height: 8),
           if (photoGallery)
             ListTile(
               leading: const Icon(Icons.photo),
-              title: const Text('Choose Photo from Gallery'),
+              title: Text(tr.uploadFromGallery),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 Navigator.pop(context, SourceType.photoGallery);
@@ -35,7 +36,7 @@ class UploadSelectionBottomSheet extends StatelessWidget {
           if (photoCamera)
             ListTile(
               leading: const Icon(Icons.camera_alt),
-              title: const Text('Take Photo from Camera'),
+              title: Text(tr.uploadFromCamera),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 Navigator.pop(context, SourceType.photoCamera);
@@ -44,7 +45,7 @@ class UploadSelectionBottomSheet extends StatelessWidget {
           if (file)
             ListTile(
               leading: const Icon(Icons.file_upload),
-              title: const Text('Choose File'),
+              title: Text(tr.uploadFromFiles),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 debugPrint('Choosing a file');
@@ -52,7 +53,7 @@ class UploadSelectionBottomSheet extends StatelessWidget {
               },
             ),
           TextButton(
-            child: const Text('Close'),
+            child: Text(tr.close),
             onPressed: () {
               Navigator.pop(context);
             },

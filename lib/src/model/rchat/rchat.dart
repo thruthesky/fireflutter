@@ -10,6 +10,7 @@ class RChat {
   ///
   ///
   static DatabaseReference get roomsRef => rtdb.ref().child('chat-rooms');
+  static DatabaseReference get messageseRef => rtdb.ref().child('chat-messages');
   static DatabaseReference get joinsRef => rtdb.ref().child('chat-joins');
   static DatabaseReference roomRef(String roomId) => roomsRef.child(roomId);
   static DatabaseReference joinRef(String myUid, String roomId) => joinsRef.child(myUid).child(roomId);

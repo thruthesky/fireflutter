@@ -27,6 +27,7 @@ class I18nTexts {
   String yes;
   String no;
   String ok;
+  String close;
   String edit;
   String delete;
   String cancel;
@@ -208,6 +209,12 @@ class I18nTexts {
 
   String selectCategory;
 
+  // upload
+  String uploadTitle;
+  String uploadFromCamera;
+  String uploadFromGallery;
+  String uploadFromFiles;
+
   I18nTexts({
     this.loginFirstTitle = 'Login first',
     this.loginFirstMessage = 'Please login first.',
@@ -224,14 +231,15 @@ class I18nTexts {
     this.noReply = "No reply",
     this.title = "Title",
     this.content = "Content",
-    this.postCreate = "Post created",
-    this.postUpdate = "Post updated",
+    this.postCreate = "Create",
+    this.postUpdate = "Save",
     this.titleRequired = "Title is required",
     this.contentRequired = "Content is required",
     this.dismiss = "Dismiss",
     this.yes = "Yes",
     this.no = "No",
     this.ok = "OK",
+    this.close = 'Close',
     this.edit = 'Edit',
     this.delete = 'Delete',
     this.cancel = "Cancel",
@@ -403,6 +411,12 @@ class I18nTexts {
     this.notificationSettingCommentLiked = 'Receive notifications on comment liked',
     this.pushNotificationUserHint = "Choose users to send push notification",
     this.pushNotificationTokenHint = "Choose users to get tokens and  send push notification.",
+
+    // upload
+    this.uploadTitle = "Upload Photo ...",
+    this.uploadFromCamera = "Take Photo from Camera",
+    this.uploadFromGallery = "Choose Photo from Gallery",
+    this.uploadFromFiles = "Choose File",
   });
 
   factory I18nTexts.fromJson(Map<String, dynamic> json) => _$I18nTextsFromJson(json);

@@ -17,6 +17,7 @@ bool get isIOS => !kIsWeb && Platform.isIOS;
 bool get isWeb => kIsWeb;
 
 void dog(String msg) {
+  if (kReleaseMode) return;
   developer.log('--> $msg', time: DateTime.now(), name: '🐶', level: 2000);
 }
 
