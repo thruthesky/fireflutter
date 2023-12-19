@@ -83,10 +83,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
                         // color: Theme.of(context).colorScheme.surface.tone(25),
                         color: Theme.of(context).colorScheme.secondary.withAlpha(20),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                        customHeaderBuilder: (context, post) => PostViewMeta(
-                          post: _post,
-                          headerPadding: widget.headerPadding,
-                        ),
+                        customHeaderBuilder: (context, post) =>
+                            PostViewMeta(post: _post, headerPadding: widget.headerPadding),
                         post: _post!,
                         customMainContentBuilder: (context, post) {
                           if ((post.youtubeId.isEmpty && post.urls.isEmpty) || my?.hasBlocked(post.uid) == true) {
