@@ -1,7 +1,6 @@
-library fireship;
-
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+export 'src/chat/chat.service.dart';
+export 'src/chat/chat.functions.dart';
+export 'src/chat/chat.room.model.dart';
+export 'src/user/user.model.dart';
+export 'src/user/user.service.dart';
+export 'src/database.functions.dart';
