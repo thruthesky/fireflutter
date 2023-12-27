@@ -1,3 +1,15 @@
+# example
+example/.gitignore
+example/.metadata
+example/pubspec.lock
+example/android
+example/ios
+example/linux
+example/macos
+example/test
+example/web
+example/windows
+
 # Miscellaneous
 *.class
 *.log
@@ -27,4 +39,3 @@ migrate_working_dir/
 **/doc/api/
 .dart_tool/
 build/
-example
