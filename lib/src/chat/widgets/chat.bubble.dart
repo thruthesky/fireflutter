@@ -90,7 +90,7 @@ class ChatBubble extends StatelessWidget {
           uid: uid,
           field: Def.displayName,
           builder: (data) => Text(
-            data,
+            data ?? 'NoName',
             style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
           ),
         ),
@@ -104,16 +104,17 @@ class ChatBubble extends StatelessWidget {
       child: Container(
         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
         child: CachedNetworkImage(
-          imageUrl: message.url!.thumbnail,
+          imageUrl: message.url!,
           fit: BoxFit.cover,
-          // progressIndicatorBuilder: (context, url, downloadProgress) =>
-          //     CircularProgressIndicator(value: downloadProgress.progress),
           placeholder: (context, url) => const Padding(
             padding: EdgeInsets.all(8.0),
             child: CircularProgressIndicator(),
           ),
           // if thumbnail is not available, show original image
-          errorWidget: (context, url, error) => CachedNetworkImage(imageUrl: message.url!),
+          errorWidget: (context, url, error) {
+            return const Icon(Icons.error_outline, color: Colors.red);
+          },
+          errorListener: (value) => dog('Image not exist in storage: $value'),
         ),
       ),
     );

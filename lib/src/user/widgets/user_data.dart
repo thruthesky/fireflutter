@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 ///
 /// Use this widget to get user data as FutureBuilder only if you know the user's uid.
 ///
+/// [cache] 가 true 이면 캐시를 사용한다. 즉, 같은 uid 와 field 에 대한 데이터는 한번만 읽어온다.
+///
 /// ```dart
 /// UserData(
 ///   uid: message.uid!,
@@ -20,22 +22,30 @@ import 'package:flutter/material.dart';
 ///   ),
 /// ),
 /// ```
+final _userDataCache = <String, dynamic>{};
+
 class UserData extends StatelessWidget {
   const UserData({
     super.key,
     required this.uid,
     required this.field,
     required this.builder,
+    this.cache = true,
   });
 
   final String uid;
   final String? field;
   final Function(dynamic data) builder;
+  final bool cache;
 
   @override
   Widget build(BuildContext context) {
+    final path = 'users/$uid${field != null ? '/$field' : ''}';
+    if (cache && _userDataCache.containsKey(path)) {
+      return builder(_userDataCache[path]);
+    }
     return FutureBuilder(
-      future: get<Map<String, dynamic>>('users/$uid${field != null ? '/$field' : ''}'),
+      future: get(path),
       builder: (_, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const SizedBox(
@@ -44,8 +54,14 @@ class UserData extends StatelessWidget {
             child: CircularProgressIndicator.adaptive(),
           );
         }
-        if (snapshot.data == null) return const Text('User node does not exists');
-        return builder(snapshot.data!);
+        if (snapshot.hasError) {
+          dog('error in UserData: ${snapshot.error}');
+          return const Icon(Icons.error_outline);
+        }
+        if (cache) {
+          _userDataCache[path] = snapshot.data;
+        }
+        return builder(snapshot.data);
       },
     );
   }

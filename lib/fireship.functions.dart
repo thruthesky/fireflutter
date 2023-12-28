@@ -21,6 +21,8 @@ String platformName() {
   }
 }
 
+bool get isIos => platformName() == 'ios';
+
 /// Returns a string of "yyyy-MM-dd" or "HH:mm:ss"
 String dateTimeShort(DateTime dt) {
   final now = DateTime.now();

@@ -203,6 +203,7 @@ class MessagingService {
 
     dog('data; $data');
 
+    /// TODO - HTTP REST 를 이용해서 직접 메시지 전송
     // return await messageQueueCol.add(data);
   }
 

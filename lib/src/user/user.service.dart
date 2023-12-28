@@ -6,12 +6,13 @@ import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
 class UserService {
-  static late final UserService? _instance;
+  static UserService? _instance;
   static UserService get instance => _instance ??= UserService._();
 
   UserModel? user;
   final rtdb = FirebaseDatabase.instance.ref();
   DatabaseReference get userRef => rtdb.child('users');
+  DatabaseReference get myRef => userRef.child(myUid!);
 
   StreamSubscription? userNodeSubscription;
 
@@ -54,7 +55,7 @@ class UserService {
   bool enableNotificationOnLike = false;
 
   UserService._() {
-    print('--> UserService._()');
+    dog('--> UserService._()');
   }
 
   init({
@@ -68,7 +69,7 @@ class UserService {
     void Function(User user, bool isLiked)? onLike,
     UserCustomize? customize,
   }) {
-    print('--> UserService.init()');
+    dog('--> UserService.init()');
     listenUser();
 
     if (customize != null) {
@@ -90,18 +91,19 @@ class UserService {
   }
 
   listenUser() {
-    print('--> UserService.listenUser()');
+    dog('--> UserService.listenUser()');
     FirebaseAuth.instance.authStateChanges().listen((user) async {
-      print('--> UserService.listenUser() FirebaseAuth.instance.authStateChanges()');
+      dog('--> UserService.listenUser() FirebaseAuth.instance.authStateChanges()');
       if (user == null) {
         this.user = null;
         return;
       }
       userNodeSubscription?.cancel();
       userNodeSubscription = userRef.child(user.uid).onValue.listen((event) {
-        print('--> UserService.listenUser() userRef.child(user.uid).onValue.listen()');
-        final json = event.snapshot.value as Map<String, dynamic>;
-        this.user = UserModel.fromJson(json);
+        dog('--> UserService.listenUser() userRef.child(user.uid).onValue.listen()');
+        // final json = Map<String, dynamic>.from(event.snapshot.value);
+        // this.user = UserModel.fromJson(json);
+        this.user = UserModel.fromSnapshot(event.snapshot);
       });
     });
   }
@@ -171,5 +173,11 @@ class UserService {
   /// ```
   getSetting(String uid, {String? path}) {
     return get('user_settings/$uid${path != null ? '/$path' : ''}');
+  }
+
+  login() async {
+    await myRef.update({
+      'lastLogin': ServerValue.timestamp,
+    });
   }
 }

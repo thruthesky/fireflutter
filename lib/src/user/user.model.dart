@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:fireship/fireship.dart' as fs;
 
 class UserModel {
@@ -17,7 +18,13 @@ class UserModel {
     this.isDisabled = false,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
+  factory UserModel.fromSnapshot(DataSnapshot snapshot) {
+    final json = snapshot.value as Map<dynamic, dynamic>;
+    json['uid'] = snapshot.key;
+    return UserModel.fromJson(json);
+  }
+
+  factory UserModel.fromJson(Map<dynamic, dynamic> json) {
     return UserModel(
       uid: json['uid'],
       email: json['email'],
@@ -63,5 +70,21 @@ class UserModel {
       return null;
     }
     return UserModel.fromJson(nodeData);
+  }
+
+  Future<void> update({
+    String? displayName,
+  }) async {
+    final data = {
+      if (displayName != null) 'displayName': displayName,
+    };
+    if (data.isEmpty) {
+      return;
+    }
+
+    return await fs.update(
+      'users/$uid',
+      data,
+    );
   }
 }

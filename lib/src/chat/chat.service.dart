@@ -5,15 +5,15 @@ import 'package:fireship/fireship.dart';
 /// Chat
 ///
 class ChatService {
-  static late final ChatService? _instance;
+  static ChatService? _instance;
   static ChatService get instance => _instance ??= ChatService._();
 
   ChatService._() {
-    print('--> ChatService._()');
+    dog('--> ChatService._()');
   }
 
   init() {
-    print('--> ChatService.init()');
+    dog('--> ChatService.init()');
   }
 
   /// Firebase Realtime Database Chat Functions
@@ -189,14 +189,13 @@ class ChatService {
   /// this is used to order by unread/read messages then by updatedAt
   /// w/out the "1" it means it has been read.
   Future<void> resetMyRoomNewMessage({
-    required ChatRoomModel room,
     int? order,
   }) async {
-    final myJoinRef = joinRef(myUid!, room.id);
+    final myJoinRef = joinRef(myUid!, currentRoom.id);
     // the problem is when this is too fast
     myJoinRef.update({
       'newMessage': null,
-      'order': order ?? -int.parse('${room.updatedAt ?? room.createdAt ?? 0}'),
+      'order': order ?? -int.parse('${currentRoom.updatedAt ?? currentRoom.createdAt ?? 0}'),
     });
 
     // wait for 1 second before updating the order

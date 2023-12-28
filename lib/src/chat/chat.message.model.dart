@@ -9,7 +9,10 @@ class ChatMessageModel {
   int? order;
   int? createdAt;
 
-  bool get mine => uid == FirebaseAuth.instance.currentUser!.uid;
+  bool get mine {
+    return uid != null && uid == FirebaseAuth.instance.currentUser?.uid;
+  }
+
   bool get other => !mine;
 
   ChatMessageModel({

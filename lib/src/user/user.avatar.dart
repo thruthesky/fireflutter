@@ -19,7 +19,7 @@ class UserAvatar extends StatelessWidget {
           return CircleAvatar(
             radius: radius,
             backgroundColor: Colors.grey.shade200,
-            child: const Icon(Icons.person, size: 20),
+            child: Icon(Icons.person, size: 22, color: Colors.grey.shade700),
           );
         } else {
           return CircleAvatar(
