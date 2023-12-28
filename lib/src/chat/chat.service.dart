@@ -8,8 +8,6 @@ class ChatService {
   static late final ChatService? _instance;
   static ChatService get instance => _instance ??= ChatService._();
 
-  static String? myUid = UserService.instance.user?.uid;
-
   ChatService._() {
     print('--> ChatService._()');
   }
