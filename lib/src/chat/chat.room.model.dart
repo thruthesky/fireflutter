@@ -69,8 +69,12 @@ class ChatRoomModel {
       key: json['key'],
       text: json['text'] as String?,
       url: json['url'] as String?,
-      updatedAt: json['updatedAt'] is int ? json['updatedAt'] : int.parse(json['updatedAt'] ?? '0'),
-      createdAt: json['createdAt'] is int ? json['createdAt'] : int.parse(json['createdAt'] ?? '0'),
+      updatedAt: json['updatedAt'] is int
+          ? json['updatedAt']
+          : int.parse(json['updatedAt'] ?? '0'),
+      createdAt: json['createdAt'] is int
+          ? json['createdAt']
+          : int.parse(json['createdAt'] ?? '0'),
       newMessage: json['newMessage'] ?? 0,
 
       /// See, rchat.md#database structure
@@ -80,8 +84,11 @@ class ChatRoomModel {
       photoUrl: json['photoUrl'] as String?,
       description: json['description'] as String?,
       master: json['master'] as String?,
-      users: json['users'] == null ? null : Map<String, bool>.from(json['users']),
-      order: json['order'] is int ? json['order'] : int.parse(json['order'] ?? '0'),
+      users:
+          json['users'] == null ? null : Map<String, bool>.from(json['users']),
+      order: json['order'] is int
+          ? json['order']
+          : int.parse(json['order'] ?? '0'),
     );
   }
   Map<String, dynamic> toJson() {
@@ -137,7 +144,8 @@ class ChatRoomModel {
   static Future<ChatRoomModel> fromReference(DatabaseReference ref) async {
     final event = await ref.once();
     if (event.snapshot.exists == false) {
-      throw Exception('ChatRoomModel.fromReference: ${ref.path} does not exist.');
+      throw Exception(
+          'ChatRoomModel.fromReference: ${ref.path} does not exist.');
     }
     return ChatRoomModel.fromSnapshot(event.snapshot);
   }
@@ -203,6 +211,8 @@ class ChatRoomModel {
           element.value ? (previousValue?..add(element.key)) : previousValue,
     );
     if (uids == null) return null;
-    return uids.where((element) => element != FirebaseAuth.instance.currentUser!.uid).toList();
+    return uids
+        .where((element) => element != FirebaseAuth.instance.currentUser!.uid)
+        .toList();
   }
 }

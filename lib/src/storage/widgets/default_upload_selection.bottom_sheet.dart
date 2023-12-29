@@ -41,7 +41,8 @@ class DefaultUploadSelectionBottomSheet extends StatelessWidget {
               },
             ),
           TextButton(
-            child: Text('Cancel', style: TextStyle(color: Theme.of(context).primaryColor)),
+            child: Text('Cancel',
+                style: TextStyle(color: Theme.of(context).primaryColor)),
             onPressed: () {
               Navigator.pop(context);
             },

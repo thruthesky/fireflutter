@@ -3,7 +3,8 @@ import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
 class UserAvatar extends StatelessWidget {
-  const UserAvatar({super.key, required this.uid, this.radius = 40, this.onTap});
+  const UserAvatar(
+      {super.key, required this.uid, this.radius = 40, this.onTap});
 
   final String uid;
   final double radius;

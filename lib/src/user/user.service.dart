@@ -77,7 +77,8 @@ class UserService {
     }
 
     this.enableNoOfProfileView = enableNoOfProfileView;
-    this.enableMessagingOnPublicProfileVisit = enableMessagingOnPublicProfileVisit;
+    this.enableMessagingOnPublicProfileVisit =
+        enableMessagingOnPublicProfileVisit;
     this.onCreate = onCreate;
 
     /// [onUpdate] will be triggered every time user is being updated.

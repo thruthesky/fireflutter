@@ -37,7 +37,9 @@ class ChatMessageModel {
       text: json['text'] as String?,
       url: json['url'] as String?,
       order: json['order'] as int?,
-      createdAt: json['createdAt'] is int ? json['createdAt'] : int.parse(json['createdAt'] ?? '0'),
+      createdAt: json['createdAt'] is int
+          ? json['createdAt']
+          : int.parse(json['createdAt'] ?? '0'),
     );
   }
   Map<String, dynamic> toJson() {

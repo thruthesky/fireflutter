@@ -33,7 +33,8 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (progress != null && !progress!.isNaN) LinearProgressIndicator(value: progress),
+        if (progress != null && !progress!.isNaN)
+          LinearProgressIndicator(value: progress),
         const Divider(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -56,8 +57,9 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                     // Review
                     camera: true,
                     gallery: true,
-                    progress: (p) =>
-                        widget.onProgress?.call(p) ?? mounted ? setState(() => progress = p) : null,
+                    progress: (p) => widget.onProgress?.call(p) ?? mounted
+                        ? setState(() => progress = p)
+                        : null,
                     complete: () => widget.onProgress?.call(null) ?? mounted
                         ? setState(() => progress = null)
                         : null,

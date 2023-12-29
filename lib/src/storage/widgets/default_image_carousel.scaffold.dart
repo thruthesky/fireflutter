@@ -74,8 +74,8 @@ class _CarouselScreenState extends State<DefaultImageCarouselScaffold> {
       ),
       body: PageView(
         controller: controller,
-        children:
-            widget.widgets ?? widget.urls!.map((e) => CachedNetworkImage(imageUrl: e)).toList(),
+        children: widget.widgets ??
+            widget.urls!.map((e) => CachedNetworkImage(imageUrl: e)).toList(),
       ),
     );
   }

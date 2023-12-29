@@ -42,7 +42,8 @@ class _RChatMessageListState extends State<ChatMessageListView> {
     return FirebaseDatabaseQueryBuilder(
       // 페이지 사이즈(메시지를 가져오는 개수)를 100으로 해서, 자주 가져오지 않도록 한다. 그래서 flickering 을 줄인다.
       pageSize: 100,
-      query: ChatService.instance.messageRef(roomId: roomId).orderByChild('order'),
+      query:
+          ChatService.instance.messageRef(roomId: roomId).orderByChild('order'),
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
           // FirebaseDatabaseQueryBuilder 는 snapshot.isFetching 을 맨 처음 로딩할 때 딱 한번만 true 로 지정한다.
@@ -92,10 +93,12 @@ class _RChatMessageListState extends State<ChatMessageListView> {
               if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
                 snapshot.fetchMore();
               }
-              final message = ChatMessageModel.fromSnapshot(snapshot.docs[index]);
+              final message =
+                  ChatMessageModel.fromSnapshot(snapshot.docs[index]);
 
               /// Reset the [order] field of the message to list in time based order.
-              ChatService.instance.resetRoomMessageOrder(roomId: roomId, order: message.order);
+              ChatService.instance
+                  .resetRoomMessageOrder(roomId: roomId, order: message.order);
 
               return ChatBubble(
                 message: message,

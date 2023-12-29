@@ -26,7 +26,8 @@ class ChatService {
   DatabaseReference get messageseRef => rtdb.ref().child('chat-messages');
   DatabaseReference get joinsRef => rtdb.ref().child('chat-joins');
   DatabaseReference roomRef(String roomId) => roomsRef.child(roomId);
-  DatabaseReference joinRef(String myUid, String roomId) => joinsRef.child(myUid).child(roomId);
+  DatabaseReference joinRef(String myUid, String roomId) =>
+      joinsRef.child(myUid).child(roomId);
   DatabaseReference messageRef({required String roomId}) =>
       rtdb.ref().child('chat-messages').child(roomId);
 
@@ -62,7 +63,8 @@ class ChatService {
     }
 
     ///
-    roomMessageOrder[currentRoom.id] = (roomMessageOrder[currentRoom.id] ?? 0) - 1;
+    roomMessageOrder[currentRoom.id] =
+        (roomMessageOrder[currentRoom.id] ?? 0) - 1;
 
     /// 참고, 실제 메시지를 보내기 전에, 채팅방 자체를 먼저 업데이트 해 버린다.
     ///
@@ -71,7 +73,8 @@ class ChatService {
     /// B 의 채팅방의 newMessage 가 0 으로 된다.
     /// 그리고, 나서 updateJoin() 을 하면, B 의 채팅 메시지가 1이 되는 것이다.
     /// 즉, 0이 되어야하는데 1이 되는 상황이 발생한다. 그래서, updateJoin() 이 먼저 호출되어야 한다.
-    Map<String, dynamic> multiUpdateData = getMultiUpdateJoinMap(text: text, url: url);
+    Map<String, dynamic> multiUpdateData =
+        getMultiUpdateJoinMap(text: text, url: url);
 
     /// Save chat message under `/chat-messages`.
     multiUpdateData[
@@ -169,7 +172,8 @@ class ChatService {
     if (ChatService.instance.roomMessageOrder[roomId] == null) {
       ChatService.instance.roomMessageOrder[roomId] = 0;
     }
-    if (order != null && order < ChatService.instance.roomMessageOrder[roomId]!) {
+    if (order != null &&
+        order < ChatService.instance.roomMessageOrder[roomId]!) {
       ChatService.instance.roomMessageOrder[roomId] = order;
     }
   }
@@ -195,7 +199,8 @@ class ChatService {
     // the problem is when this is too fast
     myJoinRef.update({
       'newMessage': null,
-      'order': order ?? -int.parse('${currentRoom.updatedAt ?? currentRoom.createdAt ?? 0}'),
+      'order': order ??
+          -int.parse('${currentRoom.updatedAt ?? currentRoom.createdAt ?? 0}'),
     });
 
     // wait for 1 second before updating the order
@@ -234,7 +239,8 @@ class ChatService {
   /// 채팅방으로 접속을 하면, `if (currentMessageOrder == 0 ) return fales` 에 의해서 항상 false 가
   /// 리턴된다. 그래서, 처음 채팅방에 진입을 할 때에는 [snapshot.isFetching] 을 통해서 newMessage 를 초기화
   /// 해야 한다.
-  bool isLoadingNewMessage(String messageRoomId, FirebaseQueryBuilderSnapshot snapshot) {
+  bool isLoadingNewMessage(
+      String messageRoomId, FirebaseQueryBuilderSnapshot snapshot) {
     if (snapshot.docs.isEmpty) return false;
 
     final lastMessage = ChatMessageModel.fromSnapshot(snapshot.docs.first);
@@ -302,7 +308,8 @@ class ChatService {
     // set order into -updatedAt (w/out "1")
     // it is important to know that updatedAt must not be updated
     // before this.
-    data['order'] = -int.parse('${currentRoom.updatedAt ?? currentRoom.createdAt ?? 0}');
+    data['order'] =
+        -int.parse('${currentRoom.updatedAt ?? currentRoom.createdAt ?? 0}');
     await joinsRef.child(myUid!).child(room.id).update(data);
   }
 
