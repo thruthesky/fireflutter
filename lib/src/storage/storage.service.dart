@@ -70,8 +70,7 @@ class StorageService {
     }
 
     final storageRef = FirebaseStorage.instance.ref();
-    final fileRef = storageRef
-        .child(saveAs ?? "users/${myUid!}/${file.path.split('/').last}");
+    final fileRef = storageRef.child(saveAs ?? "users/${myUid!}/${file.path.split('/').last}");
     // Review: Here only Image can be compressed. File and Video cannot be compressed.
     // It may cause error if you try to compress file or video.
     // So, we should check the file type before compressing.
@@ -112,7 +111,18 @@ class StorageService {
     return;
   }
 
+  /// 이미지 업로드 소스(갤러리 또는 카메라) 선택창을 보여주고, 선택된 소스를 반환한다.
+  ///
+  Future<ImageSource?> chooseUploadSource(BuildContext context) async {
+    return await showModalBottomSheet(
+      context: context,
+      builder: (_) => const DefaultUploadSelectionBottomSheet(),
+    );
+  }
+
   /// 사용자에게 사진/파일 업로드를 요청한다.
+  ///
+  /// 업로드가 완료되면, URL 을 리턴한다. 업로드가 취소되면, null 을 리턴한다.
   ///
   /// Ask user to upload a photo or a file
   ///
@@ -120,9 +130,6 @@ class StorageService {
   ///
   /// This method does not handle any exception. You may handle it outisde if you want.
   ///
-  /// [gallery] is for both photo and video.
-  /// [photoGallery] is for photo only.
-  /// [videoGallery] is for video only.
   Future<String?> upload({
     required BuildContext context,
     Function(double)? progress,
@@ -137,17 +144,17 @@ class StorageService {
     bool camera = true,
     bool gallery = true,
   }) async {
-    final re = await showModalBottomSheet(
-      context: context,
-      builder: (_) => DefaultUploadSelectionBottomSheet(
-        camera: camera,
-        gallery: gallery,
-      ),
-    );
-    if (re == null) return null;
+    // final re = await showModalBottomSheet(
+    //   context: context,
+    //   builder: (_) => DefaultUploadSelectionBottomSheet(
+    //     camera: camera,
+    //     gallery: gallery,
+    //   ),
+    // );
+    // if (re == null) return null;
 
     return uploadFrom(
-      source: re,
+      source: await chooseUploadSource(context),
       progress: progress,
       complete: complete,
       compressQuality: compressQuality,
@@ -189,12 +196,10 @@ class StorageService {
     if (source == null) return null;
 
     if (source == ImageSource.camera) {
-      final XFile? image =
-          await ImagePicker().pickImage(source: ImageSource.camera);
+      final XFile? image = await ImagePicker().pickImage(source: ImageSource.camera);
       return image?.path;
     } else if (source == ImageSource.gallery) {
-      final XFile? image =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
+      final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
       return image?.path;
     }
     return null;
@@ -206,8 +211,8 @@ class StorageService {
     int compressQuality = 80,
     String? type,
   }) async {
-    final pickedFiles = await ImagePicker()
-        .pickMultiImage(imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
+    final pickedFiles =
+        await ImagePicker().pickMultiImage(imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
     List<XFile> xFilePicks = pickedFiles;
 
     if (xFilePicks.isEmpty) return null;
@@ -232,8 +237,8 @@ class StorageService {
       return customize.showUploads!(context, urls, index: index);
     }
     showGeneralDialog(
-        context: context,
-        pageBuilder: (context, _, __) =>
-            DefaultImageCarouselScaffold(urls: urls, index: index));
+      context: context,
+      pageBuilder: (context, _, __) => DefaultImageCarouselScaffold(urls: urls, index: index),
+    );
   }
 }

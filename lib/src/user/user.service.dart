@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 
 class UserService {
   static UserService? _instance;
@@ -14,27 +15,11 @@ class UserService {
   DatabaseReference get userRef => rtdb.child('users');
   DatabaseReference get myRef => userRef.child(myUid!);
 
+  BehaviorSubject<UserModel?> userDataChanges = BehaviorSubject<UserModel?>.seeded(null);
+
   StreamSubscription? userNodeSubscription;
 
   UserCustomize customize = UserCustomize();
-
-  /// User create event. It fires when a user document is created.
-  Function(User user)? onCreate;
-
-  /// If any of the user document field updates, then this callback will be called.
-  /// For instance, when a user creates a post or a comment, the no of posts or
-  /// comments are updated in user document. Hence [onUpdate] will be called.
-  /// Warning, don't call UserService.instance.update() inside this callback. It
-  /// will cause an infinite loop. You may use the firestore SDK to update the
-  /// user document.
-  ///
-  /// [user] is the user model that has new data (after update).
-  ///
-  /// [data] it has the fields and values in Map that are updated. You can use
-  /// it to know which fields are updated.
-  /// updated.
-  Function(User user, Map<String, dynamic> data)? onUpdate;
-  Function(User user)? onDelete;
 
   Function(User user)? onSignout;
 
@@ -62,9 +47,6 @@ class UserService {
     bool enableNoOfProfileView = false,
     bool enableMessagingOnPublicProfileVisit = false,
     bool enableNotificationOnLike = false,
-    Function(User user)? onCreate,
-    Function(User user, Map<String, dynamic> data)? onUpdate,
-    Function(User user)? onDelete,
     Function(User user)? onSignout,
     void Function(User user, bool isLiked)? onLike,
     UserCustomize? customize,
@@ -77,15 +59,7 @@ class UserService {
     }
 
     this.enableNoOfProfileView = enableNoOfProfileView;
-    this.enableMessagingOnPublicProfileVisit =
-        enableMessagingOnPublicProfileVisit;
-    this.onCreate = onCreate;
-
-    /// [onUpdate] will be triggered every time user is being updated.
-    /// See user.dart and check the [update] method.
-    this.onUpdate = onUpdate;
-    this.onDelete = onDelete;
-    this.onSignout = onSignout;
+    this.enableMessagingOnPublicProfileVisit = enableMessagingOnPublicProfileVisit;
 
     this.onLike = onLike;
     this.enableNotificationOnLike = enableNotificationOnLike;
@@ -105,6 +79,16 @@ class UserService {
         // final json = Map<String, dynamic>.from(event.snapshot.value);
         // this.user = UserModel.fromJson(json);
         this.user = UserModel.fromSnapshot(event.snapshot);
+        userDataChanges.add(this.user);
+
+        /// 문서를 읽지 못했거나, createdAt 이 없으면, 최초 로그인이다. 그래서 createdAt 을 지정해서
+        /// 회원 가입으로 간주한다.
+        if (this.user?.createdAt == null) {
+          dog('--> User login for the first time. --> update createdAt');
+          this.user?.ref.update({
+            'createdAt': ServerValue.timestamp,
+          });
+        }
       });
     });
   }

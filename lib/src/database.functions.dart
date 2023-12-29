@@ -22,8 +22,7 @@ Future<T?> get<T>(String path) async {
 }
 
 Future<DataSnapshot> getSnapshot(String path) async {
-  final event =
-      await FirebaseDatabase.instance.ref(path).once(DatabaseEventType.value);
+  final event = await FirebaseDatabase.instance.ref(path).once(DatabaseEventType.value);
   return event.snapshot;
 }
 
@@ -49,6 +48,8 @@ Future<List<String>> getKeys(String path) async {
 /// This will overwrite any data at this location and all child locations.
 ///
 /// Data types that are allowed are String, boolean, int, double, Map, List.
+///
+/// If the values are null, they will be deleted.
 Future<void> set<T>(String path, dynamic value) async {
   await FirebaseDatabase.instance.ref(path).set(value);
 }
@@ -99,6 +100,5 @@ Future<bool> toggle(String path) async {
 /// Like other user
 ///
 Future<bool> like(String otherUid) async {
-  return await toggle(
-      'likes/$otherUid/${FirebaseAuth.instance.currentUser!.uid}');
+  return await toggle('likes/$otherUid/${FirebaseAuth.instance.currentUser!.uid}');
 }
