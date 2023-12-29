@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 ///
 /// 'users/uid/photoUrl' 값을 실시간으로 listen 해서 표시.
 class UserAvatar extends StatelessWidget {
-  const UserAvatar({super.key, required this.uid, this.radius = 40, this.onTap});
+  const UserAvatar(
+      {super.key, required this.uid, this.radius = 40, this.onTap});
 
   final String uid;
   final double radius;
@@ -30,7 +31,8 @@ class UserAvatar extends StatelessWidget {
                 )
               : null,
           child: url == null
-              ? Icon(Icons.person, size: radius * 1.6, color: Colors.grey.shade700)
+              ? Icon(Icons.person,
+                  size: radius * 1.6, color: Colors.grey.shade700)
               : null,
         );
       },

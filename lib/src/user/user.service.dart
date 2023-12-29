@@ -15,7 +15,8 @@ class UserService {
   DatabaseReference get userRef => rtdb.child('users');
   DatabaseReference get myRef => userRef.child(myUid!);
 
-  BehaviorSubject<UserModel?> userDataChanges = BehaviorSubject<UserModel?>.seeded(null);
+  BehaviorSubject<UserModel?> userDataChanges =
+      BehaviorSubject<UserModel?>.seeded(null);
 
   StreamSubscription? userNodeSubscription;
 
@@ -59,7 +60,8 @@ class UserService {
     }
 
     this.enableNoOfProfileView = enableNoOfProfileView;
-    this.enableMessagingOnPublicProfileVisit = enableMessagingOnPublicProfileVisit;
+    this.enableMessagingOnPublicProfileVisit =
+        enableMessagingOnPublicProfileVisit;
 
     this.onLike = onLike;
     this.enableNotificationOnLike = enableNotificationOnLike;
