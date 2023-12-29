@@ -32,6 +32,7 @@ export 'src/storage/widgets/default_image_carousel.scaffold.dart';
 
 /// User
 export 'src/user/user.model.dart';
+export 'src/user/user.photo.model.dart';
 export 'src/user/user.service.dart';
 export 'src/user/widgets/user.avatar.dart';
 export 'src/user/user.customize.dart';
