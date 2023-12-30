@@ -7,11 +7,14 @@ import 'package:flutter/material.dart';
 class ChatMessageInputBox extends StatefulWidget {
   const ChatMessageInputBox({
     super.key,
+    required this.chat,
     this.cameraIcon,
     this.sendIcon,
     this.onProgress,
     this.onSend,
   });
+
+  final ChatModel chat;
 
   final Widget? cameraIcon;
   final Widget? sendIcon;
@@ -33,8 +36,7 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (progress != null && !progress!.isNaN)
-          LinearProgressIndicator(value: progress),
+        if (progress != null && !progress!.isNaN) LinearProgressIndicator(value: progress),
         const Divider(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -57,14 +59,13 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                     // Review
                     camera: true,
                     gallery: true,
-                    progress: (p) => widget.onProgress?.call(p) ?? mounted
-                        ? setState(() => progress = p)
-                        : null,
+                    progress: (p) =>
+                        widget.onProgress?.call(p) ?? mounted ? setState(() => progress = p) : null,
                     complete: () => widget.onProgress?.call(null) ?? mounted
                         ? setState(() => progress = null)
                         : null,
                   );
-                  await ChatService.instance.sendMessage(url: url);
+                  await widget.chat.sendMessage(url: url);
                   widget.onSend?.call(text: null, url: url);
                 },
               ),
@@ -76,7 +77,7 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                     onPressed: () async {
                       String text = inputController.text.trim();
                       if (text.isEmpty) return;
-                      await ChatService.instance.sendMessage(text: text);
+                      await widget.chat.sendMessage(text: text);
                       inputController.clear();
                       widget.onSend?.call(text: text, url: null);
                     },

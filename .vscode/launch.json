@@ -14,6 +14,15 @@
             "program": "lib/main.dart"
         },
         {
+            "name": "Momcafe - iPhone SE",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "iPhone SE",
+            "flutterMode": "debug",
+            "cwd": "apps/momcafe",
+            "program": "lib/main.dart"
+        },
+        {
             "name": "Example - iPhone 15 Pro Max",
             "request": "launch",
             "type": "dart",

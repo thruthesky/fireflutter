@@ -14,12 +14,10 @@ class UserModel {
   final int? birthDay;
   final int? createdAt;
 
-  DatabaseReference get ref =>
-      FirebaseDatabase.instance.ref('users').child(uid);
+  DatabaseReference get ref => FirebaseDatabase.instance.ref('users').child(uid);
 
   /// See README.md
-  DatabaseReference get photoRef =>
-      FirebaseDatabase.instance.ref('user-photos').child(uid);
+  DatabaseReference get photoRef => FirebaseDatabase.instance.ref('user-photos').child(uid);
 
   UserModel({
     required this.uid,
@@ -40,13 +38,15 @@ class UserModel {
     return UserModel.fromJson(json);
   }
 
-  /// 사용자 uid 로 부터, UserModel 을 만든다
+  /// 사용자 uid 로 부터, UserModel 을 만들어, 빈 UserModel 을 리턴한다.
   ///
   /// 즉, 생성된 UserModel 의 instance 에서, uid 를 제외한 모든 properties 는 null 이지만,
   /// uid 를 기반으로 하는, 각종 method 를 쓸 수 있다.
   ///
   /// 예를 들면, UserModel.fromUid(uid).ref.child('photoUrl').onValue 등과 같이 쓸 수 있으며,
   /// update(), delete() 함수 등을 쓸 수 있다.
+  ///
+  /// 만약, uid 만으로 사용자 정보 전체를 다 가지고 싶다면,
   factory UserModel.fromUid(String uid) {
     return UserModel.fromJson({
       'uid': uid,
@@ -108,10 +108,12 @@ class UserModel {
   }
 
   static Future<UserModel?> get(String uid) async {
-    final nodeData = await fs.get<Map<String, dynamic>>('users/$uid');
+    final nodeData = await fs.get<Map<dynamic, dynamic>>('users/$uid');
     if (nodeData == null) {
       return null;
     }
+
+    nodeData['uid'] = uid;
     return UserModel.fromJson(nodeData);
   }
 

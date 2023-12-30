@@ -69,12 +69,8 @@ class ChatRoomModel {
       key: json['key'],
       text: json['text'] as String?,
       url: json['url'] as String?,
-      updatedAt: json['updatedAt'] is int
-          ? json['updatedAt']
-          : int.parse(json['updatedAt'] ?? '0'),
-      createdAt: json['createdAt'] is int
-          ? json['createdAt']
-          : int.parse(json['createdAt'] ?? '0'),
+      updatedAt: json['updatedAt'] is int ? json['updatedAt'] : int.parse(json['updatedAt'] ?? '0'),
+      createdAt: json['createdAt'] is int ? json['createdAt'] : int.parse(json['createdAt'] ?? '0'),
       newMessage: json['newMessage'] ?? 0,
 
       /// See, rchat.md#database structure
@@ -84,11 +80,8 @@ class ChatRoomModel {
       photoUrl: json['photoUrl'] as String?,
       description: json['description'] as String?,
       master: json['master'] as String?,
-      users:
-          json['users'] == null ? null : Map<String, bool>.from(json['users']),
-      order: json['order'] is int
-          ? json['order']
-          : int.parse(json['order'] ?? '0'),
+      users: json['users'] == null ? null : Map<String, bool>.from(json['users']),
+      order: json['order'] is int ? json['order'] : int.parse(json['order'] ?? '0'),
     );
   }
   Map<String, dynamic> toJson() {
@@ -129,14 +122,14 @@ class ChatRoomModel {
   }
 
   // /// Returns a [ChatRoomModel] from a single chat room id.
-  // factory ChatRoomModel.fromUid(String otherUserUid) {
-  //   return ChatRoomModel.fromJson({
-  //     'key': singleChatRoomId(otherUserUid),
-  //     'ref': RChat.roomRef(singleChatRoomId(otherUserUid)),
-  //     'isGroupChat': false,
-  //     'isOpenGroupChat': false,
-  //   });
-  // }
+  factory ChatRoomModel.fromUid(String otherUserUid) {
+    return ChatRoomModel.fromJson({
+      'key': singleChatRoomId(otherUserUid),
+      'ref': ChatService.instance.roomRef(singleChatRoomId(otherUserUid)),
+      'isGroupChat': false,
+      'isOpenGroupChat': false,
+    });
+  }
 
   /// Return ChatRoomModel from a reference
   ///
@@ -144,8 +137,7 @@ class ChatRoomModel {
   static Future<ChatRoomModel> fromReference(DatabaseReference ref) async {
     final event = await ref.once();
     if (event.snapshot.exists == false) {
-      throw Exception(
-          'ChatRoomModel.fromReference: ${ref.path} does not exist.');
+      throw Exception('ChatRoomModel.fromReference: ${ref.path} does not exist.');
     }
     return ChatRoomModel.fromSnapshot(event.snapshot);
   }
@@ -166,27 +158,42 @@ class ChatRoomModel {
     return [];
   }
 
-  /// This is for group chat only.
+  /// 채팅방 생성
+  ///
+  /// [uid] 가 들어오면 1:1 채팅방을 생성한다.
+  /// [uid] 가 없으면, 그룹 채팅방을 생성한다.
+  ///
+  ///
   /// It creates the chat room information and it read and returns. Don't think about the speed of reading the data.
   ///
   static Future<ChatRoomModel> create({
-    required String name,
-    required bool isGroupChat,
-    required bool isOpenGroupChat,
+    String? uid,
+    String? name,
+    bool? isGroupChat,
+    bool? isOpenGroupChat,
   }) async {
-    final ref = ChatService.instance.roomsRef.push();
-    final myUid = FirebaseAuth.instance.currentUser!.uid;
-    final data = {
-      'name': name,
-      'isGroupChat': isGroupChat,
-      'isOpenGroupChat': isOpenGroupChat,
-      'createdAt': ServerValue.timestamp,
-      'users': {myUid: true},
-      'master': myUid,
-    };
-    await ref.set(data);
-
-    return fromReference(ref);
+    if (uid != null) {
+      final ref = ChatService.instance.roomRef(singleChatRoomId(uid));
+      await ref.update({
+        'createdAt': ServerValue.timestamp,
+        'updatedAt': ServerValue.timestamp,
+      });
+      return fromReference(ref);
+    } else {
+      // 그룹 채팅방을 생성할 때 추가 정보 저장
+      final ref = ChatService.instance.roomsRef.push();
+      final myUid = FirebaseAuth.instance.currentUser!.uid;
+      final data = {
+        'name': name,
+        'isGroupChat': isGroupChat,
+        'isOpenGroupChat': isOpenGroupChat,
+        'createdAt': ServerValue.timestamp,
+        'users': {myUid: true},
+        'master': myUid,
+      };
+      await ref.set(data);
+      return fromReference(ref);
+    }
   }
 
   /// 채팅방에 남아 있는 사람이 없으면, 방을 삭제한다.
@@ -211,8 +218,6 @@ class ChatRoomModel {
           element.value ? (previousValue?..add(element.key)) : previousValue,
     );
     if (uids == null) return null;
-    return uids
-        .where((element) => element != FirebaseAuth.instance.currentUser!.uid)
-        .toList();
+    return uids.where((element) => element != FirebaseAuth.instance.currentUser!.uid).toList();
   }
 }

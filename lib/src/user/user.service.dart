@@ -14,9 +14,16 @@ class UserService {
   final rtdb = FirebaseDatabase.instance.ref();
   DatabaseReference get userRef => rtdb.child('users');
   DatabaseReference get myRef => userRef.child(myUid!);
+  DatabaseReference get mySettingsRef => rtdb.child('user-settings');
+  DatabaseReference otherSettingsRef(String uid, {String? path}) {
+    if (path == null) {
+      return rtdb.child('user-settings/$uid');
+    } else {
+      return rtdb.child('user-settings/$uid/$path');
+    }
+  }
 
-  BehaviorSubject<UserModel?> userDataChanges =
-      BehaviorSubject<UserModel?>.seeded(null);
+  BehaviorSubject<UserModel?> userDataChanges = BehaviorSubject<UserModel?>.seeded(null);
 
   StreamSubscription? userNodeSubscription;
 
@@ -60,8 +67,7 @@ class UserService {
     }
 
     this.enableNoOfProfileView = enableNoOfProfileView;
-    this.enableMessagingOnPublicProfileVisit =
-        enableMessagingOnPublicProfileVisit;
+    this.enableMessagingOnPublicProfileVisit = enableMessagingOnPublicProfileVisit;
 
     this.onLike = onLike;
     this.enableNotificationOnLike = enableNotificationOnLike;
@@ -111,7 +117,7 @@ class UserService {
   /// Send notification even if enableMessagingOnPublicProfileVisit is set to false
   /// set `notify` to `false` to prevent sending push notification
   /// used `notify` to `false` like admin visit the user profile
-  Future showPublicProfileDialog({
+  Future showPublicProfile({
     required BuildContext context,
     required String uid,
   }) {
@@ -123,15 +129,11 @@ class UserService {
     /// TODO - 누가 나의 프로필을 보았는지, 기록을 남긴다. 한 사용자가 다른 사용자의 프로필을 중복으로 볼 때, 모든 기록을 남긴다.
     /// 날짜, 시간, 누가, 등...
 
-    if (customize.showPublicProfileDialog != null) {
-      return customize.showPublicProfileDialog!(context, uid);
-    }
-
     /// 누가 나의 프로필을 볼 때, 푸시 알림 보내기
     /// send notification by default when user visit other user profile
     /// disable notification when `disableNotifyOnProfileVisited` is set on user setting
     () async {
-      bool re = await getSetting(uid, path: Def.profileViewNotification);
+      bool? re = await getSetting<bool?>(uid, path: Def.profileViewNotification);
       if (re != true) return;
 
       if (loggedIn && myUid != uid) {
@@ -145,26 +147,48 @@ class UserService {
       }
     }();
 
+    /// 커스텀 디자인을 사용하면, 커스텀 디자인을 보여준다.
+    if (customize.showPublicProfile != null) {
+      return customize.showPublicProfile!(context, uid);
+    }
+
     return showGeneralDialog(
       context: context,
-      pageBuilder: ($, _, __) => DefaultPublicProfileDialog(uid: uid),
+      pageBuilder: ($, _, __) => DefaultPublicProfileScreen(uid: uid),
     );
   }
 
   /// 사용자 설정 값을 리턴한다.
   ///
-  /// [path] 를 입력하면, 해당 키의 값을 리턴한다.
+  /// [uid] 사용자 UID. 이 사용자의 설정을 리턴한다.
+  ///
+  /// [path] 를 입력하면, 해당 키의 값을 리턴한다. [path] 가 지정되지 않으면, 사용자의 전체 설정을 리턴한다.
+  ///
   /// 예) 아래와 같이 하면, `user_settings/myUid/abc` 키의 값을 리턴한다.
   /// ```dart
   /// UserService.instance.getSetting(myUid, key: 'abc');
   /// ```
-  getSetting(String uid, {String? path}) {
-    return get('user_settings/$uid${path != null ? '/$path' : ''}');
+  getSetting<T>(String uid, {String? path}) async {
+    final nodePath = otherSettingsRef(uid, path: path);
+    dog('--> UserService.getSetting() nodePath: ${nodePath.path.toString()}');
+    final snapshot = await nodePath.get();
+    if (!snapshot.exists) {
+      return null;
+    }
+    return snapshot.value as T;
   }
 
   login() async {
     await myRef.update({
       'lastLogin': ServerValue.timestamp,
     });
+  }
+
+  /// 로그인한 사용자의 프로필 수정 페이지를 보여준다.
+  Future showProfile(BuildContext context) {
+    return showGeneralDialog(
+      context: context,
+      pageBuilder: ($, $$, $$$) => const DefaultProfileScreen(),
+    );
   }
 }

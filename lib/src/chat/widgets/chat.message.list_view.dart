@@ -9,13 +9,13 @@ import 'package:flutter/material.dart';
 class ChatMessageListView extends StatefulWidget {
   const ChatMessageListView({
     super.key,
-    required this.room,
+    required this.chat,
     this.builder,
     this.primary,
     this.emptyBuilder,
   });
 
-  final ChatRoomModel room;
+  final ChatModel chat;
 
   final Widget Function(ChatMessageModel)? builder;
   final bool? primary;
@@ -28,22 +28,23 @@ class ChatMessageListView extends StatefulWidget {
 class _RChatMessageListState extends State<ChatMessageListView> {
   Widget? listView;
 
-  String get roomId => widget.room.id;
+  String get roomId => widget.chat.room.id;
+  ChatModel get chat => widget.chat;
 
   @override
   void initState() {
     super.initState();
-    ChatService.instance.setCurrentRoom(widget.room);
-    ChatService.instance.resetMyRoomNewMessage();
+    chat.resetMyRoomNewMessage();
   }
 
   @override
   Widget build(BuildContext context) {
+    final ref = ChatService.instance.messageRef(roomId: roomId);
+
     return FirebaseDatabaseQueryBuilder(
       // 페이지 사이즈(메시지를 가져오는 개수)를 100으로 해서, 자주 가져오지 않도록 한다. 그래서 flickering 을 줄인다.
       pageSize: 100,
-      query:
-          ChatService.instance.messageRef(roomId: roomId).orderByChild('order'),
+      query: ref.orderByChild('order'),
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
           // FirebaseDatabaseQueryBuilder 는 snapshot.isFetching 을 맨 처음 로딩할 때 딱 한번만 true 로 지정한다.
@@ -68,10 +69,10 @@ class _RChatMessageListState extends State<ChatMessageListView> {
         }
 
         // 새로은 채팅이 들어오면(전달되어져 오면), 채팅방의 새 메시지 갯수를 0 으로 초기화 시킨다.
-        if (ChatService.instance.isLoadingNewMessage(roomId, snapshot)) {
+        if (chat.isLoadingNewMessage(roomId, snapshot)) {
           final newMessage = ChatMessageModel.fromSnapshot(snapshot.docs.first);
           // newMessage 리셋
-          ChatService.instance.resetMyRoomNewMessage(
+          chat.resetMyRoomNewMessage(
             order: newMessage.createdAt != null ? -newMessage.createdAt! : null,
           );
         }
@@ -93,12 +94,10 @@ class _RChatMessageListState extends State<ChatMessageListView> {
               if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
                 snapshot.fetchMore();
               }
-              final message =
-                  ChatMessageModel.fromSnapshot(snapshot.docs[index]);
+              final message = ChatMessageModel.fromSnapshot(snapshot.docs[index]);
 
-              /// Reset the [order] field of the message to list in time based order.
-              ChatService.instance
-                  .resetRoomMessageOrder(roomId: roomId, order: message.order);
+              /// 채팅방의 맨 마지막 메시지의 order 를 지정.
+              chat.resetRoomMessageOrder(order: message.order);
 
               return ChatBubble(
                 message: message,

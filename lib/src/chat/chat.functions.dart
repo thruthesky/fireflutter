@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fireship/fireship.dart';
 
 const String chatRoomDivider = '---';
 
@@ -31,6 +32,9 @@ String? getOtherUserUidFromRoomId(String roomId) {
 ///
 /// 로그인 사용자의 uid 와 [otherUserUid] 를 정렬해서 합친다.
 String singleChatRoomId(String otherUserUid) {
+  if (myUid == null) {
+    throw Exception('chat.function.dart::singleChatRoomId() -> Login first');
+  }
   final uids = [FirebaseAuth.instance.currentUser!.uid, otherUserUid];
   uids.sort();
   return uids.join(chatRoomDivider);

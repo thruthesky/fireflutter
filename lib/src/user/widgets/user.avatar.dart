@@ -6,8 +6,12 @@ import 'package:flutter/material.dart';
 ///
 /// 'users/uid/photoUrl' 값을 실시간으로 listen 해서 표시.
 class UserAvatar extends StatelessWidget {
-  const UserAvatar(
-      {super.key, required this.uid, this.radius = 40, this.onTap});
+  const UserAvatar({
+    super.key,
+    required this.uid,
+    this.radius = 40,
+    this.onTap,
+  });
 
   final String uid;
   final double radius;
@@ -22,18 +26,21 @@ class UserAvatar extends StatelessWidget {
             ? event.data!.snapshot.value as String
             : null;
 
-        return CircleAvatar(
-          radius: radius,
-          backgroundColor: Colors.grey.shade200,
-          backgroundImage: url != null
-              ? CachedNetworkImageProvider(
-                  url,
-                )
-              : null,
-          child: url == null
-              ? Icon(Icons.person,
-                  size: radius * 1.6, color: Colors.grey.shade700)
-              : null,
+        return GestureDetector(
+          onTap: onTap,
+          behavior: HitTestBehavior.opaque,
+          child: CircleAvatar(
+            radius: radius,
+            backgroundColor: Colors.grey.shade200,
+            backgroundImage: url != null
+                ? CachedNetworkImageProvider(
+                    url,
+                  )
+                : null,
+            child: url == null
+                ? Icon(Icons.person, size: radius * 1.6, color: Colors.grey.shade700)
+                : null,
+          ),
         );
       },
     );

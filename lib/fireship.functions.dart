@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 bool get loggedIn => FirebaseAuth.instance.currentUser != null;
+bool get notLoggedIn => FirebaseAuth.instance.currentUser == null;
 String? get myUid => FirebaseAuth.instance.currentUser?.uid;
 User? get currentUser => FirebaseAuth.instance.currentUser;
 

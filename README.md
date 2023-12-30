@@ -2,3 +2,19 @@
 
 A lightning-fast, robust CMS for seamless real-time content management in app development.
 
+
+## Features
+
+- User management
+- Chat
+
+
+
+## Documentation
+
+
+See the API documentation for details on the following topics:
+
+- [Korean Guideline](https://thruthesky.github.io/fireship/)
+
+
