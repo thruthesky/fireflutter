@@ -107,6 +107,7 @@ class UserModel {
     );
   }
 
+  /// 사용자 정보 node 전체를 리턴한다.
   static Future<UserModel?> get(String uid) async {
     final nodeData = await fs.get<Map<dynamic, dynamic>>('users/$uid');
     if (nodeData == null) {
@@ -115,6 +116,16 @@ class UserModel {
 
     nodeData['uid'] = uid;
     return UserModel.fromJson(nodeData);
+  }
+
+  /// 사용자의 특정 필만 가져와서 리턴한다.
+  static Future<T?> getField<T>(String uid, String field) async {
+    final nodeData = await fs.get('users/$uid/$field');
+    if (nodeData == null) {
+      return null;
+    }
+
+    return nodeData as T;
   }
 
   /// Update user data.

@@ -57,7 +57,6 @@ class ChatService {
   }) async {
     final room = await ChatRoomModel.create(
       name: name,
-      isGroupChat: isGroupChat,
       isOpenGroupChat: isOpenGroupChat,
     );
 

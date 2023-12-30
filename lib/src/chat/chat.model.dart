@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireship/fireship.dart';
@@ -76,13 +78,17 @@ class ChatModel {
     // Reference: https://firebase.google.com/docs/database/flutter/read-and-write#updating_or_deleting_data
     await rtdb.ref().update(multiUpdateData);
 
-    // if it's 1:1 chat, then update other user's name and photo under the my chat room info.
+    /// 1:1 채팅방이면, 상대방의 이름과 사진을 내 채팅방 정보에 저장한다.
+    /// 이것은, 상대방의 채팅방 목록에서 상대방의 이름과 사진을 보여주기 위해서이다.
+    /// 실시간으로 uid 로 상대방의 정보를 가져와서 보여주어도 되지만, 더 빠른 목록을 위해서 이렇게 한다.
+    /// 다만, 여기서는 채팅 메시지가 이미 전달된 다음에, 채팅방 정보를 업데이트하므로, 데이터 반응 속도는 신경쓰지 않아도 된다.
     if (room.isSingleChat) {
       final otherUid = room.otherUserUid!;
-      final other = await UserModel.get(otherUid);
+      final name = await UserModel.getField(otherUid, Def.displayName);
+      final photoUrl = await UserModel.getField(otherUid, Def.photoUrl);
       joinRef(myUid!, singleChatRoomId(otherUid)).update({
-        'name': other?.displayName,
-        'photoUrl': other?.photoUrl,
+        'name': name,
+        'photoUrl': photoUrl,
       });
     }
   }
@@ -100,6 +106,9 @@ class ChatModel {
         text: text,
         url: url,
         newMessage: uid == myUid ? null : ServerValue.increment(1),
+
+        /// -1 을 order 앞에 붙여주는 이유는 읽지 않은 메시지가 있는 채팅방을 상단에 표시하기 위해서이다.
+        /// 채팅방을 확인하면, 앞의 -1을 빼고, 그냥 -epoch 를 order 에 저장한다.
         order: uid == myUid ? -epoch : -int.parse("1$epoch"),
       );
     }
@@ -107,7 +116,9 @@ class ChatModel {
     return multiUpdateData;
   }
 
-  /// see rchat.md
+  /// 각 채팅방 멤버의 채팅방 목록에 마지막 채팅 정보 업데이트
+  ///
+  /// singleChatOrder 와 groupChatOrder 를 업데이트해야 한다. openChatOrder 는 업데이트 하지 않는다.
   ///
   /// [receiverUid] is the one who will receive the message.
   // static Future<Map<String, dynamic>> _lastMessage({
@@ -119,14 +130,15 @@ class ChatModel {
   }) {
     // chat room info
     final data = {
+      /// 그룹 채팅방 이름 또는 보내는 사람 이름
       'name': room.isSingleChat ? UserService.instance.user?.displayName : (room.name ?? ''),
       'photoUrl': UserService.instance.user?.photoUrl,
       'text': text,
       'url': url,
       'updatedAt': ServerValue.timestamp,
       'newMessage': newMessage,
-      'isGroupChat': room.isGroupChat,
-      'isOpenGroupChat': room.isOpenGroupChat,
+      Def.groupChatOrder: room.isGroupChat ? order : null,
+      Def.singleChatOrder: room.isSingleChat ? order : null,
       //
       'order': order,
     };
@@ -292,12 +304,14 @@ class ChatModel {
       }
     }
 
-    // 채팅방 정보
+    /// 나의 채팅방 목록에 저장할 채팅방 정보
+    ///
+    final order = -int.parse('${room.updatedAt ?? room.createdAt ?? 0}');
     final data = {
-      'name': room.isGroupChat ? room.name : '',
-      'isGroupChat': room.isGroupChat,
-      'isOpenGroupChat': room.isOpenGroupChat,
-      'newMessage': null,
+      Def.name: room.isGroupChat ? room.name : '',
+      Def.groupChatOrder: room.isGroupChat ? order : null,
+      Def.singleChatOrder: room.isSingleChat ? order : null,
+      Def.newMessage: null,
     };
 
     /// 1:1 채팅방의 경우, 상대방의 이름을 저장한다.
@@ -309,7 +323,32 @@ class ChatModel {
     // set order into -updatedAt (w/out "1")
     // it is important to know that updatedAt must not be updated
     // before this.
-    data['order'] = -int.parse('${room.updatedAt ?? room.createdAt ?? 0}');
+    data['order'] = order;
     await joinsRef.child(myUid!).child(room.id).update(data);
+  }
+
+  /// 현재 방 listen, unlisten
+  StreamSubscription<DatabaseEvent>? roomSubscription;
+  subscribeRoomUpdate() {
+    /// 현재 채팅방 listen
+    roomSubscription = room.ref.onValue.listen((event) async {
+      if (event.snapshot.exists) {
+        // 채팅방이 존재하면, 채팅방 정보를 가져오고, 재 설정
+        final room = ChatRoomModel.fromSnapshot(event.snapshot);
+        resetRoom(room: room);
+        // 그리고 채팅방에 join (이미 join 되어 있으면, 아무것도 하지 않는다.)
+        join();
+        dog('[2] 채팅방 정보 업데이트 및 join');
+      } else {
+        // 채팅방이 존재하지 않으면, 채팅방을 생성
+        // 그러면 위의 이벤트가 발생.
+        await ChatRoomModel.create(roomId: room.id);
+        dog('[1] 채팅방 생성');
+      }
+    });
+  }
+
+  unsubscribeRoomUpdate() {
+    roomSubscription?.cancel();
   }
 }

@@ -10,8 +10,9 @@ class ChatRoomModel {
   int? updatedAt;
   int? createdAt;
   int? newMessage;
-  bool isGroupChat;
-  bool isOpenGroupChat;
+  int? singleChatOrder;
+  int? groupChatOrder;
+  int? openGroupChatOrder;
   String? name;
   String? photoUrl;
   String? description;
@@ -29,7 +30,8 @@ class ChatRoomModel {
   /// [path] is the path of the chat room.
   String get path => ref.path;
 
-  bool get isSingleChat => !isGroupChat;
+  bool get isSingleChat => isSingleChatRoom(id);
+  bool get isGroupChat => !isSingleChat;
 
   ChatRoomModel({
     required this.ref,
@@ -39,8 +41,9 @@ class ChatRoomModel {
     this.updatedAt,
     this.createdAt,
     this.newMessage,
-    required this.isGroupChat,
-    required this.isOpenGroupChat,
+    this.singleChatOrder,
+    this.groupChatOrder,
+    this.openGroupChatOrder,
     this.name,
     this.photoUrl,
     this.description,
@@ -72,10 +75,9 @@ class ChatRoomModel {
       updatedAt: json['updatedAt'] is int ? json['updatedAt'] : int.parse(json['updatedAt'] ?? '0'),
       createdAt: json['createdAt'] is int ? json['createdAt'] : int.parse(json['createdAt'] ?? '0'),
       newMessage: json['newMessage'] ?? 0,
-
-      /// See, rchat.md#database structure
-      isGroupChat: isSingleChatRoom(json['key']) == false,
-      isOpenGroupChat: json['isOpenGroupChat'] ?? false,
+      singleChatOrder: json['singleChatOrder'] as int?,
+      groupChatOrder: json['groupChatOrder'] as int?,
+      openGroupChatOrder: json['openGroupChatOrder'] as int?,
       name: json['name'] as String?,
       photoUrl: json['photoUrl'] as String?,
       description: json['description'] as String?,
@@ -91,8 +93,9 @@ class ChatRoomModel {
       'url': url,
       'updatedAt': updatedAt,
       'newMessage': newMessage,
-      'isGroupChat': isGroupChat,
-      'isOpenGroupChat': isOpenGroupChat,
+      'singleChatOrder': singleChatOrder,
+      'groupChatOrder': groupChatOrder,
+      'openGroupChatOrder': openGroupChatOrder,
       'name': name,
       'photoUrl': photoUrl,
       'description': description,
@@ -160,40 +163,63 @@ class ChatRoomModel {
 
   /// 채팅방 생성
   ///
-  /// [uid] 가 들어오면 1:1 채팅방을 생성한다.
-  /// [uid] 가 없으면, 그룹 채팅방을 생성한다.
+  /// 채팅방은
+  /// - 그룹 채팅방의 경우, 사용자가 채팅 방 생성 버튼과 입력 항목을 통해서 생성할 수 있고,
+  /// - 채팅 방이 존재하지 않아도, 첫번째 사용자가 채팅방에 입장 할 때, 방이 존재하지 않으면 자동으로 만든다.
   ///
+  /// 주의, 입력 값 중에서
+  /// - [uid] 가 들어오면 1:1 채팅방을 생성하고,
+  /// - [roomId] 가 들어오면,
+  ///   - [roomId] 가 1:1 채팅방 아이디이면, 1:1 채팅방을 생성하고,
+  ///   - 아니면, 그룹 채팅방을 생성한다.
+  /// - [uid] 와 [roomId] 둘 다 들어오지 않으면, 그룹 채팅방으로 인식하고, roomId 를 자동 생성한다.
+  ///
+  /// 주의, 채팅방이 존재하면 기존의 채팅방이 존재하면 몇 몇 속성이 덮어 쓰여진다.
   ///
   /// It creates the chat room information and it read and returns. Don't think about the speed of reading the data.
   ///
   static Future<ChatRoomModel> create({
     String? uid,
+    String? roomId,
     String? name,
-    bool? isGroupChat,
     bool? isOpenGroupChat,
   }) async {
+    DatabaseReference ref;
+    final int minusTime = DateTime.now().millisecondsSinceEpoch * -1;
     if (uid != null) {
-      final ref = ChatService.instance.roomRef(singleChatRoomId(uid));
+      ref = ChatService.instance.roomRef(singleChatRoomId(uid));
       await ref.update({
-        'createdAt': ServerValue.timestamp,
-        'updatedAt': ServerValue.timestamp,
+        Def.singleChatOrder: minusTime,
+        Def.createdAt: ServerValue.timestamp,
+        Def.updatedAt: ServerValue.timestamp,
       });
-      return fromReference(ref);
+    } else if (roomId != null && isSingleChatRoom(roomId)) {
+      // 채팅 방 ID 가 1:1 채팅방?
+      ref = ChatService.instance.roomRef(roomId);
+      await ref.update({
+        Def.singleChatOrder: minusTime,
+        Def.createdAt: ServerValue.timestamp,
+        Def.updatedAt: ServerValue.timestamp,
+      });
     } else {
       // 그룹 채팅방을 생성할 때 추가 정보 저장
-      final ref = ChatService.instance.roomsRef.push();
+      if (roomId == null) {
+        ref = ChatService.instance.roomsRef.push();
+      } else {
+        ref = ChatService.instance.roomsRef.child(roomId);
+      }
       final myUid = FirebaseAuth.instance.currentUser!.uid;
       final data = {
         'name': name,
-        'isGroupChat': isGroupChat,
-        'isOpenGroupChat': isOpenGroupChat,
+        Def.groupChatOrder: minusTime,
+        Def.openGroupChatOrder: isOpenGroupChat == null ? null : minusTime,
         'createdAt': ServerValue.timestamp,
         'users': {myUid: true},
         'master': myUid,
       };
-      await ref.set(data);
-      return fromReference(ref);
+      await ref.update(data);
     }
+    return fromReference(ref);
   }
 
   /// 채팅방에 남아 있는 사람이 없으면, 방을 삭제한다.
