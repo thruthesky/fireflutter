@@ -18,3 +18,6 @@ See the API documentation for details on the following topics:
 - [Korean Guideline](https://thruthesky.github.io/fireship/)
 
 
+## Issues
+
+Create issues on github.
