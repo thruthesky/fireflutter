@@ -11,6 +11,14 @@ import 'package:flutter/material.dart';
 ///
 /// [cache] 가 true 이면 캐시를 사용한다. 즉, 같은 uid 와 field 에 대한 데이터는 한번만 읽어온다.
 ///
+/// [sync] 를 사용하면, FutureBuilder 대신에 Database 를 사용한다. 즉, 데이터가 변경되면, 자동으로 리빌드 된다.
+/// 이 때, [cache] 는 무시된다.
+///
+/// 아래의 예제는 사용자 이름을 실시간으로 표시한다.
+/// ```dart
+/// UserData.sync(uid: user.uid, field: 'displayName', builder: (data, $) => Text(data)),
+/// ```
+///
 /// ```dart
 /// UserData(
 ///   uid: message.uid!,
@@ -22,6 +30,7 @@ import 'package:flutter/material.dart';
 ///   ),
 /// ),
 /// ```
+///
 final _userDataCache = <String, dynamic>{};
 
 class UserData extends StatelessWidget {
@@ -41,6 +50,7 @@ class UserData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final path = 'users/$uid${field != null ? '/$field' : ''}';
+
     if (cache && _userDataCache.containsKey(path)) {
       return builder(_userDataCache[path]);
     }
@@ -64,5 +74,15 @@ class UserData extends StatelessWidget {
         return builder(snapshot.data);
       },
     );
+  }
+
+  static Widget sync({
+    required String uid,
+    String? field,
+    required Widget Function(dynamic data) builder,
+  }) {
+    final path = 'users/$uid${field != null ? '/$field' : ''}';
+
+    return Database(path: path, builder: (a, b) => builder(a));
   }
 }

@@ -16,4 +16,22 @@ class AdminService {
       pageBuilder: (_, __, ___) => const AdminDashBoardScreen(),
     );
   }
+
+  showUserList({required BuildContext context}) {
+    dog('--> AdminService.showDashboard()');
+    return showGeneralDialog(
+      context: context,
+      pageBuilder: (_, __, ___) => const AdminUserListScreen(),
+    );
+  }
+
+  showUserUpdate({required BuildContext context, required String uid}) {
+    dog('--> AdminService.showDashboard()');
+    return showGeneralDialog(
+      context: context,
+      pageBuilder: (_, __, ___) => AdminUserUpdateScreen(
+        uid: uid,
+      ),
+    );
+  }
 }

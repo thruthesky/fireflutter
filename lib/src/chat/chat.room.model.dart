@@ -18,6 +18,10 @@ class ChatRoomModel {
   String? description;
   String? master;
   Map<String, bool>? users;
+
+  /// 그룹 채팅방의 사용자 수
+  /// 이 값은 /chat-joins/<uid>/<room-id> 에만 기록된다.
+  int? noOfUsers;
   int? order;
 
   /// [id] It returns the chat room id.
@@ -49,6 +53,7 @@ class ChatRoomModel {
     this.description,
     this.master,
     this.users,
+    this.noOfUsers,
     this.order,
   });
 
@@ -83,6 +88,7 @@ class ChatRoomModel {
       description: json['description'] as String?,
       master: json['master'] as String?,
       users: json['users'] == null ? null : Map<String, bool>.from(json['users']),
+      noOfUsers: json['noOfUsers'] is int ? json['noOfUsers'] : int.parse(json['noOfUsers'] ?? '0'),
       order: json['order'] is int ? json['order'] : int.parse(json['order'] ?? '0'),
     );
   }
@@ -101,6 +107,7 @@ class ChatRoomModel {
       'description': description,
       'master': master,
       'users': users,
+      'noOfUsers': noOfUsers,
       'order': order,
     };
   }
@@ -182,6 +189,7 @@ class ChatRoomModel {
     String? uid,
     String? roomId,
     String? name,
+    String? description,
     bool? isOpenGroupChat,
   }) async {
     DatabaseReference ref;
@@ -210,12 +218,13 @@ class ChatRoomModel {
       }
       final myUid = FirebaseAuth.instance.currentUser!.uid;
       final data = {
-        'name': name,
+        Def.name: name,
+        Def.description: description,
         Def.groupChatOrder: minusTime,
         Def.openGroupChatOrder: isOpenGroupChat == null ? null : minusTime,
-        'createdAt': ServerValue.timestamp,
-        'users': {myUid: true},
-        'master': myUid,
+        Def.createdAt: ServerValue.timestamp,
+        Def.users: {myUid: true},
+        Def.master: myUid,
       };
       await ref.update(data);
     }

@@ -132,7 +132,15 @@ class ChatModel {
     final data = {
       /// 그룹 채팅방 이름 또는 보내는 사람 이름
       'name': room.isSingleChat ? UserService.instance.user?.displayName : (room.name ?? ''),
-      'photoUrl': UserService.instance.user?.photoUrl,
+
+      /// 1:1 채팅에서는 마지막 보낸 사람 사진 (나중에 덮어 쓰여질 수 있음.)
+      /// 그룹 채팅에서는 방 사진.
+      'photoUrl': room.isSingleChat ? UserService.instance.user?.photoUrl : room.photoUrl,
+
+      /// 그룹 채팅의 경우, 사용자 수
+      'noOfUsers': room.isGroupChat ? room.users?.length : null,
+
+      /// 마지막 채팅 메시지
       'text': text,
       'url': url,
       'updatedAt': ServerValue.timestamp,
@@ -302,6 +310,9 @@ class ChatModel {
       if (room.users?.containsKey(otherUserUid) != true) {
         await room.ref.child('users').child(otherUserUid!).set(true);
       }
+    } else {
+      // 그룹 채팅방이면, noOfUsers 를 업데이트 한다.
+      await room.ref.child('noOfUsers').set(room.users?.length);
     }
 
     /// 나의 채팅방 목록에 저장할 채팅방 정보
@@ -329,7 +340,9 @@ class ChatModel {
 
   /// 현재 방 listen, unlisten
   StreamSubscription<DatabaseEvent>? roomSubscription;
-  subscribeRoomUpdate() {
+  subscribeRoomUpdate({
+    Function? onUpdate,
+  }) {
     /// 현재 채팅방 listen
     roomSubscription = room.ref.onValue.listen((event) async {
       if (event.snapshot.exists) {
@@ -339,6 +352,7 @@ class ChatModel {
         // 그리고 채팅방에 join (이미 join 되어 있으면, 아무것도 하지 않는다.)
         join();
         dog('[2] 채팅방 정보 업데이트 및 join');
+        onUpdate?.call();
       } else {
         // 채팅방이 존재하지 않으면, 채팅방을 생성
         // 그러면 위의 이벤트가 발생.

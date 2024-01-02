@@ -4,15 +4,17 @@ import 'package:fireship/fireship.dart' as fs;
 
 class UserModel {
   final String uid;
-  final String? email;
-  final String? phoneNumber;
-  final String? displayName;
-  final String? photoUrl;
-  final bool isDisabled;
-  final int? birthYear;
-  final int? birthMonth;
-  final int? birthDay;
-  final int? createdAt;
+  String? email;
+  String? phoneNumber;
+  String? displayName;
+  String? photoUrl;
+  bool isDisabled;
+  int? birthYear;
+  int? birthMonth;
+  int? birthDay;
+  int? createdAt;
+  bool isAdmin;
+  bool isVerified;
 
   DatabaseReference get ref => FirebaseDatabase.instance.ref('users').child(uid);
 
@@ -30,6 +32,8 @@ class UserModel {
     this.birthMonth,
     this.birthDay,
     this.createdAt,
+    this.isAdmin = false,
+    this.isVerified = false,
   });
 
   factory UserModel.fromSnapshot(DataSnapshot snapshot) {
@@ -53,9 +57,9 @@ class UserModel {
     });
   }
 
-  factory UserModel.fromJson(Map<dynamic, dynamic> json) {
+  factory UserModel.fromJson(Map<dynamic, dynamic> json, {String? uid}) {
     return UserModel(
-      uid: json['uid'],
+      uid: uid ?? json['uid'],
       email: json['email'],
       phoneNumber: json['phoneNumber'],
       displayName: json['displayName'],
@@ -65,6 +69,8 @@ class UserModel {
       birthMonth: json['birthMonth'],
       birthDay: json['birthDay'],
       createdAt: json['createdAt'],
+      isAdmin: json['isAdmin'] ?? false,
+      isVerified: json['isVerified'] ?? false,
     );
   }
 
@@ -80,31 +86,35 @@ class UserModel {
       'birthMonth': birthMonth,
       'birthDay': birthDay,
       'createdAt': createdAt,
+      'isAdmin': isAdmin,
+      'isVerified': isVerified,
     };
   }
 
-  UserModel copyWith({
-    String? uid,
-    String? email,
-    String? phoneNumber,
-    String? displayName,
-    String? photoUrl,
-    bool? isDisabled,
-    int? birthYear,
-    int? birthMonth,
-    int? birthDay,
-  }) {
-    return UserModel(
-      uid: uid ?? this.uid,
-      email: email ?? this.email,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      displayName: displayName ?? this.displayName,
-      photoUrl: photoUrl ?? this.photoUrl,
-      isDisabled: isDisabled ?? this.isDisabled,
-      birthYear: birthYear ?? this.birthYear,
-      birthMonth: birthMonth ?? this.birthMonth,
-      birthDay: birthDay ?? this.birthDay,
-    );
+  @override
+  String toString() {
+    return 'UserModel(${toJson()})';
+  }
+
+  /// Reload user data and apply it to this instance.
+  Future<UserModel> reload() async {
+    final user = await UserModel.get(uid);
+
+    if (user != null) {
+      email = user.email;
+      phoneNumber = user.phoneNumber;
+      displayName = user.displayName;
+      photoUrl = user.photoUrl;
+      isDisabled = user.isDisabled;
+      birthYear = user.birthYear;
+      birthMonth = user.birthMonth;
+      birthDay = user.birthDay;
+      createdAt = user.createdAt;
+      isAdmin = user.isAdmin;
+      isVerified = user.isVerified;
+    }
+
+    return this;
   }
 
   /// 사용자 정보 node 전체를 리턴한다.
@@ -132,19 +142,25 @@ class UserModel {
   ///
   /// hasPhotoUrl is automatically set to true if photoUrl is not null.
   Future<void> update({
+    String? name,
     String? displayName,
     String? photoUrl,
     int? birthYear,
     int? birthMonth,
     int? birthDay,
+    bool? isAdmin,
+    bool? isVerified,
   }) async {
     final data = {
+      if (name != null) 'name': name,
       if (displayName != null) 'displayName': displayName,
       if (photoUrl != null) 'photoUrl': photoUrl,
       if (photoUrl != null) 'hasPhotoUrl': true,
       if (birthYear != null) 'birthYear': birthYear,
       if (birthMonth != null) 'birthMonth': birthMonth,
       if (birthDay != null) 'birthDay': birthDay,
+      if (isAdmin != null) 'isAdmin': isAdmin,
+      if (isVerified != null) 'isVerified': isVerified,
     };
     if (data.isEmpty) {
       return;

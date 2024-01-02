@@ -9,11 +9,13 @@ class UserAvatar extends StatelessWidget {
   const UserAvatar({
     super.key,
     required this.uid,
-    this.radius = 40,
+    this.size = 48,
+    this.radius = 20,
     this.onTap,
   });
 
   final String uid;
+  final double size;
   final double radius;
   final VoidCallback? onTap;
 
@@ -29,18 +31,16 @@ class UserAvatar extends StatelessWidget {
         return GestureDetector(
           onTap: onTap,
           behavior: HitTestBehavior.opaque,
-          child: CircleAvatar(
-            radius: radius,
-            backgroundColor: Colors.grey.shade200,
-            backgroundImage: url != null
-                ? CachedNetworkImageProvider(
-                    url,
-                  )
-                : null,
-            child: url == null
-                ? Icon(Icons.person, size: radius * 1.6, color: Colors.grey.shade700)
-                : null,
-          ),
+          child: url == null
+              ? AnonymousAvatar(
+                  size: size,
+                  radius: radius,
+                )
+              : Avatar(
+                  photoUrl: url,
+                  size: size,
+                  radius: radius,
+                ),
         );
       },
     );

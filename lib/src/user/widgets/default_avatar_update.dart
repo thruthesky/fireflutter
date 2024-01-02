@@ -31,7 +31,8 @@ class DefaultAvatarUpdate extends StatefulWidget {
   const DefaultAvatarUpdate({
     super.key,
     required this.uid,
-    this.radius = 100,
+    this.size = 140,
+    this.radius = 60,
     this.badgeNumber,
     this.delete = false,
     this.onUploadSuccess,
@@ -45,6 +46,7 @@ class DefaultAvatarUpdate extends StatefulWidget {
   });
 
   final String uid;
+  final double size;
   final double radius;
   final int? badgeNumber;
   final bool delete;
@@ -102,6 +104,7 @@ class _UserAvatarState extends State<DefaultAvatarUpdate> {
         children: [
           UserAvatar(
             uid: user.uid,
+            size: widget.size,
             radius: widget.radius,
           ),
           uploadProgressIndicator(color: Colors.white),
@@ -135,8 +138,7 @@ class _UserAvatarState extends State<DefaultAvatarUpdate> {
           if (widget.delete && isNotUploading)
             StreamBuilder(
               stream: user.ref.child(Def.photoUrl).onValue,
-              builder: (_, event) => event.hasData &&
-                      event.data!.snapshot.exists
+              builder: (_, event) => event.hasData && event.data!.snapshot.exists
                   ? Positioned(
                       top: 0,
                       left: 0,
@@ -145,8 +147,7 @@ class _UserAvatarState extends State<DefaultAvatarUpdate> {
                           /// 이전 사진 삭제
                           ///
                           /// 삭제 실패해도, 계속 진행되도록 한다.
-                          StorageService.instance
-                              .delete(event.data!.snapshot.value as String?);
+                          StorageService.instance.delete(event.data!.snapshot.value as String?);
                           await UserService.instance.user!.deletePhotoUrl();
                         },
                         padding: EdgeInsets.zero,

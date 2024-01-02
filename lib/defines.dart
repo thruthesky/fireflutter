@@ -3,6 +3,7 @@ class Def {
 
   static const String uid = 'uid';
   static const String name = 'name';
+  static const String description = 'description';
   static const String email = 'email';
   static const String phoneNumber = 'phoneNumber';
   static const String isDisabled = 'isDisabled';
@@ -25,4 +26,10 @@ class Def {
   static const String groupChatOrder = 'groupChatOrder';
   static const String openGroupChatOrder = 'openGroupChatOrder';
   static const String newMessage = 'newMessage';
+
+  static const String text = 'text';
+  static const String url = 'url';
+  static const String roomId = 'roomId';
+  static const String users = 'users';
+  static const String master = 'master';
 }

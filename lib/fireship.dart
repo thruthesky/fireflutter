@@ -3,6 +3,18 @@
 /// Admin
 export 'src/admin/admin.service.dart';
 export 'src/admin/widgets/admin.dash_board.screen.dart';
+export 'src/admin/widgets/admin.user_list.screen.dart';
+export 'src/admin/widgets/admin.user_update.screen.dart';
+
+/// Common
+export 'src/common/anonymous_avatar.dart';
+export 'src/common/avatar.dart';
+export 'src/common/error_box.dart';
+export 'src/common/stacked_avatar.dart';
+
+/// Datbase
+export 'src/database/widgets/database.count.dart';
+export 'src/database/widgets/database.dart';
 
 /// Defines
 export 'defines.dart';
@@ -24,6 +36,10 @@ export 'src/chat/widgets/chat.bubble.dart';
 export 'src/chat/widgets/chat.message.list_view.dart';
 export 'src/chat/widgets/chat.message_input_box.dart';
 export 'src/chat/widgets/default_chat_room.screen.dart';
+export 'src/chat/widgets/default_chat_room_edit.dialog.dart';
+export 'src/chat/widgets/chat.new_message.dart';
+export 'src/chat/widgets/chat.room_avatar.dart';
+export 'src/chat/widgets/chat.room_list_tile.dart';
 
 /// Database
 export 'src/database.functions.dart';

@@ -1,9 +1,9 @@
-import 'dart:async';
-
-import 'package:firebase_database/firebase_database.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
+/// 채팅방
+///
+/// 채팅 메시지를 보여주고, 새로운 채팅 메시지를 전송할 수 있도록 한다.
 class DefaultChatRoomScreen extends StatefulWidget {
   const DefaultChatRoomScreen({
     super.key,
@@ -19,7 +19,6 @@ class DefaultChatRoomScreen extends StatefulWidget {
 }
 
 class _DefaultChatRoomScreenState extends State<DefaultChatRoomScreen> {
-  StreamSubscription<DatabaseEvent>? subscription;
   late ChatModel chat;
 
   @override
@@ -30,60 +29,67 @@ class _DefaultChatRoomScreenState extends State<DefaultChatRoomScreen> {
       return;
     }
 
+    /// 빠르게 화면을 보여주기 위해서, uid 또는 roomId 로 부터 임시 ChatModel instance 생성 후,
     chat = ChatModel(
       room: widget.uid != null
           ? ChatRoomModel.fromUid(widget.uid!)
           : ChatRoomModel.fromRoomdId(widget.roomId!),
     );
 
-    /// 현재 채팅방 listen
-    subscription = chat.room.ref.onValue.listen((event) async {
-      if (event.snapshot.exists) {
-        // 채팅방이 존재하면, 채팅방 정보를 가져오고, 재 설정
-        final room = ChatRoomModel.fromSnapshot(event.snapshot);
-        chat.resetRoom(room: room);
-        // 그리고 채팅방에 join (이미 join 되어 있으면, 아무것도 하지 않는다.)
-        chat.join();
-      } else {
-        // 채팅방이 존재하지 않으면, 채팅방을 생성하고, 재 설정
-        final room = await ChatRoomModel.create(uid: widget.uid);
-        chat.resetRoom(room: room);
-      }
-
-      setState(() {});
-    });
+    /// 방 정보 전체를 한번 읽고, 이후, 실시간 업데이트
+    chat.subscribeRoomUpdate(onUpdate: () => setState(() {}));
   }
 
   @override
   void dispose() {
-    subscription?.cancel();
+    /// 실시간 업데이트 subscription 해제
+    chat.unsubscribeRoomUpdate();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return loggedIn
-        ? Scaffold(
-            appBar: AppBar(
-              title: const Text('채팅'),
-              actions: const [],
+    /// 로그인을 하지 않았으면, 로그인 요청 위젯 표시
+    if (notLoggedIn) {
+      return const DefaultLoginFirstScreen();
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('채팅'),
+        actions: [
+          PopupMenuButton<String>(
+            itemBuilder: (_) => const [
+              PopupMenuItem(value: 'edit', child: Text('Edit')),
+            ],
+            onSelected: (v) {
+              if (v == 'edit') {
+                ChatService.instance.showChatRoomSettings(
+                  context: context,
+                  roomId: chat.room.id,
+                );
+              }
+            },
+            tooltip: '채팅방 설정',
+            icon: const Icon(Icons.menu_rounded),
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ChatMessageListView(
+              chat: chat,
             ),
-            body: Column(
-              children: [
-                Expanded(
-                  child: ChatMessageListView(
-                    chat: chat,
-                  ),
-                ),
-                SafeArea(
-                  top: false,
-                  child: ChatMessageInputBox(
-                    chat: chat,
-                  ),
-                ),
-              ],
+          ),
+          SafeArea(
+            top: false,
+            child: ChatMessageInputBox(
+              chat: chat,
             ),
-          )
-        : const DefaultLoginFirstScreen();
+          ),
+        ],
+      ),
+    );
   }
 }

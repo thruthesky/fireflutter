@@ -66,6 +66,12 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
                 child: const Text('테스트 사용자로 로그인해서 전체 채팅방에 채팅 삭제하기'),
               ),
               ElevatedButton(
+                onPressed: () {
+                  AdminService.instance.showUserList(context: context);
+                },
+                child: const Text('전체 사용자 목록'),
+              ),
+              ElevatedButton(
                 onPressed: () {},
                 child: const Text('신고목록'),
               )

@@ -36,7 +36,7 @@ class ChatService {
   DatabaseReference joinRef(String myUid, String roomId) => joinsRef.child(myUid).child(roomId);
 
   /// 각 채팅방 마다, 맨 마지막 채팅 메시지의 order 값을 가지고 있는 배열
-  /// TODO: 이 변수를 통째로 ChatModel 로 이동하도록 한다.
+  /// TODO: 이 변수를 통째로 ChatModel 로 이동하도록 하면, 보다 간결한 코딩이 가능해진다.
   ///
   /// 이것은 채팅 메시지를 역순으로 목록하기 위해서 사용하는 것으로, 나중에 입력되는 메시지일 수록 더 적은 음수 값을 저장해야하는데,
   /// 메시지가 저장될 때 그 즉시, -1 로 저장하고,
@@ -74,6 +74,23 @@ class ChatService {
         uid: uid,
         roomId: roomId,
       ),
+    );
+  }
+
+  Future showChatRoomCreate({required BuildContext context}) async {
+    return await showDialog<ChatRoomModel?>(
+      context: context,
+      builder: (_) => const DefaultChatRoomEditDialog(),
+    );
+  }
+
+  Future showChatRoomSettings({
+    required BuildContext context,
+    required String roomId,
+  }) async {
+    return await showDialog<ChatRoomModel?>(
+      context: context,
+      builder: (_) => DefaultChatRoomEditDialog(roomId: roomId),
     );
   }
 }

@@ -77,7 +77,10 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
                       return;
                     }
 
-                    UserService.instance.user?.update(displayName: nameController.text);
+                    UserService.instance.user?.update(
+                      name: nameController.text,
+                      displayName: nameController.text,
+                    );
                   },
                   child: const Text(
                     '저장',

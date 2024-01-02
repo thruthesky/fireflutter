@@ -23,7 +23,7 @@ class UserService {
     }
   }
 
-  BehaviorSubject<UserModel?> userDataChanges = BehaviorSubject<UserModel?>.seeded(null);
+  BehaviorSubject<UserModel?> myDataChanges = BehaviorSubject<UserModel?>.seeded(null);
 
   StreamSubscription? userNodeSubscription;
 
@@ -74,7 +74,7 @@ class UserService {
   }
 
   listenUser() {
-    dog('--> UserService.listenUser()');
+    dog('--> UserService.listenUser() for login user: $myUid');
     FirebaseAuth.instance.authStateChanges().listen((user) async {
       dog('--> UserService.listenUser() FirebaseAuth.instance.authStateChanges()');
       if (user == null) {
@@ -82,12 +82,33 @@ class UserService {
         return;
       }
       userNodeSubscription?.cancel();
-      userNodeSubscription = userRef.child(user.uid).onValue.listen((event) {
+      userNodeSubscription = userRef.child(user.uid).onValue.listen((event) async {
         dog('--> UserService.listenUser() userRef.child(user.uid).onValue.listen()');
         // final json = Map<String, dynamic>.from(event.snapshot.value);
         // this.user = UserModel.fromJson(json);
+
+        /// 사용자 문서 존재하지 않는 경우, 생성
+        ///
+        /// 어떤 이유로 인해서 사용자 문서가 존재하지 않을 수 있다. 예를 들면, 테스트를 하는 경우 등에서 발생할 수 있는데,
+        /// 이와 같은 경우, 그냥 문서를 생성해 준다.
+        ///
+        /// If the user document does not exsit. Then create it.
+        if (event.snapshot.exists == false) {
+          dog('--> 어떤 이유(테스트 등)로 인해 사용자 문서 존재하지 않음, 생성함.');
+          await userRef.child(user.uid).set({
+            'email': user.email,
+            'displayName': user.displayName,
+            'photoUrl': user.photoURL,
+            'createdAt': ServerValue.timestamp,
+          });
+          return;
+        }
+
+        /// 문서 파싱
         this.user = UserModel.fromSnapshot(event.snapshot);
-        userDataChanges.add(this.user);
+
+        ///
+        myDataChanges.add(this.user);
 
         /// 문서를 읽지 못했거나, createdAt 이 없으면, 최초 로그인이다. 그래서 createdAt 을 지정해서
         /// 회원 가입으로 간주한다.

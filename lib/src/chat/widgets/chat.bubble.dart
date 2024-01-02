@@ -25,7 +25,8 @@ class ChatBubble extends StatelessWidget {
           if (message.other)
             UserAvatar(
               uid: message.uid!,
-              radius: 13,
+              size: 30,
+              radius: 12,
               onTap: () => UserService.instance.showPublicProfile(
                 context: context,
                 uid: message.uid!,
@@ -52,7 +53,8 @@ class ChatBubble extends StatelessWidget {
           if (message.mine)
             UserAvatar(
               uid: myUid!,
-              radius: 13,
+              size: 30,
+              radius: 12,
               onTap: () => UserService.instance.showPublicProfile(
                 context: context,
                 uid: myUid!,
