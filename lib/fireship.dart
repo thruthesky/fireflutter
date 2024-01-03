@@ -12,6 +12,10 @@ export 'src/common/avatar.dart';
 export 'src/common/error_box.dart';
 export 'src/common/stacked_avatar.dart';
 
+/// Common Exception
+export 'src/common/exception/error_code.dart';
+export 'src/common/exception/code.dart';
+
 /// Common / url preview
 export 'src/common/url_preview/url_preview.dart';
 export 'src/common/url_preview/url_preview.model.dart';

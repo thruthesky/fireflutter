@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -13,74 +12,61 @@ import 'package:url_launcher/url_launcher_string.dart';
 /// [builder] is a builder function that takes the preview widget as [child]
 /// parameter. You can customize the preview widget by using the [builder].
 ///
-class UrlPreview extends StatefulWidget {
+class UrlPreview extends StatelessWidget {
   const UrlPreview({
     Key? key,
-    this.text,
-    this.descriptionLength,
-    required this.builder,
+    required this.previewUrl,
+    this.title,
+    this.description,
+    this.imageUrl,
   }) : super(key: key);
 
-  final String? text;
-  final int? descriptionLength;
-  final Widget Function(Widget) builder;
-
-  @override
-  createState() => _UrlPreviewState();
-}
-
-class _UrlPreviewState extends State<UrlPreview> {
-  final model = UrlPreviewModel();
-  @override
-  void initState() {
-    super.initState();
-    init();
-  }
-
-  init() async {
-    await model.load(widget.text);
-    setState(() {});
-  }
+  final String previewUrl;
+  final String? title;
+  final String? description;
+  final String? imageUrl;
 
   @override
   Widget build(BuildContext context) {
-    if (widget.text == null ||
-        widget.text!.isEmpty ||
-        model.firstLink == null ||
-        model.firstLink!.isEmpty ||
-        model.html == null ||
-        model.html!.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    final child = Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      if (model.image != null) CachedNetworkImage(imageUrl: model.image!),
-      if (model.title != null) ...[
-        const SizedBox(height: 8),
-        Text(
-          model.title!,
-          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-        ),
-      ],
-      if (model.description != null) ...[
-        const SizedBox(height: 8),
-        Text(
-          model.description!.length > (widget.descriptionLength ?? 100)
-              ? '${model.description!.substring(0, widget.descriptionLength ?? 100)}...'
-              : model.description!,
-          style: TextStyle(fontSize: 13, color: Colors.grey.shade800),
-        ),
-      ],
-    ]);
     return GestureDetector(
       onTap: () async {
-        if (await canLaunchUrlString(model.firstLink!)) {
-          await launchUrlString(model.firstLink!);
+        if (await canLaunchUrlString(previewUrl)) {
+          await launchUrlString(previewUrl);
         } else {
-          throw 'Could not launch ${model..firstLink}';
+          throw 'Could not launch $previewUrl';
         }
       },
-      child: widget.builder(child),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (imageUrl != null) CachedNetworkImage(imageUrl: imageUrl!),
+            if (title != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                title!,
+                style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+            if (description != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                description!.length > 100 ? '${description!.substring(0, 100)}...' : description!,
+                style: TextStyle(fontSize: 13, color: Colors.grey.shade800),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }

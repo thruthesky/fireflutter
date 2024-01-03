@@ -5,4 +5,7 @@ class Ref {
 
   static DatabaseReference root = FirebaseDatabase.instance.ref();
   static DatabaseReference users = root.child('users');
+
+  /// Chat
+  static DatabaseReference chatMessages = root.child('chat-messages');
 }

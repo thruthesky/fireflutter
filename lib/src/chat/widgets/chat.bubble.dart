@@ -38,12 +38,30 @@ class ChatBubble extends StatelessWidget {
           if (message.text != null)
             Container(
               constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: message.mine ? Colors.amber.shade200 : Colors.grey.shade200,
-                borderRadius: borderRadius(),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: message.mine ? Colors.amber.shade200 : Colors.grey.shade200,
+                      borderRadius: borderRadius(),
+                    ),
+                    child: Text(
+                      message.text ?? '',
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  if (message.hasUrlPreview) ...[
+                    const SizedBox(height: 8),
+                    UrlPreview(
+                      previewUrl: message.previewUrl!,
+                      title: message.previewTitle,
+                      description: message.previewDescription,
+                      imageUrl: message.previewImageUrl,
+                    ),
+                  ],
+                ],
               ),
-              child: Text(message.text ?? '', style: const TextStyle(color: Colors.black)),
             ),
           // image
           if (message.url != null) cachedImage(context, message.url!),

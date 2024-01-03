@@ -17,7 +17,16 @@ class ChatRoomModel {
   String? photoUrl;
   String? description;
   String? master;
-  bool? verified;
+
+  /// 회원 인증한 사용자만 입장 가능하도록 하는 옵션
+  bool isVerifiedOnly;
+
+  /// 회원 인증한 사용자만 url 입력 가능하도록 하는 옵션
+  bool urlVerified;
+
+  /// 회원 인증한 사용자만 업로드 가능하도록 하는 옵션
+  bool uploadVerified;
+
   Map<String, bool>? users;
 
   /// 그룹 채팅방의 사용자 수
@@ -54,7 +63,9 @@ class ChatRoomModel {
     this.photoUrl,
     this.description,
     this.master,
-    this.verified,
+    this.isVerifiedOnly = false,
+    this.urlVerified = false,
+    this.uploadVerified = false,
     this.users,
     this.noOfUsers,
     this.order,
@@ -90,7 +101,9 @@ class ChatRoomModel {
       photoUrl: json['photoUrl'] as String?,
       description: json['description'] as String?,
       master: json['master'] as String?,
-      verified: json['verified'] as bool?,
+      isVerifiedOnly: json['isVerifiedOnly'] ?? false,
+      urlVerified: json['urlVerified'] ?? false,
+      uploadVerified: json['uploadVerified'] ?? false,
       users: json['users'] == null ? null : Map<String, bool>.from(json['users']),
       noOfUsers: json['noOfUsers'] is int ? json['noOfUsers'] : int.parse(json['noOfUsers'] ?? '0'),
       order: json['order'] is int ? json['order'] : int.parse(json['order'] ?? '0'),
@@ -110,7 +123,9 @@ class ChatRoomModel {
       'photoUrl': photoUrl,
       'description': description,
       'master': master,
-      'verified': verified,
+      'isVerifiedOnly': isVerifiedOnly,
+      'urlVerified': urlVerified,
+      'uploadVerified': uploadVerified,
       'users': users,
       'noOfUsers': noOfUsers,
       'order': order,
@@ -241,13 +256,17 @@ class ChatRoomModel {
     String? description,
     bool? isOpenGroupChat,
     String? gender,
-    bool? verified,
+    bool? isVerifiedOnly,
+    bool? urlVerified,
+    bool? uploadVerified,
   }) async {
     final data = {
       Def.name: name,
       Def.description: description,
       Def.updatedAt: ServerValue.timestamp,
-      Def.verified: verified,
+      Def.isVerifiedOnly: isVerifiedOnly,
+      Def.urlVerified: urlVerified,
+      Def.uploadVerified: uploadVerified,
     };
     return ref.update(data);
   }

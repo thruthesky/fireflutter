@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireship/fireship.dart';
+import 'package:fireship/ref.dart';
 
 /// ChatModel
 ///
@@ -20,8 +21,6 @@ class ChatModel {
   /// [roomUserRef] is the reference to the users node under the group chat room. Ex) /chat-rooms/{roomId}/users/{my-uid}
   DatabaseReference roomUserRef(String roomId, String uid) =>
       rtdb.ref().child('chat-rooms/$roomId/users/$uid');
-
-  String _getMessagesPath(String roomId) => '/chat-messages/$roomId';
 
   DatabaseReference get joinsRef => rtdb.ref().child('chat-joins');
   DatabaseReference joinRef(String myUid, String roomId) => joinsRef.child(myUid).child(roomId);
@@ -62,18 +61,24 @@ class ChatModel {
     /// B 의 채팅방의 newMessage 가 0 으로 된다.
     /// 그리고, 나서 updateJoin() 을 하면, B 의 채팅 메시지가 1이 되는 것이다.
     /// 즉, 0이 되어야하는데 1이 되는 상황이 발생한다. 그래서, updateJoin() 이 먼저 호출되어야 한다.
-    Map<String, dynamic> multiUpdateData = _getMultiUpdateJoinMap(text: text, url: url);
+    Map<String, dynamic> multiUpdateData =
+        _getMultiUpdateForChatJoinLastMessage(text: text, url: url);
 
     /// Save chat message under `/chat-messages`.
-    multiUpdateData[
-        '${_getMessagesPath(room.id)}/${DateTime.now().millisecondsSinceEpoch}_$myUid'] = {
+    // 저장할 채팅 데이터
+    final chatMessageData = {
       'uid': myUid,
       if (text != null) 'text': text,
       if (url != null) 'url': url,
       'order': service.roomMessageOrder[room.id],
       'createdAt': ServerValue.timestamp,
     };
+    // 저장 할 경로
+    final chatMessageRef = Ref.chatMessages.child(room.id).push();
+    // 한번에 여러개 같이 저장
+    multiUpdateData[chatMessageRef.path] = chatMessageData;
 
+    /// 한번에 여러개 노드 저장
     // See reference for the multi-path update.
     // Reference: https://firebase.google.com/docs/database/flutter/read-and-write#updating_or_deleting_data
     await rtdb.ref().update(multiUpdateData);
@@ -91,9 +96,35 @@ class ChatModel {
         'photoUrl': photoUrl,
       });
     }
+
+    /// URL Preview 업데이트
+    updateUrlPreview(chatMessageRef, text);
   }
 
-  Map<String, dynamic> _getMultiUpdateJoinMap({
+  /// URL Preview 업데이트
+  ///
+  /// 채팅 메시지 자체에 업데이트하므로, 한번만 가져온다.
+  Future updateUrlPreview(DatabaseReference ref, String? text) async {
+    if (text == null || text == '') {
+      return;
+    }
+
+    /// Update url preview
+    final model = UrlPreviewModel();
+    await model.load(text);
+
+    if (model.hasData) {
+      final data = {
+        'previewUrl': model.firstLink!,
+        if (model.title != null) 'previewTitle': model.title,
+        if (model.description != null) 'previewDescription': model.description,
+        if (model.image != null) 'previewImageUrl': model.image,
+      };
+      await ref.update(data);
+    }
+  }
+
+  Map<String, dynamic> _getMultiUpdateForChatJoinLastMessage({
     String? text,
     String? url,
   }) {
@@ -275,8 +306,10 @@ class ChatModel {
     return false;
   }
 
-  /// Join chat room
+  /// 채팅방 입장
   ///
+  /// [join] 메소드를 호출 할 때에는 [room] 정보가 실제 DB 로 업데이트되어져야 한다. 실제로
+  /// [subscribeRoomUpdate] 에서 [room] 정보를 업데이트 후, [join] 메소드를 호출하고 있다.
   ///
   /// 채팅방 문서(/chat-rooms/{roomId})가 존재하지 않아도 joinRoom() 을 호출하면, 채팅방 문서가 생성된다.
   /// 1:1 채팅에서는, 맨 처음 채팅방이 만들어지고, 입장 할 때, 채팅방이 존재하지 않는 상태이다.
@@ -296,6 +329,12 @@ class ChatModel {
       return;
       // throw Exception('ChatModel::join() -> Login first -> myUid is null');
     }
+
+    // 채팅방이 인증 회원 전용 입장이면, 인증 회원이 아니면 그냥 리턴
+    if (room.isVerifiedOnly && UserService.instance.user?.isVerified != true) {
+      throw ErrorCode(Code.chatRoomNotVerified);
+    }
+
     // 내가 이미 방에 들어가 있는 상태이면 그냥 리턴
     if (room.users?.containsKey(myUid) == true) return;
     dog('ChatService.instance.joinRoom: Not joined, yet. Joing now ...');
@@ -349,9 +388,7 @@ class ChatModel {
         // 채팅방이 존재하면, 채팅방 정보를 가져오고, 재 설정
         final room = ChatRoomModel.fromSnapshot(event.snapshot);
         resetRoom(room: room);
-        // 그리고 채팅방에 join (이미 join 되어 있으면, 아무것도 하지 않는다.)
-        join();
-        dog('[2] 채팅방 정보 업데이트 및 join');
+        dog('[2] 채팅방 정보 업데이트');
         onUpdate?.call();
       } else {
         // 채팅방이 존재하지 않으면, 채팅방을 생성

@@ -20,6 +20,17 @@
   - 메시지를 전송 할 때 `/chat-joins` 에 업데이트된다.
 
 
+
+- 채팅 메시지를 전송 할 때, text 에 URL 이 들어가 있으면, url preview 할 수 있는 정보를 추출하여, 해당 메시지의 아래의 필드들에 적절한 값을 저장한다.
+  - `previewUrl` - 해당 URL
+  - `previewTitle` - 제목
+  - `previewDescription` - 내용
+  - `previewImageUrl` - 사진
+
+
+
+
+
 ## 로직
 
 

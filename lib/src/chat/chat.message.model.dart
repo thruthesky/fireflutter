@@ -9,9 +9,19 @@ class ChatMessageModel {
   int? order;
   int? createdAt;
 
+  String? previewUrl;
+  String? previewTitle;
+  String? previewDescription;
+  String? previewImageUrl;
+
   bool get mine {
     return uid != null && uid == FirebaseAuth.instance.currentUser?.uid;
   }
+
+  bool get hasUrlPreview =>
+      previewUrl != null &&
+      previewUrl!.isNotEmpty &&
+      (previewTitle != null || previewDescription != null || previewImageUrl != null);
 
   bool get other => !mine;
 
@@ -22,6 +32,10 @@ class ChatMessageModel {
     this.url,
     this.order,
     this.createdAt,
+    this.previewUrl,
+    this.previewTitle,
+    this.previewDescription,
+    this.previewImageUrl,
   });
 
   factory ChatMessageModel.fromSnapshot(DataSnapshot snapshot) {
@@ -37,9 +51,11 @@ class ChatMessageModel {
       text: json['text'] as String?,
       url: json['url'] as String?,
       order: json['order'] as int?,
-      createdAt: json['createdAt'] is int
-          ? json['createdAt']
-          : int.parse(json['createdAt'] ?? '0'),
+      createdAt: json['createdAt'] is int ? json['createdAt'] : int.parse(json['createdAt'] ?? '0'),
+      previewUrl: json['previewUrl'] as String?,
+      previewTitle: json['previewTitle'] as String?,
+      previewDescription: json['previewDescription'] as String?,
+      previewImageUrl: json['previewImageUrl'] as String?,
     );
   }
   Map<String, dynamic> toJson() {
@@ -49,6 +65,11 @@ class ChatMessageModel {
       'text': text,
       'url': url,
       'createdAt': createdAt,
+      'order': order,
+      'previewUrl': previewUrl,
+      'previewTitle': previewTitle,
+      'previewDescription': previewDescription,
+      'previewImageUrl': previewImageUrl,
     };
   }
 }

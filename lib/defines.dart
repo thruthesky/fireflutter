@@ -33,5 +33,7 @@ class Def {
   static const String users = 'users';
   static const String master = 'master';
   static const String noOfUsers = 'noOfUsers';
-  static const String verified = 'verified';
+  static const String isVerifiedOnly = 'isVerifiedOnly';
+  static const String urlVerified = 'urlVerified';
+  static const String uploadVerified = 'uploadVerified';
 }

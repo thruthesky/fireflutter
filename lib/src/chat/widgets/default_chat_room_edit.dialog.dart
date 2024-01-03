@@ -15,7 +15,9 @@ class DefaultChatRoomEditDialog extends StatefulWidget {
 
 class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
   bool open = false;
-  bool verified = false;
+  bool isVerifiedOnly = false;
+  bool urlVerified = false;
+  bool uploadVerified = false;
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
 
@@ -35,7 +37,9 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
       nameController.text = room?.name ?? '';
       descriptionController.text = room?.description ?? '';
       open = room?.isGroupChat ?? false;
-      verified = room?.verified ?? false;
+      isVerifiedOnly = room?.isVerifiedOnly ?? false;
+      urlVerified = room?.urlVerified ?? false;
+      uploadVerified = room?.uploadVerified ?? false;
       setState(() {});
     }
   }
@@ -88,12 +92,12 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
             ),
           ),
           SwitchListTile(
-            value: verified,
-            onChanged: (v) => setState(() => verified = v),
+            value: isVerifiedOnly,
+            onChanged: (v) => setState(() => isVerifiedOnly = v),
             title: Padding(
               padding: const EdgeInsets.only(left: 16),
               child: Text(
-                '인증 회원 전용',
+                '인증 회원 전용 입장',
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ),
@@ -101,6 +105,42 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
               padding: const EdgeInsets.only(left: 16),
               child: Text(
                 '본인 인증 한 회원만 채팅방에 참여할 수 있습니다.',
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
+            ),
+          ),
+          SwitchListTile(
+            value: urlVerified,
+            onChanged: (v) => setState(() => urlVerified = v),
+            title: Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Text(
+                '인증 회원 전용 URL 입력',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Text(
+                '본인 인증 한 회원만 URL 링크를 입력 할 수 있습니다.',
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
+            ),
+          ),
+          SwitchListTile(
+            value: uploadVerified,
+            onChanged: (v) => setState(() => uploadVerified = v),
+            title: Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Text(
+                '인증 회원 전용 사진 등록',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Text(
+                '본인 인증 한 회원만 사진을 등록 할 수 있습니다.',
                 style: Theme.of(context).textTheme.labelSmall,
               ),
             ),
@@ -137,7 +177,9 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 name: nameController.text,
                 description: descriptionController.text,
                 isOpenGroupChat: open,
-                verified: verified,
+                isVerifiedOnly: isVerifiedOnly,
+                urlVerified: urlVerified,
+                uploadVerified: uploadVerified,
               );
               if (context.mounted) {
                 Navigator.pop(context);

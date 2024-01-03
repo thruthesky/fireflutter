@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 /// 채팅방
 ///
 /// 채팅 메시지를 보여주고, 새로운 채팅 메시지를 전송할 수 있도록 한다.
+///
+/// TODO 채팅방 정보에 따른 입장 권한, 비밀번호 확인 등의 절차가 필요하므로, 채팅방 정보를 먼저 읽어야만 한다.
+/// TODO 그래서, 옵션으로 roomId 또는 uid 를 받고, 방정보 천체를 받을 수 있도록 한다. id 만들어 오면, 방 정보를 먼저 읽는다.
+/// 그래야 로직이 편해진다.
+///
 class DefaultChatRoomScreen extends StatefulWidget {
   const DefaultChatRoomScreen({
     super.key,
@@ -36,8 +41,20 @@ class _DefaultChatRoomScreenState extends State<DefaultChatRoomScreen> {
           : ChatRoomModel.fromRoomdId(widget.roomId!),
     );
 
-    /// 방 정보 전체를 한번 읽고, 이후, 실시간 업데이트
-    chat.subscribeRoomUpdate(onUpdate: () => setState(() {}));
+    /// 방 정보 전체를 한번 읽고, 이후, 실시간 업데이트. subscribe 할 때, join 을 한다.
+    chat.subscribeRoomUpdate(onUpdate: () async {
+      // 그리고 채팅방에 join (이미 join 되어 있으면, 아무것도 하지 않는다.)
+      try {
+        await chat.join();
+      } on ErrorCode catch (e) {
+        if (e.code == Code.chatRoomNotVerified) {
+          rethrow;
+        }
+      } catch (e) {
+        rethrow;
+      }
+      setState(() {});
+    });
   }
 
   @override

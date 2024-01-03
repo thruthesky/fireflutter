@@ -68,7 +68,7 @@ class _RChatMessageListState extends State<ChatMessageListView> {
           return Text('Something went wrong! ${snapshot.error}');
         }
 
-        // 새로은 채팅이 들어오면(전달되어져 오면), 채팅방의 새 메시지 갯수를 0 으로 초기화 시킨다.
+        // 새로운 채팅이 들어오면(전달되어져 오면), 채팅방의 새 메시지 갯수를 0 으로 초기화 시킨다.
         if (chat.isLoadingNewMessage(roomId, snapshot)) {
           final newMessage = ChatMessageModel.fromSnapshot(snapshot.docs.first);
           // newMessage 리셋
