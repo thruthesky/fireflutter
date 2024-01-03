@@ -15,8 +15,31 @@ class DefaultChatRoomEditDialog extends StatefulWidget {
 
 class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
   bool open = false;
+  bool verified = false;
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
+
+  bool get isEdit => widget.roomId != null;
+  bool get isCreate => widget.roomId == null;
+  ChatRoomModel? room;
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  init() async {
+    if (isEdit) {
+      /// 채팅방 수정의 경우, 기존 채팅방 정보를 가져와 초기화 한다.
+      room = await ChatRoomModel.get(widget.roomId!);
+      nameController.text = room?.name ?? '';
+      descriptionController.text = room?.description ?? '';
+      open = room?.isGroupChat ?? false;
+      verified = room?.verified ?? false;
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -25,7 +48,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: 24),
-          Text('채로운 채팅', style: Theme.of(context).textTheme.titleLarge),
+          Text(isCreate ? '새로운 채팅' : '채팅방 설정', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 32),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -36,7 +59,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
               ),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: TextField(
@@ -54,6 +77,31 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
               child: Text(
                 '오픈 채팅',
                 style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Text(
+                '다른 사용자가 채팅방에 참여할 수 있습니다.',
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
+            ),
+          ),
+          SwitchListTile(
+            value: verified,
+            onChanged: (v) => setState(() => verified = v),
+            title: Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Text(
+                '인증 회원 전용',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Text(
+                '본인 인증 한 회원만 채팅방에 참여할 수 있습니다.',
+                style: Theme.of(context).textTheme.labelSmall,
               ),
             ),
           ),
@@ -74,18 +122,29 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
               );
               return;
             }
+            if (isCreate) {
+              final room = await ChatRoomModel.create(
+                name: nameController.text,
+                description: descriptionController.text,
+                isOpenGroupChat: open,
+              );
 
-            final room = await ChatRoomModel.create(
-              name: nameController.text,
-              description: descriptionController.text,
-              isOpenGroupChat: open,
-            );
-
-            if (context.mounted) {
-              Navigator.pop(context, room);
+              if (context.mounted) {
+                Navigator.pop(context, room);
+              }
+            } else {
+              await room?.update(
+                name: nameController.text,
+                description: descriptionController.text,
+                isOpenGroupChat: open,
+                verified: verified,
+              );
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
             }
           },
-          child: const Text('전송'),
+          child: Text(isCreate ? '생성' : '수정'),
         ),
       ],
     );

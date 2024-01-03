@@ -12,6 +12,10 @@ export 'src/common/avatar.dart';
 export 'src/common/error_box.dart';
 export 'src/common/stacked_avatar.dart';
 
+/// Common / url preview
+export 'src/common/url_preview/url_preview.dart';
+export 'src/common/url_preview/url_preview.model.dart';
+
 /// Datbase
 export 'src/database/widgets/database.count.dart';
 export 'src/database/widgets/database.dart';
@@ -61,7 +65,8 @@ export 'src/user/widgets/user.avatar.dart';
 export 'src/user/user.customize.dart';
 export 'src/user/widgets/default_public_profile.screen.dart';
 export 'src/user/widgets/default_profile.screen.dart';
-export 'src/user/widgets/user_data.dart';
+export 'src/user/widgets/user_doc.dart';
 export 'src/user/widgets/default_avatar_update.dart';
-export 'src/user/widgets/user_data_changes.dart';
+export 'src/user/widgets/my_doc.dart';
 export 'src/user/widgets/default_login_first.screen.dart';
+export 'src/user/widgets/admin.dart';

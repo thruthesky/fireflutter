@@ -17,6 +17,7 @@ class ChatRoomModel {
   String? photoUrl;
   String? description;
   String? master;
+  bool? verified;
   Map<String, bool>? users;
 
   /// 그룹 채팅방의 사용자 수
@@ -36,6 +37,7 @@ class ChatRoomModel {
 
   bool get isSingleChat => isSingleChatRoom(id);
   bool get isGroupChat => !isSingleChat;
+  bool get isOpenGroupChat => openGroupChatOrder != null;
 
   ChatRoomModel({
     required this.ref,
@@ -52,6 +54,7 @@ class ChatRoomModel {
     this.photoUrl,
     this.description,
     this.master,
+    this.verified,
     this.users,
     this.noOfUsers,
     this.order,
@@ -87,6 +90,7 @@ class ChatRoomModel {
       photoUrl: json['photoUrl'] as String?,
       description: json['description'] as String?,
       master: json['master'] as String?,
+      verified: json['verified'] as bool?,
       users: json['users'] == null ? null : Map<String, bool>.from(json['users']),
       noOfUsers: json['noOfUsers'] is int ? json['noOfUsers'] : int.parse(json['noOfUsers'] ?? '0'),
       order: json['order'] is int ? json['order'] : int.parse(json['order'] ?? '0'),
@@ -106,6 +110,7 @@ class ChatRoomModel {
       'photoUrl': photoUrl,
       'description': description,
       'master': master,
+      'verified': verified,
       'users': users,
       'noOfUsers': noOfUsers,
       'order': order,
@@ -229,6 +234,22 @@ class ChatRoomModel {
       await ref.update(data);
     }
     return fromReference(ref);
+  }
+
+  Future update({
+    String? name,
+    String? description,
+    bool? isOpenGroupChat,
+    String? gender,
+    bool? verified,
+  }) async {
+    final data = {
+      Def.name: name,
+      Def.description: description,
+      Def.updatedAt: ServerValue.timestamp,
+      Def.verified: verified,
+    };
+    return ref.update(data);
   }
 
   /// 채팅방에 남아 있는 사람이 없으면, 방을 삭제한다.

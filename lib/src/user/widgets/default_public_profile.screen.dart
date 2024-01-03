@@ -78,7 +78,7 @@ class DefaultPublicProfileScreen extends StatelessWidget {
               const Spacer(),
               UserAvatar(uid: uid, radius: 64),
               const SizedBox(height: 8),
-              UserData(
+              UserDoc(
                 uid: uid,
                 field: Def.displayName,
                 builder: (name) => Text(

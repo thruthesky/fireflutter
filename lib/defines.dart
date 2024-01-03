@@ -32,4 +32,6 @@ class Def {
   static const String roomId = 'roomId';
   static const String users = 'users';
   static const String master = 'master';
+  static const String noOfUsers = 'noOfUsers';
+  static const String verified = 'verified';
 }

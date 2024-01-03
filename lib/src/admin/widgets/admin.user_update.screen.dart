@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +17,7 @@ class _AdminUserUpdateScreenState extends State<AdminUserUpdateScreen> {
       appBar: AppBar(
         title: const Text('User Update'),
       ),
-      body: UserData.sync(
+      body: UserDoc.sync(
         uid: widget.uid,
         field: null,
         builder: (data) {

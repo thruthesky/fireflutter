@@ -16,11 +16,11 @@ import 'package:flutter/material.dart';
 ///
 /// 아래의 예제는 사용자 이름을 실시간으로 표시한다.
 /// ```dart
-/// UserData.sync(uid: user.uid, field: 'displayName', builder: (data, $) => Text(data)),
+/// UserDoc.sync(uid: user.uid, field: 'displayName', builder: (data, $) => Text(data)),
 /// ```
 ///
 /// ```dart
-/// UserData(
+/// UserDoc(
 ///   uid: message.uid!,
 ///   field: null,
 ///   builder: (data) => UserAvatar(
@@ -33,8 +33,8 @@ import 'package:flutter/material.dart';
 ///
 final _userDataCache = <String, dynamic>{};
 
-class UserData extends StatelessWidget {
-  const UserData({
+class UserDoc extends StatelessWidget {
+  const UserDoc({
     super.key,
     required this.uid,
     required this.field,
@@ -65,7 +65,7 @@ class UserData extends StatelessWidget {
           );
         }
         if (snapshot.hasError) {
-          dog('error in UserData: ${snapshot.error}');
+          dog('error in UserDoc: ${snapshot.error}');
           return const Icon(Icons.error_outline);
         }
         if (cache) {

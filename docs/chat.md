@@ -51,6 +51,9 @@ ChatModel 만드는 것 만으로 채팅방이 만들어지지 않는다. 그래
 채팅방 수정은 `ChatService.instance.showChatRoomSettings(roomId: ...)` 를 호출하면 되며, 채팅방 생성과 같은 위젯인 `DefaultChatRoomEditDialog` 를 사용한다.
 
 
+채팅방을 수정 할 때에는 추가적으로 인증 회원, 성별을 지정 할 수 있다. `gender` 에 `M` 또는 `F` 의 값이 지정되면, 해당 성별의 회원만 접속(채탕방 입장)이 가능하다. `verified` 의 경우, 남/녀 상관없이, 인증된 사용자 이면 접속 할 수 있다. 참고로 인증 회원과 성별은 회원 정보를 참고한다.
+
+
 
 
 
