@@ -98,6 +98,16 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
-        }
+        },
+        {
+            "name": "Momcafe - SM J737S (Galaxy A04)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "SM J737S",
+            "flutterMode": "debug",
+            "cwd": "apps/momcafe",
+            "program": "lib/main.dart"
+        },
+       
     ]
 }
