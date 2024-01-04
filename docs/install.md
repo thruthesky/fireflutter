@@ -10,10 +10,10 @@
 
 ## Install Cloud Functions
 
-Run the following to install `sendPushNotifications` cloud function.
+Run the following command to install `sendPushNotifications` cloud function.
 
 ```sh
-% npm run deploy
+% npm run deploy:sendPushNotifications
 ```
 
 And set the end point URL to `MessagingService.instance.init(sendPushNotificationsUrl: ..)`

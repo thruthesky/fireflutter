@@ -7,7 +7,7 @@
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:sendPushNotifications",
+    "deploy:sendPushNotifications": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:sendPushNotifications",
     "logs": "firebase functions:log"
   },
   "engines": {
@@ -15,7 +15,7 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "firebase-admin": "^11.8.0",
+    "firebase-admin": "^11.11.1",
     "firebase-functions": "^4.3.1"
   },
   "devDependencies": {
