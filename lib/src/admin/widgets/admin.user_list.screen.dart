@@ -27,7 +27,8 @@ class _AdminUserListScreenState extends State<AdminUserListScreen> {
             subtitle: Text(user.uid),
             trailing: Text(user.isAdmin ? '관리자' : ''),
             onTap: () {
-              AdminService.instance.showUserUpdate(context: context, uid: user.uid);
+              AdminService.instance
+                  .showUserUpdate(context: context, uid: user.uid);
             },
           );
         },

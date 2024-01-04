@@ -1,4 +1,5 @@
 import 'package:fireship/fireship.dart';
+import 'package:fireship/src/translation/translation.service.dart';
 import 'package:flutter/material.dart';
 
 /// 채팅 메시지 입력 박스
@@ -36,7 +37,8 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (progress != null && !progress!.isNaN) LinearProgressIndicator(value: progress),
+        if (progress != null && !progress!.isNaN)
+          LinearProgressIndicator(value: progress),
         const Divider(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -59,13 +61,15 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                     // Review
                     camera: true,
                     gallery: true,
-                    progress: (p) =>
-                        widget.onProgress?.call(p) ?? mounted ? setState(() => progress = p) : null,
+                    progress: (p) => widget.onProgress?.call(p) ?? mounted
+                        ? setState(() => progress = p)
+                        : null,
                     complete: () => widget.onProgress?.call(null) ?? mounted
                         ? setState(() => progress = null)
                         : null,
                   );
-                  await widget.chat.sendMessage(url: url);
+
+                  await send(url: url);
                   widget.onSend?.call(text: null, url: url);
                 },
               ),
@@ -77,7 +81,7 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                     onPressed: () async {
                       String text = inputController.text.trim();
                       if (text.isEmpty) return;
-                      await widget.chat.sendMessage(text: text);
+                      await send(text: text);
                       inputController.clear();
                       widget.onSend?.call(text: text, url: null);
                     },
@@ -91,5 +95,22 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
         ),
       ],
     );
+  }
+
+  send({String? text, String? url}) async {
+    try {
+      if (text != null) {
+        await widget.chat.sendMessage(text: text);
+      }
+      if (url != null) {
+        await widget.chat.sendMessage(url: url);
+      }
+    } on ErrorCode catch (e) {
+      if (mounted) {
+        error(context: context, message: e.code.tr);
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 }

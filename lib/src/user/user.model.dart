@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:fireship/defines.dart';
+
 import 'package:fireship/fireship.dart' as fs;
+import 'package:fireship/src/common/exception/code.dart';
 
 class UserModel {
   final String uid;
@@ -16,10 +17,12 @@ class UserModel {
   bool isAdmin;
   bool isVerified;
 
-  DatabaseReference get ref => FirebaseDatabase.instance.ref('users').child(uid);
+  DatabaseReference get ref =>
+      FirebaseDatabase.instance.ref('users').child(uid);
 
   /// See README.md
-  DatabaseReference get photoRef => FirebaseDatabase.instance.ref('user-photos').child(uid);
+  DatabaseReference get photoRef =>
+      FirebaseDatabase.instance.ref('user-photos').child(uid);
 
   UserModel({
     required this.uid,
@@ -174,8 +177,8 @@ class UserModel {
     if (photoUrl != null) {
       /// createdAt 정보는 없어서, 저장 할 수 없다.
       await photoRef.set({
-        Def.photoUrl: photoUrl,
-        Def.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
+        Code.photoUrl: photoUrl,
+        Code.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
       });
     }
   }
@@ -188,8 +191,8 @@ class UserModel {
     await fs.update(
       'users/$uid',
       {
-        Def.photoUrl: null,
-        Def.hasPhotoUrl: false,
+        Code.photoUrl: null,
+        Code.hasPhotoUrl: false,
       },
     );
 

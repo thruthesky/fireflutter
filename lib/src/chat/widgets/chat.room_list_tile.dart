@@ -39,7 +39,8 @@ class ChatRoomListTile extends StatelessWidget {
         children: [
           Text(
             dateTimeShort(DateTime.fromMillisecondsSinceEpoch(room.updatedAt!)),
-            style: Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 10),
+            style:
+                Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 10),
           ),
           ChatNewMessage(room: room),
         ],

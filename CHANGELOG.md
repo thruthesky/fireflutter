@@ -1,3 +1,8 @@
+## 0.0.4
+
+* Adding translation
+
+
 ## 0.0.3
 
 * Adding storage feature

@@ -32,7 +32,8 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
                       photoUrl: 'https://picsum.photos/id/${i * 100}/300/300',
                     );
 
-                    ChatModel chat = ChatModel(room: ChatRoomModel.fromRoomdId('all'));
+                    ChatModel chat =
+                        ChatModel(room: ChatRoomModel.fromRoomdId('all'));
                     await chat.join();
                     await chat.sendMessage(
                       text: '테스트 메시지 from ${user.email}',
@@ -50,9 +51,11 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
                       photoUrl: 'https://picsum.photos/id/${i * 100}/300/300',
                     );
 
-                    ChatModel chat = ChatModel(room: ChatRoomModel.fromRoomdId('all'));
+                    ChatModel chat =
+                        ChatModel(room: ChatRoomModel.fromRoomdId('all'));
                     final ref = ChatService.instance.messageRef(roomId: 'all');
-                    final snapshot = await ref.orderByChild('uid').equalTo(user.uid).get();
+                    final snapshot =
+                        await ref.orderByChild('uid').equalTo(user.uid).get();
                     if (snapshot.value != null) {
                       final nodes = snapshot.value as Map<dynamic, dynamic>;
                       for (final node in nodes.entries) {

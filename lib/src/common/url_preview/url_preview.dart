@@ -50,7 +50,8 @@ class UrlPreview extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 title!,
-                style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                style:
+                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -58,7 +59,9 @@ class UrlPreview extends StatelessWidget {
             if (description != null) ...[
               const SizedBox(height: 8),
               Text(
-                description!.length > 100 ? '${description!.substring(0, 100)}...' : description!,
+                description!.length > 100
+                    ? '${description!.substring(0, 100)}...'
+                    : description!,
                 style: TextStyle(fontSize: 13, color: Colors.grey.shade800),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

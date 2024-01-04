@@ -33,7 +33,8 @@ class ChatService {
       rtdb.ref().child('chat-rooms/$roomId/users/$uid');
 
   DatabaseReference get joinsRef => rtdb.ref().child('chat-joins');
-  DatabaseReference joinRef(String myUid, String roomId) => joinsRef.child(myUid).child(roomId);
+  DatabaseReference joinRef(String myUid, String roomId) =>
+      joinsRef.child(myUid).child(roomId);
 
   /// 각 채팅방 마다, 맨 마지막 채팅 메시지의 order 값을 가지고 있는 배열
   /// TODO: 이 변수를 통째로 ChatModel 로 이동하도록 하면, 보다 간결한 코딩이 가능해진다.
@@ -70,7 +71,8 @@ class ChatService {
   }) async {
     return showGeneralDialog(
       context: context,
-      pageBuilder: (context, animation, secondaryAnimation) => DefaultChatRoomScreen(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          DefaultChatRoomScreen(
         uid: uid,
         roomId: roomId,
       ),

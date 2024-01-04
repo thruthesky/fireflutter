@@ -37,13 +37,17 @@ class ChatBubble extends StatelessWidget {
           // text
           if (message.text != null)
             Container(
-              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.6),
               child: Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: message.mine ? Colors.amber.shade200 : Colors.grey.shade200,
+                      color: message.mine
+                          ? Colors.amber.shade200
+                          : Colors.grey.shade200,
                       borderRadius: borderRadius(),
                     ),
                     child: Text(
@@ -99,16 +103,18 @@ class ChatBubble extends StatelessWidget {
 
   dateAndName({required String uid}) {
     return Column(
-      crossAxisAlignment: message.mine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment:
+          message.mine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         Text(
-          dateTimeShort(DateTime.fromMillisecondsSinceEpoch(message.createdAt ?? 0)),
+          dateTimeShort(
+              DateTime.fromMillisecondsSinceEpoch(message.createdAt ?? 0)),
           style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
         ),
         const SizedBox(width: 4),
         UserDoc(
           uid: uid,
-          field: Def.displayName,
+          field: Code.displayName,
           builder: (data) => Text(
             data ?? 'NoName',
             style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
@@ -122,7 +128,8 @@ class ChatBubble extends StatelessWidget {
     return ClipRRect(
       borderRadius: borderRadius(),
       child: Container(
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+        constraints:
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
         child: CachedNetworkImage(
           imageUrl: message.url!,
           fit: BoxFit.cover,

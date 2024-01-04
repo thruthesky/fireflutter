@@ -23,7 +23,8 @@ class UserService {
     }
   }
 
-  BehaviorSubject<UserModel?> myDataChanges = BehaviorSubject<UserModel?>.seeded(null);
+  BehaviorSubject<UserModel?> myDataChanges =
+      BehaviorSubject<UserModel?>.seeded(null);
 
   StreamSubscription? userNodeSubscription;
 
@@ -67,7 +68,8 @@ class UserService {
     }
 
     this.enableNoOfProfileView = enableNoOfProfileView;
-    this.enableMessagingOnPublicProfileVisit = enableMessagingOnPublicProfileVisit;
+    this.enableMessagingOnPublicProfileVisit =
+        enableMessagingOnPublicProfileVisit;
 
     this.onLike = onLike;
     this.enableNotificationOnLike = enableNotificationOnLike;
@@ -82,7 +84,8 @@ class UserService {
         return;
       }
       userNodeSubscription?.cancel();
-      userNodeSubscription = userRef.child(user.uid).onValue.listen((event) async {
+      userNodeSubscription =
+          userRef.child(user.uid).onValue.listen((event) async {
         dog('--> UserService.listenUser() userRef.child(user.uid).onValue.listen()');
         // final json = Map<String, dynamic>.from(event.snapshot.value);
         // this.user = UserModel.fromJson(json);
@@ -154,7 +157,8 @@ class UserService {
     /// send notification by default when user visit other user profile
     /// disable notification when `disableNotifyOnProfileVisited` is set on user setting
     () async {
-      bool? re = await getSetting<bool?>(uid, path: Def.profileViewNotification);
+      bool? re =
+          await getSetting<bool?>(uid, path: Code.profileViewNotification);
       if (re != true) return;
 
       if (loggedIn && myUid != uid) {

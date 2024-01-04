@@ -13,7 +13,9 @@ class Admin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MyDoc(
-      builder: (my) => isAdmin ? builder() : (notAdminBuilder?.call() ?? const SizedBox.shrink()),
+      builder: (my) => isAdmin
+          ? builder()
+          : (notAdminBuilder?.call() ?? const SizedBox.shrink()),
     );
   }
 }

@@ -65,7 +65,11 @@ class _RChatMessageListState extends State<ChatMessageListView> {
 
         if (snapshot.hasError) {
           dog(snapshot.error.toString());
-          return Text('Something went wrong! ${snapshot.error}');
+          if (snapshot.error.toString().contains('permission-denied')) {
+            return const Center(child: Text('권한이 없습니다.'));
+          } else {
+            return Text('Something went wrong! ${snapshot.error}');
+          }
         }
 
         // 새로운 채팅이 들어오면(전달되어져 오면), 채팅방의 새 메시지 갯수를 0 으로 초기화 시킨다.
@@ -94,7 +98,8 @@ class _RChatMessageListState extends State<ChatMessageListView> {
               if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
                 snapshot.fetchMore();
               }
-              final message = ChatMessageModel.fromSnapshot(snapshot.docs[index]);
+              final message =
+                  ChatMessageModel.fromSnapshot(snapshot.docs[index]);
 
               /// 채팅방의 맨 마지막 메시지의 order 를 지정.
               chat.resetRoomMessageOrder(order: message.order);

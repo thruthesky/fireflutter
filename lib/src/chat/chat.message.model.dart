@@ -21,7 +21,9 @@ class ChatMessageModel {
   bool get hasUrlPreview =>
       previewUrl != null &&
       previewUrl!.isNotEmpty &&
-      (previewTitle != null || previewDescription != null || previewImageUrl != null);
+      (previewTitle != null ||
+          previewDescription != null ||
+          previewImageUrl != null);
 
   bool get other => !mine;
 
@@ -51,7 +53,9 @@ class ChatMessageModel {
       text: json['text'] as String?,
       url: json['url'] as String?,
       order: json['order'] as int?,
-      createdAt: json['createdAt'] is int ? json['createdAt'] : int.parse(json['createdAt'] ?? '0'),
+      createdAt: json['createdAt'] is int
+          ? json['createdAt']
+          : int.parse(json['createdAt'] ?? '0'),
       previewUrl: json['previewUrl'] as String?,
       previewTitle: json['previewTitle'] as String?,
       previewDescription: json['previewDescription'] as String?,

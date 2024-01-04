@@ -24,9 +24,6 @@ export 'src/common/url_preview/url_preview.model.dart';
 export 'src/database/widgets/database.count.dart';
 export 'src/database/widgets/database.dart';
 
-/// Defines
-export 'defines.dart';
-
 /// Extensions
 export 'src/extensions/color.extension.dart';
 export 'src/extensions/string.extension.dart';

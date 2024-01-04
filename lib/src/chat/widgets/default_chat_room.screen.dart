@@ -5,26 +5,34 @@ import 'package:flutter/material.dart';
 ///
 /// 채팅 메시지를 보여주고, 새로운 채팅 메시지를 전송할 수 있도록 한다.
 ///
-/// TODO 채팅방 정보에 따른 입장 권한, 비밀번호 확인 등의 절차가 필요하므로, 채팅방 정보를 먼저 읽어야만 한다.
-/// TODO 그래서, 옵션으로 roomId 또는 uid 를 받고, 방정보 천체를 받을 수 있도록 한다. id 만들어 오면, 방 정보를 먼저 읽는다.
-/// 그래야 로직이 편해진다.
+/// [uid] 가 들어오면, 해당 채팅방의 정보를 읽어서, 위젯을 빌드한다. 해당 채팅방이 없으면 생성한다.
+///
+/// [roomId] 가 들어오면, 해당 채팅방의 정보를 읽어서, 위젯을 빌드한다. 해당 채팅방이 없으면 에러를 발생시킨다. 그리고,
+/// 채팅방에 join 한다.
+///
+/// [room] 이 들어오면, 해당 채팅방의 정보를 읽지 않고, 빠르게 위젯을 빌드한다. 그리고, join 한다.
+///
+///
 ///
 class DefaultChatRoomScreen extends StatefulWidget {
   const DefaultChatRoomScreen({
     super.key,
     this.uid,
     this.roomId,
+    this.room,
   });
 
   final String? uid;
   final String? roomId;
+  final ChatRoomModel? room;
 
   @override
   State<DefaultChatRoomScreen> createState() => _DefaultChatRoomScreenState();
 }
 
 class _DefaultChatRoomScreenState extends State<DefaultChatRoomScreen> {
-  late ChatModel chat;
+  ChatModel? _chat;
+  ChatModel get chat => _chat!;
 
   @override
   void initState() {
@@ -34,16 +42,24 @@ class _DefaultChatRoomScreenState extends State<DefaultChatRoomScreen> {
       return;
     }
 
-    /// 빠르게 화면을 보여주기 위해서, uid 또는 roomId 로 부터 임시 ChatModel instance 생성 후,
-    chat = ChatModel(
-      room: widget.uid != null
-          ? ChatRoomModel.fromUid(widget.uid!)
-          : ChatRoomModel.fromRoomdId(widget.roomId!),
-    );
+    init();
+  }
 
-    /// 방 정보 전체를 한번 읽고, 이후, 실시간 업데이트. subscribe 할 때, join 을 한다.
-    chat.subscribeRoomUpdate(onUpdate: () async {
-      // 그리고 채팅방에 join (이미 join 되어 있으면, 아무것도 하지 않는다.)
+  init() async {
+    /// 채팅방 정보를 읽는다.
+    if (widget.room != null) {
+      _chat = ChatModel(room: widget.room!);
+    } else if (widget.uid != null) {
+      _chat = ChatModel(room: ChatRoomModel.fromUid(widget.uid!));
+      await chat.room.reload();
+    } else if (widget.roomId != null) {
+      _chat = ChatModel(room: ChatRoomModel.fromRoomdId(widget.roomId!));
+      await chat.room.reload();
+    } else {
+      throw ArgumentError('uid, roomId, room 중 하나는 반드시 있어야 합니다.');
+    }
+
+    if (chat.room.joined == false) {
       try {
         await chat.join();
       } on ErrorCode catch (e) {
@@ -53,8 +69,10 @@ class _DefaultChatRoomScreenState extends State<DefaultChatRoomScreen> {
       } catch (e) {
         rethrow;
       }
-      setState(() {});
-    });
+    }
+
+    /// 방 정보 전체를 한번 읽고, 이후, 실시간 업데이트
+    chat.subscribeRoomUpdate(onUpdate: () => setState(() {}));
   }
 
   @override

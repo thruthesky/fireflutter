@@ -8,6 +8,7 @@ import 'package:fireship/ref.dart';
 /// ChatModel
 ///
 /// 이 모델은 채팅방의 데이터 모델이 아니라, 로직을 담고 있는 로직 모델이다.
+/// ChatService 에 모든 것을 다 집어 넣으면, 각 채팅 방마다 관리가 어렵다. 그래서 동시에 두개의 채팅방을 열 수 없다.
 class ChatModel {
   /// Set the current room.
   ChatRoomModel room;
@@ -23,7 +24,8 @@ class ChatModel {
       rtdb.ref().child('chat-rooms/$roomId/users/$uid');
 
   DatabaseReference get joinsRef => rtdb.ref().child('chat-joins');
-  DatabaseReference joinRef(String myUid, String roomId) => joinsRef.child(myUid).child(roomId);
+  DatabaseReference joinRef(String myUid, String roomId) =>
+      joinsRef.child(myUid).child(roomId);
 
   // This is used to update the last message in the chat room list per user in /chat-joins
   String joinPath(String roomId, String uid) => '/chat-joins/$uid/$roomId';
@@ -47,12 +49,18 @@ class ChatModel {
   }) async {
     if ((url == null || url.isEmpty) && (text == null || text.isEmpty)) return;
 
+    /// TODO 관리자 모드에서 특정 사용자에게 disabled 할 수 있도록 한다.
     if (UserService.instance.user?.isDisabled == true) {
-      throw Exception('you-are-disabled');
+      throw ErrorCode(Code.disabled);
+    }
+
+    if (room.joined == false) {
+      throw ErrorCode(Code.notJoined);
     }
 
     ///
-    service.roomMessageOrder[room.id] = (service.roomMessageOrder[room.id] ?? 0) - 1;
+    service.roomMessageOrder[room.id] =
+        (service.roomMessageOrder[room.id] ?? 0) - 1;
 
     /// 참고, 실제 메시지를 보내기 전에, 채팅방 자체를 먼저 업데이트 해 버린다.
     ///
@@ -89,8 +97,8 @@ class ChatModel {
     /// 다만, 여기서는 채팅 메시지가 이미 전달된 다음에, 채팅방 정보를 업데이트하므로, 데이터 반응 속도는 신경쓰지 않아도 된다.
     if (room.isSingleChat) {
       final otherUid = room.otherUserUid!;
-      final name = await UserModel.getField(otherUid, Def.displayName);
-      final photoUrl = await UserModel.getField(otherUid, Def.photoUrl);
+      final name = await UserModel.getField(otherUid, Code.displayName);
+      final photoUrl = await UserModel.getField(otherUid, Code.photoUrl);
       joinRef(myUid!, singleChatRoomId(otherUid)).update({
         'name': name,
         'photoUrl': photoUrl,
@@ -162,11 +170,15 @@ class ChatModel {
     // chat room info
     final data = {
       /// 그룹 채팅방 이름 또는 보내는 사람 이름
-      'name': room.isSingleChat ? UserService.instance.user?.displayName : (room.name ?? ''),
+      'name': room.isSingleChat
+          ? UserService.instance.user?.displayName
+          : (room.name ?? ''),
 
       /// 1:1 채팅에서는 마지막 보낸 사람 사진 (나중에 덮어 쓰여질 수 있음.)
       /// 그룹 채팅에서는 방 사진.
-      'photoUrl': room.isSingleChat ? UserService.instance.user?.photoUrl : room.photoUrl,
+      'photoUrl': room.isSingleChat
+          ? UserService.instance.user?.photoUrl
+          : room.photoUrl,
 
       /// 그룹 채팅의 경우, 사용자 수
       'noOfUsers': room.isGroupChat ? room.users?.length : null,
@@ -176,8 +188,8 @@ class ChatModel {
       'url': url,
       'updatedAt': ServerValue.timestamp,
       'newMessage': newMessage,
-      Def.groupChatOrder: room.isGroupChat ? order : null,
-      Def.singleChatOrder: room.isSingleChat ? order : null,
+      Code.groupChatOrder: room.isGroupChat ? order : null,
+      Code.singleChatOrder: room.isSingleChat ? order : null,
       //
       'order': order,
     };
@@ -210,7 +222,8 @@ class ChatModel {
     if (ChatService.instance.roomMessageOrder[room.id] == null) {
       ChatService.instance.roomMessageOrder[room.id] = 0;
     }
-    if (order != null && order < ChatService.instance.roomMessageOrder[room.id]!) {
+    if (order != null &&
+        order < ChatService.instance.roomMessageOrder[room.id]!) {
       ChatService.instance.roomMessageOrder[room.id] = order;
     }
   }
@@ -277,7 +290,8 @@ class ChatModel {
   /// 채팅방으로 접속을 하면, `if (currentMessageOrder == 0 ) return fales` 에 의해서 항상 false 가
   /// 리턴된다. 그래서, 처음 채팅방에 진입을 할 때에는 [snapshot.isFetching] 을 통해서 newMessage 를 초기화
   /// 해야 한다.
-  bool isLoadingNewMessage(String messageRoomId, FirebaseQueryBuilderSnapshot snapshot) {
+  bool isLoadingNewMessage(
+      String messageRoomId, FirebaseQueryBuilderSnapshot snapshot) {
     if (snapshot.docs.isEmpty) return false;
 
     final lastMessage = ChatMessageModel.fromSnapshot(snapshot.docs.first);
@@ -326,8 +340,8 @@ class ChatModel {
   Future join() async {
     if (myUid == null) {
       // 로그인을 하지 않았으면 그냥 리턴
-      return;
       // throw Exception('ChatModel::join() -> Login first -> myUid is null');
+      throw ErrorCode(Code.notLoggedIn);
     }
 
     // 채팅방이 인증 회원 전용 입장이면, 인증 회원이 아니면 그냥 리턴
@@ -351,17 +365,17 @@ class ChatModel {
       }
     } else {
       // 그룹 채팅방이면, noOfUsers 를 업데이트 한다.
-      await room.ref.child('noOfUsers').set(room.users?.length);
+      await room.ref.child('noOfUsers').set((room.users?.length ?? 0) + 1);
     }
 
     /// 나의 채팅방 목록에 저장할 채팅방 정보
     ///
     final order = -int.parse('${room.updatedAt ?? room.createdAt ?? 0}');
     final data = {
-      Def.name: room.isGroupChat ? room.name : '',
-      Def.groupChatOrder: room.isGroupChat ? order : null,
-      Def.singleChatOrder: room.isSingleChat ? order : null,
-      Def.newMessage: null,
+      Code.name: room.isGroupChat ? room.name : '',
+      Code.groupChatOrder: room.isGroupChat ? order : null,
+      Code.singleChatOrder: room.isSingleChat ? order : null,
+      Code.newMessage: null,
     };
 
     /// 1:1 채팅방의 경우, 상대방의 이름을 저장한다.
