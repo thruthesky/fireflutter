@@ -1,4 +1,5 @@
 import 'package:fireship/fireship.dart';
+import 'package:fireship/ref.dart';
 import 'package:flutter/material.dart';
 
 /// 채팅방
@@ -14,7 +15,7 @@ import 'package:flutter/material.dart';
 ///
 ///
 ///
-class DefaultChatRoomScreen extends StatefulWidget {
+class DefaultChatRoomScreen extends StatelessWidget {
   const DefaultChatRoomScreen({
     super.key,
     this.uid,
@@ -27,68 +28,7 @@ class DefaultChatRoomScreen extends StatefulWidget {
   final ChatRoomModel? room;
 
   @override
-  State<DefaultChatRoomScreen> createState() => _DefaultChatRoomScreenState();
-}
-
-class _DefaultChatRoomScreenState extends State<DefaultChatRoomScreen> {
-  ChatModel? _chat;
-  ChatModel get chat => _chat!;
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (notLoggedIn) {
-      return;
-    }
-
-    init();
-  }
-
-  init() async {
-    /// 채팅방 정보를 읽는다.
-    if (widget.room != null) {
-      _chat = ChatModel(room: widget.room!);
-    } else if (widget.uid != null) {
-      _chat = ChatModel(room: ChatRoomModel.fromUid(widget.uid!));
-      await chat.room.reload();
-    } else if (widget.roomId != null) {
-      _chat = ChatModel(room: ChatRoomModel.fromRoomdId(widget.roomId!));
-      await chat.room.reload();
-    } else {
-      throw ArgumentError('uid, roomId, room 중 하나는 반드시 있어야 합니다.');
-    }
-
-    if (chat.room.joined == false) {
-      try {
-        await chat.join();
-      } on ErrorCode catch (e) {
-        if (e.code == Code.chatRoomNotVerified) {
-          rethrow;
-        }
-      } catch (e) {
-        rethrow;
-      }
-    }
-
-    /// 방 정보 전체를 한번 읽고, 이후, 실시간 업데이트
-    chat.subscribeRoomUpdate(onUpdate: () => setState(() {}));
-  }
-
-  @override
-  void dispose() {
-    /// 실시간 업데이트 subscription 해제
-    chat.unsubscribeRoomUpdate();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    /// 로그인을 하지 않았으면, 로그인 요청 위젯 표시
-    if (notLoggedIn) {
-      return const DefaultLoginFirstScreen();
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('채팅'),
@@ -99,9 +39,10 @@ class _DefaultChatRoomScreenState extends State<DefaultChatRoomScreen> {
             ],
             onSelected: (v) {
               if (v == 'edit') {
+                /// TODO 채팅방이 그룹 채팅이 아니라, 1:1 채팅인 경우, chat-joins 에서 설정을 해야 한다.
                 ChatService.instance.showChatRoomSettings(
                   context: context,
-                  roomId: chat.room.id,
+                  roomId: roomId ?? room?.id ?? '',
                 );
               }
             },
@@ -110,21 +51,7 @@ class _DefaultChatRoomScreenState extends State<DefaultChatRoomScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ChatMessageListView(
-              chat: chat,
-            ),
-          ),
-          SafeArea(
-            top: false,
-            child: ChatMessageInputBox(
-              chat: chat,
-            ),
-          ),
-        ],
-      ),
+      body: ChatRoom(uid: uid, roomId: roomId, room: room),
     );
   }
 }

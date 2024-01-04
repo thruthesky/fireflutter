@@ -6,14 +6,13 @@ import 'package:flutter/foundation.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:rxdart/rxdart.dart';
 
+/// TODO convert it as a model
 typedef MessageData = ({
   dynamic badge,
-  String id,
-  String roomId,
-  String uid,
-  String type,
+  String? postId,
+  String? roomId,
+  String? uid,
   String senderUid,
-  String action,
 });
 
 class CustomizeMessagingTopic {
@@ -46,14 +45,11 @@ class CustomizeMessagingTopic {
 ///
 class MessagingService {
   static MessagingService? _instance;
-  static MessagingService get instance {
-    _instance ??= MessagingService();
-    return _instance!;
-  }
+  static MessagingService get instance => _instance ??= MessagingService._();
 
   // final BehaviorSubject<bool> permissionGranted = BehaviorSubject.seeded(false);
 
-  MessagingService() {
+  MessagingService._() {
     // debugPrint('MessagingService::constructor');
   }
 
@@ -76,7 +72,6 @@ class MessagingService {
     required Function(RemoteMessage) onMessageOpenedFromBackground,
     required Function onNotificationPermissionDenied,
     required Function onNotificationPermissionNotDetermined,
-    List<CustomizeMessagingTopic>? customizeTopic,
   }) {
     initialized = true;
     if (onBackgroundMessage != null) {
@@ -87,10 +82,7 @@ class MessagingService {
     this.onMessageOpenedFromTerminated = onMessageOpenedFromTerminated;
     this.onMessageOpenedFromBackground = onMessageOpenedFromBackground;
     this.onNotificationPermissionDenied = onNotificationPermissionDenied;
-    this.onNotificationPermissionNotDetermined =
-        onNotificationPermissionNotDetermined;
-
-    this.customizeTopic = customizeTopic;
+    this.onNotificationPermissionNotDetermined = onNotificationPermissionNotDetermined;
 
     _initializeListeners();
     _initializeToken();
@@ -102,8 +94,7 @@ class MessagingService {
     /// Permission request for iOS only. For Android, the permission is granted by default.
     ///
     if (kIsWeb || Platform.isIOS) {
-      NotificationSettings settings =
-          await FirebaseMessaging.instance.requestPermission(
+      NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
         alert: true,
         announcement: false,
         badge: true,
@@ -128,9 +119,7 @@ class MessagingService {
     ///
     /// `/fcm_tokens/<docId>/{token: '...', uid: '...'}`
     /// Save(or update) token
-    FirebaseAuth.instance
-        .authStateChanges()
-        .listen((user) => _updateToken(token));
+    FirebaseAuth.instance.authStateChanges().listen((user) => _updateToken(token));
 
     /// Token changed. update it.
     ///
@@ -142,22 +131,29 @@ class MessagingService {
     /// Run this subscription on the whole lifecycle. (No unsubscription)
     ///
     // Any time the token refreshes, store this in the database too.
-    FirebaseMessaging.instance.onTokenRefresh
-        .listen((token) => tokenChange.add(token));
+    FirebaseMessaging.instance.onTokenRefresh.listen((token) => tokenChange.add(token));
 
     /// Get token from device and save it into Firestore
     ///
     /// Get the token each time the application loads and save it to database.
     token = await FirebaseMessaging.instance.getToken() ?? '';
-    dog('---> device token: $token');
     await _updateToken(token);
   }
 
   /// Save tokens at `/user_fcm_tokens/<uid>/token/platform`
   _updateToken(String? token) async {
-    if (FirebaseAuth.instance.currentUser == null) return;
+    if (FirebaseAuth.instance.currentUser == null) {
+      dog("Can't update token. User is not logged in.");
+      return;
+    }
+    dog('Updating the device token: $token');
     if (token == null) return;
-    await set('user_fcm_tokens/$myUid/token', platformName());
+    try {
+      await set('user-fcm-tokens/$myUid/$token', platformName());
+    } catch (e) {
+      dog('Error while updating token: $e');
+      rethrow;
+    }
   }
 
   /// Initialize Messaging
@@ -166,8 +162,7 @@ class MessagingService {
     FirebaseMessaging.onMessage.listen(onForegroundMessage);
 
     // Check if app is opened from CLOSED(TERMINATED) state and get message data.
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
       onMessageOpenedFromTerminated(initialMessage);
     }
@@ -220,12 +215,10 @@ class MessagingService {
   MessageData parseMessageData(Map<String, dynamic> data) {
     return (
       badge: data['badge'],
-      id: data['id'],
+      postId: data['postId'],
       roomId: data['roomId'] ?? '',
       uid: data['uid'] ?? '',
-      type: data['type'],
       senderUid: data['senderUid'],
-      action: data['action'] ?? '',
     );
   }
 }

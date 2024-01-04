@@ -7,11 +7,7 @@
 
 ## 설치
 
-- package 설치
-
-- security rules 설치
-
-- [관리자 지정](admin.md)
+See install.md
 
 
 
@@ -32,7 +28,7 @@
 - DB 구조 예
   - 아래와 같이 하면, 사용자가 사진을 수정한 날짜 순서로 회원 사진이 있는 사용자만 목록 할 수 있다.
 
-`/user-photos/<uid>/ { updatedAt: ..., photoUrl: ... }`
+`/user-profile-photos/<uid>/ { updatedAt: ..., photoUrl: ... }`
 
 
 

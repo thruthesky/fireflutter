@@ -45,6 +45,7 @@ export 'src/chat/widgets/default_chat_room_edit.dialog.dart';
 export 'src/chat/widgets/chat.new_message.dart';
 export 'src/chat/widgets/chat.room_avatar.dart';
 export 'src/chat/widgets/chat.room_list_tile.dart';
+export 'src/chat/widgets/chat.room.dart';
 
 /// Database
 export 'src/database.functions.dart';

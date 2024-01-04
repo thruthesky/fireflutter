@@ -27,7 +27,7 @@ class Code {
   static const String hasPhotoUrl = 'hasPhotoUrl';
   static const String profileViewNotification = 'profileViewNotification';
 
-  static const String userPhotos = 'user-photos';
+  static const String userProfilePhotos = 'user-profile-photos';
 
   static const String order = 'order';
   static const String singleChatOrder = 'singleChatOrder';

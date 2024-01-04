@@ -5,7 +5,13 @@
 예를 들면, 회원 정보 수정이나, 공개 프로필 페이지 등은 바로 동작을 하는 상태이다. 이러한 UI 는 customize 할 수 있다.
 
 
-## 사용자 데이터베이스
+## User database structure
+
+
+
+- The user data is saved under `/users/<uid>`.
+
+ `createdAt` has the time of the first login. This is the account creation time.
 
 
 사용자의 본명 또는 화면에 나타나지 않는 이름은 `name` 필드에 저장한다.
@@ -15,6 +21,17 @@
 `isVerified` 는 관리자만 수정 할 수 있는 필드이다. 비록 사용자 문서에 들어 있어도 사용자가 수정 할 수 없다. 관리자가 직접 수동으로 회원 신분증을 확인하고 영상 통화를 한 다음 `isVerified` 에 true 를 지정하면 된다.
 
 `gender` 는 `M` 또는 `F` 의 값을 가질 수 있으며, null (필드가 없는 상태) 상태가 될 수도 있다. 참고로, `isVerified` 가 true 일 때에만 성별 여부를 믿을 수 있다. 즉, `isVerified` 가 true 가 아니면, `gender` 정보도 가짜일 수 있다.
+
+
+
+
+
+- User profile photo is saved under `/users/<uid>` and `/user-profile-photos/<uid>`.
+  - The reason why it saves the photo url into `/user-profile-photos` is to list the users who has profile photo.
+    Without `/user-profile-photos` node, It can list with `/users` data but it cannot sort by time.
+  - `/user-profile-photos/<uid>` has `updatedAt` field that is updated whenever the user changes profile photo.
+  - It is managed by `UserModel`.
+
 
 
 ## 사용자 UI 커스터마이징

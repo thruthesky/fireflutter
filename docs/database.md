@@ -3,18 +3,9 @@
 - Realtime Database 위주로 사용을 하는데, 가장 큰 이유는 속도 때문이다. 물론 부가적으로 비용을 절감을 할 수 있다. 그러나, Firestore 보다는 검색 필터링 옵션이 부족하므로, 필요에 따라서 Firestore 에 데이터를 나누어 저장 할 필요가 있다.
 
 
-- 데이터베이스 node 에서 여러 단어가 들어가는 경우, `-` 로 구분 짓는다. 예, `user-photos`
+- 데이터베이스 node 에서 여러 단어가 들어가는 경우, `-` 로 구분 짓는다. 예, `user-profile-photos`
 
 
-## 사용자 정보
+## User Database
 
-- `/users/<uid>` 에 저장
-  - `createdAt` 은 처음 로그인 시간
-
-
-
-- `/user-photos/<uid>` 는 사용자가 프로필 사진을 업로드 할 때 마다 갱신된다.
-  - `{updatedAt: ..., photoUrl: ...}` 와 같은 값이 저장된다. 이를 바탕으로 최근에 사진을 변경한 사용자 순서로 목록 할 수 있다.
-  - 회원이 사진을 업로드/삭제 할 때, `UserModel` 내에서 자동으로 처리된다.
-
-
+See user document.

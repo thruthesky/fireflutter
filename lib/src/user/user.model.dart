@@ -17,12 +17,10 @@ class UserModel {
   bool isAdmin;
   bool isVerified;
 
-  DatabaseReference get ref =>
-      FirebaseDatabase.instance.ref('users').child(uid);
+  DatabaseReference get ref => FirebaseDatabase.instance.ref('users').child(uid);
 
   /// See README.md
-  DatabaseReference get photoRef =>
-      FirebaseDatabase.instance.ref('user-photos').child(uid);
+  DatabaseReference get photoRef => FirebaseDatabase.instance.ref('user-profile-photos').child(uid);
 
   UserModel({
     required this.uid,
