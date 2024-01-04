@@ -37,8 +37,7 @@ export class MessagingService {
             console.log('message', message);
             promises.push(getMessaging().send(message));
         }
-
-
+        
         return Promise.allSettled(promises);
     }
 }
