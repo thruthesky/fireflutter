@@ -18,3 +18,6 @@ See the following documents:
 - [Guideline](https://thruthesky.github.io/fireship/)
 
 
+## Issues
+
+Create issues on github.
