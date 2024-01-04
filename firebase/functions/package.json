@@ -7,7 +7,7 @@
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
+    "deploy": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:sendPushNotifications",
     "logs": "firebase functions:log"
   },
   "engines": {
