@@ -14,7 +14,9 @@ export class MessagingService {
              * @param {string} title message title
              * @param {string} body message body
              * 
-             * It returns the results of push notification in a map like below,
+             * It returns the error results of push notification in a map like
+             * below. And it only returns the tokens that has error results.
+             * The tokens that succeed (without error) will not be returned.
              * 
              * ```
              * {
@@ -29,7 +31,7 @@ export class MessagingService {
         tokens: string[],
         title: string,
         body: string,
-        data: {[key: string] : string}
+        data: { [key: string]: string }
     ) {
         const promises = [];
 
@@ -39,7 +41,7 @@ export class MessagingService {
         for (const token of newTokens) {
             const message = {
                 notification: { title, body },
-                data:data,
+                data: data,
                 token: token,
             };
             console.log('message', message);
@@ -56,19 +58,15 @@ export class MessagingService {
         }
 
         const newResponses: { [token: string]: any; } = {};
+
         for (let i = 0; i < res.length; i++) {
             const status: string = res[i].status;
             if (status == 'fulfilled') {
-                newResponses[newTokens[i]] = '';
                 continue;
             }
             const reason = (res[i] as PromiseRejectedResult).reason;
+            newResponses[newTokens[i]] = reason['errorInfo']['code'];
 
-            const errorCode = reason['errorInfo']['code'];
-
-            if(errorCode !== 'messaging/invalid-argument'){
-                newResponses[newTokens[i]] = errorCode;
-            }
         }
         return newResponses;
 
