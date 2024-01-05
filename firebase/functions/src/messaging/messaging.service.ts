@@ -28,7 +28,8 @@ export class MessagingService {
     static async sendNotificationToTokens(
         tokens: string[],
         title: string,
-        body: string
+        body: string,
+        data: {[key: string] : string}
     ) {
         const promises = [];
 
@@ -38,13 +39,9 @@ export class MessagingService {
         for (const token of newTokens) {
             const message = {
                 notification: { title, body },
-                data: {
-                    score: '850',
-                    time: '2:45'
-                },
+                data:data,
                 token: token,
             };
-
             console.log('message', message);
             promises.push(getMessaging().send(message));
         }
@@ -67,9 +64,12 @@ export class MessagingService {
             }
             const reason = (res[i] as PromiseRejectedResult).reason;
 
-            newResponses[newTokens[i]] = reason['errorInfo']['code'];
-        }
+            const errorCode = reason['errorInfo']['code'];
 
+            if(errorCode !== 'messaging/invalid-argument'){
+                newResponses[newTokens[i]] = errorCode;
+            }
+        }
         return newResponses;
 
     }
