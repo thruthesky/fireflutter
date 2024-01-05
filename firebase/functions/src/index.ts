@@ -13,12 +13,16 @@ initializeApp();
  */
 export const sendPushNotifications = onRequest(async (request, response) => {
   logger.info("Hello logs!", {structuredData: true});
-  response.send(
-    await MessagingService.sendNotificationToTokens(
-        request.query["tokens"] as string[],
-        request.query["title"] as string,
-        request.query["body"] as string,
-        request.query["data"] as { [key: string]: string }
-    )
-  );
+  try {
+    response.send(
+      await MessagingService.sendNotificationToTokens(
+          request.query["tokens"] as string[],
+          request.query["title"] as string,
+          request.query["body"] as string,
+          request.query["data"] as { [key: string]: string }
+      )
+    );
+  } catch (e) {
+    console.error(e);
+  }
 });
