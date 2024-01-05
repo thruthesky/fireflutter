@@ -14,6 +14,7 @@ class ChatRoomModel {
   int? groupChatOrder;
   int? openGroupChatOrder;
   String? name;
+  String? iconUrl;
   String? photoUrl;
   String? description;
   String? master;
@@ -63,6 +64,7 @@ class ChatRoomModel {
     this.groupChatOrder,
     this.openGroupChatOrder,
     this.name,
+    this.iconUrl,
     this.photoUrl,
     this.description,
     this.master,
@@ -101,6 +103,7 @@ class ChatRoomModel {
       groupChatOrder: json['groupChatOrder'] as int?,
       openGroupChatOrder: json['openGroupChatOrder'] as int?,
       name: json['name'] as String?,
+      iconUrl: json['iconUrl'] as String?,
       photoUrl: json['photoUrl'] as String?,
       description: json['description'] as String?,
       master: json['master'] as String?,
@@ -123,6 +126,7 @@ class ChatRoomModel {
       'groupChatOrder': groupChatOrder,
       'openGroupChatOrder': openGroupChatOrder,
       'name': name,
+      'iconUrl': iconUrl,
       'photoUrl': photoUrl,
       'description': description,
       'master': master,
@@ -207,6 +211,7 @@ class ChatRoomModel {
     groupChatOrder = room.groupChatOrder;
     openGroupChatOrder = room.openGroupChatOrder;
     name = room.name;
+    iconUrl = room.iconUrl;
     photoUrl = room.photoUrl;
     description = room.description;
     master = room.master;
@@ -253,12 +258,14 @@ class ChatRoomModel {
     String? uid,
     String? roomId,
     String? name,
+    String? iconUrl,
     String? description,
     bool? isOpenGroupChat,
   }) async {
     DatabaseReference ref;
     final int minusTime = DateTime.now().millisecondsSinceEpoch * -1;
     if (uid != null) {
+      // 1:1 채팅방
       ref = ChatService.instance.roomRef(singleChatRoomId(uid));
       await ref.update({
         Code.singleChatOrder: minusTime,
@@ -266,7 +273,7 @@ class ChatRoomModel {
         Code.updatedAt: ServerValue.timestamp,
       });
     } else if (roomId != null && isSingleChatRoom(roomId)) {
-      // 채팅 방 ID 가 1:1 채팅방?
+      // 1:1 채팅방 - 채팅 방 ID 가 1:1 채팅방 ID
       ref = ChatService.instance.roomRef(roomId);
       await ref.update({
         Code.singleChatOrder: minusTime,
@@ -283,6 +290,7 @@ class ChatRoomModel {
       final myUid = FirebaseAuth.instance.currentUser!.uid;
       final data = {
         Code.name: name,
+        Code.iconUrl: iconUrl,
         Code.description: description,
         Code.groupChatOrder: minusTime,
         Code.openGroupChatOrder: isOpenGroupChat == null ? null : minusTime,
@@ -297,6 +305,7 @@ class ChatRoomModel {
 
   Future update({
     String? name,
+    String? iconUrl,
     String? description,
     bool? isOpenGroupChat,
     String? gender,
@@ -306,6 +315,7 @@ class ChatRoomModel {
   }) async {
     final data = {
       Code.name: name,
+      Code.iconUrl: iconUrl,
       Code.description: description,
       Code.updatedAt: ServerValue.timestamp,
       Code.isVerifiedOnly: isVerifiedOnly,

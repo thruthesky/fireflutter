@@ -45,6 +45,8 @@ class Code {
   static const String urlVerified = 'urlVerified';
   static const String uploadVerified = 'uploadVerified';
 
+  static const String iconUrl = 'iconUrl';
+
   /// Label, texts, buttons,
   static const String dismiss = 'dismiss';
 
