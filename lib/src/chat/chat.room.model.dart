@@ -49,8 +49,7 @@ class ChatRoomModel {
   bool get isOpenGroupChat => openGroupChatOrder != null;
 
   /// [joined] 현재 사용자가 입장해 있으면, 즉 [users] 에 현재 사용자의 UID 가 있으면, true 를 리턴한다.
-  bool get joined =>
-      users?.containsKey(FirebaseAuth.instance.currentUser!.uid) ?? false;
+  bool get joined => users?.containsKey(FirebaseAuth.instance.currentUser!.uid) ?? false;
 
   ChatRoomModel({
     required this.ref,
@@ -95,12 +94,8 @@ class ChatRoomModel {
       key: json['key'],
       text: json['text'] as String?,
       url: json['url'] as String?,
-      updatedAt: json['updatedAt'] is int
-          ? json['updatedAt']
-          : int.parse(json['updatedAt'] ?? '0'),
-      createdAt: json['createdAt'] is int
-          ? json['createdAt']
-          : int.parse(json['createdAt'] ?? '0'),
+      updatedAt: json['updatedAt'] is int ? json['updatedAt'] : int.parse(json['updatedAt'] ?? '0'),
+      createdAt: json['createdAt'] is int ? json['createdAt'] : int.parse(json['createdAt'] ?? '0'),
       newMessage: json['newMessage'] ?? 0,
       singleChatOrder: json['singleChatOrder'] as int?,
       groupChatOrder: json['groupChatOrder'] as int?,
@@ -112,14 +107,9 @@ class ChatRoomModel {
       isVerifiedOnly: json['isVerifiedOnly'] ?? false,
       urlVerified: json['urlVerified'] ?? false,
       uploadVerified: json['uploadVerified'] ?? false,
-      users:
-          json['users'] == null ? null : Map<String, bool>.from(json['users']),
-      noOfUsers: json['noOfUsers'] is int
-          ? json['noOfUsers']
-          : int.parse(json['noOfUsers'] ?? '0'),
-      order: json['order'] is int
-          ? json['order']
-          : int.parse(json['order'] ?? '0'),
+      users: json['users'] == null ? null : Map<String, bool>.from(json['users']),
+      noOfUsers: json['noOfUsers'] is int ? json['noOfUsers'] : int.parse(json['noOfUsers'] ?? '0'),
+      order: json['order'] is int ? json['order'] : int.parse(json['order'] ?? '0'),
     );
   }
   Map<String, dynamic> toJson() {
@@ -183,8 +173,7 @@ class ChatRoomModel {
   static Future<ChatRoomModel> fromReference(DatabaseReference ref) async {
     final event = await ref.once();
     if (event.snapshot.exists == false) {
-      throw Exception(
-          'ChatRoomModel.fromReference: ${ref.path} does not exist.');
+      throw Exception('ChatRoomModel.fromReference: ${ref.path} does not exist.');
     }
     return ChatRoomModel.fromSnapshot(event.snapshot);
   }
@@ -319,6 +308,7 @@ class ChatRoomModel {
   }
 
   /// 채팅방에 남아 있는 사람이 없으면, 방을 삭제한다.
+  /// If there are no remaining people in the chat room, the room is deleted.
   Future<void> deleteIfNoUsers() async {
     final room = await ChatRoomModel.get(id);
 
@@ -336,12 +326,9 @@ class ChatRoomModel {
   List<String>? get getSubscribedUids {
     final List<String>? uids = users?.entries.fold(
       [],
-      (previousValue, element) =>
-          element.value ? (previousValue?..add(element.key)) : previousValue,
+      (previousValue, element) => element.value ? (previousValue?..add(element.key)) : previousValue,
     );
     if (uids == null) return null;
-    return uids
-        .where((element) => element != FirebaseAuth.instance.currentUser!.uid)
-        .toList();
+    return uids.where((element) => element != FirebaseAuth.instance.currentUser!.uid).toList();
   }
 }

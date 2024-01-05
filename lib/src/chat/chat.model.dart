@@ -8,7 +8,11 @@ import 'package:fireship/ref.dart';
 /// ChatModel
 ///
 /// 이 모델은 채팅방의 데이터 모델이 아니라, 로직을 담고 있는 로직 모델이다.
+/// This model is not a data model for the chat room but a logic model containing the logic.
+///
 /// ChatService 에 모든 것을 다 집어 넣으면, 각 채팅 방마다 관리가 어렵다. 그래서 동시에 두개의 채팅방을 열 수 없다.
+/// If everything is put into ChatService, it becomes challenging to manage each chat room.
+/// Therefore, it is not possible to open two chat rooms simultaneously.
 class ChatModel {
   /// Set the current room.
   ChatRoomModel room;
@@ -16,16 +20,13 @@ class ChatModel {
   DatabaseReference get roomsRef => rtdb.ref().child('chat-rooms');
   DatabaseReference get messageseRef => rtdb.ref().child('chat-messages');
   DatabaseReference roomRef(String roomId) => roomsRef.child(roomId);
-  DatabaseReference messageRef({required String roomId}) =>
-      rtdb.ref().child('chat-messages').child(roomId);
+  DatabaseReference messageRef({required String roomId}) => rtdb.ref().child('chat-messages').child(roomId);
 
   /// [roomUserRef] is the reference to the users node under the group chat room. Ex) /chat-rooms/{roomId}/users/{my-uid}
-  DatabaseReference roomUserRef(String roomId, String uid) =>
-      rtdb.ref().child('chat-rooms/$roomId/users/$uid');
+  DatabaseReference roomUserRef(String roomId, String uid) => rtdb.ref().child('chat-rooms/$roomId/users/$uid');
 
   DatabaseReference get joinsRef => rtdb.ref().child('chat-joins');
-  DatabaseReference joinRef(String myUid, String roomId) =>
-      joinsRef.child(myUid).child(roomId);
+  DatabaseReference joinRef(String myUid, String roomId) => joinsRef.child(myUid).child(roomId);
 
   // This is used to update the last message in the chat room list per user in /chat-joins
   String joinPath(String roomId, String uid) => '/chat-joins/$uid/$roomId';
@@ -59,8 +60,7 @@ class ChatModel {
     }
 
     ///
-    service.roomMessageOrder[room.id] =
-        (service.roomMessageOrder[room.id] ?? 0) - 1;
+    service.roomMessageOrder[room.id] = (service.roomMessageOrder[room.id] ?? 0) - 1;
 
     /// 참고, 실제 메시지를 보내기 전에, 채팅방 자체를 먼저 업데이트 해 버린다.
     ///
@@ -69,8 +69,7 @@ class ChatModel {
     /// B 의 채팅방의 newMessage 가 0 으로 된다.
     /// 그리고, 나서 updateJoin() 을 하면, B 의 채팅 메시지가 1이 되는 것이다.
     /// 즉, 0이 되어야하는데 1이 되는 상황이 발생한다. 그래서, updateJoin() 이 먼저 호출되어야 한다.
-    Map<String, dynamic> multiUpdateData =
-        _getMultiUpdateForChatJoinLastMessage(text: text, url: url);
+    Map<String, dynamic> multiUpdateData = _getMultiUpdateForChatJoinLastMessage(text: text, url: url);
 
     /// Save chat message under `/chat-messages`.
     // 저장할 채팅 데이터
@@ -170,15 +169,11 @@ class ChatModel {
     // chat room info
     final data = {
       /// 그룹 채팅방 이름 또는 보내는 사람 이름
-      'name': room.isSingleChat
-          ? UserService.instance.user?.displayName
-          : (room.name ?? ''),
+      'name': room.isSingleChat ? UserService.instance.user?.displayName : (room.name ?? ''),
 
       /// 1:1 채팅에서는 마지막 보낸 사람 사진 (나중에 덮어 쓰여질 수 있음.)
       /// 그룹 채팅에서는 방 사진.
-      'photoUrl': room.isSingleChat
-          ? UserService.instance.user?.photoUrl
-          : room.photoUrl,
+      'photoUrl': room.isSingleChat ? UserService.instance.user?.photoUrl : room.photoUrl,
 
       /// 그룹 채팅의 경우, 사용자 수
       'noOfUsers': room.isGroupChat ? room.users?.length : null,
@@ -196,10 +191,11 @@ class ChatModel {
     return data;
   }
 
-  /// 채팅방 나가기
+  /// 채팅방 나가기 (Exit the chat room)
   ///
   /// 상대방의 채팅방 목록에서는 삭제하지 않고, 나의 채팅방 목록에서만 삭제한다.
-  /// 즉, 상대방은 모르게 한다.
+  /// It is deleted only from my chat room list without removing it from the other person's chat room list.
+  /// 즉, 상대방은 모르게 한다. (In other words, the other person remains unaware.)
   ///
   /// For 1:1 chat, just remove the chat room node from /chat-rooms/{myUid}/{otherUid}
   /// For group chat, remove the chat room node from /chat-rooms/{myUid}/{groupChatId}
@@ -207,8 +203,8 @@ class ChatModel {
   leave() {
     joinRef(myUid!, room.id).remove();
     roomUserRef(room.id, myUid!).remove();
-
-    /// 채팅 방에 인원이 더 이상 없으면, 채팅 방을 삭제한다.
+    // 채팅 방에 인원이 더 이상 없으면, 채팅 방을 삭제한다.
+    // If there are no more people in the chat room, the chat room is deleted.
     room.deleteIfNoUsers();
   }
 
@@ -222,8 +218,7 @@ class ChatModel {
     if (ChatService.instance.roomMessageOrder[room.id] == null) {
       ChatService.instance.roomMessageOrder[room.id] = 0;
     }
-    if (order != null &&
-        order < ChatService.instance.roomMessageOrder[room.id]!) {
+    if (order != null && order < ChatService.instance.roomMessageOrder[room.id]!) {
       ChatService.instance.roomMessageOrder[room.id] = order;
     }
   }
@@ -290,8 +285,7 @@ class ChatModel {
   /// 채팅방으로 접속을 하면, `if (currentMessageOrder == 0 ) return fales` 에 의해서 항상 false 가
   /// 리턴된다. 그래서, 처음 채팅방에 진입을 할 때에는 [snapshot.isFetching] 을 통해서 newMessage 를 초기화
   /// 해야 한다.
-  bool isLoadingNewMessage(
-      String messageRoomId, FirebaseQueryBuilderSnapshot snapshot) {
+  bool isLoadingNewMessage(String messageRoomId, FirebaseQueryBuilderSnapshot snapshot) {
     if (snapshot.docs.isEmpty) return false;
 
     final lastMessage = ChatMessageModel.fromSnapshot(snapshot.docs.first);
