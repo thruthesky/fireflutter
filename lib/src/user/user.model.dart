@@ -9,6 +9,7 @@ class UserModel {
   String? phoneNumber;
   String? displayName;
   String? photoUrl;
+  String? profileBackgroundImageUrl;
   bool isDisabled;
   int? birthYear;
   int? birthMonth;
@@ -28,6 +29,7 @@ class UserModel {
     this.phoneNumber,
     this.displayName,
     this.photoUrl,
+    this.profileBackgroundImageUrl,
     this.isDisabled = false,
     this.birthYear,
     this.birthMonth,
@@ -65,6 +67,7 @@ class UserModel {
       phoneNumber: json['phoneNumber'],
       displayName: json['displayName'],
       photoUrl: json['photoUrl'],
+      profileBackgroundImageUrl: json['profileBackgroundImageUrl'],
       isDisabled: json['isDisabled'] ?? false,
       birthYear: json['birthYear'],
       birthMonth: json['birthMonth'],
@@ -82,6 +85,7 @@ class UserModel {
       'phoneNumber': phoneNumber,
       'displayName': displayName,
       'photoUrl': photoUrl,
+      'profileBackgroundImageUrl': profileBackgroundImageUrl,
       'isDisabled': isDisabled,
       'birthYear': birthYear,
       'birthMonth': birthMonth,
@@ -106,6 +110,7 @@ class UserModel {
       phoneNumber = user.phoneNumber;
       displayName = user.displayName;
       photoUrl = user.photoUrl;
+      profileBackgroundImageUrl = user.profileBackgroundImageUrl;
       isDisabled = user.isDisabled;
       birthYear = user.birthYear;
       birthMonth = user.birthMonth;
@@ -146,6 +151,7 @@ class UserModel {
     String? name,
     String? displayName,
     String? photoUrl,
+    String? profileBackgroundImageUrl,
     int? birthYear,
     int? birthMonth,
     int? birthDay,
@@ -156,6 +162,7 @@ class UserModel {
       if (name != null) 'name': name,
       if (displayName != null) 'displayName': displayName,
       if (photoUrl != null) 'photoUrl': photoUrl,
+      if (profileBackgroundImageUrl != null) 'profileBackgroundImageUrl': profileBackgroundImageUrl,
       if (photoUrl != null) 'hasPhotoUrl': true,
       if (birthYear != null) 'birthYear': birthYear,
       if (birthMonth != null) 'birthMonth': birthMonth,

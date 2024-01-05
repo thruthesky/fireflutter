@@ -59,6 +59,9 @@ export 'src/storage/storage.customize.dart';
 export 'src/storage/widgets/default_upload_selection.bottom_sheet.dart';
 export 'src/storage/widgets/default_image_carousel.scaffold.dart';
 
+/// Translation
+export 'src/translation/translation.service.dart';
+
 /// User
 export 'src/user/user.model.dart';
 export 'src/user/user.photo.model.dart';

@@ -13,8 +13,7 @@ class DefaultPublicProfileScreen extends StatelessWidget {
         children: [
           Positioned.fill(
             child: CachedNetworkImage(
-                imageUrl: 'https://picsum.photos/id/171/400/900',
-                fit: BoxFit.cover),
+                imageUrl: 'https://picsum.photos/id/171/400/900', fit: BoxFit.cover),
           ),
           Positioned(
             top: 0,
@@ -71,8 +70,7 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                           Icons.settings_outlined,
                           color: Colors.white,
                         ),
-                        onPressed: () =>
-                            UserService.instance.showProfile(context),
+                        onPressed: () => UserService.instance.showProfile(context),
                       ),
                   ],
                 ),
@@ -97,22 +95,9 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        ChatService.instance
-                            .showChatRoom(context: context, uid: uid);
+                        ChatService.instance.showChatRoom(context: context, uid: uid);
                       },
                       child: const Text('채팅'),
-                    ),
-                    const SizedBox(width: 8),
-                    ElevatedButton(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content:
-                                Text('TODO: Open loign user profile screen'),
-                          ),
-                        );
-                      },
-                      child: const Text('팔로우'),
                     ),
                   ],
                 ),

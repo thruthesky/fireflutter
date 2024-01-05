@@ -11,6 +11,7 @@ For instance, simply set the text code as following.
 
 ```dart
 TextService.instance.texts['name'] = '이름';
+TranslationService.instance.texts[Code.profileUpdate] = '프로필 수정';
 ```
 
 

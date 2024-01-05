@@ -8,7 +8,6 @@ class Code {
   static const String chatRoomNotVerified = 'chatRoomNotVerified';
 
   /// Fields and constants
-
   static const String uid = 'uid';
   static const String name = 'name';
   static const String description = 'description';
@@ -44,4 +43,7 @@ class Code {
   static const String isVerifiedOnly = 'isVerifiedOnly';
   static const String urlVerified = 'urlVerified';
   static const String uploadVerified = 'uploadVerified';
+
+  /// User and Profile
+  static const String profileUpdate = 'profileUpdate';
 }
