@@ -152,7 +152,6 @@ RTDB 의 특성상 채팅방을 목록 할 때,
 Here is an example code to show chat room list.
 
 ```dart
-
 FirebaseDatabaseQueryBuilder(
   query: ChatService.instance.joinsRef
       .child(myUid!)
@@ -163,24 +162,12 @@ FirebaseDatabaseQueryBuilder(
     if (snapshot.isFetching) {
       return const Center(child: CircularProgressIndicator());
     }
-
     if (snapshot.hasError) {
       return Text('Something went wrong! ${snapshot.error}');
     }
-
-    // display if there is no more data
     if (snapshot.hasMore == false && snapshot.docs.isEmpty) {
-      return EmptyList(
-        title: '친구가 없습니다',
-        subtitle: '친구 찾기 기능을 통해서 친구를 추가해보세요',
-        iconData: FontAwesomeIcons.thinFaceSadTear,
-        onTap: () {
-          context.push(SearchScreen.routeName);
-        },
-        buttonText: '친구 찾기',
-      );
+      return Text('No chat rooms');
     }
-
     return ListView.builder(
       padding: EdgeInsets.zero,
       itemCount: snapshot.docs.length,
@@ -188,9 +175,7 @@ FirebaseDatabaseQueryBuilder(
         if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
           snapshot.fetchMore();
         }
-
         final room = ChatRoomModel.fromSnapshot(snapshot.docs[index]);
-
         return ChatRoomListTile(room: room);
       },
     );
