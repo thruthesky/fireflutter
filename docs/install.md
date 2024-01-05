@@ -21,7 +21,6 @@ And set the end point URL to `MessagingService.instance.init(sendPushNotificatio
 
 ## Admin
 
-
 - See [Admin Doc](admin.md)
 
 

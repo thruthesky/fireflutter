@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
+import 'package:material_color_utilities/material_color_utilities.dart';
 
 class DefaultProfileScreen extends StatefulWidget {
   const DefaultProfileScreen({super.key});
@@ -9,6 +11,7 @@ class DefaultProfileScreen extends StatefulWidget {
 }
 
 class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
+  double? progress;
   final nameController = TextEditingController();
   UserModel get user => UserService.instance.user!;
 
@@ -22,7 +25,7 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Text(Code.profileUpdate.tr),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -33,10 +36,83 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
               Center(
                 child: Column(
                   children: [
-                    DefaultAvatarUpdate(
-                      uid: UserService.instance.user!.uid,
-                      radius: 80,
-                      delete: true,
+                    Stack(
+                      children: [
+                        MyDoc(builder: (my) {
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 60),
+                            width: double.infinity,
+                            height: 200,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              image: DecorationImage(
+                                image: CachedNetworkImageProvider(
+                                  my?.profileBackgroundImageUrl ?? blackUrl,
+                                ),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        }),
+                        Container(
+                          height: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            gradient: const LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.black54,
+                                  Colors.transparent,
+                                ]),
+                          ),
+                        ),
+                        Positioned(
+                          right: 0,
+                          child: progress != null
+                              ? Text('$progress %')
+                              : TextButton.icon(
+                                  onPressed: () async {
+                                    final url = await StorageService.instance.upload(
+                                      context: context,
+                                      progress: (p) => setState(() => progress = p),
+                                      complete: () => setState(() => progress = null),
+                                    );
+                                    if (url == null) return;
+
+                                    final oldUrl =
+                                        UserService.instance.user?.profileBackgroundImageUrl;
+
+                                    await user.update(
+                                      profileBackgroundImageUrl: url,
+                                    );
+
+                                    /// Delete exisitng photo
+                                    await StorageService.instance.delete(oldUrl);
+                                  },
+                                  icon: const Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.white,
+                                  ),
+                                  label: const Text(
+                                    '배경 사진',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Center(
+                            child: DefaultAvatarUpdate(
+                              uid: UserService.instance.user!.uid,
+                              radius: 80,
+                              delete: false,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 8),
                     const Text("프로필 사진"),

@@ -2,11 +2,11 @@ import 'package:fireship/fireship.dart';
 
 class TranslationService {
   static TranslationService? _instance;
-  static TranslationService get instance =>
-      _instance ??= TranslationService._();
+  static TranslationService get instance => _instance ??= TranslationService._();
 
   /// Define your texts here. You can update this map from the app.
   Map<String, String> texts = {
+    Code.profileUpdate: 'Profile Update',
     Code.notJoined: 'You have not joined this room.',
   };
 
