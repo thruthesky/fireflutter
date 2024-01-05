@@ -47,14 +47,90 @@ ChatModel 만드는 것 만으로 채팅방이 만들어지지 않는다. 그래
 
 ### 채팅방 메시지 전송 (Sending Chat Room Messages)
 
+To send Chat message into a room, `ChatMessageInputBox()` can be used as Input box.
+
 ```dart
-// 사용자 로그인
-await loginOrRegister(
-    email: 'test$i@email.com',
-    password: '12345a',
-    photoUrl: 'https://picsum.photos/id/$i/300/300',
+// the ChatRoomModel is required. Get it.
+ChatRoomModel room = ChatRoomModel.fromSnaphot(snapshot);
+
+// the `chat` should be the model of the room
+ChatModel chat = ChatModel(room: room);
+
+ChatMessageInputBox(
+  chat: chat,
+),
+```
+
+However, for more customization, here is the actual code to send a chat message. Edit these as needed.
+
+```dart
+// the ChatRoomModel is required. Get it.
+ChatRoomModel room = ChatRoomModel.fromSnaphot(snapshot);
+
+ChatModel chat = ChatModel(room: room);
+
+// This may throw error if user is not logged in.
+chat.sendMessage(text: 'Text Message to send', url: 'photo.url.com');
+
+```
+
+### Getting Chat Messages in a Room
+
+To display chat messages in a room, `ChatMessageListView()` can be used.
+
+```dart
+// the ChatRoomModel is required. Get it.
+ChatRoomModel room = ChatRoomModel.fromSnaphot(snapshot);
+
+// the `chat` should be the model of the room
+ChatModel chat = ChatModel(room: room);
+
+ChatMessageListView(
+  chat: chat,
+),
+```
+
+For customization, these can be used. Edit them as needed:
+
+```dart
+DatabaseReference ref = ChatService.instance.messageRef(roomId: roomId).orderByChild('order');
+
+FirebaseDatabaseQueryBuilder(
+  pageSize: 100,
+  query: ref,
+  builder: (context, snapshot, _) {
+    if (snapshot.isFetching) {
+      return CircularProgressIndicator();
+    }
+    if (snapshot.hasError) {
+      return Text('Something went wrong! ${snapshot.error}');
+    }
+    if (snapshot.docs.isEmpty) {
+      return Center(child: Text('There is no message, yet.'));
+    }
+    // finally return the list
+    return ListView.builder(
+      reverse: true,
+      itemCount: snapshot.docs.length,
+      itemBuilder: (context, index) {
+        if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+          snapshot.fetchMore();
+        }
+        final message = ChatMessageModel.fromSnapshot(snapshot.docs[index]);
+
+        /// 채팅방의 맨 마지막 메시지의 order 를 지정.
+        chat.resetRoomMessageOrder(order: message.order);
+
+        return YourCustomChatBubble(
+          message: message,
+        );
+      },
+
+    );
+  },
 );
-// 메시지 전송
+
+
 
 ```
 
@@ -72,6 +148,56 @@ RTDB 의 특성상 채팅방을 목록 할 때,
 
 그래서, 채팅방 목록 전체를 다 가져와서 한번에 표시한다. 즉, 나의 1:1 채팅방 목록을 할 때에는 나의 1:1 채팅방 목록 전체를 다 가져와서 날싸순으로 표시를 하는 것이다. 이것을 나의 전체 그룹 채팅, 그리고 모든 오픈 채팅과 동일하게 표시를 한다.
 다만, 이렇게 하려면 개개인(사용자)의 채팅 방수가 너무 많으면 안된다. 전반적으로 1인당 500개 이하는 무난 할 것 같다. 2천개 이하도 괜찮을 것 같기도 하다. 다만 한 사용자의 방 수가 2천 개 이상 이면 좀 무리가 되지 않을까 싶다. 그래서 방수를 제한하는 것도 하나의 방법이겠다. 또한 오픈 챗의 개수가 2천개 이상 넘어가도 문제가 될 것 같다.
+
+Here is an example code to show chat room list.
+
+```dart
+
+FirebaseDatabaseQueryBuilder(
+  query: ChatService.instance.joinsRef
+      .child(myUid!)
+      .orderByChild(Code.order)
+      .startAt(false),
+  pageSize: 50,
+  builder: (context, snapshot, _) {
+    if (snapshot.isFetching) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (snapshot.hasError) {
+      return Text('Something went wrong! ${snapshot.error}');
+    }
+
+    // display if there is no more data
+    if (snapshot.hasMore == false && snapshot.docs.isEmpty) {
+      return EmptyList(
+        title: '친구가 없습니다',
+        subtitle: '친구 찾기 기능을 통해서 친구를 추가해보세요',
+        iconData: FontAwesomeIcons.thinFaceSadTear,
+        onTap: () {
+          context.push(SearchScreen.routeName);
+        },
+        buttonText: '친구 찾기',
+      );
+    }
+
+    return ListView.builder(
+      padding: EdgeInsets.zero,
+      itemCount: snapshot.docs.length,
+      itemBuilder: (context, index) {
+        if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+          snapshot.fetchMore();
+        }
+
+        final room = ChatRoomModel.fromSnapshot(snapshot.docs[index]);
+
+        return ChatRoomListTile(room: room);
+      },
+    );
+  },
+);
+
+```
 
 ## 관리 (Management)
 
