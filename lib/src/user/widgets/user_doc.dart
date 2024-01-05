@@ -37,7 +37,7 @@ class UserDoc extends StatelessWidget {
   const UserDoc({
     super.key,
     required this.uid,
-    required this.field,
+    this.field,
     required this.builder,
     this.cache = true,
   });

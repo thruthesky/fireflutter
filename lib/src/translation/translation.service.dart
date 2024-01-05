@@ -8,6 +8,7 @@ class TranslationService {
   Map<String, String> texts = {
     Code.profileUpdate: 'Profile Update',
     Code.notJoined: 'You have not joined this room.',
+    Code.dismiss: 'Dismiss',
   };
 
   TranslationService._() {

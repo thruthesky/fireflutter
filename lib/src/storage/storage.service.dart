@@ -70,8 +70,7 @@ class StorageService {
     }
 
     final storageRef = FirebaseStorage.instance.ref();
-    final fileRef = storageRef
-        .child(saveAs ?? "users/${myUid!}/${file.path.split('/').last}");
+    final fileRef = storageRef.child(saveAs ?? "users/${myUid!}/${file.path.split('/').last}");
     // Review: Here only Image can be compressed. File and Video cannot be compressed.
     // It may cause error if you try to compress file or video.
     // So, we should check the file type before compressing.
@@ -135,25 +134,12 @@ class StorageService {
     required BuildContext context,
     Function(double)? progress,
     Function()? complete,
-
-    // Updated the default into zero
-    // because videos and files will have problem
-    // if we compress them using FlutterImageCompress.
-    int compressQuality = 0,
+    int compressQuality = 80,
     String? path,
     String? saveAs,
     bool camera = true,
     bool gallery = true,
   }) async {
-    // final re = await showModalBottomSheet(
-    //   context: context,
-    //   builder: (_) => DefaultUploadSelectionBottomSheet(
-    //     camera: camera,
-    //     gallery: gallery,
-    //   ),
-    // );
-    // if (re == null) return null;
-
     return uploadFrom(
       source: await chooseUploadSource(context),
       progress: progress,
@@ -197,12 +183,10 @@ class StorageService {
     if (source == null) return null;
 
     if (source == ImageSource.camera) {
-      final XFile? image =
-          await ImagePicker().pickImage(source: ImageSource.camera);
+      final XFile? image = await ImagePicker().pickImage(source: ImageSource.camera);
       return image?.path;
     } else if (source == ImageSource.gallery) {
-      final XFile? image =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
+      final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
       return image?.path;
     }
     return null;
@@ -214,8 +198,8 @@ class StorageService {
     int compressQuality = 80,
     String? type,
   }) async {
-    final pickedFiles = await ImagePicker()
-        .pickMultiImage(imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
+    final pickedFiles =
+        await ImagePicker().pickMultiImage(imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
     List<XFile> xFilePicks = pickedFiles;
 
     if (xFilePicks.isEmpty) return null;
@@ -241,8 +225,7 @@ class StorageService {
     }
     showGeneralDialog(
       context: context,
-      pageBuilder: (context, _, __) =>
-          DefaultImageCarouselScaffold(urls: urls, index: index),
+      pageBuilder: (context, _, __) => DefaultImageCarouselScaffold(urls: urls, index: index),
     );
   }
 }
