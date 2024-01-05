@@ -14,6 +14,7 @@ class ChatRoomModel {
   int? groupChatOrder;
   int? openGroupChatOrder;
   String? name;
+  String? iconUrl;
   String? photoUrl;
   String? description;
   String? master;
@@ -49,8 +50,7 @@ class ChatRoomModel {
   bool get isOpenGroupChat => openGroupChatOrder != null;
 
   /// [joined] 현재 사용자가 입장해 있으면, 즉 [users] 에 현재 사용자의 UID 가 있으면, true 를 리턴한다.
-  bool get joined =>
-      users?.containsKey(FirebaseAuth.instance.currentUser!.uid) ?? false;
+  bool get joined => users?.containsKey(FirebaseAuth.instance.currentUser!.uid) ?? false;
 
   ChatRoomModel({
     required this.ref,
@@ -64,6 +64,7 @@ class ChatRoomModel {
     this.groupChatOrder,
     this.openGroupChatOrder,
     this.name,
+    this.iconUrl,
     this.photoUrl,
     this.description,
     this.master,
@@ -95,31 +96,23 @@ class ChatRoomModel {
       key: json['key'],
       text: json['text'] as String?,
       url: json['url'] as String?,
-      updatedAt: json['updatedAt'] is int
-          ? json['updatedAt']
-          : int.parse(json['updatedAt'] ?? '0'),
-      createdAt: json['createdAt'] is int
-          ? json['createdAt']
-          : int.parse(json['createdAt'] ?? '0'),
+      updatedAt: json['updatedAt'] is int ? json['updatedAt'] : int.parse(json['updatedAt'] ?? '0'),
+      createdAt: json['createdAt'] is int ? json['createdAt'] : int.parse(json['createdAt'] ?? '0'),
       newMessage: json['newMessage'] ?? 0,
       singleChatOrder: json['singleChatOrder'] as int?,
       groupChatOrder: json['groupChatOrder'] as int?,
       openGroupChatOrder: json['openGroupChatOrder'] as int?,
       name: json['name'] as String?,
+      iconUrl: json['iconUrl'] as String?,
       photoUrl: json['photoUrl'] as String?,
       description: json['description'] as String?,
       master: json['master'] as String?,
       isVerifiedOnly: json['isVerifiedOnly'] ?? false,
       urlVerified: json['urlVerified'] ?? false,
       uploadVerified: json['uploadVerified'] ?? false,
-      users:
-          json['users'] == null ? null : Map<String, bool>.from(json['users']),
-      noOfUsers: json['noOfUsers'] is int
-          ? json['noOfUsers']
-          : int.parse(json['noOfUsers'] ?? '0'),
-      order: json['order'] is int
-          ? json['order']
-          : int.parse(json['order'] ?? '0'),
+      users: json['users'] == null ? null : Map<String, bool>.from(json['users']),
+      noOfUsers: json['noOfUsers'] is int ? json['noOfUsers'] : int.parse(json['noOfUsers'] ?? '0'),
+      order: json['order'] is int ? json['order'] : int.parse(json['order'] ?? '0'),
     );
   }
   Map<String, dynamic> toJson() {
@@ -133,6 +126,7 @@ class ChatRoomModel {
       'groupChatOrder': groupChatOrder,
       'openGroupChatOrder': openGroupChatOrder,
       'name': name,
+      'iconUrl': iconUrl,
       'photoUrl': photoUrl,
       'description': description,
       'master': master,
@@ -183,8 +177,8 @@ class ChatRoomModel {
   static Future<ChatRoomModel> fromReference(DatabaseReference ref) async {
     final event = await ref.once();
     if (event.snapshot.exists == false) {
-      throw Exception(
-          'ChatRoomModel.fromReference: ${ref.path} does not exist.');
+      throw ErrorCode(Code.chatRoomNotExists);
+      // Exception('ChatRoomModel.fromReference: ${ref.path} does not exist.');
     }
     return ChatRoomModel.fromSnapshot(event.snapshot);
   }
@@ -193,15 +187,17 @@ class ChatRoomModel {
   ///
   /// Warning, this is for group chat only.
   ///
-  static Future<ChatRoomModel> get(String id) {
+  static Future<ChatRoomModel> get(String id) async {
     final ref = ChatService.instance.roomsRef.child(id);
-    return fromReference(ref);
+    return await fromReference(ref);
   }
 
   /// 현재 채팅방 정보 모델 인스턴스의 데이터를 DB 에서 다시 읽어서 리턴한다.
   ///
   /// 특히, [fromUid] 또는 [fromRoomdId] 함수를 통해서 만든 인스턴스에는 많은 정보가 빠져있는데, 실제 DB 에서
   /// 데이터를 가져와 전체 정보를 채우고자 할 때 사용하면 된다.
+  ///
+  /// 주의, 채팅방 노드가 생성되지 않았는데, 이 함수를 호출하면 [Code.chatRoomNotExists] 에러가 발생한다.
   Future<ChatRoomModel> reload() async {
     final room = await ChatRoomModel.get(id);
 
@@ -215,6 +211,7 @@ class ChatRoomModel {
     groupChatOrder = room.groupChatOrder;
     openGroupChatOrder = room.openGroupChatOrder;
     name = room.name;
+    iconUrl = room.iconUrl;
     photoUrl = room.photoUrl;
     description = room.description;
     master = room.master;
@@ -250,18 +247,25 @@ class ChatRoomModel {
   ///
   /// 주의, 채팅방이 존재하면 기존의 채팅방이 존재하면 몇 몇 속성이 덮어 쓰여진다.
   ///
+  /// 예제 - 1:1 채팅방의 경우, 그냥 상대방의 uid 만 넣어서 호출하면 된다.
+  /// ```dart
+  /// await ChatRoomModel.create(uid: otherUserUid);
+  /// ```
+  ///
   /// It creates the chat room information and it read and returns. Don't think about the speed of reading the data.
   ///
   static Future<ChatRoomModel> create({
     String? uid,
     String? roomId,
     String? name,
+    String? iconUrl,
     String? description,
     bool? isOpenGroupChat,
   }) async {
     DatabaseReference ref;
     final int minusTime = DateTime.now().millisecondsSinceEpoch * -1;
     if (uid != null) {
+      // 1:1 채팅방
       ref = ChatService.instance.roomRef(singleChatRoomId(uid));
       await ref.update({
         Code.singleChatOrder: minusTime,
@@ -269,7 +273,7 @@ class ChatRoomModel {
         Code.updatedAt: ServerValue.timestamp,
       });
     } else if (roomId != null && isSingleChatRoom(roomId)) {
-      // 채팅 방 ID 가 1:1 채팅방?
+      // 1:1 채팅방 - 채팅 방 ID 가 1:1 채팅방 ID
       ref = ChatService.instance.roomRef(roomId);
       await ref.update({
         Code.singleChatOrder: minusTime,
@@ -286,6 +290,7 @@ class ChatRoomModel {
       final myUid = FirebaseAuth.instance.currentUser!.uid;
       final data = {
         Code.name: name,
+        Code.iconUrl: iconUrl,
         Code.description: description,
         Code.groupChatOrder: minusTime,
         Code.openGroupChatOrder: isOpenGroupChat == null ? null : minusTime,
@@ -300,6 +305,7 @@ class ChatRoomModel {
 
   Future update({
     String? name,
+    String? iconUrl,
     String? description,
     bool? isOpenGroupChat,
     String? gender,
@@ -309,6 +315,7 @@ class ChatRoomModel {
   }) async {
     final data = {
       Code.name: name,
+      Code.iconUrl: iconUrl,
       Code.description: description,
       Code.updatedAt: ServerValue.timestamp,
       Code.isVerifiedOnly: isVerifiedOnly,
@@ -340,8 +347,6 @@ class ChatRoomModel {
           element.value ? (previousValue?..add(element.key)) : previousValue,
     );
     if (uids == null) return null;
-    return uids
-        .where((element) => element != FirebaseAuth.instance.currentUser!.uid)
-        .toList();
+    return uids.where((element) => element != FirebaseAuth.instance.currentUser!.uid).toList();
   }
 }

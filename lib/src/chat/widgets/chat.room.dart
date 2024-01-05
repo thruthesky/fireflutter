@@ -48,10 +48,21 @@ class _ChatRoomState extends State<ChatRoom> {
   init() async {
     /// 채팅방 정보를 읽는다.
     if (widget.room != null) {
+      //
       _chat = ChatModel(room: widget.room!);
     } else if (widget.uid != null) {
+      // 1:1 채팅 방
       _chat = ChatModel(room: ChatRoomModel.fromUid(widget.uid!));
-      await chat.room.reload();
+      try {
+        await chat.room.reload();
+      } on ErrorCode catch (e) {
+        // 1:1 채팅방이 존재하지 않는 경우, 즉, 처음 채팅을 시작하는 경우
+        if (e.code == Code.chatRoomNotExists) {
+          chat.resetRoom(room: await ChatRoomModel.create(uid: widget.uid!));
+        }
+      } catch (e) {
+        rethrow;
+      }
     } else if (widget.roomId != null) {
       _chat = ChatModel(room: ChatRoomModel.fromRoomdId(widget.roomId!));
       await chat.room.reload();

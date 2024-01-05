@@ -76,18 +76,32 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              UserAvatar(uid: uid, radius: 64),
+              UserAvatar(uid: uid, size: 100, radius: 40),
               const SizedBox(height: 8),
               UserDoc(
                 uid: uid,
-                field: Code.displayName,
-                builder: (name) => Text(
-                  name ?? 'No name',
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                builder: (data) {
+                  if (data == null) return const SizedBox.shrink();
+                  final user = UserModel.fromJson(data, uid: uid);
+                  return Column(
+                    children: [
+                      Text(
+                        user.displayName ?? 'No name',
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
-                ),
+                      if (user.stateMessage != null)
+                        Text(
+                          user.stateMessage!,
+                          style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                                color: Colors.white.withAlpha(200),
+                              ),
+                        ),
+                    ],
+                  );
+                },
               ),
               SafeArea(
                 child: Row(

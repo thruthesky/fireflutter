@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
-import 'package:material_color_utilities/material_color_utilities.dart';
 
 class DefaultProfileScreen extends StatefulWidget {
   const DefaultProfileScreen({super.key});
@@ -13,12 +12,15 @@ class DefaultProfileScreen extends StatefulWidget {
 class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
   double? progress;
   final nameController = TextEditingController();
+  final stateMessageController = TextEditingController();
+
   UserModel get user => UserService.instance.user!;
 
   @override
   void initState() {
     super.initState();
     nameController.text = user.displayName ?? '';
+    stateMessageController.text = user.stateMessage ?? '';
   }
 
   @override
@@ -70,7 +72,16 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
                         Positioned(
                           right: 0,
                           child: progress != null
-                              ? Text('$progress %')
+                              ? Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    '${(progress! * 100).toStringAsFixed(0)} %',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge!
+                                        .copyWith(color: Colors.white),
+                                  ),
+                                )
                               : TextButton.icon(
                                   onPressed: () async {
                                     final url = await StorageService.instance.upload(
@@ -125,7 +136,7 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 64),
               TextField(
                 controller: nameController,
                 decoration: const InputDecoration(
@@ -133,6 +144,7 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
                   labelText: '이름',
                 ),
               ),
+              const SizedBox(height: 4),
               Padding(
                 padding: const EdgeInsets.only(left: 16),
                 child: Text(
@@ -141,9 +153,25 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
                 ),
               ),
               const SizedBox(height: 32),
+              TextField(
+                controller: stateMessageController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '상태메시지',
+                ),
+              ),
+              const SizedBox(height: 4),
+              Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Text(
+                  "프로필 보기에 나오는 나의 상태메시지입니다.",
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
+              ),
+              const SizedBox(height: 32),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (nameController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -153,10 +181,13 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
                       return;
                     }
 
-                    UserService.instance.user?.update(
+                    await UserService.instance.user?.update(
                       name: nameController.text,
                       displayName: nameController.text,
+                      stateMessage: stateMessageController.text,
                     );
+
+                    if (mounted) toast(context: context, message: '저장되었습니다.');
                   },
                   child: const Text(
                     '저장',
