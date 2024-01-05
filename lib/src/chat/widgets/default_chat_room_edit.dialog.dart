@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
@@ -24,6 +25,8 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
   bool get isEdit => widget.roomId != null;
   bool get isCreate => widget.roomId == null;
   ChatRoomModel? room;
+
+  double? progress;
   @override
   void initState() {
     super.initState();
@@ -74,19 +77,42 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
             ),
           ),
           const SizedBox(height: 16),
-          TextButton.icon(
-            icon: const Icon(Icons.camera_alt),
-            label: const Text('채팅방 아이콘 업로드'),
-            onPressed: () {
-              // StorageService.instance.upload(
-              //   context: context,
-              //   complete: (url) async {
-              //     await room?.update(iconUrl: url);
-              //     setState(() {});
-              //   },
-              // );
-            },
-          ),
+
+          Database(
+              path: "${Folder.chatRooms}/${widget.roomId}/${Field.iconUrl}",
+              builder: (url, path) {
+                return url == null
+                    ? const SizedBox()
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(40),
+                        child: CachedNetworkImage(
+                          imageUrl: url,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
+                      );
+              }),
+
+          // 채팅방 아이콘 업로드는 - 채팅방이 먼저 존재해야, 아이콘 URL 을 쉽게 저장 할 수 있다.
+          if (isEdit)
+            progress == null || progress?.isNaN == true
+                ? TextButton.icon(
+                    icon: const Icon(Icons.camera_alt),
+                    label: const Text('채팅방 아이콘 업로드'),
+                    onPressed: () async {
+                      await StorageService.instance.uploadAt(
+                        context: context,
+                        path: "${Folder.chatRooms}/${widget.roomId}/${Field.iconUrl}",
+                        progress: (p) => setState(() => progress = p),
+                        complete: () => setState(() => progress = null),
+                      );
+                    },
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: LinearProgressIndicator(value: progress),
+                  ),
           SwitchListTile(
             value: open,
             onChanged: (v) => setState(() => open = v),

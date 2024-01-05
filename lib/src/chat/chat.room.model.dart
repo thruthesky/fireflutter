@@ -14,7 +14,16 @@ class ChatRoomModel {
   int? groupChatOrder;
   int? openGroupChatOrder;
   String? name;
+
+  /// 그룹 채팅방을 대표하는 아이콘 사진을 저장한다.
   String? iconUrl;
+
+  /// 채팅방 목록에 표시할 사진을 저장한다.
+  ///
+  /// 1:1 채팅에서 A 가 채팅 메시지를 전송하면, A 의 chat-joins 에는 B 의 사진이 들어가고, B 의 chat-joins
+  /// 에는 A 의 사진이 들어간다.
+  ///
+  /// 그룹 채팅에서는 iconUrl 을 chat-joins/<uid>/<roomId> 에 저장한다.
   String? photoUrl;
   String? description;
   String? master;
@@ -314,7 +323,7 @@ class ChatRoomModel {
   }) async {
     final data = {
       Field.name: name,
-      Field.iconUrl: iconUrl,
+      if (iconUrl != null) Field.iconUrl: iconUrl,
       Code.description: description,
       Field.updatedAt: ServerValue.timestamp,
       Field.isVerifiedOnly: isVerifiedOnly,

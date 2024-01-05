@@ -75,6 +75,9 @@ class _ChatRoomState extends State<ChatRoom> {
         await chat.join();
       } on ErrorCode catch (e) {
         if (e.code == Code.chatRoomNotVerified) {
+          if (mounted) {
+            error(context: context, message: '본인 인증을 하지 않아 채팅방에 입장할 수 없습니다.');
+          }
           rethrow;
         }
       } catch (e) {

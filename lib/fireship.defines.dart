@@ -51,4 +51,6 @@ class Field {
   static const String uploadVerified = 'uploadVerified';
 
   static const String iconUrl = 'iconUrl';
+
+  static const String profileBackgroundImageUrl = 'profileBackgroundImageUrl';
 }

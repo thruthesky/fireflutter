@@ -175,8 +175,8 @@ class ChatModel {
       'name': room.isSingleChat ? UserService.instance.user?.displayName : (room.name ?? ''),
 
       /// 1:1 채팅에서는 마지막 보낸 사람 사진 (나중에 덮어 쓰여질 수 있음.)
-      /// 그룹 채팅에서는 방 사진.
-      'photoUrl': room.isSingleChat ? UserService.instance.user?.photoUrl : room.photoUrl,
+      /// 그룹 채팅에서는 채팅방 아이콘 사진.
+      'photoUrl': room.isSingleChat ? UserService.instance.user?.photoUrl : room.iconUrl,
 
       /// 그룹 채팅의 경우, 사용자 수
       'noOfUsers': room.isGroupChat ? room.users?.length : null,

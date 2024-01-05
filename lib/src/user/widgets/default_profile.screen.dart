@@ -84,22 +84,13 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
                                 )
                               : TextButton.icon(
                                   onPressed: () async {
-                                    final url = await StorageService.instance.upload(
+                                    await StorageService.instance.uploadAt(
                                       context: context,
+                                      path:
+                                          "${Folder.users}/${user.uid}/${Field.profileBackgroundImageUrl}",
                                       progress: (p) => setState(() => progress = p),
                                       complete: () => setState(() => progress = null),
                                     );
-                                    if (url == null) return;
-
-                                    final oldUrl =
-                                        UserService.instance.user?.profileBackgroundImageUrl;
-
-                                    await user.update(
-                                      profileBackgroundImageUrl: url,
-                                    );
-
-                                    /// Delete exisitng photo
-                                    await StorageService.instance.delete(oldUrl);
                                   },
                                   icon: const Icon(
                                     Icons.camera_alt,
