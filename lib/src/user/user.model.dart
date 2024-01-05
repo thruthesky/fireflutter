@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:fireship/fireship.dart' as fs;
+import 'package:fireship/fireship.defines.dart';
 import 'package:fireship/src/common/exception/code.dart';
 
 class UserModel {
@@ -189,8 +190,8 @@ class UserModel {
     if (photoUrl != null) {
       /// createdAt 정보는 없어서, 저장 할 수 없다.
       await photoRef.set({
-        Code.photoUrl: photoUrl,
-        Code.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
+        Field.photoUrl: photoUrl,
+        Field.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
       });
     }
   }
@@ -203,8 +204,8 @@ class UserModel {
     await fs.update(
       'users/$uid',
       {
-        Code.photoUrl: null,
-        Code.hasPhotoUrl: false,
+        Field.photoUrl: null,
+        Field.hasPhotoUrl: false,
       },
     );
 

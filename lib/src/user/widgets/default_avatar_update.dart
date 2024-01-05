@@ -80,21 +80,12 @@ class _UserAvatarState extends State<DefaultAvatarUpdate> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        final url = await StorageService.instance.upload(
+        await StorageService.instance.uploadAt(
           context: context,
+          path: "${Folder.users}/${user.uid}/${Field.photoUrl}",
           progress: (p) => setState(() => progress = p),
           complete: () => setState(() => progress = null),
         );
-        if (url == null) return;
-
-        final oldUrl = UserService.instance.user?.photoUrl;
-
-        await user.update(
-          photoUrl: url,
-        );
-
-        /// Delete exisitng photo
-        await StorageService.instance.delete(oldUrl);
       },
       child: Stack(
         children: [
@@ -133,7 +124,7 @@ class _UserAvatarState extends State<DefaultAvatarUpdate> {
             ),
           if (widget.delete && isNotUploading)
             StreamBuilder(
-              stream: user.ref.child(Code.photoUrl).onValue,
+              stream: user.ref.child(Field.photoUrl).onValue,
               builder: (_, event) => event.hasData && event.data!.snapshot.exists
                   ? Positioned(
                       top: 0,

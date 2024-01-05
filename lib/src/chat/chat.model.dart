@@ -20,10 +20,12 @@ class ChatModel {
   DatabaseReference get roomsRef => rtdb.ref().child('chat-rooms');
   DatabaseReference get messageseRef => rtdb.ref().child('chat-messages');
   DatabaseReference roomRef(String roomId) => roomsRef.child(roomId);
-  DatabaseReference messageRef({required String roomId}) => rtdb.ref().child('chat-messages').child(roomId);
+  DatabaseReference messageRef({required String roomId}) =>
+      rtdb.ref().child('chat-messages').child(roomId);
 
   /// [roomUserRef] is the reference to the users node under the group chat room. Ex) /chat-rooms/{roomId}/users/{my-uid}
-  DatabaseReference roomUserRef(String roomId, String uid) => rtdb.ref().child('chat-rooms/$roomId/users/$uid');
+  DatabaseReference roomUserRef(String roomId, String uid) =>
+      rtdb.ref().child('chat-rooms/$roomId/users/$uid');
 
   DatabaseReference get joinsRef => rtdb.ref().child('chat-joins');
   DatabaseReference joinRef(String myUid, String roomId) => joinsRef.child(myUid).child(roomId);
@@ -69,7 +71,8 @@ class ChatModel {
     /// B 의 채팅방의 newMessage 가 0 으로 된다.
     /// 그리고, 나서 updateJoin() 을 하면, B 의 채팅 메시지가 1이 되는 것이다.
     /// 즉, 0이 되어야하는데 1이 되는 상황이 발생한다. 그래서, updateJoin() 이 먼저 호출되어야 한다.
-    Map<String, dynamic> multiUpdateData = _getMultiUpdateForChatJoinLastMessage(text: text, url: url);
+    Map<String, dynamic> multiUpdateData =
+        _getMultiUpdateForChatJoinLastMessage(text: text, url: url);
 
     /// Save chat message under `/chat-messages`.
     // 저장할 채팅 데이터
@@ -96,8 +99,8 @@ class ChatModel {
     /// 다만, 여기서는 채팅 메시지가 이미 전달된 다음에, 채팅방 정보를 업데이트하므로, 데이터 반응 속도는 신경쓰지 않아도 된다.
     if (room.isSingleChat) {
       final otherUid = room.otherUserUid!;
-      final name = await UserModel.getField(otherUid, Code.displayName);
-      final photoUrl = await UserModel.getField(otherUid, Code.photoUrl);
+      final name = await UserModel.getField(otherUid, Field.displayName);
+      final photoUrl = await UserModel.getField(otherUid, Field.photoUrl);
       joinRef(myUid!, singleChatRoomId(otherUid)).update({
         'name': name,
         'photoUrl': photoUrl,
@@ -183,8 +186,8 @@ class ChatModel {
       'url': url,
       'updatedAt': ServerValue.timestamp,
       'newMessage': newMessage,
-      Code.groupChatOrder: room.isGroupChat ? order : null,
-      Code.singleChatOrder: room.isSingleChat ? order : null,
+      Field.groupChatOrder: room.isGroupChat ? order : null,
+      Field.singleChatOrder: room.isSingleChat ? order : null,
       //
       'order': order,
     };
@@ -366,10 +369,10 @@ class ChatModel {
     ///
     final order = -int.parse('${room.updatedAt ?? room.createdAt ?? 0}');
     final data = {
-      Code.name: room.isGroupChat ? room.name : '',
-      Code.groupChatOrder: room.isGroupChat ? order : null,
-      Code.singleChatOrder: room.isSingleChat ? order : null,
-      Code.newMessage: null,
+      Field.name: room.isGroupChat ? room.name : '',
+      Field.groupChatOrder: room.isGroupChat ? order : null,
+      Field.singleChatOrder: room.isSingleChat ? order : null,
+      Field.newMessage: null,
     };
 
     /// 1:1 채팅방의 경우, 상대방의 이름을 저장한다.

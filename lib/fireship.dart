@@ -35,6 +35,8 @@ export 'src/extensions/string.extension.dart';
 /// Functions
 export 'fireship.functions.dart';
 
+export 'fireship.defines.dart';
+
 /// Chat
 export 'src/chat/chat.service.dart';
 export 'src/chat/chat.model.dart';

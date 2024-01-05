@@ -122,7 +122,13 @@ class StorageService {
 
   /// 사용자에게 사진/파일 업로드를 요청한다.
   ///
-  /// 업로드가 완료되면, URL 을 리턴한다. 업로드가 취소되면, null 을 리턴한다.
+  /// 1. It displays the upload source selection dialog (camera or gallery).
+  /// 2. It picks the file
+  /// 3. It compresses the file
+  /// 4. It uploads and calls back the function for the progress indicator.
+  /// 5. It returns the download url of the uploaded file.
+  ///
+  /// If the user cancels the upload, it returns null.
   ///
   /// Ask user to upload a photo or a file
   ///
@@ -130,12 +136,17 @@ class StorageService {
   ///
   /// This method does not handle any exception. You may handle it outisde if you want.
   ///
+  /// [path] is the file path on mobile phone(local storage) to upload.
+  ///
+  /// [saveAs] is the path on the Firebase storage to save the uploaded file.
+  /// If it's empty, it willl save the file under "/users/$uid/". You can use
+  /// this option to save the file under a different path.
+  ///
   Future<String?> upload({
     required BuildContext context,
     Function(double)? progress,
     Function()? complete,
     int compressQuality = 80,
-    String? path,
     String? saveAs,
     bool camera = true,
     bool gallery = true,
@@ -145,9 +156,53 @@ class StorageService {
       progress: progress,
       complete: complete,
       compressQuality: compressQuality,
-      path: path,
       saveAs: saveAs,
     );
+  }
+
+  /// Upload a file (or an image) and save the url at the node in Realtime database.
+  ///
+  /// Logic
+  /// 1. Upload
+  /// 2. Svae url at the path
+  /// 3. Delete if there is an old url
+  ///
+  /// [path] is the node to save the url.
+  ///
+  Future uploadAt({
+    required BuildContext context,
+    required String path,
+    Function(double)? progress,
+    Function()? complete,
+    int compressQuality = 80,
+    String? saveAs,
+    bool camera = true,
+    bool gallery = true,
+  }) async {
+    String? url, oldUrl;
+    oldUrl = await get<String?>(path);
+    if (context.mounted) {
+      url = await upload(
+        context: context,
+        progress: progress,
+        complete: complete,
+        compressQuality: compressQuality,
+        saveAs: saveAs,
+        camera: camera,
+        gallery: gallery,
+      );
+    }
+    if (url == null) return;
+
+    // 업로드 성공
+    await set(path, url);
+
+    // 이전 파일 삭제
+    if (oldUrl != null) {
+      await delete(oldUrl);
+    }
+
+    return url;
   }
 
   /// Call this if method of uploading (like, from camera) is already known.
@@ -160,7 +215,6 @@ class StorageService {
     Function(double)? progress,
     Function? complete,
     int compressQuality = 80,
-    String? path,
     String? saveAs,
     String? type,
   }) async {

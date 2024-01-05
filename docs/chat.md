@@ -28,7 +28,7 @@
 
 ```dart
 ChatModel chat = ChatModel(room: ChatRoomModel.fromRoomdId('all'))..join();
-ChatMessageListView(chat: chat)
+ChatMessageListView(chat: chat);
 ```
 
 ChatModel 만드는 것 만으로 채팅방이 만들어지지 않는다. 그래서 join() 을 추가적으로 호출한다.
@@ -175,7 +175,7 @@ Here is an example code to show chat room list.
 FirebaseDatabaseQueryBuilder(
   query: ChatService.instance.joinsRef
       .child(myUid!)
-      .orderByChild(Code.order)
+      .orderByChild(Field.order)
       .startAt(false),
   pageSize: 50,
   builder: (context, snapshot, _) {

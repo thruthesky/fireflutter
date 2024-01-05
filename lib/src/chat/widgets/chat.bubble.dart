@@ -108,7 +108,7 @@ class ChatBubble extends StatelessWidget {
         const SizedBox(width: 4),
         UserDoc(
           uid: uid,
-          field: Code.displayName,
+          field: Field.displayName,
           builder: (data) => Text(
             data ?? 'NoName',
             style: TextStyle(fontSize: 10, color: Colors.grey.shade600),

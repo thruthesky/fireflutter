@@ -229,16 +229,13 @@ class MessagingService {
     };
 
     dog('data->>  $data');
-    try {
-      final dio = Dio();
-      final response = await dio.post(
-        sendUrl!,
-        data: data,
-      );
-      dog('response; $response');
-    } catch (e) {
-      dog('Error sending push notification: $e');
-    }
+
+    final dio = Dio();
+    final response = await dio.post(
+      sendUrl!,
+      data: data,
+    );
+    dog('response; $response');
   }
 
   /// Parse message data from [RemoteMessage.data]

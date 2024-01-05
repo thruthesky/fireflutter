@@ -267,17 +267,17 @@ class ChatRoomModel {
       // 1:1 채팅방
       ref = ChatService.instance.roomRef(singleChatRoomId(uid));
       await ref.update({
-        Code.singleChatOrder: minusTime,
-        Code.createdAt: ServerValue.timestamp,
-        Code.updatedAt: ServerValue.timestamp,
+        Field.singleChatOrder: minusTime,
+        Field.createdAt: ServerValue.timestamp,
+        Field.updatedAt: ServerValue.timestamp,
       });
     } else if (roomId != null && isSingleChatRoom(roomId)) {
       // 1:1 채팅방 - 채팅 방 ID 가 1:1 채팅방 ID
       ref = ChatService.instance.roomRef(roomId);
       await ref.update({
-        Code.singleChatOrder: minusTime,
-        Code.createdAt: ServerValue.timestamp,
-        Code.updatedAt: ServerValue.timestamp,
+        Field.singleChatOrder: minusTime,
+        Field.createdAt: ServerValue.timestamp,
+        Field.updatedAt: ServerValue.timestamp,
       });
     } else {
       // 그룹 채팅방을 생성할 때 추가 정보 저장
@@ -288,14 +288,14 @@ class ChatRoomModel {
       }
       final myUid = FirebaseAuth.instance.currentUser!.uid;
       final data = {
-        Code.name: name,
-        Code.iconUrl: iconUrl,
+        Field.name: name,
+        Field.iconUrl: iconUrl,
         Code.description: description,
-        Code.groupChatOrder: minusTime,
-        Code.openGroupChatOrder: isOpenGroupChat == null ? null : minusTime,
-        Code.createdAt: ServerValue.timestamp,
-        Code.users: {myUid: true},
-        Code.master: myUid,
+        Field.groupChatOrder: minusTime,
+        Field.openGroupChatOrder: isOpenGroupChat == null ? null : minusTime,
+        Field.createdAt: ServerValue.timestamp,
+        Field.users: {myUid: true},
+        Field.master: myUid,
       };
       await ref.update(data);
     }
@@ -313,13 +313,13 @@ class ChatRoomModel {
     bool? uploadVerified,
   }) async {
     final data = {
-      Code.name: name,
-      Code.iconUrl: iconUrl,
+      Field.name: name,
+      Field.iconUrl: iconUrl,
       Code.description: description,
-      Code.updatedAt: ServerValue.timestamp,
-      Code.isVerifiedOnly: isVerifiedOnly,
-      Code.urlVerified: urlVerified,
-      Code.uploadVerified: uploadVerified,
+      Field.updatedAt: ServerValue.timestamp,
+      Field.isVerifiedOnly: isVerifiedOnly,
+      Field.urlVerified: urlVerified,
+      Field.uploadVerified: uploadVerified,
     };
     return ref.update(data);
   }
@@ -343,7 +343,8 @@ class ChatRoomModel {
   List<String>? get getSubscribedUids {
     final List<String>? uids = users?.entries.fold(
       [],
-      (previousValue, element) => element.value ? (previousValue?..add(element.key)) : previousValue,
+      (previousValue, element) =>
+          element.value ? (previousValue?..add(element.key)) : previousValue,
     );
     if (uids == null) return null;
     return uids.where((element) => element != FirebaseAuth.instance.currentUser!.uid).toList();

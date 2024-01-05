@@ -21,7 +21,7 @@ class UserAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: UserModel.fromUid(uid).ref.child(Code.photoUrl).onValue,
+      stream: UserModel.fromUid(uid).ref.child(Field.photoUrl).onValue,
       builder: (_, event) {
         final url = event.hasData && event.data!.snapshot.exists
             ? event.data!.snapshot.value as String
