@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/foundation.dart';
@@ -58,6 +59,8 @@ class MessagingService {
   late Function(RemoteMessage) onMessageOpenedFromBackground;
   late Function onNotificationPermissionDenied;
   late Function onNotificationPermissionNotDetermined;
+
+  String? sendUrl;
   String? token;
   final BehaviorSubject<String?> tokenChange = BehaviorSubject.seeded(null);
 
@@ -72,6 +75,7 @@ class MessagingService {
     required Function(RemoteMessage) onMessageOpenedFromBackground,
     required Function onNotificationPermissionDenied,
     required Function onNotificationPermissionNotDetermined,
+    String? sendUrl,
   }) {
     initialized = true;
     if (onBackgroundMessage != null) {
@@ -83,6 +87,8 @@ class MessagingService {
     this.onMessageOpenedFromBackground = onMessageOpenedFromBackground;
     this.onNotificationPermissionDenied = onNotificationPermissionDenied;
     this.onNotificationPermissionNotDetermined = onNotificationPermissionNotDetermined;
+
+    this.sendUrl = sendUrl;
 
     _initializeListeners();
     _initializeToken();
@@ -185,6 +191,10 @@ class MessagingService {
   /// if action, topic, and tokens are null, then uids will be used
   ///
   ///
+  /// TODO: what if there is too much tokens? chunk it by 255 tokens and send them all at once.
+  ///
+  /// TODO: remove invalid tokens from database.
+  ///
   Future send({
     required String title,
     required String body,
@@ -199,13 +209,29 @@ class MessagingService {
     Map<String, dynamic> data = {
       'title': title,
       'body': body,
-      'senderUid': myUid!,
+      'data': {
+        'senderUid': myUid!,
+      },
+      'tokens': [
+        // / iPhone11ProMax
+        "fVWDxKs1kEzxhtV9ElWh-5:APA91bE_rN_OBQF3KwAdqd6Ves18AnSrCovj3UQyoLHvRwp0--1BRyo9af8EDEWXEuzBneknEFFuWZ7Lq2VS-_MBRY9vbRrdXHEIAOtQ0GEkJgnaJqPYt7TQnXtci3s0hxn34MBOhwSK",
+        // / andriod with initail uid of W7a
+        "c9OPdjOoRtqCOXVG7HLpSI:APA91bFJ9VshAvx-mQ4JsIpFmkljnA4XZtE8LDw6JYtIWSJwSxnuJsHt0XtlHKy4wuRcttIzqPQckfAwX_baurPfiJuFFNS6ioD50X9ks5eeyi5Pl40vMWmCpNpgCVxg92CjRe5S51Ja",
+        // / Android in MacOS
+        "e66JGEFqRWOuictuIH8pnk:APA91bEPzpJI1IzfWs-A1UO13Mly3YQU07kpQZyl5KVXYowKts_ILI6l624ZtSk2wljVaY62xXHJNFvLKvfCNvzUI9QjEygKPjC0NROBnKQ3P__LZU2d5fd2-jdlUosOwoViLnUEaADN",
+        // TEST empty token
+        "",
+        // TEST invalid token
+        "This-is-invalid-token",
+      ],
     };
 
     dog('data; $data');
 
-    /// TODO - HTTP REST 를 이용해서 직접 메시지 전송
-    // return await messageQueueCol.add(data);
+    final dio = Dio();
+    final response = await dio.post(sendUrl!, data: data);
+
+    dog('response; ${response.data}');
   }
 
   /// Parse message data from [RemoteMessage.data]
