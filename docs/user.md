@@ -68,15 +68,32 @@ UserService.instance.init(
 
 ```dart
 UserDoc(
-  uid: message.uid!,
-  field: null,
-  builder: (data) => UserAvatar(
-    user: user,
-    radius: 13,
-    onTap: () => ...,
-  ),
+  uid: uid,
+  builder: (data) {
+    if (data == null) return const SizedBox.shrink();
+    final user = UserModel.fromJson(data, uid: uid);
+    return Column(
+      children: [
+        Text(
+          user.displayName ?? 'No name',
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        if (user.stateMessage != null)
+          Text(
+            user.stateMessage!,
+            style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                  color: Colors.white.withAlpha(200),
+                ),
+          ),
+      ],
+    );
+  },
 ),
 ```
+
 
 
 

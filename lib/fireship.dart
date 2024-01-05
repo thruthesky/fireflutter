@@ -18,6 +18,8 @@ export 'src/common/stacked_avatar.dart';
 export 'src/common/exception/error_code.dart';
 export 'src/common/exception/code.dart';
 
+export 'src/common/linkify_text/linkify_text.dart';
+
 /// Common / url preview
 export 'src/common/url_preview/url_preview.dart';
 export 'src/common/url_preview/url_preview.model.dart';

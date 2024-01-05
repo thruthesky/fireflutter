@@ -10,6 +10,7 @@ class UserModel {
   String? displayName;
   String? photoUrl;
   String? profileBackgroundImageUrl;
+  String? stateMessage;
   bool isDisabled;
   int? birthYear;
   int? birthMonth;
@@ -30,6 +31,7 @@ class UserModel {
     this.displayName,
     this.photoUrl,
     this.profileBackgroundImageUrl,
+    this.stateMessage,
     this.isDisabled = false,
     this.birthYear,
     this.birthMonth,
@@ -68,6 +70,7 @@ class UserModel {
       displayName: json['displayName'],
       photoUrl: json['photoUrl'],
       profileBackgroundImageUrl: json['profileBackgroundImageUrl'],
+      stateMessage: json['stateMessage'],
       isDisabled: json['isDisabled'] ?? false,
       birthYear: json['birthYear'],
       birthMonth: json['birthMonth'],
@@ -86,6 +89,7 @@ class UserModel {
       'displayName': displayName,
       'photoUrl': photoUrl,
       'profileBackgroundImageUrl': profileBackgroundImageUrl,
+      'stateMessage': stateMessage,
       'isDisabled': isDisabled,
       'birthYear': birthYear,
       'birthMonth': birthMonth,
@@ -111,6 +115,7 @@ class UserModel {
       displayName = user.displayName;
       photoUrl = user.photoUrl;
       profileBackgroundImageUrl = user.profileBackgroundImageUrl;
+      stateMessage = user.stateMessage;
       isDisabled = user.isDisabled;
       birthYear = user.birthYear;
       birthMonth = user.birthMonth;
@@ -152,6 +157,7 @@ class UserModel {
     String? displayName,
     String? photoUrl,
     String? profileBackgroundImageUrl,
+    String? stateMessage,
     int? birthYear,
     int? birthMonth,
     int? birthDay,
@@ -163,6 +169,7 @@ class UserModel {
       if (displayName != null) 'displayName': displayName,
       if (photoUrl != null) 'photoUrl': photoUrl,
       if (profileBackgroundImageUrl != null) 'profileBackgroundImageUrl': profileBackgroundImageUrl,
+      if (stateMessage != null) 'stateMessage': stateMessage,
       if (photoUrl != null) 'hasPhotoUrl': true,
       if (birthYear != null) 'birthYear': birthYear,
       if (birthMonth != null) 'birthMonth': birthMonth,
