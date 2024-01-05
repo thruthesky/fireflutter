@@ -39,6 +39,26 @@ ChatModel 만드는 것 만으로 채팅방이 만들어지지 않는다. 그래
 
 그러나, 미리 만들어져 있는 `ChatService.instance.showChatRoomCreate()` 함수를 사용하면 보다 쉽게 채팅방을 생성 할 수 있다. 커스텀 디자인을 하고 싶다면, `DefaultChatRoomEditDialog` 를 복사해서 수정하면 된다.
 
+### Viewing Chat Room
+
+A `ChatRoom()` widget can be used to show chat room (room's messages with room input box).
+
+```dart
+// For 1:1 chat room
+ChatRoom(uid: 'user-uid');
+
+...
+
+// Using room-id for 1:1 or group chat room
+ChatRoom(roomId: 'room-id');
+
+...
+
+// Using snapshot -> ChatRoomModel
+ChatRoomModel chatRoom = ChatRoomModel.fromSnapshot(dataSnapshot);
+ChatRoom(room: chatRoom);
+```
+
 ### 채팅방 수정 (Updating Chat Room)
 
 채팅방 수정은 `ChatService.instance.showChatRoomSettings(roomId: ...)` 를 호출하면 되며, 채팅방 생성과 같은 위젯인 `DefaultChatRoomEditDialog` 를 사용한다.
