@@ -7,6 +7,8 @@ export 'src/admin/widgets/admin.user_list.screen.dart';
 export 'src/admin/widgets/admin.user_update.screen.dart';
 
 /// Common
+///
+export 'src/common/assets.dart';
 export 'src/common/anonymous_avatar.dart';
 export 'src/common/avatar.dart';
 export 'src/common/error_box.dart';

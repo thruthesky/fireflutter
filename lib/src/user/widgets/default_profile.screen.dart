@@ -47,8 +47,7 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
                               borderRadius: BorderRadius.circular(16),
                               image: DecorationImage(
                                 image: CachedNetworkImageProvider(
-                                  my?.profileBackgroundImageUrl ??
-                                      'https://picsum.photos/id/171/400/900',
+                                  my?.profileBackgroundImageUrl ?? blackUrl,
                                 ),
                                 fit: BoxFit.cover,
                               ),

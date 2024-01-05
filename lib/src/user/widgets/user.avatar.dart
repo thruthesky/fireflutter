@@ -30,16 +30,11 @@ class UserAvatar extends StatelessWidget {
         return GestureDetector(
           onTap: onTap,
           behavior: HitTestBehavior.opaque,
-          child: url == null
-              ? AnonymousAvatar(
-                  size: size,
-                  radius: radius,
-                )
-              : Avatar(
-                  photoUrl: url,
-                  size: size,
-                  radius: radius,
-                ),
+          child: Avatar(
+            photoUrl: url ?? anonymousUrl,
+            size: size,
+            radius: radius,
+          ),
         );
       },
     );
