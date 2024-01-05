@@ -13,8 +13,7 @@ class DefaultPublicProfileScreen extends StatelessWidget {
         children: [
           Positioned.fill(
             child: CachedNetworkImage(
-                imageUrl: 'https://picsum.photos/id/171/400/900',
-                fit: BoxFit.cover),
+                imageUrl: 'https://picsum.photos/id/171/400/900', fit: BoxFit.cover),
           ),
           Positioned(
             top: 0,
@@ -71,25 +70,38 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                           Icons.settings_outlined,
                           color: Colors.white,
                         ),
-                        onPressed: () =>
-                            UserService.instance.showProfile(context),
+                        onPressed: () => UserService.instance.showProfile(context),
                       ),
                   ],
                 ),
               ),
               const Spacer(),
-              UserAvatar(uid: uid, radius: 64),
+              UserAvatar(uid: uid, size: 100, radius: 40),
               const SizedBox(height: 8),
               UserDoc(
                 uid: uid,
-                field: Code.displayName,
-                builder: (name) => Text(
-                  name ?? 'No name',
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                builder: (data) {
+                  if (data == null) return const SizedBox.shrink();
+                  final user = UserModel.fromJson(data, uid: uid);
+                  return Column(
+                    children: [
+                      Text(
+                        user.displayName ?? 'No name',
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
-                ),
+                      if (user.stateMessage != null)
+                        Text(
+                          user.stateMessage!,
+                          style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                                color: Colors.white.withAlpha(200),
+                              ),
+                        ),
+                    ],
+                  );
+                },
               ),
               SafeArea(
                 child: Row(
@@ -97,22 +109,9 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        ChatService.instance
-                            .showChatRoom(context: context, uid: uid);
+                        ChatService.instance.showChatRoom(context: context, uid: uid);
                       },
                       child: const Text('채팅'),
-                    ),
-                    const SizedBox(width: 8),
-                    ElevatedButton(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content:
-                                Text('TODO: Open loign user profile screen'),
-                          ),
-                        );
-                      },
-                      child: const Text('팔로우'),
                     ),
                   ],
                 ),

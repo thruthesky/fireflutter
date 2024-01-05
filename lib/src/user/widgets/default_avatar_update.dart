@@ -12,8 +12,6 @@ import 'package:flutter/material.dart';
 ///
 /// [delete] is the callback function that is being called when the user taps the delete button.
 ///
-/// [defaultIcon] is a widget to be displayed when the user's avatar is not available.
-/// and the [name] property of AdvancedAvatar is igonored by [defaultIcon].
 ///
 /// [onUploadSuccess] is the callback function that is being called when the user's avatar is uploaded.
 ///
@@ -38,7 +36,6 @@ class DefaultAvatarUpdate extends StatefulWidget {
     this.onUploadSuccess,
     this.uploadStrokeWidth = 6,
     this.shadowBlurRadius = 16.0,
-    this.defaultIcon,
     this.backgroundColor,
     this.borderColor,
     this.borderWidth = 0,
@@ -52,7 +49,6 @@ class DefaultAvatarUpdate extends StatefulWidget {
   final bool delete;
   final double uploadStrokeWidth;
   final double shadowBlurRadius;
-  final Widget? defaultIcon;
   final Color? backgroundColor;
   final Color? borderColor;
   final double borderWidth;
@@ -138,8 +134,7 @@ class _UserAvatarState extends State<DefaultAvatarUpdate> {
           if (widget.delete && isNotUploading)
             StreamBuilder(
               stream: user.ref.child(Code.photoUrl).onValue,
-              builder: (_, event) => event.hasData &&
-                      event.data!.snapshot.exists
+              builder: (_, event) => event.hasData && event.data!.snapshot.exists
                   ? Positioned(
                       top: 0,
                       left: 0,
@@ -148,8 +143,7 @@ class _UserAvatarState extends State<DefaultAvatarUpdate> {
                           /// 이전 사진 삭제
                           ///
                           /// 삭제 실패해도, 계속 진행되도록 한다.
-                          StorageService.instance
-                              .delete(event.data!.snapshot.value as String?);
+                          StorageService.instance.delete(event.data!.snapshot.value as String?);
                           await UserService.instance.user!.deletePhotoUrl();
                         },
                         padding: EdgeInsets.zero,

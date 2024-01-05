@@ -10,8 +10,7 @@ class DefaultChatRoomEditDialog extends StatefulWidget {
   final String? roomId;
 
   @override
-  State<DefaultChatRoomEditDialog> createState() =>
-      _DefaultChatRoomEditDialogState();
+  State<DefaultChatRoomEditDialog> createState() => _DefaultChatRoomEditDialogState();
 }
 
 class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
@@ -53,8 +52,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: 24),
-          Text(isCreate ? '새로운 채팅' : '채팅방 설정',
-              style: Theme.of(context).textTheme.titleLarge),
+          Text(isCreate ? '새로운 채팅' : '채팅방 설정', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 32),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -74,6 +72,20 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 labelText: '채팅방 설명',
               ),
             ),
+          ),
+          const SizedBox(height: 16),
+          TextButton.icon(
+            icon: const Icon(Icons.camera_alt),
+            label: const Text('채팅방 아이콘 업로드'),
+            onPressed: () {
+              // StorageService.instance.upload(
+              //   context: context,
+              //   complete: (url) async {
+              //     await room?.update(iconUrl: url);
+              //     setState(() {});
+              //   },
+              // );
+            },
           ),
           SwitchListTile(
             value: open,
@@ -111,42 +123,44 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
               ),
             ),
           ),
-          SwitchListTile(
-            value: urlVerified,
-            onChanged: (v) => setState(() => urlVerified = v),
-            title: Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: Text(
-                '인증 회원 전용 URL 입력',
-                style: Theme.of(context).textTheme.bodySmall,
+          if (isEdit)
+            SwitchListTile(
+              value: urlVerified,
+              onChanged: (v) => setState(() => urlVerified = v),
+              title: Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Text(
+                  '인증 회원 전용 URL 입력',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+              subtitle: Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Text(
+                  '본인 인증 한 회원만 URL 링크를 입력 할 수 있습니다.',
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
               ),
             ),
-            subtitle: Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: Text(
-                '본인 인증 한 회원만 URL 링크를 입력 할 수 있습니다.',
-                style: Theme.of(context).textTheme.labelSmall,
+          if (isEdit)
+            SwitchListTile(
+              value: uploadVerified,
+              onChanged: (v) => setState(() => uploadVerified = v),
+              title: Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Text(
+                  '인증 회원 전용 사진 등록',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+              subtitle: Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Text(
+                  '본인 인증 한 회원만 사진을 등록 할 수 있습니다.',
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
               ),
             ),
-          ),
-          SwitchListTile(
-            value: uploadVerified,
-            onChanged: (v) => setState(() => uploadVerified = v),
-            title: Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: Text(
-                '인증 회원 전용 사진 등록',
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ),
-            subtitle: Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: Text(
-                '본인 인증 한 회원만 사진을 등록 할 수 있습니다.',
-                style: Theme.of(context).textTheme.labelSmall,
-              ),
-            ),
-          ),
         ],
       ),
       actions: [
@@ -156,8 +170,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
         ),
         ElevatedButton(
           onPressed: () async {
-            if (nameController.text.isEmpty ||
-                descriptionController.text.isEmpty) {
+            if (nameController.text.isEmpty || descriptionController.text.isEmpty) {
               error(
                 context: context,
                 title: '',

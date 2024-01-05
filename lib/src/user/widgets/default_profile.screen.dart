@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
@@ -9,20 +10,24 @@ class DefaultProfileScreen extends StatefulWidget {
 }
 
 class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
+  double? progress;
   final nameController = TextEditingController();
+  final stateMessageController = TextEditingController();
+
   UserModel get user => UserService.instance.user!;
 
   @override
   void initState() {
     super.initState();
     nameController.text = user.displayName ?? '';
+    stateMessageController.text = user.stateMessage ?? '';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Text(Code.profileUpdate.tr),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -33,10 +38,92 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
               Center(
                 child: Column(
                   children: [
-                    DefaultAvatarUpdate(
-                      uid: UserService.instance.user!.uid,
-                      radius: 80,
-                      delete: true,
+                    Stack(
+                      children: [
+                        MyDoc(builder: (my) {
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 60),
+                            width: double.infinity,
+                            height: 200,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              image: DecorationImage(
+                                image: CachedNetworkImageProvider(
+                                  my?.profileBackgroundImageUrl ?? blackUrl,
+                                ),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        }),
+                        Container(
+                          height: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            gradient: const LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.black54,
+                                  Colors.transparent,
+                                ]),
+                          ),
+                        ),
+                        Positioned(
+                          right: 0,
+                          child: progress != null
+                              ? Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    '${(progress! * 100).toStringAsFixed(0)} %',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge!
+                                        .copyWith(color: Colors.white),
+                                  ),
+                                )
+                              : TextButton.icon(
+                                  onPressed: () async {
+                                    final url = await StorageService.instance.upload(
+                                      context: context,
+                                      progress: (p) => setState(() => progress = p),
+                                      complete: () => setState(() => progress = null),
+                                    );
+                                    if (url == null) return;
+
+                                    final oldUrl =
+                                        UserService.instance.user?.profileBackgroundImageUrl;
+
+                                    await user.update(
+                                      profileBackgroundImageUrl: url,
+                                    );
+
+                                    /// Delete exisitng photo
+                                    await StorageService.instance.delete(oldUrl);
+                                  },
+                                  icon: const Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.white,
+                                  ),
+                                  label: const Text(
+                                    '배경 사진',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Center(
+                            child: DefaultAvatarUpdate(
+                              uid: UserService.instance.user!.uid,
+                              radius: 80,
+                              delete: false,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 8),
                     const Text("프로필 사진"),
@@ -49,7 +136,7 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 64),
               TextField(
                 controller: nameController,
                 decoration: const InputDecoration(
@@ -57,6 +144,7 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
                   labelText: '이름',
                 ),
               ),
+              const SizedBox(height: 4),
               Padding(
                 padding: const EdgeInsets.only(left: 16),
                 child: Text(
@@ -65,9 +153,25 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
                 ),
               ),
               const SizedBox(height: 32),
+              TextField(
+                controller: stateMessageController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '상태메시지',
+                ),
+              ),
+              const SizedBox(height: 4),
+              Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Text(
+                  "프로필 보기에 나오는 나의 상태메시지입니다.",
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
+              ),
+              const SizedBox(height: 32),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (nameController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -77,10 +181,13 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
                       return;
                     }
 
-                    UserService.instance.user?.update(
+                    await UserService.instance.user?.update(
                       name: nameController.text,
                       displayName: nameController.text,
+                      stateMessage: stateMessageController.text,
                     );
+
+                    if (mounted) toast(context: context, message: '저장되었습니다.');
                   },
                   child: const Text(
                     '저장',

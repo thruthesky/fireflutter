@@ -6,9 +6,9 @@ class Code {
   static const String notJoined = 'notJoined';
   static const String notLoggedIn = 'notLoggedIn';
   static const String chatRoomNotVerified = 'chatRoomNotVerified';
+  static const String chatRoomNotExists = 'chatRoomNotExists';
 
   /// Fields and constants
-
   static const String uid = 'uid';
   static const String name = 'name';
   static const String description = 'description';
@@ -44,4 +44,12 @@ class Code {
   static const String isVerifiedOnly = 'isVerifiedOnly';
   static const String urlVerified = 'urlVerified';
   static const String uploadVerified = 'uploadVerified';
+
+  static const String iconUrl = 'iconUrl';
+
+  /// Label, texts, buttons,
+  static const String dismiss = 'dismiss';
+
+  /// User and Profile
+  static const String profileUpdate = 'profileUpdate';
 }
