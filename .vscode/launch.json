@@ -41,6 +41,15 @@
             "program": "lib/main.dart"
         },
         {
+            "name": "Momcafe - SM J737S",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "SM J737S",
+            "flutterMode": "debug",
+            "cwd": "apps/momcafe",
+            "program": "lib/main.dart"
+        },
+        {
             "name": "Momcafe - Chrome",
             "request": "launch",
             "type": "dart",
