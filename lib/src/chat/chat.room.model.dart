@@ -177,8 +177,7 @@ class ChatRoomModel {
   static Future<ChatRoomModel> fromReference(DatabaseReference ref) async {
     final event = await ref.once();
     if (event.snapshot.exists == false) {
-      throw ErrorCode(Code.chatRoomNotExists);
-      // Exception('ChatRoomModel.fromReference: ${ref.path} does not exist.');
+      throw Exception('ChatRoomModel.fromReference: ${ref.path} does not exist.');
     }
     return ChatRoomModel.fromSnapshot(event.snapshot);
   }
@@ -326,6 +325,7 @@ class ChatRoomModel {
   }
 
   /// 채팅방에 남아 있는 사람이 없으면, 방을 삭제한다.
+  /// If there are no remaining people in the chat room, the room is deleted.
   Future<void> deleteIfNoUsers() async {
     final room = await ChatRoomModel.get(id);
 
@@ -343,8 +343,7 @@ class ChatRoomModel {
   List<String>? get getSubscribedUids {
     final List<String>? uids = users?.entries.fold(
       [],
-      (previousValue, element) =>
-          element.value ? (previousValue?..add(element.key)) : previousValue,
+      (previousValue, element) => element.value ? (previousValue?..add(element.key)) : previousValue,
     );
     if (uids == null) return null;
     return uids.where((element) => element != FirebaseAuth.instance.currentUser!.uid).toList();
