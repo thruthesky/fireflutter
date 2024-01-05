@@ -1,6 +1,7 @@
 
 import {getMessaging} from "firebase-admin/messaging";
 
+
 /**
  * MessagingService
  *
@@ -39,7 +40,7 @@ export class MessagingService {
     const promises = [];
 
     // / remove empty tokens from tokens and save it to newTokens
-    const newTokens = tokens.filter((token) => !!token);
+    const newTokens = Array.isArray(tokens) ? tokens.filter((token) => !!token): [];
 
     for (const token of newTokens) {
       const message = {
