@@ -8,6 +8,8 @@ class Code {
   static const String chatRoomNotVerified = 'chatRoomNotVerified';
   static const String chatRoomNotExists = 'chatRoomNotExists';
 
+  static const String blockSelf = 'blockSelf';
+
   /// Fields and constants
   static const String uid = 'uid';
 

@@ -1,5 +1,4 @@
 import 'package:fireship/fireship.dart';
-import 'package:fireship/ref.dart';
 import 'package:flutter/material.dart';
 
 /// 채팅방
@@ -30,27 +29,6 @@ class DefaultChatRoomScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('채팅'),
-        actions: [
-          PopupMenuButton<String>(
-            itemBuilder: (_) => const [
-              PopupMenuItem(value: 'edit', child: Text('Edit')),
-            ],
-            onSelected: (v) {
-              if (v == 'edit') {
-                /// TODO 채팅방이 그룹 채팅이 아니라, 1:1 채팅인 경우, chat-joins 에서 설정을 해야 한다.
-                ChatService.instance.showChatRoomSettings(
-                  context: context,
-                  roomId: roomId ?? room?.id ?? '',
-                );
-              }
-            },
-            tooltip: '채팅방 설정',
-            icon: const Icon(Icons.menu_rounded),
-          ),
-        ],
-      ),
       body: ChatRoom(uid: uid, roomId: roomId, room: room),
     );
   }

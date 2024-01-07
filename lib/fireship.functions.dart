@@ -9,7 +9,12 @@ bool get loggedIn => FirebaseAuth.instance.currentUser != null;
 bool get notLoggedIn => FirebaseAuth.instance.currentUser == null;
 String? get myUid => FirebaseAuth.instance.currentUser?.uid;
 bool get isAdmin => UserService.instance.user?.isAdmin ?? false;
+
+/// Firebase current user
 User? get currentUser => FirebaseAuth.instance.currentUser;
+
+/// UserService.instance.user
+UserModel? get my => UserService.instance.user;
 
 void dog(String msg) {
   if (kReleaseMode) return;
@@ -153,5 +158,34 @@ ScaffoldFeatureController toast({
         ],
       ),
     ),
+  );
+}
+
+/// Confirm dialgo
+///
+/// It requires build context where [toast] does not.
+Future<bool?> confirm({
+  required BuildContext context,
+  required String title,
+  required String message,
+}) {
+  return showDialog<bool?>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(T.no.tr),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(T.yes.tr),
+          ),
+        ],
+      );
+    },
   );
 }

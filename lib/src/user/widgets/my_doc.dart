@@ -34,4 +34,15 @@ class MyDoc extends StatelessWidget {
       },
     );
   }
+
+  static Widget field(
+    String field, {
+    required Function(dynamic value) builder,
+  }) {
+    return UserDoc.sync(
+      uid: UserService.instance.user!.uid,
+      field: field,
+      builder: (v) => builder(v),
+    );
+  }
 }

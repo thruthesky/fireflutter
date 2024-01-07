@@ -105,14 +105,35 @@ class DefaultPublicProfileScreen extends StatelessWidget {
               ),
               SafeArea(
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
                       onPressed: () async {
                         ChatService.instance.showChatRoom(context: context, uid: uid);
                       },
-                      child: const Text('채팅'),
+                      child: Text(T.chat.tr),
                     ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        ChatService.instance.showChatRoom(context: context, uid: uid);
+                      },
+                      child: Text(T.report.tr),
+                    ),
+                    MyDoc.field('${Field.blocks}/$uid', builder: (v) {
+                      return ElevatedButton(
+                        onPressed: () async {
+                          final re = await confirm(
+                            context: context,
+                            title: v == null ? T.blockConfirmTitle.tr : T.unblockConfirmTitle.tr,
+                            message:
+                                v == null ? T.blockConfirmMessage.tr : T.unblockConfirmMessage.tr,
+                          );
+                          if (re != true) return;
+                          await my?.block(uid);
+                        },
+                        child: Text(v == null ? T.block.tr : T.unblock.tr),
+                      );
+                    }),
                   ],
                 ),
               ),

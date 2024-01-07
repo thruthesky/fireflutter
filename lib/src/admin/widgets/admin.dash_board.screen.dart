@@ -24,50 +24,6 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
             runSpacing: 8,
             children: [
               ElevatedButton(
-                onPressed: () async {
-                  for (int i = 0; i < 10; i++) {
-                    final user = await loginOrRegister(
-                      email: 'test$i@email.com',
-                      password: '12345a',
-                      photoUrl: 'https://picsum.photos/id/${i * 100}/300/300',
-                    );
-
-                    ChatModel chat =
-                        ChatModel(room: ChatRoomModel.fromRoomdId('all'));
-                    await chat.join();
-                    await chat.sendMessage(
-                      text: '테스트 메시지 from ${user.email}',
-                    );
-                  }
-                },
-                child: const Text('테스트 사용자로 로그인해서 전체 채팅방에 채팅하기'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  for (int i = 0; i < 10; i++) {
-                    final user = await loginOrRegister(
-                      email: 'test$i@email.com',
-                      password: '12345a',
-                      photoUrl: 'https://picsum.photos/id/${i * 100}/300/300',
-                    );
-
-                    ChatModel chat =
-                        ChatModel(room: ChatRoomModel.fromRoomdId('all'));
-                    final ref = ChatService.instance.messageRef(roomId: 'all');
-                    final snapshot =
-                        await ref.orderByChild('uid').equalTo(user.uid).get();
-                    if (snapshot.value != null) {
-                      final nodes = snapshot.value as Map<dynamic, dynamic>;
-                      for (final node in nodes.entries) {
-                        await ref.child(node.key).remove();
-                      }
-                    }
-                    await chat.leave();
-                  }
-                },
-                child: const Text('테스트 사용자로 로그인해서 전체 채팅방에 채팅 삭제하기'),
-              ),
-              ElevatedButton(
                 onPressed: () {
                   AdminService.instance.showUserList(context: context);
                 },

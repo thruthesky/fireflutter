@@ -60,11 +60,11 @@ UserService.instance.init(
 
 
 
-## 사용자 정보 액세스
+## Access to other user data
 
-`UserDoc` 을 통해서 다른 사용자의 정보를 가져 올 수 있다. 물론 자기 자신의 정보도 가져 올 수 있다.
+You can use `UserDoc` to access other user's data. Note that you can use it to get your data also.
 
-기본적으로 데이터를 한 번만 가져와서 내부적으로 캐시를 한다. 즉, 한번 데이터를 가져오면, 두번 가져오지 않는다. 그래서 사용자의 데이터가 변경되어도 이전값을 보여 줄 수 있다. `cache` 옵션을 false 로 주면, 위젯을 빌드 할 때 마다 데이터를 가져온다.
+`UserDoc` caches the data in memory by default. This mean, it will get the data only once from Database. You may use `cache` option with false to get the data from the Database again.
 
 ```dart
 UserDoc(
@@ -94,15 +94,15 @@ UserDoc(
 ),
 ```
 
+It's important to know that you can use `field` property to get only the value of the field. It's recommended to use `field` whenever possible since the size of user data may be large.
 
 
 
-만약, 다른 회원의 정보가 변경 될 때 위젯이 자동으로 rebuild 되도록 하려면, `UserDoc.sync` 를 사용하면 된다.
+You can use `sync` method to update (rebuild) the widget whenever the value changes.
 
 ```dart
 UserDoc.sync(uid: user.uid, field: 'displayName', builder: (data, $) => Text(data)),
 ```
-
 
 
 ## 나의 (로그인 사용자) 정보 액세스
@@ -120,6 +120,18 @@ MyDoc(builder: (my) => Text("isAdmin: ${my?.isAdmin}"))
 ```dart
 MyDoc(builder: (my) => isAdmin ? Text('I am admin') : Text('I am not admin')
 ```
+
+
+
+If you are going to watch(listen) a value of a field, then you can use `MyDoc.field`.
+
+```dart
+MyDoc.field('${Field.blocks}/$uid', builder: (v) {
+  return Text(v == null ? T.block.tr : T.unblock.tr);
+})
+```
+
+
 
 ### 관리자 위젯 표시
 

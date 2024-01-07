@@ -1,5 +1,5 @@
 import 'package:fireship/fireship.dart';
-import 'package:fireship/src/translation/translation.service.dart';
+import 'package:fireship/src/text/text.service.dart';
 import 'package:flutter/material.dart';
 
 /// 채팅 메시지 입력 박스
@@ -37,8 +37,7 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (progress != null && !progress!.isNaN)
-          LinearProgressIndicator(value: progress),
+        if (progress != null && !progress!.isNaN) LinearProgressIndicator(value: progress),
         const Divider(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -61,9 +60,8 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                     // Review
                     camera: true,
                     gallery: true,
-                    progress: (p) => widget.onProgress?.call(p) ?? mounted
-                        ? setState(() => progress = p)
-                        : null,
+                    progress: (p) =>
+                        widget.onProgress?.call(p) ?? mounted ? setState(() => progress = p) : null,
                     complete: () => widget.onProgress?.call(null) ?? mounted
                         ? setState(() => progress = null)
                         : null,
@@ -105,7 +103,7 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
       if (url != null) {
         await widget.chat.sendMessage(url: url);
       }
-    } on ErrorCode catch (e) {
+    } on Issue catch (e) {
       if (mounted) {
         error(context: context, message: e.code.tr);
       }

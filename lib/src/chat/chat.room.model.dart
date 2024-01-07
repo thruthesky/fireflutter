@@ -42,7 +42,6 @@ class ChatRoomModel {
   /// 그룹 채팅방의 사용자 수
   /// 이 값은 /chat-joins/<uid>/<room-id> 에만 기록된다.
   int? noOfUsers;
-  int? order;
 
   /// [id] It returns the chat room id.
   ///
@@ -82,7 +81,6 @@ class ChatRoomModel {
     this.uploadVerified = false,
     this.users,
     this.noOfUsers,
-    this.order,
   });
 
   /// [fromSnapshot] It creates a [ChatRoomModel] from a [DataSnapshot].
@@ -121,7 +119,6 @@ class ChatRoomModel {
       uploadVerified: json['uploadVerified'] ?? false,
       users: json['users'] == null ? null : Map<String, bool>.from(json['users']),
       noOfUsers: json['noOfUsers'] is int ? json['noOfUsers'] : int.parse(json['noOfUsers'] ?? '0'),
-      order: json['order'] is int ? json['order'] : int.parse(json['order'] ?? '0'),
     );
   }
   Map<String, dynamic> toJson() {
@@ -144,7 +141,6 @@ class ChatRoomModel {
       'uploadVerified': uploadVerified,
       'users': users,
       'noOfUsers': noOfUsers,
-      'order': order,
     };
   }
 
@@ -186,7 +182,10 @@ class ChatRoomModel {
   static Future<ChatRoomModel> fromReference(DatabaseReference ref) async {
     final event = await ref.once();
     if (event.snapshot.exists == false) {
-      throw Exception('ChatRoomModel.fromReference: ${ref.path} does not exist.');
+      throw Issue(
+        Code.chatRoomNotExists,
+        'ChatRoomModel.fromReference: ${ref.path} does not exist.',
+      );
     }
     return ChatRoomModel.fromSnapshot(event.snapshot);
   }
@@ -228,7 +227,6 @@ class ChatRoomModel {
     uploadVerified = room.uploadVerified;
     users = room.users;
     noOfUsers = room.noOfUsers;
-    order = room.order;
 
     return this;
   }

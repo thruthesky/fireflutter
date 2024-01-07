@@ -1,11 +1,44 @@
-# 데이터베이스
+# Database
 
-- Realtime Database 위주로 사용을 하는데, 가장 큰 이유는 속도 때문이다. 물론 부가적으로 비용을 절감을 할 수 있다. 그러나, Firestore 보다는 검색 필터링 옵션이 부족하므로, 필요에 따라서 Firestore 에 데이터를 나누어 저장 할 필요가 있다.
+Fireship uses `Firebase Realtime Database`, although the majority of developers use `Firestore`. We have chosen the realtime database because it's fast and simply. You may use `Firestore` with Fireship.
 
 
-- 데이터베이스 node 에서 여러 단어가 들어가는 경우, `-` 로 구분 짓는다. 예, `user-profile-photos`
+## Gudeline
+
+- The path of database should not contain underbar(_). Instead use `-` between the words.
+  - For instance, `user-profile-photos`.
+
+## Database structure
+
+Fireship maintains as flat as it can be. Meaning, it does not contains a batch of data inside a node. For instance, the data of the users are saved under `/users/<uid>` and its data should not contain another batch of data. The fields should have a value of string, number, array. But not a map or subnode.
+
+Below is the good example of flat style.
+```json
+/users/<uid>/ { name: ..., age: ..., address: ..., }
+```
+
+Below is the bad example because it has other batch of information under the user node.
+```json
+/users/<uid>/schedule/<scheduleId>/ { subject: ..., contenxt: ...., dateAt: ...}
+```
+
+
+## Use Database
+
+```dart
+Database(
+    path: '${Path.join(myUid!, chat.room.id)}/name',
+    builder: (v, p) => Text(
+        v ?? '',
+        style: Theme.of(context).textTheme.titleLarge,
+    ),
+),
+```
 
 
 ## User Database
 
 See user document.
+
+
+

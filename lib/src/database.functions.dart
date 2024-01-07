@@ -22,8 +22,7 @@ Future<T?> get<T>(String path) async {
 }
 
 Future<DataSnapshot> getSnapshot(String path) async {
-  final event =
-      await FirebaseDatabase.instance.ref(path).once(DatabaseEventType.value);
+  final event = await FirebaseDatabase.instance.ref(path).once(DatabaseEventType.value);
   return event.snapshot;
 }
 
@@ -84,13 +83,15 @@ Future<void> update(String path, Map<String, Object?> value) async {
 /// If the node of the [path] does not exist, create it and return true.
 /// Warning, if the node exists, then remove it and return false.
 ///
+/// [value] is the value to set. If it is null, then it will be set to true.
+///
 /// ! NOTE - dont use directly, must be called from model or service
-Future<bool> toggle(String path) async {
+Future<bool> toggle(String path, [dynamic value]) async {
   final value = await get<bool?>(path);
 
   final ref = FirebaseDatabase.instance.ref(path);
   if (value == null) {
-    await ref.set(true);
+    await ref.set(value ?? true);
     return true;
   } else {
     await ref.remove();
@@ -101,6 +102,5 @@ Future<bool> toggle(String path) async {
 /// Like other user
 ///
 Future<bool> like(String otherUid) async {
-  return await toggle(
-      'likes/$otherUid/${FirebaseAuth.instance.currentUser!.uid}');
+  return await toggle('likes/$otherUid/${FirebaseAuth.instance.currentUser!.uid}');
 }

@@ -22,7 +22,6 @@ import 'package:flutter/material.dart';
 /// ```dart
 /// UserDoc(
 ///   uid: message.uid!,
-///   field: null,
 ///   builder: (data) => UserAvatar(
 ///     user: user,
 ///     radius: 13,

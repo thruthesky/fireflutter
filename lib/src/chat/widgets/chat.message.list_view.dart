@@ -1,10 +1,13 @@
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireship/fireship.dart';
+import 'package:fireship/ref.dart';
 import 'package:flutter/material.dart';
 
-/// 메시지 목록
+/// Chat Message List
 ///
-/// 채팅방 하나에 대한 메시지 목록을 보여준다.
+/// Display chat message
+///
+/// [chat.room] 에는 완전한 채팅방 정보 및 옵션(속성 값)이 들어가 있다. 이 옵션에 따라 적절한 처리를 하면 된다.
 ///
 class ChatMessageListView extends StatefulWidget {
   const ChatMessageListView({
@@ -34,7 +37,14 @@ class _RChatMessageListState extends State<ChatMessageListView> {
   @override
   void initState() {
     super.initState();
-    chat.resetMyRoomNewMessage();
+
+    init();
+  }
+
+  init() async {
+    final myJoinRef = Ref.join(myUid!, roomId);
+    final join = ChatRoomModel.fromSnapshot(await myJoinRef.get());
+    chat.resetNewMessage(join: join);
   }
 
   @override
@@ -76,7 +86,7 @@ class _RChatMessageListState extends State<ChatMessageListView> {
         if (chat.isLoadingNewMessage(roomId, snapshot)) {
           final newMessage = ChatMessageModel.fromSnapshot(snapshot.docs.first);
           // newMessage 리셋
-          chat.resetMyRoomNewMessage(
+          chat.resetNewMessage(
             order: newMessage.createdAt != null ? -newMessage.createdAt! : null,
           );
         }
@@ -98,11 +108,10 @@ class _RChatMessageListState extends State<ChatMessageListView> {
               if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
                 snapshot.fetchMore();
               }
-              final message =
-                  ChatMessageModel.fromSnapshot(snapshot.docs[index]);
+              final message = ChatMessageModel.fromSnapshot(snapshot.docs[index]);
 
               /// 채팅방의 맨 마지막 메시지의 order 를 지정.
-              chat.resetRoomMessageOrder(order: message.order);
+              chat.resetMessageOrder(order: message.order);
 
               return ChatBubble(
                 message: message,

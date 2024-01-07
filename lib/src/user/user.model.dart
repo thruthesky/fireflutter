@@ -3,6 +3,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:fireship/fireship.dart' as fs;
 import 'package:fireship/fireship.defines.dart';
 import 'package:fireship/src/common/exception/code.dart';
+import 'package:fireship/src/common/exception/issues.dart';
+import 'package:fireship/src/database.functions.dart';
 
 class UserModel {
   final String uid;
@@ -19,6 +21,9 @@ class UserModel {
   int? createdAt;
   bool isAdmin;
   bool isVerified;
+  List<String>? blocks;
+
+  bool isBlocked(String otherUserUid) => blocks?.contains(otherUserUid) ?? false;
 
   DatabaseReference get ref => FirebaseDatabase.instance.ref('users').child(uid);
 
@@ -40,6 +45,7 @@ class UserModel {
     this.createdAt,
     this.isAdmin = false,
     this.isVerified = false,
+    this.blocks,
   });
 
   factory UserModel.fromSnapshot(DataSnapshot snapshot) {
@@ -79,6 +85,11 @@ class UserModel {
       createdAt: json['createdAt'],
       isAdmin: json['isAdmin'] ?? false,
       isVerified: json['isVerified'] ?? false,
+      blocks: json[Field.blocks] == null
+          ? null
+          : List<String>.from(
+              (json[Field.blocks] as Map<Object?, Object?>).entries.map((x) => x.key),
+            ),
     );
   }
 
@@ -98,6 +109,7 @@ class UserModel {
       'createdAt': createdAt,
       'isAdmin': isAdmin,
       'isVerified': isVerified,
+      Field.blocks: blocks == null ? null : List<dynamic>.from(blocks!.map((x) => x)),
     };
   }
 
@@ -210,5 +222,34 @@ class UserModel {
     );
 
     await photoRef.remove();
+  }
+
+  /// Blocks or unblocks
+  ///
+  ///
+  Future block(String otherUserUid) async {
+    if (otherUserUid == uid) {
+      throw Issue(Code.blockSelf);
+    }
+    //
+    if (isBlocked(otherUserUid)) {
+      return await unblockUser(otherUserUid);
+    } else {
+      return await blockUser(otherUserUid);
+    }
+  }
+
+  /// Block a user
+  Future blockUser(String otherUserUid) async {
+    return await ref.child(Field.blocks).child(otherUserUid).set(
+          ServerValue.timestamp,
+        );
+  }
+
+  /// Unblock a user
+  ///
+  /// Remove the user from the block list by setting null value
+  Future unblockUser(String otherUserUid) async {
+    return await ref.child(Field.blocks).child(otherUserUid).set(null);
   }
 }

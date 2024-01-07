@@ -1,5 +1,7 @@
 # 채팅 (Chat)
 
+
+
 ## 디자인 컨셉 (Design Concept)
 
 - 동시에 여러개의 채팅방을 열 수 있다 (You can open multiple chat rooms simultaneously).
@@ -22,6 +24,26 @@
 
 ## 로직 (Logic)
 
+
+
+### Get ChatRoomModel on ChatRoom
+
+- The complete chat room model instance is needed before display the chat room message. For instance,
+  - to check if the user is in the room,
+  - to check if site preview displaying or image displaying options,
+  - to show password input box based on the chat room settings,
+  - etc
+
+
+
+
+### order
+
+- Chat message order is sorted by the last message's `order` field.
+  - It must have a smaller value than the previous message.
+  - When you send a chat message programatically without `order`, the message may be shown at the top.
+
+
 ### 채팅방 생성 (Creating Chat Room)
 
 간단하게 채팅방을 생성하는 방법은 아래와 같다.
@@ -35,7 +57,7 @@ ChatModel 만드는 것 만으로 채팅방이 만들어지지 않는다. 그래
 
 `join()` 을 호출하면, `/chat-rooms/all/users` 에 `{[uid]: true}` 가 생성된다.
 
-그리고 `ChatMessageListView` 위젯을 화면에 표시하면, 내부적으로 `ChatMessageListView::initState() -> ChatModel::resetMyRoomNewMessage()` 에서 RTDB `chat-joins/all` 에 `{order: 0}` 을 저장한다.
+그리고 `ChatMessageListView` 위젯을 화면에 표시하면, 내부적으로 `ChatMessageListView::initState() -> ChatModel::resetNewMessage()` 에서 RTDB `chat-joins/all` 에 `{order: 0}` 을 저장한다.
 
 그러나, 미리 만들어져 있는 `ChatService.instance.showChatRoomCreate()` 함수를 사용하면 보다 쉽게 채팅방을 생성 할 수 있다. 커스텀 디자인을 하고 싶다면, `DefaultChatRoomEditDialog` 를 복사해서 수정하면 된다.
 

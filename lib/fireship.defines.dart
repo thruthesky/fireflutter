@@ -53,4 +53,6 @@ class Field {
   static const String iconUrl = 'iconUrl';
 
   static const String profileBackgroundImageUrl = 'profileBackgroundImageUrl';
+
+  static const String blocks = 'blocks';
 }

@@ -15,7 +15,7 @@ export 'src/common/error_box.dart';
 export 'src/common/stacked_avatar.dart';
 
 /// Common Exception
-export 'src/common/exception/error_code.dart';
+export 'src/common/exception/issues.dart';
 export 'src/common/exception/code.dart';
 
 export 'src/common/linkify_text/linkify_text.dart';
@@ -66,7 +66,8 @@ export 'src/storage/widgets/default_upload_selection.bottom_sheet.dart';
 export 'src/storage/widgets/default_image_carousel.scaffold.dart';
 
 /// Translation
-export 'src/translation/translation.service.dart';
+export 'src/text/text.service.dart';
+export 'src/text/texts.dart';
 
 /// User
 export 'src/user/user.model.dart';

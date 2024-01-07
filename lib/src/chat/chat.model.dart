@@ -5,14 +5,18 @@ import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireship/fireship.dart';
 import 'package:fireship/ref.dart';
 
-/// ChatModel
+/// Chat Model
 ///
 /// 이 모델은 채팅방의 데이터 모델이 아니라, 로직을 담고 있는 로직 모델이다.
 /// This model is not a data model for the chat room but a logic model containing the logic.
 ///
-/// ChatService 에 모든 것을 다 집어 넣으면, 각 채팅 방마다 관리가 어렵다. 그래서 동시에 두개의 채팅방을 열 수 없다.
-/// If everything is put into ChatService, it becomes challenging to manage each chat room.
-/// Therefore, it is not possible to open two chat rooms simultaneously.
+/// ChatService 에 모든 것을 다 집어 넣으면, 각 채팅 방마다 관리가 어렵고 동시에 두개의 채팅방을 열 수 없다.
+/// If all the logic is squeezed inside the ChatService, it is not easy to
+/// manage chat room. And it is very difficult to open more than one chat room at the same time.
+/// So, [ChatModel] is created to manage the logic of each chat room. And it is
+/// possible to open more than one chat room at the same time.
+///
+
 class ChatModel {
   /// Set the current room.
   ChatRoomModel room;
@@ -27,9 +31,6 @@ class ChatModel {
   DatabaseReference roomUserRef(String roomId, String uid) =>
       rtdb.ref().child('chat-rooms/$roomId/users/$uid');
 
-  DatabaseReference get joinsRef => rtdb.ref().child('chat-joins');
-  DatabaseReference joinRef(String myUid, String roomId) => joinsRef.child(myUid).child(roomId);
-
   // This is used to update the last message in the chat room list per user in /chat-joins
   String joinPath(String roomId, String uid) => '/chat-joins/$uid/$roomId';
 
@@ -38,6 +39,17 @@ class ChatModel {
   ChatModel({
     required this.room,
   });
+
+  ///   /// 각 채팅방 마다, 맨 마지막 채팅 메시지의 order 값을 가지고 있는 배열
+  /// TODO: 이 변수를 통째로 ChatModel 로 이동하도록 하면, 보다 간결한 코딩이 가능해진다.
+  ///
+  /// 이것은 채팅 메시지를 역순으로 목록하기 위해서 사용하는 것으로, 나중에 입력되는 메시지일 수록 더 적은 음수 값을 저장해야하는데,
+  /// 메시지가 저장될 때 그 즉시, -1 로 저장하고,
+  /// 나중에, "시간 * -1"을 해서 업데이트를 해준다.
+  ///
+  /// 채팅방의 메시지 순서(order)를 가져온다.
+  /// 만약, [ChatService.instance.roomMessageOrder] 에 값이 없으면 0을 리턴한다.
+  int messageOrder = 0;
 
   resetRoom({required ChatRoomModel room}) {
     this.room = room;
@@ -54,15 +66,15 @@ class ChatModel {
 
     /// TODO 관리자 모드에서 특정 사용자에게 disabled 할 수 있도록 한다.
     if (UserService.instance.user?.isDisabled == true) {
-      throw ErrorCode(Code.disabled);
+      throw Issue(Code.disabled);
     }
 
     if (room.joined == false) {
-      throw ErrorCode(Code.notJoined);
+      throw Issue(Code.notJoined, 'chat.model.dart->sendMessage()');
     }
 
-    ///
-    service.roomMessageOrder[room.id] = (service.roomMessageOrder[room.id] ?? 0) - 1;
+    /// 채팅 메시지 순서를 -1 (감소) 한다.
+    messageOrder--;
 
     /// 참고, 실제 메시지를 보내기 전에, 채팅방 자체를 먼저 업데이트 해 버린다.
     ///
@@ -80,7 +92,7 @@ class ChatModel {
       'uid': myUid,
       if (text != null) 'text': text,
       if (url != null) 'url': url,
-      'order': service.roomMessageOrder[room.id],
+      'order': messageOrder,
       'createdAt': ServerValue.timestamp,
     };
     // 저장 할 경로
@@ -101,7 +113,7 @@ class ChatModel {
       final otherUid = room.otherUserUid!;
       final name = await UserModel.getField(otherUid, Field.displayName);
       final photoUrl = await UserModel.getField(otherUid, Field.photoUrl);
-      joinRef(myUid!, singleChatRoomId(otherUid)).update({
+      Ref.join(myUid!, singleChatRoomId(otherUid)).update({
         'name': name,
         'photoUrl': photoUrl,
       });
@@ -204,7 +216,7 @@ class ChatModel {
   /// For group chat, remove the chat room node from /chat-rooms/{myUid}/{groupChatId}
   ///   and remove my uid from /chat-rooms/{gropChatId}/users/{myUid}
   leave() {
-    joinRef(myUid!, room.id).remove();
+    Ref.joinRef(myUid!, room.id).remove();
     roomUserRef(room.id, myUid!).remove();
     // 채팅 방에 인원이 더 이상 없으면, 채팅 방을 삭제한다.
     // If there are no more people in the chat room, the chat room is deleted.
@@ -217,16 +229,13 @@ class ChatModel {
   ///
   /// 첫 메시지에는 0의 값을 지정하고,
   /// 그 다음 메시지에는 [order] 를 입력 받아 더 작은 값으로 지정한다.
-  resetRoomMessageOrder({required int? order}) async {
-    if (ChatService.instance.roomMessageOrder[room.id] == null) {
-      ChatService.instance.roomMessageOrder[room.id] = 0;
-    }
-    if (order != null && order < ChatService.instance.roomMessageOrder[room.id]!) {
-      ChatService.instance.roomMessageOrder[room.id] = order;
+  resetMessageOrder({required int? order}) async {
+    if (order != null && order < messageOrder) {
+      messageOrder = order;
     }
   }
 
-  /// 채팅방 정보 `/chat-rooms/$uid/$otherUid` 에서 newMessage 를 0 으로 초기화 한다.
+  /// 채팅방 정보 `/chat-joins/$uid/$otherUid` 에서 newMessage 를 0 으로 초기화 한다.
   ///
   /// 사용처: 내가 현재 채팅방에 들어왔으니, 현재 채팅방의 새로운 메시지가 없다는 것을 표시 할 때 사용.
   ///
@@ -239,27 +248,35 @@ class ChatModel {
   ///
   /// 주의, 로그인을 하지 않은 상태이면 그냥 리턴한다.
   /// 예를 들어, 메인 페이지에 (로그인을 하기 전에) 채팅방을 보여주는 경우,
-  Future<void> resetMyRoomNewMessage({
+  ///
+  /// [join] 은 맨 처음 채팅방에 입장 할 때, 한번만 전달되주면 된다. 새 메시지가 없다는 표시를 하기 위해서이다.
+  ///
+  Future<void> resetNewMessage({
     int? order,
+    ChatRoomModel? join,
   }) async {
     if (myUid == null) {
       return;
     }
-    final myJoinRef = joinRef(myUid!, room.id);
-    // the problem is when this is too fast
+
+    int? singleChatOrder, groupChatOrder;
+
+    /// 새 메시지가 있다는 뜻인 -11 을 그냥 -1 로 변경한다.
+    if (join != null) {
+      if (join.singleChatOrder.toString().contains('-11')) {
+        singleChatOrder = int.parse(join.singleChatOrder.toString().replaceAll('-11', '-1'));
+      }
+      if (join.groupChatOrder.toString().contains('-11')) {
+        groupChatOrder = int.parse(join.groupChatOrder.toString().replaceAll('-11', '-1'));
+      }
+    }
+
+    final myJoinRef = Ref.join(myUid!, room.id);
     myJoinRef.update({
-      'newMessage': null,
-      'order': order ?? -int.parse('${room.updatedAt ?? room.createdAt ?? 0}'),
+      Field.newMessage: null,
+      if (singleChatOrder != null) Field.singleChatOrder: singleChatOrder,
+      if (groupChatOrder != null) Field.groupChatOrder: groupChatOrder,
     });
-
-    // wait for 1 second before updating the order
-
-    // .then((value) {
-    //   myJoinRef.child('updatedAt').get().then((updatedAt) {
-    //     myJoinRef.update({'order': -int.parse('${(updatedAt.value ?? "0") as int}')});
-    //   });
-    // });
-    // print('--> resetRoomNewMessage: $roomId');
   }
 
   /// 누군가 채팅을 해서, 새로운 메시지가 전달되어져 왔는지 판단하는 함수이다.
@@ -294,7 +311,7 @@ class ChatModel {
     final lastMessage = ChatMessageModel.fromSnapshot(snapshot.docs.first);
     final lastMessageOrder = lastMessage.order as int;
 
-    final currentMessageOrder = service.getRoomMessageOrder(messageRoomId);
+    final currentMessageOrder = messageOrder;
 
     /// 이전에 로드된 채팅 메시지가 없는가? 누군가 채팅을 한 것이 아니라, 채팅방에 접속해서, 처음 로드된 것이므로 false 를 리턴한다.
     ///
@@ -338,12 +355,12 @@ class ChatModel {
     if (myUid == null) {
       // 로그인을 하지 않았으면 그냥 리턴
       // throw Exception('ChatModel::join() -> Login first -> myUid is null');
-      throw ErrorCode(Code.notLoggedIn);
+      throw Issue(Code.notLoggedIn);
     }
 
     // 채팅방이 인증 회원 전용 입장이면, 인증 회원이 아니면 그냥 리턴
     if (room.isVerifiedOnly && UserService.instance.user?.isVerified != true) {
-      throw ErrorCode(Code.chatRoomNotVerified);
+      throw Issue(Code.chatRoomNotVerified);
     }
 
     // 내가 이미 방에 들어가 있는 상태이면 그냥 리턴
@@ -385,7 +402,7 @@ class ChatModel {
     // it is important to know that updatedAt must not be updated
     // before this.
     data['order'] = order;
-    await joinsRef.child(myUid!).child(room.id).update(data);
+    await Ref.joinsRef.child(myUid!).child(room.id).update(data);
   }
 
   /// 현재 방 listen, unlisten
