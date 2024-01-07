@@ -16,6 +16,7 @@ class T {
   static const String unblock = 'Unblock';
   static const String report = 'Report';
   static const String leave = 'Leave';
+  static const String thisIsBlockedUser = 'You have blocked this user.';
 
   static const String blockConfirmTitle = 'Block this user?';
   static const String blockConfirmMessage = 'You will not be able to contents of this user.';

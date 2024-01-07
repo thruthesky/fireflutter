@@ -133,21 +133,32 @@ class _ChatRoomState extends State<ChatRoom> {
               const BackButton(),
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () {
+                onTap: () async {
                   if (chat.room.isSingleChat) {
-                    UserService.instance.showPublicProfile(
+                    await UserService.instance.showPublicProfile(
                       context: context,
                       uid: chat.room.otherUserUid!,
                     );
+                    setState(() {});
                   }
                 },
-                child: Database.once(
-                  path: '${Path.join(myUid!, chat.room.id)}/name',
-                  builder: (v, p) => Text(
-                    v ?? '',
-                    style: Theme.of(context).textTheme.titleLarge,
+                child: Row(children: [
+                  Database.once(
+                      path: '${Path.join(myUid!, chat.room.id)}/${Field.photoUrl}',
+                      builder: (v, p) => v == null
+                          ? const SizedBox.shrink()
+                          : Row(children: [
+                              Avatar(photoUrl: v),
+                              const SizedBox(width: 8),
+                            ])),
+                  Database.once(
+                    path: '${Path.join(myUid!, chat.room.id)}/name',
+                    builder: (v, p) => Text(
+                      v ?? '',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
                   ),
-                ),
+                ]),
               ),
               const Spacer(),
               PopupMenuButton<String>(

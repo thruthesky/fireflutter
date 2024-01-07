@@ -12,6 +12,23 @@ class ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (my!.isBlocked(message.uid!)) {
+      return Row(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+            constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: borderRadius(),
+            ),
+            child: Text(T.thisIsBlockedUser.tr),
+          ),
+        ],
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Row(
