@@ -1,3 +1,9 @@
+## 0.0.5
+
+* Updating chat features
+* Adding blocking function
+* Adding report function
+
 ## 0.0.4
 
 * Adding translation

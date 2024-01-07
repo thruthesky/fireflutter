@@ -160,10 +160,10 @@ class _ChatRoomState extends State<ChatRoom> {
                 onSelected: (v) {
                   if (v == 'setting') {
                     /// TODO 채팅방이 그룹 채팅이 아니라, 1:1 채팅인 경우, chat-joins 에서 설정을 해야 한다.
-                    // ChatService.instance.showChatRoomSettings(
-                    //   context: context,
-                    //   // roomId: roomId ?? room?.id ?? '',
-                    // );
+                    ChatService.instance.showChatRoomSettings(
+                      context: context,
+                      roomId: chat.room.id,
+                    );
                   }
                 },
                 tooltip: '채팅방 설정',

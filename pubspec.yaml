@@ -1,6 +1,6 @@
 name: fireship
 description: "A lightning-fast, robust CMS for seamless real-time content management in app development."
-version: 0.0.4
+version: 0.0.5
 homepage: https://github.com/thruthesky/fireship
 
 environment:
