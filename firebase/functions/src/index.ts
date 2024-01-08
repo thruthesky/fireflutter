@@ -22,5 +22,4 @@ export const sendPushNotifications = onRequest(async (request, response) => {
       request.query["data"] as { [key: string]: string }
     )
   );
-
 });
