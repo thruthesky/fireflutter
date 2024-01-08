@@ -38,8 +38,8 @@ export class MessagingService {
     body: string,
     data: { [key: string]: string }
   ) {
-
     const promises = [];
+
     // / remove empty tokens from tokens and save it to newTokens
     const newTokens = Array.isArray(tokens) ? tokens.filter((token) => !!token) : (tokens ? [tokens] : []);
     
