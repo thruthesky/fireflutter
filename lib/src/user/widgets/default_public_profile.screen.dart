@@ -115,7 +115,14 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        ChatService.instance.showChatRoom(context: context, uid: uid);
+                        final re = await input(
+                          context: context,
+                          title: T.reportInputTitle.tr,
+                          subtitle: T.reportInputMessage.tr,
+                          hintText: T.reportInputHint.tr,
+                        );
+                        if (re == null || re == '') return;
+                        // await my?.report(uid);
                       },
                       child: Text(T.report.tr),
                     ),

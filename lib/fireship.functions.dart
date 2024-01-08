@@ -189,3 +189,58 @@ Future<bool?> confirm({
     },
   );
 }
+
+/// Prompt a dialog to get user input.
+///
+/// [context] is the build context.
+/// [title] is the title of the dialog.
+/// [subtitle] is the subtitle of the dialog.
+/// [hintText] is the hintText of the input.
+/// [initialValue] is the initial value of the input field.
+///
+/// Returns the user input.
+///
+/// Used in:
+/// - admin.messaging.screen.dart
+Future<String?> input({
+  required BuildContext context,
+  required String title,
+  String? subtitle,
+  required String hintText,
+  String? initialValue,
+}) {
+  return showDialog<String?>(
+    context: context,
+    builder: (BuildContext context) {
+      final controller = TextEditingController(text: initialValue);
+      return AlertDialog(
+        title: Text(title),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (subtitle != null) ...[
+              Text(subtitle),
+              const SizedBox(height: 24),
+            ],
+            TextField(
+              controller: controller,
+              decoration: InputDecoration(
+                hintText: hintText,
+              ),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, controller.text),
+            child: Text(T.ok.tr),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(T.cancel.tr),
+          ),
+        ],
+      );
+    },
+  );
+}
