@@ -122,7 +122,7 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                           hintText: T.reportInputHint.tr,
                         );
                         if (re == null || re == '') return;
-                        // await my?.report(uid);
+                        await ReportService.instance.report(otherUserUid: uid, reason: re);
                       },
                       child: Text(T.report.tr),
                     ),

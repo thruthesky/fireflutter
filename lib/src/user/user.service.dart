@@ -158,13 +158,14 @@ class UserService {
       if (re != true) return;
 
       if (loggedIn && myUid != uid) {
-        MessagingService.instance.send(
-          title: "Your profile was visited.",
-          body: "${currentUser?.displayName} visit your profile",
-          senderUid: myUid!,
-          receiverUid: uid,
-          action: 'profile',
-        );
+        // TODO send message if somebody visit my profile
+        // MessagingService.instance.send(
+        //   title: "Your profile was visited.",
+        //   body: "${currentUser?.displayName} visit your profile",
+        //   senderUid: myUid!,
+        //   receiverUid: uid,
+        //   action: 'profile',
+        // );
       }
     }();
 

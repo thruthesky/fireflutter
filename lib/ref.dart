@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:fireship/fireship.dart';
 
 class Ref {
   Ref._();
@@ -18,18 +19,7 @@ class Ref {
   @Deprecated('Use join() instead')
   static DatabaseReference joinRef(String myUid, String roomId) =>
       joinsRef.child(myUid).child(roomId);
-}
 
-class Path {
-  Path._();
-
-  /// User
-  static const String users = 'users';
-  static const String userProfilePhotos = 'profile-photos';
-
-  /// Chat
-  static const String chatMessages = 'chat-messages';
-
-  static const String joins = 'chat-joins';
-  static String join(String myUid, String roomId) => '$joins/$myUid/$roomId';
+  /// Report
+  static DatabaseReference reports = root.child(Folder.reports);
 }

@@ -232,7 +232,11 @@ Future<String?> input({
         ),
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.pop(context, controller.text),
+            onPressed: () {
+              if (controller.text.isNotEmpty) {
+                Navigator.pop(context, controller.text);
+              }
+            },
             child: Text(T.ok.tr),
           ),
           TextButton(

@@ -1,3 +1,5 @@
+import 'package:fireship/fireship.dart';
+
 class Folder {
   Folder._();
   static const String admins = 'admins';
@@ -8,6 +10,8 @@ class Folder {
   static const String userPhotos = 'user-photos';
   static const String userProfilePhotos = 'user-profile-photos';
   static const String users = 'users';
+
+  static const String reports = 'reports';
 }
 
 class Field {
@@ -55,4 +59,20 @@ class Field {
   static const String profileBackgroundImageUrl = 'profileBackgroundImageUrl';
 
   static const String blocks = 'blocks';
+}
+
+class Path {
+  Path._();
+
+  /// User
+  static const String users = Folder.users;
+  static const String userProfilePhotos = Folder.userProfilePhotos;
+
+  /// Chat
+  static const String chatMessages = Folder.chatMessages;
+
+  static const String joins = Folder.chatJoins;
+  static String join(String myUid, String roomId) => '$joins/$myUid/$roomId';
+
+  static String get myReports => '${Folder.reports}/$myUid';
 }

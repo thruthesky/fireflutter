@@ -31,6 +31,7 @@ export 'src/database/widgets/database.dart';
 /// Extensions
 export 'src/extensions/color.extension.dart';
 export 'src/extensions/string.extension.dart';
+export 'src/extensions/int.extension.dart';
 
 /// Functions
 export 'fireship.functions.dart';
@@ -58,6 +59,13 @@ export 'src/database.functions.dart';
 
 /// message
 export 'src/messaging/messaging.service.dart';
+
+/// Report
+export 'src/report/report.service.dart';
+export 'src/report/report.model.dart';
+
+/// Ref
+export './ref.dart';
 
 /// Stroage
 export 'src/storage/storage.service.dart';

@@ -196,28 +196,30 @@ class MessagingService {
   ///
   /// TODO: remove invalid tokens from database.
   ///
-  Future send(
-      {required String title,
-      required String body,
-      required String senderUid,
-      required String receiverUid,
-      String? badge,
-      String? channelId,
-      String? sound,
-      String? action,
-      Map<String, dynamic>? extra,
-      List<String>? tokens}) async {
-    /// limit of token per chunk
-    const int maxToken = 255;
+  Future<Map<String, String>> send({
+    required List<String> tokens,
+    required String title,
+    required String body,
+    required String senderUid,
+    required String receiverUid,
+    String? badge,
+    String? channelId,
+    String? sound,
+    String? action,
+    Map<String, dynamic>? extra,
+    int numberOfChunks = 255,
+  }) async {
+    /// remove empty tokens
+    tokens = tokens.where((element) => element.isNotEmpty).toList();
 
     /// check and separate the token by 255 per chunk
     List<List<String>> tokenChunck = [];
-    if (tokens != null) {
-      for (int i = 0; i < tokens.length; i += maxToken) {
-        int end = (i + maxToken < tokens.length) ? i + maxToken : tokens.length;
-        tokenChunck.add(tokens.sublist(i, end));
-      }
+    for (int i = 0; i < tokens.length; i += numberOfChunks) {
+      int end = (i + numberOfChunks < tokens.length) ? i + numberOfChunks : tokens.length;
+      tokenChunck.add(tokens.sublist(i, end));
     }
+
+    Map<String, String> responses = {};
 
     /// send the token per group of chunk
     for (List<String> chunck in tokenChunck) {
@@ -228,14 +230,22 @@ class MessagingService {
         "tokens": chunck
       };
 
-      dog('data->>  $data');
+      dog('tokens in this chunk ->>  ${chunck.length}');
 
       final dio = Dio();
-      final response = await dio.post(
-          'http://127.0.0.1:5001/philgo/us-central1/sendPushNotifications',
-          queryParameters: data);
-      dog('response; $response');
+      try {
+        final response = await dio.post(sendUrl!, queryParameters: data);
+
+        final res = Map<String, String>.from(response.data);
+        responses.addAll(res);
+      } catch (e) {
+        dog('error: $e');
+
+        ///
+      }
     }
+
+    return responses;
   }
 
   /// Parse message data from [RemoteMessage.data]
