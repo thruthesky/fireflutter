@@ -1,5 +1,6 @@
 
 import {getMessaging} from "firebase-admin/messaging";
+import { logger } from "firebase-functions/v1";
 
 
 /**
@@ -40,8 +41,9 @@ export class MessagingService {
     const promises = [];
 
     // / remove empty tokens from tokens and save it to newTokens
-    const newTokens = Array.isArray(tokens) ? tokens.filter((token) => !!token): [];
-
+    const newTokens = Array.isArray(tokens) ? tokens.filter((token) => !!token) : (tokens ? [tokens] : []);
+    
+    // send the notification message to the list of tokens
     for (const token of newTokens) {
       const message = {
         notification: {title, body},
@@ -54,6 +56,9 @@ export class MessagingService {
 
     const res = await Promise.allSettled(promises);
 
+
+    logger.info(res.length, { structuredData: true })
+    
     if (res.length != newTokens.length) {
       console.log("res", res);
       console.log("tokens", tokens);
@@ -66,8 +71,12 @@ export class MessagingService {
     for (let i = 0; i < res.length; i++) {
       const status: string = res[i].status;
       if (status == "fulfilled") {
+        // const value = (res[i] as PromiseFulfilledResult<any>).value;
+        // console.log("value",value)
+        newResponses[newTokens[i]] = "ok";
         continue;
       }
+      
       const reason = (res[i] as PromiseRejectedResult).reason;
       newResponses[newTokens[i]] = reason["errorInfo"]["code"];
     }

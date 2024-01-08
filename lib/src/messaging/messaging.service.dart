@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -195,47 +196,46 @@ class MessagingService {
   ///
   /// TODO: remove invalid tokens from database.
   ///
-  Future send({
-    required String title,
-    required String body,
-    required String senderUid,
-    required String receiverUid,
-    String? badge,
-    String? channelId,
-    String? sound,
-    String? action,
-    Map<String, dynamic>? extra,
-  }) async {
-    Map<String, dynamic> data = {
-      'title': title,
-      'body': body,
-      'data': {
-        'senderUid': myUid!,
-      },
-      'tokens': [
-        // / iPhone11ProMax
-        // "fVWDxKs1kEzxhtV9ElWh-5:APA91bE_rN_OBQF3KwAdqd6Ves18AnSrCovj3UQyoLHvRwp0--1BRyo9af8EDEWXEuzBneknEFFuWZ7Lq2VS-_MBRY9vbRrdXHEIAOtQ0GEkJgnaJqPYt7TQnXtci3s0hxn34MBOhwSK",
-        // / andriod with initail uid of W7a
-        "c9OPdjOoRtqCOXVG7HLpSI:APA91bFJ9VshAvx-mQ4JsIpFmkljnA4XZtE8LDw6JYtIWSJwSxnuJsHt0XtlHKy4wuRcttIzqPQckfAwX_baurPfiJuFFNS6ioD50X9ks5eeyi5Pl40vMWmCpNpgCVxg92CjRe5S51Ja",
-        // / Android in MacOS
-        "e66JGEFqRWOuictuIH8pnk:APA91bEPzpJI1IzfWs-A1UO13Mly3YQU07kpQZyl5KVXYowKts_ILI6l624ZtSk2wljVaY62xXHJNFvLKvfCNvzUI9QjEygKPjC0NROBnKQ3P__LZU2d5fd2-jdlUosOwoViLnUEaADN",
-        //
-        "df06WGOxSJCJLwciBcbO_D:APA91bH1kAm1MFsCCWkPutbqmt95Xl0xg7poQNSUjlaCAXeM4hERN2toI94yzDoIMW4b1lyNGQRcc3uFkSmptWRXGGADzQjNXQt-2WPI9GoQ08AiXCmGoYhXmWWNntlDHE92jQ_ojuhW"
-            // TEST empty token
-            "",
-        // TEST invalid token
-        "This-is-invalid-token",
-      ],
-    };
+  Future send(
+      {required String title,
+      required String body,
+      required String senderUid,
+      required String receiverUid,
+      String? badge,
+      String? channelId,
+      String? sound,
+      String? action,
+      Map<String, dynamic>? extra,
+      List<String>? tokens}) async {
+    /// limit of token per chunk
+    const int maxToken = 255;
 
-    dog('data->>  $data');
+    /// check and separate the token by 255 per chunk
+    List<List<String>> tokenChunck = [];
+    if (tokens != null) {
+      for (int i = 0; i < tokens.length; i += maxToken) {
+        int end = (i + maxToken < tokens.length) ? i + maxToken : tokens.length;
+        tokenChunck.add(tokens.sublist(i, end));
+      }
+    }
 
-    final dio = Dio();
-    final response = await dio.post(
-      sendUrl!,
-      data: data,
-    );
-    dog('response; $response');
+    /// send the token per group of chunk
+    for (List<String> chunck in tokenChunck) {
+      Map<String, dynamic> data = {
+        "title": title,
+        "body": body,
+        "data": {"senderUid": senderUid, "receiverUid": receiverUid},
+        "tokens": chunck
+      };
+
+      dog('data->>  $data');
+
+      final dio = Dio();
+      final response = await dio.post(
+          'http://127.0.0.1:5001/philgo/us-central1/sendPushNotifications',
+          queryParameters: data);
+      dog('response; $response');
+    }
   }
 
   /// Parse message data from [RemoteMessage.data]

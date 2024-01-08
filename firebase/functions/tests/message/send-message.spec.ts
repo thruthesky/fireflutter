@@ -13,7 +13,8 @@ if (admin.apps.length === 0) {
  */
 describe("Send message", () => {
   it("Check invalid tokens", async () => {
-    const res = await MessagingService.sendNotificationToTokens([
+    const res = await MessagingService.sendNotificationToTokens(
+      [
       // / iPhone11ProMax
       // "fVWDxKs1kEzxhtV9ElWh-5:APA91bE_rN_OBQF3KwAdqd6Ves18AnSrCovj3UQyoLHvRwp0--1BRyo9af8EDEWXEuzBneknEFFuWZ7Lq2VS-_MBRY9vbRrdXHEIAOtQ0GEkJgnaJqPYt7TQnXtci3s0hxn34MBOhwSK",
       // / andriod with initail uid of W7a
@@ -33,6 +34,7 @@ describe("Send message", () => {
       time: "10:24",
       title: "score on test",
     }
+  
     );
     console.log("res", res);
 
