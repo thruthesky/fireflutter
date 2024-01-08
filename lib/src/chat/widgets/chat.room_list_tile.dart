@@ -39,8 +39,7 @@ class ChatRoomListTile extends StatelessWidget {
         children: [
           Text(
             dateTimeShort(DateTime.fromMillisecondsSinceEpoch(room.updatedAt!)),
-            style:
-                Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 10),
+            style: Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 10),
           ),
           ChatNewMessage(room: room),
         ],
@@ -55,6 +54,17 @@ class ChatRoomListTile extends StatelessWidget {
   }
 
   Widget? subtitle(BuildContext context, ChatRoomModel room) {
+    if (room.isSingleChat) {
+      if (my?.isBlocked(room.otherUserUid!) == true) {
+        return Text(
+          T.thisIsBlockedUser.tr,
+          style: Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 11),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        );
+      }
+    }
+
     final text = this.text(room);
     if (text == null) return null;
 
