@@ -1,7 +1,5 @@
 # 채팅 (Chat)
 
-
-
 ## 디자인 컨셉 (Design Concept)
 
 - 동시에 여러개의 채팅방을 열 수 있다 (You can open multiple chat rooms simultaneously).
@@ -24,8 +22,6 @@
 
 ## 로직 (Logic)
 
-
-
 ### Get ChatRoomModel on ChatRoom
 
 - The complete chat room model instance is needed before display the chat room message. For instance,
@@ -34,15 +30,11 @@
   - to show password input box based on the chat room settings,
   - etc
 
-
-
-
 ### order
 
 - Chat message order is sorted by the last message's `order` field.
   - It must have a smaller value than the previous message.
   - When you send a chat message programatically without `order`, the message may be shown at the top.
-
 
 ### 채팅방 생성 (Creating Chat Room)
 
@@ -66,7 +58,7 @@ ChatModel 만드는 것 만으로 채팅방이 만들어지지 않는다. 그래
 A `ChatRoom()` widget can be used to show chat room (room's messages with room input box).
 
 ```dart
-// For 1:1 chat room
+// For 1:1 chat room, using other user's uid
 ChatRoom(uid: 'user-uid');
 
 ...
@@ -172,8 +164,6 @@ FirebaseDatabaseQueryBuilder(
   },
 );
 
-
-
 ```
 
 ### 채팅방 목록 (Chat Room List)
@@ -191,14 +181,13 @@ RTDB 의 특성상 채팅방을 목록 할 때,
 그래서, 채팅방 목록 전체를 다 가져와서 한번에 표시한다. 즉, 나의 1:1 채팅방 목록을 할 때에는 나의 1:1 채팅방 목록 전체를 다 가져와서 날싸순으로 표시를 하는 것이다. 이것을 나의 전체 그룹 채팅, 그리고 모든 오픈 채팅과 동일하게 표시를 한다.
 다만, 이렇게 하려면 개개인(사용자)의 채팅 방수가 너무 많으면 안된다. 전반적으로 1인당 500개 이하는 무난 할 것 같다. 2천개 이하도 괜찮을 것 같기도 하다. 다만 한 사용자의 방 수가 2천 개 이상 이면 좀 무리가 되지 않을까 싶다. 그래서 방수를 제한하는 것도 하나의 방법이겠다. 또한 오픈 챗의 개수가 2천개 이상 넘어가도 문제가 될 것 같다.
 
-Here is an example code to show chat room list.
+Here is an example code to show chat room list. This will show list of all Chat Rooms by the currently logged in user. Take note that the `Field.order` is the same as 'order'.
 
 ```dart
 FirebaseDatabaseQueryBuilder(
   query: ChatService.instance.joinsRef
       .child(myUid!)
-      .orderByChild(Field.order)
-      .startAt(false),
+      .orderByChild(Field.order),
   pageSize: 50,
   builder: (context, snapshot, _) {
     if (snapshot.isFetching) {
@@ -225,6 +214,61 @@ FirebaseDatabaseQueryBuilder(
 );
 
 ```
+
+#### Querying Specific Type of Chat Rooms
+
+You may want to show specific types of Chat Rooms, like Single Chat Rooms only, Group Chats Only, or Open Group Chats only.
+
+##### Chat Rooms Joined by the Currently Logged in User (joinsRef)
+
+In the earlier example, the query in FirebaseDatabaseQueryBuilder uses `Field.order`:
+
+```dart
+FirebaseDatabaseQueryBuilder(
+  query: ChatService.instance.joinsRef
+      .child(myUid!)
+      .orderByChild(Field.order)
+      .startAt(false),
+  pageSize: 50,
+  builder: (context, snapshot, _) {
+    ...
+  },
+);
+```
+
+For `ChatService.instance.joinsRef.child(myUid!)`, the `joinsRef` is the reference for the chat rooms. In RTDB the node is `chat-joins/user-uid/room-id`. Therefore, `myUid` is required.
+
+The `Field.order` is the same with 'order'. This can be used to get all the group chat that the currently logged in user is joined. Here are the list of fields can be used in `joinsRef`:
+
+1. `Field.order` - same as 'order'.
+   - All chat room - single or group chat
+2. `Field.singleChatOrder` - same as 'singleChatOrder'.
+   - All single chat room
+3. `Field.groupChatOrder` - same as 'groupChatOrder'.
+   - All group chat room
+
+##### Chat Rooms not Necessarily Joined by the Currently Logged in User (roomsRef)
+
+For `ChatService.instance.roomsRef`, the `roomsRef` is the reference for the chat rooms. In RTDB the node is `chat-rooms/roon-id`.
+
+```dart
+FirebaseDatabaseQueryBuilder(
+  query: ChatService.instance.roomsRef
+      .orderByChild(Field.openGroupChatOrder)
+      .startAt(false),
+  pageSize: 50,
+  builder: (context, snapshot, _) {
+    ...
+  }
+);
+```
+
+Here are the list of fields can be used in `roomsRef`:
+
+1. `Field.groupChatOrder` - same as 'groupChatOrder'.
+   - All group chat room
+2. `Field.openGroupChatOrder` - same as 'openGroupChatOrder'.
+   - All open group chat room
 
 ## 관리 (Management)
 
