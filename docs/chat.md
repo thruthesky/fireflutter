@@ -266,7 +266,7 @@ FirebaseDatabaseQueryBuilder(
 Here are the list of fields can be used in `roomsRef`:
 
 1. `Field.groupChatOrder` - same as 'groupChatOrder'.
-   - All group chat room
+   - All group chat room - open or closed
 2. `Field.openGroupChatOrder` - same as 'openGroupChatOrder'.
    - All open group chat room
 
