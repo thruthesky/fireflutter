@@ -216,7 +216,7 @@ class MessagingService {
     /// remove empty tokens
     tokens = tokens.where((element) => element.isNotEmpty).toList();
 
-    /// check and separate the token by 255 per chunk
+    /// Chunk. check and separate the token by 255 per chunk
     List<List<String>> tokenChunck = [];
     for (int i = 0; i < tokens.length; i += numberOfChunks) {
       int end = (i + numberOfChunks < tokens.length) ? i + numberOfChunks : tokens.length;
@@ -225,7 +225,7 @@ class MessagingService {
 
     Map<String, String> responses = {};
 
-    /// send the token per group of chunk
+    /// Send. send the token per group of chunk
     for (List<String> chunck in tokenChunck) {
       Map<String, dynamic> data = {
         "title": title,
@@ -243,7 +243,7 @@ class MessagingService {
         final res = Map<String, String>.from(response.data);
         responses.addAll(res);
       } catch (e) {
-        dog('error: $e');
+        dog('error on calling firebase function: $e');
 
         ///
       }
@@ -271,12 +271,14 @@ class MessagingService {
     final List<String> tokens = List<String>.from(folders.keys);
 
     // 2. send messages to all tokens
-    await send(
+    final responses = await send(
       tokens: tokens,
       title: 'send all test - ${DateTime.now()}',
       body: 'this is the content of the message',
       senderUid: myUid!,
     );
+
+    print('sendAll() responses: $responses');
   }
 
   /// Send message to one user or multiple users
