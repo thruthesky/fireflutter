@@ -10,8 +10,13 @@ class Ref {
   static DatabaseReference users = root.child('users');
   static DatabaseReference userProfilePhotos = root.child('profile-photos');
 
-  /// Chat
+  /// Chat Message
   static DatabaseReference chatMessages = root.child('chat-messages');
+
+  /// Chat Room
+  static DatabaseReference chatRoom = root.child('chat-rooms');
+  static Query listOfUsers(String uid, String roomId) =>
+      chatRoom.orderByChild('users').equalTo(uid);
 
   static DatabaseReference get joinsRef => root.child(Path.joins);
   static DatabaseReference join(String myUid, String roomId) =>

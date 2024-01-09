@@ -134,7 +134,9 @@ class ChatModel {
       return p;
     });
 
-    print('uids: $uids');
+    print('list of uids:  $uids');
+
+    /// sending notification to the list of uids
     MessagingService.instance.sendTo(uids: uids);
   }
 

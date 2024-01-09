@@ -196,10 +196,9 @@ class MessagingService {
   /// if action, topic, and tokens are null, then uids will be used
   ///
   /// [receiverUid] the receiver's uid. It can be null if the tokens are from multiple users.
+  /// [numberOfChunks] the number of chunks is the number of token inside a chuncks the maximum number of chunks that th
+  /// firebase cloud messging to send all at once is 1000.
   ///
-  /// TODO: what if there is too much tokens? chunk it by 255 tokens and send them all at once.
-  ///
-  /// TODO: remove invalid tokens from database.
   ///
   Future<Map<String, String>> send({
     required List<String> tokens,
@@ -281,7 +280,12 @@ class MessagingService {
   }
 
   /// Send message to one user or multiple users
-  sendTo({String? uid, List<String>? uids}) async {
+  /// [uid] sending a notification to a single uid
+  /// [uids] sending a notification to multiple uids
+  sendTo({
+    String? uid,
+    List<String>? uids,
+  }) async {
     assert(uid != null || uids != null);
     uids ??= [uid!];
 
