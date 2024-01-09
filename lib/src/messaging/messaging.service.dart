@@ -234,7 +234,7 @@ class MessagingService {
         "tokens": chunck
       };
 
-      dog('tokens in this chunk ->>  ${chunck.length}');
+      dog('tokens in this chunk ->>  ${chunck.length}, data: $data');
 
       final dio = Dio();
       try {
@@ -243,7 +243,7 @@ class MessagingService {
         final res = Map<String, String>.from(response.data);
         responses.addAll(res);
       } catch (e) {
-        dog('error on calling firebase function: $e');
+        dog('Error on calling firebase function: $e');
 
         ///
       }
@@ -262,10 +262,10 @@ class MessagingService {
     return responses;
   }
 
-  sendAll() async {
+  Future<Map<String, String>> sendAll() async {
     // 1. get all tokens
     final folders = await get<Map>(Folder.userFcmTokens);
-    if (folders == null) return;
+    if (folders == null) return {};
 
     // get all tokens from `/user-fcm-tokens`.
     final List<String> tokens = List<String>.from(folders.keys);
@@ -279,12 +279,14 @@ class MessagingService {
     );
 
     print('sendAll() responses: $responses');
+
+    return responses;
   }
 
   /// Send message to one user or multiple users
   /// [uid] sending a notification to a single uid
   /// [uids] sending a notification to multiple uids
-  sendTo({
+  Future<Map<String, String>> sendTo({
     String? uid,
     List<String>? uids,
   }) async {
@@ -295,21 +297,24 @@ class MessagingService {
     List<String> tokens = [];
     for (uid in uids) {
       final snapshot = await Ref.userTokens(uid).get();
-      if (snapshot.exists == false) return;
-      if (snapshot.value == null) return;
+      if (snapshot.value == null) continue;
+      if (snapshot.exists == false) continue;
 
       // get all tokens from `/user-fcm-tokens`.
       tokens += List<String>.from((snapshot.value! as Map).keys);
     }
-    // 2. send all messages to all tokens
+    print('tokens: $tokens');
 
     // 2. send messages to all tokens
-    await send(
+    final responses = await send(
       tokens: tokens,
       title: 'send all test - ${DateTime.now()}',
       body: 'this is the content of the message',
       senderUid: myUid!,
     );
+
+    print('sendTo() responses: $responses');
+    return responses;
   }
 
   /// Parse message data from [RemoteMessage.data]
