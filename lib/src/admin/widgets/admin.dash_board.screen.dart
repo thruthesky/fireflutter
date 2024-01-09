@@ -32,7 +32,13 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
               ElevatedButton(
                 onPressed: () {},
                 child: const Text('신고목록'),
-              )
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  MessagingService.instance.sendAll();
+                },
+                child: const Text('Send push messages to all users'),
+              ),
             ],
           ),
         ],

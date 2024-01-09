@@ -22,4 +22,8 @@ class Ref {
 
   /// Report
   static DatabaseReference reports = root.child(Folder.reports);
+
+  /// Token, FCM, Notification
+  static DatabaseReference userFcmTokens = root.child(Folder.userFcmTokens);
+  static Query userTokens(String uid) => userFcmTokens.orderByChild('uid').equalTo(uid);
 }

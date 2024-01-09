@@ -161,6 +161,7 @@ class _ChatRoomState extends State<ChatRoom> {
                 ]),
               ),
               const Spacer(),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.notifications)),
               PopupMenuButton<String>(
                 itemBuilder: (_) => [
                   PopupMenuItem(value: 'setting', child: Text(T.setting.tr)),

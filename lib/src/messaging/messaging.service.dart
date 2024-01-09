@@ -156,7 +156,11 @@ class MessagingService {
     dog('Updating the device token: $token');
     if (token == null) return;
     try {
-      await set('user-fcm-tokens/$myUid/$token', platformName());
+      final data = {
+        'uid': myUid,
+        'platform': platformName(),
+      };
+      await set('${Folder.userFcmTokens}/$token', data);
     } catch (e) {
       dog('Error while updating token: $e');
       rethrow;
@@ -183,7 +187,7 @@ class MessagingService {
   /// [uids] 는 배열로 입력되어야 하고, 여기서 콤마로 분리된 문자열로 만들어 서버로 보낸다. 즉, 서버에서는 문자열이어야 한다.
   ///
   /// [target] is the target of devices you want to send message to. If it's "all", then it will send messages to all users.
-  /// [type] is the kind of push notification `post` `chat`
+  /// [type] is the kind of push notification `post`, `chat`, `profile`
   /// [id] is can be use to determined the landing page when notification is clicked
   /// heirarchy action >> topic >> tokens >> uids
   /// if action is not null, topic, tokens, uids will be ignored
@@ -191,6 +195,7 @@ class MessagingService {
   /// if action and topic is null, and tokens is not null then uids will be ignored
   /// if action, topic, and tokens are null, then uids will be used
   ///
+  /// [receiverUid] the receiver's uid. It can be null if the tokens are from multiple users.
   ///
   /// TODO: what if there is too much tokens? chunk it by 255 tokens and send them all at once.
   ///
@@ -201,13 +206,13 @@ class MessagingService {
     required String title,
     required String body,
     required String senderUid,
-    required String receiverUid,
     String? badge,
     String? channelId,
     String? sound,
     String? action,
     Map<String, dynamic>? extra,
     int numberOfChunks = 255,
+    bool removeInvalidTokens = true,
   }) async {
     /// remove empty tokens
     tokens = tokens.where((element) => element.isNotEmpty).toList();
@@ -226,7 +231,7 @@ class MessagingService {
       Map<String, dynamic> data = {
         "title": title,
         "body": body,
-        "data": {"senderUid": senderUid, "receiverUid": receiverUid},
+        "data": {"senderUid": senderUid},
         "tokens": chunck
       };
 
@@ -245,7 +250,60 @@ class MessagingService {
       }
     }
 
+    /// remove invalid tokens
+    print('no of bad tokens: ${responses.length}');
+    for (final key in responses.keys) {
+      print('invalid key: $key - ${responses[key]}');
+      set("${Folder.userFcmTokens}/$key", null);
+    }
+    if (removeInvalidTokens) {
+      ///
+    }
+
     return responses;
+  }
+
+  sendAll() async {
+    // 1. get all tokens
+    final folders = await get<Map>(Folder.userFcmTokens);
+    if (folders == null) return;
+
+    // get all tokens from `/user-fcm-tokens`.
+    final List<String> tokens = List<String>.from(folders.keys);
+
+    // 2. send messages to all tokens
+    await send(
+      tokens: tokens,
+      title: 'send all test - ${DateTime.now()}',
+      body: 'this is the content of the message',
+      senderUid: myUid!,
+    );
+  }
+
+  /// Send message to one user or multiple users
+  sendTo({String? uid, List<String>? uids}) async {
+    assert(uid != null || uids != null);
+    uids ??= [uid!];
+
+    // 1. get all tokens
+    List<String> tokens = [];
+    for (uid in uids) {
+      final snapshot = await Ref.userTokens(uid).get();
+      if (snapshot.exists == false) return;
+      if (snapshot.value == null) return;
+
+      // get all tokens from `/user-fcm-tokens`.
+      tokens += List<String>.from((snapshot.value! as Map).keys);
+    }
+    // 2. send all messages to all tokens
+
+    // 2. send messages to all tokens
+    await send(
+      tokens: tokens,
+      title: 'send all test - ${DateTime.now()}',
+      body: 'this is the content of the message',
+      senderUid: myUid!,
+    );
   }
 
   /// Parse message data from [RemoteMessage.data]

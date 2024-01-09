@@ -119,8 +119,23 @@ class ChatModel {
       });
     }
 
-    /// URL Preview 업데이트
+    /// URL Preview Update
+    ///
+    /// If there is a url inside the text, it will display site preview.
+    /// Don't do this before sending message since it will slow down the process.
     updateUrlPreview(chatMessageRef, text);
+
+    /// Send push notification to the room users
+    ///
+    /// Dont' send push notification if the user truned off the push notification.
+    final List<String> uids = room.users!.entries.toList().fold([], (p, e) {
+      if (room.users![e.key] != true) return p;
+      p.add(e.key);
+      return p;
+    });
+
+    print('uids: $uids');
+    MessagingService.instance.sendTo(uids: uids);
   }
 
   /// URL Preview 업데이트
