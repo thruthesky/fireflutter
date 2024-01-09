@@ -4,7 +4,6 @@ import 'package:fireship/fireship.dart' as fs;
 import 'package:fireship/fireship.defines.dart';
 import 'package:fireship/src/common/exception/code.dart';
 import 'package:fireship/src/common/exception/issues.dart';
-import 'package:fireship/src/database.functions.dart';
 
 class UserModel {
   final String uid;
@@ -19,6 +18,7 @@ class UserModel {
   int? birthMonth;
   int? birthDay;
   int? createdAt;
+  int? order;
   bool isAdmin;
   bool isVerified;
   List<String>? blocks;
@@ -43,6 +43,7 @@ class UserModel {
     this.birthMonth,
     this.birthDay,
     this.createdAt,
+    this.order,
     this.isAdmin = false,
     this.isVerified = false,
     this.blocks,
@@ -83,6 +84,7 @@ class UserModel {
       birthMonth: json['birthMonth'],
       birthDay: json['birthDay'],
       createdAt: json['createdAt'],
+      order: json['order'],
       isAdmin: json['isAdmin'] ?? false,
       isVerified: json['isVerified'] ?? false,
       blocks: json[Field.blocks] == null
@@ -107,6 +109,7 @@ class UserModel {
       'birthMonth': birthMonth,
       'birthDay': birthDay,
       'createdAt': createdAt,
+      'order': order,
       'isAdmin': isAdmin,
       'isVerified': isVerified,
       Field.blocks: blocks == null ? null : List<dynamic>.from(blocks!.map((x) => x)),
@@ -134,6 +137,7 @@ class UserModel {
       birthMonth = user.birthMonth;
       birthDay = user.birthDay;
       createdAt = user.createdAt;
+      order = user.order;
       isAdmin = user.isAdmin;
       isVerified = user.isVerified;
     }
@@ -153,6 +157,10 @@ class UserModel {
   }
 
   /// 사용자의 특정 필만 가져와서 리턴한다.
+  ///
+  /// ```dart
+  /// UserModel.getField(uid, Field.isVerified);
+  /// ```
   static Future<T?> getField<T>(String uid, String field) async {
     final nodeData = await fs.get('users/$uid/$field');
     if (nodeData == null) {
@@ -160,6 +168,22 @@ class UserModel {
     }
 
     return nodeData as T;
+  }
+
+  static Future<void> create({
+    required String uid,
+    String? displayName,
+    String? photoUrl,
+  }) {
+    return fs.set(
+      '${Folder.users}/$uid',
+      {
+        'displayName': displayName,
+        'photoUrl': photoUrl,
+        'createdAt': ServerValue.timestamp,
+        'order': DateTime.now().millisecondsSinceEpoch * -1,
+      },
+    );
   }
 
   /// Update user data.
@@ -176,6 +200,8 @@ class UserModel {
     int? birthDay,
     bool? isAdmin,
     bool? isVerified,
+    dynamic createdAt,
+    dynamic order,
   }) async {
     final data = {
       if (name != null) 'name': name,
@@ -189,6 +215,8 @@ class UserModel {
       if (birthDay != null) 'birthDay': birthDay,
       if (isAdmin != null) 'isAdmin': isAdmin,
       if (isVerified != null) 'isVerified': isVerified,
+      if (createdAt != null) 'createdAt': createdAt,
+      if (order != null) 'order': order,
     };
     if (data.isEmpty) {
       return;

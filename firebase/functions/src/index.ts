@@ -1,8 +1,8 @@
 
-import { onRequest } from "firebase-functions/v2/https";
-import { MessagingService } from "./messaging/messaging.service";
-import { initializeApp } from "firebase-admin/app";
-import { logger } from "firebase-functions/v1";
+import {onRequest} from "firebase-functions/v2/https";
+import {MessagingService} from "./messaging/messaging.service";
+import {initializeApp} from "firebase-admin/app";
+import {logger} from "firebase-functions/v1";
 
 
 // / initialize firebase app

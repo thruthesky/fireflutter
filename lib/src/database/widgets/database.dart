@@ -30,7 +30,7 @@ class Database extends StatelessWidget {
 
   /// [dynamic] is the value of the node.
   /// [String] is the path of the node.
-  final Widget Function(dynamic value, String path) builder;
+  final Widget Function(dynamic value) builder;
   final Widget? onLoading;
 
   @override
@@ -44,7 +44,7 @@ class Database extends StatelessWidget {
         if (event.connectionState == ConnectionState.waiting) {
           if (snapshotData != null) {
             // dog('--> data loaded onced ');
-            return builder(snapshotData!.data!.snapshot.value, path);
+            return builder(snapshotData!.data!.snapshot.value);
           }
           return onLoading ?? const SizedBox.shrink();
         }
@@ -53,9 +53,9 @@ class Database extends StatelessWidget {
         }
         snapshotData = event;
         if (event.hasData && event.data!.snapshot.exists) {
-          return builder(event.data!.snapshot.value, path);
+          return builder(event.data!.snapshot.value);
         } else {
-          return builder(null, path);
+          return builder(null);
         }
       },
     );

@@ -60,6 +60,7 @@ class UserService {
     UserCustomize? customize,
   }) {
     dog('--> UserService.init()');
+    initUser();
     listenUser();
 
     if (customize != null) {
@@ -73,6 +74,48 @@ class UserService {
     this.enableNotificationOnLike = enableNotificationOnLike;
   }
 
+  /// 사용자 정보 초기화
+  ///
+  /// 회원 가입을 하지 않았거나, 최초 로그인인 경우, 문서가 존재하지 않을 수 있는데, 그와 같은 경우 새로운 문서를 생성한다.
+  /// createdAt 이 없는 경우, createdAt  를 추가한다.
+  /// order 가 없는 경우, order 를 추가한다.
+  ///
+  /// 이처럼, 회원 정보에 빠져 있는 내용을 이곳에서 추가 할 수 있다.
+  initUser() {
+    FirebaseAuth.instance.authStateChanges().listen((firebaseUser) async {
+      if (firebaseUser == null) {
+        return;
+      }
+
+      /// 사용자 문서 읽기
+      UserModel? user = await UserModel.get(firebaseUser.uid);
+      if (user == null) {
+        await UserModel.create(
+          uid: firebaseUser.uid,
+          displayName: firebaseUser.displayName,
+          photoUrl: firebaseUser.photoURL,
+        );
+        user = await UserModel.get(firebaseUser.uid);
+      }
+
+      /// createdAt 이 없으면, 최초 로그인이다. 그래서 createdAt 을 지정해서
+      /// 회원 가입으로 간주한다.
+      if (user?.createdAt == null) {
+        dog('--> User login for the first time. --> update createdAt');
+        user?.update(
+          createdAt: ServerValue.timestamp,
+        );
+      }
+      if (user?.order == null) {
+        dog('--> User login for the first time. --> update createdAt');
+        user?.update(
+          order: DateTime.now().millisecondsSinceEpoch * -1,
+        );
+      }
+    });
+  }
+
+  /// 주의, 이 함수의 callback 안에서, 회원 정보를 업데이트 해서는 안된다. 그러면 무한 재귀호출에 빠질 수 있다.
   listenUser() {
     dog('--> UserService.listenUser() for login user: $myUid');
     FirebaseAuth.instance.authStateChanges().listen((user) async {
@@ -109,15 +152,6 @@ class UserService {
 
         ///
         myDataChanges.add(this.user);
-
-        /// 문서를 읽지 못했거나, createdAt 이 없으면, 최초 로그인이다. 그래서 createdAt 을 지정해서
-        /// 회원 가입으로 간주한다.
-        if (this.user?.createdAt == null) {
-          dog('--> User login for the first time. --> update createdAt');
-          this.user?.ref.update({
-            'createdAt': ServerValue.timestamp,
-          });
-        }
       });
     });
   }

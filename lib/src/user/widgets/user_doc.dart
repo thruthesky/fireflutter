@@ -82,6 +82,6 @@ class UserDoc extends StatelessWidget {
   }) {
     final path = 'users/$uid${field != null ? '/$field' : ''}';
 
-    return Database(path: path, builder: (a, b) => builder(a));
+    return Database(path: path, builder: builder);
   }
 }

@@ -1,5 +1,5 @@
 
-import { getMessaging } from "firebase-admin/messaging";
+import {getMessaging} from "firebase-admin/messaging";
 
 /**
  * MessagingService
@@ -48,7 +48,7 @@ export class MessagingService {
     // send the notification message to the list of tokens
     for (const token of tokens) {
       const message = {
-        notification: { title, body },
+        notification: {title, body},
         data: data,
         token: token,
       };

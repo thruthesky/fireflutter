@@ -79,20 +79,21 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
           const SizedBox(height: 16),
 
           Database(
-              path: "${Folder.chatRooms}/${widget.roomId}/${Field.iconUrl}",
-              builder: (url, path) {
-                return url == null
-                    ? const SizedBox()
-                    : ClipRRect(
-                        borderRadius: BorderRadius.circular(40),
-                        child: CachedNetworkImage(
-                          imageUrl: url,
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
-                      );
-              }),
+            path: "${Folder.chatRooms}/${widget.roomId}/${Field.iconUrl}",
+            builder: (url) {
+              return url == null
+                  ? const SizedBox()
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(40),
+                      child: CachedNetworkImage(
+                        imageUrl: url,
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                    );
+            },
+          ),
 
           // 채팅방 아이콘 업로드는 - 채팅방이 먼저 존재해야, 아이콘 URL 을 쉽게 저장 할 수 있다.
           if (isEdit)
@@ -210,6 +211,11 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 description: descriptionController.text,
                 isOpenGroupChat: open,
               );
+
+              /// 채팅방을 생성하는 경우, chat-joins 에도 정보를 저장한다.
+              ///
+              final chat = ChatModel(room: room);
+              await chat.join(forceJoin: true);
 
               if (context.mounted) {
                 Navigator.pop(context, room);

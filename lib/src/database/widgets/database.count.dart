@@ -26,7 +26,7 @@ class DatabaseCount extends StatelessWidget {
     return Database(
       path: path,
       onLoading: builder(0),
-      builder: (value, p) {
+      builder: (value) {
         if (value == null) {
           return builder(0);
         }

@@ -341,6 +341,115 @@ class ChatRoomModel {
     }
   }
 
+  /// 사용자 초대 (또는 채팅방 입장)
+  ///
+  /// 이 함수는 아래와 같이 채팅방 입장 뿐만아니라 초대까지 한다.
+  /// - 내가 그룹 채팅방에 처음 입장
+  /// - 내가 그룹 채팅방 생성할 때, 처음 입장
+  /// - 내가 다른 사용자를 초대할 때, 초대할 사용자를 입장 시킴 (즉, 초대)
+  ///
+  ///
+  /// [uid] 는 나의 uid 일 수 있고, 다른 사용자의 uid 일 수 있다. 지정된 사용자(uid)를 현재 방에 입장시키는 것이다.
+  ///
+  ///
+  /// 이 함수는 채팅방의 'users' 필드에 사용자 uid 를 true 로 지정하고, chat-joins 에 정보를 생성하면 된다.
+  ///
+  /// 1:1 채팅에서는
+  /// - 로그인한 사용자가 다른 사용자와 채팅을 시작할 경우,
+  /// - ChatRoom 등에서 이 함수를 호출하면 된다.
+  /// - 이 함수가 최초 호출이 되는 경우 chat-rooms 의 users 에 로그인 사용자 UID 와 다른 사용자 UID 저장되지만,
+  /// - 로그인을 한 사용자의 /chat-joins 만 생성되고, 다른 사용자의 /chat-joins 는 생성되지 않는다.
+  /// - 로그인 한 사용자가 채팅 메시지를 하나 전송하면, 그 때서야 달느 사용자의 /chat-joins 가 생성된다.
+  ///
+  /// 내가 그룹 채팅방에 입장하는 경우,
+  /// - 나의 UID 만 chat-rooms/users 에 저장하고
+  /// - 나의 chat-joins 를 생성한다.
+  ///
+  /// 내가, 다른 사용자를 그룹 채팅방에 초대하는 경우,
+  /// - 다른 사용자를 chat-rooms/users 에 저장하고
+  /// - 다른 사용자의 chat-joins 를 생성한다.
+  /// 즉, A 가 B 를 (단톡방에) 초대하면, B 의 /chat-joins 가 생성되어, 자동으로 B 의 채팅방 목록에 나온다.
+  ///
+  ///
+  ///
+  /// 이미 방에 들어가 있는 상태이면 `alreadyJoined` issue 를 생성한다.
+  ///
+  /// For group chat, the user uid is added to /chat-rooms/{groupChatId}/users/{[uid]: true}
+  /// For 1:1 chat, create a chat room info under my chat room list only. Not the other user's.
+  ///
+  /// Note, it's not that harmful to set the same uid to true over again and if it happens
+  /// only one time when the user enters the chat room.
+  ///
+  ///
+  ///
+  /// [forceJoin] 이 true 이면, 내가 이미 방에 들어가 있는 상태이더라도, 강제로 방에 들어간다. 특히, 채팅방을 생성 한
+  /// 후에 나의 uid 가 채팅방의 users 에 들어가 있지만, /chat-joins 에 데이터가 만들어져 있지 않고, noOfUsers 와
+  /// 같은 정보가 올바로 설정되어져 있지 않다. 그래서, 채팅방을 생성한 다음에는 이 옵션을 true 주고 호출하면 된다.
+  ///
+  Future invite(String uid, {bool forceJoin = false}) async {
+    /// 채팅방 설정이 인증 회원 전용 입장 체크
+    ///
+    /// 인증 회원이 아니면 Issue 발생.
+    /// 단, master 는 인증 안되어도 그냥 통과.
+    if (master != uid && // 마스터가 아니고,
+            isVerifiedOnly // 인증 회원 전용 옵션이 켜져 있는 경우,
+        ) {
+      bool verified = false;
+      if (uid == myUid) {
+        verified = my!.isVerified;
+      } else {
+        verified = await UserModel.getField(uid, Field.isVerified);
+      }
+      if (verified == false) {
+        throw Issue(Code.chatRoomNotVerified);
+      }
+    }
+
+    /// 내가 이미 방에 들어가 있는 상태이면 그냥 리턴
+    if (forceJoin == false && users?.containsKey(uid) == true) {
+      throw Issue(Code.alreadyJoined);
+    }
+    dog('ChatService.instance.joinRoom: Not joined, yet. Joing now ...');
+
+    final usersRef = ref.child(Field.users);
+
+    /// 채팅방 사용자 목록(users)에 입력된 사용자의 UID 추가
+    await usersRef.child(uid).set(true);
+
+    // 1:1 채팅이면, 채팅방의 사용자 목록에, 다른 사용자 아이디를 추가해 준다.
+    if (isSingleChat) {
+      if (users?.containsKey(otherUserUid) != true) {
+        await usersRef.child(otherUserUid!).set(true);
+      }
+    } else {
+      // 그룹 채팅방이면, noOfUsers 를 업데이트 한다.
+      await ref.child('noOfUsers').set(users?.length ?? 1);
+    }
+
+    /// 입력된 사용자 UID 의 채팅방 목록(chat-joins)에 입장하는 채팅방 정보 저장
+    ///
+    final order = DateTime.now().millisecondsSinceEpoch * -1;
+    final data = {
+      Field.name: isGroupChat ? name : '',
+      Field.groupChatOrder: isGroupChat ? order : null,
+      Field.singleChatOrder: isSingleChat ? order : null,
+      Field.newMessage: null,
+    };
+
+    /// 1:1 채팅방의 경우, 상대방의 이름을 저장한다.
+    if (otherUserUid != null) {
+      final user = await UserModel.get(otherUserUid!);
+      data['name'] = user?.displayName;
+    }
+
+    // set order into -updatedAt (w/out "1")
+    // it is important to know that updatedAt must not be updated
+    // before this.
+    data['order'] = order;
+    await Ref.joinsRef.child(uid).child(id).update(data);
+    ////
+  }
+
   /// Return the first other user uid from the users list.
   String? get otherUserUid {
     return getOtherUserUidFromRoomId(id);
@@ -355,5 +464,12 @@ class ChatRoomModel {
     );
     if (uids == null) return null;
     return uids.where((element) => element != FirebaseAuth.instance.currentUser!.uid).toList();
+  }
+
+  /// 채팅방 알림 토글
+  ///
+  /// 채팅방의 'users' 필드에서 나의 uid 에 true 또는 false 를 지정하면된다.
+  toggleNotifications() async {
+    ref.child(Field.users).child(myUid!).set(users![myUid!] == true ? false : true);
   }
 }

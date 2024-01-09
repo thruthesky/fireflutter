@@ -4,6 +4,7 @@ class Code {
   /// ERROR CODES
   static const String disabled = 'disabled';
   static const String notJoined = 'notJoined';
+  static const String alreadyJoined = 'alreadyJoined';
   static const String notLoggedIn = 'notLoggedIn';
   static const String chatRoomNotVerified = 'chatRoomNotVerified';
   static const String chatRoomNotExists = 'chatRoomNotExists';

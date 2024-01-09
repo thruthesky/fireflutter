@@ -50,6 +50,7 @@ class Field {
   static const String users = 'users';
   static const String master = 'master';
   static const String noOfUsers = 'noOfUsers';
+  static const String isVerified = 'isVerified';
   static const String isVerifiedOnly = 'isVerifiedOnly';
   static const String urlVerified = 'urlVerified';
   static const String uploadVerified = 'uploadVerified';
@@ -70,6 +71,7 @@ class Path {
 
   /// Chat
   static const String chatMessages = Folder.chatMessages;
+  static String chatRoomUsersAt(roomId, uid) => '${Folder.chatRooms}/$roomId/${Field.users}/$uid';
 
   static const String joins = Folder.chatJoins;
   static String join(String myUid, String roomId) => '$joins/$myUid/$roomId';
