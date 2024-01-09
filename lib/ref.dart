@@ -10,7 +10,7 @@ class Ref {
   static DatabaseReference users = root.child('users');
   static DatabaseReference userProfilePhotos = root.child('profile-photos');
 
-  /// Chat
+  /// Chat Message
   static DatabaseReference chatMessages = root.child('chat-messages');
 
   static DatabaseReference get joinsRef => root.child(Path.joins);
