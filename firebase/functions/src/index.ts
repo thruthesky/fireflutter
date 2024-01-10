@@ -12,14 +12,16 @@ initializeApp();
  * sending messages to tokens
  */
 export const sendPushNotifications = onRequest(async (request, response) => {
-  logger.info("request.query of sendPushNotifications", request.query);
+  logger.info("request.query of sendPushNotifications", request.body);
+  const requestBody = request.body;
+  const {tokens, title, body, data, image } =  requestBody;
   response.send(
     await MessagingService.sendNotificationToTokens(
-      request.query["tokens"] as string[],
-      request.query["title"] as string,
-      request.query["body"] as string,
-      request.query["data"] as { [key: string]: string },
-      request.query['image'] as string
+      tokens,
+      title,
+      body,
+      data,
+      image,
     )
   );
 });

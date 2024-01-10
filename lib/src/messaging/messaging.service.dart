@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -226,7 +227,7 @@ class MessagingService {
 
     /// Send. send the token per group of chunk
     for (List<String> chunck in tokenChunck) {
-      Map<String, dynamic> data = {
+      final data = {
         "title": title,
         "body": body,
         "data": {"senderUid": senderUid},
@@ -238,7 +239,7 @@ class MessagingService {
 
       final dio = Dio();
       try {
-        final response = await dio.post(sendUrl!, queryParameters: data);
+        final response = await dio.post(sendUrl!, data: data);
 
         final res = Map<String, String>.from(response.data);
         responses.addAll(res);
@@ -294,11 +295,18 @@ class MessagingService {
     String? image,
   }) async {
     assert(uid != null || uids != null);
-
     uids ??= [uid!];
-
-    // 1. get all tokens
     List<String> tokens = [];
+    // if (uid!.isNotEmpty) {
+    //   final snapshot = await Ref.userTokens(uid).get();
+
+    //   (snapshot.value as Map<String?, Object?>).forEach((k, p) {
+    //     dog('key-> $k');
+    //     tokens.add(k!);
+    //   });
+    //   dog('snapshot uid --> ${snapshot.value.runtimeType}');
+    // }
+    // 1. get all tokens
 
     for (uid in uids) {
       dog('lenght -> ${uids.length}');
@@ -308,7 +316,17 @@ class MessagingService {
 
       // get all tokens from `/user-fcm-tokens`
 
-      tokens.addAll(List<String>.from((snapshot.value! as Map).keys));
+      if (uids.length > 1) {
+        tokens.addAll(List<String>.from((snapshot.value! as Map).keys));
+      } else {
+        // Map<String?, Object?> data = snapshot.value as Map<String?, Object?>;
+        // dog('new data - $data');
+        (snapshot.value as Map).forEach((key, value) {
+          dog('new key == $key');
+          tokens.add(key!);
+        });
+        break;
+      }
     }
 
     print('tokens: $tokens');
