@@ -255,6 +255,8 @@ class UserModel {
 
   /// Blocks or unblocks
   ///
+  /// After this method call, the user is blocked or unblocked.
+  /// Returns true if the user has just blocked blocked, false if unblocked.
   ///
   Future block(String otherUserUid) async {
     if (otherUserUid == uid) {
@@ -262,9 +264,11 @@ class UserModel {
     }
     //
     if (isBlocked(otherUserUid)) {
-      return await unblockUser(otherUserUid);
+      await unblockUser(otherUserUid);
+      return false;
     } else {
-      return await blockUser(otherUserUid);
+      await blockUser(otherUserUid);
+      return true;
     }
   }
 

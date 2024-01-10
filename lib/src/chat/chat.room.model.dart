@@ -449,7 +449,16 @@ class ChatRoomModel {
     // before this.
     data['order'] = order;
     await Ref.joinsRef.child(uid).child(id).update(data);
-    ////
+  }
+
+  /// 채팅방 나가기
+  ///
+  /// 채팅방에서 나가는 것은 채팅방의 'users' 필드에서 나의 uid 를 삭제하고, chat-joins 에서도 해당 방을 삭제하면 된다.
+  /// 1:1 채팅방이라도 방 전체 데이터를 삭제를 하지 않고, users 에 나의 uid 만 삭제한다. 1:1 채팅방에서 상대방의 채팅방
+  /// 목록에는 채팅방 정보가 남아 있어야 한다.
+  Future leave() async {
+    await ref.child(Field.users).child(myUid!).remove();
+    await Ref.join(myUid!, id).remove();
   }
 
   /// Return the first other user uid from the users list.

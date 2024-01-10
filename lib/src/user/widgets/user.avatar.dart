@@ -20,23 +20,39 @@ class UserAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: UserModel.fromUid(uid).ref.child(Field.photoUrl).onValue,
-      builder: (_, event) {
-        final url = event.hasData && event.data!.snapshot.exists
-            ? event.data!.snapshot.value as String
-            : null;
+    return UserDoc(
+      uid: uid,
+      field: Field.photoUrl,
+      builder: (url) => GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Avatar(
+          photoUrl: (url == null || url == "") ? anonymousUrl : url,
+          size: size,
+          radius: radius,
+        ),
+      ),
+    );
+  }
 
-        return GestureDetector(
-          onTap: onTap,
-          behavior: HitTestBehavior.opaque,
-          child: Avatar(
-            photoUrl: url ?? anonymousUrl,
-            size: size,
-            radius: radius,
-          ),
-        );
-      },
+  static sync({
+    required String uid,
+    double size = 48,
+    double radius = 20,
+    VoidCallback? onTap,
+  }) {
+    return UserDoc.sync(
+      uid: uid,
+      field: Field.photoUrl,
+      builder: (url) => GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Avatar(
+          photoUrl: (url == null || url == "") ? anonymousUrl : url,
+          size: size,
+          radius: radius,
+        ),
+      ),
     );
   }
 }
