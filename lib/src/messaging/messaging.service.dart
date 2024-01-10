@@ -231,7 +231,7 @@ class MessagingService {
         "body": body,
         "data": {"senderUid": senderUid},
         "tokens": chunck,
-        'image': image
+        if (image != null) 'image': image
       };
 
       dog('tokens in this chunk ->>  ${chunck.length}, data: $data');
@@ -289,8 +289,8 @@ class MessagingService {
   Future<Map<String, String>> sendTo({
     String? uid,
     List<String>? uids,
-    String? title,
-    String? body,
+    required String title,
+    required String body,
     String? image,
   }) async {
     assert(uid != null || uids != null);
@@ -322,8 +322,8 @@ class MessagingService {
     // 2. send messages to all tokens
     final responses = await send(
       tokens: tokens,
-      title: title ?? 'Your Title',
-      body: body ?? 'Your Body',
+      title: title,
+      body: body,
       image: image,
       senderUid: myUid!,
     );
