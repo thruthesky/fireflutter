@@ -166,6 +166,17 @@ FirebaseDatabaseQueryBuilder(
 
 ```
 
+### Opening the Settings for the Chat Room
+
+To open the
+
+```dart
+ChatService.instance.showChatRoomSettings(
+  context: context,
+  roomId: chat.room.id,
+);
+```
+
 ### 채팅방 목록 (Chat Room List)
 
 RTDB 의 특성상 채팅방을 목록 할 때,
