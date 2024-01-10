@@ -155,3 +155,8 @@ print(user.displayName);
 ```
 
 
+
+## Displaying user data
+
+- You can use `UserDoc` or `MyDoc` to display user data.
+- The most commonly used user properties are name and photos. And fireship provides `UserDisplayName` and `UserAvatar` for your convinience.

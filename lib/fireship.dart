@@ -11,8 +11,11 @@ export 'src/admin/widgets/admin.user_update.screen.dart';
 export 'src/common/assets.dart';
 export 'src/common/anonymous_avatar.dart';
 export 'src/common/avatar.dart';
-export 'src/common/error_box.dart';
 export 'src/common/stacked_avatar.dart';
+export 'src/common/date_time_short.dart';
+
+/// Common / Dialogs
+export 'src/common/dialogs/error.dialog.dart';
 
 /// Common Exception
 export 'src/common/exception/issues.dart';
@@ -83,6 +86,7 @@ export 'src/user/user.model.dart';
 export 'src/user/user.photo.model.dart';
 export 'src/user/user.service.dart';
 export 'src/user/widgets/user.avatar.dart';
+export 'src/user/widgets/user.display_name.dart';
 export 'src/user/user.customize.dart';
 export 'src/user/widgets/default_public_profile.screen.dart';
 export 'src/user/widgets/default_profile.screen.dart';

@@ -113,6 +113,8 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                       },
                       child: Text(T.chat.tr),
                     ),
+
+                    /// 레포팅 신고
                     ElevatedButton(
                       onPressed: () async {
                         final re = await input(
@@ -126,6 +128,8 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                       },
                       child: Text(T.report.tr),
                     ),
+
+                    /// 차단 & 해제
                     MyDoc.field('${Field.blocks}/$uid', builder: (v) {
                       return ElevatedButton(
                         onPressed: () async {

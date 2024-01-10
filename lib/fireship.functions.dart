@@ -14,7 +14,14 @@ bool get isAdmin => UserService.instance.user?.isAdmin ?? false;
 User? get currentUser => FirebaseAuth.instance.currentUser;
 
 /// UserService.instance.user
+///
+/// It's nullable
 UserModel? get my => UserService.instance.user;
+
+/// For more readability.
+///
+/// It's NOT nullable.
+UserModel get iam => UserService.instance.user!;
 
 void dog(String msg) {
   if (kReleaseMode) return;
@@ -55,17 +62,9 @@ Future error({
   return showDialog(
     context: context,
     builder: (BuildContext context) {
-      return AlertDialog(
-        content: ErrorBox(
-          title: title,
-          message: message,
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
+      return ErrorDialog(
+        title: title,
+        message: message,
       );
     },
   );

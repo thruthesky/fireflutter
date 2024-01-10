@@ -64,7 +64,7 @@ class Database extends StatelessWidget {
   /// 한번만 가져온다. 단, 위젯이 다시 생성되면 다시 가져온다.
   static Widget once({
     required String path,
-    required Widget Function(dynamic value, String path) builder,
+    required Widget Function(dynamic value) builder,
     Widget? onLoading,
   }) {
     return FutureBuilder(
@@ -77,9 +77,9 @@ class Database extends StatelessWidget {
           return Text('Error; ${event.error}');
         }
         if (event.hasData && event.data!.snapshot.exists) {
-          return builder(event.data!.snapshot.value, path);
+          return builder(event.data!.snapshot.value);
         } else {
-          return builder(null, path);
+          return builder(null);
         }
       },
     );

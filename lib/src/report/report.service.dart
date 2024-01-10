@@ -7,12 +7,17 @@ class ReportService {
     dog('--> ReportService._()');
   }
   Future<void> report({
-    required String otherUserUid,
+    String? otherUserUid,
+    String? chatRoomId,
     String reason = '',
   }) async {
     if (notLoggedIn) {
       throw Issue(Code.notLoggedIn);
     }
-    await ReportModel.create(otherUserUid: otherUserUid, reason: reason);
+    await ReportModel.create(
+      otherUserUid: otherUserUid,
+      chatRoomId: chatRoomId,
+      reason: reason,
+    );
   }
 }

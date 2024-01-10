@@ -57,6 +57,7 @@ class ChatModel {
 
   /// 채팅 메시지 전송
   ///
+  /// [url] 은 업로드한 파일(사진) url 이다.
   ///
   Future<void> sendMessage({
     String? text,
@@ -64,13 +65,23 @@ class ChatModel {
   }) async {
     if ((url == null || url.isEmpty) && (text == null || text.isEmpty)) return;
 
-    /// TODO 관리자 모드에서 특정 사용자에게 disabled 할 수 있도록 한다.
+    /// TODO 관리자 모드에서 특정 사용자에게 disabled 한 다음 테스트 할 것.
     if (UserService.instance.user?.isDisabled == true) {
       throw Issue(Code.disabled);
     }
 
     if (room.joined == false) {
       throw Issue(Code.notJoined, 'chat.model.dart->sendMessage()');
+    }
+
+    /// 인증된 사용자만 URL 전송 옵션
+    if (text?.hasUrl == true && room.urlVerifiedUserOnly && iam.notVerified) {
+      throw Issue(Code.notVerified, T.notVerifiedMessage);
+    }
+
+    /// 인증된 사용자만 파일 전송 옵션
+    if (url != null && room.uploadVerifiedUserOnly && iam.notVerified) {
+      throw Issue(Code.notVerified, T.notVerifiedMessage);
     }
 
     /// 채팅 메시지 순서를 -1 (감소) 한다.
