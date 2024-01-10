@@ -1,11 +1,10 @@
 # Database
 
-Fireship uses `Firebase Realtime Database`, although the majority of developers use `Firestore`. We have chosen the realtime database because it's fast and simply. You may use `Firestore` with Fireship.
-
+Fireship uses `Firebase Realtime Database`, although the majority of developers use `Firestore`. We have chosen the realtime database because it's fast and simple. You may use `Firestore` with Fireship.
 
 ## Gudeline
 
-- The path of database should not contain underbar(_). Instead use `-` between the words.
+- The path of database should not contain underbar(\_). Instead use `-` between the words.
   - For instance, `user-profile-photos`.
 
 ## Database structure
@@ -13,15 +12,16 @@ Fireship uses `Firebase Realtime Database`, although the majority of developers 
 Fireship maintains as flat as it can be. Meaning, it does not contains a batch of data inside a node. For instance, the data of the users are saved under `/users/<uid>` and its data should not contain another batch of data. The fields should have a value of string, number, array. But not a map or subnode.
 
 Below is the good example of flat style.
+
 ```json
 /users/<uid>/ { name: ..., age: ..., address: ..., }
 ```
 
 Below is the bad example because it has other batch of information under the user node.
+
 ```json
 /users/<uid>/schedule/<scheduleId>/ { subject: ..., contenxt: ...., dateAt: ...}
 ```
-
 
 ## Use Database
 
@@ -35,10 +35,6 @@ Database(
 ),
 ```
 
-
 ## User Database
 
 See user document.
-
-
-
