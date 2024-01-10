@@ -145,10 +145,9 @@ class ChatModel {
       return p;
     });
 
-    print('list of uids:  $uids');
-
     /// sending notification to the list of uids
-    MessagingService.instance.sendTo(uids: uids);
+    MessagingService.instance
+        .sendTo(uids: uids, title: 'Loby', body: 'You have a notification from the loby');
   }
 
   /// URL Preview 업데이트

@@ -211,6 +211,7 @@ class MessagingService {
     Map<String, dynamic>? extra,
     int numberOfChunks = 255,
     bool removeInvalidTokens = true,
+    String? image,
   }) async {
     /// remove empty tokens
     tokens = tokens.where((element) => element.isNotEmpty).toList();
@@ -221,23 +222,23 @@ class MessagingService {
       int end = (i + numberOfChunks < tokens.length) ? i + numberOfChunks : tokens.length;
       tokenChunck.add(tokens.sublist(i, end));
     }
-
     Map<String, String> responses = {};
 
     /// Send. send the token per group of chunk
     for (List<String> chunck in tokenChunck) {
-      Map<String, dynamic> data = {
+      final data = {
         "title": title,
         "body": body,
         "data": {"senderUid": senderUid},
-        "tokens": chunck
+        "tokens": chunck,
+        'image': image
       };
 
       dog('tokens in this chunk ->>  ${chunck.length}, data: $data');
 
       final dio = Dio();
       try {
-        final response = await dio.post(sendUrl!, queryParameters: data);
+        final response = await dio.post(sendUrl!, data: data);
 
         final res = Map<String, String>.from(response.data);
         responses.addAll(res);
@@ -248,7 +249,7 @@ class MessagingService {
       }
     }
 
-    /// remove invalid tokens
+    // / remove invalid tokens
     print('no of bad tokens: ${responses.length}');
     for (final key in responses.keys) {
       print('invalid key: $key - ${responses[key]}');
@@ -288,27 +289,42 @@ class MessagingService {
   Future<Map<String, String>> sendTo({
     String? uid,
     List<String>? uids,
+    String? title,
+    String? body,
+    String? image,
   }) async {
     assert(uid != null || uids != null);
     uids ??= [uid!];
 
+    // if (uid!.isNotEmpty) {
+    //   final snapshot = await Ref.userTokens(uid).get();
+
+    //   (snapshot.value as Map<String?, Object?>).forEach((k, p) {
+    //     dog('key-> $k');
+    //     tokens.add(k!);
+    //   });
+    //   dog('snapshot uid --> ${snapshot.value.runtimeType}');
+    // }
     // 1. get all tokens
     List<String> tokens = [];
     for (uid in uids) {
+      dog('lenght -> ${uids.length}');
       final snapshot = await Ref.userTokens(uid).get();
       if (snapshot.value == null) continue;
       if (snapshot.exists == false) continue;
 
-      // get all tokens from `/user-fcm-tokens`.
-      tokens += List<String>.from((snapshot.value! as Map).keys);
+      // get all tokens from `/user-fcm-tokens`
+      tokens.addAll(List<String>.from((snapshot.value! as Map).keys));
     }
+
     print('tokens: $tokens');
 
     // 2. send messages to all tokens
     final responses = await send(
       tokens: tokens,
-      title: 'send all test - ${DateTime.now()}',
-      body: 'this is the content of the message',
+      title: title ?? 'Your Title',
+      body: body ?? 'Your Body',
+      image: image,
       senderUid: myUid!,
     );
 

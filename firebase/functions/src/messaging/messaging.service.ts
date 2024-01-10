@@ -14,6 +14,7 @@ export class MessagingService {
          * @param {string} title message title
          * @param {string} body message body
          * @param {any} data message data
+         * @param {image} image image url path
          *
          *
          * It returns the error results of push notification in a map like
@@ -34,7 +35,8 @@ export class MessagingService {
     tokens: string[],
     title: string,
     body: string,
-    data: { [key: string]: string }
+    data: { [key: string]: string }, 
+    image: string
   ) {
     const promises = [];
 
@@ -43,12 +45,12 @@ export class MessagingService {
     }
 
     // remove empty tokens
-    tokens = tokens.filter((token) => !!token);
+    // tokens = tokens.filter((token) => !!token);
 
     // send the notification message to the list of tokens
     for (const token of tokens) {
       const message = {
-        notification: {title, body},
+        notification: {title, body, image},
         data: data,
         token: token,
       };
