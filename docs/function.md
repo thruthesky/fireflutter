@@ -8,7 +8,7 @@ To display an error, there is a widget that displays a dialog. You can use that 
 
 ## toast
 
-Toast can be used to show a snackbar with a message/
+Toast can be used to show a snackbar with a message.
 
 ```dart
 toast(context: context, message: 'Hello User.');
@@ -44,11 +44,42 @@ The `confirm` is a prompt that will let the user choose from yes or no.
 ```dart
 final re = await confirm(
     context: context,
-    title: v == null ? T.blockConfirmTitle.tr : T.unblockConfirmTitle.tr,
-    message: ''
+    title: 'Delete Account',
+    message: 'Are you sure you want to delete your account?'
 );
 ```
 
 The `re` in the example will be a nullable bool. If `re` is `true` means user chooses yes. If `false` means user chooses no. If `null` means neither user chooses yes nor no.
 
+Parameters:
+
+- [required] BuildContext context
+- [required] String title
+  - title of the message
+- [required] String message
+  - Add the question or confirmation message here.
+
 ## input
+
+The `input` function can be used to ask for an input from user.
+
+```dart
+final re = await input(
+    context: context,
+    title: 'Name',
+    subtitle: 'Enter your lovely name',
+    hintText: 'Last Name, First Name',
+);
+```
+
+Parameters:
+
+- [required] BuildContext context
+- [required] String title
+  - The title of the prompt
+- String subtitle
+  - The subtitle or additional info for input box
+- [required] String hintText
+  - hintText for the input box
+- String initialValue
+  - the default input value
