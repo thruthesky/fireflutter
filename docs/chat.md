@@ -281,6 +281,103 @@ Here are the list of fields can be used in `roomsRef`:
 2. `Field.openGroupChatOrder` - same as 'openGroupChatOrder'.
    - All open group chat room
 
+## Toggling Notifications
+
+You can set true or false for my uid in the 'users' field of the chat room. Try this code:
+
+```dart
+IconButton(
+  onPressed: () async {
+    await chat.room.toggleNotifications();
+  },
+  icon: Database(
+    path: Path.chatRoomUsersAt(chat.room.id, myUid!),
+    builder: (v) => v == true
+        ? const Icon(Icons.notifications_rounded)
+        : const Icon(Icons.notifications_outlined),
+  ),
+),
+```
+
+When `v` is true, notifications is toggled on. Else, toggled off.
+
+## Group Chat Room
+
+### Creating a Group Chat
+
+Use `ChatService.instance.showChatRoomCreate()` for the default way on creating a chat room.
+
+```dart
+
+IconButton(
+  onPressed: () async {
+    final room = await ChatService.instance.showChatRoomCreate(context: context);
+    // It is recommended to show the newly created room to the user.
+    if (room != null && mounted) {
+      ChatService.instance.showChatRoom(context: context, roomId: room.id);
+    }
+  },
+  icon: const Icon(Icons.comment),
+),
+
+```
+
+Automatically, creator of the room will join to the newly created room after submitting.
+
+### Inviting users into a Chat Room
+
+To show the default invite screen, add these code:
+
+```dart
+IconButton(
+  onPressed: () async {
+    ChatService.instance.showInviteScreen(context: context, room: chat.room);
+  },
+  icon: const Icon(Icons.person_add_rounded),
+),
+```
+
+The `ChatService.instance.showInviteScreen()` will show a list of users in a list view who can be added. It uses `DefaultChatRoomInviteScreen` widget. Check this code for reference in customization:
+
+```dart
+// Showing the list screen
+await showGeneralDialog<ChatRoomModel?>(
+  context: context,
+  pageBuilder: (_, __, ___) => CustomChatRoomInviteScreen(room: room),
+);
+...
+// Update this into your custom Invite screen
+class CustomChatRoomInviteScreen extends StatelessWidget {
+  const CustomChatRoomInviteScreen({
+    super.key,
+    required this.room,
+  });
+  final ChatRoomModel room;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('친구 초대'),
+      ),
+      body: FirebaseDatabaseListView(
+        query: Ref.users.orderByChild('order'),
+        itemBuilder: (context, snapshot) {
+          final user = UserModel.fromSnapshot(snapshot);
+          return ListTile(
+            leading: UserAvatar(uid: user.uid),
+            title: Text(user.displayName ?? ''),
+            trailing: const Icon(Icons.add),
+            onTap: () async {
+              await room.invite(user.uid);
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+```
+
 ## 관리 (Management)
 
 - 기본 관리자 화면을 사용하면 된다. `AdminService.instance.showDashboard()` 를 호출하면 된다.
