@@ -1,6 +1,6 @@
 # Database
 
-Fireship uses `Firebase Realtime Database`, although the majority of developers use `Firestore`. We have chosen the realtime database because it's fast and simple. You may use `Firestore` with Fireship.
+Fireship uses `Firebase Realtime Database`, although the majority of developers use `Firestore`. We have chosen the realtime database because it's fast and simple. You may use `Firestore` together with Fireship.
 
 ## Gudeline
 
