@@ -296,7 +296,7 @@ class MessagingService {
   }) async {
     assert(uid != null || uids != null);
     uids ??= [uid!];
-    List<String> tokens = [];
+
     // if (uid!.isNotEmpty) {
     //   final snapshot = await Ref.userTokens(uid).get();
 
@@ -307,7 +307,7 @@ class MessagingService {
     //   dog('snapshot uid --> ${snapshot.value.runtimeType}');
     // }
     // 1. get all tokens
-
+    List<String> tokens = [];
     for (uid in uids) {
       dog('lenght -> ${uids.length}');
       final snapshot = await Ref.userTokens(uid).get();
@@ -315,18 +315,7 @@ class MessagingService {
       if (snapshot.exists == false) continue;
 
       // get all tokens from `/user-fcm-tokens`
-
-      if (uids.length > 1) {
-        tokens.addAll(List<String>.from((snapshot.value! as Map).keys));
-      } else {
-        // Map<String?, Object?> data = snapshot.value as Map<String?, Object?>;
-        // dog('new data - $data');
-        (snapshot.value as Map).forEach((key, value) {
-          dog('new key == $key');
-          tokens.add(key!);
-        });
-        break;
-      }
+      tokens.addAll(List<String>.from((snapshot.value! as Map).keys));
     }
 
     print('tokens: $tokens');
