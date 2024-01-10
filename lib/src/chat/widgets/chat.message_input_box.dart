@@ -55,6 +55,10 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
               prefixIcon: IconButton(
                 icon: widget.cameraIcon ?? const Icon(Icons.camera_alt),
                 onPressed: () async {
+                  /// 인증된 사용자만 파일 전송 옵션
+                  if (widget.chat.room.uploadVerifiedUserOnly && iam.notVerified) {
+                    return error(context: context, message: T.notVerifiedMessage);
+                  }
                   final url = await StorageService.instance.upload(
                     context: context,
                     // Review
@@ -79,6 +83,14 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                     onPressed: () async {
                       String text = inputController.text.trim();
                       if (text.isEmpty) return;
+
+                      /// 인증된 사용자만 URL 전송 옵션
+                      if (text.hasUrl == true &&
+                          widget.chat.room.urlVerifiedUserOnly &&
+                          iam.notVerified) {
+                        return error(context: context, message: T.notVerifiedMessage);
+                      }
+
                       await send(text: text);
                       inputController.clear();
                       widget.onSend?.call(text: text, url: null);
@@ -105,7 +117,7 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
       }
     } on Issue catch (e) {
       if (mounted) {
-        error(context: context, message: e.code.tr);
+        error(context: context, message: '${e.code.tr}\n${e.message}');
       }
     } catch (e) {
       rethrow;

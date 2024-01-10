@@ -116,6 +116,7 @@ class _RChatMessageListState extends State<ChatMessageListView> {
 
               return ChatBubble(
                 message: message,
+                onChange: () => setState(() {}),
               );
             },
           );

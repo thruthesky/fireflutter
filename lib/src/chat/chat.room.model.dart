@@ -32,10 +32,10 @@ class ChatRoomModel {
   bool isVerifiedOnly;
 
   /// 회원 인증한 사용자만 url 입력 가능하도록 하는 옵션
-  bool urlVerified;
+  bool urlVerifiedUserOnly;
 
   /// 회원 인증한 사용자만 업로드 가능하도록 하는 옵션
-  bool uploadVerified;
+  bool uploadVerifiedUserOnly;
 
   Map<String, bool>? users;
 
@@ -60,6 +60,8 @@ class ChatRoomModel {
   /// [joined] 현재 사용자가 입장해 있으면, 즉 [users] 에 현재 사용자의 UID 가 있으면, true 를 리턴한다.
   bool get joined => users?.containsKey(FirebaseAuth.instance.currentUser!.uid) ?? false;
 
+  bool get isMaster => master == myUid;
+
   ChatRoomModel({
     required this.ref,
     required this.key,
@@ -77,8 +79,8 @@ class ChatRoomModel {
     this.description,
     this.master,
     this.isVerifiedOnly = false,
-    this.urlVerified = false,
-    this.uploadVerified = false,
+    this.urlVerifiedUserOnly = false,
+    this.uploadVerifiedUserOnly = false,
     this.users,
     this.noOfUsers,
   });
@@ -115,8 +117,8 @@ class ChatRoomModel {
       description: json['description'] as String?,
       master: json['master'] as String?,
       isVerifiedOnly: json['isVerifiedOnly'] ?? false,
-      urlVerified: json['urlVerified'] ?? false,
-      uploadVerified: json['uploadVerified'] ?? false,
+      urlVerifiedUserOnly: json['urlVerifiedUserOnly'] ?? false,
+      uploadVerifiedUserOnly: json['uploadVerifiedUserOnly'] ?? false,
       users: json['users'] == null ? null : Map<String, bool>.from(json['users']),
       noOfUsers: json['noOfUsers'] is int ? json['noOfUsers'] : int.parse(json['noOfUsers'] ?? '0'),
     );
@@ -137,8 +139,8 @@ class ChatRoomModel {
       'description': description,
       'master': master,
       'isVerifiedOnly': isVerifiedOnly,
-      'urlVerified': urlVerified,
-      'uploadVerified': uploadVerified,
+      'urlVerifiedUserOnly': urlVerifiedUserOnly,
+      'uploadVerifiedUserOnly': uploadVerifiedUserOnly,
       'users': users,
       'noOfUsers': noOfUsers,
     };
@@ -223,8 +225,8 @@ class ChatRoomModel {
     description = room.description;
     master = room.master;
     isVerifiedOnly = room.isVerifiedOnly;
-    urlVerified = room.urlVerified;
-    uploadVerified = room.uploadVerified;
+    urlVerifiedUserOnly = room.urlVerifiedUserOnly;
+    uploadVerifiedUserOnly = room.uploadVerifiedUserOnly;
     users = room.users;
     noOfUsers = room.noOfUsers;
 
@@ -316,8 +318,8 @@ class ChatRoomModel {
     bool? isOpenGroupChat,
     String? gender,
     bool? isVerifiedOnly,
-    bool? urlVerified,
-    bool? uploadVerified,
+    bool? urlVerifiedUserOnly,
+    bool? uploadVerifiedUserOnly,
   }) async {
     final data = {
       Field.name: name,
@@ -325,8 +327,8 @@ class ChatRoomModel {
       Code.description: description,
       Field.updatedAt: ServerValue.timestamp,
       Field.isVerifiedOnly: isVerifiedOnly,
-      Field.urlVerified: urlVerified,
-      Field.uploadVerified: uploadVerified,
+      Field.urlVerifiedUserOnly: urlVerifiedUserOnly,
+      Field.uploadVerifiedUserOnly: uploadVerifiedUserOnly,
     };
     return ref.update(data);
   }

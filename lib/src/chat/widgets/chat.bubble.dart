@@ -2,31 +2,29 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
+/// Chat bubble
+///
+/// Displays a chat message.
+///
+/// If [uid] is blocked, show a message that the user is blocked.
+///
+/// If the chat bubble needs to be rebuild when something chagned, [onChange]
+/// will be called. One example is when the login user open's other's profile
+/// and block/unblock.
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
     super.key,
     required this.message,
+    this.onChange,
   });
 
   final ChatMessageModel message;
+  final Function? onChange;
 
   @override
   Widget build(BuildContext context) {
     if (my!.isBlocked(message.uid!)) {
-      return Row(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-            constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: borderRadius(),
-            ),
-            child: Text(T.thisIsBlockedUser.tr),
-          ),
-        ],
-      );
+      return blockedUserMessage(context);
     }
 
     return Container(
@@ -44,10 +42,12 @@ class ChatBubble extends StatelessWidget {
               uid: message.uid!,
               size: 30,
               radius: 12,
-              onTap: () => UserService.instance.showPublicProfile(
-                context: context,
-                uid: message.uid!,
-              ),
+              onTap: () => UserService.instance
+                  .showPublicProfile(
+                    context: context,
+                    uid: message.uid!,
+                  )
+                  .then((value) => onChange?.call()),
             ),
 
           const SizedBox(width: 8),
@@ -90,10 +90,12 @@ class ChatBubble extends StatelessWidget {
               uid: myUid!,
               size: 30,
               radius: 12,
-              onTap: () => UserService.instance.showPublicProfile(
-                context: context,
-                uid: myUid!,
-              ),
+              onTap: () => UserService.instance
+                  .showPublicProfile(
+                    context: context,
+                    uid: myUid!,
+                  )
+                  .then((value) => onChange?.call()),
             ),
 
           if (!message.mine) ...[
@@ -118,19 +120,9 @@ class ChatBubble extends StatelessWidget {
     return Column(
       crossAxisAlignment: message.mine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
-        Text(
-          dateTimeShort(DateTime.fromMillisecondsSinceEpoch(message.createdAt ?? 0)),
-          style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
-        ),
+        DateTimeShort(stamp: message.createdAt ?? 0),
         const SizedBox(width: 4),
-        UserDoc(
-          uid: uid,
-          field: Field.displayName,
-          builder: (data) => Text(
-            data ?? 'NoName',
-            style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
-          ),
-        ),
+        UserDisplayName(uid: uid),
       ],
     );
   }
@@ -153,6 +145,44 @@ class ChatBubble extends StatelessWidget {
           },
           errorListener: (value) => dog('Image not exist in storage: $value'),
         ),
+      ),
+    );
+  }
+
+  blockedUserMessage(context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => UserService.instance
+          .showPublicProfile(
+            context: context,
+            uid: message.uid!,
+          )
+          .then((value) => onChange?.call()),
+      child: Row(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+            constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: borderRadius(),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(T.thisIsBlockedUser.tr),
+                Row(
+                  children: [
+                    UserDisplayName(uid: message.uid!),
+                    const SizedBox(width: 8),
+                    DateTimeShort(stamp: message.createdAt ?? 0),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
