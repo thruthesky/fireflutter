@@ -34,7 +34,8 @@ export class MessagingService {
     tokens: string[],
     title: string,
     body: string,
-    data: { [key: string]: string }
+    data: { [key: string]: string }, 
+    image: string
   ) {
     const promises = [];
 
@@ -48,7 +49,7 @@ export class MessagingService {
     // send the notification message to the list of tokens
     for (const token of tokens) {
       const message = {
-        notification: {title, body},
+        notification: {title, body, image},
         data: data,
         token: token,
       };

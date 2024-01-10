@@ -18,7 +18,8 @@ export const sendPushNotifications = onRequest(async (request, response) => {
       request.query["tokens"] as string[],
       request.query["title"] as string,
       request.query["body"] as string,
-      request.query["data"] as { [key: string]: string }
+      request.query["data"] as { [key: string]: string },
+      request.query['image'] as string
     )
   );
 });
