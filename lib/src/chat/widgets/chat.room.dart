@@ -1,5 +1,4 @@
 import 'package:fireship/fireship.dart';
-import 'package:fireship/ref.dart';
 import 'package:flutter/material.dart';
 
 /// 채팅방
@@ -21,11 +20,13 @@ class ChatRoom extends StatefulWidget {
     this.uid,
     this.roomId,
     this.room,
+    this.backButton = true,
   });
 
   final String? uid;
   final String? roomId;
   final ChatRoomModel? room;
+  final bool backButton;
 
   @override
   State<ChatRoom> createState() => _ChatRoomState();
@@ -107,7 +108,10 @@ class _ChatRoomState extends State<ChatRoom> {
     /// 방 정보 전체를 한번 읽고, 이후, 실시간 업데이트
     ///
     /// 참고, reload() 에 의해서 채팅방 정보를 한번 읽었을 수 있는데, 여기서 중복으로 한번 더 읽는다.
-    chat.subscribeRoomUpdate(onUpdate: () => setState(() {}));
+    /// 참고, setState() 를 하지 않는다. setState() 를 하게 되면, 화면이 깜빡거린다.
+    ///
+    /// 참고, 여기서 방 전체를 subscribe 하는데, 잘못된 것 같다. 필요한 필드만 subscribe 해야하는 것이 맞는 것 같다.
+    chat.subscribeRoomUpdate(onUpdate: () => {});
   }
 
   @override
@@ -130,51 +134,127 @@ class _ChatRoomState extends State<ChatRoom> {
         SafeArea(
           child: Row(
             children: [
-              const BackButton(),
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () async {
-                  if (chat.room.isSingleChat) {
-                    await UserService.instance.showPublicProfile(
-                      context: context,
-                      uid: chat.room.otherUserUid!,
-                    );
-                    setState(() {});
-                  }
-                },
-                child: Row(children: [
-                  Database.once(
-                      path: '${Path.join(myUid!, chat.room.id)}/${Field.photoUrl}',
-                      builder: (v, p) => v == null
-                          ? const SizedBox.shrink()
-                          : Row(children: [
-                              Avatar(photoUrl: v),
-                              const SizedBox(width: 8),
-                            ])),
-                  Database.once(
-                    path: '${Path.join(myUid!, chat.room.id)}/name',
-                    builder: (v, p) => Text(
-                      v ?? '',
-                      style: Theme.of(context).textTheme.titleLarge,
+              if (widget.backButton)
+                const BackButton()
+              else
+                const SizedBox(
+                  width: 16,
+                ),
+
+              /// 채팅방 제목
+              Expanded(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () async {
+                    if (chat.room.isSingleChat) {
+                      UserService.instance.showPublicProfile(
+                        context: context,
+                        uid: chat.room.otherUserUid!,
+                      );
+                    }
+                  },
+                  child: Row(children: [
+                    /// 사진
+                    ///
+                    /// 1:1 채팅은 chat-joins 에서 한번만 가져오고, 그룹 채팅은 chat-rooms 에서 가져온다.
+                    /// 그룹 채팅은 관리자가 사진을 바꿀 때, 채팅 화면에 바로 적용되어야 한다.
+                    chat.room.isSingleChat
+                        ? Database.once(
+                            path: '${Path.join(myUid!, chat.room.id)}/${Field.photoUrl}',
+                            builder: (v, p) => v == null
+                                ? const SizedBox.shrink()
+                                : Row(
+                                    children: [
+                                      Avatar(
+                                        photoUrl: v,
+                                        size: 40,
+                                        radius: 18,
+                                      ),
+                                      const SizedBox(width: 8),
+                                    ],
+                                  ),
+                          )
+                        : Database(
+                            path: Path.chatRoomIconUrl(chat.room
+                                .id), // '${Path.join(myUid!, chat.room.id)}/${Field.photoUrl}',
+                            builder: (v) => v == null
+                                ? const SizedBox.shrink()
+                                : Row(
+                                    children: [
+                                      Avatar(
+                                        photoUrl: v,
+                                        size: 40,
+                                        radius: 18,
+                                      ),
+                                      const SizedBox(width: 8),
+                                    ],
+                                  ),
+                          ),
+
+                    /// 제목
+                    ///
+                    /// 1:1 채팅은 chat-joins 에서 한번만 가져오고, 그룹 채팅은 chat-rooms 에서 가져온다.
+                    /// 그룹 채팅은 관리자가 채팅 이름을 바꿀 때, 채팅 화면에 바로 적용되어야 한다.
+                    Expanded(
+                      child: chat.room.isSingleChat
+                          ? Database.once(
+                              path: '${Path.join(myUid!, chat.room.id)}/name',
+                              builder: (v, p) => Text(
+                                v ?? '',
+                                style: Theme.of(context).textTheme.titleLarge,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )
+                          : Database(
+                              path: Path.chatRoomName(chat.room.id),
+                              builder: (v) => Text(
+                                v ?? '',
+                                style: Theme.of(context).textTheme.titleLarge,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                     ),
-                  ),
-                ]),
+                  ]),
+                ),
               ),
               const Spacer(),
+
+              /// add notifications on and off
+              IconButton(
+                onPressed: () async {
+                  await chat.room.toggleNotifications();
+                },
+                icon: Database(
+                  path: Path.chatRoomUsersAt(chat.room.id, myUid!),
+                  builder: (v) => v == true
+                      ? const Icon(Icons.notifications_rounded)
+                      : const Icon(Icons.notifications_outlined),
+                ),
+              ),
+              IconButton(
+                onPressed: () async {
+                  ChatService.instance.showInviteScreen(context: context, room: chat.room);
+                },
+                icon: const Icon(Icons.person_add_rounded),
+              ),
               PopupMenuButton<String>(
                 itemBuilder: (_) => [
-                  PopupMenuItem(value: 'setting', child: Text(T.setting.tr)),
+                  if (chat.room.isMaster || my!.isAdmin)
+                    PopupMenuItem(value: 'setting', child: Text(T.setting.tr)),
                   PopupMenuItem(value: 'block', child: Text(T.block.tr)),
                   PopupMenuItem(value: 'report', child: Text(T.report.tr)),
                   PopupMenuItem(value: 'leave', child: Text(T.leave.tr)),
                 ],
-                onSelected: (v) {
+                onSelected: (v) async {
                   if (v == 'setting') {
                     /// TODO 채팅방이 그룹 채팅이 아니라, 1:1 채팅인 경우, chat-joins 에서 설정을 해야 한다.
-                    ChatService.instance.showChatRoomSettings(
+                    await ChatService.instance.showChatRoomSettings(
                       context: context,
                       roomId: chat.room.id,
                     );
+                    setState(() {});
                   }
                 },
                 tooltip: '채팅방 설정',
@@ -183,6 +263,9 @@ class _ChatRoomState extends State<ChatRoom> {
             ],
           ),
         ),
+        const SizedBox(height: 8),
+
+        /// 채팅 메시지
         Expanded(
           child: loaded
               ? ChatMessageListView(
@@ -190,6 +273,8 @@ class _ChatRoomState extends State<ChatRoom> {
                 )
               : const SizedBox.shrink(),
         ),
+
+        /// 채팅 입력 박스
         SafeArea(
           top: false,
           child: ChatMessageInputBox(

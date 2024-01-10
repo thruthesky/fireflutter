@@ -7,8 +7,7 @@ extension FireFlutterStringExtension on String {
     return double.parse(this);
   }
 
-  bool get isEmail =>
-      RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(this);
+  bool get isEmail => RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(this);
 
   /// Return value if the current string is empty.
   ///
@@ -30,4 +29,7 @@ extension FireFlutterStringExtension on String {
     });
     return s;
   }
+
+  /// Return true if the string contains the url.
+  bool get hasUrl => contains('http://') || contains('https://');
 }

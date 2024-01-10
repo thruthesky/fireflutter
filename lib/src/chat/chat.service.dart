@@ -52,12 +52,14 @@ class ChatService {
     required BuildContext context,
     String? uid,
     String? roomId,
+    ChatRoomModel? room,
   }) async {
     return showGeneralDialog(
       context: context,
       pageBuilder: (context, animation, secondaryAnimation) => DefaultChatRoomScreen(
         uid: uid,
         roomId: roomId,
+        room: room,
       ),
     );
   }
@@ -76,6 +78,17 @@ class ChatService {
     return await showDialog<ChatRoomModel?>(
       context: context,
       builder: (_) => DefaultChatRoomEditDialog(roomId: roomId),
+    );
+  }
+
+  /// Display a dialog to invite a user to a chat room.
+  Future showInviteScreen({
+    required BuildContext context,
+    required ChatRoomModel room,
+  }) async {
+    return await showGeneralDialog<ChatRoomModel?>(
+      context: context,
+      pageBuilder: (_, __, ___) => DefaultChatRoomInviteScreen(room: room),
     );
   }
 }

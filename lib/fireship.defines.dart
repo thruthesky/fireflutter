@@ -1,3 +1,5 @@
+import 'package:fireship/fireship.dart';
+
 class Folder {
   Folder._();
   static const String admins = 'admins';
@@ -8,6 +10,8 @@ class Folder {
   static const String userPhotos = 'user-photos';
   static const String userProfilePhotos = 'user-profile-photos';
   static const String users = 'users';
+
+  static const String reports = 'reports';
 }
 
 class Field {
@@ -46,13 +50,33 @@ class Field {
   static const String users = 'users';
   static const String master = 'master';
   static const String noOfUsers = 'noOfUsers';
+  static const String isVerified = 'isVerified';
   static const String isVerifiedOnly = 'isVerifiedOnly';
-  static const String urlVerified = 'urlVerified';
-  static const String uploadVerified = 'uploadVerified';
+  static const String urlVerifiedUserOnly = 'urlVerifiedUserOnly';
+  static const String uploadVerifiedUserOnly = 'uploadVerifiedUserOnly';
 
   static const String iconUrl = 'iconUrl';
 
   static const String profileBackgroundImageUrl = 'profileBackgroundImageUrl';
 
   static const String blocks = 'blocks';
+}
+
+class Path {
+  Path._();
+
+  /// User
+  static const String users = Folder.users;
+  static const String userProfilePhotos = Folder.userProfilePhotos;
+
+  /// Chat
+  static const String chatMessages = Folder.chatMessages;
+  static String chatRoomUsersAt(roomId, uid) => '${Folder.chatRooms}/$roomId/${Field.users}/$uid';
+  static String chatRoomName(roomId) => '${Folder.chatRooms}/$roomId/${Field.name}';
+  static String chatRoomIconUrl(roomId) => '${Folder.chatRooms}/$roomId/${Field.iconUrl}';
+
+  static const String joins = Folder.chatJoins;
+  static String join(String myUid, String roomId) => '$joins/$myUid/$roomId';
+
+  static String get myReports => '${Folder.reports}/$myUid';
 }

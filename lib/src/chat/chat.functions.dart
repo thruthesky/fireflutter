@@ -14,6 +14,8 @@ isSingleChatRoom(String roomId) {
 
 /// 1:1 채팅방 ID 에서 다른 사용자의 uid 를 리턴한다.
 ///
+/// 그룹 채팅방 ID 이면, null 을 리턴한다.
+///
 /// 주의, 자기 자신과 대화를 할 수 있으니, 그 경우에는 자기 자신의 uid 를 리턴한다.
 String? getOtherUserUidFromRoomId(String roomId) {
   final splits = roomId.split(chatRoomDivider);

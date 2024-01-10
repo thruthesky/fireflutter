@@ -57,6 +57,7 @@ class ChatModel {
 
   /// 채팅 메시지 전송
   ///
+  /// [url] 은 업로드한 파일(사진) url 이다.
   ///
   Future<void> sendMessage({
     String? text,
@@ -64,13 +65,23 @@ class ChatModel {
   }) async {
     if ((url == null || url.isEmpty) && (text == null || text.isEmpty)) return;
 
-    /// TODO 관리자 모드에서 특정 사용자에게 disabled 할 수 있도록 한다.
+    /// TODO 관리자 모드에서 특정 사용자에게 disabled 한 다음 테스트 할 것.
     if (UserService.instance.user?.isDisabled == true) {
       throw Issue(Code.disabled);
     }
 
     if (room.joined == false) {
       throw Issue(Code.notJoined, 'chat.model.dart->sendMessage()');
+    }
+
+    /// 인증된 사용자만 URL 전송 옵션
+    if (text?.hasUrl == true && room.urlVerifiedUserOnly && iam.notVerified) {
+      throw Issue(Code.notVerified, T.notVerifiedMessage);
+    }
+
+    /// 인증된 사용자만 파일 전송 옵션
+    if (url != null && room.uploadVerifiedUserOnly && iam.notVerified) {
+      throw Issue(Code.notVerified, T.notVerifiedMessage);
     }
 
     /// 채팅 메시지 순서를 -1 (감소) 한다.
@@ -119,8 +130,25 @@ class ChatModel {
       });
     }
 
-    /// URL Preview 업데이트
+    /// URL Preview Update
+    ///
+    /// If there is a url inside the text, it will display site preview.
+    /// Don't do this before sending message since it will slow down the process.
     updateUrlPreview(chatMessageRef, text);
+
+    /// Send push notification to the room users
+    ///
+    /// Dont' send push notification if the user truned off the push notification.
+    final List<String> uids = room.users!.entries.toList().fold([], (p, e) {
+      if (room.users![e.key] != true) return p;
+      p.add(e.key);
+      return p;
+    });
+
+    print('list of uids:  $uids');
+
+    /// sending notification to the list of uids
+    MessagingService.instance.sendTo(uids: uids);
   }
 
   /// URL Preview 업데이트
@@ -336,73 +364,16 @@ class ChatModel {
 
   /// 채팅방 입장
   ///
-  /// [join] 메소드를 호출 할 때에는 [room] 정보가 실제 DB 로 업데이트되어져야 한다. 실제로
-  /// [subscribeRoomUpdate] 에서 [room] 정보를 업데이트 후, [join] 메소드를 호출하고 있다.
-  ///
-  /// 채팅방 문서(/chat-rooms/{roomId})가 존재하지 않아도 joinRoom() 을 호출하면, 채팅방 문서가 생성된다.
-  /// 1:1 채팅에서는, 맨 처음 채팅방이 만들어지고, 입장 할 때, 채팅방이 존재하지 않는 상태이다.
-  /// For group chat, the user uid is added to /chat-rooms/{groupChatId}/users/{[uid]: true}
-  /// For 1:1 chat, create a chat room info under my chat room list only. Not the other user's.
-  ///
-  /// Note, it's not that harmful to set the same uid to true over again and if it happens
-  /// only one time when the user enters the chat room.
-  ///
-  /// 로그인을 하지 않았으면, 그냥 리턴한다.
-  /// 이미 방에 들어가 있는 상태이면 그냥 리턴한다.
-  ///
-  ///
-  Future join() async {
+  Future join({
+    bool forceJoin = false,
+  }) async {
     if (myUid == null) {
       // 로그인을 하지 않았으면 그냥 리턴
       // throw Exception('ChatModel::join() -> Login first -> myUid is null');
       throw Issue(Code.notLoggedIn);
     }
 
-    // 채팅방이 인증 회원 전용 입장이면, 인증 회원이 아니면 그냥 리턴
-    if (room.isVerifiedOnly && UserService.instance.user?.isVerified != true) {
-      throw Issue(Code.chatRoomNotVerified);
-    }
-
-    // 내가 이미 방에 들어가 있는 상태이면 그냥 리턴
-    if (room.users?.containsKey(myUid) == true) return;
-    dog('ChatService.instance.joinRoom: Not joined, yet. Joing now ...');
-
-    final otherUserUid = room.otherUserUid;
-
-    // 나를 채팅방 정보의 사용자 목록에 추가
-    await room.ref.child('users').child(myUid!).set(true);
-
-    // 1:1 채팅이면, 채팅방의 사용자 목록에, 다른 사용자 아이디를 추가해 준다.
-    if (room.isSingleChat) {
-      if (room.users?.containsKey(otherUserUid) != true) {
-        await room.ref.child('users').child(otherUserUid!).set(true);
-      }
-    } else {
-      // 그룹 채팅방이면, noOfUsers 를 업데이트 한다.
-      await room.ref.child('noOfUsers').set((room.users?.length ?? 0) + 1);
-    }
-
-    /// 나의 채팅방 목록에 저장할 채팅방 정보
-    ///
-    final order = -int.parse('${room.updatedAt ?? room.createdAt ?? 0}');
-    final data = {
-      Field.name: room.isGroupChat ? room.name : '',
-      Field.groupChatOrder: room.isGroupChat ? order : null,
-      Field.singleChatOrder: room.isSingleChat ? order : null,
-      Field.newMessage: null,
-    };
-
-    /// 1:1 채팅방의 경우, 상대방의 이름을 저장한다.
-    if (otherUserUid != null) {
-      final user = await UserModel.get(otherUserUid);
-      data['name'] = user?.displayName;
-    }
-
-    // set order into -updatedAt (w/out "1")
-    // it is important to know that updatedAt must not be updated
-    // before this.
-    data['order'] = order;
-    await Ref.joinsRef.child(myUid!).child(room.id).update(data);
+    await room.invite(myUid!, forceJoin: forceJoin);
   }
 
   /// 현재 방 listen, unlisten

@@ -155,7 +155,11 @@ class MessagingService {
     dog('Updating the device token: $token');
     if (token == null) return;
     try {
-      await set('user-fcm-tokens/$myUid/$token', platformName());
+      final data = {
+        'uid': myUid,
+        'platform': platformName(),
+      };
+      await set('${Folder.userFcmTokens}/$token', data);
     } catch (e) {
       dog('Error while updating token: $e');
       rethrow;
@@ -182,7 +186,7 @@ class MessagingService {
   /// [uids] 는 배열로 입력되어야 하고, 여기서 콤마로 분리된 문자열로 만들어 서버로 보낸다. 즉, 서버에서는 문자열이어야 한다.
   ///
   /// [target] is the target of devices you want to send message to. If it's "all", then it will send messages to all users.
-  /// [type] is the kind of push notification `post` `chat`
+  /// [type] is the kind of push notification `post`, `chat`, `profile`
   /// [id] is can be use to determined the landing page when notification is clicked
   /// heirarchy action >> topic >> tokens >> uids
   /// if action is not null, topic, tokens, uids will be ignored
@@ -190,52 +194,126 @@ class MessagingService {
   /// if action and topic is null, and tokens is not null then uids will be ignored
   /// if action, topic, and tokens are null, then uids will be used
   ///
+  /// [receiverUid] the receiver's uid. It can be null if the tokens are from multiple users.
+  /// [numberOfChunks] the number of chunks is the number of token inside a chuncks the maximum number of chunks that th
+  /// firebase cloud messging to send all at once is 1000.
   ///
-  /// TODO: what if there is too much tokens? chunk it by 255 tokens and send them all at once.
   ///
-  /// TODO: remove invalid tokens from database.
-  ///
-  Future send({
+  Future<Map<String, String>> send({
+    required List<String> tokens,
     required String title,
     required String body,
     required String senderUid,
-    required String receiverUid,
     String? badge,
     String? channelId,
     String? sound,
     String? action,
     Map<String, dynamic>? extra,
+    int numberOfChunks = 255,
+    bool removeInvalidTokens = true,
   }) async {
-    Map<String, dynamic> data = {
-      'title': title,
-      'body': body,
-      'data': {
-        'senderUid': myUid!,
-      },
-      'tokens': [
-        // / iPhone11ProMax
-        // "fVWDxKs1kEzxhtV9ElWh-5:APA91bE_rN_OBQF3KwAdqd6Ves18AnSrCovj3UQyoLHvRwp0--1BRyo9af8EDEWXEuzBneknEFFuWZ7Lq2VS-_MBRY9vbRrdXHEIAOtQ0GEkJgnaJqPYt7TQnXtci3s0hxn34MBOhwSK",
-        // / andriod with initail uid of W7a
-        "c9OPdjOoRtqCOXVG7HLpSI:APA91bFJ9VshAvx-mQ4JsIpFmkljnA4XZtE8LDw6JYtIWSJwSxnuJsHt0XtlHKy4wuRcttIzqPQckfAwX_baurPfiJuFFNS6ioD50X9ks5eeyi5Pl40vMWmCpNpgCVxg92CjRe5S51Ja",
-        // / Android in MacOS
-        "e66JGEFqRWOuictuIH8pnk:APA91bEPzpJI1IzfWs-A1UO13Mly3YQU07kpQZyl5KVXYowKts_ILI6l624ZtSk2wljVaY62xXHJNFvLKvfCNvzUI9QjEygKPjC0NROBnKQ3P__LZU2d5fd2-jdlUosOwoViLnUEaADN",
-        //
-        "df06WGOxSJCJLwciBcbO_D:APA91bH1kAm1MFsCCWkPutbqmt95Xl0xg7poQNSUjlaCAXeM4hERN2toI94yzDoIMW4b1lyNGQRcc3uFkSmptWRXGGADzQjNXQt-2WPI9GoQ08AiXCmGoYhXmWWNntlDHE92jQ_ojuhW"
-            // TEST empty token
-            "",
-        // TEST invalid token
-        "This-is-invalid-token",
-      ],
-    };
+    /// remove empty tokens
+    tokens = tokens.where((element) => element.isNotEmpty).toList();
 
-    dog('data->>  $data');
+    /// Chunk. check and separate the token by 255 per chunk
+    List<List<String>> tokenChunck = [];
+    for (int i = 0; i < tokens.length; i += numberOfChunks) {
+      int end = (i + numberOfChunks < tokens.length) ? i + numberOfChunks : tokens.length;
+      tokenChunck.add(tokens.sublist(i, end));
+    }
 
-    final dio = Dio();
-    final response = await dio.post(
-      sendUrl!,
-      data: data,
+    Map<String, String> responses = {};
+
+    /// Send. send the token per group of chunk
+    for (List<String> chunck in tokenChunck) {
+      Map<String, dynamic> data = {
+        "title": title,
+        "body": body,
+        "data": {"senderUid": senderUid},
+        "tokens": chunck
+      };
+
+      dog('tokens in this chunk ->>  ${chunck.length}, data: $data');
+
+      final dio = Dio();
+      try {
+        final response = await dio.post(sendUrl!, queryParameters: data);
+
+        final res = Map<String, String>.from(response.data);
+        responses.addAll(res);
+      } catch (e) {
+        dog('Error on calling firebase function: $e');
+
+        ///
+      }
+    }
+
+    /// remove invalid tokens
+    print('no of bad tokens: ${responses.length}');
+    for (final key in responses.keys) {
+      print('invalid key: $key - ${responses[key]}');
+      set("${Folder.userFcmTokens}/$key", null);
+    }
+    if (removeInvalidTokens) {
+      ///
+    }
+
+    return responses;
+  }
+
+  Future<Map<String, String>> sendAll() async {
+    // 1. get all tokens
+    final folders = await get<Map>(Folder.userFcmTokens);
+    if (folders == null) return {};
+
+    // get all tokens from `/user-fcm-tokens`.
+    final List<String> tokens = List<String>.from(folders.keys);
+
+    // 2. send messages to all tokens
+    final responses = await send(
+      tokens: tokens,
+      title: 'send all test - ${DateTime.now()}',
+      body: 'this is the content of the message',
+      senderUid: myUid!,
     );
-    dog('response; $response');
+
+    print('sendAll() responses: $responses');
+
+    return responses;
+  }
+
+  /// Send message to one user or multiple users
+  /// [uid] sending a notification to a single uid
+  /// [uids] sending a notification to multiple uids
+  Future<Map<String, String>> sendTo({
+    String? uid,
+    List<String>? uids,
+  }) async {
+    assert(uid != null || uids != null);
+    uids ??= [uid!];
+
+    // 1. get all tokens
+    List<String> tokens = [];
+    for (uid in uids) {
+      final snapshot = await Ref.userTokens(uid).get();
+      if (snapshot.value == null) continue;
+      if (snapshot.exists == false) continue;
+
+      // get all tokens from `/user-fcm-tokens`.
+      tokens += List<String>.from((snapshot.value! as Map).keys);
+    }
+    print('tokens: $tokens');
+
+    // 2. send messages to all tokens
+    final responses = await send(
+      tokens: tokens,
+      title: 'send all test - ${DateTime.now()}',
+      body: 'this is the content of the message',
+      senderUid: myUid!,
+    );
+
+    print('sendTo() responses: $responses');
+    return responses;
   }
 
   /// Parse message data from [RemoteMessage.data]

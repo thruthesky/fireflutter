@@ -1,8 +1,12 @@
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
-/// Get user data from 'users/uid' node.
-/// 사용자 필드(또는 전체) 값을 가져온다.
+final _userDataCache = <String, dynamic>{};
+
+/// Get user data synchroneously.
+///
+/// 사용자 필드(또는 전체) 값을 가져온다. 데이터가 업데이트되어도 rebuild 하지 않는다. [UserDoc.sync] 를 사용하면,
+/// rebuild 할 수 있다.
 ///
 /// 주의, field 가 null 이면, "users/uid" 통째를 가져오고, field 가 'abc/def' 이면, "users/uid/abc/def" 의 값을 가져온다.
 /// 참고, 이러한 이유로, 사용자 정보를 전달 할 때, 사용자 데이터를 통째로 읽어 전달 할 필요 없이, 필요한 데이터 필드만 바로 바로 쓰면 된다.
@@ -30,8 +34,6 @@ import 'package:flutter/material.dart';
 /// ),
 /// ```
 ///
-final _userDataCache = <String, dynamic>{};
-
 class UserDoc extends StatelessWidget {
   const UserDoc({
     super.key,
@@ -82,6 +84,6 @@ class UserDoc extends StatelessWidget {
   }) {
     final path = 'users/$uid${field != null ? '/$field' : ''}';
 
-    return Database(path: path, builder: (a, b) => builder(a));
+    return Database(path: path, builder: builder);
   }
 }

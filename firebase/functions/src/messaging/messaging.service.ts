@@ -1,7 +1,6 @@
 
 import {getMessaging} from "firebase-admin/messaging";
 
-
 /**
  * MessagingService
  *
@@ -39,38 +38,37 @@ export class MessagingService {
   ) {
     const promises = [];
 
-    // / remove empty tokens from tokens and save it to newTokens
-    const newTokens = Array.isArray(tokens) ? tokens.filter((token) => !!token): [];
+    if (typeof tokens != "object") {
+      throw new Error("tokens must be an array of string");
+    }
 
-    for (const token of newTokens) {
+    // remove empty tokens
+    tokens = tokens.filter((token) => !!token);
+
+    // send the notification message to the list of tokens
+    for (const token of tokens) {
       const message = {
         notification: {title, body},
         data: data,
         token: token,
       };
-      console.log("message", message);
       promises.push(getMessaging().send(message));
     }
 
     const res = await Promise.allSettled(promises);
 
-    if (res.length != newTokens.length) {
-      console.log("res", res);
-      console.log("tokens", tokens);
-      console.log("newTokens", newTokens);
-      throw new Error("The number of tokens and the number of responses are not equal");
-    }
 
-    const newResponses: { [token: string]: string; } = {};
+    const responses: { [token: string]: string; } = {};
 
     for (let i = 0; i < res.length; i++) {
       const status: string = res[i].status;
       if (status == "fulfilled") {
         continue;
       }
+
       const reason = (res[i] as PromiseRejectedResult).reason;
-      newResponses[newTokens[i]] = reason["errorInfo"]["code"];
+      responses[tokens[i]] = reason["errorInfo"]["code"];
     }
-    return newResponses;
+    return responses;
   }
 }

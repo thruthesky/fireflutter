@@ -5,6 +5,7 @@ class T {
   static const String yes = 'Yes';
   static const String no = 'No';
   static const String ok = 'OK';
+  static const String cancel = 'Cancel';
 
   /// Chat
   ///
@@ -22,4 +23,10 @@ class T {
   static const String blockConfirmMessage = 'You will not be able to contents of this user.';
   static const String unblockConfirmTitle = 'Unblock this user?';
   static const String unblockConfirmMessage = 'You will be able to contents of this user.';
+  static const String notVerifiedMessage = 'You have not verified yourself.';
+
+  /// Report
+  static const String reportInputTitle = 'Report';
+  static const String reportInputMessage = 'Please enter the reason for the report.';
+  static const String reportInputHint = 'Reason';
 }
