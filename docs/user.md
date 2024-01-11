@@ -169,6 +169,8 @@ The `UserDisplayName` widget can be used like this:
 UserDisplayName(uid: uid),
 ```
 
+This will show `displayName`, not `name` of the user.
+
 ### UserAvatar
 
 The `UserAvatar` widget can be used like this:
