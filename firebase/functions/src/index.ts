@@ -13,7 +13,11 @@ initializeApp();
  */
 export const sendPushNotifications = onRequest(async (request, response) => {
   logger.info("request.query of sendPushNotifications", request.body);
-  response.send(
-    await MessagingService.sendNotificationToTokens(request.body)
-  );
+  try {
+    const res = await MessagingService.sendNotificationToTokens(request.body);
+    response.send(res);
+  } catch (e) {
+    logger.error(e);
+    response.send({ error: e });
+  }
 });
