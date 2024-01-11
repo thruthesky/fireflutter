@@ -34,7 +34,10 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  MessagingService.instance.sendAll();
+                  MessagingService.instance.sendAll(
+                    title: 'send all test - ${DateTime.now()}',
+                    body: 'this is the content of the message',
+                  );
                 },
                 child: const Text('Send push messages to all users'),
               ),

@@ -241,6 +241,7 @@ class MessagingService {
         final response = await dio.post(sendUrl!, data: data);
 
         final res = Map<String, String>.from(response.data);
+        dog('res error - > ${res['error']}');
         if (res['error'] != null) {
           dog('Error on calling firebase function: ${res['error']}');
         } else {
@@ -252,7 +253,6 @@ class MessagingService {
         ///
       }
     }
-
     // / remove invalid tokens
     print('no of bad tokens: ${responses.length}');
     for (final key in responses.keys) {
@@ -266,7 +266,8 @@ class MessagingService {
     return responses;
   }
 
-  Future<Map<String, String>> sendAll() async {
+  Future<Map<String, String>> sendAll(
+      {required String title, required String body, String? image}) async {
     // 1. get all tokens
     final folders = await get<Map>(Folder.userFcmTokens);
     if (folders == null) return {};
@@ -275,12 +276,8 @@ class MessagingService {
     final List<String> tokens = List<String>.from(folders.keys);
 
     // 2. send messages to all tokens
-    final responses = await send(
-      tokens: tokens,
-      title: 'send all test - ${DateTime.now()}',
-      body: 'this is the content of the message',
-      senderUid: myUid!,
-    );
+    final responses =
+        await send(tokens: tokens, title: title, body: body, senderUid: myUid!, image: image);
 
     print('sendAll() responses: $responses');
 
@@ -298,7 +295,12 @@ class MessagingService {
     String? image,
   }) async {
     assert(uid != null || uids != null);
+
     uids ??= [uid!];
+
+    if (uids.isEmpty) {
+      dog('MessagingService Error --> uids must not not be empty');
+    }
 
     // if (uid!.isNotEmpty) {
     //   final snapshot = await Ref.userTokens(uid).get();
