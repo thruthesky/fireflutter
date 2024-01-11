@@ -241,7 +241,6 @@ class MessagingService {
         final response = await dio.post(sendUrl!, data: data);
 
         final res = Map<String, String>.from(response.data);
-        dog('res error - > ${res['error']}');
         if (res['error'] != null) {
           dog('Error on calling firebase function: ${res['error']}');
         } else {

@@ -135,22 +135,38 @@ class ChatModel {
     /// Don't do this before sending message since it will slow down the process.
     updateUrlPreview(chatMessageRef, text);
 
-    /// Send push notification to the room users
-    ///
-    /// Dont' send push notification if the user truned off the push notification.
-    final List<String> uids = room.users!.entries.toList().fold([], (p, e) {
-      if (room.users![e.key] != true) return p;
-      p.add(e.key);
-      return p;
-    });
+    if (room.isGroupChat) {
+      room.name!;
+      dog('group chat');
 
-    /// sending notification to the list of uids
-    MessagingService.instance.sendTo(
-      uids: uids,
-      title: '${UserService.instance.user?.displayName}',
-      body: text ?? "사진을 업로드하였습니다.",
-      image: url,
-    );
+      /// Send push notification to the room users
+      ///
+      /// Dont' send push notification if the user truned off the push notification.
+      final List<String> uids = room.users!.entries.toList().fold([], (p, e) {
+        if (room.users![e.key] != true) return p;
+        p.add(e.key);
+        return p;
+      });
+
+      /// sending notification to the list of uids
+      await MessagingService.instance.sendTo(
+        uids: uids,
+        title: room.name!,
+        body: text ?? "사진을 업로드하였습니다.",
+        image: url,
+      );
+    }
+
+    /// sending notification for single chat
+    if (room.isSingleChat) {
+      final uid = room.otherUserUid;
+      if (room.users![uid] != true) return;
+      await MessagingService.instance.sendTo(
+          uid: uid,
+          title: '${UserService.instance.user?.displayName}',
+          body: text ?? "사진을 업로드하였습니다.",
+          image: url);
+    }
   }
 
   /// URL Preview 업데이트
