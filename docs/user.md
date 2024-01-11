@@ -132,3 +132,47 @@ print(user.displayName);
 
 - You can use `UserDoc` or `MyDoc` to display user data.
 - The most commonly used user properties are name and photos. Fireship provides `UserDisplayName` and `UserAvatar` for your convinience.
+
+### UserDoc
+
+The `UserDoc` can be used like this:
+
+```dart
+UserDoc(
+  uid: uid,
+  builder: (data) {
+    if (data == null) return const SizedBox.shrink();
+    final user = UserModel.fromJson(data, uid: uid);
+    return Text( user.displayName ?? 'No name' );
+  },
+),
+```
+
+### MyDoc
+
+The `MyDoc` can be used like this:
+
+```dart
+MyDoc(
+  builder: (my) {
+    return Text( user.displayName ?? 'No name');
+  }
+),
+
+```
+
+### UserDisplayName
+
+The `UserDisplayName` widget can be used like this:
+
+```dart
+UserDisplayName(uid: uid),
+```
+
+### UserAvatar
+
+The `UserAvatar` widget can be used like this:
+
+```dart
+UserAvatar(uid: uid, size: 100, radius: 40),
+```
