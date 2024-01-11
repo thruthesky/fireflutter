@@ -378,6 +378,8 @@ class CustomChatRoomInviteScreen extends StatelessWidget {
 }
 ```
 
+<!-- TODO review -->
+
 ## 관리 (Management)
 
 - 기본 관리자 화면을 사용하면 된다. `AdminService.instance.showDashboard()` 를 호출하면 된다.
