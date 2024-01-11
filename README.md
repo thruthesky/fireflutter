@@ -21,3 +21,9 @@ See the following documents:
 ## Issues
 
 Create issues on github.
+
+
+## Contacts
+
+JaeHo Song
+thruthesky@gmail.com
