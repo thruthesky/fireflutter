@@ -298,7 +298,12 @@ class MessagingService {
     String? image,
   }) async {
     assert(uid != null || uids != null);
+
     uids ??= [uid!];
+
+    if (uids.isEmpty) {
+      dog('MessagingService Error --> uids must not not be empty');
+    }
 
     // if (uid!.isNotEmpty) {
     //   final snapshot = await Ref.userTokens(uid).get();
