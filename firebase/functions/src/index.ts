@@ -1,8 +1,8 @@
 
-import {onRequest} from "firebase-functions/v2/https";
-import {MessagingService} from "./messaging/messaging.service";
-import {initializeApp} from "firebase-admin/app";
-import {logger} from "firebase-functions/v1";
+import { onRequest } from "firebase-functions/v2/https";
+import { MessagingService } from "./messaging/messaging.service";
+import { initializeApp } from "firebase-admin/app";
+import { logger } from "firebase-functions/v1";
 
 
 // / initialize firebase app
@@ -19,7 +19,9 @@ export const sendPushNotifications = onRequest(async (request, response) => {
   } catch (e) {
     logger.error(e);
     if (e instanceof Error) {
-      response.send({error: e.message});
+      response.send({ error: e.message });
+    } else {
+      response.send({ error: "unknown error" });
     }
   }
 });
