@@ -18,6 +18,8 @@ export const sendPushNotifications = onRequest(async (request, response) => {
     response.send(res);
   } catch (e) {
     logger.error(e);
-    response.send({ error: e });
+   if(e instanceof Error){
+    response.send({error: e.message})
+   }
   }
 });
