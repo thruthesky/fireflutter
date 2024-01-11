@@ -1,5 +1,6 @@
 
 import {getMessaging} from "firebase-admin/messaging";
+import {MessageNotification, MessageRequest} from "./messaging.interface";
 
 /**
  * MessagingService
@@ -10,10 +11,7 @@ export class MessagingService {
   /**
          * Send messages
          *
-         * @param {Array<string>} tokens array of tokens
-         * @param {string} title message title
-         * @param {string} body message body
-         * @param {any} data message data
+         * @param {MessageRequest} params - The parameters for sending messages.
          *
          *
          * It returns the error results of push notification in a map like
@@ -30,26 +28,38 @@ export class MessagingService {
          * If there is no error with the token, the value will be empty
          * string. Otherwise, there will be a error message.
          */
-  static async sendNotificationToTokens(
-    tokens: string[],
-    title: string,
-    body: string,
-    data: { [key: string]: string }
-  ) {
+  static async sendNotificationToTokens(params: MessageRequest): Promise<{ [token: string]: string; }> {
     const promises = [];
 
-    if (typeof tokens != "object") {
+    if (typeof params.tokens != "object") {
       throw new Error("tokens must be an array of string");
     }
+    if (params.tokens.length == 0) {
+      throw new Error("tokens must not be empty");
+    }
+    if (!params.title) {
+      throw new Error("title must not be empty");
+    }
+    if (!params.body) {
+      throw new Error("body must not be empty");
+    }
+
 
     // remove empty tokens
-    tokens = tokens.filter((token) => !!token);
+    const tokens = params.tokens.filter((token) => !!token);
+
+
+    // image is optional
+    const notification: MessageNotification = {title: params.title, body: params.body};
+    if (params.image) {
+      notification["image"] = params.image;
+    }
 
     // send the notification message to the list of tokens
     for (const token of tokens) {
       const message = {
-        notification: {title, body},
-        data: data,
+        notification: notification,
+        data: params.data,
         token: token,
       };
       promises.push(getMessaging().send(message));

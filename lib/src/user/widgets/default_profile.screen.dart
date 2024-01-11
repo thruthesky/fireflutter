@@ -108,7 +108,7 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
                           right: 0,
                           child: Center(
                             child: DefaultAvatarUpdate(
-                              uid: UserService.instance.user!.uid,
+                              uid: myUid!,
                               radius: 80,
                               delete: false,
                             ),

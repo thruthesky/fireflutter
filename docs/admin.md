@@ -1,10 +1,16 @@
-# 관리자
+# Admin
 
 
-## 관리자 지정
+## How to set a user as admin
 
-- `/admins/{ uid: master }` 와 같이 지정하면 된다. 만약, 본인의 UID 가 ABCDEF 라면, `admins` 노드에 필드 이름을 `ABCDEF` 로 해서 값을 `master` 로 저장하면, 관리자가 된다.
+1. Add the user uid under `/admins`.
 
+For instance, if the user uid is `abc`, then set it like below
+
+`/admins/{ abc: master }`
+
+
+2. Set the `isAdmin` to true in the `/users/<uid>`.
 
 
 

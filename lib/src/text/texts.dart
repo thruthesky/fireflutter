@@ -25,6 +25,13 @@ class T {
   static const String unblockConfirmMessage = 'You will be able to contents of this user.';
   static const String notVerifiedMessage = 'You have not verified yourself.';
 
+  /// Block
+  static const String blocked = 'Blocked';
+  static const String blockedMessage = 'You have been blocked by this user.';
+
+  static const String unblocked = 'Unblocked';
+  static const String unblockedMessage = 'You have been unblocked by this user.';
+
   /// Report
   static const String reportInputTitle = 'Report';
   static const String reportInputMessage = 'Please enter the reason for the report.';

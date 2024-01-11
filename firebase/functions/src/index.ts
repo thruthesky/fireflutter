@@ -1,8 +1,8 @@
 
-import {onRequest} from "firebase-functions/v2/https";
-import {MessagingService} from "./messaging/messaging.service";
-import {initializeApp} from "firebase-admin/app";
-import {logger} from "firebase-functions/v1";
+import { onRequest } from "firebase-functions/v2/https";
+import { MessagingService } from "./messaging/messaging.service";
+import { initializeApp } from "firebase-admin/app";
+import { logger } from "firebase-functions/v1";
 
 
 // / initialize firebase app
@@ -12,13 +12,12 @@ initializeApp();
  * sending messages to tokens
  */
 export const sendPushNotifications = onRequest(async (request, response) => {
-  logger.info("request.query of sendPushNotifications", request.query);
-  response.send(
-    await MessagingService.sendNotificationToTokens(
-      request.query["tokens"] as string[],
-      request.query["title"] as string,
-      request.query["body"] as string,
-      request.query["data"] as { [key: string]: string }
-    )
-  );
+  logger.info("request.query of sendPushNotifications", request.body);
+  try {
+    const res = await MessagingService.sendNotificationToTokens(request.body);
+    response.send(res);
+  } catch (e) {
+    logger.error(e);
+    response.send({ error: e });
+  }
 });

@@ -129,6 +129,24 @@
       "cwd": "apps/momcafe",
       "program": "lib/main.dart"
     },
+    {
+      "name": "Momcafe - SM A045F (Profile)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "SM A045F",
+      "flutterMode": "profile",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Momcafe - Iphone (2)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone (2)",
+      "flutterMode": "debug",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart"
+    },
 
     {
       "name": "Momcafe (Chris) - iPhone 15 Pro Max (debug)",

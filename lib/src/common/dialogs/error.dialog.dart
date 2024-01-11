@@ -1,3 +1,4 @@
+import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
 class ErrorDialog extends StatelessWidget {
@@ -10,7 +11,7 @@ class ErrorDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
         title: Text(
-          title ?? '에러',
+          title ?? 'Error',
           style: Theme.of(context).textTheme.titleLarge,
         ),
         content: Text(
@@ -20,7 +21,7 @@ class ErrorDialog extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('확인'),
+            child: Text(T.ok.tr),
           ),
         ]);
   }
