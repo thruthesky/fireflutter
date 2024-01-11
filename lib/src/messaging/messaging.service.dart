@@ -266,7 +266,8 @@ class MessagingService {
     return responses;
   }
 
-  Future<Map<String, String>> sendAll() async {
+  Future<Map<String, String>> sendAll(
+      {required String title, required String body, String? image}) async {
     // 1. get all tokens
     final folders = await get<Map>(Folder.userFcmTokens);
     if (folders == null) return {};
@@ -275,12 +276,8 @@ class MessagingService {
     final List<String> tokens = List<String>.from(folders.keys);
 
     // 2. send messages to all tokens
-    final responses = await send(
-      tokens: tokens,
-      title: 'send all test - ${DateTime.now()}',
-      body: 'this is the content of the message',
-      senderUid: myUid!,
-    );
+    final responses =
+        await send(tokens: tokens, title: title, body: body, senderUid: myUid!, image: image);
 
     print('sendAll() responses: $responses');
 
