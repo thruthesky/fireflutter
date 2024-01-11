@@ -1,6 +1,6 @@
 
-import { getMessaging } from "firebase-admin/messaging";
-import { MessageNotification, MessageRequest } from "./messaging.interface";
+import {getMessaging} from "firebase-admin/messaging";
+import {MessageNotification, MessageRequest} from "./messaging.interface";
 
 /**
  * MessagingService
@@ -11,11 +11,7 @@ export class MessagingService {
   /**
          * Send messages
          *
-         * @param {Array<string>} tokens array of tokens
-         * @param {string} title message title
-         * @param {string} body message body
-         * @param {any} data message data
-         * @param {image} image image url path
+         * @param {MessageRequest} params - The parameters for sending messages.
          *
          *
          * It returns the error results of push notification in a map like
@@ -54,7 +50,7 @@ export class MessagingService {
 
 
     // image is optional
-    const notification: MessageNotification = { title: params.title, body: params.body };
+    const notification: MessageNotification = {title: params.title, body: params.body};
     if (params.image) {
       notification["image"] = params.image;
     }

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireship/fireship.dart';
-import 'package:fireship/ref.dart';
 
 /// Chat Model
 ///
@@ -146,8 +145,12 @@ class ChatModel {
     });
 
     /// sending notification to the list of uids
-    MessagingService.instance
-        .sendTo(uids: uids, title: 'Loby', body: 'You have a notification from the loby');
+    MessagingService.instance.sendTo(
+      uids: uids,
+      title: '${UserService.instance.user?.displayName}',
+      body: text ?? "사진을 업로드하였습니다.",
+      image: url,
+    );
   }
 
   /// URL Preview 업데이트
