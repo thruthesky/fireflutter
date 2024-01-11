@@ -23,5 +23,7 @@ See the following documents:
 Create issues on github.
 
 
-## test
-touch
+## Contacts
+
+JaeHo Song
+thruthesky@gmail.com
