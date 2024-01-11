@@ -378,7 +378,7 @@ class CustomChatRoomInviteScreen extends StatelessWidget {
 }
 ```
 
-<!-- TODO review 2 -->
+<!-- TODO review 3 -->
 
 ## 관리 (Management)
 
