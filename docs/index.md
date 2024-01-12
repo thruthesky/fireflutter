@@ -29,20 +29,20 @@ See [install.md](install.md)
 
 Fireship 은 기본적으로 디자인을 제공하며, 모두 변경이 가능하다 (Fireship provides a default design that can be completely customized).
 
-앱의 여러 곳에서 사용자 프로필을 보기를 원 할 수 있다. 예를 들면, 채팅방안에서, 사용자 목록에서, 게시판 글/코멘트에서 사용자 사진을 클릭하는 경우 사용자 공개 프로필을 보여 줄 수 있다. 이 때, 통일되게 `UserService.instance.showPublicProfile(uid: ...)` 함수 하나만 호출하면 어디서든 해당 사용자의 프로필을 보여 줄 수 있다.
+앱의 여러 곳에서 사용자 프로필을 보기를 원 할 수 있다. 예를 들면, 채팅방안에서, 사용자 목록에서, 게시판 글/코멘트에서 사용자 사진을 클릭하는 경우 사용자 공개 프로필을 보여 줄 수 있다. 이 때, 통일되게 `UserService.instance.showPublicProfile(uid: ...)` 함수 하나만 호출하면 어디서든 해당 사용자의 프로필을 보여 줄 수 있다. (You may want to view a user's profile in various places in the app. For example, in a chat room, in a user list, or when clicking on a user's photo in a forum post/comment, you can show the user's public profile. In this case, by simply calling the `UserService.instance.showPublicProfile(uid: ...)` function uniformly, you can display the user's profile anywhere.)
 
-만약, 기본 디자인이 아닌 직접 디자인을 커스터마이징을 하고 싶으면, `UserSerivce.instance.init(customize: UserCustomize(...))` 를 통해서 커스터마이징을 하면 된다.
+만약, 기본 디자인이 아닌 직접 디자인을 커스터마이징을 하고 싶으면, `UserSerivce.instance.init(customize: UserCustomize(...))` 를 통해서 커스터마이징을 하면 된다. If you want to customize the design directly rather than using the default design, you can customize it by calling `UserSerivce.instance.init(customize: UserCustomize(...))`.
 
-커스터마이징 가능한 위젯들의 이름은 `Default` 로 시작한다. 커스터마이징을 할 때에는 fireship 에 있는 코드를 그대로 복사해서 사용하면 된다.
+커스터마이징 가능한 위젯들의 이름은 `Default` 로 시작한다. 커스터마이징을 할 때에는 fireship 에 있는 코드를 그대로 복사해서 사용하면 된다. The names of customizable widgets start with `Default`. When customizing, you can simply copy and use the code from Fireship.
 
 ## Messaging
 
 As the deprecation of [Send messages to multiple devices](https://firebase.google.com/docs/cloud-messaging/send-message#send-messages-to-multiple-devices) is stated in the [official Firebase Documentation](Send messages to multiple devices), we will send push notifications in Flutter code.
 
-## 썸네일
+## 썸네일 (Thumbnails)
 
-- 썸네일을 사용하지 않는다. 과거에는 Firebase Extensions 의 Resize Image 를 통해서 썸네일 이미지를 사용했는데, 이미지를 업로드 할 때, compression 을 하므로, 이미지 용량이 그다지 크지 않다. 평균적으로 3M ~ 5M 사이즈 이미지를 업로드하면, 클라이언트 앱에서 200Kb ~ 300Kb 용량으로 줄여서 업로드를 한다.
+- 썸네일을 사용하지 않는다. 과거에는 Firebase Extensions 의 Resize Image 를 통해서 썸네일 이미지를 사용했는데, 이미지를 업로드 할 때, compression 을 하므로, 이미지 용량이 그다지 크지 않다. 평균적으로 3M ~ 5M 사이즈 이미지를 업로드하면, 클라이언트 앱에서 200Kb ~ 300Kb 용량으로 줄여서 업로드를 한다. (Thumbnails are not used. In the past, thumbnail images were used through the Firebase Extensions Resize Image. However, since compression is applied when uploading images, the image size is not very large. Typically, when uploading images between 3MB and 5MB, they are reduced to 200KB to 300KB in size when uploaded to the client app.)
 
-## 관리자
+## 관리자 (Admin)
 
-- [관리자 문서](admin.md) 참고
+- [관리자 문서](admin.md) 참고 (Refer to [Admin Documentation](admin.md))
