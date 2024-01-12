@@ -1,12 +1,12 @@
-# 공통 (Common)
+# Common
 
 These will be commonly used in different aspect of the app.
 
-## 위젯 (Widgets)
+## Widgets
 
 ### Avatar
 
-사진 URL 을 전달하면, 아바타 처럼 표시. (Displays like an avatar when a photo URL is provided.)
+Displays like an avatar when a photo URL is provided.
 
 ```dart
 Avatar(photoUrl: room.photoUrl);
@@ -31,6 +31,8 @@ import 'package:fireship/fireship.dart';
 // Note that this is a different approach from AnonymousAvatar Widget
 Avatar(photoUrl: anonymousUrl);
 ```
+
+When we want to use Avatar for a User's Profile Photo, it is recommended to use UserAvatar instead. See [user.md doc](user.md).
 
 ### AnonymousAvatar
 

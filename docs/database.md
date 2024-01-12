@@ -6,6 +6,7 @@ Fireship uses `Firebase Realtime Database`, although the majority of developers 
 
 - The path of database should not contain underbar(\_). Instead use `-` between the words.
   - For instance, `user-profile-photos`.
+  - for custom path, do not use the triple dash `---` within path because it is used for the 1:1 chat rooms' ids.
 
 ## Database structure
 
