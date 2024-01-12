@@ -17,6 +17,7 @@ class PostModel {
     required this.urls,
     required this.comments,
     required this.noOfComments,
+    required this.deleted,
   });
 
   final DatabaseReference ref;
@@ -33,6 +34,8 @@ class PostModel {
 
   int noOfLikes;
   int noOfComments;
+
+  bool deleted;
 
   factory PostModel.fromSnapshot(DataSnapshot snapshot) => PostModel.fromJson(
         snapshot.value as Map<dynamic, dynamic>,
@@ -65,6 +68,7 @@ class PostModel {
         urls: List<String>.from(json['urls'] ?? []),
         comments: List<String>.from(json['comments'] ?? []),
         noOfComments: json[Field.noOfComments] ?? 0,
+        deleted: json[Field.deleted] ?? false,
       );
 
   Map<String, dynamic> toSummary() => {
@@ -89,6 +93,7 @@ class PostModel {
         'urls': urls,
         'comments': comments,
         'noOfComments': noOfComments,
+        'deleted': deleted,
       };
 
   @override
@@ -107,6 +112,7 @@ class PostModel {
       urls = p.urls;
       comments = p.comments;
       noOfComments = p.noOfComments;
+      deleted = p.deleted;
     }
     return this;
   }
@@ -171,11 +177,13 @@ class PostModel {
     String? title,
     String? content,
     int? order,
+    bool? deleted,
   }) async {
     final data = {
       if (title != null) 'title': title,
       if (content != null) 'content': content,
       if (order != null) Field.order: order,
+      if (deleted != null) Field.deleted: deleted,
     };
 
     if (data.isEmpty) return;
@@ -189,6 +197,35 @@ class PostModel {
     final snapshot = await ref.get();
     final updated = PostModel.fromSnapshot(snapshot);
     await Ref.postSummary.child(updated.category).child(updated.id).set(updated.toSummary());
+  }
+
+  /// Delete post
+  ///
+  /// If there is no comment, delete the post. Or update the title and content to 'deleted'.
+  /// And set the deleted field to true.
+  Future<void> delete() async {
+    if (comments!.isEmpty) {
+      await ref.remove();
+    } else {
+      await update(
+        title: Code.deleted,
+        content: Code.deleted,
+        deleted: true,
+      );
+    }
+    _afterDelete();
+  }
+
+  _afterDelete() async {
+    if (comments!.isEmpty) {
+      await Ref.postSummary.child(category).child(id).remove();
+    } else {
+      await Ref.postSummary.child(category).child(id).set({
+        Field.title: Code.deleted,
+        Field.content: Code.deleted,
+        Field.deleted: true,
+      });
+    }
   }
 
   /// Like or unlike

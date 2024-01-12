@@ -23,7 +23,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: post.onFieldChange(Field.title, (v) => Text(v)),
+        title: post.onFieldChange(Field.title, (v) => Text(v ?? '')),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -83,8 +83,14 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     await ForumService.instance.showPostUpdateScreen(context, post: post);
                     post.reload();
                   } else if (value == 'delete') {
-                    // await post.delete();
-                    // Navigator.of(context).pop();
+                    final re = await confirm(
+                      context: context,
+                      title: T.deletePostConfirmTitle.tr,
+                      message: T.deletePostConfirmMessage.tr,
+                    );
+                    if (re != true) return;
+                    await post.delete();
+                    if (mounted) Navigator.of(context).pop();
                   }
                 }),
               ],

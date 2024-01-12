@@ -12,16 +12,23 @@
 
 
 
-/posts/<category>
-{ all posts data }
-
-/posts/<category>/comments
-{ all comment data }
-
-
-```
-
-
 ## Coding Guideline
 
 - `category` cannot be changed due to the node structure.
+
+
+
+## Observing post changes and update data
+
+As you know, we are using realtime database. This means the app should observe for data change as small portiona as it can be. And we made it simple for post data changes. Use `PostModel.onFieldChange(field, callback)`.
+
+The example below listens the title changes and if it is changed, it wil update on screen.
+
+```dart
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: post.onFieldChange(Field.title, (v) => Text(v ?? '')),
+    )
+```

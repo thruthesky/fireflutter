@@ -25,6 +25,11 @@ class T {
   static const String unblockConfirmMessage = 'You will be able to contents of this user.';
   static const String notVerifiedMessage = 'You have not verified yourself.';
 
+  /// Forum Post Comment
+  static const String deletePostConfirmTitle = 'Delete this post?';
+  static const String deletePostConfirmMessage =
+      'Are you sure you want to delete post?\nYou will not be able to recover this post.';
+
   /// Block
   static const String blocked = 'Blocked';
   static const String blockedMessage = 'You have blocked this user.';

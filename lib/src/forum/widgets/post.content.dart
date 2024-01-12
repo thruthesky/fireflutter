@@ -11,12 +11,13 @@ class PostContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(16),
       child: post.onFieldChange(
         Field.content,
         (v) => Text(
-          v,
+          v ?? '',
           style: const TextStyle(fontSize: 16),
         ),
       ),

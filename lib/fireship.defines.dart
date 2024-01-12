@@ -48,6 +48,8 @@ class Field {
   static const String profileViewNotification = 'profileViewNotification';
 
   static const String order = 'order';
+  static const String deleted = 'deleted';
+
   static const String singleChatOrder = 'singleChatOrder';
   static const String groupChatOrder = 'groupChatOrder';
   static const String openGroupChatOrder = 'openGroupChatOrder';

@@ -91,8 +91,8 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                         return error(context: context, message: T.notVerifiedMessage);
                       }
 
-                      await send(text: text);
                       inputController.clear();
+                      await send(text: text);
                       widget.onSend?.call(text: text, url: null);
                     },
                   ),

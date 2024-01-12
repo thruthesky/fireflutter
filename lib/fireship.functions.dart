@@ -248,4 +248,4 @@ Future<String?> input({
   );
 }
 
-String likeText(int no) => no == 0 ? '' : ' ($no)';
+String likeText(int? no) => no == null || no == 0 ? '' : ' ($no)';
