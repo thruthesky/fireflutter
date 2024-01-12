@@ -1,6 +1,5 @@
 # Assets
 
-
 Fireship has some default assets.
 
 - https://raw.githubusercontent.com/thruthesky/fireship/main/assets/white.jpg for white background image.

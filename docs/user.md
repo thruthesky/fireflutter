@@ -1,8 +1,8 @@
-# 사용자 (User)
+# User
 
-많은 부분의 코드가 이미 fireship 내에 들어가 있다 (Much of the code is already included in Fireship).
+Much of the code is already included in Fireship.
 
-예를 들면, 회원 정보 수정이나, 공개 프로필 페이지 등은 바로 동작을 하는 상태이다. 이러한 UI 는 customize 할 수 있다. For example, features like modifying user information or public profile pages are already in working codes. You can customize these UI elements.
+For example, features like modifying user information or public profile pages are already in working codes. You can customize these UI elements.
 
 ## User database structure
 
