@@ -1,33 +1,33 @@
 # Fireship
 
-파이어베이스 Realtime Database 를 바타응로 실시간 콘텐츠 관리를 위한 빠르고 강력한 플러터 CMS 라이브러리입니다.
+파이어베이스 Realtime Database 를 바타응로 실시간 콘텐츠 관리를 위한 빠르고 강력한 플러터 CMS 라이브러리입니다. (Fireship is a fast and powerful Flutter CMS library for real-time content management using Firebase Realtime Database.)
 
-## 설치
+## 설치 (Installation)
 
-See install.md
+See [install.md](install.md)
 
-## 데이터베이스
+## 데이터베이스 (Database)
 
-참고: [데이터베이스](database.md)
+참고 (Reference): [데이터베이스 (Database)](database.md)
 
-## 사용자
+## 사용자 (User)
 
-참고: [사용자 개발 매뉴얼](user.md)
+참고 (Reference): [사용자 개발 매뉴얼 (User Dev Manual)](user.md)
 
-## 소팅 / 정렬
+## 소팅 (Sorting) / 정렬 (Ordering)
 
-정렬을 할 때에 정렬 필드와 값을 별도의 node 에 저장한다. 예를 들어, 사진을 업로드한 사용자 목록을 가입날짜 순 또는 사용자 사진을 변경한 순서로 목록하고 싶다면,
+정렬을 할 때에 정렬 필드와 값을 별도의 node 에 저장한다. 예를 들어, 사진을 업로드한 사용자 목록을 가입날짜 순 또는 사용자 사진을 변경한 순서로 목록하고 싶다면, (When sorting, the sorting field and value are stored in a separate node. For example, if you want to list users who uploaded photos in order of registration date or in the order they changed their profile pictures)
 
-- DB 구조 예
-  - 아래와 같이 하면, 사용자가 사진을 수정한 날짜 순서로 회원 사진이 있는 사용자만 목록 할 수 있다.
+- DB 구조 예 (Database Structure Example)
+  - 아래와 같이 하면, 사용자가 사진을 수정한 날짜 순서로 회원 사진이 있는 사용자만 목록 할 수 있다. (By doing the following, you can list users with profile pictures in the order they modified their photos.)
 
 `/user-profile-photos/<uid>/ { updatedAt: ..., photoUrl: ... }`
 
-## 디자인 컨셉
+## 디자인 컨셉 (Design Concept)
 
-### UI 디자인 커스터마이징
+### UI 디자인 커스터마이징 (UI Design Customization)
 
-Fireship 은 기본적으로 디자인을 제공하며, 모두 변경이 가능하다.
+Fireship 은 기본적으로 디자인을 제공하며, 모두 변경이 가능하다 (Fireship provides a default design that can be completely customized).
 
 앱의 여러 곳에서 사용자 프로필을 보기를 원 할 수 있다. 예를 들면, 채팅방안에서, 사용자 목록에서, 게시판 글/코멘트에서 사용자 사진을 클릭하는 경우 사용자 공개 프로필을 보여 줄 수 있다. 이 때, 통일되게 `UserService.instance.showPublicProfile(uid: ...)` 함수 하나만 호출하면 어디서든 해당 사용자의 프로필을 보여 줄 수 있다.
 
