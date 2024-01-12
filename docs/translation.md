@@ -1,6 +1,6 @@
 # Text
 
-The default language is English. And you can chagne it into different language or change it into your own texts.
+The default language is English. And you can change it into different language or change it into your own texts.
 
 ## Changing the texts
 
