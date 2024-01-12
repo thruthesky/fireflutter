@@ -7,6 +7,6 @@
    `/admins/{ abc: master }`
 2. Set the `isAdmin` to true in the `/users/<uid>`.
 
-## 전체 사용자 목록 및 수정 (Displaying the Entire User List and Editing)
+## Displaying the Entire User List and Editing
 
-전체 사용자 목록은 그냥 `FirebaseDatabaseListView` 로 목록을 하면 된다. 참고로 `AdminService.instance.showUserList(context: context)` 를 통해서 사용자 목록을 할 수 있다. (To display the entire user list, you can simply utilize `FirebaseDatabaseListView`. For editing user information, you can reference `AdminService.instance.showUserList(context: context)`)
+To display the entire user list, you can simply utilize `FirebaseDatabaseListView`. For editing user information, you can reference `AdminService.instance.showUserList(context: context)`
