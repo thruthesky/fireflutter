@@ -260,7 +260,7 @@ class UserModel {
   ///
   Future block(String otherUserUid) async {
     if (otherUserUid == uid) {
-      throw Issue(Code.blockSelf);
+      throw Issue(Code.blockSelf, 'You cannot block yourself.');
     }
     //
     if (isBlocked(otherUserUid)) {

@@ -61,6 +61,17 @@ export 'src/chat/widgets/default_chat_room_invite.screen.dart';
 /// Database
 export 'src/database.functions.dart';
 
+/// Forum, Post, Comment
+export 'src/forum/forum.service.dart';
+export 'src/forum/widgets/post.create.screen.dart';
+export 'src/forum/widgets/post.update.screen.dart';
+export 'src/forum/widgets/post.view.screen.dart';
+export 'src/forum/post.model.dart';
+export 'src/forum/comment.model.dart';
+export 'src/forum/widgets/post.list.tile.dart';
+export 'src/forum/widgets/post.content.dart';
+export 'src/forum/widgets/post.meta.dart';
+
 /// message
 export 'src/messaging/messaging.service.dart';
 

@@ -286,14 +286,14 @@ class MessagingService {
   /// Send message to one user or multiple users
   /// [uid] sending a notification to a single uid
   /// [uids] sending a notification to multiple uids
-  Future<Map<String, String>> sendTo({
+  Future<Map<String, String>?> sendTo({
     String? uid,
     List<String>? uids,
     required String title,
     required String body,
     String? image,
   }) async {
-    assert(uid != null || uids != null);
+    if (uid == null && uids == null) return null;
 
     uids ??= [uid!];
 

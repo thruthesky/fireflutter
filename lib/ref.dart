@@ -20,6 +20,12 @@ class Ref {
   static DatabaseReference joinRef(String myUid, String roomId) =>
       joinsRef.child(myUid).child(roomId);
 
+  /// Forum
+  static DatabaseReference posts = root.child('posts');
+  static DatabaseReference category(String category) => posts.child(category);
+  static DatabaseReference post(String category, String id) => Ref.category(category).child(id);
+  static DatabaseReference postSummary = root.child('posts-summary');
+
   /// Report
   static DatabaseReference reports = root.child(Folder.reports);
 

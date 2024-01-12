@@ -6,10 +6,16 @@ import 'package:flutter/material.dart';
 ///
 /// Use [UserDisplayName.sync] to rebuild when the name changes.
 class UserDisplayName extends StatelessWidget {
-  const UserDisplayName({super.key, required this.uid, this.defaultName = 'NoName'});
+  const UserDisplayName({
+    super.key,
+    required this.uid,
+    this.defaultName = 'NoName',
+    this.style,
+  });
 
   final String uid;
   final String defaultName;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +24,7 @@ class UserDisplayName extends StatelessWidget {
       field: Field.displayName,
       builder: (data) => Text(
         data ?? defaultName,
-        style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
+        style: style ?? TextStyle(fontSize: 10, color: Colors.grey.shade600),
       ),
     );
   }

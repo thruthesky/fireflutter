@@ -247,3 +247,5 @@ Future<String?> input({
     },
   );
 }
+
+String likeText(int no) => no == 0 ? '' : ' ($no)';

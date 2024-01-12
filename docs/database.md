@@ -1,8 +1,13 @@
 # Database
 
-Fireship uses `Firebase Realtime Database`, although the majority of developers use `Firestore`. We have chosen the realtime database because it's fast and simple. You may use `Firestore` together with Fireship.
+Fireship uses `Firebase Realtime Database`. We have chosen the realtime database because it's fast and simple. You may use `Firestore` together with Fireship.
 
 ## Gudeline
+
+- We use `Realtime Database` and it's different from `Firestore`. And it is good to know that the app should
+  - listen(observe) as small portion as it can be.
+  - get the data as small portion as it can be.
+  - not listening the whole document of a user or a post. Just listen a portion of it. Meaning, instead of listing the whole post document, just listen the title only if it's needed.
 
 - The path of database should not contain underbar(\_). Instead use `-` between the words.
   - For instance, `user-profile-photos`.

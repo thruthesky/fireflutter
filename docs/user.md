@@ -178,3 +178,25 @@ The `UserAvatar` widget can be used like this:
 ```dart
 UserAvatar(uid: uid, size: 100, radius: 40),
 ```
+
+
+
+## Block and unblock
+
+You can block or unblock other user like below.
+
+```dart
+final re = await my?.block(chat.room.otherUserUid!);
+```
+
+
+You may want to let the user know if the other user has blocked or unblocked.
+
+```dart
+final re = await my?.block(chat.room.otherUserUid!);
+toast(
+  context: context,
+  title: re == true ? 'Blocked' : 'Unblocked',
+  message: re == true ? 'You have blocked this user' : 'You have unblocked this user',
+);
+```

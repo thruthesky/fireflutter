@@ -9,6 +9,7 @@ class ReportService {
   Future<void> report({
     String? otherUserUid,
     String? chatRoomId,
+    String? postId,
     String reason = '',
   }) async {
     if (notLoggedIn) {
@@ -17,6 +18,7 @@ class ReportService {
     await ReportModel.create(
       otherUserUid: otherUserUid,
       chatRoomId: chatRoomId,
+      postId: postId,
       reason: reason,
     );
   }

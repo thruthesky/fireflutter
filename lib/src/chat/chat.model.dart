@@ -155,17 +155,16 @@ class ChatModel {
         body: text ?? "사진을 업로드하였습니다.",
         image: url,
       );
-    }
-
-    /// sending notification for single chat
-    if (room.isSingleChat) {
+    } else if (room.isSingleChat) {
+      /// sending notification for single chat
       final uid = room.otherUserUid;
-      if (room.users![uid] != true) return;
-      await MessagingService.instance.sendTo(
-          uid: uid,
-          title: '${UserService.instance.user?.displayName}',
-          body: text ?? "사진을 업로드하였습니다.",
-          image: url);
+      if (room.users![uid] == true) {
+        await MessagingService.instance.sendTo(
+            uid: uid,
+            title: '${UserService.instance.user?.displayName}',
+            body: text ?? "사진을 업로드하였습니다.",
+            image: url);
+      }
     }
   }
 

@@ -27,10 +27,10 @@ class T {
 
   /// Block
   static const String blocked = 'Blocked';
-  static const String blockedMessage = 'You have been blocked by this user.';
+  static const String blockedMessage = 'You have blocked this user.';
 
   static const String unblocked = 'Unblocked';
-  static const String unblockedMessage = 'You have been unblocked by this user.';
+  static const String unblockedMessage = 'You have unblocked this user.';
 
   /// Report
   static const String reportInputTitle = 'Report';

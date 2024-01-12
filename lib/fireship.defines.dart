@@ -20,9 +20,11 @@ class Field {
   static const String disabled = 'disabled';
 
   /// Fields and constants
+  static const String id = 'id';
   static const String uid = 'uid';
   static const String name = 'name';
   static const String description = 'description';
+  static const String content = 'content';
   static const String email = 'email';
   static const String phoneNumber = 'phoneNumber';
   static const String isDisabled = 'isDisabled';
@@ -33,6 +35,13 @@ class Field {
   static const String birthDay = 'birthDay';
   static const String birthMonth = 'birthMonth';
   static const String birthYear = 'birthYear';
+
+  static const String category = 'category';
+  static const String title = 'title';
+
+  static const String noOfLikes = 'noOfLikes';
+  static const String likes = 'likes';
+  static const String noOfComments = 'noOfComments';
 
   static const String photoUrl = 'photoUrl';
   static const String hasPhotoUrl = 'hasPhotoUrl';

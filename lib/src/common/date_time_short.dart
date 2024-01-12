@@ -2,14 +2,21 @@ import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
 class DateTimeShort extends StatelessWidget {
-  const DateTimeShort({super.key, required this.stamp});
+  const DateTimeShort({
+    super.key,
+    this.stamp,
+    this.dateTime,
+  });
 
-  final int stamp;
+  final int? stamp;
+  final DateTime? dateTime;
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      dateTimeShort(DateTime.fromMillisecondsSinceEpoch(stamp)),
+      dateTimeShort(
+        stamp != null ? DateTime.fromMillisecondsSinceEpoch(stamp!) : dateTime!,
+      ),
       style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
     );
   }
