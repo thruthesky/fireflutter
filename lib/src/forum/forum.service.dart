@@ -10,7 +10,7 @@ class ForumService {
   Future showPostCreateScreen(BuildContext context, {required String category}) async {
     await showGeneralDialog(
       context: context,
-      pageBuilder: ($, $$, $$$) => PostCreateScreen(
+      pageBuilder: ($, $$, $$$) => PostEditScreen(
         category: category,
       ),
     );
@@ -19,7 +19,7 @@ class ForumService {
   Future showPostUpdateScreen(BuildContext context, {required PostModel post}) async {
     await showGeneralDialog(
       context: context,
-      pageBuilder: ($, $$, $$$) => PostUpdateScreen(
+      pageBuilder: ($, $$, $$$) => PostEditScreen(
         post: post,
       ),
     );
@@ -29,6 +29,15 @@ class ForumService {
     await showGeneralDialog(
       context: context,
       pageBuilder: ($, $$, $$$) => PostViewScreen(
+        post: post,
+      ),
+    );
+  }
+
+  Future showCommentCreateScreen(BuildContext context, {required PostModel post}) async {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => CommentEditDialog(
         post: post,
       ),
     );

@@ -39,6 +39,8 @@ class Field {
   static const String category = 'category';
   static const String title = 'title';
 
+  static const String urls = 'urls';
+
   static const String noOfLikes = 'noOfLikes';
   static const String likes = 'likes';
   static const String noOfComments = 'noOfComments';

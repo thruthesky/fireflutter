@@ -28,9 +28,9 @@ class PostModel {
   final String uid;
   final DateTime createdAt;
   final int order;
-  List<String>? likes;
-  List<String>? urls;
-  List<String>? comments;
+  List<String> likes;
+  List<String> urls;
+  List<String> comments;
 
   int noOfLikes;
   int noOfComments;
@@ -70,6 +70,40 @@ class PostModel {
         noOfComments: json[Field.noOfComments] ?? 0,
         deleted: json[Field.deleted] ?? false,
       );
+
+  /// Create a PostModel from a category with empty values.
+  ///
+  /// Use this factory to create a PostModel from a category with empty values.
+  /// This is useful when you want to create a new post or using other post
+  /// model properties or methods.
+  ///
+  /// It creates a reference with post id along with empty values. So, the post
+  /// does not actaully exists in database, but you can use all the properties
+  /// and method.
+  ///
+  /// ```dart
+  /// final post = PostModel.fromCategory(category);
+  /// ```
+  ///
+  factory PostModel.fromCategory(String category) {
+    final ref = Ref.category(category).push();
+    return PostModel(
+      id: ref.key!,
+      ref: ref,
+      title: '',
+      content: '',
+      category: category,
+      uid: myUid!,
+      createdAt: DateTime.now(),
+      order: DateTime.now().millisecondsSinceEpoch * -1,
+      likes: [],
+      noOfLikes: 0,
+      urls: [],
+      comments: [],
+      noOfComments: 0,
+      deleted: false,
+    );
+  }
 
   Map<String, dynamic> toSummary() => {
         Field.uid: uid,
@@ -134,6 +168,9 @@ class PostModel {
 
   /// Create post data in the database
   ///
+  /// Note that, post must be created with this method since it has some
+  /// special logic only for creating post.
+  ///
   /// /posts
   /// /posts-summary
   /// /posts-all
@@ -141,12 +178,14 @@ class PostModel {
     required String title,
     required String content,
     required String category,
+    List<String>? urls,
   }) async {
     final data = {
+      'uid': myUid,
       Field.category: category,
       'title': title,
       'content': content,
-      'uid': myUid,
+      Field.urls: urls,
       'createdAt': ServerValue.timestamp,
       Field.order: DateTime.now().millisecondsSinceEpoch * -1,
     };
@@ -176,6 +215,7 @@ class PostModel {
     String? category,
     String? title,
     String? content,
+    List<String>? urls,
     int? order,
     bool? deleted,
   }) async {
@@ -184,6 +224,7 @@ class PostModel {
       if (content != null) 'content': content,
       if (order != null) Field.order: order,
       if (deleted != null) Field.deleted: deleted,
+      if (urls != null) Field.urls: urls,
     };
 
     if (data.isEmpty) return;
@@ -204,7 +245,7 @@ class PostModel {
   /// If there is no comment, delete the post. Or update the title and content to 'deleted'.
   /// And set the deleted field to true.
   Future<void> delete() async {
-    if (comments!.isEmpty) {
+    if (comments.isEmpty) {
       await ref.remove();
     } else {
       await update(
@@ -217,7 +258,7 @@ class PostModel {
   }
 
   _afterDelete() async {
-    if (comments!.isEmpty) {
+    if (comments.isEmpty) {
       await Ref.postSummary.child(category).child(id).remove();
     } else {
       await Ref.postSummary.child(category).child(id).set({
@@ -235,14 +276,14 @@ class PostModel {
     final snapshot = await ref.child(Field.likes).get();
     likes = List<String>.from((snapshot.value as Map? ?? {}).keys);
 
-    if (likes?.contains(myUid) == false) {
+    if (likes.contains(myUid) == false) {
       ref.child(Field.likes).child(myUid!).set(true);
-      likes?.add(myUid!);
-      ref.child(Field.noOfLikes).set(likes?.length ?? 0);
+      likes.add(myUid!);
+      ref.child(Field.noOfLikes).set(likes.length);
     } else {
       ref.child(Field.likes).child(myUid!).remove();
-      likes?.remove(myUid);
-      ref.child(Field.noOfLikes).set(likes?.length ?? 0);
+      likes.remove(myUid);
+      ref.child(Field.noOfLikes).set(likes.length);
     }
   }
 

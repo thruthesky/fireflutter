@@ -63,14 +63,14 @@ export 'src/database.functions.dart';
 
 /// Forum, Post, Comment
 export 'src/forum/forum.service.dart';
-export 'src/forum/widgets/post.create.screen.dart';
-export 'src/forum/widgets/post.update.screen.dart';
+export 'src/forum/widgets/post.edit.screen.dart';
 export 'src/forum/widgets/post.view.screen.dart';
 export 'src/forum/post.model.dart';
 export 'src/forum/comment.model.dart';
 export 'src/forum/widgets/post.list.tile.dart';
 export 'src/forum/widgets/post.content.dart';
 export 'src/forum/widgets/post.meta.dart';
+export 'src/forum/widgets/comment.edit.dialog.dart';
 
 /// message
 export 'src/messaging/messaging.service.dart';
@@ -87,6 +87,8 @@ export 'src/storage/storage.service.dart';
 export 'src/storage/storage.customize.dart';
 export 'src/storage/widgets/default_upload_selection.bottom_sheet.dart';
 export 'src/storage/widgets/default_image_carousel.scaffold.dart';
+export 'src/storage/widgets/edit_uploads.dart';
+export 'src/storage/widgets/display_photos.dart';
 
 /// Translation
 export 'src/text/text.service.dart';
