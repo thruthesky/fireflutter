@@ -10,6 +10,7 @@ class ReportService {
     String? otherUserUid,
     String? chatRoomId,
     String? postId,
+    String? commentId,
     String reason = '',
   }) async {
     if (notLoggedIn) {
@@ -19,6 +20,7 @@ class ReportService {
       otherUserUid: otherUserUid,
       chatRoomId: chatRoomId,
       postId: postId,
+      commentId: commentId,
       reason: reason,
     );
   }

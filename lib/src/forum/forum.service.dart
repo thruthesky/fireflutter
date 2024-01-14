@@ -34,11 +34,40 @@ class ForumService {
     );
   }
 
-  Future showCommentCreateScreen(BuildContext context, {required PostModel post}) async {
-    showModalBottomSheet(
+  /// Returns true if comment is created or updated.
+  Future<bool?> showCommentCreateScreen(
+    BuildContext context, {
+    required PostModel post,
+    CommentModel? parent,
+    bool? showUploadDialog,
+    bool? focusOnTextField,
+  }) async {
+    return showModalBottomSheet<bool?>(
       context: context,
+      isScrollControlled: true, // 중요: 이것이 있어야 키보드가 bottom sheet 을 위로 밀어 올린다.
       builder: (_) => CommentEditDialog(
         post: post,
+        parent: parent,
+        showUploadDialog: showUploadDialog,
+        focusOnTextField: focusOnTextField,
+      ),
+    );
+  }
+
+  /// Returns true if comment is created or updated.
+  Future<bool?> showCommentUpdateScreen(
+    BuildContext context, {
+    required CommentModel comment,
+    bool? showUploadDialog,
+    bool? focusOnTextField,
+  }) async {
+    return showModalBottomSheet<bool?>(
+      context: context,
+      isScrollControlled: true, // 중요: 이것이 있어야 키보드가 bottom sheet 을 위로 밀어 올린다.
+      builder: (_) => CommentEditDialog(
+        comment: comment,
+        showUploadDialog: showUploadDialog,
+        focusOnTextField: focusOnTextField,
       ),
     );
   }

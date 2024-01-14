@@ -20,7 +20,8 @@ class T {
   static const String thisIsBlockedUser = 'You have blocked this user.';
 
   static const String blockConfirmTitle = 'Block this user?';
-  static const String blockConfirmMessage = 'You will not be able to contents of this user.';
+  static const String blockConfirmMessage =
+      'Do you want to block this user?\nYou will not be able to contents of this user.';
   static const String unblockConfirmTitle = 'Unblock this user?';
   static const String unblockConfirmMessage = 'You will be able to contents of this user.';
   static const String notVerifiedMessage = 'You have not verified yourself.';
@@ -29,6 +30,9 @@ class T {
   static const String deletePostConfirmTitle = 'Delete this post?';
   static const String deletePostConfirmMessage =
       'Are you sure you want to delete post?\nYou will not be able to recover this post.';
+
+  static const String deleteCommentConfirmTitle = 'Delete this comment?';
+  static const String deleteCommentConfirmMessage = 'Are you sure you want to delete comment?';
 
   /// Block
   static const String blocked = 'Blocked';

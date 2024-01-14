@@ -23,7 +23,12 @@ class UserModel {
   bool isVerified;
   List<String>? blocks;
 
+  /// Returns true if the user is blocked.
   bool isBlocked(String otherUserUid) => blocks?.contains(otherUserUid) ?? false;
+
+  /// Alias of isBlocked
+  bool hasBlocked(String otherUserUid) => isBlocked(otherUserUid);
+
   bool get notVerified => !isVerified;
 
   DatabaseReference get ref => FirebaseDatabase.instance.ref('users').child(uid);

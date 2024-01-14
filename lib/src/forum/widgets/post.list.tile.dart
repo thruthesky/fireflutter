@@ -9,9 +9,39 @@ class PostListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(post.title),
-      subtitle: Text(post.content),
-      trailing: const Icon(Icons.chevron_right),
+      leading: UserAvatar(
+        uid: post.uid,
+        onTap: () => UserService.instance.showPublicProfile(
+          context: context,
+          uid: post.uid,
+        ),
+      ),
+      title: Text(
+        post.title,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      subtitle: Text(
+        post.content.replaceAll("\n", " "),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          post.noOfComments > 0
+              ? Padding(
+                  padding: const EdgeInsets.only(bottom: 4.0),
+                  child: Badge.count(
+                    count: post.noOfComments,
+                    textColor: Theme.of(context).colorScheme.onSecondary,
+                    backgroundColor: Theme.of(context).colorScheme.secondary.tone(50),
+                  ),
+                )
+              : const SizedBox.shrink(),
+          Text(post.createdAt.millisecondsSinceEpoch.toShortDate),
+        ],
+      ),
       onTap: () => ForumService.instance.showPostViewScreen(
         context,
         post: post,

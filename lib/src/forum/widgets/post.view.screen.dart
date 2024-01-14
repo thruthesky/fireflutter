@@ -13,17 +13,20 @@ class PostViewScreen extends StatefulWidget {
 
 class _PostViewScreenState extends State<PostViewScreen> {
   PostModel get post => widget.post;
+  int? previousNoOfLikes;
   @override
   void initState() {
     super.initState();
-    post.reload().then((x) => setState(() {}));
+    post.reload().then((x) => setState(
+          () {},
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: post.onFieldChange(Field.title, (v) => Text(v ?? '')),
+        title: PostTitle(post: post),
       ),
       body: SingleChildScrollView(
         child: SafeArea(
@@ -31,43 +34,59 @@ class _PostViewScreenState extends State<PostViewScreen> {
             children: [
               PostMeta(post: post),
               PostContent(post: post),
-              DisplayPhotos(urls: post.urls),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: DisplayPhotos(urls: post.urls),
+              ),
               Row(
                 children: [
                   TextButton(
                     onPressed: post.like,
                     child: Database(
                       path: post.ref.child(Field.noOfLikes).path,
-                      builder: (no) => Text('좋아요${likeText(no)}'),
+                      builder: (no) {
+                        previousNoOfLikes = no;
+                        return Text('좋아요${likeText(no)}');
+                      },
+                      onLoading: Text('좋아요${likeText(previousNoOfLikes)}'),
                     ),
                   ),
                   TextButton(
-                      onPressed: () async {
-                        final re = await input(
-                          context: context,
-                          title: T.reportInputTitle.tr,
-                          subtitle: T.reportInputMessage.tr,
-                          hintText: T.reportInputHint.tr,
-                        );
-                        if (re == null || re == '') return;
-                        await ReportService.instance.report(
-                          postId: post.id,
-                          reason: re,
-                        );
-                      },
-                      child: const Text('신고')),
+                    onPressed: () => ChatService.instance.showChatRoom(
+                      context: context,
+                      uid: post.uid,
+                    ),
+                    child: const Text('채팅'),
+                  ),
                   TextButton(
-                      onPressed: () async {
-                        final re = await my?.block(post.uid);
-                        if (mounted) {
-                          toast(
-                            context: context,
-                            title: re == true ? T.blocked.tr : T.unblocked.tr,
-                            message: re == true ? T.blockedMessage.tr : T.unblockedMessage.tr,
-                          );
-                        }
-                      },
-                      child: const Text('차단')),
+                    onPressed: () async {
+                      final re = await input(
+                        context: context,
+                        title: T.reportInputTitle.tr,
+                        subtitle: T.reportInputMessage.tr,
+                        hintText: T.reportInputHint.tr,
+                      );
+                      if (re == null || re == '') return;
+                      await ReportService.instance.report(
+                        postId: post.id,
+                        reason: re,
+                      );
+                    },
+                    child: const Text('신고'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      final re = await my?.block(post.uid);
+                      if (mounted) {
+                        toast(
+                          context: context,
+                          title: re == true ? T.blocked.tr : T.unblocked.tr,
+                          message: re == true ? T.blockedMessage.tr : T.unblockedMessage.tr,
+                        );
+                      }
+                    },
+                    child: const Text('차단'),
+                  ),
                   const Spacer(),
                   PopupMenuButton(itemBuilder: (context) {
                     return [
@@ -101,11 +120,17 @@ class _PostViewScreenState extends State<PostViewScreen> {
               /// 가짜 (임시) 코멘트 입력 창
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  ForumService.instance.showCommentCreateScreen(
+                onTap: () async {
+                  /// 텍스트 입력 버튼 액션
+                  final re = await ForumService.instance.showCommentCreateScreen(
                     context,
                     post: post,
+                    focusOnTextField: true,
                   );
+                  if (re == true) {
+                    await post.reload();
+                    setState(() {});
+                  }
                 },
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -115,8 +140,19 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   ),
                   child: Row(
                     children: [
+                      /// 사진 버튼
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          final re = await ForumService.instance.showCommentCreateScreen(
+                            context,
+                            post: post,
+                            showUploadDialog: true,
+                          );
+                          if (re == true) {
+                            await post.reload();
+                            setState(() {});
+                          }
+                        },
                         icon: const Icon(Icons.camera_alt),
                       ),
                       const Expanded(child: Text('댓글을 입력하세요')),
@@ -127,20 +163,19 @@ class _PostViewScreenState extends State<PostViewScreen> {
                 ),
               ),
 
-              /// fake comment list
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: 10,
+                itemCount: post.comments.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: const CircleAvatar(),
-                    title: Text('댓글 $index'),
-                    subtitle: Text('댓글 내용 $index'),
-                    trailing: TextButton(
-                      onPressed: () {},
-                      child: const Text('답글'),
-                    ),
+                  final CommentModel comment = post.comments[index];
+
+                  return CommnetView(
+                    post: post,
+                    comment: comment,
+                    onCreate: () {
+                      post.reload().then((value) => setState(() {}));
+                    },
                   );
                 },
               )

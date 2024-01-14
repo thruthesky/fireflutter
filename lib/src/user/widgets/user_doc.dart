@@ -81,9 +81,14 @@ class UserDoc extends StatelessWidget {
     required String uid,
     String? field,
     required Widget Function(dynamic data) builder,
+    Widget? onLoading,
   }) {
     final path = 'users/$uid${field != null ? '/$field' : ''}';
 
-    return Database(path: path, builder: builder);
+    return Database(
+      path: path,
+      builder: builder,
+      onLoading: onLoading,
+    );
   }
 }

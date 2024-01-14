@@ -15,7 +15,13 @@ class PostMeta extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
-          UserAvatar(uid: post.uid),
+          UserAvatar(
+            uid: post.uid,
+            onTap: () => UserService.instance.showPublicProfile(
+              context: context,
+              uid: post.uid,
+            ),
+          ),
           const SizedBox(width: 8),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

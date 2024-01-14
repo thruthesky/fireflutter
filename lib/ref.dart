@@ -24,7 +24,15 @@ class Ref {
   static DatabaseReference posts = root.child('posts');
   static DatabaseReference category(String category) => posts.child(category);
   static DatabaseReference post(String category, String id) => Ref.category(category).child(id);
-  static DatabaseReference postSummary = root.child('posts-summary');
+  static DatabaseReference postsSummary = root.child('posts-summary');
+  static DatabaseReference postSummary(String category, String id) =>
+      root.child('posts-summary').child(category).child(id);
+
+  /// Forum Comments
+  static DatabaseReference comments(String category, String postId) =>
+      post(category, postId).child('comments');
+  static DatabaseReference comment(String category, String postId, String id) =>
+      comments(category, postId).child(id);
 
   /// Report
   static DatabaseReference reports = root.child(Folder.reports);

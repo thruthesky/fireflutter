@@ -20,8 +20,11 @@ class DefaultUploadSelectionBottomSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           const SizedBox(height: 16),
-          const Text('사진 업로드'),
-          const SizedBox(height: 8),
+          Text(
+            '사진 업로드',
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
+          const SizedBox(height: 16),
           if (gallery)
             ListTile(
               leading: const Icon(Icons.photo),
@@ -40,13 +43,14 @@ class DefaultUploadSelectionBottomSheet extends StatelessWidget {
                 Navigator.pop(context, ImageSource.camera);
               },
             ),
+          const SizedBox(height: 16),
           TextButton(
-            child: Text('취소',
-                style: TextStyle(color: Theme.of(context).primaryColor)),
+            child: Text('취소', style: TextStyle(color: Theme.of(context).primaryColor)),
             onPressed: () {
               Navigator.pop(context);
             },
-          )
+          ),
+          const SizedBox(height: 24),
         ],
       ),
     );

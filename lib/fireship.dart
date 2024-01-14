@@ -71,9 +71,14 @@ export 'src/forum/widgets/post.list.tile.dart';
 export 'src/forum/widgets/post.content.dart';
 export 'src/forum/widgets/post.meta.dart';
 export 'src/forum/widgets/comment.edit.dialog.dart';
+export 'src/forum/widgets/post.title.dart';
+export 'src/forum/widgets/comment.view.dart';
 
 /// message
 export 'src/messaging/messaging.service.dart';
+
+/// Path
+export './path.dart';
 
 /// Report
 export 'src/report/report.service.dart';

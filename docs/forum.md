@@ -32,3 +32,23 @@ Widget build(BuildContext context) {
       title: post.onFieldChange(Field.title, (v) => Text(v ?? '')),
     )
 ```
+
+
+
+
+## Test code
+
+
+You can load a post like below and do whatever test.
+
+```dart
+SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+  Timer(const Duration(microseconds: 200), () async {
+    final post = await PostModel.get(category: 'discussion', id: '-No5q8HHMw7ZDZSjR-Qu');
+    print('length of comment; ${post?.comments.length}');
+    for (final c in post?.comments ?? []) {
+      print("[${c.depth}] ${c.content}");
+    }
+  });
+});
+```

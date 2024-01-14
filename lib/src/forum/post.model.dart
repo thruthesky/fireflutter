@@ -30,9 +30,13 @@ class PostModel {
   final int order;
   List<String> likes;
   List<String> urls;
-  List<String> comments;
+  List<CommentModel> comments;
 
   int noOfLikes;
+
+  /// The number of comments
+  ///
+  /// This is save only under '/posts-summary'. This is not saved under '/posts'.
   int noOfComments;
 
   bool deleted;
@@ -54,22 +58,71 @@ class PostModel {
   ///    id: ref.key!,
   ///  );
   /// ```
-  factory PostModel.fromJson(Map<dynamic, dynamic> json, {required String id}) => PostModel(
-        id: id,
-        ref: Ref.post(json['category'], id),
-        title: json['title'] ?? '',
-        content: json['content'] ?? '',
-        category: json['category'],
-        uid: json['uid'],
-        createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
-        order: json[Field.order],
-        likes: List<String>.from((json['likes'] as Map? ?? {}).keys),
-        noOfLikes: json[Field.noOfLikes] ?? 0,
-        urls: List<String>.from(json['urls'] ?? []),
-        comments: List<String>.from(json['comments'] ?? []),
-        noOfComments: json[Field.noOfComments] ?? 0,
-        deleted: json[Field.deleted] ?? false,
-      );
+  factory PostModel.fromJson(Map<dynamic, dynamic> json, {required String id}) {
+    return PostModel(
+      id: id,
+      ref: Ref.post(json['category'], id),
+      title: json['title'] ?? '',
+      content: json['content'] ?? '',
+      category: json['category'],
+      uid: json['uid'],
+      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
+      order: json[Field.order],
+      likes: List<String>.from((json['likes'] as Map? ?? {}).keys),
+      noOfLikes: json[Field.noOfLikes] ?? 0,
+      urls: List<String>.from(json['urls'] ?? []),
+      comments: sortComments(
+        Map<Object, Object>.from((json['comments'] ?? {}))
+            .entries
+            .map((e) => CommentModel.fromMap(
+                  e.value as Map,
+                  e.key as String,
+                  category: json['category'],
+                  postId: id,
+                ))
+            .toList(),
+      ),
+      noOfComments: json[Field.noOfComments] ?? 0,
+      deleted: json[Field.deleted] ?? false,
+    );
+  }
+
+  static List<CommentModel> sortComments(List<CommentModel> comments) {
+    // final parents = comments.where((e) => e.parentId == null).toList();
+    // parents.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
+    // return parents;
+
+    comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
+    final List<CommentModel> newComments = [];
+
+    /// This is the list of comments that are not replies.
+    /// It is sorted by createdAt.
+    /// If the comment is a reply, it has the parentId of the parent comment.
+    /// So, we can find the parent comment by searching the list.
+    /// And add the reply to the parent comment's replies.
+    for (final comment in comments) {
+      if (comment.parentId == null) {
+        newComments.add(comment);
+      } else {
+        /// 부모 찾기
+        final index = newComments.indexWhere((e) => e.id == comment.parentId);
+
+        comment.depth = newComments[index].depth + 1;
+
+        /// 형제 찾기
+        final siblingIndex = newComments.lastIndexWhere((e) => e.parentId == comment.parentId);
+        if (siblingIndex == -1) {
+          newComments.insert(index + 1, comment);
+        } else {
+          newComments.insert(siblingIndex + 1, comment);
+        }
+      }
+    }
+
+    return newComments;
+  }
 
   /// Create a PostModel from a category with empty values.
   ///
@@ -208,7 +261,7 @@ class PostModel {
     final data = created.toSummary();
     data[Field.order] = -created.createdAt.millisecondsSinceEpoch;
 
-    await Ref.postSummary.child(created.category).child(created.id).set(created.toSummary());
+    await Ref.postSummary(created.category, created.id).set(created.toSummary());
   }
 
   Future<void> update({
@@ -237,7 +290,7 @@ class PostModel {
   static _afterUpdate(DatabaseReference ref) async {
     final snapshot = await ref.get();
     final updated = PostModel.fromSnapshot(snapshot);
-    await Ref.postSummary.child(updated.category).child(updated.id).set(updated.toSummary());
+    await Ref.postSummary(updated.category, updated.id).set(updated.toSummary());
   }
 
   /// Delete post
@@ -259,9 +312,9 @@ class PostModel {
 
   _afterDelete() async {
     if (comments.isEmpty) {
-      await Ref.postSummary.child(category).child(id).remove();
+      await Ref.postSummary(category, id).remove();
     } else {
-      await Ref.postSummary.child(category).child(id).set({
+      await Ref.postSummary(category, id).set({
         Field.title: Code.deleted,
         Field.content: Code.deleted,
         Field.deleted: true,
@@ -287,10 +340,15 @@ class PostModel {
     }
   }
 
-  onFieldChange(String field, Widget Function(dynamic) builder) {
+  onFieldChange(
+    String field,
+    Widget Function(dynamic) builder, {
+    Widget? onLoading,
+  }) {
     return Database(
       path: ref.child(field).path,
       builder: builder,
+      onLoading: onLoading,
     );
   }
 }

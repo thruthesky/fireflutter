@@ -31,6 +31,8 @@ Below is the bad example because it has other batch of information under the use
 
 ## Use Database
 
+You can use `Database` widget on listing a value of database node.
+
 ```dart
 Database(
     path: '${Path.join(myUid!, chat.room.id)}/name',
@@ -41,6 +43,18 @@ Database(
 ),
 ```
 
+The `onLoading` can be used to reduce the screen flickering.
+
+```dart
+Database(
+  path: post.ref.child(Field.noOfLikes).path,
+  builder: (no) => Text('좋아요${likeText(no)}'),
+  onLoading: const Text('좋아요'),
+),
+```
+
 ## User Database
 
 See user document.
+
+

@@ -1,30 +1,36 @@
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
-/// PostContent
+/// PostTitle
 ///
-/// Display the content of a post.
-class PostContent extends StatefulWidget {
-  const PostContent({super.key, required this.post});
+/// Display the title of a post.
+class PostTitle extends StatefulWidget {
+  const PostTitle({super.key, required this.post});
 
   final PostModel post;
 
   @override
-  State<PostContent> createState() => _PostContentState();
+  State<PostTitle> createState() => _PostTitleState();
 }
 
-class _PostContentState extends State<PostContent> {
+class _PostTitleState extends State<PostTitle> {
   /// 내용을 캐시해서, 깜빡이지 않도록 한다.
-  String content = '';
+  late String title;
+  @override
+  void initState() {
+    super.initState();
+    title = widget.post.title;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       child: widget.post.onFieldChange(
-        Field.content,
+        Field.title,
         (v) {
-          content = v ?? '';
+          title = v ?? '';
           return _text();
         },
         onLoading: _text(),
@@ -33,6 +39,9 @@ class _PostContentState extends State<PostContent> {
   }
 
   _text() {
-    return Text(content);
+    return Text(
+      title,
+      style: const TextStyle(fontSize: 16),
+    );
   }
 }

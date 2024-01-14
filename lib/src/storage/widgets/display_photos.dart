@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 /// Display photos that are uploaded to Firebase Storage.
@@ -9,13 +10,20 @@ class DisplayPhotos extends StatelessWidget {
   final List<String> urls;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: urls.map((url) {
-        return Image.network(
-          url,
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      separatorBuilder: (context, index) {
+        return const SizedBox(height: 4);
+      },
+      itemCount: urls.length,
+      itemBuilder: (context, index) => ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: CachedNetworkImage(
+          imageUrl: urls[index],
           fit: BoxFit.cover,
-        );
-      }).toList(),
+        ),
+      ),
     );
   }
 }
