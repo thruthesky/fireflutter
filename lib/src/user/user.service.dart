@@ -47,6 +47,9 @@ class UserService {
   // Enable/Disable push notification when profile was liked
   bool enableNotificationOnLike = false;
 
+  Function(UserModel)? onCreate;
+  Function(UserModel)? onUpdate;
+
   UserService._() {
     dog('--> UserService._()');
   }
@@ -58,6 +61,8 @@ class UserService {
     Function(User user)? onSignout,
     void Function(User user, bool isLiked)? onLike,
     UserCustomize? customize,
+    Function(UserModel)? onCreate,
+    Function(UserModel)? onUpdate,
   }) {
     dog('--> UserService.init()');
     initUser();
@@ -72,6 +77,9 @@ class UserService {
 
     this.onLike = onLike;
     this.enableNotificationOnLike = enableNotificationOnLike;
+
+    this.onCreate = onCreate;
+    this.onUpdate = onUpdate;
   }
 
   /// 사용자 정보 초기화
@@ -89,26 +97,23 @@ class UserService {
 
       /// 사용자 문서 읽기
       UserModel? user = await UserModel.get(firebaseUser.uid);
-      if (user == null) {
-        await UserModel.create(
-          uid: firebaseUser.uid,
-          displayName: firebaseUser.displayName,
-          photoUrl: firebaseUser.photoURL,
-        );
-        user = await UserModel.get(firebaseUser.uid);
-      }
+      user ??= await UserModel.create(
+        uid: firebaseUser.uid,
+        displayName: firebaseUser.displayName,
+        photoUrl: firebaseUser.photoURL,
+      );
 
       /// createdAt 이 없으면, 최초 로그인이다. 그래서 createdAt 을 지정해서
       /// 회원 가입으로 간주한다.
-      if (user?.createdAt == null) {
+      if (user.createdAt == null) {
         dog('--> User login for the first time. --> update createdAt');
-        user?.update(
+        user.update(
           createdAt: ServerValue.timestamp,
         );
       }
-      if (user?.order == null) {
+      if (user.order == null) {
         dog('--> User login for the first time. --> update createdAt');
-        user?.update(
+        user.update(
           order: DateTime.now().millisecondsSinceEpoch * -1,
         );
       }

@@ -262,6 +262,8 @@ class PostModel {
     data[Field.order] = -created.createdAt.millisecondsSinceEpoch;
 
     await Ref.postSummary(created.category, created.id).set(created.toSummary());
+
+    ForumService.instance.onPostCreate?.call(created);
   }
 
   Future<void> update({
@@ -291,6 +293,8 @@ class PostModel {
     final snapshot = await ref.get();
     final updated = PostModel.fromSnapshot(snapshot);
     await Ref.postSummary(updated.category, updated.id).set(updated.toSummary());
+
+    ForumService.instance.onPostCreate?.call(updated);
   }
 
   /// Delete post
@@ -320,6 +324,7 @@ class PostModel {
         Field.deleted: true,
       });
     }
+    ForumService.instance.onPostDelete?.call(this);
   }
 
   /// Like or unlike

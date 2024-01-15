@@ -2,8 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 import 'package:fireship/fireship.dart' as fs;
 import 'package:fireship/fireship.defines.dart';
-import 'package:fireship/src/common/exception/code.dart';
-import 'package:fireship/src/common/exception/issues.dart';
+import 'package:fireship/src/user/user.service.dart';
 
 class UserModel {
   final String uid;
@@ -176,12 +175,15 @@ class UserModel {
     return nodeData as T;
   }
 
-  static Future<void> create({
+  /// Create user document
+  ///
+  /// This returns UserModel of the created user document.
+  static Future<UserModel> create({
     required String uid,
     String? displayName,
     String? photoUrl,
-  }) {
-    return fs.set(
+  }) async {
+    await fs.set(
       '${Folder.users}/$uid',
       {
         'displayName': displayName,
@@ -190,12 +192,18 @@ class UserModel {
         'order': DateTime.now().millisecondsSinceEpoch * -1,
       },
     );
+
+    final created = await UserModel.get(uid);
+    UserService.instance.onCreate?.call(created!);
+    return created!;
   }
 
   /// Update user data.
   ///
+  /// All user data fields must be updated with this method.
+  ///
   /// hasPhotoUrl is automatically set to true if photoUrl is not null.
-  Future<void> update({
+  Future<UserModel> update({
     String? name,
     String? displayName,
     String? photoUrl,
@@ -225,7 +233,7 @@ class UserModel {
       if (order != null) 'order': order,
     };
     if (data.isEmpty) {
-      return;
+      return this;
     }
 
     await fs.update(
@@ -234,12 +242,21 @@ class UserModel {
     );
 
     if (photoUrl != null) {
-      /// createdAt 정보는 없어서, 저장 할 수 없다.
-      await photoRef.set({
-        Field.photoUrl: photoUrl,
-        Field.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
-      });
+      await _updateUserProfilePhotos(photoUrl);
     }
+
+    final updated = await UserModel.get(uid);
+    UserService.instance.onUpdate?.call(updated!);
+    return updated!;
+  }
+
+  ///
+  Future<void> _updateUserProfilePhotos(String? url) async {
+    /// createdAt 정보는 없어서, 저장 할 수 없다.
+    await photoRef.set({
+      Field.photoUrl: photoUrl,
+      Field.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
+    });
   }
 
   /// Delete user data.
@@ -265,7 +282,7 @@ class UserModel {
   ///
   Future block(String otherUserUid) async {
     if (otherUserUid == uid) {
-      throw Issue(Code.blockSelf, 'You cannot block yourself.');
+      throw fs.Issue(fs.Code.blockSelf, 'You cannot block yourself.');
     }
     //
     if (isBlocked(otherUserUid)) {

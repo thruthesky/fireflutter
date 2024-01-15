@@ -7,6 +7,29 @@ class ForumService {
 
   ForumService._();
 
+  Function(PostModel?)? onPostCreate;
+  Function(PostModel?)? onPostUpdate;
+  Function(PostModel?)? onPostDelete;
+  Function(CommentModel?)? onCommentCreate;
+  Function(CommentModel?)? onCommentUpdate;
+  Function(CommentModel?)? onCommentDelete;
+
+  init({
+    Function(PostModel?)? onPostCreate,
+    Function(PostModel?)? onPostUpdate,
+    Function(PostModel?)? onPostDelete,
+    Function(CommentModel?)? onCommentCreate,
+    Function(CommentModel?)? onCommentUpdate,
+    Function(CommentModel?)? onCommentDelete,
+  }) {
+    this.onPostCreate = onPostCreate;
+    this.onPostUpdate = onPostUpdate;
+    this.onPostDelete = onPostDelete;
+    this.onCommentCreate = onCommentCreate;
+    this.onCommentUpdate = onCommentUpdate;
+    this.onCommentDelete = onCommentDelete;
+  }
+
   Future showPostCreateScreen(BuildContext context, {required String category}) async {
     await showGeneralDialog(
       context: context,

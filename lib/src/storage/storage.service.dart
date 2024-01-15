@@ -169,7 +169,7 @@ class StorageService {
   ///
   /// [path] is the node to save the url.
   ///
-  Future uploadAt({
+  Future<String?> uploadAt({
     required BuildContext context,
     required String path,
     Function(double)? progress,
@@ -192,7 +192,7 @@ class StorageService {
         gallery: gallery,
       );
     }
-    if (url == null) return;
+    if (url == null) return null;
 
     // 업로드 성공
     await set(path, url);

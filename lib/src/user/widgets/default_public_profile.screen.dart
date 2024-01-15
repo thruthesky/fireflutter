@@ -12,8 +12,14 @@ class DefaultPublicProfileScreen extends StatelessWidget {
       body: Stack(
         children: [
           Positioned.fill(
-            child: CachedNetworkImage(
-                imageUrl: 'https://picsum.photos/id/171/400/900', fit: BoxFit.cover),
+            child: UserDoc(
+              uid: uid,
+              field: Field.profileBackgroundImageUrl,
+              builder: (url) => CachedNetworkImage(
+                imageUrl: url ?? 'https://picsum.photos/id/171/400/900',
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
           Positioned(
             top: 0,

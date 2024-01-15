@@ -80,12 +80,15 @@ class _UserAvatarState extends State<DefaultAvatarUpdate> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        await StorageService.instance.uploadAt(
+        final url = await StorageService.instance.uploadAt(
           context: context,
           path: "${Folder.users}/${user.uid}/${Field.photoUrl}",
           progress: (p) => setState(() => progress = p),
           complete: () => setState(() => progress = null),
         );
+        if (url != null) {
+          await my!.update(photoUrl: url);
+        }
       },
       child: Stack(
         children: [

@@ -151,8 +151,9 @@ class CommentModel {
     await ref.set(comment.toJson());
 
     final summaryRef = Ref.postSummary(ref.parent!.parent!.parent!.key!, ref.parent!.parent!.key!);
-    print(summaryRef.path);
     summaryRef.child(Field.noOfComments).set(ServerValue.increment(1));
+
+    ForumService.instance.onCommentCreate?.call(comment);
   }
 
   Future update({
@@ -166,6 +167,8 @@ class CommentModel {
 
     /// Update the current content of the comment.
     this.content = content;
+
+    ForumService.instance.onCommentUpdate?.call(this);
   }
 
   /// Like or unlike
@@ -192,6 +195,8 @@ class CommentModel {
     await update(
       content: Code.deleted,
     );
+
+    ForumService.instance.onCommentDelete?.call(this);
   }
 
   onFieldChange(
