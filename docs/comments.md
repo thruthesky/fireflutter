@@ -16,6 +16,10 @@ Fields:
   - Referance in RTDB to access the comment
 - String id;
   - The ID of the category
+- String category;
+  - Category is not saved in RTDB since it is accessible in post but it is important in the model.
+- String postId;
+  - Post's Id is not saved in RTDB since it is accessible in post but it is important in the model.
 - final String? parentId;
   - This it when the comment is represented as a reply under an existing comment.
 - String content;

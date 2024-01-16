@@ -12,6 +12,10 @@ class CommentModel {
   List<String> urls = [];
   int depth;
 
+  // TODO add getter
+  // category => ref.parent!.parent!.parent!.key!
+  // postId => ref.parent!.parent!.key!
+
   List<String> likes;
   double get leftMargin {
     if (depth == 0) {
