@@ -154,6 +154,7 @@ class CommentModel {
       ref: ref,
       id: ref.key!,
       category: category,
+      postId: postId,
       parentId: parent?.ref.key,
       content: content,
       uid: myUid!,

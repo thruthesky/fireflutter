@@ -155,7 +155,8 @@
       "deviceId": "9538AD08-48B3-43A8-B848-31CC488FE3E9",
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
-      "program": "lib/main.dart"
+      "program": "lib/main.dart",
+      "args": ["-v"]
     }
   ]
 }
