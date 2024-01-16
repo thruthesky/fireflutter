@@ -2,8 +2,8 @@ import 'package:fireship/fireship.dart';
 import 'package:fireship/src/forum/widgets/comment.content.dart';
 import 'package:flutter/material.dart';
 
-class CommnetView extends StatefulWidget {
-  const CommnetView({
+class CommentView extends StatefulWidget {
+  const CommentView({
     super.key,
     required this.post,
     required this.comment,
@@ -15,10 +15,10 @@ class CommnetView extends StatefulWidget {
   final Function onCreate;
 
   @override
-  State<CommnetView> createState() => _CommnetViewState();
+  State<CommentView> createState() => _CommnetViewState();
 }
 
-class _CommnetViewState extends State<CommnetView> {
+class _CommnetViewState extends State<CommentView> {
   int? previousNoOfLikes;
   @override
   Widget build(BuildContext context) {
@@ -78,8 +78,7 @@ class _CommnetViewState extends State<CommnetView> {
                     ),
                     TextButton(
                       onPressed: () {
-                        ChatService.instance
-                            .showChatRoom(context: context, uid: widget.comment.uid);
+                        ChatService.instance.showChatRoom(context: context, uid: widget.comment.uid);
                       },
                       child: const Text('채팅'),
                     ),
@@ -123,9 +122,8 @@ class _CommnetViewState extends State<CommnetView> {
                         bool? re = await confirm(
                           context: context,
                           title: my!.hasBlocked(widget.comment.uid) ? T.unblock.tr : T.block.tr,
-                          message: my!.hasBlocked(widget.comment.uid)
-                              ? T.unblockConfirmMessage
-                              : T.blockConfirmMessage.tr,
+                          message:
+                              my!.hasBlocked(widget.comment.uid) ? T.unblockConfirmMessage : T.blockConfirmMessage.tr,
                         );
                         if (re != true) return;
                         re = await my?.block(widget.comment.uid);
@@ -137,8 +135,7 @@ class _CommnetViewState extends State<CommnetView> {
                           );
                         }
                       } else if (value == 'edit') {
-                        await ForumService.instance
-                            .showCommentUpdateScreen(context, comment: widget.comment);
+                        await ForumService.instance.showCommentUpdateScreen(context, comment: widget.comment);
                         widget.post.reload();
                       } else if (value == 'delete') {
                         final re = await confirm(

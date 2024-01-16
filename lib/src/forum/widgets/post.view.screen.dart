@@ -170,7 +170,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                 itemBuilder: (context, index) {
                   final CommentModel comment = post.comments[index];
 
-                  return CommnetView(
+                  return CommentView(
                     post: post,
                     comment: comment,
                     onCreate: () {
