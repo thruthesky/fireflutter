@@ -1,5 +1,3 @@
-import 'package:fireship/fireship.dart';
-
 class Folder {
   Folder._();
   static const String admins = 'admins';

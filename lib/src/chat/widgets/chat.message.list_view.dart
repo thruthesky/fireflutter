@@ -1,7 +1,5 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireship/fireship.dart';
-import 'package:fireship/ref.dart';
 import 'package:flutter/material.dart';
 
 /// Chat Message List
@@ -94,8 +92,7 @@ class _RChatMessageListState extends State<ChatMessageListView> {
 
         // 메시지가 없는 경우,
         if (snapshot.docs.isEmpty) {
-          listView = widget.emptyBuilder?.call(context) ??
-              const Center(child: Text('There is no message, yet.'));
+          listView = widget.emptyBuilder?.call(context) ?? const Center(child: Text('There is no message, yet.'));
         } else {
           /// Reset the newMessage
           /// This is a good place to reset it since it is called when the user
