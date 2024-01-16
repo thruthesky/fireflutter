@@ -169,7 +169,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
                 itemCount: post.comments.length,
                 itemBuilder: (context, index) {
                   final CommentModel comment = post.comments[index];
-
                   return CommentView(
                     post: post,
                     comment: comment,

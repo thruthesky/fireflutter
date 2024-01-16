@@ -32,3 +32,24 @@ Fields:
   - urls of the attached files (mostly for photos)
 - int depth;
   - depth of the comment (for indention in replies).
+
+## CommentView Widget
+
+To view a comment, use like below:
+
+<!-- TODO test example -->
+
+```dart
+
+final CommentModel comment = CommentModel.fromMap({
+        'uid': uid,
+        'createdAt': createdAt,
+        'urls': urls,},);
+return CommentView(
+    post: post,
+    comment: comment,
+    onCreate: () {
+        post.reload().then((value) => setState(() {}));
+    },
+);
+```
