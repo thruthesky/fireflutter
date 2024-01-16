@@ -6,6 +6,7 @@ class CommentModel {
   final DatabaseReference ref;
   final String id;
   String? category;
+  String? postId;
   final String? parentId;
   String content;
   final String uid;
@@ -38,6 +39,7 @@ class CommentModel {
     required this.ref,
     required this.id,
     this.category,
+    this.postId,
     required this.parentId,
     required this.content,
     required this.uid,
@@ -57,6 +59,7 @@ class CommentModel {
       ref: Ref.comment(category, postId, id),
       id: id,
       category: category,
+      postId: postId,
       parentId: map['parentId'],
       content: map['content'],
       uid: map['uid'],
@@ -86,6 +89,7 @@ class CommentModel {
       ref: fakeRef,
       id: fakeRef.key!,
       category: post.category,
+      postId: post.id,
       parentId: null,
       content: '',
       uid: myUid!,
@@ -102,6 +106,7 @@ class CommentModel {
       ref: fakeRef,
       id: fakeRef.key!,
       category: parent.category,
+      postId: parent.postId,
       parentId: parent.ref.key,
       content: '',
       uid: myUid!,
@@ -115,6 +120,7 @@ class CommentModel {
         'content': content,
         'id': id,
         'category': category,
+        'postId': postId,
         'parentId': parentId,
         'uid': uid,
         'createdAt': createdAt,
@@ -124,7 +130,7 @@ class CommentModel {
 
   @override
   String toString() {
-    return 'CommentModel(ref: $ref, id: $id, category: $category, parentId: $parentId, content: $content, uid: $uid, createdAt: $createdAt, urls: $urls, likes: $likes)';
+    return 'CommentModel(ref: $ref, id: $id, category: $category, postId: $postId, parentId: $parentId, content: $content, uid: $uid, createdAt: $createdAt, urls: $urls, likes: $likes)';
   }
 
   /// Create a comment from current comment instance.
