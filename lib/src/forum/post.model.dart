@@ -90,7 +90,7 @@ class PostModel {
   static List<CommentModel> sortComments(List<CommentModel> comments) {
     // final parents = comments.where((e) => e.parentId == null).toList();
     // parents.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-
+  
     // return parents;
 
     comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
