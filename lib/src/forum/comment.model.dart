@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class CommentModel {
   final DatabaseReference ref;
   final String id;
+  String? category;
   final String? parentId;
   String content;
   final String uid;
@@ -36,6 +37,7 @@ class CommentModel {
   CommentModel({
     required this.ref,
     required this.id,
+    this.category,
     required this.parentId,
     required this.content,
     required this.uid,
@@ -54,6 +56,7 @@ class CommentModel {
     return CommentModel(
       ref: Ref.comment(category, postId, id),
       id: id,
+      category: category,
       parentId: map['parentId'],
       content: map['content'],
       uid: map['uid'],
@@ -82,6 +85,7 @@ class CommentModel {
     return CommentModel(
       ref: fakeRef,
       id: fakeRef.key!,
+      category: post.category,
       parentId: null,
       content: '',
       uid: myUid!,
@@ -97,6 +101,7 @@ class CommentModel {
     return CommentModel(
       ref: fakeRef,
       id: fakeRef.key!,
+      category: parent.category,
       parentId: parent.ref.key,
       content: '',
       uid: myUid!,
@@ -109,6 +114,7 @@ class CommentModel {
   Map<String, dynamic> toJson() => {
         'content': content,
         'id': id,
+        'category': category,
         'parentId': parentId,
         'uid': uid,
         'createdAt': createdAt,
@@ -118,7 +124,7 @@ class CommentModel {
 
   @override
   String toString() {
-    return 'CommentModel(ref: $ref, id: $id, parentId: $parentId, content: $content, uid: $uid, createdAt: $createdAt, urls: $urls, likes: $likes)';
+    return 'CommentModel(ref: $ref, id: $id, category: $category, parentId: $parentId, content: $content, uid: $uid, createdAt: $createdAt, urls: $urls, likes: $likes)';
   }
 
   /// Create a comment from current comment instance.
@@ -141,6 +147,7 @@ class CommentModel {
     final comment = CommentModel(
       ref: ref,
       id: ref.key!,
+      category: category,
       parentId: parent?.ref.key,
       content: content,
       uid: myUid!,
