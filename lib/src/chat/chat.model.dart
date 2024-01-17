@@ -136,7 +136,6 @@ class ChatModel {
     updateUrlPreview(chatMessageRef, text);
 
     if (room.isGroupChat) {
-      room.name!;
       dog('group chat');
 
       /// Send push notification to the room users
@@ -151,7 +150,7 @@ class ChatModel {
       /// sending notification to the list of uids
       await MessagingService.instance.sendTo(
         uids: uids,
-        title: room.name!,
+        title: room.name ?? '',
         body: text ?? "사진을 업로드하였습니다.",
         image: url,
       );
