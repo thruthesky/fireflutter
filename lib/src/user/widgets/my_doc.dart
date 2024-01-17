@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +42,7 @@ class MyDoc extends StatelessWidget {
     required Function(dynamic value) builder,
   }) {
     return UserDoc.sync(
-      uid: UserService.instance.user!.uid,
+      uid: FirebaseAuth.instance.currentUser!.uid,
       field: field,
       builder: (v) => builder(v),
     );

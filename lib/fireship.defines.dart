@@ -35,6 +35,8 @@ class Field {
   static const String birthMonth = 'birthMonth';
   static const String birthYear = 'birthYear';
 
+  static const String stateMessage = 'stateMessage';
+
   static const String category = 'category';
   static const String title = 'title';
 
