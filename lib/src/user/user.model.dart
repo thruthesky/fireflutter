@@ -236,27 +236,38 @@ class UserModel {
       return this;
     }
 
+    // 업데이트부터 하고
     await fs.update(
       'users/$uid',
       data,
     );
 
+    /// 사용자 객체(UserModel) 를 reload 하고, (주의: 로그인한 사용자의 정보가 아닐 수 있다.)
+    await reload();
+    // final updated = await UserModel.get(uid);
+
+    /// 사진 정보 업데이트
     if (photoUrl != null) {
-      await _updateUserProfilePhotos(photoUrl);
+      await _updateUserProfilePhotos();
     }
 
-    final updated = await UserModel.get(uid);
-    UserService.instance.onUpdate?.call(updated!);
-    return updated!;
+    UserService.instance.onUpdate?.call(this);
+    return this;
   }
 
+  /// 사진 순서로 목록하기 위한 정보
   ///
-  Future<void> _updateUserProfilePhotos(String? url) async {
-    /// createdAt 정보는 없어서, 저장 할 수 없다.
-    await photoRef.set({
-      Field.photoUrl: photoUrl,
-      Field.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
-    });
+  /// createdAt 보다는 updatedAt 을 사용한다.
+  Future<void> _updateUserProfilePhotos() async {
+    if (photoUrl == null || photoUrl == "") {
+      await photoRef.remove();
+    } else {
+      await photoRef.set({
+        Field.photoUrl: photoUrl,
+        Field.displayName: displayName,
+        Field.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
+      });
+    }
   }
 
   /// Delete user data.
