@@ -92,7 +92,8 @@ class _RChatMessageListState extends State<ChatMessageListView> {
 
         // 메시지가 없는 경우,
         if (snapshot.docs.isEmpty) {
-          listView = widget.emptyBuilder?.call(context) ?? const Center(child: Text('There is no message, yet.'));
+          listView = widget.emptyBuilder?.call(context) ??
+              const Center(child: Text('There is no message, yet.'));
         } else {
           /// Reset the newMessage
           /// This is a good place to reset it since it is called when the user
@@ -106,7 +107,8 @@ class _RChatMessageListState extends State<ChatMessageListView> {
               if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
                 snapshot.fetchMore();
               }
-              final message = ChatMessageModel.fromSnapshot(snapshot.docs[index]);
+              final message =
+                  ChatMessageModel.fromSnapshot(snapshot.docs[index]);
 
               /// 채팅방의 맨 마지막 메시지의 order 를 지정.
               chat.resetMessageOrder(order: message.order);
