@@ -1,6 +1,5 @@
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireship/fireship.dart';
-import 'package:fireship/ref.dart';
 import 'package:flutter/material.dart';
 
 class AdminUserListScreen extends StatefulWidget {
