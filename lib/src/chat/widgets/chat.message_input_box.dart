@@ -1,5 +1,4 @@
 import 'package:fireship/fireship.dart';
-import 'package:fireship/src/text/text.service.dart';
 import 'package:flutter/material.dart';
 
 /// 채팅 메시지 입력 박스
@@ -64,11 +63,8 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                     // Review
                     camera: true,
                     gallery: true,
-                    progress: (p) =>
-                        widget.onProgress?.call(p) ?? mounted ? setState(() => progress = p) : null,
-                    complete: () => widget.onProgress?.call(null) ?? mounted
-                        ? setState(() => progress = null)
-                        : null,
+                    progress: (p) => widget.onProgress?.call(p) ?? mounted ? setState(() => progress = p) : null,
+                    complete: () => widget.onProgress?.call(null) ?? mounted ? setState(() => progress = null) : null,
                   );
 
                   await send(url: url);
@@ -85,9 +81,7 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                       if (text.isEmpty) return;
 
                       /// 인증된 사용자만 URL 전송 옵션
-                      if (text.hasUrl == true &&
-                          widget.chat.room.urlVerifiedUserOnly &&
-                          iam.notVerified) {
+                      if (text.hasUrl == true && widget.chat.room.urlVerifiedUserOnly && iam.notVerified) {
                         return error(context: context, message: T.notVerifiedMessage);
                       }
 

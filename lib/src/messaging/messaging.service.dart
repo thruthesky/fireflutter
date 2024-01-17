@@ -253,9 +253,9 @@ class MessagingService {
       }
     }
     // / remove invalid tokens
-    print('no of bad tokens: ${responses.length}');
+    dog('no of bad tokens: ${responses.length}');
     for (final key in responses.keys) {
-      print('invalid key: $key - ${responses[key]}');
+      dog('invalid key: $key - ${responses[key]}');
       set("${Folder.userFcmTokens}/$key", null);
     }
     if (removeInvalidTokens) {
@@ -265,8 +265,7 @@ class MessagingService {
     return responses;
   }
 
-  Future<Map<String, String>> sendAll(
-      {required String title, required String body, String? image}) async {
+  Future<Map<String, String>> sendAll({required String title, required String body, String? image}) async {
     // 1. get all tokens
     final folders = await get<Map>(Folder.userFcmTokens);
     if (folders == null) return {};
@@ -275,10 +274,9 @@ class MessagingService {
     final List<String> tokens = List<String>.from(folders.keys);
 
     // 2. send messages to all tokens
-    final responses =
-        await send(tokens: tokens, title: title, body: body, senderUid: myUid!, image: image);
+    final responses = await send(tokens: tokens, title: title, body: body, senderUid: myUid!, image: image);
 
-    print('sendAll() responses: $responses');
+    dog('sendAll() responses: $responses');
 
     return responses;
   }
@@ -322,7 +320,7 @@ class MessagingService {
       tokens.addAll(List<String>.from((snapshot.value! as Map).keys));
     }
 
-    print('tokens: $tokens');
+    dog('tokens: $tokens');
 
     // 2. send messages to all tokens
     final responses = await send(
@@ -333,7 +331,7 @@ class MessagingService {
       senderUid: myUid!,
     );
 
-    print('sendTo() responses: $responses');
+    dog('sendTo() responses: $responses');
     return responses;
   }
 

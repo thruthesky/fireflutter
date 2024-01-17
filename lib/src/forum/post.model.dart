@@ -67,7 +67,7 @@ class PostModel {
       category: json['category'],
       uid: json['uid'],
       createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
-      order: json[Field.order],
+      order: json[Field.order] ?? 0,
       likes: List<String>.from((json['likes'] as Map? ?? {}).keys),
       noOfLikes: json[Field.noOfLikes] ?? 0,
       urls: List<String>.from(json['urls'] ?? []),
@@ -214,8 +214,7 @@ class PostModel {
   }
 
   /// Get the value of the field of a post
-  static Future<dynamic> field(
-      {required String category, required String id, required String field}) {
+  static Future<dynamic> field({required String category, required String id, required String field}) {
     return Ref.post(category, id).child(field).get();
   }
 

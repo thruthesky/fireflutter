@@ -1,6 +1,5 @@
 # Forum
 
-
 ## Database strucuture
 
 - `/posts-summary/<category>` is for listing posts in a category list. It will have a summary of the post.
@@ -9,14 +8,9 @@
 - `posts` is for saving all the post data.
 - `posts/<category>/comments` is for saving the comments for the post.
 
-
-
-
 ## Coding Guideline
 
 - `category` cannot be changed due to the node structure.
-
-
 
 ## Observing post changes and update data
 
@@ -33,11 +27,7 @@ Widget build(BuildContext context) {
     )
 ```
 
-
-
-
 ## Test code
-
 
 You can load a post like below and do whatever test.
 
@@ -52,3 +42,7 @@ SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
   });
 });
 ```
+
+## Comments
+
+Refer to [Comments doc](comments.md).
