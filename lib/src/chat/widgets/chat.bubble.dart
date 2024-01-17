@@ -39,7 +39,9 @@ class ChatBubble extends StatelessWidget {
           // other avtar
           if (message.other)
             UserAvatar(
+              key: ValueKey(message.key),
               uid: message.uid!,
+              cacheId: 'chatRoom',
               size: 30,
               radius: 12,
               onTap: () => UserService.instance
@@ -47,7 +49,9 @@ class ChatBubble extends StatelessWidget {
                     context: context,
                     uid: message.uid!,
                   )
-                  .then((value) => onChange?.call()),
+                  .then(
+                    (value) => onChange?.call(),
+                  ),
             ),
 
           const SizedBox(width: 8),
@@ -88,6 +92,7 @@ class ChatBubble extends StatelessWidget {
           if (message.mine)
             UserAvatar(
               uid: myUid!,
+              cacheId: 'chatRoom',
               size: 30,
               radius: 12,
               onTap: () => UserService.instance

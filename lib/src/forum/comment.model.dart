@@ -12,9 +12,13 @@ class CommentModel {
   List<String> urls = [];
   int depth;
 
-  // TODO add getter
-  // category => ref.parent!.parent!.parent!.key!
-  // postId => ref.parent!.parent!.key!
+  bool deleted;
+
+  /// Get the category of the post
+  String get category => ref.parent!.parent!.parent!.key!;
+
+  /// Get the post id of the comment
+  String get postId => ref.parent!.parent!.key!;
 
   List<String> likes;
   double get leftMargin {
@@ -47,6 +51,7 @@ class CommentModel {
     required this.urls,
     this.depth = 0,
     this.likes = const [],
+    this.deleted = false,
   });
 
   factory CommentModel.fromMap(
@@ -64,6 +69,7 @@ class CommentModel {
       createdAt: map['createdAt'],
       urls: List<String>.from(map['urls'] ?? []),
       likes: List<String>.from((map['likes'] as Map? ?? {}).keys),
+      deleted: map['deleted'] ?? false,
     );
   }
 
@@ -118,11 +124,12 @@ class CommentModel {
         'createdAt': createdAt,
         'urls': urls,
         'likes': likes,
+        'deleted': deleted,
       };
 
   @override
   String toString() {
-    return 'CommentModel(ref: $ref, id: $id, parentId: $parentId, content: $content, uid: $uid, createdAt: $createdAt, urls: $urls, likes: $likes)';
+    return 'CommentModel(ref: $ref, id: $id, parentId: $parentId, content: $content, uid: $uid, createdAt: $createdAt, urls: $urls, likes: $likes, deleted: $deleted)';
   }
 
   /// Create a comment from current comment instance.
@@ -154,7 +161,7 @@ class CommentModel {
 
     await ref.set(comment.toJson());
 
-    final summaryRef = Ref.postSummary(ref.parent!.parent!.parent!.key!, ref.parent!.parent!.key!);
+    final summaryRef = Ref.postSummary(category, postId);
     summaryRef.child(Field.noOfComments).set(ServerValue.increment(1));
 
     ForumService.instance.onCommentCreate?.call(comment);
@@ -163,10 +170,12 @@ class CommentModel {
   Future update({
     required String content,
     List<String>? urls,
+    bool? deleted,
   }) async {
     await ref.update({
       'content': content,
       'urls': urls,
+      if (deleted != null) 'deleted': deleted,
     });
 
     /// Update the current content of the comment.
@@ -198,6 +207,7 @@ class CommentModel {
   Future<void> delete() async {
     await update(
       content: Code.deleted,
+      deleted: true,
     );
 
     ForumService.instance.onCommentDelete?.call(this);

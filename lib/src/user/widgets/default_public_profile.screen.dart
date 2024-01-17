@@ -110,48 +110,51 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                 },
               ),
               SafeArea(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        ChatService.instance.showChatRoom(context: context, uid: uid);
-                      },
-                      child: Text(T.chat.tr),
-                    ),
-
-                    /// 레포팅 신고
-                    ElevatedButton(
-                      onPressed: () async {
-                        final re = await input(
-                          context: context,
-                          title: T.reportInputTitle.tr,
-                          subtitle: T.reportInputMessage.tr,
-                          hintText: T.reportInputHint.tr,
-                        );
-                        if (re == null || re == '') return;
-                        await ReportService.instance.report(otherUserUid: uid, reason: re);
-                      },
-                      child: Text(T.report.tr),
-                    ),
-
-                    /// 차단 & 해제
-                    MyDoc.field('${Field.blocks}/$uid', builder: (v) {
-                      return ElevatedButton(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
                         onPressed: () async {
-                          final re = await confirm(
-                            context: context,
-                            title: v == null ? T.blockConfirmTitle.tr : T.unblockConfirmTitle.tr,
-                            message:
-                                v == null ? T.blockConfirmMessage.tr : T.unblockConfirmMessage.tr,
-                          );
-                          if (re != true) return;
-                          await my?.block(uid);
+                          ChatService.instance.showChatRoom(context: context, uid: uid);
                         },
-                        child: Text(v == null ? T.block.tr : T.unblock.tr),
-                      );
-                    }),
-                  ],
+                        child: Text(T.chat.tr),
+                      ),
+
+                      /// 레포팅 신고
+                      ElevatedButton(
+                        onPressed: () async {
+                          final re = await input(
+                            context: context,
+                            title: T.reportInputTitle.tr,
+                            subtitle: T.reportInputMessage.tr,
+                            hintText: T.reportInputHint.tr,
+                          );
+                          if (re == null || re == '') return;
+                          await ReportService.instance.report(otherUserUid: uid, reason: re);
+                        },
+                        child: Text(T.report.tr),
+                      ),
+
+                      /// 차단 & 해제
+                      MyDoc.field('${Field.blocks}/$uid', builder: (v) {
+                        return ElevatedButton(
+                          onPressed: () async {
+                            final re = await confirm(
+                              context: context,
+                              title: v == null ? T.blockConfirmTitle.tr : T.unblockConfirmTitle.tr,
+                              message:
+                                  v == null ? T.blockConfirmMessage.tr : T.unblockConfirmMessage.tr,
+                            );
+                            if (re != true) return;
+                            await my?.block(uid);
+                          },
+                          child: Text(v == null ? T.block.tr : T.unblock.tr),
+                        );
+                      }),
+                    ],
+                  ),
                 ),
               ),
             ],
