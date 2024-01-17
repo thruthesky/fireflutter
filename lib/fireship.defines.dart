@@ -10,6 +10,7 @@ class Folder {
   static const String users = 'users';
 
   static const String reports = 'reports';
+  static const String posts = 'posts';
 }
 
 class Field {

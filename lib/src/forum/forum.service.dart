@@ -7,19 +7,19 @@ class ForumService {
 
   ForumService._();
 
-  Function(PostModel?)? onPostCreate;
-  Function(PostModel?)? onPostUpdate;
+  Function(PostModel)? onPostCreate;
+  Function(PostModel)? onPostUpdate;
   Function(PostModel?)? onPostDelete;
-  Function(CommentModel?)? onCommentCreate;
-  Function(CommentModel?)? onCommentUpdate;
+  Function(CommentModel)? onCommentCreate;
+  Function(CommentModel)? onCommentUpdate;
   Function(CommentModel?)? onCommentDelete;
 
   init({
-    Function(PostModel?)? onPostCreate,
-    Function(PostModel?)? onPostUpdate,
+    Function(PostModel)? onPostCreate,
+    Function(PostModel)? onPostUpdate,
     Function(PostModel?)? onPostDelete,
-    Function(CommentModel?)? onCommentCreate,
-    Function(CommentModel?)? onCommentUpdate,
+    Function(CommentModel)? onCommentCreate,
+    Function(CommentModel)? onCommentUpdate,
     Function(CommentModel?)? onCommentDelete,
   }) {
     this.onPostCreate = onPostCreate;
