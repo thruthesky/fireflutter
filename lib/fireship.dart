@@ -99,6 +99,12 @@ export 'src/storage/widgets/display_photos.dart';
 export 'src/text/text.service.dart';
 export 'src/text/texts.dart';
 
+/// Typesense
+export 'src/typesense/typesense.service.dart';
+export 'src/typesense/model/search_result.doc.dart';
+export 'src/typesense/model/search_result.hit.dart';
+export 'src/typesense/model/search_result.dart';
+
 /// User
 export 'src/user/user.model.dart';
 export 'src/user/user.photo.model.dart';
