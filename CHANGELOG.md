@@ -1,9 +1,6 @@
-## 0.0.6
-
-* Adding forum feature
-
 ## 0.0.5
 
+* Adding forum feature
 * Updating chat features
 * Adding blocking function
 * Adding report function
