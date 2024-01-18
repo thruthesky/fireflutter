@@ -1,10 +1,22 @@
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
+/// ChatRoomListTile
+///
+/// [room] 채팅방 정보 (ChatRoomModel)
+///
+/// [stateMessageAsSubtitle] 상태 메시지를 subtitle 로 표시할지 여부.
+/// 1:1 채팅 메시지 목록 보다는, 친구 목록을 할 때 사용 할 수 있다. 그룹 채팅 목록에는 false 로 하면 마지막 메세지가
+/// 화면에 표시된다.
 class ChatRoomListTile extends StatelessWidget {
-  const ChatRoomListTile({super.key, required this.room});
+  const ChatRoomListTile({
+    super.key,
+    required this.room,
+    this.stateMessageAsSubtitle,
+  });
 
   final ChatRoomModel room;
+  final bool? stateMessageAsSubtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -23,20 +35,24 @@ class ChatRoomListTile extends StatelessWidget {
             ),
           ),
           if (room.isGroupChat) ...[
-            const SizedBox(width: 4),
+            const SizedBox(width: 14),
             Text(
               '${room.noOfUsers ?? ''}',
-              style: Theme.of(context).textTheme.labelLarge,
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary.tone(50),
+                  ),
+            ),
+            Database(
+              path: Path.chatRoomUsersAt(room.id, myUid!),
+              builder: (v) => v == true
+                  ? Icon(Icons.notifications_rounded,
+                      color: Theme.of(context).colorScheme.secondary.tone(50))
+                  : const Icon(Icons.notifications_outlined),
             ),
           ],
         ],
       ),
-      subtitle: Text(
-        subtitle(context, room),
-        style: Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 11),
-        overflow: TextOverflow.ellipsis,
-        maxLines: 1,
-      ),
+      subtitle: subtitle(context, room),
       onTap: () {
         dog('room.id: ${room.id}');
         dog('room.id: ${room.key}');
@@ -48,28 +64,49 @@ class ChatRoomListTile extends StatelessWidget {
         children: [
           Text(
             dateTimeShort(DateTime.fromMillisecondsSinceEpoch(room.updatedAt!)),
-            style:
-                Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 10),
+            style: Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 10),
           ),
+          const SizedBox(height: 2),
           ChatNewMessage(room: room),
         ],
       ),
     );
   }
 
-  String? text(ChatRoomModel room) {
+  String text(ChatRoomModel room) {
     if (room.text != null) return room.text!.replaceAll('\n', ' ');
     if (room.url != null) return '사진을 보내셨습니다.';
-    return null;
+    return '';
   }
 
-  String subtitle(BuildContext context, ChatRoomModel room) {
+  Widget subtitle(BuildContext context, ChatRoomModel room) {
+    // 1:1 채팅?
     if (room.isSingleChat) {
+      // 블럭된 회원?
       if (my?.isBlocked(room.otherUserUid!) == true) {
-        return T.thisIsBlockedUser.tr;
+        return subtitleText(context, T.thisIsBlockedUser.tr);
+      }
+
+      // 상태 메세지 표시?
+      if (stateMessageAsSubtitle == true) {
+        return UserDoc(
+          uid: room.otherUserUid!,
+          field: Field.stateMessage,
+          // 상태 메시지가 있으면 상태 메시지 표시, 아니면 채팅 메시지 표시
+          builder: (v) => subtitleText(context, (v == null || v == '') ? text(room) : v),
+        );
       }
     }
 
-    return text(room) ?? '';
+    return subtitleText(context, text(room));
+  }
+
+  Widget subtitleText(BuildContext context, String text) {
+    return Text(
+      text,
+      style: Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 11),
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
+    );
   }
 }

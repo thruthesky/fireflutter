@@ -280,7 +280,10 @@ Here are the list of fields can be used in `roomsRef`:
 
 ## Toggling Notifications
 
-You can set true or false for my uid in the 'users' field of the chat room. Try this code:
+The on and off switch for push notification is set under each user's uid in `users` field of the chat room.
+For instance, if the value is `true` like `/chat-rooms/<room-id>/users/ {uid-a: true}`, then the user of `uid-a` will get push notification. If it's `false`, then the user will not get any push notification.
+
+You can set true or false for the login uid in the 'users' field of the chat room like below;
 
 ```dart
 IconButton(
