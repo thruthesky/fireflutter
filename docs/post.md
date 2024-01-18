@@ -73,3 +73,52 @@ initForum() {
     );
 }
 ```
+
+## Viewing a post
+
+You can use the `ForumService` to View the Post in a screen.
+
+```dart
+final post = PostModel(
+  // get the post
+);
+
+ForumService.instance.showPostViewScreen(
+  context,
+  post: post,
+);
+```
+
+It uses Fireship's `PostViewScreen` widget. This is the default screen widget to view post.
+
+For customization, modify the code below.
+
+```dart
+final post = PostModel(
+  // get the post
+);
+
+await showGeneralDialog(
+  context: context,
+  pageBuilder: ($, $$, $$$) => PostViewScreen(
+    post: post,
+  ),
+);
+```
+
+## Posts Listing
+
+The `PostListTile` widget can be used as List Tile. Show a list of posts like the code below.
+
+```dart
+FirebaseDatabaseListView(
+  query: Ref.postsSummary.child(category).orderByChild(Field.order),
+  itemBuilder: (context, snapshot) {
+    return PostListTile(
+      post: PostModel.fromSnapshot(snapshot),
+    );
+  },
+);
+```
+
+Replace the `PostListTile` widget as needed (like customization).
