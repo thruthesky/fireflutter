@@ -315,6 +315,7 @@ class PostModel {
         deleted: true,
       );
     }
+    deleted = true;
     _afterDelete();
   }
 
