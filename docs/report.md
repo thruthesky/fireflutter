@@ -1,9 +1,9 @@
 # Report
 
-
 Users can report another user, post, comment, chat room.
 
 - To report a user
+
 ```dart
 ElevatedButton(
     onPressed: () async {

@@ -55,6 +55,4 @@ Database(
 
 ## User Database
 
-See user document.
-
-
+See [user document](user.md).

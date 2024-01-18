@@ -16,26 +16,39 @@ toast(context: context, message: 'Hello User.');
 
 Parameters:
 
-- [required] BuildContext context
-  - the build context of the current widget
-- String title
-  - title text of the snackbar
-- [required] String message
-  - message to show as text
-- Icon? icon
-  - Icon to add in the snackbar
-- Duration duration
-  - how long does the snackbar shows? [default] const Duration(seconds: 8)
-- Function(Function) onTap
-  - on tap function
-- bool error
-  - is it an error message?
-- bool hideCloseButton
-  - [default] false
-- Color backgroundColor
-- Color foregroundColor
-- double runSpacing
-  - spacing between the icon and the message [default] 12
+- context
+  * required BuildContext
+  * the build context of the current widget
+- title
+  * String
+  * title text of the snackbar
+- message
+  * required String
+  * message to show as text
+- icon
+  * Icon
+  * The icon to add in the snackbar
+- duration
+  * Duration
+  * how long does the snackbar shows?
+  * default: const Duration(seconds: 8)
+- onTap
+  * Function(Function)
+  * on tap function
+- error
+  * bool
+  * is it an error message?
+- hideCloseButton
+  * bool
+  * default: false
+- backgroundColor
+  * Color
+- foregroundColor
+  * Color
+- runSpacing
+  * double
+  * default: 12
+  * spacing between the icon and the message
 
 ## confirm
 
