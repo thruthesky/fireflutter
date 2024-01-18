@@ -209,7 +209,7 @@ class CommentModel {
       content: Code.deleted,
       deleted: true,
     );
-
+    deleted = true;
     ForumService.instance.onCommentDelete?.call(this);
   }
 
