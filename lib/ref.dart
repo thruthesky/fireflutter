@@ -14,12 +14,14 @@ class Ref {
   static DatabaseReference chatMessages = root.child('chat-messages');
 
   static DatabaseReference get joinsRef => root.child(Path.joins);
-  static DatabaseReference join(String myUid, String roomId) => root.child(Path.join(myUid, roomId));
+  static DatabaseReference join(String myUid, String roomId) =>
+      root.child(Path.join(myUid, roomId));
   @Deprecated('Use join() instead')
-  static DatabaseReference joinRef(String myUid, String roomId) => joinsRef.child(myUid).child(roomId);
+  static DatabaseReference joinRef(String myUid, String roomId) =>
+      joinsRef.child(myUid).child(roomId);
 
   /// Forum
-  static DatabaseReference posts = root.child('posts');
+  static DatabaseReference posts = root.child(Folder.posts);
 
   /// # Category (Post)
   static DatabaseReference category(String category) => posts.child(category);
@@ -29,8 +31,10 @@ class Ref {
       root.child('posts-summary').child(category).child(id);
 
   /// Forum Comments
-  static DatabaseReference comments(String category, String postId) => post(category, postId).child('comments');
-  static DatabaseReference comment(String category, String postId, String id) => comments(category, postId).child(id);
+  static DatabaseReference comments(String category, String postId) =>
+      post(category, postId).child('comments');
+  static DatabaseReference comment(String category, String postId, String id) =>
+      comments(category, postId).child(id);
 
   /// Report
   static DatabaseReference reports = root.child(Folder.reports);

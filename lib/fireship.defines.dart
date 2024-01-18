@@ -10,6 +10,7 @@ class Folder {
   static const String users = 'users';
 
   static const String reports = 'reports';
+  static const String posts = 'posts';
 }
 
 class Field {
@@ -33,6 +34,8 @@ class Field {
   static const String birthDay = 'birthDay';
   static const String birthMonth = 'birthMonth';
   static const String birthYear = 'birthYear';
+
+  static const String stateMessage = 'stateMessage';
 
   static const String category = 'category';
   static const String title = 'title';
