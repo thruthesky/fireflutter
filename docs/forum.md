@@ -25,6 +25,8 @@ Widget build(BuildContext context) {
     appBar: AppBar(
       title: post.onFieldChange(Field.title, (v) => Text(v ?? '')),
     )
+  );
+}
 ```
 
 ## Test code
@@ -46,3 +48,7 @@ SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
 ## Comments
 
 Refer to [Comments doc](comments.md).
+
+## Posts
+
+Refer to [Post doc](post.md).
