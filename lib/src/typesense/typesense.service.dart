@@ -50,7 +50,7 @@ class TypesenseService {
   Future<SearchResult> search({
     required Map<String, dynamic> searchParameters,
     // NOTE that collection here must have the correct default value
-    // By default it uses `searchCollection`
+    // By default it uses `searchCollection` that was set upon init()
     String? collection,
   }) async {
     collection ??= searchCollection;
@@ -63,6 +63,9 @@ class TypesenseService {
 
   /// This delete is only gonna delete record in
   /// Typesense, not in RTDB.
+  ///
+  /// Can use ID as string to delete into Typesense
+  ///
   Future<Map<String, dynamic>> delete(Object obj) {
     String id;
     if (obj is String) {
