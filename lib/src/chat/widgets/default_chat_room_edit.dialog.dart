@@ -11,7 +11,8 @@ class DefaultChatRoomEditDialog extends StatefulWidget {
   final String? roomId;
 
   @override
-  State<DefaultChatRoomEditDialog> createState() => _DefaultChatRoomEditDialogState();
+  State<DefaultChatRoomEditDialog> createState() =>
+      _DefaultChatRoomEditDialogState();
 }
 
 class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
@@ -63,7 +64,8 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 24),
-            Text(isCreate ? '새로운 채팅' : '채팅방 설정', style: Theme.of(context).textTheme.titleLarge),
+            Text(isCreate ? '새로운 채팅' : '채팅방 설정',
+                style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 32),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -112,7 +114,8 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                       onPressed: () async {
                         await StorageService.instance.uploadAt(
                           context: context,
-                          path: "${Folder.chatRooms}/${widget.roomId}/${Field.iconUrl}",
+                          path:
+                              "${Folder.chatRooms}/${widget.roomId}/${Field.iconUrl}",
                           progress: (p) => setState(() => progress = p),
                           complete: () => setState(() => progress = null),
                         );
@@ -206,7 +209,8 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
         ),
         ElevatedButton(
           onPressed: () async {
-            if (nameController.text.isEmpty || descriptionController.text.isEmpty) {
+            if (nameController.text.isEmpty ||
+                descriptionController.text.isEmpty) {
               error(
                 context: context,
                 title: '',

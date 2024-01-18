@@ -45,7 +45,8 @@ class _CommnetViewState extends State<CommentView> {
                 data: Theme.of(context).copyWith(
                   textButtonTheme: TextButtonThemeData(
                     style: TextButton.styleFrom(
-                      visualDensity: const VisualDensity(horizontal: -2, vertical: 0),
+                      visualDensity:
+                          const VisualDensity(horizontal: -2, vertical: 0),
                     ),
                   ),
                 ),
@@ -53,7 +54,8 @@ class _CommnetViewState extends State<CommentView> {
                   children: [
                     TextButton(
                       onPressed: () async {
-                        final re = await ForumService.instance.showCommentCreateScreen(
+                        final re =
+                            await ForumService.instance.showCommentCreateScreen(
                           context,
                           post: widget.post,
                           parent: widget.comment,
@@ -78,7 +80,8 @@ class _CommnetViewState extends State<CommentView> {
                     ),
                     TextButton(
                       onPressed: () {
-                        ChatService.instance.showChatRoom(context: context, uid: widget.comment.uid);
+                        ChatService.instance.showChatRoom(
+                            context: context, uid: widget.comment.uid);
                       },
                       child: const Text('채팅'),
                     ),
@@ -121,9 +124,12 @@ class _CommnetViewState extends State<CommentView> {
                       } else if (value == 'block') {
                         bool? re = await confirm(
                           context: context,
-                          title: my!.hasBlocked(widget.comment.uid) ? T.unblock.tr : T.block.tr,
-                          message:
-                              my!.hasBlocked(widget.comment.uid) ? T.unblockConfirmMessage : T.blockConfirmMessage.tr,
+                          title: my!.hasBlocked(widget.comment.uid)
+                              ? T.unblock.tr
+                              : T.block.tr,
+                          message: my!.hasBlocked(widget.comment.uid)
+                              ? T.unblockConfirmMessage
+                              : T.blockConfirmMessage.tr,
                         );
                         if (re != true) return;
                         re = await my?.block(widget.comment.uid);
@@ -131,11 +137,15 @@ class _CommnetViewState extends State<CommentView> {
                           toast(
                             context: context,
                             title: re == true ? T.blocked.tr : T.unblocked.tr,
-                            message: re == true ? T.blockedMessage.tr : T.unblockedMessage.tr,
+                            message: re == true
+                                ? T.blockedMessage.tr
+                                : T.unblockedMessage.tr,
                           );
                         }
                       } else if (value == 'edit') {
-                        await ForumService.instance.showCommentUpdateScreen(context, comment: widget.comment);
+                        await ForumService.instance.showCommentUpdateScreen(
+                            context,
+                            comment: widget.comment);
                         widget.post.reload();
                       } else if (value == 'delete') {
                         final re = await confirm(

@@ -22,7 +22,8 @@ Future<T?> get<T>(String path) async {
 }
 
 Future<DataSnapshot> getSnapshot(String path) async {
-  final event = await FirebaseDatabase.instance.ref(path).once(DatabaseEventType.value);
+  final event =
+      await FirebaseDatabase.instance.ref(path).once(DatabaseEventType.value);
   return event.snapshot;
 }
 
@@ -102,5 +103,6 @@ Future<bool> toggle(String path, [dynamic value]) async {
 /// Like other user
 ///
 Future<bool> like(String otherUid) async {
-  return await toggle('likes/$otherUid/${FirebaseAuth.instance.currentUser!.uid}');
+  return await toggle(
+      'likes/$otherUid/${FirebaseAuth.instance.currentUser!.uid}');
 }

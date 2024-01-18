@@ -50,7 +50,10 @@ class ReportModel {
     String? commentId,
     String reason = '',
   }) async {
-    return await Ref.reports.child(myUid!).child(otherUserUid ?? chatRoomId ?? postId ?? commentId!).set({
+    return await Ref.reports
+        .child(myUid!)
+        .child(otherUserUid ?? chatRoomId ?? postId ?? commentId!)
+        .set({
       'reason': reason,
       'otherUserUid': otherUserUid,
       'postId': postId,

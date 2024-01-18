@@ -36,7 +36,8 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (progress != null && !progress!.isNaN) LinearProgressIndicator(value: progress),
+        if (progress != null && !progress!.isNaN)
+          LinearProgressIndicator(value: progress),
         const Divider(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -55,16 +56,22 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                 icon: widget.cameraIcon ?? const Icon(Icons.camera_alt),
                 onPressed: () async {
                   /// 인증된 사용자만 파일 전송 옵션
-                  if (widget.chat.room.uploadVerifiedUserOnly && iam.notVerified) {
-                    return error(context: context, message: T.notVerifiedMessage);
+                  if (widget.chat.room.uploadVerifiedUserOnly &&
+                      iam.notVerified) {
+                    return error(
+                        context: context, message: T.notVerifiedMessage);
                   }
                   final url = await StorageService.instance.upload(
                     context: context,
                     // Review
                     camera: true,
                     gallery: true,
-                    progress: (p) => widget.onProgress?.call(p) ?? mounted ? setState(() => progress = p) : null,
-                    complete: () => widget.onProgress?.call(null) ?? mounted ? setState(() => progress = null) : null,
+                    progress: (p) => widget.onProgress?.call(p) ?? mounted
+                        ? setState(() => progress = p)
+                        : null,
+                    complete: () => widget.onProgress?.call(null) ?? mounted
+                        ? setState(() => progress = null)
+                        : null,
                   );
 
                   await send(url: url);
@@ -81,8 +88,11 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                       if (text.isEmpty) return;
 
                       /// 인증된 사용자만 URL 전송 옵션
-                      if (text.hasUrl == true && widget.chat.room.urlVerifiedUserOnly && iam.notVerified) {
-                        return error(context: context, message: T.notVerifiedMessage);
+                      if (text.hasUrl == true &&
+                          widget.chat.room.urlVerifiedUserOnly &&
+                          iam.notVerified) {
+                        return error(
+                            context: context, message: T.notVerifiedMessage);
                       }
 
                       inputController.clear();

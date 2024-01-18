@@ -45,7 +45,8 @@ class DefaultUploadSelectionBottomSheet extends StatelessWidget {
             ),
           const SizedBox(height: 16),
           TextButton(
-            child: Text('취소', style: TextStyle(color: Theme.of(context).primaryColor)),
+            child: Text('취소',
+                style: TextStyle(color: Theme.of(context).primaryColor)),
             onPressed: () {
               Navigator.pop(context);
             },

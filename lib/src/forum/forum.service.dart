@@ -30,7 +30,8 @@ class ForumService {
     this.onCommentDelete = onCommentDelete;
   }
 
-  Future showPostCreateScreen(BuildContext context, {required String category}) async {
+  Future showPostCreateScreen(BuildContext context,
+      {required String category}) async {
     await showGeneralDialog(
       context: context,
       pageBuilder: ($, $$, $$$) => PostEditScreen(
@@ -39,7 +40,8 @@ class ForumService {
     );
   }
 
-  Future showPostUpdateScreen(BuildContext context, {required PostModel post}) async {
+  Future showPostUpdateScreen(BuildContext context,
+      {required PostModel post}) async {
     await showGeneralDialog(
       context: context,
       pageBuilder: ($, $$, $$$) => PostEditScreen(
@@ -48,7 +50,8 @@ class ForumService {
     );
   }
 
-  Future showPostViewScreen(BuildContext context, {required PostModel post}) async {
+  Future showPostViewScreen(BuildContext context,
+      {required PostModel post}) async {
     await showGeneralDialog(
       context: context,
       pageBuilder: ($, $$, $$$) => PostViewScreen(

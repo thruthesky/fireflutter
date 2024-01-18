@@ -35,7 +35,8 @@ class EditUploads extends StatelessWidget {
               right: 0,
               child: IconButton(
                 style: IconButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
+                  backgroundColor:
+                      Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
                 ),
                 onPressed: () async {
                   await StorageService.instance.delete(url);

@@ -81,7 +81,9 @@ class _PostViewScreenState extends State<PostViewScreen> {
                         toast(
                           context: context,
                           title: re == true ? T.blocked.tr : T.unblocked.tr,
-                          message: re == true ? T.blockedMessage.tr : T.unblockedMessage.tr,
+                          message: re == true
+                              ? T.blockedMessage.tr
+                              : T.unblockedMessage.tr,
                         );
                       }
                     },
@@ -101,7 +103,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     ];
                   }, onSelected: (value) async {
                     if (value == 'edit') {
-                      await ForumService.instance.showPostUpdateScreen(context, post: post);
+                      await ForumService.instance
+                          .showPostUpdateScreen(context, post: post);
                       post.reload();
                     } else if (value == 'delete') {
                       final re = await confirm(
@@ -122,7 +125,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
                 behavior: HitTestBehavior.opaque,
                 onTap: () async {
                   /// 텍스트 입력 버튼 액션
-                  final re = await ForumService.instance.showCommentCreateScreen(
+                  final re =
+                      await ForumService.instance.showCommentCreateScreen(
                     context,
                     post: post,
                     focusOnTextField: true,
@@ -133,7 +137,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   }
                 },
                 child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(8),
@@ -143,7 +148,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       /// 사진 버튼
                       IconButton(
                         onPressed: () async {
-                          final re = await ForumService.instance.showCommentCreateScreen(
+                          final re = await ForumService.instance
+                              .showCommentCreateScreen(
                             context,
                             post: post,
                             showUploadDialog: true,

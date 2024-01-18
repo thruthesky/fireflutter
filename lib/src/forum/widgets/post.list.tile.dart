@@ -35,7 +35,8 @@ class PostListTile extends StatelessWidget {
                   child: Badge.count(
                     count: post.noOfComments,
                     textColor: Theme.of(context).colorScheme.onSecondary,
-                    backgroundColor: Theme.of(context).colorScheme.secondary.tone(50),
+                    backgroundColor:
+                        Theme.of(context).colorScheme.secondary.tone(50),
                   ),
                 )
               : const SizedBox.shrink(),
