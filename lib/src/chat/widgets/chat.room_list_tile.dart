@@ -25,7 +25,7 @@ class ChatRoomListTile extends StatelessWidget {
         room: room,
       ),
       title: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             child: Text(
@@ -45,9 +45,16 @@ class ChatRoomListTile extends StatelessWidget {
             Database(
               path: Path.chatRoomUsersAt(room.id, myUid!),
               builder: (v) => v == true
-                  ? Icon(Icons.notifications_rounded,
-                      color: Theme.of(context).colorScheme.secondary.tone(50))
-                  : const Icon(Icons.notifications_outlined),
+                  ? Icon(
+                      Icons.notifications_rounded,
+                      color: Theme.of(context).colorScheme.secondary.tone(50),
+                      size: 20,
+                    )
+                  : Icon(
+                      Icons.notifications_off_outlined,
+                      color: Theme.of(context).colorScheme.secondary.tone(70),
+                      size: 20,
+                    ),
             ),
           ],
         ],

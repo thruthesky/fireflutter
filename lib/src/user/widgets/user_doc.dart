@@ -41,12 +41,14 @@ class UserDoc extends StatelessWidget {
     this.field,
     required this.builder,
     this.cache = true,
+    this.onLoading,
   });
 
   final String uid;
   final String? field;
   final Function(dynamic data) builder;
   final bool cache;
+  final Widget? onLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -59,11 +61,7 @@ class UserDoc extends StatelessWidget {
       future: get(path),
       builder: (_, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const SizedBox(
-            width: 32,
-            height: 32,
-            child: CircularProgressIndicator.adaptive(),
-          );
+          return onLoading ?? const SizedBox.shrink();
         }
         if (snapshot.hasError) {
           dog('error in UserDoc: ${snapshot.error}');
