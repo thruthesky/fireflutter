@@ -87,3 +87,27 @@ initForum() {
     );
 }
 ```
+
+## Listing comments
+
+Comments will be provided by the PostModel. For customization, check the code below:
+
+```dart
+final post = PostModel(
+  // get the post model
+);
+
+ListView.builder(
+  itemCount: post.comments.length,
+  itemBuilder: (context, index) {
+    final CommentModel comment = post.comments[index];
+    return CommentView(
+      post: post,
+      comment: comment,
+      onCreate: () {
+        post.reload().then((value) => setState(() {}));
+      },
+    );
+  },
+)
+```
