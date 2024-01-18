@@ -128,7 +128,8 @@ class _UserAvatarState extends State<DefaultAvatarUpdate> {
           if (widget.delete && isNotUploading)
             StreamBuilder(
               stream: user.ref.child(Field.photoUrl).onValue,
-              builder: (_, event) => event.hasData && event.data!.snapshot.exists
+              builder: (_, event) => event.hasData &&
+                      event.data!.snapshot.exists
                   ? Positioned(
                       top: 0,
                       left: 0,
@@ -137,7 +138,8 @@ class _UserAvatarState extends State<DefaultAvatarUpdate> {
                           /// 이전 사진 삭제
                           ///
                           /// 삭제 실패해도, 계속 진행되도록 한다.
-                          StorageService.instance.delete(event.data!.snapshot.value as String?);
+                          StorageService.instance
+                              .delete(event.data!.snapshot.value as String?);
                           await UserService.instance.user!.deletePhotoUrl();
                         },
                         padding: EdgeInsets.zero,

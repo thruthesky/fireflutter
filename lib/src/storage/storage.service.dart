@@ -70,7 +70,8 @@ class StorageService {
     }
 
     final storageRef = FirebaseStorage.instance.ref();
-    final fileRef = storageRef.child(saveAs ?? "users/${myUid!}/${file.path.split('/').last}");
+    final fileRef = storageRef
+        .child(saveAs ?? "users/${myUid!}/${file.path.split('/').last}");
     // Review: Here only Image can be compressed. File and Video cannot be compressed.
     // It may cause error if you try to compress file or video.
     // So, we should check the file type before compressing.
@@ -237,10 +238,12 @@ class StorageService {
     if (source == null) return null;
 
     if (source == ImageSource.camera) {
-      final XFile? image = await ImagePicker().pickImage(source: ImageSource.camera);
+      final XFile? image =
+          await ImagePicker().pickImage(source: ImageSource.camera);
       return image?.path;
     } else if (source == ImageSource.gallery) {
-      final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final XFile? image =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
       return image?.path;
     }
     return null;
@@ -252,8 +255,8 @@ class StorageService {
     int compressQuality = 80,
     String? type,
   }) async {
-    final pickedFiles =
-        await ImagePicker().pickMultiImage(imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
+    final pickedFiles = await ImagePicker()
+        .pickMultiImage(imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
     List<XFile> xFilePicks = pickedFiles;
 
     if (xFilePicks.isEmpty) return null;
@@ -279,7 +282,8 @@ class StorageService {
     }
     showGeneralDialog(
       context: context,
-      pageBuilder: (context, _, __) => DefaultImageCarouselScaffold(urls: urls, index: index),
+      pageBuilder: (context, _, __) =>
+          DefaultImageCarouselScaffold(urls: urls, index: index),
     );
   }
 }

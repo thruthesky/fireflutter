@@ -23,17 +23,20 @@ class UserModel {
   List<String>? blocks;
 
   /// Returns true if the user is blocked.
-  bool isBlocked(String otherUserUid) => blocks?.contains(otherUserUid) ?? false;
+  bool isBlocked(String otherUserUid) =>
+      blocks?.contains(otherUserUid) ?? false;
 
   /// Alias of isBlocked
   bool hasBlocked(String otherUserUid) => isBlocked(otherUserUid);
 
   bool get notVerified => !isVerified;
 
-  DatabaseReference get ref => FirebaseDatabase.instance.ref('users').child(uid);
+  DatabaseReference get ref =>
+      FirebaseDatabase.instance.ref('users').child(uid);
 
   /// See README.md
-  DatabaseReference get photoRef => FirebaseDatabase.instance.ref('user-profile-photos').child(uid);
+  DatabaseReference get photoRef =>
+      FirebaseDatabase.instance.ref('user-profile-photos').child(uid);
 
   UserModel({
     required this.uid,
@@ -95,7 +98,9 @@ class UserModel {
       blocks: json[Field.blocks] == null
           ? null
           : List<String>.from(
-              (json[Field.blocks] as Map<Object?, Object?>).entries.map((x) => x.key),
+              (json[Field.blocks] as Map<Object?, Object?>)
+                  .entries
+                  .map((x) => x.key),
             ),
     );
   }
@@ -117,7 +122,8 @@ class UserModel {
       'order': order,
       'isAdmin': isAdmin,
       'isVerified': isVerified,
-      Field.blocks: blocks == null ? null : List<dynamic>.from(blocks!.map((x) => x)),
+      Field.blocks:
+          blocks == null ? null : List<dynamic>.from(blocks!.map((x) => x)),
     };
   }
 
@@ -221,7 +227,8 @@ class UserModel {
       if (name != null) 'name': name,
       if (displayName != null) 'displayName': displayName,
       if (photoUrl != null) 'photoUrl': photoUrl,
-      if (profileBackgroundImageUrl != null) 'profileBackgroundImageUrl': profileBackgroundImageUrl,
+      if (profileBackgroundImageUrl != null)
+        'profileBackgroundImageUrl': profileBackgroundImageUrl,
       if (stateMessage != null) 'stateMessage': stateMessage,
       if (photoUrl != null) 'hasPhotoUrl': true,
       if (birthYear != null) 'birthYear': birthYear,

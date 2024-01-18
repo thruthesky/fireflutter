@@ -33,7 +33,8 @@ class ChatService {
       rtdb.ref().child('chat-rooms/$roomId/users/$uid');
 
   DatabaseReference get joinsRef => rtdb.ref().child('chat-joins');
-  DatabaseReference joinRef(String myUid, String roomId) => joinsRef.child(myUid).child(roomId);
+  DatabaseReference joinRef(String myUid, String roomId) =>
+      joinsRef.child(myUid).child(roomId);
 
   Future createRoom({
     required String name,
@@ -56,7 +57,8 @@ class ChatService {
   }) async {
     return showGeneralDialog(
       context: context,
-      pageBuilder: (context, animation, secondaryAnimation) => DefaultChatRoomScreen(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          DefaultChatRoomScreen(
         uid: uid,
         roomId: roomId,
         room: room,

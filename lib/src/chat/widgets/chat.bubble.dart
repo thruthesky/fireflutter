@@ -58,13 +58,17 @@ class ChatBubble extends StatelessWidget {
           // text
           if (message.text != null)
             Container(
-              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.6),
               child: Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: message.mine ? Colors.amber.shade200 : Colors.grey.shade200,
+                      color: message.mine
+                          ? Colors.amber.shade200
+                          : Colors.grey.shade200,
                       borderRadius: borderRadius(),
                     ),
                     child: LinkifyText(
@@ -123,7 +127,8 @@ class ChatBubble extends StatelessWidget {
 
   dateAndName({required String uid}) {
     return Column(
-      crossAxisAlignment: message.mine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment:
+          message.mine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         DateTimeShort(stamp: message.createdAt ?? 0),
         const SizedBox(width: 4),
@@ -136,7 +141,8 @@ class ChatBubble extends StatelessWidget {
     return ClipRRect(
       borderRadius: borderRadius(),
       child: Container(
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+        constraints:
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
         child: CachedNetworkImage(
           imageUrl: message.url!,
           fit: BoxFit.cover,
@@ -167,7 +173,8 @@ class ChatBubble extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-            constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.6),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
               color: Colors.grey.shade200,

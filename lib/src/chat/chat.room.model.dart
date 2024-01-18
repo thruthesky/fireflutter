@@ -58,7 +58,8 @@ class ChatRoomModel {
   bool get isOpenGroupChat => openGroupChatOrder != null;
 
   /// [joined] 현재 사용자가 입장해 있으면, 즉 [users] 에 현재 사용자의 UID 가 있으면, true 를 리턴한다.
-  bool get joined => users?.containsKey(FirebaseAuth.instance.currentUser!.uid) ?? false;
+  bool get joined =>
+      users?.containsKey(FirebaseAuth.instance.currentUser!.uid) ?? false;
 
   bool get isMaster => master == myUid;
 
@@ -105,8 +106,12 @@ class ChatRoomModel {
       key: json['key'],
       text: json['text'] as String?,
       url: json['url'] as String?,
-      updatedAt: json['updatedAt'] is int ? json['updatedAt'] : int.parse(json['updatedAt'] ?? '0'),
-      createdAt: json['createdAt'] is int ? json['createdAt'] : int.parse(json['createdAt'] ?? '0'),
+      updatedAt: json['updatedAt'] is int
+          ? json['updatedAt']
+          : int.parse(json['updatedAt'] ?? '0'),
+      createdAt: json['createdAt'] is int
+          ? json['createdAt']
+          : int.parse(json['createdAt'] ?? '0'),
       newMessage: json['newMessage'] ?? 0,
       singleChatOrder: json['singleChatOrder'] as int?,
       groupChatOrder: json['groupChatOrder'] as int?,
@@ -119,8 +124,11 @@ class ChatRoomModel {
       isVerifiedOnly: json['isVerifiedOnly'] ?? false,
       urlVerifiedUserOnly: json['urlVerifiedUserOnly'] ?? false,
       uploadVerifiedUserOnly: json['uploadVerifiedUserOnly'] ?? false,
-      users: json['users'] == null ? null : Map<String, bool>.from(json['users']),
-      noOfUsers: json['noOfUsers'] is int ? json['noOfUsers'] : int.parse(json['noOfUsers'] ?? '0'),
+      users:
+          json['users'] == null ? null : Map<String, bool>.from(json['users']),
+      noOfUsers: json['noOfUsers'] is int
+          ? json['noOfUsers']
+          : int.parse(json['noOfUsers'] ?? '0'),
     );
   }
   Map<String, dynamic> toJson() {
@@ -474,13 +482,18 @@ class ChatRoomModel {
           element.value ? (previousValue?..add(element.key)) : previousValue,
     );
     if (uids == null) return null;
-    return uids.where((element) => element != FirebaseAuth.instance.currentUser!.uid).toList();
+    return uids
+        .where((element) => element != FirebaseAuth.instance.currentUser!.uid)
+        .toList();
   }
 
   /// 채팅방 알림 토글
   ///
   /// 채팅방의 'users' 필드에서 나의 uid 에 true 또는 false 를 지정하면된다.
   toggleNotifications() async {
-    ref.child(Field.users).child(myUid!).set(users![myUid!] == true ? false : true);
+    ref
+        .child(Field.users)
+        .child(myUid!)
+        .set(users![myUid!] == true ? false : true);
   }
 }

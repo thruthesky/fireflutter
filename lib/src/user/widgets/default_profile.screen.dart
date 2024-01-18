@@ -88,8 +88,10 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
                                       context: context,
                                       path:
                                           "${Folder.users}/${user.uid}/${Field.profileBackgroundImageUrl}",
-                                      progress: (p) => setState(() => progress = p),
-                                      complete: () => setState(() => progress = null),
+                                      progress: (p) =>
+                                          setState(() => progress = p),
+                                      complete: () =>
+                                          setState(() => progress = null),
                                     );
                                   },
                                   icon: const Icon(
