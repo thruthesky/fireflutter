@@ -56,8 +56,7 @@ class TypesenseService {
     collection ??= searchCollection;
     dog("searchCollection: $collection");
     dog('searchParameters: $searchParameters');
-    final re =
-        await client.collection(collection).documents.search(searchParameters);
+    final re = await client.collection(collection).documents.search(searchParameters);
     return SearchResult.fromJson(re);
   }
 
