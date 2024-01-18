@@ -1,31 +1,50 @@
 # Comments
 
+A comment is created by users to comment on a post.
+
 ## Comment Model
 
-Fields:
+### Fields
 
-- DatabaseReference ref;
-  * Referance in RTDB to access the comment
-- String id;
+- ref
+  * DatabaseReference
+  * Reference in RTDB to access the comment
+- id
+  * String
   * The ID of the category
-- String category;
-  * Category is not saved in RTDB since it is accessible in post but it is important in the model.
-- String postId;
-  * Post's Id is not saved in RTDB since it is accessible in post but it is important in the model.
-- final String? parentId;
-  * This it when the comment is represented as a reply under an existing comment.
-- String content;
+- parentId
+  * optional String
+  * The ID of the comment's parent when the comment is represented as a reply under an existing comment.
+- content
+  * String
   * The main content which is the actual comment.
-- final String uid;
+- uid
+  * String
   * The commenter's uid.
-- final int createdAt;
+- createdAt
+  * int
   * When the comment was created, in milliseconds since epoch
-- List of String urls = [];
+- urls
+  * List of Strings
+  * default: []
   * urls of the attached files (mostly for photos)
-- int depth;
+- depth
+  * int
   * depth of the comment (for indention in replies).
-- bool deleted
-  * Whether the comment is deleted. True means deleted.
+- deleted
+  * bool
+  * Whether the comment is deleted. True means deleted. Otherwise, not deleted.
+
+### Getters
+
+- category
+  * String
+  * The category of the forum where the comment's post belong.
+  * Category is not saved in RTDB since it is accessible in post but it is important in the model.
+- postId
+  * String
+  * The id of the post where the comment is commented.
+  * Post's Id is not saved in RTDB since it is accessible in post but it is important in the model.
   
 ## CommentView Widget
 
