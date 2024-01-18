@@ -65,7 +65,7 @@ class TypesenseService {
   ///
   /// Can use ID as string to delete into Typesense
   ///
-  Future<Map<String, dynamic>> delete(Object obj) {
+  Future<Map<String, dynamic>> delete(Object obj) async {
     String id;
     if (obj is String) {
       id = obj;
@@ -76,11 +76,11 @@ class TypesenseService {
     } else {
       throw Issue('Invalid object type: ${obj.runtimeType}');
     }
-    return client.collection(searchCollection).document(id).delete();
+    return await client.collection(searchCollection).document(id).delete();
   }
 
   /// Update the index for the user.
-  Future<Map<String, dynamic>> upsertUser(UserModel user) {
+  Future<Map<String, dynamic>> upsertUser(UserModel user) async {
     final data = {
       'id': user.uid,
       'uid': user.uid,
@@ -90,11 +90,11 @@ class TypesenseService {
       'photoUrl': user.photoUrl,
       'isVerified': user.isVerified,
     };
-    return client.collection(searchCollection).documents.upsert(data);
+    return await client.collection(searchCollection).documents.upsert(data);
   }
 
   /// Updates the index for the post.
-  Future<Map<String, dynamic>> upsertPost(PostModel post) {
+  Future<Map<String, dynamic>> upsertPost(PostModel post) async {
     final data = {
       'id': post.id,
       'type': TypesenceDocType.post,
@@ -108,11 +108,11 @@ class TypesenseService {
       'noOfComments': post.noOfComments,
       'deleted': post.deleted,
     };
-    return client.collection(searchCollection).documents.upsert(data);
+    return await client.collection(searchCollection).documents.upsert(data);
   }
 
   /// Updates the index for the comment.
-  Future<Map<String, dynamic>> upsertComment(CommentModel comment) {
+  Future<Map<String, dynamic>> upsertComment(CommentModel comment) async {
     final data = {
       'id': comment.id,
       'type': TypesenceDocType.comment,
@@ -124,7 +124,7 @@ class TypesenseService {
       'uid': comment.uid,
       'urls': comment.urls,
     };
-    return client.collection(searchCollection).documents.upsert(data);
+    return await client.collection(searchCollection).documents.upsert(data);
   }
 
   Future<void> reindexUser() async {
@@ -162,9 +162,9 @@ class TypesenseService {
     }
   }
 
-  Future<Map<String, dynamic>> deleteCategory(String category) {
+  Future<Map<String, dynamic>> deleteCategory(String category) async {
     dog('Deleting category: $category');
-    return client.collection(searchCollection).documents.delete({
+    return await client.collection(searchCollection).documents.delete({
       'filter_by': 'type:=[post,comment] && category:=$category',
     });
   }
