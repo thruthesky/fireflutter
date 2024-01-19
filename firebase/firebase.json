@@ -19,6 +19,9 @@
     "functions": {
       "port": 5001
     },
+    "database": {
+      "port": 6004
+    },
     "ui": {
       "enabled": true
     },

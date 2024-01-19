@@ -1,3 +1,6 @@
+key.ts
+**/key.ts
+
 # Compiled JavaScript files
 lib/**/*.js
 lib/**/*.js.map

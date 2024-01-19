@@ -4,6 +4,7 @@ import { MessagingService } from "./messaging/messaging.service";
 import { initializeApp } from "firebase-admin/app";
 import { logger } from "firebase-functions/v1";
 import { onValueWritten } from "firebase-functions/v2/database";
+import { getDatabase } from "firebase-admin/database";
 
 
 // / initialize firebase app
@@ -27,6 +28,11 @@ export const sendPushNotifications = onRequest(async (request, response) => {
   }
 });
 
+export const createTestNode = onRequest(async (request, response) => {
+  await getDatabase().ref("/test").set({ test: "test" });
+  response.send({ ok: true });
+});
+
 
 // Listens for new messages added to /messages/:pushId/original and creates an
 // uppercase version of the message to /messages/:pushId/uppercase
@@ -34,23 +40,26 @@ export const sendPushNotifications = onRequest(async (request, response) => {
 export const typesenseUserIndexing = onValueWritten(
   "/users/{uid}",
   (event) => {
+    if (!event.data.after.exists()) {
+      // Do something here for deleted users
+      const data = event.data.before.val();
+      console.log("deleted: ", data);
+      return null;
+    }
+    // console.log("event.data", event.data);
     // Edit data if the document exists.
     if (event.data.before.exists()) {
       // Do something here for updated users
       // This is an update action. When user updates his profile(document), it comes here.
       const data = event.data.after.val();
+      console.log("updated: ", data);
       return null;
     }
-    // Exit when the data is deleted.
-    if (!event.data.after.exists()) {
-      // Do something here for deleted users
-      return null;
-    }
-
     // It comes here when the user document is newly created.
     // Do something when a new user is created.
     // [data] is the user document when it is first created.
     const data = event.data.after.val();
+    console.log("created: ", data);
 
 
     return null;
