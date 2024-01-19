@@ -2,7 +2,6 @@ import { typesenseApiKey, typesenseHost, typesensePort, typesenseProtocol } from
 import { TypesenseUser } from "./typesense.interface";
 import * as Typesense from "typesense";
 
-
 /**
  * Typesense Service
  *
@@ -29,7 +28,7 @@ export class TypesenseService {
   }
   /**
    *
-   * @param {TypesenseUser} user
+   * @param { TypesenseUser } user
    * @returns
    */
   static async upsertUser(user: TypesenseUser) {
