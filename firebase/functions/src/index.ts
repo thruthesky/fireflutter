@@ -5,6 +5,7 @@ import { initializeApp } from "firebase-admin/app";
 import { logger } from "firebase-functions/v1";
 import { onValueWritten } from "firebase-functions/v2/database";
 import { getDatabase } from "firebase-admin/database";
+import { TypesenseService } from "./typesense/typesense.service";
 
 
 // / initialize firebase app
@@ -44,7 +45,7 @@ export const typesenseUserIndexing = onValueWritten(
       // Do something here for deleted users
       const data = event.data.before.val();
       console.log("deleted: ", data);
-      return null;
+      return TypesenseService.upsertUser(data);
     }
     // console.log("event.data", event.data);
     // Edit data if the document exists.
@@ -53,16 +54,14 @@ export const typesenseUserIndexing = onValueWritten(
       // This is an update action. When user updates his profile(document), it comes here.
       const data = event.data.after.val();
       console.log("updated: ", data);
-      return null;
+      return TypesenseService.delete(event.data.before.key as string);
     }
     // It comes here when the user document is newly created.
     // Do something when a new user is created.
     // [data] is the user document when it is first created.
     const data = event.data.after.val();
     console.log("created: ", data);
-
-
-    return null;
+    return TypesenseService.upsertUser(data);
   },
 );
 
