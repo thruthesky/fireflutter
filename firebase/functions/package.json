@@ -11,7 +11,8 @@
     "logs": "firebase functions:log",
     "test:send-message": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/send-message.spec.ts",
     "test:send-message-input": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/send-message-input.spec.ts",
-    "test:user-create": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/typesense/user-create.spec.ts"
+    "test:user-create": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/typesense/user-create.spec.ts",
+    "test:typesense": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/typesense/**.spec.ts --timeout 100000"
   },
   "engines": {
     "node": "18"

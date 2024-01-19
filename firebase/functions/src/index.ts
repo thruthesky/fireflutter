@@ -9,7 +9,9 @@ import { TypesenseService } from "./typesense/typesense.service";
 
 
 // / initialize firebase app
-initializeApp();
+initializeApp({
+  databaseURL: "http://127.0.0.1:6004?ns=withcenter-test-3",
+});
 
 /**
  * sending messages to tokens

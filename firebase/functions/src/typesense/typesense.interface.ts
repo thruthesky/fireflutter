@@ -2,5 +2,8 @@
  * Typesense interface for User
  */
 export interface TypesenseUser {
-    displayName: string;
+    type?: "user" | "post" | "comment";
+    uid?: string;
+    displayName?: string;
+    createdAt?: number;
 }

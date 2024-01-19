@@ -9,6 +9,11 @@ import * as Typesense from "typesense";
  */
 export class TypesenseService {
   /**
+   * Test Search
+   */
+  static collection = "testSearch";
+
+  /**
    *
    */
   static get client() {
@@ -23,7 +28,7 @@ export class TypesenseService {
       apiKey: typesenseApiKey,
       numRetries: 3, // A total of 4 tries (1 original try + 3 retries)
       connectionTimeoutSeconds: 120, // Set a longer timeout for large imports
-      logLevel: "debug",
+      // logLevel: "debug",
     });
   }
   /**
@@ -35,10 +40,24 @@ export class TypesenseService {
     console.log(user);
 
     const result = await this.client
-      .collections("testSearch")
+      .collections(this.collection)
       .documents().upsert(user);
 
     return result;
+  }
+
+  /**
+   * Search User
+   * @param searchText
+   */
+  static async searchUser({ searchText = "", filterBy = "" }) {
+    const result = await this.client.collections(this.collection
+      ).documents().search({
+        q: searchText,
+        query_by: "displayName",
+        filter_by: filterBy,
+      });
+     return result;
   }
 
 
