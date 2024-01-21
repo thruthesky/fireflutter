@@ -22,12 +22,11 @@ class _AdminUserListScreenState extends State<AdminUserListScreen> {
         itemBuilder: (context, doc) {
           final user = UserModel.fromSnapshot(doc);
           return ListTile(
-            title: Text(user.displayName ?? ''),
+            title: Text(user.displayName),
             subtitle: Text(user.uid),
             trailing: Text(user.isAdmin ? '관리자' : ''),
             onTap: () {
-              AdminService.instance
-                  .showUserUpdate(context: context, uid: user.uid);
+              AdminService.instance.showUserUpdate(context: context, uid: user.uid);
             },
           );
         },

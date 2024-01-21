@@ -11,7 +11,7 @@ class ErrorDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
         title: Text(
-          title ?? 'Error',
+          title ?? T.error.tr,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         content: Text(

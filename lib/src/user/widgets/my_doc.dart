@@ -31,11 +31,19 @@ class MyDoc extends StatelessWidget {
           return const Icon(Icons.error_outline);
         }
         final user = snapshot.data;
+
         return builder(user);
       },
     );
   }
 
+  /// 로그인한 사용자의 DB 에서 하나의 값을 모니터링 한다.
+  ///
+  /// 주의, 굳이 이 함수를 쓸 필요없이, [MyDoc] 위젯을 쓰면 된다. [MyDoc] 위젯은 DB 에서 값을 listen 하는
+  /// 것이 아니라, [UserService.user] 를 listen 하기 때문에, [MyDoc] 위젯을 쓰면, DB 에서 값을 가져오지
+  /// 않기 때문에 더 효율 적이다.
+  ///
+  /// [onLoading] 은 현재 정보를 바탕으로 호출하므로, 깜빡임에 효율적이다.
   static Widget field(
     String field, {
     required Function(dynamic value) builder,
@@ -44,6 +52,7 @@ class MyDoc extends StatelessWidget {
       uid: FirebaseAuth.instance.currentUser!.uid,
       field: field,
       builder: (v) => builder(v),
+      onLoading: builder(my?.data[field] ?? ''),
     );
   }
 }

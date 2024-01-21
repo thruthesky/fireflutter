@@ -23,8 +23,7 @@ class UserService {
     }
   }
 
-  BehaviorSubject<UserModel?> myDataChanges =
-      BehaviorSubject<UserModel?>.seeded(null);
+  BehaviorSubject<UserModel?> myDataChanges = BehaviorSubject<UserModel?>.seeded(null);
 
   StreamSubscription? userNodeSubscription;
 
@@ -74,8 +73,7 @@ class UserService {
     }
 
     this.enableNoOfProfileView = enableNoOfProfileView;
-    this.enableMessagingOnPublicProfileVisit =
-        enableMessagingOnPublicProfileVisit;
+    this.enableMessagingOnPublicProfileVisit = enableMessagingOnPublicProfileVisit;
 
     this.onLike = onLike;
     this.enableNotificationOnLike = enableNotificationOnLike;
@@ -99,24 +97,22 @@ class UserService {
 
       /// 사용자 문서 읽기
       UserModel? user = await UserModel.get(firebaseUser.uid);
-      user ??= await UserModel.create(
-        uid: firebaseUser.uid,
-        displayName: firebaseUser.displayName,
-        photoUrl: firebaseUser.photoURL,
-      );
+
+      // ignore: prefer_conditional_assignment
+      if (user == null) {
+        user = await UserModel.create(
+          uid: firebaseUser.uid,
+          displayName: firebaseUser.displayName,
+          photoUrl: firebaseUser.photoURL,
+        );
+      }
 
       /// createdAt 이 없으면, 최초 로그인이다. 그래서 createdAt 을 지정해서
       /// 회원 가입으로 간주한다.
-      if (user.createdAt == null) {
+      if (user.createdAt == 0) {
         dog('--> User login for the first time. --> update createdAt');
         user.update(
           createdAt: ServerValue.timestamp,
-        );
-      }
-      if (user.order == null) {
-        dog('--> User login for the first time. --> update createdAt');
-        user.update(
-          order: DateTime.now().millisecondsSinceEpoch * -1,
         );
       }
     });
@@ -132,28 +128,18 @@ class UserService {
         return;
       }
       userNodeSubscription?.cancel();
-      userNodeSubscription =
-          userRef.child(user.uid).onValue.listen((event) async {
+      userNodeSubscription = userRef.child(user.uid).onValue.listen((event) async {
         dog('--> UserService.listenUser() userRef.child(user.uid).onValue.listen()');
-        // final json = Map<String, dynamic>.from(event.snapshot.value);
-        // this.user = UserModel.fromJson(json);
-
-        /// 사용자 문서 존재하지 않는 경우, 생성
-        ///
-        /// 어떤 이유로 인해서 사용자 문서가 존재하지 않을 수 있다. 예를 들면, 테스트를 하는 경우 등에서 발생할 수 있는데,
-        /// 이와 같은 경우, 그냥 문서를 생성해 준다.
-        ///
-        /// If the user document does not exsit. Then create it.
-        if (event.snapshot.exists == false) {
-          dog('--> 어떤 이유(테스트 등)로 인해 사용자 문서 존재하지 않음, 생성함.');
-          await userRef.child(user.uid).set({
-            'email': user.email,
-            'displayName': user.displayName,
-            'photoUrl': user.photoURL,
-            'createdAt': ServerValue.timestamp,
-          });
+        if (event.snapshot.exists == false || event.snapshot.value == null) {
           return;
         }
+
+        /// 사용자 문서 존재하지 않는 경우, 여기서 생성하면 안된다.
+        /// 실제로, 사용자 문서가 존재하는데도 불구하고, 각종 읽기 실패, 인터넷 순단 등의 이유로 문서가 존재하지 않는 것으로
+        /// 인식되어, 다시 문서를 생성하는 경우가 있다. 그리고 무한 루프를 돌 수도 있다.
+        ///
+        /// 위의, initUser() 에서, 사용자 로그인이 바뀌면 문서가 존재하는지 확인하고, 존재하지 않으면 사용자 문서를 생성
+        /// 한다.
 
         /// 문서 파싱
         this.user = UserModel.fromSnapshot(event.snapshot);
@@ -196,8 +182,7 @@ class UserService {
     /// send notification by default when user visit other user profile
     /// disable notification when `disableNotifyOnProfileVisited` is set on user setting
     () async {
-      bool? re =
-          await getSetting<bool?>(uid, path: Code.profileViewNotification);
+      bool? re = await getSetting<bool?>(uid, path: Code.profileViewNotification);
       if (re != true) return;
 
       if (loggedIn && myUid != uid) {

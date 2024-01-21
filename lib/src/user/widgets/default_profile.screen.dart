@@ -19,8 +19,8 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
   @override
   void initState() {
     super.initState();
-    nameController.text = user.displayName ?? '';
-    stateMessageController.text = user.stateMessage ?? '';
+    nameController.text = user.displayName;
+    stateMessageController.text = user.stateMessage;
   }
 
   @override
@@ -49,7 +49,7 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
                               borderRadius: BorderRadius.circular(16),
                               image: DecorationImage(
                                 image: CachedNetworkImageProvider(
-                                  my?.profileBackgroundImageUrl ?? blackUrl,
+                                  my!.profileBackgroundImageUrl.orBlackUrl,
                                 ),
                                 fit: BoxFit.cover,
                               ),
@@ -88,10 +88,8 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
                                       context: context,
                                       path:
                                           "${Folder.users}/${user.uid}/${Field.profileBackgroundImageUrl}",
-                                      progress: (p) =>
-                                          setState(() => progress = p),
-                                      complete: () =>
-                                          setState(() => progress = null),
+                                      progress: (p) => setState(() => progress = p),
+                                      complete: () => setState(() => progress = null),
                                     );
                                   },
                                   icon: const Icon(
@@ -162,6 +160,8 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
                 ),
               ),
               const SizedBox(height: 32),
+              MyDoc(builder: (my) => UpdateBirthdayField(user: user)),
+              const SizedBox(height: 32),
               Center(
                 child: ElevatedButton(
                   onPressed: () async {
@@ -174,7 +174,7 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
                       return;
                     }
 
-                    await UserService.instance.user?.update(
+                    await my?.update(
                       name: nameController.text,
                       displayName: nameController.text,
                       stateMessage: stateMessageController.text,
