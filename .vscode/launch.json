@@ -159,14 +159,14 @@
     },
 
     {
-      "name": "Momcafe (Chris) - iPhone 15 Pro Max (debug)",
+      "name": "Momcafe (Chris) TEST - iPhone 15 Pro Max (debug)",
       "request": "launch",
       "type": "dart",
       "deviceId": "9538AD08-48B3-43A8-B848-31CC488FE3E9",
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
-      "args": ["-v"]
+      "args": ["-v", "--dart-define", "MODE=test"]
     }
   ]
 }

@@ -1,5 +1,5 @@
 import { typesenseApiKey, typesenseHost, typesensePort, typesenseProtocol } from "../key";
-import { TypesenseUser } from "./typesense.interface";
+import { TypesenseDoc } from "./typesense.interface";
 import * as Typesense from "typesense";
 
 /**
@@ -31,18 +31,16 @@ export class TypesenseService {
       // logLevel: "debug",
     });
   }
+
   /**
-   *
-   * @param { TypesenseUser } user
+   * Upserts the Document in the Typesense.
+   * @param doc Either user, post, comment
    * @returns
    */
-  static async upsertUser(user: TypesenseUser) {
-    console.log(user);
-
+  static async upsert(doc: TypesenseDoc) {
     const result = await this.client
       .collections(this.collection)
-      .documents().upsert(user);
-
+      .documents().upsert(doc);
     return result;
   }
 
@@ -60,6 +58,42 @@ export class TypesenseService {
      return result;
   }
 
+  /**
+   * Search Post
+   */
+  static async searchPost({ searchText = "", filterBy = "" }) {
+    const result = await this.client.collections(this.collection
+      ).documents().search({
+        q: searchText,
+        query_by: "content,title",
+        filter_by: filterBy,
+      });
+     return result;
+  }
+
+  /**
+  * Search Comment
+  */
+ static async searchComment({ searchText = "", filterBy = "" }) {
+   const result = await this.client.collections(this.collection
+     ).documents().search({
+       q: searchText,
+       query_by: "content",
+       filter_by: filterBy,
+     });
+    return result;
+ }
+
+  /**
+   * Retrieve User
+   * @param id
+   * @returns
+   */
+  static async retrieve( id: string ) {
+    const result = await this.client.collections(this.collection
+      ).documents(id).retrieve();
+     return result;
+  }
 
   /**
    * delete typesense document
@@ -68,7 +102,9 @@ export class TypesenseService {
    * @returns
    */
   static async delete(id: string) {
-    console.log(id);
-    return null;
+    // console.log(id);
+    const result = await this.client.collections(this.collection
+      ).documents(id).delete();
+    return result;
   }
 }
