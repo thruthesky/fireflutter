@@ -6,6 +6,9 @@ class Ref {
 
   static DatabaseReference root = FirebaseDatabase.instance.ref();
 
+  /// Admins
+  static DatabaseReference admins = root.child('admins');
+
   /// User
   static DatabaseReference users = root.child('users');
   static DatabaseReference userProfilePhotos = root.child('profile-photos');
@@ -25,8 +28,7 @@ class Ref {
 
   /// # Category (Post)
   static DatabaseReference category(String category) => posts.child(category);
-  static DatabaseReference post(String category, String id) =>
-      Ref.category(category).child(id);
+  static DatabaseReference post(String category, String id) => Ref.category(category).child(id);
   static DatabaseReference postsSummary = root.child('posts-summary');
   static DatabaseReference postSummary(String category, String id) =>
       root.child('posts-summary').child(category).child(id);
@@ -42,6 +44,5 @@ class Ref {
 
   /// Token, FCM, Notification
   static DatabaseReference userFcmTokens = root.child(Folder.userFcmTokens);
-  static Query userTokens(String uid) =>
-      userFcmTokens.orderByChild('uid').equalTo(uid);
+  static Query userTokens(String uid) => userFcmTokens.orderByChild('uid').equalTo(uid);
 }

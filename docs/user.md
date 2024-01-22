@@ -197,3 +197,38 @@ toast(
   message: re == true ? 'You have blocked this user' : 'You have unblocked this user',
 );
 ```
+
+
+
+## Widgets
+
+### UpdateBirthdayField
+
+You can use this widget to display birthday and let user to update his birthday in profile screen.
+
+
+### UserTile
+
+Use this widget to display the user information in a list.
+`onTap` is optional and if it is not specified, the widget does not capture the tap event.
+
+```dart
+FirebaseDatabaseListView(
+  query: Ref.users,
+  itemBuilder: (_, snapshot) => UserTile(
+    user: UserModel.fromSnapshot(snapshot),
+    trailing: const Column(
+      children: [
+        FaIcon(FontAwesomeIcons.solidCheck),
+        spaceXxs,
+        Text('인증완료'),
+      ],
+    ),
+    onTap: (user) {
+      user.update(isVerified: true);
+    },
+  ),
+),
+```
+
+You can use `trailing` to add your own buttons intead of using `onTap`.

@@ -75,6 +75,10 @@ class UserDoc extends StatelessWidget {
     );
   }
 
+  /// 사용자의 특정 필드 하나만 listen 한다.
+  ///
+  /// 로그인한 사용자 뿐만 아니라, 다른 사용자의 필드를 listen 할 때에도 사용한다.
+  ///
   static Widget sync({
     required String uid,
     String? field,

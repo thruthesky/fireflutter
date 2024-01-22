@@ -22,10 +22,8 @@ class DefaultChatRoomInviteScreen extends StatelessWidget {
           final user = UserModel.fromSnapshot(snapshot);
           return ListTile(
             leading: UserAvatar(uid: user.uid),
-            title: Text(user.displayName ?? ''),
-            subtitle: user.stateMessage == null
-                ? null
-                : Text(user.stateMessage ?? ''),
+            title: Text(user.displayName),
+            subtitle: Text(user.stateMessage),
             trailing: const Icon(Icons.add),
             onTap: () async {
               await room.invite(user.uid);

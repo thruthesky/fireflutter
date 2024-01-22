@@ -58,8 +58,7 @@ class ChatRoomModel {
   bool get isOpenGroupChat => openGroupChatOrder != null;
 
   /// [joined] 현재 사용자가 입장해 있으면, 즉 [users] 에 현재 사용자의 UID 가 있으면, true 를 리턴한다.
-  bool get joined =>
-      users?.containsKey(FirebaseAuth.instance.currentUser!.uid) ?? false;
+  bool get joined => users?.containsKey(FirebaseAuth.instance.currentUser!.uid) ?? false;
 
   bool get isMaster => master == myUid;
 
@@ -106,12 +105,8 @@ class ChatRoomModel {
       key: json['key'],
       text: json['text'] as String?,
       url: json['url'] as String?,
-      updatedAt: json['updatedAt'] is int
-          ? json['updatedAt']
-          : int.parse(json['updatedAt'] ?? '0'),
-      createdAt: json['createdAt'] is int
-          ? json['createdAt']
-          : int.parse(json['createdAt'] ?? '0'),
+      updatedAt: json['updatedAt'] is int ? json['updatedAt'] : int.parse(json['updatedAt'] ?? '0'),
+      createdAt: json['createdAt'] is int ? json['createdAt'] : int.parse(json['createdAt'] ?? '0'),
       newMessage: json['newMessage'] ?? 0,
       singleChatOrder: json['singleChatOrder'] as int?,
       groupChatOrder: json['groupChatOrder'] as int?,
@@ -124,11 +119,8 @@ class ChatRoomModel {
       isVerifiedOnly: json['isVerifiedOnly'] ?? false,
       urlVerifiedUserOnly: json['urlVerifiedUserOnly'] ?? false,
       uploadVerifiedUserOnly: json['uploadVerifiedUserOnly'] ?? false,
-      users:
-          json['users'] == null ? null : Map<String, bool>.from(json['users']),
-      noOfUsers: json['noOfUsers'] is int
-          ? json['noOfUsers']
-          : int.parse(json['noOfUsers'] ?? '0'),
+      users: json['users'] == null ? null : Map<String, bool>.from(json['users']),
+      noOfUsers: json['noOfUsers'] is int ? json['noOfUsers'] : int.parse(json['noOfUsers'] ?? '0'),
     );
   }
   Map<String, dynamic> toJson() {
@@ -173,10 +165,15 @@ class ChatRoomModel {
     });
   }
 
-  /// 1:1 채티에서 다른 사용자 uid 로 임시 [ChatRoomModel] 인스턴스를 만들어 리턴한다.
+  /// 다른 사용자 uid 로 1:1 채팅방 모델 객체를 만든다.
+  ///
+  /// 1:1 채팅에서 다른 사용자 uid 로 임시 [ChatRoomModel] 인스턴스를 만들어 리턴한다.
   ///
   /// 주의, 이 함수는 실제 DB 의 데이터를 읽지 않고, 임시로 만들므로, [key], [ref], [isGroupChat],
-  /// [isOpenGroupChat] 만 지정해서 리턴한다. 실제 DB 정보가 필요하면, reload() 함수를 호출하면 된다.
+  /// [isOpenGroupChat] 만 지정해서 리턴한다. 그리고 이를 바탕으로 ChatRoomModel 의 다른 속성들을 사용할 수
+  /// 있다. 예를 들면, 채팅 메시지를 전송 할 수 있다.
+  ///
+  /// 실제 DB 정보가 필요하면, reload() 함수를 호출하면 된다.
   factory ChatRoomModel.fromUid(String otherUserUid) {
     return ChatRoomModel.fromJson({
       'key': singleChatRoomId(otherUserUid),
@@ -309,7 +306,7 @@ class ChatRoomModel {
         Field.iconUrl: iconUrl,
         Code.description: description,
         Field.groupChatOrder: minusTime,
-        Field.openGroupChatOrder: isOpenGroupChat == null ? null : minusTime,
+        Field.openGroupChatOrder: isOpenGroupChat == true ? minusTime : null,
         Field.createdAt: ServerValue.timestamp,
         Field.users: {myUid: true},
         Field.master: myUid,
@@ -324,11 +321,11 @@ class ChatRoomModel {
     String? iconUrl,
     String? description,
     bool? isOpenGroupChat,
-    String? gender,
     bool? isVerifiedOnly,
     bool? urlVerifiedUserOnly,
     bool? uploadVerifiedUserOnly,
   }) async {
+    final int minusTime = DateTime.now().millisecondsSinceEpoch * -1;
     final data = {
       Field.name: name,
       if (iconUrl != null) Field.iconUrl: iconUrl,
@@ -337,6 +334,7 @@ class ChatRoomModel {
       Field.isVerifiedOnly: isVerifiedOnly,
       Field.urlVerifiedUserOnly: urlVerifiedUserOnly,
       Field.uploadVerifiedUserOnly: uploadVerifiedUserOnly,
+      Field.openGroupChatOrder: isOpenGroupChat == true ? minusTime : null,
     };
     return ref.update(data);
   }
@@ -351,13 +349,14 @@ class ChatRoomModel {
     }
   }
 
-  /// 사용자 초대 (또는 채팅방 입장)
+  /// 1:1 채팅방과 그룹 채팅방에 사용자 초대 또는 채팅방 입장
   ///
   /// 이 함수는 아래와 같이 채팅방 입장 뿐만아니라 초대까지 한다.
   /// - 내가 그룹 채팅방에 처음 입장
   /// - 내가 그룹 채팅방 생성할 때, 처음 입장
   /// - 내가 다른 사용자를 초대할 때, 초대할 사용자를 입장 시킴 (즉, 초대)
   ///
+  /// 참고로, 1:1 채팅방에도 join 을 해야만 한다.
   ///
   /// [uid] 는 나의 uid 일 수 있고, 다른 사용자의 uid 일 수 있다. 지정된 사용자(uid)를 현재 방에 입장시키는 것이다.
   ///
@@ -396,7 +395,10 @@ class ChatRoomModel {
   /// 후에 나의 uid 가 채팅방의 users 에 들어가 있지만, /chat-joins 에 데이터가 만들어져 있지 않고, noOfUsers 와
   /// 같은 정보가 올바로 설정되어져 있지 않다. 그래서, 채팅방을 생성한 다음에는 이 옵션을 true 주고 호출하면 된다.
   ///
-  Future invite(String uid, {bool forceJoin = false}) async {
+  /// 에러가 있으면 Exception 을 던지거나 에러 코드를 리턴한다. 심각한 에러의 경우 Exception 을 던진다.
+  /// 특히, 에러가 있어도 무시하고 계속 진행을 해도 되는 에러의 경우, 에러 코드를 리턴한다.
+  ///
+  Future<String?> invite(String uid, {bool forceJoin = false}) async {
     /// 채팅방 설정이 인증 회원 전용 입장 체크
     ///
     /// 인증 회원이 아니면 Issue 발생.
@@ -415,11 +417,11 @@ class ChatRoomModel {
       }
     }
 
-    /// 내가 이미 방에 들어가 있는 상태이면 그냥 리턴
+    /// 내가 이미 방에 들어가 있는 상태이면, 에러 코드를 리턴, 즉, 계속해서 다음 코드가 실행된다.
     if (forceJoin == false && users?.containsKey(uid) == true) {
-      throw Issue(Code.alreadyJoined);
+      return Code.alreadyJoined;
     }
-    dog('ChatService.instance.joinRoom: Not joined, yet. Joing now ...');
+    dog('ChatRoomModel: Not joined, yet. Joing now.');
 
     final usersRef = ref.child(Field.users);
 
@@ -457,6 +459,11 @@ class ChatRoomModel {
     // before this.
     data['order'] = order;
     await Ref.joinsRef.child(uid).child(id).update(data);
+    return null;
+  }
+
+  Future<String?> join(String uid, {bool forceJoin = false}) async {
+    return await invite(uid, forceJoin: forceJoin);
   }
 
   /// 채팅방 나가기
@@ -482,18 +489,13 @@ class ChatRoomModel {
           element.value ? (previousValue?..add(element.key)) : previousValue,
     );
     if (uids == null) return null;
-    return uids
-        .where((element) => element != FirebaseAuth.instance.currentUser!.uid)
-        .toList();
+    return uids.where((element) => element != FirebaseAuth.instance.currentUser!.uid).toList();
   }
 
   /// 채팅방 알림 토글
   ///
   /// 채팅방의 'users' 필드에서 나의 uid 에 true 또는 false 를 지정하면된다.
   toggleNotifications() async {
-    ref
-        .child(Field.users)
-        .child(myUid!)
-        .set(users![myUid!] == true ? false : true);
+    ref.child(Field.users).child(myUid!).set(users![myUid!] == true ? false : true);
   }
 }

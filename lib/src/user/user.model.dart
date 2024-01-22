@@ -5,59 +5,90 @@ import 'package:fireship/fireship.defines.dart';
 import 'package:fireship/src/user/user.service.dart';
 
 class UserModel {
+  /// [data] 는 사용자 정보 문서 node 의 전체 값을 가지고 있다. 그래서, 필요할 때,
+  /// data['email'] 과 같이, 필드를 직접 접근할 수 있다.
+  Map<String, dynamic> data;
+
   final String uid;
-  String? email;
-  String? phoneNumber;
-  String? displayName;
-  String? photoUrl;
-  String? profileBackgroundImageUrl;
-  String? stateMessage;
+
+  /// [name] 사용자의 본 명.
+  ///
+  /// [name] 은 사용자가 직접 입력 할 수도 있고, 본인 인증 후 자동으로 입력 될 수도 있다. 이름은 화면에 나타나지 않고,
+  /// [displayName] 이 화면에 나타난다.
+  ///
+  /// [name] 은 fireship 에서 직접 지정하지 않는다. 개발자가 개발하는 앱내에서 직접 지정을 해야 한다.
+  String name;
+
+  /// 사용자가 직접 입력하는 별명
+  String displayName;
+  String email;
+  String phoneNumber;
+  String photoUrl;
+  String profileBackgroundImageUrl;
+  String stateMessage;
   bool isDisabled;
-  int? birthYear;
-  int? birthMonth;
-  int? birthDay;
-  int? createdAt;
-  int? order;
+  int birthYear;
+  int birthMonth;
+  int birthDay;
+  int createdAt;
+  int order;
   bool isAdmin;
   bool isVerified;
   List<String>? blocks;
 
+  /// 신분증 업로드한 url
+  ///
+  /// 신분증을 업로드하면 이 필드에 그 신분증 사진 url 이 저장된다.
+  String idUrl;
+
+  /// ID 카드(신분증) 업로드 후, 업로드 시간 저장
+  ///
+  /// 활용: 신분증 업로드 후, [idUploadedAt] 에 값이 있으면 관리자 페이지에 신분증 확인 대기 목록에 나타나도록 한다.
+  /// 그리고, 관리자가 신분증을 수동 인증하면, isVerified 에 true 에 값을 저장하고, [idUploadedAt] 은 null
+  /// 로 저장하면 된다. 만약, 인증을 취소하면, isVerified 는 false 로 저장하고, [idUploadedAt] 은
+  /// 현재 시간으로 저장함녀 된다.
+  int idUploadedAt;
+
   /// Returns true if the user is blocked.
-  bool isBlocked(String otherUserUid) =>
-      blocks?.contains(otherUserUid) ?? false;
+  bool isBlocked(String otherUserUid) => blocks?.contains(otherUserUid) ?? false;
 
   /// Alias of isBlocked
   bool hasBlocked(String otherUserUid) => isBlocked(otherUserUid);
 
   bool get notVerified => !isVerified;
 
-  DatabaseReference get ref =>
-      FirebaseDatabase.instance.ref('users').child(uid);
+  DatabaseReference get ref => FirebaseDatabase.instance.ref('users').child(uid);
 
   /// See README.md
-  DatabaseReference get photoRef =>
-      FirebaseDatabase.instance.ref('user-profile-photos').child(uid);
+  DatabaseReference get photoRef => FirebaseDatabase.instance.ref('user-profile-photos').child(uid);
+
+  String get birth => '$birthYear-$birthMonth-$birthDay';
 
   UserModel({
+    required this.data,
     required this.uid,
-    this.email,
-    this.phoneNumber,
-    this.displayName,
-    this.photoUrl,
-    this.profileBackgroundImageUrl,
-    this.stateMessage,
+    required this.name,
+    required this.email,
+    required this.phoneNumber,
+    required this.displayName,
+    required this.photoUrl,
+    required this.profileBackgroundImageUrl,
+    required this.stateMessage,
     this.isDisabled = false,
-    this.birthYear,
-    this.birthMonth,
-    this.birthDay,
-    this.createdAt,
-    this.order,
+    required this.birthYear,
+    required this.birthMonth,
+    required this.birthDay,
+    required this.createdAt,
+    required this.order,
     this.isAdmin = false,
     this.isVerified = false,
     this.blocks,
+    required this.idUrl,
+    required this.idUploadedAt,
   });
 
   factory UserModel.fromSnapshot(DataSnapshot snapshot) {
+    ///
     final json = snapshot.value as Map<dynamic, dynamic>;
     json['uid'] = snapshot.key;
     return UserModel.fromJson(json);
@@ -80,34 +111,37 @@ class UserModel {
 
   factory UserModel.fromJson(Map<dynamic, dynamic> json, {String? uid}) {
     return UserModel(
+      data: Map<String, dynamic>.from(json),
       uid: uid ?? json['uid'],
-      email: json['email'],
-      phoneNumber: json['phoneNumber'],
-      displayName: json['displayName'],
-      photoUrl: json['photoUrl'],
-      profileBackgroundImageUrl: json['profileBackgroundImageUrl'],
-      stateMessage: json['stateMessage'],
+      name: json['name'] ?? '',
+      email: json['email'] ?? '',
+      phoneNumber: json['phoneNumber'] ?? '',
+      displayName: json['displayName'] ?? '',
+      photoUrl: json['photoUrl'] ?? '',
+      profileBackgroundImageUrl: json['profileBackgroundImageUrl'] ?? '',
+      stateMessage: json['stateMessage'] ?? '',
       isDisabled: json['isDisabled'] ?? false,
-      birthYear: json['birthYear'],
-      birthMonth: json['birthMonth'],
-      birthDay: json['birthDay'],
-      createdAt: json['createdAt'],
-      order: json['order'],
+      birthYear: json['birthYear'] ?? 0,
+      birthMonth: json['birthMonth'] ?? 0,
+      birthDay: json['birthDay'] ?? 0,
+      createdAt: json['createdAt'] ?? 0,
+      order: json['order'] ?? 0,
       isAdmin: json['isAdmin'] ?? false,
       isVerified: json['isVerified'] ?? false,
       blocks: json[Field.blocks] == null
           ? null
           : List<String>.from(
-              (json[Field.blocks] as Map<Object?, Object?>)
-                  .entries
-                  .map((x) => x.key),
+              (json[Field.blocks] as Map<Object?, Object?>).entries.map((x) => x.key),
             ),
+      idUrl: json[Field.idUrl] ?? '',
+      idUploadedAt: json[Field.idUploadedAt] ?? 0,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'uid': uid,
+      'name': name,
       'email': email,
       'phoneNumber': phoneNumber,
       'displayName': displayName,
@@ -122,8 +156,9 @@ class UserModel {
       'order': order,
       'isAdmin': isAdmin,
       'isVerified': isVerified,
-      Field.blocks:
-          blocks == null ? null : List<dynamic>.from(blocks!.map((x) => x)),
+      Field.blocks: blocks == null ? null : List<dynamic>.from(blocks!.map((x) => x)),
+      Field.idUrl: idUrl,
+      Field.idUploadedAt: idUploadedAt,
     };
   }
 
@@ -137,6 +172,7 @@ class UserModel {
     final user = await UserModel.get(uid);
 
     if (user != null) {
+      name = user.name;
       email = user.email;
       phoneNumber = user.phoneNumber;
       displayName = user.displayName;
@@ -151,6 +187,9 @@ class UserModel {
       order = user.order;
       isAdmin = user.isAdmin;
       isVerified = user.isVerified;
+      blocks = user.blocks;
+      idUrl = user.idUrl;
+      idUploadedAt = user.idUploadedAt;
     }
 
     return this;
@@ -209,6 +248,8 @@ class UserModel {
   /// All user data fields must be updated with this method.
   ///
   /// hasPhotoUrl is automatically set to true if photoUrl is not null.
+  ///
+  /// [photoUrl] 값이 빈 문자열이면, 해당 필드는 삭제되고, hasPhotoUrl 도 false 로 저장된다.
   Future<UserModel> update({
     String? name,
     String? displayName,
@@ -222,13 +263,14 @@ class UserModel {
     bool? isVerified,
     dynamic createdAt,
     dynamic order,
+    int? idUploadedAt,
+    String? idUrl,
   }) async {
     final data = {
       if (name != null) 'name': name,
       if (displayName != null) 'displayName': displayName,
       if (photoUrl != null) 'photoUrl': photoUrl,
-      if (profileBackgroundImageUrl != null)
-        'profileBackgroundImageUrl': profileBackgroundImageUrl,
+      if (profileBackgroundImageUrl != null) 'profileBackgroundImageUrl': profileBackgroundImageUrl,
       if (stateMessage != null) 'stateMessage': stateMessage,
       if (photoUrl != null) 'hasPhotoUrl': true,
       if (birthYear != null) 'birthYear': birthYear,
@@ -238,6 +280,8 @@ class UserModel {
       if (isVerified != null) 'isVerified': isVerified,
       if (createdAt != null) 'createdAt': createdAt,
       if (order != null) 'order': order,
+      if (idUploadedAt != null) 'idUploadedAt': idUploadedAt,
+      if (idUrl != null) 'idUrl': idUrl,
     };
     if (data.isEmpty) {
       return this;
@@ -254,8 +298,8 @@ class UserModel {
     // final updated = await UserModel.get(uid);
 
     /// 사진 정보 업데이트
-    if (photoUrl != null) {
-      await _updateUserProfilePhotos();
+    if (displayName != null || photoUrl != null) {
+      await _updateUserProfilePhotos(displayName: displayName, photoUrl: photoUrl);
     }
 
     UserService.instance.onUpdate?.call(this);
@@ -264,15 +308,25 @@ class UserModel {
 
   /// 사진 순서로 목록하기 위한 정보
   ///
-  /// createdAt 보다는 updatedAt 을 사용한다.
-  Future<void> _updateUserProfilePhotos() async {
-    if (photoUrl == null || photoUrl == "") {
+  /// 사진 목록 경로(정보)에는 createdAt 보다는 updatedAt 을 사용한다.
+  ///
+  /// 사진 목록에는 이름과 날짜, 사진 url 이 저장된다. 따라서, 둘 중 하나만 변경되어도 업데이트를 한다.
+  /// 단, 이름을 업데이트 할 때에는 updatedAt 를 생성하지 않는다. 즉, 이미지가 있어야지만, 검색이 되도록 한다.
+  ///
+  Future<void> _updateUserProfilePhotos({
+    String? displayName,
+    String? photoUrl,
+  }) async {
+    if (displayName == null && photoUrl == null) {
+      return;
+    }
+    if (photoUrl == "") {
       await photoRef.remove();
     } else {
-      await photoRef.set({
-        Field.photoUrl: photoUrl,
-        Field.displayName: displayName,
-        Field.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
+      await photoRef.update({
+        if (photoUrl != null) Field.photoUrl: photoUrl,
+        if (displayName != null) Field.displayName: displayName,
+        if (photoUrl != null) Field.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
       });
     }
   }
@@ -291,6 +345,44 @@ class UserModel {
     );
 
     await photoRef.remove();
+  }
+
+  /// 인증 완료 설정
+  ///
+  /// 관리자가 수동으로 신분증을 인증하면, 해당 사용자는 완전히 인증된 것이다.
+  Future<void> setVerified() async {
+    await ref.update({
+      Field.isVerified: true,
+      Field.idUploadedAt: null,
+    });
+  }
+
+  /// 인증 취소
+  ///
+  /// 해당 사용자는 인증 대기 목록에 표시된다.
+  Future<void> setUnverified() async {
+    await ref.update({
+      Field.isVerified: null,
+      Field.idUploadedAt: DateTime.now().millisecondsSinceEpoch,
+    });
+  }
+
+  /// 신분증 업로드
+  Future<UserModel> setVerificationIdUrl(String url) async {
+    return await update(
+      idUploadedAt: DateTime.now().millisecondsSinceEpoch,
+      idUrl: url,
+    );
+  }
+
+  /// 신분증 업로드한 사진 URL 과 idUpdatedAt 을 삭제.
+  ///
+  /// 사용자는 다시 신분증을 업로드 해야 한다.
+  Future<void> deleteVerification() async {
+    await ref.update({
+      Field.idUrl: null,
+      Field.idUploadedAt: null,
+    });
   }
 
   /// Blocks or unblocks

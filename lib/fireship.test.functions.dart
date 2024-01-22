@@ -35,11 +35,14 @@ Future<User> loginOrRegister({
 
   final user = cred.user!;
 
-  final model = UserModel.fromUid(user.uid);
-  model.update(
-    displayName: email.split('@').first,
-    photoUrl: photoUrl,
-  );
+  final userModel = await UserModel.get(user.uid);
+  if (userModel == null) {
+    final model = UserModel.fromUid(user.uid);
+    model.update(
+      displayName: email.split('@').first,
+      photoUrl: photoUrl,
+    );
+  }
 
   return user;
 }

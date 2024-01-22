@@ -74,4 +74,7 @@ class Field {
   static const String profileBackgroundImageUrl = 'profileBackgroundImageUrl';
 
   static const String blocks = 'blocks';
+
+  static const String idUploadedAt = 'idUploadedAt';
+  static const String idUrl = 'idUrl';
 }

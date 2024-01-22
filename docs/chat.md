@@ -79,9 +79,9 @@ To update a chat room, call `ChatService.instance.showChatRoomSettings(roomId: .
 
 When updating a chat room, you can optionally specify authenticated members and gender. If the `gender` has a value of `M` or `F`, only members of that gender can access (enter) the room. For `verified`, regardless of gender, if the user is verified, they can access the room. Note that authenticated members and gender refer to user information.
 
-### Sending Chat Room Messages
+### Sending Chat Messages
 
-To send Chat message into a room, `ChatMessageInputBox()` can be used as Input box.
+To send a chat message into a room (or to a user), `ChatMessageInputBox()` can be used as Input box. You can copy this widget and customize by yourself.
 
 ```dart
 // the ChatRoomModel is required. Get it.
@@ -95,7 +95,7 @@ ChatMessageInputBox(
 ),
 ```
 
-However, for more customization, here is the actual code to send a chat message. Edit these as needed.
+You can also send a chat message to a user or to a room programatically (without entering a chat room screen) like below.
 
 ```dart
 // the ChatRoomModel is required. Get it.

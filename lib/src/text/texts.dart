@@ -6,6 +6,7 @@ class T {
   static const String no = 'No';
   static const String ok = 'OK';
   static const String cancel = 'Cancel';
+  static const String error = 'Error';
 
   /// Chat
   ///
@@ -23,8 +24,7 @@ class T {
   static const String blockConfirmMessage =
       'Do you want to block this user?\nYou will not be able to contents of this user.';
   static const String unblockConfirmTitle = 'Unblock this user?';
-  static const String unblockConfirmMessage =
-      'You will be able to contents of this user.';
+  static const String unblockConfirmMessage = 'You will be able to contents of this user.';
   static const String notVerifiedMessage = 'You have not verified yourself.';
 
   /// Forum Post Comment
@@ -33,8 +33,7 @@ class T {
       'Are you sure you want to delete post?\nYou will not be able to recover this post.';
 
   static const String deleteCommentConfirmTitle = 'Delete this comment?';
-  static const String deleteCommentConfirmMessage =
-      'Are you sure you want to delete comment?';
+  static const String deleteCommentConfirmMessage = 'Are you sure you want to delete comment?';
 
   /// Block
   static const String blocked = 'Blocked';
@@ -45,7 +44,6 @@ class T {
 
   /// Report
   static const String reportInputTitle = 'Report';
-  static const String reportInputMessage =
-      'Please enter the reason for the report.';
+  static const String reportInputMessage = 'Please enter the reason for the report.';
   static const String reportInputHint = 'Reason';
 }
