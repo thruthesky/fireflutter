@@ -40,11 +40,11 @@ describe("Indexing Users (typesense/user-indexing.spec.ts)", () => {
         // 1. set user uid in RTDB
         const userUid = randomString();
         const userData = {
-            id: userUid,
-            uid: userUid,
+            // do not add "id" here
+            // do not add "uid" here
+            // do not add "type" here
             displayName: "name-b",
             createdAt: 123123,
-            type: "user",
         } as TypesenseDoc;
         await admin.database().ref("users/" + userUid).set(userData);
 
@@ -66,11 +66,11 @@ describe("Indexing Users (typesense/user-indexing.spec.ts)", () => {
             // 1. create new user in RTDB
             const userUid = randomString();
             const userData = {
-                id: userUid,
-                uid: userUid,
+                // do not add "id" here
+                // do not add "uid" here
+                // do not add "type" here
                 displayName: "name-b",
                 createdAt: 123123,
-                type: "user",
             } as TypesenseDoc;
             await admin.database().ref("users/" + userUid).set(userData);
             // console.log("Expecting insert. user uid: " + userUid);
@@ -80,11 +80,8 @@ describe("Indexing Users (typesense/user-indexing.spec.ts)", () => {
 
             // 3. update the user in RTDB
             const updatedUserData = {
-                id: userUid,
-                uid: userUid,
                 displayName: "updated-name-c",
                 createdAt: 123123,
-                type: "user",
             } as TypesenseDoc;
             await admin.database().ref("users/" + userUid).set(updatedUserData);
             // console.log("Expecting update. user uid: " + userUid);
@@ -122,11 +119,11 @@ describe("Indexing Users (typesense/user-indexing.spec.ts)", () => {
         // 1. Create a new user record in RTDB
         const userUid = randomString();
         const userData = {
-            id: userUid,
-            uid: userUid,
+            // do not add "id" here
+            // do not add "uid" here
+            // do not add "type" here
             displayName: "name-b",
             createdAt: 123123,
-            type: "user",
         } as TypesenseDoc;
         await admin.database().ref("users/" + userUid).set(userData);
         // console.log("Expecting insert. user uid: " + userUid);

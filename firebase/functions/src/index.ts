@@ -54,7 +54,12 @@ export const typesenseUserIndexing = onValueWritten(
     // It comes here when the user document is newly created or updated.
     // Do something when a new user is created/updated.
     // [data] is the user document when it is first created.
-    const data = event.data.after.val();
+    const data = {
+      ...event.data.after.val(),
+      type: "user",
+      uid: event.params.uid,
+      id: event.params.uid,
+    } as TypesenseDoc;
     console.log("Created/Updated User in RTDB: ", data);
     return TypesenseService.upsert(data);
   },
@@ -68,7 +73,12 @@ export const typesensePostCreatedIndexing = onValueCreated(
   "/posts/{category}/{id}",
   (event) => {
     const data = event.data.val();
-    const postData = { ...data, id: event.params.id, category: event.params.category } as TypesenseDoc;
+    const postData = {
+      ...data,
+      id: event.params.id,
+      category: event.params.category,
+      type: "post",
+    } as TypesenseDoc;
     console.log("Created Post in RTDB: ", postData);
     // There might be a possibility that the document is already at the Typesense
     // Upsert I think is okay. (compare to Create)
@@ -91,13 +101,19 @@ export const typesensePostUpdateTitleIndexing = onValueUpdated(
 
 /**
  * Indexing for post update for content
+ *
+ * TODO need to review this scenario:
+ * There can be an instance, upon creation of post,
+ * we only have title and content without urls in RTDB.
+ * If that happens, then suddenly, user attached a url,
+ * It will be considered as value created for urls and
+ * we don't have the update for that yet.
  */
 export const typesensePostUpdateContentIndexing = onValueUpdated(
   "/posts/{category}/{id}/content",
   (event) => {
     const afterValue = event.data.after.val();
     console.log("A post's `content` is updated in RTDB", event.params, afterValue);
-    // TODO review what will happen if document doesn't exist. Will it still continue?
     return TypesenseService.update(event.params.id, { content: afterValue });
   },
 );
@@ -108,10 +124,14 @@ export const typesensePostUpdateContentIndexing = onValueUpdated(
 export const typesensePostUpdateUrlsIndexing = onValueUpdated(
   "/posts/{category}/{id}/urls",
   (event) => {
-    const afterValue = event.data.after.val();
+    // after value will never be null because this is onValueUpdated
+    // if it's deleted, onValueDeleted is called instead.
+    // there can also be a case when urls becomes empty []
+    const afterValue = event.data.after.val() as Array<string>;
+    // const firstUrl = afterValue?.[0];
     console.log("A post's `urls` is updated in RTDB", event.params, afterValue);
-    // TODO review what will happen if document doesn't exist. Will it still continue?
-    return TypesenseService.update(event.params.id, { urls: afterValue });
+    // TODO
+    // return TypesenseService.update(event.params.id, { url: afterValue });
   },
 );
 
@@ -127,7 +147,9 @@ export const typesensePostUpdateDeleteIndexing = onValueWritten(
       return TypesenseService.delete(event.params.id);
     } else {
       console.log("A post's `deleted` is updated in RTDB: ", event.params, data);
-      return TypesenseService.update(event.params.id, { deleted: data });
+      // deleted in typesense will have no meaning anyway. (Will remove the field from the collection)
+      // return TypesenseService.update(event.params.id, { deleted: data });
+      return;
     }
   },
 );
@@ -140,7 +162,7 @@ export const typesensePostUpdateDeleteIndexing = onValueWritten(
  * on our system. However, in case admins deleted the record, it
  * should reflect properly in Typesense with less effort.
  *
- * Check if we need this
+ * TODO Check if we need this
  */
 export const typesensePostDeleteIndexing = onValueDeleted(
   "/posts/{category}/{id}",
@@ -164,7 +186,14 @@ export const typesenseCommentIndexing = onValueWritten(
       // Logic will also go here if the RTDB Doc is updated and deleted = true
       // Do something here for deleted Comments
       const data = event.data.before.val() as TypesenseDoc;
-      const postData = { ...data, id: event.params.id, category: event.params.category, postId: event.params.postId } as TypesenseDoc;
+      const postData = {
+        ...data,
+        id: event.params.id,
+        type: "comment",
+        category: event.params.category,
+        postId: event.params.postId,
+        url: data.urls?.[0],
+      } as TypesenseDoc;
       console.log("Deleted Comment in RTDB: ", postData);
       return TypesenseService.delete(event.params.id);
     }
@@ -173,7 +202,14 @@ export const typesenseCommentIndexing = onValueWritten(
     // Do something when a new user is created.
     // [data] is the user document when it is first created.
     // const data = event.data.after.val() as TypesenseDoc;
-    const postData = { ...data, id: event.params.id, category: event.params.category, postId: event.params.postId } as TypesenseDoc;
+    const postData = {
+      ...data,
+      id: event.params.id,
+      type: "comment",
+      category: event.params.category,
+      postId: event.params.postId,
+      url: data.urls?.[0],
+    } as TypesenseDoc;
     console.log("Created/Updated Comment in RTDB: ", postData);
     return TypesenseService.upsert(postData);
   },
