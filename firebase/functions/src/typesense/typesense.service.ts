@@ -12,7 +12,7 @@ export class TypesenseService {
    * Test Search
    * TODO need customizable collection
    */
-  static collection = "testSearch";
+  static collection = "momcafeSearch";
 
   /**
    *
