@@ -121,7 +121,7 @@ export const typesensePostUpdateContentIndexing = onValueUpdated(
 /**
  * Indexing for post update for urls
  */
-export const typesensePostUpdateUrlsIndexing = onValueUpdated(
+export const typesensePostUpdateUrlsIndexing = onValueUpdated( // onValueWritten
   "/posts/{category}/{id}/urls",
   (event) => {
     // after value will never be null because this is onValueUpdated
