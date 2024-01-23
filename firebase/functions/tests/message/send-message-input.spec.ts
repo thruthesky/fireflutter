@@ -1,6 +1,6 @@
 import * as admin from "firebase-admin";
-import {MessagingService} from "../../src/messaging/messaging.service";
-import {describe, it} from "mocha";
+import { MessagingService } from "../../src/messaging/messaging.service";
+import { describe, it } from "mocha";
 import assert = require("assert");
 
 if (admin.apps.length === 0) {
@@ -16,11 +16,11 @@ describe("Send message", () => {
     try {
       const res = await MessagingService.sendNotificationToTokens(
         {
-          tokens:[
+          tokens: [
             "fVWDxKs1kEzxhtV9ElWh-5:APA91bE_rN_OBQF3KwAdqd6Ves18AnSrCovj3UQyoLHvRwp0--1BRyo9af8EDEWXEuzBneknEFFuWZ7Lq2VS-_MBRY9vbRrdXHEIAOtQ0GEkJgnaJqPYt7TQnXtci3s0hxn34MBOhwSK",
             "",
             "This-is-invalid-token",
-            0 as any
+            0 as any,
           ],
           title: "Test Title",
           body: "Test Body",
@@ -37,7 +37,7 @@ describe("Send message", () => {
   it("Check if Empty tokens", async () => {
     try {
       const res = await MessagingService.sendNotificationToTokens(
-        {tokens: [], title: "hello", body: "hello"}
+        { tokens: [], title: "hello", body: "hello" }
       );
       console.log("res", res);
     } catch (e) {
@@ -50,12 +50,12 @@ describe("Send message", () => {
   it("Check Empty title", async () => {
     try {
       const res = await MessagingService.sendNotificationToTokens(
-        {tokens: [
+        { tokens: [
           "fVWDxKs1kEzxhtV9ElWh-5:APA91bE_rN_OBQF3KwAdqd6Ves18AnSrCovj3UQyoLHvRwp0--1BRyo9af8EDEWXEuzBneknEFFuWZ7Lq2VS-_MBRY9vbRrdXHEIAOtQ0GEkJgnaJqPYt7TQnXtci3s0hxn34MBOhwSK",
           "",
           // TEST invalid token
           "This-is-invalid-token"],
-        title: "", body: "hello"}
+        title: "", body: "hello" }
       ); res["status"] = "passed";
       console.log("res", res);
     } catch (e) {
@@ -68,11 +68,11 @@ describe("Send message", () => {
   it("Check Empty Body", async ()=>{
     try {
       const res = await MessagingService.sendNotificationToTokens(
-        {tokens: [
+        { tokens: [
           "fVWDxKs1kEzxhtV9ElWh-5:APA91bE_rN_OBQF3KwAdqd6Ves18AnSrCovj3UQyoLHvRwp0--1BRyo9af8EDEWXEuzBneknEFFuWZ7Lq2VS-_MBRY9vbRrdXHEIAOtQ0GEkJgnaJqPYt7TQnXtci3s0hxn34MBOhwSK",
           "",
           // TEST invalid token
-          "This-is-invalid-token"], title: "hello", body: ""}
+          "This-is-invalid-token"], title: "hello", body: "" }
       );
       res["status"] = "passed";
       console.log("res", res);
