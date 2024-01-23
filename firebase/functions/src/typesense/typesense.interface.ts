@@ -15,9 +15,9 @@ export interface TypesenseDoc {
     title?: string;
     content?: string;
     category?: string;
-    noOfLikes?: number;
+    // noOfLikes?: number;
     urls?: Array<string>;
-    noOfCommments?: number;
+    // noOfCommments?: number;
     deleted?: boolean;
 
     // Comment

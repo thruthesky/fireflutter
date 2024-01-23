@@ -46,6 +46,20 @@ export class TypesenseService {
   }
 
   /**
+   * Updates the Document in the Typesense partially.
+   *
+   * You can send a partial document containing
+   * only the fields that are to be updated.
+   * Reference: https://typesense.org/docs/0.24.0/api/documents.html#update-a-document
+   *
+   * NOTE!: Please only include fields to update.
+   */
+  static async update(id: string, doc: TypesenseDoc) {
+    const result = await this.client.collections(this.collection).documents(id).update(doc);
+    return result;
+  }
+
+  /**
    * Search User
    * @param searchText
    */

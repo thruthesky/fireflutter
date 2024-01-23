@@ -30,8 +30,6 @@ describe("Indexing Posts (typesense/post-indexing.spec.ts)", () => {
                 uid: randomString(),
                 title: "title-post",
                 content: "content-post",
-                noOfLikes: 1,
-                noOfCommments: 2,
                 deleted: false,
                 createdAt: 12345,
             } as TypesenseDoc;
@@ -52,8 +50,6 @@ describe("Indexing Posts (typesense/post-indexing.spec.ts)", () => {
             title: "title-post",
             content: "content-post",
             // do not add "category" here
-            noOfLikes: 1,
-            noOfCommments: 2,
             deleted: false,
             createdAt: 12345,
         } as TypesenseDoc;
@@ -63,7 +59,6 @@ describe("Indexing Posts (typesense/post-indexing.spec.ts)", () => {
         await setTimeout(5000);
 
         // 3. search for the document in Typesense
-        // const searchResult = await TypesenseService.searchUser({ filterBy: "id:=" + userUid });
         const retrieveResult = await TypesenseService.retrieve(id) as TypesenseDoc;
         if (retrieveResult.id === id) {
             // means doc exist in Typesense
@@ -74,7 +69,7 @@ describe("Indexing Posts (typesense/post-indexing.spec.ts)", () => {
     });
     it("Reindex an exisiting post upon edit in RTDB", async () => {
         try {
-            // 1. create new user in RTDB
+            // 1. create new post in RTDB
             const id = randomString();
             const user = generateUser();
             const postData = {
@@ -118,7 +113,6 @@ describe("Indexing Posts (typesense/post-indexing.spec.ts)", () => {
             // 6. check if the doc is the updated info
             if (retrieveResult.id === id) {
                 // means user exist in Typesense
-                // const resultDoc = searchResult.hits[0].document as TypesenseDoc;
                 if (retrieveResult.title === updatedPostData.title && retrieveResult.content === updatedPostData.content) {
                     assert.ok(true);
                 } else {
@@ -132,7 +126,72 @@ describe("Indexing Posts (typesense/post-indexing.spec.ts)", () => {
             assert.ok(false, "it should succeed. Something went wrong. " + message);
         }
     });
-    it("Remove document in Typesense when it was deleted in RTDB", async () => {
+
+    // 1. Update only title,
+    // title should be updated,
+    // content should not be affected,
+    // createdAt should not be affected,
+    // uid should not be affected,
+    // deleted should not be affected
+    it("Update only title and only title should be affected", async () => {
+        // 1. Create a post
+        const id = randomString();
+        const user = generateUser();
+        const postData = {
+            // do not add "id" here
+            type: "post",
+            uid: user.uid,
+            title: "title-post",
+            content: "content-post",
+            // do not add "category" here
+            noOfLikes: 1,
+            noOfCommments: 2,
+            deleted: false,
+            createdAt: 12345,
+        } as TypesenseDoc;
+        await admin.database().ref("posts/" + category + "/" + id).set(postData);
+
+        // 2. Wait for 5 seconds
+        await setTimeout(10000);
+
+        // 3. Update title
+        await admin.database().ref("posts/" + category + "/" + id + "/title").set("updated title");
+
+        // 4. Wait for 5 seconds
+        await setTimeout(10000);
+
+        // 5. Retrieve values
+
+        // 6. Check the following in Typesense:
+        //    - title should be updated,
+        //    - content should not be affected,
+        //    - createdAt should not be affected,
+        //    - uid should not be affected,
+        //    - deleted should not be affected,
+        //    Otherwise, the test failed.
+    },);
+
+    // 2. Update only content,
+    // content should be updated,
+    // title should not be affected,
+    // createdAt should not be affected,
+    // uid should not be affected,
+    // deleted should not be affected,
+    // 3. Update only deleted into false,
+    // deleted should be false,
+    // title should not be updated,
+    // content should not be affected,
+    // createdAt should not be affected,
+    // uid should not be affected,
+    // 4. Set title as "", content as "", deleted as true
+    // it should properly be deleted in typesense without problems.
+    // do this multiple times.
+    // 5. Update both title and content,
+    // should not update other than title and content,
+    // both updates should be corrrect.
+
+
+    it("Remove document in Typesense when it was hard deleted in RTDB", async () => {
         // 1. Create a new post record in RTDB
         const id = randomString();
         const user = generateUser();
@@ -156,8 +215,8 @@ describe("Indexing Posts (typesense/post-indexing.spec.ts)", () => {
         // 3. Delete the record in RTDB
         await admin.database().ref("posts/" + category + "/" + id).set(null);
 
-        // 4. Wait for 5 seconds
-        await setTimeout(5000);
+        // 4. Wait for 10 seconds
+        await setTimeout(10000);
 
         // 5. Check that record should not exist in Typesense
         const searchResult = await TypesenseService.searchPost({ filterBy: "id:=" + id });
