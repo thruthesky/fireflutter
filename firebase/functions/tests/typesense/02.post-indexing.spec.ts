@@ -18,7 +18,7 @@ const category = "category";
 /**
  * This test is not reliable because the tokens may be invalid after a while.
  */
-describe("Indexing Posts (typesense/post-indexing.spec.ts)", () => {
+describe("Indexing Posts (typesense/02.post-indexing.spec.ts)", () => {
     it("Index a post document", async () => {
         // 1. create a database document for the new post.
         // 2. call the index method.

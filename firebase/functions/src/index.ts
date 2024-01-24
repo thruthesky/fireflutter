@@ -67,78 +67,142 @@ export const typesenseUserIndexing = onValueWritten(
 
 
 /**
- * Indexing for post created
+ * Indexing after creating post's uid
  */
-export const typesensePostCreatedIndexing = onValueCreated(
-  "/posts/{category}/{id}",
+export const typesensePostCreatedUidIndexing = onValueCreated(
+  "/posts/{category}/{id}/uid",
   (event) => {
-    const data = event.data.val();
+    const uid = event.data.val();
     const postData = {
-      ...data,
+      uid: uid,
       id: event.params.id,
       category: event.params.category,
       type: "post",
     } as TypesenseDoc;
-    console.log("Created Post in RTDB: ", postData);
-    // There might be a possibility that the document is already at the Typesense
-    // Upsert I think is okay. (compare to Create)
-    return TypesenseService.upsert(postData);
+    console.log("Created Post in RTDB (triggered by uid creation): ", postData);
+    return TypesenseService.emplace(postData);
   },
 );
 
 /**
- * Indexing for post update for title
+* Indexing after creating post's createdAt
+*/
+export const typesensePostCreatedCreatedAtIndexing = onValueCreated(
+ "/posts/{category}/{id}/createdAt",
+ (event) => {
+  const createdAt = event.data.val();
+    const postData = {
+      createdAt: createdAt,
+      id: event.params.id,
+      category: event.params.category,
+      type: "post",
+    } as TypesenseDoc;
+  console.log("Created Post in RTDB (triggered by createdAt creation): ", postData);
+  return TypesenseService.emplace(postData);
+ },
+);
+
+
+/**
+ * Indexing for post write for title
  */
-export const typesensePostUpdateTitleIndexing = onValueUpdated(
+export const typesensePostWriteTitleIndexing = onValueWritten(
   "/posts/{category}/{id}/title",
   (event) => {
     const afterValue = event.data.after.val();
-    console.log("A post's `title` is updated in RTDB", event.params, afterValue);
-    // TODO review what will happen if document doesn't exist. Will it still continue?
-    return TypesenseService.update(event.params.id, { title: afterValue });
+    const id = event.params.id;
+    if (!event.data.after.exists() || event.data.before.exists()) {
+      // `!event.data.after.exists()` means, title is deleted
+      // `event.data.before.exists()` means, title already existed, it's being updated
+      // using update instead of emplace so in case
+      // that typesensePostUpdateDeleteIndexing
+      // or typesensePostDeleteIndexing already
+      // handled it, it will fail and not create the doc
+      console.log("A post's `title` is updated/deleted in RTDB", event.params, afterValue);
+      return TypesenseService.update(id, { title: afterValue });
+    }
+    // if it comes here, it means it is just created
+    const postData = {
+      title: afterValue,
+      id: id,
+      type: "post",
+    } as TypesenseDoc;
+    console.log("A post's `title` is created in RTDB", event.params, afterValue);
+    return TypesenseService.emplace(postData);
   },
 );
 
 /**
- * Indexing for post update for content
- *
- * TODO need to review this scenario:
- * There can be an instance, upon creation of post,
- * we only have title and content without urls in RTDB.
- * If that happens, then suddenly, user attached a url,
- * It will be considered as value created for urls and
- * we don't have the update for that yet.
+ * Indexing for post write for content
  */
-export const typesensePostUpdateContentIndexing = onValueUpdated(
+export const typesensePostWriteContentIndexing = onValueWritten(
   "/posts/{category}/{id}/content",
   (event) => {
     const afterValue = event.data.after.val();
-    console.log("A post's `content` is updated in RTDB", event.params, afterValue);
-    return TypesenseService.update(event.params.id, { content: afterValue });
+    const id = event.params.id;
+    if (!event.data.after.exists() || event.data.before.exists()) {
+      // `!event.data.after.exists()` means, title is deleted
+      // `event.data.before.exists()` means, title already existed, it's being updated
+      // using update instead of emplace so in case
+      // that typesensePostUpdateDeleteIndexing
+      // or typesensePostDeleteIndexing already
+      // handled it, it will fail and not create the doc
+      console.log("A post's `content` is updated/deleted in RTDB", event.params, afterValue);
+      return TypesenseService.update(id, { content: afterValue });
+    }
+    // if it comes here, it means it is just created
+    const postData = {
+      content: afterValue,
+      id: id,
+      type: "post",
+    } as TypesenseDoc;
+    console.log("A post's `content` is created in RTDB", event.params, afterValue);
+    return TypesenseService.emplace(postData);
   },
 );
 
+
 /**
- * Indexing for post update for urls
+ * Indexing for post write for urls
+ *
+ * **NOTE!**: We are only saving the first url
  */
-export const typesensePostUpdateUrlsIndexing = onValueUpdated( // onValueWritten
+export const typesensePostWriteUrlsIndexing = onValueWritten(
   "/posts/{category}/{id}/urls",
   (event) => {
     // after value will never be null because this is onValueUpdated
     // if it's deleted, onValueDeleted is called instead.
     // there can also be a case when urls becomes empty []
-    const afterValue = event.data.after.val() as Array<string>;
-    // const firstUrl = afterValue?.[0];
-    console.log("A post's `urls` is updated in RTDB", event.params, afterValue);
-    // TODO
-    // return TypesenseService.update(event.params.id, { url: afterValue });
+    const afterValue = event.data.after.val();
+    const id = event.params.id;
+    let url: string | null = null;
+    if ( Array.isArray(afterValue) && afterValue.length > 0) {
+      url = afterValue[0];
+    }
+    if (!event.data.after.exists() || event.data.before.exists()) {
+      // `!event.data.after.exists()` means, title is deleted
+      // `event.data.before.exists()` means, title already existed, it's being updated
+      // using update instead of emplace so in case
+      // that typesensePostUpdateDeleteIndexing
+      // or typesensePostDeleteIndexing already
+      // handled it, it will fail and not create the doc
+      console.log("A post's `urls` is updated/deleted in RTDB", event.params, url);
+      return TypesenseService.update(id, { url: url });
+    }
+    const postData = {
+      url: url,
+      id: event.params.id,
+      type: "post",
+    } as TypesenseDoc;
+    console.log("A post's `urls` is created in RTDB", event.params, afterValue);
+    return TypesenseService.emplace(postData);
   },
 );
 
 /**
- * Indexing for post update for deleted
+ * Indexing for post write for deleted
  */
-export const typesensePostUpdateDeleteIndexing = onValueWritten(
+export const typesensePostWriteDeleteIndexing = onValueWritten(
   "/posts/{category}/{id}/deleted",
   (event) => {
     const data = event.data.after.val() as boolean;
@@ -147,8 +211,7 @@ export const typesensePostUpdateDeleteIndexing = onValueWritten(
       return TypesenseService.delete(event.params.id);
     } else {
       console.log("A post's `deleted` is updated in RTDB: ", event.params, data);
-      // deleted in typesense will have no meaning anyway. (Will remove the field from the collection)
-      // return TypesenseService.update(event.params.id, { deleted: data });
+      // deleted in typesense will have no meaning anyway. No need to update Typesense
       return;
     }
   },
@@ -162,7 +225,7 @@ export const typesensePostUpdateDeleteIndexing = onValueWritten(
  * on our system. However, in case admins deleted the record, it
  * should reflect properly in Typesense with less effort.
  *
- * TODO Check if we need this
+ * Check if we need this. Please confirm
  */
 export const typesensePostDeleteIndexing = onValueDeleted(
   "/posts/{category}/{id}",
@@ -179,7 +242,6 @@ export const typesensePostDeleteIndexing = onValueDeleted(
 export const typesenseCommentIndexing = onValueWritten(
   "/posts/{category}/{postId}/comments/{id}",
   (event) => {
-    console.log("/posts/{$category}/{$postId}/comments/{$id} - event.params", event.params);
     const data = event.data.after.val() as TypesenseDoc;
     if (!event.data.after.exists() || (event.data.before.exists() && data.deleted == true)) {
       // Supposedly !event.data.after.exists() should not happen naturally, unless admins deleted the actual record directly to RTDB.

@@ -17,7 +17,7 @@ const category = "category";
 /**
  * This test is not reliable because the tokens may be invalid after a while.
  */
-describe("Indexing Comments (typesense/comment-indexing.spec.ts)", () => {
+describe("Indexing Comments (03.typesense/comment-indexing.spec.ts)", () => {
     it("Index a comment document", async () => {
         // 1. create a database document for the new post.
         // 2. call the index method.

@@ -12,12 +12,12 @@ export interface TypesenseDoc {
     isVerified?: boolean;
 
     // Post
-    title?: string;
+    title?: string | null;
     content?: string;
     category?: string;
     // noOfLikes?: number;
     urls?: Array<string>;
-    url?: string; // used only for typesense
+    url?: string | null; // used only for typesense
     // noOfCommments?: number;
     deleted?: boolean;
 

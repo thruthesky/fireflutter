@@ -16,7 +16,7 @@ if (admin.apps.length === 0) {
 /**
  * This test is not reliable because the tokens may be invalid after a while.
  */
-describe("Indexing Users (typesense/user-indexing.spec.ts)", () => {
+describe("Indexing Users (typesense/01.user-indexing.spec.ts)", () => {
     it("Index a user document (TypesenseService.upsert test)", async () => {
         // 1. create a database document for the new user.
         // 2. call the index method.
