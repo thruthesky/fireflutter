@@ -8,7 +8,6 @@ class PostModel {
     required this.id,
     required this.title,
     required this.content,
-    required this.category,
     required this.uid,
     required this.createdAt,
     required this.order,
@@ -24,7 +23,6 @@ class PostModel {
   final String id;
   String title;
   String content;
-  final String category;
   final String uid;
   final DateTime createdAt;
   final int order;
@@ -40,6 +38,9 @@ class PostModel {
   int noOfComments;
 
   bool deleted;
+
+  /// Get the category of the post
+  String get category => ref.parent!.key!;
 
   factory PostModel.fromSnapshot(DataSnapshot snapshot) => PostModel.fromJson(
         snapshot.value as Map<dynamic, dynamic>,
@@ -64,7 +65,6 @@ class PostModel {
       ref: Ref.post(json['category'], id),
       title: json['title'] ?? '',
       content: json['content'] ?? '',
-      category: json['category'],
       uid: json['uid'],
       createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
       order: json[Field.order] ?? 0,
@@ -146,7 +146,6 @@ class PostModel {
       ref: ref,
       title: '',
       content: '',
-      category: category,
       uid: myUid!,
       createdAt: DateTime.now(),
       order: DateTime.now().millisecondsSinceEpoch * -1,
@@ -237,7 +236,6 @@ class PostModel {
   }) async {
     final data = {
       'uid': myUid,
-      Field.category: category,
       'title': title,
       'content': content,
       Field.urls: urls,

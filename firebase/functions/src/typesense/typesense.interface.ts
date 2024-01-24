@@ -27,3 +27,35 @@ export interface TypesenseDoc {
 
     createdAt?: number;
 }
+
+export interface TypesensePostCreate {
+    category: string;
+    content?: string;
+    createdAt: number;
+    deleted?: boolean;
+    id: string;
+    title?: string;
+    type: "post";
+    uid: string;
+    url?: string | null;
+}
+
+export interface TypesensePostUpdate {
+    content?: string;
+    title?: string;
+    url?: string | null;
+}
+
+export interface PostCreateEvent {
+    uid: string;
+    title?: string;
+    content?: string;
+    urls?: Array<string>;
+    createdAt: number;
+}
+export interface PostUpdateEvent {
+    title?: string;
+    content?: string;
+    urls?: Array<string>;
+    deleted?: boolean;
+}

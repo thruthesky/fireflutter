@@ -121,3 +121,17 @@ FirebaseDatabaseListView(
 ```
 
 Replace the `PostListTile` widget as needed (like customization).
+
+
+
+## Post Creation Logic
+
+- Post will be creatd with the following data.
+  - uid (required)
+  - title (optional)
+  - content (optinal)
+  - urls (optional)
+  - createdAt (required)
+  - order (required)
+
+- Right after creation of the post, it will update the post with new `order`. So, if you are working on cloud functions with event trigger, don't be supprised that it may cause multiple write events.
