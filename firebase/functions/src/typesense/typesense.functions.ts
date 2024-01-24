@@ -46,7 +46,7 @@ export const typesenseCommentIndexing = onValueWritten(
             // Logic will also go here if the RTDB Doc is updated and deleted = true
             // Do something here for deleted Comments
             const data = event.data.before.val() as TypesenseDoc;
-            const postData = {
+            const commentData = {
                 ...data,
                 id: event.params.id,
                 type: "comment",
@@ -54,7 +54,7 @@ export const typesenseCommentIndexing = onValueWritten(
                 postId: event.params.postId,
                 url: data.urls?.[0],
             } as TypesenseDoc;
-            console.log("Deleted Comment in RTDB: ", postData);
+            console.log("Deleted Comment in RTDB: ", commentData);
             return TypesenseService.delete(event.params.id);
         }
 
@@ -62,7 +62,7 @@ export const typesenseCommentIndexing = onValueWritten(
         // Do something when a new user is created.
         // [data] is the user document when it is first created.
         // const data = event.data.after.val() as TypesenseDoc;
-        const postData = {
+        const commentData = {
             ...data,
             id: event.params.id,
             type: "comment",
@@ -70,8 +70,8 @@ export const typesenseCommentIndexing = onValueWritten(
             postId: event.params.postId,
             url: data.urls?.[0],
         } as TypesenseDoc;
-        console.log("Created/Updated Comment in RTDB: ", postData);
-        return TypesenseService.upsert(postData);
+        console.log("Created/Updated Comment in RTDB: ", commentData);
+        return TypesenseService.upsert(commentData);
     },
 );
 
@@ -81,7 +81,7 @@ export const typesenseCommentIndexing = onValueWritten(
  *
  * **Attention**: read the cloud_functions.md for the post indexing issue.
  */
-export const typesensePostUpdateIndexing = onValueWritten(
+export const typesensePostIndexing = onValueWritten(
     "/posts/{category}/{id}",
     async (event) => {
         // Attention: delete event must come first (before update).
