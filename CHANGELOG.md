@@ -1,3 +1,7 @@
+## 0.0.6
+
+* Updating features.
+
 ## 0.0.5
 
 * Adding forum feature

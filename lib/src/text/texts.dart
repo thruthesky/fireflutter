@@ -8,6 +8,9 @@ class T {
   static const String cancel = 'Cancel';
   static const String error = 'Error';
 
+  /// Label, texts, buttons,
+  static const String dismiss = 'dismiss';
+
   /// Chat
   ///
   static const String chat = 'Chat';
