@@ -1,4 +1,8 @@
+/**
+ * Configuration
+ */
 export class Config {
-    static typesenseCollection = "momcafeSearch";
+    // TODO update into momcafeSearch
+    static typesenseCollection = "testSearch";
 }
 

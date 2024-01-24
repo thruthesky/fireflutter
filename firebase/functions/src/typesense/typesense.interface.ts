@@ -48,11 +48,10 @@ export interface TypesensePostUpdate {
     createdAt: number;
 }
 
-export interface PostCreateOrUpdateEvent {
+export interface PostCreateEvent {
     title?: string;
     content?: string;
     uid: string;
     urls?: Array<string>;
-    deleted?: boolean;
     createdAt: number;
 }
