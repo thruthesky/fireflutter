@@ -37,7 +37,9 @@ class SearchResult {
   });
 
   factory SearchResult.fromJson(Map<dynamic, dynamic> json) {
-    final hitsMap = json['hits'] == null ? [] : List<Map<String, dynamic>>.from(json['hits']);
+    final hitsMap = json['hits'] == null
+        ? []
+        : List<Map<String, dynamic>>.from(json['hits']);
     final hits = hitsMap.map((e) => SearchResultHit.fromJson((e))).toList();
     return SearchResult(
       facetCounts: json['facet_counts'],

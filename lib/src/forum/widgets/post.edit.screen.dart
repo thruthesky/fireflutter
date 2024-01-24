@@ -70,7 +70,8 @@ class _PostEditScreenState extends State<PostEditScreen> {
                 children: [
                   IconButton(
                       onPressed: () async {
-                        final String? url = await StorageService.instance.upload(
+                        final String? url =
+                            await StorageService.instance.upload(
                           context: context,
                           progress: (p) => setState(() => progress = p),
                           complete: () => setState(() => progress = null),

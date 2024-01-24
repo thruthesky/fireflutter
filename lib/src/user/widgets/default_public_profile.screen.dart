@@ -76,7 +76,8 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                           Icons.settings_outlined,
                           color: Colors.white,
                         ),
-                        onPressed: () => UserService.instance.showProfile(context),
+                        onPressed: () =>
+                            UserService.instance.showProfile(context),
                       ),
                   ],
                 ),
@@ -116,7 +117,8 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                     children: [
                       ElevatedButton(
                         onPressed: () async {
-                          ChatService.instance.showChatRoom(context: context, uid: uid);
+                          ChatService.instance
+                              .showChatRoom(context: context, uid: uid);
                         },
                         child: Text(T.chat.tr),
                       ),
@@ -131,7 +133,8 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                             hintText: T.reportInputHint.tr,
                           );
                           if (re == null || re == '') return;
-                          await ReportService.instance.report(otherUserUid: uid, reason: re);
+                          await ReportService.instance
+                              .report(otherUserUid: uid, reason: re);
                         },
                         child: Text(T.report.tr),
                       ),
@@ -142,9 +145,12 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                           onPressed: () async {
                             final re = await confirm(
                               context: context,
-                              title: v == null ? T.blockConfirmTitle.tr : T.unblockConfirmTitle.tr,
-                              message:
-                                  v == null ? T.blockConfirmMessage.tr : T.unblockConfirmMessage.tr,
+                              title: v == null
+                                  ? T.blockConfirmTitle.tr
+                                  : T.unblockConfirmTitle.tr,
+                              message: v == null
+                                  ? T.blockConfirmMessage.tr
+                                  : T.unblockConfirmMessage.tr,
                             );
                             if (re != true) return;
                             await my?.block(uid);

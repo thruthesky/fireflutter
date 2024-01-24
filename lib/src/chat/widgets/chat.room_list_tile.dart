@@ -71,7 +71,8 @@ class ChatRoomListTile extends StatelessWidget {
         children: [
           Text(
             dateTimeShort(DateTime.fromMillisecondsSinceEpoch(room.updatedAt!)),
-            style: Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 10),
+            style:
+                Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 10),
           ),
           const SizedBox(height: 2),
           ChatNewMessage(room: room),
@@ -100,7 +101,8 @@ class ChatRoomListTile extends StatelessWidget {
           uid: room.otherUserUid!,
           field: Field.stateMessage,
           // 상태 메시지가 있으면 상태 메시지 표시, 아니면 채팅 메시지 표시
-          builder: (v) => subtitleText(context, (v == null || v == '') ? text(room) : v),
+          builder: (v) =>
+              subtitleText(context, (v == null || v == '') ? text(room) : v),
         );
       }
     }
