@@ -1,6 +1,7 @@
 import { getMessaging } from "firebase-admin/messaging";
 import { getDatabase } from "firebase-admin/database";
 import { MessageNotification, MessageRequest } from "./messaging.interface";
+import { chunk } from "../library";
 
 /**
  * MessagingService
@@ -104,33 +105,46 @@ export class MessagingService {
     data?: { [key: string]: string },
   ) {
     const tokens = await this.getTokensOfUsers(uids);
-    return this.sendNotificationToTokens({ tokens, title, body, image, data });
+    console.log("tokens", tokens);
+
   }
 
   /**
    * Returns the list of tokens under '/user-fcm-tokens/{uid}'.
    * 
    * @param uids uids of users
+   * @param chunkSize chunk size - default 500. sendAll() 로 한번에 보낼 수 있는 최대 메세지 수는 500 개 이다.
+   * chunk 가 500 이고, 총 토큰의 수가 501 이면, 첫번째 배열에 500개의 토큰 두번째 배열에 1개의 토큰이 들어간다.
+   * 
+   * @returns Array<Array<string>> - Array of tokens. Each array contains 500 tokens.
+   * 리턴 값은 2차원 배열이다. 각 배열은 최대 [chunkSize] 개의 토큰을 담고 있다.
    */
-  static async getTokensOfUsers(uids: Array<string>): Promise<Array<string>> {
+  static async getTokensOfUsers(uids: Array<string>, chunkSize = 500): Promise<Array<Array<string>>> {
     const promises = [];
-    const tokens: string[] = [];
 
-    if (uids.length == 0) return tokens;
+    if (uids.length == 0) return [];
 
     const db = getDatabase();
+
+    // uid 사용자 별 모든 토큰을 가져온다.
     for (const uid of uids) {
-      promises.push(db.ref(`/user-fcm-tokens/${uid}`).orderByChild('uid').equalTo(uid).get());
+      promises.push(db.ref(`user-fcm-tokens`).orderByChild('uid').equalTo(uid).get());
     }
-    const res = await Promise.allSettled(promises);
+    const settled = await Promise.allSettled(promises);
 
-    console.log(res);
 
-    for (const r of res) {
-      if (r.status == "fulfilled") {
-        tokens.push(...Object.keys(r.value.val()));
+    // 토큰을 배열에 담는다.
+
+    const tokens: Array<string> = [];
+    for (const res of settled) {
+      if (res.status == "fulfilled") {
+        res.value.forEach((token) => {
+          tokens.push(token.key!);
+        });
       }
     }
-    return tokens;
+
+    return chunk(tokens, chunkSize);
+
   }
 }
