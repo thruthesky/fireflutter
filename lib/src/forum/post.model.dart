@@ -112,7 +112,8 @@ class PostModel {
         comment.depth = newComments[index].depth + 1;
 
         /// 형제 찾기
-        final siblingIndex = newComments.lastIndexWhere((e) => e.parentId == comment.parentId);
+        final siblingIndex =
+            newComments.lastIndexWhere((e) => e.parentId == comment.parentId);
         if (siblingIndex == -1) {
           newComments.insert(index + 1, comment);
         } else {
@@ -205,7 +206,8 @@ class PostModel {
   }
 
   /// Get a post by id and category
-  static Future<PostModel?> get({required String category, required String id}) async {
+  static Future<PostModel?> get(
+      {required String category, required String id}) async {
     final snapshot = await Ref.post(category, id).get();
     if (snapshot.exists) {
       return PostModel.fromSnapshot(snapshot);
@@ -261,7 +263,8 @@ class PostModel {
     final data = created.toSummary();
     data[Field.order] = -created.createdAt.millisecondsSinceEpoch;
 
-    await Ref.postSummary(created.category, created.id).set(created.toSummary());
+    await Ref.postSummary(created.category, created.id)
+        .set(created.toSummary());
 
     ForumService.instance.onPostCreate?.call(created);
   }
@@ -292,7 +295,8 @@ class PostModel {
   static _afterUpdate(DatabaseReference ref) async {
     final snapshot = await ref.get();
     final updated = PostModel.fromSnapshot(snapshot);
-    await Ref.postSummary(updated.category, updated.id).set(updated.toSummary());
+    await Ref.postSummary(updated.category, updated.id)
+        .set(updated.toSummary());
 
     ForumService.instance.onPostCreate?.call(updated);
   }

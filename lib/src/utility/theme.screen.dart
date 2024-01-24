@@ -31,7 +31,8 @@ class ThemeScreen extends StatelessWidget {
         nameColor: (context) => Theme.of(context).colorScheme.primaryContainer,
         nameColorCode: 'Theme.of(context).colorScheme.primaryContainer',
         onName: 'onPrimaryContainer',
-        onNameColor: (context) => Theme.of(context).colorScheme.onPrimaryContainer,
+        onNameColor: (context) =>
+            Theme.of(context).colorScheme.onPrimaryContainer,
         onNameColorCode: 'Theme.of(context).colorScheme.primaryContainer'
       ),
       (
@@ -44,10 +45,12 @@ class ThemeScreen extends StatelessWidget {
       ),
       (
         name: 'secondaryContainer',
-        nameColor: (context) => Theme.of(context).colorScheme.secondaryContainer,
+        nameColor: (context) =>
+            Theme.of(context).colorScheme.secondaryContainer,
         nameColorCode: 'Theme.of(context).colorScheme.secondaryContainer',
         onName: 'onSecondaryContainer',
-        onNameColor: (context) => Theme.of(context).colorScheme.onSecondaryContainer,
+        onNameColor: (context) =>
+            Theme.of(context).colorScheme.onSecondaryContainer,
         onNameColorCode: 'Theme.of(context).colorScheme.onSecondaryContainer'
       ),
       (
@@ -63,7 +66,8 @@ class ThemeScreen extends StatelessWidget {
         nameColor: (context) => Theme.of(context).colorScheme.tertiaryContainer,
         nameColorCode: 'Theme.of(context).colorScheme.tertiaryContainer',
         onName: 'onTertiaryContainer',
-        onNameColor: (context) => Theme.of(context).colorScheme.onTertiaryContainer,
+        onNameColor: (context) =>
+            Theme.of(context).colorScheme.onTertiaryContainer,
         onNameColorCode: 'Theme.of(context).colorScheme.onTertiaryContainer'
       ),
       (
@@ -79,7 +83,8 @@ class ThemeScreen extends StatelessWidget {
         nameColor: (context) => Theme.of(context).colorScheme.errorContainer,
         nameColorCode: 'Theme.of(context).colorScheme.errorContainer',
         onName: 'onErrorContainer',
-        onNameColor: (context) => Theme.of(context).colorScheme.onErrorContainer,
+        onNameColor: (context) =>
+            Theme.of(context).colorScheme.onErrorContainer,
         onNameColorCode: 'Theme.of(context).colorScheme.onErrorContainer'
       ),
       (
@@ -103,7 +108,8 @@ class ThemeScreen extends StatelessWidget {
         nameColor: (context) => Theme.of(context).colorScheme.surfaceVariant,
         nameColorCode: 'Theme.of(context).colorScheme.surfaceVariant',
         onName: 'onSurfaceVariant',
-        onNameColor: (context) => Theme.of(context).colorScheme.onSurfaceVariant,
+        onNameColor: (context) =>
+            Theme.of(context).colorScheme.onSurfaceVariant,
         onNameColorCode: 'Theme.of(context).colorScheme.onSurfaceVariant'
       ),
       (
@@ -111,7 +117,8 @@ class ThemeScreen extends StatelessWidget {
         nameColor: (context) => Theme.of(context).colorScheme.inverseSurface,
         nameColorCode: 'Theme.of(context).colorScheme.inverseSurface',
         onName: 'onInverseSurface',
-        onNameColor: (context) => Theme.of(context).colorScheme.onInverseSurface,
+        onNameColor: (context) =>
+            Theme.of(context).colorScheme.onInverseSurface,
         onNameColorCode: 'Theme.of(context).colorScheme.onInverseSurface'
       ),
       (
@@ -173,20 +180,28 @@ class ThemeScreen extends StatelessWidget {
         child: Column(
           children: [
             const Text('Theme Fonts'),
-            Text('Display Large', style: Theme.of(context).textTheme.displayLarge),
-            Text('Display Medium', style: Theme.of(context).textTheme.displayMedium),
-            Text('Display Small', style: Theme.of(context).textTheme.displaySmall),
-            Text('Headline Large', style: Theme.of(context).textTheme.headlineLarge),
-            Text('Headline Medium', style: Theme.of(context).textTheme.headlineMedium),
-            Text('Headline Small', style: Theme.of(context).textTheme.headlineSmall),
+            Text('Display Large',
+                style: Theme.of(context).textTheme.displayLarge),
+            Text('Display Medium',
+                style: Theme.of(context).textTheme.displayMedium),
+            Text('Display Small',
+                style: Theme.of(context).textTheme.displaySmall),
+            Text('Headline Large',
+                style: Theme.of(context).textTheme.headlineLarge),
+            Text('Headline Medium',
+                style: Theme.of(context).textTheme.headlineMedium),
+            Text('Headline Small',
+                style: Theme.of(context).textTheme.headlineSmall),
             Text('Title Large', style: Theme.of(context).textTheme.titleLarge),
-            Text('Title Medium', style: Theme.of(context).textTheme.titleMedium),
+            Text('Title Medium',
+                style: Theme.of(context).textTheme.titleMedium),
             Text('Title Small', style: Theme.of(context).textTheme.titleSmall),
             Text('Body Large', style: Theme.of(context).textTheme.bodyLarge),
             Text('Body Medium', style: Theme.of(context).textTheme.bodyMedium),
             Text('Body Small', style: Theme.of(context).textTheme.bodySmall),
             Text('Label Large', style: Theme.of(context).textTheme.labelLarge),
-            Text('Label Medium', style: Theme.of(context).textTheme.labelMedium),
+            Text('Label Medium',
+                style: Theme.of(context).textTheme.labelMedium),
             Text('Label Small', style: Theme.of(context).textTheme.labelSmall),
             const Divider(
               height: 32,

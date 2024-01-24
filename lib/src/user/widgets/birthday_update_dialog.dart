@@ -75,7 +75,8 @@ class _BirthdayPickerState extends State<BirthdayPickerDialog> {
                         value: birthYear,
                         isExpanded: true,
                         items: [
-                          for (int i = 2020; i >= 1950; i--) birthdayMenuItem(i),
+                          for (int i = 2020; i >= 1950; i--)
+                            birthdayMenuItem(i),
                         ],
                         onChanged: (v) => setState(() => birthYear = v!),
                       ),
@@ -95,7 +96,8 @@ class _BirthdayPickerState extends State<BirthdayPickerDialog> {
                         isExpanded: true,
                         items: [
                           for (int i = 1; i <= 12; i++)
-                            DropdownMenuItem(value: i, child: birthdayMenuItem(i)),
+                            DropdownMenuItem(
+                                value: i, child: birthdayMenuItem(i)),
                         ],
                         onChanged: (v) => setState(() => birthMonth = v!),
                       ),
@@ -114,7 +116,8 @@ class _BirthdayPickerState extends State<BirthdayPickerDialog> {
                         value: birthDay,
                         items: [
                           for (int i = 1; i <= 31; i++)
-                            DropdownMenuItem(value: i, child: birthdayMenuItem(i)),
+                            DropdownMenuItem(
+                                value: i, child: birthdayMenuItem(i)),
                         ],
                         onChanged: (v) => setState(() => birthDay = v!),
                       ),

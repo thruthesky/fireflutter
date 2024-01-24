@@ -70,6 +70,28 @@ Future error({
   );
 }
 
+Future<void> alert({
+  required BuildContext context,
+  required String title,
+  required String message,
+}) async {
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('닫기'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 /// Display a snackbar
 ///
 /// When the body of the snackbar is tapped, [onTap] will be called with a callback that will hide the snackbar.
@@ -135,7 +157,9 @@ ScaffoldFeatureController toast({
                       if (title != null)
                         Text(
                           title,
-                          style: TextStyle(color: foregroundColor, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              color: foregroundColor,
+                              fontWeight: FontWeight.bold),
                         ),
                       Text(message),
                     ],
@@ -150,7 +174,7 @@ ScaffoldFeatureController toast({
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
               },
               child: Text(
-                Code.dismiss.tr,
+                T.dismiss.tr,
                 style: TextStyle(color: foregroundColor),
               ),
             )

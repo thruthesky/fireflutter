@@ -233,11 +233,15 @@ class ChatModel {
     // chat room info
     final data = {
       /// 그룹 채팅방 이름 또는 보내는 사람 이름
-      'name': room.isSingleChat ? UserService.instance.user?.displayName : (room.name ?? ''),
+      'name': room.isSingleChat
+          ? UserService.instance.user?.displayName
+          : (room.name ?? ''),
 
       /// 1:1 채팅에서는 마지막 보낸 사람 사진 (나중에 덮어 쓰여질 수 있음.)
       /// 그룹 채팅에서는 채팅방 아이콘 사진.
-      'photoUrl': room.isSingleChat ? UserService.instance.user?.photoUrl : room.iconUrl,
+      'photoUrl': room.isSingleChat
+          ? UserService.instance.user?.photoUrl
+          : room.iconUrl,
 
       /// 그룹 채팅의 경우, 사용자 수
       'noOfUsers': room.isGroupChat ? room.users?.length : null,
@@ -313,10 +317,12 @@ class ChatModel {
     /// 새 메시지가 있다는 뜻인 -11 을 그냥 -1 로 변경한다.
     if (join != null) {
       if (join.singleChatOrder.toString().contains('-11')) {
-        singleChatOrder = int.parse(join.singleChatOrder.toString().replaceAll('-11', '-1'));
+        singleChatOrder =
+            int.parse(join.singleChatOrder.toString().replaceAll('-11', '-1'));
       }
       if (join.groupChatOrder.toString().contains('-11')) {
-        groupChatOrder = int.parse(join.groupChatOrder.toString().replaceAll('-11', '-1'));
+        groupChatOrder =
+            int.parse(join.groupChatOrder.toString().replaceAll('-11', '-1'));
       }
     }
 
@@ -354,7 +360,8 @@ class ChatModel {
   /// 채팅방으로 접속을 하면, `if (currentMessageOrder == 0 ) return fales` 에 의해서 항상 false 가
   /// 리턴된다. 그래서, 처음 채팅방에 진입을 할 때에는 [snapshot.isFetching] 을 통해서 newMessage 를 초기화
   /// 해야 한다.
-  bool isLoadingNewMessage(String messageRoomId, FirebaseQueryBuilderSnapshot snapshot) {
+  bool isLoadingNewMessage(
+      String messageRoomId, FirebaseQueryBuilderSnapshot snapshot) {
     if (snapshot.docs.isEmpty) return false;
 
     final lastMessage = ChatMessageModel.fromSnapshot(snapshot.docs.first);

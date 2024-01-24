@@ -26,9 +26,6 @@ class Code {
 
   static const String roomId = 'roomId';
 
-  /// Label, texts, buttons,
-  static const String dismiss = 'dismiss';
-
   /// User and Profile
   static const String profileUpdate = 'profileUpdate';
   static const String recentLoginRequiredForResign =

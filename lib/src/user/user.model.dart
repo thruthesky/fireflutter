@@ -50,17 +50,20 @@ class UserModel {
   int idUploadedAt;
 
   /// Returns true if the user is blocked.
-  bool isBlocked(String otherUserUid) => blocks?.contains(otherUserUid) ?? false;
+  bool isBlocked(String otherUserUid) =>
+      blocks?.contains(otherUserUid) ?? false;
 
   /// Alias of isBlocked
   bool hasBlocked(String otherUserUid) => isBlocked(otherUserUid);
 
   bool get notVerified => !isVerified;
 
-  DatabaseReference get ref => FirebaseDatabase.instance.ref('users').child(uid);
+  DatabaseReference get ref =>
+      FirebaseDatabase.instance.ref('users').child(uid);
 
   /// See README.md
-  DatabaseReference get photoRef => FirebaseDatabase.instance.ref('user-profile-photos').child(uid);
+  DatabaseReference get photoRef =>
+      FirebaseDatabase.instance.ref('user-profile-photos').child(uid);
 
   String get birth => '$birthYear-$birthMonth-$birthDay';
 
@@ -131,7 +134,9 @@ class UserModel {
       blocks: json[Field.blocks] == null
           ? null
           : List<String>.from(
-              (json[Field.blocks] as Map<Object?, Object?>).entries.map((x) => x.key),
+              (json[Field.blocks] as Map<Object?, Object?>)
+                  .entries
+                  .map((x) => x.key),
             ),
       idUrl: json[Field.idUrl] ?? '',
       idUploadedAt: json[Field.idUploadedAt] ?? 0,
@@ -156,7 +161,8 @@ class UserModel {
       'order': order,
       'isAdmin': isAdmin,
       'isVerified': isVerified,
-      Field.blocks: blocks == null ? null : List<dynamic>.from(blocks!.map((x) => x)),
+      Field.blocks:
+          blocks == null ? null : List<dynamic>.from(blocks!.map((x) => x)),
       Field.idUrl: idUrl,
       Field.idUploadedAt: idUploadedAt,
     };
@@ -270,7 +276,8 @@ class UserModel {
       if (name != null) 'name': name,
       if (displayName != null) 'displayName': displayName,
       if (photoUrl != null) 'photoUrl': photoUrl,
-      if (profileBackgroundImageUrl != null) 'profileBackgroundImageUrl': profileBackgroundImageUrl,
+      if (profileBackgroundImageUrl != null)
+        'profileBackgroundImageUrl': profileBackgroundImageUrl,
       if (stateMessage != null) 'stateMessage': stateMessage,
       if (photoUrl != null) 'hasPhotoUrl': true,
       if (birthYear != null) 'birthYear': birthYear,
@@ -299,7 +306,8 @@ class UserModel {
 
     /// 사진 정보 업데이트
     if (displayName != null || photoUrl != null) {
-      await _updateUserProfilePhotos(displayName: displayName, photoUrl: photoUrl);
+      await _updateUserProfilePhotos(
+          displayName: displayName, photoUrl: photoUrl);
     }
 
     UserService.instance.onUpdate?.call(this);
@@ -326,7 +334,8 @@ class UserModel {
       await photoRef.update({
         if (photoUrl != null) Field.photoUrl: photoUrl,
         if (displayName != null) Field.displayName: displayName,
-        if (photoUrl != null) Field.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
+        if (photoUrl != null)
+          Field.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
       });
     }
   }

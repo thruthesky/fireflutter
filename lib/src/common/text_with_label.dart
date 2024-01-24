@@ -54,7 +54,8 @@ class TextWithLable extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Icon(Icons.pending,
-                        size: 14, color: Theme.of(context).colorScheme.onPrimary),
+                        size: 14,
+                        color: Theme.of(context).colorScheme.onPrimary),
                   ),
                 ),
               ],
