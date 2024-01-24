@@ -3,10 +3,6 @@ import { onValueWritten } from "firebase-functions/v2/database";
 import { TypesenseService } from "./typesense.service";
 import { PostCreateEvent, PostUpdateEvent, TypesenseDoc, TypesensePostCreate, TypesensePostUpdate } from "./typesense.interface";
 
-
-
-
-
 /**
  * Indexing for users
  * Listens for new messages added to /messages/:pushId/original and creates an
@@ -38,8 +34,6 @@ export const typesenseUserIndexing = onValueWritten(
     },
 );
 
-
-
 /**
  * Indexing for comments
  */
@@ -52,7 +46,7 @@ export const typesenseCommentIndexing = onValueWritten(
             // Logic will also go here if the RTDB Doc is updated and deleted = true
             // Do something here for deleted Comments
             const data = event.data.before.val() as TypesenseDoc;
-            const postData = {
+            const commentData = {
                 ...data,
                 id: event.params.id,
                 type: "comment",
@@ -60,7 +54,7 @@ export const typesenseCommentIndexing = onValueWritten(
                 postId: event.params.postId,
                 url: data.urls?.[0],
             } as TypesenseDoc;
-            console.log("Deleted Comment in RTDB: ", postData);
+            console.log("Deleted Comment in RTDB: ", commentData);
             return TypesenseService.delete(event.params.id);
         }
 
@@ -68,7 +62,7 @@ export const typesenseCommentIndexing = onValueWritten(
         // Do something when a new user is created.
         // [data] is the user document when it is first created.
         // const data = event.data.after.val() as TypesenseDoc;
-        const postData = {
+        const commentData = {
             ...data,
             id: event.params.id,
             type: "comment",
@@ -76,42 +70,37 @@ export const typesenseCommentIndexing = onValueWritten(
             postId: event.params.postId,
             url: data.urls?.[0],
         } as TypesenseDoc;
-        console.log("Created/Updated Comment in RTDB: ", postData);
-        return TypesenseService.upsert(postData);
+        console.log("Created/Updated Comment in RTDB: ", commentData);
+        return TypesenseService.upsert(commentData);
     },
 );
 
 
-
-
-
 /**
  * Indexing for post
- * 
- * Attension: read the cloud_functions.md for the post indexing issue.
+ *
+ * **Attention**: read the cloud_functions.md for the post indexing issue.
  */
-export const typesensePostWriteTitleIndexing = onValueWritten(
+export const typesensePostIndexing = onValueWritten(
     "/posts/{category}/{id}",
     async (event) => {
-
-        // Attension: delete event must come first (before update).
+        // Attention: delete event must come first (before update).
         if (!event.data.after.exists()) {
             // Deleted.
             return await TypesenseService.delete(event.params.id);
         }
-
         if (event.data.before.exists()) {
             // Update
             const data = event.data.after.val() as PostUpdateEvent;
-            const postData: TypesensePostUpdate = {
-                title: data.title ?? '',
-                content: data.content ?? '',
-                url: data.urls?.[0] ?? '',
-            };
             if (data.deleted) {
                 return await TypesenseService.delete(event.params.id);
             }
-            return await TypesenseService.emplace(postData);
+            const postData: TypesensePostUpdate = {
+                title: data.title ?? "",
+                content: data.content ?? "",
+                url: data.urls?.[0] ?? "",
+            };
+            return await TypesenseService.update(event.params.id, postData);
         }
         // Created
         const data = event.data.after.val() as PostCreateEvent;
@@ -125,6 +114,6 @@ export const typesensePostWriteTitleIndexing = onValueWritten(
             url: data.urls?.[0],
             createdAt: data.createdAt,
         };
-        return await TypesenseService.emplace(postData);
+        return await TypesenseService.upsert(postData);
     },
 );

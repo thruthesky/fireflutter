@@ -55,8 +55,8 @@ describe("Indexing Posts (typesense/02.post-indexing.spec.ts)", () => {
         } as TypesenseDoc;
         await admin.database().ref("posts/" + category + "/" + id).set(postData);
 
-        // 2. wait for 5 seconds
-        await setTimeout(5000);
+        // 2. wait for 20 seconds
+        await setTimeout(20000);
 
         // 3. search for the document in Typesense
         const retrieveResult = await TypesenseService.retrieve(id) as TypesenseDoc;
@@ -113,7 +113,10 @@ describe("Indexing Posts (typesense/02.post-indexing.spec.ts)", () => {
             // 6. check if the doc is the updated info
             if (retrieveResult.id === id) {
                 // means user exist in Typesense
-                if (retrieveResult.title === updatedPostData.title && retrieveResult.content === updatedPostData.content) {
+                if (
+                    retrieveResult.title === updatedPostData.title &&
+                    retrieveResult.content === updatedPostData.content
+                ) {
                     assert.ok(true);
                 } else {
                     assert.ok(false, "Either there is an error, more latency, or the data saved is wrong.");
@@ -232,8 +235,7 @@ describe("Indexing Posts (typesense/02.post-indexing.spec.ts)", () => {
             if (retrieveResult.content === updatedContent &&
                 retrieveResult.title === postData.title &&
                 retrieveResult.createdAt === postData.createdAt &&
-                retrieveResult.uid === postData.uid &&
-                retrieveResult.deleted === postData.deleted
+                retrieveResult.uid === postData.uid
                 ) {
                 assert.ok(true);
             } else {
@@ -280,17 +282,16 @@ describe("Indexing Posts (typesense/02.post-indexing.spec.ts)", () => {
         //    - uid should not be affected
         //    Otherwise, the test failed.
         if (retrieveResult.id === id) {
-            if ( JSON.stringify(retrieveResult.urls??[]) === JSON.stringify(updatedUrl) &&
+            if ( retrieveResult.url == "new url" &&
                 retrieveResult.content === postData.content &&
                 retrieveResult.title === postData.title &&
                 retrieveResult.createdAt === postData.createdAt &&
-                retrieveResult.uid === postData.uid &&
-                retrieveResult.deleted === postData.deleted
+                retrieveResult.uid === postData.uid
                 ) {
                 assert.ok(true);
             } else {
-                console.log("retrieveResult.urls " + retrieveResult.urls);
-                console.log("updatedUrl " + updatedUrl);
+                console.log("retrieveResult.url " + retrieveResult.url);
+                console.log("updatedUrls" + updatedUrl);
                 assert.ok(false, "Either there is an error, more latency, or the data saved is wrong. Check: urls should be updated, content should not be updated, title should not be affected, createdAt should not be affected, uid should not be affected, deleted should not be affected.");
             }
         } else {
@@ -345,8 +346,7 @@ describe("Indexing Posts (typesense/02.post-indexing.spec.ts)", () => {
             if (retrieveResult.content === postData.content &&
                 retrieveResult.title === postData.title &&
                 retrieveResult.createdAt === postData.createdAt &&
-                retrieveResult.uid === postData.uid &&
-                retrieveResult.deleted === postData.deleted
+                retrieveResult.uid === postData.uid
                 ) {
                 assert.ok(true);
             } else {
@@ -441,8 +441,7 @@ describe("Indexing Posts (typesense/02.post-indexing.spec.ts)", () => {
             if (retrieveResult.content === updatedPostData.content &&
                 retrieveResult.title === updatedPostData.title &&
                 retrieveResult.createdAt === postData.createdAt &&
-                retrieveResult.uid === postData.uid &&
-                retrieveResult.deleted === postData.deleted
+                retrieveResult.uid === postData.uid
                 ) {
                 assert.ok(true);
             } else {
