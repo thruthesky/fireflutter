@@ -16,7 +16,7 @@ if (admin.apps.length === 0) {
 /**
  * This test is not reliable because the tokens may be invalid after a while.
  */
-describe("Indexing Users (typesense/user-indexing.spec.ts)", () => {
+describe("Indexing Users (typesense/01.user-indexing.spec.ts)", () => {
     it("Index a user document (TypesenseService.upsert test)", async () => {
         // 1. create a database document for the new user.
         // 2. call the index method.
@@ -40,11 +40,11 @@ describe("Indexing Users (typesense/user-indexing.spec.ts)", () => {
         // 1. set user uid in RTDB
         const userUid = randomString();
         const userData = {
-            id: userUid,
-            uid: userUid,
+            // do not add "id" here
+            // do not add "uid" here
+            // do not add "type" here
             displayName: "name-b",
             createdAt: 123123,
-            type: "user",
         } as TypesenseDoc;
         await admin.database().ref("users/" + userUid).set(userData);
 
@@ -66,11 +66,11 @@ describe("Indexing Users (typesense/user-indexing.spec.ts)", () => {
             // 1. create new user in RTDB
             const userUid = randomString();
             const userData = {
-                id: userUid,
-                uid: userUid,
+                // do not add "id" here
+                // do not add "uid" here
+                // do not add "type" here
                 displayName: "name-b",
                 createdAt: 123123,
-                type: "user",
             } as TypesenseDoc;
             await admin.database().ref("users/" + userUid).set(userData);
             // console.log("Expecting insert. user uid: " + userUid);
@@ -80,11 +80,8 @@ describe("Indexing Users (typesense/user-indexing.spec.ts)", () => {
 
             // 3. update the user in RTDB
             const updatedUserData = {
-                id: userUid,
-                uid: userUid,
                 displayName: "updated-name-c",
                 createdAt: 123123,
-                type: "user",
             } as TypesenseDoc;
             await admin.database().ref("users/" + userUid).set(updatedUserData);
             // console.log("Expecting update. user uid: " + userUid);
@@ -122,11 +119,11 @@ describe("Indexing Users (typesense/user-indexing.spec.ts)", () => {
         // 1. Create a new user record in RTDB
         const userUid = randomString();
         const userData = {
-            id: userUid,
-            uid: userUid,
+            // do not add "id" here
+            // do not add "uid" here
+            // do not add "type" here
             displayName: "name-b",
             createdAt: 123123,
-            type: "user",
         } as TypesenseDoc;
         await admin.database().ref("users/" + userUid).set(userData);
         // console.log("Expecting insert. user uid: " + userUid);

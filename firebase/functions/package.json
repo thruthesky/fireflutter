@@ -11,10 +11,10 @@
     "logs": "firebase functions:log",
     "test:send-message": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/send-message.spec.ts",
     "test:send-message-input": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/send-message-input.spec.ts",
-    "test:user-create": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/typesense/user-create.spec.ts",
+    "test:user-index": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/typesense/01.user-indexing.spec.ts --timeout 100000",
     "test:typesense": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/typesense/**.spec.ts --timeout 100000",
-    "test:post-index": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/typesense/post-indexing.spec.ts --timeout 100000",
-    "test:comment-index": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/typesense/comment-indexing.spec.ts --timeout 100000"
+    "test:post-index": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/typesense/02.post-indexing.spec.ts --timeout 100000",
+    "test:comment-index": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/typesense/03.comment-indexing.spec.ts --timeout 100000"
   },
   "engines": {
     "node": "18"

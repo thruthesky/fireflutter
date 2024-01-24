@@ -12,12 +12,13 @@ export interface TypesenseDoc {
     isVerified?: boolean;
 
     // Post
-    title?: string;
+    title?: string | null;
     content?: string;
     category?: string;
-    noOfLikes?: number;
+    // noOfLikes?: number;
     urls?: Array<string>;
-    noOfCommments?: number;
+    url?: string | null; // used only for typesense
+    // noOfCommments?: number;
     deleted?: boolean;
 
     // Comment
