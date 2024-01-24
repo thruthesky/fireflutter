@@ -1,5 +1,5 @@
 
-import { onValueCreated, onValueDeleted, onValueWritten } from "firebase-functions/v2/database";
+import { onValueWritten } from "firebase-functions/v2/database";
 import { TypesenseService } from "./typesense.service";
 import { PostCreateEvent, PostUpdateEvent, TypesenseDoc, TypesensePostCreate, TypesensePostUpdate } from "./typesense.interface";
 
