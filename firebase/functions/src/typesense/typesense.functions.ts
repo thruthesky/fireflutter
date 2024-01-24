@@ -117,3 +117,14 @@ export const typesensePostIndexing = onValueWritten(
         return await TypesenseService.upsert(postData);
     },
 );
+
+
+/**
+ * /posts/{category}/title
+/posts/{category}/content
+/posts/{category}/urls
+/posts/{category}/deleted
+
+onValueCreated()
+onValueDeleted()
+ */
