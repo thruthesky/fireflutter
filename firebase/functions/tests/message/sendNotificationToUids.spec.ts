@@ -39,13 +39,13 @@ describe("sendNotificationToUids 기능 테스트", () => {
 
         // 진짜 토큰을 첫번째 uid 에 1개 추가
         await db.ref(`user-fcm-tokens/${uids[0]}-real-token`).set({
+            'uid': uids[0],
         });
 
         // 토큰 5개 단위, 가져오기
         const chunkSize = 5;
         const tokensChunk = await MessagingService.getTokensOfUsers(uids, chunkSize);
         assert.ok(tokensChunk.length === 3, "No of tokens must be " + Math.ceil(n / chunkSize) + ". result: " + tokensChunk.length);
-
         // 첫번째 chunk 에는 5개의 토큰이 있어야 한다.
         assert.ok(tokensChunk[0].length === chunkSize, "No of tokens must be " + chunkSize + ". result: " + tokensChunk[0].length);
         // 두번째 chunk 에도 5개의 토큰이 있어야 한다.
@@ -54,11 +54,4 @@ describe("sendNotificationToUids 기능 테스트", () => {
         assert.ok(tokensChunk[2].length === 1, "No of tokens must be 1. result: " + tokensChunk[2].length);
     });
 
-
-
-    // it("getTokensOfUsers with wrong uids", async () => {
-    //     const res = await MessagingService.sendNotificationToUids(['wrong-uid-a'], "title", "body");
-    //     assert.ok(Object.keys(res).length == 3, "length of invalid tokens must be [x]. but it is " + Object.keys(res).length);
-    //     assert.ok(res["This-is-invalid-token"] == "messaging/invalid-argument", "invalid token must be [messaging/invalid-argument]. but it is " + res["This-is-invalid-token"]);
-    // });
 });
