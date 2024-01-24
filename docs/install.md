@@ -76,3 +76,8 @@ And set the end point URL to `MessagingService.instance.init(sendPushNotificatio
 ## Admin
 
 - See [Admin Doc](admin.md)
+
+
+## Unit tests
+
+- There are many unit test codes. You can read other document of fireship on how to install and test the unit test codes.
