@@ -1,4 +1,5 @@
 import { getMessaging } from "firebase-admin/messaging";
+import { getDatabase } from "firebase-admin/database";
 import { MessageNotification, MessageRequest } from "./messaging.interface";
 
 /**
@@ -11,6 +12,11 @@ export class MessagingService {
          * Send messages
          *
          * @param {MessageRequest} params - The parameters for sending messages.
+         * params.tokens - The list of tokens to send the message to.
+         * params.title - The title of the message.
+         * params.body - The body of the message.
+         * params.image - The image of the message.
+         * params.data - The extra data of the message.
          *
          *
          * It returns the error results of push notification in a map like
@@ -79,5 +85,52 @@ export class MessagingService {
       responses[tokens[i]] = reason["errorInfo"]["code"];
     }
     return responses;
+  }
+
+  /**
+   * Send message to users
+   * 
+   * 1. This gets the user tokens from '/user-fcm-tokens/{uid}'.
+   * 2. Then it chunks the tokens into 500 tokens per chunk.
+   * 3. Then delete the tokens that are not valid.
+   * 
+   * @param {Array<string>} uids - The list of user uids to send the message to.
+   */
+  static async sendNotificationToUids(
+    uids: Array<string>,
+    title: string,
+    body: string,
+    image?: string,
+    data?: { [key: string]: string },
+  ) {
+    const tokens = await this.getTokensOfUsers(uids);
+    return this.sendNotificationToTokens({ tokens, title, body, image, data });
+  }
+
+  /**
+   * Returns the list of tokens under '/user-fcm-tokens/{uid}'.
+   * 
+   * @param uids uids of users
+   */
+  static async getTokensOfUsers(uids: Array<string>): Promise<Array<string>> {
+    const promises = [];
+    const tokens: string[] = [];
+
+    if (uids.length == 0) return tokens;
+
+    const db = getDatabase();
+    for (const uid of uids) {
+      promises.push(db.ref(`/user-fcm-tokens/${uid}`).orderByChild('uid').equalTo(uid).get());
+    }
+    const res = await Promise.allSettled(promises);
+
+    console.log(res);
+
+    for (const r of res) {
+      if (r.status == "fulfilled") {
+        tokens.push(...Object.keys(r.value.val()));
+      }
+    }
+    return tokens;
   }
 }

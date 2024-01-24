@@ -47,7 +47,6 @@ export interface TypesensePostUpdate {
 }
 
 export interface PostCreateEvent {
-    id: string;
     uid: string;
     title?: string;
     content?: string;
@@ -56,10 +55,8 @@ export interface PostCreateEvent {
 }
 
 export interface PostUpdateEvent {
-    id: string;
     title?: string;
     content?: string;
     urls?: Array<string>;
     deleted?: boolean;
-    createdAt: number;
 }
