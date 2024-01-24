@@ -1,4 +1,8 @@
-export class Config {
-    static typesenseCollection = "momcafeSearch";
-}
 
+/**
+ *
+ * Configurations
+ */
+export class Config {
+    static typesenseCollection = "testSearch";
+}

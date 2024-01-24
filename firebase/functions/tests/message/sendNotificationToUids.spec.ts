@@ -26,18 +26,16 @@ describe("sendNotificationToUids.spec", () => {
         // Generate 2 tokens under 2 uids
         const db = getDatabase();
         await db.ref("user-fcm-tokens/uid-1").set({
-            'uid-1-token-1': { 'uid': 'uid-1' },
-            'uid-1-token-2': { 'uid': 'uid-1' },
+            "uid-1-token-1": { uid: "uid-1" },
+            "uid-1-token-2": { uid: "uid-1" },
         });
         await db.ref("user-fcm-tokens/uid-2").set({
-            'uid-2-token-1': { 'uid': 'uid-2' },
-            'uid-2-token-2': { 'uid': 'uid-2' },
+            "uid-2-token-1": { uid: "uid-2" },
+            "uid-2-token-2": { uid: "uid-2" },
         });
-        const tokens = await MessagingService.getTokensOfUsers(['uid-1', 'uid-2']);
+        const tokens = await MessagingService.getTokensOfUsers(["uid-1", "uid-2"]);
         assert.ok(tokens.length === 4, "No of tokens must be 4.");
     });
-
-
 
 
     // it("getTokensOfUsers with wrong uids", async () => {

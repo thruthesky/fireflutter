@@ -89,11 +89,11 @@ export class MessagingService {
 
   /**
    * Send message to users
-   * 
+   *
    * 1. This gets the user tokens from '/user-fcm-tokens/{uid}'.
    * 2. Then it chunks the tokens into 500 tokens per chunk.
    * 3. Then delete the tokens that are not valid.
-   * 
+   *
    * @param {Array<string>} uids - The list of user uids to send the message to.
    */
   static async sendNotificationToUids(
@@ -109,7 +109,7 @@ export class MessagingService {
 
   /**
    * Returns the list of tokens under '/user-fcm-tokens/{uid}'.
-   * 
+   *
    * @param uids uids of users
    */
   static async getTokensOfUsers(uids: Array<string>): Promise<Array<string>> {
@@ -120,7 +120,7 @@ export class MessagingService {
 
     const db = getDatabase();
     for (const uid of uids) {
-      promises.push(db.ref(`/user-fcm-tokens/${uid}`).orderByChild('uid').equalTo(uid).get());
+      promises.push(db.ref("/user-fcm-tokens/${uid}").orderByChild("uid").equalTo(uid).get());
     }
     const res = await Promise.allSettled(promises);
 
