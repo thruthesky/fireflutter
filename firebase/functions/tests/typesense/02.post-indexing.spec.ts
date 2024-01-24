@@ -67,6 +67,49 @@ describe("Indexing Posts (typesense/02.post-indexing.spec.ts)", () => {
             assert.ok(false, "Either there is an error, more latency, or the doc is not in Typesense");
         }
     });
+
+    it("If Post isn't in Typesense, it should not have problem when post updated from RTDB", async () => {
+        try {
+            // 1. set post in RTDB
+            const id = randomString();
+            const postData = {
+                // do not add "id" here
+                // do not add "type" here
+                uid: randomString(),
+                title: "title-post",
+                content: "content-post",
+                // do not add "category" here
+                deleted: false,
+                createdAt: 12345,
+            } as TypesenseDoc;
+            await admin.database().ref("posts/" + category + "/" + id).set(postData);
+
+            await setTimeout(5000);
+
+            // delete record in Typesense (To replicate the scenario that the record doesn't exist in Typesense)
+            TypesenseService.delete(id);
+
+            await setTimeout(2000);
+
+            // update title in post
+            const updatedTitle = "updated title";
+            await admin.database().ref("posts/" + category + "/" + id + "/title").set(updatedTitle);
+
+            await setTimeout(20000);
+
+            // search for the document in Typesense
+            const retrieveResult = await TypesenseService.retrieve(id) as TypesenseDoc;
+            if (retrieveResult.id === id && retrieveResult.title === updatedTitle) {
+                // means doc exist in Typesense
+                assert.ok(true);
+            } else {
+                assert.ok(false, "Either there is an error, more latency, or the doc is not in Typesense");
+            }
+        } catch (e) {
+            const message = (e as Error).message;
+            assert.ok(false, "it should succeed. Something went wrong. " + message);
+        }
+    });
     it("Reindex an exisiting post upon edit in RTDB", async () => {
         try {
             // 1. create new post in RTDB

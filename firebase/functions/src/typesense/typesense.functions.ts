@@ -1,7 +1,7 @@
 
 import { onValueWritten } from "firebase-functions/v2/database";
 import { TypesenseService } from "./typesense.service";
-import { PostCreateEvent, PostUpdateEvent, TypesenseDoc, TypesensePostCreate, TypesensePostUpdate } from "./typesense.interface";
+import { PostCreateOrUpdateEvent, TypesenseDoc, TypesensePostCreate } from "./typesense.interface";
 
 /**
  * Indexing for users
@@ -84,26 +84,11 @@ export const typesenseCommentIndexing = onValueWritten(
 export const typesensePostIndexing = onValueWritten(
     "/posts/{category}/{id}",
     async (event) => {
-        // Attention: delete event must come first (before update).
-        if (!event.data.after.exists()) {
-            // Deleted.
+        const data = event.data.after.val() as PostCreateOrUpdateEvent;
+        if (!event.data.after.exists() || (event.data.before.exists() && data.deleted == true)) {
             return await TypesenseService.delete(event.params.id);
         }
-        if (event.data.before.exists()) {
-            // Update
-            const data = event.data.after.val() as PostUpdateEvent;
-            if (data.deleted) {
-                return await TypesenseService.delete(event.params.id);
-            }
-            const postData: TypesensePostUpdate = {
-                title: data.title ?? "",
-                content: data.content ?? "",
-                url: data.urls?.[0] ?? "",
-            };
-            return await TypesenseService.update(event.params.id, postData);
-        }
-        // Created
-        const data = event.data.after.val() as PostCreateEvent;
+        // Created && Updated
         const postData: TypesensePostCreate = {
             id: event.params.id,
             type: "post",
