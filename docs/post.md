@@ -124,7 +124,7 @@ Replace the `PostListTile` widget as needed (like customization).
 
 ## Post Creation Logic
 
-- Post will be creatd with the following data.
+- Post will be creatd with the following data. There is no `category` or post `id`.
     - uid (required)
     - title (optional)
     - content (optinal)
