@@ -1,3 +1,4 @@
+import { Config } from "../config";
 import { typesenseApiKey, typesenseHost, typesensePort, typesenseProtocol } from "../key";
 import { TypesenseDoc } from "./typesense.interface";
 import * as Typesense from "typesense";
@@ -12,7 +13,7 @@ export class TypesenseService {
    * Test Search
    * TODO need customizable collection
    */
-  static collection = "testSearch";
+  static collection = Config.typesenseCollection;
 
   /**
    *
@@ -83,12 +84,12 @@ export class TypesenseService {
    */
   static async searchUser({ searchText = "", filterBy = "" }) {
     const result = await this.client.collections(this.collection
-      ).documents().search({
-        q: searchText,
-        query_by: "displayName",
-        filter_by: filterBy,
-      });
-     return result;
+    ).documents().search({
+      q: searchText,
+      query_by: "displayName",
+      filter_by: filterBy,
+    });
+    return result;
   }
 
   /**
@@ -96,36 +97,36 @@ export class TypesenseService {
    */
   static async searchPost({ searchText = "", filterBy = "" }) {
     const result = await this.client.collections(this.collection
-      ).documents().search({
-        q: searchText,
-        query_by: "content,title",
-        filter_by: filterBy,
-      });
-     return result;
+    ).documents().search({
+      q: searchText,
+      query_by: "content,title",
+      filter_by: filterBy,
+    });
+    return result;
   }
 
   /**
   * Search Comment
   */
- static async searchComment({ searchText = "", filterBy = "" }) {
-   const result = await this.client.collections(this.collection
-     ).documents().search({
-       q: searchText,
-       query_by: "content",
-       filter_by: filterBy,
-     });
+  static async searchComment({ searchText = "", filterBy = "" }) {
+    const result = await this.client.collections(this.collection
+    ).documents().search({
+      q: searchText,
+      query_by: "content",
+      filter_by: filterBy,
+    });
     return result;
- }
+  }
 
   /**
    * Retrieve User
    * @param id
    * @returns
    */
-  static async retrieve( id: string ) {
+  static async retrieve(id: string) {
     const result = await this.client.collections(this.collection
-      ).documents(id).retrieve();
-     return result;
+    ).documents(id).retrieve();
+    return result;
   }
 
   /**
@@ -137,7 +138,7 @@ export class TypesenseService {
   static async delete(id: string) {
     // console.log(id);
     const result = await this.client.collections(this.collection
-      ).documents(id).delete();
+    ).documents(id).delete();
     return result;
   }
 }
