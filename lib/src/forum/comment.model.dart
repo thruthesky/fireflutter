@@ -54,6 +54,15 @@ class CommentModel {
     this.deleted = false,
   });
 
+  factory CommentModel.fromSnapshot(DataSnapshot snapshot) {
+    return CommentModel.fromMap(
+      snapshot.value as Map,
+      snapshot.key!,
+      category: snapshot.ref.parent!.parent!.parent!.key!,
+      postId: snapshot.ref.parent!.parent!.key!,
+    );
+  }
+
   factory CommentModel.fromMap(
     Map<dynamic, dynamic> map,
     String id, {
@@ -132,7 +141,19 @@ class CommentModel {
     return 'CommentModel(ref: $ref, id: $id, parentId: $parentId, content: $content, uid: $uid, createdAt: $createdAt, urls: $urls, likes: $likes, deleted: $deleted)';
   }
 
-  /// Create a comment from current comment instance.
+  /// Get a comment from the database
+  static Future<CommentModel> get({
+    required String category,
+    required String postId,
+    required String commentId,
+  }) async {
+    final snapshot = await Ref.comment(category, postId, commentId).get();
+    return CommentModel.fromSnapshot(snapshot);
+  }
+
+  /// Create a comment
+  ///
+  /// It's the instance member method. Not a static method.
   ///
   /// Note that, this is NOT a static method. It is an instance method that
   /// uses the properties of current instance.
@@ -149,22 +170,27 @@ class CommentModel {
     CommentModel? parent,
     List<String>? urls,
   }) async {
-    final comment = CommentModel(
-      ref: ref,
-      id: ref.key!,
-      parentId: parent?.ref.key,
-      content: content,
-      uid: myUid!,
-      createdAt: DateTime.now().millisecondsSinceEpoch,
-      urls: urls ?? [],
-    );
+    Map<String, dynamic> data = {
+      'content': content,
+      'parentId': parent?.id,
+      'uid': myUid!,
+      'createdAt': ServerValue.timestamp,
+      'urls': urls,
+    };
 
-    await ref.set(comment.toJson());
+    await ref.set(data);
 
     final summaryRef = Ref.postSummary(category, postId);
     summaryRef.child(Field.noOfComments).set(ServerValue.increment(1));
 
-    ForumService.instance.onCommentCreate?.call(comment);
+    /// Don't wait for calling onCommentCreate.
+    CommentModel.get(
+      category: category,
+      postId: postId,
+      commentId: id,
+    ).then((comment) {
+      ForumService.instance.onCommentCreate?.call(comment);
+    });
   }
 
   Future update({

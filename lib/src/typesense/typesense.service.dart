@@ -153,7 +153,7 @@ class TypesenseService {
     final snapshot = await Ref.category(category).get();
     if (snapshot.exists == false || snapshot.value == null) return;
     for (final e in (snapshot.value as Map).entries) {
-      final post = PostModel.fromJson(e.value, id: e.key);
+      final post = PostModel.fromJson(e.value, id: e.key, category: category);
       if (!post.deleted) {
         await upsertPost(post);
         dog('Re-indexing post: ${post.id}');

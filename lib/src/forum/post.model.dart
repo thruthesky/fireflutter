@@ -42,14 +42,11 @@ class PostModel {
   /// Get the category of the post
   String get category => ref.parent!.key!;
 
-  factory PostModel.fromSnapshot(DataSnapshot snapshot) {
-    final value = snapshot.value as Map<dynamic, dynamic>;
-    final category = snapshot.ref.parent!.key;
-    return PostModel.fromJson(
-      {...value, "category": category},
-      id: snapshot.key!,
-    );
-  }
+  factory PostModel.fromSnapshot(DataSnapshot snapshot) => PostModel.fromJson(
+        snapshot.value as Map<dynamic, dynamic>,
+        id: snapshot.key!,
+        category: snapshot.ref.parent!.key!,
+      );
 
   /// This is the factory constructor that takes a map and produces a PostModel
   ///
@@ -63,10 +60,14 @@ class PostModel {
   ///    id: ref.key!,
   ///  );
   /// ```
-  factory PostModel.fromJson(Map<dynamic, dynamic> json, {required String id}) {
+  factory PostModel.fromJson(
+    Map<dynamic, dynamic> json, {
+    required String id,
+    required String category,
+  }) {
     return PostModel(
       id: id,
-      ref: Ref.post(json['category'], id),
+      ref: Ref.post(category, id),
       title: json['title'] ?? '',
       content: json['content'] ?? '',
       uid: json['uid'],
@@ -81,7 +82,7 @@ class PostModel {
             .map((e) => CommentModel.fromMap(
                   e.value as Map,
                   e.key as String,
-                  category: json['category'],
+                  category: category,
                   postId: id,
                 ))
             .toList(),
@@ -92,11 +93,6 @@ class PostModel {
   }
 
   static List<CommentModel> sortComments(List<CommentModel> comments) {
-    // final parents = comments.where((e) => e.parentId == null).toList();
-    // parents.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-
-    // return parents;
-
     comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     final List<CommentModel> newComments = [];
