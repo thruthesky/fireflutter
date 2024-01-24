@@ -16,12 +16,13 @@ if (admin.apps.length === 0) {
  * This test is not reliable because the tokens may be invalid after a while.
  */
 describe("Typsense Upsert, Update, Emplace Test (typesense/00.upsert.spec.ts)", () => {
-    it("Index a document with at least the required (id, type) using Upsert", async () => {
+    it("Index a document with at least the required (id, type, createdAt) using Upsert", async () => {
         try {
             const uid = randomString();
             await TypesenseService.upsert({
                 id: uid,
                 type: "user",
+                createdAt: 12323,
              });
              assert.ok(true);
         } catch (e) {
@@ -35,11 +36,11 @@ describe("Typsense Upsert, Update, Emplace Test (typesense/00.upsert.spec.ts)", 
                 id: randomString(),
                 type: "user",
             });
-            assert.ok(true);
+            assert.ok(false, "It must throw an error, since craeted is required");
         } catch (e) {
             const message = (e as Error).message;
             if (message.indexOf("createdAt") > 0) {
-                assert.ok(false, "createdAt is already optional, it should no longer be an error");
+                assert.ok(true, "createdAt is missing");
             } else {
                 assert.ok(false, "Unknown error: " + message);
             }
@@ -49,6 +50,7 @@ describe("Typsense Upsert, Update, Emplace Test (typesense/00.upsert.spec.ts)", 
         try {
             await TypesenseService.upsert({
                 id: randomString(),
+                createdAt: 123123,
             });
             assert.ok(false, "It must throw an error, since type is required");
         } catch (e) {
