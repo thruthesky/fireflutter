@@ -4,7 +4,10 @@ import { onRequest } from "firebase-functions/v2/https";
 import { MessagingService } from "./messaging.service";
 import { logger } from "firebase-functions/v1";
 import { onValueCreated } from "firebase-functions/v2/database";
-import { MessageNotification } from "./messaging.interface";
+import { PostCreateEvent } from "../forum/forum.interface";
+import { PostCreateMessage } from "./messaging.interface";
+
+
 
 
 /**
@@ -33,25 +36,19 @@ export const sendPushNotifications = onRequest(async (request, response) => {
 export const sendPushNotificationsToForumCategorySubscribers = onValueCreated(
     "/posts/{category}/{id}",
     async (event) => {
-        // const data = event.data.val();
-        // const { category, id } = event.params;
-        // const { title, content } = data;
+        // Grab the current value of what was written to the Realtime Database.
+        const data = event.data.val() as PostCreateEvent;
 
-        // const tokens = await MessagingService.getTokensForForumCategorySubscribers(category);
-        // const message = {
-        //     title: title,
-        //     body: content,
-        //     data: {
-        //         category: category,
-        //         postId: id,
-        //     },
-        // };
+        const post: PostCreateMessage = {
+            id: event.params.id,
+            category: event.params.category,
+            title: data.title ?? '',
+            body: data.content ?? '',
+            uid: data.uid,
+            image: data.urls?.[0] ?? '',
+        };
 
-        // const res = await MessagingService.sendNotificationToTokens({
-        //     tokens,
-        //     title,
-        //     body: content,
-        // });
-        // logger.info("sendPushNotificationsToForumCategorySubscribers", res);
-        // response.send(res);
+
+        await MessagingService.sendNotificationToForumCategorySubscribers(post);
+
     });

@@ -20,4 +20,7 @@ class Path {
   static String join(String myUid, String roomId) => '$joins/$myUid/$roomId';
 
   static String get myReports => '${Folder.reports}/$myUid';
+
+  static String categorySubscription(String category) =>
+      '${Folder.postsSubscription}/$category/$myUid';
 }

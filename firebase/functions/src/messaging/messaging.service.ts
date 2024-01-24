@@ -1,7 +1,8 @@
-import { getMessaging } from "firebase-admin/messaging";
+import { SendResponse, getMessaging } from "firebase-admin/messaging";
 import { getDatabase } from "firebase-admin/database";
-import { MessageNotification, MessageRequest } from "./messaging.interface";
+import { MessageNotification, MessageRequest, PostCreateMessage, SendEachMessage } from "./messaging.interface";
 import { chunk } from "../library";
+import { Config } from "../config";
 
 /**
  * MessagingService
@@ -89,23 +90,76 @@ export class MessagingService {
   }
 
   /**
-   * Send message to users
+   * 사용자의 uid 들을 입력받아, 그 사용자들의 토큰으로 메시지 전송
    * 
-   * 1. This gets the user tokens from '/user-fcm-tokens/{uid}'.
    * 2. Then it chunks the tokens into 500 tokens per chunk.
    * 3. Then delete the tokens that are not valid.
    * 
    * @param {Array<string>} uids - The list of user uids to send the message to.
+   * @param {number} chunkSize - The size of chunk. Default 500. 한번에 보낼 메시지 수. 최대 500개.
+   * 그런데 500개씩 하니까 좀 느리다. 256씩 두번 보내는 것이 500개 한번 보내는 것보다 더 빠르다.
+   * 256 묶음으로 두 번 보내면 총 (두 번 포함) 22초.
+   * 500 묵음으로 한 번 보내면 총 90초.
+   * 128 묶음으로 4번 보내면 총 18 초
+   * 
+   * 예제
+   * ```
+   * await MessagingService.sendNotificationToUids(['uid-a', 'uid-b'], 128, "title", "body");
+   * ```
+   * 
+   * 더 많은 예제는 firebase/functions/tests/message/sendNotificationToUids.spec.ts 참고
    */
   static async sendNotificationToUids(
     uids: Array<string>,
+    chunkSize = 500,
     title: string,
     body: string,
     image?: string,
-    data?: { [key: string]: string },
-  ) {
-    const tokens = await this.getTokensOfUsers(uids);
-    console.log("tokens", tokens);
+    data: { [key: string]: string } = {},
+  ): Promise<void> {
+    // 토큰 가져오기. 기본 500 개 단위로 chunk.
+    const tokenChunks = await this.getTokensOfUsers(uids, chunkSize);
+    console.log("tokenChunks", tokenChunks);
+
+    // 토큰 메시지 작성. 이미지는 옵션.
+    const notification: MessageNotification = { title, body };
+    if (image) {
+      notification["image"] = image;
+    }
+
+    const messaging = getMessaging();
+
+    // chunk 단위로 메시지 작성해서 전송
+    for (const tokenChunk of tokenChunks) {
+      const messages: Array<SendEachMessage> = [];
+      for (const token of tokenChunk) {
+        messages.push({ notification, data, token });
+      }
+      const res = await messaging.sendEach(messages, true);
+      console.log("sendEach() result ->", 'successCount', res.successCount, 'failureCount', res.failureCount,);
+
+
+      // chunk 단위로 전송 - 결과 확인 및 에러 토큰 삭제
+      for (let i = 0; i < messages.length; i++) {
+        const response = res.responses[i] as SendResponse;
+        if (response.success == false) {
+          // 에러 토큰 표시
+          messages[i].success = false;
+          // console.log("error code:", response.error?.code);
+          // console.log("error message:", response.error?.message);
+        }
+      }
+
+      // 에러 토큰 삭제
+      const tokensToRemove = messages.filter((message) => message.success == false).map((message) => message.token);
+      // console.log("tokensToRemove; ", tokensToRemove);
+      const promisesToRemove = [];
+      for (let i = 0; i < tokensToRemove.length; i++) {
+        promisesToRemove.push(getDatabase().ref(`${Config.userFcmTokensPath}/${tokensToRemove[i]}`).remove());
+      }
+      await Promise.allSettled(promisesToRemove);
+    }
+
 
   }
 
@@ -128,9 +182,10 @@ export class MessagingService {
 
     // uid 사용자 별 모든 토큰을 가져온다.
     for (const uid of uids) {
-      promises.push(db.ref(`user-fcm-tokens`).orderByChild('uid').equalTo(uid).get());
+      promises.push(db.ref(Config.userFcmTokensPath).orderByChild('uid').equalTo(uid).get());
     }
     const settled = await Promise.allSettled(promises);
+
 
 
     // 토큰을 배열에 담는다.
@@ -144,7 +199,31 @@ export class MessagingService {
       }
     }
 
+
+
+
+    // 토큰을 chunk 단위로 나누어 리턴
     return chunk(tokens, chunkSize);
 
+  }
+
+  /**
+   * 해당 게시판(카테고리)를 subscribe 한 사용자들에게 메시지를 보낸다.
+   * 
+   * @param msg 글 정보
+   */
+  static async sendNotificationToForumCategorySubscribers(msg: PostCreateMessage) {
+    // 해당 게시판(카테고리)를 subscribe 한 사용자들의 uid 를 가져온다.
+
+    const db = getDatabase();
+    const snapshot = await db.ref(`${Config.postsSubscriptionPath}/${msg.category}`).get();
+    const uids: Array<string> = [];
+    snapshot.forEach((child) => {
+      uids.push(child.key!);
+    });
+
+    console.log("uids", uids);
+
+    await this.sendNotificationToUids(uids, 256, msg.title, msg.body, msg.image, { id: msg.id, category: msg.category });
   }
 }
