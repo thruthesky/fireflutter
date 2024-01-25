@@ -6,7 +6,7 @@ export interface MessageNotification {
 }
 
 /**
- * 
+ *
  */
 export interface MessageRequest extends MessageNotification {
     tokens: Array<string>;

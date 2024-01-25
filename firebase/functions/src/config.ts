@@ -1,3 +1,8 @@
+/**
+ * Config
+ *
+ * 기본적으로 설정을 하는 클래스
+ */
 export class Config {
     static typesenseCollection = "momcafeSearch";
 

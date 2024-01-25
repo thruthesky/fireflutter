@@ -17,10 +17,6 @@ if (admin.apps.length === 0) {
  * This test is not reliable because the tokens may be invalid after a while.
  */
 describe("sendNotificationToUids 기능 테스트", () => {
-
-
-
-
     it("진짜 토큰과 가짜 토큰을 섞어, 총 502개의 토큰을 chunk 로 나누어 저장 500개 단위 전송 테스트", async () => {
         // 가짜 토큰 501 개 생성
         const n = 501;
@@ -33,18 +29,18 @@ describe("sendNotificationToUids 기능 테스트", () => {
             uids.push(uid);
             const token = `token-${i}`;
             promises.push(db.ref(`${Config.userFcmTokensPath}/${uid}-${token}`).set({
-                'uid': uid,
+                uid: uid,
             }));
         }
         await Promise.all(promises);
 
         // 진짜 토큰을 첫번째 uid 에 1개 추가
         await db.ref(`${Config.userFcmTokensPath}/dRx8UpLwt0EUtcK0kpkDme:APA91bF6gHUfRs4J6nc4xnRvEhE85uFeuOZwrxyD0lqgfhccLhnw_zpVB4UouPXJvIlAaKmzDQoqI2VxpZNnjdZlqSRBoYCTrxl2oXVSxqYoqYdMxNKgZUwhKAlVhpkPFw5r2pq1wWfm`).set({
-            'uid': uids[0],
+            uid: uids[0],
         });
         // 진짜 토큰을 두번째 uid 에 1개 추가
         await db.ref(`${Config.userFcmTokensPath}/dsV6a4_XRiGWq5Fxq_f-jH:APA91bFtB98IC06Y6SOBz6OFmNCKeCoDJQ2X72k3Taw3UaO8cwaPdcI9jDq3oWllqmMmGhnd0uuZXwRrXs3gXBnsNdyIbBF3xmQgvMDBV8LW_cM0VNmJt3UBxtKMgnFqjw2q-aanGKWH`).set({
-            'uid': uids[0],
+            uid: uids[0],
         });
 
         // 토큰 기본 500 개 단위, 가져오기
@@ -65,8 +61,5 @@ describe("sendNotificationToUids 기능 테스트", () => {
         // 올바른 토큰이 남아 있는지 확인. 2 개가 남아 있어야함.
         const tokens = await db.ref(Config.userFcmTokensPath).get();
         assert.ok(tokens.numChildren() === 2, "No of tokens must be " + 2 + ". result: " + tokens.numChildren());
-
     });
-
-
 });

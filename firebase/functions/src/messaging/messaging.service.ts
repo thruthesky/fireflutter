@@ -91,22 +91,22 @@ export class MessagingService {
 
   /**
    * 사용자의 uid 들을 입력받아, 그 사용자들의 토큰으로 메시지 전송
-   * 
+   *
    * 2. Then it chunks the tokens into 500 tokens per chunk.
    * 3. Then delete the tokens that are not valid.
-   * 
+   *
    * @param {Array<string>} uids - The list of user uids to send the message to.
    * @param {number} chunkSize - The size of chunk. Default 500. 한번에 보낼 메시지 수. 최대 500개.
    * 그런데 500개씩 하니까 좀 느리다. 256씩 두번 보내는 것이 500개 한번 보내는 것보다 더 빠르다.
    * 256 묶음으로 두 번 보내면 총 (두 번 포함) 22초.
    * 500 묵음으로 한 번 보내면 총 90초.
    * 128 묶음으로 4번 보내면 총 18 초
-   * 
+   *
    * 예제
    * ```
    * await MessagingService.sendNotificationToUids(['uid-a', 'uid-b'], 128, "title", "body");
    * ```
-   * 
+   *
    * 더 많은 예제는 firebase/functions/tests/message/sendNotificationToUids.spec.ts 참고
    */
   static async sendNotificationToUids(
@@ -136,7 +136,7 @@ export class MessagingService {
         messages.push({ notification, data, token });
       }
       const res = await messaging.sendEach(messages, true);
-      console.log("sendEach() result ->", 'successCount', res.successCount, 'failureCount', res.failureCount,);
+      console.log("sendEach() result ->", "successCount", res.successCount, "failureCount", res.failureCount,);
 
 
       // chunk 단위로 전송 - 결과 확인 및 에러 토큰 삭제
@@ -159,17 +159,15 @@ export class MessagingService {
       }
       await Promise.allSettled(promisesToRemove);
     }
-
-
   }
 
   /**
    * Returns the list of tokens under '/user-fcm-tokens/{uid}'.
-   * 
+   *
    * @param uids uids of users
    * @param chunkSize chunk size - default 500. sendAll() 로 한번에 보낼 수 있는 최대 메세지 수는 500 개 이다.
    * chunk 가 500 이고, 총 토큰의 수가 501 이면, 첫번째 배열에 500개의 토큰 두번째 배열에 1개의 토큰이 들어간다.
-   * 
+   *
    * @returns Array<Array<string>> - Array of tokens. Each array contains 500 tokens.
    * 리턴 값은 2차원 배열이다. 각 배열은 최대 [chunkSize] 개의 토큰을 담고 있다.
    */
@@ -182,10 +180,9 @@ export class MessagingService {
 
     // uid 사용자 별 모든 토큰을 가져온다.
     for (const uid of uids) {
-      promises.push(db.ref(Config.userFcmTokensPath).orderByChild('uid').equalTo(uid).get());
+      promises.push(db.ref(Config.userFcmTokensPath).orderByChild("uid").equalTo(uid).get());
     }
     const settled = await Promise.allSettled(promises);
-
 
 
     // 토큰을 배열에 담는다.
@@ -200,16 +197,13 @@ export class MessagingService {
     }
 
 
-
-
     // 토큰을 chunk 단위로 나누어 리턴
     return chunk(tokens, chunkSize);
-
   }
 
   /**
    * 해당 게시판(카테고리)를 subscribe 한 사용자들에게 메시지를 보낸다.
-   * 
+   *
    * @param msg 글 정보
    */
   static async sendNotificationToForumCategorySubscribers(msg: PostCreateMessage) {

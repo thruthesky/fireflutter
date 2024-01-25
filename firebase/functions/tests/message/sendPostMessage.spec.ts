@@ -16,20 +16,16 @@ if (admin.apps.length === 0) {
  * This test is not reliable because the tokens may be invalid after a while.
  */
 describe("게시판 카테고리 푸시 알림", () => {
-
     it("qna 게시판", async () => {
-
         await MessagingService.sendNotificationToForumCategorySubscribers({
-            id: 'post-id-1',
-            category: 'qna',
-            title: 'title',
-            body: 'body',
-            image: '',
-            uid: 'author-uid',
+            id: "post-id-1",
+            category: "qna",
+            title: "title",
+            body: "body",
+            image: "",
+            uid: "author-uid",
         });
 
         assert.ok(true);
-
     });
-
 });

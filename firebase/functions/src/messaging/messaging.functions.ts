@@ -8,8 +8,6 @@ import { PostCreateEvent } from "../forum/forum.interface";
 import { PostCreateMessage } from "./messaging.interface";
 
 
-
-
 /**
  * Sending messages to tokens
  */
@@ -33,7 +31,7 @@ export const sendPushNotifications = onRequest(async (request, response) => {
  * Sending messages to forum category subscribers
  */
 
-export const sendPushNotificationsToForumCategorySubscribers = onValueCreated(
+export const sendMessagesToCategorySubscribers = onValueCreated(
     "/posts/{category}/{id}",
     async (event) => {
         // Grab the current value of what was written to the Realtime Database.
@@ -42,13 +40,12 @@ export const sendPushNotificationsToForumCategorySubscribers = onValueCreated(
         const post: PostCreateMessage = {
             id: event.params.id,
             category: event.params.category,
-            title: data.title ?? '',
-            body: data.content ?? '',
+            title: data.title ?? "",
+            body: data.content ?? "",
             uid: data.uid,
-            image: data.urls?.[0] ?? '',
+            image: data.urls?.[0] ?? "",
         };
 
 
         await MessagingService.sendNotificationToForumCategorySubscribers(post);
-
     });
