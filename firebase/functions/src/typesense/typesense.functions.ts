@@ -1,7 +1,7 @@
 
-import { onValueWritten } from "firebase-functions/v2/database";
+import { onValueCreated, onValueDeleted, onValueUpdated, onValueWritten } from "firebase-functions/v2/database";
 import { TypesenseService } from "./typesense.service";
-import { PostCreateOrUpdateEvent, TypesenseDoc, TypesensePostCreate } from "./typesense.interface";
+import { PostCreateEvent, TypesenseDoc, TypesensePostCreate } from "./typesense.interface";
 
 /**
  * Indexing for users
@@ -74,20 +74,15 @@ export const typesenseCommentIndexing = onValueWritten(
     },
 );
 
-
 /**
- * Indexing for post
+ * Indexing for post created
  *
- * **Attention**: read the cloud_functions.md for the post indexing issue.
  */
-export const typesensePostIndexing = onValueWritten(
+export const typesensePostCreatedIndexing = onValueCreated(
     "/posts/{category}/{id}",
     async (event) => {
-        const data = event.data.after.val() as PostCreateOrUpdateEvent;
-        if (!event.data.after.exists() || (event.data.before.exists() && data.deleted == true)) {
-            return await TypesenseService.delete(event.params.id);
-        }
-        // Created && Updated
+        const data = event.data.val() as PostCreateEvent;
+        // Created
         const postData: TypesensePostCreate = {
             id: event.params.id,
             type: "post",
@@ -99,5 +94,96 @@ export const typesensePostIndexing = onValueWritten(
             createdAt: data.createdAt,
         };
         return await TypesenseService.upsert(postData);
+    },
+);
+
+/**
+ * Indexing for post update for title
+ */
+export const typesensePostUpdateTitleIndexing = onValueUpdated(
+    "/posts/{category}/{id}/title",
+    (event) => {
+        const afterValue = event.data.after.val();
+        const id = event.params.id;
+        const postData = {
+            title: afterValue,
+            id: id,
+            type: "post",
+        } as TypesenseDoc;
+        console.log("A post's `title` is updated in RTDB", event.params, afterValue);
+        return TypesenseService.emplace(postData);
+    },
+);
+
+/**
+ * Indexing for post update for content
+ */
+export const typesensePostUpdateContentIndexing = onValueUpdated(
+    "/posts/{category}/{id}/content",
+    (event) => {
+        const afterValue = event.data.after.val();
+        const id = event.params.id;
+        const postData = {
+            content: afterValue,
+            id: id,
+            type: "post",
+        } as TypesenseDoc;
+        console.log("A post's `content` is updated in RTDB", event.params, afterValue);
+        return TypesenseService.emplace(postData);
+    },
+);
+
+/**
+ * Indexing for post update for urls
+ */
+export const typesensePostUpdateUrlIndexing = onValueUpdated(
+    "/posts/{category}/{id}/urls",
+    (event) => {
+        const afterValue = event.data.after.val();
+        const id = event.params.id;
+        const postData = {
+            url: afterValue?.[0] ?? "",
+            id: id,
+            type: "post",
+        } as TypesenseDoc;
+        console.log("A post's `urls` is updated in RTDB", event.params, afterValue);
+        return TypesenseService.emplace(postData);
+    },
+);
+
+/**
+ * Indexing for post update for deleted
+ *
+ * When the value for deleted becomes true, the
+ * Typesense document should be deleted in the
+ * collection.
+ */
+export const typesensePostUpdateDeleted = onValueUpdated(
+    "/posts/{category}/{id}/deleted",
+    (event) => {
+        const deletedValue: boolean | undefined = event.data.after.val();
+        const id = event.params.id;
+        console.log("A post's `deleted` is updated in RTDB", event.params, deletedValue);
+        if (deletedValue == true) {
+            return TypesenseService.delete(id);
+        } else {
+            // do nothing, we don't care if it's false or null
+            return;
+        }
+    },
+);
+
+/**
+ * Removing index for post when it is hard deleted in RTDB
+ *
+ * Upon deleting the post, it should reflect properly
+ * in Typesense.
+ */
+export const typesensePostDeleteIndexing = onValueDeleted(
+    "/posts/{category}/{id}",
+    (event) => {
+      const deletedData = event.data.val() as TypesenseDoc;
+      console.log("Deleted Post in RTDB. This is a hard delete which means the node is completely removed in RTDB ", event.params, deletedData);
+      return TypesenseService.delete(event.params.id);
     },
 );

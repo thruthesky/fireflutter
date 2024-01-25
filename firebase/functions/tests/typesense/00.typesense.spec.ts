@@ -36,11 +36,11 @@ describe("Typsense Upsert, Update, Emplace Test (typesense/00.upsert.spec.ts)", 
                 id: randomString(),
                 type: "user",
             });
-            assert.ok(false, "It must throw an error, since craeted is required");
+            assert.ok(true);
         } catch (e) {
             const message = (e as Error).message;
             if (message.indexOf("createdAt") > 0) {
-                assert.ok(true, "createdAt is missing");
+                assert.ok(false, "createdAt is optional, therefore it should not be an issue.");
             } else {
                 assert.ok(false, "Unknown error: " + message);
             }

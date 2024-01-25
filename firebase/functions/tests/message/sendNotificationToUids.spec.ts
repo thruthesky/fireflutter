@@ -16,10 +16,6 @@ if (admin.apps.length === 0) {
  * This test is not reliable because the tokens may be invalid after a while.
  */
 describe("sendNotificationToUids 기능 테스트", () => {
-
-
-
-
     it("진짜 토큰과 가짜 토큰을 섞어, 총 11개의 토큰을 chunk 로 나누어 저장 한 5개 단위 전송 테스트", async () => {
         // 가짜 토큰 10 개 생성
         const n = 10;
@@ -32,7 +28,7 @@ describe("sendNotificationToUids 기능 테스트", () => {
             uids.push(uid);
             const token = `token-${i}`;
             promises.push(db.ref(`user-fcm-tokens/${uid}-${token}`).set({
-                'uid': uid,
+                uid: uid,
             }));
         }
         await Promise.all(promises);
@@ -53,7 +49,6 @@ describe("sendNotificationToUids 기능 테스트", () => {
         // 세번째 chunk 에는 1개의 토큰이 있어야 한다.
         assert.ok(tokensChunk[2].length === 1, "No of tokens must be 1. result: " + tokensChunk[2].length);
     });
-
 
 
     // it("getTokensOfUsers with wrong uids", async () => {
