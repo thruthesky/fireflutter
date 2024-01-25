@@ -150,19 +150,26 @@ export class MessagingService {
         if (response.success == false) {
           // 에러 토큰 표시
           messages[i].success = false;
+          messages[i].code = response.error?.code;
           // console.log("error code:", response.error?.code);
           // console.log("error message:", response.error?.message);
         }
       }
 
+
       // 에러 토큰 삭제
-      const tokensToRemove = messages.filter((message) => message.success == false).map((message) => message.token);
-      // console.log("tokensToRemove; ", tokensToRemove);
+      const tokensToRemove = messages.filter((message) => {
+        if (message.success !== false) return false;
+        console.log("message: ", message)
+        if (message.code === "messaging/invalid-registration-token") return true;
+        return false;
+      }).map((message) => message.token);
+      Config.log("에러가 있는 토큰 목록(삭제될 토큰 목록):", tokensToRemove);
       const promisesToRemove = [];
       for (let i = 0; i < tokensToRemove.length; i++) {
         promisesToRemove.push(getDatabase().ref(`${Config.userFcmTokensPath}/${tokensToRemove[i]}`).remove());
       }
-      await Promise.allSettled(promisesToRemove);
+      // await Promise.allSettled(promisesToRemove);
     }
   }
 

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/foundation.dart';
@@ -28,6 +29,9 @@ void dog(String msg) {
   log('--> $msg', time: DateTime.now(), name: '🐶', level: 2000);
 }
 
+/// 플랫폼 이름을 반환한다.
+///
+/// 가능하면, isIos 또는 isAndroid, kIsWeb 을 사용하도록 한다.
 /// It returns one of 'web', 'android', 'fuchsia', 'ios', 'linux', 'macos', 'windows'.
 String platformName() {
   if (kIsWeb) {
@@ -37,7 +41,8 @@ String platformName() {
   }
 }
 
-bool get isIos => platformName() == 'ios';
+bool get isIos => Platform.isIOS;
+bool get isAndroid => Platform.isAndroid;
 
 /// Returns a string of "yyyy-MM-dd" or "HH:mm:ss"
 String dateTimeShort(DateTime dt) {

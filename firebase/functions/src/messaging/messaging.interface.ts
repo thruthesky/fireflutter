@@ -21,6 +21,7 @@ export interface SendEachMessage {
     };
     token: string;
     success?: boolean;
+    code?: string;
 }
 
 
