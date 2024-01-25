@@ -42,9 +42,8 @@ export const typesenseCommentIndexing = onValueWritten(
     (event) => {
         const data = event.data.after.val() as TypesenseDoc;
         if (!event.data.after.exists() || (event.data.before.exists() && data.deleted == true)) {
-            // Supposedly !event.data.after.exists() should not happen naturally, unless admins deleted the actual record directly to RTDB.
-            // Logic will also go here if the RTDB Doc is updated and deleted = true
-            // Do something here for deleted Comments
+            // when deleted becomes == true
+            // or when comment node is removed
             const data = event.data.before.val() as TypesenseDoc;
             const commentData = {
                 ...data,
@@ -102,14 +101,3 @@ export const typesensePostIndexing = onValueWritten(
         return await TypesenseService.upsert(postData);
     },
 );
-
-
-/**
- * /posts/{category}/title
-/posts/{category}/content
-/posts/{category}/urls
-/posts/{category}/deleted
-
-onValueCreated()
-onValueDeleted()
- */
