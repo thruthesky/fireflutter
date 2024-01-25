@@ -1,9 +1,14 @@
+import { logger } from "firebase-functions/v1";
+
 /**
  * Config
  *
  * 기본적으로 설정을 하는 클래스
  */
 export class Config {
+    // debug = true 이면, 함수에 로그를 남긴다.
+    static debug = true;
+
     static typesenseCollection = "momcafeSearch";
 
 
@@ -12,5 +17,11 @@ export class Config {
     static userFcmTokensPath = "user-fcm-tokens";
 
     static postsSubscriptionPath = "posts-subscription";
+
+    static log(message: string, ...optionalParams: any[]) {
+        if (Config.debug) {
+            logger.info(message, ...optionalParams);
+        }
+    }
 }
 

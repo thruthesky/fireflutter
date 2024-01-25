@@ -1,5 +1,6 @@
 import { SendResponse, getMessaging } from "firebase-admin/messaging";
 import { getDatabase } from "firebase-admin/database";
+import { logger } from "firebase-functions/v1";
 import { MessageNotification, MessageRequest, PostCreateMessage, SendEachMessage } from "./messaging.interface";
 import { chunk } from "../library";
 import { Config } from "../config";
@@ -119,7 +120,8 @@ export class MessagingService {
   ): Promise<void> {
     // 토큰 가져오기. 기본 500 개 단위로 chunk.
     const tokenChunks = await this.getTokensOfUsers(uids, chunkSize);
-    console.log("tokenChunks", tokenChunks);
+
+    Config.log("----> sendNotificationToUids() -> tokenChunks:", tokenChunks);
 
     // 토큰 메시지 작성. 이미지는 옵션.
     const notification: MessageNotification = { title, body };
@@ -136,7 +138,7 @@ export class MessagingService {
         messages.push({ notification, data, token });
       }
       const res = await messaging.sendEach(messages, true);
-      console.log("sendEach() result ->", "successCount", res.successCount, "failureCount", res.failureCount,);
+      Config.log("-----> sendNotificationToUids -> sendEach() result:", "successCount", res.successCount, "failureCount", res.failureCount,);
 
 
       // chunk 단위로 전송 - 결과 확인 및 에러 토큰 삭제
@@ -216,7 +218,8 @@ export class MessagingService {
       uids.push(child.key!);
     });
 
-    console.log("uids", uids);
+    Config.log("-----> sendNotificationToForumCategorySubscribers uids:", uids);
+
 
     await this.sendNotificationToUids(uids, 256, msg.title, msg.body, msg.image, { id: msg.id, category: msg.category });
   }

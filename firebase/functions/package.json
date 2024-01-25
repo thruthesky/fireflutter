@@ -1,5 +1,8 @@
 {
   "name": "functions",
+  "engines": {
+    "node": "18"
+  },
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
     "build": "tsc",
@@ -19,9 +22,6 @@
     "test:getTokensOfUsers": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/getTokensOfUsers.spec.ts --timeout 100000",
     "test:sendNotificationToUids": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/sendNotificationToUids.spec.ts --timeout 100000",
     "test:sendPostMessage": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/sendPostMessage.spec.ts --timeout 100000"
-  },
-  "engines": {
-    "node": "18"
   },
   "main": "lib/src/index.js",
   "dependencies": {
