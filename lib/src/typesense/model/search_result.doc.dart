@@ -24,8 +24,8 @@ class SearchResultDoc {
   final String? category;
   // `uid` is already given above
   // `likes` is not added (conversion will be complicated, can add later)
-  // TODO clean up
   // final int? noOfLikes; // being removed
+  // we only use one url in here
   final List<String>? urls;
   // `comments` is not added (conversion will be complicated, can add later)
   // final int? noOfComments; // being removed
@@ -55,11 +55,10 @@ class SearchResultDoc {
     this.title,
     this.content,
     this.category,
-    // TODO clean up
-    // this.noOfLikes,
+
+    /// only one url is saved in Typesense
+    /// In Typesense it is saved as url string
     this.urls,
-    // this.noOfComments,
-    // this.deleted,
     // Comment
     this.postId,
     this.parentId,
@@ -86,19 +85,13 @@ class SearchResultDoc {
       title: json['title'],
       content: json['content'],
       category: json['category'],
-      // TODO cleanup
-      // noOfLikes: json['noOfLikes'],
-      // urls: json['urls'] == null ? null : List<String>.from(json['urls']),
-      urls: json['urls'] == null
-          ? (json['url'] == null ? null : [json['url']])
-          : List<String>.from(json['urls']),
-      // noOfComments: json['noOfComments'],
-      // deleted: json['deleted'],
+      // <---x  We only save the first url for Typesense
+      // This will ensure if we have url -> [url]
+      urls: ((json['url'] ?? '') as String).isEmpty ? null : [json['url']],
 
       // Comment
       postId: json['postId'],
       parentId: json['parentId'],
-      // depth: json['depth'],
     );
   }
 
@@ -122,16 +115,10 @@ class SearchResultDoc {
       'title': title,
       'content': content,
       'category': category,
-      // TODO cleanup
-      // 'noOfLikes': noOfLikes,
-      'urls': urls,
-      // 'noOfComments': noOfComments,
-      // 'deleted': deleted,
-
+      'urls': urls, // <---x  We only save the first url
       // Comment
       'postId': postId,
       'parentId': parentId,
-      // 'depth': depth,
     };
   }
 
