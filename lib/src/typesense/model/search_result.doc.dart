@@ -26,7 +26,7 @@ class SearchResultDoc {
   // `likes` is not added (conversion will be complicated, can add later)
   // final int? noOfLikes; // being removed
   // we only use one url in here
-  final List<String>? urls;
+  final String? url;
   // `comments` is not added (conversion will be complicated, can add later)
   // final int? noOfComments; // being removed
   // final bool? deleted; // being removed
@@ -58,7 +58,7 @@ class SearchResultDoc {
 
     /// only one url is saved in Typesense
     /// In Typesense it is saved as url string
-    this.urls,
+    this.url,
     // Comment
     this.postId,
     this.parentId,
@@ -87,7 +87,7 @@ class SearchResultDoc {
       category: json['category'],
       // <---x  We only save the first url for Typesense
       // This will ensure if we have url -> [url]
-      urls: ((json['url'] ?? '') as String).isEmpty ? null : [json['url']],
+      url: ((json['url'] ?? '') as String).isEmpty ? null : json['url'],
 
       // Comment
       postId: json['postId'],
@@ -115,7 +115,7 @@ class SearchResultDoc {
       'title': title,
       'content': content,
       'category': category,
-      'urls': urls, // <---x  We only save the first url
+      'urls': url == null ? null : [url],
       // Comment
       'postId': postId,
       'parentId': parentId,
