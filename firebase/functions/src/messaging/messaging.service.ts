@@ -106,7 +106,6 @@ export class MessagingService {
   ) {
     const tokens = await this.getTokensOfUsers(uids);
     console.log("tokens", tokens);
-
   }
 
   /**
@@ -115,7 +114,7 @@ export class MessagingService {
    * @param uids uids of users
    * @param chunkSize chunk size - default 500. sendAll() 로 한번에 보낼 수 있는 최대 메세지 수는 500 개 이다.
    * chunk 가 500 이고, 총 토큰의 수가 501 이면, 첫번째 배열에 500개의 토큰 두번째 배열에 1개의 토큰이 들어간다.
-   * 
+   *
    * @returns Array<Array<string>> - Array of tokens. Each array contains 500 tokens.
    * 리턴 값은 2차원 배열이다. 각 배열은 최대 [chunkSize] 개의 토큰을 담고 있다.
    */
@@ -145,6 +144,5 @@ export class MessagingService {
     }
 
     return chunk(tokens, chunkSize);
-
   }
 }

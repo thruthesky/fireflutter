@@ -27,12 +27,12 @@ describe("getTokensOfUsers 기능 테스트", () => {
         // Generate 2 tokens under 2 uids
         const db = getDatabase();
         await db.ref("user-fcm-tokens").set({
-            'uid-1-token-1': { 'uid': 'uid-1' },
-            'uid-1-token-2': { 'uid': 'uid-1' },
-            'uid-2-token-1': { 'uid': 'uid-2' },
-            'uid-2-token-2': { 'uid': 'uid-2' },
+            "uid-1-token-1": { uid: "uid-1" },
+            "uid-1-token-2": { uid: "uid-1" },
+            "uid-2-token-1": { uid: "uid-2" },
+            "uid-2-token-2": { uid: "uid-2" },
         });
-        const tokens = await MessagingService.getTokensOfUsers(['uid-1', 'uid-2']);
+        const tokens = await MessagingService.getTokensOfUsers(["uid-1", "uid-2"]);
         assert.ok(tokens[0].length === 4, "No of tokens must be 4.");
     });
 
@@ -43,22 +43,21 @@ describe("getTokensOfUsers 기능 테스트", () => {
         // Generate 2 tokens under 2 uids
         const db = getDatabase();
         await db.ref("user-fcm-tokens").set({
-            'uid-1-token-1': { 'uid': 'uid-1' },
-            'uid-1-token-2': { 'uid': 'uid-1' },
-            'uid-2-token-1': { 'uid': 'uid-2' },
-            'uid-2-token-2': { 'uid': 'uid-2' },
-            'uid-3-token-1': { 'uid': 'uid-3' },
+            "uid-1-token-1": { uid: "uid-1" },
+            "uid-1-token-2": { uid: "uid-1" },
+            "uid-2-token-1": { uid: "uid-2" },
+            "uid-2-token-2": { uid: "uid-2" },
+            "uid-3-token-1": { uid: "uid-3" },
         });
         // uid 1, 2, 3 로 부터 토큰 5개 가져오기
-        const tokens5 = await MessagingService.getTokensOfUsers(['uid-1', 'uid-2', 'uid-3', 'uid-x-1', 'uid-x-2']);
+        const tokens5 = await MessagingService.getTokensOfUsers(["uid-1", "uid-2", "uid-3", "uid-x-1", "uid-x-2"]);
         assert.ok(tokens5[0].length === 5, "No of tokens must be 5.");
 
 
         // uid 1, 3 로 부터 토큰 3개 가져오기
-        const tokens3 = await MessagingService.getTokensOfUsers(['uid-1', 'uid-3', 'uid-x-1', 'uid-x-2']);
+        const tokens3 = await MessagingService.getTokensOfUsers(["uid-1", "uid-3", "uid-x-1", "uid-x-2"]);
         assert.ok(tokens3[0].length === 3, "No of tokens must be 3.");
     });
-
 
 
     it("토큰을 chunk 로 나누기 - 11개의 토큰을 5개로 나누어 가져옴", async () => {
@@ -73,7 +72,7 @@ describe("getTokensOfUsers 기능 테스트", () => {
             uids.push(uid);
             const token = `token-${i}`;
             promises.push(db.ref(`user-fcm-tokens/${uid}-${token}`).set({
-                'uid': uid,
+                uid: uid,
             }));
         }
         await Promise.all(promises);
@@ -106,7 +105,7 @@ describe("getTokensOfUsers 기능 테스트", () => {
             uids.push(uid);
             const token = `token-${i}`;
             promises.push(db.ref(`user-fcm-tokens/${uid}-${token}`).set({
-                'uid': uid,
+                uid: uid,
             }));
         }
         await Promise.all(promises);
@@ -123,9 +122,6 @@ describe("getTokensOfUsers 기능 테스트", () => {
         // 두번째 chunk 에는 1개의 토큰이 있어야 한다.
         assert.ok(tokens[1].length === 1, "No of tokens must be 1. result: " + tokens[1].length);
     });
-
-
-
 
 
     // it("getTokensOfUsers with wrong uids", async () => {
