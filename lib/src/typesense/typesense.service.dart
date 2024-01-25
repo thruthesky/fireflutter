@@ -80,7 +80,6 @@ class TypesenseService {
     return await client.collection(searchCollection).document(id).delete();
   }
 
-  // TODO review since we updated schema or cleanup
   /// Update the index for the user.
   Future<Map<String, dynamic>> upsertUser(UserModel user) async {
     final data = {
@@ -95,7 +94,6 @@ class TypesenseService {
     return await client.collection(searchCollection).documents.upsert(data);
   }
 
-  // TODO review since we updated schema or cleanup
   /// Updates the index for the post.
   Future<Map<String, dynamic>> upsertPost(PostModel post) async {
     final data = {
@@ -106,15 +104,12 @@ class TypesenseService {
       'title': post.title,
       'content': post.content,
       'category': post.category,
-      'noOfLikes': post.noOfLikes,
-      'urls': post.urls,
-      'noOfComments': post.noOfComments,
-      'deleted': post.deleted,
+      // 'urls': post.urls, we only save url
+      if (post.urls.isNotEmpty) 'url': post.urls[0],
     };
     return await client.collection(searchCollection).documents.upsert(data);
   }
 
-  // TODO review since we updated schema or cleanup
   /// Updates the index for the comment.
   Future<Map<String, dynamic>> upsertComment(CommentModel comment) async {
     final data = {
@@ -126,12 +121,13 @@ class TypesenseService {
       'parentId': comment.parentId,
       'content': comment.content,
       'uid': comment.uid,
-      'urls': comment.urls,
+      // 'urls': post.urls, we only save url
+      if (comment.urls.isNotEmpty) 'url': comment.urls[0],
     };
     return await client.collection(searchCollection).documents.upsert(data);
   }
 
-  // TODO review since we updated schema
+  // Reindex a user in Typesense
   Future<void> reindexUser() async {
     dog('Re-indexing users');
     await client.collection(searchCollection).documents.delete({
@@ -145,7 +141,6 @@ class TypesenseService {
     }
   }
 
-  // TODO review since we updated schema
   /// Re-index the posts and comments for the category only.
   Future<void> reindexCategory(String category) async {
     dog('Re-indexing category: $category');
@@ -158,7 +153,6 @@ class TypesenseService {
         await upsertPost(post);
         dog('Re-indexing post: ${post.id}');
       }
-
       for (final comment in post.comments) {
         if (!comment.deleted) {
           await upsertComment(comment);
