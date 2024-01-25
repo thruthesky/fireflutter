@@ -23,8 +23,8 @@ describe("게시판 카테고리 푸시 알림", () => {
         await MessagingService.sendNotificationToForumCategorySubscribers({
             id: "post-id-1",
             category: "discussion",
-            title: "title",
-            body: "body",
+            title: "(1) This is the post title from unit test.",
+            body: "Body. Hi there. How are you? Are you having fun? Oops..",
             image: "",
             uid: "author-uid",
         });

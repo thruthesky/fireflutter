@@ -157,19 +157,25 @@ export class MessagingService {
       }
 
 
-      // 에러 토큰 삭제
+      // 전송 결과에서 에러가 있는 토큰을 골라낸다.
       const tokensToRemove = messages.filter((message) => {
         if (message.success !== false) return false;
-        console.log("message: ", message)
-        if (message.code === "messaging/invalid-registration-token") return true;
+        // 푸시 토큰이 잘못되었을 때는 아래의 세개 중 한개의 에러 메시지가 나타난다.
+        if (message.code === "messaging/invalid-argument") return true;
+        else if (message.code === "messaging/invalid-registration-token") return true;
+        else if (message.code === "messaging/registration-token-not-registered") return true;
+
         return false;
       }).map((message) => message.token);
-      Config.log("에러가 있는 토큰 목록(삭제될 토큰 목록):", tokensToRemove);
+      // Config.log("에러가 있는 토큰 목록(삭제될 토큰 목록):", tokensToRemove);
+
+
+      /// 에러가 있는, 골라낸 토큰을 삭제한다.
       const promisesToRemove = [];
       for (let i = 0; i < tokensToRemove.length; i++) {
         promisesToRemove.push(getDatabase().ref(`${Config.userFcmTokensPath}/${tokensToRemove[i]}`).remove());
       }
-      // await Promise.allSettled(promisesToRemove);
+      await Promise.allSettled(promisesToRemove);
     }
   }
 
