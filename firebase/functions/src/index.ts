@@ -10,7 +10,7 @@ import { setGlobalOptions } from "firebase-functions/v2/options";
 initializeApp();
 
 setGlobalOptions({
-    region: "asia-northeast1",
+    region: "asia-southeast1",
 });
 
 export * from "./messaging/messaging.functions";
