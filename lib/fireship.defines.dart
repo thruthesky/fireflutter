@@ -11,6 +11,8 @@ class Folder {
 
   static const String reports = 'reports';
   static const String posts = 'posts';
+
+  static const String postsSubscription = 'posts-subscription';
 }
 
 class Field {

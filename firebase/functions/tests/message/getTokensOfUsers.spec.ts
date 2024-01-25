@@ -3,11 +3,12 @@ import { MessagingService } from "../../src/messaging/messaging.service";
 import { describe, it } from "mocha";
 import assert = require("assert");
 import { getDatabase } from "firebase-admin/database";
+import { Config } from "../../src/config";
 
 if (admin.apps.length === 0) {
     admin.initializeApp(
         {
-            databaseURL: "https://withcenter-test-3-default-rtdb.firebaseio.com",
+            databaseURL: "https://philgo-default-rtdb.asia-southeast1.firebasedatabase.app",
         }
     );
 }
@@ -26,7 +27,7 @@ describe("getTokensOfUsers 기능 테스트", () => {
     it("getTokensOfUsers with right uids", async () => {
         // Generate 2 tokens under 2 uids
         const db = getDatabase();
-        await db.ref("user-fcm-tokens").set({
+        await db.ref(Config.userFcmTokensPath).set({
             "uid-1-token-1": { uid: "uid-1" },
             "uid-1-token-2": { uid: "uid-1" },
             "uid-2-token-1": { uid: "uid-2" },
@@ -42,7 +43,7 @@ describe("getTokensOfUsers 기능 테스트", () => {
     it("잘못된 UID 를 섞어서 토큰 5개 가져오기", async () => {
         // Generate 2 tokens under 2 uids
         const db = getDatabase();
-        await db.ref("user-fcm-tokens").set({
+        await db.ref(Config.userFcmTokensPath).set({
             "uid-1-token-1": { uid: "uid-1" },
             "uid-1-token-2": { uid: "uid-1" },
             "uid-2-token-1": { uid: "uid-2" },
@@ -66,12 +67,12 @@ describe("getTokensOfUsers 기능 테스트", () => {
         const db = getDatabase();
         const promises = [];
         const uids = [];
-        await db.ref("user-fcm-tokens").set({});
+        await db.ref(Config.userFcmTokensPath).set({});
         for (let i = 0; i < n; i++) {
             const uid = `uid-${i}`;
             uids.push(uid);
             const token = `token-${i}`;
-            promises.push(db.ref(`user-fcm-tokens/${uid}-${token}`).set({
+            promises.push(db.ref(`${Config.userFcmTokensPath}/${uid}-${token}`).set({
                 uid: uid,
             }));
         }
@@ -99,12 +100,12 @@ describe("getTokensOfUsers 기능 테스트", () => {
         const db = getDatabase();
         const promises = [];
         const uids = [];
-        await db.ref("user-fcm-tokens").set({});
+        await db.ref(Config.userFcmTokensPath).set({});
         for (let i = 0; i < n; i++) {
             const uid = `uid-${i}`;
             uids.push(uid);
             const token = `token-${i}`;
-            promises.push(db.ref(`user-fcm-tokens/${uid}-${token}`).set({
+            promises.push(db.ref(`${Config.userFcmTokensPath}/${uid}-${token}`).set({
                 uid: uid,
             }));
         }
