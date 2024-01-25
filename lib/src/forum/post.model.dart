@@ -159,13 +159,14 @@ class PostModel {
   }
 
   Map<String, dynamic> toSummary() => {
-        'category': category,
+        // 'category': category,
         Field.content: content.upTo(128),
         'createdAt': createdAt.millisecondsSinceEpoch,
-        'id': id,
+        // 'id': id,
         Field.order: order,
         'title': title.upTo(64),
         Field.uid: uid,
+        'url': urls.firstOrNull,
       };
 
   Map<String, dynamic> toJson() => {
@@ -308,8 +309,9 @@ class PostModel {
       await ref.remove();
     } else {
       await update(
-        title: Code.deleted,
-        content: Code.deleted,
+        title: null,
+        content: null,
+        urls: null,
         deleted: true,
       );
     }
@@ -322,8 +324,11 @@ class PostModel {
       await Ref.postSummary(category, id).remove();
     } else {
       await Ref.postSummary(category, id).set({
-        Field.title: Code.deleted,
-        Field.content: Code.deleted,
+        Field.title: null,
+        Field.content: null,
+
+        /// TODO url 필드인지, urls 필드인지 확인 할 것.
+        'url': null,
         Field.deleted: true,
       });
     }

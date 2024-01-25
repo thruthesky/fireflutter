@@ -135,3 +135,12 @@ Replace the `PostListTile` widget as needed (like customization).
   - order (required)
 
 - Right after creation of the post, it will update the post with new `order`. So, if you are working on cloud functions with event trigger, don't be supprised that it may cause multiple write events.
+
+- When a post is created, the counter part summary record will be created under `/posts-summary` with the following fields.
+  - content
+  - createdAt
+  - order
+  - title
+  - uid
+  - url
+- 

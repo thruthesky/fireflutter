@@ -13,19 +13,21 @@ if (admin.apps.length === 0) {
 }
 
 /**
- * This test is not reliable because the tokens may be invalid after a while.
+ * 게시판 카테고리 푸시 알림
+ *
+ * 실제로 메시지가 핸드폰에 전달된다. 그래서, 테스트를 할 때는, 핸드폰에 메시지가 전달되는지 확인해야 하고,
+ * 실제 사용자들에게 메시지가 전달될 수 있으므로 주의한다.
  */
 describe("게시판 카테고리 푸시 알림", () => {
     it("qna 게시판", async () => {
         await MessagingService.sendNotificationToForumCategorySubscribers({
             id: "post-id-1",
-            category: "qna",
+            category: "discussion",
             title: "title",
             body: "body",
             image: "",
             uid: "author-uid",
         });
-
         assert.ok(true);
     });
 });
