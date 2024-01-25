@@ -66,13 +66,6 @@ class SearchResultDoc {
   });
 
   factory SearchResultDoc.fromJson(Map<String, dynamic> json) {
-    // <---x  We only save the first url for Typesense
-    // This will ensure if we have url -> [url]
-    List<String>? urls;
-    if (((json['url'] ?? '') as String).isNotEmpty) {
-      urls = [json['url']];
-    }
-
     return SearchResultDoc(
       // BE REMINDED when we update anything here,
       // we should also update the structure of
@@ -92,7 +85,9 @@ class SearchResultDoc {
       title: json['title'],
       content: json['content'],
       category: json['category'],
-      urls: urls,
+      // <---x  We only save the first url for Typesense
+      // This will ensure if we have url -> [url]
+      urls: ((json['url'] ?? '') as String).isEmpty ? null : [json['url']],
 
       // Comment
       postId: json['postId'],
