@@ -10,7 +10,11 @@ import { PostCreateEvent, TypesenseDoc, TypesensePostCreate } from "./typesense.
  * for all databases in 'us-central1'
  */
 export const typesenseUserIndexing = onValueWritten(
-    "/users/{uid}",
+    {
+        ref: "/users/{uid}",
+        instance: "philgo-default-rtdb",
+        region: "asia-southeast1",
+    },
     (event) => {
         if (!event.data.after.exists()) {
             // Do something here for deleted users
@@ -38,7 +42,11 @@ export const typesenseUserIndexing = onValueWritten(
  * Indexing for comments
  */
 export const typesenseCommentIndexing = onValueWritten(
-    "/posts/{category}/{postId}/comments/{id}",
+    {
+        ref: "/posts/{category}/{postId}/comments/{id}",
+        instance: "philgo-default-rtdb",
+        region: "asia-southeast1",
+    },
     (event) => {
         const data = event.data.after.val() as TypesenseDoc;
         if (!event.data.after.exists() || (event.data.before.exists() && data.deleted == true)) {
@@ -79,7 +87,11 @@ export const typesenseCommentIndexing = onValueWritten(
  *
  */
 export const typesensePostCreatedIndexing = onValueCreated(
-    "/posts/{category}/{id}",
+    {
+        ref: "/posts/{category}/{id}",
+        instance: "philgo-default-rtdb",
+        region: "asia-southeast1",
+    },
     async (event) => {
         const data = event.data.val() as PostCreateEvent;
         // Created
@@ -110,7 +122,11 @@ export const typesensePostCreatedIndexing = onValueCreated(
  *   will not, be added. Please re-index the post, instead.
  */
 export const typesensePostUpdateTitleIndexing = onValueWritten(
-    "/posts/{category}/{id}/title",
+    {
+        ref: "/posts/{category}/{id}/title",
+        instance: "philgo-default-rtdb",
+        region: "asia-southeast1",
+    },
     (event) => {
         const id = event.params.id;
         if (event.data.after.exists()) {
@@ -152,7 +168,11 @@ export const typesensePostUpdateTitleIndexing = onValueWritten(
  *   will not, be added. Please re-index the post, instead.
  */
 export const typesensePostUpdateContentIndexing = onValueWritten(
-    "/posts/{category}/{id}/content",
+    {
+        ref: "/posts/{category}/{id}/content",
+        instance: "philgo-default-rtdb",
+        region: "asia-southeast1",
+    },
     (event) => {
         const id = event.params.id;
         if (event.data.after.exists()) {
@@ -195,7 +215,11 @@ export const typesensePostUpdateContentIndexing = onValueWritten(
  *   will not, be added. Please re-index the post, instead.
  */
 export const typesensePostUpdateUrlIndexing = onValueWritten(
-    "/posts/{category}/{id}/urls",
+    {
+        ref: "/posts/{category}/{id}/urls",
+        instance: "philgo-default-rtdb",
+        region: "asia-southeast1",
+    },
     (event) => {
         const id = event.params.id;
         if (event.data.after.exists()) {
@@ -233,7 +257,11 @@ export const typesensePostUpdateUrlIndexing = onValueWritten(
  * collection.
  */
 export const typesensePostUpdateDeleted = onValueWritten(
-    "/posts/{category}/{id}/deleted",
+    {
+        ref: "/posts/{category}/{id}/deleted",
+        instance: "philgo-default-rtdb",
+        region: "asia-southeast1",
+    },
     (event) => {
         const deletedValue: boolean | undefined = event.data.after.val();
         const id = event.params.id;
@@ -254,7 +282,11 @@ export const typesensePostUpdateDeleted = onValueWritten(
  * in Typesense.
  */
 export const typesensePostDeleteIndexing = onValueDeleted(
-    "/posts/{category}/{id}",
+    {
+        ref: "/posts/{category}/{id}",
+        instance: "philgo-default-rtdb",
+        region: "asia-southeast1",
+    },
     (event) => {
       const deletedData = event.data.val() as TypesenseDoc;
       console.log("Deleted Post in RTDB. This is a hard delete which means the node is completely removed in RTDB ", event.params, deletedData);
