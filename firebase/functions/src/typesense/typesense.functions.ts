@@ -1,5 +1,5 @@
 
-import { onValueCreated, onValueDeleted, onValueUpdated, onValueWritten } from "firebase-functions/v2/database";
+import { onValueCreated, onValueDeleted, onValueWritten } from "firebase-functions/v2/database";
 import { TypesenseService } from "./typesense.service";
 import { PostCreateEvent, TypesenseDoc, TypesensePostCreate } from "./typesense.interface";
 
@@ -99,55 +99,129 @@ export const typesensePostCreatedIndexing = onValueCreated(
 
 /**
  * Indexing for post update for title
+ *
+ * **NOTE!**:
+ * * In case when post document is not in Typesense yet but already created,
+ *   then user deleted the this, this will be trigerred. However, it will
+ *   not be inserted in Typesense since it doesn't exist in Typesense and we
+ *   are using `Typesense.update`. Please re-index the post, instead.
+ * * In case that post document is not in Typesense yet but already created,
+ *   then user updated this, this will be trigerred. However, `createdAt`, `uid`
+ *   will not, be added. Please re-index the post, instead.
  */
-export const typesensePostUpdateTitleIndexing = onValueUpdated(
+export const typesensePostUpdateTitleIndexing = onValueWritten(
     "/posts/{category}/{id}/title",
     (event) => {
-        const afterValue = event.data.after.val();
         const id = event.params.id;
+        if (event.data.after.exists()) {
+            // Created || Updated
+            const afterValue = event.data.after.val();
+            const postData = {
+                title: afterValue ?? "",
+                category: event.params.category,
+                id: id,
+                type: "post",
+            } as TypesenseDoc;
+            console.log("A post's `title` is created/updated in RTDB", event.params, afterValue);
+            return TypesenseService.emplace(postData);
+        }
+        // Deleted
         const postData = {
-            title: afterValue,
+            title: "",
             id: id,
             type: "post",
         } as TypesenseDoc;
-        console.log("A post's `title` is updated in RTDB", event.params, afterValue);
-        return TypesenseService.emplace(postData);
+        console.log("A post's `title` is deleted in RTDB", event.params);
+        // If document doesn't exist in typesense, it will not
+        // create new noc in Typesense, even when the full post document is not
+        // really deleted in RTDB
+        return TypesenseService.update(postData.id ?? "", postData);
     },
 );
 
 /**
  * Indexing for post update for content
+ *
+ * **NOTE!**:
+ * * In case when post document is not in Typesense yet but already created,
+ *   then user deleted the content, this will be trigerred. However, it will
+ *   not be inserted in Typesense since it doesn't exist in Typesense and we
+ *   are using `Typesense.update`. Please re-index the post, instead.
+ * * In case that post document is not in Typesense yet but already created,
+ *   then user updated this, this will be trigerred. However, `createdAt`, `uid`
+ *   will not, be added. Please re-index the post, instead.
  */
-export const typesensePostUpdateContentIndexing = onValueUpdated(
+export const typesensePostUpdateContentIndexing = onValueWritten(
     "/posts/{category}/{id}/content",
     (event) => {
-        const afterValue = event.data.after.val();
         const id = event.params.id;
+        if (event.data.after.exists()) {
+            // Created || Updated
+            const afterValue = event.data.after.val();
+            const postData = {
+                content: afterValue ?? "",
+                category: event.params.category,
+                id: id,
+                type: "post",
+            } as TypesenseDoc;
+            console.log("A post's `content` is updated in RTDB", event.params, afterValue);
+            return TypesenseService.emplace(postData);
+        }
+        // Deleted
+        // See note on the JSDoc.
         const postData = {
-            content: afterValue,
+            content: "",
             id: id,
             type: "post",
         } as TypesenseDoc;
-        console.log("A post's `content` is updated in RTDB", event.params, afterValue);
-        return TypesenseService.emplace(postData);
+        console.log("A post's `content` is deleted in RTDB", event.params);
+        // If document doesn't exist in typesense, it will not
+        // create new noc in Typesense, even when the full post document is not
+        // really deleted in RTDB
+        return TypesenseService.update(postData.id ?? "", postData);
     },
 );
 
 /**
  * Indexing for post update for urls
+ *
+ * **NOTE!**:
+ * * In case when post document is not in Typesense yet but already created,
+ *   then user deleted the content, this will be trigerred. However, it will
+ *   not be inserted in Typesense since it doesn't exist in Typesense and we
+ *   are using `Typesense.update`. Please re-index the post, instead.
+ * * In case that post document is not in Typesense yet but already created,
+ *   then user updated this, this will be trigerred. However, `createdAt`, `uid`
+ *   will not, be added. Please re-index the post, instead.
  */
-export const typesensePostUpdateUrlIndexing = onValueUpdated(
+export const typesensePostUpdateUrlIndexing = onValueWritten(
     "/posts/{category}/{id}/urls",
     (event) => {
-        const afterValue = event.data.after.val();
         const id = event.params.id;
+        if (event.data.after.exists()) {
+            // Created || Updated
+            const afterValue = event.data.after.val();
+            const id = event.params.id;
+            const postData = {
+                url: afterValue?.[0] ?? "",
+                category: event.params.category,
+                id: id,
+                type: "post",
+            } as TypesenseDoc;
+            console.log("A post's `urls` is updated in RTDB", event.params, afterValue);
+            return TypesenseService.emplace(postData);
+        }
+        // Deleted
         const postData = {
-            url: afterValue?.[0] ?? "",
+            url: "",
             id: id,
             type: "post",
         } as TypesenseDoc;
-        console.log("A post's `urls` is updated in RTDB", event.params, afterValue);
-        return TypesenseService.emplace(postData);
+        console.log("A post's `url` is deleted in RTDB", event.params);
+        // If document doesn't exist in typesense, it will not
+        // create new noc in Typesense, even when the full post document is not
+        // really deleted in RTDB
+        return TypesenseService.update(postData.id ?? "", postData);
     },
 );
 
@@ -158,12 +232,12 @@ export const typesensePostUpdateUrlIndexing = onValueUpdated(
  * Typesense document should be deleted in the
  * collection.
  */
-export const typesensePostUpdateDeleted = onValueUpdated(
+export const typesensePostUpdateDeleted = onValueWritten(
     "/posts/{category}/{id}/deleted",
     (event) => {
         const deletedValue: boolean | undefined = event.data.after.val();
         const id = event.params.id;
-        console.log("A post's `deleted` is updated in RTDB", event.params, deletedValue);
+        console.log("A post's `deleted` is created/updated/deleted in RTDB", event.params, deletedValue);
         if (deletedValue == true) {
             return TypesenseService.delete(id);
         } else {
