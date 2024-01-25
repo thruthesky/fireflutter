@@ -1,6 +1,5 @@
 import { SendResponse, getMessaging } from "firebase-admin/messaging";
 import { getDatabase } from "firebase-admin/database";
-import { logger } from "firebase-functions/v1";
 import { MessageNotification, MessageRequest, PostCreateMessage, SendEachMessage } from "./messaging.interface";
 import { chunk } from "../library";
 import { Config } from "../config";
@@ -140,7 +139,8 @@ export class MessagingService {
       for (const token of tokenChunk) {
         messages.push({ notification, data, token });
       }
-      const res = await messaging.sendEach(messages, true);
+      Config.log("-----> sendNotificationToUids -> sendEach() messages[0]:", messages[0]);
+      const res = await messaging.sendEach(messages, Config.messagingDryRun);
       Config.log("-----> sendNotificationToUids -> sendEach() result:", "successCount", res.successCount, "failureCount", res.failureCount,);
 
 
@@ -196,6 +196,7 @@ export class MessagingService {
     for (const res of settled) {
       if (res.status == "fulfilled") {
         res.value.forEach((token) => {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           tokens.push(token.key!);
         });
       }
@@ -218,6 +219,7 @@ export class MessagingService {
     const snapshot = await db.ref(`${Config.postsSubscriptionPath}/${msg.category}`).get();
     const uids: Array<string> = [];
     snapshot.forEach((child) => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       uids.push(child.key!);
     });
 

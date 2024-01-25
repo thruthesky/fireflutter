@@ -1,4 +1,5 @@
-import { logger } from "firebase-functions/v1";
+// eslint-disable-file @typescript-eslint/no-explicit-any
+// import { logger } from "firebase-functions/v1";
 
 /**
  * Config
@@ -17,13 +18,19 @@ export class Config {
     static postsSubscriptionPath = "posts-subscription";
 
     /**
-     *
-     * @param message
-     * @param optionalParams
+     * debug 가 true 일 때만 로그를 남긴다.
+     * @param message message to log
+     * @param optionalParams optinal parameters to log
      */
     static log(message: string, ...optionalParams: any[]) {
         if (Config.debug) {
-            logger.info(message, ...optionalParams);
+            console.log(message, ...optionalParams);
         }
     }
+    /**
+     * 푸시 알림을 보낼 때, dry run 을 할 것인지 여부.
+     *
+     * dry run 을 true 로 하면, 실제로 메시지가 전달되지 않는다. 즉, 테스트 할 때에만 true 로 한다.
+     */
+    static messagingDryRun = false;
 }

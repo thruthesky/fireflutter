@@ -1,6 +1,7 @@
 
 
 import { initializeApp } from "firebase-admin/app";
+import { setGlobalOptions } from "firebase-functions/v2/options";
 // import { onValueWritten } from "firebase-functions/v2/database";
 // import { setGlobalOptions } from "firebase-functions/v2/options";
 
@@ -8,7 +9,9 @@ import { initializeApp } from "firebase-admin/app";
 // / initialize firebase app
 initializeApp();
 
-// setGlobalOptions({ region: "asia-northeast3" });
+setGlobalOptions({
+    region: "asia-northeast1",
+});
 
 export * from "./messaging/messaging.functions";
 export * from "./typesense/typesense.functions";

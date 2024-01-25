@@ -8,8 +8,9 @@ import { PostCreateEvent } from "../forum/forum.interface";
 import { PostCreateMessage } from "./messaging.interface";
 
 
-import * as functions from "firebase-functions";
-import { Config } from "../config";
+// import * as functions from "firebase-functions";
+import { onValueCreated } from "firebase-functions/v2/database";
+// import { Config } from "../config";
 // import * as admin from "firebase-admin";
 
 
@@ -35,45 +36,44 @@ export const sendPushNotifications = onRequest(async (request, response) => {
 /**
  * Sending messages to forum category subscribers
  *
- * 아래는 Gen2 코드. 2024. 01. 25. 현재 배포에 에러가 있어서, Gen1 코드를 사용.
  */
-// export const sendMessagesToCategorySubscribers = onValueCreated(
-//     "/posts/{category}/{id}",
-//     async (event) => {
-//         // Grab the current value of what was written to the Realtime Database.
-//         const data = event.data.val() as PostCreateEvent;
+export const sendMessagesToCategorySubscribers = onValueCreated(
+    "/posts/{category}/{id}",
+    async (event) => {
+        // Grab the current value of what was written to the Realtime Database.
+        const data = event.data.val() as PostCreateEvent;
 
-//         const post: PostCreateMessage = {
-//             id: event.params.id,
-//             category: event.params.category,
-//             title: data.title ?? "",
-//             body: data.content ?? "",
-//             uid: data.uid,
-//             image: data.urls?.[0] ?? "",
-//         };
-
-
-//         await MessagingService.sendNotificationToForumCategorySubscribers(post);
-//     });
+        const post: PostCreateMessage = {
+            id: event.params.id,
+            category: event.params.category,
+            title: data.title ?? "",
+            body: data.content ?? "",
+            uid: data.uid,
+            image: data.urls?.[0] ?? "",
+        };
 
 
-export const sendMessagesToCategorySubscribers = functions.database.ref(
-    "/posts/{category}/{id}").onCreate(
-        async (snap, context) => {
-            // Grab the current value of what was written to the Realtime Database.
-            const data = snap.val() as PostCreateEvent;
+        await MessagingService.sendNotificationToForumCategorySubscribers(post);
+    });
 
-            const post: PostCreateMessage = {
-                id: context.params.id,
-                category: context.params.category,
-                title: data.title ?? "",
-                body: data.content ?? "",
-                uid: data.uid,
-                image: data.urls?.[0] ?? "",
-            };
+/**
+ * The code below is for gen1
+ */
+// export const sendMessagesToCategorySubscribers = functions.database.ref(
+//     "/posts/{category}/{id}").onCreate(
+//         async (snap, context) => {
+//             // Grab the current value of what was written to the Realtime Database.
+//             const data = snap.val() as PostCreateEvent;
 
-            Config.log("----> sendMessagesToCategorySubscribers: post: ", post);
+//             const post: PostCreateMessage = {
+//                 id: context.params.id,
+//                 category: context.params.category,
+//                 title: data.title ?? "",
+//                 body: data.content ?? "",
+//                 uid: data.uid,
+//                 image: data.urls?.[0] ?? "",
+//             };
 
 
-            await MessagingService.sendNotificationToForumCategorySubscribers(post);
-        });
+//             await MessagingService.sendNotificationToForumCategorySubscribers(post);
+//         });
