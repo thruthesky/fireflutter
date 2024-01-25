@@ -1,7 +1,8 @@
 
 import { onValueCreated, onValueDeleted, onValueWritten } from "firebase-functions/v2/database";
 import { TypesenseService } from "./typesense.service";
-import { PostCreateEvent, TypesenseDoc, TypesensePostCreate } from "./typesense.interface";
+import { TypesenseDoc, TypesensePostCreate } from "./typesense.interface";
+import { PostCreateEvent } from "../forum/forum.interface";
 
 /**
  * Indexing for users
@@ -288,8 +289,8 @@ export const typesensePostDeleteIndexing = onValueDeleted(
         region: "asia-southeast1",
     },
     (event) => {
-      const deletedData = event.data.val() as TypesenseDoc;
-      console.log("Deleted Post in RTDB. This is a hard delete which means the node is completely removed in RTDB ", event.params, deletedData);
-      return TypesenseService.delete(event.params.id);
+        const deletedData = event.data.val() as TypesenseDoc;
+        console.log("Deleted Post in RTDB. This is a hard delete which means the node is completely removed in RTDB ", event.params, deletedData);
+        return TypesenseService.delete(event.params.id);
     },
 );
