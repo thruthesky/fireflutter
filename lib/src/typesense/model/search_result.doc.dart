@@ -24,11 +24,12 @@ class SearchResultDoc {
   final String? category;
   // `uid` is already given above
   // `likes` is not added (conversion will be complicated, can add later)
-  final int? noOfLikes;
+  // TODO clean up
+  // final int? noOfLikes; // being removed
   final List<String>? urls;
   // `comments` is not added (conversion will be complicated, can add later)
-  final int? noOfComments;
-  final bool? deleted;
+  // final int? noOfComments; // being removed
+  // final bool? deleted; // being removed
 
   // Comment
   // for comment's `id`, use the id above
@@ -38,7 +39,7 @@ class SearchResultDoc {
   // for comment's `content`, it is shared with post above
   // `uid` is already given above
   // `urls` is already given in post above
-  final int? depth;
+  // final int? depth; // being removed
 
   SearchResultDoc({
     required this.id,
@@ -54,14 +55,15 @@ class SearchResultDoc {
     this.title,
     this.content,
     this.category,
-    this.noOfLikes,
+    // TODO clean up
+    // this.noOfLikes,
     this.urls,
-    this.noOfComments,
-    this.deleted,
+    // this.noOfComments,
+    // this.deleted,
     // Comment
     this.postId,
     this.parentId,
-    this.depth,
+    // this.depth,
   });
 
   factory SearchResultDoc.fromJson(Map<String, dynamic> json) {
@@ -84,15 +86,19 @@ class SearchResultDoc {
       title: json['title'],
       content: json['content'],
       category: json['category'],
-      noOfLikes: json['noOfLikes'],
-      urls: json['urls'] == null ? null : List<String>.from(json['urls']),
-      noOfComments: json['noOfComments'],
-      deleted: json['deleted'],
+      // TODO cleanup
+      // noOfLikes: json['noOfLikes'],
+      // urls: json['urls'] == null ? null : List<String>.from(json['urls']),
+      urls: json['urls'] == null
+          ? (json['url'] == null ? null : [json['url']])
+          : List<String>.from(json['urls']),
+      // noOfComments: json['noOfComments'],
+      // deleted: json['deleted'],
 
       // Comment
       postId: json['postId'],
       parentId: json['parentId'],
-      depth: json['depth'],
+      // depth: json['depth'],
     );
   }
 
@@ -116,15 +122,16 @@ class SearchResultDoc {
       'title': title,
       'content': content,
       'category': category,
-      'noOfLikes': noOfLikes,
+      // TODO cleanup
+      // 'noOfLikes': noOfLikes,
       'urls': urls,
-      'noOfComments': noOfComments,
-      'deleted': deleted,
+      // 'noOfComments': noOfComments,
+      // 'deleted': deleted,
 
       // Comment
       'postId': postId,
       'parentId': parentId,
-      'depth': depth,
+      // 'depth': depth,
     };
   }
 

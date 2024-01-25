@@ -11,8 +11,6 @@ export class Config {
     static debug = true;
 
     static typesenseCollection = "momcafeSearch";
-
-
     // token 을 저장하는 경로
     // 테스트를 할 때에는 "user-fcm-tokens-test" 경로를 사용한다.
     static userFcmTokensPath = "user-fcm-tokens";
@@ -29,7 +27,6 @@ export class Config {
             console.log(message, ...optionalParams);
         }
     }
-
     /**
      * 푸시 알림을 보낼 때, dry run 을 할 것인지 여부.
      *
@@ -37,4 +34,3 @@ export class Config {
      */
     static messagingDryRun = false;
 }
-

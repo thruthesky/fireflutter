@@ -92,6 +92,9 @@ export class MessagingService {
   /**
    * 사용자의 uid 들을 입력받아, 그 사용자들의 토큰으로 메시지 전송
    *
+   * Send message to users
+   *
+   * 1. This gets the user tokens from '/user-fcm-tokens/{uid}'.
    * 2. Then it chunks the tokens into 500 tokens per chunk.
    * 3. Then delete the tokens that are not valid.
    *

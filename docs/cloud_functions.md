@@ -6,16 +6,11 @@ So, the app should not do this work from the Flutter app. You may send the push 
 
 And here comes the cloud functions
 
-
 ## Sending push notificaiton on each chat message
 
 ## Sending push notification on post and comment create
 
-
 ## Indexing data into typesense
-
-
-
 
 ## indexing post data issues
 

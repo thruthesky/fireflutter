@@ -41,7 +41,17 @@ export interface TypesensePostCreate {
 }
 
 export interface TypesensePostUpdate {
+    id: string;
     content?: string;
     title?: string;
     url?: string | null;
+    createdAt: number;
+}
+
+export interface PostCreateEvent {
+    title?: string;
+    content?: string;
+    uid: string;
+    urls?: Array<string>;
+    createdAt: number;
 }

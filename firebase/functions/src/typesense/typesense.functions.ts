@@ -1,8 +1,7 @@
 
-import { onValueWritten } from "firebase-functions/v2/database";
+import { onValueCreated, onValueDeleted, onValueWritten } from "firebase-functions/v2/database";
 import { TypesenseService } from "./typesense.service";
-import { TypesenseDoc, TypesensePostCreate, TypesensePostUpdate } from "./typesense.interface";
-import { PostCreateEvent, PostUpdateEvent } from "../forum/forum.interface";
+import { PostCreateEvent, TypesenseDoc, TypesensePostCreate } from "./typesense.interface";
 
 /**
  * Indexing for users
@@ -11,7 +10,11 @@ import { PostCreateEvent, PostUpdateEvent } from "../forum/forum.interface";
  * for all databases in 'us-central1'
  */
 export const typesenseUserIndexing = onValueWritten(
-    "/users/{uid}",
+    {
+        ref: "/users/{uid}",
+        instance: "philgo-default-rtdb",
+        region: "asia-southeast1",
+    },
     (event) => {
         if (!event.data.after.exists()) {
             // Do something here for deleted users
@@ -39,13 +42,16 @@ export const typesenseUserIndexing = onValueWritten(
  * Indexing for comments
  */
 export const typesenseCommentIndexing = onValueWritten(
-    "/posts/{category}/{postId}/comments/{id}",
+    {
+        ref: "/posts/{category}/{postId}/comments/{id}",
+        instance: "philgo-default-rtdb",
+        region: "asia-southeast1",
+    },
     (event) => {
         const data = event.data.after.val() as TypesenseDoc;
         if (!event.data.after.exists() || (event.data.before.exists() && data.deleted == true)) {
-            // Supposedly !event.data.after.exists() should not happen naturally, unless admins deleted the actual record directly to RTDB.
-            // Logic will also go here if the RTDB Doc is updated and deleted = true
-            // Do something here for deleted Comments
+            // when deleted becomes == true
+            // or when comment node is removed
             const data = event.data.before.val() as TypesenseDoc;
             const commentData = {
                 ...data,
@@ -76,35 +82,19 @@ export const typesenseCommentIndexing = onValueWritten(
     },
 );
 
-
 /**
- * Indexing for post
+ * Indexing for post created
  *
- * **Attention**: read the cloud_functions.md for the post indexing issue.
  */
-export const typesensePostIndexing = onValueWritten(
-    "/posts/{category}/{id}",
+export const typesensePostCreatedIndexing = onValueCreated(
+    {
+        ref: "/posts/{category}/{id}",
+        instance: "philgo-default-rtdb",
+        region: "asia-southeast1",
+    },
     async (event) => {
-        // Attention: delete event must come first (before update).
-        if (!event.data.after.exists()) {
-            // Deleted.
-            return await TypesenseService.delete(event.params.id);
-        }
-        if (event.data.before.exists()) {
-            // Update
-            const data = event.data.after.val() as PostUpdateEvent;
-            if (data.deleted) {
-                return await TypesenseService.delete(event.params.id);
-            }
-            const postData: TypesensePostUpdate = {
-                title: data.title ?? "",
-                content: data.content ?? "",
-                url: data.urls?.[0] ?? "",
-            };
-            return await TypesenseService.update(event.params.id, postData);
-        }
+        const data = event.data.val() as PostCreateEvent;
         // Created
-        const data = event.data.after.val() as PostCreateEvent;
         const postData: TypesensePostCreate = {
             id: event.params.id,
             type: "post",
@@ -119,13 +109,187 @@ export const typesensePostIndexing = onValueWritten(
     },
 );
 
+/**
+ * Indexing for post update for title
+ *
+ * **NOTE!**:
+ * * In case when post document is not in Typesense yet but already created,
+ *   then user deleted the this, this will be trigerred. However, it will
+ *   not be inserted in Typesense since it doesn't exist in Typesense and we
+ *   are using `Typesense.update`. Please re-index the post, instead.
+ * * In case that post document is not in Typesense yet but already created,
+ *   then user updated this, this will be trigerred. However, `createdAt`, `uid`
+ *   will not, be added. Please re-index the post, instead.
+ */
+export const typesensePostUpdateTitleIndexing = onValueWritten(
+    {
+        ref: "/posts/{category}/{id}/title",
+        instance: "philgo-default-rtdb",
+        region: "asia-southeast1",
+    },
+    (event) => {
+        const id = event.params.id;
+        if (event.data.after.exists()) {
+            // Created || Updated
+            const afterValue = event.data.after.val();
+            const postData = {
+                title: afterValue ?? "",
+                category: event.params.category,
+                id: id,
+                type: "post",
+            } as TypesenseDoc;
+            console.log("A post's `title` is created/updated in RTDB", event.params, afterValue);
+            return TypesenseService.emplace(postData);
+        }
+        // Deleted
+        const postData = {
+            title: "",
+            id: id,
+            type: "post",
+        } as TypesenseDoc;
+        console.log("A post's `title` is deleted in RTDB", event.params);
+        // If document doesn't exist in typesense, it will not
+        // create new noc in Typesense, even when the full post document is not
+        // really deleted in RTDB
+        return TypesenseService.update(postData.id ?? "", postData);
+    },
+);
 
 /**
- * /posts/{category}/title
-/posts/{category}/content
-/posts/{category}/urls
-/posts/{category}/deleted
-
-onValueCreated()
-onValueDeleted()
+ * Indexing for post update for content
+ *
+ * **NOTE!**:
+ * * In case when post document is not in Typesense yet but already created,
+ *   then user deleted the content, this will be trigerred. However, it will
+ *   not be inserted in Typesense since it doesn't exist in Typesense and we
+ *   are using `Typesense.update`. Please re-index the post, instead.
+ * * In case that post document is not in Typesense yet but already created,
+ *   then user updated this, this will be trigerred. However, `createdAt`, `uid`
+ *   will not, be added. Please re-index the post, instead.
  */
+export const typesensePostUpdateContentIndexing = onValueWritten(
+    {
+        ref: "/posts/{category}/{id}/content",
+        instance: "philgo-default-rtdb",
+        region: "asia-southeast1",
+    },
+    (event) => {
+        const id = event.params.id;
+        if (event.data.after.exists()) {
+            // Created || Updated
+            const afterValue = event.data.after.val();
+            const postData = {
+                content: afterValue ?? "",
+                category: event.params.category,
+                id: id,
+                type: "post",
+            } as TypesenseDoc;
+            console.log("A post's `content` is updated in RTDB", event.params, afterValue);
+            return TypesenseService.emplace(postData);
+        }
+        // Deleted
+        // See note on the JSDoc.
+        const postData = {
+            content: "",
+            id: id,
+            type: "post",
+        } as TypesenseDoc;
+        console.log("A post's `content` is deleted in RTDB", event.params);
+        // If document doesn't exist in typesense, it will not
+        // create new noc in Typesense, even when the full post document is not
+        // really deleted in RTDB
+        return TypesenseService.update(postData.id ?? "", postData);
+    },
+);
+
+/**
+ * Indexing for post update for urls
+ *
+ * **NOTE!**:
+ * * In case when post document is not in Typesense yet but already created,
+ *   then user deleted the content, this will be trigerred. However, it will
+ *   not be inserted in Typesense since it doesn't exist in Typesense and we
+ *   are using `Typesense.update`. Please re-index the post, instead.
+ * * In case that post document is not in Typesense yet but already created,
+ *   then user updated this, this will be trigerred. However, `createdAt`, `uid`
+ *   will not, be added. Please re-index the post, instead.
+ */
+export const typesensePostUpdateUrlIndexing = onValueWritten(
+    {
+        ref: "/posts/{category}/{id}/urls",
+        instance: "philgo-default-rtdb",
+        region: "asia-southeast1",
+    },
+    (event) => {
+        const id = event.params.id;
+        if (event.data.after.exists()) {
+            // Created || Updated
+            const afterValue = event.data.after.val();
+            const id = event.params.id;
+            const postData = {
+                url: afterValue?.[0] ?? "",
+                category: event.params.category,
+                id: id,
+                type: "post",
+            } as TypesenseDoc;
+            console.log("A post's `urls` is updated in RTDB", event.params, afterValue);
+            return TypesenseService.emplace(postData);
+        }
+        // Deleted
+        const postData = {
+            url: "",
+            id: id,
+            type: "post",
+        } as TypesenseDoc;
+        console.log("A post's `url` is deleted in RTDB", event.params);
+        // If document doesn't exist in typesense, it will not
+        // create new noc in Typesense, even when the full post document is not
+        // really deleted in RTDB
+        return TypesenseService.update(postData.id ?? "", postData);
+    },
+);
+
+/**
+ * Indexing for post update for deleted
+ *
+ * When the value for deleted becomes true, the
+ * Typesense document should be deleted in the
+ * collection.
+ */
+export const typesensePostUpdateDeleted = onValueWritten(
+    {
+        ref: "/posts/{category}/{id}/deleted",
+        instance: "philgo-default-rtdb",
+        region: "asia-southeast1",
+    },
+    (event) => {
+        const deletedValue: boolean | undefined = event.data.after.val();
+        const id = event.params.id;
+        console.log("A post's `deleted` is created/updated/deleted in RTDB", event.params, deletedValue);
+        if (deletedValue == true) {
+            return TypesenseService.delete(id);
+        } else {
+            // do nothing, we don't care if it's false or null
+            return;
+        }
+    },
+);
+
+/**
+ * Removing index for post when it is hard deleted in RTDB
+ *
+ * Upon deleting the post, it should reflect properly
+ * in Typesense.
+ */
+export const typesensePostDeleteIndexing = onValueDeleted(
+    {
+        ref: "/posts/{category}/{id}",
+        instance: "philgo-default-rtdb",
+        region: "asia-southeast1",
+    },
+    (event) => {
+      const deletedData = event.data.val() as TypesenseDoc;
+      console.log("Deleted Post in RTDB. This is a hard delete which means the node is completely removed in RTDB ", event.params, deletedData);
+      return TypesenseService.delete(event.params.id);
+    },
+);

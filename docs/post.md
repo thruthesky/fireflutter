@@ -7,50 +7,50 @@ A post is used for forum that is under a category, that has title, content, comm
 ### Fields
 
 - DatabaseReference ref;
-  * DatabaseReference
-  * Reference in RTDB to access the post
+    - DatabaseReference
+    - Reference in RTDB to access the post
 - id
-  * String
-  * The ID of the category
+    - String
+    - The ID of the category
 - title
-  * String
-  * The title of the post
+    - String
+    - The title of the post
 - content
-  * String
-  * The actual content of the post
+    - String
+    - The actual content of the post
 - category
-  * String
-  * The category where the post belongs.
+    - String
+    - The category where the post belongs.
 - uid
-  * String
-  * The ID of the User who posted it.
+    - String
+    - The ID of the User who posted it.
 - createdAt
-  * DateTime
-  * When was the post created.
-  * In RTDB it is saved as int, milliseconds since epoch.
+    - DateTime
+    - When was the post created.
+    - In RTDB it is saved as int, milliseconds since epoch.
 - order
-  * int
-  * This is negated createdAt.
-  * It is being used to sort the posts since RTDB doesen't have descending order yet.
+    - int
+    - This is negated createdAt.
+    - It is being used to sort the posts since RTDB doesen't have descending order yet.
 - likes
-  * List of String
-  * The uid's of user who liked the post.
+    - List of String
+    - The uid's of user who liked the post.
 - urls;
-  * List of String
-  * urls of the attached files (mostly for photos)
+    - List of String
+    - urls of the attached files (mostly for photos)
 - comments;
-  * List of CommentModel
-  * Comments commented under the post.
+    - List of CommentModel
+    - Comments commented under the post.
 - noOfLikes
-  * int
-  * The number of Likers
+    - int
+    - The number of Likers
 - noOfComments
-  * int
-  * The number of comments
-  * This is save only under '/posts-summary'. This is not saved under '/posts'.
+    - int
+    - The number of comments
+    - This is save only under '/posts-summary'. This is not saved under '/posts'.
 - deleted
-  * bool
-  * Whether the comment is deleted. True means deleted. Otherwise, not deleted.
+    - bool
+    - Whether the comment is deleted. True means deleted. Otherwise, not deleted.
 
 ## onPostCreate, onPostUpdate, onPostDelete
 
@@ -122,25 +122,22 @@ FirebaseDatabaseListView(
 
 Replace the `PostListTile` widget as needed (like customization).
 
-
-
 ## Post Creation Logic
 
 - Post will be creatd with the following data. There is no `category` or post `id`.
-  - uid (required)
-  - title (optional)
-  - content (optinal)
-  - urls (optional)
-  - createdAt (required)
-  - order (required)
+    - uid (required)
+    - title (optional)
+    - content (optinal)
+    - urls (optional)
+    - createdAt (required)
+    - order (required)
 
 - Right after creation of the post, it will update the post with new `order`. So, if you are working on cloud functions with event trigger, don't be supprised that it may cause multiple write events.
 
 - When a post is created, the counter part summary record will be created under `/posts-summary` with the following fields.
-  - content
-  - createdAt
-  - order
-  - title
-  - uid
-  - url
-- 
+    - content
+    - createdAt
+    - order
+    - title
+    - uid
+    - url
