@@ -23,11 +23,12 @@ describe("게시판 카테고리 푸시 알림", () => {
         await MessagingService.sendMessagesToCategorySubscribers({
             id: "post-id-1",
             category: "discussion",
-            title: "(1) This is the post title from unit test.",
-            body: "Body. Hi there. How are you? Are you having fun? Oops..",
+            title: "(2) Post - kim",
+            body: "(2) Post Body. Hi there. How are you? Are you having fun? Oops..",
             image: "",
-            uid: "author-uid",
+            uid: "23TE0SWd8Mejv0Icv6vhSDRHe183",
         });
         assert.ok(true);
     });
 });
+

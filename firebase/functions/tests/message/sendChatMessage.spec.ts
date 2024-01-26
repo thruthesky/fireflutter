@@ -22,9 +22,9 @@ describe("채팅 메시지 전송 알림", () => {
             createdAt: 0,
             id: "chat-id-1",
             roomId: "-NoB4KHlTeKJ593hUyHL",
-            text: "Body. Hi there. How are you? Are you having fun? Oops..",
+            text: "3 - Chat. Hi there. How are you? Are you having fun? Oops..",
             order: -1,
-            uid: "author-uid",
+            uid: "23TE0SWd8Mejv0Icv6vhSDRHe183",
         });
         assert.ok(true);
     });

@@ -140,35 +140,36 @@ class ChatModel {
     /// Don't do this before sending message since it will slow down the process.
     updateUrlPreview(chatMessageRef, text);
 
+    /// 2024. 01. 26 - 푸시 알림을 클라우드 함수로 보낸다. 아래 코드는 03. 03. 이후 삭제한다.
     if (room.isGroupChat) {
       dog('group chat');
 
       /// Send push notification to the room users
       ///
       /// Dont' send push notification if the user truned off the push notification.
-      final List<String> uids = room.users!.entries.toList().fold([], (p, e) {
-        if (room.users![e.key] != true) return p;
-        p.add(e.key);
-        return p;
-      });
+      // final List<String> uids = room.users!.entries.toList().fold([], (p, e) {
+      //   if (room.users![e.key] != true) return p;
+      //   p.add(e.key);
+      //   return p;
+      // });
 
       /// sending notification to the list of uids
-      await MessagingService.instance.sendTo(
-        uids: uids,
-        title: room.name ?? '',
-        body: text ?? "사진을 업로드하였습니다.",
-        image: url,
-      );
+      // await MessagingService.instance.sendTo(
+      //   uids: uids,
+      //   title: room.name ?? '',
+      //   body: text ?? "사진을 업로드하였습니다.",
+      //   image: url,
+      // );
     } else if (room.isSingleChat) {
       /// sending notification for single chat
-      final uid = room.otherUserUid;
-      if (room.users![uid] == true) {
-        await MessagingService.instance.sendTo(
-            uid: uid,
-            title: '${UserService.instance.user?.displayName}',
-            body: text ?? "사진을 업로드하였습니다.",
-            image: url);
-      }
+      // final uid = room.otherUserUid;
+      // if (room.users![uid] == true) {
+      //   await MessagingService.instance.sendTo(
+      //       uid: uid,
+      //       title: '${UserService.instance.user?.displayName}',
+      //       body: text ?? "사진을 업로드하였습니다.",
+      //       image: url);
+      // }
     }
   }
 

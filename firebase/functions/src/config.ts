@@ -1,4 +1,5 @@
 // eslint-disable-file @typescript-eslint/no-explicit-any
+
 // import { logger } from "firebase-functions/v1";
 
 /**
@@ -22,7 +23,9 @@ export class Config {
      * @param message message to log
      * @param optionalParams optinal parameters to log
      */
-    static log(message: string, ...optionalParams: any[]) {
+    static log(message: string,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ...optionalParams: any[]) {
         if (Config.debug) {
             console.log(message, ...optionalParams);
         }

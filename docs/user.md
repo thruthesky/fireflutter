@@ -8,6 +8,9 @@ For example, features like modifying user information or public profile pages ar
 
 - The user data is saved under `/users/<uid>`.
 
+`displayName` is the name of the user. Fireship will always use this field to get user's name. This can be a real name, or it can be a nickname. If you want to keep user's name in different format like `firstName`, `middleName`, `lastName`, you can do it in your app. You may get user's real name and save it in `name` field in your app.
+
+
 `createdAt` has the time of the first login. This is the account creation time.
 
 사용자의 본명 또는 화면에 나타나지 않는 이름은 `name` 필드에 저장한다.

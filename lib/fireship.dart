@@ -77,6 +77,7 @@ export 'src/forum/widgets/comment.view.dart';
 
 /// message
 export 'src/messaging/messaging.service.dart';
+export 'src/messaging/message.data.model.dart';
 
 /// Path
 export './path.dart';

@@ -171,7 +171,7 @@ export class MessagingService {
       // Config.log("에러가 있는 토큰 목록(삭제될 토큰 목록):", tokensToRemove);
 
 
-      /// 에러가 있는, 골라낸 토큰을 삭제한다.
+      // / 에러가 있는, 골라낸 토큰을 삭제한다.
       const promisesToRemove = [];
       for (let i = 0; i < tokensToRemove.length; i++) {
         promisesToRemove.push(getDatabase().ref(`${Config.userFcmTokensPath}/${tokensToRemove[i]}`).remove());
@@ -249,15 +249,36 @@ export class MessagingService {
   static async sendMessagesToChatRoomSubscribers(msg: ChatCreateEvent) {
     const db = getDatabase();
 
-    // 구독 한 사용자 목록을 가져온다.
+    Config.log("-----> sendMessagesToChatRoomSubscribers msg:", msg);
+
+    // 구독 한 사용자의 목록을 가져온다. 구독하지 않은 사용자 정보는 가져오지 않는다.
     const snapshot = await db.ref(`chat-rooms/${msg.roomId}/users`).orderByValue().equalTo(true).get();
     const uids: Array<string> = [];
     snapshot.forEach((child) => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       uids.push(child.key!);
     });
-    console.log(uids);
+    Config.log("-----> sendMessagesToChatRoomSubscribers uids:", uids);
+
+    // 그룹 채팅이면, 그룹 채팅방 이름과 사용자 이름을 표시한다.
+    let displayName = "";
+    if (msg.roomId.indexOf("---") == -1) {
+      const snap = await db.ref(`chat-rooms/${msg.roomId}/name`).get();
+
+      displayName += snap.val() ?? "그룹 챗";
+      displayName += " - ";
+    }
+
+    // 사용자 이름. 만약 사용자 이름이 없으면 "챗 메시지"로 표시한다.
+    const snap = await db.ref(`users/${msg.uid}/displayName`).get();
+    displayName += snap.val() ?? "챗 메시지";
+
+    const title = `${displayName}`;
+
+    // 사진을 업로드하면??
+    const body = msg.text ?? "사진을 업로드하였습니다.";
 
     // 메시지를 전송한다.
+    await this.sendNotificationToUids(uids, 256, title, body, msg.url, { senderUid: msg.uid, messageId: msg.id, roomId: msg.roomId });
   }
 }

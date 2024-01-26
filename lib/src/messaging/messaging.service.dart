@@ -7,15 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:rxdart/rxdart.dart';
 
-/// TODO convert it as a model
-typedef MessageData = ({
-  dynamic badge,
-  String? postId,
-  String? roomId,
-  String? uid,
-  String senderUid,
-});
-
 class CustomizeMessagingTopic {
   final String topic;
   final String title;
@@ -351,15 +342,11 @@ class MessagingService {
 
   /// Parse message data from [RemoteMessage.data]
   ///
-  /// {badge: , id: so7HI41U2QfQRu86B7EF, roomId: , type: post, senderUid: 2F49sxIA3JbQPp38HHUTPR2XZ062, action: }
   ///
-  MessageData parseMessageData(Map<String, dynamic> data) {
-    return (
-      badge: data['badge'],
-      postId: data['postId'],
-      roomId: data['roomId'] ?? '',
-      uid: data['uid'] ?? '',
-      senderUid: data['senderUid'],
-    );
-  }
+  ///
+  parseData(Map<String, dynamic> data) => switch (data) {
+        {Field.category: String _} => PostMessageData.fromMap(data),
+        {Field.roomId: String _} => ChatMessageData.fromMap(data),
+        _ => null,
+      };
 }
