@@ -20,7 +20,7 @@ if (admin.apps.length === 0) {
  */
 describe("게시판 카테고리 푸시 알림", () => {
     it("qna 게시판", async () => {
-        await MessagingService.sendNotificationToForumCategorySubscribers({
+        await MessagingService.sendMessagesToCategorySubscribers({
             id: "post-id-1",
             category: "discussion",
             title: "(1) This is the post title from unit test.",

@@ -21,7 +21,8 @@
     "test:comment-index": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/typesense/03.comment-indexing.spec.ts --timeout 100000",
     "test:getTokensOfUsers": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/getTokensOfUsers.spec.ts --timeout 100000",
     "test:sendNotificationToUids": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/sendNotificationToUids.spec.ts --timeout 100000",
-    "test:sendPostMessage": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/sendPostMessage.spec.ts --timeout 100000"
+    "test:sendPostMessage": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/sendPostMessage.spec.ts --timeout 100000",
+    "test:sendChatMessage": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/sendChatMessage.spec.ts --timeout 100000"
   },
   "main": "lib/src/index.js",
   "dependencies": {

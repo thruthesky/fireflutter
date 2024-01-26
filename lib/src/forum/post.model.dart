@@ -159,10 +159,8 @@ class PostModel {
   }
 
   Map<String, dynamic> toSummary() => {
-        // 'category': category,
         Field.content: content.upTo(128),
         'createdAt': createdAt.millisecondsSinceEpoch,
-        // 'id': id,
         Field.order: order,
         'title': title.upTo(64),
         Field.uid: uid,

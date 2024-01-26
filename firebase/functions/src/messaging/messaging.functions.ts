@@ -6,6 +6,7 @@ import { logger } from "firebase-functions/v1";
 // import { onValueCreated } from "firebase-functions/v2/database";
 import { PostCreateEvent } from "../forum/forum.interface";
 import { PostCreateMessage } from "./messaging.interface";
+import { ChatCreateEvent } from "../chat/chat.interface";
 
 
 // import * as functions from "firebase-functions";
@@ -15,7 +16,7 @@ import { onValueCreated } from "firebase-functions/v2/database";
 
 
 /**
- * Sending messages to tokens
+ * 토큰을 입력받아서 메시지를 전송한다.
  */
 export const sendPushNotifications = onRequest(async (request, response) => {
     // logger.info("request.query of sendPushNotifications", request.body);
@@ -34,8 +35,9 @@ export const sendPushNotifications = onRequest(async (request, response) => {
 
 
 /**
- * Sending messages to forum category subscribers
+ * 게시판(카테고리) 구독자들에게 메시지 전송
  *
+ * 새 글이 작성되면 메시지를 전송한다.
  */
 export const sendMessagesToCategorySubscribers = onValueCreated(
     "/posts/{category}/{id}",
@@ -52,28 +54,22 @@ export const sendMessagesToCategorySubscribers = onValueCreated(
             image: data.urls?.[0] ?? "",
         };
 
-
-        await MessagingService.sendNotificationToForumCategorySubscribers(post);
+        await MessagingService.sendMessagesToCategorySubscribers(post);
     });
 
 /**
- * The code below is for gen1
+ * 새로운 채팅 메시지가 작성되면(전송되면) 해당 채팅방 사용자에게 메시지를 전송한다.
+ * 
  */
-// export const sendMessagesToCategorySubscribers = functions.database.ref(
-//     "/posts/{category}/{id}").onCreate(
-//         async (snap, context) => {
-//             // Grab the current value of what was written to the Realtime Database.
-//             const data = snap.val() as PostCreateEvent;
+export const sendMessagesToChatRoomSubscribers = onValueCreated(
+    "/chats/{room}/{id}",
+    async (event) => {
+        // Grab the current value of what was written to the Realtime Database.
+        const data: ChatCreateEvent = {
+            ...event.data.val(),
+            id: event.params.id,
+            room: event.params.room,
+        }
 
-//             const post: PostCreateMessage = {
-//                 id: context.params.id,
-//                 category: context.params.category,
-//                 title: data.title ?? "",
-//                 body: data.content ?? "",
-//                 uid: data.uid,
-//                 image: data.urls?.[0] ?? "",
-//             };
-
-
-//             await MessagingService.sendNotificationToForumCategorySubscribers(post);
-//         });
+        await MessagingService.sendMessagesToChatRoomSubscribers(data);
+    });

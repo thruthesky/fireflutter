@@ -3,6 +3,7 @@ import { getDatabase } from "firebase-admin/database";
 import { MessageNotification, MessageRequest, PostCreateMessage, SendEachMessage } from "./messaging.interface";
 import { chunk } from "../library";
 import { Config } from "../config";
+import { ChatCreateEvent } from "../chat/chat.interface";
 
 /**
  * MessagingService
@@ -225,7 +226,7 @@ export class MessagingService {
    *
    * @param msg 글 정보
    */
-  static async sendNotificationToForumCategorySubscribers(msg: PostCreateMessage) {
+  static async sendMessagesToCategorySubscribers(msg: PostCreateMessage) {
     // 해당 게시판(카테고리)를 subscribe 한 사용자들의 uid 를 가져온다.
 
     const db = getDatabase();
@@ -236,9 +237,27 @@ export class MessagingService {
       uids.push(child.key!);
     });
 
-    Config.log("-----> sendNotificationToForumCategorySubscribers uids:", uids);
-
-
+    Config.log("-----> sendMessagesToCategorySubscribers uids:", uids);
     await this.sendNotificationToUids(uids, 256, msg.title, msg.body, msg.image, { id: msg.id, category: msg.category });
+  }
+
+
+  /**
+   * 채팅 메시지가 전송되면, 해당 채팅방 사용자들에게 메시지를 전송한다.
+   * @param msg 채팅 메시지
+   */
+  static async sendMessagesToChatRoomSubscribers(msg: ChatCreateEvent) {
+    const db = getDatabase();
+
+    // 구독 한 사용자 목록을 가져온다.
+    const snapshot = await db.ref(`chat-rooms/${msg.roomId}/users`).orderByValue().equalTo(true).get();
+    const uids: Array<string> = [];
+    snapshot.forEach((child) => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      uids.push(child.key!);
+    });
+    console.log(uids);
+
+    // 메시지를 전송한다.
   }
 }
