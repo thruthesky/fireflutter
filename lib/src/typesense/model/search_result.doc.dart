@@ -6,7 +6,7 @@
 class SearchResultDoc {
   final String id;
   final String type;
-  final int createdAt;
+  final int? createdAt;
 
   // User
   final String? uid;
