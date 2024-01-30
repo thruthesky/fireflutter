@@ -22,6 +22,9 @@ extension FireFlutterStringExtension on String {
   /// ```
   String ifEmpty(String value) => isEmpty ? value : this;
 
+  /// If the string is empty, return the value.
+  String or(String value) => isEmpty ? value : this;
+
   String upTo(int len) => length <= len ? this : substring(0, len);
 
   /// Replace all the string of the map.

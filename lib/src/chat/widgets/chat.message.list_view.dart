@@ -93,7 +93,7 @@ class _RChatMessageListState extends State<ChatMessageListView> {
         // 메시지가 없는 경우,
         if (snapshot.docs.isEmpty) {
           listView = widget.emptyBuilder?.call(context) ??
-              const Center(child: Text('There is no message, yet.'));
+              Center(child: Text(T.chatRoomNoMessageYet.tr));
         } else {
           /// Reset the newMessage
           /// This is a good place to reset it since it is called when the user

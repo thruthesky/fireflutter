@@ -14,6 +14,7 @@ class T {
   /// Chat
   ///
   static const String chat = 'Chat';
+  static const String chatRoomNoMessageYet = 'There is no message, yet.';
 
   /// User
   static const String setting = 'Setting';

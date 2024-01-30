@@ -11,3 +11,7 @@ Avatar(
     photoUrl: my!.photoUrl.orAnonymousUrl,
 ),
 ```
+
+
+
+`ifEmpty` and `or` have same fuctionality that if the string is empty, it will use the parameter value. Note that it's not working if the string is null.
