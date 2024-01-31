@@ -33,6 +33,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "Momcafe - iPad 10",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPad",
+      "flutterMode": "debug",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Momcafe - iPhone 11 Pro Max",
       "request": "launch",
       "type": "dart",

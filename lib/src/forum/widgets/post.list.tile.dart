@@ -22,7 +22,7 @@ class PostListTile extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: Text(
-        post.content.replaceAll("\n", " "),
+        post.content.upTo(60).sanitize,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
       ),
@@ -40,7 +40,9 @@ class PostListTile extends StatelessWidget {
                   ),
                 )
               : const SizedBox.shrink(),
-          Text(post.createdAt.millisecondsSinceEpoch.toShortDate),
+          Text(
+            post.createdAt.millisecondsSinceEpoch.toShortDate,
+          ),
         ],
       ),
       onTap: () => ForumService.instance.showPostViewScreen(
