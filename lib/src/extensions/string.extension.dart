@@ -47,4 +47,7 @@ extension FireFlutterStringExtension on String {
 
   /// 해당 문자열이 빈 문자열이면, 흰색 사진 URL 을 반환한다.
   String get orWhiteUrl => isEmpty ? whiteUrl : this;
+
+  /// 각종 특수 문자를 없앤다.
+  String get sanitize => trim().replaceAll(RegExp(r'[\r\n\t]'), " ");
 }
