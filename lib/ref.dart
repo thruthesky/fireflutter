@@ -19,9 +19,6 @@ class Ref {
   static DatabaseReference get joinsRef => root.child(Path.joins);
   static DatabaseReference join(String myUid, String roomId) =>
       root.child(Path.join(myUid, roomId));
-  @Deprecated('Use join() instead')
-  static DatabaseReference joinRef(String myUid, String roomId) =>
-      joinsRef.child(myUid).child(roomId);
 
   /// Forum
   static DatabaseReference posts = root.child(Folder.posts);

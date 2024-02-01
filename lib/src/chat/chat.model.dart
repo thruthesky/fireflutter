@@ -270,7 +270,7 @@ class ChatModel {
   /// For group chat, remove the chat room node from /chat-rooms/{myUid}/{groupChatId}
   ///   and remove my uid from /chat-rooms/{gropChatId}/users/{myUid}
   leave() {
-    Ref.joinRef(myUid!, room.id).remove();
+    Ref.join(myUid!, room.id).remove();
     roomUserRef(room.id, myUid!).remove();
     // 채팅 방에 인원이 더 이상 없으면, 채팅 방을 삭제한다.
     // If there are no more people in the chat room, the chat room is deleted.
