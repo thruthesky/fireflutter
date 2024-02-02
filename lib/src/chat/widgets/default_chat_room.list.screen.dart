@@ -2,9 +2,11 @@ import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
-class DefaultChatListScreen extends StatelessWidget {
-  static const String defaultRouteName = '/ChatList';
-  const DefaultChatListScreen({super.key});
+/// Default Chat Room List Screen
+///
+/// Copy this code to your project and modify it.
+class DefaultChatRoomListScreen extends StatelessWidget {
+  const DefaultChatRoomListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

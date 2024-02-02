@@ -53,13 +53,13 @@ export 'src/chat/widgets/chat.bubble.dart';
 export 'src/chat/widgets/chat.message.list_view.dart';
 export 'src/chat/widgets/chat.message_input_box.dart';
 export 'src/chat/widgets/default_chat_room.screen.dart';
-export 'src/chat/widgets/default_chat_room_edit.dialog.dart';
+export 'src/chat/widgets/default_chat_room.edit.dialog.dart';
 export 'src/chat/widgets/chat.new_message.dart';
 export 'src/chat/widgets/chat.room_avatar.dart';
 export 'src/chat/widgets/chat.room_list_tile.dart';
 export 'src/chat/widgets/chat.room.dart';
-export 'src/chat/widgets/default_chat_room_invite.screen.dart';
-export 'src/chat/widgets/default_chat_list.screen.dart';
+export 'src/chat/widgets/default_chat_room.invite.screen.dart';
+export 'src/chat/widgets/default_chat_room.list.screen.dart';
 
 /// Database
 export 'src/database.functions.dart';
@@ -122,14 +122,14 @@ export 'src/user/widgets/user.display_name.dart';
 export 'src/user/user.customize.dart';
 export 'src/user/widgets/default_public_profile.screen.dart';
 export 'src/user/widgets/default_profile.screen.dart';
-export 'src/user/widgets/user_doc.dart';
+export 'src/user/widgets/user.doc.dart';
 export 'src/user/widgets/default_avatar_update.dart';
 export 'src/user/widgets/my_doc.dart';
 export 'src/user/widgets/default_login_first.screen.dart';
 export 'src/user/widgets/admin.dart';
 export 'src/user/widgets/birthday_update_dialog.dart';
 export 'src/user/widgets/update_birthday_field.dart';
-export 'src/user/widgets/user_tile.dart';
+export 'src/user/widgets/user.tile.dart';
 
 export 'src/user/widgets/login/simple_email_password_login.form.dart';
 export 'src/user/widgets/profile/simple_profile_update.form.dart';

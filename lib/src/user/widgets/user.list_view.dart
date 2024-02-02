@@ -2,6 +2,9 @@ import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
+/// UserListView
+///
+/// Displays a list of users.
 class UserListView extends StatelessWidget {
   const UserListView({super.key});
 
