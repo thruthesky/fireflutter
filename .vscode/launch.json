@@ -5,6 +5,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Silvers - iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "CC9FBBEF-A603-4427-98A8-37EC2ABF957F",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Momcafe - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",

@@ -109,6 +109,7 @@ export 'src/typesense/model/search_result.dart';
 
 /// Utility Theme
 export 'src/utility/theme.screen.dart';
+export 'src/utility/fireship.exception.dart';
 
 /// User
 export 'src/user/user.model.dart';
@@ -127,3 +128,6 @@ export 'src/user/widgets/admin.dart';
 export 'src/user/widgets/birthday_update_dialog.dart';
 export 'src/user/widgets/update_birthday_field.dart';
 export 'src/user/widgets/user_tile.dart';
+
+export 'src/user/widgets/login/simple_email_password_login.form.dart';
+export 'src/user/widgets/profile/simple_profile_update.form.dart';

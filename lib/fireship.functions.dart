@@ -344,3 +344,61 @@ String sanitizeFilename(String input, {String replacement = ''}) {
 
   return result.length > 255 ? result.substring(0, 255) : result;
 }
+
+/// Login or register
+///
+/// Creates a user account if it's not existing.
+///
+/// Logic:
+/// Try to login with email and password.
+///    -> If it's successful, return the user.
+///    -> If it fails, create a new user with email and password.
+///        -> If a new account is created, then update the user's display name and photo url.
+///        -> And return the user.
+///        -> If it's failed (to create a new user), throw an error.
+///
+/// ```dart
+/// final email = "${randomString()}@gmail.com";
+/// final randomUser = await Test.loginOrRegister(
+///   TestUser(
+///     displayName: email,
+///     email: email,
+///     photoUrl: 'https://picsum.photos/id/1/200/200'
+///   ),
+/// );
+/// ```
+///
+/// Return the user object of firebase auth and whether the user is registered or not.
+Future<({User user, bool register})> loginOrRegister({
+  required String email,
+  required String password,
+  String? photoUrl,
+}) async {
+  UserCredential? cred;
+  try {
+    // login
+    cred = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    return (user: cred.user!, register: false);
+  } catch (e) {
+    // create
+    cred = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password);
+
+    // update display name and photo url
+    final user = cred.user!;
+    final userModel = await UserModel.get(user.uid);
+    if (userModel == null) {
+      final model = UserModel.fromUid(user.uid);
+      await model.update(
+        displayName: email.split('@').first,
+        photoUrl: photoUrl,
+      );
+    }
+
+    return (user: user, register: true);
+  }
+}
