@@ -430,29 +430,4 @@ class UserModel {
   Future unblockUser(String otherUserUid) async {
     return await ref.child(Field.blocks).child(otherUserUid).set(null);
   }
-
-  /// Update private information
-  ///
-  /// Update user's private information like email, phone number, etc.
-  ///
-  /// The app can save empty string to email or phoneNumber to delete the field.
-  Future<void> updatePrivate({
-    String? email,
-    String? phoneNumber,
-  }) async {
-    final data = {
-      if (email != null) 'email': email,
-      if (email == "") 'email': null,
-      if (phoneNumber != null) 'phoneNumber': phoneNumber,
-      if (phoneNumber == "") 'phoneNumber': null,
-    };
-    if (data.isEmpty) {
-      return;
-    }
-
-    await fs.update(
-      '${Folder.usersPrivate}/$uid',
-      data,
-    );
-  }
 }
