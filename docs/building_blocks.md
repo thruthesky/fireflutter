@@ -57,3 +57,14 @@ runZonedGuarded(
 
 For simple login, you can use `SimpleEmailPasswordLoginForm`.
 
+
+
+## Chat widgets
+
+
+### Chat room list
+
+
+### Chat room create
+
+

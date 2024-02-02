@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
@@ -245,64 +247,66 @@ class _ChatRoomState extends State<ChatRoom> {
                 },
                 icon: const Icon(Icons.person_add_rounded),
               ),
-              PopupMenuButton<String>(
-                itemBuilder: (_) => [
-                  if (chat.room.isMaster || my!.isAdmin)
-                    PopupMenuItem(
-                      value: 'setting',
-                      child: Text(T.setting.tr),
-                    ),
-                  if (chat.room.isSingleChat)
-                    PopupMenuItem(
-                      value: 'block',
-                      child: MyDoc.field(
-                        '${Field.blocks}/${chat.room.otherUserUid}',
-                        builder: (v) =>
-                            Text(v == null ? T.block : T.unblock.tr),
-                      ),
-                    ),
-                  PopupMenuItem(value: 'report', child: Text(T.report.tr)),
-                  if (widget.leave)
-                    PopupMenuItem(value: 'leave', child: Text(T.leave.tr)),
-                ],
-                onSelected: (v) async {
-                  if (v == 'setting') {
-                    /// TODO 채팅방이 그룹 채팅이 아니라, 1:1 채팅인 경우, chat-joins 에서 설정을 해야 한다.
-                    await ChatService.instance.showChatRoomSettings(
-                      context: context,
-                      roomId: chat.room.id,
-                    );
-                    setState(() {});
-                  } else if (v == 'block') {
-                    /// 차단 & 해제
-                    final re = await my?.block(chat.room.otherUserUid!);
-                    if (mounted) {
-                      toast(
-                        context: context,
-                        title: re == true ? T.blocked.tr : T.unblocked.tr,
-                        message: re == true
-                            ? T.blockedMessage.tr
-                            : T.unblockedMessage.tr,
-                      );
-                    }
-                  } else if (v == 'report') {
-                    final re = await input(
-                      context: context,
-                      title: T.reportInputTitle.tr,
-                      subtitle: T.reportInputMessage.tr,
-                      hintText: T.reportInputHint.tr,
-                    );
-                    if (re == null || re == '') return;
-                    await ReportService.instance
-                        .report(chatRoomId: chat.room.id, reason: re);
-                  } else if (v == 'leave') {
-                    await chat.room.leave();
-                    if (mounted) Navigator.of(context).pop();
-                  }
-                },
-                tooltip: '채팅방 설정',
-                icon: const Icon(Icons.menu_rounded),
-              ),
+
+              ChatService.instance.customize.chatRoomMenu?.call(chat) ??
+                  PopupMenuButton<String>(
+                    itemBuilder: (_) => [
+                      if (chat.room.isMaster || my!.isAdmin)
+                        PopupMenuItem(
+                          value: 'setting',
+                          child: Text(T.setting.tr),
+                        ),
+                      if (chat.room.isSingleChat)
+                        PopupMenuItem(
+                          value: 'block',
+                          child: MyDoc.field(
+                            '${Field.blocks}/${chat.room.otherUserUid}',
+                            builder: (v) =>
+                                Text(v == null ? T.block : T.unblock.tr),
+                          ),
+                        ),
+                      PopupMenuItem(value: 'report', child: Text(T.report.tr)),
+                      if (widget.leave)
+                        PopupMenuItem(value: 'leave', child: Text(T.leave.tr)),
+                    ],
+                    onSelected: (v) async {
+                      if (v == 'setting') {
+                        /// TODO 채팅방이 그룹 채팅이 아니라, 1:1 채팅인 경우, chat-joins 에서 설정을 해야 한다.
+                        await ChatService.instance.showChatRoomSettings(
+                          context: context,
+                          roomId: chat.room.id,
+                        );
+                        setState(() {});
+                      } else if (v == 'block') {
+                        /// 차단 & 해제
+                        final re = await my?.block(chat.room.otherUserUid!);
+                        if (mounted) {
+                          toast(
+                            context: context,
+                            title: re == true ? T.blocked.tr : T.unblocked.tr,
+                            message: re == true
+                                ? T.blockedMessage.tr
+                                : T.unblockedMessage.tr,
+                          );
+                        }
+                      } else if (v == 'report') {
+                        final re = await input(
+                          context: context,
+                          title: T.reportInputTitle.tr,
+                          subtitle: T.reportInputMessage.tr,
+                          hintText: T.reportInputHint.tr,
+                        );
+                        if (re == null || re == '') return;
+                        await ReportService.instance
+                            .report(chatRoomId: chat.room.id, reason: re);
+                      } else if (v == 'leave') {
+                        await chat.room.leave();
+                        if (mounted) Navigator.of(context).pop();
+                      }
+                    },
+                    tooltip: '채팅방 설정',
+                    icon: const Icon(Icons.menu_rounded),
+                  ),
             ],
           ),
         ),

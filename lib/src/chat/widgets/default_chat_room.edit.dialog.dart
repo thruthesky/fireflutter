@@ -2,6 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
+/// Chat room create or update
+///
+///
+///
 class DefaultChatRoomEditDialog extends StatefulWidget {
   const DefaultChatRoomEditDialog({
     super.key,
@@ -243,7 +247,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 uploadVerifiedUserOnly: uploadVerifiedUserOnly,
               );
               if (context.mounted) {
-                Navigator.pop(context);
+                Navigator.pop(context, room);
               }
             }
           },
