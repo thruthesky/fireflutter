@@ -1,8 +1,11 @@
 import 'package:fireship/fireship.dart';
+import 'package:fireship/src/user/user.private.model.dart';
 import 'package:flutter/material.dart';
 
 class SimpleProfileUpdateForm extends StatefulWidget {
-  const SimpleProfileUpdateForm({super.key});
+  const SimpleProfileUpdateForm({super.key, this.onUpdate});
+
+  final void Function()? onUpdate;
 
   @override
   State<SimpleProfileUpdateForm> createState() =>
@@ -10,9 +13,21 @@ class SimpleProfileUpdateForm extends StatefulWidget {
 }
 
 class _SimpleProfileUpdateFormState extends State<SimpleProfileUpdateForm> {
-  final nameController = TextEditingController();
+  final displayNameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    displayNameController.text = my?.displayName ?? '';
+
+    UserPrivateModel.get().then((priv) {
+      emailController.text = priv.email ?? '';
+      phoneController.text = priv.phoneNumber ?? '';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +35,13 @@ class _SimpleProfileUpdateFormState extends State<SimpleProfileUpdateForm> {
       children: [
         const Text("Name"),
         TextField(
-          controller: nameController,
+          controller: displayNameController,
         ),
         const Text("Email"),
         TextField(
           controller: emailController,
         ),
-        const Text("Phone"),
+        const Text("Phone Number"),
         TextField(
           controller: phoneController,
         ),
@@ -34,13 +49,18 @@ class _SimpleProfileUpdateFormState extends State<SimpleProfileUpdateForm> {
         Center(
           child: ElevatedButton(
             onPressed: () async {
-              my!.update(
-                name: "name",
-              );
-              my!.updatePrivate(
-                email: emailController.text,
-                phoneNumber: phoneController.text,
-              );
+              await Future.wait([
+                my!.update(
+                  displayName: displayNameController.text,
+                ),
+                UserPrivateModel.update(
+                  email: emailController.text,
+                  phoneNumber: phoneController.text,
+                )
+              ]);
+              if (widget.onUpdate != null) {
+                widget.onUpdate!();
+              }
             },
             child: const Text('UPDATE PROFILE'),
           ),

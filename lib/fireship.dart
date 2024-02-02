@@ -32,6 +32,9 @@ export 'src/common/url_preview/url_preview.model.dart';
 export 'src/database/widgets/database.count.dart';
 export 'src/database/widgets/database.dart';
 
+/// Defines
+export 'fireship.defines.dart';
+
 /// Extensions
 export 'src/extensions/color.extension.dart';
 export 'src/extensions/string.extension.dart';
@@ -39,8 +42,6 @@ export 'src/extensions/int.extension.dart';
 
 /// Functions
 export 'fireship.functions.dart';
-
-export 'fireship.defines.dart';
 
 /// Chat
 export 'src/chat/chat.service.dart';
