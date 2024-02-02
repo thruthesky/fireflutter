@@ -256,6 +256,10 @@ class UserModel {
   /// hasPhotoUrl is automatically set to true if photoUrl is not null.
   ///
   /// [photoUrl] 값이 빈 문자열이면, 해당 필드는 삭제되고, hasPhotoUrl 도 false 로 저장된다.
+  ///
+  /// Note that, this method does not update user's private information like
+  /// email, phone number, etc. It only updates public information like
+  /// displayName, photoUrl, etc.
   Future<UserModel> update({
     String? name,
     String? displayName,
@@ -425,5 +429,30 @@ class UserModel {
   /// Remove the user from the block list by setting null value
   Future unblockUser(String otherUserUid) async {
     return await ref.child(Field.blocks).child(otherUserUid).set(null);
+  }
+
+  /// Update private information
+  ///
+  /// Update user's private information like email, phone number, etc.
+  ///
+  /// The app can save empty string to email or phoneNumber to delete the field.
+  Future<void> updatePrivate({
+    String? email,
+    String? phoneNumber,
+  }) async {
+    final data = {
+      if (email != null) 'email': email,
+      if (email == "") 'email': null,
+      if (phoneNumber != null) 'phoneNumber': phoneNumber,
+      if (phoneNumber == "") 'phoneNumber': null,
+    };
+    if (data.isEmpty) {
+      return;
+    }
+
+    await fs.update(
+      '${Folder.usersPrivate}/$uid',
+      data,
+    );
   }
 }

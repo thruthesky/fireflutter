@@ -8,6 +8,7 @@ class Folder {
   static const String userPhotos = 'user-photos';
   static const String userProfilePhotos = 'user-profile-photos';
   static const String users = 'users';
+  static const String usersPrivate = 'users-private';
 
   static const String reports = 'reports';
   static const String posts = 'posts';

@@ -1,5 +1,3 @@
-import 'package:fireship/fireship.dart';
-
 /// Post message data
 ///
 /// This is for post messages only.
