@@ -215,9 +215,52 @@ See the [Forum](forum.md) document for the details.
 ```
 
 
-## Setup the base code
+## Initializing TextService
 
-<!-- TODO must add intallation guide -->
+Fireship has some UI and you may want to show it in different languages.
+
+And you can use the text translation funtionality in your app.
+
+```dart
+
+/// Call this somewhere while the app boots.
+initTextService();
+
+void initTextService() {
+  print('--> AppService.initTextService()');
+
+  TextService.instance.texts = {
+    ...TextService.instance.texts,
+    if ( languageCode == 'ko' ) ...{
+      T.ok: '확인',
+      T.no: '아니오',
+      T.yes: '예',
+      T.error: '에러',
+      T.dismiss: '닫기',
+      Code.profileUpdate: '프로필 수정',
+      Code.recentLoginRequiredForResign:
+          '회원 탈퇴는 본인 인증을 위해서, 로그아웃 후 다시 로그인 한 다음 탈퇴하셔야합니다.',
+      Categories.qna: '질문',
+      Categories.discussion: '토론',
+      Categories.buyandsell: '장터',
+      Categories.info: '정보/알림',
+      T.notVerifiedMessage: '본인 인증을 하셔야 전체 기능을 이용 할 수 있습니다.',
+      T.chatRoomNoMessageYet: '앗, 아직 메시지가 없습니다.\n채팅을 시작 해 보세요.',
+    },
+    if ( languageCode == 'en' ) ...{
+      T.ok: 'Ok',
+      // ...
+    }
+  };
+}
+```
+
+## Initializing UserService
+
+
+
+
+
 
 ## Admin
 
