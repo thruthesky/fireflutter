@@ -185,6 +185,25 @@
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
       "args": ["-v", "--dart-define", "MODE=test"]
-    }
+    }, 
+    {
+      "name": "Silvers (Noe) - iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "IPhone 15 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Momcafe (Noe) - iPhone 15",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "IPhone 15",
+      "flutterMode": "debug",
+      "cwd": "apps/Momcafe",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=test"]
+    },
   ]
 }

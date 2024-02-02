@@ -131,3 +131,4 @@ export 'src/user/widgets/user_tile.dart';
 
 export 'src/user/widgets/login/simple_email_password_login.form.dart';
 export 'src/user/widgets/profile/simple_profile_update.form.dart';
+export 'src/forum/widgets/post/simple_post_edit.form.dart';
