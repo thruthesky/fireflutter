@@ -59,6 +59,7 @@ export 'src/chat/widgets/chat.room_avatar.dart';
 export 'src/chat/widgets/chat.room_list_tile.dart';
 export 'src/chat/widgets/chat.room.dart';
 export 'src/chat/widgets/default_chat_room_invite.screen.dart';
+export 'src/chat/widgets/default_chat_list.screen.dart';
 
 /// Database
 export 'src/database.functions.dart';
@@ -132,3 +133,5 @@ export 'src/user/widgets/user_tile.dart';
 
 export 'src/user/widgets/login/simple_email_password_login.form.dart';
 export 'src/user/widgets/profile/simple_profile_update.form.dart';
+
+export 'src/user/widgets/user.list_view.dart';

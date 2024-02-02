@@ -11,7 +11,6 @@ For example, features like modifying user information or public profile pages ar
 `displayName` is the name of the user.
 Fireship (including all the widgets) will always use `dispalyName` to display the name of the user. This can be a real name, or it can be a nickname. If you want to keep user's name in different format like `firstName`, `middleName`, `lastName`, you can do it in your app. You may get user's real name and save it in `name` field in your app.
 
-
 `createdAt` has the time of the first login. This is the account creation time.
 
 사용자의 본명 또는 화면에 나타나지 않는 이름은 `name` 필드에 저장한다.
@@ -22,10 +21,10 @@ Fireship (including all the widgets) will always use `dispalyName` to display th
 `gender` 는 `M` 또는 `F` 의 값을 가질 수 있으며, null (필드가 없는 상태) 상태가 될 수도 있다. 참고로, `isVerified` 가 true 일 때에만 성별 여부를 믿을 수 있다. 즉, `isVerified` 가 true 가 아니면, `gender` 정보도 가짜일 수 있다. `gender` can have values of `M` or `F` and may be in a null state (no field). Note that the gender information can only be trusted when `isVerified` is true. In other words, if `isVerified` is not true, gender information may also be false.
 
 - User profile photo is saved under `/users/<uid>` and `/user-profile-photos/<uid>`.
-  - The reason why it saves the photo url into `/user-profile-photos` is to list the users who has profile photo.
+    - The reason why it saves the photo url into `/user-profile-photos` is to list the users who has profile photo.
     Without `/user-profile-photos` node, It can list with `/users` data but it cannot sort by time.
-  - `/user-profile-photos/<uid>` has `updatedAt` field that is updated whenever the user changes profile photo.
-  - It is managed by `UserModel`.
+    - `/user-profile-photos/<uid>` has `updatedAt` field that is updated whenever the user changes profile photo.
+    - It is managed by `UserModel`.
 
 ## 사용자 UI 커스터마이징 (Customizing User UI)
 
@@ -202,14 +201,11 @@ toast(
 );
 ```
 
-
-
 ## Widgets
 
 ### UpdateBirthdayField
 
 You can use this widget to display birthday and let user to update his birthday in profile screen.
-
 
 ### UserTile
 
@@ -236,3 +232,17 @@ FirebaseDatabaseListView(
 ```
 
 You can use `trailing` to add your own buttons intead of using `onTap`.
+
+### UserListView
+
+<!-- TODO review -->
+
+You can use this widget to display user list.
+
+```dart
+UserListView(
+  query: Ref.users,
+  itemBuilder: (_, snapshot) => UserTile(user: UserModel.fromSnapshot(snapshot)),
+),
+
+```

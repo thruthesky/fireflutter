@@ -175,7 +175,6 @@
       "cwd": "apps/momcafe",
       "program": "lib/main.dart"
     },
-
     {
       "name": "Momcafe (Chris) TEST - iPhone 15 Pro Max (debug)",
       "request": "launch",
@@ -183,6 +182,16 @@
       "deviceId": "9538AD08-48B3-43A8-B848-31CC488FE3E9",
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
+      "program": "lib/main.dart",
+      "args": ["-v", "--dart-define", "MODE=test"]
+    },
+    {
+      "name": "Silvers (Chris) TEST - iPhone 15 Pro Max (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "9538AD08-48B3-43A8-B848-31CC488FE3E9",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
       "program": "lib/main.dart",
       "args": ["-v", "--dart-define", "MODE=test"]
     }
