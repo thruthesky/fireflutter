@@ -10,7 +10,7 @@ class DefaultChatListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat List'),
+        title: const Text('My Chat Rooms'),
         actions: [
           IconButton(
             onPressed: () {
