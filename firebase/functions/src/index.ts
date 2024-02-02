@@ -15,4 +15,5 @@ setGlobalOptions({
 
 export * from "./messaging/messaging.functions";
 export * from "./typesense/typesense.functions";
+export * from "./forum/forum.functions";
 

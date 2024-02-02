@@ -1,3 +1,7 @@
+## 0.0.7
+
+* Adding cloud functions for `/posts-all-summary`.
+
 ## 0.0.6
 
 * Updating features.

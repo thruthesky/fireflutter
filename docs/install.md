@@ -61,13 +61,32 @@ Add the following code into `info.plist`. These will be needed for access to cam
 
 ## Install Cloud Functions
 
-Run the following command to install `sendPushNotifications` cloud function.
+Run the following command to install all the push notification cloud functions.
 
 ```sh
-% npm run deploy:sendPushNotifications
+% cd firebase/function
+% npm run deploy:message
 ```
 
 And set the end point URL to `MessagingService.instance.init(sendPushNotificationsUrl: ..)`
+
+
+Run the following command to install typesense related cloud functions.
+
+```sh
+% cd firebase/function
+% npm run deploy:typesense
+```
+
+
+Run the following command to install a function that manages summarization of all posts under `/posts-all-summary`.
+See the [Forum](forum.md) document for the details.
+
+```sh
+% cd firebase/function
+% npm run deploy:managePostsAllSummary
+```
+
 
 ## Setup the base code
 
