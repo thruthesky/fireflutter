@@ -5,8 +5,13 @@ class T {
   static const String yes = 'Yes';
   static const String no = 'No';
   static const String ok = 'OK';
+  static const String save = 'Save';
   static const String cancel = 'Cancel';
   static const String error = 'Error';
+  static const String name = 'Name';
+  static const String inputName = 'Please enter your name.';
+  static const String nameInputDescription = 'NameInputDescription';
+  static const String saved = 'Saved.';
 
   /// Label, texts, buttons,
   static const String dismiss = 'dismiss';
@@ -22,6 +27,8 @@ class T {
   static const String unblock = 'Unblock';
   static const String report = 'Report';
   static const String leave = 'Leave';
+  static const String stateMessage = 'State Message';
+  static const String stateMessageDescription = 'State Message Description';
   static const String thisIsBlockedUser = 'You have blocked this user.';
 
   static const String blockConfirmTitle = 'Block this user?';
@@ -32,6 +39,20 @@ class T {
       'You will be able to contents of this user.';
   static const String notVerifiedMessage = 'You have not verified yourself.';
 
+  /// User and Profile
+  static const String recentLoginRequiredForResign =
+      'recentLoginRequiredForResign';
+
+  static const String backgroundImage = 'Background Image';
+  static const String profileUpdate = 'Profile Update';
+  static const String profilePhoto = 'Profile Photo';
+  static const String takePhotoClosely = 'Take a photo closely';
+
+  static const String birthdateLabel = 'Birthdate';
+  static const String birthdateSelectDescription = 'birthdateSelectDescription';
+  static const String birthdateTapToSelect = 'Tap to select';
+  static const String birthdate = 'birthdate';
+
   /// Forum Post Comment
   static const String deletePostConfirmTitle = 'Delete this post?';
   static const String deletePostConfirmMessage =
@@ -40,6 +61,9 @@ class T {
   static const String deleteCommentConfirmTitle = 'Delete this comment?';
   static const String deleteCommentConfirmMessage =
       'Are you sure you want to delete comment?';
+
+  static const String occupation = 'occupation';
+  static const String occupationInputDescription = 'occupationInputDescription';
 
   /// Block
   static const String blocked = 'Blocked';

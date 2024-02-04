@@ -13,7 +13,7 @@ class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Code.profileUpdate.tr),
+        title: Text(T.profileUpdate.tr),
       ),
       body: SingleChildScrollView(
         child: Padding(

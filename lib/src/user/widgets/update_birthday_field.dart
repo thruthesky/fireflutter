@@ -33,11 +33,24 @@ class _UpdateBirthdayState extends State<UpdateBirthdayField> {
   @override
   Widget build(BuildContext context) {
     return TextWithLable(
-      label: '생년월일',
-      description: '본인 인증에 필요하므로 정확히 입력해주세요.',
+      label: T.birthdateLabel.tr, // '생년월일',
+      description:
+          T.birthdateSelectDescription.tr, // '본인 인증에 필요하므로 정확히 입력해주세요.',
       text: widget.user.birthYear == 0
-          ? '탭하셔서 생년월일을 선택해주세요.'
-          : '${widget.user.birthYear}년 ${widget.user.birthMonth}월 ${widget.user.birthDay}일',
+          ? T.birthdateTapToSelect.tr // '탭하셔서 생년월일을 선택해주세요.'
+          : T.birthdate.tr
+              .replaceAll(
+                '#birthYear',
+                widget.user.birthYear.toString(),
+              )
+              .replaceAll(
+                '#birthMonth',
+                widget.user.birthMonth.toString(),
+              )
+              .replaceAll(
+                '#birthDay',
+                widget.user.birthDay.toString(),
+              ),
       onTap: () async {
         showDialog(
           context: context,

@@ -67,6 +67,8 @@ class UserModel {
 
   String get birth => '$birthYear-$birthMonth-$birthDay';
 
+  String occupation;
+
   UserModel({
     required this.data,
     required this.uid,
@@ -88,6 +90,7 @@ class UserModel {
     this.blocks,
     required this.idUrl,
     required this.idUploadedAt,
+    required this.occupation,
   });
 
   factory UserModel.fromSnapshot(DataSnapshot snapshot) {
@@ -140,6 +143,7 @@ class UserModel {
             ),
       idUrl: json[Field.idUrl] ?? '',
       idUploadedAt: json[Field.idUploadedAt] ?? 0,
+      occupation: json[Field.occupation] ?? '',
     );
   }
 
@@ -165,6 +169,7 @@ class UserModel {
           blocks == null ? null : List<dynamic>.from(blocks!.map((x) => x)),
       Field.idUrl: idUrl,
       Field.idUploadedAt: idUploadedAt,
+      Field.occupation: occupation,
     };
   }
 
@@ -196,12 +201,13 @@ class UserModel {
       blocks = user.blocks;
       idUrl = user.idUrl;
       idUploadedAt = user.idUploadedAt;
+      occupation = user.occupation;
     }
 
     return this;
   }
 
-  /// 사용자 정보 node 전체를 리턴한다.
+  /// 사용자 정보 node 전체를 UserModel 에 담아 리턴한다.
   static Future<UserModel?> get(String uid) async {
     final nodeData = await fs.get<Map<dynamic, dynamic>>('users/$uid');
     if (nodeData == null) {
@@ -275,6 +281,7 @@ class UserModel {
     dynamic order,
     int? idUploadedAt,
     String? idUrl,
+    String? occupation,
   }) async {
     final data = {
       if (name != null) 'name': name,
@@ -293,6 +300,7 @@ class UserModel {
       if (order != null) 'order': order,
       if (idUploadedAt != null) 'idUploadedAt': idUploadedAt,
       if (idUrl != null) 'idUrl': idUrl,
+      if (occupation != null) Field.occupation: occupation,
     };
     if (data.isEmpty) {
       return this;

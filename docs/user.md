@@ -71,6 +71,31 @@ You you can call `UserService.instance.showProfile(context)` mehtod which shows 
 It is important to know that fireship uses `UserService.instance.showProfile()` to display the login user's profile update screen. So, if you want to customize everything by yourself, you need to copy the code and make it your own widget. then conect it to `UserService.instance.init(customize: UserCustomize(showProfile: ... ))`.
 
 
+#### SimpleProfileUpdateForm
+
+This is very simple profile update form widget and we don't recommend it for you to use it. But this is good to learn how to write the user update form.
+
+
+```dart
+Scaffold(
+  appBar: AppBar(
+    title: const Text('Profile'),
+  ),
+  body: Padding(
+    padding: const EdgeInsets.all(md),
+    child: Theme(
+      data: bigButtonTheme(context),
+      child: SimpleProfileUpdateForm(
+        onUpdate: () => toast(
+          context: context,
+          message: context.ke('업데이트되었습니다.', 'Profile updated.'),
+        ),
+      ),
+    ),
+  ),
+);
+```
+
 
 ## Access to other user data
 

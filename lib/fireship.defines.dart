@@ -80,4 +80,6 @@ class Field {
 
   static const String idUploadedAt = 'idUploadedAt';
   static const String idUrl = 'idUrl';
+
+  static const String occupation = 'occupation';
 }

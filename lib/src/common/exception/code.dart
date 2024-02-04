@@ -26,10 +26,5 @@ class Code {
 
   static const String roomId = 'roomId';
 
-  /// User and Profile
-  static const String profileUpdate = 'profileUpdate';
-  static const String recentLoginRequiredForResign =
-      'recentLoginRequiredForResign';
-
   static const String deleted = 'deleted';
 }

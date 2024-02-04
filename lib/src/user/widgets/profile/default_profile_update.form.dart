@@ -3,8 +3,14 @@ import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
 class DefaultProfileUpdateForm extends StatefulWidget {
-  const DefaultProfileUpdateForm({super.key});
+  const DefaultProfileUpdateForm({
+    super.key,
+    this.occupation = false,
+    this.stateMessage = true,
+  });
 
+  final bool occupation;
+  final bool stateMessage;
   @override
   State<DefaultProfileUpdateForm> createState() =>
       _DefaultProfileUpdateFormState();
@@ -13,6 +19,7 @@ class DefaultProfileUpdateForm extends StatefulWidget {
 class _DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
   double? progress;
   final nameController = TextEditingController();
+  final occupationController = TextEditingController();
   final stateMessageController = TextEditingController();
 
   UserModel get user => UserService.instance.user!;
@@ -22,6 +29,7 @@ class _DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
     super.initState();
     nameController.text = user.displayName;
     stateMessageController.text = user.stateMessage;
+    occupationController.text = user.occupation;
   }
 
   @override
@@ -90,9 +98,9 @@ class _DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                               Icons.camera_alt,
                               color: Colors.white,
                             ),
-                            label: const Text(
-                              '배경 사진',
-                              style: TextStyle(color: Colors.white),
+                            label: Text(
+                              T.backgroundImage.tr,
+                              style: const TextStyle(color: Colors.white),
                             ),
                           ),
                   ),
@@ -111,10 +119,10 @@ class _DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                 ],
               ),
               const SizedBox(height: 8),
-              const Text("프로필 사진"),
+              Text(T.profilePhoto.tr),
               const SizedBox(height: 8),
               Text(
-                "본인 얼굴을 정면으로 가깝게 찍어주세요.",
+                T.takePhotoClosely.tr,
                 style: Theme.of(context).textTheme.labelSmall,
                 textAlign: TextAlign.center,
               ),
@@ -122,37 +130,63 @@ class _DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
           ),
         ),
         const SizedBox(height: 64),
+
+        /// Name
         TextField(
           controller: nameController,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: '이름',
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            labelText: T.name.tr,
           ),
         ),
         const SizedBox(height: 4),
         Padding(
           padding: const EdgeInsets.only(left: 16),
           child: Text(
-            "본인 인증에 사용됩니다. 반드시 본명을 입력하세요.",
+            T.nameInputDescription.tr,
             style: Theme.of(context).textTheme.labelSmall,
           ),
         ),
-        const SizedBox(height: 32),
-        TextField(
-          controller: stateMessageController,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: '상태메시지',
+
+        /// Occupatoin
+        if (widget.occupation) ...[
+          const SizedBox(height: 32),
+          TextField(
+            controller: occupationController,
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: T.occupation.tr,
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Padding(
-          padding: const EdgeInsets.only(left: 16),
-          child: Text(
-            "프로필 보기에 나오는 나의 상태메시지입니다.",
-            style: Theme.of(context).textTheme.labelSmall,
+          const SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Text(
+              T.occupationInputDescription.tr,
+              style: Theme.of(context).textTheme.labelSmall,
+            ),
           ),
-        ),
+        ],
+        if (widget.stateMessage) ...[
+          /// State Message
+          const SizedBox(height: 32),
+
+          TextField(
+            controller: stateMessageController,
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: T.stateMessage.tr,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Text(
+              T.stateMessageDescription.tr,
+              style: Theme.of(context).textTheme.labelSmall,
+            ),
+          ),
+        ],
         const SizedBox(height: 32),
         MyDoc(builder: (my) => UpdateBirthdayField(user: user)),
         const SizedBox(height: 32),
@@ -161,8 +195,8 @@ class _DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
             onPressed: () async {
               if (nameController.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('이름을 입력하세요.'),
+                  SnackBar(
+                    content: Text(T.inputName.tr),
                   ),
                 );
                 return;
@@ -172,12 +206,13 @@ class _DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                 name: nameController.text,
                 displayName: nameController.text,
                 stateMessage: stateMessageController.text,
+                occupation: occupationController.text,
               );
 
-              if (mounted) toast(context: context, message: '저장되었습니다.');
+              if (mounted) toast(context: context, message: T.saved.tr);
             },
-            child: const Text(
-              '저장',
+            child: Text(
+              T.save.tr,
             ),
           ),
         ),
