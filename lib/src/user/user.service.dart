@@ -201,14 +201,11 @@ class UserService {
       }
     }();
 
-    /// 커스텀 디자인을 사용하면, 커스텀 디자인을 보여준다.
-    if (customize.showPublicProfile != null) {
-      return customize.showPublicProfile!(context, uid);
-    }
-
     return showGeneralDialog(
       context: context,
-      pageBuilder: ($, _, __) => DefaultPublicProfileScreen(uid: uid),
+      pageBuilder: ($, _, __) =>
+          customize.publicProfile?.call(uid) ??
+          DefaultPublicProfileScreen(uid: uid),
     );
   }
 

@@ -4,6 +4,9 @@ Much of the code is already included in Fireship.
 
 For example, features like modifying user information or public profile pages are already in working codes. You can customize these UI elements.
 
+
+
+
 ## User database structure
 
 - The user data is saved under `/users/<uid>`.
@@ -43,9 +46,31 @@ UserService.instance.init(
 
 `loginFirstScreen` 은 builder 가 아니다. 그래서 정적 widget 을 만들어주면 되는데, Scaffold 를 통째로 만들어 넣으면 된다. `loginFirstScreen` is not a builder. So, you can create a static widget, and if you put it in a Scaffold, it will work.
 
-### 회원 정보 수정 페이지 (User Profile Editing Page)
+### User profile update screen
 
-기본적으로 `DefaultProfileScreen` 이 사용되는데, 커스터마이징을 할 수 있다 (By default, `DefaultProfileScreen` is used, but it can be customized).
+Fireship provides a few widgets to update user's profile information like below
+
+#### DefaultProfileUpdateForm
+
+`DefaultProfileUpdateForm` provides with the options below
+- state image (profile background image)
+- profile photo
+- name
+- state message
+- birthday picker
+- gender
+- nationality selector
+- region selector(for Korean nation only)
+- job
+
+`DefaultProfileUpdateForm` also provides more optoins.
+
+
+You you can call `UserService.instance.showProfile(context)` mehtod which shows the `DefaultProfileUpdateForm` as dialog.
+
+It is important to know that fireship uses `UserService.instance.showProfile()` to display the login user's profile update screen. So, if you want to customize everything by yourself, you need to copy the code and make it your own widget. then conect it to `UserService.instance.init(customize: UserCustomize(showProfile: ... ))`.
+
+
 
 ## Access to other user data
 

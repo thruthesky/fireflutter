@@ -61,8 +61,12 @@ For simple login, you can use `SimpleEmailPasswordLoginForm`.
 
 ## Chat widgets
 
+Whatever app that has the chat feature has common screens and widgets.
+
 
 ### Chat room list
+
+To list chat rooms that the login user joined, use `DefaultChatRoomListView` widget. You can use the options to customize. Or simply copy all the code of the widget and customize with your own code.
 
 
 ### Chat room create

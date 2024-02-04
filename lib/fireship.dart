@@ -136,3 +136,4 @@ export 'src/user/widgets/login/simple_email_password_login.form.dart';
 export 'src/user/widgets/profile/simple_profile_update.form.dart';
 
 export 'src/user/widgets/user.list_view.dart';
+export 'src/user/widgets/default_profile_update_form.dart';

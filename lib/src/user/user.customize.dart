@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class UserCustomize {
   Widget? loginFirstScreen;
-  Future Function(BuildContext context)? showProfile;
-  Future Function(BuildContext context, String uid)? showPublicProfile;
+  Widget? profileUpdateForm;
+  Widget Function(String uid)? publicProfile;
 
   UserCustomize({
     this.loginFirstScreen,
-    this.showProfile,
-    this.showPublicProfile,
+    this.profileUpdateForm,
+    this.publicProfile,
   });
 }
