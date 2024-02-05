@@ -388,6 +388,37 @@ class CustomChatRoomInviteScreen extends StatelessWidget {
 }
 ```
 
+### Group Chat Members
+
+To show the default members screen, add these code:
+
+```dart
+await ChatService.instance.showMembersScreen(
+  context: context,
+  room: chat.room,
+);
+```
+
+It uses the `DefaultChatRoomMembersScreen(room: room)` when it is not customized.
+
+### Removing a Group Chat Member
+
+Here is an example of a button that removes a user from the group chat. It uses `room.remove(member.uid)` code to remove the user.
+
+```dart
+final room = ChatRoomModel.fromSnapshot(snapshot);
+// ...
+final member = UserModel.fromSnapshot(snapshot);
+// ...
+TextButton(
+  onPressed: () {
+    room.remove(member.uid);
+    Navigator.pop(context);
+  },
+  child: const Text('Remove User'),
+),
+```
+
 ## Management
 
 - You can use the default admin screen. Just call `AdminService.instance.showDashboard()`.
