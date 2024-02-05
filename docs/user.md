@@ -285,14 +285,8 @@ You can use `trailing` to add your own buttons intead of using `onTap`.
 
 ### UserListView
 
-<!-- TODO review -->
-
-You can use this widget to display user list.
+Fireship provides a widget to display user list. We can use this if we don't have to customize the view.
 
 ```dart
-UserListView(
-  query: Ref.users,
-  itemBuilder: (_, snapshot) => UserTile(user: UserModel.fromSnapshot(snapshot)),
-),
-
+UserListView()
 ```
