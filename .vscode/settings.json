@@ -1,6 +1,6 @@
 {
     "problems.decorations.enabled": false,
     "dart.analysisExcludedFolders": [
-        "./apps/momcafe"
+        // "./apps/momcafe"
     ]
 }

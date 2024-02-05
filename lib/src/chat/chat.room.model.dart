@@ -456,6 +456,8 @@ class ChatRoomModel {
       Field.newMessage: null,
     };
 
+    // TODO for confirmation, must update room.noOfUsers
+
     /// 1:1 채팅방의 경우, 상대방의 이름을 저장한다.
     if (otherUserUid != null) {
       final user = await UserModel.get(otherUserUid!);
