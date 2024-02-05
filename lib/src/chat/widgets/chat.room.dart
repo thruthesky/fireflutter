@@ -40,7 +40,7 @@ class _ChatRoomState extends State<ChatRoom> {
   ChatModel? _chat;
   ChatModel get chat => _chat!;
 
-  bool loaded = false;
+  final loaded = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -105,9 +105,7 @@ class _ChatRoomState extends State<ChatRoom> {
       }
     }
 
-    setState(() {
-      loaded = true;
-    });
+    loaded.value = true;
 
     /// 방 정보 전체를 한번 읽고, 이후, 실시간 업데이트
     ///
@@ -325,11 +323,14 @@ class _ChatRoomState extends State<ChatRoom> {
 
         /// 채팅 메시지
         Expanded(
-          child: loaded
-              ? ChatMessageListView(
-                  chat: chat,
-                )
-              : const SizedBox.shrink(),
+          child: ValueListenableBuilder(
+            valueListenable: loaded,
+            builder: (_, v, __) => v
+                ? ChatMessageListView(
+                    chat: chat,
+                  )
+                : const SizedBox.shrink(),
+          ),
         ),
 
         /// 채팅 입력 박스
