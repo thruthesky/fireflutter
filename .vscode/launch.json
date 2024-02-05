@@ -194,6 +194,16 @@
       "cwd": "apps/silvers",
       "program": "lib/main.dart",
       "args": ["-v", "--dart-define", "MODE=test"]
+    },
+    {
+      "name": "Silvers (Chris) TEST - Emulator (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart",
+      "args": ["-v", "--dart-define", "MODE=test"]
     }
   ]
 }
