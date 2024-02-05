@@ -98,4 +98,16 @@ class ChatService {
       pageBuilder: (_, __, ___) => DefaultChatRoomInviteScreen(room: room),
     );
   }
+
+  Future showMembersScreen({
+    required BuildContext context,
+    required ChatRoomModel room,
+  }) async {
+    return await showGeneralDialog(
+      context: context,
+      pageBuilder: (_, __, ___) => DefaultChatRoomMembersScreen(
+        room: room,
+      ),
+    );
+  }
 }

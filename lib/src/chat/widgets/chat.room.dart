@@ -255,6 +255,13 @@ class _ChatRoomState extends State<ChatRoom> {
                           value: 'setting',
                           child: Text(T.setting.tr),
                         ),
+                      const PopupMenuItem(
+                        value: 'members',
+                        child: Text(
+                          // T.members.tr,
+                          "Members",
+                        ),
+                      ),
                       if (chat.room.isSingleChat)
                         PopupMenuItem(
                           value: 'block',
@@ -276,6 +283,11 @@ class _ChatRoomState extends State<ChatRoom> {
                           roomId: chat.room.id,
                         );
                         setState(() {});
+                      } else if (v == 'members') {
+                        await ChatService.instance.showMembersScreen(
+                          context: context,
+                          room: chat.room,
+                        );
                       } else if (v == 'block') {
                         /// 차단 & 해제
                         final re = await my?.block(chat.room.otherUserUid!);

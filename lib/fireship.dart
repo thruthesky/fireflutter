@@ -66,6 +66,7 @@ export 'src/chat/widgets/chat.room_list_tile.dart';
 export 'src/chat/widgets/chat.room.dart';
 export 'src/chat/widgets/default_chat_room.invite.screen.dart';
 export 'src/chat/widgets/default_chat_room.list_view.dart';
+export 'src/chat/widgets/default_chat_room.members.screen.dart';
 export 'src/chat/chat.customize.dart';
 
 /// Database

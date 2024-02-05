@@ -484,6 +484,15 @@ class ChatRoomModel {
     await Ref.join(myUid!, id).remove();
   }
 
+  /// Remove user in ChatRoom
+  Future remove(String uid) async {
+    if (master == myUid) {
+      await ref.child(Field.users).child(uid).remove();
+      await Ref.join(uid, id).remove();
+    }
+    // TODO if not master
+  }
+
   /// Return the first other user uid from the users list.
   String? get otherUserUid {
     return getOtherUserUidFromRoomId(id);
