@@ -223,6 +223,16 @@ FirebaseDatabaseQueryBuilder(
 
 ```
 
+#### Chat List Widget
+
+Fireship provides a default Widget for displaying a list of Chat Rooms if we don't have to customize it.
+
+Chat List is a List view of Chats. We can use this widget to show a list of chats.
+
+```dart
+DefaultChatRoomListView(),
+```
+
 #### Querying Specific Type of Chat Rooms
 
 You may want to show specific types of Chat Rooms, like Single Chat Rooms only, Group Chats Only, or Open Group Chats only.
@@ -378,27 +388,9 @@ class CustomChatRoomInviteScreen extends StatelessWidget {
 }
 ```
 
-## Ready Made Chat Widgets
-
-<!-- TODO Ongoing Christian -->
-
-Fireship provides a ready made chat screen so that it can be easier and faster to build apps especially when we are building simple apps.
-
-### Chat Screen
-
-Chat Screen shows a full screen with a listing of chat rooms.
-
-### Chat List
-
-Chat List is a List view of Chats.
-
 ## Management
 
 - You can use the default admin screen. Just call `AdminService.instance.showDashboard()`.
-
-### Open Chat List
-
-<!-- TODO -->
 
 ### Delete Open Chat Message Data
 
