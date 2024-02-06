@@ -12,8 +12,7 @@ class DefaultProfileUpdateForm extends StatefulWidget {
   final bool occupation;
   final bool stateMessage;
   @override
-  State<DefaultProfileUpdateForm> createState() =>
-      _DefaultProfileUpdateFormState();
+  State<DefaultProfileUpdateForm> createState() => _DefaultProfileUpdateFormState();
 }
 
 class _DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {

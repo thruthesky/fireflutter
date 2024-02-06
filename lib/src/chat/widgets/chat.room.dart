@@ -166,8 +166,7 @@ class _ChatRoomState extends State<ChatRoom> {
                     /// 그룹 채팅은 관리자가 사진을 바꿀 때, 채팅 화면에 바로 적용되어야 한다.
                     chat.room.isSingleChat
                         ? Database.once(
-                            path:
-                                '${Path.join(myUid!, chat.room.id)}/${Field.photoUrl}',
+                            path: '${Path.join(myUid!, chat.room.id)}/${Field.photoUrl}',
                             builder: (v) => v == null
                                 ? const SizedBox.shrink()
                                 : Row(
@@ -242,8 +241,7 @@ class _ChatRoomState extends State<ChatRoom> {
               ),
               IconButton(
                 onPressed: () async {
-                  ChatService.instance
-                      .showInviteScreen(context: context, room: chat.room);
+                  ChatService.instance.showInviteScreen(context: context, room: chat.room);
                 },
                 icon: const Icon(Icons.person_add_rounded),
               ),
@@ -261,13 +259,11 @@ class _ChatRoomState extends State<ChatRoom> {
                           value: 'block',
                           child: MyDoc.field(
                             '${Field.blocks}/${chat.room.otherUserUid}',
-                            builder: (v) =>
-                                Text(v == null ? T.block : T.unblock.tr),
+                            builder: (v) => Text(v == null ? T.block : T.unblock.tr),
                           ),
                         ),
                       PopupMenuItem(value: 'report', child: Text(T.report.tr)),
-                      if (widget.leave)
-                        PopupMenuItem(value: 'leave', child: Text(T.leave.tr)),
+                      if (widget.leave) PopupMenuItem(value: 'leave', child: Text(T.leave.tr)),
                     ],
                     onSelected: (v) async {
                       if (v == 'setting') {
@@ -284,9 +280,7 @@ class _ChatRoomState extends State<ChatRoom> {
                           toast(
                             context: context,
                             title: re == true ? T.blocked.tr : T.unblocked.tr,
-                            message: re == true
-                                ? T.blockedMessage.tr
-                                : T.unblockedMessage.tr,
+                            message: re == true ? T.blockedMessage.tr : T.unblockedMessage.tr,
                           );
                         }
                       } else if (v == 'report') {
@@ -297,8 +291,7 @@ class _ChatRoomState extends State<ChatRoom> {
                           hintText: T.reportInputHint.tr,
                         );
                         if (re == null || re == '') return;
-                        await ReportService.instance
-                            .report(chatRoomId: chat.room.id, reason: re);
+                        await ReportService.instance.report(chatRoomId: chat.room.id, reason: re);
                       } else if (v == 'leave') {
                         await chat.room.leave();
                         if (mounted) Navigator.of(context).pop();
