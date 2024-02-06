@@ -5,36 +5,64 @@ import 'package:flutter/material.dart';
 class DefaultProfileUpdateForm extends StatefulWidget {
   const DefaultProfileUpdateForm({
     super.key,
-    this.occupation = false,
+    this.occupation = true,
     this.stateMessage = true,
+    this.gender = true,
+    this.nationality = true,
+    this.region = true,
+    this.dropdownTheme,
+    this.onUpdate,
   });
 
+  final void Function()? onUpdate;
   final bool occupation;
   final bool stateMessage;
+  final bool gender;
+  final bool nationality;
+  final bool region;
+  final BoxDecoration? dropdownTheme;
+
   @override
-  State<DefaultProfileUpdateForm> createState() => _DefaultProfileUpdateFormState();
+  State<DefaultProfileUpdateForm> createState() => DefaultProfileUpdateFormState();
 }
 
-class _DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
+class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
   double? progress;
   final nameController = TextEditingController();
+  String? nationality;
+  String? region;
   final occupationController = TextEditingController();
   final stateMessageController = TextEditingController();
+  String? gender;
 
   UserModel get user => UserService.instance.user!;
 
+// todo display nationality and region
   @override
   void initState() {
     super.initState();
-    nameController.text = user.displayName;
+
+    nameController.text = my?.displayName ?? '';
     stateMessageController.text = user.stateMessage;
     occupationController.text = user.occupation;
+    getData();
+    // dog('asdasd $nationality');
+  }
+
+  getData() async {
+    final userModel = await UserModel.get(user.uid);
+    if (userModel!.nationality != '') {
+      nationality = userModel.nationality;
+      region = userModel.region;
+      setState(() {});
+    } else {
+      return;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Center(
           child: Column(
@@ -128,67 +156,136 @@ class _DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
             ],
           ),
         ),
-        const SizedBox(height: 64),
-
-        /// Name
         TextField(
           controller: nameController,
           decoration: InputDecoration(
-            border: const OutlineInputBorder(),
             labelText: T.name.tr,
           ),
         ),
-        const SizedBox(height: 4),
-        Padding(
-          padding: const EdgeInsets.only(left: 16),
-          child: Text(
-            T.nameInputDescription.tr,
-            style: Theme.of(context).textTheme.labelSmall,
-          ),
-        ),
-
-        /// Occupatoin
-        if (widget.occupation) ...[
+        if (widget.stateMessage) ...{
           const SizedBox(height: 32),
-          TextField(
-            controller: occupationController,
-            decoration: InputDecoration(
-              border: const OutlineInputBorder(),
-              labelText: T.occupation.tr,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Text(
-              T.occupationInputDescription.tr,
-              style: Theme.of(context).textTheme.labelSmall,
-            ),
-          ),
-        ],
-        if (widget.stateMessage) ...[
-          /// State Message
-          const SizedBox(height: 32),
-
           TextField(
             controller: stateMessageController,
             decoration: InputDecoration(
-              border: const OutlineInputBorder(),
               labelText: T.stateMessage.tr,
             ),
           ),
-          const SizedBox(height: 4),
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Text(
-              T.stateMessageDescription.tr,
-              style: Theme.of(context).textTheme.labelSmall,
+        },
+        if (widget.gender) ...{
+          const SizedBox(height: 32),
+          const Text('Gender'),
+          Row(
+            children: [
+              Expanded(
+                child: RadioListTile<String>(
+                  title: const Text('Male'),
+                  value: 'Male',
+                  groupValue: gender,
+                  onChanged: (value) {
+                    setState(() {
+                      gender = value;
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                child: RadioListTile<String>(
+                  title: const Text('Female'),
+                  value: 'Female',
+                  groupValue: gender,
+                  onChanged: (value) {
+                    setState(() {
+                      gender = value;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        },
+        MyDoc(builder: (my) => UpdateBirthdayField(user: user)),
+        if (widget.nationality) ...{
+          const SizedBox(height: 32),
+          const Text('Nationality'),
+          Container(
+            height: 65,
+            decoration: widget.dropdownTheme ??
+                BoxDecoration(
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.secondary,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(24),
+                ),
+            padding: const EdgeInsets.only(right: 8, top: 16, left: 8),
+            child: DropdownButton<String>(
+              value: nationality,
+              onChanged: (value) {
+                setState(() {
+                  nationality = value as String;
+                });
+              },
+              items: const [
+                DropdownMenuItem(value: 'Korea', child: Text('Korea')),
+                DropdownMenuItem(value: 'United States', child: Text('United States')),
+                DropdownMenuItem(value: 'Vietnam', child: Text('Vietnam')),
+                DropdownMenuItem(value: 'Thailand', child: Text('Thailand')),
+                DropdownMenuItem(value: 'Laos', child: Text('Laos')),
+                DropdownMenuItem(value: 'Myanmar', child: Text('Myanmar')),
+                // Add more countries as needed
+              ],
+              isDense: true,
+              isExpanded: true,
             ),
           ),
-        ],
-        const SizedBox(height: 32),
-        MyDoc(builder: (my) => UpdateBirthdayField(user: user)),
-        const SizedBox(height: 32),
+        },
+        if (widget.region) ...{
+          if (nationality == 'Korea') ...{
+            const SizedBox(height: 32),
+            const Text('Region'),
+            Container(
+              height: 65,
+              decoration: widget.dropdownTheme ??
+                  BoxDecoration(
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.secondary,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+              padding: const EdgeInsets.only(right: 8, top: 16, left: 8),
+              child: DropdownButton<String>(
+                hint: const Text('Region'),
+                value: region,
+                onChanged: (value) {
+                  setState(() {
+                    region = value as String;
+                  });
+                },
+                items: const [
+                  DropdownMenuItem(value: 'Haeso', child: Text('Haeso')),
+                  DropdownMenuItem(value: 'Kwanso', child: Text('Kwanso')),
+                  DropdownMenuItem(value: 'Kwanbuk', child: Text('Kwanbuk')),
+                  DropdownMenuItem(value: 'Gwandong', child: Text('Gwandong')),
+                  DropdownMenuItem(value: 'Gyeonggi', child: Text('Gyeonggi')),
+                  DropdownMenuItem(value: 'Honam', child: Text('Honam')),
+                  DropdownMenuItem(value: 'Yeongnam', child: Text('Yeongnam')),
+                  // Add more countries as needed
+                ],
+                isDense: true,
+                isExpanded: true,
+              ),
+            )
+          },
+        },
+        if (widget.occupation) ...{
+          const SizedBox(height: 32),
+          const Text('Occupation'),
+          TextField(
+            controller: occupationController,
+          ),
+        },
+        const SizedBox(height: 24),
         Center(
           child: ElevatedButton(
             onPressed: () async {
@@ -200,14 +297,19 @@ class _DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                 );
                 return;
               }
-
-              await my?.update(
+              await my!.update(
                 name: nameController.text,
                 displayName: nameController.text,
-                stateMessage: stateMessageController.text,
+                gender: gender,
+                nationality: nationality,
+                region: region,
                 occupation: occupationController.text,
               );
 
+              if (widget.onUpdate != null) {
+                dog('asdasdasdasdasd');
+                widget.onUpdate!();
+              }
               if (mounted) toast(context: context, message: T.saved.tr);
             },
             child: Text(
