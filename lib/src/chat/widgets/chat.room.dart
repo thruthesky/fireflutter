@@ -237,13 +237,15 @@ class _ChatRoomState extends State<ChatRoom> {
                 ),
               ),
               if (chat.room.isGroupChat)
-                IconButton(
-                  onPressed: () async {
-                    ChatService.instance
-                        .showInviteScreen(context: context, room: chat.room);
-                  },
-                  icon: const Icon(Icons.person_add_rounded),
-                ),
+                ChatService.instance.customize.chatRoomInviteButton
+                        ?.call(chat.room) ??
+                    IconButton(
+                      onPressed: () async {
+                        ChatService.instance.showInviteScreen(
+                            context: context, room: chat.room);
+                      },
+                      icon: const Icon(Icons.person_add_rounded),
+                    ),
 
               ChatService.instance.customize.chatRoomMenu?.call(chat) ??
                   PopupMenuButton<String>(
