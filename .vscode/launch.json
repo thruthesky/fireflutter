@@ -213,6 +213,16 @@
       "cwd": "apps/wemeet",
       "program": "lib/main.dart",
       // "args": ["-v", "--dart-define", "MODE=test"]
+    },
+    {
+      "name": "Wemeet (Noe) TEST - iPhone 15 Pro (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro",
+      "flutterMode": "debug",
+      "cwd": "apps/wemeet",
+      "program": "lib/main.dart",
+      // "args": ["-v", "--dart-define", "MODE=test"]
     }
   ]
 }
