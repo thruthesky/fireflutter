@@ -62,8 +62,8 @@ class UserService {
     Function(User user)? onSignout,
     void Function(User user, bool isLiked)? onLike,
     UserCustomize? customize,
-    Function(UserModel)? onCreate,
-    Function(UserModel)? onUpdate,
+    Function(UserModel user)? onCreate,
+    Function(UserModel user)? onUpdate,
   }) {
     dog('--> UserService.init()');
     initUser();
