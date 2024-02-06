@@ -491,6 +491,10 @@ class ChatRoomModel {
     if (master == myUid) {
       await ref.child(Field.users).child(uid).remove();
       await Ref.join(uid, id).remove();
+
+      // Added this line of code so that we don't have to reload to
+      // get the updated users list.
+      users!.remove(uid);
     }
     // TODO if not master
   }
