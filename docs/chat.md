@@ -12,29 +12,29 @@
 
 - `noOfUsers` is updated in `/chat-rooms` when a new user joins or leaves a group chat room,
 
-  - and is updated in `/chat-joins` when a chat message is sent.
+    - and is updated in `/chat-joins` when a chat message is sent.
 
 - When sending a chat message, if the text contains a URL, information for previewing the URL is extracted. The appropriate values are stored in the following fields below the message:
-  - `previewUrl` - URL
-  - `previewTitle` - Title
-  - `previewDescription` - Description
-  - `previewImageUrl` - Image
+    - `previewUrl` - URL
+    - `previewTitle` - Title
+    - `previewDescription` - Description
+    - `previewImageUrl` - Image
 
 ## Logic
 
 ### Get ChatRoomModel on ChatRoom
 
 - The complete chat room model instance is needed before display the chat room message. For instance,
-  - to check if the user is in the room,
-  - to check if site preview displaying or image displaying options,
-  - to show password input box based on the chat room settings,
-  - etc
+    - to check if the user is in the room,
+    - to check if site preview displaying or image displaying options,
+    - to show password input box based on the chat room settings,
+    - etc
 
 ### Order
 
 - Chat message order is sorted by the last message's `order` field.
-  - It must have a smaller value than the previous message.
-  - When you send a chat message programatically without `order`, the message may be shown at the top.
+    - It must have a smaller value than the previous message.
+    - When you send a chat message programatically without `order`, the message may be shown at the top.
 
 ### Creating Chat Room
 
@@ -377,6 +377,20 @@ class CustomChatRoomInviteScreen extends StatelessWidget {
   }
 }
 ```
+
+## Ready Made Chat Widgets
+
+<!-- TODO Ongoing Christian -->
+
+Fireship provides a ready made chat screen so that it can be easier and faster to build apps especially when we are building simple apps.
+
+### Chat Screen
+
+Chat Screen shows a full screen with a listing of chat rooms.
+
+### Chat List
+
+Chat List is a List view of Chats.
 
 ## Management
 

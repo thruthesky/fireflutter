@@ -166,11 +166,6 @@ Copy below and paste it into your firebase project.
 
 
 
-
-### Add the security rule for RTDB
-
-<!-- TODO must have security rule -->
-
 ## Default app-environment entitlement
 
 Add the following code into `info.plist`. These will be needed for access to camera and gallery.

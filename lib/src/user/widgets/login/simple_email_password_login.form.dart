@@ -23,12 +23,10 @@ class SimpleEmailPasswordLoginForm extends StatefulWidget {
   final void Function()? onRegister;
 
   @override
-  State<SimpleEmailPasswordLoginForm> createState() =>
-      _SimpleEmailPasswordLoginFormState();
+  State<SimpleEmailPasswordLoginForm> createState() => _SimpleEmailPasswordLoginFormState();
 }
 
-class _SimpleEmailPasswordLoginFormState
-    extends State<SimpleEmailPasswordLoginForm> {
+class _SimpleEmailPasswordLoginFormState extends State<SimpleEmailPasswordLoginForm> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -37,13 +35,13 @@ class _SimpleEmailPasswordLoginFormState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Email"),
+        Text(T.email.tr),
         TextField(
           keyboardType: TextInputType.emailAddress,
           controller: emailController,
         ),
         const SizedBox(height: 16),
-        const Text("Password"),
+        Text(T.password.tr),
         TextField(
           obscureText: true,
           controller: passwordController,
@@ -58,8 +56,7 @@ class _SimpleEmailPasswordLoginFormState
               if (emailController.text.trim().isEmpty) {
                 throw FireshipException('input-email', 'Input email to login');
               } else if (passwordController.text.trim().isEmpty) {
-                throw FireshipException(
-                    'input-password', 'Input password to login');
+                throw FireshipException('input-password', 'Input password to login');
               }
 
               final re = await loginOrRegister(
@@ -76,7 +73,7 @@ class _SimpleEmailPasswordLoginFormState
                 widget.onLogin();
               }
             },
-            child: const Text(' LOGIN '),
+            child: Text(T.login.tr),
           ),
         ),
       ],

@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireship/fireship.dart';
+import 'package:fireship/src/chat/chat.customize.dart';
 import 'package:flutter/material.dart';
 
 /// Chat
@@ -10,10 +11,6 @@ class ChatService {
 
   ChatService._() {
     dog('--> ChatService._()');
-  }
-
-  init() {
-    dog('--> ChatService.init()');
   }
 
   /// Firebase Realtime Database Chat Functions
@@ -36,6 +33,15 @@ class ChatService {
   DatabaseReference joinRef(String myUid, String roomId) =>
       joinsRef.child(myUid).child(roomId);
 
+  ChatCustomize customize = const ChatCustomize();
+
+  init({
+    ChatCustomize? customize,
+  }) {
+    dog('--> ChatService.init()');
+    this.customize = customize ?? this.customize;
+  }
+
   Future createRoom({
     required String name,
     required bool isGroupChat,
@@ -56,17 +62,17 @@ class ChatService {
     ChatRoomModel? room,
   }) async {
     return showGeneralDialog(
-      context: context,
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          DefaultChatRoomScreen(
-        uid: uid,
-        roomId: roomId,
-        room: room,
-      ),
-    );
+        context: context,
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            DefaultChatRoomScreen(
+              uid: uid,
+              roomId: roomId,
+              room: room,
+            ));
   }
 
-  Future showChatRoomCreate({required BuildContext context}) async {
+  Future<ChatRoomModel?> showChatRoomCreate(
+      {required BuildContext context}) async {
     return await showDialog<ChatRoomModel?>(
       context: context,
       builder: (_) => const DefaultChatRoomEditDialog(),

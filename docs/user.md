@@ -4,13 +4,15 @@ Much of the code is already included in Fireship.
 
 For example, features like modifying user information or public profile pages are already in working codes. You can customize these UI elements.
 
+
+
+
 ## User database structure
 
 - The user data is saved under `/users/<uid>`.
 
 `displayName` is the name of the user.
 Fireship (including all the widgets) will always use `dispalyName` to display the name of the user. This can be a real name, or it can be a nickname. If you want to keep user's name in different format like `firstName`, `middleName`, `lastName`, you can do it in your app. You may get user's real name and save it in `name` field in your app.
-
 
 `createdAt` has the time of the first login. This is the account creation time.
 
@@ -22,10 +24,10 @@ Fireship (including all the widgets) will always use `dispalyName` to display th
 `gender` 는 `M` 또는 `F` 의 값을 가질 수 있으며, null (필드가 없는 상태) 상태가 될 수도 있다. 참고로, `isVerified` 가 true 일 때에만 성별 여부를 믿을 수 있다. 즉, `isVerified` 가 true 가 아니면, `gender` 정보도 가짜일 수 있다. `gender` can have values of `M` or `F` and may be in a null state (no field). Note that the gender information can only be trusted when `isVerified` is true. In other words, if `isVerified` is not true, gender information may also be false.
 
 - User profile photo is saved under `/users/<uid>` and `/user-profile-photos/<uid>`.
-  - The reason why it saves the photo url into `/user-profile-photos` is to list the users who has profile photo.
+    - The reason why it saves the photo url into `/user-profile-photos` is to list the users who has profile photo.
     Without `/user-profile-photos` node, It can list with `/users` data but it cannot sort by time.
-  - `/user-profile-photos/<uid>` has `updatedAt` field that is updated whenever the user changes profile photo.
-  - It is managed by `UserModel`.
+    - `/user-profile-photos/<uid>` has `updatedAt` field that is updated whenever the user changes profile photo.
+    - It is managed by `UserModel`.
 
 ## 사용자 UI 커스터마이징 (Customizing User UI)
 
@@ -44,9 +46,56 @@ UserService.instance.init(
 
 `loginFirstScreen` 은 builder 가 아니다. 그래서 정적 widget 을 만들어주면 되는데, Scaffold 를 통째로 만들어 넣으면 된다. `loginFirstScreen` is not a builder. So, you can create a static widget, and if you put it in a Scaffold, it will work.
 
-### 회원 정보 수정 페이지 (User Profile Editing Page)
+### User profile update screen
 
-기본적으로 `DefaultProfileScreen` 이 사용되는데, 커스터마이징을 할 수 있다 (By default, `DefaultProfileScreen` is used, but it can be customized).
+Fireship provides a few widgets to update user's profile information like below
+
+#### DefaultProfileUpdateForm
+
+`DefaultProfileUpdateForm` provides with the options below
+- state image (profile background image)
+- profile photo
+- name
+- state message
+- birthday picker
+- gender
+- nationality selector
+- region selector(for Korean nation only)
+- job
+
+`DefaultProfileUpdateForm` also provides more optoins.
+
+
+You you can call `UserService.instance.showProfile(context)` mehtod which shows the `DefaultProfileUpdateForm` as dialog.
+
+It is important to know that fireship uses `UserService.instance.showProfile()` to display the login user's profile update screen. So, if you want to customize everything by yourself, you need to copy the code and make it your own widget. then conect it to `UserService.instance.init(customize: UserCustomize(showProfile: ... ))`.
+
+
+#### SimpleProfileUpdateForm
+
+This is very simple profile update form widget and we don't recommend it for you to use it. But this is good to learn how to write the user update form.
+
+
+```dart
+Scaffold(
+  appBar: AppBar(
+    title: const Text('Profile'),
+  ),
+  body: Padding(
+    padding: const EdgeInsets.all(md),
+    child: Theme(
+      data: bigButtonTheme(context),
+      child: SimpleProfileUpdateForm(
+        onUpdate: () => toast(
+          context: context,
+          message: context.ke('업데이트되었습니다.', 'Profile updated.'),
+        ),
+      ),
+    ),
+  ),
+);
+```
+
 
 ## Access to other user data
 
@@ -202,14 +251,11 @@ toast(
 );
 ```
 
-
-
 ## Widgets
 
 ### UpdateBirthdayField
 
 You can use this widget to display birthday and let user to update his birthday in profile screen.
-
 
 ### UserTile
 
@@ -236,3 +282,17 @@ FirebaseDatabaseListView(
 ```
 
 You can use `trailing` to add your own buttons intead of using `onTap`.
+
+### UserListView
+
+<!-- TODO review -->
+
+You can use this widget to display user list.
+
+```dart
+UserListView(
+  query: Ref.users,
+  itemBuilder: (_, snapshot) => UserTile(user: UserModel.fromSnapshot(snapshot)),
+),
+
+```

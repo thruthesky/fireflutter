@@ -35,6 +35,9 @@ class UserModel {
   bool isAdmin;
   bool isVerified;
   List<String>? blocks;
+  String gender;
+  String nationality;
+  String region;
 
   /// 신분증 업로드한 url
   ///
@@ -50,22 +53,21 @@ class UserModel {
   int idUploadedAt;
 
   /// Returns true if the user is blocked.
-  bool isBlocked(String otherUserUid) =>
-      blocks?.contains(otherUserUid) ?? false;
+  bool isBlocked(String otherUserUid) => blocks?.contains(otherUserUid) ?? false;
 
   /// Alias of isBlocked
   bool hasBlocked(String otherUserUid) => isBlocked(otherUserUid);
 
   bool get notVerified => !isVerified;
 
-  DatabaseReference get ref =>
-      FirebaseDatabase.instance.ref('users').child(uid);
+  DatabaseReference get ref => FirebaseDatabase.instance.ref('users').child(uid);
 
   /// See README.md
-  DatabaseReference get photoRef =>
-      FirebaseDatabase.instance.ref('user-profile-photos').child(uid);
+  DatabaseReference get photoRef => FirebaseDatabase.instance.ref('user-profile-photos').child(uid);
 
   String get birth => '$birthYear-$birthMonth-$birthDay';
+
+  String occupation;
 
   UserModel({
     required this.data,
@@ -86,8 +88,12 @@ class UserModel {
     this.isAdmin = false,
     this.isVerified = false,
     this.blocks,
+    required this.gender,
     required this.idUrl,
     required this.idUploadedAt,
+    required this.occupation,
+    required this.nationality,
+    required this.region,
   });
 
   factory UserModel.fromSnapshot(DataSnapshot snapshot) {
@@ -127,6 +133,7 @@ class UserModel {
       birthYear: json['birthYear'] ?? 0,
       birthMonth: json['birthMonth'] ?? 0,
       birthDay: json['birthDay'] ?? 0,
+      gender: json['gender'] ?? '',
       createdAt: json['createdAt'] ?? 0,
       order: json['order'] ?? 0,
       isAdmin: json['isAdmin'] ?? false,
@@ -134,12 +141,13 @@ class UserModel {
       blocks: json[Field.blocks] == null
           ? null
           : List<String>.from(
-              (json[Field.blocks] as Map<Object?, Object?>)
-                  .entries
-                  .map((x) => x.key),
+              (json[Field.blocks] as Map<Object?, Object?>).entries.map((x) => x.key),
             ),
       idUrl: json[Field.idUrl] ?? '',
       idUploadedAt: json[Field.idUploadedAt] ?? 0,
+      occupation: json[Field.occupation] ?? '',
+      nationality: json['nationality'] ?? '',
+      region: json['region'] ?? '',
     );
   }
 
@@ -157,14 +165,17 @@ class UserModel {
       'birthYear': birthYear,
       'birthMonth': birthMonth,
       'birthDay': birthDay,
+      'gender': gender,
       'createdAt': createdAt,
       'order': order,
       'isAdmin': isAdmin,
       'isVerified': isVerified,
-      Field.blocks:
-          blocks == null ? null : List<dynamic>.from(blocks!.map((x) => x)),
+      Field.blocks: blocks == null ? null : List<dynamic>.from(blocks!.map((x) => x)),
       Field.idUrl: idUrl,
       Field.idUploadedAt: idUploadedAt,
+      Field.occupation: occupation,
+      'nationality': nationality,
+      'region': region
     };
   }
 
@@ -189,6 +200,7 @@ class UserModel {
       birthYear = user.birthYear;
       birthMonth = user.birthMonth;
       birthDay = user.birthDay;
+      gender = user.gender;
       createdAt = user.createdAt;
       order = user.order;
       isAdmin = user.isAdmin;
@@ -196,12 +208,15 @@ class UserModel {
       blocks = user.blocks;
       idUrl = user.idUrl;
       idUploadedAt = user.idUploadedAt;
+      occupation = user.occupation;
+      nationality = user.nationality;
+      region = user.region;
     }
 
     return this;
   }
 
-  /// 사용자 정보 node 전체를 리턴한다.
+  /// 사용자 정보 node 전체를 UserModel 에 담아 리턴한다.
   static Future<UserModel?> get(String uid) async {
     final nodeData = await fs.get<Map<dynamic, dynamic>>('users/$uid');
     if (nodeData == null) {
@@ -269,30 +284,37 @@ class UserModel {
     int? birthYear,
     int? birthMonth,
     int? birthDay,
+    String? gender,
     bool? isAdmin,
     bool? isVerified,
     dynamic createdAt,
     dynamic order,
     int? idUploadedAt,
     String? idUrl,
+    String? occupation,
+    String? nationality,
+    String? region,
   }) async {
     final data = {
       if (name != null) 'name': name,
       if (displayName != null) 'displayName': displayName,
       if (photoUrl != null) 'photoUrl': photoUrl,
-      if (profileBackgroundImageUrl != null)
-        'profileBackgroundImageUrl': profileBackgroundImageUrl,
+      if (profileBackgroundImageUrl != null) 'profileBackgroundImageUrl': profileBackgroundImageUrl,
       if (stateMessage != null) 'stateMessage': stateMessage,
       if (photoUrl != null) 'hasPhotoUrl': true,
       if (birthYear != null) 'birthYear': birthYear,
       if (birthMonth != null) 'birthMonth': birthMonth,
       if (birthDay != null) 'birthDay': birthDay,
+      if (gender != null) 'gender': gender,
       if (isAdmin != null) 'isAdmin': isAdmin,
       if (isVerified != null) 'isVerified': isVerified,
       if (createdAt != null) 'createdAt': createdAt,
       if (order != null) 'order': order,
       if (idUploadedAt != null) 'idUploadedAt': idUploadedAt,
       if (idUrl != null) 'idUrl': idUrl,
+      if (occupation != null) Field.occupation: occupation,
+      if (nationality != null) 'nationality': nationality,
+      if (region != null) 'region': region,
     };
     if (data.isEmpty) {
       return this;
@@ -310,8 +332,7 @@ class UserModel {
 
     /// 사진 정보 업데이트
     if (displayName != null || photoUrl != null) {
-      await _updateUserProfilePhotos(
-          displayName: displayName, photoUrl: photoUrl);
+      await _updateUserProfilePhotos(displayName: displayName, photoUrl: photoUrl);
     }
 
     UserService.instance.onUpdate?.call(this);
@@ -338,8 +359,7 @@ class UserModel {
       await photoRef.update({
         if (photoUrl != null) Field.photoUrl: photoUrl,
         if (displayName != null) Field.displayName: displayName,
-        if (photoUrl != null)
-          Field.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
+        if (photoUrl != null) Field.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
       });
     }
   }

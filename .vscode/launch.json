@@ -5,6 +5,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "WeMeet - iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "CC9FBBEF-A603-4427-98A8-37EC2ABF957F",
+      "flutterMode": "debug",
+      "cwd": "apps/wemeet",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Silvers - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
@@ -175,7 +184,6 @@
       "cwd": "apps/momcafe",
       "program": "lib/main.dart"
     },
-
     {
       "name": "Momcafe (Chris) TEST - iPhone 15 Pro Max (debug)",
       "request": "launch",
@@ -185,25 +193,55 @@
       "cwd": "apps/momcafe",
       "program": "lib/main.dart",
       "args": ["-v", "--dart-define", "MODE=test"]
-    }, 
+    },
     {
-      "name": "Silvers (Noe) - iPhone 15 Pro Max",
+      "name": "Silvers (Chris) TEST - iPhone 15 Pro Max (debug)",
       "request": "launch",
       "type": "dart",
-      "deviceId": "IPhone 15 Pro Max",
+      "deviceId": "9538AD08-48B3-43A8-B848-31CC488FE3E9",
       "flutterMode": "debug",
       "cwd": "apps/silvers",
-      "program": "lib/main.dart"
+      "program": "lib/main.dart",
+      "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
-      "name": "Momcafe (Noe) - iPhone 15",
+      "name": "Wemeet (Noe) TEST - iPhone 15 Pro Max (debug)",
       "request": "launch",
       "type": "dart",
-      "deviceId": "IPhone 15",
+      "deviceId": "iPhone 15 Pro Max",
       "flutterMode": "debug",
-      "cwd": "apps/Momcafe",
+      "cwd": "apps/wemeet",
       "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=test"]
+      // "args": ["-v", "--dart-define", "MODE=test"]
     },
+    {
+      "name": "Wemeet (Noe) TEST - iPhone 15 Pro (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro",
+      "flutterMode": "debug",
+      "cwd": "apps/wemeet",
+      "program": "lib/main.dart",
+      // "args": ["-v", "--dart-define", "MODE=test"]
+    },{
+      "name": "Wemeet (Noe) TEST - Pixel 3 API 30 (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "apps/wemeet",
+      "program": "lib/main.dart",
+      // "args": ["-v", "--dart-define", "MODE=test"]
+    },
+    {
+      "name": "Silvers (Noe) TEST - iPhone 15 Pro (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart",
+      // "args": ["-v", "--dart-define", "MODE=test"]
+    }
   ]
 }
