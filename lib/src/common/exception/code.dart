@@ -9,8 +9,10 @@ class Code {
   static const String notLoggedIn = 'notLoggedIn';
   static const String chatRoomNotVerified = 'chatRoomNotVerified';
   static const String chatRoomNotExists = 'chatRoomNotExists';
+  static const String recentLoginRequiredForResign = 'recentLoginRequiredForResign';
 
   static const String blockSelf = 'blockSelf';
+  static const String profileUpdate = 'profileUpdate';
 
   /// Fields and constants
   static const String uid = 'uid';

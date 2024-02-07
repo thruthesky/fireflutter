@@ -12,6 +12,9 @@ class T {
   static const String inputName = 'Please enter your name.';
   static const String nameInputDescription = 'NameInputDescription';
   static const String saved = 'Saved.';
+  static const String email = 'Email';
+  static const String password = 'Password';
+  static const String login = 'Login';
 
   /// Label, texts, buttons,
   static const String dismiss = 'dismiss';
@@ -35,13 +38,11 @@ class T {
   static const String blockConfirmMessage =
       'Do you want to block this user?\nYou will not be able to contents of this user.';
   static const String unblockConfirmTitle = 'Unblock this user?';
-  static const String unblockConfirmMessage =
-      'You will be able to contents of this user.';
+  static const String unblockConfirmMessage = 'You will be able to contents of this user.';
   static const String notVerifiedMessage = 'You have not verified yourself.';
 
   /// User and Profile
-  static const String recentLoginRequiredForResign =
-      'recentLoginRequiredForResign';
+  static const String recentLoginRequiredForResign = 'recentLoginRequiredForResign';
 
   static const String backgroundImage = 'Background Image';
   static const String profileUpdate = 'Profile Update';
@@ -59,8 +60,7 @@ class T {
       'Are you sure you want to delete post?\nYou will not be able to recover this post.';
 
   static const String deleteCommentConfirmTitle = 'Delete this comment?';
-  static const String deleteCommentConfirmMessage =
-      'Are you sure you want to delete comment?';
+  static const String deleteCommentConfirmMessage = 'Are you sure you want to delete comment?';
 
   static const String occupation = 'occupation';
   static const String occupationInputDescription = 'occupationInputDescription';
@@ -74,7 +74,6 @@ class T {
 
   /// Report
   static const String reportInputTitle = 'Report';
-  static const String reportInputMessage =
-      'Please enter the reason for the report.';
+  static const String reportInputMessage = 'Please enter the reason for the report.';
   static const String reportInputHint = 'Reason';
 }
