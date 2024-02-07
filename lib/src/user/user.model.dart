@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 import 'package:fireship/fireship.dart' as fs;
 import 'package:fireship/fireship.defines.dart';
+import 'package:fireship/fireship.functions.dart';
 import 'package:fireship/src/user/user.service.dart';
 
 class UserModel {
@@ -25,6 +26,7 @@ class UserModel {
   String phoneNumber;
   String photoUrl;
   String profileBackgroundImageUrl;
+  List<String> photoOfMeUrl;
   String stateMessage;
   bool isDisabled;
   int birthYear;
@@ -38,6 +40,8 @@ class UserModel {
   String gender;
   String nationality;
   String region;
+  List<String> likes;
+  int noOfLikes;
 
   /// 신분증 업로드한 url
   ///
@@ -53,17 +57,20 @@ class UserModel {
   int idUploadedAt;
 
   /// Returns true if the user is blocked.
-  bool isBlocked(String otherUserUid) => blocks?.contains(otherUserUid) ?? false;
+  bool isBlocked(String otherUserUid) =>
+      blocks?.contains(otherUserUid) ?? false;
 
   /// Alias of isBlocked
   bool hasBlocked(String otherUserUid) => isBlocked(otherUserUid);
 
   bool get notVerified => !isVerified;
 
-  DatabaseReference get ref => FirebaseDatabase.instance.ref('users').child(uid);
+  DatabaseReference get ref =>
+      FirebaseDatabase.instance.ref('users').child(uid);
 
   /// See README.md
-  DatabaseReference get photoRef => FirebaseDatabase.instance.ref('user-profile-photos').child(uid);
+  DatabaseReference get photoRef =>
+      FirebaseDatabase.instance.ref('user-profile-photos').child(uid);
 
   String get birth => '$birthYear-$birthMonth-$birthDay';
 
@@ -78,6 +85,7 @@ class UserModel {
     required this.displayName,
     required this.photoUrl,
     required this.profileBackgroundImageUrl,
+    required this.photoOfMeUrl,
     required this.stateMessage,
     this.isDisabled = false,
     required this.birthYear,
@@ -94,6 +102,8 @@ class UserModel {
     required this.occupation,
     required this.nationality,
     required this.region,
+    required this.likes,
+    required this.noOfLikes,
   });
 
   factory UserModel.fromSnapshot(DataSnapshot snapshot) {
@@ -128,6 +138,7 @@ class UserModel {
       displayName: json['displayName'] ?? '',
       photoUrl: json['photoUrl'] ?? '',
       profileBackgroundImageUrl: json['profileBackgroundImageUrl'] ?? '',
+      photoOfMeUrl: List<String>.from((json['photoOfMeUrl'] ?? [])),
       stateMessage: json['stateMessage'] ?? '',
       isDisabled: json['isDisabled'] ?? false,
       birthYear: json['birthYear'] ?? 0,
@@ -141,13 +152,17 @@ class UserModel {
       blocks: json[Field.blocks] == null
           ? null
           : List<String>.from(
-              (json[Field.blocks] as Map<Object?, Object?>).entries.map((x) => x.key),
+              (json[Field.blocks] as Map<Object?, Object?>)
+                  .entries
+                  .map((x) => x.key),
             ),
       idUrl: json[Field.idUrl] ?? '',
       idUploadedAt: json[Field.idUploadedAt] ?? 0,
       occupation: json[Field.occupation] ?? '',
       nationality: json['nationality'] ?? '',
       region: json['region'] ?? '',
+      likes: List<String>.from((json['likes'] ?? [])),
+      noOfLikes: json['noOfLikes'] ?? 0,
     );
   }
 
@@ -160,6 +175,7 @@ class UserModel {
       'displayName': displayName,
       'photoUrl': photoUrl,
       'profileBackgroundImageUrl': profileBackgroundImageUrl,
+      'photoOfMeUrl': photoOfMeUrl,
       'stateMessage': stateMessage,
       'isDisabled': isDisabled,
       'birthYear': birthYear,
@@ -170,12 +186,15 @@ class UserModel {
       'order': order,
       'isAdmin': isAdmin,
       'isVerified': isVerified,
-      Field.blocks: blocks == null ? null : List<dynamic>.from(blocks!.map((x) => x)),
+      Field.blocks:
+          blocks == null ? null : List<dynamic>.from(blocks!.map((x) => x)),
       Field.idUrl: idUrl,
       Field.idUploadedAt: idUploadedAt,
       Field.occupation: occupation,
       'nationality': nationality,
-      'region': region
+      'region': region,
+      Field.likes: likes,
+      Field.noOfLikes: noOfLikes
     };
   }
 
@@ -195,6 +214,7 @@ class UserModel {
       displayName = user.displayName;
       photoUrl = user.photoUrl;
       profileBackgroundImageUrl = user.profileBackgroundImageUrl;
+      photoOfMeUrl = user.photoOfMeUrl;
       stateMessage = user.stateMessage;
       isDisabled = user.isDisabled;
       birthYear = user.birthYear;
@@ -211,6 +231,8 @@ class UserModel {
       occupation = user.occupation;
       nationality = user.nationality;
       region = user.region;
+      likes = user.likes;
+      noOfLikes = user.noOfLikes;
     }
 
     return this;
@@ -280,6 +302,7 @@ class UserModel {
     String? displayName,
     String? photoUrl,
     String? profileBackgroundImageUrl,
+    List<String>? photoOfMeUrl,
     String? stateMessage,
     int? birthYear,
     int? birthMonth,
@@ -299,7 +322,9 @@ class UserModel {
       if (name != null) 'name': name,
       if (displayName != null) 'displayName': displayName,
       if (photoUrl != null) 'photoUrl': photoUrl,
-      if (profileBackgroundImageUrl != null) 'profileBackgroundImageUrl': profileBackgroundImageUrl,
+      if (profileBackgroundImageUrl != null)
+        'profileBackgroundImageUrl': profileBackgroundImageUrl,
+      if (photoOfMeUrl != null) 'photoOfMeUrl': photoOfMeUrl,
       if (stateMessage != null) 'stateMessage': stateMessage,
       if (photoUrl != null) 'hasPhotoUrl': true,
       if (birthYear != null) 'birthYear': birthYear,
@@ -332,7 +357,8 @@ class UserModel {
 
     /// 사진 정보 업데이트
     if (displayName != null || photoUrl != null) {
-      await _updateUserProfilePhotos(displayName: displayName, photoUrl: photoUrl);
+      await _updateUserProfilePhotos(
+          displayName: displayName, photoUrl: photoUrl);
     }
 
     UserService.instance.onUpdate?.call(this);
@@ -359,7 +385,8 @@ class UserModel {
       await photoRef.update({
         if (photoUrl != null) Field.photoUrl: photoUrl,
         if (displayName != null) Field.displayName: displayName,
-        if (photoUrl != null) Field.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
+        if (photoUrl != null)
+          Field.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
       });
     }
   }
@@ -449,5 +476,20 @@ class UserModel {
   /// Remove the user from the block list by setting null value
   Future unblockUser(String otherUserUid) async {
     return await ref.child(Field.blocks).child(otherUserUid).set(null);
+  }
+
+  Future<void> like() async {
+    final snapshot = await ref.child(Field.likes).get();
+    likes = List<String>.from((snapshot.value as Map? ?? {}).keys);
+
+    if (likes.contains(myUid) == false) {
+      ref.child(Field.likes).child(myUid!).set(true);
+      likes.add(myUid!);
+      ref.child(Field.noOfLikes).set(likes.length);
+    } else {
+      ref.child(Field.likes).child(myUid!).remove();
+      likes.remove(myUid);
+      ref.child(Field.noOfLikes).set(likes.length);
+    }
   }
 }
