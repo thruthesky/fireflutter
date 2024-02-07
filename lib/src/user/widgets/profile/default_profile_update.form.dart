@@ -37,28 +37,31 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
 
   UserModel get user => UserService.instance.user!;
 
-// todo display nationality and region
   @override
   void initState() {
     super.initState();
 
     nameController.text = my?.displayName ?? '';
+    if (user.nationality != '') {
+      nationality = user.nationality;
+      region = user.region;
+    }
     stateMessageController.text = user.stateMessage;
     occupationController.text = user.occupation;
-    getData();
+    // getData();
     // dog('asdasd $nationality');
   }
 
-  getData() async {
-    final userModel = await UserModel.get(user.uid);
-    if (userModel!.nationality != '') {
-      nationality = userModel.nationality;
-      region = userModel.region;
-      setState(() {});
-    } else {
-      return;
-    }
-  }
+  // getData() async {
+  //   final userModel = await UserModel.get(user.uid);
+  //   if (userModel!.nationality != '') {
+  //     nationality = userModel.nationality;
+  //     region = userModel.region;
+  //     setState(() {});
+  //   } else {
+  //     return;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
