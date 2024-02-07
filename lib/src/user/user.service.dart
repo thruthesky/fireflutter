@@ -23,8 +23,7 @@ class UserService {
     }
   }
 
-  BehaviorSubject<UserModel?> myDataChanges =
-      BehaviorSubject<UserModel?>.seeded(null);
+  BehaviorSubject<UserModel?> myDataChanges = BehaviorSubject<UserModel?>.seeded(null);
 
   StreamSubscription? userNodeSubscription;
 
@@ -74,8 +73,7 @@ class UserService {
     }
 
     this.enableNoOfProfileView = enableNoOfProfileView;
-    this.enableMessagingOnPublicProfileVisit =
-        enableMessagingOnPublicProfileVisit;
+    this.enableMessagingOnPublicProfileVisit = enableMessagingOnPublicProfileVisit;
 
     this.onLike = onLike;
     this.enableNotificationOnLike = enableNotificationOnLike;
@@ -130,8 +128,7 @@ class UserService {
         return;
       }
       userNodeSubscription?.cancel();
-      userNodeSubscription =
-          userRef.child(user.uid).onValue.listen((event) async {
+      userNodeSubscription = userRef.child(user.uid).onValue.listen((event) async {
         dog('--> UserService.listenUser() userRef.child(user.uid).onValue.listen()');
         if (event.snapshot.exists == false || event.snapshot.value == null) {
           return;
@@ -185,8 +182,7 @@ class UserService {
     /// send notification by default when user visit other user profile
     /// disable notification when `disableNotifyOnProfileVisited` is set on user setting
     () async {
-      bool? re =
-          await getSetting<bool?>(uid, path: Code.profileViewNotification);
+      bool? re = await getSetting<bool?>(uid, path: Code.profileViewNotification);
       if (re != true) return;
 
       if (loggedIn && myUid != uid) {
@@ -204,8 +200,7 @@ class UserService {
     return showGeneralDialog(
       context: context,
       pageBuilder: ($, _, __) =>
-          customize.publicProfile?.call(uid) ??
-          DefaultPublicProfileScreen(uid: uid),
+          customize.publicProfile?.call(uid) ?? DefaultPublicProfileScreen(uid: uid),
     );
   }
 

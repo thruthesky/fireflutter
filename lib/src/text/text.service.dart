@@ -31,6 +31,9 @@ class TextService {
     T.birthdateSelectDescription: 'Please select your birthdate.',
     T.birthdateTapToSelect: 'Tap to select',
     T.birthdate: '#birthMonth/#birthDay/#birthYear',
+    T.email: 'Email',
+    T.password: 'Password',
+    T.login: 'Login'
   };
 
   TextService._() {
