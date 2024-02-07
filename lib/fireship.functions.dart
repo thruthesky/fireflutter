@@ -22,7 +22,13 @@ UserModel? get my => UserService.instance.user;
 /// For more readability.
 ///
 /// It's NOT nullable.
-UserModel get iam => UserService.instance.user!;
+UserModel get iam {
+  if (my == null) {
+    throw Exception(
+        '[iam] UserService.instance.user is null. Developer may forget to call [UserService.instance.init()] or [UserService.instance.myDataChanges.listen()] is not complete yet.');
+  }
+  return my!;
+}
 
 void dog(String msg) {
   if (kReleaseMode) return;
@@ -162,7 +168,9 @@ ScaffoldFeatureController toast({
                       if (title != null)
                         Text(
                           title,
-                          style: TextStyle(color: foregroundColor, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              color: foregroundColor,
+                              fontWeight: FontWeight.bold),
                         ),
                       Text(message),
                     ],
