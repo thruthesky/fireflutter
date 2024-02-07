@@ -15,10 +15,18 @@ export class Config {
     static region = "asia-southeast1";
 
     static typesenseCollection = "momcafeSearch";
-    // token 을 저장하는 경로
+
+    // User paths
+    static users = "users";
+    static userLikes = "user-likes";
+    static userWhoILike = "user-who-i-like";
+
+    // Path to save tokens
     // 테스트를 할 때에는 "user-fcm-tokens-test" 경로를 사용한다.
     static userFcmTokensPath = "user-fcm-tokens";
 
+
+    // Forum paths
     static posts = "posts";
     static postSummaries = "post-summaries";
     static postAllSummaries = "post-all-summaries";
