@@ -48,20 +48,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
     }
     stateMessageController.text = user.stateMessage;
     occupationController.text = user.occupation;
-    // getData();
-    // dog('asdasd $nationality');
   }
-
-  // getData() async {
-  //   final userModel = await UserModel.get(user.uid);
-  //   if (userModel!.nationality != '') {
-  //     nationality = userModel.nationality;
-  //     region = userModel.region;
-  //     setState(() {});
-  //   } else {
-  //     return;
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
