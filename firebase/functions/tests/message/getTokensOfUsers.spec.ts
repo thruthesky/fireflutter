@@ -8,7 +8,7 @@ import { Config } from "../../src/config";
 if (admin.apps.length === 0) {
     admin.initializeApp(
         {
-            databaseURL: "https://philgo-default-rtdb.asia-southeast1.firebasedatabase.app",
+            databaseURL: "http://127.0.0.1:6004/?ns=withcenter-silvers",
         }
     );
 }

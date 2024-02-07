@@ -10,6 +10,9 @@ class DefaultChatRoomInviteScreen extends StatelessWidget {
 
   final ChatRoomModel room;
 
+  /// get list of uids of members
+  List<String> get memberUids => (room.users ?? {}).keys.toList();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,6 +23,9 @@ class DefaultChatRoomInviteScreen extends StatelessWidget {
         query: Ref.users.orderByChild('order'),
         itemBuilder: (context, snapshot) {
           final user = UserModel.fromSnapshot(snapshot);
+          if (memberUids.contains(user.uid)) {
+            return const SizedBox.shrink();
+          }
           return ListTile(
             leading: UserAvatar(uid: user.uid),
             title: Text(user.displayName),

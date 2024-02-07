@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
@@ -42,7 +40,7 @@ class _ChatRoomState extends State<ChatRoom> {
   ChatModel? _chat;
   ChatModel get chat => _chat!;
 
-  bool loaded = false;
+  final loaded = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -107,9 +105,7 @@ class _ChatRoomState extends State<ChatRoom> {
       }
     }
 
-    setState(() {
-      loaded = true;
-    });
+    loaded.value = true;
 
     /// 방 정보 전체를 한번 읽고, 이후, 실시간 업데이트
     ///
@@ -240,13 +236,16 @@ class _ChatRoomState extends State<ChatRoom> {
                       : const Icon(Icons.notifications_outlined),
                 ),
               ),
-              IconButton(
-                onPressed: () async {
-                  ChatService.instance
-                      .showInviteScreen(context: context, room: chat.room);
-                },
-                icon: const Icon(Icons.person_add_rounded),
-              ),
+              if (chat.room.isGroupChat)
+                ChatService.instance.customize.chatRoomInviteButton
+                        ?.call(chat.room) ??
+                    IconButton(
+                      onPressed: () async {
+                        ChatService.instance.showInviteScreen(
+                            context: context, room: chat.room);
+                      },
+                      icon: const Icon(Icons.person_add_rounded),
+                    ),
 
               ChatService.instance.customize.chatRoomMenu?.call(chat) ??
                   PopupMenuButton<String>(
@@ -256,6 +255,13 @@ class _ChatRoomState extends State<ChatRoom> {
                           value: 'setting',
                           child: Text(T.setting.tr),
                         ),
+                      const PopupMenuItem(
+                        value: 'members',
+                        child: Text(
+                          // T.members.tr,
+                          "Members",
+                        ),
+                      ),
                       if (chat.room.isSingleChat)
                         PopupMenuItem(
                           value: 'block',
@@ -277,6 +283,11 @@ class _ChatRoomState extends State<ChatRoom> {
                           roomId: chat.room.id,
                         );
                         setState(() {});
+                      } else if (v == 'members') {
+                        await ChatService.instance.showMembersScreen(
+                          context: context,
+                          room: chat.room,
+                        );
                       } else if (v == 'block') {
                         /// 차단 & 해제
                         final re = await my?.block(chat.room.otherUserUid!);
@@ -314,11 +325,14 @@ class _ChatRoomState extends State<ChatRoom> {
 
         /// 채팅 메시지
         Expanded(
-          child: loaded
-              ? ChatMessageListView(
-                  chat: chat,
-                )
-              : const SizedBox.shrink(),
+          child: ValueListenableBuilder(
+            valueListenable: loaded,
+            builder: (_, v, __) => v
+                ? ChatMessageListView(
+                    chat: chat,
+                  )
+                : const SizedBox.shrink(),
+          ),
         ),
 
         /// 채팅 입력 박스

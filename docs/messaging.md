@@ -2,8 +2,6 @@
 
 ## Overview
 
-
-
 ### FCM and tokens
 
 Fireship uses FCM to send messages to devices.
@@ -14,9 +12,7 @@ The tokens are saved under `/user-fcm-tokens/<token> { uid: [user uid], platform
 
 One user may use multiple devices and one device may have multiple tokens. So, if the app sends a message to A, the app must query to get the tokens of A in `/user-fcm-tokens`
 
-
 The code below shows how send a message to multiple users.
-
 
 ```dart
 final List<String> uids = some.users;

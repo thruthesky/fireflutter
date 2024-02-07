@@ -15,12 +15,12 @@ class ForumService {
   Function(CommentModel)? onCommentDelete;
 
   init({
-    Function(PostModel)? onPostCreate,
-    Function(PostModel)? onPostUpdate,
-    Function(PostModel)? onPostDelete,
-    Function(CommentModel)? onCommentCreate,
-    Function(CommentModel)? onCommentUpdate,
-    Function(CommentModel)? onCommentDelete,
+    Function(PostModel post)? onPostCreate,
+    Function(PostModel post)? onPostUpdate,
+    Function(PostModel post)? onPostDelete,
+    Function(CommentModel comment)? onCommentCreate,
+    Function(CommentModel comment)? onCommentUpdate,
+    Function(CommentModel comment)? onCommentDelete,
   }) {
     this.onPostCreate = onPostCreate;
     this.onPostUpdate = onPostUpdate;
