@@ -1,5 +1,6 @@
 import { getDatabase } from "firebase-admin/database";
 import { PostCreateEvent, PostSummary } from "./forum.interface";
+import { Config } from "../config";
 
 /**
  * Typesense Service
@@ -26,6 +27,6 @@ export class PostService {
         }
         
         const db = getDatabase();
-        return db.ref(`posts-summary/${category}/${id}`).set(summary);
+        return db.ref(`${Config.postSummaries}/${category}/${id}`).set(summary);
     }
 }

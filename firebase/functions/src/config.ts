@@ -19,7 +19,10 @@ export class Config {
     // 테스트를 할 때에는 "user-fcm-tokens-test" 경로를 사용한다.
     static userFcmTokensPath = "user-fcm-tokens";
 
-    static postsSubscriptionPath = "posts-subscription";
+    static posts = "posts";
+    static postSummaries = "post-summaries";
+    static postAllSummaries = "post-all-summaries";
+    static postSubscriptionPath = "post-subscriptions";
 
     /**
      * debug 가 true 일 때만 로그를 남긴다.

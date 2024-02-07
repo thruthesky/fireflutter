@@ -296,3 +296,17 @@ UserListView()
 
 
 - User likes are saved under `/user-likes`.
+- The data structure will be like below.
+  - When A like U,
+```json
+/user-likes/U { A: true }
+
+```
+  - When A, B likes U,
+```json
+/user-likes/U { A: true, B: true}
+```
+  - When B unlinke U,
+```json
+/user-likes/U { A: true }
+```

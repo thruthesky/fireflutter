@@ -2,6 +2,7 @@ import { getDatabase } from "firebase-admin/database";
 import { onValueCreated, onValueDeleted, onValueWritten } from "firebase-functions/v2/database";
 import { PostCreateEvent } from "./forum.interface";
 import { PostService } from "./post.service";
+import { Config } from "../config";
 
 /**
  * managePostsAllSummary
@@ -10,13 +11,13 @@ import { PostService } from "./post.service";
  *
  */
 export const managePostsAllSummary = onValueWritten(
-    "/posts-summary/{category}/{postId}",
+    `${Config.postSummaries}/{category}/{postId}`,
     (event) => {
         const db = getDatabase();
         if (!event.data.after.exists()) {
             // Data deleted
             // const data = event.data.before.val();
-            return db.ref(`posts-all-summary/${event.params.postId}`).remove();
+            return db.ref(`${Config.postAllSummaries}/${event.params.postId}`).remove();
         }
 
         // Data has created or updated
@@ -24,7 +25,7 @@ export const managePostsAllSummary = onValueWritten(
             ...event.data.after.val(),
             category: event.params.category,
         };
-        return db.ref(`posts-all-summary/${event.params.postId}`).set(data);
+        return db.ref(`${Config.postAllSummaries}/${event.params.postId}`).set(data);
     },
 );
 
@@ -56,7 +57,7 @@ export const postUpdateSummaryTitle = onValueWritten(
         const category = event.params.category;
         const id = event.params.id;
         const db = getDatabase();
-        const ref = db.ref(`posts-summary/${category}/${id}/title`);
+        const ref = db.ref(`${Config.postSummaries}/${category}/${id}/title`);
         return ref.set(event.data.after?.val() ?? null);
 
         // if (event.data.after.exists()) {
@@ -85,7 +86,7 @@ export const postUpdateSummaryContent = onValueWritten(
     (event) => {
         const category = event.params.category;
         const id = event.params.id;
-        const ref = getDatabase().ref(`posts-summary/${category}/${id}/content`);
+        const ref = getDatabase().ref(`${Config.postSummaries}/${category}/${id}/content`);
         return ref.set(event.data.after?.val() ?? null);
 
 
@@ -116,18 +117,18 @@ export const postUpdateSummaryUrl = onValueWritten(
         
         const category = event.params.category;
         const id = event.params.id;
-        const ref = getDatabase().ref(`posts-summary/${category}/${id}/url`);
+        const ref = getDatabase().ref(`${Config.postSummaries}/${category}/${id}/url`);
         return ref.set(event.data.after?.val()?.[0] ?? null);
 
         // if (event.data.after.exists()) {
         //     // Created || Updated
         //     const afterValue = event.data.after.val();
         //     if ( afterValue?.[0] ) {
-        //         return db.ref(`posts-summary/${category}/${id}`).set({ url: afterValue[0] });
+        //         return db.ref(`${Config.postSummaries}/${category}/${id}`).set({ url: afterValue[0] });
         //     }
         // }
         // // Deleted
-        // return db.ref(`posts-summary/${category}/${id}`).set({ url: null });
+        // return db.ref(`${Config.postSummaries}/${category}/${id}`).set({ url: null });
     },
 );
 
@@ -143,7 +144,7 @@ export const postUpdateSummaryDeleted = onValueWritten(
     (event) => {
         const category = event.params.category;
         const id = event.params.id;
-        const ref = getDatabase().ref(`posts-summary/${category}/${id}/deleted`);
+        const ref = getDatabase().ref(`${Config.postSummaries}/${category}/${id}/deleted`);
         const deletedValue: boolean | undefined = event.data.after?.val() ?? null;
         
         return ref.set(deletedValue);
@@ -171,7 +172,7 @@ export const postDeleteSummary = onValueDeleted(
         
         const category = event.params.category;
         const id = event.params.id;
-        const ref = getDatabase().ref(`posts-summary/${category}/${id}`);
+        const ref = getDatabase().ref(`${Config.postSummaries}/${category}/${id}`);
         return ref.remove();
     },
 );
