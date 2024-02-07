@@ -1,6 +1,5 @@
 import { getDatabase } from "firebase-admin/database";
 import { onValueCreated, onValueDeleted, onValueWritten } from "firebase-functions/v2/database";
-import { PostCreateEvent } from "./forum.interface";
 import { PostService } from "./post.service";
 
 /**
@@ -30,7 +29,7 @@ export const managePostsAllSummary = onValueWritten(
 
 
 
-///
+/// ----------------- Post Summary ----------------- ///
 
 /**
  * Indexing for post created
@@ -39,9 +38,7 @@ export const managePostsAllSummary = onValueWritten(
 export const postSetSummary = onValueCreated(
     "/posts/{category}/{id}",
     async (event) => {
-        const data = event.data.val() as PostCreateEvent;
-        return PostService.setSummary(data, event.params.category, event.params.id);
-
+        return PostService.setSummary(event.data.val(), event.params.category, event.params.id);
     },
 );
 
@@ -144,10 +141,9 @@ export const postUpdateSummaryDeleted = onValueWritten(
         const category = event.params.category;
         const id = event.params.id;
         const ref = getDatabase().ref(`posts-summary/${category}/${id}/deleted`);
-        const deletedValue: boolean | undefined = event.data.after?.val() ?? null;
-        
-        return ref.set(deletedValue);
+        return ref.set(event.data.after?.val() ?? null);
    
+        //         const deletedValue: boolean | undefined = event.data.after?.val() ?? null;
         // console.log("A post's `deleted` is created/updated/deleted in RTDB", event.params, deletedValue);
         // if (deletedValue == true) {
         //     return TypesenseService.delete(id);
@@ -168,7 +164,6 @@ export const postUpdateSummaryDeleted = onValueWritten(
 export const postDeleteSummary = onValueDeleted(
     "/posts/{category}/{id}",
     (event) => {
-        
         const category = event.params.category;
         const id = event.params.id;
         const ref = getDatabase().ref(`posts-summary/${category}/${id}`);
