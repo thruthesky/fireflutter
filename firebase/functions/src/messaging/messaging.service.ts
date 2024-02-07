@@ -229,7 +229,7 @@ export class MessagingService {
     // 해당 게시판(카테고리)를 subscribe 한 사용자들의 uid 를 가져온다.
 
     const db = getDatabase();
-    const snapshot = await db.ref(`${Config.postsSubscriptionPath}/${msg.category}`).get();
+    const snapshot = await db.ref(`${Config.postSubscriptions}/${msg.category}`).get();
     const uids: Array<string> = [];
     snapshot.forEach((child) => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

@@ -304,21 +304,26 @@ UserListView()
 ```json
 /user-likes/U { A: true }
 /user-who-i-like/A { U: true }
+/users/U {noOfLikes: 1}
 ```
   - When A, B likes U,
 ```json
 /user-likes/U { A: true, B: true}
 /user-who-i-like/A {U: true}
 /user-who-i-like/B {U: true}
+/users/U {noOfLikes: 2}
 ```
   - When B unlinke U,
 ```json
 /user-likes/U { A: true }
 /user-who-i-like/A { U: true }
+/users/U {noOfLikes: 1}
 ```
   - When A likes U, W
 ```json
 /user-likes/U { A: true }
 /user-likes/W { A: true }
 /user-who-i-like/A { U: true, W: true }
+/users/U {noOfLikes: 1}
+/users/W {noOfLikes: 1}
 ```

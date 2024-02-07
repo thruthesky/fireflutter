@@ -8,8 +8,15 @@ import { Config } from "../config";
  * This service is responsible for all the Typesense related operations.
  */
 export class PostService {
+    /**
+     * Sets the summary of the post
+     *
+     * @param post post data from the event
+     * @param category category of the post
+     * @param id id of the post
+     * @returns the promise of the operation
+     */
     static setSummary(post: PostCreateEvent, category: string, id: string) {
-
         const summary: PostSummary = {
             uid: post.uid,
             createdAt: post.createdAt,
@@ -25,7 +32,7 @@ export class PostService {
         if ( post.urls ) {
             summary.url = post.urls[0];
         }
-        
+
         const db = getDatabase();
         return db.ref(`${Config.postSummaries}/${category}/${id}`).set(summary);
     }

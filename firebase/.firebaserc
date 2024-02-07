@@ -2,7 +2,8 @@
   "projects": {
     "philgo": "philgo",
     "test3": "withcenter-test-3",
-    "silvers": "withcenter-silvers"
+    "silvers": "withcenter-silvers",
+    "wemeet": "withcenter-meetup-3"
   },
   "targets": {},
   "etags": {}

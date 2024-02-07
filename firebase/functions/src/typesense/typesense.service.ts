@@ -1,5 +1,4 @@
 import { Config } from "../config";
-import { typesenseApiKey, typesenseHost, typesensePort, typesenseProtocol } from "../key";
 import { TypesenseDoc } from "./typesense.interface";
 import * as Typesense from "typesense";
 
@@ -22,12 +21,12 @@ export class TypesenseService {
     return new Typesense.Client({
       nodes: [
         {
-          host: typesenseHost,
-          port: typesensePort,
-          protocol: typesenseProtocol,
+          host: Config.typesenseHost,
+          port: Config.typesensePort,
+          protocol: Config.typesenseProtocol,
         },
       ],
-      apiKey: typesenseApiKey,
+      apiKey: Config.typesenseApiKey,
       numRetries: 3, // A total of 4 tries (1 original try + 3 retries)
       connectionTimeoutSeconds: 120, // Set a longer timeout for large imports
       // logLevel: "debug",

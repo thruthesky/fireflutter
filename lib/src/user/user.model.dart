@@ -2,6 +2,8 @@ import 'package:firebase_database/firebase_database.dart';
 
 import 'package:fireship/fireship.dart' as fs;
 import 'package:fireship/fireship.defines.dart';
+import 'package:fireship/fireship.functions.dart';
+import 'package:fireship/src/database.functions.dart';
 import 'package:fireship/src/user/user.service.dart';
 
 class UserModel {
@@ -474,5 +476,9 @@ class UserModel {
   /// Remove the user from the block list by setting null value
   Future unblockUser(String otherUserUid) async {
     return await ref.child(Field.blocks).child(otherUserUid).set(null);
+  }
+
+  Future like(String otherUserUid) async {
+    return await toggle(fs.Path.like(my!.uid, otherUserUid));
   }
 }

@@ -5,6 +5,8 @@ class Path {
 
   /// User
   static const String users = Folder.users;
+  static const String userLikes = Folder.userLikes;
+  static String like(String a, String b) => '$userLikes/$a/$b';
   static const String userProfilePhotos = Folder.userProfilePhotos;
 
   /// Forum
