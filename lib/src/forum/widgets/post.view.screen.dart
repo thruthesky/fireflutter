@@ -90,33 +90,34 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     child: const Text('차단'),
                   ),
                   const Spacer(),
-                  PopupMenuButton(itemBuilder: (context) {
-                    return [
-                      const PopupMenuItem(
-                        value: 'edit',
-                        child: Text('수정'),
-                      ),
-                      const PopupMenuItem(
-                        value: 'delete',
-                        child: Text('삭제'),
-                      ),
-                    ];
-                  }, onSelected: (value) async {
-                    if (value == 'edit') {
-                      await ForumService.instance
-                          .showPostUpdateScreen(context, post: post);
-                      post.reload();
-                    } else if (value == 'delete') {
-                      final re = await confirm(
-                        context: context,
-                        title: T.deletePostConfirmTitle.tr,
-                        message: T.deletePostConfirmMessage.tr,
-                      );
-                      if (re != true) return;
-                      await post.delete();
-                      if (mounted) Navigator.of(context).pop();
-                    }
-                  }),
+                  if (post.uid == myUid)
+                    PopupMenuButton(itemBuilder: (context) {
+                      return [
+                        const PopupMenuItem(
+                          value: 'edit',
+                          child: Text('수정'),
+                        ),
+                        const PopupMenuItem(
+                          value: 'delete',
+                          child: Text('삭제'),
+                        ),
+                      ];
+                    }, onSelected: (value) async {
+                      if (value == 'edit') {
+                        await ForumService.instance
+                            .showPostUpdateScreen(context, post: post);
+                        post.reload();
+                      } else if (value == 'delete') {
+                        final re = await confirm(
+                          context: context,
+                          title: T.deletePostConfirmTitle.tr,
+                          message: T.deletePostConfirmMessage.tr,
+                        );
+                        if (re != true) return;
+                        await post.delete();
+                        if (mounted) Navigator.of(context).pop();
+                      }
+                    }),
                 ],
               ),
 

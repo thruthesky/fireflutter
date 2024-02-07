@@ -1,6 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireship/fireship.dart';
-import 'package:fireship/src/chat/chat.customize.dart';
 import 'package:flutter/material.dart';
 
 /// Chat
@@ -97,6 +96,18 @@ class ChatService {
     return await showGeneralDialog<ChatRoomModel?>(
       context: context,
       pageBuilder: (_, __, ___) => DefaultChatRoomInviteScreen(room: room),
+    );
+  }
+
+  Future showMembersScreen({
+    required BuildContext context,
+    required ChatRoomModel room,
+  }) async {
+    return await showGeneralDialog(
+      context: context,
+      pageBuilder: (_, __, ___) => DefaultChatRoomMembersScreen(
+        room: room,
+      ),
     );
   }
 }

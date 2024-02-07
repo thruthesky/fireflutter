@@ -223,6 +223,16 @@ FirebaseDatabaseQueryBuilder(
 
 ```
 
+#### Chat List Widget
+
+Fireship provides a default Widget for displaying a list of Chat Rooms if we don't have to customize it.
+
+Chat List is a List view of Chats. We can use this widget to show a list of chats.
+
+```dart
+DefaultChatRoomListView(),
+```
+
 #### Querying Specific Type of Chat Rooms
 
 You may want to show specific types of Chat Rooms, like Single Chat Rooms only, Group Chats Only, or Open Group Chats only.
@@ -378,27 +388,40 @@ class CustomChatRoomInviteScreen extends StatelessWidget {
 }
 ```
 
-## Ready Made Chat Widgets
+### Group Chat Members
 
-<!-- TODO Ongoing Christian -->
+To show the default members screen, add these code:
 
-Fireship provides a ready made chat screen so that it can be easier and faster to build apps especially when we are building simple apps.
+```dart
+await ChatService.instance.showMembersScreen(
+  context: context,
+  room: chat.room,
+);
+```
 
-### Chat Screen
+It uses the `DefaultChatRoomMembersScreen(room: room)` when it is not customized.
 
-Chat Screen shows a full screen with a listing of chat rooms.
+### Removing a Group Chat Member
 
-### Chat List
+Here is an example of a button that removes a user from the group chat. It uses `room.remove(member.uid)` code to remove the user.
 
-Chat List is a List view of Chats.
+```dart
+final room = ChatRoomModel.fromSnapshot(snapshot);
+// ...
+final member = UserModel.fromSnapshot(snapshot);
+// ...
+TextButton(
+  onPressed: () {
+    room.remove(member.uid);
+    Navigator.pop(context);
+  },
+  child: const Text('Remove User'),
+),
+```
 
 ## Management
 
 - You can use the default admin screen. Just call `AdminService.instance.showDashboard()`.
-
-### Open Chat List
-
-<!-- TODO -->
 
 ### Delete Open Chat Message Data
 

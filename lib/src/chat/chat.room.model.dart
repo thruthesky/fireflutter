@@ -456,6 +456,8 @@ class ChatRoomModel {
       Field.newMessage: null,
     };
 
+    // TODO for confirmation, must update room.noOfUsers
+
     /// 1:1 채팅방의 경우, 상대방의 이름을 저장한다.
     if (otherUserUid != null) {
       final user = await UserModel.get(otherUserUid!);
@@ -482,6 +484,19 @@ class ChatRoomModel {
   Future leave() async {
     await ref.child(Field.users).child(myUid!).remove();
     await Ref.join(myUid!, id).remove();
+  }
+
+  /// Remove user in ChatRoom
+  Future remove(String uid) async {
+    if (master == myUid) {
+      await ref.child(Field.users).child(uid).remove();
+      await Ref.join(uid, id).remove();
+
+      // Added this line of code so that we don't have to reload to
+      // get the updated users list.
+      users!.remove(uid);
+    }
+    // TODO if not master
   }
 
   /// Return the first other user uid from the users list.

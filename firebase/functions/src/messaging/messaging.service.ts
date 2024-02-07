@@ -216,7 +216,6 @@ export class MessagingService {
       }
     }
 
-
     // 토큰을 chunk 단위로 나누어 리턴
     return chunk(tokens, chunkSize);
   }

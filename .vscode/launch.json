@@ -185,6 +185,26 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "Momcafe (Chris) TEST - Emulator (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart",
+      "args": ["-v", "--dart-define", "MODE=test"]
+    },
+    {
+      "name": "Momcafe (Chris) TEST - iPhone 15 Pro (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "4EE2C314-5DBF-4992-8246-5B5EC0A38741",
+      "flutterMode": "debug",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart",
+      "args": ["-v", "--dart-define", "MODE=test"]
+    },
+    {
       "name": "Momcafe (Chris) TEST - iPhone 15 Pro Max (debug)",
       "request": "launch",
       "type": "dart",
@@ -198,7 +218,37 @@
       "name": "Silvers (Chris) TEST - iPhone 15 Pro Max (debug)",
       "request": "launch",
       "type": "dart",
-      "deviceId": "9538AD08-48B3-43A8-B848-31CC488FE3E9",
+      "deviceId": "8B2FB5BD-4CBA-4C09-8810-BD4D3D003ECF",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart",
+      "args": ["-v", "--dart-define", "MODE=test"]
+    },
+    {
+      "name": "Silvers (Chris) TEST - iPhone 15 Pro (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "4EE2C314-5DBF-4992-8246-5B5EC0A38741",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart",
+      "args": ["-v", "--dart-define", "MODE=test"]
+    },
+    {
+      "name": "Silvers (Chris) TEST - External Sam (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "R9ATA00LMJM",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart",
+      "args": ["-v", "--dart-define", "MODE=test"]
+    },
+    {
+      "name": "Silvers (Chris) TEST - Emulator (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
       "flutterMode": "debug",
       "cwd": "apps/silvers",
       "program": "lib/main.dart",
