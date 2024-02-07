@@ -162,9 +162,7 @@ ScaffoldFeatureController toast({
                       if (title != null)
                         Text(
                           title,
-                          style: TextStyle(
-                              color: foregroundColor,
-                              fontWeight: FontWeight.bold),
+                          style: TextStyle(color: foregroundColor, fontWeight: FontWeight.bold),
                         ),
                       Text(message),
                     ],
