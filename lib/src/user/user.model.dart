@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 import 'package:fireship/fireship.dart' as fs;
 import 'package:fireship/fireship.defines.dart';
+import 'package:fireship/fireship.functions.dart';
 import 'package:fireship/src/user/user.service.dart';
 
 class UserModel {
@@ -39,6 +40,8 @@ class UserModel {
   String gender;
   String nationality;
   String region;
+  List<String> likes;
+  int noOfLikes;
 
   /// 신분증 업로드한 url
   ///
@@ -99,6 +102,8 @@ class UserModel {
     required this.occupation,
     required this.nationality,
     required this.region,
+    required this.likes,
+    required this.noOfLikes,
   });
 
   factory UserModel.fromSnapshot(DataSnapshot snapshot) {
@@ -156,6 +161,8 @@ class UserModel {
       occupation: json[Field.occupation] ?? '',
       nationality: json['nationality'] ?? '',
       region: json['region'] ?? '',
+      likes: List<String>.from((json['likes'] ?? [])),
+      noOfLikes: json['noOfLikes'] ?? 0,
     );
   }
 
@@ -185,7 +192,9 @@ class UserModel {
       Field.idUploadedAt: idUploadedAt,
       Field.occupation: occupation,
       'nationality': nationality,
-      'region': region
+      'region': region,
+      Field.likes: likes,
+      Field.noOfLikes: noOfLikes
     };
   }
 
@@ -222,6 +231,8 @@ class UserModel {
       occupation = user.occupation;
       nationality = user.nationality;
       region = user.region;
+      likes = user.likes;
+      noOfLikes = user.noOfLikes;
     }
 
     return this;
@@ -465,5 +476,20 @@ class UserModel {
   /// Remove the user from the block list by setting null value
   Future unblockUser(String otherUserUid) async {
     return await ref.child(Field.blocks).child(otherUserUid).set(null);
+  }
+
+  Future<void> like() async {
+    final snapshot = await ref.child(Field.likes).get();
+    likes = List<String>.from((snapshot.value as Map? ?? {}).keys);
+
+    if (likes.contains(myUid) == false) {
+      ref.child(Field.likes).child(myUid!).set(true);
+      likes.add(myUid!);
+      ref.child(Field.noOfLikes).set(likes.length);
+    } else {
+      ref.child(Field.likes).child(myUid!).remove();
+      likes.remove(myUid);
+      ref.child(Field.noOfLikes).set(likes.length);
+    }
   }
 }
