@@ -2,6 +2,7 @@
 
 import { initializeApp } from "firebase-admin/app";
 import { setGlobalOptions } from "firebase-functions/v2/options";
+import { Config } from "./config";
 // import { onValueWritten } from "firebase-functions/v2/database";
 // import { setGlobalOptions } from "firebase-functions/v2/options";
 
@@ -10,10 +11,12 @@ import { setGlobalOptions } from "firebase-functions/v2/options";
 initializeApp();
 
 setGlobalOptions({
-    region: "asia-southeast1",
+    region: Config.region,
 });
 
 export * from "./messaging/messaging.functions";
 export * from "./typesense/typesense.functions";
 export * from "./forum/forum.functions";
+
+
 

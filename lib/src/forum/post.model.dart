@@ -158,6 +158,7 @@ class PostModel {
     );
   }
 
+  @Deprecated('summary is now updated automatically by cloud functoion')
   Map<String, dynamic> toSummary() => {
         Field.content: content.upTo(128),
         'createdAt': createdAt.millisecondsSinceEpoch,

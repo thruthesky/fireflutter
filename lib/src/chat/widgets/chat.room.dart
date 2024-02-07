@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
