@@ -28,10 +28,6 @@ export const managePostsAllSummary = onValueWritten(
     },
 );
 
-
-
-///
-
 /**
  * Indexing for post created
  *
@@ -41,13 +37,12 @@ export const postSetSummary = onValueCreated(
     async (event) => {
         const data = event.data.val() as PostCreateEvent;
         return PostService.setSummary(data, event.params.category, event.params.id);
-
     },
 );
 
 /**
  * Indexing for post update for title
- * 
+ *
  * 글 생성시, 제목 필드가 없을 수 있고, 글 수정할 때, 제목이 생성될 수 있다. 따라서 여기서 제목 생성/수정/삭제를 모두 핸들링한다.
  */
 export const postUpdateSummaryTitle = onValueWritten(
@@ -113,7 +108,6 @@ export const postUpdateSummaryContent = onValueWritten(
 export const postUpdateSummaryUrl = onValueWritten(
      "/posts/{category}/{id}/urls",
     (event) => {
-        
         const category = event.params.category;
         const id = event.params.id;
         const ref = getDatabase().ref(`posts-summary/${category}/${id}/url`);
@@ -144,10 +138,9 @@ export const postUpdateSummaryDeleted = onValueWritten(
         const category = event.params.category;
         const id = event.params.id;
         const ref = getDatabase().ref(`posts-summary/${category}/${id}/deleted`);
+        // TODO for confirmation. Should this be actual delete??
         const deletedValue: boolean | undefined = event.data.after?.val() ?? null;
-        
         return ref.set(deletedValue);
-   
         // console.log("A post's `deleted` is created/updated/deleted in RTDB", event.params, deletedValue);
         // if (deletedValue == true) {
         //     return TypesenseService.delete(id);
@@ -158,17 +151,12 @@ export const postUpdateSummaryDeleted = onValueWritten(
     },
 );
 
-
-
-
-
 /**
  * 글 삭제시, summary 에서도 삭제한다.
  */
 export const postDeleteSummary = onValueDeleted(
     "/posts/{category}/{id}",
     (event) => {
-        
         const category = event.params.category;
         const id = event.params.id;
         const ref = getDatabase().ref(`posts-summary/${category}/${id}`);

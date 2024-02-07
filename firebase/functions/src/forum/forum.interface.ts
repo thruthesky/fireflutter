@@ -1,4 +1,3 @@
-
 export interface PostCreateEvent {
     uid: string;
     title?: string;

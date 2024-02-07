@@ -8,15 +8,16 @@ import { Config } from "./config";
 
 
 // / initialize firebase app
-initializeApp();
-
-setGlobalOptions({
-    region: Config.region,
+initializeApp({
+    databaseURL: "http://127.0.0.1:6004/?ns=withcenter-test-3",
 });
+
+// For testing, please do not set region on GlobalOptions.
+// setGlobalOptions({
+//     // region: Config.region,
+// });
 
 export * from "./messaging/messaging.functions";
 export * from "./typesense/typesense.functions";
 export * from "./forum/forum.functions";
-
-
 
