@@ -11,9 +11,12 @@ class Folder {
   static const String usersPrivate = 'users-private';
 
   static const String reports = 'reports';
-  static const String posts = 'posts';
 
-  static const String postsSubscription = 'posts-subscription';
+  /// Forum
+  static const String posts = 'posts';
+  static const String postSubscriptions = 'post-subscriptions';
+  static const String postSummaries = 'post-summaries';
+  static const String postAllSummaries = 'post-all-summaries';
 }
 
 class Field {

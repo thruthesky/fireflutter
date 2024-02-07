@@ -47,6 +47,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
       nationality = user.nationality;
       region = user.region;
     }
+
     if (user.gender != '') {
       gender = user.gender;
     }

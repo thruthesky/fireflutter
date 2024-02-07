@@ -290,3 +290,9 @@ Fireship provides a widget to display user list. We can use this if we don't hav
 ```dart
 UserListView()
 ```
+
+
+## User likes
+
+
+- User likes are saved under `/user-likes`.
