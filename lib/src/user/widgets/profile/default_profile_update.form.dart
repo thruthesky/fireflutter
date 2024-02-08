@@ -222,22 +222,16 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                   nationality = value as String;
                 });
               },
-              items: {
-                const DropdownMenuItem(value: 'Korea', child: Text('Korea')),
-                const DropdownMenuItem(
+              items: const [
+                DropdownMenuItem(value: 'Korea', child: Text('Korea')),
+                DropdownMenuItem(
                     value: 'United States', child: Text('United States')),
-                const DropdownMenuItem(
-                    value: 'Vietnam', child: Text('Vietnam')),
-                const DropdownMenuItem(
-                    value: 'Thailand', child: Text('Thailand')),
-                const DropdownMenuItem(value: 'Laos', child: Text('Laos')),
-                const DropdownMenuItem(
-                    value: 'Myanmar', child: Text('Myanmar')),
+                DropdownMenuItem(value: 'Vietnam', child: Text('Vietnam')),
+                DropdownMenuItem(value: 'Thailand', child: Text('Thailand')),
+                DropdownMenuItem(value: 'Laos', child: Text('Laos')),
+                DropdownMenuItem(value: 'Myanmar', child: Text('Myanmar')),
                 // Add more countries as needed
-              }.toSet().toList(), // i added this toSet toList to make sure that
-              //  the list of items in drop down has a unique value because it give
-              // error duplicated entries on dropdown
-
+              ],
               isDense: true,
               isExpanded: true,
             ),
