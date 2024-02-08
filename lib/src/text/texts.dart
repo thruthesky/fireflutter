@@ -80,4 +80,19 @@ class T {
   static const String reportInputMessage =
       'Please enter the reason for the report.';
   static const String reportInputHint = 'Reason';
+
+  /// Phone sign in
+  static const String phoneNumber = 'Phone Number';
+  static const String phoneSignInHeaderTitle =
+      'Please enter your phone number and tap "Get Verification Code" button.';
+  static const String phoneNumberInputHint = 'Enter your phone number.';
+  static const String phoneNumberInputDescription =
+      'Input phone number. e.g 010 1234 5678 or 0917 1234 5678';
+
+  static const String phoneSignInTimeoutTryAgain = 'Timeout. Please try again.';
+  static const String phoneSignInGetVerificationCode = 'GetVerification Code';
+  static const String phoneSignInInputSmsCode =
+      'Input Verification Code and press submit button';
+  static const String phoneSignInRetry = 'Retry';
+  static const String phoneSignInVerifySmsCode = 'Verification Code';
 }
