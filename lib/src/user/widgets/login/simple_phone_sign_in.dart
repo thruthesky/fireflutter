@@ -93,7 +93,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
           '전화번호를 입력하신 후 인증 코드 받기 버튼을 눌러주세요.',
           style: Theme.of(context).textTheme.labelMedium,
         ),
-        SizedBox(height: 32),
+        const SizedBox(height: 32),
         // 전화번호를 입력하고, SMS 코드 전송하고, 코드 입력하는 UI 를 보여주는가?
         showSmsCodeInput
             // 그렇다면 전화번호 입력 UI 대신, 전화번호만 보여준다.
@@ -104,7 +104,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                         color: Theme.of(context).colorScheme.secondary,
                       ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   completeNumber,
                   style: const TextStyle(fontSize: 16),
@@ -118,7 +118,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                     '전화번호',
                     style: Theme.of(context).textTheme.labelMedium,
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   TextField(
                     controller: phoneNumberController,
                     keyboardType: TextInputType.phone,
@@ -137,7 +137,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                     autofocus: true,
                     onChanged: (value) => setState(() {}),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     '예) 010 1234 5678 또는 0917 1234 5678',
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -146,7 +146,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                   ),
                 ],
               ),
-        if (showSmsCodeInput == false) SizedBox(height: 32),
+        if (showSmsCodeInput == false) const SizedBox(height: 32),
         if (showSmsCodeInput == false)
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -178,19 +178,16 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                               setState(() => progressVerifyPhoneNumber = false);
                             }
                           }
-                        }
-
-                        if (completeNumber == widget.reviewPhoneNumber) {
+                        } else if (completeNumber == widget.reviewPhoneNumber) {
                           setState(() => progressVerifyPhoneNumber = true);
                           await loginOrRegister(
                               email: widget.reviewEmail,
                               password: widget.reviewPassword);
                           signinSuccess();
                           return;
-                        }
-
-                        /// 테스트 전화번호. 실제 전화번호인 것 처럼 동작.
-                        if (completeNumber == widget.reviewRealPhoneNumber) {
+                        } else if (completeNumber ==
+                            widget.reviewRealPhoneNumber) {
+                          /// 테스트 전화번호. 실제 전화번호인 것 처럼 동작.
                           setState(() {
                             showSmsCodeInput = true;
                             progressVerifyPhoneNumber = false;
@@ -255,15 +252,17 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                           strokeWidth: 3,
                         ),
                       )
-                    : const Text('핸드폰 인증 코드 받기'),
+                    : const Text(
+                        '핸드폰 인증 코드 받기',
+                      ),
               ),
             ],
           ),
         if (showSmsCodeInput) ...[
-          SizedBox(height: 32),
+          const SizedBox(height: 32),
           Text('인증 코드를 입력하신 다음 확인 버튼을 눌러주세요.',
               style: Theme.of(context).textTheme.labelMedium),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           TextField(
             controller: smsCodeController,
             decoration: const InputDecoration(border: OutlineInputBorder()),
@@ -271,7 +270,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
             autofocus: true,
             style: const TextStyle(fontSize: 24),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Row(
             children: [
               TextButton(
