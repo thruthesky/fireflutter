@@ -1,9 +1,7 @@
 # Error handling
 
+Some of the widgets and logic in fireship throw `FireshipException` exception.
 
-Most of the error(exceptions) are not handled by fireship. The app should handle the exceptions.
-
-Fireship can throw `FireshipException` exception.
-
+Those exceptions and whatever exceptions derived from other packages are **NOT** handled by fireship. The app is responsible for handling the exceptions.
 
 
