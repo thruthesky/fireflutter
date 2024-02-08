@@ -5,8 +5,8 @@
             "source.fixAll": "explicit"
         },
     },
-    "problems.decorations.enabled": false,
-    "dart.analysisExcludedFolders": [
-        "./apps/momcafe"
-    ],
+    // "problems.decorations.enabled": false,
+    // "dart.analysisExcludedFolders": [
+    //     "./apps/momcafe"
+    // ],
 }
