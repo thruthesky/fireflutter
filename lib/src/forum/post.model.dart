@@ -258,13 +258,6 @@ class PostModel {
     // don't wait for this
     created.update(order: -created.createdAt.millisecondsSinceEpoch);
 
-    // TODO cleanup
-    // final data = created.toSummary();
-    // data[Field.order] = -created.createdAt.millisecondsSinceEpoch;
-
-    // await Ref.postSummary(created.category, created.id)
-    //     .set(created.toSummary());
-
     ForumService.instance.onPostCreate?.call(created);
   }
 
@@ -295,10 +288,6 @@ class PostModel {
     final snapshot = await ref.get();
     final updated = PostModel.fromSnapshot(snapshot);
 
-    // TODO cleanup
-    // await Ref.postSummary(updated.category, updated.id)
-    //     .set(updated.toSummary());
-
     ForumService.instance.onPostCreate?.call(updated);
   }
 
@@ -322,19 +311,6 @@ class PostModel {
   }
 
   _afterDelete() async {
-    // TODO cleanup
-    // if (comments.isEmpty) {
-    //   await Ref.postSummary(category, id).remove();
-    // } else {
-    //   await Ref.postSummary(category, id).set({
-    //     Field.title: null,
-    //     Field.content: null,
-
-    //     /// TODO url 필드인지, urls 필드인지 확인 할 것.
-    //     'url': null,
-    //     Field.deleted: true,
-    //   });
-    // }
     ForumService.instance.onPostDelete?.call(this);
   }
 

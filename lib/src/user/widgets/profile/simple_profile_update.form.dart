@@ -1,5 +1,4 @@
 import 'package:fireship/fireship.dart';
-import 'package:fireship/src/user/user.private.model.dart';
 import 'package:flutter/material.dart';
 
 class SimpleProfileUpdateForm extends StatefulWidget {
