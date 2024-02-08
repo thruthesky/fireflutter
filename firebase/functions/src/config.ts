@@ -1,6 +1,5 @@
-// eslint-disable-file @typescript-eslint/no-explicit-any
 
-// import { logger } from "firebase-functions/v1";
+import { typesenseApiKey, typesenseHost, typesensePort, typesenseProtocol } from "./key";
 
 /**
  * Config
@@ -15,11 +14,22 @@ export class Config {
     static region = "asia-southeast1";
 
     static typesenseCollection = "momcafeSearch";
-    // token 을 저장하는 경로
+
+    // User paths
+    static users = "users";
+    static userLikes = "user-likes";
+    static userWhoILike = "user-who-i-like";
+
+    // Path to save tokens
     // 테스트를 할 때에는 "user-fcm-tokens-test" 경로를 사용한다.
     static userFcmTokensPath = "user-fcm-tokens";
 
-    static postsSubscriptionPath = "posts-subscription";
+
+    // Forum paths
+    static posts = "posts";
+    static postSummaries = "post-summaries";
+    static postAllSummaries = "post-all-summaries";
+    static postSubscriptions = "post-subscriptions";
 
     /**
      * debug 가 true 일 때만 로그를 남긴다.
@@ -39,4 +49,13 @@ export class Config {
      * dry run 을 true 로 하면, 실제로 메시지가 전달되지 않는다. 즉, 테스트 할 때에만 true 로 한다.
      */
     static messagingDryRun = false;
+
+    /**
+     * Typsense Api Key
+     *
+     */
+    static typesenseApiKey = typesenseApiKey;
+    static typesenseHost = typesenseHost;
+    static typesensePort = typesensePort;
+    static typesenseProtocol = typesenseProtocol;
 }

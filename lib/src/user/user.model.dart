@@ -2,6 +2,8 @@ import 'package:firebase_database/firebase_database.dart';
 
 import 'package:fireship/fireship.dart' as fs;
 import 'package:fireship/fireship.defines.dart';
+import 'package:fireship/fireship.functions.dart';
+import 'package:fireship/src/database.functions.dart';
 import 'package:fireship/src/user/user.service.dart';
 
 class UserModel {
@@ -23,8 +25,18 @@ class UserModel {
   String displayName;
   String email;
   String phoneNumber;
+
+  /// The primary photo URL of the user.
   String photoUrl;
+
+  /// The background image URL of the user profile. This is used as the
+  /// background image of the user profile.
   String profileBackgroundImageUrl;
+
+  /// Extra photo URLs of the user. User can upload multiple photos of
+  /// themselves.
+  List<String> photoUrls;
+
   String stateMessage;
   bool isDisabled;
   int birthYear;
@@ -53,17 +65,20 @@ class UserModel {
   int idUploadedAt;
 
   /// Returns true if the user is blocked.
-  bool isBlocked(String otherUserUid) => blocks?.contains(otherUserUid) ?? false;
+  bool isBlocked(String otherUserUid) =>
+      blocks?.contains(otherUserUid) ?? false;
 
   /// Alias of isBlocked
   bool hasBlocked(String otherUserUid) => isBlocked(otherUserUid);
 
   bool get notVerified => !isVerified;
 
-  DatabaseReference get ref => FirebaseDatabase.instance.ref('users').child(uid);
+  DatabaseReference get ref =>
+      FirebaseDatabase.instance.ref('users').child(uid);
 
   /// See README.md
-  DatabaseReference get photoRef => FirebaseDatabase.instance.ref('user-profile-photos').child(uid);
+  DatabaseReference get photoRef =>
+      FirebaseDatabase.instance.ref('user-profile-photos').child(uid);
 
   String get birth => '$birthYear-$birthMonth-$birthDay';
 
@@ -78,6 +93,7 @@ class UserModel {
     required this.displayName,
     required this.photoUrl,
     required this.profileBackgroundImageUrl,
+    required this.photoUrls,
     required this.stateMessage,
     this.isDisabled = false,
     required this.birthYear,
@@ -128,6 +144,7 @@ class UserModel {
       displayName: json['displayName'] ?? '',
       photoUrl: json['photoUrl'] ?? '',
       profileBackgroundImageUrl: json['profileBackgroundImageUrl'] ?? '',
+      photoUrls: List<String>.from((json['photoUrls'] ?? [])),
       stateMessage: json['stateMessage'] ?? '',
       isDisabled: json['isDisabled'] ?? false,
       birthYear: json['birthYear'] ?? 0,
@@ -141,7 +158,9 @@ class UserModel {
       blocks: json[Field.blocks] == null
           ? null
           : List<String>.from(
-              (json[Field.blocks] as Map<Object?, Object?>).entries.map((x) => x.key),
+              (json[Field.blocks] as Map<Object?, Object?>)
+                  .entries
+                  .map((x) => x.key),
             ),
       idUrl: json[Field.idUrl] ?? '',
       idUploadedAt: json[Field.idUploadedAt] ?? 0,
@@ -160,6 +179,7 @@ class UserModel {
       'displayName': displayName,
       'photoUrl': photoUrl,
       'profileBackgroundImageUrl': profileBackgroundImageUrl,
+      'photoUrls': photoUrls,
       'stateMessage': stateMessage,
       'isDisabled': isDisabled,
       'birthYear': birthYear,
@@ -170,12 +190,13 @@ class UserModel {
       'order': order,
       'isAdmin': isAdmin,
       'isVerified': isVerified,
-      Field.blocks: blocks == null ? null : List<dynamic>.from(blocks!.map((x) => x)),
+      Field.blocks:
+          blocks == null ? null : List<dynamic>.from(blocks!.map((x) => x)),
       Field.idUrl: idUrl,
       Field.idUploadedAt: idUploadedAt,
       Field.occupation: occupation,
       'nationality': nationality,
-      'region': region
+      'region': region,
     };
   }
 
@@ -195,6 +216,7 @@ class UserModel {
       displayName = user.displayName;
       photoUrl = user.photoUrl;
       profileBackgroundImageUrl = user.profileBackgroundImageUrl;
+      photoUrls = user.photoUrls;
       stateMessage = user.stateMessage;
       isDisabled = user.isDisabled;
       birthYear = user.birthYear;
@@ -280,6 +302,7 @@ class UserModel {
     String? displayName,
     String? photoUrl,
     String? profileBackgroundImageUrl,
+    List<String>? photoUrls,
     String? stateMessage,
     int? birthYear,
     int? birthMonth,
@@ -299,7 +322,9 @@ class UserModel {
       if (name != null) 'name': name,
       if (displayName != null) 'displayName': displayName,
       if (photoUrl != null) 'photoUrl': photoUrl,
-      if (profileBackgroundImageUrl != null) 'profileBackgroundImageUrl': profileBackgroundImageUrl,
+      if (profileBackgroundImageUrl != null)
+        'profileBackgroundImageUrl': profileBackgroundImageUrl,
+      if (photoUrls != null) 'photoUrls': photoUrls,
       if (stateMessage != null) 'stateMessage': stateMessage,
       if (photoUrl != null) 'hasPhotoUrl': true,
       if (birthYear != null) 'birthYear': birthYear,
@@ -332,7 +357,8 @@ class UserModel {
 
     /// 사진 정보 업데이트
     if (displayName != null || photoUrl != null) {
-      await _updateUserProfilePhotos(displayName: displayName, photoUrl: photoUrl);
+      await _updateUserProfilePhotos(
+          displayName: displayName, photoUrl: photoUrl);
     }
 
     UserService.instance.onUpdate?.call(this);
@@ -359,7 +385,8 @@ class UserModel {
       await photoRef.update({
         if (photoUrl != null) Field.photoUrl: photoUrl,
         if (displayName != null) Field.displayName: displayName,
-        if (photoUrl != null) Field.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
+        if (photoUrl != null)
+          Field.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
       });
     }
   }
@@ -449,5 +476,9 @@ class UserModel {
   /// Remove the user from the block list by setting null value
   Future unblockUser(String otherUserUid) async {
     return await ref.child(Field.blocks).child(otherUserUid).set(null);
+  }
+
+  Future like(String otherUserUid) async {
+    return await toggle(fs.Path.like(my!.uid, otherUserUid));
   }
 }

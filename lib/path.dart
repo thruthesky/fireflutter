@@ -5,7 +5,15 @@ class Path {
 
   /// User
   static const String users = Folder.users;
+  static const String userLikes = Folder.userLikes;
+  static String like(String a, String b) => '$userLikes/$a/$b';
   static const String userProfilePhotos = Folder.userProfilePhotos;
+
+  /// Forum
+  static const String posts = Folder.posts;
+  static const String postSubscriptions = Folder.postSubscriptions;
+  static const String postSummaries = Folder.postSummaries;
+  static const String postAllSummaries = Folder.postAllSummaries;
 
   /// Chat
   static const String chatMessages = Folder.chatMessages;
@@ -22,5 +30,5 @@ class Path {
   static String get myReports => '${Folder.reports}/$myUid';
 
   static String categorySubscription(String category) =>
-      '${Folder.postsSubscription}/$category/$myUid';
+      '${Folder.postSubscriptions}/$category/$myUid';
 }

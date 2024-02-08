@@ -23,13 +23,16 @@ class Ref {
   /// Forum
   static DatabaseReference posts = root.child(Folder.posts);
 
+  static DatabaseReference postSummaries = root.child('post-summaries');
+  static DatabaseReference postSummary(String category, String id) =>
+      postSummaries.child(category).child(id);
+  static DatabaseReference postAllSummaries =
+      root.child(Folder.postAllSummaries);
+
   /// # Category (Post)
   static DatabaseReference category(String category) => posts.child(category);
   static DatabaseReference post(String category, String id) =>
       Ref.category(category).child(id);
-  static DatabaseReference postsSummary = root.child('posts-summary');
-  static DatabaseReference postSummary(String category, String id) =>
-      root.child('posts-summary').child(category).child(id);
 
   /// Forum Comments
   static DatabaseReference comments(String category, String postId) =>

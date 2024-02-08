@@ -20,4 +20,6 @@ initializeApp({
 export * from "./messaging/messaging.functions";
 export * from "./typesense/typesense.functions";
 export * from "./forum/forum.functions";
+export * from "./user/user.functions";
+
 

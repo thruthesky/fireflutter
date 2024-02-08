@@ -54,7 +54,8 @@ class DefaultFirebaseOptions {
     appId: '1:782614324251:android:4a108fc02d344ff74304be',
     messagingSenderId: '782614324251',
     projectId: 'withcenter-meetup-2',
-    databaseURL: 'https://withcenter-meetup-2-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://withcenter-meetup-2-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'withcenter-meetup-2.appspot.com',
   );
 
@@ -63,7 +64,8 @@ class DefaultFirebaseOptions {
     appId: '1:782614324251:ios:e7ab4138a295f6ba4304be',
     messagingSenderId: '782614324251',
     projectId: 'withcenter-meetup-2',
-    databaseURL: 'https://withcenter-meetup-2-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://withcenter-meetup-2-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'withcenter-meetup-2.appspot.com',
     iosBundleId: 'com.withcenter.wemeet',
   );

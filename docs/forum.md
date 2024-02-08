@@ -2,17 +2,17 @@
 
 ## Database strucuture
 
-- `/posts-summary/<category>` is for listing posts in a category list. It will have a summary of the post.
+- `/post-summary/<category>` is for listing posts in a category list. It will have a summary of the post.
     - It includes `64 letters of title`, `128 letters of content`, `category`, `id`, `uid`, `createdAt`, `order`.
     - it does not include `no of likes`, `no of comments`. It needs to get those information from `/posts`.
-    - The client app is reponsible to manage(crud) the summary posts under `/posts-summary/<category>`.
+    - The client app is reponsible to manage(crud) the summary posts under `/post-summary/<category>`.
 - `posts` is for saving all the post data.
 - `posts/<category>/<postId>/comments` is for saving the comments for the post.
 
-- `/posts-all-summary` is a place(path) that all post summaries are being saved.
+- `/post-all-summary` is a place(path) that all post summaries are being saved.
     - You can use this data to display all the posts of all categories in the same page.
-    - The data under `/posts-all-summary` is managed by cloud functions. And you need to install `managePostsAllSummary` cloud function to make it work.
-    - See install.md to know how to install `managePostsAllSummary` function.
+    - The data under `/post-all-summary` is managed by cloud functions. And you need to install `managePostAllSummary` cloud function to make it work.
+    - See install.md to know how to install `managePostAllSummary` function.
 
 ## Coding Guideline
 

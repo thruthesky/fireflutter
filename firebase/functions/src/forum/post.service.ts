@@ -1,5 +1,7 @@
 import { getDatabase } from "firebase-admin/database";
 import { PostCreateEvent, PostSummary } from "./forum.interface";
+import { Config } from "../config";
+
 /* eslint linebreak-style: ["error", "windows"] */
 /**
  * Typesense Service
@@ -8,13 +10,14 @@ import { PostCreateEvent, PostSummary } from "./forum.interface";
  */
 export class PostService {
     /**
-     * Set the summary in RTDB
+     * Sets the summary of the post
+     *
+     * @param post post data from the event
+     * @param category category of the post
+     * @param id id of the post
+     * @returns the promise of the operation
      */
-    static setSummary(
-        post: PostCreateEvent,
-        category: string,
-        id: string,
-    ) {
+    static setSummary(post: PostCreateEvent, category: string, id: string,) {
         const summary: PostSummary = {
             uid: post.uid,
             createdAt: post.createdAt,
@@ -32,6 +35,6 @@ export class PostService {
         }
 
         const db = getDatabase();
-        return db.ref(`posts-summary/${category}/${id}`).set(summary);
+        return db.ref(`${Config.postSummaries}/${category}/${id}`).set(summary);
     }
 }

@@ -23,7 +23,8 @@ class DefaultProfileUpdateForm extends StatefulWidget {
   final BoxDecoration? dropdownTheme;
 
   @override
-  State<DefaultProfileUpdateForm> createState() => DefaultProfileUpdateFormState();
+  State<DefaultProfileUpdateForm> createState() =>
+      DefaultProfileUpdateFormState();
 }
 
 class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
@@ -46,6 +47,11 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
       nationality = user.nationality;
       region = user.region;
     }
+
+    if (user.gender != '') {
+      gender = user.gender;
+    }
+
     stateMessageController.text = user.stateMessage;
     occupationController.text = user.occupation;
   }
@@ -217,7 +223,8 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
               },
               items: const [
                 DropdownMenuItem(value: 'Korea', child: Text('Korea')),
-                DropdownMenuItem(value: 'United States', child: Text('United States')),
+                DropdownMenuItem(
+                    value: 'United States', child: Text('United States')),
                 DropdownMenuItem(value: 'Vietnam', child: Text('Vietnam')),
                 DropdownMenuItem(value: 'Thailand', child: Text('Thailand')),
                 DropdownMenuItem(value: 'Laos', child: Text('Laos')),

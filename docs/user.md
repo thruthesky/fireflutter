@@ -290,3 +290,40 @@ Fireship provides a widget to display user list. We can use this if we don't hav
 ```dart
 UserListView()
 ```
+
+
+## User likes
+
+
+- User likes are saved under `/user-likes` and `/user-who-i-like`.
+  - If A likes U, then A is saved under `/user-likes/U {A: true}` and U is saved under `/user-who-i-like/A { U: true}`.
+- The fireship client code needs to save `/user-likes/U {A: true}` only. The cloud function `userLike` will take action and it will save the counter part `/user-who-i-like` data and update the `noOfLikes` on the user's node.
+
+- The data structure will be like below.
+  - When A like U,
+```json
+/user-likes/U { A: true }
+/user-who-i-like/A { U: true }
+/users/U {noOfLikes: 1}
+```
+  - When A, B likes U,
+```json
+/user-likes/U { A: true, B: true}
+/user-who-i-like/A {U: true}
+/user-who-i-like/B {U: true}
+/users/U {noOfLikes: 2}
+```
+  - When B unlinke U,
+```json
+/user-likes/U { A: true }
+/user-who-i-like/A { U: true }
+/users/U {noOfLikes: 1}
+```
+  - When A likes U, W
+```json
+/user-likes/U { A: true }
+/user-likes/W { A: true }
+/user-who-i-like/A { U: true, W: true }
+/users/U {noOfLikes: 1}
+/users/W {noOfLikes: 1}
+```

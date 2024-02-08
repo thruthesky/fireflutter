@@ -23,7 +23,15 @@ extension FireFlutterStringExtension on String {
   String ifEmpty(String value) => isEmpty ? value : this;
 
   /// If the string is empty, return the value.
+  ///
+  /// example
+  /// ```dart
+  /// String gender = user.gender.or(null);
+  /// ```
   String or(String value) => isEmpty ? value : this;
+
+  /// If the string is empty, return tnull
+  dynamic get orNull => isEmpty ? null : this;
 
   String upTo(int len) => length <= len ? this : substring(0, len);
 

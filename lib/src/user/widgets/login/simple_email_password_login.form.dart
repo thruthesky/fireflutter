@@ -23,10 +23,12 @@ class SimpleEmailPasswordLoginForm extends StatefulWidget {
   final void Function()? onRegister;
 
   @override
-  State<SimpleEmailPasswordLoginForm> createState() => _SimpleEmailPasswordLoginFormState();
+  State<SimpleEmailPasswordLoginForm> createState() =>
+      _SimpleEmailPasswordLoginFormState();
 }
 
-class _SimpleEmailPasswordLoginFormState extends State<SimpleEmailPasswordLoginForm> {
+class _SimpleEmailPasswordLoginFormState
+    extends State<SimpleEmailPasswordLoginForm> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -56,7 +58,8 @@ class _SimpleEmailPasswordLoginFormState extends State<SimpleEmailPasswordLoginF
               if (emailController.text.trim().isEmpty) {
                 throw FireshipException('input-email', 'Input email to login');
               } else if (passwordController.text.trim().isEmpty) {
-                throw FireshipException('input-password', 'Input password to login');
+                throw FireshipException(
+                    'input-password', 'Input password to login');
               }
 
               final re = await loginOrRegister(
