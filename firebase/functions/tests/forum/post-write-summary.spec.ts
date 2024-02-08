@@ -5,6 +5,7 @@ import { PostCreateEvent, PostSummary } from "../../src/forum/forum.interface";
 import { randomString } from "../firebase-test-functions";
 import { setTimeout } from "timers/promises";
 import { getDatabase } from "firebase-admin/database";
+import { Config } from "../../src/config";
 
 
 if (admin.apps.length === 0) {
@@ -32,7 +33,7 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
         // Wait for some seconds to make sure the data is written to DB
         await setTimeout(millisecondsToWait);
         // Check if the data is written to post-summary
-        const summarySnapshot = await db.ref(`posts-summary/${category}/${postId}`).get();
+        const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
         const summary = summarySnapshot.val() as PostSummary;
         if (
             summarySnapshot.exists() &&
@@ -66,7 +67,7 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
         // Wait for some seconds
         await setTimeout(millisecondsToWait);
         // Check if the updated title is written to post-summary
-        const summarySnapshot = await db.ref(`posts-summary/${category}/${postId}`).get();
+        const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
         const summary = summarySnapshot.val() as PostSummary;
         if (
             summarySnapshot.exists() &&
@@ -96,7 +97,7 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
         // Wait for some seconds
         await setTimeout(millisecondsToWait);
         // Check if the updated content is written to post-summary
-        const summarySnapshot = await db.ref(`posts-summary/${category}/${postId}`).get();
+        const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
         const summary = summarySnapshot.val() as PostSummary;
         if (
             summarySnapshot.exists() &&
@@ -127,7 +128,7 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
         // Wait for some seconds
         await setTimeout(millisecondsToWait);
         // Check if the updated URL is written to post-summary
-        const summarySnapshot = await db.ref(`posts-summary/${category}/${postId}`).get();
+        const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
         const summary = summarySnapshot.val() as PostSummary;
         if (
             summarySnapshot.exists() &&
@@ -157,14 +158,9 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
         // Wait for some seconds
         await setTimeout(millisecondsToWait);
         // Check if it is deleted in post-summary
-        const summarySnapshot = await db.ref(`posts-summary/${category}/${postId}`).get();
+        const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
         const summary = summarySnapshot.val();
-        // TODO confirm if this should be actual deletion in post-summary
-        // if (summarySnapshot.exists()) {
-        //     assert.ok(false, "It should not exists in post-summary.");
-        // } else {
-        //     assert.ok(true);
-        // }
+        // Please Check if this should be actual deletion in post-summary
         if (summarySnapshot.exists() && summary.deleted) {
             assert.ok(true);
         } else {
@@ -190,7 +186,7 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
         // Wait for some seconds
         await setTimeout(millisecondsToWait);
         // Check if it is deleted in post-summary
-        const summarySnapshot = await db.ref(`posts-summary/${category}/${postId}`).get();
+        const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
         if (summarySnapshot.exists()) {
             assert.ok(false, "It should not exists in post-summary.");
         } else {

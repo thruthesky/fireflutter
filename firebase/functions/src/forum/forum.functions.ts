@@ -54,13 +54,6 @@ export const postUpdateSummaryTitle = onValueWritten(
         const db = getDatabase();
         const ref = db.ref(`${Config.postSummaries}/${category}/${id}/title`);
         return ref.set(event.data.after?.val() ?? null);
-
-        // if (event.data.after.exists()) {
-        //     // Created || Updated
-        //     const afterValue = event.data.after.val();
-        //     return ref.set({ title: afterValue });
-        // }
-        // return ref.set({ title: null });
     },
 );
 
@@ -83,14 +76,6 @@ export const postUpdateSummaryContent = onValueWritten(
         const id = event.params.id;
         const ref = getDatabase().ref(`${Config.postSummaries}/${category}/${id}/content`);
         return ref.set(event.data.after?.val() ?? null);
-
-
-        // if (event.data.after.exists()) {
-        //     // Created || Updated
-        //     const afterValue = event.data.after.val();
-        //     return ref.set({ content: afterValue });
-        // }
-        // return ref.set({ content: null });
     },
 );
 
@@ -113,16 +98,6 @@ export const postUpdateSummaryUrl = onValueWritten(
         const id = event.params.id;
         const ref = getDatabase().ref(`${Config.postSummaries}/${category}/${id}/url`);
         return ref.set(event.data.after?.val()?.[0] ?? null);
-
-        // if (event.data.after.exists()) {
-        //     // Created || Updated
-        //     const afterValue = event.data.after.val();
-        //     if ( afterValue?.[0] ) {
-        //         return db.ref(`${Config.postSummaries}/${category}/${id}`).set({ url: afterValue[0] });
-        //     }
-        // }
-        // // Deleted
-        // return db.ref(`${Config.postSummaries}/${category}/${id}`).set({ url: null });
     },
 );
 
@@ -139,16 +114,8 @@ export const postUpdateSummaryDeleted = onValueWritten(
         const category = event.params.category;
         const id = event.params.id;
         const ref = getDatabase().ref(`posts-summary/${category}/${id}/deleted`);
-        // TODO for confirmation. Should this be actual delete??
         const deletedValue: boolean | undefined = event.data.after?.val() ?? null;
         return ref.set(deletedValue);
-        // console.log("A post's `deleted` is created/updated/deleted in RTDB", event.params, deletedValue);
-        // if (deletedValue == true) {
-        //     return TypesenseService.delete(id);
-        // } else {
-        //     // do nothing, we don't care if it's false or null
-        //     return;
-        // }
     },
 );
 

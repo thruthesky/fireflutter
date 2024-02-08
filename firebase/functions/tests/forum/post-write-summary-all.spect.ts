@@ -13,7 +13,7 @@ if (admin.apps.length === 0) {
     });
 }
 
-const millisecondsToWait = 12000;
+// const millisecondsToWait = 12000;
 
 describe("Post Write Test for Summary All (forum/post-write-summary-all.spec.ts)", () => {
     // TODO

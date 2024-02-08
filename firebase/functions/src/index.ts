@@ -1,8 +1,7 @@
 
 
 import { initializeApp } from "firebase-admin/app";
-import { setGlobalOptions } from "firebase-functions/v2/options";
-import { Config } from "./config";
+// import { Config } from "./config";
 // import { onValueWritten } from "firebase-functions/v2/database";
 // import { setGlobalOptions } from "firebase-functions/v2/options";
 

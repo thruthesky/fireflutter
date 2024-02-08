@@ -5,6 +5,7 @@ import { PostCreateEvent } from "../../src/forum/forum.interface";
 import { randomString } from "../firebase-test-functions";
 import { PostService } from "../../src/forum/post.service";
 import { getDatabase } from "firebase-admin/database";
+import { Config } from "../../src/config";
 
 
 if (admin.apps.length === 0) {
@@ -44,7 +45,7 @@ describe("Post Service Test (forum/post-service.spec.ts)", () => {
         const postId = randomString();
         await PostService.setSummary(postData, category, postId);
         const db = getDatabase();
-        const summary = await db.ref(`posts-summary/${category}/${postId}`).get();
+        const summary = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
         if (
             summary.exists() &&
             summary.val().uid === postData.uid &&

@@ -2,7 +2,6 @@ import { getDatabase } from "firebase-admin/database";
 import { PostCreateEvent, PostSummary } from "./forum.interface";
 import { Config } from "../config";
 
-/* eslint linebreak-style: ["error", "windows"] */
 /**
  * Typesense Service
  *
