@@ -91,7 +91,6 @@ export const postUpdateSummaryDeleted = onValueWritten(
         const id = event.params.id;
         const ref = getDatabase().ref(`${Config.postSummaries}/${category}/${id}/deleted`);
         return ref.set(event.data.after?.val() ?? null);
-   
     },
 );
 
