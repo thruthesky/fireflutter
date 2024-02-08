@@ -59,15 +59,6 @@ export const postUpdateSummaryTitle = onValueWritten(
 
 /**
  * Indexing for post update for content
- *
- * **NOTE!**:
- * * In case when post document is not in Typesense yet but already created,
- *   then user deleted the content, this will be trigerred. However, it will
- *   not be inserted in Typesense since it doesn't exist in Typesense and we
- *   are using `Typesense.update`. Please re-index the post, instead.
- * * In case that post document is not in Typesense yet but already created,
- *   then user updated this, this will be trigerred. However, `createdAt`, `uid`
- *   will not, be added. Please re-index the post, instead.
  */
 export const postUpdateSummaryContent = onValueWritten(
     "/posts/{category}/{id}/content",
@@ -81,15 +72,6 @@ export const postUpdateSummaryContent = onValueWritten(
 
 /**
  * Indexing for post update for urls
- *
- * **NOTE!**:
- * * In case when post document is not in Typesense yet but already created,
- *   then user deleted the content, this will be trigerred. However, it will
- *   not be inserted in Typesense since it doesn't exist in Typesense and we
- *   are using `Typesense.update`. Please re-index the post, instead.
- * * In case that post document is not in Typesense yet but already created,
- *   then user updated this, this will be trigerred. However, `createdAt`, `uid`
- *   will not, be added. Please re-index the post, instead.
  */
 export const postUpdateSummaryUrl = onValueWritten(
      "/posts/{category}/{id}/urls",
@@ -103,17 +85,13 @@ export const postUpdateSummaryUrl = onValueWritten(
 
 /**
  * Indexing for post update for deleted
- *
- * When the value for deleted becomes true, the
- * Typesense document should be deleted in the
- * collection.
  */
 export const postUpdateSummaryDeleted = onValueWritten(
     "/posts/{category}/{id}/deleted",
     (event) => {
         const category = event.params.category;
         const id = event.params.id;
-        const ref = getDatabase().ref(`posts-summary/${category}/${id}/deleted`);
+        const ref = getDatabase().ref(`${Config.postSummaries}/${category}/${id}/deleted`);
         const deletedValue: boolean | undefined = event.data.after?.val() ?? null;
         return ref.set(deletedValue);
     },
