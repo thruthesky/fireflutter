@@ -4,6 +4,13 @@ import 'package:flutter/material.dart';
 
 /// A simple phone number login form.
 ///
+/// 간단한 전화번호 로그인 위젯. 이 위젯은 전화번호를 입력하고, SMS 코드를 입력하는 UI 를 보여준다.
+/// 참고로, 국가 코드 선택을 하지는 않는다. 따라서 국가 코드 선택이 필요한 경우, 이 위젯의 코드를 복사해서 수정해서 사용하면 된다.
+///
+/// 리뷰 또는 테스트를 위해서 [emailLogin], [reviewEmail], [reviewPassword],
+/// [reviewPhoneNumber], [reviewRealPhoneNumber], [reviewRealSmsCode] 와 같은
+/// 값을 사용 할 수 있다. 만약 리뷰나 테스트 용 로그인이 아니면, 이 값들은 필요 없다.
+///
 /// [emailLogin] 이 true 이며, 전화번호에 @ 이 포함되어 있으면, 이메일과 비밀번호로 로그인을 한다.
 /// 이메일과 비밀번호는 : 로 분리해서 입력한다. 예) my@email.com:4321Pw 와 같이 하면, 메일 주소는
 /// my@email.com 이고, 비밀번호는 4321Pw 이다.
@@ -16,7 +23,8 @@ import 'package:flutter/material.dart';
 /// 계정으로 로그인한다.
 ///
 /// [reviewPhoneNumber] Review 용 임시 전화번호. 이 값을 전화번호로 입력하면, 리뷰 계정으로 자동 로그인.
-/// 예를 들어, 이 값이 '01012345678' 으로 지정되고, 사용자가 이 값을 입력하면, 리뷰 [reviewEmail] 계정으로 로그인한다.
+/// 예를 들어, 이 값이 '01012345678' 으로 지정되고, 사용자가 이 값을 입력하면, 곧 바로 리뷰 [reviewEmail]
+/// 계정으로 로그인한다. SMS 코드를 입력 할 필요 없이, 바로 로그인한다.
 ///
 /// [reviewRealPhoneNumber] 테스트 전화번호. 이 값을 전화번호로 입력하면, 테스트 SMS 코드를 입력하게 한다.
 /// 예를 들어, 이 값이 '01012345678' 으로 지정되고, 사용자가 이 값을 입력하면, 테스트 SMS 코드를 입력하게 한다.
@@ -27,12 +35,15 @@ import 'package:flutter/material.dart';
 /// 애플 리뷰에서 리뷰 계정 로그인을 할 때, 로그인 전체 과정을 다 보여달라고 하는 경우, 이 [reviewRealPhoneNumber] 와
 /// [reviewRealSmsCode] 를 알려주면 된다.
 ///
+///
 /// [onCompleteNumber] 전화번호 입력을 하고, 전송 버튼을 누르면 이 콜백을 호출한다. 이 콜백은 전화번호를 받아서,
 /// 전화번호가 올바른지 또는 전화번호를 원하는 형태로 수정해서 반환한다. 예를 들어, 한국 전화번호와 필리핀 전화번호 두 가지만 입력
 /// 받고 싶은 경우, 한국 전화번호는 010 로 시작하고, 필리핀 전화번호는 09로 시작한다. 그래서 전화번호의 처음 숫자를 보고
 /// +82 또는 +63을 붙여 완전한 국제 전화번호로 리턴하면 된다.
 ///
 /// [onSignin] 로그인이 성공하면 호출되는 콜백. 홈 화면으로 이동하거나 기타 작업을 할 수 있다.
+///
+/// 로그인이 성성하면 이 위젯은 UserService.instance.login() 을 호출한다.
 class SimplePhoneSignIn extends StatefulWidget {
   const SimplePhoneSignIn({
     super.key,
@@ -44,6 +55,7 @@ class SimplePhoneSignIn extends StatefulWidget {
     this.reviewRealSmsCode,
     this.onCompleteNumber,
     this.onSignin,
+    this.languageCode = 'ko',
   });
 
   final bool emailLogin;
@@ -54,6 +66,7 @@ class SimplePhoneSignIn extends StatefulWidget {
   final String? reviewRealSmsCode;
   final String Function(String)? onCompleteNumber;
   final void Function()? onSignin;
+  final String languageCode;
 
   @override
   State<SimplePhoneSignIn> createState() => _SimplePhoneSignInState();
@@ -82,6 +95,11 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
     return widget.onCompleteNumber?.call(number) ?? number;
   }
 
+  bool get isRealReviewSmsCode {
+    return completeNumber == widget.reviewRealPhoneNumber &&
+        smsCodeController.text == widget.reviewRealSmsCode;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -90,7 +108,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          '전화번호를 입력하신 후 인증 코드 받기 버튼을 눌러주세요.',
+          T.phoneSignInHeaderTitle.tr,
           style: Theme.of(context).textTheme.labelMedium,
         ),
         const SizedBox(height: 32),
@@ -99,7 +117,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
             // 그렇다면 전화번호 입력 UI 대신, 전화번호만 보여준다.
             ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(
-                  '전화 번호',
+                  T.phoneNumber.tr,
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
@@ -107,7 +125,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                 const SizedBox(height: 8),
                 Text(
                   completeNumber,
-                  style: const TextStyle(fontSize: 16),
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ])
             // 전화번호 입력을 다 안했으면, SMS 코드 전송을 안했으면, 전화번호 입력 UI를 보여준다.
@@ -115,7 +133,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '전화번호',
+                    T.phoneNumber.tr,
                     style: Theme.of(context).textTheme.labelMedium,
                   ),
                   const SizedBox(height: 8),
@@ -126,7 +144,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                       isDense: true,
                       // contentPadding: EdgeInsets.symmetric(vertical: 24, horizontal: 24),
                       border: const OutlineInputBorder(),
-                      hintText: '전화 번호를 입력하세요',
+                      hintText: T.phoneNumberInputHint.tr,
                       hintStyle: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w400,
@@ -139,7 +157,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '예) 010 1234 5678 또는 0917 1234 5678',
+                    T.phoneNumberInputDescription.tr,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: Theme.of(context).colorScheme.secondary,
                         ),
@@ -156,46 +174,21 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                         progressVerifyPhoneNumber)
                     ? null
                     : () async {
-                        /// 전화번호에 @ 이 포함되어 있으면, 이메일과 비밀번호로 로그인을 한다.
-                        if (widget.emailLogin) {
-                          if (phoneNumberController.text.contains('@')) {
-                            setState(() => progressVerifyPhoneNumber = true);
-                            try {
-                              // 전화번호 중간에 @ 이 있으면 : 로 분리해서, 이메일과 비밀번호로 로그인을 한다.
-                              // 예) test9@email.com:12345a
-                              final email =
-                                  phoneNumberController.text.split(':').first;
-                              final password =
-                                  phoneNumberController.text.split(':').last;
-                              await loginOrRegister(
-                                email: email,
-                                password: password,
-                                photoUrl: '',
-                              );
-                              signinSuccess();
-                              return;
-                            } finally {
-                              setState(() => progressVerifyPhoneNumber = false);
-                            }
-                          }
+                        // 전화번호에 @ 이 포함되어 있으면, 이메일과 비밀번호로 로그인을 한다.
+                        if (widget.emailLogin &&
+                            phoneNumberController.text.contains('@')) {
+                          return doEmailLogin();
                         } else if (completeNumber == widget.reviewPhoneNumber) {
-                          setState(() => progressVerifyPhoneNumber = true);
-                          await loginOrRegister(
-                              email: widget.reviewEmail,
-                              password: widget.reviewPassword);
-                          signinSuccess();
-                          return;
+                          // 리뷰 전화번호. 리뷰 이메일 계정으로 로그인.
+                          return doReviewPhoneNumberLogin();
                         } else if (completeNumber ==
                             widget.reviewRealPhoneNumber) {
-                          /// 테스트 전화번호. 실제 전화번호인 것 처럼 동작.
-                          setState(() {
-                            showSmsCodeInput = true;
-                            progressVerifyPhoneNumber = false;
-                          });
-                          return;
+                          // 테스트 전화번호. 실제 전화번호인 것 처럼 동작.
+                          return doReviewRealPhoneNumberLogin();
                         }
 
-                        FirebaseAuth.instance.setLanguageCode('ko');
+                        FirebaseAuth.instance
+                            .setLanguageCode(widget.languageCode);
                         setState(() => progressVerifyPhoneNumber = true);
                         await FirebaseAuth.instance.verifyPhoneNumber(
                           timeout: const Duration(seconds: 120),
@@ -218,7 +211,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                             setState(() => progressVerifyPhoneNumber = false);
                             error(
                                 context: context,
-                                title: '에러',
+                                title: T.error.tr,
                                 message: e.toString());
                           },
                           // Phone number verfied and SMS code sent to user.
@@ -235,8 +228,8 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                             // Auto-resolution timed out...
                             error(
                                 context: context,
-                                title: '에러',
-                                message: '시간이 초과 하였습니다. 다시 시도하세요.');
+                                title: T.error.tr,
+                                message: T.phoneSignInTimeoutTryAgain.tr);
                             setState(() {
                               showSmsCodeInput = false;
                               progressVerifyPhoneNumber = false;
@@ -252,15 +245,15 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                           strokeWidth: 3,
                         ),
                       )
-                    : const Text(
-                        '핸드폰 인증 코드 받기',
+                    : Text(
+                        T.phoneSignInGetVerificationCode.tr,
                       ),
               ),
             ],
           ),
         if (showSmsCodeInput) ...[
           const SizedBox(height: 32),
-          Text('인증 코드를 입력하신 다음 확인 버튼을 눌러주세요.',
+          Text(T.phoneSignInInputSmsCode.tr,
               style: Theme.of(context).textTheme.labelMedium),
           const SizedBox(height: 8),
           TextField(
@@ -278,21 +271,17 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                   showSmsCodeInput = false;
                   smsCodeController.text = '';
                 }),
-                child: const Text('다시하기'),
+                child: Text(
+                  T.phoneSignInRetry.tr,
+                ),
               ),
               const Spacer(),
               // display a button for SMS code verification.
               ElevatedButton(
                 onPressed: () async {
                   // 테스트 전화번호. 실제 전화번호 인 것 처럼 동작. 가짜 전화번호와 가짜 SMS 코드를 입력하게 해서 로그인.
-                  if (completeNumber == widget.reviewRealPhoneNumber &&
-                      smsCodeController.text == widget.reviewRealSmsCode) {
-                    await loginOrRegister(
-                      email: widget.reviewEmail,
-                      password: widget.reviewPassword,
-                    );
-                    signinSuccess();
-                    return;
+                  if (isRealReviewSmsCode) {
+                    return doReviewLogin();
                   }
                   // Create a PhoneAuthCredential with the code
                   PhoneAuthCredential credential = PhoneAuthProvider.credential(
@@ -310,7 +299,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                     if (mounted) {
                       error(
                         context: context,
-                        title: '에러',
+                        title: T.error.tr,
                         message: e.toString(),
                       );
                     }
@@ -320,7 +309,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                 },
                 child: smsCodeProgress
                     ? const CircularProgressIndicator.adaptive()
-                    : const Text('인증 코드 확인하기'),
+                    : Text(T.phoneSignInVerifySmsCode.tr),
               ),
             ],
           ),
@@ -332,5 +321,43 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
   signinSuccess() async {
     UserService.instance.login();
     widget.onSignin?.call();
+  }
+
+  doReviewLogin() async {
+    await loginOrRegister(
+      email: widget.reviewEmail,
+      password: widget.reviewPassword,
+    );
+    signinSuccess();
+  }
+
+  doEmailLogin() async {
+    setState(() => progressVerifyPhoneNumber = true);
+    try {
+      // 전화번호 중간에 @ 이 있으면 : 로 분리해서, 이메일과 비밀번호로 로그인을 한다.
+      // 예) test9@email.com:12345a
+      final email = phoneNumberController.text.split(':').first;
+      final password = phoneNumberController.text.split(':').last;
+      await loginOrRegister(
+        email: email,
+        password: password,
+        photoUrl: '',
+      );
+      signinSuccess();
+    } finally {
+      setState(() => progressVerifyPhoneNumber = false);
+    }
+  }
+
+  doReviewPhoneNumberLogin() async {
+    setState(() => progressVerifyPhoneNumber = true);
+    return doReviewLogin();
+  }
+
+  doReviewRealPhoneNumberLogin() {
+    setState(() {
+      showSmsCodeInput = true;
+      progressVerifyPhoneNumber = false;
+    });
   }
 }
