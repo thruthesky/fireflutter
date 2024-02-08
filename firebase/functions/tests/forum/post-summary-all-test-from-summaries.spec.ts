@@ -110,12 +110,11 @@ describe("Post Summary All write from `posts-summaries` test (forum/post-summary
         // Wait
         await setTimeout(millisecondsToWait);
         // Check if not exist
-
         const summarySnapshot = await db.ref(`${Config.postAllSummaries}/${postId}`).get();
         if (
             summarySnapshot.exists()
         ) {
-            assert.ok(false, "It should not exists in post-all-summaries when deleted.");
+            assert.ok(false, "It should not exists in post-all-summaries when deleted in post-summaries.");
         } else {
             assert.ok(true);
         }
