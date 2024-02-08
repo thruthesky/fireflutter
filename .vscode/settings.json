@@ -1,5 +1,10 @@
 {
     "dart.lineLength": 80,
+    "[dart]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit"
+        },
+    }
     // "problems.decorations.enabled": false,
     // "dart.analysisExcludedFolders": [
     //     "./apps/momcafe"
