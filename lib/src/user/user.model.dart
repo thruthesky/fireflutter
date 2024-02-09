@@ -82,6 +82,18 @@ class UserModel {
 
   String get birth => '$birthYear-$birthMonth-$birthDay';
 
+// user age by computing the current date  and the user given year and month and day
+  String get age {
+    if (birthDay == 0 || birthYear == 0 || birthYear == 0) return "";
+    DateTime currentTime = DateTime.now();
+    int age = currentTime.year - birthYear;
+    if (currentTime.month < birthMonth ||
+        (currentTime.month == birthMonth && currentTime.day < birthDay)) {
+      age--;
+    }
+    return age.toString();
+  }
+
   String occupation;
 
   UserModel({
