@@ -56,14 +56,15 @@ Copy below and paste it into your firebase project.
         "isAdmin": {
           ".validate": "root.child('admins').hasChild(auth.uid)"
         }
-      }
+      },
+      ".indexOn": ["gender","nationality","region", "birthYear"]
     },
     "user-likes": {
       ".read": true,
-      ".write": true
     },
     "user-who-i-like": {
-      ".read": true
+      ".read": true,
+      ".write": true
     },
     // Fireship - users who have profile photos. To display users who has profile photo.
     "user-profile-photos": {

@@ -38,9 +38,6 @@ A post is used for forum that is under a category, that has title, content, comm
 - urls;
     - List of String
     - urls of the attached files (mostly for photos)
-- comments;
-    - List of CommentModel
-    - Comments commented under the post.
 - noOfLikes
     - int
     - The number of Likers
