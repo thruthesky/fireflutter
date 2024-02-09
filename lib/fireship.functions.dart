@@ -408,3 +408,15 @@ Future<({User user, bool register})> loginOrRegister({
     return (user: user, register: true);
   }
 }
+
+/// Return true if the value is false, or empty.
+///
+bool empty(v) {
+  if (v == null) return true;
+  if (v is String) return v.isEmpty;
+  if (v is List) return v.isEmpty;
+  if (v is Map) return v.isEmpty;
+  if (v == 0) return true;
+  if (v == false) return true;
+  return false;
+}

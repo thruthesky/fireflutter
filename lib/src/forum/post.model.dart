@@ -70,12 +70,6 @@ class PostModel {
     required String id,
     required String category,
   }) {
-    /// This is for post-summaries where only one url is saved.
-    /// So, we need to convert it to a list.
-    // Please update if we have a better way.
-    final url = json['url'] is String && (json['url'] as String).isNotEmpty
-        ? [json['url'] as String]
-        : null;
     return PostModel(
       id: id,
       ref: Ref.post(category, id),
@@ -86,7 +80,11 @@ class PostModel {
       order: json[Field.order] ?? 0,
       likes: List<String>.from((json['likes'] as Map? ?? {}).keys),
       noOfLikes: json[Field.noOfLikes] ?? 0,
-      urls: url ?? List<String>.from(json['urls'] ?? []),
+
+      /// Post summary has the first photo url in 'url' field.
+      urls: empty(json['url'])
+          ? List<String>.from(json['urls'] ?? [])
+          : [json['url']],
       comments: sortComments(
         Map<Object, Object>.from((json['comments'] ?? {}))
             .entries
