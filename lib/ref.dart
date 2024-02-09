@@ -12,6 +12,7 @@ class Ref {
   /// User
   static DatabaseReference users = root.child('users');
   static DatabaseReference userProfilePhotos = root.child('profile-photos');
+  static DatabaseReference userWhoIlike = root.child(Path.userWhoIlike);
 
   /// Chat Message
   static DatabaseReference chatMessages = root.child('chat-messages');
