@@ -42,11 +42,23 @@ class PostModel {
   /// Get the category of the post
   String get category => ref.parent!.key!;
 
-  factory PostModel.fromSnapshot(DataSnapshot snapshot) => PostModel.fromJson(
-        snapshot.value as Map<dynamic, dynamic>,
-        id: snapshot.key!,
-        category: snapshot.ref.parent!.key!,
-      );
+  /// Take note of the category node. Check the snapshot ref parent
+  /// because in `post-all-summaries`, category is part of the field.
+  /// Use PostModel.fromJson instead.
+  // TODO clean up
+  // factory PostModel.fromSnapshot(DataSnapshot snapshot) => PostModel.fromJson(
+  //       snapshot.value as Map<dynamic, dynamic>,
+  //       id: snapshot.key!,
+  //       category: snapshot.ref.parent!.key!,
+  //     );
+  factory PostModel.fromSnapshot(DataSnapshot snapshot) {
+    final value = snapshot.value as Map<dynamic, dynamic>;
+    return PostModel.fromJson(
+      value,
+      id: snapshot.key!,
+      category: value[Field.category] ?? snapshot.ref.parent!.key!,
+    );
+  }
 
   /// This is the factory constructor that takes a map and produces a PostModel
   ///
