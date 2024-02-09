@@ -131,7 +131,7 @@ export 'src/user/user.customize.dart';
 export 'src/user/widgets/profile/default_public_profile.screen.dart';
 export 'src/user/widgets/profile/default_profile.screen.dart';
 export 'src/user/widgets/user.doc.dart';
-export 'src/user/widgets/default_avatar_update.dart';
+export 'src/user/widgets/user_avatar_update.dart';
 export 'src/user/widgets/my_doc.dart';
 export 'src/user/widgets/login/default_login_first.screen.dart';
 export 'src/user/widgets/admin.dart';

@@ -34,11 +34,14 @@ class ChatService {
 
   ChatCustomize customize = const ChatCustomize();
 
+  Function(ChatModel)? testBeforeSendMessage;
   init({
     ChatCustomize? customize,
+    Function(ChatModel)? testBeforeSendMessage,
   }) {
     dog('--> ChatService.init()');
     this.customize = customize ?? this.customize;
+    this.testBeforeSendMessage = testBeforeSendMessage;
   }
 
   Future createRoom({
