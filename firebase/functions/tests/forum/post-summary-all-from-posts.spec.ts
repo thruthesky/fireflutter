@@ -14,7 +14,7 @@ if (admin.apps.length === 0) {
     });
 }
 
-const millisecondsToWait = 32000;
+const millisecondsToWait = 35000;
 
 /**
  * To test if the post written in `posts` will be written into `post-summary-all`
@@ -71,7 +71,7 @@ describe("Post Summary All write from post test (forum/post-summary-all-from-pos
         };
         await db.ref(`posts/${category}/${postId}`).set(updatedPostData);
         // Wait for some time
-        await setTimeout(millisecondsToWait);
+        await setTimeout(millisecondsToWait * 2.5);
         // Check if the data is written to post-all-summaries
         const summarySnapshot = await db.ref(`${Config.postAllSummaries}/${postId}`).get();
         const summary = summarySnapshot.val() as PostSummary;

@@ -1,5 +1,7 @@
 # Comments
 
+<!-- TODO revise -->
+
 A comment is created by users to comment on a post.
 
 ## Comment Model

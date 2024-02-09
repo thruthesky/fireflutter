@@ -15,9 +15,11 @@ if (admin.apps.length === 0) {
     });
 }
 
-const millisecondsToWait = 30000;
+const millisecondsToWait = 5000;
 
 /**
+ * ! Read the message in assert false
+ *
  * To test if the post written in `posts-summaries` will be written into `post-summary-all`
  */
 describe("Post Summary All write from `posts-summaries` test (forum/post-summary-all-test-from-summaries.spec.ts)", () => {
@@ -47,9 +49,11 @@ describe("Post Summary All write from `posts-summaries` test (forum/post-summary
             summary.createdAt === postData.createdAt &&
             summary.order === postData.order
         ) {
-            assert.ok(true);
+            // assert.ok(true);
+            assert.ok(false, "Since we moved comments, we decided to make it one function. From that function, it only listens to `posts` so this it will not be triggered.");
         } else {
-            assert.ok(false, "It should exists in post-all-summaries and has correct data.");
+            // assert.ok(false, "It should exists in post-all-summaries and has correct data.");
+            assert.ok(true);
         }
     });
     it("Update post in posts-summaries, check it in post-summary-all", async () => {
@@ -87,9 +91,11 @@ describe("Post Summary All write from `posts-summaries` test (forum/post-summary
             summary.createdAt === updatedPostData.createdAt &&
             summary.order === postData.order
         ) {
-            assert.ok(true);
+            // assert.ok(true);
+            assert.ok(false, "Since we moved comments, we decided to make it one function. From that function, it only listens to `posts` so this it will not be triggered.");
         } else {
-            assert.ok(false, "It should exists in post-all-summaries and has correct data.");
+            // assert.ok(false, "It should exists in post-all-summaries and has correct data.");
+            assert.ok(true);
         }
     });
     it("Delete post in posts-summaries, it should not be existing in post-summaries-all", async () => {

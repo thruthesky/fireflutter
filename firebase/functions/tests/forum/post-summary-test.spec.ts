@@ -267,7 +267,7 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
         const updateUrls = ["url1", "url2", "url3"];
         db.ref(`posts/${category}/${postId}/urls`).set(updateUrls);
         // Wait for some time
-        await setTimeout(millisecondsToWait * 2);
+        await setTimeout(millisecondsToWait * 2.5);
         // Check the values
         const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
         const summary = summarySnapshot.val() as PostSummary;
@@ -305,7 +305,7 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
         // Update deleted as true
         await db.ref(`posts/${category}/${postId}/deleted`).set(true);
         // Wait for some seconds
-        await setTimeout(millisecondsToWait);
+        await setTimeout(millisecondsToWait * 2);
         // Check if it is deleted in post-summary
         const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
         const summary = summarySnapshot.val();

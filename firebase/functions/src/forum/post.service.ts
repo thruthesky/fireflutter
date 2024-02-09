@@ -28,4 +28,25 @@ export class PostService {
         const db = getDatabase();
         return db.ref(`${Config.postSummaries}/${category}/${id}`).update(summary);
     }
+
+    /**
+     * Sets `post-all-summaries`
+     *
+     * @param post post data of the doc
+     * @param category category
+     * @param id post Id
+     * @returns
+     */
+    static setAllSummaries(post: PostCreateEvent, category: string, id: string,) {
+        const summary: PostSummary = {
+            uid: post.uid,
+            createdAt: post.createdAt,
+            order: -post.createdAt,
+            title: post.title ?? "",
+            content: post.content ?? "",
+            url: post.urls?.[0] ?? "",
+        };
+        const db = getDatabase();
+        return db.ref(`${Config.postAllSummaries}/${id}`).update(summary);
+    }
 }

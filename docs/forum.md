@@ -53,11 +53,17 @@ SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
 
 ## Comments
 
-
 Comments are saved under `/comments/<post-id>`.
 
+<!-- 
+  TODOS
+  1. Update Models
+  2. Update Cloud Functions
+  3. Update Typesense Indexing
+  4. Update Refs
+-->
 
-
+Refer to [Comment doc](comments.md).
 
 ## Posts
 
