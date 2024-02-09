@@ -45,10 +45,7 @@ class UserTile extends StatelessWidget {
                     ),
                     if (displayUid ?? false) Text(user.uid),
                     if (displayStateMessage) Text(user.stateMessage),
-                    if (displayBirth)
-                      Text(
-                        user.birth,
-                      ),
+                    if (displayBirth) Text(user.age),
                   ],
                 ),
               ),

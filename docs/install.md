@@ -58,7 +58,14 @@ Copy below and paste it into your firebase project.
         }
       }
     },
-      // Fireship - users who have profile photos. To display users who has profile photo.
+    "user-likes": {
+      ".read": true,
+      ".write": true
+    },
+    "user-who-i-like": {
+      ".read": true
+    },
+    // Fireship - users who have profile photos. To display users who has profile photo.
     "user-profile-photos": {
       ".read": true,
       "$uid": {
@@ -114,7 +121,7 @@ Copy below and paste it into your firebase project.
         ".write": true
       }
     },
-      // Fireship - reports
+    // Fireship - reports
     "reports": {
       "$uid": {
         ".read": "$uid === auth.uid || root.child('admins').hasChild(auth.uid)",
@@ -122,7 +129,7 @@ Copy below and paste it into your firebase project.
       }
     },
       
-      // Fireship - posts
+    // Fireship - posts
     "posts": {
       ".read": true,
       "$category": {
@@ -139,7 +146,7 @@ Copy below and paste it into your firebase project.
         }
       }
     },
-      "posts-subscription": {
+      "post-subscriptions": {
         ".read": true,
         "$category": {
           "$uid": {
@@ -149,7 +156,7 @@ Copy below and paste it into your firebase project.
       },
       
     // Fireship - post summary
-    "posts-summary": {
+    "post-summaries": {
       ".read": true,
       ".write": true,
       "$category": {
@@ -157,7 +164,7 @@ Copy below and paste it into your firebase project.
       }
     },
       
-    "posts-all-summary": {
+    "post-all-summaries": {
       ".read": true
     }
   }
