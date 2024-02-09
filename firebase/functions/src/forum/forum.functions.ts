@@ -1,5 +1,5 @@
 import { getDatabase } from "firebase-admin/database";
-import { onValueCreated, onValueDeleted, onValueWritten } from "firebase-functions/v2/database";
+import { onValueCreated, onValueDeleted, onValueUpdated, onValueWritten } from "firebase-functions/v2/database";
 import { PostService } from "./post.service";
 import { Config } from "../config";
 
@@ -44,7 +44,7 @@ export const postSetSummary = onValueCreated(
  *
  * 글 생성시, 제목 필드가 없을 수 있고, 글 수정할 때, 제목이 생성될 수 있다. 따라서 여기서 제목 생성/수정/삭제를 모두 핸들링한다.
  */
-export const postUpdateSummaryTitle = onValueWritten(
+export const postUpdateSummaryTitle = onValueUpdated(
     "/posts/{category}/{id}/title",
     (event) => {
         const category = event.params.category;
@@ -58,7 +58,7 @@ export const postUpdateSummaryTitle = onValueWritten(
 /**
  * Indexing for post update for content
  */
-export const postUpdateSummaryContent = onValueWritten(
+export const postUpdateSummaryContent = onValueUpdated(
     "/posts/{category}/{id}/content",
     (event) => {
         const category = event.params.category;
@@ -71,7 +71,7 @@ export const postUpdateSummaryContent = onValueWritten(
 /**
  * Indexing for post update for urls
  */
-export const postUpdateSummaryUrl = onValueWritten(
+export const postUpdateSummaryUrl = onValueUpdated(
      "/posts/{category}/{id}/urls",
     (event) => {
         const category = event.params.category;

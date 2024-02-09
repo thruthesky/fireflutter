@@ -9,9 +9,9 @@ export interface PostCreateEvent {
 
 export interface PostSummary {
     uid: string;
-    title?: string;
-    content?: string;
-    url?: string;
+    title: string;
+    content: string;
+    url: string;
     createdAt: number;
     order: number;
 }
