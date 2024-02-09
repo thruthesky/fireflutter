@@ -15,3 +15,10 @@ And here comes the cloud functions
 ## indexing post data issues
 
 - When ever comment is created/updated/deleted, the post write event trigger unneccessarily causing extra function call, document read(including all the comments), and band width, and unneccessary typesense indexing. As of now, we just let it be this way. This is the cheapest for now.
+
+## Post Summaries upon Post Create/Update/Delete
+
+- We have cloud functions that whenever a post is created/updated/deleted in `posts`, it updates `post-all-summaries` and `post-summaries`.
+
+### managePostsAllSummary
+

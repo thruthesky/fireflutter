@@ -16,24 +16,16 @@ export class PostService {
      * @param id id of the post
      * @returns the promise of the operation
      */
-    static setSummary(post: PostCreateEvent, category: string, id: string) {
+    static setSummary(post: PostCreateEvent, category: string, id: string,) {
         const summary: PostSummary = {
             uid: post.uid,
             createdAt: post.createdAt,
             order: -post.createdAt,
+            title: post.title ?? "",
+            content: post.content ?? "",
+            url: post.urls?.[0] ?? "",
         };
-
-        if ( post.title ) {
-            summary.title = post.title;
-        }
-        if ( post.content ) {
-            summary.content = post.content;
-        }
-        if ( post.urls ) {
-            summary.url = post.urls[0];
-        }
-
         const db = getDatabase();
-        return db.ref(`${Config.postSummaries}/${category}/${id}`).set(summary);
+        return db.ref(`${Config.postSummaries}/${category}/${id}`).update(summary);
     }
 }

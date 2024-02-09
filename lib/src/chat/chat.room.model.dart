@@ -63,6 +63,8 @@ class ChatRoomModel {
 
   bool get isMaster => master == myUid;
 
+  List<String> get uids => users?.keys.toList() ?? [];
+
   ChatRoomModel({
     required this.ref,
     required this.key,

@@ -42,11 +42,16 @@ class PostModel {
   /// Get the category of the post
   String get category => ref.parent!.key!;
 
-  factory PostModel.fromSnapshot(DataSnapshot snapshot) => PostModel.fromJson(
-        snapshot.value as Map<dynamic, dynamic>,
-        id: snapshot.key!,
-        category: snapshot.ref.parent!.key!,
-      );
+  /// Take note of the category node. Check the snapshot ref parent
+  /// because in `post-all-summaries`, category is part of the field.
+  factory PostModel.fromSnapshot(DataSnapshot snapshot) {
+    final value = snapshot.value as Map<dynamic, dynamic>;
+    return PostModel.fromJson(
+      value,
+      id: snapshot.key!,
+      category: value[Field.category] ?? snapshot.ref.parent!.key!,
+    );
+  }
 
   /// This is the factory constructor that takes a map and produces a PostModel
   ///
@@ -65,6 +70,12 @@ class PostModel {
     required String id,
     required String category,
   }) {
+    /// This is for post-summaries where only one url is saved.
+    /// So, we need to convert it to a list.
+    // Please update if we have a better way.
+    final url = json['url'] is String && (json['url'] as String).isNotEmpty
+        ? [json['url'] as String]
+        : null;
     return PostModel(
       id: id,
       ref: Ref.post(category, id),
@@ -75,7 +86,7 @@ class PostModel {
       order: json[Field.order] ?? 0,
       likes: List<String>.from((json['likes'] as Map? ?? {}).keys),
       noOfLikes: json[Field.noOfLikes] ?? 0,
-      urls: List<String>.from(json['urls'] ?? []),
+      urls: url ?? List<String>.from(json['urls'] ?? []),
       comments: sortComments(
         Map<Object, Object>.from((json['comments'] ?? {}))
             .entries
@@ -258,12 +269,6 @@ class PostModel {
     // don't wait for this
     created.update(order: -created.createdAt.millisecondsSinceEpoch);
 
-    final data = created.toSummary();
-    data[Field.order] = -created.createdAt.millisecondsSinceEpoch;
-
-    await Ref.postSummary(created.category, created.id)
-        .set(created.toSummary());
-
     ForumService.instance.onPostCreate?.call(created);
   }
 
@@ -293,8 +298,6 @@ class PostModel {
   static _afterUpdate(DatabaseReference ref) async {
     final snapshot = await ref.get();
     final updated = PostModel.fromSnapshot(snapshot);
-    await Ref.postSummary(updated.category, updated.id)
-        .set(updated.toSummary());
 
     ForumService.instance.onPostCreate?.call(updated);
   }
@@ -319,18 +322,6 @@ class PostModel {
   }
 
   _afterDelete() async {
-    if (comments.isEmpty) {
-      await Ref.postSummary(category, id).remove();
-    } else {
-      await Ref.postSummary(category, id).set({
-        Field.title: null,
-        Field.content: null,
-
-        /// TODO url 필드인지, urls 필드인지 확인 할 것.
-        'url': null,
-        Field.deleted: true,
-      });
-    }
     ForumService.instance.onPostDelete?.call(this);
   }
 

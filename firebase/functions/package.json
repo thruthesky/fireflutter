@@ -16,6 +16,7 @@
     "deploy:managePostsAllSummary": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:managePostsAllSummary",
     "deploy:typesense": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:typesenseUserIndexing,functions:typesenseCommentIndexing,functions:typesensePostCreatedIndexing,functions:typesensePostUpdateTitleIndexing,functions:typesensePostUpdateContentIndexing,functions:typesensePostUpdateUrlIndexing,functions:typesensePostUpdateDeleted,functions:typesensePostDeleteIndexing",
     "deploy:userLike": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:userLikeCreated,functions:userLikeDeleted",
+    "deploy:forumSummary": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:managePostsAllSummary,functions:postSetSummary,functions:postUpdateSummaryTitle,functions:postUpdateSummaryContent,functions:postUpdateSummaryUrl,functions:postUpdateSummaryDeleted,functions:postDeleteSummary",
     "deploy:userToFirestore": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:userToFirestoreCreated,functions:userToFirestoreUpdated",
     "logs": "firebase functions:log",
     "test:send-message": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/send-message.spec.ts",
@@ -28,7 +29,10 @@
     "test:sendNotificationToUids": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/sendNotificationToUids.spec.ts --timeout 100000",
     "test:sendPostMessage": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/sendPostMessage.spec.ts --timeout 100000",
     "test:sendChatMessage": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/sendChatMessage.spec.ts --timeout 100000",
-    "test:allPushNotifications": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/**.spec.ts --timeout 100000"
+    "test:allPushNotifications": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/**.spec.ts --timeout 100000",
+    "test:forum": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/**.spec.ts --timeout 100000",
+    "test:forumSummary": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/post-summary-test.spec.ts --timeout 100000",
+    "test:forumNulls": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/post-null-fields.spec.ts --timeout 100000"
   },
   "main": "lib/src/index.js",
   "dependencies": {
