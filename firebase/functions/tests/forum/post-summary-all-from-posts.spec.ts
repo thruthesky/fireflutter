@@ -69,7 +69,7 @@ describe("Post Summary All write from post test (forum/post-summary-all-from-pos
             title: "Title Test Updated",
             content: "Content Test Updated",
         };
-        await db.ref(`posts/${category}/${postId}`).set(updatedPostData);
+        await db.ref(`posts/${category}/${postId}`).update(updatedPostData);
         // Wait for some time
         await setTimeout(millisecondsToWait * 2.5);
         // Check if the data is written to post-all-summaries
