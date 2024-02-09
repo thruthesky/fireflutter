@@ -327,3 +327,13 @@ UserListView()
 /users/U {noOfLikes: 1}
 /users/W {noOfLikes: 1}
 ```
+
+You can use the `like` method to perform a like and unlike user like bellow.
+```dart
+IconButton(
+  onPressed: () async {
+     await my?.like(uid);
+  },
+  icon: const FaIcon(FontAwesomeIcons.heart),
+),
+```

@@ -10,6 +10,7 @@ class Folder {
   static const String users = 'users';
   static const String usersPrivate = 'users-private';
   static const String userLikes = 'user-likes';
+  static const String userWhoIlike = 'user-who-i-like';
 
   static const String reports = 'reports';
 

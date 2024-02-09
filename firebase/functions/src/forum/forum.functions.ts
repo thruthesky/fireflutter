@@ -30,7 +30,7 @@ export const managePostsAllSummary = onValueWritten(
 );
 
 
-/// 
+// /
 
 /**
  * Indexing for post created
