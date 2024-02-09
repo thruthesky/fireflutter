@@ -17,6 +17,7 @@ dependencies:
   firebase_messaging: ^14.7.15
   firebase_storage: ^11.6.5
   firebase_ui_database: ^1.4.2
+  firebase_ui_firestore: ^1.6.2
   flutter:
     sdk: flutter
   flutter_image_compress: ^2.1.0

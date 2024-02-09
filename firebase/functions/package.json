@@ -16,6 +16,7 @@
     "deploy:managePostsAllSummary": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:managePostsAllSummary",
     "deploy:typesense": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:typesenseUserIndexing,functions:typesenseCommentIndexing,functions:typesensePostCreatedIndexing,functions:typesensePostUpdateTitleIndexing,functions:typesensePostUpdateContentIndexing,functions:typesensePostUpdateUrlIndexing,functions:typesensePostUpdateDeleted,functions:typesensePostDeleteIndexing",
     "deploy:userLike": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:userLikeCreated,functions:userLikeDeleted",
+    "deploy:userToFirestore": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:userToFirestoreCreated,functions:userToFirestoreUpdated",
     "logs": "firebase functions:log",
     "test:send-message": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/send-message.spec.ts",
     "test:send-message-input": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/send-message-input.spec.ts",
