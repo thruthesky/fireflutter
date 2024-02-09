@@ -74,6 +74,7 @@ export const postUpdateSummaryContent = onValueUpdated(
 export const postUpdateSummaryUrl = onValueUpdated(
      "/posts/{category}/{id}/urls",
     (event) => {
+        console.log("postUpdateSummaryUrl is triggered");
         const category = event.params.category;
         const id = event.params.id;
         const ref = getDatabase().ref(`${Config.postSummaries}/${category}/${id}/url`);

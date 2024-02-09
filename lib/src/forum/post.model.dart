@@ -44,13 +44,6 @@ class PostModel {
 
   /// Take note of the category node. Check the snapshot ref parent
   /// because in `post-all-summaries`, category is part of the field.
-  /// Use PostModel.fromJson instead.
-  // TODO clean up
-  // factory PostModel.fromSnapshot(DataSnapshot snapshot) => PostModel.fromJson(
-  //       snapshot.value as Map<dynamic, dynamic>,
-  //       id: snapshot.key!,
-  //       category: snapshot.ref.parent!.key!,
-  //     );
   factory PostModel.fromSnapshot(DataSnapshot snapshot) {
     final value = snapshot.value as Map<dynamic, dynamic>;
     return PostModel.fromJson(
@@ -77,6 +70,12 @@ class PostModel {
     required String id,
     required String category,
   }) {
+    /// This is for post-summaries where only one url is saved.
+    /// So, we need to convert it to a list.
+    // Please update if we have a better way.
+    final url = json['url'] is String && (json['url'] as String).isNotEmpty
+        ? [json['url'] as String]
+        : null;
     return PostModel(
       id: id,
       ref: Ref.post(category, id),
@@ -87,7 +86,7 @@ class PostModel {
       order: json[Field.order] ?? 0,
       likes: List<String>.from((json['likes'] as Map? ?? {}).keys),
       noOfLikes: json[Field.noOfLikes] ?? 0,
-      urls: List<String>.from(json['urls'] ?? []),
+      urls: url ?? List<String>.from(json['urls'] ?? []),
       comments: sortComments(
         Map<Object, Object>.from((json['comments'] ?? {}))
             .entries

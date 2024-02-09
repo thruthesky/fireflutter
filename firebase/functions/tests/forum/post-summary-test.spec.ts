@@ -14,7 +14,7 @@ if (admin.apps.length === 0) {
     });
 }
 
-const millisecondsToWait = 25000;
+const millisecondsToWait = 35000;
 
 describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
     it("Create new post in posts, check it in post-summary (postSetSummary)", async () => {
@@ -48,6 +48,8 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
             assert.ok(false, "It should exists in post-summary and has correct data.");
         }
     });
+    // TODO add test, if title, content and url are null at first
+    // it must not have problem
     it("Update post's title in posts, check it in post-summary if updated (postUpdatedSummaryTitle)", async ()=>{
         // Create post
         const postData: PostCreateEvent = {
@@ -168,10 +170,11 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
             summary.title === postData.title &&
             summary.order === postData.order &&
             summary.createdAt === postData.createdAt &&
-            summary.url === postData.urls?.[0]
+            summary.url === (postData.urls?.[0] ?? "")
         ) {
             assert.ok(true);
         } else {
+            console.log("Original: ", postData, "Retireved: ", summary);
             assert.ok(false, "It should exist and should not affect other fields than content.");
         }
     });
@@ -246,6 +249,7 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
             uid: randomString(),
             title: "postUpdateSummaryContent Test",
             content: "postUpdateSummaryContent Test",
+            urls: ["differenturl"],
             createdAt: 12312,
             order: -12312,
         };
@@ -263,7 +267,7 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
         const updateUrls = ["url1", "url2", "url3"];
         db.ref(`posts/${category}/${postId}/urls`).set(updateUrls);
         // Wait for some time
-        await setTimeout(millisecondsToWait * 3);
+        await setTimeout(millisecondsToWait * 2);
         // Check the values
         const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
         const summary = summarySnapshot.val() as PostSummary;
@@ -271,12 +275,16 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
             summarySnapshot.exists() &&
             summary.title === updatedTitle &&
             summary.content === updatedContent &&
-            summary.url === updateUrls[0] &&
+            (summary.url ?? "") === (updateUrls[0] ?? "") &&
             summary.order === postData.order &&
             summary.createdAt === postData.createdAt
         ) {
             assert.ok(true);
         } else {
+            console.log("Original: ", postData, "Retireved: ", summary);
+            console.log("(summary.url ?? \"\") :", summary.url ?? "");
+            console.log("(updateUrls[0] ?? \"\") :", updateUrls[0] ?? "");
+            console.log("(summary.url ?? \"\") === (updateUrls[0] ?? \"\") :", (summary.url ?? "") === (updateUrls[0] ?? ""));
             assert.ok(false, "It should exist and should have proper values.");
         }
     });

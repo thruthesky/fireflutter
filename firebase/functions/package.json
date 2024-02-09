@@ -29,7 +29,9 @@
     "test:sendPostMessage": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/sendPostMessage.spec.ts --timeout 100000",
     "test:sendChatMessage": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/sendChatMessage.spec.ts --timeout 100000",
     "test:allPushNotifications": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/**.spec.ts --timeout 100000",
-    "test:forum": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/**.spec.ts --timeout 100000"
+    "test:forum": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/**.spec.ts --timeout 100000",
+    "test:forumSummary": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/post-summary-test.spec.ts --timeout 100000",
+    "test:forumNulls": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/post-null-fields.spec.ts --timeout 100000"
   },
   "main": "lib/src/index.js",
   "dependencies": {
