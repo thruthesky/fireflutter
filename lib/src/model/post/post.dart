@@ -259,8 +259,6 @@ class Post {
       deleted: true,
       data: {
         'deletedReason': deletedReason ?? 'Deleted',
-        // TODO - need to review. Is this necessary? Will it be automatically set in update() method.
-        'hasMedia': false,
       },
       log: false, // don't log for update.
     );
