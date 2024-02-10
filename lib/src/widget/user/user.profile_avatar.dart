@@ -94,6 +94,10 @@ class _UserAvatarState extends State<UserProfileAvatar> {
     user = widget.user;
   }
 
+  bool get isNotUploading {
+    return progress == null || progress == 0 || progress!.isNaN;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -144,7 +148,10 @@ class _UserAvatarState extends State<UserProfileAvatar> {
           hasPhotoUrl: true,
         );
         User.get(user.uid).then((value) => setState(() => user = value!));
+
+        /// Delete exisitng photo
         await StorageService.instance.delete(oldUrl);
+        await StorageService.instance.delete(oldUrl?.thumbnail);
       },
       child: Stack(
         children: [
@@ -157,8 +164,10 @@ class _UserAvatarState extends State<UserProfileAvatar> {
             borderWidth: widget.borderWidth,
             backgroundColor: widget.backgroundColor ?? Colors.transparent,
           ),
-          uploadProgressIndicator(),
-          if (widget.upload)
+          uploadProgressIndicator(
+            color: Colors.white,
+          ),
+          if (widget.upload && isNotUploading)
             Positioned(
               right: 0,
               bottom: 0,
@@ -169,13 +178,17 @@ class _UserAvatarState extends State<UserProfileAvatar> {
                     size: 32,
                   ),
             ),
-          if (widget.delete && widget.user.photoUrl.isNotEmpty)
+          if (widget.delete && widget.user.photoUrl.isNotEmpty && isNotUploading)
             Positioned(
               top: 0,
               left: 0,
               child: IconButton(
                 onPressed: () async {
-                  await StorageService.instance.delete(my?.photoUrl);
+                  /// 이전 사진 삭제
+                  ///
+                  /// 삭제 실패해도, 계속 진행되도록 한다.
+                  StorageService.instance.delete(my?.photoUrl);
+                  StorageService.instance.delete(my?.photoUrl.thumbnail);
 
                   await widget.user.update(
                     field: 'photoUrl',
@@ -201,9 +214,8 @@ class _UserAvatarState extends State<UserProfileAvatar> {
     );
   }
 
-  uploadProgressIndicator() {
-    if (progress == null || progress == 0) return const SizedBox.shrink();
-    if (progress!.isNaN) return const SizedBox.shrink();
+  uploadProgressIndicator({Color? color}) {
+    if (isNotUploading) return const SizedBox.shrink();
 
     return Positioned(
       top: 0,
@@ -217,7 +229,9 @@ class _UserAvatarState extends State<UserProfileAvatar> {
               height: widget.size,
               child: CircularProgressIndicator(
                 strokeWidth: widget.uploadStrokeWidth,
-                valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  color ?? Theme.of(context).primaryColor,
+                ),
                 value: progress,
               ),
             ),

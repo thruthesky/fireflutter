@@ -148,3 +148,5 @@ export 'widget/activity_log/activity_log.tile.icon.dart';
 
 // utility
 export 'widget/utility/color_scheme.dart';
+
+export 'widget/common/cached_thumbnail_first_image.dart';

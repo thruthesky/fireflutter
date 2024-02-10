@@ -83,20 +83,27 @@ class UserListView extends StatelessWidget {
   bool get hasOrderBy => orderBy != null && orderBy != '';
 
   Query? get searchQuery {
-    if (searchText == null) return null;
-    if (searchText!.isEmpty) return null;
-    if (field == 'name') {
-      return userCol.where(
-        Filter.or(
-          Filter('firstName', isEqualTo: searchText),
-          Filter('middleName', isEqualTo: searchText),
-          Filter('lastName', isEqualTo: searchText),
-          Filter('name', isEqualTo: searchText),
-          Filter('displayName', isEqualTo: searchText),
-        ),
-      );
+    Query q = userCol;
+
+    if (searchText != null && searchText != '') {
+      if (field == 'name') {
+        q = userCol.where(
+          Filter.or(
+            Filter('firstName', isEqualTo: searchText),
+            Filter('middleName', isEqualTo: searchText),
+            Filter('lastName', isEqualTo: searchText),
+            Filter('name', isEqualTo: searchText),
+            Filter('displayName', isEqualTo: searchText),
+          ),
+        );
+      } else {
+        q = userCol.where(field, isEqualTo: searchText);
+      }
     }
-    return userCol.where(field, isEqualTo: searchText);
+    if (hasOrderBy) {
+      q = q.orderBy(orderBy!, descending: descending);
+    }
+    return q;
   }
 
   @override

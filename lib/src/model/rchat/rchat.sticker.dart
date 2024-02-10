@@ -46,8 +46,12 @@ class RChatSticker extends StatelessWidget {
                     color: message.mine ? Colors.amber.shade200 : Colors.grey.shade200,
                     borderRadius: borderRadius(),
                   ),
-                  child: Text(message.text?.upTo(36).replaceAll('\n', '') ?? '',
-                      style: const TextStyle(color: Colors.black)),
+                  child: Text(
+                    message.text?.replaceAll('\n', '') ?? '',
+                    style: const TextStyle(color: Colors.black),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 );
               },
               blockedBuilder: (context) {

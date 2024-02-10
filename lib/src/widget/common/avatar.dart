@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 /// Avatar
@@ -51,15 +52,7 @@ class Avatar extends StatelessWidget {
         padding: padding,
         child: ClipRRect(
           borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
-          child: CachedNetworkImage(
-            imageUrl: url,
-            fit: BoxFit.cover,
-            placeholder: (context, url) => Padding(
-              padding: EdgeInsets.all(size / 4),
-              child: const CircularProgressIndicator(),
-            ),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
-          ),
+          child: CachedThumbnailFirstImage(url: url),
         ),
       ),
     );
