@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 class DefaultProfileUpdateForm extends StatefulWidget {
   const DefaultProfileUpdateForm({
     super.key,
-    this.occupation = true,
+    this.occupation = false,
     this.stateMessage = true,
     this.gender = true,
-    this.nationality = true,
+    this.nationality = false,
     this.region = true,
     this.dropdownTheme,
     this.onUpdate,
@@ -60,6 +60,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Center(
           child: Column(
@@ -128,13 +129,12 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                             ),
                           ),
                   ),
-                  Positioned(
+                  const Positioned(
                     bottom: 0,
                     left: 0,
                     right: 0,
                     child: Center(
-                      child: DefaultAvatarUpdate(
-                        uid: myUid!,
+                      child: UserAvatarUpdate(
                         radius: 80,
                         delete: false,
                       ),
@@ -153,6 +153,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
             ],
           ),
         ),
+        const SizedBox(height: 32),
         TextField(
           controller: nameController,
           decoration: InputDecoration(
@@ -171,111 +172,55 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
         if (widget.gender) ...{
           const SizedBox(height: 32),
           const Text('Gender'),
-          Row(
-            children: [
-              Expanded(
-                child: RadioListTile<String>(
-                  title: const Text('Male'),
-                  value: 'Male',
-                  groupValue: gender,
-                  onChanged: (value) {
-                    setState(() {
-                      gender = value;
-                    });
-                  },
-                ),
-              ),
-              Expanded(
-                child: RadioListTile<String>(
-                  title: const Text('Female'),
-                  value: 'Female',
-                  groupValue: gender,
-                  onChanged: (value) {
-                    setState(() {
-                      gender = value;
-                    });
-                  },
-                ),
-              ),
-            ],
-          ),
-        },
-        MyDoc(builder: (my) => UpdateBirthdayField(user: user)),
-        if (widget.nationality) ...{
-          const SizedBox(height: 32),
-          const Text('Nationality'),
+          const SizedBox(height: 4),
           Container(
-            height: 65,
-            decoration: widget.dropdownTheme ??
-                BoxDecoration(
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.secondary,
-                    width: 2,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Theme.of(context).colorScheme.secondary.withAlpha(128),
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.only(
+              right: 8,
+              top: 4,
+              left: 8,
+              bottom: 4,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: RadioListTile<String>(
+                    title: const Text('Male'),
+                    value: 'Male',
+                    groupValue: gender,
+                    onChanged: (value) {
+                      setState(() {
+                        gender = value;
+                      });
+                    },
                   ),
-                  borderRadius: BorderRadius.circular(24),
                 ),
-            padding: const EdgeInsets.only(right: 8, top: 16, left: 8),
-            child: DropdownButton<String>(
-              value: nationality,
-              onChanged: (value) {
-                setState(() {
-                  nationality = value as String;
-                });
-              },
-              items: const [
-                DropdownMenuItem(value: 'Korea', child: Text('Korea')),
-                DropdownMenuItem(
-                    value: 'United States', child: Text('United States')),
-                DropdownMenuItem(value: 'Vietnam', child: Text('Vietnam')),
-                DropdownMenuItem(value: 'Thailand', child: Text('Thailand')),
-                DropdownMenuItem(value: 'Laos', child: Text('Laos')),
-                DropdownMenuItem(value: 'Myanmar', child: Text('Myanmar')),
-                // Add more countries as needed
+                Expanded(
+                  child: RadioListTile<String>(
+                    title: const Text('Female'),
+                    value: 'Female',
+                    groupValue: gender,
+                    onChanged: (value) {
+                      setState(() {
+                        gender = value;
+                      });
+                    },
+                  ),
+                ),
               ],
-              isDense: true,
-              isExpanded: true,
             ),
           ),
         },
-        if (widget.region) ...{
-          if (nationality == 'Korea') ...{
-            const SizedBox(height: 32),
-            const Text('Region'),
-            Container(
-              height: 65,
-              decoration: widget.dropdownTheme ??
-                  BoxDecoration(
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.secondary,
-                      width: 2,
-                    ),
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-              padding: const EdgeInsets.only(right: 8, top: 16, left: 8),
-              child: DropdownButton<String>(
-                hint: const Text('Region'),
-                value: region,
-                onChanged: (value) {
-                  setState(() {
-                    region = value as String;
-                  });
-                },
-                items: const [
-                  DropdownMenuItem(value: 'Haeso', child: Text('Haeso')),
-                  DropdownMenuItem(value: 'Kwanso', child: Text('Kwanso')),
-                  DropdownMenuItem(value: 'Kwanbuk', child: Text('Kwanbuk')),
-                  DropdownMenuItem(value: 'Gwandong', child: Text('Gwandong')),
-                  DropdownMenuItem(value: 'Gyeonggi', child: Text('Gyeonggi')),
-                  DropdownMenuItem(value: 'Honam', child: Text('Honam')),
-                  DropdownMenuItem(value: 'Yeongnam', child: Text('Yeongnam')),
-                  // Add more countries as needed
-                ],
-                isDense: true,
-                isExpanded: true,
-              ),
-            )
-          },
-        },
+        const SizedBox(height: 32),
+        MyDoc(
+          builder: (my) => UpdateBirthdayField(user: user),
+        ),
         if (widget.occupation) ...{
           const SizedBox(height: 32),
           const Text('Occupation'),
@@ -305,7 +250,6 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
               );
 
               if (widget.onUpdate != null) {
-                dog('asdasdasdasdasd');
                 widget.onUpdate!();
               }
               if (mounted) toast(context: context, message: T.saved.tr);

@@ -1,34 +1,21 @@
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
-/// DefaultAvatarUpdate
+/// UserAvatarUpdate
 ///
 /// Displays the user's avatar.
 ///
 /// [badgeNumber] is the number of notifications.
-///
-/// [upload] if [upload] is set to true, then it displays the camera upload
-/// button and does the upload.
 ///
 /// [delete] is the callback function that is being called when the user taps the delete button.
 ///
 ///
 /// [onUploadSuccess] is the callback function that is being called when the user's avatar is uploaded.
 ///
-/// [onDeleteSuccess] is the callback function that is being called when the user's avatar is deleted.
-/// This callback is not called when the user uploads and deletes existing photos.
 ///
-/// [cameraOnly] if [cameraOnly] is set to true, then it displays the camera when upload buton is being pressed.
-/// [galleryOnly] if [galleryOnly] is set to true, then it displays the gallery when upload buton is being pressed.
-///
-///
-/// Note, that this avatar widget uses the [AdvancedAvatar] widget from
-/// the [flutter_advanced_avatar](https://pub.dev/packages/flutter_advanced_avatar) package.
-/// See the examples from the github: https://github.com/alex-melnyk/flutter_advanced_avatar/blob/master/example/lib/main.dart
-class DefaultAvatarUpdate extends StatefulWidget {
-  const DefaultAvatarUpdate({
+class UserAvatarUpdate extends StatefulWidget {
+  const UserAvatarUpdate({
     super.key,
-    required this.uid,
     this.size = 140,
     this.radius = 60,
     this.badgeNumber,
@@ -42,7 +29,6 @@ class DefaultAvatarUpdate extends StatefulWidget {
     this.progressBuilder,
   });
 
-  final String uid;
   final double size;
   final double radius;
   final int? badgeNumber;
@@ -56,10 +42,10 @@ class DefaultAvatarUpdate extends StatefulWidget {
   final Widget Function(double? progress)? progressBuilder;
 
   @override
-  State<DefaultAvatarUpdate> createState() => _UserAvatarState();
+  State<UserAvatarUpdate> createState() => _UserAvatarUpdateState();
 }
 
-class _UserAvatarState extends State<DefaultAvatarUpdate> {
+class _UserAvatarUpdateState extends State<UserAvatarUpdate> {
   double? progress;
 
   late UserModel user;
@@ -67,7 +53,7 @@ class _UserAvatarState extends State<DefaultAvatarUpdate> {
   @override
   void initState() {
     super.initState();
-    user = UserModel.fromUid(widget.uid);
+    user = UserModel.fromUid(myUid!);
   }
 
   bool get isNotUploading {
