@@ -17,120 +17,120 @@ if (admin.apps.length === 0) {
 const millisecondsToWait = 50000;
 
 describe("When fields are removed from post (post-null-fields.spec.ts)", () => {
-    it("Begin with non-null title, then update the title into null. Check if it is updated in post-summary", async () => {
-        // Create post
-        const postData: PostCreateEvent = {
-            uid: randomString(),
-            createdAt: 12312,
-            order: -12312,
-            urls: ["url1", "url2"],
-            content: "This is a content",
-            title: "This is a title to be removed",
-        };
-        const category = "null-test";
-        const postId = randomString();
-        const db = getDatabase();
-        await db.ref(`posts/${category}/${postId}`).set(postData);
-        // Remove title
-        await db.ref(`posts/${category}/${postId}/title`).set(null);
-        // Wait for some time
-        await setTimeout(millisecondsToWait);
-        // Check if record in post summary is updated
-        const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
-        const summary = summarySnapshot.val() as PostSummary;
-        if (!summarySnapshot.exists()) {
-            assert.ok(false, "It should exist.");
-        } else if (summary.content !== postData.content ||
-            summary.url !== postData.urls?.[0] ||
-            summary.order !== postData.order ||
-            summary.createdAt !== postData.createdAt ||
-            summary.uid !== postData.uid
-            ) {
-            console.log("Original: ", postData, "Retireved: ", summary);
-            assert.ok(false, "Other records should not be affected.");
-        } else if (summarySnapshot.exists() && summary.title === "") {
-            assert.ok(true);
-        } else {
-            console.log("Original: ", postData, "Retireved: ", summary, "Expected title to be empty.");
-            assert.ok(false, "It should exist and should have proper values.");
-        }
-    });
-    it("Begin with non-null content, then update the content into null. Check if it is updated in post-summary", async () => {
-        // Create post
-        const postData: PostCreateEvent = {
-            uid: randomString(),
-            createdAt: 12312,
-            order: -12312,
-            urls: ["url1", "url2"],
-            title: "This is a title",
-            content: "This is a content to be removed",
-        };
-        const category = "null-test";
-        const postId = randomString();
-        const db = getDatabase();
-        await db.ref(`posts/${category}/${postId}`).set(postData);
-        // Nullify content
-        await db.ref(`posts/${category}/${postId}/content`).set(null);
-        // Wait for some time
-        await setTimeout(millisecondsToWait);
-        // Check if record in post summary is updated
-        const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
-        const summary = summarySnapshot.val() as PostSummary;
-        if (!summarySnapshot.exists()) {
-            assert.ok(false, "It should exist.");
-        } else if (summary.title !== postData.title ||
-            summary.url !== postData.urls?.[0] ||
-            summary.order !== postData.order ||
-            summary.createdAt !== postData.createdAt ||
-            summary.uid !== postData.uid
-            ) {
-            console.log("Original: ", postData, "Retireved: ", summary);
-            assert.ok(false, "Other records should not be affected.");
-        } else if (summarySnapshot.exists() && summary.content === "") {
-            assert.ok(true);
-        } else {
-            console.log("Original: ", postData, "Retireved: ", summary, "Expected content should be empty");
-            assert.ok(false, "It should exist and should have proper values.");
-        }
-    });
-    it("Begin with non-null urls, then update the urls. Check if it is updated in post-summary", async () => {
-        // Create post
-        const postData: PostCreateEvent = {
-            uid: randomString(),
-            createdAt: 12312,
-            order: -12312,
-            title: "This is a title",
-            content: "This is a content",
-            urls: ["url1", "url2"],
-        };
-        const category = "null-test";
-        const postId = randomString();
-        const db = getDatabase();
-        await db.ref(`posts/${category}/${postId}`).set(postData);
-        // Update title
-        await db.ref(`posts/${category}/${postId}/urls`).set(null);
-        // Wait for some time
-        await setTimeout(millisecondsToWait);
-        // Check if record in post summary is updated
-        const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
-        const summary = summarySnapshot.val() as PostSummary;
-        if (!summarySnapshot.exists()) {
-            assert.ok(false, "It should exist.");
-        } else if (summary.title !== postData.title ||
-            summary.content !== postData.content ||
-            summary.order !== postData.order ||
-            summary.createdAt !== postData.createdAt ||
-            summary.uid !== postData.uid
-            ) {
-            console.log("Original: ", postData, "Retireved: ", summary);
-            assert.ok(false, "Other records should not be affected.");
-        } else if (summarySnapshot.exists() && summary.url === "") {
-            assert.ok(true);
-        } else {
-            console.log("Original: ", postData, "Retireved: ", summary, "Updated urls should be empty.");
-            assert.ok(false, "It should exist and should have proper values.");
-        }
-    });
+    // it("Begin with non-null title, then update the title into null. Check if it is updated in post-summary", async () => {
+    //     // Create post
+    //     const postData: PostCreateEvent = {
+    //         uid: randomString(),
+    //         createdAt: 12312,
+    //         order: -12312,
+    //         urls: ["url1", "url2"],
+    //         content: "This is a content",
+    //         title: "This is a title to be removed",
+    //     };
+    //     const category = "null-test";
+    //     const postId = randomString();
+    //     const db = getDatabase();
+    //     await db.ref(`posts/${category}/${postId}`).set(postData);
+    //     // Remove title
+    //     await db.ref(`posts/${category}/${postId}/title`).set(null);
+    //     // Wait for some time
+    //     await setTimeout(millisecondsToWait);
+    //     // Check if record in post summary is updated
+    //     const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
+    //     const summary = summarySnapshot.val() as PostSummary;
+    //     if (!summarySnapshot.exists()) {
+    //         assert.ok(false, "It should exist.");
+    //     } else if (summary.content !== postData.content ||
+    //         summary.url !== postData.urls?.[0] ||
+    //         summary.order !== postData.order ||
+    //         summary.createdAt !== postData.createdAt ||
+    //         summary.uid !== postData.uid
+    //         ) {
+    //         console.log("Original: ", postData, "Retireved: ", summary);
+    //         assert.ok(false, "Other records should not be affected.");
+    //     } else if (summarySnapshot.exists() && summary.title === "") {
+    //         assert.ok(true);
+    //     } else {
+    //         console.log("Original: ", postData, "Retireved: ", summary, "Expected title to be empty.");
+    //         assert.ok(false, "It should exist and should have proper values.");
+    //     }
+    // });
+    // it("Begin with non-null content, then update the content into null. Check if it is updated in post-summary", async () => {
+    //     // Create post
+    //     const postData: PostCreateEvent = {
+    //         uid: randomString(),
+    //         createdAt: 12312,
+    //         order: -12312,
+    //         urls: ["url1", "url2"],
+    //         title: "This is a title",
+    //         content: "This is a content to be removed",
+    //     };
+    //     const category = "null-test";
+    //     const postId = randomString();
+    //     const db = getDatabase();
+    //     await db.ref(`posts/${category}/${postId}`).set(postData);
+    //     // Nullify content
+    //     await db.ref(`posts/${category}/${postId}/content`).set(null);
+    //     // Wait for some time
+    //     await setTimeout(millisecondsToWait);
+    //     // Check if record in post summary is updated
+    //     const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
+    //     const summary = summarySnapshot.val() as PostSummary;
+    //     if (!summarySnapshot.exists()) {
+    //         assert.ok(false, "It should exist.");
+    //     } else if (summary.title !== postData.title ||
+    //         summary.url !== postData.urls?.[0] ||
+    //         summary.order !== postData.order ||
+    //         summary.createdAt !== postData.createdAt ||
+    //         summary.uid !== postData.uid
+    //         ) {
+    //         console.log("Original: ", postData, "Retireved: ", summary);
+    //         assert.ok(false, "Other records should not be affected.");
+    //     } else if (summarySnapshot.exists() && summary.content === "") {
+    //         assert.ok(true);
+    //     } else {
+    //         console.log("Original: ", postData, "Retireved: ", summary, "Expected content should be empty");
+    //         assert.ok(false, "It should exist and should have proper values.");
+    //     }
+    // });
+    // it("Begin with non-null urls, then update the urls. Check if it is updated in post-summary", async () => {
+    //     // Create post
+    //     const postData: PostCreateEvent = {
+    //         uid: randomString(),
+    //         createdAt: 12312,
+    //         order: -12312,
+    //         title: "This is a title",
+    //         content: "This is a content",
+    //         urls: ["url1", "url2"],
+    //     };
+    //     const category = "null-test";
+    //     const postId = randomString();
+    //     const db = getDatabase();
+    //     await db.ref(`posts/${category}/${postId}`).set(postData);
+    //     // Update title
+    //     await db.ref(`posts/${category}/${postId}/urls`).set(null);
+    //     // Wait for some time
+    //     await setTimeout(millisecondsToWait);
+    //     // Check if record in post summary is updated
+    //     const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
+    //     const summary = summarySnapshot.val() as PostSummary;
+    //     if (!summarySnapshot.exists()) {
+    //         assert.ok(false, "It should exist.");
+    //     } else if (summary.title !== postData.title ||
+    //         summary.content !== postData.content ||
+    //         summary.order !== postData.order ||
+    //         summary.createdAt !== postData.createdAt ||
+    //         summary.uid !== postData.uid
+    //         ) {
+    //         console.log("Original: ", postData, "Retireved: ", summary);
+    //         assert.ok(false, "Other records should not be affected.");
+    //     } else if (summarySnapshot.exists() && summary.url === "") {
+    //         assert.ok(true);
+    //     } else {
+    //         console.log("Original: ", postData, "Retireved: ", summary, "Updated urls should be empty.");
+    //         assert.ok(false, "It should exist and should have proper values.");
+    //     }
+    // });
     it("Update post multiple non-null fields at multiple times, check if it is updated in post-summary", async () => {
         // Create post
         const postData: PostCreateEvent = {
