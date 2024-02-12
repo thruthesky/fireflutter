@@ -1,52 +1,62 @@
-# Comments
+# Comments  
 
 <!-- TODO revise -->
 
 A comment is created by users to comment on a post.
+
+Comments are saved under `/comments/<post-id>`.
+
+<!-- 
+  TODOS
+  1. Update Models
+  2. Update Cloud Functions (done)
+  3. Update Typesense Indexing
+  4. Update Refs
+-->
 
 ## Comment Model
 
 ### Fields
 
 - ref
-  * DatabaseReference
-  * Reference in RTDB to access the comment
+    - DatabaseReference
+    - Reference in RTDB to access the comment
 - id
-  * String
-  * The ID of the category
+    - String
+    - The ID of the category
 - parentId
-  * optional String
-  * The ID of the comment`s parent when the comment is represented as a reply under an existing comment.
+    - optional String
+    - The ID of the comment`s parent when the comment is represented as a reply under an existing comment.
 - content
-  * String
-  * The main content which is the actual comment.
+    - String
+    - The main content which is the actual comment.
 - uid
-  * String
-  * The commenter`s uid.
+    - String
+    - The commenter`s uid.
 - createdAt
-  * int
-  * When the comment was created, in milliseconds since epoch
+    - int
+    - When the comment was created, in milliseconds since epoch
 - urls
-  * List of Strings
-  * default: []
-  * urls of the attached files (mostly for photos)
+    - List of Strings
+    - default: []
+    - urls of the attached files (mostly for photos)
 - depth
-  * int
-  * depth of the comment (for indention in replies).
+    - int
+    - depth of the comment (for indention in replies).
 - deleted
-  * bool
-  * Whether the comment is deleted. True means deleted. Otherwise, not deleted.
+    - bool
+    - Whether the comment is deleted. True means deleted. Otherwise, not deleted.
 
 ### Getters
 
 - category
-  * String
-  * The category of the forum where the comment`s post belong.
-  * Category is not saved in RTDB since it is accessible in post but it is important in the model.
+    - String
+    - The category of the forum where the comment`s post belong.
+    - Category is not saved in RTDB since it is accessible in post but it is important in the model.
 - postId
-  * String
-  * The id of the post where the comment is commented.
-  * Post`s Id is not saved in RTDB since it is accessible in post but it is important in the model.
+    - String
+    - The id of the post where the comment is commented.
+    - Post`s Id is not saved in RTDB since it is accessible in post but it is important in the model.
   
 ## CommentView Widget
 
@@ -92,6 +102,8 @@ initForum() {
 
 ## Listing comments
 
+<!-- TODO revise since comments are not in posts -->
+
 Comments will be provided by the PostModel. For customization, check the code below:
 
 ```dart
@@ -114,12 +126,11 @@ ListView.builder(
 )
 ```
 
-
 ## Comment create logic
 
 - There followings are the comments fields. There is no `category`, `postId`, `id`.
-  - `content`: optional
-  - `parentId`: null for root level comment. required for child of root level comment. (required for comment of comment)
-  - `uid`: required
-  - `createdAt`: required
-  - `urls`: optional
+    - `content`: optional
+    - `parentId`: null for root level comment. required for child of root level comment. (required for comment of comment)
+    - `uid`: required
+    - `createdAt`: required
+    - `urls`: optional

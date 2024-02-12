@@ -24,6 +24,7 @@ export class PostService {
             title: post.title ?? "",
             content: post.content ?? "",
             url: post.urls?.[0] ?? "",
+            deleted: post.deleted ?? false,
         };
         const db = getDatabase();
         return db.ref(`${Config.postSummaries}/${category}/${id}`).update(summary);
@@ -45,6 +46,7 @@ export class PostService {
             title: post.title ?? "",
             content: post.content ?? "",
             url: post.urls?.[0] ?? "",
+            deleted: post.deleted ?? false,
         };
         const db = getDatabase();
         return db.ref(`${Config.postAllSummaries}/${id}`).update(summary);

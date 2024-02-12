@@ -12,13 +12,15 @@ class CommentModel {
   List<String> urls = [];
   int depth;
 
+  /// Get the category of the post
+  // TODO revise
+  // String get category => ref.parent!.parent!.parent!.key!;
+  String category;
+
   bool deleted;
 
-  /// Get the category of the post
-  String get category => ref.parent!.parent!.parent!.key!;
-
   /// Get the post id of the comment
-  String get postId => ref.parent!.parent!.key!;
+  String get postId => ref.parent!.key!;
 
   List<String> likes;
   double get leftMargin {
@@ -51,26 +53,30 @@ class CommentModel {
     required this.urls,
     this.depth = 0,
     this.likes = const [],
+    this.category = '',
     this.deleted = false,
   });
 
   factory CommentModel.fromSnapshot(DataSnapshot snapshot) {
+    dog("snapshot: ${snapshot.value}");
     return CommentModel.fromMap(
       snapshot.value as Map,
       snapshot.key!,
-      category: snapshot.ref.parent!.parent!.parent!.key!,
-      postId: snapshot.ref.parent!.parent!.key!,
+      // category: snapshot.ref.parent!.parent!.parent!.key!,
+      postId: snapshot.ref.parent!.key!,
     );
   }
 
   factory CommentModel.fromMap(
     Map<dynamic, dynamic> map,
     String id, {
-    required String category,
+    // required String category,
     required String postId,
   }) {
     return CommentModel(
-      ref: Ref.comment(category, postId, id),
+      // TODO cleanup
+      // ref: Ref.comment(category, postId, id),
+      ref: Ref.postComment(postId, id),
       id: id,
       parentId: map['parentId'],
       content: map['content'],
@@ -78,6 +84,9 @@ class CommentModel {
       createdAt: map['createdAt'],
       urls: List<String>.from(map['urls'] ?? []),
       likes: List<String>.from((map['likes'] as Map? ?? {}).keys),
+      // TODO review
+      category: map['category'] ?? '',
+      depth: map['depth'] ?? 0,
       deleted: map['deleted'] ?? false,
     );
   }
@@ -97,12 +106,15 @@ class CommentModel {
   /// ```
   ///
   factory CommentModel.fromPost(PostModel post) {
-    final fakeRef = Ref.comments(post.category, post.id).push();
+    // TODO cleanup
+    // final fakeRef = Ref.comments(post.category, post.id).push();
+    final fakeRef = Ref.postComments(post.id).push();
     return CommentModel(
       ref: fakeRef,
       id: fakeRef.key!,
       parentId: null,
       content: '',
+      // TODO category
       uid: myUid!,
       createdAt: 0,
       urls: [],
@@ -143,11 +155,21 @@ class CommentModel {
 
   /// Get a comment from the database
   static Future<CommentModel> get({
-    required String category,
+    // required String category,
     required String postId,
     required String commentId,
   }) async {
-    final snapshot = await Ref.comment(category, postId, commentId).get();
+    // TODO cleanup
+    // final snapshot = await Ref.comment(category, postId, commentId).get();
+    // final snapshot = await Ref.postComment(postId, commentId).get();
+    dog("getting postId: $postId commentId: $commentId");
+    final snapshot = await FirebaseDatabase.instance
+        .ref()
+        .root
+        .child("comments")
+        .child(postId)
+        .child(commentId)
+        .get();
     return CommentModel.fromSnapshot(snapshot);
   }
 
@@ -184,8 +206,8 @@ class CommentModel {
     summaryRef.child(Field.noOfComments).set(ServerValue.increment(1));
 
     /// Don't wait for calling onCommentCreate.
-    CommentModel.get(
-      category: category,
+    await CommentModel.get(
+      // category: category,
       postId: postId,
       commentId: id,
     ).then((comment) {

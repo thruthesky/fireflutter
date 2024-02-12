@@ -5,6 +5,7 @@ export interface PostCreateEvent {
     urls?: Array<string>;
     createdAt: number;
     order: number;
+    deleted?: boolean;
 }
 
 export interface PostSummary {
@@ -14,6 +15,7 @@ export interface PostSummary {
     url: string;
     createdAt: number;
     order: number;
+    deleted: boolean;
 }
 
 

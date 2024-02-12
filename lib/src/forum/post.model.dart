@@ -14,7 +14,7 @@ class PostModel {
     required this.likes,
     required this.noOfLikes,
     required this.urls,
-    required this.comments,
+    // required this.comments,
     required this.noOfComments,
     required this.deleted,
   });
@@ -28,7 +28,9 @@ class PostModel {
   final int order;
   List<String> likes;
   List<String> urls;
-  List<CommentModel> comments;
+  // List<CommentModel> comments;
+  // TODO cleanup
+  List<CommentModel> get comments => [];
 
   int noOfLikes;
 
@@ -41,6 +43,9 @@ class PostModel {
 
   /// Get the category of the post
   String get category => ref.parent!.key!;
+
+  /// Post's comments' database reference
+  DatabaseReference get commentsRef => Ref.postComments(id);
 
   /// Take note of the category node. Check the snapshot ref parent
   /// because in `post-all-summaries`, category is part of the field.
@@ -85,54 +90,56 @@ class PostModel {
       urls: empty(json['url'])
           ? List<String>.from(json['urls'] ?? [])
           : [json['url']],
-      comments: sortComments(
-        Map<Object, Object>.from((json['comments'] ?? {}))
-            .entries
-            .map((e) => CommentModel.fromMap(
-                  e.value as Map,
-                  e.key as String,
-                  category: category,
-                  postId: id,
-                ))
-            .toList(),
-      ),
+      // TODO cleanup
+      // comments: sortComments(
+      //   Map<Object, Object>.from((json['comments'] ?? {}))
+      //       .entries
+      //       .map((e) => CommentModel.fromMap(
+      //             e.value as Map,
+      //             e.key as String,
+      //             category: category,
+      //             postId: id,
+      //           ))
+      //       .toList(),
+      // ),
       noOfComments: json[Field.noOfComments] ?? 0,
       deleted: json[Field.deleted] ?? false,
     );
   }
 
-  static List<CommentModel> sortComments(List<CommentModel> comments) {
-    comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+  // TODO if needed since comments will be on a separate node
+  // static List<CommentModel> sortComments(List<CommentModel> comments) {
+  //   comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
-    final List<CommentModel> newComments = [];
+  //   final List<CommentModel> newComments = [];
 
-    /// This is the list of comments that are not replies.
-    /// It is sorted by createdAt.
-    /// If the comment is a reply, it has the parentId of the parent comment.
-    /// So, we can find the parent comment by searching the list.
-    /// And add the reply to the parent comment's replies.
-    for (final comment in comments) {
-      if (comment.parentId == null) {
-        newComments.add(comment);
-      } else {
-        /// 부모 찾기
-        final index = newComments.indexWhere((e) => e.id == comment.parentId);
+  //   /// This is the list of comments that are not replies.
+  //   /// It is sorted by createdAt.
+  //   /// If the comment is a reply, it has the parentId of the parent comment.
+  //   /// So, we can find the parent comment by searching the list.
+  //   /// And add the reply to the parent comment's replies.
+  //   for (final comment in comments) {
+  //     if (comment.parentId == null) {
+  //       newComments.add(comment);
+  //     } else {
+  //       /// 부모 찾기
+  //       final index = newComments.indexWhere((e) => e.id == comment.parentId);
 
-        comment.depth = newComments[index].depth + 1;
+  //       comment.depth = newComments[index].depth + 1;
 
-        /// 형제 찾기
-        final siblingIndex =
-            newComments.lastIndexWhere((e) => e.parentId == comment.parentId);
-        if (siblingIndex == -1) {
-          newComments.insert(index + 1, comment);
-        } else {
-          newComments.insert(siblingIndex + 1, comment);
-        }
-      }
-    }
+  //       /// 형제 찾기
+  //       final siblingIndex =
+  //           newComments.lastIndexWhere((e) => e.parentId == comment.parentId);
+  //       if (siblingIndex == -1) {
+  //         newComments.insert(index + 1, comment);
+  //       } else {
+  //         newComments.insert(siblingIndex + 1, comment);
+  //       }
+  //     }
+  //   }
 
-    return newComments;
-  }
+  //   return newComments;
+  // }
 
   /// Create a PostModel from a category with empty values.
   ///
@@ -161,7 +168,7 @@ class PostModel {
       likes: [],
       noOfLikes: 0,
       urls: [],
-      comments: [],
+      // comments: [],
       noOfComments: 0,
       deleted: false,
     );
@@ -187,7 +194,7 @@ class PostModel {
         'likes': likes,
         'noOfLikes': noOfLikes,
         'urls': urls,
-        'comments': comments,
+        // 'comments': comments,
         'noOfComments': noOfComments,
         'deleted': deleted,
       };
@@ -206,7 +213,7 @@ class PostModel {
       likes = p.likes;
       noOfLikes = p.noOfLikes;
       urls = p.urls;
-      comments = p.comments;
+      // comments = p.comments;
       noOfComments = p.noOfComments;
       deleted = p.deleted;
     }
@@ -304,17 +311,18 @@ class PostModel {
   ///
   /// If there is no comment, delete the post. Or update the title and content to 'deleted'.
   /// And set the deleted field to true.
+  // TODO review this logic since commment is updated
   Future<void> delete() async {
-    if (comments.isEmpty) {
-      await ref.remove();
-    } else {
-      await update(
-        title: null,
-        content: null,
-        urls: null,
-        deleted: true,
-      );
-    }
+    // if (comments.isEmpty) {
+    //   await ref.remove();
+    // } else {
+    //   await update(
+    //     title: null,
+    //     content: null,
+    //     urls: null,
+    //     deleted: true,
+    //   );
+    // }
     deleted = true;
     _afterDelete();
   }

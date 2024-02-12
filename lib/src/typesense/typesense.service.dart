@@ -153,6 +153,7 @@ class TypesenseService {
         await upsertPost(post);
         dog('Re-indexing post: ${post.id}');
       }
+      // TODO review comments
       for (final comment in post.comments) {
         if (!comment.deleted) {
           await upsertComment(comment);

@@ -1,3 +1,4 @@
+import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
@@ -132,10 +133,11 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     post: post,
                     focusOnTextField: true,
                   );
-                  if (re == true) {
-                    await post.reload();
-                    setState(() {});
-                  }
+                  // TODO review
+                  // if (re == true) {
+                  //   await post.reload();
+                  //   setState(() {});
+                  // }
                 },
                 child: Container(
                   margin:
@@ -155,10 +157,10 @@ class _PostViewScreenState extends State<PostViewScreen> {
                             post: post,
                             showUploadDialog: true,
                           );
-                          if (re == true) {
-                            await post.reload();
-                            setState(() {});
-                          }
+                          // if (re == true) {
+                          //   await post.reload();
+                          //   setState(() {});
+                          // }
                         },
                         icon: const Icon(Icons.camera_alt),
                       ),
@@ -169,22 +171,38 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   ),
                 ),
               ),
-
-              ListView.builder(
+              // TODO cleanup
+              // ListView.builder(
+              //   shrinkWrap: true,
+              //   physics: const NeverScrollableScrollPhysics(),
+              //   // TODO review, get comments without blinks
+              //   itemCount: post.comments.length,
+              //   itemBuilder: (context, index) {
+              //     final CommentModel comment = post.comments[index];
+              //     return CommentView(
+              //       post: post,
+              //       comment: comment,
+              //       onCreate: () {
+              //         post.reload().then((value) => setState(() {}));
+              //       },
+              //     );
+              //   },
+              // )
+              FirebaseDatabaseListView(
+                query: post.commentsRef,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: post.comments.length,
-                itemBuilder: (context, index) {
-                  final CommentModel comment = post.comments[index];
+                itemBuilder: (context, doc) {
+                  final comment = CommentModel.fromSnapshot(doc);
                   return CommentView(
                     post: post,
                     comment: comment,
                     onCreate: () {
-                      post.reload().then((value) => setState(() {}));
+                      // post.reload().then((value) => setState(() {}));
                     },
                   );
                 },
-              )
+              ),
             ],
           ),
         ),
