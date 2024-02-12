@@ -45,9 +45,9 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
     nameController.text = my?.displayName ?? '';
     if (user.nationality != '') {
       nationality = user.nationality;
-      if (user.region != '') {
-        region = user.region;
-      }
+    }
+    if (user.region != '') {
+      region = user.region;
     }
     if (user.gender != '') {
       gender = user.gender;
