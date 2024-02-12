@@ -34,7 +34,7 @@ describe("Test when post title, content and urls are null at first (post-null-fi
         const updatedTitle = "Now it has Title";
         await db.ref(`posts/${category}/${postId}/title`).set(updatedTitle);
         // Wait for some time
-        await setTimeout(millisecondsToWait * 3);
+        await setTimeout(millisecondsToWait * 3.5);
         // Check if record in post summary is updated
         const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
         const summary = summarySnapshot.val() as PostSummary;
@@ -146,13 +146,13 @@ describe("Test when post title, content and urls are null at first (post-null-fi
         await db.ref(`posts/${category}/${postId}`).set(postData);
         // Update title without await
         const updatedTitle = "Updated Title";
-        db.ref(`posts/${category}/${postId}/title`).set(updatedTitle);
+        await db.ref(`posts/${category}/${postId}/title`).set(updatedTitle);
         // Update content without await
         const updatedContent = "Updated Content";
-        db.ref(`posts/${category}/${postId}/content`).set(updatedContent);
+        await db.ref(`posts/${category}/${postId}/content`).set(updatedContent);
         // Update urls without await
         const updateUrls = ["url1", "url2", "url3"];
-        db.ref(`posts/${category}/${postId}/urls`).set(updateUrls);
+        await db.ref(`posts/${category}/${postId}/urls`).set(updateUrls);
         // Wait for some time
         await setTimeout(millisecondsToWait * 3.5);
         // Check the values

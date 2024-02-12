@@ -22,3 +22,6 @@ And here comes the cloud functions
 
 ### managePostsAllSummary
 
+This cloud function updates `post-all-summaries` and `post-summaries` based on `posts`.
+
+Be informed that we are only saving the first url of the post in summaries.

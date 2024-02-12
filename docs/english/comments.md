@@ -9,7 +9,7 @@ Comments are saved under `/comments/<post-id>`.
 <!-- 
   TODOS
   1. Update Models
-  2. Update Cloud Functions (done)
+  2. Update Cloud Summary Functions (done)
   3. Update Typesense Indexing
   4. Update Refs
 -->
@@ -105,6 +105,8 @@ initForum() {
 <!-- TODO revise since comments are not in posts -->
 
 Comments will be provided by the PostModel. For customization, check the code below:
+
+<!-- TODO need to update because comment is no longer in post -->
 
 ```dart
 final post = PostModel(

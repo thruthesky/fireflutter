@@ -9,7 +9,7 @@ import { Config } from "../config";
  */
 export class PostService {
     /**
-     * Sets the summary of the post
+     * Sets the summary of the post in `post-summaries` and `post-all-summary`
      *
      * @param post post data from the event
      * @param category category of the post
@@ -27,28 +27,8 @@ export class PostService {
             deleted: post.deleted ?? false,
         };
         const db = getDatabase();
-        return db.ref(`${Config.postSummaries}/${category}/${id}`).update(summary);
-    }
-
-    /**
-     * Sets `post-all-summaries`
-     *
-     * @param post post data of the doc
-     * @param category category
-     * @param id post Id
-     * @returns
-     */
-    static setAllSummaries(post: PostCreateEvent, category: string, id: string,) {
-        const summary: PostSummary = {
-            uid: post.uid,
-            createdAt: post.createdAt,
-            order: -post.createdAt,
-            title: post.title ?? "",
-            content: post.content ?? "",
-            url: post.urls?.[0] ?? "",
-            deleted: post.deleted ?? false,
-        };
-        const db = getDatabase();
-        return db.ref(`${Config.postAllSummaries}/${id}`).update(summary);
+        db.ref(`${Config.postAllSummaries}/${id}`).update(summary);
+        db.ref(`${Config.postSummaries}/${category}/${id}`).update(summary);
+        return;
     }
 }

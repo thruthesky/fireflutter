@@ -24,8 +24,6 @@ export const managePostsAllSummary = onValueWritten(
         // Data has created or updated
         // Update on postSummaries
         PostService.setSummary(event.data.after.val(), event.params.category, event.params.postId);
-        // Update on postAllSummaries
-        PostService.setAllSummaries(event.data.after.val(), event.params.category, event.params.postId);
         return;
     },
 );

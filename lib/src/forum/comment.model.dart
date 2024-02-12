@@ -189,12 +189,15 @@ class CommentModel {
   /// ```
   Future create({
     required String content,
+    required String category,
     CommentModel? parent,
     List<String>? urls,
   }) async {
     Map<String, dynamic> data = {
       'content': content,
       'parentId': parent?.id,
+      'category': category,
+      // 'depth': parent?.depth ?? 0,
       'uid': myUid!,
       'createdAt': ServerValue.timestamp,
       'urls': urls,
