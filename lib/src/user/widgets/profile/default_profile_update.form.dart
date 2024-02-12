@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
@@ -10,17 +11,23 @@ class DefaultProfileUpdateForm extends StatefulWidget {
     this.gender = true,
     this.nationality = false,
     this.region = true,
-    this.dropdownTheme,
+    this.nationalityTheme,
     this.onUpdate,
+    this.countryFilter,
+    this.dialogSize,
   });
 
   final void Function()? onUpdate;
+  // use [occupation] to hide the occupation field
   final bool occupation;
   final bool stateMessage;
   final bool gender;
   final bool nationality;
   final bool region;
-  final BoxDecoration? dropdownTheme;
+  final BoxDecoration? nationalityTheme;
+  // use countryFilter to list only the country you want to display in the screen
+  final List<String>? countryFilter;
+  final Size? dialogSize;
 
   @override
   State<DefaultProfileUpdateForm> createState() =>
@@ -215,6 +222,27 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                 ),
               ],
             ),
+          ),
+        },
+        if (widget.nationality) ...{
+          const SizedBox(
+            height: 32,
+          ),
+          const Text('Nationality'),
+          Container(
+            width: double.infinity,
+            decoration: widget.nationalityTheme,
+            child: CountryCodePicker(
+                showCountryOnly: true,
+                showOnlyCountryWhenClosed: true,
+                hideSearch: true,
+                initialSelection: nationality,
+                countryFilter: widget.countryFilter,
+                dialogSize: widget.dialogSize,
+                onChanged: (country) {
+                  nationality = country.code;
+                  setState(() {});
+                }),
           ),
         },
         const SizedBox(height: 32),
