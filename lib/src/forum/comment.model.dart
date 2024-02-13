@@ -58,7 +58,6 @@ class CommentModel {
   });
 
   factory CommentModel.fromSnapshot(DataSnapshot snapshot) {
-    dog("snapshot: ${snapshot.value}");
     return CommentModel.fromMap(
       snapshot.value as Map,
       snapshot.key!,

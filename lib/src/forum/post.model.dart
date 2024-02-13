@@ -104,7 +104,12 @@ class PostModel {
     );
   }
 
-  static List<CommentModel> sortComments(List<CommentModel> comments) {
+  static List<CommentModel> sortComments(List<DataSnapshot> commentSnapshots) {
+    // TODO need to review since it is not properly sorted
+    final comments =
+        commentSnapshots.map((e) => CommentModel.fromSnapshot(e)).toList();
+
+    /// Sort comments by createdAt
     comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     final List<CommentModel> newComments = [];

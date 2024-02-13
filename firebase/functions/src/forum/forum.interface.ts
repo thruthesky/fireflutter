@@ -18,6 +18,17 @@ export interface PostSummary {
     deleted?: boolean;
 }
 
+export interface PostSummaryAll {
+    uid: string;
+    title?: string;
+    content?: string;
+    url?: string;
+    createdAt: number;
+    order: number;
+    deleted?: boolean;
+    category: string;
+}
+
 export interface Post {
     uid?: string | null;
     title?: string | null;

@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import * as admin from "firebase-admin";
 import assert = require("assert");
-import { PostCreateEvent, PostSummary, PostUpdateEvent } from "../../src/forum/forum.interface";
+import { PostCreateEvent, PostSummary, PostSummaryAll, PostUpdateEvent } from "../../src/forum/forum.interface";
 import { randomString } from "../firebase-test-functions";
 import { setTimeout } from "timers/promises";
 import { getDatabase } from "firebase-admin/database";
@@ -49,6 +49,34 @@ describe("Post Summary All write from post test (forum/post-summary-all-from-pos
             assert.ok(true);
         } else {
             assert.ok(false, "It should exists in post-all-summaries and has correct data.");
+        }
+    });
+    // Test to check category exist
+    it("Check if category exists in post-all-summaries", async () => {
+        // Create post
+        const postData: PostCreateEvent = {
+            uid: randomString(),
+            title: "Title Test",
+            content: "Content Test",
+            createdAt: 12312,
+            order: -12312,
+        };
+        const category = "test-category-snake";
+        const postId = randomString();
+        const db = getDatabase();
+        await db.ref(`posts/${category}/${postId}`).set(postData);
+        // Wait for some seconds to make sure the data is written to DB
+        await setTimeout(millisecondsToWait * 2);
+        // Check if the data is written to post-summary
+        const summarySnapshot = await db.ref(`${Config.postAllSummaries}/${postId}`).get();
+        const summary = summarySnapshot.val() as PostSummaryAll;
+        if (
+            summarySnapshot.exists() &&
+            summary.category === category
+        ) {
+            assert.ok(true);
+        } else {
+            assert.ok(false, "It should exists in post-all-summaries and has correct category. Actual: " + summary.category + " Expected: " + category);
         }
     });
     it("Update a post, it must reflect in post-all-summaries", async () => {

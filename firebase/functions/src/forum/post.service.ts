@@ -1,5 +1,5 @@
 import { getDatabase } from "firebase-admin/database";
-import { PostCreateEvent, PostSummary, Post } from "./forum.interface";
+import { PostCreateEvent, PostSummary, Post, PostSummaryAll } from "./forum.interface";
 import { Config } from "../config";
 
 /**
@@ -34,8 +34,12 @@ export class PostService {
             summary.deleted = post.deleted;
         }
         const db = getDatabase();
-        db.ref(`${Config.postAllSummaries}/${id}`).update(summary);
         db.ref(`${Config.postSummaries}/${category}/${id}`).update(summary);
+        const summaryAll: PostSummaryAll = {
+            ...summary,
+            category,
+        };
+        db.ref(`${Config.postAllSummaries}/${id}`).update(summaryAll);
         return;
     }
 

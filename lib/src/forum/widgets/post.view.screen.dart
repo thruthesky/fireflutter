@@ -160,17 +160,50 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   ),
                 ),
               ),
-              FirebaseDatabaseListView(
+              // FirebaseDatabaseListView(
+              //   query: post.commentsRef,
+              //   shrinkWrap: true,
+              //   physics: const NeverScrollableScrollPhysics(),
+              //   itemBuilder: (context, doc) {
+              //     final comment = CommentModel.fromSnapshot(doc);
+              //     return CommentView(
+              //       post: post,
+              //       comment: comment,
+              //       onCreate: () {
+              //         // post.reload().then((value) => setState(() {}));
+              //       },
+              //     );
+              //   },
+              // ),
+              FirebaseDatabaseQueryBuilder(
                 query: post.commentsRef,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, doc) {
-                  final comment = CommentModel.fromSnapshot(doc);
-                  return CommentView(
-                    post: post,
-                    comment: comment,
-                    onCreate: () {
-                      // post.reload().then((value) => setState(() {}));
+                builder: (context, snapshot, _) {
+                  if (snapshot.isFetching) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasMore) {
+                    snapshot.fetchMore();
+                  }
+                  if (snapshot.hasError) {
+                    return Center(child: Text(snapshot.error.toString()));
+                  }
+                  if (snapshot.docs.isEmpty) {
+                    return const Center(child: Text('No comments'));
+                  }
+                  final comments = PostModel.sortComments(snapshot.docs);
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: comments.length,
+                    itemBuilder: (context, index) {
+                      final comment = comments[index];
+                      return CommentView(
+                        post: post,
+                        comment: comment,
+                        onCreate: () {
+                          // post.reload().then((value) => setState(() {}));
+                        },
+                      );
                     },
                   );
                 },
