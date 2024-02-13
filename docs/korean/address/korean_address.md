@@ -30,7 +30,11 @@ DB 에 저장 할 때, 문자열로 된 시/군/구 정보가 아닌 sidoCode �
 
 ## 예제
 
-`languageCode` 에는 `ko` 와 `en` 만 지원된다. `apiKey` 에는 data.go.kr 에서 가져 온 키를 입력. 
+- `languageCode` 에는 `ko` 와 `en` 만 지원된다.
+- `apiKey` 에는 data.go.kr 에서 가져 온 키를 입력하면 된다.
+- `onChangedSiDoCode` 는 `시/도` 를 선택하면 호출되는 콜백함수이다.
+- `onChangedSiGunGuCode` 는 `시/군/구` 를 선택하면 호출되는 콜백함수이다.
+
 
 ```dart
 KoreanSiGunGuSelector(
