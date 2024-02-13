@@ -12,9 +12,7 @@ class CommentModel {
   List<String> urls = [];
   int depth;
 
-  /// Get the category of the post
-  // TODO revise
-  // String get category => ref.parent!.parent!.parent!.key!;
+  /// Category is added here since we cannot access post category using ref..parent..key
   String category;
 
   bool deleted;
