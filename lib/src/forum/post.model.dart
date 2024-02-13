@@ -104,42 +104,93 @@ class PostModel {
     );
   }
 
+  // TODO cleanup when created correct sorting logic
+  // static List<CommentModel> sortComments(List<DataSnapshot> commentSnapshots) {
+  //   // TODO need to review since it is not properly sorted
+  //   final comments =
+  //       commentSnapshots.map((e) => CommentModel.fromSnapshot(e)).toList();
+
+  //   /// Sort comments by createdAt
+  //   comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
+  //   final List<CommentModel> newComments = [];
+
+  //   /// This is the list of comments that are not replies.
+  //   /// It is sorted by createdAt.
+  //   /// If the comment is a reply, it has the parentId of the parent comment.
+  //   /// So, we can find the parent comment by searching the list.
+  //   /// And add the reply to the parent comment's replies.
+  //   for (final comment in comments) {
+  //     if (comment.parentId == null) {
+  //       newComments.add(comment);
+  //     } else {
+  //       /// 부모 찾기
+  //       final index = newComments.indexWhere((e) => e.id == comment.parentId);
+
+  //       comment.depth = newComments[index].depth + 1;
+
+  //       /// 형제 찾기
+  //       final siblingIndex =
+  //           newComments.lastIndexWhere((e) => e.parentId == comment.parentId);
+  //       if (siblingIndex == -1) {
+  //         newComments.insert(index + 1, comment);
+  //       } else {
+  //         newComments.insert(siblingIndex + 1, comment);
+  //       }
+  //     }
+  //   }
+
+  //   return newComments;
+  // }
+
   static List<CommentModel> sortComments(List<DataSnapshot> commentSnapshots) {
-    // TODO need to review since it is not properly sorted
+    // TODO need to review since it has lot of code
+    // ask for help
     final comments =
         commentSnapshots.map((e) => CommentModel.fromSnapshot(e)).toList();
 
     /// Sort comments by createdAt
     comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
-    final List<CommentModel> newComments = [];
+    final List<CommentModel> newComments = <CommentModel>[];
 
-    /// This is the list of comments that are not replies.
-    /// It is sorted by createdAt.
-    /// If the comment is a reply, it has the parentId of the parent comment.
-    /// So, we can find the parent comment by searching the list.
-    /// And add the reply to the parent comment's replies.
-    for (final comment in comments) {
-      if (comment.parentId == null) {
-        newComments.add(comment);
-      } else {
-        /// 부모 찾기
-        final index = newComments.indexWhere((e) => e.id == comment.parentId);
+    final List<CommentModel> rootParentComments = comments
+        .where((e) => e.parentId == null)
+        .toList()
+      ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
-        comment.depth = newComments[index].depth + 1;
-
-        /// 형제 찾기
-        final siblingIndex =
-            newComments.lastIndexWhere((e) => e.parentId == comment.parentId);
-        if (siblingIndex == -1) {
-          newComments.insert(index + 1, comment);
-        } else {
-          newComments.insert(siblingIndex + 1, comment);
-        }
-      }
+    // for each parent Comment
+    for (final parentComment in rootParentComments) {
+      newComments.add(parentComment);
+      // Find all childComment
+      final childComments = _getChildren(comments, parentComment.id, 1);
+      // insert childComments next to the parentComment
+      newComments.insertAll(
+          newComments.indexOf(parentComment) + 1, childComments);
     }
-
     return newComments;
+  }
+
+  static List<CommentModel> _getChildren(
+    List<CommentModel> comments,
+    String parentId,
+    int depth,
+  ) {
+    final List<CommentModel> children = [];
+    children.addAll(comments.where((e) => e.parentId == parentId));
+    if (children.isEmpty) return children;
+    children.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    for (var e in children) {
+      e.depth = depth;
+    }
+    final List<CommentModel> childrenIterator = children.toList();
+    for (var childWithChildren in childrenIterator) {
+      final childComments =
+          _getChildren(comments, childWithChildren.id, depth + 1);
+      children.insertAll(
+          children.indexOf(childWithChildren) + 1, childComments);
+    }
+    return children;
   }
 
   /// Create a PostModel from a category with empty values.
