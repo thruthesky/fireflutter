@@ -28,9 +28,6 @@ class PostModel {
   final int order;
   List<String> likes;
   List<String> urls;
-  // List<CommentModel> comments;
-  // TODO cleanup
-  List<CommentModel> get comments => [];
 
   int noOfLikes;
 
@@ -107,39 +104,38 @@ class PostModel {
     );
   }
 
-  // TODO if needed since comments will be on a separate node
-  // static List<CommentModel> sortComments(List<CommentModel> comments) {
-  //   comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+  static List<CommentModel> sortComments(List<CommentModel> comments) {
+    comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
-  //   final List<CommentModel> newComments = [];
+    final List<CommentModel> newComments = [];
 
-  //   /// This is the list of comments that are not replies.
-  //   /// It is sorted by createdAt.
-  //   /// If the comment is a reply, it has the parentId of the parent comment.
-  //   /// So, we can find the parent comment by searching the list.
-  //   /// And add the reply to the parent comment's replies.
-  //   for (final comment in comments) {
-  //     if (comment.parentId == null) {
-  //       newComments.add(comment);
-  //     } else {
-  //       /// 부모 찾기
-  //       final index = newComments.indexWhere((e) => e.id == comment.parentId);
+    /// This is the list of comments that are not replies.
+    /// It is sorted by createdAt.
+    /// If the comment is a reply, it has the parentId of the parent comment.
+    /// So, we can find the parent comment by searching the list.
+    /// And add the reply to the parent comment's replies.
+    for (final comment in comments) {
+      if (comment.parentId == null) {
+        newComments.add(comment);
+      } else {
+        /// 부모 찾기
+        final index = newComments.indexWhere((e) => e.id == comment.parentId);
 
-  //       comment.depth = newComments[index].depth + 1;
+        comment.depth = newComments[index].depth + 1;
 
-  //       /// 형제 찾기
-  //       final siblingIndex =
-  //           newComments.lastIndexWhere((e) => e.parentId == comment.parentId);
-  //       if (siblingIndex == -1) {
-  //         newComments.insert(index + 1, comment);
-  //       } else {
-  //         newComments.insert(siblingIndex + 1, comment);
-  //       }
-  //     }
-  //   }
+        /// 형제 찾기
+        final siblingIndex =
+            newComments.lastIndexWhere((e) => e.parentId == comment.parentId);
+        if (siblingIndex == -1) {
+          newComments.insert(index + 1, comment);
+        } else {
+          newComments.insert(siblingIndex + 1, comment);
+        }
+      }
+    }
 
-  //   return newComments;
-  // }
+    return newComments;
+  }
 
   /// Create a PostModel from a category with empty values.
   ///

@@ -154,12 +154,12 @@ class TypesenseService {
         dog('Re-indexing post: ${post.id}');
       }
       // TODO review comments
-      for (final comment in post.comments) {
-        if (!comment.deleted) {
-          await upsertComment(comment);
-          dog('Re-indexing comment: ${comment.id}');
-        }
-      }
+      // for (final comment in post.comments) {
+      //   if (!comment.deleted) {
+      //     await upsertComment(comment);
+      //     dog('Re-indexing comment: ${comment.id}');
+      //   }
+      // }
     }
   }
 

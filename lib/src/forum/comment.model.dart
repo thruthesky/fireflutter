@@ -114,7 +114,7 @@ class CommentModel {
       id: fakeRef.key!,
       parentId: null,
       content: '',
-      // TODO category
+      category: post.category,
       uid: myUid!,
       createdAt: 0,
       urls: [],
@@ -160,8 +160,6 @@ class CommentModel {
     required String commentId,
   }) async {
     // TODO cleanup
-    // final snapshot = await Ref.comment(category, postId, commentId).get();
-    // final snapshot = await Ref.postComment(postId, commentId).get();
     dog("getting postId: $postId commentId: $commentId");
     final snapshot = await FirebaseDatabase.instance
         .ref()
