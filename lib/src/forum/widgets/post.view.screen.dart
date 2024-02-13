@@ -160,23 +160,9 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   ),
                 ),
               ),
-              // FirebaseDatabaseListView(
-              //   query: post.commentsRef,
-              //   shrinkWrap: true,
-              //   physics: const NeverScrollableScrollPhysics(),
-              //   itemBuilder: (context, doc) {
-              //     final comment = CommentModel.fromSnapshot(doc);
-              //     return CommentView(
-              //       post: post,
-              //       comment: comment,
-              //       onCreate: () {
-              //         // post.reload().then((value) => setState(() {}));
-              //       },
-              //     );
-              //   },
-              // ),
               FirebaseDatabaseQueryBuilder(
                 query: post.commentsRef,
+                pageSize: 100,
                 builder: (context, snapshot, _) {
                   if (snapshot.isFetching) {
                     return const Center(child: CircularProgressIndicator());
