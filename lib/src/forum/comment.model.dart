@@ -73,8 +73,6 @@ class CommentModel {
     required String postId,
   }) {
     return CommentModel(
-      // TODO cleanup
-      // ref: Ref.comment(category, postId, id),
       ref: Ref.postComment(postId, id),
       id: id,
       parentId: map['parentId'],
@@ -83,7 +81,7 @@ class CommentModel {
       createdAt: map['createdAt'],
       urls: List<String>.from(map['urls'] ?? []),
       likes: List<String>.from((map['likes'] as Map? ?? {}).keys),
-      // TODO review
+      // Category is added since we cannot access post category using ref..parent..key
       category: map['category'] ?? '',
       depth: map['depth'] ?? 0,
       deleted: map['deleted'] ?? false,
@@ -105,8 +103,6 @@ class CommentModel {
   /// ```
   ///
   factory CommentModel.fromPost(PostModel post) {
-    // TODO cleanup
-    // final fakeRef = Ref.comments(post.category, post.id).push();
     final fakeRef = Ref.postComments(post.id).push();
     return CommentModel(
       ref: fakeRef,
@@ -158,8 +154,6 @@ class CommentModel {
     required String postId,
     required String commentId,
   }) async {
-    // TODO cleanup
-    dog("getting postId: $postId commentId: $commentId");
     final snapshot = await FirebaseDatabase.instance
         .ref()
         .root
