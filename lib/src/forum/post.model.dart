@@ -87,18 +87,6 @@ class PostModel {
       urls: empty(json['url'])
           ? List<String>.from(json['urls'] ?? [])
           : [json['url']],
-      // TODO cleanup
-      // comments: sortComments(
-      //   Map<Object, Object>.from((json['comments'] ?? {}))
-      //       .entries
-      //       .map((e) => CommentModel.fromMap(
-      //             e.value as Map,
-      //             e.key as String,
-      //             category: category,
-      //             postId: id,
-      //           ))
-      //       .toList(),
-      // ),
       noOfComments: json[Field.noOfComments] ?? 0,
       deleted: json[Field.deleted] ?? false,
     );
