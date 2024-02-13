@@ -332,7 +332,7 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
         // Delete post
         await db.ref(`posts/${category}/${postId}`).remove();
         // Wait for some seconds
-        await setTimeout(millisecondsToWait * 2);
+        await setTimeout(millisecondsToWait * 4);
         // Check if it is deleted in post-summary
         const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
         if (summarySnapshot.exists()) {

@@ -315,7 +315,7 @@ class PostModel {
   // TODO review this logic since commment is updated
   Future<void> delete() async {
     // if (comments.isEmpty) {
-    //   await ref.remove();
+    await ref.remove();
     // } else {
     //   await update(
     //     title: null,

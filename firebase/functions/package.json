@@ -14,7 +14,7 @@
     "deploy:sendMessagesToCategorySubscribers": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:sendMessagesToCategorySubscribers",
     "deploy:message": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:sendPushNotifications,functions:sendMessagesToCategorySubscribers,functions:sendMessagesToChatRoomSubscribers",
     "deploy:managePostsSummary": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:managePostsSummary",
-    "deploy:typesense": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:typesenseUserIndexing,functions:typesenseCommentIndexing,functions:typesensePostCreatedIndexing,functions:typesensePostUpdateTitleIndexing,functions:typesensePostUpdateContentIndexing,functions:typesensePostUpdateUrlIndexing,functions:typesensePostUpdateDeleted,functions:typesensePostDeleteIndexing",
+    "deploy:typesense": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:typesenseUserIndexing,functions:typesenseCommentIndexing,functions:typesensePostIndexing",
     "deploy:userLike": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:userLikeCreated,functions:userLikeDeleted",
     "deploy:forumFunction": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:managePostsAllSummary",
     "deploy:userToFirestore": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:userToFirestoreCreated,functions:userToFirestoreUpdated",
