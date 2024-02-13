@@ -18,7 +18,6 @@ if (admin.apps.length === 0) {
 const millisecondsToWait = 5000;
 
 /**
- * ! Read the message in assert false
  *
  * To test if the post written in `posts-summaries` will be written into `post-summary-all`
  */
@@ -49,11 +48,10 @@ describe("Post Summary All write from `posts-summaries` test (forum/post-summary
             summary.createdAt === postData.createdAt &&
             summary.order === postData.order
         ) {
-            // assert.ok(true);
-            assert.ok(false, "Since we moved comments, we decided to make it one function. From that function, it only listens to `posts` so this it will not be triggered.");
-        } else {
-            // assert.ok(false, "It should exists in post-all-summaries and has correct data.");
+            // PostService.setSummary also updates `posts-summaries`
             assert.ok(true);
+        } else {
+            assert.ok(false, "It should exists in post-all-summaries and has correct data.");
         }
     });
     it("Update post in posts-summaries, check it in post-summary-all", async () => {
@@ -91,11 +89,10 @@ describe("Post Summary All write from `posts-summaries` test (forum/post-summary
             summary.createdAt === updatedPostData.createdAt &&
             summary.order === postData.order
         ) {
-            // assert.ok(true);
-            assert.ok(false, "Since we moved comments, we decided to make it one function. From that function, it only listens to `posts` so this it will not be triggered.");
-        } else {
-            // assert.ok(false, "It should exists in post-all-summaries and has correct data.");
+            // PostService.setSummary also updates `posts-summaries`
             assert.ok(true);
+        } else {
+            assert.ok(false, "It should exists in post-all-summaries and has correct data.");
         }
     });
     it("Delete post in posts-summaries, it should not be existing in post-summaries-all", async () => {
@@ -120,9 +117,11 @@ describe("Post Summary All write from `posts-summaries` test (forum/post-summary
         if (
             summarySnapshot.exists()
         ) {
-            assert.ok(false, "It should not exists in post-all-summaries when deleted in post-summaries.");
-        } else {
             assert.ok(true);
+            // NOTE: We are not listening to `${Config.postSummaries}/${category}/${postId}`
+            // we are only listening to `posts`
+        } else {
+            assert.ok(false, "We are not listening to `${Config.postSummaries}/${category}/${postId}`, so it should exist.");
         }
     });
 });

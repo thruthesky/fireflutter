@@ -1,5 +1,5 @@
 import { getDatabase } from "firebase-admin/database";
-import { onValueWritten, onValueDeleted } from "firebase-functions/v2/database";
+import { onValueWritten } from "firebase-functions/v2/database";
 import { PostService } from "./post.service";
 import { Config } from "../config";
 
@@ -21,23 +21,12 @@ export const managePostsSummary = onValueWritten(
             db.ref(`${Config.postAllSummaries}/${event.params.postId}`).remove();
             return;
         }
-        // Data has created or updated
-        // Update on postSummaries
-        PostService.setSummary(event.data.after.val(), event.params.category, event.params.postId);
-        return;
+        if (event.data.before.exists()) {
+            // Data updated
+            // Update on postSummaries
+            return PostService.updateSummary(event.data.before.val(), event.data.after.val(), event.params.category, event.params.postId);
+        }
+        // Data created
+        return PostService.setSummary(event.data.after.val(), event.params.category, event.params.postId);
     },
-);
-
-/**
- * postSummaryRemoveField
- *
- * PostService.setSummary will not be able to remove specific fields.
- */
-export const postSummaryRemoveField = onValueDeleted(
-    `${Config.postSummaries}/{category}/{postId}/{field}`,
-    (event) => {
-        const db = getDatabase();
-        db.ref(`${Config.postSummaries}/${event.params.category}/${event.params.postId}/${event.params.field}`).remove();
-        db.ref(`${Config.postAllSummaries}/${event.params.postId}/${event.params.field}`).remove();
-    }
 );

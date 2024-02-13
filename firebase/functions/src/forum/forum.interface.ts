@@ -18,10 +18,30 @@ export interface PostSummary {
     deleted?: boolean;
 }
 
+export interface Post {
+    uid?: string | null;
+    title?: string | null;
+    content?: string | null;
+    urls?: Array<string> | null;
+    createdAt?: number | null;
+    order?: number | null;
+    deleted?: boolean | null;
+}
 
 export interface PostUpdateEvent {
     title?: string;
     content?: string;
     urls?: Array<string>;
     deleted?: boolean;
+}
+
+
+export interface PostSummaryUpdateEvent {
+    uid?: string | null;
+    createdAt?: number | null;
+    order?: number | null;
+    title?: string | null;
+    content?: string | null;
+    url?: string | null;
+    deleted?: boolean | null;
 }

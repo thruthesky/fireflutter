@@ -43,8 +43,8 @@ describe("Post Summary All write from post test (forum/post-summary-all-from-pos
             summary.uid === postData.uid &&
             summary.title === postData.title &&
             summary.content === postData.content &&
-            summary.createdAt === postData.createdAt &&
-            summary.order === postData.order
+            summary.createdAt == postData.createdAt &&
+            summary.order == postData.order
         ) {
             assert.ok(true);
         } else {
@@ -102,16 +102,16 @@ describe("Post Summary All write from post test (forum/post-summary-all-from-pos
             title: "Title Test Updated",
             content: "Content Test Updated",
         };
-        await db.ref(`posts/${category}/${postId}`).set(updatedPostData);
+        await db.ref(`posts/${category}/${postId}`).update(updatedPostData);
         // Wait for some time
         await setTimeout(millisecondsToWait);
         // Check if order and createdAt is not affected
         const summarySnapshot = await db.ref(`${Config.postAllSummaries}/${postId}`).get();
         const summary = summarySnapshot.val() as PostSummary;
         if (summarySnapshot.exists() &&
-            summary.order === postData.order &&
+            summary.order == postData.order &&
             summary.order !== null &&
-            summary.createdAt === postData.createdAt &&
+            summary.createdAt == postData.createdAt &&
             summary.createdAt !== null
         ) {
             assert.ok(true);

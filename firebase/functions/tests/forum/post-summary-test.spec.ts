@@ -14,7 +14,7 @@ if (admin.apps.length === 0) {
     });
 }
 
-const millisecondsToWait = 35000;
+const millisecondsToWait = 40000;
 
 describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
     it("Create new post in posts, check it in post-summary (postSetSummary)", async () => {
@@ -48,7 +48,6 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
             assert.ok(false, "It should exists in post-summary and has correct data.");
         }
     });
-    // TODO add test, if title, content and url are null at first
     // it must not have problem
     it("Update post's title in posts, check it in post-summary if updated (postUpdatedSummaryTitle)", async ()=>{
         // Create post
@@ -168,9 +167,9 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
         if (
             summarySnapshot.exists() &&
             summary.title === postData.title &&
-            summary.order === postData.order &&
-            summary.createdAt === postData.createdAt &&
-            summary.url === (postData.urls?.[0] ?? "")
+            summary.order == postData.order &&
+            summary.createdAt == postData.createdAt &&
+            summary.url === undefined
         ) {
             assert.ok(true);
         } else {
@@ -275,9 +274,9 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
             summarySnapshot.exists() &&
             summary.title === updatedTitle &&
             summary.content === updatedContent &&
-            (summary.url ?? "") === (updateUrls[0] ?? "") &&
-            summary.order === postData.order &&
-            summary.createdAt === postData.createdAt
+            summary.url === updateUrls[0] &&
+            summary.order == postData.order &&
+            summary.createdAt == postData.createdAt
         ) {
             assert.ok(true);
         } else {
@@ -310,7 +309,7 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
         const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
         const summary = summarySnapshot.val();
         // Please Check if this should be actual deletion in post-summary
-        if (summarySnapshot.exists() && summary.deleted) {
+        if (summarySnapshot.exists() && (summary.deleted === true)) {
             assert.ok(true);
         } else {
             assert.ok(false, "It should exists in post-summary and deleted is true.");

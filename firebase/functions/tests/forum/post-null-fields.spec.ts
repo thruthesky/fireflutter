@@ -34,7 +34,7 @@ describe("Test when post title, content and urls are null at first (post-null-fi
         const updatedTitle = "Now it has Title";
         await db.ref(`posts/${category}/${postId}/title`).set(updatedTitle);
         // Wait for some time
-        await setTimeout(millisecondsToWait * 3.5);
+        await setTimeout(millisecondsToWait);
         // Check if record in post summary is updated
         const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
         const summary = summarySnapshot.val() as PostSummary;
