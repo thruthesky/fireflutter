@@ -4,11 +4,12 @@
 
 - You can open multiple chat rooms simultaneously.
 
-## Chat Database
+## Chat 데이터베이스 구조
 
-- `/chat-rooms` stores information about chat rooms.
-- `/chat-messages` stores chat messages.
-- `/chat-joins` indicates who is participating in which chat room. Both `/chat-rooms` and `/chat-joins` use the `ChatRoomModel`.
+- `/chat-rooms` 채팅 방 정보를 저장하는 경로
+- `/chat-messages` 채팅 메시지를 저장하는 경로
+- `/chat-joins` 채팅 방에 참여한 사용자들에게 채팅방 정보를 장하는 경로. 예를 들어, 사용자별 읽지 않은 (새로운) 메시지 수를 표시하는 데 사용. 참고로, `/chat-rooms` 과 `/chat-joins` 둘 모두 `ChatRoomModel` 을 사용해서 modeling 한다.
+
 
 - `noOfUsers` is updated in `/chat-rooms` when a new user joins or leaves a group chat room,
 
@@ -20,7 +21,58 @@
     - `previewDescription` - Description
     - `previewImageUrl` - Image
 
-## Logic
+### chat-messages 구조
+
+- `uid` 메시지 전송한 사용자의 uid
+- `createdAt` 메시지 전송한 시간
+- `order` 메시지 목록 순서
+- `text` 텍스트를 전송한 경우.
+- `url` 사진 URL. 사진을 전송한 경우.
+
+
+
+## 코딩 기법
+
+### 채팅 방에서 사용자의 전체 채팅 메시지 가져오기
+
+아래와 같이 하면, 해당 채팅방의 모든 메시지를 `uid` 순서로 한번에 다 가져온다. 다운로드 용량이 많아 데이터를 너무 가져오지 않도록 주의 할 필요가 있다.
+
+```dart
+final snapshot = await Ref.chatRoomMessages('chat-room-id')
+    .orderByChild('uid')
+    .get();
+
+if (snapshot.exists) {
+  print((snapshot.value as Map).keys.length);
+  for (var key in (snapshot.value as Map).keys) {
+    print((snapshot.value as Map)[key]['uid'] +
+        ' : ' +
+        ((snapshot.value as Map)[key]['text'] ?? '--'));
+  }
+}
+```
+
+
+### 채팅방에서 로그인한 사용자의 메시지 한 개만 가져오기
+
+예를 들어, 모든 회원이 의무적으로(자동으로 채팅방 입장) 사용하는 전체 채팅방이 있는 경우, 회원 가입을 한 다음, 해당 채팅 방에 (가입인사) 채팅을 남기도록 권유하는 경우, 로그인 한 사용자가 해당 채팅방에 채팅을 했는지 안했는지 확인하기 위해서, 딱 하나의 채팅 메시지만 가져와서, 채팅을 했는지 하지 않았는지 알 수 있다.
+
+아래와 같이 코딩을 하면 된다.
+
+```dart
+final snapshot = await Ref.chatRoomMessages('chat-room-id')
+    .orderByChild('uid')
+    .startAt(myUid!)
+    .endAt('$myUid\f8ff')
+    .limitToFirst(1)
+    .get();
+
+if (snapshot.exists) {
+  print((snapshot.value as Map).entries.first.value['text']);
+}
+```
+
+
 
 ### Get ChatRoomModel on ChatRoom
 
