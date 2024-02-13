@@ -105,6 +105,7 @@ class PostModel {
   }
 
   // TODO cleanup when created correct sorting logic
+  // ! THis one has logic error
   // static List<CommentModel> sortComments(List<DataSnapshot> commentSnapshots) {
   //   // TODO need to review since it is not properly sorted
   //   final comments =
@@ -154,6 +155,7 @@ class PostModel {
 
     final List<CommentModel> newComments = <CommentModel>[];
 
+    // Get root parents
     final List<CommentModel> rootParentComments = comments
         .where((e) => e.parentId == null)
         .toList()
@@ -166,7 +168,9 @@ class PostModel {
       final childComments = _getChildren(comments, parentComment.id, 1);
       // insert childComments next to the parentComment
       newComments.insertAll(
-          newComments.indexOf(parentComment) + 1, childComments);
+        newComments.indexOf(parentComment) + 1,
+        childComments,
+      );
     }
     return newComments;
   }
@@ -176,21 +180,21 @@ class PostModel {
     String parentId,
     int depth,
   ) {
-    final List<CommentModel> children = [];
-    children.addAll(comments.where((e) => e.parentId == parentId));
+    final List<CommentModel> children =
+        comments.where((e) => e.parentId == parentId).toList();
     if (children.isEmpty) return children;
     children.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-    for (var e in children) {
-      e.depth = depth;
+
+    final List<CommentModel> childrenWithChildren = [];
+    for (CommentModel child in children) {
+      child.depth = depth;
+      childrenWithChildren.add(child);
+      // ! This is recursive so this must be revised
+      // Although I think this may work. Ask for help with Sir Song.
+      childrenWithChildren.addAll(_getChildren(comments, child.id, depth + 1));
     }
-    final List<CommentModel> childrenIterator = children.toList();
-    for (var childWithChildren in childrenIterator) {
-      final childComments =
-          _getChildren(comments, childWithChildren.id, depth + 1);
-      children.insertAll(
-          children.indexOf(childWithChildren) + 1, childComments);
-    }
-    return children;
+
+    return childrenWithChildren;
   }
 
   /// Create a PostModel from a category with empty values.
