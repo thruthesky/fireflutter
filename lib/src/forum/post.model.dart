@@ -332,8 +332,8 @@ class PostModel {
     bool? deleted,
   }) async {
     final data = {
-      if (title != null) 'title': title,
-      if (content != null) 'content': content,
+      if (title != null) Field.title: title,
+      if (content != null) Field.content: content,
       if (order != null) Field.order: order,
       if (deleted != null) Field.deleted: deleted,
       if (urls != null) Field.urls: urls,
@@ -363,10 +363,12 @@ class PostModel {
     //                If not, delete the post.
     // QUESTION: Do we need to retrieve comments from RTDB
     //           to check if there are comments?
-    final snapshot =
-        await ref.child(Folder.comments).child(id).limitToFirst(1).get();
+    final snapshot = await Ref.postComments(id).limitToFirst(1).get();
+    dog("Post Id: $id");
+    dog("Comment exists: ${snapshot.exists}");
     final doesCommentsExist = snapshot.exists;
     if (doesCommentsExist) {
+      dog("Ref path: ${ref.path}");
       await update(
         title: null,
         content: null,
