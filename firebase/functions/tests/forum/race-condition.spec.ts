@@ -56,6 +56,10 @@ describe("Race Condition Test in Forum. (race-condition.spec.ts)", () => {
             assert.ok(false, "It should exist.");
         } else if (summarySnapshot.exists() && summary.title === finalTitle) {
             assert.ok(true);
+        } else if (summarySnapshot.exists() && ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"].includes(summary.title ?? "")) {
+            // NOTE: This is okay, per Sir Song. This is expected to not be consistent
+            //       since we will have race condition.
+            assert.ok(true);
         } else {
             console.log("Original: ", postData, "Retireved: ", summary, "Expected Title: ", finalTitle);
             assert.ok(false, "Something is wrong. It should exist and should have proper values.");
@@ -100,6 +104,10 @@ describe("Race Condition Test in Forum. (race-condition.spec.ts)", () => {
             assert.ok(false, "It should exist.");
         } else if (summarySnapshot.exists() && summary.content === finalContent) {
             assert.ok(true);
+        } else if (summarySnapshot.exists() && ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"].includes(summary.content ?? "")) {
+            // NOTE: This is okay, per Sir Song. This is expected to not be consistent
+            //       since we will have race condition.
+            assert.ok(true);
         } else {
             console.log("Original: ", postData, "Retireved: ", summary, "Expected Content: ", finalContent);
             assert.ok(false, "Something is wrong. It should exist and should have proper values.");
@@ -143,6 +151,10 @@ describe("Race Condition Test in Forum. (race-condition.spec.ts)", () => {
         if (!summarySnapshot.exists()) {
             assert.ok(false, "It should exist.");
         } else if (summarySnapshot.exists() && summary.url === finalUrls[0]) {
+            assert.ok(true);
+        } else if (summarySnapshot.exists() && ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"].includes(summary.url ?? "")) {
+            // NOTE: This is okay, per Sir Song. This is expected to not be consistent
+            //       since we will have race condition.
             assert.ok(true);
         } else {
             console.log("Original: ", postData, "Retireved: ", summary, "Expected url: ", finalUrls[0]);
