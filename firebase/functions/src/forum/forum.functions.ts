@@ -4,7 +4,7 @@ import { PostService } from "./post.service";
 import { Config } from "../config";
 
 /**
- * managePostsSummary
+ * managePostsSummaryCreated
  *
  * This function is triggered when a new post
  *
@@ -23,7 +23,7 @@ export const managePostsSummaryCreated = onValueCreated(
  * This function is triggered when a post(post summary) is deleted
  */
 export const managePostsSummaryDeleted = onValueDeleted(
-    `${Config.postSummaries}/{category}/{postId}`,
+    `${Config.posts}/{category}/{postId}`,
     (event) => {
         // Data deleted
         const db = getDatabase();
