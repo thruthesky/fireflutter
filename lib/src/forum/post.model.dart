@@ -94,9 +94,12 @@ class PostModel {
     );
   }
 
+<<<<<<< HEAD
   // TODO cleanup when created correct sorting logic
   // ! THis one has logic error
   // ! need to review since it is not properly sorted
+=======
+>>>>>>> eef83b81d5c451fb85dfb7b217eb1c75fad48352
   static List<CommentModel> sortComments(List<DataSnapshot> commentSnapshots) {
     final comments =
         commentSnapshots.map((e) => CommentModel.fromSnapshot(e)).toList();
@@ -133,59 +136,6 @@ class PostModel {
 
     return newComments;
   }
-
-  // static List<CommentModel> sortComments(List<DataSnapshot> commentSnapshots) {
-  //   // TODO need to review since it has lot of code
-  //   // ask for help
-  //   final comments =
-  //       commentSnapshots.map((e) => CommentModel.fromSnapshot(e)).toList();
-
-  //   /// Sort comments by createdAt
-  //   comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-
-  //   final List<CommentModel> newComments = <CommentModel>[];
-
-  //   // Get root parents
-  //   final List<CommentModel> rootParentComments = comments
-  //       .where((e) => e.parentId == null)
-  //       .toList()
-  //     ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
-
-  //   // for each parent Comment
-  //   for (final parentComment in rootParentComments) {
-  //     newComments.add(parentComment);
-  //     // Find all childComment
-  //     final childComments = _getChildren(comments, parentComment.id, 1);
-  //     // insert childComments next to the parentComment
-  //     newComments.insertAll(
-  //       newComments.indexOf(parentComment) + 1,
-  //       childComments,
-  //     );
-  //   }
-  //   return newComments;
-  // }
-
-  // static List<CommentModel> _getChildren(
-  //   List<CommentModel> comments,
-  //   String parentId,
-  //   int depth,
-  // ) {
-  //   final List<CommentModel> children =
-  //       comments.where((e) => e.parentId == parentId).toList();
-  //   if (children.isEmpty) return children;
-  //   children.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-
-  //   final List<CommentModel> childrenWithChildren = [];
-  //   for (CommentModel child in children) {
-  //     child.depth = depth;
-  //     childrenWithChildren.add(child);
-  //     // ! This is recursive so this must be revised
-  //     // Although I think this may work. Ask for help with Sir Song.
-  //     childrenWithChildren.addAll(_getChildren(comments, child.id, depth + 1));
-  //   }
-
-  //   return childrenWithChildren;
-  // }
 
   /// Create a PostModel from a category with empty values.
   ///
