@@ -195,6 +195,34 @@ ScaffoldFeatureController toast({
   );
 }
 
+ScaffoldFeatureController errorToast({
+  required BuildContext context,
+  String? title,
+  required String message,
+  Icon? icon,
+  Duration duration = const Duration(seconds: 8),
+  Function(Function)? onTap,
+  bool? error,
+  bool hideCloseButton = false,
+  Color? backgroundColor,
+  Color? foregroundColor,
+  double runSpacing = 12,
+}) {
+  return toast(
+    context: context,
+    title: title,
+    message: message,
+    icon: icon,
+    duration: duration,
+    onTap: onTap,
+    error: true,
+    hideCloseButton: hideCloseButton,
+    backgroundColor: backgroundColor,
+    foregroundColor: foregroundColor,
+    runSpacing: runSpacing,
+  );
+}
+
 /// Confirm dialgo
 ///
 /// It requires build context where [toast] does not.

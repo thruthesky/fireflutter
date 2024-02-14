@@ -43,7 +43,8 @@ import 'package:flutter/material.dart';
 ///
 /// [onSignin] 로그인이 성공하면 호출되는 콜백. 홈 화면으로 이동하거나 기타 작업을 할 수 있다.
 ///
-/// 로그인이 성성하면 이 위젯은 UserService.instance.login() 을 호출한다.
+/// 로그인이 성성하면 이 위젯은 UserService.instance.login() 을 호출한다. 그리고 처음 로그인이면, 이 함수에서
+/// /users/<uid> 를 생성한다.
 class SimplePhoneSignIn extends StatefulWidget {
   const SimplePhoneSignIn({
     super.key,
@@ -54,7 +55,7 @@ class SimplePhoneSignIn extends StatefulWidget {
     this.reviewRealPhoneNumber,
     this.reviewRealSmsCode,
     this.onCompleteNumber,
-    this.onSignin,
+    required this.onSignin,
     this.languageCode = 'ko',
   });
 
@@ -65,7 +66,7 @@ class SimplePhoneSignIn extends StatefulWidget {
   final String? reviewRealPhoneNumber;
   final String? reviewRealSmsCode;
   final String Function(String)? onCompleteNumber;
-  final void Function()? onSignin;
+  final void Function() onSignin;
   final String languageCode;
 
   @override
@@ -319,8 +320,8 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
   }
 
   signinSuccess() async {
-    UserService.instance.login();
-    widget.onSignin?.call();
+    await UserService.instance.login();
+    widget.onSignin.call();
   }
 
   doReviewLogin() async {
