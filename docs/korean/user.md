@@ -366,3 +366,27 @@ listenRequiredField = UserService.instance.myDataChanges.listen((user) {
   }
 });
 ```
+
+
+### 사용자가 사진 또는 이름을 입력하지 않았으면 강제로 입력하게하는 방법
+
+아래와 같이, `UserService.instance.myDataChanges` 의 값을 살펴보고, 이름 또는 사진이 없으면 특정 페이지로 이동하게 하면 된다.
+
+```dart
+class _HomeScreenState extends State<MainScreen> {
+  StreamSubscription? subscribeMyData;
+
+  @override
+  void initState() {
+    super.initState();
+
+    subscribeMyData = UserService.instance.myDataChanges.listen((my) {
+      if (my == null) return;
+      // 로그인을 한 다음, 이름이나 사진이 없으면, 강제로 입력 할 수 있는 스크린으로 이동해 버린다.
+      if (my.displayName.trim().isEmpty || my.photoUrl.isEmpty) {
+        context.go(InputRequiredFieldScreen.routeName);
+        // 한번만 listen 하도록 한다.
+        subscribeMyData?.cancel();
+      }
+    });
+```
