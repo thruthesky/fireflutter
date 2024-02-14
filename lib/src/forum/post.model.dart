@@ -97,95 +97,95 @@ class PostModel {
   // TODO cleanup when created correct sorting logic
   // ! THis one has logic error
   // ! need to review since it is not properly sorted
-  // static List<CommentModel> sortComments(List<DataSnapshot> commentSnapshots) {
-  //   final comments =
-  //       commentSnapshots.map((e) => CommentModel.fromSnapshot(e)).toList();
-
-  //   /// Sort comments by createdAt
-  //   comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-
-  //   final List<CommentModel> newComments = [];
-
-  //   /// This is the list of comments that are not replies.
-  //   /// It is sorted by createdAt.
-  //   /// If the comment is a reply, it has the parentId of the parent comment.
-  //   /// So, we can find the parent comment by searching the list.
-  //   /// And add the reply to the parent comment's replies.
-  //   for (final comment in comments) {
-  //     if (comment.parentId == null) {
-  //       newComments.add(comment);
-  //     } else {
-  //       /// 부모 찾기
-  //       final index = newComments.indexWhere((e) => e.id == comment.parentId);
-
-  //       comment.depth = newComments[index].depth + 1;
-
-  //       /// 형제 찾기
-  //       final siblingIndex =
-  //           newComments.lastIndexWhere((e) => e.parentId == comment.parentId);
-  //       if (siblingIndex == -1) {
-  //         newComments.insert(index + 1, comment);
-  //       } else {
-  //         newComments.insert(siblingIndex + 1, comment);
-  //       }
-  //     }
-  //   }
-
-  //   return newComments;
-  // }
-
   static List<CommentModel> sortComments(List<DataSnapshot> commentSnapshots) {
-    // TODO need to review since it has lot of code
-    // ask for help
     final comments =
         commentSnapshots.map((e) => CommentModel.fromSnapshot(e)).toList();
 
     /// Sort comments by createdAt
     comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
-    final List<CommentModel> newComments = <CommentModel>[];
+    final List<CommentModel> newComments = [];
 
-    // Get root parents
-    final List<CommentModel> rootParentComments = comments
-        .where((e) => e.parentId == null)
-        .toList()
-      ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    /// This is the list of comments that are not replies.
+    /// It is sorted by createdAt.
+    /// If the comment is a reply, it has the parentId of the parent comment.
+    /// So, we can find the parent comment by searching the list.
+    /// And add the reply to the parent comment's replies.
+    for (final comment in comments) {
+      if (comment.parentId == null) {
+        newComments.add(comment);
+      } else {
+        /// 부모 찾기
+        final index = newComments.indexWhere((e) => e.id == comment.parentId);
 
-    // for each parent Comment
-    for (final parentComment in rootParentComments) {
-      newComments.add(parentComment);
-      // Find all childComment
-      final childComments = _getChildren(comments, parentComment.id, 1);
-      // insert childComments next to the parentComment
-      newComments.insertAll(
-        newComments.indexOf(parentComment) + 1,
-        childComments,
-      );
+        comment.depth = newComments[index].depth + 1;
+
+        /// 형제 찾기
+        final siblingIndex =
+            newComments.lastIndexWhere((e) => e.parentId == comment.parentId);
+        if (siblingIndex == -1) {
+          newComments.insert(index + 1, comment);
+        } else {
+          newComments.insert(siblingIndex + 1, comment);
+        }
+      }
     }
+
     return newComments;
   }
 
-  static List<CommentModel> _getChildren(
-    List<CommentModel> comments,
-    String parentId,
-    int depth,
-  ) {
-    final List<CommentModel> children =
-        comments.where((e) => e.parentId == parentId).toList();
-    if (children.isEmpty) return children;
-    children.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+  // static List<CommentModel> sortComments(List<DataSnapshot> commentSnapshots) {
+  //   // TODO need to review since it has lot of code
+  //   // ask for help
+  //   final comments =
+  //       commentSnapshots.map((e) => CommentModel.fromSnapshot(e)).toList();
 
-    final List<CommentModel> childrenWithChildren = [];
-    for (CommentModel child in children) {
-      child.depth = depth;
-      childrenWithChildren.add(child);
-      // ! This is recursive so this must be revised
-      // Although I think this may work. Ask for help with Sir Song.
-      childrenWithChildren.addAll(_getChildren(comments, child.id, depth + 1));
-    }
+  //   /// Sort comments by createdAt
+  //   comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
-    return childrenWithChildren;
-  }
+  //   final List<CommentModel> newComments = <CommentModel>[];
+
+  //   // Get root parents
+  //   final List<CommentModel> rootParentComments = comments
+  //       .where((e) => e.parentId == null)
+  //       .toList()
+  //     ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
+  //   // for each parent Comment
+  //   for (final parentComment in rootParentComments) {
+  //     newComments.add(parentComment);
+  //     // Find all childComment
+  //     final childComments = _getChildren(comments, parentComment.id, 1);
+  //     // insert childComments next to the parentComment
+  //     newComments.insertAll(
+  //       newComments.indexOf(parentComment) + 1,
+  //       childComments,
+  //     );
+  //   }
+  //   return newComments;
+  // }
+
+  // static List<CommentModel> _getChildren(
+  //   List<CommentModel> comments,
+  //   String parentId,
+  //   int depth,
+  // ) {
+  //   final List<CommentModel> children =
+  //       comments.where((e) => e.parentId == parentId).toList();
+  //   if (children.isEmpty) return children;
+  //   children.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
+  //   final List<CommentModel> childrenWithChildren = [];
+  //   for (CommentModel child in children) {
+  //     child.depth = depth;
+  //     childrenWithChildren.add(child);
+  //     // ! This is recursive so this must be revised
+  //     // Although I think this may work. Ask for help with Sir Song.
+  //     childrenWithChildren.addAll(_getChildren(comments, child.id, depth + 1));
+  //   }
+
+  //   return childrenWithChildren;
+  // }
 
   /// Create a PostModel from a category with empty values.
   ///
@@ -323,6 +323,17 @@ class PostModel {
     ForumService.instance.onPostCreate?.call(created);
   }
 
+  /// Update post data in the database
+  ///
+  /// For deleting the field, must use otherData
+  /// instead of setting the arguments to null.
+  /// Example:
+  /// ```dart
+  /// await post.update(
+  ///   otherData: {
+  ///     Field.title: null,
+  ///   },
+  /// );
   Future<void> update({
     String? category,
     String? title,
@@ -330,8 +341,10 @@ class PostModel {
     List<String>? urls,
     int? order,
     bool? deleted,
+    Map<String, dynamic>? otherData,
   }) async {
     final data = {
+      if (otherData != null) ...otherData,
       if (title != null) Field.title: title,
       if (content != null) Field.content: content,
       if (order != null) Field.order: order,
@@ -369,12 +382,20 @@ class PostModel {
     final doesCommentsExist = snapshot.exists;
     if (doesCommentsExist) {
       dog("Ref path: ${ref.path}");
+      // await update(
+      //   title: null,
+      //   content: null,
+      //   urls: null,
+      //   deleted: true,
+      // );
       await update(
-        title: null,
-        content: null,
-        urls: null,
-        deleted: true,
+        otherData: {
+          Field.title: null,
+          Field.content: null,
+          Field.urls: null,
+        },
       );
+      await update(deleted: true);
     } else {
       await ref.remove();
     }

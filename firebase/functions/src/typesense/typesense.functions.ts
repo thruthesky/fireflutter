@@ -40,7 +40,7 @@ export const typesenseCommentIndexing = onValueWritten(
     "/comments/{postId}/{id}",
     (event) => {
         const data = event.data.after.val() as TypesenseDoc;
-        if (!event.data.after.exists() || (event.data.before.exists() && data.deleted == true)) {
+        if (!event.data.after.exists() || (event.data.before.exists() && data.deleted === true)) {
             // when deleted becomes == true
             // or when comment node is removed
             const data = event.data.before.val() as TypesenseDoc;
@@ -79,7 +79,7 @@ export const typesensePostIndexing = onValueWritten(
     "/posts/{category}/{id}",
     (event) => {
         const data = event.data.after.val() as TypesenseDoc;
-        if (!event.data.after.exists() || (event.data.before.exists() && data.deleted == true)) {
+        if (!event.data.after.exists() || (event.data.before.exists() && data.deleted === true)) {
             console.log("Deleted Post in RTDB: ", data);
             // means deleted
             return TypesenseService.delete(event.params.id);
