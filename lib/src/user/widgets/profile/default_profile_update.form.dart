@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:country_code_picker/country_code_picker.dart';
+// import 'package:country_code_picker/country_code_picker.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +15,7 @@ class DefaultProfileUpdateForm extends StatefulWidget {
       this.nationalityTheme,
       this.onUpdate,
       this.countryFilter,
-      this.dialogSize,
+      // this.dialogSize,
       this.regionApiKey,
       this.regionSelectorLangCode = 'ko'});
 
@@ -29,7 +29,7 @@ class DefaultProfileUpdateForm extends StatefulWidget {
   final BoxDecoration? nationalityTheme;
   // use countryFilter to list only the country you want to display in the screen
   final List<String>? countryFilter;
-  final Size? dialogSize;
+  // final Size? dialogSize;
   final String? regionApiKey;
   final bool morePhotos;
   final String regionSelectorLangCode;
@@ -233,22 +233,22 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
             height: 32,
           ),
           Text(T.nationality.tr),
-          Container(
-            width: double.infinity,
-            decoration: widget.nationalityTheme,
-            child: CountryCodePicker(
-                showCountryOnly: true,
-                showOnlyCountryWhenClosed: true,
-                hideSearch: true,
-                alignLeft: true,
-                initialSelection: nationality,
-                countryFilter: widget.countryFilter,
-                dialogSize: widget.dialogSize,
-                onChanged: (country) {
-                  nationality = country.code;
-                  setState(() {});
-                }),
-          ),
+          //   SizedBox(
+          //     width: double.infinity,
+          //     // decoration: widget.nationalityTheme,
+          //     child: CountryCodePicker(
+          //         showCountryOnly: true,
+          //         showOnlyCountryWhenClosed: true,
+          //         hideSearch: true,
+          //         alignLeft: true,
+          //         initialSelection: nationality,
+          //         countryFilter: widget.countryFilter,
+          //         // dialogSize: widget.dialogSize,
+          //         onChanged: (country) {
+          //           nationality = country.code;
+          //           setState(() {});
+          //         }),
+          //   ),
         },
         const SizedBox(height: 32),
         if (widget.region) ...{
