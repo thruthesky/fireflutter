@@ -44,6 +44,7 @@ class T {
   static const String unblockConfirmMessage =
       'You will be able to contents of this user.';
   static const String notVerifiedMessage = 'You have not verified yourself.';
+  static const String writeYourMessage = 'Write your message';
 
   /// User and Profile
   static const String recentLoginRequiredForResign =
@@ -58,6 +59,23 @@ class T {
   static const String birthdateSelectDescription = 'birthdateSelectDescription';
   static const String birthdateTapToSelect = 'Tap to select';
   static const String birthdate = 'birthdate';
+
+  // profile update labels and error messages
+  static const String gender = 'Gender';
+  static const String male = 'Male';
+  static const String female = 'Female';
+  static const String nationality = 'Nationality';
+  static const String region = 'Region';
+  static const String pleaseSelectGender = 'Please select your gender';
+  static const String addYourPhoto = 'Add your photo. (Minimum 2, Maximum 4)';
+  static const String pleaseSelectNationality =
+      'Please select your nationality';
+  static const String pleaseSelectRegion = 'Please select your region';
+  static const String pleaseInputOccupation = 'Please input your occupation';
+  static const String pleaseAddMorePhotos =
+      'Please add more photos (minimum 2 of photos and maximum 2 of photos)';
+  static const String pleaseInputStateMessage =
+      'Please input your state/introduction message';
 
   /// Forum Post Comment
   static const String deletePostConfirmTitle = 'Delete this post?';
