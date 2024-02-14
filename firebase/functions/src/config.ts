@@ -13,9 +13,9 @@ export class Config {
     // Cloud Functions Server Resion
     static region = "asia-southeast1";
 
-    static typesenseCollection = "silversSearch";
+    // static typesenseCollection = "silversSearch";
     // testing
-    // static typesenseCollection = "testSearch";
+    static typesenseCollection = "testSearch";
 
     // User paths
     static users = "users";

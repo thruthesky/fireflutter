@@ -33,7 +33,8 @@
     "test:forum": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/**.spec.ts --timeout 350000",
     "test:forumSummary": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/post-summary-test.spec.ts --timeout 100000",
     "test:forumNulls": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/post-null-fields.spec.ts --timeout 150000",
-    "test:forumRemoveField": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/post-remove-field.spec.ts --timeout 350000"
+    "test:forumRemoveField": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/post-remove-field.spec.ts --timeout 350000",
+    "test:forumDelete": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/post-delete-true.spec.ts --timeout 350000"
   },
   "main": "lib/src/index.js",
   "dependencies": {
