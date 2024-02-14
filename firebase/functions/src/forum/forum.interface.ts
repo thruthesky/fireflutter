@@ -40,10 +40,10 @@ export interface Post {
 }
 
 export interface PostUpdateEvent {
-    title?: string;
-    content?: string;
-    urls?: Array<string>;
-    deleted?: boolean;
+    title?: string | null;
+    content?: string | null;
+    urls?: Array<string> | null;
+    deleted?: boolean | null;
 }
 
 

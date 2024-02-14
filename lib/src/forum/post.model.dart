@@ -94,12 +94,6 @@ class PostModel {
     );
   }
 
-<<<<<<< HEAD
-  // TODO cleanup when created correct sorting logic
-  // ! THis one has logic error
-  // ! need to review since it is not properly sorted
-=======
->>>>>>> eef83b81d5c451fb85dfb7b217eb1c75fad48352
   static List<CommentModel> sortComments(List<DataSnapshot> commentSnapshots) {
     final comments =
         commentSnapshots.map((e) => CommentModel.fromSnapshot(e)).toList();
