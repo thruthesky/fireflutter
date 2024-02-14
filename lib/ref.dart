@@ -14,8 +14,12 @@ class Ref {
   static DatabaseReference userProfilePhotos = root.child('profile-photos');
   static DatabaseReference userWhoIlike = root.child(Path.userWhoIlike);
 
-  /// Chat Message
+  /// Chat Messages Folder(Node) for all room
   static DatabaseReference chatMessages = root.child('chat-messages');
+
+  /// Chat messages for the room.
+  static DatabaseReference chatRoomMessages(roomId) =>
+      chatMessages.child(roomId);
 
   static DatabaseReference get joinsRef => root.child(Path.joins);
   static DatabaseReference join(String myUid, String roomId) =>

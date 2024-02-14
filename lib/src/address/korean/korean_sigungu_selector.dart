@@ -9,23 +9,23 @@ class KoreanSiGunGuSelector extends StatefulWidget {
   const KoreanSiGunGuSelector({
     super.key,
     required this.apiKey,
-    required this.onChangedRootCode,
-    required this.onChangedSecondaryCode,
+    required this.onChangedSiDoCode,
+    required this.onChangedSiGunGuCode,
     this.languageCode = 'ko',
   });
 
   final String apiKey;
   final String languageCode;
-  final Function(AddressModel) onChangedRootCode;
-  final Function(AddressModel, AddressModel) onChangedSecondaryCode;
+  final Function(AddressModel) onChangedSiDoCode;
+  final Function(AddressModel, AddressModel) onChangedSiGunGuCode;
 
   @override
   State<KoreanSiGunGuSelector> createState() => _KoreanSiGunGuSelectorState();
 }
 
 class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
-  String rootCode = '';
-  String secondaryCode = '';
+  String siDoCode = '';
+  String siGunGuCode = '';
   List<AddressModel>? secondaryAddresses;
 
   List<AddressModel> get rootCodes =>
@@ -53,7 +53,7 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
                 items: [
                   const DropdownMenuItem(
                     value: '',
-                    child: Text('Select Si/Do'),
+                    child: Text('Select Province'),
                   ),
                   ...rootCodes.map((addr) {
                     return DropdownMenuItem(
@@ -62,17 +62,17 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
                     );
                   }).toList(),
                 ],
-                value: rootCode,
+                value: siDoCode,
                 onChanged: (value) {
                   setState(() {
-                    rootCode = value ?? '';
-                    secondaryCode = '';
+                    siDoCode = value ?? '';
+                    siGunGuCode = '';
                     secondaryAddresses = null;
                   });
-                  widget.onChangedRootCode(
-                    rootCodes.firstWhere((e) => e.code == rootCode),
+                  widget.onChangedSiDoCode(
+                    rootCodes.firstWhere((e) => e.code == siDoCode),
                   );
-                  loadSecondaryAddress(rootCode);
+                  loadSecondaryAddress(siDoCode);
                 }),
           ),
         ),
@@ -103,15 +103,15 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
                       );
                     }).toList(),
                   ],
-                  value: secondaryCode,
+                  value: siGunGuCode,
                   onChanged: (value) {
                     setState(() {
-                      secondaryCode = value ?? '';
+                      siGunGuCode = value ?? '';
 
-                      widget.onChangedSecondaryCode(
-                        rootCodes.firstWhere((e) => e.code == rootCode),
+                      widget.onChangedSiGunGuCode(
+                        rootCodes.firstWhere((e) => e.code == siDoCode),
                         secondaryAddresses!
-                            .firstWhere((e) => e.code == secondaryCode),
+                            .firstWhere((e) => e.code == siGunGuCode),
                       );
                     });
                   }),
@@ -122,10 +122,10 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
     );
   }
 
-  loadSecondaryAddress(String rootCode) async {
+  loadSecondaryAddress(String siDoCode) async {
     final dio = Dio();
     final url =
-        "http://apis.data.go.kr/B551011/${widget.languageCode == 'ko' ? 'Kor' : 'Eng'}Service1/areaCode1?numOfRows=10000&pageNo=1&MobileOS=ETC&MobileApp=AppTest&_type=json&serviceKey=${widget.apiKey}&areaCode=$rootCode";
+        "http://apis.data.go.kr/B551011/${widget.languageCode == 'ko' ? 'Kor' : 'Eng'}Service1/areaCode1?numOfRows=10000&pageNo=1&MobileOS=ETC&MobileApp=AppTest&_type=json&serviceKey=${widget.apiKey}&areaCode=$siDoCode";
 
     final response = await dio.get(url);
 
