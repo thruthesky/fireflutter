@@ -46,6 +46,8 @@ class PostModel {
 
   /// Take note of the category node. Check the snapshot ref parent
   /// because in `post-all-summaries`, category is part of the field.
+  /// Since this model is shared by `post-all-summary` and `post-summary`,
+  /// we need to check if category is included in the snapshot.
   factory PostModel.fromSnapshot(DataSnapshot snapshot) {
     final value = snapshot.value as Map<dynamic, dynamic>;
     return PostModel.fromJson(
@@ -355,18 +357,25 @@ class PostModel {
   ///
   /// If there is no comment, delete the post. Or update the title and content to 'deleted'.
   /// And set the deleted field to true.
-  // TODO review this logic since commment is updated
   Future<void> delete() async {
-    // if (comments.isEmpty) {
-    await ref.remove();
-    // } else {
-    //   await update(
-    //     title: null,
-    //     content: null,
-    //     urls: null,
-    //     deleted: true,
-    //   );
-    // }
+    // PLEASE REVIEW: Updated this since comment node is updated.
+    //                Checking if at least one comment exists.
+    //                If not, delete the post.
+    // QUESTION: Do we need to retrieve comments from RTDB
+    //           to check if there are comments?
+    final snapshot =
+        await ref.child(Folder.comments).child(id).limitToFirst(1).get();
+    final doesCommentsExist = snapshot.exists;
+    if (doesCommentsExist) {
+      await update(
+        title: null,
+        content: null,
+        urls: null,
+        deleted: true,
+      );
+    } else {
+      await ref.remove();
+    }
     deleted = true;
     _afterDelete();
   }
