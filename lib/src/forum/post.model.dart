@@ -234,7 +234,7 @@ class PostModel {
   /// /posts
   /// /posts-summary
   /// /posts-all
-  static Future<void> create({
+  static Future<PostModel> create({
     required String title,
     required String content,
     required String category,
@@ -254,17 +254,18 @@ class PostModel {
     dog("PostModel.create: ref.key: ${ref.path}, data: $data");
     await ref.set(data);
 
-    await _afterCreate(ref);
+    return await _afterCreate(ref);
   }
 
   /// Create post data in the database
-  static _afterCreate(DatabaseReference ref) async {
+  static Future<PostModel> _afterCreate(DatabaseReference ref) async {
     final snapshot = await ref.get();
     final created = PostModel.fromSnapshot(snapshot);
     // don't wait for this
     created.update(order: -created.createdAt.millisecondsSinceEpoch);
 
     ForumService.instance.onPostCreate?.call(created);
+    return created;
   }
 
   /// Update post data in the database
@@ -278,7 +279,7 @@ class PostModel {
   ///     Field.title: null,
   ///   },
   /// );
-  Future<void> update({
+  Future<PostModel> update({
     String? category,
     String? title,
     String? content,
@@ -296,18 +297,19 @@ class PostModel {
       if (urls != null) Field.urls: urls,
     };
 
-    if (data.isEmpty) return;
+    if (data.isEmpty) return this;
     await ref.update(data);
 
     /// Don't wait for this
-    _afterUpdate(ref);
+    return _afterUpdate(ref);
   }
 
-  static _afterUpdate(DatabaseReference ref) async {
+  static Future<PostModel> _afterUpdate(DatabaseReference ref) async {
     final snapshot = await ref.get();
     final updated = PostModel.fromSnapshot(snapshot);
 
     ForumService.instance.onPostCreate?.call(updated);
+    return updated;
   }
 
   /// Delete post
