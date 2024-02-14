@@ -186,9 +186,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       return CommentView(
                         post: post,
                         comment: comment,
-                        onCreate: () {
-                          // post.reload().then((value) => setState(() {}));
-                        },
                       );
                     },
                   );

@@ -7,12 +7,12 @@ class CommentView extends StatefulWidget {
     super.key,
     required this.post,
     required this.comment,
-    required this.onCreate,
+    this.onCreate,
   });
 
   final PostModel post;
   final CommentModel comment;
-  final Function onCreate;
+  final Function? onCreate;
 
   @override
   State<CommentView> createState() => _CommnetViewState();
@@ -62,7 +62,7 @@ class _CommnetViewState extends State<CommentView> {
                           // focusOnTextField: true,
                         );
                         if (re == true) {
-                          widget.onCreate();
+                          widget.onCreate?.call();
                         }
                       },
                       child: const Text('답글'),
