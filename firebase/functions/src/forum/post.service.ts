@@ -1,5 +1,5 @@
 import { getDatabase } from "firebase-admin/database";
-import { PostCreateEvent, PostSummary, Post, PostSummaryAll } from "./forum.interface";
+import { PostCreateEvent, PostSummary, Post, PostSummaryAll, PostSummaryUpdateEvent } from "./forum.interface";
 import { Config } from "../config";
 
 /**
@@ -54,6 +54,7 @@ export class PostService {
     ) {
         const updatedSummary = this._getUpdatedFields(originalPost, updatedPost);
         console.log("Post updates summary: ", updatedSummary);
+        if (Object.keys(updatedSummary).length === 0) return;
         const db = getDatabase();
         db.ref(`${Config.postAllSummaries}/${id}`).update(updatedSummary);
         db.ref(`${Config.postSummaries}/${category}/${id}`).update(updatedSummary);
@@ -61,43 +62,25 @@ export class PostService {
     }
 
     /**
-     * Get the difference of the two objects
+     * Get the updated fields from original to updated
      *
      * To get ONLY the updated field.
      * NOTE: This doesn't check when we have Map Fields
      */
-    static _getUpdatedFields(originalPost: Post, updatedPost: Post): Partial<PostSummary> {
-        // get all the combined keys without duplicate
-        const keys = [...new Set([...Object.keys(originalPost), ...Object.keys(updatedPost)])];
-
-        // get the keys that have values different between originalPost and updatedPost
-        const keysUpdated = keys.filter((key) => {
-            // NOTE: This case is only for arrays
-            if (Array.isArray(Object(originalPost)[key]) || Array.isArray(Object(updatedPost)[key])) {
-                // Automatically, there was an update when this original or updated field is null
-                if (!Object.prototype.hasOwnProperty.call(originalPost, key)) return true;
-                if (!Object.prototype.hasOwnProperty.call(updatedPost, key)) return true;
-                // There was a change in type, therefore there's an update.
-                if (typeof Object(originalPost)[key] !== typeof Object(updatedPost)[key]) return true;
-                return JSON.stringify(Object(originalPost)[key]) !== JSON.stringify(Object(updatedPost)[key]);
-            }
-            // This doesn't check for Objects/Maps. Since we don't have record with objects,
-            // it is not included here
-            // Other than Arrays, simply compare here
-            return Object(originalPost)[key] !== Object(updatedPost)[key];
-        });
-
-        // get the updated fields only
-        const updatedData = keysUpdated.reduce((acc, key) => {
-            if (key === "urls") {
-                // Urls is only url in summary
-                Object(acc)["url"] = Object(updatedPost)[key]?.[0] ?? null;
-            } else {
-                Object(acc)[key] = Object(updatedPost)[key] ?? null;
-            }
-            return acc;
-        }, {} as Partial<PostSummary>);
-
+    static _getUpdatedFields(originalPost: Post, updatedPost: Post): Partial<PostSummaryUpdateEvent> {
+        const updatedData: Partial<PostSummaryUpdateEvent> = {};
+        if (originalPost.title !== updatedPost.title) {
+            updatedData.title = updatedPost.title ?? null;
+        }
+        if (originalPost.content !== updatedPost.content) {
+            updatedData.content = updatedPost.content ?? null;
+        }
+        if (originalPost.urls?.[0] !== updatedPost.urls?.[0]) {
+            updatedData.url = updatedPost.urls?.[0] ?? null;
+        }
+        if (originalPost.deleted !== updatedPost.deleted) {
+            updatedData.deleted = updatedPost.deleted ?? null;
+        }
         return updatedData;
     }
 }
