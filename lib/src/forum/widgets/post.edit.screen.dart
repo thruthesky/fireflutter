@@ -90,22 +90,26 @@ class _PostEditScreenState extends State<PostEditScreen> {
                   const Spacer(),
                   ElevatedButton(
                     onPressed: () async {
+                      PostModel? newPost;
                       if (isCreate) {
-                        await PostModel.create(
+                        newPost = await PostModel.create(
                           category: post.category,
                           title: titleController.text,
                           content: contentController.text,
                           urls: post.urls,
                         );
                       } else {
-                        await post.update(
+                        newPost = await post.update(
                           title: titleController.text,
                           content: contentController.text,
                           urls: post.urls,
                         );
                       }
-                      if (mounted) {
-                        Navigator.of(context).pop();
+                      if (!mounted) return;
+                      Navigator.of(context).pop();
+                      if (isCreate) {
+                        ForumService.instance
+                            .showPostViewScreen(context, post: newPost);
                       }
                     },
                     child: Text(isCreate ? 'CREATE' : 'UPDATE'),

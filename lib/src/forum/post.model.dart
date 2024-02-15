@@ -14,7 +14,7 @@ class PostModel {
     required this.likes,
     required this.noOfLikes,
     required this.urls,
-    required this.comments,
+    // required this.comments,
     required this.noOfComments,
     required this.deleted,
   });
@@ -28,7 +28,6 @@ class PostModel {
   final int order;
   List<String> likes;
   List<String> urls;
-  List<CommentModel> comments;
 
   int noOfLikes;
 
@@ -42,8 +41,13 @@ class PostModel {
   /// Get the category of the post
   String get category => ref.parent!.key!;
 
+  /// Post's comments' database reference
+  DatabaseReference get commentsRef => Ref.postComments(id);
+
   /// Take note of the category node. Check the snapshot ref parent
   /// because in `post-all-summaries`, category is part of the field.
+  /// Since this model is shared by `post-all-summary` and `post-summary`,
+  /// we need to check if category is included in the snapshot.
   factory PostModel.fromSnapshot(DataSnapshot snapshot) {
     final value = snapshot.value as Map<dynamic, dynamic>;
     return PostModel.fromJson(
@@ -85,23 +89,16 @@ class PostModel {
       urls: empty(json['url'])
           ? List<String>.from(json['urls'] ?? [])
           : [json['url']],
-      comments: sortComments(
-        Map<Object, Object>.from((json['comments'] ?? {}))
-            .entries
-            .map((e) => CommentModel.fromMap(
-                  e.value as Map,
-                  e.key as String,
-                  category: category,
-                  postId: id,
-                ))
-            .toList(),
-      ),
       noOfComments: json[Field.noOfComments] ?? 0,
       deleted: json[Field.deleted] ?? false,
     );
   }
 
-  static List<CommentModel> sortComments(List<CommentModel> comments) {
+  static List<CommentModel> sortComments(List<DataSnapshot> commentSnapshots) {
+    final comments =
+        commentSnapshots.map((e) => CommentModel.fromSnapshot(e)).toList();
+
+    /// Sort comments by createdAt
     comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     final List<CommentModel> newComments = [];
@@ -161,7 +158,7 @@ class PostModel {
       likes: [],
       noOfLikes: 0,
       urls: [],
-      comments: [],
+      // comments: [],
       noOfComments: 0,
       deleted: false,
     );
@@ -187,7 +184,7 @@ class PostModel {
         'likes': likes,
         'noOfLikes': noOfLikes,
         'urls': urls,
-        'comments': comments,
+        // 'comments': comments,
         'noOfComments': noOfComments,
         'deleted': deleted,
       };
@@ -206,7 +203,7 @@ class PostModel {
       likes = p.likes;
       noOfLikes = p.noOfLikes;
       urls = p.urls;
-      comments = p.comments;
+      // comments = p.comments;
       noOfComments = p.noOfComments;
       deleted = p.deleted;
     }
@@ -237,7 +234,7 @@ class PostModel {
   /// /posts
   /// /posts-summary
   /// /posts-all
-  static Future<void> create({
+  static Future<PostModel> create({
     required String title,
     required String content,
     required String category,
@@ -257,47 +254,62 @@ class PostModel {
     dog("PostModel.create: ref.key: ${ref.path}, data: $data");
     await ref.set(data);
 
-    await _afterCreate(ref);
+    return await _afterCreate(ref);
   }
 
   /// Create post data in the database
-  static _afterCreate(DatabaseReference ref) async {
+  static Future<PostModel> _afterCreate(DatabaseReference ref) async {
     final snapshot = await ref.get();
     final created = PostModel.fromSnapshot(snapshot);
     // don't wait for this
     created.update(order: -created.createdAt.millisecondsSinceEpoch);
 
     ForumService.instance.onPostCreate?.call(created);
+    return created;
   }
 
-  Future<void> update({
+  /// Update post data in the database
+  ///
+  /// For deleting the field, must use otherData
+  /// instead of setting the arguments to null.
+  /// Example:
+  /// ```dart
+  /// await post.update(
+  ///   otherData: {
+  ///     Field.title: null,
+  ///   },
+  /// );
+  Future<PostModel> update({
     String? category,
     String? title,
     String? content,
     List<String>? urls,
     int? order,
     bool? deleted,
+    Map<String, dynamic>? otherData,
   }) async {
     final data = {
-      if (title != null) 'title': title,
-      if (content != null) 'content': content,
+      if (otherData != null) ...otherData,
+      if (title != null) Field.title: title,
+      if (content != null) Field.content: content,
       if (order != null) Field.order: order,
       if (deleted != null) Field.deleted: deleted,
       if (urls != null) Field.urls: urls,
     };
 
-    if (data.isEmpty) return;
+    if (data.isEmpty) return this;
     await ref.update(data);
 
     /// Don't wait for this
-    _afterUpdate(ref);
+    return _afterUpdate(ref);
   }
 
-  static _afterUpdate(DatabaseReference ref) async {
+  static Future<PostModel> _afterUpdate(DatabaseReference ref) async {
     final snapshot = await ref.get();
     final updated = PostModel.fromSnapshot(snapshot);
 
     ForumService.instance.onPostCreate?.call(updated);
+    return updated;
   }
 
   /// Delete post
@@ -305,15 +317,33 @@ class PostModel {
   /// If there is no comment, delete the post. Or update the title and content to 'deleted'.
   /// And set the deleted field to true.
   Future<void> delete() async {
-    if (comments.isEmpty) {
-      await ref.remove();
-    } else {
+    // PLEASE REVIEW: Updated this since comment node is updated.
+    //                Checking if at least one comment exists.
+    //                If not, delete the post.
+    // QUESTION: Do we need to retrieve comments from RTDB
+    //           to check if there are comments?
+    final snapshot = await Ref.postComments(id).limitToFirst(1).get();
+    dog("Post Id: $id");
+    dog("Comment exists: ${snapshot.exists}");
+    final doesCommentsExist = snapshot.exists;
+    if (doesCommentsExist) {
+      dog("Ref path: ${ref.path}");
+      // await update(
+      //   title: null,
+      //   content: null,
+      //   urls: null,
+      //   deleted: true,
+      // );
       await update(
-        title: null,
-        content: null,
-        urls: null,
-        deleted: true,
+        otherData: {
+          Field.title: null,
+          Field.content: null,
+          Field.urls: null,
+        },
       );
+      await update(deleted: true);
+    } else {
+      await ref.remove();
     }
     deleted = true;
     _afterDelete();

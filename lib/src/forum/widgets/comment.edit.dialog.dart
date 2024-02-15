@@ -92,6 +92,7 @@ class _CommentEditDialogState extends State<CommentEditDialog> {
                     if (isCreate) {
                       await comment.create(
                         content: contentController.text,
+                        category: widget.post!.category,
                         urls: comment.urls,
                         parent: widget.parent,
                       );

@@ -1,110 +1,116 @@
 import { getDatabase } from "firebase-admin/database";
-import { onValueCreated, onValueDeleted, onValueUpdated, onValueWritten } from "firebase-functions/v2/database";
+import { onValueCreated, onValueDeleted, onValueWritten } from "firebase-functions/v2/database";
 import { PostService } from "./post.service";
 import { Config } from "../config";
 
 /**
- * managePostsAllSummary
+ * managePostsSummaryCreated
  *
- * This function is triggered when a new post(post summary) is created/updated/deleted in the path under `/posts-summary` in RTDB.
+ * This function is triggered when a new post
  *
  */
-export const managePostsAllSummary = onValueWritten(
-    `${Config.postSummaries}/{category}/{postId}`,
+export const managePostsSummaryCreated = onValueCreated(
+    `${Config.posts}/{category}/{postId}`,
     (event) => {
+        // Data created
+        return PostService.setSummary(event.data.val(), event.params.category, event.params.postId);
+    },
+);
+
+/**
+ * managePostsSummaryDeleted
+ *
+ * This function is triggered when a post(post summary) is deleted
+ */
+export const managePostsSummaryDeleted = onValueDeleted(
+    `${Config.posts}/{category}/{postId}`,
+    (event) => {
+        // Data deleted
         const db = getDatabase();
-        if (!event.data.after.exists()) {
-            // Data deleted
-            // const data = event.data.before.val();
-            return db.ref(`${Config.postAllSummaries}/${event.params.postId}`).remove();
+        db.ref(`${Config.postSummaries}/${event.params.category}/${event.params.postId}`).remove();
+        db.ref(`${Config.postAllSummaries}/${event.params.postId}`).remove();
+    },
+);
+
+/**
+ * postSummaryTitle
+ *
+ * This function is triggered when the title of a post is updated in the path under `/posts` in RTDB.
+ */
+export const postSummaryTitle = onValueWritten(
+    `${Config.posts}/{category}/{postId}/title`,
+   async (event) => {
+        // means created
+        if (!event.data.before.exists()) {
+            const createdAtExists = await PostService.checkCreatedAtExists(event.params.category, event.params.postId);
+            if (!createdAtExists) return;
+            // else continue
         }
-
-        // Data has created or updated
-        const data = {
-            ...event.data.after.val(),
-            category: event.params.category,
-        };
-        return db.ref(`${Config.postAllSummaries}/${event.params.postId}`).set(data);
-    },
-);
-
-/**
- * Indexing for post created
- *
- */
-export const postSetSummary = onValueCreated(
-    "/posts/{category}/{id}",
-    async (event) => {
-        return PostService.setSummary(event.data.val(), event.params.category, event.params.id);
-    },
-);
-
-/**
- * Indexing for post update for title
- *
- * 글 생성시, 제목 필드가 없을 수 있고, 글 수정할 때, 제목이 생성될 수 있다. 따라서 여기서 제목 생성/수정/삭제를 모두 핸들링한다.
- */
-export const postUpdateSummaryTitle = onValueUpdated(
-    "/posts/{category}/{id}/title",
-    (event) => {
-        const category = event.params.category;
-        const id = event.params.id;
         const db = getDatabase();
-        const ref = db.ref(`${Config.postSummaries}/${category}/${id}/title`);
-        return ref.set(event.data.after?.val() ?? null);
-    },
+        const updatedTitle = event.data.after.val() ?? null;
+        db.ref(`${Config.postSummaries}/${event.params.category}/${event.params.postId}`).update({ title: updatedTitle });
+        db.ref(`${Config.postAllSummaries}/${event.params.postId}`).update({ title: updatedTitle });
+    }
 );
 
 /**
- * Indexing for post update for content
+ * postSummaryContent
+ *
+ * This function is triggered when the content of a post is updated in the path under `/posts` in RTDB.
+ *
  */
-export const postUpdateSummaryContent = onValueUpdated(
-    "/posts/{category}/{id}/content",
-    (event) => {
-        const category = event.params.category;
-        const id = event.params.id;
-        const ref = getDatabase().ref(`${Config.postSummaries}/${category}/${id}/content`);
-        return ref.set(event.data.after?.val() ?? null);
-    },
+export const postSummaryContent = onValueWritten(
+    `${Config.posts}/{category}/{postId}/content`,
+    async (event) => {
+        // means created
+        if (!event.data.before.exists()) {
+            const createdAtExists = await PostService.checkCreatedAtExists(event.params.category, event.params.postId);
+            if (!createdAtExists) return;
+            // else continue
+        }
+        const db = getDatabase();
+        const updatedContent = event.data.after.val() ?? null;
+        db.ref(`${Config.postSummaries}/${event.params.category}/${event.params.postId}`).update({ content: updatedContent });
+        db.ref(`${Config.postAllSummaries}/${event.params.postId}`).update({ content: updatedContent });
+    }
 );
 
 /**
- * Indexing for post update for urls
+ * postSummaryUrl
+ *
+ * This function is triggered when the urls of a post is updated in the path under `/posts` in RTDB.
  */
-export const postUpdateSummaryUrl = onValueUpdated(
-     "/posts/{category}/{id}/urls",
-    (event) => {
-        console.log("postUpdateSummaryUrl is triggered");
-        const category = event.params.category;
-        const id = event.params.id;
-        const ref = getDatabase().ref(`${Config.postSummaries}/${category}/${id}/url`);
-        return ref.set(event.data.after?.val()?.[0] ?? null);
-    },
+export const postSummaryUrl = onValueWritten(
+    `${Config.posts}/{category}/{postId}/urls`,
+   async (event) => {
+        // means created
+        if (!event.data.before.exists()) {
+            const createdAtExists = await PostService.checkCreatedAtExists(event.params.category, event.params.postId);
+            if (!createdAtExists) return;
+            // else continue
+        }
+        const db = getDatabase();
+        const updatedUrl = event.data.after.val()?.[0] ?? null;
+        db.ref(`${Config.postSummaries}/${event.params.category}/${event.params.postId}`).update({ url: updatedUrl });
+        db.ref(`${Config.postAllSummaries}/${event.params.postId}`).update({ url: updatedUrl });
+    }
 );
 
 /**
- * Indexing for post update for deleted
+ * postSummaryDeleted
  */
-export const postUpdateSummaryDeleted = onValueWritten(
-    "/posts/{category}/{id}/deleted",
-    (event) => {
-        const category = event.params.category;
-        const id = event.params.id;
-        const ref = getDatabase().ref(`${Config.postSummaries}/${category}/${id}/deleted`);
-        return ref.set(event.data.after?.val() ?? null);
-    },
+export const postSummaryDeleted = onValueWritten(
+    `${Config.posts}/{category}/{postId}/deleted`,
+    async (event) => {
+        // means created
+        if (!event.data.before.exists()) {
+            const createdAtExists = await PostService.checkCreatedAtExists(event.params.category, event.params.postId);
+            if (!createdAtExists) return;
+            // else continue
+        }
+        const db = getDatabase();
+        const updatedDeleted = event.data.after.val() ?? null;
+        db.ref(`${Config.postSummaries}/${event.params.category}/${event.params.postId}`).update({ deleted: updatedDeleted });
+        db.ref(`${Config.postAllSummaries}/${event.params.postId}`).update({ deleted: updatedDeleted });
+    }
 );
-
-/**
- * 글 삭제시, summary 에서도 삭제한다.
- */
-export const postDeleteSummary = onValueDeleted(
-    "/posts/{category}/{id}",
-    (event) => {
-        const category = event.params.category;
-        const id = event.params.id;
-        const ref = getDatabase().ref(`${Config.postSummaries}/${category}/${id}`);
-        return ref.remove();
-    },
-);
-
