@@ -49,6 +49,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
   final stateMessageController = TextEditingController();
   String? gender;
   List<String> urls = [];
+  List<String>? regionCode;
 
   UserModel get user => UserService.instance.user!;
 
@@ -62,6 +63,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
     }
     if (user.region != '') {
       region = user.region;
+      regionCode = region?.split('-');
     }
     if (user.gender != '') {
       gender = user.gender;
@@ -71,6 +73,8 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
     }
     stateMessageController.text = user.stateMessage;
     occupationController.text = user.occupation;
+
+    dog(user.region);
   }
 
   @override
@@ -229,34 +233,20 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
           builder: (my) => UpdateBirthdayField(user: my ?? user),
         ),
         if (widget.nationality) ...{
-          const SizedBox(
-            height: 32,
-          ),
-          Text(T.nationality.tr),
-          //   SizedBox(
-          //     width: double.infinity,
-          //     // decoration: widget.nationalityTheme,
-          //     child: CountryCodePicker(
-          //         showCountryOnly: true,
-          //         showOnlyCountryWhenClosed: true,
-          //         hideSearch: true,
-          //         alignLeft: true,
-          //         initialSelection: nationality,
-          //         countryFilter: widget.countryFilter,
-          //         // dialogSize: widget.dialogSize,
-          //         onChanged: (country) {
-          //           nationality = country.code;
-          //           setState(() {});
-          //         }),
-          //   ),
+          // const SizedBox(
+          //   height: 32,
+          // ),
+          // Text(T.nationality.tr),
         },
         const SizedBox(height: 32),
         if (widget.region) ...{
           Text(T.region.tr),
           // init value
           KoreanSiGunGuSelector(
-              languageCode: widget.regionSelectorLangCode,
+              languageCode: 'en',
               apiKey: widget.regionApiKey ?? '',
+              initSiDoCode: regionCode![0],
+              initSiGunGuCode: regionCode![1],
               onChangedSiDoCode: (siDo) {},
               onChangedSiGunGuCode: (siDo, siGunGo) {
                 region = "${siDo.code}-${siGunGo.code}";
