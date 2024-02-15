@@ -5,11 +5,15 @@ class CountryPickerListView extends StatefulWidget {
   const CountryPickerListView({
     super.key,
     this.filters,
+    required this.search,
+    this.headerBuilder,
     required this.onChanged,
   });
 
   /// List of country codes to show in the list.
   final List<String>? filters;
+  final bool search;
+  final Widget Function()? headerBuilder;
   final void Function(Map<String, String>) onChanged;
 
   @override
@@ -27,17 +31,18 @@ class _CountryPickerListViewState extends State<CountryPickerListView> {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Country Picker'),
-          TextField(
-            controller: searchController,
-            decoration: const InputDecoration(
-              hintText: 'Search',
-              prefixIcon: Icon(Icons.search),
+          widget.headerBuilder?.call() ?? const Text('Country Picker'),
+          if (widget.search)
+            TextField(
+              controller: searchController,
+              decoration: const InputDecoration(
+                hintText: 'Search',
+                prefixIcon: Icon(Icons.search),
+              ),
+              onChanged: (value) {
+                setState(() {});
+              },
             ),
-            onChanged: (value) {
-              setState(() {});
-            },
-          ),
         ],
       ),
       content: Container(
