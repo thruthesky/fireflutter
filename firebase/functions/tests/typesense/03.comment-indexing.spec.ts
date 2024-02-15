@@ -62,7 +62,7 @@ describe("Indexing Comments (03.typesense/comment-indexing.spec.ts)", () => {
             content: "content-comment",
             createdAt: 12345,
         } as TypesenseDoc;
-        await admin.database().ref("posts/" + category + "/" + postId + "/comments/" + id).set(commentData);
+        await admin.database().ref("comments/" + postId + "/" + id).set(commentData);
 
         // 2. wait for 5 seconds
         await setTimeout(5000);
@@ -102,7 +102,7 @@ describe("Indexing Comments (03.typesense/comment-indexing.spec.ts)", () => {
                 content: "content-comment",
                 createdAt: 12345,
             } as TypesenseDoc;
-            const path = "posts/" + category + "/" + postId + "/comments/" + id;
+            const path = "comments/" + postId + "/" + id;
             await admin.database().ref(path).set(commentData);
 
             // 2. wait for 5 seconds
@@ -166,7 +166,7 @@ describe("Indexing Comments (03.typesense/comment-indexing.spec.ts)", () => {
             content: "content-comment",
             createdAt: 12345,
         } as TypesenseDoc;
-        const path = "posts/" + category + "/" + postId + "/comments/" + id;
+        const path = "comments/" + postId + "/" + id;
         await admin.database().ref(path).set(commentData);
 
         // 2. Wait for 5 seconds
@@ -211,7 +211,7 @@ describe("Indexing Comments (03.typesense/comment-indexing.spec.ts)", () => {
             content: "content-comment",
             createdAt: 12345,
         } as TypesenseDoc;
-        const path = "posts/" + category + "/" + postId + "/comments/" + id;
+        const path = "comments/" + postId + "/" + id;
         await admin.database().ref(path).set(commentData);
 
         // 2. Wait for 5 seconds

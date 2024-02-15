@@ -40,10 +40,11 @@ class Ref {
       Ref.category(category).child(id);
 
   /// Forum Comments
-  static DatabaseReference comments(String category, String postId) =>
-      post(category, postId).child('comments');
-  static DatabaseReference comment(String category, String postId, String id) =>
-      comments(category, postId).child(id);
+  static DatabaseReference comments = root.child(Folder.comments);
+  static DatabaseReference postComments(String postId) =>
+      comments.child(postId);
+  static DatabaseReference postComment(String postId, String commentId) =>
+      postComments(postId).child(commentId);
 
   /// Report
   static DatabaseReference reports = root.child(Folder.reports);

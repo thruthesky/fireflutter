@@ -14,6 +14,8 @@ export class Config {
     static region = "asia-southeast1";
 
     static typesenseCollection = "silversSearch";
+    // testing
+    // static typesenseCollection = "testSearch";
 
     // User paths
     static users = "users";

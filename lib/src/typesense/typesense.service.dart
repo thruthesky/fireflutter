@@ -145,21 +145,38 @@ class TypesenseService {
   Future<void> reindexCategory(String category) async {
     dog('Re-indexing category: $category');
     await deleteCategory(category);
-    final snapshot = await Ref.category(category).get();
-    if (snapshot.exists == false || snapshot.value == null) return;
-    for (final e in (snapshot.value as Map).entries) {
+    dog('Re-indexing posts for category: $category');
+    final postSnapshot = await Ref.category(category).get();
+    List<Future> futures = [];
+    for (final e in (postSnapshot.value as Map).entries) {
       final post = PostModel.fromJson(e.value, id: e.key, category: category);
       if (!post.deleted) {
-        await upsertPost(post);
+        futures.add(upsertPost(post));
         dog('Re-indexing post: ${post.id}');
+        futures.add(_reindexComments(post.id));
       }
-      for (final comment in post.comments) {
-        if (!comment.deleted) {
-          await upsertComment(comment);
-          dog('Re-indexing comment: ${comment.id}');
-        }
+      // deleted or not, reindex comments under this post,
+      // since deleted post can still have comments.
+      futures.add(_reindexComments(post.id));
+    }
+    await Future.wait(futures);
+    return;
+  }
+
+  Future<void> _reindexComments(String postId) async {
+    dog('Re-indexing comments for post: $postId');
+    final commentsSnapshot = await Ref.comments.child(postId).get();
+    dog("Retrieved: ${commentsSnapshot.value}");
+    List<Future> futures = [];
+    for (final commentSnapshot in commentsSnapshot.children) {
+      final comment = CommentModel.fromSnapshot(commentSnapshot);
+      if (!comment.deleted) {
+        futures.add(upsertComment(comment));
+        dog('Re-indexing comment: ${comment.id}');
       }
     }
+    await Future.wait(futures);
+    return;
   }
 
   Future<Map<String, dynamic>> deleteCategory(String category) async {

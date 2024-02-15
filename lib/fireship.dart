@@ -24,7 +24,7 @@ export 'src/common/text_with_label.dart';
 /// Common / Country picker
 export 'src/common/country_picker/country_picker.dart';
 export 'src/common/country_picker/country_picker_list_view.dart';
-export 'src/common/country_picker/country_picker_list.dart';
+export 'src/common/country_picker/country_list.dart';
 
 /// Common / Dialogs
 export 'src/common/dialogs/error.dialog.dart';

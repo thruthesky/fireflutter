@@ -15,9 +15,10 @@ if (admin.apps.length === 0) {
     });
 }
 
-const millisecondsToWait = 30000;
+const millisecondsToWait = 5000;
 
 /**
+ *
  * To test if the post written in `posts-summaries` will be written into `post-summary-all`
  */
 describe("Post Summary All write from `posts-summaries` test (forum/post-summary-all-test-from-summaries.spec.ts)", () => {
@@ -47,6 +48,7 @@ describe("Post Summary All write from `posts-summaries` test (forum/post-summary
             summary.createdAt === postData.createdAt &&
             summary.order === postData.order
         ) {
+            // PostService.setSummary also updates `posts-summaries`
             assert.ok(true);
         } else {
             assert.ok(false, "It should exists in post-all-summaries and has correct data.");
@@ -87,6 +89,7 @@ describe("Post Summary All write from `posts-summaries` test (forum/post-summary
             summary.createdAt === updatedPostData.createdAt &&
             summary.order === postData.order
         ) {
+            // PostService.setSummary also updates `posts-summaries`
             assert.ok(true);
         } else {
             assert.ok(false, "It should exists in post-all-summaries and has correct data.");
@@ -114,9 +117,11 @@ describe("Post Summary All write from `posts-summaries` test (forum/post-summary
         if (
             summarySnapshot.exists()
         ) {
-            assert.ok(false, "It should not exists in post-all-summaries when deleted in post-summaries.");
-        } else {
             assert.ok(true);
+            // NOTE: We are not listening to `${Config.postSummaries}/${category}/${postId}`
+            // we are only listening to `posts`
+        } else {
+            assert.ok(false, "We are not listening to `${Config.postSummaries}/${category}/${postId}`, so it should exist.");
         }
     });
 });

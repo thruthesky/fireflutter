@@ -53,11 +53,7 @@ SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
 
 ## Comments
 
-
-Comments are saved under `/comments/<post-id>`.
-
-
-
+Refer to [Comment doc](comments.md).
 
 ## Posts
 

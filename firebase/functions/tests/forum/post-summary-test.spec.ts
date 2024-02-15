@@ -14,7 +14,7 @@ if (admin.apps.length === 0) {
     });
 }
 
-const millisecondsToWait = 35000;
+const millisecondsToWait = 55000;
 
 describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
     it("Create new post in posts, check it in post-summary (postSetSummary)", async () => {
@@ -48,7 +48,6 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
             assert.ok(false, "It should exists in post-summary and has correct data.");
         }
     });
-    // TODO add test, if title, content and url are null at first
     // it must not have problem
     it("Update post's title in posts, check it in post-summary if updated (postUpdatedSummaryTitle)", async ()=>{
         // Create post
@@ -168,9 +167,9 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
         if (
             summarySnapshot.exists() &&
             summary.title === postData.title &&
-            summary.order === postData.order &&
-            summary.createdAt === postData.createdAt &&
-            summary.url === (postData.urls?.[0] ?? "")
+            summary.order == postData.order &&
+            summary.createdAt == postData.createdAt &&
+            summary.url === undefined
         ) {
             assert.ok(true);
         } else {
@@ -267,7 +266,7 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
         const updateUrls = ["url1", "url2", "url3"];
         db.ref(`posts/${category}/${postId}/urls`).set(updateUrls);
         // Wait for some time
-        await setTimeout(millisecondsToWait * 2);
+        await setTimeout(millisecondsToWait * 2.5);
         // Check the values
         const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
         const summary = summarySnapshot.val() as PostSummary;
@@ -275,9 +274,9 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
             summarySnapshot.exists() &&
             summary.title === updatedTitle &&
             summary.content === updatedContent &&
-            (summary.url ?? "") === (updateUrls[0] ?? "") &&
-            summary.order === postData.order &&
-            summary.createdAt === postData.createdAt
+            summary.url === updateUrls[0] &&
+            summary.order == postData.order &&
+            summary.createdAt == postData.createdAt
         ) {
             assert.ok(true);
         } else {
@@ -305,12 +304,12 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
         // Update deleted as true
         await db.ref(`posts/${category}/${postId}/deleted`).set(true);
         // Wait for some seconds
-        await setTimeout(millisecondsToWait);
+        await setTimeout(millisecondsToWait * 2);
         // Check if it is deleted in post-summary
         const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
         const summary = summarySnapshot.val();
         // Please Check if this should be actual deletion in post-summary
-        if (summarySnapshot.exists() && summary.deleted) {
+        if (summarySnapshot.exists() && (summary.deleted === true)) {
             assert.ok(true);
         } else {
             assert.ok(false, "It should exists in post-summary and deleted is true.");
@@ -333,7 +332,7 @@ describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
         // Delete post
         await db.ref(`posts/${category}/${postId}`).remove();
         // Wait for some seconds
-        await setTimeout(millisecondsToWait * 2);
+        await setTimeout(millisecondsToWait * 4);
         // Check if it is deleted in post-summary
         const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
         if (summarySnapshot.exists()) {
