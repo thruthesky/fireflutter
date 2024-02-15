@@ -42,4 +42,15 @@ export class PostService {
         db.ref(`${Config.postAllSummaries}/${id}`).update(summaryAll);
         return;
     }
+
+    /**
+     * Check if uid exists
+     *
+     * This is used to prevent race condition that may cause null error
+     */
+    static async checkUidExist(category: string, postId: string) {
+        const db = getDatabase();
+        const snapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}/uid`).get();
+        return snapshot.exists();
+    }
 }

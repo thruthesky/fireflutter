@@ -40,6 +40,15 @@ export const managePostsSummaryDeleted = onValueDeleted(
 export const postSummaryTitle = onValueWritten(
     `${Config.posts}/{category}/{postId}/title`,
     (event) => {
+        // check if created
+        if (!event.data.before.exists()) {
+            // check if other fields exist
+            const uidExists = PostService.checkUidExist(event.params.category, event.params.postId);
+            if (!uidExists) return;
+            // else continue
+        }
+
+        // Data updated
         const db = getDatabase();
         const updatedTitle = event.data.after.val() ?? null;
         db.ref(`${Config.postSummaries}/${event.params.category}/${event.params.postId}`).update({ title: updatedTitle });
@@ -56,6 +65,13 @@ export const postSummaryTitle = onValueWritten(
 export const postSummaryContent = onValueWritten(
     `${Config.posts}/{category}/{postId}/content`,
     (event) => {
+        // check if created
+        if (!event.data.before.exists()) {
+            // check if other fields exist
+            const uidExists = PostService.checkUidExist(event.params.category, event.params.postId);
+            if (!uidExists) return;
+            // else continue
+        }
         const db = getDatabase();
         const updatedContent = event.data.after.val() ?? null;
         db.ref(`${Config.postSummaries}/${event.params.category}/${event.params.postId}`).update({ content: updatedContent });
@@ -71,6 +87,13 @@ export const postSummaryContent = onValueWritten(
 export const postSummaryUrl = onValueWritten(
     `${Config.posts}/{category}/{postId}/urls`,
     (event) => {
+        // check if created
+        if (!event.data.before.exists()) {
+            // check if other fields exist
+            const uidExists = PostService.checkUidExist(event.params.category, event.params.postId);
+            if (!uidExists) return;
+            // else continue
+        }
         const db = getDatabase();
         const updatedUrl = event.data.after.val()?.[0] ?? null;
         db.ref(`${Config.postSummaries}/${event.params.category}/${event.params.postId}`).update({ url: updatedUrl });
@@ -84,6 +107,13 @@ export const postSummaryUrl = onValueWritten(
 export const postSummaryDeleted = onValueWritten(
     `${Config.posts}/{category}/{postId}/deleted`,
     (event) => {
+        // check if created
+        if (!event.data.before.exists()) {
+            // check if other fields exist
+            const uidExists = PostService.checkUidExist(event.params.category, event.params.postId);
+            if (!uidExists) return;
+            // else continue
+        }
         const db = getDatabase();
         const updatedDeleted = event.data.after.val() ?? null;
         db.ref(`${Config.postSummaries}/${event.params.category}/${event.params.postId}`).update({ deleted: updatedDeleted });
