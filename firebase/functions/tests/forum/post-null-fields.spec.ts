@@ -14,7 +14,7 @@ if (admin.apps.length === 0) {
     });
 }
 
-const millisecondsToWait = 50000;
+const millisecondsToWait = 30000;
 
 describe("Test when post title, content and urls are null at first (post-null-fields.spec.ts)", () => {
     it("Begin with null title, then update the title. Check if it is updated in post-summary", async () => {
@@ -154,7 +154,7 @@ describe("Test when post title, content and urls are null at first (post-null-fi
         const updateUrls = ["url1", "url2", "url3"];
         await db.ref(`posts/${category}/${postId}/urls`).set(updateUrls);
         // Wait for some time
-        await setTimeout(millisecondsToWait * 3.5);
+        await setTimeout(millisecondsToWait * 4.5);
         // Check the values
         const summarySnapshot = await db.ref(`${Config.postSummaries}/${category}/${postId}`).get();
         const summary = summarySnapshot.val() as PostSummary;

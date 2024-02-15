@@ -14,7 +14,7 @@ if (admin.apps.length === 0) {
     });
 }
 
-const millisecondsToWait = 55000;
+const millisecondsToWait = 35000;
 
 describe("Post Write Test (forum/post-write-summary.spec.ts)", () => {
     it("Create new post in posts, check it in post-summary (postSetSummary)", async () => {

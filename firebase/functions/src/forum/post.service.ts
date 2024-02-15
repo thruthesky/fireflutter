@@ -35,15 +35,4 @@ export class PostService {
         db.ref(`${Config.postAllSummaries}/${id}`).update(summaryAll);
         return;
     }
-
-    /**
-     * Check if createdAt Exist
-     *
-     * This is used to check if record is already exisiting
-     */
-    static async checkCreatedAtExists(category: string, id: string): Promise<boolean> {
-        const db = getDatabase();
-        const snapshot = await db.ref(`${Config.postSummaries}/${category}/${id}/createdAt`).get();
-        return snapshot.exists();
-    }
 }
