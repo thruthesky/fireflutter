@@ -261,8 +261,6 @@ class PostModel {
   static Future<PostModel> _afterCreate(DatabaseReference ref) async {
     final snapshot = await ref.get();
     final created = PostModel.fromSnapshot(snapshot);
-    // don't wait for this
-    created.update(order: -created.createdAt.millisecondsSinceEpoch);
 
     ForumService.instance.onPostCreate?.call(created);
     return created;

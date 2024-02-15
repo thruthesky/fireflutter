@@ -20,19 +20,12 @@ export class PostService {
             uid: post.uid,
             createdAt: post.createdAt,
             order: -post.createdAt,
+            title: post.title ?? null,
+            content: post.content ?? null,
+            url: post.urls?.[0] ?? null,
+            deleted: post.deleted ?? null,
         } as PostSummary;
-        if (post.title) {
-            summary.title = post.title;
-        }
-        if (post.content) {
-            summary.content = post.content;
-        }
-        if (post.urls?.[0]) {
-            summary.url = post.urls[0];
-        }
-        if (post.deleted) {
-            summary.deleted = post.deleted;
-        }
+
         const db = getDatabase();
         db.ref(`${Config.postSummaries}/${category}/${id}`).update(summary);
         const summaryAll: PostSummaryAll = {
