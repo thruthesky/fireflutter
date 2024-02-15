@@ -15,10 +15,6 @@ class PostViewScreen extends StatefulWidget {
 class _PostViewScreenState extends State<PostViewScreen> {
   PostModel get post => widget.post;
   int? previousNoOfLikes;
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +100,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       if (value == 'edit') {
                         await ForumService.instance
                             .showPostUpdateScreen(context, post: post);
-                        post.reload();
+                        await post.reload();
+                        if (mounted) setState(() {});
                       } else if (value == 'delete') {
                         final re = await confirm(
                           context: context,
