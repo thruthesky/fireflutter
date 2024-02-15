@@ -18,9 +18,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
   @override
   void initState() {
     super.initState();
-    // post.reload().then((x) => setState(
-    //       () {},
-    //     ));
   }
 
   @override
