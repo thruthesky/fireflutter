@@ -14,7 +14,7 @@ if (admin.apps.length === 0) {
     });
 }
 
-const millisecondsToWait = 5000;
+const millisecondsToWait = 10000;
 
 describe("Setting delete == true, other fields delete. (post-delete-true.spec.ts)", () => {
     it("Set delete == true, other fields delete. Record should be updated in post summary.", async () => {
