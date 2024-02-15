@@ -1,21 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:country_code_picker/country_code_picker.dart';
+// import 'package:country_code_picker/country_code_picker.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
 class DefaultProfileUpdateForm extends StatefulWidget {
-  const DefaultProfileUpdateForm({
-    super.key,
-    this.occupation = false,
-    this.stateMessage = true,
-    this.gender = true,
-    this.nationality = false,
-    this.region = true,
-    this.nationalityTheme,
-    this.onUpdate,
-    this.countryFilter,
-    this.dialogSize,
-  });
+  const DefaultProfileUpdateForm(
+      {super.key,
+      this.occupation = false,
+      this.stateMessage = true,
+      this.gender = true,
+      this.nationality = false,
+      this.region = true,
+      this.morePhotos = false,
+      this.nationalityTheme,
+      this.onUpdate,
+      this.countryFilter,
+      // this.dialogSize,
+      this.regionApiKey,
+      this.regionSelectorLangCode = 'ko'});
 
   final void Function()? onUpdate;
   // use [occupation] to hide the occupation field
@@ -27,7 +29,10 @@ class DefaultProfileUpdateForm extends StatefulWidget {
   final BoxDecoration? nationalityTheme;
   // use countryFilter to list only the country you want to display in the screen
   final List<String>? countryFilter;
-  final Size? dialogSize;
+  // final Size? dialogSize;
+  final String? regionApiKey;
+  final bool morePhotos;
+  final String regionSelectorLangCode;
 
   @override
   State<DefaultProfileUpdateForm> createState() =>
@@ -36,12 +41,14 @@ class DefaultProfileUpdateForm extends StatefulWidget {
 
 class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
   double? progress;
+  double? morePhotoProgress;
   final nameController = TextEditingController();
   String? nationality;
   String? region;
   final occupationController = TextEditingController();
   final stateMessageController = TextEditingController();
   String? gender;
+  List<String> urls = [];
 
   UserModel get user => UserService.instance.user!;
 
@@ -59,7 +66,9 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
     if (user.gender != '') {
       gender = user.gender;
     }
-
+    if (user.photoUrls.isNotEmpty) {
+      urls = user.photoUrls;
+    }
     stateMessageController.text = user.stateMessage;
     occupationController.text = user.occupation;
   }
@@ -167,15 +176,6 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
             labelText: T.name.tr,
           ),
         ),
-        if (widget.stateMessage) ...{
-          const SizedBox(height: 32),
-          TextField(
-            controller: stateMessageController,
-            decoration: InputDecoration(
-              labelText: T.stateMessage.tr,
-            ),
-          ),
-        },
         if (widget.gender) ...{
           const SizedBox(height: 32),
           const Text('Gender'),
@@ -198,7 +198,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
               children: [
                 Expanded(
                   child: RadioListTile<String>(
-                    title: const Text('Male'),
+                    title: Text(T.male.tr),
                     value: 'Male',
                     groupValue: gender,
                     onChanged: (value) {
@@ -210,7 +210,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                 ),
                 Expanded(
                   child: RadioListTile<String>(
-                    title: const Text('Female'),
+                    title: Text(T.female.tr),
                     value: 'Female',
                     groupValue: gender,
                     onChanged: (value) {
@@ -224,58 +224,201 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
             ),
           ),
         },
+        const SizedBox(height: 32),
+        MyDoc(
+          builder: (my) => UpdateBirthdayField(user: my ?? user),
+        ),
         if (widget.nationality) ...{
           const SizedBox(
             height: 32,
           ),
-          const Text('Nationality'),
-          Container(
-            width: double.infinity,
-            decoration: widget.nationalityTheme,
-            child: CountryCodePicker(
-                showCountryOnly: true,
-                showOnlyCountryWhenClosed: true,
-                hideSearch: true,
-                initialSelection: nationality,
-                countryFilter: widget.countryFilter,
-                dialogSize: widget.dialogSize,
-                onChanged: (country) {
-                  nationality = country.code;
-                  setState(() {});
-                }),
-          ),
+          Text(T.nationality.tr),
+          //   SizedBox(
+          //     width: double.infinity,
+          //     // decoration: widget.nationalityTheme,
+          //     child: CountryCodePicker(
+          //         showCountryOnly: true,
+          //         showOnlyCountryWhenClosed: true,
+          //         hideSearch: true,
+          //         alignLeft: true,
+          //         initialSelection: nationality,
+          //         countryFilter: widget.countryFilter,
+          //         // dialogSize: widget.dialogSize,
+          //         onChanged: (country) {
+          //           nationality = country.code;
+          //           setState(() {});
+          //         }),
+          //   ),
         },
         const SizedBox(height: 32),
-        MyDoc(
-          builder: (my) => UpdateBirthdayField(user: user),
-        ),
+        if (widget.region) ...{
+          Text(T.region.tr),
+          // init value
+          KoreanSiGunGuSelector(
+              languageCode: widget.regionSelectorLangCode,
+              apiKey: widget.regionApiKey ?? '',
+              onChangedSiDoCode: (siDo) {},
+              onChangedSiGunGuCode: (siDo, siGunGo) {
+                region = "${siDo.code}-${siGunGo.code}";
+                setState(() {});
+              }),
+        },
         if (widget.occupation) ...{
           const SizedBox(height: 32),
-          const Text('Occupation'),
+          Text(T.occupation.tr),
           TextField(
             controller: occupationController,
+          ),
+        },
+        if (widget.morePhotos) ...{
+          const SizedBox(height: 32),
+          Text(T.pleaseAddMorePhotos.tr),
+          SizedBox(
+              height: 16,
+              child: Column(
+                children: [
+                  morePhotoProgress != null && morePhotoProgress!.isNaN == false
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: LinearProgressIndicator(
+                            value: progress,
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ],
+              )),
+          Wrap(
+            runAlignment: WrapAlignment.start,
+            spacing: 16,
+            runSpacing: 16,
+            children: [
+              // display content for urls
+              ...urls.map((url) {
+                return Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(24),
+                      child: CachedNetworkImage(
+                        imageUrl: url,
+                        fit: BoxFit.cover,
+                        width: 130,
+                        height: 130,
+                      ),
+                    ),
+                    // delete image
+                    Positioned(
+                      top: 4,
+                      right: 8,
+                      child: GestureDetector(
+                        onTap: () async {
+                          final re = await confirm(
+                              context: context,
+                              title: '${'delete'.tr}?',
+                              message: '${'doYouWantToDeleteThisPhoto'.tr}?');
+                          if (re != true) return;
+                          urls.remove(url);
+                          await StorageService.instance.delete(url);
+                          setState(() {});
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withAlpha(100),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Icon(
+                            Icons.delete,
+                            size: 20,
+                            color: Theme.of(context).colorScheme.onSecondary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }),
+              if (urls.length < 4)
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () async {
+                    final String? url = await StorageService.instance.upload(
+                      context: context,
+                      progress: (p) => setState(() => progress = p),
+                      complete: () => setState(() => progress = null),
+                    );
+                    if (url != null) {
+                      setState(() {
+                        progress = null;
+                        urls.add(url);
+                      });
+                    }
+                  },
+                  child: Container(
+                    width: 120,
+                    height: 120,
+                    color: Colors.grey[300],
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.all(8),
+                    child: const Icon(Icons.add),
+                  ),
+                ),
+            ],
+          ),
+        },
+        if (widget.stateMessage) ...{
+          const SizedBox(height: 32),
+          TextField(
+            controller: stateMessageController,
+            minLines: 5,
+            maxLines: 5,
+            decoration: InputDecoration(
+              labelText: T.stateMessage.tr,
+            ),
           ),
         },
         const SizedBox(height: 24),
         Center(
           child: ElevatedButton(
             onPressed: () async {
-              if (nameController.text.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(T.inputName.tr),
-                  ),
-                );
+              if (nameController.text.trim().isEmpty) {
+                errorToast(context: context, message: T.inputName.tr);
+                return;
+              } else if (widget.gender && gender == null) {
+                errorToast(context: context, message: T.pleaseSelectGender.tr);
+                return;
+              } else if (widget.nationality && nationality == null) {
+                errorToast(
+                    context: context, message: T.pleaseSelectNationality.tr);
+                return;
+              } else if (widget.region && region == null) {
+                errorToast(context: context, message: T.pleaseSelectRegion.tr);
+                return;
+              } else if (widget.occupation &&
+                  occupationController.text.trim().isEmpty) {
+                errorToast(
+                    context: context, message: T.pleaseInputOccupation.tr);
+                return;
+              } else if (widget.morePhotos && urls.isEmpty) {
+                errorToast(context: context, message: T.pleaseAddMorePhotos.tr);
+                return;
+              } else if (widget.stateMessage &&
+                  stateMessageController.text.trim().isEmpty) {
+                errorToast(
+                    context: context, message: T.pleaseInputStateMessage.tr);
                 return;
               }
               await my!.update(
-                name: nameController.text,
-                displayName: nameController.text,
-                gender: gender,
-                nationality: nationality,
-                region: region,
-                occupation: occupationController.text,
-              );
+                  name: nameController.text,
+                  displayName: nameController.text,
+                  gender: gender,
+                  nationality: nationality,
+                  region: region,
+                  occupation: occupationController.text,
+                  photoUrls: urls,
+                  stateMessage: stateMessageController.text);
 
               if (widget.onUpdate != null) {
                 widget.onUpdate!();
