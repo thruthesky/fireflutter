@@ -1,5 +1,6 @@
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 class CountryPickerListView extends StatefulWidget {
   const CountryPickerListView({
@@ -7,6 +8,7 @@ class CountryPickerListView extends StatefulWidget {
     this.filters,
     required this.search,
     this.headerBuilder,
+    this.itemBuilder,
     required this.onChanged,
   });
 
@@ -14,7 +16,8 @@ class CountryPickerListView extends StatefulWidget {
   final List<String>? filters;
   final bool search;
   final Widget Function()? headerBuilder;
-  final void Function(Map<String, String>) onChanged;
+  final Widget Function(CountryCode)? itemBuilder;
+  final void Function(CountryCode) onChanged;
 
   @override
   State<CountryPickerListView> createState() => _CountryPickerListViewState();
@@ -25,14 +28,14 @@ class _CountryPickerListViewState extends State<CountryPickerListView> {
 
   @override
   Widget build(BuildContext context) {
-    print("search: ${searchController.text}");
     return AlertDialog(
       contentPadding: EdgeInsets.zero,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           widget.headerBuilder?.call() ?? const Text('Country Picker'),
-          if (widget.search)
+          if (widget.search) ...[
+            const SizedBox(height: 8),
             TextField(
               controller: searchController,
               decoration: const InputDecoration(
@@ -43,121 +46,59 @@ class _CountryPickerListViewState extends State<CountryPickerListView> {
                 setState(() {});
               },
             ),
+          ],
+          const SizedBox(height: 8),
         ],
       ),
-      content: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: countryPickerList(searchController.text)
-                .where((e) =>
-                    widget.filters == null ||
-                    widget.filters!.contains(e['code']))
-                .map(
-                  (e) => InkWell(
-                    onTap: () {
-                      widget.onChanged(e);
-                      Navigator.pop(context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 8.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            '${e['flag']}',
-                            style: TextStyle(
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .fontSize,
-                            ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              '  ${e['name']} ',
+      content: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: countryList(searchController.text)
+              .where((e) =>
+                  widget.filters == null || widget.filters!.contains(e.alpha2))
+              .map(
+                (e) => InkWell(
+                  onTap: () {
+                    widget.onChanged(e);
+                    Navigator.pop(context);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8.0),
+                    child: widget.itemBuilder?.call(e) ??
+                        Row(
+                          children: [
+                            Text(
+                              e.flag,
                               style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
                                 fontSize: Theme.of(context)
                                     .textTheme
-                                    .titleMedium!
+                                    .displaySmall!
                                     .fontSize,
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                          // Text(
-                          //   ' (${e['code']})',
-                          //   style: TextStyle(
-                          //     color: Theme.of(context).colorScheme.secondary,
-                          //   ),
-                          // ),
-                        ],
-                      ),
-                    ),
+                            Expanded(
+                              child: Text(
+                                '  ${e.officialName} ',
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontSize: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .fontSize,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
                   ),
-                )
-                .toList(),
-          ),
+                ),
+              )
+              .toList(),
         ),
       ),
     );
   }
 }
-
-
-///
-///
-/*SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Country Picker'),
-            ...countryPickerList()
-                .where((e) => filters == null || filters!.contains(e['code']))
-                .map(
-                  (e) => InkWell(
-                    onTap: () {
-                      onChanged(e);
-                      Navigator.pop(context);
-                    },
-                    child: Row(
-                      children: [
-                        Text(
-                          '${e['flag']}',
-                          style: TextStyle(
-                            fontSize: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .fontSize,
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            '  ${e['name']} ',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .fontSize,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        // Text(
-                        //   ' (${e['code']})',
-                        //   style: TextStyle(
-                        //     color: Theme.of(context).colorScheme.secondary,
-                        //   ),
-                        // ),
-                      ],
-                    ),
-                  ),
-                )
-                .toList(),
-          ],
-        ),
-      ),*/
