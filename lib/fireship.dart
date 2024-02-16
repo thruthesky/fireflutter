@@ -9,8 +9,7 @@ export 'src/admin/widgets/admin.user_update.screen.dart';
 /// Address
 /// Korean address
 export 'src/address/korean/korean_sigungu_selector.dart';
-export 'src/address/korean/korean_sigungu.model.dart';
-export 'src/address/korean/korean_sigungu_root_code.dart';
+export 'src/address/korean/korean_sigungu_sido_code.dart';
 
 /// Common
 ///
@@ -151,3 +150,5 @@ export 'src/user/widgets/profile/simple_profile_update.form.dart';
 export 'src/user/widgets/user.list_view.dart';
 export 'src/user/widgets/profile/default_profile_update.form.dart';
 export 'src/user/widgets/login/simple_phone_sign_in.dart';
+
+export 'src/user/firestore.user.model.dart';
