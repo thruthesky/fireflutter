@@ -16,7 +16,7 @@ class DefaultProfileUpdateForm extends StatefulWidget {
       this.countryFilter,
       // this.dialogSize,
       this.regionApiKey,
-      this.regionSelectorLangCode = 'ko',
+      this.koreanSiGunGuLanguageCode = 'ko',
       this.countryPickerTheme});
 
   final void Function()? onUpdate;
@@ -31,7 +31,7 @@ class DefaultProfileUpdateForm extends StatefulWidget {
   // final Size? dialogSize;
   final String? regionApiKey;
   final bool morePhotos;
-  final String regionSelectorLangCode;
+  final String koreanSiGunGuLanguageCode;
   final ThemeData? countryPickerTheme;
 
   @override
@@ -44,7 +44,8 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
   double? morePhotoProgress;
   final nameController = TextEditingController();
   String? nationality;
-  String? region;
+  AreaCode? siDo;
+  AreaCode? siGunGu;
   final occupationController = TextEditingController();
   final stateMessageController = TextEditingController();
   String? gender;
@@ -61,10 +62,14 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
     if (user.nationality != '') {
       nationality = user.nationality;
     }
-    if (user.region != '') {
-      region = user.region;
-      regionCode = region?.split('-');
+    if (user.siDo != '') {
+      siDo = getSiDo(widget.koreanSiGunGuLanguageCode, user.siDo);
     }
+
+    // if (user.siGunGu != '') {
+    //   siGunGu =
+    // }
+
     if (user.gender != '') {
       gender = user.gender;
     }
@@ -73,8 +78,6 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
     }
     stateMessageController.text = user.stateMessage;
     occupationController.text = user.occupation;
-
-    dog(user.region);
   }
 
   @override
@@ -275,12 +278,14 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
           Text(T.region.tr),
           // init value
           KoreanSiGunGuSelector(
-              languageCode: 'en',
-              initSiDoCode: regionCode![0],
-              initSiGunGuCode: regionCode![1],
+              languageCode: widget.koreanSiGunGuLanguageCode,
+              initSiDoCode: siDo?.code,
+              initSiGunGuCode: siGunGu?.code,
               onChangedSiDoCode: (siDo) {},
-              onChangedSiGunGuCode: (siDo, siGunGo) {
-                region = "${siDo.code}-${siGunGo.code}";
+              onChangedSiGunGuCode: (v, vv) {
+                siDo = v;
+                siGunGu = vv;
+                dog('siGunGu $siDo , $siGunGu');
                 setState(() {});
               }),
         },
@@ -404,6 +409,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
         Center(
           child: ElevatedButton(
             onPressed: () async {
+              dog('$siGunGu');
               if (nameController.text.trim().isEmpty) {
                 errorToast(context: context, message: T.inputName.tr);
                 return;
@@ -414,7 +420,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                 errorToast(
                     context: context, message: T.pleaseSelectNationality.tr);
                 return;
-              } else if (widget.region && region == null) {
+              } else if (widget.region && siGunGu == null) {
                 errorToast(context: context, message: T.pleaseSelectRegion.tr);
                 return;
               } else if (widget.occupation &&
@@ -436,8 +442,8 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                   displayName: nameController.text,
                   gender: gender,
                   nationality: nationality,
-                  siDo: '',
-                  siGunGu: '',
+                  siDo: siDo?.code,
+                  siGunGu: siGunGu?.code,
                   occupation: occupationController.text,
                   photoUrls: urls,
                   stateMessage: stateMessageController.text);
