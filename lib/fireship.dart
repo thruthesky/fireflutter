@@ -19,6 +19,7 @@ export 'src/common/avatar.dart';
 export 'src/common/stacked_avatar.dart';
 export 'src/common/date_time_short.dart';
 export 'src/common/text_with_label.dart';
+export 'src/common/text_field/label_field.dart';
 
 /// Common / Country picker
 export 'src/common/country_picker/country_picker.dart';
