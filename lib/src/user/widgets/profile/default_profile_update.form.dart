@@ -12,12 +12,12 @@ class DefaultProfileUpdateForm extends StatefulWidget {
       this.nationality = false,
       this.region = true,
       this.morePhotos = false,
-      this.nationalityTheme,
       this.onUpdate,
       this.countryFilter,
       // this.dialogSize,
       this.regionApiKey,
-      this.regionSelectorLangCode = 'ko'});
+      this.regionSelectorLangCode = 'ko',
+      this.countryPickerTheme});
 
   final void Function()? onUpdate;
   // use [occupation] to hide the occupation field
@@ -26,13 +26,13 @@ class DefaultProfileUpdateForm extends StatefulWidget {
   final bool gender;
   final bool nationality;
   final bool region;
-  final BoxDecoration? nationalityTheme;
   // use countryFilter to list only the country you want to display in the screen
   final List<String>? countryFilter;
   // final Size? dialogSize;
   final String? regionApiKey;
   final bool morePhotos;
   final String regionSelectorLangCode;
+  final ThemeData? countryPickerTheme;
 
   @override
   State<DefaultProfileUpdateForm> createState() =>
@@ -49,6 +49,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
   final stateMessageController = TextEditingController();
   String? gender;
   List<String> urls = [];
+  List<String>? regionCode;
 
   UserModel get user => UserService.instance.user!;
 
@@ -62,6 +63,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
     }
     if (user.region != '') {
       region = user.region;
+      regionCode = region?.split('-');
     }
     if (user.gender != '') {
       gender = user.gender;
@@ -71,6 +73,8 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
     }
     stateMessageController.text = user.stateMessage;
     occupationController.text = user.occupation;
+
+    dog(user.region);
   }
 
   @override
@@ -233,30 +237,48 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
             height: 32,
           ),
           Text(T.nationality.tr),
-          //   SizedBox(
-          //     width: double.infinity,
-          //     // decoration: widget.nationalityTheme,
-          //     child: CountryCodePicker(
-          //         showCountryOnly: true,
-          //         showOnlyCountryWhenClosed: true,
-          //         hideSearch: true,
-          //         alignLeft: true,
-          //         initialSelection: nationality,
-          //         countryFilter: widget.countryFilter,
-          //         // dialogSize: widget.dialogSize,
-          //         onChanged: (country) {
-          //           nationality = country.code;
-          //           setState(() {});
-          //         }),
-          //   ),
+          Theme(
+            data: widget.countryPickerTheme ??
+                Theme.of(context).copyWith(
+                    inputDecorationTheme:
+                        Theme.of(context).inputDecorationTheme.copyWith(
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.all(0),
+                            ),
+                    elevatedButtonTheme: ElevatedButtonThemeData(
+                      style:
+                          Theme.of(context).elevatedButtonTheme.style?.copyWith(
+                                padding: MaterialStateProperty.all(
+                                    const EdgeInsets.all(16)),
+                              ),
+                    )),
+            child: SizedBox(
+              width: double.infinity,
+              child: CountryPicker(
+                initialValue: nationality,
+                filters: widget.countryFilter,
+                search: false,
+                headerBuilder: () => const Text('Select your country'),
+                onChanged: (v) {
+                  nationality = v.alpha2;
+                },
+              ),
+            ),
+          ),
         },
-        const SizedBox(height: 32),
         if (widget.region) ...{
+          const SizedBox(height: 24),
           Text(T.region.tr),
           // init value
           KoreanSiGunGuSelector(
-              languageCode: widget.regionSelectorLangCode,
+              languageCode: 'en',
               apiKey: widget.regionApiKey ?? '',
+              initSiDoCode: regionCode![0],
+              initSiGunGuCode: regionCode![1],
               onChangedSiDoCode: (siDo) {},
               onChangedSiGunGuCode: (siDo, siGunGo) {
                 region = "${siDo.code}-${siGunGo.code}";

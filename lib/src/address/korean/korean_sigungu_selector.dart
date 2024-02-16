@@ -6,18 +6,24 @@ import 'package:flutter/material.dart';
 ///
 /// Refer address.md
 class KoreanSiGunGuSelector extends StatefulWidget {
-  const KoreanSiGunGuSelector({
-    super.key,
-    required this.apiKey,
-    required this.onChangedSiDoCode,
-    required this.onChangedSiGunGuCode,
-    this.languageCode = 'ko',
-  });
+  const KoreanSiGunGuSelector(
+      {super.key,
+      required this.apiKey,
+      required this.onChangedSiDoCode,
+      required this.onChangedSiGunGuCode,
+      this.languageCode = 'ko',
+      this.initSiDoCode,
+      this.initSiGunGuCode,
+      this.showLoading = true});
 
   final String apiKey;
   final String languageCode;
   final Function(AddressModel) onChangedSiDoCode;
   final Function(AddressModel, AddressModel) onChangedSiGunGuCode;
+  // for review sir song
+  final String? initSiDoCode;
+  final String? initSiGunGuCode;
+  final bool showLoading;
 
   @override
   State<KoreanSiGunGuSelector> createState() => _KoreanSiGunGuSelectorState();
@@ -27,11 +33,24 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
   String siDoCode = '';
   String siGunGuCode = '';
   List<AddressModel>? secondaryAddresses;
+  bool isLoading = false;
 
   List<AddressModel> get rootCodes =>
       (widget.languageCode == 'ko' ? koreanRootCode : englishRootCodes)
           .map((e) => AddressModel.fromJson(e))
           .toList();
+
+  // for review sir song
+  @override
+  void initState() {
+    super.initState();
+    siDoCode = widget.initSiDoCode ?? '';
+    siGunGuCode = widget.initSiGunGuCode ?? '';
+
+    if (widget.initSiDoCode != null) {
+      loadSecondaryAddress(widget.initSiDoCode ?? '');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +95,23 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
                 }),
           ),
         ),
+        // for review sir song
+        if (widget.showLoading) ...{
+          if (isLoading) ...{
+            const SizedBox(
+              height: 8,
+            ),
+            const Center(
+              child: SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              ),
+            ),
+          },
+        },
         if (secondaryAddresses != null) ...[
           const SizedBox(height: 16),
           InputDecorator(
@@ -107,7 +143,6 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
                   onChanged: (value) {
                     setState(() {
                       siGunGuCode = value ?? '';
-
                       widget.onChangedSiGunGuCode(
                         rootCodes.firstWhere((e) => e.code == siDoCode),
                         secondaryAddresses!
@@ -123,17 +158,29 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
   }
 
   loadSecondaryAddress(String siDoCode) async {
+    setState(() {
+      isLoading = true;
+    });
+
     final dio = Dio();
     final url =
         "http://apis.data.go.kr/B551011/${widget.languageCode == 'ko' ? 'Kor' : 'Eng'}Service1/areaCode1?numOfRows=10000&pageNo=1&MobileOS=ETC&MobileApp=AppTest&_type=json&serviceKey=${widget.apiKey}&areaCode=$siDoCode";
 
     final response = await dio.get(url);
-
+    if (!mounted) {
+      return;
+    }
     if (response.statusCode == 200) {
       final data = response.data;
       final items = data['response']['body']['items']['item'] as List;
       secondaryAddresses = items.map((e) => AddressModel.fromJson(e)).toList();
       setState(() {});
+    }
+
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 }
