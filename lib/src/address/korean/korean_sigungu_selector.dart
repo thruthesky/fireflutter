@@ -43,7 +43,6 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
   // for review sir song
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     siDoCode = widget.initSiDoCode ?? '';
     siGunGuCode = widget.initSiGunGuCode ?? '';
