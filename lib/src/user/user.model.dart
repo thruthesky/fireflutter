@@ -328,7 +328,8 @@ class UserModel {
     String? idUrl,
     String? occupation,
     String? nationality,
-    String? region,
+    String? siDo,
+    String? siGunGu,
   }) async {
     final data = {
       if (name != null) 'name': name,
@@ -351,7 +352,8 @@ class UserModel {
       if (idUrl != null) 'idUrl': idUrl,
       if (occupation != null) Field.occupation: occupation,
       if (nationality != null) 'nationality': nationality,
-      if (region != null) 'region': region,
+      if (siDo != null) 'siDo': siDo,
+      if (siGunGu != null) 'siGunGu': siGunGu,
     };
     if (data.isEmpty) {
       return this;

@@ -9,8 +9,7 @@ export 'src/admin/widgets/admin.user_update.screen.dart';
 /// Address
 /// Korean address
 export 'src/address/korean/korean_sigungu_selector.dart';
-export 'src/address/korean/korean_sigungu.model.dart';
-export 'src/address/korean/korean_sigungu_root_code.dart';
+export 'src/address/korean/korean_sigungu_sido_code.dart';
 
 /// Common
 ///

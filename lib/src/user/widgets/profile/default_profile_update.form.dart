@@ -276,7 +276,6 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
           // init value
           KoreanSiGunGuSelector(
               languageCode: 'en',
-              apiKey: widget.regionApiKey ?? '',
               initSiDoCode: regionCode![0],
               initSiGunGuCode: regionCode![1],
               onChangedSiDoCode: (siDo) {},
@@ -437,7 +436,8 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                   displayName: nameController.text,
                   gender: gender,
                   nationality: nationality,
-                  region: region,
+                  siDo: '',
+                  siGunGu: '',
                   occupation: occupationController.text,
                   photoUrls: urls,
                   stateMessage: stateMessageController.text);
