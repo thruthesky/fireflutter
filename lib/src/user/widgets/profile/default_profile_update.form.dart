@@ -14,9 +14,7 @@ class DefaultProfileUpdateForm extends StatefulWidget {
       this.morePhotos = false,
       this.onUpdate,
       this.countryFilter,
-      // this.dialogSize,
-      this.regionApiKey,
-      this.koreanSiGunGuLanguageCode = 'ko',
+      this.koreanAreaLanguageCode = 'ko',
       this.countryPickerTheme});
 
   final void Function()? onUpdate;
@@ -28,10 +26,9 @@ class DefaultProfileUpdateForm extends StatefulWidget {
   final bool region;
   // use countryFilter to list only the country you want to display in the screen
   final List<String>? countryFilter;
-  // final Size? dialogSize;
-  final String? regionApiKey;
+
   final bool morePhotos;
-  final String koreanSiGunGuLanguageCode;
+  final String koreanAreaLanguageCode;
   final ThemeData? countryPickerTheme;
 
   @override
@@ -63,7 +60,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
       nationality = user.nationality;
     }
     if (user.siDo != '') {
-      siDo = getSiDo(widget.koreanSiGunGuLanguageCode, user.siDo);
+      siDo = getSiDo(widget.koreanAreaLanguageCode, user.siDo);
     }
 
     // if (user.siGunGu != '') {
@@ -278,7 +275,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
           Text(T.region.tr),
           // init value
           KoreanSiGunGuSelector(
-              languageCode: widget.koreanSiGunGuLanguageCode,
+              languageCode: widget.koreanAreaLanguageCode,
               initSiDoCode: siDo?.code,
               initSiGunGuCode: siGunGu?.code,
               onChangedSiDoCode: (siDo) {},

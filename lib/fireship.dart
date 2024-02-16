@@ -150,3 +150,5 @@ export 'src/user/widgets/profile/simple_profile_update.form.dart';
 export 'src/user/widgets/user.list_view.dart';
 export 'src/user/widgets/profile/default_profile_update.form.dart';
 export 'src/user/widgets/login/simple_phone_sign_in.dart';
+
+export 'src/user/firestore.user.model.dart';

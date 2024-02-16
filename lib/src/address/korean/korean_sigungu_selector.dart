@@ -16,7 +16,7 @@ class KoreanSiGunGuSelector extends StatefulWidget {
   });
 
   final String languageCode;
-  final Function(AreaCode) onChangedSiDoCode;
+  final Function(AreaCode?) onChangedSiDoCode;
   final Function(AreaCode, AreaCode) onChangedSiGunGuCode;
   // for review sir song
   final String? initSiDoCode;
@@ -90,8 +90,10 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
 
                   setState(() {});
                   widget.onChangedSiDoCode(
-                    getSiDoCodes(languageCode: widget.languageCode)
-                        .firstWhere((e) => e.code == siDoCode),
+                    siDoCode == null
+                        ? null
+                        : getSiDoCodes(languageCode: widget.languageCode)
+                            .firstWhere((e) => e.code == siDoCode),
                   );
                 }),
           ),
