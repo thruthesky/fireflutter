@@ -601,30 +601,3 @@ AreaCode? getSiDo(String languageCode, String code) {
     return found;
   }
 }
-
-
-
-// loadSecondaryAddress({
-//   required String siDoCode,
-//   required String languageCode,
-//   required String apiKey,
-// }) async {
-//   List<AreaCode>? secondaryAddresses;
-//   final dio = Dio();
-//   final url =
-//       "http://apis.data.go.kr/B551011/${languageCode == 'ko' ? 'Kor' : 'Eng'}Service1/areaCode1?numOfRows=10000&pageNo=1&MobileOS=ETC&MobileApp=AppTest&_type=json&serviceKey=$apiKey&areaCode=$siDoCode";
-
-//   final response = await dio.get(url);
-
-//   if (response.statusCode == 200) {
-//     final data = response.data;
-//     final items = data['response']['body']['items']['item'] as List;
-//     secondaryAddresses = items
-//         .map((e) => (
-//               code: e['code'] as String,
-//               name: e['name'] as String,
-//             ))
-//         .toList();
-//   }
-//   return secondaryAddresses;
-// }
