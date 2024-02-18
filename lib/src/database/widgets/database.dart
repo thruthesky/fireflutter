@@ -1,4 +1,4 @@
-import 'package:firebase_database/firebase_database.dart';
+import 'package:fireship/src/database/widgets/value.dart';
 import 'package:flutter/material.dart';
 
 /// Database
@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 ///  return Text(value);
 /// });
 ///
+@Deprecated('Use Value instead')
 class Database extends StatelessWidget {
   const Database({
     super.key,
@@ -37,27 +38,10 @@ class Database extends StatelessWidget {
   Widget build(BuildContext context) {
     /// To prevent the widget from rebuilding when the data is loaded.
     /// It reduces the flickering.
-    AsyncSnapshot<DatabaseEvent>? snapshotData;
-    return StreamBuilder(
-      stream: FirebaseDatabase.instance.ref(path).onValue,
-      builder: (context, AsyncSnapshot<DatabaseEvent> event) {
-        if (event.connectionState == ConnectionState.waiting) {
-          if (snapshotData != null) {
-            // dog('--> data loaded onced ');
-            return builder(snapshotData!.data!.snapshot.value);
-          }
-          return onLoading ?? const SizedBox.shrink();
-        }
-        if (event.hasError) {
-          return Text('Error; ${event.error}');
-        }
-        snapshotData = event;
-        if (event.hasData && event.data!.snapshot.exists) {
-          return builder(event.data!.snapshot.value);
-        } else {
-          return builder(null);
-        }
-      },
+    return Value(
+      path: path,
+      builder: builder,
+      onLoading: onLoading,
     );
   }
 
@@ -67,21 +51,10 @@ class Database extends StatelessWidget {
     required Widget Function(dynamic value) builder,
     Widget? onLoading,
   }) {
-    return FutureBuilder(
-      future: FirebaseDatabase.instance.ref(path).once(),
-      builder: (context, AsyncSnapshot<DatabaseEvent> event) {
-        if (event.connectionState == ConnectionState.waiting) {
-          return onLoading ?? const SizedBox.shrink();
-        }
-        if (event.hasError) {
-          return Text('Error; ${event.error}');
-        }
-        if (event.hasData && event.data!.snapshot.exists) {
-          return builder(event.data!.snapshot.value);
-        } else {
-          return builder(null);
-        }
-      },
+    return Value.once(
+      path: path,
+      builder: builder,
+      onLoading: onLoading,
     );
   }
 }

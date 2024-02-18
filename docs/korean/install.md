@@ -1,4 +1,5 @@
-# Install
+# 설치
+
 
 Follow the instruction below to install Fireship into your app
 
@@ -36,9 +37,10 @@ dependencies:
 
 - If you have update any code in Fireship, consider to submit a `pull request`.
 
-## Install Firebase Realtime Database Secuirty
+## Firebase Realtime Database Secuirty 설치
 
-Copy [the security rules](../assets/realtime_database_security.md) and paste it into your firebase project.
+
+[Firebase Realtime Database Security](../assets/realtime_database_security.md) 를 복사해어 Firebase project 에 붙여 넣기 한 다음 저장해 주세요.
 
 
 

@@ -42,6 +42,7 @@ export 'src/common/url_preview/url_preview.model.dart';
 /// Datbase
 export 'src/database/widgets/database.count.dart';
 export 'src/database/widgets/database.dart';
+export 'src/database/widgets/value.dart';
 
 /// Defines
 export 'fireship.defines.dart';

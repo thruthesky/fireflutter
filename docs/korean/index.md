@@ -13,3 +13,23 @@ Fireship 을 확장하여 쇼핑몰, CMS 등 다양한 앱을 만들 수 있습�
 
 [빌딩 블록](building_blocks.md)를 참고하시면, fireship 을 통해서 앱을 개발 할 수 있는 방법에 여러가지 설명을 하고 있습니다.
 
+
+
+```mermaid
+block-beta
+    columns 3
+    %% whitespace has been added to make the code easier to read
+    space             a(("🚀"))               space
+                       space:3
+                      c("🌝"):3
+    d1<[" "]>(down) d2<[" "]>(down) d3<[" "]>(down)
+
+    block:e1:3
+        sube1(("👽")) sube2(("👾"))   sube3(("🛸"))
+    end
+
+    d4<[" "]>(down)                         space:2
+    g("🤯")         r1<[" "]>(right)      f(("👯‍♂️"))
+
+    a --> c
+```
