@@ -17,6 +17,8 @@ User? get currentUser => FirebaseAuth.instance.currentUser;
 /// UserService.instance.user
 ///
 /// It's nullable
+///
+/// DB 에서 사용자 문서가 업데이트되면, 이 값도 자동으로 업데이트(sync)된다.
 UserModel? get my => UserService.instance.user;
 
 /// For more readability.

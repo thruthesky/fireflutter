@@ -12,6 +12,7 @@ class Path {
 
   static String phoneNumber =
       '${Folder.userPrivate}/$myUid/${Field.phoneNumber}';
+  static String email = '${Folder.userPrivate}/$myUid/${Field.email}';
 
   /// Forum
   static const String posts = Folder.posts;

@@ -143,6 +143,7 @@ export 'src/user/widgets/login/default_login_first.screen.dart';
 export 'src/user/widgets/admin.dart';
 export 'src/user/widgets/birthday_update_dialog.dart';
 export 'src/user/widgets/update_birthday_field.dart';
+export 'src/user/widgets/birthday_update.dart';
 export 'src/user/widgets/user.tile.dart';
 export 'src/user/user.private.model.dart';
 

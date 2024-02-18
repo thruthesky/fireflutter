@@ -1,10 +1,16 @@
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
+@Deprecated('Use UpdateBirthday instead')
 class UpdateBirthdayField extends StatefulWidget {
-  const UpdateBirthdayField({super.key, required this.user});
+  const UpdateBirthdayField({
+    super.key,
+    required this.user,
+    this.displayLabel = true,
+  });
 
   final UserModel user;
+  final bool displayLabel;
 
   @override
   State<UpdateBirthdayField> createState() => _UpdateBirthdayState();
@@ -33,7 +39,7 @@ class _UpdateBirthdayState extends State<UpdateBirthdayField> {
   @override
   Widget build(BuildContext context) {
     return TextWithLable(
-      label: T.birthdateLabel.tr, // '생년월일',
+      label: widget.displayLabel ? T.birthdateLabel.tr : null, // '생년월일',
       description:
           T.birthdateSelectDescription.tr, // '본인 인증에 필요하므로 정확히 입력해주세요.',
       text: widget.user.birthYear == 0
