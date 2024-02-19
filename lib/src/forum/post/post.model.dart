@@ -323,17 +323,8 @@ class PostModel {
     // QUESTION: Do we need to retrieve comments from RTDB
     //           to check if there are comments?
     final snapshot = await Ref.postComments(id).limitToFirst(1).get();
-    dog("Post Id: $id");
-    dog("Comment exists: ${snapshot.exists}");
     final doesCommentsExist = snapshot.exists;
     if (doesCommentsExist) {
-      dog("Ref path: ${ref.path}");
-      // await update(
-      //   title: null,
-      //   content: null,
-      //   urls: null,
-      //   deleted: true,
-      // );
       await update(
         otherData: {
           Field.title: null,

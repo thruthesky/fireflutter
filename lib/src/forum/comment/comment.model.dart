@@ -17,7 +17,8 @@ class CommentModel {
 
   bool deleted;
 
-  /// Get the post id of the comment
+  /// Get the post id of the comment.
+  ///
   String get postId => ref.parent!.key!;
 
   List<String> likes;
@@ -39,15 +40,6 @@ class CommentModel {
     } else {
       return 108;
     }
-  }
-
-  /// Get the path of the field
-  ///
-  /// ```dart
-  /// path(Field.content); // --> /coments/postId/commentId/content
-  /// ```
-  String path(String field) {
-    return '${Path.comment(postId, id)}/$field';
   }
 
   CommentModel({

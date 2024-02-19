@@ -41,7 +41,8 @@ class _CommnetViewState extends State<CommentView> {
               CommentContent(comment: widget.comment),
               const SizedBox(height: 8),
               DisplayDatabasePhotos(
-                path: widget.comment.path(Field.urls),
+                path:
+                    '${Path.comment(widget.post.id, widget.comment.id)}/${Field.urls}',
               ),
               Theme(
                 data: Theme.of(context).copyWith(
