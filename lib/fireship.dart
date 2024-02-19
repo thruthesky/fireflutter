@@ -80,16 +80,18 @@ export 'src/database.functions.dart';
 
 /// Forum, Post, Comment
 export 'src/forum/forum.service.dart';
-export 'src/forum/widgets/post.edit.screen.dart';
-export 'src/forum/widgets/post.view.screen.dart';
-export 'src/forum/post.model.dart';
-export 'src/forum/comment.model.dart';
-export 'src/forum/widgets/post.list.tile.dart';
-export 'src/forum/widgets/post.content.dart';
-export 'src/forum/widgets/post.meta.dart';
-export 'src/forum/widgets/comment.edit.dialog.dart';
-export 'src/forum/widgets/post.title.dart';
-export 'src/forum/widgets/comment.view.dart';
+export 'src/forum/post/widgets/post.edit.screen.dart';
+export 'src/forum/post/widgets/post.view.screen.dart';
+export 'src/forum/post/post.model.dart';
+export 'src/forum/comment/comment.model.dart';
+export 'src/forum/post/widgets/post.list.tile.dart';
+export 'src/forum/post/widgets/post.content.dart';
+export 'src/forum/post/widgets/post.meta.dart';
+export 'src/forum/comment/widgets/comment.edit.dialog.dart';
+export 'src/forum/post/widgets/post.title.dart';
+export 'src/forum/post/widgets/post.list_view.dart';
+export 'src/forum/comment/widgets/comment.view.dart';
+export 'src/forum/comment/widgets/comment.list_view.dart';
 
 /// message
 export 'src/messaging/messaging.service.dart';

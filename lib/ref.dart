@@ -42,7 +42,7 @@ class Ref {
   /// Forum Comments
   static DatabaseReference comments = root.child(Folder.comments);
   static DatabaseReference postComments(String postId) =>
-      comments.child(postId);
+      root.child(Path.comments(postId));
   static DatabaseReference postComment(String postId, String commentId) =>
       postComments(postId).child(commentId);
 
