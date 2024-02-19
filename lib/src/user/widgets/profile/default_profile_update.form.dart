@@ -1,26 +1,35 @@
 import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:country_code_picker/country_code_picker.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
 class DefaultProfileUpdateForm extends StatefulWidget {
-  const DefaultProfileUpdateForm({
-    super.key,
-    this.occupation = true,
-    this.stateMessage = true,
-    this.gender = true,
-    this.nationality = true,
-    this.region = true,
-    this.dropdownTheme,
-    this.onUpdate,
-  });
+  const DefaultProfileUpdateForm(
+      {super.key,
+      this.occupation = false,
+      this.stateMessage = true,
+      this.gender = true,
+      this.nationality = false,
+      this.region = true,
+      this.morePhotos = false,
+      this.onUpdate,
+      this.countryFilter,
+      this.koreanAreaLanguageCode = 'ko',
+      this.countryPickerTheme});
 
   final void Function()? onUpdate;
+  // use [occupation] to hide the occupation field
   final bool occupation;
   final bool stateMessage;
   final bool gender;
   final bool nationality;
   final bool region;
-  final BoxDecoration? dropdownTheme;
+  // use countryFilter to list only the country you want to display in the screen
+  final List<String>? countryFilter;
+
+  final bool morePhotos;
+  final String koreanAreaLanguageCode;
+  final ThemeData? countryPickerTheme;
 
   @override
   State<DefaultProfileUpdateForm> createState() =>
@@ -29,12 +38,16 @@ class DefaultProfileUpdateForm extends StatefulWidget {
 
 class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
   double? progress;
+  double? morePhotoProgress;
   final nameController = TextEditingController();
   String? nationality;
-  String? region;
+  AreaCode? siDo;
+  AreaCode? siGunGu;
   final occupationController = TextEditingController();
   final stateMessageController = TextEditingController();
   String? gender;
+  List<String> urls = [];
+  List<String>? regionCode;
 
   UserModel get user => UserService.instance.user!;
 
@@ -45,14 +58,21 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
     nameController.text = my?.displayName ?? '';
     if (user.nationality != '') {
       nationality = user.nationality;
-      if (user.region != '') {
-        region = user.region;
-      }
     }
+    if (user.siDo != '') {
+      siDo = getSiDo(widget.koreanAreaLanguageCode, user.siDo);
+    }
+
+    // if (user.siGunGu != '') {
+    //   siGunGu =
+    // }
+
     if (user.gender != '') {
       gender = user.gender;
     }
-
+    if (user.photoUrls.isNotEmpty) {
+      urls = user.photoUrls;
+    }
     stateMessageController.text = user.stateMessage;
     occupationController.text = user.occupation;
   }
@@ -60,6 +80,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Center(
           child: Column(
@@ -128,13 +149,12 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                             ),
                           ),
                   ),
-                  Positioned(
+                  const Positioned(
                     bottom: 0,
                     left: 0,
                     right: 0,
                     child: Center(
-                      child: DefaultAvatarUpdate(
-                        uid: myUid!,
+                      child: UserAvatarUpdate(
                         radius: 80,
                         delete: false,
                       ),
@@ -153,159 +173,282 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
             ],
           ),
         ),
+        const SizedBox(height: 32),
         TextField(
           controller: nameController,
           decoration: InputDecoration(
             labelText: T.name.tr,
           ),
         ),
-        if (widget.stateMessage) ...{
-          const SizedBox(height: 32),
-          TextField(
-            controller: stateMessageController,
-            decoration: InputDecoration(
-              labelText: T.stateMessage.tr,
-            ),
-          ),
-        },
         if (widget.gender) ...{
           const SizedBox(height: 32),
           const Text('Gender'),
-          Row(
-            children: [
-              Expanded(
-                child: RadioListTile<String>(
-                  title: const Text('Male'),
-                  value: 'Male',
-                  groupValue: gender,
-                  onChanged: (value) {
-                    setState(() {
-                      gender = value;
-                    });
-                  },
-                ),
+          const SizedBox(height: 4),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Theme.of(context).colorScheme.secondary.withAlpha(128),
+                width: 1,
               ),
-              Expanded(
-                child: RadioListTile<String>(
-                  title: const Text('Female'),
-                  value: 'Female',
-                  groupValue: gender,
-                  onChanged: (value) {
-                    setState(() {
-                      gender = value;
-                    });
-                  },
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.only(
+              right: 8,
+              top: 4,
+              left: 8,
+              bottom: 4,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: RadioListTile<String>(
+                    title: Text(T.male.tr),
+                    value: 'Male',
+                    groupValue: gender,
+                    onChanged: (value) {
+                      setState(() {
+                        gender = value;
+                      });
+                    },
+                  ),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: RadioListTile<String>(
+                    title: Text(T.female.tr),
+                    value: 'Female',
+                    groupValue: gender,
+                    onChanged: (value) {
+                      setState(() {
+                        gender = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         },
-        MyDoc(builder: (my) => UpdateBirthdayField(user: user)),
+        const SizedBox(height: 32),
+        MyDoc(
+          builder: (my) => BirthdayUpdate(
+            label: T.birthdateLabel.tr,
+            description: T.birthdateSelectDescription.tr,
+          ),
+        ),
         if (widget.nationality) ...{
-          const SizedBox(height: 32),
-          const Text('Nationality'),
-          Container(
-            height: 65,
-            decoration: widget.dropdownTheme ??
-                BoxDecoration(
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.secondary,
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.circular(24),
-                ),
-            padding: const EdgeInsets.only(right: 8, top: 16, left: 8),
-            child: DropdownButton<String>(
-              value: nationality,
-              onChanged: (value) {
-                setState(() {
-                  nationality = value as String;
-                });
-              },
-              items: const [
-                DropdownMenuItem(value: 'Korea', child: Text('Korea')),
-                DropdownMenuItem(
-                    value: 'United States', child: Text('United States')),
-                DropdownMenuItem(value: 'Vietnam', child: Text('Vietnam')),
-                DropdownMenuItem(value: 'Thailand', child: Text('Thailand')),
-                DropdownMenuItem(value: 'Laos', child: Text('Laos')),
-                DropdownMenuItem(value: 'Myanmar', child: Text('Myanmar')),
-                // Add more countries as needed
-              ],
-              isDense: true,
-              isExpanded: true,
+          const SizedBox(
+            height: 32,
+          ),
+          Text(T.nationality.tr),
+          Theme(
+            data: widget.countryPickerTheme ??
+                Theme.of(context).copyWith(
+                    inputDecorationTheme:
+                        Theme.of(context).inputDecorationTheme.copyWith(
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.all(0),
+                            ),
+                    elevatedButtonTheme: ElevatedButtonThemeData(
+                      style:
+                          Theme.of(context).elevatedButtonTheme.style?.copyWith(
+                                padding: MaterialStateProperty.all(
+                                    const EdgeInsets.all(16)),
+                              ),
+                    )),
+            child: SizedBox(
+              width: double.infinity,
+              child: CountryPicker(
+                initialValue: nationality,
+                filters: widget.countryFilter,
+                search: false,
+                headerBuilder: () => const Text('Select your country'),
+                onChanged: (v) {
+                  nationality = v.alpha2;
+                },
+              ),
             ),
           ),
         },
         if (widget.region) ...{
-          if (nationality == 'Korea') ...{
-            const SizedBox(height: 32),
-            const Text('Region'),
-            Container(
-              height: 65,
-              decoration: widget.dropdownTheme ??
-                  BoxDecoration(
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.secondary,
-                      width: 2,
-                    ),
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-              padding: const EdgeInsets.only(right: 8, top: 16, left: 8),
-              child: DropdownButton<String>(
-                hint: const Text('Region'),
-                value: region,
-                onChanged: (value) {
-                  setState(() {
-                    region = value as String;
-                  });
-                },
-                items: const [
-                  DropdownMenuItem(value: 'Haeso', child: Text('Haeso')),
-                  DropdownMenuItem(value: 'Kwanso', child: Text('Kwanso')),
-                  DropdownMenuItem(value: 'Kwanbuk', child: Text('Kwanbuk')),
-                  DropdownMenuItem(value: 'Gwandong', child: Text('Gwandong')),
-                  DropdownMenuItem(value: 'Gyeonggi', child: Text('Gyeonggi')),
-                  DropdownMenuItem(value: 'Honam', child: Text('Honam')),
-                  DropdownMenuItem(value: 'Yeongnam', child: Text('Yeongnam')),
-                  // Add more countries as needed
-                ],
-                isDense: true,
-                isExpanded: true,
-              ),
-            )
-          },
+          const SizedBox(height: 24),
+          Text(T.region.tr),
+          // init value
+          KoreanSiGunGuSelector(
+              languageCode: widget.koreanAreaLanguageCode,
+              initSiDoCode: siDo?.code,
+              initSiGunGuCode: siGunGu?.code,
+              onChangedSiDoCode: (siDo) {},
+              onChangedSiGunGuCode: (v, vv) {
+                siDo = v;
+                siGunGu = vv;
+                dog('siGunGu $siDo , $siGunGu');
+                setState(() {});
+              }),
         },
         if (widget.occupation) ...{
           const SizedBox(height: 32),
-          const Text('Occupation'),
+          Text(T.occupation.tr),
           TextField(
             controller: occupationController,
+          ),
+        },
+        if (widget.morePhotos) ...{
+          const SizedBox(height: 32),
+          Text(T.pleaseAddMorePhotos.tr),
+          SizedBox(
+              height: 16,
+              child: Column(
+                children: [
+                  morePhotoProgress != null && morePhotoProgress!.isNaN == false
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: LinearProgressIndicator(
+                            value: progress,
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ],
+              )),
+          Wrap(
+            runAlignment: WrapAlignment.start,
+            spacing: 16,
+            runSpacing: 16,
+            children: [
+              // display content for urls
+              ...urls.map((url) {
+                return Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(24),
+                      child: CachedNetworkImage(
+                        imageUrl: url,
+                        fit: BoxFit.cover,
+                        width: 130,
+                        height: 130,
+                      ),
+                    ),
+                    // delete image
+                    Positioned(
+                      top: 4,
+                      right: 8,
+                      child: GestureDetector(
+                        onTap: () async {
+                          final re = await confirm(
+                              context: context,
+                              title: '${'delete'.tr}?',
+                              message: '${'doYouWantToDeleteThisPhoto'.tr}?');
+                          if (re != true) return;
+                          urls.remove(url);
+                          await StorageService.instance.delete(url);
+                          setState(() {});
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withAlpha(100),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Icon(
+                            Icons.delete,
+                            size: 20,
+                            color: Theme.of(context).colorScheme.onSecondary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }),
+              if (urls.length < 4)
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () async {
+                    final String? url = await StorageService.instance.upload(
+                      context: context,
+                      progress: (p) => setState(() => progress = p),
+                      complete: () => setState(() => progress = null),
+                    );
+                    if (url != null) {
+                      setState(() {
+                        progress = null;
+                        urls.add(url);
+                      });
+                    }
+                  },
+                  child: Container(
+                    width: 120,
+                    height: 120,
+                    color: Colors.grey[300],
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.all(8),
+                    child: const Icon(Icons.add),
+                  ),
+                ),
+            ],
+          ),
+        },
+        if (widget.stateMessage) ...{
+          const SizedBox(height: 32),
+          TextField(
+            controller: stateMessageController,
+            minLines: 5,
+            maxLines: 5,
+            decoration: InputDecoration(
+              labelText: T.stateMessage.tr,
+            ),
           ),
         },
         const SizedBox(height: 24),
         Center(
           child: ElevatedButton(
             onPressed: () async {
-              if (nameController.text.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(T.inputName.tr),
-                  ),
-                );
+              dog('$siGunGu');
+              if (nameController.text.trim().isEmpty) {
+                errorToast(context: context, message: T.inputName.tr);
+                return;
+              } else if (widget.gender && gender == null) {
+                errorToast(context: context, message: T.pleaseSelectGender.tr);
+                return;
+              } else if (widget.nationality && nationality == null) {
+                errorToast(
+                    context: context, message: T.pleaseSelectNationality.tr);
+                return;
+              } else if (widget.region && siGunGu == null) {
+                errorToast(context: context, message: T.pleaseSelectRegion.tr);
+                return;
+              } else if (widget.occupation &&
+                  occupationController.text.trim().isEmpty) {
+                errorToast(
+                    context: context, message: T.pleaseInputOccupation.tr);
+                return;
+              } else if (widget.morePhotos && urls.isEmpty) {
+                errorToast(context: context, message: T.pleaseAddMorePhotos.tr);
+                return;
+              } else if (widget.stateMessage &&
+                  stateMessageController.text.trim().isEmpty) {
+                errorToast(
+                    context: context, message: T.pleaseInputStateMessage.tr);
                 return;
               }
               await my!.update(
-                name: nameController.text,
-                displayName: nameController.text,
-                gender: gender,
-                nationality: nationality,
-                region: region,
-                occupation: occupationController.text,
-              );
+                  name: nameController.text,
+                  displayName: nameController.text,
+                  gender: gender,
+                  nationality: nationality,
+                  siDo: siDo?.code,
+                  siGunGu: siGunGu?.code,
+                  occupation: occupationController.text,
+                  photoUrls: urls,
+                  stateMessage: stateMessageController.text);
 
               if (widget.onUpdate != null) {
-                dog('asdasdasdasdasd');
                 widget.onUpdate!();
               }
               if (mounted) toast(context: context, message: T.saved.tr);

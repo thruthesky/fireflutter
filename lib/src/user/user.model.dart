@@ -23,7 +23,10 @@ class UserModel {
 
   /// 사용자가 직접 입력하는 별명
   String displayName;
+
+  @Deprecated('email is a private informationn. Use UserPrivateModel')
   String email;
+  @Deprecated('phoneNumber is a private informationn. Use UserPrivateModel')
   String phoneNumber;
 
   /// The primary photo URL of the user.
@@ -49,7 +52,8 @@ class UserModel {
   List<String>? blocks;
   String gender;
   String nationality;
-  String region;
+  String siDo;
+  String siGunGu;
 
   /// 신분증 업로드한 url
   ///
@@ -121,7 +125,8 @@ class UserModel {
     required this.idUploadedAt,
     required this.occupation,
     required this.nationality,
-    required this.region,
+    required this.siDo,
+    required this.siGunGu,
   });
 
   factory UserModel.fromSnapshot(DataSnapshot snapshot) {
@@ -178,7 +183,8 @@ class UserModel {
       idUploadedAt: json[Field.idUploadedAt] ?? 0,
       occupation: json[Field.occupation] ?? '',
       nationality: json['nationality'] ?? '',
-      region: json['region'] ?? '',
+      siDo: json['siDo'] ?? '',
+      siGunGu: json['siGunGu'] ?? '',
     );
   }
 
@@ -208,7 +214,8 @@ class UserModel {
       Field.idUploadedAt: idUploadedAt,
       Field.occupation: occupation,
       'nationality': nationality,
-      'region': region,
+      'siDo': siDo,
+      'siGunGu': siGunGu,
     };
   }
 
@@ -244,7 +251,8 @@ class UserModel {
       idUploadedAt = user.idUploadedAt;
       occupation = user.occupation;
       nationality = user.nationality;
-      region = user.region;
+      siDo = user.siDo;
+      siGunGu = user.siGunGu;
     }
 
     return this;
@@ -328,7 +336,8 @@ class UserModel {
     String? idUrl,
     String? occupation,
     String? nationality,
-    String? region,
+    String? siDo,
+    String? siGunGu,
   }) async {
     final data = {
       if (name != null) 'name': name,
@@ -351,7 +360,8 @@ class UserModel {
       if (idUrl != null) 'idUrl': idUrl,
       if (occupation != null) Field.occupation: occupation,
       if (nationality != null) 'nationality': nationality,
-      if (region != null) 'region': region,
+      if (siDo != null) 'siDo': siDo,
+      if (siGunGu != null) 'siGunGu': siGunGu,
     };
     if (data.isEmpty) {
       return this;

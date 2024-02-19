@@ -60,7 +60,7 @@
       "program": "lib/main.dart"
     },
     {
-      "name": "Momcafe - iPhone 11 Pro Max",
+      "name": "Momcafe - iPhone11ProMax",
       "request": "launch",
       "type": "dart",
       "deviceId": "iPhone11ProMax",

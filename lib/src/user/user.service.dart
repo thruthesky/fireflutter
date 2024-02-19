@@ -10,6 +10,7 @@ class UserService {
   static UserService? _instance;
   static UserService get instance => _instance ??= UserService._();
 
+  /// DB 에서 사용자 문서가 업데이트되면, 자동으로 이 변수에 sync 된다.
   UserModel? user;
   final rtdb = FirebaseDatabase.instance.ref();
   DatabaseReference get userRef => rtdb.child('users');

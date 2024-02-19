@@ -26,7 +26,7 @@ class UserPrivateModel {
 
   static Future<UserPrivateModel> get() async {
     final data = await fireship.get<Map>(
-      '${Folder.usersPrivate}/${fireship.my!.uid}',
+      '${Folder.userPrivate}/${fireship.my!.uid}',
     );
     return UserPrivateModel.fromJson(data ?? {});
   }
@@ -46,7 +46,7 @@ class UserPrivateModel {
     }
 
     await fireship.update(
-      '${Folder.usersPrivate}/${fireship.my!.uid}',
+      '${Folder.userPrivate}/${fireship.my!.uid}',
       data,
     );
   }

@@ -21,14 +21,9 @@ runZonedGuarded(
     },
     zoneErrorHandler,
   );
-  /// TODO record this error
   zoneErrorHandler(error, stackTrace) {
-    /// Unhandled exceptions NOT from flutter framework.
-    /// Firebase exceptions or dart(outside flutter) exceptions.
-    /// Error from outside of Flutter will be handled here.
     print("----> runZoneGuarded() : exceptions outside flutter framework.");
-    print("---> runtimeType: ${error.runtimeType}");
-
+    print("---> runtimeType: ${error.runtimeType}"); 
     if (error is FirebaseAuthException) {
       if (AppService.instance.smsCodeAutoRetrieval) {
         if (error.code.contains('session-expired') ||
@@ -52,6 +47,30 @@ runZonedGuarded(
 ```
 
 
+## 다국어
+
+다국어를 쓰기 위해서는 iOS 에서는 `Info.plist` 에 아래와 같이 추가를 해 주어야 한다.
+
+```xml
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>ko</string>
+	</array>
+```
+
+그리고 앱에 적절히 언어 설정을 하고 `TextService.instance.texts` 에 국가별 언어를 설정하면 된다.
+
+```dart
+// 아래와 같이 원하는 언어를 추가하고,
+TextService.instance.texts = {
+  ...TextService.instance.texts,
+    'login': systemLanguageCode == 'ko' ? '로그인' : 'Login',
+};
+
+// 아래아 같이 쓰면 된다.
+Text('login'.tr);
+```
 
 
 ## 로그인 관련 위젯
@@ -59,7 +78,7 @@ runZonedGuarded(
 
 ### SimpleEmailPasswordLoginForm
 
-간단한 email 과 비밀번호 로그인 기능을 제공한다.
+간단한 email 과 비밀번호 로그인 기능을 제공한다. 이 위젯의 소스 코드를 복사해서 수정해서 쓰면 된다.
 
 
 ### SimplePhoneSignIn
@@ -129,3 +148,10 @@ To list chat rooms that the login user joined, use `DefaultChatRoomListView` wid
 ### Chat room create
 
 
+
+
+## 쓰기 쉬운 가편한 위젯
+
+### LabelField
+
+위젯 항목을 참고한다.

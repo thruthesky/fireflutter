@@ -1,3 +1,4 @@
+import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
@@ -14,13 +15,6 @@ class PostViewScreen extends StatefulWidget {
 class _PostViewScreenState extends State<PostViewScreen> {
   PostModel get post => widget.post;
   int? previousNoOfLikes;
-  @override
-  void initState() {
-    super.initState();
-    post.reload().then((x) => setState(
-          () {},
-        ));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +100,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       if (value == 'edit') {
                         await ForumService.instance
                             .showPostUpdateScreen(context, post: post);
-                        post.reload();
+                        await post.reload();
+                        if (mounted) setState(() {});
                       } else if (value == 'delete') {
                         final re = await confirm(
                           context: context,
@@ -126,16 +121,11 @@ class _PostViewScreenState extends State<PostViewScreen> {
                 behavior: HitTestBehavior.opaque,
                 onTap: () async {
                   /// 텍스트 입력 버튼 액션
-                  final re =
-                      await ForumService.instance.showCommentCreateScreen(
+                  await ForumService.instance.showCommentCreateScreen(
                     context,
                     post: post,
                     focusOnTextField: true,
                   );
-                  if (re == true) {
-                    await post.reload();
-                    setState(() {});
-                  }
                 },
                 child: Container(
                   margin:
@@ -149,16 +139,11 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       /// 사진 버튼
                       IconButton(
                         onPressed: () async {
-                          final re = await ForumService.instance
-                              .showCommentCreateScreen(
+                          await ForumService.instance.showCommentCreateScreen(
                             context,
                             post: post,
                             showUploadDialog: true,
                           );
-                          if (re == true) {
-                            await post.reload();
-                            setState(() {});
-                          }
                         },
                         icon: const Icon(Icons.camera_alt),
                       ),
@@ -169,22 +154,37 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   ),
                 ),
               ),
-
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: post.comments.length,
-                itemBuilder: (context, index) {
-                  final CommentModel comment = post.comments[index];
-                  return CommentView(
-                    post: post,
-                    comment: comment,
-                    onCreate: () {
-                      post.reload().then((value) => setState(() {}));
+              FirebaseDatabaseQueryBuilder(
+                query: post.commentsRef,
+                pageSize: 100,
+                builder: (context, snapshot, _) {
+                  if (snapshot.isFetching) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasMore) {
+                    snapshot.fetchMore();
+                  }
+                  if (snapshot.hasError) {
+                    return Center(child: Text(snapshot.error.toString()));
+                  }
+                  if (snapshot.docs.isEmpty) {
+                    return const Center(child: Text('No comments'));
+                  }
+                  final comments = PostModel.sortComments(snapshot.docs);
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: comments.length,
+                    itemBuilder: (context, index) {
+                      final comment = comments[index];
+                      return CommentView(
+                        post: post,
+                        comment: comment,
+                      );
                     },
                   );
                 },
-              )
+              ),
             ],
           ),
         ),

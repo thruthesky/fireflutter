@@ -53,7 +53,7 @@ SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
 
 ## Comments
 
-Refer to [Comments doc](comments.md).
+Refer to [Comment doc](comments.md).
 
 ## Posts
 

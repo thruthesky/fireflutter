@@ -17,6 +17,8 @@ User? get currentUser => FirebaseAuth.instance.currentUser;
 /// UserService.instance.user
 ///
 /// It's nullable
+///
+/// DB 에서 사용자 문서가 업데이트되면, 이 값도 자동으로 업데이트(sync)된다.
 UserModel? get my => UserService.instance.user;
 
 /// For more readability.
@@ -192,6 +194,34 @@ ScaffoldFeatureController toast({
         ],
       ),
     ),
+  );
+}
+
+ScaffoldFeatureController errorToast({
+  required BuildContext context,
+  String? title,
+  required String message,
+  Icon? icon,
+  Duration duration = const Duration(seconds: 8),
+  Function(Function)? onTap,
+  bool? error,
+  bool hideCloseButton = false,
+  Color? backgroundColor,
+  Color? foregroundColor,
+  double runSpacing = 12,
+}) {
+  return toast(
+    context: context,
+    title: title,
+    message: message,
+    icon: icon,
+    duration: duration,
+    onTap: onTap,
+    error: true,
+    hideCloseButton: hideCloseButton,
+    backgroundColor: backgroundColor,
+    foregroundColor: foregroundColor,
+    runSpacing: runSpacing,
   );
 }
 
@@ -407,4 +437,16 @@ Future<({User user, bool register})> loginOrRegister({
 
     return (user: user, register: true);
   }
+}
+
+/// Return true if the value is false, or empty.
+///
+bool empty(v) {
+  if (v == null) return true;
+  if (v is String) return v.isEmpty;
+  if (v is List) return v.isEmpty;
+  if (v is Map) return v.isEmpty;
+  if (v == 0) return true;
+  if (v == false) return true;
+  return false;
 }

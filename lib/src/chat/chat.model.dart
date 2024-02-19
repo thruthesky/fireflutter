@@ -68,6 +68,8 @@ class ChatModel {
   }) async {
     if ((url == null || url.isEmpty) && (text == null || text.isEmpty)) return;
 
+    ChatService.instance.testBeforeSendMessage?.call(this);
+
     /// TODO 관리자 모드에서 특정 사용자에게 disabled 한 다음 테스트 할 것.
     if (force == false && UserService.instance.user?.isDisabled == true) {
       throw Issue(Code.disabled);
