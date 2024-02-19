@@ -29,7 +29,6 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
   String? siDoCode;
   String? siGunGuCode;
   List<AreaCode>? secondaryAddresses;
-  bool isLoading = false;
 
   // for review sir song
   @override

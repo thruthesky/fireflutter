@@ -63,9 +63,10 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
       siDo = getSiDo(widget.koreanAreaLanguageCode, user.siDo);
     }
 
-    // if (user.siGunGu != '') {
-    //   siGunGu =
-    // }
+    if (user.siGunGu != '') {
+      siGunGu =
+          getSiGunGu(widget.koreanAreaLanguageCode, user.siDo, user.siGunGu);
+    }
 
     if (user.gender != '') {
       gender = user.gender;
