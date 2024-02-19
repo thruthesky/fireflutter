@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 /// User Tile
 ///
 /// Use this widget to display a user's information in a list.
+///
+/// [onTap] is optional. If not provided, the fireship will open the user's
+/// public profile screen. If provided, the function will be called when the
+/// user's tile is tapped.
 class UserTile extends StatelessWidget {
   const UserTile({
     Key? key,
@@ -64,7 +68,12 @@ class UserTile extends StatelessWidget {
     );
     if (onTap != null) {
       return InkWell(
-        onTap: () => onTap!(user),
+        onTap: () =>
+            onTap?.call(user) ??
+            UserService.instance.showPublicProfile(
+              context: context,
+              uid: user.uid,
+            ),
         child: child,
       );
     } else {

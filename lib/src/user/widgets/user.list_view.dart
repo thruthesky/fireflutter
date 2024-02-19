@@ -6,9 +6,18 @@ import 'package:flutter/material.dart';
 /// UserListView
 ///
 /// Displays a list of users.
+///
+/// Example:
+/// ```dart
+/// UserListView()
+/// ```
 class UserListView extends StatelessWidget {
-  const UserListView(
-      {super.key, this.query, this.shrinkWrap = false, this.onTap});
+  const UserListView({
+    super.key,
+    this.query,
+    this.shrinkWrap = false,
+    this.onTap,
+  });
 
   final Query? query;
   final bool shrinkWrap;
@@ -19,18 +28,9 @@ class UserListView extends StatelessWidget {
       query: query ?? Ref.users,
       shrinkWrap: shrinkWrap,
       itemBuilder: (_, snapshot) => UserTile(
-          user: UserModel.fromSnapshot(snapshot),
-          onTap: (user) {
-            if (onTap != null) {
-              onTap!(user);
-              return;
-            } else {
-              UserService.instance.showPublicProfile(
-                context: context,
-                uid: user.uid,
-              );
-            }
-          }),
+        user: UserModel.fromSnapshot(snapshot),
+        onTap: onTap,
+      ),
     );
   }
 }
