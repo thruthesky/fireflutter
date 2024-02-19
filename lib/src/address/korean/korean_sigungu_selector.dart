@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 

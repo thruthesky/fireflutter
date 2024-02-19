@@ -19,6 +19,7 @@ export 'src/common/avatar.dart';
 export 'src/common/stacked_avatar.dart';
 export 'src/common/date_time_short.dart';
 export 'src/common/text_with_label.dart';
+export 'src/common/text_field/label_field.dart';
 
 /// Common / Country picker
 export 'src/common/country_picker/country_picker.dart';
@@ -41,6 +42,7 @@ export 'src/common/url_preview/url_preview.model.dart';
 /// Datbase
 export 'src/database/widgets/database.count.dart';
 export 'src/database/widgets/database.dart';
+export 'src/database/widgets/value.dart';
 
 /// Defines
 export 'fireship.defines.dart';
@@ -141,6 +143,7 @@ export 'src/user/widgets/login/default_login_first.screen.dart';
 export 'src/user/widgets/admin.dart';
 export 'src/user/widgets/birthday_update_dialog.dart';
 export 'src/user/widgets/update_birthday_field.dart';
+export 'src/user/widgets/birthday_update.dart';
 export 'src/user/widgets/user.tile.dart';
 export 'src/user/user.private.model.dart';
 

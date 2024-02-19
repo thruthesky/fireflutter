@@ -230,7 +230,10 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
         },
         const SizedBox(height: 32),
         MyDoc(
-          builder: (my) => UpdateBirthdayField(user: my ?? user),
+          builder: (my) => BirthdayUpdate(
+            label: T.birthdateLabel.tr,
+            description: T.birthdateSelectDescription.tr,
+          ),
         ),
         if (widget.nationality) ...{
           const SizedBox(

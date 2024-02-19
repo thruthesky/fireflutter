@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class TextWithLable extends StatelessWidget {
   const TextWithLable({
     super.key,
-    required this.label,
+    this.label,
     required this.text,
     this.description,
     required this.onTap,
   });
 
-  final String label;
+  final String? label;
   final String text;
   final String? description;
   final Function() onTap;
@@ -22,13 +22,14 @@ class TextWithLable extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Text(
-              label,
-              style: Theme.of(context).textTheme.labelSmall,
+          if (label != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Text(
+                label!,
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
             ),
-          ),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),

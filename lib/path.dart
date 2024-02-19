@@ -10,6 +10,10 @@ class Path {
   static String like(String a, String b) => '$userWhoIlike/$a/$b';
   static const String userProfilePhotos = Folder.userProfilePhotos;
 
+  static String phoneNumber =
+      '${Folder.userPrivate}/$myUid/${Field.phoneNumber}';
+  static String email = '${Folder.userPrivate}/$myUid/${Field.email}';
+
   /// Forum
   static const String posts = Folder.posts;
   static const String postSubscriptions = Folder.postSubscriptions;
