@@ -40,9 +40,8 @@ class _CommnetViewState extends State<CommentView> {
             children: [
               CommentContent(comment: widget.comment),
               const SizedBox(height: 8),
-              widget.comment.onFieldChange(
-                Field.urls,
-                (v) => DisplayPhotos(urls: List<String>.from(v ?? [])),
+              DisplayDatabasePhotos(
+                path: widget.comment.path(Field.urls),
               ),
               Theme(
                 data: Theme.of(context).copyWith(

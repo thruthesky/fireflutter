@@ -114,6 +114,7 @@ export 'src/storage/widgets/default_upload_selection.bottom_sheet.dart';
 export 'src/storage/widgets/default_image_carousel.scaffold.dart';
 export 'src/storage/widgets/edit_uploads.dart';
 export 'src/storage/widgets/display_photos.dart';
+export 'src/storage/widgets/display_database_photos.dart';
 
 /// Translation
 export 'src/text/text.service.dart';
