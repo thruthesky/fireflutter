@@ -94,6 +94,8 @@ class PostModel {
     );
   }
 
+  /// Get the comments of the post
+  @Deprecated('Use CommentModel.sortComments if needed')
   static List<CommentModel> sortComments(List<DataSnapshot> commentSnapshots) {
     final comments =
         commentSnapshots.map((e) => CommentModel.fromSnapshot(e)).toList();

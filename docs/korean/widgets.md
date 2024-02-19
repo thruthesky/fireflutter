@@ -24,3 +24,13 @@ UpdateBirthday(
 )
 ```
 
+
+
+## DisplayPhotos 사진 표시
+
+
+배열에 URL 을 담아서 전달하면 화면에 사진을 표시 해 준다.
+
+```dart
+DisplayPhotos(urls: List<String>.from(v ?? []))
+```

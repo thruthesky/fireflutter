@@ -41,6 +41,15 @@ class CommentModel {
     }
   }
 
+  /// Get the path of the field
+  ///
+  /// ```dart
+  /// path(Field.content); // --> /coments/postId/commentId/content
+  /// ```
+  String path(String field) {
+    return '${Path.comment(postId, id)}/$field';
+  }
+
   CommentModel({
     required this.ref,
     required this.id,
@@ -152,14 +161,67 @@ class CommentModel {
     required String postId,
     required String commentId,
   }) async {
-    final snapshot = await FirebaseDatabase.instance
-        .ref()
-        .root
-        .child("comments")
-        .child(postId)
-        .child(commentId)
-        .get();
+    final snapshot = await Ref.comments.child(postId).child(commentId).get();
     return CommentModel.fromSnapshot(snapshot);
+  }
+
+  /// Get all the comments of a post
+  ///
+  ///
+  static Future<List<CommentModel>> getAll({
+    required String postId,
+  }) async {
+    print(Ref.comments.child(postId).path);
+    final snapshot = await Ref.comments.child(postId).get();
+    final comments = <CommentModel>[];
+    if (snapshot.value == null) {
+      return comments;
+    }
+    (snapshot.value as Map).forEach((key, value) {
+      final comment = CommentModel.fromMap(
+        value,
+        key,
+        postId: postId,
+      );
+      comments.add(comment);
+    });
+
+    return sortComments(comments);
+  }
+
+  /// Get the comments of the post
+  static List<CommentModel> sortComments(List<CommentModel> comments) {
+    /// Sort comments by createdAt
+    comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
+    final List<CommentModel> newComments = [];
+
+    /// This is the list of comments that are not replies.
+    /// It is sorted by createdAt.
+    /// If the comment is a reply, it has the parentId of the parent comment.
+    /// So, we can find the parent comment by searching the list.
+    /// And add the reply to the parent comment's replies.
+    for (final comment in comments) {
+      if (comment.parentId == null) {
+        newComments.add(comment);
+      } else {
+        /// 부모 찾기
+        final index = newComments.indexWhere((e) => e.id == comment.parentId);
+
+        comment.depth = newComments[index].depth + 1;
+
+        /// 형제 찾기
+        final siblingIndex =
+            newComments.lastIndexWhere((e) => e.parentId == comment.parentId);
+        if (siblingIndex == -1) {
+          newComments.insert(index + 1, comment);
+        } else {
+          newComments.insert(siblingIndex + 1, comment);
+        }
+      }
+    }
+
+    return newComments;
   }
 
   /// Create a comment
@@ -191,6 +253,8 @@ class CommentModel {
       'createdAt': ServerValue.timestamp,
       'urls': urls,
     };
+
+    print("ref: ${ref.path}, data: $data");
 
     await ref.set(data);
 

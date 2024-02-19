@@ -80,16 +80,18 @@ export 'src/database.functions.dart';
 
 /// Forum, Post, Comment
 export 'src/forum/forum.service.dart';
-export 'src/forum/widgets/post.edit.screen.dart';
-export 'src/forum/widgets/post.view.screen.dart';
-export 'src/forum/post.model.dart';
-export 'src/forum/comment.model.dart';
-export 'src/forum/widgets/post.list.tile.dart';
-export 'src/forum/widgets/post.content.dart';
-export 'src/forum/widgets/post.meta.dart';
-export 'src/forum/widgets/comment.edit.dialog.dart';
-export 'src/forum/widgets/post.title.dart';
-export 'src/forum/widgets/comment.view.dart';
+export 'src/forum/post/widgets/post.edit.screen.dart';
+export 'src/forum/post/widgets/post.view.screen.dart';
+export 'src/forum/post/post.model.dart';
+export 'src/forum/comment/comment.model.dart';
+export 'src/forum/post/widgets/post.list.tile.dart';
+export 'src/forum/post/widgets/post.content.dart';
+export 'src/forum/post/widgets/post.meta.dart';
+export 'src/forum/comment/widgets/comment.edit.dialog.dart';
+export 'src/forum/post/widgets/post.title.dart';
+export 'src/forum/post/widgets/post.list_view.dart';
+export 'src/forum/comment/widgets/comment.view.dart';
+export 'src/forum/comment/widgets/comment.list_view.dart';
 
 /// message
 export 'src/messaging/messaging.service.dart';
@@ -112,6 +114,7 @@ export 'src/storage/widgets/default_upload_selection.bottom_sheet.dart';
 export 'src/storage/widgets/default_image_carousel.scaffold.dart';
 export 'src/storage/widgets/edit_uploads.dart';
 export 'src/storage/widgets/display_photos.dart';
+export 'src/storage/widgets/display_database_photos.dart';
 
 /// Translation
 export 'src/text/text.service.dart';
