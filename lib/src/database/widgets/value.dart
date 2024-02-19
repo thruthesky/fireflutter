@@ -36,28 +36,21 @@ class Value extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// To prevent the widget from rebuilding when the data is loaded.
-    /// It reduces the flickering.
-    AsyncSnapshot<DatabaseEvent>? snapshotData;
     return StreamBuilder(
       stream: FirebaseDatabase.instance.ref(path).onValue,
       builder: (context, AsyncSnapshot<DatabaseEvent> event) {
         if (event.connectionState == ConnectionState.waiting) {
-          if (snapshotData != null) {
-            // dog('--> data loaded onced ');
-            return builder(snapshotData!.data!.snapshot.value);
-          }
           return onLoading ?? const SizedBox.shrink();
         }
         if (event.hasError) {
           return Text('Error; path: $path, message: ${event.error}');
         }
-        snapshotData = event;
-        if (event.hasData && event.data!.snapshot.exists) {
-          return builder(event.data!.snapshot.value);
-        } else {
+        if (event.hasData == false || event.data!.snapshot.exists == false) {
           return builder(null);
         }
+
+        // value can be null.
+        return builder(event.data!.snapshot.value);
       },
     );
   }
