@@ -284,6 +284,16 @@
       // "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
+      "name": "Wemeet (Noe) TEST - SM J737S)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "SM J737S",
+      "flutterMode": "debug",
+      "cwd": "apps/wemeet",
+      "program": "lib/main.dart",
+      // "args": ["-v", "--dart-define", "MODE=test"]
+    },
+    {
       "name": "Silvers (Noe) TEST - iPhone 15 Pro (debug)",
       "request": "launch",
       "type": "dart",

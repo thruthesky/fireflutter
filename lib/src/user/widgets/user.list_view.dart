@@ -7,25 +7,30 @@ import 'package:flutter/material.dart';
 ///
 /// Displays a list of users.
 class UserListView extends StatelessWidget {
-  const UserListView({super.key, this.query, this.shrinkWrap = false});
+  const UserListView(
+      {super.key, this.query, this.shrinkWrap = false, this.onTap});
 
   final Query? query;
   final bool shrinkWrap;
-
+  final Function(UserModel)? onTap;
   @override
   Widget build(BuildContext context) {
     return FirebaseDatabaseListView(
       query: query ?? Ref.users,
       shrinkWrap: shrinkWrap,
       itemBuilder: (_, snapshot) => UserTile(
-        user: UserModel.fromSnapshot(snapshot),
-        onTap: (user) {
-          UserService.instance.showPublicProfile(
-            context: context,
-            uid: user.uid,
-          );
-        },
-      ),
+          user: UserModel.fromSnapshot(snapshot),
+          onTap: (user) {
+            if (onTap != null) {
+              onTap!(user);
+              return;
+            } else {
+              UserService.instance.showPublicProfile(
+                context: context,
+                uid: user.uid,
+              );
+            }
+          }),
     );
   }
 }

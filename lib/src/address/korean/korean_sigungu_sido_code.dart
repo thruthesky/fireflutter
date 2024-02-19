@@ -601,3 +601,17 @@ AreaCode? getSiDo(String languageCode, String code) {
     return found;
   }
 }
+
+AreaCode? getSiGunGu(String languageCode, String siDo, String code) {
+  if (code.isEmpty) return null;
+  final found =
+      getSiGunGuCodes(languageCode: languageCode, siDo: siDo).firstWhere(
+    (e) => e.code == code,
+    orElse: () => (code: '', name: ''),
+  );
+  if (found.code.isEmpty) {
+    return null;
+  } else {
+    return found;
+  }
+}

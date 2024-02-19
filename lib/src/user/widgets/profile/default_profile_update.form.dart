@@ -63,9 +63,10 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
       siDo = getSiDo(widget.koreanAreaLanguageCode, user.siDo);
     }
 
-    // if (user.siGunGu != '') {
-    //   siGunGu =
-    // }
+    if (user.siGunGu != '') {
+      siGunGu =
+          getSiGunGu(widget.koreanAreaLanguageCode, user.siDo, user.siGunGu);
+    }
 
     if (user.gender != '') {
       gender = user.gender;
@@ -281,10 +282,11 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
               languageCode: widget.koreanAreaLanguageCode,
               initSiDoCode: siDo?.code,
               initSiGunGuCode: siGunGu?.code,
-              onChangedSiDoCode: (siDo) {},
-              onChangedSiGunGuCode: (v, vv) {
-                siDo = v;
-                siGunGu = vv;
+              onChangedSiDoCode: (siDo) {
+                this.siDo = siDo;
+              },
+              onChangedSiGunGuCode: (siDo, siGunGu) {
+                this.siGunGu = siGunGu;
                 dog('siGunGu $siDo , $siGunGu');
                 setState(() {});
               }),
