@@ -12,7 +12,7 @@ class DefaultPublicProfileScreen extends StatelessWidget {
       body: Stack(
         children: [
           Positioned.fill(
-            child: UserDoc(
+            child: UserDoc.field(
               uid: uid,
               field: Field.profileBackgroundImageUrl,
               builder: (url) => CachedNetworkImage(
@@ -87,9 +87,7 @@ class DefaultPublicProfileScreen extends StatelessWidget {
               const SizedBox(height: 8),
               UserDoc(
                 uid: uid,
-                builder: (data) {
-                  if (data == null) return const SizedBox.shrink();
-                  final user = UserModel.fromJson(data, uid: uid);
+                builder: (user) {
                   return Column(
                     children: [
                       Text(

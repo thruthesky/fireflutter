@@ -97,7 +97,7 @@ class ChatRoomListTile extends StatelessWidget {
 
       // 상태 메세지 표시?
       if (stateMessageAsSubtitle == true) {
-        return UserDoc(
+        return UserDoc.field(
           uid: room.otherUserUid!,
           field: Field.stateMessage,
           // 상태 메시지가 있으면 상태 메시지 표시, 아니면 채팅 메시지 표시
