@@ -19,14 +19,18 @@ class UserListView extends StatelessWidget {
       query: query ?? Ref.users,
       shrinkWrap: shrinkWrap,
       itemBuilder: (_, snapshot) => UserTile(
-        user: UserModel.fromSnapshot(snapshot),
-        onTap: (user) =>
-            onTap!(user) ??
-            UserService.instance.showPublicProfile(
-              context: context,
-              uid: user.uid,
-            ),
-      ),
+          user: UserModel.fromSnapshot(snapshot),
+          onTap: (user) {
+            if (onTap != null) {
+              onTap!(user);
+              return;
+            } else {
+              UserService.instance.showPublicProfile(
+                context: context,
+                uid: user.uid,
+              );
+            }
+          }),
     );
   }
 }
