@@ -225,6 +225,16 @@
       "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
+      "name": "Silvers (Chris) - iPhone 15 Pro Max (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "8B2FB5BD-4CBA-4C09-8810-BD4D3D003ECF",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart",
+      "args": ["-v",]
+    },
+    {
       "name": "Silvers (Chris) TEST - iPhone 15 Pro (debug)",
       "request": "launch",
       "type": "dart",
