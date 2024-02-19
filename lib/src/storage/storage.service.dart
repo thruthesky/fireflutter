@@ -286,4 +286,19 @@ class StorageService {
           DefaultImageCarouselScaffold(urls: urls, index: index),
     );
   }
+
+  Future<List<String>> getAllImagesUrl(String uid) async {
+    List<String> imageUrls = [];
+
+    Reference storageRef =
+        FirebaseStorage.instance.ref().child('users').child(uid);
+    ListResult result = await storageRef.listAll();
+
+    for (Reference ref in result.items) {
+      String downloadUrl = await ref.getDownloadURL();
+      imageUrls.add(downloadUrl);
+    }
+
+    return imageUrls;
+  }
 }
