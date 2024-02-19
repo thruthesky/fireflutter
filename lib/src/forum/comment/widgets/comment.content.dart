@@ -18,10 +18,12 @@ class _CommentContentState extends State<CommentContent> {
   String content = '';
   @override
   Widget build(BuildContext context) {
+    // listen the comment content changes.
     return widget.comment.onFieldChange(
       Field.content,
       (v) {
-        content = v ?? '';
+        // if the vlaue of the content is changed and if it's empty, then use the comment's content.
+        content = v ?? widget.comment.content;
         return _text();
       },
       onLoading: _text(),

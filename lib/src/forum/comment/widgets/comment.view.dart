@@ -1,5 +1,5 @@
 import 'package:fireship/fireship.dart';
-import 'package:fireship/src/forum/widgets/comment.content.dart';
+import 'package:fireship/src/forum/comment/widgets/comment.content.dart';
 import 'package:flutter/material.dart';
 
 class CommentView extends StatefulWidget {
@@ -40,13 +40,18 @@ class _CommnetViewState extends State<CommentView> {
             children: [
               CommentContent(comment: widget.comment),
               const SizedBox(height: 8),
-              DisplayPhotos(urls: widget.comment.urls),
+              DisplayDatabasePhotos(
+                path:
+                    '${Path.comment(widget.post.id, widget.comment.id)}/${Field.urls}',
+              ),
               Theme(
                 data: Theme.of(context).copyWith(
                   textButtonTheme: TextButtonThemeData(
                     style: TextButton.styleFrom(
-                      visualDensity:
-                          const VisualDensity(horizontal: -2, vertical: 0),
+                      visualDensity: const VisualDensity(
+                        horizontal: -2,
+                        vertical: 0,
+                      ),
                     ),
                   ),
                 ),

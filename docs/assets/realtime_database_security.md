@@ -106,6 +106,12 @@
         "content": {
           ".validate": "data.child('uid').val() === auth.uid"
         },
+        "uid": {
+          ".validate": "data.child('uid').val() === auth.uid"
+        },
+        "urls": {
+          ".validate": "data.child('uid').val() === auth.uid"
+        },
           // 이것은 Fireflutter 에서 post 글을 볼 때, 자동 생성되는 것으로 Fireship 에서는 사용되지 않음.
         "seenBy": {
           ".validate": false
@@ -132,6 +138,29 @@
       
     "post-all-summaries": {
       ".read": true
+    },
+      
+    "comments": {
+      "$postId": {
+        ".read": true,
+        "$commentId": {
+          // Condition:
+          // Create and Update must be done by anyone. noOfLikes field and other fields.
+          // Delete must be done by owner.
+          ".write": "(newData.exists() && auth.uid !== null) || (!newData.exists() && data.child('uid').val() === auth.uid)",
+          "content": {
+            // Anyone can create or owner can update/delete.
+            ".validate": "!data.exists() || data.parent().child('uid').val() === auth.uid"
+          },
+          "uid": {
+            ".validate": "!data.exists() || data.val() === auth.uid"
+          },
+          "urls": {
+            // 
+            ".validate": "!data.exists() || data.parent().child('uid').val() === auth.uid"
+          }
+        }
+      }
     }
   }
 }

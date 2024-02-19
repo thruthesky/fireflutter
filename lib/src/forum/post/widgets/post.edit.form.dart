@@ -1,16 +1,16 @@
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
-class SimplePostEditForm extends StatefulWidget {
-  const SimplePostEditForm({super.key, this.category, this.post});
+class PostEditForm extends StatefulWidget {
+  const PostEditForm({super.key, this.category, this.post});
   final String? category;
   final PostModel? post;
 
   @override
-  State<SimplePostEditForm> createState() => _SimplePostEditFormState();
+  State<PostEditForm> createState() => _SimplePostEditFormState();
 }
 
-class _SimplePostEditFormState extends State<SimplePostEditForm> {
+class _SimplePostEditFormState extends State<PostEditForm> {
   final titleController = TextEditingController();
   final contentController = TextEditingController();
 

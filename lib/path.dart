@@ -1,5 +1,7 @@
 import 'package:fireship/fireship.dart';
 
+/// Path
+///
 class Path {
   Path._();
 
@@ -19,6 +21,12 @@ class Path {
   static const String postSubscriptions = Folder.postSubscriptions;
   static const String postSummaries = Folder.postSummaries;
   static const String postAllSummaries = Folder.postAllSummaries;
+
+  /// Retuns the path of comments of the post.
+  /// i.e. /comments/<postId>
+  static String comments(String postId) => '${Folder.comments}/$postId';
+  static String comment(String postId, String commentId) =>
+      '${comments(postId)}/$commentId';
 
   /// Chat
   static const String chatMessages = Folder.chatMessages;
