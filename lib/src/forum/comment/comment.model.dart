@@ -41,6 +41,15 @@ class CommentModel {
     }
   }
 
+  /// Get the path of the field
+  ///
+  /// ```dart
+  /// path(Field.content); // --> /coments/postId/commentId/content
+  /// ```
+  String path(String field) {
+    return '${Path.comment(postId, id)}/$field';
+  }
+
   CommentModel({
     required this.ref,
     required this.id,
