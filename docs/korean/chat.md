@@ -1,4 +1,4 @@
-# Chat
+# 채팅
 
 ## Design Concept
 

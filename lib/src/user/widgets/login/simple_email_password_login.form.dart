@@ -37,16 +37,15 @@ class _SimpleEmailPasswordLoginFormState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(T.email.tr),
-        TextField(
-          keyboardType: TextInputType.emailAddress,
+        LabelField(
+          label: T.email.tr,
           controller: emailController,
+          keyboardType: TextInputType.emailAddress,
         ),
-        const SizedBox(height: 16),
-        Text(T.password.tr),
-        TextField(
-          obscureText: true,
+        LabelField(
+          label: T.password.tr,
           controller: passwordController,
+          obscureText: true,
         ),
         const SizedBox(height: 24),
         Center(

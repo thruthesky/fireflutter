@@ -138,7 +138,14 @@ You can use `sync` method to update (rebuild) the widget whenever the value chan
 UserDoc.sync(uid: user.uid, field: 'displayName', builder: (data, $) => Text(data)),
 ```
 
-## 나의 (로그인 사용자) 정보 액세스 Accessing My (Logged-in User) Information
+## 나의 (로그인 사용자) 정보 액세스
+
+`UserService.instance.user` 는 DB 의 사용자 문서 값을 모델로 가지고 있는 변수이다. 짧게 `my` 로 쓸 수 있도록 해 놓았다. DB 의 값이 변경되면 실시간으로 이 변수의 값도 업데이트(sync)된다. 그래서 DB 에 값을 변경 한 다음, (약간 쉬었다) `my` 변수로 올바로 값이 저장되었는지 확인 할 수 있다. 예를 들면, form field 값 변경 즉시 저장하고, submit 버튼을 누르면 확인을 할 수 있다.
+
+
+
+
+
 
 로그인한 사용자(나)의 정보를 참조하기 위해서는 `MyDoc` 를 사용하면 된다. 물론, `UserDoc` 를 사용해도 되지만, `MyDoc` 를 사용하는 것이 더 효과적이다. To reference the information of the logged-in user (yourself), you can use MyDoc. While using UserDoc is acceptable, using MyDoc is more effective.
 
@@ -390,3 +397,8 @@ class _HomeScreenState extends State<MainScreen> {
       }
     });
 ```
+
+
+## 위젯
+
+`UpdateBirthday` 위젯을 통해서 손 쉽게 회원 생년월일 정보를 수정 할 수 있다. 위젯 문서 참고
