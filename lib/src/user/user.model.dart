@@ -5,6 +5,7 @@ import 'package:fireship/fireship.defines.dart';
 import 'package:fireship/fireship.functions.dart';
 import 'package:fireship/src/database.functions.dart';
 import 'package:fireship/src/user/user.service.dart';
+import 'package:geohash_plus/geohash_plus.dart';
 
 class UserModel {
   /// [data] 는 사용자 정보 문서 node 의 전체 값을 가지고 있다. 그래서, 필요할 때,
@@ -54,6 +55,24 @@ class UserModel {
   String nationality;
   String siDo;
   String siGunGu;
+
+  /// User's latitude and longitude
+  double latitude;
+  double longitude;
+
+  /// When the user's location was updated, geohash data is also updated.
+  ///
+  /// [geohash4] is used for searching nearby users within 20k meters
+  String geohash4;
+
+  /// [geohash5] is used for searching nearby users within 5k meters
+  String geohash5;
+
+  /// [geohash6] is used for searching nearby users within 1k meters
+  String geohash6;
+
+  /// [geohash7] is used for searching nearby users within 200 meters
+  String geohash7;
 
   /// 신분증 업로드한 url
   ///
@@ -127,6 +146,12 @@ class UserModel {
     required this.nationality,
     required this.siDo,
     required this.siGunGu,
+    required this.latitude,
+    required this.longitude,
+    required this.geohash4,
+    required this.geohash5,
+    required this.geohash6,
+    required this.geohash7,
   });
 
   factory UserModel.fromSnapshot(DataSnapshot snapshot) {
@@ -185,6 +210,12 @@ class UserModel {
       nationality: json['nationality'] ?? '',
       siDo: json['siDo'] ?? '',
       siGunGu: json['siGunGu'] ?? '',
+      latitude: json['latitude'] ?? 0.0,
+      longitude: json['longitude'] ?? 0.0,
+      geohash4: json['geohash4'] ?? '',
+      geohash5: json['geohash5'] ?? '',
+      geohash6: json['geohash6'] ?? '',
+      geohash7: json['geohash7'] ?? '',
     );
   }
 
@@ -192,8 +223,6 @@ class UserModel {
     return {
       'uid': uid,
       'name': name,
-      'email': email,
-      'phoneNumber': phoneNumber,
       'displayName': displayName,
       'photoUrl': photoUrl,
       'profileBackgroundImageUrl': profileBackgroundImageUrl,
@@ -216,6 +245,12 @@ class UserModel {
       'nationality': nationality,
       'siDo': siDo,
       'siGunGu': siGunGu,
+      'latitude': latitude,
+      'longitude': longitude,
+      'geohash4': geohash4,
+      'geohash5': geohash5,
+      'geohash6': geohash6,
+      'geohash7': geohash7,
     };
   }
 
@@ -230,8 +265,6 @@ class UserModel {
 
     if (user != null) {
       name = user.name;
-      email = user.email;
-      phoneNumber = user.phoneNumber;
       displayName = user.displayName;
       photoUrl = user.photoUrl;
       profileBackgroundImageUrl = user.profileBackgroundImageUrl;
@@ -253,6 +286,12 @@ class UserModel {
       nationality = user.nationality;
       siDo = user.siDo;
       siGunGu = user.siGunGu;
+      latitude = user.latitude;
+      longitude = user.longitude;
+      geohash4 = user.geohash4;
+      geohash5 = user.geohash5;
+      geohash6 = user.geohash6;
+      geohash7 = user.geohash7;
     }
 
     return this;
@@ -338,6 +377,8 @@ class UserModel {
     String? nationality,
     String? siDo,
     String? siGunGu,
+    double? latitude,
+    double? longitude,
   }) async {
     final data = {
       if (name != null) 'name': name,
@@ -362,9 +403,20 @@ class UserModel {
       if (nationality != null) 'nationality': nationality,
       if (siDo != null) 'siDo': siDo,
       if (siGunGu != null) 'siGunGu': siGunGu,
+      if (latitude != null) 'latitude': latitude,
+      if (longitude != null) 'longitude': longitude,
     };
     if (data.isEmpty) {
       return this;
+    }
+
+    if (latitude != null && longitude != null) {
+      final geohash = GeoHash.encode(latitude, longitude);
+      final hash = geohash.hash;
+      data['geohash4'] = hash.substring(0, 4);
+      data['geohash5'] = hash.substring(0, 5);
+      data['geohash6'] = hash.substring(0, 6);
+      data['geohash7'] = hash.substring(0, 7);
     }
 
     // 업데이트부터 하고
