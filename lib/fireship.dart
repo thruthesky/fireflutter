@@ -158,3 +158,4 @@ export 'src/user/widgets/profile/default_profile_update.form.dart';
 export 'src/user/widgets/login/simple_phone_sign_in.dart';
 
 export 'src/user/firestore.user.model.dart';
+export 'src/user/widgets/profile/my_profile_sticker.dart';

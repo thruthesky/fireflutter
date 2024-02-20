@@ -20,9 +20,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: PostTitle(post: post),
-      // ),
       body: SafeArea(
         child: CustomScrollView(
           slivers: [

@@ -90,16 +90,5 @@ class _CommentListViewState extends State<CommentListView> {
         childCount: comments!.length,
       ),
     );
-
-    return ListView.builder(
-      itemCount: comments!.length,
-      itemBuilder: (context, index) {
-        final comment = comments![index];
-        return CommentView(
-          post: widget.post,
-          comment: comment,
-        );
-      },
-    );
   }
 }

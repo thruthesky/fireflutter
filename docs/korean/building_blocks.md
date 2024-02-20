@@ -155,3 +155,9 @@ To list chat rooms that the login user joined, use `DefaultChatRoomListView` wid
 ### LabelField
 
 위젯 항목을 참고한다.
+
+
+## 사용자 프로필 스티커 표시
+
+이미지
+
