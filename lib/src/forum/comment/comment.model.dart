@@ -162,7 +162,6 @@ class CommentModel {
   static Future<List<CommentModel>> getAll({
     required String postId,
   }) async {
-    print(Ref.comments.child(postId).path);
     final snapshot = await Ref.comments.child(postId).get();
     final comments = <CommentModel>[];
     if (snapshot.value == null) {
@@ -245,8 +244,6 @@ class CommentModel {
       'urls': urls,
     };
 
-    print("ref: ${ref.path}, data: $data");
-
     await ref.set(data);
 
     final summaryRef = Ref.postSummary(category, postId);
@@ -313,7 +310,7 @@ class CommentModel {
     Widget Function(dynamic) builder, {
     Widget? onLoading,
   }) {
-    return Database(
+    return Value(
       path: ref.child(field).path,
       builder: builder,
       onLoading: onLoading,

@@ -42,7 +42,7 @@ class ChatRoomListTile extends StatelessWidget {
                     color: Theme.of(context).colorScheme.secondary.tone(50),
                   ),
             ),
-            Database(
+            Value(
               path: Path.chatRoomUsersAt(room.id, myUid!),
               builder: (v) => v == true
                   ? Icon(

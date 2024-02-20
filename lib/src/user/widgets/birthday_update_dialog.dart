@@ -135,7 +135,7 @@ class _BirthdayPickerState extends State<BirthdayPickerDialog> {
                 birthMonth: birthMonth,
                 birthDay: birthDay,
               );
-              if (mounted) {
+              if (context.mounted) {
                 Navigator.pop(context);
               }
             },

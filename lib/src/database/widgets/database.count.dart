@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 /// Database count no of keys
 ///
 /// This is a widget that counts the number of keys in a node. Basically, it
-/// just works like [Database] widget, but it returns the number of keys in the
+/// just works like the [Value] widget, but it returns the number of keys in the
 /// node. Use this widget to build a child widget depending on the no of kes
 /// in the node.
 ///
@@ -23,7 +23,7 @@ class DatabaseCount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Database(
+    return Value(
       path: path,
       onLoading: builder(0),
       builder: (value) {

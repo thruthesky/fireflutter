@@ -92,7 +92,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
             ),
             const SizedBox(height: 16),
 
-            Database(
+            Value(
               path: "${Folder.chatRooms}/${widget.roomId}/${Field.iconUrl}",
               builder: (url) {
                 return url == null

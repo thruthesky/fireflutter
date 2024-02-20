@@ -297,7 +297,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                     signinSuccess();
                   } catch (e) {
                     // SMS Code verification error comes here.
-                    if (mounted) {
+                    if (context.mounted) {
                       error(
                         context: context,
                         title: T.error.tr,

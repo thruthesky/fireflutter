@@ -1,4 +1,3 @@
-import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +35,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                 children: [
                   TextButton(
                     onPressed: post.like,
-                    child: Database(
+                    child: Value(
                       path: post.ref.child(Field.noOfLikes).path,
                       builder: (no) {
                         previousNoOfLikes = no;
@@ -71,15 +70,14 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   TextButton(
                     onPressed: () async {
                       final re = await my?.block(post.uid);
-                      if (mounted) {
-                        toast(
-                          context: context,
-                          title: re == true ? T.blocked.tr : T.unblocked.tr,
-                          message: re == true
-                              ? T.blockedMessage.tr
-                              : T.unblockedMessage.tr,
-                        );
-                      }
+                      if (!context.mounted) return;
+                      toast(
+                        context: context,
+                        title: re == true ? T.blocked.tr : T.unblocked.tr,
+                        message: re == true
+                            ? T.blockedMessage.tr
+                            : T.unblockedMessage.tr,
+                      );
                     },
                     child: const Text('차단'),
                   ),
@@ -110,7 +108,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                         );
                         if (re != true) return;
                         await post.delete();
-                        if (mounted) Navigator.of(context).pop();
+                        if (context.mounted) Navigator.of(context).pop();
                       }
                     }),
                 ],

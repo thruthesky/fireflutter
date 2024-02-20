@@ -367,7 +367,7 @@ class PostModel {
     Widget Function(dynamic) builder, {
     Widget? onLoading,
   }) {
-    return Database(
+    return Value(
       path: ref.child(field).path,
       builder: builder,
       onLoading: onLoading,

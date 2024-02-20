@@ -1,5 +1,4 @@
 import 'package:fireship/fireship.dart';
-import 'package:fireship/src/user/user.model.dart';
 import 'package:flutter/material.dart';
 
 final _userDataCache = <String, dynamic>{};
@@ -98,7 +97,7 @@ class UserDoc extends StatelessWidget {
   }) {
     final path = 'users/$uid${field != null ? '/$field' : ''}';
 
-    return Database(
+    return Value(
       path: path,
       builder: builder,
       onLoading: onLoading,
