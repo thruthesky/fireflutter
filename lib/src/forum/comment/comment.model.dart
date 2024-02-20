@@ -82,7 +82,6 @@ class CommentModel {
       likes: List<String>.from((map['likes'] as Map? ?? {}).keys),
       // Category is added since we cannot access post category using ref..parent..key
       category: map['category'] ?? '',
-      depth: map['depth'] ?? 0,
       deleted: map['deleted'] ?? false,
     );
   }
