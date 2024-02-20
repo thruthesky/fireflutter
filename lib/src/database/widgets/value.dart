@@ -19,7 +19,7 @@ import 'package:firebase_database/firebase_database.dart';
 ///  return Text(value);
 /// });
 ///
-class Value extends StatelessWidget {
+class Value extends StatefulWidget {
   const Value({
     super.key,
     required this.path,
@@ -35,25 +35,7 @@ class Value extends StatelessWidget {
   final Widget? onLoading;
 
   @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: FirebaseDatabase.instance.ref(path).onValue,
-      builder: (context, AsyncSnapshot<DatabaseEvent> event) {
-        if (event.connectionState == ConnectionState.waiting) {
-          return onLoading ?? const SizedBox.shrink();
-        }
-        if (event.hasError) {
-          return Text('Error; path: $path, message: ${event.error}');
-        }
-        if (event.hasData == false || event.data!.snapshot.exists == false) {
-          return builder(null);
-        }
-
-        // value can be null.
-        return builder(event.data!.snapshot.value);
-      },
-    );
-  }
+  State<Value> createState() => _ValueState();
 
   /// 한번만 가져온다. 단, 위젯이 다시 생성되면 다시 가져온다.
   static Widget once({
@@ -75,6 +57,35 @@ class Value extends StatelessWidget {
         } else {
           return builder(null);
         }
+      },
+    );
+  }
+}
+
+class _ValueState extends State<Value> {
+  DatabaseEvent? _event;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      initialData: _event,
+      stream: FirebaseDatabase.instance.ref(widget.path).onValue,
+      builder: (context, AsyncSnapshot<DatabaseEvent> event) {
+        if (event.connectionState == ConnectionState.waiting &&
+            event.hasData == false) {
+          print("Wait again");
+          return widget.onLoading ?? const SizedBox.shrink();
+        }
+        if (event.hasError) {
+          return Text('Error; path: ${widget.path}, message: ${event.error}');
+        }
+        if (event.hasData == false || event.data!.snapshot.exists == false) {
+          return widget.builder(null);
+        }
+        _event = event.data;
+
+        // value can be null.
+        return widget.builder(event.data!.snapshot.value);
       },
     );
   }
