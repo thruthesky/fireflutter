@@ -31,8 +31,7 @@ class _CommentListViewState extends State<CommentListView> {
   }
 
   init() async {
-    // await get(Path.comments(widget.post.id));
-
+    // Getting all the comments first
     comments = await CommentModel.getAll(postId: widget.post.id);
     setState(() {});
 
@@ -43,19 +42,16 @@ class _CommentListViewState extends State<CommentListView> {
         .onChildAdded
         .listen((event) {
       final comment = CommentModel.fromSnapshot(event.snapshot);
-
+      // Check if the comment is already in the list.
       final int index =
           comments!.indexWhere((element) => element.id == comment.id);
-
-      /// Exisiting comment. Do nothing. This happens on the first time.
-      if (index > -1) {
-        return;
-      }
-
+      // Exisiting comment. Do nothing. This happens on the first time.
+      if (index > -1) return;
+      // Add the comment to the list
       comments?.add(comment);
-      comments = CommentModel.sortComments(comments!); // sort the comments
-
-      /// This may trigger the screen flickering. It's okay. It's a rear case.
+      // Sort the comments
+      comments = CommentModel.sortComments(comments!);
+      // This may trigger the screen flickering. It's okay. It's a rare case.
       setState(() {});
     });
   }
