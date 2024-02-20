@@ -1,5 +1,7 @@
 import 'package:fireship/fireship.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class PostViewScreen extends StatefulWidget {
   static const String routeName = '/PostView';
@@ -18,20 +20,27 @@ class _PostViewScreenState extends State<PostViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: PostTitle(post: post),
-      ),
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            children: [
-              PostMeta(post: post),
-              PostContent(post: post),
-              Padding(
+      // appBar: AppBar(
+      //   title: PostTitle(post: post),
+      // ),
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              pinned: false,
+              floating: true,
+              title: PostTitle(post: post),
+            ),
+            SliverToBoxAdapter(child: PostMeta(post: post)),
+            SliverToBoxAdapter(child: PostContent(post: post)),
+            SliverToBoxAdapter(
+              child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: DisplayPhotos(urls: post.urls),
               ),
-              Row(
+            ),
+            SliverToBoxAdapter(
+              child: Row(
                 children: [
                   TextButton(
                     onPressed: post.like,
@@ -113,9 +122,11 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     }),
                 ],
               ),
+            ),
 
-              /// 가짜 (임시) 코멘트 입력 창
-              GestureDetector(
+            /// 가짜 (임시) 코멘트 입력 창
+            SliverToBoxAdapter(
+              child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () async {
                   /// 텍스트 입력 버튼 액션
@@ -152,9 +163,9 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   ),
                 ),
               ),
-              CommentListView(post: post),
-            ],
-          ),
+            ),
+            CommentListView(post: post),
+          ],
         ),
       ),
     );

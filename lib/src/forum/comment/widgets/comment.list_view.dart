@@ -70,14 +70,28 @@ class _CommentListViewState extends State<CommentListView> {
   @override
   Widget build(BuildContext context) {
     if (comments == null) {
-      return const Center(child: CircularProgressIndicator());
+      return const SliverToBoxAdapter(
+          child: Center(child: CircularProgressIndicator()));
     }
     if (comments!.isEmpty) {
-      return const Center(child: Text('No comments'));
+      return const SliverToBoxAdapter(
+          child: Center(child: Text('No comments')));
     }
+
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final comment = comments![index];
+          return CommentView(
+            post: widget.post,
+            comment: comment,
+          );
+        },
+        childCount: comments!.length,
+      ),
+    );
+
     return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
       itemCount: comments!.length,
       itemBuilder: (context, index) {
         final comment = comments![index];
