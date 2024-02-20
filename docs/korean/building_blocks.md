@@ -157,7 +157,10 @@ To list chat rooms that the login user joined, use `DefaultChatRoomListView` wid
 위젯 항목을 참고한다.
 
 
-## 사용자 프로필 스티커 표시
+## 사용자 프로필 스티커 표시 - MyProfileSticker
 
-이미지
+사용자 프로필 스티커는 아래의 사진 처럼 왼쪽에 로그인 한 사용자의 사진, 오른쪽에 프로필 수정 버튼, 그리고 중앙 상단에 이름, 중앙하단에 상태 메시지를 표시해 주는 위젯이다.
 
+디자인 변경은 `Theme` 위젯으로 하고, 필요한 경우, 소스 코드를 복사해서 수정하여 사용하면 된다.
+
+![my_profile_sticker](https://github.com/thruthesky/fireship/blob/main/docs/assets/images/my_profile_sticker.jpg?raw=true)
