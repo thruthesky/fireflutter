@@ -43,7 +43,6 @@ class Value extends StatelessWidget {
           return builder(event.data!.snapshot.value);
         }
         if (event.connectionState == ConnectionState.waiting) {
-          print("Wait again");
           return onLoading ?? const SizedBox.shrink();
         }
         if (event.hasError) {
