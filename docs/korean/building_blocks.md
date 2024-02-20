@@ -166,7 +166,7 @@ To list chat rooms that the login user joined, use `DefaultChatRoomListView` wid
 ![my_profile_sticker](https://github.com/thruthesky/fireship/blob/main/docs/assets/images/my_profile_sticker.jpg?raw=true)
 
 
-아래의 코드는 Sliver 스크롤 뷰에 추가한 것으로 
+아래의 코드는 Sliver 스크롤 뷰에 추가한 것으로 프로필 수정 버튼의 디자인을 변경 한 것이다. 이 처럼 디자인은 소스 코드를 수정하지 않고 얼마든지 변경 할 수 있다.
 
 ```dart
 SliverToBoxAdapter(

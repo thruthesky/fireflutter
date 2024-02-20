@@ -35,6 +35,20 @@ extension FireFlutterStringExtension on String {
 
   String upTo(int len) => length <= len ? this : substring(0, len);
 
+  /// Cut the string
+  ///
+  /// ```dart
+  /// Text( comment.content.cut(56) );
+  /// ```
+  String cut(int length) {
+    String temp = this;
+    temp = temp.trim();
+    temp = temp.replaceAll('\n', ' ');
+    temp = temp.replaceAll('\r', ' ');
+    temp = temp.replaceAll('\t', ' ');
+    return temp.length > length ? '${temp.substring(0, length)}...' : temp;
+  }
+
   /// Replace all the string of the map.
   String replace(Map<String, String> map) {
     String s = this;

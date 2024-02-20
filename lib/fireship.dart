@@ -159,3 +159,4 @@ export 'src/user/widgets/login/simple_phone_sign_in.dart';
 
 export 'src/user/firestore.user.model.dart';
 export 'src/user/widgets/profile/my_profile_sticker.dart';
+export 'src/user/widgets/profile/new_profile_photos.dart';
