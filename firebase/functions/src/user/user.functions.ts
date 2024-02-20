@@ -47,6 +47,7 @@ export const userMirror = onValueWritten(
             return await firestore.collection(Config.users).doc(userUid).delete();
         }
         // created
-        return await firestore.collection(Config.users).doc(userUid).set(event.data.before.val());
+        const data = event.data.after.val();
+        return await firestore.collection(Config.users).doc(userUid).set({ ...data });
     }
 );

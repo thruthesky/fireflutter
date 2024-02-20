@@ -294,6 +294,16 @@
       // "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
+      "name": "Wemeet (Noe) TEST - iphone 2",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "00008030-000D445A11A3802E",
+      "flutterMode": "debug",
+      "cwd": "apps/wemeet",
+      "program": "lib/main.dart",
+      // "args": ["-v", "--dart-define", "MODE=test"]
+    },
+    {
       "name": "Silvers (Noe) TEST - iPhone 15 Pro (debug)",
       "request": "launch",
       "type": "dart",
