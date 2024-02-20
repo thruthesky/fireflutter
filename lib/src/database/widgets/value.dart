@@ -49,6 +49,7 @@ class Value extends StatelessWidget {
         if (event.hasError) {
           return Text('Error; path: $path, message: ${event.error}');
         }
+        // this code is not needed.
         // if (event.hasData == false || event.data!.snapshot.exists == false) {
         //   return builder(null);
         // }
