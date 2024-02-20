@@ -23,7 +23,7 @@ Fireship (including all the widgets) will always use `dispalyName` to display th
 `blocks` 는 차단한 사용자의 목록을 나타낸다. 참고로, `likes` 는 쌍방으로 정보 확인이 가능해야한다. 이 말은 내가 누구를 좋아요 했는지 알아야 할 필요가 있고, 상대방도 내가 좋아요를 했는지 알아야 할 필요가 있다. 그래서 데이터 구조가 복잡해 `/user-likes` 에 따로 저장을 하지만, `blocks` 는 내가 누구를 차단했는지 다른 사람에게 알려 줄 필요가 없다. 그래서 `/users` 에 저장을 한다.
 
 
-`latitude` 와 `longitude` 에 값이 저장되면 자동으로 `geohash4`, `geohash5`, `geohash6`, `geohash7` 에 GeoHash 문자열 4/5/6/7 자리 값이 저장된다. 즉, 위/경도의 값은 앱에서 Location 또는 GeoLocator 패키지를 써서, 퍼미션 설정을 하고, Lat/Lon 값을 구한 다음, `UserModel.update()` 로 저장하면, 자동으로 geohash 문자열이 저장되는 것이다.
+`latitude` 와 `longitude` 에 값이 저장되면 자동으로 `geohash4`, `geohash5`, `geohash6`, `geohash7` 에 GeoHash 문자열 4/5/6/7 자리 값이 저장된다. 즉, 위/경도의 값은 앱에서 Location 또는 GeoLocator 패키지를 써서, 퍼미션 설정을 하고, Lat/Lon 값을 구한 다음, `UserModel.update()` 로 저장하면, 자동으로 geohash 문자열이 저장되는 것이다. 보다 자세한 내용은 [거리 검색](#거리-검색)을 참고한다.
 
 
 
@@ -34,6 +34,7 @@ Fireship (including all the widgets) will always use `dispalyName` to display th
     Without `/user-profile-photos` node, It can list with `/users` data but it cannot sort by time.
     - `/user-profile-photos/<uid>` has `updatedAt` field that is updated whenever the user changes profile photo.
     - It is managed by `UserModel`.
+
 
 
 
@@ -412,6 +413,33 @@ class _HomeScreenState extends State<MainScreen> {
 ## 위젯
 
 `UpdateBirthday` 위젯을 통해서 손 쉽게 회원 생년월일 정보를 수정 할 수 있다. 위젯 문서 참고
+
+
+## Firestore 미러링
+
+Realtime Database 는 검색 기능이 매우 부족하다. 그래서 사용자 문서를 Firestore 로 미러링(백업)을 해서, Firestore 를 통해서 검색 할 수 있다. 이 미러링 작업은 Cloud function 을 설치하면 된다. 참고, [설치 문서](./install.md).
+
+
+
+
+## 거리 검색
+
+거리를 검색 할 때 보다 상세한 검색을 하려면, SQL 데이터베이스, Algolia, Typesense 등의 Radius 수식을 적용하여 검색해야 한다. 그러나 Firebase 에서는 Realtime Database 나 Firestore 에서는 DB 차원을 통해서 Radius 검색을 할 수 없다.
+
+Firebase 를 사용하면서, Radius 검색을 꼭 해야겠다면
+1. Location 정보를 Algolia 와 같은 3rd party 검색 엔진에 저장을 하던지
+2. 또는 사용자의 모든 Location 정보를 앱 내(SQLite 등)에 보관해 놓고, Radius 검색을 할 수 있다.
+3. 또는 공식문서: [Firebase 지역 쿼리](https://firebase.google.com/docs/firestore/solutions/geoqueries?hl=ko)에서 설명하듯이 Geohash 네자리 수에 해당하는 값을 가진 사용자를 가져와 앱 내에서 보다 정확하게 distance 계산을 하는 것이다. 하지만, 이와 같은 경우 `거짓양성`, `에지케이스`, `필요없는 데이터를 가져오는 비용`을 고려해야 한다.
+
+Fireship 에서 기본 제공하는 거리 검색은 위의 세 가지 방법과는 조금 다르지만 매우 편리한 방법이다.
+
+- 먼저 앱이 실행되면 사용자의 위/경도 정보를 사용자 문서 필드  `latitude`, `longitude` 에 저장한다.
+  - 그러면 fireship 이 자동으로 geohash4,geohash5,geohash6,geohash7 를 저장한다.
+  - 그리고, 필요에 따라 Firestore 미러링되게 한다.
+
+- 검색을 할 때, 로그인한 사용자의 200 미터 내의 사용자 검색은 로그인을 한 사용자의 geohash7 과 DB 의 geohash7 이 일치하는 사용자를 가져와 보여주면 된다.
+  - geohash6 는 1km 이내, geohash5 는 5km 이내, geohash4 는 20km 이내의 사용자를 검색 할 수 있다.
+
 
 
 
