@@ -36,7 +36,9 @@ class MyProfileSticker extends StatelessWidget {
                     ),
                     Text(
                       my.stateMessage,
-                      style: Theme.of(context).textTheme.labelLarge,
+                      style: Theme.of(context).textTheme.labelSmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),

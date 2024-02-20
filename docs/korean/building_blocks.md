@@ -164,3 +164,33 @@ To list chat rooms that the login user joined, use `DefaultChatRoomListView` wid
 디자인 변경은 `Theme` 위젯으로 하고, 필요한 경우, 소스 코드를 복사해서 수정하여 사용하면 된다.
 
 ![my_profile_sticker](https://github.com/thruthesky/fireship/blob/main/docs/assets/images/my_profile_sticker.jpg?raw=true)
+
+
+아래의 코드는 Sliver 스크롤 뷰에 추가한 것으로 
+
+```dart
+SliverToBoxAdapter(
+  child: Theme(
+    data: Theme.of(context).copyWith(
+      chipTheme: ChipThemeData(
+        padding:
+            const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+        backgroundColor: context.onSurface.withAlpha(10),
+        side: BorderSide(color: context.onSurface.withAlpha(20)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        selectedColor: context.primary,
+        labelStyle:
+            Theme.of(context).textTheme.labelMedium!.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: context.onSurface,
+                ),
+      ),
+    ),
+    child: const MyProfileSticker(),
+  ),
+),
+```
+
