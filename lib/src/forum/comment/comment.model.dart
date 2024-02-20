@@ -56,23 +56,25 @@ class CommentModel {
     this.deleted = false,
   });
 
-  factory CommentModel.fromSnapshot(DataSnapshot snapshot) {
-    return CommentModel.fromMap(
-      snapshot.value as Map,
-      snapshot.key!,
-      // category: snapshot.ref.parent!.parent!.parent!.key!,
-      postId: snapshot.ref.parent!.key!,
-    );
-  }
+  // @Deprecated()
+  // factory CommentModel.fromSnapshot(DataSnapshot snapshot) {
+  //   return CommentModel.fromMap(
+  //     snapshot.value as Map,
+  //     snapshot.key!,
+  //     // category: snapshot.ref.parent!.parent!.parent!.key!,
+  //     postId: snapshot.ref.parent!.key!,
+  //   );
+  // }
 
-  factory CommentModel.fromMap(
+  factory CommentModel.fromJson(
     Map<dynamic, dynamic> map,
     String id, {
     // required String category,
     required String postId,
   }) {
+    final ref = Ref.comment(postId, id);
     return CommentModel(
-      ref: Ref.postComment(postId, id),
+      ref: ref,
       id: id,
       parentId: map['parentId'],
       content: map['content'],
@@ -82,7 +84,6 @@ class CommentModel {
       likes: List<String>.from((map['likes'] as Map? ?? {}).keys),
       // Category is added since we cannot access post category using ref..parent..key
       category: map['category'] ?? '',
-      depth: map['depth'] ?? 0,
       deleted: map['deleted'] ?? false,
     );
   }
@@ -154,7 +155,8 @@ class CommentModel {
     required String commentId,
   }) async {
     final snapshot = await Ref.comments.child(postId).child(commentId).get();
-    return CommentModel.fromSnapshot(snapshot);
+    return CommentModel.fromJson(snapshot.value as Map, commentId,
+        postId: postId);
   }
 
   /// Get all the comments of a post
@@ -163,14 +165,13 @@ class CommentModel {
   static Future<List<CommentModel>> getAll({
     required String postId,
   }) async {
-    print(Ref.comments.child(postId).path);
     final snapshot = await Ref.comments.child(postId).get();
     final comments = <CommentModel>[];
     if (snapshot.value == null) {
       return comments;
     }
     (snapshot.value as Map).forEach((key, value) {
-      final comment = CommentModel.fromMap(
+      final comment = CommentModel.fromJson(
         value,
         key,
         postId: postId,
@@ -246,8 +247,6 @@ class CommentModel {
       'urls': urls,
     };
 
-    print("ref: ${ref.path}, data: $data");
-
     await ref.set(data);
 
     final summaryRef = Ref.postSummary(category, postId);
@@ -314,7 +313,7 @@ class CommentModel {
     Widget Function(dynamic) builder, {
     Widget? onLoading,
   }) {
-    return Database(
+    return Value(
       path: ref.child(field).path,
       builder: builder,
       onLoading: onLoading,

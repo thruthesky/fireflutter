@@ -22,12 +22,6 @@ class _CommnetViewState extends State<CommentView> {
   int? previousNoOfLikes;
 
   @override
-  void initState() {
-    super.initState();
-    print('--> CommentView.initState');
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: widget.comment.leftMargin),
@@ -81,7 +75,7 @@ class _CommnetViewState extends State<CommentView> {
                     ),
                     TextButton(
                       onPressed: widget.comment.like,
-                      child: Database(
+                      child: Value(
                         path: widget.comment.ref.child(Field.likes).path,
                         builder: (likes) {
                           previousNoOfLikes = (likes as Map? ?? {}).keys.length;
@@ -130,7 +124,7 @@ class _CommnetViewState extends State<CommentView> {
                           commentId: widget.comment.id,
                           reason: re,
                         );
-                        if (mounted) {
+                        if (context.mounted) {
                           toast(context: context, message: '신고가 접수되었습니다.');
                         }
                       } else if (value == 'block') {
@@ -145,7 +139,7 @@ class _CommnetViewState extends State<CommentView> {
                         );
                         if (re != true) return;
                         re = await my?.block(widget.comment.uid);
-                        if (mounted) {
+                        if (context.mounted) {
                           toast(
                             context: context,
                             title: re == true ? T.blocked.tr : T.unblocked.tr,

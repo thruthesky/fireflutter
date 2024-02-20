@@ -103,7 +103,7 @@ class _CommentEditDialogState extends State<CommentEditDialog> {
                       );
                     }
 
-                    if (mounted) Navigator.of(context).pop(true);
+                    if (context.mounted) Navigator.of(context).pop(true);
                   },
                   child: Text(
                     isCreate ? '코멘트 작성' : '저장',

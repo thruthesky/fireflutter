@@ -37,7 +37,7 @@ class _AdminUserUpdateScreenState extends State<AdminUserUpdateScreen> {
                 onChanged: (value) async {
                   await user.update(isVerified: value);
                   await user.reload();
-                  if (mounted) {
+                  if (context.mounted) {
                     error(
                       context: context,
                       title: '사용자 인증 ${user.isVerified == true ? '완료' : '해제'}',
@@ -56,7 +56,7 @@ class _AdminUserUpdateScreenState extends State<AdminUserUpdateScreen> {
                 onChanged: (value) async {
                   await user.update(isAdmin: value);
                   await user.reload();
-                  if (mounted) {
+                  if (context.mounted) {
                     error(
                       context: context,
                       title: '관리자 ${user.isAdmin == true ? '지정' : '해제'}',

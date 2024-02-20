@@ -453,7 +453,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
               if (widget.onUpdate != null) {
                 widget.onUpdate!();
               }
-              if (mounted) toast(context: context, message: T.saved.tr);
+              if (context.mounted) toast(context: context, message: T.saved.tr);
             },
             child: Text(
               T.save.tr,

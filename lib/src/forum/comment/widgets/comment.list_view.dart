@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
@@ -31,10 +30,11 @@ class _CommentListViewState extends State<CommentListView> {
   }
 
   init() async {
-    // await get(Path.comments(widget.post.id));
-
+    // Getting all the comments first
     comments = await CommentModel.getAll(postId: widget.post.id);
     setState(() {});
+
+    print('path: ${widget.post.commentsRef.path}');
 
     // Generate a flutter code with firebase realtime database that listens to newly created data on the path 'comments/${widget.post.id}'
     newCommentSubscription = widget.post.commentsRef
@@ -42,20 +42,21 @@ class _CommentListViewState extends State<CommentListView> {
         .orderByChild('order')
         .onChildAdded
         .listen((event) {
-      final comment = CommentModel.fromSnapshot(event.snapshot);
-
+      final comment = CommentModel.fromJson(
+        event.snapshot.value as Map,
+        event.snapshot.key!,
+        postId: widget.post.id,
+      );
+      // Check if the comment is already in the list.
       final int index =
           comments!.indexWhere((element) => element.id == comment.id);
-
-      /// Exisiting comment. Do nothing. This happens on the first time.
-      if (index > -1) {
-        return;
-      }
-
+      // Exisiting comment. Do nothing. This happens on the first time.
+      if (index > -1) return;
+      // Add the comment to the list
       comments?.add(comment);
-      comments = CommentModel.sortComments(comments!); // sort the comments
-
-      /// This may trigger the screen flickering. It's okay. It's a rear case.
+      // Sort the comments
+      comments = CommentModel.sortComments(comments!);
+      // This may trigger the screen flickering. It's okay. It's a rare case.
       setState(() {});
     });
   }
@@ -69,14 +70,28 @@ class _CommentListViewState extends State<CommentListView> {
   @override
   Widget build(BuildContext context) {
     if (comments == null) {
-      return const Center(child: CircularProgressIndicator());
+      return const SliverToBoxAdapter(
+          child: Center(child: CircularProgressIndicator()));
     }
     if (comments!.isEmpty) {
-      return const Center(child: Text('No comments'));
+      return const SliverToBoxAdapter(
+          child: Center(child: Text('No comments')));
     }
+
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final comment = comments![index];
+          return CommentView(
+            post: widget.post,
+            comment: comment,
+          );
+        },
+        childCount: comments!.length,
+      ),
+    );
+
     return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
       itemCount: comments!.length,
       itemBuilder: (context, index) {
         final comment = comments![index];

@@ -105,7 +105,7 @@ class _PostEditScreenState extends State<PostEditScreen> {
                           urls: post.urls,
                         );
                       }
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       Navigator.of(context).pop();
                       if (isCreate) {
                         ForumService.instance

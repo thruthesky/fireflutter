@@ -69,7 +69,7 @@ class _SimplePostEditFormState extends State<PostEditForm> {
                     urls: post.urls,
                   );
                 }
-                if (mounted) {
+                if (context.mounted) {
                   Navigator.of(context).pop();
                 }
               },

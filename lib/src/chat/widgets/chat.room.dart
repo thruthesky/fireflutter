@@ -165,7 +165,7 @@ class _ChatRoomState extends State<ChatRoom> {
                     /// 1:1 채팅은 chat-joins 에서 한번만 가져오고, 그룹 채팅은 chat-rooms 에서 가져온다.
                     /// 그룹 채팅은 관리자가 사진을 바꿀 때, 채팅 화면에 바로 적용되어야 한다.
                     chat.room.isSingleChat
-                        ? Database.once(
+                        ? Value.once(
                             path:
                                 '${Path.join(myUid!, chat.room.id)}/${Field.photoUrl}',
                             builder: (v) => v == null
@@ -181,7 +181,7 @@ class _ChatRoomState extends State<ChatRoom> {
                                     ],
                                   ),
                           )
-                        : Database(
+                        : Value(
                             path: Path.chatRoomIconUrl(chat.room
                                 .id), // '${Path.join(myUid!, chat.room.id)}/${Field.photoUrl}',
                             builder: (v) => v == null
@@ -204,7 +204,7 @@ class _ChatRoomState extends State<ChatRoom> {
                     /// 그룹 채팅은 관리자가 채팅 이름을 바꿀 때, 채팅 화면에 바로 적용되어야 한다.
                     Expanded(
                       child: chat.room.isSingleChat
-                          ? Database.once(
+                          ? Value.once(
                               path: '${Path.join(myUid!, chat.room.id)}/name',
                               builder: (v) => Text(
                                 v ?? '',
@@ -213,7 +213,7 @@ class _ChatRoomState extends State<ChatRoom> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             )
-                          : Database(
+                          : Value(
                               path: Path.chatRoomName(chat.room.id),
                               builder: (v) => Text(
                                 v ?? '',
@@ -233,7 +233,7 @@ class _ChatRoomState extends State<ChatRoom> {
                 onPressed: () async {
                   await chat.room.toggleNotifications();
                 },
-                icon: Database(
+                icon: Value(
                   path: Path.chatRoomUsersAt(chat.room.id, myUid!),
                   builder: (v) => v == true
                       ? const Icon(Icons.notifications_rounded)
@@ -295,7 +295,7 @@ class _ChatRoomState extends State<ChatRoom> {
                       } else if (v == 'block') {
                         /// 차단 & 해제
                         final re = await my?.block(chat.room.otherUserUid!);
-                        if (mounted) {
+                        if (context.mounted) {
                           toast(
                             context: context,
                             title: re == true ? T.blocked.tr : T.unblocked.tr,
@@ -316,7 +316,7 @@ class _ChatRoomState extends State<ChatRoom> {
                             .report(chatRoomId: chat.room.id, reason: re);
                       } else if (v == 'leave') {
                         await chat.room.leave();
-                        if (mounted) Navigator.of(context).pop();
+                        if (context.mounted) Navigator.of(context).pop();
                       }
                     },
                     tooltip: '채팅방 설정',

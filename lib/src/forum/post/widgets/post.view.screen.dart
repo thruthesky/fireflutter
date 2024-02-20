@@ -1,6 +1,7 @@
-import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireship/fireship.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class PostViewScreen extends StatefulWidget {
   static const String routeName = '/PostView';
@@ -19,24 +20,31 @@ class _PostViewScreenState extends State<PostViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: PostTitle(post: post),
-      ),
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            children: [
-              PostMeta(post: post),
-              PostContent(post: post),
-              Padding(
+      // appBar: AppBar(
+      //   title: PostTitle(post: post),
+      // ),
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              pinned: false,
+              floating: true,
+              title: PostTitle(post: post),
+            ),
+            SliverToBoxAdapter(child: PostMeta(post: post)),
+            SliverToBoxAdapter(child: PostContent(post: post)),
+            SliverToBoxAdapter(
+              child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: DisplayPhotos(urls: post.urls),
               ),
-              Row(
+            ),
+            SliverToBoxAdapter(
+              child: Row(
                 children: [
                   TextButton(
                     onPressed: post.like,
-                    child: Database(
+                    child: Value(
                       path: post.ref.child(Field.noOfLikes).path,
                       builder: (no) {
                         previousNoOfLikes = no;
@@ -71,15 +79,14 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   TextButton(
                     onPressed: () async {
                       final re = await my?.block(post.uid);
-                      if (mounted) {
-                        toast(
-                          context: context,
-                          title: re == true ? T.blocked.tr : T.unblocked.tr,
-                          message: re == true
-                              ? T.blockedMessage.tr
-                              : T.unblockedMessage.tr,
-                        );
-                      }
+                      if (!context.mounted) return;
+                      toast(
+                        context: context,
+                        title: re == true ? T.blocked.tr : T.unblocked.tr,
+                        message: re == true
+                            ? T.blockedMessage.tr
+                            : T.unblockedMessage.tr,
+                      );
                     },
                     child: const Text('차단'),
                   ),
@@ -110,14 +117,16 @@ class _PostViewScreenState extends State<PostViewScreen> {
                         );
                         if (re != true) return;
                         await post.delete();
-                        if (mounted) Navigator.of(context).pop();
+                        if (context.mounted) Navigator.of(context).pop();
                       }
                     }),
                 ],
               ),
+            ),
 
-              /// 가짜 (임시) 코멘트 입력 창
-              GestureDetector(
+            /// 가짜 (임시) 코멘트 입력 창
+            SliverToBoxAdapter(
+              child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () async {
                   /// 텍스트 입력 버튼 액션
@@ -154,9 +163,9 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   ),
                 ),
               ),
-              CommentListView(post: post),
-            ],
-          ),
+            ),
+            CommentListView(post: post),
+          ],
         ),
       ),
     );
