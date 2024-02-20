@@ -67,7 +67,7 @@ class UserAvatar extends StatefulWidget {
     double radius = 20,
     VoidCallback? onTap,
   }) {
-    return UserDoc(
+    return UserDoc.field(
       uid: uid,
       field: Field.photoUrl,
       builder: (url) => GestureDetector(

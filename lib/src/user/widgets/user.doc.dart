@@ -1,4 +1,5 @@
 import 'package:fireship/fireship.dart';
+import 'package:fireship/src/user/user.model.dart';
 import 'package:flutter/material.dart';
 
 final _userDataCache = <String, dynamic>{};
@@ -38,27 +39,19 @@ class UserDoc extends StatelessWidget {
   const UserDoc({
     super.key,
     required this.uid,
-    this.field,
     required this.builder,
-    this.cache = true,
     this.onLoading,
   });
 
   final String uid;
-  final String? field;
-  final Function(dynamic data) builder;
-  final bool cache;
+  final Function(UserModel data) builder;
+
   final Widget? onLoading;
 
   @override
   Widget build(BuildContext context) {
-    final path = 'users/$uid${field != null ? '/$field' : ''}';
-
-    if (cache && _userDataCache.containsKey(path)) {
-      return builder(_userDataCache[path]);
-    }
     return FutureBuilder(
-      future: get(path),
+      future: get('users/$uid'),
       builder: (_, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return onLoading ?? const SizedBox.shrink();
@@ -67,8 +60,26 @@ class UserDoc extends StatelessWidget {
           dog('error in UserDoc: ${snapshot.error}');
           return const Icon(Icons.error_outline);
         }
-        if (cache) {
-          _userDataCache[path] = snapshot.data;
+        return builder(UserModel.fromJson(snapshot.data, uid: uid));
+      },
+    );
+  }
+
+  static Widget field({
+    required String uid,
+    required String field,
+    required Function(dynamic) builder,
+    Widget? onLoading,
+  }) {
+    return FutureBuilder(
+      future: get('users/$uid/$field'),
+      builder: (_, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return onLoading ?? const SizedBox.shrink();
+        }
+        if (snapshot.hasError) {
+          dog('error in UserDoc: ${snapshot.error}');
+          return const Icon(Icons.error_outline);
         }
         return builder(snapshot.data);
       },

@@ -22,11 +22,21 @@ Fireship (including all the widgets) will always use `dispalyName` to display th
 
 `blocks` 는 차단한 사용자의 목록을 나타낸다. 참고로, `likes` 는 쌍방으로 정보 확인이 가능해야한다. 이 말은 내가 누구를 좋아요 했는지 알아야 할 필요가 있고, 상대방도 내가 좋아요를 했는지 알아야 할 필요가 있다. 그래서 데이터 구조가 복잡해 `/user-likes` 에 따로 저장을 하지만, `blocks` 는 내가 누구를 차단했는지 다른 사람에게 알려 줄 필요가 없다. 그래서 `/users` 에 저장을 한다.
 
+
+`latitude` 와 `longitude` 에 값이 저장되면 자동으로 `geohash4`, `geohash5`, `geohash6`, `geohash7` 에 GeoHash 문자열 4/5/6/7 자리 값이 저장된다. 즉, 위/경도의 값은 앱에서 Location 또는 GeoLocator 패키지를 써서, 퍼미션 설정을 하고, Lat/Lon 값을 구한 다음, `UserModel.update()` 로 저장하면, 자동으로 geohash 문자열이 저장되는 것이다.
+
+
+
+
+
 - User profile photo is saved under `/users/<uid>` and `/user-profile-photos/<uid>`.
     - The reason why it saves the photo url into `/user-profile-photos` is to list the users who has profile photo.
     Without `/user-profile-photos` node, It can list with `/users` data but it cannot sort by time.
     - `/user-profile-photos/<uid>` has `updatedAt` field that is updated whenever the user changes profile photo.
     - It is managed by `UserModel`.
+
+
+
 
 ## 사용자 UI 커스터마이징 (Customizing User UI)
 
@@ -402,3 +412,6 @@ class _HomeScreenState extends State<MainScreen> {
 ## 위젯
 
 `UpdateBirthday` 위젯을 통해서 손 쉽게 회원 생년월일 정보를 수정 할 수 있다. 위젯 문서 참고
+
+
+
