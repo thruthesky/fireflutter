@@ -169,7 +169,9 @@ class TypesenseService {
     dog("Retrieved: ${commentsSnapshot.value}");
     List<Future> futures = [];
     for (final commentSnapshot in commentsSnapshot.children) {
-      final comment = CommentModel.fromSnapshot(commentSnapshot);
+      final comment = CommentModel.fromJson(
+          commentSnapshot.value as Map, commentSnapshot.key!,
+          postId: postId);
       if (!comment.deleted) {
         futures.add(upsertComment(comment));
         dog('Re-indexing comment: ${comment.id}');

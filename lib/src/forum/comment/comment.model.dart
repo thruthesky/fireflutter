@@ -56,23 +56,25 @@ class CommentModel {
     this.deleted = false,
   });
 
-  factory CommentModel.fromSnapshot(DataSnapshot snapshot) {
-    return CommentModel.fromMap(
-      snapshot.value as Map,
-      snapshot.key!,
-      // category: snapshot.ref.parent!.parent!.parent!.key!,
-      postId: snapshot.ref.parent!.key!,
-    );
-  }
+  // @Deprecated()
+  // factory CommentModel.fromSnapshot(DataSnapshot snapshot) {
+  //   return CommentModel.fromMap(
+  //     snapshot.value as Map,
+  //     snapshot.key!,
+  //     // category: snapshot.ref.parent!.parent!.parent!.key!,
+  //     postId: snapshot.ref.parent!.key!,
+  //   );
+  // }
 
-  factory CommentModel.fromMap(
+  factory CommentModel.fromJson(
     Map<dynamic, dynamic> map,
     String id, {
     // required String category,
     required String postId,
   }) {
+    final ref = Ref.comment(postId, id);
     return CommentModel(
-      ref: Ref.postComment(postId, id),
+      ref: ref,
       id: id,
       parentId: map['parentId'],
       content: map['content'],
@@ -153,7 +155,8 @@ class CommentModel {
     required String commentId,
   }) async {
     final snapshot = await Ref.comments.child(postId).child(commentId).get();
-    return CommentModel.fromSnapshot(snapshot);
+    return CommentModel.fromJson(snapshot.value as Map, commentId,
+        postId: postId);
   }
 
   /// Get all the comments of a post
@@ -168,7 +171,7 @@ class CommentModel {
       return comments;
     }
     (snapshot.value as Map).forEach((key, value) {
-      final comment = CommentModel.fromMap(
+      final comment = CommentModel.fromJson(
         value,
         key,
         postId: postId,

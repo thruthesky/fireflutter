@@ -94,45 +94,6 @@ class PostModel {
     );
   }
 
-  /// Get the comments of the post
-  @Deprecated('Use CommentModel.sortComments if needed')
-  static List<CommentModel> sortComments(List<DataSnapshot> commentSnapshots) {
-    final comments =
-        commentSnapshots.map((e) => CommentModel.fromSnapshot(e)).toList();
-
-    /// Sort comments by createdAt
-    comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-
-    final List<CommentModel> newComments = [];
-
-    /// This is the list of comments that are not replies.
-    /// It is sorted by createdAt.
-    /// If the comment is a reply, it has the parentId of the parent comment.
-    /// So, we can find the parent comment by searching the list.
-    /// And add the reply to the parent comment's replies.
-    for (final comment in comments) {
-      if (comment.parentId == null) {
-        newComments.add(comment);
-      } else {
-        /// 부모 찾기
-        final index = newComments.indexWhere((e) => e.id == comment.parentId);
-
-        comment.depth = newComments[index].depth + 1;
-
-        /// 형제 찾기
-        final siblingIndex =
-            newComments.lastIndexWhere((e) => e.parentId == comment.parentId);
-        if (siblingIndex == -1) {
-          newComments.insert(index + 1, comment);
-        } else {
-          newComments.insert(siblingIndex + 1, comment);
-        }
-      }
-    }
-
-    return newComments;
-  }
-
   /// Create a PostModel from a category with empty values.
   ///
   /// Use this factory to create a PostModel from a category with empty values.

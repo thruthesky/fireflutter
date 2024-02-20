@@ -20,6 +20,7 @@ class CommentView extends StatefulWidget {
 
 class _CommnetViewState extends State<CommentView> {
   int? previousNoOfLikes;
+
   @override
   Widget build(BuildContext context) {
     return Container(
