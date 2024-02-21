@@ -14,6 +14,17 @@ import { MessagingService } from "../messaging/messaging.service";
 export const managePostsSummary = onValueWritten(
     `${Config.posts}/{category}/{postId}`,
     (event) => {
+
+        // TODO: implement isCreate, isUpdate, isDelete to make the code more readable
+        // if (isCreate()) {
+        //     await PostService.setSummary(event.data.after.val(), event.params.category, event.params.postId);
+        //     await MessagingService.sendMessagesToCategorySubscribers(event.params.category, event.params.postId);
+        // } else if (isUpdate()) {
+        //     await PostService.setSummary(event.data.after.val(), event.params.category, event.params.postId);
+        // } else if (isDelete()) {
+        //     await PostService.deleteSummary(event.params.category, event.params.postId);
+        // }
+
         if (!event.data.after.exists()) {
             // Data deleted
             const db = getDatabase();
@@ -25,15 +36,10 @@ export const managePostsSummary = onValueWritten(
     },
 );
 
-
-
-
 /**
  * 게시판(카테고리) 구독자들에게 메시지 전송
  *
  * 새 글이 작성되면 메시지를 전송한다.
- * 
- * 
  */
 export const sendMessagesToCategorySubscribers = onValueCreated(
     "/posts/{category}/{id}",
