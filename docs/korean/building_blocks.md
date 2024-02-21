@@ -194,3 +194,17 @@ SliverToBoxAdapter(
 ),
 ```
 
+
+## 사용자 목록 - NewProfilePhotos
+
+사용자가 사진을 변경하면, `/user-profile-photos` 에 복사된다. `NewProfilePhotos` 는 이 값을 바탕으로 사용자의 사진을 화면에 표시한다.
+
+
+
+![my_profile_sticker](https://github.com/thruthesky/fireship/blob/main/docs/assets/images/new_profile_photos.jpg?raw=true)
+
+
+예제
+```dart
+NewProfilePhotos()
+```

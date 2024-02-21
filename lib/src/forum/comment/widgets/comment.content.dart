@@ -21,6 +21,7 @@ class _CommentContentState extends State<CommentContent> {
     // listen the comment content changes.
     return widget.comment.onFieldChange(
       Field.content,
+      initialData: widget.comment.content,
       (v) {
         // if the vlaue of the content is changed and if it's empty, then use the comment's content.
         content = v ?? widget.comment.content;

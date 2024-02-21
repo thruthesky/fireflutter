@@ -19,6 +19,8 @@ class Path {
   /// Forum
   static const String posts = Folder.posts;
   static const String postSubscriptions = Folder.postSubscriptions;
+  static String postSubscription(String category) =>
+      '$postSubscriptions/$category/$myUid';
   static const String postSummaries = Folder.postSummaries;
   static const String postAllSummaries = Folder.postAllSummaries;
 

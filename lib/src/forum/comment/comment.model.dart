@@ -311,9 +311,11 @@ class CommentModel {
   onFieldChange(
     String field,
     Widget Function(dynamic) builder, {
+    dynamic initialData,
     Widget? onLoading,
   }) {
     return Value(
+      initialData: initialData,
       path: ref.child(field).path,
       builder: builder,
       onLoading: onLoading,

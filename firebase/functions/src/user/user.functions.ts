@@ -30,6 +30,7 @@ export const userLike = onValueWritten(
  */
 export const userMirror = onValueWritten(
     `${Config.users}/{uid}`,
+    // @eslint-ignore-next-line @typescript-eslint/no-explicit-any
     async (event): Promise<any> => {
         const firestore = getFirestore();
         const userUid = event.params.uid;
