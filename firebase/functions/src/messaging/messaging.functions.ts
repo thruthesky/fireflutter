@@ -6,7 +6,6 @@ import { logger } from "firebase-functions/v1";
 // import { onValueCreated } from "firebase-functions/v2/database";
 
 
-
 // import * as functions from "firebase-functions";
 // import { Config } from "../config";
 // import * as admin from "firebase-admin";

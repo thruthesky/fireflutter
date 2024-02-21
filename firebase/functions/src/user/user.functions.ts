@@ -1,7 +1,9 @@
-import { onValueWritten } from "firebase-functions/v2/database";
+import { onValueCreated, onValueWritten } from "firebase-functions/v2/database";
 import { Config } from "../config";
 import { ServerValue, getDatabase } from "firebase-admin/database";
 import { getFirestore } from "firebase-admin/firestore";
+import { UserLikeEvent } from "../messaging/messaging.interface";
+import { MessagingService } from "../messaging/messaging.service";
 
 /**
  * User likes
@@ -52,3 +54,13 @@ export const userMirror = onValueWritten(
         return await firestore.collection(Config.users).doc(userUid).set({ ...data });
     }
 );
+
+export const sendMessageWhenUserLikeMe = onValueCreated(
+    `${Config.userLikes}/{myUid}/{targetUid}`,
+    async (event) => {
+        const data: UserLikeEvent = {
+            uid: event.params.myUid,
+            otherUid: event.params.targetUid,
+        };
+        await MessagingService.sendMessageWhenUserLikeMe(data);
+    });

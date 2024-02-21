@@ -282,9 +282,10 @@ export class MessagingService {
   }
 
   /**
+   * sending notification when user liked me
    * @param msg uid and other person uid
    */
-    static async sendMessagesToWhoILikeSubscribers(msg: UserLikeEvent) {
+    static async sendMessageWhenUserLikeMe(msg: UserLikeEvent) {
     const db = getDatabase();
     const displayName =(await db.ref(`${Config.users}/${msg.otherUid}/displayName`).get()).val();
     const photoUrl = (await db.ref(`${Config.users}/${msg.otherUid}/photoUrl`).get()).val();
