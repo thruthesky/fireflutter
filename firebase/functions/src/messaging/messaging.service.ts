@@ -1,9 +1,10 @@
 import { SendResponse, getMessaging } from "firebase-admin/messaging";
 import { getDatabase } from "firebase-admin/database";
-import { MessageNotification, MessageRequest, PostCreateMessage, SendEachMessage, UserLikeEvent } from "./messaging.interface";
+import { MessageNotification, MessageRequest, NotificationToUids, PostCreateMessage, SendEachMessage, UserLikeEvent } from "./messaging.interface";
 import { chunk } from "../library";
 import { Config } from "../config";
 import { ChatCreateEvent } from "../chat/chat.interface";
+import { UserService } from "../user/user.service";
 
 /**
  * MessagingService
@@ -113,14 +114,21 @@ export class MessagingService {
    *
    * 더 많은 예제는 firebase/functions/tests/message/sendNotificationToUids.spec.ts 참고
    */
-  static async sendNotificationToUids(
-    uids: Array<string>,
-    chunkSize = 500,
-    title: string,
-    body: string,
-    image?: string,
-    data: { [key: string]: string } = {},
-  ): Promise<void> {
+  static async sendNotificationToUids(req: NotificationToUids)
+    // uids: Array<string>,
+    // chunkSize: number = 500,
+    // title: string,
+    // body: string,
+    // image?: string,
+    // data: { [key: string]: string } = {},
+    : Promise<void> {
+
+    // prepare the parameters
+    let { uids, chunkSize, title, body, image, data } = req;
+    data = data ?? {};
+    chunkSize = chunkSize ?? 500;
+
+
     // 토큰 가져오기. 기본 500 개 단위로 chunk.
     const tokenChunks = await this.getTokensOfUsers(uids, chunkSize);
 
@@ -237,13 +245,18 @@ export class MessagingService {
     });
 
     Config.log("-----> sendMessagesToCategorySubscribers uids:", uids);
-    await this.sendNotificationToUids(uids, 256, msg.title, msg.body, msg.image, { id: msg.id, category: msg.category });
+    await this.sendNotificationToUids({
+      uids: uids, chunkSize: 256, title: msg.title, body: msg.body, image: msg.image, data: {
+        id: msg.id, category: msg.category
+      }
+    });
   }
 
 
   /**
    * 채팅 메시지가 전송되면, 해당 채팅방 사용자들에게 메시지를 전송한다.
-   * @param msg 채팅 메시지
+   * 
+   * @param msg 채팅 메시지 정보
    */
   static async sendMessagesToChatRoomSubscribers(msg: ChatCreateEvent) {
     const db = getDatabase();
@@ -278,19 +291,26 @@ export class MessagingService {
     const body = msg.text ?? "사진을 업로드하였습니다.";
 
     // 메시지를 전송한다.
-    await this.sendNotificationToUids(uids, 256, title, body, msg.url, { senderUid: msg.uid, messageId: msg.id, roomId: msg.roomId });
+    await this.sendNotificationToUids({
+      uids, chunkSize: 256, title, body, image: msg.url, data: {
+        senderUid: msg.uid, messageId: msg.id, roomId: msg.roomId
+      }
+    });
   }
 
   /**
-   * sending notification when user liked me
-   * @param msg uid and other person uid
+   * Sending notification when a user liked me
+   * 
+   * @param event UserLikeEvent - The event when a user liked me
    */
-    static async sendMessageWhenUserLikeMe(msg: UserLikeEvent) {
-    const db = getDatabase();
-    const displayName =(await db.ref(`${Config.users}/${msg.otherUid}/displayName`).get()).val();
-    const photoUrl = (await db.ref(`${Config.users}/${msg.otherUid}/photoUrl`).get()).val();
-    const title = `${displayName}`;
-    const body = `${displayName} liked you`;
-    await this.sendNotificationToUids([msg.uid], 256, title, body, photoUrl, { uid: msg.uid });
+  static async sendMessageWhenUserLikeMe(event: UserLikeEvent) {
+    const user = await UserService.get(event.otherUid);
+    const title = `${user.displayName} liked you.`;
+    const body = `Please say Hi to ${user.displayName}.`;
+    await this.sendNotificationToUids({
+      uids: [event.uid], chunkSize: 256, title, body, image: user.photoUrl, data: {
+        uid: event.uid
+      }
+    });
   }
 }

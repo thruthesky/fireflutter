@@ -55,12 +55,15 @@ export const userMirror = onValueWritten(
     }
 );
 
+
+/**
+ * Send message when a user like me
+ */
 export const sendMessageWhenUserLikeMe = onValueCreated(
     `${Config.userLikes}/{myUid}/{targetUid}`,
     async (event) => {
-        const data: UserLikeEvent = {
+        await MessagingService.sendMessageWhenUserLikeMe({
             uid: event.params.myUid,
             otherUid: event.params.targetUid,
-        };
-        await MessagingService.sendMessageWhenUserLikeMe(data);
+        });
     });

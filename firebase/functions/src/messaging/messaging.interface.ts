@@ -13,6 +13,19 @@ export interface MessageRequest extends MessageNotification {
     data?: { [key: string]: string };
 }
 
+/**
+ * Inteface for sendNotificationToUids
+ */
+export interface NotificationToUids {
+    uids: Array<string>;
+    chunkSize: number;
+    title: string;
+    body: string;
+    image?: string;
+    data: { [key: string]: string };
+}
+
+
 
 export interface SendEachMessage {
     notification: MessageNotification;
@@ -34,7 +47,7 @@ export interface PostCreateMessage {
     image: string;
 }
 
-export interface UserLikeEvent{
+export interface UserLikeEvent {
     uid: string;
     otherUid: string;
 }
