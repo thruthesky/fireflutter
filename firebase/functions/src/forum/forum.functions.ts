@@ -1,10 +1,11 @@
-import { getDatabase } from "firebase-admin/database";
+
 import { onValueCreated, onValueWritten } from "firebase-functions/v2/database";
 import { PostService } from "./post.service";
 import { Config } from "../config";
 import { PostCreateEvent } from "./forum.interface";
 import { PostCreateMessage } from "../messaging/messaging.interface";
 import { MessagingService } from "../messaging/messaging.service";
+import { isCreate, isDelete, isUpdate } from "../library";
 
 /**
  * managePostsSummary
@@ -13,25 +14,22 @@ import { MessagingService } from "../messaging/messaging.service";
  */
 export const managePostsSummary = onValueWritten(
     `${Config.posts}/{category}/{postId}`,
-    (event) => {
-        // TODO: implement isCreate, isUpdate, isDelete to make the code more readable
-        // if (isCreate()) {
-        //     await PostService.setSummary(event.data.after.val(), event.params.category, event.params.postId);
-        //     await MessagingService.sendMessagesToCategorySubscribers(event.params.category, event.params.postId);
-        // } else if (isUpdate()) {
-        //     await PostService.setSummary(event.data.after.val(), event.params.category, event.params.postId);
-        // } else if (isDelete()) {
-        //     await PostService.deleteSummary(event.params.category, event.params.postId);
-        // }
+    async (event) => {
 
-        if (!event.data.after.exists()) {
-            // Data deleted
-            const db = getDatabase();
-            db.ref(`${Config.postSummaries}/${event.params.category}/${event.params.postId}`).remove();
-            db.ref(`${Config.postAllSummaries}/${event.params.postId}`).remove();
+        if (isCreate(event) || isUpdate(event)) {
+            await PostService.setSummary(event.data.after.val(), event.params.category, event.params.postId);
+        } else if (isDelete(event)) {
+            await PostService.deleteSummary(event.params.category, event.params.postId);
         }
-        // Data created/updated
-        return PostService.setSummary(event.data.after.val(), event.params.category, event.params.postId);
+
+        // if (!event.data.after.exists()) {
+        //     // Data deleted
+        //     const db = getDatabase();
+        //     db.ref(`${Config.postSummaries}/${event.params.category}/${event.params.postId}`).remove();
+        //     db.ref(`${Config.postAllSummaries}/${event.params.postId}`).remove();
+        // }
+        // // Data created/updated
+        // return PostService.setSummary(event.data.after.val(), event.params.category, event.params.postId);
     },
 );
 

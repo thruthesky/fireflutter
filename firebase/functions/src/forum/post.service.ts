@@ -15,7 +15,7 @@ export class PostService {
      * @param id id of the post
      * @returns the promise of the operation
      */
-    static setSummary(post: PostCreateEvent, category: string, id: string,) {
+    static async setSummary(post: PostCreateEvent, category: string, id: string,) {
         const summary = {
             uid: post.uid,
             createdAt: post.createdAt,
@@ -27,12 +27,19 @@ export class PostService {
         } as PostSummary;
 
         const db = getDatabase();
-        db.ref(`${Config.postSummaries}/${category}/${id}`).update(summary);
+        await db.ref(`${Config.postSummaries}/${category}/${id}`).update(summary);
         const summaryAll: PostSummaryAll = {
             ...summary,
             category,
         };
-        db.ref(`${Config.postAllSummaries}/${id}`).update(summaryAll);
+        await db.ref(`${Config.postAllSummaries}/${id}`).update(summaryAll);
         return;
+    }
+
+
+    static async deleteSummary(category: string, postId: string) {
+        const db = getDatabase();
+        await db.ref(`${Config.postSummaries}/${category}/${postId}`).remove();
+        await db.ref(`${Config.postAllSummaries}/${postId}`).remove();
     }
 }

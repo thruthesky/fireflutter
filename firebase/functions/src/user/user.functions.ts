@@ -1,9 +1,9 @@
-import { onValueCreated, onValueWritten } from "firebase-functions/v2/database";
+import { onValueWritten } from "firebase-functions/v2/database";
 import { Config } from "../config";
 import { ServerValue, getDatabase } from "firebase-admin/database";
 import { getFirestore } from "firebase-admin/firestore";
-import { UserLikeEvent } from "../messaging/messaging.interface";
 import { MessagingService } from "../messaging/messaging.service";
+import { isCreate } from "../library";
 
 /**
  * User likes
@@ -24,6 +24,15 @@ export const userLike = onValueWritten(
             await db.ref(`${Config.userLikes}/${targetUid}/${myUid}`).remove();
             await db.ref(`users/${targetUid}`).update({ noOfLikes: ServerValue.increment(-1) });
         }
+
+
+        if (isCreate(event)) {
+            await MessagingService.sendMessageWhenUserLikeMe({
+                uid: targetUid,
+                otherUid: myUid,
+            });
+        }
+
     },
 );
 
@@ -56,14 +65,14 @@ export const userMirror = onValueWritten(
 );
 
 
-/**
- * Send message when a user like me
- */
-export const sendMessageWhenUserLikeMe = onValueCreated(
-    `${Config.userLikes}/{myUid}/{targetUid}`,
-    async (event) => {
-        await MessagingService.sendMessageWhenUserLikeMe({
-            uid: event.params.myUid,
-            otherUid: event.params.targetUid,
-        });
-    });
+// /**
+//  * Send message when a user like me
+//  */
+// export const sendMessageWhenUserLikeMe = onValueCreated(
+//     `${Config.userLikes}/{myUid}/{targetUid}`,
+//     async (event) => {
+//         await MessagingService.sendMessageWhenUserLikeMe({
+//             uid: event.params.myUid,
+//             otherUid: event.params.targetUid,
+//         });
+//     });

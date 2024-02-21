@@ -31,53 +31,87 @@ class UserTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final child = Padding(
-      padding: padding ?? const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              UserAvatar(uid: user.uid),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      user.displayName,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    if (displayUid ?? false) Text(user.uid),
-                    if (displayStateMessage) Text(user.stateMessage),
-                    if (displayBirth) Text(user.age),
-                  ],
-                ),
-              ),
-              if (trailing != null) ...[
-                const SizedBox(width: 16),
-                trailing!,
-              ],
-            ],
+    return InkWell(
+      onTap: () =>
+          onTap?.call(user) ??
+          UserService.instance.showPublicProfile(
+            context: context,
+            uid: user.uid,
           ),
-          if (bottom != null) ...[
-            const SizedBox(height: 16),
-            bottom!,
+      child: Padding(
+        padding: padding ?? const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                UserAvatar(uid: user.uid),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        user.displayName,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      if (displayUid ?? false) Text(user.uid),
+                      if (displayStateMessage) Text(user.stateMessage),
+                      if (displayBirth) Text(user.age),
+                    ],
+                  ),
+                ),
+                if (trailing != null) ...[
+                  const SizedBox(width: 16),
+                  trailing!,
+                ],
+              ],
+            ),
+            if (bottom != null) ...[
+              const SizedBox(height: 16),
+              bottom!,
+            ],
           ],
-        ],
+        ),
       ),
     );
-    if (onTap != null) {
-      return InkWell(
-        onTap: () =>
-            onTap?.call(user) ??
-            UserService.instance.showPublicProfile(
-              context: context,
-              uid: user.uid,
-            ),
-        child: child,
-      );
-    } else {
-      return child;
-    }
+  }
+
+  static fromUid({
+    required String uid,
+    EdgeInsetsGeometry? padding,
+    Function(UserModel)? onTap,
+    Widget? trailing,
+    bool? displayUid,
+    bool displayStateMessage = false,
+    bool displayBirth = false,
+    Widget? bottom,
+  }) {
+    return FutureBuilder<UserModel?>(
+        future: UserModel.get(uid),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return UserTile(
+              user: UserModel.fromUid(uid),
+              padding: padding,
+              onTap: onTap,
+              trailing: trailing,
+              displayUid: displayUid,
+              displayStateMessage: displayStateMessage,
+              displayBirth: displayBirth,
+              bottom: bottom,
+            );
+          }
+
+          return UserTile(
+            user: snapshot.data ?? UserModel.fromUid(uid),
+            padding: padding,
+            onTap: onTap,
+            trailing: trailing,
+            displayUid: displayUid,
+            displayStateMessage: displayStateMessage,
+            displayBirth: displayBirth,
+            bottom: bottom,
+          );
+        });
   }
 }

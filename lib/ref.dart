@@ -12,7 +12,8 @@ class Ref {
   /// User
   static DatabaseReference users = root.child('users');
   static DatabaseReference userProfilePhotos = root.child('profile-photos');
-  static DatabaseReference userWhoIlike = root.child(Path.userWhoIlike);
+  static DatabaseReference userWhoILike = root.child(Path.userWhoILike);
+  static DatabaseReference userWhoLikeMe = root.child(Path.userWhoLikeMe);
 
   /// Chat Messages Folder(Node) for all room
   static DatabaseReference chatMessages = root.child('chat-messages');

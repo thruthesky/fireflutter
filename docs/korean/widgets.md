@@ -34,3 +34,9 @@ UpdateBirthday(
 ```dart
 DisplayPhotos(urls: List<String>.from(v ?? []))
 ```
+
+
+
+## 사용자 표시
+
+Tile 형식으로 표현하기 위해서 `UserTile` 을 쓰면 된다. 사용자 모델이 있으면 `UserTile(user: UserModel)` 와 같이 표시하면 되고, 사용자 id 만 가지고 있다면, `UserTile.fromUid(uid)` 와 같이 호출하면 된다.
