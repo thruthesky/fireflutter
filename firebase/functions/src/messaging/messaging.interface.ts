@@ -33,3 +33,8 @@ export interface PostCreateMessage {
     uid: string;
     image: string;
 }
+
+export interface UserLikeEvent{
+    uid: string;
+    otherUid: string;
+}

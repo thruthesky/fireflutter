@@ -5,12 +5,13 @@ import { MessagingService } from "./messaging.service";
 import { logger } from "firebase-functions/v1";
 // import { onValueCreated } from "firebase-functions/v2/database";
 import { PostCreateEvent } from "../forum/forum.interface";
-import { PostCreateMessage } from "./messaging.interface";
+import { PostCreateMessage, UserLikeEvent } from "./messaging.interface";
 import { ChatCreateEvent } from "../chat/chat.interface";
 
 
 // import * as functions from "firebase-functions";
 import { onValueCreated } from "firebase-functions/v2/database";
+import { Config } from "../config";
 // import { Config } from "../config";
 // import * as admin from "firebase-admin";
 
@@ -72,4 +73,15 @@ export const sendMessagesToChatRoomSubscribers = onValueCreated(
         };
 
         await MessagingService.sendMessagesToChatRoomSubscribers(data);
+    });
+
+
+export const sendMessagesToWhoILikeSubscribers = onValueCreated(
+    `${Config.userLikes}/{myUid}/{targetUid}`,
+    async (event) => {
+        const data: UserLikeEvent = {
+            uid: event.params.myUid,
+            otherUid: event.params.targetUid,
+        };
+        await MessagingService.sendMessagesToWhoILikeSubscribers(data);
     });
