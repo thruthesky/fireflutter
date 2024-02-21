@@ -10,20 +10,21 @@ class DisplayPhotos extends StatelessWidget {
   final List<String> urls;
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      separatorBuilder: (context, index) {
-        return const SizedBox(height: 4);
-      },
-      itemCount: urls.length,
-      itemBuilder: (context, index) => ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: CachedNetworkImage(
-          imageUrl: urls[index],
-          fit: BoxFit.cover,
-        ),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: urls
+          .map(
+            (url) => SizedBox(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: CachedNetworkImage(
+                  imageUrl: url,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          )
+          .toList(),
     );
   }
 }
