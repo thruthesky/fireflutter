@@ -41,3 +41,17 @@ class ChatMessageData {
     );
   }
 }
+
+// for user
+class UserMessageData {
+  String uid;
+
+  UserMessageData({
+    required this.uid,
+  });
+  factory UserMessageData.fromMap(Map<String, dynamic> map) {
+    return UserMessageData(
+      uid: map['uid'],
+    );
+  }
+}

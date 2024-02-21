@@ -344,7 +344,7 @@
       "name": "Silvers (Noe) TEST - iPhone 15 Pro (debug)",
       "request": "launch",
       "type": "dart",
-      "deviceId": "iPhone 15 Pro",
+      "deviceId": "iPhone 15 Pro Max",
       "flutterMode": "debug",
       "cwd": "apps/silvers",
       "program": "lib/main.dart",

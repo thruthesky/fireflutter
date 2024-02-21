@@ -1,6 +1,6 @@
 import { SendResponse, getMessaging } from "firebase-admin/messaging";
 import { getDatabase } from "firebase-admin/database";
-import { MessageNotification, MessageRequest, PostCreateMessage, SendEachMessage } from "./messaging.interface";
+import { MessageNotification, MessageRequest, PostCreateMessage, SendEachMessage, UserLikeEvent } from "./messaging.interface";
 import { chunk } from "../library";
 import { Config } from "../config";
 import { ChatCreateEvent } from "../chat/chat.interface";
@@ -279,5 +279,18 @@ export class MessagingService {
 
     // 메시지를 전송한다.
     await this.sendNotificationToUids(uids, 256, title, body, msg.url, { senderUid: msg.uid, messageId: msg.id, roomId: msg.roomId });
+  }
+
+  /**
+   * sending notification when user liked me
+   * @param msg uid and other person uid
+   */
+    static async sendMessageWhenUserLikeMe(msg: UserLikeEvent) {
+    const db = getDatabase();
+    const displayName =(await db.ref(`${Config.users}/${msg.otherUid}/displayName`).get()).val();
+    const photoUrl = (await db.ref(`${Config.users}/${msg.otherUid}/photoUrl`).get()).val();
+    const title = `${displayName}`;
+    const body = `${displayName} liked you`;
+    await this.sendNotificationToUids([msg.uid], 256, title, body, photoUrl, { uid: msg.uid });
   }
 }

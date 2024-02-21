@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 /// A simple phone number login form.
 ///
@@ -227,14 +228,16 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                           // Only for Android. This timeout may happens when the Phone Signal is not stable.
                           codeAutoRetrievalTimeout: (String verificationId) {
                             // Auto-resolution timed out...
-                            error(
-                                context: context,
-                                title: T.error.tr,
-                                message: T.phoneSignInTimeoutTryAgain.tr);
-                            setState(() {
-                              showSmsCodeInput = false;
-                              progressVerifyPhoneNumber = false;
-                            });
+                            if (mounted) {
+                              error(
+                                  context: context,
+                                  title: T.error.tr,
+                                  message: T.phoneSignInTimeoutTryAgain.tr);
+                              setState(() {
+                                showSmsCodeInput = false;
+                                progressVerifyPhoneNumber = false;
+                              });
+                            }
                           },
                         );
                       },
@@ -284,6 +287,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                   if (isRealReviewSmsCode) {
                     return doReviewLogin();
                   }
+
                   // Create a PhoneAuthCredential with the code
                   PhoneAuthCredential credential = PhoneAuthProvider.credential(
                       verificationId: verificationId!,
@@ -297,7 +301,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                     signinSuccess();
                   } catch (e) {
                     // SMS Code verification error comes here.
-                    if (context.mounted) {
+                    if (mounted) {
                       error(
                         context: context,
                         title: T.error.tr,

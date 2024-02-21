@@ -14,7 +14,6 @@ import { MessagingService } from "../messaging/messaging.service";
 export const managePostsSummary = onValueWritten(
     `${Config.posts}/{category}/{postId}`,
     (event) => {
-
         // TODO: implement isCreate, isUpdate, isDelete to make the code more readable
         // if (isCreate()) {
         //     await PostService.setSummary(event.data.after.val(), event.params.category, event.params.postId);
