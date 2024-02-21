@@ -32,6 +32,24 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "Silvers - iPhone SE 3",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone SE",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Silvers - iPhone11ProMax",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone11ProMax",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Momcafe - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
