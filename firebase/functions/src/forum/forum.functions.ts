@@ -1,7 +1,10 @@
 import { getDatabase } from "firebase-admin/database";
-import { onValueWritten } from "firebase-functions/v2/database";
+import { onValueCreated, onValueWritten } from "firebase-functions/v2/database";
 import { PostService } from "./post.service";
 import { Config } from "../config";
+import { PostCreateEvent } from "./forum.interface";
+import { PostCreateMessage } from "../messaging/messaging.interface";
+import { MessagingService } from "../messaging/messaging.service";
 
 /**
  * managePostsSummary
@@ -21,3 +24,31 @@ export const managePostsSummary = onValueWritten(
         return PostService.setSummary(event.data.after.val(), event.params.category, event.params.postId);
     },
 );
+
+
+
+
+/**
+ * 게시판(카테고리) 구독자들에게 메시지 전송
+ *
+ * 새 글이 작성되면 메시지를 전송한다.
+ * 
+ * 
+ */
+export const sendMessagesToCategorySubscribers = onValueCreated(
+    "/posts/{category}/{id}",
+    async (event) => {
+        // Grab the current value of what was written to the Realtime Database.
+        const data = event.data.val() as PostCreateEvent;
+
+        const post: PostCreateMessage = {
+            id: event.params.id,
+            category: event.params.category,
+            title: data.title ?? "",
+            body: data.content ?? "",
+            uid: data.uid,
+            image: data.urls?.[0] ?? "",
+        };
+
+        await MessagingService.sendMessagesToCategorySubscribers(post);
+    });
