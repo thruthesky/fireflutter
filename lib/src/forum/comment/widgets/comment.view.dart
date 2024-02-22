@@ -95,6 +95,18 @@ class _CommnetViewState extends State<CommentView> {
                     const Spacer(),
                     PopupMenuButton(itemBuilder: (context) {
                       return [
+                        PopupMenuItem(
+                          value: 'bookmark',
+                          child: Value(
+                              path: Path.bookmarkComment(
+                                widget.comment.id,
+                              ),
+                              builder: (v) {
+                                return Text(v == null
+                                    ? T.bookmark.tr
+                                    : T.bookmarked.tr);
+                              }),
+                        ),
                         const PopupMenuItem(
                           value: 'block',
                           child: Text('차단'),
@@ -163,6 +175,20 @@ class _CommnetViewState extends State<CommentView> {
                         );
                         if (re != true) return;
                         await widget.comment.delete();
+                      } else if (value == 'bookmark') {
+                        final re = await BookmarkModel.toggle(
+                          postId: widget.comment.postId,
+                          commentId: widget.comment.id,
+                        );
+                        if (context.mounted) {
+                          toast(
+                            context: context,
+                            title: re == true ? T.bookmarked.tr : T.bookmark.tr,
+                            message: re == true
+                                ? T.bookmarkedMessage.tr
+                                : T.bookmarkMessage.tr,
+                          );
+                        }
                       }
                     }),
                   ],

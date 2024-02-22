@@ -14,6 +14,8 @@ class Folder {
 
   static const String reports = 'reports';
 
+  static const String bookmarks = 'bookmarks';
+
   /// Forum
   static const String posts = 'posts';
   static const String postSubscriptions = 'post-subscriptions';

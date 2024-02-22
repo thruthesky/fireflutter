@@ -11,6 +11,10 @@ export 'src/admin/widgets/admin.user_update.screen.dart';
 export 'src/address/korean/korean_sigungu_selector.dart';
 export 'src/address/korean/korean_sigungu_sido_code.dart';
 
+/// Bookmark(Favorite)
+export 'src/bookmark/bookmark.model.dart';
+export 'src/bookmark/widgets/bookmark.list_view.dart';
+
 /// Common
 ///
 export 'src/common/assets.dart';

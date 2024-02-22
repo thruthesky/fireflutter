@@ -9,6 +9,9 @@ class Ref {
   /// Admins
   static DatabaseReference admins = root.child('admins');
 
+  /// Bookmark
+  static DatabaseReference bookmarks = root.child(Folder.bookmarks);
+
   /// User
   static DatabaseReference users = root.child('users');
   static DatabaseReference userProfilePhotos = root.child('profile-photos');

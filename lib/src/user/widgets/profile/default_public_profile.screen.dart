@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireship/fireship.dart';
+import 'package:fireship/src/bookmark/bookmark.model.dart';
 import 'package:flutter/material.dart';
 
 class DefaultPublicProfileScreen extends StatelessWidget {
@@ -110,8 +111,7 @@ class DefaultPublicProfileScreen extends StatelessWidget {
               SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  child: Wrap(
                     children: [
                       // Chat
                       ElevatedButton(
@@ -135,6 +135,23 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                                 : v == 1
                                     ? ('${T.like.tr} 1')
                                     : '${T.likes.tr} ${v ?? ''}',
+                          ),
+                        ),
+                      ),
+
+                      // Bookmark
+                      Value(
+                        path: Path.bookmarkUser(uid),
+                        builder: (v) => ElevatedButton(
+                          onPressed: () async {
+                            if (v != null) {
+                              await BookmarkModel.delete(otherUserUid: uid);
+                            } else {
+                              await BookmarkModel.create(otherUserUid: uid);
+                            }
+                          },
+                          child: Text(
+                            v == null ? T.bookmark.tr : T.bookmarked.tr,
                           ),
                         ),
                       ),

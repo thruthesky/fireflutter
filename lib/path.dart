@@ -49,4 +49,14 @@ class Path {
 
   static String categorySubscription(String category) =>
       '${Folder.postSubscriptions}/$category/$myUid';
+
+  /// Bookmark ( = Favorite )
+  static String bookmarkUser(String otherUserUid) =>
+      '${Folder.bookmarks}/$myUid/$otherUserUid';
+  static String bookmarkPost(String postId) =>
+      '${Folder.bookmarks}/$myUid/$postId';
+  static String bookmarkComment(String commentId) =>
+      '${Folder.bookmarks}/$myUid/$commentId';
+  static String bookmarkChatRoom(String roomId) =>
+      '${Folder.bookmarks}/$myUid/$roomId';
 }

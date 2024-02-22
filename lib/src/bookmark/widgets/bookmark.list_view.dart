@@ -2,21 +2,21 @@ import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
-class ReportMyListView extends StatelessWidget {
-  const ReportMyListView({super.key});
+class BookmarkListView extends StatelessWidget {
+  const BookmarkListView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return FirebaseDatabaseListView(
-      query: Ref.reports.child(myUid!),
+      query: Ref.bookmarks.child(myUid!),
       itemBuilder: (context, snapshot) {
-        final ReportModel report =
-            ReportModel.fromValue(snapshot.value, snapshot.key!);
+        final BookmarkModel bookmark =
+            BookmarkModel.fromValue(snapshot.value, snapshot.key!);
 
-        if (report.isPost) {
+        if (bookmark.isPost) {
           return FutureBuilder<PostModel?>(
-            future:
-                PostModel.get(category: report.category!, id: report.postId!),
+            future: PostModel.get(
+                category: bookmark.category!, id: bookmark.postId!),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return ListTile(
@@ -46,7 +46,7 @@ class ReportMyListView extends StatelessWidget {
               final post = snapshot.data!;
               return ListTile(
                 leading: UserAvatar(uid: post.uid),
-                title: Text(report.reason),
+                title: Text(post.title),
                 subtitle: Row(
                   children: [
                     const Text('[POST] '),
@@ -55,17 +55,21 @@ class ReportMyListView extends StatelessWidget {
                       field: 'displayName',
                       builder: (name) => Text(name ?? ''),
                     ),
-                    Text(' ${report.createdAt.toShortDate}'),
+                    Text(' ${post.createdAt.toLocal()}'),
                   ],
+                ),
+                onTap: () => ForumService.instance.showPostViewScreen(
+                  context,
+                  post: post,
                 ),
               );
             },
           );
-        } else if (report.isComment) {
+        } else if (bookmark.isComment) {
           return FutureBuilder<CommentModel?>(
             future: CommentModel.get(
-              postId: report.postId!,
-              commentId: report.commentId!,
+              postId: bookmark.postId!,
+              commentId: bookmark.commentId!,
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -96,7 +100,7 @@ class ReportMyListView extends StatelessWidget {
               final comment = snapshot.data!;
               return ListTile(
                 leading: UserAvatar(uid: comment.uid),
-                title: Text(report.reason),
+                title: Text(comment.content),
                 subtitle: Row(
                   children: [
                     const Text('[COMMNET] '),
@@ -105,35 +109,28 @@ class ReportMyListView extends StatelessWidget {
                       field: 'displayName',
                       builder: (name) => Text(name ?? ''),
                     ),
-                    Text(' ${report.createdAt.toShortDate}'),
+                    Text(' ${comment.createdAt.toShortDate}'),
                   ],
                 ),
+                onTap: () async {
+                  final post = await PostModel.get(
+                      category: comment.category, id: comment.postId);
+                  if (context.mounted) {
+                    ForumService.instance.showPostViewScreen(
+                      context,
+                      post: post!,
+                    );
+                  }
+                },
               );
             },
           );
-        } else if (report.isChatRoom) {
-          return ListTile(
-            title: Text(report.reason),
-            subtitle: Row(
-              children: [
-                const Text('[CHAT] '),
-                Value.once(
-                    path: Path.chatRoomName(report.chatRoomId),
-                    builder: (v) {
-                      return Text(v);
-                    }),
-                Text(' ${report.createdAt.toShortDate}'),
-              ],
-            ),
-          );
         } else {
           return ListTile(
-            leading: UserAvatar(uid: report.otherUserUid!),
-            title: Text(report.reason),
+            leading: UserAvatar(uid: bookmark.otherUserUid!),
             subtitle: Row(
               children: [
-                UserDisplayName(uid: report.otherUserUid!),
-                Text(' ${report.createdAt.toShortDate}'),
+                UserDisplayName(uid: bookmark.otherUserUid!),
               ],
             ),
           );

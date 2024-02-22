@@ -1,4 +1,5 @@
 import 'package:fireship/fireship.dart';
+import 'package:fireship/src/bookmark/bookmark.model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -50,6 +51,26 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       onLoading: Text('좋아요${likeText(previousNoOfLikes)}'),
                     ),
                   ),
+
+                  // Bookmark
+                  Value(
+                    path: Path.bookmarkPost(post.id),
+                    builder: (v) => TextButton(
+                      onPressed: () async {
+                        if (v != null) {
+                          await BookmarkModel.delete(
+                              category: post.category, postId: post.id);
+                        } else {
+                          await BookmarkModel.create(
+                              category: post.category, postId: post.id);
+                        }
+                      },
+                      child: Text(
+                        v == null ? T.bookmark.tr : T.bookmarked.tr,
+                      ),
+                    ),
+                  ),
+
                   TextButton(
                     onPressed: () => ChatService.instance.showChatRoom(
                       context: context,

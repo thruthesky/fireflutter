@@ -6,6 +6,8 @@ class ReportService {
   ReportService._() {
     dog('--> ReportService._()');
   }
+
+  @Deprecated('Use ReportModel.create instead')
   Future<void> report({
     String? otherUserUid,
     String? chatRoomId,
