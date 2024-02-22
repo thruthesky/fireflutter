@@ -20,7 +20,9 @@ Fireship (including all the widgets) will always use `dispalyName` to display th
 
 `gender` 는 `M` 또는 `F` 의 값을 가질 수 있으며, null (필드가 없는 상태) 상태가 될 수도 있다. 참고로, `isVerified` 가 true 일 때에만 성별 여부를 믿을 수 있다. 즉, `isVerified` 가 true 가 아니면, `gender` 정보도 가짜일 수 있다. `gender` can have values of `M` or `F` and may be in a null state (no field). Note that the gender information can only be trusted when `isVerified` is true. In other words, if `isVerified` is not true, gender information may also be false.
 
-`blocks` 는 차단한 사용자의 목록을 나타낸다. 참고로, `likes` 는 쌍방으로 정보 확인이 가능해야한다. 이 말은 내가 누구를 좋아요 했는지 알아야 할 필요가 있고, 상대방도 내가 좋아요를 했는지 알아야 할 필요가 있다. 그래서 데이터 구조가 복잡해 `/user-likes` 에 따로 저장을 하지만, `blocks` 는 내가 누구를 차단했는지 다른 사람에게 알려 줄 필요가 없다. 그래서 `/users` 에 저장을 한다.
+`blocks` 는 차단한 사용자의 목록을 가지고 있다. 차단은 사용자만 할 수 있다.
+참고로, 좋아요는 사용자, 글, 코멘트, 채팅 등에 할 수 있고, 북마크는 사용자, 글, 코멘트 등에 할 수 있으나, 차단은 사용만 할 수 있다.
+참고로, `likes` 는 쌍방으로 정보 확인이 가능해야한다. 이 말은 내가 누구를 좋아요 했는지 알아야 할 필요가 있고, 상대방도 내가 좋아요를 했는지 알아야 할 필요가 있다. 그래서 데이터 구조가 복잡해 `/user-likes` 에 따로 저장을 하지만, `blocks` 는 내가 누구를 차단했는지 다른 사람에게 알려 줄 필요가 없다. 그래서 `/users` 에 저장을 한다.
 
 
 `latitude` 와 `longitude` 에 값이 저장되면 자동으로 `geohash4`, `geohash5`, `geohash6`, `geohash7` 에 GeoHash 문자열 4/5/6/7 자리 값이 저장된다. 즉, 위/경도의 값은 앱에서 Location 또는 GeoLocator 패키지를 써서, 퍼미션 설정을 하고, Lat/Lon 값을 구한 다음, `UserModel.update()` 로 저장하면, 자동으로 geohash 문자열이 저장되는 것이다. 보다 자세한 내용은 [거리 검색](#거리-검색)을 참고한다.
@@ -481,3 +483,32 @@ ElevatedButton(
 아래와 같이 코딩을 하면 된다.
 
 ```dart
+//..
+```
+
+
+
+## 블럭
+
+
+- 블럭된 사용자는 `BlockListView` 로 목록으로 표시 할 수 있다.
+- 블럭된 경우 문자열로 표시하는 경우는 `orBlock()` String extension 을 사용하면 된다.
+- 위젯으로 표시를 해야하는 경우는 `Blocked`로 하면 된다.
+
+
+
+
+예제 - 코멘트 목록에서 사진을 표시할 때, 사용자가 차단되어져 있으면 사진을 표시하지 않는다.
+
+```dart
+Blocked(
+  uid: widget.comment.uid,
+  yes: () => SizedBox.fromSize(),
+  no: () => DisplayDatabasePhotos(
+    urls: widget.comment.urls,
+    path:
+        '${Path.comment(widget.post.id, widget.comment.id)}/${Field.urls}',
+  ),
+),
+```
+

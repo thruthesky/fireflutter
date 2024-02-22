@@ -39,7 +39,7 @@ class _CommentContentState extends State<CommentContent> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
-        content,
+        content.orBlocked(widget.comment.uid, T.blockedContentMessage),
         style: const TextStyle(fontSize: 16),
       ),
     );

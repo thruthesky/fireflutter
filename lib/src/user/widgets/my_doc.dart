@@ -44,6 +44,7 @@ class MyDoc extends StatelessWidget {
   /// 않기 때문에 더 효율 적이다.
   ///
   /// [onLoading] 은 현재 정보를 바탕으로 호출하므로, 깜빡임에 효율적이다.
+  @Deprecated('User MyDoc. MyDoc is more efficient than MyDoc.field()')
   static Widget field(
     String field, {
     required Function(dynamic value) builder,
@@ -52,7 +53,7 @@ class MyDoc extends StatelessWidget {
       uid: FirebaseAuth.instance.currentUser!.uid,
       field: field,
       builder: (v) => builder(v),
-      onLoading: builder(my?.data[field] ?? ''),
+      onLoading: builder(my?.data[field]),
     );
   }
 }

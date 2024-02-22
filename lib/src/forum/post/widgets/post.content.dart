@@ -33,6 +33,6 @@ class _PostContentState extends State<PostContent> {
   }
 
   _text() {
-    return Text(content);
+    return Text(content.orBlocked(widget.post.uid, T.blockedContentMessage));
   }
 }

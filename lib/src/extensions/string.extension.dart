@@ -72,4 +72,8 @@ extension FireFlutterStringExtension on String {
 
   /// 각종 특수 문자를 없앤다.
   String get sanitize => trim().replaceAll(RegExp(r'[\r\n\t]'), " ");
+
+  String orBlocked(String uid, String message) {
+    return iHave.blocked(uid) ? message : this;
+  }
 }

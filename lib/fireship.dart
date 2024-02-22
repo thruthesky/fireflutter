@@ -167,3 +167,5 @@ export 'src/user/widgets/profile/my_profile_sticker.dart';
 export 'src/user/widgets/profile/new_profile_photos.dart';
 export 'src/user/widgets/like/who_i_like_list_view.dart';
 export 'src/user/widgets/like/who_like_me_list_view.dart';
+export 'src/user/widgets/block/block_list_view.dart';
+export 'src/user/widgets/block/blocked.dart';

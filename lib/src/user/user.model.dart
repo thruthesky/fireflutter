@@ -297,6 +297,8 @@ class UserModel {
     return this;
   }
 
+  bool blocked(String otherUserUid) => isBlocked(otherUserUid);
+
   /// 사용자 정보 node 전체를 UserModel 에 담아 리턴한다.
   static Future<UserModel?> get(String uid) async {
     final nodeData = await fs.get<Map<dynamic, dynamic>>('users/$uid');

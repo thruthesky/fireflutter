@@ -41,10 +41,14 @@ class _CommnetViewState extends State<CommentView> {
             children: [
               CommentContent(comment: widget.comment),
               const SizedBox(height: 8),
-              DisplayDatabasePhotos(
-                urls: widget.comment.urls,
-                path:
-                    '${Path.comment(widget.post.id, widget.comment.id)}/${Field.urls}',
+              Blocked(
+                uid: widget.comment.uid,
+                yes: () => SizedBox.fromSize(),
+                no: () => DisplayDatabasePhotos(
+                  urls: widget.comment.urls,
+                  path:
+                      '${Path.comment(widget.post.id, widget.comment.id)}/${Field.urls}',
+                ),
               ),
               Theme(
                 data: Theme.of(context).copyWith(

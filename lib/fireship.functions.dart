@@ -32,6 +32,15 @@ UserModel get iam {
   return my!;
 }
 
+/// For more readability.
+///
+///
+/// Example:
+/// ```dart
+/// Text(iHave.blocked(widget.post.uid) ? T.blockedMessage.tr : title)
+/// ```
+UserModel get iHave => iam;
+
 void dog(String msg) {
   if (kReleaseMode) return;
   log('--> $msg', time: DateTime.now(), name: '🐶', level: 2000);

@@ -1,8 +1,5 @@
 import 'package:fireship/fireship.dart';
-import 'package:fireship/src/bookmark/bookmark.model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class PostViewScreen extends StatefulWidget {
   static const String routeName = '/PostView';
@@ -34,7 +31,15 @@ class _PostViewScreenState extends State<PostViewScreen> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: DisplayPhotos(urls: post.urls),
+                child: Blocked(
+                  uid: widget.post.uid,
+                  yes: () => SizedBox.fromSize(),
+                  no: () => DisplayDatabasePhotos(
+                    urls: widget.post.urls,
+                    path:
+                        '${Path.posts}/${widget.post.category}/${widget.post.id}/${Field.urls}',
+                  ),
+                ),
               ),
             ),
             SliverToBoxAdapter(
