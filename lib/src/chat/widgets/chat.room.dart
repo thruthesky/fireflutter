@@ -43,7 +43,7 @@ class _ChatRoomState extends State<ChatRoom> {
   /// 채팅방 정보가 로드되었는지 여부
   ///
   /// 채팅방 정보가 로드되었으면, 전체 화면을 다시 그리지 않고, 채팅 목록만 다시 그린다.
-  /// 그래서, 채팅 화면 상단의 제목이 깜빡거리지 않도록 한다.
+  /// 그래서, 채팅 화면 상단의 제목 부분이 깜빡거리지 않도록 한다.
   final loaded = ValueNotifier<bool>(false);
 
   @override

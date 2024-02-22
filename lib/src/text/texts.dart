@@ -100,6 +100,7 @@ class T {
   static const String blockedTitleMessage = 'Blocked this user';
   static const String blockedContentMessage = 'You have blocked this user.';
   static const String blockedChatMessage = 'You have blocked this user.';
+  // static const String blockedUserMessage = 'You have blocked this user.';
 
   static const String unblocked = 'Unblocked';
   static const String unblockedMessage = 'You have unblocked this user.';

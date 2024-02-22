@@ -6,7 +6,7 @@
 
 ## Chat 데이터베이스 구조
 
-- `/chat-rooms` 채팅 방 정보를 저장하는 경로
+- `/chat-rooms` 채팅 방 정보를 저장하는 경로.
 - `/chat-messages` 채팅 메시지를 저장하는 경로
 - `/chat-joins` 채팅 방에 참여한 사용자들에게 채팅방 정보를 장하는 경로. 예를 들어, 사용자별 읽지 않은 (새로운) 메시지 수를 표시하는 데 사용. 참고로, `/chat-rooms` 과 `/chat-joins` 둘 모두 `ChatRoomModel` 을 사용해서 modeling 한다.
 
@@ -21,6 +21,12 @@
     - `previewDescription` - Description
     - `previewImageUrl` - Image
 
+### chat-rooms
+
+- `blocks` - 관리자가 채팅방의 블럭 리스트를 관리한다. 여기에 추가된 사용자는 채팅방에 입장을 할 수 없다. 또한 자동으로 채팅방에서 튕겨나가도록 한다. (TODO: 2024-02-22 현재 기능 구현되지 않음.)
+
+
+
 ### chat-messages 구조
 
 - `uid` 메시지 전송한 사용자의 uid
@@ -28,6 +34,9 @@
 - `order` 메시지 목록 순서
 - `text` 텍스트를 전송한 경우.
 - `url` 사진 URL. 사진을 전송한 경우.
+
+
+
 
 
 
