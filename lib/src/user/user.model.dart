@@ -554,7 +554,7 @@ class UserModel {
     return await ref.child(Field.blocks).child(otherUserUid).set(null);
   }
 
-  Future like(String otherUserUid) async {
+  Future like(String otherUserUid, {void Function(bool)? onLike}) async {
     return await toggle(fs.Path.like(my!.uid, otherUserUid));
   }
 }
