@@ -9,6 +9,7 @@ class ReportService {
   Future<void> report({
     String? otherUserUid,
     String? chatRoomId,
+    String? category,
     String? postId,
     String? commentId,
     String reason = '',
@@ -19,6 +20,7 @@ class ReportService {
     await ReportModel.create(
       otherUserUid: otherUserUid,
       chatRoomId: chatRoomId,
+      category: category,
       postId: postId,
       commentId: commentId,
       reason: reason,

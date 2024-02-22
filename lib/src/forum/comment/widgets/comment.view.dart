@@ -122,6 +122,7 @@ class _CommnetViewState extends State<CommentView> {
                         );
                         if (re == null || re == '') return;
                         await ReportService.instance.report(
+                          postId: widget.comment.postId,
                           commentId: widget.comment.id,
                           reason: re,
                         );

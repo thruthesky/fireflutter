@@ -68,6 +68,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       if (re == null || re == '') return;
                       await ReportService.instance.report(
                         postId: post.id,
+                        category: post.category,
                         reason: re,
                       );
                     },

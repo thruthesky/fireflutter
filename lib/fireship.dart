@@ -103,6 +103,7 @@ export './path.dart';
 /// Report
 export 'src/report/report.service.dart';
 export 'src/report/report.model.dart';
+export 'src/report/widgets/report.my.list_view.dart';
 
 /// Ref
 export './ref.dart';
