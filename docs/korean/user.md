@@ -109,47 +109,11 @@ Scaffold(
 ```
 
 
-## Access to other user data
+## 사용자 정보 참고
 
-You can use `UserDoc` to access other user's data. Note that you can use it to get your data also.
+`UserDoc` 위젯을 사용 하면 된다. 자세한 것은, 위젯 문서를 참고한다.
 
-`UserDoc` caches the data in memory by default. This mean, it will get the data only once from Database. You may use `cache` option with false to get the data from the Database again.
 
-```dart
-UserDoc(
-  uid: uid,
-  builder: (data) {
-    if (data == null) return const SizedBox.shrink();
-    final user = UserModel.fromJson(data, uid: uid);
-    return Column(
-      children: [
-        Text(
-          user.displayName ?? 'No name',
-          style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        if (user.stateMessage != null)
-          Text(
-            user.stateMessage!,
-            style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                  color: Colors.white.withAlpha(200),
-                ),
-          ),
-      ],
-    );
-  },
-),
-```
-
-It's important to know that you can use `field` property to get only the value of the field. It's recommended to use `field` whenever possible since the size of user data may be large.
-
-You can use `sync` method to update (rebuild) the widget whenever the value changes.
-
-```dart
-UserDoc.sync(uid: user.uid, field: 'displayName', builder: (data, $) => Text(data)),
-```
 
 ## 나의 (로그인 사용자) 정보 액세스
 

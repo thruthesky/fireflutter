@@ -11,15 +11,18 @@ class UserDisplayName extends StatelessWidget {
     required this.uid,
     this.defaultName = 'NoName',
     this.style,
+    this.cacheId,
   });
 
   final String uid;
   final String defaultName;
   final TextStyle? style;
+  final String? cacheId;
 
   @override
   Widget build(BuildContext context) {
     return UserDoc.field(
+      cacheId: cacheId,
       uid: uid,
       field: Field.displayName,
       builder: (data) => Text(

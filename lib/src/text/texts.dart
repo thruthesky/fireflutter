@@ -41,7 +41,6 @@ class T {
   static const String leave = 'Leave';
   static const String stateMessage = 'State Message';
   static const String stateMessageDescription = 'State Message Description';
-  static const String thisIsBlockedUser = 'You have blocked this user.';
 
   static const String blockConfirmTitle = 'Block this user?';
   static const String blockConfirmMessage =

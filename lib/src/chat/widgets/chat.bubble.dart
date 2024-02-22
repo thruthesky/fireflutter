@@ -129,7 +129,7 @@ class ChatBubble extends StatelessWidget {
       children: [
         DateTimeShort(stamp: message.createdAt ?? 0),
         const SizedBox(width: 4),
-        UserDisplayName(uid: uid),
+        UserDisplayName(uid: uid, cacheId: 'chatRoom'),
       ],
     );
   }

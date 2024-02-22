@@ -1,7 +1,7 @@
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
-final _userDataCache = <String, dynamic>{};
+final _userDocCache = <String, dynamic>{};
 
 /// Get user data synchroneously.
 ///
@@ -40,15 +40,21 @@ class UserDoc extends StatelessWidget {
     required this.uid,
     required this.builder,
     this.onLoading,
+    this.cacheId,
   });
 
   final String uid;
   final Function(UserModel data) builder;
-
   final Widget? onLoading;
+  final String? cacheId;
 
   @override
   Widget build(BuildContext context) {
+    // cacheId 가 있으면, 캐시를 사용한다.
+    if (cacheId != null && _userDocCache.containsKey(uid)) {
+      return builder(_userDocCache[uid]);
+    }
+
     return FutureBuilder(
       future: get('users/$uid'),
       builder: (_, snapshot) {
@@ -59,6 +65,11 @@ class UserDoc extends StatelessWidget {
           dog('error in UserDoc: ${snapshot.error}');
           return const Icon(Icons.error_outline);
         }
+
+        if (cacheId != null) {
+          _userDocCache[uid] = UserModel.fromJson(snapshot.data, uid: uid);
+        }
+
         return builder(UserModel.fromJson(snapshot.data, uid: uid));
       },
     );
@@ -69,7 +80,13 @@ class UserDoc extends StatelessWidget {
     required String field,
     required Function(dynamic) builder,
     Widget? onLoading,
+    String? cacheId,
   }) {
+    // cacheId 가 있으면, 캐시를 사용한다.
+    if (cacheId != null && _userDocCache.containsKey('$uid/$field')) {
+      return builder(_userDocCache['$uid/$field']);
+    }
+
     return FutureBuilder(
       future: get('users/$uid/$field'),
       builder: (_, snapshot) {
@@ -80,6 +97,11 @@ class UserDoc extends StatelessWidget {
           dog('error in UserDoc: ${snapshot.error}');
           return const Icon(Icons.error_outline);
         }
+
+        if (cacheId != null) {
+          _userDocCache['$uid/$field'] = snapshot.data;
+        }
+
         return builder(snapshot.data);
       },
     );
