@@ -23,10 +23,6 @@ class ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (my!.isBlocked(message.uid!)) {
-      return blockedUserMessage(context);
-    }
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Row(
@@ -72,7 +68,8 @@ class ChatBubble extends StatelessWidget {
                       borderRadius: borderRadius(),
                     ),
                     child: LinkifyText(
-                      message.text ?? '',
+                      message.text!
+                          .orBlocked(message.uid!, T.blockedChatMessage),
                       style: const TextStyle(color: Colors.black),
                     ),
                   ),
@@ -138,6 +135,7 @@ class ChatBubble extends StatelessWidget {
   }
 
   cachedImage(BuildContext context, String url) {
+    if (iHave.blocked(message.uid!)) return const SizedBox.shrink();
     return ClipRRect(
       borderRadius: borderRadius(),
       child: Container(
@@ -156,45 +154,6 @@ class ChatBubble extends StatelessWidget {
           },
           errorListener: (value) => dog('Image not exist in storage: $value'),
         ),
-      ),
-    );
-  }
-
-  blockedUserMessage(context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () => UserService.instance
-          .showPublicProfile(
-            context: context,
-            uid: message.uid!,
-          )
-          .then((value) => onChange?.call()),
-      child: Row(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-            constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.6),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: borderRadius(),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(T.thisIsBlockedUser.tr),
-                Row(
-                  children: [
-                    UserDisplayName(uid: message.uid!),
-                    const SizedBox(width: 8),
-                    DateTimeShort(stamp: message.createdAt ?? 0),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

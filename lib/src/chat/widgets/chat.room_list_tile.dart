@@ -91,8 +91,8 @@ class ChatRoomListTile extends StatelessWidget {
     // 1:1 채팅?
     if (room.isSingleChat) {
       // 블럭된 회원?
-      if (my?.isBlocked(room.otherUserUid!) == true) {
-        return subtitleText(context, T.thisIsBlockedUser.tr);
+      if (iHave.isBlocked(room.otherUserUid!) == true) {
+        return subtitleText(context, T.blockedChatMessage.tr);
       }
 
       // 상태 메세지 표시?
