@@ -18,6 +18,8 @@ class T {
   static const String next = 'Next';
   static const String prev = 'Prev';
   static const String back = 'Back';
+  static const String like = 'Like';
+  static const String likes = 'Likes';
 
   /// Label, texts, buttons,
   static const String dismiss = 'dismiss';

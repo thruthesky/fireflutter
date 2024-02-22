@@ -66,7 +66,7 @@ class TypesenseService {
   ///
   /// Can use ID as string to delete into Typesense
   ///
-  Future<Map<String, dynamic>> delete(Object obj) async {
+  Future<Map<String, dynamic>> _delete(Object obj) async {
     String id;
     if (obj is String) {
       id = obj;
@@ -81,7 +81,7 @@ class TypesenseService {
   }
 
   /// Update the index for the user.
-  Future<Map<String, dynamic>> upsertUser(UserModel user) async {
+  Future<Map<String, dynamic>> _upsertUser(UserModel user) async {
     final data = {
       'id': user.uid,
       'uid': user.uid,
@@ -95,7 +95,7 @@ class TypesenseService {
   }
 
   /// Updates the index for the post.
-  Future<Map<String, dynamic>> upsertPost(PostModel post) async {
+  Future<Map<String, dynamic>> _upsertPost(PostModel post) async {
     final data = {
       'id': post.id,
       'type': TypesenceDocType.post,
@@ -111,7 +111,7 @@ class TypesenseService {
   }
 
   /// Updates the index for the comment.
-  Future<Map<String, dynamic>> upsertComment(CommentModel comment) async {
+  Future<Map<String, dynamic>> _upsertComment(CommentModel comment) async {
     final data = {
       'id': comment.id,
       'type': TypesenceDocType.comment,
@@ -136,7 +136,7 @@ class TypesenseService {
     final snapshot = await FirebaseDatabase.instance.ref(Folder.users).get();
     for (final e in (snapshot.value as Map).entries) {
       final user = UserModel.fromJson(e.value, uid: e.key);
-      await upsertUser(user);
+      await _upsertUser(user);
       dog('Re-indexing user: ${user.uid} - ${user.displayName}');
     }
   }
@@ -151,7 +151,7 @@ class TypesenseService {
     for (final e in (postSnapshot.value as Map).entries) {
       final post = PostModel.fromJson(e.value, id: e.key, category: category);
       if (!post.deleted) {
-        futures.add(upsertPost(post));
+        futures.add(_upsertPost(post));
         dog('Re-indexing post: ${post.id}');
         futures.add(_reindexComments(post.id));
       }
@@ -173,7 +173,7 @@ class TypesenseService {
           commentSnapshot.value as Map, commentSnapshot.key!,
           postId: postId);
       if (!comment.deleted) {
-        futures.add(upsertComment(comment));
+        futures.add(_upsertComment(comment));
         dog('Re-indexing comment: ${comment.id}');
       }
     }

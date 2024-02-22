@@ -26,6 +26,7 @@ export const userLike = onValueWritten(
         }
 
 
+        // Send message to the target user
         if (isCreate(event)) {
             await MessagingService.sendMessageWhenUserLikeMe({
                 uid: targetUid,
@@ -37,7 +38,8 @@ export const userLike = onValueWritten(
 );
 
 /**
- * User mirror
+ * User CRUD
+ * - Mirror the user data to Firestore
  */
 export const userMirror = onValueWritten(
     `${Config.users}/{uid}`,
@@ -65,14 +67,3 @@ export const userMirror = onValueWritten(
 );
 
 
-// /**
-//  * Send message when a user like me
-//  */
-// export const sendMessageWhenUserLikeMe = onValueCreated(
-//     `${Config.userLikes}/{myUid}/{targetUid}`,
-//     async (event) => {
-//         await MessagingService.sendMessageWhenUserLikeMe({
-//             uid: event.params.myUid,
-//             otherUid: event.params.targetUid,
-//         });
-//     });

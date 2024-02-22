@@ -4,18 +4,19 @@ import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
 class DefaultProfileUpdateForm extends StatefulWidget {
-  const DefaultProfileUpdateForm(
-      {super.key,
-      this.occupation = false,
-      this.stateMessage = true,
-      this.gender = true,
-      this.nationality = false,
-      this.region = true,
-      this.morePhotos = false,
-      this.onUpdate,
-      this.countryFilter,
-      this.koreanAreaLanguageCode = 'ko',
-      this.countryPickerTheme});
+  const DefaultProfileUpdateForm({
+    super.key,
+    this.occupation = false,
+    this.stateMessage = true,
+    this.gender = true,
+    this.nationality = false,
+    this.region = true,
+    this.morePhotos = false,
+    this.onUpdate,
+    this.countryFilter,
+    this.koreanAreaLanguageCode = 'ko',
+    this.countryPickerTheme,
+  });
 
   final void Function()? onUpdate;
   // use [occupation] to hide the occupation field

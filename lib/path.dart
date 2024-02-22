@@ -7,6 +7,8 @@ class Path {
 
   /// User
   static const String users = Folder.users;
+  static String user(String uid) => '${Folder.users}/$uid';
+  static String userField(String uid, String field) => '${user(uid)}/$field';
   static const String userLikes = Folder.userLikes;
   static const String userWhoILike = Folder.userWhoILike;
   static String like(String a, String b) => '$userWhoILike/$a/$b';

@@ -443,3 +443,29 @@ Fireship 에서 기본 제공하는 거리 검색은 위의 세 가지 방법과
 
 
 
+
+
+
+
+## 좋아요
+
+
+텍스트 버튼으로 표시 할 때 아래와 같이 할 수 있다. 다만, 좋아요 숫자 증가는 cloud function 에 의해서 동작하므로, 실시간으로 빠르게 표시되 않는데, 적절한 처리가 필요하다.
+
+```dart
+ElevatedButton(
+  onPressed: () async {
+    await my?.like(uid);
+  },
+  child: Value(
+    path: Path.userField(uid, Field.noOfLikes),
+    builder: (v) => Text(
+      v == null || v == 0
+          ? T.like.tr
+          : v == 1
+              ? ('${T.like.tr} 1')
+              : '${T.likes.tr} ${v ?? ''}',
+    ),
+  ),
+),
+```

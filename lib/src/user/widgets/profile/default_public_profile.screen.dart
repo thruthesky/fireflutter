@@ -113,12 +113,30 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      // Chat
                       ElevatedButton(
                         onPressed: () async {
                           ChatService.instance
                               .showChatRoom(context: context, uid: uid);
                         },
                         child: Text(T.chat.tr),
+                      ),
+
+                      // Like
+                      ElevatedButton(
+                        onPressed: () async {
+                          await my?.like(uid);
+                        },
+                        child: Value(
+                          path: Path.userField(uid, Field.noOfLikes),
+                          builder: (v) => Text(
+                            v == null || v == 0
+                                ? T.like.tr
+                                : v == 1
+                                    ? ('${T.like.tr} 1')
+                                    : '${T.likes.tr} ${v ?? ''}',
+                          ),
+                        ),
                       ),
 
                       /// 레포팅 신고
