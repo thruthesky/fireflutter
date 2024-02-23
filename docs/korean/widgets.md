@@ -199,4 +199,19 @@ BookmarkButton(uid: userUid),
 ChatButton(uid: uid),
 ```
 
-                        
+
+### 신고 버튼
+
+신고 버튼은 사용자, 글, 코멘트, 채팅 등을 신고 할 때 사용 할 수 있다.
+
+예제 - 사용자 신고
+```dart
+ReportButton(uid: userUid),
+```
+
+
+### 차단 버튼
+
+```dart
+BlockButton(uid: userUid),
+```

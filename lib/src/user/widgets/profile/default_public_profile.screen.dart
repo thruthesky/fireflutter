@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:fireship/fireship.dart';
-import 'package:fireship/src/user/widgets/buttons/bookmark_buttons.dart';
+import 'package:fireship/src/user/widgets/buttons/block_button.dart';
+import 'package:fireship/src/user/widgets/buttons/bookmark_button.dart';
 import 'package:flutter/material.dart';
 
 class DefaultPublicProfileScreen extends StatelessWidget {
@@ -75,49 +76,8 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                         ChatButton(uid: uid),
                         LikeButton(uid: userUid, user: user),
                         BookmarkButton(uid: userUid),
-
-                        /// 레포팅 신고
-                        ElevatedButton(
-                          onPressed: () async {
-                            final re = await input(
-                              context: context,
-                              title: T.reportInputTitle.tr,
-                              subtitle: T.reportInputMessage.tr,
-                              hintText: T.reportInputHint.tr,
-                            );
-                            if (re == null || re == '') return;
-                            await ReportModel.create(
-                              otherUserUid: userUid,
-                              reason: re,
-                            );
-                          },
-                          child: Text(T.report.tr),
-                        ),
-
-                        /// 차단 & 해제
-                        MyDoc(
-                          builder: (iHave) {
-                            if (iHave == null) return const SizedBox();
-                            return ElevatedButton(
-                              onPressed: () async {
-                                final re = await confirm(
-                                  context: context,
-                                  title: iHave.blocked(userUid)
-                                      ? T.unblockConfirmTitle.tr
-                                      : T.blockConfirmTitle.tr,
-                                  message: iHave.blocked(userUid)
-                                      ? T.unblockConfirmMessage.tr
-                                      : T.blockConfirmMessage.tr,
-                                );
-                                if (re != true) return;
-                                await my?.block(userUid);
-                              },
-                              child: Text(iHave.blocked(userUid)
-                                  ? T.unblock.tr
-                                  : T.block.tr),
-                            );
-                          },
-                        ),
+                        ReportButton(uid: userUid),
+                        BlockButton(uid: userUid),
                       ],
                     ),
                   ),
