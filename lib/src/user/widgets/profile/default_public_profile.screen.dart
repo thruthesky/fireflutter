@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireship/fireship.dart';
+import 'package:fireship/src/user/widgets/buttons/bookmark_buttons.dart';
 import 'package:flutter/material.dart';
 
 class DefaultPublicProfileScreen extends StatelessWidget {
@@ -17,14 +17,9 @@ class DefaultPublicProfileScreen extends StatelessWidget {
     return Stack(
       children: [
         Positioned.fill(
-          child: UserDoc.field(
+          child: UserBackgroundImage.sync(
             uid: userUid,
-            initialData: user?.profileBackgroundImageUrl,
-            field: Field.profileBackgroundImageUrl,
-            builder: (url) => CachedNetworkImage(
-              imageUrl: url ?? 'https://picsum.photos/id/171/400/900',
-              fit: BoxFit.cover,
-            ),
+            user: user,
           ),
         ),
         const GradientTopDown(height: 220),
@@ -58,9 +53,9 @@ class DefaultPublicProfileScreen extends StatelessWidget {
             child: Column(
               children: [
                 const Spacer(),
-                UserAvatar(uid: userUid, size: 100, radius: 40),
+                UserAvatar.sync(uid: userUid, size: 100, radius: 40),
                 const SizedBox(height: 8),
-                UserDisplayName(
+                UserDisplayName.sync(
                   uid: userUid,
                   user: user,
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
@@ -68,52 +63,18 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                 ),
-                UserStateMessage(
+                UserStateMessage.sync(
                   uid: userUid,
                   user: user,
-                  style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                        color: Colors.white.withAlpha(200),
-                      ),
                 ),
                 SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 24),
                     child: Wrap(
                       children: [
-                        // Chat
-                        ElevatedButton(
-                          onPressed: () async {
-                            ChatService.instance.showChatRoom(
-                              context: context,
-                              uid: userUid,
-                            );
-                          },
-                          child: Text(T.chat.tr),
-                        ),
-
-                        LikeButton(
-                          uid: userUid,
-                          user: user,
-                        ),
-
-                        // Bookmark
-                        Value(
-                          path: Path.bookmarkUser(userUid),
-                          builder: (v) => ElevatedButton(
-                            onPressed: () async {
-                              if (v != null) {
-                                await BookmarkModel.delete(
-                                    otherUserUid: userUid);
-                              } else {
-                                await BookmarkModel.create(
-                                    otherUserUid: userUid);
-                              }
-                            },
-                            child: Text(
-                              v == null ? T.bookmark.tr : T.bookmarked.tr,
-                            ),
-                          ),
-                        ),
+                        ChatButton(uid: uid),
+                        LikeButton(uid: userUid, user: user),
+                        BookmarkButton(uid: userUid),
 
                         /// 레포팅 신고
                         ElevatedButton(
@@ -125,32 +86,35 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                               hintText: T.reportInputHint.tr,
                             );
                             if (re == null || re == '') return;
-                            await ReportService.instance
-                                .report(otherUserUid: userUid, reason: re);
+                            await ReportModel.create(
+                              otherUserUid: userUid,
+                              reason: re,
+                            );
                           },
                           child: Text(T.report.tr),
                         ),
 
                         /// 차단 & 해제
-                        MyDoc.field(
-                          '${Field.blocks}/$userUid',
-                          builder: (v) {
+                        MyDoc(
+                          builder: (iHave) {
+                            if (iHave == null) return const SizedBox();
                             return ElevatedButton(
                               onPressed: () async {
                                 final re = await confirm(
                                   context: context,
-                                  title: v == null
-                                      ? T.blockConfirmTitle.tr
-                                      : T.unblockConfirmTitle.tr,
-                                  message: v == null
-                                      ? T.blockConfirmMessage.tr
-                                      : T.unblockConfirmMessage.tr,
+                                  title: iHave.blocked(userUid)
+                                      ? T.unblockConfirmTitle.tr
+                                      : T.blockConfirmTitle.tr,
+                                  message: iHave.blocked(userUid)
+                                      ? T.unblockConfirmMessage.tr
+                                      : T.blockConfirmMessage.tr,
                                 );
                                 if (re != true) return;
                                 await my?.block(userUid);
                               },
-                              child:
-                                  Text(v == null ? T.block.tr : T.unblock.tr),
+                              child: Text(iHave.blocked(userUid)
+                                  ? T.unblock.tr
+                                  : T.block.tr),
                             );
                           },
                         ),

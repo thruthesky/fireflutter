@@ -171,4 +171,6 @@ export 'src/user/widgets/like/who_like_me_list_view.dart';
 export 'src/user/widgets/block/block_list_view.dart';
 export 'src/user/widgets/block/blocked.dart';
 export 'src/user/widgets/user.state_message.dart';
-export 'src/user/widgets/like/like_button.dart';
+export 'src/user/widgets/buttons/like_button.dart';
+export 'src/user/widgets/buttons/chat_button.dart';
+export 'src/user/widgets/user.background_image.dart';
