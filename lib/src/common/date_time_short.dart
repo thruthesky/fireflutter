@@ -17,7 +17,7 @@ class DateTimeShort extends StatelessWidget {
       dateTimeShort(
         stamp != null ? DateTime.fromMillisecondsSinceEpoch(stamp!) : dateTime!,
       ),
-      style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
+      style: Theme.of(context).textTheme.labelSmall,
     );
   }
 }

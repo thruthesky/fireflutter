@@ -71,7 +71,6 @@ class UserDisplayName extends StatelessWidget {
 
   Widget builder(data, BuildContext context) => Text(
         data ?? initialData ?? '',
-        style: style ??
-            TextStyle(fontSize: 14, color: Theme.of(context).primaryColor),
+        style: style ?? Theme.of(context).textTheme.bodyMedium,
       );
 }

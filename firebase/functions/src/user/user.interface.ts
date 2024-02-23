@@ -5,3 +5,13 @@ export interface User {
     isVerified: boolean;
     createdAt: number;
 }
+
+
+
+/**
+ *
+ */
+export interface UserCreateWithPhoneNumber {
+    phoneNumber: string;
+}
+

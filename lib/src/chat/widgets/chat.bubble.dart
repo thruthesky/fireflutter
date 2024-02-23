@@ -30,7 +30,7 @@ class ChatBubble extends StatelessWidget {
         children: [
           if (message.mine) ...[
             const Spacer(),
-            dateAndName(uid: myUid!),
+            dateAndName(context: context, uid: myUid!),
           ],
           // other avtar
           if (message.other)
@@ -103,7 +103,7 @@ class ChatBubble extends StatelessWidget {
             ),
 
           if (!message.mine) ...[
-            dateAndName(uid: message.uid!),
+            dateAndName(context: context, uid: message.uid!),
             const Spacer(),
           ],
         ],
@@ -120,14 +120,21 @@ class ChatBubble extends StatelessWidget {
     );
   }
 
-  dateAndName({required String uid}) {
+  dateAndName({
+    required BuildContext context,
+    required String uid,
+  }) {
     return Column(
       crossAxisAlignment:
           message.mine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         DateTimeShort(stamp: message.createdAt ?? 0),
         const SizedBox(width: 4),
-        UserDisplayName(uid: uid, cacheId: 'chatRoom'),
+        UserDisplayName(
+          uid: uid,
+          cacheId: 'chatRoom',
+          style: Theme.of(context).textTheme.labelSmall,
+        ),
       ],
     );
   }
