@@ -78,7 +78,7 @@ class _UserAvatarUpdateState extends State<UserAvatarUpdate> {
       },
       child: Stack(
         children: [
-          UserAvatar(
+          UserAvatar.sync(
             uid: user.uid,
             size: widget.size,
             radius: widget.radius,

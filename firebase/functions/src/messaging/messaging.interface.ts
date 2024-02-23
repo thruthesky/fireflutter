@@ -1,3 +1,4 @@
+import { AndroidConfig, ApnsConfig, FcmOptions, WebpushConfig } from "firebase-admin/messaging";
 
 export interface MessageNotification {
     title: string;
@@ -18,13 +19,12 @@ export interface MessageRequest extends MessageNotification {
  */
 export interface NotificationToUids {
     uids: Array<string>;
-    chunkSize: number;
+    chunkSize?: number;
     title: string;
     body: string;
     image?: string;
-    data: { [key: string]: string };
+    data?: { [key: string]: string };
 }
-
 
 
 export interface SendEachMessage {
@@ -35,7 +35,14 @@ export interface SendEachMessage {
     token: string;
     success?: boolean;
     code?: string;
+
+    android?: AndroidConfig;
+    webpush?: WebpushConfig;
+    apns?: ApnsConfig;
+    fcmOptions?: FcmOptions;
 }
+
+export type SendTokenMessage = SendEachMessage
 
 
 export interface PostCreateMessage {

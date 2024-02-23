@@ -21,6 +21,7 @@ class UserStateMessage extends StatelessWidget {
     this.initialData,
     this.style,
     this.cacheId,
+    this.sync = false,
   }) : assert(uid != null || user != null);
 
   final String? uid;
@@ -28,18 +29,50 @@ class UserStateMessage extends StatelessWidget {
   final String? initialData;
   final TextStyle? style;
   final String? cacheId;
+  final bool sync;
 
   @override
   Widget build(BuildContext context) {
-    return UserDoc.field(
-      cacheId: cacheId,
-      uid: uid ?? user!.uid,
-      initialData: initialData ?? user?.stateMessage,
-      field: Field.stateMessage,
-      builder: (data) => Text(
-        data ?? initialData ?? '',
-        style: style ?? TextStyle(fontSize: 10, color: Colors.grey.shade600),
-      ),
-    );
+    return sync
+        ? UserDoc.fieldSync(
+            uid: uid ?? user!.uid,
+            initialData: initialData ?? user?.stateMessage,
+            field: Field.stateMessage,
+            builder: builder,
+          )
+        : UserDoc.field(
+            cacheId: cacheId,
+            uid: uid ?? user!.uid,
+            initialData: initialData ?? user?.stateMessage,
+            field: Field.stateMessage,
+            builder: builder,
+          );
   }
+
+  Widget builder(data) => Text(
+        (data ?? initialData ?? '').toString().cut(50),
+        style: style ??
+            const TextStyle(
+              fontSize: 14,
+              color: Colors.white,
+            ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      );
+
+  /// Realtime update the user's state message.
+  const UserStateMessage.sync({
+    Key? key,
+    String? uid,
+    UserModel? user,
+    String? initialData,
+    TextStyle? style,
+  }) : this(
+          key: key,
+          uid: uid,
+          user: user,
+          initialData: initialData,
+          style: style,
+          sync: true,
+        );
 }

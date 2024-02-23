@@ -49,7 +49,7 @@ class MyDoc extends StatelessWidget {
     String field, {
     required Function(dynamic value) builder,
   }) {
-    return UserDoc.sync(
+    return UserDoc.fieldSync(
       uid: FirebaseAuth.instance.currentUser!.uid,
       field: field,
       builder: (v) => builder(v),

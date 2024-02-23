@@ -40,7 +40,7 @@ class ChatBubble extends StatelessWidget {
               size: 30,
               radius: 12,
               onTap: () => UserService.instance
-                  .showPublicProfile(
+                  .showPublicProfileScreen(
                     context: context,
                     uid: message.uid!,
                   )
@@ -95,7 +95,7 @@ class ChatBubble extends StatelessWidget {
               size: 30,
               radius: 12,
               onTap: () => UserService.instance
-                  .showPublicProfile(
+                  .showPublicProfileScreen(
                     context: context,
                     uid: myUid!,
                   )

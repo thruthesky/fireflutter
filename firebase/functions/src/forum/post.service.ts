@@ -37,6 +37,12 @@ export class PostService {
     }
 
 
+    /**
+     * deletes the summary of the post in `post-summaries` and `post-all-summary`
+     *
+     * @param category category of the post
+     * @param postId post id
+     */
     static async deleteSummary(category: string, postId: string) {
         const db = getDatabase();
         await db.ref(`${Config.postSummaries}/${category}/${postId}`).remove();

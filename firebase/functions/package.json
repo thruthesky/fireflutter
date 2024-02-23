@@ -10,6 +10,7 @@
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
+    "deploy": "eslint --fix --ext .js,.ts . && firebase deploy --only functions",
     "deploy:sendPushNotifications": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:sendPushNotifications",
     "deploy:sendMessagesToCategorySubscribers": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:sendMessagesToCategorySubscribers",
     "deploy:message": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:sendPushNotifications,functions:sendMessagesToCategorySubscribers,functions:sendMessagesToChatRoomSubscribers",

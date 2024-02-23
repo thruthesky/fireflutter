@@ -1,6 +1,6 @@
 import { SendResponse, getMessaging } from "firebase-admin/messaging";
 import { getDatabase } from "firebase-admin/database";
-import { MessageNotification, MessageRequest, NotificationToUids, PostCreateMessage, SendEachMessage, UserLikeEvent } from "./messaging.interface";
+import { MessageNotification, MessageRequest, NotificationToUids, PostCreateMessage, SendEachMessage, SendTokenMessage, UserLikeEvent } from "./messaging.interface";
 import { chunk } from "../library";
 import { Config } from "../config";
 import { ChatCreateEvent } from "../chat/chat.interface";
@@ -12,6 +12,19 @@ import { UserService } from "../user/user.service";
  *
  */
 export class MessagingService {
+  static android = {
+    notification: {
+      sound: "default",
+    },
+  };
+  static apns = {
+    payload: {
+      aps: {
+        sound: "default",
+      },
+    },
+  };
+
   /**
          * Send messages
          *
@@ -66,10 +79,12 @@ export class MessagingService {
 
     // send the notification message to the list of tokens
     for (const token of tokens) {
-      const message = {
+      const message: SendTokenMessage = {
         notification: notification,
-        data: params.data,
+        data: params.data ?? {},
         token: token,
+        android: MessagingService.android,
+        apns: MessagingService.apns,
       };
       promises.push(getMessaging().send(message));
     }
@@ -115,14 +130,7 @@ export class MessagingService {
    * 더 많은 예제는 firebase/functions/tests/message/sendNotificationToUids.spec.ts 참고
    */
   static async sendNotificationToUids(req: NotificationToUids)
-    // uids: Array<string>,
-    // chunkSize: number = 500,
-    // title: string,
-    // body: string,
-    // image?: string,
-    // data: { [key: string]: string } = {},
     : Promise<void> {
-
     // prepare the parameters
     let { uids, chunkSize, title, body, image, data } = req;
     data = data ?? {};
@@ -146,7 +154,13 @@ export class MessagingService {
     for (const tokenChunk of tokenChunks) {
       const messages: Array<SendEachMessage> = [];
       for (const token of tokenChunk) {
-        messages.push({ notification, data, token });
+        messages.push({
+          notification,
+          data,
+          token,
+          android: MessagingService.android,
+          apns: MessagingService.apns,
+        });
       }
       Config.log("-----> sendNotificationToUids -> sendEach() messages[0]:", messages[0]);
       const res = await messaging.sendEach(messages, Config.messagingDryRun);
@@ -247,15 +261,15 @@ export class MessagingService {
     Config.log("-----> sendMessagesToCategorySubscribers uids:", uids);
     await this.sendNotificationToUids({
       uids: uids, chunkSize: 256, title: msg.title, body: msg.body, image: msg.image, data: {
-        id: msg.id, category: msg.category
-      }
+        id: msg.id, category: msg.category,
+      },
     });
   }
 
 
   /**
    * 채팅 메시지가 전송되면, 해당 채팅방 사용자들에게 메시지를 전송한다.
-   * 
+   *
    * @param msg 채팅 메시지 정보
    */
   static async sendMessagesToChatRoomSubscribers(msg: ChatCreateEvent) {
@@ -293,14 +307,14 @@ export class MessagingService {
     // 메시지를 전송한다.
     await this.sendNotificationToUids({
       uids, chunkSize: 256, title, body, image: msg.url, data: {
-        senderUid: msg.uid, messageId: msg.id, roomId: msg.roomId
-      }
+        senderUid: msg.uid, messageId: msg.id, roomId: msg.roomId,
+      },
     });
   }
 
   /**
    * Sending notification when a user liked me
-   * 
+   *
    * @param event UserLikeEvent - The event when a user liked me
    */
   static async sendMessageWhenUserLikeMe(event: UserLikeEvent) {
@@ -309,8 +323,8 @@ export class MessagingService {
     const body = `Please say Hi to ${user.displayName}.`;
     await this.sendNotificationToUids({
       uids: [event.uid], chunkSize: 256, title, body, image: user.photoUrl, data: {
-        uid: event.uid
-      }
+        uid: event.uid,
+      },
     });
   }
 }

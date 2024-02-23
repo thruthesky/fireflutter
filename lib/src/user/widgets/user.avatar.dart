@@ -22,6 +22,7 @@ class UserAvatar extends StatelessWidget {
     this.radius = 20,
     this.onTap,
     this.initialData,
+    this.sync = false,
   });
 
   final String uid;
@@ -29,40 +30,44 @@ class UserAvatar extends StatelessWidget {
   final double radius;
   final VoidCallback? onTap;
   final String? initialData;
+  final bool sync;
 
   @override
   Widget build(BuildContext context) {
-    return UserDoc.sync(
-      uid: uid,
-      initialData: initialData,
-      field: Field.photoUrl,
-      builder: (url) {
-        return GestureDetector(
-          onTap: onTap,
-          behavior: HitTestBehavior.opaque,
-          child: Avatar(
-            photoUrl: (url == null || url == "") ? anonymousUrl : url,
-            size: size,
-            radius: radius,
-          ),
-        );
-      },
-    );
+    if (sync) {
+      return UserDoc.fieldSync(
+        uid: uid,
+        initialData: initialData,
+        field: Field.photoUrl,
+        builder: builder,
+      );
+    } else {
+      return UserDoc.field(
+        uid: uid,
+        field: Field.photoUrl,
+        builder: builder,
+      );
+    }
   }
 
-  /// 사용자 사진을 한번만 표시한다.
-  ///
-  /// DB 에 업데이트 되어도, 리빌드 하지 않는다.
-  static once({
+  const UserAvatar.sync({
+    Key? key,
     required String uid,
     double size = 48,
     double radius = 20,
     VoidCallback? onTap,
-  }) {
-    return UserDoc.field(
-      uid: uid,
-      field: Field.photoUrl,
-      builder: (url) => GestureDetector(
+    String? initialData,
+  }) : this(
+          key: key,
+          uid: uid,
+          size: size,
+          radius: radius,
+          onTap: onTap,
+          initialData: initialData,
+          sync: true,
+        );
+
+  Widget builder(dynamic url) => GestureDetector(
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
         child: Avatar(
@@ -70,7 +75,5 @@ class UserAvatar extends StatelessWidget {
           size: size,
           radius: radius,
         ),
-      ),
-    );
-  }
+      );
 }

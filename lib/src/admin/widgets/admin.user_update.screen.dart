@@ -19,9 +19,7 @@ class _AdminUserUpdateScreenState extends State<AdminUserUpdateScreen> {
       ),
       body: UserDoc.sync(
         uid: widget.uid,
-        field: null,
-        builder: (data) {
-          final user = UserModel.fromJson(data, uid: widget.uid);
+        builder: (user) {
           return Column(
             children: [
               ListTile(

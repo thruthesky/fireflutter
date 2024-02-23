@@ -389,8 +389,7 @@ class _HomeScreenState extends State<MainScreen> {
 사용자 프로필 화면은 여러 곳에서 보여질 수 있다. 예를 들면, 사용자 목록, 게시판, 코멘트, 채팅 등등에서 사용자 이름이나 아이콘을 클릭하면 사용자 공개 프로필 화면이 열리는 것이다. 그래서, 개발하기 편하게 하기 위해서 `UserService.instance.showPublicProfileScreen` 을 호출하면, `DefaultPublicProfileScreen` 이 호출 되도록 했다. 커스텀 디자인을 하려면 `UserService.instance.init(custom: ...)` 에서 수정하면 된다. 사실 커스텀 디자인을 추천하며, 공개 프로필에 들어가는 각각의 작은 위젯들을 재 활용하면 된다.
 
 
-
-예제 - 초기화
+예제 - 초기화를 통하여 공개 프로필 화면 커스텀 디자인 작업
 
 ```dart
 UserService.instance.init(
@@ -400,50 +399,7 @@ UserService.instance.init(
 );
 ```
 
-
-예제 - PublicProfileScreen
-
-```dart
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fireship/fireship.dart';
-import 'package:flutter/material.dart';
-
-class PublicProfileScreen extends StatelessWidget {
-  static const String routeName = '/PublicProfile';
-  const PublicProfileScreen({super.key, required this.uid});
-
-  final String uid;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Positioned.fill(
-          child: UserDoc.field(
-            uid: uid,
-            field: Field.profileBackgroundImageUrl,
-            builder: (url) => CachedNetworkImage(
-              imageUrl: url ?? 'https://picsum.photos/id/171/400/900',
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-            ),
-            body: const Align(child: Text("PublicProfile"))),
-      ],
-    );
-  }
-}
-```
-
-
-
+위와 같이 하면, 사용자가 프로필 사진 등을 탭하면, 화면에 `PublicProfileScreen` 이 나타난다. 이 위젯의 디자인을 완전히 처음부터 새로 작성해도 되지만, `DefaultPublicProfileScreen` 을 복사해서 수정하는 것을 추천한다.
 
 
 ## 위젯
@@ -475,11 +431,6 @@ Fireship 에서 기본 제공하는 거리 검색은 위의 세 가지 방법과
 
 - 검색을 할 때, 로그인한 사용자의 200 미터 내의 사용자 검색은 로그인을 한 사용자의 geohash7 과 DB 의 geohash7 이 일치하는 사용자를 가져와 보여주면 된다.
   - geohash6 는 1km 이내, geohash5 는 5km 이내, geohash4 는 20km 이내의 사용자를 검색 할 수 있다.
-
-
-
-
-
 
 
 
@@ -517,20 +468,50 @@ ElevatedButton(
 아래와 같이 코딩을 하면 된다.
 
 ```dart
-//..
+import 'package:fireship/fireship.dart';
+import 'package:flutter/material.dart';
+
+class LikeScreen extends StatefulWidget {
+  const LikeScreen({super.key});
+
+  @override
+  State<LikeScreen> createState() => _LikeScreenState();
+}
+
+class _LikeScreenState extends State<LikeScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 0,
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'Who Likes Me'),
+              Tab(text: 'Who I Like'),
+            ],
+          ),
+        ),
+        body: const TabBarView(
+          children: [
+            WhoLikeMeListView(),
+            WhoILikeListView(),
+          ],
+        ),
+      ),
+    );
+  }
+}
 ```
 
 
 
 ## 블럭
 
-
 - 블럭된 사용자는 `BlockListView` 로 목록으로 표시 할 수 있다.
 - 블럭된 경우 문자열로 표시하는 경우는 `orBlock()` String extension 을 사용하면 된다.
 - 위젯으로 표시를 해야하는 경우는 `Blocked`로 하면 된다.
-
-
-
 
 예제 - 코멘트 목록에서 사진을 표시할 때, 사용자가 차단되어져 있으면 사진을 표시하지 않는다.
 
@@ -545,4 +526,8 @@ Blocked(
   ),
 ),
 ```
+
+블럭 버튼을 표시하는 것은 위젯 문서를 참고한다.
+
+
 

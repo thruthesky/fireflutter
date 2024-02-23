@@ -68,6 +68,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "Silvers - Emulator",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Momcafe - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
