@@ -154,62 +154,6 @@ class UserService {
     });
   }
 
-  /// Open the user's public profile dialog
-  ///
-  /// It shows the public profile dialog for the user. You can customize by
-  /// setting [UserCustomize] to [UserService.instance.customize].
-  ///
-  /// It does manythings like:
-  /// - send notification when user visit other user profile
-  /// - log when user visit other user profile
-  /// - save profile view history
-  /// - show public profile dialog
-  ///
-  /// You can customize by setting [UserCustomize] to [UserService.instance.customize].
-  ///
-  /// Send notification even if enableMessagingOnPublicProfileVisit is set to false
-  /// set `notify` to `false` to prevent sending push notification
-  /// used `notify` to `false` like admin visit the user profile
-  Future showPublicProfile({
-    required BuildContext context,
-    required String uid,
-  }) {
-    /// Dynamic link is especially for users who are not install and not signed users.
-    if (loggedIn && myUid != uid && enableNoOfProfileView) {
-      /// TODO - 누가 나의 프로필을 보았는지, 기록을 남긴다. UID 를 추가해서, 숫자만 표시 할 수 있도록 한다.
-    }
-
-    /// TODO - 누가 나의 프로필을 보았는지, 기록을 남긴다. 한 사용자가 다른 사용자의 프로필을 중복으로 볼 때, 모든 기록을 남긴다.
-    /// 날짜, 시간, 누가, 등...
-
-    /// 누가 나의 프로필을 볼 때, 푸시 알림 보내기
-    /// send notification by default when user visit other user profile
-    /// disable notification when `disableNotifyOnProfileVisited` is set on user setting
-    () async {
-      bool? re =
-          await getSetting<bool?>(uid, path: Code.profileViewNotification);
-      if (re != true) return;
-
-      if (loggedIn && myUid != uid) {
-        // TODO send message if somebody visit my profile
-        // MessagingService.instance.send(
-        //   title: "Your profile was visited.",
-        //   body: "${currentUser?.displayName} visit your profile",
-        //   senderUid: myUid!,
-        //   receiverUid: uid,
-        //   action: 'profile',
-        // );
-      }
-    }();
-
-    return showGeneralDialog(
-      context: context,
-      pageBuilder: ($, _, __) =>
-          customize.publicProfile?.call(uid) ??
-          DefaultPublicProfileScreen(uid: uid),
-    );
-  }
-
   /// 사용자 설정 값을 리턴한다.
   ///
   /// [uid] 사용자 UID. 이 사용자의 설정을 리턴한다.
@@ -237,10 +181,80 @@ class UserService {
   }
 
   /// 로그인한 사용자의 프로필 수정 페이지를 보여준다.
-  Future showProfile(BuildContext context) {
+  Future showProfileScreen(BuildContext context) {
     return showGeneralDialog(
       context: context,
       pageBuilder: ($, $$, $$$) => const DefaultProfileScreen(),
     );
+  }
+
+  @Deprecated('Use showProfileScreen instead')
+  Future showProfile(BuildContext context) {
+    return showProfileScreen(context);
+  }
+
+  /// Open the user's public profile screen
+  ///
+  /// It shows the public profile dialog for the user. You can customize by
+  /// setting [UserCustomize] to [UserService.instance.customize].
+  ///
+  /// It does manythings like:
+  /// - send notification when user visit other user profile
+  /// - log when user visit other user profile
+  /// - save profile view history
+  /// - show public profile dialog
+  ///
+  /// You can customize by setting [UserCustomize] to [UserService.instance.customize].
+  ///
+  /// Send notification even if enableMessagingOnPublicProfileVisit is set to false
+  /// set `notify` to `false` to prevent sending push notification
+  /// used `notify` to `false` like admin visit the user profile
+  Future showPublicProfileScreen({
+    required BuildContext context,
+    String? uid,
+    UserModel? user,
+  }) {
+    /// Dynamic link is especially for users who are not install and not signed users.
+    if (loggedIn && myUid != uid && enableNoOfProfileView) {
+      /// TODO - 누가 나의 프로필을 보았는지, 기록을 남긴다. UID 를 추가해서, 숫자만 표시 할 수 있도록 한다.
+    }
+
+    /// TODO - 누가 나의 프로필을 보았는지, 기록을 남긴다. 한 사용자가 다른 사용자의 프로필을 중복으로 볼 때, 모든 기록을 남긴다.
+    /// 날짜, 시간, 누가, 등...
+
+    /// 누가 나의 프로필을 볼 때, 푸시 알림 보내기
+    /// send notification by default when user visit other user profile
+    /// disable notification when `disableNotifyOnProfileVisited` is set on user setting
+    () async {
+      bool? re = await getSetting<bool?>(uid ?? user!.uid,
+          path: Code.profileViewNotification);
+      if (re != true) return;
+
+      if (loggedIn && myUid != uid) {
+        // TODO send message if somebody visit my profile
+        // MessagingService.instance.send(
+        //   title: "Your profile was visited.",
+        //   body: "${currentUser?.displayName} visit your profile",
+        //   senderUid: myUid!,
+        //   receiverUid: uid,
+        //   action: 'profile',
+        // );
+      }
+    }();
+
+    return showGeneralDialog(
+      context: context,
+      pageBuilder: ($, _, __) =>
+          customize.publicProfileScreen?.call(uid, user) ??
+          DefaultPublicProfileScreen(uid: uid, user: user),
+    );
+  }
+
+  @Deprecated('Use showPublicProfileScreen instead')
+  Future showPublicProfile({
+    required BuildContext context,
+    required String uid,
+  }) {
+    return showPublicProfileScreen(context: context, uid: uid);
   }
 }

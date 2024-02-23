@@ -376,6 +376,76 @@ class _HomeScreenState extends State<MainScreen> {
 ```
 
 
+## 회원 정보 수정 화면
+
+회원 정보 수정 화면은 로그인 한 사용자가 본인의 정보를 보는 페이지다. `UserService.instance.showProfileScreen` 을 호출하면 회원 정보 수정 화면을 열 수 있다.
+
+
+
+## 사용자 공개 프로필 화면
+
+사용자 공개 프로필 화면은 본인 뿐만아니라 다른 사용자가 보는 페이지이다.
+
+사용자 프로필 화면은 여러 곳에서 보여질 수 있다. 예를 들면, 사용자 목록, 게시판, 코멘트, 채팅 등등에서 사용자 이름이나 아이콘을 클릭하면 사용자 공개 프로필 화면이 열리는 것이다. 그래서, 개발하기 편하게 하기 위해서 `UserService.instance.showPublicProfileScreen` 을 호출하면, `DefaultPublicProfileScreen` 이 호출 되도록 했다. 커스텀 디자인을 하려면 `UserService.instance.init(custom: ...)` 에서 수정하면 된다. 사실 커스텀 디자인을 추천하며, 공개 프로필에 들어가는 각각의 작은 위젯들을 재 활용하면 된다.
+
+
+
+예제 - 초기화
+
+```dart
+UserService.instance.init(
+  customize: UserCustomize(
+    publicProfileScreen: (uid) => PublicProfileScreen(uid: uid),
+  ),
+);
+```
+
+
+예제 - PublicProfileScreen
+
+```dart
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fireship/fireship.dart';
+import 'package:flutter/material.dart';
+
+class PublicProfileScreen extends StatelessWidget {
+  static const String routeName = '/PublicProfile';
+  const PublicProfileScreen({super.key, required this.uid});
+
+  final String uid;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Positioned.fill(
+          child: UserDoc.field(
+            uid: uid,
+            field: Field.profileBackgroundImageUrl,
+            builder: (url) => CachedNetworkImage(
+              imageUrl: url ?? 'https://picsum.photos/id/171/400/900',
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+            ),
+            body: const Align(child: Text("PublicProfile"))),
+      ],
+    );
+  }
+}
+```
+
+
+
+
+
 ## 위젯
 
 `UpdateBirthday` 위젯을 통해서 손 쉽게 회원 생년월일 정보를 수정 할 수 있다. 위젯 문서 참고

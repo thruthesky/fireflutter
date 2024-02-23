@@ -1,6 +1,9 @@
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
+/// Cache user data
+///
+/// 실제로 이 캐시를 사용하면, setState() 를 호출 할 때, 화면 깜빡임이 매우 줄어든다.
 final _userDocCache = <String, dynamic>{};
 
 /// Get user data synchroneously.
@@ -76,13 +79,14 @@ class UserDoc extends StatelessWidget {
   }
 
   static Widget field({
+    dynamic initialData,
     required String uid,
     required String field,
     required Function(dynamic) builder,
     Widget? onLoading,
     String? cacheId,
   }) {
-    // cacheId 가 있으면, 캐시를 사용한다.
+    // Use cached data if [cacheId] is provided.
     if (cacheId != null && _userDocCache.containsKey('$uid/$field')) {
       return builder(_userDocCache['$uid/$field']);
     }
@@ -91,7 +95,11 @@ class UserDoc extends StatelessWidget {
       future: get('users/$uid/$field'),
       builder: (_, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return onLoading ?? const SizedBox.shrink();
+          if (initialData != null) {
+            return builder(initialData);
+          } else {
+            return onLoading ?? const SizedBox.shrink();
+          }
         }
         if (snapshot.hasError) {
           dog('error in UserDoc: ${snapshot.error}');
@@ -112,6 +120,7 @@ class UserDoc extends StatelessWidget {
   /// 로그인한 사용자 뿐만 아니라, 다른 사용자의 필드를 listen 할 때에도 사용한다.
   ///
   static Widget sync({
+    dynamic initialData,
     required String uid,
     String? field,
     required Widget Function(dynamic data) builder,
@@ -120,6 +129,7 @@ class UserDoc extends StatelessWidget {
     final path = 'users/$uid${field != null ? '/$field' : ''}';
 
     return Value(
+      initialData: initialData,
       path: path,
       builder: builder,
       onLoading: onLoading,
