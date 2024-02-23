@@ -41,7 +41,6 @@ class T {
   static const String leave = 'Leave';
   static const String stateMessage = 'State Message';
   static const String stateMessageDescription = 'State Message Description';
-  static const String thisIsBlockedUser = 'You have blocked this user.';
 
   static const String blockConfirmTitle = 'Block this user?';
   static const String blockConfirmMessage =
@@ -101,6 +100,7 @@ class T {
   static const String blockedTitleMessage = 'Blocked this user';
   static const String blockedContentMessage = 'You have blocked this user.';
   static const String blockedChatMessage = 'You have blocked this user.';
+  // static const String blockedUserMessage = 'You have blocked this user.';
 
   static const String unblocked = 'Unblocked';
   static const String unblockedMessage = 'You have unblocked this user.';

@@ -14,6 +14,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "WeMeet - iPhone SE",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone SE",
+      "flutterMode": "debug",
+      "cwd": "apps/wemeet",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "WeMeet - iPhone11ProMax",
       "request": "launch",
       "type": "dart",

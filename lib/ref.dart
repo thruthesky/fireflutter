@@ -14,6 +14,7 @@ class Ref {
 
   /// User
   static DatabaseReference users = root.child('users');
+  static DatabaseReference user(String uid) => users.child(uid);
   static DatabaseReference userProfilePhotos = root.child('profile-photos');
   static DatabaseReference userWhoILike = root.child(Path.userWhoILike);
   static DatabaseReference userWhoLikeMe = root.child(Path.userWhoLikeMe);

@@ -1,7 +1,7 @@
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
-/// Display user name
+/// Display user state message
 ///
 /// [uid] is required if [user] is not provided.
 ///
@@ -13,8 +13,8 @@ import 'package:flutter/material.dart';
 /// [style] is used to style the text.
 ///
 /// [cacheId] is used to cache the data.
-class UserDisplayName extends StatelessWidget {
-  const UserDisplayName({
+class UserStateMessage extends StatelessWidget {
+  const UserStateMessage({
     super.key,
     this.uid,
     this.user,
@@ -34,8 +34,8 @@ class UserDisplayName extends StatelessWidget {
     return UserDoc.field(
       cacheId: cacheId,
       uid: uid ?? user!.uid,
-      initialData: initialData ?? user?.displayName,
-      field: Field.displayName,
+      initialData: initialData ?? user?.stateMessage,
+      field: Field.stateMessage,
       builder: (data) => Text(
         data ?? initialData ?? '',
         style: style ?? TextStyle(fontSize: 10, color: Colors.grey.shade600),

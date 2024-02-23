@@ -1,7 +1,10 @@
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
-final _userDataCache = <String, dynamic>{};
+/// Cache user data
+///
+/// 실제로 이 캐시를 사용하면, setState() 를 호출 할 때, 화면 깜빡임이 매우 줄어든다.
+final _userDocCache = <String, dynamic>{};
 
 /// Get user data synchroneously.
 ///
@@ -40,15 +43,21 @@ class UserDoc extends StatelessWidget {
     required this.uid,
     required this.builder,
     this.onLoading,
+    this.cacheId,
   });
 
   final String uid;
   final Function(UserModel data) builder;
-
   final Widget? onLoading;
+  final String? cacheId;
 
   @override
   Widget build(BuildContext context) {
+    // cacheId 가 있으면, 캐시를 사용한다.
+    if (cacheId != null && _userDocCache.containsKey(uid)) {
+      return builder(_userDocCache[uid]);
+    }
+
     return FutureBuilder(
       future: get('users/$uid'),
       builder: (_, snapshot) {
@@ -59,27 +68,48 @@ class UserDoc extends StatelessWidget {
           dog('error in UserDoc: ${snapshot.error}');
           return const Icon(Icons.error_outline);
         }
+
+        if (cacheId != null) {
+          _userDocCache[uid] = UserModel.fromJson(snapshot.data, uid: uid);
+        }
+
         return builder(UserModel.fromJson(snapshot.data, uid: uid));
       },
     );
   }
 
   static Widget field({
+    dynamic initialData,
     required String uid,
     required String field,
     required Function(dynamic) builder,
     Widget? onLoading,
+    String? cacheId,
   }) {
+    // Use cached data if [cacheId] is provided.
+    if (cacheId != null && _userDocCache.containsKey('$uid/$field')) {
+      return builder(_userDocCache['$uid/$field']);
+    }
+
     return FutureBuilder(
       future: get('users/$uid/$field'),
       builder: (_, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return onLoading ?? const SizedBox.shrink();
+          if (initialData != null) {
+            return builder(initialData);
+          } else {
+            return onLoading ?? const SizedBox.shrink();
+          }
         }
         if (snapshot.hasError) {
           dog('error in UserDoc: ${snapshot.error}');
           return const Icon(Icons.error_outline);
         }
+
+        if (cacheId != null) {
+          _userDocCache['$uid/$field'] = snapshot.data;
+        }
+
         return builder(snapshot.data);
       },
     );
@@ -90,6 +120,7 @@ class UserDoc extends StatelessWidget {
   /// 로그인한 사용자 뿐만 아니라, 다른 사용자의 필드를 listen 할 때에도 사용한다.
   ///
   static Widget sync({
+    dynamic initialData,
     required String uid,
     String? field,
     required Widget Function(dynamic data) builder,
@@ -98,6 +129,7 @@ class UserDoc extends StatelessWidget {
     final path = 'users/$uid${field != null ? '/$field' : ''}';
 
     return Value(
+      initialData: initialData,
       path: path,
       builder: builder,
       onLoading: onLoading,

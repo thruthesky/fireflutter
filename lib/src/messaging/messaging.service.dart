@@ -148,7 +148,7 @@ class MessagingService {
       dog("Can't update token. User is not logged in.");
       return;
     }
-    dog('Updating the device token: $token');
+    dog('Updating the device token: $token for $myUid');
     if (token == null) return;
     try {
       final data = {
@@ -342,9 +342,12 @@ class MessagingService {
 
   /// Parse message data from [RemoteMessage.data]
   ///
+  /// Example:
+  /// ```dart
+  /// final data = MessagingService.instance.parseData(message.data);
+  /// ```
   ///
-  ///
-  parseData(Map<String, dynamic> data) => switch (data) {
+  dynamic parseData(Map<String, dynamic> data) => switch (data) {
         {Field.category: String _} => PostMessageData.fromMap(data),
         {Field.roomId: String _} => ChatMessageData.fromMap(data),
         {Field.uid: String _} => UserMessageData.fromMap(data),

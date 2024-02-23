@@ -24,6 +24,7 @@ export 'src/common/stacked_avatar.dart';
 export 'src/common/date_time_short.dart';
 export 'src/common/text_with_label.dart';
 export 'src/common/text_field/label_field.dart';
+export 'src/common/gradient/gradient.dart';
 
 /// Common / Country picker
 export 'src/common/country_picker/country_picker.dart';
@@ -169,3 +170,5 @@ export 'src/user/widgets/like/who_i_like_list_view.dart';
 export 'src/user/widgets/like/who_like_me_list_view.dart';
 export 'src/user/widgets/block/block_list_view.dart';
 export 'src/user/widgets/block/blocked.dart';
+export 'src/user/widgets/user.state_message.dart';
+export 'src/user/widgets/like/like_button.dart';

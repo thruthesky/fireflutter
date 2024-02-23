@@ -52,7 +52,11 @@ class UserModel {
   bool isVerified;
   List<String>? blocks;
   String gender;
+
+  int noOfLikes;
+
   String nationality;
+
   String siDo;
   String siGunGu;
 
@@ -140,6 +144,7 @@ class UserModel {
     this.isVerified = false,
     this.blocks,
     required this.gender,
+    required this.noOfLikes,
     required this.idUrl,
     required this.idUploadedAt,
     required this.occupation,
@@ -193,6 +198,7 @@ class UserModel {
       birthMonth: json['birthMonth'] ?? 0,
       birthDay: json['birthDay'] ?? 0,
       gender: json['gender'] ?? '',
+      noOfLikes: json['noOfLikes'] ?? 0,
       createdAt: json['createdAt'] ?? 0,
       order: json['order'] ?? 0,
       isAdmin: json['isAdmin'] ?? false,
@@ -233,6 +239,7 @@ class UserModel {
       'birthMonth': birthMonth,
       'birthDay': birthDay,
       'gender': gender,
+      'noOfLikes': noOfLikes,
       'createdAt': createdAt,
       'order': order,
       'isAdmin': isAdmin,
@@ -275,6 +282,7 @@ class UserModel {
       birthMonth = user.birthMonth;
       birthDay = user.birthDay;
       gender = user.gender;
+      noOfLikes = user.noOfLikes;
       createdAt = user.createdAt;
       order = user.order;
       isAdmin = user.isAdmin;
@@ -554,7 +562,10 @@ class UserModel {
     return await ref.child(Field.blocks).child(otherUserUid).set(null);
   }
 
-  Future like(String otherUserUid, {void Function(bool)? onLike}) async {
+  /// Like other user
+  ///
+  /// Returns true if the user has just liked, false if unliked.
+  Future like(String otherUserUid) async {
     return await toggle(fs.Path.like(my!.uid, otherUserUid));
   }
 }

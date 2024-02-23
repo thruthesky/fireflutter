@@ -37,7 +37,6 @@ class ChatBubble extends StatelessWidget {
             UserAvatar(
               key: ValueKey(message.key),
               uid: message.uid!,
-              cacheId: 'chatRoom',
               size: 30,
               radius: 12,
               onTap: () => UserService.instance
@@ -93,7 +92,6 @@ class ChatBubble extends StatelessWidget {
           if (message.mine)
             UserAvatar(
               uid: myUid!,
-              cacheId: 'chatRoom',
               size: 30,
               radius: 12,
               onTap: () => UserService.instance
@@ -129,7 +127,7 @@ class ChatBubble extends StatelessWidget {
       children: [
         DateTimeShort(stamp: message.createdAt ?? 0),
         const SizedBox(width: 4),
-        UserDisplayName(uid: uid),
+        UserDisplayName(uid: uid, cacheId: 'chatRoom'),
       ],
     );
   }

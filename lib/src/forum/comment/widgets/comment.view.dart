@@ -42,7 +42,7 @@ class _CommnetViewState extends State<CommentView> {
               CommentContent(comment: widget.comment),
               const SizedBox(height: 8),
               Blocked(
-                uid: widget.comment.uid,
+                otherUserUid: widget.comment.uid,
                 yes: () => SizedBox.fromSize(),
                 no: () => DisplayDatabasePhotos(
                   urls: widget.comment.urls,

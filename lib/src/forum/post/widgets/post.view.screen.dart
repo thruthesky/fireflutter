@@ -32,7 +32,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Blocked(
-                  uid: widget.post.uid,
+                  otherUserUid: widget.post.uid,
                   yes: () => SizedBox.fromSize(),
                   no: () => DisplayDatabasePhotos(
                     urls: widget.post.urls,

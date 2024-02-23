@@ -1,13 +1,14 @@
+import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
 class UserCustomize {
   Widget? loginFirstScreen;
   Widget? profileUpdateForm;
-  Widget Function(String uid)? publicProfile;
+  Widget Function(String? uid, UserModel? user)? publicProfileScreen;
 
   UserCustomize({
     this.loginFirstScreen,
     this.profileUpdateForm,
-    this.publicProfile,
+    this.publicProfileScreen,
   });
 }

@@ -86,7 +86,7 @@ Future<void> update(String path, Map<String, Object?> value) async {
 ///
 /// [value] is the value to set. If it is null, then it will be set to true.
 ///
-/// ! NOTE - dont use directly, must be called from model or service
+/// Returns true if the node is created, otherwise false.
 Future<bool> toggle(String path, [dynamic value]) async {
   final value = await get<bool?>(path);
 

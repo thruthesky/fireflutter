@@ -53,3 +53,54 @@ The source code is under `firebase/functions` and the test code is under `fireba
 ## Unit testing
 
 See `firebase/functions/tests` folder for unit testing on push notification. To run the unit test code, you need to set the environment variable - `GOOGLE_APPLICATION_CREDENTIAILS`
+
+
+
+
+## 시스템트레이에서 메시지가 탭 되면 화면 열기
+
+사용자가 시스템트레이에서 메시지를 탭하면, 채팅, 글, 사용자 프로필 등의 페이지를 열어야 한다.
+
+사용자가 메시지를 탭하면 내부적으로 `parseData` 를 통해서 푸시 알림 데이터를 모델링한다.
+
+푸시 알림 메시지가 탭 되면, 라우팅되는 화면은 각 앱 마다 다를 수 밖에 없다. 아래의 예제를 보고 적당하게 수정해서 사용하면 된다.
+
+```dart
+Future<void> _onMessageTapped(RemoteMessage message) async {
+  dog("onMessageTapped trigged.");
+  dog("onMessageTapped: ${message.data.toString()}");
+
+  final data = MessagingService.instance.parseData(message.data);
+
+  if (data is ChatMessageData) {
+    ChatService.instance.showChatRoom(
+      context: globalContext,
+      roomId: data.roomId,
+    );
+    return;
+  }
+
+  if (data is PostMessageData) {
+    PostModel? post =
+        await PostModel.get(category: data.category, id: data.id);
+    if (post == null) return;
+    if (globalContext.mounted) {
+      ForumService.instance.showPostViewScreen(
+        globalContext,
+        post: post,
+      );
+    }
+    return;
+  }
+
+  if (data is UserMessageData) {
+    UserService.instance.showPublicProfileScreen(
+      context: globalContext,
+      uid: data.uid,
+    );
+    return;
+  }
+}
+```
+
+

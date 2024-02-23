@@ -33,10 +33,14 @@ class _RChatMessageListState extends State<ChatMessageListView> {
   String get roomId => widget.chat.room.id;
   ChatModel get chat => widget.chat;
 
+  /// 채팅방의 상대방 uid.
+  ///
+  /// 주의: 채팅방이 싱글 채팅이 아닌 경우, null operator used on a null value 에러가 발생할 수 있다.
+  String get otherUserUid => chat.room.otherUserUid!;
+
   @override
   void initState() {
     super.initState();
-
     init();
   }
 
@@ -49,6 +53,10 @@ class _RChatMessageListState extends State<ChatMessageListView> {
   @override
   Widget build(BuildContext context) {
     final ref = ChatService.instance.messageRef(roomId: roomId);
+
+    if (chat.room.isSingleChat && iHave.blocked(otherUserUid)) {
+      return Center(child: Text(T.blockedChatMessage.tr));
+    }
 
     return FirebaseDatabaseQueryBuilder(
       // 페이지 사이즈(메시지를 가져오는 개수)를 100으로 해서, 자주 가져오지 않도록 한다. 그래서 flickering 을 줄인다.

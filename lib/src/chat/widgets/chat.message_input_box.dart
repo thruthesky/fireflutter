@@ -33,6 +33,11 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
   double? progress;
   @override
   Widget build(BuildContext context) {
+    if (widget.chat.room.isSingleChat &&
+        iHave.blocked(widget.chat.room.otherUserUid!)) {
+      return const SizedBox.shrink();
+    }
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
