@@ -10,16 +10,33 @@ export const chunk = (arr: any[], size: number) =>
     );
 
 
-
+/**
+ * Returns true if the event is a create event
+ *
+ * @param event DatabaseEvent<Change<DataSnapshot>>
+ * @returns boolean
+ */
 export function isCreate(event: DatabaseEvent<Change<DataSnapshot>>): boolean {
     return !event.data.before.exists() && event.data.after.exists();
 }
 
 
+/**
+ * Returns true if the event is an update event
+ *
+ * @param event DatabaseEvent<Change<DataSnapshot>>
+ * @returns boolean
+ */
 export function isUpdate(event: DatabaseEvent<Change<DataSnapshot>>): boolean {
     return event.data.before.exists() && event.data.after.exists();
 }
 
+/**
+ * Return true if the event is a delete event
+ *
+ * @param event DatabaseEvent<Change<DataSnapshot>>
+ * @returns boolean
+ */
 export function isDelete(event: DatabaseEvent<Change<DataSnapshot>>): boolean {
     return event.data.before.exists() && !event.data.after.exists();
 }

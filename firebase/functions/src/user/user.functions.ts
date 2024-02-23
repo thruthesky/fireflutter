@@ -25,7 +25,6 @@ export const userLike = onValueWritten(
             await db.ref(`users/${targetUid}`).update({ noOfLikes: ServerValue.increment(-1) });
         }
 
-
         // Send message to the target user
         if (isCreate(event)) {
             await MessagingService.sendMessageWhenUserLikeMe({
@@ -33,7 +32,6 @@ export const userLike = onValueWritten(
                 otherUid: myUid,
             });
         }
-
     },
 );
 
@@ -43,7 +41,7 @@ export const userLike = onValueWritten(
  */
 export const userMirror = onValueWritten(
     `${Config.users}/{uid}`,
-    // @eslint-ignore-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async (event): Promise<any> => {
         const firestore = getFirestore();
         const userUid = event.params.uid;

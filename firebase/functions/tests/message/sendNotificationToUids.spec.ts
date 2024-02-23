@@ -54,7 +54,11 @@ describe("sendNotificationToUids 기능 테스트", () => {
 
 
         // 전송
-        await MessagingService.sendNotificationToUids(uids, 128, "title", "body");
+        await MessagingService.sendNotificationToUids({
+            uids: uids,
+            title: "title",
+            body: "body",
+        });
 
 
         // 잘못된 토큰이 삭제 되었는지 확인. 501 개 삭제되어야함.

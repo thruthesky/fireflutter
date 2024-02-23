@@ -15,7 +15,6 @@ import { isCreate, isDelete, isUpdate } from "../library";
 export const managePostsSummary = onValueWritten(
     `${Config.posts}/{category}/{postId}`,
     async (event) => {
-
         if (isCreate(event) || isUpdate(event)) {
             await PostService.setSummary(event.data.after.val(), event.params.category, event.params.postId);
         } else if (isDelete(event)) {
