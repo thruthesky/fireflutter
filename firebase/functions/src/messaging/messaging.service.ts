@@ -296,9 +296,6 @@ export class MessagingService {
     uids = uids.filter((uid) => uid != msg.uid);
 
 
-
-
-
     // 그룹 채팅이면, 그룹 채팅방 이름과 사용자 이름을 표시한다.
     let displayName = "";
     if (msg.roomId.indexOf("---") == -1) {

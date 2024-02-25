@@ -320,15 +320,15 @@ class UserModel {
   }
 
   /// 입력된 전화번호 문자열을 바탕으로 사용자 정보(문서, 값)를 찾아 사용자 모델로 리턴한다.
-  static Future<UserModel?> getByPhoneNumber(String phoneNumber) async {
-    final snapshot =
-        await Ref.users.orderByChild('phoneNumber').equalTo(phoneNumber).get();
+  // static Future<UserModel?> getByPhoneNumber(String phoneNumber) async {
+  //   final snapshot =
+  //       await Ref.users.orderByChild('phoneNumber').equalTo(phoneNumber).get();
 
-    if (snapshot.value == null) {
-      return null;
-    }
-    return null;
-  }
+  //   if (snapshot.value == null) {
+  //     return null;
+  //   }
+  //   return null;
+  // }
 
   /// 사용자의 특정 필만 가져와서 리턴한다.
   ///

@@ -1,6 +1,7 @@
 import { getDatabase } from "firebase-admin/database";
 import { Config } from "../config";
 import { User, UserCreateWithPhoneNumber } from "./user.interface";
+import { getAuth } from "firebase-admin/auth";
 
 /**
  * UserService
@@ -18,22 +19,33 @@ export class UserService {
         return data as User;
     }
 
-    static async createAccountWithPhoneNumber(params: UserCreateWithPhoneNumber): Promise<{ uid: string }> {
-
-        if (params.phoneNumber === undefined) {
-            throw new Error("phoneNumber is required");
+    /**
+     * Create account with phone number
+     *
+     * @param params phone number
+     * @returns the promise of the uid
+     */
+    static async createAccountWithPhoneNumber(params: UserCreateWithPhoneNumber): Promise<{
+        code?: string,
+        message?: string,
+        uid?: string,
+        customToken?: string,
+        phoneNumber?: string
+    }> {
+        const auth = getAuth();
+        try {
+            const userRecord = await auth.createUser({ phoneNumber: params.phoneNumber });
+            const customToken = await auth.createCustomToken(userRecord.uid);
+            return { uid: userRecord.uid, customToken };
+        } catch (e) {
+            if (e instanceof Error) {
+                if ((e as any).errorInfo.code) {
+                    return { code: (e as any).errorInfo.code, message: (e as any).errorInfo.message, phoneNumber: params.phoneNumber };
+                }
+                return { code: e.name, message: e.message };
+            } else {
+                return { code: "unknown", message: "unknown error" };
+            }
         }
-        else if (typeof params.phoneNumber !== "string") {
-            throw new Error("phoneNumber must be a string");
-        }
-        else if (params.phoneNumber.length < 10) {
-            throw new Error("phoneNumber must be at least 10 characters long");
-        }
-        else if (params.phoneNumber.length > 15) {
-            throw new Error("phoneNumber must be at most 15 characters long");
-        }
-
-        return { uid: '... should be a uid....' };
-
     }
 }

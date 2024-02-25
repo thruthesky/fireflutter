@@ -6,7 +6,6 @@ import { MessagingService } from "../messaging/messaging.service";
 import { isCreate } from "../library";
 
 
-
 import { onRequest } from "firebase-functions/v2/https";
 import { logger } from "firebase-functions/v1";
 import { UserService } from "./user.service";
@@ -14,24 +13,21 @@ import { UserService } from "./user.service";
 
 /**
  * 전화번호 가입을 한다.
- * 
+ *
  * 로그인을 하지 않는다. 즉, 이미 전화번호가 가입되어져 있으면 에러를 낸다.
+ *
+ * @param request request
+ * @param response response
+ *
+ * @returns response
+ *
+ * @see READMD.md
  */
 export const phoneNumberRegister = onRequest(async (request, response) => {
     logger.info("phoneNumberRegister: request.body", request.body);
-    try {
-        const res = await UserService.createAccountWithPhoneNumber(request.body);
-        response.send(res);
-    } catch (e) {
-        logger.error(e);
-        if (e instanceof Error) {
-            response.send({ error: e.message });
-        } else {
-            response.send({ error: "unknown error" });
-        }
-    }
+    const res = await UserService.createAccountWithPhoneNumber({ ...request.body, ...request.query });
+    response.send(res);
 });
-
 
 
 /**

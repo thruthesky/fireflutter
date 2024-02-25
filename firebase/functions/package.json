@@ -18,6 +18,7 @@
     "deploy:typesense": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:typesenseUserIndexing,functions:typesenseCommentIndexing,functions:typesensePostIndexing",
     "deploy:userLike": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:userLikeCreated,functions:userLikeDeleted",
     "deploy:userMirror": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:userMirror",
+    "deploy:phoneNumberRegister": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:phoneNumberRegister",
     "logs": "firebase functions:log",
     "test:send-message": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/send-message.spec.ts",
     "test:send-message-input": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/send-message-input.spec.ts",
@@ -35,7 +36,8 @@
     "test:forumNulls": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/post-null-fields.spec.ts --timeout 150000",
     "test:forumRemoveField": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/post-remove-field.spec.ts --timeout 350000",
     "test:forumDelete": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/post-delete-true.spec.ts --timeout 350000",
-    "test:forumRace": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/race-condition.spec.ts --timeout 350000"
+    "test:forumRace": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/race-condition.spec.ts --timeout 350000",
+    "test:phoneNumberRegister": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/user/phoneNumberRegister.spec.ts --timeout 100000"
   },
   "main": "lib/src/index.js",
   "dependencies": {
