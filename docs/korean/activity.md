@@ -15,3 +15,9 @@
 - `user-activity/<uid>/comment-like` 은 코멘트 좋아요
 
 
+
+```json
+{
+  createdAt: ...server-timestamp...
+}
+```
