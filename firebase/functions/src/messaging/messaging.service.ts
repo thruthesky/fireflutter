@@ -277,14 +277,24 @@ export class MessagingService {
 
     Config.log("-----> sendMessagesToChatRoomSubscribers msg:", msg);
 
+    // Get the uids of the room users who have subscribed.
+    //
     // 구독 한 사용자의 목록을 가져온다. 구독하지 않은 사용자 정보는 가져오지 않는다.
     const snapshot = await db.ref(`chat-rooms/${msg.roomId}/users`).orderByValue().equalTo(true).get();
-    const uids: Array<string> = [];
+
+    //
+    let uids: Array<string> = [];
     snapshot.forEach((child) => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       uids.push(child.key!);
     });
     Config.log("-----> sendMessagesToChatRoomSubscribers uids:", uids);
+
+
+    // Remove my uid from the list of uids to NOT receive the message from myself.
+    // @withcenter-dev2 : double check this logic
+    uids = uids.filter((uid) => uid != msg.uid);
+
 
     // 그룹 채팅이면, 그룹 채팅방 이름과 사용자 이름을 표시한다.
     let displayName = "";

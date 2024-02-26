@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:fireship/fireship.dart' as fs;
 import 'package:fireship/fireship.defines.dart';
 import 'package:fireship/fireship.functions.dart';
+import 'package:fireship/ref.dart';
 import 'package:fireship/src/database.functions.dart';
 import 'package:fireship/src/user/user.service.dart';
 import 'package:geohash_plus/geohash_plus.dart';
@@ -317,6 +318,17 @@ class UserModel {
     nodeData['uid'] = uid;
     return UserModel.fromJson(nodeData);
   }
+
+  /// 입력된 전화번호 문자열을 바탕으로 사용자 정보(문서, 값)를 찾아 사용자 모델로 리턴한다.
+  // static Future<UserModel?> getByPhoneNumber(String phoneNumber) async {
+  //   final snapshot =
+  //       await Ref.users.orderByChild('phoneNumber').equalTo(phoneNumber).get();
+
+  //   if (snapshot.value == null) {
+  //     return null;
+  //   }
+  //   return null;
+  // }
 
   /// 사용자의 특정 필만 가져와서 리턴한다.
   ///
