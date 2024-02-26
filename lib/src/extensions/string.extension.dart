@@ -77,3 +77,7 @@ extension FireFlutterStringExtension on String {
     return iHave.blocked(uid) ? message : this;
   }
 }
+
+extension FireFlutterNullableStringExtension on String? {
+  bool get isNullOrEmpty => this == null || this!.isEmpty;
+}

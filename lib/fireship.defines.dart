@@ -1,5 +1,7 @@
 class Folder {
   Folder._();
+  static const String action = 'action';
+  static const String activity = 'activity';
   static const String admins = 'admins';
   static const String chatJoins = 'chat-joins';
   static const String chatMessages = 'chat-messages';

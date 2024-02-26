@@ -3,7 +3,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:fireship/fireship.dart' as fs;
 import 'package:fireship/fireship.defines.dart';
 import 'package:fireship/fireship.functions.dart';
-import 'package:fireship/ref.dart';
 import 'package:fireship/src/database.functions.dart';
 import 'package:fireship/src/user/user.service.dart';
 import 'package:geohash_plus/geohash_plus.dart';
@@ -578,6 +577,7 @@ class UserModel {
   ///
   /// Returns true if the user has just liked, false if unliked.
   Future like(String otherUserUid) async {
+    fs.ActivityModel.userLike(otherUserUid);
     return await toggle(fs.Path.like(my!.uid, otherUserUid));
   }
 }
