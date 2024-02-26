@@ -506,23 +506,6 @@ class ChatRoomModel {
     return getOtherUserUidFromRoomId(id);
   }
 
-// for review - sir song
-// returns true if the other user is blocked you in 1:1 chat
-  Future<bool> get isBloked async {
-    Map<Object?, Object?> blocksMap =
-        await UserModel.getField(otherUserUid!, 'blocks');
-    final List<String> blocks =
-        blocksMap.keys.map((key) => key.toString()).toList();
-    if (isSingleChat) {
-      if (blocks.contains(my?.uid)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-    return false;
-  }
-
   /// Returns the uids of the users who subscribed the chat room.
   List<String>? get getSubscribedUids {
     final List<String>? uids = users?.entries.fold(

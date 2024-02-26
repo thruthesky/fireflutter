@@ -70,13 +70,6 @@ class ChatModel {
 
     ChatService.instance.testBeforeSendMessage?.call(this);
 
-    bool isBlocked = await room.isBloked;
-
-    // if the user is blocked by the other user
-    if (isBlocked) {
-      throw Issue(Code.blocked, "You are blocked by this user");
-    }
-
     /// TODO 관리자 모드에서 특정 사용자에게 disabled 한 다음 테스트 할 것.
     if (force == false && UserService.instance.user?.isDisabled == true) {
       throw Issue(Code.disabled);
