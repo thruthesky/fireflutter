@@ -15,4 +15,10 @@ extension FireshipIntExtension on int {
       return DateFormat('yy.MM.dd').format(dt);
     }
   }
+
+  String get toHis {
+    final dt = DateTime.fromMillisecondsSinceEpoch(this);
+
+    return DateFormat('HH:mm:ss').format(dt);
+  }
 }

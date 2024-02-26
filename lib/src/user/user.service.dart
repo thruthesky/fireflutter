@@ -221,7 +221,10 @@ class UserService {
 
     ///
     if (ActionService.instance.userView.isOverLimit) {
-      ActionService.instance.userView.overLimit?.call();
+      final re = await ActionService.instance.userView.overLimit?.call();
+      if (re != true) {
+        return;
+      }
     }
 
     showGeneralDialog(

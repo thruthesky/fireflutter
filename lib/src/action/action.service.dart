@@ -5,9 +5,9 @@ class ActionOption {
   int limit;
   int minutes;
   int count;
-  Function()? overLimit;
+  Future<bool?> Function()? overLimit;
 
-  bool get isOverLimit => count > limit;
+  bool get isOverLimit => count >= limit;
 
   ActionOption({
     this.enable = false,
@@ -52,17 +52,21 @@ class ActionService {
           .listen((event) {
         if (event.snapshot.exists == false) {
           userView.count = 0;
-          return;
-        }
-
-        userView.count = 0;
-        for (var snapshot in event.snapshot.children) {
-          final actoin = ActionModel.fromSnapshot(snapshot);
-          if (actoin.createdAt >
-              DateTime.now().millisecondsSinceEpoch - userView.minutes * 60) {
-            userView.count++;
+        } else {
+          print('---> children count: ${event.snapshot.children.length}');
+          userView.count = 0;
+          final overtime = DateTime.now().millisecondsSinceEpoch -
+              (userView.minutes * 60 * 1000);
+          for (var snapshot in event.snapshot.children) {
+            final actoin = ActionModel.fromSnapshot(snapshot);
+            // print(" ${actoin.createdAt.toHis} > ${overtime.toHis}");
+            if (actoin.createdAt > overtime) {
+              userView.count++;
+            }
           }
         }
+
+        print('---> limit count: ${userView.count}');
       });
     }
   }
