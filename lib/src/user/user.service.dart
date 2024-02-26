@@ -221,8 +221,7 @@ class UserService {
 
     ///
     if (ActionService.instance.userView.isOverLimit) {
-      final re = await ActionService.instance.userView.overLimit?.call();
-      if (re != true) {
+      if (await ActionService.instance.userViewOverLimit() != true) {
         return;
       }
     }

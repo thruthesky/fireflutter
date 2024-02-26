@@ -109,7 +109,7 @@ class _PostEditScreenState extends State<PostEditScreen> {
                       Navigator.of(context).pop();
                       if (isCreate) {
                         ForumService.instance
-                            .showPostViewScreen(context, post: newPost);
+                            .showPostViewScreen(context, post: newPost!);
                       }
                     },
                     child: Text(isCreate ? 'CREATE' : 'UPDATE'),

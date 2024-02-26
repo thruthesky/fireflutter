@@ -63,14 +63,23 @@ class ChatService {
     String? roomId,
     ChatRoomModel? room,
   }) async {
-    return showGeneralDialog(
+    /// 채팅방 입장을 할 때, DB 업데이트를 하므로, 메시지를 보낼 때에는 해제 계산이 되어져 있다.
+    if (ActionService.instance.chatJoin.isOverLimit) {
+      if (await ActionService.instance.chatJoinOverLimit() != true) {
+        return;
+      }
+    }
+    if (context.mounted) {
+      return showGeneralDialog(
         context: context,
         pageBuilder: (context, animation, secondaryAnimation) =>
             DefaultChatRoomScreen(
-              uid: uid,
-              roomId: roomId,
-              room: room,
-            ));
+          uid: uid,
+          roomId: roomId,
+          room: room,
+        ),
+      );
+    }
   }
 
   Future<ChatRoomModel?> showChatRoomCreate(
