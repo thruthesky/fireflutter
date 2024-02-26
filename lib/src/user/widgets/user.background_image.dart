@@ -26,8 +26,8 @@ class UserBackgroundImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final v = initialData ??
-        user?.profileBackgroundImageUrl ??
-        'https://picsum.photos/id/171/400/900';
+        user?.profileBackgroundImageUrl
+            .or('https://picsum.photos/id/171/400/900');
 
     return sync
         ? UserDoc.fieldSync(
