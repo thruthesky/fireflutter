@@ -1,6 +1,20 @@
 ```json
 {
   "rules": {
+    // Action
+    "action": {
+      "$uid": {
+        ".read": true,
+        ".write": "$uid === auth.uid"
+      }
+    },
+    // Activity
+    "activity": {
+      "$uid": {
+        ".read": true,
+        ".write": "$uid === auth.uid"
+      }
+    },
     // Fireship admins
     "admins": {
       ".read": true,

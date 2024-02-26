@@ -577,6 +577,7 @@ class UserModel {
   ///
   /// Returns true if the user has just liked, false if unliked.
   Future like(String otherUserUid) async {
+    fs.ActivityModel.userLike(otherUserUid);
     return await toggle(fs.Path.like(my!.uid, otherUserUid));
   }
 }

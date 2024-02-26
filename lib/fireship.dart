@@ -1,4 +1,13 @@
 /// Note, export by alphabet order
+///
+
+/// Action
+export 'src/action/action.model.dart';
+export 'src/action/action.service.dart';
+
+/// Activity
+export 'src/activity/activity.model.dart';
+export 'src/activity/activity.service.dart';
 
 /// Admin
 export 'src/admin/admin.service.dart';

@@ -253,13 +253,16 @@ class CommentModel {
     summaryRef.child(Field.noOfComments).set(ServerValue.increment(1));
 
     /// Don't wait for calling onCommentCreate.
-    await CommentModel.get(
+    final created = await CommentModel.get(
       // category: category,
       postId: postId,
       commentId: id,
-    ).then((comment) {
-      ForumService.instance.onCommentCreate?.call(comment);
-    });
+    );
+
+    ForumService.instance.onCommentCreate?.call(created);
+
+    ActionModel.commentCreate(postId: postId, commentId: created.id);
+    ActivityModel.commentCreate(postId: postId, commentId: created.id);
   }
 
   Future update({

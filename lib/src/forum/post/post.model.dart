@@ -217,14 +217,14 @@ class PostModel {
     dog("PostModel.create: ref.key: ${ref.path}, data: $data");
     await ref.set(data);
 
-    return await _afterCreate(ref);
-  }
-
-  /// Create post data in the database
-  static Future<PostModel> _afterCreate(DatabaseReference ref) async {
+    /// Read the post data from the database
     final snapshot = await ref.get();
     final created = PostModel.fromSnapshot(snapshot);
 
+    ActionModel.postCreate(category: category, postId: created.id);
+    ActivityModel.postCreate(category: category, postId: created.id);
+
+    /// Call the onPostCreate callback
     ForumService.instance.onPostCreate?.call(created);
     return created;
   }

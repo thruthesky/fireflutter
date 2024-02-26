@@ -5,6 +5,20 @@ import 'package:fireship/fireship.dart';
 class Path {
   Path._();
 
+  /// Action
+  static const String action = Folder.action;
+  static String get userViewAction => '$action/$myUid/user-view';
+  static String get postCreateAction => '$action/$myUid/post-create';
+  static String get commentCreateAction => '$action/$myUid/comment-create';
+  static String get chatJoinAction => '$action/$myUid/chat-join';
+
+  /// Activity
+  static const String activity = Folder.activity;
+  static String get userLikeActivity => '$activity/$myUid/user-likes';
+  static String get userViewActivity => '$activity/$myUid/user-view';
+  static String get postCreateActivity => '$activity/$myUid/post-create';
+  static String get commentCreateActivity => '$activity/$myUid/comment-create';
+
   /// User
   static const String users = Folder.users;
   static String user(String uid) => '${Folder.users}/$uid';

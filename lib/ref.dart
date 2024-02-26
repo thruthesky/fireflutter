@@ -6,6 +6,28 @@ class Ref {
 
   static DatabaseReference root = FirebaseDatabase.instance.ref();
 
+  /// Action
+  static DatabaseReference action = root.child(Folder.action);
+  static DatabaseReference get chatJoinAction =>
+      root.child(Path.chatJoinAction);
+  static DatabaseReference get userViewAction =>
+      root.child(Path.userViewAction);
+  static DatabaseReference get postCreateAction =>
+      root.child(Path.postCreateAction);
+  static DatabaseReference get commentCreateAction =>
+      root.child(Path.commentCreateAction);
+
+  /// Activity
+  static DatabaseReference activity = root.child(Folder.activity);
+  static DatabaseReference get userLikeActivity =>
+      root.child(Path.userLikeActivity);
+  static DatabaseReference get userViewActivity =>
+      root.child(Path.userViewActivity);
+  static DatabaseReference get postCreateActivity =>
+      root.child(Path.postCreateActivity);
+  static DatabaseReference get commentCreateActivity =>
+      root.child(Path.commentCreateActivity);
+
   /// Admins
   static DatabaseReference admins = root.child('admins');
 
