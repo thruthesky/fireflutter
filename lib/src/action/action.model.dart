@@ -42,7 +42,7 @@ class ActionModel {
     });
   }
 
-  static Future<void> chat(String roomId) async {
+  static Future<void> chatJoin(String roomId) async {
     if (myUid == null) return;
     if (ActionService.instance.chatJoin.enable == false) return;
 

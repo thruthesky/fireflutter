@@ -66,19 +66,19 @@ class TypesenseService {
   ///
   /// Can use ID as string to delete into Typesense
   ///
-  Future<Map<String, dynamic>> _delete(Object obj) async {
-    String id;
-    if (obj is String) {
-      id = obj;
-    } else if (obj is PostModel) {
-      id = obj.id;
-    } else if (obj is CommentModel) {
-      id = obj.id;
-    } else {
-      throw Issue('Invalid object type: ${obj.runtimeType}');
-    }
-    return await client.collection(searchCollection).document(id).delete();
-  }
+  // Future<Map<String, dynamic>> delete(Object obj) async {
+  //   String id;
+  //   if (obj is String) {
+  //     id = obj;
+  //   } else if (obj is PostModel) {
+  //     id = obj.id;
+  //   } else if (obj is CommentModel) {
+  //     id = obj.id;
+  //   } else {
+  //     throw Issue('Invalid object type: ${obj.runtimeType}');
+  //   }
+  //   return await client.collection(searchCollection).document(id).delete();
+  // }
 
   /// Update the index for the user.
   Future<Map<String, dynamic>> _upsertUser(UserModel user) async {

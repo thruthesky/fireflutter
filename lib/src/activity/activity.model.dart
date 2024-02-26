@@ -75,4 +75,14 @@ class ActivityModel {
       'commentId': commentId,
     });
   }
+
+  /// chat join(enter) activity
+  static Future<void> chatJoin(String roomId) async {
+    if (myUid == null) return;
+    if (ActivityService.instance.chatJoin == false) return;
+    return await Ref.chatJoinActivity.push().set({
+      'createdAt': ServerValue.timestamp,
+      'roomId': roomId,
+    });
+  }
 }

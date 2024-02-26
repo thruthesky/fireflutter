@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 /// A simple phone number login form.
 ///
@@ -301,7 +300,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
                     signinSuccess();
                   } catch (e) {
                     // SMS Code verification error comes here.
-                    if (mounted) {
+                    if (context.mounted) {
                       error(
                         context: context,
                         title: T.error.tr,

@@ -16,7 +16,7 @@ class MyProfileSticker extends StatelessWidget {
         if (my == null) return const SizedBox.shrink();
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () => UserService.instance.showProfile(context),
+          onTap: () => UserService.instance.showProfileScreen(context),
           child: Row(
             children: [
               SizedBox(width: spacing),

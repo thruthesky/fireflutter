@@ -36,7 +36,7 @@ class DefaultChatRoomMemberDialog extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context);
               UserService.instance
-                  .showPublicProfile(context: context, uid: member.uid);
+                  .showPublicProfileScreen(context: context, uid: member.uid);
             },
             child: const Text('View User Profile'),
           ),

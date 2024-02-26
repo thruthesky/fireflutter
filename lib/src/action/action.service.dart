@@ -64,7 +64,7 @@ class ActionService {
     for (final action in [userView, chatJoin, postCreate, commentCreate]) {
       if (action.enable) {
         // listen user view
-        print('---> ActionService.listenActions() - action: ${action.limit}');
+        // print('---> ActionService.listenActions() - action: ${action.limit}');
         action.ref
             .limitToLast(action.limit)
             .orderByChild('createdAt')
@@ -73,8 +73,8 @@ class ActionService {
           if (event.snapshot.exists == false) {
             action.count = 0;
           } else {
-            print(
-                'listen actions; ${action.ref.path} -> ${event.snapshot.children.length}');
+            // print(
+            //     'listen actions; ${action.ref.path} -> ${event.snapshot.children.length}');
             action.count = _updateCountFromSnapshot(event.snapshot);
           }
         });

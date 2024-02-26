@@ -18,6 +18,7 @@ class Path {
   static String get userViewActivity => '$activity/$myUid/user-view';
   static String get postCreateActivity => '$activity/$myUid/post-create';
   static String get commentCreateActivity => '$activity/$myUid/comment-create';
+  static String get chatJoinActivity => '$activity/$myUid/chat-join';
 
   /// User
   static const String users = Folder.users;

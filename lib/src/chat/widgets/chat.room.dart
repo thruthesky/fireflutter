@@ -112,7 +112,8 @@ class _ChatRoomState extends State<ChatRoom> {
     /// 채팅방 정보 로드 완료
     loaded.value = true;
 
-    ActionModel.chat(chat.room.id);
+    ActionModel.chatJoin(chat.room.id);
+    ActivityModel.chatJoin(chat.room.id);
 
     /// 방 정보 전체를 한번 읽고, 이후, 실시간 업데이트
     ///
@@ -156,7 +157,7 @@ class _ChatRoomState extends State<ChatRoom> {
                   behavior: HitTestBehavior.opaque,
                   onTap: () async {
                     if (chat.room.isSingleChat) {
-                      UserService.instance.showPublicProfile(
+                      UserService.instance.showPublicProfileScreen(
                         context: context,
                         uid: chat.room.otherUserUid!,
                       );

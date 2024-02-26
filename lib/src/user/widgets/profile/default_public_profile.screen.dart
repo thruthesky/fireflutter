@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:fireship/fireship.dart';
-import 'package:fireship/src/user/widgets/buttons/block_button.dart';
-import 'package:fireship/src/user/widgets/buttons/bookmark_button.dart';
 import 'package:flutter/material.dart';
 
 class DefaultPublicProfileScreen extends StatelessWidget {
