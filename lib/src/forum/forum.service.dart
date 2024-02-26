@@ -34,12 +34,20 @@ class ForumService {
     BuildContext context, {
     required String category,
   }) async {
-    await showGeneralDialog(
-      context: context,
-      pageBuilder: ($, $$, $$$) => PostEditScreen(
-        category: category,
-      ),
-    );
+    if (ActionService.instance.postCreate.isOverLimit) {
+      if (await ActionService.instance.postCreateOverLimit() != true) {
+        return null;
+      }
+    }
+
+    if (context.mounted) {
+      await showGeneralDialog(
+        context: context,
+        pageBuilder: ($, $$, $$$) => PostEditScreen(
+          category: category,
+        ),
+      );
+    }
   }
 
   Future showPostUpdateScreen(

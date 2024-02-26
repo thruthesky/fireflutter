@@ -197,12 +197,18 @@ class PostModel {
   /// /posts
   /// /posts-summary
   /// /posts-all
-  static Future<PostModel> create({
+  static Future<PostModel?> create({
     required String title,
     required String content,
     required String category,
     List<String>? urls,
   }) async {
+    if (ActionService.instance.postCreate.isOverLimit) {
+      if (await ActionService.instance.postCreateOverLimit() != true) {
+        return null;
+      }
+    }
+
     final data = {
       'uid': myUid,
       'title': title,
