@@ -78,9 +78,9 @@ Fireship provides a few widgets to update user's profile information like below
 `DefaultProfileUpdateForm` also provides more optoins.
 
 
-You you can call `UserService.instance.showProfile(context)` mehtod which shows the `DefaultProfileUpdateForm` as dialog.
+You you can call `UserService.instance.showProfileScreen(context)` mehtod which shows the `DefaultProfileUpdateForm` as dialog.
 
-It is important to know that fireship uses `UserService.instance.showProfile()` to display the login user's profile update screen. So, if you want to customize everything by yourself, you need to copy the code and make it your own widget. then conect it to `UserService.instance.init(customize: UserCustomize(showProfile: ... ))`.
+It is important to know that fireship uses `UserService.instance.showProfileScreen()` to display the login user's profile update screen. So, if you want to customize everything by yourself, you need to copy the code and make it your own widget. then conect it to `UserService.instance.init(customize: UserCustomize(showProfile: ... ))`.
 
 
 #### SimpleProfileUpdateForm

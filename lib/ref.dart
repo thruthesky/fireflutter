@@ -27,6 +27,8 @@ class Ref {
       root.child(Path.postCreateActivity);
   static DatabaseReference get commentCreateActivity =>
       root.child(Path.commentCreateActivity);
+  static DatabaseReference get chatJoinActivity =>
+      root.child(Path.chatJoinActivity);
 
   /// Admins
   static DatabaseReference admins = root.child('admins');

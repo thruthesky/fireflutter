@@ -34,7 +34,7 @@ class UserTile extends StatelessWidget {
     return InkWell(
       onTap: () =>
           onTap?.call(user) ??
-          UserService.instance.showPublicProfile(
+          UserService.instance.showPublicProfileScreen(
             context: context,
             uid: user.uid,
           ),

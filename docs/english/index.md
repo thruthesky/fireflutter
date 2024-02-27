@@ -29,7 +29,7 @@ When sorting, the sorting field and value are stored in a separate node. For exa
 
 Fireship provides a default design that can be completely customized.
 
-You may want to view a user's profile in various places in the app. For example, in a chat room, in a user list, or when clicking on a user's photo in a forum post/comment, you can show the user's public profile. In this case, by simply calling the `UserService.instance.showPublicProfile(uid: ...)` function uniformly, you can display the user's profile anywhere.
+You may want to view a user's profile in various places in the app. For example, in a chat room, in a user list, or when clicking on a user's photo in a forum post/comment, you can show the user's public profile. In this case, by simply calling the `UserService.instance.showPublicProfileScreen(uid: ...)` function uniformly, you can display the user's profile anywhere.
 
 If you want to customize the design directly rather than using the default design, you can customize it by calling `UserSerivce.instance.init(customize: UserCustomize(...))`.
 

@@ -226,12 +226,14 @@ class UserService {
       }
     }
 
-    showGeneralDialog(
-      context: context,
-      pageBuilder: ($, _, __) =>
-          customize.publicProfileScreen?.call(uid, user) ??
-          DefaultPublicProfileScreen(uid: uid, user: user),
-    );
+    if (context.mounted) {
+      showGeneralDialog(
+        context: context,
+        pageBuilder: ($, _, __) =>
+            customize.publicProfileScreen?.call(uid, user) ??
+            DefaultPublicProfileScreen(uid: uid, user: user),
+      );
+    }
 
     /// Dynamic link is especially for users who are not install and not signed users.
     if (loggedIn && myUid != userUid) {

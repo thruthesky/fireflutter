@@ -17,7 +17,7 @@ class PostMeta extends StatelessWidget {
         children: [
           UserAvatar(
             uid: post.uid,
-            onTap: () => UserService.instance.showPublicProfile(
+            onTap: () => UserService.instance.showPublicProfileScreen(
               context: context,
               uid: post.uid,
             ),

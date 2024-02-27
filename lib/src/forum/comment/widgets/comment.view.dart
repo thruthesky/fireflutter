@@ -29,7 +29,7 @@ class _CommnetViewState extends State<CommentView> {
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         UserAvatar(
           uid: widget.comment.uid,
-          onTap: () => UserService.instance.showPublicProfile(
+          onTap: () => UserService.instance.showPublicProfileScreen(
             context: context,
             uid: widget.comment.uid,
           ),
@@ -137,7 +137,7 @@ class _CommnetViewState extends State<CommentView> {
                           hintText: T.reportInputHint.tr,
                         );
                         if (re == null || re == '') return;
-                        await ReportService.instance.report(
+                        await ReportModel.create(
                           postId: widget.comment.postId,
                           commentId: widget.comment.id,
                           reason: re,

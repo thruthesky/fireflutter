@@ -92,7 +92,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                         hintText: T.reportInputHint.tr,
                       );
                       if (re == null || re == '') return;
-                      await ReportService.instance.report(
+                      await ReportModel.create(
                         postId: post.id,
                         category: post.category,
                         reason: re,

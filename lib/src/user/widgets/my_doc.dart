@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 /// 이 위젯은 로그인을 한 사용자의, 'users/<uid>' 데이터가 변경될 때마다 rebuild 를 한다.
 /// 즉, 다른 사용자 정보는 가져오지 않으며, UserService 에서 listen 하는 'users/<uid>' 하위 데이터를 통째로
 /// 가져온다. 그래서 여러군데 동시에 쓰기에 부담이 없는 위젯이다.
+///
+/// 사용자 문서가 로드되지 않은 경우, (주로, 처음 앱을 실행하는 경우) [builder] 로 null 이 전달될 수 있다.
 class MyDoc extends StatelessWidget {
   const MyDoc({super.key, required this.builder});
 

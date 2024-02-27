@@ -47,7 +47,7 @@ class NewProfilePhotos extends StatelessWidget {
 
               return GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () => UserService.instance.showPublicProfile(
+                onTap: () => UserService.instance.showPublicProfileScreen(
                     context: context, uid: snapshot.docs[index].key!),
                 child: Padding(
                   padding: EdgeInsets.only(left: index == 0 ? 16 : 0),
