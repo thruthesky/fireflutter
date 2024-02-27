@@ -71,6 +71,7 @@ class T {
   static const String female = 'Female';
   static const String nationality = 'Nationality';
   static const String region = 'Region';
+  static const String pleaseInputBirthday = 'Please input your birthday';
   static const String pleaseSelectGender = 'Please select your gender';
   static const String addYourPhoto = 'Add your photo. (Minimum 2, Maximum 4)';
   static const String pleaseSelectNationality =
