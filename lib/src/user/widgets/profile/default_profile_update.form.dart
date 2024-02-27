@@ -3,15 +3,21 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireship/fireship.dart';
 import 'package:flutter/material.dart';
 
+typedef FormOption = ({
+  bool display,
+  bool require,
+});
+
 class DefaultProfileUpdateForm extends StatefulWidget {
   const DefaultProfileUpdateForm({
     super.key,
-    this.occupation = false,
-    this.stateMessage = true,
-    this.gender = true,
-    this.nationality = false,
-    this.region = true,
-    this.morePhotos = false,
+    this.birthday,
+    this.occupation,
+    this.stateMessage,
+    this.gender,
+    this.nationality,
+    this.region,
+    this.morePhotos,
     this.onUpdate,
     this.countryFilter,
     this.koreanAreaLanguageCode = 'ko',
@@ -19,16 +25,18 @@ class DefaultProfileUpdateForm extends StatefulWidget {
   });
 
   final void Function()? onUpdate;
+  final FormOption? birthday;
   // use [occupation] to hide the occupation field
-  final bool occupation;
-  final bool stateMessage;
-  final bool gender;
-  final bool nationality;
-  final bool region;
+  final FormOption? occupation;
+  final FormOption? stateMessage;
+  final FormOption? gender;
+  final FormOption? nationality;
+  final FormOption? region;
+  final FormOption? morePhotos;
+
   // use countryFilter to list only the country you want to display in the screen
   final List<String>? countryFilter;
 
-  final bool morePhotos;
   final String koreanAreaLanguageCode;
   final ThemeData? countryPickerTheme;
 
@@ -182,7 +190,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
             labelText: T.name.tr,
           ),
         ),
-        if (widget.gender) ...{
+        if (widget.gender?.display == true) ...{
           const SizedBox(height: 32),
           const Text('Gender'),
           const SizedBox(height: 4),
@@ -231,13 +239,14 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
           ),
         },
         const SizedBox(height: 32),
-        MyDoc(
-          builder: (my) => BirthdayUpdate(
-            label: T.birthdateLabel.tr,
-            description: T.birthdateSelectDescription.tr,
+        if (widget.birthday?.require == true)
+          MyDoc(
+            builder: (my) => BirthdayUpdate(
+              label: T.birthdateLabel.tr,
+              description: T.birthdateSelectDescription.tr,
+            ),
           ),
-        ),
-        if (widget.nationality) ...{
+        if (widget.nationality?.require == true) ...{
           const SizedBox(
             height: 32,
           ),
@@ -275,7 +284,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
             ),
           ),
         },
-        if (widget.region) ...{
+        if (widget.region?.display == true) ...{
           const SizedBox(height: 24),
           Text(T.region.tr),
           // init value
@@ -292,14 +301,14 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                 setState(() {});
               }),
         },
-        if (widget.occupation) ...{
+        if (widget.occupation?.display == true) ...{
           const SizedBox(height: 32),
           Text(T.occupation.tr),
           TextField(
             controller: occupationController,
           ),
         },
-        if (widget.morePhotos) ...{
+        if (widget.morePhotos?.display == true) ...{
           const SizedBox(height: 32),
           Text(T.pleaseAddMorePhotos.tr),
           SizedBox(
@@ -397,7 +406,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
             ],
           ),
         },
-        if (widget.stateMessage) ...{
+        if (widget.stateMessage?.display == true) ...{
           const SizedBox(height: 32),
           TextField(
             controller: stateMessageController,
@@ -416,25 +425,30 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
               if (nameController.text.trim().isEmpty) {
                 errorToast(context: context, message: T.inputName.tr);
                 return;
-              } else if (widget.gender && gender == null) {
+              } else if (widget.birthday?.require == true &&
+                  my!.birthYear == 0) {
+                errorToast(context: context, message: T.pleaseInputBirthday.tr);
+                return;
+              } else if (widget.gender?.require == true && gender == null) {
                 errorToast(context: context, message: T.pleaseSelectGender.tr);
                 return;
-              } else if (widget.nationality && nationality == null) {
+              } else if (widget.nationality?.require == true &&
+                  nationality == null) {
                 errorToast(
                     context: context, message: T.pleaseSelectNationality.tr);
                 return;
-              } else if (widget.region && siGunGu == null) {
+              } else if (widget.region?.require == true && siGunGu == null) {
                 errorToast(context: context, message: T.pleaseSelectRegion.tr);
                 return;
-              } else if (widget.occupation &&
+              } else if (widget.occupation?.require == true &&
                   occupationController.text.trim().isEmpty) {
                 errorToast(
                     context: context, message: T.pleaseInputOccupation.tr);
                 return;
-              } else if (widget.morePhotos && urls.isEmpty) {
+              } else if (widget.morePhotos?.require == true && urls.isEmpty) {
                 errorToast(context: context, message: T.pleaseAddMorePhotos.tr);
                 return;
-              } else if (widget.stateMessage &&
+              } else if (widget.stateMessage?.require == true &&
                   stateMessageController.text.trim().isEmpty) {
                 errorToast(
                     context: context, message: T.pleaseInputStateMessage.tr);
