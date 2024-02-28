@@ -1,8 +1,11 @@
 import 'package:fireship/fireship.dart';
 
 extension FireFlutterStringExtension on String {
-  int? tryInt() {
-    return int.tryParse(this);
+  /// 문자를 정수로 변환
+  ///
+  /// 만약 변환할 수 없다면 0을 리턴.
+  int tryInt() {
+    return int.tryParse(this) ?? 0;
   }
 
   double? tryDouble() {
