@@ -588,6 +588,13 @@ String getSiDoNameFromCode({required String code, String languageCode = 'ko'}) {
   return sido.name;
 }
 
+String getSiGunGuNameFromCode(
+    {required String siDo, required String code, String languageCode = 'ko'}) {
+  AreaCode siGunGu = getSiGunGuCodes(languageCode: languageCode, siDo: siDo)
+      .firstWhere((address) => address.code == code);
+  return siGunGu.name;
+}
+
 /// [regionSiDo] is the AreaCode of the Si/Do area code from the first region code of [siDo].
 AreaCode? getSiDo(String languageCode, String code) {
   if (code.isEmpty) return null;
