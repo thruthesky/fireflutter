@@ -505,6 +505,27 @@ class _LikeScreenState extends State<LikeScreen> {
 }
 ```
 
+## 사용자 로그인 및 문서 준비 확인
+
+### AuthReady
+
+`AuthReady` 는 사용자가 Firebase 에 로그인을 했으면, `builder` 콜백 함수가 호출되어 위젯을 표시할 수 있다. 만약 로그인을 하지 않았으면 `notLogin` 콜백 함수가 실행된다.
+참고로, Firebase Realtime Database 의 사용자 문서가 로딩되지 않아도, 이 함수의 builder 가 실행된다.
+
+주로, 파이어베이스에 로그인을 하여 사용자 uid 가 사용 가능한지 확인을 위해서 쓴다.
+
+
+### MyDocReady
+
+`MyDocReady` 는 사용자가 Firebase 에 로그인 한 다음, Realtime Database 에서 사용자 문서를 로딩했는지를 확인 할 때 사용한다.
+
+내부적으로 단순히, [MyDoc] 위젯을 사용하여, 사용자 문서가 로딩되었는지 확인하며, 사용자 문서가 로딩되었으면, `builder(UserModel)` 를 실행하고, 로딩이 안되었으면 [loading] 을 한다.
+
+
+/// [MyDoc] 을 사용하면, builder(UserModel) 가 null 일 수 있으므로, null 체크를 해야 하는데,
+/// [MyDocReady] 는 builder(UserModel) 가 null 이 아니므로 조금 더 편리하게 사용 할 수 있다.
+
+
 
 
 ## 블럭

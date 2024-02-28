@@ -66,6 +66,11 @@ Be informed that we are only saving the first url of the post in summaries.
 - 성공하는 경우
   - 결과: `{ uid: 'YSr8fJwQASSF4QApILkaAEjbfCd2' }`
 
+
+참고로, 클라우드 함수 호출이 속도가 좀 느린편이다. 그나마 맨 처음 (새로운) 전화번호를 입력해서 가입을 할 때에는 Firebase Phone Sign-in 과정이 없어서 조금은 빨리 로그인이 되지만, 두번째 로그인을 할 때에는 Phone Sign-in 을 해야 해서 로그인 속도가 좀 더 느릴 수 있다.
+
+
+
 ## 함수 테스트
 
 [테스트 문서](./test.md)를 참고한다.
