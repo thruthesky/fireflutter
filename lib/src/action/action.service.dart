@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireship/fireship.dart';
 
@@ -36,6 +38,8 @@ class ActionService {
   ActionOption postCreate = ActionOption();
   ActionOption commentCreate = ActionOption();
 
+  List<StreamSubscription> subs = [];
+
   init({
     ActionOption? userView,
     ActionOption? chatJoin,
@@ -63,23 +67,37 @@ class ActionService {
   }
 
   listenActions() {
-    for (final action in [userView, chatJoin, postCreate, commentCreate]) {
-      if (action.enable) {
+    for (final sub in subs) {
+      sub.cancel();
+    }
+    subs.clear();
+    for (final actionOption in [
+      userView,
+      chatJoin,
+      postCreate,
+      commentCreate
+    ]) {
+      if (actionOption.enable) {
         // listen user view
         // print('---> ActionService.listenActions() - action: ${action.limit}');
-        action.ref
-            .limitToLast(action.limit)
-            .orderByChild('createdAt')
-            .onValue
-            .listen((event) {
-          if (event.snapshot.exists == false) {
-            action.count = 0;
-          } else {
-            // print(
-            //     'listen actions; ${action.ref.path} -> ${event.snapshot.children.length}');
-            action.count = _updateCountFromSnapshot(event.snapshot);
-          }
-        });
+        subs.add(
+          actionOption.ref
+              .limitToLast(actionOption.limit)
+              .orderByChild('createdAt')
+              .onValue
+              .listen(
+            (event) {
+              if (event.snapshot.exists == false) {
+                actionOption.count = 0;
+              } else {
+                // print(
+                //     'listen actions; ${action.ref.path} -> ${event.snapshot.children.length}');
+                actionOption.count =
+                    _updateCountFromSnapshot(event.snapshot, actionOption);
+              }
+            },
+          ),
+        );
       }
     }
   }
@@ -96,7 +114,7 @@ class ActionService {
       userView.count = 0;
       return true;
     } else {
-      userView.count = _updateCountFromSnapshot(snapshot);
+      userView.count = _updateCountFromSnapshot(snapshot, userView);
       if (userView.isOverLimit == false) return true;
     }
 
@@ -118,7 +136,7 @@ class ActionService {
       postCreate.count = 0;
       return true;
     } else {
-      postCreate.count = _updateCountFromSnapshot(snapshot);
+      postCreate.count = _updateCountFromSnapshot(snapshot, postCreate);
       if (postCreate.isOverLimit == false) return true;
     }
     return await postCreate.overLimit?.call();
@@ -135,7 +153,7 @@ class ActionService {
       commentCreate.count = 0;
       return true;
     } else {
-      commentCreate.count = _updateCountFromSnapshot(snapshot);
+      commentCreate.count = _updateCountFromSnapshot(snapshot, commentCreate);
       if (commentCreate.isOverLimit == false) return true;
     }
     return await commentCreate.overLimit?.call();
@@ -154,16 +172,16 @@ class ActionService {
       chatJoin.count = 0;
       return true;
     } else {
-      chatJoin.count = _updateCountFromSnapshot(snapshot);
+      chatJoin.count = _updateCountFromSnapshot(snapshot, chatJoin);
       if (chatJoin.isOverLimit == false) return true;
     }
     return await chatJoin.overLimit?.call();
   }
 
-  _updateCountFromSnapshot(DataSnapshot snapshot) {
+  _updateCountFromSnapshot(DataSnapshot snapshot, ActionOption option) {
     int count = 0;
     final overtime =
-        DateTime.now().millisecondsSinceEpoch - (userView.minutes * 60 * 1000);
+        DateTime.now().millisecondsSinceEpoch - (option.minutes * 60 * 1000);
     for (var snapshot in snapshot.children) {
       final actoin = ActionModel.fromSnapshot(snapshot);
       // print(" ${actoin.createdAt.toHis} > ${overtime.toHis}");
