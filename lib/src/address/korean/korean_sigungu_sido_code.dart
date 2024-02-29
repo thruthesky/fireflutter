@@ -609,29 +609,18 @@ String getSiGunGuNameFromCode(
 }
 
 /// [regionSiDo] is the AreaCode of the Si/Do area code from the first region code of [siDo].
-AreaCode? getSiDo(String languageCode, String code) {
-  if (code.isEmpty) return null;
-  final found = getSiDoCodes(languageCode: languageCode).firstWhere(
+///
+///
+///
+AreaCode getSiDo(String languageCode, String code) {
+  return getSiDoCodes(languageCode: languageCode).firstWhere(
     (e) => e.code == code,
-    orElse: () => (code: '', name: ''),
   );
-  if (found.code.isEmpty) {
-    return null;
-  } else {
-    return found;
-  }
 }
 
-AreaCode? getSiGunGu(String languageCode, String siDo, String code) {
-  if (code.isEmpty) return null;
-  final found =
-      getSiGunGuCodes(languageCode: languageCode, siDo: siDo).firstWhere(
+////
+AreaCode getSiGunGu(String languageCode, String siDo, String code) {
+  return getSiGunGuCodes(languageCode: languageCode, siDo: siDo).firstWhere(
     (e) => e.code == code,
-    orElse: () => (code: '', name: ''),
   );
-  if (found.code.isEmpty) {
-    return null;
-  } else {
-    return found;
-  }
 }
