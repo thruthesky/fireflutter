@@ -24,6 +24,8 @@ class ActionOption {
 ///
 /// 다른 사용자 프로필 보기를 1분에 3회로 제한 한 경우, 3회 제한이 걸리면, 이전에 본 다른 사용자의 프로필도 모두 볼 수 없다.
 /// 단, 이전에 본 사용자의 프로필을 다시 보기 해도, 카운트가 증가하지는 않는다.
+///
+///
 class ActionService {
   static ActionService? _instance;
   static ActionService get instance => _instance ??= ActionService._();
