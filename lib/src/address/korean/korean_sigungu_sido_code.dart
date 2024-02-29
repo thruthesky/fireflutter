@@ -577,22 +577,32 @@ List<AreaCode> getSiDoCodes({String languageCode = 'ko'}) =>
     siDoCodes[languageCode]!;
 
 /// Returns a list of AreaCode for the Si/Gun/Gu area code from the [siDo] code.
-List<AreaCode> getSiGunGuCodes(
-        {String languageCode = 'ko', required String siDo}) =>
-    siGunGuCodes[languageCode]![siDo]!;
+List<AreaCode> getSiGunGuCodes({
+  String languageCode = 'ko',
+  required String siDo,
+}) =>
+    siGunGuCodes[languageCode]?[siDo] ?? [];
 
 /// replace name to getSiDoName()
 String getSiDoNameFromCode({required String code, String languageCode = 'ko'}) {
-  AreaCode sido = getSiDoCodes(languageCode: languageCode)
-      .firstWhere((address) => address.code == code);
+  AreaCode sido = getSiDoCodes(languageCode: languageCode).firstWhere(
+      (address) => address.code == code,
+      orElse: () => (code: '', name: ''));
   return sido.name;
 }
 
 String getSiGunGuNameFromCode(
     {required String siDo, required String code, String languageCode = 'ko'}) {
-  AreaCode siGunGu = getSiGunGuCodes(languageCode: languageCode, siDo: siDo)
-      .firstWhere((address) => address.code == code);
-  return siGunGu.name;
+  List<AreaCode> siGunGuCodes =
+      getSiGunGuCodes(languageCode: languageCode, siDo: siDo);
+  if (siGunGuCodes.isNotEmpty) {
+    AreaCode siGunGu = siGunGuCodes.firstWhere(
+        (address) => address.code == code,
+        orElse: () => (code: '', name: ''));
+    return siGunGu.name;
+  } else {
+    return '';
+  }
 }
 
 /// [regionSiDo] is the AreaCode of the Si/Do area code from the first region code of [siDo].
