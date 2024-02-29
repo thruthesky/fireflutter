@@ -38,3 +38,25 @@
 
 
 - 채팅방의 경우, 입장을 할 때, action 기록을 한다. 즉, 1분에 2 개로 제한하면, 1분 내에 2번째 입장은 허용한다. 단, 채팅을 할 때, 제한을 계산해서 에러를 표시하는데, 입장은 이미 했으나, 입장한 후 제한에 걸리게된다. 즉, 채팅 메시지를 두번째에서 못보내게 된다.
+
+
+- 참고로 `init()` 함수는 여러번 호출 할 수 있고, 필요한 것만 init 하면 되고, 이전에 init 한 것들은 유지된다.
+
+
+  // void initActivityService() {
+  //   ActivityService.instance.init(
+  //     userView: true,
+  //     userLike: true,
+  //     postCreate: true,
+  //     commentCreate: true,
+  //   );
+  // }
+
+  // void initActionService() {
+  //   ActionService.instance.init(
+  //     userView: ActionOption(enable: true, limit: 2, minutes: 2),
+  //     chatJoin: ActionOption(enable: true, limit: 2, minutes: 2),
+  //     postCreate: ActionOption(enable: true, limit: 2, minutes: 2),
+  //     commentCreate: ActionOption(enable: true, limit: 2, minutes: 2),
+  //   );
+  // }
