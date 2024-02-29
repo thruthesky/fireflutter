@@ -127,6 +127,7 @@ class ActionService {
   Future<bool?> postCreateOverLimit() async {
     if (postCreate.enable == false) return null;
 
+    /// 게시판의 경우, 카테고리 한 개를 입력받아서, 그
     final snapshot = await Ref.postCreateAction
         .limitToLast(postCreate.limit)
         .orderByChild('createdAt')
