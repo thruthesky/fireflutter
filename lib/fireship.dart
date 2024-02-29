@@ -186,3 +186,6 @@ export 'src/user/widgets/buttons/chat_button.dart';
 export 'src/user/widgets/buttons/report_button.dart';
 export 'src/user/widgets/buttons/bookmark_button.dart';
 export 'src/user/widgets/buttons/block_button.dart';
+
+export 'src/user/widgets/ready/auth_ready.dart';
+export 'src/user/widgets/ready/my_doc_ready.dart';
