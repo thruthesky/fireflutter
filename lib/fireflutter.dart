@@ -56,7 +56,7 @@ export 'src/database/widgets/database.dart';
 export 'src/database/widgets/value.dart';
 
 /// Defines
-export 'fireship.defines.dart';
+export 'fireflutter.defines.dart';
 
 /// Extensions
 export 'src/extensions/color.extension.dart';
@@ -64,7 +64,7 @@ export 'src/extensions/string.extension.dart';
 export 'src/extensions/int.extension.dart';
 
 /// Functions
-export 'fireship.functions.dart';
+export 'fireflutter.functions.dart';
 
 /// Chat
 export 'src/chat/chat.service.dart';
@@ -145,7 +145,7 @@ export 'src/typesense/model/search_result.dart';
 
 /// Utility Theme
 export 'src/utility/theme.screen.dart';
-export 'src/utility/fireship.exception.dart';
+export 'src/utility/fireflutter.exception.dart';
 
 /// User
 export 'src/user/user.model.dart';
