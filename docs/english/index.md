@@ -1,6 +1,6 @@
-# Fireship
+# FireFlutter
 
-Fireship is a fast and powerful Flutter CMS library for real-time content management using Firebase Realtime Database.
+FireFlutter is a fast and powerful Flutter CMS library for real-time content management using Firebase Realtime Database.
 
 ## Installation
 
@@ -27,13 +27,13 @@ When sorting, the sorting field and value are stored in a separate node. For exa
 
 ### UI Design Customization
 
-Fireship provides a default design that can be completely customized.
+FireFlutter provides a default design that can be completely customized.
 
 You may want to view a user's profile in various places in the app. For example, in a chat room, in a user list, or when clicking on a user's photo in a forum post/comment, you can show the user's public profile. In this case, by simply calling the `UserService.instance.showPublicProfileScreen(uid: ...)` function uniformly, you can display the user's profile anywhere.
 
 If you want to customize the design directly rather than using the default design, you can customize it by calling `UserSerivce.instance.init(customize: UserCustomize(...))`.
 
-The names of customizable widgets start with `Default`. When customizing, you can simply copy and use the code from Fireship.
+The names of customizable widgets start with `Default`. When customizing, you can simply copy and use the code from FireFlutter.
 
 ## Messaging
 
