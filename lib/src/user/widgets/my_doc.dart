@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fireship/fireship.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 /// 로그인 사용자 정보가 변경될 때마다 rebuild 를 하는 위젯

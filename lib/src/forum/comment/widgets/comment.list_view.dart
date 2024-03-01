@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:fireship/fireship.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 /// A list of comments for a post

@@ -1,5 +1,4 @@
-import 'package:fireship/fireship.dart';
-import 'package:fireship/src/forum/comment/widgets/comment.content.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class CommentView extends StatefulWidget {

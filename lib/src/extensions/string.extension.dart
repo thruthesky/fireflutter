@@ -1,4 +1,4 @@
-import 'package:fireship/fireship.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 extension FireFlutterStringExtension on String {
   /// 문자를 정수로 변환

@@ -1,6 +1,6 @@
 // import 'package:flutter_test/flutter_test.dart';
 
-// import 'package:fireship/fireship.dart';
+// import 'package:fireflutter/fireflutter.dart';
 
 // void main() {
 //   test('adds one to input values', () {

@@ -1,4 +1,4 @@
-import 'package:fireship/fireship.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 /// # Search Result
 /// This is needed to prevent typing error in Search result

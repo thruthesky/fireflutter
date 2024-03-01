@@ -1,5 +1,4 @@
-import 'package:fireship/fireship.dart' as fireship;
-import 'package:fireship/fireship.defines.dart';
+import 'package:fireflutter/fireflutter.dart' as fireflutter;
 
 class UserPrivateModel {
   final String? email;
@@ -25,8 +24,8 @@ class UserPrivateModel {
   }
 
   static Future<UserPrivateModel> get() async {
-    final data = await fireship.get<Map>(
-      '${Folder.userPrivate}/${fireship.my!.uid}',
+    final data = await fireflutter.get<Map>(
+      '${fireflutter.Folder.userPrivate}/${fireflutter.my!.uid}',
     );
     return UserPrivateModel.fromJson(data ?? {});
   }
@@ -45,8 +44,8 @@ class UserPrivateModel {
       return;
     }
 
-    await fireship.update(
-      '${Folder.userPrivate}/${fireship.my!.uid}',
+    await fireflutter.update(
+      '${fireflutter.Folder.userPrivate}/${fireflutter.my!.uid}',
       data,
     );
   }

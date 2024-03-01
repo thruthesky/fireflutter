@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:fireship/fireship.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class DefaultPublicProfileScreen extends StatelessWidget {

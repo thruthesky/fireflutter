@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fireship/fireship.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 /// Firestore FirestoreUserModel Model
 class FirestoreUserModel {

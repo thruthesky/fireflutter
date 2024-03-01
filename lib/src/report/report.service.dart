@@ -1,4 +1,4 @@
-import 'package:fireship/fireship.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 class ReportService {
   static ReportService get instance => _instance ??= ReportService._();

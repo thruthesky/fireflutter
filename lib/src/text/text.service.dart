@@ -1,4 +1,4 @@
-import 'package:fireship/fireship.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 class TextService {
   static TextService? _instance;

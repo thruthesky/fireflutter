@@ -1,4 +1,4 @@
-import 'package:fireship/fireship.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 /// These are the hit from `hits` in Search Result Model
 

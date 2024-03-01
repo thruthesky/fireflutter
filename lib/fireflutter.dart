@@ -89,6 +89,8 @@ export 'src/chat/widgets/default_chat_room.list_view.dart';
 export 'src/chat/widgets/default_chat_room.members.screen.dart';
 export 'src/chat/chat.customize.dart';
 
+export 'src/chat/widgets/default_chat_room.member.dialog.dart';
+
 /// Database
 export 'src/database.functions.dart';
 
@@ -106,6 +108,8 @@ export 'src/forum/post/widgets/post.title.dart';
 export 'src/forum/post/widgets/post.list_view.dart';
 export 'src/forum/comment/widgets/comment.view.dart';
 export 'src/forum/comment/widgets/comment.list_view.dart';
+
+export 'src/forum/comment/widgets/comment.content.dart';
 
 /// message
 export 'src/messaging/messaging.service.dart';

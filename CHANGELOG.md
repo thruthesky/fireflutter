@@ -1,3 +1,7 @@
+## 0.3.16
+
+* Merging from fireship
+
 ## 0.0.8
 
 * Add more cloud funtions

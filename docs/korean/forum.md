@@ -64,7 +64,7 @@ Refer to [Post doc](post.md).
 ## 글 목록
 
 ```dart
-import 'package:fireship/fireship.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:silvers/defines/categories.dart';
 

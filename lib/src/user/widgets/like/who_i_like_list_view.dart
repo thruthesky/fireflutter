@@ -1,5 +1,5 @@
 import 'package:firebase_ui_database/firebase_ui_database.dart';
-import 'package:fireship/fireship.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/widgets.dart';
 
 class WhoILikeListView extends StatelessWidget {

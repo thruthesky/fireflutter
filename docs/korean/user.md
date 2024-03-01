@@ -468,7 +468,7 @@ ElevatedButton(
 아래와 같이 코딩을 하면 된다.
 
 ```dart
-import 'package:fireship/fireship.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class LikeScreen extends StatefulWidget {

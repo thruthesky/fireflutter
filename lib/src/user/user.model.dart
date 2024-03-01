@@ -1,10 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 
-import 'package:fireship/fireship.dart' as fs;
-import 'package:fireship/fireship.defines.dart';
-import 'package:fireship/fireship.functions.dart';
-import 'package:fireship/src/database.functions.dart';
-import 'package:fireship/src/user/user.service.dart';
+import 'package:fireflutter/fireflutter.dart' as ff;
 import 'package:geohash_plus/geohash_plus.dart';
 
 class UserModel {
@@ -203,16 +199,16 @@ class UserModel {
       order: json['order'] ?? 0,
       isAdmin: json['isAdmin'] ?? false,
       isVerified: json['isVerified'] ?? false,
-      blocks: json[Field.blocks] == null
+      blocks: json[ff.Field.blocks] == null
           ? null
           : List<String>.from(
-              (json[Field.blocks] as Map<Object?, Object?>)
+              (json[ff.Field.blocks] as Map<Object?, Object?>)
                   .entries
                   .map((x) => x.key),
             ),
-      idUrl: json[Field.idUrl] ?? '',
-      idUploadedAt: json[Field.idUploadedAt] ?? 0,
-      occupation: json[Field.occupation] ?? '',
+      idUrl: json[ff.Field.idUrl] ?? '',
+      idUploadedAt: json[ff.Field.idUploadedAt] ?? 0,
+      occupation: json[ff.Field.occupation] ?? '',
       nationality: json['nationality'] ?? '',
       siDo: json['siDo'] ?? '',
       siGunGu: json['siGunGu'] ?? '',
@@ -244,11 +240,11 @@ class UserModel {
       'order': order,
       'isAdmin': isAdmin,
       'isVerified': isVerified,
-      Field.blocks:
+      ff.Field.blocks:
           blocks == null ? null : List<dynamic>.from(blocks!.map((x) => x)),
-      Field.idUrl: idUrl,
-      Field.idUploadedAt: idUploadedAt,
-      Field.occupation: occupation,
+      ff.Field.idUrl: idUrl,
+      ff.Field.idUploadedAt: idUploadedAt,
+      ff.Field.occupation: occupation,
       'nationality': nationality,
       'siDo': siDo,
       'siGunGu': siGunGu,
@@ -309,7 +305,7 @@ class UserModel {
 
   /// 사용자 정보 node 전체를 UserModel 에 담아 리턴한다.
   static Future<UserModel?> get(String uid) async {
-    final nodeData = await fs.get<Map<dynamic, dynamic>>('users/$uid');
+    final nodeData = await ff.get<Map<dynamic, dynamic>>('users/$uid');
     if (nodeData == null) {
       return null;
     }
@@ -332,10 +328,10 @@ class UserModel {
   /// 사용자의 특정 필만 가져와서 리턴한다.
   ///
   /// ```dart
-  /// UserModel.getField(uid, Field.isVerified);
+  /// UserModel.getField(uid, ff.Field.isVerified);
   /// ```
   static Future<T?> getField<T>(String uid, String field) async {
-    final nodeData = await fs.get('users/$uid/$field');
+    final nodeData = await ff.get('users/$uid/$field');
     if (nodeData == null) {
       return null;
     }
@@ -351,8 +347,8 @@ class UserModel {
     String? displayName,
     String? photoUrl,
   }) async {
-    await fs.set(
-      '${Folder.users}/$uid',
+    await ff.set(
+      '${ff.Folder.users}/$uid',
       {
         'displayName': displayName,
         'photoUrl': photoUrl,
@@ -362,7 +358,7 @@ class UserModel {
     );
 
     final created = await UserModel.get(uid);
-    UserService.instance.onCreate?.call(created!);
+    ff.UserService.instance.onCreate?.call(created!);
     return created!;
   }
 
@@ -420,7 +416,7 @@ class UserModel {
       if (order != null) 'order': order,
       if (idUploadedAt != null) 'idUploadedAt': idUploadedAt,
       if (idUrl != null) 'idUrl': idUrl,
-      if (occupation != null) Field.occupation: occupation,
+      if (occupation != null) ff.Field.occupation: occupation,
       if (nationality != null) 'nationality': nationality,
       if (siDo != null) 'siDo': siDo,
       if (siGunGu != null) 'siGunGu': siGunGu,
@@ -441,7 +437,7 @@ class UserModel {
     }
 
     // 업데이트부터 하고
-    await fs.update(
+    await ff.update(
       'users/$uid',
       data,
     );
@@ -456,7 +452,7 @@ class UserModel {
           displayName: displayName, photoUrl: photoUrl);
     }
 
-    UserService.instance.onUpdate?.call(this);
+    ff.UserService.instance.onUpdate?.call(this);
     return this;
   }
 
@@ -478,10 +474,10 @@ class UserModel {
       await photoRef.remove();
     } else {
       await photoRef.update({
-        if (photoUrl != null) Field.photoUrl: photoUrl,
-        if (displayName != null) Field.displayName: displayName,
+        if (photoUrl != null) ff.Field.photoUrl: photoUrl,
+        if (displayName != null) ff.Field.displayName: displayName,
         if (photoUrl != null)
-          Field.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
+          ff.Field.updatedAt: DateTime.now().millisecondsSinceEpoch * -1,
       });
     }
   }
@@ -491,11 +487,11 @@ class UserModel {
   /// update() 메소드에 필드를 null 로 주면, 해당 필드가 삭제되지 않고 그냐 그대로 유지된다.
   /// 그래서, delete() 메소드를 따로 만들어서 사용한다.
   Future<void> deletePhotoUrl() async {
-    await fs.update(
+    await ff.update(
       'users/$uid',
       {
-        Field.photoUrl: null,
-        Field.hasPhotoUrl: false,
+        ff.Field.photoUrl: null,
+        ff.Field.hasPhotoUrl: false,
       },
     );
 
@@ -507,8 +503,8 @@ class UserModel {
   /// 관리자가 수동으로 신분증을 인증하면, 해당 사용자는 완전히 인증된 것이다.
   Future<void> setVerified() async {
     await ref.update({
-      Field.isVerified: true,
-      Field.idUploadedAt: null,
+      ff.Field.isVerified: true,
+      ff.Field.idUploadedAt: null,
     });
   }
 
@@ -517,8 +513,8 @@ class UserModel {
   /// 해당 사용자는 인증 대기 목록에 표시된다.
   Future<void> setUnverified() async {
     await ref.update({
-      Field.isVerified: null,
-      Field.idUploadedAt: DateTime.now().millisecondsSinceEpoch,
+      ff.Field.isVerified: null,
+      ff.Field.idUploadedAt: DateTime.now().millisecondsSinceEpoch,
     });
   }
 
@@ -535,8 +531,8 @@ class UserModel {
   /// 사용자는 다시 신분증을 업로드 해야 한다.
   Future<void> deleteVerification() async {
     await ref.update({
-      Field.idUrl: null,
-      Field.idUploadedAt: null,
+      ff.Field.idUrl: null,
+      ff.Field.idUploadedAt: null,
     });
   }
 
@@ -547,7 +543,7 @@ class UserModel {
   ///
   Future block(String otherUserUid) async {
     if (otherUserUid == uid) {
-      throw fs.Issue(fs.Code.blockSelf, 'You cannot block yourself.');
+      throw ff.Issue(ff.Code.blockSelf, 'You cannot block yourself.');
     }
     //
     if (isBlocked(otherUserUid)) {
@@ -561,7 +557,7 @@ class UserModel {
 
   /// Block a user
   Future blockUser(String otherUserUid) async {
-    return await ref.child(Field.blocks).child(otherUserUid).set(
+    return await ref.child(ff.Field.blocks).child(otherUserUid).set(
           ServerValue.timestamp,
         );
   }
@@ -570,14 +566,14 @@ class UserModel {
   ///
   /// Remove the user from the block list by setting null value
   Future unblockUser(String otherUserUid) async {
-    return await ref.child(Field.blocks).child(otherUserUid).set(null);
+    return await ref.child(ff.Field.blocks).child(otherUserUid).set(null);
   }
 
   /// Like other user
   ///
   /// Returns true if the user has just liked, false if unliked.
   Future like(String otherUserUid) async {
-    fs.ActivityModel.userLike(otherUserUid);
-    return await toggle(fs.Path.like(my!.uid, otherUserUid));
+    ff.ActivityModel.userLike(otherUserUid);
+    return await ff.toggle(ff.Path.like(ff.my!.uid, otherUserUid));
   }
 }

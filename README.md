@@ -15,8 +15,8 @@ A lightning-fast, robust CMS for seamless real-time content management in app de
 
 See the following documents:
 
-- [English Guideline](https://thruthesky.github.io/fireship/english/)
-- [한국어 매뉴얼](https://thruthesky.github.io/fireship/korean/)
+- [English Guideline](https://thruthesky.github.io/fireflutter/english/)
+- [한국어 매뉴얼](https://thruthesky.github.io/fireflutter/korean/)
 
 
 ## TODO

@@ -26,7 +26,7 @@ The url doesn't have to be a user's avatar. It can be used in any photo URLs.
 We can also use `anonymousUrl`, a photo for anonymous picture.
 
 ```dart
-import 'package:fireship/fireship.dart';
+import 'package:fireflutter/fireflutter.dart';
 ...
 // Note that this is a different approach from AnonymousAvatar Widget
 Avatar(photoUrl: anonymousUrl);
