@@ -237,11 +237,7 @@ class CommentModel {
     CommentModel? parent,
     List<String>? urls,
   }) async {
-    if (ActionService.instance.commentCreate.isOverLimit) {
-      if (await ActionService.instance.commentCreateOverLimit() != true) {
-        return;
-      }
-    }
+    if (await ActionService.instance.commentCreate.isOverLimit()) return;
 
     Map<String, dynamic> data = {
       'content': content,
