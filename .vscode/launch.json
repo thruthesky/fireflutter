@@ -357,6 +357,16 @@
       // "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
+      "name": "Wemeet (Noe) TEST - iPad Air(5th generation",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPad Air (5th generation)",
+      "flutterMode": "debug",
+      "cwd": "apps/wemeet",
+      "program": "lib/main.dart",
+      // "args": ["-v", "--dart-define", "MODE=test"]
+    },
+    {
       "name": "Wemeet (Noe) TEST - SM J737S)",
       "request": "launch",
       "type": "dart",

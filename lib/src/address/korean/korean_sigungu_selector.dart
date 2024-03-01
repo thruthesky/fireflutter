@@ -12,14 +12,18 @@ class KoreanSiGunGuSelector extends StatefulWidget {
     this.languageCode = 'ko',
     this.initSiDoCode,
     this.initSiGunGuCode,
+    this.showSiGunGu = false,
   });
 
   final String languageCode;
   final Function(AreaCode?) onChangedSiDoCode;
   final Function(AreaCode, AreaCode?) onChangedSiGunGuCode;
-  // for review sir song
   final String? initSiDoCode;
   final String? initSiGunGuCode;
+
+  // adding showSiGunGu this property will dispplay the SiGunGu dropdown but if
+  // siDo is not selected or not exist the dropdown is disable.
+  final bool showSiGunGu;
 
   @override
   State<KoreanSiGunGuSelector> createState() => _KoreanSiGunGuSelectorState();
@@ -30,7 +34,6 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
   String? siGunGuCode;
   List<AreaCode>? secondaryAddresses;
 
-  // for review sir song
   @override
   void initState() {
     super.initState();
@@ -96,7 +99,7 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
                 }),
           ),
         ),
-        if (siDoCode != null) ...[
+        if (siDoCode != null || widget.showSiGunGu) ...[
           const SizedBox(height: 16),
           InputDecorator(
             decoration: const InputDecoration(
@@ -112,31 +115,37 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
                   isExpanded: true, // 화살표 아이콘을 오른쪽에 밀어 붙이기
                   menuMaxHeight: 300, // 높이 조절
                   items: [
-                    const DropdownMenuItem(
+                    DropdownMenuItem(
                       value: null,
-                      child: Text('Select Region'),
+                      child: Text(siDoCode != null
+                          ? 'Select Region'
+                          : 'No selected province'),
                     ),
-                    ...secondaryAddresses!.map((addr) {
-                      return DropdownMenuItem(
-                        value: addr.code,
-                        child: Text(addr.name),
-                      );
-                    }).toList(),
+                    if (siDoCode != null) ...{
+                      ...secondaryAddresses!.map((addr) {
+                        return DropdownMenuItem(
+                          value: addr.code,
+                          child: Text(addr.name),
+                        );
+                      }).toList(),
+                    }
                   ],
                   value: siGunGuCode,
-                  onChanged: (value) {
-                    setState(() {
-                      siGunGuCode = value;
-                    });
+                  onChanged: siDoCode != null
+                      ? (value) {
+                          setState(() {
+                            siGunGuCode = value;
+                          });
 
-                    widget.onChangedSiGunGuCode(
-                        getSiDoCodes(languageCode: widget.languageCode)
-                            .firstWhere((e) => e.code == siDoCode),
-                        siGunGuCode == null
-                            ? null
-                            : secondaryAddresses!
-                                .firstWhere((e) => e.code == siGunGuCode));
-                  }),
+                          widget.onChangedSiGunGuCode(
+                              getSiDoCodes(languageCode: widget.languageCode)
+                                  .firstWhere((e) => e.code == siDoCode),
+                              siGunGuCode == null
+                                  ? null
+                                  : secondaryAddresses!.firstWhere(
+                                      (e) => e.code == siGunGuCode));
+                        }
+                      : null),
             ),
           ),
         ],
