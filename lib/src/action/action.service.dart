@@ -3,8 +3,13 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireship/fireship.dart';
 
+/// ActionOption
+///
+/// id 는 어떤 액션인지 구분을 위해서 쓰인다.
+/// 예를 들어, userView 이면,
 class ActionOption {
-  late DatabaseReference ref;
+  String id;
+  DatabaseReference ref;
   bool enable;
   int limit;
   int minutes;
@@ -14,6 +19,8 @@ class ActionOption {
   bool get isOverLimit => count >= limit;
 
   ActionOption({
+    required this.id,
+    required this.ref,
     this.enable = false,
     this.limit = 100,
     this.minutes = 10000,
