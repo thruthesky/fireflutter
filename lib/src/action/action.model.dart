@@ -1,10 +1,21 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireship/fireship.dart';
 
+/// ActionModel
+///
+/// 액션 모델은, 사용자의 활동을 기록하는 모델이다.
+/// Fireship 의 적절한 위치에서 이 모델의 [userProfileView], [chatJoin], [postCreate], [commentCreate] 등의 함수를
+/// 호출하여 사용자의 활동을 기록하면 된다.
 class ActionModel {
   final String key;
+
+  /// [category] 는 게시판의 경우만 필요하다. key 가 게시판의 id 이다.
   final String? category;
+
+  /// [postId] 는 코멘트의 경우만 필요하다. key 가 코멘트의 id 이다.
   final String? postId;
+
+  ///
   final int createdAt;
 
   const ActionModel({
@@ -29,7 +40,7 @@ class ActionModel {
 
   static Future<void> userView(String otherUserUid) async {
     if (myUid == null) return;
-    if (ActionService.instance.userView.enable == false) return;
+    if (ActionService.instance.userProfileView.ref == null) return;
 
     final ref = Ref.userViewAction.child(otherUserUid);
     final snapshot = await ref.get();
@@ -44,7 +55,7 @@ class ActionModel {
 
   static Future<void> chatJoin(String roomId) async {
     if (myUid == null) return;
-    if (ActionService.instance.chatJoin.enable == false) return;
+    if (ActionService.instance.chatJoin.ref == null) return;
 
     final ref = Ref.chatJoinAction.child(roomId);
     final snapshot = await ref.get();
@@ -65,7 +76,7 @@ class ActionModel {
     required String postId,
   }) async {
     if (myUid == null) return;
-    if (ActionService.instance.postCreate.enable == false) return;
+    if (ActionService.instance.postCreate.ref == null) return;
 
     final ref = Ref.postCreateAction.child(postId);
 
@@ -80,7 +91,7 @@ class ActionModel {
     required String commentId,
   }) async {
     if (myUid == null) return;
-    if (ActionService.instance.commentCreate.enable == false) return;
+    if (ActionService.instance.commentCreate.ref == null) return;
     final ref = Ref.commentCreateAction.child(commentId);
     return await ref.set({
       'createdAt': ServerValue.timestamp,

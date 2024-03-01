@@ -7,16 +7,25 @@ class ReportMyListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("ReportMyListView build: ${Ref.reports.path}");
     return FirebaseDatabaseListView(
-      query: Ref.reports.child(myUid!),
+      query: Ref.reports.orderByChild('uid').equalTo(myUid!),
+      errorBuilder: (context, error, stackTrace) {
+        dog("Error: $error");
+        return Center(
+          child: Text('Error: $error'),
+        );
+      },
       itemBuilder: (context, snapshot) {
         final ReportModel report =
             ReportModel.fromValue(snapshot.value, snapshot.key!);
 
         if (report.isPost) {
           return FutureBuilder<PostModel?>(
-            future:
-                PostModel.get(category: report.category!, id: report.postId!),
+            future: PostModel.get(
+              category: report.category!,
+              id: report.postId!,
+            ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return ListTile(

@@ -7,7 +7,7 @@ class Path {
 
   /// Action
   static const String action = Folder.action;
-  static String get userViewAction => '$action/$myUid/user-view';
+  static String get userViewAction => '$action/$myUid/user-profile-view';
   static String get postCreateAction => '$action/$myUid/post-create';
   static String get commentCreateAction => '$action/$myUid/comment-create';
   static String get chatJoinAction => '$action/$myUid/chat-join';
@@ -15,7 +15,7 @@ class Path {
   /// Activity
   static const String activity = Folder.activity;
   static String get userLikeActivity => '$activity/$myUid/user-likes';
-  static String get userViewActivity => '$activity/$myUid/user-view';
+  static String get userViewActivity => '$activity/$myUid/user-profile-view';
   static String get postCreateActivity => '$activity/$myUid/post-create';
   static String get commentCreateActivity => '$activity/$myUid/comment-create';
   static String get chatJoinActivity => '$activity/$myUid/chat-join';

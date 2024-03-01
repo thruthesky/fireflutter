@@ -10,7 +10,7 @@
 
 ## 데이터베이스
 
-- `activity/<uid>/user-view` 는 다른 사용자의 공개 프로필 보기.
+- `activity/<uid>/user-profile-view` 는 다른 사용자의 공개 프로필 보기.
 - `activity/<uid>/user-like` 는 사용자 프로필 좋아요.
 - `activity/<uid>/post-create` 는 글 생성.
 - `activity/<uid>/comment-create` 은 코멘트 생성.

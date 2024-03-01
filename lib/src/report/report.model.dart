@@ -3,6 +3,7 @@ import 'package:fireship/fireship.dart';
 
 class ReportModel {
   String key;
+  String uid;
   String? otherUserUid;
   String? chatRoomId;
   String? postId;
@@ -18,6 +19,7 @@ class ReportModel {
 
   ReportModel({
     required this.key,
+    required this.uid,
     required this.otherUserUid,
     required this.chatRoomId,
     required this.category,
@@ -30,6 +32,7 @@ class ReportModel {
   factory ReportModel.fromJson(Map<dynamic, dynamic> json, String key) {
     return ReportModel(
       key: key,
+      uid: json['uid'],
       otherUserUid: json['otherUserUid'],
       chatRoomId: json['chatRoomId'],
       category: json['category'],
@@ -46,6 +49,7 @@ class ReportModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'uid': uid,
       'otherUserUid': otherUserUid,
       'chatRoomId': chatRoomId,
       'category': category,
@@ -58,7 +62,7 @@ class ReportModel {
 
   @override
   String toString() {
-    return 'ReportModel(otherUserUid: $otherUserUid, chatRoomId: $chatRoomId, category: $category, postId: $postId, commentId: $commentId, reason: $reason, createdAt: $createdAt)';
+    return 'ReportModel(uid: $uid, otherUserUid: $otherUserUid, chatRoomId: $chatRoomId, category: $category, postId: $postId, commentId: $commentId, reason: $reason, createdAt: $createdAt)';
   }
 
   static Future<void> create({
@@ -75,7 +79,8 @@ class ReportModel {
             'category or commentId must be provided when postId is provided');
       }
     }
-    return await Ref.reports.child(myUid!).push().set({
+    return await Ref.reports.push().set({
+      'uid': myUid!,
       'reason': reason,
       'otherUserUid': otherUserUid,
       'category': category,
