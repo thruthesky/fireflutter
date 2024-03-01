@@ -220,11 +220,13 @@ class UserService {
     final String userUid = uid ?? user!.uid;
 
     ///
-    if (ActionService.instance.userView.isOverLimit) {
-      if (await ActionService.instance.userViewOverLimit() != true) {
-        return;
-      }
-    }
+    // if (ActionService.instance.userView.isOverLimit) {
+    //   if (await ActionService.instance.userViewOverLimit() != true) {
+    //     return;
+    //   }
+    // }
+
+    if (await ActionService.instance.userProfileView.isOverLimit()) return;
 
     if (context.mounted) {
       showGeneralDialog(

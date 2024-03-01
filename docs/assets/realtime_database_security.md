@@ -1,7 +1,13 @@
 ```json
 {
   "rules": {
-    // Action
+    
+
+    "test": {
+      ".read": true,
+      ".write": true
+    },
+          // Action
     "action": {
       "$uid": {
         ".read": true,
@@ -98,17 +104,10 @@
     "chat-joins": {
       ".read": true,
       "$uid": {
-        ".write": true
-      }
+        ".write": true,
+        ".indexOn": "order"
+      },
     },
-    // Fireship - reports
-    "reports": {
-      "$uid": {
-        ".read": "$uid === auth.uid || root.child('admins').hasChild(auth.uid)",
-        ".write": "$uid === auth.uid || root.child('admins').hasChild(auth.uid)"
-      }
-    },
-      
     // Fireship - posts
     "posts": {
       ".read": true,
@@ -173,9 +172,25 @@
             // 
             ".validate": "!data.exists() || data.parent().child('uid').val() === auth.uid"
           }
-        }
+        },
+        ".indexOn" : ["order"]  
       }
+    },
+    "bookmarks": {
+      "$uid": {
+        ".read": "$uid == auth.uid",
+        ".write": "$uid == auth.uid"
+      }
+    },
+    // Fireship - reports
+    "reports": {
+        ".read": true,
+        "$id": {
+          ".write": "newData.child('uid').val() === auth.uid || root.child('admins').hasChild(auth.uid)",
+          ".indexOn": ["uid"]
+        }
     }
+
   }
 }
 ```

@@ -34,11 +34,11 @@ class ForumService {
     BuildContext context, {
     required String category,
   }) async {
-    if (ActionService.instance.postCreate.isOverLimit) {
-      if (await ActionService.instance.postCreateOverLimit() != true) {
-        return null;
-      }
+    if (iam.isDisabled) {
+      error(context: context, message: 'You are disabled.');
+      return;
     }
+    if (await ActionService.instance.postCreate.isOverLimit()) return;
 
     if (context.mounted) {
       await showGeneralDialog(

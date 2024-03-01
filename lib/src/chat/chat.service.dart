@@ -64,11 +64,8 @@ class ChatService {
     ChatRoomModel? room,
   }) async {
     /// 채팅방 입장을 할 때, DB 업데이트를 하므로, 메시지를 보낼 때에는 해제 계산이 되어져 있다.
-    if (ActionService.instance.chatJoin.isOverLimit) {
-      if (await ActionService.instance.chatJoinOverLimit() != true) {
-        return;
-      }
-    }
+    if (await ActionService.instance.chatJoin.isOverLimit()) return;
+
     if (context.mounted) {
       return showGeneralDialog(
         context: context,
