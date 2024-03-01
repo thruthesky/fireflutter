@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 
 /// Firestore FirestoreUserModel Model
+///
+/// This is used for mirroring the user data in the firestore.
 class FirestoreUserModel {
   String uid;
   String name;

@@ -55,9 +55,10 @@ class _SimpleEmailPasswordLoginFormState
               dog("Password: ${passwordController.text}");
 
               if (emailController.text.trim().isEmpty) {
-                throw FireshipException('input-email', 'Input email to login');
+                throw FireFlutterException(
+                    'input-email', 'Input email to login');
               } else if (passwordController.text.trim().isEmpty) {
-                throw FireshipException(
+                throw FireFlutterException(
                     'input-password', 'Input password to login');
               }
 
