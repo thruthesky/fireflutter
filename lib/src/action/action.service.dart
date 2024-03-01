@@ -4,7 +4,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:fireship/fireship.dart';
 
 class ActionOption {
-  late DatabaseReference ref;
+  String id;
+  DatabaseReference ref;
   bool enable;
   int limit;
   int minutes;
@@ -14,6 +15,8 @@ class ActionOption {
   bool get isOverLimit => count >= limit;
 
   ActionOption({
+    required this.id,
+    required this.ref,
     this.enable = false,
     this.limit = 100,
     this.minutes = 10000,
