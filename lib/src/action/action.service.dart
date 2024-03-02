@@ -8,8 +8,22 @@ import 'package:fireflutter/fireflutter.dart';
 /// 만약, 특정 액션을 설정을 원하지 않는다면, ref 에 null 을 저장하면 된다. 그러면, 해당 액션은
 /// 제한 설정을 하지 않는다.
 class ActionOption {
+  /// 주의: ref 에 직접 쿼리를 하지 않고, query 를 사용해야 한다.
   DatabaseReference? ref;
-  Query? get query => ref?.limitToLast(limit).orderByChild('createdAt');
+  Query? get query {
+    /// 게시판의 경우, 카테고리 별로 제한을 한다.
+    ///
+    /// TODO 문제 발생. RTDB 에서 내가 쓴 글의 마지막 5개와 같이 조건 검색을 할 수 없다. 그래서, 액션을 저장할 때,
+    /// TODO 글의 경우, /action/<uid>/postCreate/{category}/{postId} 와 같이 저장해야지만, 해결이 된다.
+    /// TODO 그러면 모든 것이 쉽게 해결 된다.
+    if (category != null) {
+      return ref?.limitToLast(limit).orderByChild('createdAt');
+    }
+    return ref?.limitToLast(limit).orderByChild('createdAt');
+  }
+
+  /// 게시판의 경우, 카테고리를 지정하여, 여러개의 게시판에 대해서 각각의 제한을 설정할 수 있다.
+  String? category;
   int limit;
   int seconds;
   int count;
@@ -67,8 +81,7 @@ class ActionOption {
 
   /// 디버깅을 위해서, 남은 시간을 로그로 남긴다.
   logTimeleft() async {
-    final snapshot =
-        await ref!.limitToLast(limit).orderByChild('createdAt').get();
+    final snapshot = await query!.get();
     if (snapshot.exists) {
       final list =
           snapshot.children.map((e) => ActionModel.fromSnapshot(e)).toList();
@@ -95,7 +108,7 @@ class ActionService {
 
   ActionOption userProfileView = ActionOption(ref: null);
   ActionOption chatJoin = ActionOption(ref: null);
-  ActionOption postCreate = ActionOption(ref: null);
+  Map<String, ActionOption> postCreate = {};
   ActionOption commentCreate = ActionOption(ref: null);
 
   List<StreamSubscription> subs = [];
@@ -103,7 +116,7 @@ class ActionService {
   init({
     ActionOption? userProfileView,
     ActionOption? chatJoin,
-    ActionOption? postCreate,
+    Map<String, ActionOption>? postCreate,
     ActionOption? commentCreate,
   }) {
     if (userProfileView != null) {
@@ -116,7 +129,10 @@ class ActionService {
     }
     if (postCreate != null) {
       this.postCreate = postCreate;
-      this.postCreate.ref = Ref.postCreateAction;
+      for (final key in postCreate.keys) {
+        postCreate[key]!.ref = Ref.postCreateAction;
+        postCreate[key]!.category = key;
+      }
     }
     if (commentCreate != null) {
       this.commentCreate = commentCreate;
@@ -131,8 +147,12 @@ class ActionService {
       sub.cancel();
     }
     subs.clear();
-    final subscriptions = [userProfileView, chatJoin, postCreate, commentCreate]
-        .where((e) => e.ref != null);
+    final subscriptions = [
+      userProfileView,
+      chatJoin,
+      ...postCreate.values,
+      commentCreate
+    ];
     for (final actionOption in subscriptions) {
       // listen user view
       // print('---> ActionService.listenActions() - action: ${action.limit}');
@@ -145,105 +165,15 @@ class ActionService {
               // print(
               //     'listen actions; ${action.ref.path} -> ${event.snapshot.children.length}');
               actionOption.count = countFromSnapshot(
-                  snapshot: event.snapshot, option: actionOption);
+                snapshot: event.snapshot,
+                option: actionOption,
+              );
             }
           },
         ),
       );
     }
   }
-
-  // Future<bool?> userViewOverLimit() async {
-  //   if (userView.enable == false) return null;
-
-  //   final snapshot = await Ref.userViewAction
-  //       .limitToLast(userView.limit)
-  //       .orderByChild('createdAt')
-  //       .get();
-
-  //   if (snapshot.exists == false) {
-  //     userView.count = 0;
-  //     return true;
-  //   } else {
-  //     userView.count = _updateCountFromSnapshot(snapshot, userView);
-  //     if (userView.isOverLimit == false) return true;
-  //   }
-
-  //   if (userView.overLimit != null) {
-  //     return await userView.overLimit!();
-  //   }
-  //   return null;
-  // }
-
-  // Future<bool?> postCreateOverLimit() async {
-  //   if (postCreate.enable == false) return null;
-
-  //   /// 게시판의 경우, 카테고리 한 개를 입력받아서, 그
-  //   final snapshot = await Ref.postCreateAction
-  //       .limitToLast(postCreate.limit)
-  //       .orderByChild('createdAt')
-  //       .get();
-
-  //   if (snapshot.exists == false) {
-  //     postCreate.count = 0;
-  //     return true;
-  //   } else {
-  //     postCreate.count = _updateCountFromSnapshot(snapshot, postCreate);
-  //     if (postCreate.isOverLimit == false) return true;
-  //   }
-  //   return await postCreate.overLimit?.call();
-  // }
-
-  // Future<bool?> commentCreateOverLimit() async {
-  //   if (commentCreate.enable == false) return null;
-  //   final snapshot = await Ref.commentCreateAction
-  //       .limitToLast(commentCreate.limit)
-  //       .orderByChild('createdAt')
-  //       .get();
-
-  //   if (snapshot.exists == false) {
-  //     commentCreate.count = 0;
-  //     return true;
-  //   } else {
-  //     commentCreate.count = _updateCountFromSnapshot(snapshot, commentCreate);
-  //     if (commentCreate.isOverLimit == false) return true;
-  //   }
-  //   return await commentCreate.overLimit?.call();
-  // }
-
-  // ///
-  // Future<bool?> chatJoinOverLimit() async {
-  //   if (chatJoin.enable == false) return null;
-
-  //   final snapshot = await Ref.chatJoinAction
-  //       .limitToLast(chatJoin.limit)
-  //       .orderByChild('createdAt')
-  //       .get();
-
-  //   if (snapshot.exists == false) {
-  //     chatJoin.count = 0;
-  //     return true;
-  //   } else {
-  //     chatJoin.count = _updateCountFromSnapshot(snapshot, chatJoin);
-  //     if (chatJoin.isOverLimit == false) return true;
-  //   }
-  //   return await chatJoin.overLimit?.call();
-  // }
-
-  // @Deprecated('dont use this')
-  // _updateCountFromSnapshot(DataSnapshot snapshot, ActionOption option) {
-  //   int count = 0;
-  //   final overtime =
-  //       DateTime.now().millisecondsSinceEpoch - (option.minutes * 60 * 1000);
-  //   for (var snapshot in snapshot.children) {
-  //     final actoin = ActionModel.fromSnapshot(snapshot);
-  //     // print(" ${actoin.createdAt.toHis} > ${overtime.toHis}");
-  //     if (actoin.createdAt > overtime) {
-  //       count++;
-  //     }
-  //   }
-  //   return count;
-  // }
 
   /// Snapshot 의 데이터들에서 createdAt 이 seconds 보다 오래된 갯수를 리턴한다.
   countFromSnapshot({

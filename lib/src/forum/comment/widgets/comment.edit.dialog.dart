@@ -2,6 +2,11 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+/// Edit comment dialog
+///
+/// This dialog is used to create or update a comment.
+///
+/// This dialog pops with `true` when the comment is created or updated.
 class CommentEditDialog extends StatefulWidget {
   const CommentEditDialog({
     super.key,

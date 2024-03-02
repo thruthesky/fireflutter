@@ -30,15 +30,23 @@ class ForumService {
     this.onCommentDelete = onCommentDelete;
   }
 
+  /// Show post create screen when the user taps on the post creation button
+  ///
+  ///
   Future showPostCreateScreen(
     BuildContext context, {
     required String category,
   }) async {
-    if (iam.isDisabled) {
+    if (iam.disabled) {
       error(context: context, message: 'You are disabled.');
       return;
     }
-    if (await ActionService.instance.postCreate.isOverLimit()) return;
+
+    if (ActionService.instance.postCreate[category] != null) {
+      if (await ActionService.instance.postCreate[category]!.isOverLimit()) {
+        return;
+      }
+    }
 
     if (context.mounted) {
       await showGeneralDialog(
@@ -82,16 +90,24 @@ class ForumService {
     bool? showUploadDialog,
     bool? focusOnTextField,
   }) async {
-    return showModalBottomSheet<bool?>(
-      context: context,
-      isScrollControlled: true, // 중요: 이것이 있어야 키보드가 bottom sheet 을 위로 밀어 올린다.
-      builder: (_) => CommentEditDialog(
-        post: post,
-        parent: parent,
-        showUploadDialog: showUploadDialog,
-        focusOnTextField: focusOnTextField,
-      ),
-    );
+    if (iam.disabled) {
+      error(context: context, message: 'You are disabled.');
+      return false;
+    }
+    if (await ActionService.instance.commentCreate.isOverLimit()) return false;
+    if (context.mounted) {
+      return showModalBottomSheet<bool?>(
+        context: context,
+        isScrollControlled: true, // 중요: 이것이 있어야 키보드가 bottom sheet 을 위로 밀어 올린다.
+        builder: (_) => CommentEditDialog(
+          post: post,
+          parent: parent,
+          showUploadDialog: showUploadDialog,
+          focusOnTextField: focusOnTextField,
+        ),
+      );
+    }
+    return null;
   }
 
   /// Returns true if comment is created or updated.

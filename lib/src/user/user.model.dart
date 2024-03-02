@@ -39,6 +39,7 @@ class UserModel {
 
   String stateMessage;
   bool isDisabled;
+  bool get disabled => isDisabled;
   int birthYear;
   int birthMonth;
   int birthDay;

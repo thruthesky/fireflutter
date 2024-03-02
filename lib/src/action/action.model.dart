@@ -76,7 +76,11 @@ class ActionModel {
     required String postId,
   }) async {
     if (myUid == null) return;
-    if (ActionService.instance.postCreate.ref == null) return;
+    if (ActionService.instance.postCreate[category] != null) {
+      if (await ActionService.instance.postCreate[category]!.isOverLimit()) {
+        return;
+      }
+    }
 
     final ref = Ref.postCreateAction.child(postId);
 

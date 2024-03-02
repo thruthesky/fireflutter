@@ -203,9 +203,13 @@ class PostModel {
     required String category,
     List<String>? urls,
   }) async {
-    if (iam.isDisabled) return null;
+    if (iam.disabled) return null;
 
-    if (await ActionService.instance.postCreate.isOverLimit()) return null;
+    if (ActionService.instance.postCreate[category] != null) {
+      if (await ActionService.instance.postCreate[category]!.isOverLimit()) {
+        return null;
+      }
+    }
 
     final data = {
       'uid': myUid,
