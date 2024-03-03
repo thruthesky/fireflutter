@@ -29,7 +29,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
 
   bool get isEdit => widget.roomId != null;
   bool get isCreate => widget.roomId == null;
-  ChatRoomModel? room;
+  ChatRoom? room;
 
   double? progress;
   @override
@@ -41,7 +41,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
   init() async {
     if (isEdit) {
       /// 채팅방 수정의 경우, 기존 채팅방 정보를 가져와 초기화 한다.
-      room = await ChatRoomModel.get(widget.roomId!);
+      room = await ChatRoom.get(widget.roomId!);
       nameController.text = room?.name ?? '';
       descriptionController.text = room?.description ?? '';
       open = room?.isGroupChat ?? false;
@@ -223,7 +223,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
               return;
             }
             if (isCreate) {
-              final room = await ChatRoomModel.create(
+              final room = await ChatRoom.create(
                 name: nameController.text,
                 description: descriptionController.text,
                 isOpenGroupChat: open,

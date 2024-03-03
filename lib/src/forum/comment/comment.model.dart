@@ -2,7 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class CommentModel {
+class Comment {
   /// Paths and Refs
   static String nodeName = 'comments';
   static String comments(String postId) => '$nodeName/$postId';
@@ -57,7 +57,7 @@ class CommentModel {
     }
   }
 
-  CommentModel({
+  Comment({
     required this.ref,
     required this.id,
     required this.parentId,
@@ -72,8 +72,8 @@ class CommentModel {
   });
 
   // @Deprecated()
-  // factory CommentModel.fromSnapshot(DataSnapshot snapshot) {
-  //   return CommentModel.fromMap(
+  // factory Comment.fromSnapshot(DataSnapshot snapshot) {
+  //   return Comment.fromMap(
   //     snapshot.value as Map,
   //     snapshot.key!,
   //     // category: snapshot.ref.parent!.parent!.parent!.key!,
@@ -81,14 +81,14 @@ class CommentModel {
   //   );
   // }
 
-  factory CommentModel.fromJson(
+  factory Comment.fromJson(
     Map<dynamic, dynamic> map,
     String id, {
     // required String category,
     required String postId,
   }) {
     final ref = commentRef(postId, id);
-    return CommentModel(
+    return Comment(
       ref: ref,
       id: id,
       parentId: map['parentId'],
@@ -103,9 +103,9 @@ class CommentModel {
     );
   }
 
-  /// Create a CommentModel from a post with empty values.
+  /// Create a Comment from a post with empty values.
   ///
-  /// Use this factory to create a CommentModel from a post with empty values.
+  /// Use this factory to create a Comment from a post with empty values.
   /// This is useful to create a new comment or to use other comment model
   /// properties or methods.
   ///
@@ -114,12 +114,12 @@ class CommentModel {
   /// database, but you can use all the properties and method.
   ///
   /// ```dart
-  /// final post = CommentModel.fromPost(post);
+  /// final post = Comment.fromPost(post);
   /// ```
   ///
-  factory CommentModel.fromPost(PostModel post) {
-    final fakeRef = CommentModel.postComments(post.id).push();
-    return CommentModel(
+  factory Comment.fromPost(Post post) {
+    final fakeRef = Comment.postComments(post.id).push();
+    return Comment(
       ref: fakeRef,
       id: fakeRef.key!,
       parentId: null,
@@ -132,10 +132,10 @@ class CommentModel {
     );
   }
 
-  /// Create a CommentModel from a parent comment with empty values.
-  factory CommentModel.fromParent(CommentModel parent) {
+  /// Create a Comment from a parent comment with empty values.
+  factory Comment.fromParent(Comment parent) {
     final fakeRef = parent.ref.parent!.push();
-    return CommentModel(
+    return Comment(
       ref: fakeRef,
       id: fakeRef.key!,
       parentId: parent.ref.key,
@@ -160,34 +160,33 @@ class CommentModel {
 
   @override
   String toString() {
-    return 'CommentModel(ref: $ref, id: $id, parentId: $parentId, content: $content, uid: $uid, createdAt: $createdAt, urls: $urls, likes: $likes, deleted: $deleted)';
+    return 'Comment(ref: $ref, id: $id, parentId: $parentId, content: $content, uid: $uid, createdAt: $createdAt, urls: $urls, likes: $likes, deleted: $deleted)';
   }
 
   /// Get a comment from the database
-  static Future<CommentModel> get({
+  static Future<Comment> get({
     // required String category,
     required String postId,
     required String commentId,
   }) async {
     final snapshot =
-        await CommentModel.commentsRef.child(postId).child(commentId).get();
-    return CommentModel.fromJson(snapshot.value as Map, commentId,
-        postId: postId);
+        await Comment.commentsRef.child(postId).child(commentId).get();
+    return Comment.fromJson(snapshot.value as Map, commentId, postId: postId);
   }
 
   /// Get all the comments of a post
   ///
   ///
-  static Future<List<CommentModel>> getAll({
+  static Future<List<Comment>> getAll({
     required String postId,
   }) async {
-    final snapshot = await CommentModel.commentsRef.child(postId).get();
-    final comments = <CommentModel>[];
+    final snapshot = await Comment.commentsRef.child(postId).get();
+    final comments = <Comment>[];
     if (snapshot.value == null) {
       return comments;
     }
     (snapshot.value as Map).forEach((key, value) {
-      final comment = CommentModel.fromJson(
+      final comment = Comment.fromJson(
         value,
         key,
         postId: postId,
@@ -199,11 +198,11 @@ class CommentModel {
   }
 
   /// Get the comments of the post
-  static List<CommentModel> sortComments(List<CommentModel> comments) {
+  static List<Comment> sortComments(List<Comment> comments) {
     /// Sort comments by createdAt
     comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
-    final List<CommentModel> newComments = [];
+    final List<Comment> newComments = [];
 
     /// This is the list of comments that are not replies.
     /// It is sorted by createdAt.
@@ -244,13 +243,13 @@ class CommentModel {
   /// the post model instance or parent comment model instance.
   ///
   /// ```dart
-  /// final comment = CommentModel.fromPost(post);
+  /// final comment = Comment.fromPost(post);
   /// await comment.create(content: 'content');
   /// ```
   Future create({
     required String content,
     required String category,
-    CommentModel? parent,
+    Comment? parent,
     List<String>? urls,
   }) async {
     if (await ActionLogService.instance.commentCreate.isOverLimit()) return;
@@ -267,11 +266,11 @@ class CommentModel {
 
     await ref.set(data);
 
-    final summaryRef = PostModel.postSummary(category, postId);
+    final summaryRef = Post.postSummary(category, postId);
     summaryRef.child(Field.noOfComments).set(ServerValue.increment(1));
 
     /// Don't wait for calling onCommentCreate.
-    final created = await CommentModel.get(
+    final created = await Comment.get(
       // category: category,
       postId: postId,
       commentId: id,

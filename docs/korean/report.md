@@ -2,7 +2,7 @@
 
 사용자는 글, 코멘트, 채팅, 사용자 등을 신고 할 수 있다.
 
-신고를 하면 `/reports/<id>` 에 신고 정보가 저장된다. 참고로, 신고하는 코드는 `ReportModel.create()` 을 보면 된다.
+신고를 하면 `/reports/<id>` 에 신고 정보가 저장된다. 참고로, 신고하는 코드는 `Report.create()` 을 보면 된다.
 
 기본적으로 저장되는 필드는 `uid` 와 `createdAt` 이 있다. `uid` 는 신고자의 uid 이며, `createdAt` 은 신고된 시간이다.
 

@@ -9,9 +9,9 @@ class PostListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FirebaseDatabaseListView(
-      query: PostModel.postSummaries.child(category).orderByChild(Field.order),
+      query: Post.postSummaries.child(category).orderByChild(Field.order),
       itemBuilder: (context, snapshot) {
-        final post = PostModel.fromSnapshot(snapshot);
+        final post = Post.fromSnapshot(snapshot);
         if (post.deleted) {
           return const SizedBox.shrink();
         }

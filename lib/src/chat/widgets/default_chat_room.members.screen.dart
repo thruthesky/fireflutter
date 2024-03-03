@@ -8,7 +8,7 @@ class DefaultChatRoomMembersScreen extends StatelessWidget {
     required this.room,
   });
 
-  final ChatRoomModel room;
+  final ChatRoom room;
 
   @override
   Widget build(BuildContext context) {

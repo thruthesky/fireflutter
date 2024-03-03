@@ -14,9 +14,9 @@ class BookmarkListView extends StatelessWidget {
             Bookmark.fromValue(snapshot.value, snapshot.key!);
 
         if (bookmark.isPost) {
-          return FutureBuilder<PostModel?>(
-            future: PostModel.get(
-                category: bookmark.category!, id: bookmark.postId!),
+          return FutureBuilder<Post?>(
+            future:
+                Post.get(category: bookmark.category!, id: bookmark.postId!),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return ListTile(
@@ -66,8 +66,8 @@ class BookmarkListView extends StatelessWidget {
             },
           );
         } else if (bookmark.isComment) {
-          return FutureBuilder<CommentModel?>(
-            future: CommentModel.get(
+          return FutureBuilder<Comment?>(
+            future: Comment.get(
               postId: bookmark.postId!,
               commentId: bookmark.commentId!,
             ),
@@ -113,7 +113,7 @@ class BookmarkListView extends StatelessWidget {
                   ],
                 ),
                 onTap: () async {
-                  final post = await PostModel.get(
+                  final post = await Post.get(
                       category: comment.category, id: comment.postId);
                   if (context.mounted) {
                     ForumService.instance.showPostViewScreen(

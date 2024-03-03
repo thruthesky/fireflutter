@@ -81,8 +81,8 @@ Future<void> _onMessageTapped(RemoteMessage message) async {
   }
 
   if (data is PostMessagingModel) {
-    PostModel? post =
-        await PostModel.get(category: data.category, id: data.id);
+    Post? post =
+        await Post.get(category: data.category, id: data.id);
     if (post == null) return;
     if (globalContext.mounted) {
       ForumService.instance.showPostViewScreen(

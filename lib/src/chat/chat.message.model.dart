@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-class ChatMessageModel {
+class ChatMessage {
   /// Paths and Refs
 
   static const String nodeName = 'chat-messages';
@@ -36,7 +36,7 @@ class ChatMessageModel {
 
   bool get other => !mine;
 
-  ChatMessageModel({
+  ChatMessage({
     this.key,
     this.uid,
     this.text,
@@ -49,14 +49,14 @@ class ChatMessageModel {
     this.previewImageUrl,
   });
 
-  factory ChatMessageModel.fromSnapshot(DataSnapshot snapshot) {
+  factory ChatMessage.fromSnapshot(DataSnapshot snapshot) {
     final json = snapshot.value as Map<dynamic, dynamic>;
     json['key'] = snapshot.key;
-    return ChatMessageModel.fromJson(json);
+    return ChatMessage.fromJson(json);
   }
 
-  factory ChatMessageModel.fromJson(Map<dynamic, dynamic> json) {
-    return ChatMessageModel(
+  factory ChatMessage.fromJson(Map<dynamic, dynamic> json) {
+    return ChatMessage(
       key: json['key'] as String?,
       uid: json['uid'] as String?,
       text: json['text'] as String?,

@@ -49,7 +49,7 @@ class ChatService {
     required bool isGroupChat,
     required bool isOpenGroupChat,
   }) async {
-    final room = await ChatRoomModel.create(
+    final room = await ChatRoom.create(
       name: name,
       isOpenGroupChat: isOpenGroupChat,
     );
@@ -61,7 +61,7 @@ class ChatService {
     required BuildContext context,
     String? uid,
     String? roomId,
-    ChatRoomModel? room,
+    ChatRoom? room,
   }) async {
     /// 채팅방 입장을 할 때, DB 업데이트를 하므로, 메시지를 보낼 때에는 해제 계산이 되어져 있다.
     if (await ActionLogService.instance.chatJoin.isOverLimit()) return;
@@ -79,9 +79,8 @@ class ChatService {
     }
   }
 
-  Future<ChatRoomModel?> showChatRoomCreate(
-      {required BuildContext context}) async {
-    return await showDialog<ChatRoomModel?>(
+  Future<ChatRoom?> showChatRoomCreate({required BuildContext context}) async {
+    return await showDialog<ChatRoom?>(
       context: context,
       builder: (_) => const DefaultChatRoomEditDialog(),
     );
@@ -91,7 +90,7 @@ class ChatService {
     required BuildContext context,
     required String roomId,
   }) async {
-    return await showDialog<ChatRoomModel?>(
+    return await showDialog<ChatRoom?>(
       context: context,
       builder: (_) => DefaultChatRoomEditDialog(roomId: roomId),
     );
@@ -100,9 +99,9 @@ class ChatService {
   /// Display a dialog to invite a user to a chat room.
   Future showInviteScreen({
     required BuildContext context,
-    required ChatRoomModel room,
+    required ChatRoom room,
   }) async {
-    return await showGeneralDialog<ChatRoomModel?>(
+    return await showGeneralDialog<ChatRoom?>(
       context: context,
       pageBuilder: (_, __, ___) => DefaultChatRoomInviteScreen(room: room),
     );
@@ -110,7 +109,7 @@ class ChatService {
 
   Future showMembersScreen({
     required BuildContext context,
-    required ChatRoomModel room,
+    required ChatRoom room,
   }) async {
     return await showGeneralDialog(
       context: context,

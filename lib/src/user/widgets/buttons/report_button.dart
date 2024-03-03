@@ -28,7 +28,7 @@ class ReportButton extends StatelessWidget {
           hintText: T.reportInputHint.tr,
         );
         if (re == null || re == '') return;
-        await ReportModel.create(
+        await Report.create(
           otherUserUid: uid,
           chatRoomId: chatRoomId,
           category: category,

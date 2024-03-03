@@ -1,7 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 
-class ReportModel {
+class Report {
   /// Paths and Refs
   static String nodeName = 'reports';
 
@@ -24,7 +24,7 @@ class ReportModel {
   bool get isUser => otherUserUid != null;
   bool get isChatRoom => chatRoomId != null;
 
-  ReportModel({
+  Report({
     required this.key,
     required this.uid,
     required this.otherUserUid,
@@ -36,8 +36,8 @@ class ReportModel {
     required this.createdAt,
   });
 
-  factory ReportModel.fromJson(Map<dynamic, dynamic> json, String key) {
-    return ReportModel(
+  factory Report.fromJson(Map<dynamic, dynamic> json, String key) {
+    return Report(
       key: key,
       uid: json['uid'],
       otherUserUid: json['otherUserUid'],
@@ -50,8 +50,8 @@ class ReportModel {
     );
   }
 
-  factory ReportModel.fromValue(dynamic value, String key) {
-    return ReportModel.fromJson(value, key);
+  factory Report.fromValue(dynamic value, String key) {
+    return Report.fromJson(value, key);
   }
 
   Map<String, dynamic> toJson() {
@@ -69,7 +69,7 @@ class ReportModel {
 
   @override
   String toString() {
-    return 'ReportModel(uid: $uid, otherUserUid: $otherUserUid, chatRoomId: $chatRoomId, category: $category, postId: $postId, commentId: $commentId, reason: $reason, createdAt: $createdAt)';
+    return 'Report(uid: $uid, otherUserUid: $otherUserUid, chatRoomId: $chatRoomId, category: $category, postId: $postId, commentId: $commentId, reason: $reason, createdAt: $createdAt)';
   }
 
   static Future<void> create({
@@ -86,7 +86,7 @@ class ReportModel {
             'category or commentId must be provided when postId is provided');
       }
     }
-    return await ReportModel.reportsRef.push().set({
+    return await Report.reportsRef.push().set({
       'uid': myUid!,
       'reason': reason,
       'otherUserUid': otherUserUid,

@@ -7,7 +7,7 @@ class PostMeta extends StatelessWidget {
     required this.post,
   });
 
-  final PostModel post;
+  final Post post;
 
   @override
   Widget build(BuildContext context) {

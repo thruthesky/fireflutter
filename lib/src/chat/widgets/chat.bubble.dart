@@ -18,7 +18,7 @@ class ChatBubble extends StatelessWidget {
     this.onChange,
   });
 
-  final ChatMessageModel message;
+  final ChatMessage message;
   final Function? onChange;
 
   @override

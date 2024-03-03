@@ -8,7 +8,7 @@ class DefaultChatRoomMemberDialog extends StatelessWidget {
     required this.member,
   });
 
-  final ChatRoomModel room;
+  final ChatRoom room;
   final UserModel member;
 
   @override

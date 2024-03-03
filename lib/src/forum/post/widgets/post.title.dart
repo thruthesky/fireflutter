@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class PostTitle extends StatefulWidget {
   const PostTitle({super.key, required this.post});
 
-  final PostModel post;
+  final Post post;
 
   @override
   State<PostTitle> createState() => _PostTitleState();

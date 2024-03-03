@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 /// ChatRoomListTile
 ///
-/// [room] 채팅방 정보 (ChatRoomModel)
+/// [room] 채팅방 정보 (ChatRoom)
 ///
 /// [stateMessageAsSubtitle] 상태 메시지를 subtitle 로 표시할지 여부.
 /// 1:1 채팅 메시지 목록 보다는, 친구 목록을 할 때 사용 할 수 있다. 그룹 채팅 목록에는 false 로 하면 마지막 메세지가
@@ -15,7 +15,7 @@ class ChatRoomListTile extends StatelessWidget {
     this.stateMessageAsSubtitle,
   });
 
-  final ChatRoomModel room;
+  final ChatRoom room;
   final bool? stateMessageAsSubtitle;
 
   @override
@@ -43,7 +43,7 @@ class ChatRoomListTile extends StatelessWidget {
                   ),
             ),
             Value(
-              path: ChatRoomModel.chatRoomUsersAt(room.id, myUid!),
+              path: ChatRoom.chatRoomUsersAt(room.id, myUid!),
               builder: (v) => v == true
                   ? Icon(
                       Icons.notifications_rounded,
@@ -81,13 +81,13 @@ class ChatRoomListTile extends StatelessWidget {
     );
   }
 
-  String text(ChatRoomModel room) {
+  String text(ChatRoom room) {
     if (room.text != null) return room.text!.replaceAll('\n', ' ');
     if (room.url != null) return '사진을 보내셨습니다.';
     return '';
   }
 
-  Widget subtitle(BuildContext context, ChatRoomModel room) {
+  Widget subtitle(BuildContext context, ChatRoom room) {
     // 1:1 채팅?
     if (room.isSingleChat) {
       // 블럭된 회원?

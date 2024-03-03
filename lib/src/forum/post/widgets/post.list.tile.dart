@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class PostListTile extends StatelessWidget {
   const PostListTile({super.key, required this.post});
 
-  final PostModel post;
+  final Post post;
 
   @override
   Widget build(BuildContext context) {

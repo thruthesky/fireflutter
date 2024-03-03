@@ -17,9 +17,9 @@ class CommentEditDialog extends StatefulWidget {
     this.focusOnTextField,
   });
 
-  final PostModel? post;
-  final CommentModel? parent;
-  final CommentModel? comment;
+  final Post? post;
+  final Comment? parent;
+  final Comment? comment;
   final bool? showUploadDialog;
   final bool? focusOnTextField;
 
@@ -32,8 +32,8 @@ class _CommentEditDialogState extends State<CommentEditDialog> {
 
   double? progress;
 
-  CommentModel? _comment;
-  CommentModel get comment => _comment!;
+  Comment? _comment;
+  Comment get comment => _comment!;
 
   final contentController = TextEditingController();
 
@@ -46,7 +46,7 @@ class _CommentEditDialogState extends State<CommentEditDialog> {
       _comment = widget.comment;
       contentController.text = comment.content;
     } else {
-      _comment = CommentModel.fromPost(widget.post!);
+      _comment = Comment.fromPost(widget.post!);
     }
 
     if (widget.showUploadDialog == true) {

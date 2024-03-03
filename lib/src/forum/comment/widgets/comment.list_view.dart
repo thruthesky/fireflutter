@@ -12,14 +12,14 @@ import 'package:flutter/material.dart';
 class CommentListView extends StatefulWidget {
   const CommentListView({super.key, required this.post});
 
-  final PostModel post;
+  final Post post;
 
   @override
   State<CommentListView> createState() => _CommentListViewState();
 }
 
 class _CommentListViewState extends State<CommentListView> {
-  List<CommentModel>? comments;
+  List<Comment>? comments;
   StreamSubscription? newCommentSubscription;
 
   @override
@@ -31,7 +31,7 @@ class _CommentListViewState extends State<CommentListView> {
 
   init() async {
     // Getting all the comments first
-    comments = await CommentModel.getAll(postId: widget.post.id);
+    comments = await Comment.getAll(postId: widget.post.id);
 
     setState(() {});
 
@@ -45,7 +45,7 @@ class _CommentListViewState extends State<CommentListView> {
         .onChildAdded
         .listen(
       (event) {
-        final comment = CommentModel.fromJson(
+        final comment = Comment.fromJson(
           event.snapshot.value as Map,
           event.snapshot.key!,
           postId: widget.post.id,
@@ -58,7 +58,7 @@ class _CommentListViewState extends State<CommentListView> {
         // Add the comment to the list
         comments?.add(comment);
         // Sort the comments
-        comments = CommentModel.sortComments(comments!);
+        comments = Comment.sortComments(comments!);
         // This may trigger the screen flickering. It's okay. It's a rare case.
         setState(() {});
       },

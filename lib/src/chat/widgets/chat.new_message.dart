@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class ChatNewMessage extends StatelessWidget {
   const ChatNewMessage({super.key, required this.room});
 
-  final ChatRoomModel room;
+  final ChatRoom room;
 
   @override
   Widget build(BuildContext context) {

@@ -7,20 +7,20 @@ class ForumService {
 
   ForumService._();
 
-  Function(PostModel)? onPostCreate;
-  Function(PostModel)? onPostUpdate;
-  Function(PostModel)? onPostDelete;
-  Function(CommentModel)? onCommentCreate;
-  Function(CommentModel)? onCommentUpdate;
-  Function(CommentModel)? onCommentDelete;
+  Function(Post)? onPostCreate;
+  Function(Post)? onPostUpdate;
+  Function(Post)? onPostDelete;
+  Function(Comment)? onCommentCreate;
+  Function(Comment)? onCommentUpdate;
+  Function(Comment)? onCommentDelete;
 
   init({
-    Function(PostModel post)? onPostCreate,
-    Function(PostModel post)? onPostUpdate,
-    Function(PostModel post)? onPostDelete,
-    Function(CommentModel comment)? onCommentCreate,
-    Function(CommentModel comment)? onCommentUpdate,
-    Function(CommentModel comment)? onCommentDelete,
+    Function(Post post)? onPostCreate,
+    Function(Post post)? onPostUpdate,
+    Function(Post post)? onPostDelete,
+    Function(Comment comment)? onCommentCreate,
+    Function(Comment comment)? onCommentUpdate,
+    Function(Comment comment)? onCommentDelete,
   }) {
     this.onPostCreate = onPostCreate;
     this.onPostUpdate = onPostUpdate;
@@ -67,7 +67,7 @@ class ForumService {
 
   Future showPostUpdateScreen(
     BuildContext context, {
-    required PostModel post,
+    required Post post,
   }) async {
     await showGeneralDialog(
       context: context,
@@ -79,7 +79,7 @@ class ForumService {
 
   Future showPostViewScreen(
     BuildContext context, {
-    required PostModel post,
+    required Post post,
   }) async {
     await showGeneralDialog(
       context: context,
@@ -92,8 +92,8 @@ class ForumService {
   /// Returns true if comment is created or updated.
   Future<bool?> showCommentCreateScreen(
     BuildContext context, {
-    required PostModel post,
-    CommentModel? parent,
+    required Post post,
+    Comment? parent,
     bool? showUploadDialog,
     bool? focusOnTextField,
   }) async {
@@ -122,7 +122,7 @@ class ForumService {
   /// Returns true if comment is created or updated.
   Future<bool?> showCommentUpdateScreen(
     BuildContext context, {
-    required CommentModel comment,
+    required Comment comment,
     bool? showUploadDialog,
     bool? focusOnTextField,
   }) async {

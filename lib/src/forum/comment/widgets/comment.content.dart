@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class CommentContent extends StatefulWidget {
   const CommentContent({super.key, required this.comment});
 
-  final CommentModel comment;
+  final Comment comment;
 
   @override
   State<CommentContent> createState() => _CommentContentState();

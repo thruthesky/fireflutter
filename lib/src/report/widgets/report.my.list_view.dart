@@ -7,9 +7,9 @@ class ReportMyListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("ReportMyListView build: ${ReportModel.reportsRef.path}");
+    print("ReportMyListView build: ${Report.reportsRef.path}");
     return FirebaseDatabaseListView(
-      query: ReportModel.reportsRef.orderByChild('uid').equalTo(myUid!),
+      query: Report.reportsRef.orderByChild('uid').equalTo(myUid!),
       errorBuilder: (context, error, stackTrace) {
         dog("Error: $error");
         return Center(
@@ -17,12 +17,11 @@ class ReportMyListView extends StatelessWidget {
         );
       },
       itemBuilder: (context, snapshot) {
-        final ReportModel report =
-            ReportModel.fromValue(snapshot.value, snapshot.key!);
+        final Report report = Report.fromValue(snapshot.value, snapshot.key!);
 
         if (report.isPost) {
-          return FutureBuilder<PostModel?>(
-            future: PostModel.get(
+          return FutureBuilder<Post?>(
+            future: Post.get(
               category: report.category!,
               id: report.postId!,
             ),
@@ -71,8 +70,8 @@ class ReportMyListView extends StatelessWidget {
             },
           );
         } else if (report.isComment) {
-          return FutureBuilder<CommentModel?>(
-            future: CommentModel.get(
+          return FutureBuilder<Comment?>(
+            future: Comment.get(
               postId: report.postId!,
               commentId: report.commentId!,
             ),
@@ -127,7 +126,7 @@ class ReportMyListView extends StatelessWidget {
               children: [
                 const Text('[CHAT] '),
                 Value.once(
-                    path: ChatRoomModel.chatRoomName(report.chatRoomId),
+                    path: ChatRoom.chatRoomName(report.chatRoomId),
                     builder: (v) {
                       return Text(v);
                     }),

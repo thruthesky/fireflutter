@@ -70,9 +70,9 @@ class TypesenseService {
   //   String id;
   //   if (obj is String) {
   //     id = obj;
-  //   } else if (obj is PostModel) {
+  //   } else if (obj is Post) {
   //     id = obj.id;
-  //   } else if (obj is CommentModel) {
+  //   } else if (obj is Comment) {
   //     id = obj.id;
   //   } else {
   //     throw Issue('Invalid object type: ${obj.runtimeType}');
@@ -95,7 +95,7 @@ class TypesenseService {
   }
 
   /// Updates the index for the post.
-  Future<Map<String, dynamic>> _upsertPost(PostModel post) async {
+  Future<Map<String, dynamic>> _upsertPost(Post post) async {
     final data = {
       'id': post.id,
       'type': TypesenceDocType.post,
@@ -111,7 +111,7 @@ class TypesenseService {
   }
 
   /// Updates the index for the comment.
-  Future<Map<String, dynamic>> _upsertComment(CommentModel comment) async {
+  Future<Map<String, dynamic>> _upsertComment(Comment comment) async {
     final data = {
       'id': comment.id,
       'type': TypesenceDocType.comment,
@@ -147,10 +147,10 @@ class TypesenseService {
     dog('Re-indexing category: $category');
     await deleteCategory(category);
     dog('Re-indexing posts for category: $category');
-    final postSnapshot = await PostModel.categoryRef(category).get();
+    final postSnapshot = await Post.categoryRef(category).get();
     List<Future> futures = [];
     for (final e in (postSnapshot.value as Map).entries) {
-      final post = PostModel.fromJson(e.value, id: e.key, category: category);
+      final post = Post.fromJson(e.value, id: e.key, category: category);
       if (!post.deleted) {
         futures.add(_upsertPost(post));
         dog('Re-indexing post: ${post.id}');
@@ -166,11 +166,11 @@ class TypesenseService {
 
   Future<void> _reindexComments(String postId) async {
     dog('Re-indexing comments for post: $postId');
-    final commentsSnapshot = await CommentModel.commentsRef.child(postId).get();
+    final commentsSnapshot = await Comment.commentsRef.child(postId).get();
     dog("Retrieved: ${commentsSnapshot.value}");
     List<Future> futures = [];
     for (final commentSnapshot in commentsSnapshot.children) {
-      final comment = CommentModel.fromJson(
+      final comment = Comment.fromJson(
           commentSnapshot.value as Map, commentSnapshot.key!,
           postId: postId);
       if (!comment.deleted) {

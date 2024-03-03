@@ -8,7 +8,7 @@
 
 - `/chat-rooms` 채팅 방 정보를 저장하는 경로.
 - `/chat-messages` 채팅 메시지를 저장하는 경로
-- `/chat-joins` 채팅 방에 참여한 사용자들에게 채팅방 정보를 장하는 경로. 예를 들어, 사용자별 읽지 않은 (새로운) 메시지 수를 표시하는 데 사용. 참고로, `/chat-rooms` 과 `/chat-joins` 둘 모두 `ChatRoomModel` 을 사용해서 modeling 한다.
+- `/chat-joins` 채팅 방에 참여한 사용자들에게 채팅방 정보를 장하는 경로. 예를 들어, 사용자별 읽지 않은 (새로운) 메시지 수를 표시하는 데 사용. 참고로, `/chat-rooms` 과 `/chat-joins` 둘 모두 `ChatRoom` 을 사용해서 modeling 한다.
 
 
 - `noOfUsers` is updated in `/chat-rooms` when a new user joins or leaves a group chat room,
@@ -83,7 +83,7 @@ if (snapshot.exists) {
 
 
 
-### Get ChatRoomModel on ChatRoomBody
+### Get ChatRoom on ChatRoomBody
 
 - The complete chat room model instance is needed before display the chat room message. For instance,
     - to check if the user is in the room,
@@ -102,7 +102,7 @@ if (snapshot.exists) {
 A simple way to create a chat room is as follows:
 
 ```dart
-ChatModel chat = ChatModel(room: ChatRoomModel.fromRoomdId('all'))..join();
+ChatModel chat = ChatModel(room: ChatRoom.fromRoomdId('all'))..join();
 ChatMessageListView(chat: chat);
 ```
 
@@ -129,8 +129,8 @@ ChatRoomBody(roomId: 'room-id');
 
 ...
 
-// Using snapshot -> ChatRoomModel
-ChatRoomModel chatRoom = ChatRoomModel.fromSnapshot(dataSnapshot);
+// Using snapshot -> ChatRoom
+ChatRoom chatRoom = ChatRoom.fromSnapshot(dataSnapshot);
 ChatRoomBody(room: chatRoom);
 ```
 
@@ -145,8 +145,8 @@ When updating a chat room, you can optionally specify authenticated members and 
 To send a chat message into a room (or to a user), `ChatMessageInputBox()` can be used as Input box. You can copy this widget and customize by yourself.
 
 ```dart
-// the ChatRoomModel is required. Get it.
-ChatRoomModel room = ChatRoomModel.fromSnaphot(snapshot);
+// the ChatRoom is required. Get it.
+ChatRoom room = ChatRoom.fromSnaphot(snapshot);
 
 // the `chat` should be the model of the room
 ChatModel chat = ChatModel(room: room);
@@ -159,8 +159,8 @@ ChatMessageInputBox(
 You can also send a chat message to a user or to a room programatically (without entering a chat room screen) like below.
 
 ```dart
-// the ChatRoomModel is required. Get it.
-ChatRoomModel room = ChatRoomModel.fromSnaphot(snapshot);
+// the ChatRoom is required. Get it.
+ChatRoom room = ChatRoom.fromSnaphot(snapshot);
 
 ChatModel chat = ChatModel(room: room);
 
@@ -174,8 +174,8 @@ chat.sendMessage(text: 'Text Message to send', url: 'photo.url.com');
 To display chat messages in a room, `ChatMessageListView()` can be used.
 
 ```dart
-// the ChatRoomModel is required. Get it.
-ChatRoomModel room = ChatRoomModel.fromSnaphot(snapshot);
+// the ChatRoom is required. Get it.
+ChatRoom room = ChatRoom.fromSnaphot(snapshot);
 
 // the `chat` should be the model of the room
 ChatModel chat = ChatModel(room: room);
@@ -211,7 +211,7 @@ FirebaseDatabaseQueryBuilder(
         if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
           snapshot.fetchMore();
         }
-        final message = ChatMessageModel.fromSnapshot(snapshot.docs[index]);
+        final message = ChatMessage.fromSnapshot(snapshot.docs[index]);
 
         /// 채팅방의 맨 마지막 메시지의 order 를 지정.
         chat.resetRoomMessageOrder(order: message.order);
@@ -275,7 +275,7 @@ FirebaseDatabaseQueryBuilder(
         if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
           snapshot.fetchMore();
         }
-        final room = ChatRoomModel.fromSnapshot(snapshot.docs[index]);
+        final room = ChatRoom.fromSnapshot(snapshot.docs[index]);
         return ChatRoomListTile(room: room);
       },
     );
@@ -412,7 +412,7 @@ The `ChatService.instance.showInviteScreen()` will show a list of users in a lis
 
 ```dart
 // Showing the list screen
-await showGeneralDialog<ChatRoomModel?>(
+await showGeneralDialog<ChatRoom?>(
   context: context,
   pageBuilder: (_, __, ___) => CustomChatRoomInviteScreen(room: room),
 );
@@ -423,7 +423,7 @@ class CustomChatRoomInviteScreen extends StatelessWidget {
     super.key,
     required this.room,
   });
-  final ChatRoomModel room;
+  final ChatRoom room;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -467,7 +467,7 @@ It uses the `DefaultChatRoomMembersScreen(room: room)` when it is not customized
 Here is an example of a button that removes a user from the group chat. It uses `room.remove(member.uid)` code to remove the user.
 
 ```dart
-final room = ChatRoomModel.fromSnapshot(snapshot);
+final room = ChatRoom.fromSnapshot(snapshot);
 // ...
 final member = UserModel.fromSnapshot(snapshot);
 // ...

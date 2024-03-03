@@ -28,7 +28,7 @@ class ChatRoomBody extends StatefulWidget {
 
   final String? uid;
   final String? roomId;
-  final ChatRoomModel? room;
+  final ChatRoom? room;
   final bool backButton;
   final bool leave;
 
@@ -64,10 +64,10 @@ class _ChatRoomState extends State<ChatRoomBody> {
     try {
       await chat.room.reload();
     } on Issue catch (e) {
-      // See chat.md#Get ChatRoomModel on ChatRoomBody
+      // See chat.md#Get ChatRoom on ChatRoomBody
       if (e.code == Code.chatRoomNotExists) {
         /// uid 또는 groupId 로 채팅방을 생성한다.
-        final room = await ChatRoomModel.create(
+        final room = await ChatRoom.create(
           uid: widget.uid,
           roomId: widget.roomId,
         );
@@ -79,16 +79,16 @@ class _ChatRoomState extends State<ChatRoomBody> {
   }
 
   init() async {
-    /// ChatRoomModel 이 들어온 경우, 채팅방 정보를 읽지 않고, 그대로 쓴다.
+    /// ChatRoom 이 들어온 경우, 채팅방 정보를 읽지 않고, 그대로 쓴다.
     if (widget.room != null) {
       _chat = ChatModel(room: widget.room!);
     } else if (widget.uid != null) {
       // 1:1 채팅 방 - 방이 없으면 생성한다.
-      _chat = ChatModel(room: ChatRoomModel.fromUid(widget.uid!));
+      _chat = ChatModel(room: ChatRoom.fromUid(widget.uid!));
       await reload();
     } else if (widget.roomId != null) {
       // 그룹 채팅 방 - 방이 없으면 생성한다.
-      _chat = ChatModel(room: ChatRoomModel.fromRoomdId(widget.roomId!));
+      _chat = ChatModel(room: ChatRoom.fromRoomdId(widget.roomId!));
       await reload();
     } else {
       throw ArgumentError('uid, roomId, room 중 하나는 반드시 있어야 합니다.');
@@ -186,7 +186,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
                                   ),
                           )
                         : Value(
-                            path: ChatRoomModel.chatRoomIconUrl(chat.room
+                            path: ChatRoom.chatRoomIconUrl(chat.room
                                 .id), // '${Path.join(myUid!, chat.room.id)}/${Field.photoUrl}',
                             builder: (v) => v == null
                                 ? const SizedBox.shrink()
@@ -219,7 +219,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
                               ),
                             )
                           : Value(
-                              path: ChatRoomModel.chatRoomName(chat.room.id),
+                              path: ChatRoom.chatRoomName(chat.room.id),
                               builder: (v) => Text(
                                 v ?? '',
                                 style: Theme.of(context).textTheme.titleLarge,
@@ -239,7 +239,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
                   await chat.room.toggleNotifications();
                 },
                 icon: Value(
-                  path: ChatRoomModel.chatRoomUsersAt(chat.room.id, myUid!),
+                  path: ChatRoom.chatRoomUsersAt(chat.room.id, myUid!),
                   builder: (v) => v == true
                       ? const Icon(Icons.notifications_rounded)
                       : const Icon(Icons.notifications_outlined),

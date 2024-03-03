@@ -11,7 +11,7 @@ class ChatButton extends StatelessWidget {
 
   final String? uid;
   final String? roomId;
-  final ChatRoomModel? room;
+  final ChatRoom? room;
 
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,7 @@ class PostEditScreen extends StatefulWidget {
   const PostEditScreen({super.key, this.category, this.post});
 
   final String? category;
-  final PostModel? post;
+  final Post? post;
 
   @override
   State<PostEditScreen> createState() => _PostEditScreenState();
@@ -16,8 +16,8 @@ class _PostEditScreenState extends State<PostEditScreen> {
   final titleController = TextEditingController();
   final contentController = TextEditingController();
 
-  PostModel? _post;
-  PostModel get post => _post!;
+  Post? _post;
+  Post get post => _post!;
 
   bool get isCreate => widget.post == null;
 
@@ -30,7 +30,7 @@ class _PostEditScreenState extends State<PostEditScreen> {
     if (widget.post != null) {
       _post = widget.post;
     } else {
-      _post = PostModel.fromCategory(widget.category!);
+      _post = Post.fromCategory(widget.category!);
     }
 
     titleController.text = post.title;
@@ -90,9 +90,9 @@ class _PostEditScreenState extends State<PostEditScreen> {
                   const Spacer(),
                   ElevatedButton(
                     onPressed: () async {
-                      PostModel? newPost;
+                      Post? newPost;
                       if (isCreate) {
-                        newPost = await PostModel.create(
+                        newPost = await Post.create(
                           category: post.category,
                           title: titleController.text,
                           content: contentController.text,

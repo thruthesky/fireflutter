@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class PostEditForm extends StatefulWidget {
   const PostEditForm({super.key, this.category, this.post});
   final String? category;
-  final PostModel? post;
+  final Post? post;
 
   @override
   State<PostEditForm> createState() => _SimplePostEditFormState();
@@ -14,8 +14,8 @@ class _SimplePostEditFormState extends State<PostEditForm> {
   final titleController = TextEditingController();
   final contentController = TextEditingController();
 
-  PostModel? _post;
-  PostModel get post => _post!;
+  Post? _post;
+  Post get post => _post!;
 
   bool get isCreate => widget.post == null;
 
@@ -28,7 +28,7 @@ class _SimplePostEditFormState extends State<PostEditForm> {
     if (widget.post != null) {
       _post = widget.post!;
     } else {
-      _post = PostModel.fromCategory(widget.category!);
+      _post = Post.fromCategory(widget.category!);
     }
 
     titleController.text = post.title;
@@ -56,7 +56,7 @@ class _SimplePostEditFormState extends State<PostEditForm> {
             ElevatedButton(
               onPressed: () async {
                 if (isCreate) {
-                  await PostModel.create(
+                  await Post.create(
                     category: post.category,
                     title: titleController.text,
                     content: contentController.text,

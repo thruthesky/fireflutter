@@ -19,7 +19,7 @@ class ChatMessageListView extends StatefulWidget {
 
   final ChatModel chat;
 
-  final Widget Function(ChatMessageModel)? builder;
+  final Widget Function(ChatMessage)? builder;
   final bool? primary;
   final Widget Function(BuildContext)? emptyBuilder;
 
@@ -46,7 +46,7 @@ class _RChatMessageListState extends State<ChatMessageListView> {
 
   init() async {
     final myJoinRef = ChatJoinModel.joinRef(myUid!, roomId);
-    final join = ChatRoomModel.fromSnapshot(await myJoinRef.get());
+    final join = ChatRoom.fromSnapshot(await myJoinRef.get());
     chat.resetNewMessage(join: join);
   }
 
@@ -91,7 +91,7 @@ class _RChatMessageListState extends State<ChatMessageListView> {
 
         // 새로운 채팅이 들어오면(전달되어져 오면), 채팅방의 새 메시지 갯수를 0 으로 초기화 시킨다.
         if (chat.isLoadingNewMessage(roomId, snapshot)) {
-          final newMessage = ChatMessageModel.fromSnapshot(snapshot.docs.first);
+          final newMessage = ChatMessage.fromSnapshot(snapshot.docs.first);
           // newMessage 리셋
           chat.resetNewMessage(
             order: newMessage.createdAt != null ? -newMessage.createdAt! : null,
@@ -115,8 +115,7 @@ class _RChatMessageListState extends State<ChatMessageListView> {
               if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
                 snapshot.fetchMore();
               }
-              final message =
-                  ChatMessageModel.fromSnapshot(snapshot.docs[index]);
+              final message = ChatMessage.fromSnapshot(snapshot.docs[index]);
 
               /// 채팅방의 맨 마지막 메시지의 order 를 지정.
               chat.resetMessageOrder(order: message.order);

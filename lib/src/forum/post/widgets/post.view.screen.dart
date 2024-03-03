@@ -5,14 +5,14 @@ class PostViewScreen extends StatefulWidget {
   static const String routeName = '/PostView';
   const PostViewScreen({super.key, required this.post});
 
-  final PostModel post;
+  final Post post;
 
   @override
   State<PostViewScreen> createState() => _PostViewScreenState();
 }
 
 class _PostViewScreenState extends State<PostViewScreen> {
-  PostModel get post => widget.post;
+  Post get post => widget.post;
   int? previousNoOfLikes;
 
   @override
@@ -37,7 +37,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   no: () => DisplayDatabasePhotos(
                     urls: widget.post.urls,
                     path:
-                        '${PostModel.posts}/${widget.post.category}/${widget.post.id}/${Field.urls}',
+                        '${Post.posts}/${widget.post.category}/${widget.post.id}/${Field.urls}',
                   ),
                 ),
               ),
@@ -92,7 +92,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                         hintText: T.reportInputHint.tr,
                       );
                       if (re == null || re == '') return;
-                      await ReportModel.create(
+                      await Report.create(
                         postId: post.id,
                         category: post.category,
                         reason: re,

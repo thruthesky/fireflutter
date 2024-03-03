@@ -7,7 +7,7 @@ class ReportService {
     dog('--> ReportService._()');
   }
 
-  @Deprecated('Use ReportModel.create instead')
+  @Deprecated('Use Report.create instead')
   Future<void> report({
     String? otherUserUid,
     String? chatRoomId,
@@ -19,7 +19,7 @@ class ReportService {
     if (notLoggedIn) {
       throw Issue(Code.notLoggedIn);
     }
-    await ReportModel.create(
+    await Report.create(
       otherUserUid: otherUserUid,
       chatRoomId: chatRoomId,
       category: category,

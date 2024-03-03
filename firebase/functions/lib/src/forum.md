@@ -20,7 +20,7 @@
 
 ## Observing post changes and update data
 
-As you know, we are using realtime database. This means the app should observe for data change as small portiona as it can be. And we made it simple for post data changes. Use `PostModel.onFieldChange(field, callback)`.
+As you know, we are using realtime database. This means the app should observe for data change as small portiona as it can be. And we made it simple for post data changes. Use `Post.onFieldChange(field, callback)`.
 
 The example below listens the title changes and if it is changed, it wil update on screen.
 
@@ -42,7 +42,7 @@ You can load a post like below and do whatever test.
 ```dart
 SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
   Timer(const Duration(microseconds: 200), () async {
-    final post = await PostModel.get(category: 'discussion', id: '-No5q8HHMw7ZDZSjR-Qu');
+    final post = await Post.get(category: 'discussion', id: '-No5q8HHMw7ZDZSjR-Qu');
     print('length of comment; ${post?.comments.length}');
     for (final c in post?.comments ?? []) {
       print("[${c.depth}] ${c.content}");

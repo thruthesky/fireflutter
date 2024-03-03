@@ -34,7 +34,7 @@ class DefaultChatRoomListView extends StatelessWidget {
               if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
                 snapshot.fetchMore();
               }
-              final room = ChatRoomModel.fromSnapshot(snapshot.docs[index]);
+              final room = ChatRoom.fromSnapshot(snapshot.docs[index]);
               return ChatRoomListTile(room: room);
             },
           );

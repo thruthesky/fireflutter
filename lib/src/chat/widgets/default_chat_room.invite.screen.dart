@@ -8,7 +8,7 @@ class DefaultChatRoomInviteScreen extends StatelessWidget {
     required this.room,
   });
 
-  final ChatRoomModel room;
+  final ChatRoom room;
 
   /// get list of uids of members
   List<String> get memberUids => (room.users ?? {}).keys.toList();

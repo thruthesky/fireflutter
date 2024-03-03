@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class PostContent extends StatefulWidget {
   const PostContent({super.key, required this.post});
 
-  final PostModel post;
+  final Post post;
 
   @override
   State<PostContent> createState() => _PostContentState();

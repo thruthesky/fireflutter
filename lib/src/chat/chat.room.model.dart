@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 
-class ChatRoomModel {
+class ChatRoom {
   /// Paths and Refs
   static const String nodeName = 'chat-rooms';
 
@@ -74,7 +74,7 @@ class ChatRoomModel {
 
   List<String> get uids => users?.keys.toList() ?? [];
 
-  ChatRoomModel({
+  ChatRoom({
     required this.ref,
     required this.key,
     this.text,
@@ -97,22 +97,22 @@ class ChatRoomModel {
     this.noOfUsers,
   });
 
-  /// [fromSnapshot] It creates a [ChatRoomModel] from a [DataSnapshot].
+  /// [fromSnapshot] It creates a [ChatRoom] from a [DataSnapshot].
   ///
   /// Example
   /// ```
   ///   final event = await RChat.roomRef(uid: data.roomId).once(DatabaseEventType.value);
-  ///   final room = ChatRoomModel.fromSnapshot(event.snapshot);
+  ///   final room = ChatRoom.fromSnapshot(event.snapshot);
   /// ```
-  factory ChatRoomModel.fromSnapshot(DataSnapshot snapshot) {
+  factory ChatRoom.fromSnapshot(DataSnapshot snapshot) {
     final json = snapshot.value as Map<dynamic, dynamic>;
     json['key'] = snapshot.key;
     json['ref'] = snapshot.ref;
-    return ChatRoomModel.fromJson(json);
+    return ChatRoom.fromJson(json);
   }
 
-  factory ChatRoomModel.fromJson(Map<dynamic, dynamic> json) {
-    return ChatRoomModel(
+  factory ChatRoom.fromJson(Map<dynamic, dynamic> json) {
+    return ChatRoom(
       ref: json['ref'],
       key: json['key'],
       text: json['text'] as String?,
@@ -168,17 +168,17 @@ class ChatRoomModel {
   /// toString
   @override
   String toString() {
-    return 'ChatRoomModel(${toJson()})';
+    return 'ChatRoom(${toJson()})';
   }
 
-  /// Returns a [ChatRoomModel] from a group id.
+  /// Returns a [ChatRoom] from a group id.
   ///
   /// Note that, single chat room ref is like /chat-rooms/uidA/uidB
   ///   while group chat room ref is like /chat-rooms/groupId.
   ///
   /// This is a factory. So, you can use it for creating a chat room model object programmatically.
-  factory ChatRoomModel.fromRoomdId(String id) {
-    return ChatRoomModel.fromJson({
+  factory ChatRoom.fromRoomdId(String id) {
+    return ChatRoom.fromJson({
       'key': id,
       'ref': ChatService.instance.roomsRef.child(id),
     });
@@ -186,15 +186,15 @@ class ChatRoomModel {
 
   /// 다른 사용자 uid 로 1:1 채팅방 모델 객체를 만든다.
   ///
-  /// 1:1 채팅에서 다른 사용자 uid 로 임시 [ChatRoomModel] 인스턴스를 만들어 리턴한다.
+  /// 1:1 채팅에서 다른 사용자 uid 로 임시 [ChatRoom] 인스턴스를 만들어 리턴한다.
   ///
   /// 주의, 이 함수는 실제 DB 의 데이터를 읽지 않고, 임시로 만들므로, [key], [ref], [isGroupChat],
-  /// [isOpenGroupChat] 만 지정해서 리턴한다. 그리고 이를 바탕으로 ChatRoomModel 의 다른 속성들을 사용할 수
+  /// [isOpenGroupChat] 만 지정해서 리턴한다. 그리고 이를 바탕으로 ChatRoom 의 다른 속성들을 사용할 수
   /// 있다. 예를 들면, 채팅 메시지를 전송 할 수 있다.
   ///
   /// 실제 DB 정보가 필요하면, reload() 함수를 호출하면 된다.
-  factory ChatRoomModel.fromUid(String otherUserUid) {
-    return ChatRoomModel.fromJson({
+  factory ChatRoom.fromUid(String otherUserUid) {
+    return ChatRoom.fromJson({
       'key': singleChatRoomId(otherUserUid),
       'ref': ChatService.instance.roomRef(singleChatRoomId(otherUserUid)),
       'isGroupChat': false,
@@ -202,25 +202,25 @@ class ChatRoomModel {
     });
   }
 
-  /// Return ChatRoomModel from a reference
+  /// Return ChatRoom from a reference
   ///
   ///
-  static Future<ChatRoomModel> fromReference(DatabaseReference ref) async {
+  static Future<ChatRoom> fromReference(DatabaseReference ref) async {
     final event = await ref.once();
     if (event.snapshot.exists == false) {
       throw Issue(
         Code.chatRoomNotExists,
-        'ChatRoomModel.fromReference: ${ref.path} does not exist.',
+        'ChatRoom.fromReference: ${ref.path} does not exist.',
       );
     }
-    return ChatRoomModel.fromSnapshot(event.snapshot);
+    return ChatRoom.fromSnapshot(event.snapshot);
   }
 
-  /// Load data from database and return a [ChatRoomModel] from a group chat room id.
+  /// Load data from database and return a [ChatRoom] from a group chat room id.
   ///
   /// Warning, this is for group chat only.
   ///
-  static Future<ChatRoomModel> get(String id) async {
+  static Future<ChatRoom> get(String id) async {
     final ref = ChatService.instance.roomsRef.child(id);
     return await fromReference(ref);
   }
@@ -231,8 +231,8 @@ class ChatRoomModel {
   /// 데이터를 가져와 전체 정보를 채우고자 할 때 사용하면 된다.
   ///
   /// 주의, 채팅방 노드가 생성되지 않았는데, 이 함수를 호출하면 [Code.chatRoomNotExists] 에러가 발생한다.
-  Future<ChatRoomModel> reload() async {
-    final room = await ChatRoomModel.get(id);
+  Future<ChatRoom> reload() async {
+    final room = await ChatRoom.get(id);
 
     key = room.key;
     text = room.text;
@@ -281,12 +281,12 @@ class ChatRoomModel {
   ///
   /// 예제 - 1:1 채팅방의 경우, 그냥 상대방의 uid 만 넣어서 호출하면 된다.
   /// ```dart
-  /// await ChatRoomModel.create(uid: otherUserUid);
+  /// await ChatRoom.create(uid: otherUserUid);
   /// ```
   ///
   /// It creates the chat room information and it read and returns. Don't think about the speed of reading the data.
   ///
-  static Future<ChatRoomModel> create({
+  static Future<ChatRoom> create({
     String? uid,
     String? roomId,
     String? name,
@@ -361,7 +361,7 @@ class ChatRoomModel {
   /// 채팅방에 남아 있는 사람이 없으면, 방을 삭제한다.
   /// If there are no remaining people in the chat room, the room is deleted.
   Future<void> deleteIfNoUsers() async {
-    final room = await ChatRoomModel.get(id);
+    final room = await ChatRoom.get(id);
 
     if (room.users == null || room.users!.isEmpty) {
       await room.ref.remove();
@@ -440,7 +440,7 @@ class ChatRoomModel {
     if (forceJoin == false && users?.containsKey(uid) == true) {
       return Code.alreadyJoined;
     }
-    dog('ChatRoomModel: Not joined, yet. Joing now.');
+    dog('ChatRoom: Not joined, yet. Joing now.');
 
     final usersRef = ref.child(Field.users);
 

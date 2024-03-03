@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 class ChatRoomAvatar extends StatelessWidget {
   const ChatRoomAvatar({super.key, required this.room});
 
-  final ChatRoomModel room;
+  final ChatRoom room;
   @override
   Widget build(BuildContext context) {
     return room.isSingleChat

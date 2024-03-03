@@ -9,8 +9,8 @@ class CommentView extends StatefulWidget {
     this.onCreate,
   });
 
-  final PostModel post;
-  final CommentModel comment;
+  final Post post;
+  final Comment comment;
   final Function? onCreate;
 
   @override
@@ -46,7 +46,7 @@ class _CommnetViewState extends State<CommentView> {
                 no: () => DisplayDatabasePhotos(
                   urls: widget.comment.urls,
                   path:
-                      '${CommentModel.comment(widget.post.id, widget.comment.id)}/${Field.urls}',
+                      '${Comment.comment(widget.post.id, widget.comment.id)}/${Field.urls}',
                 ),
               ),
               Theme(
@@ -136,7 +136,7 @@ class _CommnetViewState extends State<CommentView> {
                           hintText: T.reportInputHint.tr,
                         );
                         if (re == null || re == '') return;
-                        await ReportModel.create(
+                        await Report.create(
                           postId: widget.comment.postId,
                           commentId: widget.comment.id,
                           reason: re,

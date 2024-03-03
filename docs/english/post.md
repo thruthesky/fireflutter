@@ -62,9 +62,9 @@ Check the example code below to understand how to set these onPostCreate, onPost
 ```dart
 initForum() {
     ForumService.instance.init(
-        onPostCreate: (PostModel post) => toast("Created post: $post"),
-        onPostUpdate: (PostModel post) => toast("Updated post: $post"),
-        onPostDelete: (PostModel post) => toast("Deleted post: $post"),
+        onPostCreate: (Post post) => toast("Created post: $post"),
+        onPostUpdate: (Post post) => toast("Updated post: $post"),
+        onPostDelete: (Post post) => toast("Deleted post: $post"),
         // ... 
     );
 }
@@ -75,7 +75,7 @@ initForum() {
 You can use the `ForumService` to View the Post in a screen.
 
 ```dart
-final post = PostModel(
+final post = Post(
   // get the post
 );
 
@@ -90,7 +90,7 @@ It uses Fireship's `PostViewScreen` widget. This is the default screen widget to
 For customization, modify the code below.
 
 ```dart
-final post = PostModel(
+final post = Post(
   // get the post
 );
 
@@ -111,7 +111,7 @@ FirebaseDatabaseListView(
   query: Ref.postsSummary.child(category).orderByChild(Field.order),
   itemBuilder: (context, snapshot) {
     return PostListTile(
-      post: PostModel.fromSnapshot(snapshot),
+      post: Post.fromSnapshot(snapshot),
     );
   },
 );

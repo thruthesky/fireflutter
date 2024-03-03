@@ -18,7 +18,7 @@ import 'package:fireflutter/fireflutter.dart';
 
 class ChatModel {
   /// Set the current room.
-  ChatRoomModel room;
+  ChatRoom room;
   FirebaseDatabase get rtdb => FirebaseDatabase.instance;
   DatabaseReference get roomsRef => rtdb.ref().child('chat-rooms');
   DatabaseReference get messageseRef => rtdb.ref().child('chat-messages');
@@ -52,7 +52,7 @@ class ChatModel {
   /// 만약, [ChatService.instance.roomMessageOrder] 에 값이 없으면 0을 리턴한다.
   int messageOrder = 0;
 
-  resetRoom({required ChatRoomModel room}) {
+  resetRoom({required ChatRoom room}) {
     this.room = room;
   }
 
@@ -115,7 +115,7 @@ class ChatModel {
       'createdAt': ServerValue.timestamp,
     };
     // 저장 할 경로
-    final chatMessageRef = ChatMessageModel.messageRef(roomId: room.id).push();
+    final chatMessageRef = ChatMessage.messageRef(roomId: room.id).push();
     // 한번에 여러개 같이 저장
     multiUpdateData[chatMessageRef.path] = chatMessageData;
 
@@ -311,7 +311,7 @@ class ChatModel {
   ///
   Future<void> resetNewMessage({
     int? order,
-    ChatRoomModel? join,
+    ChatRoom? join,
   }) async {
     if (myUid == null) {
       return;
@@ -369,7 +369,7 @@ class ChatModel {
       String messageRoomId, FirebaseQueryBuilderSnapshot snapshot) {
     if (snapshot.docs.isEmpty) return false;
 
-    final lastMessage = ChatMessageModel.fromSnapshot(snapshot.docs.first);
+    final lastMessage = ChatMessage.fromSnapshot(snapshot.docs.first);
     final lastMessageOrder = lastMessage.order as int;
 
     final currentMessageOrder = messageOrder;
@@ -418,14 +418,14 @@ class ChatModel {
     roomSubscription = room.ref.onValue.listen((event) async {
       if (event.snapshot.exists) {
         // 채팅방이 존재하면, 채팅방 정보를 가져오고, 재 설정
-        final room = ChatRoomModel.fromSnapshot(event.snapshot);
+        final room = ChatRoom.fromSnapshot(event.snapshot);
         resetRoom(room: room);
         dog('[2] 채팅방 정보 업데이트');
         onUpdate?.call();
       } else {
         // 채팅방이 존재하지 않으면, 채팅방을 생성
         // 그러면 위의 이벤트가 발생.
-        await ChatRoomModel.create(roomId: room.id);
+        await ChatRoom.create(roomId: room.id);
         dog('[1] 채팅방 생성');
       }
     });

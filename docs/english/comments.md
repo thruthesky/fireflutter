@@ -63,7 +63,7 @@ Comments are saved under `/comments/<post-id>`.
 To view a comment, use like below:
 
 ```dart
-final CommentModel comment = CommentModel.fromMap({
+final Comment comment = Comment.fromMap({
     `uid`: uid,
     `createdAt`: createdAt,
     `urls`: urls,
@@ -93,9 +93,9 @@ Check the example code below to understand how to set these onCommentCreate, onC
 initForum() {
     ForumService.instance.init(
         // ... 
-        onCommentCreate: (CommentModel comment) => toast("Created comment: $comment"),
-        onCommentUpdate: (CommentModel comment) => toast("Updated comment: $comment"),
-        onCommentDelete: (CommentModel comment) => toast("Deleted comment: $comment"),
+        onCommentCreate: (Comment comment) => toast("Created comment: $comment"),
+        onCommentUpdate: (Comment comment) => toast("Updated comment: $comment"),
+        onCommentDelete: (Comment comment) => toast("Deleted comment: $comment"),
     );
 }
 ```
@@ -104,19 +104,19 @@ initForum() {
 
 <!-- TODO revise since comments are not in posts -->
 
-Comments will be provided by the PostModel. For customization, check the code below:
+Comments will be provided by the Post. For customization, check the code below:
 
 <!-- TODO need to update because comment is no longer in post -->
 
 ```dart
-final post = PostModel(
+final post = Post(
   // get the post model
 );
 
 ListView.builder(
   itemCount: post.comments.length,
   itemBuilder: (context, index) {
-    final CommentModel comment = post.comments[index];
+    final Comment comment = post.comments[index];
     return CommentView(
       post: post,
       comment: comment,
