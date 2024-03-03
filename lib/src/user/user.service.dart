@@ -243,8 +243,8 @@ class UserService {
         /// TODO - 누가 나의 프로필을 보았는지, 기록을 남긴다. UID 를 추가해서, 숫자만 표시 할 수 있도록 한다.
       }
 
-      ActivityLogModel.userView(userUid);
-      ActionLogModel.userProfileView(userUid);
+      ActivityLog.userView(userUid);
+      ActionLog.userProfileView(userUid);
     }
 
     /// 누가 나의 프로필을 볼 때, 푸시 알림 보내기

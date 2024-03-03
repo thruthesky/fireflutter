@@ -1,6 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 
-class AdminModel {
+class Admin {
   /// Paths and Refs
   static const String path = 'admins';
   static DatabaseReference root = FirebaseDatabase.instance.ref();

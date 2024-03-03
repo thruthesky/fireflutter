@@ -1,7 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 
-class BookmarkModel {
+class Bookmark {
   /// Paths and Refs
   static const String nodeName = 'bookmarks';
 
@@ -30,7 +30,7 @@ class BookmarkModel {
   bool get isUser => otherUserUid != null;
   bool get isChatRoom => chatRoomId != null;
 
-  BookmarkModel({
+  Bookmark({
     required this.key,
     required this.otherUserUid,
     required this.chatRoomId,
@@ -40,8 +40,8 @@ class BookmarkModel {
     required this.createdAt,
   });
 
-  factory BookmarkModel.fromJson(Map<dynamic, dynamic> json, String key) {
-    return BookmarkModel(
+  factory Bookmark.fromJson(Map<dynamic, dynamic> json, String key) {
+    return Bookmark(
       key: key,
       otherUserUid: json['otherUserUid'],
       chatRoomId: json['chatRoomId'],
@@ -52,8 +52,8 @@ class BookmarkModel {
     );
   }
 
-  factory BookmarkModel.fromValue(dynamic value, String key) {
-    return BookmarkModel.fromJson(value, key);
+  factory Bookmark.fromValue(dynamic value, String key) {
+    return Bookmark.fromJson(value, key);
   }
 
   Map<String, dynamic> toJson() {
@@ -69,10 +69,10 @@ class BookmarkModel {
 
   @override
   String toString() {
-    return 'BookmarkModel(otherUserUid: $otherUserUid, chatRoomId: $chatRoomId, category: $category, postId: $postId, commentId: $commentId, createdAt: $createdAt)';
+    return 'Bookmark(otherUserUid: $otherUserUid, chatRoomId: $chatRoomId, category: $category, postId: $postId, commentId: $commentId, createdAt: $createdAt)';
   }
 
-  static Future<BookmarkModel?> get({
+  static Future<Bookmark?> get({
     String? otherUserUid,
     String? chatRoomId,
     String? category,
@@ -87,14 +87,13 @@ class BookmarkModel {
       commentId: commentId,
     );
 
-    final snapshot =
-        await BookmarkModel.bookmarksRef.child(myUid!).child(id).get();
+    final snapshot = await Bookmark.bookmarksRef.child(myUid!).child(id).get();
 
     if (!snapshot.exists) {
       return null;
     }
 
-    return BookmarkModel.fromValue(snapshot.value, snapshot.key!);
+    return Bookmark.fromValue(snapshot.value, snapshot.key!);
   }
 
   static Future<bool> toggle({

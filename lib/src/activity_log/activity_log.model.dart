@@ -1,7 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 
-class ActivityLogModel {
+class ActivityLog {
   /// Paths and Refs
   static const String path = 'activity-logs';
   static String get chatJoinPath => '$path/$myUid/chat-join';
@@ -28,7 +28,7 @@ class ActivityLogModel {
   final String? commentId;
   final int createdAt;
 
-  const ActivityLogModel({
+  const ActivityLog({
     this.otherUserUid,
     this.category,
     this.postId,
@@ -36,8 +36,8 @@ class ActivityLogModel {
     required this.createdAt,
   });
 
-  factory ActivityLogModel.fromJson(Map<String, dynamic> json) {
-    return ActivityLogModel(
+  factory ActivityLog.fromJson(Map<String, dynamic> json) {
+    return ActivityLog(
       otherUserUid: json['otherUserUid'] as String?,
       category: json['category'] as String?,
       postId: json['postId'] as String?,

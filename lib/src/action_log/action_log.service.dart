@@ -96,7 +96,7 @@ class ActionLogOption {
     final snapshot = await query!.get();
     if (snapshot.exists) {
       final list =
-          snapshot.children.map((e) => ActionLogModel.fromSnapshot(e)).toList();
+          snapshot.children.map((e) => ActionLog.fromSnapshot(e)).toList();
 
       /// 첫번째 action 의 시간이 경과하려면 몇 초가 남았는지 계산한다.
       final first = list.first;
@@ -135,22 +135,22 @@ class ActionLogService {
   }) {
     if (userProfileView != null) {
       this.userProfileView = userProfileView;
-      this.userProfileView.ref = ActionLogModel.userProfileViewRef;
+      this.userProfileView.ref = ActionLog.userProfileViewRef;
     }
     if (chatJoin != null) {
       this.chatJoin = chatJoin;
-      this.chatJoin.ref = ActionLogModel.chatJoinRef;
+      this.chatJoin.ref = ActionLog.chatJoinRef;
     }
     if (postCreate != null) {
       this.postCreate = postCreate;
       for (final key in postCreate.keys) {
-        postCreate[key]!.ref = ActionLogModel.categoryCreateRef(key);
+        postCreate[key]!.ref = ActionLog.categoryCreateRef(key);
         postCreate[key]!.category = key;
       }
     }
     if (commentCreate != null) {
       this.commentCreate = commentCreate;
-      this.commentCreate.ref = ActionLogModel.commentCreateRef;
+      this.commentCreate.ref = ActionLog.commentCreateRef;
     }
 
     listenActions();
@@ -190,7 +190,7 @@ class ActionLogService {
             );
           }
         }, onError: (e) {
-          dog('----> ActionLogModel::listenActions() - with path: ${actionOption.ref!.path}, $e');
+          dog('----> ActionLog::listenActions() - with path: ${actionOption.ref!.path}, $e');
           throw e;
         }),
       );
@@ -206,7 +206,7 @@ class ActionLogService {
     final overtime =
         DateTime.now().millisecondsSinceEpoch - (option.seconds * 1000);
     for (var snapshot in snapshot.children) {
-      final actoin = ActionLogModel.fromSnapshot(snapshot);
+      final actoin = ActionLog.fromSnapshot(snapshot);
       // print(" ${actoin.createdAt.toHis} > ${overtime.toHis}");
       if (actoin.createdAt > overtime) {
         count++;

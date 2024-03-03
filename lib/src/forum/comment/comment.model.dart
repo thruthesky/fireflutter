@@ -279,8 +279,8 @@ class CommentModel {
 
     ForumService.instance.onCommentCreate?.call(created);
 
-    ActionLogModel.commentCreate(postId: postId, commentId: created.id);
-    ActivityLogModel.commentCreate(postId: postId, commentId: created.id);
+    ActionLog.commentCreate(postId: postId, commentId: created.id);
+    ActivityLog.commentCreate(postId: postId, commentId: created.id);
 
     return created;
   }

@@ -101,7 +101,7 @@ class _CommnetViewState extends State<CommentView> {
                         PopupMenuItem(
                           value: 'bookmark',
                           child: Value(
-                              path: BookmarkModel.bookmarkComment(
+                              path: Bookmark.bookmarkComment(
                                 widget.comment.id,
                               ),
                               builder: (v) {
@@ -179,7 +179,7 @@ class _CommnetViewState extends State<CommentView> {
                         if (re != true) return;
                         await widget.comment.delete();
                       } else if (value == 'bookmark') {
-                        final re = await BookmarkModel.toggle(
+                        final re = await Bookmark.toggle(
                           postId: widget.comment.postId,
                           commentId: widget.comment.id,
                         );

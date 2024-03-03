@@ -1,12 +1,12 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 
-/// ActionLogModel
+/// ActionLog
 ///
 /// 액션 모델은, 사용자의 활동을 기록하는 모델이다.
 /// Fireship 의 적절한 위치에서 이 모델의 [userProfileView], [chatJoin], [postCreate], [commentCreate] 등의 함수를
 /// 호출하여 사용자의 활동을 기록하면 된다.
-class ActionLogModel {
+class ActionLog {
   /// Paths and Refs
   static const String path = 'action-logs';
   static String get userProfileViewPath => '$path/user-profile-view/$myUid';
@@ -36,15 +36,15 @@ class ActionLogModel {
   ///
   final int createdAt;
 
-  const ActionLogModel({
+  const ActionLog({
     required this.key,
     this.category,
     this.postId,
     required this.createdAt,
   });
 
-  factory ActionLogModel.fromJson(Map<Object?, Object?> json, String key) {
-    return ActionLogModel(
+  factory ActionLog.fromJson(Map<Object?, Object?> json, String key) {
+    return ActionLog(
       key: key,
       category: json['category'] as String?,
       postId: json['postId'] as String?,
@@ -52,8 +52,8 @@ class ActionLogModel {
     );
   }
 
-  factory ActionLogModel.fromSnapshot(DataSnapshot snapshot) {
-    return ActionLogModel.fromJson(snapshot.value as Map, snapshot.key!);
+  factory ActionLog.fromSnapshot(DataSnapshot snapshot) {
+    return ActionLog.fromJson(snapshot.value as Map, snapshot.key!);
   }
 
   /// Create a new action log for user profiel view
@@ -70,7 +70,7 @@ class ActionLogModel {
         'createdAt': ServerValue.timestamp,
       });
     } catch (e) {
-      dog('----> ActionLogModel.userProfileView() Error: $e, path: ${ref.path}');
+      dog('----> ActionLog.userProfileView() Error: $e, path: ${ref.path}');
       rethrow;
     }
   }
@@ -91,7 +91,7 @@ class ActionLogModel {
         'createdAt': ServerValue.timestamp,
       });
     } catch (e) {
-      dog('----> ActionLogModel.chatJoin() Error: $e, path: ${ref.path}');
+      dog('----> ActionLog.chatJoin() Error: $e, path: ${ref.path}');
       rethrow;
     }
   }
@@ -130,7 +130,7 @@ class ActionLogModel {
         'createdAt': ServerValue.timestamp,
       });
     } catch (e) {
-      dog('----> ActionLogModel.postCreate() Error: $e, path: ${ref.path}');
+      dog('----> ActionLog.postCreate() Error: $e, path: ${ref.path}');
       rethrow;
     }
   }
@@ -149,7 +149,7 @@ class ActionLogModel {
         'postId': postId,
       });
     } catch (e) {
-      dog('----> ActionLogModel.commentCreate() Error: $e, path: ${ref.path}');
+      dog('----> ActionLog.commentCreate() Error: $e, path: ${ref.path}');
       rethrow;
     }
   }

@@ -59,14 +59,14 @@ class _PostViewScreenState extends State<PostViewScreen> {
 
                   // Bookmark
                   Value(
-                    path: BookmarkModel.bookmarkPost(post.id),
+                    path: Bookmark.bookmarkPost(post.id),
                     builder: (v) => TextButton(
                       onPressed: () async {
                         if (v != null) {
-                          await BookmarkModel.delete(
+                          await Bookmark.delete(
                               category: post.category, postId: post.id);
                         } else {
-                          await BookmarkModel.create(
+                          await Bookmark.create(
                               category: post.category, postId: post.id);
                         }
                       },

@@ -8,10 +8,10 @@ class BookmarkListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FirebaseDatabaseListView(
-      query: BookmarkModel.bookmarksRef.child(myUid!),
+      query: Bookmark.bookmarksRef.child(myUid!),
       itemBuilder: (context, snapshot) {
-        final BookmarkModel bookmark =
-            BookmarkModel.fromValue(snapshot.value, snapshot.key!);
+        final Bookmark bookmark =
+            Bookmark.fromValue(snapshot.value, snapshot.key!);
 
         if (bookmark.isPost) {
           return FutureBuilder<PostModel?>(
