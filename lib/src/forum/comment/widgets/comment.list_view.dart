@@ -32,33 +32,41 @@ class _CommentListViewState extends State<CommentListView> {
   init() async {
     // Getting all the comments first
     comments = await CommentModel.getAll(postId: widget.post.id);
+
     setState(() {});
 
     // print('path: ${widget.post.commentsRef.path}');
 
-    // Generate a flutter code with firebase realtime database that listens to newly created data on the path 'comments/${widget.post.id}'
+    // Generate a flutter code with firebase realtime database that listens
+    // to newly created data on the path 'comments/${widget.post.id}'
     newCommentSubscription = widget.post.commentsRef
         .limitToLast(1)
         .orderByChild('order')
         .onChildAdded
-        .listen((event) {
-      final comment = CommentModel.fromJson(
-        event.snapshot.value as Map,
-        event.snapshot.key!,
-        postId: widget.post.id,
-      );
-      // Check if the comment is already in the list.
-      final int index =
-          comments!.indexWhere((element) => element.id == comment.id);
-      // Exisiting comment. Do nothing. This happens on the first time.
-      if (index > -1) return;
-      // Add the comment to the list
-      comments?.add(comment);
-      // Sort the comments
-      comments = CommentModel.sortComments(comments!);
-      // This may trigger the screen flickering. It's okay. It's a rare case.
-      setState(() {});
-    });
+        .listen(
+      (event) {
+        final comment = CommentModel.fromJson(
+          event.snapshot.value as Map,
+          event.snapshot.key!,
+          postId: widget.post.id,
+        );
+        // Check if the comment is already in the list.
+        final int index =
+            comments!.indexWhere((element) => element.id == comment.id);
+        // Exisiting comment. Do nothing. This happens on the first time.
+        if (index > -1) return;
+        // Add the comment to the list
+        comments?.add(comment);
+        // Sort the comments
+        comments = CommentModel.sortComments(comments!);
+        // This may trigger the screen flickering. It's okay. It's a rare case.
+        setState(() {});
+      },
+      onError: (error) {
+        dog('----> CommentListView::initState() -> init() listen new comment: $error, path: ${widget.post.commentsRef.path}');
+        throw error;
+      },
+    );
   }
 
   @override

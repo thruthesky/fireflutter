@@ -3,6 +3,15 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 
 class ChatRoomModel {
+  /// Paths and Refs
+  static const String nodeName = 'chat-rooms';
+
+  static String chatRoomUsersAt(roomId, uid) =>
+      '$nodeName/$roomId/${Field.users}/$uid';
+  static String chatRoomName(roomId) => '$nodeName/$roomId/${Field.name}';
+  static String chatRoomIconUrl(roomId) => '$nodeName/$roomId/${Field.iconUrl}';
+
+  /// Variables
   final DatabaseReference ref;
   String key;
   String? text;
@@ -470,7 +479,7 @@ class ChatRoomModel {
     // it is important to know that updatedAt must not be updated
     // before this.
     data['order'] = order;
-    await Ref.joinsRef.child(uid).child(id).update(data);
+    await ChatJoinModel.ref.child(uid).child(id).update(data);
     return null;
   }
 
@@ -485,14 +494,14 @@ class ChatRoomModel {
   /// 목록에는 채팅방 정보가 남아 있어야 한다.
   Future leave() async {
     await ref.child(Field.users).child(myUid!).remove();
-    await Ref.join(myUid!, id).remove();
+    await ChatJoinModel.joinRef(myUid!, id).remove();
   }
 
   /// Remove user in ChatRoom
   Future remove(String uid) async {
     if (master == myUid) {
       await ref.child(Field.users).child(uid).remove();
-      await Ref.join(uid, id).remove();
+      await ChatJoinModel.joinRef(uid, id).remove();
 
       // Added this line of code so that we don't have to reload to
       // get the updated users list.

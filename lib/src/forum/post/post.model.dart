@@ -3,6 +3,18 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class PostModel {
+  /// Refs and Paths
+  ///
+
+  static const String posts = 'posts';
+  static DatabaseReference root = FirebaseDatabase.instance.ref();
+  static DatabaseReference get postsRef => root.child(posts);
+  static DatabaseReference categoryRef(String category) =>
+      postsRef.child(category);
+
+  static DatabaseReference postRef(String category, String id) =>
+      categoryRef(category).child(id);
+
   PostModel({
     required this.ref,
     required this.id,
@@ -42,7 +54,7 @@ class PostModel {
   String get category => ref.parent!.key!;
 
   /// Post's comments' database reference
-  DatabaseReference get commentsRef => Ref.postComments(id);
+  DatabaseReference get commentsRef => CommentModel.postComments(id);
 
   /// Take note of the category node. Check the snapshot ref parent
   /// because in `post-all-summaries`, category is part of the field.
@@ -76,7 +88,7 @@ class PostModel {
   }) {
     return PostModel(
       id: id,
-      ref: Ref.post(category, id),
+      ref: PostModel.postRef(category, id),
       title: json['title'] ?? '',
       content: json['content'] ?? '',
       uid: json['uid'],
@@ -109,7 +121,7 @@ class PostModel {
   /// ```
   ///
   factory PostModel.fromCategory(String category) {
-    final ref = Ref.category(category).push();
+    final ref = PostModel.categoryRef(category).push();
     return PostModel(
       id: ref.key!,
       ref: ref,
@@ -176,7 +188,7 @@ class PostModel {
   /// Get a post by id and category
   static Future<PostModel?> get(
       {required String category, required String id}) async {
-    final snapshot = await Ref.post(category, id).get();
+    final snapshot = await PostModel.postRef(category, id).get();
     if (snapshot.exists) {
       return PostModel.fromSnapshot(snapshot);
     }
@@ -186,7 +198,7 @@ class PostModel {
   /// Get the value of the field of a post
   static Future<dynamic> field(
       {required String category, required String id, required String field}) {
-    return Ref.post(category, id).child(field).get();
+    return PostModel.postRef(category, id).child(field).get();
   }
 
   /// Create post data in the database
@@ -227,7 +239,7 @@ class PostModel {
       Field.order: DateTime.now().millisecondsSinceEpoch * -1,
     };
 
-    final DatabaseReference ref = Ref.category(category).push();
+    final DatabaseReference ref = PostModel.categoryRef(category).push();
 
     dog("PostModel.create: ref.key: ${ref.path}, data: $data");
     await ref.set(data);
@@ -298,7 +310,7 @@ class PostModel {
     //                If not, delete the post.
     // QUESTION: Do we need to retrieve comments from RTDB
     //           to check if there are comments?
-    final snapshot = await Ref.postComments(id).limitToFirst(1).get();
+    final snapshot = await CommentModel.postComments(id).limitToFirst(1).get();
     final doesCommentsExist = snapshot.exists;
     if (doesCommentsExist) {
       await update(

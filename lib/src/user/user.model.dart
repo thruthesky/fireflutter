@@ -4,6 +4,27 @@ import 'package:fireflutter/fireflutter.dart' as ff;
 import 'package:geohash_plus/geohash_plus.dart';
 
 class UserModel {
+  /// Paths and Refs
+
+  static const String nodeName = 'users';
+  static const String userProfilePhotos = 'user-profile-photos';
+  static const String userLikes = 'user-likes';
+  static const String userWhoILike = 'user-who-i-like';
+
+  static String user(String uid) => '$nodeName/$uid';
+  static String userField(String uid, String field) => '${user(uid)}/$field';
+  static String whoILike(String a, String b) => '$userWhoILike/$a/$b';
+
+  static const String userWhoLikeMe = userLikes;
+
+  ///
+  static DatabaseReference root = FirebaseDatabase.instance.ref();
+  static DatabaseReference usersRef = root.child('users');
+  static DatabaseReference userRef(String uid) => usersRef.child(uid);
+  static DatabaseReference userProfilePhotosRef = root.child('profile-photos');
+  static DatabaseReference userWhoILikeRef = root.child(userLikes);
+  static DatabaseReference userWhoLikeMeRef = root.child(userWhoLikeMe);
+
   /// [data] 는 사용자 정보 문서 node 의 전체 값을 가지고 있다. 그래서, 필요할 때,
   /// data['email'] 과 같이, 필드를 직접 접근할 수 있다.
   Map<String, dynamic> data;
@@ -575,6 +596,6 @@ class UserModel {
   /// Returns true if the user has just liked, false if unliked.
   Future like(String otherUserUid) async {
     ff.ActivityLogModel.userLike(otherUserUid);
-    return await ff.toggle(ff.Path.like(ff.my!.uid, otherUserUid));
+    return await ff.toggle(ff.UserModel.whoILike(ff.my!.uid, otherUserUid));
   }
 }

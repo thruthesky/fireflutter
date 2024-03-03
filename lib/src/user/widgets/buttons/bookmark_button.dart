@@ -9,7 +9,7 @@ class BookmarkButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Value(
-      path: Path.bookmarkUser(uid),
+      path: BookmarkModel.bookmarkUser(uid),
       builder: (v) => ElevatedButton(
         onPressed: () async {
           if (v != null) {

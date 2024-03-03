@@ -3,6 +3,18 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class CommentModel {
+  /// Paths and Refs
+  static String nodeName = 'comments';
+  static String comments(String postId) => '$nodeName/$postId';
+  static String comment(String postId, String commentId) =>
+      '${comments(postId)}/$commentId';
+
+  static DatabaseReference root = FirebaseDatabase.instance.ref();
+  static DatabaseReference commentsRef = root.child(nodeName);
+  static DatabaseReference postComments(String postId) =>
+      root.child(comments(postId));
+
+  /// Variables
   final DatabaseReference ref;
   final String id;
   final String? parentId;
@@ -103,7 +115,7 @@ class CommentModel {
   /// ```
   ///
   factory CommentModel.fromPost(PostModel post) {
-    final fakeRef = Ref.postComments(post.id).push();
+    final fakeRef = CommentModel.postComments(post.id).push();
     return CommentModel(
       ref: fakeRef,
       id: fakeRef.key!,

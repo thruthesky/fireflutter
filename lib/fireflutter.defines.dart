@@ -21,7 +21,7 @@ class Folder {
 
   /// Forum
   static const String posts = 'posts';
-  static const String postSubscriptions = 'post-subscriptions';
+
   static const String postSummaries = 'post-summaries';
   static const String postAllSummaries = 'post-all-summaries';
   static const String comments = 'comments';

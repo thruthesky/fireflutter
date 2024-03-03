@@ -2,6 +2,13 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 
 class ReportModel {
+  /// Paths and Refs
+  static String nodeName = 'reports';
+
+  static DatabaseReference root = FirebaseDatabase.instance.ref();
+  static DatabaseReference reportsRef = root.child(nodeName);
+
+  /// Variables
   String key;
   String uid;
   String? otherUserUid;
@@ -79,7 +86,7 @@ class ReportModel {
             'category or commentId must be provided when postId is provided');
       }
     }
-    return await Ref.reports.push().set({
+    return await ReportModel.reportsRef.push().set({
       'uid': myUid!,
       'reason': reason,
       'otherUserUid': otherUserUid,

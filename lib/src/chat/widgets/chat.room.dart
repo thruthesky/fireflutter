@@ -171,7 +171,7 @@ class _ChatRoomState extends State<ChatRoom> {
                     chat.room.isSingleChat
                         ? Value.once(
                             path:
-                                '${Path.join(myUid!, chat.room.id)}/${Field.photoUrl}',
+                                '${ChatJoinModel.join(myUid!, chat.room.id)}/${Field.photoUrl}',
                             builder: (v) => v == null
                                 ? const SizedBox.shrink()
                                 : Row(
@@ -186,7 +186,7 @@ class _ChatRoomState extends State<ChatRoom> {
                                   ),
                           )
                         : Value(
-                            path: Path.chatRoomIconUrl(chat.room
+                            path: ChatRoomModel.chatRoomIconUrl(chat.room
                                 .id), // '${Path.join(myUid!, chat.room.id)}/${Field.photoUrl}',
                             builder: (v) => v == null
                                 ? const SizedBox.shrink()
@@ -209,7 +209,8 @@ class _ChatRoomState extends State<ChatRoom> {
                     Expanded(
                       child: chat.room.isSingleChat
                           ? Value.once(
-                              path: '${Path.join(myUid!, chat.room.id)}/name',
+                              path:
+                                  '${ChatJoinModel.join(myUid!, chat.room.id)}/name',
                               builder: (v) => Text(
                                 v ?? '',
                                 style: Theme.of(context).textTheme.titleLarge,
@@ -218,7 +219,7 @@ class _ChatRoomState extends State<ChatRoom> {
                               ),
                             )
                           : Value(
-                              path: Path.chatRoomName(chat.room.id),
+                              path: ChatRoomModel.chatRoomName(chat.room.id),
                               builder: (v) => Text(
                                 v ?? '',
                                 style: Theme.of(context).textTheme.titleLarge,
@@ -238,7 +239,7 @@ class _ChatRoomState extends State<ChatRoom> {
                   await chat.room.toggleNotifications();
                 },
                 icon: Value(
-                  path: Path.chatRoomUsersAt(chat.room.id, myUid!),
+                  path: ChatRoomModel.chatRoomUsersAt(chat.room.id, myUid!),
                   builder: (v) => v == true
                       ? const Icon(Icons.notifications_rounded)
                       : const Icon(Icons.notifications_outlined),

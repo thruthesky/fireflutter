@@ -72,7 +72,7 @@ Future<void> _onMessageTapped(RemoteMessage message) async {
 
   final data = MessagingService.instance.parseData(message.data);
 
-  if (data is ChatMessageData) {
+  if (data is ChatMessagingModel) {
     ChatService.instance.showChatRoom(
       context: globalContext,
       roomId: data.roomId,
@@ -80,7 +80,7 @@ Future<void> _onMessageTapped(RemoteMessage message) async {
     return;
   }
 
-  if (data is PostMessageData) {
+  if (data is PostMessagingModel) {
     PostModel? post =
         await PostModel.get(category: data.category, id: data.id);
     if (post == null) return;
@@ -93,7 +93,7 @@ Future<void> _onMessageTapped(RemoteMessage message) async {
     return;
   }
 
-  if (data is UserMessageData) {
+  if (data is UserMessagingModel) {
     UserService.instance.showPublicProfileScreen(
       context: globalContext,
       uid: data.uid,

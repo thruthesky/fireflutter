@@ -2,6 +2,20 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 
 class BookmarkModel {
+  /// Paths and Refs
+  static const String nodeName = 'bookmarks';
+
+  /// Bookmark ( = Favorite )
+  static DatabaseReference root = FirebaseDatabase.instance.ref();
+  static DatabaseReference bookmarksRef = root.child(nodeName);
+  static String bookmarkUser(String otherUserUid) =>
+      '$nodeName/$myUid/$otherUserUid';
+  static String bookmarkPost(String postId) => '$nodeName/$myUid/$postId';
+  static String bookmarkComment(String commentId) =>
+      '$nodeName/$myUid/$commentId';
+  static String bookmarkChatRoom(String roomId) => '$nodeName/$myUid/$roomId';
+
+  /// Variables
   String key;
   String? otherUserUid;
   String? chatRoomId;
@@ -73,7 +87,8 @@ class BookmarkModel {
       commentId: commentId,
     );
 
-    final snapshot = await Ref.bookmarks.child(myUid!).child(id).get();
+    final snapshot =
+        await BookmarkModel.bookmarksRef.child(myUid!).child(id).get();
 
     if (!snapshot.exists) {
       return null;
@@ -132,7 +147,7 @@ class BookmarkModel {
       commentId: commentId,
     );
 
-    return await Ref.bookmarks.child(myUid!).child(id).set({
+    return await bookmarksRef.child(myUid!).child(id).set({
       'otherUserUid': otherUserUid,
       'category': category,
       'postId': postId,
@@ -157,7 +172,7 @@ class BookmarkModel {
       commentId: commentId,
     );
 
-    return await Ref.bookmarks.child(myUid!).child(id).remove();
+    return await bookmarksRef.child(myUid!).child(id).remove();
   }
 
   static String _getId({

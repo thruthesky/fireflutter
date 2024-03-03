@@ -1,3 +1,4 @@
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_database/firebase_database.dart';
@@ -83,6 +84,7 @@ class Value extends StatelessWidget {
           return onLoading ?? const SizedBox.shrink();
         }
         if (event.hasError) {
+          dog('---> Value.once() -> Error; path: $path, message: ${event.error}');
           return Text('Error; ${event.error}');
         }
 

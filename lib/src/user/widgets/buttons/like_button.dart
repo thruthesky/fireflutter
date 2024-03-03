@@ -31,7 +31,8 @@ class _LikeButtonState extends State<LikeButton> {
 
     noOfLikes = widget.user?.noOfLikes ?? 0;
 
-    unlisten = Ref.user(userUid).child(Field.noOfLikes).onValue.listen((v) {
+    unlisten =
+        UserModel.userRef(userUid).child(Field.noOfLikes).onValue.listen((v) {
       setState(
         () => noOfLikes = int.tryParse(v.snapshot.value.toString()) ?? 0,
       );

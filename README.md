@@ -27,11 +27,6 @@ See the following documents:
 - [한국어 매뉴얼](https://thruthesky.github.io/fireflutter/korean/)
 
 
-## TODO
-
-- See [TODO](todo.md).
-
-
 ## Issues
 
 Create issues on github.

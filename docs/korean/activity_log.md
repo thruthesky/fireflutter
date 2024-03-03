@@ -10,11 +10,11 @@
 
 ## 데이터베이스
 
-- `activity/<uid>/user-profile-view` 는 다른 사용자의 공개 프로필 보기.
-- `activity/<uid>/user-like` 는 사용자 프로필 좋아요.
-- `activity/<uid>/post-create` 는 글 생성.
-- `activity/<uid>/comment-create` 은 코멘트 생성.
-- `activity/<uid>/chat-join` 은 채팅방 입장 기록. 동일한 채팅방에 여러번 입장을 해도, 입장 할 때마다 기록이 된다.
+- `activity-logs/<uid>/user-profile-view` 는 다른 사용자의 공개 프로필 보기.
+- `activity-logs/<uid>/user-like` 는 사용자 프로필 좋아요.
+- `activity-logs/<uid>/post-create` 는 글 생성.
+- `activity-logs/<uid>/comment-create` 은 코멘트 생성.
+- `activity-logs/<uid>/chat-join` 은 채팅방 입장 기록. 동일한 채팅방에 여러번 입장을 해도, 입장 할 때마다 기록이 된다.
 
 
 
@@ -47,7 +47,7 @@
 
 참고, Firestore 를 사용하면, A 가 B 를 좋아요 하면, B 가 나를 좋아요 한 사람들의 목록을 볼 수 있지만, Realtime Database 는 자료 구조를 다시 만들어야 해서, 그렇게 하지 않는다. 물론 별도의 자료구조를 만들면 가능할 것이다.
 
-참고, A 가 B 를 좋아요 하면 `activity/<A>/<push-id>/{ createdAt: ..., otherUserUid: B}` 와 같이 생성된다. 그리고 좋아요 해제를 해도 또 생성되고, 다시 좋아요 해도 또 생성된다. 즉, 한 사용자에 대해서 여러번 좋아요/해제를 해도 할 때 마다 acitivty 가 생성된다.
+참고, A 가 B 를 좋아요 하면 `activity-logs/<A>/<push-id>/{ createdAt: ..., otherUserUid: B}` 와 같이 생성된다. 그리고 좋아요 해제를 해도 또 생성되고, 다시 좋아요 해도 또 생성된다. 즉, 한 사용자에 대해서 여러번 좋아요/해제를 해도 할 때 마다 acitivty 가 생성된다.
 
 
 참고, 로그인은 보통 가입 할 때 최초로 한번 이루어지는데, 따로 기록을 하지는 않는다.

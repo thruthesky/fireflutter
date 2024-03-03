@@ -46,7 +46,7 @@ class _CommnetViewState extends State<CommentView> {
                 no: () => DisplayDatabasePhotos(
                   urls: widget.comment.urls,
                   path:
-                      '${Path.comment(widget.post.id, widget.comment.id)}/${Field.urls}',
+                      '${CommentModel.comment(widget.post.id, widget.comment.id)}/${Field.urls}',
                 ),
               ),
               Theme(
@@ -101,7 +101,7 @@ class _CommnetViewState extends State<CommentView> {
                         PopupMenuItem(
                           value: 'bookmark',
                           child: Value(
-                              path: Path.bookmarkComment(
+                              path: BookmarkModel.bookmarkComment(
                                 widget.comment.id,
                               ),
                               builder: (v) {

@@ -2,6 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class ChatMessageModel {
+  /// Paths and Refs
+
+  static const String nodeName = 'chat-messages';
+
+  static DatabaseReference root = FirebaseDatabase.instance.ref();
+  static DatabaseReference messageRef({required String roomId}) =>
+      root.child(nodeName).child(roomId);
+
+  /// Variables
   String? key;
   String? uid;
   String? text;

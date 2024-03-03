@@ -133,7 +133,8 @@ class TypesenseService {
     await client.collection(searchCollection).documents.delete({
       'filter_by': 'type:=user',
     });
-    final snapshot = await FirebaseDatabase.instance.ref(Folder.users).get();
+    final snapshot =
+        await FirebaseDatabase.instance.ref(UserModel.nodeName).get();
     for (final e in (snapshot.value as Map).entries) {
       final user = UserModel.fromJson(e.value, uid: e.key);
       await _upsertUser(user);
@@ -146,7 +147,7 @@ class TypesenseService {
     dog('Re-indexing category: $category');
     await deleteCategory(category);
     dog('Re-indexing posts for category: $category');
-    final postSnapshot = await Ref.category(category).get();
+    final postSnapshot = await PostModel.categoryRef(category).get();
     List<Future> futures = [];
     for (final e in (postSnapshot.value as Map).entries) {
       final post = PostModel.fromJson(e.value, id: e.key, category: category);
@@ -165,7 +166,7 @@ class TypesenseService {
 
   Future<void> _reindexComments(String postId) async {
     dog('Re-indexing comments for post: $postId');
-    final commentsSnapshot = await Ref.comments.child(postId).get();
+    final commentsSnapshot = await CommentModel.commentsRef.child(postId).get();
     dog("Retrieved: ${commentsSnapshot.value}");
     List<Future> futures = [];
     for (final commentSnapshot in commentsSnapshot.children) {

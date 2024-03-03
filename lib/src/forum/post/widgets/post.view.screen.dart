@@ -37,7 +37,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   no: () => DisplayDatabasePhotos(
                     urls: widget.post.urls,
                     path:
-                        '${Path.posts}/${widget.post.category}/${widget.post.id}/${Field.urls}',
+                        '${PostModel.posts}/${widget.post.category}/${widget.post.id}/${Field.urls}',
                   ),
                 ),
               ),
@@ -59,7 +59,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
 
                   // Bookmark
                   Value(
-                    path: Path.bookmarkPost(post.id),
+                    path: BookmarkModel.bookmarkPost(post.id),
                     builder: (v) => TextButton(
                       onPressed: () async {
                         if (v != null) {

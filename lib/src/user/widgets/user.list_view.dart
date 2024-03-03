@@ -25,7 +25,7 @@ class UserListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FirebaseDatabaseListView(
-      query: query ?? Ref.users,
+      query: query ?? UserModel.usersRef,
       shrinkWrap: shrinkWrap,
       itemBuilder: (_, snapshot) => UserTile(
         user: UserModel.fromSnapshot(snapshot),

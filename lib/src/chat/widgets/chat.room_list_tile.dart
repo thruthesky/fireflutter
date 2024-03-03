@@ -43,7 +43,7 @@ class ChatRoomListTile extends StatelessWidget {
                   ),
             ),
             Value(
-              path: Path.chatRoomUsersAt(room.id, myUid!),
+              path: ChatRoomModel.chatRoomUsersAt(room.id, myUid!),
               builder: (v) => v == true
                   ? Icon(
                       Icons.notifications_rounded,

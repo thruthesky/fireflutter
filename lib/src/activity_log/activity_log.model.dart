@@ -4,20 +4,22 @@ import 'package:fireflutter/fireflutter.dart';
 class ActivityLogModel {
   /// Paths and Refs
   static const String path = 'activity-logs';
-  static String get userProfileViewPath => '$path/user-profile-view/$myUid';
-  static String get chatJoinPath => '$path/chat-join/$myUid';
-  static String get postCreatePath => '$path/post-create/$myUid';
-  static String get commentCreatePath => '$path/comment-create/$myUid';
+  static String get chatJoinPath => '$path/$myUid/chat-join';
+  static String get commentCreatePath => '$path/$myUid/comment-create';
+  static String get postCreatePath => '$path/$myUid/post-create';
+  static String get userLikePath => '$path/$myUid/user-like';
+  static String get userProfileViewPath => '$path/$myUid/user-profile-view';
   static categoryCreateRef(String category) =>
       root.child(postCreatePath).child(category);
 
   ///
   static DatabaseReference root = FirebaseDatabase.instance.ref();
   static DatabaseReference ref = root.child(path);
-  static DatabaseReference userProfileViewRef = root.child(userProfileViewPath);
   static DatabaseReference chatJoinRef = root.child(chatJoinPath);
-  static DatabaseReference postCreateRef = root.child(postCreatePath);
   static DatabaseReference commentCreateRef = root.child(commentCreatePath);
+  static DatabaseReference postCreateRef = root.child(postCreatePath);
+  static DatabaseReference userLikeRef = root.child(userLikePath);
+  static DatabaseReference userProfileViewRef = root.child(userProfileViewPath);
 
   /// Variables
   final String? otherUserUid;
@@ -47,7 +49,7 @@ class ActivityLogModel {
   static Future<void> userView(String otherUserUid) async {
     if (myUid == null) return;
     if (ActivityLogService.instance.userView == false) return;
-    return await Ref.userViewActivity.push().set({
+    return await userProfileViewRef.push().set({
       'createdAt': ServerValue.timestamp,
       'otherUserUid': otherUserUid,
     });
@@ -56,7 +58,7 @@ class ActivityLogModel {
   static Future<void> userLike(String otherUserUid) async {
     if (myUid == null) return;
     if (ActivityLogService.instance.userLike == false) return;
-    return await Ref.userLikeActivity.push().set({
+    return await userLikeRef.push().set({
       'createdAt': ServerValue.timestamp,
       'otherUserUid': otherUserUid,
     });
@@ -71,7 +73,7 @@ class ActivityLogModel {
   }) async {
     if (myUid == null) return;
     if (ActivityLogService.instance.postCreate == false) return;
-    return await Ref.postCreateActivity.push().set({
+    return await postCreateRef.push().set({
       'createdAt': ServerValue.timestamp,
       'category': category,
       'postId': postId,
@@ -87,7 +89,7 @@ class ActivityLogModel {
   }) async {
     if (myUid == null) return;
     if (ActivityLogService.instance.commentCreate == false) return;
-    return await Ref.commentCreateActivity.push().set({
+    return await commentCreateRef.push().set({
       'createdAt': ServerValue.timestamp,
       'postId': postId,
       'commentId': commentId,
@@ -98,7 +100,7 @@ class ActivityLogModel {
   static Future<void> chatJoin(String roomId) async {
     if (myUid == null) return;
     if (ActivityLogService.instance.chatJoin == false) return;
-    return await Ref.chatJoinActivity.push().set({
+    return await chatJoinRef.push().set({
       'createdAt': ServerValue.timestamp,
       'roomId': roomId,
     });

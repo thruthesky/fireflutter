@@ -7,9 +7,9 @@ class ReportMyListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("ReportMyListView build: ${Ref.reports.path}");
+    print("ReportMyListView build: ${ReportModel.reportsRef.path}");
     return FirebaseDatabaseListView(
-      query: Ref.reports.orderByChild('uid').equalTo(myUid!),
+      query: ReportModel.reportsRef.orderByChild('uid').equalTo(myUid!),
       errorBuilder: (context, error, stackTrace) {
         dog("Error: $error");
         return Center(
@@ -127,7 +127,7 @@ class ReportMyListView extends StatelessWidget {
               children: [
                 const Text('[CHAT] '),
                 Value.once(
-                    path: Path.chatRoomName(report.chatRoomId),
+                    path: ChatRoomModel.chatRoomName(report.chatRoomId),
                     builder: (v) {
                       return Text(v);
                     }),

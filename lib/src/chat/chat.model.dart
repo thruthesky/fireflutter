@@ -23,6 +23,8 @@ class ChatModel {
   DatabaseReference get roomsRef => rtdb.ref().child('chat-rooms');
   DatabaseReference get messageseRef => rtdb.ref().child('chat-messages');
   DatabaseReference roomRef(String roomId) => roomsRef.child(roomId);
+
+  @Deprecated('Use ChatModel.messageRef instead of ChatModel.messageseRef')
   DatabaseReference messageRef({required String roomId}) =>
       rtdb.ref().child('chat-messages').child(roomId);
 
@@ -113,7 +115,7 @@ class ChatModel {
       'createdAt': ServerValue.timestamp,
     };
     // 저장 할 경로
-    final chatMessageRef = Ref.chatMessages.child(room.id).push();
+    final chatMessageRef = ChatMessageModel.messageRef(roomId: room.id).push();
     // 한번에 여러개 같이 저장
     multiUpdateData[chatMessageRef.path] = chatMessageData;
 
@@ -130,7 +132,7 @@ class ChatModel {
       final otherUid = room.otherUserUid!;
       final name = await UserModel.getField(otherUid, Field.displayName);
       final photoUrl = await UserModel.getField(otherUid, Field.photoUrl);
-      Ref.join(myUid!, singleChatRoomId(otherUid)).update({
+      ChatJoinModel.joinRef(myUid!, singleChatRoomId(otherUid)).update({
         'name': name,
         'photoUrl': photoUrl,
       });
@@ -272,7 +274,7 @@ class ChatModel {
   /// For group chat, remove the chat room node from /chat-rooms/{myUid}/{groupChatId}
   ///   and remove my uid from /chat-rooms/{gropChatId}/users/{myUid}
   leave() {
-    Ref.join(myUid!, room.id).remove();
+    ChatJoinModel.joinRef(myUid!, room.id).remove();
     roomUserRef(room.id, myUid!).remove();
     // 채팅 방에 인원이 더 이상 없으면, 채팅 방을 삭제한다.
     // If there are no more people in the chat room, the chat room is deleted.
@@ -329,7 +331,7 @@ class ChatModel {
       }
     }
 
-    final myJoinRef = Ref.join(myUid!, room.id);
+    final myJoinRef = ChatJoinModel.joinRef(myUid!, room.id);
     myJoinRef.update({
       Field.newMessage: null,
       if (singleChatOrder != null) Field.singleChatOrder: singleChatOrder,

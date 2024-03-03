@@ -20,7 +20,7 @@ class DefaultChatRoomInviteScreen extends StatelessWidget {
         title: const Text('친구 초대'),
       ),
       body: FirebaseDatabaseListView(
-        query: Ref.users.orderByChild('order'),
+        query: UserModel.usersRef.orderByChild('order'),
         itemBuilder: (context, snapshot) {
           final user = UserModel.fromSnapshot(snapshot);
           if (memberUids.contains(user.uid)) {
