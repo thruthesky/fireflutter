@@ -384,7 +384,7 @@ class ChatRoomModel {
   ///
   /// 1:1 채팅에서는
   /// - 로그인한 사용자가 다른 사용자와 채팅을 시작할 경우,
-  /// - ChatRoom 등에서 이 함수를 호출하면 된다.
+  /// - ChatRoomBody 등에서 이 함수를 호출하면 된다.
   /// - 이 함수가 최초 호출이 되는 경우 chat-rooms 의 users 에 로그인 사용자 UID 와 다른 사용자 UID 저장되지만,
   /// - 로그인을 한 사용자의 /chat-joins 만 생성되고, 다른 사용자의 /chat-joins 는 생성되지 않는다.
   /// - 로그인 한 사용자가 채팅 메시지를 하나 전송하면, 그 때서야 달느 사용자의 /chat-joins 가 생성된다.
@@ -497,7 +497,7 @@ class ChatRoomModel {
     await ChatJoinModel.joinRef(myUid!, id).remove();
   }
 
-  /// Remove user in ChatRoom
+  /// Remove user in ChatRoomBody
   Future remove(String uid) async {
     if (master == myUid) {
       await ref.child(Field.users).child(uid).remove();

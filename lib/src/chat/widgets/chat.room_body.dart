@@ -16,8 +16,8 @@ import 'package:flutter/material.dart';
 /// [leave] 가 false 이면 메뉴에서 방나기를 보여주지 않는다. 예를 들면, 모든 사용자가 자동으로 접속하는 전체 채탱방에서는
 /// 따로 방을 나갈 필요 없고, 나가도 다시 join 을 해야만 한다. 이와 같은 경우 사용을 하면 된다.
 ///
-class ChatRoom extends StatefulWidget {
-  const ChatRoom({
+class ChatRoomBody extends StatefulWidget {
+  const ChatRoomBody({
     super.key,
     this.uid,
     this.roomId,
@@ -33,10 +33,10 @@ class ChatRoom extends StatefulWidget {
   final bool leave;
 
   @override
-  State<ChatRoom> createState() => _ChatRoomState();
+  State<ChatRoomBody> createState() => _ChatRoomState();
 }
 
-class _ChatRoomState extends State<ChatRoom> {
+class _ChatRoomState extends State<ChatRoomBody> {
   ChatModel? _chat;
   ChatModel get chat => _chat!;
 
@@ -64,7 +64,7 @@ class _ChatRoomState extends State<ChatRoom> {
     try {
       await chat.room.reload();
     } on Issue catch (e) {
-      // See chat.md#Get ChatRoomModel on ChatRoom
+      // See chat.md#Get ChatRoomModel on ChatRoomBody
       if (e.code == Code.chatRoomNotExists) {
         /// uid 또는 groupId 로 채팅방을 생성한다.
         final room = await ChatRoomModel.create(

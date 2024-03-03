@@ -65,7 +65,7 @@ export 'src/chat/widgets/default_chat_room.edit.dialog.dart';
 export 'src/chat/widgets/chat.new_message.dart';
 export 'src/chat/widgets/chat.room_avatar.dart';
 export 'src/chat/widgets/chat.room_list_tile.dart';
-export 'src/chat/widgets/chat.room.dart';
+export 'src/chat/widgets/chat.room_body.dart';
 export 'src/chat/widgets/default_chat_room.invite.screen.dart';
 export 'src/chat/widgets/default_chat_room.list_view.dart';
 export 'src/chat/widgets/default_chat_room.members.screen.dart';

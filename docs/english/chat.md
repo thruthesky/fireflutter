@@ -22,7 +22,7 @@
 
 ## Logic
 
-### Get ChatRoomModel on ChatRoom
+### Get ChatRoomModel on ChatRoomBody
 
 - The complete chat room model instance is needed before display the chat room message. For instance,
     - to check if the user is in the room,
@@ -55,22 +55,22 @@ However, if you want to create a chat room more easily, you can use the pre-made
 
 ### Viewing Chat Room
 
-A `ChatRoom()` widget can be used to show chat room (room's messages with room input box).
+A `ChatRoomBody()` widget can be used to show chat room (room's messages with room input box).
 
 ```dart
 // For 1:1 chat room, using other user's uid
-ChatRoom(uid: 'user-uid');
+ChatRoomBody(uid: 'user-uid');
 
 ...
 
 // Using room-id for 1:1 or group chat room
-ChatRoom(roomId: 'room-id');
+ChatRoomBody(roomId: 'room-id');
 
 ...
 
 // Using snapshot -> ChatRoomModel
 ChatRoomModel chatRoom = ChatRoomModel.fromSnapshot(dataSnapshot);
-ChatRoom(room: chatRoom);
+ChatRoomBody(room: chatRoom);
 ```
 
 ### Updating Chat Room

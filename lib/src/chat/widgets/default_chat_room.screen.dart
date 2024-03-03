@@ -29,7 +29,7 @@ class DefaultChatRoomScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ChatRoom(uid: uid, roomId: roomId, room: room),
+      body: ChatRoomBody(uid: uid, roomId: roomId, room: room),
     );
   }
 }
