@@ -8,7 +8,7 @@
       ".write": true
     },
           // Action
-    "action": {
+    "action-logs": {
       "$uid": {
         ".read": true,
         ".write": "$uid === auth.uid"

@@ -220,13 +220,13 @@ class UserService {
     final String userUid = uid ?? user!.uid;
 
     ///
-    // if (ActionService.instance.userView.isOverLimit) {
-    //   if (await ActionService.instance.userViewOverLimit() != true) {
+    // if (ActionLogService.instance.userView.isOverLimit) {
+    //   if (await ActionLogService.instance.userViewOverLimit() != true) {
     //     return;
     //   }
     // }
 
-    if (await ActionService.instance.userProfileView.isOverLimit()) return;
+    if (await ActionLogService.instance.userProfileView.isOverLimit()) return;
 
     if (context.mounted) {
       showGeneralDialog(
@@ -244,7 +244,7 @@ class UserService {
       }
 
       ActivityModel.userView(userUid);
-      ActionModel.userView(userUid);
+      ActionLogModel.userProfileView(userUid);
     }
 
     /// 누가 나의 프로필을 볼 때, 푸시 알림 보내기

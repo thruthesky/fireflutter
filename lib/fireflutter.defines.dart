@@ -1,3 +1,4 @@
+@Deprecated('Use model classes instead of Folder class.')
 class Folder {
   Folder._();
   static const String action = 'action';

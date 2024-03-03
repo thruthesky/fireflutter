@@ -237,7 +237,7 @@ class CommentModel {
     CommentModel? parent,
     List<String>? urls,
   }) async {
-    if (await ActionService.instance.commentCreate.isOverLimit()) return;
+    if (await ActionLogService.instance.commentCreate.isOverLimit()) return;
 
     Map<String, dynamic> data = {
       'content': content,
@@ -263,7 +263,7 @@ class CommentModel {
 
     ForumService.instance.onCommentCreate?.call(created);
 
-    ActionModel.commentCreate(postId: postId, commentId: created.id);
+    ActionLogModel.commentCreate(postId: postId, commentId: created.id);
     ActivityModel.commentCreate(postId: postId, commentId: created.id);
 
     return created;

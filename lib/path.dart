@@ -2,6 +2,7 @@ import 'package:fireflutter/fireflutter.dart';
 
 /// Path
 ///
+@Deprecated('Use model classes instead of Path class.')
 class Path {
   Path._();
 

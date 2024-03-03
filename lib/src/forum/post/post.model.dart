@@ -205,8 +205,15 @@ class PostModel {
   }) async {
     if (iam.disabled) return null;
 
-    if (ActionService.instance.postCreate[category] != null) {
-      if (await ActionService.instance.postCreate[category]!.isOverLimit()) {
+    if (ActionLogService.instance.postCreate[category] != null) {
+      if (await ActionLogService.instance.postCreate[category]!.isOverLimit()) {
+        return null;
+      }
+    }
+
+    if (ActionLogService.instance.postCreate['all'] != null) {
+      /// 만약 'all' 카테고리가 제한이 되었으면, 모든 게시판을 통틀어서 제한이 되었는지 확인한다.
+      if (await ActionLogService.instance.postCreate['all']!.isOverLimit()) {
         return null;
       }
     }
@@ -229,7 +236,7 @@ class PostModel {
     final snapshot = await ref.get();
     final created = PostModel.fromSnapshot(snapshot);
 
-    ActionModel.postCreate(category: category, postId: created.id);
+    ActionLogModel.postCreate(category: category, postId: created.id);
     ActivityModel.postCreate(category: category, postId: created.id);
 
     /// Call the onPostCreate callback

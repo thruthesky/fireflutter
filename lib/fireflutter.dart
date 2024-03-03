@@ -1,6 +1,6 @@
 /// Action
-export 'src/action/action.model.dart';
-export 'src/action/action.service.dart';
+export 'src/action_log/action_log.model.dart';
+export 'src/action_log/action_log.service.dart';
 
 /// Activity
 export 'src/activity/activity.model.dart';

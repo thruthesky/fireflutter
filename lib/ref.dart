@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 
+@Deprecated('Use model classes instead of Ref class.')
 class Ref {
   Ref._();
 

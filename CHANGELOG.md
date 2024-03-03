@@ -1,3 +1,8 @@
+## 0.3.18
+
+* Fix. Action log. You can limit the creation of posts per each category.
+
+
 ## 0.3.17
 
 * Document update

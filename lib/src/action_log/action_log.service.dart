@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 
-/// ActionOption
+/// ActionLogOption
 ///
 /// 만약, 특정 액션을 설정을 원하지 않는다면, ref 에 null 을 저장하면 된다. 그러면, 해당 액션은
 /// 제한 설정을 하지 않는다.
-class ActionOption {
+class ActionLogOption {
   /// 주의: ref 에 직접 쿼리를 하지 않고, query 를 사용해야 한다.
   DatabaseReference? ref;
   Query? get query {
@@ -17,18 +17,24 @@ class ActionOption {
     /// TODO 글의 경우, /action/<uid>/postCreate/{category}/{postId} 와 같이 저장해야지만, 해결이 된다.
     /// TODO 그러면 모든 것이 쉽게 해결 된다.
     if (category != null) {
-      return ref?.limitToLast(limit).orderByChild('createdAt');
+      return ref!.limitToLast(limit).orderByChild('createdAt');
     }
-    return ref?.limitToLast(limit).orderByChild('createdAt');
+    return ref!.limitToLast(limit).orderByChild('createdAt');
   }
 
   /// 게시판의 경우, 카테고리를 지정하여, 여러개의 게시판에 대해서 각각의 제한을 설정할 수 있다.
   String? category;
+
+  /// [limit] 은 몇 개의 액션을 허용할 것인지를 설정한다. 참고로 이 값이 커지면, DB 에서 그 만큼 많은 데이터를 가져와야
+  /// 하므로, 성능에 영향을 줄 수 있다. 그래서 최대 100 정도로 설정하는 것이 좋다. 보통 10 이내의 값을 주면 된다.
   int limit;
+
+  /// [seconds] 는 몇 초 동안 제한을 할 것인지를 설정한다. 만약, 10초 동안 3개의 액션을 허용하고 싶다면,
+  /// limit 은 3, seconds 는 10 이 된다.
   int seconds;
   int count;
   bool debug;
-  Future<bool?> Function()? overLimit;
+  Future<bool?> Function(ActionLogOption)? overLimit;
 
   /// limit 에 걸렸는지 확인을 한다.
   ///
@@ -46,8 +52,14 @@ class ActionOption {
     /// ref 가 null 이면, 제한을 하지 않는다.
     if (ref == null) return false;
 
+    /// limit 이 0 이면, 무조건 제한을 한다. 즉, 액션을 한번도 허용하지 않는다.
+    if (limit == 0) {
+      final re = await overLimit?.call(this);
+      return (re == null || re) ? true : false;
+    }
+
     /// 현재 카운트가 limit 보다 작으면, 제한을 하지 않는다.
-    /// 이 값은 ActionService init 에서 실시간으로 업데이트가 된다.
+    /// 이 값은 ActionLogService init 에서 실시간으로 업데이트가 된다.
     if (count < limit) return false;
     if (debug) dog('--> 제한에 걸렸다. ${ref!.path}');
 
@@ -55,7 +67,7 @@ class ActionOption {
     /// 그래서, 이곳에서 쿼리를 해서, 제한 시간이 지났는지 확인한다.
     /// 제한 시간이 지나면, 다시 action 이 가능해 지고, 그러면 계속 action 을 로그하므로, init 에서 실시간 업데이트가 된다.
     final snapshot = await query!.get();
-    count = ActionService.instance
+    count = ActionLogService.instance
         .countFromSnapshot(snapshot: snapshot, option: this);
     if (count < limit) {
       if (debug) dog('제한 시간이 지나서, 다시 action 이 가능해졌다. ${ref!.path}');
@@ -66,11 +78,11 @@ class ActionOption {
       }
     }
 
-    final re = await overLimit?.call();
-    return re == null ? true : false;
+    final re = await overLimit?.call(this);
+    return (re == null || re) ? true : false;
   }
 
-  ActionOption({
+  ActionLogOption({
     this.ref,
     this.limit = 100,
     this.seconds = 10000,
@@ -84,93 +96,103 @@ class ActionOption {
     final snapshot = await query!.get();
     if (snapshot.exists) {
       final list =
-          snapshot.children.map((e) => ActionModel.fromSnapshot(e)).toList();
+          snapshot.children.map((e) => ActionLogModel.fromSnapshot(e)).toList();
 
       /// 첫번째 action 의 시간이 경과하려면 몇 초가 남았는지 계산한다.
       final first = list.first;
       final overtime = first.createdAt + seconds * 1000;
       final remain = overtime - DateTime.now().millisecondsSinceEpoch;
-      dog('제한 시간이 지나기까지 ${remain ~/ 1000} 초 남았다. ${ref!.path}');
+      dog(
+        '제한 시간이 지나기까지 ${remain ~/ 1000} 초 남았다. ${ref!.path}',
+      );
     }
   }
 }
 
-/// ActionService
+/// ActionLogService
 ///
 /// 다른 사용자 프로필 보기를 1분에 3회로 제한 한 경우, 3회 제한이 걸리면, 이전에 본 다른 사용자의 프로필도 모두 볼 수 없다.
 /// 단, 이전에 본 사용자의 프로필을 다시 보기 해도, 카운트가 증가하지는 않는다.
 ///
 ///
-class ActionService {
-  static ActionService? _instance;
-  static ActionService get instance => _instance ??= ActionService._();
-  ActionService._();
+class ActionLogService {
+  static ActionLogService? _instance;
+  static ActionLogService get instance => _instance ??= ActionLogService._();
+  ActionLogService._();
 
-  ActionOption userProfileView = ActionOption(ref: null);
-  ActionOption chatJoin = ActionOption(ref: null);
-  Map<String, ActionOption> postCreate = {};
-  ActionOption commentCreate = ActionOption(ref: null);
+  ActionLogOption userProfileView = ActionLogOption(ref: null);
+  ActionLogOption chatJoin = ActionLogOption(ref: null);
+  Map<String, ActionLogOption> postCreate = {};
+  ActionLogOption commentCreate = ActionLogOption(ref: null);
 
   List<StreamSubscription> subs = [];
 
   init({
-    ActionOption? userProfileView,
-    ActionOption? chatJoin,
-    Map<String, ActionOption>? postCreate,
-    ActionOption? commentCreate,
+    ActionLogOption? userProfileView,
+    ActionLogOption? chatJoin,
+    Map<String, ActionLogOption>? postCreate,
+    ActionLogOption? commentCreate,
   }) {
     if (userProfileView != null) {
       this.userProfileView = userProfileView;
-      this.userProfileView.ref = Ref.userViewAction;
+      this.userProfileView.ref = ActionLogModel.userProfileViewRef;
     }
     if (chatJoin != null) {
       this.chatJoin = chatJoin;
-      this.chatJoin.ref = Ref.chatJoinAction;
+      this.chatJoin.ref = ActionLogModel.chatJoinRef;
     }
     if (postCreate != null) {
       this.postCreate = postCreate;
       for (final key in postCreate.keys) {
-        postCreate[key]!.ref = Ref.postCreateAction;
+        postCreate[key]!.ref = ActionLogModel.categoryCreateRef(key);
         postCreate[key]!.category = key;
       }
     }
     if (commentCreate != null) {
       this.commentCreate = commentCreate;
-      this.commentCreate.ref = Ref.commentCreateAction;
+      this.commentCreate.ref = ActionLogModel.commentCreateRef;
     }
 
     listenActions();
   }
 
+  /// [init] 이 호출 될 때 마다, 이전에 등록된 리스너를 모두 취소하고, 새로 리스너를 등록한다.
+  ///
+  /// 참고로, 새로 등록되는 설정만 리스너를 등록하도록 하면 좋을 것 같다.
   listenActions() {
     for (final sub in subs) {
       sub.cancel();
     }
     subs.clear();
     final subscriptions = [
-      userProfileView,
       chatJoin,
+      commentCreate,
       ...postCreate.values,
-      commentCreate
-    ];
+      userProfileView,
+    ]
+        .where(
+            (element) => false == (element.ref == null)) // ref 가 null 인 경우는 제외
+        .where((element) => element.limit > 0) // limit 이 0 인 경우 제외
+        .toList();
     for (final actionOption in subscriptions) {
       // listen user view
-      // print('---> ActionService.listenActions() - action: ${action.limit}');
+      // print('---> ActionLogService.listenActions() - action: ${action.limit}');
       subs.add(
-        actionOption.query!.onValue.listen(
-          (event) {
-            actionOption.count = 0;
-            if (event.snapshot.exists == false) {
-            } else {
-              // print(
-              //     'listen actions; ${action.ref.path} -> ${event.snapshot.children.length}');
-              actionOption.count = countFromSnapshot(
-                snapshot: event.snapshot,
-                option: actionOption,
-              );
-            }
-          },
-        ),
+        actionOption.query!.onValue.listen((event) {
+          actionOption.count = 0;
+          if (event.snapshot.exists == false) {
+          } else {
+            // print(
+            //     'listen actions; ${action.ref.path} -> ${event.snapshot.children.length}');
+            actionOption.count = countFromSnapshot(
+              snapshot: event.snapshot,
+              option: actionOption,
+            );
+          }
+        }, onError: (e) {
+          dog('----> ActionLogModel::listenActions() - with path: ${actionOption.ref!.path}, $e');
+          throw e;
+        }),
       );
     }
   }
@@ -178,13 +200,13 @@ class ActionService {
   /// Snapshot 의 데이터들에서 createdAt 이 seconds 보다 오래된 갯수를 리턴한다.
   countFromSnapshot({
     required DataSnapshot snapshot,
-    required ActionOption option,
+    required ActionLogOption option,
   }) {
     int count = 0;
     final overtime =
         DateTime.now().millisecondsSinceEpoch - (option.seconds * 1000);
     for (var snapshot in snapshot.children) {
-      final actoin = ActionModel.fromSnapshot(snapshot);
+      final actoin = ActionLogModel.fromSnapshot(snapshot);
       // print(" ${actoin.createdAt.toHis} > ${overtime.toHis}");
       if (actoin.createdAt > overtime) {
         count++;

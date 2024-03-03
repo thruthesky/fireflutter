@@ -42,8 +42,15 @@ class ForumService {
       return;
     }
 
-    if (ActionService.instance.postCreate[category] != null) {
-      if (await ActionService.instance.postCreate[category]!.isOverLimit()) {
+    if (ActionLogService.instance.postCreate[category] != null) {
+      if (await ActionLogService.instance.postCreate[category]!.isOverLimit()) {
+        return;
+      }
+    }
+
+    if (ActionLogService.instance.postCreate['all'] != null) {
+      /// 만약 'all' 카테고리가 제한이 되었으면, 모든 게시판을 통틀어서 제한이 되었는지 확인한다.
+      if (await ActionLogService.instance.postCreate['all']!.isOverLimit()) {
         return;
       }
     }
@@ -94,7 +101,9 @@ class ForumService {
       error(context: context, message: 'You are disabled.');
       return false;
     }
-    if (await ActionService.instance.commentCreate.isOverLimit()) return false;
+    if (await ActionLogService.instance.commentCreate.isOverLimit()) {
+      return false;
+    }
     if (context.mounted) {
       return showModalBottomSheet<bool?>(
         context: context,
