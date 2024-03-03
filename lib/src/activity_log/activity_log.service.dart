@@ -1,7 +1,8 @@
-class ActivityService {
-  static ActivityService? _instance;
-  static ActivityService get instance => _instance ??= ActivityService._();
-  ActivityService._();
+class ActivityLogService {
+  static ActivityLogService? _instance;
+  static ActivityLogService get instance =>
+      _instance ??= ActivityLogService._();
+  ActivityLogService._();
 
   bool userView = false;
   bool userLike = false;

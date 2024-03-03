@@ -58,7 +58,7 @@
 아래와 같이 설정을 하면, 해당 로그가 기록된다.
 
 ```dart
-ActivityService.instance.init(
+ActivityLogService.instance.init(
   userView: true,
   userLike: true,
   postCreate: true,

@@ -8,7 +8,6 @@ import 'package:fireflutter/fireflutter.dart';
 /// 호출하여 사용자의 활동을 기록하면 된다.
 class ActionLogModel {
   /// Paths and Refs
-  ///
   static const String path = 'action-logs';
   static String get userProfileViewPath => '$path/user-profile-view/$myUid';
   static String get chatJoinPath => '$path/chat-join/$myUid';
@@ -16,7 +15,8 @@ class ActionLogModel {
   static String get commentCreatePath => '$path/comment-create/$myUid';
   static categoryCreateRef(String category) =>
       root.child(postCreatePath).child(category);
-  //
+
+  ///
   static DatabaseReference root = FirebaseDatabase.instance.ref();
   static DatabaseReference ref = root.child(path);
   static DatabaseReference userProfileViewRef = root.child(userProfileViewPath);

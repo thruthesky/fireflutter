@@ -237,7 +237,7 @@ class PostModel {
     final created = PostModel.fromSnapshot(snapshot);
 
     ActionLogModel.postCreate(category: category, postId: created.id);
-    ActivityModel.postCreate(category: category, postId: created.id);
+    ActivityLogModel.postCreate(category: category, postId: created.id);
 
     /// Call the onPostCreate callback
     ForumService.instance.onPostCreate?.call(created);

@@ -113,7 +113,7 @@ class _ChatRoomState extends State<ChatRoom> {
     loaded.value = true;
 
     ActionLogModel.chatJoin(chat.room.id);
-    ActivityModel.chatJoin(chat.room.id);
+    ActivityLogModel.chatJoin(chat.room.id);
 
     /// 방 정보 전체를 한번 읽고, 이후, 실시간 업데이트
     ///
