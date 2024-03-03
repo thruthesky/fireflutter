@@ -7,6 +7,9 @@ class PostModel {
   ///
 
   static const String posts = 'posts';
+  // static const String postSummaries = 'post-summaries';
+  // static const String postAllSummaries = 'post-all-summaries';
+
   static DatabaseReference root = FirebaseDatabase.instance.ref();
   static DatabaseReference get postsRef => root.child(posts);
   static DatabaseReference categoryRef(String category) =>
@@ -14,6 +17,12 @@ class PostModel {
 
   static DatabaseReference postRef(String category, String id) =>
       categoryRef(category).child(id);
+
+  static DatabaseReference postSummaries = root.child('post-summaries');
+
+  static DatabaseReference postSummary(String category, String id) =>
+      postSummaries.child(category).child(id);
+  static DatabaseReference postAllSummaries = root.child('post-all-summaries');
 
   PostModel({
     required this.ref,

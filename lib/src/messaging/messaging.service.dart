@@ -317,7 +317,7 @@ class MessagingService {
     List<String> tokens = [];
     for (uid in uids) {
       dog('lenght -> ${uids.length}');
-      final snapshot = await Ref.userTokens(uid).get();
+      final snapshot = await MessagingModel.userTokens(uid).get();
       if (snapshot.value == null) continue;
       if (snapshot.exists == false) continue;
 

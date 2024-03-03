@@ -14,6 +14,9 @@ class CommentModel {
   static DatabaseReference postComments(String postId) =>
       root.child(comments(postId));
 
+  static DatabaseReference commentRef(String postId, String commentId) =>
+      root.child(comment(postId, commentId));
+
   /// Variables
   final DatabaseReference ref;
   final String id;
@@ -84,7 +87,7 @@ class CommentModel {
     // required String category,
     required String postId,
   }) {
-    final ref = Ref.comment(postId, id);
+    final ref = commentRef(postId, id);
     return CommentModel(
       ref: ref,
       id: id,
@@ -166,7 +169,8 @@ class CommentModel {
     required String postId,
     required String commentId,
   }) async {
-    final snapshot = await Ref.comments.child(postId).child(commentId).get();
+    final snapshot =
+        await CommentModel.commentsRef.child(postId).child(commentId).get();
     return CommentModel.fromJson(snapshot.value as Map, commentId,
         postId: postId);
   }
@@ -177,7 +181,7 @@ class CommentModel {
   static Future<List<CommentModel>> getAll({
     required String postId,
   }) async {
-    final snapshot = await Ref.comments.child(postId).get();
+    final snapshot = await CommentModel.commentsRef.child(postId).get();
     final comments = <CommentModel>[];
     if (snapshot.value == null) {
       return comments;
@@ -263,7 +267,7 @@ class CommentModel {
 
     await ref.set(data);
 
-    final summaryRef = Ref.postSummary(category, postId);
+    final summaryRef = PostModel.postSummary(category, postId);
     summaryRef.child(Field.noOfComments).set(ServerValue.increment(1));
 
     /// Don't wait for calling onCommentCreate.
