@@ -370,7 +370,7 @@ class UserModel {
     String? photoUrl,
   }) async {
     await ff.set(
-      '${ff.Folder.users}/$uid',
+      '${ff.UserModel.nodeName}/$uid',
       {
         'displayName': displayName,
         'photoUrl': photoUrl,

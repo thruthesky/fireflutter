@@ -13,9 +13,6 @@ class ActionLogOption {
   Query? get query {
     /// 게시판의 경우, 카테고리 별로 제한을 한다.
     ///
-    /// TODO 문제 발생. RTDB 에서 내가 쓴 글의 마지막 5개와 같이 조건 검색을 할 수 없다. 그래서, 액션을 저장할 때,
-    /// TODO 글의 경우, /action/<uid>/postCreate/{category}/{postId} 와 같이 저장해야지만, 해결이 된다.
-    /// TODO 그러면 모든 것이 쉽게 해결 된다.
     if (category != null) {
       return ref!.limitToLast(limit).orderByChild('createdAt');
     }

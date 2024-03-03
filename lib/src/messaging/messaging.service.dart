@@ -155,7 +155,7 @@ class MessagingService {
         'uid': myUid,
         'platform': platformName(),
       };
-      await set('${Folder.userFcmTokens}/$token', data);
+      await set('${MessagingModel.userFcmTokens}/$token', data);
     } catch (e) {
       dog('Error while updating token: $e');
       rethrow;
@@ -255,7 +255,7 @@ class MessagingService {
     dog('no of bad tokens: ${responses.length}');
     for (final key in responses.keys) {
       dog('invalid key: $key - ${responses[key]}');
-      set("${Folder.userFcmTokens}/$key", null);
+      set("${MessagingModel.userFcmTokens}/$key", null);
     }
     if (removeInvalidTokens) {
       ///
@@ -267,7 +267,7 @@ class MessagingService {
   Future<Map<String, String>> sendAll(
       {required String title, required String body, String? image}) async {
     // 1. get all tokens
-    final folders = await get<Map>(Folder.userFcmTokens);
+    final folders = await get<Map>(MessagingModel.userFcmTokens);
     if (folders == null) return {};
 
     // get all tokens from `/user-fcm-tokens`.

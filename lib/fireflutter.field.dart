@@ -1,32 +1,3 @@
-@Deprecated('Use model classes instead of Folder class.')
-class Folder {
-  Folder._();
-  static const String action = 'action';
-  static const String activity = 'activity';
-  static const String admins = 'admins';
-  static const String chatJoins = 'chat-joins';
-  static const String chatMessages = 'chat-messages';
-  static const String chatRooms = 'chat-rooms';
-  static const String userFcmTokens = 'user-fcm-tokens';
-  static const String userPhotos = 'user-photos';
-  static const String userProfilePhotos = 'user-profile-photos';
-  static const String users = 'users';
-  static const String userPrivate = 'user-private';
-  static const String userLikes = 'user-likes';
-  static const String userWhoILike = 'user-who-i-like';
-
-  static const String reports = 'reports';
-
-  static const String bookmarks = 'bookmarks';
-
-  /// Forum
-  static const String posts = 'posts';
-
-  static const String postSummaries = 'post-summaries';
-  static const String postAllSummaries = 'post-all-summaries';
-  static const String comments = 'comments';
-}
-
 class Field {
   Field._();
 

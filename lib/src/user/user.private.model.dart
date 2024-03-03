@@ -1,6 +1,9 @@
-import 'package:fireflutter/fireflutter.dart' as fireflutter;
+import 'package:fireflutter/fireflutter.dart' as ff;
 
 class UserPrivateModel {
+  /// Paths and Refs
+  static const String nodeName = 'user-private';
+
   final String? email;
   final String? phoneNumber;
 
@@ -24,8 +27,8 @@ class UserPrivateModel {
   }
 
   static Future<UserPrivateModel> get() async {
-    final data = await fireflutter.get<Map>(
-      '${fireflutter.Folder.userPrivate}/${fireflutter.my!.uid}',
+    final data = await ff.get<Map>(
+      '$nodeName/${ff.myUid}',
     );
     return UserPrivateModel.fromJson(data ?? {});
   }
@@ -44,8 +47,8 @@ class UserPrivateModel {
       return;
     }
 
-    await fireflutter.update(
-      '${fireflutter.Folder.userPrivate}/${fireflutter.my!.uid}',
+    await ff.update(
+      '$nodeName/${ff.my!.uid}',
       data,
     );
   }

@@ -68,7 +68,7 @@ class _UserAvatarUpdateState extends State<UserAvatarUpdate> {
       onTap: () async {
         final url = await StorageService.instance.uploadAt(
           context: context,
-          path: "${Folder.users}/${user.uid}/${Field.photoUrl}",
+          path: "${UserModel.nodeName}/${user.uid}/${Field.photoUrl}",
           progress: (p) => setState(() => progress = p),
           complete: () => setState(() => progress = null),
         );

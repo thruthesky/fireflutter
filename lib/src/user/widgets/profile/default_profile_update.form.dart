@@ -144,7 +144,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                               await StorageService.instance.uploadAt(
                                 context: context,
                                 path:
-                                    "${Folder.users}/${user.uid}/${Field.profileBackgroundImageUrl}",
+                                    "${UserModel.nodeName}/${user.uid}/${Field.profileBackgroundImageUrl}",
                                 progress: (p) => setState(() => progress = p),
                                 complete: () => setState(() => progress = null),
                               );

@@ -93,7 +93,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
             const SizedBox(height: 16),
 
             Value(
-              path: "${Folder.chatRooms}/${widget.roomId}/${Field.iconUrl}",
+              path: "${ChatRoom.nodeName}/${widget.roomId}/${Field.iconUrl}",
               builder: (url) {
                 return url == null
                     ? const SizedBox()
@@ -119,7 +119,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                         await StorageService.instance.uploadAt(
                           context: context,
                           path:
-                              "${Folder.chatRooms}/${widget.roomId}/${Field.iconUrl}",
+                              "${ChatRoom.nodeName}/${widget.roomId}/${Field.iconUrl}",
                           progress: (p) => setState(() => progress = p),
                           complete: () => setState(() => progress = null),
                         );

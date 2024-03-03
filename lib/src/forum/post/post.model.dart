@@ -6,12 +6,12 @@ class Post {
   /// Refs and Paths
   ///
 
-  static const String posts = 'posts';
+  static const String nodeName = 'posts';
   // static const String postSummaries = 'post-summaries';
   // static const String postAllSummaries = 'post-all-summaries';
 
   static DatabaseReference root = FirebaseDatabase.instance.ref();
-  static DatabaseReference get postsRef => root.child(posts);
+  static DatabaseReference get postsRef => root.child(nodeName);
   static DatabaseReference categoryRef(String category) =>
       postsRef.child(category);
 
