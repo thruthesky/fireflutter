@@ -26,6 +26,7 @@ await MessagingService.instance.sendTo(
 );
 ```
 
+
 To use this method, The firebase cloud function named `sendPushNotifications` in `firebase/functions/src/messaging/functions.ts` must be installed. See installation on how to install firebsae functions.
 
 
