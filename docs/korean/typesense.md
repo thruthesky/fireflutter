@@ -5,8 +5,8 @@
 ## 설치
 
 - Typesense 의 경우 Api Key 를 백엔드와 프론트엔드에 지정해야 한다.
-  - 백엔드는 Cloud Functions 의 `firebase/functions/src/config.ts` 이고,
-  - 프론트엔드는 플러터에서 `TypesenseService.instnace.init()` 에서 하면 된다.
+    - 백엔드는 Cloud Functions 의 `firebase/functions/src/config.ts` 이고,
+    - 프론트엔드는 플러터에서 `TypesenseService.instnace.init()` 에서 하면 된다.
 
 ### How to index
 
