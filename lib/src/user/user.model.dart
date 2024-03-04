@@ -5,25 +5,33 @@ import 'package:geohash_plus/geohash_plus.dart';
 
 class UserModel {
   /// Paths and Refs
+  static DatabaseReference rootRef = FirebaseDatabase.instance.ref();
 
-  static const String nodeName = 'users';
+  static const String node = 'users';
+  static DatabaseReference usersRef = rootRef.child('users');
+
+  ///
   static const String userProfilePhotos = 'user-profile-photos';
   static const String userLikes = 'user-likes';
   static const String userWhoILike = 'user-who-i-like';
 
-  static String user(String uid) => '$nodeName/$uid';
+  static String user(String uid) => '$node/$uid';
   static String userField(String uid, String field) => '${user(uid)}/$field';
-  static String whoILike(String a, String b) => '$userWhoILike/$a/$b';
 
+  /// 내가 다른 사람을 좋아요 할 때, 그 정보를 저장하는 노드 경로
+  static String whoILikePath(String a, String b) => '$userWhoILike/$a/$b';
+  static DatabaseReference whoILikeRef(String a, String b) =>
+      FirebaseDatabase.instance.ref(whoILikePath(a, b));
+
+  ///
   static const String userWhoLikeMe = userLikes;
 
   ///
-  static DatabaseReference root = FirebaseDatabase.instance.ref();
-  static DatabaseReference usersRef = root.child('users');
   static DatabaseReference userRef(String uid) => usersRef.child(uid);
-  static DatabaseReference userProfilePhotosRef = root.child('profile-photos');
-  static DatabaseReference userWhoILikeRef = root.child(userLikes);
-  static DatabaseReference userWhoLikeMeRef = root.child(userWhoLikeMe);
+  static DatabaseReference userProfilePhotosRef =
+      rootRef.child('profile-photos');
+  static DatabaseReference userWhoILikeRef = rootRef.child(userLikes);
+  static DatabaseReference userWhoLikeMeRef = rootRef.child(userWhoLikeMe);
 
   /// [data] 는 사용자 정보 문서 node 의 전체 값을 가지고 있다. 그래서, 필요할 때,
   /// data['email'] 과 같이, 필드를 직접 접근할 수 있다.
@@ -370,7 +378,7 @@ class UserModel {
     String? photoUrl,
   }) async {
     await ff.set(
-      '${ff.UserModel.nodeName}/$uid',
+      '${ff.UserModel.node}/$uid',
       {
         'displayName': displayName,
         'photoUrl': photoUrl,
@@ -596,6 +604,8 @@ class UserModel {
   /// Returns true if the user has just liked, false if unliked.
   Future like(String otherUserUid) async {
     ff.ActivityLog.userLike(otherUserUid);
-    return await ff.toggle(ff.UserModel.whoILike(ff.my!.uid, otherUserUid));
+    return await ff.toggle(
+      path: ff.UserModel.whoILikePath(ff.my!.uid, otherUserUid),
+    );
   }
 }

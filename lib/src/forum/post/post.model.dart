@@ -5,24 +5,25 @@ import 'package:flutter/material.dart';
 class Post {
   /// Refs and Paths
   ///
+  static const String node = 'posts';
 
-  static const String nodeName = 'posts';
-  // static const String postSummaries = 'post-summaries';
-  // static const String postAllSummaries = 'post-all-summaries';
-
-  static DatabaseReference root = FirebaseDatabase.instance.ref();
-  static DatabaseReference get postsRef => root.child(nodeName);
+  static DatabaseReference rootRef = FirebaseDatabase.instance.ref();
+  static DatabaseReference get postsRef => rootRef.child(node);
   static DatabaseReference categoryRef(String category) =>
       postsRef.child(category);
 
+  /// Returns the reference of a post
   static DatabaseReference postRef(String category, String id) =>
       categoryRef(category).child(id);
 
-  static DatabaseReference postSummaries = root.child('post-summaries');
+  static DatabaseReference postSummariesRef = rootRef.child('post-summaries');
 
-  static DatabaseReference postSummary(String category, String id) =>
-      postSummaries.child(category).child(id);
-  static DatabaseReference postAllSummaries = root.child('post-all-summaries');
+  /// Returns the reference of a post summary
+  static DatabaseReference postSummaryRef(String category, String id) =>
+      postSummariesRef.child(category).child(id);
+
+  static DatabaseReference postAllSummariesRef =
+      rootRef.child('post-all-summaries');
 
   Post({
     required this.ref,
@@ -365,7 +366,7 @@ class Post {
     Widget? onLoading,
   }) {
     return Value(
-      path: ref.child(field).path,
+      ref: ref.child(field),
       builder: builder,
       onLoading: onLoading,
     );

@@ -37,7 +37,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   no: () => DisplayDatabasePhotos(
                     urls: widget.post.urls,
                     path:
-                        '${Post.nodeName}/${widget.post.category}/${widget.post.id}/${Field.urls}',
+                        '${Post.node}/${widget.post.category}/${widget.post.id}/${Field.urls}',
                   ),
                 ),
               ),

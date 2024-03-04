@@ -170,8 +170,8 @@ class _ChatRoomState extends State<ChatRoomBody> {
                     /// 그룹 채팅은 관리자가 사진을 바꿀 때, 채팅 화면에 바로 적용되어야 한다.
                     chat.room.isSingleChat
                         ? Value.once(
-                            path:
-                                '${ChatJoinModel.join(myUid!, chat.room.id)}/${Field.photoUrl}',
+                            // path: '${ChatJoin.join(myUid!, chat.room.id)}/${Field.photoUrl}',
+                            ref: ChatJoin.photoRef(chat.room.id),
                             builder: (v) => v == null
                                 ? const SizedBox.shrink()
                                 : Row(
@@ -210,7 +210,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
                       child: chat.room.isSingleChat
                           ? Value.once(
                               path:
-                                  '${ChatJoinModel.join(myUid!, chat.room.id)}/name',
+                                  '${ChatJoin.join(myUid!, chat.room.id)}/name',
                               builder: (v) => Text(
                                 v ?? '',
                                 style: Theme.of(context).textTheme.titleLarge,

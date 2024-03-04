@@ -266,7 +266,7 @@ class Comment {
 
     await ref.set(data);
 
-    final summaryRef = Post.postSummary(category, postId);
+    final summaryRef = Post.postSummaryRef(category, postId);
     summaryRef.child(Field.noOfComments).set(ServerValue.increment(1));
 
     /// Don't wait for calling onCommentCreate.

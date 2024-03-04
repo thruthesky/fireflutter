@@ -87,11 +87,22 @@ Future<void> update(String path, Map<String, Object?> value) async {
 /// [value] is the value to set. If it is null, then it will be set to true.
 ///
 /// Returns true if the node is created, otherwise false.
-Future<bool> toggle(String path, [dynamic value]) async {
-  final value = await get<bool?>(path);
+Future<bool> toggle({
+  String? path,
+  DatabaseReference? ref,
+  dynamic value,
+}) async {
+  if (path == null && ref == null) {
+    throw ArgumentError('path or ref must be not null');
+  }
 
-  final ref = FirebaseDatabase.instance.ref(path);
-  if (value == null) {
+  if (path != null) {
+    ref = FirebaseDatabase.instance.ref(path);
+  }
+
+  final snapshot = await ref!.get();
+
+  if (snapshot.exists == false) {
     await ref.set(value ?? true);
     return true;
   } else {
@@ -104,5 +115,6 @@ Future<bool> toggle(String path, [dynamic value]) async {
 ///
 Future<bool> like(String otherUid) async {
   return await toggle(
-      'likes/$otherUid/${FirebaseAuth.instance.currentUser!.uid}');
+    path: 'likes/$otherUid/${FirebaseAuth.instance.currentUser!.uid}',
+  );
 }

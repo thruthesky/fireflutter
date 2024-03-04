@@ -477,7 +477,7 @@ class ChatRoom {
     // it is important to know that updatedAt must not be updated
     // before this.
     data['order'] = order;
-    await ChatJoinModel.ref.child(uid).child(id).update(data);
+    await ChatJoin.ref.child(uid).child(id).update(data);
     return null;
   }
 
@@ -492,14 +492,14 @@ class ChatRoom {
   /// 목록에는 채팅방 정보가 남아 있어야 한다.
   Future leave() async {
     await ref.child(Field.users).child(myUid!).remove();
-    await ChatJoinModel.joinRef(myUid!, id).remove();
+    await ChatJoin.joinRef(myUid!, id).remove();
   }
 
   /// Remove user in ChatRoomBody
   Future remove(String uid) async {
     if (master == myUid) {
       await ref.child(Field.users).child(uid).remove();
-      await ChatJoinModel.joinRef(uid, id).remove();
+      await ChatJoin.joinRef(uid, id).remove();
 
       // Added this line of code so that we don't have to reload to
       // get the updated users list.
