@@ -233,10 +233,18 @@ class MessagingService {
         "data": {
           "senderUid": senderUid,
           "uid": senderUid,
-          "id": extra?['id'],
-          'roomId': extra?['roomId'],
-          "messageId": extra?['messageId'],
-          "category": extra?['category'],
+          if (extra != null &&
+              extra['id'] != null &&
+              extra['category'] != null) ...{
+            "id": extra['id'],
+            "category": extra['category'],
+          },
+          if (extra != null &&
+              extra['messageId'] != null &&
+              extra['roomId'] != null) ...{
+            "roomId": extra['roomId'],
+            "messageId": extra['messageId'],
+          }
         },
         "tokens": chunck,
         if (image != null) 'image': image
