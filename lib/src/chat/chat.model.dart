@@ -107,6 +107,7 @@ class ChatModel {
         _getMultiUpdateForChatJoinLastMessage(text: text, url: url);
 
     /// Save chat message under `/chat-messages`.
+    ///
     // 저장할 채팅 데이터
     final chatMessageData = {
       'uid': myUid,
@@ -115,15 +116,27 @@ class ChatModel {
       'order': messageOrder,
       'createdAt': ServerValue.timestamp,
     };
-    // 저장 할 경로
-    final chatMessageRef = ChatMessage.messageRef(roomId: room.id).push();
-    // 한번에 여러개 같이 저장
+
+    /// Place to save the chat message data
+    ///
+    /// 채팅 메시지를 저장 할 경로
+    final chatMessageRef = ChatMessage.messagesRef(roomId: room.id).push();
+
+    /// Save multiple nodes at once
+    ///
+    /// 한번에 여러 노드를 같이 저장
     multiUpdateData[chatMessageRef.path] = chatMessageData;
 
-    /// 한번에 여러개 노드 저장
-    // See reference for the multi-path update.
-    // Reference: https://firebase.google.com/docs/database/flutter/read-and-write#updating_or_deleting_data
+    /// See reference for the multi-path update.
+    /// Reference: https://firebase.google.com/docs/database/flutter/read-and-write#updating_or_deleting_data
     await rtdb.ref().update(multiUpdateData);
+
+    /// After chat message is saved (meaning after chat message is sent), call the callback function
+    ChatService.instance.onMessageSent?.call(ChatMessage.fromJson({
+      'key': chatMessageRef.key,
+      'ref': chatMessageRef,
+      ...chatMessageData,
+    }));
 
     /// 1:1 채팅방이면, 상대방의 이름과 사진을 내 채팅방 정보에 저장한다.
     /// 이것은, 상대방의 채팅방 목록에서 상대방의 이름과 사진을 보여주기 위해서이다.

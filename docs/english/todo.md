@@ -12,3 +12,5 @@
 
 
 - photo expansion view on comment, post, etc.
+
+- Translation every where.
