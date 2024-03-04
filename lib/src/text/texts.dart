@@ -50,6 +50,8 @@ class T {
       'You will be able to contents of this user.';
   static const String notVerifiedMessage = 'You have not verified yourself.';
   static const String writeYourMessage = 'Write your message';
+  static const String yourProfileWasVisited = 'Your profile was visited.';
+  static const String visitYourProfile = 'visit your profile';
 
   /// User and Profile
   static const String recentLoginRequiredForResign =
