@@ -39,3 +39,129 @@ Limiting actions per user:
 - `overLimit` is a callback function that executes additional actions when the limit is reached. If this function returns false, the action continues to be performed. Therefore, ensure this callback function doesn't return any value.
 - `debug` logs information to the console.
 - The `ActionLogService.instance.init()` method is used to configure the limitations. This function maintains previous settings even if called multiple times. Therefore, you can initially set limitations for viewing user profiles and later add restrictions for chat at specific points within the app.
+
+The following example restricts viewing user profiles, entering chat rooms, and creating comments. Note that post creation is not included in this example.
+
+```dart
+ActionLogService.instance.init(
+  userProfileView: ActionLogOption(
+    limit: 5,
+    seconds: 10 * 60, // 10분에 최대 5명의 프로필 보기 가능
+    overLimit: (option) async {
+      toast(
+        context: globalContext,
+        message: 'You have viewed too many users.',
+      );
+      // 여기서 만약 false 를 리턴하면, 해당 동작을 제한하지 않고 계속 진행한다.
+      return null;
+    },
+    debug: true,
+  ),
+  chatJoin: ActionLogOption(
+    limit: 5,
+    seconds: 60 * 60 * 2, // 2 시간에 최대 5 명과 채팅 가능
+    overLimit: (option) async {
+      toast(
+        context: globalContext,
+        message: 'You have entered too many chat rooms.',
+      );
+      return null;
+    },
+    debug: true,
+  ),
+  commentCreate: ActionLogOption(
+    limit: 10,
+    seconds: 60 * 60, // 1 시간에 최대 10개 코멘트 작성 가능.
+    overLimit: (option) async {
+      toast(
+        context: globalContext,
+        message: 'You have commented too many times.',
+      );
+      return null;
+    },
+    debug: true,
+  ),
+);
+```
+
+The example below illustrates limiting the number of posts a user can create based on their membership level (writing level).
+
+```dart
+/// 사용자가 인앱결제를 했으면, Product ID 를 저장.
+updateInAppPurchasedEntitlements(CustomerInfo customerInfo) async {
+  /// 인앱결제한 Product ID 저장
+  final PurchasedEntitlements ids = [];
+  for (final entitlementId in EntitlementIDs.values) {
+    if (customerInfo.entitlements.all[entitlementId.name] != null &&
+        customerInfo.entitlements.all[entitlementId.name]!.isActive) {
+      ids.add(entitlementId.name);
+    }
+  }
+  purchasedEntitlements.add(ids);
+
+  /// 인앱결제 구독에 따라서 글 쓰기 회 수 지정
+  int limit = 0;
+  if (ids.contains(EntitlementIDs.platinum.name)) {
+    limit = 10;
+  } else if (ids.contains(EntitlementIDs.gold.name)) {
+    limit = 5;
+  } else if (ids.contains(EntitlementIDs.silver.name)) {
+    limit = 1;
+  }
+
+  /// 구인구직 게시판과 buyandsell 게시판만 제한하고, 나머지 게시판은 제한하지 않는다.
+  ActionLogService.instance.init(
+    postCreate: {
+      'jobs': ActionLogOption(
+        limit: limit,
+        seconds: 60 * 60 * 24, // 24시간에 최대 limit 개의 글을 쓸 수 있다.
+        overLimit: (option) async {
+          toast(
+            context: globalContext,
+            message: option.limit == 0
+                ? '구인 구직 게시판에 글 쓰기 권한이 없습니다.\n멤버쉽 구독을 해 주세요.'
+                : '구인 구직 게시판에 ${(option.seconds / 60).toStringAsFixed(0)}분 동안 ${option.limit}개의 글을 쓸 수 있습니다.',
+          );
+          return null;
+        },
+        debug: true,
+      ),
+      'buyandsell': ActionLogOption(
+        limit: limit,
+        seconds: 60 * 60 * 24, // 24시간에 최대 limit 개의 글을 쓸 수 있다.
+        overLimit: (option) async {
+          toast(
+            context: globalContext,
+            message: option.limit == 0
+                ? '회원 장터에 글 쓰기 권한이 없습니다.\n멤버쉽 구독을 해 주세요.'
+                : '회원 장터에 ${(option.seconds / 60).toStringAsFixed(0)}분 동안 ${option.limit}개의 글을 쓸 수 있습니다.',
+          );
+          return null;
+        },
+        debug: true,
+      ),
+    },
+  );
+}
+```
+
+Below, you can limit writing posts on the entire bulletin board.
+
+```dart
+ActionLogService.instance.init(
+  postCreate: {
+    'all': ActionLogOption(
+      limit: 3,
+      seconds: 60 * 20,
+      overLimit: (option) async {
+        toast(
+          context: globalContext,
+          message: '게시판 글 쓰기가 20분에 3회로 제한되어져 있습니다.',
+        );
+        return null;
+      },
+      debug: true,
+    ),
+  },
+);
+```
