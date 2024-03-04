@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,7 @@ class DatabaseCount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Value(
-      path: path,
+      ref: FirebaseDatabase.instance.ref().child(path),
       onLoading: builder(0),
       builder: (value) {
         if (value == null) {
