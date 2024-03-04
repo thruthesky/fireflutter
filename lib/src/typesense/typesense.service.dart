@@ -133,8 +133,7 @@ class TypesenseService {
     await client.collection(searchCollection).documents.delete({
       'filter_by': 'type:=user',
     });
-    final snapshot =
-        await FirebaseDatabase.instance.ref(UserModel.nodeName).get();
+    final snapshot = await FirebaseDatabase.instance.ref(UserModel.node).get();
     for (final e in (snapshot.value as Map).entries) {
       final user = UserModel.fromJson(e.value, uid: e.key);
       await _upsertUser(user);

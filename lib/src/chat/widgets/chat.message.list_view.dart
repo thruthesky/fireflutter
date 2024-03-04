@@ -45,7 +45,7 @@ class _RChatMessageListState extends State<ChatMessageListView> {
   }
 
   init() async {
-    final myJoinRef = ChatJoinModel.joinRef(myUid!, roomId);
+    final myJoinRef = ChatJoin.joinRef(myUid!, roomId);
     final join = ChatRoom.fromSnapshot(await myJoinRef.get());
     chat.resetNewMessage(join: join);
   }

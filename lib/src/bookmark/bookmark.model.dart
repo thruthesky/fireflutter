@@ -3,17 +3,16 @@ import 'package:fireflutter/fireflutter.dart';
 
 class Bookmark {
   /// Paths and Refs
-  static const String nodeName = 'bookmarks';
+  static const String node = 'bookmarks';
 
   /// Bookmark ( = Favorite )
-  static DatabaseReference root = FirebaseDatabase.instance.ref();
-  static DatabaseReference bookmarksRef = root.child(nodeName);
+  static DatabaseReference rootRef = FirebaseDatabase.instance.ref();
+  static DatabaseReference bookmarksRef = rootRef.child(node);
   static String bookmarkUser(String otherUserUid) =>
-      '$nodeName/$myUid/$otherUserUid';
-  static String bookmarkPost(String postId) => '$nodeName/$myUid/$postId';
-  static String bookmarkComment(String commentId) =>
-      '$nodeName/$myUid/$commentId';
-  static String bookmarkChatRoom(String roomId) => '$nodeName/$myUid/$roomId';
+      '$node/$myUid/$otherUserUid';
+  static String bookmarkPost(String postId) => '$node/$myUid/$postId';
+  static String bookmarkComment(String commentId) => '$node/$myUid/$commentId';
+  static String bookmarkChatRoom(String roomId) => '$node/$myUid/$roomId';
 
   /// Variables
   String key;

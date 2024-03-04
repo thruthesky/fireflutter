@@ -10,6 +10,8 @@ import 'package:firebase_database/firebase_database.dart';
 /// [path] is the path of the node. If the node does not exist, pass null to builder().
 /// [path] 는 노드의 경로이다. 만약 해당 노드가 존재하지 않으면 null 을 builder() 로 전달한다.
 ///
+/// [ref] is the reference of the node. If the node does not exist, pass null to builder().
+///
 /// [builder] is the widget builder.
 ///
 /// [initialData] is the initial data to show when waiting for the data. This
@@ -27,13 +29,18 @@ import 'package:firebase_database/firebase_database.dart';
 class Value extends StatelessWidget {
   const Value({
     super.key,
-    required this.path,
+    this.path,
+    this.ref,
     required this.builder,
     this.initialData,
     this.onLoading,
-  });
+  }) : assert(path != null || ref != null, 'path or ref must be not null');
 
-  final String path;
+  @Deprecated('User ref instead of path')
+  final String? path;
+
+  final DatabaseReference? ref;
+
   final dynamic initialData;
 
   /// [dynamic] is the value of the node.
@@ -44,7 +51,7 @@ class Value extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: FirebaseDatabase.instance.ref(path).onValue,
+      stream: ref?.onValue ?? FirebaseDatabase.instance.ref(path).onValue,
       builder: (context, AsyncSnapshot<DatabaseEvent> event) {
         if (event.connectionState == ConnectionState.waiting) {
           if (event.hasData) {
@@ -55,7 +62,8 @@ class Value extends StatelessWidget {
           return onLoading ?? const SizedBox.shrink();
         }
         if (event.hasError) {
-          return Text('Error; path: $path, message: ${event.error}');
+          return Text(
+              'Error; path: ${ref?.path ?? path}, message: ${event.error}');
         }
         // value may be null.
         return builder(event.data?.snapshot.value);
@@ -66,14 +74,22 @@ class Value extends StatelessWidget {
   /// 한번만 가져온다. 단, 위젯이 다시 생성되면 다시 가져온다.
   ///
   /// [initialData] 를 사용하면 화면 깜빡임을 현저하게 줄일 수 있다.
+  ///
+  /// [onLoading] 을 사용하면 데이터를 기다리는 동안 보여줄 위젯을 지정할 수 있다.
+  ///
+  /// [path] 와 [ref] 둘 중 하나는 반드시 있어야 한다.
   static Widget once({
-    required String path,
+    @Deprecated('Use ref instead of path') String? path,
+    DatabaseReference? ref,
     required Widget Function(dynamic value) builder,
     dynamic initialData,
     Widget? onLoading,
   }) {
+    if (path == null && ref == null) {
+      throw ArgumentError('path or ref must be not null');
+    }
     return FutureBuilder(
-      future: FirebaseDatabase.instance.ref(path).once(),
+      future: ref?.once() ?? FirebaseDatabase.instance.ref(path).once(),
       builder: (context, AsyncSnapshot<DatabaseEvent> event) {
         if (event.connectionState == ConnectionState.waiting) {
           if (event.hasData) {
@@ -84,7 +100,7 @@ class Value extends StatelessWidget {
           return onLoading ?? const SizedBox.shrink();
         }
         if (event.hasError) {
-          dog('---> Value.once() -> Error; path: $path, message: ${event.error}');
+          dog('---> Value.once() -> Error; path: ${ref?.path ?? path}, message: ${event.error}');
           return Text('Error; ${event.error}');
         }
 

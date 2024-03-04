@@ -9,7 +9,7 @@ class PostListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FirebaseDatabaseListView(
-      query: Post.postSummaries.child(category).orderByChild(Field.order),
+      query: Post.postSummariesRef.child(category).orderByChild(Field.order),
       itemBuilder: (context, snapshot) {
         final post = Post.fromSnapshot(snapshot);
         if (post.deleted) {

@@ -133,7 +133,7 @@ class ChatModel {
       final otherUid = room.otherUserUid!;
       final name = await UserModel.getField(otherUid, Field.displayName);
       final photoUrl = await UserModel.getField(otherUid, Field.photoUrl);
-      ChatJoinModel.joinRef(myUid!, singleChatRoomId(otherUid)).update({
+      ChatJoin.joinRef(myUid!, singleChatRoomId(otherUid)).update({
         'name': name,
         'photoUrl': photoUrl,
       });
@@ -275,7 +275,7 @@ class ChatModel {
   /// For group chat, remove the chat room node from /chat-rooms/{myUid}/{groupChatId}
   ///   and remove my uid from /chat-rooms/{gropChatId}/users/{myUid}
   leave() {
-    ChatJoinModel.joinRef(myUid!, room.id).remove();
+    ChatJoin.joinRef(myUid!, room.id).remove();
     roomUserRef(room.id, myUid!).remove();
     // 채팅 방에 인원이 더 이상 없으면, 채팅 방을 삭제한다.
     // If there are no more people in the chat room, the chat room is deleted.
@@ -332,7 +332,7 @@ class ChatModel {
       }
     }
 
-    final myJoinRef = ChatJoinModel.joinRef(myUid!, room.id);
+    final myJoinRef = ChatJoin.joinRef(myUid!, room.id);
     myJoinRef.update({
       Field.newMessage: null,
       if (singleChatOrder != null) Field.singleChatOrder: singleChatOrder,
