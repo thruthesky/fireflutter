@@ -1,33 +1,32 @@
-# 검색
+# Typesense
 
-- 만약, 어떠한 이유로 사용자 정보가 Typesense 에 색인되지 않았을 수 있다. 이와 같은 경우, 사용자 정보를 수정하면 Typesense 에 색인된다.
+Fireflutter is now managing Typesense thru a cloud function. Refer to [cloud functions document](cloud_functions.md).
 
-## 설치
+TypesenseService must be initialized before using it.
 
-- Typesense 의 경우 Api Key 를 백엔드와 프론트엔드에 지정해야 한다.
-  - 백엔드는 Cloud Functions 의 `firebase/functions/src/config.ts` 이고,
-  - 프론트엔드는 플러터에서 `TypesenseService.instnace.init()` 에서 하면 된다.
+If, for any reason, user information is not indexed in Typesense, updating the user information will trigger the indexing in Typesense.
 
-### How to index
+## Installation
 
-- Below is an example of indexing.
+- For Typesense, you need to specify the API Key for both the backend and frontend.
+    - The backend is configured in `firebase/functions/src/config.ts` for Cloud Functions,
+    - The frontend configuration is done in Flutter's `TypesenseService.instance.init()`.
+
+## Initialization
+
+Here is an example to initialize the TypesenseService.
 
 ```dart
 TypesenseService.instance.init(
-    apiKey: '12345a',
+    apiKey: 'api-pass',
     scheme: 'http',
-    host: 'file.philgo.com',
-    port: 8108,
-    searchCollection: 'search',
+    host: 'file.phila.com',
+    port: 8008,
+    searchCollection: 'mySearchCollection',
 );
 ```
 
 **Make sure to create the collection in Typesense.**
-
-<!-- 
-    TODO
-    I think we should give instruction on how to create the collection in Typesense.
--->
 
 ### How to search
 
