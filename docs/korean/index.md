@@ -26,6 +26,9 @@ FireFlutter 을 확장하여 쇼핑몰, CMS 등 다양한 앱을 만들 수 있�
 - 모든 모델 클래스에는 아래와 같은 변수들을 가지고 있다.
   - `node` 는 데이터 노드 이름을 가지고 있다. 예를 들면, `Post.node` 는 `posts` 의 값을 가지고 있다.
   - 데이터 reference 는 `____Ref` 로 끝난다.
+  - `ref` 는 해당 모델의 데이터 reference 이다.
+  - `rootRef` 는 Realtime Databsae 의 최상위 `/` 를 가르킨다.
+  - `nodeRef` 는 각 데이터 노드의 최 상이 클래스를 가르킨다. 예: `/users`, `/posts`, etc.
   - 참고로 2024년 3월 현재, 이 부분 코드 리팩토링 중이어서 혼동이 조금 있을 수 있다.
 
 

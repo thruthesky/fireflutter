@@ -122,6 +122,9 @@ export 'src/utility/theme.screen.dart';
 export 'src/utility/fireflutter.exception.dart';
 
 export 'src/user/user.model.dart';
+
+export 'src/user/user.setting.model.dart';
+
 export 'src/user/user.photo.model.dart';
 export 'src/user/user.service.dart';
 export 'src/user/widgets/user.avatar.dart';
