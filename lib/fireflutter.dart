@@ -43,7 +43,7 @@ export 'src/database/widgets/database.count.dart';
 export 'src/database/widgets/database.dart';
 export 'src/database/widgets/value.dart';
 
-export 'fireflutter.fields.dart';
+export 'fireflutter.field.dart';
 
 export 'src/extensions/color.extension.dart';
 export 'src/extensions/string.extension.dart';
