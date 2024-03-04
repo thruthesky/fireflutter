@@ -43,6 +43,7 @@ Value(
 ```
 
 예제 2 - 로그인 사용자의 전화번호를 화면에 보여준다.
+
 ```dart
 Value(path: Path.phoneNumber, builder: (v) => Text(v ?? ''))
 ```
