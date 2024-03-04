@@ -59,7 +59,7 @@ Refer to [Comment doc](comments.md).
 
 Refer to [Post doc](post.md).
 
-## 글 목록
+## Post List
 
 ```dart
 import 'package:fireflutter/fireflutter.dart';
@@ -98,9 +98,9 @@ class PostListScreen extends StatelessWidget {
 }
 ```
 
-## 푸시 알림 구독
+## Push Notification Subscription
 
-게시판 카테고리 별 푸시 알림 구독과 해제는 아래와 같이 하면 된다.
+To subscribe or unsubscribe to push notifications for forum categories, follow the steps below.
 
 ```dart
 IconButton(
