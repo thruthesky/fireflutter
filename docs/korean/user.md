@@ -379,6 +379,10 @@ UserService.instance.init(
 
 위와 같이 하면, 사용자가 프로필 사진 등을 탭하면, 화면에 `PublicProfileScreen` 이 나타난다. 이 위젯의 디자인을 완전히 처음부터 새로 작성해도 되지만, `DefaultPublicProfileScreen` 을 복사해서 수정하는 것을 추천한다.
 
+### 사용자 프로필 보기를 할 때, 상대 회원에게 푸시 알림 보내기
+
+참고, 푸시알림 메시지 문서를 본다.
+
 ## 위젯
 
 `UpdateBirthday` 위젯을 통해서 손 쉽게 회원 생년월일 정보를 수정 할 수 있다. 위젯 문서 참고

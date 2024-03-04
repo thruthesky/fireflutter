@@ -17,7 +17,11 @@ class Comment {
   static DatabaseReference commentRef(String postId, String commentId) =>
       root.child(comment(postId, commentId));
 
-  /// Variables
+  /// Membrer Variable Reference
+  DatabaseReference get likesRef => ref.child(Field.likes);
+  DatabaseReference get urlsRef => ref.child(Field.urls);
+
+  /// Member Variables
   final DatabaseReference ref;
   final String id;
   final String? parentId;
@@ -338,7 +342,7 @@ class Comment {
   }) {
     return Value(
       initialData: initialData,
-      path: ref.child(field).path,
+      ref: ref.child(field),
       builder: builder,
       onLoading: onLoading,
     );

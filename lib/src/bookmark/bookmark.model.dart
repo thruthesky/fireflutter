@@ -14,6 +14,14 @@ class Bookmark {
   static String bookmarkComment(String commentId) => '$node/$myUid/$commentId';
   static String bookmarkChatRoom(String roomId) => '$node/$myUid/$roomId';
 
+  static DatabaseReference commentRef(String commentId) =>
+      rootRef.child(bookmarkComment(commentId));
+  static DatabaseReference postRef(String postId) =>
+      rootRef.child(bookmarkPost(postId));
+
+  static DatabaseReference userRef(String otherUserUid) =>
+      rootRef.child(bookmarkUser(otherUserUid));
+
   /// Variables
   String key;
   String? otherUserUid;
@@ -95,6 +103,11 @@ class Bookmark {
     return Bookmark.fromValue(snapshot.value, snapshot.key!);
   }
 
+  /// Toggle bookmark
+  ///
+  /// If the bookmark exists, it will be deleted. If not, it will be created.
+  ///
+  /// Returns true if the bookmark is created, false if the bookmark is deleted.
   static Future<bool> toggle({
     String? otherUserUid,
     String? chatRoomId,
@@ -126,8 +139,8 @@ class Bookmark {
         postId: postId,
         commentId: commentId,
       );
+      return false;
     }
-    return false;
   }
 
   static Future<void> create({

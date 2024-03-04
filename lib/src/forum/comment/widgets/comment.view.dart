@@ -45,8 +45,8 @@ class _CommnetViewState extends State<CommentView> {
                 yes: () => SizedBox.fromSize(),
                 no: () => DisplayDatabasePhotos(
                   urls: widget.comment.urls,
-                  path:
-                      '${Comment.comment(widget.post.id, widget.comment.id)}/${Field.urls}',
+                  // path:'${Comment.comment(widget.post.id, widget.comment.id)}/${Field.urls}',
+                  ref: widget.comment.urlsRef,
                 ),
               ),
               Theme(
@@ -80,7 +80,8 @@ class _CommnetViewState extends State<CommentView> {
                     TextButton(
                       onPressed: widget.comment.like,
                       child: Value(
-                        path: widget.comment.ref.child(Field.likes).path,
+                        // path: widget.comment.ref.child(Field.likes).path,
+                        ref: widget.comment.likesRef,
                         builder: (likes) {
                           previousNoOfLikes = (likes as Map? ?? {}).keys.length;
                           return Text('좋아요${likeText(previousNoOfLikes)}');
@@ -101,14 +102,16 @@ class _CommnetViewState extends State<CommentView> {
                         PopupMenuItem(
                           value: 'bookmark',
                           child: Value(
-                              path: Bookmark.bookmarkComment(
-                                widget.comment.id,
-                              ),
-                              builder: (v) {
-                                return Text(v == null
-                                    ? T.bookmark.tr
-                                    : T.bookmarked.tr);
-                              }),
+                            // path: Bookmark.bookmarkComment(
+                            //   widget.comment.id,
+                            // ),
+                            ref: Bookmark.commentRef(widget.comment.id),
+                            builder: (v) {
+                              return Text(
+                                v == null ? T.bookmark.tr : T.unbookmark.tr,
+                              );
+                            },
+                          ),
                         ),
                         const PopupMenuItem(
                           value: 'block',
@@ -186,10 +189,10 @@ class _CommnetViewState extends State<CommentView> {
                         if (context.mounted) {
                           toast(
                             context: context,
-                            title: re == true ? T.bookmarked.tr : T.bookmark.tr,
+                            title: re == true ? T.bookmark.tr : T.unbookmark.tr,
                             message: re == true
-                                ? T.bookmarkedMessage.tr
-                                : T.bookmarkMessage.tr,
+                                ? T.bookmarkMessage.tr
+                                : T.unbookmarkMessage.tr,
                           );
                         }
                       }

@@ -62,7 +62,8 @@ export const userLike = onValueWritten(
 
 /**
  * User CRUD
- * - Mirror the user data to Firestore
+ * 
+ * Mirror the user data to Firestore
  */
 export const userMirror = onValueWritten(
     `${Config.users}/{uid}`,

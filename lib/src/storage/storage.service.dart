@@ -275,7 +275,6 @@ class StorageService {
 
   /// 여러 이미지를 화면에 보여준다.
   ///
-  /// TODO 확대를 할 수 있도록 해 준다.
   showUploads(BuildContext context, List<String> urls, {int index = 0}) {
     if (customize.showUploads != null) {
       return customize.showUploads!(context, urls, index: index);

@@ -21,9 +21,9 @@ class T {
   static const String like = 'Like';
   static const String likes = 'Likes';
   static const String bookmark = 'Favorite';
-  static const String bookmarked = 'Unfavorite';
   static const String bookmarkMessage = 'Favorite sucess';
-  static const String bookmarkedMessage = 'Unfavorite success';
+  static const String unbookmark = 'Unfavorite';
+  static const String unbookmarkMessage = 'Unfavorite success';
 
   /// Label, texts, buttons,
   static const String dismiss = 'dismiss';
@@ -50,6 +50,8 @@ class T {
       'You will be able to contents of this user.';
   static const String notVerifiedMessage = 'You have not verified yourself.';
   static const String writeYourMessage = 'Write your message';
+  static const String yourProfileWasVisited = 'Your profile was visited.';
+  static const String visitYourProfile = 'visit your profile';
 
   /// User and Profile
   static const String recentLoginRequiredForResign =

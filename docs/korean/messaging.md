@@ -89,3 +89,14 @@ Future<void> _onMessageTapped(RemoteMessage message) async {
   }
 }
 ```
+
+## 사용자 프로필 보기 메시지
+
+A 가 B 의 프로필을 보면, B 는 푸시 알림을 받을 수 있다. 즉, 누가 나의 프로필을 봤는지 알림을 받는 것이다.
+
+사용자 프로필을 보는 경우, 푸시 알림은 클라이언트에서 처리하는데, user.service.dart 의 showPublicProfileScreen 에서 작업 처리한다.
+
+프로필 보기를 할 때, 푸시 알림을 하는 조건은
+
+- 앱 초기화를 할 때, `UserService.init()` 에서 프로필 보기를 할 때, 푸시 알림 설정을 하고
+- 사용자 설정에서 `profileViewNotification` 에 false 가 아닌 값을 저장하면 푸시 알림을 한다. 즉, 이 값이 존재하지 않거나(null 이거나), true 인 경우에 푸시 알림을 한다.

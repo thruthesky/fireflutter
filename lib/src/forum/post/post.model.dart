@@ -25,6 +25,10 @@ class Post {
   static DatabaseReference postAllSummariesRef =
       rootRef.child('post-all-summaries');
 
+  /// Member variable reference
+  DatabaseReference get noOfLikesRef => ref.child(Field.noOfLikes);
+  DatabaseReference get urlsRef => ref.child(Field.urls);
+
   Post({
     required this.ref,
     required this.id,

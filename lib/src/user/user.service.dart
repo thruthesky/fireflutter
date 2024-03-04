@@ -33,15 +33,13 @@ class UserService {
 
   Function(User user)? onSignout;
 
-  bool enableNoOfProfileView = false;
-
-  /// If [enableMessagingOnPublicProfileVisit] is set to true it will send push notification
+  /// If [enablePushNotificationOnProfileView] is set to true it will send push notification
   /// when showPublicProfileScreen is called
   /// this will send a push notification to the visited profile
   /// and indicating that the current user visited that profile
   ///
   ///
-  bool enableMessagingOnPublicProfileVisit = false;
+  bool enablePushNotificationOnProfileView = false;
 
   /// [onLike] is called when a post is liked or unliked by the login user.
   void Function(User user, bool isLiked)? onLike;
@@ -57,8 +55,7 @@ class UserService {
   }
 
   init({
-    bool enableNoOfProfileView = false,
-    bool enableMessagingOnPublicProfileVisit = false,
+    bool enablePushNotificationOnProfileView = false,
     bool enableNotificationOnLike = false,
     Function(User user)? onSignout,
     void Function(User user, bool isLiked)? onLike,
@@ -74,9 +71,8 @@ class UserService {
       this.customize = customize;
     }
 
-    this.enableNoOfProfileView = enableNoOfProfileView;
-    this.enableMessagingOnPublicProfileVisit =
-        enableMessagingOnPublicProfileVisit;
+    this.enablePushNotificationOnProfileView =
+        enablePushNotificationOnProfileView;
 
     this.onLike = onLike;
     this.enableNotificationOnLike = enableNotificationOnLike;
@@ -164,6 +160,7 @@ class UserService {
   /// ```dart
   /// UserService.instance.getSetting(myUid, key: 'abc');
   /// ```
+  @Deprecated('Use UserSetting.getField instead')
   getSetting<T>(String uid, {String? path}) async {
     final nodePath = otherSettingsRef(uid, path: path);
     dog('--> UserService.getSetting() nodePath: ${nodePath.path.toString()}');
@@ -206,7 +203,7 @@ class UserService {
   ///
   /// You can customize by setting [UserCustomize] to [UserService.instance.customize].
   ///
-  /// Send notification even if enableMessagingOnPublicProfileVisit is set to false
+  /// Send notification even if enablePushNotificationOnProfileView is set to false
   /// set `notify` to `false` to prevent sending push notification
   /// used `notify` to `false` like admin visit the user profile
   Future showPublicProfileScreen({
@@ -239,11 +236,7 @@ class UserService {
 
     /// Dynamic link is especially for users who are not install and not signed users.
     if (loggedIn && myUid != userUid) {
-      if (enableNoOfProfileView) {
-        /// TODO - 누가 나의 프로필을 보았는지, 기록을 남긴다. UID 를 추가해서, 숫자만 표시 할 수 있도록 한다.
-      }
-
-      ActivityLog.userView(userUid);
+      ActivityLog.userProfileView(userUid);
       ActionLog.userProfileView(userUid);
     }
 
@@ -251,19 +244,16 @@ class UserService {
     /// send notification by default when user visit other user profile
     /// disable notification when `disableNotifyOnProfileVisited` is set on user setting
 
-    bool? re =
-        await getSetting<bool?>(userUid, path: Code.profileViewNotification);
-    if (re != true) return;
-
-    if (loggedIn && myUid != userUid) {
-      // TODO send message if somebody visit my profile
-      // MessagingService.instance.send(
-      //   title: "Your profile was visited.",
-      //   body: "${currentUser?.displayName} visit your profile",
-      //   senderUid: myUid!,
-      //   receiverUid: uid,
-      //   action: 'profile',
-      // );
+    /// Send push notification to the other user.
+    if (enablePushNotificationOnProfileView && loggedIn && myUid != userUid) {
+      bool? re =
+          await UserSetting.getField(userUid, Code.profileViewNotification);
+      if (re == false) return;
+      MessagingService.instance.sendTo(
+        title: "Your profile was visited.",
+        body: "${currentUser?.displayName} visit your profile",
+        uid: uid,
+      );
     }
   }
 

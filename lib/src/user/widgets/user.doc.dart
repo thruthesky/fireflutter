@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -125,11 +126,12 @@ class UserDoc extends StatelessWidget {
     required Widget Function(UserModel data) builder,
     Widget? onLoading,
   }) {
-    final path = 'users/$uid';
+    // final path = 'users/$uid';
 
     return Value(
       initialData: initialData,
-      path: path,
+      // path: path,
+      ref: FirebaseDatabase.instance.ref("${UserModel.node}/$uid"),
       builder: (data) => builder(UserModel.fromJson(data, uid: uid)),
       onLoading: onLoading,
     );
@@ -146,11 +148,12 @@ class UserDoc extends StatelessWidget {
     required Widget Function(dynamic data) builder,
     Widget? onLoading,
   }) {
-    final path = 'users/$uid/$field';
+    // final path = 'users/$uid/$field';
 
     return Value(
       initialData: initialData,
-      path: path,
+      // path: path,
+      ref: FirebaseDatabase.instance.ref("${UserModel.node}/$uid/$field"),
       builder: builder,
       onLoading: onLoading,
     );

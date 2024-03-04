@@ -4,12 +4,24 @@ import 'package:fireflutter/fireflutter.dart';
 
 class ChatRoom {
   /// Paths and Refs
-  static const String nodeName = 'chat-rooms';
+  static const String node = 'chat-rooms';
 
-  static String chatRoomUsersAt(roomId, uid) =>
-      '$nodeName/$roomId/${Field.users}/$uid';
-  static String chatRoomName(roomId) => '$nodeName/$roomId/${Field.name}';
-  static String chatRoomIconUrl(roomId) => '$nodeName/$roomId/${Field.iconUrl}';
+  static String usersAt(roomId, uid) => '$node/$roomId/${Field.users}/$uid';
+  static String chatRoomName(roomId) => '$node/$roomId/${Field.name}';
+  static String chatRoomIconUrl(roomId) => '$node/$roomId/${Field.iconUrl}';
+
+  static DatabaseReference rootRef = FirebaseDatabase.instance.ref();
+
+  static DatabaseReference iconUrlRef(roomId) =>
+      rootRef.child('$node/$roomId/${Field.iconUrl}');
+
+  static DatabaseReference usersAtRef(roomId, uid) =>
+      rootRef.child(usersAt(roomId, uid));
+
+  /// Member Variable Reference
+  // DatabaseReference get nameRef => rootRef.child('$node/$id/${Field.name}');
+  static DatabaseReference nameRef(String roomId) =>
+      rootRef.child('$node/$roomId/${Field.name}');
 
   /// Variables
   final DatabaseReference ref;
