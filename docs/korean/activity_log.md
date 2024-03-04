@@ -10,15 +10,15 @@
 
 ## 데이터베이스
 
-- `activity-logs/<uid>/user-profile-view` 는 다른 사용자의 공개 프로필 보기.
-- `activity-logs/<uid>/user-like` 는 사용자 프로필 좋아요.
+- `activity-logs/<uid>/user-profile-view` 는 로그인한 사용자의 프로필을 본 경우, 기록.
+- `activity-logs/<uid>/user-like` 는 로그인 한 사용자가 다른 사용자를 좋아요 한 경우.
+- `activity-logs/<uid>/who-viewed-me` 는 다른 사람이 나의 프로필을 본 경우 기록을 남긴다.
+- `activity-logs/<uid>/who-liked-me` 는 다른 사람이 나를 좋아요 한 경우 기록을 남긴다.
 - `activity-logs/<uid>/post-create` 는 글 생성.
 - `activity-logs/<uid>/comment-create` 은 코멘트 생성.
 - `activity-logs/<uid>/chat-join` 은 채팅방 입장 기록. 동일한 채팅방에 여러번 입장을 해도, 입장 할 때마다 기록이 된다.
 
-
-
-각 데이터는 아래와 같은 구조를 가진다.
+각 데이터는 아래와 같은 값들 중에서 createdAt 은 필수이며 그 외에는 옵션으로 최소한의 정보를 가진다.
 
 ```json
 {
@@ -38,7 +38,6 @@
 - 채팅방에 입장하는 경우, chatRoomId 가 저장된다.
 
 
-
 참고로 프로실 수정(profile update) 는 하지 않는데, 그 이유는
 
 - 프로필 수정은 여러 장소에서 여러 형태로 나타날 수 있다.
@@ -47,7 +46,10 @@
 
 참고, Firestore 를 사용하면, A 가 B 를 좋아요 하면, B 가 나를 좋아요 한 사람들의 목록을 볼 수 있지만, Realtime Database 는 자료 구조를 다시 만들어야 해서, 그렇게 하지 않는다. 물론 별도의 자료구조를 만들면 가능할 것이다.
 
-참고, A 가 B 를 좋아요 하면 `activity-logs/<A>/<push-id>/{ createdAt: ..., otherUserUid: B}` 와 같이 생성된다. 그리고 좋아요 해제를 해도 또 생성되고, 다시 좋아요 해도 또 생성된다. 즉, 한 사용자에 대해서 여러번 좋아요/해제를 해도 할 때 마다 acitivty 가 생성된다.
+참고, A 가 B 를 좋아요 하면 `activity-logs/<A>/user-like/<push-id>/{ createdAt: ..., otherUserUid: B }` 와 같이 생성된다. 그리고 좋아요 해제를 해도 또 생성되고, 다시 좋아요 해도 또 생성된다. 즉, 한 사용자에 대해서 여러번 좋아요/해제를 해도 할 때 마다 acitivty 가 생성된다.
+
+참고, A 가 B 를 좋아요 하면, `activity-logs/<B>/who-liked-me/<push-id>/{ createdAt: ..., otherUserUid: A }` 와 같이 누가 나를 좋아요 했는지 표시가 된다.
+
 
 
 참고, 로그인은 보통 가입 할 때 최초로 한번 이루어지는데, 따로 기록을 하지는 않는다.

@@ -33,8 +33,6 @@ class UserService {
 
   Function(User user)? onSignout;
 
-  bool enableNoOfProfileView = false;
-
   /// If [enableMessagingOnPublicProfileVisit] is set to true it will send push notification
   /// when showPublicProfileScreen is called
   /// this will send a push notification to the visited profile
@@ -57,7 +55,6 @@ class UserService {
   }
 
   init({
-    bool enableNoOfProfileView = false,
     bool enableMessagingOnPublicProfileVisit = false,
     bool enableNotificationOnLike = false,
     Function(User user)? onSignout,
@@ -74,7 +71,6 @@ class UserService {
       this.customize = customize;
     }
 
-    this.enableNoOfProfileView = enableNoOfProfileView;
     this.enableMessagingOnPublicProfileVisit =
         enableMessagingOnPublicProfileVisit;
 
@@ -239,11 +235,7 @@ class UserService {
 
     /// Dynamic link is especially for users who are not install and not signed users.
     if (loggedIn && myUid != userUid) {
-      if (enableNoOfProfileView) {
-        /// TODO - 누가 나의 프로필을 보았는지, 기록을 남긴다. UID 를 추가해서, 숫자만 표시 할 수 있도록 한다.
-      }
-
-      ActivityLog.userView(userUid);
+      ActivityLog.userProfileView(userUid);
       ActionLog.userProfileView(userUid);
     }
 
@@ -256,14 +248,12 @@ class UserService {
     if (re != true) return;
 
     if (loggedIn && myUid != userUid) {
-      // TODO send message if somebody visit my profile
-      // MessagingService.instance.send(
-      //   title: "Your profile was visited.",
-      //   body: "${currentUser?.displayName} visit your profile",
-      //   senderUid: myUid!,
-      //   receiverUid: uid,
-      //   action: 'profile',
-      // );
+      /// TODO 나의 설정에서 프로필 보기 알림을 끌 수 있다.
+      MessagingService.instance.sendTo(
+        title: "Your profile was visited.",
+        body: "${currentUser?.displayName} visit your profile",
+        uid: uid,
+      );
     }
   }
 

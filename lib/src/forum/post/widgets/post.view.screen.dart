@@ -36,8 +36,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   yes: () => SizedBox.fromSize(),
                   no: () => DisplayDatabasePhotos(
                     urls: widget.post.urls,
-                    path:
-                        '${Post.node}/${widget.post.category}/${widget.post.id}/${Field.urls}',
+                    // path: '${Post.node}/${widget.post.category}/${widget.post.id}/${Field.urls}',
+                    ref: widget.post.urlsRef,
                   ),
                 ),
               ),
@@ -48,7 +48,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   TextButton(
                     onPressed: post.like,
                     child: Value(
-                      path: post.ref.child(Field.noOfLikes).path,
+                      // path: post.ref.child(Field.noOfLikes).path,
+                      ref: post.noOfLikesRef,
                       builder: (no) {
                         previousNoOfLikes = no;
                         return Text('좋아요${likeText(no)}');
@@ -59,7 +60,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
 
                   // Bookmark
                   Value(
-                    path: Bookmark.bookmarkPost(post.id),
+                    // path: Bookmark.bookmarkPost(post.id),
+                    ref: Bookmark.postRef(post.id),
                     builder: (v) => TextButton(
                       onPressed: () async {
                         if (v != null) {
@@ -71,7 +73,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                         }
                       },
                       child: Text(
-                        v == null ? T.bookmark.tr : T.bookmarked.tr,
+                        v == null ? T.bookmark.tr : T.unbookmark.tr,
                       ),
                     ),
                   ),

@@ -186,8 +186,8 @@ class _ChatRoomState extends State<ChatRoomBody> {
                                   ),
                           )
                         : Value(
-                            path: ChatRoom.chatRoomIconUrl(chat.room
-                                .id), // '${Path.join(myUid!, chat.room.id)}/${Field.photoUrl}',
+                            // path: ChatRoom.chatRoomIconUrl(chat.room .id), // '${Path.join(myUid!, chat.room.id)}/${Field.photoUrl}',
+                            ref: ChatRoom.iconUrlRef(chat.room.id),
                             builder: (v) => v == null
                                 ? const SizedBox.shrink()
                                 : Row(
@@ -209,8 +209,8 @@ class _ChatRoomState extends State<ChatRoomBody> {
                     Expanded(
                       child: chat.room.isSingleChat
                           ? Value.once(
-                              path:
-                                  '${ChatJoin.join(myUid!, chat.room.id)}/name',
+                              // path: '${ChatJoin.join(myUid!, chat.room.id)}/name',
+                              ref: ChatJoin.nameRef(chat.room.id),
                               builder: (v) => Text(
                                 v ?? '',
                                 style: Theme.of(context).textTheme.titleLarge,
@@ -219,7 +219,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
                               ),
                             )
                           : Value(
-                              path: ChatRoom.chatRoomName(chat.room.id),
+                              ref: ChatRoom.nameRef(chat.room.id),
                               builder: (v) => Text(
                                 v ?? '',
                                 style: Theme.of(context).textTheme.titleLarge,
@@ -239,7 +239,8 @@ class _ChatRoomState extends State<ChatRoomBody> {
                   await chat.room.toggleNotifications();
                 },
                 icon: Value(
-                  path: ChatRoom.chatRoomUsersAt(chat.room.id, myUid!),
+                  // path: ChatRoom.chatRoomUsersAt(chat.room.id, myUid!),
+                  ref: ChatRoom.usersAtRef(chat.room.id, myUid!),
                   builder: (v) => v == true
                       ? const Icon(Icons.notifications_rounded)
                       : const Icon(Icons.notifications_outlined),

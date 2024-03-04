@@ -104,3 +104,11 @@ Future<void> _onMessageTapped(RemoteMessage message) async {
 ```
 
 
+
+
+## 사용자 프로필 보기 메시지
+
+A 가 B 의 프로필을 보면, B 는 푸시 알림을 받을 수 있다. 즉, 누가 나의 프로필을 봤는지 알림을 받는 것이다.
+
+이 코드는 user.service.dart 에 있다.
+

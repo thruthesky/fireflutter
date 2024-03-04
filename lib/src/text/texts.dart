@@ -21,9 +21,9 @@ class T {
   static const String like = 'Like';
   static const String likes = 'Likes';
   static const String bookmark = 'Favorite';
-  static const String bookmarked = 'Unfavorite';
   static const String bookmarkMessage = 'Favorite sucess';
-  static const String bookmarkedMessage = 'Unfavorite success';
+  static const String unbookmark = 'Unfavorite';
+  static const String unbookmarkMessage = 'Unfavorite success';
 
   /// Label, texts, buttons,
   static const String dismiss = 'dismiss';

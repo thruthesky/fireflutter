@@ -126,7 +126,8 @@ class ReportAdminListView extends StatelessWidget {
               children: [
                 const Text('[CHAT] '),
                 Value.once(
-                    path: ChatRoom.chatRoomName(report.chatRoomId),
+                    // path: ChatRoom.chatRoomName(report.chatRoomId),
+                    ref: ChatRoom.nameRef(report.chatRoomId!),
                     builder: (v) {
                       return Text(v);
                     }),
