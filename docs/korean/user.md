@@ -1,15 +1,13 @@
 # 사용자
 
-사용자 정보 관리에 필요한 기본 기능이 fireship 에 포함되어져 있으므로 그 위젯이나 로직을 재 활용하면 좋다. 특히, 기본 제공되는 위젯을 복사해서 커스텀해서 사용하는 것을 권장한다.
-
+사용자 정보 관리에 필요한 기본 기능이 Fireflutter 에 포함되어져 있으므로 그 위젯이나 로직을 재 활용하면 좋다. 특히, 기본 제공되는 위젯을 복사해서 커스텀해서 사용하는 것을 권장한다.
 
 ## User database structure
 
 - 사용자 정보는 realtime database 의 `/users/<uid>` 에 기록된다.
 
-
 `displayName` is the name of the user.
-Fireship (including all the widgets) will always use `dispalyName` to display the name of the user. This can be a real name, or it can be a nickname. If you want to keep user's name in different format like `firstName`, `middleName`, `lastName`, you can do it in your app. You may get user's real name and save it in `name` field in your app.
+Firefluter (including all the widgets) will always use `dispalyName` to display the name of the user. This can be a real name, or it can be a nickname. If you want to keep user's name in different format like `firstName`, `middleName`, `lastName`, you can do it in your app. You may get user's real name and save it in `name` field in your app.
 
 `createdAt` has the time of the first login. This is the account creation time.
 
@@ -24,22 +22,13 @@ Fireship (including all the widgets) will always use `dispalyName` to display th
 참고로, 좋아요는 사용자, 글, 코멘트, 채팅 등에 할 수 있고, 북마크는 사용자, 글, 코멘트 등에 할 수 있으나, 차단은 사용만 할 수 있다.
 참고로, `likes` 는 쌍방으로 정보 확인이 가능해야한다. 이 말은 내가 누구를 좋아요 했는지 알아야 할 필요가 있고, 상대방도 내가 좋아요를 했는지 알아야 할 필요가 있다. 그래서 데이터 구조가 복잡해 `/user-likes` 에 따로 저장을 하지만, `blocks` 는 내가 누구를 차단했는지 다른 사람에게 알려 줄 필요가 없다. 그래서 `/users` 에 저장을 한다.
 
-
 `latitude` 와 `longitude` 에 값이 저장되면 자동으로 `geohash4`, `geohash5`, `geohash6`, `geohash7` 에 GeoHash 문자열 4/5/6/7 자리 값이 저장된다. 즉, 위/경도의 값은 앱에서 Location 또는 GeoLocator 패키지를 써서, 퍼미션 설정을 하고, Lat/Lon 값을 구한 다음, `UserModel.update()` 로 저장하면, 자동으로 geohash 문자열이 저장되는 것이다. 보다 자세한 내용은 [거리 검색](#거리-검색)을 참고한다.
-
-
-
-
 
 - User profile photo is saved under `/users/<uid>` and `/user-profile-photos/<uid>`.
     - The reason why it saves the photo url into `/user-profile-photos` is to list the users who has profile photo.
     Without `/user-profile-photos` node, It can list with `/users` data but it cannot sort by time.
     - `/user-profile-photos/<uid>` has `updatedAt` field that is updated whenever the user changes profile photo.
     - It is managed by `UserModel`.
-
-
-
-
 
 ## 사용자 UI 커스터마이징 (Customizing User UI)
 
@@ -60,11 +49,12 @@ UserService.instance.init(
 
 ### User profile update screen
 
-Fireship provides a few widgets to update user's profile information like below
+Fireflutter provides a few widgets to update user's profile information like below
 
 #### DefaultProfileUpdateForm
 
 `DefaultProfileUpdateForm` provides with the options below
+
 - state image (profile background image)
 - profile photo
 - name
@@ -77,16 +67,13 @@ Fireship provides a few widgets to update user's profile information like below
 
 `DefaultProfileUpdateForm` also provides more optoins.
 
-
 You you can call `UserService.instance.showProfileScreen(context)` mehtod which shows the `DefaultProfileUpdateForm` as dialog.
 
-It is important to know that fireship uses `UserService.instance.showProfileScreen()` to display the login user's profile update screen. So, if you want to customize everything by yourself, you need to copy the code and make it your own widget. then conect it to `UserService.instance.init(customize: UserCustomize(showProfile: ... ))`.
-
+It is important to know that Fireflutter uses `UserService.instance.showProfileScreen()` to display the login user's profile update screen. So, if you want to customize everything by yourself, you need to copy the code and make it your own widget. then conect it to `UserService.instance.init(customize: UserCustomize(showProfile: ... ))`.
 
 #### SimpleProfileUpdateForm
 
 This is very simple profile update form widget and we don't recommend it for you to use it. But this is good to learn how to write the user update form.
-
 
 ```dart
 Scaffold(
@@ -108,25 +95,17 @@ Scaffold(
 );
 ```
 
-
 ## 사용자 정보 참고
 
 `UserDoc` 위젯을 사용 하면 된다. 자세한 것은, 위젯 문서를 참고한다.
-
-
 
 ## 나의 (로그인 사용자) 정보 액세스
 
 `UserService.instance.user` 는 DB 의 사용자 문서 값을 모델로 가지고 있는 변수이다. 짧게 `my` 로 쓸 수 있도록 해 놓았다. DB 의 값이 변경되면 실시간으로 이 변수의 값도 업데이트(sync)된다. 그래서 DB 에 값을 변경 한 다음, (약간 쉬었다) `my` 변수로 올바로 값이 저장되었는지 확인 할 수 있다. 예를 들면, form field 값 변경 즉시 저장하고, submit 버튼을 누르면 확인을 할 수 있다.
 
-
-
-
-
-
 로그인한 사용자(나)의 정보를 참조하기 위해서는 `MyDoc` 를 사용하면 된다. 물론, `UserDoc` 를 사용해도 되지만, `MyDoc` 를 사용하는 것이 더 효과적이다. To reference the information of the logged-in user (yourself), you can use MyDoc. While using UserDoc is acceptable, using MyDoc is more effective.
 
-Fireship 은 `UserService.instance.myDataChanges` 를 통해서 로그인 한 사용자의 데이터가 변경 될 때 마다, 자동으로 BehaviorSubject 인 `myDataChanges` 이벤트 시키는데 그 이벤트를 받아서 `MyDoc` 위젯이 동작한다. 그래서 추가적으로 DB 액세스를 하지 않아도 되는 것이다. Fireship uses UserService.instance.myDataChanges to automatically trigger the BehaviorSubject myDataChanges event whenever the data of the logged-in user changes. MyDoc widgets respond to this event, eliminating the need for additional DB access.
+Fireflutter 은 `UserService.instance.myDataChanges` 를 통해서 로그인 한 사용자의 데이터가 변경 될 때 마다, 자동으로 BehaviorSubject 인 `myDataChanges` 이벤트 시키는데 그 이벤트를 받아서 `MyDoc` 위젯이 동작한다. 그래서 추가적으로 DB 액세스를 하지 않아도 되는 것이다. Fireflutter uses UserService.instance.myDataChanges to automatically trigger the BehaviorSubject myDataChanges event whenever the data of the logged-in user changes. MyDoc widgets respond to this event, eliminating the need for additional DB access.
 
 ```dart
 MyDoc(builder: (my) => Text("isAdmin: ${my?.isAdmin}"))
@@ -167,7 +146,7 @@ print(user.displayName);
 ## Displaying user data
 
 - You can use `UserDoc` or `MyDoc` to display user data.
-- The most commonly used user properties are name and photos. Fireship provides `UserDisplayName` and `UserAvatar` for your convinience.
+- The most commonly used user properties are name and photos. Fireflutter provides `UserDisplayName` and `UserAvatar` for your convinience.
 
 ### UserDoc
 
@@ -268,41 +247,46 @@ You can use `trailing` to add your own buttons intead of using `onTap`.
 
 ### UserListView
 
-Fireship provides a widget to display user list. We can use this if we don't have to customize the view.
+Fireflutter provides a widget to display user list. We can use this if we don't have to customize the view.
 
 ```dart
 UserListView()
 ```
 
-
 ## User likes
 
-
 - User likes are saved under `/user-likes` and `/user-who-i-like`.
-  - If A likes U, then A is saved under `/user-likes/U {A: true}` and U is saved under `/user-who-i-like/A { U: true}`.
-- The fireship client code needs to save `/user-likes/U {A: true}` only. The cloud function `userLike` will take action and it will save the counter part `/user-who-i-like` data and update the `noOfLikes` on the user's node.
+    - If A likes U, then A is saved under `/user-likes/U {A: true}` and U is saved under `/user-who-i-like/A { U: true}`.
+- The fireflutter client code needs to save `/user-likes/U {A: true}` only. The cloud function `userLike` will take action and it will save the counter part `/user-who-i-like` data and update the `noOfLikes` on the user's node.
 
 - The data structure will be like below.
-  - When A like U,
+    - When A like U,
+
 ```json
 /user-likes/U { A: true }
 /user-who-i-like/A { U: true }
 /users/U {noOfLikes: 1}
 ```
-  - When A, B likes U,
+
+- When A, B likes U,
+
 ```json
 /user-likes/U { A: true, B: true}
 /user-who-i-like/A {U: true}
 /user-who-i-like/B {U: true}
 /users/U {noOfLikes: 2}
 ```
-  - When B unlinke U,
+
+- When B unlinke U,
+
 ```json
 /user-likes/U { A: true }
 /user-who-i-like/A { U: true }
 /users/U {noOfLikes: 1}
 ```
-  - When A likes U, W
+
+- When A likes U, W
+
 ```json
 /user-likes/U { A: true }
 /user-likes/W { A: true }
@@ -312,6 +296,7 @@ UserListView()
 ```
 
 You can use the `like` method to perform a like and unlike user like bellow.
+
 ```dart
 IconButton(
   onPressed: () async {
@@ -320,7 +305,6 @@ IconButton(
   icon: const FaIcon(FontAwesomeIcons.heart),
 ),
 ```
-
 
 ## 사용자 정보 listening
 
@@ -338,7 +322,6 @@ UserService.instance.myDataChanges.listen((user) {
 });
 ```
 
-
 만약, 사용자 데이터가 로딩될 때 (또는 데이터가 변하는 경우), 한번만 어떤 액션을 취하고 싶다면, 아래와 같이 하면 된다.
 
 ```dart
@@ -350,7 +333,6 @@ listenRequiredField = UserService.instance.myDataChanges.listen((user) {
   }
 });
 ```
-
 
 ### 사용자가 사진 또는 이름을 입력하지 않았으면 강제로 입력하게하는 방법
 
@@ -375,19 +357,15 @@ class _HomeScreenState extends State<MainScreen> {
     });
 ```
 
-
 ## 회원 정보 수정 화면
 
 회원 정보 수정 화면은 로그인 한 사용자가 본인의 정보를 보는 페이지다. `UserService.instance.showProfileScreen` 을 호출하면 회원 정보 수정 화면을 열 수 있다.
-
-
 
 ## 사용자 공개 프로필 화면
 
 사용자 공개 프로필 화면은 본인 뿐만아니라 다른 사용자가 보는 페이지이다.
 
 사용자 프로필 화면은 여러 곳에서 보여질 수 있다. 예를 들면, 사용자 목록, 게시판, 코멘트, 채팅 등등에서 사용자 이름이나 아이콘을 클릭하면 사용자 공개 프로필 화면이 열리는 것이다. 그래서, 개발하기 편하게 하기 위해서 `UserService.instance.showPublicProfileScreen` 을 호출하면, `DefaultPublicProfileScreen` 이 호출 되도록 했다. 커스텀 디자인을 하려면 `UserService.instance.init(custom: ...)` 에서 수정하면 된다. 사실 커스텀 디자인을 추천하며, 공개 프로필에 들어가는 각각의 작은 위젯들을 재 활용하면 된다.
-
 
 예제 - 초기화를 통하여 공개 프로필 화면 커스텀 디자인 작업
 
@@ -401,41 +379,34 @@ UserService.instance.init(
 
 위와 같이 하면, 사용자가 프로필 사진 등을 탭하면, 화면에 `PublicProfileScreen` 이 나타난다. 이 위젯의 디자인을 완전히 처음부터 새로 작성해도 되지만, `DefaultPublicProfileScreen` 을 복사해서 수정하는 것을 추천한다.
 
-
 ## 위젯
 
 `UpdateBirthday` 위젯을 통해서 손 쉽게 회원 생년월일 정보를 수정 할 수 있다. 위젯 문서 참고
 
-
 ## Firestore 미러링
 
 Realtime Database 는 검색 기능이 매우 부족하다. 그래서 사용자 문서를 Firestore 로 미러링(백업)을 해서, Firestore 를 통해서 검색 할 수 있다. 이 미러링 작업은 Cloud function 을 설치하면 된다. 참고, [설치 문서](./install.md).
-
-
-
 
 ## 거리 검색
 
 거리를 검색 할 때 보다 상세한 검색을 하려면, SQL 데이터베이스, Algolia, Typesense 등의 Radius 수식을 적용하여 검색해야 한다. 그러나 Firebase 에서는 Realtime Database 나 Firestore 에서는 DB 차원을 통해서 Radius 검색을 할 수 없다.
 
 Firebase 를 사용하면서, Radius 검색을 꼭 해야겠다면
+
 1. Location 정보를 Algolia 와 같은 3rd party 검색 엔진에 저장을 하던지
 2. 또는 사용자의 모든 Location 정보를 앱 내(SQLite 등)에 보관해 놓고, Radius 검색을 할 수 있다.
 3. 또는 공식문서: [Firebase 지역 쿼리](https://firebase.google.com/docs/firestore/solutions/geoqueries?hl=ko)에서 설명하듯이 Geohash 네자리 수에 해당하는 값을 가진 사용자를 가져와 앱 내에서 보다 정확하게 distance 계산을 하는 것이다. 하지만, 이와 같은 경우 `거짓양성`, `에지케이스`, `필요없는 데이터를 가져오는 비용`을 고려해야 한다.
 
-Fireship 에서 기본 제공하는 거리 검색은 위의 세 가지 방법과는 조금 다르지만 매우 편리한 방법이다.
+Fireflutter 에서 기본 제공하는 거리 검색은 위의 세 가지 방법과는 조금 다르지만 매우 편리한 방법이다.
 
 - 먼저 앱이 실행되면 사용자의 위/경도 정보를 사용자 문서 필드  `latitude`, `longitude` 에 저장한다.
-  - 그러면 fireship 이 자동으로 geohash4,geohash5,geohash6,geohash7 를 저장한다.
-  - 그리고, 필요에 따라 Firestore 미러링되게 한다.
+    - 그러면 Fireflutter 이 자동으로 geohash4,geohash5,geohash6,geohash7 를 저장한다.
+    - 그리고, 필요에 따라 Firestore 미러링되게 한다.
 
 - 검색을 할 때, 로그인한 사용자의 200 미터 내의 사용자 검색은 로그인을 한 사용자의 geohash7 과 DB 의 geohash7 이 일치하는 사용자를 가져와 보여주면 된다.
-  - geohash6 는 1km 이내, geohash5 는 5km 이내, geohash4 는 20km 이내의 사용자를 검색 할 수 있다.
-
-
+    - geohash6 는 1km 이내, geohash5 는 5km 이내, geohash4 는 20km 이내의 사용자를 검색 할 수 있다.
 
 ## 좋아요
-
 
 텍스트 버튼으로 표시 할 때 아래와 같이 할 수 있다. 다만, 좋아요 숫자 증가는 cloud function 에 의해서 동작하므로, 실시간으로 빠르게 표시되 않는데, 적절한 처리가 필요하다.
 
@@ -457,13 +428,12 @@ ElevatedButton(
 ),
 ```
 
-
 ### 좋아요 목록
 
 좋아요 목록은 두가지가 있다.
+
 - 첫째, 내가 좋아요 한 사람 목록.
 - 둘째, 나를 좋아요 한 사람 목록.
-
 
 아래와 같이 코딩을 하면 된다.
 
@@ -514,19 +484,14 @@ class _LikeScreenState extends State<LikeScreen> {
 
 주로, 파이어베이스에 로그인을 하여 사용자 uid 가 사용 가능한지 확인을 위해서 쓴다.
 
-
 ### MyDocReady
 
 `MyDocReady` 는 사용자가 Firebase 에 로그인 한 다음, Realtime Database 에서 사용자 문서를 로딩했는지를 확인 할 때 사용한다.
 
 내부적으로 단순히, [MyDoc] 위젯을 사용하여, 사용자 문서가 로딩되었는지 확인하며, 사용자 문서가 로딩되었으면, `builder(UserModel)` 를 실행하고, 로딩이 안되었으면 [loading] 을 한다.
 
-
 /// [MyDoc] 을 사용하면, builder(UserModel) 가 null 일 수 있으므로, null 체크를 해야 하는데,
 /// [MyDocReady] 는 builder(UserModel) 가 null 이 아니므로 조금 더 편리하게 사용 할 수 있다.
-
-
-
 
 ## 블럭
 
@@ -549,6 +514,3 @@ Blocked(
 ```
 
 블럭 버튼을 표시하는 것은 위젯 문서를 참고한다.
-
-
-
