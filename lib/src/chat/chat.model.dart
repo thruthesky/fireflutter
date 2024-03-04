@@ -115,7 +115,6 @@ class ChatModel {
       'order': messageOrder,
       'createdAt': ServerValue.timestamp,
     };
-    dog(room.id);
     // 저장 할 경로
     final chatMessageRef = ChatMessage.messageRef(roomId: room.id).push();
     // 한번에 여러개 같이 저장
