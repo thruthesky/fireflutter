@@ -222,8 +222,9 @@ class UserService {
     //     return;
     //   }
     // }
-
-    if (await ActionLogService.instance.userProfileView.isOverLimit()) return;
+    if (!isAdmin && userUid != my?.uid) {
+      if (await ActionLogService.instance.userProfileView.isOverLimit()) return;
+    }
 
     if (context.mounted) {
       showGeneralDialog(
@@ -250,8 +251,8 @@ class UserService {
           await UserSetting.getField(userUid, Code.profileViewNotification);
       if (re == false) return;
       MessagingService.instance.sendTo(
-        title: "Your profile was visited.",
-        body: "${currentUser?.displayName} visit your profile",
+        title: T.yourProfileWasVisited,
+        body: "${my?.displayName} ${T.visitYourProfile}",
         uid: uid,
       );
     }
