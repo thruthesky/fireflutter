@@ -247,7 +247,7 @@ class UserService {
         await getSetting<bool?>(userUid, path: Code.profileViewNotification);
     if (re != true) return;
 
-    if (loggedIn && myUid != userUid) {
+    if (enableMessagingOnPublicProfileVisit && loggedIn && myUid != userUid) {
       /// TODO 나의 설정에서 프로필 보기 알림을 끌 수 있다.
       MessagingService.instance.sendTo(
         title: "Your profile was visited.",
