@@ -1,12 +1,12 @@
-# 설치
+# Installation
 
-Follow the instruction below to install Fireflutter into your app
+Follow the instruction below to install Fireflutter into your app.
 
 ## Install Fireflutter
 
 ### Install Fireflutter as a package
 
-Simply add the latest version of Fireflutter from pub.dev
+Simply add the latest version of Fireflutter from pub.dev.
 
 ### Install Fireflutter as a package developer
 
@@ -36,9 +36,9 @@ dependencies:
 
 - If you have update any code in Fireflutter, consider to submit a `pull request`.
 
-## Firebase Realtime Database Secuirty 설치
+## Installing Firebase Realtime Database Security
 
-[Firebase Realtime Database Security](../assets/realtime_database_security.md) 를 복사해어 Firebase project 에 붙여 넣기 한 다음 저장해 주세요.
+Copy the [Firebase Realtime Database Security](../assets/realtime_database_security.md) and paste it into your Firebase project, then save it.
 
 ## Default app-environment entitlement
 
