@@ -251,14 +251,10 @@ class UserService {
           await UserSetting.getField(userUid, Code.profileViewNotification);
       if (re == false) return;
       MessagingService.instance.sendTo(
-          title: T.yourProfileWasVisited,
-          body: "${my?.displayName} ${T.visitYourProfile}",
-          uid: uid,
-          extra: {
-            'roomId':
-                '0KQMqVETuiVyWJCt5LuYARtRszV2---8gdUrhfajrXnoHyISVLjJcpuFvn2',
-            'messageId': '-Ns8NugKLRB5zWJbz68B'
-          });
+        title: T.yourProfileWasVisited,
+        body: "${my?.displayName} ${T.visitYourProfile}",
+        uid: uid,
+      );
     }
   }
 
