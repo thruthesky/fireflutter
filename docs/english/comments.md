@@ -1,63 +1,9 @@
 # Comments  
 
-<!-- TODO revise -->
-
 A comment is created by users to comment on a post.
 
 Comments are saved under `/comments/<post-id>`.
 
-<!-- 
-  TODOS
-  1. Update Models
-  2. Update Cloud Summary Functions (done)
-  3. Update Typesense Indexing
-  4. Update Refs
--->
-
-## Comment Model
-
-### Fields
-
-- ref
-    - DatabaseReference
-    - Reference in RTDB to access the comment
-- id
-    - String
-    - The ID of the category
-- parentId
-    - optional String
-    - The ID of the comment`s parent when the comment is represented as a reply under an existing comment.
-- content
-    - String
-    - The main content which is the actual comment.
-- uid
-    - String
-    - The commenter`s uid.
-- createdAt
-    - int
-    - When the comment was created, in milliseconds since epoch
-- urls
-    - List of Strings
-    - default: []
-    - urls of the attached files (mostly for photos)
-- depth
-    - int
-    - depth of the comment (for indention in replies).
-- deleted
-    - bool
-    - Whether the comment is deleted. True means deleted. Otherwise, not deleted.
-
-### Getters
-
-- category
-    - String
-    - The category of the forum where the comment`s post belong.
-    - Category is not saved in RTDB since it is accessible in post but it is important in the model.
-- postId
-    - String
-    - The id of the post where the comment is commented.
-    - Post`s Id is not saved in RTDB since it is accessible in post but it is important in the model.
-  
 ## CommentView Widget
 
 To view a comment, use like below:
@@ -93,46 +39,21 @@ Check the example code below to understand how to set these onCommentCreate, onC
 initForum() {
     ForumService.instance.init(
         // ... 
-        onCommentCreate: (Comment comment) => toast("Created comment: $comment"),
-        onCommentUpdate: (Comment comment) => toast("Updated comment: $comment"),
-        onCommentDelete: (Comment comment) => toast("Deleted comment: $comment"),
+        onCommentCreate: (Comment comment) => print("Created comment: $comment"),
+        onCommentUpdate: (Comment comment) => print("Updated comment: $comment"),
+        onCommentDelete: (Comment comment) => print("Deleted comment: $comment"),
     );
 }
 ```
 
 ## Listing comments
 
-<!-- TODO revise since comments are not in posts -->
-
 Comments will be provided by the Post. For customization, check the code below:
-
-<!-- TODO need to update because comment is no longer in post -->
 
 ```dart
 final post = Post(
   // get the post model
 );
 
-ListView.builder(
-  itemCount: post.comments.length,
-  itemBuilder: (context, index) {
-    final Comment comment = post.comments[index];
-    return CommentView(
-      post: post,
-      comment: comment,
-      onCreate: () {
-        post.reload().then((value) => setState(() {}));
-      },
-    );
-  },
-)
+return CommentListView(post: post);
 ```
-
-## Comment create logic
-
-- There followings are the comments fields. There is no `category`, `postId`, `id`.
-    - `content`: optional
-    - `parentId`: null for root level comment. required for child of root level comment. (required for comment of comment)
-    - `uid`: required
-    - `createdAt`: required
-    - `urls`: optional

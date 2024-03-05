@@ -40,3 +40,46 @@ Text(T.setting.tr)
 ```
 
 Note that, `T.setting` is not defined in `texts`. So it is used as it is.
+
+## Multilingual Support
+
+You can display translated strings (sentences) on the screen based on the device's default language.
+
+Here's how to set up translated strings.
+
+```dart
+Locale locale = Localizations.localeOf(context);
+
+TextService.instance.texts = {
+    ...TextService.instance.texts,
+    if (locale.languageCode == 'ko') ...{
+    T.save: '저장',
+    T.login: '로그인',
+    'phoneSignIn': '전화번호로 로그인',
+    },
+    if (locale.languageCode == 'en') ...{
+    T.save: 'Save',
+    T.saved: 'Saved',
+    'phoneSignIn': 'Sign in with phone',
+    },
+    if (locale.languageCode == 'vi') ...{
+    T.save: 'Lưu',
+    'phoneSignIn': 'Đăng nhập bằng số điện thoại',
+    },
+    if (locale.languageCode == 'th') ...{
+    T.save: 'บันทึก',
+    },
+    if (locale.languageCode == 'lo') ...{
+    T.save: 'ບັນທຶກ',
+    },
+    if (locale.languageCode == 'my') ...{
+    T.save: 'သိမ်းဆည်း',
+    }
+};
+```
+
+## Usage
+
+```dart
+'phoneSignIn'.tr
+```

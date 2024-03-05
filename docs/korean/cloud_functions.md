@@ -1,37 +1,52 @@
 # 클라우드 함수
 
-
-
 I thought that I will not use Firebase cloud functions since it is a bit difficult to maintain the code. And we already have all the neccessary code in Flutter. But the code in the Flutter is not efficient. For instance, sending push notifications for a group chat from the Flutter app can downgrade the performance seriously. Even if the work is done in isolated, still it will consume a hugh resource. I am expecing that there are more than 1,000 uesrs who are chatting a lot every day. That's what acctually happens. And every time a user send a message, the push message ... (I will not explain it details.)
 
 So, the app should not do this work from the Flutter app. You may send the push notification from client only if it will not consume a lot of resource.
 
 And here comes the cloud functions
 
-## Sending push notificaiton on each chat message
+성능을 향상시키기 위해 Fireflutter는 클라우드 함수를 사용합니다.
 
-## Sending push notification on post and comment create
+## 푸시 알림
 
-## Indexing data into typesense
+`sendPushNotifications` 클라우드 함수를 사용하여 사용자에게 푸시 알림을 보낼 수 있습니다.
 
-## indexing post data issues
+### 각 채팅 메시지에 푸시 알림 보내기
 
-- When ever comment is created/updated/deleted, the post write event trigger unneccessarily causing extra function call, document read(including all the comments), and band width, and unneccessary typesense indexing. As of now, we just let it be this way. This is the cheapest for now.
+각 채팅 메시지에 푸시 알림을 보내는 클라우드 함수의 이름은 sendMessagesToChatRoomSubscribers입니다. 이 함수는 채팅방에 참여한 모든 사용자에게 푸시 알림을 보냅니다.
 
-## Post Summaries upon Post Create/Update/Delete
+### 포럼 카테고리 구독자에게 푸시 알림 보내기
 
-- We have cloud functions that whenever a post is created/updated/deleted in `posts`, it updates `post-all-summaries` and `post-summaries`.
+각 채팅 메시지에 대해 푸시 알림을 보내는 클라우드 함수의 이름은 sendMessagesToCategorySubbscribers입니다. 이 함수는 포럼 카테고리를 구독한 모든 사용자에게 푸시 알림을 보냅니다.
+
+## Typesense 클라우드 함수
+
+### Typesense에 사용자 데이터 색인화
+
+사용자 데이터를 Typesense에 색인화하는 클라우드 함수의 이름은 `typesenseUserIndexing`입니다. 사용자 데이터가 생성, 업데이트 또는 삭제될 때 Typesense에 사용자 데이터를 색인화합니다.
+
+### Typesense에 게시물 데이터 색인화
+
+게시물 데이터를 Typesense에 색인화하는 클라우드 함수의 이름은 `typesensePostIndexing`입니다. 게시물 데이터가 생성, 업데이트 또는 삭제될 때 Typesense에 게시물 데이터를 색인화합니다.
+
+### Typesense에 댓글 데이터 색인화
+
+댓글 데이터를 Typesense에 색인화하는 클라우드 함수의 이름은 `typesenseCommentIndexing`입니다. 댓글 데이터가 생성, 업데이트 또는 삭제될 때 Typesense에 댓글 데이터를 색인화합니다.
+
+## 게시물 생성/업데이트/삭제 시 게시물 요약 정보
+
+- `posts`에서 게시물이 생성/업데이트/삭제될 때마다 `post-all-summaries`와 `post-summaries`를 업데이트하는 클라우드 함수가 있습니다.
 
 ### managePostsAllSummary
 
-This cloud function updates `post-all-summaries` and `post-summaries` based on `posts`.
+이 클라우드 함수는 `posts`를 기반으로 `post-all-summaries`와 `post-summaries`를 업데이트합니다.
 
-Be informed that we are only saving the first url of the post in summaries.
-
+게시물 요약 정보에는 첫 번째 URL만 저장한다는 점을 유의하십시오.
 
 ## 사용자 클라우드 함수
 
-참고, [사용자 문서](#user.md)를 문서를 참고한다.
+참고, [사용자 문서](user.md) 를 문서를 참고한다.
 참고, `user.functions.ts` 를 살펴 본다.
 
 클라우드 함수는 사용자 기능을 좀 더 보강하기 위해서 여러가지 함수를 제공하고 있으며, 필요한 것만 설치를 해서 사용하면 된다.
@@ -39,8 +54,6 @@ Be informed that we are only saving the first url of the post in summaries.
 - `userLike` 는 A 가 B 를 좋아요 할 때, B 가 A 를 좋아요 하고 있다고 알려주어야 하며, 총 좋아요 갯 수도 증/감 시켜 주어야 한다. 이러한 잡다한 일을 `userLike` 가 해 준다.
 
 - `userMirror` 는 rtdb 의 `/users` 노드 값을 firestore 의 `/users` 컬렉션으로 이동 시켜준다. 이렇게 하므로서, 사용자 검색을 보다 복잡하게 할 필요가 있는 경우, firestore 를 통해서 필터링해서 화면에 보여주면 된다. 이 때, 한가지 주의 할 점은 `noOfLikes` 필드는 mirror 하지 않는데 그 이유는 사용자 목록에서 좋아요/좋아요취소 를 하는 경우, rtdb 의 `/users/<uid>/noOfLikes` 가 증/감하면 firestore 의 `/users` 데이터 값이 변경된다. 만약, FirestoreListView 와 같이 쿼리를 통해서 사용자 필터링을 하는 경우, 사용자의 문서가 하나 변경되면, 모든 목록(검색되는 아이템)이 다시 그려져야하는데, 이 때 화면 반짝임이 발생하기 때문이다.
-
-
 
 ## 전화번호 가입
 
@@ -53,23 +66,19 @@ Be informed that we are only saving the first url of the post in summaries.
 요청을 할 때에는 `phoneNumber` 에 가입할 전화번호를 입력하면 된다. 전화번호가 입력되지 않거나, 너무 짧거나, 긴 경우는 함수에서 에러를 낸다. 그 외에는 Firebase 에서 에러를 낸다.
 전화번호는 국제 전화번호 포멧에 맞아야 한다.
 
-
 - 요청: `?phoneNumber=12345`
-  - 결과: `{ code: 'auth/invalid-phone-number', message: '...' }`
+    - 결과: `{ code: 'auth/invalid-phone-number', message: '...' }`
 - 요청: `?phoneNumber=1234567890123456`
-  - 결과: `{ code: 'auth/invalid-phone-number', message: '...' }`
+    - 결과: `{ code: 'auth/invalid-phone-number', message: '...' }`
 - 요청: `/?phoneNumber=1234567890`
-  - 결과: `{ code: 'auth/invalid-phone-number', message: '...' }`
+    - 결과: `{ code: 'auth/invalid-phone-number', message: '...' }`
 
 - 전화번호가 존재하는 경우, `{ code: 'auth/phone-number-already-exists', message: '...' }` 와 같이 에러가 나온다.
 
 - 성공하는 경우
-  - 결과: `{ uid: 'YSr8fJwQASSF4QApILkaAEjbfCd2' }`
-
+    - 결과: `{ uid: 'YSr8fJwQASSF4QApILkaAEjbfCd2' }`
 
 참고로, 클라우드 함수 호출이 속도가 좀 느린편이다. 그나마 맨 처음 (새로운) 전화번호를 입력해서 가입을 할 때에는 Firebase Phone Sign-in 과정이 없어서 조금은 빨리 로그인이 되지만, 두번째 로그인을 할 때에는 Phone Sign-in 을 해야 해서 로그인 속도가 좀 더 느릴 수 있다.
-
-
 
 ## 함수 테스트
 

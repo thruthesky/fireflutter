@@ -9,36 +9,25 @@
 - `/chat-rooms` 채팅 방 정보를 저장하는 경로.
 - `/chat-messages` 채팅 메시지를 저장하는 경로
 - `/chat-joins` 채팅 방에 참여한 사용자들에게 채팅방 정보를 장하는 경로. 예를 들어, 사용자별 읽지 않은 (새로운) 메시지 수를 표시하는 데 사용. 참고로, `/chat-rooms` 과 `/chat-joins` 둘 모두 `ChatRoom` 을 사용해서 modeling 한다.
-
-
 - `noOfUsers` is updated in `/chat-rooms` when a new user joins or leaves a group chat room,
-
     - and is updated in `/chat-joins` when a chat message is sent.
-
 - When sending a chat message, if the text contains a URL, information for previewing the URL is extracted. The appropriate values are stored in the following fields below the message:
     - `previewUrl` - URL
     - `previewTitle` - Title
     - `previewDescription` - Description
     - `previewImageUrl` - Image
 
-### chat-rooms
+### Chat Rooms
 
-- `blocks` - 관리자가 채팅방의 블럭 리스트를 관리한다. 여기에 추가된 사용자는 채팅방에 입장을 할 수 없다. 또한 자동으로 채팅방에서 튕겨나가도록 한다. (TODO: 2024-02-22 현재 기능 구현되지 않음.)
+- `blocks` - 관리자가 채팅방의 블럭 리스트를 관리한다. 여기에 추가된 사용자는 채팅방에 입장을 할 수 없다. 또한 자동으로 채팅방에서 튕겨나가도록 한다. (**TODO: 2024-02-22 현재 기능 구현되지 않음.**)
 
-
-
-### chat-messages 구조
+### Chat Messages 구조
 
 - `uid` 메시지 전송한 사용자의 uid
 - `createdAt` 메시지 전송한 시간
 - `order` 메시지 목록 순서
 - `text` 텍스트를 전송한 경우.
 - `url` 사진 URL. 사진을 전송한 경우.
-
-
-
-
-
 
 ## 코딩 기법
 
@@ -61,7 +50,6 @@ if (snapshot.exists) {
 }
 ```
 
-
 ### 채팅방에서 로그인한 사용자의 메시지 한 개만 가져오기
 
 예를 들어, 모든 회원이 의무적으로(자동으로 채팅방 입장) 사용하는 전체 채팅방이 있는 경우, 회원 가입을 한 다음, 해당 채팅 방에 (가입인사) 채팅을 남기도록 권유하는 경우, 로그인 한 사용자가 해당 채팅방에 채팅을 했는지 안했는지 확인하기 위해서, 딱 하나의 채팅 메시지만 가져와서, 채팅을 했는지 하지 않았는지 알 수 있다.
@@ -69,50 +57,55 @@ if (snapshot.exists) {
 아래와 같이 코딩을 하면 된다.
 
 ```dart
-final snapshot = await Ref.chatRoomMessages('chat-room-id')
+// Get the chat room first.
+final ChatModel chatRoom = await ChatModel.get('chat-room-id');
+
+final snapshot = await ChatModel.messageseRef
     .orderByChild('uid')
-    .startAt(myUid!)
-    .endAt('$myUid\f8ff')
-    .limitToFirst(1)
     .get();
 
 if (snapshot.exists) {
-  print((snapshot.value as Map).entries.first.value['text']);
+  print((snapshot.value as Map).keys.length);
+  for (var key in (snapshot.value as Map).keys) {
+    print((snapshot.value as Map)[key]['uid'] +
+        ' : ' +
+        ((snapshot.value as Map)[key]['text'] ?? '--'));
+  }
 }
 ```
 
+### ChatModel에서 ChatRoom 가져오기
 
+- 채팅방 메시지를 표시하기 전에 완전한 채팅방 모델 인스턴스가 필요합니다. 예를 들어,
+    - 사용자가 방에 있는지 확인하려면,
+    - 사이트 미리보기 표시 여부 또는 이미지 표시 옵션을 확인하려면,
+    - 채팅방 설정에 따라 암호 입력 상자를 표시하려면,
+    - 등등
 
-### Get ChatRoom on ChatRoomBody
-
-- The complete chat room model instance is needed before display the chat room message. For instance,
-    - to check if the user is in the room,
-    - to check if site preview displaying or image displaying options,
-    - to show password input box based on the chat room settings,
-    - etc
+명확히 하자면, ChatRoom과 ChatModel은 두 가지 다른 모델입니다. ChatRoom은 채팅방의 일부 세부 정보를 보유하는 모델입니다. ChatModel은 채팅방과 채팅 메시지의 모든 세부 정보를 보유하는 완전한 모델입니다. 간단히 말해서, ChatRoom은 ChatModel.chatRoom을 통해 접근할 수 있습니다.
 
 ### Order
 
-- Chat message order is sorted by the last message's `order` field.
-    - It must have a smaller value than the previous message.
-    - When you send a chat message programatically without `order`, the message may be shown at the top.
+- 채팅 메시지 순서는 마지막 메시지의 `order` 필드에 의해 정렬됩니다.
+    - 이전 메시지보다 늦은 메시지는 이전 메시지보다 작은 값을 가져야 합니다. 최신 메시지는 항상 가장 작은 값이어야 합니다.
+    - 프로그래밍 방식으로 order를 지정하지 않고 채팅 메시지를 보낼 경우, 메시지가 잘못된 위치에 표시될 수 있습니다 (가장 위쪽에 표시될 수 있음).
 
-### Creating Chat Room
+### 채팅방 만들기
 
-A simple way to create a chat room is as follows:
+채팅방을 만드는 간단한 방법은 다음과 같습니다:
 
 ```dart
 ChatModel chat = ChatModel(room: ChatRoom.fromRoomdId('all'))..join();
 ChatMessageListView(chat: chat);
 ```
 
-Creating a `ChatModel` alone does not create the chat room. Therefore, `join()` is called additionally.
+ChatModel을 단독으로 만들어도 채팅방을 만들지 않습니다. 따라서 추가로 join()을 호출해야 합니다.
 
-When join() is called, {[uid]: true} is created in /chat-rooms/all/users.
+join()을 호출하면 /chat-rooms/all/users에 {[uid]: true}가 생성됩니다.
 
-And when the `ChatMessageListView` widget is displayed on the screen, it internally saves `{order: 0}` in RTDB `chat-joins/all` in `ChatMessageListView::initState() -> ChatModel::resetNewMessage()`.
+그리고 화면에 ChatMessageListView 위젯이 표시되면, `ChatMessageListView::initState() -> ChatModel::resetNewMessage()`에서 RTDB `chat-joins/all`에 `{order: 0}`가 내부적으로 저장됩니다.
 
-However, if you want to create a chat room more easily, you can use the pre-made `ChatService.instance.showChatRoomCreate()` function. If you want to customize the design, you can copy and modify `DefaultChatRoomEditDialog`.
+그러나 더 간편하게 채팅방을 만들고 싶다면, 미리 제공된 ChatService.instance.showChatRoomCreate() 함수를 사용할 수 있습니다. 디자인을 사용자 정의하려면 DefaultChatRoomEditDialog을 복사하고 수정할 수 있습니다.
 
 ### Viewing Chat Room
 
@@ -229,7 +222,7 @@ FirebaseDatabaseQueryBuilder(
 
 ### Opening the Settings for the Chat Room
 
-To open the
+To open the Settings for the Chat Room
 
 ```dart
 ChatService.instance.showChatRoomSettings(
@@ -484,18 +477,11 @@ TextButton(
 
 - You can use the default admin screen. Just call `AdminService.instance.showDashboard()`.
 
-### Delete Open Chat Message Data
-
-<!-- TODO -->
-
-
-
 ## 채팅 메시지를 전송하기 전에 로직 변경하기
 
 채팅 메시지(또는 사진)를 전송하기 전에 원하는 로직을 추가하고 싶다면, `testBeforeSendMessage` 를 사용하면 된다.
 
 예를 들어, 회원의 사진 또는 이름이 없는 상태라면 채팅 메시지를 보내지 않게 사려면 아래와 같이 하면 된다.
-
 
 ```dart
 ChatService.instance.init(testBeforeSendMessage: (chat) {
@@ -509,15 +495,11 @@ ChatService.instance.init(testBeforeSendMessage: (chat) {
 });
 ```
 
-
-
-
 ## 채팅 메시지 전송 훅
 
 채팅 메시지를 보낸 다음 어떤 작업을 하고 싶은 경우에 훅을 쓸 수 있다.
 
 예를 들면, 채팅 메시지를 보낸 후, 그 메시지를 다른 언어로 변경하고 싶다면, 먼저 채팅 메시지를 보내고, 번역하는 API 를 통해서 번역하고, 전송된 채팅 메시지의 내용을 업데이트 할 수 있다.
-
 
 ```dart
 void initChatService() {

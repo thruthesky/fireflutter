@@ -1,41 +1,32 @@
 # Typesense
 
-## How to
+Fireflutter is now managing Typesense thru a cloud function. Refer to [cloud functions document](cloud_functions.md).
 
-- Typesense is not tightly coupled with fireship. Meaning, you have to manually code to index.
-- TypesenseService must be initialized before using it.
+TypesenseService must be initialized before using it.
 
-### How to index
+If, for any reason, user information is not indexed in Typesense, updating the user information will trigger the indexing in Typesense.
 
-- Below is an example of indexing.
+## Installation
+
+- For Typesense, you need to specify the API Key for both the backend and frontend.
+    - The backend is configured in `firebase/functions/src/config.ts` for Cloud Functions,
+    - The frontend configuration is done in Flutter's `TypesenseService.instance.init()`.
+
+## Initialization
+
+Here is an example to initialize the TypesenseService.
 
 ```dart
 TypesenseService.instance.init(
-    apiKey: '12345a',
+    apiKey: 'api-pass',
     scheme: 'http',
-    host: 'file.philgo.com',
-    port: 8108,
-    searchCollection: 'search',
-);
-UserService.instance.init(
-    onCreate: TypesenseService.instance.upsertUser,
-    onUpdate: Types
-    enseService.instance.upsertUser,
-);
-ForumService.instance.init(
-    onPostCreate: TypesenseService.instance.upsertPost,
-    onPostUpdate: TypesenseService.instance.upsertPost,
-    onPostDelete: TypesenseService.instance.delete,
-    onCommentCreate: TypesenseService.instance.upsertComment,
-    onCommentUpdate: TypesenseService.instance.upsertComment,
-    onCommentDelete: TypesenseService.instance.delete,
+    host: 'file.phila.com',
+    port: 8008,
+    searchCollection: 'mySearchCollection',
 );
 ```
 
-<!-- 
-    TODO
-    I think we should give instruction on how to create the collection in Typesense.
--->
+**Make sure to create the collection in Typesense.**
 
 ### How to search
 

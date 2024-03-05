@@ -1,24 +1,24 @@
-# Install
+# Installation
 
-Follow the instruction below to install Fireship into your app
+Follow the instruction below to install Fireflutter into your app.
 
-## Install Fireship
+## Install Fireflutter
 
-### Install Fireship as a package
+### Install Fireflutter as a package
 
-Simply add the latest version of fireship from pub.dev
+Simply add the latest version of Fireflutter from pub.dev.
 
-### Install Fireship as a package developer
+### Install Fireflutter as a package developer
 
-You may wish to develop your app while building(or updating) the Fireship package together.
+You may wish to develop your app while building(or updating) the Fireflutter package together.
 
-- Fork the Fireship from `https://github.com/thruthesky/fireship`
+- Fork the Fireflutter from `https://github.com/thruthesky/fireflutter`
 
 - Then, clone it
 
-- Then, create a branch in Fireship local repository
+- Then, create a branch in Fireflutter local repository
 
-- Create `apps` folder under the root of Fireship folder and create your app inside `apps` folder.
+- Create `apps` folder under the root of Fireflutter folder and create your app inside `apps` folder.
 
 ```dart
 mkdir apps
@@ -26,21 +26,19 @@ cd apps
 flutter create your_project
 ```
 
-- You need to add the path of the dependency as `../..`. Add the fireship dependency like below.
+- You need to add the path of the dependency as `../..`. Add the Fireflutter dependency like below.
 
 ```yaml
 dependencies:
-  fireship:
+  fireflutter:
     path: ../..
 ```
 
-- If you have update any code in Fireship, consider to submit a `pull request`.
+- If you have update any code in Fireflutter, consider to submit a `pull request`.
 
-## Install Firebase Realtime Database Secuirty
+## Installing Firebase Realtime Database Security
 
-Copy [the security rules](../assets/realtime_database_security.md) and paste it into your firebase project.
-
-
+Copy the [Firebase Realtime Database Security](../assets/realtime_database_security.md) and paste it into your Firebase project, then save it.
 
 ## Default app-environment entitlement
 
@@ -55,8 +53,6 @@ Add the following code into `info.plist`. These will be needed for access to cam
 <string>PhiLov app requires access to the photo library to share the photo on profile, chat, forum.</string>
 ```
 
-
-
 ## Install Cloud Functions
 
 Run the following command to install all the push notification cloud functions.
@@ -68,14 +64,12 @@ Run the following command to install all the push notification cloud functions.
 
 And set the end point URL to `MessagingService.instance.init(sendPushNotificationsUrl: ..)`
 
-
 Run the following command to install typesense related cloud functions.
 
 ```sh
 % cd firebase/function
 % npm run deploy:typesense
 ```
-
 
 Run the following command to install a function that manages summarization of all posts under `/posts-all-summary`.
 See the [Forum](forum.md) document for the details.
@@ -85,10 +79,9 @@ See the [Forum](forum.md) document for the details.
 % npm run deploy:managePostsAllSummary
 ```
 
-
 ## Initializing TextService
 
-Fireship has some UI and you may want to show it in different languages.
+Fireflutter has some UI and you may want to show it in different languages.
 
 And you can use the text translation funtionality in your app.
 
@@ -126,18 +119,10 @@ void initTextService() {
 }
 ```
 
-## Initializing UserService
-
-
-
-
-
-
 ## Admin
 
 - See [Admin Doc](admin.md)
 
-
 ## Unit tests
 
-- There are many unit test codes. You can read other document of fireship on how to install and test the unit test codes.
+- There are many unit test codes. You can read other document of Fireflutter on how to install and test the unit test codes.
