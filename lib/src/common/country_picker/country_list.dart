@@ -3224,3 +3224,11 @@ List<CountryCode> countryList([String? keyword]) {
     return countries;
   }
 }
+
+String getOfficalNameByCode(String code) {
+  final matchingCountry = countryList().firstWhere(
+    (country) => country.alpha2 == code,
+  );
+
+  return matchingCountry.officialName;
+}

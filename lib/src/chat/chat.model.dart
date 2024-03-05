@@ -132,11 +132,14 @@ class ChatModel {
     await rtdb.ref().update(multiUpdateData);
 
     /// After chat message is saved (meaning after chat message is sent), call the callback function
-    ChatService.instance.onMessageSent?.call(ChatMessage.fromJson({
-      'key': chatMessageRef.key,
-      'ref': chatMessageRef,
-      ...chatMessageData,
-    }));
+    ChatService.instance.onMessageSent?.call(
+      ChatMessage.fromJson({
+        'key': chatMessageRef.key,
+        'ref': chatMessageRef,
+        ...chatMessageData,
+      }),
+      room.otherUserUid!,
+    );
 
     /// 1:1 채팅방이면, 상대방의 이름과 사진을 내 채팅방 정보에 저장한다.
     /// 이것은, 상대방의 채팅방 목록에서 상대방의 이름과 사진을 보여주기 위해서이다.

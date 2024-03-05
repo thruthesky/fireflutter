@@ -36,13 +36,13 @@ class ChatService {
 
   Function(ChatModel)? testBeforeSendMessage;
 
-  Function(ChatMessage)? onMessageSent;
+  Function(ChatMessage, String)? onMessageSent;
 
   /// init
   init({
     ChatCustomize? customize,
     Function(ChatModel)? testBeforeSendMessage,
-    Function(ChatMessage)? onMessageSent,
+    Function(ChatMessage, String)? onMessageSent,
   }) {
     dog('--> ChatService.init()');
     this.customize = customize ?? this.customize;
@@ -70,7 +70,12 @@ class ChatService {
     ChatRoom? room,
   }) async {
     /// 채팅방 입장을 할 때, DB 업데이트를 하므로, 메시지를 보낼 때에는 해제 계산이 되어져 있다.
-    if (await ActionLogService.instance.chatJoin.isOverLimit()) return;
+    ///
+
+    /// Check if it hits limit except the user is admin
+    if (isAdmin == false) {
+      if (await ActionLogService.instance.chatJoin.isOverLimit()) return;
+    }
 
     if (context.mounted) {
       return showGeneralDialog(
