@@ -467,9 +467,36 @@ ChatService.instance.init(testBeforeSendMessage: (chat) {
   if (my!.photoUrl.isEmpty || my!.displayName.isEmpty) {
     error(
         context: context,
-        title: '회원 정보 미완성',
-        message: '빠진 회원 정보를 모두 입력해 주세요.');
-    throw '프로필이 미완성입니다.';
+        title: 'Incomplete Profile',
+        message: 'Please fill in all missing profile information.');
+    throw 'The profile is incomplete.';
   }
 });
 ```
+
+## Chat Message Sent Hook
+
+If you want to perform certain actions after sending a chat message, you can use a hook.
+
+For example, if you want to translate the sent chat message into another language after sending it, you can first send the chat message, then translate it using a translation API, and finally update the content of the sent chat message.
+
+```dart
+void initChatService() {
+  ChatService.instance.init(
+    onMessageSent: (ChatMessage message) async {
+      /// You can perform desired actions here.
+      /// For example, you can detect the language of the recipient and then translate the chat message using the https://pub.dev/packages/translator package
+      /// After that, you can update the chat message as follows:
+      /// This means automatically translating the chat message into another language.
+      try {
+        await message.ref!.update({
+          Field.text:
+              "Translated message: ...., original message: ${message.text}"
+        });
+      } catch (e) {
+        dog('onMessageSent: ${e.toString()}, path: ${message.ref!.path}');
+        rethrow;
+      }
+    },
+  );
+}

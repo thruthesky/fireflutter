@@ -10,3 +10,5 @@
 - Save `noOfUsers` in each chat room. So, it can display how many users in the room anywhere in the app.
 
 - photo expansion view on comment, post, etc.
+
+- Translation every where.

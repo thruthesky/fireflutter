@@ -29,15 +29,11 @@ import 'package:firebase_database/firebase_database.dart';
 class Value extends StatelessWidget {
   const Value({
     super.key,
-    this.path,
     this.ref,
     required this.builder,
     this.initialData,
     this.onLoading,
-  }) : assert(path != null || ref != null, 'path or ref must be not null');
-
-  @Deprecated('User ref instead of path')
-  final String? path;
+  });
 
   final DatabaseReference? ref;
 
@@ -51,7 +47,7 @@ class Value extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: ref?.onValue ?? FirebaseDatabase.instance.ref(path).onValue,
+      stream: ref?.onValue,
       builder: (context, AsyncSnapshot<DatabaseEvent> event) {
         if (event.connectionState == ConnectionState.waiting) {
           if (event.hasData) {
@@ -62,8 +58,7 @@ class Value extends StatelessWidget {
           return onLoading ?? const SizedBox.shrink();
         }
         if (event.hasError) {
-          return Text(
-              'Error; path: ${ref?.path ?? path}, message: ${event.error}');
+          return Text('Error; path: ${ref?.path}, message: ${event.error}');
         }
         // value may be null.
         return builder(event.data?.snapshot.value);

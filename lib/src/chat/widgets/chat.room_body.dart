@@ -318,8 +318,8 @@ class _ChatRoomState extends State<ChatRoomBody> {
                           hintText: T.reportInputHint.tr,
                         );
                         if (re == null || re == '') return;
-                        await ReportService.instance
-                            .report(chatRoomId: chat.room.id, reason: re);
+                        await Report.create(
+                            chatRoomId: chat.room.id, reason: re);
                       } else if (v == 'leave') {
                         await chat.room.leave();
                         if (context.mounted) Navigator.of(context).pop();
