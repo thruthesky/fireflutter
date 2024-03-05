@@ -355,6 +355,8 @@ class _HomeScreenState extends State<MainScreen> {
         subscribeMyData?.cancel();
       }
     });
+  }
+}
 ```
 
 ## 회원 정보 수정 화면
@@ -382,10 +384,6 @@ UserService.instance.init(
 ### 사용자 프로필 보기를 할 때, 상대 회원에게 푸시 알림 보내기
 
 참고, 푸시알림 메시지 문서를 본다.
-
-## 위젯
-
-`UpdateBirthday` 위젯을 통해서 손 쉽게 회원 생년월일 정보를 수정 할 수 있다. 위젯 문서 참고
 
 ## Firestore 미러링
 

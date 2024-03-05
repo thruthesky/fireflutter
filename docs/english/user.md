@@ -209,7 +209,7 @@ toast(
 
 ### UpdateBirthdayField
 
-You can use this widget to display birthday and let user to update his birthday in profile screen.
+Easily modify member birthdate information using the `UpdateBirthday` widget. You can use this widget to display birthday and let user to update his birthday in profile screen.
 
 ### UserTile
 
@@ -326,14 +326,184 @@ listenRequiredField = UserService.instance.myDataChanges.listen((user) {
 });
 ```
 
+### How to Require Users to Input a Photo or Name if They Haven't
 
+You can check the value of `UserService.instance.myDataChanges` and if there is no name or photo, you can redirect them to a specific page.
 
+```dart
+class _HomeScreenState extends State<MainScreen> {
+  StreamSubscription? subscribeMyData;
 
+  @override
+  void initState() {
+    super.initState();
 
+    subscribeMyData = UserService.instance.myDataChanges.listen((my) {
+      if (my == null) return;
+      // If the user is logged in but has no name or photo, redirect them to a screen where they can input the required fields.
+      if (my.displayName.trim().isEmpty || my.photoUrl.isEmpty) {
+        context.go(InputRequiredFieldScreen.routeName);
+        // Cancel listening after executing once.
+        subscribeMyData?.cancel();
+      }
+    });
+  }
+}
+```
 
+## Profile Editing Screen
 
+The profile editing screen is a page where logged-in users can view and edit their own information. You can open the profile editing screen by calling `UserService.instance.showProfileScreen`.
 
+## User Public Profile Screen
 
+The user public profile screen is a page that can be viewed by every users.
+
+The user profile screen can be displayed in various places. For example, when clicking on a user's name or icon in user lists, posts, comments, or chats, the user public profile screen opens. To make development easier, calling `UserService.instance.showPublicProfileScreen` triggers `DefaultPublicProfileScreen` to be displayed. If you want to customize the design, you can modify it in `UserService.instance.init(custom: ...)`. Customizing the design is recommended, and you can reuse small widgets used in the public profile.
+
+Example - Customizing the public profile screen design through initialization.
+
+```dart
+UserService.instance.init(
+  customize: UserCustomize(
+    publicProfileScreen: (uid) => PublicProfileScreen(uid: uid),
+  ),
+);
+```
+
+By doing this, when the user taps on the profile picture, the `PublicProfileScreen` appears on the screen. You can either design this widget from scratch or it is recommended to copy and modify the `DefaultPublicProfileScreen`.
+
+### Sending Push Notifications to the Other Member when Viewing User Profiles
+
+Refer to the [Push Notification Message Documentation](messaging.md) for more information.
+
+## Firestore Mirroring
+
+Realtime Database lacks robust search functionality. Therefore, mirroring (backing up) user documents to Firestore allows for search capabilities using Firestore. This mirroring process can be achieved by installing a Cloud Function. Refer to the [installation documentation](install.md) for more information.
 
 ## Distance Search
 
+For more detailed distance searches, applying a radius formula from SQL databases, Algolia, Typesense, etc., is necessary. However, with Firebase, conducting radius searches directly through the database dimension is not feasible, whether it's Realtime Database or Firestore.
+
+If you really need radius search while using Firebase, you can:
+
+1. Store location information in a third-party search engine like Algolia.
+2. Store all user location information within the app (e.g., SQLite) and conduct radius searches internally.
+3. Utilize Geohash values as explained in the official documentation: [Firestore GeoQueries](https://firebase.google.com/docs/firestore/solutions/geoqueries?hl=en). This involves fetching users with Geohash values corresponding to the desired range and then performing more accurate distance calculations within the app. However, this approach requires consideration of false positives, edge cases, and the cost of fetching unnecessary data.
+
+Fireflutter provides a convenient method for distance search, although slightly different from the above three methods.
+
+- Upon app startup, the user's latitude and longitude information are stored in the user document fields latitude and longitude.
+    - Fireflutter then automatically stores geohash4, geohash5, geohash6, and geohash7.
+    - Additionally, it can be mirrored in Firestore as needed.
+- During searches, fetching users within 200 meters of the logged-in user simply involves retrieving users whose geohash7 matches that of the logged-in user in the database.
+    - Geohash6 allows searches within 1 km, geohash5 within 5 km, and geohash4 within 20 km.
+
+## Likes
+
+When displaying as a text button, you can do it as follows. However, since the increase in the number of likes is handled by cloud functions, it may not be displayed in real-time, requiring appropriate handling.
+
+```dart
+ElevatedButton(
+  onPressed: () async {
+    await my?.like(uid);
+  },
+  child: Value(
+    path: Path.userField(uid, Field.noOfLikes),
+    builder: (v) => Text(
+      v == null || v == 0
+          ? T.like.tr
+          : v == 1
+              ? ('${T.like.tr} 1')
+              : '${T.likes.tr} ${v ?? ''}',
+    ),
+  ),
+),
+```
+
+## Likes List
+
+There are two types of likes lists:
+
+First, the list of people I liked.
+Second, the list of people who liked me.
+
+You can code as follows:
+
+
+```dart
+import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
+
+class LikeScreen extends StatefulWidget {
+  const LikeScreen({super.key});
+
+  @override
+  State<LikeScreen> createState() => _LikeScreenState();
+}
+
+class _LikeScreenState extends State<LikeScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 0,
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'Who Likes Me'),
+              Tab(text: 'Who I Like'),
+            ],
+          ),
+        ),
+        body: const TabBarView(
+          children: [
+            WhoLikeMeListView(),
+            WhoILikeListView(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+## Checking User Login and User Document Preparation
+
+### AuthReady
+
+`AuthReady` allows the builder callback function to be called and display widgets if the user is logged into Firebase. If the user is not logged in, the `notLogin` callback function is executed. Note that even if the user document in Firebase Realtime Database is not loaded, the builder function of this function is executed.
+
+It is mainly used to check if the user UID is available after logging in to Firebase.
+
+### MyDocReady
+
+`MyDocReady` is used to check if the user document has been loaded from the Realtime Database after the user has logged into Firebase.
+
+Internally, it simply uses the [MyDoc] widget to check if the user document has been loaded. If the user document has been loaded, it executes `builder(UserModel)` and if not, it displays [loading].
+
+/// When using [MyDoc], builder(UserModel) may be null, so null check is necessary,
+/// but [MyDocReady] is more convenient to use as builder(UserModel) is not null.
+
+## Blocking
+
+- Blocked users can be displayed as a list with `BlockListView`.
+- If you want to display it as a string when blocked, you can use the `orBlock()` String extension.
+- If you need to display it as a widget, use `Blocked`.
+
+Example - When displaying pictures in the comment list, if the user is blocked, do not display the picture.
+
+```dart
+Blocked(
+  uid: widget.comment.uid,
+  yes: () => SizedBox.fromSize(),
+  no: () => DisplayDatabasePhotos(
+    urls: widget.comment.urls,
+    path:
+        '${Path.comment(widget.post.id, widget.comment.id)}/${Field.urls}',
+  ),
+),
+```
+
+Refer to the [widget documentation](widgets.md) for displaying the block button.
