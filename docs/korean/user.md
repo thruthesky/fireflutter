@@ -47,6 +47,48 @@ UserService.instance.init(
 
 `loginFirstScreen` 은 builder 가 아니다. 그래서 정적 widget 을 만들어주면 되는데, Scaffold 를 통째로 만들어 넣으면 된다. `loginFirstScreen` is not a builder. So, you can create a static widget, and if you put it in a Scaffold, it will work.
 
+
+
+### 사용자 정보 수정 페이지 초기화 예제
+
+`profileUpdateForm` 은  `UserService.instance.showProfileUpdateScreen()` 을 호출하면 dialog screen 이 나타나고 그 안에 표시될 회원 정보 양식을 지정 할 때 사용한다.
+기본적으로 `DefaultProfileUpdateForm` 위젯을 사용하며, 아래와 같이 커스터마이징을 할 수 있다.
+
+
+```dart
+UserService.instance.init(
+  customize: UserCustomize(
+    profileUpdateForm: const DefaultProfileUpdateForm(
+      stateMessage: (display: true, require: true),
+      nationality: (display: true, require: true),
+      countryFilter: ['KR', 'VN', 'TH', 'LA', 'MM'],
+      region: (display: true, require: true),
+      gender: (display: true, require: true),
+      morePhotos: (display: true, require: true),
+      occupation: (display: true, require: true),
+      koreanAreaLanguageCode: 'ko',
+    ),
+);
+```
+
+그런데, 위와 같이 하면 회원 정보 수정 양식만 변경 할 수 있지, 해더나 백그라운드 등 화면 전체에 대한 변경을 할 수 없다. 그래서 아래와 같이 하면 모든 것을 직접 변경 할 수 있다.
+
+```dart
+UserService.instance.init(
+  customize: UserCustomize(
+    profileUpdateScreen: () => const ProfileUpdateScreen(),
+  ),
+);
+```
+위 코드는 사용자가 프로필 수정 버튼을 누르면 `ProfileUpdateScreen` 위젯을 화면에 보여주도록 하는 것이다. 이 `ProfileUpdateScreen` 위젯은 직접 만드는 것으로 원하는 모든 것을 작업하면 된다. 가능하면 `DefaultProfileUpdateScreen` 파일을 복사해서 수정할 것을 권한다. 그리고 모든 회원 정보 양식을 직접 만들어도 되지만, 가능하면 `DefaultProfileUpdateForm` 을 `ProfileUpdateScreen` 안에서 사용하고, 헤더 디자인 등 필요한 디자인만 추가할 것을 권한다.
+
+
+참고로, 회원 정보 수정 페이지는 반드시 `UserService.instance.showProfileUpdateScreen(context);` 을 통해서 열어야 한다. 그렇지 않고 직접 route 연결을 통해서 열면, 앱 내의 여러 곳에서 회원 정보 수정 페이지를 여는 버튼을 두어야 하는 경우가 있는데 이 같은 경우, `profileUpdateForm` 이나 `profileUpdateScreen` 등에서 혼동이 생길 수 있다.
+
+
+
+
+
 ### User profile update screen
 
 Fireflutter provides a few widgets to update user's profile information like below
