@@ -216,14 +216,10 @@ class UserService {
 
     final String userUid = uid ?? user!.uid;
 
-    ///
-    // if (ActionLogService.instance.userView.isOverLimit) {
-    //   if (await ActionLogService.instance.userViewOverLimit() != true) {
-    //     return;
-    //   }
-    // }
-
-    if (await ActionLogService.instance.userProfileView.isOverLimit()) return;
+    /// Check if it hits limit except the user is admin or the user views his own profile.
+    if (isAdmin == false && userUid != my?.uid) {
+      if (await ActionLogService.instance.userProfileView.isOverLimit()) return;
+    }
 
     if (context.mounted) {
       showGeneralDialog(
@@ -240,28 +236,20 @@ class UserService {
       ActionLog.userProfileView(userUid);
     }
 
-    /// 누가 나의 프로필을 볼 때, 푸시 알림 보내기
+    /// Push notification on profile view
+    ///
     /// send notification by default when user visit other user profile
     /// disable notification when `disableNotifyOnProfileVisited` is set on user setting
-
     /// Send push notification to the other user.
     if (enablePushNotificationOnProfileView && loggedIn && myUid != userUid) {
       bool? re =
           await UserSetting.getField(userUid, Code.profileViewNotification);
       if (re == false) return;
       MessagingService.instance.sendTo(
-        title: "Your profile was visited.",
-        body: "${currentUser?.displayName} visit your profile",
+        title: T.yourProfileWasVisited,
+        body: "${my?.displayName} ${T.visitYourProfile}",
         uid: uid,
       );
     }
-  }
-
-  @Deprecated('Use showPublicProfileScreen instead')
-  Future showPublicProfile({
-    required BuildContext context,
-    required String uid,
-  }) {
-    return showPublicProfileScreen(context: context, uid: uid);
   }
 }

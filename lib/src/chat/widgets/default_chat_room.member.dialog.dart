@@ -45,7 +45,6 @@ class DefaultChatRoomMemberDialog extends StatelessWidget {
           if (room.isMaster && member.uid != room.master && member.uid != myUid)
             TextButton(
               onPressed: () async {
-                // TODO TR
                 final re = await confirm(
                     context: context,
                     title: 'Remove User',

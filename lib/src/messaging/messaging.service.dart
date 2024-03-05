@@ -183,7 +183,9 @@ class MessagingService {
   /// [uids] 는 배열로 입력되어야 하고, 여기서 콤마로 분리된 문자열로 만들어 서버로 보낸다. 즉, 서버에서는 문자열이어야 한다.
   ///
   /// [target] is the target of devices you want to send message to. If it's "all", then it will send messages to all users.
-  /// [type] is the kind of push notification `post`, `chat`, `profile`
+  /// [extra] is the data you pass to get the notification message type by "default" or if you are not passisng
+  /// any extra data the norification is profile or user message type, by passing "roomId", and "messageId", the message type
+  /// is "chat", and by pasing "id" which is postId and "category" the message type is post
   /// [id] is can be use to determined the landing page when notification is clicked
   /// heirarchy action >> topic >> tokens >> uids
   /// if action is not null, topic, tokens, uids will be ignored
@@ -228,7 +230,22 @@ class MessagingService {
       final data = {
         "title": title,
         "body": body,
-        "data": {"senderUid": senderUid},
+        "data": {
+          "senderUid": senderUid,
+          "uid": senderUid,
+          if (extra != null &&
+              extra['id'] != null &&
+              extra['category'] != null) ...{
+            "id": extra['id'],
+            "category": extra['category'],
+          },
+          if (extra != null &&
+              extra['messageId'] != null &&
+              extra['roomId'] != null) ...{
+            "roomId": extra['roomId'],
+            "messageId": extra['messageId'],
+          }
+        },
         "tokens": chunck,
         if (image != null) 'image': image
       };
@@ -264,8 +281,12 @@ class MessagingService {
     return responses;
   }
 
-  Future<Map<String, String>> sendAll(
-      {required String title, required String body, String? image}) async {
+  Future<Map<String, String>> sendAll({
+    required String title,
+    required String body,
+    String? image,
+    Map<String, dynamic>? extra,
+  }) async {
     // 1. get all tokens
     final folders = await get<Map>(MessagingModel.userFcmTokens);
     if (folders == null) return {};
@@ -279,7 +300,8 @@ class MessagingService {
         title: title,
         body: body,
         senderUid: myUid!,
-        image: image);
+        image: image,
+        extra: extra);
 
     dog('sendAll() responses: $responses');
 
@@ -289,12 +311,14 @@ class MessagingService {
   /// Send message to one user or multiple users
   /// [uid] sending a notification to a single uid
   /// [uids] sending a notification to multiple uids
+  /// [extra] sending a extra data to determine what type of message your passing
   Future<Map<String, String>?> sendTo({
     String? uid,
     List<String>? uids,
     required String title,
     required String body,
     String? image,
+    Map<String, dynamic>? extra,
   }) async {
     if (uid == null && uids == null) return null;
 
@@ -334,8 +358,8 @@ class MessagingService {
       body: body,
       image: image,
       senderUid: myUid!,
+      extra: extra,
     );
-
     dog('sendTo() responses: $responses');
     return responses;
   }

@@ -148,6 +148,7 @@ class UserModel {
   }
 
   String occupation;
+  String languageCode;
 
   UserModel({
     required this.data,
@@ -183,6 +184,7 @@ class UserModel {
     required this.geohash5,
     required this.geohash6,
     required this.geohash7,
+    required this.languageCode,
   });
 
   factory UserModel.fromSnapshot(DataSnapshot snapshot) {
@@ -248,6 +250,7 @@ class UserModel {
       geohash5: json['geohash5'] ?? '',
       geohash6: json['geohash6'] ?? '',
       geohash7: json['geohash7'] ?? '',
+      languageCode: json['languageCode'] ?? '',
     );
   }
 
@@ -284,6 +287,7 @@ class UserModel {
       'geohash5': geohash5,
       'geohash6': geohash6,
       'geohash7': geohash7,
+      'languageCode': languageCode,
     };
   }
 
@@ -326,6 +330,7 @@ class UserModel {
       geohash5 = user.geohash5;
       geohash6 = user.geohash6;
       geohash7 = user.geohash7;
+      languageCode = user.languageCode;
     }
 
     return this;
@@ -426,6 +431,7 @@ class UserModel {
     String? siGunGu,
     double? latitude,
     double? longitude,
+    String? languageCode,
   }) async {
     final data = {
       if (name != null) 'name': name,
@@ -452,6 +458,7 @@ class UserModel {
       if (siGunGu != null) 'siGunGu': siGunGu,
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
+      if (languageCode != null) 'languageCode': languageCode,
     };
     if (data.isEmpty) {
       return this;

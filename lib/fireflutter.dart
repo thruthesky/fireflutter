@@ -40,7 +40,6 @@ export 'src/common/url_preview/url_preview.dart';
 export 'src/common/url_preview/url_preview.model.dart';
 
 export 'src/database/widgets/database.count.dart';
-export 'src/database/widgets/database.dart';
 export 'src/database/widgets/value.dart';
 
 export 'fireflutter.field.dart';
