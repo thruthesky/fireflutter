@@ -517,3 +517,26 @@ ChatService.instance.init(testBeforeSendMessage: (chat) {
 채팅 메시지를 보낸 다음 어떤 작업을 하고 싶은 경우에 훅을 쓸 수 있다.
 
 예를 들면, 채팅 메시지를 보낸 후, 그 메시지를 다른 언어로 변경하고 싶다면, 먼저 채팅 메시지를 보내고, 번역하는 API 를 통해서 번역하고, 전송된 채팅 메시지의 내용을 업데이트 할 수 있다.
+
+
+```dart
+void initChatService() {
+  ChatService.instance.init(
+    onMessageSent: (ChatMessage message) async {
+      /// 여기서 원하는 작업을 할 수 있다.
+      /// 예를 들면, 상대방의 언어를 알아내고, https://pub.dev/packages/translator 패키지로 번역한 다음
+      /// 채팅 메시지를 아래와 같이 업데이트 할 수 있다.
+      /// 즉, 자동으로 채팅 메시지를 다른 언어로 번역하는 것이다.
+      try {
+        await message.ref!.update({
+          Field.text:
+              "Translated message: ...., original message: ${message.text}"
+        });
+      } catch (e) {
+        dog('onMessageSent: ${e.toString()}, path: ${message.ref!.path}');
+        rethrow;
+      }
+    },
+  );
+}
+```
