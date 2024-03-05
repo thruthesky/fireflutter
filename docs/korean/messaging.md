@@ -1,22 +1,16 @@
 # 푸시 알림
 
-
-
 ## FCM 과 token
 
-Fireship uses FCM to send messages to devices.
+Fireflutter uses FCM to send messages to devices.
 
 The tokens are saved under `/user-fcm-tokens/<token> { uid: [user uid], platform: [android or ios]}`. So, if you want to get the tokens of a user, you must get the tokens by searching the uid.
-
-
 
 ## 구독
 
 토픽을 사용하지 않고, 사용자 토큰 별로 메시지를 보낸다. 그래서 구독을 했는지 안했는지에 대한 정보를 DB 에 보관해야하는데, 각 기능별 문서를 참고하도록 한다.
 참고, 게시판 구독
 참고, 채팅방 구독
-
-
 
 ## Sending messages to user
 
@@ -38,24 +32,17 @@ await MessagingService.instance.sendTo(
 
 To use this method, The firebase cloud function named `sendPushNotifications` in `firebase/functions/src/messaging/functions.ts` must be installed. See installation on how to install firebsae functions.
 
-
 ## Sending messages for forum category subscription and chat room subscription
 
-
-There are firebase cloud functions that work with fireship for sending messages to subscribers on forum categories and chat rooms.
+There are firebase cloud functions that work with Fireflutter for sending messages to subscribers on forum categories and chat rooms.
 
 You will need to install `sendMessagesToCategorySubscribers` and `sendMessagesToChatRoomSubscribers` in `firebase/functions/src/messaging/functions.ts` to make it work.
 
 The source code is under `firebase/functions` and the test code is under `firebase/functions/tests`.
 
-
-
 ## Unit testing
 
 See `firebase/functions/tests` folder for unit testing on push notification. To run the unit test code, you need to set the environment variable - `GOOGLE_APPLICATION_CREDENTIAILS`
-
-
-
 
 ## 시스템트레이에서 메시지가 탭 되면 화면 열기
 
@@ -103,9 +90,6 @@ Future<void> _onMessageTapped(RemoteMessage message) async {
 }
 ```
 
-
-
-
 ## 사용자 프로필 보기 메시지
 
 A 가 B 의 프로필을 보면, B 는 푸시 알림을 받을 수 있다. 즉, 누가 나의 프로필을 봤는지 알림을 받는 것이다.
@@ -116,8 +100,3 @@ A 가 B 의 프로필을 보면, B 는 푸시 알림을 받을 수 있다. 즉, 
 
 - 앱 초기화를 할 때, `UserService.init()` 에서 프로필 보기를 할 때, 푸시 알림 설정을 하고
 - 사용자 설정에서 `profileViewNotification` 에 false 가 아닌 값을 저장하면 푸시 알림을 한다. 즉, 이 값이 존재하지 않거나(null 이거나), true 인 경우에 푸시 알림을 한다.
-
-
-
-
-

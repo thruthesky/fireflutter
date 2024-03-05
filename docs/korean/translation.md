@@ -41,11 +41,9 @@ Text(T.setting.tr)
 
 Note that, `T.setting` is not defined in `texts`. So it is used as it is.
 
-
 ## 다국어 지원
 
 아래와 같이 장치의 기본 언어에 따라 번역된 문자열(문장)을 화면에 보여 줄 수 있다.
-
 
 번역된 문자열 설정하는 방법
 
@@ -80,7 +78,7 @@ TextService.instance.texts = {
 };
 ```
 
-사용하는 방법
+## 사용하는 방법
 
 ```dart
 'phoneSignIn'.tr

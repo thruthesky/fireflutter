@@ -11,11 +11,9 @@
 
 - 북마크와 북마크 해제는 `Bookmark.toggle()` 을 사용하면 된다.
 
-
 ## 북마크 목록
 
 아래는 북마크 기본 코드이며, 필요한 경우, `BookMarkListView` 를 복사해서 수정해서 사용하면 된다.
-
 
 ```dart
 import 'package:fireflutter/fireflutter.dart';

@@ -9,32 +9,65 @@
 - `/chat-rooms` stores information about chat rooms.
 - `/chat-messages` stores chat messages.
 - `/chat-joins` indicates who is participating in which chat room. Both `/chat-rooms` and `/chat-joins` use the `ChatRoom`.
-
 - `noOfUsers` is updated in `/chat-rooms` when a new user joins or leaves a group chat room,
-
     - and is updated in `/chat-joins` when a chat message is sent.
-
 - When sending a chat message, if the text contains a URL, information for previewing the URL is extracted. The appropriate values are stored in the following fields below the message:
     - `previewUrl` - URL
     - `previewTitle` - Title
     - `previewDescription` - Description
     - `previewImageUrl` - Image
 
-## Logic
+### Chat Rooms
 
-### Get ChatRoom on ChatRoomBody
+- `blocks`: Administrators manage the block list of chat rooms here. Users whose UIDs added here cannot enter the chat room. Additionally, they are automatically ejected from the chat room. (**TODO: Functionality not implemented as of 2024-02-22.**)
 
-- The complete chat room model instance is needed before display the chat room message. For instance,
+### Structure of Chat Messages
+
+- uid: The UID of the user who sent the message.
+- createdAt: The time when the message was sent.
+- order: The order of the message in the list.
+- text: The text message content.
+- url: The URL of the photo if a photo was sent.
+
+## Coding Technique
+
+### Fetching All Users' Chat Messages in a Chat Room
+
+By doing the following, you can retrieve all messages in the chat room sorted by `uid`. Be careful not to fetch too much data to avoid excessive download size.
+
+```dart
+// Get the chat room first.
+final ChatModel chatRoom = await ChatModel.get('chat-room-id');
+
+final snapshot = await ChatModel.messageseRef
+    .orderByChild('uid')
+    .get();
+
+if (snapshot.exists) {
+  print((snapshot.value as Map).keys.length);
+  for (var key in (snapshot.value as Map).keys) {
+    print((snapshot.value as Map)[key]['uid'] +
+        ' : ' +
+        ((snapshot.value as Map)[key]['text'] ?? '--'));
+  }
+}
+```
+
+### Get ChatRoom from ChatModel
+
+- The `ChatModel` instance is needed before displaying the chat room message.
     - to check if the user is in the room,
     - to check if site preview displaying or image displaying options,
     - to show password input box based on the chat room settings,
     - etc
 
+To clarify, `ChatRoom` and `ChatModel` are two different models. The `ChatRoom` is the model that holds some details of the chat room. The `ChatModel` is the complete model that holds all the details of the chat room and the chat messages. In short, the `ChatRoom` is accessible  `ChatModel.chatRoom`.
+
 ### Order
 
 - Chat message order is sorted by the last message's `order` field.
-    - It must have a smaller value than the previous message.
-    - When you send a chat message programatically without `order`, the message may be shown at the top.
+    - The later message must have a smaller value than the previous message. Meaning the latest message always have the smallest value.
+    - When you send a chat message programatically without `order`, the message may be shown at the wrong place (at the top).
 
 ### Creating Chat Room
 
@@ -168,7 +201,7 @@ FirebaseDatabaseQueryBuilder(
 
 ### Opening the Settings for the Chat Room
 
-To open the
+To open the Settings for the Chat Room
 
 ```dart
 ChatService.instance.showChatRoomSettings(
@@ -177,7 +210,7 @@ ChatService.instance.showChatRoomSettings(
 );
 ```
 
-### 채팅방 목록 (Chat Room List)
+### Chat Room List
 
 Due to the characteristics of RTDB, it is challenging to list chat rooms:
 
@@ -423,6 +456,47 @@ TextButton(
 
 - You can use the default admin screen. Just call `AdminService.instance.showDashboard()`.
 
-### Delete Open Chat Message Data
+## Changing logic before sending chat messages
 
-<!-- TODO -->
+If you want to add logic before sending chat messages (or photos), you can use `testBeforeSendMessage`.
+
+For example, if you don't want to send a chat message if the member doesn't have a photo or name, you can do the following.
+
+```dart
+ChatService.instance.init(testBeforeSendMessage: (chat) {
+  if (my!.photoUrl.isEmpty || my!.displayName.isEmpty) {
+    error(
+        context: context,
+        title: 'Incomplete Profile',
+        message: 'Please fill in all missing profile information.');
+    throw 'The profile is incomplete.';
+  }
+});
+```
+
+## Chat Message Sent Hook
+
+If you want to perform certain actions after sending a chat message, you can use a hook.
+
+For example, if you want to translate the sent chat message into another language after sending it, you can first send the chat message, then translate it using a translation API, and finally update the content of the sent chat message.
+
+```dart
+void initChatService() {
+  ChatService.instance.init(
+    onMessageSent: (ChatMessage message) async {
+      /// You can perform desired actions here.
+      /// For example, you can detect the language of the recipient and then translate the chat message using the https://pub.dev/packages/translator package
+      /// After that, you can update the chat message as follows:
+      /// This means automatically translating the chat message into another language.
+      try {
+        await message.ref!.update({
+          Field.text:
+              "Translated message: ...., original message: ${message.text}"
+        });
+      } catch (e) {
+        dog('onMessageSent: ${e.toString()}, path: ${message.ref!.path}');
+        rethrow;
+      }
+    },
+  );
+}

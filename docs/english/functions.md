@@ -1,17 +1,15 @@
-# Fireship 에서 제공하는 함수들
-
+# Functions
 
 These functions are provided to be used anywhere in the code as needed.
 
-## 에러 표시 함수
+## Error Display Functions
 
-주로 아래의 두가지 방식으로 에러를 화면에 표시 할 수 있다.
+You can display errors on the screen using the following two methods:
 
+- The `error` function utilizes `showDialog` to display the error on the screen using an ErrorDialog.
+- The `errorToast` function uses a `toast` to display the error on the screen.
 
-- `error` 함수는 showDialog 를 이용해서, `ErrorDialog` 를 화면에 에러를 표시한다.
-- `errorToast` 는 `toast` 를 이용해서, 화면에 에러를 표시한다.
-
-## toast
+## Toast
 
 Toast can be used to show a snackbar with a message.
 
@@ -22,38 +20,38 @@ toast(context: context, message: 'Hello User.');
 Parameters:
 
 - context
-  * required BuildContext
-  * the build context of the current widget
+    - required BuildContext
+    - the build context of the current widget
 - title
-  * String
-  * title text of the snackbar
+    - String
+    - title text of the snackbar
 - message
-  * required String
-  * message to show as text
+    - required String
+    - message to show as text
 - icon
-  * Icon
-  * The icon to add in the snackbar
+    - Icon
+    - The icon to add in the snackbar
 - duration
-  * Duration
-  * how long does the snackbar shows?
-  * default: const Duration(seconds: 8)
+    - Duration
+    - how long does the snackbar shows?
+    - default: const Duration(seconds: 8)
 - onTap
-  * Function(Function)
-  * on tap function
+    - Function(Function)
+    - on tap function
 - error
-  * bool
-  * is it an error message?
+    - bool
+    - is it an error message?
 - hideCloseButton
-  * bool
-  * default: false
+    - bool
+    - default: false
 - backgroundColor
-  * Color
+    - Color
 - foregroundColor
-  * Color
+    - Color
 - runSpacing
-  * double
-  * default: 12
-  * spacing between the icon and the message
+    - double
+    - default: 12
+    - spacing between the icon and the message
 
 ## confirm
 
@@ -73,9 +71,9 @@ Parameters:
 
 - [required] BuildContext context
 - [required] String title
-  - title of the message
+    - title of the message
 - [required] String message
-  - Add the question or confirmation message here.
+    - Add the question or confirmation message here.
 
 ## input
 
@@ -94,10 +92,10 @@ Parameters:
 
 - [required] BuildContext context
 - [required] String title
-  - The title of the prompt
+    - The title of the prompt
 - String subtitle
-  - The subtitle or additional info for input box
+    - The subtitle or additional info for input box
 - [required] String hintText
-  - hintText for the input box
+    - hintText for the input box
 - String initialValue
-  - the default input value
+    - the default input value

@@ -4,11 +4,34 @@ To upload an image, you may use `StorageService.instance.upload` method.
 
 ## Uploading
 
-<!-- TODO DOCS -->
+This is an example of an Button that will upload a file.
+
+```dart
+IconButton(
+    icon: widget.cameraIcon ?? const Icon(Icons.camera_alt),
+    onPressed: () async {
+        // This is the upload
+        final url = await StorageService.instance.upload(
+            context: context,
+            camera: true,
+            gallery: true,
+        );
+        if (url == null) return;
+        print("Your uploaded file url is $url");
+    },
+),
+```
 
 ## Deleting
 
-<!-- TODO DOCS -->
+This is an example of deleting a file using URL.
+
+```dart
+final oldUrl = "firebase.url.photo.com";
+
+// Delete existing image
+await StorageService.instance.delete(oldUrl);
+```
 
 ## Accessing
 

@@ -58,3 +58,60 @@ Refer to [Comment doc](comments.md).
 ## Posts
 
 Refer to [Post doc](post.md).
+
+## Post List
+
+```dart
+import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
+import 'package:silvers/defines/categories.dart';
+
+class PostListScreen extends StatelessWidget {
+  static const String routeName = '/PostList';
+  const PostListScreen({
+    super.key,
+    required this.category,
+  });
+
+  final String category;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(Categories.getLabel(context, category)),
+        actions: [
+          IconButton(
+            onPressed: () {
+              ForumService.instance
+                  .showPostCreateScreen(context, category: category);
+            },
+            icon: const Icon(Icons.add),
+          ),
+        ],
+      ),
+      body: PostListView(
+        category: category,
+      ),
+    );
+  }
+}
+```
+
+## Push Notification Subscription
+
+To subscribe or unsubscribe to push notifications for forum categories, follow the steps below.
+
+```dart
+IconButton(
+  onPressed: () async {
+    toggle(Path.postSubscription(category));
+  },
+  icon: Value(
+    path: Path.postSubscription(category),
+    builder: (v) => v == true
+        ? const Icon(Icons.notifications_rounded)
+        : const Icon(Icons.notifications_outlined),
+  ),
+),
+```

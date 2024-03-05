@@ -1,55 +1,69 @@
 # Database
 
-Fireship uses `Firebase Realtime Database`. We have chosen the realtime database because it's fast and simple. You may use `Firestore` together with Fireship.
+FireFlutter uses Realtime Database. Initially, FireFlutter was actively developed and used through Firestore. However, in early 2024, it was determined that Realtime Database could be sufficiently well-implemented, leading to the development of a more concise and faster package. As a result, the package primarily using Realtime Database was developed.
 
-## Gudeline
+## Database Guidelines
 
-- We use `Realtime Database` and it's different from `Firestore`. And it is good to know that the app should
-  - listen(observe) as small portion as it can be.
-  - get the data as small portion as it can be.
-  - not listening the whole document of a user or a post. Just listen a portion of it. Meaning, instead of listing the whole post document, just listen the title only if it's needed.
+- By using Realtime Database instead of Firestore,
+    - You can listen to parts of the data rather than the entire data, and fetch minimal units of data from the database.
+    - This allows you to retrieve data faster and display it on the screen more efficiently.
+    - It can lead to cost savings.
 
-- The path of database should not contain underbar(\_). Instead use `-` between the words.
-  - For instance, `user-profile-photos`.
-  - for custom path, do not use the triple dash `---` within path because it is used for the 1:1 chat rooms' ids.
+- Use hyphens (-) instead of underscores (_) in database paths whenever possible.
+    - For example, use user-private instead of user_private.
 
-## Database structure
+## Database Structure
 
-Fireship maintains as flat as it can be. Meaning, it does not contains a batch of data inside a node. For instance, the data of the users are saved under `/users/<uid>` and its data should not contain another batch of data. The fields should have a value of string, number, array. But not a map or subnode.
+- Aim for a flat data structure whenever possible.
+- Avoid nesting subcollections whenever possible. For instance, refrain from storing comments under a post node. For example,
+    - Instead of storing comments under a post like `/posts/<postId>/comments/...`,
+    - Store posts under `/posts/<postId>` and comments under `/comments/<postId>/...` to separate the data groups.
 
-Below is the good example of flat style.
+## Database Widgets
 
-```json
-/users/<uid>/ { name: ..., age: ..., address: ..., }
-```
+- Provides widgets for easy database usage.
 
-Below is the bad example because it has other batch of information under the user node.
+## Value Widget
 
-```json
-/users/<uid>/schedule/<scheduleId>/ { subject: ..., contenxt: ...., dateAt: ...}
-```
+The Value widget displays information from the Realtime Database in real-time on the screen. When displaying values from the database on the screen, it is essential to use this widget.
 
-## Use Database
+When a database path is specified in `path`, it is passed to the `builder` as dynamic type. If there is no value at the specified path, a null value is passed to the builder.
 
-You can use `Database` widget on listing a value of database node.
+Providing the same value as in the database to `initialData` significantly reduces screen flickering.
+
+Example 1 - Display the value of the `test/banana` node on the screen.
 
 ```dart
-Database(
-    path: '${Path.join(myUid!, chat.room.id)}/name',
-    builder: (v, p) => Text(
-        v ?? '',
-        style: Theme.of(context).textTheme.titleLarge,
-    ),
+Value(
+  initialData: 'BANANA',
+  path: 'test/banana',
+  builder: (v) => Text(v.toString()),
 ),
 ```
 
-The `onLoading` can be used to reduce the screen flickering.
+Example 2 - Display the phone number of the logged-in user on the screen.
+
+```dart
+Value(path: Path.phoneNumber, builder: (v) => Text(v ?? ''))
+```
+
+You can display a loader icon in onLoading, or show default widgets to reduce screen flickering.
 
 ```dart
 Database(
   path: post.ref.child(Field.noOfLikes).path,
   builder: (no) => Text('좋아요${likeText(no)}'),
   onLoading: const Text('좋아요'),
+),
+```
+
+Through `Value.once`, you can display the value only once on the screen. In other words, if the value continues to be modified, it will not be displayed on the screen in real-time. Instead, it fetches the value once, displays it on the screen, and does not update it even if it changes.
+
+```dart
+Value.once(
+  initialData: 'BANANA',
+  path: 'test/banana',
+  builder: (v) => Text(v.toString()),
 ),
 ```
 

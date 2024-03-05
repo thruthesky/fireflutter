@@ -59,8 +59,6 @@ Refer to [Comment doc](comments.md).
 
 Refer to [Post doc](post.md).
 
-
-
 ## 글 목록
 
 ```dart
@@ -100,11 +98,9 @@ class PostListScreen extends StatelessWidget {
 }
 ```
 
-
 ## 푸시 알림 구독
 
 게시판 카테고리 별 푸시 알림 구독과 해제는 아래와 같이 하면 된다.
-
 
 ```dart
 IconButton(
