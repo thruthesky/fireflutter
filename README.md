@@ -1,7 +1,7 @@
 # FireFlutter
 
 
-![Image](https://github.com/thruthesky/fireflutter/blob/main/docs/assets/images/fireflutter_title_image.jpg?raw=true)
+![Image](https://github.com/thruthesky/fireflutter/blob/main/docs/assets/images/fireflutter_title_image.png?raw=true)
 
 FireFluter is a lightning-fast, robust CMS toolkit for real-time content management in Flutter app development. Empower your projects with dynamic, feature-rich building blocks. Built on Firebase, FireFlutter accelerates development, revolutionizing your app creation process. Unleash boundless possibilities with FireFlutter today!
 
