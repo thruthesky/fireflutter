@@ -15,12 +15,14 @@ import 'package:flutter/material.dart';
 class SimpleEmailPasswordLoginForm extends StatefulWidget {
   const SimpleEmailPasswordLoginForm({
     super.key,
-    required this.onLogin,
+    this.onLogin,
     this.onRegister,
+    this.padding,
   });
 
-  final void Function() onLogin;
+  final void Function()? onLogin;
   final void Function()? onRegister;
+  final EdgeInsets? padding;
 
   @override
   State<SimpleEmailPasswordLoginForm> createState() =>
@@ -34,52 +36,67 @@ class _SimpleEmailPasswordLoginFormState
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        LabelField(
-          label: T.email.tr,
-          controller: emailController,
-          keyboardType: TextInputType.emailAddress,
-        ),
-        LabelField(
-          label: T.password.tr,
-          controller: passwordController,
-          obscureText: true,
-        ),
-        const SizedBox(height: 24),
-        Center(
-          child: ElevatedButton(
-            onPressed: () async {
-              dog("Email: ${emailController.text}");
-              dog("Password: ${passwordController.text}");
-
-              if (emailController.text.trim().isEmpty) {
-                throw FireFlutterException(
-                    'input-email', 'Input email to login');
-              } else if (passwordController.text.trim().isEmpty) {
-                throw FireFlutterException(
-                    'input-password', 'Input password to login');
-              }
-
-              final re = await loginOrRegister(
-                email: emailController.text,
-                password: passwordController.text,
-              );
-              if (widget.onRegister != null) {
-                if (re.register) {
-                  widget.onRegister!();
-                } else {
-                  widget.onLogin();
-                }
-              } else {
-                widget.onLogin();
-              }
-            },
-            child: Text(T.login.tr),
+    return Padding(
+      padding: widget.padding ?? const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          LabelField(
+            label: T.email.tr,
+            controller: emailController,
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+              prefixIcon: const Icon(
+                Icons.email,
+              ),
+              hintText: T.inputEmail.tr,
+            ),
           ),
-        ),
-      ],
+          LabelField(
+            label: T.password.tr,
+            controller: passwordController,
+            obscureText: true,
+            decoration: InputDecoration(
+              prefixIcon: const Icon(
+                Icons.lock,
+              ),
+              hintText: T.inputPassword.tr,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Center(
+            child: ElevatedButton(
+              onPressed: () async {
+                dog("Email: ${emailController.text}");
+                dog("Password: ${passwordController.text}");
+
+                if (emailController.text.trim().isEmpty) {
+                  throw FireFlutterException(
+                      'input-email', 'Input email to login');
+                } else if (passwordController.text.trim().isEmpty) {
+                  throw FireFlutterException(
+                      'input-password', 'Input password to login');
+                }
+
+                final re = await loginOrRegister(
+                  email: emailController.text,
+                  password: passwordController.text,
+                );
+                if (widget.onRegister != null) {
+                  if (re.register) {
+                    widget.onRegister!();
+                  } else {
+                    widget.onLogin?.call();
+                  }
+                } else {
+                  widget.onLogin?.call();
+                }
+              },
+              child: Text(T.login.tr.toUpperCase()),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

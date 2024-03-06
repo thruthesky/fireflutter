@@ -8,6 +8,26 @@ fireship 에서 제공하는 기본 위젯에 대한 설명을 한다.
 
 TextField 를 좀 더 쓰기 편하게 해 놓은 것이다.
 
+예제
+```dart
+Theme(
+  data: Theme.of(context).copyWith(
+    inputDecorationTheme:
+        Theme.of(context).inputDecorationTheme.copyWith(),
+  ),
+  child: LabelField(
+    label: T.email.tr,
+    controller: emailController,
+    keyboardType: TextInputType.emailAddress,
+    decoration: const InputDecoration(
+      prefixIcon: Icon(
+        Icons.email,
+      ),
+    ),
+  ),
+),
+```
+
 ## UpdateBirthday
 
 회원 정보 수정 페이지 등에서 회원의 생년월일 정보를 보여주고 수정하게 하려면 `UpdateBirthday` 위젯을 사용하면 된다. lable 과 description 을 줄 수 있다.

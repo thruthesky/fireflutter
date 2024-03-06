@@ -11,9 +11,12 @@ class T {
   static const String name = 'Name';
   static const String inputName = 'Please enter your name.';
   static const String nameInputDescription = 'NameInputDescription';
+
   static const String saved = 'Saved.';
   static const String email = 'Email';
+  static const String inputEmail = 'Please enter your email.';
   static const String password = 'Password';
+  static const String inputPassword = 'Please enter your password.';
   static const String login = 'Login';
   static const String next = 'Next';
   static const String prev = 'Prev';
