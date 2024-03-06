@@ -11,3 +11,41 @@
 
 
 
+
+## 사용자 설정 화면 UI
+
+FireFlutter 에서 제공하는 기본 데이터 구조와 코드를 사용하여 모든 것을 직접 작성을 할 수 있다. 하지만, 기존의 코드를 활용하면 더욱 쉽게 작업을 할 수 있다.
+
+
+
+```dart
+import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
+import 'package:wemeet/global.dart';
+
+class SettingsScreen extends StatefulWidget {
+  static const String routeName = '/Settings';
+  const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+      ),
+      body: const Padding(
+        padding: EdgeInsets.all(md),
+        child: DefaultUserSettings(
+          languageFilters: ['en', 'ko', 'vi', 'lo', 'my', 'th'],
+          languageSearch: false,
+        ),
+      ),
+    );
+  }
+}
+```

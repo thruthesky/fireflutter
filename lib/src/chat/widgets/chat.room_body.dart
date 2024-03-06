@@ -287,7 +287,8 @@ class _ChatRoomState extends State<ChatRoomBody> {
                     ],
                     onSelected: (v) async {
                       if (v == 'setting') {
-                        /// TODO 채팅방이 그룹 채팅이 아니라, 1:1 채팅인 경우, chat-joins 에서 설정을 해야 한다.
+                        /// 채팅방이 그룹 채팅이 아니라, 1:1 채팅인 경우, chat-joins 에서 설정을 해야 한다.
+                        /// 이에 대한 내용은, ko/chat.md 를 한다.
                         await ChatService.instance.showChatRoomSettings(
                           context: context,
                           roomId: chat.room.id,

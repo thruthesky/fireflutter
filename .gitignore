@@ -2,6 +2,8 @@
 key.ts
 **/key.ts
 
+tmp/
+
 # apps
 apps/
 
