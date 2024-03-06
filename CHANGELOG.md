@@ -1,3 +1,9 @@
+## 0.3.20
+
+* Update. Document.
+* Update. SimpleEmailPasswordLoginForm.
+
+
 ## 0.3.19
 
 * Fix. activity logs. log who vied me and how liked me.
