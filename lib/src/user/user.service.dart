@@ -171,10 +171,21 @@ class UserService {
     return snapshot.value as T;
   }
 
+  /// 사용자가 로그인을 하면, 사용자 설정 값을 업데이트 한다.
   login() async {
     await myRef.update({
       'lastLogin': ServerValue.timestamp,
     });
+  }
+
+  /// User log out
+  logout() {
+    FirebaseAuth.instance.signOut();
+  }
+
+  /// Alias of logout()
+  signOut() {
+    FirebaseAuth.instance.signOut();
   }
 
   /// 로그인한 사용자의 프로필 수정 페이지를 보여준다.
