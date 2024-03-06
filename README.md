@@ -37,6 +37,8 @@ See the following documents:
 
 ## UI Samples
 
+- All the UI design is customizable throught Flutter's own theme design. You may copy the fireflutter source code and re-create your own.
+
 - This is `Simple Email Password Login Form` widget that lets the user creates a new account or sign in with existing account.
 
 
