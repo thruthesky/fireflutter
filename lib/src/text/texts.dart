@@ -135,4 +135,10 @@ class T {
   static const String selectProvince = "Select Province";
   static const String selectRegion = 'Select Region';
   static const String noSelectTedRegion = 'No selected province';
+
+  /// DefaultUploadSelectionBottomSheet
+  ///
+  static const String photoUpload = 'Upload a photo';
+  static const String selectPhotoFromGallery = 'Select photo from gallery';
+  static const String takePhotoWithCamera = 'Take photo with camera';
 }
