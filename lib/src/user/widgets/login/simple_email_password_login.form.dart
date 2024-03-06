@@ -92,7 +92,7 @@ class _SimpleEmailPasswordLoginFormState
                   widget.onLogin?.call();
                 }
               },
-              child: Text(T.login.tr),
+              child: Text(T.login.tr.toUpperCase()),
             ),
           ),
         ],

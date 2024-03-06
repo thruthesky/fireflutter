@@ -275,10 +275,14 @@ class _ChatRoomState extends State<ChatRoomBody> {
                       if (chat.room.isSingleChat)
                         PopupMenuItem(
                           value: 'block',
-                          child: MyDoc.field(
-                            '${Field.blocks}/${chat.room.otherUserUid}',
-                            builder: (v) =>
-                                Text(v == null ? T.block : T.unblock.tr),
+                          child: MyDoc(
+                            builder: (my) => my == null
+                                ? const SizedBox.shrink()
+                                : Text(my.blocks?.contains(
+                                            chat.room.otherUserUid) ==
+                                        false
+                                    ? T.block
+                                    : T.unblock.tr),
                           ),
                         ),
                       PopupMenuItem(value: 'report', child: Text(T.report.tr)),
