@@ -1,6 +1,6 @@
 name: fireflutter
 description: "A lightning-fast, robust CMS for seamless real-time content management in app development."
-version: 0.3.19
+version: 0.3.20
 homepage: https://github.com/thruthesky/fireflutter
 
 environment:
