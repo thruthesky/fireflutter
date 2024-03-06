@@ -118,7 +118,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
             // 그렇다면 전화번호 입력 UI 대신, 전화번호만 보여준다.
             ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(
-                  T.phoneNumber.tr,
+                  "phone",
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
