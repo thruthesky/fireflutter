@@ -1,6 +1,6 @@
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-// import 'package:image_picker/image_picker.dart';
 
 class DefaultUploadSelectionBottomSheet extends StatelessWidget {
   const DefaultUploadSelectionBottomSheet({
@@ -21,14 +21,14 @@ class DefaultUploadSelectionBottomSheet extends StatelessWidget {
         children: <Widget>[
           const SizedBox(height: 16),
           Text(
-            '사진 업로드',
+            T.photoUpload.tr,
             style: Theme.of(context).textTheme.labelLarge,
           ),
           const SizedBox(height: 16),
           if (gallery)
             ListTile(
               leading: const Icon(Icons.photo),
-              title: const Text('갤러리에서 사진 가져오기'),
+              title: Text(T.selectPhotoFromGallery.tr),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 Navigator.pop(context, ImageSource.gallery);
@@ -37,7 +37,7 @@ class DefaultUploadSelectionBottomSheet extends StatelessWidget {
           if (camera)
             ListTile(
               leading: const Icon(Icons.camera_alt),
-              title: const Text('카메라로 사진 찍기'),
+              title: Text(T.takePhotoWithCamera.tr),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 Navigator.pop(context, ImageSource.camera);
@@ -45,7 +45,7 @@ class DefaultUploadSelectionBottomSheet extends StatelessWidget {
             ),
           const SizedBox(height: 16),
           TextButton(
-            child: Text('취소',
+            child: Text(T.cancel.tr,
                 style: TextStyle(color: Theme.of(context).primaryColor)),
             onPressed: () {
               Navigator.pop(context);

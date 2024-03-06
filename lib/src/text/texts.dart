@@ -55,6 +55,8 @@ class T {
   static const String writeYourMessage = 'Write your message';
   static const String yourProfileWasVisited = 'Your profile was visited.';
   static const String visitYourProfile = 'visit your profile';
+  // chat input box hint text -> please enter a message
+  static const String pleaseEnterMessage = '메시지를 입력하세요.';
 
   /// User and Profile
   static const String recentLoginRequiredForResign =
@@ -126,9 +128,20 @@ class T {
       'Input phone number. e.g 010 1234 5678 or 0917 1234 5678';
 
   static const String phoneSignInTimeoutTryAgain = 'Timeout. Please try again.';
-  static const String phoneSignInGetVerificationCode = 'GetVerification Code';
+  static const String phoneSignInGetVerificationCode = 'Get Verification Code';
   static const String phoneSignInInputSmsCode =
       'Input Verification Code and press submit button';
   static const String phoneSignInRetry = 'Retry';
   static const String phoneSignInVerifySmsCode = 'Verification Code';
+
+  /// Korean Sigungu Selector
+  static const String selectProvince = "Select Province";
+  static const String selectRegion = 'Select Region';
+  static const String noSelectTedRegion = 'No selected province';
+
+  /// DefaultUploadSelectionBottomSheet
+  ///
+  static const String photoUpload = 'Upload a photo';
+  static const String selectPhotoFromGallery = 'Select photo from gallery';
+  static const String takePhotoWithCamera = 'Take photo with camera';
 }
