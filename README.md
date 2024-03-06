@@ -37,8 +37,7 @@ See the following documents:
 
 ## UI Samples
 
-- Simple Email Password Login Form
-
+- This is `Simple Email Password Login Form` widget that lets the user creates a new account or sign in with existing account.
 
 
 ![Image](https://github.com/thruthesky/fireflutter/blob/main/docs/assets/images/simple_email_password_login_form.jpg?raw=true)
