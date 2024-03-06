@@ -97,7 +97,7 @@ export 'src/report/report.service.dart';
 export 'src/report/widgets/report.admin.list_view.dart';
 export 'src/report/widgets/report.my.list_view.dart';
 
-export 'src/setting/default_settings.dart';
+export 'src/setting/default_user_settings.dart';
 
 export 'src/storage/storage.customize.dart';
 export 'src/storage/storage.service.dart';
