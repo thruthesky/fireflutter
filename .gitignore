@@ -2,8 +2,12 @@
 key.ts
 **/key.ts
 
+tmp/
+
 # apps
 apps/
+
+example/**/firebase_options.dart
 
 
 #

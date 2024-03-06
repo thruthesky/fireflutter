@@ -275,10 +275,14 @@ class _ChatRoomState extends State<ChatRoomBody> {
                       if (chat.room.isSingleChat)
                         PopupMenuItem(
                           value: 'block',
-                          child: MyDoc.field(
-                            '${Field.blocks}/${chat.room.otherUserUid}',
-                            builder: (v) =>
-                                Text(v == null ? T.block : T.unblock.tr),
+                          child: MyDoc(
+                            builder: (my) => my == null
+                                ? const SizedBox.shrink()
+                                : Text(my.blocks?.contains(
+                                            chat.room.otherUserUid) ==
+                                        false
+                                    ? T.block
+                                    : T.unblock.tr),
                           ),
                         ),
                       PopupMenuItem(value: 'report', child: Text(T.report.tr)),
@@ -287,7 +291,8 @@ class _ChatRoomState extends State<ChatRoomBody> {
                     ],
                     onSelected: (v) async {
                       if (v == 'setting') {
-                        /// TODO 채팅방이 그룹 채팅이 아니라, 1:1 채팅인 경우, chat-joins 에서 설정을 해야 한다.
+                        /// 채팅방이 그룹 채팅이 아니라, 1:1 채팅인 경우, chat-joins 에서 설정을 해야 한다.
+                        /// 이에 대한 내용은, ko/chat.md 를 한다.
                         await ChatService.instance.showChatRoomSettings(
                           context: context,
                           roomId: chat.room.id,
