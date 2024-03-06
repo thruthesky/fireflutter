@@ -7,6 +7,8 @@ tmp/
 # apps
 apps/
 
+example/**/firebase_options.dart
+
 
 #
 .flutter-plugins

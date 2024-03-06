@@ -7,12 +7,14 @@ class LabelField extends StatelessWidget {
     required this.controller,
     this.keyboardType,
     this.obscureText = false,
+    this.decoration,
   });
 
   final String label;
   final TextEditingController controller;
   final TextInputType? keyboardType;
   final bool obscureText;
+  final InputDecoration? decoration;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,7 @@ class LabelField extends StatelessWidget {
           keyboardType: keyboardType,
           controller: controller,
           obscureText: obscureText,
+          decoration: decoration ?? const InputDecoration(),
         ),
       ],
     );

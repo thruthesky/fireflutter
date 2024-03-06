@@ -110,6 +110,8 @@ export 'src/storage/widgets/edit_uploads.dart';
 export 'src/text/text.service.dart';
 export 'src/text/texts.dart';
 
+export 'src/theme/default_light_theme.dart';
+
 export 'src/typesense/model/search_result.dart';
 export 'src/typesense/model/search_result.doc.dart';
 export 'src/typesense/model/search_result.hit.dart';

@@ -10,6 +10,9 @@ environment:
 
 dependencies:
   cupertino_icons: ^1.0.2
+  firebase_auth: ^4.17.7
+  firebase_core: ^2.26.0
+  firebase_database: ^10.4.8
   fireflutter:
     path: ..
   flutter:

@@ -14,8 +14,8 @@ dependencies:
   devicelocale: ^0.7.0
   dio: ^5.4.0
   firebase_auth: ^4.17.4
-  firebase_core: ^2.25.4
-  firebase_database: ^10.4.5
+  firebase_core: ^2.26.0
+  firebase_database: ^10.4.8
   firebase_messaging: ^14.7.15
   firebase_storage: ^11.6.5
   firebase_ui_database: ^1.4.2
