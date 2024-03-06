@@ -8,10 +8,18 @@ import 'package:flutter/material.dart';
 ///
 /// 참고로, Firebase Realtime Database 의 사용자 문서가 로딩되지 않아도, 이 함수의 builder 가 실행된다.
 class AuthReady extends StatelessWidget {
-  const AuthReady({super.key, required this.builder, this.notLogin});
+  const AuthReady({
+    super.key,
+    required this.builder,
+    @Deprecated('Use notLoginBuilder instead') this.notLogin,
+    this.notLoginBuilder,
+  });
 
   final Widget Function(String) builder;
+
   final Widget? notLogin;
+
+  final Widget Function()? notLoginBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +33,7 @@ class AuthReady extends StatelessWidget {
           return Center(child: Text('Error: ${snapshot.error}'));
         }
         if (snapshot.data == null) {
+          if (notLoginBuilder != null) return notLoginBuilder!();
           return notLogin ?? const SizedBox.shrink();
         }
         return builder(snapshot.data!);
