@@ -1,24 +1,46 @@
 ```json
 {
   "rules": {
-    
-
     "test": {
       ".read": true,
       ".write": true
     },
-          // Action
+    // Action
     "action-logs": {
-      "$uid": {
+      "chat-join": {
         ".read": true,
-        ".write": "$uid === auth.uid"
+        ".write": true
+      },
+      "comment-create": {
+        "$uid": {
+          ".read": "$uid === auth.uid",
+          ".write": "$uid === auth.uid"
+        }
+      },
+      "post-create": {
+        "$uid": {
+          "$category": {
+            ".read": "$uid === auth.uid",
+            ".write": "$uid === auth.uid"
+          }
+        }
+      },
+      "user-profile-view": {
+        "$uid": {
+          ".read": "$uid === auth.uid",
+          ".write": "$uid === auth.uid"
+        }
       }
     },
     // Activity
-    "activity": {
+    "activity-logs": {
       "$uid": {
-        ".read": true,
-        ".write": "$uid === auth.uid"
+        "$activityName": {
+          "$dataDockey": {
+            ".read": "$uid === auth.uid",
+            ".write": "$uid === auth.uid || newData.child('otherUserUid').val() === auth.uid"
+          }
+        }
       }
     },
     // Fireship admins
@@ -32,6 +54,9 @@
       "$uid": {
         ".write": "$uid === auth.uid || root.child('admins').hasChild(auth.uid)",
         "isAdmin": {
+          ".validate": "root.child('admins').hasChild(auth.uid)"
+        },
+        "isDisabled": {
           ".validate": "root.child('admins').hasChild(auth.uid)"
         }
       },
@@ -190,7 +215,6 @@
           ".indexOn": ["uid"]
         }
     }
-
   }
 }
 ```

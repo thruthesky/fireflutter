@@ -7,13 +7,13 @@
 
 ## 데이터베이스
 
-- `activity-logs/<uid>/user-profile-view` 는 로그인한 사용자의 프로필을 본 경우, 기록.
-- `activity-logs/<uid>/user-like` 는 로그인 한 사용자가 다른 사용자를 좋아요 한 경우.
-- `activity-logs/<uid>/who-viewed-me` 는 다른 사람이 나의 프로필을 본 경우 기록을 남긴다.
-- `activity-logs/<uid>/who-liked-me` 는 다른 사람이 나를 좋아요 한 경우 기록을 남긴다.
-- `activity-logs/<uid>/post-create` 는 글 생성.
-- `activity-logs/<uid>/comment-create` 은 코멘트 생성.
 - `activity-logs/<uid>/chat-join` 은 채팅방 입장 기록. 동일한 채팅방에 여러번 입장을 해도, 입장 할 때마다 기록이 된다.
+- `activity-logs/<uid>/comment-create` 은 코멘트 생성.
+- `activity-logs/<uid>/post-create` 는 글 생성.
+- `activity-logs/<uid>/user-like` 는 로그인 한 사용자가 다른 사용자를 좋아요 한 경우. 데이터 필드의 `re` 가 true 이면 좋아요, `false` 이면 싫어요를 한 것이다.
+- `activity-logs/<uid>/user-profile-view` 는 로그인한 사용자의 프로필을 본 경우, 기록.
+- `activity-logs/<uid>/who-liked-me` 는 다른 사람이 나를 좋아요 한 경우 기록을 남긴다. 데이터 필드의 `re` 가 true 이면 좋아요, `false` 이면 싫어요를 한 것이다.
+- `activity-logs/<uid>/who-viewed-me` 는 다른 사람이 나의 프로필을 본 경우 기록을 남긴다.
 
 각 데이터는 아래와 같은 값들 중에서 createdAt 은 필수이며 그 외에는 옵션으로 최소한의 정보를 가진다.
 

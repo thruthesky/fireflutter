@@ -39,6 +39,8 @@ class ChatMessage {
 
   bool get other => !mine;
 
+  DatabaseReference get roomRef => ref!.parent!;
+
   ChatMessage({
     this.key,
     this.ref,

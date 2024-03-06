@@ -20,6 +20,7 @@ class DefaultProfileUpdateForm extends StatefulWidget {
     this.morePhotos,
     this.onUpdate,
     this.countryFilter,
+    this.countrySearch = false,
     this.koreanAreaLanguageCode = 'ko',
     this.countryPickerTheme,
   });
@@ -31,6 +32,7 @@ class DefaultProfileUpdateForm extends StatefulWidget {
   final FormOption? stateMessage;
   final FormOption? gender;
   final FormOption? nationality;
+  final bool countrySearch;
   final FormOption? region;
   final FormOption? morePhotos;
 
@@ -254,28 +256,29 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
           Theme(
             data: widget.countryPickerTheme ??
                 Theme.of(context).copyWith(
-                    inputDecorationTheme:
-                        Theme.of(context).inputDecorationTheme.copyWith(
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
+                  inputDecorationTheme:
+                      Theme.of(context).inputDecorationTheme.copyWith(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.primary,
                               ),
-                              contentPadding: const EdgeInsets.all(0),
                             ),
-                    elevatedButtonTheme: ElevatedButtonThemeData(
-                      style:
-                          Theme.of(context).elevatedButtonTheme.style?.copyWith(
-                                padding: MaterialStateProperty.all(
-                                    const EdgeInsets.all(16)),
-                              ),
-                    )),
+                            contentPadding: const EdgeInsets.all(0),
+                          ),
+                  elevatedButtonTheme: ElevatedButtonThemeData(
+                    style:
+                        Theme.of(context).elevatedButtonTheme.style?.copyWith(
+                              padding: MaterialStateProperty.all(
+                                  const EdgeInsets.all(16)),
+                            ),
+                  ),
+                ),
             child: SizedBox(
               width: double.infinity,
               child: CountryPicker(
                 initialValue: nationality,
                 filters: widget.countryFilter,
-                search: false,
+                search: widget.countrySearch,
                 headerBuilder: () => const Text('Select your country'),
                 onChanged: (v) {
                   nationality = v.alpha2;

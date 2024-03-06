@@ -1,14 +1,15 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class DefaultProfileScreen extends StatefulWidget {
-  const DefaultProfileScreen({super.key});
+class DefaultProfileUpdateScreen extends StatefulWidget {
+  const DefaultProfileUpdateScreen({super.key});
 
   @override
-  State<DefaultProfileScreen> createState() => _DefaultProfileScreenState();
+  State<DefaultProfileUpdateScreen> createState() =>
+      _DefaultProfileScreenState();
 }
 
-class _DefaultProfileScreenState extends State<DefaultProfileScreen> {
+class _DefaultProfileScreenState extends State<DefaultProfileUpdateScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

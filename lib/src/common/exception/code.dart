@@ -31,4 +31,6 @@ class Code {
   static const String roomId = 'roomId';
 
   static const String deleted = 'deleted';
+
+  static const String languageCode = 'languageCode';
 }

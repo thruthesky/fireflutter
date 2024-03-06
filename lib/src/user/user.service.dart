@@ -178,16 +178,13 @@ class UserService {
   }
 
   /// 로그인한 사용자의 프로필 수정 페이지를 보여준다.
-  Future showProfileScreen(BuildContext context) {
+  Future showProfileUpdateScreen(BuildContext context) {
     return showGeneralDialog(
       context: context,
-      pageBuilder: ($, $$, $$$) => const DefaultProfileScreen(),
+      pageBuilder: ($, $$, $$$) =>
+          customize.profileUpdateScreen?.call() ??
+          const DefaultProfileUpdateScreen(),
     );
-  }
-
-  @Deprecated('Use showProfileScreen instead')
-  Future showProfile(BuildContext context) {
-    return showProfileScreen(context);
   }
 
   /// Open the user's public profile screen

@@ -19,6 +19,8 @@ class ActivityLog {
   static DatabaseReference commentCreateRef = root.child(commentCreatePath);
   static DatabaseReference postCreateRef = root.child(postCreatePath);
   static DatabaseReference userLikeRef = root.child(userLikePath);
+  static DatabaseReference whoLikedMeRef(String otherUserUid) =>
+      root.child('$node/$otherUserUid/who-liked-me');
   static DatabaseReference userProfileViewRef = root.child(userProfileViewPath);
 
   static DatabaseReference whoViewedMeRef(String otherUserUid) =>
@@ -49,7 +51,11 @@ class ActivityLog {
     );
   }
 
-  /// user profile view activity
+  /// User profile view activity
+  ///
+  /// 기록을 할 때, 사용자 A 가 B 의 프로필을 보면, 쌍방기록을 한다.
+  /// 즉, A 가 B 를 본 기록을 기록하고, B 가 A 를 기록을 한다.
+  /// 그래서 누가 나를 봤는지 기록한다.
   static Future<void> userProfileView(String otherUserUid) async {
     if (myUid == null) return;
     if (ActivityLogService.instance.userProfileView == false) return;
@@ -60,7 +66,7 @@ class ActivityLog {
       'otherUserUid': otherUserUid,
     });
 
-    /// 다른 사용자가 나를 본 경우 기록
+    /// 다른 사용자가 나를 본 경우 기록. (누가 나를 보았는지 기록)
     final newRef = whoViewedMeRef(otherUserUid).push();
     final data = {
       'createdAt': ServerValue.timestamp,
@@ -74,12 +80,22 @@ class ActivityLog {
     }
   }
 
-  static Future<void> userLike(String otherUserUid) async {
+  static Future<void> userLike(String otherUserUid, bool re) async {
     if (myUid == null) return;
     if (ActivityLogService.instance.userLike == false) return;
-    return await userLikeRef.push().set({
+
+    /// 내가 다른 사용자 좋아요 한 기록
+    await userLikeRef.push().set({
       'createdAt': ServerValue.timestamp,
       'otherUserUid': myUid,
+      're': re,
+    });
+
+    /// 누가 나를 좋아요 했는지 기록
+    await whoLikedMeRef(otherUserUid).push().set({
+      'createdAt': ServerValue.timestamp,
+      'otherUserUid': myUid,
+      're': re,
     });
   }
 

@@ -138,7 +138,6 @@ class ChatModel {
         'ref': chatMessageRef,
         ...chatMessageData,
       }),
-      room.otherUserUid!,
     );
 
     /// 1:1 채팅방이면, 상대방의 이름과 사진을 내 채팅방 정보에 저장한다.

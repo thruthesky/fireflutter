@@ -10,6 +10,7 @@ class UserSetting {
   /// Member variables
   final String key;
   final bool? profileViewNotification;
+  final String? languageCode;
 
   final DatabaseReference ref;
 
@@ -17,6 +18,7 @@ class UserSetting {
     required this.key,
     required this.ref,
     required this.profileViewNotification,
+    required this.languageCode,
   });
 
   /// Return a new UserSetting with the given data
@@ -30,6 +32,7 @@ class UserSetting {
       key: key,
       ref: nodeRef.child(key),
       profileViewNotification: json[Code.profileViewNotification],
+      languageCode: json[Code.languageCode],
     );
   }
 
@@ -44,6 +47,7 @@ class UserSetting {
     return UserSetting.fromJson(
       {
         Code.profileViewNotification: null,
+        Code.languageCode: null,
       },
       uid,
     );
@@ -52,6 +56,7 @@ class UserSetting {
   Map<String, dynamic> toJson() {
     return {
       Code.profileViewNotification: profileViewNotification,
+      Code.languageCode: languageCode,
     };
   }
 
@@ -81,9 +86,11 @@ class UserSetting {
 
   update({
     bool? profileViewNotification,
+    String? languageCode,
   }) async {
     await ref.update({
       Code.profileViewNotification: profileViewNotification,
+      Code.languageCode: languageCode,
     });
   }
 }

@@ -99,3 +99,27 @@ Parameters:
     - hintText for the input box
 - String initialValue
     - the default input value
+
+
+
+
+## 로케일 - 언어
+
+아래와 같이 언어 정보를 가져 올 수 있다. `currentLocale` 은 `devicelocale` 의 `Devicelocale.currentLocale` 을 짧게 표현한 것으로 현재 핸드폰의 언어를 가져온다. `preferredLanguages` 는 핸드폰에 설정된(추가된) 언어 목록을 가져온다.
+
+참고로, `Devicelocale.currentLocale` 과 `Devicelocale.preferredLanguages` 는 `en-PH` 과 같이 로케일 전체 문자열을 리턴하지만 `currentLocale` 과 `preferredLanguages` 는 `en` 과 같이 두 글자 언어 코드만 리턴한다.
+
+```dart
+(() async {
+  final locale = await currentLocale;
+  print('locale: $locale');
+  final locales = await preferredLanguages;
+  print('locales: $locales');
+})();
+```
+
+결과
+```dart
+locale: en
+locales: [en, ko]
+```

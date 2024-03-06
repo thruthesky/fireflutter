@@ -36,13 +36,13 @@ class ChatService {
 
   Function(ChatModel)? testBeforeSendMessage;
 
-  Function(ChatMessage, String)? onMessageSent;
+  Function(ChatMessage)? onMessageSent;
 
   /// init
   init({
     ChatCustomize? customize,
     Function(ChatModel)? testBeforeSendMessage,
-    Function(ChatMessage, String)? onMessageSent,
+    Function(ChatMessage)? onMessageSent,
   }) {
     dog('--> ChatService.init()');
     this.customize = customize ?? this.customize;

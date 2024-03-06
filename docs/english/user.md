@@ -353,7 +353,8 @@ class _HomeScreenState extends State<MainScreen> {
 
 ## Profile Editing Screen
 
-The profile editing screen is a page where logged-in users can view and edit their own information. You can open the profile editing screen by calling `UserService.instance.showProfileScreen`.
+The profile editing screen is a page where logged-in users can view and edit their own information. To open the profile update screen for the login user, you must call `UserService.instance.showProfileScreen`.
+
 
 ## User Public Profile Screen
 
