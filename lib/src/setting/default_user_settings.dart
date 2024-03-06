@@ -22,7 +22,7 @@ class DefaultUserSettings extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Settings"),
+            Text(T.setting.tr),
             SwitchListTile(
               value: userSetting.profileViewNotification != false,
               title: const Text('Push Notification on Profile View'),
@@ -34,7 +34,6 @@ class DefaultUserSettings extends StatelessWidget {
                 );
               },
             ),
-
             const Divider(height: 32),
             // Language picker
 
