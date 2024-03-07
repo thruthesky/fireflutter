@@ -37,11 +37,17 @@ See the following documents:
 
 ## UI Samples
 
-- All the UI design is customizable throught Flutter's own theme design. You may copy the fireflutter source code and re-create your own.
+- All the UI design is customizable throught Flutter's own theme design pattern. You may copy the fireflutter source code and re-create your own if you want.
 
 - Below is `Simple Email Password Login Form` widget that lets the user creates a new account or sign in with existing account.
 
 ![Image](https://github.com/thruthesky/fireflutter/blob/main/docs/assets/images/simple_email_password_login_form.jpg?raw=true)
+
+
+- Below is `CountryPicker` widget that lets the user to choose his country. It returns `country flag`, `country name in English`, `country name of Official language`, `dial code`, `two letter code`, `three letter code`, `currency code`, `currency name`, `currency name in Korean`, `currency symbol` and more. Use this widget to get the country information.
+
+![Image](https://github.com/thruthesky/fireflutter/blob/main/docs/assets/images/country_picker.jpg?raw=true)
+
 
 
 - Below is `LanguagePicker` widget that lets the user to choose his language.
