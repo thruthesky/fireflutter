@@ -22,36 +22,30 @@ class DefaultUserSettings extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Settings"),
+            Text(T.setting.tr),
             SwitchListTile(
               value: userSetting.profileViewNotification != false,
-              title: const Text('Push Notification on Profile View'),
-              subtitle:
-                  const Text('Get notified when someone views your profile'),
+              title: Text(T.pushNotificationOnProfileView.tr),
+              subtitle: Text(T.getNotifiedWhenSomeoneViewYourProfile.tr),
               onChanged: (v) {
                 userSetting.update(
                   profileViewNotification: v,
                 );
               },
             ),
-
             const Divider(height: 32),
             // Language picker
 
-            const Text('Choose your language'),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-              child: LanguagePicker(
-                initialValue: userSetting.languageCode,
-                filters: languageFilters,
-                search: languageSearch,
-                onChanged: (v) {
-                  userSetting.update(
-                    languageCode: v,
-                  );
-                },
-              ),
+            Text(T.chooseYourLanguage.tr),
+            LanguagePicker.tile(
+              initialValue: userSetting.languageCode,
+              filters: languageFilters,
+              search: languageSearch,
+              onChanged: (v) {
+                userSetting.update(
+                  languageCode: v,
+                );
+              },
             ),
           ],
         );

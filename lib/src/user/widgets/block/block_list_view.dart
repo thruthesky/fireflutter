@@ -8,17 +8,21 @@ class BlockListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return MyDoc(
       builder: (my) => my?.blocks == null
-          ? const Column(
-              children: [
-                Text('No blocked users'),
-                SizedBox(height: 20),
-                Text('You can block users from their profile page'),
-                SizedBox(height: 20),
-                Icon(
-                  Icons.block,
-                  size: 100,
-                ),
-              ],
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(T.noBlockUser.tr),
+                  const SizedBox(height: 20),
+                  Text(T.youCanBlockUserFromTheirProfilePage.tr),
+                  const SizedBox(height: 20),
+                  const Icon(
+                    Icons.block,
+                    size: 100,
+                  ),
+                ],
+              ),
             )
           : ListView.separated(
               itemBuilder: (_, i) {

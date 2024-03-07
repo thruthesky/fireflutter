@@ -359,6 +359,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                           if (re != true) return;
                           urls.remove(url);
                           await StorageService.instance.delete(url);
+                          await my?.update(photoUrls: urls);
                           setState(() {});
                         },
                         child: Container(
