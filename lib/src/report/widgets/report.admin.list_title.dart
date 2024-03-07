@@ -111,6 +111,7 @@ class ReportAdminListTile extends StatelessWidget {
           context,
           report.otherUserUid!,
           user: User.fromUid(report.otherUserUid!),
+          report: report,
         ),
       );
     }
@@ -122,6 +123,7 @@ class ReportAdminListTile extends StatelessWidget {
     User? user,
     Post? post,
     Comment? comment,
+    Report? report,
   }) {
     showDialog(
       context: context,
@@ -173,12 +175,15 @@ class ReportAdminListTile extends StatelessWidget {
                     child: const Text('View Post'),
                   ),
                 ElevatedButton(
-                  onPressed: () {
-                    input(
+                  onPressed: () async {
+                    final re = await input(
                       context: context,
                       title: 'Reason',
                       hintText: 'Entry why you reject the report',
                     );
+                    if (re != null) {
+                      await Report.reject(report: report!, rejectReason: re);
+                    }
                   },
                   child: const Text('Reject'),
                 ),
