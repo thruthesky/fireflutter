@@ -58,7 +58,7 @@ class NewProfilePhotos extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        ((profile[Field.displayName] ?? '') as String).cut(10),
+                        ((profile[Field.displayName] ?? '') as String).cut(9),
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: Theme.of(context).colorScheme.secondary,
                             ),

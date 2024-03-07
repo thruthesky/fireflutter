@@ -67,6 +67,8 @@ class UserModel {
   List<String> photoUrls;
 
   String stateMessage;
+
+  /// 사용자가 비활성화 되었는지 여부
   bool isDisabled;
   bool get disabled => isDisabled;
   int birthYear;

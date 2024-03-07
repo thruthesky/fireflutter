@@ -144,4 +144,17 @@ class T {
   static const String photoUpload = 'Upload a photo';
   static const String selectPhotoFromGallery = 'Select photo from gallery';
   static const String takePhotoWithCamera = 'Take photo with camera';
+
+  // BlockScreen
+
+  static const String noBlockUser = 'No blocked users';
+  static const String youCanBlockUserFromTheirProfilePage =
+      'You can block users from their profile page';
+
+  // SettingScree
+  static const String pushNotificationOnProfileView =
+      'Push Notification on Profile View';
+  static const String getNotifiedWhenSomeoneViewYourProfile =
+      'Get notified when someone views your profile';
+  static const String chooseYourLanguage = 'Choose your language';
 }

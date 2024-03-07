@@ -76,7 +76,7 @@ class _LanguagePickerState extends State<LanguagePicker> {
     }
 
     if (selectedCountry == null) {
-      return const Text('Choose your country');
+      return const Text('Choose your language');
     } else {
       return Text(langaugeCodeJson[selectedCountry!]!);
     }

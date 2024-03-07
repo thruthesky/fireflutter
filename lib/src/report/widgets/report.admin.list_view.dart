@@ -129,7 +129,7 @@ class ReportAdminListView extends StatelessWidget {
                     // path: ChatRoom.chatRoomName(report.chatRoomId),
                     ref: ChatRoom.nameRef(report.chatRoomId!),
                     builder: (v) {
-                      return Text(v);
+                      return Text(v ?? '');
                     }),
                 Text(' ${report.createdAt.toShortDate}'),
               ],

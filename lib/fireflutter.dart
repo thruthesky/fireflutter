@@ -111,6 +111,7 @@ export 'src/text/text.service.dart';
 export 'src/text/texts.dart';
 
 export 'src/theme/default_light_theme.dart';
+export 'src/theme/theme_functions.dart';
 
 export 'src/typesense/model/search_result.dart';
 export 'src/typesense/model/search_result.doc.dart';
