@@ -1,6 +1,7 @@
 ## 0.3.21
 
 * Update. Document.
+* Refcator. UserModel to User and other model name refactoring.
 
 
 ## 0.3.20

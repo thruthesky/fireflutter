@@ -95,6 +95,7 @@ export 'src/messaging/user.messaging.model.dart';
 
 export 'src/report/report.model.dart';
 export 'src/report/report.service.dart';
+export 'src/report/widgets/report.admin.list_title.dart';
 export 'src/report/widgets/report.admin.list_view.dart';
 export 'src/report/widgets/report.my.list_view.dart';
 
