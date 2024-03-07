@@ -44,7 +44,6 @@ See the following documents:
 
 ![Image](https://github.com/thruthesky/fireflutter/blob/main/docs/assets/images/simple_email_password_login_form.jpg?raw=true)
 
-..
 
 ## Issues
 

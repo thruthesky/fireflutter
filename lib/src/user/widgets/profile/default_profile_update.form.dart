@@ -194,7 +194,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
         ),
         if (widget.gender?.display == true) ...{
           const SizedBox(height: 32),
-          const Text('Gender'),
+          Text(T.gender.tr),
           const SizedBox(height: 4),
           Container(
             decoration: BoxDecoration(
