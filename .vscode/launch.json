@@ -313,6 +313,16 @@
       "args": ["-v",]
     },
     {
+      "name": "Wemeet (Chris) TEST - External Sam (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "R9ATA00LMJM",
+      "flutterMode": "debug",
+      "cwd": "apps/wemeet",
+      "program": "lib/main.dart",
+      "args": ["-v",]
+    },
+    {
       "name": "Wemeet (Noe) TEST - iPhone 15 Pro Max (debug)",
       "request": "launch",
       "type": "dart",
