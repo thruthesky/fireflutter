@@ -46,6 +46,8 @@ See the following documents:
 
 - Below is `LanguagePicker` widget that lets the user to choose his language.
 
+![Image](https://github.com/thruthesky/fireflutter/blob/main/docs/assets/images/language_picker.jpg?raw=true)
+
 
 ## Issues
 
