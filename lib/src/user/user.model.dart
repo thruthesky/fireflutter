@@ -3,7 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart' as ff;
 import 'package:geohash_plus/geohash_plus.dart';
 
-class UserModel {
+class User {
   /// Paths and Refs
   static DatabaseReference rootRef = FirebaseDatabase.instance.ref();
 
@@ -152,7 +152,7 @@ class UserModel {
   String occupation;
   String languageCode;
 
-  UserModel({
+  User({
     required this.data,
     required this.uid,
     required this.name,
@@ -189,30 +189,30 @@ class UserModel {
     required this.languageCode,
   });
 
-  factory UserModel.fromSnapshot(DataSnapshot snapshot) {
+  factory User.fromSnapshot(DataSnapshot snapshot) {
     ///
     final json = snapshot.value as Map<dynamic, dynamic>;
     json['uid'] = snapshot.key;
-    return UserModel.fromJson(json);
+    return User.fromJson(json);
   }
 
-  /// 사용자 uid 로 부터, UserModel 을 만들어, 빈 UserModel 을 리턴한다.
+  /// 사용자 uid 로 부터, User 을 만들어, 빈 User 을 리턴한다.
   ///
-  /// 즉, 생성된 UserModel 의 instance 에서, uid 를 제외한 모든 properties 는 null 이지만,
+  /// 즉, 생성된 User 의 instance 에서, uid 를 제외한 모든 properties 는 null 이지만,
   /// uid 를 기반으로 하는, 각종 method 를 쓸 수 있다.
   ///
-  /// 예를 들면, UserModel.fromUid(uid).ref.child('photoUrl').onValue 등과 같이 쓸 수 있으며,
+  /// 예를 들면, User.fromUid(uid).ref.child('photoUrl').onValue 등과 같이 쓸 수 있으며,
   /// update(), delete() 함수 등을 쓸 수 있다.
   ///
   /// 만약, uid 만으로 사용자 정보 전체를 다 가지고 싶다면,
-  factory UserModel.fromUid(String uid) {
-    return UserModel.fromJson({
+  factory User.fromUid(String uid) {
+    return User.fromJson({
       'uid': uid,
     });
   }
 
-  factory UserModel.fromJson(Map<dynamic, dynamic> json, {String? uid}) {
-    return UserModel(
+  factory User.fromJson(Map<dynamic, dynamic> json, {String? uid}) {
+    return User(
       data: Map<String, dynamic>.from(json),
       uid: uid ?? json['uid'],
       name: json['name'] ?? '',
@@ -295,12 +295,12 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(${toJson()})';
+    return 'User(${toJson()})';
   }
 
   /// Reload user data and apply it to this instance.
-  Future<UserModel> reload() async {
-    final user = await UserModel.get(uid);
+  Future<User> reload() async {
+    final user = await User.get(uid);
 
     if (user != null) {
       name = user.name;
@@ -340,19 +340,19 @@ class UserModel {
 
   bool blocked(String otherUserUid) => isBlocked(otherUserUid);
 
-  /// 사용자 정보 node 전체를 UserModel 에 담아 리턴한다.
-  static Future<UserModel?> get(String uid) async {
+  /// 사용자 정보 node 전체를 User 에 담아 리턴한다.
+  static Future<User?> get(String uid) async {
     final nodeData = await ff.get<Map<dynamic, dynamic>>('users/$uid');
     if (nodeData == null) {
       return null;
     }
 
     nodeData['uid'] = uid;
-    return UserModel.fromJson(nodeData);
+    return User.fromJson(nodeData);
   }
 
   /// 입력된 전화번호 문자열을 바탕으로 사용자 정보(문서, 값)를 찾아 사용자 모델로 리턴한다.
-  // static Future<UserModel?> getByPhoneNumber(String phoneNumber) async {
+  // static Future<User?> getByPhoneNumber(String phoneNumber) async {
   //   final snapshot =
   //       await Ref.users.orderByChild('phoneNumber').equalTo(phoneNumber).get();
 
@@ -365,7 +365,7 @@ class UserModel {
   /// 사용자의 특정 필만 가져와서 리턴한다.
   ///
   /// ```dart
-  /// UserModel.getField(uid, ff.Field.isVerified);
+  /// User.getField(uid, ff.Field.isVerified);
   /// ```
   static Future<T?> getField<T>(String uid, String field) async {
     final nodeData = await ff.get('users/$uid/$field');
@@ -378,14 +378,14 @@ class UserModel {
 
   /// Create user document
   ///
-  /// This returns UserModel of the created user document.
-  static Future<UserModel> create({
+  /// This returns User of the created user document.
+  static Future<User> create({
     required String uid,
     String? displayName,
     String? photoUrl,
   }) async {
     await ff.set(
-      '${ff.UserModel.node}/$uid',
+      '${ff.User.node}/$uid',
       {
         'displayName': displayName,
         'photoUrl': photoUrl,
@@ -394,7 +394,7 @@ class UserModel {
       },
     );
 
-    final created = await UserModel.get(uid);
+    final created = await User.get(uid);
     ff.UserService.instance.onCreate?.call(created!);
     return created!;
   }
@@ -410,7 +410,7 @@ class UserModel {
   /// Note that, this method does not update user's private information like
   /// email, phone number, etc. It only updates public information like
   /// displayName, photoUrl, etc.
-  Future<UserModel> update({
+  Future<User> update({
     String? name,
     String? displayName,
     String? photoUrl,
@@ -481,9 +481,9 @@ class UserModel {
       data,
     );
 
-    /// 사용자 객체(UserModel) 를 reload 하고, (주의: 로그인한 사용자의 정보가 아닐 수 있다.)
+    /// 사용자 객체(User) 를 reload 하고, (주의: 로그인한 사용자의 정보가 아닐 수 있다.)
     await reload();
-    // final updated = await UserModel.get(uid);
+    // final updated = await User.get(uid);
 
     /// 사진 정보 업데이트
     if (displayName != null || photoUrl != null) {
@@ -558,7 +558,7 @@ class UserModel {
   }
 
   /// 신분증 업로드
-  Future<UserModel> setVerificationIdUrl(String url) async {
+  Future<User> setVerificationIdUrl(String url) async {
     return await update(
       idUploadedAt: DateTime.now().millisecondsSinceEpoch,
       idUrl: url,
@@ -613,7 +613,7 @@ class UserModel {
   /// Returns true if the user has just liked, false if unliked.
   Future like(String otherUserUid) async {
     final re = await ff.toggle(
-      path: ff.UserModel.whoILikePath(ff.my!.uid, otherUserUid),
+      path: ff.User.whoILikePath(ff.my!.uid, otherUserUid),
     );
     ff.ActivityLog.userLike(otherUserUid, re);
     return re;

@@ -1,7 +1,6 @@
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 /// Report list for admin
 ///
@@ -122,7 +121,7 @@ class ReportAdminListView extends StatelessWidget {
   onTap(
     BuildContext context,
     String uid, {
-    UserModel? user,
+    User? user,
     Post? post,
     Comment? comment,
   }) {

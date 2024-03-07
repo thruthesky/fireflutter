@@ -21,14 +21,14 @@ class UserListView extends StatelessWidget {
 
   final Query? query;
   final bool shrinkWrap;
-  final Function(UserModel)? onTap;
+  final Function(User)? onTap;
   @override
   Widget build(BuildContext context) {
     return FirebaseDatabaseListView(
-      query: query ?? UserModel.usersRef,
+      query: query ?? User.usersRef,
       shrinkWrap: shrinkWrap,
       itemBuilder: (_, snapshot) => UserTile(
-        user: UserModel.fromSnapshot(snapshot),
+        user: User.fromSnapshot(snapshot),
         onTap: onTap,
       ),
     );

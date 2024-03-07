@@ -32,7 +32,7 @@ class DefaultChatRoomMembersScreen extends StatelessWidget {
           return ListView.builder(
             itemCount: snapshot.docs.length,
             itemBuilder: (context, index) {
-              final member = UserModel.get(snapshot.docs[index].key!);
+              final member = User.get(snapshot.docs[index].key!);
               return GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () async {
@@ -53,7 +53,7 @@ class DefaultChatRoomMembersScreen extends StatelessWidget {
                     future: member,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        return UserTile(user: snapshot.data as UserModel);
+                        return UserTile(user: snapshot.data as User);
                       }
                       return const SizedBox.shrink();
                     },

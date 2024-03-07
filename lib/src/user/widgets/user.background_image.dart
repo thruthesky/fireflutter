@@ -19,7 +19,7 @@ class UserBackgroundImage extends StatelessWidget {
   });
 
   final String? uid;
-  final UserModel? user;
+  final User? user;
   final String? initialData;
   final bool sync;
 
@@ -53,7 +53,7 @@ class UserBackgroundImage extends StatelessWidget {
   const UserBackgroundImage.sync({
     Key? key,
     String? uid,
-    UserModel? user,
+    User? user,
     String? initialData,
   }) : this(
           key: key,

@@ -18,9 +18,9 @@ class _AdminUserListScreenState extends State<AdminUserListScreen> {
         title: const Text('User list'),
       ),
       body: FirebaseDatabaseListView(
-        query: UserModel.usersRef,
+        query: User.usersRef,
         itemBuilder: (context, doc) {
-          final user = UserModel.fromSnapshot(doc);
+          final user = User.fromSnapshot(doc);
           return ListTile(
             title: Text(user.displayName),
             subtitle: Text(user.uid),

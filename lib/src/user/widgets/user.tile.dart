@@ -20,9 +20,9 @@ class UserTile extends StatelessWidget {
     this.displayBirth = false,
     this.bottom,
   }) : super(key: key);
-  final UserModel user;
+  final User user;
   final EdgeInsetsGeometry? padding;
-  final Function(UserModel)? onTap;
+  final Function(User)? onTap;
   final Widget? trailing;
   final bool? displayUid;
   final bool displayStateMessage;
@@ -79,19 +79,19 @@ class UserTile extends StatelessWidget {
   static fromUid({
     required String uid,
     EdgeInsetsGeometry? padding,
-    Function(UserModel)? onTap,
+    Function(User)? onTap,
     Widget? trailing,
     bool? displayUid,
     bool displayStateMessage = false,
     bool displayBirth = false,
     Widget? bottom,
   }) {
-    return FutureBuilder<UserModel?>(
-        future: UserModel.get(uid),
+    return FutureBuilder<User?>(
+        future: User.get(uid),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return UserTile(
-              user: UserModel.fromUid(uid),
+              user: User.fromUid(uid),
               padding: padding,
               onTap: onTap,
               trailing: trailing,
@@ -103,7 +103,7 @@ class UserTile extends StatelessWidget {
           }
 
           return UserTile(
-            user: snapshot.data ?? UserModel.fromUid(uid),
+            user: snapshot.data ?? User.fromUid(uid),
             padding: padding,
             onTap: onTap,
             trailing: trailing,

@@ -146,8 +146,8 @@ class ChatModel {
     /// 다만, 여기서는 채팅 메시지가 이미 전달된 다음에, 채팅방 정보를 업데이트하므로, 데이터 반응 속도는 신경쓰지 않아도 된다.
     if (room.isSingleChat) {
       final otherUid = room.otherUserUid!;
-      final name = await UserModel.getField(otherUid, Field.displayName);
-      final photoUrl = await UserModel.getField(otherUid, Field.photoUrl);
+      final name = await User.getField(otherUid, Field.displayName);
+      final photoUrl = await User.getField(otherUid, Field.photoUrl);
       ChatJoin.joinRef(myUid!, singleChatRoomId(otherUid)).update({
         'name': name,
         'photoUrl': photoUrl,

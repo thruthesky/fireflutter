@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +11,7 @@ class UserService {
   static UserService get instance => _instance ??= UserService._();
 
   /// DB 에서 사용자 문서가 업데이트되면, 자동으로 이 변수에 sync 된다.
-  UserModel? user;
+  User? user;
   final rtdb = FirebaseDatabase.instance.ref();
   DatabaseReference get userRef => rtdb.child('users');
   DatabaseReference get myRef => userRef.child(myUid!);
@@ -24,8 +24,7 @@ class UserService {
     }
   }
 
-  BehaviorSubject<UserModel?> myDataChanges =
-      BehaviorSubject<UserModel?>.seeded(null);
+  BehaviorSubject<User?> myDataChanges = BehaviorSubject<User?>.seeded(null);
 
   StreamSubscription? userNodeSubscription;
 
@@ -47,8 +46,8 @@ class UserService {
   // Enable/Disable push notification when profile was liked
   bool enableNotificationOnLike = false;
 
-  Function(UserModel)? onCreate;
-  Function(UserModel)? onUpdate;
+  Function(User)? onCreate;
+  Function(User)? onUpdate;
 
   UserService._() {
     dog('--> UserService._()');
@@ -60,8 +59,8 @@ class UserService {
     Function(User user)? onSignout,
     void Function(User user, bool isLiked)? onLike,
     UserCustomize? customize,
-    Function(UserModel user)? onCreate,
-    Function(UserModel user)? onUpdate,
+    Function(User user)? onCreate,
+    Function(User user)? onUpdate,
   }) {
     dog('--> UserService.init()');
     initUser();
@@ -89,17 +88,17 @@ class UserService {
   ///
   /// 이처럼, 회원 정보에 빠져 있는 내용을 이곳에서 추가 할 수 있다.
   initUser() {
-    FirebaseAuth.instance.authStateChanges().listen((firebaseUser) async {
+    fb.FirebaseAuth.instance.authStateChanges().listen((firebaseUser) async {
       if (firebaseUser == null) {
         return;
       }
 
       /// 사용자 문서 읽기
-      UserModel? user = await UserModel.get(firebaseUser.uid);
+      User? user = await User.get(firebaseUser.uid);
 
       // ignore: prefer_conditional_assignment
       if (user == null) {
-        user = await UserModel.create(
+        user = await User.create(
           uid: firebaseUser.uid,
           displayName: firebaseUser.displayName,
           photoUrl: firebaseUser.photoURL,
@@ -120,8 +119,8 @@ class UserService {
   /// 주의, 이 함수의 callback 안에서, 회원 정보를 업데이트 해서는 안된다. 그러면 무한 재귀호출에 빠질 수 있다.
   listenUser() {
     dog('--> UserService.listenUser() for login user: $myUid');
-    FirebaseAuth.instance.authStateChanges().listen((user) async {
-      dog('--> UserService.listenUser() FirebaseAuth.instance.authStateChanges()');
+    fb.FirebaseAuth.instance.authStateChanges().listen((user) async {
+      dog('--> UserService.listenUser() fb.FirebaseAuth.instance.authStateChanges()');
       if (user == null) {
         this.user = null;
         return;
@@ -142,7 +141,7 @@ class UserService {
         /// 한다.
 
         /// 문서 파싱
-        this.user = UserModel.fromSnapshot(event.snapshot);
+        this.user = User.fromSnapshot(event.snapshot);
 
         ///
         myDataChanges.add(this.user);
@@ -180,12 +179,12 @@ class UserService {
 
   /// User log out
   logout() {
-    FirebaseAuth.instance.signOut();
+    fb.FirebaseAuth.instance.signOut();
   }
 
   /// Alias of logout()
   signOut() {
-    FirebaseAuth.instance.signOut();
+    fb.FirebaseAuth.instance.signOut();
   }
 
   /// 로그인한 사용자의 프로필 수정 페이지를 보여준다.
@@ -217,7 +216,7 @@ class UserService {
   Future showPublicProfileScreen({
     required BuildContext context,
     String? uid,
-    UserModel? user,
+    User? user,
   }) async {
     assert(uid != null || user != null,
         'Either uid or user must be provided to show public profile screen');
