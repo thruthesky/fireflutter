@@ -37,7 +37,7 @@ class DefaultUserSettings extends StatelessWidget {
             // Language picker
 
             Text(T.chooseYourLanguage.tr),
-            LanguagePicker.tile(
+            LanguagePicker(
               initialValue: userSetting.languageCode,
               filters: languageFilters,
               search: languageSearch,

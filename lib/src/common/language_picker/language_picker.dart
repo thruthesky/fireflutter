@@ -10,7 +10,6 @@ class LanguagePicker extends StatefulWidget {
     this.headerBuilder,
     this.itemBuilder,
     this.labelBuilder,
-    this.isTile = false,
     required this.onChanged,
   });
 
@@ -24,7 +23,6 @@ class LanguagePicker extends StatefulWidget {
   final List<String>? filters;
 
   final bool search;
-  final bool isTile;
   final Widget Function()? headerBuilder;
   final Widget Function(MapEntry)? itemBuilder;
   final Widget Function(String?)? labelBuilder;
@@ -32,28 +30,6 @@ class LanguagePicker extends StatefulWidget {
 
   @override
   State<LanguagePicker> createState() => _LanguagePickerState();
-
-  // variant of LanguagePicker if you want to use the language picker as a listTile
-  // use LanguagePicker.tile()
-  const LanguagePicker.tile({
-    Key? key,
-    String? initialValue,
-    List<String>? filters,
-    bool search = true,
-    Widget Function()? headerBuilder,
-    Widget Function(MapEntry)? itemBuilder,
-    Widget Function(String?)? labelBuilder,
-    required void Function(String) onChanged,
-  }) : this(
-            key: key,
-            initialValue: initialValue,
-            filters: filters,
-            search: search,
-            headerBuilder: headerBuilder,
-            itemBuilder: itemBuilder,
-            labelBuilder: labelBuilder,
-            onChanged: onChanged,
-            isTile: true);
 }
 
 class _LanguagePickerState extends State<LanguagePicker> {
@@ -70,53 +46,28 @@ class _LanguagePickerState extends State<LanguagePicker> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.isTile) {
-      return ListTile(
-        onTap: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return LanguagePickerListView(
-                search: widget.search,
-                onChanged: (v) {
-                  setState(() {
-                    selectedCountry = v;
-                  });
-                  widget.onChanged(v);
-                },
-                headerBuilder: widget.headerBuilder,
-                itemBuilder: widget.itemBuilder,
-                filters: widget.filters,
-              );
-            },
-          );
-        },
-        title: lableBuilder(),
-      );
-    } else {
-      return ElevatedButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return LanguagePickerListView(
-                search: widget.search,
-                onChanged: (v) {
-                  setState(() {
-                    selectedCountry = v;
-                  });
-                  widget.onChanged(v);
-                },
-                headerBuilder: widget.headerBuilder,
-                itemBuilder: widget.itemBuilder,
-                filters: widget.filters,
-              );
-            },
-          );
-        },
-        child: lableBuilder(),
-      );
-    }
+    return ElevatedButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return LanguagePickerListView(
+              search: widget.search,
+              onChanged: (v) {
+                setState(() {
+                  selectedCountry = v;
+                });
+                widget.onChanged(v);
+              },
+              headerBuilder: widget.headerBuilder,
+              itemBuilder: widget.itemBuilder,
+              filters: widget.filters,
+            );
+          },
+        );
+      },
+      child: lableBuilder(),
+    );
   }
 
   Widget lableBuilder() {
@@ -125,7 +76,7 @@ class _LanguagePickerState extends State<LanguagePicker> {
     }
 
     if (selectedCountry == null) {
-      return const Text('Choose your country');
+      return const Text('Choose your language');
     } else {
       return Text(langaugeCodeJson[selectedCountry!]!);
     }

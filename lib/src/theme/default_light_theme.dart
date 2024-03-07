@@ -56,15 +56,3 @@ ThemeData defaultLightTheme({required BuildContext context}) {
     useMaterial3: true,
   );
 }
-
-ThemeData bigButtonTheme(BuildContext context) {
-  return Theme.of(context).copyWith(
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
-            minimumSize: MaterialStateProperty.all(
-              const Size(double.infinity, 52),
-            ),
-          ),
-    ),
-  );
-}
