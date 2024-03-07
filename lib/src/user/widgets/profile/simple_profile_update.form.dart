@@ -22,7 +22,7 @@ class _SimpleProfileUpdateFormState extends State<SimpleProfileUpdateForm> {
 
     displayNameController.text = my?.displayName ?? '';
 
-    UserPrivateModel.get().then((priv) {
+    UserPrivate.get().then((priv) {
       emailController.text = priv.email ?? '';
       phoneController.text = priv.phoneNumber ?? '';
     });
@@ -52,7 +52,7 @@ class _SimpleProfileUpdateFormState extends State<SimpleProfileUpdateForm> {
                 my!.update(
                   displayName: displayNameController.text,
                 ),
-                UserPrivateModel.update(
+                UserPrivate.update(
                   email: emailController.text,
                   phoneNumber: phoneController.text,
                 )

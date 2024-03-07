@@ -50,9 +50,9 @@ class UserModel {
   /// 사용자가 직접 입력하는 별명
   String displayName;
 
-  @Deprecated('email is a private informationn. Use UserPrivateModel')
+  @Deprecated('email is a private informationn. Use UserPrivate')
   String email;
-  @Deprecated('phoneNumber is a private informationn. Use UserPrivateModel')
+  @Deprecated('phoneNumber is a private informationn. Use UserPrivate')
   String phoneNumber;
 
   /// The primary photo URL of the user.

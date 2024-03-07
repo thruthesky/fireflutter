@@ -1,7 +1,11 @@
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
+/// Report list for admin
+///
+/// 1. all, unviewed, rejected, accepted, blocked list.
 class ReportAdminListView extends StatelessWidget {
   const ReportAdminListView({super.key});
 
@@ -27,29 +31,7 @@ class ReportAdminListView extends StatelessWidget {
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return ListTile(
-                  leading: const Avatar(photoUrl: anonymousUrl),
-                  title: Container(
-                    height: 16,
-                    width: 140,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  subtitle: Row(
-                    children: [
-                      Container(
-                        height: 16,
-                        width: 140,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+                return const CircularProgressIndicator.adaptive();
               }
               final post = snapshot.data!;
               return ListTile(
@@ -66,6 +48,7 @@ class ReportAdminListView extends StatelessWidget {
                     Text(' ${report.createdAt.toShortDate}'),
                   ],
                 ),
+                onTap: () => onTap(context, post.uid),
               );
             },
           );
@@ -77,29 +60,7 @@ class ReportAdminListView extends StatelessWidget {
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return ListTile(
-                  leading: const Avatar(photoUrl: anonymousUrl),
-                  title: Container(
-                    height: 16,
-                    width: 140,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  subtitle: Row(
-                    children: [
-                      Container(
-                        height: 16,
-                        width: 140,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+                return const CircularProgressIndicator.adaptive();
               }
               final comment = snapshot.data!;
               return ListTile(
@@ -116,6 +77,7 @@ class ReportAdminListView extends StatelessWidget {
                     Text(' ${report.createdAt.toShortDate}'),
                   ],
                 ),
+                onTap: () => onTap(context, comment.uid),
               );
             },
           );
@@ -134,6 +96,10 @@ class ReportAdminListView extends StatelessWidget {
                 Text(' ${report.createdAt.toShortDate}'),
               ],
             ),
+            onTap: () => toast(
+                context: context,
+                message:
+                    'Chat report management is not implemented yet. Admin should check the chat room and decide to destroy the chat room.'),
           );
         } else {
           return ListTile(
@@ -146,9 +112,56 @@ class ReportAdminListView extends StatelessWidget {
                 Text(' ${report.createdAt.toShortDate}'),
               ],
             ),
+            onTap: () => onTap(context, report.otherUserUid!),
           );
         }
       },
+    );
+  }
+
+  onTap(
+    BuildContext context,
+    String uid, {
+    UserModel? user,
+    Post? post,
+    Comment? comment,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Report Management'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            UserAvatar(uid: uid),
+            UserDisplayName(uid: uid),
+            const SizedBox(height: 16),
+            Wrap(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    UserService.instance
+                        .showPublicProfileScreen(context: context, uid: uid);
+                  },
+                  child: const Text('View Profile'),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('Reject'),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('Accept'),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('Disable'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
