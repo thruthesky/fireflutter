@@ -56,7 +56,7 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
-              hintText: '메시지를 입력하세요.',
+              hintText: T.pleaseEnterMessage.tr,
               prefixIcon: IconButton(
                 icon: widget.cameraIcon ?? const Icon(Icons.camera_alt),
                 onPressed: () async {

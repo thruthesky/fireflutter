@@ -66,9 +66,9 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
                 isExpanded: true, // 화살표 아이콘을 오른쪽에 밀어 붙이기
                 menuMaxHeight: 300, // 높이 조절
                 items: [
-                  const DropdownMenuItem(
+                  DropdownMenuItem(
                     value: null,
-                    child: Text('Select Province'),
+                    child: Text(T.selectProvince.tr),
                   ),
                   ...getSiDoCodes(languageCode: widget.languageCode)
                       .map((addr) {
@@ -118,8 +118,8 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
                     DropdownMenuItem(
                       value: null,
                       child: Text(siDoCode != null
-                          ? 'Select Region'
-                          : 'No selected province'),
+                          ? T.selectProvince.tr
+                          : T.noSelectTedRegion.tr),
                     ),
                     if (siDoCode != null) ...{
                       ...secondaryAddresses!.map((addr) {
