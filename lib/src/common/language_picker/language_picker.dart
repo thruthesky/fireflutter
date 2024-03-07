@@ -32,7 +32,8 @@ class LanguagePicker extends StatefulWidget {
 
   @override
   State<LanguagePicker> createState() => _LanguagePickerState();
-
+  // variant of luaguagepicker if you want to use the language picker as a list
+  // user LanguagePicker.tile()
   const LanguagePicker.tile({
     Key? key,
     String? initialValue,
