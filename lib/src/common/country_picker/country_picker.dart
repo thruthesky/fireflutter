@@ -9,6 +9,7 @@ class CountryPicker extends StatefulWidget {
     this.search = true,
     this.headerBuilder,
     this.itemBuilder,
+    this.iconBuilder,
     this.labelBuilder,
     required this.onChanged,
   });
@@ -25,6 +26,7 @@ class CountryPicker extends StatefulWidget {
   final bool search;
   final Widget Function()? headerBuilder;
   final Widget Function(CountryCode)? itemBuilder;
+  final Widget Function(CountryCode?)? iconBuilder;
   final Widget Function(CountryCode?)? labelBuilder;
   final void Function(CountryCode) onChanged;
 
@@ -49,7 +51,7 @@ class _CountryPickerState extends State<CountryPicker> {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return ElevatedButton.icon(
       onPressed: () {
         showDialog(
           context: context,
@@ -69,7 +71,8 @@ class _CountryPickerState extends State<CountryPicker> {
           },
         );
       },
-      child: lableBuilder(),
+      icon: iconBuilder(),
+      label: lableBuilder(),
     );
   }
 
@@ -78,17 +81,18 @@ class _CountryPickerState extends State<CountryPicker> {
       return widget.labelBuilder!(selectedCountry);
     }
 
+    return Text(selectedCountry == null
+        ? 'Choose your country'
+        : selectedCountry!.officialName);
+  }
+
+  Widget iconBuilder() {
     if (selectedCountry == null) {
-      return const Text('Choose your country');
+      return const SizedBox.shrink();
     } else {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(selectedCountry!.flag,
-              style: Theme.of(context).textTheme.titleLarge!),
-          const SizedBox(width: 8),
-          Text(selectedCountry!.officialName),
-        ],
+      return Text(
+        selectedCountry!.flag,
+        style: Theme.of(context).textTheme.headlineSmall!,
       );
     }
   }
