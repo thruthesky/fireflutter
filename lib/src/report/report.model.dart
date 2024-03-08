@@ -1,6 +1,12 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 
+/// types of report
+enum ReportType { rejected, accepted }
+
+/// Where the report originated
+enum From { rejeced, accepted, unviewed }
+
 class Report {
   /// Paths and Refs
   static String nodeName = 'reports';
@@ -8,7 +14,8 @@ class Report {
   static DatabaseReference root = FirebaseDatabase.instance.ref();
   static DatabaseReference reportsRef = root.child(nodeName);
   static DatabaseReference unviewedRef = reportsRef.child('unviewed');
-  static DatabaseReference rejectsRef = reportsRef.child('rejected');
+  static DatabaseReference rejectedRef = reportsRef.child('rejected');
+  static DatabaseReference acceptedRef = reportsRef.child('accepted');
 
   /// Variables
   String key;
@@ -20,8 +27,7 @@ class Report {
   String? commentId;
   String reason;
   final int createdAt;
-  String reportId;
-  String rejectReason;
+  String review;
 
   bool get isPost => category != null;
   bool get isComment => commentId != null;
@@ -38,8 +44,7 @@ class Report {
     required this.commentId,
     required this.reason,
     required this.createdAt,
-    required this.reportId,
-    required this.rejectReason,
+    required this.review,
   });
 
   factory Report.fromJson(Map<dynamic, dynamic> json, String key) {
@@ -53,8 +58,7 @@ class Report {
       commentId: json['commentId'],
       reason: json['reason'] ?? '',
       createdAt: json['createdAt'] as int,
-      reportId: json['reportId'] ?? '',
-      rejectReason: json['rejectReason'] ?? '',
+      review: json['review'] ?? '',
     );
   }
 
@@ -72,24 +76,51 @@ class Report {
       'commentId': commentId,
       'reason': reason,
       'createdAt': createdAt,
-      'reportId': reportId,
+      'review': review
     };
   }
 
   @override
   String toString() {
-    return 'Report(uid: $uid, otherUserUid: $otherUserUid, chatRoomId: $chatRoomId, category: $category, postId: $postId, commentId: $commentId, reason: $reason, createdAt: $createdAt , reportId: $reportId, commentId: $commentId, reason: $reason, rejectReason: $rejectReason)';
+    return 'Report(uid: $uid, otherUserUid: $otherUserUid, chatRoomId: $chatRoomId, category: $category, postId: $postId, commentId: $commentId, reason: $reason, createdAt: $createdAt ,commentId: $commentId, reason: $reason, review: $review)';
   }
 
-  // For REVIEW
-  // Adding [reportId] to the report to have a track on report and when the admin
-  // want to reject the report it will remove from report id
-  // and create a report in the rejected node with the rejectReason for reason for
-  // rejection
-  static Future<void> reject(
-      {required Report report, required String rejectReason}) async {
-    await unviewedRef.child(report.reportId).remove();
-    await rejectsRef.child(report.reportId).set({
+  /// When the admin want to rejected/accepted the report it will remove from the unviewd list
+  /// and create a report in the rejected/accepted node with the review of the admin
+  /// [review] is the message from the admin why the admin rejected/accpeted the reports.
+  ///
+  /// [ReportType] is the type of the report thier are two types of reports:
+  /// - ReportType.rejected is thre rejected reports and will go into the rejected node.
+  /// - ReportType.accepted is the accepted reports and will go into the accepted node.
+  ///
+  /// [From] is where the report originated before evaluated, by default when the report is
+  /// created the report will originated in the unviewed node which is From.unviewed
+  /// and theres From.rejected and From.accepted
+  static Future<void> evaluate({
+    required Report report,
+    required String review,
+    required ReportType type,
+    required From from,
+  }) async {
+    DatabaseReference ref;
+
+    if (type == ReportType.rejected) {
+      ref = rejectedRef;
+    } else if (type == ReportType.accepted) {
+      ref = acceptedRef;
+    } else {
+      throw Issue('Invalid', 'Invalid Type');
+    }
+
+    if (from == From.unviewed) {
+      await unviewedRef.child(report.key).remove();
+    } else if (from == From.rejeced) {
+      await rejectedRef.child(report.key).remove();
+    } else if (from == From.accepted) {
+      await acceptedRef.child(report.key).remove();
+    }
+
+    await ref.child(report.key).set({
       'uid': report.uid,
       'reason': report.reason,
       'otherUserUid': report.otherUserUid,
@@ -98,8 +129,7 @@ class Report {
       'commentId': report.commentId,
       'chatRoomId': report.chatRoomId,
       'createdAt': report.createdAt,
-      'reportId': report.reportId,
-      'rejectReason': rejectReason
+      'review': report.review
     });
   }
 
@@ -117,13 +147,7 @@ class Report {
             'category or commentId must be provided when postId is provided');
       }
     }
-
-    // refactor code need to Review
-    // generate key first and report id
-    DatabaseReference newReportRef = unviewedRef.push();
-    String reportId = newReportRef.key!;
-
-    Map<String, dynamic> reportData = {
+    return await unviewedRef.push().set({
       'uid': myUid!,
       'reason': reason,
       'otherUserUid': otherUserUid,
@@ -132,9 +156,6 @@ class Report {
       'commentId': commentId,
       'chatRoomId': chatRoomId,
       'createdAt': ServerValue.timestamp,
-      'reportId': reportId
-    };
-
-    return await newReportRef.set(reportData);
+    });
   }
 }
