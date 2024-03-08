@@ -129,7 +129,7 @@ class Report {
       'commentId': report.commentId,
       'chatRoomId': report.chatRoomId,
       'createdAt': report.createdAt,
-      'review': report.review
+      'review': review
     });
   }
 

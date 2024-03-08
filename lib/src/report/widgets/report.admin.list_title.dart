@@ -138,7 +138,15 @@ class ReportAdminListTile extends StatelessWidget {
             UserAvatar(uid: uid),
             UserDisplayName(uid: uid),
             const SizedBox(height: 16),
+            if (report.review.isNotEmpty) ...{
+              Text(report.review),
+              const SizedBox(
+                height: 16,
+              ),
+            },
             Wrap(
+              spacing: 2,
+              runSpacing: 2,
               children: [
                 ElevatedButton(
                   onPressed: () {
@@ -177,42 +185,45 @@ class ReportAdminListTile extends StatelessWidget {
                     },
                     child: const Text('View Post'),
                   ),
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.pop(context);
-                    final re = await input(
-                      context: context,
-                      title: 'Reason',
-                      hintText: 'Entry why you reject the report',
-                    );
-                    if (re != null) {
-                      await Report.evaluate(
+                if (from != From.rejeced)
+                  ElevatedButton(
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      final re = await input(
+                        context: context,
+                        title: 'Reason',
+                        hintText: 'Entry why you reject the report',
+                      );
+                      if (re != null) {
+                        dog(re);
+                        await Report.evaluate(
+                            report: report,
+                            review: re,
+                            type: ReportType.rejected,
+                            from: from);
+                      }
+                    },
+                    child: const Text('Reject'),
+                  ),
+                if (from != From.accepted)
+                  ElevatedButton(
+                    onPressed: () async {
+                      final re = await input(
+                        context: context,
+                        title: 'Reason',
+                        hintText: 'Entry why you accept the report',
+                      );
+                      if (re != null) {
+                        await Report.evaluate(
                           report: report,
                           review: re,
-                          type: ReportType.rejected,
-                          from: from);
-                    }
-                  },
-                  child: const Text('Reject'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    final re = await input(
-                      context: context,
-                      title: 'Reason',
-                      hintText: 'Entry why you accept the report',
-                    );
-                    if (re != null) {
-                      await Report.evaluate(
-                        report: report,
-                        review: re,
-                        type: ReportType.accepted,
-                        from: from,
-                      );
-                    }
-                  },
-                  child: const Text('Accept'),
-                ),
+                          type: ReportType.accepted,
+                          from: from,
+                        );
+                      }
+                    },
+                    child: const Text('Accept'),
+                  ),
               ],
             ),
           ],
