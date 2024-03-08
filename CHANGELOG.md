@@ -1,3 +1,9 @@
+## 0.3.22
+
+* Update. Document.
+* Update. Report model. Admin can review the report and take an action between accept or rejection.
+
+
 ## 0.3.21
 
 * Update. Document.
@@ -26,4 +32,4 @@
 
 ## 0.3.16
 
-* Merging FireFlutter from Fireship. The change log has been reset due to the adoption of new engine.
+* Merging FireFlutter from Fireship. The change log has been reset by this version due to the adoption of fireflutter.

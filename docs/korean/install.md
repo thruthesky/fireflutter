@@ -79,6 +79,89 @@ See the [Forum](forum.md) document for the details.
 % npm run deploy:managePostsAllSummary
 ```
 
+## FireFlutter 설치
+
+다음은 FireFlutter 를 적용하는 간단한 예제입니다.
+
+- 우선, Firebase 를 플러터 프로젝트에 연결하고,
+- FireFlutter 의 `UserService` 를 초기화합니다.
+- 그리고, 로그인을 UI 를 제공하는 위젯인 `SimpleEmailPasswordLoginForm` 을 화면에 보여준다.
+
+아래의 코드는 어떻게 FireFlutter 를 사용 할 수 있는지에 대한 설명을 하는 것으로, 매우 간단한 코드를 가지고 있으며, 앱 개발 작업을 진행하면서, 필요에 따라 여러가지 코드가 추가되어야 할 것입니다.
+
+```dart
+import 'package:example/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  runApp(const MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    UserService.instance.init();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Column(
+        children: [
+          AuthReady(
+            builder: (uid) => Column(
+              children: [
+                Text('UID: $uid'),
+                ElevatedButton(
+                  onPressed: () => UserService.instance.signOut(),
+                  child: const Text('로그아웃'),
+                ),
+              ],
+            ),
+            notLoginBuilder: () => const SimpleEmailPasswordLoginForm(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+추가적으로 [에러 핸들링](./error_handling.md) 문서와 [빠르게 시작하기](./quick_start.md) 문처를 참고 해 보시면 도움이 될 것입니다.
+
+
 ## Initializing TextService
 
 Fireflutter has some UI and you may want to show it in different languages.
