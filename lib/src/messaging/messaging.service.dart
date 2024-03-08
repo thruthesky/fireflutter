@@ -155,7 +155,7 @@ class MessagingService {
         'uid': myUid,
         'platform': platformName(),
       };
-      await set('${MessagingModel.userFcmTokens}/$token', data);
+      await set('${Messaging.userFcmTokens}/$token', data);
     } catch (e) {
       dog('Error while updating token: $e');
       rethrow;
@@ -272,7 +272,7 @@ class MessagingService {
     dog('no of bad tokens: ${responses.length}');
     for (final key in responses.keys) {
       dog('invalid key: $key - ${responses[key]}');
-      set("${MessagingModel.userFcmTokens}/$key", null);
+      set("${Messaging.userFcmTokens}/$key", null);
     }
     if (removeInvalidTokens) {
       ///
@@ -288,7 +288,7 @@ class MessagingService {
     Map<String, dynamic>? extra,
   }) async {
     // 1. get all tokens
-    final folders = await get<Map>(MessagingModel.userFcmTokens);
+    final folders = await get<Map>(Messaging.userFcmTokens);
     if (folders == null) return {};
 
     // get all tokens from `/user-fcm-tokens`.
@@ -341,7 +341,7 @@ class MessagingService {
     List<String> tokens = [];
     for (uid in uids) {
       dog('lenght -> ${uids.length}');
-      final snapshot = await MessagingModel.userTokens(uid).get();
+      final snapshot = await Messaging.userTokens(uid).get();
       if (snapshot.value == null) continue;
       if (snapshot.exists == false) continue;
 
@@ -372,9 +372,9 @@ class MessagingService {
   /// ```
   ///
   dynamic parseData(Map<String, dynamic> data) => switch (data) {
-        {Field.category: String _} => PostMessagingModel.fromMap(data),
-        {Field.roomId: String _} => ChatMessagingModel.fromMap(data),
-        {Field.uid: String _} => UserMessagingModel.fromMap(data),
+        {Field.category: String _} => PostMessaging.fromMap(data),
+        {Field.roomId: String _} => ChatMessaging.fromMap(data),
+        {Field.uid: String _} => UserMessaging.fromMap(data),
         _ => null,
       };
 }

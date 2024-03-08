@@ -7,9 +7,9 @@ class ReportMyListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("ReportMyListView build: ${Report.reportsRef.path}");
+    print("ReportMyListView build: ${Report.unviewedRef.path}");
     return FirebaseDatabaseListView(
-      query: Report.reportsRef.orderByChild('uid').equalTo(myUid!),
+      query: Report.unviewedRef.orderByChild('uid').equalTo(myUid!),
       errorBuilder: (context, error, stackTrace) {
         dog("Error: $error");
         return Center(

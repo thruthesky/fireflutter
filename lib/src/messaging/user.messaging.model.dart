@@ -1,12 +1,12 @@
 /// User Messaging Model
-class UserMessagingModel {
+class UserMessaging {
   String uid;
 
-  UserMessagingModel({
+  UserMessaging({
     required this.uid,
   });
-  factory UserMessagingModel.fromMap(Map<String, dynamic> map) {
-    return UserMessagingModel(
+  factory UserMessaging.fromMap(Map<String, dynamic> map) {
+    return UserMessaging(
       uid: map['uid'],
     );
   }

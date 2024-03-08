@@ -1,19 +1,19 @@
 /// Chat messaging model
 ///
 /// This is for chat messages only.
-class ChatMessagingModel {
+class ChatMessaging {
   String senderUid;
   String messageId;
   String roomId;
 
-  ChatMessagingModel({
+  ChatMessaging({
     required this.senderUid,
     required this.messageId,
     required this.roomId,
   });
 
-  factory ChatMessagingModel.fromMap(Map<String, dynamic> map) {
-    return ChatMessagingModel(
+  factory ChatMessaging.fromMap(Map<String, dynamic> map) {
+    return ChatMessaging(
       senderUid: map['senderUid'],
       messageId: map['messageId'],
       roomId: map['roomId'],

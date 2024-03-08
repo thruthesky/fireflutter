@@ -25,7 +25,7 @@ class UserStateMessage extends StatelessWidget {
   }) : assert(uid != null || user != null);
 
   final String? uid;
-  final UserModel? user;
+  final User? user;
   final String? initialData;
   final TextStyle? style;
   final String? cacheId;
@@ -64,7 +64,7 @@ class UserStateMessage extends StatelessWidget {
   const UserStateMessage.sync({
     Key? key,
     String? uid,
-    UserModel? user,
+    User? user,
     String? initialData,
     TextStyle? style,
   }) : this(

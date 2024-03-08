@@ -132,7 +132,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     }, onSelected: (value) async {
                       if (value == 'edit') {
                         await ForumService.instance
-                            .showPostUpdateScreen(context, post: post);
+                            .showPostUpdateScreen(context: context, post: post);
                         await post.reload();
                         if (mounted) setState(() {});
                       } else if (value == 'delete') {
@@ -157,7 +157,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                 onTap: () async {
                   /// 텍스트 입력 버튼 액션
                   await ForumService.instance.showCommentCreateScreen(
-                    context,
+                    context: context,
                     post: post,
                     focusOnTextField: true,
                   );
@@ -175,7 +175,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       IconButton(
                         onPressed: () async {
                           await ForumService.instance.showCommentCreateScreen(
-                            context,
+                            context: context,
                             post: post,
                             showUploadDialog: true,
                           );

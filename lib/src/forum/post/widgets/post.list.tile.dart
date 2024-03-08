@@ -46,7 +46,7 @@ class PostListTile extends StatelessWidget {
         ],
       ),
       onTap: () => ForumService.instance.showPostViewScreen(
-        context,
+        context: context,
         post: post,
       ),
     );

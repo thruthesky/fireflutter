@@ -9,7 +9,7 @@ class DefaultChatRoomMemberDialog extends StatelessWidget {
   });
 
   final ChatRoom room;
-  final UserModel member;
+  final User member;
 
   @override
   Widget build(BuildContext context) {

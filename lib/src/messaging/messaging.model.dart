@@ -1,7 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 
-class MessagingModel {
+class Messaging {
   static const String userFcmTokens = 'user-fcm-tokens';
   static const String postSubscriptions = 'post-subscriptions';
 

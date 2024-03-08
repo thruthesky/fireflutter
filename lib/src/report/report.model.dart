@@ -7,6 +7,7 @@ class Report {
 
   static DatabaseReference root = FirebaseDatabase.instance.ref();
   static DatabaseReference reportsRef = root.child(nodeName);
+  static DatabaseReference unviewedRef = reportsRef.child('unviewed');
 
   /// Variables
   String key;
@@ -86,7 +87,7 @@ class Report {
             'category or commentId must be provided when postId is provided');
       }
     }
-    return await Report.reportsRef.push().set({
+    return await unviewedRef.push().set({
       'uid': myUid!,
       'reason': reason,
       'otherUserUid': otherUserUid,

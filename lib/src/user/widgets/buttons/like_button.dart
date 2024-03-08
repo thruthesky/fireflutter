@@ -13,7 +13,7 @@ class LikeButton extends StatefulWidget {
   const LikeButton({super.key, this.uid, this.user});
 
   final String? uid;
-  final UserModel? user;
+  final User? user;
 
   @override
   State<LikeButton> createState() => _LikeButtonState();
@@ -31,8 +31,7 @@ class _LikeButtonState extends State<LikeButton> {
 
     noOfLikes = widget.user?.noOfLikes ?? 0;
 
-    unlisten =
-        UserModel.userRef(userUid).child(Field.noOfLikes).onValue.listen((v) {
+    unlisten = User.userRef(userUid).child(Field.noOfLikes).onValue.listen((v) {
       setState(
         () => noOfLikes = int.tryParse(v.snapshot.value.toString()) ?? 0,
       );

@@ -48,12 +48,12 @@ class UserAvatarUpdate extends StatefulWidget {
 class _UserAvatarUpdateState extends State<UserAvatarUpdate> {
   double? progress;
 
-  late UserModel user;
+  late User user;
 
   @override
   void initState() {
     super.initState();
-    user = UserModel.fromUid(myUid!);
+    user = User.fromUid(myUid!);
   }
 
   bool get isNotUploading {
@@ -68,7 +68,7 @@ class _UserAvatarUpdateState extends State<UserAvatarUpdate> {
       onTap: () async {
         final url = await StorageService.instance.uploadAt(
           context: context,
-          path: "${UserModel.node}/${user.uid}/${Field.photoUrl}",
+          path: "${User.node}/${user.uid}/${Field.photoUrl}",
           progress: (p) => setState(() => progress = p),
           complete: () => setState(() => progress = null),
         );

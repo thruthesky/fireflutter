@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 
@@ -79,8 +78,7 @@ class ChatRoom {
   bool get isOpenGroupChat => openGroupChatOrder != null;
 
   /// [joined] 현재 사용자가 입장해 있으면, 즉 [users] 에 현재 사용자의 UID 가 있으면, true 를 리턴한다.
-  bool get joined =>
-      users?.containsKey(FirebaseAuth.instance.currentUser!.uid) ?? false;
+  bool get joined => users?.containsKey(myUid!) ?? false;
 
   bool get isMaster => master == myUid;
 
@@ -331,7 +329,6 @@ class ChatRoom {
       } else {
         ref = ChatService.instance.roomsRef.child(roomId);
       }
-      final myUid = FirebaseAuth.instance.currentUser!.uid;
       final data = {
         Field.name: name,
         Field.iconUrl: iconUrl,
@@ -339,8 +336,8 @@ class ChatRoom {
         Field.groupChatOrder: minusTime,
         Field.openGroupChatOrder: isOpenGroupChat == true ? minusTime : null,
         Field.createdAt: ServerValue.timestamp,
-        Field.users: {myUid: true},
-        Field.master: myUid,
+        Field.users: {myUid!: true},
+        Field.master: myUid!,
       };
       await ref.update(data);
     }
@@ -441,7 +438,7 @@ class ChatRoom {
       if (uid == myUid) {
         verified = my!.isVerified;
       } else {
-        verified = await UserModel.getField(uid, Field.isVerified);
+        verified = await User.getField(uid, Field.isVerified);
       }
       if (verified == false) {
         throw Issue(Code.chatRoomNotVerified);
@@ -481,7 +478,7 @@ class ChatRoom {
 
     /// 1:1 채팅방의 경우, 상대방의 이름을 저장한다.
     if (otherUserUid != null) {
-      final user = await UserModel.get(otherUserUid!);
+      final user = await User.get(otherUserUid!);
       data['name'] = user?.displayName;
     }
 
@@ -533,9 +530,7 @@ class ChatRoom {
           element.value ? (previousValue?..add(element.key)) : previousValue,
     );
     if (uids == null) return null;
-    return uids
-        .where((element) => element != FirebaseAuth.instance.currentUser!.uid)
-        .toList();
+    return uids.where((element) => element != myUid).toList();
   }
 
   /// 채팅방 알림 토글
