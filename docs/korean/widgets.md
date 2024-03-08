@@ -306,3 +306,50 @@ SizedBox(
 ),
 ```
 
+
+## SimplePhoneSignIn
+
+
+전화 번호를 할 수 있는 UI 를 제공한다. 테스트를 위해서 이메일 로그인을 지원한다.
+
+
+```dart
+SimplePhoneSignIn(
+  emailLogin: true,
+  reviewEmail: "review@email.com",
+  reviewPassword: "12345a",
+  reviewPhoneNumber: '86934225',
+  reviewRealPhoneNumber: '+11234123123',
+  reviewRealSmsCode: '123456',
+  onCompleteNumber: (value) {
+    String number = value.trim();
+    number = number.replaceAll(RegExp(r'[^\+0-9]'), '');
+    number = number.replaceFirst(RegExp(r'^0'), '');
+    number = number.replaceAll(' ', '');
+
+    if (number.startsWith('10')) {
+      return '+82$number';
+    } else if (number.startsWith('9')) {
+      return '+63$number';
+    } else
+    // 테스트 전화번호
+    if (number.startsWith('+1')) {
+      return number;
+    } else if (number == Config.reviewPhoneNumber) {
+      return number;
+    } else {
+      error(
+        context: context,
+        title: '에러',
+        message:
+            '에러\n한국 전화번호 또는 필리핀 전화번호를 입력하세요.\n예) 010 1234 5678 또는 0917 1234 5678',
+      );
+      throw '전화번호가 잘못되었습니다. 숫자만 입력하세요.';
+    }
+  },
+  onSignin: () {
+    context.pop();
+    context.go(HomeScreen.routeName);
+  },
+),
+```

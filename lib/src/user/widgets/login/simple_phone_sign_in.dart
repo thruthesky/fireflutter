@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 /// A simple phone number login form.
 ///
 /// 간단한 전화번호 로그인 위젯. 이 위젯은 전화번호를 입력하고, SMS 코드를 입력하는 UI 를 보여준다.
+/// 참고로, 이메일로 로그인을 할 수도 있다.
 /// 참고로, 국가 코드 선택을 하지는 않는다. 따라서 국가 코드 선택이 필요한 경우, 이 위젯의 코드를 복사해서 수정해서 사용하면 된다.
 ///
 /// 리뷰 또는 테스트를 위해서 [emailLogin], [reviewEmail], [reviewPassword],

@@ -80,6 +80,43 @@ And here comes the cloud functions
 
 참고로, 클라우드 함수 호출이 속도가 좀 느린편이다. 그나마 맨 처음 (새로운) 전화번호를 입력해서 가입을 할 때에는 Firebase Phone Sign-in 과정이 없어서 조금은 빨리 로그인이 되지만, 두번째 로그인을 할 때에는 Phone Sign-in 을 해야 해서 로그인 속도가 좀 더 느릴 수 있다.
 
+다음은, 전화번호로 처음 가입하면 인증 문자 없이 바로 가입하는 화면이다.
+
+```dart
+phoneNumber = '+82$tmpNumber';
+
+/// 임시 로그인 번호이면, SMS 입력 창을 바로 보여 주기.
+if (isRealTestPhoneNumber) {
+  return setState(() => showSmsCodeInput = true);
+}
+
+Dio dio = Dio();
+
+setState(() => progressVerifyPhoneNumber = true);
+final response =
+    await dio.post(Config.cloudFunctionsApi, data: {
+  'phoneNumber': phoneNumber,
+});
+
+if (response.data?['code'] != null) {
+  handleFirebaseAuthError(response.data!['code']);
+  return;
+}
+
+// 처음 로그인을 하는 경우,
+try {
+  // final userCredential =
+  await FirebaseAuth.instance
+      .signInWithCustomToken(response.data!['customToken']!);
+  // print("Sign-in successful. ${userCredential.user?.uid}");
+  signinSuccess(firstLogin: true);
+} on FirebaseAuthException catch (e) {
+  handleFirebaseAuthError(e.code);
+} finally {
+  setState(() => progressVerifyPhoneNumber = false);
+}
+```
+
 ## 함수 테스트
 
 [테스트 문서](./test.md)를 참고한다.
