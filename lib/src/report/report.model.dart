@@ -1,12 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 
-/// types of report
-enum ReportType { rejected, accepted }
-
-/// Where the report originated
-enum From { rejeced, accepted, unviewed }
-
 class Report {
   /// Paths and Refs
   static String nodeName = 'reports';
@@ -19,6 +13,7 @@ class Report {
 
   /// Variables
   String key;
+  DatabaseReference get ref => reportsRef.child(key);
   String uid;
   String? otherUserUid;
   String? chatRoomId;
@@ -33,6 +28,10 @@ class Report {
   bool get isComment => commentId != null;
   bool get isUser => otherUserUid != null;
   bool get isChatRoom => chatRoomId != null;
+
+  bool get rejected => ref.parent?.key == 'rejected';
+  bool get accepted => ref.parent?.key == 'accepted';
+  bool get unviewed => ref.parent?.key == 'unviewed';
 
   Report({
     required this.key,
@@ -89,48 +88,20 @@ class Report {
   /// and create a report in the rejected/accepted node with the review of the admin
   /// [review] is the message from the admin why the admin rejected/accpeted the reports.
   ///
-  /// [ReportType] is the type of the report thier are two types of reports:
-  /// - ReportType.rejected is thre rejected reports and will go into the rejected node.
-  /// - ReportType.accepted is the accepted reports and will go into the accepted node.
-  ///
-  /// [From] is where the report originated before evaluated, by default when the report is
-  /// created the report will originated in the unviewed node which is From.unviewed
-  /// and theres From.rejected and From.accepted
-  static Future<void> evaluate({
+  static Future<void> reject({
     required Report report,
     required String review,
-    required ReportType type,
-    required From from,
   }) async {
-    DatabaseReference ref;
+    await rejectedRef.child(report.key).set(report.toJson());
+    await report.ref.remove();
+  }
 
-    if (type == ReportType.rejected) {
-      ref = rejectedRef;
-    } else if (type == ReportType.accepted) {
-      ref = acceptedRef;
-    } else {
-      throw Issue('Invalid', 'Invalid Type');
-    }
-
-    if (from == From.unviewed) {
-      await unviewedRef.child(report.key).remove();
-    } else if (from == From.rejeced) {
-      await rejectedRef.child(report.key).remove();
-    } else if (from == From.accepted) {
-      await acceptedRef.child(report.key).remove();
-    }
-
-    await ref.child(report.key).set({
-      'uid': report.uid,
-      'reason': report.reason,
-      'otherUserUid': report.otherUserUid,
-      'category': report.category,
-      'postId': report.postId,
-      'commentId': report.commentId,
-      'chatRoomId': report.chatRoomId,
-      'createdAt': report.createdAt,
-      'review': review
-    });
+  static Future<void> accept({
+    required Report report,
+    required String review,
+  }) async {
+    await acceptedRef.child(report.key).set(report.toJson());
+    await report.ref.remove();
   }
 
   static Future<void> create({

@@ -8,11 +8,9 @@ class ReportAdminListTile extends StatelessWidget {
   const ReportAdminListTile({
     super.key,
     required this.snapshot,
-    this.from = From.unviewed,
   });
 
   final DataSnapshot snapshot;
-  final From from;
 
   @override
   Widget build(BuildContext context) {
@@ -185,27 +183,24 @@ class ReportAdminListTile extends StatelessWidget {
                     },
                     child: const Text('View Post'),
                   ),
-                if (from != From.rejeced)
+                if (report.rejected == false)
                   ElevatedButton(
                     onPressed: () async {
-                      Navigator.pop(context);
                       final re = await input(
                         context: context,
                         title: 'Reason',
                         hintText: 'Entry why you reject the report',
                       );
                       if (re != null) {
-                        dog(re);
-                        await Report.evaluate(
-                            report: report,
-                            review: re,
-                            type: ReportType.rejected,
-                            from: from);
+                        await Report.reject(
+                          report: report,
+                          review: re,
+                        );
                       }
                     },
                     child: const Text('Reject'),
                   ),
-                if (from != From.accepted)
+                if (report.accepted == false)
                   ElevatedButton(
                     onPressed: () async {
                       final re = await input(
@@ -214,11 +209,9 @@ class ReportAdminListTile extends StatelessWidget {
                         hintText: 'Entry why you accept the report',
                       );
                       if (re != null) {
-                        await Report.evaluate(
+                        await Report.accept(
                           report: report,
                           review: re,
-                          type: ReportType.accepted,
-                          from: from,
                         );
                       }
                     },

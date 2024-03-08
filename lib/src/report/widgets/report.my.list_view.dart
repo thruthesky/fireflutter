@@ -145,6 +145,16 @@ class ReportMyListView extends StatelessWidget {
                 Text(' ${report.createdAt.toShortDate}'),
               ],
             ),
+            trailing: IconButton(
+                onPressed: () async {
+                  final re = await confirm(
+                      context: context,
+                      title: 'Delete report',
+                      message: 'Do you want to delete this report?');
+                  if (re != true) return;
+                  await report.ref.remove();
+                },
+                icon: const Icon(Icons.delete)),
           );
         }
       },

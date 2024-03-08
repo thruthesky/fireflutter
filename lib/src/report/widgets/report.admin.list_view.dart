@@ -31,8 +31,9 @@ class ReportAdminListView extends StatelessWidget {
                           child: Text('Error: $error'),
                         );
                       },
-                      itemBuilder: (context, snapshot) =>
-                          ReportAdminListTile(snapshot: snapshot),
+                      itemBuilder: (context, snapshot) => ReportAdminListTile(
+                        snapshot: snapshot,
+                      ),
                     ),
                     FirebaseDatabaseListView(
                       query: Report.rejectedRef,
@@ -44,7 +45,6 @@ class ReportAdminListView extends StatelessWidget {
                       },
                       itemBuilder: (context, snapshot) => ReportAdminListTile(
                         snapshot: snapshot,
-                        from: From.rejeced,
                       ),
                     ),
                     FirebaseDatabaseListView(
@@ -57,7 +57,6 @@ class ReportAdminListView extends StatelessWidget {
                       },
                       itemBuilder: (context, snapshot) => ReportAdminListTile(
                         snapshot: snapshot,
-                        from: From.accepted,
                       ),
                     ),
                   ],
