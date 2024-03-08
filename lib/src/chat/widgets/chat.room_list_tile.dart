@@ -13,10 +13,13 @@ class ChatRoomListTile extends StatelessWidget {
     super.key,
     required this.room,
     this.stateMessageAsSubtitle,
+    this.onTap,
   });
 
   final ChatRoom room;
   final bool? stateMessageAsSubtitle;
+
+  final Function(BuildContext context, String roomId)? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +67,11 @@ class ChatRoomListTile extends StatelessWidget {
       onTap: () {
         dog('room.id: ${room.id}');
         dog('room.id: ${room.key}');
-        ChatService.instance.showChatRoom(context: context, roomId: room.id);
-        // context.push(AllRoomScreen.routeName, extra: {'roomId': room.id});
+        if (onTap == null) {
+          ChatService.instance.showChatRoom(context: context, roomId: room.id);
+        } else {
+          onTap!(context, room.id);
+        }
       },
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
