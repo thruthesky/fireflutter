@@ -34,8 +34,32 @@ class ReportAdminListView extends StatelessWidget {
                       itemBuilder: (context, snapshot) =>
                           ReportAdminListTile(snapshot: snapshot),
                     ),
-                    const Text('rejected'),
-                    const Text('accepted'),
+                    FirebaseDatabaseListView(
+                      query: Report.rejectedRef,
+                      errorBuilder: (context, error, stackTrace) {
+                        dog("Error: $error");
+                        return Center(
+                          child: Text('Error: $error'),
+                        );
+                      },
+                      itemBuilder: (context, snapshot) => ReportAdminListTile(
+                        snapshot: snapshot,
+                        from: From.rejeced,
+                      ),
+                    ),
+                    FirebaseDatabaseListView(
+                      query: Report.acceptedRef,
+                      errorBuilder: (context, error, stackTrace) {
+                        dog("Error: $error");
+                        return Center(
+                          child: Text('Error: $error'),
+                        );
+                      },
+                      itemBuilder: (context, snapshot) => ReportAdminListTile(
+                        snapshot: snapshot,
+                        from: From.accepted,
+                      ),
+                    ),
                   ],
                 ),
               ),
