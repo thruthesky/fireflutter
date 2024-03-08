@@ -7,7 +7,7 @@ class DefaultPublicProfileScreen extends StatelessWidget {
   const DefaultPublicProfileScreen({super.key, this.uid, this.user});
 
   final String? uid;
-  final UserModel? user;
+  final User? user;
 
   String get userUid => uid ?? user!.uid;
 

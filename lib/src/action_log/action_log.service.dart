@@ -187,7 +187,7 @@ class ActionLogService {
             );
           }
         }, onError: (e) {
-          dog('----> ActionLog::listenActions() - with path: ${actionOption.ref!.path}, $e');
+          dog('----> ActionLogService::listenActions() - with path: ${actionOption.ref!.path}, $e');
           throw e;
         }),
       );

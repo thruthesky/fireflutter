@@ -87,6 +87,7 @@ export 'src/forum/post/widgets/post.view.screen.dart';
 export 'src/functions/locale.functions.dart';
 
 export 'src/messaging/chat.messaging.model.dart';
+
 export 'src/messaging/messaging.model.dart';
 export 'src/messaging/messaging.service.dart';
 export 'src/messaging/post.messaging.model.dart';
@@ -94,6 +95,7 @@ export 'src/messaging/user.messaging.model.dart';
 
 export 'src/report/report.model.dart';
 export 'src/report/report.service.dart';
+export 'src/report/widgets/report.admin.list_title.dart';
 export 'src/report/widgets/report.admin.list_view.dart';
 export 'src/report/widgets/report.my.list_view.dart';
 

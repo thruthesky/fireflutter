@@ -33,8 +33,8 @@ class ForumService {
   /// Show post create screen when the user taps on the post creation button
   ///
   ///
-  Future showPostCreateScreen(
-    BuildContext context, {
+  Future showPostCreateScreen({
+    required BuildContext context,
     required String category,
   }) async {
     if (iam.disabled) {
@@ -65,8 +65,8 @@ class ForumService {
     }
   }
 
-  Future showPostUpdateScreen(
-    BuildContext context, {
+  Future showPostUpdateScreen({
+    required BuildContext context,
     required Post post,
   }) async {
     await showGeneralDialog(
@@ -77,8 +77,8 @@ class ForumService {
     );
   }
 
-  Future showPostViewScreen(
-    BuildContext context, {
+  Future showPostViewScreen({
+    required BuildContext context,
     required Post post,
   }) async {
     await showGeneralDialog(
@@ -90,8 +90,8 @@ class ForumService {
   }
 
   /// Returns true if comment is created or updated.
-  Future<bool?> showCommentCreateScreen(
-    BuildContext context, {
+  Future<bool?> showCommentCreateScreen({
+    required BuildContext context,
     required Post post,
     Comment? parent,
     bool? showUploadDialog,
@@ -120,8 +120,8 @@ class ForumService {
   }
 
   /// Returns true if comment is created or updated.
-  Future<bool?> showCommentUpdateScreen(
-    BuildContext context, {
+  Future<bool?> showCommentUpdateScreen({
+    required BuildContext context,
     required Comment comment,
     bool? showUploadDialog,
     bool? focusOnTextField,

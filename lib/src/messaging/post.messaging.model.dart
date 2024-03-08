@@ -1,18 +1,18 @@
 /// Post message data
 ///
 /// This is for post messages only.
-class PostMessagingModel {
+class PostMessaging {
   /// post id
   String id;
   String category;
 
-  PostMessagingModel({
+  PostMessaging({
     required this.id,
     required this.category,
   });
 
-  factory PostMessagingModel.fromMap(Map<String, dynamic> map) {
-    return PostMessagingModel(
+  factory PostMessaging.fromMap(Map<String, dynamic> map) {
+    return PostMessaging(
       id: map['id'],
       category: map['category'],
     );

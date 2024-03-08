@@ -48,7 +48,7 @@ class UserDoc extends StatelessWidget {
   });
 
   final String uid;
-  final Function(UserModel data) builder;
+  final Function(User data) builder;
   final Widget? onLoading;
   final String? cacheId;
 
@@ -71,10 +71,10 @@ class UserDoc extends StatelessWidget {
         }
 
         if (cacheId != null) {
-          _userDocCache[uid] = UserModel.fromJson(snapshot.data, uid: uid);
+          _userDocCache[uid] = User.fromJson(snapshot.data, uid: uid);
         }
 
-        return builder(UserModel.fromJson(snapshot.data, uid: uid));
+        return builder(User.fromJson(snapshot.data, uid: uid));
       },
     );
   }
@@ -123,7 +123,7 @@ class UserDoc extends StatelessWidget {
   static Widget sync({
     dynamic initialData,
     required String uid,
-    required Widget Function(UserModel data) builder,
+    required Widget Function(User data) builder,
     Widget? onLoading,
   }) {
     // final path = 'users/$uid';
@@ -131,8 +131,8 @@ class UserDoc extends StatelessWidget {
     return Value(
       initialData: initialData,
       // path: path,
-      ref: FirebaseDatabase.instance.ref("${UserModel.node}/$uid"),
-      builder: (data) => builder(UserModel.fromJson(data, uid: uid)),
+      ref: FirebaseDatabase.instance.ref("${User.node}/$uid"),
+      builder: (data) => builder(User.fromJson(data, uid: uid)),
       onLoading: onLoading,
     );
   }
@@ -153,7 +153,7 @@ class UserDoc extends StatelessWidget {
     return Value(
       initialData: initialData,
       // path: path,
-      ref: FirebaseDatabase.instance.ref("${UserModel.node}/$uid/$field"),
+      ref: FirebaseDatabase.instance.ref("${User.node}/$uid/$field"),
       builder: builder,
       onLoading: onLoading,
     );

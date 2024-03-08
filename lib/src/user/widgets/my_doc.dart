@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -14,11 +13,11 @@ import 'package:flutter/material.dart';
 class MyDoc extends StatelessWidget {
   const MyDoc({super.key, required this.builder});
 
-  final Function(UserModel? user) builder;
+  final Function(User? user) builder;
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<UserModel?>(
+    return StreamBuilder<User?>(
       stream: UserService.instance.myDataChanges,
       builder: (_, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -52,7 +51,7 @@ class MyDoc extends StatelessWidget {
     required Function(dynamic value) builder,
   }) {
     return UserDoc.fieldSync(
-      uid: FirebaseAuth.instance.currentUser!.uid,
+      uid: myUid!,
       field: field,
       builder: (v) => builder(v),
       onLoading: builder(my?.data[field]),

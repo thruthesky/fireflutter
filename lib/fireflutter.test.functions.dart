@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:fireflutter/fireflutter.dart';
 
 /// Login or register
@@ -17,27 +17,27 @@ import 'package:fireflutter/fireflutter.dart';
 /// ```
 ///
 /// @return User of firebase auth
-Future<User> loginOrRegister({
+Future<fb.User> loginOrRegister({
   required String email,
   required String password,
   required String photoUrl,
 }) async {
-  UserCredential? cred;
+  fb.UserCredential? cred;
   try {
-    cred = await FirebaseAuth.instance.signInWithEmailAndPassword(
+    cred = await fb.FirebaseAuth.instance.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
   } catch (e) {
-    cred = await FirebaseAuth.instance
+    cred = await fb.FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
   }
 
   final user = cred.user!;
 
-  final userModel = await UserModel.get(user.uid);
+  final userModel = await User.get(user.uid);
   if (userModel == null) {
-    final model = UserModel.fromUid(user.uid);
+    final model = User.fromUid(user.uid);
     model.update(
       displayName: email.split('@').first,
       photoUrl: photoUrl,

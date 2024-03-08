@@ -59,7 +59,7 @@ class BookmarkListView extends StatelessWidget {
                   ],
                 ),
                 onTap: () => ForumService.instance.showPostViewScreen(
-                  context,
+                  context: context,
                   post: post,
                 ),
               );
@@ -117,7 +117,7 @@ class BookmarkListView extends StatelessWidget {
                       category: comment.category, id: comment.postId);
                   if (context.mounted) {
                     ForumService.instance.showPostViewScreen(
-                      context,
+                      context: context,
                       post: post!,
                     );
                   }

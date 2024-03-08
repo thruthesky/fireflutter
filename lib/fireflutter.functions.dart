@@ -1,30 +1,30 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-bool get loggedIn => FirebaseAuth.instance.currentUser != null;
-bool get notLoggedIn => FirebaseAuth.instance.currentUser == null;
-String? get myUid => FirebaseAuth.instance.currentUser?.uid;
+bool get loggedIn => fb.FirebaseAuth.instance.currentUser != null;
+bool get notLoggedIn => fb.FirebaseAuth.instance.currentUser == null;
+String? get myUid => fb.FirebaseAuth.instance.currentUser?.uid;
 bool get isAdmin => UserService.instance.user?.isAdmin ?? false;
 
 /// Firebase current user
-User? get currentUser => FirebaseAuth.instance.currentUser;
+fb.User? get currentUser => fb.FirebaseAuth.instance.currentUser;
 
 /// UserService.instance.user
 ///
 /// It's nullable
 ///
 /// DB 에서 사용자 문서가 업데이트되면, 이 값도 자동으로 업데이트(sync)된다.
-UserModel? get my => UserService.instance.user;
+User? get my => UserService.instance.user;
 
 /// For more readability.
 ///
 /// It's NOT nullable.
-UserModel get iam {
+User get iam {
   if (my == null) {
     throw Exception(
         '[iam] UserService.instance.user is null. Developer may forget to call [UserService.instance.init()] or [UserService.instance.myDataChanges.listen()] is not complete yet.');
@@ -39,7 +39,7 @@ UserModel get iam {
 /// ```dart
 /// Text(iHave.blocked(widget.post.uid) ? T.blockedMessage.tr : title)
 /// ```
-UserModel get iHave => iam;
+User get iHave => iam;
 
 void dog(String msg) {
   if (kReleaseMode) return;
@@ -414,15 +414,15 @@ String sanitizeFilename(String input, {String replacement = ''}) {
 /// ```
 ///
 /// Return the user object of firebase auth and whether the user is registered or not.
-Future<({User user, bool register})> loginOrRegister({
+Future<({fb.User user, bool register})> loginOrRegister({
   required String email,
   required String password,
   String? photoUrl,
 }) async {
-  UserCredential? cred;
+  fb.UserCredential? cred;
   try {
     // login
-    cred = await FirebaseAuth.instance.signInWithEmailAndPassword(
+    cred = await fb.FirebaseAuth.instance.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
@@ -430,14 +430,14 @@ Future<({User user, bool register})> loginOrRegister({
     return (user: cred.user!, register: false);
   } catch (e) {
     // create
-    cred = await FirebaseAuth.instance
+    cred = await fb.FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
 
     // update display name and photo url
     final user = cred.user!;
-    final userModel = await UserModel.get(user.uid);
+    final userModel = await User.get(user.uid);
     if (userModel == null) {
-      final model = UserModel.fromUid(user.uid);
+      final model = User.fromUid(user.uid);
       await model.update(
         displayName: email.split('@').first,
         photoUrl: photoUrl,

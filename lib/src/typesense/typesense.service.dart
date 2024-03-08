@@ -81,7 +81,7 @@ class TypesenseService {
   // }
 
   /// Update the index for the user.
-  Future<Map<String, dynamic>> _upsertUser(UserModel user) async {
+  Future<Map<String, dynamic>> _upsertUser(User user) async {
     final data = {
       'id': user.uid,
       'uid': user.uid,
@@ -133,9 +133,9 @@ class TypesenseService {
     await client.collection(searchCollection).documents.delete({
       'filter_by': 'type:=user',
     });
-    final snapshot = await FirebaseDatabase.instance.ref(UserModel.node).get();
+    final snapshot = await FirebaseDatabase.instance.ref(User.node).get();
     for (final e in (snapshot.value as Map).entries) {
-      final user = UserModel.fromJson(e.value, uid: e.key);
+      final user = User.fromJson(e.value, uid: e.key);
       await _upsertUser(user);
       dog('Re-indexing user: ${user.uid} - ${user.displayName}');
     }

@@ -1,23 +1,23 @@
 import 'package:firebase_database/firebase_database.dart';
 
-class UserPhotoModel {
+class UserPhoto {
   String? uid;
   String? photoUrl;
   int? updatedAt;
 
-  UserPhotoModel({
+  UserPhoto({
     this.uid,
     this.photoUrl,
     this.updatedAt,
   });
 
-  factory UserPhotoModel.fromSnapshot(DataSnapshot snapshot) {
+  factory UserPhoto.fromSnapshot(DataSnapshot snapshot) {
     final json = snapshot.value as Map<dynamic, dynamic>;
     json['uid'] = snapshot.key;
-    return UserPhotoModel.fromJson(json);
+    return UserPhoto.fromJson(json);
   }
 
-  UserPhotoModel.fromJson(Map<dynamic, dynamic> json) {
+  UserPhoto.fromJson(Map<dynamic, dynamic> json) {
     uid = json['uid'];
     photoUrl = json['photoUrl'];
     updatedAt = json['updatedAt'];

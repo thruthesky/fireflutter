@@ -60,7 +60,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
   List<String> urls = [];
   List<String>? regionCode;
 
-  UserModel get user => UserService.instance.user!;
+  User get user => UserService.instance.user!;
 
   @override
   void initState() {
@@ -146,7 +146,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                               await StorageService.instance.uploadAt(
                                 context: context,
                                 path:
-                                    "${UserModel.node}/${user.uid}/${Field.profileBackgroundImageUrl}",
+                                    "${User.node}/${user.uid}/${Field.profileBackgroundImageUrl}",
                                 progress: (p) => setState(() => progress = p),
                                 complete: () => setState(() => progress = null),
                               );

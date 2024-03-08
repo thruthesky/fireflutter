@@ -1,19 +1,19 @@
 import 'package:fireflutter/fireflutter.dart' as ff;
 
-class UserPrivateModel {
+class UserPrivate {
   /// Paths and Refs
   static const String nodeName = 'user-private';
 
   final String? email;
   final String? phoneNumber;
 
-  UserPrivateModel({
+  UserPrivate({
     this.email,
     this.phoneNumber,
   });
 
-  factory UserPrivateModel.fromJson(Map<dynamic, dynamic> json) {
-    return UserPrivateModel(
+  factory UserPrivate.fromJson(Map<dynamic, dynamic> json) {
+    return UserPrivate(
       email: json['email'],
       phoneNumber: json['phoneNumber'],
     );
@@ -26,11 +26,11 @@ class UserPrivateModel {
     };
   }
 
-  static Future<UserPrivateModel> get() async {
+  static Future<UserPrivate> get() async {
     final data = await ff.get<Map>(
       '$nodeName/${ff.myUid}',
     );
-    return UserPrivateModel.fromJson(data ?? {});
+    return UserPrivate.fromJson(data ?? {});
   }
 
   static Future<void> update({

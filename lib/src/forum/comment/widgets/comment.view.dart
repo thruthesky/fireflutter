@@ -66,7 +66,7 @@ class _CommnetViewState extends State<CommentView> {
                       onPressed: () async {
                         final re =
                             await ForumService.instance.showCommentCreateScreen(
-                          context,
+                          context: context,
                           post: widget.post,
                           parent: widget.comment,
                           // focusOnTextField: true,
@@ -170,8 +170,9 @@ class _CommnetViewState extends State<CommentView> {
                         }
                       } else if (value == 'edit') {
                         await ForumService.instance.showCommentUpdateScreen(
-                            context,
-                            comment: widget.comment);
+                          context: context,
+                          comment: widget.comment,
+                        );
                         widget.post.reload();
                       } else if (value == 'delete') {
                         final re = await confirm(

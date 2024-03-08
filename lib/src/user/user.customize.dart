@@ -6,7 +6,7 @@ class UserCustomize {
 
   Widget? profileUpdateForm;
   Widget Function()? profileUpdateScreen;
-  Widget Function(String? uid, UserModel? user)? publicProfileScreen;
+  Widget Function(String? uid, User? user)? publicProfileScreen;
 
   UserCustomize({
     this.loginFirstScreen,
