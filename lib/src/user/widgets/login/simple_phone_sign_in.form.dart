@@ -46,8 +46,8 @@ import 'package:flutter/material.dart';
 ///
 /// 로그인이 성성하면 이 위젯은 UserService.instance.login() 을 호출한다. 그리고 처음 로그인이면, 이 함수에서
 /// /users/<uid> 를 생성한다.
-class SimplePhoneSignIn extends StatefulWidget {
-  const SimplePhoneSignIn({
+class SimplePhoneSignInForm extends StatefulWidget {
+  const SimplePhoneSignInForm({
     super.key,
     this.emailLogin = false,
     this.reviewEmail = 'review@email.com',
@@ -71,10 +71,10 @@ class SimplePhoneSignIn extends StatefulWidget {
   final String languageCode;
 
   @override
-  State<SimplePhoneSignIn> createState() => _SimplePhoneSignInState();
+  State<SimplePhoneSignInForm> createState() => _SimplePhoneSignInState();
 }
 
-class _SimplePhoneSignInState extends State<SimplePhoneSignIn> {
+class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
   bool showSmsCodeInput = false; // 테스트 할 때, true 로 할 것.
   final phoneNumberController =
       TextEditingController(text: ""); // 테스트 할 때, 임시 전화번호 입력. 예: 010-1234-5678

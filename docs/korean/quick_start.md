@@ -89,3 +89,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 ```
+
+### 구글 전화 로그인
+
+`SimpleEmailPasswordLoginForm` 대신 `SimplePhoneSignInForm` 을 사용해서, 구글 전화 로그인을 할 수 있다.
+
+
