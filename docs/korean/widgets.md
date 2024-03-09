@@ -353,3 +353,66 @@ SimplePhoneSignIn(
   },
 ),
 ```
+
+
+## PopupTextField
+
+
+`PopupTextField` 는 TextField 와 비슷한 동작을 하는데, 터치를 하면 새창을 열고, 사용자로 부터 문자열을 입력을 받습니다. TextField 보다는 공간 절약을 할 수 있습니다.
+`onChange` 는 사용자가 텍스트 입력을 통해 변경 했을 때, 변경된 텍스트 값이 넘어오는 콜백 함수입니다. `initialData` 를 지정하면, 처음 한번 자동으로 호출이 됩니다. 만약, 사용자가 텍스트 필드에서 값을 변경하지 않고, 그대로 OK 를 누르거나, Cancel 하거나, 팝업창을 닫을 때에는 `onChange` 가 호출되지 않습니다.
+
+
+
+예제 - initialData 를 사용하는 경우.
+
+아래와 같이 하면, 기본적으로 "전체"의 값이 선택되어져 있고, 터치를 하여 새창을 열면 텍스트 필드에도 "전체"의 값이 미리 들어가 있습니다. 사용자가 값을 지우면, 기본 값은 사라지고, "근무지를 입력하세요." 라고 typehint 로 나옵니다. initialData 값이 주어졌으므로, onChange 콜백 함수가 곧 바로 1회 호출됩니다.
+
+```dart
+PopupTextField(
+  label: '근무지',
+  initialData: '전체',
+  typeHint: '근무지를 입력하세요',
+  onChange: (value) {},
+),
+```
+
+예제
+
+아래와 같이 하면, 기본적으로 "근무지를 입력하세요"가 보여지며, 터치를 하여 새창을 열면 텍스트 필드에 typehint 로 "근무지를 입력하세요"가 나타납니다. 즉, 실제 값이 아닌, typehint 로서 사용될 뿐입니다.
+
+```dart
+PopupTextField(
+  label: '근무지',
+  typeHint: '근무지를 입력하세요',
+  onChange: (value) {},
+),
+```
+
+
+
+## PopupSelectField
+
+팝업 다이얼로그 창을 띄운 후 여러 개의 목록 아이템 중에서 하나를 선택 할 수 있습니다. 플러터에서 이미 존재하는 PopupMenuButton 이나 BottomSheet 과 유사하게 동작하는데, 차이점은 UI/UX 가 최대한 PopupTextField 와 유사하게 되어져 있어 통일된 디자인을 하고자 할 때 PopupTextFiled 와 함께 사용하면 좋습니다.
+
+기본적으로 텍스트 레이블과 값이 PopupTextField 와 동일하게 나타나며, 텍스트를 터치하면 팝업창이 뜨고, 목록한 값들 중에서 하나를 선택 할 수 있습니다.
+label 의 값은 기본 UI 에 레이블 처럼 나오며, 팝업 창의 제목으로 나옵니다.
+
+typeHint 는 기본 값이 없는 경우, 힌트로 표시되며, 기본 값인 [initialData] 가 지정되거나 사용자가 값을 변경(선택)하면 사라집니다. typeHint 는 팝업창에서 label 밑에 표시되며, 설명으로 사용됩니다.
+
+`initialData` 는  초기값입니다.  그리고 팝업창 목록에서 해당 값이 선택되어져 보입니다.
+
+`onChange` 는 선택 목록에서 값이 변경(선택) 될 때 호출되는 콜백 함수입니다. initialData 가 지정되면 위젯이 inflate 될 때, 최초 1회 자동 호출됩니다.
+
+
+예제
+
+```dart
+PopupSelectField(
+  label: '근무형태',
+  initialData: '전체',
+  typeHint: '근무형태를 선택하세요',
+  items: ['전체', '정규직', '비정규직', '계약직'],
+  onChange: print,
+),
+```
+

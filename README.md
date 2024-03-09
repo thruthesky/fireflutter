@@ -64,12 +64,14 @@ See the following documents:
 
 
 
-- Below is `NewProfilePhotos` widget that displays new profile photos of the users.
+- Below is `SimplePhoneSignInForm` widget that lets the user to sign in with google phone sign-in.
 
 ![Image](https://github.com/thruthesky/fireflutter/blob/main/docs/assets/images/simple_phone_sign_in_form.jpg?raw=true)
 
 
 
+
+There are a lot more widgets that you can mix up to build your app. Refere Widgets document.
 
 
 

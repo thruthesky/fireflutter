@@ -92,6 +92,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
 ### 구글 전화 로그인
 
-`SimpleEmailPasswordLoginForm` 대신 `SimplePhoneSignInForm` 을 사용해서, 구글 전화 로그인을 할 수 있다.
+`SimpleEmailPasswordLoginForm` 대신 `SimplePhoneSignInForm` 을 사용해서, 구글 전화 로그인을 할 수 있습니다.
+
+
+
+
+## 회원 정보 수정
+
+회원 정보 수정 화면은 이름, 성별, 생년월일 등을 수정할 수 있는 화면이다. 회원 정보 수정 화면은 앱 내의 다양한 위치에서 호출 될 수 있는데, `UserService.instance.showProfileUpdateScreen()` 을 호출하면 회원 정보 수정 화면이 보입니다. 회원 정보 수정 화면을 열어야 할 필요가 있을 때 마다 이 함수를 호출하면 됩니다.
+
+커스텀 디자인을 하려면 크게 두 가지 방법으로 할 수 있는데, 보다 자세한 정보는 [사용자 문서](./user.md)를 참고하기 바랍니다.
+
+
+## 공개 프로필
+
+공개 프로필은 `UserService.instance.showPublicProfileScreen()` 을 호출하면 됩니다.
+
+
+## 로그인 사용자 프로필 스티커
+
+`MyProfileSticker` 를 통해서 로그인한 사용자 정보를 한 줄 짜리 스티커형 배너를 표시 할 수 있습니다.
 
 
