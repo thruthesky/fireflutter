@@ -32,12 +32,12 @@ class UserTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () =>
-          onTap?.call(user) ??
-          UserService.instance.showPublicProfileScreen(
-            context: context,
-            uid: user.uid,
-          ),
+      onTap: () => onTap != null
+          ? onTap!.call(user)
+          : UserService.instance.showPublicProfileScreen(
+              context: context,
+              uid: user.uid,
+            ),
       child: Padding(
         padding: padding ?? const EdgeInsets.all(8.0),
         child: Column(

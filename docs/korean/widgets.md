@@ -306,3 +306,110 @@ SizedBox(
 ),
 ```
 
+
+## SimplePhoneSignIn
+
+
+전화 번호를 할 수 있는 UI 를 제공한다. 테스트를 위해서 이메일 로그인을 지원한다.
+
+
+```dart
+SimplePhoneSignIn(
+  emailLogin: true,
+  reviewEmail: "review@email.com",
+  reviewPassword: "12345a",
+  reviewPhoneNumber: '86934225',
+  reviewRealPhoneNumber: '+11234123123',
+  reviewRealSmsCode: '123456',
+  onCompleteNumber: (value) {
+    String number = value.trim();
+    number = number.replaceAll(RegExp(r'[^\+0-9]'), '');
+    number = number.replaceFirst(RegExp(r'^0'), '');
+    number = number.replaceAll(' ', '');
+
+    if (number.startsWith('10')) {
+      return '+82$number';
+    } else if (number.startsWith('9')) {
+      return '+63$number';
+    } else
+    // 테스트 전화번호
+    if (number.startsWith('+1')) {
+      return number;
+    } else if (number == Config.reviewPhoneNumber) {
+      return number;
+    } else {
+      error(
+        context: context,
+        title: '에러',
+        message:
+            '에러\n한국 전화번호 또는 필리핀 전화번호를 입력하세요.\n예) 010 1234 5678 또는 0917 1234 5678',
+      );
+      throw '전화번호가 잘못되었습니다. 숫자만 입력하세요.';
+    }
+  },
+  onSignin: () {
+    context.pop();
+    context.go(HomeScreen.routeName);
+  },
+),
+```
+
+
+## PopupTextField
+
+
+`PopupTextField` 는 TextField 와 비슷한 동작을 하는데, TextField 의 레이블이나 입력 박스 UI 대신에 두 줄로된 레이블과 값을 표시하고, 터치를 하면 새창을 열어, 사용자로 부터 문자열을 입력을 받습니다. TextField 과 비슷하게 동작하면서 UI/UX 적으로 분명한 차이를 보이는데, 공간 절약을 할 수 있다는 장점이 있습니다.
+
+활용 예를 들면, AppBar 의 bottom 이나, 각종 양식에서 새창을 띄워서 입력을 받고 싶은 경우에 사용 할 수 있습니다.
+
+`controller` 는 TextEditingController 이며, 필수 값입니다. 실제 TextField 에서 동작하는 것과 비슷하게 동작합니다.
+
+`onChange` 는 사용자가 텍스트 입력을 통해 변경 했을 때, 변경된 텍스트 값이 넘어오는 콜백 함수입니다. 만약, 사용자가 텍스트 필드에서 값을 변경하지 않고, 그대로 OK 를 누르거나, Cancel 하거나, 팝업창을 닫을 때에는 `onChange` 가 호출되지 않습니다.
+
+
+```dart
+PopupTextField(
+  controller: searchController,
+  label: '검색어',
+  typeHint: '검색어를 입력하세요',
+  onChange: (value) => research(search: value),
+),
+```
+
+
+
+
+
+## PopupSelectField
+
+팝업 다이얼로그 창을 띄운 후 여러 개의 목록 아이템 중에서 하나를 선택 할 수 있습니다. 플러터에서 이미 존재하는 PopupMenuButton 이나 BottomSheet 과 유사하게 동작하는데, 차이점은 UI/UX 가 최대한 PopupTextField 와 유사하게 되어져 있어 통일된 디자인을 하고자 할 때 PopupTextFiled 와 함께 사용하면 좋습니다.
+
+기본적으로 텍스트 레이블과 값이 PopupTextField 와 동일하게 나타나며, 텍스트를 터치하면 팝업창이 뜨고, 목록한 값들 중에서 하나를 선택 할 수 있습니다.
+label 의 값은 기본 UI 에 레이블 처럼 나오며, 팝업 창의 제목으로 나옵니다.
+
+typeHint 는 기본 값이 없는 경우, 힌트로 표시되며, 기본 값인 [initialValue] 가 지정되거나 사용자가 값을 변경(선택)하면 사라집니다. typeHint 는 팝업창에서 label 밑에 표시되며, 설명으로 사용됩니다.
+
+`initialValue` 는  초기값입니다.  그리고 팝업창 목록에서 해당 값이 선택되어져 보입니다.
+
+`onChange` 는 선택 목록에서 값이 변경(선택) 될 때 호출되는 콜백 함수입니다. initialValue 가 지정되면 위젯이 inflate 될 때, 최초 1회 자동 호출됩니다.
+
+
+예제
+
+```dart
+PopupSelectField(
+  label: '근무형태',
+  initialValue: '전체',
+  typeHint: '근무형태를 선택하세요',
+  items: ['전체', '정규직', '비정규직', '계약직'],
+  onChange: print,
+),
+```
+
+
+
+## TextWithLabel
+
+텍스트와 레이블을 보여주고, 탭을 할 수 있도록 한다. 기본적인 UI/UX ListTile 과 흡사하다. 꼭 필요한 경우가 아니면, ListTile 을 사용할 수도 있겠다.
+
+

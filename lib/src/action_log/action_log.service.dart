@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 
@@ -188,7 +189,12 @@ class ActionLogService {
           }
         }, onError: (e) {
           dog('----> ActionLogService::listenActions() - with path: ${actionOption.ref!.path}, $e');
-          throw e;
+          if (e is FirebaseException && e.code == 'permission-denied') {
+            /// Ignore permission-denied error because it usually happens when
+            /// the user suddenly logs out.
+          } else {
+            throw e;
+          }
         }),
       );
     }

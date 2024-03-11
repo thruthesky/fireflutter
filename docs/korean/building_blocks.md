@@ -4,47 +4,8 @@
 
 ## 에러 핸들링
 
-Fireflutter 에서 제공하는 위젯 또는 로직에서 exception 을 발생 시키기도 한다. 이러한 exception 중에서 어떤 것은 Fireflutter 내에서 핸들링되지 않는 경우가 있다. 즉, 앱 내에서 에러 처리를 해야하는 것이다.
+참고, 에러 핸들링 문서 참고
 
-앱 내에서 에러 처리는 일반적으로 많이 하는 runZoneGuarded 방식으로 하면 된다.
-
-예제
-
-```dart
-runZonedGuarded(
-    () async {
-      runApp(const MyApp());
-      /// Flutter error happens here like Overflow, Unbounded height
-      FlutterError.onError = (FlutterErrorDetails details) {
-        FlutterError.dumpErrorToConsole(details);
-      };
-    },
-    zoneErrorHandler,
-  );
-  zoneErrorHandler(error, stackTrace) {
-    print("----> runZoneGuarded() : exceptions outside flutter framework.");
-    print("---> runtimeType: ${error.runtimeType}"); 
-    if (error is FirebaseAuthException) {
-      if (AppService.instance.smsCodeAutoRetrieval) {
-        if (error.code.contains('session-expired') ||
-            error.code.contains('invalid-verification-code')) {
-          print("....");
-          return;
-        }
-      } else {}
-
-      toast(
-          context: context,
-          message: 'Error :  ${error.code} - ${error.message}');
-    } else if (error is FirebaseException) {
-      print("FirebaseException :  $error }");
-    } else {
-      print("Unknown Error :  $error");
-      // toast(context: context, message: "백엔드 에러 :  ${error.code} - ${error.message}");
-    }
-    debugPrintStack(stackTrace: stackTrace);
-  }
-```
 
 ## 다국어
 
