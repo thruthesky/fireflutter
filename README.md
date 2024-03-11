@@ -37,6 +37,8 @@ See the following documents:
 
 ## UI Samples
 
+- In this chapter, A few sample UIs(Designs) are displayed. To view more UIs, refer the FireFlutter Widgets document.
+
 - All the UI design is customizable throught Flutter's own theme design pattern. You may copy the fireflutter source code and re-create your own if you want.
 
 - Below is `Simple Email Password Login Form` widget that lets the user creates a new account or sign in with existing account.
@@ -53,6 +55,24 @@ See the following documents:
 - Below is `LanguagePicker` widget that lets the user to choose his language.
 
 ![Image](https://github.com/thruthesky/fireflutter/blob/main/docs/assets/images/language_picker.jpg?raw=true)
+
+
+
+- Below is `NewProfilePhotos` widget that displays new profile photos of the users.
+
+![Image](https://github.com/thruthesky/fireflutter/blob/main/docs/assets/images/new_profile_photos.jpg?raw=true)
+
+
+
+- Below is `SimplePhoneSignInForm` widget that lets the user to sign in with google phone sign-in.
+
+![Image](https://github.com/thruthesky/fireflutter/blob/main/docs/assets/images/simple_phone_sign_in_form.jpg?raw=true)
+
+
+
+
+There are a lot more widgets that you can mix up to build your app. Refere Widgets document.
+
 
 
 ## Issues

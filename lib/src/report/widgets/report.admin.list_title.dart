@@ -43,7 +43,7 @@ class ReportAdminListTile extends StatelessWidget {
                 Text(' ${report.createdAt.toShortDate}'),
               ],
             ),
-            onTap: () => onTap(context, post.uid, post: post),
+            onTap: () => onTap(context, post.uid, post: post, report: report),
           );
         },
       );
@@ -72,7 +72,8 @@ class ReportAdminListTile extends StatelessWidget {
                 Text(' ${report.createdAt.toShortDate}'),
               ],
             ),
-            onTap: () => onTap(context, comment.uid, comment: comment),
+            onTap: () =>
+                onTap(context, comment.uid, comment: comment, report: report),
           );
         },
       );
@@ -111,6 +112,7 @@ class ReportAdminListTile extends StatelessWidget {
           context,
           report.otherUserUid!,
           user: User.fromUid(report.otherUserUid!),
+          report: report,
         ),
       );
     }
@@ -122,6 +124,7 @@ class ReportAdminListTile extends StatelessWidget {
     User? user,
     Post? post,
     Comment? comment,
+    required Report report,
   }) {
     showDialog(
       context: context,
@@ -133,7 +136,15 @@ class ReportAdminListTile extends StatelessWidget {
             UserAvatar(uid: uid),
             UserDisplayName(uid: uid),
             const SizedBox(height: 16),
+            if (report.review.isNotEmpty) ...{
+              Text(report.review),
+              const SizedBox(
+                height: 16,
+              ),
+            },
             Wrap(
+              spacing: 2,
+              runSpacing: 2,
               children: [
                 ElevatedButton(
                   onPressed: () {
@@ -172,26 +183,40 @@ class ReportAdminListTile extends StatelessWidget {
                     },
                     child: const Text('View Post'),
                   ),
-                ElevatedButton(
-                  onPressed: () {
-                    input(
-                      context: context,
-                      title: 'Reason',
-                      hintText: 'Entry why you reject the report',
-                    );
-                  },
-                  child: const Text('Reject'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    input(
-                      context: context,
-                      title: 'Reason',
-                      hintText: 'Entry why you accept the report',
-                    );
-                  },
-                  child: const Text('Accept'),
-                ),
+                if (report.rejected == false)
+                  ElevatedButton(
+                    onPressed: () async {
+                      final re = await input(
+                        context: context,
+                        title: 'Reason',
+                        hintText: 'Entry why you reject the report',
+                      );
+                      if (re != null) {
+                        await Report.reject(
+                          report: report,
+                          review: re,
+                        );
+                      }
+                    },
+                    child: const Text('Reject'),
+                  ),
+                if (report.accepted == false)
+                  ElevatedButton(
+                    onPressed: () async {
+                      final re = await input(
+                        context: context,
+                        title: 'Reason',
+                        hintText: 'Entry why you accept the report',
+                      );
+                      if (re != null) {
+                        await Report.accept(
+                          report: report,
+                          review: re,
+                        );
+                      }
+                    },
+                    child: const Text('Accept'),
+                  ),
               ],
             ),
           ],

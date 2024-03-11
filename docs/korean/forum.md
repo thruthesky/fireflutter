@@ -1,4 +1,4 @@
-# Forum
+# 게시판
 
 ## Database strucuture
 
