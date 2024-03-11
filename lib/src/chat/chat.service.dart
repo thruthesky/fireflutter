@@ -81,16 +81,11 @@ class ChatService {
       return showGeneralDialog(
         context: context,
         pageBuilder: (context, animation, secondaryAnimation) =>
-            customize.chatRoomScreen?.call(
-              uid: uid,
-              roomId: roomId,
-              room: room,
-            ) ??
             DefaultChatRoomScreen(
-              uid: uid,
-              roomId: roomId,
-              room: room,
-            ),
+          uid: uid,
+          roomId: roomId,
+          room: room,
+        ),
       );
     }
   }
