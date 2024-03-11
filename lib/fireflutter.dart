@@ -59,7 +59,7 @@ export 'src/common/stacked_avatar.dart';
 export 'src/common/input/label_field.dart';
 export 'src/common/input/popup_select_field.dart';
 export 'src/common/input/popup_text_field.dart';
-export 'src/common/text_with_label.dart';
+export 'src/common/text/text_with_label.dart';
 export 'src/common/url_preview/url_preview.dart';
 export 'src/common/url_preview/url_preview.model.dart';
 

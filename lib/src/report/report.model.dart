@@ -12,8 +12,7 @@ class Report {
   static DatabaseReference acceptedRef = reportsRef.child('accepted');
 
   /// Variables
-  String key;
-  DatabaseReference get ref => reportsRef.child(key);
+  DatabaseReference ref;
   String uid;
   String? otherUserUid;
   String? chatRoomId;
@@ -34,7 +33,7 @@ class Report {
   bool get unviewed => ref.parent?.key == 'unviewed';
 
   Report({
-    required this.key,
+    required this.ref,
     required this.uid,
     required this.otherUserUid,
     required this.chatRoomId,
@@ -46,9 +45,9 @@ class Report {
     required this.review,
   });
 
-  factory Report.fromJson(Map<dynamic, dynamic> json, String key) {
+  factory Report.fromJson(Map<dynamic, dynamic> json, DatabaseReference ref) {
     return Report(
-      key: key,
+      ref: ref,
       uid: json['uid'],
       otherUserUid: json['otherUserUid'],
       chatRoomId: json['chatRoomId'],
@@ -61,8 +60,13 @@ class Report {
     );
   }
 
-  factory Report.fromValue(dynamic value, String key) {
-    return Report.fromJson(value, key);
+  /// This is a factory constructor that creates a Report from a value and a key
+  ///
+  /// [value] is the data
+  ///
+  /// [key] is the key of the data
+  factory Report.fromValue(dynamic value, DatabaseReference ref) {
+    return Report.fromJson(value, ref);
   }
 
   Map<String, dynamic> toJson() {
@@ -92,7 +96,7 @@ class Report {
     required Report report,
     required String review,
   }) async {
-    await rejectedRef.child(report.key).set(report.toJson());
+    await rejectedRef.child(report.ref.key!).set(report.toJson());
     await report.ref.remove();
   }
 
@@ -100,7 +104,10 @@ class Report {
     required Report report,
     required String review,
   }) async {
-    await acceptedRef.child(report.key).set(report.toJson());
+    final ref = acceptedRef.child(report.ref.key!);
+    print('ref: ${ref.path}');
+    print('report: ${report.toJson()}');
+    await ref.set(report.toJson());
     await report.ref.remove();
   }
 

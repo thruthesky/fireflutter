@@ -17,7 +17,7 @@ class ReportMyListView extends StatelessWidget {
         );
       },
       itemBuilder: (context, snapshot) {
-        final Report report = Report.fromValue(snapshot.value, snapshot.key!);
+        final Report report = Report.fromValue(snapshot.value, snapshot.ref);
 
         if (report.isPost) {
           return FutureBuilder<Post?>(

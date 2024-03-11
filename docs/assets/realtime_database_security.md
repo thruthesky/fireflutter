@@ -32,6 +32,7 @@
         }
       }
     },
+      
     // Activity
     "activity-logs": {
       "$uid": {
@@ -209,11 +210,13 @@
     },
     // Fireship - reports
     "reports": {
-        ".read": true,
-        "$id": {
+      "$category": {
+        ".read": "root.child('admins').hasChild(auth.uid) || (query.orderByChild === 'uid' && query.equalTo === auth.uid)",
+        "$dataKey": {
           ".write": "newData.child('uid').val() === auth.uid || root.child('admins').hasChild(auth.uid)",
           ".indexOn": ["uid"]
         }
+      }
     }
 
   }
