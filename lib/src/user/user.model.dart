@@ -12,26 +12,24 @@ class User {
 
   ///
   static const String userProfilePhotos = 'user-profile-photos';
-  static const String userLikes = 'user-likes';
-  static const String userWhoILike = 'user-who-i-like';
+  static const String whoLikeMe = 'who-like-me';
+  static const String whoILike = 'who-i-like';
 
   static String user(String uid) => '$node/$uid';
   static String userField(String uid, String field) => '${user(uid)}/$field';
 
   /// 내가 다른 사람을 좋아요 할 때, 그 정보를 저장하는 노드 경로
-  static String whoILikePath(String a, String b) => '$userWhoILike/$a/$b';
-  static DatabaseReference whoILikeRef(String a, String b) =>
-      FirebaseDatabase.instance.ref(whoILikePath(a, b));
+  static String whoILikePath(String a, String b) => '$whoILike/$a/$b';
 
-  ///
-  static const String userWhoLikeMe = userLikes;
+  static DatabaseReference iLikeRef(String b) =>
+      FirebaseDatabase.instance.ref(whoILikePath(ff.myUid!, b));
 
   ///
   static DatabaseReference userRef(String uid) => usersRef.child(uid);
   static DatabaseReference userProfilePhotosRef =
       rootRef.child('profile-photos');
-  static DatabaseReference userWhoILikeRef = rootRef.child(userLikes);
-  static DatabaseReference userWhoLikeMeRef = rootRef.child(userWhoLikeMe);
+  static DatabaseReference whoILikeRef = rootRef.child(whoILike);
+  static DatabaseReference whoLikeMeRef = rootRef.child(whoLikeMe);
 
   /// [data] 는 사용자 정보 문서 node 의 전체 값을 가지고 있다. 그래서, 필요할 때,
   /// data['email'] 과 같이, 필드를 직접 접근할 수 있다.

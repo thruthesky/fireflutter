@@ -10,7 +10,7 @@ class WhoLikeMeListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FirebaseDatabaseListView(
-      query: User.userWhoLikeMeRef.child(myUid!),
+      query: User.whoLikeMeRef.child(myUid!),
       itemBuilder: (context, snapshot) {
         return UserTile.fromUid(uid: snapshot.key!);
       },
