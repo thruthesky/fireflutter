@@ -22,7 +22,7 @@ class _BirthdayUpdateState extends State<BirthdayUpdate> {
       if (my == null) {
         return const SizedBox();
       }
-      return TextWithLable(
+      return TextWithLabel(
         label: widget.label, // '생년월일',
         description: widget.description,
         text: my.birthYear == 0

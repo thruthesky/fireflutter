@@ -358,35 +358,25 @@ SimplePhoneSignIn(
 ## PopupTextField
 
 
-`PopupTextField` 는 TextField 와 비슷한 동작을 하는데, 터치를 하면 새창을 열고, 사용자로 부터 문자열을 입력을 받습니다. TextField 보다는 공간 절약을 할 수 있습니다.
-`onChange` 는 사용자가 텍스트 입력을 통해 변경 했을 때, 변경된 텍스트 값이 넘어오는 콜백 함수입니다. `initialData` 를 지정하면, 처음 한번 자동으로 호출이 됩니다. 만약, 사용자가 텍스트 필드에서 값을 변경하지 않고, 그대로 OK 를 누르거나, Cancel 하거나, 팝업창을 닫을 때에는 `onChange` 가 호출되지 않습니다.
+`PopupTextField` 는 TextField 와 비슷한 동작을 하는데, TextField 의 레이블이나 입력 박스 UI 대신에 두 줄로된 레이블과 값을 표시하고, 터치를 하면 새창을 열어, 사용자로 부터 문자열을 입력을 받습니다. TextField 과 비슷하게 동작하면서 UI/UX 적으로 분명한 차이를 보이는데, 공간 절약을 할 수 있다는 장점이 있습니다.
 
+활용 예를 들면, AppBar 의 bottom 이나, 각종 양식에서 새창을 띄워서 입력을 받고 싶은 경우에 사용 할 수 있습니다.
 
+`controller` 는 TextEditingController 이며, 필수 값입니다. 실제 TextField 에서 동작하는 것과 비슷하게 동작합니다.
 
-예제 - initialData 를 사용하는 경우.
+`onChange` 는 사용자가 텍스트 입력을 통해 변경 했을 때, 변경된 텍스트 값이 넘어오는 콜백 함수입니다. 만약, 사용자가 텍스트 필드에서 값을 변경하지 않고, 그대로 OK 를 누르거나, Cancel 하거나, 팝업창을 닫을 때에는 `onChange` 가 호출되지 않습니다.
 
-아래와 같이 하면, 기본적으로 "전체"의 값이 선택되어져 있고, 터치를 하여 새창을 열면 텍스트 필드에도 "전체"의 값이 미리 들어가 있습니다. 사용자가 값을 지우면, 기본 값은 사라지고, "근무지를 입력하세요." 라고 typehint 로 나옵니다. initialData 값이 주어졌으므로, onChange 콜백 함수가 곧 바로 1회 호출됩니다.
 
 ```dart
 PopupTextField(
-  label: '근무지',
-  initialData: '전체',
-  typeHint: '근무지를 입력하세요',
-  onChange: (value) {},
+  controller: searchController,
+  label: '검색어',
+  typeHint: '검색어를 입력하세요',
+  onChange: (value) => research(search: value),
 ),
 ```
 
-예제
 
-아래와 같이 하면, 기본적으로 "근무지를 입력하세요"가 보여지며, 터치를 하여 새창을 열면 텍스트 필드에 typehint 로 "근무지를 입력하세요"가 나타납니다. 즉, 실제 값이 아닌, typehint 로서 사용될 뿐입니다.
-
-```dart
-PopupTextField(
-  label: '근무지',
-  typeHint: '근무지를 입력하세요',
-  onChange: (value) {},
-),
-```
 
 
 
@@ -397,11 +387,11 @@ PopupTextField(
 기본적으로 텍스트 레이블과 값이 PopupTextField 와 동일하게 나타나며, 텍스트를 터치하면 팝업창이 뜨고, 목록한 값들 중에서 하나를 선택 할 수 있습니다.
 label 의 값은 기본 UI 에 레이블 처럼 나오며, 팝업 창의 제목으로 나옵니다.
 
-typeHint 는 기본 값이 없는 경우, 힌트로 표시되며, 기본 값인 [initialData] 가 지정되거나 사용자가 값을 변경(선택)하면 사라집니다. typeHint 는 팝업창에서 label 밑에 표시되며, 설명으로 사용됩니다.
+typeHint 는 기본 값이 없는 경우, 힌트로 표시되며, 기본 값인 [initialValue] 가 지정되거나 사용자가 값을 변경(선택)하면 사라집니다. typeHint 는 팝업창에서 label 밑에 표시되며, 설명으로 사용됩니다.
 
-`initialData` 는  초기값입니다.  그리고 팝업창 목록에서 해당 값이 선택되어져 보입니다.
+`initialValue` 는  초기값입니다.  그리고 팝업창 목록에서 해당 값이 선택되어져 보입니다.
 
-`onChange` 는 선택 목록에서 값이 변경(선택) 될 때 호출되는 콜백 함수입니다. initialData 가 지정되면 위젯이 inflate 될 때, 최초 1회 자동 호출됩니다.
+`onChange` 는 선택 목록에서 값이 변경(선택) 될 때 호출되는 콜백 함수입니다. initialValue 가 지정되면 위젯이 inflate 될 때, 최초 1회 자동 호출됩니다.
 
 
 예제
@@ -409,10 +399,17 @@ typeHint 는 기본 값이 없는 경우, 힌트로 표시되며, 기본 값인 
 ```dart
 PopupSelectField(
   label: '근무형태',
-  initialData: '전체',
+  initialValue: '전체',
   typeHint: '근무형태를 선택하세요',
   items: ['전체', '정규직', '비정규직', '계약직'],
   onChange: print,
 ),
 ```
+
+
+
+## TextWithLabel
+
+텍스트와 레이블을 보여주고, 탭을 할 수 있도록 한다. 기본적인 UI/UX ListTile 과 흡사하다. 꼭 필요한 경우가 아니면, ListTile 을 사용할 수도 있겠다.
+
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class TextWithLable extends StatelessWidget {
-  const TextWithLable({
+class TextWithLabel extends StatelessWidget {
+  const TextWithLabel({
     super.key,
     this.label,
     required this.text,

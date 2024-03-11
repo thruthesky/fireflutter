@@ -16,7 +16,7 @@ class ReportAdminListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     print("ReportAdminListTile build: ${Report.reportsRef.path}");
 
-    final Report report = Report.fromValue(snapshot.value, snapshot.key!);
+    final Report report = Report.fromValue(snapshot.value, snapshot.ref);
 
     if (report.isPost) {
       return FutureBuilder<Post?>(
