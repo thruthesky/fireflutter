@@ -215,7 +215,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                 Expanded(
                   child: RadioListTile<String>(
                     title: Text(T.male.tr),
-                    value: 'Male',
+                    value: 'M',
                     groupValue: gender,
                     onChanged: (value) {
                       setState(() {
@@ -227,7 +227,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                 Expanded(
                   child: RadioListTile<String>(
                     title: Text(T.female.tr),
-                    value: 'Female',
+                    value: 'F',
                     groupValue: gender,
                     onChanged: (value) {
                       setState(() {

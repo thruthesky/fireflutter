@@ -293,6 +293,36 @@
       "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
+      "name": "Wemeet (Chris) TEST - iPhone 15 Pro Max (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "8B2FB5BD-4CBA-4C09-8810-BD4D3D003ECF",
+      "flutterMode": "debug",
+      "cwd": "apps/wemeet",
+      "program": "lib/main.dart",
+      "args": ["-v",]
+    },
+    {
+      "name": "Wemeet (Chris) TEST - External sm iPhone (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "00008030-000D445A11A3802E",
+      "flutterMode": "debug",
+      "cwd": "apps/wemeet",
+      "program": "lib/main.dart",
+      "args": ["-v",]
+    },
+    {
+      "name": "Wemeet (Chris) TEST - External Sam (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "R9ATA00LMJM",
+      "flutterMode": "debug",
+      "cwd": "apps/wemeet",
+      "program": "lib/main.dart",
+      "args": ["-v",]
+    },
+    {
       "name": "Wemeet (Noe) TEST - iPhone 15 Pro Max (debug)",
       "request": "launch",
       "type": "dart",
