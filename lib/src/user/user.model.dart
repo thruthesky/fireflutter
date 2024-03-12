@@ -86,7 +86,7 @@ class User {
   String gender;
 
   bool get isMale => gender == 'M';
-  bool get isFemale => gender == 'M';
+  bool get isFemale => gender == 'F';
 
   int noOfLikes;
 
