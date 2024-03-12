@@ -63,10 +63,11 @@
       },
       ".indexOn": ["gender","nationality","region", "birthYear"]
     },
-    "user-likes": {
+    "who-like-me": {
       ".read": true,
+      ".write": true
     },
-    "user-who-i-like": {
+    "who-i-like": {
       ".read": true,
       ".write": true
     },
