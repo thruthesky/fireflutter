@@ -2,6 +2,7 @@ name: fireflutter
 description: "A lightning-fast, robust CMS for seamless real-time content management in app development."
 version: 0.3.22
 homepage: https://github.com/thruthesky/fireflutter
+repository: https://github.com/thruthesky/fireflutter
 
 environment:
   sdk: ">=3.2.3 <4.0.0"
