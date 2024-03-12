@@ -5,39 +5,39 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "WeMeet - iPhone 15 Pro Max",
+      "name": "RoHa - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
       "deviceId": "iPhone 15 Pro Max",
       "flutterMode": "debug",
-      "cwd": "apps/wemeet",
+      "cwd": "apps/roha",
       "program": "lib/main.dart"
     },
     {
-      "name": "WeMeet - iPhone SE",
+      "name": "RoHa - iPhone SE",
       "request": "launch",
       "type": "dart",
       "deviceId": "iPhone SE",
       "flutterMode": "debug",
-      "cwd": "apps/wemeet",
+      "cwd": "apps/roha",
       "program": "lib/main.dart"
     },
     {
-      "name": "WeMeet - iPhone11ProMax",
+      "name": "RoHa - iPhone11ProMax",
       "request": "launch",
       "type": "dart",
       "deviceId": "iPhone11ProMax",
       "flutterMode": "debug",
-      "cwd": "apps/wemeet",
+      "cwd": "apps/roha",
       "program": "lib/main.dart"
     },
     {
-      "name": "WeMeet - Emulator",
+      "name": "RoHa - Emulator",
       "request": "launch",
       "type": "dart",
       "deviceId": "emulator-5554",
       "flutterMode": "debug",
-      "cwd": "apps/wemeet",
+      "cwd": "apps/roha",
       "program": "lib/main.dart"
     },
     {
@@ -328,7 +328,7 @@
       "type": "dart",
       "deviceId": "iPhone 15 Pro Max",
       "flutterMode": "debug",
-      "cwd": "apps/wemeet",
+      "cwd": "apps/roha",
       "program": "lib/main.dart",
       // "args": ["-v", "--dart-define", "MODE=test"]
     },
@@ -338,7 +338,7 @@
       "type": "dart",
       "deviceId": "iPhone 15 Pro",
       "flutterMode": "debug",
-      "cwd": "apps/wemeet",
+      "cwd": "apps/roha",
       "program": "lib/main.dart",
       // "args": ["-v", "--dart-define", "MODE=test"]
     },{
@@ -347,7 +347,7 @@
       "type": "dart",
       "deviceId": "emulator-5554",
       "flutterMode": "debug",
-      "cwd": "apps/wemeet",
+      "cwd": "apps/roha",
       "program": "lib/main.dart",
       // "args": ["-v", "--dart-define", "MODE=test"]
     },
@@ -357,7 +357,7 @@
       "type": "dart",
       "deviceId": "iPad Air (5th generation)",
       "flutterMode": "debug",
-      "cwd": "apps/wemeet",
+      "cwd": "apps/roha",
       "program": "lib/main.dart",
       // "args": ["-v", "--dart-define", "MODE=test"]
     },
@@ -367,7 +367,7 @@
       "type": "dart",
       "deviceId": "SM J737S",
       "flutterMode": "debug",
-      "cwd": "apps/wemeet",
+      "cwd": "apps/roha",
       "program": "lib/main.dart",
       // "args": ["-v", "--dart-define", "MODE=test"]
     },
@@ -377,7 +377,7 @@
       "type": "dart",
       "deviceId": "00008030-000D445A11A3802E",
       "flutterMode": "debug",
-      "cwd": "apps/wemeet",
+      "cwd": "apps/roha",
       "program": "lib/main.dart",
       // "args": ["-v", "--dart-define", "MODE=test"]
     },
