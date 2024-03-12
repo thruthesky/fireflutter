@@ -14,7 +14,7 @@ The user's real name or a name not displayed on the screen is stored in the `nam
 
 `isVerified` is a field that only administrators can modify. Even though it's included in the user document, users cannot modify it. Administrators manually verify identity documents and conduct video calls. Afterward, they can set `isVerified` to true.
 
-`gender` can have values of `Male` or `Female` and may be null (no field). Note that the gender information can only be trusted when `isVerified` is true. In other words, if `isVerified` is not true, the gender information may not be true.
+`gender` can have values of `M` or `F` and may be null (no field). Note that the gender information can only be trusted when `isVerified` is true. In other words, if `isVerified` is not true, the gender information may not be true.
 
 `blocks` stores a list of blocked users. Only users can perform blocking. Additionally, while users can perform actions like liking posts, comments, or chats, as well as bookmarking items such as posts, comments, etc., blocking is a one-sided action.
 

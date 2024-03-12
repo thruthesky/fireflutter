@@ -78,15 +78,15 @@ class User {
   bool isVerified;
   List<String>? blocks;
 
-  /// [gender] can be "Male" or "Female" or "".
+  /// [gender] can be "M" or "F" or "".
   ///
   /// Use [isMale] to check if the user is male.
   ///
   /// Use [isFemale] to check if the user is female.
   String gender;
 
-  bool get isMale => gender == 'Male';
-  bool get isFemale => gender == 'Female';
+  bool get isMale => gender == 'M';
+  bool get isFemale => gender == 'M';
 
   int noOfLikes;
 
