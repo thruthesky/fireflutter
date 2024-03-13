@@ -60,7 +60,15 @@ class ActionLog {
   static Future<void> userProfileView(String otherUserUid) async {
     if (myUid == null) return;
     if (ActionLogService.instance.userProfileView.ref == null) return;
-    final ref = userProfileViewRef.child(otherUserUid);
+
+    // ! FOR REVIEW: For some reason, using userProfileViewRef.child(otherUserUid) gets the old myUid
+    // For now, I am using '$path/user-profile-view/$myUid/$otherUserUid'.
+    //
+    // final ref = userProfileViewRef.child(otherUserUid);
+    final ref = FirebaseDatabase.instance
+        .ref()
+        .child('$path/user-profile-view/$myUid/$otherUserUid');
+    dog("[Check] User Profile View Ref: ${ref.path}");
     try {
       final snapshot = await ref.get();
       if (snapshot.exists) {
