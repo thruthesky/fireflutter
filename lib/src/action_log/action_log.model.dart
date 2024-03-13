@@ -17,12 +17,14 @@ class ActionLog {
       root.child(postCreatePath).child(category);
 
   ///
-  static DatabaseReference root = FirebaseDatabase.instance.ref();
-  static DatabaseReference ref = root.child(path);
-  static DatabaseReference userProfileViewRef = root.child(userProfileViewPath);
-  static DatabaseReference chatJoinRef = root.child(chatJoinPath);
-  static DatabaseReference postCreateRef = root.child(postCreatePath);
-  static DatabaseReference commentCreateRef = root.child(commentCreatePath);
+  static DatabaseReference get root => FirebaseDatabase.instance.ref();
+  static DatabaseReference get ref => root.child(path);
+  static DatabaseReference get userProfileViewRef =>
+      root.child(userProfileViewPath);
+  static DatabaseReference get chatJoinRef => root.child(chatJoinPath);
+  static DatabaseReference get postCreateRef => root.child(postCreatePath);
+  static DatabaseReference get commentCreateRef =>
+      root.child(commentCreatePath);
 
   /// Member Variables
   final String key;
@@ -61,6 +63,7 @@ class ActionLog {
     if (myUid == null) return;
     if (ActionLogService.instance.userProfileView.ref == null) return;
     final ref = userProfileViewRef.child(otherUserUid);
+    dog("[Check] User Profile View Ref: ${ref.path}");
     try {
       final snapshot = await ref.get();
       if (snapshot.exists) {

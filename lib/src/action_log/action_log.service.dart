@@ -134,6 +134,7 @@ class ActionLogService {
     if (userProfileView != null) {
       this.userProfileView = userProfileView;
       this.userProfileView.ref = ActionLog.userProfileViewRef;
+      dog("[Check] Expect to updated ref's path. The myUid is $myUid. this.userProfileView.ref path is ${this.userProfileView.ref?.path}");
     }
     if (chatJoin != null) {
       this.chatJoin = chatJoin;

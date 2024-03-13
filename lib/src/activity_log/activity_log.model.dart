@@ -13,15 +13,17 @@ class ActivityLog {
       root.child(postCreatePath).child(category);
 
   ///
-  static DatabaseReference root = FirebaseDatabase.instance.ref();
-  static DatabaseReference ref = root.child(node);
-  static DatabaseReference chatJoinRef = root.child(chatJoinPath);
-  static DatabaseReference commentCreateRef = root.child(commentCreatePath);
-  static DatabaseReference postCreateRef = root.child(postCreatePath);
-  static DatabaseReference userLikeRef = root.child(userLikePath);
+  static DatabaseReference get root => FirebaseDatabase.instance.ref();
+  static DatabaseReference get ref => root.child(node);
+  static DatabaseReference get chatJoinRef => root.child(chatJoinPath);
+  static DatabaseReference get commentCreateRef =>
+      root.child(commentCreatePath);
+  static DatabaseReference get postCreateRef => root.child(postCreatePath);
+  static DatabaseReference get userLikeRef => root.child(userLikePath);
   static DatabaseReference whoLikedMeRef(String otherUserUid) =>
       root.child('$node/$otherUserUid/who-liked-me');
-  static DatabaseReference userProfileViewRef = root.child(userProfileViewPath);
+  static DatabaseReference get userProfileViewRef =>
+      root.child(userProfileViewPath);
 
   static DatabaseReference whoViewedMeRef(String otherUserUid) =>
       root.child('$node/$otherUserUid/who-viewed-me');
