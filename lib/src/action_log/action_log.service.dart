@@ -133,14 +133,7 @@ class ActionLogService {
   }) {
     if (userProfileView != null) {
       this.userProfileView = userProfileView;
-
-      // ! FOR REVIW: For some reason, ActionLog.userProfileViewRef uses the old path.
-      // For now we can use "action-logs/user-profile-view/$myUid" for the path
-      //
-      // this.userProfileView.ref = ActionLog.userProfileViewRef;
-      this.userProfileView.ref = FirebaseDatabase.instance
-          .ref()
-          .child("action-logs/user-profile-view/$myUid");
+      this.userProfileView.ref = ActionLog.userProfileViewRef;
       dog("[Check] Expect to updated ref's path. The myUid is $myUid. this.userProfileView.ref path is ${this.userProfileView.ref?.path}");
     }
     if (chatJoin != null) {
