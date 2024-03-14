@@ -201,7 +201,9 @@ class ActionLogService {
     ]
         .where(
             (element) => false == (element.ref == null)) // ref 가 null 인 경우는 제외
-        .where((element) => element.limit > 0) // limit 이 0 인 경우 제외
+        .where((element) =>
+            element.limit >
+            0) // limit 이 0 인 경우 제외. 무조건 제한이므로, 결제한 사용자만 action 가능. 즉, 따로 action 을 count 할 필요 없음.
         .toList();
     for (final actionOption in subscriptions) {
       // listen user view

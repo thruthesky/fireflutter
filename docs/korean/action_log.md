@@ -35,7 +35,56 @@
 - 채팅방의 경우, 입장을 할 때, action 기록을 한다. 즉, 1분에 2 개로 제한하면, 1분 내에 2번째 입장은 허용한다.
 
 
-## 로직 설명 - Logics
+## 로직 설명
+
+- 로직 전체를 이해하지 못하면 코드 접근이 어려울 정도로 난이도가 약간 있습니다. 로직을 잘 이해 해야합니다.
+
+- 먼저 알아 둘 것은 action log 를 DB 에 기록하는 것 자체는 크게 어렵지 않습니다. 그냥 해당 action 이 발생할 때 마다 (중복되지 않게) DB 에 기록을 하는 것입니다.
+
+- 중요한 부분이 action 을 몇 분/시간/일 단위로 제한하는 것인데, 만약 제한을 할 필요없다면, 로직을 이해 할 필요없이 그냥 개발을 계속 진행하면 됩니다.
+
+- Action 제한을 하기 위해서 가장 먼저 해야할 일은 아래와 같이, ActionOption 으로 `ActionLogService.instance.init()` 에 설정을 하는 것입니다.
+
+```dart
+
+final customerInfo = await Purchases.getCustomerInfo();
+final active = customerInfo?.entitlements.active.containsKey(gold) == true;
+if (active) {
+  limit = 999999;
+} else if (isGoldFemaleActive) {
+ limit = 5;
+}
+ActionLogService.instance.init(
+  userProfileView: ActionLogOption(
+    limit: limit,
+    seconds: 60 * 60 * 24, // 24 시간
+    overLimit: (option) => /** 제한에 걸리면 호출되는 콜백. 알림 메시지 표시 할 것. */,
+    debug: true,
+  ),
+  chatJoin: ActionLogOption(
+    limit: limit,
+    seconds: 60 * 60 * 12, // 12 시간
+    overLimit: (option) => /** 제한에 걸리면 호출되는 콜백. 알림 메시지 표시 할 것. */,
+    debug: true,
+  ),
+);
+```
+
+위 코드는 인앱 결제를 한 사용자와 결제를 하지 않은 사용자를 나누어서 사용자 프로필 보기와 채팅방 입장을 할 때 제한을 하는 것입니다. 결제를 했으면, 무제한으로 프로필 보기와 채팅방 이용을 허락하고, 결제를 하지 않았으면, 사용자 프로필을 24시간에 5번, 채팅은 12시간에 5번으로 허용합니다.
+
+만약, 제한을 하지 않고 기록만 한다면 `limit` 값을 무제한으로 주거나, `overLimit` 에서 false 를 리턴하면 됩니다.
+
+- 위와 같이 설정을 하면, 사용자가 해당 action 을 할 때, 적절한 위치에서 제한이 걸렸는지 확인을 합니다.
+  - 예를 들면, 사용자 프로필 보기를 할 때에는 `UserService.instance.showPublicProfileScreen()`,
+  - 채팅을 할 때에는 `ChatService.instance.showChatRoom()`
+  - 글 쓸 때에는 `ForumService.instance.showPostCreateScreen()`
+  - 코멘트 쓸 때에는 `ForumService.instance.showCommentCreateScreen()`
+  에서 합니다.
+
+
+
+
+
 
 - You can set how you want it to retrict the user action with `ActionOption`.
 - Based on the `ActionOption`, when the user did an action over limit, `overLimit` callback function is called.
