@@ -189,6 +189,7 @@ class ActionLogService {
   ///
   /// 참고로, 새로 등록되는 설정만 리스너를 등록하도록 하면 좋을 것 같다.
   listenActions() {
+    print('---> ActionLogService.listenActions()');
     for (final sub in subs) {
       sub.cancel();
     }
@@ -207,7 +208,8 @@ class ActionLogService {
         .toList();
     for (final actionOption in subscriptions) {
       // listen user view
-      // print('---> ActionLogService.listenActions() - action: ${action.limit}');
+      dog('---> ActionLogService.listenActions() - action: for ${actionOption.ref?.path} limit: ${actionOption.limit}');
+
       subs.add(
         actionOption.query!.onValue.listen((event) {
           actionOption.count = 0;

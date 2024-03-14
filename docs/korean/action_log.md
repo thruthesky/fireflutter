@@ -87,6 +87,14 @@ ActionLogService.instance.init(
 
 - `ActionLogService.instance.Xxxx.isOverLimit()` 에서 제한에 걸렸지만, 이전에 본 사용자 프로필 보기나 이전에 참여한 채팅방의 경우, 계속해서 동작 할 수 있도록 flase 를 리턴합니다.
 
+
+- 만약, 프로필 보기, 채팅방 입장, 글 쓰기, 코멘트 쓰기 등의 action 에서 제한이 걸린 경우 결제를 유도하는 paywall 을 보여주거나, 제한에 걸렸다는 표시를 하기 위해서는 `ActionLogOption( overLimit: () { ... })` 에서 paywall 이나 제한이 걸렸다는 화면을 보여주어야 합니다.
+  - 혹시, 인앱결제에서 유료 멤버 전용 화면을 보여준다면 적절한 곳에서 절적하게 코딩을 하며 됩니다.
+
+
+
+
+
 ## 코드 설명
 
 다음은 사용자 별로 액션을 제한하는 예제이다.
