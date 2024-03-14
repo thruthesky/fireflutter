@@ -30,9 +30,18 @@
 
 - 이전에 본 사용자의 프로필을 다시 보기 해도, 카운트가 증가하지는 않는다.
   - 예를 들어, 24시간 동안 3 명의 프로필을 볼 수 있도록 제한을 한 경우, 100 명의 프로필도 볼 수 있다. 단, 신규 사용자(이전에 보지 않았던 사용자)의 프로필은 3 번 밖에 못 본다.
-- 다른 사용자 프로필 보기를 1분에 3회로 제한 한 경우, 3회 제한이 걸리면, 이전에 본 다른 사용자의 프로필도 모두 볼 수 없다.
+- 다른 사용자 프로필 보기를 1분에 3회로 제한 한 경우, 3회 제한이 걸리면, 이전에 본 다른 사용자의 프로필은 계속 볼 수 있지만, (이전에 보지 않았던) 새로운 프로필은 볼 수 없다.
 - 게시 글 생성의 경우, limit 에 걸리면, 글 작성 페이지로 들어가기 전에 미리 사용자에게 알려주는 것이 좋다.
 - 채팅방의 경우, 입장을 할 때, action 기록을 한다. 즉, 1분에 2 개로 제한하면, 1분 내에 2번째 입장은 허용한다.
+
+
+## 로직 설명 - Logics
+
+- You can set how you want it to retrict the user action with `ActionOption`.
+- Based on the `ActionOption`, when the user did an action over limit, `overLimit` callback function is called.
+- If you return false in `overLimit` callback function, the action will continue. You can do this if you want the user continue with the action.
+- If `overLimit` function returns null or true, then the user is blocked to do the action. In this case, you should show some warning sign to the user.
+
 
 ## 코드 설명
 
@@ -40,7 +49,7 @@
 
 - `limit` 에는 제한할 회수를 기록한다. 0 의 값을 주면 제한을 하지 않는다. 만약, 3 의 값을 주면, 해당 액션을 세 번만 허용한다.  참고로 이 값이 커지면, DB 에서 그 만큼 많은 데이터를 가져와야 하므로, 성능에 영향을 줄 수 있다. 그래서 최대 100 정도로 설정하는 것이 좋다. 보통 10 이내의 값을 주는 것을 권장한다.
 - `seconds` 에는 초 단위 기간을 적어서, 몇 초 동안 제한을 할 것인지를 설정한다. 만약, 10초 동안 3개의 액션을 허용하고 싶다면, limit 은 3, seconds 는 10 이 된다.
-- `overLimit` 은 limit 에 걸렸을 경우 추가적인 동작을 수행 할 있는 콜백함수이다. 만약, 이 함수에서 false 를 리턴하면, 해당 액션을 계속 수행해 버린다. 따라서 이 콜백함수에서는 아무 값도 리턴하지 않도록 한다.
+- `overLimit` 은 limit 에 걸렸을 경우 추가적인 동작을 수행 할 있는 콜백함수이다. 글 쓰기, 코멘트 쓰기, 채팅방 입장, 사용자 프로필 보기 등에서 적절한 위치에서 각 `ActionLogService` 의 `ActionOption` 으로 지정된, `isOverLimit()` 를 호출한다. 그리고 만약, 이 함수에서 false 를 리턴하면, 해당 액션을 계속 수행한다. 즉, limit 에 걸려도 계속 해서 작업을 수쟁하고자 한다면, 이 함수에서 false 를 리턴하도록 하면 된다. 자세한 것은 로직 설명을 참고한다.
 - `debug` 는 로그를 콘솔에 기록한다.
 
 - `ActionLogService.instance.init()` 을 통해서 제한 설정을 하는데, 이 init 함수는 여러번 호출되어도 이전에 설정을 유지한다. 즉, 처음에 init 을 할 때, 사용자 프로필 보기만 제한 했다가, 다시 앱 내의 특정 시점에서 채팅 제한 설정을 추가할 수 있다.
@@ -170,3 +179,8 @@ ActionLogService.instance.init(
   },
 );
 ```
+
+
+
+
+- chat join 로그 기록은 `chat.room_body.dart` 의 initState 에서 한다. 기록은 여기서 하지만, over limit 검사는 `chat.service.dart::showChatRoom` 에서 한다.

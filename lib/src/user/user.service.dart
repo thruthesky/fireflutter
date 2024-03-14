@@ -225,7 +225,9 @@ class UserService {
 
     /// Check if it hits limit except the user is admin or the user views his own profile.
     if (isAdmin == false && userUid != my?.uid) {
-      if (await ActionLogService.instance.userProfileView.isOverLimit()) return;
+      if (await ActionLogService.instance.userProfileView.isOverLimit(
+        uid: user?.uid ?? uid!,
+      )) return;
     }
 
     if (context.mounted) {
