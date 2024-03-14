@@ -74,7 +74,9 @@ class ChatService {
 
     /// Check if it hits limit except the user is admin
     if (isAdmin == false) {
-      if (await ActionLogService.instance.chatJoin.isOverLimit()) return;
+      if (await ActionLogService.instance.chatJoin.isOverLimit(
+        roomId: room?.id ?? roomId ?? singleChatRoomId(uid!),
+      )) return;
     }
 
     if (context.mounted) {
