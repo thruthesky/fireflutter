@@ -82,15 +82,10 @@ ActionLogService.instance.init(
   에서 합니다.
 
 
+- 위의 각 service 들에서 `ActionLogService.instance.Xxxx.isOverLimit()` 을 호출하게 되고 이 함수가 true 를 리턴하면 제한에 걸린것이며 해당 action 을 하지 않습니다. 즉, 이 함수에서 제한을 할지 말지 결정을 하며, false 를 리턴 받으면 계속해서 해당 action 을 수행하는 것입니다.
+  - 경우에 따라서, 제한에 걸렸지만, 계속 해당 액션을 수행해야 할 수도 있습니다.
 
-
-
-
-- You can set how you want it to retrict the user action with `ActionOption`.
-- Based on the `ActionOption`, when the user did an action over limit, `overLimit` callback function is called.
-- If you return false in `overLimit` callback function, the action will continue. You can do this if you want the user continue with the action.
-- If `overLimit` function returns null or true, then the user is blocked to do the action. In this case, you should show some warning sign to the user.
-
+- `ActionLogService.instance.Xxxx.isOverLimit()` 에서 제한에 걸렸지만, 이전에 본 사용자 프로필 보기나 이전에 참여한 채팅방의 경우, 계속해서 동작 할 수 있도록 flase 를 리턴합니다.
 
 ## 코드 설명
 
