@@ -206,6 +206,8 @@ class ActionLogService {
             element.limit >
             0) // limit 이 0 인 경우 제외. 무조건 제한이므로, 결제한 사용자만 action 가능. 즉, 따로 action 을 count 할 필요 없음.
         .toList();
+
+    dog('---> Actions to listen: ${subscriptions.length}');
     for (final actionOption in subscriptions) {
       // listen user view
       dog('---> ActionLogService.listenActions() - action: for ${actionOption.ref?.path} limit: ${actionOption.limit}');
