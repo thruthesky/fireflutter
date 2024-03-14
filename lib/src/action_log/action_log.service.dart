@@ -240,9 +240,9 @@ class ActionLogService {
     final overtime =
         DateTime.now().millisecondsSinceEpoch - (option.seconds * 1000);
     for (var snapshot in snapshot.children) {
-      final actoin = ActionLog.fromSnapshot(snapshot);
+      final action = ActionLog.fromSnapshot(snapshot);
       // print(" ${actoin.createdAt.toHis} > ${overtime.toHis}");
-      if (actoin.createdAt > overtime) {
+      if (action.createdAt > overtime) {
         count++;
       }
     }
