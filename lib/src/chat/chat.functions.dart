@@ -30,7 +30,8 @@ String? getOtherUserUidFromRoomId(String roomId) {
   return FirebaseAuth.instance.currentUser!.uid;
 }
 
-/// 일대일 채팅방 ID 를 만든다.
+/// Returns a chat room ID from a user's uid.
+/// 대화할 상대방의 UID 를 입력 받아, 일대일 채팅방 ID 를 만든다.
 ///
 /// 로그인 사용자의 uid 와 [otherUserUid] 를 정렬해서 합친다.
 String singleChatRoomId(String otherUserUid) {

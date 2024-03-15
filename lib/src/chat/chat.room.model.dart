@@ -115,7 +115,13 @@ class ChatRoom {
   ///   final room = ChatRoom.fromSnapshot(event.snapshot);
   /// ```
   factory ChatRoom.fromSnapshot(DataSnapshot snapshot) {
-    final json = snapshot.value as Map<dynamic, dynamic>;
+    /// From @thruthesky
+    /// Problem: "type 'Null' is not a subtype of type 'Map<dynamic, dynamic>' in type cast" happended.
+    /// It is because the snapshot.value is null.
+    /// It's coming from "_RChatMessageListState.init (package:fireflutter/src/chat/widgets/chat.message.list_view.dart:49:27)"
+    /// Why: Somehow "snapshot.value" is not null and it may read the chat-room data before it exist on entering chat room.
+    /// Fix: If it's null, make it empty map.
+    final json = (snapshot.value ?? {}) as Map<dynamic, dynamic>;
     json['key'] = snapshot.key;
     json['ref'] = snapshot.ref;
     return ChatRoom.fromJson(json);

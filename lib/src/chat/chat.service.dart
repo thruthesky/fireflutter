@@ -63,7 +63,7 @@ class ChatService {
     return room;
   }
 
-  Future showChatRoom({
+  Future showChatRoomScreen({
     required BuildContext context,
     String? uid,
     String? roomId,
@@ -74,7 +74,9 @@ class ChatService {
 
     /// Check if it hits limit except the user is admin
     if (isAdmin == false) {
-      if (await ActionLogService.instance.chatJoin.isOverLimit()) return;
+      if (await ActionLogService.instance.chatJoin.isOverLimit(
+        roomId: room?.id ?? roomId ?? singleChatRoomId(uid!),
+      )) return;
     }
 
     if (context.mounted) {
@@ -88,6 +90,21 @@ class ChatService {
         ),
       );
     }
+  }
+
+  @Deprecated('Use showChatRoomScreen instead')
+  Future showChatRoom({
+    required BuildContext context,
+    String? uid,
+    String? roomId,
+    ChatRoom? room,
+  }) async {
+    return await showChatRoomScreen(
+      context: context,
+      uid: uid,
+      roomId: roomId,
+      room: room,
+    );
   }
 
   Future<ChatRoom?> showChatRoomCreate({required BuildContext context}) async {

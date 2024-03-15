@@ -225,7 +225,9 @@ class UserService {
 
     /// Check if it hits limit except the user is admin or the user views his own profile.
     if (isAdmin == false && userUid != my?.uid) {
-      if (await ActionLogService.instance.userProfileView.isOverLimit()) return;
+      if (await ActionLogService.instance.userProfileView.isOverLimit(
+        uid: user?.uid ?? uid!,
+      )) return;
     }
 
     if (context.mounted) {
@@ -239,8 +241,7 @@ class UserService {
 
     /// Dynamic link is especially for users who are not install and not signed users.
     if (loggedIn && myUid != userUid) {
-      ActivityLog.userProfileView(userUid);
-      ActionLog.userProfileView(userUid);
+      _userProfileViewLogs(userUid);
     }
 
     /// Push notification on profile view
@@ -258,5 +259,14 @@ class UserService {
         uid: uid,
       );
     }
+  }
+
+  // Separated to track possible errors. Needed the await
+  Future<void> _userProfileViewLogs(String userUid) async {
+    final futures = [
+      ActivityLog.userProfileView(userUid),
+      ActionLog.userProfileView(userUid)
+    ];
+    await Future.wait(futures);
   }
 }
