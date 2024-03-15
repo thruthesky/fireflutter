@@ -132,6 +132,15 @@ class ActionLogOption {
   /// 제한을 5개로 한다면, 그 중 첫 번째 action 의 시간이 경과하려면 몇 초가 남았는지 계산한다.
   ///
   /// 만약, 제한에 걸린 로그가 없으면, null 을 리턴한다. 즉, 로그가 없다는 뜻이다.
+  ///
+  /// Example:
+  /// ```
+  /// final timeLeft = await ActionLogService.instance.chatJoin.getTimeLeft();
+  /// print('Time left: $timeLeft');
+  /// final dt = DateTime.now().add(Duration(seconds: timeLeft ?? 0));
+  /// print('Try again at ${DateFormat.jm().format(dt)}');
+  /// jm = DateFormat.jm().format(dt);
+  /// ```
   Future<int?> getTimeLeft() async {
     final snapshot = await query!.get();
     if (snapshot.exists) {

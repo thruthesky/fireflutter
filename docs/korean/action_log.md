@@ -244,3 +244,19 @@ ActionLogService.instance.init(
 
 
 - chat join 로그 기록은 `chat.room_body.dart` 의 initState 에서 한다. 기록은 여기서 하지만, over limit 검사는 `chat.service.dart::showChatRoom` 에서 한다.
+
+
+### 남은 시간 표시
+
+
+남은 시간은 `ActionLogService.instance.Xxxx.getTimeLeft()` 로 구 할 수 있습니다. 아래와 같이 현재 시간으로 부터 얼마 후 까지 제한되어져 있는지를 표현 할 수 있습니다.
+
+
+```dart
+    timeLeft = await ActionLogService.instance.chatJoin.getTimeLeft();
+    print('Time left: $timeLeft');
+    final dt = DateTime.now().add(Duration(seconds: timeLeft ?? 0));
+    print('Try again at ${DateFormat.jm().format(dt)}');
+    jm = DateFormat.jm().format(dt);
+```
+
