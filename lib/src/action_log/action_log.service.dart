@@ -79,7 +79,7 @@ class ActionLogOption {
       return false;
     } else {
       if (debug) {
-        logTimeleft();
+        logTimeLeft();
       }
     }
 
@@ -120,7 +120,19 @@ class ActionLogOption {
   });
 
   /// 디버깅을 위해서, 남은 시간을 로그로 남긴다.
-  logTimeleft() async {
+  logTimeLeft() async {
+    final remain = await getTimeLeft();
+    dog(
+      '제한 시간이 지나기까지 ${remain ?? 0} 초 남았다. ${ref!.path}',
+    );
+  }
+
+  /// 제한 시간이 지나기까지 몇 초가 남았는지 계산한다.
+  ///
+  /// 제한을 5개로 한다면, 그 중 첫 번째 action 의 시간이 경과하려면 몇 초가 남았는지 계산한다.
+  ///
+  /// 만약, 제한에 걸린 로그가 없으면, null 을 리턴한다. 즉, 로그가 없다는 뜻이다.
+  Future<int?> getTimeLeft() async {
     final snapshot = await query!.get();
     if (snapshot.exists) {
       final list =
@@ -130,9 +142,9 @@ class ActionLogOption {
       final first = list.first;
       final overtime = first.createdAt + seconds * 1000;
       final remain = overtime - DateTime.now().millisecondsSinceEpoch;
-      dog(
-        '제한 시간이 지나기까지 ${remain ~/ 1000} 초 남았다. ${ref!.path}',
-      );
+      return remain ~/ 1000;
+    } else {
+      return null;
     }
   }
 }

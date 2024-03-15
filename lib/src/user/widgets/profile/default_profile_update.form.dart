@@ -479,6 +479,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
             ),
           ),
         ),
+        const SizedBox(height: 32),
       ],
     );
   }
