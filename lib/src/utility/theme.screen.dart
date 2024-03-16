@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 /// Theme Screen
 ///
 /// 현재 앱의 테마 색상 및 폰트 등의 표현해서, 눈으로 쉽게 확인 할 수 있도록 한다.
+@Deprecated('Use ThemeScreen of social_kit instead')
 class ThemeScreen extends StatelessWidget {
   const ThemeScreen({super.key});
 
