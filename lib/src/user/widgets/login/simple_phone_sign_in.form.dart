@@ -41,11 +41,18 @@ import 'package:flutter/material.dart';
 /// 전화번호가 올바른지 또는 전화번호를 원하는 형태로 수정해서 반환한다. 예를 들어, 한국 전화번호와 필리핀 전화번호 두 가지만 입력
 /// 받고 싶은 경우, 한국 전화번호는 010 로 시작하고, 필리핀 전화번호는 09로 시작한다. 그래서 전화번호의 처음 숫자를 보고
 /// +82 또는 +63을 붙여 완전한 국제 전화번호로 리턴하면 된다.
+/// 만약, 이 함수가 null 을 리턴하면, 에러가 있는 것으로 판단하여 동작을 멈춘다.
 ///
 /// [onSignin] 로그인이 성공하면 호출되는 콜백. 홈 화면으로 이동하거나 기타 작업을 할 수 있다.
 ///
 /// 로그인이 성성하면 이 위젯은 UserService.instance.login() 을 호출한다. 그리고 처음 로그인이면, 이 함수에서
 /// /users/<uid> 를 생성한다.
+///
+/// [headline] 상단에 표시할 헤드라인 위젯. 이 값이 null 이면 기본 텍스트가 표시된다. 기본 텍스트는 다국어 번역이 지원이 된다.
+///
+/// [label] 전화번호 입력 박스 위에 표시될 레이블
+///
+/// [description] 전화번호 입력 박스 아래에 표시될 설명
 class SimplePhoneSignInForm extends StatefulWidget {
   const SimplePhoneSignInForm({
     super.key,
@@ -58,6 +65,16 @@ class SimplePhoneSignInForm extends StatefulWidget {
     this.onCompleteNumber,
     required this.onSignin,
     this.languageCode = 'ko',
+    this.headline,
+    this.label,
+    this.description,
+    this.submitLabel,
+    this.prefix,
+    this.hintText,
+    this.smsPhoneLabel,
+    this.smsDescription,
+    this.smsSubmitLabel,
+    this.smsRetry,
   });
 
   final bool emailLogin;
@@ -66,9 +83,19 @@ class SimplePhoneSignInForm extends StatefulWidget {
   final String? reviewPhoneNumber;
   final String? reviewRealPhoneNumber;
   final String? reviewRealSmsCode;
-  final String Function(String)? onCompleteNumber;
+  final String? Function(String)? onCompleteNumber;
   final void Function() onSignin;
   final String languageCode;
+  final Widget? headline;
+  final Widget? label;
+  final Widget? description;
+  final Widget? submitLabel;
+  final Widget? prefix;
+  final String? hintText;
+  final Widget? smsPhoneLabel;
+  final Widget? smsDescription;
+  final Widget? smsSubmitLabel;
+  final Widget? smsRetry;
 
   @override
   State<SimplePhoneSignInForm> createState() => _SimplePhoneSignInState();
@@ -84,7 +111,8 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
   bool progressVerifyPhoneNumber = false;
   bool smsCodeProgress = false;
 
-  String get completeNumber {
+  /// 전화번호 입력이 완료되면, 이 함수를 호출해서 전화번호를 완전한 국제 전화번호로 만든다.
+  String? get completeNumber {
     String number = phoneNumberController.text.trim();
     number = number.replaceAll(RegExp(r'[^\+0-9]'), '');
     number = number.replaceFirst(RegExp(r'^0'), '');
@@ -94,7 +122,11 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
         number == widget.reviewRealPhoneNumber) {
       return number;
     }
-    return widget.onCompleteNumber?.call(number) ?? number;
+    if (widget.onCompleteNumber != null) {
+      return widget.onCompleteNumber!.call(number);
+    } else {
+      return number;
+    }
   }
 
   bool get isRealReviewSmsCode {
@@ -109,24 +141,26 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          T.phoneSignInHeaderTitle.tr,
-          style: Theme.of(context).textTheme.labelMedium,
-        ),
-        const SizedBox(height: 32),
+        widget.headline ??
+            Text(
+              T.phoneSignInHeaderTitle.tr,
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
+        const SizedBox(height: 64),
         // 전화번호를 입력하고, SMS 코드 전송하고, 코드 입력하는 UI 를 보여주는가?
         showSmsCodeInput
             // 그렇다면 전화번호 입력 UI 대신, 전화번호만 보여준다.
             ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(
-                  "phone",
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                ),
+                widget.smsPhoneLabel ??
+                    Text(
+                      "phone".tr,
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                    ),
                 const SizedBox(height: 8),
                 Text(
-                  completeNumber,
+                  completeNumber ?? '',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ])
@@ -134,40 +168,44 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    T.phoneNumber.tr,
-                    style: Theme.of(context).textTheme.labelMedium,
-                  ),
+                  widget.label ??
+                      Text(
+                        T.phoneNumber.tr,
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
                   const SizedBox(height: 8),
                   TextField(
                     controller: phoneNumberController,
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
+                      prefix: widget.prefix,
                       isDense: true,
                       // contentPadding: EdgeInsets.symmetric(vertical: 24, horizontal: 24),
                       border: const OutlineInputBorder(),
-                      hintText: T.phoneNumberInputHint.tr,
+                      hintText: widget.hintText ?? T.phoneNumberInputHint.tr,
                       hintStyle: TextStyle(
-                        fontSize: 24,
+                        fontSize: 32,
                         fontWeight: FontWeight.w400,
                         color: Theme.of(context).colorScheme.outline.tone(72),
                       ),
                     ),
-                    style: const TextStyle(fontSize: 24),
+                    style: const TextStyle(fontSize: 32),
                     autofocus: true,
                     onChanged: (value) => setState(() {}),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    T.phoneNumberInputDescription.tr,
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                  ),
+                  widget.description ??
+                      Text(
+                        T.phoneNumberInputDescription.tr,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                      ),
                 ],
               ),
         if (showSmsCodeInput == false) const SizedBox(height: 32),
-        if (showSmsCodeInput == false)
+        if (showSmsCodeInput == false &&
+            phoneNumberController.text.trim().isNotEmpty)
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -177,7 +215,9 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                     ? null
                     : () async {
                         // 전화번호에 @ 이 포함되어 있으면, 이메일과 비밀번호로 로그인을 한다.
-                        if (widget.emailLogin &&
+                        if (completeNumber == null) {
+                          return;
+                        } else if (widget.emailLogin &&
                             phoneNumberController.text.contains('@')) {
                           return doEmailLogin();
                         } else if (completeNumber == widget.reviewPhoneNumber) {
@@ -249,23 +289,25 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                           strokeWidth: 3,
                         ),
                       )
-                    : Text(
-                        T.phoneSignInGetVerificationCode.tr,
-                      ),
+                    : (widget.submitLabel ??
+                        Text(
+                          T.phoneSignInGetVerificationCode.tr,
+                        )),
               ),
             ],
           ),
         if (showSmsCodeInput) ...[
           const SizedBox(height: 32),
-          Text(T.phoneSignInInputSmsCode.tr,
-              style: Theme.of(context).textTheme.labelMedium),
+          widget.smsDescription ??
+              Text(T.phoneSignInInputSmsCode.tr,
+                  style: Theme.of(context).textTheme.labelMedium),
           const SizedBox(height: 8),
           TextField(
             controller: smsCodeController,
             decoration: const InputDecoration(border: OutlineInputBorder()),
             keyboardType: TextInputType.number,
             autofocus: true,
-            style: const TextStyle(fontSize: 24),
+            style: const TextStyle(fontSize: 32),
           ),
           const SizedBox(height: 16),
           Row(
@@ -275,9 +317,10 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                   showSmsCodeInput = false;
                   smsCodeController.text = '';
                 }),
-                child: Text(
-                  T.phoneSignInRetry.tr,
-                ),
+                child: widget.smsRetry ??
+                    Text(
+                      T.phoneSignInRetry.tr,
+                    ),
               ),
               const Spacer(),
               // display a button for SMS code verification.
@@ -314,7 +357,8 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                 },
                 child: smsCodeProgress
                     ? const CircularProgressIndicator.adaptive()
-                    : Text(T.phoneSignInVerifySmsCode.tr),
+                    : (widget.smsSubmitLabel ??
+                        Text(T.phoneSignInVerifySmsCode.tr)),
               ),
             ],
           ),
