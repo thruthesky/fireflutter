@@ -58,6 +58,7 @@ class SimplePhoneSignInForm extends StatefulWidget {
     this.onCompleteNumber,
     required this.onSignin,
     this.languageCode = 'ko',
+    this.headerTitleTextAlign,
   });
 
   final bool emailLogin;
@@ -69,6 +70,7 @@ class SimplePhoneSignInForm extends StatefulWidget {
   final String Function(String)? onCompleteNumber;
   final void Function() onSignin;
   final String languageCode;
+  final TextAlign? headerTitleTextAlign;
 
   @override
   State<SimplePhoneSignInForm> createState() => _SimplePhoneSignInState();
@@ -112,6 +114,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
         Text(
           T.phoneSignInHeaderTitle.tr,
           style: Theme.of(context).textTheme.labelMedium,
+          textAlign: widget.headerTitleTextAlign,
         ),
         const SizedBox(height: 32),
         // 전화번호를 입력하고, SMS 코드 전송하고, 코드 입력하는 UI 를 보여주는가?
