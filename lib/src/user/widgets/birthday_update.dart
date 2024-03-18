@@ -25,6 +25,8 @@ class _BirthdayUpdateState extends State<BirthdayUpdate> {
       return TextWithLabel(
         label: widget.label, // '생년월일',
         description: widget.description,
+        backgroundColor: Colors.grey.shade300,
+        iconBackgroundColor: Colors.grey,
         text: my.birthYear == 0
             ? T.birthdateTapToSelect.tr // '탭하셔서 생년월일을 선택해주세요.'
             : T.birthdate.tr

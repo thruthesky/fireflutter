@@ -215,11 +215,12 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                     ? null
                     : () async {
                         // 전화번호에 @ 이 포함되어 있으면, 이메일과 비밀번호로 로그인을 한다.
-                        if (completeNumber == null) {
-                          return;
-                        } else if (widget.emailLogin &&
+
+                        if (widget.emailLogin &&
                             phoneNumberController.text.contains('@')) {
                           return doEmailLogin();
+                        } else if (completeNumber == null) {
+                          return;
                         } else if (completeNumber == widget.reviewPhoneNumber) {
                           // 리뷰 전화번호. 리뷰 이메일 계정으로 로그인.
                           return doReviewPhoneNumberLogin();
@@ -391,6 +392,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
         email: email,
         password: password,
         photoUrl: '',
+        displayName: '',
       );
       signinSuccess();
     } finally {

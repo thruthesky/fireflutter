@@ -50,7 +50,7 @@ class UserService {
   Function(User)? onUpdate;
 
   UserService._() {
-    dog('--> UserService._()');
+    // dog('--> UserService._()');
   }
 
   init({
@@ -62,7 +62,7 @@ class UserService {
     Function(User user)? onCreate,
     Function(User user)? onUpdate,
   }) {
-    dog('--> UserService.init()');
+    // dog('--> UserService.init()');
     initUser();
     listenUser();
 
@@ -81,6 +81,8 @@ class UserService {
   }
 
   /// 사용자 정보 초기화
+  ///
+  /// UserService.instance.init() 에 의해서 호출 됨.
   ///
   /// 회원 가입을 하지 않았거나, 최초 로그인인 경우, 문서가 존재하지 않을 수 있는데, 그와 같은 경우 새로운 문서를 생성한다.
   /// createdAt 이 없는 경우, createdAt  를 추가한다.
@@ -118,9 +120,9 @@ class UserService {
 
   /// 주의, 이 함수의 callback 안에서, 회원 정보를 업데이트 해서는 안된다. 그러면 무한 재귀호출에 빠질 수 있다.
   listenUser() {
-    dog('--> UserService.listenUser() for login user: $myUid');
+    // dog('--> UserService.listenUser() for login user: $myUid');
     fb.FirebaseAuth.instance.authStateChanges().listen((user) async {
-      dog('--> UserService.listenUser() fb.FirebaseAuth.instance.authStateChanges()');
+      // dog('--> UserService.listenUser() fb.FirebaseAuth.instance.authStateChanges()');
       if (user == null) {
         this.user = null;
         return;
@@ -128,7 +130,7 @@ class UserService {
       userNodeSubscription?.cancel();
       userNodeSubscription =
           userRef.child(user.uid).onValue.listen((event) async {
-        dog('--> UserService.listenUser() userRef.child(user.uid).onValue.listen()');
+        // dog('--> UserService.listenUser() userRef.child(user.uid).onValue.listen()');
         if (event.snapshot.exists == false || event.snapshot.value == null) {
           return;
         }

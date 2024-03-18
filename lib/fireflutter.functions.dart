@@ -394,6 +394,15 @@ String sanitizeFilename(String input, {String replacement = ''}) {
 ///
 /// Creates a user account if it's not existing.
 ///
+/// [email] is the email of the user.
+///
+/// [password] is the password of the user.
+///
+/// [photoUrl] is the photo url of the user. If it's null, then it will be the default photo url.
+///
+/// [displayName] is the display name of the user. If it's null, then it will be the same as the email.
+/// You can put empty string if you want to save it an empty stirng.
+///
 /// Logic:
 /// Try to login with email and password.
 ///    -> If it's successful, return the user.
@@ -418,6 +427,7 @@ Future<({fb.User user, bool register})> loginOrRegister({
   required String email,
   required String password,
   String? photoUrl,
+  String? displayName,
 }) async {
   fb.UserCredential? cred;
   try {
@@ -439,7 +449,7 @@ Future<({fb.User user, bool register})> loginOrRegister({
     if (userModel == null) {
       final model = User.fromUid(user.uid);
       await model.update(
-        displayName: email.split('@').first,
+        displayName: displayName ?? email.split('@').first,
         photoUrl: photoUrl,
       );
     }

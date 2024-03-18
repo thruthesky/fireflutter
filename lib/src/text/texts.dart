@@ -7,6 +7,7 @@ class T {
   static const String ok = 'OK';
   static const String save = 'Save';
   static const String cancel = 'Cancel';
+  static const String close = 'Close';
   static const String error = 'Error';
   static const String name = 'Name';
   static const String inputName = 'Please enter your name.';
@@ -43,6 +44,8 @@ class T {
   static const String report = 'Report';
   static const String leave = 'Leave';
   static const String stateMessage = 'State Message';
+  static const String stateMessageInProfileUpdate = 'STATE MESSAGE';
+  static const String hintInputStateMessage = 'Please input your state message';
   static const String stateMessageDescription = 'State Message Description';
 
   static const String blockConfirmTitle = 'Block this user?';
@@ -71,9 +74,17 @@ class T {
   static const String birthdateSelectDescription = 'birthdateSelectDescription';
   static const String birthdateTapToSelect = 'Tap to select';
   static const String birthdate = 'birthdate';
+  static const String selectBirthDate = 'Select Birth';
+
+  static const String yearInBirthdatePicker = 'Year';
+  static const String monthInBirthdatePicker = 'Month';
+  static const String dayInBirthdatePicker = 'Day';
+  static const String descriptionInBirthdatePicker =
+      'Please select your birthdate.';
 
   // profile update labels and error messages
   static const String gender = 'Gender';
+  static const String genderInProfileUpdate = 'GENDER';
   static const String male = 'Male';
   static const String female = 'Female';
   static const String nationality = 'Nationality';
@@ -101,6 +112,7 @@ class T {
 
   static const String occupation = 'occupation';
   static const String occupationInputDescription = 'occupationInputDescription';
+  static const String hintInputOccupation = 'Please input your occupation';
 
   /// Block
   static const String blocked = 'Blocked';

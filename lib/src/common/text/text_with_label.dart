@@ -7,12 +7,16 @@ class TextWithLabel extends StatelessWidget {
     required this.text,
     this.description,
     required this.onTap,
+    this.iconBackgroundColor,
+    this.backgroundColor,
   });
 
   final String? label;
   final String text;
   final String? description;
   final Function() onTap;
+  final Color? iconBackgroundColor;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +38,8 @@ class TextWithLabel extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer,
+              color: backgroundColor ??
+                  Theme.of(context).colorScheme.primaryContainer,
               borderRadius: BorderRadius.circular(22),
             ),
             child: Row(
@@ -49,7 +54,8 @@ class TextWithLabel extends StatelessWidget {
                 ),
                 Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary.withAlpha(60),
+                    color: iconBackgroundColor ??
+                        Theme.of(context).colorScheme.primary.withAlpha(60),
                     borderRadius: BorderRadius.circular(13),
                   ),
                   child: Padding(
