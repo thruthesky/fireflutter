@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+@Deprecated('Use the themeLight of social_kit')
 ThemeData defaultLightTheme({required BuildContext context}) {
   final colorScheme = ColorScheme.fromSeed(seedColor: Colors.blue);
   return ThemeData(

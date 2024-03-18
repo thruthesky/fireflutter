@@ -36,7 +36,8 @@ class TextService {
     T.login: 'Login',
     T.next: 'Next',
     T.prev: 'Prev',
-    T.back: 'Back'
+    T.back: 'Back',
+    T.selectBirthDate: 'Select Birth',
   };
 
   TextService._() {

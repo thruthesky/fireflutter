@@ -122,6 +122,9 @@ extension FireFlutterStringExtension on String {
   }
 }
 
+/// 문자열이 null 이거나 빈 문자열인지 확인하는 확장 함수
+///
+/// String? 을 extends 에서 null 인지 아닌지를 검사한다.
 extension FireFlutterNullableStringExtension on String? {
   bool get isNullOrEmpty => this == null || this!.isEmpty;
 }

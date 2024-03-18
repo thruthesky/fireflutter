@@ -24,10 +24,10 @@ class ChatMessageListView extends StatefulWidget {
   final Widget Function(BuildContext)? emptyBuilder;
 
   @override
-  State<ChatMessageListView> createState() => _RChatMessageListState();
+  State<ChatMessageListView> createState() => _ChatMessageListViewState();
 }
 
-class _RChatMessageListState extends State<ChatMessageListView> {
+class _ChatMessageListViewState extends State<ChatMessageListView> {
   Widget? listView;
 
   String get roomId => widget.chat.room.id;

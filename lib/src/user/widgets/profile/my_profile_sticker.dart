@@ -23,7 +23,7 @@ class MyProfileSticker extends StatelessWidget {
               Avatar(
                 photoUrl: my.photoUrl.orAnonymousUrl,
                 size: 64,
-                radius: 24,
+                radius: 26,
               ),
               SizedBox(width: spacing),
               Expanded(

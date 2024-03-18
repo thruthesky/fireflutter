@@ -194,15 +194,16 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
         ),
         if (widget.gender?.display == true) ...{
           const SizedBox(height: 32),
-          Text(T.gender.tr),
+          Text(T.genderInProfileUpdate.tr,
+              style: Theme.of(context).textTheme.labelSmall),
           const SizedBox(height: 4),
           Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color: Theme.of(context).colorScheme.secondary.withAlpha(128),
-                width: 1,
+                color: Theme.of(context).colorScheme.secondary,
+                width: 2,
               ),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(24),
             ),
             padding: const EdgeInsets.only(
               right: 8,
@@ -287,28 +288,14 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
             ),
           ),
         },
-        if (widget.region?.display == true) ...{
-          const SizedBox(height: 24),
-          Text(T.region.tr),
-          // init value
-          KoreanSiGunGuSelector(
-              languageCode: widget.koreanAreaLanguageCode,
-              initSiDoCode: siDo?.code,
-              initSiGunGuCode: siGunGu?.code,
-              onChangedSiDoCode: (siDo) {
-                this.siDo = siDo;
-              },
-              onChangedSiGunGuCode: (siDo, siGunGu) {
-                this.siGunGu = siGunGu;
-                dog('siGunGu $siDo , $siGunGu');
-                setState(() {});
-              }),
-        },
         if (widget.occupation?.display == true) ...{
           const SizedBox(height: 32),
           Text(T.occupation.tr),
           TextField(
             controller: occupationController,
+            decoration: InputDecoration(
+              hintText: T.hintInputOccupation.tr,
+            ),
           ),
         },
         if (widget.morePhotos?.display == true) ...{
@@ -412,14 +399,31 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
         },
         if (widget.stateMessage?.display == true) ...{
           const SizedBox(height: 32),
+          Text(T.stateMessageInProfileUpdate.tr,
+              style: Theme.of(context).textTheme.labelSmall),
           TextField(
             controller: stateMessageController,
-            minLines: 5,
-            maxLines: 5,
             decoration: InputDecoration(
-              labelText: T.stateMessage.tr,
+              hintText: T.hintInputStateMessage.tr,
             ),
           ),
+        },
+        if (widget.region?.display == true) ...{
+          const SizedBox(height: 24),
+          Text(T.region.tr),
+          // init value
+          KoreanSiGunGuSelector(
+              languageCode: widget.koreanAreaLanguageCode,
+              initSiDoCode: siDo?.code,
+              initSiGunGuCode: siGunGu?.code,
+              onChangedSiDoCode: (siDo) {
+                this.siDo = siDo;
+              },
+              onChangedSiGunGuCode: (siDo, siGunGu) {
+                this.siGunGu = siGunGu;
+                dog('siGunGu $siDo , $siGunGu');
+                setState(() {});
+              }),
         },
         const SizedBox(height: 24),
         Center(

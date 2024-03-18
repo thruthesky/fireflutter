@@ -9,7 +9,7 @@ class ChatService {
   static ChatService get instance => _instance ??= ChatService._();
 
   ChatService._() {
-    dog('--> ChatService._()');
+    // dog('--> ChatService._()');
   }
 
   /// Firebase Realtime Database Chat Functions
@@ -44,7 +44,7 @@ class ChatService {
     Function(ChatModel)? testBeforeSendMessage,
     Function(ChatMessage)? onMessageSent,
   }) {
-    dog('--> ChatService.init()');
+    // dog('--> ChatService.init()');
     this.customize = customize ?? this.customize;
     this.testBeforeSendMessage = testBeforeSendMessage;
     this.onMessageSent = onMessageSent;

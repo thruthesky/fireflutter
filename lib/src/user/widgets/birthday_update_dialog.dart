@@ -46,7 +46,7 @@ class _BirthdayPickerState extends State<BirthdayPickerDialog> {
     return InputDecorator(
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
-        contentPadding: EdgeInsets.zero,
+        contentPadding: EdgeInsets.only(right: 8),
         isDense: true,
       ),
       child: DropdownButtonHideUnderline(child: child),
@@ -60,7 +60,10 @@ class _BirthdayPickerState extends State<BirthdayPickerDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: 32),
-          const Text('생년/월/일을 선택해주세요.'),
+          Text(
+            T.selectBirthDate.tr,
+            style: Theme.of(context).textTheme.labelSmall,
+          ),
           const SizedBox(height: 24),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -69,7 +72,10 @@ class _BirthdayPickerState extends State<BirthdayPickerDialog> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('년'),
+                    Text(
+                      T.yearInBirthdatePicker.tr,
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
                     decorate(
                       DropdownButton<int>(
                         value: birthYear,
@@ -89,7 +95,10 @@ class _BirthdayPickerState extends State<BirthdayPickerDialog> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('월'),
+                    Text(
+                      T.monthInBirthdatePicker.tr,
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
                     decorate(
                       DropdownButton<int>(
                         value: birthMonth,
@@ -97,7 +106,9 @@ class _BirthdayPickerState extends State<BirthdayPickerDialog> {
                         items: [
                           for (int i = 1; i <= 12; i++)
                             DropdownMenuItem(
-                                value: i, child: birthdayMenuItem(i)),
+                              value: i,
+                              child: birthdayMenuItem(i),
+                            ),
                         ],
                         onChanged: (v) => setState(() => birthMonth = v!),
                       ),
@@ -110,7 +121,10 @@ class _BirthdayPickerState extends State<BirthdayPickerDialog> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('일'),
+                    Text(
+                      T.dayInBirthdatePicker.tr,
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
                     decorate(
                       DropdownButton<int>(
                         value: birthDay,
@@ -127,6 +141,11 @@ class _BirthdayPickerState extends State<BirthdayPickerDialog> {
               ),
             ],
           ),
+          const SizedBox(height: 8),
+          Text(
+            T.descriptionInBirthdatePicker.tr,
+            style: Theme.of(context).textTheme.labelSmall,
+          ),
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed: () async {
@@ -139,10 +158,9 @@ class _BirthdayPickerState extends State<BirthdayPickerDialog> {
                 Navigator.pop(context);
               }
             },
-            child: const Text("저장"),
+            child: Text(T.save.tr),
           ),
-          const SizedBox(height: 32),
-          const Text('본인 인증에 사용되므로, 올바른 정보를 입력해주세요.'),
+          const SizedBox(height: 24),
         ],
       ),
     );
@@ -151,7 +169,7 @@ class _BirthdayPickerState extends State<BirthdayPickerDialog> {
   birthdayMenuItem(int i) => DropdownMenuItem(
         value: i,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.only(left: 16),
           child: Text('$i'),
         ),
       );

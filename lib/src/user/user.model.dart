@@ -349,13 +349,18 @@ class User {
 
   /// 사용자 정보 node 전체를 User 에 담아 리턴한다.
   static Future<User?> get(String uid) async {
-    final nodeData = await ff.get<Map<dynamic, dynamic>>('users/$uid');
-    if (nodeData == null) {
-      return null;
-    }
+    try {
+      final nodeData = await ff.get<Map<dynamic, dynamic>>('users/$uid');
+      if (nodeData == null) {
+        return null;
+      }
 
-    nodeData['uid'] = uid;
-    return User.fromJson(nodeData);
+      nodeData['uid'] = uid;
+      return User.fromJson(nodeData);
+    } catch (e) {
+      print('---> User.get($uid) error: $e');
+      rethrow;
+    }
   }
 
   /// 입력된 전화번호 문자열을 바탕으로 사용자 정보(문서, 값)를 찾아 사용자 모델로 리턴한다.
