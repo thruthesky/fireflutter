@@ -83,7 +83,7 @@ UserService.instance.init(
 위 코드는 사용자가 프로필 수정 버튼을 누르면 `ProfileUpdateScreen` 위젯을 화면에 보여주도록 하는 것이다. 이 `ProfileUpdateScreen` 위젯은 직접 만드는 것으로 원하는 모든 것을 작업하면 된다. 가능하면 `DefaultProfileUpdateScreen` 파일을 복사해서 수정할 것을 권한다. 그리고 모든 회원 정보 양식을 직접 만들어도 되지만, 가능하면 `DefaultProfileUpdateForm` 을 `ProfileUpdateScreen` 안에서 사용하고, 헤더 디자인 등 필요한 디자인만 추가할 것을 권한다.
 
 
-참고로, 회원 정보 수정 페이지는 반드시 `UserService.instance.showProfileUpdateScreen(context);` 을 통해서 열어야 한다. 그렇지 않고 직접 route 연결을 통해서 열면, 앱 내의 여러 곳에서 회원 정보 수정 페이지를 여는 버튼을 두어야 하는 경우가 있는데 이 같은 경우, `profileUpdateForm` 이나 `profileUpdateScreen` 등에서 혼동이 생길 수 있다.
+참고로, 회원 정보 수정 페이지는 반드시 `UserService.instance.showProfileUpdateScreen(context: context);` 을 통해서 열어야 한다. 그렇지 않고 직접 route 연결을 통해서 열면, 앱 내의 여러 곳에서 회원 정보 수정 페이지를 여는 버튼을 두어야 하는 경우가 있는데 이 같은 경우, `profileUpdateForm` 이나 `profileUpdateScreen` 등에서 혼동이 생길 수 있다.
 
 
 

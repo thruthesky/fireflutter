@@ -42,8 +42,8 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                     Icons.settings_outlined,
                     color: Colors.white,
                   ),
-                  onPressed: () =>
-                      UserService.instance.showProfileUpdateScreen(context),
+                  onPressed: () => UserService.instance
+                      .showProfileUpdateScreen(context: context),
                 ),
               const SizedBox(width: 8),
             ],
