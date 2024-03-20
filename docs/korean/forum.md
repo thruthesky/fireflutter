@@ -115,3 +115,29 @@ IconButton(
   ),
 ),
 ```
+
+
+
+## 최근 글 가져오기
+
+
+최근 글을 가져오려면 `PostLatestListView` 를 사용할 수 있으며, 필요에 따라서 소스 코드를 복사하여 적절히 수정해서 사용하면 됩니다.
+
+
+아래의 예제는 `PostTitle` 위젯을 통해 제목만 출력한다.
+
+```dart
+PostLatestListView(
+    category: 'qna',
+    limit: 5,
+    itemBuilder: (post) => PostTitle(post: post)),
+```
+
+아래는 `PostListTile` 위젯을 통해 목록에 적당한 UI 로 글 정보를 출력한다.
+
+```dart
+PostLatestListView(
+    category: 'qna',
+    limit: 5,
+    itemBuilder: (post) => PostListTile(post: post)),
+```
