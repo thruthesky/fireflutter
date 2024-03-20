@@ -37,6 +37,7 @@ class ChatBubble extends StatelessWidget {
             UserAvatar(
               key: ValueKey(message.key),
               uid: message.uid!,
+              cacheId: message.uid,
               size: 30,
               radius: 12,
               onTap: () => UserService.instance
@@ -88,10 +89,14 @@ class ChatBubble extends StatelessWidget {
           if (message.url != null) cachedImage(context, message.url!),
 
           const SizedBox(width: 8),
-          // my avtar
+
+          /// Login user's avatar (my avtar)
+          ///
           if (message.mine)
             UserAvatar(
               uid: myUid!,
+              initialData: my?.photoUrl,
+              sync: true,
               size: 30,
               radius: 12,
               onTap: () => UserService.instance
