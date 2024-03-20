@@ -1,9 +1,15 @@
+## 0.3.24
+
+* Update. Document.
+* Fix. Chat room flickering.
+* Add. Forum widgets.
+
+
 ## 0.3.23
 
 * Update. Document.
 * Add. ActionLogOption `getTimeLeft`
 * Fix. Null value error on entering chat room.
-* Fix. Chat room flickering.
 * Refactoring. Chat feature.
 
 
