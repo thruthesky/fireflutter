@@ -1,4 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
+import 'package:intl/intl.dart';
 
 extension FireFlutterStringExtension on String {
   /// 문자를 정수로 변환
@@ -124,6 +125,24 @@ extension FireFlutterStringExtension on String {
   /// 예) 2021-01-01 -> 01-01
   String get md {
     return '${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}';
+  }
+
+  /// Returns in the format of "HH:mm:ss" from dateTime
+  String get his {
+    return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}';
+  }
+
+  /// 문자열을 DateTime 으로 변경한 다음,
+  /// - 오늘 날짜이면, HH:MM AM 로 리턴하고
+  /// - 오늘 날짜가 아니면, YYYY-MM-DD 형태로 리턴한다.
+  String get shortDateTime {
+    final dt = dateTime;
+    final now = DateTime.now();
+    if (dt.year == now.year && dt.month == now.month && dt.day == now.day) {
+      return DateFormat.jm().format(dt);
+    } else {
+      return DateFormat('yy.MM.dd').format(dt);
+    }
   }
 }
 
