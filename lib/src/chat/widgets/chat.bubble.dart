@@ -42,7 +42,6 @@ class ChatBubble extends StatelessWidget {
           if (message.other)
             UserAvatar(
               // key: ValueKey(message.key),
-              key: ValueKey("other_${message.key}"),
               uid: message.uid!,
               size: 30,
               radius: 12,
