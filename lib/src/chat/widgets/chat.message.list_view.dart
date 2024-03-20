@@ -66,7 +66,7 @@ class _ChatMessageListViewState extends State<ChatMessageListView> {
         if (snapshot.isFetching) {
           // FirebaseDatabaseQueryBuilder 는 snapshot.isFetching 을 맨 처음 로딩할 때 딱 한번만 true 로 지정한다.
           // 단, 처음 로딩 할 때, FirestoreDatabaseQueryBuilder 가 여러번 번 호출 되어, snapshot.isFetching 로 여러번 true 로 지정된다.
-          dog('snapshot.isFetching: ${snapshot.isFetching}');
+          dog('ChatMessageListView -> FirebaseDatabaseQueryBuilder -> snapshot.isFetching: ${snapshot.isFetching}');
 
           // 맨 처음 로딩을 할 때, loader 표시
           if (listView == null) {
@@ -119,10 +119,12 @@ class _ChatMessageListViewState extends State<ChatMessageListView> {
 
               /// 채팅방의 맨 마지막 메시지의 order 를 지정.
               chat.resetMessageOrder(order: message.order);
-
+              return Text('shaking....?? oo ,,${message.text}');
               return ChatBubble(
                 message: message,
-                onChange: () => setState(() {}),
+                onChange: () => setState(() {
+                  print('onChange');
+                }),
               );
             },
           );

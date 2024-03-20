@@ -177,7 +177,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
                                 : Row(
                                     children: [
                                       Avatar(
-                                        photoUrl: v,
+                                        photoUrl: (v as String).orAnonymousUrl,
                                         size: 40,
                                         radius: 18,
                                       ),
