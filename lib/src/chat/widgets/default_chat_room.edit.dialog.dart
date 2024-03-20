@@ -92,23 +92,24 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
             ),
             const SizedBox(height: 16),
 
-            Value(
-              // path: "${ChatRoom.node}/${widget.roomId}/${Field.iconUrl}",
-              ref: ChatRoom.iconUrlRef(widget.roomId!),
-              builder: (url) {
-                return url == null
-                    ? const SizedBox()
-                    : ClipRRect(
-                        borderRadius: BorderRadius.circular(40),
-                        child: CachedNetworkImage(
-                          imageUrl: url,
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
-                      );
-              },
-            ),
+            if (isEdit)
+              Value(
+                // path: "${ChatRoom.node}/${widget.roomId}/${Field.iconUrl}",
+                ref: ChatRoom.iconUrlRef(widget.roomId!),
+                builder: (url) {
+                  return url == null
+                      ? const SizedBox()
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(40),
+                          child: CachedNetworkImage(
+                            imageUrl: url,
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                },
+              ),
 
             // 채팅방 아이콘 업로드는 - 채팅방이 먼저 존재해야, 아이콘 URL 을 쉽게 저장 할 수 있다.
             if (isEdit)

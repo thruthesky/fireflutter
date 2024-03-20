@@ -115,7 +115,7 @@ join()을 호출하면 /chat-rooms/all/users에 {[uid]: true}가 생성됩니다
 
 그리고 화면에 ChatMessageListView 위젯이 표시되면, `ChatMessageListView::initState() -> ChatModel::resetNewMessage()`에서 RTDB `chat-joins/all`에 `{order: 0}`가 내부적으로 저장됩니다.
 
-그러나 더 간편하게 채팅방을 만들고 싶다면, 미리 제공된 ChatService.instance.showChatRoomCreate() 함수를 사용할 수 있습니다. 디자인을 사용자 정의하려면 DefaultChatRoomEditDialog을 복사하고 수정할 수 있습니다.
+그러나 더 간편하게 채팅방을 만들고 싶다면, 미리 제공된 `ChatService.instance.showChatRoomCreate()` 함수를 사용할 수 있습니다. 디자인을 사용자 정의하려면 DefaultChatRoomEditDialog을 복사하고 수정할 수 있습니다.
 
 ### Viewing Chat Room
 

@@ -153,7 +153,8 @@ class Post {
     );
   }
 
-  @Deprecated('summary is now updated automatically by cloud functoion')
+  @Deprecated(
+      'summary is now updated automatically by cloud functoion. Do not use this method.')
   Map<String, dynamic> toSummary() => {
         Field.content: content.upTo(128),
         'createdAt': createdAt.millisecondsSinceEpoch,
@@ -374,5 +375,30 @@ class Post {
       builder: builder,
       onLoading: onLoading,
     );
+  }
+
+  /// /post-summary 에서 가장 최근 글 몇개를 가져온다.
+  ///
+  ///
+  static Future<List<Post>> latestSummary({
+    required String category,
+    int limit = 5,
+  }) async {
+    final snapshot = await postSummariesRef
+        .child(category)
+        .orderByChild(Field.order)
+        .limitToLast(limit)
+        .get();
+
+    return (snapshot.exists == false || snapshot.value == null)
+        ? []
+        : Map.from(snapshot.value as Map)
+            .entries
+            .map((e) => Post.fromJson(
+                  e.value,
+                  id: e.key,
+                  category: category,
+                ))
+            .toList();
   }
 }
