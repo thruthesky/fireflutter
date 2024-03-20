@@ -33,9 +33,16 @@ class ChatBubble extends StatelessWidget {
             dateAndName(context: context, uid: myUid!),
           ],
           // other avtar
+          // Upon rigorous testing and checking,
+          // the flicker happens because of the
+          // key. When key changes, the Future
+          // builders' behavior is to rebuild
+          // from scratch.
+          // Need to check
           if (message.other)
             UserAvatar(
-              key: ValueKey(message.key),
+              // key: ValueKey(message.key),
+              key: ValueKey("other_${message.key}"),
               uid: message.uid!,
               size: 30,
               radius: 12,
@@ -89,19 +96,44 @@ class ChatBubble extends StatelessWidget {
 
           const SizedBox(width: 8),
           // my avtar
-          if (message.mine)
-            UserAvatar(
-              uid: myUid!,
-              size: 30,
-              radius: 12,
+          // if (message.mine)
+          //   UserAvatar(
+          //     key: ValueKey("me_${message.key}"),
+          //     uid: myUid!,
+          //     size: 30,
+          //     radius: 12,
+          //     onTap: () => UserService.instance
+          //         .showPublicProfileScreen(
+          //           context: context,
+          //           uid: myUid!,
+          //         )
+          //         .then((value) => onChange?.call()),
+          //   ),
+          // TODO delete. this is test only
+          if (message.mine) ...[
+            // No need to use future things here
+            GestureDetector(
               onTap: () => UserService.instance
                   .showPublicProfileScreen(
                     context: context,
                     uid: myUid!,
                   )
                   .then((value) => onChange?.call()),
-            ),
-
+              behavior: HitTestBehavior.opaque,
+              child: SizedBox(
+                height: 30,
+                width: 30,
+                child: Avatar(
+                  key: ValueKey("me_${my?.photoUrl}"),
+                  photoUrl: (my?.photoUrl == null || my?.photoUrl == "")
+                      ? anonymousUrl
+                      : my!.photoUrl,
+                  size: 30,
+                  radius: 12,
+                ),
+              ),
+            )
+          ],
           if (!message.mine) ...[
             dateAndName(context: context, uid: message.uid!),
             const Spacer(),

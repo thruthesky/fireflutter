@@ -95,6 +95,11 @@ class UserDoc extends StatelessWidget {
     return FutureBuilder(
       future: get('users/$uid/$field'),
       builder: (_, snapshot) {
+        if (snapshot.hasData) {
+          dog("[User Doc] This is a rebuild");
+          return builder(snapshot.data);
+        }
+        dog("[User Doc] Began to build from zero");
         if (snapshot.connectionState == ConnectionState.waiting) {
           if (initialData != null) {
             return builder(initialData);
