@@ -114,6 +114,10 @@ extension FireFlutterStringExtension on String {
     return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}';
   }
 
+  String get YmdHm {
+    return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+  }
+
   /// 문자열을 DateTime 으로 변경한 다음, MM-DD 형태로 리턴한다.
   /// 만약, 문자열의 값이 시간 형식이 아니라서 파싱이 안되면, 현재 시간을 기준으로 날짜 값을 리턴한다.
   /// 예) 2021-01-01 -> 01-01
