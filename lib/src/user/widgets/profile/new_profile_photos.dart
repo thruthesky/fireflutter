@@ -4,7 +4,14 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class NewProfilePhotos extends StatelessWidget {
-  const NewProfilePhotos({super.key});
+  const NewProfilePhotos({
+    super.key,
+    this.avatarSize = 48,
+    this.avatarRadius = 20,
+  });
+
+  final double avatarSize;
+  final double avatarRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +62,8 @@ class NewProfilePhotos extends StatelessWidget {
                     children: [
                       Avatar(
                         photoUrl: profile[Field.photoUrl] ?? '',
+                        size: avatarSize,
+                        radius: avatarRadius,
                       ),
                       const SizedBox(width: 4),
                       Text(

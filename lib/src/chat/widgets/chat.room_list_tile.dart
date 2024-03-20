@@ -64,7 +64,8 @@ class ChatRoomListTile extends StatelessWidget {
       onTap: () {
         dog('room.id: ${room.id}');
         dog('room.id: ${room.key}');
-        ChatService.instance.showChatRoom(context: context, roomId: room.id);
+        ChatService.instance
+            .showChatRoomScreen(context: context, roomId: room.id);
         // context.push(AllRoomScreen.routeName, extra: {'roomId': room.id});
       },
       trailing: Column(
