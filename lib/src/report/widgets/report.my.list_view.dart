@@ -129,7 +129,8 @@ class ReportMyListView extends StatelessWidget {
                     // path: ChatRoom.chatRoomName(report.chatRoomId),
                     ref: ChatRoom.nameRef(report.chatRoomId!),
                     builder: (v) {
-                      return Text(v);
+                      // no name is null on chat-rooms/chatid/name
+                      return Text(v ?? '');
                     }),
                 Text(' ${report.createdAt.toShortDate}'),
               ],
@@ -146,6 +147,7 @@ class ReportMyListView extends StatelessWidget {
               ],
             ),
             trailing: IconButton(
+                key: Key('reportUser${report.otherUserUid}'),
                 onPressed: () async {
                   final re = await confirm(
                       context: context,

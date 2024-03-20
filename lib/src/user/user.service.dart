@@ -180,17 +180,17 @@ class UserService {
   }
 
   /// User log out
-  logout() {
-    fb.FirebaseAuth.instance.signOut();
+  Future<void> logout() {
+    return fb.FirebaseAuth.instance.signOut();
   }
 
   /// Alias of logout()
-  signOut() {
-    fb.FirebaseAuth.instance.signOut();
+  Future<void> signOut() {
+    return fb.FirebaseAuth.instance.signOut();
   }
 
   /// 로그인한 사용자의 프로필 수정 페이지를 보여준다.
-  Future showProfileUpdateScreen(BuildContext context) {
+  Future showProfileUpdateScreen({required BuildContext context}) {
     return showGeneralDialog(
       context: context,
       pageBuilder: ($, $$, $$$) =>

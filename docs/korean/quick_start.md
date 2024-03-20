@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Text('UID: $uid'),
                 ElevatedButton(
                   onPressed: () =>
-                      UserService.instance.showProfileUpdateScreen(context),
+                      UserService.instance.showProfileUpdateScreen(context: context),
                   child: const Text('Profile'),
                 )
               ],
