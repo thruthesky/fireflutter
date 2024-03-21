@@ -77,7 +77,8 @@ export const userMirror = onValueWritten(
             // noOfLikes 는 자주 업데이트 되므로, firestore /users 를 목록 할 때, FirestoreListView 등에서 flickering 이 발생한다.
             // 그래서, noOfLikes 필드는 삭제한다.
             delete userData.noOfLikes;
-            return await firestore.collection(Config.users).doc(userUid).update({ ...userData });
+            const searchDisplayName = userData.displayName.trim().toLowerCase().replace(/\s+/g, "");
+            return await firestore.collection(Config.users).doc(userUid).update({ ...userData, searchDisplayName: searchDisplayName });
         }
         if (!event.data.after.exists()) {
             // deleted
@@ -85,7 +86,8 @@ export const userMirror = onValueWritten(
         }
         // created
         const data = event.data.after.val();
-        return await firestore.collection(Config.users).doc(userUid).set({ ...data });
+        const searchDisplayName = data.displayName.trim().toLowerCase().replace(/\s+/g, "");
+        return await firestore.collection(Config.users).doc(userUid).set({ ...data, searchDisplayName: searchDisplayName });
     }
 );
 

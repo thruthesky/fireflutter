@@ -58,6 +58,10 @@ import 'package:flutter/material.dart';
 /// [label] 전화번호 입력 박스 위에 표시될 레이블
 ///
 /// [description] 전화번호 입력 박스 아래에 표시될 설명
+///
+/// [phoneNumberTextStyle] use phoneNumberTextStyle to change the text style of phone number text field
+///
+/// [smsTextStyle] use smsTextStyle to change the text style of sms code text field
 class SimplePhoneSignInForm extends StatefulWidget {
   const SimplePhoneSignInForm({
     super.key,
@@ -81,6 +85,8 @@ class SimplePhoneSignInForm extends StatefulWidget {
     this.smsSubmitLabel,
     this.smsRetry,
     this.phoneNumberDisplayBuilder,
+    this.phoneNumberTextStyle,
+    this.smsTextStyle,
   });
 
   final bool emailLogin;
@@ -103,7 +109,8 @@ class SimplePhoneSignInForm extends StatefulWidget {
   final Widget? smsSubmitLabel;
   final Widget? smsRetry;
   final String? Function(String?)? phoneNumberDisplayBuilder;
-
+  final TextStyle? phoneNumberTextStyle;
+  final TextStyle? smsTextStyle;
   @override
   State<SimplePhoneSignInForm> createState() => _SimplePhoneSignInState();
 }
@@ -184,6 +191,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                       ),
                   const SizedBox(height: 8),
                   TextField(
+                    focusNode: FocusNode(),
                     key: const Key('phoneNumberField'),
                     controller: phoneNumberController,
                     keyboardType: TextInputType.phone,
@@ -193,13 +201,14 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                       // contentPadding: EdgeInsets.symmetric(vertical: 24, horizontal: 24),
                       border: const OutlineInputBorder(),
                       hintText: widget.hintText ?? T.phoneNumberInputHint.tr,
-                      hintStyle: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w400,
-                        color: Theme.of(context).colorScheme.outline.tone(72),
-                      ),
+                      // hintStyle: TextStyle(
+                      //   fontSize: 32,
+                      //   fontWeight: FontWeight.w400,
+                      //   color: Theme.of(context).colorScheme.outline.tone(72),
+                      // ),
                     ),
-                    style: const TextStyle(fontSize: 32),
+                    style: widget.phoneNumberTextStyle ??
+                        const TextStyle(fontSize: 32),
                     autofocus: true,
                     onChanged: (value) => setState(() {}),
                   ),
@@ -320,7 +329,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
             decoration: const InputDecoration(border: OutlineInputBorder()),
             keyboardType: TextInputType.number,
             autofocus: true,
-            style: const TextStyle(fontSize: 32),
+            style: widget.smsTextStyle ?? const TextStyle(fontSize: 32),
           ),
           const SizedBox(height: 16),
           Row(
