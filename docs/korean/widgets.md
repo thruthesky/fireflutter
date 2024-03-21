@@ -102,10 +102,10 @@ UserDoc.field(
   );
 ```
 
-/// UserDoc( ... )
-/// UserDoc.sync(uid: user.uid, field: 'displayName', builder: (data, $) => Text(data)),
-/// UserDoc.field( ... )
-/// UserDoc.fieldSync( ...)
+UserDoc( ... )
+UserDoc.sync(uid: user.uid, field: 'displayName', builder: (data, $) => Text(data)),
+UserDoc.field( ... )
+UserDoc.fieldSync( ...)
 
 ## 사용자 이름 표시
 
@@ -334,50 +334,108 @@ SizedBox(
 ```
 
 
-## SimplePhoneSignIn
+## SimplePhoneSignInForm
+
+FireFlutter 는 Firebase Auth 의 Phone Sign-in 을 지원하는 전화 번호로 로그인 할 수 있는 간단한 UI 를 제공합니다. 참고로, 이 위젯은 편리한 테스트를 위해서 이메일 로그인도 지원합니다.
 
 
-전화 번호를 할 수 있는 UI 를 제공한다. 테스트를 위해서 이메일 로그인을 지원한다.
+- 이 위젯은 (현재까지는) 국가 전화 코드 선택을 지원하지 않습니다. 따라서 국가 코드 선택이 필요한 경우, 이 위젯의 코드를 복사해서 수정해서 사용하면 됩니다.
 
+- 리뷰 또는 테스트를 위해서 [emailLogin], [reviewEmail], [reviewPassword], [reviewPhoneNumber], [reviewRealPhoneNumber], [reviewRealSmsCode] 와 같은 값을 사용 할 수 있습니다. 만약 리뷰나 테스트 용 로그인이 아니면, 이 값들은 필요없으므로 옵션 지정 할 필요가 없습니다.
+
+- [emailLogin] 이메일 로그인을 할 수 있게 해 줍니다. 이 값이 true 로 지정되고, 전화번호에 @ 이 포함되어 있으면, 이메일과 비밀번호로 로그인을 합니다. 이메일과 비밀번호는 `:` 로 분리해서 입력하면 됩니다. 예를 들어, `my@email.com:4321Pw` 와 같이 하면, 메일 주소는 my@email.com 이고, 비밀번호는 4321Pw 가 됩니다.
+
+- [reviewEmail] Review 용 임시 이메일. 이 옵션에 메일 주소를 "abcdefg@review.com" 와 같이 지정해 놓고, 사용자가 입력 창에 이 메일 주소를 입력하면 리뷰 계정으로 로그인을 합니다. 물론, 메일 계정은 이미 Firebase Auth 에 생성되어져 있어야 합니다.
+
+- [reviewPhoneNumber] 나 [reviewRealPhoneNumber] 를 입력하면, 이 이메일 계정으로 로그인합니다.
+
+- [reviewPassword] 는 [reviewEmail] 과 함께 사용되는 리뷰용 임시 비밀번호. [emailLogin] 이 true 인 경우, "[reviewEmail]:[reviewPassword]" 와 같이 입력하면, 리뷰 계정으로 로그인합니다.
+
+- [reviewPhoneNumber] Review 용 임시 전화번호. 이 값을 전화번호로 입력하면, 리뷰 계정으로 자동 로그인. 예를 들어, 이 값이 '01012345678' 으로 지정되고, 사용자가 이 값을 입력하면, 곧 바로 리뷰 [reviewEmail] 계정으로 로그인합니다. SMS 코드를 입력 할 필요 없이, 바로 로그인합니다.
+
+- [reviewRealPhoneNumber] 테스트 전화번호. 이 값을 전화번호로 입력하면, 테스트 SMS 코드를 입력하게 합니다. 예를 들어, 이 값이 '01012345678' 으로 지정되고, 사용자가 이 값을 입력하면, 테스트 SMS 코드를 입력하게 합니다.
+
+- [reviewRealSmsCode] 리뷰 할 때 사용하는 SMS 코드. [reviewRealPhoneNumber] 를 입력 한 다음, 이 값을 SMS 코드로 입력하면, [reviewEmail] 계정으로 자동 로그인. 즉, [reviewRealPhoneNumber] 을 입력하고, [reviewRealSmsCode] 를 입력하면, 테스트 계정으로 로그인하빈다. 이것은 애플 리뷰에서 리뷰 계정 로그인을 할 때, 로그인 전체 과정을 다 보여달라고 하는 경우, 이 [reviewRealPhoneNumber] 와
+[reviewRealSmsCode] 를 알려주면 됩니다.
+
+- [onCompleteNumber] 전화번호 입력을 하고, 전송 버튼을 누르면 이 콜백을 호출합니다. 이 콜백은 전화번호를 받아서,
+전화번호가 올바른지 또는 전화번호를 원하는 형태로 수정해서 반환하면 됩니다. 예를 들어, 한국 전화번호와 필리핀 전화번호 두 가지만 입력
+받고 싶은 경우, 한국 전화번호는 010 로 시작하고, 필리핀 전화번호는 09로 시작한다. 그래서 전화번호의 처음 숫자를 보고
++82 또는 +63을 붙여 완전한 국제 전화번호로 리턴하면 됩니다. 만약, 이 함수가 null 을 리턴하면, 에러가 있는 것으로 판단하여 동작을 멈춥니다.
+
+- [phoneNumberDisplayBuilder] 는 전화번호 입력을 완료하고, SMS 코드를 입력하는 화면에서, 전화번호를 어떻게 표시할지
+결정하는 함수입니다. 이 함수는 일반적으로 국제 전화 번호 포멧의 문자열 값을 받아서, 사용자에게 보기 쉽게 적절히 수정해서 리턴하는 역할을 합니다.
+예를 들어, 사용자가 입력한 전화번호(또는 국제 전화번호)가 +821012345678 이면, 이 국제 전화번호 문자열을 받아서, 사용자가 보기/읽기 쉽게 010-1234-5678 로 리턴하면 화면에 010-1234-5678 이 표시됩니다. 이 함수가 null 이면, 전화번호를 그대로 표시합니다.
+
+- [onSignin] 로그인이 성공하면 호출되는 콜백. 사용자가 로그인을 했으므로, 홈 화면으로 이동하거나 기타 작업을 할 수 있습니다. 참고로, 로그인이 성성하면 이 위젯은 UserService.instance.login() 을 호출합니다. 그리고 처음 로그인이면, 이 함수에서 /users/<uid> 를 생성를 생성합니다.
+
+- [headline] 상단에 표시할 헤드라인 위젯. 이 값이 null 이면 기본 텍스트가 표시된다. 기본 텍스트는 다국어 번역이 지원이 됩니다.
+
+- [label] 전화번호 입력 박스 위에 표시될 레이블
+
+- [description] 전화번호 입력 박스 아래에 표시될 설명
 
 ```dart
-SimplePhoneSignIn(
+SimplePhoneSignInForm(
   emailLogin: true,
-  reviewEmail: "review@email.com",
-  reviewPassword: "12345a",
-  reviewPhoneNumber: '86934225',
-  reviewRealPhoneNumber: '+11234123123',
+  prefix: const Text('010 '),
+  reviewPhoneNumber: '12345678',
+  reviewRealPhoneNumber:
+      '+821011112222', // 화면에는 010-1111-2222 로 입력 하면 됨.
   reviewRealSmsCode: '123456',
-  onCompleteNumber: (value) {
-    String number = value.trim();
+  onCompleteNumber: (phoneNumber) {
+    String number = phoneNumber.trim();
     number = number.replaceAll(RegExp(r'[^\+0-9]'), '');
     number = number.replaceFirst(RegExp(r'^0'), '');
     number = number.replaceAll(' ', '');
+    number = number.replaceAll('-', '');
+    number = number.replaceAll('(', '');
+    number = number.replaceAll(')', '');
 
-    if (number.startsWith('10')) {
-      return '+82$number';
-    } else if (number.startsWith('9')) {
-      return '+63$number';
-    } else
-    // 테스트 전화번호
-    if (number.startsWith('+1')) {
-      return number;
-    } else if (number == Config.reviewPhoneNumber) {
+    if (number.length == 8) {
+      return "+8210$number";
+    } else if (number == '12345678') {
+      // 리뷰 전화번호
       return number;
     } else {
       error(
         context: context,
-        title: '에러',
-        message:
-            '에러\n한국 전화번호 또는 필리핀 전화번호를 입력하세요.\n예) 010 1234 5678 또는 0917 1234 5678',
+        title: '전화번호 입력 오류',
+        message: '전화번호를 올바로 입력하세요.',
       );
-      throw '전화번호가 잘못되었습니다. 숫자만 입력하세요.';
+    }
+    return null;
+  },
+  onSignin: () => signinSuccess(context),
+  languageCode: 'ko',
+  headline:
+      Text(' 간편하게 전화번호 로그인을 합니다.', style: context.bodySmall),
+  label: Text('  전화번호', style: context.labelSmall),
+  hintText: '',
+  description: Text(
+    '  전화번호를 입력하시면 인증 요청 버튼을 나타납니다.',
+    style: context.labelSmall,
+  ),
+  phoneNumberDisplayBuilder: (n) {
+    if (n?.contains('+8210') == true) {
+      n = n?.replaceFirst('+8210', '');
+      n = '010-${n?.substring(0, 4)}-${n?.substring(4, 8)}';
+      return n;
+    } else {
+      return n;
     }
   },
-  onSignin: () {
-    context.pop();
-    context.go(HomeScreen.routeName);
-  },
+  submitLabel: const Text('     인증 요청     '),
+
+  smsPhoneLabel: Text('  전화번호', style: context.labelSmall),
+  smsDescription:
+      Text('  인증번호를 입력하세요.', style: context.labelSmall),
+  smsSubmitLabel: const Text('   인증번호 전송   '),
+  smsRetry: Text(
+    '다시하기',
+    style: context.labelLarge
+        .copyWith(color: context.colorScheme.secondary),
+  ),
 ),
 ```
 

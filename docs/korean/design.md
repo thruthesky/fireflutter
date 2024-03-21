@@ -51,3 +51,39 @@ ElevatedButton(
   child: const Text("Color theme"),
 )
 ```
+
+
+## 사진 업로드 팝업창 UI 디자인 변경
+
+
+![RoundCarouseEntry](https://github.com/thruthesky/social_kit/blob/main/images/default_upload_selected_bottom_sheet_1.jpg?raw=true)
+
+
+
+```dart
+StorageService.instance.init(
+  customize: StorageCustomize(
+    uploadSelectionBottomsheetBuilder: ({
+      required BuildContext context,
+      required bool camera,
+      required bool gallery,
+    }) {
+      return Theme(
+        data: Theme.of(context).copyWith(
+          listTileTheme: Theme.of(context).listTileTheme.copyWith(
+                dense: false,
+                visualDensity: VisualDensity.standard,
+                titleTextStyle: context.titleMedium,
+              ),
+        ),
+        child: DefaultUploadSelectionBottomSheet(
+          camera: camera,
+          gallery: gallery,
+          padding: const EdgeInsets.all(24),
+          spacing: 16,
+        ),
+      );
+    },
+  ),
+);
+```

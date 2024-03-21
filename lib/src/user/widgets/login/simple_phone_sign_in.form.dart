@@ -43,6 +43,11 @@ import 'package:flutter/material.dart';
 /// +82 또는 +63을 붙여 완전한 국제 전화번호로 리턴하면 된다.
 /// 만약, 이 함수가 null 을 리턴하면, 에러가 있는 것으로 판단하여 동작을 멈춘다.
 ///
+/// [phoneNumberDisplayBuilder] 는 전화번호 입력을 완료하고, SMS 코드를 입력하는 화면에서, 전화번호를 어떻게 표시할지
+/// 결정하는 함수이다. 이 함수는 전화번호를 받아서, 표시할 전화번호를 리턴하면 된다.
+/// 예를 들어, 사용자가 입력한 전화번호(또는 국제 전화번호)가 +821012345678 이면, 이 것을 010-1234-5678 로 리턴하면
+/// 화면에 010-1234-5678 이 표시된다. 이 함수가 null 이면, 전화번호를 그대로 표시한다.
+///
 /// [onSignin] 로그인이 성공하면 호출되는 콜백. 홈 화면으로 이동하거나 기타 작업을 할 수 있다.
 ///
 /// 로그인이 성성하면 이 위젯은 UserService.instance.login() 을 호출한다. 그리고 처음 로그인이면, 이 함수에서
@@ -75,6 +80,7 @@ class SimplePhoneSignInForm extends StatefulWidget {
     this.smsDescription,
     this.smsSubmitLabel,
     this.smsRetry,
+    this.phoneNumberDisplayBuilder,
   });
 
   final bool emailLogin;
@@ -96,6 +102,7 @@ class SimplePhoneSignInForm extends StatefulWidget {
   final Widget? smsDescription;
   final Widget? smsSubmitLabel;
   final Widget? smsRetry;
+  final String? Function(String?)? phoneNumberDisplayBuilder;
 
   @override
   State<SimplePhoneSignInForm> createState() => _SimplePhoneSignInState();
@@ -160,8 +167,10 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                     ),
                 const SizedBox(height: 8),
                 Text(
-                  completeNumber ?? '',
-                  style: Theme.of(context).textTheme.titleLarge,
+                  (widget.phoneNumberDisplayBuilder?.call(completeNumber) ??
+                          completeNumber) ??
+                      "",
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ])
             // 전화번호 입력을 다 안했으면, SMS 코드 전송을 안했으면, 전화번호 입력 UI를 보여준다.

@@ -94,6 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 `SimpleEmailPasswordLoginForm` 대신 `SimplePhoneSignInForm` 을 사용해서, 구글 전화 로그인을 할 수 있습니다.
 
+`SimplePhoneSignInForm` 에 대한 자세한 설명은 [widget 문서](./widgets.md)를 참고해 주세요.
 
 
 
