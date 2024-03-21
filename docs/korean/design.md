@@ -56,7 +56,8 @@ ElevatedButton(
 ## 사진 업로드 팝업창 UI 디자인 변경
 
 
-아래의 사진은 
+아래에서 왼쪽은 테마 디자인을 하지 않은 것이다.
+
 
 ![DefaultUploadSelectedBottomSheet](https://github.com/thruthesky/fireflutter/blob/main/docs/assets/images/default_upload_selected_bottom_sheet_1.jpg?raw=true)
 
