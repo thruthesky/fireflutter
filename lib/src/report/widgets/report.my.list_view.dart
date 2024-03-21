@@ -130,7 +130,10 @@ class ReportMyListView extends StatelessWidget {
                     ref: ChatRoom.nameRef(report.chatRoomId!),
                     builder: (v) {
                       // no name is null on chat-rooms/chatid/name
-                      return Text(v ?? '');
+                      // Explanation: Name is null because chat room can be a single
+                      //              Chat Room, which doesn't usually have Chat
+                      //              Room Name.
+                      return Text(v ?? 'No Chat Room Name');
                     }),
                 Text(' ${report.createdAt.toShortDate}'),
               ],
