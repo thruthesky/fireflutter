@@ -30,6 +30,7 @@ class ChatRoomListTile extends StatelessWidget {
           Expanded(
             child: Text(
               room.name ?? '',
+              style: Theme.of(context).textTheme.titleMedium,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

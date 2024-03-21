@@ -114,10 +114,29 @@ class StorageService {
 
   /// 이미지 업로드 소스(갤러리 또는 카메라) 선택창을 보여주고, 선택된 소스를 반환한다.
   ///
-  Future<ImageSource?> chooseUploadSource(BuildContext context) async {
+  /// [camera] 는 카메라를 선택할 수 있게 할지 여부이다.
+  /// [gallery] 는 갤러리를 선택할 수 있게 할지 여부이다.
+  ///
+  /// 사용자에게 사진/파일 업로드를 요청한다.
+  ///
+  /// 커스텀 디자인은 [customize] 에서 할 수 있다.
+  Future<ImageSource?> chooseUploadSource({
+    required BuildContext context,
+    bool camera = true,
+    bool gallery = true,
+  }) async {
     return await showModalBottomSheet(
       context: context,
-      builder: (_) => const DefaultUploadSelectionBottomSheet(),
+      builder: (_) =>
+          customize.uploadSelectionBottomsheetBuilder?.call(
+            context: context,
+            camera: camera,
+            gallery: gallery,
+          ) ??
+          DefaultUploadSelectionBottomSheet(
+            camera: camera,
+            gallery: gallery,
+          ),
     );
   }
 
@@ -153,7 +172,11 @@ class StorageService {
     bool gallery = true,
   }) async {
     return uploadFrom(
-      source: await chooseUploadSource(context),
+      source: await chooseUploadSource(
+        context: context,
+        camera: true,
+        gallery: true,
+      ),
       progress: progress,
       complete: complete,
       compressQuality: compressQuality,

@@ -109,12 +109,15 @@ class _ChatMessageListViewState extends State<ChatMessageListView> {
               /// 채팅방의 맨 마지막 메시지의 order 를 지정.
               chat.resetMessageOrder(order: message.order);
 
-              return ChatBubble(
-                message: message,
-                onChange: () => setState(() {
-                  print('onChange');
-                }),
-              );
+              return ChatService.instance.customize.chatBubbleBuilder?.call(
+                    context: context,
+                    message: message,
+                    onChange: () => setState(() {}),
+                  ) ??
+                  ChatBubble(
+                    message: message,
+                    onChange: () => setState(() {}),
+                  );
             },
           );
         }
