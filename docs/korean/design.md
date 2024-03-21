@@ -56,12 +56,12 @@ ElevatedButton(
 ## 사진 업로드 팝업창 UI 디자인 변경
 
 
-아래에서 왼쪽은 테마 디자인을 하지 않은 것이다.
+아래에서 왼쪽 사진은 테마 디자인 및 커스텀 디자인 설정을 하지 않은 것입니다. 경우에 따라서는 기본 UI 를 그대로 써도 되지만, 오른쪽 사진과 같이 약간 변화를 주고 싶은 경우가 있습니다.
+
+![DefaultUploadSelectedBottomSheet](https://github.com/thruthesky/fireflutter/blob/main/docs/assets/images/default_upload_selected_bottom_sheet_2.jpg?raw=true)
 
 
-![DefaultUploadSelectedBottomSheet](https://github.com/thruthesky/fireflutter/blob/main/docs/assets/images/default_upload_selected_bottom_sheet_1.jpg?raw=true)
-
-
+예제 - 커스텀 디자인을 하는 예제
 
 
 ```dart
@@ -90,4 +90,60 @@ StorageService.instance.init(
     },
   ),
 );
+```
+
+원한다면 `DefaultUploadSelectionBottomSheet` 소스 코드를 복사해서 모든 것을 변경해도 됩니다.
+
+
+
+
+## 디자인 작업 편리하게 하기
+
+UI 커스터마이징 작업을 할 때, 코드를 약간 수정하면 곧 바로 화면에 적용되어 눈으로 볼 수 있어야 하는데 그렇지 못한 경우가 발생합니다. 이와 같은 경우, 작업을 편리하기 위해서 테스트 코드를 initState 등에 기록하여, 화면 reload 를 통해서, 빠르게 디자인 변경 사항을 확인을 할 수 있습니다.
+
+```dart
+@override
+void initState() {
+  super.initState();
+  SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+    Timer(const Duration(milliseconds: 100), () {
+      StorageService.instance.chooseUploadSource(context: context);
+    });
+  });
+}
+```
+
+또는 `build` 함수에 코드를 임시로 집어 넣고, UI 디자인 작업이 끝나면 적당한 위치로 옮기셔도 됩니다.
+
+
+
+## 채팅 메시지 버블 디자인
+
+
+```dart
+ChatService.instance.init(
+  customize: ChatCustomize(
+    chatBubbleBuilder: ({
+      required context,
+      required message,
+      required onChange,
+    }) =>
+        Theme(
+      data: Theme.of(context).copyWith(
+        textTheme: Theme.of(context).textTheme.copyWith(
+              bodyMedium:
+                  Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontSize: 14,
+                      ),
+            ),
+      ),
+      child: Text(
+        message.text ?? '',
+        style: context.titleLarge,
+      ),
+
+    ),
+  ),
+);
+});
 ```
