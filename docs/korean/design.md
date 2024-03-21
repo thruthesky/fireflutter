@@ -56,7 +56,10 @@ ElevatedButton(
 ## 사진 업로드 팝업창 UI 디자인 변경
 
 
-![RoundCarouseEntry](https://github.com/thruthesky/social_kit/blob/main/images/default_upload_selected_bottom_sheet_1.jpg?raw=true)
+아래의 사진은 
+
+![DefaultUploadSelectedBottomSheet](https://github.com/thruthesky/fireflutter/blob/main/docs/assets/images/default_upload_selected_bottom_sheet_1.jpg?raw=true)
+
 
 
 
