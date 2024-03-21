@@ -79,7 +79,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   ),
 
                   TextButton(
-                    onPressed: () => ChatService.instance.showChatRoom(
+                    onPressed: () => ChatService.instance.showChatRoomScreen(
                       context: context,
                       uid: post.uid,
                     ),

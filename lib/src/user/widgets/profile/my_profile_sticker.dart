@@ -5,9 +5,11 @@ class MyProfileSticker extends StatelessWidget {
   const MyProfileSticker({
     super.key,
     this.spacing = 16.0,
+    this.defaultStateMessage = '',
   });
 
   final double spacing;
+  final String defaultStateMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +38,8 @@ class MyProfileSticker extends StatelessWidget {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     Text(
-                      my.stateMessage,
-                      style: Theme.of(context).textTheme.labelSmall,
+                      my.stateMessage.or(defaultStateMessage),
+                      style: Theme.of(context).textTheme.labelMedium,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

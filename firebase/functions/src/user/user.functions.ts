@@ -34,7 +34,7 @@ export const phoneNumberRegister = onRequest(async (request, response) => {
  * User likes
  */
 export const userLike = onValueWritten(
-    `${Config.userWhoILike}/{myUid}/{targetUid}`,
+    `${Config.whoILike}/{myUid}/{targetUid}`,
     async (event): Promise<void> => {
         const db = getDatabase();
         const myUid = event.params.myUid;
@@ -42,11 +42,11 @@ export const userLike = onValueWritten(
 
         // created or updated
         if (event.data.after.exists()) {
-            await db.ref(`${Config.userLikes}/${targetUid}`).update({ [myUid]: true });
+            await db.ref(`${Config.whoLikeMe}/${targetUid}`).update({ [myUid]: true });
             await db.ref(`users/${targetUid}`).update({ noOfLikes: ServerValue.increment(1) });
         } else {
             // deleted
-            await db.ref(`${Config.userLikes}/${targetUid}/${myUid}`).remove();
+            await db.ref(`${Config.whoLikeMe}/${targetUid}/${myUid}`).remove();
             await db.ref(`users/${targetUid}`).update({ noOfLikes: ServerValue.increment(-1) });
         }
 
@@ -62,7 +62,6 @@ export const userLike = onValueWritten(
 
 /**
  * User CRUD
- * 
  * Mirror the user data to Firestore
  */
 export const userMirror = onValueWritten(

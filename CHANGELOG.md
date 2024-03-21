@@ -3,6 +3,7 @@
 * Update. Document.
 * Add. ActionLogOption `getTimeLeft`
 * Fix. Null value error on entering chat room.
+* Fix. Chat room flickering.
 * Refactoring. Chat feature.
 
 

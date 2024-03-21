@@ -28,8 +28,6 @@ class ChatMessageListView extends StatefulWidget {
 }
 
 class _ChatMessageListViewState extends State<ChatMessageListView> {
-  Widget? listView;
-
   String get roomId => widget.chat.room.id;
   ChatModel get chat => widget.chat;
 
@@ -66,18 +64,9 @@ class _ChatMessageListViewState extends State<ChatMessageListView> {
         if (snapshot.isFetching) {
           // FirebaseDatabaseQueryBuilder 는 snapshot.isFetching 을 맨 처음 로딩할 때 딱 한번만 true 로 지정한다.
           // 단, 처음 로딩 할 때, FirestoreDatabaseQueryBuilder 가 여러번 번 호출 되어, snapshot.isFetching 로 여러번 true 로 지정된다.
-          dog('snapshot.isFetching: ${snapshot.isFetching}');
+          dog('ChatMessageListView -> FirebaseDatabaseQueryBuilder -> snapshot.isFetching: ${snapshot.isFetching}');
 
-          // 맨 처음 로딩을 할 때, loader 표시
-          if (listView == null) {
-            dog('listView is null');
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            dog('첫번째 로딩이 이미 완료되어, 기존에 그린 위젯을 그대로 사용.');
-            // 만약, 이전에 (첫번째 100개 메시지를 보여주는 ListView) 위젯을 화면에 표시 했으면, 그 위젯을 다시 표시한다.
-            // 즉, flickering 을 줄인다.
-            return listView!;
-          }
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (snapshot.hasError) {
@@ -100,13 +89,13 @@ class _ChatMessageListViewState extends State<ChatMessageListView> {
 
         // 메시지가 없는 경우,
         if (snapshot.docs.isEmpty) {
-          listView = widget.emptyBuilder?.call(context) ??
+          return widget.emptyBuilder?.call(context) ??
               Center(child: Text(T.chatRoomNoMessageYet.tr));
         } else {
           /// Reset the newMessage
           /// This is a good place to reset it since it is called when the user
           /// enters the room and every time it gets new message.
-          listView = ListView.builder(
+          return ListView.builder(
             padding: const EdgeInsets.all(0),
             reverse: true,
             primary: widget.primary,
@@ -122,12 +111,13 @@ class _ChatMessageListViewState extends State<ChatMessageListView> {
 
               return ChatBubble(
                 message: message,
-                onChange: () => setState(() {}),
+                onChange: () => setState(() {
+                  print('onChange');
+                }),
               );
             },
           );
         }
-        return listView!;
       },
     );
   }

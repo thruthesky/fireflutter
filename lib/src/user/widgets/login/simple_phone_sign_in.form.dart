@@ -175,6 +175,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                       ),
                   const SizedBox(height: 8),
                   TextField(
+                    key: const Key('phoneNumberField'),
                     controller: phoneNumberController,
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
@@ -210,6 +211,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
+                key: const Key('verifyCode'),
                 onPressed: (phoneNumberController.text.trim().isEmpty ||
                         progressVerifyPhoneNumber)
                     ? null
@@ -304,6 +306,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                   style: Theme.of(context).textTheme.labelMedium),
           const SizedBox(height: 8),
           TextField(
+            key: const Key('smsField'),
             controller: smsCodeController,
             decoration: const InputDecoration(border: OutlineInputBorder()),
             keyboardType: TextInputType.number,
@@ -326,6 +329,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
               const Spacer(),
               // display a button for SMS code verification.
               ElevatedButton(
+                key: const Key('smsCodeVerification'),
                 onPressed: () async {
                   // 테스트 전화번호. 실제 전화번호 인 것 처럼 동작. 가짜 전화번호와 가짜 SMS 코드를 입력하게 해서 로그인.
                   if (isRealReviewSmsCode) {

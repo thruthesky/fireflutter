@@ -42,6 +42,7 @@ class BlockListView extends StatelessWidget {
                       subtitle: Text(user.uid),
                       leading: Avatar(photoUrl: user.photoUrl.orAnonymousUrl),
                       trailing: IconButton(
+                        key: Key('blockListTileDeleteBtn${user.uid}'),
                         onPressed: () {
                           my.block(user.uid);
                         },

@@ -19,8 +19,8 @@ export class Config {
 
     // User paths
     static users = "users";
-    static userLikes = "user-likes";
-    static userWhoILike = "user-who-i-like";
+    static whoLikeMe = "who-like-me";
+    static whoILike = "who-i-like";
 
     // Path to save tokens
     // 테스트를 할 때에는 "user-fcm-tokens-test" 경로를 사용한다.
