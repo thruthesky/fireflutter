@@ -59,9 +59,6 @@ import 'package:flutter/material.dart';
 ///
 /// [description] 전화번호 입력 박스 아래에 표시될 설명
 ///
-/// [phoneNumberTextStyle] use phoneNumberTextStyle to change the text style of phone number text field
-///
-/// [smsTextStyle] use smsTextStyle to change the text style of sms code text field
 class SimplePhoneSignInForm extends StatefulWidget {
   const SimplePhoneSignInForm({
     super.key,
@@ -85,8 +82,8 @@ class SimplePhoneSignInForm extends StatefulWidget {
     this.smsSubmitLabel,
     this.smsRetry,
     this.phoneNumberDisplayBuilder,
-    this.phoneNumberTextStyle,
-    this.smsTextStyle,
+    // this.phoneNumberTextStyle,
+    // this.smsTextStyle,
   });
 
   final bool emailLogin;
@@ -109,8 +106,8 @@ class SimplePhoneSignInForm extends StatefulWidget {
   final Widget? smsSubmitLabel;
   final Widget? smsRetry;
   final String? Function(String?)? phoneNumberDisplayBuilder;
-  final TextStyle? phoneNumberTextStyle;
-  final TextStyle? smsTextStyle;
+  // final TextStyle? phoneNumberTextStyle;
+  // final TextStyle? smsTextStyle;
   @override
   State<SimplePhoneSignInForm> createState() => _SimplePhoneSignInState();
 }
@@ -207,8 +204,8 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                       //   color: Theme.of(context).colorScheme.outline.tone(72),
                       // ),
                     ),
-                    style: widget.phoneNumberTextStyle ??
-                        const TextStyle(fontSize: 32),
+                    // style: widget.phoneNumberTextStyle ??
+                    //     const TextStyle(fontSize: 32),
                     autofocus: true,
                     onChanged: (value) => setState(() {}),
                   ),
@@ -329,7 +326,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
             decoration: const InputDecoration(border: OutlineInputBorder()),
             keyboardType: TextInputType.number,
             autofocus: true,
-            style: widget.smsTextStyle ?? const TextStyle(fontSize: 32),
+            // style: widget.smsTextStyle ?? const TextStyle(fontSize: 32),
           ),
           const SizedBox(height: 16),
           Row(
