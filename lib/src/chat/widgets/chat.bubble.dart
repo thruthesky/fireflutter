@@ -33,7 +33,8 @@ class ChatBubble extends StatelessWidget {
             const Spacer(),
             dateAndName(context: context, uid: myUid!),
           ],
-          // other avtar
+
+          /// Other user avtar. size 30.
           if (message.other)
             UserAvatar(
               key: ValueKey(message.key),
@@ -52,7 +53,7 @@ class ChatBubble extends StatelessWidget {
             ),
 
           const SizedBox(width: 8),
-          // text
+          // Chat message text. size 60%
           if (message.text != null)
             Container(
               constraints: BoxConstraints(
@@ -126,6 +127,9 @@ class ChatBubble extends StatelessWidget {
     );
   }
 
+  /// Display date and name
+  ///
+  /// The width of the name is 20% of the screen width to prevent the overflow.
   dateAndName({
     required BuildContext context,
     required String uid,
@@ -137,8 +141,8 @@ class ChatBubble extends StatelessWidget {
         DateTimeShort(stamp: message.createdAt ?? 0),
         const SizedBox(width: 4),
         ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: 100,
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.2,
           ),
           child: UserDisplayName(
             uid: uid,
