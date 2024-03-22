@@ -257,6 +257,32 @@ toast(
 
 ## Widgets
 
+### UserDisplayName 사용자 이름 표시
+
+`UserDisplayName` 으로 사용자 이름을 표시 할 수 있습니다.
+
+- `style` 는 TextStyle 로 UI 를 지정 할 수 있습니다.
+
+- `maxLines` 는 최대 라인 수
+
+- `overflow` 는 글자가 overflow 될 때, 처리할 방식
+
+
+```dart
+ConstrainedBox(
+  constraints: const BoxConstraints(
+    maxWidth: 100,
+  ),
+  child: UserDisplayName(
+    uid: uid,
+    cacheId: 'chatRoom',
+    style: Theme.of(context).textTheme.labelSmall,
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis,
+  ),
+),
+```
+
 ### UpdateBirthdayField
 
 You can use this widget to display birthday and let user to update his birthday in profile screen.

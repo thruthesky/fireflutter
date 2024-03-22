@@ -26,6 +26,8 @@ class UserDisplayName extends StatelessWidget {
     this.style,
     this.cacheId,
     this.sync = false,
+    this.maxLines,
+    this.overflow,
   }) : assert(uid != null || user != null);
 
   final String? uid;
@@ -34,6 +36,8 @@ class UserDisplayName extends StatelessWidget {
   final TextStyle? style;
   final String? cacheId;
   final bool sync;
+  final int? maxLines;
+  final TextOverflow? overflow;
 
   @override
   Widget build(BuildContext context) {
@@ -72,5 +76,7 @@ class UserDisplayName extends StatelessWidget {
   Widget builder(data, BuildContext context) => Text(
         data ?? initialData ?? '',
         style: style ?? Theme.of(context).textTheme.bodyMedium,
+        maxLines: maxLines,
+        overflow: overflow,
       );
 }

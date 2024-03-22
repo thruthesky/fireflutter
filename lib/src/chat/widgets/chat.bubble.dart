@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 /// Chat bubble
 ///
@@ -135,10 +136,17 @@ class ChatBubble extends StatelessWidget {
       children: [
         DateTimeShort(stamp: message.createdAt ?? 0),
         const SizedBox(width: 4),
-        UserDisplayName(
-          uid: uid,
-          cacheId: 'chatRoom',
-          style: Theme.of(context).textTheme.labelSmall,
+        ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 100,
+          ),
+          child: UserDisplayName(
+            uid: uid,
+            cacheId: 'chatRoom',
+            style: Theme.of(context).textTheme.labelSmall,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ],
     );

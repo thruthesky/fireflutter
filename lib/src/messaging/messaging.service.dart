@@ -148,7 +148,7 @@ class MessagingService {
       dog("Can't update token. User is not logged in.");
       return;
     }
-    dog('Updating the device token: $token for $myUid');
+    dog('Updating the device token: "$token" for $myUid');
     if (token == null) return;
     try {
       final data = {
@@ -268,14 +268,14 @@ class MessagingService {
         ///
       }
     }
-    // / remove invalid tokens
+
+    /// Note, don't remove the tokens from client.
+    /// Something happened that, even if the token looks fine, it's producing
+    /// invalid key error and token wsa removed from here.
     dog('no of bad tokens: ${responses.length}');
     for (final key in responses.keys) {
       dog('invalid key: $key - ${responses[key]}');
-      set("${Messaging.userFcmTokens}/$key", null);
-    }
-    if (removeInvalidTokens) {
-      ///
+      // set("${Messaging.userFcmTokens}/$key", null);
     }
 
     return responses;

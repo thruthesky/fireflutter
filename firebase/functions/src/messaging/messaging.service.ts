@@ -43,12 +43,14 @@ export class MessagingService {
          * ```
          * {
          *   'fVWDxKs1kEzx...Lq2Vs': '',
-         *   'wrong-token': 'messaging/invalid-argument',
+         *   'wrong-token': 'messaging/invalid-argument;addiontional error message',
          * }
          * ```
          *
          * If there is no error with the token, the value will be empty
          * string. Otherwise, there will be a error message.
+         *
+         *
          */
   static async sendNotificationToTokens(params: MessageRequest): Promise<{ [token: string]: string; }> {
     const promises = [];
@@ -86,6 +88,7 @@ export class MessagingService {
         android: MessagingService.android,
         apns: MessagingService.apns,
       };
+      console.log("message: ", message);
       promises.push(getMessaging().send(message));
     }
 
@@ -96,12 +99,13 @@ export class MessagingService {
 
     for (let i = 0; i < res.length; i++) {
       const status: string = res[i].status;
+      console.log("status; ", status, res[i]);
       if (status == "fulfilled") {
         continue;
+      } else {
+        const reason = (res[i] as PromiseRejectedResult).reason;
+        responses[tokens[i]] = reason["errorInfo"]["code"] + ":::" + reason["errorInfo"]["message"];
       }
-
-      const reason = (res[i] as PromiseRejectedResult).reason;
-      responses[tokens[i]] = reason["errorInfo"]["code"];
     }
     return responses;
   }

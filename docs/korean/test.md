@@ -17,3 +17,11 @@
 ## FCM 테스트
 
 - 로컬에서 push notification 테스트 하려면, `firebase/functions/src/test/send-message.ts` 를 참고한다.
+
+
+### Token 아이디로 푸시 메시지 전송
+
+
+- `firebase/functions/tests/message/send--amessage.spec.ts` 에 테스트 코드가 있다. 이 안의 `tokens` 배열에 토큰을 추가하고, `% npm run test:send-a-message` 를 호출하면 된다. 그러면 해당 token 의 디바이스로 메시지가 와야 한다.
+  - 참고로 실행을 할 때에는 위의 `GOOGLE_APPLICATION_CREDENTIALS` 에 적절한 키 값을 지정해야 한다.
+
