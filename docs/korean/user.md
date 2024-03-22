@@ -9,6 +9,10 @@
 `displayName` is the name of the user.
 Firefluter (including all the widgets) will always use `dispalyName` to display the name of the user. This can be a real name, or it can be a nickname. If you want to keep user's name in different format like `firstName`, `middleName`, `lastName`, you can do it in your app. You may get user's real name and save it in `name` field in your app.
 
+- `seearchDisplayName` 은 검색을 위한 용도로 사용한됩니다. 예를 들어 `displayName` 이, "JaeHo Song" 이면, "jaehosong" 으로 모두 소문자로 저장하며, 공백없이 저장을 합니다. 그래서 검색을 할 때, `Jaeho` 또는 `jaehoso` 등으로 검색을 보다 유연하게 할 수 있습니다.
+
+
+
 `createdAt` has the time of the first login. This is the account creation time.
 
 사용자의 본명 또는 화면에 나타나지 않는 이름은 `name` 필드에 저장한다.
