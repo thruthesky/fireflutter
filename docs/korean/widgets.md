@@ -375,66 +375,86 @@ FireFlutter 는 Firebase Auth 의 Phone Sign-in 을 지원하는 전화 번호�
 
 - [description] 전화번호 입력 박스 아래에 표시될 설명
 
+
+아래의 예제는 SimplePhoneSignInForm 을 사용하는데, Theme 을 사용하여 UI 를 변경하는 예제이다.
+
 ```dart
-SimplePhoneSignInForm(
-  emailLogin: true,
-  prefix: const Text('010 '),
-  reviewPhoneNumber: '12345678',
-  reviewRealPhoneNumber:
-      '+821011112222', // 화면에는 010-1111-2222 로 입력 하면 됨.
-  reviewRealSmsCode: '123456',
-  onCompleteNumber: (phoneNumber) {
-    String number = phoneNumber.trim();
-    number = number.replaceAll(RegExp(r'[^\+0-9]'), '');
-    number = number.replaceFirst(RegExp(r'^0'), '');
-    number = number.replaceAll(' ', '');
-    number = number.replaceAll('-', '');
-    number = number.replaceAll('(', '');
-    number = number.replaceAll(')', '');
-
-    if (number.length == 8) {
-      return "+8210$number";
-    } else if (number == '12345678') {
-      // 리뷰 전화번호
-      return number;
-    } else {
-      error(
-        context: context,
-        title: '전화번호 입력 오류',
-        message: '전화번호를 올바로 입력하세요.',
-      );
-    }
-    return null;
-  },
-  onSignin: () => signinSuccess(context),
-  languageCode: 'ko',
-  headline:
-      Text(' 간편하게 전화번호 로그인을 합니다.', style: context.bodySmall),
-  label: Text('  전화번호', style: context.labelSmall),
-  hintText: '',
-  description: Text(
-    '  전화번호를 입력하시면 인증 요청 버튼을 나타납니다.',
-    style: context.labelSmall,
+Theme(
+  data: Theme.of(context).copyWith(
+    inputDecorationTheme:
+        Theme.of(context).inputDecorationTheme.copyWith(
+              hintStyle: TextStyle(
+                color: context.colorScheme.secondary,
+                fontSize: fsXl,
+              ),
+            ),
+    textTheme: Theme.of(context).textTheme.copyWith(
+          bodyLarge: TextStyle(
+            color: context.colorScheme.secondary,
+            fontSize: fsXl,
+          ),
+        ),
   ),
-  phoneNumberDisplayBuilder: (n) {
-    if (n?.contains('+8210') == true) {
-      n = n?.replaceFirst('+8210', '');
-      n = '010-${n?.substring(0, 4)}-${n?.substring(4, 8)}';
-      return n;
-    } else {
-      return n;
-    }
-  },
-  submitLabel: const Text('     인증 요청     '),
+  child: SimplePhoneSignInForm(
+    emailLogin: true,
+    prefix: const Text('010 '),
+    reviewPhoneNumber: '12345678',
+    reviewRealPhoneNumber:
+        '+821011112222', // 화면에는 11112222 로 입력 하면 됨.
+    reviewRealSmsCode: '123456',
+    onCompleteNumber: (phoneNumber) {
+      String number = phoneNumber.trim();
+      number = number.replaceAll(RegExp(r'[^\+0-9]'), '');
+      number = number.replaceFirst(RegExp(r'^0'), '');
+      number = number.replaceAll(' ', '');
+      number = number.replaceAll('-', '');
+      number = number.replaceAll('(', '');
+      number = number.replaceAll(')', '');
 
-  smsPhoneLabel: Text('  전화번호', style: context.labelSmall),
-  smsDescription:
-      Text('  인증번호를 입력하세요.', style: context.labelSmall),
-  smsSubmitLabel: const Text('   인증번호 전송   '),
-  smsRetry: Text(
-    '다시하기',
-    style: context.labelLarge
-        .copyWith(color: context.colorScheme.secondary),
+      if (number.length == 8) {
+        return "+8210$number";
+      } else if (number == '12345678') {
+        // 리뷰 전화번호
+        return number;
+      } else {
+        error(
+          context: context,
+          title: '전화번호 입력 오류',
+          message: '전화번호를 올바로 입력하세요.',
+        );
+      }
+      return null;
+    },
+    onSignin: () => signinSuccess(context),
+    languageCode: 'ko',
+    headline:
+        Text(' 간편하게 전화번호 로그인을 합니다.', style: context.bodySmall),
+    label: Text('  전화번호', style: context.labelSmall),
+    hintText: '',
+    description: Text(
+      '  전화번호를 입력하시면 인증 요청 버튼을 나타납니다.',
+      style: context.labelSmall,
+    ),
+    phoneNumberDisplayBuilder: (n) {
+      if (n?.contains('+8210') == true) {
+        n = n?.replaceFirst('+8210', '');
+        n = '010-${n?.substring(0, 4)}-${n?.substring(4, 8)}';
+        return n;
+      } else {
+        return n;
+      }
+    },
+    submitLabel: const Text('     인증 요청     '),
+
+    smsPhoneLabel: Text('  전화번호', style: context.labelSmall),
+    smsDescription:
+        Text('  인증번호를 입력하세요.', style: context.labelSmall),
+    smsSubmitLabel: const Text('   인증번호 전송   '),
+    smsRetry: Text(
+      '다시하기',
+      style: context.labelLarge
+          .copyWith(color: context.colorScheme.secondary),
+    ),
   ),
 ),
 ```
