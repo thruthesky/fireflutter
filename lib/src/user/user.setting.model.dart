@@ -89,8 +89,9 @@ class UserSetting {
     String? languageCode,
   }) async {
     await ref.update({
-      Code.profileViewNotification: profileViewNotification,
-      Code.languageCode: languageCode,
+      if (profileViewNotification != null)
+        Code.profileViewNotification: profileViewNotification,
+      if (languageCode != null) Code.languageCode: languageCode,
     });
   }
 }
