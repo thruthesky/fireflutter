@@ -1,5 +1,5 @@
 
-import { typesenseApiKey, typesenseHost, typesensePort, typesenseProtocol } from "./key";
+import { typesenseApiKey, typesenseHost, typesenseProtocol } from "./key";
 
 /**
  * Config
@@ -58,6 +58,6 @@ export class Config {
      */
     static typesenseApiKey = typesenseApiKey;
     static typesenseHost = typesenseHost;
-    static typesensePort = typesensePort;
+    static typesensePort = 8080;
     static typesenseProtocol = typesenseProtocol;
 }
