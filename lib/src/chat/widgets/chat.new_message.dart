@@ -8,6 +8,10 @@ class ChatNewMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// If the login user blocked this user, do not show the new message count.
+    if (room.isSingleChat && iHave.blocked(room.otherUserUid!)) {
+      return const SizedBox.shrink();
+    }
     if ((room.newMessage ?? 0) > 0) {
       return Container(
         width: (room.newMessage ?? 0) > 9 ? 20 : 16,

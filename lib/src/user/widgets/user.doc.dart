@@ -4,19 +4,23 @@ import 'package:flutter/material.dart';
 
 /// Cache user data
 ///
+/// 회원의 정보를 캐시하는 용도로 사용한다.
 /// 실제로 이 캐시를 사용하면, setState() 를 호출 할 때, 화면 깜빡임이 매우 줄어든다.
 final _userDocCache = <String, dynamic>{};
 
 /// Get user data synchroneously.
 ///
-/// 사용자 필드(또는 전체) 값을 가져온다. [UserDoc.sync] 를 사용하면, DB 가 업데이트되면 실시간으로 위젯에 업데이트된다.
+/// 사용자 필드(또는 전체) 값을 가져온다. 기본적으로 실시간 업데이트를 하지 않지만, [UserDoc.sync] 를
+/// 사용하면, DB 가 업데이트되면 실시간으로 업데이트된 값을 가져와 위젯을 업데이트한다.
 ///
 /// 주의, field 가 null 이면, "users/uid" 통째를 가져오고, field 가 'abc/def' 이면, "users/uid/abc/def" 의 값을 가져온다.
 /// 참고, 사용자 정보를 전달 할 때, 사용자 데이터를 통째로 읽어 전달 할 필요 없이, 필요한 데이터 필드만 바로 바로 쓰면 된다.
 ///
 ///
-/// [cache] 가 true 이면 캐시를 사용한다. 즉, 같은 uid 와 field 에 대한 데이터는 한번만 읽어온다.
+/// [cacheId] 에 캐시 ID 값을 주면, 메모리 캐시를 사용한다. 즉, 같은 uid 와 field 에 대한 데이터는 한번만 읽어온다.
 /// 캐시는 sync 를 할 때에는 무시된다. 즉, sync 을 안할 때에만 cache 를 사용한다.
+///
+/// [field] 는 하나의 값을 가져온다.
 ///
 ///
 /// 아래의 예제는 사용자 이름을 실시간으로 표시한다.

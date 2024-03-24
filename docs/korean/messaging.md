@@ -1,5 +1,22 @@
 # 푸시 알림
 
+
+## 푸시 알림 설치
+
+- 먼저, 푸시 알림 전송을 담당하는 함수를 `Firebase Cloud Functions` 에 배포해야 합니다
+  - `sendMessagesToChatRoomSubscribers`
+  - `sendPushNotifications`
+  - `sendMessagesToCategorySubscribers`
+
+- 그리고 iOS 에서 푸시 알림 관련 설정을 해야 합니다. 참고로 Android 에서는 설정이 필요 없습니다.
+
+- 그리고 앱에 푸시 알림 초기화 코드를 추가해야 합니다.
+
+- 그리고 푸시 알림 토큰이 DB 에 잘 저장되는지 확인합니다.
+
+
+
+
 ## FCM 과 token
 
 Fireflutter uses FCM to send messages to devices.

@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:rxdart/rxdart.dart';
 
 class CustomizeMessagingTopic {
   final String topic;
@@ -53,7 +52,6 @@ class MessagingService {
 
   String? sendUrl;
   String? token;
-  final BehaviorSubject<String?> tokenChange = BehaviorSubject.seeded(null);
 
   List<CustomizeMessagingTopic>? customizeTopic;
 
@@ -112,9 +110,12 @@ class MessagingService {
       }
     }
 
-    /// Token update on user change(login/logout)
+    /// Save token to database
     ///
-    /// Run this subscription on the whole lifecycle. (No unsubscription)
+    /// Subscribe the user auth changes for updating the token for the user.
+    ///
+    /// Run this subscription on the whole lifecycle. No need to subscribe
+    /// since this will be called only one time.
     ///
     /// `/fcm_tokens/<docId>/{token: '...', uid: '...'}`
     /// Save(or update) token
@@ -122,18 +123,13 @@ class MessagingService {
         .authStateChanges()
         .listen((user) => _updateToken(token));
 
-    /// Token changed. update it.
-    ///
-    /// Run this subscription on the whole lifecycle. (No unsubscription)
-    tokenChange.listen(_updateToken);
-
     /// Token refreshed. update it.
     ///
     /// Run this subscription on the whole lifecycle. (No unsubscription)
     ///
     // Any time the token refreshes, store this in the database too.
     FirebaseMessaging.instance.onTokenRefresh
-        .listen((token) => tokenChange.add(token));
+        .listen((token) => _updateToken(token));
 
     /// Get token from device and save it into Firestore
     ///
@@ -145,12 +141,15 @@ class MessagingService {
   /// Save tokens at `/user_fcm_tokens/<uid>/token/platform`
   _updateToken(String? token) async {
     if (FirebaseAuth.instance.currentUser == null) {
-      dog("Can't update token. User is not logged in.");
+      dog("MessagingService::_updateToken() - Can't update token. User is not logged in.");
       return;
     }
-    dog('Updating the device token: "$token" for $myUid');
-    if (token == null) return;
+    if (token == null) {
+      dog("MessagingService::_updateToken() - Can't update token. Token is null.");
+      return;
+    }
     try {
+      dog('MessagingService::_updateToken() - Updating the device token: "$token" for $myUid');
       final data = {
         'uid': myUid,
         'platform': platformName(),
