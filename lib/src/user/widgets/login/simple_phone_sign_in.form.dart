@@ -196,6 +196,8 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                     controller: phoneNumberController,
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
+                      /// prefix is only shown when the input is focused.
+                      /// That's why it's prefixIcon over prefix.
                       prefixIcon: widget.prefix,
                       isDense: true,
                       // contentPadding: EdgeInsets.symmetric(vertical: 24, horizontal: 24),
