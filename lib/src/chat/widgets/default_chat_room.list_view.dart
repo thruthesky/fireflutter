@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 ///
 /// Copy this code to your project and modify it.
 class DefaultChatRoomListView extends StatelessWidget {
-  const DefaultChatRoomListView({super.key});
+  const DefaultChatRoomListView({super.key, this.emptyBuilder});
+
+  final Widget? emptyBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class DefaultChatRoomListView extends StatelessWidget {
             return Text('Something went wrong! ${snapshot.error}');
           }
           if (snapshot.hasMore == false && snapshot.docs.isEmpty) {
-            return const Text('No chat rooms');
+            return emptyBuilder ?? const Center(child: Text('No chat rooms'));
           }
           return ListView.builder(
             padding: EdgeInsets.zero,
