@@ -353,6 +353,16 @@
       "args": ["-v",]
     },
     {
+      "name": "Wemeet (Chris) TEST - SM J737S (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "5200960c4e1e5577",
+      "flutterMode": "debug",
+      "cwd": "apps/wemeet",
+      "program": "lib/main.dart",
+      "args": ["-v",]
+    },
+    {
       "name": "Roha (Noe) TEST - iPhone 15 Pro Max (debug)",
       "request": "launch",
       "type": "dart",

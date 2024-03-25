@@ -602,7 +602,7 @@ class User {
   /// After this method call, the user is blocked or unblocked.
   /// Returns true if the user has just blocked blocked, false if unblocked.
   ///
-  Future block(String otherUserUid) async {
+  Future<bool> block(String otherUserUid) async {
     if (otherUserUid == uid) {
       throw ff.Issue(ff.Code.blockSelf, 'You cannot block yourself.');
     }
