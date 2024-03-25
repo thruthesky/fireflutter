@@ -353,6 +353,16 @@
       "args": ["--dart-define", "MODE=dev"]
     },
     {
+      "name": "Roha (Noe) TEST - SM J737S (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "SM J737S",
+      "flutterMode": "debug",
+      "cwd": "apps/roha",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=dev"]
+    },
+    {
       "name": "Roha (Noe) TEST - iPhone SE (3rd Generation)",
       "request": "launch",
       "type": "dart",
@@ -409,7 +419,7 @@
       "flutterMode": "debug",
       "cwd": "apps/roha",
       "program": "lib/main.dart",
-      // "args": ["-v", "--dart-define", "MODE=test"]
+      "args": ["-v", "--dart-define", "MODE=dev"]
     },
     {
       "name": "Silvers (Noe) TEST - iPhone 15 Pro (debug)",
