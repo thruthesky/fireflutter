@@ -228,7 +228,17 @@ class User {
       displayName: json['displayName'] ?? '',
       photoUrl: json['photoUrl'] ?? '',
       profileBackgroundImageUrl: json['profileBackgroundImageUrl'] ?? '',
-      photoUrls: List<String>.from((json['photoUrls'] ?? [])),
+
+      /// [photoUrls] is a list of photo urls.
+      /// This code handles with the malformed photoUrl data.
+      photoUrls: json['photoUrls'] is List
+          ? List<String>.from(
+              ((json['photoUrls'] ?? []) as List)
+                  .map((x) => x.toString())
+                  .toList(),
+            )
+          : [],
+      //List<String>.from((json['photoUrls'] ?? [])),
       stateMessage: json['stateMessage'] ?? '',
       isDisabled: json['isDisabled'] ?? false,
       birthYear: json['birthYear'] ?? 0,

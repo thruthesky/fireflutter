@@ -23,6 +23,16 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "RoHa - iPhone SE - JaeHo",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone SE",
+      "flutterMode": "debug",
+      "cwd": "apps/roha",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=jaeho"]
+    },
+    {
       "name": "RoHa - iPhone11ProMax",
       "request": "launch",
       "type": "dart",

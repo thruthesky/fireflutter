@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 /// Firebase Auth 에 로그인을 한 경우, builder(uid) 가 실행된다.
 /// 만약, 로그인을 하지 않은 상태이면, notLogin() 이 실행된다.
 ///
-/// 참고로, Firebase Realtime Database 의 사용자 문서가 로딩되지 않아도, 이 함수의 builder 가 실행된다.
+/// 참고로, Firebase Realtime Database 의 사용자 문서가 로딩되지 않아도, Firebase Auth 에
+/// 로그인이 되면 이 함수의 builder 가 실행된다.
 class AuthReady extends StatelessWidget {
   const AuthReady({
     super.key,

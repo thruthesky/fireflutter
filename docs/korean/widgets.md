@@ -53,7 +53,46 @@ DisplayPhotos(urls: List<String>.from(v ?? []))
 
 Tile 형식으로 표현하기 위해서 `UserTile` 을 쓰면 된다. 사용자 모델이 있으면 `UserTile(user: UserModel)` 와 같이 표시하면 되고, 사용자 id 만 가지고 있다면, `UserTile.fromUid(uid)` 와 같이 호출하면 된다.
 
-## 사용자 정보 참고
+## 로그인한 사용자의 정보 표시
+
+로그인한 사용자의 정보를 표시 할 때에는 아래와 같이 `MyDoc` 위젯을 사용하면 됩니다.
+
+```dart
+MyDoc(
+  builder: (user) => user == null
+      ? const SizedBox.shrink()
+      : TextField(
+          controller: nameController..text = user.displayName,
+          decoration: const InputDecoration(
+            labelText: '본명을 입력 해 주세요',
+          ),
+        ),
+),
+```
+
+참고로, 아래는 MyDoc 을 쓰지 않고, UserDoc 을 써서 사용자 정보를 표시한 것입니다.
+UserDoc 에는 사용자 UID 를 기록해 주어야하는데, 앱 부팅시에 로그인한 사용자의 UID 를 안전하게 얻으려면 `AuthReady` 를 통해서 로그인 사용자의 UID 가져오면 됩니다.
+
+```dart
+AuthReady(
+  builder: (uid) => UserDoc.field(
+    uid: uid,
+    field: Field.displayName,
+    builder: (v) {
+      return TextField(
+        controller: nameController..text = v ?? '',
+        decoration: const InputDecoration(
+          labelText: '본명을 입력 해 주세요',
+        ),
+      );
+    },
+  ),
+),
+```
+
+
+
+## 다른 사용자 정보 참고
 
 로그인한 사용자를 포함한 사용자 정보를 화면에 표시 할 때에는 `UserDoc` 을 사용하면 된다.
 
@@ -81,7 +120,7 @@ UserDoc.fieldSync(uid: myUid!, field: 'displayName',  builder: (v) => Text(v.toS
 UserDisplayName(uid: uid, cacheId: 'chatRoom'),
 ```
 
-## 사용자 정보 캐시
+## 다른 사용자 정보 캐시
 
 때로는 사용자 정보를 표시 한 다음, setState 를 호출하면, 화면이 반짝 거리는 경우가 있다. 또는 계속 해서 DB 에 접속하는 것이 마음에 들지 않는 경우가 있을 수 있다. 이와 같은 경우, cacheId 를 사용하면, 해당 cacheId 위치에서는 해당 사용자의 값(또는 필드)를 메모리에 캐시하여 사용한다.
 
