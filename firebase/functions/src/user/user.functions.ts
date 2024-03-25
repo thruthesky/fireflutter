@@ -98,19 +98,26 @@ export const userMirror = onValueWritten(
  * 
  * This will delete user account from Firebase Auth, Realtime Database, Firestore.
  */
-export const userDeleteAccount = onValueUpdated(`${Config.users}/{uid}/deleteAccount`, async (event) => {
+export const userDeleteAccount = onValueUpdated(`${Config.commands}/{uid}/deleteAccount`, async (event) => {
 
     if (event.data.after.val() === true) {
         const uid = event.params.uid;
         // Delete user account
         const auth = getAuth();
         await auth.deleteUser(uid);
+
+
         // Delete user data from Realtime Database
         const db = getDatabase();
         await db.ref(`${Config.users}/${uid}`).remove();
         // Delete user data from Firestore
         const firestore = getFirestore();
-        await firestore.collection(Config.users).doc(uid).delete();
+        try {
+            await firestore.collection(Config.users).doc(uid).delete();
+        } catch (error) {
+            // Ignore error
+            // If the user data may not be in Firestore or it may be deleted already.
+        }
     }
 });
 

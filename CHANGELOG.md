@@ -1,3 +1,14 @@
+## 0.3.25
+
+* Update. Document
+* Add. User resign
+* Add. empty widget in chat room list
+* Fix. prefix in SimplePhoneSignInForm
+* Fix. User data mirro to Firestore
+* Fix. overflow on chat message
+
+
+
 ## 0.3.24
 
 * Update. Document.
