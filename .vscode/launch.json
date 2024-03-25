@@ -430,6 +430,16 @@
       "cwd": "apps/silvers",
       "program": "lib/main.dart",
       // "args": ["-v", "--dart-define", "MODE=test"]
+    },
+    {
+      "name": "Social Kit - iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "apps/social_kit/example",
+      "program": "lib/main.dart",
+      // "args": ["-v", "--dart-define", "MODE=test"]
     }
   ]
 }
