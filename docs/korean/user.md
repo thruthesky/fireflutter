@@ -461,9 +461,16 @@ UserService.instance.init(
 
 참고, 푸시알림 메시지 문서를 본다.
 
-## Firestore 미러링
 
-Realtime Database 는 검색 기능이 매우 부족하다. 그래서 사용자 문서를 Firestore 로 미러링(백업)을 해서, Firestore 를 통해서 검색 할 수 있다. 이 미러링 작업은 Cloud function 을 설치하면 된다. 참고, [설치 문서](./install.md).
+
+## 사용자 정보 Firestore 미러링
+
+Realtime Database 는 검색 기능이 매우 부족하다. 그래서 사용자 문서를 Firestore 로 미러링(백업)을 해서, Firestore 를 통해서 검색 할 수 있다. 이 미러링 기능은 Cloud functions 의 `userMirror` 함수를 설치하면 된다. 참고, [설치 문서](./install.md).
+
+`userMirror` 함수는 사용자 정보 생성 또는 업데이트를 할 때, 사용자 정보 전체(부분이 아닌 전체 데이터)를 Firestore 의 `/users/<uid>` 로 복사한다. 기존에 존재하는 필드의 경우 덮어 쓸 수 있다.
+
+그 후 필요한 경우, Firestore 의 `users` 컬렉션을 검색하면 된다.
+
 
 ## 거리 검색
 
