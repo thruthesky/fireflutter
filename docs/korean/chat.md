@@ -30,6 +30,8 @@
 - `blocks` - 관리자가 채팅방의 블럭 리스트를 관리한다. 여기에 추가된 사용자는 채팅방에 입장을 할 수 없다. 또한 자동으로 채팅방에서 튕겨나가도록 한다. (**TODO: 2024-02-22 현재 기능 구현되지 않음.**)
 
 
+- `open` 옵션은 단순히 오픈 채팅방에 목록되거나 채팅방이 검색된다는 뜻이다. `open` 이 false 로 지정되어도, 사람들은 여전히 (그냥) 입장을 할 수 있다.
+
 
 ### Chat Messages 구조
 
@@ -102,18 +104,28 @@ if (snapshot.exists) {
 
 ### 채팅방 만들기
 
-채팅방을 만드는 간단한 방법은 다음과 같습니다:
+채팅방을 만드는 방법은 다음과 같다.
 
 ```dart
-ChatModel chat = ChatModel(room: ChatRoom.fromRoomdId('all'))..join();
-ChatMessageListView(chat: chat);
+/// 아래와 같이 채팅방 생성
+final room = await ChatRoom.create(
+  name: '채팅방 이름',
+  description: '채팅방 설명',
+  isOpenGroupChat: true, // 오픈 채팅 방
+);
+/// 채팅방을 생성하고 나서, 곧바로 채팅방에 입장한다. 즉, rtdb 의 /chat-joins 에 방 입장 정보를 기록한다.
+final chat = ChatModel(room: room);
+await chat.join(forceJoin: true);
+
+/// 그리고 나서 해당 채팅방으로 입장하면 된다. 물론 안해도 된다.
 ```
 
-ChatModel을 단독으로 만들어도 채팅방을 만들지 않습니다. 따라서 추가로 join()을 호출해야 합니다.
+`ChatRoom.create()` 을 통해 채팅방을 생성하고, 추가로 `ChatModel.join()` 을 호출해야 한다.
 
-join()을 호출하면 /chat-rooms/all/users에 {[uid]: true}가 생성됩니다.
+`ChatModel.join()` 을 호출하면 /chat-rooms/all/users에 {[uid]: true}가 생성됩니다.
 
-그리고 화면에 ChatMessageListView 위젯이 표시되면, `ChatMessageListView::initState() -> ChatModel::resetNewMessage()`에서 RTDB `chat-joins/all`에 `{order: 0}`가 내부적으로 저장됩니다.
+
+참고로 화면에 ChatMessageListView 위젯이 표시되면, `ChatMessageListView::initState() -> ChatModel::resetNewMessage()`에서 RTDB `chat-joins/all`에 `{order: 0}`가 내부적으로 저장된다.
 
 그러나 더 간편하게 채팅방을 만들고 싶다면, 미리 제공된 `ChatService.instance.showChatRoomCreate()` 함수를 사용할 수 있습니다. 디자인을 사용자 정의하려면 DefaultChatRoomEditDialog을 복사하고 수정할 수 있습니다.
 

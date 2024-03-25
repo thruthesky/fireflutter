@@ -62,6 +62,7 @@ export const userLike = onValueWritten(
 
 /**
  * User CRUD
+ * 
  * Mirror the user data to Firestore
  */
 export const userMirror = onValueWritten(
@@ -72,19 +73,19 @@ export const userMirror = onValueWritten(
         const userUid = event.params.uid;
 
         if (event.data.before.exists()) {
-            // updated
+            // Updated
             const userData = event.data.after.val();
             // noOfLikes 는 자주 업데이트 되므로, firestore /users 를 목록 할 때, FirestoreListView 등에서 flickering 이 발생한다.
             // 그래서, noOfLikes 필드는 삭제한다.
             delete userData.noOfLikes;
             const searchDisplayName = userData.displayName.trim().toLowerCase().replace(/\s+/g, "");
-            return await firestore.collection(Config.users).doc(userUid).update({ ...userData, searchDisplayName: searchDisplayName });
+            return await firestore.collection(Config.users).doc(userUid).set({ ...userData, searchDisplayName: searchDisplayName }, { merge: true });
         }
         if (!event.data.after.exists()) {
-            // deleted
+            // Deleted
             return await firestore.collection(Config.users).doc(userUid).delete();
         }
-        // created
+        // Created
         const data = event.data.after.val();
         const searchDisplayName = data.displayName.trim().toLowerCase().replace(/\s+/g, "");
         return await firestore.collection(Config.users).doc(userUid).set({ ...data, searchDisplayName: searchDisplayName });

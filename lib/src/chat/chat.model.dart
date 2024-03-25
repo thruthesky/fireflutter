@@ -336,6 +336,9 @@ class ChatModel {
     int? singleChatOrder, groupChatOrder;
 
     /// 새 메시지가 있다는 뜻인 -11 을 그냥 -1 로 변경한다.
+    ///
+    /// order 값 맨 앞에 1을 추가한 것이다. 예를 들어, order 값이 -12345 와 같다면 맨 앞에 1을 추가해서
+    /// -112345 가 된 것이다. 즉, 맨 앞의 -11 을 그냥 -1 로 바꾸는 것이다.
     if (join != null) {
       if (join.singleChatOrder.toString().contains('-11')) {
         singleChatOrder =
@@ -413,6 +416,7 @@ class ChatModel {
 
   /// 채팅방 입장
   ///
+  /// @TODO 이 코드를 ChatRoom 으로 옮기면 안되나? 그러면 더 직관적일 것 같다.
   Future join({
     bool forceJoin = false,
   }) async {
