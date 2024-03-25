@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/services.dart';
 
 class CustomizeMessagingTopic {
   final String topic;
@@ -134,7 +135,12 @@ class MessagingService {
     /// Get token from device and save it into Firestore
     ///
     /// Get the token each time the application loads and save it to database.
-    token = await FirebaseMessaging.instance.getToken() ?? '';
+    try {
+      token = await FirebaseMessaging.instance.getToken() ?? '';
+    } on FirebaseException catch (e) {
+      dog('Error while getting token: code: ${e.code}, message: ${e.message}, e: $e');
+      rethrow;
+    }
     await _updateToken(token);
   }
 

@@ -16,7 +16,10 @@
 
 ## FCM 테스트
 
-- 로컬에서 push notification 테스트 하려면, `firebase/functions/src/test/send-message.ts` 를 참고한다.
+- 로컬에서 push notification 테스트 하려면,
+  - 먼저, GOOGLE_APPLICATION_CREDENTIALS 에 키를 설정합니다.
+    - `export GOOGLE_APPLICATION_CREDENTIALS=~/Documents/Keys/Firebase-Service-Accounts/xxxx.json`
+    - 그리고, `firebase/functions/src/test/send-a-message.ts` 를 통해서 메시지를 보냅니다.
 
 
 ### Token 아이디로 푸시 메시지 전송
