@@ -14,6 +14,9 @@
 
 - 그리고 푸시 알림 토큰이 DB 에 잘 저장되는지 확인합니다.
 
+- 그리고 푸시 메시지를 보내 봅니다.
+  - 먼저, `파이어베이스 콘솔` 에서 보내 봅니다. 이것이 가장 쉽습니다. 공홈 참고 [Send a notification message](https://firebase.google.com/docs/cloud-messaging/flutter/first-message?_gl=1*13pdja2*_up*MQ..*_ga*NjAwOTEyNC4xNzExMjU4MDcx*_ga_CW55HF8NVT*MTcxMTI1ODA3MC4xLjAuMTcxMTI1ODA3MC4wLjAuMA..#send_a_test_notification_message)
+  - 만약, 파이어베이스 콘솔에서 테스트 메시지를 보냇는데, 메시지가 수신되지 않으면, `send-a-message.spec.ts` 를 통해서 메시지를 보냅니다. 이렇게 하면 좀 더 상세한 에러 메시지를 확인 할 수 있습니다. 참고, [테스트 문서](./test.md)에서 FCM 테스트 항목을 참고해 보세요.
 
 
 

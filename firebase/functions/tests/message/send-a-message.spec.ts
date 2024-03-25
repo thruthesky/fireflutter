@@ -37,7 +37,7 @@ describe("Send message", () => {
         },
       },
 
-      token: "eKi_y9DTRUQ_gzbFcH1AxZ:APA91bHxHJQ2kWrMjK5q8FZgQq6ntFHi6k7_CdB-bANHU6OlcTQ_ayIg_Y7tw7uM2QQuCy8lAuLPQvElVZn2n_MP8VipmNbfz9zegloJBP-NOnPjVrnMZTefEUV3ArdzJJR3Onp4eoQA",
+      token: "eEvWRLMg_0Sppg6ZxaBtQI:APA91bEMWBwALRi-KWXOlmIpRvY5MAqiO9_Bw9gQVvFAM0YiLszYbuyPGNy1vGvev-OjmkmCI5-1tsq0Wrd73lRSRP_1s_sHOX64Uhrw8YscwQEo5R4d1-INBJtERwWmIetPNldkwa1f",
 
     };
 
@@ -51,7 +51,5 @@ describe("Send message", () => {
     }
   });
 });
-
-
 
 
