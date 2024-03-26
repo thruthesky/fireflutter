@@ -38,7 +38,8 @@
     "test:forumRemoveField": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/post-remove-field.spec.ts --timeout 350000",
     "test:forumDelete": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/post-delete-true.spec.ts --timeout 350000",
     "test:forumRace": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/race-condition.spec.ts --timeout 350000",
-    "test:phoneNumberRegister": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/user/phoneNumberRegister.spec.ts --timeout 100000"
+    "test:phoneNumberRegister": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/user/phoneNumberRegister.spec.ts --timeout 100000",
+    "test:userDeleteAccount": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/user/userDeleteAccount.spec.ts --timeout 5000"
   },
   "main": "lib/src/index.js",
   "dependencies": {

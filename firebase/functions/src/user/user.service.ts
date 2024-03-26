@@ -3,6 +3,7 @@ import { Config } from "../config";
 import { User, UserCreateWithPhoneNumber } from "./user.interface";
 import { getAuth } from "firebase-admin/auth";
 
+
 /**
  * UserService
  */
@@ -47,5 +48,33 @@ export class UserService {
                 return { code: "unknown", message: "unknown error" };
             }
         }
+    }
+
+
+    /**
+     * Deletes the user account from Firebase Auth
+     * 
+     * It only deletes the user account from Firebase Auth. Deletion of user data from Firestore or Realtime Database
+     * must be done in clientend.
+     * 
+     * @param uid uid of the user
+     */
+    static async deleteAccount(uid: string): Promise<void> {
+
+        // Delete user account
+        const auth = getAuth();
+        const db = getDatabase();
+        try {
+            await auth.deleteUser(uid);
+            await db.ref(`${Config.commands}/${uid}`).update({
+                deleteAccountResult: true,
+            });
+        } catch (e: any) {
+            await db.ref(`${Config.commands}/${uid}`).update({
+                deleteAccountResult: false,
+                error: `${e.name}: ${e.message}`,
+            });
+        }
+
     }
 }
