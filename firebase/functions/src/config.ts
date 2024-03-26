@@ -33,6 +33,10 @@ export class Config {
     static postAllSummaries = "post-all-summaries";
     static postSubscriptions = "post-subscriptions";
 
+
+    // Command paths
+    static commands = "commands";
+
     /**
      * debug 가 true 일 때만 로그를 남긴다.
      * @param message message to log

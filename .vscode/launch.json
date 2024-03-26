@@ -370,7 +370,17 @@
       "flutterMode": "debug",
       "cwd": "apps/roha",
       "program": "lib/main.dart",
-      // "args": ["-v", "--dart-define", "MODE=test"]
+      "args": ["--dart-define", "MODE=dev"]
+    },
+    {
+      "name": "Roha (Noe) TEST - SM J737S (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "SM J737S",
+      "flutterMode": "debug",
+      "cwd": "apps/roha",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=dev"]
     },
     {
       "name": "Roha (Noe) TEST - iPhone SE (3rd Generation)",
@@ -380,7 +390,7 @@
       "flutterMode": "debug",
       "cwd": "apps/roha",
       "program": "lib/main.dart",
-      // "args": ["-v", "--dart-define", "MODE=test"]
+      "args": ["--dart-define", "MODE=dev"]
     },
     {
       "name": "Wemeet (Noe) TEST - iPhone 15 Pro (debug)",
@@ -429,7 +439,7 @@
       "flutterMode": "debug",
       "cwd": "apps/roha",
       "program": "lib/main.dart",
-      // "args": ["-v", "--dart-define", "MODE=test"]
+      "args": ["-v", "--dart-define", "MODE=dev"]
     },
     {
       "name": "Silvers (Noe) TEST - iPhone 15 Pro (debug)",
@@ -438,6 +448,16 @@
       "deviceId": "iPhone 15 Pro Max",
       "flutterMode": "debug",
       "cwd": "apps/silvers",
+      "program": "lib/main.dart",
+      // "args": ["-v", "--dart-define", "MODE=test"]
+    },
+    {
+      "name": "Social Kit - iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "apps/social_kit/example",
       "program": "lib/main.dart",
       // "args": ["-v", "--dart-define", "MODE=test"]
     }

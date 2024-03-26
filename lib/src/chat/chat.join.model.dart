@@ -10,6 +10,7 @@ class ChatJoin {
   /// Chat Join 은 /chat-joins/{myUid}/{roomId} 에 저장된다. 항상 나의 uid 가 앞에 온다.
   static String join(String myUid, String roomId) => '$nodeName/$myUid/$roomId';
 
+  /// /chat-joins/{나의 uid}/{roomId} 의 reference 를 리턴한다.
   static DatabaseReference joinRef(String myUid, String roomId) =>
       rootRef.child(join(myUid, roomId));
 

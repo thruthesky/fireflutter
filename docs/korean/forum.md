@@ -16,7 +16,14 @@
 
 ## Coding Guideline
 
-- `category` cannot be changed due to the node structure.
+
+- `category` 는 rtdb 내에 미리 정해져 있거나 관리자 모드에서 따로 카테고리를 생성하는 것이 아니다. 그냥 카테고리 문자열을 적절히 (임의로) 지정해서 쓰면 된다. 예를 들어, `abc` 라는 카테고리가 없는데, 그냥 글 쓰기 할 때, 카테고리 `abc` 라고 쓰고, 글 목록을 할 때, 카테고리를 `abc` 로 해서 목록하면 된다.
+
+- `category` 카테고리 값은 변경 할 수 없다. 이것은 rtdb 의 경로 구조와 문제가 있는데, `/posts` 경로 뿐만아니라 `/post-summary`, `post-all-summary` 등 여러 경로가 복잡하게 얽혀 있어서 그렇다.
+
+
+
+
 
 ## Observing post changes and update data
 

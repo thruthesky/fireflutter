@@ -192,12 +192,13 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                       ),
                   const SizedBox(height: 8),
                   TextField(
-                    focusNode: FocusNode(),
                     key: const Key('phoneNumberField'),
                     controller: phoneNumberController,
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
-                      prefix: widget.prefix,
+                      /// prefix is only shown when the input is focused.
+                      /// That's why it's prefixIcon over prefix.
+                      prefixIcon: widget.prefix,
                       isDense: true,
                       // contentPadding: EdgeInsets.symmetric(vertical: 24, horizontal: 24),
                       border: const OutlineInputBorder(),

@@ -99,6 +99,7 @@ class _ChatMessageListViewState extends State<ChatMessageListView> {
             padding: const EdgeInsets.all(0),
             reverse: true,
             primary: widget.primary,
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             itemCount: snapshot.docs.length,
             itemBuilder: (context, index) {
               if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
