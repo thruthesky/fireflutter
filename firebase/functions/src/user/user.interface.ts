@@ -14,3 +14,9 @@ export interface UserCreateWithPhoneNumber {
     phoneNumber: string;
 }
 
+
+export interface DeleteAccountResponse {
+    code: string;
+    message?: string;
+    uid: string;
+}

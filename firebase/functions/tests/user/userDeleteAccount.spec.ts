@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * To test, run the following command:
  * ```
  * npm run test:userDeleteAccount
@@ -9,7 +9,6 @@ import * as admin from "firebase-admin";
 import { describe, it } from "mocha";
 import assert = require("assert");
 import { UserService } from "../../src/user/user.service";
-import { Config } from "../../src/config";
 
 
 if (admin.apps.length === 0) {
@@ -19,18 +18,20 @@ if (admin.apps.length === 0) {
 }
 
 describe("user delete account test", () => {
+    it("delete with undefined uid -> no-uid", async () => {
+        const re = await UserService.deleteAccount(undefined);
+        assert.ok(re.code === "no-uid", re.message);
+    });
+    it("delete with empty uid -> no-uid", async () => {
+        const re = await UserService.deleteAccount("");
+        assert.ok(re.code === "no-uid", re.message);
+    });
+
+
     it("delete with wrong user uid -> auth/user-not-found", async () => {
         const uid = "wrong-user-uid";
-        const db = admin.database();
-        try {
-            await UserService.deleteAccount(uid);
-            const snapshot = await db.ref(`${Config.commands}/${uid}`).get();
-            console.log('snapshot.val()', snapshot.val());
-            assert.ok(snapshot.val()['deleteAccountResult'] === false, "...");
-        } catch (e) {
-            // console.error(e);
-            assert.ok((e as any).code === "auth/user-not-found", "...");
-        }
+        const re = await UserService.deleteAccount(uid);
+        assert.ok(re.code === "auth/user-not-found", "user not found by that uid");
     });
 
     it("delete with real user uid", async () => {
@@ -41,21 +42,8 @@ describe("user delete account test", () => {
             password: "password12345a,*",
         });
 
-        // console.log('userRecord', userRecord);
-
-
-        const db = admin.database();
-        try {
-            await UserService.deleteAccount(userRecord.uid);
-
-            const snapshot = await db.ref(`${Config.commands}/${userRecord.uid}`).get();
-            console.log('snapshot.val()', snapshot.val());
-            assert.ok(snapshot.val()['deleteAccountResult'] === true, "...");
-
-        } catch (e) {
-            // console.error(e);
-            assert.ok((e as any).code === "----", "...");
-        }
+        const re = await UserService.deleteAccount(userRecord.uid);
+        assert.ok(re.code === "ok", "user account deleted");
     });
 });
 
