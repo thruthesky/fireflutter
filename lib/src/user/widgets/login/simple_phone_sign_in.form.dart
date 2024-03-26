@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 /// A simple phone number login form.
 ///
@@ -212,14 +211,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                       border: const OutlineInputBorder(),
                       hintText: widget.phoneNumberInputHintText ??
                           T.phoneNumberInputHint.tr,
-                      // hintStyle: TextStyle(
-                      //   fontSize: 32,
-                      //   fontWeight: FontWeight.w400,
-                      //   color: Theme.of(context).colorScheme.outline.tone(72),
-                      // ),
                     ),
-                    // style: widget.phoneNumberTextStyle ??
-                    //     const TextStyle(fontSize: 32),
                     autofocus: true,
                     onChanged: (value) => setState(() {}),
                   ),

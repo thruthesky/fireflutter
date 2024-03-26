@@ -440,8 +440,15 @@ Theme(
           hintStyle: phoneNumberHintTextStyle,
         ),
     textTheme: Theme.of(context).textTheme.copyWith(
+          /// 전화번호 입력시, 입력 박스 안의 텍스트
           bodyLarge: phoneNumberTextStyle.copyWith(
             color: Theme.of(context).colorScheme.onBackground,
+          ),
+
+          /// SMS 인증시, 상단에 표시되는 전화번호
+          headlineSmall: TextStyle(
+            color: context.colorScheme.secondary.withAlpha(232),
+            fontSize: fsXxl,
           ),
         ),
   ),
@@ -503,6 +510,7 @@ Theme(
 
 
 만약, 입력 박스 안의 텍스트를 조금 더 크게 키우고 싶다면 위 코드에서 아래의 코드를 수정하여 적용하면 된다.
+아래의 코드는 글자를 크게하면 텍스트 입력 박스 안의 글자가 약간 위로 올라가는데, 그것을 내리지 않고, 오히려 prefixIcon 을 내린다. 입력 박스 안에 입력된 글자를 내릴 수 있는 방법이 있다면 그것도 좋은 방법이다.
 
 ```dart
 TextStyle get phoneNumberTextStyle => context.isNarrow
