@@ -63,6 +63,16 @@ class ChatService {
     return room;
   }
 
+  /// 채팅방 입장
+  ///
+  /// 채팅방을 보여준다. 채팅방을 입장 할 때에는 [uid], [roomId] 또는 [room] 중 하나를
+  /// 전달하면 된다.
+  ///
+  /// [uid] 는 1:1 채팅방에서 다른 사용자의 uid 이다.
+  ///
+  /// [roomId] 는 채팅방의 id 이다.
+  ///
+  /// [room] 는 채팅방의 정보이다. [room] 을 전달하면 보다 빠르게 화면을 보여 줄 수 있다.
   Future showChatRoomScreen({
     required BuildContext context,
     String? uid,

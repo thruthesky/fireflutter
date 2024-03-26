@@ -129,9 +129,14 @@ await chat.join(forceJoin: true);
 
 그러나 더 간편하게 채팅방을 만들고 싶다면, 미리 제공된 `ChatService.instance.showChatRoomCreate()` 함수를 사용할 수 있습니다. 디자인을 사용자 정의하려면 DefaultChatRoomEditDialog을 복사하고 수정할 수 있습니다.
 
-### Viewing Chat Room
+### 채팅방 입장
 
-A `ChatRoomBody()` widget can be used to show chat room (room's messages with room input box).
+채팅방에 입장을 하려면 간단히, `ChatService.instance.showChatRoomScreen()` 을 호출하면 새창으로 채팅방을 보여준다.
+
+새창이 아니라, 탭바 또는 화면의 한 부분으로 추가를 하고 싶은 경우 `ChatRoomBody()` 위젯을 사용하면 된다.
+
+`ChatRoomBody()` 은 기본적으로 채팅 헤더, 메시지 목록, 채팅 입력 박스 세 가지가 포함되어져 있다. 그리고 여러가지 옵션이 있으며 이를 통해서 디자인을 변경 할 수. 있다 물론 원한다면 `ChatRoomBody()` 를 복사해서 모든 것을 직접 작성해도 된다.
+
 
 ```dart
 // For 1:1 chat room, using other user's uid
@@ -147,6 +152,65 @@ ChatRoomBody(roomId: 'room-id');
 // Using snapshot -> ChatRoom
 ChatRoom chatRoom = ChatRoom.fromSnapshot(dataSnapshot);
 ChatRoomBody(room: chatRoom);
+```
+
+
+```dart
+import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
+import 'package:silvers/models/club/club.dart';
+
+class ClubScreen extends StatefulWidget {
+  static const String routeName = '/Club';
+  const ClubScreen({super.key, required this.club});
+
+  final Club club;
+
+  @override
+  State<ClubScreen> createState() => _ClubScreenState();
+}
+
+class _ClubScreenState extends State<ClubScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 5,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('클럽 제목 : ${widget.club.name}'),
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: '소개'),
+              Tab(text: '일정'),
+              Tab(text: '채팅'),
+              Tab(text: '게시판'),
+              Tab(text: '사진첩'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            const Text("모임 소개. @TODO 시놀 보고 따라 만든다."),
+            const Text(
+                "미팅 시간 날짜 약속 @TODO 간단하게 게시판 형태로 만든다. 날짜를 수동으로 입력한다. 시놀 보고 따라 만든다."),
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: ChatRoomBody(
+                roomId: widget.club.id,
+                displayAppBar: false,
+                appBarBottomSpacing: 0,
+              ),
+            ),
+            const Text(
+                "게시판. 서브 카테고리 없이 그냥 글만 쓸 수 있게 한다. 단, 공지사항은 따로 맨 위에 최대 5개까지 노출 할 수 있도록 한다."),
+            const Text("사진첩, 그냥 갤러리로 만든다."),
+          ],
+        ),
+      ),
+    );
+  }
+}
 ```
 
 ### Updating Chat Room
