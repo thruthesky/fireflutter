@@ -19,6 +19,7 @@
     "deploy:userLike": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:userLikeCreated,functions:userLikeDeleted",
     "deploy:userMirror": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:userMirror",
     "deploy:phoneNumberRegister": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:phoneNumberRegister",
+    "deploy:userDeleteAccount": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:userDeleteAccount",
     "logs": "firebase functions:log",
     "test:send-a-message": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/send-a-message.spec.ts",
     "test:send-message": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/send-message.spec.ts",
@@ -38,7 +39,8 @@
     "test:forumRemoveField": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/post-remove-field.spec.ts --timeout 350000",
     "test:forumDelete": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/post-delete-true.spec.ts --timeout 350000",
     "test:forumRace": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/race-condition.spec.ts --timeout 350000",
-    "test:phoneNumberRegister": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/user/phoneNumberRegister.spec.ts --timeout 100000"
+    "test:phoneNumberRegister": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/user/phoneNumberRegister.spec.ts --timeout 100000",
+    "test:userDeleteAccount": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/user/userDeleteAccount.spec.ts --timeout 5000"
   },
   "main": "lib/src/index.js",
   "dependencies": {

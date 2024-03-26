@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
@@ -49,11 +50,20 @@ class UserService {
   Function(User)? onCreate;
   Function(User)? onUpdate;
 
+  /// Set the region of the callable function.
+  ///
+  /// To call callable function in Firebase cloud functions, you need to set the region.
+  ///
+  /// This is used when the user resigns and deletes the user data. You may not need to set this,
+  /// if you don't use the resign function or any callable functions.
+  String? callableFunctionRegion;
+
   UserService._() {
     // dog('--> UserService._()');
   }
 
   init({
+    String? callableFunctionRegion,
     bool enablePushNotificationOnProfileView = false,
     bool enableNotificationOnLike = false,
     Function(User user)? onSignout,
@@ -63,6 +73,9 @@ class UserService {
     Function(User user)? onUpdate,
   }) {
     // dog('--> UserService.init()');
+
+    this.callableFunctionRegion = callableFunctionRegion;
+
     initUser();
     listenUser();
 
@@ -270,5 +283,34 @@ class UserService {
       ActionLog.userProfileView(userUid)
     ];
     await Future.wait(futures);
+  }
+
+  /// Resign the user and delete database
+  Future<void> resign() async {
+    if (callableFunctionRegion == null) {
+      throw FireFlutterException(
+          'callable-functino-region', 'callableFunctionRegion is not set');
+    }
+    await myRef.remove();
+    try {
+      final result =
+          await FirebaseFunctions.instanceFor(region: callableFunctionRegion)
+              .httpsCallable(
+                'userDeleteAccount',
+                options: HttpsCallableOptions(
+                  timeout: const Duration(seconds: 25),
+                ),
+              )
+              .call();
+
+      if (result.data['code'] != 'ok') {
+        throw FireFlutterException(result.data['code'], result.data['message']);
+      }
+    } on FirebaseFunctionsException catch (error) {
+      print(error.code);
+      print(error.details);
+      print(error.message);
+      rethrow;
+    }
   }
 }
