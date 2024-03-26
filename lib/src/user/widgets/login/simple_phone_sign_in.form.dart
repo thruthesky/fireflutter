@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 /// A simple phone number login form.
 ///
@@ -75,8 +76,10 @@ class SimplePhoneSignInForm extends StatefulWidget {
     this.label,
     this.description,
     this.submitLabel,
-    this.prefix,
-    this.hintText,
+    this.phoneNumberInputPrefix,
+    this.phoneNumberInputPrefixIcon,
+    this.phoneNumberInputPrefixIconConstraints,
+    this.phoneNumberInputHintText,
     this.smsPhoneLabel,
     this.smsDescription,
     this.smsSubmitLabel,
@@ -99,8 +102,10 @@ class SimplePhoneSignInForm extends StatefulWidget {
   final Widget? label;
   final Widget? description;
   final Widget? submitLabel;
-  final Widget? prefix;
-  final String? hintText;
+  final Widget? phoneNumberInputPrefix;
+  final Widget? phoneNumberInputPrefixIcon;
+  final BoxConstraints? phoneNumberInputPrefixIconConstraints;
+  final String? phoneNumberInputHintText;
   final Widget? smsPhoneLabel;
   final Widget? smsDescription;
   final Widget? smsSubmitLabel;
@@ -198,11 +203,15 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                     decoration: InputDecoration(
                       /// prefix is only shown when the input is focused.
                       /// That's why it's prefixIcon over prefix.
-                      prefixIcon: widget.prefix,
+                      prefix: widget.phoneNumberInputPrefix,
+                      prefixIcon: widget.phoneNumberInputPrefixIcon,
+                      prefixIconConstraints:
+                          widget.phoneNumberInputPrefixIconConstraints,
                       isDense: true,
                       // contentPadding: EdgeInsets.symmetric(vertical: 24, horizontal: 24),
                       border: const OutlineInputBorder(),
-                      hintText: widget.hintText ?? T.phoneNumberInputHint.tr,
+                      hintText: widget.phoneNumberInputHintText ??
+                          T.phoneNumberInputHint.tr,
                       // hintStyle: TextStyle(
                       //   fontSize: 32,
                       //   fontWeight: FontWeight.w400,
@@ -225,9 +234,15 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                 ],
               ),
         if (showSmsCodeInput == false) const SizedBox(height: 32),
-        if (showSmsCodeInput == false &&
-            phoneNumberController.text.trim().isNotEmpty)
-          Row(
+        // if (showSmsCodeInput == false &&
+        //     phoneNumberController.text.trim().isNotEmpty)
+        Visibility(
+          visible: showSmsCodeInput == false &&
+              phoneNumberController.text.trim().isNotEmpty,
+          maintainSize: true,
+          maintainAnimation: true,
+          maintainState: true,
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
@@ -319,6 +334,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
               ),
             ],
           ),
+        ),
         if (showSmsCodeInput) ...[
           const SizedBox(height: 32),
           widget.smsDescription ??

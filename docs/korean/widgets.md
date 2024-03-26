@@ -415,32 +415,55 @@ FireFlutter 는 Firebase Auth 의 Phone Sign-in 을 지원하는 전화 번호�
 - [description] 전화번호 입력 박스 아래에 표시될 설명
 
 
-아래의 예제는 SimplePhoneSignInForm 을 사용하는데, Theme 을 사용하여 UI 를 변경하는 예제이다.
+아래의 예제는 SimplePhoneSignInForm 을 사용하는데, Theme 을 사용하여 UI 를 변경하는 예제이다. 특히, 전화번호를 입력 할 때, 텍스트 입력 박스와 텍스트 글자가 정렬이 잘 안되는 경우가 있는데, 아래는 최적의 정렬과 여백을 조정해 놓은 예제이다.
 
 ```dart
+
+extension RohaBuildContext on BuildContext {
+  bool get isNarrow {
+    return MediaQuery.of(this).size.width <= 375;
+  }
+}
+
+
+TextStyle get phoneNumberTextStyle => context.isNarrow
+    ? context.textTheme.headlineMedium!
+    : context.textTheme.headlineLarge!;
+
+TextStyle get phoneNumberHintTextStyle => phoneNumberTextStyle.copyWith(
+      color: Theme.of(context).colorScheme.onBackground.withOpacity(.5),
+    );
+
 Theme(
   data: Theme.of(context).copyWith(
-    inputDecorationTheme:
-        Theme.of(context).inputDecorationTheme.copyWith(
-              hintStyle: TextStyle(
-                color: context.colorScheme.secondary,
-                fontSize: fsXl,
-              ),
-            ),
+    inputDecorationTheme: Theme.of(context).inputDecorationTheme.copyWith(
+          hintStyle: phoneNumberHintTextStyle,
+        ),
     textTheme: Theme.of(context).textTheme.copyWith(
-          bodyLarge: TextStyle(
-            color: context.colorScheme.secondary,
-            fontSize: fsXl,
+          bodyLarge: phoneNumberTextStyle.copyWith(
+            color: Theme.of(context).colorScheme.onBackground,
           ),
         ),
   ),
   child: SimplePhoneSignInForm(
+    description: const SizedBox.shrink(),
+    headline: const SizedBox.shrink(),
     emailLogin: true,
-    prefix: const Text('010 '),
-    reviewPhoneNumber: '12345678',
-    reviewRealPhoneNumber:
-        '+821011112222', // 화면에는 11112222 로 입력 하면 됨.
+    reviewPhoneNumber: '86934225',
+    reviewRealPhoneNumber: '+11234123123',
     reviewRealSmsCode: '123456',
+    onSignin: () => context.go(MainScreen.routeName),
+    languageCode: languageCode ?? 'ko',
+    phoneNumberInputHintText: 'XXXX XXXX',
+    phoneNumberInputPrefixIcon: Align(
+      child: Text(
+        ' 010 ',
+        style: phoneNumberHintTextStyle,
+      ),
+    ),
+    phoneNumberInputPrefixIconConstraints: const BoxConstraints(
+      maxWidth: 80,
+    ),
     onCompleteNumber: (phoneNumber) {
       String number = phoneNumber.trim();
       number = number.replaceAll(RegExp(r'[^\+0-9]'), '');
@@ -458,22 +481,14 @@ Theme(
       } else {
         error(
           context: context,
-          title: '전화번호 입력 오류',
-          message: '전화번호를 올바로 입력하세요.',
+
+          /// TODO translate below
+          title: 'error'.tr,
+          message: 'inputCorrectPhoneNumber'.tr,
         );
       }
       return null;
     },
-    onSignin: () => signinSuccess(context),
-    languageCode: 'ko',
-    headline:
-        Text(' 간편하게 전화번호 로그인을 합니다.', style: context.bodySmall),
-    label: Text('  전화번호', style: context.labelSmall),
-    hintText: '',
-    description: Text(
-      '  전화번호를 입력하시면 인증 요청 버튼을 나타납니다.',
-      style: context.labelSmall,
-    ),
     phoneNumberDisplayBuilder: (n) {
       if (n?.contains('+8210') == true) {
         n = n?.replaceFirst('+8210', '');
@@ -483,19 +498,28 @@ Theme(
         return n;
       }
     },
-    submitLabel: const Text('     인증 요청     '),
+  ),
+```
 
-    smsPhoneLabel: Text('  전화번호', style: context.labelSmall),
-    smsDescription:
-        Text('  인증번호를 입력하세요.', style: context.labelSmall),
-    smsSubmitLabel: const Text('   인증번호 전송   '),
-    smsRetry: Text(
-      '다시하기',
-      style: context.labelLarge
-          .copyWith(color: context.colorScheme.secondary),
+
+만약, 입력 박스 안의 텍스트를 조금 더 크게 키우고 싶다면 위 코드에서 아래의 코드를 수정하여 적용하면 된다.
+
+```dart
+TextStyle get phoneNumberTextStyle => context.isNarrow
+    ? context.textTheme.headlineLarge!
+    : context.textTheme.displaySmall!;
+SimplePhoneSignInForm(
+  phoneNumberInputPrefixIcon: Align(
+    child: Padding(
+      padding: EdgeInsets.only(bottom: context.isNarrow ? 0 : 2),
+      child: Text(
+        ' 010 ',
+        style: phoneNumberHintTextStyle,
+      ),
     ),
   ),
-),
+    // ...
+)
 ```
 
 

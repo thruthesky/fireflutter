@@ -613,8 +613,8 @@ Blocked(
 
 ## 회원 탈퇴
 
-- 명령 문서에 `deleteAccount: true` 를 저장하면, 계정 삭제를 진행한다. 참고, [명령어 문서](./command.md)
-- 회원 탈퇴를 따로 백엔드 함수로 만드는 이유는 클라이언트엔드에서 이 작업하면 `requires-recent-login` 에러가 발생한다.
+- 회원 탈퇴는 `UserService.instance.resign()` 함수를 호출하면 된다. 이 함수는 `callable function` 을 통해서 클라우드 함수 코드를 호출한다.
+- 회원 탈퇴를 callable function 으로 만드는 이유는 클라이언트엔드에서 이 작업하면 `requires-recent-login` 에러가 발생한다.
   - 만약, 회원 탈퇴를 할 때, RTDB 나 Firestore 에서 회원 데이터를 삭제해야하는 경우, Firebase Auth 에서 계정 삭제를 먼저 한 다음,데이터를 삭제해야하는데, Firebase Auth 에서 계정 삭제를 하는 순간, 로그인 사용자의 uid 가 사라지고 회원 로그인 상태 정보가 사라져서 데이터를 삭제 할 수 없다. 그렇다고 데이터를 먼저 삭제해 버리면, `requires-recent-login` 에러가 발생해서 문제가 된다.
   - `http request` 로 하면 본인 인증이 안되고, `backend trigger` 로 하면 클라이언트에서 결과 대기하는 것이 어렵다. 그래서 `on call` 방식으로 한다.
 
