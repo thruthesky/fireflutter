@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:fireflutter/fireflutter.dart' as ff;
+import 'package:fireflutter/fireflutter.functions.dart';
 import 'package:geohash_plus/geohash_plus.dart';
 
 class User {
@@ -14,6 +15,7 @@ class User {
   static const String userProfilePhotos = 'user-profile-photos';
   static const String whoLikeMe = 'who-like-me';
   static const String whoILike = 'who-i-like';
+  static const String commands = 'commands';
 
   static String user(String uid) => '$node/$uid';
   static String userField(String uid, String field) => '${user(uid)}/$field';
@@ -23,6 +25,8 @@ class User {
 
   static DatabaseReference iLikeRef(String b) =>
       FirebaseDatabase.instance.ref(whoILikePath(ff.myUid!, b));
+
+  static String resignPath = '$commands/$myUid';
 
   ///
   static DatabaseReference userRef(String uid) => usersRef.child(uid);

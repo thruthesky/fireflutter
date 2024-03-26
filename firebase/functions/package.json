@@ -18,6 +18,7 @@
     "deploy:typesense": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:typesenseUserIndexing,functions:typesenseCommentIndexing,functions:typesensePostIndexing",
     "deploy:userLike": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:userLikeCreated,functions:userLikeDeleted",
     "deploy:userMirror": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:userMirror",
+    "deploy:userDeleteAccount": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:userDeleteAccount",
     "deploy:phoneNumberRegister": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:phoneNumberRegister",
     "logs": "firebase functions:log",
     "test:send-a-message": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/send-a-message.spec.ts",

@@ -184,6 +184,15 @@ class UserService {
     return fb.FirebaseAuth.instance.signOut();
   }
 
+  // review
+  // this service allow the user delete his account data from auth, firestore ,
+  // rtdb this will created a node commands/uid/deleteAccount and the backend
+  // deleteUserAccount cloudfunction will lisen to changes and delete the data
+  Future<void> resign() async {
+    final ref = FirebaseDatabase.instance.ref('commands/$myUid');
+    return await ref.set({'deleteAccount': true});
+  }
+
   /// Alias of logout()
   Future<void> signOut() {
     return fb.FirebaseAuth.instance.signOut();

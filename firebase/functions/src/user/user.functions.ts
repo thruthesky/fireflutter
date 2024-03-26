@@ -1,4 +1,4 @@
-import { onValueUpdated, onValueWritten } from "firebase-functions/v2/database";
+import { onValueWritten } from "firebase-functions/v2/database";
 import { Config } from "../config";
 import { ServerValue, getDatabase } from "firebase-admin/database";
 import { getFirestore } from "firebase-admin/firestore";
@@ -63,7 +63,7 @@ export const userLike = onValueWritten(
 
 /**
  * User CRUD
- * 
+ *
  * Mirror the user data to Firestore
  */
 export const userMirror = onValueWritten(
@@ -95,17 +95,18 @@ export const userMirror = onValueWritten(
 
 /**
  * User delete account
- * 
+ *
  * This will delete user account from Firebase Auth, Realtime Database, Firestore.
  */
-export const userDeleteAccount = onValueUpdated(`${Config.commands}/{uid}/deleteAccount`, async (event) => {
-
-    if (event.data.after.val() === true) {
+export const userDeleteAccount = onValueWritten(`${Config.commands}/{uid}/deleteAccount`, async (event) => {
+    if (event.data.after.val() === true ) {
         const uid = event.params.uid;
         // Delete user account
         const auth = getAuth();
-        await auth.deleteUser(uid);
-
+        const userRecord = await auth.getUser(uid);
+        if (userRecord) {
+            await auth.deleteUser(uid);
+        }
 
         // Delete user data from Realtime Database
         const db = getDatabase();
