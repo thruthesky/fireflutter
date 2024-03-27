@@ -32,5 +32,6 @@ class Code {
 
   static const String deleted = 'deleted';
 
+  @Deprecated('Use Field.languageCode instead')
   static const String languageCode = 'languageCode';
 }

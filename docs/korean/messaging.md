@@ -120,3 +120,17 @@ A 가 B 의 프로필을 보면, B 는 푸시 알림을 받을 수 있다. 즉, 
 
 - 앱 초기화를 할 때, `UserService.init()` 에서 프로필 보기를 할 때, 푸시 알림 설정을 하고
 - 사용자 설정에서 `profileViewNotification` 에 false 가 아닌 값을 저장하면 푸시 알림을 한다. 즉, 이 값이 존재하지 않거나(null 이거나), true 인 경우에 푸시 알림을 한다.
+
+
+
+
+## 사용자 프로필이 보여질 때, 푸시 알림 보내기 커스텀 작업
+
+사용자 프로필이 보여질 때 `enablePushNotificationOnPublicProfileView` 옵션을 이용해서, 푸시 알림을 보낼 수 있다. 하지만 기본적으로 푸시 알림 코드가 마음에 들지 않는다면, 직접 코딩을 통해서 푸시 알림 로직을 작성 할 수 있다.
+
+
+먼저, `enablePushNotificationOnPublicProfileView` 를 false 로 지정해서, 기본 푸시 알림 로직이 실행되지 않도록 한다.
+그리고, `pushNotificationOnPublicProfileView` 을 custom 작업해서 그 안에서 직접 푸시 알림 로직을 수행하면 되는 것이다.
+
+
+

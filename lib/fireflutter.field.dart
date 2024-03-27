@@ -64,4 +64,6 @@ class Field {
   static const String idUrl = 'idUrl';
 
   static const String occupation = 'occupation';
+
+  static const String languageCode = 'languageCode';
 }

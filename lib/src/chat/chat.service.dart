@@ -36,19 +36,24 @@ class ChatService {
 
   Function(ChatModel)? testBeforeSendMessage;
 
-  Function(ChatMessage)? afterMessageSent;
-
-  /// Warning! this is a dangerous function. Don't use the reference to the database directly because the data is not exists yet in the database.
+  /// Do something before the message is sent.
   ///
-  /// Don't do anything with the database in this call back function. This is only for the client side and for chaing the message from the memory only.
-  Function(ChatMessage)? beforeMessageSent;
+  /// You can translate the text into other language or do something else.
+  ///
+  /// [message] is the message that is going to be sent. It has text, url, etc. You can modify it and return it.
+  ///
+  /// [chatModel] is the chat model that contains the room id, my uid, etc. You can now who you are chatting with with this.
+  Future<Map<String, dynamic>> Function(
+      Map<String, dynamic> message, ChatModel chatModel)? beforeMessageSent;
+  Function(ChatMessage)? afterMessageSent;
 
   /// init
   init({
     ChatCustomize? customize,
     Function(ChatModel)? testBeforeSendMessage,
+    Future<Map<String, dynamic>> Function(Map<String, dynamic>, ChatModel)?
+        beforeMessageSent,
     Function(ChatMessage)? afterMessageSent,
-    Function(ChatMessage)? beforeMessageSent,
   }) {
     // dog('--> ChatService.init()');
     this.customize = customize ?? this.customize;

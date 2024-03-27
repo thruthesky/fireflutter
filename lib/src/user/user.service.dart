@@ -33,13 +33,13 @@ class UserService {
 
   Function(User user)? onSignout;
 
-  /// If [enablePushNotificationOnProfileView] is set to true it will send push notification
+  /// If [enablePushNotificationOnPublicProfileView] is set to true it will send push notification
   /// when showPublicProfileScreen is called
   /// this will send a push notification to the visited profile
   /// and indicating that the current user visited that profile
   ///
   ///
-  bool enablePushNotificationOnProfileView = false;
+  bool enablePushNotificationOnPublicProfileView = false;
 
   /// [onLike] is called when a post is liked or unliked by the login user.
   void Function(User user, bool isLiked)? onLike;
@@ -64,7 +64,7 @@ class UserService {
 
   init({
     String? callableFunctionRegion,
-    bool enablePushNotificationOnProfileView = false,
+    bool enablePushNotificationOnPublicProfileView = false,
     bool enableNotificationOnLike = false,
     Function(User user)? onSignout,
     void Function(User user, bool isLiked)? onLike,
@@ -83,8 +83,8 @@ class UserService {
       this.customize = customize;
     }
 
-    this.enablePushNotificationOnProfileView =
-        enablePushNotificationOnProfileView;
+    this.enablePushNotificationOnPublicProfileView =
+        enablePushNotificationOnPublicProfileView;
 
     this.onLike = onLike;
     this.enableNotificationOnLike = enableNotificationOnLike;
@@ -225,9 +225,13 @@ class UserService {
   ///
   /// You can customize by setting [UserCustomize] to [UserService.instance.customize].
   ///
-  /// Send notification even if enablePushNotificationOnProfileView is set to false
+  /// Send notification even if enablePushNotificationOnPublicProfileView is set to false
   /// set `notify` to `false` to prevent sending push notification
   /// used `notify` to `false` like admin visit the user profile
+  ///
+  /// [uid] is the other user's uid
+  ///
+  /// [user] is the other user's User object
   Future showPublicProfileScreen({
     required BuildContext context,
     String? uid,
@@ -236,12 +240,12 @@ class UserService {
     assert(uid != null || user != null,
         'Either uid or user must be provided to show public profile screen');
 
-    final String userUid = uid ?? user!.uid;
+    user ??= await User.get(uid!);
 
     /// Check if it hits limit except the user is admin or the user views his own profile.
-    if (isAdmin == false && userUid != my?.uid) {
+    if (isAdmin == false && user!.uid != my?.uid) {
       if (await ActionLogService.instance.userProfileView.isOverLimit(
-        uid: user?.uid ?? uid!,
+        uid: user.uid,
       )) return;
     }
 
@@ -255,8 +259,8 @@ class UserService {
     }
 
     /// Dynamic link is especially for users who are not install and not signed users.
-    if (loggedIn && myUid != userUid) {
-      _userProfileViewLogs(userUid);
+    if (loggedIn && myUid != user!.uid) {
+      _userProfileViewLogs(user.uid);
     }
 
     /// Push notification on profile view
@@ -264,15 +268,24 @@ class UserService {
     /// send notification by default when user visit other user profile
     /// disable notification when `disableNotifyOnProfileVisited` is set on user setting
     /// Send push notification to the other user.
-    if (enablePushNotificationOnProfileView && loggedIn && myUid != userUid) {
+    if ((enablePushNotificationOnPublicProfileView ||
+            customize.pushNotificationOnPublicProfileView != null) &&
+        loggedIn &&
+        myUid != user!.uid) {
       bool? re =
-          await UserSetting.getField(userUid, Code.profileViewNotification);
+          await UserSetting.getField(user.uid, Code.profileViewNotification);
       if (re == false) return;
-      MessagingService.instance.sendTo(
-        title: T.yourProfileWasVisited,
-        body: "${my?.displayName} ${T.visitYourProfile}",
-        uid: uid,
-      );
+
+      if (customize.pushNotificationOnPublicProfileView != null) {
+        await customize.pushNotificationOnPublicProfileView!(user);
+      } else {
+        await MessagingService.instance.sendTo(
+          title: T.visitedYourProfileTitle.tr,
+          body:
+              T.visitedYourProfileBody.tr.replaceAll('#name', my!.displayName),
+          uid: user.uid,
+        );
+      }
     }
   }
 
