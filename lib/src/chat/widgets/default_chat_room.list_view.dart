@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 /// [empty] is the widget to display when there is no chat room.
 ///
 class DefaultChatRoomListView extends StatelessWidget {
-  const DefaultChatRoomListView({super.key, this.empty});
+  const DefaultChatRoomListView({super.key, this.emptyBuilder});
 
-  final Widget? empty;
+  final Widget Function()? emptyBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,8 @@ class DefaultChatRoomListView extends StatelessWidget {
             return Text('Something went wrong! ${snapshot.error}');
           }
           if (snapshot.hasMore == false && snapshot.docs.isEmpty) {
-            return empty ?? const Center(child: Text('No chat rooms'));
+            return emptyBuilder?.call() ??
+                const Center(child: Text('No chat rooms'));
           }
           return ListView.builder(
             padding: EdgeInsets.zero,
