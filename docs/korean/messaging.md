@@ -124,13 +124,62 @@ A 가 B 의 프로필을 보면, B 는 푸시 알림을 받을 수 있다. 즉, 
 
 
 
-## 사용자 프로필이 보여질 때, 푸시 알림 보내기 커스텀 작업
+## 사용자 프로필이 보여질 때, 푸시 알림 커스터마이징
 
-사용자 프로필이 보여질 때 `enablePushNotificationOnPublicProfileView` 옵션을 이용해서, 푸시 알림을 보낼 수 있다. 하지만 기본적으로 푸시 알림 코드가 마음에 들지 않는다면, 직접 코딩을 통해서 푸시 알림 로직을 작성 할 수 있다.
+`enablePushNotificationOnPublicProfileView` 옵션을 true 로 주면, A 의 공개 프로필이 B 에 의해서 보여질 때 이용해서 (즉, B 가 A 를 볼 때), 푸시 알림을 A 에게 보낼 수 있다. 하지만 기본적으로 푸시 알림 코드가 마음에 들지 않는다면, 직접 코딩을 통해서 푸시 알림 로직을 작성 할 수 있다.
 
+예를 들면, A 는 영어를 쓰고, B 는 한글로 쓴다면, A 에게는 영어로 푸시 알림이 가야한다. 즉, B 의 핸드폰(또는 앱) 설정이 한글이라고 해서, 푸시 알림이 한글로 가면 안되는 것이다. 이와 같은 때에 푸시 알림 로직을 직접 코딩 할 수 있다.
 
-먼저, `enablePushNotificationOnPublicProfileView` 를 false 로 지정해서, 기본 푸시 알림 로직이 실행되지 않도록 한다.
-그리고, `pushNotificationOnPublicProfileView` 을 custom 작업해서 그 안에서 직접 푸시 알림 로직을 수행하면 되는 것이다.
+먼저, `enablePushNotificationOnPublicProfileView` 를 false 로 지정해서, 기본 푸시 알림 로직이 실행되지 않도록 한다. 그리고, `pushNotificationOnPublicProfileView` 을 custom 함수로 만들고 그 안에서 직접 푸시 알림 로직을 수행하면 되는 것이다. 참고로, `pushNotificationOnPublicProfileView` 에 콜백 함수가 지정되면, `enablePushNotificationOnPublicProfileView` 는 무시된다.
 
+아래의 예제는 B 가 A 프로필을 방문하면, A 의 언어 맞게 번역하여 푸시 알림을 보내는 예제이다.
+
+```dart
+void initUserService() {
+  UserService.instance.init(
+    customize: UserCustomize(
+      pushNotificationOnPublicProfileView: (User otherUser) async {
+        final otherUserLanguageCode =
+            await UserSetting.getField(otherUser.uid, Field.languageCode);
+
+        String title;
+        if (otherUserLanguageCode == 'my') {
+          title = 'သင့်ပရိုဖိုင်ကို ဝင်ကြည့်ခဲ့သည်။';
+        } else if (otherUserLanguageCode == 'ko') {
+          title = '당신의 프로필을 방문했습니다.';
+        } else if (otherUserLanguageCode == 'lo') {
+          title = 'ທ່ານໄດ້ເຂົ້າໜ້າໂປຣໄຟລຂອງທ່ານ.';
+        } else if (otherUserLanguageCode == 'vi') {
+          title = 'Bạn đã ghé thăm hồ sơ của bạn.';
+        } else if (otherUserLanguageCode == 'th') {
+          title = 'คุณได้เยี่ยมชมโปรไฟล์ของคุณแล้ว.';
+        } else {
+          title = 'Someone visited your profile.';
+        }
+
+        String body;
+        if (otherUserLanguageCode == 'my') {
+          body = 'သင့်ပရိုဖိုင်ကို ဝင်ကြည့်ပါ။';
+        } else if (otherUserLanguageCode == 'ko') {
+          body = '#name님께서 회원님의 프로필을 방문했습니다.';
+        } else if (otherUserLanguageCode == 'lo') {
+          body = 'ທ່ານໄດ້ເຂົ້າໜ້າໂປຣໄຟລຂອງທ່ານ.';
+        } else if (otherUserLanguageCode == 'vi') {
+          body = 'Bạn đã ghé thăm hồ sơ của bạn.';
+        } else if (otherUserLanguageCode == 'th') {
+          body = 'คุณได้เยี่ยมชมโปรไฟล์ของคุณแล้ว.';
+        } else {
+          body = '#name visited your profile.';
+        }
+        await MessagingService.instance.sendTo(
+          title: title,
+          body: body.replaceAll('#name', my!.displayName),
+          uid: otherUser.uid,
+        );
+      },
+    ),
+  );
+}
+```
 
 
