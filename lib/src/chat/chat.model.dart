@@ -102,7 +102,6 @@ class ChatModel {
     if (ChatService.instance.beforeMessageSent != null) {
       final beforeChatSentMessage =
           await ChatService.instance.beforeMessageSent!.call(
-        // TODO: loading features should be done in beforeMessageSent and afterMessageSent function
         ChatMessage.fromJson({
           if (text != null) 'text': text,
           if (url != null) 'url': url,
