@@ -98,22 +98,18 @@ class ChatModel {
     messageOrder--;
 
     // Currently, we don't support preventing some chat message
+    // Currently, we only support updating text and/or url
     if (ChatService.instance.beforeMessageSent != null) {
       final beforeChatSentMessage =
           await ChatService.instance.beforeMessageSent!.call(
         // TODO: loading features should be done in beforeMessageSent and afterMessageSent function
-        // In this way, we cannot support removing the text and/or url if developer wants to remove them.
         ChatMessage.fromJson({
           if (text != null) 'text': text,
           if (url != null) 'url': url,
         }),
       );
-      if (beforeChatSentMessage.text != null) {
-        text = beforeChatSentMessage.text;
-      }
-      if (beforeChatSentMessage.url != null) {
-        url = beforeChatSentMessage.url;
-      }
+      text = beforeChatSentMessage.text;
+      url = beforeChatSentMessage.url;
     }
 
     /// 참고, 실제 메시지를 보내기 전에, 채팅방 자체를 먼저 업데이트 해 버린다.
@@ -149,41 +145,6 @@ class ChatModel {
       'ref': chatMessageRef,
       ...chatMessageData,
     });
-
-    // TODO cleanup
-    // Currently, we don't support preventing some chat message
-    // but if we will support it, we can use this function and we
-    // will need to add some sort of options if it will proceed.
-    // if (ChatService.instance.beforeMessageSent != null) {
-    // final beforeChatSentMessage =
-    //     await ChatService.instance.beforeMessageSent!.call(
-    //   // loading features should be done in beforeMessageSent and afterMessageSent function
-    //   virtualChatMessage,
-    // );
-    // // NOTE: This will not trigger warnings/errors if developer
-    // //       updated the key, ref, order, createdAt, or uid
-    // //       but it they will be overridden before sending.
-    // final beforeChatSentMessageData = beforeChatSentMessage.toJson();
-    // beforeChatSentMessageData.remove("key");
-    // beforeChatSentMessageData.remove("ref");
-    // chatMessageData = {
-    //   ...beforeChatSentMessageData,
-    //   ...{
-    //     // TODO: Review if order is having problem if async
-    //     'order': messageOrder,
-    //     'createdAt': ServerValue.timestamp,
-    //     'uid': myUid,
-    //   }
-    // };
-    // virtualChatMessage = ChatMessage.fromJson({
-    //   ...chatMessageData,
-    //   // To prevent updating the ref and key
-    //   ...{
-    //     'key': chatMessageRef.key,
-    //     'ref': chatMessageRef,
-    //   }
-    // });
-    // }
 
     /// Save multiple nodes at once
     ///

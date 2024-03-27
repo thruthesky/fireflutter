@@ -53,41 +53,49 @@ class ChatBubble extends StatelessWidget {
 
           const SizedBox(width: 8),
           // Chat message text. size 60%
-          if (message.text != null)
-            Container(
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.6),
-              child: Column(
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: message.mine
-                          ? Colors.amber.shade200
-                          : Colors.grey.shade200,
-                      borderRadius: borderRadius(),
-                    ),
-                    child: LinkifyText(
-                      message.text!
-                          .orBlocked(message.uid!, T.blockedChatMessage),
-                      style: const TextStyle(color: Colors.black),
-                    ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: message.other
+                ? CrossAxisAlignment.start
+                : CrossAxisAlignment.end,
+            children: [
+              // image
+              if (message.url != null) cachedImage(context, message.url!),
+              if (message.text != null)
+                Container(
+                  constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.6),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: message.mine
+                              ? Colors.amber.shade200
+                              : Colors.grey.shade200,
+                          borderRadius: borderRadius(),
+                        ),
+                        child: LinkifyText(
+                          message.text!
+                              .orBlocked(message.uid!, T.blockedChatMessage),
+                          style: const TextStyle(color: Colors.black),
+                        ),
+                      ),
+                      if (message.hasUrlPreview) ...[
+                        const SizedBox(height: 8),
+                        UrlPreview(
+                          previewUrl: message.previewUrl!,
+                          title: message.previewTitle,
+                          description: message.previewDescription,
+                          imageUrl: message.previewImageUrl,
+                        ),
+                      ],
+                    ],
                   ),
-                  if (message.hasUrlPreview) ...[
-                    const SizedBox(height: 8),
-                    UrlPreview(
-                      previewUrl: message.previewUrl!,
-                      title: message.previewTitle,
-                      description: message.previewDescription,
-                      imageUrl: message.previewImageUrl,
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          // image
-          if (message.url != null) cachedImage(context, message.url!),
+                ),
+            ],
+          ),
 
           const SizedBox(width: 8),
 
