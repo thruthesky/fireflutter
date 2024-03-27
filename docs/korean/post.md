@@ -117,6 +117,7 @@ PostListView.gridView(
     crossAxisSpacing: 8,
     mainAxisSpacing: 8,
   ),
+  emptyBuilder: () => const Center(child: Text('사진을 등록 해 주세요.')),
 ),
 ```
 

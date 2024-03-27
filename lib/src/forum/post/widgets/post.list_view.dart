@@ -31,6 +31,7 @@ class PostListView extends StatelessWidget {
     this.restorationId,
     this.clipBehavior = Clip.hardEdge,
     this.itemBuilder,
+    this.emptyBuilder,
 
     ///
     this.gridView = false,
@@ -59,6 +60,7 @@ class PostListView extends StatelessWidget {
   final String? restorationId;
   final Clip clipBehavior;
   final Widget Function(Post)? itemBuilder;
+  final Widget Function()? emptyBuilder;
 
   /// GridView options
   final bool gridView;
@@ -78,6 +80,11 @@ class PostListView extends StatelessWidget {
           dog('Error: ${snapshot.error}');
           return errorBuilder?.call(snapshot.error.toString()) ??
               Text('Something went wrong! ${snapshot.error}');
+        }
+
+        if (snapshot.hasData && snapshot.docs.isEmpty && !snapshot.hasMore) {
+          return emptyBuilder?.call() ??
+              const Center(child: Text('No posts found.'));
         }
 
         return gridView
@@ -186,6 +193,7 @@ class PostListView extends StatelessWidget {
     String? restorationId,
     Clip clipBehavior = Clip.hardEdge,
     Widget Function(Post)? itemBuilder,
+    Widget Function()? emptyBuilder,
     SliverGridDelegate? gridDelegate,
   }) : this(
           category: category,
@@ -211,6 +219,7 @@ class PostListView extends StatelessWidget {
           addAutomaticKeepAlives: addAutomaticKeepAlives,
           keyboardDismissBehavior: keyboardDismissBehavior,
           itemBuilder: itemBuilder,
+          emptyBuilder: emptyBuilder,
           gridDelegate: gridDelegate,
         );
 }
