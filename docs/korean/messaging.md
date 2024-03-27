@@ -132,13 +132,15 @@ A 가 B 의 프로필을 보면, B 는 푸시 알림을 받을 수 있다. 즉, 
 
 먼저, `enablePushNotificationOnPublicProfileView` 를 false 로 지정해서, 기본 푸시 알림 로직이 실행되지 않도록 한다. 그리고, `pushNotificationOnPublicProfileView` 을 custom 함수로 만들고 그 안에서 직접 푸시 알림 로직을 수행하면 되는 것이다. 참고로, `pushNotificationOnPublicProfileView` 에 콜백 함수가 지정되면, `enablePushNotificationOnPublicProfileView` 는 무시된다.
 
-아래의 예제는 B 가 A 프로필을 방문하면, A 의 언어 맞게 번역하여 푸시 알림을 보내는 예제이다.
+아래의 예제는 B 가 A 프로필을 방문하면, A 의 언어 맞게 번역하여 푸시 알림을 보내는 예제이다. 직접 `MessagingService.instance.sendTo()` 함수를 호출하면 된다.
 
 ```dart
 void initUserService() {
   UserService.instance.init(
     customize: UserCustomize(
       pushNotificationOnPublicProfileView: (User otherUser) async {
+
+        /// 상대방의 언어 설정을 가져온다.
         final otherUserLanguageCode =
             await UserSetting.getField(otherUser.uid, Field.languageCode);
 
@@ -175,6 +177,7 @@ void initUserService() {
           title: title,
           body: body.replaceAll('#name', my!.displayName),
           uid: otherUser.uid,
+          image: user.photoUrl,
         );
       },
     ),

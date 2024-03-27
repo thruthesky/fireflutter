@@ -258,20 +258,20 @@ class UserService {
       );
     }
 
-    /// Dynamic link is especially for users who are not install and not signed users.
-    if (loggedIn && myUid != user!.uid) {
-      _userProfileViewLogs(user.uid);
-    }
+    _userProfileViewLogs(user!.uid);
+    _sendPushNotificationOnProfileView(user);
+  }
 
-    /// Push notification on profile view
-    ///
-    /// send notification by default when user visit other user profile
-    /// disable notification when `disableNotifyOnProfileVisited` is set on user setting
-    /// Send push notification to the other user.
+  /// Push notification on profile view
+  ///
+  /// send notification by default when user visit other user profile
+  /// disable notification when `disableNotifyOnProfileVisited` is set on user setting
+  /// Send push notification to the other user.
+  _sendPushNotificationOnProfileView(User user) async {
     if ((enablePushNotificationOnPublicProfileView ||
             customize.pushNotificationOnPublicProfileView != null) &&
         loggedIn &&
-        myUid != user!.uid) {
+        myUid != user.uid) {
       bool? re =
           await UserSetting.getField(user.uid, Code.profileViewNotification);
       if (re == false) return;
@@ -284,6 +284,7 @@ class UserService {
           body:
               T.visitedYourProfileBody.tr.replaceAll('#name', my!.displayName),
           uid: user.uid,
+          image: user.photoUrl,
         );
       }
     }
@@ -291,6 +292,7 @@ class UserService {
 
   // Separated to track possible errors. Needed the await
   Future<void> _userProfileViewLogs(String userUid) async {
+    if (loggedIn == false || myUid == user!.uid) return;
     final futures = [
       ActivityLog.userProfileView(userUid),
       ActionLog.userProfileView(userUid)

@@ -282,7 +282,7 @@ FirebaseDatabaseQueryBuilder(
     if (snapshot.docs.isEmpty) {
       return Center(child: Text('There is no message, yet.'));
     }
-    // finally return the list
+    finally return the list
     return ListView.builder(
       reverse: true,
       itemCount: snapshot.docs.length,
@@ -462,7 +462,7 @@ Use `ChatService.instance.showChatRoomCreate()` for the default way on creating 
 IconButton(
   onPressed: () async {
     final room = await ChatService.instance.showChatRoomCreate(context: context);
-    // It is recommended to show the newly created room to the user.
+    It is recommended to show the newly created room to the user.
     if (room != null && mounted) {
       ChatService.instance.showChatRoom(context: context, roomId: room.id);
     }
@@ -581,30 +581,82 @@ ChatService.instance.init(testBeforeSendMessage: (chat) {
 });
 ```
 
-## 채팅 메시지 전송 훅
+## 채팅 메시지 전송 콜백
 
-채팅 메시지를 보낸 다음 어떤 작업을 하고 싶은 경우에 훅을 쓸 수 있다.
+채팅 메시지를 보내기 전이나, 보낸 다음 어떤 작업을 하고 싶은 경우에 커스텀 콜백을 쓸 수 있다.
 
-예를 들면, 채팅 메시지를 보낸 후, 그 메시지를 다른 언어로 변경하고 싶다면, 먼저 채팅 메시지를 보내고, 번역하는 API 를 통해서 번역하고, 전송된 채팅 메시지의 내용을 업데이트 할 수 있다.
+실제 발생한 상황 중 한 예를 들면, A 는 한국어를 쓰고 B 는 따갈로그어를 쓰는 겨우, A 가 한국어로 채팅을 하면 B 에게 따갈로그어로 번역되어 전송이 되어야 한다. 그리고 푸시 알림 엮시 한국에서 따갈로그어로 번역이 되어서 전송이 되어야 한다. 이렇게 하기 위해서는 채팅 메시지를 DB 에 집어 넣기 전에, 먼저 번역을 해야 하는데, `beforeMessageSent` 을 통해서 번역을 하면 된다. 참고로 번역은 `afterMessageSent` 에서도 할 수 있다. 하지만 DB 에 기록된 후 번역을 하는 데, 푸시 알림은 DB 에 기록되자 마자 곧 바로 메시지를 보내므로 번역된 내용이 전달되지 않고 사용자가 입력한 원문이 전달된다.
+
+예제
 
 ```dart
-void initChatService() {
-  ChatService.instance.init(
-    onMessageSent: (ChatMessage message) async {
-      /// 여기서 원하는 작업을 할 수 있다.
-      /// 예를 들면, 상대방의 언어를 알아내고, https://pub.dev/packages/translator 패키지로 번역한 다음
-      /// 채팅 메시지를 아래와 같이 업데이트 할 수 있다.
-      /// 즉, 자동으로 채팅 메시지를 다른 언어로 번역하는 것이다.
-      try {
-        await message.ref!.update({
-          Field.text:
-              "Translated message: ...., original message: ${message.text}"
-        });
-      } catch (e) {
-        dog('onMessageSent: ${e.toString()}, path: ${message.ref!.path}');
-        rethrow;
-      }
-    },
-  );
-}
+ChatService.instance.init(
+  /// A 가 B 에게 채팅하면, 한국어를 따갈로그어로 번역
+  ///
+  /// 메시지 전송 전에 콜백으로 message 값을 변경 후 리턴
+  /// [chat] 은 채팅 모델. 1:1 채팅에서 상대방의 uid 를 알 수 있다>
+  beforeMessageSent: (Map<String, dynamic> message, ChatModel chat) async {
+    /// 채팅 할 내용이 없으면 그냥 리턴
+    if (message['text'] != null && message['text'].isEmpty) return message;
+
+    /// 다른 사용자의 언어 코드를 얻는다.
+    final otherUserSettings = await UserSetting.get(chat.room.otherUserUid!);
+    final otherUserLanguageCode = otherUserSettings.languageCode;
+    if (otherUserLanguageCode == null) return message;
+
+    /// 나의 언어 코드를 얻는다
+    final myUserSettings = await UserSetting.get(myUid!);
+    final myUserLanguageCode = myUserSettings.languageCode;
+
+    /// 나의 언어와 상대방의 언어가 동일하면 그냥 리턴
+    if (myUserLanguageCode == otherUserLanguageCode) return message;
+ 
+    /// ChatGPT 로 번역한다.
+    final openAI = OpenAI.instance.build(
+      token: AppConfig.openAiKey,
+      baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 5)),
+      enableLog: true,
+    );
+    final prompt =
+        "I want to translate a text. Act as a simple translating service. Translate below into ${otherUserLanguageCode.language}.\n\n${message['text']}";
+    final request = CompleteText(
+        prompt: prompt, maxTokens: 200, model: Gpt3TurboInstruct());
+
+    final response = await openAI.onCompletion(request: request);
+
+    /// 번역된 내용을 원문과 함께 담는다.
+    message['text'] =
+        '${response?.choices.first.text.trim().replaceAll(r'^\S+', '')}\n\n(${message['text']})';
+
+    /// 번역(조작)된 message 데이터를 리턴한다.
+    return message;
+},
+/// 채팅 메시지 전송 후, Google 번역하는 예
+afterMessageSent: (ChatMessage message) async {
+  if (message.text == null || message.text!.isEmpty) return;
+
+  /// 상대방의 언어코드
+  final room = await ChatRoom.get(message.roomRef.key!);
+  final otherUserSettings = await UserSetting.get(room.otherUserUid!);
+  final otherUserLanguageCode = otherUserSettings.languageCode;
+  if (otherUserLanguageCode == null) return;
+
+  /// 나의 언어코드
+  final myUserSettings = await UserSetting.get(myUid!);
+  final myUserLanguageCode = myUserSettings.languageCode;
+
+  /// 나의 언어와 상대방의 언어가 동일하면 리턴
+  if (myUserLanguageCode == otherUserLanguageCode) return;
+
+  /// 구글 번역
+  final translator = GoogleTranslator();
+  final translation =
+      await translator.translate(message.text!, to: otherUserLanguageCode);
+  if (translation.text == message.text) return;
+
+  /// 번역한 내용을 DB 에 바로 저장
+  await message.ref!.update({
+    Field.text: "${translation.text}\n\n(${message.text})",
+  });
+});
 ```
