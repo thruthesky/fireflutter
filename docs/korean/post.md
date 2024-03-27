@@ -58,6 +58,46 @@ class PostListScreen extends StatelessWidget {
 ```
 
 
+#### 글 쓰기 UI 변경
+
+디자인 작업은 하기 나름이다. FireFlutter 에서는 기본적인 디자인만 추가하며 Flutter 의 theme 작업 방식으로 모든 디자인 작업을 변경 할 수 있다.
+
+아래의 예제는 간단히 UI 디자인을 변경하는 기본 예제이다.
+
+```dart
+ListTileTheme( // 기존 ListTile 테마를 모두 삭제
+  child: PostListView( // 글 목록은 ListView 에 표시하며, ListView 의 옵션 사용 가능.
+    category: 'qna',
+    padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+    pageSize: 20,
+    separatorBuilder: (p0, p1) => Padding( // 각 ListTile 중간에 라인 추가
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Divider(
+        height: 5,
+        thickness: 1,
+        color: context.outline.withAlpha(64),
+      ),
+    ),
+  ),
+),
+```
+
+#### 글 목록 그리드뷰로 표시하기
+
+아래의 방식으로 GridView 로 게시글을 표시 할 수 있으며 주로 사진첩(갤러리) 방식으로 사진 위로 리스트를 할 때 사용하면 된다.
+참고로 `PostListView.gridView` 는 `GridView.builder` 의 모든 옵션을 다 지원한다.
+
+
+```dart
+PostListView.gridView(
+  category: widget.club.id,
+  padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+  pageSize: 20,
+),
+```
+
+
+
 ## 글 쓰기
 
 글 쓰기는 아래와 같이 할 수 있다.
