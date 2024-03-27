@@ -160,12 +160,15 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        widget.headline ??
-            Text(
-              T.phoneSignInHeaderTitle.tr,
-              style: Theme.of(context).textTheme.labelMedium,
-            ),
-        const SizedBox(height: 64),
+        if (widget.headline != null)
+          widget.headline!
+        else ...[
+          Text(
+            T.phoneSignInHeaderTitle.tr,
+            style: Theme.of(context).textTheme.labelMedium,
+          ),
+          const SizedBox(height: 64),
+        ],
         // 전화번호를 입력하고, SMS 코드 전송하고, 코드 입력하는 UI 를 보여주는가?
         showSmsCodeInput
             // 그렇다면 전화번호 입력 UI 대신, 전화번호만 보여준다.
@@ -231,7 +234,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
         Visibility(
           visible: showSmsCodeInput == false &&
               phoneNumberController.text.trim().isNotEmpty,
-          maintainSize: true,
+          maintainSize: showSmsCodeInput == false,
           maintainAnimation: true,
           maintainState: true,
           child: Row(

@@ -122,22 +122,31 @@ class ChatModel {
     /// 채팅 메시지를 저장 할 경로
     final chatMessageRef = ChatMessage.messagesRef(roomId: room.id).push();
 
+    /// Warning! This data does not represent the actual data in the database. It is a temporary data
+    /// made for the purpose of manipulating the chat message data before saving it.
+    final virtualChatMessage = ChatMessage.fromJson({
+      'key': chatMessageRef.key,
+      'ref': chatMessageRef,
+      ...chatMessageData,
+    });
+    ChatService.instance.beforeMessageSent?.call(
+      virtualChatMessage,
+    );
+
     /// Save multiple nodes at once
     ///
     /// 한번에 여러 노드를 같이 저장
     multiUpdateData[chatMessageRef.path] = chatMessageData;
 
+    /// Save chat message and its relavant data
+    ///
     /// See reference for the multi-path update.
     /// Reference: https://firebase.google.com/docs/database/flutter/read-and-write#updating_or_deleting_data
     await rtdb.ref().update(multiUpdateData);
 
     /// After chat message is saved (meaning after chat message is sent), call the callback function
-    ChatService.instance.onMessageSent?.call(
-      ChatMessage.fromJson({
-        'key': chatMessageRef.key,
-        'ref': chatMessageRef,
-        ...chatMessageData,
-      }),
+    ChatService.instance.afterMessageSent?.call(
+      virtualChatMessage,
     );
 
     /// 1:1 채팅방이면, 상대방의 이름과 사진을 내 채팅방 정보에 저장한다.
