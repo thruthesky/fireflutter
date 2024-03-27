@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/widgets.dart';
 
 /// Chat Model
 ///
@@ -96,6 +97,25 @@ class ChatModel {
     /// 채팅 메시지 순서를 -1 (감소) 한다.
     messageOrder--;
 
+    // Currently, we don't support preventing some chat message
+    if (ChatService.instance.beforeMessageSent != null) {
+      final beforeChatSentMessage =
+          await ChatService.instance.beforeMessageSent!.call(
+        // TODO: loading features should be done in beforeMessageSent and afterMessageSent function
+        // In this way, we cannot support removing the text and/or url if developer wants to remove them.
+        ChatMessage.fromJson({
+          if (text != null) 'text': text,
+          if (url != null) 'url': url,
+        }),
+      );
+      if (beforeChatSentMessage.text != null) {
+        text = beforeChatSentMessage.text;
+      }
+      if (beforeChatSentMessage.url != null) {
+        url = beforeChatSentMessage.url;
+      }
+    }
+
     /// 참고, 실제 메시지를 보내기 전에, 채팅방 자체를 먼저 업데이트 해 버린다.
     ///
     /// 상황 발생, A 가 B 가 모두 채팅방에 들어가 있는 상태에서
@@ -109,7 +129,7 @@ class ChatModel {
     /// Save chat message under `/chat-messages`.
     ///
     // 저장할 채팅 데이터
-    final chatMessageData = {
+    Map<String, dynamic> chatMessageData = {
       'uid': myUid,
       if (text != null) 'text': text,
       if (url != null) 'url': url,
@@ -124,14 +144,46 @@ class ChatModel {
 
     /// Warning! This data does not represent the actual data in the database. It is a temporary data
     /// made for the purpose of manipulating the chat message data before saving it.
-    final virtualChatMessage = ChatMessage.fromJson({
+    ChatMessage virtualChatMessage = ChatMessage.fromJson({
       'key': chatMessageRef.key,
       'ref': chatMessageRef,
       ...chatMessageData,
     });
-    ChatService.instance.beforeMessageSent?.call(
-      virtualChatMessage,
-    );
+
+    // TODO cleanup
+    // Currently, we don't support preventing some chat message
+    // but if we will support it, we can use this function and we
+    // will need to add some sort of options if it will proceed.
+    // if (ChatService.instance.beforeMessageSent != null) {
+    // final beforeChatSentMessage =
+    //     await ChatService.instance.beforeMessageSent!.call(
+    //   // loading features should be done in beforeMessageSent and afterMessageSent function
+    //   virtualChatMessage,
+    // );
+    // // NOTE: This will not trigger warnings/errors if developer
+    // //       updated the key, ref, order, createdAt, or uid
+    // //       but it they will be overridden before sending.
+    // final beforeChatSentMessageData = beforeChatSentMessage.toJson();
+    // beforeChatSentMessageData.remove("key");
+    // beforeChatSentMessageData.remove("ref");
+    // chatMessageData = {
+    //   ...beforeChatSentMessageData,
+    //   ...{
+    //     // TODO: Review if order is having problem if async
+    //     'order': messageOrder,
+    //     'createdAt': ServerValue.timestamp,
+    //     'uid': myUid,
+    //   }
+    // };
+    // virtualChatMessage = ChatMessage.fromJson({
+    //   ...chatMessageData,
+    //   // To prevent updating the ref and key
+    //   ...{
+    //     'key': chatMessageRef.key,
+    //     'ref': chatMessageRef,
+    //   }
+    // });
+    // }
 
     /// Save multiple nodes at once
     ///

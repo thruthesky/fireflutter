@@ -41,14 +41,14 @@ class ChatService {
   /// Warning! this is a dangerous function. Don't use the reference to the database directly because the data is not exists yet in the database.
   ///
   /// Don't do anything with the database in this call back function. This is only for the client side and for chaing the message from the memory only.
-  Function(ChatMessage)? beforeMessageSent;
+  Future<ChatMessage> Function(ChatMessage)? beforeMessageSent;
 
   /// init
   init({
     ChatCustomize? customize,
     Function(ChatModel)? testBeforeSendMessage,
     Function(ChatMessage)? afterMessageSent,
-    Function(ChatMessage)? beforeMessageSent,
+    Future<ChatMessage> Function(ChatMessage)? beforeMessageSent,
   }) {
     // dog('--> ChatService.init()');
     this.customize = customize ?? this.customize;
