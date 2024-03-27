@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/gestures.dart';
@@ -29,9 +30,11 @@ class PostListView extends StatelessWidget {
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.restorationId,
     this.clipBehavior = Clip.hardEdge,
+    this.itemBuilder,
 
     ///
     this.gridView = false,
+    this.gridDelegate,
   });
 
   final String category;
@@ -55,9 +58,11 @@ class PostListView extends StatelessWidget {
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final String? restorationId;
   final Clip clipBehavior;
+  final Widget Function(Post)? itemBuilder;
 
   /// GridView options
   final bool gridView;
+  final SliverGridDelegate? gridDelegate;
 
   @override
   Widget build(BuildContext context) {
@@ -77,11 +82,12 @@ class PostListView extends StatelessWidget {
 
         return gridView
             ? GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                ),
+                gridDelegate: gridDelegate ??
+                    const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 8,
+                    ),
                 scrollDirection: scrollDirection,
                 reverse: reverse,
                 controller: controller,
@@ -109,11 +115,7 @@ class PostListView extends StatelessWidget {
 
                   final post = Post.fromSnapshot(snapshot.docs[index]);
 
-                  return Container(
-                    padding: const EdgeInsets.all(8),
-                    color: Colors.teal[100],
-                    child: Text("User name is ${post.title}"),
-                  );
+                  return itemBuilder?.call(post) ?? PostCard(post: post);
                 },
               )
             : ListView.separated(
@@ -149,9 +151,11 @@ class PostListView extends StatelessWidget {
                   if (post.deleted) {
                     return const SizedBox.shrink();
                   }
-                  return PostListTile(
-                    post: post,
-                  );
+
+                  return itemBuilder?.call(post) ??
+                      PostListTile(
+                        post: post,
+                      );
                 },
               );
       },
@@ -181,6 +185,8 @@ class PostListView extends StatelessWidget {
         ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     Clip clipBehavior = Clip.hardEdge,
+    Widget Function(Post)? itemBuilder,
+    SliverGridDelegate? gridDelegate,
   }) : this(
           category: category,
           gridView: true,
@@ -204,5 +210,7 @@ class PostListView extends StatelessWidget {
           addRepaintBoundaries: addRepaintBoundaries,
           addAutomaticKeepAlives: addAutomaticKeepAlives,
           keyboardDismissBehavior: keyboardDismissBehavior,
+          itemBuilder: itemBuilder,
+          gridDelegate: gridDelegate,
         );
 }

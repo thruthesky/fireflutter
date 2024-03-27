@@ -82,10 +82,15 @@ ListTileTheme( // 기존 ListTile 테마를 모두 삭제
 ),
 ```
 
+#### itemBuilder 를 통한 전체 UI 커스텀 디자인
+
+`itemBuilder` 를 통해서 글 목록에서 글 UI 표현을 마음데로 작업 할 수 있다.
+
+
 #### 글 목록 그리드뷰로 표시하기
 
-아래의 방식으로 GridView 로 게시글을 표시 할 수 있으며 주로 사진첩(갤러리) 방식으로 사진 위로 리스트를 할 때 사용하면 된다.
-참고로 `PostListView.gridView` 는 `GridView.builder` 의 모든 옵션을 다 지원한다.
+- 아래의 방식으로 GridView 로 게시글을 표시 할 수 있으며 주로 사진첩(갤러리) 방식으로 사진 위로 리스트를 할 때 사용하면 된다.
+- 참고로 `PostListView.gridView` 는 `GridView.builder` 의 모든 옵션을 다 지원한다.
 
 
 ```dart
@@ -95,6 +100,26 @@ PostListView.gridView(
   pageSize: 20,
 ),
 ```
+
+
+다음의 예는 글 목록을 그리드 형태로 표현하는 것인데, 각 아이템의 UI (radius 등) 를 수정하고, 또 한 행에 3개의 글(아이템)이 보이도록 하는 예제이다. 이 처럼 많은 것들을 원하는 데로 디자인을 할 수 있다.
+
+```dart
+PostListView.gridView(
+  category: '${widget.club.id}-gallery',
+  padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+  itemBuilder: (post) => ClipRRect(
+    borderRadius: BorderRadius.circular(16),
+    child: PostCard(post: post),
+  ),
+  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: 3,
+    crossAxisSpacing: 8,
+    mainAxisSpacing: 8,
+  ),
+),
+```
+
 
 
 

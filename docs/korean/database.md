@@ -1,10 +1,15 @@
 # 데이터베이스
 
-FireFlutter에서는 Realtime Database를 사용합니다. 초기에는 FireFlutter가 활발히 개발되고 Firestore를 통해 사용되었습니다. 그러나 2024년 초에는 Realtime Database가 충분히 잘 구현될 수 있다는 것이 판명되어, 더 간결하고 빠르게 동작하는 패키지를 개발하기로 결정되었습니다. 결과적으로, 주로 Realtime Database를 사용하는 패키지가 개발되었습니다.
+- FireFlutter 는 Firebase 를 기반으로 동작하는 패키지인 만큼 Realtime Database (또는 필요한 경우 Firestore) 를 사용한다.
+
+- FireFlutter 는 2023년 말까지 기본 데이터베이스로 Firestore 를 사용하였으나, 2024년 초 부터는 기본 데이터베이스를 Realtime Database(이하 RTDB) 로 변경하였다. Firestore 에서 RTDB 로 변경하게 된 계기는 반응속도 때문이다. 부가적으로 저렴한 비용과 단순한 데이터베이스 구조를 유지 할 수 있다. FireFlutter 의 기본 기능은 회원 관련 기능, 게시판 관련 기능, 채팅 관련 기능, 푸시 알림 관련 기능 및 기타 소셜 서비스 관련 기능들인데, Firestore 가 아닌 RTDB 로도 훌륭하게 그리고 더 잘 개발 할 수 있다. 물론 복잡한 필터링이 필요한 경우, 예를 들면 회원 정보 상세 검색의 경우, `userMirror` 클라우드 함수 기능을 통해서 RTDB 의 사용자 정보를 Firestore 로 미러링해서 Firestore 를 통해서 검색을 하면 된다.
+
+
+
 
 ## 데이터베이스 가이드라인
 
-- Firestore 대신 Realtime Database 를 사용하므로서
+- Firestore 대신 RTDB 를 사용하므로서
     - 데이터의 전체가 아닌 부분을 listen 할 수 있으며, 최소 단위의 데이터를 (DB 로 부터) 가져 올 수 있고,
     - 이로 인해 데이터를 보다 빠르게 가져와 화면에 보여 줄 수 있고,
     - 비용 절감의 효과를 가져 올 수 있다.
@@ -26,7 +31,7 @@ FireFlutter에서는 Realtime Database를 사용합니다. 초기에는 FireFlut
 
 ### Value 위젯
 
-Value 위젯은 Realtime Database 에 있는 정보를 실시간으로 화면에 보여준다. DB 에 있는 값을 화면에 보여줄 때에는 꼭 이 위젯을 사용하도록 한다.
+Value 위젯은 RTDB 에 있는 정보를 실시간으로 화면에 보여준다. DB 에 있는 값을 화면에 보여줄 때에는 꼭 이 위젯을 사용하도록 한다.
 
 `path` 에 DB 경로를 지정하면 `builder` 에 dynamic 타입으로 전달되어 온다. 만약 `path` 에 지정된 경로에 값이 없으면 null 값이 builder 로 전달된다.
 

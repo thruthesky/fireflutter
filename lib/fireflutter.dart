@@ -79,6 +79,7 @@ export 'src/forum/comment/widgets/comment.view.dart';
 export 'src/forum/forum.service.dart';
 export 'src/forum/post/post.model.dart';
 export 'src/forum/post/widgets/post.all_list_view.dart';
+export 'src/forum/post/widgets/post.card.dart';
 export 'src/forum/post/widgets/post.content.dart';
 export 'src/forum/post/widgets/post.edit.screen.dart';
 export 'src/forum/post/widgets/post.latest_list_view.dart';
