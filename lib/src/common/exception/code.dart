@@ -30,6 +30,13 @@ class Code {
 
   static const String roomId = 'roomId';
 
+  /// Basic CRUD code
+  static const String edit = 'edit';
+  static const String view = 'view';
+  static const String create = 'create';
+  static const String update = 'update';
+  static const String delete = 'delete';
+
   static const String deleted = 'deleted';
 
   @Deprecated('Use Field.languageCode instead')

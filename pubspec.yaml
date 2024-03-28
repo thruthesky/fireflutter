@@ -3,6 +3,10 @@ description: "A lightning-fast, robust CMS for seamless real-time content manage
 version: 0.3.25
 homepage: https://github.com/thruthesky/fireflutter
 repository: https://github.com/thruthesky/fireflutter
+issue_tracker: https://github.com/thruthesky/fireflutter/issues
+screenshots:
+  - description: The rapid flutter app development kit.
+    path: assets/screenshots/logo.jpg
 
 environment:
   sdk: ">=3.2.3 <4.0.0"
@@ -40,7 +44,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
-  lints: ^2.1.1
+  flutter_lints: ^3.0.2
+  lints: ^3.0.0
 
 flutter:
