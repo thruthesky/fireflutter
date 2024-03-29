@@ -42,8 +42,11 @@ export 'src/chat/widgets/default_chat_room.screen.dart';
 
 export 'src/club/club.model.dart';
 export 'src/club/club.service.dart';
+export 'src/club/widgets/club.card.dart';
 export 'src/club/widgets/club.create_form.dart';
+export 'src/club/widgets/club.doc.dart';
 export 'src/club/widgets/club.edit.screen.dart';
+export 'src/club/widgets/club.list_view.dart';
 export 'src/club/widgets/club.update_form.dart';
 export 'src/club/widgets/club.view.screen.dart';
 

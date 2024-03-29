@@ -1,4 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/club/widgets/club.details.dart';
 import 'package:flutter/material.dart';
 
 class ClubViewScreen extends StatefulWidget {
@@ -22,21 +23,20 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
           title: Text(widget.club.name),
           actions: [
             ValueListenableBuilder(
-                valueListenable: _tabIndex,
-                builder: (_, index, __) {
-                  if (index == 3 || index == 4) {
-                    return OutlinedButton(
-                      onPressed: () =>
-                          ForumService.instance.showPostCreateScreen(
-                        context: context,
-                        category:
-                            widget.club.id + (index == 4 ? '-gallery' : ''),
-                      ),
-                      child: const Text('글 쓰기'),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                }),
+              valueListenable: _tabIndex,
+              builder: (_, index, __) {
+                if (index == 3 || index == 4) {
+                  return OutlinedButton(
+                    onPressed: () => ForumService.instance.showPostCreateScreen(
+                      context: context,
+                      category: widget.club.id + (index == 4 ? '-gallery' : ''),
+                    ),
+                    child: const Text('글 쓰기'),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
             PopupMenuButton<String>(
                 icon: const Icon(Icons.menu),
                 itemBuilder: (context) {
@@ -92,7 +92,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
         ),
         body: TabBarView(
           children: [
-            const Text("모임 소개. @TODO 시놀 보고 따라 만든다."),
+            ClubDetails(club: widget.club),
             const Text(
                 "미팅 시간 날짜 약속 @TODO 간단하게 게시판 형태로 만든다. 날짜를 수동으로 입력한다. 시놀 보고 따라 만든다."),
             GestureDetector(
@@ -123,7 +123,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
             PostListView.gridView(
               category: '${widget.club.id}-gallery',
               padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
-              itemBuilder: (post) => ClipRRect(
+              itemBuilder: (post, i) => ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: PostCard(post: post),
               ),

@@ -58,7 +58,7 @@ class PostListView extends StatelessWidget {
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final String? restorationId;
   final Clip clipBehavior;
-  final Widget Function(Post)? itemBuilder;
+  final Widget Function(Post, int)? itemBuilder;
   final Widget Function()? emptyBuilder;
 
   /// GridView options
@@ -121,7 +121,7 @@ class PostListView extends StatelessWidget {
 
                   final post = Post.fromSnapshot(snapshot.docs[index]);
 
-                  return itemBuilder?.call(post) ?? PostCard(post: post);
+                  return itemBuilder?.call(post, index) ?? PostCard(post: post);
                 },
               )
             : ListView.separated(
@@ -158,7 +158,7 @@ class PostListView extends StatelessWidget {
                     return const SizedBox.shrink();
                   }
 
-                  return itemBuilder?.call(post) ??
+                  return itemBuilder?.call(post, index) ??
                       PostListTile(
                         post: post,
                       );
@@ -191,7 +191,7 @@ class PostListView extends StatelessWidget {
         ScrollViewKeyboardDismissBehavior.manual,
     String? restorationId,
     Clip clipBehavior = Clip.hardEdge,
-    Widget Function(Post)? itemBuilder,
+    Widget Function(Post, int)? itemBuilder,
     Widget Function()? emptyBuilder,
     SliverGridDelegate? gridDelegate,
   }) : this(

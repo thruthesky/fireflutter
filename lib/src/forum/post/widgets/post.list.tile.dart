@@ -15,6 +15,7 @@ class PostListTile extends StatelessWidget {
           context: context,
           uid: post.uid,
         ),
+        cacheId: 'post.list.tile',
       ),
       title: Text(
         post.title,

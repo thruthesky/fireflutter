@@ -27,3 +27,30 @@
 
 
 
+## 클럽 목록
+
+- `ClubListView` 로 하면 된다.
+
+- 아래의 예제는 클럽 목록을 가로 스크롤을 하는 예제이다.
+
+```dart
+SizedBox(
+  height: 180,
+  child: ClubListView(
+    scrollDirection: Axis.horizontal,
+    separatorBuilder: (p0, p1) => const SizedBox(width: 8),
+    itemBuilder: (club, i) => SizedBox(
+      width: 180,
+      child: Padding(
+        padding: EdgeInsets.only(left: i == 0 ? 16 : 0),
+        child: ClubCard(club: club),
+      ),
+    ),
+  ),
+),
+```
+
+## 클럽 카드
+
+- 클럽을 목록이나 기타 방식으로 표현 할 때, `ClubCard` 를 쓰면 된다.
+

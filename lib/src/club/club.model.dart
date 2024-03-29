@@ -7,11 +7,15 @@ class Club {
   String id;
   final String uid;
   final String name;
+  final String? description;
+  final String? photoUrl;
 
   Club({
     required this.id,
     required this.uid,
     required this.name,
+    required this.description,
+    this.photoUrl,
   });
 
   DocumentReference get ref => col.doc(id);
@@ -25,7 +29,14 @@ class Club {
       id: id,
       uid: map['uid'],
       name: map['name'],
+      description: map['description'],
+      photoUrl: map['photoUrl'],
     );
+  }
+
+  @override
+  String toString() {
+    return 'Club{id: $id, uid: $uid, name: $name, description: $description, photoUrl: $photoUrl}';
   }
 
   /// 클럽 생성을 위한, 데이터 맵을 만든다.
@@ -69,6 +80,45 @@ class Club {
     await chat.join(forceJoin: true);
 
     return ref;
+  }
+
+  /// Update club
+  ///
+  /// [photoUrl] is optional. After uploading photo into Storage, set the photo url using this parameter.
+  /// And [hasPhoto] is set to true if [photoUrl] is not null.
+  /// If [photoUrl] is null, it does not update [photoUrl], nor [hasPhoto]
+  /// ! If [photoUrl] is empty string, then, [photoUrl] is deleted from document and [hasPhoto] is set to false.
+  ///
+  ///
+  Future<void> update({
+    String? name,
+    String? description,
+    String? photoUrl,
+    bool? hasPhoto,
+  }) async {
+    // 모임 이름이 들어오는 경우, 빈 문자열이면 에러
+    if (name != null && name.trim().isEmpty) {
+      throw FireFlutterException('club-update/name-empty', 'Input name.');
+    }
+
+    final Map<String, dynamic> data = {
+      'name': name,
+      'description': description,
+      'updatedAt': FieldValue.serverTimestamp(),
+    };
+
+    /// Photo
+    if (photoUrl == null) {
+      /// do nothing
+    } else if (photoUrl == '') {
+      data['photoUrl'] = FieldValue.delete();
+      data['hasPhoto'] = false;
+    } else {
+      data['photoUrl'] = photoUrl;
+      data['hasPhoto'] = true;
+    }
+
+    await ref.update(data);
   }
 
   /// 모임 탈퇴
