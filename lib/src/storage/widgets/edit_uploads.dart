@@ -10,10 +10,10 @@ class EditUploads extends StatelessWidget {
   final void Function(String url) onDelete;
 
   const EditUploads({
-    Key? key,
+    super.key,
     required this.urls,
     required this.onDelete,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -5,9 +5,9 @@ import 'package:url_launcher/url_launcher_string.dart';
 class LinkifyText extends StatelessWidget {
   const LinkifyText(
     this.text, {
-    Key? key,
+    super.key,
     this.style,
-  }) : super(key: key);
+  });
   final String text;
   final TextStyle? style;
 
