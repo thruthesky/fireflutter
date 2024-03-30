@@ -35,7 +35,7 @@ class ClubService {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, animation, secondaryAnimation) => ClubEditScreen(
-        reference: club.ref,
+        club: club,
       ),
     );
   }

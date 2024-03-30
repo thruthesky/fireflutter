@@ -28,7 +28,7 @@ class Club {
     return Club(
       id: id,
       uid: map['uid'],
-      name: map['name'],
+      name: map['name'] ?? '',
       description: map['description'],
       photoUrl: map['photoUrl'],
     );
@@ -41,14 +41,19 @@ class Club {
 
   /// 클럽 생성을 위한, 데이터 맵을 만든다.
   static Map<String, dynamic> toCreate({
-    required String uid,
     required String name,
   }) {
     return {
-      'uid': uid,
+      'uid': myUid!,
+      'users': [myUid!],
       'name': name,
       'createdAt': FieldValue.serverTimestamp(),
     };
+  }
+
+  static Future<Club> get(DocumentReference ref) async {
+    final snapshot = await ref.get();
+    return Club.fromSnapshot(snapshot);
   }
 
   /// 모임 만들기
@@ -56,7 +61,9 @@ class Club {
   /// 1. 채팅방 생성
   /// 2. 게시판 생성
   /// 3. 갤러리 게시판 생성
-  static Future<DocumentReference> create({
+  ///
+  /// 생성된 Club 객체를 리턴한다.
+  static Future<Club> create({
     required String name,
   }) async {
     if (name.trim().isEmpty) {
@@ -65,21 +72,22 @@ class Club {
 
     final ref = await col.add(
       Club.toCreate(
-        uid: myUid!,
         name: name,
       ),
     );
 
+    final club = await Club.get(ref);
+
     final room = await ChatRoom.create(
       name: name,
-      roomId: ref.id,
+      roomId: club.id,
       isOpenGroupChat: false,
     );
 
     final chat = ChatModel(room: room);
     await chat.join(forceJoin: true);
 
-    return ref;
+    return club;
   }
 
   /// Update club
@@ -102,8 +110,8 @@ class Club {
     }
 
     final Map<String, dynamic> data = {
-      'name': name,
-      'description': description,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
       'updatedAt': FieldValue.serverTimestamp(),
     };
 

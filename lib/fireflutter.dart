@@ -81,6 +81,8 @@ export 'src/extensions/color.extension.dart';
 export 'src/extensions/int.extension.dart';
 export 'src/extensions/string.extension.dart';
 
+export 'src/fireflutter/fireflutter.service.dart';
+
 export 'src/forum/comment/comment.model.dart';
 export 'src/forum/comment/widgets/comment.content.dart';
 export 'src/forum/comment/widgets/comment.edit.dialog.dart';

@@ -115,3 +115,11 @@ class _MyHomePageState extends State<MyHomePage> {
 `MyProfileSticker` 를 통해서 로그인한 사용자 정보를 한 줄 짜리 스티커형 배너를 표시 할 수 있습니다.
 
 
+
+
+
+## global context 적용
+
+FireFlutter 에 global build context 를 적용하는 것이 좋다. 자세한 내용은 [FireFlutter 문서](./fireflutter.md#global-context-적용)를 참고한다.
+
+

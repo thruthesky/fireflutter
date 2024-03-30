@@ -145,7 +145,10 @@ ScaffoldFeatureController toast({
     foregroundColor ??= Theme.of(context).colorScheme.onPrimary;
   }
 
-  return ScaffoldMessenger.of(context).showSnackBar(
+  BuildContext mayBeGlobalContext =
+      FireFlutterService.instance.globalContext ?? context;
+
+  return ScaffoldMessenger.of(mayBeGlobalContext).showSnackBar(
     SnackBar(
       duration: duration,
       backgroundColor: backgroundColor,
@@ -158,7 +161,8 @@ ScaffoldFeatureController toast({
                 if (onTap == null) return;
 
                 onTap(() {
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(mayBeGlobalContext)
+                      .hideCurrentSnackBar();
                 });
               },
               child: Row(children: [
@@ -193,7 +197,7 @@ ScaffoldFeatureController toast({
           if (hideCloseButton == false)
             TextButton(
               onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(mayBeGlobalContext).hideCurrentSnackBar();
               },
               child: Text(
                 T.dismiss.tr,

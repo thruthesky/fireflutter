@@ -1,25 +1,24 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class ClubEditScreen extends StatefulWidget {
-  const ClubEditScreen({super.key, this.reference});
+  const ClubEditScreen({super.key, this.club});
 
-  final DocumentReference? reference;
+  final Club? club;
 
   @override
   State<ClubEditScreen> createState() => _ClubEditScreenState();
 }
 
 class _ClubEditScreenState extends State<ClubEditScreen> {
-  DocumentReference? ref;
+  Club? club;
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.reference != null) {
-      ref = widget.reference;
+    if (widget.club != null) {
+      club = widget.club;
     }
   }
 
@@ -27,16 +26,16 @@ class _ClubEditScreenState extends State<ClubEditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(ref == null ? '모임 만들기' : '모임 수정하기'),
+        title: Text(club == null ? '모임 만들기' : '모임 수정하기'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24),
-        child: ref == null
+        child: club == null
             ? ClubCreateForm(
-                onCreate: (ref) => setState(() => this.ref = ref),
+                onCreate: (club) => setState(() => this.club = club),
               )
             : ClubUpdateForm(
-                reference: ref!,
+                club: club!,
               ),
       ),
     );
