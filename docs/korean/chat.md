@@ -1,13 +1,15 @@
 # 채팅
 
-## Design Concept
 
-- You can open multiple chat rooms simultaneously.
 
 ## TODO
 
 - 1:1 채팅방의 경우, `chat-rooms` 에서 설정하는 것이 아니라, `chat-join` 에서 설정을 해야 한다.
 - 그룹 채팅방의 경우, 개별 설정이 필요하다면, `chat-join` 에서 추가 설정을 해야 한다. 예를 들어, 채팅방 이름 변경, 채팅방 목록에서 우선 순위 표시 등.
+
+## 참고
+
+- 이론적으로 동시에 채팅방 여러개에 접속 할 수 있다. 하지만, 그럴 필요가 없어서 아직 테스트는 못했다.
 
 
 ## Chat 데이터베이스 구조
@@ -94,13 +96,13 @@ if (snapshot.exists) {
     - 채팅방 설정에 따라 암호 입력 상자를 표시하려면,
     - 등등
 
-명확히 하자면, ChatRoom과 ChatModel은 두 가지 다른 모델입니다. ChatRoom은 채팅방의 일부 세부 정보를 보유하는 모델입니다. ChatModel은 채팅방과 채팅 메시지의 모든 세부 정보를 보유하는 완전한 모델입니다. 간단히 말해서, ChatRoom은 ChatModel.chatRoom을 통해 접근할 수 있습니다.
+명확히 하자면, ChatRoom과 ChatModel은 두 가지 다른 모델이다. ChatRoom은 채팅방의 일부 세부 정보를 보유하는 모델이고, ChatModel은 채팅방과 채팅 메시지의 모든 세부 정보를 가지는 모델이다. 참고로 ChatModel.room 이 ChatRoom 모델이며, 이를 통해서 ChatRoom 모델을 참조 할 수 있다.
 
 ### Order
 
-- 채팅 메시지 순서는 마지막 메시지의 `order` 필드에 의해 정렬됩니다.
-    - 이전 메시지보다 늦은 메시지는 이전 메시지보다 작은 값을 가져야 합니다. 최신 메시지는 항상 가장 작은 값이어야 합니다.
-    - 프로그래밍 방식으로 order를 지정하지 않고 채팅 메시지를 보낼 경우, 메시지가 잘못된 위치에 표시될 수 있습니다 (가장 위쪽에 표시될 수 있음).
+- 채팅 메시지 순서는 마지막 메시지의 `order` 필드에 의해 정렬된다.
+    - 이전 메시지보다 늦은 메시지는 이전 메시지보다 작은 값을 가져야 하며, 최신 메시지는 항상 가장 작은 값이어야 한다.
+    - 프로그래밍 방식으로 order를 지정하지 않고 채팅 메시지를 보낼 경우, 메시지가 잘못된 위치에 표시될 수 있다. (가장 위쪽에 표시될 수 있음).
 
 ### 채팅방 만들기
 
@@ -122,7 +124,10 @@ await chat.join(forceJoin: true);
 
 `ChatRoom.create()` 을 통해 채팅방을 생성하고, 추가로 `ChatModel.join()` 을 호출해야 한다.
 
-`ChatModel.join()` 을 호출하면 /chat-rooms/all/users에 {[uid]: true}가 생성됩니다.
+`ChatModel.join()` 을 호출하면 /chat-rooms/all/users에 {[uid]: true}가 생성된다.
+
+참고로, `await ChatRoom.fromRoomdId(id).join(myUid!, forceJoin: true);` 와 같이 해도 채팅방에 입장 (join) 할 수 있다.
+
 
 
 참고로 화면에 ChatMessageListView 위젯이 표시되면, `ChatMessageListView::initState() -> ChatModel::resetNewMessage()`에서 RTDB `chat-joins/all`에 `{order: 0}`가 내부적으로 저장된다.

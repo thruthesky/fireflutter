@@ -379,26 +379,31 @@ class Post {
 
   /// /post-summary 에서 가장 최근 글 몇개를 가져온다.
   ///
+  /// 예제는 PostLatestListView 를 참고한다.
   ///
+  /// 중요: order 로 정렬하지 않고, createdAt 으로 정렬한다.
   static Future<List<Post>> latestSummary({
     required String category,
     int limit = 5,
   }) async {
     final snapshot = await postSummariesRef
         .child(category)
-        .orderByChild(Field.order)
+        .orderByChild(Field.createdAt)
+        // .orderByKey()
         .limitToLast(limit)
         .get();
 
-    return (snapshot.exists == false || snapshot.value == null)
-        ? []
-        : Map.from(snapshot.value as Map)
-            .entries
-            .map((e) => Post.fromJson(
-                  e.value,
-                  id: e.key,
-                  category: category,
-                ))
-            .toList();
+    final List<Post> posts =
+        (snapshot.exists == false || snapshot.value == null)
+            ? []
+            : snapshot.children
+                .map((DataSnapshot e) => Post.fromJson(
+                      e.value as Map,
+                      id: e.key as String,
+                      category: category,
+                    ))
+                .toList();
+
+    return posts.reversed.toList();
   }
 }

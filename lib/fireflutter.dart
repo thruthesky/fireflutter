@@ -41,6 +41,7 @@ export 'src/chat/widgets/default_chat_room.members.screen.dart';
 export 'src/chat/widgets/default_chat_room.screen.dart';
 
 export 'src/club/club.model.dart';
+export 'src/club/club.meetup.model.dart';
 export 'src/club/club.service.dart';
 export 'src/club/widgets/club.card.dart';
 export 'src/club/widgets/club.create_form.dart';
@@ -49,6 +50,9 @@ export 'src/club/widgets/club.edit.screen.dart';
 export 'src/club/widgets/club.list_view.dart';
 export 'src/club/widgets/club.update_form.dart';
 export 'src/club/widgets/club.view.screen.dart';
+export 'src/club/widgets/club.view_register_first.dart';
+export 'src/club/widgets/meetup/club.meetup_create_form.dart';
+export 'src/club/widgets/meetup/club.meetup_edit.screen.dart';
 
 export 'src/common/anonymous_avatar.dart';
 export 'src/common/assets.dart';

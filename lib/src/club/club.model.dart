@@ -6,19 +6,28 @@ class Club {
 
   String id;
   final String uid;
+  final String master;
   final String name;
-  final String? description;
+  final String description;
   final String? photoUrl;
+  final List<String> users;
+  final String reminder;
 
   Club({
     required this.id,
     required this.uid,
+    required this.master,
     required this.name,
     required this.description,
     this.photoUrl,
+    required this.users,
+    required this.reminder,
   });
 
   DocumentReference get ref => col.doc(id);
+
+  bool get joined => users.contains(myUid);
+  bool get isMaster => master == myUid;
 
   factory Club.fromSnapshot(DocumentSnapshot snapshot) {
     return Club.fromMap(snapshot.data() as Map, snapshot.id);
@@ -28,15 +37,19 @@ class Club {
     return Club(
       id: id,
       uid: map['uid'],
+      master:
+          map['master'] ?? map['uid'], // 초반 개발에서 에러 방지. 나중에 map[uid] 는 없애도 됨.
       name: map['name'] ?? '',
-      description: map['description'],
+      description: map['description'] ?? '',
       photoUrl: map['photoUrl'],
+      users: List<String>.from((map['users'] ?? [])),
+      reminder: map['reminder'] ?? '',
     );
   }
 
   @override
   String toString() {
-    return 'Club{id: $id, uid: $uid, name: $name, description: $description, photoUrl: $photoUrl}';
+    return 'Club{id: $id, uid: $uid, master: $master, name: $name, description: $description, photoUrl: $photoUrl, users: $users, reminder: $reminder}';
   }
 
   /// 클럽 생성을 위한, 데이터 맵을 만든다.
@@ -45,6 +58,7 @@ class Club {
   }) {
     return {
       'uid': myUid!,
+      'master': myUid!,
       'users': [myUid!],
       'name': name,
       'createdAt': FieldValue.serverTimestamp(),
@@ -103,6 +117,7 @@ class Club {
     String? description,
     String? photoUrl,
     bool? hasPhoto,
+    String? reminder,
   }) async {
     // 모임 이름이 들어오는 경우, 빈 문자열이면 에러
     if (name != null && name.trim().isEmpty) {
@@ -113,6 +128,7 @@ class Club {
       if (name != null) 'name': name,
       if (description != null) 'description': description,
       'updatedAt': FieldValue.serverTimestamp(),
+      if (reminder != null) 'reminder': reminder,
     };
 
     /// Photo
@@ -129,11 +145,24 @@ class Club {
     await ref.update(data);
   }
 
-  /// 모임 탈퇴
+  /// 클럽 가입
+  ///
+  /// 클럽 가입 할 때, 채팅방에 따로 입장 할 필요 없이, 최초 채팅방 입장시 자동으로 chat-rooms/{users}, chat-join 등이 설정된다.
+  /// 하지만, 사용자가 채팅방에 입장을 하지 않을 수 있으니, 미리 채팅방 입장을 해 준다.
+  join() async {
+    await ref.update({
+      'users': FieldValue.arrayUnion([myUid]),
+    });
+    await ChatRoom.fromRoomdId(id).join(myUid!, forceJoin: true);
+  }
+
+  /// 클럽 탈퇴
   ///
   /// 이 때, 채팅방도 같이 탈퇴를 해야 한다.
-  leave() {
-    //
-    // 채팅방 탈퇴
+  leave() async {
+    await ref.update({
+      'users': FieldValue.arrayRemove([myUid]),
+    });
+    await ChatRoom.fromRoomdId(id).leave();
   }
 }

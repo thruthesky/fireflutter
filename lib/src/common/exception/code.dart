@@ -36,9 +36,14 @@ class Code {
   static const String create = 'create';
   static const String update = 'update';
   static const String delete = 'delete';
+  static const String leave = 'leave';
+  static const String join = 'join';
 
   static const String deleted = 'deleted';
 
   @Deprecated('Use Field.languageCode instead')
   static const String languageCode = 'languageCode';
+
+  // club menu for admin
+  static const String reminders = 'reminders';
 }

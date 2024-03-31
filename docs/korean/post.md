@@ -174,6 +174,27 @@ PostLatestListView(
 ```
 
 
+참고로, `PostLatestListView` 는 ListView 의 모든 옵션을 지원하며, GridView 도 같이 지원한다.
+
+```dart
+const Text('최근 사진들'),
+PostLatestListView.gridView(
+  category: '${club.id}-gallery',
+  emptyBuilder: () => const Card(child: Text('최근 사진이 없습니다.')),
+  shrinkWrap: true,
+  physics: const NeverScrollableScrollPhysics(),
+),
+const Text('최근글'),
+PostLatestListView(
+  category: club.id,
+  emptyBuilder: () => const Card(child: Text('최근 글이 없습니다.')),
+  shrinkWrap: true,
+  physics: const NeverScrollableScrollPhysics(),
+),
+```
+
+
+
 아래의 예제는 하나의 화면에 질문과 답변, 자유게시판의 카테고리들에서 최근글 몇개를 가져와 보여주는 예제이다.
 
 ```dart

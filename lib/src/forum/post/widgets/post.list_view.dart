@@ -154,9 +154,6 @@ class PostListView extends StatelessWidget {
                   }
 
                   final post = Post.fromSnapshot(snapshot.docs[index]);
-                  if (post.deleted) {
-                    return const SizedBox.shrink();
-                  }
 
                   return itemBuilder?.call(post, index) ??
                       PostListTile(

@@ -42,7 +42,7 @@ class PostListTile extends StatelessWidget {
                 )
               : const SizedBox.shrink(),
           Text(
-            post.createdAt.millisecondsSinceEpoch.toShortDate,
+            post.createdAt.millisecondsSinceEpoch.toHis,
           ),
         ],
       ),
