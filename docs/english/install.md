@@ -38,7 +38,7 @@ dependencies:
 
 ## Installing Firebase Realtime Database Security
 
-Copy the [Firebase Realtime Database Security](../assets/realtime_database_security.md) and paste it into your Firebase project, then save it.
+Copy the [Firebase Realtime Database Security](../assets/realtime_database_security_rules.md) and paste it into your Firebase project, then save it.
 
 ## Default app-environment entitlement
 

@@ -6,10 +6,9 @@ import { MessagingService } from "../messaging/messaging.service";
 import { isCreate } from "../library";
 
 
-import { onRequest } from "firebase-functions/v2/https";
+import { CallableRequest, onCall, onRequest } from "firebase-functions/v2/https";
 import { logger } from "firebase-functions/v1";
 import { UserService } from "./user.service";
-import { getAuth } from "firebase-admin/auth";
 
 
 /**
@@ -73,52 +72,50 @@ export const userMirror = onValueWritten(
         const firestore = getFirestore();
         const userUid = event.params.uid;
 
-        if (event.data.before.exists()) {
-            // Updated
-            const userData = event.data.after.val();
-            // noOfLikes 는 자주 업데이트 되므로, firestore /users 를 목록 할 때, FirestoreListView 등에서 flickering 이 발생한다.
-            // 그래서, noOfLikes 필드는 삭제한다.
-            delete userData.noOfLikes;
-            const searchDisplayName = userData.displayName.trim().toLowerCase().replace(/\s+/g, "");
-            return await firestore.collection(Config.users).doc(userUid).set({ ...userData, searchDisplayName: searchDisplayName }, { merge: true });
-        }
+
         if (!event.data.after.exists()) {
+            console.log("--> Deleting user data; uid: ", userUid);
             // Deleted
             return await firestore.collection(Config.users).doc(userUid).delete();
         }
+
+        if (event.data.before.exists()) {
+            // Updated
+            const updatedUserData = event.data.after.val();
+            // noOfLikes 는 자주 업데이트 되므로, firestore /users 를 목록 할 때, FirestoreListView 등에서 flickering 이 발생한다.
+            // 그래서, noOfLikes 필드는 삭제한다.
+            if (updatedUserData && updatedUserData.noOfLikes) {
+                delete updatedUserData.noOfLikes;
+            }
+            if (updatedUserData && updatedUserData.searchDisplayName) {
+                updatedUserData.searchDisplayName = updatedUserData.displayName.trim().toLowerCase().replace(/\s+/g, "");
+            }
+
+            if (!updatedUserData) {
+                console.log("Updating user data. The data value is empty but it exists. updatedUserData; ", updatedUserData);
+                return; // <-- This shouldn't happen. But it happens somehow.
+            }
+            console.log("--> Updating user data; ", updatedUserData);
+            return await firestore.collection(Config.users).doc(userUid).set(updatedUserData, { merge: true });
+        }
         // Created
         const data = event.data.after.val();
-        const searchDisplayName = data.displayName.trim().toLowerCase().replace(/\s+/g, "");
-        return await firestore.collection(Config.users).doc(userUid).set({ ...data, searchDisplayName: searchDisplayName });
+
+        if (data && data.searchDisplayName) {
+            data.searchDisplayName = data.displayName.trim().toLowerCase().replace(/\s+/g, "");
+        }
+        console.log("--> Creating user data; uid & data: ", userUid, data);
+        return await firestore.collection(Config.users).doc(userUid).set(data);
     }
 );
+
 
 /**
  * User delete account
  *
  * This will delete user account from Firebase Auth, Realtime Database, Firestore.
+ *
  */
-export const userDeleteAccount = onValueWritten(`${Config.commands}/{uid}/deleteAccount`, async (event) => {
-    if (event.data.after.val() === true ) {
-        const uid = event.params.uid;
-        // Delete user account
-        const auth = getAuth();
-        const userRecord = await auth.getUser(uid);
-        if (userRecord) {
-            await auth.deleteUser(uid);
-        }
-
-        // Delete user data from Realtime Database
-        const db = getDatabase();
-        await db.ref(`${Config.users}/${uid}`).remove();
-        // Delete user data from Firestore
-        const firestore = getFirestore();
-        try {
-            await firestore.collection(Config.users).doc(uid).delete();
-        } catch (error) {
-            // Ignore error
-            // If the user data may not be in Firestore or it may be deleted already.
-        }
-    }
+export const userDeleteAccount = onCall(async (request: CallableRequest) => {
+    return await UserService.deleteAccount(request.auth?.uid);
 });
-

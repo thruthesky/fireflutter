@@ -76,7 +76,7 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
                       value: addr.code,
                       child: Text(addr.name),
                     );
-                  }).toList(),
+                  }),
                 ],
                 value: siDoCode,
                 onChanged: (value) {
@@ -127,7 +127,7 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
                           value: addr.code,
                           child: Text(addr.name),
                         );
-                      }).toList(),
+                      }),
                     }
                   ],
                   value: siGunGuCode,

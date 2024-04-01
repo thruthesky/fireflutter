@@ -1,3 +1,21 @@
+## 0.3.27
+
+* Add. Global context
+* Update. Club
+
+
+## 0.3.26
+
+* Add. Club(Meetup) feature
+* Change. empty -> emptyBuilder on chat room list
+* Add & Fix. `before` and `after` callback function when chat send message sent
+* Add & Fix. GridView for post list view
+* Add. Cloud function for user account deletion
+* Fix. UI simple phone sign in
+* Fix. Chag emessage overflow
+* Fix. Flicker on chat message list and post list
+
+
 ## 0.3.25
 
 * Update. Document

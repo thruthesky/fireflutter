@@ -459,7 +459,9 @@ UserService.instance.init(
 
 ### 사용자 프로필 보기를 할 때, 상대 회원에게 푸시 알림 보내기
 
-참고, 푸시알림 메시지 문서를 본다.
+참고, [푸시알림 메시지 문서](./messaging.md#사용자-프로필이-보여질-때-푸시-알림-커스터마이징)를 본다.
+
+
 
 
 
@@ -515,10 +517,12 @@ ElevatedButton(
 
 ### 좋아요 목록
 
-좋아요 목록은 두가지가 있다.
+좋아요 목록은 총 세 가지가 있다.
 
 - 첫째, 내가 좋아요 한 사람 목록.
 - 둘째, 나를 좋아요 한 사람 목록.
+- 셋째, 서로 좋아요 한 목록. 내가 A 이고, A 가 B 를 좋아요 하고, B 도 A 를 좋아요 했다면, B 가 서로 좋아요 목록에 타나난다.
+
 
 아래와 같이 코딩을 하면 된다.
 
@@ -613,4 +617,11 @@ Blocked(
 
 ## 회원 탈퇴
 
-명령 문서에 `deleteAccount: true` 를 저장하면, 계정 삭제를 진행한다. 참고, [명령어 문서](./command.md)
+- 회원 탈퇴는 `UserService.instance.resign()` 함수를 호출하면 된다.
+  - 이 `UserService.instance.resign()` 함수는 내부적으로 Firebase Cloud Functions 의 `callable function` 을 통해서 클라우드 함수 코드를 호출한다. 따라서 cloud functions 중에서 `userDeleteAccount` 를 설치해야 한다.
+- 회원 탈퇴를 callable function 으로 만드는 이유는 Flutter Client SDK 에서 회원 계정 삭제 작업하면 `requires-recent-login` 에러가 발생한다.
+  - 그리고 만약, 회원 탈퇴를 할 때, RTDB 나 Firestore 에서 회원 데이터를 삭제해야하는 경우, Firebase Auth 에서 계정 삭제를 먼저 한 다음,데이터를 삭제해야하는데, Firebase Auth 에서 계정 삭제를 하는 순간, 로그인 사용자의 uid 가 사라지고 회원 로그인 상태 정보가 사라져서 데이터를 삭제 할 수 없다. 그렇다고 데이터를 먼저 삭제해 버리면, `requires-recent-login` 에러가 발생해서 회원 탈퇴는 못하고 회원 데이터만 삭제를 해 버리는 꼴이 되어 문제가 복잡해 진다.
+  - 그래서 `on call` 방식으로 하여, 본인 인증을 한 다음, 회원 탈퇴를 한다.
+    - 참고로 `http request` 로 하면 본인 인증이 안되고, `backend trigger` 로 하면 클라이언트에서 결과 대기하는 것이 어렵다.
+
+

@@ -36,18 +36,30 @@ class ChatService {
 
   Function(ChatModel)? testBeforeSendMessage;
 
-  Function(ChatMessage)? onMessageSent;
+  /// Do something before the message is sent.
+  ///
+  /// You can translate the text into other language or do something else.
+  ///
+  /// [message] is the message that is going to be sent. It has text, url, etc. You can modify it and return it.
+  ///
+  /// [chatModel] is the chat model that contains the room id, my uid, etc. You can now who you are chatting with with this.
+  Future<Map<String, dynamic>> Function(
+      Map<String, dynamic> message, ChatModel chatModel)? beforeMessageSent;
+  Function(ChatMessage)? afterMessageSent;
 
   /// init
   init({
     ChatCustomize? customize,
     Function(ChatModel)? testBeforeSendMessage,
-    Function(ChatMessage)? onMessageSent,
+    Future<Map<String, dynamic>> Function(Map<String, dynamic>, ChatModel)?
+        beforeMessageSent,
+    Function(ChatMessage)? afterMessageSent,
   }) {
     // dog('--> ChatService.init()');
     this.customize = customize ?? this.customize;
     this.testBeforeSendMessage = testBeforeSendMessage;
-    this.onMessageSent = onMessageSent;
+    this.afterMessageSent = afterMessageSent;
+    this.beforeMessageSent = beforeMessageSent;
   }
 
   Future createRoom({
@@ -63,6 +75,16 @@ class ChatService {
     return room;
   }
 
+  /// 채팅방 입장
+  ///
+  /// 채팅방을 보여준다. 채팅방을 입장 할 때에는 [uid], [roomId] 또는 [room] 중 하나를
+  /// 전달하면 된다.
+  ///
+  /// [uid] 는 1:1 채팅방에서 다른 사용자의 uid 이다.
+  ///
+  /// [roomId] 는 채팅방의 id 이다.
+  ///
+  /// [room] 는 채팅방의 정보이다. [room] 을 전달하면 보다 빠르게 화면을 보여 줄 수 있다.
   Future showChatRoomScreen({
     required BuildContext context,
     String? uid,

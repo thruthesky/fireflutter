@@ -145,7 +145,10 @@ ScaffoldFeatureController toast({
     foregroundColor ??= Theme.of(context).colorScheme.onPrimary;
   }
 
-  return ScaffoldMessenger.of(context).showSnackBar(
+  BuildContext mayBeGlobalContext =
+      FireFlutterService.instance.globalContext ?? context;
+
+  return ScaffoldMessenger.of(mayBeGlobalContext).showSnackBar(
     SnackBar(
       duration: duration,
       backgroundColor: backgroundColor,
@@ -158,7 +161,8 @@ ScaffoldFeatureController toast({
                 if (onTap == null) return;
 
                 onTap(() {
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(mayBeGlobalContext)
+                      .hideCurrentSnackBar();
                 });
               },
               child: Row(children: [
@@ -193,7 +197,7 @@ ScaffoldFeatureController toast({
           if (hideCloseButton == false)
             TextButton(
               onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(mayBeGlobalContext).hideCurrentSnackBar();
               },
               child: Text(
                 T.dismiss.tr,
@@ -266,10 +270,18 @@ Future<bool?> confirm({
 /// Prompt a dialog to get user input.
 ///
 /// [context] is the build context.
+///
 /// [title] is the title of the dialog.
+///
 /// [subtitle] is the subtitle of the dialog.
+///
 /// [hintText] is the hintText of the input.
+///
 /// [initialValue] is the initial value of the input field.
+///
+/// [minLines] is the minLines of TextField
+///
+/// [maxLines] is the maxLines of TextField
 ///
 /// Returns the user input.
 ///
@@ -281,6 +293,8 @@ Future<String?> input({
   String? subtitle,
   required String hintText,
   String? initialValue,
+  int? minLines,
+  int? maxLines,
 }) {
   return showDialog<String?>(
     context: context,
@@ -300,6 +314,8 @@ Future<String?> input({
               decoration: InputDecoration(
                 hintText: hintText,
               ),
+              minLines: minLines,
+              maxLines: maxLines,
             ),
           ],
         ),

@@ -1,7 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:fireflutter/fireflutter.dart' as ff;
-import 'package:fireflutter/fireflutter.functions.dart';
 import 'package:geohash_plus/geohash_plus.dart';
 
 class User {
@@ -11,11 +10,11 @@ class User {
   static const String node = 'users';
   static DatabaseReference usersRef = rootRef.child('users');
 
-  ///
+  /// data paths
   static const String userProfilePhotos = 'user-profile-photos';
   static const String whoLikeMe = 'who-like-me';
   static const String whoILike = 'who-i-like';
-  static const String commands = 'commands';
+  static const String mutualLike = 'mutual-like';
 
   static String user(String uid) => '$node/$uid';
   static String userField(String uid, String field) => '${user(uid)}/$field';
@@ -26,14 +25,13 @@ class User {
   static DatabaseReference iLikeRef(String b) =>
       FirebaseDatabase.instance.ref(whoILikePath(ff.myUid!, b));
 
-  static String resignPath = '$commands/$myUid';
-
   ///
   static DatabaseReference userRef(String uid) => usersRef.child(uid);
   static DatabaseReference userProfilePhotosRef =
       rootRef.child('profile-photos');
   static DatabaseReference whoILikeRef = rootRef.child(whoILike);
   static DatabaseReference whoLikeMeRef = rootRef.child(whoLikeMe);
+  static DatabaseReference mutualLikeRef = rootRef.child(mutualLike);
 
   /// [data] 는 사용자 정보 문서 node 의 전체 값을 가지고 있다. 그래서, 필요할 때,
   /// data['email'] 과 같이, 필드를 직접 접근할 수 있다.
@@ -636,12 +634,40 @@ class User {
 
   /// Like other user
   ///
+  /// This method does both of the like and the unlike. If it is already liked, it will be unliked.
+  /// And this method also records for mutual likes.
+  ///
   /// Returns true if the user has just liked, false if unliked.
+  ///
   Future like(String otherUserUid) async {
     final re = await ff.toggle(
       path: ff.User.whoILikePath(ff.my!.uid, otherUserUid),
     );
     ff.ActivityLog.userLike(otherUserUid, re);
+
+    /// Mutual like
+    if (re) {
+      /// The login user liked the other user.
+      final got = await whoLikeMeRef.child(ff.myUid!).child(otherUserUid).get();
+      if (got.exists) {
+        /// it's mutual like
+        await mutualLikeRef
+            .child(ff.myUid!)
+            .child(otherUserUid)
+            .set(ServerValue.timestamp);
+        await mutualLikeRef
+            .child(otherUserUid)
+            .child(ff.myUid!)
+            .set(ServerValue.timestamp);
+      }
+    } else {
+      /// The login user unliked the other user.
+      /// Remove mutual likes
+      await mutualLikeRef.child(ff.myUid!).child(otherUserUid).remove();
+      await mutualLikeRef.child(otherUserUid).child(ff.myUid!).remove();
+    }
+
+    ///
     return re;
   }
 }

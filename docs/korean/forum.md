@@ -17,9 +17,12 @@
 ## Coding Guideline
 
 
-- `category` 는 rtdb 내에 미리 정해져 있거나 관리자 모드에서 따로 카테고리를 생성하는 것이 아니다. 그냥 카테고리 문자열을 적절히 (임의로) 지정해서 쓰면 된다. 예를 들어, `abc` 라는 카테고리가 없는데, 그냥 글 쓰기 할 때, 카테고리 `abc` 라고 쓰고, 글 목록을 할 때, 카테고리를 `abc` 로 해서 목록하면 된다.
+- 일반적으로 게시판 카테고리를 임의로 지정하는 것이 아니라, 데이터베이스에 카테고리를 생성하고 그 카테고리가 존재하는 경우에만 글을 작성하게 하는 경우가 흔하다. 그리고 DB 의 카테고리에는 해당 카테고리에 대한 이름이나 설명, 관리자, 글 쓰기 가능한 사용자 등급 등 각종 설정을 할 수 있도록 하는 것이다. 하지만, FireFlutter 에서는 이 카테고리를 따로 DB 에 저장하지 않아도 동작 할 수 있도록 했다. 이렇게 하는 가장 큰 이유는 DB 구조의 간편함을 유지하기 위한 것이다.
 
-- `category` 카테고리 값은 변경 할 수 없다. 이것은 rtdb 의 경로 구조와 문제가 있는데, `/posts` 경로 뿐만아니라 `/post-summary`, `post-all-summary` 등 여러 경로가 복잡하게 얽혀 있어서 그렇다.
+- 글 데이터에 저장되는 `category` 는 DB 내에 미리 정해져 있거나 관리자 모드에서 따로 카테고리를 생성할 필요 없이 그냥 카테고리 문자열을 적절히 (임의로) 지정해서 쓰면 된다. 예를 들어, `abc` 라는 카테고리가 없는데, 그냥 글 쓰기 할 때, 카테고리에 `abc` 라고 저장하고, 글 목록을 할 때, 카테고리를 `abc` 로 해서 목록하면 된다.
+
+- `category` 카테고리 값은 변경 할 수 없다. 이것은 RTDB 의 경로 구조와 문제가 있는데, `/posts` 경로 뿐만아니라 `/post-summary`, `post-all-summary` 등 여러 경로가 복잡하게 얽혀 있어서 그렇다.
+
 
 
 
@@ -65,135 +68,6 @@ Refer to [Comment doc](comments.md).
 ## Posts
 
 Refer to [Post doc](post.md).
-
-## 글 목록
-
-
-글 목록은 `PostListView`, `PostAllListView`, `PostLatestListView` 등 여러가지가 있다.
-
-
-### PostListView - 카테고리 별 게시판 목록
-
-카테고리 별 글 목록을 할 때 사용하는 위젯이다. 무한 스크롤을 통해서 글을 보여준다.
-
-```dart
-import 'package:fireflutter/fireflutter.dart';
-import 'package:flutter/material.dart';
-import 'package:silvers/defines/categories.dart';
-
-class PostListScreen extends StatelessWidget {
-  static const String routeName = '/PostList';
-  const PostListScreen({
-    super.key,
-    required this.category,
-  });
-
-  final String category;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(Categories.getLabel(context, category)),
-        actions: [
-          IconButton(
-            onPressed: () {
-              ForumService.instance
-                  .showPostCreateScreen(context, category: category);
-            },
-            icon: const Icon(Icons.add),
-          ),
-        ],
-      ),
-      body: PostListView(
-        category: category,
-      ),
-    );
-  }
-}
-```
-
-
-
-### PostAllListView 전체 게시판 목록
-
-카테고리 별로 게시글을 보여주는 것이 아니라, 모든 카테고리의 글을 한번에 무한 스크롤 목록으로 보여주고 싶을 때 사용한다.
-
-
-
-
-
-
-### PostLatestListView - 최근 글 목록 가져오기
-
-
-최근 글을 가져오려면 `PostLatestListView` 를 사용할 수 있으며, 필요에 따라서 소스 코드를 복사하여 적절히 수정해서 사용하면 됩니다.
-
-
-아래의 예제는 `PostTitle` 위젯을 통해 제목만 출력한다.
-
-```dart
-PostLatestListView(
-    category: 'qna',
-    limit: 5,
-    itemBuilder: (post) => PostTitle(post: post)),
-```
-
-아래는 `PostListTile` 위젯을 통해 목록에 적당한 UI 로 글 정보를 출력한다.
-
-```dart
-PostLatestListView(
-    category: 'qna',
-    limit: 5,
-    itemBuilder: (post) => PostListTile(post: post)),
-```
-
-
-아래의 예제는 하나의 화면에 질문과 답변, 자유게시판의 카테고리들에서 최근글 몇개를 가져와 보여주는 예제이다.
-
-```dart
-class ForumScreen extends StatelessWidget {
-  const ForumScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Forum'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: ListView(
-          children: [
-            ...['qna', 'discussion'].map((category) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  ElevatedButton(
-                    onPressed: () => context.push(
-                      PostListScreen.routeName,
-                      extra: {
-                        Field.category: category,
-                      },
-                    ),
-                    child: Text(category.toUpperCase()),
-                  ),
-                  PostLatestListView(
-                      category: category,
-                      limit: 5,
-                      itemBuilder: (post) => PostListTile(post: post)),
-                  const SizedBox(height: 16),
-                ],
-              );
-            }).toList(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-```
-
 
 ## 푸시 알림 구독
 

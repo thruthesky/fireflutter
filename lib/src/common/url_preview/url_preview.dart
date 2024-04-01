@@ -14,12 +14,12 @@ import 'package:url_launcher/url_launcher_string.dart';
 ///
 class UrlPreview extends StatelessWidget {
   const UrlPreview({
-    Key? key,
+    super.key,
     required this.previewUrl,
     this.title,
     this.description,
     this.imageUrl,
-  }) : super(key: key);
+  });
 
   final String previewUrl;
   final String? title;

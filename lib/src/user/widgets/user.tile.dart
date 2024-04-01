@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 /// user's tile is tapped.
 class UserTile extends StatelessWidget {
   const UserTile({
-    Key? key,
+    super.key,
     required this.user,
     this.padding,
     this.onTap,
@@ -19,7 +19,7 @@ class UserTile extends StatelessWidget {
     this.displayStateMessage = false,
     this.displayBirth = false,
     this.bottom,
-  }) : super(key: key);
+  });
   final User user;
   final EdgeInsetsGeometry? padding;
   final Function(User)? onTap;

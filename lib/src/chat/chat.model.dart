@@ -96,6 +96,24 @@ class ChatModel {
     /// 채팅 메시지 순서를 -1 (감소) 한다.
     messageOrder--;
 
+    /// Save chat message under `/chat-messages`.
+    ///
+    // 저장할 채팅 데이터
+    Map<String, dynamic> chatMessageData = {
+      'uid': myUid,
+      if (text != null) 'text': text,
+      if (url != null) 'url': url,
+      'order': messageOrder,
+      'createdAt': ServerValue.timestamp,
+    };
+
+    /// Warning! This data does not represent the actual data in the database. It is a temporary data
+    /// made for the purpose of manipulating the chat message data before saving it.
+    if (ChatService.instance.beforeMessageSent != null) {
+      chatMessageData =
+          await ChatService.instance.beforeMessageSent!(chatMessageData, this);
+    }
+
     /// 참고, 실제 메시지를 보내기 전에, 채팅방 자체를 먼저 업데이트 해 버린다.
     ///
     /// 상황 발생, A 가 B 가 모두 채팅방에 들어가 있는 상태에서
@@ -105,17 +123,6 @@ class ChatModel {
     /// 즉, 0이 되어야하는데 1이 되는 상황이 발생한다. 그래서, updateJoin() 이 먼저 호출되어야 한다.
     Map<String, dynamic> multiUpdateData =
         _getMultiUpdateForChatJoinLastMessage(text: text, url: url);
-
-    /// Save chat message under `/chat-messages`.
-    ///
-    // 저장할 채팅 데이터
-    final chatMessageData = {
-      'uid': myUid,
-      if (text != null) 'text': text,
-      if (url != null) 'url': url,
-      'order': messageOrder,
-      'createdAt': ServerValue.timestamp,
-    };
 
     /// Place to save the chat message data
     ///
@@ -127,12 +134,13 @@ class ChatModel {
     /// 한번에 여러 노드를 같이 저장
     multiUpdateData[chatMessageRef.path] = chatMessageData;
 
+    ///
     /// See reference for the multi-path update.
     /// Reference: https://firebase.google.com/docs/database/flutter/read-and-write#updating_or_deleting_data
     await rtdb.ref().update(multiUpdateData);
 
     /// After chat message is saved (meaning after chat message is sent), call the callback function
-    ChatService.instance.onMessageSent?.call(
+    ChatService.instance.afterMessageSent?.call(
       ChatMessage.fromJson({
         'key': chatMessageRef.key,
         'ref': chatMessageRef,

@@ -17,6 +17,10 @@ import 'package:flutter/material.dart';
 /// [leave] 가 false 이면 메뉴에서 방나기를 보여주지 않는다. 예를 들면, 모든 사용자가 자동으로 접속하는 전체 채탱방에서는
 /// 따로 방을 나갈 필요 없고, 나가도 다시 join 을 해야만 한다. 이와 같은 경우 사용을 하면 된다.
 ///
+/// [displayAppBar] 가 false 이면 앱바를 표시하지 않는다. 예를 들면, 채팅 방을 탭바나 기타 다른 화면으로 임베드할 때 사용하면 된다.
+///
+/// [appBarBottomSpacing] 은 앱바 아래에 여백을 준다. 기본값은 8 이다.
+///
 class ChatRoomBody extends StatefulWidget {
   const ChatRoomBody({
     super.key,
@@ -25,6 +29,8 @@ class ChatRoomBody extends StatefulWidget {
     this.room,
     this.backButton = true,
     this.leave = true,
+    this.displayAppBar = true,
+    this.appBarBottomSpacing = 8,
   });
 
   final String? uid;
@@ -32,6 +38,8 @@ class ChatRoomBody extends StatefulWidget {
   final ChatRoom? room;
   final bool backButton;
   final bool leave;
+  final bool displayAppBar;
+  final double appBarBottomSpacing;
 
   @override
   State<ChatRoomBody> createState() => _ChatRoomState();
@@ -142,202 +150,211 @@ class _ChatRoomState extends State<ChatRoomBody> {
     return Column(
       children: [
         // 앱바 - 타이틀바
-        SafeArea(
-          child: Row(
-            children: [
-              if (widget.backButton)
-                const BackButton()
-              else
-                const SizedBox(
-                  width: 16,
-                ),
+        if (widget.displayAppBar)
+          SafeArea(
+            bottom: false,
+            child: Row(
+              children: [
+                if (widget.backButton)
+                  const BackButton()
+                else
+                  const SizedBox(
+                    width: 16,
+                  ),
 
-              /// 채팅방 제목
-              Expanded(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () async {
-                    if (chat.room.isSingleChat) {
-                      UserService.instance.showPublicProfileScreen(
-                        context: context,
-                        uid: chat.room.otherUserUid!,
-                      );
-                    }
-                  },
-                  child: Row(children: [
-                    /// 사진
-                    ///
-                    /// 1:1 채팅은 chat-joins 에서 한번만 가져오고, 그룹 채팅은 chat-rooms 에서 가져온다.
-                    /// 그룹 채팅은 관리자가 사진을 바꿀 때, 채팅 화면에 바로 적용되어야 한다.
-                    chat.room.isSingleChat
-                        ? Value.once(
-                            // path: '${ChatJoin.join(myUid!, chat.room.id)}/${Field.photoUrl}',
-                            ref: ChatJoin.photoRef(chat.room.id),
-                            builder: (v) => v == null
-                                ? const SizedBox.shrink()
-                                : Row(
-                                    children: [
-                                      Avatar(
-                                        photoUrl: (v as String).orAnonymousUrl,
-                                        size: 40,
-                                        radius: 18,
-                                      ),
-                                      const SizedBox(width: 8),
-                                    ],
-                                  ),
-                          )
-                        : Value(
-                            // path: ChatRoom.chatRoomIconUrl(chat.room .id), // '${Path.join(myUid!, chat.room.id)}/${Field.photoUrl}',
-                            ref: ChatRoom.iconUrlRef(chat.room.id),
-                            builder: (v) => v == null
-                                ? const SizedBox.shrink()
-                                : Row(
-                                    children: [
-                                      Avatar(
-                                        photoUrl: v,
-                                        size: 40,
-                                        radius: 18,
-                                      ),
-                                      const SizedBox(width: 8),
-                                    ],
-                                  ),
-                          ),
+                /// 채팅방 제목
 
-                    /// 제목
-                    ///
-                    /// 1:1 채팅은 chat-joins 에서 한번만 가져오고, 그룹 채팅은 chat-rooms 에서 가져온다.
-                    /// 그룹 채팅은 관리자가 채팅 이름을 바꿀 때, 채팅 화면에 바로 적용되어야 한다.
-                    Expanded(
-                      child: chat.room.isSingleChat
-                          ? Value.once(
-                              // path: '${ChatJoin.join(myUid!, chat.room.id)}/name',
-                              ref: ChatJoin.nameRef(chat.room.id),
-                              builder: (v) => Text(
-                                v ?? '',
-                                style: Theme.of(context).textTheme.titleLarge,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            )
-                          : Value(
-                              ref: ChatRoom.nameRef(chat.room.id),
-                              builder: (v) => Text(
-                                v ?? '',
-                                style: Theme.of(context).textTheme.titleLarge,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                    ),
-                  ]),
-                ),
-              ),
-              const SizedBox(width: 8),
-
-              /// add notifications on and off
-              IconButton(
-                onPressed: () async {
-                  await chat.room.toggleNotifications();
-                },
-                icon: Value(
-                  // path: ChatRoom.chatRoomUsersAt(chat.room.id, myUid!),
-                  ref: ChatRoom.usersAtRef(chat.room.id, myUid!),
-                  builder: (v) => v == true
-                      ? const Icon(Icons.notifications_rounded)
-                      : const Icon(Icons.notifications_outlined),
-                ),
-              ),
-              if (chat.room.isGroupChat)
-                ChatService.instance.customize.chatRoomInviteButton
-                        ?.call(chat.room) ??
-                    IconButton(
-                      onPressed: () async {
-                        ChatService.instance.showInviteScreen(
-                            context: context, room: chat.room);
-                      },
-                      icon: const Icon(Icons.person_add_rounded),
-                    ),
-
-              ChatService.instance.customize.chatRoomMenu?.call(chat) ??
-                  PopupMenuButton<String>(
-                    itemBuilder: (_) => [
-                      if (chat.room.isMaster || my!.isAdmin)
-                        PopupMenuItem(
-                          value: 'setting',
-                          child: Text(T.setting.tr),
-                        ),
-                      const PopupMenuItem(
-                        value: 'members',
-                        child: Text(
-                          // T.members.tr,
-                          "Members",
-                        ),
-                      ),
-                      if (chat.room.isSingleChat)
-                        PopupMenuItem(
-                          value: 'block',
-                          child: MyDoc(
-                            builder: (my) => my == null
-                                ? const SizedBox.shrink()
-                                : Text(my.blocks?.contains(
-                                            chat.room.otherUserUid) ==
-                                        false
-                                    ? T.block
-                                    : T.unblock.tr),
-                          ),
-                        ),
-                      PopupMenuItem(value: 'report', child: Text(T.report.tr)),
-                      if (widget.leave)
-                        PopupMenuItem(value: 'leave', child: Text(T.leave.tr)),
-                    ],
-                    onSelected: (v) async {
-                      if (v == 'setting') {
-                        /// 채팅방이 그룹 채팅이 아니라, 1:1 채팅인 경우, chat-joins 에서 설정을 해야 한다.
-                        /// 이에 대한 내용은, ko/chat.md 를 한다.
-                        await ChatService.instance.showChatRoomSettings(
+                Expanded(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () async {
+                      if (chat.room.isSingleChat) {
+                        UserService.instance.showPublicProfileScreen(
                           context: context,
-                          roomId: chat.room.id,
+                          uid: chat.room.otherUserUid!,
                         );
-                        setState(() {});
-                      } else if (v == 'members') {
-                        await ChatService.instance.showMembersScreen(
-                          context: context,
-                          room: chat.room,
-                        );
-                      } else if (v == 'block') {
-                        /// 차단 & 해제
-                        final re = await my?.block(chat.room.otherUserUid!);
-                        if (context.mounted) {
-                          toast(
-                            context: context,
-                            title: re == true ? T.blocked.tr : T.unblocked.tr,
-                            message: re == true
-                                ? T.blockedMessage.tr
-                                : T.unblockedMessage.tr,
-                          );
-                        }
-                      } else if (v == 'report') {
-                        final re = await input(
-                          context: context,
-                          title: T.reportInputTitle.tr,
-                          subtitle: T.reportInputMessage.tr,
-                          hintText: T.reportInputHint.tr,
-                        );
-                        if (re == null || re == '') return;
-                        await Report.create(
-                            chatRoomId: chat.room.id, reason: re);
-                      } else if (v == 'leave') {
-                        await chat.room.leave();
-                        if (context.mounted) Navigator.of(context).pop();
                       }
                     },
-                    tooltip: '채팅방 설정',
-                    icon: const Icon(Icons.menu_rounded),
+                    child: Row(children: [
+                      /// 사진
+                      ///
+                      /// 1:1 채팅은 chat-joins 에서 한번만 가져오고, 그룹 채팅은 chat-rooms 에서 가져온다.
+                      /// 그룹 채팅은 관리자가 사진을 바꿀 때, 채팅 화면에 바로 적용되어야 한다.
+                      chat.room.isSingleChat
+                          ? Value.once(
+                              // path: '${ChatJoin.join(myUid!, chat.room.id)}/${Field.photoUrl}',
+                              ref: ChatJoin.photoRef(chat.room.id),
+                              builder: (v) => v == null
+                                  ? const SizedBox.shrink()
+                                  : Row(
+                                      children: [
+                                        Avatar(
+                                          photoUrl:
+                                              (v as String).orAnonymousUrl,
+                                          size: 40,
+                                          radius: 18,
+                                        ),
+                                        const SizedBox(width: 8),
+                                      ],
+                                    ),
+                            )
+                          : Value(
+                              // path: ChatRoom.chatRoomIconUrl(chat.room .id), // '${Path.join(myUid!, chat.room.id)}/${Field.photoUrl}',
+                              ref: ChatRoom.iconUrlRef(chat.room.id),
+                              builder: (v) => v == null
+                                  ? const SizedBox.shrink()
+                                  : Row(
+                                      children: [
+                                        Avatar(
+                                          photoUrl: v,
+                                          size: 40,
+                                          radius: 18,
+                                        ),
+                                        const SizedBox(width: 8),
+                                      ],
+                                    ),
+                            ),
+
+                      /// 제목
+                      ///
+                      /// 1:1 채팅은 chat-joins 에서 한번만 가져오고, 그룹 채팅은 chat-rooms 에서 가져온다.
+                      /// 그룹 채팅은 관리자가 채팅 이름을 바꿀 때, 채팅 화면에 바로 적용되어야 한다.
+                      Expanded(
+                        child: chat.room.isSingleChat
+                            ? Value.once(
+                                // path: '${ChatJoin.join(myUid!, chat.room.id)}/name',
+                                ref: ChatJoin.nameRef(chat.room.id),
+                                builder: (v) => Text(
+                                  v ?? '',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              )
+                            : Value(
+                                ref: ChatRoom.nameRef(chat.room.id),
+                                builder: (v) => Text(
+                                  v ?? '',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                      ),
+                    ]),
                   ),
-            ],
+                ),
+                const Spacer(),
+                const SizedBox(width: 8),
+
+                /// add notifications on and off
+                IconButton(
+                  onPressed: () async {
+                    await chat.room.toggleNotifications();
+                  },
+                  icon: Value(
+                    // path: ChatRoom.chatRoomUsersAt(chat.room.id, myUid!),
+                    ref: ChatRoom.usersAtRef(chat.room.id, myUid!),
+                    builder: (v) => v == true
+                        ? const Icon(Icons.notifications_rounded)
+                        : const Icon(Icons.notifications_outlined),
+                  ),
+                ),
+
+                if (chat.room.isGroupChat)
+                  ChatService.instance.customize.chatRoomInviteButton
+                          ?.call(chat.room) ??
+                      IconButton(
+                        onPressed: () async {
+                          ChatService.instance.showInviteScreen(
+                              context: context, room: chat.room);
+                        },
+                        icon: const Icon(Icons.person_add_rounded),
+                      ),
+
+                ChatService.instance.customize.chatRoomMenu?.call(chat) ??
+                    PopupMenuButton<String>(
+                      itemBuilder: (_) => [
+                        if (chat.room.isMaster || my!.isAdmin)
+                          PopupMenuItem(
+                            value: 'setting',
+                            child: Text(T.setting.tr),
+                          ),
+                        const PopupMenuItem(
+                          value: 'members',
+                          child: Text(
+                            // T.members.tr,
+                            "Members",
+                          ),
+                        ),
+                        if (chat.room.isSingleChat)
+                          PopupMenuItem(
+                            value: 'block',
+                            child: MyDoc(
+                              builder: (my) => my == null
+                                  ? const SizedBox.shrink()
+                                  : Text(my.blocks?.contains(
+                                              chat.room.otherUserUid) ==
+                                          false
+                                      ? T.block
+                                      : T.unblock.tr),
+                            ),
+                          ),
+                        PopupMenuItem(
+                            value: 'report', child: Text(T.report.tr)),
+                        if (widget.leave)
+                          PopupMenuItem(
+                              value: 'leave', child: Text(T.leave.tr)),
+                      ],
+                      onSelected: (v) async {
+                        if (v == 'setting') {
+                          /// 채팅방이 그룹 채팅이 아니라, 1:1 채팅인 경우, chat-joins 에서 설정을 해야 한다.
+                          /// 이에 대한 내용은, ko/chat.md 를 한다.
+                          await ChatService.instance.showChatRoomSettings(
+                            context: context,
+                            roomId: chat.room.id,
+                          );
+                          setState(() {});
+                        } else if (v == 'members') {
+                          await ChatService.instance.showMembersScreen(
+                            context: context,
+                            room: chat.room,
+                          );
+                        } else if (v == 'block') {
+                          /// 차단 & 해제
+                          final re = await my?.block(chat.room.otherUserUid!);
+                          if (context.mounted) {
+                            toast(
+                              context: context,
+                              title: re == true ? T.blocked.tr : T.unblocked.tr,
+                              message: re == true
+                                  ? T.blockedMessage.tr
+                                  : T.unblockedMessage.tr,
+                            );
+                          }
+                        } else if (v == 'report') {
+                          final re = await input(
+                            context: context,
+                            title: T.reportInputTitle.tr,
+                            subtitle: T.reportInputMessage.tr,
+                            hintText: T.reportInputHint.tr,
+                          );
+                          if (re == null || re == '') return;
+                          await Report.create(
+                              chatRoomId: chat.room.id, reason: re);
+                        } else if (v == 'leave') {
+                          await chat.room.leave();
+                          if (context.mounted) Navigator.of(context).pop();
+                        }
+                      },
+                      tooltip: '채팅방 설정',
+                      icon: const Icon(Icons.menu_rounded),
+                    ),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
+
+        SizedBox(height: widget.appBarBottomSpacing),
 
         /// 채팅 메시지
         Expanded(

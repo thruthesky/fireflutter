@@ -1,13 +1,15 @@
 # 채팅
 
-## Design Concept
 
-- You can open multiple chat rooms simultaneously.
 
 ## TODO
 
 - 1:1 채팅방의 경우, `chat-rooms` 에서 설정하는 것이 아니라, `chat-join` 에서 설정을 해야 한다.
 - 그룹 채팅방의 경우, 개별 설정이 필요하다면, `chat-join` 에서 추가 설정을 해야 한다. 예를 들어, 채팅방 이름 변경, 채팅방 목록에서 우선 순위 표시 등.
+
+## 참고
+
+- 이론적으로 동시에 채팅방 여러개에 접속 할 수 있다. 하지만, 그럴 필요가 없어서 아직 테스트는 못했다.
 
 
 ## Chat 데이터베이스 구조
@@ -94,13 +96,13 @@ if (snapshot.exists) {
     - 채팅방 설정에 따라 암호 입력 상자를 표시하려면,
     - 등등
 
-명확히 하자면, ChatRoom과 ChatModel은 두 가지 다른 모델입니다. ChatRoom은 채팅방의 일부 세부 정보를 보유하는 모델입니다. ChatModel은 채팅방과 채팅 메시지의 모든 세부 정보를 보유하는 완전한 모델입니다. 간단히 말해서, ChatRoom은 ChatModel.chatRoom을 통해 접근할 수 있습니다.
+명확히 하자면, ChatRoom과 ChatModel은 두 가지 다른 모델이다. ChatRoom은 채팅방의 일부 세부 정보를 보유하는 모델이고, ChatModel은 채팅방과 채팅 메시지의 모든 세부 정보를 가지는 모델이다. 참고로 ChatModel.room 이 ChatRoom 모델이며, 이를 통해서 ChatRoom 모델을 참조 할 수 있다.
 
 ### Order
 
-- 채팅 메시지 순서는 마지막 메시지의 `order` 필드에 의해 정렬됩니다.
-    - 이전 메시지보다 늦은 메시지는 이전 메시지보다 작은 값을 가져야 합니다. 최신 메시지는 항상 가장 작은 값이어야 합니다.
-    - 프로그래밍 방식으로 order를 지정하지 않고 채팅 메시지를 보낼 경우, 메시지가 잘못된 위치에 표시될 수 있습니다 (가장 위쪽에 표시될 수 있음).
+- 채팅 메시지 순서는 마지막 메시지의 `order` 필드에 의해 정렬된다.
+    - 이전 메시지보다 늦은 메시지는 이전 메시지보다 작은 값을 가져야 하며, 최신 메시지는 항상 가장 작은 값이어야 한다.
+    - 프로그래밍 방식으로 order를 지정하지 않고 채팅 메시지를 보낼 경우, 메시지가 잘못된 위치에 표시될 수 있다. (가장 위쪽에 표시될 수 있음).
 
 ### 채팅방 만들기
 
@@ -122,16 +124,24 @@ await chat.join(forceJoin: true);
 
 `ChatRoom.create()` 을 통해 채팅방을 생성하고, 추가로 `ChatModel.join()` 을 호출해야 한다.
 
-`ChatModel.join()` 을 호출하면 /chat-rooms/all/users에 {[uid]: true}가 생성됩니다.
+`ChatModel.join()` 을 호출하면 /chat-rooms/all/users에 {[uid]: true}가 생성된다.
+
+참고로, `await ChatRoom.fromRoomdId(id).join(myUid!, forceJoin: true);` 와 같이 해도 채팅방에 입장 (join) 할 수 있다.
+
 
 
 참고로 화면에 ChatMessageListView 위젯이 표시되면, `ChatMessageListView::initState() -> ChatModel::resetNewMessage()`에서 RTDB `chat-joins/all`에 `{order: 0}`가 내부적으로 저장된다.
 
 그러나 더 간편하게 채팅방을 만들고 싶다면, 미리 제공된 `ChatService.instance.showChatRoomCreate()` 함수를 사용할 수 있습니다. 디자인을 사용자 정의하려면 DefaultChatRoomEditDialog을 복사하고 수정할 수 있습니다.
 
-### Viewing Chat Room
+### 채팅방 입장
 
-A `ChatRoomBody()` widget can be used to show chat room (room's messages with room input box).
+채팅방에 입장을 하려면 간단히, `ChatService.instance.showChatRoomScreen()` 을 호출하면 새창으로 채팅방을 보여준다.
+
+새창이 아니라, 탭바 또는 화면의 한 부분으로 추가를 하고 싶은 경우 `ChatRoomBody()` 위젯을 사용하면 된다.
+
+`ChatRoomBody()` 은 기본적으로 채팅 헤더, 메시지 목록, 채팅 입력 박스 세 가지가 포함되어져 있다. 그리고 여러가지 옵션이 있으며 이를 통해서 디자인을 변경 할 수. 있다 물론 원한다면 `ChatRoomBody()` 를 복사해서 모든 것을 직접 작성해도 된다.
+
 
 ```dart
 // For 1:1 chat room, using other user's uid
@@ -147,6 +157,65 @@ ChatRoomBody(roomId: 'room-id');
 // Using snapshot -> ChatRoom
 ChatRoom chatRoom = ChatRoom.fromSnapshot(dataSnapshot);
 ChatRoomBody(room: chatRoom);
+```
+
+
+```dart
+import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
+import 'package:silvers/models/club/club.dart';
+
+class ClubScreen extends StatefulWidget {
+  static const String routeName = '/Club';
+  const ClubScreen({super.key, required this.club});
+
+  final Club club;
+
+  @override
+  State<ClubScreen> createState() => _ClubScreenState();
+}
+
+class _ClubScreenState extends State<ClubScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 5,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('클럽 제목 : ${widget.club.name}'),
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: '소개'),
+              Tab(text: '일정'),
+              Tab(text: '채팅'),
+              Tab(text: '게시판'),
+              Tab(text: '사진첩'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            const Text("모임 소개. @TODO 시놀 보고 따라 만든다."),
+            const Text(
+                "미팅 시간 날짜 약속 @TODO 간단하게 게시판 형태로 만든다. 날짜를 수동으로 입력한다. 시놀 보고 따라 만든다."),
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: ChatRoomBody(
+                roomId: widget.club.id,
+                displayAppBar: false,
+                appBarBottomSpacing: 0,
+              ),
+            ),
+            const Text(
+                "게시판. 서브 카테고리 없이 그냥 글만 쓸 수 있게 한다. 단, 공지사항은 따로 맨 위에 최대 5개까지 노출 할 수 있도록 한다."),
+            const Text("사진첩, 그냥 갤러리로 만든다."),
+          ],
+        ),
+      ),
+    );
+  }
+}
 ```
 
 ### Updating Chat Room
@@ -218,7 +287,7 @@ FirebaseDatabaseQueryBuilder(
     if (snapshot.docs.isEmpty) {
       return Center(child: Text('There is no message, yet.'));
     }
-    // finally return the list
+    finally return the list
     return ListView.builder(
       reverse: true,
       itemCount: snapshot.docs.length,
@@ -398,7 +467,7 @@ Use `ChatService.instance.showChatRoomCreate()` for the default way on creating 
 IconButton(
   onPressed: () async {
     final room = await ChatService.instance.showChatRoomCreate(context: context);
-    // It is recommended to show the newly created room to the user.
+    It is recommended to show the newly created room to the user.
     if (room != null && mounted) {
       ChatService.instance.showChatRoom(context: context, roomId: room.id);
     }
@@ -517,30 +586,82 @@ ChatService.instance.init(testBeforeSendMessage: (chat) {
 });
 ```
 
-## 채팅 메시지 전송 훅
+## 채팅 메시지 전송 콜백
 
-채팅 메시지를 보낸 다음 어떤 작업을 하고 싶은 경우에 훅을 쓸 수 있다.
+채팅 메시지를 보내기 전이나, 보낸 다음 어떤 작업을 하고 싶은 경우에 커스텀 콜백을 쓸 수 있다.
 
-예를 들면, 채팅 메시지를 보낸 후, 그 메시지를 다른 언어로 변경하고 싶다면, 먼저 채팅 메시지를 보내고, 번역하는 API 를 통해서 번역하고, 전송된 채팅 메시지의 내용을 업데이트 할 수 있다.
+실제 발생한 상황 중 한 예를 들면, A 는 한국어를 쓰고 B 는 따갈로그어를 쓰는 겨우, A 가 한국어로 채팅을 하면 B 에게 따갈로그어로 번역되어 전송이 되어야 한다. 그리고 푸시 알림 엮시 한국에서 따갈로그어로 번역이 되어서 전송이 되어야 한다. 이렇게 하기 위해서는 채팅 메시지를 DB 에 집어 넣기 전에, 먼저 번역을 해야 하는데, `beforeMessageSent` 을 통해서 번역을 하면 된다. 참고로 번역은 `afterMessageSent` 에서도 할 수 있다. 하지만 DB 에 기록된 후 번역을 하는 데, 푸시 알림은 DB 에 기록되자 마자 곧 바로 메시지를 보내므로 번역된 내용이 전달되지 않고 사용자가 입력한 원문이 전달된다.
+
+예제
 
 ```dart
-void initChatService() {
-  ChatService.instance.init(
-    onMessageSent: (ChatMessage message) async {
-      /// 여기서 원하는 작업을 할 수 있다.
-      /// 예를 들면, 상대방의 언어를 알아내고, https://pub.dev/packages/translator 패키지로 번역한 다음
-      /// 채팅 메시지를 아래와 같이 업데이트 할 수 있다.
-      /// 즉, 자동으로 채팅 메시지를 다른 언어로 번역하는 것이다.
-      try {
-        await message.ref!.update({
-          Field.text:
-              "Translated message: ...., original message: ${message.text}"
-        });
-      } catch (e) {
-        dog('onMessageSent: ${e.toString()}, path: ${message.ref!.path}');
-        rethrow;
-      }
-    },
-  );
-}
+ChatService.instance.init(
+  /// A 가 B 에게 채팅하면, 한국어를 따갈로그어로 번역
+  ///
+  /// 메시지 전송 전에 콜백으로 message 값을 변경 후 리턴
+  /// [chat] 은 채팅 모델. 1:1 채팅에서 상대방의 uid 를 알 수 있다>
+  beforeMessageSent: (Map<String, dynamic> message, ChatModel chat) async {
+    /// 채팅 할 내용이 없으면 그냥 리턴
+    if (message['text'] != null && message['text'].isEmpty) return message;
+
+    /// 다른 사용자의 언어 코드를 얻는다.
+    final otherUserSettings = await UserSetting.get(chat.room.otherUserUid!);
+    final otherUserLanguageCode = otherUserSettings.languageCode;
+    if (otherUserLanguageCode == null) return message;
+
+    /// 나의 언어 코드를 얻는다
+    final myUserSettings = await UserSetting.get(myUid!);
+    final myUserLanguageCode = myUserSettings.languageCode;
+
+    /// 나의 언어와 상대방의 언어가 동일하면 그냥 리턴
+    if (myUserLanguageCode == otherUserLanguageCode) return message;
+ 
+    /// ChatGPT 로 번역한다.
+    final openAI = OpenAI.instance.build(
+      token: AppConfig.openAiKey,
+      baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 5)),
+      enableLog: true,
+    );
+    final prompt =
+        "I want to translate a text. Act as a simple translating service. Translate below into ${otherUserLanguageCode.language}.\n\n${message['text']}";
+    final request = CompleteText(
+        prompt: prompt, maxTokens: 200, model: Gpt3TurboInstruct());
+
+    final response = await openAI.onCompletion(request: request);
+
+    /// 번역된 내용을 원문과 함께 담는다.
+    message['text'] =
+        '${response?.choices.first.text.trim().replaceAll(r'^\S+', '')}\n\n(${message['text']})';
+
+    /// 번역(조작)된 message 데이터를 리턴한다.
+    return message;
+},
+/// 채팅 메시지 전송 후, Google 번역하는 예
+afterMessageSent: (ChatMessage message) async {
+  if (message.text == null || message.text!.isEmpty) return;
+
+  /// 상대방의 언어코드
+  final room = await ChatRoom.get(message.roomRef.key!);
+  final otherUserSettings = await UserSetting.get(room.otherUserUid!);
+  final otherUserLanguageCode = otherUserSettings.languageCode;
+  if (otherUserLanguageCode == null) return;
+
+  /// 나의 언어코드
+  final myUserSettings = await UserSetting.get(myUid!);
+  final myUserLanguageCode = myUserSettings.languageCode;
+
+  /// 나의 언어와 상대방의 언어가 동일하면 리턴
+  if (myUserLanguageCode == otherUserLanguageCode) return;
+
+  /// 구글 번역
+  final translator = GoogleTranslator();
+  final translation =
+      await translator.translate(message.text!, to: otherUserLanguageCode);
+  if (translation.text == message.text) return;
+
+  /// 번역한 내용을 DB 에 바로 저장
+  await message.ref!.update({
+    Field.text: "${translation.text}\n\n(${message.text})",
+  });
+});
 ```

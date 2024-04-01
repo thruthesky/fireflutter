@@ -56,8 +56,8 @@ class T {
       'You will be able to contents of this user.';
   static const String notVerifiedMessage = 'You have not verified yourself.';
   static const String writeYourMessage = 'Write your message';
-  static const String yourProfileWasVisited = 'Your profile was visited.';
-  static const String visitYourProfile = 'visit your profile';
+  static const String visitedYourProfileTitle = 'Your profile was visited.';
+  static const String visitedYourProfileBody = '#name visited your profile';
   // chat input box hint text -> please enter a message
   static const String pleaseEnterMessage = '메시지를 입력하세요.';
 

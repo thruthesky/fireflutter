@@ -15,6 +15,7 @@ class PostListTile extends StatelessWidget {
           context: context,
           uid: post.uid,
         ),
+        cacheId: 'post.list.tile',
       ),
       title: Text(
         post.title,
@@ -41,7 +42,7 @@ class PostListTile extends StatelessWidget {
                 )
               : const SizedBox.shrink(),
           Text(
-            post.createdAt.millisecondsSinceEpoch.toShortDate,
+            post.createdAt.millisecondsSinceEpoch.toHis,
           ),
         ],
       ),

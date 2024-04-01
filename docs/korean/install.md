@@ -38,7 +38,10 @@ dependencies:
 
 ## Firebase Realtime Database Secuirty 설치
 
-[Firebase Realtime Database Security](../assets/realtime_database_security.md) 를 복사해어 Firebase project 에 붙여 넣기 한 다음 저장해 주세요.
+[Firebase Realtime Database Security](../assets/realtime_database_security_rules.md) 를 복사해어 Firebase project 에 붙여 넣기 한 다음 저장해 주세요.
+
+## Firestore Security Rules
+
 
 ## Default app-environment entitlement
 

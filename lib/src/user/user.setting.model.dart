@@ -32,7 +32,7 @@ class UserSetting {
       key: key,
       ref: nodeRef.child(key),
       profileViewNotification: json[Code.profileViewNotification],
-      languageCode: json[Code.languageCode],
+      languageCode: json[Field.languageCode],
     );
   }
 
@@ -47,7 +47,7 @@ class UserSetting {
     return UserSetting.fromJson(
       {
         Code.profileViewNotification: null,
-        Code.languageCode: null,
+        Field.languageCode: null,
       },
       uid,
     );
@@ -56,7 +56,7 @@ class UserSetting {
   Map<String, dynamic> toJson() {
     return {
       Code.profileViewNotification: profileViewNotification,
-      Code.languageCode: languageCode,
+      Field.languageCode: languageCode,
     };
   }
 
@@ -91,7 +91,7 @@ class UserSetting {
     await ref.update({
       if (profileViewNotification != null)
         Code.profileViewNotification: profileViewNotification,
-      if (languageCode != null) Code.languageCode: languageCode,
+      if (languageCode != null) Field.languageCode: languageCode,
     });
   }
 }

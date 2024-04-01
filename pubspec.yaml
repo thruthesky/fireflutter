@@ -1,8 +1,12 @@
 name: fireflutter
 description: "A lightning-fast, robust CMS for seamless real-time content management in app development."
-version: 0.3.25
+version: 0.3.27
 homepage: https://github.com/thruthesky/fireflutter
 repository: https://github.com/thruthesky/fireflutter
+issue_tracker: https://github.com/thruthesky/fireflutter/issues
+screenshots:
+  - description: The rapid flutter app development kit.
+    path: assets/screenshots/logo.jpg
 
 environment:
   sdk: ">=3.2.3 <4.0.0"
@@ -11,6 +15,7 @@ environment:
 dependencies:
   cached_network_image: ^3.3.0
   cloud_firestore: ^4.15.7
+  cloud_functions: ^4.6.9
   crypto: ^3.0.3
   devicelocale: ^0.7.0
   dio: ^5.4.0
@@ -20,6 +25,7 @@ dependencies:
   firebase_messaging: ^14.7.18
   firebase_storage: ^11.6.8
   firebase_ui_database: ^1.4.2
+  firebase_ui_firestore: ^1.6.2
   flutter:
     sdk: flutter
   flutter_image_compress: ^2.1.0
@@ -39,7 +45,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
-  lints: ^2.1.1
+  flutter_lints: ^3.0.2
+  lints: ^3.0.0
 
 flutter:

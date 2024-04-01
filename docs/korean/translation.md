@@ -81,7 +81,7 @@ initTextService(BuildContext context) {
 ```
 
 
-## 트릭
+## 언어 설정
 
 일반적으로 언어 설정을 할 때, build context 가 필요한데, HomeScreen 과 같은 곳에서 1 회만 호출되도록 하면 된다.
 
@@ -108,5 +108,7 @@ class HomeScreen extends StatelessWidget {
 ```dart
 'phoneSignIn'.tr
 ```
+
+
 
 

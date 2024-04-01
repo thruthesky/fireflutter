@@ -140,6 +140,8 @@ class StorageService {
     );
   }
 
+  /// Update photos in the Firebase Storage.
+  ///
   /// 사용자에게 사진/파일 업로드를 요청한다.
   ///
   /// 1. It displays the upload source selection dialog (camera or gallery).
@@ -162,6 +164,17 @@ class StorageService {
   /// If it's empty, it willl save the file under "/users/$uid/". You can use
   /// this option to save the file under a different path.
   ///
+  /// [compressQuality] is the quality of the compress for the image before uploading.
+  ///
+  /// [camera] is a flag to allow the user to choose the camera as the source.
+  ///
+  /// [gallery] is a flag to allow the user to choose the gallery as the source.
+  ///
+  /// [maxHeight] is the maximum height of the image to upload.
+  ///
+  /// [maxWidth] is the maximum width of the image to upload.
+  ///
+  /// It returns the download url of the uploaded file.
   Future<String?> upload({
     required BuildContext context,
     Function(double)? progress,
@@ -170,6 +183,8 @@ class StorageService {
     String? saveAs,
     bool camera = true,
     bool gallery = true,
+    double maxHeight = 1024,
+    double maxWidth = 1024,
   }) async {
     return uploadFrom(
       source: await chooseUploadSource(
@@ -181,6 +196,8 @@ class StorageService {
       complete: complete,
       compressQuality: compressQuality,
       saveAs: saveAs,
+      maxHeight: maxHeight,
+      maxWidth: maxWidth,
     );
   }
 
@@ -202,6 +219,8 @@ class StorageService {
     String? saveAs,
     bool camera = true,
     bool gallery = true,
+    double maxHeight = 1024,
+    double maxWidth = 1024,
   }) async {
     String? url, oldUrl;
     oldUrl = await get<String?>(path);
@@ -214,6 +233,8 @@ class StorageService {
         saveAs: saveAs,
         camera: camera,
         gallery: gallery,
+        maxHeight: maxHeight,
+        maxWidth: maxWidth,
       );
     }
     if (url == null) return null;
@@ -241,9 +262,15 @@ class StorageService {
     int compressQuality = 80,
     String? saveAs,
     String? type,
+    double maxHeight = 1024,
+    double maxWidth = 1024,
   }) async {
     if (source == null) return null;
-    String? path = await getFilePathFromPicker(source: source);
+    String? path = await getFilePathFromPicker(
+      source: source,
+      maxHeight: maxHeight,
+      maxWidth: maxWidth,
+    );
     if (path == null) return null;
     return await uploadFile(
       path: path,
@@ -257,12 +284,17 @@ class StorageService {
 
   Future<String?> getFilePathFromPicker({
     required ImageSource? source,
+    double maxHeight = 1024,
+    double maxWidth = 1024,
   }) async {
     if (source == null) return null;
 
     if (source == ImageSource.camera) {
-      final XFile? image =
-          await ImagePicker().pickImage(source: ImageSource.camera);
+      final XFile? image = await ImagePicker().pickImage(
+        source: ImageSource.camera,
+        maxHeight: maxHeight,
+        maxWidth: maxWidth,
+      );
       return image?.path;
     } else if (source == ImageSource.gallery) {
       final XFile? image =
@@ -277,9 +309,14 @@ class StorageService {
     Function? complete,
     int compressQuality = 80,
     String? type,
+    double maxHeight = 1024,
+    double maxWidth = 1024,
   }) async {
-    final pickedFiles = await ImagePicker()
-        .pickMultiImage(imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
+    final pickedFiles = await ImagePicker().pickMultiImage(
+      imageQuality: 100,
+      maxHeight: maxHeight,
+      maxWidth: maxWidth,
+    );
     List<XFile> xFilePicks = pickedFiles;
 
     if (xFilePicks.isEmpty) return null;
