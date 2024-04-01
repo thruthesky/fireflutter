@@ -71,6 +71,12 @@
       ".read": true,
       ".write": true
     },
+   "mutual-like":{
+     ".read": true,
+       "$uid": {
+         ".write": true
+       }
+    },
     // Fireship - users who have profile photos. To display users who has profile photo.
     "user-profile-photos": {
       ".read": true,

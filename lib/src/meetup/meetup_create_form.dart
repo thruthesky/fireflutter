@@ -1,22 +1,21 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class ClubMeetupCreateForm extends StatefulWidget {
-  const ClubMeetupCreateForm({
+class MeetupCreateForm extends StatefulWidget {
+  const MeetupCreateForm({
     super.key,
-    required this.club,
+    required this.clubId,
     required this.onCreate,
   });
 
-  final Club club;
-  final void Function(ClubMeetup club) onCreate;
+  final String? clubId;
+  final void Function(Meetup meetup) onCreate;
 
   @override
-  State<ClubMeetupCreateForm> createState() => _ClubMeetupCreateFormState();
+  State<MeetupCreateForm> createState() => _ClubMeetupCreateFormState();
 }
 
-/// TODO: 여기서 부터...
-class _ClubMeetupCreateFormState extends State<ClubMeetupCreateForm> {
+class _ClubMeetupCreateFormState extends State<MeetupCreateForm> {
   final TextEditingController titleController = TextEditingController();
 
   @override
@@ -25,25 +24,25 @@ class _ClubMeetupCreateFormState extends State<ClubMeetupCreateForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("오프라인 모임 제목"),
+        const Text("오프라인 일정 제목"),
         TextField(
           controller: titleController,
           onChanged: (value) => setState(() {}),
         ),
         const SizedBox(height: 8),
-        const Text("오프라인 모임 제목을 적어주세요."),
+        const Text("오프라인 만남의 제목을 적어주세요."),
         const SizedBox(height: 24),
         if (titleController.text.trim().isNotEmpty)
           Align(
             child: OutlinedButton(
               onPressed: () async {
-                final meetup = await ClubMeetup.create(
-                  clubId: widget.club.id,
+                final meetup = await Meetup.create(
+                  clubId: widget.clubId,
                   title: titleController.text,
                 );
                 widget.onCreate(meetup);
               },
-              child: const Text('모임 만들기'),
+              child: const Text('일정 만들기'),
             ),
           ),
       ],

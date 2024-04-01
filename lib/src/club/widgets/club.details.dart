@@ -40,7 +40,17 @@ class ClubDetails extends StatelessWidget {
               UserDoc(
                   uid: club.master,
                   builder: (user) {
-                    return Text('운영자: ${user.displayName}');
+                    return Row(
+                      children: [
+                        Text('운영자: ${user.displayName}'),
+                        if (club.isMaster)
+                          ElevatedButton(
+                            onPressed: () => ClubService.instance
+                                .showUpdateScreen(context: context, club: club),
+                            child: const Text('모임 설정'),
+                          ),
+                      ],
+                    );
                   }),
               const Text('@TODO 일정 - 우선 가장 간단하게 만들 것.'),
               if (club.reminder.isNotEmpty) ...[

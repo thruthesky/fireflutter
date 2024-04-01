@@ -2,8 +2,8 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/club/widgets/club.join_button.dart';
 import 'package:flutter/material.dart';
 
-class ClubViewRegisterFirst extends StatelessWidget {
-  const ClubViewRegisterFirst({
+class ClubViewRegisterFirstButton extends StatelessWidget {
+  const ClubViewRegisterFirstButton({
     super.key,
     required this.club,
     required this.label,
