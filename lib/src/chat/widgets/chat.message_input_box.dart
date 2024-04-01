@@ -57,6 +57,7 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
               hintText: T.pleaseEnterMessage.tr,
+              hintMaxLines: 1,
               prefixIcon: IconButton(
                 icon: widget.cameraIcon ?? const Icon(Icons.camera_alt),
                 onPressed: () async {
