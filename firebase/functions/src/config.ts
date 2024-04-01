@@ -69,6 +69,6 @@ export class Config {
     /**
      * Link setup
      */
-    static appleTeamId = '';
-    static iosBundleId = '';
+    static appleTeamId = "AX352BQR6K";
+    static iosBundleId = "com.linkexam.testapp";
 }

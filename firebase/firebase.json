@@ -15,6 +15,21 @@
       ]
     }
   ],
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "appAssociation": "NONE",
+    "rewrites": [
+      {
+        "source": "**",
+        "function": "link"
+      }
+    ]
+  },
   "emulators": {
     "functions": {
       "port": 5001
@@ -28,6 +43,12 @@
     "singleProjectMode": true,
     "firestore": {
       "port": 4040
+    },
+    "auth": {
+      "port": 9099
+    },
+    "hosting": {
+      "port": 55000
     }
   }
 }
