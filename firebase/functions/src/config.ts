@@ -64,4 +64,11 @@ export class Config {
     static typesenseHost = typesenseHost;
     static typesensePort = 8080;
     static typesenseProtocol = typesenseProtocol;
+
+
+    /**
+     * Link setup
+     */
+    static appleTeamId = '';
+    static iosBundleId = '';
 }
