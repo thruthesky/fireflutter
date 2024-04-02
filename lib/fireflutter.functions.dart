@@ -301,7 +301,10 @@ Future<String?> input({
     builder: (BuildContext context) {
       final controller = TextEditingController(text: initialValue);
       return AlertDialog(
-        title: Text(title),
+        title: Text(
+          title,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

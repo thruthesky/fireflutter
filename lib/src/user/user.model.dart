@@ -132,6 +132,15 @@ class User {
   /// 현재 시간으로 저장함녀 된다.
   int idUploadedAt;
 
+  /// [ping] is an int value that is used to update user document.
+  ///
+  /// You can use this to trigger any listeners that are listening to the user
+  /// document. Especially, when you use [MyDoc] widget, you can update this value
+  /// to rebuild the widget.
+  /// For example, when user pays, you can update this value to trigger the [MyDoc]
+  /// widget to rebuild.
+  int ping;
+
   /// Returns true if the user is blocked.
   bool isBlocked(String otherUserUid) =>
       blocks?.contains(otherUserUid) ?? false;
@@ -201,6 +210,7 @@ class User {
     required this.geohash6,
     required this.geohash7,
     required this.languageCode,
+    required this.ping,
   });
 
   factory User.fromSnapshot(DataSnapshot snapshot) {
@@ -278,6 +288,7 @@ class User {
       geohash6: json['geohash6'] ?? '',
       geohash7: json['geohash7'] ?? '',
       languageCode: json['languageCode'] ?? '',
+      ping: json['ping'] ?? 0,
     );
   }
 
@@ -315,6 +326,7 @@ class User {
       'geohash6': geohash6,
       'geohash7': geohash7,
       'languageCode': languageCode,
+      'ping': ping,
     };
   }
 
@@ -359,6 +371,7 @@ class User {
       geohash6 = user.geohash6;
       geohash7 = user.geohash7;
       languageCode = user.languageCode;
+      ping = user.ping;
     }
 
     return this;
@@ -465,6 +478,7 @@ class User {
     double? latitude,
     double? longitude,
     String? languageCode,
+    int? ping,
   }) async {
     final data = {
       if (name != null) 'name': name,
@@ -492,6 +506,7 @@ class User {
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
       if (languageCode != null) 'languageCode': languageCode,
+      if (ping != null) 'ping': ping,
     };
     if (data.isEmpty) {
       return this;

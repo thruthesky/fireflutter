@@ -26,31 +26,56 @@ class ClubDetails extends StatelessWidget {
                   height: 200,
                   fit: BoxFit.cover,
                 ),
-              Text(club.description),
-              if (club.joined == false) ClubJoinButton(club: club),
-              ElevatedButton(
-                  onPressed: () {
-                    ChatService.instance
-                        .showChatRoomScreen(context: context, uid: club.master);
-                  },
-                  child: const Text('문의하기')),
-              Text('회원 수: ${club.users.length} 명'),
-              UserDoc(
-                  uid: club.master,
-                  builder: (user) {
-                    return Row(
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(club.description),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('운영자: ${user.displayName}'),
-                        if (club.isMaster)
-                          ElevatedButton(
-                            onPressed: () => ClubService.instance
-                                .showUpdateScreen(context: context, club: club),
-                            child: const Text('모임 설정'),
-                          ),
+                        UserDoc(
+                          uid: club.master,
+                          builder: (user) {
+                            return Row(
+                              children: [
+                                Text('운영자: ${user.displayName}'),
+                                if (club.isMaster)
+                                  IconButton(
+                                    onPressed: () => ClubService.instance
+                                        .showUpdateScreen(
+                                            context: context, club: club),
+                                    icon: const Icon(Icons.edit),
+                                  ),
+                              ],
+                            );
+                          },
+                        ),
+                        Text('회원 수: ${club.users.length} 명'),
                       ],
-                    );
-                  }),
-              const Text('@TODO 일정 - 우선 가장 간단하게 만들 것.'),
+                    ),
+                    const Spacer(),
+                    if (club.joined == false) ClubJoinButton(club: club),
+                    const SizedBox(width: 4),
+                    ElevatedButton(
+                      onPressed: () {
+                        ChatService.instance.showChatRoomScreen(
+                            context: context, uid: club.master);
+                      },
+                      child: const Text('문의하기'),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
               if (club.reminder.isNotEmpty) ...[
                 const Text('Reminder'),
                 Card(
