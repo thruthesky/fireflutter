@@ -39,6 +39,15 @@ class ReportMyListView extends StatelessWidget {
       itemBuilder: (context, snapshot) {
         final Report report = Report.fromValue(snapshot.value, snapshot.ref);
 
+        func() async {
+          final re = await confirm(
+              context: context,
+              title: 'Delete report',
+              message: 'Do you want to delete this report?');
+          if (re != true) return;
+          await report.ref.remove();
+        }
+
         if (report.isPost) {
           return FutureBuilder<Post?>(
             future: Post.get(
@@ -118,15 +127,6 @@ class ReportMyListView extends StatelessWidget {
             ),
           );
         } else {
-          func() async {
-            final re = await confirm(
-                context: context,
-                title: 'Delete report',
-                message: 'Do you want to delete this report?');
-            if (re != true) return;
-            await report.ref.remove();
-          }
-
           return userBuilder?.call(report, func) ??
               ListTile(
                 leading: UserAvatar(uid: report.otherUserUid!),
