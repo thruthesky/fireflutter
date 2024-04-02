@@ -34,11 +34,12 @@ class _ClubUpdateFormState extends State<ClubUpdateForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Club ID: ${club.id}'),
-          Text('owner uid: ${club.uid}'),
-          Text('my Uid: ${UserService.instance.user!.uid}'),
+          // Text('Club ID: ${club.id}'),
+          // Text('owner uid: ${club.uid}'),
+          // Text('my Uid: ${UserService.instance.user!.uid}'),
           GestureDetector(
             onTap: () async {
+              StorageService.instance.delete(club.photoUrl);
               final url = await StorageService.instance.upload(
                 context: context,
                 progress: (p0) => print(p0),
@@ -54,6 +55,7 @@ class _ClubUpdateFormState extends State<ClubUpdateForm> {
                 club: club,
                 builder: (Club club) => Container(
                   height: 240,
+                  width: double.infinity,
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.secondary,
                   ),
@@ -67,6 +69,7 @@ class _ClubUpdateFormState extends State<ClubUpdateForm> {
                         )
                       : CachedNetworkImage(
                           imageUrl: club.photoUrl ?? '',
+                          fit: BoxFit.cover,
                           placeholder: (context, url) => const Center(
                             child: CircularProgressIndicator(),
                           ),
@@ -79,7 +82,7 @@ class _ClubUpdateFormState extends State<ClubUpdateForm> {
           ),
           const SizedBox(height: 8),
           Text(
-            "  모임 사진을 업로드 해 주세요. 사진 크기: 500x500",
+            "  모임 사진을 업로드 해 주세요. 사진 너비: 800, 사진 높이: 500",
             style: Theme.of(context).textTheme.labelMedium,
           ),
           const SizedBox(height: 24),

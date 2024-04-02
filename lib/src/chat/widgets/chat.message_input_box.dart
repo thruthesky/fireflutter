@@ -53,6 +53,8 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
               contentPadding: const EdgeInsets.only(
                 top: 7,
               ),
+              fillColor: Colors.transparent,
+              focusColor: Colors.transparent,
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
