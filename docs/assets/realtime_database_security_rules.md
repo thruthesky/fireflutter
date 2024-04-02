@@ -178,7 +178,7 @@
       ".read": true,
       ".write": true,
       "$category": {
-        ".indexOn": ["order"]
+        ".indexOn": ["order", "createdAt"]
       }
     },
       

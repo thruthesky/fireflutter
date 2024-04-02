@@ -21,14 +21,30 @@ class _ClubMeetupUpdateFormState extends State<MeetupUpdateForm> {
   DateTime? date;
   TimeOfDay? time;
 
-  Meetup get meetup => widget.meetup;
+  Meetup? _meetup;
+  Meetup get meetup => _meetup ?? widget.meetup;
 
   @override
   void initState() {
     super.initState();
 
-    titleController.text = meetup.title;
-    descriptionController.text = meetup.description;
+    /// Load meetup data
+    ///
+    /// 파마메타로 넘어온 meetup 을 그대로 사용하면, 업데이트가 올바로 되지 않는 경우가 발생한다.
+    /// 확실히 하기 위해서, Firestore 로 부터 로딩을 한다.
+    Meetup.get(widget.meetup.ref).then((value) {
+      _meetup = value;
+      titleController.text = value.title;
+      descriptionController.text = value.description;
+      date = value.meetAt;
+      if (date != null) {
+        date = DateTime(date!.year, date!.month, date!.day);
+      }
+      if (value.meetAt != null) {
+        time = TimeOfDay.fromDateTime(value.meetAt!);
+      }
+      setState(() {});
+    });
   }
 
   @override
@@ -44,13 +60,14 @@ class _ClubMeetupUpdateFormState extends State<MeetupUpdateForm> {
                 onPressed: () async {
                   date = await showDatePicker(
                       context: context,
+                      initialDate: date ?? DateTime.now(),
                       firstDate: DateTime.now(),
                       lastDate: DateTime.now().add(const Duration(days: 365)));
                   setState(() {});
                 },
                 child: const Text('날짜 선택'),
               ),
-              if (date != null) Text(DateFormat("yyyy년 MM월 dd일").format(date!)),
+              if (date != null) Text(DateFormat.yMMMEd('ko').format(date!)),
             ],
           ),
           Row(
@@ -59,14 +76,14 @@ class _ClubMeetupUpdateFormState extends State<MeetupUpdateForm> {
                 onPressed: () async {
                   time = await showTimePicker(
                     context: context,
-                    initialTime: const TimeOfDay(hour: 0, minute: 0),
+                    initialTime: time ?? const TimeOfDay(hour: 0, minute: 0),
                     initialEntryMode: TimePickerEntryMode.inputOnly,
                   );
                   setState(() {});
                 },
                 child: const Text('시간 선택'),
               ),
-              if (time != null) Text(time!.format(context))
+              if (time != null) Text(time!.format(context)),
             ],
           ),
           Text('Club ID: ${meetup.clubId}'),
@@ -135,15 +152,25 @@ class _ClubMeetupUpdateFormState extends State<MeetupUpdateForm> {
           Align(
             child: OutlinedButton(
               onPressed: () async {
+                if (date == null || time == null) {
+                  toast(context: context, message: '모임 날짜와 시간을 선택해주세요.');
+                  return;
+                }
+                print(date);
+
                 await meetup.update(
                   title: titleController.text,
                   description: descriptionController.text,
+                  meetAt: date!.add(
+                    Duration(hours: time!.hour, minutes: time!.minute),
+                  ),
                 );
                 toast(context: context, message: '만남 일정이 수정되었습니다.');
               },
               child: const Text('일정 수정하기'),
             ),
           ),
+          const SizedBox(height: 24),
         ],
       ),
     );
