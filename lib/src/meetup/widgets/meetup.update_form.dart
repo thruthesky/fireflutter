@@ -53,7 +53,7 @@ class _ClubMeetupUpdateFormState extends State<MeetupUpdateForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('만남 날짜와 시간'),
+          const Text('만남 일정 날짜와 시간'),
           Row(
             children: [
               ElevatedButton(
@@ -67,6 +67,7 @@ class _ClubMeetupUpdateFormState extends State<MeetupUpdateForm> {
                 },
                 child: const Text('날짜 선택'),
               ),
+              const SizedBox(width: 16),
               if (date != null) Text(DateFormat.yMMMEd('ko').format(date!)),
             ],
           ),
@@ -83,15 +84,20 @@ class _ClubMeetupUpdateFormState extends State<MeetupUpdateForm> {
                 },
                 child: const Text('시간 선택'),
               ),
+              const SizedBox(width: 16),
               if (time != null) Text(time!.format(context)),
             ],
           ),
-          Text('Club ID: ${meetup.clubId}'),
-          Text('Meetup ID: ${meetup.id}'),
-          Text('owner uid: ${meetup.uid}'),
-          Text('my Uid: ${UserService.instance.user!.uid}'),
+          // Text('Club ID: ${meetup.clubId}'),
+          // Text('Meetup ID: ${meetup.id}'),
+          // Text('owner uid: ${meetup.uid}'),
+          // Text('my Uid: ${UserService.instance.user!.uid}'),
+
+          const SizedBox(height: 24),
+          const Text('만남 일정 사진'),
           GestureDetector(
             onTap: () async {
+              StorageService.instance.delete(meetup.photoUrl);
               final url = await StorageService.instance.upload(
                 context: context,
                 progress: (p0) => print(p0),
@@ -107,6 +113,7 @@ class _ClubMeetupUpdateFormState extends State<MeetupUpdateForm> {
                 meetup: meetup,
                 builder: (Meetup meetup) => Container(
                   height: 240,
+                  width: double.infinity,
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.secondary,
                   ),
@@ -120,6 +127,7 @@ class _ClubMeetupUpdateFormState extends State<MeetupUpdateForm> {
                         )
                       : CachedNetworkImage(
                           imageUrl: meetup.photoUrl!,
+                          fit: BoxFit.cover,
                           placeholder: (context, url) => const Center(
                             child: CircularProgressIndicator(),
                           ),
@@ -138,12 +146,12 @@ class _ClubMeetupUpdateFormState extends State<MeetupUpdateForm> {
           const SizedBox(height: 24),
           LabelField(
             controller: titleController,
-            label: '오프라인 만남 이름',
+            label: '만남 일정 이름',
             description: '오프라인 만남에 대한 이름을 적어주세요.',
           ),
           LabelField(
             controller: descriptionController,
-            label: '만남 설명',
+            label: '만남 일정 설명',
             description: '만남 설명을 적어주세요.',
             minLines: 3,
             maxLines: 5,

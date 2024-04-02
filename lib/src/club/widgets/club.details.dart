@@ -27,8 +27,6 @@ class ClubDetails extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               Text(club.description),
-              const Divider(),
-              Text("클럽 아이디: ${club.id}"),
               if (club.joined == false) ClubJoinButton(club: club),
               ElevatedButton(
                   onPressed: () {

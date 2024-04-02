@@ -70,7 +70,10 @@ class ClubListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FirestoreQueryBuilder(
-      query: query ?? Club.col.orderBy('createdAt', descending: true),
+      query: query ??
+          Club.col
+              .where('hasPhoto', isEqualTo: true)
+              .orderBy('createdAt', descending: true),
       builder: (_, snapshot, __) {
         if (snapshot.isFetching) {
           return loadingBuilder?.call() ??
@@ -116,7 +119,7 @@ class ClubListView extends StatelessWidget {
               snapshot.fetchMore();
             }
             final club = Club.fromSnapshot(snapshot.docs[index]);
-            return itemBuilder?.call(club, index) ?? ClubCard(club: club);
+            return itemBuilder?.call(club, index) ?? ClubListTile(club: club);
           },
         );
       },

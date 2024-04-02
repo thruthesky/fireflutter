@@ -21,6 +21,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
     return DefaultTabController(
       length: 5,
       child: Scaffold(
+        // backgroundColor: Colors.blue,
         appBar: AppBar(
           title: Text(widget.club.name),
           actions: [
@@ -160,7 +161,12 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
         body: TabBarView(
           children: [
             ClubDetails(club: widget.club),
-            MeetupListView(clubId: widget.club.id),
+            MeetupListView(
+              clubId: widget.club.id,
+              emptyBuilder: () => const Center(
+                child: Text('일정이 없습니다.'),
+              ),
+            ),
             ClubDoc(
               club: widget.club,
               builder: (club) => club.users.contains(myUid)
