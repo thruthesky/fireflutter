@@ -103,6 +103,10 @@ class User {
 
   /// When the user's location was updated, geohash data is also updated.
   ///
+  ///
+  /// [geohash3] is used for searching nearby users above 20k meters
+  String geohash3;
+
   /// [geohash4] is used for searching nearby users within 20k meters
   String geohash4;
 
@@ -191,6 +195,7 @@ class User {
     required this.siGunGu,
     required this.latitude,
     required this.longitude,
+    required this.geohash3,
     required this.geohash4,
     required this.geohash5,
     required this.geohash6,
@@ -267,6 +272,7 @@ class User {
       siGunGu: json['siGunGu'] ?? '',
       latitude: json['latitude'] ?? 0.0,
       longitude: json['longitude'] ?? 0.0,
+      geohash3: json['geohash3'] ?? '',
       geohash4: json['geohash4'] ?? '',
       geohash5: json['geohash5'] ?? '',
       geohash6: json['geohash6'] ?? '',
@@ -347,6 +353,7 @@ class User {
       siGunGu = user.siGunGu;
       latitude = user.latitude;
       longitude = user.longitude;
+      geohash3 = user.geohash3;
       geohash4 = user.geohash4;
       geohash5 = user.geohash5;
       geohash6 = user.geohash6;
@@ -493,6 +500,7 @@ class User {
     if (latitude != null && longitude != null) {
       final geohash = GeoHash.encode(latitude, longitude);
       final hash = geohash.hash;
+      data['geohash3'] = hash.substring(0, 3);
       data['geohash4'] = hash.substring(0, 4);
       data['geohash5'] = hash.substring(0, 5);
       data['geohash6'] = hash.substring(0, 6);
