@@ -25,7 +25,6 @@ class MeetupDoc extends StatelessWidget {
           );
         }
         final meetup = snapshot.data!;
-        print(meetup);
         return builder(meetup);
       },
     );

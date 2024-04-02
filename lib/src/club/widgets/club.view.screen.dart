@@ -1,6 +1,7 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/club/widgets/club.details.dart';
 import 'package:fireflutter/src/meetup/meetup.service.dart';
+import 'package:fireflutter/src/meetup/widgets/meetup.list_view.dart';
 import 'package:flutter/material.dart';
 
 class ClubViewScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
     return DefaultTabController(
       length: 5,
       child: Scaffold(
+        // backgroundColor: Colors.blue,
         appBar: AppBar(
           title: Text(widget.club.name),
           actions: [
@@ -46,8 +48,9 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
                       ),
                       child: const Text('글 쓰기'),
                     );
-                  } else
+                  } else {
                     return const SizedBox.shrink();
+                  }
                 },
               ),
             ),
@@ -158,7 +161,12 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
         body: TabBarView(
           children: [
             ClubDetails(club: widget.club),
-            const Text('meetup 을 별도 서비스로 뺄 것'),
+            MeetupListView(
+              clubId: widget.club.id,
+              emptyBuilder: () => const Center(
+                child: Text('일정이 없습니다.'),
+              ),
+            ),
             ClubDoc(
               club: widget.club,
               builder: (club) => club.users.contains(myUid)
@@ -195,8 +203,9 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
                                 .withAlpha(64),
                           ),
                         ),
-                        emptyBuilder: () =>
-                            const Center(child: Text('글을 등록 해 주세요.')),
+                        emptyBuilder: () => const Center(
+                          child: Text('글을 등록 해 주세요.'),
+                        ),
                       ),
                     )
                   : ClubViewRegisterFirstButton(

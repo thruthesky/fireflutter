@@ -25,7 +25,6 @@ class ClubDoc extends StatelessWidget {
           );
         }
         final club = snapshot.data!;
-        print(club);
         return builder(club);
       },
     );

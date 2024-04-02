@@ -136,7 +136,8 @@ class UserDoc extends StatelessWidget {
       initialData: initialData,
       // path: path,
       ref: FirebaseDatabase.instance.ref("${User.node}/$uid"),
-      builder: (data) => builder(User.fromJson(data, uid: uid)),
+      // warning: data may be null if the uid does not exist in database.
+      builder: (data) => builder(User.fromJson(data ?? {}, uid: uid)),
       onLoading: onLoading,
     );
   }

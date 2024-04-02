@@ -4,7 +4,9 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-/// 클럽 목록 위젯
+/// 모임 목록 위젯
+///
+/// [clubId] 클럽 아이디. 이 값이 주어지면, 해당 클럽의 모임 목록만 표시한다.
 ///
 /// [query] 파라미터를 통해, Firestore 쿼리를 전달할 수 있다. 기본 값은 `Club.col.orderBy('createdAt', descending: true)` 이다.
 ///
@@ -16,9 +18,10 @@ import 'package:flutter/material.dart';
 ///
 /// 그 외, [ListView.separated] 가 지원하는 모든 옵션(파라미터)을 지원한다. 따라서 [ListView.separated] 를 사용하듯 사용하면 된다.
 ///
-class ClubListView extends StatelessWidget {
-  const ClubListView({
+class MeetupListView extends StatelessWidget {
+  const MeetupListView({
     super.key,
+    this.clubId,
     this.query,
     this.pageSize = 10,
     this.loadingBuilder,
@@ -43,6 +46,7 @@ class ClubListView extends StatelessWidget {
     this.emptyBuilder,
   });
 
+  final String? clubId;
   final Query? query;
 
   final int pageSize;
@@ -64,16 +68,22 @@ class ClubListView extends StatelessWidget {
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final String? restorationId;
   final Clip clipBehavior;
-  final Widget Function(Club, int)? itemBuilder;
+  final Widget Function(Meetup, int)? itemBuilder;
   final Widget Function()? emptyBuilder;
 
   @override
   Widget build(BuildContext context) {
+    Query? q = query;
+    if (q == null) {
+      q = Meetup.col;
+      if (clubId != null) {
+        q = q.where('clubId', isEqualTo: clubId);
+      }
+      q = q.orderBy('createdAt', descending: true);
+    }
+
     return FirestoreQueryBuilder(
-      query: query ??
-          Club.col
-              .where('hasPhoto', isEqualTo: true)
-              .orderBy('createdAt', descending: true),
+      query: q,
       builder: (_, snapshot, __) {
         if (snapshot.isFetching) {
           return loadingBuilder?.call() ??
@@ -118,8 +128,9 @@ class ClubListView extends StatelessWidget {
               // It is safe to call this function from within the build method.
               snapshot.fetchMore();
             }
-            final club = Club.fromSnapshot(snapshot.docs[index]);
-            return itemBuilder?.call(club, index) ?? ClubListTile(club: club);
+            final meetup = Meetup.fromSnapshot(snapshot.docs[index]);
+            return itemBuilder?.call(meetup, index) ??
+                MeetupCard(meetup: meetup);
           },
         );
       },

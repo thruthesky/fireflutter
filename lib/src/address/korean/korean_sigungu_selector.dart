@@ -8,21 +8,27 @@ class KoreanSiGunGuSelector extends StatefulWidget {
   const KoreanSiGunGuSelector({
     super.key,
     required this.onChangedSiDoCode,
-    required this.onChangedSiGunGuCode,
+    this.onChangedSiGunGuCode,
     this.languageCode = 'ko',
     this.initSiDoCode,
     this.initSiGunGuCode,
-    this.showSiGunGu = false,
+    this.showSiGunGuOnSiDoEmpty = false,
+    this.showSiGunGu = true,
   });
 
   final String languageCode;
   final Function(AreaCode?) onChangedSiDoCode;
-  final Function(AreaCode, AreaCode?) onChangedSiGunGuCode;
+  final Function(AreaCode, AreaCode?)? onChangedSiGunGuCode;
   final String? initSiDoCode;
   final String? initSiGunGuCode;
 
-  // adding showSiGunGu this property will dispplay the SiGunGu dropdown but if
+  // adding showSiGunGuOnSiDoEmpty this property will dispplay the SiGunGu dropdown but if
   // siDo is not selected or not exist the dropdown is disable.
+  final bool showSiGunGuOnSiDoEmpty;
+
+  /// If [showSiGunGu] is false, the SiGunGu dropdown will not be displayed
+  /// Meaning, user can only select SiDo.
+  /// In this case, [showSiGunGuOnSiDoEmpty], [initSiGunGuCode], [onChangeSiGunGuCode] will be ignored.
   final bool showSiGunGu;
 
   @override
@@ -40,7 +46,7 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
     siDoCode = widget.initSiDoCode;
     siGunGuCode = widget.initSiGunGuCode;
 
-    if (widget.initSiDoCode != null) {
+    if (widget.initSiDoCode != null && widget.showSiGunGu) {
       secondaryAddresses = getSiGunGuCodes(
         languageCode: widget.languageCode,
         siDo: widget.initSiDoCode!,
@@ -99,7 +105,8 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
                 }),
           ),
         ),
-        if (siDoCode != null || widget.showSiGunGu) ...[
+        if (widget.showSiGunGu &&
+            (siDoCode != null || widget.showSiGunGuOnSiDoEmpty)) ...[
           const SizedBox(height: 16),
           InputDecorator(
             decoration: const InputDecoration(
@@ -137,7 +144,7 @@ class _KoreanSiGunGuSelectorState extends State<KoreanSiGunGuSelector> {
                             siGunGuCode = value;
                           });
 
-                          widget.onChangedSiGunGuCode(
+                          widget.onChangedSiGunGuCode?.call(
                               getSiDoCodes(languageCode: widget.languageCode)
                                   .firstWhere((e) => e.code == siDoCode),
                               siGunGuCode == null
