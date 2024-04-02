@@ -4,12 +4,10 @@ import * as functions from "firebase-functions";
 import * as express from "express";
 import { Config } from "../config";
 
-
 // Initialize Express app
 const app = express();
 // Set up Firebase Cloud Function
 export const link = functions.https.onRequest(app);
-
 
 app.get("/.well-known/apple-app-site-association", (req, res) => {
     const applicationID = `${Config.appleTeamId}.${Config.iosBundleId}`;
@@ -43,9 +41,9 @@ app.get("/.well-known/assetlinks.json", (req, res) => {
             ],
             target: {
                 namespace: "android_app",
-                package_name: "YOUR_PACKAGE_NAME",
+                package_name: "com.withcenter.roha",
                 sha256_cert_fingerprints: [
-                    "YOUR_SHA256_FINGERPRINT",
+                    "87:B4:AB:C6:F0:A9:AB:FC:94:54:C0:AA:A0:81:EC:99:F4:0B:F1:26:F2:1C:57:F0:E2:0D:9C:4D:45:C4:FB:35",
                 ],
             },
         }]
@@ -53,10 +51,9 @@ app.get("/.well-known/assetlinks.json", (req, res) => {
     res.end();
 });
 
-
 app.get("*", (req, res, next) => {
     // Define values
-    const title = "My Amazing Application";
+    const title = "Roha";
     const subtitle = "Find out more about my app...";
     const image = "https://.../your-app-banner.jpg";
 
@@ -94,25 +91,26 @@ app.get("*", (req, res, next) => {
     
         <link rel="apple-touch-icon" href="...">
     </head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Detect.js/2.2.2/detect.min.js" rossorigin="anonymous" referrerpolicy="no-referrer"></script>
     
     <body>
         <!-- YOUR PAGE CONTENT HERE -->
+        TEST New
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Detect.js/2.2.2/detect.min.js" rossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script>
+            // Optional: redirect users on mobile platforms to the according store
+            var result = detect.parse(navigator.userAgent);
+            if (result.os.family === 'iOS') {
+                window.location.replace("https://apps.apple.com/us/app/id6478899497");
+            } else if (result.os.family.includes('Android')) {
+                window.location.replace("https://play.google.com/store/apps/details?id=com.withcenter.roha");
+            } else {
+                // window.location.replace("https://play.google.com/store/apps/details?id=com.withcenter.roha");
+            }
+        // You can handle any other logic here - Google Analytics, popups, etc...
+        </script>
     </body>
     
-    <script>
-      // Optional: redirect users on mobile platforms to the according store
-        var result = detect.parse(navigator.userAgent);
-        if (result.os.family === 'iOS') {
-            window.location.href = 'https://apps.apple.com/us/app/YOUR_APP_ID';
-        } else if (result.os.family.includes('Android')) {
-            window.location.href = 'https://play.google.com/store/apps/details?id=YOUR_APP_ID';
-        } else {
-            window.location.href = 'https://your-homepage.com/?path=menu
-        }
-      // You can handle any other logic here - Google Analytics, popups, etc...
-    </script>
-    </html>
+</html>
 `;
     // Replace handles with content
     const source = html
