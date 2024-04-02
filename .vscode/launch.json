@@ -363,6 +363,16 @@
       "args": ["--dart-define", "MODE=dev"]
     },
     {
+      "name": "Roha (Noe) TEST - emulator 5554 (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "apps/roha",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=dev"]
+    },
+    {
       "name": "Roha (Noe) TEST - iPhone SE (3rd Generation)",
       "request": "launch",
       "type": "dart",

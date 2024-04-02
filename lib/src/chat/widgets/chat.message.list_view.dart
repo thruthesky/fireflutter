@@ -90,7 +90,11 @@ class _ChatMessageListViewState extends State<ChatMessageListView> {
         // 메시지가 없는 경우,
         if (snapshot.docs.isEmpty) {
           return widget.emptyBuilder?.call(context) ??
-              Center(child: Text(T.chatRoomNoMessageYet.tr));
+              Center(
+                  child: Text(
+                T.chatRoomNoMessageYet.tr,
+                textAlign: TextAlign.center,
+              ));
         } else {
           /// Reset the newMessage
           /// This is a good place to reset it since it is called when the user

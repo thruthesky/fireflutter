@@ -59,6 +59,12 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                 child: Text(meetup.description),
               ),
             ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {},
+              child: const Text('참석 신청'),
+            ),
+            const Text('참석 신청자 목록'),
           ],
         ),
       ),

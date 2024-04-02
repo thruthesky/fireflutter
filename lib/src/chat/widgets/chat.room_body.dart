@@ -31,6 +31,7 @@ class ChatRoomBody extends StatefulWidget {
     this.leave = true,
     this.displayAppBar = true,
     this.appBarBottomSpacing = 8,
+    this.emptyBuilder,
   });
 
   final String? uid;
@@ -40,6 +41,7 @@ class ChatRoomBody extends StatefulWidget {
   final bool leave;
   final bool displayAppBar;
   final double appBarBottomSpacing;
+  final Widget Function(BuildContext)? emptyBuilder;
 
   @override
   State<ChatRoomBody> createState() => _ChatRoomState();
@@ -363,6 +365,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
             builder: (_, v, __) => v
                 ? ChatMessageListView(
                     chat: chat,
+                    emptyBuilder: widget.emptyBuilder,
                   )
                 : const SizedBox.shrink(),
           ),
