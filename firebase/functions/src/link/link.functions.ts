@@ -43,7 +43,8 @@ app.get("/.well-known/assetlinks.json", (req, res) => {
                 namespace: "android_app",
                 package_name: "com.withcenter.roha",
                 sha256_cert_fingerprints: [
-                    "87:B4:AB:C6:F0:A9:AB:FC:94:54:C0:AA:A0:81:EC:99:F4:0B:F1:26:F2:1C:57:F0:E2:0D:9C:4D:45:C4:FB:35",
+                    // "87:B4:AB:C6:F0:A9:AB:FC:94:54:C0:AA:A0:81:EC:99:F4:0B:F1:26:F2:1C:57:F0:E2:0D:9C:4D:45:C4:FB:35",
+                    "B8:DC:24:EF:36:56:61:97:EB:AC:7A:BA:75:8C:EB:C7:BD:73:F7:D7:B0:6A:F2:E8:27:3D:DA:BD:B9:F4:8C:61",
                 ],
             },
         }]

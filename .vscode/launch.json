@@ -330,7 +330,7 @@
       "flutterMode": "debug",
       "cwd": "apps/wemeet",
       "program": "lib/main.dart",
-      "args": ["-v",]
+      // "args": ["-v",]
     },
     {
       "name": "Wemeet (Chris) TEST - External Sam (debug)",
@@ -340,7 +340,7 @@
       "flutterMode": "debug",
       "cwd": "apps/wemeet",
       "program": "lib/main.dart",
-      "args": ["-v",]
+      // "args": ["-v",]
     },
     {
       "name": "Roha (Noe) TEST - iPhone 15 Pro Max (debug)",
