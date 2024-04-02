@@ -1,5 +1,7 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/club/widgets/club.details.dart';
+import 'package:fireflutter/src/meetup/meetup.service.dart';
+import 'package:fireflutter/src/meetup/widgets/meetup.list_view.dart';
 import 'package:flutter/material.dart';
 
 class ClubViewScreen extends StatefulWidget {
@@ -29,7 +31,10 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
                 builder: (_, index, __) {
                   if (club.isMaster && index == 1) {
                     return OutlinedButton(
-                      onPressed: () => {},
+                      onPressed: () => MeetupService.instance.showCreateScreen(
+                        context: context,
+                        clubId: club.id,
+                      ),
                       child: const Text('일정 생성'),
                     );
                   } else if (club.joined && (index == 3 || index == 4)) {
@@ -42,8 +47,9 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
                       ),
                       child: const Text('글 쓰기'),
                     );
-                  } else
+                  } else {
                     return const SizedBox.shrink();
+                  }
                 },
               ),
             ),
@@ -154,8 +160,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
         body: TabBarView(
           children: [
             ClubDetails(club: widget.club),
-            const Text(
-                "미팅 시간 날짜 약속 @TODO 간단하게 게시판 형태로 만든다. 날짜를 수동으로 입력한다. 시놀 보고 따라 만든다."),
+            MeetupListView(clubId: widget.club.id),
             ClubDoc(
               club: widget.club,
               builder: (club) => club.users.contains(myUid)
@@ -168,7 +173,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
                         appBarBottomSpacing: 0,
                       ),
                     )
-                  : ClubViewRegisterFirst(
+                  : ClubViewRegisterFirstButton(
                       club: club,
                       label: "모임에 가입하셔야\n채팅방을 볼 수 있습니다.",
                     ),
@@ -192,11 +197,12 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
                                 .withAlpha(64),
                           ),
                         ),
-                        emptyBuilder: () =>
-                            const Center(child: Text('글을 등록 해 주세요.')),
+                        emptyBuilder: () => const Center(
+                          child: Text('글을 등록 해 주세요.'),
+                        ),
                       ),
                     )
-                  : ClubViewRegisterFirst(
+                  : ClubViewRegisterFirstButton(
                       club: club,
                       label: "모임에 가입하셔야\n게시판을 볼 수 있습니다.",
                     ),
@@ -220,7 +226,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
                       emptyBuilder: () =>
                           const Center(child: Text('사진을 등록 해 주세요.')),
                     )
-                  : ClubViewRegisterFirst(
+                  : ClubViewRegisterFirstButton(
                       club: club,
                       label: "모임에 가입하셔야\n사진첩을 볼 수 있습니다.",
                     ),
