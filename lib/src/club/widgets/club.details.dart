@@ -28,10 +28,13 @@ class ClubDetails extends StatelessWidget {
                 ),
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(club.description),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(club.description),
+                    ),
                   ),
                 ),
               ),
@@ -76,28 +79,35 @@ class ClubDetails extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              if (club.reminder.isNotEmpty) ...[
-                const Text('Reminder'),
-                Card(
-                  child: InkWell(
-                    onTap: () => alert(
-                      context: context,
-                      title: 'Reminder',
-                      message: club.reminder,
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      width: double.infinity,
-                      child: Text(
-                        club.reminder.cut(128),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+              if (club.reminder.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Reminder'),
+                      Card(
+                        child: InkWell(
+                          onTap: () => alert(
+                            context: context,
+                            title: 'Reminder',
+                            message: club.reminder,
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(16),
+                            width: double.infinity,
+                            child: Text(
+                              club.reminder.cut(128),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
-              ],
-              const Divider(),
+              const SizedBox(height: 16),
               const Text('최근 사진들'),
               PostLatestListView.gridView(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -106,16 +116,37 @@ class ClubDetails extends StatelessWidget {
                   mainAxisSpacing: 8,
                 ),
                 category: '${club.id}-gallery',
-                emptyBuilder: () => const Card(child: Text('최근 사진이 없습니다.')),
+                emptyBuilder: () => Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  child: const Card(
+                      child: Padding(
+                    padding: EdgeInsets.all(32),
+                    child: Center(child: Text('최근 사진이 없습니다.')),
+                  )),
+                ),
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
               ),
+              const SizedBox(height: 16),
               const Text('최근글'),
-              PostLatestListView(
-                category: club.id,
-                emptyBuilder: () => const Card(child: Text('최근 글이 없습니다.')),
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: PostLatestListView(
+                  separatorBuilder: (p0, p1) => const SizedBox(height: 8),
+                  category: club.id,
+                  emptyBuilder: () => Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    child: const Card(
+                        child: Padding(
+                      padding: EdgeInsets.all(32),
+                      child: Center(child: Text('최근 글이 없습니다.')),
+                    )),
+                  ),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                ),
               ),
             ],
           ),

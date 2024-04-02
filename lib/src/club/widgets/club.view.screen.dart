@@ -31,7 +31,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
                 valueListenable: _tabIndex,
                 builder: (_, index, __) {
                   if (club.isMaster && index == 1) {
-                    return OutlinedButton(
+                    return TextButton(
                       onPressed: () => MeetupService.instance.showCreateScreen(
                         context: context,
                         clubId: club.id,
@@ -39,7 +39,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
                       child: const Text('일정 생성'),
                     );
                   } else if (club.joined && (index == 3 || index == 4)) {
-                    return OutlinedButton(
+                    return TextButton(
                       onPressed: () =>
                           ForumService.instance.showPostCreateScreen(
                         context: context,
@@ -163,6 +163,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
             ClubDetails(club: widget.club),
             MeetupListView(
               clubId: widget.club.id,
+              separatorBuilder: (p0, p1) => const Divider(height: 16),
               emptyBuilder: () => const Center(
                 child: Text('일정이 없습니다.'),
               ),
