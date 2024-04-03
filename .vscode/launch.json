@@ -393,6 +393,16 @@
       "args": ["--dart-define", "MODE=dev"]
     },
     {
+    "name": "Roha (Noe) TEST - SM T295",
+    "request": "launch",
+    "type": "dart",
+    "deviceId": "ROWM705A3NJ",
+    "flutterMode": "debug",
+    "cwd": "apps/roha",
+    "program": "lib/main.dart",
+    "args": ["--dart-define", "MODE=dev"]
+    },
+    {
       "name": "Wemeet (Noe) TEST - iPhone 15 Pro (debug)",
       "request": "launch",
       "type": "dart",
@@ -441,6 +451,7 @@
       "program": "lib/main.dart",
       "args": ["-v", "--dart-define", "MODE=dev"]
     },
+
     {
       "name": "Silvers (Noe) TEST - iPhone 15 Pro (debug)",
       "request": "launch",

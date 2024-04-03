@@ -30,7 +30,7 @@ class ReportMyListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("ReportMyListView build: ${Report.unviewedRef.path}");
-    // change FirebaseDatabaseListview to FirebaseDatabaseQueryBuilder
+    // To have a emptybuilder need to be FirebaseDatabaseQueryBuilder
     return FirebaseDatabaseQueryBuilder(
         query: Report.unviewedRef.orderByChild('uid').equalTo(myUid!),
         builder: (context, snapshot, index) {
