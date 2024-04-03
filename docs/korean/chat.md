@@ -602,46 +602,79 @@ ChatService.instance.init(testBeforeSendMessage: (chat) {
 
 ```dart
 ChatService.instance.init(
-  /// A 가 B 에게 채팅하면, 한국어를 따갈로그어로 번역
+  /// 다음은 한국인 A 가 필리피노 B 에게 채팅하면, 한국어를 따갈로그어로 번역해서 채팅 메시지를 전송한다.
   ///
   /// 메시지 전송 전에 콜백으로 message 값을 변경 후 리턴
   /// [chat] 은 채팅 모델. 1:1 채팅에서 상대방의 uid 를 알 수 있다>
   beforeMessageSent: (Map<String, dynamic> message, ChatModel chat) async {
-    /// 채팅 할 내용이 없으면 그냥 리턴
-    if (message['text'] != null && message['text'].isEmpty) return message;
+      /// If there is no text to translate, then just return
+      if (message['text'] != null && message['text'].trim().isEmpty) {
+        return message;
+      }
+      if (message['text'] == null) {
+        return message;
+      }
 
-    /// 다른 사용자의 언어 코드를 얻는다.
-    final otherUserSettings = await UserSetting.get(chat.room.otherUserUid!);
-    final otherUserLanguageCode = otherUserSettings.languageCode;
-    if (otherUserLanguageCode == null) return message;
+      /// Get the other user's language code
+      final otherUserSettings =
+          await UserSetting.get(chat.room.otherUserUid!);
+      final otherUserLanguageCode = otherUserSettings.languageCode;
+      if (otherUserLanguageCode == null) return message;
 
-    /// 나의 언어 코드를 얻는다
-    final myUserSettings = await UserSetting.get(myUid!);
-    final myUserLanguageCode = myUserSettings.languageCode;
+      /// Get my language code
+      final myUserSettings = await UserSetting.get(myUid!);
+      final myUserLanguageCode = myUserSettings.languageCode;
+      if (myUserLanguageCode == otherUserLanguageCode) return message;
 
-    /// 나의 언어와 상대방의 언어가 동일하면 그냥 리턴
-    if (myUserLanguageCode == otherUserLanguageCode) return message;
- 
-    /// ChatGPT 로 번역한다.
-    final openAI = OpenAI.instance.build(
-      token: AppConfig.openAiKey,
-      baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 5)),
-      enableLog: true,
-    );
-    final prompt =
-        "I want to translate a text. Act as a simple translating service. Translate below into ${otherUserLanguageCode.language}.\n\n${message['text']}";
-    final request = CompleteText(
-        prompt: prompt, maxTokens: 200, model: Gpt3TurboInstruct());
+      /// ChatGPT 3.5 Turbo 번역
+      /// 아래는 번역을 아주 잘 해 주는 코드이다.
+      final openAI = OpenAI.instance.build(
+        token: AppConfig.openAiKey,
+        baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 5)),
+        enableLog: true,
+      );
 
-    final response = await openAI.onCompletion(request: request);
+      final String userInputMessage = message['text'];
 
-    /// 번역된 내용을 원문과 함께 담는다.
-    message['text'] =
-        '${response?.choices.first.text.trim().replaceAll(r'^\S+', '')}\n\n(${message['text']})';
+      /// Gpt3 turbo chat
+      String text = userInputMessage.trim();
+      if (text.endsWith('.') == false) {
+        text = '$text.';
+      }
+      final prompt2 =
+          "Translate below into ${otherUserLanguageCode.language}.\n\n$text";
 
-    /// 번역(조작)된 message 데이터를 리턴한다.
-    return message;
-},
+      final request2 = ChatCompleteText(
+        messages: [
+          Map.of({
+            "role": "system",
+            "content":
+                'You are a language translator. Not a chatbot. Not a human. Just translate the text.'
+          }),
+          Map.of({
+            "role": "assistant",
+            "content":
+                "Don't act as a chatbot. Don't answer the text. Just translate the text.",
+          }),
+          Map.of({
+            "role": "user",
+            "content": prompt2,
+          }),
+        ],
+        maxToken: 200,
+        model: GptTurboChatModel(),
+      );
+
+      final response2 = await openAI.onChatCompletion(request: request2);
+
+      String response = '';
+      for (var element in response2!.choices) {
+        response = element.message?.content.trim() ?? '';
+        if (response.isNotEmpty) break;
+      }
+      message['text'] = '$response\n\n($userInputMessage)';
+      return message;
+    },
 /// 채팅 메시지 전송 후, Google 번역하는 예
 afterMessageSent: (ChatMessage message) async {
   if (message.text == null || message.text!.isEmpty) return;
@@ -670,4 +703,49 @@ afterMessageSent: (ChatMessage message) async {
     Field.text: "${translation.text}\n\n(${message.text})",
   });
 });
+```
+
+
+## 채팅 방 생성 다이얼로그 UI 변경
+
+* 채팅 방 생성을 할 때, 아래와 같이 Theme 을 통해서 UI 변경을 할 수 있다. 또는 `DefaultChatRoomEditDialog` 를 복사하여 모든 것을 직접 작성해도 된다.
+
+```dart
+ChatService.instance.init(
+  customize: ChatCustomize(
+    chatRoomInviteButton: (chatRoom) {
+      return ChatRoomInviteScreenButton(room: chatRoom);
+    },
+    chatRoomEditDialogBuilder: ({required context, roomId}) => Theme(
+      data: Theme.of(context).copyWith(
+        dialogBackgroundColor: Colors.white,
+        textTheme: Theme.of(context).textTheme.apply(
+              bodyColor: Colors.blue,
+              displayColor: Colors.red,
+            ),
+      ),
+      child: DefaultChatRoomEditDialog(
+        roomId: roomId,
+      ),
+    ),
+  ),
+);
+```
+
+* UI 작업 팁: 참고로, UI 작업을 할 때, 매번 다이얼로그를 닫고 다시 실행해야하는 번거로움이 발생 할 수 있는데, 필요 없이, 아래와 같은 코드를 initState() 에 넣어 두고, CMD+R 등으로 간단하게 다얼로그를 열어서 변경된 디자인을 보다 편하게 확인 할 수 있다.
+
+```dart
+showDialog(
+  context: globalContext,
+  builder: (context) => Theme(
+    data: Theme.of(globalContext).copyWith(
+      listTileTheme: const ListTileThemeData(
+        contentPadding: EdgeInsets.fromLTRB(12, 0, 24, 24),
+      ),
+    ),
+    child: const DefaultChatRoomEditDialog(
+      roomId: null,
+    ),
+  ),
+);
 ```

@@ -114,25 +114,12 @@ class ChatService {
     }
   }
 
-  @Deprecated('Use showChatRoomScreen instead')
-  Future showChatRoom({
-    required BuildContext context,
-    String? uid,
-    String? roomId,
-    ChatRoom? room,
-  }) async {
-    return await showChatRoomScreen(
-      context: context,
-      uid: uid,
-      roomId: roomId,
-      room: room,
-    );
-  }
-
   Future<ChatRoom?> showChatRoomCreate({required BuildContext context}) async {
     return await showDialog<ChatRoom?>(
       context: context,
-      builder: (_) => const DefaultChatRoomEditDialog(),
+      builder: (_) =>
+          customize.chatRoomEditDialogBuilder?.call(context: context) ??
+          const DefaultChatRoomEditDialog(),
     );
   }
 
@@ -142,7 +129,10 @@ class ChatService {
   }) async {
     return await showDialog<ChatRoom?>(
       context: context,
-      builder: (_) => DefaultChatRoomEditDialog(roomId: roomId),
+      builder: (_) =>
+          customize.chatRoomEditDialogBuilder
+              ?.call(context: context, roomId: roomId) ??
+          DefaultChatRoomEditDialog(roomId: roomId),
     );
   }
 
