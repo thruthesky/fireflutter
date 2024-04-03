@@ -46,4 +46,11 @@ class Code {
 
   // club menu for admin
   static const String reminders = 'reminders';
+
+  /// Club error codes
+  static const clubAlreadyJoined = 'club-already-joined';
+
+  /// Meetup error code
+  static const meetupAlreadyJoined = 'meetup-already-joined';
+  static const meetupNotJoined = 'meetup-not-joined';
 }
