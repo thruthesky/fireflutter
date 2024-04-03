@@ -70,15 +70,12 @@ class ActionLogOption {
     limitRoomId = roomId;
     limitCategory = category;
 
-    /// limit 이 0 이면, 무조건 제한을 한다. 즉, 액션을 한번도 허용하지 않는다.
-    if (limit == 0) {
-      final re = await overLimit?.call(this);
-      return (re == null || re) ? true : false;
+    /// limit 이 0 이면, 무조건 제한을 한다. 즉, 결제를 했어도 액션을 한번도 허용하지 않는다. 단 이전에 본 프로필, 입장한 채팅방은 허용.
+    if (limit != 0) {
+      /// 현재 카운트가 limit 보다 작으면, 제한을 하지 않는다.
+      /// 이 값은 ActionLogService init 에서 실시간으로 업데이트가 된다.
+      if (count < limit) return false;
     }
-
-    /// 현재 카운트가 limit 보다 작으면, 제한을 하지 않는다.
-    /// 이 값은 ActionLogService init 에서 실시간으로 업데이트가 된다.
-    if (count < limit) return false;
     if (debug) dog('--> 제한에 걸렸다. ${ref!.path}');
 
     /// 제한에 걸린 경우, (count 가 limit 보다 크거나 같은 경우)
@@ -87,22 +84,27 @@ class ActionLogOption {
     /// 그래서, 이곳에서 쿼리를 해서, 제한 시간이 지났는지 확인한다.
     /// 제한 시간이 지나면, count 를 업데이트해서, 다시 action 이 가능해 지고, 그러면 계속 action 이 가능해 지고, action 을 하면 새로운 로그를 기록하므로,
     /// init 에서 계속 action 로그를 발생 할 때 마다, 실시간 업데이트가 된다.
-    final snapshot = await query!.get();
-    count = ActionLogService.instance
-        .countFromSnapshot(snapshot: snapshot, option: this);
-    if (count < limit) {
-      if (debug) dog('제한 시간이 지나서, 다시 action 이 가능해졌다. ${ref!.path}');
-      return false;
-    } else {
-      if (debug) {
-        logTimeLeft();
+    ///
+    /// limit 이 0 이면, 무조건 제한을 한다. 즉, 결제를 했어도  한번도 허용하지 않는다.
+    if (limit != 0) {
+      final snapshot = await query!.get();
+      count = ActionLogService.instance
+          .countFromSnapshot(snapshot: snapshot, option: this);
+      if (count < limit) {
+        if (debug) dog('제한 시간이 지나서, 다시 action 이 가능해졌다. ${ref!.path}');
+        return false;
+      } else {
+        if (debug) {
+          logTimeLeft();
+        }
       }
     }
-
     print('----> isOverLimit() - uid: $uid, roomId: $roomId');
 
     /// 제한에 걸린 경우, action 이 public profile view 나 chat join 중 하나라면,
     /// 이전에 본 사용자 프로필이라면 계속 볼 수 있게 하고, 또 이전에 접속한 채팅방이면 계속 접속 할 수 있도록 해 준다.
+    ///
+    /// limit 이 0 이면 무조건 제한을 하지만, 이전에 본 사용자 프로필이나 이전에 접속한 채팅방은 계속 볼 수 있게 한다.
     if (uid != null) {
       final re = await ActionLog.userProfileViewExists(uid);
       // await ActionLogService.instance.userProfileView.ref!.child(uid).get();

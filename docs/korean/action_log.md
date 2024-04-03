@@ -263,7 +263,18 @@ ActionLogService.instance.init(
 
 
 
-##
+## 팁
+
+### overlimit 발생하는 경우, 사용자 제한 로직
+
+참고로 글 또는 코멘트 쓰기를 할 때에 over limit 이 발생하는 경우, 그냥 에러 메시지를 표시하거나 결제 창을 보여주면 된다.
+
+다른 사용자의 프로필을 보거나, 채팅방에 입장 하려고 할 때, over limit 이 발생하면 `ActionLogService.instance.isOverLimit()` 에서 이전에 프로필을 보았거나 채팅방에 입장을 했다면, `overLimit` 콜백 자체를 호출하지 않는다. 즉, 사용자는 그대로 프로필 보거나 채팅방에 입장 할 수 있다.
+
+만약 직접 이전에 본 사용자 프로필을 보거나, 채팅방에 입장하는 경우 로직을 만든다면 아래와 같이 하면 된다. 물론 아래와 같이 할 필요 없다. 이미 `ActionLogService.instance.isOverLimit()` 에서, 이전에 본 프로필, 또는 입장한 채팅방의 경우 `overLimit` 콜백 함수 자체가 호출되지 않는다. 그러나 만약, 이 외의 다른 
+
+
+
 
 ```dart
 
@@ -285,6 +296,14 @@ ActionLogService.instance.init(
   
 
   Future<bool?> _showPaywallOrReachedLimit(ActionLogOption option) async {
+    if (option.limitUid != null) {
+      bool re = await ActionLog.userProfileViewExists(option.limitUid!);
+      if (re == true) return false;
+    } else if (option.limitRoomId != null) {
+      bool re = await ActionLog.chatJoinExists(option.limitRoomId!);
+      if (re == true) return false;
+    }
+
     if (globalContext.mounted) {
       if (PurchaseService.instance.isActive) {
         globalContext.push(ReachedLimitScreen.routeName);
