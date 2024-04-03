@@ -422,21 +422,6 @@ class ChatModel {
     return false;
   }
 
-  /// 채팅방 입장
-  ///
-  /// @TODO 이 코드를 ChatRoom 으로 옮기면 안되나? 그러면 더 직관적일 것 같다.
-  Future join({
-    bool forceJoin = false,
-  }) async {
-    if (myUid == null) {
-      // 로그인을 하지 않았으면 그냥 리턴
-      // throw Exception('ChatModel::join() -> Login first -> myUid is null');
-      throw Issue(Code.notLoggedIn);
-    }
-
-    await room.invite(myUid!, forceJoin: forceJoin);
-  }
-
   /// 현재 방 listen, unlisten
   StreamSubscription<DatabaseEvent>? roomSubscription;
   subscribeRoomUpdate({

@@ -99,3 +99,141 @@ TextButton(
 단, accept 후에 아무런 추가 조치를 취하지 않을 수도 있으며, 해당 사용자의 계정을 정지 할 수도 있습니다.
 
 사용자 계정 정지에 관해서는 [사용자 문서](./user.md)를 읽어 보세요.
+
+
+
+
+
+## UI 커스터마이징
+
+
+기본 UI 가 마음에 들지 않는다면, 아래와 같이 직접 모든 것을 디자인 할 수 있다.
+
+UI 커스텀 디자인 예제
+
+```dart
+import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
+import 'package:roha/font_awesome/lib/font_awesome_flutter.dart';
+import 'package:roha/global.dart';
+import 'package:roha/screens/block/widget/roha_block_tile.dart';
+import 'package:roha/widgets/empty_display.dart';
+
+class ReportScreen extends StatelessWidget {
+  static const String routeName = "/RerportScreen";
+  const ReportScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(T.report.tr),
+      ),
+      body: ReportMyListView(
+        emptyBuilder: (context) => EmptyDisplay(
+          text: 'emptyReportList'.tr,
+        ),
+        chatBuilder: (report, func) {
+          return Container(
+            width: double.infinity,
+            margin: const EdgeInsets.symmetric(horizontal: md, vertical: 12),
+            padding: const EdgeInsets.symmetric(
+              horizontal: md,
+            ),
+            height: 82,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: context.onBackground.withAlpha(10)),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        report.reason,
+                        style: context.titleMedium.copyWith(
+                            fontSize: 21, fontWeight: FontWeight.w500),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            '[CHAT] ',
+                            style: context.labelSmall,
+                          ),
+                          Expanded(
+                              child: UserDisplayName(
+                            uid: report.otherUserUid,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: context.labelSmall,
+                          )),
+                          Text(
+                            ' ${report.createdAt.toShortDate}',
+                            style: context.labelSmall,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                spaceSm,
+                SizedBox(
+                  width: 37,
+                  height: 37,
+                  child: IconButton.outlined(
+                    onPressed: func,
+                    icon: const FaIcon(
+                      FontAwesomeIcons.lightTrash,
+                      size: 17,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+        userBuilder: (report, func) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: md, vertical: fsSm),
+          child: RohaBlockTile(
+            userUid: report.otherUserUid,
+            title: Text(
+              report.reason,
+              style: context.titleMedium
+                  .copyWith(fontSize: 21, fontWeight: FontWeight.w500),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: Row(
+              children: [
+                UserDisplayName(
+                  uid: report.otherUserUid!,
+                  style: context.labelSmall,
+                ),
+                Text(
+                  ' ${report.createdAt.toShortDate}',
+                  style: context.labelSmall,
+                ),
+              ],
+            ),
+            trailing: SizedBox(
+              width: 37,
+              height: 37,
+              child: IconButton.outlined(
+                onPressed: func,
+                icon: const FaIcon(
+                  FontAwesomeIcons.lightTrash,
+                  size: 17,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```

@@ -260,3 +260,38 @@ ActionLogService.instance.init(
     jm = DateFormat.jm().format(dt);
 ```
 
+
+
+
+##
+
+```dart
+
+    ActionLogService.instance.init(
+      userProfileView: ActionLogOption(
+        limit: limit,
+        seconds: 60 * 60 * 24,
+        overLimit: (option) async =>
+            my!.isFemale ? false : await _showPaywallOrReachedLimit(option),
+        debug: true,
+      ),
+      chatJoin: ActionLogOption(
+        limit: limit,
+        seconds: 60 * 60 * 24,
+        overLimit: (option) => _showPaywallOrReachedLimit(option),
+        debug: true,
+      ),
+    );
+  
+
+  Future<bool?> _showPaywallOrReachedLimit(ActionLogOption option) async {
+    if (globalContext.mounted) {
+      if (PurchaseService.instance.isActive) {
+        globalContext.push(ReachedLimitScreen.routeName);
+      } else {
+        globalContext.push(PaywallScreen.routeName);
+      }
+    }
+    return null;
+  }
+  ```

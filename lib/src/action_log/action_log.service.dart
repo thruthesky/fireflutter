@@ -35,6 +35,15 @@ class ActionLogOption {
   bool debug;
   Future<bool?> Function(ActionLogOption)? overLimit;
 
+  /// limit 에 걸린 경우, 어느 사용자 프로필을 볼 때 limit 에 걸렸는지 표시한다.
+  String? limitUid;
+
+  /// limit 에 걸린 경우, 어느 채팅방에 참여할 때 limit 에 걸렸는지 표시한다.
+  String? limitRoomId;
+
+  /// limit 에 걸린 경우, 어느 카테고리에 글 쓰려고 할 때, limit 에 걸렸는지 표시한다.
+  String? limitCategory;
+
   /// limit 에 걸렸는지 확인을 한다.
   ///
   /// limit 에 걸리지 않았거나, limit 에 걸려도 계속 실행을 하게 하는 경우 false 를 리턴한다. 이 경우 앱은 그대로 실행을 하면 된다.
@@ -50,9 +59,16 @@ class ActionLogOption {
   ///
   /// [roomId] 채팅방 ID. chatJoin 동작에서 limit 이 발생하는 경우, 채팅방 ID 를 넘겨주어, overLimit callback 함수에서
   /// 채팅방 ID 를 이용하여, 채팅방에 이미 참여했으면 false 를 리턴하여 경고 없이 채팅방에 접속을 할 수 있도록 한다.
-  Future<bool> isOverLimit({String? uid, String? roomId}) async {
+  Future<bool> isOverLimit({
+    String? uid,
+    String? roomId,
+    String? category,
+  }) async {
     /// ref 가 null 이면, 제한을 하지 않는다.
     if (ref == null) return false;
+    limitUid = uid;
+    limitRoomId = roomId;
+    limitCategory = category;
 
     /// limit 이 0 이면, 무조건 제한을 한다. 즉, 액션을 한번도 허용하지 않는다.
     if (limit == 0) {
@@ -88,18 +104,17 @@ class ActionLogOption {
     /// 제한에 걸린 경우, action 이 public profile view 나 chat join 중 하나라면,
     /// 이전에 본 사용자 프로필이라면 계속 볼 수 있게 하고, 또 이전에 접속한 채팅방이면 계속 접속 할 수 있도록 해 준다.
     if (uid != null) {
-      final re =
-          await ActionLogService.instance.userProfileView.ref!.child(uid).get();
-      if (re.exists) {
+      final re = await ActionLog.userProfileViewExists(uid);
+      // await ActionLogService.instance.userProfileView.ref!.child(uid).get();
+      if (re) {
         print('--> But continue, userProfileView - uid: $uid');
         return false;
       }
     } else if (roomId != null) {
       /// 참고, chatJoin 동작에서 limit 이 발생하는 경우, 채팅방 ID 를 받는 대신, chatRoom model 을 받아서, users 필드에 내가 들어가 있는지 확인을 하면
       /// 여기서 async/await 을 하지 않아도 처리가 가능하다.
-      final re =
-          await ActionLogService.instance.chatJoin.ref!.child(roomId).get();
-      if (re.exists) {
+      final re = await ActionLog.chatJoinExists(roomId);
+      if (re) {
         print('--> But continue, chatJoin - roomId: $roomId');
         return false;
       }

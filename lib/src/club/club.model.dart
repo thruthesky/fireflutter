@@ -103,7 +103,7 @@ class Club {
     );
 
     final chat = ChatModel(room: room);
-    await chat.join(forceJoin: true);
+    await chat.room.join(forceJoin: true);
 
     return club;
   }
@@ -157,7 +157,7 @@ class Club {
     await ref.update({
       'users': FieldValue.arrayUnion([myUid]),
     });
-    await ChatRoom.fromRoomdId(id).join(myUid!, forceJoin: true);
+    await ChatRoom.fromRoomdId(id).join(uid: myUid!, forceJoin: true);
   }
 
   /// 클럽 탈퇴

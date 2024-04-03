@@ -234,7 +234,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
               /// 채팅방을 생성하는 경우, chat-joins 에도 정보를 저장한다.
               ///
               final chat = ChatModel(room: room);
-              await chat.join(forceJoin: true);
+              await chat.room.join(forceJoin: true);
 
               if (context.mounted) {
                 Navigator.pop(context, room);
