@@ -363,6 +363,16 @@
       "args": ["--dart-define", "MODE=dev"]
     },
     {
+      "name": "Roha (Noe) TEST - SM A045F (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "SM A045F",
+      "flutterMode": "debug",
+      "cwd": "apps/roha",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=dev"]
+    },
+    {
       "name": "Roha (Noe) TEST - emulator 5554 (debug)",
       "request": "launch",
       "type": "dart",
