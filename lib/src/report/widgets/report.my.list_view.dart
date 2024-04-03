@@ -3,7 +3,27 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class ReportMyListView extends StatelessWidget {
-  const ReportMyListView({super.key});
+  const ReportMyListView({
+    super.key,
+    this.userBuilder,
+    this.postBuilder,
+    this.commentBuilder,
+    this.chatBuilder,
+    this.errorBuilder,
+    this.loadingBuilder,
+    this.emptyBuilder,
+  });
+
+  final Widget Function(Report report, VoidCallback func)? userBuilder;
+  final Widget Function(BuildContext context, Report report)? postBuilder;
+  final Widget Function(BuildContext context, Report report)? commentBuilder;
+  final Widget Function(BuildContext context, Report report)? chatBuilder;
+
+  final Widget Function(
+          BuildContext context, dynamic error, StackTrace? stackTrace)?
+      errorBuilder;
+  final Widget Function(BuildContext context)? loadingBuilder;
+  final Widget Function(BuildContext context)? emptyBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +39,15 @@ class ReportMyListView extends StatelessWidget {
       itemBuilder: (context, snapshot) {
         final Report report = Report.fromValue(snapshot.value, snapshot.ref);
 
+        func() async {
+          final re = await confirm(
+              context: context,
+              title: 'Delete report',
+              message: 'Do you want to delete this report?');
+          if (re != true) return;
+          await report.ref.remove();
+        }
+
         if (report.isPost) {
           return FutureBuilder<Post?>(
             future: Post.get(
@@ -27,29 +56,8 @@ class ReportMyListView extends StatelessWidget {
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return ListTile(
-                  leading: const Avatar(photoUrl: anonymousUrl),
-                  title: Container(
-                    height: 16,
-                    width: 140,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  subtitle: Row(
-                    children: [
-                      Container(
-                        height: 16,
-                        width: 140,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+                return const Center(
+                    child: CircularProgressIndicator.adaptive());
               }
               final post = snapshot.data!;
               return ListTile(
@@ -77,29 +85,8 @@ class ReportMyListView extends StatelessWidget {
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return ListTile(
-                  leading: const Avatar(photoUrl: anonymousUrl),
-                  title: Container(
-                    height: 16,
-                    width: 140,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  subtitle: Row(
-                    children: [
-                      Container(
-                        height: 16,
-                        width: 140,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+                return const Center(
+                    child: CircularProgressIndicator.adaptive());
               }
               final comment = snapshot.data!;
               return ListTile(
@@ -140,27 +127,22 @@ class ReportMyListView extends StatelessWidget {
             ),
           );
         } else {
-          return ListTile(
-            leading: UserAvatar(uid: report.otherUserUid!),
-            title: Text(report.reason),
-            subtitle: Row(
-              children: [
-                UserDisplayName(uid: report.otherUserUid!),
-                Text(' ${report.createdAt.toShortDate}'),
-              ],
-            ),
-            trailing: IconButton(
-                key: Key('reportUser${report.otherUserUid}'),
-                onPressed: () async {
-                  final re = await confirm(
-                      context: context,
-                      title: 'Delete report',
-                      message: 'Do you want to delete this report?');
-                  if (re != true) return;
-                  await report.ref.remove();
-                },
-                icon: const Icon(Icons.delete)),
-          );
+          return userBuilder?.call(report, func) ??
+              ListTile(
+                leading: UserAvatar(uid: report.otherUserUid!),
+                title: Text(report.reason),
+                subtitle: Row(
+                  children: [
+                    UserDisplayName(uid: report.otherUserUid!),
+                    Text(' ${report.createdAt.toShortDate}'),
+                  ],
+                ),
+                trailing: IconButton(
+                  key: Key('reportUser${report.otherUserUid}'),
+                  onPressed: func,
+                  icon: const Icon(Icons.delete),
+                ),
+              );
         }
       },
     );

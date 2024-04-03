@@ -8,7 +8,7 @@ class Meetup {
   DocumentReference get ref => Meetup.col.doc(id);
 
   final String id;
-  final String clubId;
+  final String? clubId;
   final String uid;
   final List<String> users;
   final String title;
@@ -26,6 +26,8 @@ class Meetup {
     required this.users,
     required this.meetAt,
   });
+
+  bool get joined => users.contains(myUid);
 
   factory Meetup.fromSnapshot(DocumentSnapshot snapshot) {
     return Meetup.fromMap(snapshot.data() as Map, snapshot.id);
@@ -149,5 +151,35 @@ class Meetup {
     }
 
     await ref.update(data);
+  }
+
+  Future<void> join() async {
+    if (users.contains(myUid)) {
+      throw FireFlutterException(
+        Code.meetupAlreadyJoined,
+        'You already joined this meetup.',
+      );
+    }
+
+    await ref.update({
+      'users': FieldValue.arrayUnion([myUid]),
+    });
+
+    users.add(myUid!);
+  }
+
+  Future<void> leave() async {
+    if (users.contains(myUid) == false) {
+      throw FireFlutterException(
+        Code.meetupNotJoined,
+        'You have not joined this meetup, yet.',
+      );
+    }
+
+    await ref.update({
+      'users': FieldValue.arrayRemove([myUid]),
+    });
+
+    users.remove(myUid);
   }
 }

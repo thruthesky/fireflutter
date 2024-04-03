@@ -65,7 +65,11 @@ class Club {
     };
   }
 
-  static Future<Club> get(DocumentReference ref) async {
+  static Future<Club> get({String? id, DocumentReference? ref}) async {
+    if (id == null && ref == null) {
+      throw FireFlutterException('club-get/id-null', 'Input id or ref.');
+    }
+    ref ??= col.doc(id);
     final snapshot = await ref.get();
     return Club.fromSnapshot(snapshot);
   }
@@ -90,7 +94,7 @@ class Club {
       ),
     );
 
-    final club = await Club.get(ref);
+    final club = await Club.get(ref: ref);
 
     final room = await ChatRoom.create(
       name: name,
