@@ -28,32 +28,26 @@ app.get("/.well-known/apple-app-site-association", async (req, res) => {
     const docSnap = await getDoc(docRef);
     res.writeHead(200, { "Content-Type": "application/json" });
     if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
         res.write(JSON.stringify(docSnap.data()["value"]));
     } else {
         // docSnap.data() will be undefined in this case
         res.write(JSON.stringify({}));
-        console.log("No such document!");
     }
     res.end();
 });
 
-app.get("/.well-known/assetlinks.json", (req, res) => {
+app.get("/.well-known/assetlinks.json", async (req, res) => {
+    const firebaseApp = initializeApp(firebaseConfig);
+    const db = getFirestore(firebaseApp);
+    const docRef = doc(db, "_deeplink_", "android");
+    const docSnap = await getDoc(docRef);
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.write(JSON.stringify(
-        [{
-            relation: [
-                "delegate_permission/common.handle_all_urls",
-            ],
-            target: {
-                namespace: "android_app",
-                package_name: "com.withcenter.roha",
-                sha256_cert_fingerprints: [
-                    "2D:BD:C7:28:CF:1E:11:EA:87:D5:B8:2C:56:BB:F1:56:98:F4:C0:AB:88:8E:3A:47:BF:F0:A9:69:4C:22:BE:7E",
-                ],
-            },
-        }]
-    ));
+    if (docSnap.exists()) {
+        res.write(JSON.stringify(docSnap.data()["value"]));
+    } else {
+        // docSnap.data() will be undefined in this case
+        res.write(JSON.stringify({}));
+    }
     res.end();
 });
 
