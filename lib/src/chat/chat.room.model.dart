@@ -23,6 +23,8 @@ class ChatRoom {
       rootRef.child('$node/$roomId/${Field.name}');
 
   /// Variables
+
+  /// Chat Room Document Reference
   final DatabaseReference ref;
   String key;
   String? text;
@@ -457,13 +459,16 @@ class ChatRoom {
     }
     dog('ChatRoom: Not joined, yet. Joing now.');
 
+    /// 채팅방의 'users` 필드. 이 필드에 사용자 UID 목록이 저장되어져 있다.
     final usersRef = ref.child(Field.users);
 
     /// 채팅방 사용자 목록(users)에 입력된 사용자의 UID 추가
     await usersRef.child(uid).set(true);
 
-    // 1:1 채팅이면, 채팅방의 사용자 목록에, 다른 사용자 아이디를 추가해 준다.
+    /// 1:1 채팅이면, 채팅방의 사용자 목록에, 다른 사용자 아이디를 추가해 준다.
     if (isSingleChat) {
+      /// 채팅방의 사용자 목록에 다른 사용자의 UID 추가
+      /// 그래서 푸시 알림이 전송되도록 한다. (단, 메시지를 보내기 전까지는 상대방 채팅방 목록에 내가 안나올 수 있음.)
       if (users?.containsKey(otherUserUid) != true) {
         await usersRef.child(otherUserUid!).set(true);
       }
@@ -486,18 +491,33 @@ class ChatRoom {
     if (otherUserUid != null) {
       final user = await User.get(otherUserUid!);
       data['name'] = user?.displayName;
+      data['photoUrl'] = user?.photoUrl;
     }
 
     // set order into -updatedAt (w/out "1")
     // it is important to know that updatedAt must not be updated
     // before this.
+
+    /// 1:1 채팅방의 경우, 상대방의 채팅방 join 목록에 나의 채팅방 정보를 저장하지 않는다. 그래서,
+    /// 채팅 방 입장만 한 경우, 나의 목록에는 나타나지만 상대방의 목록에는 타나나지 않도록 한다.
     data['order'] = order;
     await ChatJoin.ref.child(uid).child(id).update(data);
     return null;
   }
 
-  Future<String?> join(String uid, {bool forceJoin = false}) async {
-    return await invite(uid, forceJoin: forceJoin);
+  /// 채팅방 입장
+  ///
+  /// 내가 채팅방에 들어가는 것은 채팅방의 'users' 필드에 나의 uid 를 추가하면 된다.
+  /// 다른 사람을 채팅방에 초대하는 것은 다른 사람의 uid 를 'users' 필드에 추가하면 된다.
+  ///
+  /// [uid] 는 [invite] 함수의 uid 와 동일한다. invite 함수 참고
+  Future<String?> join({String? uid, bool forceJoin = false}) async {
+    if (myUid == null) {
+      // 로그인을 하지 않았으면 그냥 리턴
+      // throw Exception('ChatModel::join() -> Login first -> myUid is null');
+      throw Issue(Code.notLoggedIn);
+    }
+    return await invite(uid ?? myUid!, forceJoin: forceJoin);
   }
 
   /// 채팅방 나가기

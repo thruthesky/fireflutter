@@ -35,6 +35,15 @@ class ActionLogOption {
   bool debug;
   Future<bool?> Function(ActionLogOption)? overLimit;
 
+  /// limit 에 걸린 경우, 어느 사용자 프로필을 볼 때 limit 에 걸렸는지 표시한다.
+  String? limitUid;
+
+  /// limit 에 걸린 경우, 어느 채팅방에 참여할 때 limit 에 걸렸는지 표시한다.
+  String? limitRoomId;
+
+  /// limit 에 걸린 경우, 어느 카테고리에 글 쓰려고 할 때, limit 에 걸렸는지 표시한다.
+  String? limitCategory;
+
   /// limit 에 걸렸는지 확인을 한다.
   ///
   /// limit 에 걸리지 않았거나, limit 에 걸려도 계속 실행을 하게 하는 경우 false 를 리턴한다. 이 경우 앱은 그대로 실행을 하면 된다.
@@ -50,19 +59,23 @@ class ActionLogOption {
   ///
   /// [roomId] 채팅방 ID. chatJoin 동작에서 limit 이 발생하는 경우, 채팅방 ID 를 넘겨주어, overLimit callback 함수에서
   /// 채팅방 ID 를 이용하여, 채팅방에 이미 참여했으면 false 를 리턴하여 경고 없이 채팅방에 접속을 할 수 있도록 한다.
-  Future<bool> isOverLimit({String? uid, String? roomId}) async {
+  Future<bool> isOverLimit({
+    String? uid,
+    String? roomId,
+    String? category,
+  }) async {
     /// ref 가 null 이면, 제한을 하지 않는다.
     if (ref == null) return false;
+    limitUid = uid;
+    limitRoomId = roomId;
+    limitCategory = category;
 
-    /// limit 이 0 이면, 무조건 제한을 한다. 즉, 액션을 한번도 허용하지 않는다.
-    if (limit == 0) {
-      final re = await overLimit?.call(this);
-      return (re == null || re) ? true : false;
+    /// limit 이 0 이면, 무조건 제한을 한다. 즉, 결제를 했어도 액션을 한번도 허용하지 않는다. 단 이전에 본 프로필, 입장한 채팅방은 허용.
+    if (limit != 0) {
+      /// 현재 카운트가 limit 보다 작으면, 제한을 하지 않는다.
+      /// 이 값은 ActionLogService init 에서 실시간으로 업데이트가 된다.
+      if (count < limit) return false;
     }
-
-    /// 현재 카운트가 limit 보다 작으면, 제한을 하지 않는다.
-    /// 이 값은 ActionLogService init 에서 실시간으로 업데이트가 된다.
-    if (count < limit) return false;
     if (debug) dog('--> 제한에 걸렸다. ${ref!.path}');
 
     /// 제한에 걸린 경우, (count 가 limit 보다 크거나 같은 경우)
@@ -71,35 +84,39 @@ class ActionLogOption {
     /// 그래서, 이곳에서 쿼리를 해서, 제한 시간이 지났는지 확인한다.
     /// 제한 시간이 지나면, count 를 업데이트해서, 다시 action 이 가능해 지고, 그러면 계속 action 이 가능해 지고, action 을 하면 새로운 로그를 기록하므로,
     /// init 에서 계속 action 로그를 발생 할 때 마다, 실시간 업데이트가 된다.
-    final snapshot = await query!.get();
-    count = ActionLogService.instance
-        .countFromSnapshot(snapshot: snapshot, option: this);
-    if (count < limit) {
-      if (debug) dog('제한 시간이 지나서, 다시 action 이 가능해졌다. ${ref!.path}');
-      return false;
-    } else {
-      if (debug) {
-        logTimeLeft();
+    ///
+    /// limit 이 0 이면, 무조건 제한을 한다. 즉, 결제를 했어도  한번도 허용하지 않는다.
+    if (limit != 0) {
+      final snapshot = await query!.get();
+      count = ActionLogService.instance
+          .countFromSnapshot(snapshot: snapshot, option: this);
+      if (count < limit) {
+        if (debug) dog('제한 시간이 지나서, 다시 action 이 가능해졌다. ${ref!.path}');
+        return false;
+      } else {
+        if (debug) {
+          logTimeLeft();
+        }
       }
     }
-
     print('----> isOverLimit() - uid: $uid, roomId: $roomId');
 
     /// 제한에 걸린 경우, action 이 public profile view 나 chat join 중 하나라면,
     /// 이전에 본 사용자 프로필이라면 계속 볼 수 있게 하고, 또 이전에 접속한 채팅방이면 계속 접속 할 수 있도록 해 준다.
+    ///
+    /// limit 이 0 이면 무조건 제한을 하지만, 이전에 본 사용자 프로필이나 이전에 접속한 채팅방은 계속 볼 수 있게 한다.
     if (uid != null) {
-      final re =
-          await ActionLogService.instance.userProfileView.ref!.child(uid).get();
-      if (re.exists) {
+      final re = await ActionLog.userProfileViewExists(uid);
+      // await ActionLogService.instance.userProfileView.ref!.child(uid).get();
+      if (re) {
         print('--> But continue, userProfileView - uid: $uid');
         return false;
       }
     } else if (roomId != null) {
       /// 참고, chatJoin 동작에서 limit 이 발생하는 경우, 채팅방 ID 를 받는 대신, chatRoom model 을 받아서, users 필드에 내가 들어가 있는지 확인을 하면
       /// 여기서 async/await 을 하지 않아도 처리가 가능하다.
-      final re =
-          await ActionLogService.instance.chatJoin.ref!.child(roomId).get();
-      if (re.exists) {
+      final re = await ActionLog.chatJoinExists(roomId);
+      if (re) {
         print('--> But continue, chatJoin - roomId: $roomId');
         return false;
       }

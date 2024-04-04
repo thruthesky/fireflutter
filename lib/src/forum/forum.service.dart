@@ -43,14 +43,16 @@ class ForumService {
     }
 
     if (ActionLogService.instance.postCreate[category] != null) {
-      if (await ActionLogService.instance.postCreate[category]!.isOverLimit()) {
+      if (await ActionLogService.instance.postCreate[category]!
+          .isOverLimit(category: category)) {
         return;
       }
     }
 
     if (ActionLogService.instance.postCreate['all'] != null) {
       /// 만약 'all' 카테고리가 제한이 되었으면, 모든 게시판을 통틀어서 제한이 되었는지 확인한다.
-      if (await ActionLogService.instance.postCreate['all']!.isOverLimit()) {
+      if (await ActionLogService.instance.postCreate['all']!
+          .isOverLimit(category: 'all')) {
         return;
       }
     }

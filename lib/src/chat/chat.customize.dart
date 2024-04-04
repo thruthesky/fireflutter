@@ -8,6 +8,12 @@ class ChatCustomize {
   /// Customization for chat room invite button inside DefaultChatRoomScreen
   final Widget Function(ChatRoom chatRoom)? chatRoomInviteButton;
 
+  /// Customization for chat room edit dialog inside DefaultChatRoomScreen
+  final Widget Function({
+    required BuildContext context,
+    String? roomId,
+  })? chatRoomEditDialogBuilder;
+
   /// Customization for chat bubble inside DefaultChatRoomScreen
   final Widget Function({
     required BuildContext context,
@@ -19,5 +25,6 @@ class ChatCustomize {
     this.chatRoomMenu,
     this.chatRoomInviteButton,
     this.chatBubbleBuilder,
+    this.chatRoomEditDialogBuilder,
   });
 }
