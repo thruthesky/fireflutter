@@ -292,7 +292,7 @@ class UserService {
 
   // Separated to track possible errors. Needed the await
   Future<void> _userProfileViewLogs(String userUid) async {
-    if (loggedIn == false || myUid == user!.uid) return;
+    if (loggedIn == false || myUid == userUid) return;
     final futures = [
       ActivityLog.userProfileView(userUid),
       ActionLog.userProfileView(userUid)
