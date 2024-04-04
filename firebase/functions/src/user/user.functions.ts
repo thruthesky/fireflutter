@@ -87,7 +87,7 @@ export const userMirror = onValueWritten(
             if (updatedUserData && updatedUserData.noOfLikes) {
                 delete updatedUserData.noOfLikes;
             }
-            if (updatedUserData && updatedUserData.searchDisplayName) {
+            if (updatedUserData && updatedUserData.displayName) {
                 updatedUserData.searchDisplayName = updatedUserData.displayName.trim().toLowerCase().replace(/\s+/g, "");
             }
 
@@ -101,7 +101,7 @@ export const userMirror = onValueWritten(
         // Created
         const data = event.data.after.val();
 
-        if (data && data.searchDisplayName) {
+        if (data && data.displayName) {
             data.searchDisplayName = data.displayName.trim().toLowerCase().replace(/\s+/g, "");
         }
         console.log("--> Creating user data; uid & data: ", userUid, data);
