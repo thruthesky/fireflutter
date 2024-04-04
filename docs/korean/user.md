@@ -559,3 +559,22 @@ Blocked(
     - 참고로 `http request` 로 하면 본인 인증이 안되고, `backend trigger` 로 하면 클라이언트에서 결과 대기하는 것이 어렵다.
 
 
+```dart
+ElevatedButton(
+  onPressed: () async {
+    final re = await confirm(
+      context: context,
+      title: '회원 탈퇴',
+      message: '회원 탈퇴를 하시겠습니까?',
+    );
+    if (re == true) {
+      await UserService.instance.resign();
+      await UserService.instance.signOut();
+      if (context.mounted) {
+        context.go(EntryScreen.routeName);
+      }
+    }
+  },
+  child: Text('회원 탈퇴'),
+),
+```

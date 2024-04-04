@@ -161,7 +161,7 @@ class _ClubMeetupUpdateFormState extends State<MeetupUpdateForm> {
             child: OutlinedButton(
               onPressed: () async {
                 if (date == null || time == null) {
-                  toast(context: context, message: '모임 날짜와 시간을 선택해주세요.');
+                  error(context: context, message: '모임 날짜와 시간을 선택해주세요.');
                   return;
                 }
                 print(date);

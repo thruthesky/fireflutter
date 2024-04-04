@@ -385,8 +385,9 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                           // Create a PhoneAuthCredential with the code
                           PhoneAuthCredential credential =
                               PhoneAuthProvider.credential(
-                                  verificationId: verificationId!,
-                                  smsCode: smsCodeController.text);
+                            verificationId: verificationId!,
+                            smsCode: smsCodeController.text.trim(),
+                          );
 
                           setState(() => smsCodeProgress = true);
                           try {

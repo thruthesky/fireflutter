@@ -65,7 +65,11 @@ class Club {
     };
   }
 
-  static Future<Club> get(DocumentReference ref) async {
+  static Future<Club> get({String? id, DocumentReference? ref}) async {
+    if (id == null && ref == null) {
+      throw FireFlutterException('club-get/id-null', 'Input id or ref.');
+    }
+    ref ??= col.doc(id);
     final snapshot = await ref.get();
     return Club.fromSnapshot(snapshot);
   }
@@ -90,7 +94,7 @@ class Club {
       ),
     );
 
-    final club = await Club.get(ref);
+    final club = await Club.get(ref: ref);
 
     final room = await ChatRoom.create(
       name: name,
@@ -99,7 +103,7 @@ class Club {
     );
 
     final chat = ChatModel(room: room);
-    await chat.join(forceJoin: true);
+    await chat.room.join(forceJoin: true);
 
     return club;
   }
@@ -153,7 +157,7 @@ class Club {
     await ref.update({
       'users': FieldValue.arrayUnion([myUid]),
     });
-    await ChatRoom.fromRoomdId(id).join(myUid!, forceJoin: true);
+    await ChatRoom.fromRoomdId(id).join(uid: myUid!, forceJoin: true);
   }
 
   /// 클럽 탈퇴
