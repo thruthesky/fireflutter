@@ -3,32 +3,38 @@
 import * as functions from "firebase-functions";
 import * as express from "express";
 import { Config } from "../config";
+import { initializeApp } from "firebase/app";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 // Initialize Express app
 const app = express();
 // Set up Firebase Cloud Function
 export const link = functions.https.onRequest(app);
 
-app.get("/.well-known/apple-app-site-association", (req, res) => {
-    const applicationID = `${Config.appleTeamId}.${Config.iosBundleId}`;
+const firebaseConfig = {
+    apiKey: "AIzaSyC8ME9ffn9KwEg01zrtzHgHdV80V0Qxj2c",
+    authDomain: "withcenter-meetup-3.firebaseapp.com",
+    databaseURL: "https://withcenter-meetup-3-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "withcenter-meetup-3",
+    storageBucket: "withcenter-meetup-3.appspot.com",
+    messagingSenderId: "103508765497",
+    appId: "1:103508765497:web:64cbdcc1f57acf8ddad6e8",
+  };
 
+app.get("/.well-known/apple-app-site-association", async (req, res) => {
+    const firebaseApp = initializeApp(firebaseConfig);
+    const db = getFirestore(firebaseApp);
+    const docRef = doc(db, "_deeplink_", "apple");
+    const docSnap = await getDoc(docRef);
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.write(JSON.stringify({
-        applinks: {
-            apps: [],
-            details: [{
-                appID: applicationID,
-                paths: [
-                    "*",
-                ],
-            }],
-        },
-        webcredentials: {
-            apps: [
-                applicationID,
-            ],
-        },
-    }));
+    if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+        res.write(JSON.stringify(docSnap.data()["value"]));
+    } else {
+        // docSnap.data() will be undefined in this case
+        res.write(JSON.stringify({}));
+        console.log("No such document!");
+    }
     res.end();
 });
 
@@ -43,8 +49,7 @@ app.get("/.well-known/assetlinks.json", (req, res) => {
                 namespace: "android_app",
                 package_name: "com.withcenter.roha",
                 sha256_cert_fingerprints: [
-                    // "87:B4:AB:C6:F0:A9:AB:FC:94:54:C0:AA:A0:81:EC:99:F4:0B:F1:26:F2:1C:57:F0:E2:0D:9C:4D:45:C4:FB:35",
-                    "B8:DC:24:EF:36:56:61:97:EB:AC:7A:BA:75:8C:EB:C7:BD:73:F7:D7:B0:6A:F2:E8:27:3D:DA:BD:B9:F4:8C:61",
+                    "2D:BD:C7:28:CF:1E:11:EA:87:D5:B8:2C:56:BB:F1:56:98:F4:C0:AB:88:8E:3A:47:BF:F0:A9:69:4C:22:BE:7E",
                 ],
             },
         }]
@@ -101,11 +106,11 @@ app.get("*", (req, res, next) => {
             // Optional: redirect users on mobile platforms to the according store
             var result = detect.parse(navigator.userAgent);
             if (result.os.family === 'iOS') {
-                window.location.replace("https://apps.apple.com/us/app/id6478899497");
+                window.location.replace("https://apps.apple.com/us/app/{{iosLinkId}}");
             } else if (result.os.family.includes('Android')) {
-                window.location.replace("https://play.google.com/store/apps/details?id=com.withcenter.roha");
+                window.location.replace("https://play.google.com/store/apps/details?id={{androidBundleId}}");
             } else {
-                // window.location.replace("https://play.google.com/store/apps/details?id=com.withcenter.roha");
+                // window.location.replace("yourwebsite link");
             }
         // You can handle any other logic here - Google Analytics, popups, etc...
         </script>
@@ -117,7 +122,9 @@ app.get("*", (req, res, next) => {
     const source = html
         .replaceAll("{{title}}", title)
         .replaceAll("{{subtitle}}", subtitle)
-        .replaceAll("{{image}}", image);
+        .replaceAll("{{image}}", image)
+        .replaceAll("{{androidBundleId}}", Config.androidBundleId)
+        .replaceAll("{{iosLinkId}}", Config.iosLinkId);
 
     // Return the webpage
     return res.send(source);

@@ -71,4 +71,6 @@ export class Config {
      */
     static appleTeamId = "S367SCV66A";
     static iosBundleId = "com.withcenter.roha";
+    static iosLinkId = "id6478899497";
+    static androidBundleId = "com.withcenter.roha";
 }
