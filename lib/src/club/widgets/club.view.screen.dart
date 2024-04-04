@@ -43,8 +43,8 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
                       onPressed: () =>
                           ForumService.instance.showPostCreateScreen(
                         context: context,
-                        category:
-                            widget.club.id + (index == 4 ? '-gallery' : ''),
+                        category: widget.club.id +
+                            (index == 4 ? '-club-gallery' : '-club-post'),
                       ),
                       child: const Text('글 쓰기'),
                     );
@@ -190,7 +190,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
               builder: (club) => club.users.contains(myUid)
                   ? ListTileTheme(
                       child: PostListView(
-                        category: widget.club.id,
+                        category: '${widget.club.id}-club-post',
                         padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
                         pageSize: 20,
                         separatorBuilder: (p0, p1) => Padding(
@@ -218,7 +218,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
               club: widget.club,
               builder: (club) => club.users.contains(myUid)
                   ? PostListView.gridView(
-                      category: '${widget.club.id}-gallery',
+                      category: '${widget.club.id}-club-gallery',
                       padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
                       itemBuilder: (post, i) => ClipRRect(
                         borderRadius: BorderRadius.circular(16),
