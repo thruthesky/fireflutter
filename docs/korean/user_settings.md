@@ -49,3 +49,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 }
 ```
+
+
+### 커스터마이징 언어 선택 UI
+
+`languagePickerXxxxxBuilder` 를 통해서 커스텀 디자인을 할 수 있다.
+
+
+```dart
+DefaultUserSettings(
+  languageFilters: const ['en', 'ko', 'vi', 'lo', 'my', 'th'],
+  languageSearch: false,
+  languagePickerLabelBuilder: (label) => Text(label!.language.tr),
+  languagePickerHeaderBuilder: () => Text(T.chooseYourLanguage.tr),
+  languagePickerItemBuilder: (language) {
+    return Column(
+      children: [
+        Text(
+          '  ${'${language.value}'.tr} ',
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
+            fontSize:
+                Theme.of(context).textTheme.titleMedium!.fontSize,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        spaceXxs,
+      ],
+    );
+  },
+),
+```
