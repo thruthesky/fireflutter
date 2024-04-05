@@ -6,10 +6,16 @@ class DefaultUserSettings extends StatelessWidget {
     super.key,
     this.languageFilters,
     this.languageSearch = false,
+    this.languagePickerItemBuilder,
+    this.languagePickerLabelBuilder,
+    this.languagePickerHeaderBuilder,
   });
 
   final List<String>? languageFilters;
   final bool languageSearch;
+  final Widget Function(MapEntry)? languagePickerItemBuilder;
+  final Widget Function()? languagePickerHeaderBuilder;
+  final Widget Function(String?)? languagePickerLabelBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +52,9 @@ class DefaultUserSettings extends StatelessWidget {
                   languageCode: v,
                 );
               },
+              itemBuilder: languagePickerItemBuilder,
+              headerBuilder: languagePickerHeaderBuilder,
+              labelBuilder: languagePickerLabelBuilder,
             ),
           ],
         );
