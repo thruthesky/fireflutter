@@ -4,7 +4,7 @@ import * as functions from "firebase-functions";
 import * as express from "express";
 import { Config } from "../config";
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, DocumentSnapshot } from "firebase/firestore";
 
 // Initialize Express app
 const app = express();
@@ -21,14 +21,23 @@ const firebaseConfig = {
     appId: "1:103508765497:web:64cbdcc1f57acf8ddad6e8",
   };
 
-app.get("/.well-known/apple-app-site-association", async (req, res) => {
+/**
+ * Returns the Document Snapshot
+ * @param docId
+ */
+async function getDeeplinkDoc( docId: string ): Promise<DocumentSnapshot> {
     const firebaseApp = initializeApp(firebaseConfig);
     const db = getFirestore(firebaseApp);
-    const docRef = doc(db, "_deeplink_", "apple");
+    const docRef = doc(db, "_deeplink_", docId);
     const docSnap = await getDoc(docRef);
+    return docSnap;
+}
+
+app.get("/.well-known/apple-app-site-association", async (req, res) => {
+    const docSnaphot = await getDeeplinkDoc("apple");
     res.writeHead(200, { "Content-Type": "application/json" });
-    if (docSnap.exists()) {
-        res.write(JSON.stringify(docSnap.data()["value"]));
+    if (docSnaphot.exists()) {
+        res.write(JSON.stringify(docSnaphot.data()["value"]));
     } else {
         // docSnap.data() will be undefined in this case
         res.write(JSON.stringify({}));
@@ -37,13 +46,10 @@ app.get("/.well-known/apple-app-site-association", async (req, res) => {
 });
 
 app.get("/.well-known/assetlinks.json", async (req, res) => {
-    const firebaseApp = initializeApp(firebaseConfig);
-    const db = getFirestore(firebaseApp);
-    const docRef = doc(db, "_deeplink_", "android");
-    const docSnap = await getDoc(docRef);
+    const docSnaphot = await getDeeplinkDoc("android");
     res.writeHead(200, { "Content-Type": "application/json" });
-    if (docSnap.exists()) {
-        res.write(JSON.stringify(docSnap.data()["value"]));
+    if (docSnaphot.exists()) {
+        res.write(JSON.stringify(docSnaphot.data()["value"]));
     } else {
         // docSnap.data() will be undefined in this case
         res.write(JSON.stringify({}));
@@ -94,7 +100,7 @@ app.get("*", (req, res, next) => {
     
     <body>
         <!-- YOUR PAGE CONTENT HERE -->
-        TEST New
+        Redirecting...
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Detect.js/2.2.2/detect.min.js" rossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script>
             // Optional: redirect users on mobile platforms to the according store
