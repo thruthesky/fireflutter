@@ -53,7 +53,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
 ### 커스터마이징 언어 선택 UI
 
-`languagePickerXxxxxBuilder` 를 통해서 커스텀 디자인을 할 수 있다.
+- `languagePickerXxxxxBuilder` 를 통해서 커스텀 디자인을 할 수 있다.
 
 
 ```dart
