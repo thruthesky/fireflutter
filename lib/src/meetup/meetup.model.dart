@@ -8,12 +8,13 @@ class Meetup {
   DocumentReference get ref => Meetup.col.doc(id);
 
   final String id;
-  final String clubId;
+  final String? clubId;
   final String uid;
   final List<String> users;
   final String title;
   final String description;
   final String? photoUrl;
+  final DateTime? meetAt;
 
   Meetup({
     required this.id,
@@ -23,7 +24,10 @@ class Meetup {
     required this.description,
     required this.photoUrl,
     required this.users,
+    required this.meetAt,
   });
+
+  bool get joined => users.contains(myUid);
 
   factory Meetup.fromSnapshot(DocumentSnapshot snapshot) {
     return Meetup.fromMap(snapshot.data() as Map, snapshot.id);
@@ -38,7 +42,24 @@ class Meetup {
       description: map['description'] ?? '',
       photoUrl: map['photoUrl'],
       users: List<String>.from((map['users'] ?? [])),
+      meetAt: map['meetAt'] is Timestamp
+          ? (map['meetAt'] as Timestamp).toDate()
+          : null,
     );
+  }
+
+  /// Generate toMap method
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'clubId': clubId,
+      'uid': uid,
+      'title': title,
+      'description': description,
+      'photoUrl': photoUrl,
+      'users': users,
+      'meetAt': meetAt,
+    };
   }
 
   /// 오프라인 모임 생성을 위한, 데이터 맵을 만든다.
@@ -53,6 +74,11 @@ class Meetup {
       'title': title,
       'createdAt': FieldValue.serverTimestamp(),
     };
+  }
+
+  @override
+  String toString() {
+    return "Meetup{${toMap()}}";
   }
 
   /// 오프라인 모임 일정 만들기
@@ -98,6 +124,7 @@ class Meetup {
     String? description,
     String? photoUrl,
     bool? hasPhoto,
+    DateTime? meetAt,
   }) async {
     // 모임 이름이 들어오는 경우, 빈 문자열이면 에러
     if (title != null && title.trim().isEmpty) {
@@ -108,6 +135,7 @@ class Meetup {
     final Map<String, dynamic> data = {
       if (title != null) 'title': title,
       if (description != null) 'description': description,
+      if (meetAt != null) 'meetAt': meetAt,
       'updatedAt': FieldValue.serverTimestamp(),
     };
 
@@ -123,5 +151,35 @@ class Meetup {
     }
 
     await ref.update(data);
+  }
+
+  Future<void> join() async {
+    if (users.contains(myUid)) {
+      throw FireFlutterException(
+        Code.meetupAlreadyJoined,
+        'You already joined this meetup.',
+      );
+    }
+
+    await ref.update({
+      'users': FieldValue.arrayUnion([myUid]),
+    });
+
+    users.add(myUid!);
+  }
+
+  Future<void> leave() async {
+    if (users.contains(myUid) == false) {
+      throw FireFlutterException(
+        Code.meetupNotJoined,
+        'You have not joined this meetup, yet.',
+      );
+    }
+
+    await ref.update({
+      'users': FieldValue.arrayRemove([myUid]),
+    });
+
+    users.remove(myUid);
   }
 }

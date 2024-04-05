@@ -58,6 +58,15 @@ class ActionLog {
     return ActionLog.fromJson(snapshot.value as Map, snapshot.key!);
   }
 
+  /// Check if the user profile view exists
+  ///
+  /// 만약, [otherUserUid] 의 프로필을 본 적이 있다면, true 를 반환한다.
+  /// 이 함수는 action log 에서, overtime 이 발생 할 때, 이전에 본 적인 프로필이면 그대로 볼 수 있게 위해서 사용한다.
+  static Future<bool> userProfileViewExists(String otherUserUid) async {
+    final snapshot = await userProfileViewRef.child(otherUserUid).get();
+    return snapshot.exists;
+  }
+
   /// Create a new action log for user profiel view
   static Future<void> userProfileView(String otherUserUid) async {
     if (myUid == null) return;
@@ -76,6 +85,15 @@ class ActionLog {
       dog('----> ActionLog.userProfileView() Error: $e, path: ${ref.path}');
       rethrow;
     }
+  }
+
+  /// Check if the chat join exists
+  ///
+  /// 만약, [roomId] 의 채팅방에 들어간 적이 있다면, true 를 반환한다.
+  /// 이 함수는 action log 에서, overtime 이 발생 할 때, 이전에 입장한 채팅방이면 그대로 입장 할 수 있게 위해서 사용한다.
+  static Future<bool> chatJoinExists(String roomId) async {
+    final snapshot = await chatJoinRef.child(roomId).get();
+    return snapshot.exists;
   }
 
   /// Create a new action log for chat join

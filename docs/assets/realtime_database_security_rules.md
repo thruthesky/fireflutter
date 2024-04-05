@@ -178,7 +178,7 @@
       ".read": true,
       ".write": true,
       "$category": {
-        ".indexOn": ["order"]
+        ".indexOn": ["order", "createdAt"]
       }
     },
       
@@ -220,7 +220,7 @@
       "$category": {
         ".read": "root.child('admins').hasChild(auth.uid) || (query.orderByChild === 'uid' && query.equalTo === auth.uid)",
         "$dataKey": {
-          ".write": "newData.child('uid').val() === auth.uid || root.child('admins').hasChild(auth.uid)",
+          ".write": "(newData.child('uid').val() === auth.uid || data.child('uid').val() === auth.uid) || root.child('admins').hasChild(auth.uid)",
           ".indexOn": ["uid"]
         }
       }

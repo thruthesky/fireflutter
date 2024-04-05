@@ -103,6 +103,10 @@ class User {
 
   /// When the user's location was updated, geohash data is also updated.
   ///
+  ///
+  /// [geohash3] is used for searching nearby users above 20k meters
+  String geohash3;
+
   /// [geohash4] is used for searching nearby users within 20k meters
   String geohash4;
 
@@ -127,6 +131,15 @@ class User {
   /// 로 저장하면 된다. 만약, 인증을 취소하면, isVerified 는 false 로 저장하고, [idUploadedAt] 은
   /// 현재 시간으로 저장함녀 된다.
   int idUploadedAt;
+
+  /// [ping] is an int value that is used to update user document.
+  ///
+  /// You can use this to trigger any listeners that are listening to the user
+  /// document. Especially, when you use [MyDoc] widget, you can update this value
+  /// to rebuild the widget.
+  /// For example, when user pays, you can update this value to trigger the [MyDoc]
+  /// widget to rebuild.
+  int ping;
 
   /// Returns true if the user is blocked.
   bool isBlocked(String otherUserUid) =>
@@ -191,11 +204,13 @@ class User {
     required this.siGunGu,
     required this.latitude,
     required this.longitude,
+    required this.geohash3,
     required this.geohash4,
     required this.geohash5,
     required this.geohash6,
     required this.geohash7,
     required this.languageCode,
+    required this.ping,
   });
 
   factory User.fromSnapshot(DataSnapshot snapshot) {
@@ -267,11 +282,13 @@ class User {
       siGunGu: json['siGunGu'] ?? '',
       latitude: json['latitude'] ?? 0.0,
       longitude: json['longitude'] ?? 0.0,
+      geohash3: json['geohash3'] ?? '',
       geohash4: json['geohash4'] ?? '',
       geohash5: json['geohash5'] ?? '',
       geohash6: json['geohash6'] ?? '',
       geohash7: json['geohash7'] ?? '',
       languageCode: json['languageCode'] ?? '',
+      ping: json['ping'] ?? 0,
     );
   }
 
@@ -309,6 +326,7 @@ class User {
       'geohash6': geohash6,
       'geohash7': geohash7,
       'languageCode': languageCode,
+      'ping': ping,
     };
   }
 
@@ -347,11 +365,13 @@ class User {
       siGunGu = user.siGunGu;
       latitude = user.latitude;
       longitude = user.longitude;
+      geohash3 = user.geohash3;
       geohash4 = user.geohash4;
       geohash5 = user.geohash5;
       geohash6 = user.geohash6;
       geohash7 = user.geohash7;
       languageCode = user.languageCode;
+      ping = user.ping;
     }
 
     return this;
@@ -458,6 +478,7 @@ class User {
     double? latitude,
     double? longitude,
     String? languageCode,
+    int? ping,
   }) async {
     final data = {
       if (name != null) 'name': name,
@@ -485,6 +506,7 @@ class User {
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
       if (languageCode != null) 'languageCode': languageCode,
+      if (ping != null) 'ping': ping,
     };
     if (data.isEmpty) {
       return this;
@@ -493,6 +515,7 @@ class User {
     if (latitude != null && longitude != null) {
       final geohash = GeoHash.encode(latitude, longitude);
       final hash = geohash.hash;
+      data['geohash3'] = hash.substring(0, 3);
       data['geohash4'] = hash.substring(0, 4);
       data['geohash5'] = hash.substring(0, 5);
       data['geohash6'] = hash.substring(0, 6);

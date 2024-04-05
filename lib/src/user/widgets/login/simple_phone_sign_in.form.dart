@@ -347,6 +347,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
           ),
           const SizedBox(height: 16),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               TextButton(
                 onPressed: () => setState(() {
@@ -358,57 +359,61 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                       T.phoneSignInRetry.tr,
                     ),
               ),
-              const Spacer(),
+              // const Spacer(),
               // display a button for SMS code verification.
 
-              OutlinedButton(
-                key: const Key('smsCodeVerification'),
-                onPressed: smsCodeController.text.isEmpty
-                    ? null
-                    : () async {
-                        // 테스트 전화번호. 실제 전화번호 인 것 처럼 동작. 가짜 전화번호와 가짜 SMS 코드를 입력하게 해서 로그인.
-                        if (isRealReviewNumer) {
-                          if (isRealReviewSmsCode) {
-                            return doReviewLogin();
-                          } else {
-                            error(
-                              context: context,
-                              title: T.error.tr,
-                              message: "Invalid SMS Code",
-                            );
-                            return;
+              Flexible(
+                child: OutlinedButton(
+                  key: const Key('smsCodeVerification'),
+                  onPressed: smsCodeController.text.isEmpty
+                      ? null
+                      : () async {
+                          // 테스트 전화번호. 실제 전화번호 인 것 처럼 동작. 가짜 전화번호와 가짜 SMS 코드를 입력하게 해서 로그인.
+                          if (isRealReviewNumer) {
+                            if (isRealReviewSmsCode) {
+                              return doReviewLogin();
+                            } else {
+                              error(
+                                context: context,
+                                title: T.error.tr,
+                                message: "Invalid SMS Code",
+                              );
+                              return;
+                            }
                           }
-                        }
 
-                        // Create a PhoneAuthCredential with the code
-                        PhoneAuthCredential credential =
-                            PhoneAuthProvider.credential(
-                                verificationId: verificationId!,
-                                smsCode: smsCodeController.text);
+                          // Create a PhoneAuthCredential with the code
+                          PhoneAuthCredential credential =
+                              PhoneAuthProvider.credential(
+                            verificationId: verificationId!,
+                            smsCode: smsCodeController.text.trim(),
+                          );
 
-                        setState(() => smsCodeProgress = true);
-                        try {
-                          // Sign the user in (or link) with the credential
-                          await FirebaseAuth.instance
-                              .signInWithCredential(credential);
-                          signinSuccess();
-                        } catch (e) {
-                          // SMS Code verification error comes here.
-                          if (context.mounted) {
-                            error(
-                              context: context,
-                              title: T.error.tr,
-                              message: e.toString(),
-                            );
+                          setState(() => smsCodeProgress = true);
+                          try {
+                            // Sign the user in (or link) with the credential
+                            await FirebaseAuth.instance
+                                .signInWithCredential(credential);
+                            signinSuccess();
+                          } catch (e) {
+                            // SMS Code verification error comes here.
+                            if (context.mounted) {
+                              error(
+                                context: context,
+                                title: T.error.tr,
+                                message: e.toString(),
+                              );
+                            }
+                          } finally {
+                            setState(() => smsCodeProgress = false);
                           }
-                        } finally {
-                          setState(() => smsCodeProgress = false);
-                        }
-                      },
-                child: smsCodeProgress
-                    ? const CircularProgressIndicator.adaptive()
-                    : (widget.smsSubmitLabel ??
-                        Text(T.phoneSignInVerifySmsCode.tr)),
+                        },
+                  child: smsCodeProgress
+                      ? const CircularProgressIndicator.adaptive()
+                      : (widget.smsSubmitLabel ??
+                          Text(T.phoneSignInVerifySmsCode.tr,
+                              maxLines: 1, overflow: TextOverflow.ellipsis)),
+                ),
               ),
             ],
           ),

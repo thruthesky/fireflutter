@@ -13,7 +13,7 @@ class LinkifyText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Linkify(
+    return SelectableLinkify(
       options: const LinkifyOptions(humanize: false),
       onOpen: (link) async {
         if (await canLaunchUrlString(link.url)) {
@@ -24,6 +24,11 @@ class LinkifyText extends StatelessWidget {
       },
       text: text,
       style: style,
+      contextMenuBuilder: (_, state) =>
+          AdaptiveTextSelectionToolbar.buttonItems(
+        anchors: state.contextMenuAnchors,
+        buttonItems: state.contextMenuButtonItems,
+      ),
     );
   }
 }

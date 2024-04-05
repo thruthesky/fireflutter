@@ -10,9 +10,11 @@ class DefaultChatRoomEditDialog extends StatefulWidget {
   const DefaultChatRoomEditDialog({
     super.key,
     this.roomId,
+    this.authRequired = false,
   });
 
   final String? roomId;
+  final bool authRequired;
 
   @override
   State<DefaultChatRoomEditDialog> createState() =>
@@ -149,24 +151,25 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 ),
               ),
             ),
-            SwitchListTile(
-              value: isVerifiedOnly,
-              onChanged: (v) => setState(() => isVerifiedOnly = v),
-              title: Padding(
-                padding: const EdgeInsets.only(left: 16),
-                child: Text(
-                  '인증 회원 전용 입장',
-                  style: Theme.of(context).textTheme.bodySmall,
+            if (widget.authRequired)
+              SwitchListTile(
+                value: isVerifiedOnly,
+                onChanged: (v) => setState(() => isVerifiedOnly = v),
+                title: Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: Text(
+                    '인증 회원 전용 입장',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: Text(
+                    '본인 인증 한 회원만 채팅방에 참여할 수 있습니다.',
+                    style: Theme.of(context).textTheme.labelSmall,
+                  ),
                 ),
               ),
-              subtitle: Padding(
-                padding: const EdgeInsets.only(left: 16),
-                child: Text(
-                  '본인 인증 한 회원만 채팅방에 참여할 수 있습니다.',
-                  style: Theme.of(context).textTheme.labelSmall,
-                ),
-              ),
-            ),
             if (isEdit)
               SwitchListTile(
                 value: urlVerifiedUserOnly,
@@ -234,7 +237,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
               /// 채팅방을 생성하는 경우, chat-joins 에도 정보를 저장한다.
               ///
               final chat = ChatModel(room: room);
-              await chat.join(forceJoin: true);
+              await chat.room.join(forceJoin: true);
 
               if (context.mounted) {
                 Navigator.pop(context, room);

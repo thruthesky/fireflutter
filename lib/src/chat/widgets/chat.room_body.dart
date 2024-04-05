@@ -31,6 +31,7 @@ class ChatRoomBody extends StatefulWidget {
     this.leave = true,
     this.displayAppBar = true,
     this.appBarBottomSpacing = 8,
+    this.emptyBuilder,
   });
 
   final String? uid;
@@ -40,6 +41,7 @@ class ChatRoomBody extends StatefulWidget {
   final bool leave;
   final bool displayAppBar;
   final double appBarBottomSpacing;
+  final Widget Function(BuildContext)? emptyBuilder;
 
   @override
   State<ChatRoomBody> createState() => _ChatRoomState();
@@ -105,7 +107,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
 
     if (chat.room.joined == false) {
       try {
-        await chat.join();
+        await chat.room.join();
       } on Issue catch (e) {
         if (e.code == Code.chatRoomNotVerified) {
           if (mounted) {
@@ -181,7 +183,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
                       /// 1:1 채팅은 chat-joins 에서 한번만 가져오고, 그룹 채팅은 chat-rooms 에서 가져온다.
                       /// 그룹 채팅은 관리자가 사진을 바꿀 때, 채팅 화면에 바로 적용되어야 한다.
                       chat.room.isSingleChat
-                          ? Value.once(
+                          ? Value(
                               // path: '${ChatJoin.join(myUid!, chat.room.id)}/${Field.photoUrl}',
                               ref: ChatJoin.photoRef(chat.room.id),
                               builder: (v) => v == null
@@ -221,7 +223,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
                       /// 그룹 채팅은 관리자가 채팅 이름을 바꿀 때, 채팅 화면에 바로 적용되어야 한다.
                       Expanded(
                         child: chat.room.isSingleChat
-                            ? Value.once(
+                            ? Value(
                                 // path: '${ChatJoin.join(myUid!, chat.room.id)}/name',
                                 ref: ChatJoin.nameRef(chat.room.id),
                                 builder: (v) => Text(
@@ -363,6 +365,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
             builder: (_, v, __) => v
                 ? ChatMessageListView(
                     chat: chat,
+                    emptyBuilder: widget.emptyBuilder,
                   )
                 : const SizedBox.shrink(),
           ),

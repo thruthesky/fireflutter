@@ -1,6 +1,7 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/club/widgets/club.details.dart';
 import 'package:fireflutter/src/meetup/meetup.service.dart';
+import 'package:fireflutter/src/meetup/widgets/meetup.list_view.dart';
 import 'package:flutter/material.dart';
 
 class ClubViewScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
     return DefaultTabController(
       length: 5,
       child: Scaffold(
+        // backgroundColor: Colors.blue,
         appBar: AppBar(
           title: Text(widget.club.name),
           actions: [
@@ -29,7 +31,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
                 valueListenable: _tabIndex,
                 builder: (_, index, __) {
                   if (club.isMaster && index == 1) {
-                    return OutlinedButton(
+                    return TextButton(
                       onPressed: () => MeetupService.instance.showCreateScreen(
                         context: context,
                         clubId: club.id,
@@ -37,17 +39,18 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
                       child: const Text('일정 생성'),
                     );
                   } else if (club.joined && (index == 3 || index == 4)) {
-                    return OutlinedButton(
+                    return TextButton(
                       onPressed: () =>
                           ForumService.instance.showPostCreateScreen(
                         context: context,
-                        category:
-                            widget.club.id + (index == 4 ? '-gallery' : ''),
+                        category: widget.club.id +
+                            (index == 4 ? '-club-gallery' : '-club-post'),
                       ),
                       child: const Text('글 쓰기'),
                     );
-                  } else
+                  } else {
                     return const SizedBox.shrink();
+                  }
                 },
               ),
             ),
@@ -158,7 +161,13 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
         body: TabBarView(
           children: [
             ClubDetails(club: widget.club),
-            const Text('meetup 을 별도 서비스로 뺄 것'),
+            MeetupListView(
+              clubId: widget.club.id,
+              separatorBuilder: (p0, p1) => const Divider(height: 16),
+              emptyBuilder: () => const Center(
+                child: Text('일정이 없습니다.'),
+              ),
+            ),
             ClubDoc(
               club: widget.club,
               builder: (club) => club.users.contains(myUid)
@@ -181,7 +190,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
               builder: (club) => club.users.contains(myUid)
                   ? ListTileTheme(
                       child: PostListView(
-                        category: widget.club.id,
+                        category: '${widget.club.id}-club-post',
                         padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
                         pageSize: 20,
                         separatorBuilder: (p0, p1) => Padding(
@@ -195,8 +204,9 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
                                 .withAlpha(64),
                           ),
                         ),
-                        emptyBuilder: () =>
-                            const Center(child: Text('글을 등록 해 주세요.')),
+                        emptyBuilder: () => const Center(
+                          child: Text('글을 등록 해 주세요.'),
+                        ),
                       ),
                     )
                   : ClubViewRegisterFirstButton(
@@ -208,7 +218,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
               club: widget.club,
               builder: (club) => club.users.contains(myUid)
                   ? PostListView.gridView(
-                      category: '${widget.club.id}-gallery',
+                      category: '${widget.club.id}-club-gallery',
                       padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
                       itemBuilder: (post, i) => ClipRRect(
                         borderRadius: BorderRadius.circular(16),

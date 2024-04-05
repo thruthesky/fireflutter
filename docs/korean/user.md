@@ -495,74 +495,8 @@ Fireflutter 에서 기본 제공하는 거리 검색은 위의 세 가지 방법
 
 ## 좋아요
 
-텍스트 버튼으로 표시 할 때 아래와 같이 할 수 있다. 다만, 좋아요 숫자 증가는 cloud function 에 의해서 동작하므로, 실시간으로 빠르게 표시되 않는데, 적절한 처리가 필요하다.
+- [좋아요](./like.md) 문서 참고
 
-```dart
-ElevatedButton(
-  onPressed: () async {
-    await my?.like(uid);
-  },
-  child: Value(
-    path: Path.userField(uid, Field.noOfLikes),
-    builder: (v) => Text(
-      v == null || v == 0
-          ? T.like.tr
-          : v == 1
-              ? ('${T.like.tr} 1')
-              : '${T.likes.tr} ${v ?? ''}',
-    ),
-  ),
-),
-```
-
-### 좋아요 목록
-
-좋아요 목록은 총 세 가지가 있다.
-
-- 첫째, 내가 좋아요 한 사람 목록.
-- 둘째, 나를 좋아요 한 사람 목록.
-- 셋째, 서로 좋아요 한 목록. 내가 A 이고, A 가 B 를 좋아요 하고, B 도 A 를 좋아요 했다면, B 가 서로 좋아요 목록에 타나난다.
-
-
-아래와 같이 코딩을 하면 된다.
-
-```dart
-import 'package:fireflutter/fireflutter.dart';
-import 'package:flutter/material.dart';
-
-class LikeScreen extends StatefulWidget {
-  const LikeScreen({super.key});
-
-  @override
-  State<LikeScreen> createState() => _LikeScreenState();
-}
-
-class _LikeScreenState extends State<LikeScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 0,
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'Who Likes Me'),
-              Tab(text: 'Who I Like'),
-            ],
-          ),
-        ),
-        body: const TabBarView(
-          children: [
-            WhoLikeMeListView(),
-            WhoILikeListView(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-```
 
 ## 사용자 로그인 및 문서 준비 확인
 
@@ -625,3 +559,22 @@ Blocked(
     - 참고로 `http request` 로 하면 본인 인증이 안되고, `backend trigger` 로 하면 클라이언트에서 결과 대기하는 것이 어렵다.
 
 
+```dart
+ElevatedButton(
+  onPressed: () async {
+    final re = await confirm(
+      context: context,
+      title: '회원 탈퇴',
+      message: '회원 탈퇴를 하시겠습니까?',
+    );
+    if (re == true) {
+      await UserService.instance.resign();
+      await UserService.instance.signOut();
+      if (context.mounted) {
+        context.go(EntryScreen.routeName);
+      }
+    }
+  },
+  child: Text('회원 탈퇴'),
+),
+```
