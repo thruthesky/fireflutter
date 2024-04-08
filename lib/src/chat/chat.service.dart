@@ -114,12 +114,17 @@ class ChatService {
     }
   }
 
-  Future<ChatRoom?> showChatRoomCreate({required BuildContext context}) async {
+  Future<ChatRoom?> showChatRoomCreate({
+    required BuildContext context,
+    bool authRequired = false,
+  }) async {
     return await showDialog<ChatRoom?>(
       context: context,
       builder: (_) =>
           customize.chatRoomEditDialogBuilder?.call(context: context) ??
-          const DefaultChatRoomEditDialog(),
+          DefaultChatRoomEditDialog(
+            authRequired: authRequired,
+          ),
     );
   }
 
