@@ -39,7 +39,7 @@ app.get("/.well-known/apple-app-site-association", async (req, res) => {
         res.write(JSON.stringify(docSnaphot.data()["value"]));
     } else {
         // docSnap.data() will be undefined in this case
-        res.write(JSON.stringify({}));
+        res.write("Page not found!");
     }
     res.end();
 });
@@ -51,7 +51,7 @@ app.get("/.well-known/assetlinks.json", async (req, res) => {
         res.write(JSON.stringify(docSnaphot.data()["value"]));
     } else {
         // docSnap.data() will be undefined in this case
-        res.write(JSON.stringify({}));
+        res.write("Page not found!");
     }
     res.end();
 });
@@ -64,5 +64,5 @@ app.get("*", async (req, res) => {
         return res.send(source);
     }
     // Return the webpage
-    return res.send(JSON.stringify({}));
+    return res.send("Page not found!");
 });
