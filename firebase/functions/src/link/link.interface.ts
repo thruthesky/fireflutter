@@ -5,3 +5,7 @@ export interface LinkCredential {
 export interface AndroidCredential {
     [key: string]: Array<string>;
 }
+
+export interface AppleCredential {
+    [key: string]: string;
+}
