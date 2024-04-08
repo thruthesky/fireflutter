@@ -64,13 +64,4 @@ export class Config {
     static typesenseHost = typesenseHost;
     static typesensePort = 8080;
     static typesenseProtocol = typesenseProtocol;
-
-
-    /**
-     * Link setup
-     */
-    static appleTeamId = "S367SCV66A";
-    static iosBundleId = "com.withcenter.roha";
-    static iosLinkId = "id6478899497";
-    static androidBundleId = "com.withcenter.roha";
 }
