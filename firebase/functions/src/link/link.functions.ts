@@ -40,7 +40,6 @@ app.get("/.well-known/apple-app-site-association", async (req, res) => {
     res.writeHead(200, { "Content-Type": "application/json" });
     if (docSnaphot.exists()) {
         const data = docSnaphot.data() as LinkCredential;
-
         res.write(JSON.stringify(data.value));
     } else {
         // docSnap.data() will be undefined in this case
@@ -50,7 +49,7 @@ app.get("/.well-known/apple-app-site-association", async (req, res) => {
 });
 
 app.get("/.well-known/assetlinks.json", async (req, res) => {
-    const docSnaphot = await getDeeplinkDoc("android_test");
+    const docSnaphot = await getDeeplinkDoc("android");
     res.writeHead(200, { "Content-Type": "application/json" });
     if (docSnaphot.exists()) {
         const snapshotData: AndroidCredential = docSnaphot.data();
