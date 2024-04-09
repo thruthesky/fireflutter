@@ -8,8 +8,10 @@
 
 참고로 이것은 옵션이지만, 가능하면 해 주는 것이 좋다.
 
-```dart
 
+예제 - global context(navator state context)를 FireFlutter 에 전달
+
+```dart
 void main() {
   runApp(const MyApp());
 }
@@ -37,4 +39,16 @@ class _MyAppState extends State<MyApp> {
       routerConfig: router,
     );
   }
+```
+
+
+예제 - go_router 를 사용하는 경우
+
+```dart
+final GlobalKey<NavigatorState> globalNavigatorKey = GlobalKey();
+
+final router = GoRouter(
+  navigatorKey: globalNavigatorKey,
+  // ...
+);
 ```

@@ -11,6 +11,7 @@ typedef FormOption = ({
 class DefaultProfileUpdateForm extends StatefulWidget {
   const DefaultProfileUpdateForm({
     super.key,
+    this.backgroundImage,
     this.birthday,
     this.occupation,
     this.stateMessage,
@@ -26,6 +27,7 @@ class DefaultProfileUpdateForm extends StatefulWidget {
   });
 
   final void Function()? onUpdate;
+  final FormOption? backgroundImage;
   final FormOption? birthday;
   // use [occupation] to hide the occupation field
   final FormOption? occupation;
@@ -97,83 +99,93 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
         Center(
           child: Column(
             children: [
-              Stack(
-                children: [
-                  MyDoc(builder: (my) {
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 60),
-                      width: double.infinity,
-                      height: 200,
+              /// display backgroundImage
+              if (widget.backgroundImage?.display == true)
+                Stack(
+                  children: [
+                    MyDoc(builder: (my) {
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 60),
+                        width: double.infinity,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          image: DecorationImage(
+                            image: CachedNetworkImageProvider(
+                              my!.profileBackgroundImageUrl.orBlackUrl,
+                            ),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    }),
+                    Container(
+                      height: 100,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        image: DecorationImage(
-                          image: CachedNetworkImageProvider(
-                            my!.profileBackgroundImageUrl.orBlackUrl,
-                          ),
-                          fit: BoxFit.cover,
+                        gradient: const LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.black54,
+                              Colors.transparent,
+                            ]),
+                      ),
+                    ),
+                    Positioned(
+                      right: 0,
+                      child: progress != null
+                          ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                '${(progress! * 100).toStringAsFixed(0)} %',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge!
+                                    .copyWith(color: Colors.white),
+                              ),
+                            )
+                          : TextButton.icon(
+                              onPressed: () async {
+                                await StorageService.instance.uploadAt(
+                                  context: context,
+                                  path:
+                                      "${User.node}/${user.uid}/${Field.profileBackgroundImageUrl}",
+                                  progress: (p) => setState(() => progress = p),
+                                  complete: () =>
+                                      setState(() => progress = null),
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.camera_alt,
+                                color: Colors.white,
+                              ),
+                              label: Text(
+                                T.backgroundImage.tr,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ),
+                    ),
+                    const Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: UserAvatarUpdate(
+                          radius: 80,
+                          delete: false,
                         ),
                       ),
-                    );
-                  }),
-                  Container(
-                    height: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      gradient: const LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.black54,
-                            Colors.transparent,
-                          ]),
                     ),
+                  ],
+                )
+              else
+                const Center(
+                  child: UserAvatarUpdate(
+                    radius: 80,
+                    delete: false,
                   ),
-                  Positioned(
-                    right: 0,
-                    child: progress != null
-                        ? Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              '${(progress! * 100).toStringAsFixed(0)} %',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge!
-                                  .copyWith(color: Colors.white),
-                            ),
-                          )
-                        : TextButton.icon(
-                            onPressed: () async {
-                              await StorageService.instance.uploadAt(
-                                context: context,
-                                path:
-                                    "${User.node}/${user.uid}/${Field.profileBackgroundImageUrl}",
-                                progress: (p) => setState(() => progress = p),
-                                complete: () => setState(() => progress = null),
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.camera_alt,
-                              color: Colors.white,
-                            ),
-                            label: Text(
-                              T.backgroundImage.tr,
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ),
-                  ),
-                  const Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Center(
-                      child: UserAvatarUpdate(
-                        radius: 80,
-                        delete: false,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
               const SizedBox(height: 8),
               Text(T.profilePhoto.tr),
               const SizedBox(height: 8),
@@ -197,48 +209,34 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
           Text(T.genderInProfileUpdate.tr,
               style: Theme.of(context).textTheme.labelSmall),
           const SizedBox(height: 4),
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Theme.of(context).colorScheme.secondary,
-                width: 2,
+          Row(
+            children: [
+              Expanded(
+                child: RadioListTile<String>(
+                  title: Text(T.male.tr),
+                  value: 'M',
+                  groupValue: gender,
+                  onChanged: (value) {
+                    setState(() {
+                      gender = value;
+                    });
+                  },
+                ),
               ),
-              borderRadius: BorderRadius.circular(24),
-            ),
-            padding: const EdgeInsets.only(
-              right: 8,
-              top: 4,
-              left: 8,
-              bottom: 4,
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: RadioListTile<String>(
-                    title: Text(T.male.tr),
-                    value: 'M',
-                    groupValue: gender,
-                    onChanged: (value) {
-                      setState(() {
-                        gender = value;
-                      });
-                    },
-                  ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: RadioListTile<String>(
+                  title: Text(T.female.tr),
+                  value: 'F',
+                  groupValue: gender,
+                  onChanged: (value) {
+                    setState(() {
+                      gender = value;
+                    });
+                  },
                 ),
-                Expanded(
-                  child: RadioListTile<String>(
-                    title: Text(T.female.tr),
-                    value: 'F',
-                    groupValue: gender,
-                    onChanged: (value) {
-                      setState(() {
-                        gender = value;
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         },
         const SizedBox(height: 32),

@@ -138,7 +138,14 @@ await chat.join(forceJoin: true);
 
 참고로 화면에 ChatMessageListView 위젯이 표시되면, `ChatMessageListView::initState() -> ChatModel::resetNewMessage()`에서 RTDB `chat-joins/all`에 `{order: 0}`가 내부적으로 저장된다.
 
-그러나 더 간편하게 채팅방을 만들고 싶다면, 미리 제공된 `ChatService.instance.showChatRoomCreate()` 함수를 사용할 수 있습니다. 디자인을 사용자 정의하려면 DefaultChatRoomEditDialog을 복사하고 수정할 수 있습니다.
+그러나 더 간편하게 채팅방을 만들고 싶다면, 미리 제공된 `ChatService.instance.showChatRoomCreate()` 함수를 사용할 수 있다.  이 때, `authRequired` 옵션을 주면 본인 인증한 사용자만 입장을 할 수 있도록 제한 할 수 있다.
+
+채팅방 생성 UI 디자인을 사용자 정의하려면 DefaultChatRoomEditDialog을 복사하고 수정할 수 있다.
+
+
+
+
+
 
 ### 채팅방 입장
 
