@@ -2,9 +2,9 @@
 
 import * as functions from "firebase-functions";
 import * as express from "express";
-// import { initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app";
 import { getFirestore, doc, getDoc, DocumentSnapshot } from "firebase/firestore";
-import { AndroidCredential, LinkCredential } from "./link.interface";
+import { AndroidCredential, AppleCredential, LinkCredential } from "./link.interface";
 
 // Initialize Express app
 const app = express();
@@ -17,25 +17,25 @@ export const link = functions.https.onRequest(app);
  * @param docId
  */
 async function getDeeplinkDoc( docId: string ): Promise<DocumentSnapshot> {
-    // const firebaseApp = initializeApp(firebaseConfig);
-    // const db = getFirestore(firebaseApp);
-    const db = getFirestore();
+    const firebaseApp = initializeApp(firebaseConfig);
+    const db = getFirestore(firebaseApp);
+    // const db = getFirestore();
     const docRef = doc(db, "_deeplink_", docId);
     const docSnap = await getDoc(docRef);
     return docSnap;
 }
 
 app.get("/.well-known/apple-app-site-association", async (req, res) => {
-    const docSnaphot = await getDeeplinkDoc("apple");
+    const docSnaphot = await getDeeplinkDoc("apple_test");
     res.writeHead(200, { "Content-Type": "application/json" });
     if (docSnaphot.exists()) {
-        const snapshotData = docSnaphot.data();
-        const applinkDetails = Object.entries(snapshotData).map(([teamId, appBundelId]) => ({
-            appID: teamId + "." + appBundelId,
+        const snapshotData: AppleCredential = docSnaphot.data() as AppleCredential;
+        const applinkDetails = snapshotData.apps.map((teamIDAndAppIBundled) => ({
+            appID: teamIDAndAppIBundled,
             paths: ["*"],
         }));
-        const webCredentials = Object.entries(snapshotData).map(([teamId, appBundelId]) => (
-            teamId + "." + appBundelId
+        const webCredentials = snapshotData.apps.map((teamIDAndAppIBundled) => (
+            teamIDAndAppIBundled
         ));
         const appsSiteAssociation = {
             applinks: {
