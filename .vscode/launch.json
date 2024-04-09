@@ -293,6 +293,26 @@
       "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
+      "name": "Silvers (Chris) TEST - Emulator (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=test"]
+    },
+    {
+      "name": "Silvers (Chris) TEST - iPhone external sm (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "00008030-000D445A11A3802E",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=test"]
+    },
+    {
       "name": "Silvers (Chris) - External Sam (debug)",
       "request": "launch",
       "type": "dart",

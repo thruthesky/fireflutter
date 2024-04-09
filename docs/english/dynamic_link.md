@@ -53,6 +53,16 @@ Well known files (assetlinks.json and apple-app-site-association), are used to v
 
 The values can be saved in Firestore collection, "\_deeplink\_".
 
+Be reminded to add the proper rules to access the collection in Firestore.
+
+```rules
+match /_deeplink_/{deeplink} {
+    allow read: if true;
+}
+```
+
+That will depend on how you made the rules.
+
 ### Android assetlinks.json
 
 For android, save it under document "android" using the app bundle id (as field name) and the array of sha 256 (as value):
