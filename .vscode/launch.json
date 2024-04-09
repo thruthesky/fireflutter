@@ -263,6 +263,16 @@
       "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
+      "name": "Silvers (Chris) TEST - iPhone SE 17.4 (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "920A2E68-9FB9-47F5-9705-C023218D340B",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart",
+      "args": [ "--dart-define", "MODE=test"]
+    },
+    {
       "name": "Silvers (Chris) - iPhone 15 Pro Max (debug)",
       "request": "launch",
       "type": "dart",
@@ -290,7 +300,7 @@
       "flutterMode": "debug",
       "cwd": "apps/silvers",
       "program": "lib/main.dart",
-      "args": ["-v",]
+      // "args": ["-v",]
     },
     {
       "name": "Silvers (Chris) TEST - Emulator (debug)",

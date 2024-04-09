@@ -70,3 +70,7 @@ For apple, save it under document "apple" using the team ID (as field name) and 
 For example:
 
 FII23432J: com.com.appname
+
+## Applying the cloud function
+
+To apply the cloud function, go to firebase/functions folder and run `npm run deploy:link`.

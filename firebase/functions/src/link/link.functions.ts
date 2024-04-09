@@ -2,7 +2,7 @@
 
 import * as functions from "firebase-functions";
 import * as express from "express";
-// import { initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app";
 import { getFirestore, doc, getDoc, DocumentSnapshot } from "firebase/firestore";
 import { AndroidCredential, LinkCredential } from "./link.interface";
 
@@ -12,21 +12,32 @@ const app = express();
 export const link = functions.https.onRequest(app);
 
 
+// TODO ask how to not use this since we are having internal server error.
+const firebaseConfig = {
+    apiKey: "AIzaSyCnPH25HAoMhbIqqh-HpnhfemioGZJMRos",
+    authDomain: "withcenter-silvers.firebaseapp.com",
+    databaseURL: "https://withcenter-silvers-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "withcenter-silvers",
+    storageBucket: "withcenter-silvers.appspot.com",
+    messagingSenderId: "543108954889",
+    appId: "1:543108954889:web:4997ca2b9b7d89992cb1d8",
+    measurementId: "G-X55GDV9Z2T",
+  };
+
 /**
  * Returns the Document Snapshot
  * @param docId
  */
 async function getDeeplinkDoc( docId: string ): Promise<DocumentSnapshot> {
-    // const firebaseApp = initializeApp(firebaseConfig);
-    // const db = getFirestore(firebaseApp);
-    const db = getFirestore();
+    const firebaseApp = initializeApp(firebaseConfig);
+    const db = getFirestore(firebaseApp);
     const docRef = doc(db, "_deeplink_", docId);
     const docSnap = await getDoc(docRef);
     return docSnap;
 }
 
 app.get("/.well-known/apple-app-site-association", async (req, res) => {
-    const docSnaphot = await getDeeplinkDoc("apple");
+    const docSnaphot = await getDeeplinkDoc("apple_test");
     res.writeHead(200, { "Content-Type": "application/json" });
     if (docSnaphot.exists()) {
         const snapshotData = docSnaphot.data();
