@@ -59,6 +59,7 @@ UserService.instance.init(
 
 ### 사용자 정보 수정 페이지 초기화 예제
 
+
 `profileUpdateForm` 은  `UserService.instance.showProfileUpdateScreen()` 을 호출하면 dialog screen 이 나타나고 그 안에 표시될 회원 정보 양식을 지정 할 때 사용한다.
 기본적으로 `DefaultProfileUpdateForm` 위젯을 사용하며, 아래와 같이 커스터마이징을 할 수 있다.
 
@@ -101,10 +102,27 @@ UserService.instance.init(
 
 Fireflutter provides a few widgets to update user's profile information like below
 
-#### DefaultProfileUpdateForm
+#### DefaultProfileUpdateForm - 사용자 정보 수정 양식
 
-`DefaultProfileUpdateForm` provides with the options below
+회원 정보 수정을 할 때, `DefaultProfileUpdateForm` 을 통해서 쉽게 회원 정보를 수정 할 수 있다.
 
+기본적으로 제공하는 옵션은 아래와 같다.
+
+- `backgroundImage`
+- `birthday`
+- `occupation`
+- `stateMessage`
+- `gender`
+- `nationality`
+- `region`
+- `morePhotos`
+- `onUpdate`
+- `countryFilter`
+- `countrySearch`
+- `koreanAreaLanguageCode`
+- `countryPickerTheme`
+
+- background
 - state image (profile background image)
 - profile photo
 - name
