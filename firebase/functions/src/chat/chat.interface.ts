@@ -1,6 +1,6 @@
 /**
  * ChatCreateEvent
- * 
+ *
  * 채팅 메시지가 작성되었을 때 발생하는 이벤트 데이터
  */
 export interface ChatCreateEvent {
