@@ -289,8 +289,8 @@ export class MessagingService {
     //
     let uids: Array<string> = [];
     snapshot.forEach((child) => {
-      if (child.key != msg.uid && child.key !== null) {
-        uids.push(child.key);
+      if (child.key != msg.uid) {
+        uids.push(child.key ?? "");
       }
     });
     Config.log("-----> sendMessagesToChatRoomSubscribers uids:", uids);
