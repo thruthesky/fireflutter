@@ -37,6 +37,8 @@
 
 ### Chat Messages 구조
 
+- 채팅 메시지는 `/chat-messages/<room-id>/<id>` 에 저장된다.
+
 - `uid` 메시지 전송한 사용자의 uid
 - `createdAt` 메시지 전송한 시간
 - `order` 메시지 목록 순서

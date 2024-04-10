@@ -139,7 +139,9 @@ class ClubDetails extends StatelessWidget {
                   child: const Card(
                       child: Padding(
                     padding: EdgeInsets.all(32),
-                    child: Center(child: Text('최근 글이 없습니다.')),
+                    child: Center(
+                      child: Text('최근 글이 없습니다.'),
+                    ),
                   )),
                 ),
                 shrinkWrap: true,
