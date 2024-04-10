@@ -106,9 +106,27 @@ const defaultHtml = `<!DOCTYPE html>
     <meta name="twitter:description" content="Find out more about my app..." />
     <meta name="twitter:image" content="https://.../your-app-banner.jpg" />
     <link rel="apple-touch-icon" href="..." />
+    <style>
+      .centered {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        color: white;
+        font-size: x-large;
+        text-align: center;
+      }
+      body {
+        background-color: black;
+      }
+    </style>
   </head>
   <body>
-    Redirecting...
+    <div class="centered">Redirecting...
+    Request Value:
+    #{{req}}
+    </div>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/Detect.js/2.2.2/detect.min.js"
       rossorigin="anonymous"
@@ -116,14 +134,23 @@ const defaultHtml = `<!DOCTYPE html>
     ></script>
     <script>
       var result = detect.parse(navigator.userAgent);
+      var deepLinkUrl = "#{{deepLinkUrl}}";
+      var webUrl = "#{{webUrl}}";
+      var appStoreUrl = "#{{appStoreUrl}}";
+      var playStoreUrl = "#{{playStoreUrl}}";
+
       const stateTimer = setTimeout(function () {
-        if (result.os.family === "iOS") {
-          window.location.replace("#{{appStoreUrl}}");
-        } else if (result.os.family.includes("Android")) {
-          window.location.replace(
-            "#{{playStoreUrl}}"
-          );
+        if (result.os.family === "iOS" && appStoreUrl.length > 0) {
+          window.location.replace(appStoreUrl);
+        } else if (
+          result.os.family.includes("Android") &&
+          playStoreUrl.length > 0
+        ) {
+          window.location.replace(playStoreUrl);
         } else {
+          if (webUrl.length > 0) {
+            window.location.replace(webUrl);
+          }
         }
       }, 2000);
       window.addEventListener("visibiltychange", function () {
@@ -131,7 +158,9 @@ const defaultHtml = `<!DOCTYPE html>
         stateTimer = null;
         window.open("", "_self").close();
       });
-      location.href = "#{{deepLinkUrl}}";
+      if (deepLinkUrl.length > 0) {
+        location.href = deepLinkUrl;
+      }
     </script>
   </body>
 </html>`;
@@ -140,11 +169,19 @@ app.get("*", async (req, res) => {
     const docSnaphot = await getDeeplinkDoc("html");
     if (docSnaphot.exists()) {
         const htmlSnapshot = docSnaphot.data() as HtmlDeepLink;
-
-       let htmlSource = defaultHtml;
-
+       let htmlSource = htmlSnapshot.html ?? defaultHtml;
+        // appStoreUrl
+        htmlSource = htmlSource.replaceAll("#{{appStoreUrl}}", htmlSnapshot.appStoreUrl ?? "");
+        // playStoreUrl
+        htmlSource = htmlSource.replaceAll("#{{playStoreUrl}}", htmlSnapshot.playStoreUrl ?? "");
+        // webUrl
+        htmlSource = htmlSource.replaceAll("#{{webUrl}}", htmlSnapshot.webUrl ?? "");
+        // deepLinkUrl
+        htmlSource = htmlSource.replaceAll("#{{deepLinkUrl}}", htmlSnapshot.webUrl ?? "");
+        // Viewing the request value. For testing only
+        htmlSource = htmlSource.replaceAll("#{{req}}", req.toString() ?? "");
         // Return the webpage
-        return res.send(source);
+        return res.send(htmlSource);
     }
     // Return the webpage
     return res.send("Page not found!");
