@@ -170,7 +170,10 @@ class _BirthdayPickerState extends State<BirthdayPickerDialog> {
         value: i,
         child: Padding(
           padding: const EdgeInsets.only(left: 16),
-          child: Text('$i'),
+          child: Text(
+            '$i',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
         ),
       );
 }
