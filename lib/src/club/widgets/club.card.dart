@@ -31,7 +31,7 @@ class ClubCard extends StatelessWidget {
                 CachedNetworkImage(
                   imageUrl: club.photoUrl!,
                   width: double.infinity,
-                  height: 200,
+                  height: 240,
                   fit: BoxFit.cover,
                 ),
 
