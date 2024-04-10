@@ -205,11 +205,23 @@ class StorageService {
   ///
   /// Logic
   /// 1. Upload
-  /// 2. Svae url at the path
-  /// 3. Delete if there is an old url
+  /// 2. Save url at the path
+  /// 3. Delete the previously existing image (if there is an old url in the path)
   ///
   /// [path] is the node to save the url.
   ///
+  /// example:
+  /// ```dart
+  /// final url = await StorageService.instance.uploadAt(
+  ///   context: context,
+  ///   path: "${User.node}/${user.uid}/${Field.photoUrl}",
+  ///   progress: (p) => setState(() => progress = p),
+  ///   complete: () => setState(() => progress = null),
+  /// );
+  /// if (url != null) {
+  ///   await my!.update(photoUrl: url);
+  /// }
+  /// ```
   Future<String?> uploadAt({
     required BuildContext context,
     required String path,

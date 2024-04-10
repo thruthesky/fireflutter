@@ -66,7 +66,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
                           children: [
                             Icon(Icons.edit),
                             SizedBox(width: 8),
-                            Text('소개 화면 수정'),
+                            Text('모임 정보 수정'),
                           ],
                         ),
                       ),

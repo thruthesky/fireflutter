@@ -80,6 +80,7 @@ export 'src/database/widgets/database.count.dart';
 export 'src/database/widgets/value.dart';
 
 export 'src/extensions/color.extension.dart';
+export 'src/extensions/datetime.extension.dart';
 export 'src/extensions/int.extension.dart';
 export 'src/extensions/string.extension.dart';
 

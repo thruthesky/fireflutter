@@ -25,9 +25,7 @@ class UserBackgroundImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final v = initialData ??
-        user?.profileBackgroundImageUrl
-            .or('https://picsum.photos/id/171/400/900');
+    final v = initialData ?? user?.profileBackgroundImageUrl.or(blackUrl);
 
     return sync
         ? UserDoc.fieldSync(
@@ -45,7 +43,7 @@ class UserBackgroundImage extends StatelessWidget {
   }
 
   Widget builder(url) => CachedNetworkImage(
-        imageUrl: url ?? initialData ?? 'https://picsum.photos/id/171/400/900',
+        imageUrl: url ?? initialData ?? blackUrl,
         fit: BoxFit.cover,
       );
 
