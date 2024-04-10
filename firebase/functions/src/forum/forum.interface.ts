@@ -1,3 +1,9 @@
+
+
+/**
+ * RTDB 에 글 쓰기 이벤트가 발생하면, (posts/categoriy/id 에 글이 작성되면) onValueCreate 클라우드 함수에서
+ * 전달되는 값을 표현한 interface 이다.
+ */
 export interface PostCreateEvent {
     uid: string;
     title?: string;
@@ -7,6 +13,8 @@ export interface PostCreateEvent {
     order: number;
     deleted?: boolean;
 }
+
+
 
 export interface PostSummary {
     uid: string;

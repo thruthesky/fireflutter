@@ -3,7 +3,7 @@ import { onValueCreated, onValueWritten } from "firebase-functions/v2/database";
 import { PostService } from "./post.service";
 import { Config } from "../config";
 import { PostCreateEvent } from "./forum.interface";
-import { PostCreateMessage } from "../messaging/messaging.interface";
+import { PostCreateEventMessage } from "../messaging/messaging.interface";
 import { MessagingService } from "../messaging/messaging.service";
 import { isCreate, isDelete, isUpdate } from "../library";
 
@@ -43,7 +43,7 @@ export const sendMessagesToCategorySubscribers = onValueCreated(
         // Grab the current value of what was written to the Realtime Database.
         const data = event.data.val() as PostCreateEvent;
 
-        const post: PostCreateMessage = {
+        const post: PostCreateEventMessage = {
             id: event.params.id,
             category: event.params.category,
             title: data.title ?? "",
