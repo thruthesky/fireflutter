@@ -4,10 +4,25 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class DefaultPublicProfileScreen extends StatelessWidget {
-  const DefaultPublicProfileScreen({super.key, this.uid, this.user});
+  const DefaultPublicProfileScreen({
+    super.key,
+    this.uid,
+    this.user,
+    this.chatButton = true,
+    this.likeButton = true,
+    this.bookmarkButton = true,
+    this.reportButton = true,
+    this.blockButton = true,
+  });
 
   final String? uid;
   final User? user;
+
+  final bool chatButton;
+  final bool likeButton;
+  final bool bookmarkButton;
+  final bool reportButton;
+  final bool blockButton;
 
   String get userUid => uid ?? user!.uid;
 
@@ -37,13 +52,32 @@ class DefaultPublicProfileScreen extends StatelessWidget {
             ),
             actions: [
               if (userUid == myUid)
-                IconButton(
-                  icon: const Icon(
-                    Icons.settings_outlined,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => UserService.instance
-                      .showProfileUpdateScreen(context: context),
+                PopupMenuButton(
+                  icon: const Icon(Icons.settings, color: Colors.white),
+                  itemBuilder: (context) {
+                    return [
+                      const PopupMenuItem(
+                        value: 'edit',
+                        child: Text('프로필 수정'),
+                      ),
+                      const PopupMenuItem(
+                        value: 'backgroundImage',
+                        child: Text('백그라운드 사진 수정'),
+                      ),
+                    ];
+                  },
+                  onSelected: (value) {
+                    if (value == 'edit') {
+                      UserService.instance
+                          .showProfileUpdateScreen(context: context);
+                    } else if (value == 'backgroundImage') {
+                      StorageService.instance.uploadAt(
+                        context: context,
+                        path:
+                            "${User.node}/$userUid/${Field.profileBackgroundImageUrl}",
+                      );
+                    }
+                  },
                 ),
               const SizedBox(width: 8),
             ],
@@ -70,12 +104,14 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 24),
                     child: Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
                       children: [
-                        ChatButton(uid: uid),
-                        LikeButton(uid: userUid, user: user),
-                        BookmarkButton(uid: userUid),
-                        ReportButton(uid: userUid),
-                        BlockButton(uid: userUid),
+                        if (chatButton) ChatButton(uid: uid),
+                        if (likeButton) LikeButton(uid: userUid, user: user),
+                        if (bookmarkButton) BookmarkButton(uid: userUid),
+                        if (reportButton) ReportButton(uid: userUid),
+                        if (blockButton) BlockButton(uid: userUid),
                       ],
                     ),
                   ),
