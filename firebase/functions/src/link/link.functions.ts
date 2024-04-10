@@ -2,7 +2,7 @@
 
 import * as functions from "firebase-functions";
 import * as express from "express";
-import { initializeApp } from "firebase/app";
+// import { initializeApp } from "firebase/app";
 import { getFirestore, doc, getDoc, DocumentSnapshot } from "firebase/firestore";
 import { AndroidCredential, AppleCredential, HtmlDeepLink } from "./link.interface";
 
@@ -11,15 +11,14 @@ const app = express();
 // Set up Firebase Cloud Function
 export const link = functions.https.onRequest(app);
 
-
 /**
  * Returns the Document Snapshot
  * @param docId
  */
 async function getDeeplinkDoc( docId: string ): Promise<DocumentSnapshot> {
-    const firebaseApp = initializeApp(firebaseConfig);
-    const db = getFirestore(firebaseApp);
-    // const db = getFirestore();
+    // const firebaseApp = initializeApp(firebaseConfig);
+    // const db = getFirestore(firebaseApp);
+    const db = getFirestore();
     const docRef = doc(db, "_deeplink_", docId);
     const docSnap = await getDoc(docRef);
     return docSnap;
@@ -33,12 +32,14 @@ app.get("/.well-known/apple-app-site-association", async (req, res) => {
         const applinkDetails = snapshotData.apps.map((teamIDAndAppIBundled) => ({
             appID: teamIDAndAppIBundled,
             paths: ["*"],
+            // appIDs: [teamIDAndAppIBundled],
         }));
         const webCredentials = snapshotData.apps.map((teamIDAndAppIBundled) => (
             teamIDAndAppIBundled
         ));
         const appsSiteAssociation = {
             applinks: {
+                // apps: [],
                 details: applinkDetails,
             },
             webCredentials: {
@@ -94,7 +95,7 @@ const defaultHtml = `<!DOCTYPE html>
     <title>Silvers</title>
     <meta name="description" content="Find out more about my app..." />
 
-    <meta property="og:title" content="“Silvers”" />
+    <meta property="og:title" content="Silvers" />
     <meta property="og:description" content="Find out more about my app..." />
     <meta property="og:image" content="https://.../your-app-banner.jpg" />
     <meta property="og:type" content="website" />
@@ -123,9 +124,8 @@ const defaultHtml = `<!DOCTYPE html>
     </style>
   </head>
   <body>
-    <div class="centered">Redirecting...
-    Request Value:
-    #{{req}}
+    <div class="centered">
+      Redirecting...
     </div>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/Detect.js/2.2.2/detect.min.js"
@@ -177,9 +177,9 @@ app.get("*", async (req, res) => {
         // webUrl
         htmlSource = htmlSource.replaceAll("#{{webUrl}}", htmlSnapshot.webUrl ?? "");
         // deepLinkUrl
-        htmlSource = htmlSource.replaceAll("#{{deepLinkUrl}}", htmlSnapshot.webUrl ?? "");
-        // Viewing the request value. For testing only
-        htmlSource = htmlSource.replaceAll("#{{req}}", req.toString() ?? "");
+        if ((htmlSnapshot.urlScheme?.length ?? 0) > 0) {
+          htmlSource = htmlSource.replaceAll("#{{deepLinkUrl}}", htmlSnapshot.urlScheme + ":/" + req.url);
+        }
         // Return the webpage
         return res.send(htmlSource);
     }

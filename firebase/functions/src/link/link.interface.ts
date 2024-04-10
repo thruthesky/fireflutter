@@ -15,6 +15,6 @@ export interface HtmlDeepLink {
     appStoreUrl?: string;
     playStoreUrl?: string;
     webUrl?: string;
-    deepLinkUrl?: string;
+    urlScheme?: string;
     // TODO title, content, image
 }
