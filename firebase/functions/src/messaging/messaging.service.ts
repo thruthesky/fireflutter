@@ -289,8 +289,9 @@ export class MessagingService {
     //
     let uids: Array<string> = [];
     snapshot.forEach((child) => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      uids.push(child.key!);
+      if (child.key != msg.uid && child.key !== null) {
+        uids.push(child.key);
+      }
     });
     Config.log("-----> sendMessagesToChatRoomSubscribers uids:", uids);
 
