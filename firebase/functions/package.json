@@ -13,6 +13,7 @@
     "deploy": "eslint --fix --ext .js,.ts . && firebase deploy --only functions",
     "deploy:sendPushNotifications": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:sendPushNotifications",
     "deploy:sendMessagesToCategorySubscribers": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:sendMessagesToCategorySubscribers",
+    "deploy:sendMessagesToChatRoomSubscribers": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:sendMessagesToChatRoomSubscribers",
     "deploy:message": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:sendPushNotifications,functions:sendMessagesToCategorySubscribers,functions:sendMessagesToChatRoomSubscribers",
     "deploy:forumFunction": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:managePostsSummary",
     "deploy:typesense": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:typesenseUserIndexing,functions:typesenseCommentIndexing,functions:typesensePostIndexing",

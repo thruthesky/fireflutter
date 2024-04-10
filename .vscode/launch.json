@@ -270,7 +270,7 @@
       "flutterMode": "debug",
       "cwd": "apps/silvers",
       "program": "lib/main.dart",
-      "args": ["-v",]
+      "args": ["-v"]
     },
     {
       "name": "Silvers (Chris) TEST - iPhone 15 Pro (debug)",
@@ -289,8 +289,18 @@
       "deviceId": "R9ATA00LMJM",
       "flutterMode": "debug",
       "cwd": "apps/silvers",
-      "program": "lib/main.dart",
-      "args": ["-v",]
+      "program": "lib/main.dart"
+      // "args": ["-v",]
+    },
+    {
+      "name": "Silvers (Chris) - External sm (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "00008030-000D445A11A3802E",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart"
+      // "args": ["-v",]
     },
     {
       "name": "Silvers (Chris) TEST - Emulator (debug)",
@@ -310,7 +320,7 @@
       "flutterMode": "debug",
       "cwd": "apps/wemeet",
       "program": "lib/main.dart",
-      "args": ["-v",]
+      "args": ["-v"]
     },
     {
       "name": "Wemeet (Chris) TEST - iPhone 15 Pro Max 17.4 (debug)",
@@ -320,7 +330,17 @@
       "flutterMode": "debug",
       "cwd": "apps/wemeet",
       "program": "lib/main.dart",
-      "args": ["-v",]
+      "args": ["-v"]
+    },
+    {
+      "name": "Wemeet (Chris) TEST - iPhone 15 SE 17.4 (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "920A2E68-9FB9-47F5-9705-C023218D340B",
+      "flutterMode": "debug",
+      "cwd": "apps/wemeet",
+      "program": "lib/main.dart"
+      // "args": ["-v",]
     },
     {
       "name": "Wemeet (Chris) TEST - External sm iPhone (debug)",
@@ -329,8 +349,8 @@
       "deviceId": "00008030-000D445A11A3802E",
       "flutterMode": "debug",
       "cwd": "apps/wemeet",
-      "program": "lib/main.dart",
-      "args": ["-v",]
+      "program": "lib/main.dart"
+      // "args": ["-v",]
     },
     {
       "name": "Wemeet (Chris) TEST - External Sam (debug)",
@@ -340,7 +360,17 @@
       "flutterMode": "debug",
       "cwd": "apps/wemeet",
       "program": "lib/main.dart",
-      "args": ["-v",]
+      "args": ["-v"]
+    },
+    {
+      "name": "Wemeet (Chris) TEST - SM T295 (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "ROWM705A3NJ",
+      "flutterMode": "debug",
+      "cwd": "apps/wemeet",
+      "program": "lib/main.dart"
+      // "args": ["-v",]
     },
     {
       "name": "Roha (Noe) TEST - iPhone 15 Pro Max (debug)",
@@ -393,14 +423,14 @@
       "args": ["--dart-define", "MODE=dev"]
     },
     {
-    "name": "Roha (Noe) TEST - SM T295",
-    "request": "launch",
-    "type": "dart",
-    "deviceId": "ROWM705A3NJ",
-    "flutterMode": "debug",
-    "cwd": "apps/roha",
-    "program": "lib/main.dart",
-    "args": ["--dart-define", "MODE=dev"]
+      "name": "Roha (Noe) TEST - SM T295",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "ROWM705A3NJ",
+      "flutterMode": "debug",
+      "cwd": "apps/roha",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=dev"]
     },
     {
       "name": "Wemeet (Noe) TEST - iPhone 15 Pro (debug)",
@@ -409,16 +439,17 @@
       "deviceId": "iPhone 15 Pro",
       "flutterMode": "debug",
       "cwd": "apps/roha",
-      "program": "lib/main.dart",
+      "program": "lib/main.dart"
       // "args": ["-v", "--dart-define", "MODE=test"]
-    },{
+    },
+    {
       "name": "Wemeet (Noe) TEST - Pixel 3 API 30 (debug)",
       "request": "launch",
       "type": "dart",
       "deviceId": "emulator-5554",
       "flutterMode": "debug",
       "cwd": "apps/roha",
-      "program": "lib/main.dart",
+      "program": "lib/main.dart"
       // "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
@@ -428,7 +459,7 @@
       "deviceId": "iPad Air (5th generation)",
       "flutterMode": "debug",
       "cwd": "apps/roha",
-      "program": "lib/main.dart",
+      "program": "lib/main.dart"
       // "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
@@ -438,7 +469,7 @@
       "deviceId": "SM J737S",
       "flutterMode": "debug",
       "cwd": "apps/roha",
-      "program": "lib/main.dart",
+      "program": "lib/main.dart"
       // "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
@@ -459,7 +490,7 @@
       "deviceId": "iPhone 15 Pro Max",
       "flutterMode": "debug",
       "cwd": "apps/silvers",
-      "program": "lib/main.dart",
+      "program": "lib/main.dart"
       // "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
@@ -469,7 +500,7 @@
       "deviceId": "iPhone 15 Pro Max",
       "flutterMode": "debug",
       "cwd": "apps/social_kit/example",
-      "program": "lib/main.dart",
+      "program": "lib/main.dart"
       // "args": ["-v", "--dart-define", "MODE=test"]
     }
   ]
