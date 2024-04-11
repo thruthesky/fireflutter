@@ -599,3 +599,62 @@ ElevatedButton(
   child: Text('회원 탈퇴'),
 ),
 ```
+
+
+## 로그인
+
+로그인을 하지 않고도 앱을 쓸 수 있도록 한다면, 특정 기능에서 에러가 발생 할 수 있다. 예를 들면, 로그인을 하지 않고 채팅방에 입장, 글 쓰기 등을 하는 경우라 할 수 있다. 이 외에도 코멘트 쓰기, 좋아요 등 여러가지 기능이 있다.
+
+이 처럼 로그인을 해야지만 쓸 수 있는 기능의 경우, 대부분 해당 서비스(예: UserService, ChatSerivce, ForumService 등)에서 팝업이나 생 창을 띄우기 전에 로그인을 했는지 검사를 한다. 로그인을 했으면 문제가 없겠지만, 로그인을 하지 않았다면, `UserService.instance.init(loginRequired: ...)` 콜백 함수를 실행한다. 만약, `UserService.instance.init(loginRequired: ...)` 함수가 정의되지 않았다면 `UserService.instnace.loginRequired!()` 와 같이 호출하는 과정에서, `null check operator used on null value` 와 같은 에러가 발생 할 수 있다. 따라서 로그인을 하지 않고, 앱의 사용 할 수 있게 한다면 반드시 `loginRequired` 설정을 해 주어야 한다.
+
+`action` 은 채팅방 입장, 채팅방 메세지 전송, 글 쓰기, 코멘트 쓰기 등의 행동 분류를 나타내며, `data` 는 각 행동에 따른 각종 옵션이 전달된다.
+
+
+예제 - 로그인을 하지 않고 채팅방에 입장하려 하는 경우,
+
+```dart
+UserService.instance.init(
+  loginRequired: ({
+    required BuildContext context,
+    required String action,
+    Map? data,
+  }) async {
+    if (action == 'showChatRoomScreen') { // 채팅방 입장이면,
+      final re = await confirm( // 로그인 할 것인 물어보고,
+        context: context,
+        title: '로그인',
+        message: '로그인을 하셔야 채팅을 할 수 있습니다.',
+      );
+      if (re == true && context.mounted) { // 로그인 한다면,
+        final login = await showGeneralDialog( // 로그인 창을 띄우고,
+          context: context,
+          pageBuilder: ($, $$, $$$) => const PhoneNumberLoginScreen(),
+        );
+        if (login == true) { // 로그인 성공 했다면,
+          if (context.mounted) {
+            ChatService.instance.showChatRoomScreen( // 채팅창을 띄운다.
+              context: context,
+              uid: data?['uid'] as String?,
+              roomId: data?['roomId'] as String?,
+              room: data?['room'] as ChatRoom?,
+            );
+          }
+        }
+      }
+    } else {
+      // 이 부분을 꼭 해 주도록 한다. 그래서 혹시라도 action 이 설정되지 않으면 기본적으로 이곳에서 모든 처리를 하도록 한다.
+      alert(
+        context: context,
+        title: T.loginRequredTitle.tr,
+        message: T.loginRequredMessage.tr,
+      );
+    }
+  },
+)
+```
+
+
+
+
+
+

@@ -144,11 +144,6 @@ class _ChatRoomState extends State<ChatRoomBody> {
 
   @override
   Widget build(BuildContext context) {
-    /// 로그인을 하지 않았으면, 로그인 요청 위젯 표시
-    if (notLoggedIn) {
-      return const DefaultLoginFirstScreen();
-    }
-
     return Column(
       children: [
         // 앱바 - 타이틀바

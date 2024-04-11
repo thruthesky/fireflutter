@@ -61,6 +61,13 @@ class UserService {
   /// if you don't use the resign function or any callable functions.
   String? callableFunctionRegion;
 
+  /// 로그인을 하지 않고 로그인이 필요한 action 을 한 경우, 이 콜백 함수를 정의해서 에러 핸들링을 할 수 있다.
+  Function({
+    required BuildContext context,
+    required String action,
+    Map<String, dynamic>? data,
+  })? loginRequired;
+
   UserService._() {
     // dog('--> UserService._()');
   }
@@ -69,6 +76,11 @@ class UserService {
     String? callableFunctionRegion,
     bool enablePushNotificationOnPublicProfileView = false,
     bool enableNotificationOnLike = false,
+    Function({
+      required BuildContext context,
+      required String action,
+      Map<String, dynamic>? data,
+    })? loginRequired,
     Function(User user)? onSignout,
     void Function(User user, bool isLiked)? onLike,
     UserCustomize? customize,
@@ -78,6 +90,7 @@ class UserService {
     // dog('--> UserService.init()');
 
     this.callableFunctionRegion = callableFunctionRegion;
+    this.loginRequired = loginRequired;
 
     initUser();
     listenUser();
@@ -243,12 +256,13 @@ class UserService {
     assert(uid != null || user != null,
         'Either uid or user must be provided to show public profile screen');
 
+    /// 사용자 데이터를 읽음. 단, user 에는 값이 들어가 있지 않을 수 있다. (회원 탈퇴하여 DB 에 값이 없는 경우)
     user ??= await User.get(uid!);
 
     /// Check if it hits limit except the user is admin or the user views his own profile.
-    if (isAdmin == false && user!.uid != my?.uid) {
+    if (loggedIn && isAdmin == false && user?.uid != my?.uid) {
       if (await ActionLogService.instance.userProfileView.isOverLimit(
-        uid: user.uid,
+        uid: user!.uid,
       )) return;
     }
 
@@ -261,8 +275,10 @@ class UserService {
       );
     }
 
-    _userProfileViewLogs(user!.uid);
-    _sendPushNotificationOnProfileView(user);
+    if (loggedIn) {
+      _userProfileViewLogs(user!.uid);
+      _sendPushNotificationOnProfileView(user);
+    }
   }
 
   /// Push notification on profile view
@@ -304,12 +320,24 @@ class UserService {
   }
 
   /// Resign the user and delete database
+  ///
+  /// 회원 탈퇴를 할 때, 회원 정보 뿐만아니라, 설정, 사진 목록도 삭제를 해야 한다.
   Future<void> resign() async {
     if (callableFunctionRegion == null) {
       throw FireFlutterException(
           'callable-functino-region', 'callableFunctionRegion is not set');
     }
-    await myRef.remove();
+
+    /// 회원 탈퇴하기 전에 먼저, RTDB 의 사용자 정보 삭제
+    ///
+    /// 에러가 있어도 진행한다.
+    try {
+      await my?.photoRef.remove();
+      await myRef.remove();
+      await mySettingsRef.remove();
+    } catch (e) {
+      dog('UserService.resign() error: $e');
+    }
     try {
       final result =
           await FirebaseFunctions.instanceFor(region: callableFunctionRegion)

@@ -450,19 +450,25 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
       );
       signinSuccess();
     } finally {
-      setState(() => progressVerifyPhoneNumber = false);
+      if (context.mounted) {
+        setState(() => progressVerifyPhoneNumber = false);
+      }
     }
   }
 
   doReviewPhoneNumberLogin() async {
-    setState(() => progressVerifyPhoneNumber = true);
+    if (context.mounted) {
+      setState(() => progressVerifyPhoneNumber = true);
+    }
     return doReviewLogin();
   }
 
   doReviewRealPhoneNumberLogin() {
-    setState(() {
-      showSmsCodeInput = true;
-      progressVerifyPhoneNumber = false;
-    });
+    if (context.mounted) {
+      setState(() {
+        showSmsCodeInput = true;
+        progressVerifyPhoneNumber = false;
+      });
+    }
   }
 }

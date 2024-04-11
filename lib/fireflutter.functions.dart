@@ -6,9 +6,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+/// Login check based on Firebase current user
+///
 bool get loggedIn => fb.FirebaseAuth.instance.currentUser != null;
 bool get notLoggedIn => fb.FirebaseAuth.instance.currentUser == null;
 String? get myUid => fb.FirebaseAuth.instance.currentUser?.uid;
+
+///
 bool get isAdmin => UserService.instance.user?.isAdmin ?? false;
 
 /// Firebase current user
