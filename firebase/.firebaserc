@@ -3,7 +3,8 @@
     "philgo": "philgo",
     "test3": "withcenter-test-3",
     "silvers": "withcenter-silvers",
-    "wemeet": "withcenter-meetup-3"
+    "wemeet": "withcenter-meetup-3",
+    "default": "withcenter-test-2"
   },
   "targets": {},
   "etags": {}

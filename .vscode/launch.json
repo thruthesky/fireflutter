@@ -96,6 +96,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "Silvers - Galaxy - A45",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "R9ATA00LMJM",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Momcafe - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
@@ -263,6 +272,16 @@
       "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
+      "name": "Silvers (Chris) TEST - iPhone SE 17.4 (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "920A2E68-9FB9-47F5-9705-C023218D340B",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=test"]
+    },
+    {
       "name": "Silvers (Chris) - iPhone 15 Pro Max (debug)",
       "request": "launch",
       "type": "dart",
@@ -283,20 +302,30 @@
       "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
+      "name": "Silvers (Chris) TEST - Emulator (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=test"]
+    },
+    {
+      "name": "Silvers (Chris) TEST - iPhone external sm (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "00008030-000D445A11A3802E",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=test"]
+    },
+    {
       "name": "Silvers (Chris) - External Sam (debug)",
       "request": "launch",
       "type": "dart",
       "deviceId": "R9ATA00LMJM",
-      "flutterMode": "debug",
-      "cwd": "apps/silvers",
-      "program": "lib/main.dart"
-      // "args": ["-v",]
-    },
-    {
-      "name": "Silvers (Chris) - External sm (debug)",
-      "request": "launch",
-      "type": "dart",
-      "deviceId": "00008030-000D445A11A3802E",
       "flutterMode": "debug",
       "cwd": "apps/silvers",
       "program": "lib/main.dart"
