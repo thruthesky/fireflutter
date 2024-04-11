@@ -92,6 +92,8 @@ class User {
 
   int noOfLikes;
 
+  /// TODO @withcenter-dev2change this to countryCode
+  @Deprecated('Change this to countryCode')
   String nationality;
 
   String siDo;

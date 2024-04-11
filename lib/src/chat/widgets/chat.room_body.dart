@@ -138,7 +138,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
   @override
   void dispose() {
     /// 실시간 업데이트 subscription 해제
-    chat.unsubscribeRoomUpdate();
+    _chat?.unsubscribeRoomUpdate();
     super.dispose();
   }
 

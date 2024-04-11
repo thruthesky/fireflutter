@@ -27,6 +27,9 @@ class UserService {
 
   BehaviorSubject<User?> myDataChanges = BehaviorSubject<User?>.seeded(null);
 
+  /// Alias of [myDataChanges]
+  BehaviorSubject<User?> get changes => myDataChanges;
+
   StreamSubscription? userNodeSubscription;
 
   UserCustomize customize = UserCustomize();
