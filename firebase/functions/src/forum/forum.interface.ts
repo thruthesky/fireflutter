@@ -15,7 +15,6 @@ export interface PostCreateEvent {
 }
 
 
-
 export interface PostSummary {
     uid: string;
     title?: string;

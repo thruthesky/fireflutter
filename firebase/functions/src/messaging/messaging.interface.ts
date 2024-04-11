@@ -46,7 +46,7 @@ export type SendTokenMessage = SendEachMessage
 
 
 /**
- * PostCreateEvent 에서 push notification 을 보내기 위한 데이터 타입이다. 
+ * PostCreateEvent 에서 push notification 을 보내기 위한 데이터 타입이다.
  */
 export interface PostCreateEventMessage {
     id: string;

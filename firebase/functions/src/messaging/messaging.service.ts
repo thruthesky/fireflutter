@@ -289,6 +289,7 @@ export class MessagingService {
     //
     let uids: Array<string> = [];
     snapshot.forEach((child) => {
+      // Don't send the message to myself.
       if (child.key != msg.uid) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         uids.push(child.key!);

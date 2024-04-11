@@ -69,6 +69,7 @@ class _BirthdayPickerState extends State<BirthdayPickerDialog> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Expanded(
+                flex: 7,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -92,6 +93,7 @@ class _BirthdayPickerState extends State<BirthdayPickerDialog> {
               ),
               const SizedBox(width: 8.4),
               Expanded(
+                flex: 4,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -118,6 +120,7 @@ class _BirthdayPickerState extends State<BirthdayPickerDialog> {
               ),
               const SizedBox(width: 8.4),
               Expanded(
+                flex: 5,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

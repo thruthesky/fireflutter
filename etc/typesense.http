@@ -1,0 +1,8 @@
+@scheme=http
+@serverUrl=178.128.124.178:8108
+@apiKey=12345a
+
+
+# 시스템 상태 확인하기
+###
+{{scheme}}://{{serverUrl}}/health
