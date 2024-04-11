@@ -15,7 +15,7 @@ class DefaultChatRoomListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MyDocReady(
+    return DocReady(
       builder: (my) => FirebaseDatabaseQueryBuilder(
         query: ChatService.instance.joinsRef
             .child(myUid!)
