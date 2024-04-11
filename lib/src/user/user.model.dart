@@ -12,6 +12,8 @@ class User {
 
   /// data paths
   static const String userProfilePhotos = 'user-profile-photos';
+  static const String userLocations = 'user-locations';
+
   static const String whoLikeMe = 'who-like-me';
   static const String whoILike = 'who-i-like';
   static const String mutualLike = 'mutual-like';
@@ -29,6 +31,7 @@ class User {
   static DatabaseReference userRef(String uid) => usersRef.child(uid);
   static DatabaseReference userProfilePhotosRef =
       rootRef.child('profile-photos');
+
   static DatabaseReference whoILikeRef = rootRef.child(whoILike);
   static DatabaseReference whoLikeMeRef = rootRef.child(whoLikeMe);
   static DatabaseReference mutualLikeRef = rootRef.child(mutualLike);
@@ -156,6 +159,9 @@ class User {
   /// See README.md
   DatabaseReference get photoRef =>
       FirebaseDatabase.instance.ref('user-profile-photos').child(uid);
+
+  DatabaseReference get userLocationsRef =>
+      rootRef.child(userLocations).child(ff.myUid!);
 
   String get birth => '$birthYear-$birthMonth-$birthDay';
 
@@ -538,8 +544,34 @@ class User {
           displayName: displayName, photoUrl: photoUrl);
     }
 
+    // to review ->
+    // checking the if the latitude and longitude is not null during the update
+    // if the latitude and longitude is not null during the update and call the
+    // _updateUserProfilePhotos method to update the lat-lon-string
+    if (latitude != null && longitude != null) {
+      await _updateUserLocations(
+        latitude: latitude,
+        longitude: longitude,
+      );
+    }
+
     ff.UserService.instance.onUpdate?.call(this);
     return this;
+  }
+
+  // to review ->
+  // this is ganna update the user the database where user location
+  // is stored. user-locations/uid/lat-long-string/
+  // adding subtring to trim the length of each point to 9 bit long a total of 19 bytes
+  // to be stored in the database.
+  Future<void> _updateUserLocations({
+    double? latitude,
+    double? longitude,
+  }) async {
+    await userLocationsRef.update({
+      "lat-lon-string":
+          "${latitude.toString().substring(0, 9)}-${longitude.toString().substring(0, 9)}"
+    });
   }
 
   /// 사진 순서로 목록하기 위한 정보
