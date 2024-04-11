@@ -27,8 +27,6 @@ class FirestoreUserModel {
   int idUploadedAt;
   int createdAt;
   String occupation;
-  @Deprecated('Use countryCode instead')
-  String nationality;
 
   /// The countryCode will be the basis of the
   /// Nationality of the user.
@@ -83,8 +81,6 @@ class FirestoreUserModel {
     required this.idUrl,
     required this.idUploadedAt,
     required this.occupation,
-    // TODO deprecate nationality
-    required this.nationality,
     required this.countryCode,
     required this.siDo,
     required this.siGunGu,
@@ -140,8 +136,6 @@ class FirestoreUserModel {
       idUrl: json[Field.idUrl] ?? '',
       idUploadedAt: json[Field.idUploadedAt] ?? 0,
       occupation: json[Field.occupation] ?? '',
-      // TODO delete nationality
-      nationality: json['nationality'] ?? '',
       countryCode: json['countryCode'] ?? '',
       siDo: json['siDo'] ?? '',
       siGunGu: json['siGunGu'] ?? '',
