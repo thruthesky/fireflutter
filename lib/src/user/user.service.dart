@@ -154,6 +154,7 @@ class UserService {
       // dog('--> UserService.listenUser() fb.FirebaseAuth.instance.authStateChanges()');
       if (user == null) {
         this.user = null;
+        myDataChanges.add(this.user);
         return;
       }
       userNodeSubscription?.cancel();

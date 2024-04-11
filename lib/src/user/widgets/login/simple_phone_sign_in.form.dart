@@ -449,7 +449,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
         displayName: '',
       );
       signinSuccess();
-    } finally {
+    } catch (e) {
       if (context.mounted) {
         setState(() => progressVerifyPhoneNumber = false);
       }
