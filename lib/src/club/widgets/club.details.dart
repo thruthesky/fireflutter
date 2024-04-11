@@ -130,23 +130,22 @@ class ClubDetails extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const Text('최근글'),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: PostLatestListView(
-                  separatorBuilder: (p0, p1) => const SizedBox(height: 8),
-                  category: club.id,
-                  emptyBuilder: () => Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    child: const Card(
-                        child: Padding(
-                      padding: EdgeInsets.all(32),
-                      child: Center(child: Text('최근 글이 없습니다.')),
-                    )),
-                  ),
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
+              PostLatestListView(
+                separatorBuilder: (p0, p1) => const SizedBox(height: 8),
+                category: club.id,
+                emptyBuilder: () => Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  child: const Card(
+                      child: Padding(
+                    padding: EdgeInsets.all(32),
+                    child: Center(
+                      child: Text('최근 글이 없습니다.'),
+                    ),
+                  )),
                 ),
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
               ),
             ],
           ),

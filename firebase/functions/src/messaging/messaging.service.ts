@@ -1,6 +1,6 @@
 import { SendResponse, getMessaging } from "firebase-admin/messaging";
 import { getDatabase } from "firebase-admin/database";
-import { MessageNotification, MessageRequest, NotificationToUids, PostCreateMessage, SendEachMessage, SendTokenMessage, UserLikeEvent } from "./messaging.interface";
+import { MessageNotification, MessageRequest, NotificationToUids, PostCreateEventMessage, SendEachMessage, SendTokenMessage, UserLikeEvent } from "./messaging.interface";
 import { chunk } from "../library";
 import { Config } from "../config";
 import { ChatCreateEvent } from "../chat/chat.interface";
@@ -251,7 +251,7 @@ export class MessagingService {
    *
    * @param msg 글 정보
    */
-  static async sendMessagesToCategorySubscribers(msg: PostCreateMessage) {
+  static async sendMessagesToCategorySubscribers(msg: PostCreateEventMessage) {
     // 해당 게시판(카테고리)를 subscribe 한 사용자들의 uid 를 가져온다.
 
     const db = getDatabase();
@@ -289,8 +289,11 @@ export class MessagingService {
     //
     let uids: Array<string> = [];
     snapshot.forEach((child) => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      uids.push(child.key!);
+      // Don't send the message to myself.
+      if (child.key != msg.uid) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        uids.push(child.key!);
+      }
     });
     Config.log("-----> sendMessagesToChatRoomSubscribers uids:", uids);
 

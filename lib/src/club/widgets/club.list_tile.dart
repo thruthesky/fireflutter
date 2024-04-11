@@ -32,6 +32,7 @@ class ClubListTile extends StatelessWidget {
                 height: 200,
                 fit: BoxFit.cover,
               ),
+            const SizedBox(height: 8),
             Text(
               club.name,
               maxLines: 1,

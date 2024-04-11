@@ -80,6 +80,7 @@ export 'src/database/widgets/database.count.dart';
 export 'src/database/widgets/value.dart';
 
 export 'src/extensions/color.extension.dart';
+export 'src/extensions/datetime.extension.dart';
 export 'src/extensions/int.extension.dart';
 export 'src/extensions/string.extension.dart';
 
@@ -173,8 +174,10 @@ export 'src/user/widgets/profile/default_public_profile.screen.dart';
 export 'src/user/widgets/profile/my_profile_sticker.dart';
 export 'src/user/widgets/profile/new_profile_photos.dart';
 export 'src/user/widgets/profile/simple_profile_update.form.dart';
-export 'src/user/widgets/ready/auth_ready.dart';
-export 'src/user/widgets/ready/my_doc_ready.dart';
+export 'src/user/widgets/auth/auth_ready.dart';
+export 'src/user/widgets/auth/doc_ready.dart';
+export 'src/user/widgets/auth/logged_in.dart';
+export 'src/user/widgets/auth/logged_out.dart';
 export 'src/user/widgets/user.display_name.dart';
 export 'src/user/widgets/user.avatar.dart';
 export 'src/user/widgets/user.background_image.dart';

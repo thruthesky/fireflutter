@@ -16,6 +16,8 @@ The cloud function for sending push notification on each chat message is named `
 
 ## Typesense Cloud Functions
 
+To add Typesense, must have a Typesense Server running. Make sure to include the schema. Refer to [typesense.md](typesense.md#schema)
+
 ### Indexing User Data into typesense
 
 The cloud function to index user data into typesense is named `typesenseUserIndexing`. It indexes user data into typesense upon create, update or delete of user data.
@@ -58,14 +60,14 @@ The cloud function for Phone Number Sign-Up is named `phoneNumberRegister`. The 
 When making the request, simply input the phone number you wish to sign up with into the phoneNumber field. If the phone number is not provided, or if it is too short or too long, the function will throw an error. Otherwise, Firebase will handle the error.
 
 - Request: `?phoneNumber=12345`
-    - Result: `{ code: 'auth/invalid-phone-number', message: '...' }`
+  - Result: `{ code: 'auth/invalid-phone-number', message: '...' }`
 - Request: `?phoneNumber=1234567890123456`
-    - Result: `{ code: 'auth/invalid-phone-number', message: '...' }`
+  - Result: `{ code: 'auth/invalid-phone-number', message: '...' }`
 - Request: `/?phoneNumber=1234567890`
-    - Result: `{ code: 'auth/invalid-phone-number', message: '...' }`
+  - Result: `{ code: 'auth/invalid-phone-number', message: '...' }`
 - If the phone number already exists, an error will be returned, such as `{ code: 'auth/phone-number-already-exists', message: '...' }`.
 - Upon successful sign-up:
-    - Result: `{ uid: 'YSr8fJwQASSF4QApILkaAEjbfCd2' }`
+  - Result: `{ uid: 'YSr8fJwQASSF4QApILkaAEjbfCd2' }`
 
 ## Function Testing
 
