@@ -92,9 +92,6 @@ class User {
 
   int noOfLikes;
 
-  @Deprecated('use countryCode instead.')
-  String nationality;
-
   /// The countryCode will be the basis of the nationality
   /// of the user.
   String countryCode;
@@ -204,8 +201,6 @@ class User {
     required this.idUrl,
     required this.idUploadedAt,
     required this.occupation,
-    // TODO delete nationality
-    required this.nationality,
     required this.countryCode,
     required this.siDo,
     required this.siGunGu,
@@ -284,8 +279,6 @@ class User {
       idUrl: json[ff.Field.idUrl] ?? '',
       idUploadedAt: json[ff.Field.idUploadedAt] ?? 0,
       occupation: json[ff.Field.occupation] ?? '',
-      // TODO deprecate nationality
-      nationality: json['nationality'] ?? '',
       countryCode: json['countryCode'] ?? '',
       siDo: json['siDo'] ?? '',
       siGunGu: json['siGunGu'] ?? '',
@@ -325,8 +318,6 @@ class User {
       ff.Field.idUrl: idUrl,
       ff.Field.idUploadedAt: idUploadedAt,
       ff.Field.occupation: occupation,
-      // TODO deprecate nationality
-      'nationality': nationality,
       'countryCode': countryCode,
       'siDo': siDo,
       'siGunGu': siGunGu,
@@ -371,8 +362,6 @@ class User {
       idUrl = user.idUrl;
       idUploadedAt = user.idUploadedAt;
       occupation = user.occupation;
-      // TODO deprecate nationality
-      nationality = user.nationality;
       countryCode = user.countryCode;
       siDo = user.siDo;
       siGunGu = user.siGunGu;
@@ -485,8 +474,6 @@ class User {
     int? idUploadedAt,
     String? idUrl,
     String? occupation,
-    // TODO deprecate nationality
-    String? nationality,
     String? countryCode,
     String? siDo,
     String? siGunGu,
@@ -515,8 +502,6 @@ class User {
       if (idUploadedAt != null) 'idUploadedAt': idUploadedAt,
       if (idUrl != null) 'idUrl': idUrl,
       if (occupation != null) ff.Field.occupation: occupation,
-      // TODO delete nationality
-      if (nationality != null) 'nationality': nationality,
       if (countryCode != null) 'countryCode': countryCode,
       if (siDo != null) 'siDo': siDo,
       if (siGunGu != null) 'siGunGu': siGunGu,
