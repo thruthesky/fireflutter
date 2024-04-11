@@ -28,6 +28,8 @@ class FirestoreUserModel {
   int createdAt;
   String occupation;
   String nationality;
+  double latitude;
+  double longitude;
 
   /// [siDo] is composed with two region codes separated by '-'.
   /// For example, '1-11' where the first 1 is 'Seoul', and the second 11 is 'Dongdaemun-gu'.
@@ -81,6 +83,8 @@ class FirestoreUserModel {
     required this.nationality,
     required this.siDo,
     required this.siGunGu,
+    required this.latitude,
+    required this.longitude,
   });
 
   factory FirestoreUserModel.fromDocumentSnapshot(
@@ -136,6 +140,8 @@ class FirestoreUserModel {
       nationality: json['nationality'] ?? '',
       siDo: json['siDo'] ?? '',
       siGunGu: json['siGunGu'] ?? '',
+      latitude: json['latitude'] ?? 0,
+      longitude: json['longitude'] ?? 0,
     );
   }
 }

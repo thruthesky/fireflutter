@@ -163,10 +163,22 @@ class T {
   static const String youCanBlockUserFromTheirProfilePage =
       'You can block users from their profile page';
 
-  // SettingScree
+  // SettingScreen
   static const String pushNotificationOnProfileView =
       'Push Notification on Profile View';
   static const String getNotifiedWhenSomeoneViewYourProfile =
       'Get notified when someone views your profile';
   static const String chooseYourLanguage = 'Choose your language';
+
+  // Club Translation
+  static const String createAMeeting = '모임 만들기';
+  static const String updateMeeting = '모임 수정하기';
+  static const String meetingName = '모임 이름';
+  static const String meetingNameDescription = '모임 이름을 적어주세요.';
+  static const String meetingPhotoDescription =
+      '  모임 사진을 업로드 해 주세요. 사진 너비: 800, 사진 높이: 500';
+
+  static const String meetingDescriptionLabel = '모임 설명';
+  static const String meetingDescriptionInputDescription = "모임 설명을 적어주세요.";
+  static const String meetingUpdateMessage = '모임이 수정되었습니다.';
 }

@@ -22,13 +22,13 @@ class _ClubCreateFormState extends State<ClubCreateForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("모임 이름"),
+        Text(T.meetingName.tr),
         TextField(
           controller: nameController,
           onChanged: (value) => setState(() {}),
         ),
         const SizedBox(height: 8),
-        const Text("모임 이름을 적어주세요."),
+        Text(T.meetingNameDescription.tr),
         const SizedBox(height: 24),
         if (nameController.text.trim().isNotEmpty)
           Align(
@@ -37,7 +37,7 @@ class _ClubCreateFormState extends State<ClubCreateForm> {
                 final club = await Club.create(name: nameController.text);
                 widget.onCreate(club);
               },
-              child: const Text('모임 만들기'),
+              child: Text(T.createAMeeting.tr),
             ),
           ),
       ],
