@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:fireflutter/fireflutter.dart' as ff;
+import 'package:fireflutter/fireflutter.functions.dart';
 import 'package:geohash_plus/geohash_plus.dart';
 
 class User {
@@ -12,8 +13,6 @@ class User {
 
   /// data paths
   static const String userProfilePhotos = 'user-profile-photos';
-  static const String userLocations = 'user-locations';
-
   static const String whoLikeMe = 'who-like-me';
   static const String whoILike = 'who-i-like';
   static const String mutualLike = 'mutual-like';
@@ -106,7 +105,11 @@ class User {
 
   /// When the user's location was updated, geohash data is also updated.
   ///
-  ///
+  /// [geohash] representing the geographic location of a user
+  ///  geohash is a string representation of a geographic location and is
+  ///  encoded in a series of characters.
+  String geohash;
+
   /// [geohash3] is used for searching nearby users above 20k meters
   String geohash3;
 
@@ -160,9 +163,6 @@ class User {
   DatabaseReference get photoRef =>
       FirebaseDatabase.instance.ref('user-profile-photos').child(uid);
 
-  DatabaseReference get userLocationsRef =>
-      rootRef.child(userLocations).child(ff.myUid!);
-
   String get birth => '$birthYear-$birthMonth-$birthDay';
 
 // user age by computing the current date  and the user given year and month and day
@@ -210,6 +210,7 @@ class User {
     required this.siGunGu,
     required this.latitude,
     required this.longitude,
+    required this.geohash,
     required this.geohash3,
     required this.geohash4,
     required this.geohash5,
@@ -288,6 +289,7 @@ class User {
       siGunGu: json['siGunGu'] ?? '',
       latitude: json['latitude'] ?? 0.0,
       longitude: json['longitude'] ?? 0.0,
+      geohash: json['geohash'] ?? '',
       geohash3: json['geohash3'] ?? '',
       geohash4: json['geohash4'] ?? '',
       geohash5: json['geohash5'] ?? '',
@@ -327,6 +329,7 @@ class User {
       'siGunGu': siGunGu,
       'latitude': latitude,
       'longitude': longitude,
+      'geohash': geohash,
       'geohash4': geohash4,
       'geohash5': geohash5,
       'geohash6': geohash6,
@@ -371,6 +374,7 @@ class User {
       siGunGu = user.siGunGu;
       latitude = user.latitude;
       longitude = user.longitude;
+      geohash = user.geohash;
       geohash3 = user.geohash3;
       geohash4 = user.geohash4;
       geohash5 = user.geohash5;
@@ -521,6 +525,7 @@ class User {
     if (latitude != null && longitude != null) {
       final geohash = GeoHash.encode(latitude, longitude);
       final hash = geohash.hash;
+      data['geohash'] = hash;
       data['geohash3'] = hash.substring(0, 3);
       data['geohash4'] = hash.substring(0, 4);
       data['geohash5'] = hash.substring(0, 5);
@@ -544,34 +549,8 @@ class User {
           displayName: displayName, photoUrl: photoUrl);
     }
 
-    // to review ->
-    // checking the if the latitude and longitude is not null during the update
-    // if the latitude and longitude is not null during the update and call the
-    // _updateUserProfilePhotos method to update the lat-lon-string
-    if (latitude != null && longitude != null) {
-      await _updateUserLocations(
-        latitude: latitude,
-        longitude: longitude,
-      );
-    }
-
     ff.UserService.instance.onUpdate?.call(this);
     return this;
-  }
-
-  // to review ->
-  // this is ganna update the user the database where user location
-  // is stored. user-locations/uid/lat-long-string/
-  // adding subtring to trim the length of each point to 9 bit long a total of 19 bytes
-  // to be stored in the database.
-  Future<void> _updateUserLocations({
-    double? latitude,
-    double? longitude,
-  }) async {
-    await userLocationsRef.update({
-      "lat-lon-string":
-          "${latitude.toString().substring(0, 9)}-${longitude.toString().substring(0, 9)}"
-    });
   }
 
   /// 사진 순서로 목록하기 위한 정보
