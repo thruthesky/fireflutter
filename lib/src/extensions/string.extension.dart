@@ -77,7 +77,9 @@ extension FireFlutterStringExtension on String {
   /// 각종 특수 문자를 없앤다.
   String get sanitize => trim().replaceAll(RegExp(r'[\r\n\t]'), " ");
 
+  /// 내가 [uid] 사용자를 차단했으면, [message] 를 리턴한다. 아니면, 현재 문자열을 리턴한다.
   String orBlocked(String uid, String message) {
+    if (notLoggedIn) return this;
     return iHave.blocked(uid) ? message : this;
   }
 

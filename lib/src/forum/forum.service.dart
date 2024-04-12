@@ -37,6 +37,16 @@ class ForumService {
     required BuildContext context,
     required String category,
   }) async {
+    if (notLoggedIn) {
+      UserService.instance.loginRequired!(
+          context: context,
+          action: 'showPostCreateScreen',
+          data: {
+            'category': category,
+          });
+      return;
+    }
+
     if (iam.disabled) {
       error(context: context, message: 'You are disabled.');
       return;
@@ -99,6 +109,22 @@ class ForumService {
     bool? showUploadDialog,
     bool? focusOnTextField,
   }) async {
+    ///
+
+    if (notLoggedIn) {
+      UserService.instance.loginRequired!(
+          context: context,
+          action: 'showCommentCreateScreen',
+          data: {
+            'post': post,
+            'parent': parent,
+            'showUploadDialog': showUploadDialog,
+            'focusOnTextField': focusOnTextField,
+          });
+      return null;
+    }
+
+    ///
     if (iam.disabled) {
       error(context: context, message: 'You are disabled.');
       return false;

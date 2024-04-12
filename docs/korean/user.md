@@ -641,7 +641,50 @@ UserService.instance.init(
           }
         }
       }
-    } else {
+    } else if (action == 'showPostCreateScreen') { // 게시판 글 쓰기 할 때, 로그인 안한 경우,
+        final re = await confirm(
+          context: context,
+          title: '로그인',
+          message: '로그인을 하셔야 글을 작성 할 수 있습니다.',
+        );
+        if (re == true && context.mounted) {
+          final login = await showGeneralDialog(
+            context: context,
+            pageBuilder: ($, $$, $$$) => const PhoneNumberLoginScreen(),
+          );
+          if (login == true) { // 로그인을 했다면,
+            if (context.mounted) {
+              ForumService.instance.showPostCreateScreen( // 글 쓰기 페이지를 보여준다.
+                context: context,
+                category: data?['category'] as String,
+              );
+            }
+          }
+        }
+      } else if (action == 'showCommentCreateScreen') { // 코멘트 쓰기를 할 때, 로그인 안한 경우,
+        final re = await confirm(
+          context: context,
+          title: '로그인',
+          message: '로그인을 하셔야 코멘트를 작성 할 수 있습니다.',
+        );
+        if (re == true && context.mounted) {
+          final login = await showGeneralDialog(
+            context: context,
+            pageBuilder: ($, $$, $$$) => const PhoneNumberLoginScreen(),
+          );
+          if (login == true) { // 로그인 했다면,
+            if (context.mounted) {
+              ForumService.instance.showCommentCreateScreen( // 코멘트 작성 창을 보여준다.
+                context: context,
+                post: data?['post'] as Post,
+                parent: data?['parent'] as Comment?,
+                showUploadDialog: data?['showUploadDialog'] as bool?,
+                focusOnTextField: data?['focusOnTextField'] as bool?,
+              );
+            }
+          }
+        }
+      } else {
       // 이 부분을 꼭 해 주도록 한다. 그래서 혹시라도 action 이 설정되지 않으면 기본적으로 이곳에서 모든 처리를 하도록 한다.
       alert(
         context: context,
@@ -652,7 +695,6 @@ UserService.instance.init(
   },
 )
 ```
-
 
 
 
