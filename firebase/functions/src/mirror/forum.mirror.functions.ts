@@ -14,7 +14,7 @@ const Collections = {
  *
  * Mirror the post data to Firestore
  */
-export const postMirror = onValueWritten(
+export const postMirrorToFirestoreFromRTDB = onValueWritten(
     `${Collections.posts}/{category}/{postId}`,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async (event): Promise<any> => {
@@ -36,7 +36,7 @@ export const postMirror = onValueWritten(
  *
  * Mirror the comment data to Firestore
  */
-export const commentMirror = onValueWritten(
+export const commentMirrorToFirestoreFromRTDB = onValueWritten(
     `${Collections.comments}/{postId}/{commentId}`,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async (event): Promise<any> => {

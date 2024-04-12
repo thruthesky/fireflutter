@@ -55,8 +55,7 @@ describe("Mirroring Posts (mirror/01.post-mirroring.spec.ts)", () => {
             uid: randomString(),
             title: "title-post-test",
             content: "content-posttest",
-            // do not add "category" here
-            deleted: false,
+            urls: ["url1", "url2"],
             createdAt: 12345,
             order: -1,
         };
@@ -73,7 +72,9 @@ describe("Mirroring Posts (mirror/01.post-mirroring.spec.ts)", () => {
             retrievePost.content === postData.content &&
             retrievePost.deleted === postData.deleted &&
             retrievePost.createdAt === postData.createdAt &&
-            retrievePost.order === postData.order) {
+            retrievePost.order === postData.order &&
+            retrievePost.urls?.[0] === postData.urls?.[0] &&
+            retrievePost.urls?.[1] === postData.urls?.[1]) {
             // means doc exist as same value in Firestore
             assert.ok(true);
         } else {
