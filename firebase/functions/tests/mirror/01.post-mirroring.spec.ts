@@ -110,6 +110,37 @@ describe("Mirroring Posts (mirror/01.post-mirroring.spec.ts)", () => {
             assert.ok(false, "Either there is an error, more latency, or the doc is not in Firestore.");
         }
     });
+    it("The Mirrored post from RTDB must have the category field in Firestore", async () => {
+        const qnaCategory = "qna";
+
+        // 1. Set post in RTDB
+        const id = randomString();
+        const postData: PostCreateEvent= {
+            // do not add "id" here
+            // do not add "type" here
+            uid: randomString(),
+            title: "title-post-test",
+            content: "content-posttest",
+            // do not add "category" here
+            deleted: false,
+            createdAt: 12345,
+            order: -1,
+        };
+        await admin.database().ref(postCollection + "/" + qnaCategory + "/" + id).set(postData);
+
+        // 2. Wait for 10 seconds
+        await setTimeout(10000);
+
+        // 3. Search for the document in Firestore
+        const retrieveResult = await admin.firestore().collection(postCollection).doc(id).get();
+        const retrievePost = retrieveResult.data() as FirestorePost;
+        if (retrievePost.category === qnaCategory) {
+            // means doc exist and has the correct category value in Firestore
+            assert.ok(true);
+        } else {
+            assert.ok(false, "Either there is an error, more latency, or the doc is not in Firestore.");
+        }
+    });
     it("The Updated post in RTDB, so it must be updated in Firestore as well", async () => {
         // 1. Set post in RTDB
         const id = randomString();
