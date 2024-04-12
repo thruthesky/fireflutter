@@ -92,6 +92,8 @@ class User {
 
   int noOfLikes;
 
+  /// TODO @withcenter-dev2change this to countryCode
+  @Deprecated('Change this to countryCode')
   String nationality;
 
   String siDo;
@@ -535,7 +537,9 @@ class User {
     /// 사진 정보 업데이트
     if (displayName != null || photoUrl != null) {
       await _updateUserProfilePhotos(
-          displayName: displayName, photoUrl: photoUrl);
+        displayName: displayName,
+        photoUrl: photoUrl,
+      );
     }
 
     ff.UserService.instance.onUpdate?.call(this);

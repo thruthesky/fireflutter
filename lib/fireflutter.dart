@@ -164,7 +164,6 @@ export 'src/user/widgets/buttons/bookmark_button.dart';
 export 'src/user/widgets/buttons/chat_button.dart';
 export 'src/user/widgets/buttons/like_button.dart';
 export 'src/user/widgets/buttons/report_button.dart';
-export 'src/user/widgets/login/default_login_first.screen.dart';
 export 'src/user/widgets/login/simple_email_password_login.form.dart';
 export 'src/user/widgets/login/simple_phone_sign_in.form.dart';
 export 'src/user/widgets/my_doc.dart';

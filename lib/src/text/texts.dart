@@ -158,7 +158,6 @@ class T {
   static const String takePhotoWithCamera = 'Take photo with camera';
 
   // BlockScreen
-
   static const String noBlockUser = 'No blocked users';
   static const String youCanBlockUserFromTheirProfilePage =
       'You can block users from their profile page';
@@ -169,4 +168,8 @@ class T {
   static const String getNotifiedWhenSomeoneViewYourProfile =
       'Get notified when someone views your profile';
   static const String chooseYourLanguage = 'Choose your language';
+
+  /// Used in DefaultLoginFirstScreen
+  static const String loginRequredTitle = 'Login Required';
+  static const String loginRequredMessage = 'Please login to continue.';
 }

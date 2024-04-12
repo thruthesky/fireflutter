@@ -56,8 +56,8 @@ export class UserService {
     /**
      * Deletes the user account from Firebase Auth
      *
-     * It only deletes the user account from Firebase Auth. Deletion of user data from Firestore or Realtime Database
-     * must be done in clientend.
+     * It only deletes the user account from Firebase Auth. Deletion of user data from
+     * Firestore or Realtime Database must be done in clientend.
      *
      * @param uid uid of the user
      *

@@ -2,6 +2,7 @@
 
 
 - 현재 FireFlutter 에서 지원하는 위치 기반 검색은 공식 문서에서 제공하는 [Firebase 의 Geo Query](https://firebase.google.com/docs/firestore/solutions/geoqueries?hl=ko)를 부분적으로 지원한다. 히지만 검색 결과의 정확도를 높이기 위해서 불편한 계산을 함에도 불구하고 결과가 정확하지 않다.
+  - 아래의 GEO Range Query 를 참고한다.
 
 - 만약, 위치 기반 검색 결과에 오차가 있어도 괜찮다면, Geo hash 를 DB 에 저장해 놓고, 검색을 해도 된다.
   - 그리고, 1km, 2km, 5km, 10km, 20km 등과 같이 원하는 데로 거리를 필터를 할 수 있는 것이 아니라, Geo hash 의 문자열 단계에 따라서 가능한데 이 또한 불편하다.
@@ -16,6 +17,10 @@
 
 - 참고로, 사용자의 정보를 외부 DB 에 mirror 해 놓는 경우, 그리고 그 외부 DB 의 속도가 느린 경우, 한 화면에서 여러 가지 옵션으로 사용자 검색을 할 때, 거리 검색 필터링을 하지 않는 경우 Firebase 데이터베이스를 이용해서 결과를 보여주고, 거리 검색 필터링이 추가되는 경우만 외부 DB 를 써도 되겠다.
 
+
+## GEO Range Query
+
+pub.dev 에 있는  [geo range](https://pub.dev/packages/georange) 패키지를 보면, km 단위로 쿼리를 하는 방법에 대해서 설명을 하고 있다. Firebase 의 Geo query 와 마찬가지로 false positive 와 edge case 가 있을 것이라 생각하지만, geohash 문자열을 3자리  ~ 7자리로 비교하는 것 보단느 나아 보인다.
 
 
 ## 위치 기반 거리 검색
