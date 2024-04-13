@@ -350,7 +350,19 @@ class Post {
   /// Like or unlike
   ///
   /// It loads all the likes and updates.
-  Future<void> like() async {
+  Future<void> like({
+    required BuildContext context,
+  }) async {
+    if (notLoggedIn) {
+      final re = await UserService.instance.loginRequired!(
+          context: context,
+          action: 'post-like',
+          data: {
+            'post': this,
+          });
+      if (re != true) return;
+    }
+
     final snapshot = await ref.child(Field.likes).get();
     likes = List<String>.from((snapshot.value as Map? ?? {}).keys);
 

@@ -7,25 +7,25 @@ class ReportService {
     dog('--> ReportService._()');
   }
 
-  @Deprecated('Use Report.create instead')
-  Future<void> report({
-    String? otherUserUid,
-    String? chatRoomId,
-    String? category,
-    String? postId,
-    String? commentId,
-    String reason = '',
-  }) async {
-    if (notLoggedIn) {
-      throw Issue(Code.notLoggedIn);
-    }
-    await Report.create(
-      otherUserUid: otherUserUid,
-      chatRoomId: chatRoomId,
-      category: category,
-      postId: postId,
-      commentId: commentId,
-      reason: reason,
-    );
-  }
+  // @Deprecated('Use Report.create instead')
+  // Future<void> report({
+  //   String? otherUserUid,
+  //   String? chatRoomId,
+  //   String? category,
+  //   String? postId,
+  //   String? commentId,
+  //   String reason = '',
+  // }) async {
+  //   if (notLoggedIn) {
+  //     throw FireFlutterException(Code.notLoggedIn);
+  //   }
+  //   await Report.create(
+  //     otherUserUid: otherUserUid,
+  //     chatRoomId: chatRoomId,
+  //     category: category,
+  //     postId: postId,
+  //     commentId: commentId,
+  //     reason: reason,
+  //   );
+  // }
 }

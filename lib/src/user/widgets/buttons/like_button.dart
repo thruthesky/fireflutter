@@ -48,9 +48,14 @@ class _LikeButtonState extends State<LikeButton> {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        if (await my?.like(userUid)) {
+        final re = await UserService.instance.like(
+          context: context,
+          otherUserUid: userUid,
+        );
+
+        if (re == true) {
           setState(() => noOfLikes++);
-        } else {
+        } else if (re == false) {
           setState(() => noOfLikes--);
         }
       },

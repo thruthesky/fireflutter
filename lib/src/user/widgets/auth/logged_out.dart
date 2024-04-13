@@ -11,6 +11,6 @@ class LoggedOut extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AuthReady(notLoginBuilder: builder);
+    return Login(no: builder);
   }
 }

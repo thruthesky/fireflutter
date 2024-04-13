@@ -43,13 +43,12 @@ class _PostViewScreenState extends State<PostViewScreen> {
               ),
             ),
             SliverToBoxAdapter(
-              child: AuthReady(
-                builder: (uid) => Row(
-                  children: [
-                    TextButton(
-                      onPressed: post.like,
-                      child: Value(
-                        // path: post.ref.child(Field.noOfLikes).path,
+              child: Row(
+                children: [
+                  TextButton(
+                    onPressed: () => post.like(context: context),
+                    child: Login(
+                      yes: (uid) => Value(
                         ref: post.noOfLikesRef,
                         builder: (no) {
                           previousNoOfLikes = no;
@@ -57,104 +56,103 @@ class _PostViewScreenState extends State<PostViewScreen> {
                         },
                         onLoading: Text('좋아요${likeText(previousNoOfLikes)}'),
                       ),
+                      no: () => const Text('좋아요'),
                     ),
+                  ),
 
-                    // Bookmark
-                    Value(
-                      ref: Bookmark.postRef(post.id),
-                      builder: (v) => TextButton(
-                        onPressed: () async {
-                          if (v != null) {
-                            await Bookmark.delete(
-                                category: post.category, postId: post.id);
-                          } else {
-                            await Bookmark.create(
-                                category: post.category, postId: post.id);
-                          }
-                        },
-                        child: Text(
+                  /// Bookmark
+                  TextButton(
+                    onPressed: () async {
+                      await Bookmark.toggle(
+                        context: context,
+                        category: post.category,
+                        postId: post.id,
+                      );
+                    },
+                    child: Login(
+                      yes: (uid) => Value(
+                        ref: Bookmark.postRef(post.id),
+                        builder: (v) => Text(
                           v == null ? T.bookmark.tr : T.unbookmark.tr,
                         ),
                       ),
+                      no: () => Text(T.bookmark.tr),
                     ),
-
-                    TextButton(
-                      onPressed: () => ChatService.instance.showChatRoomScreen(
-                        context: context,
-                        uid: post.uid,
-                      ),
-                      child: const Text('채팅'),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        final re = await input(
-                          context: context,
-                          title: T.reportInputTitle.tr,
-                          subtitle: T.reportInputMessage.tr,
-                          hintText: T.reportInputHint.tr,
-                        );
-                        if (re == null || re == '') return;
-                        await Report.create(
-                          postId: post.id,
-                          category: post.category,
-                          reason: re,
-                        );
-                      },
-                      child: const Text('신고'),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        final re = await my?.block(post.uid);
-                        if (!context.mounted) return;
-                        toast(
-                          context: context,
-                          title: re == true ? T.blocked.tr : T.unblocked.tr,
-                          message: re == true
-                              ? T.blockedMessage.tr
-                              : T.unblockedMessage.tr,
-                        );
-                      },
-                      child: const Text('차단'),
-                    ),
-                    const Spacer(),
-                    if (post.uid == myUid)
-                      PopupMenuButton(itemBuilder: (context) {
-                        return [
-                          const PopupMenuItem(
-                            value: 'edit',
-                            child: Text('수정'),
-                          ),
-                          const PopupMenuItem(
-                            value: 'delete',
-                            child: Text('삭제'),
-                          ),
-                        ];
-                      }, onSelected: (value) async {
-                        if (value == 'edit') {
-                          await ForumService.instance.showPostUpdateScreen(
-                              context: context, post: post);
-                          await post.reload();
-                          if (mounted) setState(() {});
-                        } else if (value == 'delete') {
-                          final re = await confirm(
-                            context: context,
-                            title: T.deletePostConfirmTitle.tr,
-                            message: T.deletePostConfirmMessage.tr,
-                          );
-                          if (re != true) return;
-                          await post.delete();
-                          if (context.mounted) Navigator.of(context).pop();
-                        }
-                      }),
-                  ],
-                ),
-                notLoginBuilder: () => Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: Text(
-                    '로그인하시면 좋아요, 채팅, 차단 등의 기능을 사용할 수 있습니다.',
-                    style: Theme.of(context).textTheme.labelSmall,
                   ),
-                ),
+
+                  TextButton(
+                    onPressed: () => ChatService.instance.showChatRoomScreen(
+                      context: context,
+                      uid: post.uid,
+                    ),
+                    child: const Text('채팅'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      final re = await input(
+                        context: context,
+                        title: T.reportInputTitle.tr,
+                        subtitle: T.reportInputMessage.tr,
+                        hintText: T.reportInputHint.tr,
+                      );
+                      if (re == null || re == '') return;
+                      await Report.create(
+                        postId: post.id,
+                        category: post.category,
+                        reason: re,
+                      );
+                    },
+                    child: const Text('신고'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      final re = await UserService.instance.block(
+                        context: context,
+                        otherUserUid: post.uid,
+                      );
+                      if (re == null) return;
+                      if (!context.mounted) return;
+                      toast(
+                        context: context,
+                        title: re == true ? T.blocked.tr : T.unblocked.tr,
+                        message: re == true
+                            ? T.blockedMessage.tr
+                            : T.unblockedMessage.tr,
+                      );
+                    },
+                    child: const Text('차단'),
+                  ),
+                  const Spacer(),
+                  if (post.uid == myUid)
+                    PopupMenuButton(itemBuilder: (context) {
+                      return [
+                        const PopupMenuItem(
+                          value: 'edit',
+                          child: Text('수정'),
+                        ),
+                        const PopupMenuItem(
+                          value: 'delete',
+                          child: Text('삭제'),
+                        ),
+                      ];
+                    }, onSelected: (value) async {
+                      if (value == 'edit') {
+                        await ForumService.instance
+                            .showPostUpdateScreen(context: context, post: post);
+                        await post.reload();
+                        if (mounted) setState(() {});
+                      } else if (value == 'delete') {
+                        final re = await confirm(
+                          context: context,
+                          title: T.deletePostConfirmTitle.tr,
+                          message: T.deletePostConfirmMessage.tr,
+                        );
+                        if (re != true) return;
+                        await post.delete();
+                        if (context.mounted) Navigator.of(context).pop();
+                      }
+                    }),
+                ],
               ),
             ),
 

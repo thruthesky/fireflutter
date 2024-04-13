@@ -44,7 +44,8 @@ class BlockListView extends StatelessWidget {
                       trailing: IconButton(
                         key: Key('blockListTileDeleteBtn${user.uid}'),
                         onPressed: () {
-                          my.block(user.uid);
+                          UserService.instance
+                              .block(context: context, otherUserUid: user.uid);
                         },
                         icon: const Icon(Icons.delete),
                       ),

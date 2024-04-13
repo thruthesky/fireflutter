@@ -308,7 +308,19 @@ class Comment {
   /// Like or unlike
   ///
   /// It loads all the likes and updates.
-  Future<void> like() async {
+  Future<void> like({
+    required BuildContext context,
+  }) async {
+    if (notLoggedIn) {
+      final re = await UserService.instance.loginRequired!(
+          context: context,
+          action: 'comment-like',
+          data: {
+            'comment': this,
+          });
+      if (re != true) return;
+    }
+
     final snapshot = await ref.child(Field.likes).get();
     likes = List<String>.from((snapshot.value as Map? ?? {}).keys);
 
@@ -325,7 +337,37 @@ class Comment {
   ///
   /// If there is no comment, delete the post. Or update the title and content to 'deleted'.
   /// And set the deleted field to true.
-  Future<void> delete() async {
+  Future<void> delete({
+    required BuildContext context,
+    bool ask = true,
+  }) async {
+    /// 로그인 확인
+    if (notLoggedIn) {
+      final re = await UserService.instance.loginRequired!(
+          context: context,
+          action: 'comment-delete',
+          data: {
+            'comment': this,
+          });
+      if (re != true) return;
+    }
+
+    /// 자신의 글인지 확인
+    if (uid != myUid) {
+      error(context: context, message: T.notYourComment.tr);
+      return;
+    }
+
+    /// 물어보기
+    if (ask) {
+      final re = await confirm(
+        context: context,
+        title: T.deleteCommentConfirmTitle.tr,
+        message: T.deleteCommentConfirmMessage.tr,
+      );
+      if (re != true) return;
+    }
+
     await update(
       content: Code.deleted,
       deleted: true,
