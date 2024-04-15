@@ -92,7 +92,7 @@ class ChatService {
     ChatRoom? room,
   }) async {
     if (notLoggedIn) {
-      UserService.instance.loginRequired!(
+      final re = await UserService.instance.loginRequired!(
           context: context,
           action: 'showChatRoomScreen',
           data: {
@@ -100,7 +100,7 @@ class ChatService {
             'roomId': roomId,
             'room': room,
           });
-      return;
+      if (re != true) return;
     }
 
     /// 채팅방 입장을 할 때, DB 업데이트를 하므로, 메시지를 보낼 때에는 해제 계산이 되어져 있다.

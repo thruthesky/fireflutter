@@ -53,7 +53,7 @@ class T {
       'Do you want to block this user?\nYou will not be able to contents of this user.';
   static const String unblockConfirmTitle = 'Unblock this user?';
   static const String unblockConfirmMessage =
-      'You will be able to contents of this user.';
+      'If you unblock this user, you will be able to see the contents of this user.';
   static const String notVerifiedMessage = 'You have not verified yourself.';
   static const String writeYourMessage = 'Write your message';
   static const String visitedYourProfileTitle = 'Your profile was visited.';
@@ -110,6 +110,8 @@ class T {
   static const String deleteCommentConfirmMessage =
       'Are you sure you want to delete comment?';
 
+  static const String notYourComment = 'This is not your comment.';
+
   static const String occupation = 'occupation';
   static const String occupationInputDescription = 'occupationInputDescription';
   static const String hintInputOccupation = 'Please input your occupation';
@@ -118,8 +120,10 @@ class T {
   static const String blocked = 'Blocked';
   static const String blockedMessage = 'You have blocked this user.';
   static const String blockedTitleMessage = 'Blocked this user';
-  static const String blockedContentMessage = 'You have blocked this user.';
-  static const String blockedChatMessage = 'You have blocked this user.';
+  static const String blockedContentMessage =
+      'The contents of this user is hidden because you have blocked this user.';
+  static const String blockedChatMessage =
+      'You have blocked this user. Chat message is hidden.';
   // static const String blockedUserMessage = 'You have blocked this user.';
 
   static const String unblocked = 'Unblocked';
@@ -145,6 +149,8 @@ class T {
       'Input Verification Code and press submit button';
   static const String phoneSignInRetry = 'Retry';
   static const String phoneSignInVerifySmsCode = 'Verification Code';
+
+  static const String invalidSmsCodeMessage = 'Invalid SMS code';
 
   /// Korean Sigungu Selector
   static const String selectProvince = "Select Province";
@@ -172,4 +178,6 @@ class T {
   /// Used in DefaultLoginFirstScreen
   static const String loginRequredTitle = 'Login Required';
   static const String loginRequredMessage = 'Please login to continue.';
+  static const String askToLoginMessage =
+      'Login is required to continue. Do you want to login?';
 }

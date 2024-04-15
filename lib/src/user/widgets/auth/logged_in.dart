@@ -8,6 +8,6 @@ class LoggedIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AuthReady(builder: builder);
+    return Login(yes: builder);
   }
 }

@@ -127,7 +127,7 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
       if (url != null) {
         await widget.chat.sendMessage(url: url);
       }
-    } on Issue catch (e) {
+    } on FireFlutterException catch (e) {
       if (mounted) {
         error(context: context, message: '${e.code.tr}\n${e.message}');
       }
