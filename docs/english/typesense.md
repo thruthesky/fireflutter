@@ -6,6 +6,46 @@ TypesenseService must be initialized before using it.
 
 If, for any reason, user information is not indexed in Typesense, updating the user information will trigger the indexing in Typesense.
 
+## Schema
+
+To add Typesense, must have a Typesense Server running. Make sure to include the schema.
+
+```http
+@scheme=http
+@serverUrl=file.yourdomain.com:9999
+@apiKey=yourApiKey123
+
+
+### Creating the momcafe search collection
+POST {{scheme}}://{{serverUrl}}/collections
+Content-Type: application/json
+X-TYPESENSE-API-KEY: {{apiKey}}
+
+{
+   "name": "searchCollection",
+   "fields": [
+      {"name": "id", "type":"string"},
+      {"name": "type", "type": "string"},
+
+      {"name": "uid", "type": "string", "optional": true },
+      {"name": "displayName", "type": "string", "optional": true, "infix": true },
+      {"name": "photoUrl", "type": "string", "optional": true},
+      {"name": "isVerified", "type": "bool", "optional": true},
+
+      {"name": "title", "type": "string", "optional": true},
+      {"name": "content", "type": "string", "optional": true},
+      {"name": "category", "type": "string", "optional": true},
+      {"name": "url", "type": "string", "optional": true},
+
+      {"name": "parentId","type": "string", "optional": true},
+      {"name": "postId","type": "string", "optional": true},
+
+      {"name": "createdAt", "type": "int64", "optional": true }
+   ]
+}
+
+```
+
 ## Installation
 
 - For Typesense, you need to specify the API Key for both the backend and frontend.
@@ -64,5 +104,5 @@ return ListView.builder(
         }
         return Text("Error: document is not form user, post, or comment");
     }
-);    
+);
 ```

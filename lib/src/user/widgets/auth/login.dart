@@ -8,19 +8,24 @@ import 'package:flutter/material.dart';
 ///
 /// 참고로, Firebase Realtime Database 의 사용자 문서가 로딩되지 않아도, Firebase Auth 에
 /// 로그인이 되면 이 함수의 builder 가 실행된다.
-class AuthReady extends StatelessWidget {
-  const AuthReady({
+///
+/// [yes] 옵션이며, 로그인이 되면 실행되는 콜백 함수. 사용자 UID 가 전달됨. 옵션 함수로 생략되면, 로그인을 한 경우 아무것도 표시되지 않는다.
+///
+/// [no] 로그인이 되지 않으면 실행되는 함수. 옵션 함수로 생략되면, 로그인이 되지 않은 경우 아무것도 표시되지 않음.
+///
+/// [loadingBuider] 로그인 상태를 확인하는 중에 실행되는 함수.
+class Login extends StatelessWidget {
+  const Login({
     super.key,
-    required this.builder,
-    @Deprecated('Use notLoginBuilder instead') this.notLogin,
-    this.notLoginBuilder,
+    this.yes,
+    this.no,
+    this.loadingBuider,
   });
 
-  final Widget Function(String) builder;
+  final Widget Function(String)? yes;
 
-  final Widget? notLogin;
-
-  final Widget Function()? notLoginBuilder;
+  final Widget Function()? no;
+  final Widget Function()? loadingBuider;
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +33,16 @@ class AuthReady extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges().map((user) => user?.uid),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return loadingBuider?.call() ??
+              const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         }
         if (snapshot.data == null) {
-          if (notLoginBuilder != null) return notLoginBuilder!();
-          return notLogin ?? const SizedBox.shrink();
+          return no != null ? no!() : const SizedBox.shrink();
         }
-        return builder(snapshot.data!);
+        return yes?.call(snapshot.data!) ?? const SizedBox.shrink();
       },
     );
   }

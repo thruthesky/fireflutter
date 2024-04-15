@@ -38,9 +38,10 @@ class _CommentContentState extends State<CommentContent> {
         color: Theme.of(context).colorScheme.primary.withAlpha(50),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text(
-        content.orBlocked(widget.comment.uid, T.blockedContentMessage),
-        style: const TextStyle(fontSize: 16),
+      child: Blocked(
+        otherUserUid: widget.comment.uid,
+        no: () => Text(content),
+        yes: () => const Text(T.blockedContentMessage),
       ),
     );
   }

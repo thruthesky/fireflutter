@@ -4,6 +4,7 @@ import { initializeApp } from "firebase-admin/app";
 import { Config } from "./config";
 import { setGlobalOptions } from "firebase-functions/v2/options";
 
+
 // / initialize firebase app
 initializeApp(
     // Add database URL for testing
@@ -21,5 +22,3 @@ export * from "./forum/forum.functions";
 export * from "./user/user.functions";
 export * from "./chat/chat.functions";
 export * from "./link/link.functions";
-
-

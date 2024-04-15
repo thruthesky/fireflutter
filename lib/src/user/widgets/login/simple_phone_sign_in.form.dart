@@ -376,7 +376,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                               error(
                                 context: context,
                                 title: T.error.tr,
-                                message: "Invalid SMS Code",
+                                message: T.invalidSmsCodeMessage,
                               );
                               return;
                             }
@@ -449,20 +449,26 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
         displayName: '',
       );
       signinSuccess();
-    } finally {
-      setState(() => progressVerifyPhoneNumber = false);
+    } catch (e) {
+      if (context.mounted) {
+        setState(() => progressVerifyPhoneNumber = false);
+      }
     }
   }
 
   doReviewPhoneNumberLogin() async {
-    setState(() => progressVerifyPhoneNumber = true);
+    if (context.mounted) {
+      setState(() => progressVerifyPhoneNumber = true);
+    }
     return doReviewLogin();
   }
 
   doReviewRealPhoneNumberLogin() {
-    setState(() {
-      showSmsCodeInput = true;
-      progressVerifyPhoneNumber = false;
-    });
+    if (context.mounted) {
+      setState(() {
+        showSmsCodeInput = true;
+        progressVerifyPhoneNumber = false;
+      });
+    }
   }
 }

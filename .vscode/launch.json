@@ -96,6 +96,24 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "Silvers - Galaxy - A45",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "R9ATA00LMJM",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Silvers - Chrome",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "chrome",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Momcafe - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
