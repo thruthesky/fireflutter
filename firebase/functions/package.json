@@ -22,6 +22,7 @@
     "deploy:phoneNumberRegister": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:phoneNumberRegister",
     "deploy:userDeleteAccount": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:userDeleteAccount",
     "deploy:link": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:link,hosting",
+    "deploy:mirrorBackfillRtdbToFirestore": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:mirrorBackfillRtdbToFirestore",
     "logs": "firebase functions:log",
     "test:send-a-message": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/send-a-message.spec.ts",
     "test:send-message": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/message/send-message.spec.ts",

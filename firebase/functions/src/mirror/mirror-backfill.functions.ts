@@ -186,12 +186,17 @@ export const mirrorBackfillRtdbToFirestore = onRequest(async (request, response)
     await mirrorBackfillUsers();
     await mirrorBackfillPosts();
     await mirrorBackfillComments();
+    response.writeHead(200, { "Content-Type": "text/html" });
+    response.write("Mirrored backfill data from RTDB to Firestore successfully!");
   } catch (e) {
       logger.error(e);
+      response.writeHead(500, { "Content-Type": "text/html" });
       if (e instanceof Error) {
-          response.send({ error: e.message });
+          response.write(e.message);
       } else {
-          response.send({ error: "unknown error" });
+          response.write("unknown error");
       }
+  } finally {
+    response.end();
   }
 });
