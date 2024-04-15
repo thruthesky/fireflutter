@@ -1,18 +1,8 @@
-import * as admin from "firebase-admin";
+
+import { getFirestore } from "firebase-admin/firestore";
+import { getDatabase } from "firebase-admin/database";
 import { onRequest } from "firebase-functions/v2/https";
 import { logger } from "firebase-functions/v1";
-
-// Initialize Firebase Admin SDK
-// const serviceAccount = require('./path/to/serviceAccountKey.json');
-admin.initializeApp({
-  credential: admin.credential.applicationDefault(),
-  databaseURL: "https://127.0.0.1:6004/?ns=withcenter-test-3",
-  projectId: "withcenter-test-3",
-});
-
-// Initialize Firestore and Realtime Database
-const firestore = admin.firestore();
-const rtdb = admin.database();
 
 /**
  * Mirror backfill users.
@@ -25,6 +15,9 @@ const rtdb = admin.database();
  */
 async function mirrorBackfillUsers(rtdbNode = "users", firestoreCollection = "users") {
   try {
+    // Initialize Firestore and Realtime Database
+    const firestore = getFirestore();
+    const rtdb = getDatabase();
     // Retrieve data from RTDB
     const rtdbSnapshot = await rtdb.ref(rtdbNode).once("value");
     if (!rtdbSnapshot.exists()) {
@@ -78,6 +71,9 @@ async function mirrorBackfillUsers(rtdbNode = "users", firestoreCollection = "us
  */
 async function mirrorBackfillPosts(rtdbNode = "posts", firestoreCollection = "posts") {
   try {
+    // Initialize Firestore and Realtime Database
+    const firestore = getFirestore();
+    const rtdb = getDatabase();
     // Retrieve data from RTDB
     const rtdbSnapshot = await rtdb.ref(rtdbNode).once("value");
     if (!rtdbSnapshot.exists()) {
@@ -140,6 +136,9 @@ async function mirrorBackfillPosts(rtdbNode = "posts", firestoreCollection = "po
  */
 async function mirrorBackfillComments(rtdbNode = "comments", firestoreCollection = "comments") {
   try {
+    // Initialize Firestore and Realtime Database
+    const firestore = getFirestore();
+    const rtdb = getDatabase();
     // Retrieve data from RTDB
     const rtdbSnapshot = await rtdb.ref(rtdbNode).once("value");
     if (!rtdbSnapshot.exists()) {
