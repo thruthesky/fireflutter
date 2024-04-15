@@ -124,7 +124,10 @@ class ChatModel {
     /// 그리고, 나서 updateJoin() 을 하면, B 의 채팅 메시지가 1이 되는 것이다.
     /// 즉, 0이 되어야하는데 1이 되는 상황이 발생한다. 그래서, updateJoin() 이 먼저 호출되어야 한다.
     Map<String, dynamic> multiUpdateData =
-        _getMultiUpdateForChatJoinLastMessage(text: text, url: url);
+        _getMultiUpdateForChatJoinLastMessage(
+      text: chatMessageData["text"],
+      url: chatMessageData["url"],
+    );
 
     /// Place to save the chat message data
     ///
@@ -226,6 +229,7 @@ class ChatModel {
     }
   }
 
+  /// Prepares a map that will be used to update the chat joins
   Map<String, dynamic> _getMultiUpdateForChatJoinLastMessage({
     String? text,
     String? url,
