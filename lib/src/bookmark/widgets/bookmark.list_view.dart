@@ -3,11 +3,17 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class BookmarkListView extends StatelessWidget {
-  const BookmarkListView({super.key});
+  const BookmarkListView({
+    super.key,
+    this.padding,
+  });
+
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
     return FirebaseDatabaseListView(
+      padding: padding ?? const EdgeInsets.all(8),
       query: Bookmark.bookmarksRef.child(myUid!),
       itemBuilder: (context, snapshot) {
         final Bookmark bookmark =
@@ -19,35 +25,14 @@ class BookmarkListView extends StatelessWidget {
                 Post.get(category: bookmark.category!, id: bookmark.postId!),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return ListTile(
-                  leading: const Avatar(photoUrl: anonymousUrl),
-                  title: Container(
-                    height: 16,
-                    width: 140,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  subtitle: Row(
-                    children: [
-                      Container(
-                        height: 16,
-                        width: 140,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+                return const CircularProgressIndicator.adaptive();
               }
               final post = snapshot.data!;
               return ListTile(
                 leading: UserAvatar(uid: post.uid),
                 title: Text(post.title),
                 subtitle: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('[POST] '),
                     UserDoc.field(
@@ -55,7 +40,7 @@ class BookmarkListView extends StatelessWidget {
                       field: 'displayName',
                       builder: (name) => Text(name ?? ''),
                     ),
-                    Text(' ${post.createdAt.toLocal()}'),
+                    Text(' ${post.createdAt.toYmd}'),
                   ],
                 ),
                 onTap: () => ForumService.instance.showPostViewScreen(
@@ -73,35 +58,14 @@ class BookmarkListView extends StatelessWidget {
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return ListTile(
-                  leading: const Avatar(photoUrl: anonymousUrl),
-                  title: Container(
-                    height: 16,
-                    width: 140,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  subtitle: Row(
-                    children: [
-                      Container(
-                        height: 16,
-                        width: 140,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+                return const CircularProgressIndicator.adaptive();
               }
               final comment = snapshot.data!;
               return ListTile(
                 leading: UserAvatar(uid: comment.uid),
                 title: Text(comment.content),
                 subtitle: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('[COMMNET] '),
                     UserDoc.field(

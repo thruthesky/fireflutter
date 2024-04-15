@@ -182,7 +182,7 @@ class PostLatestListView extends StatelessWidget {
           category: category,
           gridView: true,
           scrollDirection: scrollDirection,
-          padding: const EdgeInsets.all(8),
+          padding: padding,
           shrinkWrap: shrinkWrap,
           primary: primary,
           controller: controller,

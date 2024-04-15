@@ -18,6 +18,7 @@ class ClubDetails extends StatelessWidget {
       builder: (club) {
         return SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (club.photoUrl != null)
                 CachedNetworkImage(
@@ -108,14 +109,18 @@ class ClubDetails extends StatelessWidget {
                   ),
                 ),
               const SizedBox(height: 16),
-              const Text('최근 사진들'),
+              const Padding(
+                padding: EdgeInsets.only(left: 16.0),
+                child: Text('최근 사진들'),
+              ),
               PostLatestListView.gridView(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 8,
                 ),
-                category: '${club.id}-gallery',
+                category: '${club.id}-club-gallery',
                 emptyBuilder: () => Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
@@ -129,10 +134,14 @@ class ClubDetails extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
               ),
               const SizedBox(height: 16),
-              const Text('최근글'),
+              const Padding(
+                padding: EdgeInsets.only(left: 16.0),
+                child: Text('최근글'),
+              ),
               PostLatestListView(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 separatorBuilder: (p0, p1) => const SizedBox(height: 8),
-                category: club.id,
+                category: '${club.id}-club-post',
                 emptyBuilder: () => Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
@@ -147,6 +156,7 @@ class ClubDetails extends StatelessWidget {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
               ),
+              const SizedBox(height: 64),
             ],
           ),
         );
