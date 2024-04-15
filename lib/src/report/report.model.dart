@@ -119,6 +119,23 @@ class Report {
     String? commentId,
     String reason = '',
   }) async {
+    if (notLoggedIn) {
+      final re = await UserService.instance.loginRequired!(
+        context: FireFlutterService.instance.globalContext!,
+        action: 'report',
+        data: {},
+      );
+
+      /// 로그인이 되어야만 신고가 가능하다.
+      /// 로직상 여기서는 Exception 을 던진다. 왜냐하면, 사용자가 로그인을 거절했지만, 데이터를 이미 입력한 상태이기 때문이다.
+      if (re != true) {
+        throw FireFlutterException(
+          'report-create',
+          'Login required',
+        );
+      }
+    }
+
     if (postId != null) {
       if (commentId == null && category == null) {
         throw ArgumentError(

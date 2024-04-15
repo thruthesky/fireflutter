@@ -33,6 +33,11 @@ class _PostContentState extends State<PostContent> {
   }
 
   _text() {
-    return Text(content.orBlocked(widget.post.uid, T.blockedContentMessage));
+    /// 차단이 되었으면, 차단 메시지를 보여준다.
+    return Blocked(
+      otherUserUid: widget.post.uid,
+      no: () => Text(content),
+      yes: () => const Text(T.blockedContentMessage),
+    );
   }
 }

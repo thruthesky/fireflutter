@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
 
 class Bookmark {
   /// Paths and Refs
@@ -108,13 +109,28 @@ class Bookmark {
   /// If the bookmark exists, it will be deleted. If not, it will be created.
   ///
   /// Returns true if the bookmark is created, false if the bookmark is deleted.
-  static Future<bool> toggle({
+  static Future<bool?> toggle({
+    required BuildContext context,
     String? otherUserUid,
     String? chatRoomId,
     String? category,
     String? postId,
     String? commentId,
   }) async {
+    if (notLoggedIn) {
+      final re = await UserService.instance.loginRequired!(
+          context: context,
+          action: 'bookmark-toggle',
+          data: {
+            'otherUserUid': otherUserUid,
+            'chatRoomId': chatRoomId,
+            'category': category,
+            'postId': postId,
+            'commentId': commentId,
+          });
+      if (re != true) return null;
+    }
+
     final bookmark = await get(
       otherUserUid: otherUserUid,
       chatRoomId: chatRoomId,
@@ -123,7 +139,7 @@ class Bookmark {
       commentId: commentId,
     );
     if (bookmark == null) {
-      await create(
+      await _create(
         otherUserUid: otherUserUid,
         chatRoomId: chatRoomId,
         category: category,
@@ -132,7 +148,7 @@ class Bookmark {
       );
       return true;
     } else {
-      await delete(
+      await _delete(
         otherUserUid: otherUserUid,
         chatRoomId: chatRoomId,
         category: category,
@@ -143,7 +159,7 @@ class Bookmark {
     }
   }
 
-  static Future<void> create({
+  static Future<void> _create({
     String? otherUserUid,
     String? chatRoomId,
     String? category,
@@ -168,7 +184,7 @@ class Bookmark {
     });
   }
 
-  static Future<void> delete({
+  static Future<void> _delete({
     String? otherUserUid,
     String? chatRoomId,
     String? category,

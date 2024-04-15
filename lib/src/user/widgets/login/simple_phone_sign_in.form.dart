@@ -376,7 +376,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                               error(
                                 context: context,
                                 title: T.error.tr,
-                                message: "Invalid SMS Code",
+                                message: T.invalidSmsCodeMessage,
                               );
                               return;
                             }

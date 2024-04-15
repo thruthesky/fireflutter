@@ -74,7 +74,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
   Future<void> reload() async {
     try {
       await chat.room.reload();
-    } on Issue catch (e) {
+    } on FireFlutterException catch (e) {
       // See chat.md#Get ChatRoom on ChatRoomBody
       if (e.code == Code.chatRoomNotExists) {
         /// uid 또는 groupId 로 채팅방을 생성한다.
@@ -108,7 +108,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
     if (chat.room.joined == false) {
       try {
         await chat.room.join();
-      } on Issue catch (e) {
+      } on FireFlutterException catch (e) {
         if (e.code == Code.chatRoomNotVerified) {
           if (mounted) {
             error(context: context, message: '본인 인증을 하지 않아 채팅방에 입장할 수 없습니다.');
@@ -319,7 +319,9 @@ class _ChatRoomState extends State<ChatRoomBody> {
                           );
                         } else if (v == 'block') {
                           /// 차단 & 해제
-                          final re = await my?.block(chat.room.otherUserUid!);
+                          final re = await UserService.instance.block(
+                              context: context,
+                              otherUserUid: chat.room.otherUserUid!);
                           if (context.mounted) {
                             toast(
                               context: context,

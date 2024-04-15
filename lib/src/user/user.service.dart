@@ -360,4 +360,81 @@ class UserService {
       rethrow;
     }
   }
+
+  /// 좋아요
+  ///
+  /// 로그인을 하지 않으면, my 객체가 null 이 되어, 에러가 발생한다.
+  /// 이를 방지하기 위해서 반드시 이 함수를 사용해서 좋아요 또는 좋아요 해제를 해야 한다.
+  Future<bool?> like({
+    required BuildContext context,
+    required String otherUserUid,
+  }) async {
+    if (notLoggedIn) {
+      final re = await UserService.instance.loginRequired!(
+          context: context,
+          action: 'like',
+          data: {
+            'otherUserUid': otherUserUid,
+          });
+      if (re != true) return null;
+    }
+
+    await my?.toggleLike(otherUserUid);
+    return null;
+  }
+
+  /// 차단
+  ///
+  /// 로그인을 하지 않으면, my 객체가 null 이 되는데,
+  /// 로그인을 하지 않은 채, 차단을 하면, 이로 인해 에러가 발생한다.
+  /// 이를 방지하기 위해서 반드시 이 함수를 사용해서 차단 또는 차단 해제를 해야 한다.
+  ///
+  ///
+  /// 차단을 했으면 true, 차단 해제를 했으면 false, 로그인을 하지 않았으면 null 이 리턴된다.
+  ///
+  /// [ask] 이 값이 true 이면 사용자에게 차단할지 말지 물어본다.
+  ///
+  /// [notify] 이 값이 true 이면, 차단 또는 차단 해제를 했을 때, 사용자에게 차단 또는 차단 해제했다고 화면에 알려준다.
+  Future<bool?> block({
+    required BuildContext context,
+    required String otherUserUid,
+    bool ask = false,
+    bool notify = true,
+  }) async {
+    /// 로그인 확인
+    if (notLoggedIn) {
+      final re = await UserService.instance.loginRequired!(
+          context: context,
+          action: 'block',
+          data: {
+            'otherUserUid': otherUserUid,
+          });
+      if (re != true) return null;
+    }
+
+    /// 차단할지 물어본다.
+    if (ask) {
+      bool? re = await confirm(
+        context: context,
+        title: my!.hasBlocked(otherUserUid) ? T.unblock.tr : T.block.tr,
+        message: my!.hasBlocked(otherUserUid)
+            ? T.unblockConfirmMessage.tr
+            : T.blockConfirmMessage.tr,
+      );
+      if (re != true) return null;
+    }
+
+    /// 차단
+    bool? re = await my?.toggleBlock(otherUserUid);
+
+    /// 차단 후 화면에 알림
+    if (notify && context.mounted) {
+      toast(
+        context: context,
+        title: re == true ? T.blocked.tr : T.unblocked.tr,
+        message: re == true ? T.blockedMessage.tr : T.unblockedMessage.tr,
+      );
+    }
+    return null;
+  }
 }

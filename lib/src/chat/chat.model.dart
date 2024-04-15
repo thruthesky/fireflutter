@@ -75,22 +75,24 @@ class ChatModel {
 
     /// TODO 관리자 모드에서 특정 사용자에게 disabled 한 다음 테스트 할 것.
     if (force == false && UserService.instance.user?.isDisabled == true) {
-      throw Issue(Code.disabled);
+      throw FireFlutterException(
+          Code.disabled, 'You are disabled. chat.model.dart->sendMessage()');
     }
 
     /// 방에 입장하지 않은 상태이면, [force] 가 true 이더라도 메시지를 전송하지 않는다.
     if (room.joined == false) {
-      throw Issue(Code.notJoined, 'chat.model.dart->sendMessage()');
+      throw FireFlutterException(
+          Code.notJoined, 'chat.model.dart->sendMessage()');
     }
 
     /// 인증된 사용자만 URL 전송 옵션
     if (text?.hasUrl == true && room.urlVerifiedUserOnly && iam.notVerified) {
-      throw Issue(Code.notVerified, T.notVerifiedMessage);
+      throw FireFlutterException(Code.notVerified, T.notVerifiedMessage);
     }
 
     /// 인증된 사용자만 파일 전송 옵션
     if (url != null && room.uploadVerifiedUserOnly && iam.notVerified) {
-      throw Issue(Code.notVerified, T.notVerifiedMessage);
+      throw FireFlutterException(Code.notVerified, T.notVerifiedMessage);
     }
 
     /// 채팅 메시지 순서를 -1 (감소) 한다.
