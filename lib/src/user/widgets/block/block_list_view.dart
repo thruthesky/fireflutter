@@ -2,7 +2,14 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class BlockListView extends StatelessWidget {
-  const BlockListView({super.key});
+  const BlockListView({
+    super.key,
+    this.padding,
+    this.separatorBuilder,
+  });
+
+  final EdgeInsets? padding;
+  final Widget Function(BuildContext, int)? separatorBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -25,21 +32,16 @@ class BlockListView extends StatelessWidget {
               ),
             )
           : ListView.separated(
+              padding: padding ?? const EdgeInsets.all(8),
               itemBuilder: (_, i) {
                 final blockedUid = my.blocks![i];
                 return UserDoc(
                   uid: blockedUid,
-                  onLoading: const ListTile(
-                    leading: Avatar(photoUrl: anonymousUrl),
-                    title: Text('Loading...'),
-                    subtitle: Text('...'),
-                    trailing:
-                        IconButton(onPressed: null, icon: Icon(Icons.delete)),
-                  ),
+                  onLoading: const SizedBox.shrink(),
                   builder: (user) {
                     return ListTile(
                       title: Text(user.displayName),
-                      subtitle: Text(user.uid),
+                      // subtitle: Text(user.uid),
                       leading: Avatar(photoUrl: user.photoUrl.orAnonymousUrl),
                       trailing: IconButton(
                         key: Key('blockListTileDeleteBtn${user.uid}'),
@@ -53,7 +55,8 @@ class BlockListView extends StatelessWidget {
                   },
                 );
               },
-              separatorBuilder: (_, __) => const Divider(),
+              separatorBuilder: (_, __) =>
+                  separatorBuilder?.call(_, __) ?? const Divider(),
               itemCount: my!.blocks!.length,
             ),
     );
