@@ -39,9 +39,10 @@ class _PostTitleState extends State<PostTitle> {
   }
 
   _text() {
-    return Text(
-      title.orBlocked(widget.post.uid, T.blockedTitleMessage.tr),
-      style: const TextStyle(fontSize: 16),
+    return Blocked(
+      otherUserUid: widget.post.uid,
+      no: () => Text(title),
+      yes: () => Text(T.blockedTitleMessage.tr),
     );
   }
 }

@@ -226,7 +226,7 @@ class ChatRoom {
   static Future<ChatRoom> fromReference(DatabaseReference ref) async {
     final event = await ref.once();
     if (event.snapshot.exists == false) {
-      throw Issue(
+      throw FireFlutterException(
         Code.chatRoomNotExists,
         'ChatRoom.fromReference: ${ref.path} does not exist.',
       );
@@ -449,7 +449,8 @@ class ChatRoom {
         verified = await User.getField(uid, Field.isVerified);
       }
       if (verified == false) {
-        throw Issue(Code.chatRoomNotVerified);
+        throw FireFlutterException(
+            Code.chatRoomNotVerified, 'Chat room is for verified users only.');
       }
     }
 
@@ -515,7 +516,8 @@ class ChatRoom {
     if (myUid == null) {
       // 로그인을 하지 않았으면 그냥 리턴
       // throw Exception('ChatModel::join() -> Login first -> myUid is null');
-      throw Issue(Code.notLoggedIn);
+      throw FireFlutterException(
+          Code.notLoggedIn, 'Please login to join a chat room');
     }
     return await invite(uid ?? myUid!, forceJoin: forceJoin);
   }

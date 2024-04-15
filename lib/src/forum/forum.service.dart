@@ -37,6 +37,16 @@ class ForumService {
     required BuildContext context,
     required String category,
   }) async {
+    if (notLoggedIn) {
+      final re = await UserService.instance.loginRequired!(
+          context: context,
+          action: 'showPostCreateScreen',
+          data: {
+            'category': category,
+          });
+      if (re != true) return;
+    }
+
     if (iam.disabled) {
       error(context: context, message: 'You are disabled.');
       return;
@@ -99,13 +109,32 @@ class ForumService {
     bool? showUploadDialog,
     bool? focusOnTextField,
   }) async {
+    /// 로그인 확인
+    if (notLoggedIn) {
+      final re = await UserService.instance.loginRequired!(
+          context: context,
+          action: 'showCommentCreateScreen',
+          data: {
+            'post': post,
+            'parent': parent,
+            'showUploadDialog': showUploadDialog,
+            'focusOnTextField': focusOnTextField,
+          });
+      if (re != true) return false;
+    }
+
+    /// 관리자에 의해 차단되었는지 확인
     if (iam.disabled) {
       error(context: context, message: 'You are disabled.');
       return false;
     }
+
+    /// 코멘트 생성 제한 확인
     if (await ActionLogService.instance.commentCreate.isOverLimit()) {
       return false;
     }
+
+    ///
     if (context.mounted) {
       return showModalBottomSheet<bool?>(
         context: context,
@@ -128,6 +157,19 @@ class ForumService {
     bool? showUploadDialog,
     bool? focusOnTextField,
   }) async {
+    /// 로그인 확인
+    if (notLoggedIn) {
+      final re = await UserService.instance.loginRequired!(
+          context: context,
+          action: 'showCommentUpdateScreen',
+          data: {
+            'comment': comment,
+            'showUploadDialog': showUploadDialog,
+            'focusOnTextField': focusOnTextField,
+          });
+      if (re != true) return false;
+    }
+
     return showModalBottomSheet<bool?>(
       context: context,
       isScrollControlled: true, // 중요: 이것이 있어야 키보드가 bottom sheet 을 위로 밀어 올린다.

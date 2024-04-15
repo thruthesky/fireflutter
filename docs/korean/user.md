@@ -347,7 +347,7 @@ Fireflutter provides a widget to display user list. We can use this if we don't 
 UserListView()
 ```
 
-## User likes
+## 좋아요
 
 - User likes are saved under `/user-likes` and `/user-who-i-like`.
     - If A likes U, then A is saved under `/user-likes/U {A: true}` and U is saved under `/user-who-i-like/A { U: true}`.
@@ -399,6 +399,13 @@ IconButton(
   icon: const FaIcon(FontAwesomeIcons.heart),
 ),
 ```
+
+## 서로 좋아요
+
+
+- `UserModel.like()` 에서 A 가 B 를 좋아요 할 때, B 가 A 를 좋아요 한 상태이면 서로 좋아요를 표시하고,
+- `UserModel.like()` 에서 A 가 B 를 좋아요 해제 할 때, 서로 좋아요 표리를 없앤다. 즉, 둘 중 좋아요 해제를 한 명이라도 하면 둘다 해제하면 되는 것이다.
+
 
 ## 사용자 정보 listening
 
@@ -516,28 +523,8 @@ Fireflutter 에서 기본 제공하는 거리 검색은 위의 세 가지 방법
 - [좋아요](./like.md) 문서 참고
 
 
-## 사용자 로그인 및 문서 준비 확인
 
-### AuthReady
-
-`AuthReady` 는 사용자가 Firebase 에 로그인을 했으면, `builder` 콜백 함수가 호출되어 위젯을 표시할 수 있다. 만약 로그인을 하지 않았으면 `notLogin` 콜백 함수가 실행된다.
-참고로, Firebase Realtime Database 의 사용자 문서가 로딩되지 않아도, 이 함수의 builder 가 실행된다.
-
-주로, 파이어베이스에 로그인을 하여 사용자 uid 가 사용 가능한지 확인을 위해서 쓴다.
-
-`LoggedIn` 과 `LoggedOut` 위젯은 단순히, `AuthReady` 를 재 사용하기 쉽게 해 놓은 것이다.
-
-
-
-### DocReady
-
-`DocReady` 는 사용자가 Firebase 에 로그인 한 다음, Realtime Database 에서 사용자 문서를 로딩했는지를 확인 할 때 사용한다.
-
-내부적으로 단순히, [MyDoc] 위젯을 사용하여, 사용자 문서가 로딩되었는지 확인하며, 사용자 문서가 로딩되었으면, `builder(UserModel)` 를 실행하고, 로딩이 안되었으면 [loading] 을 한다.
-
-[MyDoc] 을 사용하면, builder(UserModel) 가 null 일 수 있으므로, null 체크를 해야 하는데, [DocReady] 는 builder(UserModel) 가 null 이 아니므로 조금 더 편리하게 사용 할 수 있다.
-
-## 블럭
+## 사용자 차단 표시 및 차단하기
 
 - 블럭된 사용자는 `BlockListView` 로 목록으로 표시 할 수 있다.
 - 블럭된 경우 문자열로 표시하는 경우는 `orBlock()` String extension 을 사용하면 된다.
@@ -558,6 +545,15 @@ Blocked(
 ```
 
 블럭 버튼을 표시하는 것은 위젯 문서를 참고한다.
+
+
+- 다른 사용자를 차단 할 때에 `UserService.instance.block()` 함수를 쓰면 된다. 이 함수 내에
+  - 로그인을 했는지 확인하고,
+  - 차단 할지 물어보고 (옵션)
+  - 차단 했으면 화면에 알려주는 (옵션)
+  기능들이 모두 포함되어져 있다.
+  2024. 04. 14. 이후, 다른 함수들도 이렇게 함수내에 포함을 하도록 한다.
+
 
 
 
@@ -599,3 +595,46 @@ ElevatedButton(
   child: Text('회원 탈퇴'),
 ),
 ```
+
+## 로그인에 따른 위젯 보여주기
+
+로그인을 했는지 하지 않았는지에 따라 위젯을 다르게 보여주어야 할 때가 있다.
+
+
+- `Login` 위젯은 사용자가 Firebase 에 로그인을 했으면, `yes` 콜백 함수가 호출되어 위젯을 표시할 수 있다. 만약 로그인을 하지 않았으면 `no` 콜백 함수가 실행된다. 참고로, `Login` 위젯은 Firebase Auth 만으로 동작하며, Firebase Realtime Database 의 사용자 문서가 로딩되거나 되지 않거나 상관없다. 주로, 파이어베이스에 로그인을 하여 사용자 uid 가 사용 가능한지 확인을 위해서 쓴다.
+
+`LoggedIn` 과 `LoggedOut` 위젯은 단순히, `AuthReady` 를 재 사용하기 쉽게 해 놓은 것이다.
+
+- `LoggedIn` 은 FirebaseAuth 에 로그인을 한 경우 보여진다.
+- `LoggedOut` 은 Firebase Auth 에 로그인을 하지 않은 경우 보여진다.
+
+
+- `MyDoc` 은 내가 로그인을 한 경우 이용 할 수 있다.
+  - 이 때, 나의 문서를 Firebase Realtime Database 에서 다운로드 한 경우 builder 콜백 함수에 UserModel 이 전달된다.
+  - 만약, 앱이 시작되지 마자 호출되어, 아직 나의 정보가 RTDB 에서 다운로드되지 않았다면 (또는 다운로드 중이라면) build 함수에 null 이 전달된다.
+
+
+- `DocReady` 이 위젯은 내부적으로 `MyDoc` 을 사용하며, Firestore Auth 에 로그인하고, 나의 문서가 RTDB 에서 로드되면 builder 콜백 함수를 호출한다. 만약, 로그인을 하지 않았거나 문서를 아직 로드하지 않았다면(또는 문서가 존재하지 않거나, 로드 할 수 없는 상태 등) `loadingBuilder` 를 보여준다. 즉, 로그인을 하지 않은 경우나 문서가 없는 경우 등은 `loadingBuilder` 가 화면에 보이는 것이다. 참고로, `MyDoc` 을 사용하면, `builder( UserModel? )` 가 null 일 수 있으므로, null 체크를 해야 하는데, `DocReady` 는 `builder(UserModel)` 가 null 이 아니므로 조금 더 편리하게 사용 할 수 있다.
+
+
+
+
+
+## 로그인을 하지 않은 경우,
+
+로그인을 하지 않고도 앱을 쓸 수 있도록 한다면, 특정 기능에서 에러가 발생 할 수 있다. 예를 들면, 로그인을 하지 않고 채팅방에 입장, 글 쓰기 등을 하는 경우라 할 수 있다. 이 외에도 코멘트 쓰기, 좋아요 등 여러가지 기능이 있다.
+
+이 처럼 로그인을 해야지만 쓸 수 있는 기능의 경우, 대부분 해당 서비스(예: UserService, ChatSerivce, ForumService 등)에서 팝업이나 생 창을 띄우기 전에 로그인을 했는지 검사를 한다. 로그인을 했으면 문제가 없겠지만, 로그인을 하지 않았다면, `UserService.instance.init(loginRequired: ...)` 콜백 함수를 실행한다. 만약, `UserService.instance.init(loginRequired: ...)` 함수가 정의되지 않았다면 `UserService.instnace.loginRequired!()` 와 같이 호출하는 과정에서, `null check operator used on null value` 와 같은 에러가 발생 할 수 있다. 따라서 로그인을 하지 않고, 앱의 사용 할 수 있게 한다면 반드시 `loginRequired` 설정을 해 주어야 한다.
+
+`action` 은 채팅방 입장, 채팅방 메세지 전송, 글 쓰기, 코멘트 쓰기 등의 행동 분류를 나타내며, `data` 는 각 행동에 따른 각종 옵션이 전달된다.
+
+
+예제 - 로그인을 하지 않고 채팅방에 입장하려 하는 경우,
+
+```dart
+
+```
+
+참고로, 좋아요 또는 신고 등의 경우, 앱의 여러 곳에서 사용 될 수 있는데, 관련 로직이 모델 클래스에 있다. 그래서 로그인 여부를 판단하기 위해서, 서비스(servivce) 클래스에서 wrapping 을 하는 경우가 있다. 이렇게 하는 이유는 글이나 코멘트 등에서 좋아요를 하는 경우, 해당 글/코멘트 모델 객체가 존재 모델 클래스에서 좋아요 로직에서 로그인을 했는지 확인을 할 수 있. 하지만, 좋아요를 하는 경우, 나의 정보를 담고 있는 UserModel 객체가 필요한데, 로그인을 하지 않아서 해당 객체 자체가 존재하지 않기 때문이다. 그리서 서비스 클래스에서 wrapping 해서 로직 관리를 하는 것이다. 그래서 사용자 좋아요 하는 것과 글 좋아요 하는 것은 로직이 다르다.
+
+만약, 로그인을 했다는 확신이 있다면, `my.toggleBlock` 과 같이 바로 호출해도 된다.

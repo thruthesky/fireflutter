@@ -67,6 +67,6 @@ class BlockButton extends StatelessWidget {
           : T.blockConfirmMessage.tr,
     );
     if (re != true) return;
-    await my?.block(uid);
+    await await UserService.instance.block(context: context, otherUserUid: uid);
   }
 }
