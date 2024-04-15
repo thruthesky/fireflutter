@@ -46,7 +46,7 @@ describe("Mirroring Posts (mirror/01.post-mirroring.spec.ts)", () => {
             assert.ok(false, "Either there is an error, more latency, or the doc is not in Firestore.");
         }
     });
-    it("The Mirrored post in Firestore but have the same values in RTDB", async () => {
+    it("The Mirrored post in Firestore must have the same values in RTDB", async () => {
         // 1. Set post in RTDB
         const id = randomString();
         const postData: PostCreateEvent= {
@@ -219,7 +219,7 @@ describe("Mirroring Posts (mirror/01.post-mirroring.spec.ts)", () => {
             assert.ok(false, "Either there is an error, more latency, or the doc is not in Firestore.");
         }
     });
-    it("The post was tagged in RTDB as deleted = true, so it must be deleted in Firestore as well", async () => {
+    it("The post was tagged in RTDB as deleted = true, and it must be mirrored the same way", async () => {
         // 1. Set post in RTDB
         const id = randomString();
         const postData: PostCreateEvent = {
@@ -249,8 +249,8 @@ describe("Mirroring Posts (mirror/01.post-mirroring.spec.ts)", () => {
 
         // 5. Search for the document in Firestore
         const retrieveResult = await admin.firestore().collection(postCollection).doc(id).get();
-        if (!retrieveResult.exists) {
-            // means doc does not exist in Firestore
+        const retrievePost = retrieveResult.data() as FirestorePost;
+        if (retrieveResult.exists && retrievePost.deleted === true) {
             assert.ok(true);
         } else {
             assert.ok(false, "Either there is an error, more latency, or the doc is not in Firestore.");

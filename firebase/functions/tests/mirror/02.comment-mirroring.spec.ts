@@ -57,7 +57,7 @@ describe("Mirroring Comments (mirror/02.comment-mirroring.spec.ts)", () => {
             assert.ok(false, "Either there is an error, more latency, or the doc is not in Firestore.");
         }
     });
-    it("The Mirrored comments in Firestore but have the same values in RTDB", async () => {
+    it("The Mirrored comments in Firestore must have the same values in RTDB", async () => {
         // 1. Set post in RTDB
         const postId = randomString();
         const uid = randomString();
@@ -228,7 +228,7 @@ describe("Mirroring Comments (mirror/02.comment-mirroring.spec.ts)", () => {
             assert.ok(false, "Either there is an error, more latency, or the doc is not in Firestore.");
         }
     });
-    it("The comment was tagged in RTDB as deleted = true, so it must be deleted in Firestore as well", async () => {
+    it("The comment was tagged in RTDB as deleted = true, and it must simply be mirrored in Firestore", async () => {
         // 1. Set post in RTDB
         const postId = randomString();
         const uid = randomString();
@@ -266,8 +266,8 @@ describe("Mirroring Comments (mirror/02.comment-mirroring.spec.ts)", () => {
 
         // 5. Search for the document in Firestore
         const retrieveResult = await admin.firestore().collection(commentCollection).doc(commentId).get();
-        if (!retrieveResult.exists) {
-            // means doc does not exist in Firestore
+        const retrieveComment = retrieveResult.data() as FirestoreComment;
+        if (retrieveResult.exists && retrieveComment.deleted === true) {
             assert.ok(true);
         } else {
             assert.ok(false, "Either there is an error, more latency, or the doc is not in Firestore.");
