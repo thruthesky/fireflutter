@@ -69,6 +69,10 @@ When making the request, simply input the phone number you wish to sign up with 
 - Upon successful sign-up:
   - Result: `{ uid: 'YSr8fJwQASSF4QApILkaAEjbfCd2' }`
 
+## Mirror Functions
+
+<!-- TODO -->
+
 ## Function Testing
 
 Refer to the [testing document](./test.md).
