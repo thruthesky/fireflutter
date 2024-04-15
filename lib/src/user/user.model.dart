@@ -32,7 +32,6 @@ class User {
   static DatabaseReference userRef(String uid) => usersRef.child(uid);
   static DatabaseReference userProfilePhotosRef =
       rootRef.child('profile-photos');
-
   static DatabaseReference whoILikeRef = rootRef.child(whoILike);
   static DatabaseReference whoLikeMeRef = rootRef.child(whoLikeMe);
   static DatabaseReference mutualLikeRef = rootRef.child(mutualLike);
@@ -109,11 +108,7 @@ class User {
 
   /// When the user's location was updated, geohash data is also updated.
   ///
-  /// [geohash] representing the geographic location of a user
-  ///  geohash is a string representation of a geographic location and is
-  ///  encoded in a series of characters.
-  String geohash;
-
+  ///
   /// [geohash3] is used for searching nearby users above 20k meters
   String geohash3;
 
@@ -214,7 +209,6 @@ class User {
     required this.siGunGu,
     required this.latitude,
     required this.longitude,
-    required this.geohash,
     required this.geohash3,
     required this.geohash4,
     required this.geohash5,
@@ -293,7 +287,6 @@ class User {
       siGunGu: json['siGunGu'] ?? '',
       latitude: json['latitude'] ?? 0.0,
       longitude: json['longitude'] ?? 0.0,
-      geohash: json['geohash'] ?? '',
       geohash3: json['geohash3'] ?? '',
       geohash4: json['geohash4'] ?? '',
       geohash5: json['geohash5'] ?? '',
@@ -333,7 +326,6 @@ class User {
       'siGunGu': siGunGu,
       'latitude': latitude,
       'longitude': longitude,
-      'geohash': geohash,
       'geohash4': geohash4,
       'geohash5': geohash5,
       'geohash6': geohash6,
@@ -378,7 +370,6 @@ class User {
       siGunGu = user.siGunGu;
       latitude = user.latitude;
       longitude = user.longitude;
-      geohash = user.geohash;
       geohash3 = user.geohash3;
       geohash4 = user.geohash4;
       geohash5 = user.geohash5;
@@ -529,7 +520,6 @@ class User {
     if (latitude != null && longitude != null) {
       final geohash = GeoHash.encode(latitude, longitude);
       final hash = geohash.hash;
-      data['geohash'] = hash;
       data['geohash3'] = hash.substring(0, 3);
       data['geohash4'] = hash.substring(0, 4);
       data['geohash5'] = hash.substring(0, 5);
