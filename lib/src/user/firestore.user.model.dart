@@ -27,7 +27,10 @@ class FirestoreUserModel {
   int idUploadedAt;
   int createdAt;
   String occupation;
-  String nationality;
+
+  /// The countryCode will be the basis of the
+  /// Nationality of the user.
+  String countryCode;
 
   /// [siDo] is composed with two region codes separated by '-'.
   /// For example, '1-11' where the first 1 is 'Seoul', and the second 11 is 'Dongdaemun-gu'.
@@ -42,7 +45,7 @@ class FirestoreUserModel {
   static CollectionReference col =
       FirebaseFirestore.instance.collection(collectionName);
 
-// user age by computing the current date  and the user given year and month and day
+  // user age by computing the current date  and the user given year and month and day
   String get age {
     if (birthDay == 0 || birthYear == 0 || birthYear == 0) return "";
     DateTime currentTime = DateTime.now();
@@ -78,7 +81,7 @@ class FirestoreUserModel {
     required this.idUrl,
     required this.idUploadedAt,
     required this.occupation,
-    required this.nationality,
+    required this.countryCode,
     required this.siDo,
     required this.siGunGu,
   });
@@ -133,7 +136,7 @@ class FirestoreUserModel {
       idUrl: json[Field.idUrl] ?? '',
       idUploadedAt: json[Field.idUploadedAt] ?? 0,
       occupation: json[Field.occupation] ?? '',
-      nationality: json['nationality'] ?? '',
+      countryCode: json['countryCode'] ?? '',
       siDo: json['siDo'] ?? '',
       siGunGu: json['siGunGu'] ?? '',
     );

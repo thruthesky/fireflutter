@@ -16,7 +16,7 @@ class DefaultProfileUpdateForm extends StatefulWidget {
     this.occupation,
     this.stateMessage,
     this.gender,
-    this.nationality,
+    this.countryCode,
     this.region,
     this.morePhotos,
     this.onUpdate,
@@ -33,7 +33,7 @@ class DefaultProfileUpdateForm extends StatefulWidget {
   final FormOption? occupation;
   final FormOption? stateMessage;
   final FormOption? gender;
-  final FormOption? nationality;
+  final FormOption? countryCode;
   final bool countrySearch;
   final FormOption? region;
   final FormOption? morePhotos;
@@ -53,7 +53,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
   double? progress;
   double? morePhotoProgress;
   final nameController = TextEditingController();
-  String? nationality;
+  String? countryCode;
   AreaCode? siDo;
   AreaCode? siGunGu;
   final occupationController = TextEditingController();
@@ -69,8 +69,8 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
     super.initState();
 
     nameController.text = my?.displayName ?? '';
-    if (user.nationality != '') {
-      nationality = user.nationality;
+    if (user.countryCode != '') {
+      countryCode = user.countryCode;
     }
     if (user.siDo != '') {
       siDo = getSiDo(widget.koreanAreaLanguageCode, user.siDo);
@@ -247,7 +247,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
               description: T.birthdateSelectDescription.tr,
             ),
           ),
-        if (widget.nationality?.require == true) ...{
+        if (widget.countryCode?.require == true) ...{
           const SizedBox(
             height: 32,
           ),
@@ -275,12 +275,12 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
             child: SizedBox(
               width: double.infinity,
               child: CountryPicker(
-                initialValue: nationality,
+                initialValue: countryCode,
                 filters: widget.countryFilter,
                 search: widget.countrySearch,
                 headerBuilder: () => const Text('Select your country'),
                 onChanged: (v) {
-                  nationality = v.alpha2;
+                  countryCode = v.alpha2;
                 },
               ),
             ),
@@ -438,8 +438,8 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
               } else if (widget.gender?.require == true && gender == null) {
                 errorToast(context: context, message: T.pleaseSelectGender.tr);
                 return;
-              } else if (widget.nationality?.require == true &&
-                  nationality == null) {
+              } else if (widget.countryCode?.require == true &&
+                  countryCode == null) {
                 errorToast(
                     context: context, message: T.pleaseSelectNationality.tr);
                 return;
@@ -464,7 +464,7 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                   name: nameController.text,
                   displayName: nameController.text,
                   gender: gender,
-                  nationality: nationality,
+                  countryCode: countryCode,
                   siDo: siDo?.code,
                   siGunGu: siGunGu?.code,
                   occupation: occupationController.text,
