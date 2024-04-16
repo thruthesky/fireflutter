@@ -28,6 +28,8 @@ class T {
   static const String bookmarkMessage = 'Favorite sucess';
   static const String unbookmark = 'Unfavorite';
   static const String unbookmarkMessage = 'Unfavorite success';
+  static const String thereAreNoBookmarksInTheList =
+      'There are no bookmarks in the list.';
 
   /// Label, texts, buttons,
   static const String dismiss = 'dismiss';
@@ -59,7 +61,8 @@ class T {
   static const String visitedYourProfileTitle = 'Your profile was visited.';
   static const String visitedYourProfileBody = '#name visited your profile';
   // chat input box hint text -> please enter a message
-  static const String pleaseEnterMessage = '메시지를 입력하세요.';
+  static const String pleaseEnterMessage = 'Please enter message.';
+  static const String cannotBlockYourself = 'You cannot block yourself.';
 
   /// User and Profile
   static const String recentLoginRequiredForResign =

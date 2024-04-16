@@ -129,7 +129,22 @@ class ChatRoom {
     return ChatRoom.fromJson(json);
   }
 
-  factory ChatRoom.fromJson(Map<dynamic, dynamic> json) {
+  /// [fromJson] It creates a [ChatRoom] from a json.
+  ///
+  /// Example:
+  /// ```
+  /// int no = 0;
+  /// for (final key in value.keys) {
+  ///   final room = ChatRoom.fromJson(value[key] as Map, key: key);
+  ///   no += room.newMessage ?? 0;
+  /// }
+  /// ```
+  factory ChatRoom.fromJson(Map<dynamic, dynamic> json, {String? key}) {
+    if (key != null) {
+      json['key'] = key;
+      json['ref'] = ChatService.instance.roomRef(key);
+    }
+
     return ChatRoom(
       ref: json['ref'],
       key: json['key'],
@@ -195,10 +210,22 @@ class ChatRoom {
   ///   while group chat room ref is like /chat-rooms/groupId.
   ///
   /// This is a factory. So, you can use it for creating a chat room model object programmatically.
-  factory ChatRoom.fromRoomdId(String id) {
+  ///
+  /// [data] is optional. You can pass the chat roomd ata.
+  /// 채팅방 ID(key)만 알고 있는 경우, data 에 추가 값을 전달하여 ChatRoom 인스턴스를 만들 수 있다.
+  ///
+  /// Example
+  /// ```
+  ///  final room = ChatRoom.fromRoomdId('groupId', data: {...});
+  /// ```
+  factory ChatRoom.fromRoomdId(
+    String id, {
+    Map<dynamic, dynamic> data = const {},
+  }) {
     return ChatRoom.fromJson({
       'key': id,
       'ref': ChatService.instance.roomsRef.child(id),
+      ...data,
     });
   }
 

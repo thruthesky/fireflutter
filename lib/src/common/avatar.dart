@@ -7,11 +7,13 @@ class Avatar extends StatelessWidget {
     required this.photoUrl,
     this.size = 48,
     this.radius = 20,
+    this.border,
   });
 
   final String photoUrl;
   final double size;
   final double radius;
+  final BoxBorder? border;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,7 @@ class Avatar extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(radius),
+        border: border,
         image: DecorationImage(
           image: CachedNetworkImageProvider(photoUrl),
           fit: BoxFit.cover,
