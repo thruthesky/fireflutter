@@ -411,6 +411,16 @@
       // "args": ["-v",]
     },
     {
+      "name": "Example (Chris) Simulator SE 17.4 (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "920A2E68-9FB9-47F5-9705-C023218D340B",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+      // "args": ["-v",]
+    },
+    {
       "name": "Roha (Noe) TEST - iPhone 15 Pro Max (debug)",
       "request": "launch",
       "type": "dart",
