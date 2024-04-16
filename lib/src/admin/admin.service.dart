@@ -68,8 +68,8 @@ class AdminService {
   ///
   /// Be noted that the cloud function must be deployed.
   ///
-  /// ! Be warned that this may cost lots of data transfer from RTDB, and
-  /// lots of write in Firestore, so be careful when using this.
+  /// **Be warned that this may cost lots of data transfer from RTDB, and**
+  /// **lots of write in Firestore, so be careful when using this.**
   Future<HttpsCallableResult> mirrorBackfillRtdbToFirestore() async {
     return await FirebaseFunctions.instanceFor(
       region: FireFlutterService.instance.cloudFunctionRegion,
