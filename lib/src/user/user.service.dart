@@ -412,6 +412,12 @@ class UserService {
       if (re != true) return null;
     }
 
+    /// 자기 자신을 차단하는 경우,
+    if (otherUserUid == myUid) {
+      toast(context: context, message: T.cannotBlockYourself.tr);
+      return null;
+    }
+
     /// 차단할지 물어본다.
     if (ask) {
       bool? re = await confirm(

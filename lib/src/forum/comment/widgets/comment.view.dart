@@ -113,14 +113,15 @@ class _CommnetViewState extends State<CommentView> {
                             no: () => const Text('북마크'),
                           ),
                         ),
-                        PopupMenuItem(
-                          value: 'block',
-                          child: Blocked(
-                            otherUserUid: widget.comment.uid,
-                            no: () => const Text('차단'),
-                            yes: () => const Text('차단 해제'),
+                        if (widget.comment.uid != myUid)
+                          PopupMenuItem(
+                            value: 'block',
+                            child: Blocked(
+                              otherUserUid: widget.comment.uid,
+                              no: () => const Text('차단'),
+                              yes: () => const Text('차단 해제'),
+                            ),
                           ),
-                        ),
                         const PopupMenuItem(
                           value: 'report',
                           child: Text('신고'),

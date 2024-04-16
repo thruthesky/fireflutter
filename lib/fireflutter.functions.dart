@@ -310,6 +310,7 @@ Future<String?> input({
           style: Theme.of(context).textTheme.titleMedium,
         ),
         content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             if (subtitle != null) ...[

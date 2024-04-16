@@ -6,20 +6,22 @@ class BlockButton extends StatelessWidget {
     super.key,
     required this.uid,
     this.filledIcon = false,
+    this.textButton = false,
     this.blockIcon,
     this.unblockIcon,
     this.padding,
     this.ask = true,
-    this.inform = true,
+    this.notify = true,
   });
 
   final String uid;
   final bool filledIcon;
+  final bool textButton;
   final Widget? blockIcon;
   final Widget? unblockIcon;
   final EdgeInsetsGeometry? padding;
   final bool ask;
-  final bool inform;
+  final bool notify;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,11 @@ class BlockButton extends StatelessWidget {
             padding: padding,
             onPressed: () => onPressed(context),
             icon: iHave.blocked(uid) ? blockIcon! : unblockIcon!,
+          );
+        } else if (textButton) {
+          return TextButton(
+            onPressed: () => onPressed(context),
+            child: Text(iHave.blocked(uid) ? T.unblock.tr : T.block.tr),
           );
         } else {
           return ElevatedButton(
@@ -59,18 +66,23 @@ class BlockButton extends StatelessWidget {
           unblockIcon: unblockIcon,
           padding: padding,
         );
+  const BlockButton.textButton({
+    Key? key,
+    required String uid,
+    EdgeInsetsGeometry? padding,
+  }) : this(
+          key: key,
+          uid: uid,
+          textButton: true,
+          padding: padding,
+        );
 
   onPressed(BuildContext context) async {
-    final re = await confirm(
+    await UserService.instance.block(
       context: context,
-      title: iHave.blocked(uid)
-          ? T.unblockConfirmTitle.tr
-          : T.blockConfirmTitle.tr,
-      message: iHave.blocked(uid)
-          ? T.unblockConfirmMessage.tr
-          : T.blockConfirmMessage.tr,
+      otherUserUid: uid,
+      ask: ask,
+      notify: notify,
     );
-    if (re != true) return;
-    await UserService.instance.block(context: context, otherUserUid: uid);
   }
 }
