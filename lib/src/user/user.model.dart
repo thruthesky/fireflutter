@@ -1,9 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:fireflutter/fireflutter.dart' as ff;
-import 'package:fireflutter/fireflutter.functions.dart';
-import 'package:fireflutter/src/user/user.service.dart';
-import 'package:flutter/material.dart';
 import 'package:geohash_plus/geohash_plus.dart';
 
 class User {
@@ -79,6 +76,7 @@ class User {
   int birthDay;
   int createdAt;
   int order;
+  @Deprecated('Use AdminService.instance.isAdmin')
   bool isAdmin;
   bool isVerified;
   List<String>? blocks;
@@ -95,9 +93,9 @@ class User {
 
   int noOfLikes;
 
-  /// TODO @withcenter-dev2change this to countryCode
-  @Deprecated('Change this to countryCode')
-  String nationality;
+  /// The countryCode will be the basis of the nationality
+  /// of the user.
+  String countryCode;
 
   String siDo;
   String siGunGu;
@@ -204,7 +202,7 @@ class User {
     required this.idUrl,
     required this.idUploadedAt,
     required this.occupation,
-    required this.nationality,
+    required this.countryCode,
     required this.siDo,
     required this.siGunGu,
     required this.latitude,
@@ -282,7 +280,7 @@ class User {
       idUrl: json[ff.Field.idUrl] ?? '',
       idUploadedAt: json[ff.Field.idUploadedAt] ?? 0,
       occupation: json[ff.Field.occupation] ?? '',
-      nationality: json['nationality'] ?? '',
+      countryCode: json['countryCode'] ?? '',
       siDo: json['siDo'] ?? '',
       siGunGu: json['siGunGu'] ?? '',
       latitude: json['latitude'] ?? 0.0,
@@ -321,7 +319,7 @@ class User {
       ff.Field.idUrl: idUrl,
       ff.Field.idUploadedAt: idUploadedAt,
       ff.Field.occupation: occupation,
-      'nationality': nationality,
+      'countryCode': countryCode,
       'siDo': siDo,
       'siGunGu': siGunGu,
       'latitude': latitude,
@@ -365,7 +363,7 @@ class User {
       idUrl = user.idUrl;
       idUploadedAt = user.idUploadedAt;
       occupation = user.occupation;
-      nationality = user.nationality;
+      countryCode = user.countryCode;
       siDo = user.siDo;
       siGunGu = user.siGunGu;
       latitude = user.latitude;
@@ -477,7 +475,7 @@ class User {
     int? idUploadedAt,
     String? idUrl,
     String? occupation,
-    String? nationality,
+    String? countryCode,
     String? siDo,
     String? siGunGu,
     double? latitude,
@@ -505,7 +503,7 @@ class User {
       if (idUploadedAt != null) 'idUploadedAt': idUploadedAt,
       if (idUrl != null) 'idUrl': idUrl,
       if (occupation != null) ff.Field.occupation: occupation,
-      if (nationality != null) 'nationality': nationality,
+      if (countryCode != null) 'countryCode': countryCode,
       if (siDo != null) 'siDo': siDo,
       if (siGunGu != null) 'siGunGu': siGunGu,
       if (latitude != null) 'latitude': latitude,

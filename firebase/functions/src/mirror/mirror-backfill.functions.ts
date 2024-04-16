@@ -1,7 +1,7 @@
 
 import { getFirestore } from "firebase-admin/firestore";
 import { DataSnapshot, getDatabase } from "firebase-admin/database";
-import { HttpsError, onCall, onRequest } from "firebase-functions/v2/https";
+import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { logger } from "firebase-functions/v1";
 
 /**
@@ -186,27 +186,25 @@ export const mirrorBackfillRtdbToFirestore = onCall(async (request) => {
   if (!uid) {
     throw new HttpsError("unauthenticated", "You are not logged in");
   }
-
   const rtdb = getDatabase();
   const snapshot: DataSnapshot = await rtdb.ref("admins").get();
   if (snapshot.exists() == false) {
     throw new HttpsError("unknown", "The admin data does not exist.");
-  };
-
-
+  }
   const keys = Object.keys(snapshot.val());
-
   if (keys.includes(uid) == false) {
     throw new HttpsError("unauthenticated", "You are not listed under the admin uids.");
   }
-
   try {
     await mirrorBackfillUsers();
     await mirrorBackfillPosts();
     await mirrorBackfillComments();
-    return { result: 'ok' };
-  } catch (e: any) {
+    return { result: "ok" };
+  } catch (e) {
     logger.error(e);
-    throw new HttpsError("unknown", `An error occurred while mirroring data. code: ${e?.code ?? ''}, message: ${e?.message ?? ''}`);
+    if (e instanceof HttpsError) {
+      throw new HttpsError("unknown", `An error occurred while mirroring data. code: ${e?.code ?? ""}, message: ${e?.message ?? ""}`);
+    }
+    throw new HttpsError("unknown", "An error occurred while mirroring data.", e);
   }
 });

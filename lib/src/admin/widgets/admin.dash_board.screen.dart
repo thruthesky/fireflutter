@@ -44,13 +44,10 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  final result = await FirebaseFunctions.instance
-                      .httpsCallable('mirrorBackfillRtdbToFirestore')
-                      .call(
-                    {},
-                  );
-                  final response = result.data as String;
-                  print(response);
+                  final result = await AdminService.instance
+                      .mirrorBackfillRtdbToFirestore();
+                  final response = result.data;
+                  print(response.toString());
                 },
                 child: const Text('Mirror User Data To Firestore'),
               ),
