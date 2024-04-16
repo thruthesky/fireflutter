@@ -104,24 +104,9 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     },
                     child: const Text('신고'),
                   ),
-                  TextButton(
-                    onPressed: () async {
-                      final re = await UserService.instance.block(
-                        context: context,
-                        otherUserUid: post.uid,
-                      );
-                      if (re == null) return;
-                      if (!context.mounted) return;
-                      toast(
-                        context: context,
-                        title: re == true ? T.blocked.tr : T.unblocked.tr,
-                        message: re == true
-                            ? T.blockedMessage.tr
-                            : T.unblockedMessage.tr,
-                      );
-                    },
-                    child: const Text('차단'),
-                  ),
+
+                  BlockButton.textButton(uid: post.uid),
+
                   const Spacer(),
                   if (post.uid == myUid)
                     PopupMenuButton(itemBuilder: (context) {

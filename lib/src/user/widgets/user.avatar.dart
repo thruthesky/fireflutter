@@ -35,6 +35,7 @@ class UserAvatar extends StatelessWidget {
     this.initialData,
     this.cacheId,
     this.sync = false,
+    this.border,
   });
 
   final String uid;
@@ -44,6 +45,7 @@ class UserAvatar extends StatelessWidget {
   final String? initialData;
   final String? cacheId;
   final bool sync;
+  final BoxBorder? border;
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +91,7 @@ class UserAvatar extends StatelessWidget {
           photoUrl: (url == null || url == "") ? anonymousUrl : url,
           size: size,
           radius: radius,
+          border: border,
         ),
       );
 }
