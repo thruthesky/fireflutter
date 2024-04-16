@@ -41,12 +41,7 @@ class AdminService {
   ///
   /// 관리자 목록을 가져와 메모리에 넣어 놓는다. 그리고 실시간 업데이트를 한다.
   init() {
-    dog('--> AdminService.init()');
-    dog('--> Listen to admin list');
-
     adminRef.onValue.listen((event) {
-      dog('--> AdminService.init() adminRef.onValue.listen()');
-
       if (event.snapshot.value == null) {
         return;
       }
