@@ -9,6 +9,8 @@ class BlockButton extends StatelessWidget {
     this.blockIcon,
     this.unblockIcon,
     this.padding,
+    this.ask = true,
+    this.inform = true,
   });
 
   final String uid;
@@ -16,12 +18,14 @@ class BlockButton extends StatelessWidget {
   final Widget? blockIcon;
   final Widget? unblockIcon;
   final EdgeInsetsGeometry? padding;
+  final bool ask;
+  final bool inform;
 
   @override
   Widget build(BuildContext context) {
     return MyDoc(
       builder: (iHave) {
-        if (iHave == null) return const SizedBox();
+        if (iHave == null || iHave.uid == uid) return const SizedBox();
 
         if (filledIcon) {
           return IconButton.filled(
@@ -67,6 +71,6 @@ class BlockButton extends StatelessWidget {
           : T.blockConfirmMessage.tr,
     );
     if (re != true) return;
-    await await UserService.instance.block(context: context, otherUserUid: uid);
+    await UserService.instance.block(context: context, otherUserUid: uid);
   }
 }

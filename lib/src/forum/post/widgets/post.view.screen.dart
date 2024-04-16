@@ -104,6 +104,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     },
                     child: const Text('신고'),
                   ),
+
                   TextButton(
                     onPressed: () async {
                       final re = await UserService.instance.block(
@@ -122,6 +123,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     },
                     child: const Text('차단'),
                   ),
+
                   const Spacer(),
                   if (post.uid == myUid)
                     PopupMenuButton(itemBuilder: (context) {
