@@ -205,6 +205,6 @@ export const mirrorBackfillRtdbToFirestore = onCall(async (request) => {
     if (e instanceof HttpsError) {
       throw new HttpsError("unknown", `An error occurred while mirroring data. code: ${e?.code ?? ""}, message: ${e?.message ?? ""}`);
     }
-    throw new HttpsError("unknown", "An error occurred while mirroring data.");
+    throw new HttpsError("unknown", "An error occurred while mirroring data.", e);
   }
 });
