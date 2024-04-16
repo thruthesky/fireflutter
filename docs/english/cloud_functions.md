@@ -89,7 +89,25 @@ This can be used to mirror users into Firestore. From RTDB `users/uid`, into `us
 
 If there were records in RTDB before even adding the Mirror Functions, if the developer wants to mirror them as well, they can use the backfill script.
 
-The name of the cloud function is `mirrorBackfillRtdbToFirestore`.
+The name of the cloud function is `mirrorBackfillRtdbToFirestore`. It is a callable function.
+
+Once deployed, you can use it as follow:
+
+```dart
+ElevatedButton(
+  onPressed: () async {
+    final result = await FirebaseFunctions.instanceFor(
+            region: 'asia-southeast1')
+        .httpsCallable('mirrorBackfillRtdbToFirestore')
+        .call();
+    final response = result.data;
+    print(response.toString());
+  },
+  child: const Text('Mirror User Data To Firestore'),
+),
+```
+
+Be noted that the current user must be an Admin to use this function. Check if admin in RTDB `admins/uid` node.
 
 ## Function Testing
 
