@@ -16,9 +16,20 @@ class FireFlutterService {
   BuildContext Function()? _globalContext;
   BuildContext? get globalContext => _globalContext?.call();
 
+  /// Set the region of the callable function.
+  ///
+  /// To call callable function in Firebase cloud functions, you need to set the region.
+  ///
+  /// This is used when the user resigns and deletes the user data. You may not need to set this,
+  /// if you don't use the resign function or any callable functions.
+
+  String? cloudFunctionRegion;
+
   init({
+    String? cloudFunctionRegion,
     BuildContext Function()? globalContext,
   }) {
     _globalContext = globalContext;
+    this.cloudFunctionRegion = cloudFunctionRegion;
   }
 }
