@@ -209,3 +209,36 @@ This will be replaced by `playStoreUrl`.
 ## Applying the cloud function
 
 To apply the cloud function, go to firebase/functions folder and run `npm run deploy:link`.
+
+## Handle the links when user tapped it
+
+To handle the links, you can use Fireflutter's `DynamicLinkService` class.
+
+```dart
+DynamicLinkService.instance.init(context: globalContext);
+```
+
+It will be best to initialize it when the context is ready.
+
+By default, DynamicLinkService will handle links with "/post", and "/user" paths.
+
+To add custom Dynamic links, must add the following code:
+
+```dart
+DynamicLinkService.instance.init(
+    context: globalContext,
+    onLink: (uri) {
+        print("Your custom handler for dynamic link: $uri");
+    },
+);
+```
+
+You can also customize the path for posts and users.
+
+```dart
+DynamicLinkService.instance.init(
+    context: globalContext,
+    postPath: "/customPost",
+    userPath: "/customUser",
+);
+```
