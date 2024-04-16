@@ -27,7 +27,7 @@ class _ClubEditScreenState extends State<ClubEditScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          club == null ? T.createAMeeting.tr : T.updateMeeting.tr,
+          club == null ? T.clubCreate.tr : T.clubUpdate.tr,
         ),
       ),
       body: Padding(
