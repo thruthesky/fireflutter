@@ -175,7 +175,7 @@ expressApp.get("*", async (req, res) => {
       htmlSource = htmlSource.replaceAll("#{{webUrl}}", htmlSnapshot.webUrl ?? "");
       // deepLinkUrl
       if ((htmlSnapshot.urlScheme?.length ?? 0) > 0) {
-        htmlSource = htmlSource.replaceAll("#{{deepLinkUrl}}", htmlSnapshot.urlScheme + ":/" + req.url);
+        htmlSource = htmlSource.replaceAll("#{{deepLinkUrl}}", htmlSnapshot.urlScheme + "://link" + req.url);
       }
       // Return the webpage
       return res.send(htmlSource);
