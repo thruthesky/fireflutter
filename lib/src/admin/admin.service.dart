@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 
 class AdminService {
   static AdminService? _instance;
@@ -9,7 +10,28 @@ class AdminService {
   DatabaseReference get adminRef =>
       FirebaseDatabase.instance.ref().child('admins');
 
-  Map<String, dynamic> admins = {};
+  Map<String, dynamic> adminsValue = {};
+  List<String> get admins => adminsValue.keys.toList();
+
+  BehaviorSubject<bool> isAdminStream = BehaviorSubject<bool>.seeded(false);
+
+  bool get isAdmin {
+    return admins.contains(myUid);
+  }
+
+  String? get chatAdminUid {
+    if (adminsValue.isEmpty) {
+      return null;
+    }
+    for (String uid in admins) {
+      if (adminsValue[uid] is List) {
+        if ((adminsValue[uid] as List).contains('chat')) {
+          return uid;
+        }
+      }
+    }
+    return null;
+  }
 
   AdminService._() {
     dog('--> AdminService._()');
@@ -29,7 +51,12 @@ class AdminService {
         return;
       }
 
-      admins = Map<String, dynamic>.from(event.snapshot.value as Map);
+      adminsValue = Map<String, dynamic>.from(event.snapshot.value as Map);
+
+      // print(admins);
+      // print('chat admin uid: $chatAdminUid');
+
+      isAdminStream.add(isAdmin);
     });
   }
 
