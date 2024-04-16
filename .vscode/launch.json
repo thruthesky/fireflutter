@@ -530,16 +530,35 @@
       "program": "lib/main.dart",
       "args": ["-v", "--dart-define", "MODE=dev"]
     },
-
     {
-      "name": "Silvers (Noe) TEST - iPhone 15 Pro (debug)",
+      "name": "Silvers (Noe) TEST - SM T295 (debug)",
       "request": "launch",
       "type": "dart",
-      "deviceId": "iPhone 15 Pro Max",
+      "deviceId": "SM T295",
       "flutterMode": "debug",
       "cwd": "apps/silvers",
-      "program": "lib/main.dart"
-      // "args": ["-v", "--dart-define", "MODE=test"]
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=dev"]
+    },
+    {
+      "name": "Silvers (Noe) TEST - iPad (10th generation) (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPad (10th generation)",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=dev"]
+    },
+    {
+      "name": "Silvers (Noe) TEST - iPhone SE (3rd Generation)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone SE (3rd Generation)",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=dev"]
     },
     {
       "name": "Social Kit - iPhone 15 Pro Max",
