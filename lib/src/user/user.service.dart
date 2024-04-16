@@ -59,6 +59,8 @@ class UserService {
   ///
   /// This is used when the user resigns and deletes the user data. You may not need to set this,
   /// if you don't use the resign function or any callable functions.
+  @Deprecated(
+      'Use FireFlutterService.init(cloudFunctionRegion: region) instead')
   String? callableFunctionRegion;
 
   /// 로그인을 하지 않고 로그인이 필요한 action 을 한 경우, 이 콜백 함수를 정의해서 에러 핸들링을 할 수 있다.
@@ -73,6 +75,8 @@ class UserService {
   }
 
   init({
+    @Deprecated(
+        'Use FireFlutterService.init(cloudFunctionRegion: region) instead')
     String? callableFunctionRegion,
     bool enablePushNotificationOnPublicProfileView = false,
     bool enableNotificationOnLike = false,
@@ -324,9 +328,9 @@ class UserService {
   ///
   /// 회원 탈퇴를 할 때, 회원 정보 뿐만아니라, 설정, 사진 목록도 삭제를 해야 한다.
   Future<void> resign() async {
-    if (callableFunctionRegion == null) {
-      throw FireFlutterException(
-          'callable-functino-region', 'callableFunctionRegion is not set');
+    if (FireFlutterService.instance.cloudFunctionRegion == null) {
+      throw FireFlutterException('callable-functino-region',
+          'FireFlutterService.instance.cloudFunctionRegion is not set');
     }
 
     /// 회원 탈퇴하기 전에 먼저, RTDB 의 사용자 정보 삭제
@@ -340,15 +344,16 @@ class UserService {
       dog('UserService.resign() error: $e');
     }
     try {
-      final result =
-          await FirebaseFunctions.instanceFor(region: callableFunctionRegion)
-              .httpsCallable(
-                'userDeleteAccount',
-                options: HttpsCallableOptions(
-                  timeout: const Duration(seconds: 25),
-                ),
-              )
-              .call();
+      final result = await FirebaseFunctions.instanceFor(
+        region: FireFlutterService.instance.cloudFunctionRegion,
+      )
+          .httpsCallable(
+            'userDeleteAccount',
+            options: HttpsCallableOptions(
+              timeout: const Duration(seconds: 25),
+            ),
+          )
+          .call();
 
       if (result.data['code'] != 'ok') {
         throw FireFlutterException(result.data['code'], result.data['message']);
