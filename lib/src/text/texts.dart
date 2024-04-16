@@ -28,6 +28,8 @@ class T {
   static const String bookmarkMessage = 'Favorite sucess';
   static const String unbookmark = 'Unfavorite';
   static const String unbookmarkMessage = 'Unfavorite success';
+  static const String thereAreNoBookmarksInTheList =
+      'There are no bookmarks in the list.';
 
   /// Label, texts, buttons,
   static const String dismiss = 'dismiss';

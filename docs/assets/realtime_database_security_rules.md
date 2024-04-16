@@ -183,7 +183,8 @@
     },
       
     "post-all-summaries": {
-      ".read": true
+      ".read": true,
+      ".indexOn": ["order", "createdAt"]
     },
       
     "comments": {
