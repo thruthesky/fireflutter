@@ -28,6 +28,8 @@ class T {
   static const String bookmarkMessage = 'Favorite sucess';
   static const String unbookmark = 'Unfavorite';
   static const String unbookmarkMessage = 'Unfavorite success';
+  static const String thereAreNoBookmarksInTheList =
+      'There are no bookmarks in the list.';
 
   /// Label, texts, buttons,
   static const String dismiss = 'dismiss';
@@ -53,13 +55,14 @@ class T {
       'Do you want to block this user?\nYou will not be able to contents of this user.';
   static const String unblockConfirmTitle = 'Unblock this user?';
   static const String unblockConfirmMessage =
-      'You will be able to contents of this user.';
+      'If you unblock this user, you will be able to see the contents of this user.';
   static const String notVerifiedMessage = 'You have not verified yourself.';
   static const String writeYourMessage = 'Write your message';
   static const String visitedYourProfileTitle = 'Your profile was visited.';
   static const String visitedYourProfileBody = '#name visited your profile';
   // chat input box hint text -> please enter a message
-  static const String pleaseEnterMessage = '메시지를 입력하세요.';
+  static const String pleaseEnterMessage = 'Please enter message.';
+  static const String cannotBlockYourself = 'You cannot block yourself.';
 
   /// User and Profile
   static const String recentLoginRequiredForResign =
@@ -110,6 +113,8 @@ class T {
   static const String deleteCommentConfirmMessage =
       'Are you sure you want to delete comment?';
 
+  static const String notYourComment = 'This is not your comment.';
+
   static const String occupation = 'occupation';
   static const String occupationInputDescription = 'occupationInputDescription';
   static const String hintInputOccupation = 'Please input your occupation';
@@ -118,8 +123,10 @@ class T {
   static const String blocked = 'Blocked';
   static const String blockedMessage = 'You have blocked this user.';
   static const String blockedTitleMessage = 'Blocked this user';
-  static const String blockedContentMessage = 'You have blocked this user.';
-  static const String blockedChatMessage = 'You have blocked this user.';
+  static const String blockedContentMessage =
+      'The contents of this user is hidden because you have blocked this user.';
+  static const String blockedChatMessage =
+      'You have blocked this user. Chat message is hidden.';
   // static const String blockedUserMessage = 'You have blocked this user.';
 
   static const String unblocked = 'Unblocked';
@@ -146,6 +153,8 @@ class T {
   static const String phoneSignInRetry = 'Retry';
   static const String phoneSignInVerifySmsCode = 'Verification Code';
 
+  static const String invalidSmsCodeMessage = 'Invalid SMS code';
+
   /// Korean Sigungu Selector
   static const String selectProvince = "Select Province";
   static const String selectRegion = 'Select Region';
@@ -158,7 +167,6 @@ class T {
   static const String takePhotoWithCamera = 'Take photo with camera';
 
   // BlockScreen
-
   static const String noBlockUser = 'No blocked users';
   static const String youCanBlockUserFromTheirProfilePage =
       'You can block users from their profile page';
@@ -169,4 +177,10 @@ class T {
   static const String getNotifiedWhenSomeoneViewYourProfile =
       'Get notified when someone views your profile';
   static const String chooseYourLanguage = 'Choose your language';
+
+  /// Used in DefaultLoginFirstScreen
+  static const String loginRequredTitle = 'Login Required';
+  static const String loginRequredMessage = 'Please login to continue.';
+  static const String askToLoginMessage =
+      'Login is required to continue. Do you want to login?';
 }

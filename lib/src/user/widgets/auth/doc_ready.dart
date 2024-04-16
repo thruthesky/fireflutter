@@ -10,16 +10,16 @@ import 'package:flutter/material.dart';
 /// [DocReady] 는 builder(User) 가 null 이 아니므로 조금 더 편리하게 사용 할 수 있다.
 ///
 class DocReady extends StatelessWidget {
-  const DocReady({super.key, required this.builder, this.loading});
+  const DocReady({super.key, required this.builder, this.loadingBuilder});
 
   final Widget Function(User) builder;
-  final Widget? loading;
+  final Widget Function()? loadingBuilder;
 
   @override
   Widget build(BuildContext context) {
     return MyDoc(builder: (my) {
       if (my == null) {
-        return loading ?? const SizedBox.shrink();
+        return loadingBuilder?.call() ?? const SizedBox.shrink();
       }
       return builder(my);
     });

@@ -78,7 +78,7 @@ class _CommnetViewState extends State<CommentView> {
                       child: const Text('답글'),
                     ),
                     TextButton(
-                      onPressed: widget.comment.like,
+                      onPressed: () => widget.comment.like(context: context),
                       child: Value(
                         // path: widget.comment.ref.child(Field.likes).path,
                         ref: widget.comment.likesRef,
@@ -101,22 +101,27 @@ class _CommnetViewState extends State<CommentView> {
                       return [
                         PopupMenuItem(
                           value: 'bookmark',
-                          child: Value(
-                            // path: Bookmark.bookmarkComment(
-                            //   widget.comment.id,
-                            // ),
-                            ref: Bookmark.commentRef(widget.comment.id),
-                            builder: (v) {
-                              return Text(
-                                v == null ? T.bookmark.tr : T.unbookmark.tr,
-                              );
-                            },
+                          child: Login(
+                            yes: (uid) => Value(
+                              ref: Bookmark.commentRef(widget.comment.id),
+                              builder: (v) {
+                                return Text(
+                                  v == null ? T.bookmark.tr : T.unbookmark.tr,
+                                );
+                              },
+                            ),
+                            no: () => const Text('북마크'),
                           ),
                         ),
-                        const PopupMenuItem(
-                          value: 'block',
-                          child: Text('차단'),
-                        ),
+                        if (widget.comment.uid != myUid)
+                          PopupMenuItem(
+                            value: 'block',
+                            child: Blocked(
+                              otherUserUid: widget.comment.uid,
+                              no: () => const Text('차단'),
+                              yes: () => const Text('차단 해제'),
+                            ),
+                          ),
                         const PopupMenuItem(
                           value: 'report',
                           child: Text('신고'),
@@ -148,26 +153,12 @@ class _CommnetViewState extends State<CommentView> {
                           toast(context: context, message: '신고가 접수되었습니다.');
                         }
                       } else if (value == 'block') {
-                        bool? re = await confirm(
+                        await UserService.instance.block(
                           context: context,
-                          title: my!.hasBlocked(widget.comment.uid)
-                              ? T.unblock.tr
-                              : T.block.tr,
-                          message: my!.hasBlocked(widget.comment.uid)
-                              ? T.unblockConfirmMessage
-                              : T.blockConfirmMessage.tr,
+                          otherUserUid: widget.comment.uid,
+                          ask: true,
+                          notify: true,
                         );
-                        if (re != true) return;
-                        re = await my?.block(widget.comment.uid);
-                        if (context.mounted) {
-                          toast(
-                            context: context,
-                            title: re == true ? T.blocked.tr : T.unblocked.tr,
-                            message: re == true
-                                ? T.blockedMessage.tr
-                                : T.unblockedMessage.tr,
-                          );
-                        }
                       } else if (value == 'edit') {
                         await ForumService.instance.showCommentUpdateScreen(
                           context: context,
@@ -175,19 +166,15 @@ class _CommnetViewState extends State<CommentView> {
                         );
                         widget.post.reload();
                       } else if (value == 'delete') {
-                        final re = await confirm(
-                          context: context,
-                          title: T.deleteCommentConfirmTitle.tr,
-                          message: T.deleteCommentConfirmMessage.tr,
-                        );
-                        if (re != true) return;
-                        await widget.comment.delete();
+                        await widget.comment
+                            .delete(context: context, ask: true);
                       } else if (value == 'bookmark') {
                         final re = await Bookmark.toggle(
+                          context: context,
                           postId: widget.comment.postId,
                           commentId: widget.comment.id,
                         );
-                        if (context.mounted) {
+                        if (re != null && context.mounted) {
                           toast(
                             context: context,
                             title: re == true ? T.bookmark.tr : T.unbookmark.tr,

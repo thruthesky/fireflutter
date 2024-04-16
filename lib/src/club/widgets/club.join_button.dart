@@ -13,10 +13,19 @@ class ClubJoinButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        if (club.joined) {
-          await club.leave();
+        if (notLoggedIn) {
+          await alert(
+            context: context,
+            title: '로그인',
+            message: '모임 기능을 이용하기 위해서는 로그인을 먼저 하셔야합니다.',
+          );
+          return;
         } else {
-          await club.join();
+          if (club.joined) {
+            await club.leave();
+          } else {
+            await club.join();
+          }
         }
       },
       child: Text(

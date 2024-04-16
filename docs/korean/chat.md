@@ -758,3 +758,64 @@ showDialog(
   ),
 );
 ```
+
+
+
+## 채팅방 입장했는데 로그인을 하지 않은 경우
+
+일반적으로 로그인을 해야지만 앱의 기능을 이용 할 수 있는 경우는 필요가 없지만,
+- 로그인을 하지 않아도 앱을 사용할 수 있도록 하는 경우
+- 특히 메뉴에서 전체 채팅방과 같이 채팅방에 바로 들어갈 수 있도록 해 놓는 경우
+
+로그인을 확인해야 할 필요가 있다.
+
+참고로 채팅방에 입장 할 때에는 항상 `ChatService.instance.showChatRoomScreen` 을 통해서 입장하는 이 함수에서 로그인이 안되어져 있다면 `UserService.instance.init(loginRequired: (action, data) => ... )` 콜백 함수가 호출된다.
+
+자세한 것은 user.md 를 참고한다.
+
+
+## 채팅 메시지 수 표시
+
+아래와 같이 `ChatTotalNoOfNewMessage` 위젯으로 적절히 표현 할 수 있다.
+
+```dart
+NavigationDestination(
+  icon: const SizedBox(
+    width: 32,
+    child: Stack(
+      children: [
+        FaIcon(FontAwesomeIcons.thinComment),
+        Positioned(
+          right: 0,
+          child: ChatTotalNoOfNewMessage(),
+        ),
+      ],
+    ),
+  ),
+  label: context.ke('채팅', 'Chat'),
+),
+```
+
+만약, 커스터마징이 필요하면 아래와 같이 한다.
+
+```dart
+NavigationDestination(
+  icon: ChatTotalNoOfNewMessage(
+    builder: (_, n, child) => SizedBox(
+      width: n == 0 ? null : 32,
+      child: n == 0
+          ? const FaIcon(FontAwesomeIcons.thinComment)
+          : Stack(
+              children: [
+                const FaIcon(FontAwesomeIcons.thinComment),
+                Positioned(
+                  right: 0,
+                  child: child,
+                ),
+              ],
+            ),
+    ),
+  ),
+  label: context.ke('채팅', 'Chat'),
+),
+```

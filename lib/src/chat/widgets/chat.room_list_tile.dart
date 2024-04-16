@@ -27,37 +27,12 @@ class ChatRoomListTile extends StatelessWidget {
       title: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(
-            child: Text(
-              room.name ?? '',
-              style: Theme.of(context).textTheme.titleMedium,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+          Text(
+            room.name ?? '',
+            style: Theme.of(context).textTheme.titleMedium,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          if (room.isGroupChat) ...[
-            const SizedBox(width: 14),
-            Text(
-              '${room.noOfUsers ?? ''}',
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.secondary.tone(50),
-                  ),
-            ),
-            Value(
-              ref: ChatRoom.usersAtRef(room.id, myUid!),
-              builder: (v) => v == true
-                  ? Icon(
-                      Icons.notifications_rounded,
-                      color: Theme.of(context).colorScheme.secondary.tone(50),
-                      size: 20,
-                    )
-                  : Icon(
-                      Icons.notifications_off_outlined,
-                      color: Theme.of(context).colorScheme.secondary.tone(70),
-                      size: 20,
-                    ),
-            ),
-          ],
         ],
       ),
       subtitle: subtitle(context, room),
@@ -76,8 +51,34 @@ class ChatRoomListTile extends StatelessWidget {
             style:
                 Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 10),
           ),
-          const SizedBox(height: 2),
-          ChatNewMessage(room: room),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (room.isGroupChat)
+                Text(
+                  '${room.noOfUsers ?? ''}',
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.secondary.tone(50),
+                      ),
+                ),
+              Value(
+                ref: ChatRoom.usersAtRef(room.id, myUid!),
+                builder: (v) => v == true
+                    ? Icon(
+                        Icons.notifications_rounded,
+                        color: Theme.of(context).colorScheme.secondary.tone(50),
+                        size: 20,
+                      )
+                    : Icon(
+                        Icons.notifications_off_outlined,
+                        color: Theme.of(context).colorScheme.secondary.tone(70),
+                        size: 20,
+                      ),
+              ),
+              const SizedBox(height: 2),
+              ChatNewMessage(room: room),
+            ],
+          ),
         ],
       ),
     );

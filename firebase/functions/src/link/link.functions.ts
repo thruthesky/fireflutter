@@ -1,5 +1,4 @@
 
-
 import * as functions from "firebase-functions";
 import * as express from "express";
 // import { initializeApp } from "firebase/app";
@@ -7,72 +6,72 @@ import { getFirestore, doc, getDoc, DocumentSnapshot } from "firebase/firestore"
 import { AndroidCredential, AppleCredential, HtmlDeepLink } from "./link.interface";
 
 // Initialize Express app
-const app = express();
+export const expressApp = express();
+
 // Set up Firebase Cloud Function
-export const link = functions.https.onRequest(app);
+export const link = functions.https.onRequest(expressApp);
+
 
 /**
  * Returns the Document Snapshot
  * @param docId
  */
-async function getDeeplinkDoc( docId: string ): Promise<DocumentSnapshot> {
-    // const firebaseApp = initializeApp(firebaseConfig);
-    // const db = getFirestore(firebaseApp);
-    const db = getFirestore();
-    const docRef = doc(db, "_deeplink_", docId);
-    const docSnap = await getDoc(docRef);
-    return docSnap;
+async function getDeeplinkDoc(docId: string): Promise<DocumentSnapshot> {
+  const db = getFirestore();
+  const docRef = doc(db, "_link_", docId);
+  const docSnap = await getDoc(docRef);
+  return docSnap;
 }
 
-app.get("/.well-known/apple-app-site-association", async (req, res) => {
-    const docSnaphot = await getDeeplinkDoc("apple");
-    res.writeHead(200, { "Content-Type": "application/json" });
-    if (docSnaphot.exists()) {
-        const snapshotData: AppleCredential = docSnaphot.data() as AppleCredential;
-        const applinkDetails = snapshotData.apps.map((teamIDAndAppIBundled) => ({
-            appID: teamIDAndAppIBundled,
-            paths: ["*"],
-            // appIDs: [teamIDAndAppIBundled],
-        }));
-        const webCredentials = snapshotData.apps.map((teamIDAndAppIBundled) => (
-            teamIDAndAppIBundled
-        ));
-        const appsSiteAssociation = {
-            applinks: {
-                // apps: [],
-                details: applinkDetails,
-            },
-            webCredentials: {
-                apps: webCredentials,
-            },
-        };
-        res.write(JSON.stringify(appsSiteAssociation));
-    } else {
-        // docSnap.data() will be undefined in this case
-        res.write("Page not found!");
-    }
-    res.end();
+expressApp.get("/.well-known/apple-app-site-association", async (req, res) => {
+  const docSnaphot = await getDeeplinkDoc("apple");
+  res.writeHead(200, { "Content-Type": "application/json" });
+  if (docSnaphot.exists()) {
+    const snapshotData: AppleCredential = docSnaphot.data() as AppleCredential;
+    const applinkDetails = snapshotData.apps.map((teamIDAndAppIBundled) => ({
+      appID: teamIDAndAppIBundled,
+      paths: ["*"],
+      // appIDs: [teamIDAndAppIBundled],
+    }));
+    const webCredentials = snapshotData.apps.map((teamIDAndAppIBundled) => (
+      teamIDAndAppIBundled
+    ));
+    const appsSiteAssociation = {
+      applinks: {
+        // apps: [],
+        details: applinkDetails,
+      },
+      webCredentials: {
+        apps: webCredentials,
+      },
+    };
+    res.write(JSON.stringify(appsSiteAssociation));
+  } else {
+    // docSnap.data() will be undefined in this case
+    res.write("Page not found!");
+  }
+  res.end();
 });
 
-app.get("/.well-known/assetlinks.json", async (req, res) => {
-    const docSnaphot = await getDeeplinkDoc("android");
-    res.writeHead(200, { "Content-Type": "application/json" });
-    if (docSnaphot.exists()) {
-        const snapshotData: AndroidCredential = docSnaphot.data();
-        const jsonCredentials = Object.entries(snapshotData).map(([appName, sha256s]) => ({
-            relation: ["delegate_permission/common.handle_all_urls"],
-            target: {
-                namespace: "android_app",
-                package_name: appName,
-                sha256_cert_fingerprints: sha256s,
-            },
-        }));
-        res.write(JSON.stringify(jsonCredentials));
-    } else {
-        // docSnap.data() will be undefined in this case
-        res.write("Page not found!");
-    }
-    res.end();
+expressApp.get("/.well-known/assetlinks.json", async (req, res) => {
+  const docSnaphot = await getDeeplinkDoc("android");
+  res.writeHead(200, { "Content-Type": "application/json" });
+  if (docSnaphot.exists()) {
+    const snapshotData: AndroidCredential = docSnaphot.data();
+    const jsonCredentials = Object.entries(snapshotData).map(([appName, sha256s]) => ({
+      relation: ["delegate_permission/common.handle_all_urls"],
+      target: {
+        namespace: "android_app",
+        package_name: appName,
+        sha256_cert_fingerprints: sha256s,
+      },
+    }));
+    res.write(JSON.stringify(jsonCredentials));
+  } else {
+    // docSnap.data() will be undefined in this case
+    res.write("Page not found!");
+  }
+  res.end();
 });
 
 const defaultHtml = `<!DOCTYPE html>
@@ -165,24 +164,24 @@ const defaultHtml = `<!DOCTYPE html>
   </body>
 </html>`;
 
-app.get("*", async (req, res) => {
-    const docSnaphot = await getDeeplinkDoc("html");
-    if (docSnaphot.exists()) {
-        const htmlSnapshot = docSnaphot.data() as HtmlDeepLink;
-       let htmlSource = htmlSnapshot.html ?? defaultHtml;
-        // appStoreUrl
-        htmlSource = htmlSource.replaceAll("#{{appStoreUrl}}", htmlSnapshot.appStoreUrl ?? "");
-        // playStoreUrl
-        htmlSource = htmlSource.replaceAll("#{{playStoreUrl}}", htmlSnapshot.playStoreUrl ?? "");
-        // webUrl
-        htmlSource = htmlSource.replaceAll("#{{webUrl}}", htmlSnapshot.webUrl ?? "");
-        // deepLinkUrl
-        if ((htmlSnapshot.urlScheme?.length ?? 0) > 0) {
-          htmlSource = htmlSource.replaceAll("#{{deepLinkUrl}}", htmlSnapshot.urlScheme + ":/" + req.url);
-        }
-        // Return the webpage
-        return res.send(htmlSource);
+expressApp.get("*", async (req, res) => {
+  const docSnaphot = await getDeeplinkDoc("html");
+  if (docSnaphot.exists()) {
+    const htmlSnapshot = docSnaphot.data() as HtmlDeepLink;
+    let htmlSource = htmlSnapshot.html ?? defaultHtml;
+    // appStoreUrl
+    htmlSource = htmlSource.replaceAll("#{{appStoreUrl}}", htmlSnapshot.appStoreUrl ?? "");
+    // playStoreUrl
+    htmlSource = htmlSource.replaceAll("#{{playStoreUrl}}", htmlSnapshot.playStoreUrl ?? "");
+    // webUrl
+    htmlSource = htmlSource.replaceAll("#{{webUrl}}", htmlSnapshot.webUrl ?? "");
+    // deepLinkUrl
+    if ((htmlSnapshot.urlScheme?.length ?? 0) > 0) {
+      htmlSource = htmlSource.replaceAll("#{{deepLinkUrl}}", htmlSnapshot.urlScheme + ":/" + req.url);
     }
     // Return the webpage
-    return res.send("Page not found!");
+    return res.send(htmlSource);
+  }
+  // Return the webpage
+  return res.send("Page not found!");
 });

@@ -28,6 +28,9 @@ class ChatService {
   DatabaseReference roomUserRef(String roomId, String uid) =>
       rtdb.ref().child('chat-rooms/$roomId/users/$uid');
 
+  /// 로그인한 사용자의 채팅방 목록 reference 이다.
+  ///
+  /// 로그인한 사용자의 채팅방 목록을 가져와 화면에 보여주거나, 새로운 채팅 메시지 수를 화면에 표시하고자 할 때 등에 사용하면 된다.
   DatabaseReference get joinsRef => rtdb.ref().child('chat-joins');
   DatabaseReference joinRef(String myUid, String roomId) =>
       joinsRef.child(myUid).child(roomId);
@@ -91,6 +94,18 @@ class ChatService {
     String? roomId,
     ChatRoom? room,
   }) async {
+    if (notLoggedIn) {
+      final re = await UserService.instance.loginRequired!(
+          context: context,
+          action: 'showChatRoomScreen',
+          data: {
+            'uid': uid,
+            'roomId': roomId,
+            'room': room,
+          });
+      if (re != true) return;
+    }
+
     /// 채팅방 입장을 할 때, DB 업데이트를 하므로, 메시지를 보낼 때에는 해제 계산이 되어져 있다.
     ///
 
@@ -118,6 +133,15 @@ class ChatService {
     required BuildContext context,
     bool authRequired = false,
   }) async {
+    if (notLoggedIn) {
+      UserService.instance.loginRequired!(
+        context: context,
+        action: 'showChatRoomCreate',
+        data: {},
+      );
+      return null;
+    }
+
     return await showDialog<ChatRoom?>(
       context: context,
       builder: (_) =>

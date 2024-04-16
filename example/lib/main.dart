@@ -225,8 +225,8 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(),
       body: Column(
         children: [
-          AuthReady(
-            builder: (uid) => Column(
+          Login(
+            yes: (uid) => Column(
               children: [
                 Text('UID: $uid'),
                 ElevatedButton(
@@ -235,7 +235,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-            notLoginBuilder: () => const SimpleEmailPasswordLoginForm(),
+            no: () => const SimpleEmailPasswordLoginForm(),
           ),
         ],
       ),

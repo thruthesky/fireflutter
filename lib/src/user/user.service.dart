@@ -27,6 +27,9 @@ class UserService {
 
   BehaviorSubject<User?> myDataChanges = BehaviorSubject<User?>.seeded(null);
 
+  /// Alias of [myDataChanges]
+  BehaviorSubject<User?> get changes => myDataChanges;
+
   StreamSubscription? userNodeSubscription;
 
   UserCustomize customize = UserCustomize();
@@ -56,16 +59,32 @@ class UserService {
   ///
   /// This is used when the user resigns and deletes the user data. You may not need to set this,
   /// if you don't use the resign function or any callable functions.
+  @Deprecated(
+      'Use FireFlutterService.init(cloudFunctionRegion: region) instead')
   String? callableFunctionRegion;
+
+  /// 로그인을 하지 않고 로그인이 필요한 action 을 한 경우, 이 콜백 함수를 정의해서 에러 핸들링을 할 수 있다.
+  Function({
+    required BuildContext context,
+    required String action,
+    Map<String, dynamic>? data,
+  })? loginRequired;
 
   UserService._() {
     // dog('--> UserService._()');
   }
 
   init({
+    @Deprecated(
+        'Use FireFlutterService.init(cloudFunctionRegion: region) instead')
     String? callableFunctionRegion,
     bool enablePushNotificationOnPublicProfileView = false,
     bool enableNotificationOnLike = false,
+    Function({
+      required BuildContext context,
+      required String action,
+      Map<String, dynamic>? data,
+    })? loginRequired,
     Function(User user)? onSignout,
     void Function(User user, bool isLiked)? onLike,
     UserCustomize? customize,
@@ -75,6 +94,7 @@ class UserService {
     // dog('--> UserService.init()');
 
     this.callableFunctionRegion = callableFunctionRegion;
+    this.loginRequired = loginRequired;
 
     initUser();
     listenUser();
@@ -138,6 +158,7 @@ class UserService {
       // dog('--> UserService.listenUser() fb.FirebaseAuth.instance.authStateChanges()');
       if (user == null) {
         this.user = null;
+        myDataChanges.add(this.user);
         return;
       }
       userNodeSubscription?.cancel();
@@ -240,12 +261,13 @@ class UserService {
     assert(uid != null || user != null,
         'Either uid or user must be provided to show public profile screen');
 
+    /// 사용자 데이터를 읽음. 단, user 에는 값이 들어가 있지 않을 수 있다. (회원 탈퇴하여 DB 에 값이 없는 경우)
     user ??= await User.get(uid!);
 
     /// Check if it hits limit except the user is admin or the user views his own profile.
-    if (isAdmin == false && user!.uid != my?.uid) {
+    if (loggedIn && isAdmin == false && user?.uid != my?.uid) {
       if (await ActionLogService.instance.userProfileView.isOverLimit(
-        uid: user.uid,
+        uid: user!.uid,
       )) return;
     }
 
@@ -258,8 +280,10 @@ class UserService {
       );
     }
 
-    _userProfileViewLogs(user!.uid);
-    _sendPushNotificationOnProfileView(user);
+    if (loggedIn) {
+      _userProfileViewLogs(user!.uid);
+      _sendPushNotificationOnProfileView(user);
+    }
   }
 
   /// Push notification on profile view
@@ -301,22 +325,35 @@ class UserService {
   }
 
   /// Resign the user and delete database
+  ///
+  /// 회원 탈퇴를 할 때, 회원 정보 뿐만아니라, 설정, 사진 목록도 삭제를 해야 한다.
   Future<void> resign() async {
-    if (callableFunctionRegion == null) {
-      throw FireFlutterException(
-          'callable-functino-region', 'callableFunctionRegion is not set');
+    if (FireFlutterService.instance.cloudFunctionRegion == null) {
+      throw FireFlutterException('callable-functino-region',
+          'FireFlutterService.instance.cloudFunctionRegion is not set');
     }
-    await myRef.remove();
+
+    /// 회원 탈퇴하기 전에 먼저, RTDB 의 사용자 정보 삭제
+    ///
+    /// 에러가 있어도 진행한다.
     try {
-      final result =
-          await FirebaseFunctions.instanceFor(region: callableFunctionRegion)
-              .httpsCallable(
-                'userDeleteAccount',
-                options: HttpsCallableOptions(
-                  timeout: const Duration(seconds: 25),
-                ),
-              )
-              .call();
+      await my?.photoRef.remove();
+      await myRef.remove();
+      await mySettingsRef.remove();
+    } catch (e) {
+      dog('UserService.resign() error: $e');
+    }
+    try {
+      final result = await FirebaseFunctions.instanceFor(
+        region: FireFlutterService.instance.cloudFunctionRegion,
+      )
+          .httpsCallable(
+            'userDeleteAccount',
+            options: HttpsCallableOptions(
+              timeout: const Duration(seconds: 25),
+            ),
+          )
+          .call();
 
       if (result.data['code'] != 'ok') {
         throw FireFlutterException(result.data['code'], result.data['message']);
@@ -327,5 +364,88 @@ class UserService {
       print(error.message);
       rethrow;
     }
+  }
+
+  /// 좋아요
+  ///
+  /// 로그인을 하지 않으면, my 객체가 null 이 되어, 에러가 발생한다.
+  /// 이를 방지하기 위해서 반드시 이 함수를 사용해서 좋아요 또는 좋아요 해제를 해야 한다.
+  Future<bool?> like({
+    required BuildContext context,
+    required String otherUserUid,
+  }) async {
+    if (notLoggedIn) {
+      final re = await UserService.instance.loginRequired!(
+          context: context,
+          action: 'like',
+          data: {
+            'otherUserUid': otherUserUid,
+          });
+      if (re != true) return null;
+    }
+
+    await my?.toggleLike(otherUserUid);
+    return null;
+  }
+
+  /// 차단
+  ///
+  /// 로그인을 하지 않으면, my 객체가 null 이 되는데,
+  /// 로그인을 하지 않은 채, 차단을 하면, 이로 인해 에러가 발생한다.
+  /// 이를 방지하기 위해서 반드시 이 함수를 사용해서 차단 또는 차단 해제를 해야 한다.
+  ///
+  ///
+  /// 차단을 했으면 true, 차단 해제를 했으면 false, 로그인을 하지 않았으면 null 이 리턴된다.
+  ///
+  /// [ask] 이 값이 true 이면 사용자에게 차단할지 말지 물어본다.
+  ///
+  /// [notify] 이 값이 true 이면, 차단 또는 차단 해제를 했을 때, 사용자에게 차단 또는 차단 해제했다고 화면에 알려준다.
+  Future<bool?> block({
+    required BuildContext context,
+    required String otherUserUid,
+    bool ask = false,
+    bool notify = true,
+  }) async {
+    /// 로그인 확인
+    if (notLoggedIn) {
+      final re = await UserService.instance.loginRequired!(
+          context: context,
+          action: 'block',
+          data: {
+            'otherUserUid': otherUserUid,
+          });
+      if (re != true) return null;
+    }
+
+    /// 자기 자신을 차단하는 경우,
+    if (otherUserUid == myUid) {
+      toast(context: context, message: T.cannotBlockYourself.tr);
+      return null;
+    }
+
+    /// 차단할지 물어본다.
+    if (ask) {
+      bool? re = await confirm(
+        context: context,
+        title: my!.hasBlocked(otherUserUid) ? T.unblock.tr : T.block.tr,
+        message: my!.hasBlocked(otherUserUid)
+            ? T.unblockConfirmMessage.tr
+            : T.blockConfirmMessage.tr,
+      );
+      if (re != true) return null;
+    }
+
+    /// 차단
+    bool? re = await my?.toggleBlock(otherUserUid);
+
+    /// 차단 후 화면에 알림
+    if (notify && context.mounted) {
+      toast(
+        context: context,
+        title: re == true ? T.blocked.tr : T.unblocked.tr,
+        message: re == true ? T.blockedMessage.tr : T.unblockedMessage.tr,
+      );
+    }
+    return null;
   }
 }

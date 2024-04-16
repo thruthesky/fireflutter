@@ -1,6 +1,9 @@
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:fireflutter/fireflutter.dart' as ff;
+import 'package:fireflutter/fireflutter.functions.dart';
+import 'package:fireflutter/src/user/user.service.dart';
+import 'package:flutter/material.dart';
 import 'package:geohash_plus/geohash_plus.dart';
 
 class User {
@@ -76,6 +79,7 @@ class User {
   int birthDay;
   int createdAt;
   int order;
+  @Deprecated('Use AdminService.instance.isAdmin')
   bool isAdmin;
   bool isVerified;
   List<String>? blocks;
@@ -537,7 +541,9 @@ class User {
     /// 사진 정보 업데이트
     if (displayName != null || photoUrl != null) {
       await _updateUserProfilePhotos(
-          displayName: displayName, photoUrl: photoUrl);
+        displayName: displayName,
+        photoUrl: photoUrl,
+      );
     }
 
     ff.UserService.instance.onUpdate?.call(this);
@@ -626,12 +632,15 @@ class User {
 
   /// Blocks or unblocks
   ///
+  /// Don't use it directly. Use `UserService.instance.block` instead for the same reason of the `like` method.
+  ///
   /// After this method call, the user is blocked or unblocked.
   /// Returns true if the user has just blocked blocked, false if unblocked.
   ///
-  Future block(String otherUserUid) async {
+  Future<bool> toggleBlock(String otherUserUid) async {
     if (otherUserUid == uid) {
-      throw ff.Issue(ff.Code.blockSelf, 'You cannot block yourself.');
+      throw ff.FireFlutterException(
+          ff.Code.blockSelf, 'You cannot block yourself.');
     }
     //
     if (isBlocked(otherUserUid)) {
@@ -659,12 +668,17 @@ class User {
 
   /// Like other user
   ///
+  /// Note, do not call this method directly. Use `UserService.instance.like` instead for user login check.
+  ///
   /// This method does both of the like and the unlike. If it is already liked, it will be unliked.
   /// And this method also records for mutual likes.
   ///
-  /// Returns true if the user has just liked, false if unliked.
+  /// Returns true if the user has just liked, false if unliked. And it will return null if
+  /// it cannot like or unlike. For example, if the user didn't sign-in and cannot do the action.
   ///
-  Future like(String otherUserUid) async {
+  Future<bool?> toggleLike(
+    String otherUserUid,
+  ) async {
     final re = await ff.toggle(
       path: ff.User.whoILikePath(ff.my!.uid, otherUserUid),
     );

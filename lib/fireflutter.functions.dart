@@ -6,10 +6,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+/// Login check based on Firebase current user
+///
 bool get loggedIn => fb.FirebaseAuth.instance.currentUser != null;
 bool get notLoggedIn => fb.FirebaseAuth.instance.currentUser == null;
 String? get myUid => fb.FirebaseAuth.instance.currentUser?.uid;
-bool get isAdmin => UserService.instance.user?.isAdmin ?? false;
+
+///
+// bool get isAdmin => UserService.instance.user?.isAdmin ?? false;
+bool get isAdmin => AdminService.instance.isAdmin;
 
 /// Firebase current user
 fb.User? get currentUser => fb.FirebaseAuth.instance.currentUser;
@@ -306,6 +311,7 @@ Future<String?> input({
           style: Theme.of(context).textTheme.titleMedium,
         ),
         content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             if (subtitle != null) ...[

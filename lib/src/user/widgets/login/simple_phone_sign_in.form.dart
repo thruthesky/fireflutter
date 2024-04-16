@@ -180,7 +180,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                     ),
-                const SizedBox(height: 8),
+                // const SizedBox(height: 8),
                 Text(
                   (widget.phoneNumberDisplayBuilder?.call(completeNumber) ??
                           completeNumber) ??
@@ -362,59 +362,58 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
               // const Spacer(),
               // display a button for SMS code verification.
 
-              Flexible(
-                child: OutlinedButton(
-                  key: const Key('smsCodeVerification'),
-                  onPressed: smsCodeController.text.isEmpty
-                      ? null
-                      : () async {
-                          // 테스트 전화번호. 실제 전화번호 인 것 처럼 동작. 가짜 전화번호와 가짜 SMS 코드를 입력하게 해서 로그인.
-                          if (isRealReviewNumer) {
-                            if (isRealReviewSmsCode) {
-                              return doReviewLogin();
-                            } else {
-                              error(
-                                context: context,
-                                title: T.error.tr,
-                                message: "Invalid SMS Code",
-                              );
-                              return;
-                            }
-                          }
-
-                          // Create a PhoneAuthCredential with the code
-                          PhoneAuthCredential credential =
-                              PhoneAuthProvider.credential(
-                            verificationId: verificationId!,
-                            smsCode: smsCodeController.text.trim(),
+              if (smsCodeController.text.isNotEmpty)
+                Flexible(
+                  child: OutlinedButton(
+                    key: const Key('smsCodeVerification'),
+                    onPressed: () async {
+                      // 테스트 전화번호. 실제 전화번호 인 것 처럼 동작. 가짜 전화번호와 가짜 SMS 코드를 입력하게 해서 로그인.
+                      if (isRealReviewNumer) {
+                        if (isRealReviewSmsCode) {
+                          return doReviewLogin();
+                        } else {
+                          error(
+                            context: context,
+                            title: T.error.tr,
+                            message: T.invalidSmsCodeMessage,
                           );
+                          return;
+                        }
+                      }
 
-                          setState(() => smsCodeProgress = true);
-                          try {
-                            // Sign the user in (or link) with the credential
-                            await FirebaseAuth.instance
-                                .signInWithCredential(credential);
-                            signinSuccess();
-                          } catch (e) {
-                            // SMS Code verification error comes here.
-                            if (context.mounted) {
-                              error(
-                                context: context,
-                                title: T.error.tr,
-                                message: e.toString(),
-                              );
-                            }
-                          } finally {
-                            setState(() => smsCodeProgress = false);
-                          }
-                        },
-                  child: smsCodeProgress
-                      ? const CircularProgressIndicator.adaptive()
-                      : (widget.smsSubmitLabel ??
-                          Text(T.phoneSignInVerifySmsCode.tr,
-                              maxLines: 1, overflow: TextOverflow.ellipsis)),
+                      // Create a PhoneAuthCredential with the code
+                      PhoneAuthCredential credential =
+                          PhoneAuthProvider.credential(
+                        verificationId: verificationId!,
+                        smsCode: smsCodeController.text.trim(),
+                      );
+
+                      setState(() => smsCodeProgress = true);
+                      try {
+                        // Sign the user in (or link) with the credential
+                        await FirebaseAuth.instance
+                            .signInWithCredential(credential);
+                        signinSuccess();
+                      } catch (e) {
+                        // SMS Code verification error comes here.
+                        if (context.mounted) {
+                          error(
+                            context: context,
+                            title: T.error.tr,
+                            message: e.toString(),
+                          );
+                        }
+                      } finally {
+                        setState(() => smsCodeProgress = false);
+                      }
+                    },
+                    child: smsCodeProgress
+                        ? const CircularProgressIndicator.adaptive()
+                        : (widget.smsSubmitLabel ??
+                            Text(T.phoneSignInVerifySmsCode.tr,
+                                maxLines: 1, overflow: TextOverflow.ellipsis)),
+                  ),
                 ),
-              ),
             ],
           ),
         ],
@@ -449,20 +448,26 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
         displayName: '',
       );
       signinSuccess();
-    } finally {
-      setState(() => progressVerifyPhoneNumber = false);
+    } catch (e) {
+      if (context.mounted) {
+        setState(() => progressVerifyPhoneNumber = false);
+      }
     }
   }
 
   doReviewPhoneNumberLogin() async {
-    setState(() => progressVerifyPhoneNumber = true);
+    if (context.mounted) {
+      setState(() => progressVerifyPhoneNumber = true);
+    }
     return doReviewLogin();
   }
 
   doReviewRealPhoneNumberLogin() {
-    setState(() {
-      showSmsCodeInput = true;
-      progressVerifyPhoneNumber = false;
-    });
+    if (context.mounted) {
+      setState(() {
+        showSmsCodeInput = true;
+        progressVerifyPhoneNumber = false;
+      });
+    }
   }
 }

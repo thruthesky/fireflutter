@@ -3,6 +3,8 @@ import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
+/// 새 프로필 사진을 등록한 순서대로 사용자 목록을 보여주는 위젯
+///
 class NewProfilePhotos extends StatelessWidget {
   const NewProfilePhotos({
     super.key,
@@ -55,7 +57,9 @@ class NewProfilePhotos extends StatelessWidget {
               return GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () => UserService.instance.showPublicProfileScreen(
-                    context: context, uid: snapshot.docs[index].key!),
+                  context: context,
+                  uid: snapshot.docs[index].key!,
+                ),
                 child: Padding(
                   padding: EdgeInsets.only(left: index == 0 ? 16 : 0),
                   child: Column(
