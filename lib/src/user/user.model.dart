@@ -79,6 +79,7 @@ class User {
   int birthDay;
   int createdAt;
   int order;
+  @Deprecated('Use AdminService.instance.isAdmin')
   bool isAdmin;
   bool isVerified;
   List<String>? blocks;
