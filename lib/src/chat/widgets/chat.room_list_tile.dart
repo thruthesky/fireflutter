@@ -51,36 +51,34 @@ class ChatRoomListTile extends StatelessWidget {
             style:
                 Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 10),
           ),
-          if (room.isGroupChat)
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (room.isGroupChat)
                 Text(
                   '${room.noOfUsers ?? ''}',
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         color: Theme.of(context).colorScheme.secondary.tone(50),
                       ),
                 ),
-                Value(
-                  ref: ChatRoom.usersAtRef(room.id, myUid!),
-                  builder: (v) => v == true
-                      ? Icon(
-                          Icons.notifications_rounded,
-                          color:
-                              Theme.of(context).colorScheme.secondary.tone(50),
-                          size: 20,
-                        )
-                      : Icon(
-                          Icons.notifications_off_outlined,
-                          color:
-                              Theme.of(context).colorScheme.secondary.tone(70),
-                          size: 20,
-                        ),
-                ),
-                const SizedBox(height: 2),
-                ChatNewMessage(room: room),
-              ],
-            ),
+              Value(
+                ref: ChatRoom.usersAtRef(room.id, myUid!),
+                builder: (v) => v == true
+                    ? Icon(
+                        Icons.notifications_rounded,
+                        color: Theme.of(context).colorScheme.secondary.tone(50),
+                        size: 20,
+                      )
+                    : Icon(
+                        Icons.notifications_off_outlined,
+                        color: Theme.of(context).colorScheme.secondary.tone(70),
+                        size: 20,
+                      ),
+              ),
+              const SizedBox(height: 2),
+              ChatNewMessage(room: room),
+            ],
+          ),
         ],
       ),
     );
