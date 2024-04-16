@@ -1,7 +1,7 @@
 
 import { getFirestore } from "firebase-admin/firestore";
-import { getDatabase } from "firebase-admin/database";
-import { onRequest } from "firebase-functions/v2/https";
+import { DataSnapshot, getDatabase } from "firebase-admin/database";
+import { HttpsError, onCall, onRequest } from "firebase-functions/v2/https";
 import { logger } from "firebase-functions/v1";
 
 /**
@@ -181,22 +181,32 @@ async function mirrorBackfillComments(rtdbNode = "comments", firestoreCollection
   }
 }
 
-export const mirrorBackfillRtdbToFirestore = onRequest(async (request, response)=>{
+export const mirrorBackfillRtdbToFirestore = onCall(async (request) => {
+  const uid = request.auth?.uid;
+  if (!uid) {
+    throw new HttpsError("unauthenticated", "You are not logged in");
+  }
+
+  const rtdb = getDatabase();
+  const snapshot: DataSnapshot = await rtdb.ref("admins").get();
+  if (snapshot.exists() == false) {
+    throw new HttpsError("unknown", "The admin data does not exist.");
+  };
+
+
+  const keys = Object.keys(snapshot.val());
+
+  if (keys.includes(uid) == false) {
+    throw new HttpsError("unauthenticated", "You are not listed under the admin uids.");
+  }
+
   try {
     await mirrorBackfillUsers();
     await mirrorBackfillPosts();
     await mirrorBackfillComments();
-    response.writeHead(200, { "Content-Type": "text/html" });
-    response.write("Mirrored backfill data from RTDB to Firestore successfully!");
-  } catch (e) {
-      logger.error(e);
-      response.writeHead(500, { "Content-Type": "text/html" });
-      if (e instanceof Error) {
-          response.write(e.message);
-      } else {
-          response.write("unknown error");
-      }
-  } finally {
-    response.end();
+    return { result: 'ok' };
+  } catch (e: any) {
+    logger.error(e);
+    throw new HttpsError("unknown", `An error occurred while mirroring data. code: ${e?.code ?? ''}, message: ${e?.message ?? ''}`);
   }
 });
