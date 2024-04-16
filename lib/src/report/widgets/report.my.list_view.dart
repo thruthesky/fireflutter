@@ -12,6 +12,8 @@ class ReportMyListView extends StatelessWidget {
     this.errorBuilder,
     this.loadingBuilder,
     this.emptyBuilder,
+    this.separatorBuilder,
+    this.padding,
   });
 
   final Widget Function(Report report, VoidCallback func)? userBuilder;
@@ -26,6 +28,10 @@ class ReportMyListView extends StatelessWidget {
       errorBuilder;
   final Widget Function(BuildContext context)? loadingBuilder;
   final Widget Function(BuildContext context)? emptyBuilder;
+
+  final Widget Function(BuildContext, int)? separatorBuilder;
+
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +54,10 @@ class ReportMyListView extends StatelessWidget {
             return emptyBuilder?.call(context) ??
                 const Center(child: Text("No reports"));
           }
-          return ListView.builder(
+          return ListView.separated(
+              padding: padding ?? const EdgeInsets.all(8),
+              separatorBuilder: (_, index) =>
+                  separatorBuilder?.call(_, index) ?? const SizedBox.shrink(),
               itemCount: snapshot.docs.length,
               itemBuilder: (context, index) {
                 if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
