@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
@@ -57,5 +58,21 @@ class AdminService {
         uid: uid,
       ),
     );
+  }
+
+  /// ## Mirror Backfill RTDB to Firestore
+  ///
+  /// This function calls the cloud function mirrorBackfillRtdToFirestore
+  /// that will copy RTDB's post, comments, and users to Firestore's post,
+  /// comments, and users collections.
+  ///
+  /// Be noted that the cloud function must be deployed.
+  ///
+  /// ! Be warned that this may cost lots of data transfer from RTDB, and
+  /// lots of write in Firestore, so be careful when using this.
+  Future<HttpsCallableResult> mirrorBackfillRtdbToFirestore() async {
+    return await FirebaseFunctions.instanceFor(
+      region: FireFlutterService.instance.cloudFunctionRegion,
+    ).httpsCallable('mirrorBackfillRtdbToFirestore').call();
   }
 }

@@ -44,10 +44,8 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  final result = await FirebaseFunctions.instanceFor(
-                          region: 'asia-southeast1')
-                      .httpsCallable('mirrorBackfillRtdbToFirestore')
-                      .call();
+                  final result = await AdminService.instance
+                      .mirrorBackfillRtdbToFirestore();
                   final response = result.data;
                   print(response.toString());
                 },
