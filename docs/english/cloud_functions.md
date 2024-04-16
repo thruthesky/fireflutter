@@ -60,14 +60,36 @@ The cloud function for Phone Number Sign-Up is named `phoneNumberRegister`. The 
 When making the request, simply input the phone number you wish to sign up with into the phoneNumber field. If the phone number is not provided, or if it is too short or too long, the function will throw an error. Otherwise, Firebase will handle the error.
 
 - Request: `?phoneNumber=12345`
-  - Result: `{ code: 'auth/invalid-phone-number', message: '...' }`
+    - Result: `{ code: 'auth/invalid-phone-number', message: '...' }`
 - Request: `?phoneNumber=1234567890123456`
-  - Result: `{ code: 'auth/invalid-phone-number', message: '...' }`
+    - Result: `{ code: 'auth/invalid-phone-number', message: '...' }`
 - Request: `/?phoneNumber=1234567890`
-  - Result: `{ code: 'auth/invalid-phone-number', message: '...' }`
+    - Result: `{ code: 'auth/invalid-phone-number', message: '...' }`
 - If the phone number already exists, an error will be returned, such as `{ code: 'auth/phone-number-already-exists', message: '...' }`.
 - Upon successful sign-up:
-  - Result: `{ uid: 'YSr8fJwQASSF4QApILkaAEjbfCd2' }`
+    - Result: `{ uid: 'YSr8fJwQASSF4QApILkaAEjbfCd2' }`
+
+## Mirror Functions
+
+The following functions can be used to mirror RTDB records into Firestore collections.
+
+### postMirror
+
+This can be used to mirror posts into Firestore. From RTDB `posts/category/postId`, into `posts` collection in Firestore.
+
+### commentMirror
+
+This can be used to mirror comments into Firestore. From RTDB `comments/postId/commentId`, into `comments` collection in Firestore.
+
+### userMirror
+
+This can be used to mirror users into Firestore. From RTDB `users/uid`, into `users` collection in Firestore.
+
+### backFill Script
+
+If there were records in RTDB before even adding the Mirror Functions, if the developer wants to mirror them as well, they can use the backfill script.
+
+The name of the cloud function is `mirrorBackfillRtdbToFirestore`.
 
 ## Function Testing
 

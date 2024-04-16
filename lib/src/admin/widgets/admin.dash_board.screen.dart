@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -40,6 +41,18 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
                   );
                 },
                 child: const Text('Send push messages to all users'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  final result = await FirebaseFunctions.instance
+                      .httpsCallable('mirrorBackfillRtdbToFirestore')
+                      .call(
+                    {},
+                  );
+                  final response = result.data as String;
+                  print(response);
+                },
+                child: const Text('Mirror User Data To Firestore'),
               ),
             ],
           ),
