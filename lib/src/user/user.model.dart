@@ -1,9 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:fireflutter/fireflutter.dart' as ff;
-import 'package:fireflutter/fireflutter.functions.dart';
-import 'package:fireflutter/src/user/user.service.dart';
-import 'package:flutter/material.dart';
 import 'package:geohash_plus/geohash_plus.dart';
 
 class User {
