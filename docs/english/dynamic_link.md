@@ -7,20 +7,20 @@ Fireflutter provides a way to implement dynamic links using cloud function and F
 ### Android
 
 ```xml
-        <activity
-            android:name=".MainActivity"
-            android:exported="true" >
-            <!-- Add this in activity -->
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with https://YOUR_HOST.COM -->
-                <data
-                    android:scheme="https"
-                    android:host="YOUR_HOST.COM" />
-            </intent-filter>
-        </activity>
+<activity
+    android:name=".MainActivity"
+    android:exported="true" >
+    <!-- Add this in activity -->
+    <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <!-- Accepts URIs that begin with https://YOUR_HOST.COM -->
+        <data
+            android:scheme="https"
+            android:host="YOUR_HOST.COM" />
+    </intent-filter>
+</activity>
 ```
 
 ### Apple
@@ -51,7 +51,7 @@ or update the runner entitlements file in ios folder.
 
 Well known files (assetlinks.json and apple-app-site-association), are used to validate app linking.
 
-The values can be saved in Firestore collection, "\_deeplink\_".
+The values can be saved in Firestore collection, "\_link\_".
 
 Be reminded to add the proper rules to access the collection in Firestore.
 
@@ -65,7 +65,7 @@ That will depend on how you made the rules.
 
 ### Android assetlinks.json
 
-For android, save it under document "android" using the app bundle id (as field name) and the array of sha 256 (as value):
+For android, in Firestore on the "\_link\_" collection, save it under document "android" using the app bundle id (as field name) and the array of sha 256 (as value):
 
 For example:
 
@@ -75,11 +75,136 @@ com.com.appname: [
 
 ### Apple apple-app-site-association
 
-For apple, save it under document "apple" using the team ID (as field name) and the app bundle id (as the value):
+For apple, in Firestore on the "\_link\_" collection, save it under document "apple" using the team ID (as field name) and the app bundle id (as the value):
 
 For example:
 
 FII23432J: com.com.appname
+
+### webUrl
+
+Set the `webUrl` in Firestore on the "\_link\_" collection, using the field name `webUrl`, if you want to redirect it when device is not detected as Android or iOS.
+
+### HTML
+
+If the app is not installed in the an HTML will show in the browser. This can redirect to app store or play store depending on the device.
+
+Set up the following:
+
+1. appStoreUrl - This is the link to the appstore.
+2. playStoreUrl - This is the link to the playstore.
+3. urlScheme - This is the scheme used to open the app. This is for Custom URL Scheme (for iOS) and deep link (for Android).
+4. html - You can provide your own custom HTML.
+
+This is the default value of HTML:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="apple-itunes-app"
+      content="app-id=myAppID, affiliate-data=myAffiliateData, app-argument=myURL"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="white" />
+    <meta name="apple-mobile-web-app-title" content="Silvers" />
+
+    <link rel="icon" type="image/png" href="..." />
+    <link rel="mask-icon" href="" color="#ffffff" />
+    <meta name="application-name" content="Silvers" />
+
+    <title>Silvers</title>
+    <meta name="description" content="Find out more about my app..." />
+
+    <meta property="og:title" content="Silvers" />
+    <meta property="og:description" content="Find out more about my app..." />
+    <meta property="og:image" content="https://.../your-app-banner.jpg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Silvers" />
+    <meta name="twitter:site" content="myawesomeapp.com" />
+    <meta name="twitter:description" content="Find out more about my app..." />
+    <meta name="twitter:image" content="https://.../your-app-banner.jpg" />
+    <link rel="apple-touch-icon" href="..." />
+    <style>
+      .centered {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        color: white;
+        font-size: x-large;
+        text-align: center;
+      }
+      body {
+        background-color: black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="centered">
+      Redirecting...
+    </div>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/Detect.js/2.2.2/detect.min.js"
+      rossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      var result = detect.parse(navigator.userAgent);
+      var deepLinkUrl = "#{{deepLinkUrl}}";
+      var webUrl = "#{{webUrl}}";
+      var appStoreUrl = "#{{appStoreUrl}}";
+      var playStoreUrl = "#{{playStoreUrl}}";
+
+      const stateTimer = setTimeout(function () {
+        if (result.os.family === "iOS" && appStoreUrl.length > 0) {
+          window.location.replace(appStoreUrl);
+        } else if (
+          result.os.family.includes("Android") &&
+          playStoreUrl.length > 0
+        ) {
+          window.location.replace(playStoreUrl);
+        } else {
+          if (webUrl.length > 0) {
+            window.location.replace(webUrl);
+          }
+        }
+      }, 2000);
+      window.addEventListener("visibiltychange", function () {
+        clearTimeout(stateTimer);
+        stateTimer = null;
+        window.open("", "_self").close();
+      });
+      if (deepLinkUrl.length > 0) {
+        location.href = deepLinkUrl;
+      }
+    </script>
+  </body>
+</html>
+```
+
+It will depend on your design if you want to put the links or redirection urls in the HTML and how to do it.
+
+You can also add these that will be replaced by the values in Firestore \_link\_ collection.
+
+1. #{{deepLinkUrl}}
+This will be set by `urlScheme`.
+
+2. #{{webUrl}}
+This will be replaced by `webUrl`.
+
+3. "#{{appStoreUrl}}";
+This will be replaced by `appStoreUrl`.
+
+4. "#{{playStoreUrl}}";
+This will be replaced by `playStoreUrl`.
 
 ## Applying the cloud function
 
