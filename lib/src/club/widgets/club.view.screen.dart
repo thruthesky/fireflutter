@@ -222,16 +222,22 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
                       padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
                       itemBuilder: (post, i) => ClipRRect(
                         borderRadius: BorderRadius.circular(16),
-                        child: PostCard(post: post),
+                        child: PostCard(
+                          post: post,
+                          displayAvatar: true,
+                          displaySubtitle: true,
+                        ),
                       ),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
+                        crossAxisCount: 2,
                         crossAxisSpacing: 8,
                         mainAxisSpacing: 8,
+                        mainAxisExtent: 240,
                       ),
-                      emptyBuilder: () =>
-                          const Center(child: Text('사진을 등록 해 주세요.')),
+                      emptyBuilder: () => const Center(
+                        child: Text('사진을 등록 해 주세요.'),
+                      ),
                     )
                   : ClubViewRegisterFirstButton(
                       club: club,

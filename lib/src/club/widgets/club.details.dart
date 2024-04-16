@@ -133,7 +133,7 @@ class ClubDetails extends StatelessWidget {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               const Padding(
                 padding: EdgeInsets.only(left: 16.0),
                 child: Text('최근글'),

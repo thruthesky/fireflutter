@@ -28,6 +28,9 @@ class ChatService {
   DatabaseReference roomUserRef(String roomId, String uid) =>
       rtdb.ref().child('chat-rooms/$roomId/users/$uid');
 
+  /// 로그인한 사용자의 채팅방 목록 reference 이다.
+  ///
+  /// 로그인한 사용자의 채팅방 목록을 가져와 화면에 보여주거나, 새로운 채팅 메시지 수를 화면에 표시하고자 할 때 등에 사용하면 된다.
   DatabaseReference get joinsRef => rtdb.ref().child('chat-joins');
   DatabaseReference joinRef(String myUid, String roomId) =>
       joinsRef.child(myUid).child(roomId);

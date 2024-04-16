@@ -1,8 +1,12 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
+/// 채팅방의 새 메시지를 표시하는 위젯
 class ChatNewMessage extends StatelessWidget {
-  const ChatNewMessage({super.key, required this.room});
+  const ChatNewMessage({
+    super.key,
+    required this.room,
+  });
 
   final ChatRoom room;
 
