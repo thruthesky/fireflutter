@@ -17,7 +17,7 @@ export const link = functions.https.onRequest(expressApp);
  */
 async function getDeeplinkDoc( docId: string ): Promise<DocumentSnapshot> {
     const db = getFirestore();
-    const docSnap = await db.collection("_deeplink_").doc(docId).get();
+    const docSnap = await db.collection("_link_").doc(docId).get();
     return docSnap;
 }
 
