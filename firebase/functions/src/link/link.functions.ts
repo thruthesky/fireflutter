@@ -79,31 +79,31 @@ const defaultHtml = `<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="apple-itunes-app"
-      content="app-id=myAppID, affiliate-data=myAffiliateData, app-argument=myURL"
+      content="app-id=myAppID, app-argument=#{{deepLinkUrl}}"
     />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="white" />
-    <meta name="apple-mobile-web-app-title" content="Silvers" />
+    <meta name="apple-mobile-web-app-title" content="#{{appName}}" />
 
-    <link rel="icon" type="image/png" href="..." />
+    <link rel="icon" type="image/png" href="#{{appIconLink}}" />
     <link rel="mask-icon" href="" color="#ffffff" />
-    <meta name="application-name" content="Silvers" />
+    <meta name="application-name" content="#{{appName}}" />
 
-    <title>Silvers</title>
-    <meta name="description" content="Find out more about my app..." />
+    <title>#{{appName}}</title>
+    <meta name="description" content="#{{previewText}}" />
 
-    <meta property="og:title" content="Silvers" />
-    <meta property="og:description" content="Find out more about my app..." />
-    <meta property="og:image" content="https://.../your-app-banner.jpg" />
+    <meta property="og:title" content="#{{appName}}" />
+    <meta property="og:description" content="#{{previewText}}" />
+    <meta property="og:image" content="#{{previewImageLink}}" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Silvers" />
-    <meta name="twitter:site" content="myawesomeapp.com" />
-    <meta name="twitter:description" content="Find out more about my app..." />
-    <meta name="twitter:image" content="https://.../your-app-banner.jpg" />
-    <link rel="apple-touch-icon" href="..." />
+    <meta name="twitter:card" content="#{{previewText}}" />
+    <meta name="twitter:title" content="#{{appName}}" />
+    <meta name="twitter:site" content="#{{webUrl}}" />
+    <meta name="twitter:description" content="#{{previewText}}" />
+    <meta name="twitter:image" content="#{{previewImageLink}}" />
+    <link rel="apple-touch-icon" href="#{{appIconLink}}" />
     <style>
       .centered {
         position: fixed;
@@ -176,6 +176,24 @@ expressApp.get("*", async (req, res) => {
       // deepLinkUrl
       if ((htmlSnapshot.urlScheme?.length ?? 0) > 0) {
         htmlSource = htmlSource.replaceAll("#{{deepLinkUrl}}", htmlSnapshot.urlScheme + "://link" + req.url);
+        // The next replacements must come from the link
+        // appName
+        const appName = (req.query.appName ?? "") as string;
+        htmlSource = htmlSource.replaceAll("#{{appName}}", appName);
+        // appID
+        const appID = (req.query.appID ?? "") as string;
+        htmlSource = htmlSource.replaceAll("#{{appID}}", appID);
+        // appIconLink
+        const appIconLink = (req.query.appIconLink ?? "") as string;
+        htmlSource = htmlSource.replaceAll("#{{appIconLink}}", appIconLink);
+        // previewImageLink
+        const previewImageLink = (req.query.previewImageLink ?? "") as string;
+        htmlSource = htmlSource.replaceAll("#{{previewImageLink}}", previewImageLink);
+        // previewText
+        const previewText = (req.query.previewText ?? "") as string;
+        htmlSource = htmlSource.replaceAll("#{{previewText}}", previewText);
+      } else {
+        htmlSource = htmlSource.replaceAll("#{{deepLinkUrl}}", "");
       }
       // Return the webpage
       return res.send(htmlSource);
