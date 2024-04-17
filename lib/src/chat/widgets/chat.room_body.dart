@@ -50,6 +50,8 @@ class ChatRoomBody extends StatefulWidget {
 class _ChatRoomState extends State<ChatRoomBody> {
   ChatModel? _chat;
   ChatModel get chat => _chat!;
+  User? other;
+  bool get userDeleted => chat.room.isSingleChat && other == null;
 
   /// 채팅방 정보가 로드되었는지 여부
   ///
@@ -98,11 +100,24 @@ class _ChatRoomState extends State<ChatRoomBody> {
       _chat = ChatModel(room: ChatRoom.fromUid(widget.uid!));
       await reload();
     } else if (widget.roomId != null) {
-      // 그룹 채팅 방 - 방이 없으면 생성한다.
+      // 그룹 채팅 방 ID 가 들어온 경우 - 방이 없으면 생성한다.
       _chat = ChatModel(room: ChatRoom.fromRoomdId(widget.roomId!));
       await reload();
     } else {
       throw ArgumentError('uid, roomId, room 중 하나는 반드시 있어야 합니다.');
+    }
+
+    /// 탈퇴한 사용자인지 확인
+    if (chat.room.isSingleChat) {
+      other = await User.get(chat.room.otherUserUid!);
+      setState(() {});
+      if (other == null) {
+        error(
+          context: context,
+          title: T.userNotFoundTitleOnSingleChat.tr,
+          message: T.userNotFoundMessageOnSingleChat.tr,
+        );
+      }
     }
 
     if (chat.room.joined == false) {
@@ -369,12 +384,13 @@ class _ChatRoomState extends State<ChatRoomBody> {
         ),
 
         /// 채팅 입력 박스
-        SafeArea(
-          top: false,
-          child: ChatMessageInputBox(
-            chat: chat,
+        if (userDeleted == false)
+          SafeArea(
+            top: false,
+            child: ChatMessageInputBox(
+              chat: chat,
+            ),
           ),
-        ),
       ],
     );
   }

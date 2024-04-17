@@ -264,10 +264,19 @@ class UserService {
     /// 사용자 데이터를 읽음. 단, user 에는 값이 들어가 있지 않을 수 있다. (회원 탈퇴하여 DB 에 값이 없는 경우)
     user ??= await User.get(uid!);
 
+    if (user == null) {
+      /// There is no user data in the database.
+      return error(
+        context: context,
+        title: T.userNotFoundTitleOnShowPublicProfileScreen.tr,
+        message: T.userNotFoundMessageOnShowPublicProfileScreen.tr,
+      );
+    }
+
     /// Check if it hits limit except the user is admin or the user views his own profile.
-    if (loggedIn && isAdmin == false && user?.uid != my?.uid) {
+    if (loggedIn && isAdmin == false && user.uid != my?.uid) {
       if (await ActionLogService.instance.userProfileView.isOverLimit(
-        uid: user!.uid,
+        uid: user.uid,
       )) return;
     }
 
@@ -281,7 +290,7 @@ class UserService {
     }
 
     if (loggedIn) {
-      _userProfileViewLogs(user!.uid);
+      _userProfileViewLogs(user.uid);
       _sendPushNotificationOnProfileView(user);
     }
   }
