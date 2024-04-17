@@ -171,6 +171,13 @@ class _MyHomePageState extends State<MyHomePage> {
 참고로, 어떤 푸시 함수는 설치만 하면 동작하는 것이 있으며 또 어떤 것은 클라이언트에서 호출 해 주어야 하는 것이 있다. 특히, http tirgger 함수나 callable 함수는 클라이언트에서 호출을 해 주어야 한다고 생각을 하면 된다.
 
 
+### 클라우드 함수 설정
+
+`./firebase/functions/src/config.ts` 에 보면 Config 클래스의 `region` 변수가 있다. 이 변수에 원하는 cloud function region 을 기록하면 된다. 그 외에는 특별히 수정을 하지 않아도 된다.
+
+
+
+
 
 ### 전체 클라우드 함수 설치하기
 
@@ -220,6 +227,21 @@ firebase deploy --only functions
 
 
 ## Dynamic Link 설치
+
+Dynamic link 란 앱을 공유(다른 사람에게 알려주기 위해)하고자 할 때 특정 링크를 생성해 다른 사용자에게 전달 해 주고, 그 사용자가 링크를 클릭하면 앱애 설치되어져 있으면 앱을 열고, 설치되어져 있지 않으면 Appstore 또는 Playstore 또는 홈페이지를 여는 것이다.
+
+만약, dynamic link 를 사용하지 않는다면 굳이 본 항목을 살펴 볼 필요는 없다.
+
+Dynamic link 의 설치는 조금 복잡하게 느껴 질 수 있는 데, 잘 이해를 하면 된다.
+
+첫째, `link` 클라우드 함수를 설치한다.
+이 함수를 설치하면 홈페이지 도메인 최상단 경로에 `/.well-known/assetlinks.json` 과 `/.well-known/apple-app-site-association` 을 설치 해 준다. 물론 이 때, SHA 와 Bundle ID 등의 정보를 잘 입력해야 한다.
+
+둘째, 앱에서 App Link, Universal Link 설정을 해 주어야하며, Deeplink 설정도 해 주어야 한다. Deeplink 설정을 해 주는 이유는 카카오톡에서 링크를 클릭하면 인앱브라우저가 앱을 구동시키지 못하는 경우가 발생하는데, Deeplink 를 통해서 앱을 열기 위해서 필요하다.
+
+셋째, 링크를 만들어 공유하는 코드를 작성한다.
+
+Dynamic link 에 대한 자세한 설명은 dynamic link 항목을 참고한다. 설치가 약간 복잡한 만큼 관련 내용을 따로 설명하고 있다.
 
 
 
