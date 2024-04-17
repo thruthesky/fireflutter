@@ -1,32 +1,42 @@
 # 설치
 
-Follow the instruction below to install Fireflutter into your app
+FireFlutter 는 단순히 pub.dev 에 있는 것을 Flutter 에 설치한다고 되는 것이 아니다. 앱을 개발하고 운영하기 위해서 필요한 것들이 같이 설치되어야 하는데 예를 들면, 각종 Security Rules 가 반드시 설치되어야 한다.
 
-## Install Fireflutter
 
-### Install Fireflutter as a package
 
-Simply add the latest version of Fireflutter from pub.dev
+## Fireflutter 패키지 설치
 
-### Install Fireflutter as a package developer
+패키지 설치는 단순히, pub.dev 의 최신 버전을 설치하면 된다.
 
-You may wish to develop your app while building(or updating) the Fireflutter package together.
+그러나 개발자 모드로 설치하기 위해서는 아래의 개발자 모드를 참고한다.
 
-- Fork the Fireflutter from `https://github.com/thruthesky/fireflutter`
+## FireFlutter 패키지를 개발자 모드로 설치하기
 
-- Then, clone it
+개발자 모드로 설치하면, FireFlutter 패키지를 좀 더 쉽게 기능 수정(또는 추가)하고 또 PR 할 수 있다.
 
-- Then, create a branch in Fireflutter local repository
+아래와 같이 개발자 모드로 설치할 수 있다.
 
-- Create `apps` folder under the root of Fireflutter folder and create your app inside `apps` folder.
+- 먼저 [FireFlutter Github](https://github.com/thruthesky/fireflutter) repo 로 부터 Fireflutter 를 포크한다. 
+
+- 그리고 클론한다.
+
+- 그리고 자신만의 branch 를 만든다.
+
+- 그리고 FireFlutter 루트 폴더에서 `apps` 폴더를 만들고, 그 안에 여러분의 앱을 추가하면 된다.
+
+대충 아래와 같은 명령어가 필요할 것이다.
 
 ```dart
+git fork ...
+git clone ...
+git checkout -b ...
 mkdir apps
 cd apps
 flutter create your_project
 ```
 
-- You need to add the path of the dependency as `../..`. Add the Fireflutter dependency like below.
+- 그리고 추가한 앱의 pubspec.yaml 에서 아래와 같이 FireFlutter 를 dependency 로 추가하면 된다.
+
 
 ```yaml
 dependencies:
@@ -34,7 +44,8 @@ dependencies:
     path: ../..
 ```
 
-- If you have update any code in Fireflutter, consider to submit a `pull request`.
+- 만약, FireFlutter 코드의 버그를 수정하거나 새로운 기능을 추가한다면 PR 를 통해서 알려주기를 바란다.
+
 
 ## Firebase Realtime Database Secuirty 설치
 
@@ -81,6 +92,9 @@ See the [Forum](forum.md) document for the details.
 % cd firebase/function
 % npm run deploy:managePostsAllSummary
 ```
+
+## Dynamic Link 설치
+
 
 ## FireFlutter 설치
 
