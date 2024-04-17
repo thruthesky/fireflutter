@@ -82,19 +82,19 @@ class _ClubUpdateFormState extends State<ClubUpdateForm> {
           ),
           const SizedBox(height: 8),
           Text(
-            T.meetingPhotoDescription,
+            T.clubPhotoDescription,
             style: Theme.of(context).textTheme.labelMedium,
           ),
           const SizedBox(height: 24),
           LabelField(
             controller: nameController,
-            label: T.meetingName.tr,
-            description: T.meetingNameDescription.tr,
+            label: T.clubName.tr,
+            description: T.clubNameDescription.tr,
           ),
           LabelField(
             controller: descriptionController,
-            label: T.meetingDescriptionLabel.tr,
-            description: T.meetingDescriptionInputDescription.tr,
+            label: T.clubDescriptionLabel.tr,
+            description: T.clubDescriptionInputDescription.tr,
             minLines: 3,
             maxLines: 5,
           ),
@@ -106,9 +106,9 @@ class _ClubUpdateFormState extends State<ClubUpdateForm> {
                   name: nameController.text,
                   description: descriptionController.text,
                 );
-                toast(context: context, message: T.meetingUpdateMessage.tr);
+                toast(context: context, message: T.clubUpdateMessage.tr);
               },
-              child: Text(T.updateMeeting.tr),
+              child: Text(T.clubUpdate.tr),
             ),
           ),
         ],
