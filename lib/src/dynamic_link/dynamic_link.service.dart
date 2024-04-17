@@ -15,6 +15,8 @@ class DynamicLinkService {
   /// AppLinks instance
   late final AppLinks _appLinks;
 
+  StreamSubscription<Uri>? _appLinkStream;
+
   /// BuildContext, Preferrably, the globalContext
   late BuildContext context;
 
@@ -30,6 +32,22 @@ class DynamicLinkService {
   /// The [uri] is the the link that has the path and/or
   /// queryParameters
   Function(Uri uri)? onLink;
+
+  /// Scheme for dynamic links
+  /// For example, "https" for "https://dynamiclink.com/post?category=news&postId=1234567890"
+  String scheme = "https";
+
+  /// The host that is used to make the links.
+  String host = "";
+
+  /// The application name that may appear for
+  /// links' preview.
+  String appName = "";
+
+  /// The application's Icon's URL that may appear for
+  /// links' preview.
+  /// For example, "https://example.com/icon.png"
+  String appIconLink = "";
 
   /// Initialization
   ///
@@ -52,23 +70,45 @@ class DynamicLinkService {
     /// Path for user links
     /// For example, use "/user" for "dynamiclink.com/user?uid=1234567890"
     String userPath = "/user",
+
+    /// Scheme for dynamic links
+    /// For example, "https" for "https://dynamiclink.com/post?category=news&postId=1234567890"
+    String scheme = "https",
+
+    /// The host that is used to make the links.
+    /// This is required because we wont be able to create links without a host.
+    required String host,
+
+    /// This will be displayed as the application name in Dynamic Link
+    String? appName,
+
+    /// This link will display the Icon in the dynamic link.
+    String? appIconLink,
   }) async {
     _appLinks = AppLinks();
     this.context = context;
     this.onLink = onLink;
     this.postPath = postPath;
     this.userPath = userPath;
+    this.scheme = scheme;
+    this.host = host;
+    this.appName = appName ?? "";
+    this.appIconLink = appIconLink ?? "";
+
+    // To prevent multi-listener in case dev called init again.
+    if (_appLinkStream != null) await _appLinkStream!.cancel();
+
     // Subscribe to all events when app is started.
-    _appLinks.allUriLinkStream.listen((uri) async {
+    _appLinkStream = _appLinks.allUriLinkStream.listen((uri) async {
       dog("=======================>>>> AppLink: $uri");
       dog("queryParameters: ${uri.queryParameters}");
       dog("path: ${uri.path}");
-      await _showScreenFromUri(uri);
+      await showScreenFromUri(uri);
     });
   }
 
   /// Depending on the path, show the screen accordingly.
-  _showScreenFromUri(Uri uri) async {
+  showScreenFromUri(Uri uri) async {
     if (uri.path == postPath) return await _showPostScreen(uri);
     if (uri.path == userPath) return await _showUserScreen(uri);
     if (onLink != null) return await onLink!(uri);
@@ -93,5 +133,45 @@ class DynamicLinkService {
     if (context.mounted) {
       UserService.instance.showPublicProfileScreen(context: context, uid: uid);
     }
+  }
+
+  String createUserLink(User user) {
+    final uri = createLink(
+      path: userPath,
+      queryParameters: {
+        "uid": user.uid,
+        "previewImageLink": user.photoUrl,
+        "previewText": user.displayName,
+        "appName": appName,
+        "appIconLink": appIconLink,
+      },
+    );
+    return uri.toString();
+  }
+
+  String createPostLink(Post post) {
+    final uri = createLink(
+      path: postPath,
+      queryParameters: {
+        "category": post.category,
+        "postId": post.id,
+        "previewImageLink": post.urls.isNotEmpty ? post.urls.first : "",
+        "previewText": post.title,
+        "appName": appName,
+        "appIconLink": appIconLink,
+      },
+    );
+    return uri.toString();
+  }
+
+  /// Creates the dynamic link
+  Uri createLink({String path = "", Map<String, String>? queryParameters}) {
+    final uri = Uri(
+      scheme: scheme,
+      host: host,
+      path: path,
+      queryParameters: queryParameters,
+    );
+    return uri;
   }
 }

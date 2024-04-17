@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/user/widgets/buttons/share_button.dart';
 import 'package:flutter/material.dart';
 
 class DefaultPublicProfileScreen extends StatelessWidget {
@@ -13,6 +14,7 @@ class DefaultPublicProfileScreen extends StatelessWidget {
     this.bookmarkButton = true,
     this.reportButton = true,
     this.blockButton = true,
+    this.shareButton = true,
   });
 
   final String? uid;
@@ -23,6 +25,7 @@ class DefaultPublicProfileScreen extends StatelessWidget {
   final bool bookmarkButton;
   final bool reportButton;
   final bool blockButton;
+  final bool shareButton;
 
   String get userUid => uid ?? user!.uid;
 
@@ -110,8 +113,9 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                         if (chatButton) ChatButton(uid: uid),
                         if (likeButton) LikeButton(uid: userUid, user: user),
                         if (bookmarkButton) BookmarkButton(uid: userUid),
-                        if (reportButton) ReportButton(uid: userUid),
-                        if (blockButton) BlockButton(uid: userUid),
+                        // if (reportButton) ReportButton(uid: userUid),
+                        // if (blockButton) BlockButton(uid: userUid),
+                        if (shareButton) ShareButton(user: user),
                       ],
                     ),
                   ),
