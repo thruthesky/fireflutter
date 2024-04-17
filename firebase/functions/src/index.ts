@@ -20,9 +20,9 @@ setGlobalOptions({
 });
 
 export * from "./messaging/messaging.functions";
-export * from "./typesense/typesense.functions";
-export * from "./forum/forum.functions";
 export * from "./user/user.functions";
+// export * from "./typesense/typesense.functions";
+export * from "./forum/forum.functions";
 export * from "./chat/chat.functions";
 export * from "./link/link.functions";
 export * from "./mirror/forum.mirror.functions";

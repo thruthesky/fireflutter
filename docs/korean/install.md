@@ -157,36 +157,67 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 ```
 
-추가적으로 [에러 핸들링](./error_handling.md) 문서와 [빠르게 시작하기](./quick_start.md) 문처를 참고 해 보시면 도움이 될 것입니다.
+추가적으로 [에러 핸들링](./error_handling.md) 문서와 [빠르게 시작하기](./quick_start.md) 문서를 참고 해 보기 바란다.
 
 
 
 
-## Install Cloud Functions
+## 클라우드 함수 설치
 
-Run the following command to install all the push notification cloud functions.
+파이어베이스 클라우드 함수는 대부분 옵션이다. 예를 들면, 회원 탈퇴를 하는 경우 Firebase Auth 계정을 삭제해야하는데, 클라이언트 SDK 에서 하면 다시 로그인을 하라고 물어온다. 이것을 클라우드 함수를 사용하면 사용자에게 물어보지 않고 회원 계정을 삭제 할 수 있는 것이다. 이 처럼 여러가지 클라우드 함수가 있는데, 필요에 따라 설치를 하면 된다.
 
-```sh
-% cd firebase/function
-% npm run deploy:message
-```
+참고로, 클라우드 함수는 플러터에서만 쓸 수 있는 것이 아니라, 다른 프론트엔드 플랫폼에서도 쓸 수 있다.
 
-And set the end point URL to `MessagingService.instance.init(sendPushNotificationsUrl: ..)`
+참고로, 어떤 푸시 함수는 설치만 하면 동작하는 것이 있으며 또 어떤 것은 클라이언트에서 호출 해 주어야 하는 것이 있다. 특히, http tirgger 함수나 callable 함수는 클라이언트에서 호출을 해 주어야 한다고 생각을 하면 된다.
 
-Run the following command to install typesense related cloud functions.
 
-```sh
-% cd firebase/function
-% npm run deploy:typesense
-```
 
-Run the following command to install a function that manages summarization of all posts under `/posts-all-summary`.
-See the [Forum](forum.md) document for the details.
+### 전체 클라우드 함수 설치하기
 
 ```sh
-% cd firebase/function
-% npm run deploy:managePostsAllSummary
+cd firebase
+firebase use --add
+firebase deploy --only functions
 ```
+
+### 필요한 클라우드 함수만 설치하기
+
+
+#### 푸시 알림 함수
+
+푸시 알림 함수에는 여러 가지 함수가 있다.
+
+
+- `sendPushNotifications` 함수는 클라이언트에서 여러 개의 푸시 알림 토큰을 서버로 전달해서, 서버에서 푸시 알림을 보낼 수 있게 해 준다.
+  - 설치는 그냥 일반적인 클라우드 함수 설치 방식인 `firebase deploy --only functions:sendPushNotifications` 와 같이 하면 된다. 이 후, 다른 클라우드 함수들의 설치도 이와 같아서 생략한다.
+  - 참고로 이 함수는 http trigger 함수이다. Restful API 방식으로 호출한다고 생각하면 된다.
+
+- `userMirror` 함수는 사용자의 정보를 Firestore 로 저장하는 함수이다. 기본적으로 사용자 정보는 RTDB 의 `/users` 에 저장되는데, 이 정보를 Firestore 의 `/users` 로 복사하기 위한 것이다. Firestore 로 복사하면 회원 정보 필터링을 보다 상세하게 할 수 있으며 필요에 따라 Firebase Extensions 를 활용하여 여러가지 추가 작업을 할 수 있다.
+
+- `postMirror` 함수는 `userMirror` 함수와 비슷하게 RTDB 의 `/posts` 의 글 정보를 Firestore 의 `/posts` 컬렉션으로 복사한다.
+
+- `commentMirror` 함수는 `userMirror` 함수와 비슷하게 RTDB 의 `/comments` 의 글 정보를 Firestore 의 `/comments` 컬렉션으로 복사한다.
+
+- `mirrorBackfillRtdbToFirestore` 함수는 `userMirror`, `postMirror`, `commentMirror` 를 사용 할 때, 기존의 mirror 되지 않은 데이터를 모두 mirror 하는 것이다. 이 함수는 callable function 이며 관리자만 실행하는 한 함수이다.
+
+
+- `userLike` 함수는 좋아요 관련 추가 작업을 해 준다. 예를 들어 A 가 B 를 좋아요 하면 A 가 B 를 좋아요 했다는 표시 뿐만아니라 좋아요 갯 수 증/감, 푸시 알림 등 추가적인 작업을 하고자 할 때 이 함수를 쓰면 된다.
+
+- `userDeleteAccount` 는 회원 계정을 Firebase Auth 에서 삭제한다. 클라이언트 SDK 에서 Firebase Auth 를 삭제하려면 recent auth 에러를 내고 다시 로그인하라고 하는데, 이 함수를 사용하면 곧 바로 Firebase Auth 계정을 삭제 할 수 있다.
+  - 이 클라우드 함수는 callable function 이다.
+
+
+- `managePostsSummary` 함수는 글을 RTDB 의 `post-summaries` 와  `post-all-summaries` 에 간추려 저장한다. 기본적으로 `posts` 에 저장되는 글은 여러가지 정보를 추가로 저장하는데, 코멘트까지 같이 저장하므로 글의 용량이 클 수 있다. 그래서 각종 글 관련 목록을 할 때 다운로드해야 하는 양이 많아 비용이 증가 할 수 있는데, 이를 방지하고자 제목, 글쓴이 정도의 간단한 정보만 따로 저장하는 것이다.
+
+- `sendMessagesToCategorySubscribers` 함수는 게시판 (카테고리) 구독자에게 푸시 알림을 전송하고자 할 때 사용하는 함수이다.
+
+
+- `sendMessagesToChatRoomSubscribers` 함수는 채팅 방에 있는 사용자들 중 푸시 알림 구독자들에게만 푸시 알림을 보내고자 할 때 사용하는 함수이다.
+
+- `link` 함수는 dynamic link 함수이다. 앱을 공유하고자 할 때 사용하는 함수이다.
+
+
+
 
 ## Dynamic Link 설치
 
