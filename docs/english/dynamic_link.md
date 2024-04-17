@@ -6,7 +6,7 @@ Fireflutter provides a way to implement dynamic links using cloud function and F
 
 ### Android
 
-In activity manifest file, add the following:
+In AndroidManifest.xml, add the following:
 
 ```xml
 <activity
