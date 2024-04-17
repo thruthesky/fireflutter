@@ -31,6 +31,8 @@ class T {
   static const String thereAreNoBookmarksInTheList =
       'There are no bookmarks in the list.';
 
+  static const String share = 'Share';
+
   /// Label, texts, buttons,
   static const String dismiss = 'dismiss';
 

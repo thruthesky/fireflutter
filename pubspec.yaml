@@ -13,6 +13,7 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
+  app_links: ^4.0.1
   cached_network_image: ^3.3.0
   cloud_firestore: ^4.15.7
   cloud_functions: ^4.6.9
@@ -38,6 +39,7 @@ dependencies:
   linkify: ^5.0.0
   material_color_utilities: ^0.8.0
   rxdart: ^0.27.7
+  share_plus: ^8.0.3
   shared_preferences: ^2.2.2
   typesense: ^0.4.0
   url_launcher: ^6.2.2
