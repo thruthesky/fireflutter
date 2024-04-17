@@ -26,7 +26,9 @@ class _ClubEditScreenState extends State<ClubEditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(club == null ? '모임 만들기' : '모임 수정하기'),
+        title: Text(
+          club == null ? T.clubCreate.tr : T.clubUpdate.tr,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24),

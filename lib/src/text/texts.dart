@@ -171,7 +171,7 @@ class T {
   static const String youCanBlockUserFromTheirProfilePage =
       'You can block users from their profile page';
 
-  // SettingScree
+  // SettingScreen
   static const String pushNotificationOnProfileView =
       'Push Notification on Profile View';
   static const String getNotifiedWhenSomeoneViewYourProfile =
@@ -183,4 +183,16 @@ class T {
   static const String loginRequredMessage = 'Please login to continue.';
   static const String askToLoginMessage =
       'Login is required to continue. Do you want to login?';
+
+  // Club Translation
+  static const String clubCreate = '모임 만들기';
+  static const String clubUpdate = '모임 수정하기';
+  static const String clubName = '모임 이름';
+  static const String clubNameDescription = '모임 이름을 적어주세요.';
+  static const String clubPhotoDescription =
+      '  모임 사진을 업로드 해 주세요. 사진 너비: 800, 사진 높이: 500';
+
+  static const String clubDescriptionLabel = '모임 설명';
+  static const String clubDescriptionInputDescription = "모임 설명을 적어주세요.";
+  static const String clubUpdateMessage = '모임이 수정되었습니다.';
 }

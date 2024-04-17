@@ -82,19 +82,19 @@ class _ClubUpdateFormState extends State<ClubUpdateForm> {
           ),
           const SizedBox(height: 8),
           Text(
-            "  모임 사진을 업로드 해 주세요. 사진 너비: 800, 사진 높이: 500",
+            T.clubPhotoDescription,
             style: Theme.of(context).textTheme.labelMedium,
           ),
           const SizedBox(height: 24),
           LabelField(
             controller: nameController,
-            label: '모임 이름',
-            description: '모임 이름을 적어주세요.',
+            label: T.clubName.tr,
+            description: T.clubNameDescription.tr,
           ),
           LabelField(
             controller: descriptionController,
-            label: '모임 설명',
-            description: '모임 설명을 적어주세요.',
+            label: T.clubDescriptionLabel.tr,
+            description: T.clubDescriptionInputDescription.tr,
             minLines: 3,
             maxLines: 5,
           ),
@@ -106,9 +106,9 @@ class _ClubUpdateFormState extends State<ClubUpdateForm> {
                   name: nameController.text,
                   description: descriptionController.text,
                 );
-                toast(context: context, message: '모임이 수정되었습니다.');
+                toast(context: context, message: T.clubUpdateMessage.tr);
               },
-              child: const Text('모임 수정하기'),
+              child: Text(T.clubUpdate.tr),
             ),
           ),
         ],
