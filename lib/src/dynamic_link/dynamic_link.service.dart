@@ -51,7 +51,7 @@ class DynamicLinkService {
 
   /// This can help when the app is not installed
   /// on the receiver of the dynamic link's device.
-  String appleAppId;
+  String appleAppId = "";
 
   /// Initialization
   ///
@@ -126,6 +126,7 @@ class DynamicLinkService {
       previewText: user.displayName,
       appName: appName,
       appIconLink: appIconLink,
+      appleAppId: appleAppId,
       uid: user.uid,
     );
     final uri = createLink(
@@ -143,6 +144,7 @@ class DynamicLinkService {
       appName: appName,
       appIconLink: appIconLink,
       postId: post.id,
+      appleAppId: appleAppId,
       category: post.category,
     );
     final uri = createLink(
@@ -155,7 +157,7 @@ class DynamicLinkService {
   /// Creates the dynamic link
   ///
   /// [path] must be with "/" at the start.
-  /// For example, "/post" or "/user".
+  /// For example, "/post", or "/user".
   ///
   /// [queryParameters] can be null but
   /// it is recommended to add the preview

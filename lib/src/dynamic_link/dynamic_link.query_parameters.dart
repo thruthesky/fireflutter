@@ -24,6 +24,7 @@ class DynamicLinkQueryParameters {
   String? postId;
   Map<String, String>? otherQueryParameters;
 
+  // We can add the default values from Dynamic Link Service Instance if we have to.
   Map<String, String> toMap() => {
         if (previewImageLink != null) "previewImageLink": previewImageLink!,
         if (previewText != null) "previewText": previewText!,

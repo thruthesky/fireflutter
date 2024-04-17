@@ -245,4 +245,115 @@ DynamicLinkService.instance.init(
 
 ## Creating a Dynamic Link
 
-The `DynamicLinkService` has a functionality that allows us to make a 
+The `DynamicLinkService` has a functionality that allows us to make a link (for example, for sharing a content) in the app.
+
+Example for creating link for post.
+
+```dart
+Future<void> onPressed() async {
+  final Uri link = DynamicLinkService.instance.createPostLink(post!);
+  Share.shareUri(link);
+}
+```
+
+Example for creating link for user.
+
+```dart
+Future<void> onPressed() async {
+  final Uri link = DynamicLinkService.instance.createUserLink(user!);
+  Share.shareUri(link);
+}
+```
+
+As noticed, `DynamicLinkService.instance.createPostLink()` and `DynamicLinkService.instance.createUserLink()` can be used to create links for posts and users.
+
+## Custom Dynamic Links
+
+Not all apps will have same functionalities and each app may require a number of dynamic link variations.
+
+### Creating a Custom Dynamic Links
+
+To create a custom dynamic link, you can use `DynamicLinkService.instance.createLink()` method.
+
+```dart
+  final Uri link = DynamicLinkService.instance.createLink(
+    path = "/product",
+    queryParameters = DynamicLinkQueryParameters(
+      previewImageLink: "https://app.com/product-image-1",
+      appName: "myAPP",
+      appIconLink: "https://app.com/iconica",
+      appleAppId: "APPLEAPPID",
+      category: "fine-arts",
+      otherQueryParameters: {
+        "class": "A",
+        "productId": "kksS1sS",
+      }
+    ),
+  );
+```
+
+The [previewImageLink] will be the image to display on a preview.
+
+The [appName] will be used to display the app name when the app is not installed. This is also used in the preview.
+
+The [appIconLink] will be used to display the app's icon.
+
+The [appleAppId] will be used for the Apple ID so that if the app is not installed, it may show a [https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners](smart app banner).
+
+The [otherQueryParameters] is a map that allows for other possible values in the query parameters that is not provided by DynamicLinkQueryParameters class.
+
+The resulting link may look like this:
+
+```html
+https://yourapphost.com/product?previewImageLink=https%3A%2F%2Fapp.com/iconica&appName=myAPP&appleAppId=APPLEAPPID&category=fine-arts&class=A&productId=kksS1sS&appIconLink=https%3A%2F%2Fapp.com/product-image-1
+```
+
+### Handling the links when user tapped it
+
+When the app handled the dynamic link, URI will be provided.
+
+To open screen using uri:
+
+```dart
+DynamicLinkService.instance.showScreenFromUri(uri);
+```
+
+The example above is already sufficient if we already have the URI. However, in Fireflutter, we have to set it upon initialization so that we will handle it upon opening the app thru link.
+
+Example Code:
+
+```dart
+  DynamicLinkService.instance.init(
+    context: globalContext,
+    host: "my-host.web.app",
+    appName: "My Seller Store App",
+    onLink: (uri) {
+      // other than "/post" and "/user" onLink will be triggered.
+      if (uri.path == "/test") {
+        final productId = uri.queryParameters["productId"];
+        final category = uri.queryParameters["category"];
+        // TODO: add logic that will open the product screen based on your app.
+      }
+    },
+  );
+```
+
+Be noted that if the link is for "/user" or "/post", on link may not be triggered since it will be handled by Dynamic Link Service.
+
+### Customize the path for user and post
+
+To change the path for user or post you can also include the following:
+
+```dart
+  DynamicLinkService.instance.init(
+    context: globalContext,
+    host: "myownhost.web.app",
+    appName: "Own Amazing App",
+    postPath: "/customPostPath",
+    userPath: "/customUserPath",
+  );
+```
+
+Upon creating the links, this will also be used as paths for posts and users.
+
+This will also replace the paths for links for "/post" and "/user" that will be handled by Dynamic Link Service.
