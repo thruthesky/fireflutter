@@ -47,64 +47,45 @@ dependencies:
 - 만약, FireFlutter 코드의 버그를 수정하거나 새로운 기능을 추가한다면 PR 를 통해서 알려주기를 바란다.
 
 
-## Firebase Realtime Database Secuirty 설치
+## Firebase Realtime Database Secuirty Rules
 
-[Firebase Realtime Database Security](../assets/realtime_database_security_rules.md) 를 복사해어 Firebase project 에 붙여 넣기 한 다음 저장해 주세요.
+
+[Firebase Realtime Database Security Rules](../assets/realtime_database_security_rules.md) 를 복사해서 Realtime Database 의 Secrity Rulers 에 붙여 넣기 한 다음 저장한다. 물론 자신만의 보안 규칙이 있다면 적절히 수정을 해야 할 것이다.
+
+참고로 Security Rules 는 Security 에 초점을 맞추도록 한다. Security 에서 data validation 이나 기타 security 와 직접적인 관련이 없는 작업은 하지 않는다.
 
 ## Firestore Security Rules
 
+[Firebase Firestore Security Rules](../assets/firestore_security_rules.md) 를 Firestore Security Rules 에 복사해 넣으면 된다. 물론 자신만의 보안 규칙이 있다면 적절히 수정을 해야 할 것이다.
 
-## Default app-environment entitlement
+참고로 Security Rules 는 Security 에 초점을 맞추도록 한다. Security 에서 data validation 이나 기타 security 와 직접적인 관련이 없는 작업은 하지 않는다.
 
-Add the following code into `info.plist`. These will be needed for access to camera and gallery.
+
+
+
+## 앱 설정 iOS
+
+`FireFlutter` 패키지를 사용하기 위해서 기본적으로 다음과 같은 설정을 해야 합니다. 아래 설정은 사진 업로드에 사용되는 entitlement 입니다.
+
 
 ```xml
 <key>NSCameraUsageDescription</key>
-<string>PhiLov app requires access to the camera to share the photo on profile, chat, forum.</string>
+<string>This app requires access to the camera to share the photo on profile, chat, forum.</string>
 <key>NSMicrophoneUsageDescription</key>
-<string>PhiLov app requires access to the microphone to share vioce with other users.</string>
+<string>This app requires access to the microphone to share vioce with other users.</string>
 <key>NSPhotoLibraryUsageDescription</key>
-<string>PhiLov app requires access to the photo library to share the photo on profile, chat, forum.</string>
+<string>This app requires access to the photo library to share the photo on profile, chat, forum.</string>
 ```
 
-## Install Cloud Functions
+## FireFlutter 기본 설치
 
-Run the following command to install all the push notification cloud functions.
-
-```sh
-% cd firebase/function
-% npm run deploy:message
-```
-
-And set the end point URL to `MessagingService.instance.init(sendPushNotificationsUrl: ..)`
-
-Run the following command to install typesense related cloud functions.
-
-```sh
-% cd firebase/function
-% npm run deploy:typesense
-```
-
-Run the following command to install a function that manages summarization of all posts under `/posts-all-summary`.
-See the [Forum](forum.md) document for the details.
-
-```sh
-% cd firebase/function
-% npm run deploy:managePostsAllSummary
-```
-
-## Dynamic Link 설치
-
-
-## FireFlutter 설치
-
-다음은 FireFlutter 를 적용하는 간단한 예제입니다.
+다음은 FireFlutter 를 적용하는 간단한 예제이다.
 
 - 우선, Firebase 를 플러터 프로젝트에 연결하고,
-- FireFlutter 의 `UserService` 를 초기화합니다.
+- FireFlutter 의 `UserService` 를 초기화한다.
 - 그리고, 로그인을 UI 를 제공하는 위젯인 `SimpleEmailPasswordLoginForm` 을 화면에 보여준다.
 
-아래의 코드는 어떻게 FireFlutter 를 사용 할 수 있는지에 대한 설명을 하는 것으로, 매우 간단한 코드를 가지고 있으며, 앱 개발 작업을 진행하면서, 필요에 따라 여러가지 코드가 추가되어야 할 것입니다.
+아래의 코드는 어떻게 FireFlutter 를 사용 할 수 있는지에 대한 설명을 하는 것으로, 매우 간단한 코드를 가지고 있으며, 앱 개발 작업을 진행하면서, 필요에 따라 여러가지 코드가 추가되어야 할 것이다.
 
 ```dart
 import 'package:example/firebase_options.dart';
@@ -157,8 +138,8 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(),
       body: Column(
         children: [
-          AuthReady(
-            builder: (uid) => Column(
+          Login(
+            yes: (uid) => Column(
               children: [
                 Text('UID: $uid'),
                 ElevatedButton(
@@ -167,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-            notLoginBuilder: () => const SimpleEmailPasswordLoginForm(),
+            no: () => const SimpleEmailPasswordLoginForm(),
           ),
         ],
       ),
@@ -177,6 +158,40 @@ class _MyHomePageState extends State<MyHomePage> {
 ```
 
 추가적으로 [에러 핸들링](./error_handling.md) 문서와 [빠르게 시작하기](./quick_start.md) 문처를 참고 해 보시면 도움이 될 것입니다.
+
+
+
+
+## Install Cloud Functions
+
+Run the following command to install all the push notification cloud functions.
+
+```sh
+% cd firebase/function
+% npm run deploy:message
+```
+
+And set the end point URL to `MessagingService.instance.init(sendPushNotificationsUrl: ..)`
+
+Run the following command to install typesense related cloud functions.
+
+```sh
+% cd firebase/function
+% npm run deploy:typesense
+```
+
+Run the following command to install a function that manages summarization of all posts under `/posts-all-summary`.
+See the [Forum](forum.md) document for the details.
+
+```sh
+% cd firebase/function
+% npm run deploy:managePostsAllSummary
+```
+
+## Dynamic Link 설치
+
+
+
 
 
 ## Initializing TextService
