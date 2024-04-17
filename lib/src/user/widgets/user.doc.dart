@@ -74,6 +74,16 @@ class UserDoc extends StatelessWidget {
           return const Icon(Icons.error_outline);
         }
 
+        /// TODO : notFoundBuilder 를 통해서 커스텀 디자인을 할 수 있도록 한다.
+        if (snapshot.data == null) {
+          return Container(
+            color: Colors.amber.shade900,
+            child: const Center(
+              child: Text('User Not Found'),
+            ),
+          );
+        }
+
         if (cacheId != null) {
           _userDocCache[uid] = User.fromJson(snapshot.data, uid: uid);
         }

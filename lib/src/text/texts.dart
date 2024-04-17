@@ -197,4 +197,12 @@ class T {
   static const String clubDescriptionLabel = '모임 설명';
   static const String clubDescriptionInputDescription = "모임 설명을 적어주세요.";
   static const String clubUpdateMessage = '모임이 수정되었습니다.';
+
+  static const String userNotFoundTitleOnShowPublicProfileScreen = '사용자 정보 오류';
+  static const String userNotFoundMessageOnShowPublicProfileScreen =
+      '사용자의 정보가 올바르지 않습니다. 탈퇴한 사용자이거나 정보가 없습니다.';
+
+  static const String userNotFoundTitleOnSingleChat = '사용자 정보 오류';
+  static const String userNotFoundMessageOnSingleChat =
+      '사용자의 정보가 올바르지 않습니다. 탈퇴한 사용자이거나 정보가 없습니다.';
 }
