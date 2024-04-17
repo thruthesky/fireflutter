@@ -6,6 +6,8 @@ Fireflutter provides a way to implement dynamic links using cloud function and F
 
 ### Android
 
+In activity manifest file, add the following:
+
 ```xml
 <activity
     android:name=".MainActivity"
@@ -22,6 +24,8 @@ Fireflutter provides a way to implement dynamic links using cloud function and F
     </intent-filter>
 </activity>
 ```
+
+Check out this [reference](https://developer.android.com/training/app-links) for more details on how to add this in Android app.
 
 ### Apple
 
@@ -45,6 +49,43 @@ or update the runner entitlements file in ios folder.
  </array>
 </dict>
 </plist>
+```
+
+Check out this [reference](https://developer.apple.com/documentation/xcode/supporting-universal-links-in-your-app) for more details on how to add this in iOS app.
+
+## Adding Deeplinks for Android or Custom URL Scheme for iOS
+
+Check this [reference](https://developer.android.com/training/app-links/deep-linking) for Android.
+
+Add this to the Android manifest file:
+
+```xml
+<intent-filter>
+  ...
+  <data android:scheme="https" android:host="www.example.com" />
+  <data android:scheme="myappscheme" android:host="link" />
+</intent-filter>
+```
+
+Note that currently, fireflutter supports using `link` for deeplinks in the cloud function to open the app.
+
+For iOS, check this [reference](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app).
+
+To set it up, need to update it from Xcode.
+
+From Xcode, there is an `Info` tab that goes along with `General`, `Signing & Capabilitites`, `Resource Tags`, etc.
+
+Click `Info` tab. It will show a different screen that you can see the `URL types` section. You may need to scroll down a bit.
+
+Press the "+" button then enter Identifier, Icon, **URL Schemes** (this is the one you need to set), and Role (Set this one as Viewer).
+
+You can enter:
+
+```text
+Identifier: Custom Link
+URL Scheme: myappscheme
+Icon:
+Role: Viewer
 ```
 
 ## Saving the Well Known Files
@@ -106,31 +147,31 @@ This is the default value of HTML:
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="apple-itunes-app"
-      content="app-id=myAppID, affiliate-data=myAffiliateData, app-argument=myURL"
+      content="app-id=#{{appleAppId}}, app-argument=#{{deepLinkUrl}}"
     />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="white" />
-    <meta name="apple-mobile-web-app-title" content="Silvers" />
+    <meta name="apple-mobile-web-app-title" content="#{{appName}}" />
 
-    <link rel="icon" type="image/png" href="..." />
+    <link rel="icon" type="image/png" href="#{{appIconLink}}" />
     <link rel="mask-icon" href="" color="#ffffff" />
-    <meta name="application-name" content="Silvers" />
+    <meta name="application-name" content="#{{appName}}" />
 
-    <title>Silvers</title>
-    <meta name="description" content="Find out more about my app..." />
+    <title>#{{appName}}</title>
+    <meta name="description" content="#{{previewText}}" />
 
-    <meta property="og:title" content="Silvers" />
-    <meta property="og:description" content="Find out more about my app..." />
-    <meta property="og:image" content="https://.../your-app-banner.jpg" />
+    <meta property="og:title" content="#{{appName}}" />
+    <meta property="og:description" content="#{{previewText}}" />
+    <meta property="og:image" content="#{{previewImageLink}}" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Silvers" />
-    <meta name="twitter:site" content="myawesomeapp.com" />
-    <meta name="twitter:description" content="Find out more about my app..." />
-    <meta name="twitter:image" content="https://.../your-app-banner.jpg" />
-    <link rel="apple-touch-icon" href="..." />
+    <meta name="twitter:card" content="#{{previewText}}" />
+    <meta name="twitter:title" content="#{{appName}}" />
+    <meta name="twitter:site" content="#{{webUrl}}" />
+    <meta name="twitter:description" content="#{{previewText}}" />
+    <meta name="twitter:image" content="#{{previewImageLink}}" />
+    <link rel="apple-touch-icon" href="#{{appIconLink}}" />
     <style>
       .centered {
         position: fixed;
@@ -192,10 +233,10 @@ This is the default value of HTML:
 
 It will depend on your design if you want to put the links or redirection urls in the HTML and how to do it.
 
-You can also add these that will be replaced by the values in Firestore \_link\_ collection.
+You can also add these in your HTML that will be replaced by the values in Firestore \_link\_ collection or the query parameters of the link.
 
 1. #{{deepLinkUrl}}
-This will be set by `urlScheme`.
+This will be set depending on the value of `urlScheme` from Firestore. For example, if the `urlScheme` is `myapp`, the deepLinkUrl will be `myapp://link`.
 
 2. #{{webUrl}}
 This will be replaced by `webUrl`.
@@ -205,6 +246,21 @@ This will be replaced by `appStoreUrl`.
 
 4. "#{{playStoreUrl}}";
 This will be replaced by `playStoreUrl`.
+
+5. #{{previewImageLink}}
+This will come from the link's query `previewImageLink`.
+
+6. #{{appName}}
+This will come from the link's query `appName`.
+
+7. #{{previewText}}
+This will come from the link's query `previewText`.
+
+8. #{{appIconLink}}
+This will come from the link's query `appIconLink`.
+
+9. #{{appleAppId}}
+This will come from the link's query `appleAppId`.
 
 ## Applying the cloud function
 
@@ -298,7 +354,7 @@ The [appName] will be used to display the app name when the app is not installed
 
 The [appIconLink] will be used to display the app's icon.
 
-The [appleAppId] will be used for the Apple ID so that if the app is not installed, it may show a [https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners](smart app banner).
+The [appleAppId] will be used for the Apple ID so that if the app is not installed, it may show a [smart app banner](https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners).
 
 The [otherQueryParameters] is a map that allows for other possible values in the query parameters that is not provided by DynamicLinkQueryParameters class.
 
@@ -356,4 +412,4 @@ To change the path for user or post you can also include the following:
 
 Upon creating the links, this will also be used as paths for posts and users.
 
-This will also replace the paths for links for "/post" and "/user" that will be handled by Dynamic Link Service.
+Based on the example, Dynamic Link Service will now handle links with "/customPostPath" and "/customUserPath" paths for posts and users respectively.
