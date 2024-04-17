@@ -79,7 +79,7 @@ const defaultHtml = `<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="apple-itunes-app"
-      content="app-id=#{{appID}}, app-argument=#{{deepLinkUrl}}"
+      content="app-id=#{{appleAppId}}, app-argument=#{{deepLinkUrl}}"
     />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="white" />
@@ -181,8 +181,8 @@ expressApp.get("*", async (req, res) => {
         const appName = (req.query.appName ?? "") as string;
         htmlSource = htmlSource.replaceAll("#{{appName}}", appName);
         // appID
-        const appID = (req.query.appID ?? "") as string;
-        htmlSource = htmlSource.replaceAll("#{{appID}}", appID);
+        const appleAppId = (req.query.appleAppId ?? "") as string;
+        htmlSource = htmlSource.replaceAll("#{{appleAppId}}", appleAppId);
         // appIconLink
         const appIconLink = (req.query.appIconLink ?? "") as string;
         htmlSource = htmlSource.replaceAll("#{{appIconLink}}", appIconLink);

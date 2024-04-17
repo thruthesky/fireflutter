@@ -242,3 +242,7 @@ DynamicLinkService.instance.init(
     userPath: "/customUser",
 );
 ```
+
+## Creating a Dynamic Link
+
+The `DynamicLinkService` has a functionality that allows us to make a 

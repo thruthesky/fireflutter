@@ -49,6 +49,10 @@ class DynamicLinkService {
   /// For example, "https://example.com/icon.png"
   String appIconLink = "";
 
+  /// This can help when the app is not installed
+  /// on the receiver of the dynamic link's device.
+  String appleAppId;
+
   /// Initialization
   ///
   /// This is best called when the app is ready.
@@ -56,33 +60,13 @@ class DynamicLinkService {
   /// For post links, the link has path of "/post"
   /// For user links, the link has path of "/user"
   Future<void> init({
-    /// Required to open certain screens.
-    /// Preferrably, give the globalContext
     required BuildContext context,
-
-    /// This can be used for custom dynamic links
     Function(Uri uri)? onLink,
-
-    /// Path for post links
-    /// For example, use "/post" for "dynamiclink.com/post?category=news&postId=1234567890"
     String postPath = "/post",
-
-    /// Path for user links
-    /// For example, use "/user" for "dynamiclink.com/user?uid=1234567890"
     String userPath = "/user",
-
-    /// Scheme for dynamic links
-    /// For example, "https" for "https://dynamiclink.com/post?category=news&postId=1234567890"
     String scheme = "https",
-
-    /// The host that is used to make the links.
-    /// This is required because we wont be able to create links without a host.
     required String host,
-
-    /// This will be displayed as the application name in Dynamic Link
     String? appName,
-
-    /// This link will display the Icon in the dynamic link.
     String? appIconLink,
   }) async {
     _appLinks = AppLinks();
@@ -135,42 +119,58 @@ class DynamicLinkService {
     }
   }
 
-  String createUserLink(User user) {
+  /// Creates Fireflutter's default dynamic link for a user share.
+  Uri createUserLink(User user) {
+    final queryParameters = DynamicLinkQueryParameters(
+      previewImageLink: user.photoUrl,
+      previewText: user.displayName,
+      appName: appName,
+      appIconLink: appIconLink,
+      uid: user.uid,
+    );
     final uri = createLink(
       path: userPath,
-      queryParameters: {
-        "uid": user.uid,
-        "previewImageLink": user.photoUrl,
-        "previewText": user.displayName,
-        "appName": appName,
-        "appIconLink": appIconLink,
-      },
+      queryParameters: queryParameters,
     );
-    return uri.toString();
+    return uri;
   }
 
-  String createPostLink(Post post) {
+  /// Creates Fireflutter's default dynamic link for a post share.
+  Uri createPostLink(Post post) {
+    final queryParameters = DynamicLinkQueryParameters(
+      previewImageLink: post.urls.isNotEmpty ? post.urls.first : "",
+      previewText: post.title,
+      appName: appName,
+      appIconLink: appIconLink,
+      postId: post.id,
+      category: post.category,
+    );
     final uri = createLink(
       path: postPath,
-      queryParameters: {
-        "category": post.category,
-        "postId": post.id,
-        "previewImageLink": post.urls.isNotEmpty ? post.urls.first : "",
-        "previewText": post.title,
-        "appName": appName,
-        "appIconLink": appIconLink,
-      },
+      queryParameters: queryParameters,
     );
-    return uri.toString();
+    return uri;
   }
 
   /// Creates the dynamic link
-  Uri createLink({String path = "", Map<String, String>? queryParameters}) {
+  ///
+  /// [path] must be with "/" at the start.
+  /// For example, "/post" or "/user".
+  ///
+  /// [queryParameters] can be null but
+  /// it is recommended to add the preview
+  /// values for better preview, and the values
+  /// that will be needed to open screens.
+  ///
+  Uri createLink({
+    String path = "",
+    DynamicLinkQueryParameters? queryParameters,
+  }) {
     final uri = Uri(
       scheme: scheme,
       host: host,
       path: path,
-      queryParameters: queryParameters,
+      queryParameters: queryParameters?.toMap(),
     );
     return uri;
   }

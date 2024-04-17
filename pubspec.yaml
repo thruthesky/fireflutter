@@ -39,6 +39,7 @@ dependencies:
   linkify: ^5.0.0
   material_color_utilities: ^0.8.0
   rxdart: ^0.27.7
+  share_plus: ^8.0.3
   shared_preferences: ^2.2.2
   typesense: ^0.4.0
   url_launcher: ^6.2.2
