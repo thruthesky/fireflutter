@@ -338,7 +338,7 @@ Example Code:
   );
 ```
 
-Be noted that if the link is for "/user" or "/post", on link may not be triggered since it will be handled by Dynamic Link Service.
+Be noted that if the link is for "/user" or "/post", `onLink` may not be triggered since it will be handled by Dynamic Link Service.
 
 ### Customize the path for user and post
 
