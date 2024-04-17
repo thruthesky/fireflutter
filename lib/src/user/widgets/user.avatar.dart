@@ -74,6 +74,7 @@ class UserAvatar extends StatelessWidget {
     double radius = 20,
     VoidCallback? onTap,
     String? initialData,
+    final BoxBorder? border,
   }) : this(
           key: key,
           uid: uid,
@@ -82,6 +83,7 @@ class UserAvatar extends StatelessWidget {
           onTap: onTap,
           initialData: initialData,
           sync: true,
+          border: border,
         );
 
   Widget builder(dynamic url) => GestureDetector(
