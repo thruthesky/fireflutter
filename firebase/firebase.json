@@ -25,11 +25,7 @@
     "appAssociation": "NONE",
     "rewrites": [
       {
-        "source": "/link",
-        "function": "link"
-      },
-      {
-        "source": "/link/**",
+        "source": "/link{,/**}",
         "function": "link"
       },
       {
