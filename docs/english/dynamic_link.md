@@ -231,7 +231,7 @@ It will depend on your design if you want to put the links or redirection urls i
 You can also add these in your HTML that will be replaced by the values in Firestore \_link\_ collection or the query parameters of the link.
 
 1. #{{deepLinkUrl}}
-This will be set depending on the value of `urlScheme` from link. For example, if the `urlScheme` is `myapp`, the deepLinkUrl will be `myapp://link`.
+This will be set depending on the value of `customUrlScheme` from link. For example, if the `customUrlScheme` is `myapp`, the deepLinkUrl will be `myapp://link`.
 
 2. #{{webUrl}}
 This will be replaced by `webUrl`.
