@@ -25,7 +25,11 @@
     "appAssociation": "NONE",
     "rewrites": [
       {
-        "source": "**",
+        "source": "link/**",
+        "function": "link"
+      },
+      {
+        "source": ".well-known/**",
         "function": "link"
       }
     ]

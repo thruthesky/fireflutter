@@ -61,6 +61,10 @@ dependencies:
 참고로 Security Rules 는 Security 에 초점을 맞추도록 한다. Security 에서 data validation 이나 기타 security 와 직접적인 관련이 없는 작업은 하지 않는다.
 
 
+## Storage Security Rules
+
+[Firebase Storage Security Rules](../assets/storage_security_rules.md)를 Storage Rules 로 복사해 넣는다.
+
 
 
 ## 앱 설정 iOS
