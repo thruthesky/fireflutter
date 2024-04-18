@@ -238,7 +238,7 @@ It will depend on your design if you want to put the links or redirection urls i
 You can also add these in your HTML that will be replaced by the values in Firestore \_link\_ collection or the query parameters of the link.
 
 1. #{{deepLinkUrl}}
-This will be set depending on the value of `urlScheme` from Firestore. For example, if the `urlScheme` is `myapp`, the deepLinkUrl will be `myapp://link`.
+This will be set depending on the value of `urlScheme` from link. For example, if the `urlScheme` is `myapp`, the deepLinkUrl will be `myapp://link`.
 
 2. #{{webUrl}}
 This will be replaced by `webUrl`.
@@ -263,6 +263,12 @@ This will come from the link's query `appIconLink`.
 
 9. #{{appleAppId}}
 This will come from the link's query `appleAppId`.
+
+10. #{{description}}
+This will come from the link's query `description`.
+
+11. #{{maskIconSvgUrl}}
+This will come from the link's query `maskIconSvgUrl`.
 
 ## Applying the cloud function
 
