@@ -13,7 +13,7 @@ class DynamicLinkService {
   DynamicLinkService._();
 
   /// AppLinks instance
-  late final AppLinks _appLinks;
+  late AppLinks _appLinks;
 
   StreamSubscription<Uri>? _appLinkStream;
 
@@ -96,7 +96,7 @@ class DynamicLinkService {
     if (uri.path == postPath) return await _showPostScreen(uri);
     if (uri.path == userPath) return await _showUserScreen(uri);
     if (onLink != null) return await onLink!(uri);
-    dog("Something went wrong! Unknown path: ${uri.path}");
+    throw Exception("Link: Something is wrong! Unknown path: ${uri.path}");
   }
 
   /// Shows Post Screen using category and post ID

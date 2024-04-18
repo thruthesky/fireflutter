@@ -421,3 +421,29 @@ To change the path for user or post you can also include the following:
 Upon creating the links, this will also be used as paths for posts and users.
 
 Based on the example, Dynamic Link Service will now handle links with "/customPostPath" and "/customUserPath" paths for posts and users respectively.
+
+## ShareButton Widget
+
+Fireflutter provides a default button for sharing post, user or others.
+
+To use:
+
+```dart
+ShareButton(user: user)
+```
+
+You can also use the `ShareButton.textButton`.
+
+```dart
+ShareButton.textButton(post: post)
+```
+
+Or if you want a different content to share:
+
+```dart
+ShareButton(
+  onTap: () {
+    return DynamicLinkService.instance.createLink(path: "/ownPath");
+  }
+);
+```
