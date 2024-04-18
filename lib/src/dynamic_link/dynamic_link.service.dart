@@ -77,7 +77,7 @@ class DynamicLinkService {
 
   /// This is the urlScheme used for deeplink for Android
   /// and custom URL Scheme for iOS
-  String urlScheme = "";
+  String customUrlScheme = "";
 
   /// Initialization
   ///
@@ -91,6 +91,7 @@ class DynamicLinkService {
     String postPath = "/post",
     String userPath = "/user",
     String scheme = "https",
+    String customUrlScheme = "",
     required String host,
     String? appName,
     String? appIconLink,
@@ -101,6 +102,7 @@ class DynamicLinkService {
     this.postPath = postPath;
     this.userPath = userPath;
     this.scheme = scheme;
+    this.customUrlScheme = customUrlScheme;
     this.host = host;
     this.appName = appName ?? "";
     this.appIconLink = appIconLink ?? "";
@@ -190,7 +192,7 @@ class DynamicLinkService {
         playStoreUrl: playStoreUrl,
         appStoreUrl: appStoreUrl,
         webUrl: webUrl,
-        urlScheme: urlScheme,
+        customUrlScheme: customUrlScheme,
       );
 
   /// Creates the dynamic link

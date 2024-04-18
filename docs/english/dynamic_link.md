@@ -132,13 +132,6 @@ Set the `webUrl` in Firestore on the "\_link\_" collection, using the field name
 
 If the app is not installed in the an HTML will show in the browser. This can redirect to app store or play store depending on the device.
 
-Set up the following:
-
-1. appStoreUrl - This is the link to the appstore.
-2. playStoreUrl - This is the link to the playstore.
-3. urlScheme - This is the scheme used to open the app. This is for Custom URL Scheme (for iOS) and deep link (for Android).
-4. html - You can provide your own custom HTML.
-
 This is the default value of HTML:
 
 ```html
@@ -271,6 +264,36 @@ This will come from the link's query `description`.
 This will come from the link's query `maskIconSvgUrl`.
 
 ## Applying the cloud function
+
+In `firebase.json` file, you can see this hosting set up:
+
+```json
+{
+  // ...
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "appAssociation": "NONE",
+    "rewrites": [
+      {
+        "source": "/link{,/**}",
+        "function": "link"
+      },
+      {
+        "source": "/.well-known/**",
+        "function": "link"
+      }
+    ]
+  },
+  // ...
+}
+```
+
+The link function will be the function to be shown when the link matches the source.
 
 To apply the cloud function, go to firebase/functions folder and run `npm run deploy:link`.
 
@@ -415,12 +438,36 @@ To change the path for user or post you can also include the following:
     appName: "Own Amazing App",
     postPath: "/customPostPath",
     userPath: "/customUserPath",
+    customUrlScheme: "deeplinkscheme",
+    appStoreUrl: "https://applestorelink.com/id",
+    playStoreUrl: "https://playstorelink.com/id",
+    webUrl: "https://mywebsite.com",
   );
 ```
 
 Upon creating the links, this will also be used as paths for posts and users.
 
 Based on the example, Dynamic Link Service will now handle links with "/customPostPath" and "/customUserPath" paths for posts and users respectively.
+
+### If App is not installed, route to stores
+
+Include these upon initialization:
+
+```dart
+  DynamicLinkService.instance.init(
+    context: globalContext,
+    host: "myownhost.web.app",
+    appName: "Own Amazing App",
+    customUrlScheme: "deeplinkscheme",
+    appStoreUrl: "https://applestorelink.com/id",
+    playStoreUrl: "https://playstorelink.com/id",
+    webUrl: "https://mywebsite.com",
+  );
+```
+
+In case a user taps the link in a device which has not installed the app, `appStoreUrl`, `playStoreUrl` or `webUrl` will help to redirect the user from the browser.
+
+For `customUrlScheme`, it may help when some apps (i.e. KakaoTalk) are using in-app browser that prevents the OS from opening your app when the link is tapped. It may open the app if deeplink (for Android) or custom URL scheme (for iOS) was set properly.
 
 ## ShareButton Widget
 

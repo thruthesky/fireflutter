@@ -15,7 +15,7 @@ class DynamicLinkQueryParameters {
     this.appStoreUrl,
     this.playStoreUrl,
     this.webUrl,
-    this.urlScheme,
+    this.customUrlScheme,
     this.otherQueryParameters,
   });
 
@@ -75,7 +75,7 @@ class DynamicLinkQueryParameters {
   /// For example:
   /// myurlscheme://link
   /// Use "myurlscheme" as urlScheme here.
-  String? urlScheme;
+  String? customUrlScheme;
 
   Map<String, String>? otherQueryParameters;
 
@@ -94,7 +94,7 @@ class DynamicLinkQueryParameters {
         if (appStoreUrl != null) "appStoreUrl": appStoreUrl!,
         if (playStoreUrl != null) "playStoreUrl": playStoreUrl!,
         if (webUrl != null) "webUrl": webUrl!,
-        if (urlScheme != null) "urlScheme": urlScheme!,
+        if (customUrlScheme != null) "customUrlScheme": customUrlScheme!,
         ...?otherQueryParameters,
       };
 }
