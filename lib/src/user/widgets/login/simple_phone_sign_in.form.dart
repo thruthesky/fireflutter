@@ -303,9 +303,10 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                             // Auto-resolution timed out...
                             if (mounted) {
                               error(
-                                  context: context,
-                                  title: T.error.tr,
-                                  message: T.phoneSignInTimeoutTryAgain.tr);
+                                context: context,
+                                title: T.error.tr,
+                                message: T.phoneSignInTimeoutTryAgain.tr,
+                              );
                               setState(() {
                                 showSmsCodeInput = false;
                                 progressVerifyPhoneNumber = false;
