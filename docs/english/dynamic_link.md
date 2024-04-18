@@ -337,7 +337,7 @@ To create a custom dynamic link, you can use `DynamicLinkService.instance.create
     queryParameters = DynamicLinkQueryParameters(
       previewImageLink: "https://app.com/product-image-1",
       appName: "myAPP",
-      appIconLink: "https://app.com/iconica",
+      appIconLink: "https://app.com/iconica.jpg",
       appleAppId: "APPLEAPPID",
       category: "fine-arts",
       otherQueryParameters: {
@@ -361,7 +361,7 @@ The [otherQueryParameters] is a map that allows for other possible values in the
 The resulting link may look like this:
 
 ```html
-https://yourapphost.com/product?previewImageLink=https%3A%2F%2Fapp.com/iconica&appName=myAPP&appleAppId=APPLEAPPID&category=fine-arts&class=A&productId=kksS1sS&appIconLink=https%3A%2F%2Fapp.com/product-image-1
+https://yourapphost.com/product?previewImageLink=https%3A%2F%2Fapp.com/iconica&appName=myAPP&appleAppId=APPLEAPPID&category=fine-arts&class=A&productId=kksS1sS&appIconLink=https%3A%2F%2Fapp.com/iconica.jpg
 ```
 
 ### Handling the links when user tapped it
