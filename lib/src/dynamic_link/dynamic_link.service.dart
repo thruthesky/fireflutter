@@ -40,18 +40,40 @@ class DynamicLinkService {
   /// The host that is used to make the links.
   String host = "";
 
+  /// Default value for appName in link
+  ///
   /// The application name that may appear for
   /// links' preview.
   String appName = "";
 
+  /// Default value for appIconLink in link
+  ///
   /// The application's Icon's URL that may appear for
   /// links' preview.
   /// For example, "https://example.com/icon.png"
   String appIconLink = "";
 
+  /// Default value for appleAppId in link
+  ///
   /// This can help when the app is not installed
   /// on the receiver of the dynamic link's device.
   String appleAppId = "";
+
+  /// Default value for appStoreUrl
+  ///
+  String appStoreUrl = "";
+
+  /// Default value for playStoreUrl in link
+  ///
+  String playStoreUrl = "";
+
+  /// Default value for webUrl in link
+  ///
+  String webUrl = "";
+
+  /// This is the urlScheme used for deeplink for Android
+  /// and custom URL Scheme for iOS
+  String urlScheme = "";
 
   /// Initialization
   ///
