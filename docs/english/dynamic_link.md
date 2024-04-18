@@ -6,7 +6,7 @@ Fireflutter provides a way to implement dynamic links using cloud function and F
 
 ### Android
 
-In activity manifest file, add the following:
+In AndroidManifest.xml, add the following:
 
 ```xml
 <activity
@@ -55,6 +55,10 @@ Check out this [reference](https://developer.apple.com/documentation/xcode/suppo
 
 ## Adding Deeplinks for Android or Custom URL Scheme for iOS
 
+We are unsure about that the universial link and app link are not working in some circumstances like the link is opened in in-app-browswer. To make it work, the web (in cloud functino) tries to open the app using deeplink. The Kakaotalk app is the one that works this way. So, it is recommended to add deeplink in the app settins.
+
+
+
 Check this [reference](https://developer.android.com/training/app-links/deep-linking) for Android.
 
 Add this to the Android manifest file:
@@ -67,13 +71,11 @@ Add this to the Android manifest file:
 </intent-filter>
 ```
 
-Note that currently, fireflutter supports using `link` for deeplinks in the cloud function to open the app.
-
 For iOS, check this [reference](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app).
 
 To set it up, need to update it from Xcode.
 
-From Xcode, there is an `Info` tab that goes along with `General`, `Signing & Capabilitites`, `Resource Tags`, etc.
+From Xcode, there is an `Info` tab that goes along with `General -> Signing & Capabilitites -> Resource Tags`, etc.
 
 Click `Info` tab. It will show a different screen that you can see the `URL types` section. You may need to scroll down a bit.
 

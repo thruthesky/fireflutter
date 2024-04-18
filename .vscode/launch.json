@@ -51,16 +51,6 @@
       "program": "lib/main.dart"
     },
     {
-      "name": "Silvers - v2 - iPhone 15 Pro Max",
-      "request": "launch",
-      "type": "dart",
-      "deviceId": "iPhone 15 Pro Max",
-      "flutterMode": "debug",
-      "cwd": "apps/silvers",
-      "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=v2"]
-    },
-    {
       "name": "Silvers - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
