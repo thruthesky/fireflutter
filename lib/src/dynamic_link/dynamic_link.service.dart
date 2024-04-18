@@ -15,6 +15,10 @@ class DynamicLinkService {
   /// AppLinks instance
   late AppLinks _appLinks;
 
+  /// For dynamic links, after the host name, the path should begin with "/link"
+  /// For example, "dynamiclink.com/link/post?category=news&postId=1234567890"
+  final String _linkPath = "/link";
+
   StreamSubscription<Uri>? _appLinkStream;
 
   /// BuildContext, Preferrably, the globalContext
@@ -115,8 +119,8 @@ class DynamicLinkService {
 
   /// Depending on the path, show the screen accordingly.
   showScreenFromUri(Uri uri) async {
-    if (uri.path == postPath) return await _showPostScreen(uri);
-    if (uri.path == userPath) return await _showUserScreen(uri);
+    if (uri.path == "$_linkPath$postPath") return await _showPostScreen(uri);
+    if (uri.path == "$_linkPath$userPath") return await _showUserScreen(uri);
     if (onLink != null) return await onLink!(uri);
     throw Exception("Link: Something is wrong! Unknown path: ${uri.path}");
   }
@@ -176,6 +180,19 @@ class DynamicLinkService {
     return uri;
   }
 
+  /// Using this, this will prevent developer to type
+  /// some default fields over and over.
+  DynamicLinkQueryParameters get _defaultQueryParametersValues =>
+      DynamicLinkQueryParameters(
+        appName: appName,
+        appIconLink: appIconLink,
+        appleAppId: appleAppId,
+        playStoreUrl: playStoreUrl,
+        appStoreUrl: appStoreUrl,
+        webUrl: webUrl,
+        urlScheme: urlScheme,
+      );
+
   /// Creates the dynamic link
   ///
   /// [path] must be with "/" at the start.
@@ -190,11 +207,18 @@ class DynamicLinkService {
     String path = "",
     DynamicLinkQueryParameters? queryParameters,
   }) {
+    // Let the queryParameters input replace/add
+    // values to the map.
+    final mergedQueryParameters = {
+      ..._defaultQueryParametersValues.toMap(),
+      ...?queryParameters?.toMap(),
+    };
     final uri = Uri(
       scheme: scheme,
       host: host,
-      path: path,
-      queryParameters: queryParameters?.toMap(),
+      // Must have "/link"
+      path: "$_linkPath$path",
+      queryParameters: mergedQueryParameters,
     );
     return uri;
   }
