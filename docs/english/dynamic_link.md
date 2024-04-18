@@ -57,8 +57,6 @@ Check out this [reference](https://developer.apple.com/documentation/xcode/suppo
 
 We are unsure about that the universial link and app link are not working in some circumstances like the link is opened in in-app-browswer. To make it work, the web (in cloud functino) tries to open the app using deeplink. The Kakaotalk app is the one that works this way. So, it is recommended to add deeplink in the app settins.
 
-
-
 Check this [reference](https://developer.android.com/training/app-links/deep-linking) for Android.
 
 Add this to the Android manifest file:
@@ -118,11 +116,13 @@ com.com.appname: [
 
 ### Apple apple-app-site-association
 
-For apple, in Firestore on the "\_link\_" collection, save it under document "apple" using the team ID (as field name) and the app bundle id (as the value):
+For apple, in Firestore on the "\_link\_" collection, save it under document "apple". Save the TEAMID.bundleId as an array and save it in the field "apps":
 
-For example:
+For example under "apple" collection:
 
-FII23432J: com.com.appname
+apps: [
+  TEAMID.com.com.exampleapp
+]
 
 ### webUrl
 
