@@ -13,7 +13,11 @@ class DynamicLinkService {
   DynamicLinkService._();
 
   /// AppLinks instance
-  late final AppLinks _appLinks;
+  late AppLinks _appLinks;
+
+  /// For dynamic links, after the host name, the path should begin with "/link"
+  /// For example, "dynamiclink.com/link/post?category=news&postId=1234567890"
+  final String _linkPath = "/link";
 
   StreamSubscription<Uri>? _appLinkStream;
 
@@ -40,18 +44,40 @@ class DynamicLinkService {
   /// The host that is used to make the links.
   String host = "";
 
+  /// Default value for appName in link
+  ///
   /// The application name that may appear for
   /// links' preview.
   String appName = "";
 
+  /// Default value for appIconLink in link
+  ///
   /// The application's Icon's URL that may appear for
   /// links' preview.
   /// For example, "https://example.com/icon.png"
   String appIconLink = "";
 
+  /// Default value for appleAppId in link
+  ///
   /// This can help when the app is not installed
   /// on the receiver of the dynamic link's device.
   String appleAppId = "";
+
+  /// Default value for appStoreUrl
+  ///
+  String appStoreUrl = "";
+
+  /// Default value for playStoreUrl in link
+  ///
+  String playStoreUrl = "";
+
+  /// Default value for webUrl in link
+  ///
+  String webUrl = "";
+
+  /// This is the urlScheme used for deeplink for Android
+  /// and custom URL Scheme for iOS
+  String customUrlScheme = "";
 
   /// Initialization
   ///
@@ -65,6 +91,7 @@ class DynamicLinkService {
     String postPath = "/post",
     String userPath = "/user",
     String scheme = "https",
+    String customUrlScheme = "",
     required String host,
     String? appName,
     String? appIconLink,
@@ -75,6 +102,7 @@ class DynamicLinkService {
     this.postPath = postPath;
     this.userPath = userPath;
     this.scheme = scheme;
+    this.customUrlScheme = customUrlScheme;
     this.host = host;
     this.appName = appName ?? "";
     this.appIconLink = appIconLink ?? "";
@@ -93,10 +121,10 @@ class DynamicLinkService {
 
   /// Depending on the path, show the screen accordingly.
   showScreenFromUri(Uri uri) async {
-    if (uri.path == postPath) return await _showPostScreen(uri);
-    if (uri.path == userPath) return await _showUserScreen(uri);
+    if (uri.path == "$_linkPath$postPath") return await _showPostScreen(uri);
+    if (uri.path == "$_linkPath$userPath") return await _showUserScreen(uri);
     if (onLink != null) return await onLink!(uri);
-    dog("Something went wrong! Unknown path: ${uri.path}");
+    throw Exception("Link: Something is wrong! Unknown path: ${uri.path}");
   }
 
   /// Shows Post Screen using category and post ID
@@ -154,6 +182,19 @@ class DynamicLinkService {
     return uri;
   }
 
+  /// Using this, this will prevent developer to type
+  /// some default fields over and over.
+  DynamicLinkQueryParameters get _defaultQueryParametersValues =>
+      DynamicLinkQueryParameters(
+        appName: appName,
+        appIconLink: appIconLink,
+        appleAppId: appleAppId,
+        playStoreUrl: playStoreUrl,
+        appStoreUrl: appStoreUrl,
+        webUrl: webUrl,
+        customUrlScheme: customUrlScheme,
+      );
+
   /// Creates the dynamic link
   ///
   /// [path] must be with "/" at the start.
@@ -168,11 +209,18 @@ class DynamicLinkService {
     String path = "",
     DynamicLinkQueryParameters? queryParameters,
   }) {
+    // Let the queryParameters input replace/add
+    // values to the map.
+    final mergedQueryParameters = {
+      ..._defaultQueryParametersValues.toMap(),
+      ...?queryParameters?.toMap(),
+    };
     final uri = Uri(
       scheme: scheme,
       host: host,
-      path: path,
-      queryParameters: queryParameters?.toMap(),
+      // Must have "/link"
+      path: "$_linkPath$path",
+      queryParameters: mergedQueryParameters,
     );
     return uri;
   }

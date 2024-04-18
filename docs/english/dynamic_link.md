@@ -57,8 +57,6 @@ Check out this [reference](https://developer.apple.com/documentation/xcode/suppo
 
 We are unsure about that the universial link and app link are not working in some circumstances like the link is opened in in-app-browswer. To make it work, the web (in cloud functino) tries to open the app using deeplink. The Kakaotalk app is the one that works this way. So, it is recommended to add deeplink in the app settins.
 
-
-
 Check this [reference](https://developer.android.com/training/app-links/deep-linking) for Android.
 
 Add this to the Android manifest file:
@@ -118,11 +116,13 @@ com.com.appname: [
 
 ### Apple apple-app-site-association
 
-For apple, in Firestore on the "\_link\_" collection, save it under document "apple" using the team ID (as field name) and the app bundle id (as the value):
+For apple, in Firestore on the "\_link\_" collection, save it under document "apple". Save the TEAMID.bundleId as an array and save it in the field "apps":
 
-For example:
+For example under "apple" collection:
 
-FII23432J: com.com.appname
+apps: [
+  TEAMID.com.com.exampleapp
+]
 
 ### webUrl
 
@@ -131,13 +131,6 @@ Set the `webUrl` in Firestore on the "\_link\_" collection, using the field name
 ### HTML
 
 If the app is not installed in the an HTML will show in the browser. This can redirect to app store or play store depending on the device.
-
-Set up the following:
-
-1. appStoreUrl - This is the link to the appstore.
-2. playStoreUrl - This is the link to the playstore.
-3. urlScheme - This is the scheme used to open the app. This is for Custom URL Scheme (for iOS) and deep link (for Android).
-4. html - You can provide your own custom HTML.
 
 This is the default value of HTML:
 
@@ -238,7 +231,7 @@ It will depend on your design if you want to put the links or redirection urls i
 You can also add these in your HTML that will be replaced by the values in Firestore \_link\_ collection or the query parameters of the link.
 
 1. #{{deepLinkUrl}}
-This will be set depending on the value of `urlScheme` from Firestore. For example, if the `urlScheme` is `myapp`, the deepLinkUrl will be `myapp://link`.
+This will be set depending on the value of `customUrlScheme` from link. For example, if the `customUrlScheme` is `myapp`, the deepLinkUrl will be `myapp://link`.
 
 2. #{{webUrl}}
 This will be replaced by `webUrl`.
@@ -264,7 +257,43 @@ This will come from the link's query `appIconLink`.
 9. #{{appleAppId}}
 This will come from the link's query `appleAppId`.
 
+10. #{{description}}
+This will come from the link's query `description`.
+
+11. #{{maskIconSvgUrl}}
+This will come from the link's query `maskIconSvgUrl`.
+
 ## Applying the cloud function
+
+In `firebase.json` file, you can see this hosting set up:
+
+```json
+{
+  // ...
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "appAssociation": "NONE",
+    "rewrites": [
+      {
+        "source": "/link{,/**}",
+        "function": "link"
+      },
+      {
+        "source": "/.well-known/**",
+        "function": "link"
+      }
+    ]
+  },
+  // ...
+}
+```
+
+The link function will be the function to be shown when the link matches the source.
 
 To apply the cloud function, go to firebase/functions folder and run `npm run deploy:link`.
 
@@ -339,7 +368,7 @@ To create a custom dynamic link, you can use `DynamicLinkService.instance.create
     queryParameters = DynamicLinkQueryParameters(
       previewImageLink: "https://app.com/product-image-1",
       appName: "myAPP",
-      appIconLink: "https://app.com/iconica",
+      appIconLink: "https://app.com/iconica.jpg",
       appleAppId: "APPLEAPPID",
       category: "fine-arts",
       otherQueryParameters: {
@@ -363,7 +392,7 @@ The [otherQueryParameters] is a map that allows for other possible values in the
 The resulting link may look like this:
 
 ```html
-https://yourapphost.com/product?previewImageLink=https%3A%2F%2Fapp.com/iconica&appName=myAPP&appleAppId=APPLEAPPID&category=fine-arts&class=A&productId=kksS1sS&appIconLink=https%3A%2F%2Fapp.com/product-image-1
+https://yourapphost.com/product?previewImageLink=https%3A%2F%2Fapp.com/iconica&appName=myAPP&appleAppId=APPLEAPPID&category=fine-arts&class=A&productId=kksS1sS&appIconLink=https%3A%2F%2Fapp.com/iconica.jpg
 ```
 
 ### Handling the links when user tapped it
@@ -409,9 +438,59 @@ To change the path for user or post you can also include the following:
     appName: "Own Amazing App",
     postPath: "/customPostPath",
     userPath: "/customUserPath",
+    customUrlScheme: "deeplinkscheme",
+    appStoreUrl: "https://applestorelink.com/id",
+    playStoreUrl: "https://playstorelink.com/id",
+    webUrl: "https://mywebsite.com",
   );
 ```
 
 Upon creating the links, this will also be used as paths for posts and users.
 
 Based on the example, Dynamic Link Service will now handle links with "/customPostPath" and "/customUserPath" paths for posts and users respectively.
+
+### If App is not installed, route to stores
+
+Include these upon initialization:
+
+```dart
+  DynamicLinkService.instance.init(
+    context: globalContext,
+    host: "myownhost.web.app",
+    appName: "Own Amazing App",
+    customUrlScheme: "deeplinkscheme",
+    appStoreUrl: "https://applestorelink.com/id",
+    playStoreUrl: "https://playstorelink.com/id",
+    webUrl: "https://mywebsite.com",
+  );
+```
+
+In case a user taps the link in a device which has not installed the app, `appStoreUrl`, `playStoreUrl` or `webUrl` will help to redirect the user from the browser.
+
+For `customUrlScheme`, it may help when some apps (i.e. KakaoTalk) are using in-app browser that prevents the OS from opening your app when the link is tapped. It may open the app if deeplink (for Android) or custom URL scheme (for iOS) was set properly.
+
+## ShareButton Widget
+
+Fireflutter provides a default button for sharing post, user or others.
+
+To use:
+
+```dart
+ShareButton(user: user)
+```
+
+You can also use the `ShareButton.textButton`.
+
+```dart
+ShareButton.textButton(post: post)
+```
+
+Or if you want a different content to share:
+
+```dart
+ShareButton(
+  onTap: () {
+    return DynamicLinkService.instance.createLink(path: "/ownPath");
+  }
+);
+```

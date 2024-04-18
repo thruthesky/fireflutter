@@ -61,7 +61,7 @@ expressApp.get("/.well-known/assetlinks.json", async (req, res) => {
       target: {
         namespace: "android_app",
         package_name: appName,
-        sha256_cert_fingerprints: sha256s,
+        sha256_cert_fingerprints: sha256s.map((sha) => sha.toUpperCase()),
       },
     }));
     res.write(JSON.stringify(jsonCredentials));
@@ -86,7 +86,7 @@ const defaultHtml = `<!DOCTYPE html>
     <meta name="apple-mobile-web-app-title" content="#{{title}}" />
 
     <link rel="icon" type="image/png" href="#{{appIconLink}}" />
-    <link rel="mask-icon" href="" color="#ffffff" />
+    <link rel="mask-icon" href="#{{maskIconSvgUrl}}" color="#ffffff" />
     <meta name="application-name" content="#{{appName}}" />
 
     <title>#{{title}}</title>
@@ -168,32 +168,30 @@ expressApp.get("*", async (req, res) => {
     const htmlSnapshot = docSnaphot.data() as HtmlDeepLink;
     let htmlSource = htmlSnapshot.html ?? defaultHtml;
 
-
     // Prepare the content
     const appName = (req.query.appName ?? "") as string;
     const title = (req.query.title ?? "") as string;
     const appStoreUrl = (req.query.appStoreUrl ?? "") as string;
     const playStoreUrl = (req.query.playStoreUrl ?? "") as string;
-    const webUrl = (req.query.playStoreUrl ?? "") as string;
-    const deepLinkUrl = (req.query.deepLinkUrl ?? "") as string;
+    const webUrl = (req.query.webUrl ?? "") as string;
+    const customUrlScheme = (req.query.customUrlScheme ?? "") as string;
     const appleAppId = (req.query.appleAppId ?? "") as string;
     const appIconLink = (req.query.appIconLink ?? "") as string;
     const previewImageLink = (req.query.previewImageLink ?? "") as string;
     const description = (req.query.description ?? "") as string;
-
+    const maskIconSvgUrl = (req.query.maskIconSvgUrl ?? "") as string;
 
     htmlSource = htmlSource.replaceAll("#{{appName}}", appName);
     htmlSource = htmlSource.replaceAll("#{{title}}", title);
     htmlSource = htmlSource.replaceAll("#{{appStoreUrl}}", appStoreUrl);
     htmlSource = htmlSource.replaceAll("#{{playStoreUrl}}", playStoreUrl);
     htmlSource = htmlSource.replaceAll("#{{webUrl}}", webUrl);
-    htmlSource = htmlSource.replaceAll("#{{deepLinkUrl}}", deepLinkUrl);
+    htmlSource = htmlSource.replaceAll("#{{deepLinkUrl}}", customUrlScheme.length > 0? req.query.customUrlScheme + "://link" + req.url: "");
     htmlSource = htmlSource.replaceAll("#{{appleAppId}}", appleAppId);
     htmlSource = htmlSource.replaceAll("#{{appIconLink}}", appIconLink);
     htmlSource = htmlSource.replaceAll("#{{previewImageLink}}", previewImageLink);
     htmlSource = htmlSource.replaceAll("#{{description}}", description);
-
-
+    htmlSource = htmlSource.replaceAll("#{{maskIconSvgUrl}}", maskIconSvgUrl);
 
     // Return the webpage
     return res.send(htmlSource);
