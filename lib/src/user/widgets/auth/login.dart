@@ -34,7 +34,7 @@ class Login extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return loadingBuider?.call() ??
-              const Center(child: CircularProgressIndicator());
+              const Center(child: CircularProgressIndicator.adaptive());
         }
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
