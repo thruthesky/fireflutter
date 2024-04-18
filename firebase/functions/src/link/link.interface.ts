@@ -12,9 +12,4 @@ export interface AppleCredential {
 
 export interface HtmlDeepLink {
     html?: string;
-    appStoreUrl?: string;
-    playStoreUrl?: string;
-    webUrl?: string;
-    urlScheme?: string;
-    // TODO title, content, image
 }
