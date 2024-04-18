@@ -33,3 +33,42 @@ Dynamic link 에 대한 자세한 설명은 dynamic link 항목을 참고한다.
 
 ## 활용
 
+
+
+
+## Firebase 에 홈페이지를 운영하는 경우
+
+Firebase Hosting 에 대한 충분한 이해가 필요하다.
+
+먼저, FireFlutter 의 dynamic link 는 기본 사이트에 운영하는 것을 가정으로 하는데, 홈페이지도 기본 사이트에 운영하고자 한다면 `FireFlutter` 의 `firebase.json` 으로 hosting deploy 하면, 홈페이지로 개발한 데이터가 삭제된다. 여러가지 방법이 있겠지만 가능하면 홈페이지 개발은 별도의 폴더에서 하고, `firebase init hosting` 을 통해서 아래와 같은 설정을 하여, dynamic link 에서 사용하는 함수를 그대로 쓸 수 있도록 한다.
+
+아래에서 `.well-known/**` 를 `link` 함수로 연결하여 assetlinks.json 과 AASA 를 적절하게 보여준다. 그리고 공유할 때 링크 생성은 `https://[기]본사이트-도메인]/link/[xxxx]` 와 같이 하면 되는 것이다. 그러면 링크가 탭 될 때, 웹브라우저가 열리는 경우, `link` 함수가 실행되어 적절한 처리를 하면 되는 것이다.
+
+`firebase.json` 예제 - 아래와 같이 `appAssociation: NONE` 과 `rewrites` 를 개발하는 홈페이지 프로젝트의 `firebase.json` 에 넣어 주고 배포하면 dynamic link 를 그대로 쓸 수 있다.
+
+```dart
+{
+  "hosting": {
+    "source": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "frameworksBackend": {
+      "region": "asia-east1"
+    },
+    "appAssociation": "NONE",
+    "rewrites": [
+      {
+        "source": "link/**",
+        "function": "link"
+      },
+      {
+        "source": ".well-known/**",
+        "function": "link"
+      }
+    ]
+  }
+}
+```

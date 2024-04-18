@@ -144,10 +144,10 @@ const defaultHtml = `<!DOCTYPE html>
           playStoreUrl.length > 0
         ) {
           window.location.replace(playStoreUrl);
-        } else {
-          if (webUrl.length > 0) {
+        } else if (webUrl.length > 0) {
             window.location.replace(webUrl);
-          }
+        } else {
+          alert("No app store or play store url provided. Inform this to admin.");
         }
       }, 2000);
       window.addEventListener("visibiltychange", function () {
