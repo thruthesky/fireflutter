@@ -61,7 +61,7 @@ expressApp.get("/.well-known/assetlinks.json", async (req, res) => {
       target: {
         namespace: "android_app",
         package_name: appName,
-        sha256_cert_fingerprints: sha256s,
+        sha256_cert_fingerprints: sha256s.map((sha) => sha.toUpperCase()),
       },
     }));
     res.write(JSON.stringify(jsonCredentials));
