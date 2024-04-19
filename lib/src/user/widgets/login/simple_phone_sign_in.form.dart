@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
@@ -84,6 +86,8 @@ class SimplePhoneSignInForm extends StatefulWidget {
     this.smsSubmitLabel,
     this.smsRetry,
     this.phoneNumberDisplayBuilder,
+    this.onPhoneNumberVerificationFailed,
+    this.onSmsCodeVerificationFailed,
     // this.phoneNumberTextStyle,
     // this.smsTextStyle,
   });
@@ -110,6 +114,8 @@ class SimplePhoneSignInForm extends StatefulWidget {
   final Widget? smsSubmitLabel;
   final Widget? smsRetry;
   final String? Function(String?)? phoneNumberDisplayBuilder;
+  final Function(FirebaseAuthException)? onPhoneNumberVerificationFailed;
+  final Function(FirebaseAuthException)? onSmsCodeVerificationFailed;
   // final TextStyle? phoneNumberTextStyle;
   // final TextStyle? smsTextStyle;
   @override
@@ -284,10 +290,13 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                           // This is not for the failures of SMS code verification!!
                           verificationFailed: (FirebaseAuthException e) {
                             setState(() => progressVerifyPhoneNumber = false);
-                            error(
-                                context: context,
-                                title: T.error.tr,
-                                message: e.toString());
+                            widget.onPhoneNumberVerificationFailed != null
+                                ? widget.onPhoneNumberVerificationFailed
+                                    ?.call(e)
+                                : error(
+                                    context: context,
+                                    title: T.error.tr,
+                                    message: e.toString());
                           },
                           // Phone number verfied and SMS code sent to user.
                           // Show SMS code input UI.
@@ -394,14 +403,16 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                         await FirebaseAuth.instance
                             .signInWithCredential(credential);
                         signinSuccess();
-                      } catch (e) {
+                      } on FirebaseAuthException catch (e) {
                         // SMS Code verification error comes here.
                         if (context.mounted) {
-                          error(
-                            context: context,
-                            title: T.error.tr,
-                            message: e.toString(),
-                          );
+                          widget.onSmsCodeVerificationFailed != null
+                              ? widget.onPhoneNumberVerificationFailed?.call(e)
+                              : error(
+                                  context: context,
+                                  title: T.error.tr,
+                                  message: e.message.toString(),
+                                );
                         }
                       } finally {
                         setState(() => smsCodeProgress = false);

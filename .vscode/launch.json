@@ -441,6 +441,16 @@
       "args": ["--dart-define", "MODE=dev"]
     },
     {
+      "name": "Roha (Noe) TEST - iPhone 15 Pro Max (debug-nodev)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "apps/roha",
+      "program": "lib/main.dart",
+      // "args": ["--dart-define", "MODE=dev"]
+    },
+    {
       "name": "Roha (Noe) TEST - SM J737S (debug)",
       "request": "launch",
       "type": "dart",
@@ -489,6 +499,16 @@
       "cwd": "apps/roha",
       "program": "lib/main.dart",
       "args": ["--dart-define", "MODE=dev"]
+    },
+    {
+      "name": "Roha (Noe) TEST - SM T295(no dev)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "ROWM705A3NJ",
+      "flutterMode": "debug",
+      "cwd": "apps/roha",
+      "program": "lib/main.dart",
+      // "args": ["--dart-define", "MODE=dev"]
     },
     {
       "name": "Wemeet (Noe) TEST - iPhone 15 Pro (debug)",
