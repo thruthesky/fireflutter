@@ -81,12 +81,9 @@ const defaultHtml = `<!DOCTYPE html>
       name="apple-itunes-app"
       content="app-id=#{{appleAppId}}, app-argument=#{{deepLinkUrl}}"
     />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="white" />
-    <meta name="apple-mobile-web-app-title" content="#{{title}}" />
 
     <link rel="icon" type="image/png" href="#{{appIconLink}}" />
-    <link rel="mask-icon" href="#{{maskIconSvgUrl}}" color="#ffffff" />
+
     <meta name="application-name" content="#{{appName}}" />
 
     <title>#{{title}}</title>
@@ -103,7 +100,7 @@ const defaultHtml = `<!DOCTYPE html>
     <meta name="twitter:site" content="#{{webUrl}}" />
     <meta name="twitter:description" content="#{{description}}" />
     <meta name="twitter:image" content="#{{previewImageLink}}" />
-    <link rel="apple-touch-icon" href="#{{appIconLink}}" />
+    
     <style>
       .centered {
         position: fixed;
@@ -122,7 +119,7 @@ const defaultHtml = `<!DOCTYPE html>
   </head>
   <body>
     <div class="centered">
-      Redirecting...
+      #{{redirectingMessage}}
     </div>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/Detect.js/2.2.2/detect.min.js"
@@ -135,67 +132,59 @@ const defaultHtml = `<!DOCTYPE html>
       var webUrl = "#{{webUrl}}";
       var appStoreUrl = "#{{appStoreUrl}}";
       var playStoreUrl = "#{{playStoreUrl}}";
-
-      const stateTimer = setTimeout(function () {
-        if (result.os.family === "iOS" && appStoreUrl.length > 0) {
-          window.location.replace(appStoreUrl);
-        } else if (
-          result.os.family.includes("Android") &&
-          playStoreUrl.length > 0
-        ) {
-          window.location.replace(playStoreUrl);
-        } else if (webUrl.length > 0) {
-            window.location.replace(webUrl);
-        } else {
-          alert("No app store or play store url provided. Inform this to admin.");
-        }
-      }, 2000);
-      window.addEventListener("visibiltychange", function () {
-        clearTimeout(stateTimer);
-        stateTimer = null;
-        window.open("", "_self").close();
-      });
-      if (deepLinkUrl.length > 0) {
-        location.href = deepLinkUrl;
+      
+      if (result.os.family === "iOS" && appStoreUrl.length > 0) {
+        window.location.replace(appStoreUrl);
+      } else if (
+        result.os.family.includes("Android") &&
+        playStoreUrl.length > 0
+      ) {
+        window.location.replace(playStoreUrl);
+      } else if (webUrl.length > 0) {
+          window.location.replace(webUrl);
+      } else {
+        alert("No url to redirect. Inform this to admin.");
       }
+      
     </script>
   </body>
 </html>`;
 
 expressApp.get("*", async (req, res) => {
   const docSnaphot = await getDeeplinkDoc("html");
+  let htmlSnapshot: HtmlDeepLink | undefined;
   if (docSnaphot.exists) {
-    const htmlSnapshot = docSnaphot.data() as HtmlDeepLink;
-    let htmlSource = htmlSnapshot.html ?? defaultHtml;
-
-    // Prepare the content
-    const appName = (req.query.appName ?? "") as string;
-    const title = (req.query.title ?? "") as string;
-    const appStoreUrl = (req.query.appStoreUrl ?? "") as string;
-    const playStoreUrl = (req.query.playStoreUrl ?? "") as string;
-    const webUrl = (req.query.webUrl ?? "") as string;
-    const customUrlScheme = (req.query.customUrlScheme ?? "") as string;
-    const appleAppId = (req.query.appleAppId ?? "") as string;
-    const appIconLink = (req.query.appIconLink ?? "") as string;
-    const previewImageLink = (req.query.previewImageLink ?? "") as string;
-    const description = (req.query.description ?? "") as string;
-    const maskIconSvgUrl = (req.query.maskIconSvgUrl ?? "") as string;
-
-    htmlSource = htmlSource.replaceAll("#{{appName}}", appName);
-    htmlSource = htmlSource.replaceAll("#{{title}}", title);
-    htmlSource = htmlSource.replaceAll("#{{appStoreUrl}}", appStoreUrl);
-    htmlSource = htmlSource.replaceAll("#{{playStoreUrl}}", playStoreUrl);
-    htmlSource = htmlSource.replaceAll("#{{webUrl}}", webUrl);
-    htmlSource = htmlSource.replaceAll("#{{deepLinkUrl}}", customUrlScheme.length > 0 ? req.query.customUrlScheme + "://link" + req.url : "");
-    htmlSource = htmlSource.replaceAll("#{{appleAppId}}", appleAppId);
-    htmlSource = htmlSource.replaceAll("#{{appIconLink}}", appIconLink);
-    htmlSource = htmlSource.replaceAll("#{{previewImageLink}}", previewImageLink);
-    htmlSource = htmlSource.replaceAll("#{{description}}", description);
-    htmlSource = htmlSource.replaceAll("#{{maskIconSvgUrl}}", maskIconSvgUrl);
-
-    // Return the webpage
-    return res.send(htmlSource);
+    htmlSnapshot = docSnaphot.data() as HtmlDeepLink;
   }
+  let htmlSource = htmlSnapshot?.html ?? defaultHtml;
+
+  // Prepare the content
+  const appName = (req.query.appName ?? "") as string;
+  const title = (req.query.title ?? "") as string;
+  const appStoreUrl = (req.query.appStoreUrl ?? "") as string;
+  const playStoreUrl = (req.query.playStoreUrl ?? "") as string;
+  const webUrl = (req.query.webUrl ?? "") as string;
+  const customUrlScheme = (req.query.customUrlScheme ?? "") as string;
+  const appleAppId = (req.query.appleAppId ?? "") as string;
+  const appIconLink = (req.query.appIconLink ?? "") as string;
+  const previewImageLink = (req.query.previewImageLink ?? "") as string;
+  const description = (req.query.description ?? "") as string;
+  const maskIconSvgUrl = (req.query.maskIconSvgUrl ?? "") as string;
+
+  htmlSource = htmlSource.replaceAll("#{{appName}}", appName);
+  htmlSource = htmlSource.replaceAll("#{{title}}", title);
+  htmlSource = htmlSource.replaceAll("#{{appStoreUrl}}", appStoreUrl);
+  htmlSource = htmlSource.replaceAll("#{{playStoreUrl}}", playStoreUrl);
+  htmlSource = htmlSource.replaceAll("#{{webUrl}}", webUrl.length > 0 ? webUrl + req.url : "");
+  htmlSource = htmlSource.replaceAll("#{{deepLinkUrl}}", customUrlScheme.length > 0 ? req.query.customUrlScheme + "://link" + req.url : "");
+  htmlSource = htmlSource.replaceAll("#{{appleAppId}}", appleAppId);
+  htmlSource = htmlSource.replaceAll("#{{appIconLink}}", appIconLink);
+  htmlSource = htmlSource.replaceAll("#{{previewImageLink}}", previewImageLink);
+  htmlSource = htmlSource.replaceAll("#{{description}}", description);
+  htmlSource = htmlSource.replaceAll("#{{maskIconSvgUrl}}", maskIconSvgUrl);
+
+  // TODO redirecting message.
+
   // Return the webpage
-  return res.send("The html document not found under _link_ collection. Please refer to the documentation.");
+  return res.send(htmlSource);
 });
