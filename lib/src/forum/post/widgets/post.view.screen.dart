@@ -1,5 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/user/widgets/buttons/share_button.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 

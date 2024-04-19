@@ -124,7 +124,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
                         club: widget.club,
                       );
                     } else if (code == Code.delete) {
-                      //
+                      await widget.club.delete(context: context);
                     } else if (code == Code.leave) {
                       await widget.club.leave();
                     } else if (code == Code.join) {

@@ -22,7 +22,7 @@ async function getDeeplinkDoc(docId: string): Promise<DocumentSnapshot> {
 }
 
 expressApp.get("/.well-known/apple-app-site-association", async (req, res) => {
-  const docSnaphot = await getDeeplinkDoc("apple");
+  const docSnaphot = await getDeeplinkDoc("ios");
   res.writeHead(200, { "Content-Type": "application/json" });
   if (docSnaphot.exists) {
     const snapshotData: AppleCredential = docSnaphot.data() as AppleCredential;
@@ -186,7 +186,7 @@ expressApp.get("*", async (req, res) => {
     htmlSource = htmlSource.replaceAll("#{{appStoreUrl}}", appStoreUrl);
     htmlSource = htmlSource.replaceAll("#{{playStoreUrl}}", playStoreUrl);
     htmlSource = htmlSource.replaceAll("#{{webUrl}}", webUrl);
-    htmlSource = htmlSource.replaceAll("#{{deepLinkUrl}}", customUrlScheme.length > 0? req.query.customUrlScheme + "://link" + req.url: "");
+    htmlSource = htmlSource.replaceAll("#{{deepLinkUrl}}", customUrlScheme.length > 0 ? req.query.customUrlScheme + "://link" + req.url : "");
     htmlSource = htmlSource.replaceAll("#{{appleAppId}}", appleAppId);
     htmlSource = htmlSource.replaceAll("#{{appIconLink}}", appIconLink);
     htmlSource = htmlSource.replaceAll("#{{previewImageLink}}", previewImageLink);

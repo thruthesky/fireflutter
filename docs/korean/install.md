@@ -60,6 +60,9 @@ dependencies:
 
 참고로 Security Rules 는 Security 에 초점을 맞추도록 한다. Security 에서 data validation 이나 기타 security 와 직접적인 관련이 없는 작업은 하지 않는다.
 
+참고로, 아직, Firestore 에서 어떤 index 를 미리 만들어야 하는지 목록을 해 놓지 못하고 있다. 그래서 index 에러가 나면 콘솔에서 링크를 복사해서 index 를 생성해 주어야한다. 조만간 필요한 index 를 이곳에 나열을 할 예정이다.
+
+
 
 ## Storage Security Rules
 

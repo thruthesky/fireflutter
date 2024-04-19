@@ -1,17 +1,20 @@
 # 다이나믹 링크
 
-Dynamic link 란 앱을 공유(다른 사람에게 알려주기 위해)하고자 할 때 특정 링크를 생성해 다른 사용자에게 전달 해 주고, 그 사용자가 링크를 클릭하면 앱애 설치되어져 있으면 앱을 열고, 설치되어져 있지 않으면 Appstore 또는 Playstore 또는 홈페이지를 여는 것이다.
+Dynamic link 란 앱을 공유(다른 사람에게 알려주기 위해)하고자 할 때 앱 내에서 링크를 생성해 다른 사용자에게 전달 해 주고, 그 사용자가 링크를 클릭하면 앱이  설치되어져 있으면 앱을 열고, 설치되어져 있지 않으면 Appstore 또는 Playstore 또는 홈페이지를 여는 것이다.
 
-만약, dynamic link 를 사용하지 않는다면 굳이 본 항목을 살펴 볼 필요는 없다.
+Dynamic link 를 사용하기 위해서는 FireFlutter 에서 사용하는 dynamic link 의 기본 개념의 이해가 좀 필요하다. 만약, dynamic link 를 사용하지 않는다면 굳이 본 항목을 살펴 볼 필요는 없다.
 
-첫째, `link` 클라우드 함수를 설치한다.
-이 함수를 설치하면 홈페이지 도메인 최상단 경로에 `/.well-known/assetlinks.json` 과 `/.well-known/apple-app-site-association` 을 설치 해 준다. 물론 이 때, SHA 와 Bundle ID 등의 정보를 잘 입력해야 한다.
+첫째, dynamic link 를 담당하는 `link` 클라우드 함수를 설치한다.
 
-둘째, 앱에서 App Link, Universal Link 설정을 해 주어야하며, Deeplink 설정도 해 주어야 한다. Deeplink 설정을 해 주는 이유는 카카오톡에서 링크를 클릭하면 인앱브라우저가 앱을 구동시키지 못하는 경우가 발생하는데, Deeplink 를 통해서 앱을 열기 위해서 필요하다.
+설치를 할 때, firebase hosting 설정에서 `appAssociation` 을 NONE 으로 하고, 사이트 최상단 경로에 `/.well-known/assetlinks.json` 과 `/.well-known/apple-app-site-association` (AASA) 로 접속하면 클라우드 함수 `link` 로 접속하도록 URL rewrite 를 설정한다.
 
-셋째, 링크를 만들어 공유하는 코드를 작성한다.
+둘째, 링크가 공유되면 핸드폰 OS 가 App Link 와 Universial Link 관련 작업을 통해서 assetlinks 와 AASA 를 가져오는데, 올바른 정보를 넣어 주어야 한다. 이 값은 `_link_` 컬렉션의 `android` 와 `ios` 문서에 각각 넣어 주면 된다.
 
-Dynamic link 에 대한 자세한 설명은 dynamic link 항목을 참고한다. 설치가 약간 복잡한 만큼 관련 내용을 따로 설명하고 있다.
+셋째, 개발하는 앱(플러터 앱)에서 App Link 와 Universial Link 가 동작하도록 설정을 해 주어야 한다. 또한 Deeplink 설정도 추가를 해 주어야 한다. Deeplink 설정을 해 주는 이유는 몇 몇 앱(예 카카오톡)에서 링크를 클릭하면 곧 바로 앱을 실행하지 못하고 인앱브라우저를 열어서 홈페이지로 접속을 하는 경우가 있다. 이 때, 홈페이지에서 Deeplink 를 통해서 앱을 열기 위해서 Deeplink 설정이 필요하다.
+
+넷째, 링크를 만들어 공유하는 코드를 작성한다.
+링크를 만들때 site preview 옵션 부터 다양한 옵션을 넣어서 만들 수 있다.
+
 
 
 
@@ -24,6 +27,24 @@ Dynamic link 에 대한 자세한 설명은 dynamic link 항목을 참고한다.
 
 ### Android 설정
 
+AndroidManifest.xml 에 아래의 내용을 추가한다.
+
+```xml
+<activity
+    android:name=".MainActivity"
+    android:exported="true" >
+    <!-- Add this in activity -->
+    <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <!-- Accepts URIs that begin with https://YOUR_HOST.COM -->
+        <data
+            android:scheme="https"
+            android:host="YOUR_HOST.COM" />
+    </intent-filter>
+</activity>
+```
 
 아래의 그림과 같이 SHA256 를 저장하면 된다.
 
