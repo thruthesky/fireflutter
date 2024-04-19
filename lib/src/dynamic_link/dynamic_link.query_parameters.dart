@@ -6,7 +6,6 @@ class DynamicLinkQueryParameters {
     this.previewText,
     this.appName,
     this.appIconLink,
-    this.maskIconSvgUrl,
     this.appleAppId,
     this.uid,
     this.category,
@@ -15,7 +14,6 @@ class DynamicLinkQueryParameters {
     this.appStoreUrl,
     this.playStoreUrl,
     this.webUrl,
-    this.customUrlScheme,
     this.otherQueryParameters,
   });
 
@@ -34,11 +32,6 @@ class DynamicLinkQueryParameters {
   /// This may be displayed as Icon in the
   /// preview.
   String? appIconLink;
-
-  /// Mask Icon SVG URL
-  /// This may be displayed as Icon in the
-  /// preview. Optional.
-  String? maskIconSvgUrl;
 
   /// The app's AppId
   String? appleAppId;
@@ -70,13 +63,6 @@ class DynamicLinkQueryParameters {
   /// if it's an Android or an iOS. This will redirect to webUrl.
   String? webUrl;
 
-  /// for deepLinkUrl
-  ///
-  /// For example:
-  /// myurlscheme://link
-  /// Use "myurlscheme" as urlScheme here.
-  String? customUrlScheme;
-
   Map<String, String>? otherQueryParameters;
 
   // We can add the default values from Dynamic Link Service Instance if we have to.
@@ -85,7 +71,6 @@ class DynamicLinkQueryParameters {
         if (previewText != null) "previewText": previewText!,
         if (appName != null) "appName": appName!,
         if (appIconLink != null) "appIconLink": appIconLink!,
-        if (maskIconSvgUrl != null) "maskIconSvgUrl": maskIconSvgUrl!,
         if (appleAppId != null) "appleAppId": appleAppId!,
         if (uid != null) "uid": uid!,
         if (category != null) "category": category!,
@@ -94,7 +79,6 @@ class DynamicLinkQueryParameters {
         if (appStoreUrl != null) "appStoreUrl": appStoreUrl!,
         if (playStoreUrl != null) "playStoreUrl": playStoreUrl!,
         if (webUrl != null) "webUrl": webUrl!,
-        if (customUrlScheme != null) "customUrlScheme": customUrlScheme!,
         ...?otherQueryParameters,
       };
 }

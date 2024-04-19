@@ -25,11 +25,11 @@ class DynamicLinkService {
   late BuildContext context;
 
   /// Path for post links
-  /// For example, "dynamiclink.com/post?category=news&postId=1234567890"
+  /// For example, "dynamiclink.com/link/post?category=news&postId=1234567890"
   String postPath = "/post";
 
   /// Path for user links
-  /// For example, "dynamiclink.com/user?uid=1234567890"
+  /// For example, "dynamiclink.com/link/user?uid=1234567890"
   String userPath = "/user";
 
   /// This can be used for custom dynamic links
@@ -75,10 +75,6 @@ class DynamicLinkService {
   ///
   String webUrl = "";
 
-  /// This is the urlScheme used for deeplink for Android
-  /// and custom URL Scheme for iOS
-  String customUrlScheme = "";
-
   /// Initialization
   ///
   /// This is best called when the app is ready.
@@ -91,10 +87,12 @@ class DynamicLinkService {
     String postPath = "/post",
     String userPath = "/user",
     String scheme = "https",
-    String customUrlScheme = "",
     required String host,
-    String? appName,
-    String? appIconLink,
+    String appName = "",
+    String appIconLink = "",
+    String appStoreUrl = "",
+    String playStoreUrl = "",
+    String webUrl = "",
   }) async {
     _appLinks = AppLinks();
     this.context = context;
@@ -102,10 +100,12 @@ class DynamicLinkService {
     this.postPath = postPath;
     this.userPath = userPath;
     this.scheme = scheme;
-    this.customUrlScheme = customUrlScheme;
     this.host = host;
-    this.appName = appName ?? "";
-    this.appIconLink = appIconLink ?? "";
+    this.appName = appName;
+    this.appIconLink = appIconLink;
+    this.appStoreUrl = appStoreUrl;
+    this.playStoreUrl = playStoreUrl;
+    this.webUrl = webUrl;
 
     // To prevent multi-listener in case dev called init again.
     if (_appLinkStream != null) await _appLinkStream!.cancel();
@@ -194,7 +194,6 @@ class DynamicLinkService {
         playStoreUrl: playStoreUrl,
         appStoreUrl: appStoreUrl,
         webUrl: webUrl,
-        customUrlScheme: customUrlScheme,
       );
 
   /// Creates the dynamic link
