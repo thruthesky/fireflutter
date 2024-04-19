@@ -140,33 +140,26 @@ This is the default value of HTML:
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="apple-itunes-app"
-      content="app-id=#{{appleAppId}}, app-argument=#{{deepLinkUrl}}"
-    />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="white" />
-    <meta name="apple-mobile-web-app-title" content="#{{appName}}" />
 
     <link rel="icon" type="image/png" href="#{{appIconLink}}" />
-    <link rel="mask-icon" href="" color="#ffffff" />
+
     <meta name="application-name" content="#{{appName}}" />
 
-    <title>#{{appName}}</title>
-    <meta name="description" content="#{{previewText}}" />
+    <title>#{{title}}</title>
+    <meta name="description" content="#{{description}}" />
 
-    <meta property="og:title" content="#{{appName}}" />
-    <meta property="og:description" content="#{{previewText}}" />
+    <meta property="og:title" content="#{{title}}" />
+    <meta property="og:description" content="#{{description}}" />
     <meta property="og:image" content="#{{previewImageLink}}" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
 
-    <meta name="twitter:card" content="#{{previewText}}" />
-    <meta name="twitter:title" content="#{{appName}}" />
+    <meta name="twitter:card" content="#{{description}}" />
+    <meta name="twitter:title" content="#{{title}}" />
     <meta name="twitter:site" content="#{{webUrl}}" />
-    <meta name="twitter:description" content="#{{previewText}}" />
+    <meta name="twitter:description" content="#{{description}}" />
     <meta name="twitter:image" content="#{{previewImageLink}}" />
-    <link rel="apple-touch-icon" href="#{{appIconLink}}" />
+    
     <style>
       .centered {
         position: fixed;
@@ -185,7 +178,7 @@ This is the default value of HTML:
   </head>
   <body>
     <div class="centered">
-      Redirecting...
+      #{{redirectingMessage}}
     </div>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/Detect.js/2.2.2/detect.min.js"
@@ -194,32 +187,20 @@ This is the default value of HTML:
     ></script>
     <script>
       var result = detect.parse(navigator.userAgent);
-      var deepLinkUrl = "#{{deepLinkUrl}}";
       var webUrl = "#{{webUrl}}";
       var appStoreUrl = "#{{appStoreUrl}}";
       var playStoreUrl = "#{{playStoreUrl}}";
-
-      const stateTimer = setTimeout(function () {
-        if (result.os.family === "iOS" && appStoreUrl.length > 0) {
-          window.location.replace(appStoreUrl);
-        } else if (
-          result.os.family.includes("Android") &&
-          playStoreUrl.length > 0
-        ) {
-          window.location.replace(playStoreUrl);
-        } else {
-          if (webUrl.length > 0) {
-            window.location.replace(webUrl);
-          }
-        }
-      }, 2000);
-      window.addEventListener("visibiltychange", function () {
-        clearTimeout(stateTimer);
-        stateTimer = null;
-        window.open("", "_self").close();
-      });
-      if (deepLinkUrl.length > 0) {
-        location.href = deepLinkUrl;
+      if (result.os.family === "iOS" && appStoreUrl.length > 0) {
+        window.location.replace(appStoreUrl);
+      } else if (
+        result.os.family.includes("Android") &&
+        playStoreUrl.length > 0
+      ) {
+        window.location.replace(playStoreUrl);
+      } else if (webUrl.length > 0) {
+          window.location.replace(webUrl);
+      } else {
+        alert("No url to redirect. Inform this to admin.");
       }
     </script>
   </body>
@@ -230,38 +211,35 @@ It will depend on your design if you want to put the links or redirection urls i
 
 You can also add these in your HTML that will be replaced by the values in Firestore \_link\_ collection or the query parameters of the link.
 
-1. #{{deepLinkUrl}}
-This will be set depending on the value of `customUrlScheme` from link. For example, if the `customUrlScheme` is `myapp`, the deepLinkUrl will be `myapp://link`.
-
-2. #{{webUrl}}
+1. #{{webUrl}}
 This will be replaced by `webUrl`.
 
-3. "#{{appStoreUrl}}";
+2. "#{{appStoreUrl}}";
 This will be replaced by `appStoreUrl`.
 
-4. "#{{playStoreUrl}}";
+3. "#{{playStoreUrl}}";
 This will be replaced by `playStoreUrl`.
 
-5. #{{previewImageLink}}
+4. #{{previewImageLink}}
 This will come from the link's query `previewImageLink`.
 
-6. #{{appName}}
+5. #{{appName}}
 This will come from the link's query `appName`.
 
-7. #{{previewText}}
+6. #{{previewText}}
 This will come from the link's query `previewText`.
 
-8. #{{appIconLink}}
+7. #{{appIconLink}}
 This will come from the link's query `appIconLink`.
 
-9. #{{appleAppId}}
+8. #{{appleAppId}}
 This will come from the link's query `appleAppId`.
 
-10. #{{description}}
+9. #{{description}}
 This will come from the link's query `description`.
 
-11. #{{maskIconSvgUrl}}
-This will come from the link's query `maskIconSvgUrl`.
+10. #{{redirectingMessage}}
+This will come from the link's query `redirectingMessage`.
 
 ## Applying the cloud function
 

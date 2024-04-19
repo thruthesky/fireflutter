@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 
 import * as functions from "firebase-functions";
 import * as express from "express";
@@ -76,10 +77,12 @@ const defaultHtml = `<!DOCTYPE html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <meta
-      name="apple-itunes-app"
-      content="app-id=#{{appleAppId}}, app-argument=#{{webUrl}}"
+    name="apple-itunes-app"
+    content="app-id=#{{appleAppId}}, app-argument=#{{webUrl}}"
     />
+
     <link rel="icon" type="image/png" href="#{{appIconLink}}" />
 
     <meta name="application-name" content="#{{appName}}" />
@@ -147,6 +150,26 @@ const defaultHtml = `<!DOCTYPE html>
   </body>
 </html>`;
 
+
+expressApp.get("/test", async (req, res) => {
+  const html = `<!DOCTYPE html>
+  <html lang="en">
+    <body>
+      <h1>Hello World!</h1>
+      <a href="https://withcenter-silvers.web.app/link/user?appName=Silvers+App&appIconLink">
+        withcenter-silvers.web.app
+      </a>
+      <br />
+      <br />
+      <br />
+      <a href="https://silbus.web.app/link/user?appName=Silvers+App&appIconLink">
+        silbus.web.app
+      </a>
+    </body>
+  </html>`;
+  res.send(html);
+});
+
 expressApp.get("*", async (req, res) => {
   const docSnaphot = await getDeeplinkDoc("html");
   let htmlSnapshot: HtmlDeepLink | undefined;
@@ -165,7 +188,7 @@ expressApp.get("*", async (req, res) => {
   const appIconLink = (req.query.appIconLink ?? "") as string;
   const previewImageLink = (req.query.previewImageLink ?? "") as string;
   const description = (req.query.description ?? "") as string;
-  const redirectingMessage = (req.query.redirectingMessage ?? "Redirecting to ...") as string;
+  const redirectingMessage = (req.query.redirectingMessage ?? "Redirecting...") as string;
 
   htmlSource = htmlSource.replaceAll("#{{appName}}", appName);
   htmlSource = htmlSource.replaceAll("#{{title}}", title);

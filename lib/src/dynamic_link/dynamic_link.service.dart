@@ -93,6 +93,7 @@ class DynamicLinkService {
     String appStoreUrl = "",
     String playStoreUrl = "",
     String webUrl = "",
+    String appleAppId = "",
   }) async {
     _appLinks = AppLinks();
     this.context = context;
@@ -106,6 +107,7 @@ class DynamicLinkService {
     this.appStoreUrl = appStoreUrl;
     this.playStoreUrl = playStoreUrl;
     this.webUrl = webUrl;
+    this.appleAppId = appleAppId;
 
     // To prevent multi-listener in case dev called init again.
     if (_appLinkStream != null) await _appLinkStream!.cancel();
