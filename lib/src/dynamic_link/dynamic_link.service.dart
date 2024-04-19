@@ -115,6 +115,8 @@ class DynamicLinkService {
       dog("=======================>>>> AppLink: $uri");
       dog("queryParameters: ${uri.queryParameters}");
       dog("path: ${uri.path}");
+      dog("host: ${uri.host}");
+      dog("scheme: ${uri.scheme}");
       await showScreenFromUri(uri);
     });
   }
