@@ -583,27 +583,28 @@ TextButton(
 
 - You can use the default admin screen. Just call `AdminService.instance.showDashboard()`.
 
-## 채팅 메시지를 전송하기 전에 로직 변경하기
 
-채팅 메시지(또는 사진)를 전송하기 전에 원하는 로직을 추가하고 싶다면, `testBeforeSendMessage` 를 사용하면 된다.
-
-예를 들어, 회원의 사진 또는 이름이 없는 상태라면 채팅 메시지를 보내지 않게 사려면 아래와 같이 하면 된다.
-
-```dart
-ChatService.instance.init(testBeforeSendMessage: (chat) {
-  if (my!.photoUrl.isEmpty || my!.displayName.isEmpty) {
-    error(
-        context: context,
-        title: '회원 정보 미완성',
-        message: '빠진 회원 정보를 모두 입력해 주세요.');
-    throw '프로필이 미완성입니다.';
-  }
-});
-```
-
-## 채팅 메시지 전송 콜백
+## 채팅 메시지 전송 콜백 - beforeMessageSent, afterMessageSent
 
 채팅 메시지를 보내기 전이나, 보낸 다음 어떤 작업을 하고 싶은 경우에 커스텀 콜백을 쓸 수 있다.
+
+예를 들면, 회원이 이름이나 사진을 업데이트하지 상태라면 채팅 메시지를 보낼 때 아래와 같이 에러가 나도록 할 수 있다.
+
+```dart
+ChatService.instance.init(
+  beforeSendMessage: (chat) {
+    if (my!.photoUrl.isEmpty || my!.displayName.isEmpty) {
+      error(
+          context: context,
+          title: '회원 정보 미완성',
+          message: '빠진 회원 정보를 모두 입력해 주세요.');
+      throw '프로필이 미완성입니다.';
+    }
+  }
+);
+```
+
+
 
 실제 발생한 상황 중 한 예를 들면, A 는 한국어를 쓰고 B 는 따갈로그어를 쓰는 겨우, A 가 한국어로 채팅을 하면 B 에게 따갈로그어로 번역되어 전송이 되어야 한다. 그리고 푸시 알림 엮시 한국에서 따갈로그어로 번역이 되어서 전송이 되어야 한다. 이렇게 하기 위해서는 채팅 메시지를 DB 에 집어 넣기 전에, 먼저 번역을 해야 하는데, `beforeMessageSent` 을 통해서 번역을 하면 된다. 참고로 번역은 `afterMessageSent` 에서도 할 수 있다. 하지만 DB 에 기록된 후 번역을 하는 데, 푸시 알림은 DB 에 기록되자 마자 곧 바로 메시지를 보내므로 번역된 내용이 전달되지 않고 사용자가 입력한 원문이 전달된다.
 

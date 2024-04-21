@@ -20,7 +20,7 @@ class NewProfilePhotos extends StatelessWidget {
     return
         // 새 프로필
         SizedBox(
-      height: 80,
+      height: 96,
       child: FirebaseDatabaseQueryBuilder(
         query: FirebaseDatabase.instance
             .ref('user-profile-photos')
@@ -31,7 +31,7 @@ class NewProfilePhotos extends StatelessWidget {
         builder: (context, snapshot, _) {
           if (snapshot.isFetching) {
             return const SizedBox(
-              height: 80,
+              height: 96,
             );
           }
 
@@ -69,7 +69,7 @@ class NewProfilePhotos extends StatelessWidget {
                         size: avatarSize,
                         radius: avatarRadius,
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(height: 4),
                       Text(
                         ((profile[Field.displayName] ?? '') as String).cut(9),
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
