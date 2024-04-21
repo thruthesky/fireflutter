@@ -25,11 +25,37 @@ class FireFlutterService {
 
   String? cloudFunctionRegion;
 
+  /// Confirm Dialog
+  Future<bool?> Function({
+    required BuildContext context,
+    required String? title,
+    required String message,
+  })? confirmDialog;
+
+  /// Error Dialog
+  Future<bool?> Function({
+    required BuildContext context,
+    required String? title,
+    required String message,
+  })? errorDialog;
+
   init({
     String? cloudFunctionRegion,
     BuildContext Function()? globalContext,
+    Future<bool?> Function({
+      required BuildContext context,
+      required String? title,
+      required String message,
+    })? confirmDialog,
+    Future<bool?> Function({
+      required BuildContext context,
+      required String? title,
+      required String message,
+    })? errorDialog,
   }) {
     _globalContext = globalContext;
     this.cloudFunctionRegion = cloudFunctionRegion;
+    this.confirmDialog = confirmDialog;
+    this.errorDialog = errorDialog;
   }
 }
