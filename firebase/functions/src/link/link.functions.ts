@@ -165,6 +165,24 @@ expressApp.get("/test", async (req, res) => {
       <a href="https://silbus.web.app/link/user?appName=Silvers+App&appIconLink">
         silbus.web.app
       </a>
+      <br />
+      <br />
+      <br />
+      <a href="https://silbus.com/link/user?appName=Silvers+App&appIconLink">
+        silbus.com test
+      </a>
+      <br />
+      <br />
+      <br />
+      <a href="https://silbus.com/link/user?appName=Silvers+App&appIconLink&appleAppId=6479899469&appStoreUrl=https%3A%2F%2Fapps.apple.com%2Fus%2Fapp%2F%EC%8B%A4%EB%B2%84%EC%8A%A4%2Fid6479899469%3Fitsct%3Dapps_box_link%26itscg%3D30200&playStoreUrl=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.withcenter.silvers&webUrl&previewImageLink=https%3A%2F%2Ffirebasestorage.googleapis.com%2Fv0%2Fb%2Fsilbus.appspot.com%2Fo%2Fusers%252FyFgNPh1vX1RtAqqfXQlAS5NSRfx2%252Fimage_picker_E93F9071-2A50-4916-8D51-A25B6EA591C3-43914-00001D1127699A9C.jpg%3Falt%3Dmedia%26token%3D1ac9c025-62d5-4f67-9670-990a03ef9ab7&previewText=%EC%84%B1%EC%82%BC%ED%98%84&uid=yFgNPh1vX1RtAqqfXQlAS5NSRfx2">
+        silbus.com test link
+      </a>
+      <br />
+      <br />
+      <br />
+      <a href="https://silbus.com/link/user?appName=Silvers+App&appIconLink&appleAppId=6479899469&appStoreUrl=https%3A%2F%2Fapps.apple.com%2Fus%2Fapp%2F%EC%8B%A4%EB%B2%84%EC%8A%A4%2Fid6479899469%3Fitsct%3Dapps_box_link%26itscg%3D30200&playStoreUrl=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.withcenter.silvers&webUrl&previewImageLink=https%3A%2F%2Ffirebasestorage.googleapis.com%2Fv0%2Fb%2Fsilbus.appspot.com%2Fo%2Fusers%252FyFgNPh1vX1RtAqqfXQlAS5NSRfx2%252Fimage_picker_E93F9071-2A50-4916-8D51-A25B6EA591C3-43914-00001D1127699A9C.jpg%3Falt%3Dmedia%26token%3D1ac9c025-62d5-4f67-9670-990a03ef9ab7&previewText=%EC%84%B1%EC%82%BC%ED%98%84&uid=yFgNPh1vX1RtAqqfXQlAS5NSRfx2">
+        silbus.com test link 2
+      </a>
     </body>
   </html>`;
   res.send(html);

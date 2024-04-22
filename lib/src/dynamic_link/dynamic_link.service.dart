@@ -32,13 +32,15 @@ class DynamicLinkService {
     return FireFlutterService.instance.globalContext!;
   }
 
-  /// Path for post links
+  /// Value for post viewing
+  /// view=post
   /// For example, "dynamiclink.com/link/post?category=news&postId=1234567890"
-  String postPath = "/post";
+  String postViewValue = "post";
 
-  /// Path for user links
+  /// Value for user viewing
+  /// view=user
   /// For example, "dynamiclink.com/link/user?uid=1234567890"
-  String userPath = "/user";
+  String userViewValue = "user";
 
   /// This can be used for custom dynamic links
   /// The [uri] is the the link that has the path and/or
@@ -80,7 +82,7 @@ class DynamicLinkService {
   String playStoreUrl = "";
 
   /// Default value for webUrl in link
-  ///
+  /// Upon init, the default value is `https://yourhost.com/redirect`
   String webUrl = "";
 
   /// Initialization
@@ -91,28 +93,28 @@ class DynamicLinkService {
   /// For user links, the link has path of "/user"
   Future<void> init({
     Function(Uri uri)? onLink,
-    String postPath = "/post",
-    String userPath = "/user",
+    String postViewValue = "post",
+    String userViewValue = "user",
     String scheme = "https",
     required String host,
     String appName = "",
     String appIconLink = "",
     String appStoreUrl = "",
     String playStoreUrl = "",
-    String webUrl = "",
+    String? webUrl,
     String appleAppId = "",
   }) async {
     _appLinks = AppLinks();
     this.onLink = onLink;
-    this.postPath = postPath;
-    this.userPath = userPath;
+    this.postViewValue = postViewValue;
+    this.userViewValue = userViewValue;
     this.scheme = scheme;
     this.host = host;
     this.appName = appName;
     this.appIconLink = appIconLink;
     this.appStoreUrl = appStoreUrl;
     this.playStoreUrl = playStoreUrl;
-    this.webUrl = webUrl;
+    this.webUrl = webUrl ?? "https://$host/redirect";
     this.appleAppId = appleAppId;
 
     // To prevent multi-listener in case dev called init again.
@@ -131,8 +133,10 @@ class DynamicLinkService {
 
   /// Depending on the path, show the screen accordingly.
   showScreenFromUri(Uri uri) async {
-    if (uri.path == "$_linkPath$postPath") return await _showPostScreen(uri);
-    if (uri.path == "$_linkPath$userPath") return await _showUserScreen(uri);
+    // check the query parameter value if "view"
+    final view = uri.queryParameters["view"];
+    if (view == postViewValue) return await _showPostScreen(uri);
+    if (view == userViewValue) return await _showUserScreen(uri);
     if (onLink != null) return await onLink!(uri);
     throw Exception("Link: Something is wrong! Unknown path: ${uri.path}");
   }
@@ -160,6 +164,7 @@ class DynamicLinkService {
   /// Creates Fireflutter's default dynamic link for a user share.
   Uri createUserLink(User user) {
     final queryParameters = DynamicLinkQueryParameters(
+      view: userViewValue,
       previewImageLink: user.photoUrl,
       previewText: user.displayName,
       appName: appName,
@@ -168,7 +173,6 @@ class DynamicLinkService {
       uid: user.uid,
     );
     final uri = createLink(
-      path: userPath,
       queryParameters: queryParameters,
     );
     return uri;
@@ -177,6 +181,7 @@ class DynamicLinkService {
   /// Creates Fireflutter's default dynamic link for a post share.
   Uri createPostLink(Post post) {
     final queryParameters = DynamicLinkQueryParameters(
+      view: postViewValue,
       previewImageLink: post.urls.isNotEmpty ? post.urls.first : "",
       previewText: post.title,
       appName: appName,
@@ -184,9 +189,9 @@ class DynamicLinkService {
       postId: post.id,
       appleAppId: appleAppId,
       category: post.category,
+      webUrl: webUrl,
     );
     final uri = createLink(
-      path: postPath,
       queryParameters: queryParameters,
     );
     return uri;

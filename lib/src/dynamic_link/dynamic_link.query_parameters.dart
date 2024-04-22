@@ -2,6 +2,7 @@
 /// Dynamic Link Query Parameters
 class DynamicLinkQueryParameters {
   DynamicLinkQueryParameters({
+    this.view,
     this.previewImageLink,
     this.previewText,
     this.appName,
@@ -16,6 +17,9 @@ class DynamicLinkQueryParameters {
     this.webUrl,
     this.otherQueryParameters,
   });
+
+  /// The view screen that the link will lead
+  String? view;
 
   /// Preview Images
   String? previewImageLink;
@@ -67,6 +71,7 @@ class DynamicLinkQueryParameters {
 
   // We can add the default values from Dynamic Link Service Instance if we have to.
   Map<String, String> toMap() => {
+        if (view != null) "view": view!,
         if (previewImageLink != null) "previewImageLink": previewImageLink!,
         if (previewText != null) "previewText": previewText!,
         if (appName != null) "appName": appName!,
