@@ -53,41 +53,6 @@ or update the runner entitlements file in ios folder.
 
 Check out this [reference](https://developer.apple.com/documentation/xcode/supporting-universal-links-in-your-app) for more details on how to add this in iOS app.
 
-## Adding Deeplinks for Android or Custom URL Scheme for iOS
-
-We are unsure about that the universial link and app link are not working in some circumstances like the link is opened in in-app-browswer. To make it work, the web (in cloud functino) tries to open the app using deeplink. The Kakaotalk app is the one that works this way. So, it is recommended to add deeplink in the app settins.
-
-Check this [reference](https://developer.android.com/training/app-links/deep-linking) for Android.
-
-Add this to the Android manifest file:
-
-```xml
-<intent-filter>
-  ...
-  <data android:scheme="https" android:host="www.example.com" />
-  <data android:scheme="myappscheme" android:host="link" />
-</intent-filter>
-```
-
-For iOS, check this [reference](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app).
-
-To set it up, need to update it from Xcode.
-
-From Xcode, there is an `Info` tab that goes along with `General -> Signing & Capabilitites -> Resource Tags`, etc.
-
-Click `Info` tab. It will show a different screen that you can see the `URL types` section. You may need to scroll down a bit.
-
-Press the "+" button then enter Identifier, Icon, **URL Schemes** (this is the one you need to set), and Role (Set this one as Viewer).
-
-You can enter:
-
-```text
-Identifier: Custom Link
-URL Scheme: myappscheme
-Icon:
-Role: Viewer
-```
-
 ## Saving the Well Known Files
 
 Well known files (assetlinks.json and apple-app-site-association), are used to validate app linking.
@@ -280,7 +245,7 @@ To apply the cloud function, go to firebase/functions folder and run `npm run de
 To handle the links, you can use Fireflutter's `DynamicLinkService` class.
 
 ```dart
-DynamicLinkService.instance.init(context: globalContext);
+DynamicLinkService.instance.init(host: "myhost.com");
 ```
 
 It will be best to initialize it when the context is ready.
@@ -291,8 +256,8 @@ To add custom Dynamic links, must add the following code:
 
 ```dart
 DynamicLinkService.instance.init(
-    context: globalContext,
-    onLink: (uri) {
+  host: "myhost.com",
+  onLink: (uri) {
         print("Your custom handler for dynamic link: $uri");
     },
 );

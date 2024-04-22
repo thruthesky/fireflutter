@@ -50,7 +50,7 @@ class DynamicLinkService {
   String scheme = "https";
 
   /// The host that is used to make the links.
-  String host = "";
+  String? host;
 
   /// Default value for appName in link
   ///
@@ -226,7 +226,7 @@ class DynamicLinkService {
     };
     final uri = Uri(
       scheme: scheme,
-      host: host,
+      host: host!,
       // Must have "/link"
       path: "$_linkPath$path",
       queryParameters: mergedQueryParameters,
