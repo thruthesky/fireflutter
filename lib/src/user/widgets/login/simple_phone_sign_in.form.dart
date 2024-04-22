@@ -88,6 +88,8 @@ class SimplePhoneSignInForm extends StatefulWidget {
     this.phoneNumberDisplayBuilder,
     this.onPhoneNumberVerificationFailed,
     this.onSmsCodeVerificationFailed,
+    this.onPhoneNumberVerificationProgress,
+    this.onSmsCodeProgress,
     // this.phoneNumberTextStyle,
     // this.smsTextStyle,
   });
@@ -116,6 +118,8 @@ class SimplePhoneSignInForm extends StatefulWidget {
   final String? Function(String?)? phoneNumberDisplayBuilder;
   final Function(FirebaseAuthException)? onPhoneNumberVerificationFailed;
   final Function(FirebaseAuthException)? onSmsCodeVerificationFailed;
+  final Function(bool)? onPhoneNumberVerificationProgress;
+  final Function(bool)? onSmsCodeProgress;
   // final TextStyle? phoneNumberTextStyle;
   // final TextStyle? smsTextStyle;
   @override
