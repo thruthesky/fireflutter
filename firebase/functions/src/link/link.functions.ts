@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 
 import * as functions from "firebase-functions";
 import * as express from "express";
@@ -9,7 +10,6 @@ export const expressApp = express();
 
 // Set up Firebase Cloud Function
 export const link = functions.https.onRequest(expressApp);
-
 
 /**
  * Returns the Document Snapshot
@@ -77,9 +77,10 @@ const defaultHtml = `<!DOCTYPE html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <meta
-      name="apple-itunes-app"
-      content="app-id=#{{appleAppId}}, app-argument=#{{deepLinkUrl}}"
+    name="apple-itunes-app"
+    content="app-id=#{{appleAppId}}, app-argument=#{{webUrl}}"
     />
 
     <link rel="icon" type="image/png" href="#{{appIconLink}}" />
@@ -128,7 +129,6 @@ const defaultHtml = `<!DOCTYPE html>
     ></script>
     <script>
       var result = detect.parse(navigator.userAgent);
-      var deepLinkUrl = "#{{deepLinkUrl}}";
       var webUrl = "#{{webUrl}}";
       var appStoreUrl = "#{{appStoreUrl}}";
       var playStoreUrl = "#{{playStoreUrl}}";
@@ -164,26 +164,22 @@ expressApp.get("*", async (req, res) => {
   const appStoreUrl = (req.query.appStoreUrl ?? "") as string;
   const playStoreUrl = (req.query.playStoreUrl ?? "") as string;
   const webUrl = (req.query.webUrl ?? "") as string;
-  const customUrlScheme = (req.query.customUrlScheme ?? "") as string;
   const appleAppId = (req.query.appleAppId ?? "") as string;
   const appIconLink = (req.query.appIconLink ?? "") as string;
   const previewImageLink = (req.query.previewImageLink ?? "") as string;
   const description = (req.query.description ?? "") as string;
-  const maskIconSvgUrl = (req.query.maskIconSvgUrl ?? "") as string;
+  const redirectingMessage = (req.query.redirectingMessage ?? "Redirecting...") as string;
 
   htmlSource = htmlSource.replaceAll("#{{appName}}", appName);
   htmlSource = htmlSource.replaceAll("#{{title}}", title);
   htmlSource = htmlSource.replaceAll("#{{appStoreUrl}}", appStoreUrl);
   htmlSource = htmlSource.replaceAll("#{{playStoreUrl}}", playStoreUrl);
   htmlSource = htmlSource.replaceAll("#{{webUrl}}", webUrl.length > 0 ? webUrl + req.url : "");
-  htmlSource = htmlSource.replaceAll("#{{deepLinkUrl}}", customUrlScheme.length > 0 ? req.query.customUrlScheme + "://link" + req.url : "");
   htmlSource = htmlSource.replaceAll("#{{appleAppId}}", appleAppId);
   htmlSource = htmlSource.replaceAll("#{{appIconLink}}", appIconLink);
   htmlSource = htmlSource.replaceAll("#{{previewImageLink}}", previewImageLink);
   htmlSource = htmlSource.replaceAll("#{{description}}", description);
-  htmlSource = htmlSource.replaceAll("#{{maskIconSvgUrl}}", maskIconSvgUrl);
-
-  // TODO redirecting message.
+  htmlSource = htmlSource.replaceAll("#{{redirectingMessage}}", redirectingMessage);
 
   // Return the webpage
   return res.send(htmlSource);

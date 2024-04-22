@@ -331,6 +331,16 @@
       "args": ["--dart-define", "MODE=test"]
     },
     {
+      "name": "Silvers (Chris) TEST - iPhone external pink (debug)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "096a885ba083f01af93963a8661720cf9e67cb86",
+      "flutterMode": "debug",
+      "cwd": "apps/silvers",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=test"]
+    },
+    {
       "name": "Silvers (Chris) - External Sam (debug)",
       "request": "launch",
       "type": "dart",
