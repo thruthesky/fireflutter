@@ -4,7 +4,8 @@
     "test3": "withcenter-test-3",
     "silvers": "withcenter-silvers",
     "wemeet": "withcenter-meetup-3",
-    "default": "withcenter-test-2"
+    "default": "withcenter-test-2",
+    "silbus": "silbus"
   },
   "targets": {},
   "etags": {}

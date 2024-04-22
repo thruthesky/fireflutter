@@ -2,10 +2,11 @@ import { describe, it } from "mocha";
 import * as admin from "firebase-admin";
 import assert = require("assert");
 import { PostCreateEvent, PostSummary } from "../../src/forum/forum.interface";
-import { randomString } from "../firebase-test-functions";
+
 import { setTimeout } from "timers/promises";
 import { getDatabase } from "firebase-admin/database";
 import { Config } from "../../src/config";
+import { randomString } from "../firebase-test-functions";
 
 
 if (admin.apps.length === 0) {
@@ -45,7 +46,7 @@ describe("Test when post title, content and urls are null at first (post-null-fi
             summary.order !== postData.order ||
             summary.createdAt !== postData.createdAt ||
             summary.uid !== postData.uid
-            ) {
+        ) {
             console.log("Original: ", postData, "Retireved: ", summary);
             assert.ok(false, "Other records should not be affected.");
         } else if (summarySnapshot.exists() && summary.title === updatedTitle) {
@@ -83,7 +84,7 @@ describe("Test when post title, content and urls are null at first (post-null-fi
             summary.order !== postData.order ||
             summary.createdAt !== postData.createdAt ||
             summary.uid !== postData.uid
-            ) {
+        ) {
             console.log("Original: ", postData, "Retireved: ", summary);
             assert.ok(false, "Other records should not be affected.");
         } else if (summarySnapshot.exists() && summary.content === updatedContent) {
@@ -123,7 +124,7 @@ describe("Test when post title, content and urls are null at first (post-null-fi
             summary.order !== postData.order ||
             summary.createdAt !== postData.createdAt ||
             summary.uid !== postData.uid
-            ) {
+        ) {
             console.log("Original: ", postData, "Retireved: ", summary);
             assert.ok(false, "Other records should not be affected.");
         } else if (summarySnapshot.exists() && summary.url === url1) {

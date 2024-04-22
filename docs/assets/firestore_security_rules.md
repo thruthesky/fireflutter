@@ -3,9 +3,15 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    match /_deeplink_/{deeplink} {
+      allow read: if true;
+    }
+
     match /users/{uid} {
       allow read: if true;
     }
+
     match /clubs/{clubId} {
       // Return true if the user is removing himself from the room.
       function isLeaving() {
@@ -22,6 +28,22 @@ service cloud.firestore {
       allow read: if true;
       allow create: if (request.resource.data.uid == request.auth.uid);
       allow update: if (resource.data.uid == request.auth.uid) || isJoining() || isLeaving();
+      allow delete: if resource.data.uid == request.auth.uid;
+    }
+
+    match /meetups/{meetupId} {
+      function isLeaving() {
+        return onlyRemoving('users', request.auth.uid);
+      }
+      function isJoining() {
+        return
+          onlyAddingOneElement('users')
+          && 
+          request.resource.data.users.toSet().difference(resource.data.users.toSet()) == [request.auth.uid].toSet();
+      }
+      allow read: if true;
+      allow create: if (request.resource.data.uid == request.auth.uid);
+      allow update: if (resource.data.uid == request.auth.uid) || isJoining() || isLeaving();      
     }
   }
 }

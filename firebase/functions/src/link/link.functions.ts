@@ -1,8 +1,7 @@
 
 import * as functions from "firebase-functions";
 import * as express from "express";
-// import { initializeApp } from "firebase/app";
-import { getFirestore, doc, getDoc, DocumentSnapshot } from "firebase/firestore";
+import { getFirestore, DocumentSnapshot } from "firebase-admin/firestore";
 import { AndroidCredential, AppleCredential, HtmlDeepLink } from "./link.interface";
 
 // Initialize Express app
@@ -18,15 +17,14 @@ export const link = functions.https.onRequest(expressApp);
  */
 async function getDeeplinkDoc(docId: string): Promise<DocumentSnapshot> {
   const db = getFirestore();
-  const docRef = doc(db, "_link_", docId);
-  const docSnap = await getDoc(docRef);
+  const docSnap = await db.collection("_link_").doc(docId).get();
   return docSnap;
 }
 
 expressApp.get("/.well-known/apple-app-site-association", async (req, res) => {
-  const docSnaphot = await getDeeplinkDoc("apple");
+  const docSnaphot = await getDeeplinkDoc("ios");
   res.writeHead(200, { "Content-Type": "application/json" });
-  if (docSnaphot.exists()) {
+  if (docSnaphot.exists) {
     const snapshotData: AppleCredential = docSnaphot.data() as AppleCredential;
     const applinkDetails = snapshotData.apps.map((teamIDAndAppIBundled) => ({
       appID: teamIDAndAppIBundled,
@@ -56,14 +54,14 @@ expressApp.get("/.well-known/apple-app-site-association", async (req, res) => {
 expressApp.get("/.well-known/assetlinks.json", async (req, res) => {
   const docSnaphot = await getDeeplinkDoc("android");
   res.writeHead(200, { "Content-Type": "application/json" });
-  if (docSnaphot.exists()) {
-    const snapshotData: AndroidCredential = docSnaphot.data();
+  if (docSnaphot.exists) {
+    const snapshotData: AndroidCredential = docSnaphot.data() as AndroidCredential;
     const jsonCredentials = Object.entries(snapshotData).map(([appName, sha256s]) => ({
       relation: ["delegate_permission/common.handle_all_urls"],
       target: {
         namespace: "android_app",
         package_name: appName,
-        sha256_cert_fingerprints: sha256s,
+        sha256_cert_fingerprints: sha256s.map((sha) => sha.toUpperCase()),
       },
     }));
     res.write(JSON.stringify(jsonCredentials));
@@ -81,31 +79,28 @@ const defaultHtml = `<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="apple-itunes-app"
-      content="app-id=myAppID, affiliate-data=myAffiliateData, app-argument=myURL"
+      content="app-id=#{{appleAppId}}, app-argument=#{{deepLinkUrl}}"
     />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="white" />
-    <meta name="apple-mobile-web-app-title" content="Silvers" />
 
-    <link rel="icon" type="image/png" href="..." />
-    <link rel="mask-icon" href="" color="#ffffff" />
-    <meta name="application-name" content="Silvers" />
+    <link rel="icon" type="image/png" href="#{{appIconLink}}" />
 
-    <title>Silvers</title>
-    <meta name="description" content="Find out more about my app..." />
+    <meta name="application-name" content="#{{appName}}" />
 
-    <meta property="og:title" content="Silvers" />
-    <meta property="og:description" content="Find out more about my app..." />
-    <meta property="og:image" content="https://.../your-app-banner.jpg" />
+    <title>#{{title}}</title>
+    <meta name="description" content="#{{description}}" />
+
+    <meta property="og:title" content="#{{title}}" />
+    <meta property="og:description" content="#{{description}}" />
+    <meta property="og:image" content="#{{previewImageLink}}" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Silvers" />
-    <meta name="twitter:site" content="myawesomeapp.com" />
-    <meta name="twitter:description" content="Find out more about my app..." />
-    <meta name="twitter:image" content="https://.../your-app-banner.jpg" />
-    <link rel="apple-touch-icon" href="..." />
+    <meta name="twitter:card" content="#{{description}}" />
+    <meta name="twitter:title" content="#{{title}}" />
+    <meta name="twitter:site" content="#{{webUrl}}" />
+    <meta name="twitter:description" content="#{{description}}" />
+    <meta name="twitter:image" content="#{{previewImageLink}}" />
+    
     <style>
       .centered {
         position: fixed;
@@ -124,7 +119,7 @@ const defaultHtml = `<!DOCTYPE html>
   </head>
   <body>
     <div class="centered">
-      Redirecting...
+      #{{redirectingMessage}}
     </div>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/Detect.js/2.2.2/detect.min.js"
@@ -137,51 +132,59 @@ const defaultHtml = `<!DOCTYPE html>
       var webUrl = "#{{webUrl}}";
       var appStoreUrl = "#{{appStoreUrl}}";
       var playStoreUrl = "#{{playStoreUrl}}";
-
-      const stateTimer = setTimeout(function () {
-        if (result.os.family === "iOS" && appStoreUrl.length > 0) {
-          window.location.replace(appStoreUrl);
-        } else if (
-          result.os.family.includes("Android") &&
-          playStoreUrl.length > 0
-        ) {
-          window.location.replace(playStoreUrl);
-        } else {
-          if (webUrl.length > 0) {
-            window.location.replace(webUrl);
-          }
-        }
-      }, 2000);
-      window.addEventListener("visibiltychange", function () {
-        clearTimeout(stateTimer);
-        stateTimer = null;
-        window.open("", "_self").close();
-      });
-      if (deepLinkUrl.length > 0) {
-        location.href = deepLinkUrl;
+      
+      if (result.os.family === "iOS" && appStoreUrl.length > 0) {
+        window.location.replace(appStoreUrl);
+      } else if (
+        result.os.family.includes("Android") &&
+        playStoreUrl.length > 0
+      ) {
+        window.location.replace(playStoreUrl);
+      } else if (webUrl.length > 0) {
+          window.location.replace(webUrl);
+      } else {
+        alert("No url to redirect. Inform this to admin.");
       }
+      
     </script>
   </body>
 </html>`;
 
 expressApp.get("*", async (req, res) => {
   const docSnaphot = await getDeeplinkDoc("html");
-  if (docSnaphot.exists()) {
-    const htmlSnapshot = docSnaphot.data() as HtmlDeepLink;
-    let htmlSource = htmlSnapshot.html ?? defaultHtml;
-    // appStoreUrl
-    htmlSource = htmlSource.replaceAll("#{{appStoreUrl}}", htmlSnapshot.appStoreUrl ?? "");
-    // playStoreUrl
-    htmlSource = htmlSource.replaceAll("#{{playStoreUrl}}", htmlSnapshot.playStoreUrl ?? "");
-    // webUrl
-    htmlSource = htmlSource.replaceAll("#{{webUrl}}", htmlSnapshot.webUrl ?? "");
-    // deepLinkUrl
-    if ((htmlSnapshot.urlScheme?.length ?? 0) > 0) {
-      htmlSource = htmlSource.replaceAll("#{{deepLinkUrl}}", htmlSnapshot.urlScheme + ":/" + req.url);
-    }
-    // Return the webpage
-    return res.send(htmlSource);
+  let htmlSnapshot: HtmlDeepLink | undefined;
+  if (docSnaphot.exists) {
+    htmlSnapshot = docSnaphot.data() as HtmlDeepLink;
   }
+  let htmlSource = htmlSnapshot?.html ?? defaultHtml;
+
+  // Prepare the content
+  const appName = (req.query.appName ?? "") as string;
+  const title = (req.query.title ?? "") as string;
+  const appStoreUrl = (req.query.appStoreUrl ?? "") as string;
+  const playStoreUrl = (req.query.playStoreUrl ?? "") as string;
+  const webUrl = (req.query.webUrl ?? "") as string;
+  const customUrlScheme = (req.query.customUrlScheme ?? "") as string;
+  const appleAppId = (req.query.appleAppId ?? "") as string;
+  const appIconLink = (req.query.appIconLink ?? "") as string;
+  const previewImageLink = (req.query.previewImageLink ?? "") as string;
+  const description = (req.query.description ?? "") as string;
+  const maskIconSvgUrl = (req.query.maskIconSvgUrl ?? "") as string;
+
+  htmlSource = htmlSource.replaceAll("#{{appName}}", appName);
+  htmlSource = htmlSource.replaceAll("#{{title}}", title);
+  htmlSource = htmlSource.replaceAll("#{{appStoreUrl}}", appStoreUrl);
+  htmlSource = htmlSource.replaceAll("#{{playStoreUrl}}", playStoreUrl);
+  htmlSource = htmlSource.replaceAll("#{{webUrl}}", webUrl.length > 0 ? webUrl + req.url : "");
+  htmlSource = htmlSource.replaceAll("#{{deepLinkUrl}}", customUrlScheme.length > 0 ? req.query.customUrlScheme + "://link" + req.url : "");
+  htmlSource = htmlSource.replaceAll("#{{appleAppId}}", appleAppId);
+  htmlSource = htmlSource.replaceAll("#{{appIconLink}}", appIconLink);
+  htmlSource = htmlSource.replaceAll("#{{previewImageLink}}", previewImageLink);
+  htmlSource = htmlSource.replaceAll("#{{description}}", description);
+  htmlSource = htmlSource.replaceAll("#{{maskIconSvgUrl}}", maskIconSvgUrl);
+
+  // TODO redirecting message.
+
   // Return the webpage
-  return res.send("Page not found!");
+  return res.send(htmlSource);
 });

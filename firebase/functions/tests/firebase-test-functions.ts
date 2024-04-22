@@ -1,26 +1,26 @@
-import { TypesenseDoc } from "../src/typesense/typesense.interface";
+
 
 /**
  * Random String generator
  * @returns String
  */
 export function randomString(): string {
-  return Math.random().toString(36).slice(2, 22);
+    return Math.random().toString(36).slice(2, 22);
 }
 
 /**
  * Generates random user
  */
-export function generateUser(): TypesenseDoc {
-  const uid = randomString();
-  return {
-    id: uid,
-    type: "user",
-    uid: uid,
-    displayName: "name-" + uid,
-    createdAt: 12345,
-  };
-}
+// export function generateUser(): TypesenseDoc {
+//     const uid = randomString();
+//     return {
+//         id: uid,
+//         type: "user",
+//         uid: uid,
+//         displayName: "name-" + uid,
+//         createdAt: 12345,
+//     };
+// }
 
 // /**
 //  * Generates random post doc
@@ -57,3 +57,4 @@ export function generateUser(): TypesenseDoc {
 //     createdAt: 12345,
 //   };
 // }
+

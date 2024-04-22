@@ -53,7 +53,7 @@ Parameters:
     - default: 12
     - spacing between the icon and the message
 
-## confirm
+## 확인 다이얼로그 - Confirm Dialog
 
 The `confirm` is a prompt that will let the user choose from yes or no.
 
@@ -74,6 +74,274 @@ Parameters:
     - title of the message
 - [required] String message
     - Add the question or confirmation message here.
+
+
+
+아래와 같이 커스터마이징을 할 수 있다.
+
+```dart
+/// Dialog 커스텀 설정
+FireFlutterService.instance.init(
+  confirmDialog: ({
+    required BuildContext context,
+    required String? title,
+    required String message,
+  }) async {
+    return await showDialog<bool?>(
+      context: context,
+      builder: (context) => SilverConfirmDialog(
+        title: title,
+        message: message,
+      ),
+    );
+  },
+);
+/// Dialog UI 디자인
+import 'package:flutter/material.dart';
+import 'package:silvers/font_awesome/lib/font_awesome_flutter.dart';
+import 'package:silvers/global.dart';
+
+class SilverConfirmDialog extends StatelessWidget {
+  const SilverConfirmDialog({
+    super.key,
+    this.title,
+    required this.message,
+  });
+
+  final String? title;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Colors.transparent,
+      shadowColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      content: Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 20),
+            padding: const EdgeInsets.all(8),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: context.onPrimary,
+              border: Border.all(
+                color: context.colorScheme.primary,
+                width: 1.8,
+              ),
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Container(
+              color: context.colorScheme.primaryContainer.withAlpha(50),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 30, 24, 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (title != null)
+                      Text(
+                        title!,
+                        style: context.titleMedium,
+                      ),
+                    const SizedBox(height: 8),
+                    Text(
+                      message,
+                      style: context.labelSmall,
+                    ),
+                    Row(
+                      children: [
+                        const Spacer(),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text('거절'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text('확인'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 20,
+            child: Container(
+              height: 42,
+              width: 42,
+              decoration: BoxDecoration(
+                color: context.colorScheme.primaryContainer,
+                border: Border.all(
+                  color: context.colorScheme.primary,
+                  width: 1.8,
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Center(
+                child: FaIcon(
+                  FontAwesomeIcons.exclamation,
+                  color: context.colorScheme.primary,
+                  size: 20,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 호출하기
+TextButton(
+  onPressed: () async {
+    final re = await confirm(
+        context: context,
+        title: '확인 또는 거절',
+        message: '확인 또는 거절을 설명....');
+    print("confirm dialog closed with: $re");
+  },
+  child: const Text('Confirm Dialog'),
+);
+```
+
+
+## 에러 다이얼로그 표시
+
+아래와 같이 표시 할 수 있다.
+
+```dart
+return TextButton(
+    onPressed: () async {
+    await error(
+        context: context, title: '에러 제목', message: '에러를 설명할 메시지...');
+    print("error dialog closed");
+    },
+    child: const Text('Error Dialog'),
+);
+```
+
+
+아래와 같이 커스텀 디자인을 할 수 있다.
+
+```dart
+FireFlutterService.instance.init(
+  errorDialog: ({
+    required BuildContext context,
+    required String? title,
+    required String message,
+  }) async {
+    return await showDialog<bool?>(
+      context: globalContext,
+      builder: (context) => SilverErrorDialog(
+        title: title,
+        message: message,
+      ),
+    );
+  },
+);
+
+
+import 'package:flutter/material.dart';
+import 'package:silvers/font_awesome/lib/font_awesome_flutter.dart';
+import 'package:silvers/global.dart';
+
+class SilverErrorDialog extends StatelessWidget {
+  const SilverErrorDialog({
+    super.key,
+    this.title,
+    required this.message,
+  });
+
+  final String? title;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Colors.transparent,
+      shadowColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      content: Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 20),
+            padding: const EdgeInsets.all(8),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: context.onPrimary,
+              border: Border.all(
+                color: context.colorScheme.error,
+                width: 1.8,
+              ),
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Container(
+              color: context.colorScheme.errorContainer.withAlpha(50),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 30, 24, 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (title != null)
+                      Text(
+                        title!,
+                        style: context.titleMedium,
+                      ),
+                    const SizedBox(height: 8),
+                    Text(
+                      message,
+                      style: context.labelSmall,
+                    ),
+                    Row(
+                      children: [
+                        const Spacer(),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text('확인'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 20,
+            child: Container(
+              height: 42,
+              width: 42,
+              decoration: BoxDecoration(
+                color: context.colorScheme.errorContainer,
+                border: Border.all(
+                  color: context.colorScheme.error,
+                  width: 1.8,
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Center(
+                child: FaIcon(
+                  FontAwesomeIcons.exclamation,
+                  color: context.colorScheme.error,
+                  size: 20,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
 
 ## input
 
@@ -123,3 +391,6 @@ Parameters:
 locale: en
 locales: [en, ko]
 ```
+
+
+

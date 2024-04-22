@@ -1,5 +1,6 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 class PostViewScreen extends StatefulWidget {
   static const String routeName = '/PostView';
@@ -105,23 +106,47 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     child: const Text('신고'),
                   ),
 
-                  BlockButton.textButton(uid: post.uid),
+                  // BlockButton.textButton(uid: post.uid),
 
                   const Spacer(),
-                  if (post.uid == myUid)
-                    PopupMenuButton(itemBuilder: (context) {
+
+                  PopupMenuButton(
+                    itemBuilder: (context) {
                       return [
+                        if (post.uid == myUid) ...[
+                          const PopupMenuItem(
+                            value: 'edit',
+                            child: Text('수정'),
+                          ),
+                          const PopupMenuItem(
+                            value: 'delete',
+                            child: Text('삭제'),
+                          ),
+                        ] else ...[
+                          const PopupMenuItem(
+                            value: 'block',
+                            child: Text('차단'),
+                          ),
+                        ],
                         const PopupMenuItem(
-                          value: 'edit',
-                          child: Text('수정'),
-                        ),
-                        const PopupMenuItem(
-                          value: 'delete',
-                          child: Text('삭제'),
+                          value: 'share',
+                          child: Text('공유'),
                         ),
                       ];
-                    }, onSelected: (value) async {
-                      if (value == 'edit') {
+                    },
+                    onSelected: (value) async {
+                      if (value == 'block') {
+                        await UserService.instance.block(
+                          context: context,
+                          otherUserUid: post.uid,
+                          ask: true,
+                          notify: true,
+                        );
+                      } else if (value == 'share') {
+                        final link =
+                            DynamicLinkService.instance.createPostLink(post);
+                        Share.shareUri(link);
+                      } else if (value == 'edit') {
                         await ForumService.instance
                             .showPostUpdateScreen(context: context, post: post);
                         await post.reload();
@@ -136,7 +161,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
                         await post.delete();
                         if (context.mounted) Navigator.of(context).pop();
                       }
-                    }),
+                    },
+                  ),
                 ],
               ),
             ),

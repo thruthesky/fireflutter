@@ -31,6 +31,8 @@ class T {
   static const String thereAreNoBookmarksInTheList =
       'There are no bookmarks in the list.';
 
+  static const String share = 'Share';
+
   /// Label, texts, buttons,
   static const String dismiss = 'dismiss';
 
@@ -38,6 +40,8 @@ class T {
   ///
   static const String chat = 'Chat';
   static const String chatRoomNoMessageYet = 'There is no message, yet.';
+  static const String thereIsNoChatRoomInChatRoomListView =
+      'There is no chat room.';
 
   /// User
   static const String setting = 'Setting';

@@ -190,3 +190,6 @@ export 'src/user/widgets/like/who_like_me_list_view.dart';
 
 export 'src/common/exception/fireflutter.exception.dart';
 export 'src/utility/theme.screen.dart';
+
+export 'src/dynamic_link/dynamic_link.service.dart';
+export 'src/dynamic_link/dynamic_link.query_parameters.dart';
