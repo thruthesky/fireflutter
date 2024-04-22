@@ -93,6 +93,16 @@ apps: [
 
 Set the `webUrl` in Firestore on the "\_link\_" collection, using the field name `webUrl`, if you want to redirect it when device is not detected as Android or iOS.
 
+The path and query parameters will also be added to the web URL. Be careful that it may cause an infinite redirect loop if the link leads to the same place.
+
+You can add some path value.
+
+For example:
+
+webUrl: https://example.com/redirection
+
+If the link as `https://example.com/link?uid=1`, the resulting web URL will be `https://example.com/redirection/link?uid=1`.
+
 ### HTML
 
 If the app is not installed in the an HTML will show in the browser. This can redirect to app store or play store depending on the device.
@@ -384,7 +394,7 @@ To change the path for user or post you can also include the following:
     customUrlScheme: "deeplinkscheme",
     appStoreUrl: "https://applestorelink.com/id",
     playStoreUrl: "https://playstorelink.com/id",
-    webUrl: "https://mywebsite.com",
+    webUrl: "https://mywebsite.com/redirect",
   );
 ```
 
@@ -404,7 +414,7 @@ Include these upon initialization:
     customUrlScheme: "deeplinkscheme",
     appStoreUrl: "https://applestorelink.com/id",
     playStoreUrl: "https://playstorelink.com/id",
-    webUrl: "https://mywebsite.com",
+    webUrl: "https://mywebsite.com/redirect",
   );
 ```
 
