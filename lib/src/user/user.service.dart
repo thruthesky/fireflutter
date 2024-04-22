@@ -208,6 +208,7 @@ class UserService {
 
   /// 사용자가 로그인을 하면, 사용자 설정 값을 업데이트 한다.
   login() async {
+    dog("BEGIN: UserService.login()");
     await myRef.update({
       'lastLogin': ServerValue.timestamp,
     });

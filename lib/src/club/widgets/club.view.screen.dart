@@ -60,16 +60,17 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
                   icon: const Icon(Icons.menu),
                   itemBuilder: (context) {
                     return [
-                      const PopupMenuItem(
-                        value: Code.edit,
-                        child: Row(
-                          children: [
-                            Icon(Icons.edit),
-                            SizedBox(width: 8),
-                            Text('모임 정보 수정'),
-                          ],
+                      if (club.isMaster)
+                        const PopupMenuItem(
+                          value: Code.edit,
+                          child: Row(
+                            children: [
+                              Icon(Icons.edit),
+                              SizedBox(width: 8),
+                              Text('모임 정보 수정'),
+                            ],
+                          ),
                         ),
-                      ),
                       if (club.joined)
                         const PopupMenuItem(
                           value: Code.leave,

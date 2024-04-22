@@ -423,19 +423,35 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
   }
 
   signinSuccess() async {
-    await UserService.instance.login();
-    widget.onSignin.call();
+    dog('BEGIN: signinSuccess() method.');
+    try {
+      await UserService.instance.login();
+      widget.onSignin.call();
+    } catch (e) {
+      dog('ERROR: signinSuccess() method. error: $e');
+      rethrow;
+    }
   }
 
   doReviewLogin() async {
-    await loginOrRegister(
-      email: widget.reviewEmail,
-      password: widget.reviewPassword,
-    );
-    signinSuccess();
+    dog('BEGIN: doReviewLogin()');
+    try {
+      await loginOrRegister(
+        email: widget.reviewEmail,
+        password: widget.reviewPassword,
+      );
+      signinSuccess();
+    } catch (e) {
+      dog('ERROR: doReviewLogin() error: $e');
+      if (context.mounted) {
+        setState(() => progressVerifyPhoneNumber = false);
+      }
+      rethrow;
+    }
   }
 
   doEmailLogin() async {
+    dog('BEGIN: doEmailLogin()');
     setState(() => progressVerifyPhoneNumber = true);
     try {
       // 전화번호 중간에 @ 이 있으면 : 로 분리해서, 이메일과 비밀번호로 로그인을 한다.
@@ -450,9 +466,11 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
       );
       signinSuccess();
     } catch (e) {
+      dog('ERROR: doEmailLogin error: $e');
       if (context.mounted) {
         setState(() => progressVerifyPhoneNumber = false);
       }
+      rethrow;
     }
   }
 
@@ -463,6 +481,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
     return doReviewLogin();
   }
 
+  /// test2@email.com:12345a
   doReviewRealPhoneNumberLogin() {
     if (context.mounted) {
       setState(() {

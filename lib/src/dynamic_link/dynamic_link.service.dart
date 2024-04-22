@@ -21,8 +21,16 @@ class DynamicLinkService {
 
   StreamSubscription<Uri>? _appLinkStream;
 
-  /// BuildContext, Preferrably, the globalContext
-  late BuildContext context;
+  /// The context that is used to show screens
+  BuildContext get context {
+    if (FireFlutterService.instance.globalContext == null) {
+      throw FireFlutterException(
+        'dynamic_link/globalContext-required',
+        'To use dynamic link, you need to set FireFlutterService.instance.globalContext.',
+      );
+    }
+    return FireFlutterService.instance.globalContext!;
+  }
 
   /// Path for post links
   /// For example, "dynamiclink.com/link/post?category=news&postId=1234567890"
@@ -82,7 +90,6 @@ class DynamicLinkService {
   /// For post links, the link has path of "/post"
   /// For user links, the link has path of "/user"
   Future<void> init({
-    required BuildContext context,
     Function(Uri uri)? onLink,
     String postPath = "/post",
     String userPath = "/user",
@@ -96,7 +103,6 @@ class DynamicLinkService {
     String appleAppId = "",
   }) async {
     _appLinks = AppLinks();
-    this.context = context;
     this.onLink = onLink;
     this.postPath = postPath;
     this.userPath = userPath;

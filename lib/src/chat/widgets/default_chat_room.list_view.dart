@@ -31,7 +31,7 @@ class DefaultChatRoomListView extends StatelessWidget {
           }
           if (snapshot.hasMore == false && snapshot.docs.isEmpty) {
             return emptyBuilder?.call() ??
-                const Center(child: Text('No chat rooms'));
+                Center(child: Text(T.thereIsNoChatRoomInChatRoomListView.tr));
           }
           return ListView.builder(
             padding: EdgeInsets.zero,

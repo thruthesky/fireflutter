@@ -37,8 +37,6 @@ class ChatService {
 
   ChatCustomize customize = const ChatCustomize();
 
-  Function(ChatModel)? testBeforeSendMessage;
-
   /// Do something before the message is sent.
   ///
   /// You can translate the text into other language or do something else.
@@ -53,14 +51,13 @@ class ChatService {
   /// init
   init({
     ChatCustomize? customize,
-    Function(ChatModel)? testBeforeSendMessage,
     Future<Map<String, dynamic>> Function(Map<String, dynamic>, ChatModel)?
         beforeMessageSent,
     Function(ChatMessage)? afterMessageSent,
   }) {
     // dog('--> ChatService.init()');
     this.customize = customize ?? this.customize;
-    this.testBeforeSendMessage = testBeforeSendMessage;
+
     this.afterMessageSent = afterMessageSent;
     this.beforeMessageSent = beforeMessageSent;
   }
