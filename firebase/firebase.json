@@ -29,10 +29,6 @@
         "function": "link"
       },
       {
-        "source": "/test",
-        "function": "link"
-      },
-      {
         "source": "/.well-known/**",
         "function": "link"
       }
