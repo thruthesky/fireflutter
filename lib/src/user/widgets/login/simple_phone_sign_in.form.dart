@@ -59,6 +59,8 @@ import 'package:flutter/material.dart';
 ///
 /// [description] 전화번호 입력 박스 아래에 표시될 설명
 ///
+///
+///
 class SimplePhoneSignInForm extends StatefulWidget {
   const SimplePhoneSignInForm({
     super.key,
@@ -410,7 +412,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                         // SMS Code verification error comes here.
                         if (context.mounted) {
                           widget.onSmsCodeVerificationFailed != null
-                              ? widget.onPhoneNumberVerificationFailed?.call(e)
+                              ? widget.onSmsCodeVerificationFailed?.call(e)
                               : error(
                                   context: context,
                                   title: T.error.tr,
