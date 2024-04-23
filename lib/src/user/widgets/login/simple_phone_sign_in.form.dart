@@ -59,6 +59,15 @@ import 'package:flutter/material.dart';
 ///
 /// [description] 전화번호 입력 박스 아래에 표시될 설명
 ///
+/// [onPhoneNumberVerificationFailed] Callback to be called when the phone number verification fails.
+///
+/// [onSmsCodeVerificationFailed] Callback to be called when the sms code verification fails.
+///
+/// [onPhoneNumberVerificationProgress] callback that return true when the phone number verification is in progress and false
+///  when the phone verification is not in progress
+///
+/// [onSmsCodeProgress] callback that return true when the sms code verification is in progress and false when the sms code verification
+///
 class SimplePhoneSignInForm extends StatefulWidget {
   const SimplePhoneSignInForm({
     super.key,
@@ -84,6 +93,10 @@ class SimplePhoneSignInForm extends StatefulWidget {
     this.smsSubmitLabel,
     this.smsRetry,
     this.phoneNumberDisplayBuilder,
+    this.onPhoneNumberVerificationFailed,
+    this.onSmsCodeVerificationFailed,
+    this.onPhoneNumberVerificationProgress,
+    this.onSmsCodeProgress,
     // this.phoneNumberTextStyle,
     // this.smsTextStyle,
   });
@@ -110,6 +123,10 @@ class SimplePhoneSignInForm extends StatefulWidget {
   final Widget? smsSubmitLabel;
   final Widget? smsRetry;
   final String? Function(String?)? phoneNumberDisplayBuilder;
+  final Function(FirebaseAuthException)? onPhoneNumberVerificationFailed;
+  final Function(FirebaseAuthException)? onSmsCodeVerificationFailed;
+  final Function(bool)? onPhoneNumberVerificationProgress;
+  final Function(bool)? onSmsCodeProgress;
   // final TextStyle? phoneNumberTextStyle;
   // final TextStyle? smsTextStyle;
   @override
@@ -265,6 +282,8 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                         FirebaseAuth.instance
                             .setLanguageCode(widget.languageCode);
                         setState(() => progressVerifyPhoneNumber = true);
+                        widget.onPhoneNumberVerificationProgress
+                            ?.call(progressVerifyPhoneNumber);
                         await FirebaseAuth.instance.verifyPhoneNumber(
                           timeout: const Duration(seconds: 120),
                           phoneNumber: completeNumber,
@@ -278,16 +297,23 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                             await FirebaseAuth.instance
                                 .signInWithCredential(credential);
                             setState(() => progressVerifyPhoneNumber = false);
+                            widget.onPhoneNumberVerificationProgress
+                                ?.call(progressVerifyPhoneNumber);
                             signinSuccess();
                           },
                           // Phone number verification failed or there is an error on Firebase like quota exceeded.
                           // This is not for the failures of SMS code verification!!
                           verificationFailed: (FirebaseAuthException e) {
                             setState(() => progressVerifyPhoneNumber = false);
-                            error(
-                                context: context,
-                                title: T.error.tr,
-                                message: e.toString());
+                            widget.onPhoneNumberVerificationProgress
+                                ?.call(progressVerifyPhoneNumber);
+                            widget.onPhoneNumberVerificationFailed != null
+                                ? widget.onPhoneNumberVerificationFailed
+                                    ?.call(e)
+                                : error(
+                                    context: context,
+                                    title: T.error.tr,
+                                    message: e.toString());
                           },
                           // Phone number verfied and SMS code sent to user.
                           // Show SMS code input UI.
@@ -297,6 +323,9 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                               showSmsCodeInput = true;
                               progressVerifyPhoneNumber = false;
                             });
+
+                            widget.onPhoneNumberVerificationProgress
+                                ?.call(progressVerifyPhoneNumber);
                           },
                           // Only for Android. This timeout may happens when the Phone Signal is not stable.
                           codeAutoRetrievalTimeout: (String verificationId) {
@@ -311,6 +340,8 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                                 showSmsCodeInput = false;
                                 progressVerifyPhoneNumber = false;
                               });
+                              widget.onPhoneNumberVerificationProgress
+                                  ?.call(progressVerifyPhoneNumber);
                             }
                           },
                         );
@@ -390,22 +421,27 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
                       );
 
                       setState(() => smsCodeProgress = true);
+
+                      widget.onSmsCodeProgress?.call(smsCodeProgress);
                       try {
                         // Sign the user in (or link) with the credential
                         await FirebaseAuth.instance
                             .signInWithCredential(credential);
                         signinSuccess();
-                      } catch (e) {
+                      } on FirebaseAuthException catch (e) {
                         // SMS Code verification error comes here.
                         if (context.mounted) {
-                          error(
-                            context: context,
-                            title: T.error.tr,
-                            message: e.toString(),
-                          );
+                          widget.onSmsCodeVerificationFailed != null
+                              ? widget.onSmsCodeVerificationFailed?.call(e)
+                              : error(
+                                  context: context,
+                                  title: T.error.tr,
+                                  message: e.message.toString(),
+                                );
                         }
                       } finally {
                         setState(() => smsCodeProgress = false);
+                        widget.onSmsCodeProgress?.call(smsCodeProgress);
                       }
                     },
                     child: smsCodeProgress
@@ -446,6 +482,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
       if (context.mounted) {
         setState(() => progressVerifyPhoneNumber = false);
       }
+      widget.onPhoneNumberVerificationProgress?.call(progressVerifyPhoneNumber);
       rethrow;
     }
   }
@@ -470,6 +507,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
       if (context.mounted) {
         setState(() => progressVerifyPhoneNumber = false);
       }
+      widget.onPhoneNumberVerificationProgress?.call(progressVerifyPhoneNumber);
       rethrow;
     }
   }
@@ -478,6 +516,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
     if (context.mounted) {
       setState(() => progressVerifyPhoneNumber = true);
     }
+    widget.onPhoneNumberVerificationProgress?.call(progressVerifyPhoneNumber);
     return doReviewLogin();
   }
 
@@ -488,6 +527,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
         showSmsCodeInput = true;
         progressVerifyPhoneNumber = false;
       });
+      widget.onPhoneNumberVerificationProgress?.call(progressVerifyPhoneNumber);
     }
   }
 }
