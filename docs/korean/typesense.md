@@ -1,6 +1,8 @@
 # Typesense 검색
 
-- 2024. 04. 12. 이후, Typesense 관련 Cloud 함수를 모두 삭제하고, 대신 검색에 필요한 모든 데이터는 Firestore 로 미러링해서 Firestore 및 exstension 으로 해결한다. 즉, 개발자들의 취향에 맞게 직접 커스텀 할 수 있도록 하는 것이다.
+- 24년 4월 이후, RTDB 의 글, 코멘트를 Firestore 로 미러링하도록 했다.
+  즉, 더 이상 Typesense 관련 Cloud 함수를 직접 사용 할 필요가 없어진 것이다.
+  뿐만아니라 굳이 Typesense 가 아니라, Firestore 관련 다른 3rd party 익스텐션을 쉽게 사용 할 수 있다. 검색 엔진을 본다면 Typesense 외에 Algoria, Meilisearch 등을 extensions 으로 연결해서 쓰면 된다.
 
 - 만약, 어떠한 이유로 사용자 정보가 Typesense 에 색인되지 않았을 수 있다. 이와 같은 경우, 사용자 정보를 수정하면 Typesense 에 색인된다.
 

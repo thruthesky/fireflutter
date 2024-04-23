@@ -105,7 +105,7 @@ _link_/apps
       "description": "....",
       "redirectingMessage": "사용자에게 보여 줄 메시지",
       "redirectingErrorMessage": "에러가 발생하여 redirecting 할 수 없는 경우 사용자에게 보여 줄 메세지",
-      "appIconLink": "favicon",
+      "faviconUrl": "favicon",
       "imageUrl": "site preview image url",
     }
   }
@@ -204,8 +204,110 @@ _link_/apps
   OS 에서 앱을 바로 열지 못하고 웹 브라우저가 열릴 때, iOS 에서 Smart App Banner 를 보여주는 경우가 있다. 이 때, 앱을 실행하면 query parameter 가 앱으로 전달된다. 즉, OS 가 앱을 바로 열 때, query parameter 가 앱으로 전달되는게 그것과 동일한 값이 Smart App Banner 로 열어도 전달되도록 HTML 에 패치를 해 놓았다.
 
 
+## 플러터 앱에서 활용하기
 
-## 개발하는 방법
+아래와 같이 Dynamic Link 를 초기화 하면 된다.
+
+```dart
+LinkService.instance.init(
+  urlPrefix: "https://silbus.com",
+  autoRedirect: true,
+);
+```
+
+위와 같이 `autoRedirect` 에 true 값을 주면, 사용자 프로필, 게시글, 채팅방이 자동으로 열린다.
+
+
+그리고 필요한 곳에서 아래와 같이 쓰면 된다.
+
+```dart
+await Share.shareUri(
+  LinkService.instance.generateChatRoomLink(
+    chat.room.id,
+  ),
+);
+```
+
+참고로 `ShareButton` 위젯이 제공되며 이 위젯은 글 이나 프로필 등에서 사용되고 있다.
+
+
+
+커스텀 공유 링크를 만들고 싶다면 아래와 같이 하면 된다. 아래와 같이 하면 query parameter 가 공유 링크에 추가된다.
+
+```dart
+await Share.shareUri(
+  LinkService.instance.generateCustomLink(
+    'page=OpenChatRoomList',
+  ),
+);
+```
+
+위와 같이 하면 그냥 `https://silbus.com/link?page=OpenChatRoomList` 와 같이 링크가 만들어 진다.
+
+그리고 앱이 열리면, `onLinkTap` 콜백 함수가 호출된다. `onLinkTap` 함수는 아래와 같이 작성하면 된다. 물론 마음데로 로직을 만들면 된다. 예를 들어, 해당 링크가 탭되어 오픈되면 보너스 포인트를 추가하거나, 앱 설명 페이지를 이동하거나 등등, 공유 링크르 만들때 적절한 쿼리 파라메타라를 전달하고, 전달 받으면 된다.
+
+```dart
+LinkService.instance.init(
+  urlPrefix: "https://silbus.com",
+  autoRedirect: true,
+  onLinkTap: (parms) {
+    dog('onLinkTap: $parms');
+    if (globalContext.mounted) {
+      globalContext.push('/${parms['page']!}');
+    }
+  },
+);
+```
+
+
+만약, `autoRedirect` 를 true 로 하지 않으면, 앱이 열릴 때, 쿼리 파라메타라를 직접 받아서 핸들링해야 한다. 이 때, `app_links` 패키지를 추천한다.
+
+
+
+
+## 여러 앱 지원하기
+
+하나의 파이어베이스에 여러개의 앱을 연결하여 사용 할 수 있다. 이 때, 다이나믹 링크도 여러개의 앱을 지원할 수 있는데, 먼저, 아래와 같이 초기화를 한다.
+
+```dart
+LinkService.instance.init(
+  urlPrefix: "https://silbus.com",
+  app: 'anotherApp',
+  autoRedirect: true,
+  onLinkTap: (parms) {
+    if (globalContext.mounted) {
+      globalContext.push('/${parms['page']!}');
+    }
+  },
+);
+```
+
+위에 보면 `app` 에 연결된 앱의 id 를 적어주는데 이 id 가 Firestore 의 `_link_/apps` 문서의 설정값이다. 기본적으로 `default` 키에 다이나믹 링크 설정을 하는데 앱이 여러개 인 경우, 아래와 같이 앱 id 를 키로 지정하여 설정을 추가하면 된다.
+
+```json
+_link_/apps {
+  default: {
+    // ...
+  },
+  anotherApp: {
+    // ...
+  }
+}
+```
+
+이렇게 하면 공유 링크가 다른 사용자에게 공유되었을 때, 각 app id 에 따라 site preview 나 OS 가 앱을 바로 못열고 해당 링크를 웹 브라우저를 열었을 경우, 각 url 에 따라 리다이렉트를 하는 것이다.
+
+
+아래와 같이 호출해서 테스트를 해 보면 된다.
+
+```sh
+% curl "http://127.0.0.1:5001/silbus/us-central1/link?app=anotherApp&pid=-NvlptAoVSIoz40mNpGn&a=apple&b=banana"
+```
+
+
+
+
+## 개발자 모드로 코딩하는 방법
 
 클라우드 함수 작업은 항상 로컬 컴퓨터에서 에뮬레이터를 실행해서, 로컬에서 테스트를 하면 된다. 소스 수정한 다음, deploy 해서 확인하는 경우가 없도록 한다.
 

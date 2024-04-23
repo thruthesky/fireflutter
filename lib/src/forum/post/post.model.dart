@@ -210,6 +210,17 @@ class Post {
     return null;
   }
 
+  /// Get a post from all summary.
+  ///
+  /// You can get category from the post id.
+  static Future<Post?> getAllSummary(String id) async {
+    final snapshot = await postAllSummariesRef.child(id).get();
+    if (snapshot.exists) {
+      return Post.fromSnapshot(snapshot);
+    }
+    return null;
+  }
+
   /// Get the value of the field of a post
   static Future<dynamic> field(
       {required String category, required String id, required String field}) {

@@ -1,5 +1,6 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 /// 채팅방
 ///
@@ -292,6 +293,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
                             value: 'setting',
                             child: Text(T.setting.tr),
                           ),
+                        PopupMenuItem(child: Text(T.share.tr), value: 'share'),
                         const PopupMenuItem(
                           value: 'members',
                           child: Text(
@@ -327,6 +329,12 @@ class _ChatRoomState extends State<ChatRoomBody> {
                             roomId: chat.room.id,
                           );
                           setState(() {});
+                        } else if (v == 'share') {
+                          await Share.shareUri(
+                            LinkService.instance.generateChatRoomLink(
+                              chat.room.id,
+                            ),
+                          );
                         } else if (v == 'members') {
                           await ChatService.instance.showMembersScreen(
                             context: context,

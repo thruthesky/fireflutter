@@ -24,7 +24,7 @@ const defaultHtml = `<!DOCTYPE html>
     content="app-id=#{{appleAppId}}, app-argument=#{{query}}"
     />
 
-    <link rel="icon" type="image/png" href="#{{appIconLink}}" />
+    <link rel="icon" type="image/png" href="#{{faviconUrl}}" />
 
     <meta name="application-name" content="#{{appName}}" />
 
