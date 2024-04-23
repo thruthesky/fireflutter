@@ -96,7 +96,7 @@ Firebase Hosting 에 대한 충분한 이해가 필요하다.
 {
   "appStoreUrl": "The user will be redirected to this Appstore URL to download the app",
   "playStoreUrl": "구글 안드로이드를 사용하면, 앱 다운로드할 URL",
-  "appleAppId": "숫자로된 애플 앱 아이디",
+  "appleAppId": "숫자로된 애플 앱 아이디. App store connect 에서 알 수 있다. Smart app banner 에서 사용 됨.",
   "webUrl": "...",
   "appName": "...",
   "title": "...",
@@ -104,12 +104,15 @@ Firebase Hosting 에 대한 충분한 이해가 필요하다.
   "redirectingMessage": "사용자에게 보여 줄 메시지",
   "redirectingErrorMessage": "에러가 발생하여 redirecting 할 수 없는 경우 사용자에게 보여 줄 메세지",
   "appIconLink": "favicon",
-  "previewImageLink": "site preview image url",
+  "previewImageUrl": "site preview image url",
 }
 ```
 
 위의 값에서 `title`, `descriptoin` 은 입력되는 값에 따라 적절히 대체된다.
 `default` 에 저장하는 이유는 링크가 `?app=abc&pid=xxx` 와 같이 하나의 Firebase 에 여러앱이 있는 경우, `app` 이 들어오는 데, 만약 이 값이 없다면 기본 `default` 를 쓰기 위해서이다.
+
+`title`, `description`, `previewImageUrl` 값은 uid, pid, cid 의 DB 정보에 의해서 적절하게 대체된다. 예를 들면, uid 의 state message 가 description 으로 들어가는 해당 uid 의 state message 가 없다면, app 문서에 있는 description 이 사용된다.
+
 
 
 만약, 앱이 Android 에만 배포된 경우, 또는 iOS 에는 배포를 하지 않는 경우, appStoreUrl 은 webUrl 과 동일하게 할 수 있다. 그러면 iOS 사용자들은 자연스럽게 webUrl 로 이동한다. Anroid 에 배포하지 않고 iOS 에만 배포하는 경우도 마찬가지 이다.
@@ -126,9 +129,40 @@ Firebase Hosting 에 대한 충분한 이해가 필요하다.
 
 
 
+## 링크가 공유된 경우, SEO & Site Preview
+
+링크가 공유되는 경우, 여러 앱에서 site preview 를 보여주려고 한다.
+
+- 각 공유 링크에는 `uid`, `pid`, `cid` 등의 값이 있을 수 있다.
+  - `uid` 는 회원 프로필 정보를 공유하는 할 때 사용하는 것으로 사용자 uid 값이 들어간다.
+  - `pid` 는 게시글 또는 코멘트를 공유할 때 사용하는 것으로 글을 id 값이 들어간다.
+  - `cid` 는 (그룹) 채팅방을 공유할 때 사용하는 것으로 채팅방 id 값이 들어간다.
+
+- `uid`, `pid`, `cid` 값이 들어가지 않을 수 있다. 예를 들어 `https://my-domain.com/link?page=abc` 와 같이 공유를 할 수도 있다.
+
+- 각 앱(또는 각 웹)에서 site preview 를 할 때, 대부분의 경우 해당 URL 을 읽어서 meta 태그를 파싱해서 title, description, image 등을 화면에 보여준다.
+ - 즉, 링크가 화면에 보여지면, 앱(웹)에서 그 링크의 HTML 정보를 읽는데, 이 때, `link.function.ts` 의 `get(*)` 이 실행되고 각 `uid`, `pid`, `cid` 에 맞는 값을 DB 에 읽어서 `defaultHtml` 의 title, description, image 등을 패치 한 다음, 클라이언트(웹 또는 앱)으로 전달해 주는 것이다. 그리고 각 앱(웹)이 그 HTML 파싱해서 화면에 보여준다.
+
+## 링크가 공유 된 경우, 상황 별 설명
+
+- 사용자 프로필을 공유하는 경우,
 
 
-## 링크 탭으로 앱이 열린 경우
+```txt
+% curl "http://127.0.0.1:5001/silbus/us-central1/link?screen=about&a=apple&b=banana"
+```
+
+```html
+<meta
+    name="apple-itunes-app"
+    content="app-id=6479899469, app-argument=screen=about&a=apple&b=banana"
+    />
+```
+
+
+
+## 링크 탭되어 앱 또는 웹이 열린 경우 처리 방법
+
 
 
 pub.dev 의 [app_links](https://pub.dev/packages/app_links) 패키지를 이용해서 링크 클릭으로 앱이 열릴 때, 조치를 하면 된다.
@@ -136,3 +170,27 @@ pub.dev 의 [app_links](https://pub.dev/packages/app_links) 패키지를 이용�
 
 
 
+## 개발하는 방법
+
+클라우드 함수 작업은 항상 로컬 컴퓨터에서 에뮬레이터를 실행해서, 로컬에서 테스트를 하면 된다. 소스 수정한 다음, deploy 해서 확인하는 경우가 없도록 한다.
+
+먼저, 아래와 같이 function emulator 를 실행한다.
+
+```sh
+ % export GOOGLE_APPLICATION_CREDENTIALS=~/.../silbus-firebase-service-account.json
+ % firebase use silbus
+ % firebase emulators:start --only functions
+```
+
+그리고 TypeScript 로 코딩하므로, 아래와 같이 실시간 빌드를 해 준다.
+
+```sh
+% npm run build:watch
+```
+
+그리고 아래와 같이 테스트를 한다.
+
+
+```sh
+% curl "http://127.0.0.1:5001/silbus/us-central1/link?pid=-Nvgu90BBbLTz-vP-EJy"
+```
