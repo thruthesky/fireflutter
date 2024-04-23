@@ -59,7 +59,14 @@ import 'package:flutter/material.dart';
 ///
 /// [description] 전화번호 입력 박스 아래에 표시될 설명
 ///
+/// [onPhoneNumberVerificationFailed] Callback to be called when the phone number verification fails.
 ///
+/// [onSmsCodeVerificationFailed] Callback to be called when the sms code verification fails.
+///
+/// [onPhoneNumberVerificationProgress] callback that return true when the phone number verification is in progress and false
+///  when the phone verification is not in progress
+///
+/// [onSmsCodeProgress] callback that return true when the sms code verification is in progress and false when the sms code verification
 ///
 class SimplePhoneSignInForm extends StatefulWidget {
   const SimplePhoneSignInForm({
