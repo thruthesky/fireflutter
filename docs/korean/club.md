@@ -132,3 +132,51 @@ class ClubJoinButton extends StatelessWidget {
   }
 }
 ```
+
+
+## 하나의 클럽 정보를 화면에 표시하기
+
+아래의 예제는 `Club.get()` 을 통해서 클럽 정보를 가져와 화면에 표시를 해 주는 예제이다.
+
+
+```dart
+import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
+
+class ClubFindFriendScreen extends StatefulWidget {
+  static const String routeName = '/ClubFindFriend';
+  const ClubFindFriendScreen({super.key});
+
+  @override
+  State<ClubFindFriendScreen> createState() => _ClubFindFriendScreenState();
+}
+
+class _ClubFindFriendScreenState extends State<ClubFindFriendScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('이성 친구 찾기 추천 모임 목록'),
+      ),
+      body: Column(
+        children: [
+          const Text("많고 많은 모임들 중에서 이성 친구를 찾을 수 있는 모임을 추천해 드립니다."),
+          FutureBuilder<Club>(
+            future: Club.get(id: '17MCAQOIRJPYuIYqR6qD'),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              }
+              if (snapshot.hasError) {
+                return Text('Something went wrong! ${snapshot.error}');
+              }
+              final club = snapshot.data!;
+              return ClubListTile(club: club);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+```

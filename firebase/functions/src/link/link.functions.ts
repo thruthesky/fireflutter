@@ -3,7 +3,7 @@
 import * as functions from "firebase-functions";
 import * as express from "express";
 import { getFirestore, DocumentSnapshot } from "firebase-admin/firestore";
-import { AndroidCredential, AppleCredential, HtmlDeepLink } from "./link.interface";
+import { AndroidCredential, AppleCredential } from "./link.interface";
 
 // Initialize Express app
 export const expressApp = express();
@@ -109,77 +109,98 @@ const defaultHtml = `<!DOCTYPE html>
         left: 50%;
         transform: translate(-50%, -50%);
         font-family: Verdana, Geneva, Tahoma, sans-serif;
-        color: white;
+        color: black;
         font-size: x-large;
         text-align: center;
       }
       body {
-        background-color: black;
+        background-color: white;
       }
     </style>
+
+    <script>
+      var userAgent = window.navigator.userAgent;
+      var os = '';
+      
+      if ( /iPhone/.test(userAgent) || /iPad/.test(userAgent) || /iPod/.test(userAgent) || ( /Mac/.test(userAgent)  && "ontouchend" in document)) {
+        os = 'iOS';
+      } else if (/Android/.test(userAgent)) {
+        os = 'Android';
+      } else {
+        os = 'Desktop';
+      }
+    </script>
   </head>
   <body>
     <div class="centered">
       #{{redirectingMessage}}
     </div>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/Detect.js/2.2.2/detect.min.js"
-      rossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
     <script>
-      var result = detect.parse(navigator.userAgent);
+    
       var webUrl = "#{{webUrl}}";
       var appStoreUrl = "#{{appStoreUrl}}";
       var playStoreUrl = "#{{playStoreUrl}}";
       
-      if (result.os.family === "iOS" && appStoreUrl.length > 0) {
-        window.location.replace(appStoreUrl);
-      } else if (
-        result.os.family.includes("Android") &&
-        playStoreUrl.length > 0
-      ) {
-        window.location.replace(playStoreUrl);
-      } else if (webUrl.length > 0) {
+      console.log('--- detect os', os);
+
+      if (os === "iOS") {
+        alert(appStoreUrl);
+        if ( appStoreUrl ) {
+          window.location.replace(appStoreUrl);
+        } else {
+          alert("iOS URL is empty");
+        }
+      } else if ( os === "Android") {
+        if ( playStoreUrl ) {
+          window.location.replace(playStoreUrl);
+        } else {
+          alert("Android URL is empty");
+        }
+      } else if ( os === "Desktop" ) {
+        if ( webUrl ) {
           window.location.replace(webUrl);
+        }
+        else {
+          alert("Web URL is empty");
+        }
       } else {
-        alert("No url to redirect. Inform this to admin.");
+        alert("#{{redirectingErrorMessage}}");
       }
       
     </script>
   </body>
 </html>`;
 
+
+/**
+ * This method is called on all access under `/link` url.
+ */
 expressApp.get("*", async (req, res) => {
-  const docSnaphot = await getDeeplinkDoc("html");
-  let htmlSnapshot: HtmlDeepLink | undefined;
-  if (docSnaphot.exists) {
-    htmlSnapshot = docSnaphot.data() as HtmlDeepLink;
+  let htmlSource = defaultHtml;
+
+  const snapshot = await getDeeplinkDoc("apps");
+  if (!snapshot.exists) {
+    return res.send("/_link_/app document not found! Please create one.");
   }
-  let htmlSource = htmlSnapshot?.html ?? defaultHtml;
 
   // Prepare the content
   const appName = (req.query.appName ?? "") as string;
-  const title = (req.query.title ?? "") as string;
-  const appStoreUrl = (req.query.appStoreUrl ?? "") as string;
-  const playStoreUrl = (req.query.playStoreUrl ?? "") as string;
-  const webUrl = (req.query.webUrl ?? "") as string;
-  const appleAppId = (req.query.appleAppId ?? "") as string;
-  const appIconLink = (req.query.appIconLink ?? "") as string;
-  const previewImageLink = (req.query.previewImageLink ?? "") as string;
-  const description = (req.query.description ?? "") as string;
-  const redirectingMessage = (req.query.redirectingMessage ?? "Redirecting...") as string;
+  // const pid = (req.query.pid ?? "") as string;
+  // const cid = (req.query.cid ?? "") as string;
+  // const uid = (req.query.uid ?? "") as string;
+  // const path = (req.query.path ?? "") as string;
 
-  htmlSource = htmlSource.replaceAll("#{{appName}}", appName);
-  htmlSource = htmlSource.replaceAll("#{{title}}", title);
-  htmlSource = htmlSource.replaceAll("#{{appStoreUrl}}", appStoreUrl);
-  htmlSource = htmlSource.replaceAll("#{{playStoreUrl}}", playStoreUrl);
-  htmlSource = htmlSource.replaceAll("#{{webUrl}}", webUrl.length > 0 ? webUrl + req.url : "");
-  htmlSource = htmlSource.replaceAll("#{{appleAppId}}", appleAppId);
-  htmlSource = htmlSource.replaceAll("#{{appIconLink}}", appIconLink);
-  htmlSource = htmlSource.replaceAll("#{{previewImageLink}}", previewImageLink);
-  htmlSource = htmlSource.replaceAll("#{{description}}", description);
-  htmlSource = htmlSource.replaceAll("#{{redirectingMessage}}", redirectingMessage);
+  const map = snapshot.data()! as { [key: string]: any };
+
+
+  let appData: { [key: string]: string } = map["default"];
+  if (appName && map[appName]) {
+    appData = map[appName];
+  }
+
+  for (const key of Object.keys(appData)) {
+    htmlSource = htmlSource.replaceAll(`#{{${key}}}`, appData[key]);
+  }
 
   // Return the webpage
   return res.send(htmlSource);
