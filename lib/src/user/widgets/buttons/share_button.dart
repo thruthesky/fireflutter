@@ -6,50 +6,27 @@ import 'package:share_plus/share_plus.dart';
 class ShareButton extends StatelessWidget {
   const ShareButton({
     super.key,
-    this.user,
-    this.post,
-    this.onTap,
-  })  : assert(user != null || post != null || onTap != null),
-        _textButton = false;
-
-  final User? user;
-  final Post? post;
-  final Uri Function()? onTap;
-
-  final bool _textButton;
+    required this.link,
+    this.textButton = false,
+  });
+  final Uri link;
+  final bool textButton;
 
   const ShareButton.textButton({
-    this.user,
-    this.post,
-    this.onTap,
-  })  : assert(user != null || post != null || onTap != null),
-        _textButton = true;
+    required this.link,
+  }) : textButton = true;
 
   @override
   Widget build(BuildContext context) {
-    if (_textButton) {
+    if (textButton) {
       return TextButton(
-        onPressed: _onPressed,
+        onPressed: () => Share.shareUri(link),
         child: Text(T.share.tr),
       );
     }
     return ElevatedButton(
-      onPressed: _onPressed,
+      onPressed: () => Share.shareUri(link),
       child: Text(T.share.tr),
     );
-  }
-
-  Future<void> _onPressed() async {
-    late Uri link;
-    if (user != null) {
-      link = DynamicLinkService.instance.createUserLink(user!);
-    } else if (post != null) {
-      link = DynamicLinkService.instance.createPostLink(post!);
-    } else if (onTap != null) {
-      link = onTap!();
-    } else {
-      throw Exception("ShareButton: No user, post, or onTap provided.");
-    }
-    Share.shareUri(link);
   }
 }

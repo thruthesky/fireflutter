@@ -13,7 +13,6 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  app_links: ^4.0.1
   cached_network_image: ^3.3.0
   cloud_firestore: ^4.15.7
   cloud_functions: ^4.6.9

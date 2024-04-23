@@ -51,12 +51,6 @@ AndroidManifest.xml 에 아래의 내용을 추가한다.
 ![Android Firestore Setting](https://github.com/thruthesky/fireflutter/blob/main/docs/assets/images/dynamic_link_android.jpg?raw=true)
 
 
-
-## 활용
-
-
-
-
 ## Firebase 에 홈페이지를 운영하는 경우
 
 Firebase Hosting 에 대한 충분한 이해가 필요하다.
@@ -93,3 +87,52 @@ Firebase Hosting 에 대한 충분한 이해가 필요하다.
   }
 }
 ```
+
+
+## 링크 생성해서 공유하기
+
+먼저 Firestore 의 `_link_` 컬렉션의 `apps` 문서에 `default` 키의 값은 아래와 같은 맵데이터를 저장한다.
+```json
+{
+  "appStoreUrl": "The user will be redirected to this Appstore URL to download the app",
+  "playStoreUrl": "구글 안드로이드를 사용하면, 앱 다운로드할 URL",
+  "appleAppId": "숫자로된 애플 앱 아이디",
+  "webUrl": "...",
+  "appName": "...",
+  "title": "...",
+  "description": "....",
+  "redirectingMessage": "사용자에게 보여 줄 메시지",
+  "redirectingErrorMessage": "에러가 발생하여 redirecting 할 수 없는 경우 사용자에게 보여 줄 메세지",
+  "appIconLink": "favicon",
+  "previewImageLink": "site preview image url",
+}
+```
+
+위의 값에서 `title`, `descriptoin` 은 입력되는 값에 따라 적절히 대체된다.
+`default` 에 저장하는 이유는 링크가 `?app=abc&pid=xxx` 와 같이 하나의 Firebase 에 여러앱이 있는 경우, `app` 이 들어오는 데, 만약 이 값이 없다면 기본 `default` 를 쓰기 위해서이다.
+
+
+만약, 앱이 Android 에만 배포된 경우, 또는 iOS 에는 배포를 하지 않는 경우, appStoreUrl 은 webUrl 과 동일하게 할 수 있다. 그러면 iOS 사용자들은 자연스럽게 webUrl 로 이동한다. Anroid 에 배포하지 않고 iOS 에만 배포하는 경우도 마찬가지 이다.
+
+
+
+
+`LinkService.instance.init()` 에 링크 생성을 위한 설정을 해 주어야 한다.
+
+- `linkUrlPrefix` - `https://abc.com/link`
+
+`LinkService.instance.generatePostLink()` 는 `linkUrlPrefix` 에 `?pid=xxxx` 를 붙여서 링크를 생성한다. 예를 들면, `https://abc.com/link?pid=xxx` 와 같이 링크가 만들어지는 것이다.
+
+
+
+
+
+
+## 링크 탭으로 앱이 열린 경우
+
+
+pub.dev 의 [app_links](https://pub.dev/packages/app_links) 패키지를 이용해서 링크 클릭으로 앱이 열릴 때, 조치를 하면 된다.
+
+
+
+

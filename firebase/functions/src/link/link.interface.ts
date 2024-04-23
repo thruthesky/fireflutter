@@ -10,6 +10,3 @@ export interface AppleCredential {
     apps: Array<string>;
 }
 
-export interface HtmlDeepLink {
-    html?: string;
-}

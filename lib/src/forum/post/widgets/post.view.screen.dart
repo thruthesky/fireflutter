@@ -144,7 +144,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                         );
                       } else if (value == 'share') {
                         final link =
-                            DynamicLinkService.instance.createPostLink(post);
+                            LinkService.instance.generatePostLink(post);
                         Share.shareUri(link);
                       } else if (value == 'edit') {
                         await ForumService.instance
