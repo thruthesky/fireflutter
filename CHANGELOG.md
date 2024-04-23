@@ -1,6 +1,9 @@
 ## 0.3.28
 
-- 
+- Add. Dynamic link
+- Update. Simple phone sign in
+- Update. Mirror post and comment data from RTDB to Firestore
+
 
 ## 0.3.27
 
