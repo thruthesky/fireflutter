@@ -8,8 +8,29 @@ class LinkService {
 
   init({
     required String urlPrefix,
+    bool autoRedirect = true,
   }) {
     this.urlPrefix = urlPrefix;
+    if (autoRedirect) {
+      ///
+//       final appLinks = AppLinks();
+
+// // Subscribe to all events when app is started.
+// // (Use allStringLinkStream to get it as [String])
+//       appLinks.allUriLinkStream.listen((uri) {
+//         // Do something (navigation, ...)
+
+//         UserService.instance
+//             .showPublicProfileScreen(context: context, uid: uid);
+//         ForumService.instance.showPostViewScreen(context: context, post: post);
+//         ChatService.instance.showChatRoomScreen(
+//           context: context,
+//           uid: uid,
+//           roomId: roomId,
+//           room: room,
+//         );
+//       });
+    }
   }
 
   Uri generatePostLink(Post post) {
