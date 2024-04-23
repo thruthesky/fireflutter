@@ -12,6 +12,7 @@ export const expressApp = express();
 // Set up Firebase Cloud Function
 export const link = functions.https.onRequest(expressApp);
 
+
 /**
  * Returns the Document Snapshot
  * @param docId
@@ -28,7 +29,7 @@ async function getDeeplinkDoc(docId: string): Promise<DocumentSnapshot> {
  */
 async function getRtdbSnapshot(path: string): Promise<DataSnapshot> {
   const db = getDatabase();
-  const docSnap = await db.ref(path).once("value");
+  const docSnap = await db.ref(path).get();
   return docSnap;
 }
 
@@ -39,11 +40,16 @@ async function getRtdbSnapshot(path: string): Promise<DataSnapshot> {
  * @param cid
  * @returns
  */
-async function getPreview(pid?: string, uid?: string, cid?: string): Promise<{ [key: string]: string }> {
+async function getPreview(uid: any, pid: any, cid: any): Promise<{ [key: string]: string }> {
+  console.log("---> begin getPreview()", pid, uid, cid);
   if (pid) return await getPostPreview(pid);
   if (uid) return await getUserPreview(uid);
   if (cid) return await getChatPreview(cid);
-  return {};
+  return {
+    title: "Empty ID",
+    description: "The ID is empty! Please provide a valid ID of post, user or chat room.",
+    previewImageLink: "https://via.placeholder.com/150",
+  };
 }
 
 /**
@@ -73,7 +79,9 @@ async function getPostPreview(pid: string): Promise<{ [key: string]: string }> {
  * @param uid
  */
 async function getUserPreview(uid: string): Promise<{ [key: string]: string }> {
+  console.log("------> getUserPreview() called", uid);
   const docSnap = await getRtdbSnapshot(`users/${uid}`);
+  console.log("user snapshot", docSnap);
   if (docSnap.exists()) {
     const user = docSnap.val();
     return {
@@ -81,8 +89,13 @@ async function getUserPreview(uid: string): Promise<{ [key: string]: string }> {
       description: user.stateMessage,
       previewImageLink: user.photoUrl,
     };
+  } else {
+    return {
+      title: "User does not exsist!",
+      description: "User Description....",
+      previewImageLink: "https://via.placeholder.com/150",
+    };
   }
-  return {};
 }
 
 /**
@@ -99,8 +112,13 @@ async function getChatPreview(cid: string): Promise<{ [key: string]: string }> {
       description: chatRoom.description,
       previewImageLink: chatRoom.iconUrl,
     };
+  } else {
+    return {
+      title: "Chat room does not exsist!",
+      description: "Chat Room Description....",
+      previewImageLink: "https://via.placeholder.com/150",
+    };
   }
-  return {};
 }
 
 expressApp.get("/.well-known/apple-app-site-association", async (req, res) => {
@@ -266,32 +284,37 @@ expressApp.get("*", async (req, res) => {
   }
 
   // Prepare the content
-  const appName = (req.query.appName ?? "") as string;
+  const app = (req.query.app ?? "") as string;
+  const path = (req.query.path ?? "") as string;
 
-  // Post
-  const pid = req.query.pid as string | undefined;
-  // Chat Room
-  const cid = req.query.cid as string | undefined;
-  // User
-  const uid = req.query.uid as string | undefined;
 
   // TODO For confirmation
   // const path = (req.query.path ?? "") as string;
 
   const map = snapshot.data() as { [key: string]: { [key: string]: string } };
 
-  const previewDetails = await getPreview(pid, cid, uid);
+  let previewDetails;
+
+  if (path) {
+    previewDetails = {};
+  } else {
+    previewDetails = await getPreview(req.query.uid, req.query.pid, req.query.cid);
+  }
+
+  console.log("---> previewDetails", previewDetails);
 
   let appData: { [key: string]: string } = map["default"];
 
-  if (appName && map[appName]) {
-    appData = map[appName];
+  if (app && map[app]) {
+    appData = map[app];
   }
 
   appData = {
     ...appData,
     ...previewDetails,
   };
+
+  console.log("---> appData", appData);
 
   for (const key of Object.keys(appData)) {
     htmlSource = htmlSource.replaceAll(`#{{${key}}}`, appData[key]);
