@@ -4,6 +4,7 @@ import * as functions from "firebase-functions";
 import * as express from "express";
 import { getFirestore, DocumentSnapshot } from "firebase-admin/firestore";
 import { AndroidCredential, AppleCredential } from "./link.interface";
+import { DataSnapshot, getDatabase } from "firebase-admin/database";
 
 // Initialize Express app
 export const expressApp = express();
@@ -19,6 +20,87 @@ async function getDeeplinkDoc(docId: string): Promise<DocumentSnapshot> {
   const db = getFirestore();
   const docSnap = await db.collection("_link_").doc(docId).get();
   return docSnap;
+}
+
+/**
+ * Returns the Data Snapshot
+ * @param path
+ */
+async function getRtdbSnapshot(path: string): Promise<DataSnapshot> {
+  const db = getDatabase();
+  const docSnap = await db.ref(path).once("value");
+  return docSnap;
+}
+
+/**
+ * Returns the previews
+ * @param pid
+ * @param uid
+ * @param cid
+ * @returns
+ */
+async function getPreview(pid?: string, uid?: string, cid?: string): Promise<{ [key: string]: string }> {
+  if (pid) return getPostPreview(pid);
+  if (uid) return getUserPreview(uid);
+  if (cid) return getChatPreview(cid);
+  return {};
+}
+
+/**
+ * Returns the previews for post
+ * @param pid
+ * @returns
+ */
+async function getPostPreview(pid: string): Promise<{ [key: string]: string }> {
+  // TODO for confirmation:
+  // In RTDB, the cost is based on the data transfered not per read.
+  // In this code, the snapshot is getitng all the details under the post.
+  // Will it be better if we get value one by one?
+  const docSnap = await getRtdbSnapshot(`posts/${pid}/preview`);
+  if (docSnap.exists()) {
+    const post = docSnap.val();
+    return {
+      title: post.title,
+      description: post.content,
+      previewImageLink: post.url,
+    };
+  }
+  return {};
+}
+
+/**
+ * Returns the previews for user
+ * @param uid
+ */
+async function getUserPreview(uid: string): Promise<{ [key: string]: string }> {
+  const docSnap = await getRtdbSnapshot(`users/${uid}`);
+  if (docSnap.exists()) {
+    const user = docSnap.val();
+    return {
+      title: user.name,
+      description: user.stateMessage,
+      previewImageLink: user.photoUrl,
+    };
+  }
+  return {};
+}
+
+/**
+ * Returns the previews for Chat Room
+ * @param cid
+ * @returns
+ */
+async function getChatPreview(cid: string): Promise<{ [key: string]: string }> {
+  const docSnap = await getRtdbSnapshot(`chat-rooms/${cid}`);
+  if (docSnap.exists()) {
+    const chatRoom = docSnap.val();
+    return {
+      title: chatRoom.name,
+      description: chatRoom.description,
+      previewImageLink: chatRoom.iconUrl,
+    };
+  }
+  return {};
 }
 
 expressApp.get("/.well-known/apple-app-site-association", async (req, res) => {
@@ -185,18 +267,31 @@ expressApp.get("*", async (req, res) => {
 
   // Prepare the content
   const appName = (req.query.appName ?? "") as string;
-  // const pid = (req.query.pid ?? "") as string;
-  // const cid = (req.query.cid ?? "") as string;
-  // const uid = (req.query.uid ?? "") as string;
+
+  // Post
+  const pid = (req.query.pid ?? "") as string;
+  // Chat Room
+  const cid = (req.query.cid ?? "") as string;
+  // User
+  const uid = (req.query.uid ?? "") as string;
+
+  // TODO For confirmation
   // const path = (req.query.path ?? "") as string;
 
-  const map = snapshot.data()! as { [key: string]: any };
+  const map = (snapshot.data() ?? {}) as { [key: string]: { [key: string]: string } };
 
+  const previewDetails = await getPreview(pid, cid, uid);
 
-  let appData: { [key: string]: string } = map["default"];
+  let appData: { [key: string]: string } = map["default"] ?? {};
+
   if (appName && map[appName]) {
     appData = map[appName];
   }
+
+  appData = {
+    ...appData,
+    ...previewDetails,
+  };
 
   for (const key of Object.keys(appData)) {
     htmlSource = htmlSource.replaceAll(`#{{${key}}}`, appData[key]);
