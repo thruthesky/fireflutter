@@ -92,7 +92,7 @@ class DynamicLinkService {
   /// For post links, the link has path of "/post"
   /// For user links, the link has path of "/user"
   Future<void> init({
-    Function(Uri uri)? onLink,
+    Function(Uri uri)? onLinkTap,
     String postViewValue = "post",
     String userViewValue = "user",
     String scheme = "https",
@@ -105,7 +105,7 @@ class DynamicLinkService {
     String appleAppId = "",
   }) async {
     _appLinks = AppLinks();
-    this.onLink = onLink;
+    onLink = onLinkTap;
     this.postViewValue = postViewValue;
     this.userViewValue = userViewValue;
     this.scheme = scheme;
