@@ -93,29 +93,33 @@ Firebase Hosting 에 대한 충분한 이해가 필요하다.
 
 먼저 Firestore 의 `_link_` 컬렉션의 `apps` 문서에 `default` 키의 값은 아래와 같은 맵데이터를 저장한다.
 ```json
-{
-  "appStoreUrl": "The user will be redirected to this Appstore URL to download the app",
-  "playStoreUrl": "구글 안드로이드를 사용하면, 앱 다운로드할 URL",
-  "appleAppId": "숫자로된 애플 앱 아이디. App store connect 에서 알 수 있다. Smart app banner 에서 사용 됨.",
-  "webUrl": "...",
-  "appName": "...",
-  "title": "...",
-  "description": "....",
-  "redirectingMessage": "사용자에게 보여 줄 메시지",
-  "redirectingErrorMessage": "에러가 발생하여 redirecting 할 수 없는 경우 사용자에게 보여 줄 메세지",
-  "appIconLink": "favicon",
-  "previewImageUrl": "site preview image url",
-}
+_link_/apps
+  {
+    "default" {
+      "appStoreUrl": "The user will be redirected to this Appstore URL to download the app",
+      "playStoreUrl": "구글 안드로이드를 사용하면, 앱 다운로드할 URL",
+      "appleAppId": "숫자로된 애플 앱 아이디. App store connect 에서 알 수 있다. Smart app banner 에서 사용 됨.",
+      "webUrl": "...",
+      "appName": "...",
+      "title": "...",
+      "description": "....",
+      "redirectingMessage": "사용자에게 보여 줄 메시지",
+      "redirectingErrorMessage": "에러가 발생하여 redirecting 할 수 없는 경우 사용자에게 보여 줄 메세지",
+      "appIconLink": "favicon",
+      "imageUrl": "site preview image url",
+    }
+  }
 ```
 
 위의 값에서 `title`, `descriptoin` 은 입력되는 값에 따라 적절히 대체된다.
 `default` 에 저장하는 이유는 링크가 `?app=abc&pid=xxx` 와 같이 하나의 Firebase 에 여러앱이 있는 경우, `app` 이 들어오는 데, 만약 이 값이 없다면 기본 `default` 를 쓰기 위해서이다.
 
-`title`, `description`, `previewImageUrl` 값은 uid, pid, cid 의 DB 정보에 의해서 적절하게 대체된다. 예를 들면, uid 의 state message 가 description 으로 들어가는 해당 uid 의 state message 가 없다면, app 문서에 있는 description 이 사용된다.
+`title`, `description`, `imageUrl` 값은 uid, pid, cid 의 DB 정보에 의해서 적절하게 대체된다. 예를 들면, uid 의 state message 가 description 으로 들어가는 해당 uid 의 state message 가 없다면, app 문서에 있는 description 이 사용된다.
 
 
+`webUrl` 은 공유된 링크가 컴퓨터에서 클릭되어, 웹 브라우저에서 열리고, 이 `webUrl` 로 redirect 된다. 따라서 `webUrl` 은 공유된 링크가 클릭되어 열리는 주소 임을 인지하고 특별하게 `https://my-domain.com/weblink` 와 같이 링크가 클릭되어 들어오는 주소로 준비를 하고, 링크로 들어오는 파라메타 값에 따라 다른 페이지로 이동 할 수 있는 코드를 짜 놓아야 한다.
 
-만약, 앱이 Android 에만 배포된 경우, 또는 iOS 에는 배포를 하지 않는 경우, appStoreUrl 은 webUrl 과 동일하게 할 수 있다. 그러면 iOS 사용자들은 자연스럽게 webUrl 로 이동한다. Anroid 에 배포하지 않고 iOS 에만 배포하는 경우도 마찬가지 이다.
+만약, 앱이 Android 에만 배포된 경우, 또는 iOS 에는 배포를 하지 않는 경우, appStoreUrl 은 webUrl 과 동일하게 할 수 있다. 그러면 iOS 사용자들은 자연스럽게 webUrl 로 이동한다. 이 때, query parameter 는 전달되지 않으므로 주의한다. Anroid 에 배포하지 않고 iOS 에만 배포하는 경우도 마찬가지로 할 수 있다.
 
 
 
@@ -145,28 +149,59 @@ Firebase Hosting 에 대한 충분한 이해가 필요하다.
 
 ## 링크가 공유 된 경우, 상황 별 설명
 
-- 사용자 프로필을 공유하는 경우,
+- 사용자 프로필을 공유하는 경우, 아래와 같이 공유 링크를 만들 수 있다.
+
+```sh
+% curl "http://127.0.0.1:5001/silbus/us-central1/link?uid=FjCrteoXHgdYi6MjRp09d51F71H3&a=apple&b=banana"
+```
+위와 같이 하면, uid 사용자의 이름과 상태 메시지, 프로필 사진이 site preview 로 나타난다.
 
 
-```txt
-% curl "http://127.0.0.1:5001/silbus/us-central1/link?screen=about&a=apple&b=banana"
+- 글 또는 코멘트를 공유 할 때 아래와 같이 링크를 만들 수 있다.
+
+```sh
+% curl "http://127.0.0.1:5001/silbus/us-central1/link?pid=-NvlptAoVSIoz40mNpGn&a=apple&b=banana"
 ```
 
-```html
-<meta
-    name="apple-itunes-app"
-    content="app-id=6479899469, app-argument=screen=about&a=apple&b=banana"
-    />
+코멘트를 보여주는 화면이 따로 있는 것이 아니다. 그래서 코멘트를 공유할 때 그냥 그 코멘트의 글 id 를 pid 에 넣어주면 된다. 그러면 앱(웹)에서는 그냥 그 글을 화면에 보여주면 된다.
+
+
+
+- 채팅방을 공유하는 경우 아래와 같이 링크를 만들 수 있다.
+
+```sh
+% curl "http://127.0.0.1:5001/silbus/us-central1/link?cid=17MCAQOIRJPYuIYqR6qD&a=apple&b=banana"
 ```
+
+와 같이 공유 링크를 만들 수 있다. Site preview 를 할 때, title, description, imageUrl 등은 `/chat-rooms/{cid}` 에서 가져와 적절하게 defaultHtml 에 패치해서 클라이언트로 전달한다.
+
+
+
+- 아래의 예제는 `uid`, `pid`, `cid` 를 쓰지 않고 query parameter 를 마음대로 준 경우이다. 이와 같은 경우 앱(또는 웹)으로 query parameter 가 그대로 전달된다.
+
+```sh
+% curl "http://127.0.0.1:5001/silbus/us-central1/link?page=about&a=apple&b=banana"
+```
+
+예를 들어 OS 가 앱을 바로 열거나 Smart App Banner 에 의해서 열리면, `page=about&a=apple&b=banana` 가 전달된다. 공유된 링크가 클릭되어 webUrl 이 열리면, webUrl 의 맨 끝에 `?page=about&a=appple&b=banana` 가 붙어서 webUrl 로 redirect 된다. 즉, 앱이나 웹 등에서 각 로직에 맞게 적절이 코딩을 하면 되는 것이다.
+
 
 
 
 ## 링크 탭되어 앱 또는 웹이 열린 경우 처리 방법
 
+- 앱이 열리는 경우, pub.dev 의 [app_links](https://pub.dev/packages/app_links) 패키지를 이용해서 입력 값을 받아서 적절한 조치를 하면 된다.
+  - 앱이 OS 에 의해서 바로 열리지 않고, 웹 사이트 내에서 smart app banner 에 의해서 열리는 경우도 동일한 입력 값이 전달되므로 앱 내에서 처리하는 로직은 동일하다.
 
 
-pub.dev 의 [app_links](https://pub.dev/packages/app_links) 패키지를 이용해서 링크 클릭으로 앱이 열릴 때, 조치를 하면 된다.
+- OS 가 앱을 열지 않고, 웹 브라우저를 열어서 공유 링크 페이지를 여는 경우
+  - iOS 에서는 appStoreUrl 을 열고
+  - Android 에서는 playStoreUrl 을 열고
+  - Desktop 에서는 webUrl 을 연다.
+  
+  이 때, webUrl 을 열 때, 맨 끝에 query parameter 를 추가해 준다. 예를 들어 공유 링크가 `https://domain.com/link?a=b` 와 같고, webUrl 이 `https://domain.com/weblink` 와 같다면, desktop 에서는 `https://domain.com/weblink?a=b` 가 열린다. 그래서 웹 사이트에서 적절한 조치를 취하면 된다.
 
+  OS 에서 앱을 바로 열지 못하고 웹 브라우저가 열릴 때, iOS 에서 Smart App Banner 를 보여주는 경우가 있다. 이 때, 앱을 실행하면 query parameter 가 앱으로 전달된다. 즉, OS 가 앱을 바로 열 때, query parameter 가 앱으로 전달되는게 그것과 동일한 값이 Smart App Banner 로 열어도 전달되도록 HTML 에 패치를 해 놓았다.
 
 
 
@@ -190,7 +225,15 @@ pub.dev 의 [app_links](https://pub.dev/packages/app_links) 패키지를 이용�
 
 그리고 아래와 같이 테스트를 한다.
 
-
 ```sh
 % curl "http://127.0.0.1:5001/silbus/us-central1/link?pid=-Nvgu90BBbLTz-vP-EJy"
+```
+
+
+## 배포하는 방법
+
+아래와 같이 하면 eslint --fix 를 하고 배포한다.
+
+```sh
+% npm run deploy:link
 ```

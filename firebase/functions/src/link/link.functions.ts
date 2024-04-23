@@ -33,7 +33,7 @@ const defaultHtml = `<!DOCTYPE html>
 
     <meta property="og:title" content="#{{title}}" />
     <meta property="og:description" content="#{{description}}" />
-    <meta property="og:image" content="#{{previewImageUrl}}" />
+    <meta property="og:image" content="#{{imageUrl}}" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
 
@@ -41,7 +41,7 @@ const defaultHtml = `<!DOCTYPE html>
     <meta name="twitter:title" content="#{{title}}" />
     <meta name="twitter:site" content="#{{webUrl}}" />
     <meta name="twitter:description" content="#{{description}}" />
-    <meta name="twitter:image" content="#{{previewImageUrl}}" />
+    <meta name="twitter:image" content="#{{imageUrl}}" />
     
     <style>
       .centered {
@@ -82,7 +82,7 @@ const defaultHtml = `<!DOCTYPE html>
       var appStoreUrl = "#{{appStoreUrl}}";
       var playStoreUrl = "#{{playStoreUrl}}";
       
-      console.log('--- detect os', os);
+      console.log('---> Detected os', os, userAgent);
 
       if (os === "iOS") {
         alert(appStoreUrl);
@@ -99,7 +99,7 @@ const defaultHtml = `<!DOCTYPE html>
         }
       } else if ( os === "Desktop" ) {
         if ( webUrl ) {
-          window.location.replace(webUrl);
+          window.location.replace(webUrl + '?' + "#{{query}}");
         }
         else {
           alert("Web URL is empty");
@@ -148,7 +148,7 @@ async function getPreview(uid: any, pid: any, cid: any): Promise<{ [key: string]
   return {
     title: "Empty ID",
     description: "The ID is empty! Please provide a valid ID of post, user or chat room.",
-    previewImageUrl: "https://via.placeholder.com/150",
+    imageUrl: "https://via.placeholder.com/150",
   };
 }
 
@@ -168,7 +168,7 @@ async function getPostPreview(pid: string): Promise<{ [key: string]: string }> {
     const data = {} as { [key: string]: string };
     if (post.title) data["title"] = post.title;
     if (post.content) data["description"] = post.content;
-    if (post.url) data["previewImageUrl"] = post.url;
+    if (post.url) data["imageUrl"] = post.url;
     return data;
   } else {
     return {
@@ -189,7 +189,7 @@ async function getUserPreview(uid: string): Promise<{ [key: string]: string }> {
     const data = {} as { [key: string]: string };
     if (user.displayName) data["title"] = user.displayName;
     if (user.stateMessage) data["description"] = user.stateMessage;
-    if (user.photoUrl) data["previewImageUrl"] = user.photoUrl;
+    if (user.photoUrl) data["imageUrl"] = user.photoUrl;
     return data;
   } else {
     return {
@@ -211,7 +211,7 @@ async function getChatPreview(cid: string): Promise<{ [key: string]: string }> {
     const data = {} as { [key: string]: string };
     if (chatRoom.name) data["title"] = chatRoom.name;
     if (chatRoom.description) data["description"] = chatRoom.description;
-    if (chatRoom.iconUrl) data["previewImageUrl"] = chatRoom.iconUrl;
+    if (chatRoom.iconUrl) data["imageUrl"] = chatRoom.iconUrl;
     return data;
   } else {
     return {
@@ -285,7 +285,6 @@ expressApp.get("*", async (req, res) => {
   const path = (req.query.path ?? "") as string;
 
 
-
   // Get app data
   const snapshot = await getDeeplinkDoc("apps", res);
   if (!snapshot.exists) {
@@ -304,9 +303,6 @@ expressApp.get("*", async (req, res) => {
   } else {
     previewDetails = await getPreview(req.query.uid, req.query.pid, req.query.cid);
   }
-
-  console.log("---> previewDetails", previewDetails);
-
   appData = {
     ...appData,
     ...previewDetails,
