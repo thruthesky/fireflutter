@@ -278,11 +278,11 @@ expressApp.get("*", async (req, res) => {
   // TODO For confirmation
   // const path = (req.query.path ?? "") as string;
 
-  const map = (snapshot.data() ?? {}) as { [key: string]: { [key: string]: string } };
+  const map = snapshot.data() as { [key: string]: { [key: string]: string } };
 
   const previewDetails = await getPreview(pid, cid, uid);
 
-  let appData: { [key: string]: string } = map["default"] ?? {};
+  let appData: { [key: string]: string } = map["default"];
 
   if (appName && map[appName]) {
     appData = map[appName];
