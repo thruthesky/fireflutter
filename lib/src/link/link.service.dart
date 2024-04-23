@@ -10,9 +10,9 @@ class LinkService {
 
   String get prefix {
     if (app == null) {
-      return '$urlPrefix/link';
+      return '$urlPrefix/link?';
     } else {
-      return '$urlPrefix/link?app=$app';
+      return '$urlPrefix/link?app=$app&';
     }
   }
 
