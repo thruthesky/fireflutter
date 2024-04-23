@@ -40,9 +40,9 @@ async function getRtdbSnapshot(path: string): Promise<DataSnapshot> {
  * @returns
  */
 async function getPreview(pid?: string, uid?: string, cid?: string): Promise<{ [key: string]: string }> {
-  if (pid) return getPostPreview(pid);
-  if (uid) return getUserPreview(uid);
-  if (cid) return getChatPreview(cid);
+  if (pid) return await getPostPreview(pid);
+  if (uid) return await getUserPreview(uid);
+  if (cid) return await getChatPreview(cid);
   return {};
 }
 
@@ -56,7 +56,7 @@ async function getPostPreview(pid: string): Promise<{ [key: string]: string }> {
   // In RTDB, the cost is based on the data transfered not per read.
   // In this code, the snapshot is getitng all the details under the post.
   // Will it be better if we get value one by one?
-  const docSnap = await getRtdbSnapshot(`posts/${pid}/preview`);
+  const docSnap = await getRtdbSnapshot(`post-all-summaries/${pid}`);
   if (docSnap.exists()) {
     const post = docSnap.val();
     return {
@@ -77,7 +77,7 @@ async function getUserPreview(uid: string): Promise<{ [key: string]: string }> {
   if (docSnap.exists()) {
     const user = docSnap.val();
     return {
-      title: user.name,
+      title: user.displayName,
       description: user.stateMessage,
       previewImageLink: user.photoUrl,
     };
@@ -269,11 +269,11 @@ expressApp.get("*", async (req, res) => {
   const appName = (req.query.appName ?? "") as string;
 
   // Post
-  const pid = (req.query.pid ?? "") as string;
+  const pid = req.query.pid as string | undefined;
   // Chat Room
-  const cid = (req.query.cid ?? "") as string;
+  const cid = req.query.cid as string | undefined;
   // User
-  const uid = (req.query.uid ?? "") as string;
+  const uid = req.query.uid as string | undefined;
 
   // TODO For confirmation
   // const path = (req.query.path ?? "") as string;
