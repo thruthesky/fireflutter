@@ -92,6 +92,7 @@ Firebase Hosting 에 대한 충분한 이해가 필요하다.
 ## 링크 생성해서 공유하기
 
 먼저 Firestore 의 `_link_` 컬렉션의 `apps` 문서에 `default` 키의 값은 아래와 같은 맵데이터를 저장한다.
+
 ```json
 _link_/apps
   {
@@ -110,6 +111,13 @@ _link_/apps
     }
   }
 ```
+
+실제 예제 화면
+
+
+![Dynamic Link Firestore Setting](https://github.com/thruthesky/fireflutter/blob/main/docs/assets/images/dynamic_link_firestore.jpg?raw=true)
+
+
 
 위의 값에서 `title`, `descriptoin` 은 입력되는 값에 따라 적절히 대체된다.
 `default` 에 저장하는 이유는 링크가 `?app=abc&pid=xxx` 와 같이 하나의 Firebase 에 여러앱이 있는 경우, `app` 이 들어오는 데, 만약 이 값이 없다면 기본 `default` 를 쓰기 위해서이다.
