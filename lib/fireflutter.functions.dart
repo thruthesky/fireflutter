@@ -104,21 +104,23 @@ Future<void> alert({
   required String title,
   required String message,
 }) async {
-  return showDialog<void>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('닫기'),
-          ),
-        ],
+  return FireFlutterService.instance.alertDialog
+          ?.call(context: context, title: title, message: message) ??
+      showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('닫기'),
+              ),
+            ],
+          );
+        },
       );
-    },
-  );
 }
 
 /// Display a snackbar
@@ -307,50 +309,58 @@ Future<String?> input({
   int? minLines,
   int? maxLines,
 }) {
-  return showDialog<String?>(
-    context: context,
-    builder: (BuildContext context) {
-      final controller = TextEditingController(text: initialValue);
-      return AlertDialog(
-        title: Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (subtitle != null) ...[
-              Text(subtitle),
-              const SizedBox(height: 24),
-            ],
-            TextField(
-              controller: controller,
-              decoration: InputDecoration(
-                hintText: hintText,
-              ),
-              minLines: minLines,
-              maxLines: maxLines,
+  return FireFlutterService.instance.inputDialog?.call(
+          context: context,
+          title: title,
+          subtitle: subtitle,
+          hintText: hintText,
+          minLines: minLines,
+          maxLines: maxLines,
+          initialValue: initialValue) ??
+      showDialog<String?>(
+        context: context,
+        builder: (BuildContext context) {
+          final controller = TextEditingController(text: initialValue);
+          return AlertDialog(
+            title: Text(
+              title,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
-          ],
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              if (controller.text.isNotEmpty) {
-                Navigator.pop(context, controller.text);
-              }
-            },
-            child: Text(T.ok.tr),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(T.cancel.tr),
-          ),
-        ],
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (subtitle != null) ...[
+                  Text(subtitle),
+                  const SizedBox(height: 24),
+                ],
+                TextField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                  ),
+                  minLines: minLines,
+                  maxLines: maxLines,
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  if (controller.text.isNotEmpty) {
+                    Navigator.pop(context, controller.text);
+                  }
+                },
+                child: Text(T.ok.tr),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(T.cancel.tr),
+              ),
+            ],
+          );
+        },
       );
-    },
-  );
 }
 
 String likeText(int? no) => no == null || no == 0 ? '' : ' ($no)';
