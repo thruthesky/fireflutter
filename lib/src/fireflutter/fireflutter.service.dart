@@ -25,7 +25,7 @@ class FireFlutterService {
 
   String? cloudFunctionRegion;
 
-  /// Error Dialog this callback is used to customize all the confirm functions
+  /// Confirm Dialog this callback is used to customize all the confirm functions
   /// in fireflutter see `lib/fireflutter.functions.dart`
   Future<bool?> Function({
     required BuildContext context,
