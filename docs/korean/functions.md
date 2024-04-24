@@ -59,6 +59,127 @@ Parameters:
 
 커스텀 디자인을 할 수 있다.
 
+```dart
+FireFlutterService.instance.init(
+    cloudFunctionRegion: 'asia-southeast1',
+    globalContext: () =>
+        router.routerDelegate.navigatorKey.currentContext!,
+    alertDialog: ({
+      required BuildContext context,
+      required String? title,
+      required String message,
+    }) {
+      return showDialog<void>(
+        context: globalContext,
+        builder: (context) => RohaAlertDialog(
+          title: title,
+          message: message,
+        ),
+      );
+    },
+  );
+
+
+import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
+import 'package:roha/font_awesome/lib/font_awesome_flutter.dart';
+import 'package:roha/global.dart';
+
+class RohaAlertDialog extends StatelessWidget {
+  const RohaAlertDialog({
+    super.key,
+    this.title,
+    required this.message,
+  });
+
+  final String? title;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Colors.transparent,
+      shadowColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      content: Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 20),
+            padding: const EdgeInsets.all(8),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: context.colorScheme.background,
+              border: Border.all(
+                color: Colors.white,
+                width: 1.8,
+              ),
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Container(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (title != null)
+                      Text(
+                        title!,
+                        style: context.titleMedium,
+                      ),
+                    spaceSm,
+                    Text(
+                      message,
+                      style: context.labelMedium,
+                    ),
+                    Row(
+                      children: [
+                        const Spacer(),
+                        TextButton(
+                          onPressed: () => Navigator.pop(
+                            context,
+                          ),
+                          child: Text(T.ok.tr),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 24,
+            child: Container(
+              height: 43,
+              width: 43,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: context.colorScheme.background,
+                  width: 1.8,
+                ),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Center(
+                child: FaIcon(
+                  title == 'chatUsageGuide'.tr
+                      ? FontAwesomeIcons.solidMessageBot
+                      : FontAwesomeIcons.solidCircleExclamation,
+                  color: context.colorScheme.onBackground,
+                  size: 22,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
 
 ## 확인 다이얼로그 - Confirm Dialog
 
@@ -379,6 +500,155 @@ Parameters:
 InputDialog 도 ErrorDialog 처럼 커스텀 디자인을 할 수 있다.
 
 
+
+```dart
+FireFlutterService.instance.init(
+    cloudFunctionRegion: 'asia-southeast1',
+    globalContext: () =>
+        router.routerDelegate.navigatorKey.currentContext!,
+    inputDialog: ({
+      required BuildContext context,
+      required String title,
+      required String? subtitle,
+      required String hintText,
+      required String? initialValue,
+      required int? minLines,
+      required int? maxLines,
+    }) async {
+      return await showDialog<String?>(
+          context: globalContext,
+          builder: (context) => RohaInputDialog(
+                title: title,
+                subtitle: subtitle,
+                hintText: hintText,
+                minLines: minLines,
+                maxLines: maxLines,
+                initialValue: initialValue,
+              ));
+    });
+
+
+import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
+import 'package:roha/font_awesome/lib/font_awesome_flutter.dart';
+import 'package:roha/global.dart';
+
+class RohaInputDialog extends StatelessWidget {
+  const RohaInputDialog(
+      {super.key,
+      required this.title,
+      required this.subtitle,
+      required this.hintText,
+      required this.minLines,
+      required this.maxLines,
+      required this.initialValue});
+
+  final String title;
+  final String? subtitle;
+  final String hintText;
+  final int? minLines;
+  final int? maxLines;
+  final String? initialValue;
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = TextEditingController(text: initialValue);
+
+    return AlertDialog(
+      backgroundColor: Colors.transparent,
+      shadowColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      content: Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 20),
+            padding: const EdgeInsets.all(8),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: context.colorScheme.background,
+              border: Border.all(
+                color: Colors.white,
+                width: 1.8,
+              ),
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  spaceSm,
+                  ...[
+                    Text(
+                      subtitle!,
+                      style: context.labelMedium,
+                    ),
+                    spaceSm,
+                  ],
+                  TextField(
+                    controller: controller,
+                    decoration: InputDecoration(
+                      hintText: hintText,
+                    ),
+                    minLines: minLines,
+                    maxLines: maxLines,
+                  ),
+                  spaceSm,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          if (controller.text.isNotEmpty) {
+                            Navigator.pop(context, controller.text);
+                          }
+                        },
+                        child: Text(T.ok.tr),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(T.cancel.tr),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+            left: 24,
+            child: Container(
+              height: 43,
+              width: 43,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: context.colorScheme.background,
+                  width: 1.8,
+                ),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Center(
+                child: FaIcon(
+                  FontAwesomeIcons.solidCircleExclamation,
+                  color: context.colorScheme.error,
+                  size: 24,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+```
 
 
 
