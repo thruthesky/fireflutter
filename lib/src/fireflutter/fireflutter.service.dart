@@ -25,19 +25,41 @@ class FireFlutterService {
 
   String? cloudFunctionRegion;
 
-  /// Confirm Dialog
+  /// Error Dialog this callback is used to customize all the confirm functions
+  /// in fireflutter see `lib/fireflutter.functions.dart`
   Future<bool?> Function({
     required BuildContext context,
     required String? title,
     required String message,
   })? confirmDialog;
 
-  /// Error Dialog
+  /// Error Dialog this callback is used to customize all the error functions in
+  /// fireflutter see `lib/fireflutter.functions.dart`
   Future<bool?> Function({
     required BuildContext context,
     required String? title,
     required String message,
   })? errorDialog;
+
+  /// Alert Dialog this callback is use to customize the alert functions in fireflutter
+  /// see `lib/fireflutter.functions.dart`
+  Future<void> Function({
+    required BuildContext context,
+    required String? title,
+    required String message,
+  })? alertDialog;
+
+  /// Input Dialog this callback is used to customize all the input functions
+  /// in fireflutter. see `lib/fireflutter.functions.dart`
+  Future<String?> Function({
+    required BuildContext context,
+    required String title,
+    required String? subtitle,
+    required String hintText,
+    required String? initialValue,
+    required int? minLines,
+    required int? maxLines,
+  })? inputDialog;
 
   init({
     String? cloudFunctionRegion,
@@ -52,10 +74,26 @@ class FireFlutterService {
       required String? title,
       required String message,
     })? errorDialog,
+    Future<void> Function({
+      required BuildContext context,
+      required String? title,
+      required String message,
+    })? alertDialog,
+    Future<String?> Function({
+      required BuildContext context,
+      required String title,
+      required String? subtitle,
+      required String hintText,
+      required String? initialValue,
+      required int? minLines,
+      required int? maxLines,
+    })? inputDialog,
   }) {
     _globalContext = globalContext;
     this.cloudFunctionRegion = cloudFunctionRegion;
     this.confirmDialog = confirmDialog;
     this.errorDialog = errorDialog;
+    this.alertDialog = alertDialog;
+    this.inputDialog = inputDialog;
   }
 }
