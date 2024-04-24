@@ -53,6 +53,13 @@ Parameters:
     - default: 12
     - spacing between the icon and the message
 
+
+## 알림 다이얼로그 - AlertDialog
+
+
+커스텀 디자인을 할 수 있다.
+
+
 ## 확인 다이얼로그 - Confirm Dialog
 
 The `confirm` is a prompt that will let the user choose from yes or no.
@@ -343,7 +350,7 @@ class SilverErrorDialog extends StatelessWidget {
 ```
 
 
-## input
+## 입력 박스 - Input Dialog
 
 The `input` function can be used to ask for an input from user.
 
@@ -367,6 +374,12 @@ Parameters:
     - hintText for the input box
 - String initialValue
     - the default input value
+
+
+InputDialog 도 ErrorDialog 처럼 커스텀 디자인을 할 수 있다.
+
+
+
 
 
 
