@@ -16,6 +16,7 @@ class ChatMessageInputBox extends StatefulWidget {
 
   final ChatModel chat;
 
+  /// TODO - 이 것은 chat customize 로 들어가야 하나?
   final Widget? cameraIcon;
   final Widget? sendIcon;
 
@@ -60,36 +61,51 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
               focusedBorder: InputBorder.none,
               hintText: T.pleaseEnterMessage.tr,
               hintMaxLines: 1,
-              prefixIcon: IconButton(
-                icon: widget.cameraIcon ?? const Icon(Icons.camera_alt),
-                onPressed: () async {
-                  /// 인증된 사용자만 파일 전송 옵션
-                  if (widget.chat.room.uploadVerifiedUserOnly &&
-                      iam.notVerified) {
-                    return error(
-                        context: context, message: T.notVerifiedMessage.tr);
-                  }
-                  final url = await StorageService.instance.upload(
-                    context: context,
-                    // Review
-                    camera: true,
-                    gallery: true,
-                    progress: (p) => widget.onProgress?.call(p) ?? mounted
-                        ? setState(() => progress = p)
-                        : null,
-                    complete: () => widget.onProgress?.call(null) ?? mounted
-                        ? setState(() => progress = null)
-                        : null,
-                  );
-
-                  await send(url: url);
-                  widget.onSend?.call(text: null, url: url);
-                },
-              ),
-              suffixIcon: Row(
+              prefixIcon: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
+                    padding: const EdgeInsets.only(top: 10),
+                    visualDensity: VisualDensity.compact,
+                    icon: widget.cameraIcon ?? const Icon(Icons.camera_alt),
+                    onPressed: () async {
+                      /// 인증된 사용자만 파일 전송 옵션
+                      if (widget.chat.room.uploadVerifiedUserOnly &&
+                          iam.notVerified) {
+                        return error(
+                            context: context, message: T.notVerifiedMessage.tr);
+                      }
+                      final url = await StorageService.instance.upload(
+                        context: context,
+                        // Review
+                        camera: true,
+                        gallery: true,
+                        progress: (p) => widget.onProgress?.call(p) ?? mounted
+                            ? setState(() => progress = p)
+                            : null,
+                        complete: () => widget.onProgress?.call(null) ?? mounted
+                            ? setState(() => progress = null)
+                            : null,
+                      );
+
+                      await send(url: url);
+                      widget.onSend?.call(text: null, url: url);
+                    },
+                  ),
+                  ChatService
+                          .instance.customize.messageInputBoxPrefixIconBuilder
+                          ?.call(widget.chat) ??
+                      const SizedBox.shrink(),
+                ],
+              ),
+              suffixIcon: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    padding: const EdgeInsets.only(top: 10),
+                    visualDensity: VisualDensity.compact,
                     icon: widget.sendIcon ?? const Icon(Icons.send),
                     onPressed: () async {
                       String text = inputController.text.trim();

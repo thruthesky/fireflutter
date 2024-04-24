@@ -14,6 +14,8 @@ class ChatCustomize {
     String? roomId,
   })? chatRoomEditDialogBuilder;
 
+  final Widget Function(ChatModel chat)? messageInputBoxPrefixIconBuilder;
+
   /// Customization for chat bubble inside DefaultChatRoomScreen
   final Widget Function({
     required BuildContext context,
@@ -26,5 +28,6 @@ class ChatCustomize {
     this.chatRoomInviteButton,
     this.chatBubbleBuilder,
     this.chatRoomEditDialogBuilder,
+    this.messageInputBoxPrefixIconBuilder,
   });
 }
