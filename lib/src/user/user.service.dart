@@ -53,16 +53,6 @@ class UserService {
   Function(User)? onCreate;
   Function(User)? onUpdate;
 
-  /// Set the region of the callable function.
-  ///
-  /// To call callable function in Firebase cloud functions, you need to set the region.
-  ///
-  /// This is used when the user resigns and deletes the user data. You may not need to set this,
-  /// if you don't use the resign function or any callable functions.
-  @Deprecated(
-      'Use FireFlutterService.init(cloudFunctionRegion: region) instead')
-  String? callableFunctionRegion;
-
   /// 로그인을 하지 않고 로그인이 필요한 action 을 한 경우, 이 콜백 함수를 정의해서 에러 핸들링을 할 수 있다.
   Function({
     required BuildContext context,
@@ -75,9 +65,6 @@ class UserService {
   }
 
   init({
-    @Deprecated(
-        'Use FireFlutterService.init(cloudFunctionRegion: region) instead')
-    String? callableFunctionRegion,
     bool enablePushNotificationOnPublicProfileView = false,
     bool enableNotificationOnLike = false,
     Function({
@@ -91,9 +78,6 @@ class UserService {
     Function(User user)? onCreate,
     Function(User user)? onUpdate,
   }) {
-    // dog('--> UserService.init()');
-
-    this.callableFunctionRegion = callableFunctionRegion;
     this.loginRequired = loginRequired;
 
     initUser();

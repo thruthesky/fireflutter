@@ -56,7 +56,7 @@ Value(path: Path.phoneNumber, builder: (v) => Text(v ?? ''))
 `onLoading` 에 loader 아이콘을 보여 줄 수도 있고, 기본 위젯을 보여주어 화면에 반짝임을 줄 일 수 있다.
 
 ```dart
-Database(
+Value(
   path: post.ref.child(Field.noOfLikes).path,
   builder: (no) => Text('좋아요${likeText(no)}'),
   onLoading: const Text('좋아요'),
@@ -76,3 +76,8 @@ Value.once(
 ## User Database
 
 See [user document](user.md).
+
+
+## User Settings
+
+`SettingValue` 라는 위젯이 있는데, 이 위젯은 단순히 `Value` 를 wrapping 한 것으로 사용자의 설정 값을 업데이트 할 때 쉽게 사용 할 수 있다.

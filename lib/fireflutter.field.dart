@@ -34,6 +34,7 @@ class Field {
   static const String photoUrl = 'photoUrl';
   static const String hasPhotoUrl = 'hasPhotoUrl';
   static const String profileViewNotification = 'profileViewNotification';
+  static const String commentNotification = 'commentNotification';
 
   static const String order = 'order';
   static const String deleted = 'deleted';

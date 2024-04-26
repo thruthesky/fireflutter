@@ -20,15 +20,6 @@ export const managePostsSummary = onValueWritten(
         } else if (isDelete(event)) {
             await PostService.deleteSummary(event.params.category, event.params.postId);
         }
-
-        // if (!event.data.after.exists()) {
-        //     // Data deleted
-        //     const db = getDatabase();
-        //     db.ref(`${Config.postSummaries}/${event.params.category}/${event.params.postId}`).remove();
-        //     db.ref(`${Config.postAllSummaries}/${event.params.postId}`).remove();
-        // }
-        // // Data created/updated
-        // return PostService.setSummary(event.data.after.val(), event.params.category, event.params.postId);
     },
 );
 

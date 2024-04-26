@@ -29,13 +29,13 @@ import 'package:firebase_database/firebase_database.dart';
 class Value extends StatelessWidget {
   const Value({
     super.key,
-    this.ref,
+    required this.ref,
     required this.builder,
     this.initialData,
     this.onLoading,
   });
 
-  final DatabaseReference? ref;
+  final DatabaseReference ref;
 
   final dynamic initialData;
 
@@ -47,7 +47,7 @@ class Value extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: ref?.onValue,
+      stream: ref.onValue,
       builder: (context, AsyncSnapshot<DatabaseEvent> event) {
         if (event.connectionState == ConnectionState.waiting) {
           if (event.hasData) {
@@ -58,7 +58,7 @@ class Value extends StatelessWidget {
           return onLoading ?? const SizedBox.shrink();
         }
         if (event.hasError) {
-          return Text('Error; path: ${ref?.path}, message: ${event.error}');
+          return Text('Error; path: ${ref.path}, message: ${event.error}');
         }
         // value may be null.
         return builder(event.data?.snapshot.value);
@@ -74,17 +74,13 @@ class Value extends StatelessWidget {
   ///
   /// [path] 와 [ref] 둘 중 하나는 반드시 있어야 한다.
   static Widget once({
-    @Deprecated('Use ref instead of path') String? path,
-    DatabaseReference? ref,
+    required DatabaseReference? ref,
     required Widget Function(dynamic value) builder,
     dynamic initialData,
     Widget? onLoading,
   }) {
-    if (path == null && ref == null) {
-      throw ArgumentError('path or ref must be not null');
-    }
     return FutureBuilder(
-      future: ref?.once() ?? FirebaseDatabase.instance.ref(path).once(),
+      future: ref?.once(),
       builder: (context, AsyncSnapshot<DatabaseEvent> event) {
         if (event.connectionState == ConnectionState.waiting) {
           if (event.hasData) {
@@ -95,7 +91,7 @@ class Value extends StatelessWidget {
           return onLoading ?? const SizedBox.shrink();
         }
         if (event.hasError) {
-          dog('---> Value.once() -> Error; path: ${ref?.path ?? path}, message: ${event.error}');
+          dog('---> Value.once() -> Error; path: ${ref?.path}, message: ${event.error}');
           return Text('Error; ${event.error}');
         }
 

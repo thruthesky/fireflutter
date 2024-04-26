@@ -121,6 +121,8 @@ class Comment {
   /// final post = Comment.fromPost(post);
   /// ```
   ///
+  /// 새로 작성. 이 때, comment ID 가 ref.push() 로 만들어 진다. 그러나 아직 DB 에는 없는 상태이다.
+  ///
   factory Comment.fromPost(Post post) {
     final fakeRef = Comment.postComments(post.id).push();
     return Comment(
@@ -238,7 +240,10 @@ class Comment {
 
   /// Create a comment
   ///
-  /// It's the instance member method. Not a static method.
+  /// It's the instance member method. Not a static method. The commend ID is
+  /// already inside the object.
+  ///
+  /// 코멘트 쓰기의 경우, 현재 객체에 ID 가 이미 생성되어 있으므로, ref.set() 으로 생성(저장)하면 된다.
   ///
   /// Note that, this is NOT a static method. It is an instance method that
   /// uses the properties of current instance.

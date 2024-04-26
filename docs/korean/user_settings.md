@@ -2,8 +2,10 @@
 
 - `user-settings/<uid>` 에 사용자 설정이 저장된다.
 
-- `enablePushNotificationOnProfileView` 에 true 를 저장하면, 누가 나의 프로필을 보면 나에게 푸시 알림이 도착한다.
-  단, `UserService.instance.init(enablePushNotificationOnProfileView: true)` 와 같이 설정을 해야지만, 푸시 알림이 동작한다.
+- `/user-settings/<uid>/{profileViewNotification: true}` 와 같이 `profileViewNotification` 에 true 를 저장하면, 누가 나의 프로필을 보면 나에게 푸시 알림이 도착한다.
+
+
+- `/user-settings/<uid>/{commentNotification: true}` 와 같이 `commentNotification` 에 true 를 저장하면, 누가 나의 글 또는 코멘트 아래에 새 코멘트를 자겅하면 나에게 푸시 알림이 도착한다.
 
 
 - `langaugeCode` 언어 코드 설정. 사용자가 쓰는 기본 언어이다. 이 값은 앱이 최초 실행 될 때, 핸드폰에서 사용하는 언어가 설정이 되도록 해 주면 좋다. 그리고 설정에서 수정 할 수 있도록 하면 된다.
@@ -79,5 +81,22 @@ DefaultUserSettings(
       ],
     );
   },
+),
+```
+
+
+## 사용자 설정 추천 코딩 방법
+
+아래와 같이 `UserSettingValue` 를 통해서 개별 field 를 observe 해서, callback 의 `ref` 를 통해서 바로 업데이트하는 것을 추천한다. 물론 `UserService` 나 `User` 모델을 통해서 업데이트를 할 수도 있다.
+
+```dart
+UserSettingValue(
+  field: Field.profileViewNotification,
+  builder: (v, ref) => SwitchListTile(
+    value: v == true,
+    onChanged: (value) => ref.set(value),
+    title: const Text("프로필 알림"),
+    subtitle: const Text("누군가 나의 프로필을 보면 알림을 받습니다."),
+  ),
 ),
 ```

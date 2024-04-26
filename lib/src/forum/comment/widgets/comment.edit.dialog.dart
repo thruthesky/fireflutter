@@ -46,6 +46,7 @@ class _CommentEditDialogState extends State<CommentEditDialog> {
       _comment = widget.comment;
       contentController.text = comment.content;
     } else {
+      // 새로 작성. 이 때, comment ID 가 ref.push() 로 만들어 진다.
       _comment = Comment.fromPost(widget.post!);
     }
 
