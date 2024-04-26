@@ -1,18 +1,18 @@
 # 게시판
 
-## Database strucuture
+## 게시판 데이터베이스 구조
 
-- `/post-summary/<category>` is for listing posts in a category list. It will have a summary of the post.
-    - It includes `64 letters of title`, `128 letters of content`, `category`, `id`, `uid`, `createdAt`, `order`.
-    - it does not include `no of likes`, `no of comments`. It needs to get those information from `/posts`.
-    - The client app is reponsible to manage(crud) the summary posts under `/post-summary/<category>`.
-- `posts` is for saving all the post data.
-- `posts/<category>/<postId>/comments` is for saving the comments for the post.
+- `posts/<category>` 에 앱이 모든 글과 코멘트를 저장해야 한다.
+  - `/posts/<category>/<post-id>/comments` 에 앱이 코멘트를 저장해야 한다.
 
-- `/post-all-summary` is a place(path) that all post summaries are being saved.
-    - You can use this data to display all the posts of all categories in the same page.
-    - The data under `/post-all-summary` is managed by cloud functions. And you need to install `managePostAllSummary` cloud function to make it work.
-    - See install.md to know how to install `managePostAllSummary` function.
+- `post-summaries/<category>` 에는 글 제목, 내용 등 짧은 요약 내용만 저장된다. 직접 여기에 저장 할 필요가 없다. Cloud functions 이 자동으로 저장한다.
+
+- `post-all-summaries` 에는 모든 글이 카테고리 구분없이 저장된다. 카테고리 구분 없이 모든 글을 목록하고자 할 때 사용 할 수 있다.
+
+- 참고로, summary 는 cloud function 이 자동으로 저장하므로 앱에서 저장 할 필요 없다.
+- 참고로 summary 는 최대 64 글자의 제목과 128 자의 내용, category, id, uid, createdAt, order 등이 저장된다. `no of like` 나 `no of comments` 는 저장되지 않는다. 필요한 필드 값이 있다면, `posts/<category>/<id>` 에 해당 필드만 읽으면 된다. 전체를 다 읽을 필요가 없다.
+
+
 
 ## Coding Guideline
 
