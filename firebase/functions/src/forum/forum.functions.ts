@@ -29,7 +29,7 @@ export const managePostsSummary = onValueWritten(
  * 새 글이 작성되면 메시지를 전송한다.
  */
 export const sendMessagesToCategorySubscribers = onValueCreated(
-    "/posts/{category}/{id}",
+    `${Config.posts}/{category}/{id}`,
     async (event) => {
         // Grab the current value of what was written to the Realtime Database.
         const data = event.data.val() as PostCreateEvent;
@@ -45,3 +45,30 @@ export const sendMessagesToCategorySubscribers = onValueCreated(
 
         await MessagingService.sendMessagesToCategorySubscribers(post);
     });
+
+
+
+
+/**
+ * 내 글(또는) 아래에 새 코멘트가 작성되면 메시지를 전송한다.
+ *
+ * TODO : Background Trigger Unit TEST 를 할 것.
+ */
+export const sendMessagesToCommentSubscribers = onValueCreated(
+    "/posts/{category}/{id}/comments/{commentId}",
+    async (event) => {
+        // Grab the current value of what was written to the Realtime Database.
+        const data = event.data.val() as PostCreateEvent;
+
+        const post: PostCreateEventMessage = {
+            id: event.params.id,
+            category: event.params.category,
+            title: data.title ?? "",
+            body: data.content ?? "",
+            uid: data.uid,
+            image: data.urls?.[0] ?? "",
+        };
+
+        await MessagingService.sendMessagesToCategorySubscribers(post);
+    });
+

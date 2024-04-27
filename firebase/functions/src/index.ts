@@ -27,4 +27,4 @@ export * from "./chat/chat.functions";
 export * from "./link/link.functions";
 export * from "./mirror/forum.mirror.functions";
 export * from "./mirror/mirror-backfill.functions";
-
+export * from "./test/test.functions";

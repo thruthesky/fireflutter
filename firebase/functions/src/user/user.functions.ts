@@ -72,7 +72,6 @@ export const userMirror = onValueWritten(
         const firestore = getFirestore();
         const userUid = event.params.uid;
 
-
         if (!event.data.after.exists()) {
             console.log("--> Deleting user data; uid: ", userUid);
             // Deleted

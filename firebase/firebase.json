@@ -39,14 +39,14 @@
       "port": 5001
     },
     "database": {
-      "port": 6004
+      "port": 46004
     },
     "ui": {
       "enabled": true
     },
     "singleProjectMode": true,
     "firestore": {
-      "port": 4040
+      "port": 44040
     },
     "auth": {
       "port": 9099
