@@ -32,6 +32,8 @@ export class Config {
     static postAllSummaries = "post-all-summaries";
     static postSubscriptions = "post-subscriptions";
 
+    static comments = "comments";
+
 
     // Command paths
     static commands = "commands";

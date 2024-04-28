@@ -1,5 +1,5 @@
 import { getDatabase } from "firebase-admin/database";
-import { PostCreateEvent, PostSummary, PostSummaryAll } from "./forum.interface";
+import { Post, PostCreateEvent, PostSummary, PostSummaryAll } from "./forum.interface";
 import { Config } from "../config";
 
 /**
@@ -7,6 +7,38 @@ import { Config } from "../config";
  *
  */
 export class PostService {
+
+    /**
+     * 글을 가져와 리턴한다.
+     * 만약, 글의 특정 필드만 가져오고 싶다면, getField 를 사용한다.
+     * 
+     * @param category 카테고리
+     * @param postId 글 아이디
+     * @returns 글 내용
+     */
+    static async get(category: string, postId: string): Promise<Post> {
+        const db = getDatabase();
+        const data = (await db.ref(`${Config.posts}/${category}/${postId}`).get()).val();
+        return data as Post;
+
+    }
+
+    /**
+     * 글 필드 내용을 가져와 리턴한다.
+     * 
+     * @param category 카테고리
+     * @param postId 글 아이디
+     * @param field 필드
+     * @returns 필드의 내용을 리턴한다.
+     */
+    static async getField(category: string, postId: string, field: string): Promise<Post | any> {
+        const db = getDatabase();
+        const data = (await db.ref(`${Config.posts}/${category}/${postId}/${field}`).get()).val();
+        return data as any;
+
+    }
+
+
     /**
      * Sets the summary of the post in `post-summaries` and `post-all-summary`
      *

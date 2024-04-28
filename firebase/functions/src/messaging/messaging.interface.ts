@@ -57,6 +57,22 @@ export interface PostCreateEventMessage {
     image: string;
 }
 
+
+/**
+ * CommentCreateEvent 에서 push notification 을 보내기 위한 데이터 타입이다.
+ */
+export interface CommentCreateEventMessage {
+    // comment id.
+    id: string;
+    category: string;
+    postId: string;
+    title: string;
+    body: string;
+    uid: string;
+    image: string;
+}
+
+
 export interface UserLikeEvent {
     uid: string;
     otherUid: string;

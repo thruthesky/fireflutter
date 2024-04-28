@@ -3,7 +3,7 @@ import { onValueCreated, onValueWritten } from "firebase-functions/v2/database";
 import { PostService } from "./post.service";
 import { Config } from "../config";
 import { PostCreateEvent } from "./forum.interface";
-import { PostCreateEventMessage } from "../messaging/messaging.interface";
+import { CommentCreateEventMessage, PostCreateEventMessage } from "../messaging/messaging.interface";
 import { MessagingService } from "../messaging/messaging.service";
 import { isCreate, isDelete, isUpdate } from "../library";
 
@@ -55,20 +55,21 @@ export const sendMessagesToCategorySubscribers = onValueCreated(
  * TODO : Background Trigger Unit TEST 를 할 것.
  */
 export const sendMessagesToCommentSubscribers = onValueCreated(
-    "/posts/{category}/{id}/comments/{commentId}",
+    "/posts/{category}/{postId}/comments/{commentId}",
     async (event) => {
         // Grab the current value of what was written to the Realtime Database.
         const data = event.data.val() as PostCreateEvent;
 
-        const post: PostCreateEventMessage = {
-            id: event.params.id,
+        const comment: CommentCreateEventMessage = {
+            id: event.params.commentId,
             category: event.params.category,
+            postId: event.params.postId,
             title: data.title ?? "",
             body: data.content ?? "",
             uid: data.uid,
             image: data.urls?.[0] ?? "",
         };
 
-        await MessagingService.sendMessagesToCategorySubscribers(post);
+        await MessagingService.sendMessagesToNewCommentSubscribers(comment);
     });
 

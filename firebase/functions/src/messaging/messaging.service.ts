@@ -1,10 +1,12 @@
 import { SendResponse, getMessaging } from "firebase-admin/messaging";
 import { getDatabase } from "firebase-admin/database";
-import { MessageNotification, MessageRequest, NotificationToUids, PostCreateEventMessage, SendEachMessage, SendTokenMessage, UserLikeEvent } from "./messaging.interface";
+import { CommentCreateEventMessage, MessageNotification, MessageRequest, NotificationToUids, PostCreateEventMessage, SendEachMessage, SendTokenMessage, UserLikeEvent } from "./messaging.interface";
 import { chunk } from "../library";
 import { Config } from "../config";
 import { ChatCreateEvent } from "../chat/chat.interface";
 import { UserService } from "../user/user.service";
+import { PostService } from "../forum/post.service";
+import { CommentService } from "../forum/comment.service";
 
 /**
  * MessagingService
@@ -268,6 +270,25 @@ export class MessagingService {
         id: msg.id, category: msg.category,
       },
     });
+  }
+
+
+  /**
+   * 내 글 또는 코멘트 아래에 새로운 코멘트가 달리는 경우 푸시 알림.
+   *
+   * @param commentCreateEvent 글 정보
+   */
+  static async sendMessagesToNewCommentSubscribers(commentCreateEvent: CommentCreateEventMessage) {
+    // TODO 여기서 부터 유닛 테스트 - 총체적으로 sendMessagesToNewCommentSubscribers 를 background trigger unit test 를 할 것.
+    // 글의 uid 를 가져온다.
+    const postAuthorUid = await PostService.getField(commentCreateEvent.category, commentCreateEvent.postId, "uid");
+
+    // 보무 코멘트 들의 uid 들을 가져온다.
+
+    const commentParentUids = await CommentService.getAncestorsUid(commentCreateEvent.postId, commentCreateEvent.id);
+
+
+
   }
 
 

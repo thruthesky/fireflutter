@@ -63,3 +63,18 @@ export interface PostSummaryUpdateEvent {
     url?: string | null;
     deleted?: boolean | null;
 }
+
+
+export interface Comment {
+
+    id: string;
+    postId: string;
+    parentId: string;
+    content: string;
+    uid: string;
+    urls: string[];
+    createdAt: number;
+    likes: Array<string>;
+    deleted?: boolean;
+
+}
