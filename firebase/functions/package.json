@@ -13,6 +13,7 @@
     "deploy": "eslint --fix --ext .js,.ts . && firebase deploy --only functions",
     "deploy:sendPushNotifications": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:sendPushNotifications",
     "deploy:sendMessagesToCategorySubscribers": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:sendMessagesToCategorySubscribers",
+    "deploy:sendMessagesToCommentSubscribers": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:sendMessagesToCommentSubscribers",
     "deploy:sendMessagesToChatRoomSubscribers": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:sendMessagesToChatRoomSubscribers",
     "deploy:message": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:sendPushNotifications,functions:sendMessagesToCategorySubscribers,functions:sendMessagesToChatRoomSubscribers",
     "deploy:forumFunction": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:managePostsSummary",
@@ -45,7 +46,13 @@
     "test:forumRace": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/race-condition.spec.ts --timeout 350000",
     "test:phoneNumberRegister": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/user/phoneNumberRegister.spec.ts --timeout 100000",
     "test:userDeleteAccount": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/user/userDeleteAccount.spec.ts --timeout 5000",
-    "test:mirror": "FIRESTORE_EMULATOR_HOST=127.0.0.1:4040 mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/mirror/**.spec.ts --timeout 50000"
+    "test:mirror": "FIRESTORE_EMULATOR_HOST=127.0.0.1:4040 mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/mirror/**.spec.ts --timeout 50000",
+    "test:CommentService": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/CommentService.*.spec.ts",
+    "test:PostService": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/PostService.*.spec.ts",
+    "test:PostService.create": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/PostService.create.spec.ts",
+    "test:PostService.get": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/PostService.get.spec.ts",
+    "test:sendMessagesToCommentSubscribers": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/forum/sendMessagesToCommentSubscribers.spec.ts --timeout 100000",
+    "test:UserService": "mocha --require ts-node/register --watch --watch-files src/**/*.ts,tests/**/*.ts tests/user/UserService.*.spec.ts"
   },
   "main": "lib/src/index.js",
   "dependencies": {

@@ -91,4 +91,31 @@ export class UserService {
             }
         }
     }
+
+
+    /**
+     * Returns an array of user uids who have turned on the comment notification.
+     *
+     * 입력된 사용자 uid 들 중에서 코멘트 알림을 켜 놓은 사용자 uid 를 리턴한다. 새 코멘트 푸시 알림을 보낼 때 사용된다.
+     *
+     * @param uids user uids
+     *
+     * @returns an array of user uids who have turned on the comment notification.
+     *
+     * 참고로, Promise.all 을 사용하여 병렬로 처리하면, 더 빠르게 처리할 수 있다. 그러나 이 함수는 코멘트 알림을 보낼 때에만 사용되므로,
+     * 많은 async/await 작업을 하지 않는다. 평균 4~5 개 정도로 예상된다. 그래서 병렬로 처리할 필요가 없다.
+     *
+     * @example 예제는 tests/user/UserService.filterUidsWithCommentNotification.spec.ts 를 참고한다.
+     */
+    static async filterUidsWithCommentNotification(uids: string[]): Promise<string[]> {
+        const db = getDatabase();
+        const filteredUids = [];
+        for (const uid of uids) {
+            const data = (await db.ref(`${Config.userSettings}/${uid}/commentNotification`).get()).val();
+            if (data === true) {
+                filteredUids.push(uid);
+            }
+        }
+        return filteredUids;
+    }
 }

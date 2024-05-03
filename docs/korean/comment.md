@@ -3,11 +3,12 @@
 
 ## 코멘트 데이터베이스 구조
 
+- 코멘트 데이터에는 `postId` 가 저장되지 않는다.
 - `/comments/<post-id>/<comment-id>` 에 코멘트가 저장된다. 즉, postId 는 데이터의 parent.id 가 post id 가 된다.
 - `parentId` 에는 부모 코멘트의 id 가 저장된다. 만약, 글 바로 아래의 최 상위 댓글이면 `parentId` 필드는 데이터에 존재하지 않는다.
-- `category` 에는 부모 글의 카테고리이다.
+- `category` 에는 부모 글의 카테고리이다. 필수 값이다.
 - `content` 코멘트 내용
-- `uid` 코멘트 작성자 uid
+- `uid` 코멘트 작성자 uid. 필수 값.
 - `createdAt` 글 쓴 시간
 - `urls` 업로드된 파일(사진) url 배열. 만약 업로드된 url 이 없으면 `urls` 필드는 데이텅 존재하지 않는다.
 - `likes` 는 본 코멘트를 좋아요한 사용자의 uid 가 `{ likes: { uid: true } }` 와 같이 저장된다. 좋아요 취소를 하면 해당 uid 가 삭제된다. 즉, false 로 저장하면 안된다.
@@ -73,3 +74,9 @@ final post = Post(
 
 return CommentListView(post: post);
 ```
+
+
+## 푸시 알림
+
+- [사용자 설정 문서](./user_settings.md)에 보면, 나의 글 또는 코멘트에 새 코멘트가 작성되면 푸시 알림을 받기 위해서 어떻게 설정되어야 하는지 알 수 있다.
+- 새 코멘트 푸시 알림 전송 관련해서는 [푸시 알림 문서의 코멘트 구독](./messaging.md#코멘트-구독)을 참고한다.

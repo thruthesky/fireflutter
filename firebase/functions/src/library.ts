@@ -40,3 +40,14 @@ export function isUpdate(event: DatabaseEvent<Change<DataSnapshot>>): boolean {
 export function isDelete(event: DatabaseEvent<Change<DataSnapshot>>): boolean {
     return event.data.before.exists() && !event.data.after.exists();
 }
+
+
+/**
+ * Returns a string that is cut to the length.
+ * @param str string to cut.
+ * @param length length of the string after cutting
+ * @returns string
+ */
+export function strcut(str: string, length: number): string {
+    return str.length > length ? str.substring(0, length) : str;
+}

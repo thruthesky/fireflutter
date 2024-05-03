@@ -5,7 +5,8 @@ import { Config } from "../config";
 import { PostCreateEvent } from "./forum.interface";
 import { CommentCreateEventMessage, PostCreateEventMessage } from "../messaging/messaging.interface";
 import { MessagingService } from "../messaging/messaging.service";
-import { isCreate, isDelete, isUpdate } from "../library";
+import { isCreate, isDelete, isUpdate, strcut } from "../library";
+import { CommentCreateEvent } from "../mirror/firestore.interface";
 
 /**
  * managePostsSummary
@@ -37,39 +38,39 @@ export const sendMessagesToCategorySubscribers = onValueCreated(
         const post: PostCreateEventMessage = {
             id: event.params.id,
             category: event.params.category,
-            title: data.title ?? "",
-            body: data.content ?? "",
+            title: strcut(data.title ?? "", 64),
+            body: strcut(data.content ?? "", 100),
             uid: data.uid,
             image: data.urls?.[0] ?? "",
         };
 
-        await MessagingService.sendMessagesToCategorySubscribers(post);
+        return await MessagingService.sendMessagesToCategorySubscribers(post);
     });
 
 
-
-
 /**
- * 내 글(또는) 아래에 새 코멘트가 작성되면 메시지를 전송한다.
+ * 새 코멘트가 작성되면 푸시 알림(메시지)를 전송한다.
  *
- * TODO : Background Trigger Unit TEST 를 할 것.
+ * @return {Promise<string>} 푸시 알림 전송 후, 그 기록으로 생성된 키를 리턴한다. 이 키는 테스트 할 때 사용 할 수 있다.
  */
 export const sendMessagesToCommentSubscribers = onValueCreated(
-    "/posts/{category}/{postId}/comments/{commentId}",
+    "/comments/{postId}/{commentId}",
     async (event) => {
         // Grab the current value of what was written to the Realtime Database.
-        const data = event.data.val() as PostCreateEvent;
+        const data = event.data.val() as CommentCreateEvent;
 
         const comment: CommentCreateEventMessage = {
             id: event.params.commentId,
-            category: event.params.category,
+            category: data.category!,
             postId: event.params.postId,
-            title: data.title ?? "",
-            body: data.content ?? "",
-            uid: data.uid,
+            parentId: data.parentId ?? "",
+            title: "New comment ...",
+            body: strcut(data.content ?? "", 100),
+            uid: data.uid!,
             image: data.urls?.[0] ?? "",
         };
 
-        await MessagingService.sendMessagesToNewCommentSubscribers(comment);
+        console.log("sendMessagesToCommentSubscribers: ", comment);
+        return await MessagingService.sendMessagesToNewCommentSubscribers(comment);
     });
 

@@ -121,8 +121,8 @@ export class MessagingService {
    * 2. Then it chunks the tokens into 500 tokens per chunk.
    * 3. Then delete the tokens that are not valid.
    *
-   * @param {Array<string>} uids - The list of user uids to send the message to.
-   * @param {number} chunkSize - The size of chunk. Default 500. 한번에 보낼 메시지 수. 최대 500개.
+   * @param {Array<string>} req.uids - The list of user uids to send the message to.
+   * @param {number} req.chunkSize - The size of chunk. Default 500. 한번에 보낼 메시지 수. 최대 500개.
    * 그런데 500개씩 하니까 좀 느리다. 256씩 두번 보내는 것이 500개 한번 보내는 것보다 더 빠르다.
    * 256 묶음으로 두 번 보내면 총 (두 번 포함) 22초.
    * 500 묵음으로 한 번 보내면 총 90초.
@@ -134,9 +134,23 @@ export class MessagingService {
    * ```
    *
    * 더 많은 예제는 firebase/functions/tests/message/sendNotificationToUids.spec.ts 참고
+   *
+   * @param {string} req.title - The title of the message.
+   *
+   * @param {string} req.body - The body of the message.
+   *
+   * @param {string} req.image - The image of the message.
+   *
+   * @param {object} req.data - The extra data of the message.
+   *
+   * @param {string} req.action - The action of the message. This is used to log the message.
+   *
+   * @param {string} req.targetId - The target id of the message. This is used to log the message.
+   *
+   * @returns {string | undefined} - 로그를 기록하고 그 결과를 리턴한다.
    */
   static async sendNotificationToUids(req: NotificationToUids)
-    : Promise<void> {
+    : Promise<string | void> {
     // prepare the parameters
     let { uids, chunkSize, title, body, image, data } = req;
     data = data ?? {};
@@ -199,12 +213,32 @@ export class MessagingService {
       // Config.log("에러가 있는 토큰 목록(삭제될 토큰 목록):", tokensToRemove);
 
 
-      // / 에러가 있는, 골라낸 토큰을 삭제한다.
-      const promisesToRemove = [];
-      for (let i = 0; i < tokensToRemove.length; i++) {
-        promisesToRemove.push(getDatabase().ref(`${Config.userFcmTokensPath}/${tokensToRemove[i]}`).remove());
+      // 에러가 있는 토큰 삭제 옵션이 설정되어져 있으면, 에러가 있는 토큰을 DB 에서 삭제한다.
+      if (Config.removeBadTokens) {
+        const promisesToRemove = [];
+        for (let i = 0; i < tokensToRemove.length; i++) {
+          promisesToRemove.push(getDatabase().ref(`${Config.userFcmTokens}/${tokensToRemove[i]}`).remove());
+        }
+        await Promise.allSettled(promisesToRemove);
       }
-      await Promise.allSettled(promisesToRemove);
+    }
+
+    if (Config.logPushNotificationLogs) {
+      // 모든 토큰을 하나의 배열로 합친다.
+      const tokens = tokenChunks.flat();
+
+      // 결과를 /push-notification-logs 에 저장한다.
+      const logData = {
+        action: req.action,
+        targetId: req.targetId,
+        title,
+        body,
+        createdAt: Date.now(),
+        tokens,
+      };
+      console.log(logData);
+      const ref = await getDatabase().ref(Config.pushNotificationLogs).push(logData);
+      return ref.key!;
     }
   }
 
@@ -214,9 +248,11 @@ export class MessagingService {
    * @param uids uids of users
    * @param chunkSize chunk size - default 500. sendAll() 로 한번에 보낼 수 있는 최대 메세지 수는 500 개 이다.
    * chunk 가 500 이고, 총 토큰의 수가 501 이면, 첫번째 배열에 500개의 토큰 두번째 배열에 1개의 토큰이 들어간다.
+   * 예를 들어, 토큰이 a, b, c, d, e 와 같이 5개인데, chunkSize 가 2 이면, 리턴 값은 [a, b], [c, d], [e] 가 된다.
    *
    * @returns Array<Array<string>> - Array of tokens. Each array contains 500 tokens.
    * 리턴 값은 2차원 배열이다. 각 배열은 최대 [chunkSize] 개의 토큰을 담고 있다.
+   *
    */
   static async getTokensOfUsers(uids: Array<string>, chunkSize = 500): Promise<Array<Array<string>>> {
     const promises = [];
@@ -227,7 +263,7 @@ export class MessagingService {
 
     // uid 사용자 별 모든 토큰을 가져온다.
     for (const uid of uids) {
-      promises.push(db.ref(Config.userFcmTokensPath).orderByChild("uid").equalTo(uid).get());
+      promises.push(db.ref(Config.userFcmTokens).orderByChild("uid").equalTo(uid).get());
     }
     const settled = await Promise.allSettled(promises);
 
@@ -252,10 +288,15 @@ export class MessagingService {
    * 해당 게시판(카테고리)를 subscribe 한 사용자들에게 메시지를 보낸다.
    *
    * @param msg 글 정보
+   *
+   * @logic 새 글이 작성되면, 글을 subscribe 한 사용자들의 uid 를 가져와서, 그 사용자들에게 메시지를 전송한다.
+   *
+   * @return push-notification-logs 에 저장된 키.
+   *  - 푸시 알림을 보내고, 그 결과를 저장한다. 이 키를 사용하여 Unit Test 를 통해 결과를 확인할 수 있다.
+   *  - 데이터에는 postId 와 category 가 저장된다. commentId 가 없고, postId 필드만 있는 경우, 카테고리 subscription 에 대한 푸시 알림이다.
    */
   static async sendMessagesToCategorySubscribers(msg: PostCreateEventMessage) {
     // 해당 게시판(카테고리)를 subscribe 한 사용자들의 uid 를 가져온다.
-
     const db = getDatabase();
     const snapshot = await db.ref(`${Config.postSubscriptions}/${msg.category}`).get();
     const uids: Array<string> = [];
@@ -265,10 +306,12 @@ export class MessagingService {
     });
 
     Config.log("-----> sendMessagesToCategorySubscribers uids:", uids);
-    await this.sendNotificationToUids({
+    return await this.sendNotificationToUids({
       uids: uids, chunkSize: 256, title: msg.title, body: msg.body, image: msg.image, data: {
         id: msg.id, category: msg.category,
       },
+      action: "post",
+      targetId: msg.id,
     });
   }
 
@@ -277,18 +320,56 @@ export class MessagingService {
    * 내 글 또는 코멘트 아래에 새로운 코멘트가 달리는 경우 푸시 알림.
    *
    * @param commentCreateEvent 글 정보
+   *
+   * @return push-notification-logs 에 저장된 키.
+   *  - 푸시 알림을 보내고, 그 결과를 저장한다. 이 키를 사용하여 Unit Test 를 통해 결과를 확인할 수 있다.
+   *  - 데이터에는 commentId, postId, category 가 저장된다. commentId 필드에 값이 있으면 new comment 푸시 알림을 의미한다.
+   *
    */
   static async sendMessagesToNewCommentSubscribers(commentCreateEvent: CommentCreateEventMessage) {
-    // TODO 여기서 부터 유닛 테스트 - 총체적으로 sendMessagesToNewCommentSubscribers 를 background trigger unit test 를 할 것.
     // 글의 uid 를 가져온다.
     const postAuthorUid = await PostService.getField(commentCreateEvent.category, commentCreateEvent.postId, "uid");
 
-    // 보무 코멘트 들의 uid 들을 가져온다.
+    // 맨 하위 레벨 코멘트의 부모 uid 들을 가져온다.
+    const commentParentUids = await CommentService.getAncestorsUid(
+      commentCreateEvent.postId,
+      commentCreateEvent.id,
+    );
 
-    const commentParentUids = await CommentService.getAncestorsUid(commentCreateEvent.postId, commentCreateEvent.id);
+    // 글의 uid 와 코멘트의 부모 uid 들을 합치는데, 중복되는 uid 는 제거한다.
+    let uids = Array.from(new Set([postAuthorUid, ...commentParentUids]));
+    if (uids.includes(commentCreateEvent.uid)) {
+      uids = uids.filter((uid) => uid != commentCreateEvent.uid);
+    }
+
+    console.log("all users (without comment creator)", uids);
 
 
+    // 코멘트 알림을 enable 한 사용자만 남기고 나머지는 제거한다.
+    uids = await UserService.filterUidsWithCommentNotification(uids);
+    console.log("uids with comment notification", uids);
 
+    // 코멘트 알림을 enable 한 사용자들에게만 푸시 알림을 전송한다.
+    return await this.sendNotificationToUids({
+      uids, chunkSize: 256, title: commentCreateEvent.title, body: commentCreateEvent.body, image: commentCreateEvent.image, data: {
+        id: commentCreateEvent.id, category: commentCreateEvent.category, postId: commentCreateEvent.postId,
+      },
+      action: "comment",
+      targetId: commentCreateEvent.id,
+    });
+
+
+    // 결과를 /push-notification-logs 에 저장한다.
+    // const data = {
+    //   commentId: commentCreateEvent.id,
+    //   postId: commentCreateEvent.postId,
+    //   category: commentCreateEvent.category,
+    //   createdAt: Date.now(),
+    //   tokens,
+    // };
+    // console.log(data);
+    // const ref = await getDatabase().ref(Config.pushNotificationLogs).push(data);
+    // return ref.key!;
   }
 
 
@@ -347,6 +428,8 @@ export class MessagingService {
       uids, chunkSize: 256, title, body, image: msg.url, data: {
         senderUid: msg.uid, messageId: msg.id, roomId: msg.roomId,
       },
+      action: "chat",
+      targetId: msg.roomId,
     });
   }
 
@@ -363,6 +446,8 @@ export class MessagingService {
       uids: [event.uid], chunkSize: 256, title, body, image: user.photoUrl, data: {
         uid: event.uid,
       },
+      action: "like",
+      targetId: event.otherUid,
     });
   }
 }

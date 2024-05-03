@@ -1,5 +1,7 @@
 # 푸시 알림
 
+- 토픽을 사용하지 않고, 사용자 토큰 별로 메시지를 보낸다. 그래서 구독을 했는지 안했는지에 대한 정보를 DB 에 보관해야하는데, 각 기능별 문서를 참고하도록 한다.
+
 
 ## 푸시 알림 설치
 
@@ -20,17 +22,42 @@
 
 
 
-## FCM 과 token
+## 푸시 알림 데이터베이스 구조
 
-Fireflutter uses FCM to send messages to devices.
 
-The tokens are saved under `/user-fcm-tokens/<token> { uid: [user uid], platform: [android or ios]}`. So, if you want to get the tokens of a user, you must get the tokens by searching the uid.
+- 토큰은 `/user-fcm-tokens/<token> { uid: [user uid], platform: [android or ios]}` 와 같이 저장된다.
+  - 즉, 키가 토큰이며 값은 `uid` 와 `platform` 이다. 따라서 키를 기준으로 해당 토큰이 누구의 것인지 알 수 없으며, 특정 사용자의 토큰을 얻기 위해서는 `uid` 를 바탕으로 필터링을 해야한다.
+  - 사용자 `uid` 는 필수 값이므로 로그인을 해야지만 token 을 저장한다.
+  - 만약 로그인을 하지 않은 모든 사용자에게 푸시 알림을 전송하고 싶다면 파이어베이스 콘솔에서 메시지를 전송 할 수 있다.
 
-## 구독
+- 토큰을 저장하는 코드는
+  - `messaging.service.dart` 의 `_updateToken()` 와
+  - `test.functions.ts` 의 `createTestUser()` 를 보면 된다.
 
-토픽을 사용하지 않고, 사용자 토큰 별로 메시지를 보낸다. 그래서 구독을 했는지 안했는지에 대한 정보를 DB 에 보관해야하는데, 각 기능별 문서를 참고하도록 한다.
-참고, 게시판 구독
-참고, 채팅방 구독
+
+- 푸시 알림 기록은 `/push-notification-logs/<id>` 에 기록된다.
+  - `action` 에는 `post`, `comment`, `chat`, `like`, `profile` 등의 값이 들어 갈 수 있으며,
+  - `targetId` 에는 새 글의 ID, 새 코멘트의 ID, 새 채팅 메시지의 ID, `like` 의 경우, 상대 유저의 uid, `profile` 의 경우, 상대 유저의 uid 가 저장된다. 그래서 어떤 이벤트의 어느 대상으로 인해서 푸시 알림이 전송되는지 알 수 있다.
+  - `createdAt` 은 메시지 전송 시간
+  - `tokens` 는 메시지가 전송된 토큰 목록이다.
+  - 주의 할 것은 많은 사용자에게 푸시 알림을 하는 경우, DB 에 기록되는 데이터가 커져서 추가 비용이 발생할 수 있다. 그래서 가능한 꺼 놓도록 한다. `Config.ts` 의 `logPushNotificationLogs` 를 false 로 하면, 푸시 알림 기록을 하지 않는다.
+
+  
+
+
+
+## 게시판 구독
+
+## 코멘트 구독
+
+- 나의 글 또는 코멘트에 새로운 코멘트가 작성되면 푸시 알림을 받을 수 있다.
+- [사용자 설정 문서](./user_settings.md)에 보면, 나의 글 또는 코멘트에 새 코멘트가 작성되면 푸시 알림을 받기 위해서 어떻게 설정되어야 하는지 알 수 있다.
+- 새 코멘트가 작성되면 클라우드 함수의 `sendMessagesToCommentSubscribers` 가 동작한다.
+
+
+
+## 채팅방 구독
+
 
 ## Sending messages to user
 

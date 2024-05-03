@@ -1,4 +1,4 @@
-import { getDatabase } from "firebase-admin/database";
+import { getDatabase, Reference } from "firebase-admin/database";
 import { Post, PostCreateEvent, PostSummary, PostSummaryAll } from "./forum.interface";
 import { Config } from "../config";
 
@@ -7,11 +7,10 @@ import { Config } from "../config";
  *
  */
 export class PostService {
-
     /**
      * 글을 가져와 리턴한다.
      * 만약, 글의 특정 필드만 가져오고 싶다면, getField 를 사용한다.
-     * 
+     *
      * @param category 카테고리
      * @param postId 글 아이디
      * @returns 글 내용
@@ -20,22 +19,39 @@ export class PostService {
         const db = getDatabase();
         const data = (await db.ref(`${Config.posts}/${category}/${postId}`).get()).val();
         return data as Post;
-
     }
 
     /**
+     * 글을 생성한다.
+     *
+     *
+     * @param category 카테고리
+     * @returns 생성된 글 ref
+     *
+     * @example 예제는 tests/forum/PostService.create.spec.ts 를 참고한다.
+     */
+    static async create(category: string, data: any): Promise<Reference> {
+        const db = getDatabase();
+        const ref = db.ref(`${Config.posts}/${category}`).push() as Reference;
+        await ref.set(data);
+        return ref;
+    }
+
+
+    /**
      * 글 필드 내용을 가져와 리턴한다.
-     * 
+     *
      * @param category 카테고리
      * @param postId 글 아이디
      * @param field 필드
      * @returns 필드의 내용을 리턴한다.
+     *
+     * @example 예제는 tests/forum/PostService.getField.spec.ts 를 참고한다.
      */
     static async getField(category: string, postId: string, field: string): Promise<Post | any> {
         const db = getDatabase();
         const data = (await db.ref(`${Config.posts}/${category}/${postId}/${field}`).get()).val();
         return data as any;
-
     }
 
 

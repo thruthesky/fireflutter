@@ -66,15 +66,16 @@ export interface PostSummaryUpdateEvent {
 
 
 export interface Comment {
-
-    id: string;
+    id?: string;
     postId: string;
-    parentId: string;
-    content: string;
+    parentId?: string;
+    category: string;
+    content?: string;
     uid: string;
-    urls: string[];
-    createdAt: number;
-    likes: Array<string>;
+    urls?: string[];
+    createdAt?: number | object;
+    likes?: Array<string>;
     deleted?: boolean;
+    order?: number;
 
 }

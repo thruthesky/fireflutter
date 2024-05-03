@@ -23,23 +23,23 @@ describe("sendNotificationToUids 기능 테스트", () => {
         const db = getDatabase();
         const promises = [];
         const uids = [];
-        await db.ref(Config.userFcmTokensPath).set({});
+        await db.ref(Config.userFcmTokens).set({});
         for (let i = 0; i < n; i++) {
             const uid = `uid-${i}`;
             uids.push(uid);
             const token = `token-${i}`;
-            promises.push(db.ref(`${Config.userFcmTokensPath}/${uid}-${token}`).set({
+            promises.push(db.ref(`${Config.userFcmTokens}/${uid}-${token}`).set({
                 uid: uid,
             }));
         }
         await Promise.all(promises);
 
         // 진짜 토큰을 첫번째 uid 에 1개 추가
-        await db.ref(`${Config.userFcmTokensPath}/dRx8UpLwt0EUtcK0kpkDme:APA91bF6gHUfRs4J6nc4xnRvEhE85uFeuOZwrxyD0lqgfhccLhnw_zpVB4UouPXJvIlAaKmzDQoqI2VxpZNnjdZlqSRBoYCTrxl2oXVSxqYoqYdMxNKgZUwhKAlVhpkPFw5r2pq1wWfm`).set({
+        await db.ref(`${Config.userFcmTokens}/dRx8UpLwt0EUtcK0kpkDme:APA91bF6gHUfRs4J6nc4xnRvEhE85uFeuOZwrxyD0lqgfhccLhnw_zpVB4UouPXJvIlAaKmzDQoqI2VxpZNnjdZlqSRBoYCTrxl2oXVSxqYoqYdMxNKgZUwhKAlVhpkPFw5r2pq1wWfm`).set({
             uid: uids[0],
         });
         // 진짜 토큰을 두번째 uid 에 1개 추가
-        await db.ref(`${Config.userFcmTokensPath}/dsV6a4_XRiGWq5Fxq_f-jH:APA91bFtB98IC06Y6SOBz6OFmNCKeCoDJQ2X72k3Taw3UaO8cwaPdcI9jDq3oWllqmMmGhnd0uuZXwRrXs3gXBnsNdyIbBF3xmQgvMDBV8LW_cM0VNmJt3UBxtKMgnFqjw2q-aanGKWH`).set({
+        await db.ref(`${Config.userFcmTokens}/dsV6a4_XRiGWq5Fxq_f-jH:APA91bFtB98IC06Y6SOBz6OFmNCKeCoDJQ2X72k3Taw3UaO8cwaPdcI9jDq3oWllqmMmGhnd0uuZXwRrXs3gXBnsNdyIbBF3xmQgvMDBV8LW_cM0VNmJt3UBxtKMgnFqjw2q-aanGKWH`).set({
             uid: uids[0],
         });
 
@@ -58,12 +58,15 @@ describe("sendNotificationToUids 기능 테스트", () => {
             uids: uids,
             title: "title",
             body: "body",
+            action: "test",
+            targetId: "",
+
         });
 
 
         // 잘못된 토큰이 삭제 되었는지 확인. 501 개 삭제되어야함.
         // 올바른 토큰이 남아 있는지 확인. 2 개가 남아 있어야함.
-        const tokens = await db.ref(Config.userFcmTokensPath).get();
+        const tokens = await db.ref(Config.userFcmTokens).get();
         assert.ok(tokens.numChildren() === 2, "No of tokens must be " + 2 + ". result: " + tokens.numChildren());
     });
 });

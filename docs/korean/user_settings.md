@@ -5,8 +5,9 @@
 - `/user-settings/<uid>/{profileViewNotification: true}` 와 같이 `profileViewNotification` 에 true 를 저장하면, 누가 나의 프로필을 보면 나에게 푸시 알림이 도착한다.
 
 
-- `/user-settings/<uid>/{commentNotification: true}` 와 같이 `commentNotification` 에 true 를 저장하면, 누가 나의 글 또는 코멘트 아래에 새 코멘트를 자겅하면 나에게 푸시 알림이 도착한다.
-
+- `/user-settings/<uid>/{commentNotification: true}` 와 같이 `commentNotification` 에 true 를 저장하면, 누가 나의 글 또는 코멘트 아래에 새 코멘트를 작성하면 나에게 푸시 알림이 도착한다.
+  - 앱 기획 또는 로직을 작성 할 때, 신규 회원이 가입하자 마자 자동으로 이 값을 true 로 저장할 수 있다. 그러면 자동으로 자신의 글 아래에 새로운 코멘트를 푸시 알림 받는 것이 된다. 사용자가 푸시 알림을 원하지 않을 경우를 대비해 메뉴에서 설정을 해제 할 수 있도록 해 놓아야 할 것이다.
+  - 새 코멘트 푸시 알림 전송 관련해서는 [푸시 알림 문서의 코멘트 구독](./messaging.md#코멘트-구독)을 참고한다.
 
 - `langaugeCode` 언어 코드 설정. 사용자가 쓰는 기본 언어이다. 이 값은 앱이 최초 실행 될 때, 핸드폰에서 사용하는 언어가 설정이 되도록 해 주면 좋다. 그리고 설정에서 수정 할 수 있도록 하면 된다.
 

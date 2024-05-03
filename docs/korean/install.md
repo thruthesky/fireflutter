@@ -183,6 +183,13 @@ class _MyHomePageState extends State<MyHomePage> {
 `./firebase/functions/src/config.ts` 에 보면 Config 클래스의 `region` 변수가 있다. 이 변수에 원하는 cloud function region 을 기록하면 된다. 그 외에는 특별히 수정을 하지 않아도 된다.
 
 
+#### 푸시 알림 로그 기록
+
+`logPushNotificationLogs` 가 true 이면, 모든 푸시 알림을 `push-notification-logs` 에 기록하는데, DB 용량을 많이 차지 할 수 있으므로 유의한다.
+개발 또는 테스트를 하는 경우에는 true 로 할 수 있지만, 실제 운영을 할 때에는 false 로 할 것을 추천한다.
+
+
+
 
 
 

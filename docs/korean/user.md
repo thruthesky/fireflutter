@@ -2,7 +2,7 @@
 
 사용자 정보 관리에 필요한 기본 기능이 Fireflutter 에 포함되어져 있으므로 그 위젯이나 로직을 재 활용하면 좋다. 특히, 기본 제공되는 위젯을 복사해서 커스텀해서 사용하는 것을 권장한다.
 
-## User database structure
+## 데이터베이스 구조
 
 - 사용자 정보는 realtime database 의 `/users/<uid>` 에 기록된다.
 
@@ -10,8 +10,6 @@
 Firefluter (including all the widgets) will always use `dispalyName` to display the name of the user. This can be a real name, or it can be a nickname. If you want to keep user's name in different format like `firstName`, `middleName`, `lastName`, you can do it in your app. You may get user's real name and save it in `name` field in your app.
 
 - `seearchDisplayName` 은 검색을 위한 용도로 사용한됩니다. 예를 들어 `displayName` 이, "JaeHo Song" 이면, "jaehosong" 으로 모두 소문자로 저장하며, 공백없이 저장을 합니다. 그래서 검색을 할 때, `Jaeho` 또는 `jaehoso` 등으로 검색을 보다 유연하게 할 수 있습니다.
-
-
 
 `createdAt` has the time of the first login. This is the account creation time.
 
@@ -33,6 +31,12 @@ Firefluter (including all the widgets) will always use `dispalyName` to display 
     Without `/user-profile-photos` node, It can list with `/users` data but it cannot sort by time.
     - `/user-profile-photos/<uid>` has `updatedAt` field that is updated whenever the user changes profile photo.
     - It is managed by `UserModel`.
+
+- 참고 할 만한 사용자 생성 코드
+  - `firebase/functions/tests/test.functions.ts` 의 `createTestUser()`
+  - `user.model.dart` 의 `create()` 함수
+
+
 
 ## 사용자 UI 커스터마이징 (Customizing User UI)
 
