@@ -76,8 +76,6 @@ class User {
   int birthDay;
   int createdAt;
   int order;
-  @Deprecated('Use AdminService.instance.isAdmin')
-  bool isAdmin;
   bool isVerified;
   List<String>? blocks;
 
@@ -194,7 +192,6 @@ class User {
     required this.birthDay,
     required this.createdAt,
     required this.order,
-    this.isAdmin = false,
     this.isVerified = false,
     this.blocks,
     required this.gender,
@@ -268,7 +265,6 @@ class User {
       noOfLikes: json['noOfLikes'] ?? 0,
       createdAt: json['createdAt'] ?? 0,
       order: json['order'] ?? 0,
-      isAdmin: json['isAdmin'] ?? false,
       isVerified: json['isVerified'] ?? false,
       blocks: json[ff.Field.blocks] == null
           ? null
@@ -312,7 +308,6 @@ class User {
       'noOfLikes': noOfLikes,
       'createdAt': createdAt,
       'order': order,
-      'isAdmin': isAdmin,
       'isVerified': isVerified,
       ff.Field.blocks:
           blocks == null ? null : List<dynamic>.from(blocks!.map((x) => x)),
@@ -339,6 +334,10 @@ class User {
   }
 
   /// Reload user data and apply it to this instance.
+  ///
+  /// Usually, when the app updates the user data, it reloads the user data automatically.
+  /// 일반적으로 로그인한 사용자의 정보를 변경하면, 자동으로 UserService.instance.user 에 업데이트가 되지만,
+  /// 로그인한 사용자가 아닌 다른 사용자의 정보를 업데이트 한 다음에는 reload() 메소드를 이용해서, 그 사용자의 정보를 reload 할 수 있다.
   Future<User> reload() async {
     final user = await User.get(uid);
 
@@ -357,7 +356,6 @@ class User {
       noOfLikes = user.noOfLikes;
       createdAt = user.createdAt;
       order = user.order;
-      isAdmin = user.isAdmin;
       isVerified = user.isVerified;
       blocks = user.blocks;
       idUrl = user.idUrl;
@@ -468,7 +466,6 @@ class User {
     int? birthMonth,
     int? birthDay,
     String? gender,
-    bool? isAdmin,
     bool? isVerified,
     dynamic createdAt,
     dynamic order,
@@ -496,7 +493,6 @@ class User {
       if (birthMonth != null) 'birthMonth': birthMonth,
       if (birthDay != null) 'birthDay': birthDay,
       if (gender != null) 'gender': gender,
-      if (isAdmin != null) 'isAdmin': isAdmin,
       if (isVerified != null) 'isVerified': isVerified,
       if (createdAt != null) 'createdAt': createdAt,
       if (order != null) 'order': order,
