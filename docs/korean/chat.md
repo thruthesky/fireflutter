@@ -494,7 +494,19 @@ IconButton(
 
 Automatically, creator of the room will join to the newly created room after submitting.
 
-### Inviting users into a Chat Room
+### 사용자 초대
+
+- 그룹 채팅방에 사용자 초대를 커스텀 디자인 할 수 있다. 물론 디자인 뿐만아니라 로직 전체를 마음데로 변경 할 수 있다.
+
+- 채팅방에 친구 추가 버튼이 있는데, 이 버튼 자체를 덮어서서 아래와 같이 디자인을 변경 할 수 있다. 물론 로직도 변경하여, 채팅방에 사용자 추가하는 함수만 호출하면 된다.
+
+```dart
+ChatService.instance.init(
+  customize: ChatCustomize(
+    chatRoomInviteButton: (chatRoom) {
+      return ChatRoomInviteScreenButton(room: chatRoom);
+    },
+```
 
 To show the default invite screen, add these code:
 

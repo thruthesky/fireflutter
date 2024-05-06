@@ -410,6 +410,20 @@ IconButton(
 - `UserModel.like()` 에서 A 가 B 를 좋아요 할 때, B 가 A 를 좋아요 한 상태이면 서로 좋아요를 표시하고,
 - `UserModel.like()` 에서 A 가 B 를 좋아요 해제 할 때, 서로 좋아요 표리를 없앤다. 즉, 둘 중 좋아요 해제를 한 명이라도 하면 둘다 해제하면 되는 것이다.
 
+## 사용자 로그인 후 정보 액세스
+
+사용자가 Firebase 에 로그인을 한 다음, 특정 동작을 해야하는 경우, 아래와 같이 할 수 있다. 사용자 정보 확인이나 사용자 관련 로직을 수행 할 때에는 사용자의 UID 가 필요하다. 이 때, 아래와 같이 하면 firebase auth uid 를 바탕으로 작업을 할 수 있다. 다만, firebase auth 에만 로그인을 한 것으로 RTDB 의 사용자 문서는 로드되지 않았을 수 있다.
+
+```dart
+FirebaseAuth.instance
+    .authStateChanges()
+    .distinct((a, b) => a?.uid == b?.uid)
+    .listen((user) {
+  if (user != null) {
+    ///
+  }
+});
+```
 
 ## 사용자 정보 listening
 

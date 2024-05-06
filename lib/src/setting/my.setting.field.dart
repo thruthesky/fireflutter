@@ -2,8 +2,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class UserSettingValue extends StatelessWidget {
-  const UserSettingValue({
+class MySettingField extends StatelessWidget {
+  const MySettingField({
     super.key,
     required this.field,
     required this.builder,

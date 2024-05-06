@@ -169,6 +169,7 @@ export class MessagingService {
     }
 
     const messaging = getMessaging();
+    let tokensWithError: Array<string> = [];
 
     // chunk 단위로 메시지 작성해서 전송
     for (const tokenChunk of tokenChunks) {
@@ -201,7 +202,7 @@ export class MessagingService {
 
 
       // 전송 결과에서 에러가 있는 토큰을 골라낸다.
-      const tokensToRemove = messages.filter((message) => {
+      tokensWithError = messages.filter((message) => {
         if (message.success !== false) return false;
         // 푸시 토큰이 잘못되었을 때는 아래의 세개 중 한개의 에러 메시지가 나타난다.
         if (message.code === "messaging/invalid-argument") return true;
@@ -210,14 +211,14 @@ export class MessagingService {
 
         return false;
       }).map((message) => message.token);
-      // Config.log("에러가 있는 토큰 목록(삭제될 토큰 목록):", tokensToRemove);
+      // Config.log("에러가 있는 토큰 목록(삭제될 토큰 목록):", tokensWithError);
 
 
       // 에러가 있는 토큰 삭제 옵션이 설정되어져 있으면, 에러가 있는 토큰을 DB 에서 삭제한다.
       if (Config.removeBadTokens) {
         const promisesToRemove = [];
-        for (let i = 0; i < tokensToRemove.length; i++) {
-          promisesToRemove.push(getDatabase().ref(`${Config.userFcmTokens}/${tokensToRemove[i]}`).remove());
+        for (let i = 0; i < tokensWithError.length; i++) {
+          promisesToRemove.push(getDatabase().ref(`${Config.userFcmTokens}/${tokensWithError[i]}`).remove());
         }
         await Promise.allSettled(promisesToRemove);
       }
@@ -227,14 +228,19 @@ export class MessagingService {
       // 모든 토큰을 하나의 배열로 합친다.
       const tokens = tokenChunks.flat();
 
-      // 결과를 /push-notification-logs 에 저장한다.
+      console.log("tokensWithError:", tokensWithError);
+
+      // / 결과를 /push-notification-logs 에 저장한다.
       const logData = {
         action: req.action,
         targetId: req.targetId,
         title,
         body,
         createdAt: Date.now(),
-        tokens,
+        // 전체 토큰 목록에서 에러가 없는 것만 기록
+        tokens: tokens.filter((token) => !tokensWithError.includes(token)),
+        // 에러가 있는 토큰 목록
+        tokensWithError: tokensWithError,
       };
       console.log(logData);
       const ref = await getDatabase().ref(Config.pushNotificationLogs).push(logData);
@@ -357,19 +363,6 @@ export class MessagingService {
       action: "comment",
       targetId: commentCreateEvent.id,
     });
-
-
-    // 결과를 /push-notification-logs 에 저장한다.
-    // const data = {
-    //   commentId: commentCreateEvent.id,
-    //   postId: commentCreateEvent.postId,
-    //   category: commentCreateEvent.category,
-    //   createdAt: Date.now(),
-    //   tokens,
-    // };
-    // console.log(data);
-    // const ref = await getDatabase().ref(Config.pushNotificationLogs).push(data);
-    // return ref.key!;
   }
 
 

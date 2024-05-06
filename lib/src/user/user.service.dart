@@ -291,7 +291,7 @@ class UserService {
         loggedIn &&
         myUid != user.uid) {
       bool? re =
-          await UserSetting.getField(user.uid, Code.profileViewNotification);
+          await UserSetting.getField(user.uid, Field.profileViewNotification);
       if (re == false) return;
 
       if (customize.pushNotificationOnPublicProfileView != null) {

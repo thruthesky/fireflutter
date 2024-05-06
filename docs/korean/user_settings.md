@@ -13,6 +13,21 @@
 
 
 
+## UserSettingService
+
+- `UserSettingServic` 는 `/user-settings/<my-uid>` 의 설정 값을 관리하는 서비스이다.
+- 설정 값은 `UserSetting` model 에 저장되고, 기본적인 CRUD 동작을 한다.
+- 앱 처음 시작시, 아래와 같이 초기화를 해 주면 된다.
+
+```dart
+UserSettingService.instance.init(
+  defaultCommentNotification: false,
+);
+```
+
+- 위에서 `defaultCommentNotification` 은 사용자가 처음 앱을 실행 할 때 (또는 로그인 할 때) 새 코멘트 알림을 기본적으로 on 하는 것이다. 그래서 자신의 글 또는 코멘트에 새로운 코멘트가 작성되면 알림을 받도록 하는 것이다. 만약, 이 값을 false 로 하면, 사용자가 설정에서 on 을 하기 전에는 새 코멘트 알림을 받지 못한다. 즉, 자동으로 코멘트 알림을 해 주기 위한 것이다.
+
+
 
 
 ## 사용자 설정 화면 UI
@@ -88,10 +103,20 @@ DefaultUserSettings(
 
 ## 사용자 설정 추천 코딩 방법
 
-아래와 같이 `UserSettingValue` 를 통해서 개별 field 를 observe 해서, callback 의 `ref` 를 통해서 바로 업데이트하는 것을 추천한다. 물론 `UserService` 나 `User` 모델을 통해서 업데이트를 할 수도 있다.
+
+- 사용자 설정은 `UserSetting` 모델 클래스가 모델링을 한다. 이 클래스는 기본적인 CRUD 를 가지고 있으며, 로그인한 사용자 뿐만아니라 로그인하지 않은 사용자의 정보도 담을 수 있다. 단, 설정 정보 CRUD 는 로그인한 사용자의 것만 가능하다.
+- 로그인한 사용자의 설정은 `UserSettingService` 에 의해서 관리된다.
+  - 앱 시작시 `UserSettingService.instance.init()` 을 한번 실행을 하면 되며,
+  - 설정이 변경되면, `UserSettingService.instance.changes` 이벤트가 발생한다.
+
+
+- 사용자 설정이 업데이트 되면, 위젯을 rebuild 하고 싶은 경우, `MySetting` 을 사용하면 된다. 이 위젯은 사용자 정보 전체를 observe 한다.
+
+- 만약, 사용자 설정 정보 전체가 아니라 하나의 필드만 observe 하려고 한다면, 아래와 같이 `MySettingField` 를 통해서 개별 field 를 observe 해서, 위젯을 rebuild 하고 설정 정보를 업데이트 할 수 있다.
+  - 이렇게 하나의 (필요한) 필드만 observe 하면, 화면 깜빡임이 줄어든다.
 
 ```dart
-UserSettingValue(
+MySettingField(
   field: Field.profileViewNotification,
   builder: (v, ref) => SwitchListTile(
     value: v == true,
@@ -101,3 +126,5 @@ UserSettingValue(
   ),
 ),
 ```
+
+

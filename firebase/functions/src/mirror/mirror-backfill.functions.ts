@@ -97,7 +97,8 @@ async function mirrorBackfillPosts(rtdbNode = "posts", firestoreCollection = "po
         console.log("Post Data being batch set: id: " + postId, postData);
         // Add post data to batch
         batch.set(postDocRef, {
-          category: category,
+          category,
+          postId,
           ...postData, // Spread the rest of the data
         });
         operationCount = operationCount + 1;
@@ -159,7 +160,8 @@ async function mirrorBackfillComments(rtdbNode = "comments", firestoreCollection
         // Add comment data to batch
         const newCommentRef = firestore.collection(firestoreCollection).doc(commentId);
         batch.set(newCommentRef, {
-          postId: postId,
+          postId,
+          commentId,
           ...commentData, // Spread the rest of the data
         });
         operationCount++;

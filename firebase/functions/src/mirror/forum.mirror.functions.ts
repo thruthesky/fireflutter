@@ -27,6 +27,7 @@ export const postMirror = onValueWritten(
         // Created or Updated
         const data = event.data.after.val() as FirestorePost;
         data.category = event.params.category;
+        data.postId = postId;
         return await firestore.collection(Collections.posts).doc(postId).set(data);
     }
 );
@@ -43,13 +44,14 @@ export const commentMirror = onValueWritten(
         const firestore = getFirestore();
         const postId = event.params.postId;
         const commentId = event.params.commentId;
-        if (!event.data.after.exists() ) {
+        if (!event.data.after.exists()) {
             // Deleted
             return await firestore.collection(Collections.comments).doc(commentId).delete();
         }
         // Created or Updated
         const data = event.data.after.val() as FirestoreComment;
         data.postId = postId;
+        data.commentId = commentId;
         return await firestore.collection(Collections.comments).doc(commentId).set(data);
     }
 );

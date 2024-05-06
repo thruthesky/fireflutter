@@ -10,6 +10,7 @@ class UserSetting {
   /// Member variables
   final String key;
   final bool? profileViewNotification;
+  final bool? commentNotification;
   final String? languageCode;
 
   final DatabaseReference ref;
@@ -18,6 +19,7 @@ class UserSetting {
     required this.key,
     required this.ref,
     required this.profileViewNotification,
+    required this.commentNotification,
     required this.languageCode,
   });
 
@@ -31,7 +33,8 @@ class UserSetting {
     return UserSetting(
       key: key,
       ref: nodeRef.child(key),
-      profileViewNotification: json[Code.profileViewNotification],
+      profileViewNotification: json[Field.profileViewNotification],
+      commentNotification: json[Field.commentNotification],
       languageCode: json[Field.languageCode],
     );
   }
@@ -46,8 +49,9 @@ class UserSetting {
   factory UserSetting.fromUid(String uid) {
     return UserSetting.fromJson(
       {
-        Code.profileViewNotification: null,
+        Field.profileViewNotification: null,
         Field.languageCode: null,
+        Field.commentNotification: null,
       },
       uid,
     );
@@ -55,7 +59,7 @@ class UserSetting {
 
   Map<String, dynamic> toJson() {
     return {
-      Code.profileViewNotification: profileViewNotification,
+      Field.profileViewNotification: profileViewNotification,
       Field.languageCode: languageCode,
     };
   }
@@ -84,14 +88,23 @@ class UserSetting {
     }
   }
 
+  /// Update the user setting data
+  ///
+  /// If the value is null, it will not be updated.
+  ///
+  /// null 을 저장할 수 없다. false 로 저장해야 한다. 즉, null 을 저장해서, 해당 필드를 삭제하려면, 이 함수를 사용해서는 안되고
+  /// 다른 방법을 사용해야 한다.
   update({
     bool? profileViewNotification,
     String? languageCode,
+    bool? commentNotification,
   }) async {
     await ref.update({
       if (profileViewNotification != null)
-        Code.profileViewNotification: profileViewNotification,
+        Field.profileViewNotification: profileViewNotification,
       if (languageCode != null) Field.languageCode: languageCode,
+      if (commentNotification != null)
+        Field.commentNotification: commentNotification,
     });
   }
 }

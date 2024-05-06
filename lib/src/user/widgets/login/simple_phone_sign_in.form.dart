@@ -184,27 +184,34 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
             T.phoneSignInHeaderTitle.tr,
             style: Theme.of(context).textTheme.labelMedium,
           ),
-          const SizedBox(height: 64),
+          const SizedBox(height: 48),
         ],
         // 전화번호를 입력하고, SMS 코드 전송하고, 코드 입력하는 UI 를 보여주는가?
         showSmsCodeInput
             // 그렇다면 전화번호 입력 UI 대신, 전화번호만 보여준다.
-            ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                widget.smsPhoneLabel ??
-                    Text(
-                      "phone".tr,
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                    ),
-                // const SizedBox(height: 8),
-                Text(
-                  (widget.phoneNumberDisplayBuilder?.call(completeNumber) ??
-                          completeNumber) ??
-                      "",
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-              ])
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  widget.smsPhoneLabel ??
+                      Text(
+                        "phone".tr,
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelMedium
+                            ?.copyWith(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                      ),
+                  // const SizedBox(height: 8),
+                  Text(
+                    (widget.phoneNumberDisplayBuilder?.call(completeNumber) ??
+                            completeNumber) ??
+                        "",
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                ],
+              )
             // 전화번호 입력을 다 안했으면, SMS 코드 전송을 안했으면, 전화번호 입력 UI를 보여준다.
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -363,11 +370,11 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
           ),
         ),
         if (showSmsCodeInput) ...[
-          const SizedBox(height: 32),
+          const SizedBox(height: 8),
           widget.smsDescription ??
               Text(T.phoneSignInInputSmsCode.tr,
                   style: Theme.of(context).textTheme.labelMedium),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           TextField(
             key: const Key('smsField'),
             controller: smsCodeController,

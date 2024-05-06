@@ -10,7 +10,7 @@ Dynamic link 를 사용하기 위해서는 FireFlutter 에서 사용하는 dynam
 
 둘째, 링크가 공유되면 핸드폰 OS 가 App Link 와 Universial Link 관련 작업을 통해서 assetlinks 와 AASA 를 가져오는데, 올바른 정보를 넣어 주어야 한다. 이 값은 `_link_` 컬렉션의 `android` 와 `ios` 문서에 각각 넣어 주면 된다.
 
-셋째, 개발하는 앱(플러터 앱)에서 App Link 와 Universial Link 가 동작하도록 설정을 해 주어야 한다. 또한 Deeplink 설정도 추가를 해 주어야 한다. Deeplink 설정을 해 주는 이유는 몇 몇 앱(예 카카오톡)에서 링크를 클릭하면 곧 바로 앱을 실행하지 못하고 인앱브라우저를 열어서 홈페이지로 접속을 하는 경우가 있다. 이 때, 홈페이지에서 Deeplink 를 통해서 앱을 열기 위해서 Deeplink 설정이 필요하다.
+셋째, 개발하는 앱(플러터 앱)에서 App Link 와 Universial Link 가 동작하도록 설정을 해 주어야 한다. 예를 들어, 카카오톡과 같은 앱에서 링크(Universal link 또는 App link)를 클릭하면 인앱브라우저가 열리고 앱을 바로 열지 못하고 웹을 연다. 이 때, Deeplink 설정을 통해서 억지로 앱을 열러고하는 경우가 있는데, 추천하지 않는다. 만약, 억지로 앱을 열려고 한다면 deeplink 추가 설정을 해 주고, 웹에서 Javascript 를 통해서 앱을 열면 된다.
 
 넷째, 링크를 만들어 공유하는 코드를 작성한다.
 링크를 만들때 site preview 옵션 부터 다양한 옵션을 넣어서 만들 수 있다.

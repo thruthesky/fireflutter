@@ -127,7 +127,7 @@ export 'src/report/widgets/report.admin.list_view.dart';
 export 'src/report/widgets/report.my.list_view.dart';
 
 export 'src/setting/default_user_settings.dart';
-export 'src/setting/user.setting.value.dart';
+export 'src/setting/my.setting.field.dart';
 
 export 'src/storage/storage.customize.dart';
 export 'src/storage/storage.service.dart';
@@ -143,18 +143,14 @@ export 'src/text/texts.dart';
 export 'src/theme/default_light_theme.dart';
 export 'src/theme/theme_functions.dart';
 
-export 'src/typesense/model/search_result.dart';
-export 'src/typesense/model/search_result.doc.dart';
-export 'src/typesense/model/search_result.hit.dart';
-export 'src/typesense/typesense.service.dart';
-
 export 'src/user/firestore.user.model.dart';
 export 'src/user/user.customize.dart';
 export 'src/user/user.model.dart';
 export 'src/user/user.photo.model.dart';
 export 'src/user/user.private.model.dart';
 export 'src/user/user.service.dart';
-export 'src/user/user.setting.model.dart';
+export 'src/setting/user.setting.model.dart';
+export 'src/setting/user.setting.service.dart';
 export 'src/user/widgets/admin.dart';
 export 'src/user/widgets/birthday_update.dart';
 export 'src/user/widgets/birthday_update_dialog.dart';
@@ -168,6 +164,7 @@ export 'src/user/widgets/buttons/report_button.dart';
 export 'src/user/widgets/login/simple_email_password_login.form.dart';
 export 'src/user/widgets/login/simple_phone_sign_in.form.dart';
 export 'src/user/widgets/my_doc.dart';
+export 'src/setting/my_setting.dart';
 export 'src/user/widgets/profile/default_profile_update.form.dart';
 export 'src/user/widgets/profile/default_profile_update.screen.dart';
 export 'src/user/widgets/profile/default_public_profile.screen.dart';

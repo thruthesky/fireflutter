@@ -3,6 +3,7 @@
  * Post Model for Firestore's Posts
  */
 export interface FirestorePost {
+    postId?: string | null;
     uid?: string | null;
     title?: string | null;
     content?: string | null;
@@ -36,6 +37,7 @@ export interface FirestorePostWithExtra {
  * Comment Model for Firestore's Posts
  */
 export interface FirestoreComment {
+    commentId?: string | null;
     uid?: string | null;
     postId?: string | null;
     category?: string | null;

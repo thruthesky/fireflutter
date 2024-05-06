@@ -29,22 +29,33 @@ class LinkService {
 
 // Subscribe to all events when app is started.
 // (Use allStringLinkStream to get it as [String])
+      /// 주의, Firebase Auth 를 구현할 때, 여기에 떨어진다.
+      /// 특히, Firebase Auth 에 `/link` 문자열이 들어 있다. 예) ://firebaseauth/link?deep_link_id=...
       appLinks.allUriLinkStream.listen((uri) async {
         // Do something (navigation, ...)
         print('Received uri: $uri');
 
         final uriString = uri.toString();
-
         final context = FireFlutterService.instance.globalContext;
 
         if (context?.mounted == true) {
           if (uriString.contains('/link')) {
             final params = Uri.parse(uriString).queryParameters;
+            if (params.isEmpty) {
+              return;
+            }
+
+            /// 구글 FirebaseAuth 로그인 시, deep_link_id 가 들어오는데, 그냥 리턴한다.
+            if (params['deep_link_id'] != null) {
+              dog('-- appLinks.allUriLinkScream.listen() param has deep_link_id. It is for Firebase Auth. Just return.');
+              return;
+            }
             final pid = params['pid'];
             final uid = params['uid'];
             final cid = params['cid'];
+            final page = params['page'];
 
-            print('pid: $pid, uid: $uid, cid: $cid');
+            print('pid: $pid, uid: $uid, cid: $cid, page: $page');
 
             if (pid != null) {
               final post = await Post.getAllSummary(pid);

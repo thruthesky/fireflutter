@@ -72,7 +72,7 @@
       "name": "Silvers - iPhone SE 3",
       "request": "launch",
       "type": "dart",
-      "deviceId": "iPhone SE",
+      "deviceId": "00008030-000D445A11A3802E",
       "flutterMode": "debug",
       "cwd": "apps/silvers",
       "program": "lib/main.dart"

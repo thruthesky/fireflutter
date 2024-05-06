@@ -20,6 +20,8 @@
     "deploy:typesense": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:typesenseUserIndexing,functions:typesenseCommentIndexing,functions:typesensePostIndexing",
     "deploy:userLike": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:userLikeCreated,functions:userLikeDeleted",
     "deploy:userMirror": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:userMirror",
+    "deploy:postMirror": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:postMirror",
+    "deploy:commentMirror": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:commentMirror",
     "deploy:phoneNumberRegister": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:phoneNumberRegister",
     "deploy:userDeleteAccount": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:userDeleteAccount",
     "deploy:link": "eslint --fix --ext .js,.ts . && firebase deploy --only functions:link,hosting",

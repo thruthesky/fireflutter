@@ -24,8 +24,6 @@ class Code {
   static const String phoneNumber = 'phoneNumber';
   static const String isDisabled = 'isDisabled';
 
-  static const String profileViewNotification = 'profileViewNotification';
-
   static const String userProfilePhotos = 'user-profile-photos';
 
   static const String roomId = 'roomId';
