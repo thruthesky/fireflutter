@@ -17,6 +17,7 @@ class Blocked extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MyDoc(
+      initialData: my,
       builder: (my) => my?.blocked(otherUserUid) == true ? yes() : no(),
     );
   }
