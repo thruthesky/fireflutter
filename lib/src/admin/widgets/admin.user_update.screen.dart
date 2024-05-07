@@ -46,20 +46,19 @@ class _AdminUserUpdateScreenState extends State<AdminUserUpdateScreen> {
                 },
               ),
               CheckboxListTile(
-                value: user.isAdmin,
+                value: isAdmin,
                 title: const Text('관리자 설정'),
-                subtitle: Text(user.isAdmin
-                    ? '관리자입니다. 관리자 권한을 해제하시겠습니까?'
-                    : '관리자로 설정하시겠습니까?'),
+                subtitle: Text(
+                    isAdmin ? '관리자입니다. 관리자 권한을 해제하시겠습니까?' : '관리자로 설정하시겠습니까?'),
                 onChanged: (value) async {
-                  await user.update(isAdmin: value);
-                  await user.reload();
+                  // await user.update(isAdmin: value);
+                  // await user.reload();
                   if (context.mounted) {
                     error(
                       context: context,
-                      title: '관리자 ${user.isAdmin == true ? '지정' : '해제'}',
+                      title: '관리자 ${isAdmin == true ? '지정' : '해제'}',
                       message:
-                          '관리자 ${user.isAdmin == true ? '관리자로 지정되었습니다.' : '관리자 권한 해제되었습니다.'}',
+                          '관리자 ${isAdmin == true ? '관리자로 지정되었습니다.' : '관리자 권한 해제되었습니다.'}',
                     );
                   }
                 },

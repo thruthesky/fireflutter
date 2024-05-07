@@ -115,7 +115,7 @@ Future<void> alert({
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('닫기'),
+                child: Text(T.close.tr),
               ),
             ],
           );

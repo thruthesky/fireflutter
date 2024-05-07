@@ -1,3 +1,10 @@
+## 0.3.29
+
+- Fix. isAdmin
+- Update. initialData has added to MyDoc
+- Update. new comment notification subscription
+
+
 ## 0.3.28
 
 - Add. Dynamic link

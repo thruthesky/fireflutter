@@ -197,6 +197,24 @@ MyDoc.field('${Field.blocks}/$uid', builder: (v) {
 })
 ```
 
+
+### MyDoc 의 initialData 옵션
+
+`MyDoc` 은 StreamBuilder 를 통해서 `UserService.instance.changes` 이벤트를 수신해서, `UserService.instance.user` 가 가지고 있는 값을 빠르게 가져오지만, StreamBuilder 는 loader 를 필수적으로 화면에 표시를 한다. 즉, 화면이 깜빡이게 되는 것이다.
+
+화면이 깜빡이는 이유는 loader 를 표시하기 때문이다.
+
+`initialData` 를 통해서 이미 로드한 사용자의 정보(`UserService.instance.user`)를 전달하면, StreamBuilder 가 loader 를 화면에 나타내지 않고, `initialData` 를 사용한다. 즉, loader 를 화면에 표시하지 않으므로 화면이 깜빡이지 않는다.
+
+특히, 많은 데이터를 리스트로 표현할 때 각 아이템에서 MyDoc 을 사용하면, 화면에 매우 깜빡 거리거나 리스트의 맨 밑으로 스크롤을 내렸을 때, 아래/위로 흔들리는 경우가 종종있다. 이 같은 경우 initialData 를 사용하면 매우 효과적이다.
+
+
+```dart
+MyDoc(initialData: UserService.instance.user, builder: (user) => ... ) // 와 같이 사용 할 수 있다.
+MyDoc(initialData:my, builder: (user) => ... ) // 또는 짧게 my 를 쓸 수 있다.
+```
+
+
 ### 관리자 위젯 표시 (Displaying Admin Widgets)
 
 관리자 인지 확인하기 위해서는 아래와 같이 간단하게 하면 된다. To check if a user is an administrator, you can do it as follows:

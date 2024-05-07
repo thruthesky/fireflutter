@@ -45,7 +45,6 @@ class _CommnetViewState extends State<CommentView> {
                 yes: () => SizedBox.fromSize(),
                 no: () => DisplayDatabasePhotos(
                   urls: widget.comment.urls,
-                  // path:'${Comment.comment(widget.post.id, widget.comment.id)}/${Field.urls}',
                   ref: widget.comment.urlsRef,
                 ),
               ),

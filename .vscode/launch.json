@@ -205,6 +205,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "Example - Simplest - iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.simplest.dart"
+    },
+    {
       "name": "example (Chris) - iPhone 15",
       "request": "launch",
       "type": "dart",
