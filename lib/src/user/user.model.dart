@@ -702,4 +702,16 @@ class User {
     ///
     return re;
   }
+
+  Future disable() {
+    return ref.update({
+      ff.Field.isDisabled: true,
+    });
+  }
+
+  Future enable() {
+    return ref.update({
+      ff.Field.isDisabled: false,
+    });
+  }
 }

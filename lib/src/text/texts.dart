@@ -136,6 +136,9 @@ class T {
   static const String unblocked = 'Unblocked';
   static const String unblockedMessage = 'You have unblocked this user.';
 
+  static const String disabledOnSendMessage =
+      'You cannot send a message because your account is disabled.';
+
   /// Report
   static const String reportInputTitle = 'Report';
   static const String reportInputMessage =

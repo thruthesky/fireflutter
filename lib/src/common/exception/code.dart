@@ -28,6 +28,8 @@ class Code {
 
   static const String roomId = 'roomId';
 
+  static const String notMaster = 'notMaster';
+
   /// Basic CRUD code
   static const String edit = 'edit';
   static const String view = 'view';
