@@ -13,17 +13,27 @@ import 'package:flutter/material.dart';
 /// 그래서 여러군데 동시에 쓰기에 부담이 없는 위젯이다.
 ///
 /// 사용자 문서가 로드되지 않은 경우, (주로, 처음 앱을 실행하는 경우) [builder] 로 null 이 전달될 수 있다.
+///
+/// [initialData] 는 사용자 문서가 로드되지 않은 경우, [builder] 에 전달되는 초기값이다. 자세한 내용은
+/// user.md 를 참고한다.
 class MyDoc extends StatelessWidget {
-  const MyDoc({super.key, required this.builder});
+  const MyDoc({
+    super.key,
+    this.initialData,
+    required this.builder,
+  });
 
+  final User? initialData;
   final Function(User? user) builder;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
-      stream: UserService.instance.myDataChanges,
+      initialData: initialData,
+      stream: UserService.instance.changes,
       builder: (_, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState == ConnectionState.waiting &&
+            snapshot.hasData == false) {
           return const SizedBox(
             width: 32,
             height: 32,
@@ -38,26 +48,6 @@ class MyDoc extends StatelessWidget {
 
         return builder(user);
       },
-    );
-  }
-
-  /// 로그인한 사용자의 DB 에서 하나의 값을 모니터링 한다.
-  ///
-  /// 주의, 굳이 이 함수를 쓸 필요없이, [MyDoc] 위젯을 쓰면 된다. [MyDoc] 위젯은 DB 에서 값을 listen 하는
-  /// 것이 아니라, [UserService.user] 를 listen 하기 때문에, [MyDoc] 위젯을 쓰면, DB 에서 값을 가져오지
-  /// 않기 때문에 더 효율 적이다.
-  ///
-  /// [onLoading] 은 현재 정보를 바탕으로 호출하므로, 깜빡임에 효율적이다.
-  @Deprecated('User MyDoc. MyDoc is more efficient than MyDoc.field()')
-  static Widget field(
-    String field, {
-    required Function(dynamic value) builder,
-  }) {
-    return UserDoc.fieldSync(
-      uid: myUid!,
-      field: field,
-      builder: (v) => builder(v),
-      onLoading: builder(my?.data[field]),
     );
   }
 }

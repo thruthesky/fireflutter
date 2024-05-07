@@ -24,7 +24,7 @@ class _AdminUserListScreenState extends State<AdminUserListScreen> {
           return ListTile(
             title: Text(user.displayName),
             subtitle: Text(user.uid),
-            trailing: Text(user.isAdmin ? '관리자' : ''),
+            trailing: Text(isAdmin ? '관리자' : ''),
             onTap: () {
               AdminService.instance
                   .showUserUpdate(context: context, uid: user.uid);

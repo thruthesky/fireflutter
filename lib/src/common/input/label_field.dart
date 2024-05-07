@@ -43,8 +43,8 @@ class LabelField extends StatelessWidget {
           controller: controller,
           obscureText: obscureText,
           decoration: decoration ?? const InputDecoration(),
-          minLines: minLines,
-          maxLines: maxLines,
+          minLines: obscureText ? 1 : minLines,
+          maxLines: obscureText ? 1 : maxLines,
         ),
         if (description != null)
           Padding(

@@ -56,7 +56,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
 
   @override
   Widget build(BuildContext context) {
-    if (isEdit && room?.isMaster == false && my?.isAdmin == false) {
+    if (isEdit && room?.isMaster == false && isAdmin == false) {
       return const ErrorDialog(
         title: '권한 없음',
         message: '채팅방을 수정할 권한이 없습니다.',
