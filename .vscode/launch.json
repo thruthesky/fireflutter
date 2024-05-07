@@ -56,7 +56,7 @@
       "type": "dart",
       "deviceId": "iPhone 15 Pro Max",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart"
     },
     {
@@ -65,7 +65,7 @@
       "type": "dart",
       "deviceId": "iPhone 14 Pro Max",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart"
     },
     {
@@ -74,7 +74,7 @@
       "type": "dart",
       "deviceId": "00008030-000D445A11A3802E",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart"
     },
     {
@@ -83,7 +83,7 @@
       "type": "dart",
       "deviceId": "iPhone11ProMax",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart"
     },
     {
@@ -92,7 +92,7 @@
       "type": "dart",
       "deviceId": "emulator-5554",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart"
     },
     {
@@ -101,7 +101,7 @@
       "type": "dart",
       "deviceId": "R9ATA00LMJM",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart"
     },
     {
@@ -110,7 +110,7 @@
       "type": "dart",
       "deviceId": "chrome",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart"
     },
     {
@@ -285,7 +285,7 @@
       "type": "dart",
       "deviceId": "8B2FB5BD-4CBA-4C09-8810-BD4D3D003ECF",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["-v", "--dart-define", "MODE=test"]
     },
@@ -295,7 +295,7 @@
       "type": "dart",
       "deviceId": "920A2E68-9FB9-47F5-9705-C023218D340B",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["--dart-define", "MODE=test"]
     },
@@ -305,7 +305,7 @@
       "type": "dart",
       "deviceId": "8B2FB5BD-4CBA-4C09-8810-BD4D3D003ECF",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["-v"]
     },
@@ -315,7 +315,7 @@
       "type": "dart",
       "deviceId": "4EE2C314-5DBF-4992-8246-5B5EC0A38741",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["-v", "--dart-define", "MODE=test"]
     },
@@ -325,7 +325,7 @@
       "type": "dart",
       "deviceId": "emulator-5554",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["--dart-define", "MODE=test"]
     },
@@ -335,7 +335,7 @@
       "type": "dart",
       "deviceId": "00008030-000D445A11A3802E",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["--dart-define", "MODE=test"]
     },
@@ -345,7 +345,7 @@
       "type": "dart",
       "deviceId": "096a885ba083f01af93963a8661720cf9e67cb86",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["--dart-define", "MODE=test"]
     },
@@ -355,7 +355,7 @@
       "type": "dart",
       "deviceId": "R9ATA00LMJM",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart"
       // "args": ["-v",]
     },
@@ -365,7 +365,7 @@
       "type": "dart",
       "deviceId": "emulator-5554",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["-v", "--dart-define", "MODE=test"]
     },
@@ -584,7 +584,7 @@
       "type": "dart",
       "deviceId": "SM T295",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["--dart-define", "MODE=dev"]
     },
@@ -594,7 +594,7 @@
       "type": "dart",
       "deviceId": "iPad (10th generation)",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["--dart-define", "MODE=dev"]
     },
@@ -604,7 +604,7 @@
       "type": "dart",
       "deviceId": "iPhone SE (3rd Generation)",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["--dart-define", "MODE=dev"]
     },
