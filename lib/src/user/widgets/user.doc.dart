@@ -107,14 +107,19 @@ class UserDoc extends StatelessWidget {
     }
 
     return FutureBuilder(
+      initialData: initialData,
       future: get('users/$uid/$field'),
       builder: (_, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          if (initialData != null) {
-            return builder(initialData);
-          } else if (snapshot.hasData) {
-            builder(snapshot.data);
-          } else {
+          // if (initialData != null) {
+          //   return builder(initialData);
+          // } else
+          // if (snapshot.hasData) {
+          //   builder(snapshot.data);
+          // } else {
+          //   return onLoading ?? const SizedBox.shrink();
+          // }
+          if (snapshot.hasData == false) {
             return onLoading ?? const SizedBox.shrink();
           }
         }
