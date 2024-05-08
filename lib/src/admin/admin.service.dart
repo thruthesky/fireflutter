@@ -20,6 +20,14 @@ class AdminService {
     return admins.contains(myUid);
   }
 
+  /// 채팅 관리자의 uid를 가져온다.
+  ///
+  /// 채팅 관리자는 'chat' 권한을 가진 사용자 중에서 가장 먼저 나오는 사용자 한명이다.
+  /// 채팅 관리자가 없으면 null을 반환한다.
+  ///
+  /// 채팅 관리자는 채팅방을 관리하는 사용자이다.
+  /// RTDB 의 /admins 경로에 각 키는 관리자 UID 이고 값은 배열로 권한 목록을 가진다.
+  /// 권한 목록에 'chat' 이 포함되어 있으면 채팅 관리자이다.
   String? get chatAdminUid {
     if (adminsValue.isEmpty) {
       return null;
@@ -32,6 +40,13 @@ class AdminService {
       }
     }
     return null;
+  }
+
+  /// 사용자가 관리자인지 확인한다.
+  ///
+  /// 사용자가 관리자이면 true를 반환한다.
+  bool checkAdmin(String uid) {
+    return admins.contains(uid);
   }
 
   AdminService._() {

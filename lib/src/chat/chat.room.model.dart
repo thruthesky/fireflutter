@@ -568,8 +568,12 @@ class ChatRoom {
       // Added this line of code so that we don't have to reload to
       // get the updated users list.
       users!.remove(uid);
+    } else {
+      throw FireFlutterException(
+        Code.notMaster,
+        'Only the master can remove a user from the chat room.',
+      );
     }
-    // TODO if not master
   }
 
   /// Return the first other user uid from the users list.
