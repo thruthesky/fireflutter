@@ -5,6 +5,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Silvers - iPad",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "9BD5BE12-0818-4028-A6A5-B5D6796A2E93",
+      "flutterMode": "debug",
+      "cwd": "apps/silbus",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "RoHa - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
