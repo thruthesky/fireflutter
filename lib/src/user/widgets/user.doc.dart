@@ -112,6 +112,8 @@ class UserDoc extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           if (initialData != null) {
             return builder(initialData);
+          } else if (snapshot.hasData) {
+            builder(snapshot.data);
           } else {
             return onLoading ?? const SizedBox.shrink();
           }
