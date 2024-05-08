@@ -12,8 +12,7 @@ bool get loggedIn => fb.FirebaseAuth.instance.currentUser != null;
 bool get notLoggedIn => fb.FirebaseAuth.instance.currentUser == null;
 String? get myUid => fb.FirebaseAuth.instance.currentUser?.uid;
 
-///
-// bool get isAdmin => UserService.instance.user?.isAdmin ?? false;
+/// Returns true if the current user is an admin.
 bool get isAdmin => AdminService.instance.isAdmin;
 
 /// Firebase current user

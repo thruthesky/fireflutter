@@ -136,19 +136,11 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
   }
 
   send({String? text, String? url}) async {
-    try {
-      if (text != null) {
-        await widget.chat.sendMessage(text: text);
-      }
-      if (url != null) {
-        await widget.chat.sendMessage(url: url);
-      }
-    } on FireFlutterException catch (e) {
-      if (mounted) {
-        error(context: context, message: '${e.code.tr}\n${e.message}');
-      }
-    } catch (e) {
-      rethrow;
+    if (text != null) {
+      await widget.chat.sendMessage(text: text);
+    }
+    if (url != null) {
+      await widget.chat.sendMessage(url: url);
     }
   }
 }

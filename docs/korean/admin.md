@@ -24,3 +24,10 @@ StreamBuilder(
 );
 ```
 
+
+
+## 관리자 화면
+
+
+
+- `showDashboard`

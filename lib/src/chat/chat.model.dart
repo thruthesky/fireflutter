@@ -71,10 +71,9 @@ class ChatModel {
   }) async {
     if ((url == null || url.isEmpty) && (text == null || text.isEmpty)) return;
 
-    /// TODO 관리자 모드에서 특정 사용자에게 disabled 한 다음 테스트 할 것.
+    /// 차단되면, 메시지를 전송하지 않고 에러를 낸다.
     if (force == false && UserService.instance.user?.isDisabled == true) {
-      throw FireFlutterException(
-          Code.disabled, 'You are disabled. chat.model.dart->sendMessage()');
+      throw FireFlutterException(Code.disabled, T.disabledOnSendMessage);
     }
 
     /// 방에 입장하지 않은 상태이면, [force] 가 true 이더라도 메시지를 전송하지 않는다.
