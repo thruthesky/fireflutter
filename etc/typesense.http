@@ -35,3 +35,17 @@ X-TYPESENSE-API-KEY: {{apiKey}}
        {"name": "content", "type": "string", "optional": true, "infix": true}
    ]
 }
+
+
+### Edit the schema of the collection
+###
+PATCH {{scheme}}://{{serverUrl}}/collections/silbusForum
+X-TYPESENSE-API-KEY: {{apiKey}}
+
+{
+   "fields": [
+       {"name": "urls", "type": "string[]", "optional": true}
+   ]
+}
+
+
