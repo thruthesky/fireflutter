@@ -54,9 +54,6 @@
       ".read": true,
       "$uid": {
         ".write": "$uid === auth.uid || root.child('admins').hasChild(auth.uid)",
-        "isAdmin": {
-          ".validate": "root.child('admins').hasChild(auth.uid)"
-        },
         "isDisabled": {
           ".validate": "root.child('admins').hasChild(auth.uid)"
         }

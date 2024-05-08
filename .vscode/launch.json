@@ -51,66 +51,66 @@
       "program": "lib/main.dart"
     },
     {
-      "name": "Silvers - iPhone 15 Pro Max",
+      "name": "Silbus - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
       "deviceId": "iPhone 15 Pro Max",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart"
     },
     {
-      "name": "Silvers - iPhone 14 Pro Max",
+      "name": "Silbus - iPhone 14 Pro Max",
       "request": "launch",
       "type": "dart",
       "deviceId": "iPhone 14 Pro Max",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart"
     },
     {
-      "name": "Silvers - iPhone SE 3",
+      "name": "Silbus - iPhone SE 3",
       "request": "launch",
       "type": "dart",
       "deviceId": "00008030-000D445A11A3802E",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart"
     },
     {
-      "name": "Silvers - iPhone11ProMax",
+      "name": "Silbus - iPhone11ProMax",
       "request": "launch",
       "type": "dart",
       "deviceId": "iPhone11ProMax",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart"
     },
     {
-      "name": "Silvers - Emulator",
+      "name": "Silbus - Emulator",
       "request": "launch",
       "type": "dart",
       "deviceId": "emulator-5554",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart"
     },
     {
-      "name": "Silvers - Galaxy - A45",
+      "name": "Silbus - Galaxy - A45",
       "request": "launch",
       "type": "dart",
       "deviceId": "R9ATA00LMJM",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart"
     },
     {
-      "name": "Silvers - Chrome",
+      "name": "Silbus - Chrome",
       "request": "launch",
       "type": "dart",
       "deviceId": "chrome",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart"
     },
     {
@@ -280,92 +280,92 @@
       "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
-      "name": "Silvers (Chris) TEST - iPhone 15 Pro Max (debug)",
+      "name": "Silbus (Chris) TEST - iPhone 15 Pro Max (debug)",
       "request": "launch",
       "type": "dart",
       "deviceId": "8B2FB5BD-4CBA-4C09-8810-BD4D3D003ECF",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
-      "name": "Silvers (Chris) TEST - iPhone SE 17.4 (debug)",
+      "name": "Silbus (Chris) TEST - iPhone SE 17.4 (debug)",
       "request": "launch",
       "type": "dart",
       "deviceId": "920A2E68-9FB9-47F5-9705-C023218D340B",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
-      "program": "lib/main.dart"
-      // "args": ["--dart-define", "MODE=test"]
+      "cwd": "apps/silbus",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=test"]
     },
     {
-      "name": "Silvers (Chris) - iPhone 15 Pro Max (debug)",
+      "name": "Silbus (Chris) - iPhone 15 Pro Max (debug)",
       "request": "launch",
       "type": "dart",
       "deviceId": "8B2FB5BD-4CBA-4C09-8810-BD4D3D003ECF",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["-v"]
     },
     {
-      "name": "Silvers (Chris) TEST - iPhone 15 Pro (debug)",
+      "name": "Silbus (Chris) TEST - iPhone 15 Pro (debug)",
       "request": "launch",
       "type": "dart",
       "deviceId": "4EE2C314-5DBF-4992-8246-5B5EC0A38741",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
-      "name": "Silvers (Chris) TEST - Emulator (debug)",
+      "name": "Silbus (Chris) TEST - Emulator (debug)",
       "request": "launch",
       "type": "dart",
       "deviceId": "emulator-5554",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["--dart-define", "MODE=test"]
     },
     {
-      "name": "Silvers (Chris) TEST - iPhone external sm (debug)",
+      "name": "Silbus (Chris) TEST - iPhone external sm (debug)",
       "request": "launch",
       "type": "dart",
       "deviceId": "00008030-000D445A11A3802E",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["--dart-define", "MODE=test"]
     },
     {
-      "name": "Silvers (Chris) TEST - iPhone external pink (debug)",
+      "name": "Silbus (Chris) TEST - iPhone external pink (debug)",
       "request": "launch",
       "type": "dart",
       "deviceId": "096a885ba083f01af93963a8661720cf9e67cb86",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["--dart-define", "MODE=test"]
     },
     {
-      "name": "Silvers (Chris) - External Sam (debug)",
+      "name": "Silbus (Chris) - External Sam (debug)",
       "request": "launch",
       "type": "dart",
       "deviceId": "R9ATA00LMJM",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart"
       // "args": ["-v",]
     },
     {
-      "name": "Silvers (Chris) TEST - Emulator (debug)",
+      "name": "Silbus (Chris) TEST - Emulator (debug)",
       "request": "launch",
       "type": "dart",
       "deviceId": "emulator-5554",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["-v", "--dart-define", "MODE=test"]
     },
@@ -580,32 +580,32 @@
       "args": ["-v", "--dart-define", "MODE=dev"]
     },
     {
-      "name": "Silvers (Noe) TEST - SM T295 (debug)",
+      "name": "Silbus (Noe) TEST - SM T295 (debug)",
       "request": "launch",
       "type": "dart",
       "deviceId": "SM T295",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["--dart-define", "MODE=dev"]
     },
     {
-      "name": "Silvers (Noe) TEST - iPad (10th generation) (debug)",
+      "name": "Silbus (Noe) TEST - iPad (10th generation) (debug)",
       "request": "launch",
       "type": "dart",
       "deviceId": "iPad (10th generation)",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["--dart-define", "MODE=dev"]
     },
     {
-      "name": "Silvers (Noe) TEST - iPhone SE (3rd Generation)",
+      "name": "Silbus (Noe) TEST - iPhone SE (3rd Generation)",
       "request": "launch",
       "type": "dart",
       "deviceId": "iPhone SE (3rd Generation)",
       "flutterMode": "debug",
-      "cwd": "apps/silvers",
+      "cwd": "apps/silbus",
       "program": "lib/main.dart",
       "args": ["--dart-define", "MODE=dev"]
     },
