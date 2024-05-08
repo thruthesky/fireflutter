@@ -1,51 +1,8 @@
-@scheme=https
-@serverUrl=ts.philgo.com:443
+@scheme=http
+@serverUrl=178.128.124.178:8108
 @apiKey=12345a
 
 
 # 시스템 상태 확인하기
 ###
 {{scheme}}://{{serverUrl}}/health
-
-### Get the information of the collection (NOT the documents)
-{{scheme}}://{{serverUrl}}/collections/silbusUsers
-X-TYPESENSE-API-KEY: {{apiKey}}
-
-### Get the information of the collection (NOT the documents)
-{{scheme}}://{{serverUrl}}/collections/silbusForum
-X-TYPESENSE-API-KEY: {{apiKey}}
-
-### Search documents in testSearch
-{{scheme}}://{{serverUrl}}/collections/silbusForum/documents/search
-?q=
-&query_by=title
-&sort_by=createdAt:desc
-&per_page=100
-X-TYPESENSE-API-KEY: {{apiKey}}
-
-
-### Edit the schema of the collection
-###
-PATCH {{scheme}}://{{serverUrl}}/collections/silbusForum
-X-TYPESENSE-API-KEY: {{apiKey}}
-
-{
-   "fields": [
-       {"name": "content", "drop": true},
-       {"name": "content", "type": "string", "optional": true, "infix": true}
-   ]
-}
-
-
-### Edit the schema of the collection
-###
-PATCH {{scheme}}://{{serverUrl}}/collections/silbusForum
-X-TYPESENSE-API-KEY: {{apiKey}}
-
-{
-   "fields": [
-       {"name": "urls", "type": "string[]", "optional": true}
-   ]
-}
-
-
