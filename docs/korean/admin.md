@@ -30,4 +30,6 @@ StreamBuilder(
 
 
 
-- `showDashboard`
+- `AdminService.instance.showDashboard()` 를 호출하면 FireFlutter 에서 제공하는 기본 관리자 화면이 나온다.
+
+

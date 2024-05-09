@@ -465,7 +465,7 @@
       "deviceId": "iPhone 15 Pro Max",
       "flutterMode": "debug",
       "cwd": "apps/roha",
-      "program": "lib/main.dart",
+      "program": "lib/main.dart"
       // "args": ["--dart-define", "MODE=dev"]
     },
     {
@@ -525,9 +525,10 @@
       "deviceId": "ROWM705A3NJ",
       "flutterMode": "debug",
       "cwd": "apps/roha",
-      "program": "lib/main.dart",
+      "program": "lib/main.dart"
       // "args": ["--dart-define", "MODE=dev"]
-    }, {
+    },
+    {
       "name": "RoHa (Noe) TEST - iphone 7",
       "request": "launch",
       "type": "dart",
@@ -629,4 +630,3 @@
     }
   ]
 }
-

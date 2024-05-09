@@ -56,7 +56,7 @@ migrate_working_dir/
 .dart_tool/
 build/
 
-
+pubspec.lock
 
 ## Firebase Functions
 
