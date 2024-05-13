@@ -297,14 +297,14 @@
       "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
-      "name": "Silbus (Chris) TEST - iPhone 15 Pro Max (debug)",
+      "name": "Silbus (Chris) TEST - iPhone 15 Pro Max 17.4 (debug)",
       "request": "launch",
       "type": "dart",
-      "deviceId": "8B2FB5BD-4CBA-4C09-8810-BD4D3D003ECF",
+      "deviceId": "2978D553-F5B1-4BB4-99B8-EC6C136E15BE",
       "flutterMode": "debug",
       "cwd": "apps/silbus",
-      "program": "lib/main.dart",
-      "args": ["-v", "--dart-define", "MODE=test"]
+      "program": "lib/main.dart"
+      // "args": ["-v", "--dart-define", "MODE=test"]
     },
     {
       "name": "Silbus (Chris) TEST - iPhone SE 17.4 (debug)",
