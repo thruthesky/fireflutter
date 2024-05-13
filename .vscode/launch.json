@@ -5,6 +5,14 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "SDS - iPhone 14 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "cwd": "apps/social_design_system/example",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Silvers - iPad",
       "request": "launch",
       "type": "dart",
