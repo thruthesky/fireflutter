@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
@@ -15,6 +17,8 @@ class AdminService {
   List<String> get admins => adminsValue.keys.toList();
 
   BehaviorSubject<bool> isAdminStream = BehaviorSubject<bool>.seeded(false);
+
+  StreamSubscription? adminListSubscription;
 
   bool get isAdmin {
     return admins.contains(myUid);
@@ -57,7 +61,10 @@ class AdminService {
   ///
   /// 관리자 목록을 가져와 메모리에 넣어 놓는다. 그리고 실시간 업데이트를 한다.
   init() {
-    adminRef.onValue.listen((event) {
+    if (adminListSubscription != null) {
+      adminListSubscription!.cancel();
+    }
+    adminListSubscription = adminRef.onValue.listen((event) {
       if (event.snapshot.value == null) {
         return;
       }
