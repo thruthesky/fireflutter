@@ -5,6 +5,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "SDS - iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "apps/social_design_system/example",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "RoHa - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
