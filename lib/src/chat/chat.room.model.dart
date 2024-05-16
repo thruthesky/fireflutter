@@ -461,6 +461,9 @@ class ChatRoom {
   /// 에러가 있으면 Exception 을 던지거나 에러 코드를 리턴한다. 심각한 에러의 경우 Exception 을 던진다.
   /// 특히, 에러가 있어도 무시하고 계속 진행을 해도 되는 에러의 경우, 에러 코드를 리턴한다.
   ///
+  /// invite 함수를 호출 한 다음, 업데이트된 채팅방 정보가 필요하면 [reload] 함수를 호출하면 된다. 예를 들어,
+  /// 채팅방에 사용자를 초대하면, 채팅방 목록에 사용자가 나타나지 않을 수 있다. 그래서, 채팅방 목록을 다시 읽어야 한다.
+  ///
   Future<String?> invite(String uid, {bool forceJoin = false}) async {
     /// 채팅방 설정이 인증 회원 전용 입장 체크
     ///
@@ -538,7 +541,7 @@ class ChatRoom {
   /// 내가 채팅방에 들어가는 것은 채팅방의 'users' 필드에 나의 uid 를 추가하면 된다.
   /// 다른 사람을 채팅방에 초대하는 것은 다른 사람의 uid 를 'users' 필드에 추가하면 된다.
   ///
-  /// [uid] 는 [invite] 함수의 uid 와 동일한다. invite 함수 참고
+  /// [uid] 는 [invite] 함수의 uid 와 동일한다. invite 함수 참고.
   Future<String?> join({String? uid, bool forceJoin = false}) async {
     if (myUid == null) {
       // 로그인을 하지 않았으면 그냥 리턴

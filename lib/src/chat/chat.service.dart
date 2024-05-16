@@ -19,8 +19,12 @@ class ChatService {
   /// Firebase Realtime Database instance
   FirebaseDatabase get rtdb => FirebaseDatabase.instance;
   DatabaseReference get roomsRef => rtdb.ref().child('chat-rooms');
-  DatabaseReference get messageseRef => rtdb.ref().child('chat-messages');
   DatabaseReference roomRef(String roomId) => roomsRef.child(roomId);
+
+  /// 전체 채팅방 ref
+  DatabaseReference get messagesRef => rtdb.ref().child('chat-messages');
+
+  /// 채팅방 1개 ref
   DatabaseReference messageRef({required String roomId}) =>
       rtdb.ref().child('chat-messages').child(roomId);
 

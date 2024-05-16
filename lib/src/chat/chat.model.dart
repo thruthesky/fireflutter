@@ -21,12 +21,15 @@ class ChatModel {
   ChatRoom room;
   FirebaseDatabase get rtdb => FirebaseDatabase.instance;
   DatabaseReference get roomsRef => rtdb.ref().child('chat-rooms');
-  DatabaseReference get messageseRef => rtdb.ref().child('chat-messages');
+
   DatabaseReference roomRef(String roomId) => roomsRef.child(roomId);
 
-  @Deprecated('Use ChatModel.messageRef instead of ChatModel.messageseRef')
+  /// 전체 채팅방 ref
+  DatabaseReference get messagesRef => ChatService.instance.messagesRef;
+
+  /// 채팅방 1개 ref
   DatabaseReference messageRef({required String roomId}) =>
-      rtdb.ref().child('chat-messages').child(roomId);
+      ChatService.instance.messageRef(roomId: roomId);
 
   /// [roomUserRef] is the reference to the users node under the group chat room. Ex) /chat-rooms/{roomId}/users/{my-uid}
   DatabaseReference roomUserRef(String roomId, String uid) =>
