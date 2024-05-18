@@ -1,22 +1,31 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/meetup/widgets/meetup.view.screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class MeetupService {
   static MeetupService? _instance;
-  static MeetupService get instance => _instance ??= MeetupService._();
+  static MeetupService get instance => _instance ?? MeetupService._();
 
   MeetupService._();
 
-  showCreateScreen({
+  showViewScreen({
     required BuildContext context,
-    required String? clubId,
+    required Meetup meetup,
   }) {
     showGeneralDialog(
       context: context,
-      pageBuilder: (context, animation, secondaryAnimation) => MeetupEditScreen(
-        clubId: clubId,
-      ),
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          MeetupViewScreen(meetup: meetup),
+    );
+  }
+
+  showCreateScreen({
+    required BuildContext context,
+  }) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          const MeetupEditScreen(),
     );
   }
 
@@ -27,18 +36,6 @@ class MeetupService {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, animation, secondaryAnimation) => MeetupEditScreen(
-        meetup: meetup,
-      ),
-    );
-  }
-
-  showViewScreen({
-    required BuildContext context,
-    required Meetup meetup,
-  }) {
-    showGeneralDialog(
-      context: context,
-      pageBuilder: (context, animation, secondaryAnimation) => MeetupViewScreen(
         meetup: meetup,
       ),
     );

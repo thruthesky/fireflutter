@@ -1,33 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
 
 class Meetup {
-  static CollectionReference col =
-      FirebaseFirestore.instance.collection('meetups');
+  static final col = FirebaseFirestore.instance.collection('clubs');
 
-  DocumentReference get ref => Meetup.col.doc(id);
-
-  final String id;
-  final String? clubId;
+  String id;
   final String uid;
-  final List<String> users;
-  final String title;
+  final String master;
+  final String name;
   final String description;
   final String? photoUrl;
-  final DateTime? meetAt;
+  final List<String> users;
+  final String reminder;
 
   Meetup({
     required this.id,
-    required this.clubId,
     required this.uid,
-    required this.title,
+    required this.master,
+    required this.name,
     required this.description,
-    required this.photoUrl,
+    this.photoUrl,
     required this.users,
-    required this.meetAt,
+    required this.reminder,
   });
 
+  DocumentReference get ref => col.doc(id);
+
   bool get joined => users.contains(myUid);
+  bool get isMaster => master == myUid;
 
   factory Meetup.fromSnapshot(DocumentSnapshot snapshot) {
     return Meetup.fromMap(snapshot.data() as Map, snapshot.id);
@@ -36,79 +37,76 @@ class Meetup {
   factory Meetup.fromMap(Map<dynamic, dynamic> map, String id) {
     return Meetup(
       id: id,
-      clubId: map['clubId'],
       uid: map['uid'],
-      title: map['title'] ?? '',
+      master:
+          map['master'] ?? map['uid'], // 초반 개발에서 에러 방지. 나중에 map[uid] 는 없애도 됨.
+      name: map['name'] ?? '',
       description: map['description'] ?? '',
       photoUrl: map['photoUrl'],
       users: List<String>.from((map['users'] ?? [])),
-      meetAt: map['meetAt'] is Timestamp
-          ? (map['meetAt'] as Timestamp).toDate()
-          : null,
+      reminder: map['reminder'] ?? '',
     );
-  }
-
-  /// Generate toMap method
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'clubId': clubId,
-      'uid': uid,
-      'title': title,
-      'description': description,
-      'photoUrl': photoUrl,
-      'users': users,
-      'meetAt': meetAt,
-    };
-  }
-
-  /// 오프라인 모임 생성을 위한, 데이터 맵을 만든다.
-  static Map<String, dynamic> toCreate({
-    String? clubId,
-    required String title,
-  }) {
-    return {
-      if (clubId != null) 'clubId': clubId,
-      'uid': myUid!,
-      'users': [],
-      'title': title,
-      'createdAt': FieldValue.serverTimestamp(),
-    };
   }
 
   @override
   String toString() {
-    return "Meetup{${toMap()}}";
+    return 'Meetup{id: $id, uid: $uid, master: $master, name: $name, description: $description, photoUrl: $photoUrl, users: $users, reminder: $reminder}';
   }
 
-  /// 오프라인 모임 일정 만들기
+  /// 클럽 생성을 위한, 데이터 맵을 만든다.
+  static Map<String, dynamic> toCreate({
+    required String name,
+  }) {
+    return {
+      'uid': myUid!,
+      'master': myUid!,
+      'users': [myUid!],
+      'name': name,
+      'createdAt': FieldValue.serverTimestamp(),
+    };
+  }
+
+  static Future<Meetup> get({String? id, DocumentReference? ref}) async {
+    if (id == null && ref == null) {
+      throw FireFlutterException('club-get/id-null', 'Input id or ref.');
+    }
+    ref ??= col.doc(id);
+    final snapshot = await ref.get();
+    return Meetup.fromSnapshot(snapshot);
+  }
+
+  /// 모임 만들기
   ///
+  /// 1. 채팅방 생성
+  /// 2. 게시판 생성
+  /// 3. 갤러리 게시판 생성
+  ///
+  /// 생성된 Meetup 객체를 리턴한다.
   static Future<Meetup> create({
-    String? clubId,
-    required String title,
+    required String name,
   }) async {
-    if (title.trim().isEmpty) {
-      throw FireFlutterException(
-        'club-meetup-create/title-empty',
-        'Input title.',
-      );
+    if (name.trim().isEmpty) {
+      throw FireFlutterException('club-create/name-empty', 'Input name.');
     }
 
     final ref = await col.add(
       Meetup.toCreate(
-        clubId: clubId,
-        title: title,
+        name: name,
       ),
     );
 
-    final meetup = await get(ref);
+    final club = await Meetup.get(ref: ref);
 
-    return meetup;
-  }
+    final room = await ChatRoom.create(
+      name: name,
+      roomId: club.id,
+      isOpenGroupChat: false,
+    );
 
-  static Future<Meetup> get(DocumentReference ref) async {
-    final snapshot = await ref.get();
-    return Meetup.fromSnapshot(snapshot);
+    final chat = ChatModel(room: room);
+    await chat.room.join(forceJoin: true);
+
+    return club;
   }
 
   /// Update club
@@ -120,23 +118,22 @@ class Meetup {
   ///
   ///
   Future<void> update({
-    String? title,
+    String? name,
     String? description,
     String? photoUrl,
     bool? hasPhoto,
-    DateTime? meetAt,
+    String? reminder,
   }) async {
     // 모임 이름이 들어오는 경우, 빈 문자열이면 에러
-    if (title != null && title.trim().isEmpty) {
-      throw FireFlutterException(
-          'club-meetup-update/title-empty', 'Input title.');
+    if (name != null && name.trim().isEmpty) {
+      throw FireFlutterException('club-update/name-empty', 'Input name.');
     }
 
     final Map<String, dynamic> data = {
-      if (title != null) 'title': title,
+      if (name != null) 'name': name,
       if (description != null) 'description': description,
-      if (meetAt != null) 'meetAt': meetAt,
       'updatedAt': FieldValue.serverTimestamp(),
+      if (reminder != null) 'reminder': reminder,
     };
 
     /// Photo
@@ -153,33 +150,34 @@ class Meetup {
     await ref.update(data);
   }
 
-  Future<void> join() async {
-    if (users.contains(myUid)) {
-      throw FireFlutterException(
-        Code.meetupAlreadyJoined,
-        'You already joined this meetup.',
-      );
-    }
-
+  /// 클럽 가입
+  ///
+  /// 클럽 가입 할 때, 채팅방에 따로 입장 할 필요 없이, 최초 채팅방 입장시 자동으로 chat-rooms/{users}, chat-join 등이 설정된다.
+  /// 하지만, 사용자가 채팅방에 입장을 하지 않을 수 있으니, 미리 채팅방 입장을 해 준다.
+  join() async {
     await ref.update({
       'users': FieldValue.arrayUnion([myUid]),
     });
-
-    users.add(myUid!);
+    await ChatRoom.fromRoomdId(id).join(uid: myUid!, forceJoin: true);
   }
 
-  Future<void> leave() async {
-    if (users.contains(myUid) == false) {
-      throw FireFlutterException(
-        Code.meetupNotJoined,
-        'You have not joined this meetup, yet.',
-      );
-    }
-
+  /// 클럽 탈퇴
+  ///
+  /// 이 때, 채팅방도 같이 탈퇴를 해야 한다.
+  leave() async {
     await ref.update({
       'users': FieldValue.arrayRemove([myUid]),
     });
+    await ChatRoom.fromRoomdId(id).leave();
+  }
 
-    users.remove(myUid);
+  /// 클럽 삭제
+  ///
+  /// 현재는 채팅방이나 게시글을 삭제하지 않고, 그냥 클럽 문서만 삭제를 해 버린다.
+  Future delete({required BuildContext context}) async {
+    final re = await confirm(
+        context: context, title: '모임 삭제', message: '정말 모임을 삭제하시겠습니까?');
+    if (re != true) return;
+    await ref.delete();
   }
 }

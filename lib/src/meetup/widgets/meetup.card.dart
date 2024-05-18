@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/meetup/meetup.service.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
+/// Meetup dard
+///
+/// Meetup card widget to show meetup information in a card.
 class MeetupCard extends StatelessWidget {
   const MeetupCard({
     super.key,
@@ -20,38 +21,60 @@ class MeetupCard extends StatelessWidget {
         meetup: meetup,
       ),
       child: Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (meetup.photoUrl != null)
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: CachedNetworkImage(
+        // padding: const EdgeInsets.all(16),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Stack(
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (meetup.photoUrl != null)
+                CachedNetworkImage(
                   imageUrl: meetup.photoUrl!,
                   width: double.infinity,
-                  height: 220,
+                  height: 240,
                   fit: BoxFit.cover,
                 ),
-              ),
-            const SizedBox(height: 8),
-            Text(
-              meetup.title,
-              style: Theme.of(context).textTheme.titleSmall,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            if (meetup.meetAt != null)
-              Row(
-                children: [
-                  Text(DateFormat.yMMMEd('ko').format(meetup.meetAt!)),
-                  const SizedBox(width: 10),
-                  Text(
-                    DateFormat.jm('ko').format(meetup.meetAt!),
+
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black,
+                      ],
+                    ),
                   ),
-                ],
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        meetup.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-          ],
+              // Text(
+              //   meetup.description.cut(128),
+              //   maxLines: 1,
+              //   overflow: TextOverflow.ellipsis,
+              // ),
+              // Text('회원 수: ${meetup.users.length} 명'),
+            ],
+          ),
         ),
       ),
     );

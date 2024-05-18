@@ -1,13 +1,13 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class ClubJoinButton extends StatelessWidget {
-  const ClubJoinButton({
+class MeetupJoinButton extends StatelessWidget {
+  const MeetupJoinButton({
     super.key,
-    required this.club,
+    required this.meetup,
   });
 
-  final Club club;
+  final Meetup meetup;
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +21,15 @@ class ClubJoinButton extends StatelessWidget {
           );
           return;
         } else {
-          if (club.joined) {
-            await club.leave();
+          if (meetup.joined) {
+            await meetup.leave();
           } else {
-            await club.join();
+            await meetup.join();
           }
         }
       },
       child: Text(
-        club.joined ? '탈퇴하기' : '가입하기',
+        meetup.joined ? '탈퇴하기' : '가입하기',
       ),
     );
   }

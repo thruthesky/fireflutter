@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 /// 클럽 목록 위젯
 ///
-/// [query] 파라미터를 통해, Firestore 쿼리를 전달할 수 있다. 기본 값은 `Club.col.orderBy('createdAt', descending: true)` 이다.
+/// [query] 파라미터를 통해, Firestore 쿼리를 전달할 수 있다. 기본 값은 `Meetup.col.orderBy('createdAt', descending: true)` 이다.
 ///
 /// [loadingBuilder] 파라미터를 통해, 데이터를 불러오는 중일 때 보여줄 위젯을 지정할 수 있다. 기본 값은 `CircularProgressIndicator.adaptive()` 이다.
 ///
@@ -64,14 +64,14 @@ class MeetupListView extends StatelessWidget {
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final String? restorationId;
   final Clip clipBehavior;
-  final Widget Function(Club, int)? itemBuilder;
+  final Widget Function(Meetup, int)? itemBuilder;
   final Widget Function()? emptyBuilder;
 
   @override
   Widget build(BuildContext context) {
     return FirestoreQueryBuilder(
       query: query ??
-          Club.col
+          Meetup.col
               .where('hasPhoto', isEqualTo: true)
               .orderBy('createdAt', descending: true),
       builder: (_, snapshot, __) {
@@ -118,8 +118,9 @@ class MeetupListView extends StatelessWidget {
               // It is safe to call this function from within the build method.
               snapshot.fetchMore();
             }
-            final club = Club.fromSnapshot(snapshot.docs[index]);
-            return itemBuilder?.call(club, index) ?? ClubListTile(club: club);
+            final club = Meetup.fromSnapshot(snapshot.docs[index]);
+            return itemBuilder?.call(club, index) ??
+                MeetupListTile(meetup: club);
           },
         );
       },

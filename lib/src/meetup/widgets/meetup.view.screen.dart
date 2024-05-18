@@ -1,151 +1,249 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/meetup/meetup.service.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class MeetupViewScreen extends StatefulWidget {
-  const MeetupViewScreen({
-    super.key,
-    required this.meetup,
-  });
+  static const String routeName = '/Meetup';
+  const MeetupViewScreen({super.key, required this.meetup});
 
   final Meetup meetup;
 
   @override
-  State<MeetupViewScreen> createState() => _MeetupViewScreenState();
+  State<MeetupViewScreen> createState() => _ClubViewScreenState();
 }
 
-class _MeetupViewScreenState extends State<MeetupViewScreen> {
-  /// 클럽에 연결된 밋업이면 클럽 정보를 가져온다.
-  Club? club;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.meetup.clubId != null) {
-      Club.get(id: widget.meetup.clubId!).then((value) => club = value);
-    }
-  }
-
+class _ClubViewScreenState extends State<MeetupViewScreen> {
+  final ValueNotifier<int> _tabIndex = ValueNotifier<int>(0);
   @override
   Widget build(BuildContext context) {
-    return MeetupDoc(
-      meetup: widget.meetup,
-      builder: (meetup) => Scaffold(
+    return DefaultTabController(
+      length: 5,
+      child: Scaffold(
+        // backgroundColor: Colors.blue,
         appBar: AppBar(
-          title: Text(widget.meetup.title),
+          title: Text(widget.meetup.name),
           actions: [
-            IconButton(
-              onPressed: () {
-                MeetupService.instance.showUpdateScreen(
-                  context: context,
-                  meetup: widget.meetup,
-                );
-              },
-              icon: const Icon(
-                Icons.edit,
+            MeetupDoc(
+              meetup: widget.meetup,
+              builder: (meetup) => ValueListenableBuilder(
+                valueListenable: _tabIndex,
+                builder: (_, index, __) {
+                  if (meetup.isMaster && index == 1) {
+                    return TextButton(
+                      onPressed: () =>
+                          MeetupEventService.instance.showCreateScreen(
+                        context: context,
+                        clubId: meetup.id,
+                      ),
+                      child: const Text('일정 생성'),
+                    );
+                  } else if (meetup.joined && (index == 3 || index == 4)) {
+                    return TextButton(
+                      onPressed: () =>
+                          ForumService.instance.showPostCreateScreen(
+                        context: context,
+                        category: widget.meetup.id +
+                            (index == 4 ? '-club-gallery' : '-club-post'),
+                      ),
+                      child: const Text('글 쓰기'),
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
               ),
             ),
-            const SizedBox(width: 8),
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (meetup.photoUrl != null)
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: CachedNetworkImage(
-                    imageUrl: meetup.photoUrl!,
-                    width: double.infinity,
-                    height: 200,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              const SizedBox(height: 16),
-              Text(
-                "모임 날짜 & 시간",
-                style: Theme.of(context).textTheme.labelSmall,
-              ),
-              if (meetup.meetAt != null)
-                Row(
-                  children: [
-                    Text(DateFormat.yMMMEd('ko').format(meetup.meetAt!)),
-                    const SizedBox(width: 10),
-                    Text(
-                      DateFormat.jm('ko').format(meetup.meetAt!),
-                    ),
-                  ],
-                ),
-              const SizedBox(height: 16),
-              Text(
-                '모임 설명',
-                style: Theme.of(context).textTheme.labelSmall,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(meetup.description),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              if (meetup.joined)
-                ElevatedButton(
-                  onPressed: () async {
-                    if (club != null && club!.joined == false) {
-                      error(
-                          context: context,
-                          title: '클럽 가입 필요',
-                          message: '모임에 먼저 가입을 해 주세요.');
-                      return;
-                    }
-                    await meetup.leave();
-                    toast(context: context, message: '참석을 취소했습니다.');
-                  },
-                  child: const Text('참석 취소하기'),
-                )
-              else
-                ElevatedButton(
-                  onPressed: () async {
-                    if (club != null && club!.joined == false) {
-                      error(
-                          context: context,
-                          title: '클럽 가입 필요',
-                          message: '모임에 먼저 가입을 하신 다음, 참석 신청을 주세요.');
-                      return;
-                    }
-                    await meetup.join();
-                    toast(context: context, message: '참석 신청했습니다.');
-                  },
-                  child: const Text('참석 신청하기'),
-                ),
-              const SizedBox(height: 16),
-              const Text('참석 신청자 목록'),
-              if (meetup.users.isNotEmpty)
-                Wrap(
-                  children: meetup.users
-                      .map(
-                        (uid) => Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: UserAvatar.sync(
-                            uid: uid,
-                            size: 64,
-                            radius: 26,
+            MeetupDoc(
+              meetup: widget.meetup,
+              builder: (meetup) => PopupMenuButton<String>(
+                  icon: const Icon(Icons.menu),
+                  itemBuilder: (context) {
+                    return [
+                      if (meetup.isMaster)
+                        const PopupMenuItem(
+                          value: Code.edit,
+                          child: Row(
+                            children: [
+                              Icon(Icons.edit),
+                              SizedBox(width: 8),
+                              Text('모임 정보 수정'),
+                            ],
                           ),
                         ),
-                      )
-                      .toList(),
-                )
-              else
-                const Text('참석 신청자가 없습니다.'),
+                      if (meetup.joined)
+                        const PopupMenuItem(
+                          value: Code.leave,
+                          child: Row(
+                            children: [
+                              Icon(Icons.logout),
+                              SizedBox(width: 8),
+                              Text('모임 탈퇴'),
+                            ],
+                          ),
+                        )
+                      else
+                        const PopupMenuItem(
+                          value: Code.join,
+                          child: Row(
+                            children: [
+                              Icon(Icons.how_to_reg),
+                              SizedBox(width: 8),
+                              Text('모임 가입'),
+                            ],
+                          ),
+                        ),
+                      if (meetup.isMaster) ...[
+                        const PopupMenuDivider(),
+                        const PopupMenuItem(
+                          value: Code.reminders,
+                          child: Row(
+                            children: [
+                              Icon(Icons.newspaper),
+                              SizedBox(width: 8),
+                              Text('공지사항 관리'),
+                            ],
+                          ),
+                        ),
+                        const PopupMenuItem(
+                          value: Code.delete,
+                          child: Row(
+                            children: [
+                              Icon(Icons.close),
+                              SizedBox(width: 8),
+                              Text('모임 폐쇄'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ];
+                  },
+                  onSelected: (String code) async {
+                    if (code == Code.edit) {
+                      MeetupService.instance.showUpdateScreen(
+                        context: context,
+                        meetup: widget.meetup,
+                      );
+                    } else if (code == Code.delete) {
+                      await widget.meetup.delete(context: context);
+                    } else if (code == Code.leave) {
+                      await widget.meetup.leave();
+                    } else if (code == Code.join) {
+                      await widget.meetup.join();
+                    } else if (code == Code.reminders) {
+                      final text = await input(
+                        context: context,
+                        initialValue: meetup.reminder,
+                        title: 'Reminder',
+                        hintText: 'Input reminder',
+                        minLines: 2,
+                        maxLines: 5,
+                      );
+                      if (text != null) {
+                        await meetup.update(reminder: text);
+                      }
+                    }
+                  }),
+            ),
+          ],
+          bottom: TabBar(
+            tabs: const [
+              Tab(text: '소개'),
+              Tab(text: '일정'),
+              Tab(text: '채팅'),
+              Tab(text: '게시판'),
+              Tab(text: '사진첩'),
             ],
+            onTap: (index) {
+              _tabIndex.value = index;
+            },
           ),
+        ),
+        body: TabBarView(
+          children: [
+            MeetupDetails(meetup: widget.meetup),
+            MeetupEventListView(
+              clubId: widget.meetup.id,
+              separatorBuilder: (p0, p1) => const Divider(height: 16),
+              emptyBuilder: () => const Center(
+                child: Text('일정이 없습니다.'),
+              ),
+            ),
+            MeetupDoc(
+              meetup: widget.meetup,
+              builder: (meetup) => meetup.users.contains(myUid)
+                  ? GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => FocusScope.of(context).unfocus(),
+                      child: ChatRoomBody(
+                        roomId: widget.meetup.id,
+                        displayAppBar: false,
+                        appBarBottomSpacing: 0,
+                      ),
+                    )
+                  : MeetupViewRegisterFirstButton(
+                      meetup: meetup,
+                      label: "모임에 가입하셔야\n채팅방을 볼 수 있습니다.",
+                    ),
+            ),
+            MeetupDoc(
+              meetup: widget.meetup,
+              builder: (meetup) => meetup.users.contains(myUid)
+                  ? ListTileTheme(
+                      child: PostListView(
+                        category: '${widget.meetup.id}-club-post',
+                        padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+                        pageSize: 20,
+                        separatorBuilder: (p0, p1) => Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Divider(
+                            height: 5,
+                            thickness: 1,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .outline
+                                .withAlpha(64),
+                          ),
+                        ),
+                        emptyBuilder: () => const Center(
+                          child: Text('글을 등록 해 주세요.'),
+                        ),
+                      ),
+                    )
+                  : MeetupViewRegisterFirstButton(
+                      meetup: meetup,
+                      label: "모임에 가입하셔야\n게시판을 볼 수 있습니다.",
+                    ),
+            ),
+            MeetupDoc(
+              meetup: widget.meetup,
+              builder: (meetup) => meetup.users.contains(myUid)
+                  ? PostListView.gridView(
+                      category: '${widget.meetup.id}-club-gallery',
+                      padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+                      itemBuilder: (post, i) => ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: PostCard(
+                          post: post,
+                          displayAvatar: true,
+                          displaySubtitle: true,
+                        ),
+                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 8,
+                        mainAxisSpacing: 8,
+                        mainAxisExtent: 240,
+                      ),
+                      emptyBuilder: () => const Center(
+                        child: Text('사진을 등록 해 주세요.'),
+                      ),
+                    )
+                  : MeetupViewRegisterFirstButton(
+                      meetup: meetup,
+                      label: "모임에 가입하셔야\n사진첩을 볼 수 있습니다.",
+                    ),
+            ),
+          ],
         ),
       ),
     );

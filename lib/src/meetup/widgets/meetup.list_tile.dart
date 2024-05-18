@@ -2,49 +2,49 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-/// Club list tile
+/// Meetup list tile
 ///
-/// Club list tile widget to show club information in a list.
-class ClubListTile extends StatelessWidget {
-  const ClubListTile({
+/// Meetup list tile widget to show meetup information in a list.
+class MeetupListTile extends StatelessWidget {
+  const MeetupListTile({
     super.key,
-    required this.club,
+    required this.meetup,
   });
 
-  final Club club;
+  final Meetup meetup;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => ClubService.instance.showViewScreen(
+      onTap: () => MeetupService.instance.showViewScreen(
         context: context,
-        club: club,
+        meetup: meetup,
       ),
       child: Container(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (club.photoUrl != null)
+            if (meetup.photoUrl != null)
               CachedNetworkImage(
-                imageUrl: club.photoUrl!,
+                imageUrl: meetup.photoUrl!,
                 width: double.infinity,
                 height: 200,
                 fit: BoxFit.cover,
               ),
             const SizedBox(height: 8),
             Text(
-              club.name,
+              meetup.name,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.titleSmall,
             ),
             Text(
-              club.description.cut(128),
+              meetup.description.cut(128),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            Text('회원 수: ${club.users.length} 명'),
+            Text('회원 수: ${meetup.users.length} 명'),
           ],
         ),
       ),

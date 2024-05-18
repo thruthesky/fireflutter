@@ -15,7 +15,7 @@ class MeetupDoc extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<Meetup>(
       initialData: meetup,
-      stream: meetup.ref.snapshots().map(
+      stream: Meetup.col.doc(meetup.id).snapshots().map(
             (event) => Meetup.fromSnapshot(event),
           ),
       builder: (context, snapshot) {

@@ -1,15 +1,15 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/club/widgets/club.join_button.dart';
+import 'package:fireflutter/src/meetup/widgets/meetup.join_button.dart';
 import 'package:flutter/material.dart';
 
-class ClubViewRegisterFirstButton extends StatelessWidget {
-  const ClubViewRegisterFirstButton({
+class MeetupViewRegisterFirstButton extends StatelessWidget {
+  const MeetupViewRegisterFirstButton({
     super.key,
-    required this.club,
+    required this.meetup,
     required this.label,
   });
 
-  final Club club;
+  final Meetup meetup;
   final String label;
 
   @override
@@ -22,7 +22,7 @@ class ClubViewRegisterFirstButton extends StatelessWidget {
             label,
             textAlign: TextAlign.center,
           ),
-          ClubJoinButton(club: club),
+          MeetupJoinButton(meetup: meetup),
         ],
       ),
     );

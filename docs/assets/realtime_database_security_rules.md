@@ -119,7 +119,7 @@
             // if login and if it's my data, and if I joined the room.
             ".write": "auth != null && (data.child('uid').val() === auth.uid || newData.child('uid').val() === auth.uid) && root.child('chat-rooms').child($room_id).child('users').hasChild(auth.uid)"
            },
-          ".indexOn": ["order", "uid"]
+          // ".indexOn": ["order", "uid"]
       }
     },
     "chat-rooms": {
@@ -176,6 +176,14 @@
       ".write": true,
       "$category": {
         ".indexOn": ["order", "createdAt"]
+      }
+    },
+    // for testing only
+    "post-summaries-test": {
+      ".read": true,
+      ".write": true,
+      "$category": {
+        ".indexOn": ["order", "createdAt", "sort"]
       }
     },
       

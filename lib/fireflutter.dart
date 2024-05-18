@@ -41,17 +41,18 @@ export 'src/chat/widgets/default_chat_room.member.dialog.dart';
 export 'src/chat/widgets/default_chat_room.members.screen.dart';
 export 'src/chat/widgets/default_chat_room.screen.dart';
 
-export 'src/club/club.model.dart';
-export 'src/club/club.service.dart';
-export 'src/club/widgets/club.card.dart';
-export 'src/club/widgets/club.list_tile.dart';
-export 'src/club/widgets/club.create_form.dart';
-export 'src/club/widgets/club.doc.dart';
-export 'src/club/widgets/club.edit.screen.dart';
-export 'src/club/widgets/club.list_view.dart';
-export 'src/club/widgets/club.update_form.dart';
-export 'src/club/widgets/club.view.screen.dart';
-export 'src/club/widgets/club.view_register_first_button.dart';
+export 'src/meetup/meetup.model.dart';
+export 'src/meetup/meetup.service.dart';
+export 'src/meetup/widgets/meetup.card.dart';
+export 'src/meetup/widgets/meetup.list_tile.dart';
+export 'src/meetup/widgets/meetup.create_form.dart';
+export 'src/meetup/widgets/meetup.doc.dart';
+export 'src/meetup/widgets/meetup.edit.screen.dart';
+export 'src/meetup/widgets/meetup.list_view.dart';
+export 'src/meetup/widgets/meetup.update_form.dart';
+export 'src/meetup/widgets/meetup.view.screen.dart';
+export 'src/meetup/widgets/meetup.view_register_first_button.dart';
+export 'src/meetup/widgets/meetup.details.dart';
 
 export 'src/common/anonymous_avatar.dart';
 export 'src/common/assets.dart';
@@ -106,15 +107,17 @@ export 'src/forum/post/widgets/post.view.screen.dart';
 
 export 'src/functions/locale.functions.dart';
 
-export 'src/meetup/meetup.model.dart';
-export 'src/meetup/widgets/meetup.card.dart';
-export 'src/meetup/widgets/meetup.create_form.dart';
-export 'src/meetup/widgets/meetup.doc.dart';
-export 'src/meetup/widgets/meetup.edit.screen.dart';
-export 'src/meetup/widgets/meetup.update_form.dart';
+export 'src/meetup/meetup_event/meetup_event.model.dart';
+export 'src/meetup/meetup_event/widgets/meetup_event.card.dart';
+export 'src/meetup/meetup_event/widgets/meetup_event.create_form.dart';
+export 'src/meetup/meetup_event/widgets/meetup_event.doc.dart';
+export 'src/meetup/meetup_event/widgets/meetup_event.edit.screen.dart';
+export 'src/meetup/meetup_event/widgets/meetup_event.update_form.dart';
+export 'src/meetup/meetup_event/meetup_event.service.dart';
+export 'src/meetup/meetup_event/widgets/meetup_event.view.screen.dart';
+export 'src/meetup/meetup_event/widgets/meetup.event.list_view.dart';
 
 export 'src/messaging/chat.messaging.model.dart';
-
 export 'src/messaging/messaging.model.dart';
 export 'src/messaging/messaging.service.dart';
 export 'src/messaging/post.messaging.model.dart';

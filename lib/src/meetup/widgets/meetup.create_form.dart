@@ -4,19 +4,17 @@ import 'package:flutter/material.dart';
 class MeetupCreateForm extends StatefulWidget {
   const MeetupCreateForm({
     super.key,
-    required this.clubId,
     required this.onCreate,
   });
 
-  final String? clubId;
   final void Function(Meetup meetup) onCreate;
 
   @override
-  State<MeetupCreateForm> createState() => _ClubMeetupCreateFormState();
+  State<MeetupCreateForm> createState() => _ClubCreateFormState();
 }
 
-class _ClubMeetupCreateFormState extends State<MeetupCreateForm> {
-  final TextEditingController titleController = TextEditingController();
+class _ClubCreateFormState extends State<MeetupCreateForm> {
+  final TextEditingController nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -24,25 +22,22 @@ class _ClubMeetupCreateFormState extends State<MeetupCreateForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("오프라인 일정 제목"),
+        Text(T.clubName.tr),
         TextField(
-          controller: titleController,
+          controller: nameController,
           onChanged: (value) => setState(() {}),
         ),
         const SizedBox(height: 8),
-        const Text("오프라인 만남의 제목을 적어주세요."),
+        Text(T.clubNameDescription.tr),
         const SizedBox(height: 24),
-        if (titleController.text.trim().isNotEmpty)
+        if (nameController.text.trim().isNotEmpty)
           Align(
             child: OutlinedButton(
               onPressed: () async {
-                final meetup = await Meetup.create(
-                  clubId: widget.clubId,
-                  title: titleController.text,
-                );
-                widget.onCreate(meetup);
+                final club = await Meetup.create(name: nameController.text);
+                widget.onCreate(club);
               },
-              child: const Text('일정 만들기'),
+              child: Text(T.clubCreate.tr),
             ),
           ),
       ],

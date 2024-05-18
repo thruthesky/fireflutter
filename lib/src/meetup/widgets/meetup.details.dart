@@ -1,28 +1,28 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/club/widgets/club.join_button.dart';
+import 'package:fireflutter/src/meetup/widgets/meetup.join_button.dart';
 import 'package:flutter/material.dart';
 
-class ClubDetails extends StatelessWidget {
-  const ClubDetails({
+class MeetupDetails extends StatelessWidget {
+  const MeetupDetails({
     super.key,
-    required this.club,
+    required this.meetup,
   });
 
-  final Club club;
+  final Meetup meetup;
 
   @override
   Widget build(BuildContext context) {
-    return ClubDoc(
-      club: club,
-      builder: (club) {
+    return MeetupDoc(
+      meetup: meetup,
+      builder: (meetup) {
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (club.photoUrl != null)
+              if (meetup.photoUrl != null)
                 CachedNetworkImage(
-                  imageUrl: club.photoUrl!,
+                  imageUrl: meetup.photoUrl!,
                   width: double.infinity,
                   height: 200,
                   fit: BoxFit.cover,
@@ -34,7 +34,7 @@ class ClubDetails extends StatelessWidget {
                   child: Card(
                     child: Padding(
                       padding: const EdgeInsets.all(16),
-                      child: Text(club.description),
+                      child: Text(meetup.description),
                     ),
                   ),
                 ),
@@ -47,32 +47,33 @@ class ClubDetails extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         UserDoc(
-                          uid: club.master,
+                          uid: meetup.master,
                           builder: (user) {
                             return Row(
                               children: [
                                 Text('운영자: ${user.displayName}'),
-                                if (club.isMaster)
+                                if (meetup.isMaster)
                                   IconButton(
-                                    onPressed: () => ClubService.instance
+                                    onPressed: () => MeetupService.instance
                                         .showUpdateScreen(
-                                            context: context, club: club),
+                                            context: context, meetup: meetup),
                                     icon: const Icon(Icons.edit),
                                   ),
                               ],
                             );
                           },
                         ),
-                        Text('회원 수: ${club.users.length} 명'),
+                        Text('회원 수: ${meetup.users.length} 명'),
                       ],
                     ),
                     const Spacer(),
-                    if (club.joined == false) ClubJoinButton(club: club),
+                    if (meetup.joined == false)
+                      MeetupJoinButton(meetup: meetup),
                     const SizedBox(width: 4),
                     ElevatedButton(
                       onPressed: () {
                         ChatService.instance.showChatRoomScreen(
-                            context: context, uid: club.master);
+                            context: context, uid: meetup.master);
                       },
                       child: const Text('문의하기'),
                     ),
@@ -80,7 +81,7 @@ class ClubDetails extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              if (club.reminder.isNotEmpty)
+              if (meetup.reminder.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
@@ -92,13 +93,13 @@ class ClubDetails extends StatelessWidget {
                           onTap: () => alert(
                             context: context,
                             title: 'Reminder',
-                            message: club.reminder,
+                            message: meetup.reminder,
                           ),
                           child: Container(
                             padding: const EdgeInsets.all(16),
                             width: double.infinity,
                             child: Text(
-                              club.reminder.cut(128),
+                              meetup.reminder.cut(128),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -120,7 +121,7 @@ class ClubDetails extends StatelessWidget {
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 8,
                 ),
-                category: '${club.id}-club-gallery',
+                category: '${meetup.id}-club-gallery',
                 emptyBuilder: () => Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
@@ -141,7 +142,7 @@ class ClubDetails extends StatelessWidget {
               PostLatestListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 separatorBuilder: (p0, p1) => const SizedBox(height: 8),
-                category: '${club.id}-club-post',
+                category: '${meetup.id}-club-post',
                 emptyBuilder: () => Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),

@@ -31,7 +31,7 @@ service cloud.firestore {
       allow delete: if resource.data.uid == request.auth.uid;
     }
 
-    match /meetups/{meetupId} {
+    match /meetup-events/{meetupId} {
       function isLeaving() {
         return onlyRemoving('users', request.auth.uid);
       }
