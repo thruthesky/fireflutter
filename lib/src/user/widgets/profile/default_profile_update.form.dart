@@ -265,11 +265,13 @@ class DefaultProfileUpdateFormState extends State<DefaultProfileUpdateForm> {
                             contentPadding: const EdgeInsets.all(0),
                           ),
                   elevatedButtonTheme: ElevatedButtonThemeData(
-                    style:
-                        Theme.of(context).elevatedButtonTheme.style?.copyWith(
-                              padding: MaterialStateProperty.all(
-                                  const EdgeInsets.all(16)),
-                            ),
+                    style: Theme.of(context)
+                        .elevatedButtonTheme
+                        .style
+                        ?.copyWith(
+                          padding:
+                              WidgetStateProperty.all(const EdgeInsets.all(16)),
+                        ),
                   ),
                 ),
             child: SizedBox(

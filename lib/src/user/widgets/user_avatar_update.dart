@@ -107,7 +107,7 @@ class _UserAvatarUpdateState extends State<UserAvatarUpdate> {
               bottom: 0,
               child: Icon(
                 Icons.camera_alt,
-                color: Theme.of(context).colorScheme.background.tone(55),
+                color: Theme.of(context).colorScheme.surface.tone(55),
                 size: 32,
               ),
             ),

@@ -9,7 +9,7 @@ ThemeData defaultLightTheme({required BuildContext context}) {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         foregroundColor: colorScheme.secondary,
-        backgroundColor: colorScheme.background,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
         side: BorderSide(
           color: colorScheme.secondary,

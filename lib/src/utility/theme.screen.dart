@@ -90,11 +90,11 @@ class ThemeScreen extends StatelessWidget {
       ),
       (
         name: 'background',
-        nameColor: (context) => Theme.of(context).colorScheme.background,
-        nameColorCode: 'Theme.of(context).colorScheme.background',
+        nameColor: (context) => Theme.of(context).colorScheme.surface,
+        nameColorCode: 'Theme.of(context).colorScheme.surface',
         onName: 'onBackground',
-        onNameColor: (context) => Theme.of(context).colorScheme.onBackground,
-        onNameColorCode: 'Theme.of(context).colorScheme.onBackground'
+        onNameColor: (context) => Theme.of(context).colorScheme.onSurface,
+        onNameColorCode: 'Theme.of(context).colorScheme.onSurface'
       ),
       (
         name: 'surface',
@@ -106,8 +106,9 @@ class ThemeScreen extends StatelessWidget {
       ),
       (
         name: 'surfaceVariant',
-        nameColor: (context) => Theme.of(context).colorScheme.surfaceVariant,
-        nameColorCode: 'Theme.of(context).colorScheme.surfaceVariant',
+        nameColor: (context) =>
+            Theme.of(context).colorScheme.surfaceContainerHighest,
+        nameColorCode: 'Theme.of(context).colorScheme.surfaceContainerHighest',
         onName: 'onSurfaceVariant',
         onNameColor: (context) =>
             Theme.of(context).colorScheme.onSurfaceVariant,
