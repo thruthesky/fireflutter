@@ -16,8 +16,8 @@ import 'package:flutter/material.dart';
 ///
 /// 그 외, [ListView.separated] 가 지원하는 모든 옵션(파라미터)을 지원한다. 따라서 [ListView.separated] 를 사용하듯 사용하면 된다.
 ///
-class ClubListView extends StatelessWidget {
-  const ClubListView({
+class MeetupListView extends StatelessWidget {
+  const MeetupListView({
     super.key,
     this.query,
     this.pageSize = 10,

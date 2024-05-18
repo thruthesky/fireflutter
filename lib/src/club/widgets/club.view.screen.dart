@@ -1,7 +1,7 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/club/widgets/club.details.dart';
 import 'package:fireflutter/src/meetup/meetup.service.dart';
-import 'package:fireflutter/src/meetup/widgets/meetup.list_view.dart';
+import 'package:fireflutter/src/meetup/widgets/meetup.event.list_view.dart';
 import 'package:flutter/material.dart';
 
 class ClubViewScreen extends StatefulWidget {
@@ -162,7 +162,7 @@ class _ClubViewScreenState extends State<ClubViewScreen> {
         body: TabBarView(
           children: [
             ClubDetails(club: widget.club),
-            MeetupListView(
+            MeetupEventListView(
               clubId: widget.club.id,
               separatorBuilder: (p0, p1) => const Divider(height: 16),
               emptyBuilder: () => const Center(

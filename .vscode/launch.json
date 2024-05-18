@@ -132,6 +132,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "Momcafe - Web",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "chrome",
+      "flutterMode": "debug",
+      "cwd": "apps/momcafe",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Momcafe - TEST - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
