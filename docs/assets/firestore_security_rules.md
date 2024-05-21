@@ -12,7 +12,7 @@ service cloud.firestore {
       allow read: if true;
     }
 
-    match /clubs/{clubId} {
+    match /meetups/{meetupId} {
       // Return true if the user is removing himself from the room.
       function isLeaving() {
         return onlyRemoving('users', request.auth.uid);

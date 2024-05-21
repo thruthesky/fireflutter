@@ -3,7 +3,7 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class Meetup {
-  static final col = FirebaseFirestore.instance.collection('clubs');
+  static final col = FirebaseFirestore.instance.collection('meetups');
 
   String id;
   final String uid;

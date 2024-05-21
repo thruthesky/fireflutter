@@ -587,9 +587,11 @@ List<AreaCode> getSiGunGuCodes({
 ///
 /// If somehow the [code] is not found, it throws an exception.
 ///
+/// If the [languageCode] is not found, it defaults to empty string ''.
 String getSiDoNameFromCode({required String code, String languageCode = 'ko'}) {
   AreaCode sido = getSiDoCodes(languageCode: languageCode).firstWhere(
     (address) => address.code == code,
+    orElse: () => (code: '', name: ''),
   );
   return sido.name;
 }

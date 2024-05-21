@@ -15,6 +15,9 @@ class Field {
   static const String createdAt = 'createdAt';
   static const String updatedAt = 'updatedAt';
 
+  /// User's two letter country code like 'KR', 'US', 'JP', 'PH'
+  static const String countryCode = 'countryCode';
+
   static const String displayName = 'displayName';
   static const String birthDay = 'birthDay';
   static const String birthMonth = 'birthMonth';
