@@ -123,6 +123,8 @@ class T {
   static const String occupationInputDescription = 'occupationInputDescription';
   static const String hintInputOccupation = 'Please input your occupation';
 
+  static const String postEmptyList = 'No post found.';
+
   /// Block
   static const String blocked = 'Blocked';
   static const String blockedMessage = 'You have blocked this user.';
@@ -138,6 +140,10 @@ class T {
 
   static const String disabledOnSendMessage =
       'You cannot send a message because your account is disabled.';
+
+  /// Meetup
+
+  static const String meetupEmptyList = 'No meetup found.';
 
   /// Report
   static const String reportInputTitle = 'Report';

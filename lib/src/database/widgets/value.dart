@@ -58,6 +58,7 @@ class Value extends StatelessWidget {
           return onLoading ?? const SizedBox.shrink();
         }
         if (event.hasError) {
+          dog('Error; path: ${ref.path}, message: ${event.error}');
           return Text('Error; path: ${ref.path}, message: ${event.error}');
         }
         // value may be null.

@@ -88,7 +88,7 @@ class MeetupListView extends StatelessWidget {
 
         if (snapshot.hasData && snapshot.docs.isEmpty && !snapshot.hasMore) {
           return emptyBuilder?.call() ??
-              const Center(child: Text('No club found.'));
+              Center(child: Text(T.meetupEmptyList.tr));
         }
 
         return ListView.separated(

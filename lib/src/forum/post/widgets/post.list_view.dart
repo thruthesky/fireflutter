@@ -83,7 +83,7 @@ class PostListView extends StatelessWidget {
 
         if (snapshot.hasData && snapshot.docs.isEmpty && !snapshot.hasMore) {
           return emptyBuilder?.call() ??
-              const Center(child: Text('No posts found.'));
+              Center(child: Text(T.postEmptyList.tr));
         }
 
         return gridView

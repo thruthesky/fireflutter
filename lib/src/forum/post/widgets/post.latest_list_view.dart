@@ -86,7 +86,7 @@ class PostLatestListView extends StatelessWidget {
 
         if (posts == null || posts.isEmpty) {
           return emptyBuilder?.call() ??
-              const Center(child: Text('No posts found.'));
+              Center(child: Text(T.postEmptyList.tr));
         }
 
         return gridView
