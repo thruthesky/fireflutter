@@ -1,6 +1,9 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 
+/// User setting data modeling class
+///
+///
 class UserSetting {
   static const String node = 'user-settings';
 

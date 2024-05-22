@@ -1,6 +1,9 @@
 # 사용자 설정
 
 - `user-settings/<uid>` 에 사용자 설정이 저장된다.
+  - 사용자 설정 정보가 커질 수 있어 `users` 노드에 모두 저장하지 않고 분리한다.
+
+- `user-settings` 노드는 `users` 와 마찬가지로 초기화를 하면 실시간 업데이트된다.
 
 - `/user-settings/<uid>/{profileViewNotification: true}` 와 같이 `profileViewNotification` 에 true 를 저장하면, 누가 나의 프로필을 보면 나에게 푸시 알림이 도착한다.
 
@@ -16,7 +19,9 @@
 ## UserSettingService
 
 - `UserSettingServic` 는 `/user-settings/<my-uid>` 의 설정 값을 관리하는 서비스이다.
-- 설정 값은 `UserSetting` model 에 저장되고, 기본적인 CRUD 동작을 한다.
+- `UserSetting` model 클래스는 사용자 설정 값에 대한 CRUD 및 기본적인 동작을 포함한다.
+- `UserSettingService` 를 초기화하면 실시간으로 설정 값이 `UserSettingService.instance.setting` 에 업데이트된다.
+  - 그리고 보다 이 변수를 직접 액세스 할 수 있으며 `UserModel.setting` 에 링크되어져 있다. 즉, `my.setting.languageCode` 와 같이 쓸 수 있다.
 - 앱 처음 시작시, 아래와 같이 초기화를 해 주면 된다.
 
 ```dart
@@ -27,6 +32,13 @@ UserSettingService.instance.init(
 
 - 위에서 `defaultCommentNotification` 은 사용자가 처음 앱을 실행 할 때 (또는 로그인 할 때) 새 코멘트 알림을 기본적으로 on 하는 것이다. 그래서 자신의 글 또는 코멘트에 새로운 코멘트가 작성되면 알림을 받도록 하는 것이다. 만약, 이 값을 false 로 하면, 사용자가 설정에서 on 을 하기 전에는 새 코멘트 알림을 받지 못한다. 즉, 자동으로 코멘트 알림을 해 주기 위한 것이다.
 
+
+## 설정 관련 위젯
+
+
+- `MySetting` 위젯은 로그인한 사용자의 설정이 변경되면 위젯을 다시 빌드한다.
+
+- `MySettingField` 위젯은 내부적으로 `Value` 위젯을 쓰며 사용자 설정의 특정(개별, 하위) 노드 값 1개를 observe 하고 값이 변경되면 위젯을 다시 빌드한다.
 
 
 

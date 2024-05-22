@@ -1,6 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:fireflutter/fireflutter.dart' as ff;
+import 'package:fireflutter/src/setting/user.setting.model.dart';
+import 'package:fireflutter/src/setting/user.setting.service.dart';
 import 'package:geohash_plus/geohash_plus.dart';
 
 class User {
@@ -173,7 +175,11 @@ class User {
   }
 
   String occupation;
+
+  @Deprecated('Use setting.languageCode')
   String languageCode;
+
+  UserSetting? get setting => UserSettingService.instance.settings;
 
   User({
     required this.data,
