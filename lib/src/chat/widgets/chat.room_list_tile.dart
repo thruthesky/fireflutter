@@ -8,19 +8,26 @@ import 'package:flutter/material.dart';
 /// [stateMessageAsSubtitle] 상태 메시지를 subtitle 로 표시할지 여부.
 /// 1:1 채팅 메시지 목록 보다는, 친구 목록을 할 때 사용 할 수 있다. 그룹 채팅 목록에는 false 로 하면 마지막 메세지가
 /// 화면에 표시된다.
+///
+/// [contentPadding] ListTile 의 contentPadding. UI 디자인을 위해 사용한다.
 class ChatRoomListTile extends StatelessWidget {
   const ChatRoomListTile({
     super.key,
     required this.room,
     this.stateMessageAsSubtitle,
+    this.contentPadding,
   });
 
   final ChatRoom room;
   final bool? stateMessageAsSubtitle;
+  final EdgeInsetsGeometry? contentPadding;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      // visualDensity: VisualDensity.compact,
+      // dense: true,
+      contentPadding: contentPadding,
       leading: ChatRoomAvatar(
         room: room,
       ),
