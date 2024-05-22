@@ -68,6 +68,7 @@ import 'package:flutter/material.dart';
 ///
 /// [onSmsCodeProgress] callback that return true when the sms code verification is in progress and false when the sms code verification
 ///
+@Deprecated('Use phone_isgn_in package instead.')
 class SimplePhoneSignInForm extends StatefulWidget {
   const SimplePhoneSignInForm({
     super.key,
