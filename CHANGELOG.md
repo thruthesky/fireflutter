@@ -1,5 +1,10 @@
 ## 0.3.29
 
+- UI update. Chat room list title
+
+
+## 0.3.29
+
 - Fix. isAdmin
 - Update. initialData has added to MyDoc
 - Update. new comment notification subscription
