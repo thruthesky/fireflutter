@@ -257,7 +257,6 @@ class _ChatRoomState extends State<ChatRoomBody> {
                     ]),
                   ),
                 ),
-                const Spacer(),
                 const SizedBox(width: 8),
 
                 /// add notifications on and off

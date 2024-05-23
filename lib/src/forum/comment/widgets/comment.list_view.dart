@@ -82,8 +82,14 @@ class _CommentListViewState extends State<CommentListView> {
           child: Center(child: CircularProgressIndicator()));
     }
     if (comments!.isEmpty) {
-      return const SliverToBoxAdapter(
-          child: Center(child: Text('No comments')));
+      return SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Center(
+            child: Text(T.commentEmptyList.tr),
+          ),
+        ),
+      );
     }
 
     return SliverList(

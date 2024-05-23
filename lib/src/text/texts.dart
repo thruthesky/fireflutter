@@ -33,6 +33,9 @@ class T {
 
   static const String share = 'Share';
 
+  static const String inputTitle = 'Input title';
+  static const String inputContent = 'Input content';
+
   /// Label, texts, buttons,
   static const String dismiss = 'dismiss';
 
@@ -124,6 +127,11 @@ class T {
   static const String hintInputOccupation = 'Please input your occupation';
 
   static const String postEmptyList = 'No post found.';
+
+  static const String commentEmptyList = 'No comments';
+
+  static const String postCreate = 'Create';
+  static const String postUpdate = 'Update';
 
   /// Block
   static const String blocked = 'Blocked';
