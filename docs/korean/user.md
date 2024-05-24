@@ -37,6 +37,46 @@ Firefluter (including all the widgets) will always use `dispalyName` to display 
   - `user.model.dart` 의 `create()` 함수
 
 
+## 사용자 기능 초기화
+
+사용자 기능 초기화는 FireFlutter 가 제공하는 다른 Service 와 마찬가지로 앱 부팅을 할 때, 적절한 위치에서 `init` 함수를 실행하면 된다.
+
+```dart
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(const ExampleApp());
+}
+
+class ExampleApp extends StatefulWidget {
+  const ExampleApp({
+    super.key,
+  });
+
+  @override
+  State<ExampleApp> createState() => _ExampleAppState();
+}
+
+class _ExampleAppState extends State<ExampleApp> {
+  @override
+  void initState() {
+    super.initState();
+    UserService.instance.init(); /// 여기에서 초기화
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      routerConfig: router,
+    );
+  }
+}
+```
+
+대부분의 앱에서 사용자 기능을 사용 할 것이다. 만약, 사용자 기능이 초기화 되지 않았는데 사용자 기능을 사용하려고 한다면, 에러가 날 수 있다.
+
+혹시라도 앱 내에서 사용자 기능을 사용하지 않아서, UserService 를 초기화 하지 않는다면, User 관련 모든 기능을 사용하지 말아야 한다. 이 때, UserService 가 초기화 되었는 확인을 해야하는데, `UserService.instance.initialized` 가 false 이면, 초기화를 하지 않은 것으로 모든 User 관련 기능을 비 활성화 하면된다.
+
 
 ## 사용자 UI 커스터마이징 (Customizing User UI)
 

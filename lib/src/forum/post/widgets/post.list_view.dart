@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 /// PostListView
 ///
-/// This supports most of the parameters of ListView
+/// This supports most of the parameters of ListView and GridView.
 class PostListView extends StatelessWidget {
   const PostListView({
     super.key,

@@ -1,10 +1,13 @@
 import 'package:app_links/app_links.dart';
 import 'package:fireflutter/fireflutter.dart';
 
+/// [LinkService] is used to generate links for posts, profiles, chat rooms, and custom links.
 class LinkService {
   static LinkService? _instance;
   static LinkService get instance => _instance ??= LinkService();
 
+  /// [initialized] is used to check if the [init] method is called.
+  bool initialized = false;
   late String urlPrefix;
   String? app;
 
@@ -22,6 +25,7 @@ class LinkService {
     Function(Map<String, String> parms)? onLinkTap,
     String? app,
   }) {
+    initialized = true;
     this.urlPrefix = urlPrefix;
     this.app = app;
     if (autoRedirect) {

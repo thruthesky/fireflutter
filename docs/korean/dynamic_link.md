@@ -272,6 +272,11 @@ LinkService.instance.init(
 
 
 
+## LinkService 초기화 확인
+
+- 만약, 앱 내에서 Link 기능을 사용하지 않을 것이고 그래서 LinkService 를 초기화하지 않았다면, 당연히 Link 관련 기능은 비활성화 되어야 할 것이다.
+  - 이 때, `LinkService.instance.initialized` 가 false 이면, 초기화를 하지 않은 것으로 모든 Link 관련 기능을 비 활성화 하면된다.
+
 
 ## 여러 앱 지원하기
 
