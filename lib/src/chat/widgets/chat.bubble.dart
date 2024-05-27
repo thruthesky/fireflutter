@@ -49,40 +49,52 @@ class ChatBubble extends StatelessWidget {
           const SizedBox(width: 8),
           // Chat message text. size 60%
 
-          Container(
-            constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.6),
-            child: Column(
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: message.mine
-                        ? Colors.amber.shade200
-                        : Colors.grey.shade200,
-                    borderRadius: borderRadius(),
+          /// 여기서부터...
+          if (message.deleted ||
+              (message.text != null && message.text!.isNotEmpty))
+            Container(
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.6),
+              child: Column(
+                children: [
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: message.mine
+                          ? Colors.amber.shade200
+                          : Colors.grey.shade200,
+                      borderRadius: borderRadius(),
+                    ),
+                    child: message.deleted
+                        ? Text(T.chatMessageDeleted.tr)
+                        : LinkifyText(
+                            message.text!
+                                .orBlocked(message.uid!, T.blockedChatMessage),
+                            style: const TextStyle(color: Colors.black),
+                          ),
+
+                    /// OLD code. commented out by @thruthesky at 2024-05-27
+                    // message.text != null && message.deleted == false
+                    //     ? LinkifyText(
+                    //         message.text!
+                    //             .orBlocked(message.uid!, T.blockedChatMessage),
+                    //         style: const TextStyle(color: Colors.black),
+                    //       )
+                    //     : Text(T.chatMessageDeleted.tr),
                   ),
-                  child: message.text != null && message.deleted == false
-                      ? LinkifyText(
-                          message.text!
-                              .orBlocked(message.uid!, T.blockedChatMessage),
-                          style: const TextStyle(color: Colors.black),
-                        )
-                      : Text(T.chatMessageDeleted.tr),
-                ),
-                if (message.hasUrlPreview) ...[
-                  const SizedBox(height: 8),
-                  UrlPreview(
-                    previewUrl: message.previewUrl!,
-                    title: message.previewTitle,
-                    description: message.previewDescription,
-                    imageUrl: message.previewImageUrl,
-                  ),
+                  if (message.hasUrlPreview) ...[
+                    const SizedBox(height: 8),
+                    UrlPreview(
+                      previewUrl: message.previewUrl!,
+                      title: message.previewTitle,
+                      description: message.previewDescription,
+                      imageUrl: message.previewImageUrl,
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
           // image
           if (message.url != null) cachedImage(context, message.url!),
 
@@ -108,9 +120,37 @@ class ChatBubble extends StatelessWidget {
       ),
     );
 
-    /// 관리자가 아니고, 방장이 아니면, 그냥 chat bubble 만 리턴
-    if (isAdmin == false && room.isMaster == false) {
+    /// 관리자가 아니고, 방장이 아니고, 나의 메시지가 아니면, 그냥 chat bubble 만 리턴
+    if (isAdmin == false && room.isMaster == false && message.mine == false) {
       return bubble;
+    }
+
+    /// 나의 채팅 메시지이면, 삭제 등을 표시하기 위한 메시지 리턴
+    if (message.mine) {
+      return PopupMenuButton(
+        position: PopupMenuPosition.under,
+        onOpened: () => FocusScope.of(context).unfocus(),
+        offset: Offset(
+          message.mine ? MediaQuery.of(context).size.width : 0,
+          0,
+        ),
+        itemBuilder: (context) => <PopupMenuEntry<String>>[
+          PopupMenuItem(
+            value: Code.delete,
+            child: Text(T.chatMessageDelete.tr),
+          ),
+        ],
+        onSelected: (v) async {
+          switch (v) {
+            case Code.delete:
+              await message.delete();
+              break;
+            default:
+              break;
+          }
+        },
+        child: IgnorePointer(child: bubble),
+      );
     }
 
     /// 관리자이거나 방장이면, 팝업 메뉴 버튼을 리턴

@@ -110,18 +110,28 @@
         ".write": "$uid === auth.uid"
       }
     },
-      // Fireship - chat 2023-11-25 RTDB 로 채팅 제작
+    // 채팅 메시지
     "chat-messages": {
       "$room_id": {
-          ".read": "root.child('chat-rooms').child($room_id).child('users').hasChild(auth.uid)",
+          // 채팅 메시지 읽기 조건 - 채팅방에 들어가 있고, 블럭(차단)되지 않은 사용자 일 것.
+          ".read": "root.child('chat-rooms').child($room_id).child('users').hasChild(auth.uid) && root.child('chat-rooms').child($room_id).child('blockedUsers').hasChild(auth.uid) === false",
           "$message_id": {
             // User must signed in &&
-            //   if it's my data, and if I joined the room.
+            //   if it's my data AND if I joined the room AND I am not blocked.
             //   OR
             //   if I am admin
             //   OR
             //   if I am the master of the chat room.
-            ".write": "auth != null && ( (data.child('uid').val() === auth.uid || newData.child('uid').val() === auth.uid) && root.child('chat-rooms').child($room_id).child('users').hasChild(auth.uid) || root.child('admins').hasChild(auth.uid) || root.child('chat-rooms').child($room_id).child('master').val() == auth.uid )"
+            ".write": "
+            auth != null
+            &&
+              (
+              (( data.child('uid').val() === auth.uid || newData.child('uid').val() === auth.uid ) && root.child('chat-rooms').child($room_id).child('users').hasChild(auth.uid) && root.child('chat-rooms').child($room_id).child('blockedUsers').hasChild(auth.uid) === false )
+               || 
+               root.child('admins').hasChild(auth.uid)
+               || 
+               root.child('chat-rooms').child($room_id).child('master').val() == auth.uid
+              )"
            },
           // ".indexOn": ["order", "uid"]
       }

@@ -1,3 +1,8 @@
+## 0.3.31
+
+- Chat deltion update. user can delete his own chat. Admin/master can delete otehr user's chat.
+- Group chat user block update. Admin/master can block other user.
+
 ## 0.3.30
 
 - UI update. Chat room list title
