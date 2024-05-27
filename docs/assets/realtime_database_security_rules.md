@@ -112,22 +112,37 @@
     },
       // Fireship - chat 2023-11-25 RTDB 로 채팅 제작
     "chat-messages": {
-      
       "$room_id": {
           ".read": "root.child('chat-rooms').child($room_id).child('users').hasChild(auth.uid)",
           "$message_id": {
-            // if login and if it's my data, and if I joined the room.
-            ".write": "auth != null && (data.child('uid').val() === auth.uid || newData.child('uid').val() === auth.uid) && root.child('chat-rooms').child($room_id).child('users').hasChild(auth.uid)"
+            // User must signed in &&
+            //   if it's my data, and if I joined the room.
+            //   OR
+            //   if I am admin
+            //   OR
+            //   if I am the master of the chat room.
+            ".write": "auth != null && ( (data.child('uid').val() === auth.uid || newData.child('uid').val() === auth.uid) && root.child('chat-rooms').child($room_id).child('users').hasChild(auth.uid) || root.child('admins').hasChild(auth.uid) || root.child('chat-rooms').child($room_id).child('master').val() == auth.uid )"
            },
           // ".indexOn": ["order", "uid"]
       }
     },
     "chat-rooms": {
       ".read": true,
-      "$roomId": {
+      "$room_id": {
         ".write": true,
         "users": {
           ".indexOn": ".value"
+        },
+        // admins and master can update "blockedUsers"
+        "blockedUsers": {
+          ".validate": "root.child('admins').hasChild(auth.uid) || root.child('chat-rooms').child($room_id).child('master').val() == auth.uid"
+        },
+        // Only master can update "name", "description".
+        "name": {
+          ".validate": "root.child('chat-rooms').child($room_id).child('master').val() == auth.uid"
+        },
+        "description": {
+          ".validate": "root.child('chat-rooms').child($room_id).child('master').val() == auth.uid"
         }
       }
     },

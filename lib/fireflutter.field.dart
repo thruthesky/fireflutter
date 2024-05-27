@@ -51,6 +51,7 @@ class Field {
   static const String url = 'url';
   static const String roomId = 'roomId';
   static const String users = 'users';
+  static const String blockedUsers = 'blockedUsers';
   static const String master = 'master';
   static const String noOfUsers = 'noOfUsers';
   static const String isVerified = 'isVerified';

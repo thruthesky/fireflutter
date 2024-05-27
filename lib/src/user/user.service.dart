@@ -274,18 +274,18 @@ class UserService {
       )) return;
     }
 
+    if (loggedIn) {
+      _userProfileViewLogs(user.uid);
+      _sendPushNotificationOnProfileView(user);
+    }
+
     if (context.mounted) {
-      showGeneralDialog(
+      await showGeneralDialog(
         context: context,
         pageBuilder: ($, _, __) =>
             customize.publicProfileScreen?.call(uid, user) ??
             DefaultPublicProfileScreen(uid: uid, user: user),
       );
-    }
-
-    if (loggedIn) {
-      _userProfileViewLogs(user.uid);
-      _sendPushNotificationOnProfileView(user);
     }
   }
 

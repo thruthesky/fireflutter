@@ -26,6 +26,8 @@ class ChatMessage {
   String? previewDescription;
   String? previewImageUrl;
 
+  bool deleted = false;
+
   bool get mine {
     return uid != null && uid == FirebaseAuth.instance.currentUser?.uid;
   }
@@ -53,6 +55,7 @@ class ChatMessage {
     this.previewTitle,
     this.previewDescription,
     this.previewImageUrl,
+    this.deleted = false,
   });
 
   factory ChatMessage.fromSnapshot(DataSnapshot snapshot) {
@@ -91,6 +94,7 @@ class ChatMessage {
       previewTitle: json['previewTitle'] as String?,
       previewDescription: json['previewDescription'] as String?,
       previewImageUrl: json['previewImageUrl'] as String?,
+      deleted: json['deleted'] as bool? ?? false,
     );
   }
   Map<String, dynamic> toJson() {
@@ -106,6 +110,23 @@ class ChatMessage {
       'previewTitle': previewTitle,
       'previewDescription': previewDescription,
       'previewImageUrl': previewImageUrl,
+      'deleted': deleted,
     };
+  }
+
+  /// 채팅 메시지를 삭제
+  ///
+  ///
+  Future delete() {
+    return ref!.update({
+      'deleted': true,
+      'text': null,
+      'url': null,
+      'previewUrl': null,
+      'previewTitle': null,
+      'previewDescription': null,
+      'previewImageUrl': null,
+    });
+    // return ref!.remove();
   }
 }

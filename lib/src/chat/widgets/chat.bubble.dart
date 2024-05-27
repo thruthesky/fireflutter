@@ -14,16 +14,18 @@ import 'package:flutter/material.dart';
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
     super.key,
+    required this.room,
     required this.message,
     this.onChange,
   });
 
+  final ChatRoom room;
   final ChatMessage message;
   final Function? onChange;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final bubble = Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,51 +43,46 @@ class ChatBubble extends StatelessWidget {
               cacheId: message.uid,
               size: 30,
               radius: 12,
-              onTap: () => UserService.instance
-                  .showPublicProfileScreen(
-                    context: context,
-                    uid: message.uid!,
-                  )
-                  .then(
-                    (value) => onChange?.call(),
-                  ),
+              onTap: () => mayShowPublicProfileScreen(context, message.uid!),
             ),
 
           const SizedBox(width: 8),
           // Chat message text. size 60%
-          if (message.text != null)
-            Container(
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.6),
-              child: Column(
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: message.mine
-                          ? Colors.amber.shade200
-                          : Colors.grey.shade200,
-                      borderRadius: borderRadius(),
-                    ),
-                    child: LinkifyText(
-                      message.text!
-                          .orBlocked(message.uid!, T.blockedChatMessage),
-                      style: const TextStyle(color: Colors.black),
-                    ),
+
+          Container(
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.6),
+            child: Column(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: message.mine
+                        ? Colors.amber.shade200
+                        : Colors.grey.shade200,
+                    borderRadius: borderRadius(),
                   ),
-                  if (message.hasUrlPreview) ...[
-                    const SizedBox(height: 8),
-                    UrlPreview(
-                      previewUrl: message.previewUrl!,
-                      title: message.previewTitle,
-                      description: message.previewDescription,
-                      imageUrl: message.previewImageUrl,
-                    ),
-                  ],
+                  child: message.text != null && message.deleted == false
+                      ? LinkifyText(
+                          message.text!
+                              .orBlocked(message.uid!, T.blockedChatMessage),
+                          style: const TextStyle(color: Colors.black),
+                        )
+                      : Text(T.chatMessageDeleted.tr),
+                ),
+                if (message.hasUrlPreview) ...[
+                  const SizedBox(height: 8),
+                  UrlPreview(
+                    previewUrl: message.previewUrl!,
+                    title: message.previewTitle,
+                    description: message.previewDescription,
+                    imageUrl: message.previewImageUrl,
+                  ),
                 ],
-              ),
+              ],
             ),
+          ),
           // image
           if (message.url != null) cachedImage(context, message.url!),
 
@@ -100,12 +97,7 @@ class ChatBubble extends StatelessWidget {
               sync: true,
               size: 30,
               radius: 12,
-              onTap: () => UserService.instance
-                  .showPublicProfileScreen(
-                    context: context,
-                    uid: myUid!,
-                  )
-                  .then((value) => onChange?.call()),
+              onTap: () => mayShowPublicProfileScreen(context, myUid!),
             ),
 
           if (!message.mine) ...[
@@ -115,6 +107,59 @@ class ChatBubble extends StatelessWidget {
         ],
       ),
     );
+
+    /// 관리자가 아니고, 방장이 아니면, 그냥 chat bubble 만 리턴
+    if (isAdmin == false && room.isMaster == false) {
+      return bubble;
+    }
+
+    /// 관리자이거나 방장이면, 팝업 메뉴 버튼을 리턴
+    return PopupMenuButton(
+      position: PopupMenuPosition.under,
+      onOpened: () => FocusScope.of(context).unfocus(),
+      offset: Offset(
+        message.mine ? MediaQuery.of(context).size.width : 0,
+        0,
+      ),
+      itemBuilder: (context) => <PopupMenuEntry<String>>[
+        PopupMenuItem(
+          value: Code.delete,
+          child: Text(T.chatMessageDelete.tr),
+        ),
+        PopupMenuItem(
+          value: Code.block,
+          child: Text(T.block.tr),
+        ),
+      ],
+      onSelected: (v) async {
+        switch (v) {
+          case Code.delete:
+            await message.delete();
+            break;
+          case Code.block:
+
+            /// 여기서 부터..
+            await room.block(message.uid!);
+            break;
+          default:
+            break;
+        }
+      },
+      child: IgnorePointer(child: bubble),
+    );
+  }
+
+  mayShowPublicProfileScreen(BuildContext context, String uid) {
+    UserService.instance
+        .showPublicProfileScreen(
+          context: context,
+          uid: message.uid!,
+        )
+        .then(
+          // * when the profile is updated, the chat bubble does not reflect the change of profile
+          // * But for blocking/unblocking will be updated by this callback.
+          (value) => onChange?.call(),
+        );
   }
 
   borderRadius() {

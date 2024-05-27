@@ -223,6 +223,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "Example - Emulator",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Example - Simplest - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",

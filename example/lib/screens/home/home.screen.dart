@@ -33,6 +33,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     spacing: 8,
                     children: [
                       ElevatedButton(
+                          onPressed: () => UserService.instance
+                              .showProfileUpdateScreen(context: context),
+                          child: const Text('Profile Update')),
+                      ElevatedButton(
                         onPressed: () async {
                           await UserService.instance.signOut();
                           if (context.mounted) {

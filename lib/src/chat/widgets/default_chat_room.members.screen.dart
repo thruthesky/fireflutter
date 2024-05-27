@@ -53,7 +53,28 @@ class DefaultChatRoomMembersScreen extends StatelessWidget {
                     future: member,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        return UserTile(user: snapshot.data as User);
+                        final User user = snapshot.data as User;
+                        return ListTile(
+                          leading: UserAvatar(uid: user.uid),
+                          title: Row(
+                            children: [
+                              Text(user.displayName),
+                              if (room.isMasterUser(user.uid))
+                                const Text(' (Master)'),
+                            ],
+                          ),
+                          subtitle: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (user.stateMessage.isEmpty == false)
+                                Text(user.stateMessage.or('....')),
+                            ],
+                          ),
+                        );
+                        // return UserTile(
+                        //   user: snapshot.data as User,
+                        //   displayStateMessage: true,
+                        // );
                       }
                       return const SizedBox.shrink();
                     },

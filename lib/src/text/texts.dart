@@ -46,6 +46,9 @@ class T {
   static const String thereIsNoChatRoomInChatRoomListView =
       'There is no chat room.';
 
+  static const String chatMessageDelete = 'Delete';
+  static const String chatMessageDeleted = 'This message is deleted.';
+
   /// User
   static const String setting = 'Setting';
   static const String block = 'Block';

@@ -27,8 +27,10 @@ class _EntryScreenState extends State<EntryScreen> {
                 "Enter complete phone number with country code. Or use email and password in 'email:password' format."),
             PhoneSignIn(
               onSignInSuccess: () => context.go(HomeScreen.routeName),
-              onSignInFailed: (e) =>
-                  error(context: context, message: e.toString()),
+              onSignInFailed: (e) => error(
+                context: context,
+                message: e.toString(),
+              ),
               specialAccounts: const SpecialAccounts(
                 emailLogin: true,
               ),
