@@ -300,6 +300,12 @@ class _ChatRoomState extends State<ChatRoomBody> {
                             "Members",
                           ),
                         ),
+                        if (chat.room.isGroupChat &&
+                            (isAdmin || chat.room.isMaster))
+                          PopupMenuItem(
+                            value: Field.blockedUsers,
+                            child: Text(T.chatBlockedUserList.tr),
+                          ),
                         if (chat.room.isSingleChat)
                           PopupMenuItem(
                             value: 'block',
@@ -335,12 +341,17 @@ class _ChatRoomState extends State<ChatRoomBody> {
                             ),
                           );
                         } else if (v == 'members') {
-                          await ChatService.instance.showMembersScreen(
+                          await ChatService.instance.showUserListScreen(
+                            context: context,
+                            room: chat.room,
+                          );
+                        } else if (v == Field.blockedUsers) {
+                          await ChatService.instance.showBlockedUserListScreen(
                             context: context,
                             room: chat.room,
                           );
                         } else if (v == 'block') {
-                          /// 차단 & 해제
+                          /// 1:1 채팅 방의 경우, 차단 & 해제
                           final re = await UserService.instance.block(
                               context: context,
                               otherUserUid: chat.room.otherUserUid!);

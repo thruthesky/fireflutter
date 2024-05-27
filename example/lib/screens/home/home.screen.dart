@@ -1,6 +1,7 @@
 import 'package:example/screens/chat/chat.screen.dart';
 import 'package:example/screens/chat/open_chat.screen.dart';
 import 'package:example/screens/entry/entry.screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -28,7 +29,9 @@ class _HomeScreenState extends State<HomeScreen> {
               return Column(
                 children: [
                   const Text("@TODO: 채팅방 방장이, 채팅 삭제, 채팅방 멤버 강퇴 기능 추가"),
-                  Text("Logged in as $uid"),
+                  Text(
+                      "Logged in as ${FirebaseAuth.instance.currentUser?.email}, $uid"),
+                  Text("Admin: ${AdminService.instance.isAdmin}"),
                   Wrap(
                     spacing: 8,
                     children: [

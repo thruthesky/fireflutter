@@ -90,6 +90,9 @@ class ChatRoom {
 
   List<String> get uids => users?.keys.toList() ?? [];
 
+  /// 그룹 채팅방에서 관리자/마스터에 의해 차단된 사용자 목록
+  List<String> blockedUsers = [];
+
   ChatRoom({
     required this.ref,
     required this.key,
@@ -111,6 +114,7 @@ class ChatRoom {
     this.uploadVerifiedUserOnly = false,
     this.users,
     this.noOfUsers,
+    this.blockedUsers = const [],
   });
 
   /// [fromSnapshot] It creates a [ChatRoom] from a [DataSnapshot].
@@ -177,6 +181,9 @@ class ChatRoom {
       noOfUsers: json['noOfUsers'] is int
           ? json['noOfUsers']
           : int.parse(json['noOfUsers'] ?? '0'),
+      blockedUsers: json['blockedUsers'] == null
+          ? []
+          : List<String>.from((json['blockedUsers'] as Map).keys.toList()),
     );
   }
   Map<String, dynamic> toJson() {
@@ -199,6 +206,7 @@ class ChatRoom {
       'uploadVerifiedUserOnly': uploadVerifiedUserOnly,
       'users': users,
       'noOfUsers': noOfUsers,
+      'blockedUsers': blockedUsers,
     };
   }
 
@@ -302,6 +310,7 @@ class ChatRoom {
     uploadVerifiedUserOnly = room.uploadVerifiedUserOnly;
     users = room.users;
     noOfUsers = room.noOfUsers;
+    blockedUsers = room.blockedUsers;
 
     return this;
   }
@@ -613,9 +622,10 @@ class ChatRoom {
   ///
   /// 블럭이되면, 입장을 못하고, 채팅 메시지를 못보고, 채팅을 하지 못하도록 security rules 로 막는다.
   Future block(String uid) async {
-    /// 여기서부터... 잘 저장되는지 확인하고, security rules 에서 read/write 막는지 확인해야 한다.
-    return await ref.update({
-      Field.blockedUsers: {uid: true}
-    });
+    return await ref.child(Field.blockedUsers).update({uid: true});
+  }
+
+  Future unblock(String uid) async {
+    return await ref.child(Field.blockedUsers).update({uid: null});
   }
 }

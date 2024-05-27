@@ -49,6 +49,10 @@ class T {
   static const String chatMessageDelete = 'Delete';
   static const String chatMessageDeleted = 'This message is deleted.';
 
+  static const String chatBlockedUserList = 'Blocked users';
+
+  static const String chatEmptyBlockedUserList = 'No blocked users.';
+
   /// User
   static const String setting = 'Setting';
   static const String block = 'Block';

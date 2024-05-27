@@ -177,13 +177,25 @@ class ChatService {
     );
   }
 
-  Future showMembersScreen({
+  Future showUserListScreen({
     required BuildContext context,
     required ChatRoom room,
   }) async {
     return await showGeneralDialog(
       context: context,
-      pageBuilder: (_, __, ___) => DefaultChatRoomMembersScreen(
+      pageBuilder: (_, __, ___) => DefaultChatRoomUserListScreen(
+        room: room,
+      ),
+    );
+  }
+
+  Future showBlockedUserListScreen({
+    required BuildContext context,
+    required ChatRoom room,
+  }) async {
+    return await showGeneralDialog(
+      context: context,
+      pageBuilder: (_, __, ___) => DefaultChatRoomBlockedUserListScreen(
         room: room,
       ),
     );

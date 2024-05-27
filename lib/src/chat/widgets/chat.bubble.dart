@@ -137,8 +137,6 @@ class ChatBubble extends StatelessWidget {
             await message.delete();
             break;
           case Code.block:
-
-            /// 여기서 부터..
             await room.block(message.uid!);
             break;
           default:

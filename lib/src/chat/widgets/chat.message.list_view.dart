@@ -114,25 +114,21 @@ class _ChatMessageListViewState extends State<ChatMessageListView> {
               /// 채팅방의 맨 마지막 메시지의 order 를 지정.
               chat.resetMessageOrder(order: message.order);
 
-              /// 채팅방 메세지 버블
-              final bubble =
-                  ChatService.instance.customize.chatBubbleBuilder?.call(
-                        context: context,
-                        message: message,
-                        onChange: () => setState(() {}),
-                      ) ??
-                      ChatBubble(
-                        room: chat.room,
-                        message: message,
-                        onChange: () => setState(() {}),
-                      );
-
               /// unfocus 를 상단에서 하면, 채팅 메시지 목록을 다시 불러와야하며, 이 때 로더가 화면에 보여질 수 있다.
               /// 그래서, 여기에서 unfocus 를 하면, 채팅메시지 목록을 다시 불러오지 않는다.
               return GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () => FocusScope.of(context).unfocus(),
-                child: bubble,
+                child: ChatService.instance.customize.chatBubbleBuilder?.call(
+                      context: context,
+                      message: message,
+                      onChange: () => setState(() {}),
+                    ) ??
+                    ChatBubble(
+                      room: chat.room,
+                      message: message,
+                      onChange: () => setState(() {}),
+                    ),
               );
             },
           );

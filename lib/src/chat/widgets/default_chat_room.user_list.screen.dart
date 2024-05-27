@@ -2,8 +2,8 @@ import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class DefaultChatRoomMembersScreen extends StatelessWidget {
-  const DefaultChatRoomMembersScreen({
+class DefaultChatRoomUserListScreen extends StatelessWidget {
+  const DefaultChatRoomUserListScreen({
     super.key,
     required this.room,
   });
