@@ -52,10 +52,27 @@ class _ChatMessageListViewState extends State<ChatMessageListView> {
   Widget build(BuildContext context) {
     final ref = ChatService.instance.messageRef(roomId: roomId);
 
+    /// 1:1 채팅에서 내가 상대방을 차단한 경우,
     if (chat.room.isSingleChat && iHave.blocked(otherUserUid)) {
-      return Center(child: Text(T.blockedChatMessage.tr));
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Text(T.blockedChatMessage.tr),
+        ),
+      );
     }
 
+    /// 그룹 채팅에서 관리자 또는 마스터가 나를 차단한 경우, 즉, 내가 차단되어 메시지를 확인 할 수 없는 경우,
+    ///
+    ///
+    if (chat.room.blockedUsers.contains(myUid)) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Text(T.chatMessageListViewBlockedUser.tr),
+        ),
+      );
+    }
     return FirebaseDatabaseQueryBuilder(
       // 페이지 사이즈(메시지를 가져오는 개수)를 100으로 해서, 자주 가져오지 않도록 한다. 그래서 flickering 을 줄인다.
       pageSize: 100,
@@ -72,7 +89,7 @@ class _ChatMessageListViewState extends State<ChatMessageListView> {
         if (snapshot.hasError) {
           dog(snapshot.error.toString());
           if (snapshot.error.toString().contains('permission-denied')) {
-            return const Center(child: Text('권한이 없습니다.'));
+            return Center(child: Text(T.chatMessageListPermissionDenied.tr));
           } else {
             return Text('Something went wrong! ${snapshot.error}');
           }

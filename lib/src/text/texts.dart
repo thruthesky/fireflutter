@@ -52,6 +52,12 @@ class T {
   static const String chatBlockedUserList = 'Blocked users';
 
   static const String chatEmptyBlockedUserList = 'No blocked users.';
+  static const String chatMessageListPermissionDenied = 'Permission denied.';
+
+  static const String chatSendMessageBlockedUser = 'You are blocked.';
+
+  static const String chatMessageListViewBlockedUser =
+      'You are blocked from this chat.';
 
   /// User
   static const String setting = 'Setting';

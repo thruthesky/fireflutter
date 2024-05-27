@@ -975,3 +975,22 @@ NavigationDestination(
   label: context.ke('채팅', 'Chat'),
 ),
 ```
+
+## 차단된 사용자
+
+- 그룹 채팅방에서 관리자 또는 마스터가 특정 사용자를 차단 할 수 있다.
+
+- 차단을 하면, chat_rooms 의 `blockedUsers` 에 해당 사용자의 uid 가 저장된다.
+
+- 차단이 되면,
+  - 먼저, security rules 에 의해서, 메시지를 볼 수 없고, 전송 할 수 없게 된다.
+  - 채팅 메시지를 전송하려고 할 때, 프로그램적으로, FlutterFireException 을 발생시킨다.
+
+
+- 채팅방의 메뉴에서 차단 해제를 할 수 있다.
+
+
+- 사용자 차단을 하는 것은 흔하지 않은 일이고, 프로그램적으로 크리티컬한 에러가 발생하지 않는다.
+  - 다만, 차단되면
+    - 차단된 사용자는 security rules 에 의해서 메시지를 바로 읽을 수 없으며,
+    - 채팅 입력 창이 화면에 그대로 나올 수 있다. 하지만, security rules 에 의해서 permission denied 에러가 발생하고, `Code.chatSendMessageBlockedUser` FireFlutterException 이 발생한다.

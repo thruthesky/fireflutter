@@ -31,6 +31,8 @@ class Code {
 
   static const String notMaster = 'notMaster';
 
+  static const String chatSendMessageBlockedUser = 'chatSendMessageBlockedUser';
+
   /// Basic CRUD code
   static const String edit = 'edit';
   static const String view = 'view';
