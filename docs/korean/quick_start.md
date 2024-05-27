@@ -4,7 +4,7 @@
 
 ## FireFlutter 를 사용하는 가장 간단한 앱 만들기
 
-- 아래의 코드는 FireFlutter 패키지를 사용하는 가장 간단한 예제 이다.
+- 아래의 코드는 FireFlutter 패키지를 사용하는 가장 간단한 예제로서 FireFlutter 의 `alert` 함수를 사용하고 있다.
 
 ```dart
 import 'package:fireflutter/fireflutter.dart';

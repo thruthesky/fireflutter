@@ -1,5 +1,14 @@
+/// Multi language internalization
+typedef Mintl = Map<String, String>;
+
 class T {
   T._();
+
+  /// New translations
+  static Mintl version = {
+    'en': 'Ver: #version',
+    'ko': '버전: #version',
+  };
 
   /// Basic
   static const String yes = 'Yes';

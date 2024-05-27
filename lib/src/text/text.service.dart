@@ -4,6 +4,17 @@ class TextService {
   static TextService? _instance;
   static TextService get instance => _instance ??= TextService._();
 
+  init({
+    String? languageCode,
+  }) {
+    // Load texts from the server.
+    if (languageCode != null) {
+      this.languageCode = languageCode;
+    }
+  }
+
+  String languageCode = 'en';
+
   /// Define your texts here. You can update this map from the app.
   Map<String, String> texts = {
     T.ok: 'OK',
@@ -46,8 +57,34 @@ class TextService {
   text(String key) {
     return texts[key] ?? key;
   }
+
+  mintl(Mintl map, [Map<String, String>? args]) {
+    if (args == null) {
+      return (map[languageCode] ?? map['en']).toString();
+    } else {
+      String s = (map[languageCode] ?? map['en']).toString();
+
+      args.forEach((key, value) {
+        s = s.replaceAll('#$key', value);
+      });
+      return s;
+    }
+  }
 }
 
 extension TranslationServiceExtension on String {
+  /// Translate the string.
   String get tr => TextService.instance.text(this);
+}
+
+extension TranslationServiceExtension2 on Mintl {
+  /// Translate the string from the Mintl.
+  ///
+  /// Example:
+  /// ```dart
+  /// T.version.tr.replace({'#version': '1.0.0'})
+  /// ```
+  String get tr => TextService.instance.mintl(this);
+  String args(Map<String, String> args) =>
+      TextService.instance.mintl(this, args);
 }

@@ -103,7 +103,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                         reason: re,
                       );
                     },
-                    child: const Text('신고'),
+                    child: Text(T.report.tr),
                   ),
 
                   // BlockButton.textButton(uid: post.uid),
