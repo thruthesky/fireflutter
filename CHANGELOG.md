@@ -1,7 +1,7 @@
 ## 0.3.31
 
-- Chat deltion update. user can delete his own chat. Admin/master can delete otehr user's chat.
-- Group chat user block update. Admin/master can block other user.
+- Updated chat deletion functionality. Users can now delete their own chats. Admins/Masters have the ability to delete chats from other users.
+- Enhanced group chat user blocking. Admins/Masters can now block other users.
 
 ## 0.3.30
 
