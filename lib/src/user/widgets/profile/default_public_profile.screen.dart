@@ -115,7 +115,7 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                         if (bookmarkButton) BookmarkButton(uid: userUid),
                         if (reportButton) ReportButton(uid: userUid),
                         if (blockButton) BlockButton(uid: userUid),
-                        if (shareButton)
+                        if (LinkService.instance.initialized && shareButton)
                           ShareButton(
                             link: LinkService.instance
                                 .generateProfileLink(userUid),

@@ -176,9 +176,6 @@ class User {
 
   String occupation;
 
-  @Deprecated('Use setting.languageCode')
-  String languageCode;
-
   UserSetting? get setting => UserSettingService.instance.settings;
 
   User({
@@ -215,7 +212,6 @@ class User {
     required this.geohash5,
     required this.geohash6,
     required this.geohash7,
-    required this.languageCode,
     required this.ping,
   });
 
@@ -292,7 +288,6 @@ class User {
       geohash5: json['geohash5'] ?? '',
       geohash6: json['geohash6'] ?? '',
       geohash7: json['geohash7'] ?? '',
-      languageCode: json['languageCode'] ?? '',
       ping: json['ping'] ?? 0,
     );
   }
@@ -329,7 +324,6 @@ class User {
       'geohash5': geohash5,
       'geohash6': geohash6,
       'geohash7': geohash7,
-      'languageCode': languageCode,
       'ping': ping,
     };
   }
@@ -377,7 +371,6 @@ class User {
       geohash5 = user.geohash5;
       geohash6 = user.geohash6;
       geohash7 = user.geohash7;
-      languageCode = user.languageCode;
       ping = user.ping;
     }
 

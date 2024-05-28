@@ -4,7 +4,7 @@
 
 ## FireFlutter 를 사용하는 가장 간단한 앱 만들기
 
-- 아래의 코드는 FireFlutter 패키지를 사용하는 가장 간단한 예제 이다.
+- 아래의 코드는 FireFlutter 패키지를 사용하는 가장 간단한 예제로서 FireFlutter 의 `alert` 함수를 사용하고 있다.
 
 ```dart
 import 'package:fireflutter/fireflutter.dart';
@@ -148,3 +148,44 @@ class _MyHomePageState extends State<MyHomePage> {
 FireFlutter 에 global build context 를 적용하는 것이 좋다. 자세한 내용은 [FireFlutter 문서](./fireflutter.md#global-context-적용)를 참고한다.
 
 
+
+## 에러 메시지 핸들링
+
+FireFlutter 에서 Exception 을 발생하는 경우가 있다. 플러터에서는 `runZonedGuarded` 를 통해서, 앱내에서 발생하는 여러 exception 을 화면에 표시 할 수 있는데, 이것을 활용해서 FireFlutter 가 발생시키는 FireFlutterException 에러를 사용자에게 표시 할 수 있다.
+
+```dart
+zoneErrorHandler(e, stackTrace) {
+  dog("---> zoneErrorHandler; runtimeType: ${e.runtimeType}");
+  if (e is FirebaseAuthException) {
+    toast(
+        context: globalContext,
+        message: '로그인 관련 에러 :  ${e.code} - ${e.message}');
+  } else if (e is FirebaseException) {
+    dog("FirebaseException :  $e }");
+  } else if (e is FireFlutterException) {
+    dog("FireFlutterException: (${e.code}) - ${e.message}");
+    error(context: globalContext, message: e.message);
+  } else {
+    dog("Unknown Error :  $e");
+  }
+  debugPrintStack(stackTrace: stackTrace);
+}
+
+void main() async {
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+
+      await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform);
+
+      runApp(const ChatApp());
+
+      FlutterError.onError = (FlutterErrorDetails details) {
+        FlutterError.dumpErrorToConsole(details);
+      };
+    },
+    zoneErrorHandler,
+  );
+}
+```

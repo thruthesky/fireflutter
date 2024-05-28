@@ -74,6 +74,12 @@ class ChatModel {
   }) async {
     if ((url == null || url.isEmpty) && (text == null || text.isEmpty)) return;
 
+    /// 그룹 채팅방에서 차단된 사용자이면, 메시지를 전송하지 않고 에러를 낸다.
+    if (room.blockedUsers.contains(myUid)) {
+      throw FireFlutterException(
+          Code.chatSendMessageBlockedUser, T.chatSendMessageBlockedUser);
+    }
+
     /// 차단되면, 메시지를 전송하지 않고 에러를 낸다.
     if (force == false && UserService.instance.user?.isDisabled == true) {
       throw FireFlutterException(Code.disabled, T.disabledOnSendMessage);

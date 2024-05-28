@@ -54,12 +54,14 @@ CachedNetworkImage(
 
 Choose the correct widget for the file type.
 
-## Replacing
+## 데이터베이스 URL 값 변경
 
-There are times that the app needs to replace existing image, In this case, it needs to delete the exsiting images like below.
+이미지를 stroage 에 업로드하면 그 경로를 데이터베이스의 특정 위치(노드)에 저장을 해 놓는 것이 일반적이다. 때로는 업로드한 이미지를 삭제하고 다른 이미지로 변경하고자 하는 경우가 있다. 이 때, 사용할 수 있는 것이 `uploadAt` 이다.
+
+만약, `uploadAt` 을 사용하지 않으면 아래와 같이 코딩을 할 수 있다.
 
 ```dart
-// Upload
+// 이미지 업로드
 final url = await StorageService.instance.upload(
     context: context,
     progress: (p) => setState(() => progress = p),
@@ -67,17 +69,19 @@ final url = await StorageService.instance.upload(
 );
 if (url == null) return;
 
+// 기존 이미지 URL 보관
 final oldUrl = UserService.instance.user?.photoUrl;
 
+// 새로운 이미지 URL 을 DB 에 저장
 await user.update(
     photoUrl: url,
 );
 
-// Delete existing image
+// 기존 이미지 삭제
 await StorageService.instance.delete(oldUrl);
 ```
 
-For the replacement of exisiting (or file), you can use `uploadAt` to make it simplifying. It will replace the image at the path.
+위와 같은 코드(기존 이미지 삭제 후 새로운 이미지 저장)를 보다 간단하게 아래와 같이 할 수 있다.
 
 ```dart
 await StorageService.instance.uploadAt(
@@ -87,3 +91,21 @@ await StorageService.instance.uploadAt(
     complete: () => setState(() => progress = null),
 );
 ```
+
+위와 같이 하면 `path` 에 존재하는 이미지를 삭제하고, 새로운 이미지를 업로드한 다음, 그 경로(URL)를 `path` 에 업데이트 한다. 즉, 보다 짧은 코드로 가능하다.
+
+
+## 디자인 변경
+
+`StorageService.instance.uploadAt` 와 같이 이미지를 업로드 할 때, bottom sheet 가 열린다. 이 때 bottom sheet 에 카메라, 갤러리 등의 선택을 ListTile 로 쓰는데 디자인이 마음에 들지 않는다면, Theme 설정을 통해서 변경 해 줄 수 있다.
+
+예를 들면 아래는 `UserAvatarUpdate` 위젯을 터치하면 사용자의 프로필 사진을 변경하는데, 내부적으로 `uploadAt` 함수를 호출한다. 그래서 UI 변경을 위해서는 아래와 같이 상위 위젯에 Theme 설정을 할 수 있다.
+
+```dart
+ListTileTheme(
+  tileColor:
+      Theme.of(context).colorScheme.surfaceContainerLow,
+  child: const UserAvatarUpdate(size: 140),
+),
+```
+

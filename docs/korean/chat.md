@@ -10,7 +10,7 @@
 ## 참고
 
 - 이론적으로 동시에 채팅방 여러개에 접속 할 수 있다. 하지만, 그럴 필요가 없어서 아직 테스트는 못했다.
-
+- 사용자가 채팅방에 들어 있는 상태에서 이름을 변경하면, 바로 적용이 안되고, 앱을 종료하고 다시 실행해야 변경 적용이 된다. 이것은 버그로 보이며, [git issue](https://github.com/users/thruthesky/projects/9/views/41?pane=issue&itemId=64528981) 에 보고되어져 있다.
 
 ## Chat 데이터베이스 구조
 
@@ -44,6 +44,7 @@
 - `order` 메시지 목록 순서
 - `text` 텍스트를 전송한 경우.
 - `url` 사진 URL. 사진을 전송한 경우.
+- `deleted` 채팅 메시지가 삭제되면 true 값이 저장되고, text, url, url preview 등의 값이 모두 삭제된다.
 
 
 ## 1:1 채팅방에 상대방의 사진와 이름이 나오는 로직
@@ -71,6 +72,8 @@ if (snapshot.exists) {
   }
 }
 ```
+
+
 
 ### 채팅방에서 로그인한 사용자의 메시지 한 개만 가져오기
 
@@ -383,23 +386,163 @@ FirebaseDatabaseQueryBuilder(
 
 ```
 
-#### Chat List Widget
+#### DefaultChatRoomListView Widget
 
-Fireship provides a default Widget for displaying a list of Chat Rooms if we don't have to customize it.
+나의 채팅 방 목록을 표현하기 위해서 `DefaultChatRoomListView` 을 사용하면 된다.
 
-Chat List is a List view of Chats. We can use this widget to show a list of chats.
+예제
 
 ```dart
 DefaultChatRoomListView(),
 ```
 
-#### Querying Specific Type of Chat Rooms
 
-You may want to show specific types of Chat Rooms, like Single Chat Rooms only, Group Chats Only, or Open Group Chats only.
+전체 스크린 예제. 참고로 아래의 예제는 그룹 채팅방 생성 코드를 포함하고 있다.
 
-##### Chat Rooms Joined by the Currently Logged in User (joinsRef)
+```dart
+import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
 
-In the earlier example, the query in FirebaseDatabaseQueryBuilder uses `Field.order`:
+class ChatScreen extends StatefulWidget {
+  static const String routeName = '/Chat';
+  const ChatScreen({super.key});
+
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Chat'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () => ChatService.instance
+                .showChatRoomCreate(
+                  context: context,
+                )
+                .then(
+                  (room) => ChatService.instance.showChatRoomScreen(
+                    context: context,
+                    room: room,
+                  ),
+                ),
+          ),
+        ],
+      ),
+      body: const DefaultChatRoomListView(),
+    );
+  }
+}
+```
+
+#### ChatRoomListView
+
+`ChatRoomListView` 를 통해서 나의 채팅방 목록을 화면에 표시 할 수 있다. 이 위젯은 `ListView.separated` 의 대부분의 속성을 지원한다. 그래서 그냥 ListView 를 쓴다는 느낌으로 사용하면 된다.
+
+아래와 같이 `ChatRoomListView` 를 사용하면 된다.
+
+```dart
+import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
+
+class ChatScreen extends StatefulWidget {
+  static const String routeName = '/Chat';
+  const ChatScreen({super.key});
+
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Chat'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () => ChatService.instance
+                .showChatRoomCreate(
+                  context: context,
+                )
+                .then(
+                  (room) => ChatService.instance.showChatRoomScreen(
+                    context: context,
+                    room: room,
+                  ),
+                ),
+          ),
+        ],
+      ),
+      body: ChatRoomListView(
+        separatorBuilder: (context, index) => const Divider(),
+        itemBuilder: (room, index) => ListTile(
+          title: Text(room.name ?? 'no name'),
+          subtitle: Text(room.text ?? 'no text'),
+          onTap: () => ChatService.instance.showChatRoomScreen(
+            context: context,
+            room: room,
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+
+참고로, 위에서 `itemBuilder` 에 `ChatRoomListTile` 을 써도 된다.
+
+예제
+
+```dart
+ChatRoomListView(
+  separatorBuilder: (context, index) => const Divider(),
+  itemBuilder: (room, index) => ChatRoomListTile(room: room),
+),
+```
+
+이 처럼, FireFlutter 에는 미리 제공되는 위젯이 충분히 있다. 이를 잘 활용하거나 이러한 위젯의 소스 코드를 복사해서 나만의 것으로 만들 수 있다.
+
+참고로, `ChatRoomListView` 에는 query 를 전달하여 원하는 데이터베이스에서 원하는 채팅방을 가져와 화면에 표시 할 수 있다.
+
+예제
+
+```dart
+ChatRoomListView(
+  query: ChatService.instance.joinsRef
+      .child(myUid!)
+      .orderByChild(Field.order),
+  separatorBuilder: (context, index) => const Divider(),
+  itemBuilder: (room, index) => ChatRoomListTile(room: room),
+),
+```
+
+#### 오픈 챗 목록하기
+
+오픈 챗은 누구나 입장을 할 수 있는 채팅방이다. 아래와 같이 오픈 채팅방 목록을 표현 할 수 있다.
+
+```dart
+ChatRoomListView(
+  openChat: true,
+  separatorBuilder: (context, index) => const Divider(),
+  itemBuilder: (room, index) => ChatRoomListTile(room: room),
+),
+```
+
+#### 직접 데이터베이스에 쿼리하여 채팅방 목록하기
+
+정말 원한다면, 직접 데이터베이스에 쿼리를 해서, 채팅방 정보를 가져와 표현 할 수 있다. 물론, 채팅방의 데이터베이스 구조를 잘 알아야 할 것이다. 예를 들면, 1:1 채팅방만 목록하거나, 그룹 채팅방만 목록하거나, 오픈 채팅방만 목록하거나 하는 등의 작업을 할 수 있다.
+
+또는 chat room 관련 정보를 firestore 로 미러링해서 더 자세한 쿼리(필터링)를 할 수 있다.
+
+
+현재 사용자의 채팅방을 표시하고 싶다면 아래와 같이 쿼리를 하면 된다. 참고로 `Field.order` 순서로 쿼리를 하면 채팅 메시지를 확인하지 않은 채팅방의 목록이 먼저 나온다. 즉, 새로운 채팅 메시지가 있는 방이 위에 나오는 것이다.
 
 ```dart
 FirebaseDatabaseQueryBuilder(
@@ -832,3 +975,32 @@ NavigationDestination(
   label: context.ke('채팅', 'Chat'),
 ),
 ```
+
+## 채팅 메시지 삭제
+
+- 관리자와 마스터는 타인의 채팅 메시지를 삭제할 수 있다.
+
+- 자기 자신의 사진을 삭제할 수 있다.
+
+## 그룹 채팅 사용자 차단
+
+- 그룹 채팅방에서 관리자 또는 마스터가 특정 사용자를 차단 할 수 있다.
+
+- 차단을 하면, chat_rooms 의 `blockedUsers` 에 해당 사용자의 uid 가 저장된다.
+
+- 차단이 되면,
+  - 먼저, security rules 에 의해서, 메시지를 볼 수 없고, 전송 할 수 없게 된다.
+  - 채팅 메시지를 전송하려고 할 때, 프로그램적으로, FlutterFireException 을 발생시킨다.
+
+
+- 채팅방의 메뉴에서 차단 해제를 할 수 있다.
+
+
+- 사용자 차단을 하는 것은 흔하지 않은 일이고, 프로그램적으로 크리티컬한 에러가 발생하지 않는다.
+  - 다만, 차단되면
+    - 차단된 사용자는 security rules 에 의해서 메시지를 바로 읽을 수 없으며,
+    - 채팅 입력 창이 화면에 그대로 나올 수 있다. 하지만, security rules 에 의해서 permission denied 에러가 발생하고, `Code.chatSendMessageBlockedUser` FireFlutterException 이 발생한다.
+
+- 차단된 상태에서 차단 해제되면, 사용자는 에러 없이, 채팅메시지를 전송할 수 있다.
+  - 하지만, 메시지 목록에는 여전히 permission denied 로 나올 수 있는데, 이것은 커스텀 코딩으로 수정 할 수 있다.
+  기본적으로는 `차단된 상태에서 차단 해제되면` 채팅방을 나갔다가 다시 들어와야 채팅 메시지가 올바로 보인다.

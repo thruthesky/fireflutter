@@ -52,6 +52,8 @@ class _ChatRoomState extends State<ChatRoomBody> {
   ChatModel? _chat;
   ChatModel get chat => _chat!;
   User? other;
+
+  /// 1:1 채팅방은 존재하는데, 상대 사용자 정보가 존재하지 않는 경우 (어떤 이유로 상대 사용자 정보가 삭제된 경우),
   bool get userDeleted => chat.room.isSingleChat && other == null;
 
   /// 채팅방 정보가 로드되었는지 여부
@@ -92,6 +94,9 @@ class _ChatRoomState extends State<ChatRoomBody> {
     }
   }
 
+  /// 채팅방 초기화
+  ///
+  /// 이 함수가 호출되면, 채팅방 정보가 완전히 로드된다.
   init() async {
     /// ChatRoom 이 들어온 경우, 채팅방 정보를 읽지 않고, 그대로 쓴다.
     if (widget.room != null) {
@@ -257,7 +262,6 @@ class _ChatRoomState extends State<ChatRoomBody> {
                     ]),
                   ),
                 ),
-                const Spacer(),
                 const SizedBox(width: 8),
 
                 /// add notifications on and off
@@ -301,6 +305,12 @@ class _ChatRoomState extends State<ChatRoomBody> {
                             "Members",
                           ),
                         ),
+                        if (chat.room.isGroupChat &&
+                            (isAdmin || chat.room.isMaster))
+                          PopupMenuItem(
+                            value: Field.blockedUsers,
+                            child: Text(T.chatBlockedUserList.tr),
+                          ),
                         if (chat.room.isSingleChat)
                           PopupMenuItem(
                             value: 'block',
@@ -336,12 +346,17 @@ class _ChatRoomState extends State<ChatRoomBody> {
                             ),
                           );
                         } else if (v == 'members') {
-                          await ChatService.instance.showMembersScreen(
+                          await ChatService.instance.showUserListScreen(
+                            context: context,
+                            room: chat.room,
+                          );
+                        } else if (v == Field.blockedUsers) {
+                          await ChatService.instance.showBlockedUserListScreen(
                             context: context,
                             room: chat.room,
                           );
                         } else if (v == 'block') {
-                          /// 차단 & 해제
+                          /// 1:1 채팅 방의 경우, 차단 & 해제
                           final re = await UserService.instance.block(
                               context: context,
                               otherUserUid: chat.room.otherUserUid!);
@@ -392,13 +407,56 @@ class _ChatRoomState extends State<ChatRoomBody> {
         ),
 
         /// 채팅 입력 박스
-        if (userDeleted == false)
+        // if (userDeleted == false)
+        //   StreamBuilder(
+        //     stream:
+        //         chat.room.ref.child(Field.blockedUsers).child(myUid!).onValue,
+        //     builder: (context, snapshot) {
+        //       if (snapshot.hasData == false ||
+        //           snapshot.connectionState == ConnectionState.waiting) {
+        //         return const SizedBox.shrink();
+        //       }
+        //       final blocked = snapshot.data?.snapshot.value == true;
+
+        //       return blocked
+        //           ? const SizedBox.shrink()
+        //           : SafeArea(
+        //               top: false,
+        //               child: ChatMessageInputBox(
+        //                 chat: chat,
+        //               ),
+        //             );
+        //     },
+        //   ),
+        if (userDeleted == false &&
+            chat.room.blockedUsers.contains(myUid) == false)
           SafeArea(
             top: false,
             child: ChatMessageInputBox(
               chat: chat,
             ),
           ),
+        // // /*
+        // ValueListenableBuilder(
+        //   valueListenable: loaded,
+        //   builder: (_, v, __) {
+        //     final messageBox = SafeArea(
+        //       top: false,
+        //       child: ChatMessageInputBox(
+        //         chat: chat,
+        //       ),
+        //     );
+
+        //     if (v == false) return messageBox;
+
+        //     if (userDeleted == false &&
+        //         chat.room.blockedUsers.contains(myUid) == false) {
+        //       return messageBox;
+        //     }
+
+        //     return const SizedBox.shrink();
+        //   },
+        // ),
       ],
     );
   }

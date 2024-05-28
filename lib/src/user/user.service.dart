@@ -7,9 +7,15 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
+/// User Service
+///
+/// This class is used to manage user data.
 class UserService {
   static UserService? _instance;
   static UserService get instance => _instance ??= UserService._();
+
+  /// [initialized] is true when the [init] method is called.
+  bool initialized = false;
 
   /// DB 에서 사용자 문서가 업데이트되면, 자동으로 이 변수에 sync 된다.
   User? user;
@@ -78,6 +84,7 @@ class UserService {
     Function(User user)? onCreate,
     Function(User user)? onUpdate,
   }) {
+    initialized = true;
     this.loginRequired = loginRequired;
 
     initUser();
@@ -190,7 +197,8 @@ class UserService {
     return snapshot.value as T;
   }
 
-  /// 사용자가 로그인을 하면, 사용자 설정 값을 업데이트 한다.
+  /// 참고, 이 함수는 더 이상 사용 할 필요 없다.
+  @Deprecated('Do not use this method any more')
   login() async {
     dog("BEGIN: UserService.login()");
     await myRef.update({
@@ -199,6 +207,7 @@ class UserService {
   }
 
   /// User log out
+  @Deprecated('Use signOut instead')
   Future<void> logout() {
     return fb.FirebaseAuth.instance.signOut();
   }
@@ -265,18 +274,18 @@ class UserService {
       )) return;
     }
 
+    if (loggedIn) {
+      _userProfileViewLogs(user.uid);
+      _sendPushNotificationOnProfileView(user);
+    }
+
     if (context.mounted) {
-      showGeneralDialog(
+      await showGeneralDialog(
         context: context,
         pageBuilder: ($, _, __) =>
             customize.publicProfileScreen?.call(uid, user) ??
             DefaultPublicProfileScreen(uid: uid, user: user),
       );
-    }
-
-    if (loggedIn) {
-      _userProfileViewLogs(user.uid);
-      _sendPushNotificationOnProfileView(user);
     }
   }
 

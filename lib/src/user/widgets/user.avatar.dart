@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 ///
 /// [radius] 둥근 모서리
 ///
-/// [onTap] 클릭시 실행할 콜백 함수
+/// [onTap] 클릭시 실행할 콜백 함수. 만약, onTap 이 null 이면, GestureDetector 를 사용하지 않는다.
 ///
 /// [initialData] when [initialData] is provided, it will be use as the photo url
 /// instead of showing the loader (or SizedBox.shrink). And this reduce the flickering
@@ -86,14 +86,19 @@ class UserAvatar extends StatelessWidget {
           border: border,
         );
 
-  Widget builder(dynamic url) => GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: Avatar(
-          photoUrl: (url == null || url == "") ? anonymousUrl : url,
-          size: size,
-          radius: radius,
-          border: border,
-        ),
-      );
+  Widget builder(dynamic url) {
+    final avatar = Avatar(
+      photoUrl: (url == null || url == "") ? anonymousUrl : url,
+      size: size,
+      radius: radius,
+      border: border,
+    );
+    return onTap == null
+        ? avatar
+        : GestureDetector(
+            onTap: onTap,
+            behavior: HitTestBehavior.opaque,
+            child: avatar,
+          );
+  }
 }

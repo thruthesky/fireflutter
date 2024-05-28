@@ -50,17 +50,17 @@ class _PostEditScreenState extends State<PostEditScreen> {
             children: [
               TextField(
                 controller: titleController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Title',
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: T.inputTitle.tr, // 'Title',
                 ),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: contentController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Content',
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: T.inputContent.tr, // 'Content',
                 ),
                 minLines: 8,
                 maxLines: 10,
@@ -89,33 +89,35 @@ class _PostEditScreenState extends State<PostEditScreen> {
                       )),
                   const Spacer(),
                   ElevatedButton(
-                    onPressed: () async {
-                      Post? newPost;
-                      if (isCreate) {
-                        newPost = await Post.create(
-                          category: post.category,
-                          title: titleController.text,
-                          content: contentController.text,
-                          urls: post.urls,
-                        );
-                      } else {
-                        newPost = await post.update(
-                          title: titleController.text,
-                          content: contentController.text,
-                          urls: post.urls,
-                        );
-                      }
-                      if (!context.mounted) return;
-                      Navigator.of(context).pop();
-                      if (isCreate) {
-                        ForumService.instance.showPostViewScreen(
-                          context: context,
-                          post: newPost!,
-                        );
-                      }
-                    },
-                    child: Text(isCreate ? 'CREATE' : 'UPDATE'),
-                  ),
+                      onPressed: () async {
+                        Post? newPost;
+                        if (isCreate) {
+                          newPost = await Post.create(
+                            category: post.category,
+                            title: titleController.text,
+                            content: contentController.text,
+                            urls: post.urls,
+                          );
+                        } else {
+                          newPost = await post.update(
+                            title: titleController.text,
+                            content: contentController.text,
+                            urls: post.urls,
+                          );
+                        }
+                        if (!context.mounted) return;
+                        Navigator.of(context).pop();
+                        if (isCreate) {
+                          ForumService.instance.showPostViewScreen(
+                            context: context,
+                            post: newPost!,
+                          );
+                        }
+                      },
+                      child: Text(
+                        isCreate ? T.postCreate.tr : T.postUpdate.tr,
+                      ) // 'CREATE' : 'UPDATE'),
+                      ),
                 ],
               ),
               if (progress != null && progress?.isNaN == false)

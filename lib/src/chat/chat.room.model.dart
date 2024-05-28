@@ -82,9 +82,16 @@ class ChatRoom {
   /// [joined] 현재 사용자가 입장해 있으면, 즉 [users] 에 현재 사용자의 UID 가 있으면, true 를 리턴한다.
   bool get joined => users?.containsKey(myUid!) ?? false;
 
+  /// 로그인한 사용자가 master 이면 true 를 리턴
   bool get isMaster => master == myUid;
 
+  /// 입력한 사용자의 uid 가 master 이면 true 를 리턴. 즉, 다른 사용자가 방장인지 확인한다.
+  bool isMasterUser(uid) => master == uid;
+
   List<String> get uids => users?.keys.toList() ?? [];
+
+  /// 그룹 채팅방에서 관리자/마스터에 의해 차단된 사용자 목록
+  List<String> blockedUsers = [];
 
   ChatRoom({
     required this.ref,
@@ -107,6 +114,7 @@ class ChatRoom {
     this.uploadVerifiedUserOnly = false,
     this.users,
     this.noOfUsers,
+    this.blockedUsers = const [],
   });
 
   /// [fromSnapshot] It creates a [ChatRoom] from a [DataSnapshot].
@@ -173,6 +181,9 @@ class ChatRoom {
       noOfUsers: json['noOfUsers'] is int
           ? json['noOfUsers']
           : int.parse(json['noOfUsers'] ?? '0'),
+      blockedUsers: json['blockedUsers'] == null
+          ? []
+          : List<String>.from((json['blockedUsers'] as Map).keys.toList()),
     );
   }
   Map<String, dynamic> toJson() {
@@ -195,6 +206,7 @@ class ChatRoom {
       'uploadVerifiedUserOnly': uploadVerifiedUserOnly,
       'users': users,
       'noOfUsers': noOfUsers,
+      'blockedUsers': blockedUsers,
     };
   }
 
@@ -298,6 +310,7 @@ class ChatRoom {
     uploadVerifiedUserOnly = room.uploadVerifiedUserOnly;
     users = room.users;
     noOfUsers = room.noOfUsers;
+    blockedUsers = room.blockedUsers;
 
     return this;
   }
@@ -603,5 +616,16 @@ class ChatRoom {
         .child(Field.users)
         .child(myUid!)
         .set(users![myUid!] == true ? false : true);
+  }
+
+  /// 채팅방에 입장하지 못하도록 사용자를 블럭
+  ///
+  /// 블럭이되면, 입장을 못하고, 채팅 메시지를 못보고, 채팅을 하지 못하도록 security rules 로 막는다.
+  Future block(String uid) async {
+    return await ref.child(Field.blockedUsers).update({uid: true});
+  }
+
+  Future unblock(String uid) async {
+    return await ref.child(Field.blockedUsers).update({uid: null});
   }
 }

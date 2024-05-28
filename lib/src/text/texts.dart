@@ -1,5 +1,14 @@
+/// Multi language internalization
+typedef Mintl = Map<String, String>;
+
 class T {
   T._();
+
+  /// New translations
+  static Mintl version = {
+    'en': 'Ver: #version',
+    'ko': '버전: #version',
+  };
 
   /// Basic
   static const String yes = 'Yes';
@@ -33,6 +42,9 @@ class T {
 
   static const String share = 'Share';
 
+  static const String inputTitle = 'Input title';
+  static const String inputContent = 'Input content';
+
   /// Label, texts, buttons,
   static const String dismiss = 'dismiss';
 
@@ -42,6 +54,19 @@ class T {
   static const String chatRoomNoMessageYet = 'There is no message, yet.';
   static const String thereIsNoChatRoomInChatRoomListView =
       'There is no chat room.';
+
+  static const String chatMessageDelete = 'Delete';
+  static const String chatMessageDeleted = 'This message is deleted.';
+
+  static const String chatBlockedUserList = 'Blocked users';
+
+  static const String chatEmptyBlockedUserList = 'No blocked users.';
+  static const String chatMessageListPermissionDenied = 'Permission denied.';
+
+  static const String chatSendMessageBlockedUser = 'You are blocked.';
+
+  static const String chatMessageListViewBlockedUser =
+      'You are blocked from this chat.';
 
   /// User
   static const String setting = 'Setting';
@@ -124,6 +149,11 @@ class T {
   static const String hintInputOccupation = 'Please input your occupation';
 
   static const String postEmptyList = 'No post found.';
+
+  static const String commentEmptyList = 'No comments';
+
+  static const String postCreate = 'Create';
+  static const String postUpdate = 'Update';
 
   /// Block
   static const String blocked = 'Blocked';

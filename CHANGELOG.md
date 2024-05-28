@@ -1,3 +1,8 @@
+## 0.3.31
+
+- Updated chat deletion functionality. Users can now delete their own chats. Admins/Masters have the ability to delete chats from other users.
+- Enhanced group chat user blocking. Admins/Masters can now block other users.
+
 ## 0.3.30
 
 - UI update. Chat room list title

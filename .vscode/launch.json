@@ -5,58 +5,21 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "PhiLov - iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "SDS - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
       "deviceId": "iPhone 15 Pro Max",
       "flutterMode": "debug",
       "cwd": "apps/social_design_system/example",
-      "program": "lib/main.dart"
-    },
-    {
-      "name": "RoHa - iPhone 15 Pro Max",
-      "request": "launch",
-      "type": "dart",
-      "deviceId": "iPhone 15 Pro Max",
-      "flutterMode": "debug",
-      "cwd": "apps/roha",
-      "program": "lib/main.dart"
-    },
-    {
-      "name": "RoHa - iPhone SE",
-      "request": "launch",
-      "type": "dart",
-      "deviceId": "iPhone SE",
-      "flutterMode": "debug",
-      "cwd": "apps/roha",
-      "program": "lib/main.dart"
-    },
-    {
-      "name": "RoHa - iPhone SE - JaeHo",
-      "request": "launch",
-      "type": "dart",
-      "deviceId": "iPhone SE",
-      "flutterMode": "debug",
-      "cwd": "apps/roha",
-      "program": "lib/main.dart",
-      "args": ["--dart-define", "MODE=jaeho"]
-    },
-    {
-      "name": "RoHa - iPhone11ProMax",
-      "request": "launch",
-      "type": "dart",
-      "deviceId": "iPhone11ProMax",
-      "flutterMode": "debug",
-      "cwd": "apps/roha",
-      "program": "lib/main.dart"
-    },
-    {
-      "name": "RoHa - Emulator",
-      "request": "launch",
-      "type": "dart",
-      "deviceId": "emulator-5554",
-      "flutterMode": "debug",
-      "cwd": "apps/roha",
       "program": "lib/main.dart"
     },
     {
@@ -214,13 +177,31 @@
       "program": "lib/main.dart"
     },
     {
-      "name": "Example - iPhone 15 Pro Max",
+      "name": "Example - Chat - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
       "deviceId": "iPhone 15 Pro Max",
       "flutterMode": "debug",
       "cwd": "example",
-      "program": "lib/main.dart"
+      "program": "lib/main.chat.dart"
+    },
+    {
+      "name": "Example - Chat - iPhone SE",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone SE",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.chat.dart"
+    },
+    {
+      "name": "Example - Chat - Emulator",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.chat.dart"
     },
     {
       "name": "Example - Simplest - iPhone 15 Pro Max",
@@ -637,7 +618,52 @@
       "program": "lib/main.dart"
       // "args": ["-v", "--dart-define", "MODE=test"]
     },
-
+    {
+      "name": "RoHa - iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "apps/roha",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "RoHa - iPhone SE",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone SE",
+      "flutterMode": "debug",
+      "cwd": "apps/roha",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "RoHa - iPhone SE - JaeHo",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone SE",
+      "flutterMode": "debug",
+      "cwd": "apps/roha",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=jaeho"]
+    },
+    {
+      "name": "RoHa - iPhone11ProMax",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone11ProMax",
+      "flutterMode": "debug",
+      "cwd": "apps/roha",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "RoHa - Emulator",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "apps/roha",
+      "program": "lib/main.dart"
+    },
     {
       "name": "SDS (noe)- iPhone 15 Pro Max",
       "request": "launch",

@@ -30,8 +30,13 @@ User? get my => UserService.instance.user;
 /// It's NOT nullable.
 User get iam {
   if (my == null) {
+    if (UserService.instance.initialized == false) {
+      throw Exception(
+          'UserService is not initialized. Call UserService.instance.init()');
+    }
     throw Exception(
-        '[iam] UserService.instance.user is null. Developer may forget to call [UserService.instance.init()] or [UserService.instance.myDataChanges.listen()] is not complete yet.');
+      '[iam] UserService.instance.user is null. Developer may forget to call [UserService.instance.init()] or [UserService.instance.myDataChanges.listen()] is not complete yet.',
+    );
   }
   return my!;
 }
