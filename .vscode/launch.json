@@ -23,6 +23,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "PhiLov - iPhone11ProMax",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone11ProMax",
+      "flutterMode": "debug",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "PhiLov - sm iPhone black",
       "request": "launch",
       "type": "dart",

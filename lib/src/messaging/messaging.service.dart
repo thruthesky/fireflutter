@@ -134,6 +134,7 @@ class MessagingService {
     /// Get token from device and save it into Firestore
     ///
     /// Get the token each time the application loads and save it to database.
+
     try {
       token = await FirebaseMessaging.instance.getToken() ?? '';
     } on FirebaseException catch (e) {
@@ -150,11 +151,11 @@ class MessagingService {
       return;
     }
     if (token == null) {
-      dog("MessagingService::_updateToken() - Can't update token. Token is null.");
+      // dog("MessagingService::_updateToken() - Can't update token. Token is null.");
       return;
     }
     try {
-      dog('MessagingService::_updateToken() - Updating the device token: "$token" for $myUid');
+      dog('MessagingService::_updateToken() - Updating the device token: "$token" for myUid: $myUid');
       final data = {
         'uid': myUid,
         'platform': platformName(),

@@ -44,6 +44,56 @@
 
   
 
+## 초기화
+
+- 개발을 할 때 인터넷 연결을 와이파이 접속으로 하는 경우, 앱이 시작하자 마자 MessageingService.instance.init() 을 호출하고 초기화를 하려고 하면 `FirebaseException :  [firebase_messaging/unknown] 인터넷 연결이 오프라인 상태입니다. }` 와 같은 에러를 만날 수 있다. 이 에러는 Android, Emulator, Simulator 에서는 잘 발생하지 않고, 실제 iPhone 장치에서 자주 발생한다. 혹시라도 이 문제가 실제 사용자가 쓸 때 발생할 수 있으므로, 아래와 같이 connectivity_plus 를 통해서 해결한다.
+
+- 먼저, `connectivity_plus` 패키지를 프로젝트에 추가한다.
+
+- 그리고 아래와 같이 초기화를 한다.
+
+```dart
+
+class _MyAppState extends State<PhiLovApp> {
+  /// 인터넷 연결 Subscription
+  StreamSubscription<List<ConnectivityResult>>? connectivitySubscription;
+  @override
+  void initState() {
+    super.initState();
+
+    initFirstInternetConnection();
+  }
+  /// 인터넷 연결을 최초로 할 때, 1회만 MessagingService 를 초기화 하여, 푸시 토큰을 저장한다.
+  /// 아래와 같이 하면, iPhone 인터넷이 연결되어야지만, 토큰을 가져온다는 확인을 사용자에게 보낸다.
+  initFirstInternetConnection() {
+    connectivitySubscription = Connectivity()
+        .onConnectivityChanged
+        .listen((List<ConnectivityResult> connectivityResult) {
+      dog('connectivityResult: $connectivityResult');
+
+      /// 인터넷에 연결되었는가?
+      if (connectivityResult.contains(ConnectivityResult.none) == false) {
+        /// 그렇다면, 최초 1회 인터넷 연결만 확인하고 Subscription을 취소하여, 인터넷 순단에 대한 이벤트를 더 이상 받지 않는다.
+        /// 즉, 한번만 실행한다.
+        connectivitySubscription?.cancel();
+        dog('initConnectivity: 인터넷 연결이 되어 있음. MessagingService 를 초기화하여 푸시 알림 서비스를 시작합니다.');
+        MessagingService.instance.init(
+          onBackgroundMessage: (RemoteMessage message) async {},
+          onForegroundMessage: (RemoteMessage message) {},
+          onMessageOpenedFromTerminated: (RemoteMessage message) {},
+          onMessageOpenedFromBackground: (RemoteMessage message) {},
+          onNotificationPermissionDenied: () {
+            dog("onNotificationPermissionDenied()");
+          },
+          onNotificationPermissionNotDetermined: () {
+            dog("onNotificationPermissionNotDetermined()");
+          },
+        );
+      }
+    });
+  }
+}
+```
 
 
 ## 게시판 구독
