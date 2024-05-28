@@ -483,6 +483,34 @@ FirebaseAuth.instance
 });
 ```
 
+## 사용자 목록
+
+아래와 같이 세로로 표시 할 수 있다.
+
+```dart
+UserListView()
+```
+
+아래와 같이 가로로 표시 할 수 있다.
+
+```dart
+SizedBox(
+  height: 68,
+  child: UserListView(
+    scrollDirection: Axis.horizontal,
+    itemBuilder: (u, i) => Padding(
+      padding: EdgeInsets.fromLTRB(i == 0 ? 28 : 4, 4, 4, 4),
+      child: UserAvatar(
+        size: 60,
+        radius: 24,
+        uid: u.uid,
+        cacheId: 'user-avatar',
+      ),
+    ),
+  ),
+),
+```
+
 ## 사용자 정보 listening
 
 `UserService.instance.myDataChanges` 는 `UserService.instance.init()` 이 호출 될 때, 최초로 한번 실행되고, `/users/<my-uid>` 의 값이 변경 될 때마다 이벤트를 발생시킨다.

@@ -35,7 +35,8 @@ class ChatModel {
   DatabaseReference roomUserRef(String roomId, String uid) =>
       rtdb.ref().child('chat-rooms/$roomId/users/$uid');
 
-  // This is used to update the last message in the chat room list per user in /chat-joins
+  /// This is used to update the last message in the chat room list per user in /chat-joins
+  /// /chat-joins/{uid}/{roomId}
   String joinPath(String roomId, String uid) => '/chat-joins/$uid/$roomId';
 
   get service => ChatService.instance;
@@ -67,6 +68,11 @@ class ChatModel {
   /// [force] 는 강제로 메시지를 전송한다. 메시지를 전송하는 사용자가 disabled 나 blocked 되어져 있어도 강제로
   /// 메시지를 보낸다.
   ///
+  /// Cache receiver's name and photoUrl.
+  /// So, it can save the name and photoUrl on the single chat to reduce the number of database reads.
+  /// Note that, it is not a map for support multi chat rooms.
+  String? receiverName;
+  String? receiverPhotoUrl;
   Future<void> sendMessage({
     String? text,
     String? url,
@@ -122,6 +128,18 @@ class ChatModel {
           await ChatService.instance.beforeMessageSent!(chatMessageData, this);
     }
 
+    /// 1:1 채팅방이면, 상대방의 이름과 사진을 내 채팅방 정보에 저장한다.
+    /// 이것은, 상대방의 채팅방 목록에서 상대방의 이름과 사진을 보여주기 위해서이다.
+    /// 실시간으로 uid 로 상대방의 정보를 가져와서 보여주어도 되지만, 더 빠른 목록을 위해서 이렇게 한다.
+    /// 다만, 여기서는 채팅 메시지가 이미 전달된 다음에, 채팅방 정보를 업데이트하므로, 데이터 반응 속도는 신경쓰지 않아도 된다.
+
+    /// @thruthesky 24-05-28
+    if (room.isSingleChat && receiverName == null) {
+      final otherUid = room.otherUserUid!;
+      receiverName = (await User.getField(otherUid, Field.displayName)) ?? '';
+      receiverPhotoUrl = await User.getField(otherUid, Field.photoUrl);
+    }
+
     /// 참고, 실제 메시지를 보내기 전에, 채팅방 자체를 먼저 업데이트 해 버린다.
     ///
     /// 상황 발생, A 가 B 가 모두 채팅방에 들어가 있는 상태에서
@@ -163,15 +181,17 @@ class ChatModel {
     /// 이것은, 상대방의 채팅방 목록에서 상대방의 이름과 사진을 보여주기 위해서이다.
     /// 실시간으로 uid 로 상대방의 정보를 가져와서 보여주어도 되지만, 더 빠른 목록을 위해서 이렇게 한다.
     /// 다만, 여기서는 채팅 메시지가 이미 전달된 다음에, 채팅방 정보를 업데이트하므로, 데이터 반응 속도는 신경쓰지 않아도 된다.
-    if (room.isSingleChat) {
-      final otherUid = room.otherUserUid!;
-      final name = await User.getField(otherUid, Field.displayName);
-      final photoUrl = await User.getField(otherUid, Field.photoUrl);
-      ChatJoin.joinRef(myUid!, singleChatRoomId(otherUid)).update({
-        'name': name,
-        'photoUrl': photoUrl,
-      });
-    }
+
+    /// @thruthesky 24-05-28
+    // if (room.isSingleChat) {
+    //   final otherUid = room.otherUserUid!;
+    //   final name = await User.getField(otherUid, Field.displayName);
+    //   final photoUrl = await User.getField(otherUid, Field.photoUrl);
+    //   ChatJoin.joinRef(myUid!, singleChatRoomId(otherUid)).update({
+    //     'name': name,
+    //     'photoUrl': photoUrl,
+    //   });
+    // }
 
     /// URL Preview Update
     ///
@@ -243,9 +263,13 @@ class ChatModel {
     Map<String, dynamic> multiUpdateData = {};
     final epoch = DateTime.now().millisecondsSinceEpoch;
 
+    /// [e] is the {uid: true} pair for each user in the room. and if it's true, the user gets notification.
     for (final e in room.users?.entries.toList() ?? []) {
       final uid = e.key;
-      multiUpdateData[joinPath(room.id, uid)] = _lastMessage(
+
+      /// Update the last message in the chat room list per user in /chat-joins/{uid}/{roomId}
+      multiUpdateData[joinPath(room.id, uid)] = _chatJoinLastMessage(
+        uid: uid,
         text: text,
         url: url,
         newMessage: uid == myUid ? null : ServerValue.increment(1),
@@ -263,26 +287,41 @@ class ChatModel {
   ///
   /// singleChatOrder 와 groupChatOrder 를 업데이트해야 한다. openChatOrder 는 업데이트 하지 않는다.
   ///
-  /// [receiverUid] is the one who will receive the message.
-  // static Future<Map<String, dynamic>> _lastMessage({
-  Map<String, dynamic> _lastMessage({
+  /// [uid] is the location of the /chat-joins/{uid}/{roomId} node. This may be login user's uid or
+  /// any other user's uid in the room.
+  ///
+  Map<String, dynamic> _chatJoinLastMessage({
+    required String uid,
     String? text,
     String? url,
     required dynamic newMessage,
     required int order,
   }) {
-    // chat room info
+    /// chat room info
+    ///
+    String? name;
+    String? photoUrl;
+
+    if (room.isGroupChat) {
+      name = room.name ?? '';
+      photoUrl = room.iconUrl;
+    } else {
+      if (uid == myUid) {
+        name = receiverName;
+        photoUrl = receiverPhotoUrl;
+      } else {
+        name = my?.displayName;
+        photoUrl = my?.photoUrl;
+      }
+    }
+
     final data = {
       /// 그룹 채팅방 이름 또는 보내는 사람 이름
-      'name': room.isSingleChat
-          ? UserService.instance.user?.displayName
-          : (room.name ?? ''),
+      'name': name,
 
       /// 1:1 채팅에서는 마지막 보낸 사람 사진 (나중에 덮어 쓰여질 수 있음.)
       /// 그룹 채팅에서는 채팅방 아이콘 사진.
-      'photoUrl': room.isSingleChat
-          ? UserService.instance.user?.photoUrl
-          : room.iconUrl,
+      'photoUrl': photoUrl,
 
       /// 그룹 채팅의 경우, 사용자 수
       'noOfUsers': room.isGroupChat ? room.users?.length : null,

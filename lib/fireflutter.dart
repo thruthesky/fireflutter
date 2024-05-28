@@ -26,6 +26,7 @@ export 'src/chat/chat.message.model.dart';
 export 'src/chat/chat.model.dart';
 export 'src/chat/chat.room.model.dart';
 export 'src/chat/chat.service.dart';
+export 'src/chat/widgets/chat_room.create.button.dart';
 export 'src/chat/widgets/chat.bubble.dart';
 export 'src/chat/widgets/chat.message_input_box.dart';
 export 'src/chat/widgets/chat.message.list_view.dart';

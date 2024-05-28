@@ -110,7 +110,7 @@ class DefaultPublicProfileScreen extends StatelessWidget {
                       spacing: 6,
                       runSpacing: 6,
                       children: [
-                        if (chatButton) ChatButton(uid: uid),
+                        if (chatButton) ChatButton(otherUid: userUid),
                         if (likeButton) LikeButton(uid: userUid, user: user),
                         if (bookmarkButton) BookmarkButton(uid: userUid),
                         if (reportButton) ReportButton(uid: userUid),

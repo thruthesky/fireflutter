@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 class ChatButton extends StatelessWidget {
   const ChatButton({
     super.key,
-    this.uid,
+    this.otherUid,
     this.roomId,
     this.room,
   });
 
-  final String? uid;
+  final String? otherUid;
   final String? roomId;
   final ChatRoom? room;
 
@@ -19,7 +19,7 @@ class ChatButton extends StatelessWidget {
       onPressed: () async {
         ChatService.instance.showChatRoomScreen(
           context: context,
-          uid: uid,
+          otherUid: otherUid,
           roomId: roomId,
           room: room,
         );
