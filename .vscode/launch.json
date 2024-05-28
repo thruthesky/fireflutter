@@ -14,10 +14,28 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "PhiLov - sm iPhone black",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "00008030-000D445A11A3802E",
+      "flutterMode": "debug",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "PhiLov - Emulator",
       "request": "launch",
       "type": "dart",
       "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "PhiLov - SM T295",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "ROWM705A3NJ",
       "flutterMode": "debug",
       "cwd": "apps/philov",
       "program": "lib/main.dart"
