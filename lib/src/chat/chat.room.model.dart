@@ -35,6 +35,10 @@ class ChatRoom {
   int? singleChatOrder;
   int? groupChatOrder;
   int? openGroupChatOrder;
+
+  /// [order] is the overall order of the chat rooms
+  /// single, group, open, closed chat needs to be sorted by this order.
+  int? order;
   String? name;
 
   /// 그룹 채팅방을 대표하는 아이콘 사진을 저장한다.
@@ -104,6 +108,7 @@ class ChatRoom {
     this.singleChatOrder,
     this.groupChatOrder,
     this.openGroupChatOrder,
+    this.order,
     this.name,
     this.iconUrl,
     this.photoUrl,
@@ -168,6 +173,7 @@ class ChatRoom {
       singleChatOrder: json['singleChatOrder'] as int?,
       groupChatOrder: json['groupChatOrder'] as int?,
       openGroupChatOrder: json['openGroupChatOrder'] as int?,
+      order: json['order'] as int?,
       name: json['name'] as String?,
       iconUrl: json['iconUrl'] as String?,
       photoUrl: json['photoUrl'] as String?,
@@ -196,6 +202,7 @@ class ChatRoom {
       'singleChatOrder': singleChatOrder,
       'groupChatOrder': groupChatOrder,
       'openGroupChatOrder': openGroupChatOrder,
+      'order': order,
       'name': name,
       'iconUrl': iconUrl,
       'photoUrl': photoUrl,

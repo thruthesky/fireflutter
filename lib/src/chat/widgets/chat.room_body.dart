@@ -314,11 +314,16 @@ class _ChatRoomState extends State<ChatRoomBody> {
                           PopupMenuItem(
                             value: 'block',
                             child: MyDoc(
+                              // builder: (my) => my == null
+                              //     ? const SizedBox.shrink()
+                              //     : Text(my.blocks?.contains(
+                              //                 chat.room.otherUserUid) ==
+                              //             false
+                              //         ? T.block
+                              //         : T.unblock.tr),
                               builder: (my) => my == null
                                   ? const SizedBox.shrink()
-                                  : Text(my.blocks?.contains(
-                                              chat.room.otherUserUid) ==
-                                          false
+                                  : Text(!my.blocked(chat.room.otherUserUid!)
                                       ? T.block
                                       : T.unblock.tr),
                             ),
@@ -359,15 +364,6 @@ class _ChatRoomState extends State<ChatRoomBody> {
                           final re = await UserService.instance.block(
                               context: context,
                               otherUserUid: chat.room.otherUserUid!);
-                          if (context.mounted) {
-                            toast(
-                              context: context,
-                              title: re == true ? T.blocked.tr : T.unblocked.tr,
-                              message: re == true
-                                  ? T.blockedMessage.tr
-                                  : T.unblockedMessage.tr,
-                            );
-                          }
                         } else if (v == 'report') {
                           final re = await input(
                             context: context,
