@@ -57,6 +57,8 @@ class UserAvatar extends StatelessWidget {
         builder: builder,
       );
     } else {
+      /// If [cacheId] is provided, it will use the cacheId from memory and no need to show
+      /// loader(flickering) on the screen.
       return UserDoc.field(
         uid: uid,
         field: Field.photoUrl,

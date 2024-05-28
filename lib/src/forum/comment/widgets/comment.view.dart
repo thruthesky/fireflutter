@@ -91,7 +91,9 @@ class _CommnetViewState extends State<CommentView> {
                     TextButton(
                       onPressed: () {
                         ChatService.instance.showChatRoomScreen(
-                            context: context, uid: widget.comment.uid);
+                          context: context,
+                          otherUid: widget.comment.uid,
+                        );
                       },
                       child: const Text('채팅'),
                     ),

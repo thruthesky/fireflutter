@@ -10,19 +10,61 @@ class T {
     'ko': '버전: #version',
   };
 
+  static Mintl yes = {
+    'en': 'Yes',
+    'ko': '예',
+  };
+
+  static Mintl no = {
+    'en': 'No',
+    'ko': '아니요',
+  };
+
+  static Mintl ok = {
+    'en': 'OK',
+    'ko': '확인',
+  };
+
+  static Mintl error = {
+    'en': 'Error',
+    'ko': '오류',
+  };
+
+  static Mintl save = {
+    'en': 'Save',
+    'ko': '저장',
+  };
+
+  static Mintl saved = {
+    'en': 'Saved.',
+    'ko': '저장되었습니다.',
+  };
+
+  static Mintl name = {
+    'en': 'Name',
+    'ko': '이름',
+  };
+
+  static Mintl cancel = {
+    'en': 'Cancel',
+    'ko': '취소',
+  };
+
+  static Mintl close = {
+    'en': 'Close',
+    'ko': '닫기',
+  };
+
   /// Basic
-  static const String yes = 'Yes';
-  static const String no = 'No';
-  static const String ok = 'OK';
-  static const String save = 'Save';
-  static const String cancel = 'Cancel';
-  static const String close = 'Close';
-  static const String error = 'Error';
-  static const String name = 'Name';
+  // static const String yes = 'Yes';
+  // static const String no = 'No';
+  // static const String ok = 'OK';
+  // static const String save = 'Save';
+  // static const String cancel = 'Cancel';
+  // static const String close = 'Close';
   static const String inputName = 'Please enter your name.';
   static const String nameInputDescription = 'NameInputDescription';
 
-  static const String saved = 'Saved.';
   static const String email = 'Email';
   static const String inputEmail = 'Please enter your email.';
   static const String password = 'Password';

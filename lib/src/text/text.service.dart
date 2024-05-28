@@ -1,5 +1,17 @@
 import 'package:fireflutter/fireflutter.dart';
 
+/// Text Service
+///
+/// Example:
+/// ```dart
+/// Text(T.version.args({'version': '1.0.0'})),
+/// Text(T.yes.tr),
+///
+///
+/// TextService.instance.init(languageCode: 'ja');
+/// Text({'ja': 'Yo....'}.tr),
+/// Text({'ja': 'Yo: #no'}.args({'no': '123'})),
+/// ```
 class TextService {
   static TextService? _instance;
   static TextService get instance => _instance ??= TextService._();
@@ -17,13 +29,13 @@ class TextService {
 
   /// Define your texts here. You can update this map from the app.
   Map<String, String> texts = {
-    T.ok: 'OK',
-    T.no: 'No',
-    T.yes: 'Yes',
-    T.error: 'Error',
-    T.save: 'Save',
-    T.saved: 'Saved.',
-    T.name: 'Name',
+    // T.ok: 'OK',
+    // T.no: 'No',
+    // T.yes: 'Yes',
+    // T.error: 'Error',
+    // T.save: 'Save',
+    // T.saved: 'Saved.',
+    // T.name: 'Name',
     T.profileUpdate: 'Profile Update',
     T.profilePhoto: 'Profile Photo',
     T.backgroundImage: 'Background Image',
@@ -77,7 +89,7 @@ extension TranslationServiceExtension on String {
   String get tr => TextService.instance.text(this);
 }
 
-extension TranslationServiceExtension2 on Mintl {
+extension TranslationServiceExtensionMap on Mintl {
   /// Translate the string from the Mintl.
   ///
   /// Example:

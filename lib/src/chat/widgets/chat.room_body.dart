@@ -240,7 +240,6 @@ class _ChatRoomState extends State<ChatRoomBody> {
                       Expanded(
                         child: chat.room.isSingleChat
                             ? Value(
-                                // path: '${ChatJoin.join(myUid!, chat.room.id)}/name',
                                 ref: ChatJoin.nameRef(chat.room.id),
                                 builder: (v) => Text(
                                   v ?? '',

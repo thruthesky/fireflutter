@@ -73,7 +73,9 @@ class MeetupDetails extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         ChatService.instance.showChatRoomScreen(
-                            context: context, uid: meetup.master);
+                          context: context,
+                          otherUid: meetup.master,
+                        );
                       },
                       child: const Text('문의하기'),
                     ),

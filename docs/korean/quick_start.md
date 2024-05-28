@@ -154,8 +154,8 @@ FireFlutter 에 global build context 를 적용하는 것이 좋다. 자세한 �
 FireFlutter 에서 Exception 을 발생하는 경우가 있다. 플러터에서는 `runZonedGuarded` 를 통해서, 앱내에서 발생하는 여러 exception 을 화면에 표시 할 수 있는데, 이것을 활용해서 FireFlutter 가 발생시키는 FireFlutterException 에러를 사용자에게 표시 할 수 있다.
 
 ```dart
-zoneErrorHandler(e, stackTrace) {
-  dog("---> zoneErrorHandler; runtimeType: ${e.runtimeType}");
+runZonedGuardedHandler(e, stackTrace) {
+  dog("---> runZonedGuardedHandler; runtimeType: ${e.runtimeType}");
   if (e is FirebaseAuthException) {
     toast(
         context: globalContext,
@@ -185,7 +185,7 @@ void main() async {
         FlutterError.dumpErrorToConsole(details);
       };
     },
-    zoneErrorHandler,
+    runZonedGuardedHandler,
   );
 }
 ```
