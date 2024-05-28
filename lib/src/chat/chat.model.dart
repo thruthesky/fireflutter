@@ -407,6 +407,9 @@ class ChatModel {
         groupChatOrder =
             int.parse(join.groupChatOrder.toString().replaceAll('-11', '-1'));
       }
+      if (join.order.toString().contains('-11')) {
+        order = int.parse(join.order.toString().replaceAll('-11', '-1'));
+      }
     }
 
     final myJoinRef = ChatJoin.joinRef(myUid!, room.id);
@@ -414,6 +417,7 @@ class ChatModel {
       Field.newMessage: null,
       if (singleChatOrder != null) Field.singleChatOrder: singleChatOrder,
       if (groupChatOrder != null) Field.groupChatOrder: groupChatOrder,
+      if (order != null) Field.order: order,
     });
   }
 

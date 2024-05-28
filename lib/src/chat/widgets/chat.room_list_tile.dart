@@ -42,6 +42,7 @@ class ChatRoomListTile extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
+          Text("${room.order}"),
         ],
       ),
       subtitle: subtitle(context, room),

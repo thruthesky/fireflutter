@@ -14,6 +14,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "PhiLov - Emulator",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "SDS - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
