@@ -314,11 +314,16 @@ class _ChatRoomState extends State<ChatRoomBody> {
                           PopupMenuItem(
                             value: 'block',
                             child: MyDoc(
+                              // builder: (my) => my == null
+                              //     ? const SizedBox.shrink()
+                              //     : Text(my.blocks?.contains(
+                              //                 chat.room.otherUserUid) ==
+                              //             false
+                              //         ? T.block
+                              //         : T.unblock.tr),
                               builder: (my) => my == null
                                   ? const SizedBox.shrink()
-                                  : Text(my.blocks?.contains(
-                                              chat.room.otherUserUid) ==
-                                          false
+                                  : Text(!my.blocked(chat.room.otherUserUid!)
                                       ? T.block
                                       : T.unblock.tr),
                             ),
