@@ -673,5 +673,45 @@
       "cwd": "apps/roha",
       "program": "lib/main.dart"
     },
+    {
+      "name": "SDS (noe)- iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "apps/social_design_system/example",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=noe"]
+    },
+    {
+      "name": "SDS (noe)- iPhone SE (3rd generation)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone SE (3rd generation)",
+      "flutterMode": "debug",
+      "cwd": "apps/social_design_system/example",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=noe"]
+    },
+    {
+      "name": "Philov (noe)- iPhone SE (3rd generation)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone SE (3rd generation)",
+      "flutterMode": "debug",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=noe"]
+    },
+    {
+      "name": "Philov (noe)- iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=noe"]
+    },
   ]
 }
