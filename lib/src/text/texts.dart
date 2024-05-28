@@ -23,6 +23,8 @@ class T {
   static Mintl ok = {
     'en': 'OK',
     'ko': '확인',
+    'vi': '',
+    'th': 'ตกลง',
   };
 
   static Mintl error = {
