@@ -500,3 +500,31 @@ void initChatService() {
     },
   );
 }
+```
+
+## Blocking users
+
+```json
+/chat-rooms/
+	/chat_room_id
+		{
+			users: { uid-a: true, uid-b: false, ... },
+			blockedUsers: { uid-c: true, },
+		}
+```
+
+
+1. hard limit, they (disabled users) are restricted to chat, view chat message by security rules.
+2. soft limit, the fireflutter sdk informs user that they are blocked.
+
+3. admin or the master of the chat room can block user and unblock user (from the chat room menu).
+
+
+
+
+## Deleting message
+
+- Admin or master can delete other user's message
+
+- User can delete his own message
+
