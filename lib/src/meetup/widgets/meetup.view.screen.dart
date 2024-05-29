@@ -32,7 +32,7 @@ class _ClubViewScreenState extends State<MeetupViewScreen> {
                       onPressed: () =>
                           MeetupEventService.instance.showCreateScreen(
                         context: context,
-                        clubId: meetup.id,
+                        meetupId: meetup.id,
                       ),
                       child: const Text('일정 생성'),
                     );
@@ -161,7 +161,7 @@ class _ClubViewScreenState extends State<MeetupViewScreen> {
           children: [
             MeetupDetails(meetup: widget.meetup),
             MeetupEventListView(
-              clubId: widget.meetup.id,
+              meetup: widget.meetup,
               separatorBuilder: (p0, p1) => const Divider(height: 16),
               emptyBuilder: () => const Center(
                 child: Text('일정이 없습니다.'),

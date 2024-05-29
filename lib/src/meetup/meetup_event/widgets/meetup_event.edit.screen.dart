@@ -2,9 +2,9 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class MeetupEventEditScreen extends StatefulWidget {
-  const MeetupEventEditScreen({super.key, this.clubId, this.event});
+  const MeetupEventEditScreen({super.key, this.meetupId, this.event});
 
-  final String? clubId;
+  final String? meetupId;
   final MeetupEvent? event;
 
   @override
@@ -33,7 +33,7 @@ class _ClubMeetupEditScreenState extends State<MeetupEventEditScreen> {
         padding: const EdgeInsets.all(24),
         child: event == null
             ? MeetupEventCreateForm(
-                clubId: widget.clubId!,
+                meetupId: widget.meetupId!,
                 onCreate: (event) => setState(() => this.event = event),
               )
             : MeetupEventUpdateForm(

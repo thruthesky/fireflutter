@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 class MeetupEventCreateForm extends StatefulWidget {
   const MeetupEventCreateForm({
     super.key,
-    required this.clubId,
+    required this.meetupId,
     required this.onCreate,
   });
 
-  final String? clubId;
+  final String? meetupId;
   final void Function(MeetupEvent meetup) onCreate;
 
   @override
@@ -37,7 +37,7 @@ class _ClubMeetupCreateFormState extends State<MeetupEventCreateForm> {
             child: OutlinedButton(
               onPressed: () async {
                 final meetup = await MeetupEvent.create(
-                  clubId: widget.clubId,
+                  meetupId: widget.meetupId,
                   title: titleController.text,
                 );
                 widget.onCreate(meetup);
