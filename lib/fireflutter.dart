@@ -15,6 +15,7 @@ export 'src/admin/admin.service.dart';
 export 'src/admin/widgets/admin.dash_board.screen.dart';
 export 'src/admin/widgets/admin.user_list.screen.dart';
 export 'src/admin/widgets/admin.user_update.screen.dart';
+export 'src/admin/widgets/admin.meetup_list.screen.dart';
 
 export 'src/bookmark/bookmark.model.dart';
 export 'src/bookmark/widgets/bookmark.list_view.dart';
@@ -56,6 +57,7 @@ export 'src/meetup/widgets/meetup.update_form.dart';
 export 'src/meetup/widgets/meetup.view.screen.dart';
 export 'src/meetup/widgets/meetup.view_register_first_button.dart';
 export 'src/meetup/widgets/meetup.details.dart';
+export 'src/meetup/widgets/meetup.create_button.dart';
 
 export 'src/common/anonymous_avatar.dart';
 export 'src/common/assets.dart';

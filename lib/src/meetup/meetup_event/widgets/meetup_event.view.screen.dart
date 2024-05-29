@@ -22,8 +22,8 @@ class _MeetupViewScreenState extends State<MeetupEventViewScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.event.clubId != null) {
-      Meetup.get(id: widget.event.clubId!).then((value) => event = value);
+    if (widget.event.meetupId != null) {
+      Meetup.get(id: widget.event.meetupId!).then((value) => event = value);
     }
   }
 
@@ -112,7 +112,9 @@ class _MeetupViewScreenState extends State<MeetupEventViewScreen> {
               else
                 ElevatedButton(
                   onPressed: () async {
-                    if (event.joined == false) {
+                    /// * Refactor this not to access database. Or caching the meetup data.
+                    final meetup = await Meetup.get(id: event.meetupId!);
+                    if (meetup.joined == false) {
                       error(
                           context: context,
                           title: '클럽 가입 필요',

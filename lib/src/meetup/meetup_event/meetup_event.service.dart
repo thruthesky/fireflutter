@@ -10,13 +10,13 @@ class MeetupEventService {
 
   showCreateScreen({
     required BuildContext context,
-    required String? clubId,
+    required String? meetupId,
   }) {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, animation, secondaryAnimation) =>
           MeetupEventEditScreen(
-        clubId: clubId,
+        meetupId: meetupId,
       ),
     );
   }

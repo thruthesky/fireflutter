@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 /// 모임 목록 위젯
 ///
-/// [clubId] 클럽 아이디. 이 값이 주어지면, 해당 클럽의 모임 목록만 표시한다.
+/// [meetup] Meetup data model. 이 값이 주어지면, 해당 클럽의 모임 목록만 표시한다.
 ///
 /// [query] 파라미터를 통해, Firestore 쿼리를 전달할 수 있다. 기본 값은 `Club.col.orderBy('createdAt', descending: true)` 이다.
 ///
@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 class MeetupEventListView extends StatelessWidget {
   const MeetupEventListView({
     super.key,
-    this.clubId,
+    this.meetup,
     this.query,
     this.pageSize = 10,
     this.loadingBuilder,
@@ -46,7 +46,7 @@ class MeetupEventListView extends StatelessWidget {
     this.emptyBuilder,
   });
 
-  final String? clubId;
+  final Meetup? meetup;
   final Query? query;
 
   final int pageSize;
@@ -76,8 +76,8 @@ class MeetupEventListView extends StatelessWidget {
     Query? q = query;
     if (q == null) {
       q = MeetupEvent.col;
-      if (clubId != null) {
-        q = q.where('clubId', isEqualTo: clubId);
+      if (meetup != null) {
+        q = q.where('meetupId', isEqualTo: meetup!.id);
       }
       q = q.orderBy('createdAt', descending: true);
     }
