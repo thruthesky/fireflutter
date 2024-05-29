@@ -1,6 +1,7 @@
 import 'package:example/screens/chat/chat.screen.dart';
 import 'package:example/screens/chat/open_chat.screen.dart';
 import 'package:example/screens/entry/entry.screen.dart';
+import 'package:example/screens/forum/forum.screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
@@ -55,6 +56,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ElevatedButton(
                         onPressed: () => context.push(OpenChatScreen.routeName),
                         child: const Text('Open Chat'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => context.push(ForumScreen.routeName),
+                        child: const Text('Fourm'),
                       ),
                     ],
                   ),

@@ -13,46 +13,73 @@ class T {
   static Mintl yes = {
     'en': 'Yes',
     'ko': '예',
+    'vi': 'Có',
+    'th': 'ใช่',
+    'lo': 'ແມ່ນແລ້ວ'
   };
 
   static Mintl no = {
     'en': 'No',
     'ko': '아니요',
+    'vi': 'Không',
+    'th': 'ไม่ใช่',
+    'lo': 'ບໍ່'
   };
 
   static Mintl ok = {
     'en': 'OK',
     'ko': '확인',
+    'vi': 'Ổn',
+    'th': 'ตกลง',
+    'lo': 'ຕົວຢ່າງ'
   };
 
   static Mintl error = {
     'en': 'Error',
     'ko': '오류',
+    'vi': 'Lỗi',
+    'th': 'เกิดข้อผิดพลาด',
+    'lo': 'ຜິດພາດ'
   };
 
   static Mintl save = {
     'en': 'Save',
     'ko': '저장',
+    'vi': 'Lưu',
+    'th': 'บันทึก',
+    'lo': 'ບັນທຶກ'
   };
 
   static Mintl saved = {
     'en': 'Saved.',
     'ko': '저장되었습니다.',
+    'vi': 'Đã lưu',
+    'th': 'บันทึกสำเร็จ',
+    'lo': 'ບັນທຶກແລ້ວ'
   };
 
   static Mintl name = {
     'en': 'Name',
     'ko': '이름',
+    'vi': 'Tên',
+    'th': 'ชื่อ',
+    'lo': 'ຊື່',
   };
 
   static Mintl cancel = {
     'en': 'Cancel',
     'ko': '취소',
+    'vi': 'Hủy bỏ',
+    'th': 'ยกเลิก',
+    'lo': 'ຍົກເລີກ',
   };
 
   static Mintl close = {
     'en': 'Close',
     'ko': '닫기',
+    'vi': 'Đóng',
+    'th': 'ปิด',
+    'lo': 'ປິດ'
   };
 
   /// Basic

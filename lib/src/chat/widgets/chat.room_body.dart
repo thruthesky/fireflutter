@@ -316,9 +316,8 @@ class _ChatRoomState extends State<ChatRoomBody> {
                             child: MyDoc(
                               builder: (my) => my == null
                                   ? const SizedBox.shrink()
-                                  : Text(my.blocks?.contains(
-                                              chat.room.otherUserUid) ==
-                                          false
+                                  // : T.block.orBlocked(chat.room.otherUserUid!, T.unblock.tr),
+                                  : Text(!my.blocked(chat.room.otherUserUid!)
                                       ? T.block
                                       : T.unblock.tr),
                             ),
@@ -356,18 +355,10 @@ class _ChatRoomState extends State<ChatRoomBody> {
                           );
                         } else if (v == 'block') {
                           /// 1:1 채팅 방의 경우, 차단 & 해제
-                          final re = await UserService.instance.block(
+                          // final re =
+                          await UserService.instance.block(
                               context: context,
                               otherUserUid: chat.room.otherUserUid!);
-                          if (context.mounted) {
-                            toast(
-                              context: context,
-                              title: re == true ? T.blocked.tr : T.unblocked.tr,
-                              message: re == true
-                                  ? T.blockedMessage.tr
-                                  : T.unblockedMessage.tr,
-                            );
-                          }
                         } else if (v == 'report') {
                           final re = await input(
                             context: context,

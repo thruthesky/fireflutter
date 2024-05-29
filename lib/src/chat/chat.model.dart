@@ -394,6 +394,8 @@ class ChatModel {
 
     int? singleChatOrder, groupChatOrder;
 
+    /// If [join] is null, the user is re-entering the chat room.
+    ///
     /// 새 메시지가 있다는 뜻인 -11 을 그냥 -1 로 변경한다.
     ///
     /// order 값 맨 앞에 1을 추가한 것이다. 예를 들어, order 값이 -12345 와 같다면 맨 앞에 1을 추가해서
@@ -407,6 +409,11 @@ class ChatModel {
         groupChatOrder =
             int.parse(join.groupChatOrder.toString().replaceAll('-11', '-1'));
       }
+
+      /// For all chat room list (including single & group), uses 'order' field to sort the list.
+      if (join.order.toString().contains('-11')) {
+        order = int.parse(join.order.toString().replaceAll('-11', '-1'));
+      }
     }
 
     final myJoinRef = ChatJoin.joinRef(myUid!, room.id);
@@ -414,6 +421,7 @@ class ChatModel {
       Field.newMessage: null,
       if (singleChatOrder != null) Field.singleChatOrder: singleChatOrder,
       if (groupChatOrder != null) Field.groupChatOrder: groupChatOrder,
+      if (order != null) Field.order: order,
     });
   }
 
