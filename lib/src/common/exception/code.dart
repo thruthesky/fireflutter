@@ -42,6 +42,9 @@ class Code {
   static const String leave = 'leave';
   static const String join = 'join';
 
+  // Chat Bubble Codes
+  static const String readMore = 'readMore';
+
   static const String deleted = 'deleted';
 
   @Deprecated('Use Field.languageCode instead')

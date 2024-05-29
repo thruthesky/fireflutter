@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/chat/widgets/chat.read_more.dialog.dart';
 import 'package:flutter/material.dart';
 
 /// Chat bubble
@@ -22,6 +23,8 @@ class ChatBubble extends StatelessWidget {
   final ChatRoom room;
   final ChatMessage message;
   final Function? onChange;
+
+  bool get _isReadMore => message.text != null && message.text!.length > 360;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +73,9 @@ class ChatBubble extends StatelessWidget {
                         ? Text(T.chatMessageDeleted.tr)
                         : LinkifyText(
                             message.text!
-                                .orBlocked(message.uid!, T.blockedChatMessage),
+                                .orBlocked(message.uid!, T.blockedChatMessage)
+                                // TODO tr
+                                .cut(360, suffix: "... Read More"),
                             style: const TextStyle(color: Colors.black),
                           ),
 
@@ -121,37 +126,41 @@ class ChatBubble extends StatelessWidget {
     );
 
     /// 관리자가 아니고, 방장이 아니고, 나의 메시지가 아니면, 그냥 chat bubble 만 리턴
-    if (isAdmin == false && room.isMaster == false && message.mine == false) {
-      return bubble;
-    }
+    // commented by @withcenter-dev2 at 2024-05-27
+    // this will be reviewed
+    // if (isAdmin == false && room.isMaster == false && message.mine == false) {
+    //   return bubble;
+    // }
 
     /// 나의 채팅 메시지이면, 삭제 등을 표시하기 위한 메시지 리턴
-    if (message.mine) {
-      return PopupMenuButton(
-        position: PopupMenuPosition.under,
-        onOpened: () => FocusScope.of(context).unfocus(),
-        offset: Offset(
-          message.mine ? MediaQuery.of(context).size.width : 0,
-          0,
-        ),
-        itemBuilder: (context) => <PopupMenuEntry<String>>[
-          PopupMenuItem(
-            value: Code.delete,
-            child: Text(T.chatMessageDelete.tr),
-          ),
-        ],
-        onSelected: (v) async {
-          switch (v) {
-            case Code.delete:
-              await message.delete();
-              break;
-            default:
-              break;
-          }
-        },
-        child: IgnorePointer(child: bubble),
-      );
-    }
+    // commented by @withcenter-dev2 at 2024-05-27
+    //
+    // if (message.mine) {
+    //   return PopupMenuButton(
+    //     position: PopupMenuPosition.under,
+    //     onOpened: () => FocusScope.of(context).unfocus(),
+    //     offset: Offset(
+    //       message.mine ? MediaQuery.of(context).size.width : 0,
+    //       0,
+    //     ),
+    //     itemBuilder: (context) => <PopupMenuEntry<String>>[
+    //       PopupMenuItem(
+    //         value: Code.delete,
+    //         child: Text(T.chatMessageDelete.tr),
+    //       ),
+    //     ],
+    //     onSelected: (v) async {
+    //       switch (v) {
+    //         case Code.delete:
+    //           await message.delete();
+    //           break;
+    //         default:
+    //           break;
+    //       }
+    //     },
+    //     child: IgnorePointer(child: bubble),
+    //   );
+    // }
 
     /// 관리자이거나 방장이면, 팝업 메뉴 버튼을 리턴
     return PopupMenuButton(
@@ -162,19 +171,52 @@ class ChatBubble extends StatelessWidget {
         0,
       ),
       itemBuilder: (context) => <PopupMenuEntry<String>>[
-        PopupMenuItem(
-          value: Code.delete,
-          child: Text(T.chatMessageDelete.tr),
-        ),
-        PopupMenuItem(
-          value: Code.block,
-          child: Text(T.block.tr),
-        ),
+        if (_isReadMore) ...[
+          const PopupMenuItem(
+            value: Code.readMore,
+            // TODO tr
+            child: Text("Read More"),
+          ),
+        ],
+        if (message.mine || (room.isGroupChat && room.isMaster)) ...[
+          PopupMenuItem(
+            value: Code.delete,
+            child: Text(T.chatMessageDelete.tr),
+          ),
+        ],
+        if (!message.mine) ...[
+          PopupMenuItem(
+            // We may need to use a different term or specific term for blocking in a group chat
+            // in UX, the user may confuse that the block is the same for group chat and direct chat
+            value: Code.block,
+            child: Text(T.block.tr),
+          ),
+          const PopupMenuItem(
+            value: Code.readMore,
+            // TODO tr
+            child: Text("View Profile"),
+          ),
+        ],
       ],
       onSelected: (v) async {
         switch (v) {
+          case "readMore":
+            // show ReadMoreDialog
+            await showDialog(
+              context: context,
+              builder: (context) {
+                return ReadMoreDialog(
+                  message: message,
+                );
+              },
+            );
+            break;
           case Code.delete:
             await message.delete();
+            break;
+          // TODO Code
+          case "viewProfile":
+            await mayShowPublicProfileScreen(context, message.uid!);
             break;
           case Code.block:
             await room.block(message.uid!);
@@ -183,6 +225,8 @@ class ChatBubble extends StatelessWidget {
             break;
         }
       },
+      // TODO need help because the alert box need a scroll, it is affected by Ignore pointer.
+
       child: IgnorePointer(child: bubble),
     );
   }

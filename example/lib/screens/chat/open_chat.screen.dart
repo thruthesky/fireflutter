@@ -32,7 +32,8 @@ class _OpenChatScreenState extends State<OpenChatScreen> {
         ],
       ),
       body: ChatRoomListView(
-        openChat: true,
+        // openChat: true,
+        chatRoomList: ChatRoomList.open,
         separatorBuilder: (context, index) => const Divider(),
         itemBuilder: (room, index) => ChatRoomListTile(room: room),
       ),
