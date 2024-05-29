@@ -162,6 +162,10 @@ class T {
   static const String pleaseEnterMessage = 'Please enter message.';
   static const String cannotBlockYourself = 'You cannot block yourself.';
 
+  // Chats
+  static const String readMore = 'Read More';
+  static const String viewProfile = 'View Profile';
+
   /// User and Profile
   static const String recentLoginRequiredForResign =
       'recentLoginRequiredForResign';

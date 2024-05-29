@@ -172,10 +172,9 @@ class ChatBubble extends StatelessWidget {
       ),
       itemBuilder: (context) => <PopupMenuEntry<String>>[
         if (_isReadMore) ...[
-          const PopupMenuItem(
+          PopupMenuItem(
             value: Code.readMore,
-            // TODO tr
-            child: Text("Read More"),
+            child: Text(T.readMore.tr),
           ),
         ],
         if (message.mine || (room.isGroupChat && room.isMaster)) ...[
@@ -191,22 +190,24 @@ class ChatBubble extends StatelessWidget {
             value: Code.block,
             child: Text(T.block.tr),
           ),
-          const PopupMenuItem(
-            value: Code.readMore,
-            // TODO tr
-            child: Text("View Profile"),
+          PopupMenuItem(
+            value: Code.viewProfile,
+            child: Text(T.viewProfile.tr),
           ),
         ],
       ],
       onSelected: (v) async {
         switch (v) {
-          case "readMore":
+          case Code.readMore:
             // show ReadMoreDialog
             await showDialog(
               context: context,
               builder: (context) {
-                return ReadMoreDialog(
-                  message: message,
+                return IgnorePointer(
+                  ignoring: false,
+                  child: ReadMoreDialog(
+                    message: message,
+                  ),
                 );
               },
             );
@@ -214,8 +215,7 @@ class ChatBubble extends StatelessWidget {
           case Code.delete:
             await message.delete();
             break;
-          // TODO Code
-          case "viewProfile":
+          case Code.viewProfile:
             await mayShowPublicProfileScreen(context, message.uid!);
             break;
           case Code.block:
@@ -225,8 +225,6 @@ class ChatBubble extends StatelessWidget {
             break;
         }
       },
-      // TODO need help because the alert box need a scroll, it is affected by Ignore pointer.
-
       child: IgnorePointer(child: bubble),
     );
   }

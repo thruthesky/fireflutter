@@ -42,8 +42,10 @@ class Code {
   static const String leave = 'leave';
   static const String join = 'join';
 
+  // TODO review where to put this because this is under exception folder and this is not for exception things.
   // Chat Bubble Codes
   static const String readMore = 'readMore';
+  static const String viewProfile = 'viewProfile';
 
   static const String deleted = 'deleted';
 
