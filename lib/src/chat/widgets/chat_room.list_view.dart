@@ -4,6 +4,7 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+/// Enum for what chat rooms to display.
 enum ChatRoomList {
   /// [my] means the chat rooms that I belong, whether 1:1 or group
   my,

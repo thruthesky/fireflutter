@@ -266,6 +266,40 @@ Chat List is a List view of Chats. We can use this widget to show a list of chat
 DefaultChatRoomListView(),
 ```
 
+#### List Group, Single (1:1), Open, or All Chat Rooms where the user is joined
+
+The `ChatRoomListView` widget can be used to show different listings of chat rooms.
+
+```dart
+ChatRoomListView(),
+```
+
+The example above will show the chat room list of the user's chat rooms (where the user is joined).
+
+Using the `ChatRoomList` enum, it can be specified which group chats should be displayed. The default is `ChatRoomList.my`.
+
+```dart
+// Listing of all chat rooms where the user is joined (whether single or group)
+ChatRoomListView(
+  chatRoomList: ChatRoomList.my,
+),
+
+// Listing of all single (1:1) chat rooms where the user is joined/invloved
+ChatRoomListView(
+  chatRoomList: ChatRoomList.single,
+),
+
+// Listing of all group chat rooms where the user is joined (whether close or open chat)
+ChatRoomListView(
+  chatRoomList: ChatRoomList.group,
+),
+
+// Listong of all open group chat rooms (whether the user is joined or not)
+ChatRoomListView(
+  chatRoomList: ChatRoomList.open,
+),
+```
+
 #### Querying Specific Type of Chat Rooms
 
 You may want to show specific types of Chat Rooms, like Single Chat Rooms only, Group Chats Only, or Open Group Chats only.
