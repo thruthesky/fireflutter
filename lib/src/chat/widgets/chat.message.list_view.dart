@@ -15,6 +15,7 @@ class ChatMessageListView extends StatefulWidget {
     this.builder,
     this.primary,
     this.emptyBuilder,
+    this.onReplyToMessage,
   });
 
   final ChatModel chat;
@@ -22,6 +23,7 @@ class ChatMessageListView extends StatefulWidget {
   final Widget Function(ChatMessage)? builder;
   final bool? primary;
   final Widget Function(BuildContext)? emptyBuilder;
+  final void Function(ChatMessage message)? onReplyToMessage;
 
   @override
   State<ChatMessageListView> createState() => _ChatMessageListViewState();
@@ -145,6 +147,10 @@ class _ChatMessageListViewState extends State<ChatMessageListView> {
                       room: chat.room,
                       message: message,
                       onChange: () => setState(() {}),
+                      // onReply: (ChatMessage message) {
+                      //   dog("User wants to reply to message: $message");
+                      // },
+                      onReply: widget.onReplyToMessage,
                     ),
               );
             },

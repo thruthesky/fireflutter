@@ -1,8 +1,8 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class ReadMoreDialog extends StatelessWidget {
-  const ReadMoreDialog({
+class ChatReadMoreDialog extends StatelessWidget {
+  const ChatReadMoreDialog({
     super.key,
     required this.message,
   });

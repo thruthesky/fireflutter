@@ -391,6 +391,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
                 ? ChatMessageListView(
                     chat: chat,
                     emptyBuilder: widget.emptyBuilder,
+                    onReplyToMessage: (message) {},
                   )
                 : const SizedBox.shrink(),
           ),

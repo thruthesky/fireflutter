@@ -18,11 +18,13 @@ class ChatBubble extends StatelessWidget {
     required this.room,
     required this.message,
     this.onChange,
+    this.onReply,
   });
 
   final ChatRoom room;
   final ChatMessage message;
   final Function? onChange;
+  final void Function(ChatMessage message)? onReply;
 
   bool get _isReadMore => message.text != null && message.text!.length > 360;
 
@@ -183,16 +185,23 @@ class ChatBubble extends StatelessWidget {
             child: Text(T.chatMessageDelete.tr),
           ),
         ],
+        if (onReply != null)
+          const PopupMenuItem(
+            // TODO code
+            value: "reply",
+            // TODO tr
+            child: Text("Reply"),
+          ),
         if (!message.mine) ...[
+          PopupMenuItem(
+            value: Code.viewProfile,
+            child: Text(T.viewProfile.tr),
+          ),
           PopupMenuItem(
             // We may need to use a different term or specific term for blocking in a group chat
             // in UX, the user may confuse that the block is the same for group chat and direct chat
             value: Code.block,
             child: Text(T.block.tr),
-          ),
-          PopupMenuItem(
-            value: Code.viewProfile,
-            child: Text(T.viewProfile.tr),
           ),
         ],
       ],
@@ -203,14 +212,15 @@ class ChatBubble extends StatelessWidget {
             await showDialog(
               context: context,
               builder: (context) {
-                return IgnorePointer(
-                  ignoring: false,
-                  child: ReadMoreDialog(
-                    message: message,
-                  ),
+                return ReadMoreDialog(
+                  message: message,
                 );
               },
             );
+            break;
+          // TODO code
+          case "reply":
+            onReply?.call(message);
             break;
           case Code.delete:
             await message.delete();
