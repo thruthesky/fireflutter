@@ -4,6 +4,20 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+enum ChatRoomList {
+  /// [my] means the chat rooms that I belong, whether 1:1 or group
+  my,
+
+  /// [single] means the chat rooms for 1:1
+  single,
+
+  /// [group] means the group chat rooms that I belong
+  group,
+
+  /// [open] means the open group chat room whether I belong or not
+  open,
+}
+
 /// Chat Room List View
 ///
 /// Displays the list of chat rooms.
@@ -15,7 +29,8 @@ import 'package:flutter/material.dart';
 class ChatRoomListView extends StatelessWidget {
   const ChatRoomListView({
     super.key,
-    this.openChat = false,
+    // this.openChat = false,
+    this.chatRoomList = ChatRoomList.my,
     this.query,
     this.pageSize = 10,
     this.loadingBuilder,
@@ -40,7 +55,9 @@ class ChatRoomListView extends StatelessWidget {
     this.emptyBuilder,
   });
 
-  final bool openChat;
+  // final bool openChat;
+  final ChatRoomList chatRoomList;
+
   final Query? query;
   final int pageSize;
   final Widget Function()? loadingBuilder;
@@ -64,19 +81,29 @@ class ChatRoomListView extends StatelessWidget {
   final Widget Function(ChatRoom, int)? itemBuilder;
   final Widget Function()? emptyBuilder;
 
+  DatabaseReference get _joinsRef => ChatService.instance.joinsRef;
+
+  Query get _queryFromChatRoomList => switch (chatRoomList) {
+        ChatRoomList.my =>
+          _joinsRef.child(myUid!).orderByChild(Field.order).startAt(false),
+        ChatRoomList.single => _joinsRef
+            .child(myUid!)
+            .orderByChild(Field.singleChatOrder)
+            .startAt(false),
+        ChatRoomList.group => _joinsRef
+            .child(myUid!)
+            .orderByChild(Field.groupChatOrder)
+            .startAt(false),
+        ChatRoomList.open => ChatService.instance.roomsRef
+            .orderByChild(Field.openGroupChatOrder)
+            .startAt(false),
+      };
+
   @override
   Widget build(BuildContext context) {
     return DocReady(
       builder: (my) => FirebaseDatabaseQueryBuilder(
-        query: openChat
-            ? ChatService.instance.roomsRef
-                .orderByChild(Field.openGroupChatOrder)
-                .startAt(false)
-            : (query ??
-                ChatService.instance.joinsRef
-                    .child(myUid!)
-                    .orderByChild(Field.order)
-                    .startAt(false)),
+        query: query ?? _queryFromChatRoomList,
         pageSize: 50,
         builder: (context, snapshot, _) {
           if (snapshot.isFetching) {
