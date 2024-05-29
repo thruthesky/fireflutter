@@ -82,6 +82,45 @@ class T {
     'lo': 'ປິດ'
   };
 
+  /// Meetup translations
+  static Mintl meetupCreate = {
+    'en': 'Create meetup',
+    'ko': '모임 만들기',
+  };
+
+  static Mintl meetupUpdate = {
+    'en': 'Edit meetup',
+    'ko': '모임 수정하기',
+  };
+
+  static Mintl meetupName = {
+    'en': 'Meetup name',
+    'ko': '모임 이름',
+  };
+  static Mintl meetupNameDescription = {
+    'en': 'Please write the name of the meetup.',
+    'ko': '모임 이름을 적어주세요.',
+  };
+  static Mintl meetupPhotoDescription = {
+    'en':
+        'Please upload a photo of the meetup. Photo Width: 800, Photo Height: 500',
+    'ko': '  모임 사진을 업로드 해 주세요. 사진 너비: 800, 사진 높이: 500',
+  };
+  static Mintl meetupDescriptionLabel = {
+    'en': 'Meetup description',
+    'ko': '모임 설명',
+  };
+  static Mintl meetupDescriptionInputDescription = {
+    'en': 'Please write a description of the meetup.',
+    'ko': '모임 설명을 적어주세요.',
+  };
+  static Mintl meetupUpdateMessage = {
+    'en': 'The meetup has been modified.',
+    'ko': '모임이 수정되었습니다.',
+  };
+
+  /// EO meetups translations
+
   /// Basic
   // static const String yes = 'Yes';
   // static const String no = 'No';
@@ -297,16 +336,16 @@ class T {
       'Login is required to continue. Do you want to login?';
 
   // Club Translation
-  static const String clubCreate = '모임 만들기';
-  static const String clubUpdate = '모임 수정하기';
-  static const String clubName = '모임 이름';
-  static const String clubNameDescription = '모임 이름을 적어주세요.';
-  static const String clubPhotoDescription =
-      '  모임 사진을 업로드 해 주세요. 사진 너비: 800, 사진 높이: 500';
+  // static const String clubCreate = '모임 만들기';
+  // static const String clubUpdate = '모임 수정하기';
+  // static const String clubName = '모임 이름';
+  // static const String clubNameDescription = '모임 이름을 적어주세요.';
+  // static const String clubPhotoDescription =
+  // '  모임 사진을 업로드 해 주세요. 사진 너비: 800, 사진 높이: 500';
 
-  static const String clubDescriptionLabel = '모임 설명';
-  static const String clubDescriptionInputDescription = "모임 설명을 적어주세요.";
-  static const String clubUpdateMessage = '모임이 수정되었습니다.';
+  // static const String clubDescriptionLabel = '모임 설명';
+  // static const String clubDescriptionInputDescription = "모임 설명을 적어주세요.";
+  // static const String clubUpdateMessage = '모임이 수정되었습니다.';
 
   static const String userNotFoundTitleOnShowPublicProfileScreen = '사용자 정보 오류';
   static const String userNotFoundMessageOnShowPublicProfileScreen =
