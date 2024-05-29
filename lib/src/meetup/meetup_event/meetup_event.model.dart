@@ -11,7 +11,7 @@ class MeetupEvent {
   DocumentReference get ref => MeetupEvent.col.doc(id);
 
   final String id;
-  final String? clubId;
+  final String? meetupId;
   final String uid;
   final List<String> users;
   final String title;
@@ -21,7 +21,7 @@ class MeetupEvent {
 
   MeetupEvent({
     required this.id,
-    required this.clubId,
+    required this.meetupId,
     required this.uid,
     required this.title,
     required this.description,
@@ -39,7 +39,7 @@ class MeetupEvent {
   factory MeetupEvent.fromMap(Map<dynamic, dynamic> map, String id) {
     return MeetupEvent(
       id: id,
-      clubId: map['clubId'],
+      meetupId: map['meetupId'],
       uid: map['uid'],
       title: map['title'] ?? '',
       description: map['description'] ?? '',
@@ -55,7 +55,7 @@ class MeetupEvent {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'clubId': clubId,
+      'meetupId': meetupId,
       'uid': uid,
       'title': title,
       'description': description,
@@ -67,11 +67,11 @@ class MeetupEvent {
 
   /// 오프라인 모임 생성을 위한, 데이터 맵을 만든다.
   static Map<String, dynamic> toCreate({
-    String? clubId,
+    String? meetupId,
     required String title,
   }) {
     return {
-      if (clubId != null) 'clubId': clubId,
+      if (meetupId != null) 'meetupId': meetupId,
       'uid': myUid!,
       'users': [],
       'title': title,
@@ -87,7 +87,7 @@ class MeetupEvent {
   /// 오프라인 모임 일정 만들기
   ///
   static Future<MeetupEvent> create({
-    String? clubId,
+    String? meetupId,
     required String title,
   }) async {
     if (title.trim().isEmpty) {
@@ -99,7 +99,7 @@ class MeetupEvent {
 
     final ref = await col.add(
       MeetupEvent.toCreate(
-        clubId: clubId,
+        meetupId: meetupId,
         title: title,
       ),
     );

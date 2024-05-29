@@ -50,6 +50,15 @@ class _AdminDashBoardScreenState extends State<AdminDashBoardScreen> {
                 },
                 child: const Text('Mirror User Data To Firestore'),
               ),
+              ElevatedButton(
+                onPressed: () async {
+                  showGeneralDialog(
+                      context: context,
+                      pageBuilder: (_, __, ___) =>
+                          const AdminMeetupListScreen());
+                },
+                child: const Text('Meetup Management'),
+              ),
             ],
           ),
         ],
