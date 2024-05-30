@@ -43,7 +43,7 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                         category: widget.meetup.id +
                             (index == 4 ? '-meetup-gallery' : '-meetup-post'),
                       ),
-                      child: Text(T.createNotice.tr),
+                      child: Text(index == 4 ? T.addPhoto.tr : T.addNotice.tr),
                     );
                   } else {
                     return const SizedBox.shrink();
@@ -238,7 +238,7 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                         mainAxisExtent: 240,
                       ),
                       emptyBuilder: () => Center(
-                        child: Text(T.uploadPhoto.tr),
+                        child: Text(T.noUploadPhotoYet.tr),
                       ),
                     )
                   : MeetupViewRegisterFirstButton(
