@@ -46,7 +46,10 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
       room = await ChatRoom.get(widget.roomId!);
       nameController.text = room?.name ?? '';
       descriptionController.text = room?.description ?? '';
-      open = room?.isGroupChat ?? false;
+      // TODO cleanup
+      // Commented by @withcenter-dev2 2024-05-30
+      // open = room?.isGroupChat ?? false;
+      open = (room?.isGroupChat ?? false) ? (room!.isOpenGroupChat) : false;
       isVerifiedOnly = room?.isVerifiedOnly ?? false;
       urlVerifiedUserOnly = room?.urlVerifiedUserOnly ?? false;
       uploadVerifiedUserOnly = room?.uploadVerifiedUserOnly ?? false;
