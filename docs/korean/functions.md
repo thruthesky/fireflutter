@@ -2,6 +2,17 @@
 
 These functions are provided to be used anywhere in the code as needed.
 
+현재 클라우드 함수는 크게 아래와 같이 나뉘어져 있다.
+
+- 글 summary 작성
+- 사용자 like, 계정 삭제
+- 푸시 메세지 전송
+
+그리고, 개발자의 편리를 위해서 Firebase Extensons 로 만들어 놓았다. 설치는 이 [링크: Functions for FireFlutter 0.0.2-alpha](https://console.firebase.google.com/project/_/extensions/install?ref=jaehosong/fff@0.0.2-alpha.0)를 클릭하면 된다.
+
+참고로, RTDB 의 데이터를 Firestore 로 미러링하는 것은 별도의 Exstensions 인데, `Mirror Database to Firestore` 을 쓰면 된다. 이 extensions 은 공용으로 꼭 FireFlutter 프로젝트 뿐만아니라, 언제 어디서든 필요할 때 사용 할 수 있는 Extensions 이다.
+
+
 ## 에러 표시 함수
 
 주로 아래의 두가지 방식으로 에러를 화면에 표시 할 수 있다.
