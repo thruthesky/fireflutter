@@ -215,6 +215,11 @@ class T {
     'ko': '글 쓰기',
   };
 
+  static Mintl meetupAdminSetting = {
+    'en': 'Admin setting',
+    'ko': '관리자 설정',
+  };
+
   static Mintl editMeetupInformation = {
     'en': 'Edit meetup info',
     'ko': '모임 정보 수정',
@@ -445,6 +450,13 @@ class T {
     'en': 'There are no applicants to attend, yet.',
     'ko': '참석 신청자가 없습니다.',
   };
+
+  
+  static Mintl meetupAdminSettings = {
+    'en': 'Meetup admin settings',
+    'ko': '모임 관리자 설정',
+  };
+
 
   /// EO meetups translations
 

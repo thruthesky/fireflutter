@@ -47,8 +47,10 @@ class Code {
   @Deprecated('Use Field.languageCode instead')
   static const String languageCode = 'languageCode';
 
-  // club menu for admin
+  // meetup menu for admin
   static const String reminders = 'reminders';
+
+  static const String meetupAdminSettings = 'meetupAdminSettings';
 
   /// Club error codes
   static const clubAlreadyJoined = 'club-already-joined';

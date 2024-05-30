@@ -57,6 +57,17 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                   icon: const Icon(Icons.menu),
                   itemBuilder: (context) {
                     return [
+                      if (isAdmin)
+                        PopupMenuItem(
+                          value: Code.meetupAdminSettings,
+                          child: Row(
+                            children: [
+                              const Icon(Icons.grade),
+                              const SizedBox(width: 8),
+                              Text(T.meetupAdminSetting.tr),
+                            ],
+                          ),
+                        ),
                       if (meetup.isMaster)
                         PopupMenuItem(
                           value: Code.edit,
@@ -143,6 +154,11 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                       if (text != null) {
                         await meetup.update(reminder: text);
                       }
+                    } else if (code == Code.meetupAdminSettings) {
+                      AdminService.instance.showMeetupSettingScreen(
+                        context: context,
+                        meetup: widget.meetup,
+                      );
                     }
                   }),
             ),
