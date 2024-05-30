@@ -391,12 +391,6 @@ class _ChatRoomState extends State<ChatRoomBody> {
                 ? ChatMessageListView(
                     chat: chat,
                     emptyBuilder: widget.emptyBuilder,
-                    onReplyToMessage: (message) {
-                      dog("@TODO: Replying to message: $message");
-                    },
-                    onEditMessage: (message) {
-                      dog("@TODO: Editing message: $message");
-                    },
                   )
                 : const SizedBox.shrink(),
           ),

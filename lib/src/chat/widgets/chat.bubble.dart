@@ -32,7 +32,7 @@ class ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bubble = Container(
+    return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,51 +56,56 @@ class ChatBubble extends StatelessWidget {
           const SizedBox(width: 8),
           // Chat message text. size 60%
 
-          /// 여기서부터...
           if (message.deleted ||
               (message.text != null && message.text!.isNotEmpty))
-            Container(
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.6),
-              child: Column(
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: message.mine
-                          ? Colors.amber.shade200
-                          : Colors.grey.shade200,
-                      borderRadius: borderRadius(),
-                    ),
-                    child: message.deleted
-                        ? Text(T.chatMessageDeleted.tr)
-                        : LinkifyText(
-                            message.text!
-                                .orBlocked(message.uid!, T.blockedChatMessage)
-                                .cut(360, suffix: "... ${T.readMore.tr}"),
-                            style: const TextStyle(color: Colors.black),
-                          ),
+            ChatBubblePopupMenuButton(
+              message: message,
+              room: room,
+              onViewProfile: () =>
+                  mayShowPublicProfileScreen(context, message.uid!),
+              child: Container(
+                constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.6),
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: message.mine
+                            ? Colors.amber.shade200
+                            : Colors.grey.shade200,
+                        borderRadius: borderRadius(),
+                      ),
+                      child: message.deleted
+                          ? Text(T.chatMessageDeleted.tr)
+                          : LinkifyText(
+                              message.text!
+                                  .orBlocked(message.uid!, T.blockedChatMessage)
+                                  .cut(360, suffix: "... ${T.readMore.tr}"),
+                              style: const TextStyle(color: Colors.black),
+                            ),
 
-                    /// OLD code. commented out by @thruthesky at 2024-05-27
-                    // message.text != null && message.deleted == false
-                    //     ? LinkifyText(
-                    //         message.text!
-                    //             .orBlocked(message.uid!, T.blockedChatMessage),
-                    //         style: const TextStyle(color: Colors.black),
-                    //       )
-                    //     : Text(T.chatMessageDeleted.tr),
-                  ),
-                  if (message.hasUrlPreview) ...[
-                    const SizedBox(height: 8),
-                    UrlPreview(
-                      previewUrl: message.previewUrl!,
-                      title: message.previewTitle,
-                      description: message.previewDescription,
-                      imageUrl: message.previewImageUrl,
+                      /// OLD code. commented out by @thruthesky at 2024-05-27
+                      // message.text != null && message.deleted == false
+                      //     ? LinkifyText(
+                      //         message.text!
+                      //             .orBlocked(message.uid!, T.blockedChatMessage),
+                      //         style: const TextStyle(color: Colors.black),
+                      //       )
+                      //     : Text(T.chatMessageDeleted.tr),
                     ),
+                    if (message.hasUrlPreview) ...[
+                      const SizedBox(height: 8),
+                      UrlPreview(
+                        previewUrl: message.previewUrl!,
+                        title: message.previewTitle,
+                        description: message.previewDescription,
+                        imageUrl: message.previewImageUrl,
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
           // image
@@ -164,88 +169,6 @@ class ChatBubble extends StatelessWidget {
     //     child: IgnorePointer(child: bubble),
     //   );
     // }
-
-    /// 관리자이거나 방장이면, 팝업 메뉴 버튼을 리턴
-    return PopupMenuButton(
-      position: PopupMenuPosition.under,
-      onOpened: () => FocusScope.of(context).focusedChild?.unfocus(),
-      offset: Offset(
-        message.mine ? MediaQuery.of(context).size.width : 0,
-        0,
-      ),
-      itemBuilder: (context) => <PopupMenuEntry<String>>[
-        if (_isReadMore) ...[
-          PopupMenuItem(
-            value: Code.readMore,
-            child: Text(T.readMore.tr),
-          ),
-        ],
-        if (onReply != null)
-          PopupMenuItem(
-            value: Code.reply,
-            child: Text(T.reply.tr),
-          ),
-        if (message.mine && onEdit != null) ...[
-          const PopupMenuItem(
-            value: Code.edit,
-            // TODO T.edit.tr
-            child: Text("Edit"),
-          ),
-        ],
-        if (message.mine || (room.isGroupChat && room.isMaster)) ...[
-          PopupMenuItem(
-            value: Code.delete,
-            child: Text(T.chatMessageDelete.tr),
-          ),
-        ],
-        if (!message.mine) ...[
-          PopupMenuItem(
-            value: Code.viewProfile,
-            child: Text(T.viewProfile.tr),
-          ),
-          if (room.isGroupChat)
-            PopupMenuItem(
-              // We may need to use a different term or specific term for blocking in a group chat
-              // in UX, the user may confuse that the block is the same for group chat and direct chat
-              value: Code.block,
-              child: Text(T.block.tr),
-            ),
-        ],
-      ],
-      onSelected: (v) async {
-        switch (v) {
-          case Code.readMore:
-            // show ReadMoreDialog
-            await showDialog(
-              context: context,
-              builder: (context) {
-                return ChatReadMoreDialog(
-                  message: message,
-                );
-              },
-            );
-            break;
-          case Code.reply:
-            onReply?.call(message);
-            break;
-          case Code.edit:
-            onEdit?.call(message);
-            break;
-          case Code.delete:
-            await message.delete();
-            break;
-          case Code.viewProfile:
-            await mayShowPublicProfileScreen(context, message.uid!);
-            break;
-          case Code.block:
-            await room.block(message.uid!);
-            break;
-          default:
-            break;
-        }
-      },
-      child: IgnorePointer(child: bubble),
-    );
   }
 
   mayShowPublicProfileScreen(BuildContext context, String uid) {
