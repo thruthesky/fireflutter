@@ -166,7 +166,7 @@ class ChatBubble extends StatelessWidget {
     /// 관리자이거나 방장이면, 팝업 메뉴 버튼을 리턴
     return PopupMenuButton(
       position: PopupMenuPosition.under,
-      onOpened: () => FocusScope.of(context).unfocus(),
+      onOpened: () => FocusScope.of(context).focusedChild?.unfocus(),
       offset: Offset(
         message.mine ? MediaQuery.of(context).size.width : 0,
         0,
