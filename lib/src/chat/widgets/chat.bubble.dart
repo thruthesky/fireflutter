@@ -81,10 +81,45 @@ class ChatBubble extends StatelessWidget {
               room: room,
               onViewProfile: () =>
                   mayShowPublicProfileScreen(context, message.uid!),
+              onDeleteMessage: () async {
+                // Added Future.delayed by @withcenter-dev2 at 2024-05-30
+                // because showing a dialog is having a problem here.
+                // What I think is happening:
+                // in DropdownButton2, when onChange is called, it pops the dropdown.
+                // So when we showDialog, suddenly it pops it. Then it returns 'bool?' but
+                // it was expecting '_DropdownButton2<String>' (because it wanted to pop the dropdown)
+                // For confirmation. Because we may need a better solution.
+                await Future.delayed(const Duration(milliseconds: 1));
+                final deleteConfirmation = await confirm(
+                  context: context,
+                  title: "Delete Message",
+                  message:
+                      "Are you sure you want to delete this message? This action cannot be undone.",
+                );
+
+                if (deleteConfirmation ?? false) {
+                  await message.delete();
+                }
+              },
+              onBlock: () async {
+                // @withcenter-dev2: Please read notes on DeleteMessage above
+                // await Future.delayed(const Duration(milliseconds: 1));
+                final blockConfirmation = await confirm(
+                  context: context,
+                  title: "Block User",
+                  message:
+                      "Are you sure you want to block this user from the group chat?",
+                );
+                if (blockConfirmation ?? false) {
+                  await room.block(message.uid!);
+                }
+              },
+              onReply: () => print("onReply?.call(message);"),
               child: Container(
                 constraints: BoxConstraints(
                     maxWidth: MediaQuery.of(context).size.width * 0.6),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
@@ -103,18 +138,18 @@ class ChatBubble extends StatelessWidget {
                                   message.uid!, T.blockedChatMessage),
                               style: const TextStyle(color: Colors.black),
                             ),
-
-                      /// OLD code. commented out by @thruthesky at 2024-05-27
-                      // message.text != null && message.deleted == false
-                      //     ? LinkifyText(
-                      //         message.text!
-                      //             .orBlocked(message.uid!, T.blockedChatMessage),
-                      //         style: const TextStyle(color: Colors.black),
-                      //       )
-                      //     : Text(T.chatMessageDeleted.tr),
                     ),
                     if (isLongText)
-                      TextButton(onPressed: () {}, child: Text(T.readMore.tr)),
+                      TextButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => ChatReadMoreDialog(
+                                message: message,
+                              ),
+                            );
+                          },
+                          child: Text(T.readMore.tr)),
                     if (message.hasUrlPreview) ...[
                       const SizedBox(height: 8),
                       UrlPreview(
@@ -152,43 +187,6 @@ class ChatBubble extends StatelessWidget {
         ],
       ),
     );
-
-    /// 관리자가 아니고, 방장이 아니고, 나의 메시지가 아니면, 그냥 chat bubble 만 리턴
-    // commented by @withcenter-dev2 at 2024-05-27
-    // this will be reviewed
-    // if (isAdmin == false && room.isMaster == false && message.mine == false) {
-    //   return bubble;
-    // }
-
-    /// 나의 채팅 메시지이면, 삭제 등을 표시하기 위한 메시지 리턴
-    // commented by @withcenter-dev2 at 2024-05-27
-    //
-    // if (message.mine) {
-    //   return PopupMenuButton(
-    //     position: PopupMenuPosition.under,
-    //     onOpened: () => FocusScope.of(context).unfocus(),
-    //     offset: Offset(
-    //       message.mine ? MediaQuery.of(context).size.width : 0,
-    //       0,
-    //     ),
-    //     itemBuilder: (context) => <PopupMenuEntry<String>>[
-    //       PopupMenuItem(
-    //         value: Code.delete,
-    //         child: Text(T.chatMessageDelete.tr),
-    //       ),
-    //     ],
-    //     onSelected: (v) async {
-    //       switch (v) {
-    //         case Code.delete:
-    //           await message.delete();
-    //           break;
-    //         default:
-    //           break;
-    //       }
-    //     },
-    //     child: IgnorePointer(child: bubble),
-    //   );
-    // }
   }
 
   mayShowPublicProfileScreen(BuildContext context, String uid) {
