@@ -56,7 +56,7 @@ class TextService {
     T.birthdate: '#birthMonth/#birthDay/#birthYear',
     T.email: 'Email',
     T.password: 'Password',
-    T.login: 'Login',
+    // T.login: 'Login',
     T.next: 'Next',
     T.prev: 'Prev',
     T.back: 'Back',

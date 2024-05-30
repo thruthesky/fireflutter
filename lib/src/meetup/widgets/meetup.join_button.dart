@@ -16,8 +16,8 @@ class MeetupJoinButton extends StatelessWidget {
         if (notLoggedIn) {
           await alert(
             context: context,
-            title: '로그인',
-            message: '모임 기능을 이용하기 위해서는 로그인을 먼저 하셔야합니다.',
+            title: T.login.tr,
+            message: T.loginFirstToUseMeetup.tr,
           );
           return;
         } else {
@@ -29,7 +29,7 @@ class MeetupJoinButton extends StatelessWidget {
         }
       },
       child: Text(
-        meetup.joined ? '탈퇴하기' : '가입하기',
+        meetup.joined ? T.unsubscribed.tr : T.signup.tr,
       ),
     );
   }

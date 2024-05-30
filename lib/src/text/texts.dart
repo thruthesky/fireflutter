@@ -1,3 +1,5 @@
+import 'package:fireflutter/fireflutter.dart';
+
 /// Multi language internalization
 typedef Mintl = Map<String, String>;
 
@@ -82,6 +84,16 @@ class T {
     'lo': 'ປິດ'
   };
 
+  static Mintl createPost = {
+    'en': 'Create post',
+    'ko': '글 작성',
+  };
+
+  static Mintl editPost = {
+    'en': 'Edit post',
+    'ko': '글 수정',
+  };
+
   /// Meetup translations
   static Mintl meetupCreate = {
     'en': 'Create meetup',
@@ -155,8 +167,8 @@ class T {
     'ko': '명',
   };
 
-  static Mintl contactUs = {
-    'en': 'Contact Us',
+  static Mintl contact = {
+    'en': 'Contact',
     'ko': '문의하기',
   };
 
@@ -170,7 +182,221 @@ class T {
     'ko': '최근 사진이 없습니다',
   };
 
+  static Mintl recentPosts = {
+    'en': 'Recent Posts',
+    'ko': '최근글',
+  };
+
+  static Mintl noRecentPosts = {
+    'en': 'There are no recent posts',
+    'ko': '최근 글이 없습니다.',
+  };
+
+  static Mintl reminder = {
+    'en': 'Reminder',
+    'ko': '알림',
+  };
+
+  static Mintl inputReminder = {
+    'en': 'Input reminder',
+    'ko': '입력 알림',
+  };
+
+  static Mintl createMeetupEvent = {
+    'en': 'Create event',
+    'ko': '일정 생성',
+  };
+
+  static Mintl createNotice = {
+    'en': 'Create notice',
+    'ko': '글 쓰기',
+  };
+
+  static Mintl editMeetupInformation = {
+    'en': 'Edit meetup info',
+    'ko': '모임 정보 수정',
+  };
+
+  static Mintl leaveMeetup = {
+    'en': 'Leave meetup',
+    'ko': '모임 탈퇴',
+  };
+
+  static Mintl joinMeetup = {
+    'en': 'Join meetup',
+    'ko': '모임 가입',
+  };
+
+  static Mintl noticeManage = {
+    'en': 'Update notice',
+    'ko': '게시판 관리',
+  };
+
+  static Mintl closeMeetup = {
+    'en': 'Close meetup',
+    'ko': '모임 폐쇄',
+  };
+
+  static Mintl noEvent = {
+    'en': 'There are no events',
+    'ko': '일정이 없습니다.',
+  };
+
+  static Mintl joinMeetupToChat = {
+    'en': 'You must join the group\nto view the chat room.',
+    'ko': '모임에 가입하셔야\n채팅방을 볼 수 있습니다.',
+  };
+
+  static Mintl noNoticeYet = {
+    'en': 'There are no notices yet.',
+    'ko': '글을 등록 해 주세요.',
+  };
+
+  static Mintl joinMeetupToViewNotice = {
+    'en': 'You must join the group\nto view the announcement.',
+    'ko': '모임에 가입하셔야\n게시판을 볼 수 있습니다.',
+  };
+
+  static Mintl uploadPhoto = {
+    'en': 'Please upload a photo.',
+    'ko': '사진을 등록 해 주세요.',
+  };
+
+  static Mintl joinMeetupToViewGallery = {
+    'en': 'You must join the group\nto view the gallery.',
+    'ko': '모임에 가입하셔야\n사진첩을 볼 수 있습니다.',
+  };
+
+  static Mintl login = {
+    'en': 'Login',
+    'ko': '로그인',
+  };
+
+  static Mintl loginFirstToUseMeetup = {
+    'en': 'To use the meetup function, you must first log in.',
+    'ko': '모임 기능을 이용하기 위해서는 로그인을 먼저 하셔야합니다.',
+  };
+
+  static Mintl unsubscribed = {
+    'en': 'Unsubscribe',
+    'ko': '탈퇴하기',
+  };
+
+  static Mintl signup = {
+    'en': 'Sign up',
+    'ko': '가입하기',
+  };
+
+  static Mintl somethingWentWrong = {
+    'en': 'Something went wrong!',
+    'ko': '오류가 발생했습니다.',
+  };
+
+  static Mintl deleteMeetup = {
+    'en': 'Delete meetup',
+    'ko': '모임 삭제',
+  };
+
+  static Mintl deleteMeetupMessage = {
+    'en': 'Are you sure you want to delete this meetup?',
+    'ko': '정말 모임을 삭제하시겠습니까?',
+  };
+
+  static Mintl createMeetupSchedule = {
+    'en': 'Create meetup schedule',
+    'ko': '만남 일정 만들기',
+  };
+
+  static Mintl editMeetupSchedule = {
+    'en': 'Edit meetup schedule',
+    'ko': '만남 일정 수정하기',
+  };
+
+  static Mintl meetupScheduleTitle = {
+    'en': 'Meetup schedule title',
+    'ko': '오프라인 일정 제목',
+  };
+
+  static Mintl meetupScheduleTitleDescription = {
+    'en': 'Please enter the title of the meetup schedule.',
+    'ko': '오프라인 만남의 제목을 적어주세요.',
+  };
+
+  static Mintl meetupCreateSchedule = {
+    'en': 'Create a schedule',
+    'ko': '일정 만들기',
+  };
+
+  static Mintl meetupScheduleDateAndTime = {
+    'en': 'Meetup schedule date and time',
+    'ko': '만남 일정 날짜와 시간',
+  };
+
+  static Mintl selectDate = {
+    'en': 'Select date',
+    'ko': '날짜 선택',
+  };
+
+  static Mintl selectTime = {
+    'en': 'Select time',
+    'ko': '시간 선택',
+  };
+
+  static Mintl meetupSchedulePhoto = {
+    'en': 'Meetup schedule photo',
+    'ko': '만남 일정 사진',
+  };
+
+  static Mintl meetupScheduleName = {
+    'en': 'Meetup schedule name',
+    'ko': '만남 일정 이름',
+  };
+
+  static Mintl meetupScheduleNameNote = {
+    'en': 'Please enter the name of the meetup schedule.',
+    'ko': '오프라인 만남에 대한 이름을 적어주세요.',
+  };
+
+  static Mintl meetupSchedulePhotoNote = {
+    'en': 'Please upload a photo. Photo size: 500x500',
+    'ko': '모임 사진을 업로드 해 주세요. 사진 크기: 500x500',
+  };
+
+  static Mintl meetupScheduleDescription = {
+    'en': 'Meetup schedule description',
+    'ko': '만남 일정 설명',
+  };
+
+  static Mintl meetupScheduleDescriptionNote = {
+    'en': 'Please enter the description of the meetup schedule.',
+    'ko': '만남 설명을 적어주세요.',
+  };
+
+  static Mintl meetupScheduleDateOrTimeMissing = {
+    'en': 'Please select a meeting date and time.',
+    'ko': '모임 날짜와 시간을 선택해주세요.',
+  };
+
+  static Mintl meetupScheduleUpdated = {
+    'en': 'Meetup schedule updated',
+    'ko': '만남 일정이 수정되었습니다.',
+  };
+
+  
+  static Mintl editSchedule = {
+    'en': 'Edit schedule',
+    'ko': '일정 수정하기',
+  };
+
+
+  static Mintl xxxx = {
+    'en': 'xxxx',
+    'ko': 'xxxx',
+  };
+
   /// EO meetups translations
+
+  ///////////////////////////////////////////////////////////////////
 
   /// Basic
   // static const String yes = 'Yes';
@@ -186,7 +412,7 @@ class T {
   static const String inputEmail = 'Please enter your email.';
   static const String password = 'Password';
   static const String inputPassword = 'Please enter your password.';
-  static const String login = 'Login';
+  // static const String login = 'Login';
   static const String next = 'Next';
   static const String prev = 'Prev';
   static const String back = 'Back';

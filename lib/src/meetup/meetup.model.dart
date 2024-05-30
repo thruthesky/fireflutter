@@ -174,10 +174,14 @@ class Meetup {
   /// 클럽 삭제
   ///
   /// 현재는 채팅방이나 게시글을 삭제하지 않고, 그냥 클럽 문서만 삭제를 해 버린다.
-  Future delete({required BuildContext context}) async {
+  Future<bool> delete({required BuildContext context}) async {
     final re = await confirm(
-        context: context, title: '모임 삭제', message: '정말 모임을 삭제하시겠습니까?');
-    if (re != true) return;
+      context: context,
+      title: T.deleteMeetup.tr,
+      message: T.deleteMeetupMessage.tr,
+    );
+    if (re != true) return false;
     await ref.delete();
+    return true;
   }
 }

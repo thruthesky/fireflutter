@@ -8,17 +8,16 @@ class MeetupViewScreen extends StatefulWidget {
   final Meetup meetup;
 
   @override
-  State<MeetupViewScreen> createState() => _ClubViewScreenState();
+  State<MeetupViewScreen> createState() => _MeetupViewScreenState();
 }
 
-class _ClubViewScreenState extends State<MeetupViewScreen> {
+class _MeetupViewScreenState extends State<MeetupViewScreen> {
   final ValueNotifier<int> _tabIndex = ValueNotifier<int>(0);
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 5,
       child: Scaffold(
-        // backgroundColor: Colors.blue,
         appBar: AppBar(
           title: Text(widget.meetup.name),
           actions: [
@@ -34,7 +33,7 @@ class _ClubViewScreenState extends State<MeetupViewScreen> {
                         context: context,
                         meetupId: meetup.id,
                       ),
-                      child: const Text('일정 생성'),
+                      child: Text(T.createMeetupEvent.tr),
                     );
                   } else if (meetup.joined && (index == 3 || index == 4)) {
                     return TextButton(
@@ -42,9 +41,9 @@ class _ClubViewScreenState extends State<MeetupViewScreen> {
                           ForumService.instance.showPostCreateScreen(
                         context: context,
                         category: widget.meetup.id +
-                            (index == 4 ? '-club-gallery' : '-club-post'),
+                            (index == 4 ? '-meetup-gallery' : '-meetup-post'),
                       ),
-                      child: const Text('글 쓰기'),
+                      child: Text(T.createNotice.tr),
                     );
                   } else {
                     return const SizedBox.shrink();
@@ -59,57 +58,57 @@ class _ClubViewScreenState extends State<MeetupViewScreen> {
                   itemBuilder: (context) {
                     return [
                       if (meetup.isMaster)
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: Code.edit,
                           child: Row(
                             children: [
-                              Icon(Icons.edit),
-                              SizedBox(width: 8),
-                              Text('모임 정보 수정'),
+                              const Icon(Icons.edit),
+                              const SizedBox(width: 8),
+                              Text(T.editMeetupInformation.tr),
                             ],
                           ),
                         ),
                       if (meetup.joined)
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: Code.leave,
                           child: Row(
                             children: [
-                              Icon(Icons.logout),
-                              SizedBox(width: 8),
-                              Text('모임 탈퇴'),
+                              const Icon(Icons.logout),
+                              const SizedBox(width: 8),
+                              Text(T.leaveMeetup.tr),
                             ],
                           ),
                         )
                       else
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: Code.join,
                           child: Row(
                             children: [
-                              Icon(Icons.how_to_reg),
-                              SizedBox(width: 8),
-                              Text('모임 가입'),
+                              const Icon(Icons.how_to_reg),
+                              const SizedBox(width: 8),
+                              Text(T.joinMeetup.tr),
                             ],
                           ),
                         ),
                       if (meetup.isMaster) ...[
                         const PopupMenuDivider(),
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: Code.reminders,
                           child: Row(
                             children: [
-                              Icon(Icons.newspaper),
-                              SizedBox(width: 8),
-                              Text('공지사항 관리'),
+                              const Icon(Icons.newspaper),
+                              const SizedBox(width: 8),
+                              Text(T.noticeManage.tr),
                             ],
                           ),
                         ),
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: Code.delete,
                           child: Row(
                             children: [
-                              Icon(Icons.close),
-                              SizedBox(width: 8),
-                              Text('모임 폐쇄'),
+                              const Icon(Icons.close),
+                              const SizedBox(width: 8),
+                              Text(T.closeMeetup.tr),
                             ],
                           ),
                         ),
@@ -123,7 +122,11 @@ class _ClubViewScreenState extends State<MeetupViewScreen> {
                         meetup: widget.meetup,
                       );
                     } else if (code == Code.delete) {
-                      await widget.meetup.delete(context: context);
+                      final deleted =
+                          await widget.meetup.delete(context: context);
+                      if (deleted == true) {
+                        Navigator.of(context).pop();
+                      }
                     } else if (code == Code.leave) {
                       await widget.meetup.leave();
                     } else if (code == Code.join) {
@@ -132,8 +135,8 @@ class _ClubViewScreenState extends State<MeetupViewScreen> {
                       final text = await input(
                         context: context,
                         initialValue: meetup.reminder,
-                        title: 'Reminder',
-                        hintText: 'Input reminder',
+                        title: T.reminder.tr,
+                        hintText: T.inputReminder.tr,
                         minLines: 2,
                         maxLines: 5,
                       );
@@ -163,8 +166,8 @@ class _ClubViewScreenState extends State<MeetupViewScreen> {
             MeetupEventListView(
               meetup: widget.meetup,
               separatorBuilder: (p0, p1) => const Divider(height: 16),
-              emptyBuilder: () => const Center(
-                child: Text('일정이 없습니다.'),
+              emptyBuilder: () => Center(
+                child: Text(T.noEvent.tr),
               ),
             ),
             MeetupDoc(
@@ -181,7 +184,7 @@ class _ClubViewScreenState extends State<MeetupViewScreen> {
                     )
                   : MeetupViewRegisterFirstButton(
                       meetup: meetup,
-                      label: "모임에 가입하셔야\n채팅방을 볼 수 있습니다.",
+                      label: T.joinMeetupToChat.tr,
                     ),
             ),
             MeetupDoc(
@@ -189,7 +192,7 @@ class _ClubViewScreenState extends State<MeetupViewScreen> {
               builder: (meetup) => meetup.users.contains(myUid)
                   ? ListTileTheme(
                       child: PostListView(
-                        category: '${widget.meetup.id}-club-post',
+                        category: '${widget.meetup.id}-meetup-post',
                         padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
                         pageSize: 20,
                         separatorBuilder: (p0, p1) => Padding(
@@ -203,21 +206,21 @@ class _ClubViewScreenState extends State<MeetupViewScreen> {
                                 .withAlpha(64),
                           ),
                         ),
-                        emptyBuilder: () => const Center(
-                          child: Text('글을 등록 해 주세요.'),
+                        emptyBuilder: () => Center(
+                          child: Text(T.noNoticeYet.tr),
                         ),
                       ),
                     )
                   : MeetupViewRegisterFirstButton(
                       meetup: meetup,
-                      label: "모임에 가입하셔야\n게시판을 볼 수 있습니다.",
+                      label: T.joinMeetupToViewNotice.tr,
                     ),
             ),
             MeetupDoc(
               meetup: widget.meetup,
               builder: (meetup) => meetup.users.contains(myUid)
                   ? PostListView.gridView(
-                      category: '${widget.meetup.id}-club-gallery',
+                      category: '${widget.meetup.id}-meetup-gallery',
                       padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
                       itemBuilder: (post, i) => ClipRRect(
                         borderRadius: BorderRadius.circular(16),
@@ -234,13 +237,13 @@ class _ClubViewScreenState extends State<MeetupViewScreen> {
                         mainAxisSpacing: 8,
                         mainAxisExtent: 240,
                       ),
-                      emptyBuilder: () => const Center(
-                        child: Text('사진을 등록 해 주세요.'),
+                      emptyBuilder: () => Center(
+                        child: Text(T.uploadPhoto.tr),
                       ),
                     )
                   : MeetupViewRegisterFirstButton(
                       meetup: meetup,
-                      label: "모임에 가입하셔야\n사진첩을 볼 수 있습니다.",
+                      label: T.joinMeetupToViewGallery.tr,
                     ),
             ),
           ],
