@@ -137,6 +137,10 @@ class T {
   static const String chatMessageListViewBlockedUser =
       'You are blocked from this chat.';
 
+  static const String readMore = 'Read More';
+  static const String viewProfile = 'View Profile';
+  static const String reply = 'Reply';
+
   /// User
   static const String setting = 'Setting';
   static const String block = 'Block';
@@ -161,10 +165,6 @@ class T {
   // chat input box hint text -> please enter a message
   static const String pleaseEnterMessage = 'Please enter message.';
   static const String cannotBlockYourself = 'You cannot block yourself.';
-
-  // Chats
-  static const String readMore = 'Read More';
-  static const String viewProfile = 'View Profile';
 
   /// User and Profile
   static const String recentLoginRequiredForResign =

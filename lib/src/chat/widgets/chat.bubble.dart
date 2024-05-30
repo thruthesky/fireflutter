@@ -76,8 +76,7 @@ class ChatBubble extends StatelessWidget {
                         : LinkifyText(
                             message.text!
                                 .orBlocked(message.uid!, T.blockedChatMessage)
-                                // TODO tr
-                                .cut(360, suffix: "... Read More"),
+                                .cut(360, suffix: "... ${T.readMore.tr}"),
                             style: const TextStyle(color: Colors.black),
                           ),
 
@@ -186,11 +185,9 @@ class ChatBubble extends StatelessWidget {
           ),
         ],
         if (onReply != null)
-          const PopupMenuItem(
-            // TODO code
-            value: "reply",
-            // TODO tr
-            child: Text("Reply"),
+          PopupMenuItem(
+            value: Code.reply,
+            child: Text(T.reply.tr),
           ),
         if (!message.mine) ...[
           PopupMenuItem(
@@ -212,14 +209,13 @@ class ChatBubble extends StatelessWidget {
             await showDialog(
               context: context,
               builder: (context) {
-                return ReadMoreDialog(
+                return ChatReadMoreDialog(
                   message: message,
                 );
               },
             );
             break;
-          // TODO code
-          case "reply":
+          case Code.reply:
             onReply?.call(message);
             break;
           case Code.delete:

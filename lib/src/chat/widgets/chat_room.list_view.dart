@@ -54,6 +54,7 @@ class ChatRoomListView extends StatelessWidget {
     this.clipBehavior = Clip.hardEdge,
     this.itemBuilder,
     this.emptyBuilder,
+    this.itemPadding,
   });
 
   // final bool openChat;
@@ -81,6 +82,7 @@ class ChatRoomListView extends StatelessWidget {
   final Clip clipBehavior;
   final Widget Function(ChatRoom, int)? itemBuilder;
   final Widget Function()? emptyBuilder;
+  final EdgeInsetsGeometry? itemPadding;
 
   DatabaseReference get _joinsRef => ChatService.instance.joinsRef;
 
@@ -149,8 +151,10 @@ class ChatRoomListView extends StatelessWidget {
               }
               final room = ChatRoom.fromSnapshot(snapshot.docs[index]);
 
-              return itemBuilder?.call(room, index) ??
-                  ChatRoomListTile(room: room);
+              return Padding(
+                  padding: itemPadding ?? const EdgeInsets.all(0),
+                  child: itemBuilder?.call(room, index) ??
+                      ChatRoomListTile(room: room));
             },
           );
         },

@@ -46,6 +46,7 @@ class Code {
   // Chat Bubble Codes
   static const String readMore = 'readMore';
   static const String viewProfile = 'viewProfile';
+  static const String reply = 'reply';
 
   static const String deleted = 'deleted';
 
