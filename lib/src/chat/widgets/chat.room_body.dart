@@ -324,7 +324,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
                           ),
                         PopupMenuItem(
                             value: 'report', child: Text(T.report.tr)),
-                        if (widget.leave)
+                        if (widget.leave && !chat.room.isMaster)
                           PopupMenuItem(
                               value: 'leave', child: Text(T.leave.tr)),
                       ],
