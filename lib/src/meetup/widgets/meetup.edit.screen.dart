@@ -27,7 +27,7 @@ class _ClubEditScreenState extends State<MeetupEditScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          meetup == null ? T.clubCreate.tr : T.clubUpdate.tr,
+          meetup == null ? T.meetupCreate.tr : T.meetupUpdate.tr,
         ),
       ),
       body: Padding(

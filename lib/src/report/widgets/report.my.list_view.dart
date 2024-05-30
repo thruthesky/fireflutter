@@ -151,7 +151,7 @@ class ReportMyListView extends StatelessWidget {
                 } else if (report.isChatRoom) {
                   dog('${report.chatRoomId} ${report.otherUserUid} ');
 
-                  final room = ChatRoom.fromUid(report.otherUserUid!);
+                  final room = ChatRoom.fromRoomdId(report.chatRoomId!);
                   return chatBuilder?.call(report, func) ??
                       ListTile(
                         title: Text(report.reason),

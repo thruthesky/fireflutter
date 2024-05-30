@@ -68,7 +68,7 @@ class Meetup {
 
   static Future<Meetup> get({String? id, DocumentReference? ref}) async {
     if (id == null && ref == null) {
-      throw FireFlutterException('club-get/id-null', 'Input id or ref.');
+      throw FireFlutterException('meetup-get/id-null', 'Input id or ref.');
     }
     ref ??= col.doc(id);
     final snapshot = await ref.get();
@@ -86,7 +86,7 @@ class Meetup {
     required String name,
   }) async {
     if (name.trim().isEmpty) {
-      throw FireFlutterException('club-create/name-empty', 'Input name.');
+      throw FireFlutterException('meetup-create/name-empty', 'Input name.');
     }
 
     final ref = await col.add(
@@ -95,21 +95,21 @@ class Meetup {
       ),
     );
 
-    final club = await Meetup.get(ref: ref);
+    final meetup = await Meetup.get(ref: ref);
 
     final room = await ChatRoom.create(
       name: name,
-      roomId: club.id,
+      roomId: meetup.id,
       isOpenGroupChat: false,
     );
 
     final chat = ChatModel(room: room);
     await chat.room.join(forceJoin: true);
 
-    return club;
+    return meetup;
   }
 
-  /// Update club
+  /// Update meetup
   ///
   /// [photoUrl] is optional. After uploading photo into Storage, set the photo url using this parameter.
   /// And [hasPhoto] is set to true if [photoUrl] is not null.
@@ -126,7 +126,7 @@ class Meetup {
   }) async {
     // 모임 이름이 들어오는 경우, 빈 문자열이면 에러
     if (name != null && name.trim().isEmpty) {
-      throw FireFlutterException('club-update/name-empty', 'Input name.');
+      throw FireFlutterException('meetup-update/name-empty', 'Input name.');
     }
 
     final Map<String, dynamic> data = {
