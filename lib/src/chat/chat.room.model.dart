@@ -394,7 +394,7 @@ class ChatRoom {
         Field.users: {myUid!: true},
         Field.master: myUid!,
       };
-      await ref.set(data);
+      await ref.update(data);
     }
     return fromReference(ref);
   }
