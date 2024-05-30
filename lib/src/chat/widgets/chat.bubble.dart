@@ -19,12 +19,14 @@ class ChatBubble extends StatelessWidget {
     required this.message,
     this.onChange,
     this.onReply,
+    this.onEdit,
   });
 
   final ChatRoom room;
   final ChatMessage message;
   final Function? onChange;
   final void Function(ChatMessage message)? onReply;
+  final void Function(ChatMessage message)? onEdit;
 
   bool get _isReadMore => message.text != null && message.text!.length > 360;
 
@@ -178,17 +180,24 @@ class ChatBubble extends StatelessWidget {
             child: Text(T.readMore.tr),
           ),
         ],
+        if (onReply != null)
+          PopupMenuItem(
+            value: Code.reply,
+            child: Text(T.reply.tr),
+          ),
+        if (message.mine && onEdit != null) ...[
+          const PopupMenuItem(
+            value: Code.edit,
+            // TODO T.edit.tr
+            child: Text("Edit"),
+          ),
+        ],
         if (message.mine || (room.isGroupChat && room.isMaster)) ...[
           PopupMenuItem(
             value: Code.delete,
             child: Text(T.chatMessageDelete.tr),
           ),
         ],
-        if (onReply != null)
-          PopupMenuItem(
-            value: Code.reply,
-            child: Text(T.reply.tr),
-          ),
         if (!message.mine) ...[
           PopupMenuItem(
             value: Code.viewProfile,
@@ -218,6 +227,9 @@ class ChatBubble extends StatelessWidget {
             break;
           case Code.reply:
             onReply?.call(message);
+            break;
+          case Code.edit:
+            onEdit?.call(message);
             break;
           case Code.delete:
             await message.delete();
