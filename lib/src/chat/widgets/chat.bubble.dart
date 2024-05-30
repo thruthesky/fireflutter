@@ -125,15 +125,6 @@ class ChatBubble extends StatelessWidget {
                                   message.uid!, T.blockedChatMessage),
                               style: const TextStyle(color: Colors.black),
                             ),
-                      // TODO clean up
-                      /// OLD code. commented out by @thruthesky at 2024-05-27
-                      // message.text != null && message.deleted == false
-                      //     ? LinkifyText(
-                      //         message.text!
-                      //             .orBlocked(message.uid!, T.blockedChatMessage),
-                      //         style: const TextStyle(color: Colors.black),
-                      //       )
-                      //     : Text(T.chatMessageDeleted.tr),
                     ),
                     if (isLongText)
                       TextButton(
@@ -183,44 +174,6 @@ class ChatBubble extends StatelessWidget {
         ],
       ),
     );
-
-    // TODO cleanup
-    /// 관리자가 아니고, 방장이 아니고, 나의 메시지가 아니면, 그냥 chat bubble 만 리턴
-    // commented by @withcenter-dev2 at 2024-05-27
-    // this will be reviewed
-    // if (isAdmin == false && room.isMaster == false && message.mine == false) {
-    //   return bubble;
-    // }
-
-    /// 나의 채팅 메시지이면, 삭제 등을 표시하기 위한 메시지 리턴
-    // commented by @withcenter-dev2 at 2024-05-27
-    //
-    // if (message.mine) {
-    //   return PopupMenuButton(
-    //     position: PopupMenuPosition.under,
-    //     onOpened: () => FocusScope.of(context).unfocus(),
-    //     offset: Offset(
-    //       message.mine ? MediaQuery.of(context).size.width : 0,
-    //       0,
-    //     ),
-    //     itemBuilder: (context) => <PopupMenuEntry<String>>[
-    //       PopupMenuItem(
-    //         value: Code.delete,
-    //         child: Text(T.chatMessageDelete.tr),
-    //       ),
-    //     ],
-    //     onSelected: (v) async {
-    //       switch (v) {
-    //         case Code.delete:
-    //           await message.delete();
-    //           break;
-    //         default:
-    //           break;
-    //       }
-    //     },
-    //     child: IgnorePointer(child: bubble),
-    //   );
-    // }
   }
 
   mayShowPublicProfileScreen(BuildContext context, String uid) {
