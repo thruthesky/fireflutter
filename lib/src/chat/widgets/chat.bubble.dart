@@ -194,12 +194,13 @@ class ChatBubble extends StatelessWidget {
             value: Code.viewProfile,
             child: Text(T.viewProfile.tr),
           ),
-          PopupMenuItem(
-            // We may need to use a different term or specific term for blocking in a group chat
-            // in UX, the user may confuse that the block is the same for group chat and direct chat
-            value: Code.block,
-            child: Text(T.block.tr),
-          ),
+          if (room.isGroupChat)
+            PopupMenuItem(
+              // We may need to use a different term or specific term for blocking in a group chat
+              // in UX, the user may confuse that the block is the same for group chat and direct chat
+              value: Code.block,
+              child: Text(T.block.tr),
+            ),
         ],
       ],
       onSelected: (v) async {
