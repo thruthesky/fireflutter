@@ -28,7 +28,25 @@ class ChatBubble extends StatelessWidget {
   final void Function(ChatMessage message)? onReply;
   final void Function(ChatMessage message)? onEdit;
 
-  bool get _isReadMore => message.text != null && message.text!.length > 360;
+  bool get isLongText =>
+      message.text != null &&
+      (message.text!.length > 360 ||
+          '\n'.allMatches(message.text!).length > 10);
+
+  String get text {
+    if (message.text == null) return '';
+    if (isLongText) {
+      String t = message.text!;
+      final splits = t.split('\n');
+      if (splits.length > 10) {
+        return '${splits.sublist(0, 10).join('\n')}...';
+      } else {
+        return '${message.text!.substring(0, 360)}...';
+      }
+    } else {
+      return message.text!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,9 +98,9 @@ class ChatBubble extends StatelessWidget {
                       child: message.deleted
                           ? Text(T.chatMessageDeleted.tr)
                           : LinkifyText(
-                              message.text!
-                                  .orBlocked(message.uid!, T.blockedChatMessage)
-                                  .cut(360, suffix: "... ${T.readMore.tr}"),
+                              selectable: false,
+                              text.orBlocked(
+                                  message.uid!, T.blockedChatMessage),
                               style: const TextStyle(color: Colors.black),
                             ),
 
@@ -95,6 +113,8 @@ class ChatBubble extends StatelessWidget {
                       //       )
                       //     : Text(T.chatMessageDeleted.tr),
                     ),
+                    if (isLongText)
+                      TextButton(onPressed: () {}, child: Text(T.readMore.tr)),
                     if (message.hasUrlPreview) ...[
                       const SizedBox(height: 8),
                       UrlPreview(
