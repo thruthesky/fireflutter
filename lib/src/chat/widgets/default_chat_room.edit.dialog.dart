@@ -28,6 +28,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
   bool uploadVerifiedUserOnly = false;
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
+  final passwordController = TextEditingController();
 
   bool get isEdit => widget.roomId != null;
   bool get isCreate => widget.roomId == null;
@@ -73,14 +74,17 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 24),
-            Text(isCreate ? '새로운 채팅' : '채팅방 설정',
-                style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              isCreate ? '새로운 채팅' : '채팅방 설정',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             const SizedBox(height: 32),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: TextField(
                 controller: nameController,
                 decoration: const InputDecoration(
+                  // TODO trs
                   labelText: '채팅방 이름',
                 ),
               ),
@@ -91,7 +95,21 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
               child: TextField(
                 controller: descriptionController,
                 decoration: const InputDecoration(
+                  // TODO trs
                   labelText: '채팅방 설명',
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Password
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: TextField(
+                controller: passwordController,
+                decoration: const InputDecoration(
+                  // TODO trs
+                  labelText: '가입 비밀번호',
+                  hintText: '비워두면 비밀번호가 필요하지 않습니다.',
                 ),
               ),
             ),
