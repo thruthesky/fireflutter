@@ -51,7 +51,7 @@ class MeetupDetails extends StatelessWidget {
                           builder: (user) {
                             return Row(
                               children: [
-                                Text('운영자: ${user.displayName}'),
+                                Text('${T.host.tr}: ${user.displayName}'),
                                 if (meetup.isMaster)
                                   IconButton(
                                     onPressed: () => MeetupService.instance
@@ -63,7 +63,8 @@ class MeetupDetails extends StatelessWidget {
                             );
                           },
                         ),
-                        Text('회원 수: ${meetup.users.length} 명'),
+                        Text(
+                            '${T.members.tr}: ${meetup.users.length} ${T.noOfPeople.tr}'),
                       ],
                     ),
                     const Spacer(),
@@ -77,7 +78,7 @@ class MeetupDetails extends StatelessWidget {
                           otherUid: meetup.master,
                         );
                       },
-                      child: const Text('문의하기'),
+                      child: Text(T.contactUs.tr),
                     ),
                   ],
                 ),
@@ -112,9 +113,9 @@ class MeetupDetails extends StatelessWidget {
                   ),
                 ),
               const SizedBox(height: 16),
-              const Padding(
-                padding: EdgeInsets.only(left: 16.0),
-                child: Text('최근 사진들'),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: Text(T.recentPhotos.tr),
               ),
               PostLatestListView.gridView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -127,10 +128,10 @@ class MeetupDetails extends StatelessWidget {
                 emptyBuilder: () => Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
-                  child: const Card(
+                  child: Card(
                       child: Padding(
-                    padding: EdgeInsets.all(32),
-                    child: Center(child: Text('최근 사진이 없습니다.')),
+                    padding: const EdgeInsets.all(32),
+                    child: Center(child: Text(T.noRecentPhotos.tr)),
                   )),
                 ),
                 shrinkWrap: true,

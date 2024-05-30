@@ -145,12 +145,12 @@ class _ClubViewScreenState extends State<MeetupViewScreen> {
             ),
           ],
           bottom: TabBar(
-            tabs: const [
-              Tab(text: '소개'),
-              Tab(text: '일정'),
-              Tab(text: '채팅'),
-              Tab(text: '게시판'),
-              Tab(text: '사진첩'),
+            tabs: [
+              Tab(text: T.info.tr),
+              Tab(text: T.event.tr),
+              Tab(text: T.chat.tr),
+              Tab(text: T.notice.tr),
+              Tab(text: T.gallery.tr),
             ],
             onTap: (index) {
               _tabIndex.value = index;
