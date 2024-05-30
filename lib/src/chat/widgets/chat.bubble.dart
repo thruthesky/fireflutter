@@ -96,11 +96,24 @@ class ChatBubble extends StatelessWidget {
                   message:
                       "Are you sure you want to delete this message? This action cannot be undone.",
                 );
+
                 if (deleteConfirmation ?? false) {
                   await message.delete();
                 }
               },
-              onBlock: () => room.block(message.uid!),
+              onBlock: () async {
+                // @withcenter-dev2: Please read notes on DeleteMessage above
+                // await Future.delayed(const Duration(milliseconds: 1));
+                final blockConfirmation = await confirm(
+                  context: context,
+                  title: "Block User",
+                  message:
+                      "Are you sure you want to block this user from the group chat?",
+                );
+                if (blockConfirmation ?? false) {
+                  await room.block(message.uid!);
+                }
+              },
               onReply: () => print("onReply?.call(message);"),
               child: Container(
                 constraints: BoxConstraints(

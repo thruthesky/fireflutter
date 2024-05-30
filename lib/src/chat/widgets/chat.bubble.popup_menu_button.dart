@@ -2,7 +2,7 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-class ChatBubblePopupMenuButton extends StatelessWidget {
+class ChatBubblePopupMenuButton extends StatefulWidget {
   const ChatBubblePopupMenuButton({
     super.key,
     required this.message,
@@ -23,11 +23,28 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
   final void Function() onBlock;
 
   @override
+  State<ChatBubblePopupMenuButton> createState() =>
+      _ChatBubblePopupMenuButtonState();
+}
+
+class _ChatBubblePopupMenuButtonState extends State<ChatBubblePopupMenuButton> {
+  final valueListenable = ValueNotifier<String?>(null);
+
+  @override
+  void initState() {
+    super.initState();
+
+    valueListenable.addListener(() {
+      print(valueListenable.value);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
       child: DropdownButton2<String>(
         isExpanded: true,
-        customButton: child,
+        customButton: widget.child,
         openWithLongPress: true,
         items: [
           DropdownItem<String>(
@@ -40,13 +57,14 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
               ),
             ),
           ),
-          if (message.mine || (room.isGroupChat && room.isMaster)) ...[
+          if (widget.message.mine ||
+              (widget.room.isGroupChat && widget.room.isMaster)) ...[
             DropdownItem<String>(
               value: Code.delete,
               child: Text(T.chatMessageDelete.tr),
             ),
           ],
-          if (!message.mine)
+          if (!widget.message.mine)
             DropdownItem<String>(
               value: Code.viewProfile,
               height: 40,
@@ -57,7 +75,9 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
                 ),
               ),
             ),
-          if (room.isGroupChat && room.isMaster)
+          if (widget.room.isGroupChat &&
+              widget.room.isMaster &&
+              !widget.message.mine)
             DropdownItem<String>(
               // We may need to use a different term or specific term for blocking in a group chat
               // in UX, the user may confuse that the block is the same for group chat and direct chat
@@ -65,23 +85,31 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
               child: Text(T.block.tr),
             ),
         ],
-        // valueListenable: valueListenable,
+        valueListenable: valueListenable,
         onChanged: (String? value) {
           // valueListenable.value = value;
           switch (value) {
             case Code.reply:
-              onReply();
+              widget.onReply();
               break;
             case Code.delete:
-              // await confirm(context: context, title: "test", message: "tset");
-              // await message.delete();
-              onDeleteMessage();
+              // confirm(
+              //   context: context,
+              //   title: "Delete Message",
+              //   message:
+              //       "Are you sure you want to delete this message? This action cannot be undone.",
+              // ).then((bool? deleteConfirmation) async {
+              //   if (deleteConfirmation ?? false) {
+              //     await widget.message.delete();
+              //   }
+              // });
+
               break;
             case Code.viewProfile:
-              onViewProfile();
+              widget.onViewProfile();
               break;
             case Code.block:
-              onBlock();
+              widget.onBlock();
               break;
             default:
               break;
