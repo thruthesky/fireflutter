@@ -3,6 +3,7 @@ import 'package:example/screens/chat/open_chat.screen.dart';
 import 'package:example/screens/entry/entry.screen.dart';
 import 'package:example/screens/forum/forum.screen.dart';
 import 'package:example/screens/home/home.screen.dart';
+import 'package:example/screens/meetup/meetup.screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -47,6 +48,10 @@ final router = GoRouter(
     GoRoute(
       path: ForumScreen.routeName,
       builder: (context, state) => const ForumScreen(),
+    ),
+    GoRoute(
+      path: MeetupScreen.routeName,
+      builder: (context, state) => const MeetupScreen(),
     ),
   ],
 );
