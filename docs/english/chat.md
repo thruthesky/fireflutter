@@ -557,3 +557,13 @@ void initChatService() {
 - Admin or master can delete other user's message
 
 - User can delete his own message
+
+## When message is too long
+
+Chat Bubble has its way to handle the message when it’s too long. It will consider the message tooLong if the length of the text exceeded 360, or if the text consists of more than 10 endlines.
+
+It will show read more button if the message is tooLong.
+
+## Known Issues
+
+- In a chat room, when the last message is deleted, it wont automatically reflect in the chat room listing.
