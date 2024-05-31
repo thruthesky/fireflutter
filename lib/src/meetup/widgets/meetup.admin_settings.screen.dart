@@ -34,7 +34,7 @@ class _MeetupAdminSettingsState extends State<MeetupAdminSettingsScreen> {
                 Icons.grade,
               ),
               title: Text(
-                '${T.recommend.tr} ${recommendationCount(meetup.recommendOrder)}',
+                '${T.recommend.tr}${recommendationCount(meetup.recommendOrder)}',
               ),
               subtitle: Text(
                 T.inputRecommendHint.tr,
@@ -69,4 +69,4 @@ class _MeetupAdminSettingsState extends State<MeetupAdminSettingsScreen> {
   }
 }
 
-String recommendationCount(int? no) => no == null || no == 0 ? "" : "($no)";
+String recommendationCount(int? no) => no == null || no == 0 ? "" : " ($no)";

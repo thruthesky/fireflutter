@@ -92,6 +92,76 @@ class T {
     'ko': '글 수정',
   };
 
+  static Mintl like = {
+    'en': 'Like',
+    'ko': '좋아요',
+  };
+
+  static Mintl chat = {
+    'en': 'Chat',
+    'ko': '채팅',
+  };
+
+  static Mintl edit = {
+    'en': 'Edit',
+    'ko': '수정',
+  };
+
+  static Mintl delete = {
+    'en': 'Delete',
+    'ko': '삭제',
+  };
+
+  static Mintl share = {
+    'en': 'Share',
+    'ko': '공유',
+  };
+
+  static Mintl reply = {
+    'en': 'Reply',
+    'ko': '답글',
+  };
+
+  static Mintl bookmark = {
+    'en': 'Favorite',
+    'ko': '북마크',
+  };
+
+  static Mintl unbookmark = {
+    'en': 'Unfavorite',
+    'ko': '북마크 해제',
+  };
+
+  static Mintl bookmarkMessage = {
+    'en': 'Favorite sucess',
+    'ko': '북마크 완료',
+  };
+
+  static Mintl unbookmarkMessage = {
+    'en': 'Unfavorite sucess',
+    'ko': '북마크 해제 완료',
+  };
+
+  static Mintl block = {
+    'en': 'Block',
+    'ko': '차단',
+  };
+
+  static Mintl unblock = {
+    'en': 'Unblock',
+    'ko': '차단 해제',
+  };
+
+  static Mintl writeComment = {
+    'en': 'Write a comment',
+    'ko': '코멘트 작성',
+  };
+
+  static Mintl inputCommentHint = {
+    'en': 'Please enter your comment',
+    'ko': '댓글을 입력하세요',
+  };
+
   /// Meetup translations
   static Mintl meetupCreate = {
     'en': 'Create meetup',
@@ -137,10 +207,7 @@ class T {
     'en': 'Event',
     'ko': '일정',
   };
-  static Mintl chat = {
-    'en': 'Chat',
-    'ko': '채팅',
-  };
+
   static Mintl notice = {
     'en': 'Notice',
     'ko': '게시판',
@@ -477,9 +544,6 @@ class T {
     'ko': '추천 목록에서 이 항목을 삭제하시겠습니까?',
   };
 
-
-
-
   /// EO meetups translations
 
   ///////////////////////////////////////////////////////////////////
@@ -502,16 +566,16 @@ class T {
   static const String next = 'Next';
   static const String prev = 'Prev';
   static const String back = 'Back';
-  static const String like = 'Like';
+  // static const String like = 'Like';
   static const String likes = 'Likes';
-  static const String bookmark = 'Favorite';
-  static const String bookmarkMessage = 'Favorite sucess';
-  static const String unbookmark = 'Unfavorite';
-  static const String unbookmarkMessage = 'Unfavorite success';
+  // static const String bookmark = 'Favorite';
+  // static const String bookmarkMessage = 'Favorite sucess';
+  // static const String unbookmark = 'Unfavorite';
+  // static const String unbookmarkMessage = 'Unfavorite success';
   static const String thereAreNoBookmarksInTheList =
       'There are no bookmarks in the list.';
 
-  static const String share = 'Share';
+  // static const String share = 'Share';
 
   static const String inputTitle = 'Input title';
   static const String inputContent = 'Input content';
@@ -541,12 +605,12 @@ class T {
 
   static const String readMore = 'Read More';
   static const String viewProfile = 'View Profile';
-  static const String reply = 'Reply';
+  // static const String reply = 'Reply';
 
   /// User
   static const String setting = 'Setting';
-  static const String block = 'Block';
-  static const String unblock = 'Unblock';
+  // static const String block = 'Block';
+  // static const String unblock = 'Unblock';
   static const String report = 'Report';
   static const String leave = 'Leave';
   static const String stateMessage = 'State Message';

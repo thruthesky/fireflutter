@@ -112,7 +112,7 @@ class _CommentEditDialogState extends State<CommentEditDialog> {
                     if (context.mounted) Navigator.of(context).pop(true);
                   },
                   child: Text(
-                    isCreate ? '코멘트 작성' : '저장',
+                    isCreate ? T.writeComment.tr : T.save.tr,
                   ),
                 ),
               ],

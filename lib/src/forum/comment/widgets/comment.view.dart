@@ -74,7 +74,7 @@ class _CommnetViewState extends State<CommentView> {
                           widget.onCreate?.call();
                         }
                       },
-                      child: const Text('답글'),
+                      child: Text(T.reply.tr),
                     ),
                     TextButton(
                       onPressed: () => widget.comment.like(context: context),
@@ -83,9 +83,11 @@ class _CommnetViewState extends State<CommentView> {
                         ref: widget.comment.likesRef,
                         builder: (likes) {
                           previousNoOfLikes = (likes as Map? ?? {}).keys.length;
-                          return Text('좋아요${likeText(previousNoOfLikes)}');
+                          return Text(
+                              '${T.like.tr}${likeText(previousNoOfLikes)}');
                         },
-                        onLoading: Text('좋아요${likeText(previousNoOfLikes)}'),
+                        onLoading:
+                            Text('${T.like.tr}${likeText(previousNoOfLikes)}'),
                       ),
                     ),
                     TextButton(
@@ -95,7 +97,7 @@ class _CommnetViewState extends State<CommentView> {
                           otherUid: widget.comment.uid,
                         );
                       },
-                      child: const Text('채팅'),
+                      child: Text(T.chat.tr),
                     ),
                     const Spacer(),
                     PopupMenuButton(itemBuilder: (context) {
@@ -111,7 +113,7 @@ class _CommnetViewState extends State<CommentView> {
                                 );
                               },
                             ),
-                            no: () => const Text('북마크'),
+                            no: () => Text(T.bookmark.tr),
                           ),
                         ),
                         if (widget.comment.uid != myUid)

@@ -318,7 +318,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
                                   ? const SizedBox.shrink()
                                   // : T.block.orBlocked(chat.room.otherUserUid!, T.unblock.tr),
                                   : Text(!my.blocked(chat.room.otherUserUid!)
-                                      ? T.block
+                                      ? T.block.tr
                                       : T.unblock.tr),
                             ),
                           ),
