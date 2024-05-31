@@ -112,7 +112,7 @@ class _CommentEditDialogState extends State<CommentEditDialog> {
                     if (context.mounted) Navigator.of(context).pop(true);
                   },
                   child: Text(
-                    isCreate ? '코멘트 작성' : '저장',
+                    isCreate ? T.writeComment.tr : T.save.tr,
                   ),
                 ),
               ],
@@ -140,6 +140,7 @@ class _CommentEditDialogState extends State<CommentEditDialog> {
               onDelete: (url) => setState(
                 () {
                   comment.urls.remove(url);
+                  // need to update the commend on the backend
                 },
               ),
             ),

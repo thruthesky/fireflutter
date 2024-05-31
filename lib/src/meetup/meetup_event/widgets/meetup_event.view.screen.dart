@@ -66,22 +66,26 @@ class _MeetupViewScreenState extends State<MeetupEventViewScreen> {
                 ),
               const SizedBox(height: 16),
               Text(
-                "모임 날짜 & 시간",
+                T.meetupDateAndTime.tr,
                 style: Theme.of(context).textTheme.labelSmall,
               ),
               if (event.meetAt != null)
                 Row(
                   children: [
-                    Text(DateFormat.yMMMEd('ko').format(event.meetAt!)),
+                    // Text(DateFormat.yMMMEd('ko').format(event.meetAt!),
+                    Text(
+                      DateFormat.yMMMEd().format(event.meetAt!),
+                    ),
                     const SizedBox(width: 10),
                     Text(
-                      DateFormat.jm('ko').format(event.meetAt!),
+                      // DateFormat.jm('ko').format(event.meetAt!),
+                      DateFormat.jm().format(event.meetAt!),
                     ),
                   ],
                 ),
               const SizedBox(height: 16),
               Text(
-                '모임 설명',
+                T.meetupDescriptionLabel.tr,
                 style: Theme.of(context).textTheme.labelSmall,
               ),
               SizedBox(
@@ -99,15 +103,19 @@ class _MeetupViewScreenState extends State<MeetupEventViewScreen> {
                   onPressed: () async {
                     if (event.joined == false) {
                       error(
-                          context: context,
-                          title: '클럽 가입 필요',
-                          message: '모임에 먼저 가입을 해 주세요.');
+                        context: context,
+                        title: T.meetupMembershipRequired.tr,
+                        message: T.meetupMembershipRequiredMessage.tr,
+                      );
                       return;
                     }
                     await event.leave();
-                    toast(context: context, message: '참석을 취소했습니다.');
+                    toast(
+                      context: context,
+                      message: T.meetupCancelledAttendance.tr,
+                    );
                   },
-                  child: const Text('참석 취소하기'),
+                  child: Text(T.meetupCancelAttendance.tr),
                 )
               else
                 ElevatedButton(
@@ -116,18 +124,20 @@ class _MeetupViewScreenState extends State<MeetupEventViewScreen> {
                     final meetup = await Meetup.get(id: event.meetupId!);
                     if (meetup.joined == false) {
                       error(
-                          context: context,
-                          title: '클럽 가입 필요',
-                          message: '모임에 먼저 가입을 하신 다음, 참석 신청을 주세요.');
+                        context: context,
+                        title: T.meetupMembershipRequired.tr,
+                        message: T.signUpFirstThenApplyToAttend.tr,
+                      );
                       return;
                     }
                     await event.join();
-                    toast(context: context, message: '참석 신청했습니다.');
+                    toast(
+                        context: context, message: T.applyToAttendConfirmed.tr);
                   },
-                  child: const Text('참석 신청하기'),
+                  child: Text(T.applyToAttend.tr),
                 ),
               const SizedBox(height: 16),
-              const Text('참석 신청자 목록'),
+              Text(T.listOfAttendees.tr),
               if (event.users.isNotEmpty)
                 Wrap(
                   children: event.users
@@ -144,7 +154,7 @@ class _MeetupViewScreenState extends State<MeetupEventViewScreen> {
                       .toList(),
                 )
               else
-                const Text('참석 신청자가 없습니다.'),
+                Text(T.noApplicantsYet.tr),
             ],
           ),
         ),
