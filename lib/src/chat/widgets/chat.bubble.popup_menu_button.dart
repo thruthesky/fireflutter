@@ -1,128 +1,119 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 
-class ChatBubblePopupMenuButton extends StatefulWidget {
+/// This is a Popup Menu designed specifically for Chat Bubble.
+class ChatBubblePopupMenuButton extends StatelessWidget {
   const ChatBubblePopupMenuButton({
     super.key,
     required this.message,
     required this.room,
     required this.child,
-    required this.onViewProfile,
-    required this.onReply,
-    required this.onDeleteMessage,
-    required this.onBlock,
+    this.onViewProfile,
+    this.onBlockUser,
+    this.onDeleteMessage,
+    this.onReplyMessage,
   });
 
   final ChatMessage message;
   final ChatRoom room;
   final Widget child;
-  final void Function() onViewProfile;
-  final void Function() onReply;
-  final void Function() onDeleteMessage;
-  final void Function() onBlock;
-
-  @override
-  State<ChatBubblePopupMenuButton> createState() =>
-      _ChatBubblePopupMenuButtonState();
-}
-
-class _ChatBubblePopupMenuButtonState extends State<ChatBubblePopupMenuButton> {
-  final valueListenable = ValueNotifier<String?>(null);
-
-  @override
-  void initState() {
-    super.initState();
-
-    valueListenable.addListener(() {
-      print(valueListenable.value);
-    });
-  }
+  final void Function(BuildContext context, String uid)? onViewProfile;
+  final void Function(BuildContext context, String uid)? onBlockUser;
+  final void Function(BuildContext context, ChatMessage message)?
+      onDeleteMessage;
+  final void Function(BuildContext context, ChatMessage message)?
+      onReplyMessage;
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonHideUnderline(
-      child: DropdownButton2<String>(
-        isExpanded: true,
-        customButton: widget.child,
-        openWithLongPress: true,
-        items: [
-          DropdownItem<String>(
-            value: Code.reply,
-            height: 40,
-            child: Text(
-              T.reply.tr,
-              style: const TextStyle(
-                fontSize: 14,
-              ),
-            ),
-          ),
-          if (widget.message.mine ||
-              (widget.room.isGroupChat && widget.room.isMaster)) ...[
-            DropdownItem<String>(
-              value: Code.delete,
-              child: Text(T.chatMessageDelete.tr),
-            ),
-          ],
-          if (!widget.message.mine)
-            DropdownItem<String>(
-              value: Code.viewProfile,
-              height: 40,
-              child: Text(
-                T.viewProfile.tr,
-                style: const TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-            ),
-          if (widget.room.isGroupChat &&
-              widget.room.isMaster &&
-              !widget.message.mine)
-            DropdownItem<String>(
-              // We may need to use a different term or specific term for blocking in a group chat
-              // in UX, the user may confuse that the block is the same for group chat and direct chat
-              value: Code.block,
-              child: Text(T.block.tr),
-            ),
-        ],
-        valueListenable: valueListenable,
-        onChanged: (String? value) {
-          // valueListenable.value = value;
-          switch (value) {
-            case Code.reply:
-              widget.onReply();
-              break;
-            case Code.delete:
-              // confirm(
-              //   context: context,
-              //   title: "Delete Message",
-              //   message:
-              //       "Are you sure you want to delete this message? This action cannot be undone.",
-              // ).then((bool? deleteConfirmation) async {
-              //   if (deleteConfirmation ?? false) {
-              //     await widget.message.delete();
-              //   }
-              // });
-
-              break;
-            case Code.viewProfile:
-              widget.onViewProfile();
-              break;
-            case Code.block:
-              widget.onBlock();
-              break;
-            default:
-              break;
-          }
-        },
-        style: Theme.of(context).textTheme.bodyMedium,
-        buttonStyleData: const ButtonStyleData(
-          overlayColor: WidgetStatePropertyAll(Colors.transparent),
-        ),
-        dropdownStyleData: const DropdownStyleData(
-          width: 160,
-        ),
-      ),
+    return GestureDetector(
+      onLongPressStart: (details) {
+        _showPopupMenu(context, details.globalPosition);
+      },
+      child: child,
     );
+  }
+
+  void _showPopupMenu(BuildContext context, Offset offset) async {
+    await showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(offset.dx, offset.dy, offset.dx, 0),
+      // color: Theme.of(context).colorScheme.primaryContainer,
+      items: [
+        PopupMenuItem<String>(
+          value: Code.reply,
+          height: 40,
+          child: Text(T.reply.tr),
+        ),
+        if (message.mine || (room.isGroupChat && room.isMaster)) ...[
+          PopupMenuItem<String>(
+            value: Code.delete,
+            child: Text(T.chatMessageDelete.tr),
+          ),
+        ],
+        if (!message.mine)
+          PopupMenuItem<String>(
+            value: Code.viewProfile,
+            height: 40,
+            child: Text(T.viewProfile.tr),
+          ),
+        if (room.isGroupChat && room.isMaster && !message.mine)
+          PopupMenuItem<String>(
+            // We may need to use a different term or specific term for blocking in a group chat
+            // in UX, the user may confuse that the block is the same for group chat and direct chat
+            value: Code.block,
+            child: Text(T.block.tr),
+          ),
+      ],
+      // Review if we need shadow or remove
+      // elevation: 0.0,
+    ).then((value) {
+      // Handle the selected value if needed
+      if (value != null) {
+        if (value == Code.reply) {
+          (onReplyMessage ?? _onReplyMessage).call(context, message);
+        } else if (value == Code.delete) {
+          (onDeleteMessage ?? _onDeleteMessage).call(context, message);
+        } else if (value == Code.viewProfile) {
+          (onViewProfile ?? _onViewProfile).call(context, message.uid!);
+        } else if (value == Code.block) {
+          (onBlockUser ?? _onBlockUser).call(context, message.uid!);
+        }
+      }
+    });
+  }
+
+  void _onViewProfile(BuildContext context, String uid) {
+    UserService.instance.showPublicProfileScreen(
+      context: context,
+      uid: message.uid!,
+    );
+  }
+
+  void _onReplyMessage() {
+    dog("@TODO reply message");
+  }
+
+  void _onDeleteMessage(BuildContext context, ChatMessage message) async {
+    final deleteConfirmation = await confirm(
+      context: context,
+      title: "Delete Message",
+      message:
+          "Are you sure you want to delete this message? This action cannot be undone.",
+    );
+    if (deleteConfirmation ?? false) {
+      await message.delete();
+    }
+  }
+
+  void _onBlockUser(BuildContext context, String uid) async {
+    final blockConfirmation = await confirm(
+      context: context,
+      title: "Block User",
+      message: "Are you sure you want to block this user from the chat room?",
+    );
+    if (blockConfirmation ?? false) {
+      await room.block(message.uid!);
+    }
   }
 }
