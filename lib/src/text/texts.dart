@@ -1,5 +1,3 @@
-import 'package:fireflutter/fireflutter.dart';
-
 /// Multi language internalization
 typedef Mintl = Map<String, String>;
 
@@ -207,9 +205,19 @@ class T {
     'ko': '일정 생성',
   };
 
-  static Mintl createNotice = {
-    'en': 'Create notice',
+  static Mintl addNotice = {
+    'en': 'Add notice',
     'ko': '글 쓰기',
+  };
+
+  static Mintl addPhoto = {
+    'en': 'Add photo',
+    'ko': '글 쓰기',
+  };
+
+  static Mintl meetupAdminSetting = {
+    'en': 'Admin setting',
+    'ko': '관리자 설정',
   };
 
   static Mintl editMeetupInformation = {
@@ -257,8 +265,8 @@ class T {
     'ko': '모임에 가입하셔야\n게시판을 볼 수 있습니다.',
   };
 
-  static Mintl uploadPhoto = {
-    'en': 'Please upload a photo.',
+  static Mintl noUploadPhotoYet = {
+    'en': 'Theres no uploaded photo yet.',
     'ko': '사진을 등록 해 주세요.',
   };
 
@@ -382,17 +390,95 @@ class T {
     'ko': '만남 일정이 수정되었습니다.',
   };
 
-  
   static Mintl editSchedule = {
     'en': 'Edit schedule',
     'ko': '일정 수정하기',
   };
 
-
-  static Mintl xxxx = {
-    'en': 'xxxx',
-    'ko': 'xxxx',
+  static Mintl meetupDateAndTime = {
+    'en': 'Meetup date and time',
+    'ko': '모임 날짜 & 시간',
   };
+
+  // TODO: ko translation club
+  static Mintl meetupMembershipRequired = {
+    'en': 'Meetup membership required.',
+    'ko': '클럽 가입 필요',
+  };
+
+  static Mintl meetupMembershipRequiredMessage = {
+    'en': 'Please join the meetup first.',
+    'ko': '모임에 먼저 가입을 해 주세요.',
+  };
+
+  static Mintl meetupCancelledAttendance = {
+    'en': 'Attendance cancelled.',
+    'ko': '참석을 취소했습니다.',
+  };
+
+  static Mintl meetupCancelAttendance = {
+    'en': 'Cancel attendance',
+    'ko': '참석 취소하기',
+  };
+
+  static Mintl meetupCancelAttendanceMessage = {
+    'en': 'Meetup membership required.',
+    'ko': '클럽 가입 필요',
+  };
+
+  static Mintl signUpFirstThenApplyToAttend = {
+    'en': 'Please sign up for the meetup first and then apply to attend.',
+    'ko': '모임에 먼저 가입을 하신 다음, 참석 신청을 주세요.',
+  };
+
+  static Mintl applyToAttendConfirmed = {
+    'en': 'Apply to attend confirmed',
+    'ko': '참석 신청했습니다.',
+  };
+
+  static Mintl applyToAttend = {
+    'en': 'Apply to attend',
+    'ko': '참석 신청하기',
+  };
+
+  static Mintl listOfAttendees = {
+    'en': 'List of Applicants to Attend',
+    'ko': '참석 신청자 목록',
+  };
+
+  static Mintl noApplicantsYet = {
+    'en': 'There are no applicants to attend, yet.',
+    'ko': '참석 신청자가 없습니다.',
+  };
+
+  static Mintl meetupAdminSettings = {
+    'en': 'Meetup admin settings',
+    'ko': '모임 관리자 설정',
+  };
+
+  static Mintl recommend = {
+    'en': 'Recommend',
+    'ko': '추천',
+  };
+
+  static Mintl inputRecommendHint = {
+    'en':
+        'Input number only. Higher number will shown first. 0 will remove the recommendation.',
+    'ko': '숫자만 입력하세요. 높은 숫자가 먼저 표시됩니다. 0은 권장 사항을 제거합니다.',
+  };
+
+  static Mintl recommendRemove = {
+    'en': 'Remove recommendation',
+    'ko': '추천 삭제',
+  };
+
+  static Mintl recommendRemoveMessage = {
+    'en': 'Are you sure you want to remove this from recommendations list?',
+    'ko': '추천 목록에서 이 항목을 삭제하시겠습니까?',
+  };
+
+
+
 
   /// EO meetups translations
 

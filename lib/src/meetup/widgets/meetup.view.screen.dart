@@ -43,7 +43,7 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                         category: widget.meetup.id +
                             (index == 4 ? '-meetup-gallery' : '-meetup-post'),
                       ),
-                      child: Text(T.createNotice.tr),
+                      child: Text(index == 4 ? T.addPhoto.tr : T.addNotice.tr),
                     );
                   } else {
                     return const SizedBox.shrink();
@@ -57,6 +57,17 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                   icon: const Icon(Icons.menu),
                   itemBuilder: (context) {
                     return [
+                      if (isAdmin)
+                        PopupMenuItem(
+                          value: Code.meetupAdminSettings,
+                          child: Row(
+                            children: [
+                              const Icon(Icons.grade),
+                              const SizedBox(width: 8),
+                              Text(T.meetupAdminSetting.tr),
+                            ],
+                          ),
+                        ),
                       if (meetup.isMaster)
                         PopupMenuItem(
                           value: Code.edit,
@@ -143,6 +154,11 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                       if (text != null) {
                         await meetup.update(reminder: text);
                       }
+                    } else if (code == Code.meetupAdminSettings) {
+                      AdminService.instance.showMeetupSettingScreen(
+                        context: context,
+                        meetup: widget.meetup,
+                      );
                     }
                   }),
             ),
@@ -238,7 +254,7 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                         mainAxisExtent: 240,
                       ),
                       emptyBuilder: () => Center(
-                        child: Text(T.uploadPhoto.tr),
+                        child: Text(T.noUploadPhotoYet.tr),
                       ),
                     )
                   : MeetupViewRegisterFirstButton(

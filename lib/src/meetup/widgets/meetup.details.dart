@@ -140,7 +140,7 @@ class MeetupDetails extends StatelessWidget {
               const SizedBox(height: 24),
               Padding(
                 padding: const EdgeInsets.only(left: 16.0),
-                child: Text(T.recentPhotos.tr),
+                child: Text(T.recentPosts.tr),
               ),
               PostLatestListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
