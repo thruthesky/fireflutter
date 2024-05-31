@@ -1,6 +1,7 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/meetup/widgets/meetup.admin_settings.screen.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -95,6 +96,25 @@ class AdminService {
         uid: uid,
       ),
     );
+  }
+
+  showMeetupSettingScreen({
+    required BuildContext context,
+    required Meetup meetup,
+  }) {
+    return showGeneralDialog(
+      context: context,
+      pageBuilder: (_, __, ___) => MeetupAdminSettingsScreen(
+        meetup: meetup,
+      ),
+    );
+
+    // return showModalBottomSheet(
+    //   context: context,
+    //   builder: (_) => MeetupAdminSettingsScreen(
+    //     meetup: meetup,
+    //   ),
+    // );
   }
 
   /// ## Mirror Backfill RTDB to Firestore

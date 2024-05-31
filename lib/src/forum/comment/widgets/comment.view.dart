@@ -68,24 +68,24 @@ class _CommnetViewState extends State<CommentView> {
                           context: context,
                           post: widget.post,
                           parent: widget.comment,
-                          // focusOnTextField: true,
                         );
                         if (re == true) {
                           widget.onCreate?.call();
                         }
                       },
-                      child: const Text('답글'),
+                      child: Text(T.reply.tr),
                     ),
                     TextButton(
                       onPressed: () => widget.comment.like(context: context),
                       child: Value(
-                        // path: widget.comment.ref.child(Field.likes).path,
                         ref: widget.comment.likesRef,
                         builder: (likes) {
                           previousNoOfLikes = (likes as Map? ?? {}).keys.length;
-                          return Text('좋아요${likeText(previousNoOfLikes)}');
+                          return Text(
+                              '${T.like.tr}${likeText(previousNoOfLikes)}');
                         },
-                        onLoading: Text('좋아요${likeText(previousNoOfLikes)}'),
+                        onLoading:
+                            Text('${T.like.tr}${likeText(previousNoOfLikes)}'),
                       ),
                     ),
                     TextButton(
@@ -95,7 +95,7 @@ class _CommnetViewState extends State<CommentView> {
                           otherUid: widget.comment.uid,
                         );
                       },
-                      child: const Text('채팅'),
+                      child: Text(T.chat.tr),
                     ),
                     const Spacer(),
                     PopupMenuButton(itemBuilder: (context) {
@@ -111,7 +111,7 @@ class _CommnetViewState extends State<CommentView> {
                                 );
                               },
                             ),
-                            no: () => const Text('북마크'),
+                            no: () => Text(T.bookmark.tr),
                           ),
                         ),
                         if (widget.comment.uid != myUid)
@@ -119,21 +119,21 @@ class _CommnetViewState extends State<CommentView> {
                             value: 'block',
                             child: Blocked(
                               otherUserUid: widget.comment.uid,
-                              no: () => const Text('차단'),
-                              yes: () => const Text('차단 해제'),
+                              no: () =>  Text(T.block.tr),
+                              yes: () =>  Text(T.unblock.tr),
                             ),
                           ),
-                        const PopupMenuItem(
+                         PopupMenuItem(
                           value: 'report',
-                          child: Text('신고'),
+                          child: Text(T.report.tr),
                         ),
-                        const PopupMenuItem(
+                         PopupMenuItem(
                           value: 'edit',
-                          child: Text('수정'),
+                          child: Text(T.edit.tr),
                         ),
-                        const PopupMenuItem(
+                         PopupMenuItem(
                           value: 'delete',
-                          child: Text('삭제'),
+                          child: Text(T.delete.tr),
                         ),
                       ];
                     }, onSelected: (value) async {
@@ -151,7 +151,7 @@ class _CommnetViewState extends State<CommentView> {
                           reason: re,
                         );
                         if (context.mounted) {
-                          toast(context: context, message: '신고가 접수되었습니다.');
+                          toast(context: context, message: T.reportReceived.tr);
                         }
                       } else if (value == 'block') {
                         await UserService.instance.block(

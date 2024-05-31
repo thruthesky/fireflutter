@@ -70,6 +70,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () => context.push(MeetupScreen.routeName),
                         child: const Text('Meetup'),
                       ),
+                      ElevatedButton(
+                        onPressed: () => AdminService.instance
+                            .showDashboard(context: context),
+                        child: const Text('Admin dashboard'),
+                      ),
                     ],
                   ),
                 ],

@@ -24,13 +24,13 @@ class _ClubMeetupCreateFormState extends State<MeetupEventCreateForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("오프라인 일정 제목"),
+        Text(T.meetupScheduleTitle.tr),
         TextField(
           controller: titleController,
           onChanged: (value) => setState(() {}),
         ),
         const SizedBox(height: 8),
-        const Text("오프라인 만남의 제목을 적어주세요."),
+        Text(T.meetupScheduleTitleDescription.tr),
         const SizedBox(height: 24),
         if (titleController.text.trim().isNotEmpty)
           Align(
@@ -42,7 +42,7 @@ class _ClubMeetupCreateFormState extends State<MeetupEventCreateForm> {
                 );
                 widget.onCreate(meetup);
               },
-              child: const Text('일정 만들기'),
+              child: Text(T.meetupCreateSchedule.tr),
             ),
           ),
       ],

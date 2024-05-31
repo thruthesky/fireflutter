@@ -78,7 +78,7 @@ class MeetupDetails extends StatelessWidget {
                           otherUid: meetup.master,
                         );
                       },
-                      child: Text(T.contactUs.tr),
+                      child: Text(T.contact.tr),
                     ),
                   ],
                 ),
@@ -90,12 +90,12 @@ class MeetupDetails extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Reminder'),
+                      Text(T.reminder.tr),
                       Card(
                         child: InkWell(
                           onTap: () => alert(
                             context: context,
-                            title: 'Reminder',
+                            title: T.reminder.tr,
                             message: meetup.reminder,
                           ),
                           child: Container(
@@ -124,7 +124,7 @@ class MeetupDetails extends StatelessWidget {
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 8,
                 ),
-                category: '${meetup.id}-club-gallery',
+                category: '${meetup.id}-meetup-gallery',
                 emptyBuilder: () => Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
@@ -138,22 +138,22 @@ class MeetupDetails extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
               ),
               const SizedBox(height: 24),
-              const Padding(
-                padding: EdgeInsets.only(left: 16.0),
-                child: Text('최근글'),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: Text(T.recentPosts.tr),
               ),
               PostLatestListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 separatorBuilder: (p0, p1) => const SizedBox(height: 8),
-                category: '${meetup.id}-club-post',
+                category: '${meetup.id}-meetup-post',
                 emptyBuilder: () => Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
-                  child: const Card(
+                  child: Card(
                       child: Padding(
-                    padding: EdgeInsets.all(32),
+                    padding: const EdgeInsets.all(32),
                     child: Center(
-                      child: Text('최근 글이 없습니다.'),
+                      child: Text(T.noRecentPosts.tr),
                     ),
                   )),
                 ),
