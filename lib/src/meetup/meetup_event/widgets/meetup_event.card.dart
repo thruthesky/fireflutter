@@ -44,8 +44,8 @@ class MeetupEventCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    // DateFormat.yMMMEd('ko').format(event.meetAt!)
-                    DateFormat.yMMMEd().format(event.meetAt!),
+                    DateFormat.yMMMEd(getLanguageCode(context))
+                        .format(event.meetAt!),
                   ),
                   const SizedBox(width: 10),
                   Text(
