@@ -20,7 +20,7 @@ example/.gitignore
 example/.metadata
 example/pubspec.lock
 example/android
-example/ios
+# example/ios
 example/linux
 example/macos
 example/web
