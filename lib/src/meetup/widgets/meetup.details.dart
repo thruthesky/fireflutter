@@ -78,7 +78,7 @@ class MeetupDetails extends StatelessWidget {
                           otherUid: meetup.master,
                         );
                       },
-                      child: Text(T.contactUs.tr),
+                      child: Text(T.contact.tr),
                     ),
                   ],
                 ),
