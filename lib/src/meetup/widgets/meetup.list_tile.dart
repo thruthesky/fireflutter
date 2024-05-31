@@ -44,7 +44,7 @@ class MeetupListTile extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            Text('회원 수: ${meetup.users.length} 명'),
+            Text('${T.members.tr}: ${meetup.users.length} ${T.noOfPeople.tr}'),
           ],
         ),
       ),

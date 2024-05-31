@@ -83,7 +83,7 @@ class MeetupListView extends StatelessWidget {
         if (snapshot.hasError) {
           dog('Error: ${snapshot.error}');
           return errorBuilder?.call(snapshot.error.toString()) ??
-              Text('Something went wrong! ${snapshot.error}');
+              Text('${T.somethingWentWrong.tr} ${snapshot.error}');
         }
 
         if (snapshot.hasData && snapshot.docs.isEmpty && !snapshot.hasMore) {
@@ -118,9 +118,9 @@ class MeetupListView extends StatelessWidget {
               // It is safe to call this function from within the build method.
               snapshot.fetchMore();
             }
-            final club = Meetup.fromSnapshot(snapshot.docs[index]);
-            return itemBuilder?.call(club, index) ??
-                MeetupListTile(meetup: club);
+            final meetup = Meetup.fromSnapshot(snapshot.docs[index]);
+            return itemBuilder?.call(meetup, index) ??
+                MeetupListTile(meetup: meetup);
           },
         );
       },

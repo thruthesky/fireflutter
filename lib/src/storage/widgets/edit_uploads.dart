@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -39,8 +40,18 @@ class EditUploads extends StatelessWidget {
                       Theme.of(context).colorScheme.onPrimary.withOpacity(0.5),
                 ),
                 onPressed: () async {
-                  await StorageService.instance.delete(url);
-                  onDelete(url);
+                  try {
+                    await StorageService.instance.delete(url);
+                    onDelete(url);
+                  } on FirebaseException catch (e) {
+                    if (e.code == 'object-not-found') {
+                      onDelete(url);
+                    } else {
+                      rethrow;
+                    }
+                  }
+                  // await StorageService.instance.delete(url);
+                  // onDelete(url);
                 },
                 icon: const Icon(Icons.delete),
               ),

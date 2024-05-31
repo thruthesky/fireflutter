@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:example/app.localization.dart';
 import 'package:example/firebase_options.dart';
 import 'package:example/router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 zoneErrorHandler(e, stackTrace) {
   dog("---> zoneErrorHandler; runtimeType: ${e.runtimeType}");
@@ -69,6 +71,13 @@ class _ChatAppState extends State<ChatApp> {
     dog('chat admin uid: ${AdminService.instance.chatAdminUid}');
     return MaterialApp.router(
       routerConfig: router,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        AppLocalizationsDelegate(),
+      ],
+      supportedLocales: AppLocalizations.locales,
     );
   }
 

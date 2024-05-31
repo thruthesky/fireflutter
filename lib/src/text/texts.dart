@@ -82,6 +82,96 @@ class T {
     'lo': 'ປິດ'
   };
 
+  static Mintl createPost = {
+    'en': 'Create post',
+    'ko': '글 작성',
+  };
+
+  static Mintl editPost = {
+    'en': 'Edit post',
+    'ko': '글 수정',
+  };
+
+  static Mintl like = {
+    'en': 'Like',
+    'ko': '좋아요',
+  };
+
+  static Mintl chat = {
+    'en': 'Chat',
+    'ko': '채팅',
+  };
+
+  static Mintl edit = {
+    'en': 'Edit',
+    'ko': '수정',
+  };
+
+  static Mintl delete = {
+    'en': 'Delete',
+    'ko': '삭제',
+  };
+
+  static Mintl share = {
+    'en': 'Share',
+    'ko': '공유',
+  };
+
+  static Mintl reply = {
+    'en': 'Reply',
+    'ko': '답글',
+  };
+
+  static Mintl bookmark = {
+    'en': 'Favorite',
+    'ko': '북마크',
+  };
+
+  static Mintl unbookmark = {
+    'en': 'Unfavorite',
+    'ko': '북마크 해제',
+  };
+
+  static Mintl bookmarkMessage = {
+    'en': 'Favorite sucess',
+    'ko': '북마크 완료',
+  };
+
+  static Mintl unbookmarkMessage = {
+    'en': 'Unfavorite sucess',
+    'ko': '북마크 해제 완료',
+  };
+
+  static Mintl block = {
+    'en': 'Block',
+    'ko': '차단',
+  };
+
+  static Mintl unblock = {
+    'en': 'Unblock',
+    'ko': '차단 해제',
+  };
+
+  static Mintl report = {
+    'en': 'Report',
+    'ko': '신고',
+  };
+
+  static Mintl reportReceived = {
+    'en': 'Report has been received.',
+    'ko': '신고가 접수되었습니다.',
+  };
+
+  static Mintl writeComment = {
+    'en': 'Write a comment',
+    'ko': '코멘트 작성',
+  };
+
+  static Mintl inputCommentHint = {
+    'en': 'Please enter your comment',
+    'ko': '댓글을 입력하세요',
+  };
+
   /// Meetup translations
   static Mintl meetupCreate = {
     'en': 'Create meetup',
@@ -127,10 +217,7 @@ class T {
     'en': 'Event',
     'ko': '일정',
   };
-  static Mintl chat = {
-    'en': 'Chat',
-    'ko': '채팅',
-  };
+
   static Mintl notice = {
     'en': 'Notice',
     'ko': '게시판',
@@ -155,8 +242,8 @@ class T {
     'ko': '명',
   };
 
-  static Mintl contactUs = {
-    'en': 'Contact Us',
+  static Mintl contact = {
+    'en': 'Contact',
     'ko': '문의하기',
   };
 
@@ -170,7 +257,306 @@ class T {
     'ko': '최근 사진이 없습니다',
   };
 
+  static Mintl recentPosts = {
+    'en': 'Recent Posts',
+    'ko': '최근글',
+  };
+
+  static Mintl noRecentPosts = {
+    'en': 'There are no recent posts',
+    'ko': '최근 글이 없습니다.',
+  };
+
+  static Mintl reminder = {
+    'en': 'Reminder',
+    'ko': '알림',
+  };
+
+  static Mintl inputReminder = {
+    'en': 'Input reminder',
+    'ko': '입력 알림',
+  };
+
+  static Mintl createMeetupEvent = {
+    'en': 'Create event',
+    'ko': '일정 생성',
+  };
+
+  static Mintl addNotice = {
+    'en': 'Add notice',
+    'ko': '글 쓰기',
+  };
+
+  static Mintl addPhoto = {
+    'en': 'Add photo',
+    'ko': '글 쓰기',
+  };
+
+  static Mintl meetupAdminSetting = {
+    'en': 'Admin setting',
+    'ko': '관리자 설정',
+  };
+
+  static Mintl editMeetupInformation = {
+    'en': 'Edit meetup info',
+    'ko': '모임 정보 수정',
+  };
+
+  static Mintl leaveMeetup = {
+    'en': 'Leave meetup',
+    'ko': '모임 탈퇴',
+  };
+
+  static Mintl joinMeetup = {
+    'en': 'Join meetup',
+    'ko': '모임 가입',
+  };
+
+  static Mintl noticeManage = {
+    'en': 'Update notice',
+    'ko': '게시판 관리',
+  };
+
+  static Mintl closeMeetup = {
+    'en': 'Close meetup',
+    'ko': '모임 폐쇄',
+  };
+
+  static Mintl noEvent = {
+    'en': 'There are no events',
+    'ko': '일정이 없습니다.',
+  };
+
+  static Mintl joinMeetupToChat = {
+    'en': 'You must join the group\nto view the chat room.',
+    'ko': '모임에 가입하셔야\n채팅방을 볼 수 있습니다.',
+  };
+
+  static Mintl noNoticeYet = {
+    'en': 'There are no notices yet.',
+    'ko': '글을 등록 해 주세요.',
+  };
+
+  static Mintl joinMeetupToViewNotice = {
+    'en': 'You must join the group\nto view the announcement.',
+    'ko': '모임에 가입하셔야\n게시판을 볼 수 있습니다.',
+  };
+
+  static Mintl noUploadPhotoYet = {
+    'en': 'Theres no uploaded photo yet.',
+    'ko': '사진을 등록 해 주세요.',
+  };
+
+  static Mintl joinMeetupToViewGallery = {
+    'en': 'You must join the group\nto view the gallery.',
+    'ko': '모임에 가입하셔야\n사진첩을 볼 수 있습니다.',
+  };
+
+  static Mintl login = {
+    'en': 'Login',
+    'ko': '로그인',
+  };
+
+  static Mintl loginFirstToUseMeetup = {
+    'en': 'To use the meetup function, you must first log in.',
+    'ko': '모임 기능을 이용하기 위해서는 로그인을 먼저 하셔야합니다.',
+  };
+
+  static Mintl unsubscribed = {
+    'en': 'Unsubscribe',
+    'ko': '탈퇴하기',
+  };
+
+  static Mintl signup = {
+    'en': 'Sign up',
+    'ko': '가입하기',
+  };
+
+  static Mintl somethingWentWrong = {
+    'en': 'Something went wrong!',
+    'ko': '오류가 발생했습니다.',
+  };
+
+  static Mintl deleteMeetup = {
+    'en': 'Delete meetup',
+    'ko': '모임 삭제',
+  };
+
+  static Mintl deleteMeetupMessage = {
+    'en': 'Are you sure you want to delete this meetup?',
+    'ko': '정말 모임을 삭제하시겠습니까?',
+  };
+
+  static Mintl createMeetupSchedule = {
+    'en': 'Create meetup schedule',
+    'ko': '만남 일정 만들기',
+  };
+
+  static Mintl editMeetupSchedule = {
+    'en': 'Edit meetup schedule',
+    'ko': '만남 일정 수정하기',
+  };
+
+  static Mintl meetupScheduleTitle = {
+    'en': 'Meetup schedule title',
+    'ko': '오프라인 일정 제목',
+  };
+
+  static Mintl meetupScheduleTitleDescription = {
+    'en': 'Please enter the title of the meetup schedule.',
+    'ko': '오프라인 만남의 제목을 적어주세요.',
+  };
+
+  static Mintl meetupCreateSchedule = {
+    'en': 'Create a schedule',
+    'ko': '일정 만들기',
+  };
+
+  static Mintl meetupScheduleDateAndTime = {
+    'en': 'Meetup schedule date and time',
+    'ko': '만남 일정 날짜와 시간',
+  };
+
+  static Mintl selectDate = {
+    'en': 'Select date',
+    'ko': '날짜 선택',
+  };
+
+  static Mintl selectTime = {
+    'en': 'Select time',
+    'ko': '시간 선택',
+  };
+
+  static Mintl meetupSchedulePhoto = {
+    'en': 'Meetup schedule photo',
+    'ko': '만남 일정 사진',
+  };
+
+  static Mintl meetupScheduleName = {
+    'en': 'Meetup schedule name',
+    'ko': '만남 일정 이름',
+  };
+
+  static Mintl meetupScheduleNameNote = {
+    'en': 'Please enter the name of the meetup schedule.',
+    'ko': '오프라인 만남에 대한 이름을 적어주세요.',
+  };
+
+  static Mintl meetupSchedulePhotoNote = {
+    'en': 'Please upload a photo. Photo size: 500x500',
+    'ko': '모임 사진을 업로드 해 주세요. 사진 크기: 500x500',
+  };
+
+  static Mintl meetupScheduleDescription = {
+    'en': 'Meetup schedule description',
+    'ko': '만남 일정 설명',
+  };
+
+  static Mintl meetupScheduleDescriptionNote = {
+    'en': 'Please enter the description of the meetup schedule.',
+    'ko': '만남 설명을 적어주세요.',
+  };
+
+  static Mintl meetupScheduleDateOrTimeMissing = {
+    'en': 'Please select a meeting date and time.',
+    'ko': '모임 날짜와 시간을 선택해주세요.',
+  };
+
+  static Mintl meetupScheduleUpdated = {
+    'en': 'Meetup schedule updated',
+    'ko': '만남 일정이 수정되었습니다.',
+  };
+
+  static Mintl editSchedule = {
+    'en': 'Edit schedule',
+    'ko': '일정 수정하기',
+  };
+
+  static Mintl meetupDateAndTime = {
+    'en': 'Meetup date and time',
+    'ko': '모임 날짜 & 시간',
+  };
+
+  // TODO: ko translation club
+  static Mintl meetupMembershipRequired = {
+    'en': 'Meetup membership required.',
+    'ko': '클럽 가입 필요',
+  };
+
+  static Mintl meetupMembershipRequiredMessage = {
+    'en': 'Please join the meetup first.',
+    'ko': '모임에 먼저 가입을 해 주세요.',
+  };
+
+  static Mintl meetupCancelledAttendance = {
+    'en': 'Attendance cancelled.',
+    'ko': '참석을 취소했습니다.',
+  };
+
+  static Mintl meetupCancelAttendance = {
+    'en': 'Cancel attendance',
+    'ko': '참석 취소하기',
+  };
+
+  static Mintl meetupCancelAttendanceMessage = {
+    'en': 'Meetup membership required.',
+    'ko': '클럽 가입 필요',
+  };
+
+  static Mintl signUpFirstThenApplyToAttend = {
+    'en': 'Please sign up for the meetup first and then apply to attend.',
+    'ko': '모임에 먼저 가입을 하신 다음, 참석 신청을 주세요.',
+  };
+
+  static Mintl applyToAttendConfirmed = {
+    'en': 'Apply to attend confirmed',
+    'ko': '참석 신청했습니다.',
+  };
+
+  static Mintl applyToAttend = {
+    'en': 'Apply to attend',
+    'ko': '참석 신청하기',
+  };
+
+  static Mintl listOfAttendees = {
+    'en': 'List of Applicants to Attend',
+    'ko': '참석 신청자 목록',
+  };
+
+  static Mintl noApplicantsYet = {
+    'en': 'There are no applicants to attend, yet.',
+    'ko': '참석 신청자가 없습니다.',
+  };
+
+  static Mintl meetupAdminSettings = {
+    'en': 'Meetup admin settings',
+    'ko': '모임 관리자 설정',
+  };
+
+  static Mintl recommend = {
+    'en': 'Recommend',
+    'ko': '추천',
+  };
+
+  static Mintl inputRecommendHint = {
+    'en':
+        'Input number only. Higher number will shown first. 0 will remove the recommendation.',
+    'ko': '숫자만 입력하세요. 높은 숫자가 먼저 표시됩니다. 0은 권장 사항을 제거합니다.',
+  };
+
+  static Mintl recommendRemove = {
+    'en': 'Remove recommendation',
+    'ko': '추천 삭제',
+  };
+
+  static Mintl recommendRemoveMessage = {
+    'en': 'Are you sure you want to remove this from recommendations list?',
+    'ko': '추천 목록에서 이 항목을 삭제하시겠습니까?',
+  };
+
   /// EO meetups translations
+
+  ///////////////////////////////////////////////////////////////////
 
   /// Basic
   // static const String yes = 'Yes';
@@ -186,20 +572,20 @@ class T {
   static const String inputEmail = 'Please enter your email.';
   static const String password = 'Password';
   static const String inputPassword = 'Please enter your password.';
-  static const String login = 'Login';
+  // static const String login = 'Login';
   static const String next = 'Next';
   static const String prev = 'Prev';
   static const String back = 'Back';
-  static const String like = 'Like';
+  // static const String like = 'Like';
   static const String likes = 'Likes';
-  static const String bookmark = 'Favorite';
-  static const String bookmarkMessage = 'Favorite sucess';
-  static const String unbookmark = 'Unfavorite';
-  static const String unbookmarkMessage = 'Unfavorite success';
+  // static const String bookmark = 'Favorite';
+  // static const String bookmarkMessage = 'Favorite sucess';
+  // static const String unbookmark = 'Unfavorite';
+  // static const String unbookmarkMessage = 'Unfavorite success';
   static const String thereAreNoBookmarksInTheList =
       'There are no bookmarks in the list.';
 
-  static const String share = 'Share';
+  // static const String share = 'Share';
 
   static const String inputTitle = 'Input title';
   static const String inputContent = 'Input content';
@@ -224,7 +610,7 @@ class T {
       'You are blocked from this chat.';
   static const String readMore = 'Read More';
   static const String viewProfile = 'View Profile';
-  static const String reply = 'Reply';
+  // static const String reply = 'Reply';
   static const String deleteMessage = 'Delete Message';
   static const String deleteMessageConfirmation =
       "Are you sure you want to delete this message? This action cannot be undone.";
@@ -256,13 +642,13 @@ class T {
   static const String pleaseEnterChatRoomNameAndDescription =
       'Please enter chat room name and description.';
   static const String create = "Create";
-  static const String edit = "Edit";
+  // static const String edit = "Edit";
 
   /// User
   static const String setting = 'Setting';
-  static const String block = 'Block';
-  static const String unblock = 'Unblock';
-  static const String report = 'Report';
+  // static const String block = 'Block';
+  // static const String unblock = 'Unblock';
+  // static const String report = 'Report';
   static const String leave = 'Leave';
   static const String stateMessage = 'State Message';
   static const String stateMessageInProfileUpdate = 'STATE MESSAGE';

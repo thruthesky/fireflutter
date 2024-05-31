@@ -27,7 +27,9 @@ class _ClubMeetupEditScreenState extends State<MeetupEventEditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(event == null ? '만남 일정 만들기' : '만남 일정 수정하기'),
+        title: Text(
+          event == null ? T.createMeetupSchedule.tr : T.editMeetupSchedule.tr,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24),

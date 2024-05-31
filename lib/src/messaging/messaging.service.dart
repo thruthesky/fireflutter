@@ -110,7 +110,7 @@ class MessagingService {
       }
     }
 
-    /// Save token to database
+    /// Save token to database when user logs in (or signs up)
     ///
     /// Subscribe the user auth changes for updating the token for the user.
     ///

@@ -53,11 +53,12 @@ class _PostViewScreenState extends State<PostViewScreen> {
                         ref: post.noOfLikesRef,
                         builder: (no) {
                           previousNoOfLikes = no;
-                          return Text('좋아요${likeText(no)}');
+                          return Text('${T.like.tr}${likeText(no)}');
                         },
-                        onLoading: Text('좋아요${likeText(previousNoOfLikes)}'),
+                        onLoading:
+                            Text('${T.like.tr}${likeText(previousNoOfLikes)}'),
                       ),
-                      no: () => const Text('좋아요'),
+                      no: () => Text(T.like.tr),
                     ),
                   ),
 
@@ -86,7 +87,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       context: context,
                       otherUid: post.uid,
                     ),
-                    child: const Text('채팅'),
+                    child: Text(T.chat.tr),
                   ),
                   TextButton(
                     onPressed: () async {
@@ -114,23 +115,23 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     itemBuilder: (context) {
                       return [
                         if (post.uid == myUid) ...[
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'edit',
-                            child: Text('수정'),
+                            child: Text(T.edit.tr),
                           ),
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'delete',
-                            child: Text('삭제'),
+                            child: Text(T.delete.tr),
                           ),
                         ] else ...[
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'block',
-                            child: Text('차단'),
+                            child: Text(T.block.tr),
                           ),
                         ],
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'share',
-                          child: Text('공유'),
+                          child: Text(T.share.tr),
                         ),
                       ];
                     },
@@ -199,7 +200,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                         },
                         icon: const Icon(Icons.camera_alt),
                       ),
-                      const Expanded(child: Text('댓글을 입력하세요')),
+                      Expanded(child: Text(T.inputCommentHint.tr)),
                       const Icon(Icons.send),
                       const SizedBox(width: 8),
                     ],
