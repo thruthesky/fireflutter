@@ -200,7 +200,7 @@ ScaffoldFeatureController toast({
                               color: foregroundColor,
                               fontWeight: FontWeight.bold),
                         ),
-                      Text(message),
+                      Text(message, style: TextStyle(color: foregroundColor)),
                     ],
                   ),
                 ),

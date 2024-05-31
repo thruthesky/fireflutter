@@ -53,7 +53,7 @@ class _ClubMeetupUpdateFormState extends State<MeetupEventUpdateForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('만남 일정 날짜와 시간'),
+          Text(T.meetupScheduleDateAndTime.tr),
           Row(
             children: [
               ElevatedButton(
@@ -65,10 +65,11 @@ class _ClubMeetupUpdateFormState extends State<MeetupEventUpdateForm> {
                       lastDate: DateTime.now().add(const Duration(days: 365)));
                   setState(() {});
                 },
-                child: const Text('날짜 선택'),
+                child: Text(T.selectDate.tr),
               ),
               const SizedBox(width: 16),
-              if (date != null) Text(DateFormat.yMMMEd('ko').format(date!)),
+              // if (date != null) Text(DateFormat.yMMMEd('ko').format(date!)),
+              if (date != null) Text(DateFormat.yMMMEd().format(date!)),
             ],
           ),
           Row(
@@ -82,19 +83,14 @@ class _ClubMeetupUpdateFormState extends State<MeetupEventUpdateForm> {
                   );
                   setState(() {});
                 },
-                child: const Text('시간 선택'),
+                child: Text(T.selectTime.tr),
               ),
               const SizedBox(width: 16),
               if (time != null) Text(time!.format(context)),
             ],
           ),
-          // Text('Club ID: ${event.clubId}'),
-          // Text('MeetupEvent ID: ${event.id}'),
-          // Text('owner uid: ${event.uid}'),
-          // Text('my Uid: ${UserService.instance.user!.uid}'),
-
           const SizedBox(height: 24),
-          const Text('만남 일정 사진'),
+          Text(T.meetupSchedulePhoto.tr),
           GestureDetector(
             onTap: () async {
               StorageService.instance.delete(event.photoUrl);
@@ -140,19 +136,19 @@ class _ClubMeetupUpdateFormState extends State<MeetupEventUpdateForm> {
           ),
           const SizedBox(height: 8),
           Text(
-            "  모임 사진을 업로드 해 주세요. 사진 크기: 500x500",
+            "  ${T.meetupSchedulePhotoNote.tr}",
             style: Theme.of(context).textTheme.labelMedium,
           ),
           const SizedBox(height: 24),
           LabelField(
             controller: titleController,
-            label: '만남 일정 이름',
-            description: '오프라인 만남에 대한 이름을 적어주세요.',
+            label: T.meetupScheduleName.tr,
+            description: T.meetupScheduleNameNote.tr,
           ),
           LabelField(
             controller: descriptionController,
-            label: '만남 일정 설명',
-            description: '만남 설명을 적어주세요.',
+            label: T.meetupScheduleDescription.tr,
+            description: T.meetupScheduleDescriptionNote.tr,
             minLines: 3,
             maxLines: 5,
           ),
@@ -161,7 +157,9 @@ class _ClubMeetupUpdateFormState extends State<MeetupEventUpdateForm> {
             child: OutlinedButton(
               onPressed: () async {
                 if (date == null || time == null) {
-                  error(context: context, message: '모임 날짜와 시간을 선택해주세요.');
+                  error(
+                      context: context,
+                      message: T.meetupScheduleDateOrTimeMissing.tr);
                   return;
                 }
                 print(date);
@@ -173,9 +171,9 @@ class _ClubMeetupUpdateFormState extends State<MeetupEventUpdateForm> {
                     Duration(hours: time!.hour, minutes: time!.minute),
                   ),
                 );
-                toast(context: context, message: '만남 일정이 수정되었습니다.');
+                toast(context: context, message: T.meetupScheduleUpdated.tr);
               },
-              child: const Text('일정 수정하기'),
+              child: Text(T.editSchedule.tr),
             ),
           ),
           const SizedBox(height: 24),

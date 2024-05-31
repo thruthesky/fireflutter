@@ -34,9 +34,6 @@ class _ClubUpdateFormState extends State<MeetupUpdateForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Text('Meetup ID: ${meetup.id}'),
-          // Text('owner uid: ${meetup.uid}'),
-          // Text('my Uid: ${UserService.instance.user!.uid}'),
           GestureDetector(
             onTap: () async {
               StorageService.instance.delete(meetup.photoUrl);

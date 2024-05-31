@@ -41,7 +41,7 @@ class _PostEditScreenState extends State<PostEditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(isCreate ? '글 작성' : '글 수정'),
+        title: Text(isCreate ? T.createPost.tr : T.editPost.tr),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
