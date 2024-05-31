@@ -24,6 +24,8 @@ dependencies:
     path: ..
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   go_router: ^14.1.3
 
   phone_sign_in:

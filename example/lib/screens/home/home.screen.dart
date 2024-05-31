@@ -30,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
             yes: (uid) {
               return Column(
                 children: [
+                  const ChatRoomCreateButton(),
                   const Text("@TODO: 채팅방 방장이, 채팅 삭제, 채팅방 멤버 강퇴 기능 추가"),
                   Text(
                       "Logged in as ${FirebaseAuth.instance.currentUser?.email}, $uid"),
