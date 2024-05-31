@@ -140,6 +140,7 @@ class _CommentEditDialogState extends State<CommentEditDialog> {
               onDelete: (url) => setState(
                 () {
                   comment.urls.remove(url);
+                  // need to update the commend on the backend
                 },
               ),
             ),

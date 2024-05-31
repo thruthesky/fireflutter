@@ -152,6 +152,16 @@ class T {
     'ko': '차단 해제',
   };
 
+  static Mintl report = {
+    'en': 'Report',
+    'ko': '신고',
+  };
+
+  static Mintl reportReceived = {
+    'en': 'Report has been received.',
+    'ko': '신고가 접수되었습니다.',
+  };
+
   static Mintl writeComment = {
     'en': 'Write a comment',
     'ko': '코멘트 작성',
@@ -611,7 +621,7 @@ class T {
   static const String setting = 'Setting';
   // static const String block = 'Block';
   // static const String unblock = 'Unblock';
-  static const String report = 'Report';
+  // static const String report = 'Report';
   static const String leave = 'Leave';
   static const String stateMessage = 'State Message';
   static const String stateMessageInProfileUpdate = 'STATE MESSAGE';
