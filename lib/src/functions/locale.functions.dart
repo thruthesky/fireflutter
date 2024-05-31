@@ -1,5 +1,6 @@
 import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 /// Returns a list of preferred languages in two letter format using [devicelocale] package.
 Future<dynamic> get preferredLanguages async {
@@ -16,6 +17,13 @@ Future<String?> get currentLocale async {
 
 /// Returns the language code of the current locale using the current FlutterView from the context
 /// via View.of(context)
+/// Example: "en", "ko"
 String getLanguageCode(BuildContext context) {
   return View.of(context).platformDispatcher.locale.languageCode;
+}
+
+/// Returns the current locale in "[langaugeCode]_[countryCode]" format using [Intl] package.
+/// Example: "en_US", "ko_KR"
+String getCurrentLocale() {
+  return Intl.getCurrentLocale();
 }

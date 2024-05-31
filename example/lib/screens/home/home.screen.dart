@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/';
@@ -25,6 +26,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Column(
         children: [
+          Text(
+              'language cod: ${Intl.getCurrentLocale()}, ${getLanguageCode(context)}'),
           const Text("Home"),
           Login(
             yes: (uid) {
