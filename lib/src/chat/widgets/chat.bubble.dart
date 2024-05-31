@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/chat/widgets/chat.read_more.dialog.dart';
 import 'package:flutter/material.dart';
 
 /// Chat bubble
@@ -17,15 +18,39 @@ class ChatBubble extends StatelessWidget {
     required this.room,
     required this.message,
     this.onChange,
+    this.onReply,
+    this.onEdit,
   });
 
   final ChatRoom room;
   final ChatMessage message;
   final Function? onChange;
+  final void Function(ChatMessage message)? onReply;
+  final void Function(ChatMessage message)? onEdit;
+
+  bool get isLongText =>
+      message.text != null &&
+      (message.text!.length > 360 ||
+          '\n'.allMatches(message.text!).length > 10);
+
+  String get text {
+    if (message.text == null) return '';
+    if (isLongText) {
+      String t = message.text!;
+      final splits = t.split('\n');
+      if (splits.length > 10) {
+        return '${splits.sublist(0, 10).join('\n')}...';
+      } else {
+        return '${message.text!.substring(0, 360)}...';
+      }
+    } else {
+      return message.text!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final bubble = Container(
+    return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,50 +74,93 @@ class ChatBubble extends StatelessWidget {
           const SizedBox(width: 8),
           // Chat message text. size 60%
 
-          /// 여기서부터...
           if (message.deleted ||
               (message.text != null && message.text!.isNotEmpty))
-            Container(
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.6),
-              child: Column(
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: message.mine
-                          ? Colors.amber.shade200
-                          : Colors.grey.shade200,
-                      borderRadius: borderRadius(),
-                    ),
-                    child: message.deleted
-                        ? Text(T.chatMessageDeleted.tr)
-                        : LinkifyText(
-                            message.text!
-                                .orBlocked(message.uid!, T.blockedChatMessage),
-                            style: const TextStyle(color: Colors.black),
-                          ),
+            ChatBubblePopupMenuButton(
+              message: message,
+              room: room,
+              onViewProfile: () =>
+                  mayShowPublicProfileScreen(context, message.uid!),
+              onDeleteMessage: () async {
+                // Added Future.delayed by @withcenter-dev2 at 2024-05-30
+                // because showing a dialog is having a problem here.
+                // What I think is happening:
+                // in DropdownButton2, when onChange is called, it pops the dropdown.
+                // So when we showDialog, suddenly it pops it. Then it returns 'bool?' but
+                // it was expecting '_DropdownButton2<String>' (because it wanted to pop the dropdown)
+                // For confirmation. Because we may need a better solution.
+                await Future.delayed(const Duration(milliseconds: 1));
+                final deleteConfirmation = await confirm(
+                  context: context,
+                  title: "Delete Message",
+                  message:
+                      "Are you sure you want to delete this message? This action cannot be undone.",
+                );
 
-                    /// OLD code. commented out by @thruthesky at 2024-05-27
-                    // message.text != null && message.deleted == false
-                    //     ? LinkifyText(
-                    //         message.text!
-                    //             .orBlocked(message.uid!, T.blockedChatMessage),
-                    //         style: const TextStyle(color: Colors.black),
-                    //       )
-                    //     : Text(T.chatMessageDeleted.tr),
-                  ),
-                  if (message.hasUrlPreview) ...[
-                    const SizedBox(height: 8),
-                    UrlPreview(
-                      previewUrl: message.previewUrl!,
-                      title: message.previewTitle,
-                      description: message.previewDescription,
-                      imageUrl: message.previewImageUrl,
+                if (deleteConfirmation ?? false) {
+                  await message.delete();
+                }
+              },
+              onBlock: () async {
+                // @withcenter-dev2: Please read notes on DeleteMessage above
+                // await Future.delayed(const Duration(milliseconds: 1));
+                final blockConfirmation = await confirm(
+                  context: context,
+                  title: "Block User",
+                  message:
+                      "Are you sure you want to block this user from the group chat?",
+                );
+                if (blockConfirmation ?? false) {
+                  await room.block(message.uid!);
+                }
+              },
+              onReply: () => print("onReply?.call(message);"),
+              child: Container(
+                constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.6),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: message.mine
+                            ? Colors.amber.shade200
+                            : Colors.grey.shade200,
+                        borderRadius: borderRadius(),
+                      ),
+                      child: message.deleted
+                          ? Text(T.chatMessageDeleted.tr)
+                          : LinkifyText(
+                              selectable: false,
+                              text.orBlocked(
+                                  message.uid!, T.blockedChatMessage),
+                              style: const TextStyle(color: Colors.black),
+                            ),
                     ),
+                    if (isLongText)
+                      TextButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => ChatReadMoreDialog(
+                                message: message,
+                              ),
+                            );
+                          },
+                          child: Text(T.readMore.tr)),
+                    if (message.hasUrlPreview) ...[
+                      const SizedBox(height: 8),
+                      UrlPreview(
+                        previewUrl: message.previewUrl!,
+                        title: message.previewTitle,
+                        description: message.previewDescription,
+                        imageUrl: message.previewImageUrl,
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
           // image
@@ -118,72 +186,6 @@ class ChatBubble extends StatelessWidget {
           ],
         ],
       ),
-    );
-
-    /// 관리자가 아니고, 방장이 아니고, 나의 메시지가 아니면, 그냥 chat bubble 만 리턴
-    if (isAdmin == false && room.isMaster == false && message.mine == false) {
-      return bubble;
-    }
-
-    /// 나의 채팅 메시지이면, 삭제 등을 표시하기 위한 메시지 리턴
-    if (message.mine) {
-      return PopupMenuButton(
-        position: PopupMenuPosition.under,
-        onOpened: () => FocusScope.of(context).unfocus(),
-        offset: Offset(
-          message.mine ? MediaQuery.of(context).size.width : 0,
-          0,
-        ),
-        itemBuilder: (context) => <PopupMenuEntry<String>>[
-          PopupMenuItem(
-            value: Code.delete,
-            child: Text(T.chatMessageDelete.tr),
-          ),
-        ],
-        onSelected: (v) async {
-          switch (v) {
-            case Code.delete:
-              await message.delete();
-              break;
-            default:
-              break;
-          }
-        },
-        child: IgnorePointer(child: bubble),
-      );
-    }
-
-    /// 관리자이거나 방장이면, 팝업 메뉴 버튼을 리턴
-    return PopupMenuButton(
-      position: PopupMenuPosition.under,
-      onOpened: () => FocusScope.of(context).unfocus(),
-      offset: Offset(
-        message.mine ? MediaQuery.of(context).size.width : 0,
-        0,
-      ),
-      itemBuilder: (context) => <PopupMenuEntry<String>>[
-        PopupMenuItem(
-          value: Code.delete,
-          child: Text(T.chatMessageDelete.tr),
-        ),
-        PopupMenuItem(
-          value: Code.block,
-          child: Text(T.block.tr),
-        ),
-      ],
-      onSelected: (v) async {
-        switch (v) {
-          case Code.delete:
-            await message.delete();
-            break;
-          case Code.block:
-            await room.block(message.uid!);
-            break;
-          default:
-            break;
-        }
-      },
-      child: IgnorePointer(child: bubble),
     );
   }
 

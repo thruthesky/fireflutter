@@ -147,13 +147,21 @@
         "blockedUsers": {
           ".validate": "root.child('admins').hasChild(auth.uid) || root.child('chat-rooms').child($room_id).child('master').val() == auth.uid"
         },
-        // Only master can update "name", "description".
+        // Only master can update "name", "description". If there is no master yet(especially when it is being created), allow name/description to be updated.
         "name": {
-          ".validate": "root.child('chat-rooms').child($room_id).child('master').val() == auth.uid"
+          ".validate": "
+            root.child('chat-rooms').child($room_id).child('master').val() === null
+            ||
+            root.child('chat-rooms').child($room_id).child('master').val() == auth.uid
+          "
         },
         "description": {
-          ".validate": "root.child('chat-rooms').child($room_id).child('master').val() == auth.uid"
-        }
+          ".validate": "
+            root.child('chat-rooms').child($room_id).child('master').val() === null
+            ||
+            root.child('chat-rooms').child($room_id).child('master').val() == auth.uid
+          "
+        },
       }
     },
     "chat-joins": {

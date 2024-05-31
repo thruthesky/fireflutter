@@ -266,6 +266,40 @@ Chat List is a List view of Chats. We can use this widget to show a list of chat
 DefaultChatRoomListView(),
 ```
 
+#### List Group, Single (1:1), Open, or All Chat Rooms where the user is joined
+
+The `ChatRoomListView` widget can be used to show different listings of chat rooms.
+
+```dart
+ChatRoomListView(),
+```
+
+The example above will show the chat room list of the user's chat rooms (where the user is joined).
+
+Using the `ChatRoomList` enum, it can be specified which group chats should be displayed. The default is `ChatRoomList.my`.
+
+```dart
+// Listing of all chat rooms where the user is joined (whether single or group)
+ChatRoomListView(
+  chatRoomList: ChatRoomList.my,
+),
+
+// Listing of all single (1:1) chat rooms where the user is joined/invloved
+ChatRoomListView(
+  chatRoomList: ChatRoomList.single,
+),
+
+// Listing of all group chat rooms where the user is joined (whether close or open chat)
+ChatRoomListView(
+  chatRoomList: ChatRoomList.group,
+),
+
+// Listong of all open group chat rooms (whether the user is joined or not)
+ChatRoomListView(
+  chatRoomList: ChatRoomList.open,
+),
+```
+
 #### Querying Specific Type of Chat Rooms
 
 You may want to show specific types of Chat Rooms, like Single Chat Rooms only, Group Chats Only, or Open Group Chats only.
@@ -506,25 +540,20 @@ void initChatService() {
 
 ```json
 /chat-rooms/
-	/chat_room_id
-		{
-			users: { uid-a: true, uid-b: false, ... },
-			blockedUsers: { uid-c: true, },
-		}
+ /chat_room_id
+  {
+   users: { uid-a: true, uid-b: false, ... },
+   blockedUsers: { uid-c: true, },
+  }
 ```
-
 
 1. hard limit, they (disabled users) are restricted to chat, view chat message by security rules.
 2. soft limit, the fireflutter sdk informs user that they are blocked.
 
 3. admin or the master of the chat room can block user and unblock user (from the chat room menu).
 
-
-
-
 ## Deleting message
 
 - Admin or master can delete other user's message
 
 - User can delete his own message
-

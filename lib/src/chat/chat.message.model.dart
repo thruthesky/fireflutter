@@ -114,6 +114,12 @@ class ChatMessage {
     };
   }
 
+  /// To string
+  @override
+  String toString() {
+    return toJson().toString();
+  }
+
   /// 채팅 메시지를 삭제
   ///
   ///
