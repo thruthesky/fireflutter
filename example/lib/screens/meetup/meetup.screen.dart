@@ -20,11 +20,11 @@ class _MenuScreenState extends State<MeetupScreen> {
           SizedBox(width: 24),
         ],
       ),
-      body: const DefaultTabController(
+      body: DefaultTabController(
         length: 2,
         child: Column(
           children: [
-            TabBar(
+            const TabBar(
               tabs: [
                 Tab(text: 'new'),
                 Tab(text: 'recommended'),
@@ -33,10 +33,15 @@ class _MenuScreenState extends State<MeetupScreen> {
             Expanded(
               child: TabBarView(
                 children: [
-                  MeetupListView(
+                  const MeetupListView(
                     padding: EdgeInsets.all(0),
                   ),
-                  Text('Recommended Meetup'),
+                  MeetupListView(
+                    padding: const EdgeInsets.all(0),
+                    query: Meetup.col
+                        .where('hasPhoto', isEqualTo: true)
+                        .orderBy('recommendOrder', descending: true),
+                  )
                 ],
               ),
             ),

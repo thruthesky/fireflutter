@@ -51,6 +51,11 @@ class _AdminMeetupListScreenState extends State<AdminMeetupListScreen> {
                                 meetup.description,
                                 style: Theme.of(context).textTheme.bodySmall,
                               ),
+                              if (meetup.recommendOrder != null)
+                                Text(
+                                  '${meetup.recommendOrder}',
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
                             ],
                           ),
                         ],

@@ -1,7 +1,7 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/meetup/widgets/meetup.admin_settings.dart';
+import 'package:fireflutter/src/meetup/widgets/meetup.admin_settings.screen.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 

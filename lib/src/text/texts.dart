@@ -451,11 +451,33 @@ class T {
     'ko': '참석 신청자가 없습니다.',
   };
 
-  
   static Mintl meetupAdminSettings = {
     'en': 'Meetup admin settings',
     'ko': '모임 관리자 설정',
   };
+
+  static Mintl recommend = {
+    'en': 'Recommend',
+    'ko': '추천',
+  };
+
+  static Mintl inputRecommendHint = {
+    'en':
+        'Input number only. Higher number will shown first. 0 will remove the recommendation.',
+    'ko': '숫자만 입력하세요. 높은 숫자가 먼저 표시됩니다. 0은 권장 사항을 제거합니다.',
+  };
+
+  static Mintl recommendRemove = {
+    'en': 'Remove recommendation',
+    'ko': '추천 삭제',
+  };
+
+  static Mintl recommendRemoveMessage = {
+    'en': 'Are you sure you want to remove this from recommendations list?',
+    'ko': '추천 목록에서 이 항목을 삭제하시겠습니까?',
+  };
+
+
 
 
   /// EO meetups translations

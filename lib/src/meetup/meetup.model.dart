@@ -14,6 +14,8 @@ class Meetup {
   final List<String> users;
   final String reminder;
 
+  final int? recommendOrder;
+
   Meetup({
     required this.id,
     required this.uid,
@@ -23,6 +25,7 @@ class Meetup {
     this.photoUrl,
     required this.users,
     required this.reminder,
+    this.recommendOrder,
   });
 
   DocumentReference get ref => col.doc(id);
@@ -45,12 +48,14 @@ class Meetup {
       photoUrl: map['photoUrl'],
       users: List<String>.from((map['users'] ?? [])),
       reminder: map['reminder'] ?? '',
+
+      recommendOrder: map['recommendOrder'],
     );
   }
 
   @override
   String toString() {
-    return 'Meetup{id: $id, uid: $uid, master: $master, name: $name, description: $description, photoUrl: $photoUrl, users: $users, reminder: $reminder}';
+    return 'Meetup{id: $id, uid: $uid, master: $master, name: $name, description: $description, photoUrl: $photoUrl, users: $users, reminder: $reminder, recommendOrder: $recommendOrder}';
   }
 
   /// 클럽 생성을 위한, 데이터 맵을 만든다.
@@ -123,6 +128,7 @@ class Meetup {
     String? photoUrl,
     bool? hasPhoto,
     String? reminder,
+    int? recommendOrder,
   }) async {
     // 모임 이름이 들어오는 경우, 빈 문자열이면 에러
     if (name != null && name.trim().isEmpty) {
@@ -145,6 +151,11 @@ class Meetup {
     } else {
       data['photoUrl'] = photoUrl;
       data['hasPhoto'] = true;
+    }
+
+    if (recommendOrder != null) {
+      data['recommendOrder'] =
+          recommendOrder > 0 ? recommendOrder : FieldValue.delete();
     }
 
     await ref.update(data);
