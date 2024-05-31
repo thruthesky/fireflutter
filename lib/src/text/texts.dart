@@ -453,6 +453,10 @@ class T {
   static const String chatMessageListViewBlockedUser =
       'You are blocked from this chat.';
 
+  static const String readMore = 'Read More';
+  static const String viewProfile = 'View Profile';
+  static const String reply = 'Reply';
+
   /// User
   static const String setting = 'Setting';
   static const String block = 'Block';

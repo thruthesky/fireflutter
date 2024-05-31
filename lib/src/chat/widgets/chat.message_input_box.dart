@@ -32,6 +32,7 @@ class ChatMessageInputBox extends StatefulWidget {
 class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
   final inputController = TextEditingController();
   double? progress;
+
   @override
   Widget build(BuildContext context) {
     if (widget.chat.room.isSingleChat &&

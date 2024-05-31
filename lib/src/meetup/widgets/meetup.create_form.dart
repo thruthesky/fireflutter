@@ -34,8 +34,8 @@ class _ClubCreateFormState extends State<MeetupCreateForm> {
           Align(
             child: OutlinedButton(
               onPressed: () async {
-                final club = await Meetup.create(name: nameController.text);
-                widget.onCreate(club);
+                final meetup = await Meetup.create(name: nameController.text);
+                widget.onCreate(meetup);
               },
               child: Text(T.meetupCreate.tr),
             ),

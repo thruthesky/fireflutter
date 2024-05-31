@@ -324,7 +324,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
                           ),
                         PopupMenuItem(
                             value: 'report', child: Text(T.report.tr)),
-                        if (widget.leave)
+                        if (widget.leave && !chat.room.isMaster)
                           PopupMenuItem(
                               value: 'leave', child: Text(T.leave.tr)),
                       ],
@@ -396,28 +396,6 @@ class _ChatRoomState extends State<ChatRoomBody> {
           ),
         ),
 
-        /// 채팅 입력 박스
-        // if (userDeleted == false)
-        //   StreamBuilder(
-        //     stream:
-        //         chat.room.ref.child(Field.blockedUsers).child(myUid!).onValue,
-        //     builder: (context, snapshot) {
-        //       if (snapshot.hasData == false ||
-        //           snapshot.connectionState == ConnectionState.waiting) {
-        //         return const SizedBox.shrink();
-        //       }
-        //       final blocked = snapshot.data?.snapshot.value == true;
-
-        //       return blocked
-        //           ? const SizedBox.shrink()
-        //           : SafeArea(
-        //               top: false,
-        //               child: ChatMessageInputBox(
-        //                 chat: chat,
-        //               ),
-        //             );
-        //     },
-        //   ),
         if (userDeleted == false &&
             chat.room.blockedUsers.contains(myUid) == false)
           SafeArea(
@@ -426,27 +404,6 @@ class _ChatRoomState extends State<ChatRoomBody> {
               chat: chat,
             ),
           ),
-        // // /*
-        // ValueListenableBuilder(
-        //   valueListenable: loaded,
-        //   builder: (_, v, __) {
-        //     final messageBox = SafeArea(
-        //       top: false,
-        //       child: ChatMessageInputBox(
-        //         chat: chat,
-        //       ),
-        //     );
-
-        //     if (v == false) return messageBox;
-
-        //     if (userDeleted == false &&
-        //         chat.room.blockedUsers.contains(myUid) == false) {
-        //       return messageBox;
-        //     }
-
-        //     return const SizedBox.shrink();
-        //   },
-        // ),
       ],
     );
   }
