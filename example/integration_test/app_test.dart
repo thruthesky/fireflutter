@@ -1,4 +1,6 @@
+import 'package:example/firebase_options.dart';
 import 'package:example/main.chat.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -6,22 +8,12 @@ void main() {
   group('end-to-end test', () {
     testWidgets('tap on the floating action button, verify counter',
         (tester) async {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
       // Load app widget.
       await tester.pumpWidget(const ChatApp());
 
-      // // Verify the counter starts at 0.
-      // expect(find.text('0'), findsOneWidget);
-
-      // // Finds the floating action button to tap on.
-      // final fab = find.byKey(const ValueKey('increment'));
-
-      // // Emulate a tap on the floating action button.
-      // await tester.tap(fab);
-
-      // // Trigger a frame.
-      // await tester.pumpAndSettle();
-
-      // // Verify the counter increments by 1.
       expect(find.text('Entry Screen'), findsOneWidget);
     });
   });
