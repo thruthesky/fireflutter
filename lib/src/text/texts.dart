@@ -231,6 +231,32 @@ class T {
   static const String blockUser = 'Block User';
   static const String blockUserChatConfirmation =
       "Are you sure you want to block this user from the chat room?";
+  static const String noPermission = 'No permission.';
+  static const String noPermissionModifyChatRoom =
+      'You do not have permission to modify the chat room.';
+  static const String newChat = 'New Chat';
+  static const String chatRoomSettings = 'Chat Room Settings';
+  static const String chatRoomName = 'Chat Room Name';
+  static const String chatRoomDescription = 'Chat Room Description';
+  static const String passwordToJoin = 'Password to Join';
+  static const String leaveEmptyPasswordIfNotRequired =
+      'Empty means no password.';
+  static const String uploadChatRoomIcon = 'Upload Chat Room Icon';
+  static const String openChat = 'Open Chat';
+  static const String anyoneCanJoinChat = 'Anyone can join.';
+  static const String verifiedMembersOnly = 'Verified members only';
+  static const String onlyVerifiedMembersCanJoinChat =
+      'Must be verified to join.';
+  static const String urlEntryOnlyForVerified = 'URL Entry Only for Verified';
+  static const String onlyVerifiedMembersCanEnterViaUrl =
+      'Only verified members can enter via URL';
+  static const String photoUploadOnlyForVerified = "Upload Only for Verified";
+  static const String onlyVerifiedMembersCanUploadPhoto =
+      "Only verified can upload photos.";
+  static const String pleaseEnterChatRoomNameAndDescription =
+      'Please enter chat room name and description.';
+  static const String create = "Create";
+  static const String edit = "Edit";
 
   /// User
   static const String setting = 'Setting';
