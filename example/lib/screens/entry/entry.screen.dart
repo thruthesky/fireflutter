@@ -32,6 +32,10 @@ class _EntryScreenState extends State<EntryScreen> {
                 message: e.toString(),
               ),
               specialAccounts: const SpecialAccounts(
+                reviewPhoneNumber: '',
+                reviewEmail: '',
+                reviewPassword: '',
+                reviewSmsCode: '',
                 emailLogin: true,
               ),
             ),
