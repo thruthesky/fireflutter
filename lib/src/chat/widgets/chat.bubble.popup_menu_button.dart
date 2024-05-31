@@ -51,7 +51,7 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
             child: Text(T.chatMessageDelete.tr),
           ),
         ],
-        if (!message.mine)
+        if (!message.mine && message.uid != null)
           PopupMenuItem<String>(
             value: Code.viewProfile,
             height: 40,
@@ -97,10 +97,8 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
   void _onDeleteMessage(BuildContext context, ChatMessage message) async {
     final deleteConfirmation = await confirm(
       context: context,
-      // TODO trs
-      title: "Delete Message",
-      message:
-          "Are you sure you want to delete this message? This action cannot be undone.",
+      title: T.deleteMessage.tr,
+      message: T.deleteMessageConfirmation.tr,
     );
     if (deleteConfirmation ?? false) {
       await message.delete();
@@ -110,8 +108,8 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
   void _onBlockUser(BuildContext context, String uid) async {
     final blockConfirmation = await confirm(
       context: context,
-      title: "Block User",
-      message: "Are you sure you want to block this user from the chat room?",
+      title: T.blockUser.tr,
+      message: T.blockUserChatConfirmation.tr,
     );
     if (blockConfirmation ?? false) {
       await room.block(message.uid!);

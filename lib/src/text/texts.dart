@@ -216,20 +216,21 @@ class T {
 
   static const String chatMessageDelete = 'Delete';
   static const String chatMessageDeleted = 'This message is deleted.';
-
   static const String chatBlockedUserList = 'Blocked users';
-
   static const String chatEmptyBlockedUserList = 'No blocked users.';
   static const String chatMessageListPermissionDenied = 'Permission denied.';
-
   static const String chatSendMessageBlockedUser = 'You are blocked.';
-
   static const String chatMessageListViewBlockedUser =
       'You are blocked from this chat.';
-
   static const String readMore = 'Read More';
   static const String viewProfile = 'View Profile';
   static const String reply = 'Reply';
+  static const String deleteMessage = 'Delete Message';
+  static const String deleteMessageConfirmation =
+      "Are you sure you want to delete this message? This action cannot be undone.";
+  static const String blockUser = 'Block User';
+  static const String blockUserChatConfirmation =
+      "Are you sure you want to block this user from the chat room?";
 
   /// User
   static const String setting = 'Setting';
