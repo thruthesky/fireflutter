@@ -10,6 +10,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
 
 zoneErrorHandler(e, stackTrace) {
   dog("---> zoneErrorHandler; runtimeType: ${e.runtimeType}");
@@ -69,6 +70,10 @@ class _ChatAppState extends State<ChatApp> {
   @override
   Widget build(BuildContext context) {
     dog('chat admin uid: ${AdminService.instance.chatAdminUid}');
+
+    /// set the default locale base from device system language
+    setIntlDefaultLocale(context);
+
     return MaterialApp.router(
       routerConfig: router,
       localizationsDelegates: const [

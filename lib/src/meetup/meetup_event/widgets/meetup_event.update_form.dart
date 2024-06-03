@@ -68,7 +68,6 @@ class _ClubMeetupUpdateFormState extends State<MeetupEventUpdateForm> {
                 child: Text(T.selectDate.tr),
               ),
               const SizedBox(width: 16),
-              // if (date != null) Text(DateFormat.yMMMEd('ko').format(date!)),
               if (date != null) Text(DateFormat.yMMMEd().format(date!)),
             ],
           ),

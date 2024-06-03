@@ -34,7 +34,9 @@ class _MeetupAdminSettingsState extends State<MeetupAdminSettingsScreen> {
                 Icons.grade,
               ),
               title: Text(
-                '${T.recommend.tr}${recommendationCount(meetup.recommendOrder)}',
+                T.recommendWithCount.args(
+                  {'count': recommendationCount(meetup.recommendOrder)},
+                ),
               ),
               subtitle: Text(
                 T.inputRecommendHint.tr,
