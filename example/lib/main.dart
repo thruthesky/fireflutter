@@ -56,6 +56,7 @@ class ChatApp extends StatefulWidget {
 }
 
 class _ChatAppState extends State<ChatApp> {
+  bool flagInitLocalization = false;
   @override
   void initState() {
     super.initState();
@@ -69,6 +70,12 @@ class _ChatAppState extends State<ChatApp> {
   @override
   Widget build(BuildContext context) {
     dog('chat admin uid: ${AdminService.instance.chatAdminUid}');
+
+    if (flagInitLocalization == false) {
+      flagInitLocalization = true;
+      initIntlDefaultLocale();
+    }
+
     return MaterialApp.router(
       routerConfig: router,
       localizationsDelegates: const [

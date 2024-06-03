@@ -677,6 +677,7 @@ class User {
     ff.ActivityLog.userLike(otherUserUid, re);
 
     /// Mutual like
+    /// Note, the mutual like work should be done in the cloud functions.
     if (re) {
       /// The login user liked the other user.
       final got = await whoLikeMeRef.child(ff.myUid!).child(otherUserUid).get();

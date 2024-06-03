@@ -27,8 +27,39 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           Text(
-              'language cod: ${Intl.getCurrentLocale()}, ${getLanguageCode(context)}'),
-          const Text("Home"),
+            'Intl.getCurrentLocale(): ${Intl.getCurrentLocale()}',
+          ),
+          Text(
+            'getLanguageCode: ${getLanguageCode(context)}',
+          ),
+          const Text(
+            "DateFormat.yMMMEd(getLanguageCode(context)).format(DateTime.now())",
+            style: TextStyle(fontSize: 9),
+          ),
+          Text(
+            DateFormat.yMMMEd(getLanguageCode(context)).format(DateTime.now()),
+          ),
+          const Text(
+            "DateFormat.yMMMEd().format(DateTime.now())",
+            style: TextStyle(fontSize: 9),
+          ),
+          Text(
+            DateFormat.yMMMEd().format(DateTime.now()),
+          ),
+          const Text(
+            "DateFormat.jm(getLanguageCode(context)).format(DateTime.now())",
+            style: TextStyle(fontSize: 9),
+          ),
+          Text(
+            DateFormat.jm(getLanguageCode(context)).format(DateTime.now()),
+          ),
+          const Text(
+            "DateFormat.jm().format(DateTime.now())",
+            style: TextStyle(fontSize: 9),
+          ),
+          Text(
+            DateFormat.jm().format(DateTime.now()),
+          ),
           Login(
             yes: (uid) {
               return Column(
