@@ -1,4 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/meetup/meetup.config.dart';
 import 'package:flutter/material.dart';
 
 class MeetupAdminSettingsScreen extends StatefulWidget {
@@ -29,40 +30,44 @@ class _MeetupAdminSettingsState extends State<MeetupAdminSettingsScreen> {
         meetup: widget.meetup,
         builder: (meetup) => Column(
           children: [
-            ListTile(
-              leading: const Icon(
-                Icons.grade,
-              ),
-              title: Text(
-                T.recommendWithCount.args(
-                  {'count': recommendationCount(meetup.recommendOrder)},
+            Padding(
+              padding: MeetupConfig.adminMeetupSettingScreenPadding,
+              child: ListTile(
+                leading: const Icon(
+                  Icons.grade,
                 ),
-              ),
-              subtitle: Text(
-                T.inputRecommendHint.tr,
-              ),
-              onTap: () async {
-                final text = await input(
-                  context: context,
-                  initialValue: meetup.recommendOrder != null
-                      ? "${meetup.recommendOrder}"
-                      : "",
-                  title: T.recommend.tr,
-                  hintText: T.inputRecommendHint.tr,
-                );
+                title: Text(
+                  T.recommendWithCount.args(
+                    {'count': recommendationCount(meetup.recommendOrder)},
+                  ),
+                ),
+                subtitle: Text(
+                  T.inputRecommendHint.tr,
+                ),
+                onTap: () async {
+                  final text = await input(
+                    context: context,
+                    initialValue: meetup.recommendOrder != null
+                        ? "${meetup.recommendOrder}"
+                        : "",
+                    title: T.recommend.tr,
+                    hintText: T.inputRecommendHint.tr,
+                  );
 
-                if (text != null) {
-                  if (text == "0") {
-                    final re = await confirm(
-                        context: context,
-                        title: T.recommendRemove.tr,
-                        message: T.recommendRemoveMessage.tr);
+                  if (text != null) {
+                    if (text == "0") {
+                      final re = await confirm(
+                          context: context,
+                          title: T.recommendRemove.tr,
+                          message: T.recommendRemoveMessage.tr);
 
-                    if (re != true) return;
+                      if (re != true) return;
+                    }
+                    await meetup.update(
+                        recommendOrder: int.tryParse(text) ?? 0);
                   }
-                  await meetup.update(recommendOrder: int.tryParse(text) ?? 0);
-                }
-              },
+                },
+              ),
             ),
           ],
         ),
