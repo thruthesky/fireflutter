@@ -24,6 +24,36 @@ String getLanguageCode(BuildContext context) {
 
 /// Returns the current locale in "[langaugeCode]_[countryCode]" format using [Intl] package.
 /// Example: "en_US", "ko_KR"
-String getCurrentLocale() {
+String getIntlCurrentLocale() {
   return Intl.getCurrentLocale();
+}
+
+/// Initialize the default Intl locale  base from Devicelocale.currentLocale
+/// Or directly passing a locale string.
+/// If Devicelocale.currentLocale and locale are both empty or null, the default locale will be set to "en_US"
+///
+/// Usage
+/// ```dart
+/// @override
+/// void initState() {
+///   super.initState();;
+///   initIntlDefaultLocale();
+/// }
+/// ```
+///
+/// If this is properly set, the display of DateFormat method will automatically update the display to correspanding locale.
+///
+/// Example:
+/// DateFormat.yMMMEd().format(DateTime.now());
+///
+/// The code above should automatically adjust base to the current locale.
+///
+/// Important. this may not not reflect right away on first page load.
+/// So adding current code is still a mus
+/// Example:
+/// DateFormat.yMMMEd(getLanguageCode(context)).format(DateTime.now())
+///
+initIntlDefaultLocale({String? locale}) async {
+  locale ??= (await Devicelocale.currentLocale) ?? 'en_US';
+  Intl.defaultLocale = locale;
 }
