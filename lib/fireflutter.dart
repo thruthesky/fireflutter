@@ -123,6 +123,8 @@ export 'src/meetup/meetup_event/meetup_event.service.dart';
 export 'src/meetup/meetup_event/widgets/meetup_event.view.screen.dart';
 export 'src/meetup/meetup_event/widgets/meetup.event.list_view.dart';
 
+export 'src/meetup/meetup.config.dart';
+
 export 'src/messaging/chat.messaging.model.dart';
 export 'src/messaging/messaging.model.dart';
 export 'src/messaging/messaging.service.dart';

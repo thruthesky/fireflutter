@@ -33,8 +33,15 @@ class _MenuScreenState extends State<MeetupScreen> {
             Expanded(
               child: TabBarView(
                 children: [
-                  const MeetupListView(
-                    padding: EdgeInsets.all(0),
+                  MeetupListView(
+                    padding: const EdgeInsets.all(0),
+                    itemBuilder: (meetup, index) {
+                      return Card(
+                        child: MeetupCard(
+                          meetup: meetup,
+                        ),
+                      );
+                    },
                   ),
                   MeetupListView(
                     padding: const EdgeInsets.all(0),

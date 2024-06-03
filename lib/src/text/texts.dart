@@ -566,6 +566,11 @@ class T {
     'ko': '추천',
   };
 
+    static Mintl recommendWithCount = {
+    'en': 'Recommend #count',
+    'ko': '추천 #count',
+  };
+
   static Mintl inputRecommendHint = {
     'en':
         'Input number only. Higher number will shown first. 0 will remove the recommendation.',
