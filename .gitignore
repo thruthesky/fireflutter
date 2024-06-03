@@ -21,8 +21,8 @@ example/**/firebase_options.dart
 example/.gitignore
 example/.metadata
 example/pubspec.lock
-example/android
-# example/ios
+# example/android
+example/ios
 example/linux
 example/macos
 example/web
