@@ -64,11 +64,14 @@ class _ChatAppState extends State<ChatApp> {
     UserService.instance.init();
     AdminService.instance.init();
     initFirstInternetConnection();
+
+    initIntlDefaultLocale();
   }
 
   @override
   Widget build(BuildContext context) {
     dog('chat admin uid: ${AdminService.instance.chatAdminUid}');
+
     return MaterialApp.router(
       routerConfig: router,
       localizationsDelegates: const [

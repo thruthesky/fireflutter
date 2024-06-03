@@ -411,44 +411,52 @@ UserListView()
 
 ## 좋아요
 
-- User likes are saved under `/user-likes` and `/user-who-i-like`.
-    - If A likes U, then A is saved under `/user-likes/U {A: true}` and U is saved under `/user-who-i-like/A { U: true}`.
-- The fireflutter client code needs to save `/user-likes/U {A: true}` only. The cloud function `userLike` will take action and it will save the counter part `/user-who-i-like` data and update the `noOfLikes` on the user's node.
+- 사용자의 좋아요는 내가 좋아요 한 경우에는 `/who-i-like` 에 저장되고, 다른 사람의 나를 좋아요 한 경우에는 `/who-like-me` 에 저장된다.
+    - 만약 A 가 B 를 좋아요 하면,
+      - `/who-i-like/A {B: true}` 와 같이 저정되고,
+      - `/who-like-me/B {A: true}` 와 같이 저장된다.
 
-- The data structure will be like below.
-    - When A like U,
 
+- 앱에서는 A 가 B 를 좋아요 할 경우, 오직 `/who-i-like/A {U: true}` 에만 값을 저장하면 된다. 나머지는 클라우드 함수가 처리를 한다.
+  - 위와 같이 문서가 저장되면, 클라우드 함수 `userLike` 가 이벤트를 받아서 동작하며,
+  - `/who-liked-me` 에 적절한 값을 저장하고
+  - 서로 좋아요 (주의: 2024. 06. 현재 서로 좋아요는 플러터 UserModel 에서 수행하는데, 클라우드 함수로 옮겨야 한다.)
+  - `noOfLikes`
+  등의 필요한 여러가지 작업을 수행한다.
+
+
+- 다음과 같은 예를 들 수 있다.
+
+
+A 가 B 를 좋아요 하면,
 ```json
-/user-likes/U { A: true }
-/user-who-i-like/A { U: true }
+/who-i-like/A { U: true }
+/who-liked-me/U { A: true }
 /users/U {noOfLikes: 1}
 ```
 
-- When A, B likes U,
-
+- A 와 B 가 C 를 좋아 하면?
 ```json
-/user-likes/U { A: true, B: true}
-/user-who-i-like/A {U: true}
-/user-who-i-like/B {U: true}
-/users/U {noOfLikes: 2}
+/who-i-like/A {C: true}
+/who-i-like/B {C: true}
+/who-like-me/C { A: true, B: true}
+/users/C {noOfLikes: 2}
 ```
 
-- When B unlinke U,
-
+- B 가 C 를 싫어요 하면? B 의 who-i-like 를 삭제하고, C 의 B 에 대한 who-like-me 를 삭제하고, C 의 noOfLikes 를 1 감소한다.
 ```json
-/user-likes/U { A: true }
-/user-who-i-like/A { U: true }
+/who-like-me/C { A: true }
+/who-i-like/A { C: true }
 /users/U {noOfLikes: 1}
 ```
 
-- When A likes U, W
-
+- A 가 C 와 D 를 좋아요 하면?
 ```json
-/user-likes/U { A: true }
-/user-likes/W { A: true }
-/user-who-i-like/A { U: true, W: true }
-/users/U {noOfLikes: 1}
-/users/W {noOfLikes: 1}
+/who-i-like/A { C: true, D: true }
+/who-like-me/C { A: true }
+/who-like-me/C { A: true }
+/users/C {noOfLikes: 1}
+/users/D {noOfLikes: 1}
 ```
 
 You can use the `like` method to perform a like and unlike user like bellow.
@@ -464,6 +472,7 @@ IconButton(
 
 ## 서로 좋아요
 
+참고, 서로 좋아요 코드를 플러터 UserModel 에서 클라우드 함수로 이동 시켜야 한다.
 
 - `UserModel.like()` 에서 A 가 B 를 좋아요 할 때, B 가 A 를 좋아요 한 상태이면 서로 좋아요를 표시하고,
 - `UserModel.like()` 에서 A 가 B 를 좋아요 해제 할 때, 서로 좋아요 표리를 없앤다. 즉, 둘 중 좋아요 해제를 한 명이라도 하면 둘다 해제하면 되는 것이다.
