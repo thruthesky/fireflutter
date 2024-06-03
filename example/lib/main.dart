@@ -73,7 +73,7 @@ class _ChatAppState extends State<ChatApp> {
 
     if (flagInitLocalization == false) {
       flagInitLocalization = true;
-      initIntlDefaultLocale();
+      initIntlDefaultLocale(context);
     }
 
     return MaterialApp.router(

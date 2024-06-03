@@ -53,7 +53,8 @@ String getIntlCurrentLocale() {
 /// Example:
 /// DateFormat.yMMMEd(getLanguageCode(context)).format(DateTime.now())
 ///
-initIntlDefaultLocale({String? locale}) async {
-  locale ??= (await Devicelocale.currentLocale) ?? 'en_US';
+initIntlDefaultLocale(BuildContext context, {String? locale}) async {
+  locale ??= View.of(context).platformDispatcher.locale.toString();
+  print('initIntlDefaultLocale: $locale');
   Intl.defaultLocale = locale;
 }
