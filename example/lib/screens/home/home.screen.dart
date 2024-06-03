@@ -32,9 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
           Text(
             'getLanguageCode: ${getLanguageCode(context)}',
           ),
-          Text(
-            'getDeviceCurrentLocale: ${getDeviceCurrentLocale(context)}',
-          ),
           const Text(
             "DateFormat.yMMMEd(getLanguageCode(context)).format(DateTime.now())",
             style: TextStyle(fontSize: 9),
@@ -43,18 +40,18 @@ class _HomeScreenState extends State<HomeScreen> {
             DateFormat.yMMMEd(getLanguageCode(context)).format(DateTime.now()),
           ),
           const Text(
-            "DateFormat.yMMMEd('ko').format(DateTime.now())",
-            style: TextStyle(fontSize: 9),
-          ),
-          Text(
-            DateFormat.yMMMEd('ko').format(DateTime.now()),
-          ),
-          const Text(
             "DateFormat.yMMMEd().format(DateTime.now())",
             style: TextStyle(fontSize: 9),
           ),
           Text(
             DateFormat.yMMMEd().format(DateTime.now()),
+          ),
+          const Text(
+            "DateFormat.jm(getLanguageCode(context)).format(DateTime.now())",
+            style: TextStyle(fontSize: 9),
+          ),
+          Text(
+            DateFormat.jm(getLanguageCode(context)).format(DateTime.now()),
           ),
           const Text(
             "DateFormat.jm().format(DateTime.now())",
