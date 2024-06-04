@@ -341,13 +341,15 @@ class ChatRoom {
   ///   - [roomId] 가 1:1 채팅방 아이디이면, 1:1 채팅방을 생성하고,
   ///   - 아니면, 그룹 채팅방을 생성한다.
   /// - [uid] 와 [roomId] 둘 다 들어오지 않으면, 그룹 채팅방으로 인식하고, roomId 를 자동 생성한다.
-  ///
+  ///-
   /// 주의, 채팅방이 존재하면 기존의 채팅방이 존재하면 몇 몇 속성이 덮어 쓰여진다.
   ///
   /// 예제 - 1:1 채팅방의 경우, 그냥 상대방의 uid 만 넣어서 호출하면 된다.
   /// ```dart
   /// await ChatRoom.create(uid: otherUserUid);
   /// ```
+  /// - [isVerifiedOnly] if the value of this is true it will only allow user to
+  ///  join the chat if they are verified user
   ///
   /// It creates the chat room information and it read and returns. Don't think about the speed of reading the data.
   ///
