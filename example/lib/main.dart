@@ -67,6 +67,8 @@ class _ChatAppState extends State<ChatApp> {
     //
     UserService.instance.init();
     AdminService.instance.init();
+    LinkService.instance.init(urlPrefix: "https://example.com");
+
     initFirstInternetConnection();
   }
 
