@@ -1,3 +1,11 @@
+## 0.3.32
+- Change in progress. Firebase Cloud Functions are not moving into FireFlutterExtensions
+- Change. The term club is replaced with meetup and the code was refactorred accordingly
+- Refactor. Text translation
+- Add. ChatRoomCreateButton widget
+- Update. documents
+
+
 ## 0.3.31
 
 - Updated chat deletion functionality. Users can now delete their own chats. Admins/Masters have the ability to delete chats from other users.
