@@ -1,5 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/meetup/meetup.config.dart';
 import 'package:flutter/material.dart';
 
 class MeetupAdminSettingsScreen extends StatefulWidget {
