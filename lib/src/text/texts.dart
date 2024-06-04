@@ -235,12 +235,10 @@ class T {
     'ko': '일정',
   };
 
-
   static Mintl notice = {
     'en': 'Notice',
     'ko': '게시판',
   };
-
 
   static Mintl gallery = {
     'en': 'Gallery',
@@ -567,11 +565,6 @@ class T {
   static Mintl recommend = {
     'en': 'Recommend',
     'ko': '추천',
-  };
-
-  static Mintl all = {
-    'en': 'All',
-    'ko': '전체',
   };
 
   static Mintl recommendWithCount = {
