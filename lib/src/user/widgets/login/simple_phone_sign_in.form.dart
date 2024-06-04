@@ -469,7 +469,7 @@ class _SimplePhoneSignInState extends State<SimplePhoneSignInForm> {
   signinSuccess() async {
     dog('BEGIN: signinSuccess() method.');
     try {
-      await UserService.instance.login();
+      await UserService.instance.signOut();
       widget.onSignin.call();
     } catch (e) {
       dog('ERROR: signinSuccess() method. error: $e');
