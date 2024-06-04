@@ -78,9 +78,12 @@ class _ClubUpdateFormState extends State<MeetupUpdateForm> {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            T.meetupPhotoDescription.tr,
-            style: Theme.of(context).textTheme.labelMedium,
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(
+              T.meetupPhotoDescription.tr,
+              style: Theme.of(context).textTheme.labelSmall,
+            ),
           ),
           const SizedBox(height: 24),
           LabelField(

@@ -15,15 +15,23 @@ class MeetupViewRegisterFirstButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            label,
-            textAlign: TextAlign.center,
+      child: Card(
+        margin: const EdgeInsets.all(24),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                label,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              FittedBox(child: MeetupJoinButton(meetup: meetup)),
+            ],
           ),
-          MeetupJoinButton(meetup: meetup),
-        ],
+        ),
       ),
     );
   }

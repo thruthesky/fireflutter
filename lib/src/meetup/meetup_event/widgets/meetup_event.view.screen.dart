@@ -124,7 +124,7 @@ class _MeetupViewScreenState extends State<MeetupEventViewScreen> {
                       error(
                         context: context,
                         title: T.meetupMembershipRequired.tr,
-                        message: T.signUpFirstThenApplyToAttend.tr,
+                        message: T.joinFirstThenApplyToAttend.tr,
                       );
                       return;
                     }

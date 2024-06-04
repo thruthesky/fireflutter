@@ -6,12 +6,16 @@ import 'package:flutter/material.dart';
 ///
 /// Meetup list tile widget to show meetup information in a list.
 class MeetupListTile extends StatelessWidget {
-  const MeetupListTile({
+  MeetupListTile({
     super.key,
     required this.meetup,
+    this.padding = const EdgeInsets.all(16),
+    this.contentPadding = const EdgeInsets.all(0),
   });
 
   final Meetup meetup;
+  final EdgeInsets padding;
+  final EdgeInsets contentPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +25,7 @@ class MeetupListTile extends StatelessWidget {
         meetup: meetup,
       ),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: padding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -33,18 +37,27 @@ class MeetupListTile extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             const SizedBox(height: 8),
-            Text(
-              meetup.name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.titleSmall,
+            Padding(
+              padding: contentPadding,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    meetup.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  Text(
+                    meetup.description.cut(128),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                      '${T.members.tr}: ${meetup.users.length} ${T.noOfPeople.tr}'),
+                ],
+              ),
             ),
-            Text(
-              meetup.description.cut(128),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Text('${T.members.tr}: ${meetup.users.length} ${T.noOfPeople.tr}'),
           ],
         ),
       ),
