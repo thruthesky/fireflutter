@@ -90,6 +90,14 @@ By passing true on the [authRequired] on `ChatService.intance.showChatRoomCreate
 
 `DefaultChatRoomEditDialog` is a pre-made widget dialog for creating chat-room. if the chat room is `not yet exist` and the [authRequired] is set to `true` and [isVerifiedOnly] is set to `true` it will create a chat room that will only allow user that is verified.
 
+
+```dart
+ChatService.instance.showChatRoomCreate(
+  context: context
+  authRequired: true,
+);
+```
+
 ### Viewing Chat Room
 
 A `ChatRoomBody()` widget can be used to show chat room (room's messages with room input box).
