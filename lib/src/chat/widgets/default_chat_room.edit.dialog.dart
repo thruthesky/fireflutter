@@ -47,9 +47,6 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
       room = await ChatRoom.get(widget.roomId!);
       nameController.text = room?.name ?? '';
       descriptionController.text = room?.description ?? '';
-      // TODO cleanup
-      // Commented by @withcenter-dev2 2024-05-30
-      // open = room?.isGroupChat ?? false;
       open = (room?.isGroupChat ?? false) ? (room!.isOpenGroupChat) : false;
       isVerifiedOnly = room?.isVerifiedOnly ?? false;
       urlVerifiedUserOnly = room?.urlVerifiedUserOnly ?? false;
@@ -61,9 +58,10 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
   @override
   Widget build(BuildContext context) {
     if (isEdit && room?.isMaster == false && isAdmin == false) {
-      return const ErrorDialog(
-        title: '권한 없음',
-        message: '채팅방을 수정할 권한이 없습니다.',
+      return ErrorDialog(
+        // title: '권한 없음',
+        title: T.noPermission.tr,
+        message: T.noPermissionModifyChatRoom,
       );
     }
 
@@ -75,7 +73,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
           children: [
             const SizedBox(height: 24),
             Text(
-              isCreate ? '새로운 채팅' : '채팅방 설정',
+              isCreate ? T.newChat.tr : T.chatRoomSettings.tr,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 32),
@@ -83,9 +81,8 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: TextField(
                 controller: nameController,
-                decoration: const InputDecoration(
-                  // TODO trs
-                  labelText: '채팅방 이름',
+                decoration: InputDecoration(
+                  labelText: T.chatRoomName.tr,
                 ),
               ),
             ),
@@ -94,9 +91,8 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: TextField(
                 controller: descriptionController,
-                decoration: const InputDecoration(
-                  // TODO trs
-                  labelText: '채팅방 설명',
+                decoration: InputDecoration(
+                  labelText: T.chatRoomDescription.tr,
                 ),
               ),
             ),
@@ -106,10 +102,9 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: TextField(
                 controller: passwordController,
-                decoration: const InputDecoration(
-                  // TODO trs
-                  labelText: '가입 비밀번호',
-                  hintText: '비워두면 비밀번호가 필요하지 않습니다.',
+                decoration: InputDecoration(
+                  labelText: T.passwordToJoin.tr,
+                  hintText: T.leaveEmptyPasswordIfNotRequired.tr,
                 ),
               ),
             ),
@@ -139,7 +134,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
               progress == null || progress?.isNaN == true
                   ? TextButton.icon(
                       icon: const Icon(Icons.camera_alt),
-                      label: const Text('채팅방 아이콘 업로드'),
+                      label: Text(T.uploadChatRoomIcon.tr),
                       onPressed: () async {
                         await StorageService.instance.uploadAt(
                           context: context,
@@ -160,14 +155,14 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
               title: Padding(
                 padding: const EdgeInsets.only(left: 16),
                 child: Text(
-                  '오픈 채팅',
+                  T.openChat.tr,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
               subtitle: Padding(
                 padding: const EdgeInsets.only(left: 16),
                 child: Text(
-                  '다른 사용자가 채팅방에 참여할 수 있습니다.',
+                  T.anyoneCanJoinChat.tr,
                   style: Theme.of(context).textTheme.labelSmall,
                 ),
               ),
@@ -179,14 +174,14 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 title: Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
-                    '인증 회원 전용 입장',
+                    T.verifiedMembersOnly.tr,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
                 subtitle: Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
-                    '본인 인증 한 회원만 채팅방에 참여할 수 있습니다.',
+                    T.onlyVerifiedMembersCanJoinChat.tr,
                     style: Theme.of(context).textTheme.labelSmall,
                   ),
                 ),
@@ -198,14 +193,14 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 title: Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
-                    '인증 회원 전용 URL 입력',
+                    T.urlEntryOnlyForVerified.tr,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
                 subtitle: Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
-                    '본인 인증 한 회원만 URL 링크를 입력 할 수 있습니다.',
+                    T.onlyVerifiedMembersCanJoinChat.tr,
                     style: Theme.of(context).textTheme.labelSmall,
                   ),
                 ),
@@ -217,14 +212,14 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 title: Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
-                    '인증 회원 전용 사진 등록',
+                    T.photoUploadOnlyForVerified.tr,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
                 subtitle: Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
-                    '본인 인증 한 회원만 사진을 등록 할 수 있습니다.',
+                    T.onlyVerifiedMembersCanUploadPhoto.tr,
                     style: Theme.of(context).textTheme.labelSmall,
                   ),
                 ),
@@ -235,7 +230,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('취소'),
+          child: Text(T.cancel.tr),
         ),
         ElevatedButton(
           onPressed: () async {
@@ -244,7 +239,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
               error(
                 context: context,
                 title: '',
-                message: '채팅방 이름과 설명을 입력해주세요',
+                message: T.pleaseEnterChatRoomNameAndDescription.tr,
               );
               return;
             }
@@ -277,7 +272,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
               }
             }
           },
-          child: Text(isCreate ? '생성' : '수정'),
+          child: Text(isCreate ? T.create.tr : T.save.tr),
         ),
       ],
     );
