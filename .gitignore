@@ -1,3 +1,5 @@
+firebase_options.dart
+
 # firebase cloud funcions key
 key.ts
 **/key.ts
@@ -16,15 +18,8 @@ example/**/firebase_options.dart
 
 
 # example
-example/.gitignore
-example/.metadata
-example/pubspec.lock
-example/android
-example/ios
-example/linux
-example/macos
-example/web
-example/windows
+
+
 
 # Miscellaneous
 *.class
