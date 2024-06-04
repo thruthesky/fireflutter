@@ -248,6 +248,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 name: nameController.text,
                 description: descriptionController.text,
                 isOpenGroupChat: open,
+                isVerifiedOnly: isVerifiedOnly,
               );
 
               /// 채팅방을 생성하는 경우, chat-joins 에도 정보를 저장한다.
