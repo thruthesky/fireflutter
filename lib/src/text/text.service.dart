@@ -36,7 +36,7 @@ class TextService {
     // T.save: 'Save',
     // T.saved: 'Saved.',
     // T.name: 'Name',
-    T.profileUpdate: 'Profile Update',
+    // T.profileUpdate: 'Profile Update',
     T.profilePhoto: 'Profile Photo',
     T.backgroundImage: 'Background Image',
     T.takePhotoClosely: 'Take a photo closely',
@@ -48,7 +48,7 @@ class TextService {
     T.recentLoginRequiredForResign:
         'Please sign out and sign in again to resign. Recent login required for resign.',
     T.nameInputDescription: "Please enter your name.",
-    T.stateMessage: 'State Message',
+    // T.stateMessage: 'State Message',
     T.stateMessageDescription: 'Please enter your state message.',
     T.birthdateLabel: 'Birthdate',
     T.birthdateSelectDescription: 'Please select your birthdate.',

@@ -50,6 +50,14 @@ class T {
     'lo': 'ບັນທຶກ'
   };
 
+  static Mintl stateMessage = {
+    'en': 'State Message',
+    'ko': '상태 메시지',
+    'vi': 'Tin nhắn trạng thái',
+    'th': 'ข้อความสถานะ',
+    'lo': 'ຂໍ້ຄວາມສະຖານະ',
+  };
+
   static Mintl saved = {
     'en': 'Saved.',
     'ko': '저장되었습니다.',
@@ -145,16 +153,25 @@ class T {
   static Mintl block = {
     'en': 'Block',
     'ko': '차단',
+    'vi': 'Chặn',
+    'th': 'บล็อก',
+    'lo': 'ປິດບໍ່ໃຫ້ຕົນໄປ',
   };
 
   static Mintl unblock = {
     'en': 'Unblock',
     'ko': '차단 해제',
+    'vi': 'Bỏ chặn',
+    'th': 'ยกเลิกการบล็อก',
+    'lo': 'ປິດຕົນໄປ',
   };
 
   static Mintl report = {
     'en': 'Report',
     'ko': '신고',
+    'vi': 'Báo cáo',
+    'th': 'รายงาน',
+    'lo': 'ລາຍງານ'
   };
 
   static Mintl reportReceived = {
@@ -240,6 +257,14 @@ class T {
   static Mintl noOfPeople = {
     'en': 'people',
     'ko': '명',
+  };
+
+  static Mintl profileUpdate = {
+    'en': 'Profile update',
+    'ko': '프로필 수정',
+    'vi': 'Cập nhật hồ sơ',
+    'th': 'อัปเดตโปรไฟล์',
+    'lo': 'ອັບເດດຂໍ້ມູນຜູ້ໃຊ້',
   };
 
   static Mintl contact = {
@@ -355,6 +380,9 @@ class T {
   static Mintl login = {
     'en': 'Login',
     'ko': '로그인',
+    'vi': 'Đăng nhập',
+    'th': 'เข้าสู่ระบบ',
+    'lo': 'ເຂົ້າສູ່ລະບົບ',
   };
 
   static Mintl loginFirstToUseMeetup = {
@@ -628,7 +656,7 @@ class T {
   // static const String unblock = 'Unblock';
   // static const String report = 'Report';
   static const String leave = 'Leave';
-  static const String stateMessage = 'State Message';
+  // static const String stateMessage = 'State Message';
   static const String stateMessageInProfileUpdate = 'STATE MESSAGE';
   static const String hintInputStateMessage = 'Please input your state message';
   static const String stateMessageDescription = 'State Message Description';
@@ -652,7 +680,7 @@ class T {
       'recentLoginRequiredForResign';
 
   static const String backgroundImage = 'Background Image';
-  static const String profileUpdate = 'Profile Update';
+  // static const String profileUpdate = 'Profile Update';
   static const String profilePhoto = 'Profile Photo';
   static const String takePhotoClosely = 'Take a photo closely';
 
