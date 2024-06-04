@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -35,13 +36,43 @@ class _MenuScreenState extends State<MeetupScreen> {
                 children: [
                   MeetupListView(
                     padding: const EdgeInsets.all(0),
-                    itemBuilder: (meetup, index) {
-                      return Card(
-                        child: MeetupCard(
+                    itemBuilder: (meetup, index) => Card(
+                      child: InkWell(
+                        onTap: () => MeetupService.instance.showViewScreen(
+                          context: context,
                           meetup: meetup,
                         ),
-                      );
-                    },
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (meetup.photoUrl != null)
+                              CachedNetworkImage(
+                                imageUrl: meetup.photoUrl!,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
+                            const SizedBox(width: 8),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(meetup.name),
+                                Text(
+                                  meetup.description,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                                if (meetup.recommendOrder != null)
+                                  Text(
+                                    '${meetup.recommendOrder}',
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                   MeetupListView(
                     padding: const EdgeInsets.all(0),

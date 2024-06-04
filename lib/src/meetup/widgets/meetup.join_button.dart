@@ -29,7 +29,7 @@ class MeetupJoinButton extends StatelessWidget {
         }
       },
       child: Text(
-        meetup.joined ? T.unsubscribed.tr : T.signup.tr,
+        meetup.joined ? T.unjoin.tr : T.join.tr,
       ),
     );
   }
