@@ -86,6 +86,18 @@ And when the `ChatMessageListView` widget is displayed on the screen, it interna
 
 However, if you want to create a chat room more easily, you can use the pre-made `ChatService.instance.showChatRoomCreate()` function. If you want to customize the design, you can copy and modify `DefaultChatRoomEditDialog`.
 
+By passing true on the [authRequired] on `ChatService.intance.showChatRoomCreate` it will display a menu to allow only the verified user if `true` to enter the chat room and allow non-verified user if `false`. 
+
+`DefaultChatRoomEditDialog` is a pre-made widget dialog for creating chat-room. if the chat room is `not yet exist` and the [authRequired] is set to `true` and [isVerifiedOnly] is set to `true` it will create a chat room that will only allow user that is verified.
+
+
+```dart
+ChatService.instance.showChatRoomCreate(
+  context: context
+  authRequired: true,
+);
+```
+
 ### Viewing Chat Room
 
 A `ChatRoomBody()` widget can be used to show chat room (room's messages with room input box).
