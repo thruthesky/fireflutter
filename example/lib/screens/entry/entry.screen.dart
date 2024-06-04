@@ -29,13 +29,9 @@ class _EntryScreenState extends State<EntryScreen> {
               onSignInSuccess: () => context.go(HomeScreen.routeName),
               onSignInFailed: (e) => error(
                 context: context,
-                message: e.toString(),
+                message: '$e - FirebaseAuthException in EntryScreen',
               ),
               specialAccounts: const SpecialAccounts(
-                reviewPhoneNumber: '',
-                reviewEmail: '',
-                reviewPassword: '',
-                reviewSmsCode: '',
                 emailLogin: true,
               ),
             ),

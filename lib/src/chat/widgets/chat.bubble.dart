@@ -79,42 +79,8 @@ class ChatBubble extends StatelessWidget {
             ChatBubblePopupMenuButton(
               message: message,
               room: room,
-              onViewProfile: () =>
+              onViewProfile: (context, uid) =>
                   mayShowPublicProfileScreen(context, message.uid!),
-              onDeleteMessage: () async {
-                // Added Future.delayed by @withcenter-dev2 at 2024-05-30
-                // because showing a dialog is having a problem here.
-                // What I think is happening:
-                // in DropdownButton2, when onChange is called, it pops the dropdown.
-                // So when we showDialog, suddenly it pops it. Then it returns 'bool?' but
-                // it was expecting '_DropdownButton2<String>' (because it wanted to pop the dropdown)
-                // For confirmation. Because we may need a better solution.
-                await Future.delayed(const Duration(milliseconds: 1));
-                final deleteConfirmation = await confirm(
-                  context: context,
-                  title: "Delete Message",
-                  message:
-                      "Are you sure you want to delete this message? This action cannot be undone.",
-                );
-
-                if (deleteConfirmation ?? false) {
-                  await message.delete();
-                }
-              },
-              onBlock: () async {
-                // @withcenter-dev2: Please read notes on DeleteMessage above
-                // await Future.delayed(const Duration(milliseconds: 1));
-                final blockConfirmation = await confirm(
-                  context: context,
-                  title: "Block User",
-                  message:
-                      "Are you sure you want to block this user from the group chat?",
-                );
-                if (blockConfirmation ?? false) {
-                  await room.block(message.uid!);
-                }
-              },
-              onReply: () => print("onReply?.call(message);"),
               child: Container(
                 constraints: BoxConstraints(
                     maxWidth: MediaQuery.of(context).size.width * 0.6),

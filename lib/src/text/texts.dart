@@ -53,6 +53,9 @@ class T {
   static Mintl stateMessage = {
     'en': 'State Message',
     'ko': '상태 메시지',
+    'vi': 'Tin nhắn trạng thái',
+    'th': 'ข้อความสถานะ',
+    'lo': 'ຂໍ້ຄວາມສະຖານະ',
   };
 
   static Mintl saved = {
@@ -150,16 +153,25 @@ class T {
   static Mintl block = {
     'en': 'Block',
     'ko': '차단',
+    'vi': 'Chặn',
+    'th': 'บล็อก',
+    'lo': 'ປິດບໍ່ໃຫ້ຕົນໄປ',
   };
 
   static Mintl unblock = {
     'en': 'Unblock',
     'ko': '차단 해제',
+    'vi': 'Bỏ chặn',
+    'th': 'ยกเลิกการบล็อก',
+    'lo': 'ປິດຕົນໄປ',
   };
 
   static Mintl report = {
     'en': 'Report',
     'ko': '신고',
+    'vi': 'Báo cáo',
+    'th': 'รายงาน',
+    'lo': 'ລາຍງານ'
   };
 
   static Mintl reportReceived = {
@@ -250,10 +262,13 @@ class T {
   static Mintl profileUpdate = {
     'en': 'Profile update',
     'ko': '프로필 수정',
+    'vi': 'Cập nhật hồ sơ',
+    'th': 'อัปเดตโปรไฟล์',
+    'lo': 'ອັບເດດຂໍ້ມູນຜູ້ໃຊ້',
   };
 
-  static Mintl contactUs = {
-    'en': 'Contact Us',
+  static Mintl contact = {
+    'en': 'Contact',
     'ko': '문의하기',
   };
 
@@ -365,6 +380,9 @@ class T {
   static Mintl login = {
     'en': 'Login',
     'ko': '로그인',
+    'vi': 'Đăng nhập',
+    'th': 'เข้าสู่ระบบ',
+    'lo': 'ເຂົ້າສູ່ລະບົບ',
   };
 
   static Mintl loginFirstToUseMeetup = {
@@ -617,20 +635,47 @@ class T {
 
   static const String chatMessageDelete = 'Delete';
   static const String chatMessageDeleted = 'This message is deleted.';
-
   static const String chatBlockedUserList = 'Blocked users';
-
   static const String chatEmptyBlockedUserList = 'No blocked users.';
   static const String chatMessageListPermissionDenied = 'Permission denied.';
-
   static const String chatSendMessageBlockedUser = 'You are blocked.';
-
   static const String chatMessageListViewBlockedUser =
       'You are blocked from this chat.';
-
   static const String readMore = 'Read More';
   static const String viewProfile = 'View Profile';
   // static const String reply = 'Reply';
+  static const String deleteMessage = 'Delete Message';
+  static const String deleteMessageConfirmation =
+      "Are you sure you want to delete this message? This action cannot be undone.";
+  static const String blockUser = 'Block User';
+  static const String blockUserChatConfirmation =
+      "Are you sure you want to block this user from the chat room?";
+  static const String noPermission = 'No permission.';
+  static const String noPermissionModifyChatRoom =
+      'You do not have permission to modify the chat room.';
+  static const String newChat = 'New Chat';
+  static const String chatRoomSettings = 'Chat Room Settings';
+  static const String chatRoomName = 'Chat Room Name';
+  static const String chatRoomDescription = 'Chat Room Description';
+  static const String passwordToJoin = 'Password to Join';
+  static const String leaveEmptyPasswordIfNotRequired =
+      'Empty means no password.';
+  static const String uploadChatRoomIcon = 'Upload Chat Room Icon';
+  static const String openChat = 'Open Chat';
+  static const String anyoneCanJoinChat = 'Anyone can join.';
+  static const String verifiedMembersOnly = 'Verified members only';
+  static const String onlyVerifiedMembersCanJoinChat =
+      'Must be verified to join.';
+  static const String urlEntryOnlyForVerified = 'URL Entry Only for Verified';
+  static const String onlyVerifiedMembersCanEnterViaUrl =
+      'Only verified members can enter via URL';
+  static const String photoUploadOnlyForVerified = "Upload Only for Verified";
+  static const String onlyVerifiedMembersCanUploadPhoto =
+      "Only verified can upload photos.";
+  static const String pleaseEnterChatRoomNameAndDescription =
+      'Please enter chat room name and description.';
+  static const String create = "Create";
+  // static const String edit = "Edit";
 
   /// User
   static const String setting = 'Setting';
