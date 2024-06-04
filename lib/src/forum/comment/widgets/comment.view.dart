@@ -119,19 +119,19 @@ class _CommnetViewState extends State<CommentView> {
                             value: 'block',
                             child: Blocked(
                               otherUserUid: widget.comment.uid,
-                              no: () =>  Text(T.block.tr),
-                              yes: () =>  Text(T.unblock.tr),
+                              no: () => Text(T.block.tr),
+                              yes: () => Text(T.unblock.tr),
                             ),
                           ),
-                         PopupMenuItem(
+                        PopupMenuItem(
                           value: 'report',
                           child: Text(T.report.tr),
                         ),
-                         PopupMenuItem(
+                        PopupMenuItem(
                           value: 'edit',
                           child: Text(T.edit.tr),
                         ),
-                         PopupMenuItem(
+                        PopupMenuItem(
                           value: 'delete',
                           child: Text(T.delete.tr),
                         ),
