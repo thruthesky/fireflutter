@@ -567,6 +567,11 @@ class T {
     'ko': '추천',
   };
 
+  static Mintl all = {
+    'en': 'All',
+    'ko': '전체',
+  };
+
   static Mintl recommendWithCount = {
     'en': 'Recommend #count',
     'ko': '추천 #count',
