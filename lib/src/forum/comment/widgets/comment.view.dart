@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -43,9 +44,22 @@ class _CommnetViewState extends State<CommentView> {
               Blocked(
                 otherUserUid: widget.comment.uid,
                 yes: () => SizedBox.fromSize(),
-                no: () => DisplayDatabasePhotos(
-                  urls: widget.comment.urls,
-                  ref: widget.comment.urlsRef,
+                no: () => Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: widget.comment.urls
+                      .map(
+                        (url) => ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: CachedNetworkImage(
+                            imageUrl: url,
+                            fit: BoxFit.cover,
+                            width: 200,
+                            height: 200,
+                          ),
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
               Theme(
@@ -119,19 +133,19 @@ class _CommnetViewState extends State<CommentView> {
                             value: 'block',
                             child: Blocked(
                               otherUserUid: widget.comment.uid,
-                              no: () =>  Text(T.block.tr),
-                              yes: () =>  Text(T.unblock.tr),
+                              no: () => Text(T.block.tr),
+                              yes: () => Text(T.unblock.tr),
                             ),
                           ),
-                         PopupMenuItem(
+                        PopupMenuItem(
                           value: 'report',
                           child: Text(T.report.tr),
                         ),
-                         PopupMenuItem(
+                        PopupMenuItem(
                           value: 'edit',
                           child: Text(T.edit.tr),
                         ),
-                         PopupMenuItem(
+                        PopupMenuItem(
                           value: 'delete',
                           child: Text(T.delete.tr),
                         ),
