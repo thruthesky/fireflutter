@@ -21,7 +21,10 @@ zoneErrorHandler(e, stackTrace) {
     dog("FirebaseException :  $e }");
   } else if (e is FireFlutterException) {
     dog("FireFlutterException: (${e.code}) - ${e.message}");
-    error(context: globalContext, message: e.message);
+    error(
+        context: globalContext,
+        message:
+            '${e.message} (${e.code}) - FireFlutterException caught in Zone');
   } else {
     dog("Unknown Error :  $e");
   }
