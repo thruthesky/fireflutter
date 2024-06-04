@@ -47,13 +47,16 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
           height: 40,
           child: Text(T.reply.tr),
         ),
-        if (message.mine || (room.isGroupChat && room.isMaster)) ...[
+        if ((message.mine || (room.isGroupChat && room.isMaster)) &&
+            !message.deleted) ...[
           PopupMenuItem<String>(
             value: Code.delete,
             child: Text(T.chatMessageDelete.tr),
           ),
         ],
-        if (!message.mine && message.uid != null)
+        if (!message.mine &&
+            message.uid != null &&
+            my?.hasBlocked(message.uid!) == false)
           PopupMenuItem<String>(
             value: Code.viewProfile,
             height: 40,
