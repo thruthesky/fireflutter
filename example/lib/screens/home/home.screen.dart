@@ -36,30 +36,30 @@ class _HomeScreenState extends State<HomeScreen> {
             "DateFormat.yMMMEd(getLanguageCode(context)).format(DateTime.now())",
             style: TextStyle(fontSize: 9),
           ),
-          Text(
-            DateFormat.yMMMEd(getLanguageCode(context)).format(DateTime.now()),
-          ),
+          // Text(
+          //   DateFormat.yMMMEd(getLanguageCode(context)).format(DateTime.now()),
+          // ),
           const Text(
             "DateFormat.yMMMEd().format(DateTime.now())",
             style: TextStyle(fontSize: 9),
           ),
-          Text(
-            DateFormat.yMMMEd().format(DateTime.now()),
-          ),
+          // Text(
+          //   DateFormat.yMMMEd().format(DateTime.now()),
+          // ),
           const Text(
             "DateFormat.jm(getLanguageCode(context)).format(DateTime.now())",
             style: TextStyle(fontSize: 9),
           ),
-          Text(
-            DateFormat.jm(getLanguageCode(context)).format(DateTime.now()),
-          ),
+          // Text(
+          //   DateFormat.jm(getLanguageCode(context)).format(DateTime.now()),
+          // ),
           const Text(
             "DateFormat.jm().format(DateTime.now())",
             style: TextStyle(fontSize: 9),
           ),
-          Text(
-            DateFormat.jm().format(DateTime.now()),
-          ),
+          // Text(
+          //   DateFormat.jm().format(DateTime.now()),
+          // ),
           Login(
             yes: (uid) {
               return Column(

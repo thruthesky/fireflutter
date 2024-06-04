@@ -649,8 +649,11 @@ class T {
   static const String deleteMessageConfirmation =
       "Are you sure you want to delete this message? This action cannot be undone.";
   static const String blockUser = 'Block User';
+  static const String unblockUser = 'Unblock User';
   static const String blockUserChatConfirmation =
       "Are you sure you want to block this user from the chat room?";
+  static const String unblockUserChatConfirmation =
+      "Are you sure you want to unblock this user from the chat room? This person may see all the messages in the chat room.";
   static const String noPermission = 'No permission.';
   static const String noPermissionModifyChatRoom =
       'You do not have permission to modify the chat room.';
