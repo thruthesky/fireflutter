@@ -181,9 +181,15 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
             MeetupDetails(meetup: widget.meetup),
             MeetupEventListView(
               meetup: widget.meetup,
-              separatorBuilder: (p0, p1) => const Divider(height: 16),
+              padding: const EdgeInsets.all(16),
+              separatorBuilder: (p0, p1) => const SizedBox(height: 16),
               emptyBuilder: () => Center(
-                child: Text(T.noEvent.tr),
+                child: Card(
+                    margin: const EdgeInsets.all(24),
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Text(T.noEvent.tr),
+                    )),
               ),
             ),
             MeetupDoc(
@@ -223,7 +229,12 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                           ),
                         ),
                         emptyBuilder: () => Center(
-                          child: Text(T.noNoticeYet.tr),
+                          child: Card(
+                              margin: const EdgeInsets.all(24),
+                              child: Padding(
+                                padding: const EdgeInsets.all(24.0),
+                                child: Text(T.noNoticeYet.tr),
+                              )),
                         ),
                       ),
                     )
@@ -254,7 +265,12 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                         mainAxisExtent: 240,
                       ),
                       emptyBuilder: () => Center(
-                        child: Text(T.noUploadPhotoYet.tr),
+                        child: Card(
+                          margin: const EdgeInsets.all(24),
+                          child: Padding(
+                              padding: const EdgeInsets.all(24.0),
+                              child: Text(T.noUploadPhotoYet.tr)),
+                        ),
                       ),
                     )
                   : MeetupViewRegisterFirstButton(

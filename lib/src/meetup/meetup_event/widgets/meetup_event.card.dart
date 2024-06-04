@@ -18,14 +18,16 @@ class MeetupEventCard extends StatelessWidget {
         context: context,
         event: event,
       ),
-      child: Container(
-        padding: const EdgeInsets.all(16),
+      child: Card(
+        clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (event.photoUrl != null)
               ClipRRect(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16)),
                 child: CachedNetworkImage(
                   imageUrl: event.photoUrl!,
                   width: double.infinity,
@@ -34,24 +36,31 @@ class MeetupEventCard extends StatelessWidget {
                 ),
               ),
             const SizedBox(height: 8),
-            Text(
-              event.title,
-              style: Theme.of(context).textTheme.titleSmall,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                event.title,
+                style: Theme.of(context).textTheme.titleSmall,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             if (event.meetAt != null)
-              Row(
-                children: [
-                  Text(
-                    DateFormat.yMMMEd().format(event.meetAt!),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    DateFormat.jm().format(event.meetAt!),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  children: [
+                    Text(
+                      DateFormat.yMMMEd().format(event.meetAt!),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      DateFormat.jm().format(event.meetAt!),
+                    ),
+                  ],
+                ),
               ),
+            const SizedBox(height: 16),
           ],
         ),
       ),

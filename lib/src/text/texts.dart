@@ -235,10 +235,13 @@ class T {
     'ko': '일정',
   };
 
+
   static Mintl notice = {
     'en': 'Notice',
     'ko': '게시판',
   };
+
+
   static Mintl gallery = {
     'en': 'Gallery',
     'ko': '사진첩',
