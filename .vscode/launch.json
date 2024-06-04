@@ -796,5 +796,25 @@
       "program": "lib/main.dart",
       "args": ["--dart-define", "MODE=noe"]
     },
+    {
+      "name": "Example (noe)- iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=noe"]
+    },
+    {
+      "name": "Example (noe)- iPhone SE (3rd generation)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone SE (3rd generation)",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=noe"]
+    },
   ]
 }

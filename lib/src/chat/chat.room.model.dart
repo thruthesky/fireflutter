@@ -358,6 +358,7 @@ class ChatRoom {
     String? iconUrl,
     String? description,
     bool? isOpenGroupChat,
+    bool? isVerifiedOnly,
   }) async {
     DatabaseReference ref;
     final int minusTime = DateTime.now().millisecondsSinceEpoch * -1;
@@ -392,6 +393,7 @@ class ChatRoom {
         Field.openGroupChatOrder: isOpenGroupChat == true ? minusTime : null,
         Field.createdAt: ServerValue.timestamp,
         Field.users: {myUid!: true},
+        Field.isVerifiedOnly: isVerifiedOnly,
         Field.master: myUid!,
       };
       await ref.update(data);
@@ -496,7 +498,7 @@ class ChatRoom {
       if (uid == myUid) {
         verified = my!.isVerified;
       } else {
-        verified = await User.getField(uid, Field.isVerified);
+        verified = await User.getField(uid, Field.isVerified) ?? false;
       }
       if (verified == false) {
         throw FireFlutterException(
