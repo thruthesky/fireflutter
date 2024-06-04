@@ -36,7 +36,7 @@ class _PostContentState extends State<PostContent> {
     /// 차단이 되었으면, 차단 메시지를 보여준다.
     return Blocked(
       otherUserUid: widget.post.uid,
-      no: () => Text(content),
+      no: () => LinkifyText(content),
       yes: () => const Text(T.blockedContentMessage),
     );
   }
