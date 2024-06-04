@@ -130,6 +130,10 @@ class ChatService {
     }
   }
 
+  /// Show a dialog to create a chat room.
+  ///
+  /// [authRequired] is used to restrict the access to the chat room for authenticated users only.
+  /// If [authRequired] is true, the user must authenticate before joining this chat room.
   Future<ChatRoom?> showChatRoomCreate({
     required BuildContext context,
     bool authRequired = false,
