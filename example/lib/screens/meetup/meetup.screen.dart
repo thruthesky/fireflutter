@@ -34,9 +34,14 @@ class _MenuScreenState extends State<MeetupScreen> {
             Expanded(
               child: TabBarView(
                 children: [
+                  const MeetupListView(
+                    padding: EdgeInsets.all(8),
+                  ),
                   MeetupListView(
-                    padding: const EdgeInsets.all(0),
+                    query: MeetupService.instance.recommendedQuery,
+                    padding: const EdgeInsets.all(16),
                     itemBuilder: (meetup, index) => Card(
+                      clipBehavior: Clip.antiAlias,
                       child: InkWell(
                         onTap: () => MeetupService.instance.showViewScreen(
                           context: context,
@@ -74,12 +79,6 @@ class _MenuScreenState extends State<MeetupScreen> {
                       ),
                     ),
                   ),
-                  MeetupListView(
-                    padding: const EdgeInsets.all(0),
-                    query: Meetup.col
-                        .where('hasPhoto', isEqualTo: true)
-                        .orderBy('recommendOrder', descending: true),
-                  )
                 ],
               ),
             ),

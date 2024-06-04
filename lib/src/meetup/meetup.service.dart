@@ -7,21 +7,11 @@ class MeetupService {
   static MeetupService? _instance;
   static MeetupService get instance => _instance ?? MeetupService._();
 
-  Query recommededQuery() => Meetup.col
+  Query get recommendedQuery => Meetup.col
       .where('hasPhoto', isEqualTo: true)
       .orderBy('recommendOrder', descending: true);
 
   MeetupService._();
-
-  MeetupCustomize customize = MeetupCustomize();
-
-  init({
-    MeetupCustomize? customize,
-  }) {
-    this.customize = customize ?? this.customize;
-    debugPrint(
-        'MeetupService.init() ${this.customize.meetupDetails} ${this.customize.meetupDetailsPhoto}');
-  }
 
   showViewScreen({
     required BuildContext context,

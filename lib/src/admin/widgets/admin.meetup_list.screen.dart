@@ -13,8 +13,8 @@ class AdminMeetupListScreen extends StatefulWidget {
 class _AdminMeetupListScreenState extends State<AdminMeetupListScreen> {
   String selectedItem = 'all';
   Map<String, dynamic> menuItem = {
-    'all': 'All',
-    'recommend': 'Recommend',
+    'all': T.all.tr,
+    'recommend': T.recommend.tr,
   };
 
   @override
@@ -44,8 +44,9 @@ class _AdminMeetupListScreenState extends State<AdminMeetupListScreen> {
           children: [
             Expanded(
               child: MeetupListView(
+                
                 query: (selectedItem == 'recommend')
-                    ? MeetupService.instance.recommededQuery()
+                    ? MeetupService.instance.recommendedQuery
                     : null,
                 padding: const EdgeInsets.all(0),
                 itemBuilder: (meetup, index) =>
