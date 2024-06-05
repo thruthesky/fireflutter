@@ -26,6 +26,8 @@ class ChatMessage {
   String? previewDescription;
   String? previewImageUrl;
 
+  ChatMessage? replyTo;
+
   bool deleted = false;
 
   bool get mine {
@@ -55,6 +57,7 @@ class ChatMessage {
     this.previewTitle,
     this.previewDescription,
     this.previewImageUrl,
+    this.replyTo,
     this.deleted = false,
   });
 
@@ -94,6 +97,9 @@ class ChatMessage {
       previewTitle: json['previewTitle'] as String?,
       previewDescription: json['previewDescription'] as String?,
       previewImageUrl: json['previewImageUrl'] as String?,
+      replyTo: json['replyTo'] != null
+          ? ChatMessage.fromJson(json['replyTo'])
+          : null,
       deleted: json['deleted'] as bool? ?? false,
     );
   }
@@ -110,6 +116,7 @@ class ChatMessage {
       'previewTitle': previewTitle,
       'previewDescription': previewDescription,
       'previewImageUrl': previewImageUrl,
+      'replyTo': replyTo,
       'deleted': deleted,
     };
   }
@@ -132,6 +139,7 @@ class ChatMessage {
       'previewTitle': null,
       'previewDescription': null,
       'previewImageUrl': null,
+      'replyTo': null,
     });
     // return ref!.remove();
   }

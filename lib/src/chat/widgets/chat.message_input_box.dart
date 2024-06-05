@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,7 @@ class ChatMessageInputBox extends StatefulWidget {
     this.sendIcon,
     this.onProgress,
     this.onSend,
+    this.replyTo,
   });
 
   final ChatModel chat;
@@ -25,6 +27,8 @@ class ChatMessageInputBox extends StatefulWidget {
   /// [double] is null when upload is completed.
   final void Function({String? text, String? url})? onSend;
 
+  final ValueNotifier<ChatMessage?>? replyTo;
+
   @override
   State<ChatMessageInputBox> createState() => _ChatMessageInputBoxState();
 }
@@ -32,6 +36,12 @@ class ChatMessageInputBox extends StatefulWidget {
 class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
   final inputController = TextEditingController();
   double? progress;
+
+  @override
+  void dispose() {
+    inputController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +53,109 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        ValueListenableBuilder<ChatMessage?>(
+          valueListenable: widget.replyTo ?? ValueNotifier(null),
+          builder: (context, replyTo, _) {
+            if (replyTo == null) {
+              return const SizedBox.shrink();
+            }
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Divider(
+                  height: 0,
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.reply),
+                                const SizedBox(width: 4),
+                                UserDisplayName(
+                                  uid: replyTo.uid!,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            if (replyTo.text != null)
+                              Text(
+                                '${replyTo.text}',
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            if (replyTo.url != null)
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(16),
+                                    topRight: Radius.circular(16),
+                                    bottomLeft: Radius.circular(16),
+                                    bottomRight: Radius.circular(16),
+                                  ),
+                                  child: Container(
+                                    constraints: BoxConstraints(
+                                        maxWidth:
+                                            MediaQuery.of(context).size.width *
+                                                0.6),
+                                    child: CachedNetworkImage(
+                                      imageUrl: replyTo.url!,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          const Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                      // if thumbnail is not available, show original image
+                                      errorWidget: (context, url, error) {
+                                        return const Icon(Icons.error_outline,
+                                            color: Colors.red);
+                                      },
+                                      errorListener: (value) => dog(
+                                          'Image not exist in storage: $value'),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            const SizedBox(
+                              height: 6,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        widget.replyTo?.value = null;
+                      },
+                      icon: const Icon(Icons.cancel),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        ),
         if (progress != null && !progress!.isNaN)
           LinearProgressIndicator(value: progress),
         const Divider(),
@@ -138,10 +251,17 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
 
   send({String? text, String? url}) async {
     if (text != null) {
-      await widget.chat.sendMessage(text: text);
+      await widget.chat.sendMessage(
+        text: text,
+        replyTo: widget.replyTo?.value,
+      );
     }
     if (url != null) {
-      await widget.chat.sendMessage(url: url);
+      await widget.chat.sendMessage(
+        url: url,
+        replyTo: widget.replyTo?.value,
+      );
     }
+    widget.replyTo?.value = null;
   }
 }

@@ -62,6 +62,8 @@ class _ChatRoomState extends State<ChatRoomBody> {
   /// 그래서, 채팅 화면 상단의 제목 부분이 깜빡거리지 않도록 한다.
   final loaded = ValueNotifier<bool>(false);
 
+  final ValueNotifier<ChatMessage?> replyTo = ValueNotifier(null);
+
   @override
   void initState() {
     super.initState();
@@ -160,6 +162,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
   void dispose() {
     /// 실시간 업데이트 subscription 해제
     _chat?.unsubscribeRoomUpdate();
+    replyTo.dispose();
     super.dispose();
   }
 
@@ -391,6 +394,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
                 ? ChatMessageListView(
                     chat: chat,
                     emptyBuilder: widget.emptyBuilder,
+                    replyTo: replyTo,
                   )
                 : const SizedBox.shrink(),
           ),
@@ -402,6 +406,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
             top: false,
             child: ChatMessageInputBox(
               chat: chat,
+              replyTo: replyTo,
             ),
           ),
       ],
