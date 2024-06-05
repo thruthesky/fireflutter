@@ -41,10 +41,20 @@
       "program": "lib/main.dart"
     },
     {
-      "name": "PhiLov - Emulator",
+      "name": "PhiLov - Emulator 5554",
       "request": "launch",
       "type": "dart",
       "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart"
+    },
+    
+    {
+      "name": "PhiLov - Emulator 5556",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5556",
       "flutterMode": "debug",
       "cwd": "apps/philov",
       "program": "lib/main.dart"

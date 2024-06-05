@@ -88,7 +88,7 @@ class ChatModel {
 
     /// 차단되면, 메시지를 전송하지 않고 에러를 낸다.
     if (force == false && UserService.instance.user?.isDisabled == true) {
-      throw FireFlutterException(Code.disabled, T.disabledOnSendMessage);
+      throw FireFlutterException(Code.disabled, T.disabledOnSendMessage.tr);
     }
 
     /// 방에 입장하지 않은 상태이면, [force] 가 true 이더라도 메시지를 전송하지 않는다.

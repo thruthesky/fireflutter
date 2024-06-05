@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/meetup/widgets/meetup.join_button.dart';
 import 'package:flutter/material.dart';
 
 class MeetupDetails extends StatelessWidget {
@@ -46,6 +45,43 @@ class MeetupDetails extends StatelessWidget {
                 ),
               ),
               Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        ChatService.instance.showChatRoomScreen(
+                          context: context,
+                          otherUid: meetup.master,
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          const Icon(Icons.chat),
+                          const SizedBox(width: 2),
+                          Text(T.contact.tr),
+                        ],
+                      ),
+                    ),
+                    if (meetup.isMaster) ...[
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () => MeetupService.instance
+                            .showUpdateScreen(context: context, meetup: meetup),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.edit),
+                            const SizedBox(width: 2),
+                            Text(T.edit.tr),
+                          ],
+                        ),
+                      ),
+                    ]
+                  ],
+                ),
+              ),
+              Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,43 +110,6 @@ class MeetupDetails extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    if (meetup.joined == false)
-                      MeetupJoinButton(meetup: meetup),
-                    ElevatedButton(
-                      onPressed: () {
-                        ChatService.instance.showChatRoomScreen(
-                          context: context,
-                          otherUid: meetup.master,
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          const Icon(Icons.chat),
-                          const SizedBox(width: 2),
-                          Text(T.contact.tr),
-                        ],
-                      ),
-                    ),
-                    if (meetup.isMaster)
-                      ElevatedButton(
-                        onPressed: () => MeetupService.instance
-                            .showUpdateScreen(context: context, meetup: meetup),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.edit),
-                            const SizedBox(width: 2),
-                            Text(T.edit.tr),
-                          ],
-                        ),
-                      ),
                   ],
                 ),
               ),

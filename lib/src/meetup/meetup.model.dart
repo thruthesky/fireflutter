@@ -16,6 +16,8 @@ class Meetup {
 
   final int? recommendOrder;
 
+  final List<String> blockedUsers;
+
   Meetup({
     required this.id,
     required this.uid,
@@ -26,12 +28,14 @@ class Meetup {
     required this.users,
     required this.reminder,
     this.recommendOrder,
+    required this.blockedUsers,
   });
 
   DocumentReference get ref => col.doc(id);
 
   bool get joined => users.contains(myUid);
   bool get isMaster => master == myUid;
+  bool get blocked => blockedUsers.contains(myUid);
 
   factory Meetup.fromSnapshot(DocumentSnapshot snapshot) {
     return Meetup.fromMap(snapshot.data() as Map, snapshot.id);
@@ -48,8 +52,8 @@ class Meetup {
       photoUrl: map['photoUrl'],
       users: List<String>.from((map['users'] ?? [])),
       reminder: map['reminder'] ?? '',
-
       recommendOrder: map['recommendOrder'],
+      blockedUsers: List<String>.from((map['blockedUsers'] ?? [])),
     );
   }
 
@@ -194,5 +198,90 @@ class Meetup {
     if (re != true) return false;
     await ref.delete();
     return true;
+  }
+
+  Future<void> unblockUser({
+    required BuildContext context,
+    required String otherUserUid,
+    bool ask = false,
+    bool notify = true,
+  }) async {
+    if (notLoggedIn) {
+      final re = await UserService.instance.loginRequired!(
+          context: context,
+          action: Code.unblock,
+          data: {
+            'otherUserUid': otherUserUid,
+          });
+      if (re != true) return;
+    }
+
+    if (ask) {
+      bool? re = await confirm(
+        context: context,
+        title: T.meetupUnblockUser.tr,
+        message: T.meetupUnblockConfirmMessage.tr,
+      );
+      if (re != true) return;
+    }
+
+    await ref.update({
+      'users': FieldValue.arrayUnion([otherUserUid]),
+      'blockedUsers': FieldValue.arrayRemove([otherUserUid]),
+    });
+
+    /// 차단 후 화면에 알림
+    if (notify && context.mounted) {
+      toast(
+        context: context,
+        title: T.unblocked.tr,
+        message: T.unblockedMessage.tr,
+      );
+    }
+  }
+
+  Future<void> blockUser({
+    required BuildContext context,
+    required String otherUserUid,
+    bool ask = false,
+    bool notify = true,
+  }) async {
+    if (notLoggedIn) {
+      final re = await UserService.instance.loginRequired!(
+          context: context,
+          action: Code.block,
+          data: {
+            'otherUserUid': otherUserUid,
+          });
+      if (re != true) return;
+    }
+
+    if (otherUserUid == myUid) {
+      toast(context: context, message: T.cannotBlockYourself.tr);
+      return;
+    }
+
+    if (ask) {
+      bool? re = await confirm(
+        context: context,
+        title: T.meetupBlockUser.tr,
+        message: T.meetupBlockConfirmMessage.tr,
+      );
+      if (re != true) return;
+    }
+
+    await ref.update({
+      'blockedUsers': FieldValue.arrayUnion([otherUserUid]),
+      'users': FieldValue.arrayRemove([otherUserUid]),
+    });
+
+    /// 차단 후 화면에 알림
+    if (notify && context.mounted) {
+      toast(
+        context: context,
+        title: T.blocked.tr,
+        message: T.blockedMessage.tr,
+      );
+    }
   }
 }

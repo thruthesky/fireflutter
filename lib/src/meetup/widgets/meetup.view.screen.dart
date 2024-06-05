@@ -1,4 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/meetup/widgets/meetup.join_button.dart';
 import 'package:flutter/material.dart';
 
 class MeetupViewScreen extends StatefulWidget {
@@ -26,6 +27,11 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
               builder: (meetup) => ValueListenableBuilder(
                 valueListenable: _tabIndex,
                 builder: (_, index, __) {
+                  if (index == 0 &&
+                      meetup.joined == false &&
+                      meetup.blocked == false) {
+                    return MeetupJoinButton(meetup: meetup);
+                  }
                   if (meetup.isMaster && index == 1) {
                     return TextButton(
                       onPressed: () =>
@@ -68,7 +74,27 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                             ],
                           ),
                         ),
-                      if (meetup.isMaster)
+                      PopupMenuItem(
+                        value: Code.members,
+                        child: Row(
+                          children: [
+                            const Icon(Icons.people_alt_outlined),
+                            const SizedBox(width: 8),
+                            Text(T.members.tr),
+                          ],
+                        ),
+                      ),
+                      if (meetup.isMaster) ...[
+                        PopupMenuItem(
+                          value: Code.blockUser,
+                          child: Row(
+                            children: [
+                              const Icon(Icons.block_rounded),
+                              const SizedBox(width: 8),
+                              Text(T.blockedMembers.tr),
+                            ],
+                          ),
+                        ),
                         PopupMenuItem(
                           value: Code.edit,
                           child: Row(
@@ -79,6 +105,7 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                             ],
                           ),
                         ),
+                      ],
                       if (meetup.joined)
                         PopupMenuItem(
                           value: Code.leave,
@@ -90,7 +117,7 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                             ],
                           ),
                         )
-                      else
+                      else if (meetup.blocked == false)
                         PopupMenuItem(
                           value: Code.join,
                           child: Row(
@@ -101,6 +128,16 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                             ],
                           ),
                         ),
+                      PopupMenuItem(
+                        value: Code.chat,
+                        child: Row(
+                          children: [
+                            const Icon(Icons.chat),
+                            const SizedBox(width: 8),
+                            Text(T.contact.tr),
+                          ],
+                        ),
+                      ),
                       if (meetup.isMaster) ...[
                         const PopupMenuDivider(),
                         PopupMenuItem(
@@ -132,12 +169,27 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                         context: context,
                         meetup: widget.meetup,
                       );
+                    } else if (code == Code.members) {
+                      MeetupService.instance.showMembersScreen(
+                        context: context,
+                        meetup: widget.meetup,
+                      );
+                    } else if (code == Code.blockUser) {
+                      MeetupService.instance.showBlockedMembersScreen(
+                        context: context,
+                        meetup: widget.meetup,
+                      );
                     } else if (code == Code.delete) {
                       final deleted =
                           await widget.meetup.delete(context: context);
                       if (deleted == true) {
                         Navigator.of(context).pop();
                       }
+                    } else if (code == Code.chat) {
+                      ChatService.instance.showChatRoomScreen(
+                        context: context,
+                        otherUid: meetup.master,
+                      );
                     } else if (code == Code.leave) {
                       await widget.meetup.leave();
                     } else if (code == Code.join) {
@@ -194,25 +246,35 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
             ),
             MeetupDoc(
               meetup: widget.meetup,
-              builder: (meetup) => meetup.users.contains(myUid)
-                  ? GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => FocusScope.of(context).unfocus(),
-                      child: ChatRoomBody(
-                        roomId: widget.meetup.id,
-                        displayAppBar: false,
-                        appBarBottomSpacing: 0,
-                      ),
-                    )
-                  : MeetupViewRegisterFirstButton(
-                      meetup: meetup,
-                      label: T.joinMeetupToChat.tr,
+              builder: (meetup) {
+                if (meetup.users.contains(myUid)) {
+                  return GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => FocusScope.of(context).unfocus(),
+                    child: ChatRoomBody(
+                      roomId: widget.meetup.id,
+                      displayAppBar: false,
+                      appBarBottomSpacing: 0,
                     ),
+                  );
+                } else if (meetup.blocked == true) {
+                  return MeetupViewBlocked(
+                    meetup: meetup,
+                    label: T.meetupChatBlocked.tr,
+                  );
+                } else {
+                  return MeetupViewRegisterFirstButton(
+                    meetup: meetup,
+                    label: T.joinMeetupToChat.tr,
+                  );
+                }
+              },
             ),
             MeetupDoc(
-              meetup: widget.meetup,
-              builder: (meetup) => meetup.users.contains(myUid)
-                  ? ListTileTheme(
+                meetup: widget.meetup,
+                builder: (meetup) {
+                  if (meetup.users.contains(myUid)) {
+                    return ListTileTheme(
                       child: PostListView(
                         category: '${widget.meetup.id}-meetup-post',
                         padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
@@ -237,16 +299,24 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                               )),
                         ),
                       ),
-                    )
-                  : MeetupViewRegisterFirstButton(
+                    );
+                  } else if (meetup.blocked == true) {
+                    return MeetupViewBlocked(
+                      meetup: meetup,
+                      label: T.meetupViewNoticeBlocked.tr,
+                    );
+                  } else {
+                    return MeetupViewRegisterFirstButton(
                       meetup: meetup,
                       label: T.joinMeetupToViewNotice.tr,
-                    ),
-            ),
+                    );
+                  }
+                }),
             MeetupDoc(
-              meetup: widget.meetup,
-              builder: (meetup) => meetup.users.contains(myUid)
-                  ? PostListView.gridView(
+                meetup: widget.meetup,
+                builder: (meetup) {
+                  if (meetup.users.contains(myUid)) {
+                    return PostListView.gridView(
                       category: '${widget.meetup.id}-meetup-gallery',
                       padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
                       itemBuilder: (post, i) => ClipRRect(
@@ -272,12 +342,19 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                               child: Text(T.noUploadPhotoYet.tr)),
                         ),
                       ),
-                    )
-                  : MeetupViewRegisterFirstButton(
+                    );
+                  } else if (meetup.blocked == true) {
+                    return MeetupViewBlocked(
+                      meetup: meetup,
+                      label: T.meetupViewGalleryBlocked.tr,
+                    );
+                  } else {
+                    return MeetupViewRegisterFirstButton(
                       meetup: meetup,
                       label: T.joinMeetupToViewGallery.tr,
-                    ),
-            ),
+                    );
+                  }
+                }),
           ],
         ),
       ),

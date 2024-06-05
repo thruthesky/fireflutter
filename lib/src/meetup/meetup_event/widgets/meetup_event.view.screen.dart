@@ -120,6 +120,16 @@ class _MeetupViewScreenState extends State<MeetupEventViewScreen> {
                   onPressed: () async {
                     /// * Refactor this not to access database. Or caching the meetup data.
                     final meetup = await Meetup.get(id: event.meetupId!);
+
+                    if( meetup.blocked == true) {
+                      error(
+                        context: context,
+                        title: T.meetupEventApplyAttendBlocked.tr,
+                        message: T.meetupEventApplyAttendBlockedMessage.tr,
+                      );
+                      return;
+                    }
+
                     if (meetup.joined == false) {
                       error(
                         context: context,
