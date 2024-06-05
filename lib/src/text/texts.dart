@@ -506,7 +506,7 @@ class T {
     'ko': '모임 날짜 & 시간',
   };
 
-  // TODO: ko translation club
+  
   static Mintl meetupMembershipRequired = {
     'en': 'Meetup membership required.',
     'ko': '클럽 가입 필요',
