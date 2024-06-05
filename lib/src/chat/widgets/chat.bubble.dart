@@ -81,56 +81,124 @@ class ChatBubble extends StatelessWidget {
               room: room,
               onViewProfile: (context, uid) =>
                   mayShowPublicProfileScreen(context, message.uid!),
-              child: Container(
-                constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width * 0.6),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+              onReplyMessage: (context, message) {
+                onReply?.call(message);
+              },
+              child: Column(
+                crossAxisAlignment: message.mine
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
+                children: [
+                  if (message.replyTo != null) ...[
                     Container(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: ((message.replyTo?.mine ?? false)
+                                ? Colors.amber.shade200
+                                : Colors.grey.shade200)
+                            .withAlpha(120),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16),
+                          bottomLeft: Radius.circular(16),
+                          bottomRight: Radius.circular(16),
+                        ),
+                      ),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: message.mine
-                            ? Colors.amber.shade200
-                            : Colors.grey.shade200,
-                        borderRadius: borderRadius(),
-                      ),
-                      child: message.deleted
-                          ? Text(T.chatMessageDeleted.tr)
-                          : LinkifyText(
-                              selectable: false,
-                              text.orBlocked(
-                                  message.uid!, T.blockedChatMessage),
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                    ),
-                    if (isLongText)
-                      TextButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => ChatReadMoreDialog(
-                                message: message,
+                      child: Column(
+                        mainAxisAlignment: message.mine
+                            ? MainAxisAlignment.end
+                            : MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.reply),
+                              const SizedBox(width: 4),
+                              UserDisplayName(
+                                uid: message.replyTo!.uid!,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            );
-                          },
-                          child: Text(T.readMore.tr)),
-                    if (message.hasUrlPreview) ...[
-                      const SizedBox(height: 8),
-                      UrlPreview(
-                        previewUrl: message.previewUrl!,
-                        title: message.previewTitle,
-                        description: message.previewDescription,
-                        imageUrl: message.previewImageUrl,
+                            ],
+                          ),
+                          Text(
+                            '${message.replyTo!.text}',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ],
-                ),
+                  Container(
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.6),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: message.mine
+                                ? Colors.amber.shade200
+                                : Colors.grey.shade200,
+                            borderRadius: borderRadius(),
+                          ),
+                          child: message.deleted
+                              ? Text(T.chatMessageDeleted.tr)
+                              : LinkifyText(
+                                  selectable: false,
+                                  text.orBlocked(
+                                      message.uid!, T.blockedChatMessage),
+                                  style: const TextStyle(color: Colors.black),
+                                ),
+                        ),
+                        if (isLongText)
+                          TextButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => ChatReadMoreDialog(
+                                    message: message,
+                                  ),
+                                );
+                              },
+                              child: Text(T.readMore.tr)),
+                        if (message.hasUrlPreview) ...[
+                          const SizedBox(height: 8),
+                          UrlPreview(
+                            previewUrl: message.previewUrl!,
+                            title: message.previewTitle,
+                            description: message.previewDescription,
+                            imageUrl: message.previewImageUrl,
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           // image
-          if (message.url != null) cachedImage(context, message.url!),
+          if (message.url != null)
+            ChatBubblePopupMenuButton(
+              message: message,
+              room: room,
+              onViewProfile: (context, uid) =>
+                  mayShowPublicProfileScreen(context, message.uid!),
+              onReplyMessage: (context, message) {
+                onReply?.call(message);
+              },
+              child: cachedImage(context, message.url!),
+            ),
 
           const SizedBox(width: 8),
 

@@ -42,11 +42,12 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
       position: RelativeRect.fromLTRB(offset.dx, offset.dy, offset.dx, 0),
       // color: Theme.of(context).colorScheme.primaryContainer,
       items: [
-        PopupMenuItem<String>(
-          value: Code.reply,
-          height: 40,
-          child: Text(T.reply.tr),
-        ),
+        if (onReplyMessage != null)
+          PopupMenuItem<String>(
+            value: Code.reply,
+            height: 40,
+            child: Text(T.reply.tr),
+          ),
         if ((message.mine || (room.isGroupChat && room.isMaster)) &&
             !message.deleted) ...[
           PopupMenuItem<String>(
@@ -105,7 +106,7 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
   }
 
   void _onReplyMessage(BuildContext context, ChatMessage message) {
-    dog("@TODO reply message");
+    onReplyMessage!.call(context, message);
   }
 
   void _onDeleteMessage(BuildContext context, ChatMessage message) async {
