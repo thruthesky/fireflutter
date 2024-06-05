@@ -28,12 +28,11 @@ class ChatBubble extends StatelessWidget {
   final void Function(ChatMessage message)? onReply;
   final void Function(ChatMessage message)? onEdit;
 
-  static const allRadius = BorderRadius.only(
-    topLeft: Radius.circular(16),
-    topRight: Radius.circular(16),
-    bottomLeft: Radius.circular(16),
-    bottomRight: Radius.circular(16),
+  static const _allRadius = BorderRadius.all(
+    Radius.circular(16),
   );
+
+  static const double _avatarSize = 30;
 
   bool get isLongText =>
       message.text != null &&
@@ -66,18 +65,16 @@ class ChatBubble extends StatelessWidget {
             const Spacer(),
             dateAndName(context: context, uid: myUid!),
           ],
-
-          /// Other user avtar. size 30.
+          // Other user avtar. size 30.
           if (message.other)
             UserAvatar(
               key: ValueKey(message.key),
               uid: message.uid!,
               cacheId: message.uid,
-              size: 30,
+              size: _avatarSize,
               radius: 12,
               onTap: () => mayShowPublicProfileScreen(context, message.uid!),
             ),
-
           const SizedBox(width: 8),
           // Chat message text. size 60%
 
@@ -106,7 +103,7 @@ class ChatBubble extends StatelessWidget {
                                 ? Colors.amber.shade200
                                 : Colors.grey.shade200)
                             .withAlpha(120),
-                        borderRadius: allRadius,
+                        borderRadius: _allRadius,
                       ),
                       child: Column(
                         mainAxisAlignment: message.mine
@@ -151,7 +148,7 @@ class ChatBubble extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
                                 child: ClipRRect(
-                                  borderRadius: allRadius,
+                                  borderRadius: _allRadius,
                                   child: Container(
                                     child: CachedNetworkImage(
                                       imageUrl: message.replyTo!.url!,
@@ -181,7 +178,8 @@ class ChatBubble extends StatelessWidget {
                     children: [
                       Container(
                         constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * 0.6),
+                          maxWidth: MediaQuery.of(context).size.width * 0.6,
+                        ),
                         child: Column(
                           crossAxisAlignment: message.mine
                               ? CrossAxisAlignment.end
@@ -263,7 +261,7 @@ class ChatBubble extends StatelessWidget {
               uid: myUid!,
               initialData: my?.photoUrl,
               sync: true,
-              size: 30,
+              size: _avatarSize,
               radius: 12,
               onTap: () => mayShowPublicProfileScreen(context, myUid!),
             ),
