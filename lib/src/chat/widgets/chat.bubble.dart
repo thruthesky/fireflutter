@@ -92,7 +92,7 @@ class ChatBubble extends StatelessWidget {
                   if (message.replyTo != null) ...[
                     Container(
                       constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width * 0.6,
+                        maxWidth: MediaQuery.of(context).size.width * 0.5,
                       ),
                       decoration: BoxDecoration(
                         color: ((message.replyTo?.mine ?? false)
@@ -106,33 +106,76 @@ class ChatBubble extends StatelessWidget {
                           bottomRight: Radius.circular(16),
                         ),
                       ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
                       child: Column(
                         mainAxisAlignment: message.mine
                             ? MainAxisAlignment.end
                             : MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.reply),
-                              const SizedBox(width: 4),
-                              UserDisplayName(
-                                uid: message.replyTo!.uid!,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 12,
+                              right: 12,
+                              top: 6,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.reply),
+                                const SizedBox(width: 4),
+                                Flexible(
+                                  child: UserDisplayName(
+                                    uid: message.replyTo!.uid!,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (message.replyTo?.text != null)
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 12,
+                                right: 12,
+                                bottom: 6,
+                              ),
+                              child: Text(
+                                '${message.replyTo!.text}',
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          if (message.replyTo?.url != null)
+                            ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16),
+                                bottomLeft: Radius.circular(16),
+                                bottomRight: Radius.circular(16),
+                              ),
+                              child: Container(
+                                child: CachedNetworkImage(
+                                  imageUrl: message.replyTo!.url!,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                  // if thumbnail is not available, show original image
+                                  errorWidget: (context, url, error) {
+                                    return const Icon(Icons.error_outline,
+                                        color: Colors.red);
+                                  },
+                                  errorListener: (value) =>
+                                      dog('Image not exist in storage: $value'),
                                 ),
                               ),
-                            ],
-                          ),
-                          Text(
-                            '${message.replyTo!.text}',
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                            ),
                         ],
                       ),
                     ),

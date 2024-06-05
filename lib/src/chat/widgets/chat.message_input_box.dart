@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -42,10 +43,6 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
     super.dispose();
   }
 
-  _onReply() {
-    dog("replyTo: ${widget.replyTo?.value}");
-  }
-
   @override
   Widget build(BuildContext context) {
     if (widget.chat.room.isSingleChat &&
@@ -66,9 +63,12 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Divider(),
+                const Divider(
+                  height: 0,
+                ),
                 Row(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
                       child: Padding(
@@ -77,6 +77,9 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            const SizedBox(
+                              height: 12,
+                            ),
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -91,11 +94,43 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                                 ),
                               ],
                             ),
-                            Text(
-                              '${replyTo.text}',
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                            if (replyTo.text != null)
+                              Text(
+                                '${replyTo.text}',
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            if (replyTo.url != null)
+                              ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  topRight: Radius.circular(16),
+                                  bottomLeft: Radius.circular(16),
+                                  bottomRight: Radius.circular(16),
+                                ),
+                                child: Container(
+                                  constraints: BoxConstraints(
+                                      maxWidth:
+                                          MediaQuery.of(context).size.width *
+                                              0.6),
+                                  child: CachedNetworkImage(
+                                    imageUrl: replyTo.url!,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                    // if thumbnail is not available, show original image
+                                    errorWidget: (context, url, error) {
+                                      return const Icon(Icons.error_outline,
+                                          color: Colors.red);
+                                    },
+                                    errorListener: (value) => dog(
+                                        'Image not exist in storage: $value'),
+                                  ),
+                                ),
+                              ),
                           ],
                         ),
                       ),
