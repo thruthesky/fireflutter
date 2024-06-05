@@ -187,36 +187,45 @@ class ChatBubble extends StatelessWidget {
                               ? CrossAxisAlignment.end
                               : CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 6),
-                              decoration: BoxDecoration(
-                                color: message.mine
-                                    ? Colors.amber.shade200
-                                    : Colors.grey.shade200,
-                                borderRadius: borderRadius(),
-                              ),
-                              child: message.deleted
-                                  ? Text(T.chatMessageDeleted.tr)
-                                  : LinkifyText(
-                                      selectable: false,
-                                      text.orBlocked(
-                                          message.uid!, T.blockedChatMessage),
-                                      style:
-                                          const TextStyle(color: Colors.black),
-                                    ),
+                            Column(
+                              crossAxisAlignment: message.mine
+                                  ? CrossAxisAlignment.start
+                                  : CrossAxisAlignment.end,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: message.mine
+                                        ? Colors.amber.shade200
+                                        : Colors.grey.shade200,
+                                    borderRadius: borderRadius(),
+                                  ),
+                                  child: message.deleted
+                                      ? Text(T.chatMessageDeleted.tr)
+                                      : LinkifyText(
+                                          selectable: false,
+                                          text.orBlocked(message.uid!,
+                                              T.blockedChatMessage),
+                                          style: const TextStyle(
+                                              color: Colors.black),
+                                        ),
+                                ),
+                                if (isLongText)
+                                  TextButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            ChatReadMoreDialog(
+                                          message: message,
+                                        ),
+                                      );
+                                    },
+                                    child: Text(T.readMore.tr),
+                                  ),
+                              ],
                             ),
-                            if (isLongText)
-                              TextButton(
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => ChatReadMoreDialog(
-                                        message: message,
-                                      ),
-                                    );
-                                  },
-                                  child: Text(T.readMore.tr)),
                             if (message.hasUrlPreview) ...[
                               const SizedBox(height: 8),
                               UrlPreview(
