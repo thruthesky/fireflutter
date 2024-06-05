@@ -40,7 +40,6 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
     await showMenu(
       context: context,
       position: RelativeRect.fromLTRB(offset.dx, offset.dy, offset.dx, 0),
-      // color: Theme.of(context).colorScheme.primaryContainer,
       items: [
         if (onReplyMessage != null)
           PopupMenuItem<String>(
@@ -71,17 +70,12 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
             )
           else
             PopupMenuItem<String>(
-              // We may need to use a different term or specific term for blocking in a group chat
-              // in UX, the user may confuse that the block is the same for group chat and direct chat
               value: Code.block,
               child: Text(T.block.tr),
             ),
         ],
       ],
-      // Review if we need shadow or remove
-      // elevation: 0.0,
     ).then((value) {
-      // Handle the selected value if needed
       if (value != null) {
         if (value == Code.reply) {
           (onReplyMessage ?? _onReplyMessage).call(context, message);
