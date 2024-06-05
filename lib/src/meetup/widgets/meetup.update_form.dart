@@ -17,6 +17,7 @@ class MeetupUpdateForm extends StatefulWidget {
 class _ClubUpdateFormState extends State<MeetupUpdateForm> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  bool isVerifiedOnly = false;
 
   get meetup => widget.meetup;
 
@@ -26,6 +27,7 @@ class _ClubUpdateFormState extends State<MeetupUpdateForm> {
 
     nameController.text = meetup.name;
     descriptionController.text = meetup.description ?? '';
+    isVerifiedOnly = meetup.isVerifiedOnly;
   }
 
   @override
@@ -99,12 +101,26 @@ class _ClubUpdateFormState extends State<MeetupUpdateForm> {
             maxLines: 5,
           ),
           const SizedBox(height: 24),
+          SwitchListTile(
+            value: isVerifiedOnly,
+            onChanged: (v) => setState(() => isVerifiedOnly = v),
+            title: Text(
+              T.verifiedMembersOnly.tr,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            subtitle: Text(
+              T.onlyVerifiedMembersCanJoinChat.tr,
+              style: Theme.of(context).textTheme.labelSmall,
+            ),
+          ),
+          const SizedBox(height: 24),
           Align(
             child: OutlinedButton(
               onPressed: () async {
                 await meetup.update(
                   name: nameController.text,
                   description: descriptionController.text,
+                  isVerifiedOnly: isVerifiedOnly,
                 );
                 toast(context: context, message: T.meetupUpdateMessage.tr);
               },

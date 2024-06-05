@@ -35,18 +35,18 @@ class _MeetupViewScreenState extends State<MeetupEventViewScreen> {
         appBar: AppBar(
           title: Text(widget.event.title),
           actions: [
-            IconButton(
-              onPressed: () {
-                MeetupEventService.instance.showUpdateScreen(
-                  context: context,
-                  event: widget.event,
-                );
-              },
-              icon: const Icon(
-                Icons.edit,
+            if (event.uid == myUid)
+              IconButton(
+                onPressed: () {
+                  MeetupEventService.instance.showUpdateScreen(
+                    context: context,
+                    event: widget.event,
+                  );
+                },
+                icon: const Icon(
+                  Icons.edit,
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
           ],
         ),
         body: Padding(
@@ -121,7 +121,7 @@ class _MeetupViewScreenState extends State<MeetupEventViewScreen> {
                     /// * Refactor this not to access database. Or caching the meetup data.
                     final meetup = await Meetup.get(id: event.meetupId!);
 
-                    if( meetup.blocked == true) {
+                    if (meetup.blocked == true) {
                       error(
                         context: context,
                         title: T.meetupEventApplyAttendBlocked.tr,

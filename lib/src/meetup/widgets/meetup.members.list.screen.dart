@@ -33,23 +33,25 @@ class MeetupMembersListScreen extends StatelessWidget {
                 return Card(
                   child: UserTile(
                     user: user,
-                    trailing: PopupMenuButton(
-                      itemBuilder: (_) => [
-                        PopupMenuItem(
-                          value: Code.block,
-                          child: Text(T.block.tr),
-                        ),
-                      ],
-                      onSelected: (v) async {
-                        if (v == Code.block) {
-                          await meetupDoc.blockUser(
-                            context: context,
-                            otherUserUid: uid,
-                            ask: true,
-                          );
-                        }
-                      },
-                    ),
+                    trailing: (meetup.isMaster && user.uid != meetup.uid)
+                        ? PopupMenuButton(
+                            itemBuilder: (_) => [
+                              PopupMenuItem(
+                                value: Code.block,
+                                child: Text(T.block.tr),
+                              ),
+                            ],
+                            onSelected: (v) async {
+                              if (v == Code.block) {
+                                await meetupDoc.blockUser(
+                                  context: context,
+                                  otherUserUid: uid,
+                                  ask: true,
+                                );
+                              }
+                            },
+                          )
+                        : null,
                   ),
                 );
               },

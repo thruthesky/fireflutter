@@ -64,9 +64,11 @@ class Code {
   static const String meetupAdminSettings = 'meetupAdminSettings';
 
   /// Club error codes
-  static const clubAlreadyJoined = 'club-already-joined';
+  static const String clubAlreadyJoined = 'club-already-joined';
 
   /// Meetup error code
-  static const meetupAlreadyJoined = 'meetup-already-joined';
-  static const meetupNotJoined = 'meetup-not-joined';
+  static const String meetupAlreadyJoined = 'meetup-already-joined';
+  static const String meetupNotJoined = 'meetup-not-joined';
+
+  static const String meetupNotVerified = 'meetupNotVerified';
 }
