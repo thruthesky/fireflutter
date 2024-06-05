@@ -101,36 +101,42 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             if (replyTo.url != null)
-                              ClipRRect(
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(16),
-                                  topRight: Radius.circular(16),
-                                  bottomLeft: Radius.circular(16),
-                                  bottomRight: Radius.circular(16),
-                                ),
-                                child: Container(
-                                  constraints: BoxConstraints(
-                                      maxWidth:
-                                          MediaQuery.of(context).size.width *
-                                              0.6),
-                                  child: CachedNetworkImage(
-                                    imageUrl: replyTo.url!,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) =>
-                                        const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: CircularProgressIndicator(),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(16),
+                                    topRight: Radius.circular(16),
+                                    bottomLeft: Radius.circular(16),
+                                    bottomRight: Radius.circular(16),
+                                  ),
+                                  child: Container(
+                                    constraints: BoxConstraints(
+                                        maxWidth:
+                                            MediaQuery.of(context).size.width *
+                                                0.6),
+                                    child: CachedNetworkImage(
+                                      imageUrl: replyTo.url!,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          const Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                      // if thumbnail is not available, show original image
+                                      errorWidget: (context, url, error) {
+                                        return const Icon(Icons.error_outline,
+                                            color: Colors.red);
+                                      },
+                                      errorListener: (value) => dog(
+                                          'Image not exist in storage: $value'),
                                     ),
-                                    // if thumbnail is not available, show original image
-                                    errorWidget: (context, url, error) {
-                                      return const Icon(Icons.error_outline,
-                                          color: Colors.red);
-                                    },
-                                    errorListener: (value) => dog(
-                                        'Image not exist in storage: $value'),
                                   ),
                                 ),
                               ),
+                            const SizedBox(
+                              height: 6,
+                            ),
                           ],
                         ),
                       ),
