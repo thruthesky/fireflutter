@@ -10,6 +10,7 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
     required this.child,
     this.onViewProfile,
     this.onBlockUser,
+    this.onUnblockUser,
     this.onDeleteMessage,
     this.onReplyMessage,
   });
@@ -19,6 +20,7 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
   final Widget child;
   final void Function(BuildContext context, String uid)? onViewProfile;
   final void Function(BuildContext context, String uid)? onBlockUser;
+  final void Function(BuildContext context, String uid)? onUnblockUser;
   final void Function(BuildContext context, ChatMessage message)?
       onDeleteMessage;
   final void Function(BuildContext context, ChatMessage message)?
@@ -45,25 +47,35 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
           height: 40,
           child: Text(T.reply.tr),
         ),
-        if (message.mine || (room.isGroupChat && room.isMaster)) ...[
+        if ((message.mine || (room.isGroupChat && room.isMaster)) &&
+            !message.deleted) ...[
           PopupMenuItem<String>(
             value: Code.delete,
             child: Text(T.chatMessageDelete.tr),
           ),
         ],
-        if (!message.mine && message.uid != null)
+        if (!message.mine &&
+            message.uid != null &&
+            my?.hasBlocked(message.uid!) == false)
           PopupMenuItem<String>(
             value: Code.viewProfile,
             height: 40,
             child: Text(T.viewProfile.tr),
           ),
-        if (room.isGroupChat && room.isMaster && !message.mine)
-          PopupMenuItem<String>(
-            // We may need to use a different term or specific term for blocking in a group chat
-            // in UX, the user may confuse that the block is the same for group chat and direct chat
-            value: Code.block,
-            child: Text(T.block.tr),
-          ),
+        if (room.isGroupChat && room.isMaster && !message.mine) ...[
+          if (room.blockedUsers.contains(message.uid))
+            PopupMenuItem<String>(
+              value: Code.unblock,
+              child: Text(T.unblock.tr),
+            )
+          else
+            PopupMenuItem<String>(
+              // We may need to use a different term or specific term for blocking in a group chat
+              // in UX, the user may confuse that the block is the same for group chat and direct chat
+              value: Code.block,
+              child: Text(T.block.tr),
+            ),
+        ],
       ],
       // Review if we need shadow or remove
       // elevation: 0.0,
@@ -78,6 +90,8 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
           (onViewProfile ?? _onViewProfile).call(context, message.uid!);
         } else if (value == Code.block) {
           (onBlockUser ?? _onBlockUser).call(context, message.uid!);
+        } else if (value == Code.unblock) {
+          (onUnblockUser ?? _onUnblockUser).call(context, message.uid!);
         }
       }
     });
@@ -90,7 +104,7 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
     );
   }
 
-  void _onReplyMessage() {
+  void _onReplyMessage(BuildContext context, ChatMessage message) {
     dog("@TODO reply message");
   }
 
@@ -113,6 +127,17 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
     );
     if (blockConfirmation ?? false) {
       await room.block(message.uid!);
+    }
+  }
+
+  void _onUnblockUser(BuildContext context, String uid) async {
+    final unblockConfirmation = await confirm(
+      context: context,
+      title: T.unblockUser.tr,
+      message: T.unblockUserChatConfirmation.tr,
+    );
+    if (unblockConfirmation ?? false) {
+      await room.unblock(message.uid!);
     }
   }
 }

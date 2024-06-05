@@ -10,14 +10,17 @@ class ChatRoomCreateButton extends StatelessWidget {
   const ChatRoomCreateButton({
     super.key,
     this.authRequired = false,
+    this.icon,
   });
 
   final bool authRequired;
 
+  final Widget? icon;
+
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.add),
+      icon: icon ?? const Icon(Icons.add),
       onPressed: () async {
         final room = await ChatService.instance.showChatRoomCreate(
           context: context,
