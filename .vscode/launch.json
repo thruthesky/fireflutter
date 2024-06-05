@@ -14,6 +14,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "PhiLov - iPhone 14 Pro",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 14 Pro",
+      "flutterMode": "debug",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "PhiLov - iPhone 14 Pro Max",
       "request": "launch",
       "type": "dart",

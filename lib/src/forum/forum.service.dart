@@ -92,12 +92,15 @@ class ForumService {
   Future showPostViewScreen({
     required BuildContext context,
     required Post post,
+    Widget? viewBuilder,
   }) async {
     await showGeneralDialog(
       context: context,
-      pageBuilder: ($, $$, $$$) => PostViewScreen(
-        post: post,
-      ),
+      pageBuilder: ($, $$, $$$) =>
+          viewBuilder ??
+          PostViewScreen(
+            post: post,
+          ),
     );
   }
 
