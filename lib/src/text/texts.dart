@@ -239,6 +239,7 @@ class T {
     'en': 'Notice',
     'ko': '게시판',
   };
+
   static Mintl gallery = {
     'en': 'Gallery',
     'ko': '사진첩',
@@ -390,13 +391,13 @@ class T {
     'ko': '모임 기능을 이용하기 위해서는 로그인을 먼저 하셔야합니다.',
   };
 
-  static Mintl unsubscribed = {
-    'en': 'Unsubscribe',
+  static Mintl unjoin = {
+    'en': 'Unjoin',
     'ko': '탈퇴하기',
   };
 
-  static Mintl signup = {
-    'en': 'Sign up',
+  static Mintl join = {
+    'en': 'Join',
     'ko': '가입하기',
   };
 
@@ -531,8 +532,8 @@ class T {
     'ko': '클럽 가입 필요',
   };
 
-  static Mintl signUpFirstThenApplyToAttend = {
-    'en': 'Please sign up for the meetup first and then apply to attend.',
+  static Mintl joinFirstThenApplyToAttend = {
+    'en': 'Please join the meetup first and then apply to attend.',
     'ko': '모임에 먼저 가입을 하신 다음, 참석 신청을 주세요.',
   };
 
@@ -564,6 +565,11 @@ class T {
   static Mintl recommend = {
     'en': 'Recommend',
     'ko': '추천',
+  };
+
+  static Mintl all = {
+    'en': 'All',
+    'ko': '전체',
   };
 
   static Mintl recommendWithCount = {
@@ -648,8 +654,11 @@ class T {
   static const String deleteMessageConfirmation =
       "Are you sure you want to delete this message? This action cannot be undone.";
   static const String blockUser = 'Block User';
+  static const String unblockUser = 'Unblock User';
   static const String blockUserChatConfirmation =
       "Are you sure you want to block this user from the chat room?";
+  static const String unblockUserChatConfirmation =
+      "Are you sure you want to unblock this user from the chat room? This person may see all the messages in the chat room.";
   static const String noPermission = 'No permission.';
   static const String noPermissionModifyChatRoom =
       'You do not have permission to modify the chat room.';

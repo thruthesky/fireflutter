@@ -21,11 +21,17 @@ class MeetupDetails extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (meetup.photoUrl != null)
-                CachedNetworkImage(
-                  imageUrl: meetup.photoUrl!,
-                  width: double.infinity,
-                  height: 200,
-                  fit: BoxFit.cover,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                  child: Card(
+                    clipBehavior: Clip.antiAlias,
+                    child: CachedNetworkImage(
+                      imageUrl: meetup.photoUrl!,
+                      width: double.infinity,
+                      height: 200,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               Padding(
                 padding: const EdgeInsets.all(16),
@@ -42,35 +48,42 @@ class MeetupDetails extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        UserDoc(
-                          uid: meetup.master,
-                          builder: (user) {
-                            return Row(
-                              children: [
-                                Text('${T.host.tr}: ${user.displayName}'),
-                                if (meetup.isMaster)
-                                  IconButton(
-                                    onPressed: () => MeetupService.instance
-                                        .showUpdateScreen(
-                                            context: context, meetup: meetup),
-                                    icon: const Icon(Icons.edit),
-                                  ),
-                              ],
-                            );
-                          },
+                    Expanded(
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              UserDoc(
+                                uid: meetup.master,
+                                builder: (user) {
+                                  return Row(
+                                    children: [
+                                      Text('${T.host.tr}: ${user.displayName}'),
+                                    ],
+                                  );
+                                },
+                              ),
+                              Text(
+                                  '${T.members.tr}: ${meetup.users.length} ${T.noOfPeople.tr}'),
+                            ],
+                          ),
                         ),
-                        Text(
-                            '${T.members.tr}: ${meetup.users.length} ${T.noOfPeople.tr}'),
-                      ],
+                      ),
                     ),
-                    const Spacer(),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
                     if (meetup.joined == false)
                       MeetupJoinButton(meetup: meetup),
-                    const SizedBox(width: 4),
                     ElevatedButton(
                       onPressed: () {
                         ChatService.instance.showChatRoomScreen(
@@ -78,19 +91,39 @@ class MeetupDetails extends StatelessWidget {
                           otherUid: meetup.master,
                         );
                       },
-                      child: Text(T.contact.tr),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.chat),
+                          const SizedBox(width: 2),
+                          Text(T.contact.tr),
+                        ],
+                      ),
                     ),
+                    if (meetup.isMaster)
+                      ElevatedButton(
+                        onPressed: () => MeetupService.instance
+                            .showUpdateScreen(context: context, meetup: meetup),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.edit),
+                            const SizedBox(width: 2),
+                            Text(T.edit.tr),
+                          ],
+                        ),
+                      ),
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
               if (meetup.reminder.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(T.reminder.tr),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0, top: 24),
+                        child: Text(T.reminder.tr),
+                      ),
                       Card(
                         child: InkWell(
                           onTap: () => alert(
@@ -112,9 +145,8 @@ class MeetupDetails extends StatelessWidget {
                     ],
                   ),
                 ),
-              const SizedBox(height: 16),
               Padding(
-                padding: const EdgeInsets.only(left: 16.0),
+                padding: const EdgeInsets.only(left: 24.0, top: 24),
                 child: Text(T.recentPhotos.tr),
               ),
               PostLatestListView.gridView(
@@ -127,7 +159,7 @@ class MeetupDetails extends StatelessWidget {
                 category: '${meetup.id}-meetup-gallery',
                 emptyBuilder: () => Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Card(
                       child: Padding(
                     padding: const EdgeInsets.all(32),
@@ -137,9 +169,8 @@ class MeetupDetails extends StatelessWidget {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
               ),
-              const SizedBox(height: 24),
               Padding(
-                padding: const EdgeInsets.only(left: 16.0),
+                padding: const EdgeInsets.only(left: 24.0, top: 24),
                 child: Text(T.recentPosts.tr),
               ),
               PostLatestListView(
@@ -148,7 +179,7 @@ class MeetupDetails extends StatelessWidget {
                 category: '${meetup.id}-meetup-post',
                 emptyBuilder: () => Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Card(
                       child: Padding(
                     padding: const EdgeInsets.all(32),

@@ -108,9 +108,15 @@ class _ChatMessageListViewState extends State<ChatMessageListView> {
         if (snapshot.docs.isEmpty) {
           return widget.emptyBuilder?.call(context) ??
               Center(
+                  child: Card(
+                margin: const EdgeInsets.all(24),
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
                   child: Text(
-                T.chatRoomNoMessageYet.tr,
-                textAlign: TextAlign.center,
+                    T.chatRoomNoMessageYet.tr,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ));
         } else {
           /// Reset the newMessage

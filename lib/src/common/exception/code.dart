@@ -16,6 +16,7 @@ class Code {
   static const String profileUpdate = 'profileUpdate';
   static const String blocked = 'blocked';
   static const String block = 'block';
+  static const String unblock = 'unblock';
 
   /// Fields and constants
   static const String uid = 'uid';

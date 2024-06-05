@@ -28,8 +28,16 @@ class MeetupJoinButton extends StatelessWidget {
           }
         }
       },
-      child: Text(
-        meetup.joined ? T.unsubscribed.tr : T.signup.tr,
+      child: Row(
+        children: [
+          Icon(
+            meetup.joined ? Icons.logout : Icons.login,
+          ),
+          const SizedBox(width: 2),
+          Text(
+            meetup.joined ? T.unjoin.tr : T.join.tr,
+          ),
+        ],
       ),
     );
   }
