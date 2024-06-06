@@ -589,7 +589,7 @@ The dropdown may show the following callbacks:
 - onViewProfile
     - View the Users Profile
 - onReply
-    - Reply on the message
+    - Reply on the message.
 - onDeleteMessage
     - Delete the Message
 - onBlock
