@@ -15,30 +15,27 @@ import 'package:flutter/material.dart';
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
     super.key,
-    required this.room,
+    required this.chat,
     required this.message,
     this.onChange,
-    this.onReply,
-    this.onEdit,
   });
 
-  final ChatRoom room;
+  final ChatModel chat;
   final ChatMessage message;
   final Function? onChange;
-  final void Function(ChatMessage message)? onReply;
-  final void Function(ChatMessage message)? onEdit;
 
-  static const allRadius = BorderRadius.only(
-    topLeft: Radius.circular(16),
-    topRight: Radius.circular(16),
-    bottomLeft: Radius.circular(16),
-    bottomRight: Radius.circular(16),
+  static const _allRadius = BorderRadius.all(
+    Radius.circular(16),
   );
+
+  static const double _avatarSize = 30;
 
   bool get isLongText =>
       message.text != null &&
       (message.text!.length > 360 ||
           '\n'.allMatches(message.text!).length > 10);
+
+  ChatRoom get room => chat.room;
 
   String get text {
     if (message.text == null) return '';
@@ -66,18 +63,16 @@ class ChatBubble extends StatelessWidget {
             const Spacer(),
             dateAndName(context: context, uid: myUid!),
           ],
-
-          /// Other user avtar. size 30.
+          // Other user avtar. size 30.
           if (message.other)
             UserAvatar(
               key: ValueKey(message.key),
               uid: message.uid!,
               cacheId: message.uid,
-              size: 30,
+              size: _avatarSize,
               radius: 12,
               onTap: () => mayShowPublicProfileScreen(context, message.uid!),
             ),
-
           const SizedBox(width: 8),
           // Chat message text. size 60%
 
@@ -89,7 +84,7 @@ class ChatBubble extends StatelessWidget {
               onViewProfile: (context, uid) =>
                   mayShowPublicProfileScreen(context, message.uid!),
               onReplyMessage: (context, message) {
-                onReply?.call(message);
+                chat.replyTo.value = message;
               },
               child: Column(
                 crossAxisAlignment: message.mine
@@ -106,74 +101,93 @@ class ChatBubble extends StatelessWidget {
                                 ? Colors.amber.shade200
                                 : Colors.grey.shade200)
                             .withAlpha(120),
-                        borderRadius: allRadius,
+                        borderRadius: _allRadius,
                       ),
-                      child: Column(
-                        mainAxisAlignment: message.mine
-                            ? MainAxisAlignment.end
-                            : MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.reply),
-                                const SizedBox(width: 4),
-                                Flexible(
-                                  child: UserDisplayName(
-                                    uid: message.replyTo!.uid!,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (message.replyTo?.text != null)
+                      child: InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return ChatReadMoreDialog(
+                                message: message.replyTo!,
+                              );
+                            },
+                          );
+                        },
+                        borderRadius: _allRadius,
+                        child: Column(
+                          mainAxisAlignment: message.mine
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(12, 0, 12, 6),
-                              child: Text(
-                                '${message.replyTo!.text}',
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
+                              padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.reply),
+                                  const SizedBox(width: 4),
+                                  Flexible(
+                                    child: (!(my?.hasBlocked(
+                                                message.replyTo?.uid ?? '') ??
+                                            false))
+                                        ? UserDisplayName(
+                                            uid: message.replyTo!.uid!,
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          )
+                                        : const Text("..."),
+                                  ),
+                                ],
                               ),
                             ),
-                          if (message.replyTo?.url != null) ...[
-                            if (iHave.blocked(message.uid!))
-                              const SizedBox.shrink()
-                            else
+                            if (message.replyTo?.text != null)
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
-                                child: ClipRRect(
-                                  borderRadius: allRadius,
-                                  child: Container(
-                                    child: CachedNetworkImage(
-                                      imageUrl: message.replyTo!.url!,
-                                      fit: BoxFit.cover,
-                                      placeholder: (context, url) =>
-                                          const Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: CircularProgressIndicator(),
+                                padding:
+                                    const EdgeInsets.fromLTRB(12, 0, 12, 6),
+                                child: Text(
+                                  '${message.replyTo!.text?.orBlocked(message.replyTo!.uid!, T.blockedChatMessage)}',
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            if (message.replyTo?.url != null) ...[
+                              if (iHave.blocked(message.uid!))
+                                const SizedBox.shrink()
+                              else
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 6, 0, 0),
+                                  child: ClipRRect(
+                                    borderRadius: _allRadius,
+                                    child: Container(
+                                      child: CachedNetworkImage(
+                                        imageUrl: message.replyTo!.url!,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                        // if thumbnail is not available, show original image
+                                        errorWidget: (context, url, error) {
+                                          return const Icon(Icons.error_outline,
+                                              color: Colors.red);
+                                        },
+                                        errorListener: (value) => dog(
+                                            'Image not exist in storage: $value'),
                                       ),
-                                      // if thumbnail is not available, show original image
-                                      errorWidget: (context, url, error) {
-                                        return const Icon(Icons.error_outline,
-                                            color: Colors.red);
-                                      },
-                                      errorListener: (value) => dog(
-                                          'Image not exist in storage: $value'),
                                     ),
                                   ),
                                 ),
-                              ),
+                            ],
                           ],
-                        ],
+                        ),
                       ),
                     ),
                   ],
@@ -181,16 +195,15 @@ class ChatBubble extends StatelessWidget {
                     children: [
                       Container(
                         constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * 0.6),
+                          maxWidth: MediaQuery.of(context).size.width * 0.6,
+                        ),
                         child: Column(
                           crossAxisAlignment: message.mine
                               ? CrossAxisAlignment.end
                               : CrossAxisAlignment.start,
                           children: [
                             Column(
-                              crossAxisAlignment: message.mine
-                                  ? CrossAxisAlignment.start
-                                  : CrossAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
                                   padding: const EdgeInsets.symmetric(
@@ -211,7 +224,8 @@ class ChatBubble extends StatelessWidget {
                                               color: Colors.black),
                                         ),
                                 ),
-                                if (isLongText)
+                                if (isLongText &&
+                                    !(my?.hasBlocked(message.uid!) ?? false))
                                   TextButton(
                                     onPressed: () {
                                       showDialog(
@@ -251,7 +265,7 @@ class ChatBubble extends StatelessWidget {
               onViewProfile: (context, uid) =>
                   mayShowPublicProfileScreen(context, message.uid!),
               onReplyMessage: (context, message) {
-                onReply?.call(message);
+                chat.replyTo.value = message;
               },
               child: cachedImage(context, message.url!),
             ),
@@ -265,7 +279,7 @@ class ChatBubble extends StatelessWidget {
               uid: myUid!,
               initialData: my?.photoUrl,
               sync: true,
-              size: 30,
+              size: _avatarSize,
               radius: 12,
               onTap: () => mayShowPublicProfileScreen(context, myUid!),
             ),

@@ -13,7 +13,6 @@ class ChatMessageInputBox extends StatefulWidget {
     this.sendIcon,
     this.onProgress,
     this.onSend,
-    this.replyTo,
   });
 
   final ChatModel chat;
@@ -26,8 +25,6 @@ class ChatMessageInputBox extends StatefulWidget {
 
   /// [double] is null when upload is completed.
   final void Function({String? text, String? url})? onSend;
-
-  final ValueNotifier<ChatMessage?>? replyTo;
 
   @override
   State<ChatMessageInputBox> createState() => _ChatMessageInputBoxState();
@@ -54,7 +51,7 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
       mainAxisSize: MainAxisSize.min,
       children: [
         ValueListenableBuilder<ChatMessage?>(
-          valueListenable: widget.replyTo ?? ValueNotifier(null),
+          valueListenable: widget.chat.replyTo,
           builder: (context, replyTo, _) {
             if (replyTo == null) {
               return const SizedBox.shrink();
@@ -63,9 +60,7 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Divider(
-                  height: 0,
-                ),
+                const Divider(height: 0),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,9 +72,7 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SizedBox(
-                              height: 12,
-                            ),
+                            const SizedBox(height: 12),
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -104,17 +97,15 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
                                 child: ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(16),
-                                    topRight: Radius.circular(16),
-                                    bottomLeft: Radius.circular(16),
-                                    bottomRight: Radius.circular(16),
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(16),
                                   ),
                                   child: Container(
                                     constraints: BoxConstraints(
-                                        maxWidth:
-                                            MediaQuery.of(context).size.width *
-                                                0.6),
+                                      maxWidth:
+                                          MediaQuery.of(context).size.width *
+                                              0.6,
+                                    ),
                                     child: CachedNetworkImage(
                                       imageUrl: replyTo.url!,
                                       fit: BoxFit.cover,
@@ -134,22 +125,18 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                                   ),
                                 ),
                               ),
-                            const SizedBox(
-                              height: 6,
-                            ),
+                            const SizedBox(height: 6),
                           ],
                         ),
                       ),
                     ),
                     IconButton(
                       onPressed: () {
-                        widget.replyTo?.value = null;
+                        widget.chat.replyTo.value = null;
                       },
                       icon: const Icon(Icons.cancel),
                     ),
-                    const SizedBox(
-                      width: 20,
-                    ),
+                    const SizedBox(width: 20),
                   ],
                 ),
               ],
@@ -165,9 +152,7 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
             controller: inputController,
             decoration: InputDecoration(
               isDense: false,
-              contentPadding: const EdgeInsets.only(
-                top: 7,
-              ),
+              contentPadding: const EdgeInsets.only(top: 7),
               fillColor: Colors.transparent,
               focusColor: Colors.transparent,
               border: InputBorder.none,
@@ -253,15 +238,15 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
     if (text != null) {
       await widget.chat.sendMessage(
         text: text,
-        replyTo: widget.replyTo?.value,
+        replyTo: widget.chat.replyTo.value,
       );
     }
     if (url != null) {
       await widget.chat.sendMessage(
         url: url,
-        replyTo: widget.replyTo?.value,
+        replyTo: widget.chat.replyTo.value,
       );
     }
-    widget.replyTo?.value = null;
+    widget.chat.replyTo.value = null;
   }
 }

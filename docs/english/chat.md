@@ -86,10 +86,9 @@ And when the `ChatMessageListView` widget is displayed on the screen, it interna
 
 However, if you want to create a chat room more easily, you can use the pre-made `ChatService.instance.showChatRoomCreate()` function. If you want to customize the design, you can copy and modify `DefaultChatRoomEditDialog`.
 
-By passing true on the [authRequired] on `ChatService.intance.showChatRoomCreate` it will display a menu to allow only the verified user if `true` to enter the chat room and allow non-verified user if `false`. 
+By passing true on the [authRequired] on `ChatService.intance.showChatRoomCreate` it will display a menu to allow only the verified user if `true` to enter the chat room and allow non-verified user if `false`.
 
 `DefaultChatRoomEditDialog` is a pre-made widget dialog for creating chat-room. if the chat room is `not yet exist` and the [authRequired] is set to `true` and [isVerifiedOnly] is set to `true` it will create a chat room that will only allow user that is verified.
-
 
 ```dart
 ChatService.instance.showChatRoomCreate(
@@ -572,13 +571,17 @@ void initChatService() {
 
 ## Chat Bubble Behaviors
 
-## When message is too long
+### When message is too long
 
 Chat Bubble has its way to handle the message when it’s too long. It will consider the message tooLong if the length of the text exceeded 360, or if the text consists of more than 10 endlines.
 
 It will show read more button if the message is tooLong.
 
-## When long pressed
+### When replied message is tapped
+
+Same as when the message is long, it will show a popup like read more to show the replied message.
+
+### When long pressed
 
 This widget is used to show dropdown when Chat Bubble is long pressed.
 
@@ -589,12 +592,17 @@ The dropdown may show the following callbacks:
 - onViewProfile
     - View the Users Profile
 - onReply
-    - Reply on the message
+    - Reply on the message.
 - onDeleteMessage
     - Delete the Message
 - onBlock
     - Block the user from the group chat
 
+## Replying on a message
+
+Users can reply to a message by choosing reply to the message. Fireflutter added a ValueNotifier `replyTo` to the chat model. It is being accesed by both chat input box and chat listing so that the `replyTo` can be put into the Chat Input Box.
+
 ## Known Issues
 
 - In a chat room, when the last message is deleted, it wont automatically reflect in the chat room listing.
+- Upon deleting message, the messages that replied to it will not delete the message information.
