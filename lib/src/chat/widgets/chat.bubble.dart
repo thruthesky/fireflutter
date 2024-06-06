@@ -103,72 +103,91 @@ class ChatBubble extends StatelessWidget {
                             .withAlpha(120),
                         borderRadius: _allRadius,
                       ),
-                      child: Column(
-                        mainAxisAlignment: message.mine
-                            ? MainAxisAlignment.end
-                            : MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.reply),
-                                const SizedBox(width: 4),
-                                Flexible(
-                                  child: UserDisplayName(
-                                    uid: message.replyTo!.uid!,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (message.replyTo?.text != null)
+                      child: InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return ChatReadMoreDialog(
+                                message: message.replyTo!,
+                              );
+                            },
+                          );
+                        },
+                        borderRadius: _allRadius,
+                        child: Column(
+                          mainAxisAlignment: message.mine
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(12, 0, 12, 6),
-                              child: Text(
-                                '${message.replyTo!.text}',
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
+                              padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.reply),
+                                  const SizedBox(width: 4),
+                                  Flexible(
+                                    child: (!(my?.hasBlocked(
+                                                message.replyTo?.uid ?? '') ??
+                                            false))
+                                        ? UserDisplayName(
+                                            uid: message.replyTo!.uid!,
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          )
+                                        : const Text("..."),
+                                  ),
+                                ],
                               ),
                             ),
-                          if (message.replyTo?.url != null) ...[
-                            if (iHave.blocked(message.uid!))
-                              const SizedBox.shrink()
-                            else
+                            if (message.replyTo?.text != null)
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
-                                child: ClipRRect(
-                                  borderRadius: _allRadius,
-                                  child: Container(
-                                    child: CachedNetworkImage(
-                                      imageUrl: message.replyTo!.url!,
-                                      fit: BoxFit.cover,
-                                      placeholder: (context, url) =>
-                                          const Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: CircularProgressIndicator(),
+                                padding:
+                                    const EdgeInsets.fromLTRB(12, 0, 12, 6),
+                                child: Text(
+                                  '${message.replyTo!.text?.orBlocked(message.replyTo!.uid!, T.blockedChatMessage)}',
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            if (message.replyTo?.url != null) ...[
+                              if (iHave.blocked(message.uid!))
+                                const SizedBox.shrink()
+                              else
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 6, 0, 0),
+                                  child: ClipRRect(
+                                    borderRadius: _allRadius,
+                                    child: Container(
+                                      child: CachedNetworkImage(
+                                        imageUrl: message.replyTo!.url!,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                        // if thumbnail is not available, show original image
+                                        errorWidget: (context, url, error) {
+                                          return const Icon(Icons.error_outline,
+                                              color: Colors.red);
+                                        },
+                                        errorListener: (value) => dog(
+                                            'Image not exist in storage: $value'),
                                       ),
-                                      // if thumbnail is not available, show original image
-                                      errorWidget: (context, url, error) {
-                                        return const Icon(Icons.error_outline,
-                                            color: Colors.red);
-                                      },
-                                      errorListener: (value) => dog(
-                                          'Image not exist in storage: $value'),
                                     ),
                                   ),
                                 ),
-                              ),
+                            ],
                           ],
-                        ],
+                        ),
                       ),
                     ),
                   ],
@@ -205,7 +224,8 @@ class ChatBubble extends StatelessWidget {
                                               color: Colors.black),
                                         ),
                                 ),
-                                if (isLongText)
+                                if (isLongText &&
+                                    !(my?.hasBlocked(message.uid!) ?? false))
                                   TextButton(
                                     onPressed: () {
                                       showDialog(
