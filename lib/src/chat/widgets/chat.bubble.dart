@@ -15,15 +15,10 @@ import 'package:flutter/material.dart';
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
     super.key,
-
-    // TODO cleanup
-    // required this.room,
     required this.chat,
     required this.message,
     this.onChange,
   });
-
-  // final ChatRoom room;
 
   final ChatModel chat;
   final ChatMessage message;
