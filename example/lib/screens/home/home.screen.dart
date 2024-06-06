@@ -1,3 +1,4 @@
+import 'package:example/screens/buyandsell/buyandsell.screen.dart';
 import 'package:example/screens/chat/chat.screen.dart';
 import 'package:example/screens/chat/open_chat.screen.dart';
 import 'package:example/screens/entry/entry.screen.dart';
@@ -67,6 +68,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       ElevatedButton(
                         onPressed: () => context.push(MeetupScreen.routeName),
                         child: const Text('Meetup'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () =>
+                            context.push(BuyAndSellScreen.routeName),
+                        child: const Text('Buy & Sell'),
                       ),
                       ElevatedButton(
                         onPressed: () => AdminService.instance

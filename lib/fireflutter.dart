@@ -114,6 +114,8 @@ export 'src/forum/post/widgets/post.list_view.dart';
 export 'src/forum/post/widgets/post.meta.dart';
 export 'src/forum/post/widgets/post.title.dart';
 export 'src/forum/post/widgets/post.view.screen.dart';
+export 'src/forum/chat/forum.chat.input.dart';
+export 'src/forum/chat/post.bubble.dart';
 
 export 'src/functions/locale.functions.dart';
 

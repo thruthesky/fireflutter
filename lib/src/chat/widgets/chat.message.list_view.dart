@@ -15,6 +15,7 @@ class ChatMessageListView extends StatefulWidget {
     this.builder,
     this.primary,
     this.emptyBuilder,
+    this.replyTo,
   });
 
   final ChatModel chat;
@@ -22,6 +23,8 @@ class ChatMessageListView extends StatefulWidget {
   final Widget Function(ChatMessage)? builder;
   final bool? primary;
   final Widget Function(BuildContext)? emptyBuilder;
+
+  final ValueNotifier<ChatMessage?>? replyTo;
 
   @override
   State<ChatMessageListView> createState() => _ChatMessageListViewState();
@@ -148,7 +151,7 @@ class _ChatMessageListViewState extends State<ChatMessageListView> {
                       onChange: () => setState(() {}),
                     ) ??
                     ChatBubble(
-                      room: chat.room,
+                      chat: chat,
                       message: message,
                       onChange: () => setState(() {}),
                     ),

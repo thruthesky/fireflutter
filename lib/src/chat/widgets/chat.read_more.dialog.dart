@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -51,7 +52,38 @@ class ChatReadMoreDialog extends StatelessWidget {
           ),
         ],
       ),
-      content: SingleChildScrollView(child: Text(message.text!)),
+      content: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (message.text != null) Text(message.text!),
+            if (message.url != null)
+              ClipRRect(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(16),
+                ),
+                child: Container(
+                  constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.6),
+                  child: CachedNetworkImage(
+                    imageUrl: message.url!,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                    // if thumbnail is not available, show original image
+                    errorWidget: (context, url, error) {
+                      return const Icon(Icons.error_outline, color: Colors.red);
+                    },
+                    errorListener: (value) =>
+                        dog('Image not exist in storage: $value'),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }

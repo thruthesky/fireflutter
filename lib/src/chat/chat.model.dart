@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
 
 /// Chat Model
 ///
@@ -41,9 +42,15 @@ class ChatModel {
 
   get service => ChatService.instance;
 
+  final ValueNotifier<ChatMessage?> replyTo = ValueNotifier(null);
+
   ChatModel({
     required this.room,
   });
+
+  void dispose() {
+    replyTo.dispose();
+  }
 
   /// 각 채팅방 마다, 맨 마지막 채팅 메시지의 order 값을 가지고 있는 배열
   ///
@@ -77,6 +84,7 @@ class ChatModel {
     String? text,
     String? url,
     bool force = false,
+    ChatMessage? replyTo,
   }) async {
     if ((url == null || url.isEmpty) && (text == null || text.isEmpty)) return;
 
@@ -110,6 +118,8 @@ class ChatModel {
     /// 채팅 메시지 순서를 -1 (감소) 한다.
     messageOrder--;
 
+    Map<String, dynamic>? replyData = _getReplyData(replyTo);
+
     /// Save chat message under `/chat-messages`.
     ///
     // 저장할 채팅 데이터
@@ -119,6 +129,7 @@ class ChatModel {
       if (url != null) 'url': url,
       'order': messageOrder,
       'createdAt': ServerValue.timestamp,
+      if (replyData != null) 'replyTo': replyData,
     };
 
     /// Warning! This data does not represent the actual data in the database. It is a temporary data
@@ -230,6 +241,16 @@ class ChatModel {
       //       image: url);
       // }
     }
+  }
+
+  Map<String, dynamic>? _getReplyData(ChatMessage? replyTo) {
+    if (replyTo == null) return null;
+    return {
+      'id': replyTo.key,
+      'uid': replyTo.uid,
+      if (replyTo.text != null) 'text': replyTo.text,
+      if (replyTo.url != null) 'url': replyTo.url,
+    };
   }
 
   /// URL Preview 업데이트
