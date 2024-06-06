@@ -20,6 +20,7 @@ class _PostEditScreenState extends State<PostEditScreen> {
   Post get post => _post!;
 
   bool get isCreate => widget.post == null;
+  bool get isUpdate => !isCreate;
 
   double? progress;
 
@@ -129,7 +130,16 @@ class _PostEditScreenState extends State<PostEditScreen> {
               ),
               EditUploads(
                 urls: post.urls,
-                onDelete: (url) => setState(() => post.urls.remove(url)),
+                onDelete: (url) async {
+                  setState(() => post.urls.remove(url));
+                  if (isUpdate) {
+                    await post.update(
+                      title: titleController.text,
+                      content: contentController.text,
+                      urls: post.urls,
+                    );
+                  }
+                },
               ),
             ],
           ),

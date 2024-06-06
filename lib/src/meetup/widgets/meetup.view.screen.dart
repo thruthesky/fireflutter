@@ -74,16 +74,17 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                             ],
                           ),
                         ),
-                      PopupMenuItem(
-                        value: Code.members,
-                        child: Row(
-                          children: [
-                            const Icon(Icons.people_alt_outlined),
-                            const SizedBox(width: 8),
-                            Text(T.members.tr),
-                          ],
+                      if (meetup.blocked == false)
+                        PopupMenuItem(
+                          value: Code.members,
+                          child: Row(
+                            children: [
+                              const Icon(Icons.people_alt_outlined),
+                              const SizedBox(width: 8),
+                              Text(T.members.tr),
+                            ],
+                          ),
                         ),
-                      ),
                       if (meetup.isMaster) ...[
                         PopupMenuItem(
                           value: Code.blockUser,

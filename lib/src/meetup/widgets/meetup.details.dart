@@ -90,21 +90,51 @@ class MeetupDetails extends StatelessWidget {
                       child: Card(
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
-                          child: Column(
+                          child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              UserDoc(
-                                uid: meetup.master,
-                                builder: (user) {
-                                  return Row(
-                                    children: [
-                                      Text('${T.host.tr}: ${user.displayName}'),
-                                    ],
-                                  );
-                                },
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    UserDoc(
+                                      uid: meetup.master,
+                                      builder: (user) {
+                                        return Row(
+                                          children: [
+                                            Text(
+                                                '${T.host.tr}: ${user.displayName}'),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                    Text(
+                                        '${T.members.tr}: ${meetup.users.length} ${T.noOfPeople.tr}'),
+                                  ],
+                                ),
                               ),
-                              Text(
-                                  '${T.members.tr}: ${meetup.users.length} ${T.noOfPeople.tr}'),
+                              Row(
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      ChatService.instance.showChatRoomScreen(
+                                        context: context,
+                                        otherUid: meetup.master,
+                                      );
+                                    },
+                                    child: const Icon(Icons.chat),
+                                  ),
+                                  if (meetup.isMaster) ...[
+                                    const SizedBox(width: 8),
+                                    ElevatedButton(
+                                      onPressed: () => MeetupService.instance
+                                          .showUpdateScreen(
+                                              context: context, meetup: meetup),
+                                      child: const Icon(Icons.edit),
+                                    ),
+                                  ],
+                                ],
+                              ),
                             ],
                           ),
                         ),
@@ -120,7 +150,7 @@ class MeetupDetails extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 8.0, top: 24),
+                        padding: const EdgeInsets.only(left: 8.0, top: 8),
                         child: Text(T.reminder.tr),
                       ),
                       Card(

@@ -306,6 +306,9 @@ class Comment {
 
     /// Update the current content of the comment.
     this.content = content;
+    if (urls != null) {
+      this.urls = urls;
+    }
 
     ForumService.instance.onCommentUpdate?.call(this);
   }

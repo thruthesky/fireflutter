@@ -11,10 +11,10 @@ class MeetupUpdateForm extends StatefulWidget {
   final Meetup meetup;
 
   @override
-  State<MeetupUpdateForm> createState() => _ClubUpdateFormState();
+  State<MeetupUpdateForm> createState() => _MeetupUpdateFormState();
 }
 
-class _ClubUpdateFormState extends State<MeetupUpdateForm> {
+class _MeetupUpdateFormState extends State<MeetupUpdateForm> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   bool isVerifiedOnly = false;
