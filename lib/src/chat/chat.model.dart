@@ -77,6 +77,7 @@ class ChatModel {
     String? text,
     String? url,
     bool force = false,
+    ChatMessage? replyTo,
   }) async {
     if ((url == null || url.isEmpty) && (text == null || text.isEmpty)) return;
 
@@ -110,6 +111,8 @@ class ChatModel {
     /// 채팅 메시지 순서를 -1 (감소) 한다.
     messageOrder--;
 
+    Map<String, dynamic>? replyData = _getReplyData(replyTo);
+
     /// Save chat message under `/chat-messages`.
     ///
     // 저장할 채팅 데이터
@@ -119,6 +122,7 @@ class ChatModel {
       if (url != null) 'url': url,
       'order': messageOrder,
       'createdAt': ServerValue.timestamp,
+      if (replyData != null) 'replyTo': replyData,
     };
 
     /// Warning! This data does not represent the actual data in the database. It is a temporary data
@@ -230,6 +234,16 @@ class ChatModel {
       //       image: url);
       // }
     }
+  }
+
+  Map<String, dynamic>? _getReplyData(ChatMessage? replyTo) {
+    if (replyTo == null) return null;
+    return {
+      'id': replyTo.key,
+      'uid': replyTo.uid,
+      if (replyTo.text != null) 'text': replyTo.text,
+      if (replyTo.url != null) 'url': replyTo.url,
+    };
   }
 
   /// URL Preview 업데이트

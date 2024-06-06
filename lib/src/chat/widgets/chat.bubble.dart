@@ -28,6 +28,13 @@ class ChatBubble extends StatelessWidget {
   final void Function(ChatMessage message)? onReply;
   final void Function(ChatMessage message)? onEdit;
 
+  static const allRadius = BorderRadius.only(
+    topLeft: Radius.circular(16),
+    topRight: Radius.circular(16),
+    bottomLeft: Radius.circular(16),
+    bottomRight: Radius.circular(16),
+  );
+
   bool get isLongText =>
       message.text != null &&
       (message.text!.length > 360 ||
@@ -81,56 +88,173 @@ class ChatBubble extends StatelessWidget {
               room: room,
               onViewProfile: (context, uid) =>
                   mayShowPublicProfileScreen(context, message.uid!),
-              child: Container(
-                constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width * 0.6),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+              onReplyMessage: (context, message) {
+                onReply?.call(message);
+              },
+              child: Column(
+                crossAxisAlignment: message.mine
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
+                children: [
+                  if (message.replyTo != null) ...[
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: message.mine
-                            ? Colors.amber.shade200
-                            : Colors.grey.shade200,
-                        borderRadius: borderRadius(),
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.6,
                       ),
-                      child: message.deleted
-                          ? Text(T.chatMessageDeleted.tr)
-                          : LinkifyText(
-                              selectable: false,
-                              text.orBlocked(
-                                  message.uid!, T.blockedChatMessage.tr),
-                              style: const TextStyle(color: Colors.black),
+                      decoration: BoxDecoration(
+                        color: ((message.replyTo?.mine ?? false)
+                                ? Colors.amber.shade200
+                                : Colors.grey.shade200)
+                            .withAlpha(120),
+                        borderRadius: allRadius,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: message.mine
+                            ? MainAxisAlignment.end
+                            : MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.reply),
+                                const SizedBox(width: 4),
+                                Flexible(
+                                  child: UserDisplayName(
+                                    uid: message.replyTo!.uid!,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                ),
+                              ],
                             ),
-                    ),
-                    if (isLongText)
-                      TextButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => ChatReadMoreDialog(
-                                message: message,
+                          ),
+                          if (message.replyTo?.text != null)
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(12, 0, 12, 6),
+                              child: Text(
+                                '${message.replyTo!.text}',
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            );
-                          },
-                          child: Text(T.readMore.tr)),
-                    if (message.hasUrlPreview) ...[
-                      const SizedBox(height: 8),
-                      UrlPreview(
-                        previewUrl: message.previewUrl!,
-                        title: message.previewTitle,
-                        description: message.previewDescription,
-                        imageUrl: message.previewImageUrl,
+                            ),
+                          if (message.replyTo?.url != null) ...[
+                            if (iHave.blocked(message.uid!))
+                              const SizedBox.shrink()
+                            else
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
+                                child: ClipRRect(
+                                  borderRadius: allRadius,
+                                  child: Container(
+                                    child: CachedNetworkImage(
+                                      imageUrl: message.replyTo!.url!,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          const Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                      // if thumbnail is not available, show original image
+                                      errorWidget: (context, url, error) {
+                                        return const Icon(Icons.error_outline,
+                                            color: Colors.red);
+                                      },
+                                      errorListener: (value) => dog(
+                                          'Image not exist in storage: $value'),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ],
+                  Row(
+                    children: [
+                      Container(
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.6),
+                        child: Column(
+                          crossAxisAlignment: message.mine
+                              ? CrossAxisAlignment.end
+                              : CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              crossAxisAlignment: message.mine
+                                  ? CrossAxisAlignment.start
+                                  : CrossAxisAlignment.end,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: message.mine
+                                        ? Colors.amber.shade200
+                                        : Colors.grey.shade200,
+                                    borderRadius: borderRadius(),
+                                  ),
+                                  child: message.deleted
+                                      ? Text(T.chatMessageDeleted.tr)
+                                      : LinkifyText(
+                                          selectable: false,
+                                          text.orBlocked(message.uid!,
+                                              T.blockedChatMessage.tr),
+                                          style: const TextStyle(
+                                              color: Colors.black),
+                                        ),
+                                ),
+                                if (isLongText)
+                                  TextButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            ChatReadMoreDialog(
+                                          message: message,
+                                        ),
+                                      );
+                                    },
+                                    child: Text(T.readMore.tr),
+                                  ),
+                              ],
+                            ),
+                            if (message.hasUrlPreview) ...[
+                              const SizedBox(height: 8),
+                              UrlPreview(
+                                previewUrl: message.previewUrl!,
+                                title: message.previewTitle,
+                                description: message.previewDescription,
+                                imageUrl: message.previewImageUrl,
+                              ),
+                            ],
+                          ],
+                        ),
                       ),
                     ],
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           // image
-          if (message.url != null) cachedImage(context, message.url!),
+          if (message.url != null)
+            ChatBubblePopupMenuButton(
+              message: message,
+              room: room,
+              onViewProfile: (context, uid) =>
+                  mayShowPublicProfileScreen(context, message.uid!),
+              onReplyMessage: (context, message) {
+                onReply?.call(message);
+              },
+              child: cachedImage(context, message.url!),
+            ),
 
           const SizedBox(width: 8),
 

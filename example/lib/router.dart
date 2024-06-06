@@ -1,3 +1,4 @@
+import 'package:example/screens/buyandsell/buyandsell.screen.dart';
 import 'package:example/screens/chat/chat.screen.dart';
 import 'package:example/screens/chat/open_chat.screen.dart';
 import 'package:example/screens/entry/entry.screen.dart';
@@ -52,6 +53,10 @@ final router = GoRouter(
     GoRoute(
       path: MeetupScreen.routeName,
       builder: (context, state) => const MeetupScreen(),
+    ),
+    GoRoute(
+      path: BuyAndSellScreen.routeName,
+      builder: (context, state) => const BuyAndSellScreen(),
     ),
   ],
 );
