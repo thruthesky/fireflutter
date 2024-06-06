@@ -71,4 +71,8 @@ class Field {
   static const String occupation = 'occupation';
 
   static const String languageCode = 'languageCode';
+
+  static const String reminder = 'reminder';
+  static const String hasPhoto = 'hasPhoto';
+  static const String recommendOrder = 'recommendOrder';
 }

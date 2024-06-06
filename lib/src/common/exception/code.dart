@@ -41,7 +41,11 @@ class Code {
   static const String update = 'update';
   static const String delete = 'delete';
   static const String leave = 'leave';
+  static const String chat = 'chat';
   static const String join = 'join';
+
+  static const String members = 'members';
+  static const String blockUser = 'blockUser';
 
   // TODO review where to put this because this is under exception folder and this is not for exception things.
   // Chat Bubble Codes
@@ -60,9 +64,11 @@ class Code {
   static const String meetupAdminSettings = 'meetupAdminSettings';
 
   /// Club error codes
-  static const clubAlreadyJoined = 'club-already-joined';
+  static const String clubAlreadyJoined = 'club-already-joined';
 
   /// Meetup error code
-  static const meetupAlreadyJoined = 'meetup-already-joined';
-  static const meetupNotJoined = 'meetup-not-joined';
+  static const String meetupAlreadyJoined = 'meetup-already-joined';
+  static const String meetupNotJoined = 'meetup-not-joined';
+
+  static const String meetupNotVerified = 'meetupNotVerified';
 }

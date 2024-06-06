@@ -87,7 +87,8 @@ class StorageService {
     final uploadTask = fileRef.putFile(file);
     if (progress != null) {
       uploadTask.snapshotEvents.listen((event) {
-        progress(event.bytesTransferred / event.totalBytes);
+        double rate = event.bytesTransferred / event.totalBytes;
+        progress(rate < 0.2 ? 0.2 : rate);
       });
     }
 

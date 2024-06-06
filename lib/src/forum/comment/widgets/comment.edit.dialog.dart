@@ -29,6 +29,7 @@ class CommentEditDialog extends StatefulWidget {
 
 class _CommentEditDialogState extends State<CommentEditDialog> {
   bool get isCreate => widget.comment == null;
+  bool get isUpdate => !isCreate;
 
   double? progress;
 
@@ -137,12 +138,19 @@ class _CommentEditDialogState extends State<CommentEditDialog> {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: EditUploads(
               urls: comment.urls,
-              onDelete: (url) => setState(
-                () {
-                  comment.urls.remove(url);
-                  // need to update the commend on the backend
-                },
-              ),
+              onDelete: (url) async {
+                setState(
+                  () {
+                    comment.urls.remove(url);
+                  },
+                );
+                if (isUpdate) {
+                  await comment.update(
+                    content: contentController.text,
+                    urls: comment.urls,
+                  );
+                }
+              },
             ),
           ),
         ],

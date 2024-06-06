@@ -50,8 +50,6 @@ class EditUploads extends StatelessWidget {
                       rethrow;
                     }
                   }
-                  // await StorageService.instance.delete(url);
-                  // onDelete(url);
                 },
                 icon: const Icon(Icons.delete),
               ),

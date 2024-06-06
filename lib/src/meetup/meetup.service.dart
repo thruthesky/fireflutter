@@ -45,4 +45,30 @@ class MeetupService {
       ),
     );
   }
+
+  showMembersScreen({
+    required BuildContext context,
+    required Meetup meetup,
+  }) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          MeetupMembersListScreen(
+        meetup: meetup,
+      ),
+    );
+  }
+
+  showBlockedMembersScreen({
+    required BuildContext context,
+    required Meetup meetup,
+  }) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          MeetupBlockedMembersScreen(
+        meetup: meetup,
+      ),
+    );
+  }
 }

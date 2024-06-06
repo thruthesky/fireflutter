@@ -16,6 +16,10 @@ class Meetup {
 
   final int? recommendOrder;
 
+  final List<String> blockedUsers;
+
+  bool isVerifiedOnly;
+
   Meetup({
     required this.id,
     required this.uid,
@@ -26,12 +30,15 @@ class Meetup {
     required this.users,
     required this.reminder,
     this.recommendOrder,
+    required this.blockedUsers,
+    this.isVerifiedOnly = false,
   });
 
   DocumentReference get ref => col.doc(id);
 
   bool get joined => users.contains(myUid);
   bool get isMaster => master == myUid;
+  bool get blocked => blockedUsers.contains(myUid);
 
   factory Meetup.fromSnapshot(DocumentSnapshot snapshot) {
     return Meetup.fromMap(snapshot.data() as Map, snapshot.id);
@@ -40,22 +47,23 @@ class Meetup {
   factory Meetup.fromMap(Map<dynamic, dynamic> map, String id) {
     return Meetup(
       id: id,
-      uid: map['uid'],
-      master:
-          map['master'] ?? map['uid'], // 초반 개발에서 에러 방지. 나중에 map[uid] 는 없애도 됨.
-      name: map['name'] ?? '',
-      description: map['description'] ?? '',
-      photoUrl: map['photoUrl'],
-      users: List<String>.from((map['users'] ?? [])),
-      reminder: map['reminder'] ?? '',
-
-      recommendOrder: map['recommendOrder'],
+      uid: map[Field.uid],
+      master: map[Field.master] ??
+          map[Field.uid], // 초반 개발에서 에러 방지. 나중에 map[uid] 는 없애도 됨.
+      name: map[Field.name] ?? '',
+      description: map[Field.description] ?? '',
+      photoUrl: map[Field.photoUrl],
+      users: List<String>.from((map[Field.users] ?? [])),
+      reminder: map[Field.reminder] ?? '',
+      recommendOrder: map[Field.recommendOrder],
+      blockedUsers: List<String>.from((map[Field.blockedUsers] ?? [])),
+      isVerifiedOnly: map[Field.isVerifiedOnly] ?? false,
     );
   }
 
   @override
   String toString() {
-    return 'Meetup{id: $id, uid: $uid, master: $master, name: $name, description: $description, photoUrl: $photoUrl, users: $users, reminder: $reminder, recommendOrder: $recommendOrder}';
+    return 'Meetup{id: $id, uid: $uid, master: $master, name: $name, description: $description, photoUrl: $photoUrl, users: $users, reminder: $reminder, recommendOrder: $recommendOrder, blockedUsers: $blockedUsers, isVerifiedOnly: $isVerifiedOnly}';
   }
 
   /// 클럽 생성을 위한, 데이터 맵을 만든다.
@@ -63,11 +71,11 @@ class Meetup {
     required String name,
   }) {
     return {
-      'uid': myUid!,
-      'master': myUid!,
-      'users': [myUid!],
-      'name': name,
-      'createdAt': FieldValue.serverTimestamp(),
+      Field.uid: myUid!,
+      Field.master: myUid!,
+      Field.users: [myUid!],
+      Field.name: name,
+      Field.createdAt: FieldValue.serverTimestamp(),
     };
   }
 
@@ -129,6 +137,7 @@ class Meetup {
     bool? hasPhoto,
     String? reminder,
     int? recommendOrder,
+    bool? isVerifiedOnly,
   }) async {
     // 모임 이름이 들어오는 경우, 빈 문자열이면 에러
     if (name != null && name.trim().isEmpty) {
@@ -136,26 +145,30 @@ class Meetup {
     }
 
     final Map<String, dynamic> data = {
-      if (name != null) 'name': name,
-      if (description != null) 'description': description,
-      'updatedAt': FieldValue.serverTimestamp(),
-      if (reminder != null) 'reminder': reminder,
+      if (name != null) Field.name: name,
+      if (description != null) Field.description: description,
+      Field.updatedAt: FieldValue.serverTimestamp(),
+      if (reminder != null) Field.reminder: reminder,
     };
 
     /// Photo
     if (photoUrl == null) {
       /// do nothing
     } else if (photoUrl == '') {
-      data['photoUrl'] = FieldValue.delete();
-      data['hasPhoto'] = false;
+      data[Field.photoUrl] = FieldValue.delete();
+      data[Field.hasPhoto] = false;
     } else {
-      data['photoUrl'] = photoUrl;
-      data['hasPhoto'] = true;
+      data[Field.photoUrl] = photoUrl;
+      data[Field.hasPhoto] = true;
     }
 
     if (recommendOrder != null) {
-      data['recommendOrder'] =
+      data[Field.recommendOrder] =
           recommendOrder > 0 ? recommendOrder : FieldValue.delete();
+    }
+
+    if (isVerifiedOnly != null) {
+      data[Field.isVerifiedOnly] = isVerifiedOnly;
     }
 
     await ref.update(data);
@@ -166,8 +179,13 @@ class Meetup {
   /// 클럽 가입 할 때, 채팅방에 따로 입장 할 필요 없이, 최초 채팅방 입장시 자동으로 chat-rooms/{users}, chat-join 등이 설정된다.
   /// 하지만, 사용자가 채팅방에 입장을 하지 않을 수 있으니, 미리 채팅방 입장을 해 준다.
   join() async {
+    if (isVerifiedOnly && my!.isVerified == false) {
+      throw FireFlutterException(
+          Code.meetupNotVerified, 'This meetup is for verified users only.');
+    }
+
     await ref.update({
-      'users': FieldValue.arrayUnion([myUid]),
+      Field.users: FieldValue.arrayUnion([myUid]),
     });
     await ChatRoom.fromRoomdId(id).join(uid: myUid!, forceJoin: true);
   }
@@ -177,7 +195,7 @@ class Meetup {
   /// 이 때, 채팅방도 같이 탈퇴를 해야 한다.
   leave() async {
     await ref.update({
-      'users': FieldValue.arrayRemove([myUid]),
+      Field.users: FieldValue.arrayRemove([myUid]),
     });
     await ChatRoom.fromRoomdId(id).leave();
   }
@@ -194,5 +212,90 @@ class Meetup {
     if (re != true) return false;
     await ref.delete();
     return true;
+  }
+
+  Future<void> unblockUser({
+    required BuildContext context,
+    required String otherUserUid,
+    bool ask = false,
+    bool notify = true,
+  }) async {
+    if (notLoggedIn) {
+      final re = await UserService.instance.loginRequired!(
+          context: context,
+          action: Code.unblock,
+          data: {
+            'otherUserUid': otherUserUid,
+          });
+      if (re != true) return;
+    }
+
+    if (ask) {
+      bool? re = await confirm(
+        context: context,
+        title: T.meetupUnblockUser.tr,
+        message: T.meetupUnblockConfirmMessage.tr,
+      );
+      if (re != true) return;
+    }
+
+    await ref.update({
+      Field.users: FieldValue.arrayUnion([otherUserUid]),
+      Field.blockedUsers: FieldValue.arrayRemove([otherUserUid]),
+    });
+
+    /// 차단 후 화면에 알림
+    if (notify && context.mounted) {
+      toast(
+        context: context,
+        title: T.unblocked.tr,
+        message: T.unblockedMessage.tr,
+      );
+    }
+  }
+
+  Future<void> blockUser({
+    required BuildContext context,
+    required String otherUserUid,
+    bool ask = false,
+    bool notify = true,
+  }) async {
+    if (notLoggedIn) {
+      final re = await UserService.instance.loginRequired!(
+          context: context,
+          action: Code.block,
+          data: {
+            'otherUserUid': otherUserUid,
+          });
+      if (re != true) return;
+    }
+
+    if (otherUserUid == myUid) {
+      toast(context: context, message: T.cannotBlockYourself.tr);
+      return;
+    }
+
+    if (ask) {
+      bool? re = await confirm(
+        context: context,
+        title: T.meetupBlockUser.tr,
+        message: T.meetupBlockConfirmMessage.tr,
+      );
+      if (re != true) return;
+    }
+
+    await ref.update({
+      Field.blockedUsers: FieldValue.arrayUnion([otherUserUid]),
+      Field.users: FieldValue.arrayRemove([otherUserUid]),
+    });
+
+    /// 차단 후 화면에 알림
+    if (notify && context.mounted) {
+      toast(
+        context: context,
+        title: T.blocked.tr,
+        message: T.blockedMessage.tr,
+      );
+    }
   }
 }

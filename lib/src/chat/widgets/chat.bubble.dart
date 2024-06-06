@@ -219,7 +219,7 @@ class ChatBubble extends StatelessWidget {
                                       : LinkifyText(
                                           selectable: false,
                                           text.orBlocked(message.uid!,
-                                              T.blockedChatMessage),
+                                              T.blockedChatMessage.tr),
                                           style: const TextStyle(
                                               color: Colors.black),
                                         ),

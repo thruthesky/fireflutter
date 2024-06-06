@@ -3,13 +3,22 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+/// Meetup Event Card
+///
+/// [meetup] Meetup data model if value exist, check if current user joined the meetup and show date and time
+///
+/// [event] MeetupEvent data model
+///
+///
 class MeetupEventCard extends StatelessWidget {
   const MeetupEventCard({
     super.key,
     required this.event,
+    this.meetup,
   });
 
   final MeetupEvent event;
+  final Meetup? meetup;
 
   @override
   Widget build(BuildContext context) {
@@ -45,17 +54,29 @@ class MeetupEventCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            if (event.meetAt != null)
+            if (event.description.isNullOrEmpty == false)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  event.description,
+                  style: Theme.of(context).textTheme.bodySmall,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            if (meetup?.joined == true && event.meetAt != null)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Row(
                   children: [
                     Text(
                       DateFormat.yMMMEd().format(event.meetAt!),
+                      style: Theme.of(context).textTheme.labelSmall,
                     ),
                     const SizedBox(width: 10),
                     Text(
                       DateFormat.jm().format(event.meetAt!),
+                      style: Theme.of(context).textTheme.labelSmall,
                     ),
                   ],
                 ),
