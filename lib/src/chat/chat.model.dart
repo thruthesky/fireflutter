@@ -42,7 +42,6 @@ class ChatModel {
 
   get service => ChatService.instance;
 
-  // TODO
   final ValueNotifier<ChatMessage?> replyTo = ValueNotifier(null);
 
   ChatModel({

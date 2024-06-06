@@ -15,18 +15,19 @@ import 'package:flutter/material.dart';
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
     super.key,
-    required this.room,
+
+    // TODO cleanup
+    // required this.room,
+    required this.chat,
     required this.message,
     this.onChange,
-    this.onReply,
-    this.onEdit,
   });
 
-  final ChatRoom room;
+  // final ChatRoom room;
+
+  final ChatModel chat;
   final ChatMessage message;
   final Function? onChange;
-  final void Function(ChatMessage message)? onReply;
-  final void Function(ChatMessage message)? onEdit;
 
   static const _allRadius = BorderRadius.all(
     Radius.circular(16),
@@ -38,6 +39,8 @@ class ChatBubble extends StatelessWidget {
       message.text != null &&
       (message.text!.length > 360 ||
           '\n'.allMatches(message.text!).length > 10);
+
+  ChatRoom get room => chat.room;
 
   String get text {
     if (message.text == null) return '';
@@ -86,7 +89,7 @@ class ChatBubble extends StatelessWidget {
               onViewProfile: (context, uid) =>
                   mayShowPublicProfileScreen(context, message.uid!),
               onReplyMessage: (context, message) {
-                onReply?.call(message);
+                chat.replyTo.value = message;
               },
               child: Column(
                 crossAxisAlignment: message.mine
@@ -247,7 +250,7 @@ class ChatBubble extends StatelessWidget {
               onViewProfile: (context, uid) =>
                   mayShowPublicProfileScreen(context, message.uid!),
               onReplyMessage: (context, message) {
-                onReply?.call(message);
+                chat.replyTo.value = message;
               },
               child: cachedImage(context, message.url!),
             ),
