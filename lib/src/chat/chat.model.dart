@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
 
 /// Chat Model
 ///
@@ -41,9 +42,15 @@ class ChatModel {
 
   get service => ChatService.instance;
 
+  final ValueNotifier<ChatMessage?> replyTo = ValueNotifier(null);
+
   ChatModel({
     required this.room,
   });
+
+  void dispose() {
+    replyTo.dispose();
+  }
 
   /// 각 채팅방 마다, 맨 마지막 채팅 메시지의 order 값을 가지고 있는 배열
   ///

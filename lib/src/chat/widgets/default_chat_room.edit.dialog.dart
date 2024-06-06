@@ -149,78 +149,83 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                       padding: const EdgeInsets.all(8.0),
                       child: LinearProgressIndicator(value: progress),
                     ),
-            SwitchListTile(
-              value: open,
-              onChanged: (v) => setState(() => open = v),
-              title: Padding(
-                padding: const EdgeInsets.only(left: 16),
-                child: Text(
-                  T.openChat.tr,
-                  style: Theme.of(context).textTheme.bodySmall,
+            ListTileTheme(
+              child: SwitchListTile(
+                value: open,
+                onChanged: (v) => setState(() => open = v),
+                title: Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: Text(
+                    T.openChat.tr,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ),
-              ),
-              subtitle: Padding(
-                padding: const EdgeInsets.only(left: 16),
-                child: Text(
-                  T.anyoneCanJoinChat.tr,
-                  style: Theme.of(context).textTheme.labelSmall,
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: Text(
+                    T.anyoneCanJoinChat.tr,
+                    style: Theme.of(context).textTheme.labelSmall,
+                  ),
                 ),
               ),
             ),
             if (widget.authRequired)
-              SwitchListTile(
-                value: isVerifiedOnly,
-                onChanged: (v) => setState(() => isVerifiedOnly = v),
-                title: Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: Text(
-                    T.verifiedMembersOnly.tr,
-                    style: Theme.of(context).textTheme.bodySmall,
+              ListTileTheme(
+                child: SwitchListTile(
+                  value: isVerifiedOnly,
+                  onChanged: (v) => setState(() => isVerifiedOnly = v),
+                  title: Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Text(
+                      T.verifiedMembersOnly.tr,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ),
-                ),
-                subtitle: Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: Text(
+                  subtitle: Text(
                     T.onlyVerifiedMembersCanJoinChat.tr,
                     style: Theme.of(context).textTheme.labelSmall,
                   ),
                 ),
               ),
             if (isEdit)
-              SwitchListTile(
-                value: urlVerifiedUserOnly,
-                onChanged: (v) => setState(() => urlVerifiedUserOnly = v),
-                title: Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: Text(
-                    T.urlEntryOnlyForVerified.tr,
-                    style: Theme.of(context).textTheme.bodySmall,
+              ListTileTheme(
+                child: SwitchListTile(
+                  value: urlVerifiedUserOnly,
+                  onChanged: (v) => setState(() => urlVerifiedUserOnly = v),
+                  title: Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Text(
+                      T.urlEntryOnlyForVerified.tr,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ),
-                ),
-                subtitle: Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: Text(
-                    T.onlyVerifiedMembersCanJoinChat.tr,
-                    style: Theme.of(context).textTheme.labelSmall,
+                  subtitle: Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Text(
+                      T.onlyVerifiedMembersCanJoinChat.tr,
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
                   ),
                 ),
               ),
             if (isEdit)
-              SwitchListTile(
-                value: uploadVerifiedUserOnly,
-                onChanged: (v) => setState(() => uploadVerifiedUserOnly = v),
-                title: Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: Text(
-                    T.photoUploadOnlyForVerified.tr,
-                    style: Theme.of(context).textTheme.bodySmall,
+              ListTileTheme(
+                child: SwitchListTile(
+                  value: uploadVerifiedUserOnly,
+                  onChanged: (v) => setState(() => uploadVerifiedUserOnly = v),
+                  title: Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Text(
+                      T.photoUploadOnlyForVerified.tr,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ),
-                ),
-                subtitle: Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: Text(
-                    T.onlyVerifiedMembersCanUploadPhoto.tr,
-                    style: Theme.of(context).textTheme.labelSmall,
+                  subtitle: Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Text(
+                      T.onlyVerifiedMembersCanUploadPhoto.tr,
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
                   ),
                 ),
               ),
