@@ -80,3 +80,29 @@ await StorageService.instance.uploadAt(
     complete: () => setState(() => progress = null),
 );
 ```
+
+
+## Customization
+
+If you want to create your own design for you own upload bottomsheet you can do so by initializing `StorageService.instance`
+and updating the `uploadSelectionBottomsheetBuilder`, this will allow you to completely customize the upload bottomsheet. see example
+bellow
+
+
+```dart
+StorageService.instance.init(customize: StorageCustomize(
+    uploadSelectionBottomsheetBuilder: (
+        {required bool camera,
+        required BuildContext context,
+        required bool gallery}) {
+        // Your implementation
+            return Builder(builder: (context) {
+            return const ListTileTheme(
+            child: DefaultUploadSelectionBottomSheet(
+            camera: true,
+            gallery: true,
+            ));
+        });
+    },
+));
+```
