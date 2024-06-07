@@ -15,9 +15,11 @@ class ForumChatInput extends StatefulWidget {
 }
 
 class _ForumChatInputState extends State<ForumChatInput> {
+  final titleController = TextEditingController();
   final contentController = TextEditingController();
 
-  bool get isEmpty => contentController.text.isEmpty;
+  double? progress;
+  bool get isEmpty => titleController.text.isEmpty;
   bool get isNotEmpty => !isEmpty;
 
   final List<String> urls = [];
@@ -28,10 +30,13 @@ class _ForumChatInputState extends State<ForumChatInput> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
+        if (progress != null) LinearProgressIndicator(value: progress),
+        const SizedBox(height: 8),
+        // Title
         TextField(
-          controller: contentController,
+          controller: titleController,
           decoration: InputDecoration(
-            hintText: "Input content here...",
+            hintText: "Input title here...",
             border: const OutlineInputBorder(),
             prefixIcon: isEmpty
                 ? IconButton(
@@ -46,12 +51,38 @@ class _ForumChatInputState extends State<ForumChatInput> {
                   )
                 : null,
           ),
-          minLines: isEmpty ? 1 : 3,
-          maxLines: 10,
+          minLines: 1,
+          maxLines: 1,
           onChanged: onChanged,
           onSubmitted: onSubmitted,
         ),
-        if (isNotEmpty)
+        const SizedBox(height: 8),
+
+        if (isNotEmpty) ...[
+          // Content
+          TextField(
+            controller: contentController,
+            decoration: InputDecoration(
+              hintText: "Input content here...",
+              border: const OutlineInputBorder(),
+              prefixIcon: isEmpty
+                  ? IconButton(
+                      onPressed: onUpload,
+                      icon: const Icon(Icons.camera_alt),
+                    )
+                  : null,
+              suffixIcon: isEmpty
+                  ? const IconButton(
+                      onPressed: null,
+                      icon: Icon(Icons.send),
+                    )
+                  : null,
+            ),
+            minLines: isEmpty ? 1 : 3,
+            maxLines: 4,
+            onChanged: onChanged,
+            onSubmitted: onSubmitted,
+          ),
           Row(
             children: [
               IconButton(
@@ -65,16 +96,40 @@ class _ForumChatInputState extends State<ForumChatInput> {
               )
             ],
           ),
+        ],
+
         Wrap(
           alignment: WrapAlignment.start,
           spacing: 8,
           runSpacing: 8,
           children: urls
               .map(
-                (url) => CachedNetworkImage(
-                  imageUrl: url,
-                  width: 100,
+                (url) => SizedBox(
                   height: 100,
+                  width: 100,
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: CachedNetworkImage(
+                          imageUrl: url,
+                        ),
+                      ),
+                      Align(
+                        alignment: const Alignment(1.5, -1.5),
+                        child: IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            dog('$url is deleted');
+                            StorageService.instance.delete(url);
+                            urls.remove(url);
+                            setState(() {});
+                          },
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               )
               .toList(),
@@ -84,15 +139,15 @@ class _ForumChatInputState extends State<ForumChatInput> {
   }
 
   onChanged(String value) {
-    print(value);
-    setState(() => {});
+    setState(() {});
   }
 
   onSubmitted([String? value]) async {
     final post = await Post.create(
-      title: contentController.text.cut(64),
+      title: titleController.text.cut(64),
       content: contentController.text,
       category: widget.category,
+      urls: urls,
     );
     print(post);
 
@@ -100,14 +155,20 @@ class _ForumChatInputState extends State<ForumChatInput> {
       setState(() {
         urls.clear();
         contentController.clear();
+        titleController.clear();
       });
       FocusScope.of(context).unfocus();
     }
   }
 
-  onUpload() async {
-    final url = await StorageService.instance.upload(context: context);
+  Future<void> onUpload() async {
+    final url = await StorageService.instance.upload(
+      context: context,
+      progress: (p) => setState(() => progress = p),
+      complete: () => setState(() => progress = null),
+    );
     if (url == null) return;
+    progress = null;
     setState(() => urls.add(url));
   }
 }

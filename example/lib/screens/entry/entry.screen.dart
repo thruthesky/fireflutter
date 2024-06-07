@@ -27,10 +27,13 @@ class _EntryScreenState extends State<EntryScreen> {
                 "Enter complete phone number with country code. Or use email and password in 'email:password' format."),
             PhoneSignIn(
               onSignInSuccess: () => context.go(HomeScreen.routeName),
-              onSignInFailed: (e) => error(
-                context: context,
-                message: '$e - FirebaseAuthException in EntryScreen',
-              ),
+              onSignInFailed: (e) {
+                debugPrint(e.toString());
+                error(
+                  context: context,
+                  message: '$e - FirebaseAuthException in EntryScreen',
+                );
+              },
               specialAccounts: const SpecialAccounts(
                 emailLogin: true,
               ),

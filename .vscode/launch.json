@@ -259,6 +259,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "Example - All - iPhone 15 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 15 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Example - All - iPhone 14 Pro Max",
       "request": "launch",
       "type": "dart",
@@ -268,10 +277,10 @@
       "program": "lib/main.dart"
     },
     {
-      "name": "Example - All - iPhone 15 Pro Max",
+      "name": "Example - All - iPhone SE",
       "request": "launch",
       "type": "dart",
-      "deviceId": "iPhone 15 Pro Max",
+      "deviceId": "iPhone SE",
       "flutterMode": "debug",
       "cwd": "example",
       "program": "lib/main.dart"
