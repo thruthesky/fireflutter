@@ -144,9 +144,13 @@ class _CommentEditDialogState extends State<CommentEditDialog> {
                     comment.urls.remove(url);
                   },
                 );
+
+                /// If isUpdate then delete the url from the list of comment.urls and silently update the server
+                /// sometimes the user delete a url from post/comment but didnt save the post. so the url still exist but the actual image is already deleted
+                /// so we need to update the post to remove the url from the server
+                /// this will prevent error like the url still exist but the image is already deleted
                 if (isUpdate) {
                   await comment.update(
-                    content: contentController.text,
                     urls: comment.urls,
                   );
                 }
