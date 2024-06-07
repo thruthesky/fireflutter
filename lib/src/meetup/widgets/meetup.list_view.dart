@@ -41,10 +41,7 @@ class MeetupListView extends StatelessWidget {
     this.clipBehavior = Clip.hardEdge,
     this.itemBuilder,
     this.emptyBuilder,
-    this.fetchmore = true,
   });
-
-  final bool fetchmore;
 
   final Query? query;
 
@@ -118,9 +115,7 @@ class MeetupListView extends StatelessWidget {
             // if we reached the end of the currently obtained items, we try to
             // obtain more items
 
-            if (fetchmore &&
-                snapshot.hasMore &&
-                index + 1 == snapshot.docs.length) {
+            if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
               // Tell FirestoreQueryBuilder to try to obtain more items.
               // It is safe to call this function from within the build method.
               snapshot.fetchMore();
