@@ -166,6 +166,8 @@ PODS:
   - GTMSessionFetcher/Core (3.4.1)
   - image_picker_ios (0.0.1):
     - Flutter
+  - integration_test (0.0.1):
+    - Flutter
   - leveldb-library (1.22.5)
   - libwebp (1.3.2):
     - libwebp/demux (= 1.3.2)
@@ -224,6 +226,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_image_compress_common (from `.symlinks/plugins/flutter_image_compress_common/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
@@ -294,6 +297,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_image_compress_common/ios"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
+  integration_test:
+    :path: ".symlinks/plugins/integration_test/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   share_plus:
@@ -348,6 +353,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   GTMSessionFetcher: 8000756fc1c19d2e5697b90311f7832d2e33f6cd
   image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
+  integration_test: ce0a3ffa1de96d1a89ca0ac26fca7ea18a749ef4
   leveldb-library: e8eadf9008a61f9e1dde3978c086d2b6d9b9dc28
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d

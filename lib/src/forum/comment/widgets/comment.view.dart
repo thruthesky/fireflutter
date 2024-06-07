@@ -180,6 +180,7 @@ class _CommnetViewState extends State<CommentView> {
                           comment: widget.comment,
                         );
                         widget.post.reload();
+                        
                       } else if (value == 'delete') {
                         await widget.comment
                             .delete(context: context, ask: true);

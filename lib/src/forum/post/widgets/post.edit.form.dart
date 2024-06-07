@@ -18,6 +18,7 @@ class _SimplePostEditFormState extends State<PostEditForm> {
   Post get post => _post!;
 
   bool get isCreate => widget.post == null;
+  bool get isUpdate => !isCreate;
 
   double? progress;
   @override
@@ -86,7 +87,16 @@ class _SimplePostEditFormState extends State<PostEditForm> {
         ),
         EditUploads(
           urls: post.urls,
-          onDelete: (url) => setState(() => post.urls.remove(url)),
+          onDelete: (url) async {
+            setState(() => post.urls.remove(url));
+            if (isUpdate) {
+              await post.update(
+                title: titleController.text,
+                content: contentController.text,
+                urls: post.urls,
+              );
+            }
+          },
         ),
       ],
     );

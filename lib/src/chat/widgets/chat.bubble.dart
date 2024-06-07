@@ -151,7 +151,7 @@ class ChatBubble extends StatelessWidget {
                                 padding:
                                     const EdgeInsets.fromLTRB(12, 0, 12, 6),
                                 child: Text(
-                                  '${message.replyTo!.text?.orBlocked(message.replyTo!.uid!, T.blockedChatMessage)}',
+                                  '${message.replyTo!.text?.orBlocked(message.replyTo!.uid!, T.blockedChatMessage.tr)}',
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -219,7 +219,7 @@ class ChatBubble extends StatelessWidget {
                                       : LinkifyText(
                                           selectable: false,
                                           text.orBlocked(message.uid!,
-                                              T.blockedChatMessage),
+                                              T.blockedChatMessage.tr),
                                           style: const TextStyle(
                                               color: Colors.black),
                                         ),

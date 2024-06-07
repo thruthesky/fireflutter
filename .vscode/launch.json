@@ -14,6 +14,24 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "PhiLov - iPhone 14 Pro",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 14 Pro",
+      "flutterMode": "debug",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "PhiLov - iPhone 14 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 14 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "PhiLov - iPhone SE",
       "request": "launch",
       "type": "dart",
@@ -41,10 +59,20 @@
       "program": "lib/main.dart"
     },
     {
-      "name": "PhiLov - Emulator",
+      "name": "PhiLov - Emulator 5554",
       "request": "launch",
       "type": "dart",
       "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart"
+    },
+    
+    {
+      "name": "PhiLov - Emulator 5556",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5556",
       "flutterMode": "debug",
       "cwd": "apps/philov",
       "program": "lib/main.dart"
@@ -219,6 +247,15 @@
       "deviceId": "macOS",
       "flutterMode": "debug",
       "cwd": "apps/momcafe",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Example - All - iPhone 14 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 14 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "example",
       "program": "lib/main.dart"
     },
     {

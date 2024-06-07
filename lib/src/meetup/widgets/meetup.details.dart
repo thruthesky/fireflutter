@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/meetup/widgets/meetup.join_button.dart';
 import 'package:flutter/material.dart';
 
 class MeetupDetails extends StatelessWidget {
@@ -46,44 +45,10 @@ class MeetupDetails extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              UserDoc(
-                                uid: meetup.master,
-                                builder: (user) {
-                                  return Row(
-                                    children: [
-                                      Text('${T.host.tr}: ${user.displayName}'),
-                                    ],
-                                  );
-                                },
-                              ),
-                              Text(
-                                  '${T.members.tr}: ${meetup.users.length} ${T.noOfPeople.tr}'),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    if (meetup.joined == false)
-                      MeetupJoinButton(meetup: meetup),
                     ElevatedButton(
                       onPressed: () {
                         ChatService.instance.showChatRoomScreen(
@@ -99,7 +64,8 @@ class MeetupDetails extends StatelessWidget {
                         ],
                       ),
                     ),
-                    if (meetup.isMaster)
+                    if (meetup.isMaster) ...[
+                      const SizedBox(width: 8),
                       ElevatedButton(
                         onPressed: () => MeetupService.instance
                             .showUpdateScreen(context: context, meetup: meetup),
@@ -111,6 +77,69 @@ class MeetupDetails extends StatelessWidget {
                           ],
                         ),
                       ),
+                    ]
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    UserDoc(
+                                      uid: meetup.master,
+                                      builder: (user) {
+                                        return Row(
+                                          children: [
+                                            Text(
+                                                '${T.host.tr}: ${user.displayName}'),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                    Text(
+                                        '${T.members.tr}: ${meetup.users.length} ${T.noOfPeople.tr}'),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      ChatService.instance.showChatRoomScreen(
+                                        context: context,
+                                        otherUid: meetup.master,
+                                      );
+                                    },
+                                    child: const Icon(Icons.chat),
+                                  ),
+                                  if (meetup.isMaster) ...[
+                                    const SizedBox(width: 8),
+                                    ElevatedButton(
+                                      onPressed: () => MeetupService.instance
+                                          .showUpdateScreen(
+                                              context: context, meetup: meetup),
+                                      child: const Icon(Icons.edit),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -121,7 +150,7 @@ class MeetupDetails extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 8.0, top: 24),
+                        padding: const EdgeInsets.only(left: 8.0, top: 8),
                         child: Text(T.reminder.tr),
                       ),
                       Card(
