@@ -14,6 +14,7 @@ class Field {
   static const String isDisabled = 'isDisabled';
   static const String createdAt = 'createdAt';
   static const String updatedAt = 'updatedAt';
+  static const String password = 'password';
 
   /// User's two letter country code like 'KR', 'US', 'JP', 'PH'
   static const String countryCode = 'countryCode';

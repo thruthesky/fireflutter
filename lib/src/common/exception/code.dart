@@ -3,7 +3,7 @@ class Code {
 
   /// ERROR CODES
   static const String disabled = 'disabled';
-  static const String notJoined = 'notJoined';
+  static const String notJoined = 'chat-room-not-joined';
   static const String notVerified = 'not-verified';
   static const String alreadyJoined = 'already-joined';
   static const String notLoggedIn = 'notLoggedIn';

@@ -28,9 +28,9 @@
     - `previewDescription` - Description
     - `previewImageUrl` - Image
 
-### Chat Rooms
+### Chat Rooms 구조
 
-- `master` 는 그룹 채팅 일 경우만 저장된다. 그룹 채팅 방에서 본인이 master 이면 채팅방 설정을 하면 된다.
+- `master` 필드는 그룹 채팅 일 경우만 저장된다. 그룹 채팅 방에서 본인이 master 이면 채팅방 설정을 하면 된다.
 
 - `blocks` - 관리자가 채팅방의 블럭 리스트를 관리한다. 여기에 추가된 사용자는 채팅방에 입장을 할 수 없다. 또한 자동으로 채팅방에서 튕겨나가도록 한다. (**TODO: 2024-02-22 현재 기능 구현되지 않음.**)
 
@@ -48,6 +48,12 @@
 - `text` 텍스트를 전송한 경우.
 - `url` 사진 URL. 사진을 전송한 경우.
 - `deleted` 채팅 메시지가 삭제되면 true 값이 저장되고, text, url, url preview 등의 값이 모두 삭제된다.
+
+
+### 채팅방 설정 구조
+
+- 일반적으로 채팅방 이름, 설명, 사진 등의 기본 정보는 /chat-rooms 에 저장된다. 하지만, 사용자에게 공개되면 안되는 비밀스러운 정보는 /settings/chat-rooms 에 저장된다.
+- `/settings/chat-rooms/<room-id>/password` 필드는 채팅방의 비밀번호를 가지며, 이 값이 null, undefined, empty 가 아니라, 값이 있으면 사용자는 cloud functions 함수 호출을 통해서만 join 할 수 있다.
 
 
 ## 1:1 채팅방에 상대방의 사진와 이름이 나오는 로직

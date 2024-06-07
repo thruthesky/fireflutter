@@ -102,7 +102,9 @@ class ChatModel {
     /// 방에 입장하지 않은 상태이면, [force] 가 true 이더라도 메시지를 전송하지 않는다.
     if (room.joined == false) {
       throw FireFlutterException(
-          Code.notJoined, 'chat.model.dart->sendMessage()');
+        Code.notJoined,
+        'chat.model.dart->sendMessage()',
+      );
     }
 
     /// 인증된 사용자만 URL 전송 옵션

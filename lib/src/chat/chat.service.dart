@@ -21,6 +21,9 @@ class ChatService {
   DatabaseReference get roomsRef => rtdb.ref().child('chat-rooms');
   DatabaseReference roomRef(String roomId) => roomsRef.child(roomId);
 
+  DatabaseReference settingRef(String roomId) =>
+      rtdb.ref().child('settings/chat-rooms/$roomId');
+
   /// 전체 채팅방 ref
   DatabaseReference get messagesRef => rtdb.ref().child('chat-messages');
 
@@ -203,5 +206,10 @@ class ChatService {
         room: room,
       ),
     );
+  }
+
+  Future setRoomPassword(
+      {required String roomId, required String password}) async {
+    return await settingRef(roomId).child('password').set(password);
   }
 }

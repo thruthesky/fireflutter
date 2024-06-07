@@ -62,6 +62,9 @@ class _ChatRoomState extends State<ChatRoomBody> {
   /// 그래서, 채팅 화면 상단의 제목 부분이 깜빡거리지 않도록 한다.
   final loaded = ValueNotifier<bool>(false);
 
+  /// if there is an error while joining the chat room
+  bool cannotJoin = false;
+
   @override
   void initState() {
     super.initState();
@@ -137,6 +140,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
           rethrow;
         }
       } catch (e) {
+        setState(() => cannotJoin = true);
         rethrow;
       }
     }
@@ -396,6 +400,13 @@ class _ChatRoomState extends State<ChatRoomBody> {
                 : const SizedBox.shrink(),
           ),
         ),
+
+        if (cannotJoin)
+          const Expanded(
+            child: Center(
+              child: Text('Error. Cannot join the chat room.'),
+            ),
+          ),
 
         if (userDeleted == false &&
             chat.room.blockedUsers.contains(myUid) == false)
