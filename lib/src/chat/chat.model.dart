@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:flutter/material.dart';
 
 /// Chat Model
 ///
@@ -41,9 +42,15 @@ class ChatModel {
 
   get service => ChatService.instance;
 
+  final ValueNotifier<ChatMessage?> replyTo = ValueNotifier(null);
+
   ChatModel({
     required this.room,
   });
+
+  void dispose() {
+    replyTo.dispose();
+  }
 
   /// 각 채팅방 마다, 맨 마지막 채팅 메시지의 order 값을 가지고 있는 배열
   ///
@@ -89,7 +96,7 @@ class ChatModel {
 
     /// 차단되면, 메시지를 전송하지 않고 에러를 낸다.
     if (force == false && UserService.instance.user?.isDisabled == true) {
-      throw FireFlutterException(Code.disabled, T.disabledOnSendMessage);
+      throw FireFlutterException(Code.disabled, T.disabledOnSendMessage.tr);
     }
 
     /// 방에 입장하지 않은 상태이면, [force] 가 true 이더라도 메시지를 전송하지 않는다.

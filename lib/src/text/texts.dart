@@ -255,6 +255,16 @@ class T {
     'ko': '회원 수',
   };
 
+  static Mintl blockedMembers = {
+    'en': 'Blocked Members',
+    'ko': '차단된 회원 수',
+  };
+
+  static Mintl membersList = {
+    'en': 'Members list',
+    'ko': '회원 수',
+  };
+
   static Mintl noOfPeople = {
     'en': 'people',
     'ko': '명',
@@ -353,6 +363,11 @@ class T {
     'ko': '일정이 없습니다.',
   };
 
+  static Mintl meetupChatBlocked = {
+    'en': 'Blocked members cannot chat.',
+    'ko': '차단된 회원은 채팅을 할 수 없습니다.',
+  };
+
   static Mintl joinMeetupToChat = {
     'en': 'You must join the group\nto view the chat room.',
     'ko': '모임에 가입하셔야\n채팅방을 볼 수 있습니다.',
@@ -363,6 +378,11 @@ class T {
     'ko': '글을 등록 해 주세요.',
   };
 
+  static Mintl meetupViewNoticeBlocked = {
+    'en': 'Blocked members cannot view the forum.',
+    'ko': '차단된 회원은 게시판을 볼 수 없습니다.',
+  };
+
   static Mintl joinMeetupToViewNotice = {
     'en': 'You must join the group\nto view the announcement.',
     'ko': '모임에 가입하셔야\n게시판을 볼 수 있습니다.',
@@ -371,6 +391,11 @@ class T {
   static Mintl noUploadPhotoYet = {
     'en': 'Theres no uploaded photo yet.',
     'ko': '사진을 등록 해 주세요.',
+  };
+
+  static Mintl meetupViewGalleryBlocked = {
+    'en': 'Blocked members cannot view the gallery.',
+    'ko': '차단된 회원은 사진첩을 볼 수 없습니다.',
   };
 
   static Mintl joinMeetupToViewGallery = {
@@ -506,7 +531,16 @@ class T {
     'ko': '모임 날짜 & 시간',
   };
 
-  // TODO: ko translation club
+  static Mintl meetupEventApplyAttendBlocked = {
+    'en': 'Attend blocked',
+    'ko': '참석 차단',
+  };
+
+  static Mintl meetupEventApplyAttendBlockedMessage = {
+    'en': 'Blocked members cannot apply to attend.',
+    'ko': '차단된 회원은 참석 신청을 할 수 없습니다.',
+  };
+
   static Mintl meetupMembershipRequired = {
     'en': 'Meetup membership required.',
     'ko': '클럽 가입 필요',
@@ -593,7 +627,81 @@ class T {
     'ko': '추천 목록에서 이 항목을 삭제하시겠습니까?',
   };
 
+  static Mintl meetupBlockUser = {
+    'en': 'Block user',
+    'ko': '사용자 차단하기',
+  };
+
+  static Mintl meetupBlockConfirmMessage = {
+    'en': 'Are you sure you want to block this user?',
+    'ko': '이 사용자를 차단하시겠습니까?',
+  };
+
+  static Mintl meetupUnblockUser = {
+    'en': 'Unblock user',
+    'ko': '사용자 차단 해제하기',
+  };
+
+  static Mintl meetupUnblockConfirmMessage = {
+    'en': 'Are you sure you want to unblock this user?',
+    'ko': '이 사용자를 차단 해제하시겠습니까?',
+  };
+
   /// EO meetups translations
+
+  /// Block
+  static Mintl cannotBlockYourself = {
+    'en': 'You cannot block yourself.',
+    'ko': '자신을 차단할 수 없습니다.',
+  };
+
+  static Mintl blocked = {
+    'en': 'Blocked',
+    'ko': '차단됨',
+  };
+
+  static Mintl blockedMessage = {
+    'en': 'You have blocked this user.',
+    'ko': '이 사용자를 차단하셨습니다.',
+  };
+
+  static Mintl blockedTitleMessage = {
+    'en': 'Blocked this user',
+    'ko': '이 사용자를 차단하셨습니다.',
+  };
+
+  static Mintl blockedContentMessage = {
+    'en':
+        'The contents of this user is hidden because you have blocked this user.',
+    'ko': '이 사용자의 내용은 차단된 상태입니다.',
+  };
+
+  static Mintl blockedChatMessage = {
+    'en': 'You have blocked this user. Chat message is hidden.',
+    'ko': '이 사용자를 차단하셨습니다. 채팅 메시지는 숨겨집니다.',
+  };
+
+  static Mintl blockedUserMessage = {
+    'en': 'You have blocked this user.',
+    'ko': '이 사용자를 차단하셨습니다.',
+  };
+
+  static Mintl unblocked = {
+    'en': 'Unblocked',
+    'ko': '차단 해제됨',
+  };
+
+  static Mintl unblockedMessage = {
+    'en': 'You have unblocked this user.',
+    'ko': '이 사용자를 차단 해제하셨습니다.',
+  };
+
+  static Mintl disabledOnSendMessage = {
+    'en': 'You cannot send a message because your account is disabled.',
+    'ko': '메시지를 보낼 수 없습니다. 계정이 비활성화 상태입니다.'
+  };
+
+  /// EO Block
 
   ///////////////////////////////////////////////////////////////////
 
@@ -699,7 +807,7 @@ class T {
 
   static const String blockConfirmTitle = 'Block this user?';
   static const String blockConfirmMessage =
-      'Do you want to block this user?\nYou will not be able to contents of this user.';
+      'Do you want to block this user?\nYou will not be able to see the contents of this user.';
   static const String unblockConfirmTitle = 'Unblock this user?';
   static const String unblockConfirmMessage =
       'If you unblock this user, you will be able to see the contents of this user.';
@@ -709,7 +817,7 @@ class T {
   static const String visitedYourProfileBody = '#name visited your profile';
   // chat input box hint text -> please enter a message
   static const String pleaseEnterMessage = 'Please enter message.';
-  static const String cannotBlockYourself = 'You cannot block yourself.';
+  // static const String cannotBlockYourself = 'You cannot block yourself.';
 
   /// User and Profile
   static const String recentLoginRequiredForResign =
@@ -774,20 +882,20 @@ class T {
   static const String postUpdate = 'Update';
 
   /// Block
-  static const String blocked = 'Blocked';
-  static const String blockedMessage = 'You have blocked this user.';
-  static const String blockedTitleMessage = 'Blocked this user';
-  static const String blockedContentMessage =
-      'The contents of this user is hidden because you have blocked this user.';
-  static const String blockedChatMessage =
-      'You have blocked this user. Chat message is hidden.';
+  // static const String blocked = 'Blocked';
+  // static const String blockedMessage = 'You have blocked this user.';
+  // static const String blockedTitleMessage = 'Blocked this user';
+  // static const String blockedContentMessage =
+  //     'The contents of this user is hidden because you have blocked this user.';
+  // static const String blockedChatMessage =
+  //     'You have blocked this user. Chat message is hidden.';
   // static const String blockedUserMessage = 'You have blocked this user.';
 
-  static const String unblocked = 'Unblocked';
-  static const String unblockedMessage = 'You have unblocked this user.';
+  // static const String unblocked = 'Unblocked';
+  // static const String unblockedMessage = 'You have unblocked this user.';
 
-  static const String disabledOnSendMessage =
-      'You cannot send a message because your account is disabled.';
+  // static const String disabledOnSendMessage =
+  // 'You cannot send a message because your account is disabled.';
 
   /// Meetup
 

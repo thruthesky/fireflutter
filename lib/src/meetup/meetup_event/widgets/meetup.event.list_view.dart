@@ -68,7 +68,7 @@ class MeetupEventListView extends StatelessWidget {
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final String? restorationId;
   final Clip clipBehavior;
-  final Widget Function(MeetupEvent, int)? itemBuilder;
+  final Widget Function(MeetupEvent, Meetup?, int)? itemBuilder;
   final Widget Function()? emptyBuilder;
 
   @override
@@ -129,8 +129,11 @@ class MeetupEventListView extends StatelessWidget {
               snapshot.fetchMore();
             }
             final event = MeetupEvent.fromSnapshot(snapshot.docs[index]);
-            return itemBuilder?.call(event, index) ??
-                MeetupEventCard(event: event);
+            return itemBuilder?.call(event, meetup, index) ??
+                MeetupEventCard(
+                  event: event,
+                  meetup: meetup,
+                );
           },
         );
       },

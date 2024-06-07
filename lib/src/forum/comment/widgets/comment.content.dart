@@ -41,7 +41,7 @@ class _CommentContentState extends State<CommentContent> {
       child: Blocked(
         otherUserUid: widget.comment.uid,
         no: () => LinkifyText(content),
-        yes: () => const Text(T.blockedContentMessage),
+        yes: () =>  Text(T.blockedContentMessage.tr),
       ),
     );
   }

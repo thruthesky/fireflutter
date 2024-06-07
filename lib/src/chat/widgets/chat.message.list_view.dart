@@ -151,13 +151,9 @@ class _ChatMessageListViewState extends State<ChatMessageListView> {
                       onChange: () => setState(() {}),
                     ) ??
                     ChatBubble(
-                      room: chat.room,
+                      chat: chat,
                       message: message,
                       onChange: () => setState(() {}),
-                      onReply: (message) {
-                        widget.replyTo?.value = message;
-                        dog("onReply in Chat Message list view: $message");
-                      },
                     ),
               );
             },

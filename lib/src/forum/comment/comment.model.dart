@@ -294,18 +294,21 @@ class Comment {
   }
 
   Future update({
-    required String content,
+    String? content,
     List<String>? urls,
     bool? deleted,
   }) async {
     await ref.update({
-      'content': content,
+      if (content != null) 'content': content,
       'urls': urls,
       if (deleted != null) 'deleted': deleted,
     });
 
     /// Update the current content of the comment.
-    this.content = content;
+    if (content != null) this.content = content;
+    if (urls != null) {
+      this.urls = urls;
+    }
 
     ForumService.instance.onCommentUpdate?.call(this);
   }
