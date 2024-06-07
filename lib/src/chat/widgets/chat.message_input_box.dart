@@ -105,6 +105,9 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
                                       maxWidth:
                                           MediaQuery.of(context).size.width *
                                               0.6,
+                                      maxHeight:
+                                          MediaQuery.of(context).size.height *
+                                              0.2,
                                     ),
                                     child: CachedNetworkImage(
                                       imageUrl: replyTo.url!,
