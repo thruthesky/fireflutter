@@ -20,11 +20,6 @@ class _BuyAndSellScreenState extends State<BuyAndSellScreen> {
       body: PostListView(
         reverse: true,
         category: 'buyandsell',
-        padding: const EdgeInsets.only(
-          left: 12,
-          right: 12,
-        ),
-        separatorBuilder: (_, __) => const SizedBox(height: 8),
         itemBuilder: (post, index) => PostBubble(post: post),
       ),
       bottomNavigationBar: Padding(

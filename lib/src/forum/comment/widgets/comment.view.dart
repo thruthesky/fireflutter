@@ -44,22 +44,34 @@ class _CommnetViewState extends State<CommentView> {
               Blocked(
                 otherUserUid: widget.comment.uid,
                 yes: () => SizedBox.fromSize(),
-                no: () => Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: widget.comment.urls
-                      .map(
-                        (url) => ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: CachedNetworkImage(
-                            imageUrl: url,
-                            fit: BoxFit.cover,
-                            width: 200,
-                            height: 200,
+                no: () => GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const Placeholder(),
+                      ),
+                    );
+                  },
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: widget.comment.urls
+                        .map(
+                          (url) => ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: CachedNetworkImage(
+                              imageUrl: url,
+                              fit: BoxFit.cover,
+
+                              /// added a infity width for images
+                              width: double.infinity,
+                              // width: 100,
+                              height: 200,
+                            ),
                           ),
-                        ),
-                      )
-                      .toList(),
+                        )
+                        .toList(),
+                  ),
                 ),
               ),
               Theme(
@@ -180,7 +192,6 @@ class _CommnetViewState extends State<CommentView> {
                           comment: widget.comment,
                         );
                         widget.post.reload();
-                        
                       } else if (value == 'delete') {
                         await widget.comment
                             .delete(context: context, ask: true);

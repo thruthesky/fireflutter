@@ -26,7 +26,7 @@ class _ForumChatInputState extends State<ForumChatInput> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
