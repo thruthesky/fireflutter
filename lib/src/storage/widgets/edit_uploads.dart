@@ -44,6 +44,9 @@ class EditUploads extends StatelessWidget {
                     await StorageService.instance.delete(url);
                     onDelete(url);
                   } on FirebaseException catch (e) {
+                    // 'object-not-found' - image was already deleted in the storage
+                    // this usually happen when the user the delete an image and it didnt update the urls list on the server and reload/refresh the page then tried to delete again
+                    // this will not happen if the user delete the image and it updates the urls list on the server as well after delete
                     if (e.code == 'object-not-found') {
                       onDelete(url);
                     } else {
