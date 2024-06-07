@@ -86,6 +86,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "SDS - iPhone 14 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 14 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "apps/social_design_system/example",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Silbus - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
