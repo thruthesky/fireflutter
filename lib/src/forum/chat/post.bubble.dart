@@ -52,15 +52,23 @@ class PostBubble extends StatelessWidget {
       child: Wrap(
         spacing: 8,
         runSpacing: 8,
+        runAlignment: WrapAlignment.start,
         alignment: isMine ? WrapAlignment.end : WrapAlignment.start,
         children: [
-          if (!isMine) UserAvatar(uid: post.uid),
+          if (!isMine)
+            UserAvatar(
+              uid: post.uid,
+              cacheId: post.uid,
+            ),
           Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment:
                 isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 8),
-              DateTimeShort(dateTime: post.createdAt),
+              DateTimeShort(
+                dateTime: post.createdAt,
+              ),
               const SizedBox(width: 4),
               Container(
                 constraints: BoxConstraints(
@@ -76,7 +84,11 @@ class PostBubble extends StatelessWidget {
               ),
             ],
           ),
-          if (isMine) UserAvatar(uid: post.uid),
+          if (isMine)
+            UserAvatar(
+              uid: post.uid,
+              cacheId: post.uid,
+            ),
         ],
       ),
     );
@@ -99,29 +111,13 @@ class BubbleContent extends StatelessWidget {
         if (post.urls.isNotEmpty) CachedNetworkImage(imageUrl: post.urls.first),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                post.title.orBlocked(
-                  post.uid,
-                  T.blockedTitleMessage.tr,
-                ),
-                style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                maxLines: 1,
-              ),
-              const SizedBox(height: 4),
-              LinkifyText(
-                selectable: false,
-                post.content.orBlocked(
-                  post.uid,
-                  T.blockedContentMessage.tr,
-                ),
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ],
+          child: LinkifyText(
+            selectable: false,
+            post.content.orBlocked(
+              post.uid,
+              T.blockedContentMessage.tr,
+            ),
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
       ],

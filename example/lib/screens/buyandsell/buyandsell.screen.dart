@@ -13,6 +13,7 @@ class _BuyAndSellScreenState extends State<BuyAndSellScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('BuyAndSell'),
       ),
@@ -26,11 +27,12 @@ class _BuyAndSellScreenState extends State<BuyAndSellScreen> {
         separatorBuilder: (_, __) => const SizedBox(height: 8),
         itemBuilder: (post, index) => PostBubble(post: post),
       ),
-      bottomNavigationBar: const SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: ForumChatInput(category: 'buyandsell'),
-        ),
+      bottomNavigationBar: Padding(
+        /// This is to display the Textfield above the keyboard
+        /// viewInsets is a space that consumed by the keyboard
+        /// and used as a padding of bottomNavigationBar
+        padding: MediaQuery.of(context).viewInsets,
+        child: const ForumChatInput(category: 'buyandsell'),
       ),
     );
   }

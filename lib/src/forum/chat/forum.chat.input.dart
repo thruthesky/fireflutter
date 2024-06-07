@@ -15,125 +15,103 @@ class ForumChatInput extends StatefulWidget {
 }
 
 class _ForumChatInputState extends State<ForumChatInput> {
-  final titleController = TextEditingController();
   final contentController = TextEditingController();
 
   double? progress;
-  bool get isEmpty => titleController.text.isEmpty;
+  bool get isEmpty => contentController.text.isEmpty;
   bool get isNotEmpty => !isEmpty;
 
   final List<String> urls = [];
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (progress != null) LinearProgressIndicator(value: progress),
-        const SizedBox(height: 8),
-        // Title
-        // TextField(
-        //   controller: titleController,
-        //   decoration: InputDecoration(
-        //     hintText: "Input title here...",
-        //     border: const OutlineInputBorder(),
-        //     prefixIcon: isEmpty
-        //         ? IconButton(
-        //             onPressed: onUpload,
-        //             icon: const Icon(Icons.camera_alt),
-        //           )
-        //         : null,
-        //     suffixIcon: isEmpty
-        //         ? const IconButton(
-        //             onPressed: null,
-        //             icon: Icon(Icons.send),
-        //           )
-        //         : null,
-        //   ),
-        //   minLines: 1,
-        //   maxLines: 1,
-        //   onChanged: onChanged,
-        //   onSubmitted: onSubmitted,
-        // ),
-// Content
-        TextField(
-          controller: contentController,
-          decoration: InputDecoration(
-            hintText: "Input content here...",
-            border: const OutlineInputBorder(),
-            prefixIcon: isEmpty
-                ? IconButton(
-                    onPressed: onUpload,
-                    icon: const Icon(Icons.camera_alt),
-                  )
-                : null,
-            suffixIcon: isEmpty
-                ? const IconButton(
-                    onPressed: null,
-                    icon: Icon(Icons.send),
-                  )
-                : null,
-          ),
-          minLines: isEmpty ? 1 : 3,
-          maxLines: 4,
-          onChanged: onChanged,
-          onSubmitted: onSubmitted,
-        ),
-        if (isNotEmpty) ...[
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (progress != null) LinearProgressIndicator(value: progress),
           const SizedBox(height: 8),
-          Row(
-            children: [
-              IconButton(
-                onPressed: onUpload,
-                icon: const Icon(Icons.camera_alt),
-              ),
-              const Spacer(),
-              IconButton(
-                onPressed: onSubmitted,
-                icon: const Icon(Icons.send),
-              )
-            ],
+          TextField(
+            controller: contentController,
+            autofocus: false,
+            decoration: InputDecoration(
+              hintText: "Input content here...",
+              border: const OutlineInputBorder(),
+              prefixIcon: isEmpty
+                  ? IconButton(
+                      onPressed: onUpload,
+                      icon: const Icon(Icons.camera_alt),
+                    )
+                  : null,
+              suffixIcon: isEmpty
+                  ? const IconButton(
+                      onPressed: null,
+                      icon: Icon(Icons.send),
+                    )
+                  : null,
+            ),
+            minLines: isEmpty ? 1 : 3,
+            maxLines: 4,
+            onChanged: onChanged,
+            onSubmitted: onSubmitted,
           ),
-        ],
-
-        Wrap(
-          alignment: WrapAlignment.start,
-          spacing: 8,
-          runSpacing: 8,
-          children: urls
-              .map(
-                (url) => SizedBox(
-                  height: 100,
-                  width: 100,
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: CachedNetworkImage(
-                          imageUrl: url,
-                        ),
-                      ),
-                      Align(
-                        alignment: const Alignment(1.5, -1.5),
-                        child: IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            dog('$url is deleted');
-                            StorageService.instance.delete(url);
-                            urls.remove(url);
-                            setState(() {});
-                          },
-                          color: Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
+          if (isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: onUpload,
+                  icon: const Icon(Icons.camera_alt),
                 ),
-              )
-              .toList(),
-        ),
-      ],
+                const Spacer(),
+                IconButton(
+                  onPressed: onSubmitted,
+                  icon: const Icon(Icons.send),
+                )
+              ],
+            ),
+          ],
+          Wrap(
+            alignment: WrapAlignment.start,
+            spacing: 8,
+            runSpacing: 8,
+            children: urls
+                .map(
+                  (url) => SizedBox(
+                    height: 100,
+                    width: 100,
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: CachedNetworkImage(
+                            imageUrl: url,
+                          ),
+                        ),
+                        Align(
+                          alignment: const Alignment(1.5, -1.5),
+                          child: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              dog('$url is deleted');
+                              StorageService.instance.delete(url);
+                              urls.remove(url);
+                              setState(() {});
+                            },
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
     );
   }
 
@@ -154,7 +132,6 @@ class _ForumChatInputState extends State<ForumChatInput> {
       setState(() {
         urls.clear();
         contentController.clear();
-        titleController.clear();
       });
       FocusScope.of(context).unfocus();
     }

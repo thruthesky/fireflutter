@@ -259,6 +259,24 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "Example - All - Pixel 3a",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Example - All - SM J737S",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "SM J737S",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Example - All - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
