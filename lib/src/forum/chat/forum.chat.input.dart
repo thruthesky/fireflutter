@@ -33,10 +33,34 @@ class _ForumChatInputState extends State<ForumChatInput> {
         if (progress != null) LinearProgressIndicator(value: progress),
         const SizedBox(height: 8),
         // Title
+        // TextField(
+        //   controller: titleController,
+        //   decoration: InputDecoration(
+        //     hintText: "Input title here...",
+        //     border: const OutlineInputBorder(),
+        //     prefixIcon: isEmpty
+        //         ? IconButton(
+        //             onPressed: onUpload,
+        //             icon: const Icon(Icons.camera_alt),
+        //           )
+        //         : null,
+        //     suffixIcon: isEmpty
+        //         ? const IconButton(
+        //             onPressed: null,
+        //             icon: Icon(Icons.send),
+        //           )
+        //         : null,
+        //   ),
+        //   minLines: 1,
+        //   maxLines: 1,
+        //   onChanged: onChanged,
+        //   onSubmitted: onSubmitted,
+        // ),
+// Content
         TextField(
-          controller: titleController,
+          controller: contentController,
           decoration: InputDecoration(
-            hintText: "Input title here...",
+            hintText: "Input content here...",
             border: const OutlineInputBorder(),
             prefixIcon: isEmpty
                 ? IconButton(
@@ -51,38 +75,13 @@ class _ForumChatInputState extends State<ForumChatInput> {
                   )
                 : null,
           ),
-          minLines: 1,
-          maxLines: 1,
+          minLines: isEmpty ? 1 : 3,
+          maxLines: 4,
           onChanged: onChanged,
           onSubmitted: onSubmitted,
         ),
-        const SizedBox(height: 8),
-
         if (isNotEmpty) ...[
-          // Content
-          TextField(
-            controller: contentController,
-            decoration: InputDecoration(
-              hintText: "Input content here...",
-              border: const OutlineInputBorder(),
-              prefixIcon: isEmpty
-                  ? IconButton(
-                      onPressed: onUpload,
-                      icon: const Icon(Icons.camera_alt),
-                    )
-                  : null,
-              suffixIcon: isEmpty
-                  ? const IconButton(
-                      onPressed: null,
-                      icon: Icon(Icons.send),
-                    )
-                  : null,
-            ),
-            minLines: isEmpty ? 1 : 3,
-            maxLines: 4,
-            onChanged: onChanged,
-            onSubmitted: onSubmitted,
-          ),
+          const SizedBox(height: 8),
           Row(
             children: [
               IconButton(
@@ -144,7 +143,7 @@ class _ForumChatInputState extends State<ForumChatInput> {
 
   onSubmitted([String? value]) async {
     final post = await Post.create(
-      title: titleController.text.cut(64),
+      title: contentController.text.cut(64),
       content: contentController.text,
       category: widget.category,
       urls: urls,
