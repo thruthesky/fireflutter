@@ -245,6 +245,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                   ),
                 ),
               ),
+            const SizedBox(height: 16),
           ],
         ),
       ),
