@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,7 @@ class DefaultChatRoomEditDialog extends StatefulWidget {
 }
 
 class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
-  bool open = false;
+  bool open = true;
   bool isVerifiedOnly = false;
   bool urlVerifiedUserOnly = false;
   bool uploadVerifiedUserOnly = false;
@@ -97,19 +98,6 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
               ),
             ),
             const SizedBox(height: 16),
-            // Password
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: TextField(
-                controller: passwordController,
-                decoration: InputDecoration(
-                  labelText: T.passwordToJoin.tr,
-                  hintText: T.leaveEmptyPasswordIfNotRequired.tr,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-
             if (isEdit)
               Value(
                 // path: "${ChatRoom.node}/${widget.roomId}/${Field.iconUrl}",
@@ -149,62 +137,90 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                       padding: const EdgeInsets.all(8.0),
                       child: LinearProgressIndicator(value: progress),
                     ),
-            ListTileTheme(
-              child: SwitchListTile(
-                value: open,
-                onChanged: (v) => setState(() => open = v),
+            SwitchListTile(
+              value: open,
+              onChanged: (v) => setState(() => open = v),
+              title: Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Text(
+                  T.openChat.tr,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+              subtitle: Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Text(
+                  T.anyoneCanJoinChat.tr,
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
+              ),
+            ),
+            if (widget.authRequired)
+              SwitchListTile(
+                value: isVerifiedOnly,
+                onChanged: (v) => setState(() => isVerifiedOnly = v),
                 title: Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
-                    T.openChat.tr,
+                    T.verifiedMembersOnly.tr,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+                subtitle: Text(
+                  T.onlyVerifiedMembersCanJoinChat.tr,
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
+              ),
+
+            /// Password
+            if (isEdit && room != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: FutureBuilder<DataSnapshot>(
+                    future: ChatService.instance.settingRef(room!.id).get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const SizedBox.shrink();
+                      }
+                      if (snapshot.hasError) {
+                        debugPrint('Error: ${snapshot.error}');
+                        return Text(snapshot.error.toString());
+                      }
+                      if (snapshot.hasData == false) {
+                        return const SizedBox.shrink();
+                      }
+                      final data = snapshot.data?.value as Map?;
+                      if (data != null && data[Field.password] != null) {
+                        passwordController.text =
+                            data[Field.password] as String;
+                      }
+                      return TextField(
+                        controller: passwordController,
+                        decoration: InputDecoration(
+                          labelText: T.passwordToJoin.tr,
+                          hintText: T.leaveEmptyPasswordIfNotRequired.tr,
+                        ),
+                      );
+                    }),
+              ),
+            const SizedBox(height: 16),
+
+            if (isEdit)
+              SwitchListTile(
+                value: urlVerifiedUserOnly,
+                onChanged: (v) => setState(() => urlVerifiedUserOnly = v),
+                title: Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: Text(
+                    T.urlEntryOnlyForVerified.tr,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
                 subtitle: Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
-                    T.anyoneCanJoinChat.tr,
-                    style: Theme.of(context).textTheme.labelSmall,
-                  ),
-                ),
-              ),
-            ),
-            if (widget.authRequired)
-              ListTileTheme(
-                child: SwitchListTile(
-                  value: isVerifiedOnly,
-                  onChanged: (v) => setState(() => isVerifiedOnly = v),
-                  title: Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: Text(
-                      T.verifiedMembersOnly.tr,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ),
-                  subtitle: Text(
                     T.onlyVerifiedMembersCanJoinChat.tr,
                     style: Theme.of(context).textTheme.labelSmall,
-                  ),
-                ),
-              ),
-            if (isEdit)
-              ListTileTheme(
-                child: SwitchListTile(
-                  value: urlVerifiedUserOnly,
-                  onChanged: (v) => setState(() => urlVerifiedUserOnly = v),
-                  title: Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: Text(
-                      T.urlEntryOnlyForVerified.tr,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ),
-                  subtitle: Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: Text(
-                      T.onlyVerifiedMembersCanJoinChat.tr,
-                      style: Theme.of(context).textTheme.labelSmall,
-                    ),
                   ),
                 ),
               ),
@@ -229,6 +245,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                   ),
                 ),
               ),
+            const SizedBox(height: 16),
           ],
         ),
       ),
@@ -265,6 +282,14 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 Navigator.pop(context, room);
               }
             } else {
+              // Set password
+              await ChatService.instance.setRoomPassword(
+                roomId: room!.id,
+                password: passwordController.text.isEmpty
+                    ? null
+                    : passwordController.text,
+              );
+
               await room?.update(
                 name: nameController.text,
                 description: descriptionController.text,
@@ -272,7 +297,9 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 isVerifiedOnly: isVerifiedOnly,
                 urlVerifiedUserOnly: urlVerifiedUserOnly,
                 uploadVerifiedUserOnly: uploadVerifiedUserOnly,
+                hasPassword: passwordController.text.isNotEmpty,
               );
+
               if (context.mounted) {
                 Navigator.pop(context, room);
               }

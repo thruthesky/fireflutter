@@ -14,7 +14,7 @@ class _OpenChatScreenState extends State<OpenChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat'),
+        title: const Text('Open Chat'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),

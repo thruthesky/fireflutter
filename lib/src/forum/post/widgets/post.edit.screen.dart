@@ -132,10 +132,13 @@ class _PostEditScreenState extends State<PostEditScreen> {
                 urls: post.urls,
                 onDelete: (url) async {
                   setState(() => post.urls.remove(url));
+
+                  /// If isUpdate then delete the url silently from the server
+                  /// sometimes the user delete a url from post/comment but didnt save the post. so the url still exist but the actual image is already deleted
+                  /// so we need to update the post to remove the url from the server
+                  /// this will prevent error like the url still exist but the image is already deleted
                   if (isUpdate) {
                     await post.update(
-                      title: titleController.text,
-                      content: contentController.text,
                       urls: post.urls,
                     );
                   }

@@ -277,7 +277,7 @@
       "program": "lib/main.dart"
     },
     {
-      "name": "Example - All - iPhone 15 Pro Max",
+      "name": "Example - Main- iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
       "deviceId": "iPhone 15 Pro Max",
@@ -286,19 +286,10 @@
       "program": "lib/main.dart"
     },
     {
-      "name": "Example - All - iPhone 14 Pro Max",
+      "name": "Example - All - SM T295",
       "request": "launch",
       "type": "dart",
-      "deviceId": "iPhone 14 Pro Max",
-      "flutterMode": "debug",
-      "cwd": "example",
-      "program": "lib/main.dart"
-    },
-    {
-      "name": "Example - All - iPhone SE",
-      "request": "launch",
-      "type": "dart",
-      "deviceId": "iPhone SE",
+      "deviceId": "ROWM705A3NJ",
       "flutterMode": "debug",
       "cwd": "example",
       "program": "lib/main.dart"
@@ -311,6 +302,15 @@
       "flutterMode": "debug",
       "cwd": "example",
       "program": "lib/main.chat.dart"
+    },
+    {
+      "name": "Example - Main - iPhone SE",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone SE",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
     },
     {
       "name": "Example - Chat - iPhone SE",
