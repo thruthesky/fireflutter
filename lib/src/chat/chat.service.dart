@@ -208,8 +208,20 @@ class ChatService {
     );
   }
 
-  Future setRoomPassword(
-      {required String roomId, required String password}) async {
-    return await settingRef(roomId).child('password').set(password);
+  /// Set password for the chat room
+  ///
+  /// [roomId] is the chat room id.
+  ///
+  /// [password] is the password to set. If it is null, the password will be removed.
+  Future setRoomPassword({
+    required String roomId,
+    required String? password,
+  }) async {
+    await settingRef(roomId).child('password').set(password);
+  }
+
+  Future<String?> getRoomPassword({required String roomId}) async {
+    final snapshot = await settingRef(roomId).child('password').get();
+    return snapshot.value as String?;
   }
 }

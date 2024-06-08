@@ -4,6 +4,16 @@
       ".read": true,
       ".write": true
     },
+    // Settings
+    "settings": {
+      "chat-rooms": {
+        "$chatRoomId": {
+          // 방장(master)만 채팅방 설정을 읽고/수정 할 수 있도록 한다.
+          ".read": "root.child('chat-rooms').child($chatRoomId).child('master').val() === auth.uid",
+          ".write": "root.child('chat-rooms').child($chatRoomId).child('master').val() === auth.uid"
+        }
+      }
+    },
     // Action
     "action-logs": {
       "chat-join": {
@@ -140,6 +150,20 @@
       "$room_id": {
         ".write": true,
         "users": {
+          // 비밀번호가 없으면, 입장 가능. 비밀번호가 있거나/없거나 상관없이 퇴장 가능.
+          ".validate": "
+              (
+                root.child('settings').child('chat-rooms').child($room_id).child('password').exists() === false
+                ||
+                root.child('settings').child('chat-rooms').child($room_id).child('password').val() === ''
+              )
+              ||
+              (
+                data.hasChild(auth.uid)
+                &&
+                newData.hasChild(auth.uid) === false
+              )
+          ",
           ".indexOn": ".value"
         },
         // admins and master can update "blockedUsers"

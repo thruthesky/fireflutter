@@ -47,6 +47,7 @@ class Field {
   static const String groupChatOrder = 'groupChatOrder';
   static const String openGroupChatOrder = 'openGroupChatOrder';
   static const String newMessage = 'newMessage';
+  static const String hasPassword = 'hasPassword';
 
   static const String text = 'text';
   static const String url = 'url';

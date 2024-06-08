@@ -172,8 +172,8 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 ),
               ),
 
-            // Password
-            if (isEdit)
+            /// Password
+            if (isEdit && room != null)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: FutureBuilder<DataSnapshot>(
@@ -189,9 +189,11 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                       if (snapshot.hasData == false) {
                         return const SizedBox.shrink();
                       }
-                      final data = snapshot.data!.value as Map;
-                      final password = data[Field.password] as String?;
-                      passwordController.text = password ?? '';
+                      final data = snapshot.data?.value as Map?;
+                      if (data != null && data[Field.password] != null) {
+                        passwordController.text =
+                            data[Field.password] as String;
+                      }
                       return TextField(
                         controller: passwordController,
                         decoration: InputDecoration(
@@ -279,6 +281,14 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 Navigator.pop(context, room);
               }
             } else {
+              // Set password
+              await ChatService.instance.setRoomPassword(
+                roomId: room!.id,
+                password: passwordController.text.isEmpty
+                    ? null
+                    : passwordController.text,
+              );
+
               await room?.update(
                 name: nameController.text,
                 description: descriptionController.text,
@@ -286,12 +296,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 isVerifiedOnly: isVerifiedOnly,
                 urlVerifiedUserOnly: urlVerifiedUserOnly,
                 uploadVerifiedUserOnly: uploadVerifiedUserOnly,
-              );
-
-              // set password even if it's empty string
-              await ChatService.instance.setRoomPassword(
-                roomId: room!.id,
-                password: passwordController.text,
+                hasPassword: passwordController.text.isNotEmpty,
               );
 
               if (context.mounted) {

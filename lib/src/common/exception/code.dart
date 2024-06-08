@@ -71,4 +71,6 @@ class Code {
   static const String meetupNotJoined = 'meetup-not-joined';
 
   static const String meetupNotVerified = 'meetupNotVerified';
+
+  static const String joinWithPasswordFailed = 'joinWithPasswordFailed';
 }
