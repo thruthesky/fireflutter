@@ -29,18 +29,16 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onLongPressStart: (details) {
-        _showPopupMenu(context, details.globalPosition);
-      },
+      onLongPressStart: _menuItems.isNotEmpty
+          ? (details) {
+              _showPopupMenu(context, details.globalPosition);
+            }
+          : null,
       child: child,
     );
   }
 
-  void _showPopupMenu(BuildContext context, Offset offset) async {
-    await showMenu(
-      context: context,
-      position: RelativeRect.fromLTRB(offset.dx, offset.dy, offset.dx, 0),
-      items: [
+  List<PopupMenuItem<String>> get _menuItems => [
         if (onReplyMessage != null && !message.deleted)
           PopupMenuItem<String>(
             value: Code.reply,
@@ -74,7 +72,13 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
               child: Text(T.block.tr),
             ),
         ],
-      ],
+      ];
+
+  void _showPopupMenu(BuildContext context, Offset offset) async {
+    await showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(offset.dx, offset.dy, offset.dx, 0),
+      items: _menuItems,
     ).then((value) {
       if (value != null) {
         if (value == Code.reply) {
