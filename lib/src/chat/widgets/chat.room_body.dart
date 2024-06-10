@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
@@ -61,6 +62,9 @@ class _ChatRoomState extends State<ChatRoomBody> {
   /// 채팅방 정보가 로드되었으면, 전체 화면을 다시 그리지 않고, 채팅 목록만 다시 그린다.
   /// 그래서, 채팅 화면 상단의 제목 부분이 깜빡거리지 않도록 한다.
   final loaded = ValueNotifier<bool>(false);
+
+  /// if there is an error while joining the chat room
+  bool cannotJoin = false;
 
   @override
   void initState() {
@@ -127,17 +131,10 @@ class _ChatRoomState extends State<ChatRoomBody> {
     }
 
     if (chat.room.joined == false) {
-      try {
-        await chat.room.join();
-      } on FireFlutterException catch (e) {
-        if (e.code == Code.chatRoomNotVerified) {
-          if (mounted) {
-            error(context: context, message: '본인 인증을 하지 않아 채팅방에 입장할 수 없습니다.');
-          }
-          rethrow;
-        }
-      } catch (e) {
-        rethrow;
+      if (chat.room.hasPassword) {
+        await joinWithPassword();
+      } else {
+        await join();
       }
     }
 
@@ -154,6 +151,42 @@ class _ChatRoomState extends State<ChatRoomBody> {
     ///
     /// 참고, 여기서 방 전체를 subscribe 하는데, 잘못된 것 같다. 필요한 필드만 subscribe 해야하는 것이 맞는 것 같다.
     chat.subscribeRoomUpdate(onUpdate: () => {});
+  }
+
+  /// Join to the chat room
+  join() async {
+    try {
+      await chat.room.join();
+    } on FireFlutterException catch (e) {
+      if (e.code == Code.chatRoomNotVerified) {
+        if (mounted) {
+          error(context: context, message: '본인 인증을 하지 않아 채팅방에 입장할 수 없습니다.');
+        }
+        rethrow;
+      }
+    } catch (e) {
+      setState(() => cannotJoin = true);
+      rethrow;
+    }
+  }
+
+  /// join chat room with password
+  joinWithPassword() async {
+    final password = await input(
+      context: context,
+      title: '비밀번호를 입력해 주세요.',
+      hintText: '비밀번호',
+    );
+    if (password == null || password == '') {
+      Navigator.of(context).pop();
+      return;
+    }
+    try {
+      await chat.room.joinWithPassword(password: password);
+    } catch (e) {
+      Navigator.of(context).pop();
+      rethrow;
+    }
   }
 
   @override
@@ -325,7 +358,9 @@ class _ChatRoomState extends State<ChatRoomBody> {
                           ),
                         PopupMenuItem(
                             value: 'report', child: Text(T.report.tr)),
-                        if (widget.leave && !chat.room.isMaster)
+                        if (widget.leave &&
+                            !chat.room.isMaster &&
+                            chat.room.isGroupChat)
                           PopupMenuItem(
                               value: 'leave', child: Text(T.leave.tr)),
                       ],
@@ -396,6 +431,13 @@ class _ChatRoomState extends State<ChatRoomBody> {
                 : const SizedBox.shrink(),
           ),
         ),
+
+        if (cannotJoin)
+          const Expanded(
+            child: Center(
+              child: Text('Error. Cannot join the chat room.'),
+            ),
+          ),
 
         if (userDeleted == false &&
             chat.room.blockedUsers.contains(myUid) == false)

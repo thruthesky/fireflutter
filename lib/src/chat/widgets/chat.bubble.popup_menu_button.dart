@@ -41,7 +41,7 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
       context: context,
       position: RelativeRect.fromLTRB(offset.dx, offset.dy, offset.dx, 0),
       items: [
-        if (onReplyMessage != null)
+        if (onReplyMessage != null && !message.deleted)
           PopupMenuItem<String>(
             value: Code.reply,
             height: 40,

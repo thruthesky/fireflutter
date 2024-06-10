@@ -28,15 +28,17 @@
     - `previewDescription` - Description
     - `previewImageUrl` - Image
 
-### Chat Rooms
+### Chat Rooms 구조
 
-- `master` 는 그룹 채팅 일 경우만 저장된다. 그룹 채팅 방에서 본인이 master 이면 채팅방 설정을 하면 된다.
+- `master` 필드는 그룹 채팅 일 경우만 저장된다. 그룹 채팅 방에서 본인이 master 이면 채팅방 설정을 하면 된다.
 
 - `blocks` - 관리자가 채팅방의 블럭 리스트를 관리한다. 여기에 추가된 사용자는 채팅방에 입장을 할 수 없다. 또한 자동으로 채팅방에서 튕겨나가도록 한다. (**TODO: 2024-02-22 현재 기능 구현되지 않음.**)
 
 
 - `open` 옵션은 단순히 오픈 채팅방에 목록되거나 채팅방이 검색된다는 뜻이다. `open` 이 false 로 지정되어도, 사람들은 여전히 (그냥) 입장을 할 수 있다.
 
+
+- `hasPassword` 는 채팅방에 비밀번호가 있으면 `true` 로 지정된다.
 
 ### Chat Messages 구조
 
@@ -48,6 +50,23 @@
 - `text` 텍스트를 전송한 경우.
 - `url` 사진 URL. 사진을 전송한 경우.
 - `deleted` 채팅 메시지가 삭제되면 true 값이 저장되고, text, url, url preview 등의 값이 모두 삭제된다.
+
+
+### 채팅방 설정
+
+
+- 일반적으로 채팅방 이름, 설명, 사진 등의 기본 정보는 /chat-rooms 에 저장된다. 하지만, 사용자에게 공개되면 안되는 비밀스러운 정보는 /settings/chat-rooms 에 저장된다.
+
+#### 채팅방 설정과 비밀번호
+
+- `/settings/chat-rooms/<room-id>/password` 필드는 채팅방의 비밀번호를 가지며, 이 값이 null, undefined, empty 가 아니라, 값이 있으면 사용자는 cloud functions 함수 호출을 통해서만 join 할 수 있다.
+
+- `/settings/chat-rooms/<room-id>/password` 필드는 채팅방의 master 만 읽고 쓸 수 있도록 security rules 에 지정되어져 있다.
+  - 그래서 일반 사용자는 접근 권한이 없어 비밀번호가 있는지 조차 알 수 없는데, 이것이 프로그램 로직을 어렵게 한다.
+    - 그래서 프로그램 로직을 쉽게하기 위해서 `/settings/chat-rooms/<room-id>/password` 에 값을 설정 할 때에는 채팅방의 `hasPassword` 에 true 를 저장하고 비밀번호가 삭제되면 false 를 지정한다. 즉, 이 두 값은 쌍으로 설정된다.
+    참고로, 비밀번호 설정을 백엔드 함수를 통해서 이 두 쌍의 값이 같이 움직이도록 한다. 클라이언트에서 코딩을 하면, 클라이언트 플랫폼이 플러터 말고 다른 것으로 되면, 클라이언트 코딩 로직이 번거러워진다.
+
+- 채팅방에 비밀번호가 있는 경우, 백엔드를 통해서 입장을 해야 한다. 즉, FireFlutterExtensions 백엔드를 설치해야 한다.
 
 
 ## 1:1 채팅방에 상대방의 사진와 이름이 나오는 로직

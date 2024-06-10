@@ -17,6 +17,7 @@ class ForumChatInput extends StatefulWidget {
 class _ForumChatInputState extends State<ForumChatInput> {
   final contentController = TextEditingController();
 
+  double? progress;
   bool get isEmpty => contentController.text.isEmpty;
   bool get isNotEmpty => !isEmpty;
 
@@ -24,68 +25,98 @@ class _ForumChatInputState extends State<ForumChatInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        TextField(
-          controller: contentController,
-          decoration: InputDecoration(
-            hintText: "Input content here...",
-            border: const OutlineInputBorder(),
-            prefixIcon: isEmpty
-                ? IconButton(
-                    onPressed: onUpload,
-                    icon: const Icon(Icons.camera_alt),
-                  )
-                : null,
-            suffixIcon: isEmpty
-                ? const IconButton(
-                    onPressed: null,
-                    icon: Icon(Icons.send),
-                  )
-                : null,
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (progress != null) LinearProgressIndicator(value: progress),
+          const SizedBox(height: 8),
+          TextField(
+            controller: contentController,
+            autofocus: false,
+            decoration: InputDecoration(
+              hintText: "Input content here...",
+              border: const OutlineInputBorder(),
+              prefixIcon: isEmpty
+                  ? IconButton(
+                      onPressed: onUpload,
+                      icon: const Icon(Icons.camera_alt),
+                    )
+                  : null,
+              suffixIcon: isEmpty
+                  ? const IconButton(
+                      onPressed: null,
+                      icon: Icon(Icons.send),
+                    )
+                  : null,
+            ),
+            minLines: isEmpty ? 1 : 3,
+            maxLines: 4,
+            onChanged: onChanged,
+            onSubmitted: onSubmitted,
           ),
-          minLines: isEmpty ? 1 : 3,
-          maxLines: 10,
-          onChanged: onChanged,
-          onSubmitted: onSubmitted,
-        ),
-        if (isNotEmpty)
-          Row(
-            children: [
-              IconButton(
-                onPressed: onUpload,
-                icon: const Icon(Icons.camera_alt),
-              ),
-              const Spacer(),
-              IconButton(
-                onPressed: onSubmitted,
-                icon: const Icon(Icons.send),
-              )
-            ],
-          ),
-        Wrap(
-          alignment: WrapAlignment.start,
-          spacing: 8,
-          runSpacing: 8,
-          children: urls
-              .map(
-                (url) => CachedNetworkImage(
-                  imageUrl: url,
-                  width: 100,
-                  height: 100,
+          if (isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: onUpload,
+                  icon: const Icon(Icons.camera_alt),
                 ),
-              )
-              .toList(),
-        ),
-      ],
+                const Spacer(),
+                IconButton(
+                  onPressed: onSubmitted,
+                  icon: const Icon(Icons.send),
+                )
+              ],
+            ),
+          ],
+          Wrap(
+            alignment: WrapAlignment.start,
+            spacing: 8,
+            runSpacing: 8,
+            children: urls
+                .map(
+                  (url) => SizedBox(
+                    height: 100,
+                    width: 100,
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: CachedNetworkImage(
+                            imageUrl: url,
+                          ),
+                        ),
+                        Align(
+                          alignment: const Alignment(1.5, -1.5),
+                          child: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              dog('$url is deleted');
+                              StorageService.instance.delete(url);
+                              urls.remove(url);
+                              setState(() {});
+                            },
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
     );
   }
 
   onChanged(String value) {
-    print(value);
-    setState(() => {});
+    setState(() {});
   }
 
   onSubmitted([String? value]) async {
@@ -93,6 +124,7 @@ class _ForumChatInputState extends State<ForumChatInput> {
       title: contentController.text.cut(64),
       content: contentController.text,
       category: widget.category,
+      urls: urls,
     );
     print(post);
 
@@ -105,9 +137,14 @@ class _ForumChatInputState extends State<ForumChatInput> {
     }
   }
 
-  onUpload() async {
-    final url = await StorageService.instance.upload(context: context);
+  Future<void> onUpload() async {
+    final url = await StorageService.instance.upload(
+      context: context,
+      progress: (p) => setState(() => progress = p),
+      complete: () => setState(() => progress = null),
+    );
     if (url == null) return;
+    progress = null;
     setState(() => urls.add(url));
   }
 }

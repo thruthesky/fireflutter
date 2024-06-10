@@ -96,6 +96,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "SDS - iPhone 14 Pro Max",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone 14 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "apps/social_design_system/example",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Silbus - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
@@ -250,19 +259,37 @@
       "program": "lib/main.dart"
     },
     {
-      "name": "Example - All - iPhone 14 Pro Max",
+      "name": "Example - All - Pixel 3a",
       "request": "launch",
       "type": "dart",
-      "deviceId": "iPhone 14 Pro Max",
+      "deviceId": "emulator-5554",
       "flutterMode": "debug",
       "cwd": "example",
       "program": "lib/main.dart"
     },
     {
-      "name": "Example - All - iPhone 15 Pro Max",
+      "name": "Example - All - SM J737S",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "SM J737S",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Example - Main- iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",
       "deviceId": "iPhone 15 Pro Max",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Example - All - SM T295",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "ROWM705A3NJ",
       "flutterMode": "debug",
       "cwd": "example",
       "program": "lib/main.dart"
@@ -275,6 +302,15 @@
       "flutterMode": "debug",
       "cwd": "example",
       "program": "lib/main.chat.dart"
+    },
+    {
+      "name": "Example - Main - iPhone SE",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone SE",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
     },
     {
       "name": "Example - Chat - iPhone SE",

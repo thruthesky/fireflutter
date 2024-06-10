@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 
@@ -97,6 +98,9 @@ class ChatRoom {
   /// 그룹 채팅방에서 관리자/마스터에 의해 차단된 사용자 목록
   List<String> blockedUsers = [];
 
+  /// [hasPassword] tells whether a password is set for the group chat room
+  bool hasPassword;
+
   ChatRoom({
     required this.ref,
     required this.key,
@@ -120,6 +124,7 @@ class ChatRoom {
     this.users,
     this.noOfUsers,
     this.blockedUsers = const [],
+    this.hasPassword = false,
   });
 
   /// [fromSnapshot] It creates a [ChatRoom] from a [DataSnapshot].
@@ -190,6 +195,7 @@ class ChatRoom {
       blockedUsers: json['blockedUsers'] == null
           ? []
           : List<String>.from((json['blockedUsers'] as Map).keys.toList()),
+      hasPassword: json['hasPassword'] ?? false,
     );
   }
   Map<String, dynamic> toJson() {
@@ -214,6 +220,7 @@ class ChatRoom {
       'users': users,
       'noOfUsers': noOfUsers,
       'blockedUsers': blockedUsers,
+      'hasPassword': hasPassword,
     };
   }
 
@@ -319,6 +326,8 @@ class ChatRoom {
     noOfUsers = room.noOfUsers;
     blockedUsers = room.blockedUsers;
 
+    hasPassword = room.hasPassword;
+
     return this;
   }
 
@@ -411,6 +420,7 @@ class ChatRoom {
     bool? isVerifiedOnly,
     bool? urlVerifiedUserOnly,
     bool? uploadVerifiedUserOnly,
+    required bool hasPassword,
   }) async {
     final int minusTime = DateTime.now().millisecondsSinceEpoch * -1;
     final data = {
@@ -422,6 +432,7 @@ class ChatRoom {
       Field.urlVerifiedUserOnly: urlVerifiedUserOnly,
       Field.uploadVerifiedUserOnly: uploadVerifiedUserOnly,
       Field.openGroupChatOrder: isOpenGroupChat == true ? minusTime : null,
+      Field.hasPassword: hasPassword,
     };
     return ref.update(data);
   }
@@ -532,31 +543,8 @@ class ChatRoom {
       await ref.child('noOfUsers').set(users?.length ?? 1);
     }
 
-    /// 입력된 사용자 UID 의 채팅방 목록(chat-joins)에 입장하는 채팅방 정보 저장
-    ///
-    final order = DateTime.now().millisecondsSinceEpoch * -1;
-    final data = {
-      Field.name: isGroupChat ? name : '',
-      Field.groupChatOrder: isGroupChat ? order : null,
-      Field.singleChatOrder: isSingleChat ? order : null,
-      Field.newMessage: null,
-    };
+    await _updateChatJoins(uid);
 
-    /// 1:1 채팅방의 경우, 상대방의 이름을 저장한다.
-    if (otherUserUid != null) {
-      final user = await User.get(otherUserUid!);
-      data['name'] = user?.displayName;
-      data['photoUrl'] = user?.photoUrl;
-    }
-
-    // set order into -updatedAt (w/out "1")
-    // it is important to know that updatedAt must not be updated
-    // before this.
-
-    /// 1:1 채팅방의 경우, 상대방의 채팅방 join 목록에 나의 채팅방 정보를 저장하지 않는다. 그래서,
-    /// 채팅 방 입장만 한 경우, 나의 목록에는 나타나지만 상대방의 목록에는 타나나지 않도록 한다.
-    data['order'] = order;
-    await ChatJoin.ref.child(uid).child(id).update(data);
     return null;
   }
 
@@ -576,11 +564,67 @@ class ChatRoom {
     return await invite(uid ?? myUid!, forceJoin: forceJoin);
   }
 
+  /// 비밀번호를 입력하여 채팅방에 입장
+  ///
+  /// 그룹 채팅방만 비밀번호를 설정 할 수 있다.
+  ///
+  Future joinWithPassword({required String password}) async {
+    final res = await FirebaseFunctions.instance
+        .httpsCallable('ext-fff-chatJoinWithPassword')
+        .call({
+      'roomId': id,
+      'password': password,
+    });
+    if (res.data['code'] != 'SUCCESS') {
+      throw FireFlutterException(
+        Code.joinWithPasswordFailed,
+        'Failed to join the chat room with password - ${res.data['code']} - room id: $id',
+      );
+    }
+    // 그룹 채팅방이면, noOfUsers 를 업데이트 한다.
+    await ref.child('noOfUsers').set(users?.length ?? 1);
+
+    await _updateChatJoins(myUid!);
+  }
+
+  /// 채팅방에 입장을 할 때, chat-joins 에 채팅방 정보를 업데이트하여, 나의 채팅방 목록에 나오도록 한다.
+  ///
+  /// [uid] 는 초대할 uid 또는 내가 채팅방에 들어가는 경우, 나의 uid 이다.
+  _updateChatJoins(String uid) async {
+    dog('_updateChatJoins: $uid');
+    final order = DateTime.now().millisecondsSinceEpoch * -1;
+    final data = {
+      Field.name: isGroupChat ? name : '',
+      Field.groupChatOrder: isGroupChat ? order : null,
+      Field.singleChatOrder: isSingleChat ? order : null,
+      Field.newMessage: null,
+    };
+
+    /// 1:1 채팅방의 경우, 상대방의 이름을 저장한다.
+    ///
+    if (otherUserUid != null) {
+      final user = await User.get(otherUserUid!);
+      data['name'] = user?.displayName;
+      data['photoUrl'] = user?.photoUrl;
+    }
+
+    // set order into -updatedAt (w/out "1")
+    // it is important to know that updatedAt must not be updated
+    // before this.
+
+    /// 1:1 채팅방의 경우, 상대방의 채팅방 join 목록에 나의 채팅방 정보를 저장하지 않는다. 그래서,
+    /// 채팅 방 입장만 한 경우, 나의 목록에는 나타나지만 상대방의 목록에는 타나나지 않도록 한다.
+    data['order'] = order;
+    await ChatJoin.ref.child(uid).child(id).update(data);
+  }
+
   /// 채팅방 나가기
   ///
   /// 채팅방에서 나가는 것은 채팅방의 'users' 필드에서 나의 uid 를 삭제하고, chat-joins 에서도 해당 방을 삭제하면 된다.
   /// 1:1 채팅방이라도 방 전체 데이터를 삭제를 하지 않고, users 에 나의 uid 만 삭제한다. 1:1 채팅방에서 상대방의 채팅방
   /// 목록에는 채팅방 정보가 남아 있어야 한다.
+  ///
+  /// 단, 비밀번호가 설정되어져 있으면, 백엔드 함수를 통해서만 나갈 수 있다.
   Future leave() async {
     await ref.child(Field.users).child(myUid!).remove();
     await ChatJoin.joinRef(myUid!, id).remove();
