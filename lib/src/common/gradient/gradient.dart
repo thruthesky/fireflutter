@@ -34,9 +34,11 @@ class GradientTopDown extends StatelessWidget {
   const GradientTopDown({
     super.key,
     this.height = 220,
+    this.borderRadius,
   });
 
   final double height;
+  final BorderRadiusGeometry? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +48,9 @@ class GradientTopDown extends StatelessWidget {
       right: 0,
       child: Container(
         height: height,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
+        decoration: BoxDecoration(
+          borderRadius: borderRadius,
+          gradient: const LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
