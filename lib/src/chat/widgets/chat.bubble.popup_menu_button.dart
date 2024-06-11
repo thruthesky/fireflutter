@@ -75,25 +75,25 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
       ];
 
   void _showPopupMenu(BuildContext context, Offset offset) async {
-    await showMenu(
+    final value = await showMenu(
       context: context,
       position: RelativeRect.fromLTRB(offset.dx, offset.dy, offset.dx, 0),
       items: _menuItems,
-    ).then((value) {
-      if (value != null) {
-        if (value == Code.reply) {
-          (onReplyMessage ?? _onReplyMessage).call(context, message);
-        } else if (value == Code.delete) {
-          (onDeleteMessage ?? _onDeleteMessage).call(context, message);
-        } else if (value == Code.viewProfile) {
-          (onViewProfile ?? _onViewProfile).call(context, message.uid!);
-        } else if (value == Code.block) {
-          (onBlockUser ?? _onBlockUser).call(context, message.uid!);
-        } else if (value == Code.unblock) {
-          (onUnblockUser ?? _onUnblockUser).call(context, message.uid!);
-        }
+    );
+
+    if (value != null) {
+      if (value == Code.reply) {
+        (onReplyMessage ?? _onReplyMessage).call(context, message);
+      } else if (value == Code.delete) {
+        (onDeleteMessage ?? _onDeleteMessage).call(context, message);
+      } else if (value == Code.viewProfile) {
+        (onViewProfile ?? _onViewProfile).call(context, message.uid!);
+      } else if (value == Code.block) {
+        (onBlockUser ?? _onBlockUser).call(context, message.uid!);
+      } else if (value == Code.unblock) {
+        (onUnblockUser ?? _onUnblockUser).call(context, message.uid!);
       }
-    });
+    }
   }
 
   void _onViewProfile(BuildContext context, String uid) {
