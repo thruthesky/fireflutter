@@ -87,10 +87,8 @@ class StorageService {
     final uploadTask = fileRef.putFile(file);
     if (progress != null) {
       uploadTask.snapshotEvents.listen((event) {
-        /// Show fake progress if the progress is less than 20%
-        /// this will make the progress bar looks better
-        double p = event.bytesTransferred / event.totalBytes;
-        progress(p < 0.2 ? 0.2 : p);
+        double rate = event.bytesTransferred / event.totalBytes;
+        progress(rate < 0.2 ? 0.2 : rate);
       });
     }
 
