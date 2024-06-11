@@ -330,6 +330,15 @@
       "cwd": "example",
       "program": "lib/main.chat.dart"
     },
+    {
+      "name": "Example - Chat - iPhone sm black",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "00008030-000D445A11A3802E",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.chat.dart"
+    },
     
     {
       "name": "Example - Emulator 5554",
