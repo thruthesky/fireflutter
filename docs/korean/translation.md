@@ -49,71 +49,41 @@ Text(T.version.args({'version': '1.0.0'})),
 
 ## 언어 번역 사용하는 방법
 
-언어 번역 정보는 `T` 클래스의 static 변수에 아래와 같이 저장된다.
-
-
-
-
-
-## 새로운 언어 설정 및 번역 기능 - version 0.3.32
-
-- 버전 0.3.31 이전의 문제점은 FireFlutter 가 기본적으로 영어만 제공한다는 것이다. 그래서 앱을 개발 할 때 한글 및 다른 언어를 일일히 번역을 해 주어야 하는 불편함이 있었다. 하지만, 버전 0.3.32 부터는 기본적으로 영어와 한글 두 가지를 지원하며, 얼마든지 쉽게, 더 많이 언어를 추가할 수 있도록 변경을 했다.
-
-- 기본적인 사용 방법은 아래와 같다. 아무런 초기화 없이 그냥 쓰면 기본적으로 영어로 된다.
+언어 번역 정보는 `T` 클래스의 static 변수에 아래와 같이 저장된다. 참고로, 추가하고 싶은 언어가 있으면 언어 코드를 추가한 다음 PR 하면 된다.
 
 ```dart
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Text(T.version.tr);
-  }
-}
+class T {
+  static Json version = {
+    'en': 'Ver: #version',
+    'ko': '버전: #version',
+  };
+  static Json yes = {
+    'en': 'Yes',
+    'ko': '예',
+    'vi': 'Có',
+    'th': 'ใช่',
+    'lo': 'ແມ່ນແລ້ວ'
+  };
+
+  // ...
 ```
 
-- 아래와 같이 초기화를 할 수 있다.
-    - `TextService.instance.init(languageCode: ... )` 에 원하는 언어 코드를 소문자 두 글자로 지정하면 된다. 예를 들면 `en`, `ko` 와 같이 하면 된다.
-    - 참고로 `replace` 는 FireFlutter 가 제공하는 것으로 번역 텍스트에 있는 문자열을 변경해 준다.
+위와 같은 경우, `T.yes.tr` 와 같이 하면 된다. 그렇다면 현재 장치의 언어에 따라 번역된 단어를 사용 할 수 있다.
 
-
-```dart
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-    TextService.instance.init(languageCode: 'ko');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(T.version.tr.replace({'#version': '1.0.0'}));
-  }
-}
-```
-
-- 번역 문자열은 `lib/src/texts.dart` 에 있으며, 번역 문자열은 아래와 같이 추가(또는 수정)하면 된다.
-    - 만약, 아래에 추가되지 않은 문자열은 기본적으로 영어로 표시한다. 예를 들어 `TextService.instance.init(languageCode: 'ja')` 와 같이 했는데, 아래에 와 같이 `ja` 텍스트 값이 지정되지 않았다면 `en` 의 값을 기본적으로 사용한다.
-
-```dart
-static const Mintl version = {
-'en': 'Ver: #version',
-'ko': '버전: #version',
-};
-```
-
-- 아래와 같이 `T.version.tr.replace` 대신 보다 짧게 `T.version.args` 를 쓸 수 있다. 단순히 짧게 쓰는 역할만 한다. `args` 함수를 쓸 때에는 맵의 키에 `#` 를 붙여 줄 필요 없다. 자동으로 `#` 을 붙여서 치환해 준다.
+`T.version.tr.replace({'#version': '1.0.0'})` 아래와 같이 값을 치환할 수 있으며, 보다 짧게 `T.version.args` 를 쓸 수 있다. `args` 는 단순히 짧게 쓰는 역할만 한다. `args` 함수를 쓸 때에는 맵의 키에 `#` 를 붙여 줄 필요 없다. 자동으로 `#` 을 붙여서 치환해 준다.
 
 ```dart
 T.version.args({'version': '1.0.0'})
 ```
 
-- 동적으로 언어 변경을 할 수 있다. 아래와 같이 처음에는 languageCode 를 `ch` 로 했다가 언제든지 원한다면 다른 언어 코드로 변경을 할 수 있다.
+- 동적으로 언어 변경을 할 수 있다. 아래와 같이 처음에는 languageCode 를 `ja` 로 했다가 언제든지 원한다면 다른 언어 코드로 변경을 할 수 있다.
 
 ```dart
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    TextService.instance.init(languageCode: 'ch');
+    TextService.instance.init(languageCode: 'ja');
   }
 
   @override
@@ -163,27 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 ```
 
-
-
-
-- 만약, FireFlutter 에서 제공하는 기본 언어 번역이 마음에 들지 않는다면, 아래와 같이 변경 할 수 있다.
-
-```dart
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  Widget build(BuildContext context) {
-    TextService.instance.languageCode = 'ko';
-    T.version = {
-      'en': 'New Version #version',
-      'ko': '새 버전 #version',
-    };
-    return Text(T.version.args({'version': '1.0.0'}));
-  }
-}
-```
-
-
-- 좀 더 많은 활용을 하자면 아래와 같이 할 수도 있다.
+- 앱 내에서 아래와 같이 Fireflutter 의 번역 기능을 활용할 수 있다.
 
 ```dart
 import 'package:fireflutter/fireflutter.dart';
