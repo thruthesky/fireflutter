@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/forum/chat/images.view.screen.dart';
+import 'package:fireflutter/src/common/photo_view/photo.view.screen.dart';
 import 'package:flutter/material.dart';
 
 class CommentView extends StatefulWidget {
@@ -50,7 +50,7 @@ class _CommnetViewState extends State<CommentView> {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) =>
-                            ImageViewScreen(urls: widget.comment.urls),
+                            PhotoViewerScreen(urls: widget.comment.urls),
                       ),
                     );
                   },

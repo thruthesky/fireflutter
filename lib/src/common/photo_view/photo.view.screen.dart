@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
-class ImageViewScreen extends StatefulWidget {
-  const ImageViewScreen({
+class PhotoViewerScreen extends StatefulWidget {
+  const PhotoViewerScreen({
     super.key,
     required this.urls,
     this.selectedIndex,
@@ -14,24 +14,41 @@ class ImageViewScreen extends StatefulWidget {
   final int? selectedIndex;
 
   @override
-  State<ImageViewScreen> createState() => _ImageViewScreen();
+  State<PhotoViewerScreen> createState() => _PhotoViewerScreen();
 }
 
-class _ImageViewScreen extends State<ImageViewScreen> {
+class _PhotoViewerScreen extends State<PhotoViewerScreen> {
   PageController controller = PageController();
   int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.black, Colors.transparent],
+            ),
+          ),
+        ),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.close),
+          icon: const Icon(
+            Icons.close,
+            color: Colors.white,
+          ),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           '${(widget.selectedIndex ?? currentIndex) + 1}/${widget.urls.length}',
-          style: Theme.of(context).textTheme.titleMedium,
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Colors.white,
+              ),
         ),
       ),
       body: Stack(
@@ -43,9 +60,6 @@ class _ImageViewScreen extends State<ImageViewScreen> {
               minScale: PhotoViewComputedScale.contained,
               imageProvider: CachedNetworkImageProvider(widget.urls[index]),
               heroAttributes: PhotoViewHeroAttributes(tag: widget.urls[index]),
-            ),
-            backgroundDecoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
             ),
             onPageChanged: (index) {
               currentIndex = index;
@@ -91,10 +105,9 @@ class _ImageViewScreen extends State<ImageViewScreen> {
       onPressed: onPressed,
       icon: icon,
       style: ButtonStyle(
-        iconColor:
-            WidgetStatePropertyAll(Theme.of(context).colorScheme.onSurface),
+        iconColor: const WidgetStatePropertyAll(Colors.white),
         backgroundColor: WidgetStatePropertyAll(
-          Theme.of(context).colorScheme.surface.withAlpha(150),
+          Colors.black.withAlpha(100),
         ),
       ),
     );
