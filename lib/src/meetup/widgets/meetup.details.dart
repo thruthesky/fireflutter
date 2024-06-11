@@ -45,44 +45,11 @@ class MeetupDetails extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        ChatService.instance.showChatRoomScreen(
-                          context: context,
-                          otherUid: meetup.master,
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          const Icon(Icons.chat),
-                          const SizedBox(width: 2),
-                          Text(T.contact.tr),
-                        ],
-                      ),
-                    ),
-                    if (meetup.isMaster) ...[
-                      const SizedBox(width: 8),
-                      ElevatedButton(
-                        onPressed: () => MeetupService.instance
-                            .showUpdateScreen(context: context, meetup: meetup),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.edit),
-                            const SizedBox(width: 2),
-                            Text(T.edit.tr),
-                          ],
-                        ),
-                      ),
-                    ]
-                  ],
-                ),
+                padding: const EdgeInsets.only(left: 24, top: 24, bottom: 8),
+                child: Text(T.meetupInfo.tr),
               ),
               Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -144,16 +111,17 @@ class MeetupDetails extends StatelessWidget {
                 ),
               ),
               if (meetup.reminder.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0, top: 8),
-                        child: Text(T.reminder.tr),
-                      ),
-                      Card(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 24, top: 24, bottom: 8),
+                      child: Text(T.reminder.tr),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Card(
                         child: InkWell(
                           onTap: () => alert(
                             context: context,
@@ -171,15 +139,15 @@ class MeetupDetails extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               Padding(
-                padding: const EdgeInsets.only(left: 24.0, top: 24),
+                padding: const EdgeInsets.only(left: 24.0, top: 24, bottom: 8),
                 child: Text(T.recentPhotos.tr),
               ),
               PostLatestListView.gridView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   crossAxisSpacing: 8,
@@ -199,11 +167,11 @@ class MeetupDetails extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 24.0, top: 24),
+                padding: const EdgeInsets.only(left: 24.0, top: 24, bottom: 8),
                 child: Text(T.recentPosts.tr),
               ),
               PostLatestListView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 separatorBuilder: (p0, p1) => const SizedBox(height: 8),
                 category: '${meetup.id}-meetup-post',
                 emptyBuilder: () => Container(

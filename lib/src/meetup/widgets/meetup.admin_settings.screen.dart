@@ -30,7 +30,7 @@ class _MeetupAdminSettingsState extends State<MeetupAdminSettingsScreen> {
         builder: (meetup) => Column(
           children: [
             Padding(
-              padding: MeetupConfig.adminMeetupSettingScreenPadding,
+              padding: const EdgeInsets.all(16),
               child: ListTile(
                 leading: const Icon(
                   Icons.grade,

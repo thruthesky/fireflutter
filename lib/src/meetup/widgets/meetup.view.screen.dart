@@ -1,5 +1,4 @@
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/meetup/widgets/meetup.join_button.dart';
 import 'package:flutter/material.dart';
 
 class MeetupViewScreen extends StatefulWidget {
