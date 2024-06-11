@@ -570,7 +570,7 @@ class ChatRoom {
   ///
   Future joinWithPassword({required String password}) async {
     final res = await FirebaseFunctions.instance
-        .httpsCallable('ext-fff-chatJoinWithPassword')
+        .httpsCallable('chatJoinWithPassword')
         .call({
       'roomId': id,
       'password': password,
