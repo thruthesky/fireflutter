@@ -35,6 +35,10 @@ class _EntryScreenState extends State<EntryScreen> {
                 );
               },
               specialAccounts: const SpecialAccounts(
+                reviewEmail: '',
+                reviewPassword: '',
+                reviewPhoneNumber: '',
+                reviewSmsCode: '',
                 emailLogin: true,
               ),
             ),

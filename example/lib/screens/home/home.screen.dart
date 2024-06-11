@@ -1,5 +1,6 @@
 import 'package:example/screens/buyandsell/buyandsell.screen.dart';
 import 'package:example/screens/chat/chat.screen.dart';
+import 'package:example/screens/chat/custom_chat.screen.dart';
 import 'package:example/screens/chat/open_chat.screen.dart';
 import 'package:example/screens/entry/entry.screen.dart';
 import 'package:example/screens/forum/forum.screen.dart';
@@ -78,6 +79,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () => AdminService.instance
                             .showDashboard(context: context),
                         child: const Text('Admin dashboard'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          context.push(CustomChatScreen.routeName);
+                        },
+                        child: const Text('Custom Chat'),
                       ),
                     ],
                   ),
