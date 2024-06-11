@@ -40,6 +40,19 @@ class _CommnetViewState extends State<CommentView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Row(
+                children: [
+                  UserDisplayName(
+                    uid: widget.comment.uid,
+                    style: Theme.of(context).textTheme.labelSmall,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    widget.comment.createdAt.toShortDate,
+                    style: Theme.of(context).textTheme.labelSmall,
+                  ),
+                ],
+              ),
               CommentContent(comment: widget.comment),
               const SizedBox(height: 8),
               Blocked(
@@ -153,14 +166,16 @@ class _CommnetViewState extends State<CommentView> {
                           value: 'report',
                           child: Text(T.report.tr),
                         ),
-                        PopupMenuItem(
-                          value: 'edit',
-                          child: Text(T.edit.tr),
-                        ),
-                        PopupMenuItem(
-                          value: 'delete',
-                          child: Text(T.delete.tr),
-                        ),
+                        if (widget.comment.isMine)
+                          PopupMenuItem(
+                            value: 'edit',
+                            child: Text(T.edit.tr),
+                          ),
+                        if (widget.comment.isMine)
+                          PopupMenuItem(
+                            value: 'delete',
+                            child: Text(T.delete.tr),
+                          ),
                       ];
                     }, onSelected: (value) async {
                       if (value == 'report') {
@@ -187,12 +202,24 @@ class _CommnetViewState extends State<CommentView> {
                           notify: true,
                         );
                       } else if (value == 'edit') {
+                        if (widget.comment.isMine == false) {
+                          return error(
+                            context: context,
+                            message: T.notYourComment.tr,
+                          );
+                        }
                         await ForumService.instance.showCommentUpdateScreen(
                           context: context,
                           comment: widget.comment,
                         );
                         widget.post.reload();
                       } else if (value == 'delete') {
+                        if (widget.comment.isMine == false) {
+                          return error(
+                            context: context,
+                            message: T.notYourComment.tr,
+                          );
+                        }
                         await widget.comment
                             .delete(context: context, ask: true);
                       } else if (value == 'bookmark') {
