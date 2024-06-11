@@ -59,6 +59,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "PhiLov - SM A045F",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "R9ATA00LMJM",
+      "flutterMode": "debug",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "PhiLov - Emulator 5554",
       "request": "launch",
       "type": "dart",
