@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/forum/chat/images.view.screen.dart';
 import 'package:flutter/material.dart';
 
 class CommentView extends StatefulWidget {
@@ -48,25 +49,24 @@ class _CommnetViewState extends State<CommentView> {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => const Placeholder(),
+                        builder: (context) =>
+                            ImageViewScreen(urls: widget.comment.urls),
                       ),
                     );
                   },
-                  child: Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
+                  child: Column(
                     children: widget.comment.urls
                         .map(
-                          (url) => ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: CachedNetworkImage(
-                              imageUrl: url,
-                              fit: BoxFit.cover,
-
-                              /// added a infity width for images
-                              width: double.infinity,
-                              // width: 100,
-                              height: 200,
+                          (url) => Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: CachedNetworkImage(
+                                imageUrl: url,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: 300,
+                              ),
                             ),
                           ),
                         )
