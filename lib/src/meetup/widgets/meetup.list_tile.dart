@@ -11,19 +11,23 @@ class MeetupListTile extends StatelessWidget {
     required this.meetup,
     this.padding = const EdgeInsets.all(16),
     this.contentPadding = const EdgeInsets.all(0),
+    this.onTap,
   });
 
   final Meetup meetup;
   final EdgeInsets padding;
   final EdgeInsets contentPadding;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => MeetupService.instance.showViewScreen(
-        context: context,
-        meetup: meetup,
-      ),
+      onTap: () => onTap != null
+          ? onTap!.call()
+          : MeetupService.instance.showViewScreen(
+              context: context,
+              meetup: meetup,
+            ),
       child: Container(
         padding: padding,
         child: Column(

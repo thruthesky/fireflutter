@@ -235,7 +235,7 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
             MeetupEventListView(
               meetup: widget.meetup,
               padding: const EdgeInsets.all(16),
-              separatorBuilder: (p0, p1) => const SizedBox(height: 16),
+              separatorBuilder: (p0, p1) => const SizedBox(height: 8),
               emptyBuilder: () => Center(
                 child: Card(
                     margin: const EdgeInsets.all(24),
@@ -275,30 +275,28 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                 meetup: widget.meetup,
                 builder: (meetup) {
                   if (meetup.users.contains(myUid)) {
-                    return ListTileTheme(
-                      child: PostListView(
-                        category: '${widget.meetup.id}-meetup-post',
-                        padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
-                        pageSize: 20,
-                        separatorBuilder: (p0, p1) => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Divider(
-                            height: 5,
-                            thickness: 1,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .outline
-                                .withAlpha(64),
-                          ),
+                    return PostListView(
+                      category: '${widget.meetup.id}-meetup-post',
+                      padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+                      pageSize: 20,
+                      separatorBuilder: (p0, p1) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Divider(
+                          height: 5,
+                          thickness: 1,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .outline
+                              .withAlpha(64),
                         ),
-                        emptyBuilder: () => Center(
-                          child: Card(
-                              margin: const EdgeInsets.all(24),
-                              child: Padding(
-                                padding: const EdgeInsets.all(24.0),
-                                child: Text(T.noNoticeYet.tr),
-                              )),
-                        ),
+                      ),
+                      emptyBuilder: () => Center(
+                        child: Card(
+                            margin: const EdgeInsets.all(24),
+                            child: Padding(
+                              padding: const EdgeInsets.all(24.0),
+                              child: Text(T.noNoticeYet.tr),
+                            )),
                       ),
                     );
                   } else if (meetup.blocked == true) {
@@ -319,7 +317,7 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                   if (meetup.users.contains(myUid)) {
                     return PostListView.gridView(
                       category: '${widget.meetup.id}-meetup-gallery',
-                      padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+                      padding: const EdgeInsets.fromLTRB(16, 16, 0, 16),
                       itemBuilder: (post, i) => ClipRRect(
                         borderRadius: BorderRadius.circular(16),
                         child: PostCard(

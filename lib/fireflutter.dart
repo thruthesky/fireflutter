@@ -63,6 +63,7 @@ export 'src/meetup/widgets/meetup.details.dart';
 export 'src/meetup/widgets/meetup.create_button.dart';
 export 'src/meetup/widgets/meetup.members.list.screen.dart';
 export 'src/meetup/widgets/meetup.members.blocked.screen.dart';
+export 'src/meetup/widgets/meetup.join_button.dart';
 
 export 'src/common/anonymous_avatar.dart';
 export 'src/common/assets.dart';
