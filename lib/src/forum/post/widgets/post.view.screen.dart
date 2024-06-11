@@ -1,4 +1,5 @@
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/common/photo_view/photo.view.screen.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -35,10 +36,20 @@ class _PostViewScreenState extends State<PostViewScreen> {
                 child: Blocked(
                   otherUserUid: widget.post.uid,
                   yes: () => SizedBox.fromSize(),
-                  no: () => DisplayDatabasePhotos(
-                    urls: widget.post.urls,
-                    // path: '${Post.node}/${widget.post.category}/${widget.post.id}/${Field.urls}',
-                    ref: widget.post.urlsRef,
+                  no: () => GestureDetector(
+                    onTap: () {
+                      dog(post.urls.length.toString());
+                      showGeneralDialog(
+                        context: context,
+                        pageBuilder: (_, __, ___) =>
+                            PhotoViewerScreen(urls: post.urls),
+                      );
+                    },
+                    child: DisplayDatabasePhotos(
+                      urls: widget.post.urls,
+                      // path: '${Post.node}/${widget.post.category}/${widget.post.id}/${Field.urls}',
+                      ref: widget.post.urlsRef,
+                    ),
                   ),
                 ),
               ),

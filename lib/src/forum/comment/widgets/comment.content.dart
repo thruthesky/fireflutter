@@ -25,7 +25,10 @@ class _CommentContentState extends State<CommentContent> {
       (v) {
         // if the vlaue of the content is changed and if it's empty, then use the comment's content.
         content = v ?? widget.comment.content;
-        return _text();
+        return widget.comment.content
+                .isNotEmpty // hide bubble when there is no content
+            ? _text()
+            : const SizedBox.shrink();
       },
       onLoading: _text(),
     );
@@ -33,7 +36,7 @@ class _CommentContentState extends State<CommentContent> {
 
   _text() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary.withAlpha(50),
         borderRadius: BorderRadius.circular(8),
@@ -41,7 +44,7 @@ class _CommentContentState extends State<CommentContent> {
       child: Blocked(
         otherUserUid: widget.comment.uid,
         no: () => LinkifyText(content),
-        yes: () =>  Text(T.blockedContentMessage.tr),
+        yes: () => Text(T.blockedContentMessage.tr),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/common/photo_view/photo.view.screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class CommentView extends StatefulWidget {
   const CommentView({
@@ -58,32 +59,32 @@ class _CommnetViewState extends State<CommentView> {
               Blocked(
                 otherUserUid: widget.comment.uid,
                 yes: () => SizedBox.fromSize(),
-                no: () => GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            PhotoViewerScreen(urls: widget.comment.urls),
-                      ),
-                    );
-                  },
-                  child: Column(
-                    children: widget.comment.urls
-                        .map(
-                          (url) => Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: CachedNetworkImage(
-                                imageUrl: url,
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                height: 300,
-                              ),
+                no: () => Column(
+                  children: widget.comment.urls
+                      .map(
+                        (url) => GestureDetector(
+                          onTap: () => showGeneralDialog(
+                            context: context,
+                            pageBuilder: (_, __, ___) =>
+                                PhotoViewerScreen(urls: widget.comment.urls),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: CachedNetworkImage(
+                              imageUrl: url,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: 300,
                             ),
                           ),
-                        )
-                        .toList(),
+                        ),
+                      )
+                      .toList()
+                      .fold(
+                    [],
+                    (prev, curr) => prev
+                      ..add(curr)
+                      ..add(const SizedBox(height: 8)),
                   ),
                 ),
               ),
@@ -92,8 +93,8 @@ class _CommnetViewState extends State<CommentView> {
                   textButtonTheme: TextButtonThemeData(
                     style: TextButton.styleFrom(
                       visualDensity: const VisualDensity(
-                        horizontal: -2,
-                        vertical: 0,
+                        horizontal: -3,
+                        vertical: -2,
                       ),
                     ),
                   ),

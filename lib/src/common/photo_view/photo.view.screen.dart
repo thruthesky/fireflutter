@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -8,10 +9,12 @@ class PhotoViewerScreen extends StatefulWidget {
     super.key,
     required this.urls,
     this.selectedIndex,
+    this.selectedPhotoUrl,
   });
 
   final List<String> urls;
   final int? selectedIndex;
+  final String? selectedPhotoUrl;
 
   @override
   State<PhotoViewerScreen> createState() => _PhotoViewerScreen();
@@ -22,6 +25,7 @@ class _PhotoViewerScreen extends State<PhotoViewerScreen> {
   int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
+    if (!widget.selectedPhotoUrl.isNullOrEmpty) {}
     return Scaffold(
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
