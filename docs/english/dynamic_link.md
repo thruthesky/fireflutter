@@ -62,7 +62,7 @@ The values can be saved in Firestore collection, "\_link\_".
 Be reminded to add the proper rules to access the collection in Firestore.
 
 ```rules
-match /_deeplink_/{deeplink} {
+match /_link_/{link} {
     allow read: if true;
 }
 ```
@@ -83,7 +83,7 @@ com.com.appname: [
 
 For apple, in Firestore on the "\_link\_" collection, save it under document "apple". Save the TEAMID.bundleId as an array and save it in the field "apps":
 
-For example under "apple" collection:
+For example under "ios" collection:
 
 apps: [
   TEAMID.com.com.exampleapp
