@@ -1,8 +1,14 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/common/photo_view/photo.view.screen.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
+/// PostViewScreen
+///
+/// This screen shows the details of a post.
+///
+/// [post] is coming from posts-summary node. Which means, it may not have the full data of the post.
 class PostViewScreen extends StatefulWidget {
   static const String routeName = '/PostView';
   const PostViewScreen({super.key, required this.post});
@@ -16,6 +22,34 @@ class PostViewScreen extends StatefulWidget {
 class _PostViewScreenState extends State<PostViewScreen> {
   Post get post => widget.post;
   int? previousNoOfLikes;
+
+  /// [urls] is the URLs of the post photos.
+  ///
+  ///
+  /// The [widget.post.urls] only contains the URL of the first photo from the post (as it's sourced from the posts-summary node).
+  /// To display all photos in the PostViewScreen, we fetch the complete list of photo URLs from the database.
+  final List<String> urls = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (post.urls.isNotEmpty) {
+      urls.addAll(post.urls);
+    }
+
+    widget.post.urlsRef.once().then((DatabaseEvent event) {
+      final value = event.snapshot.value as List<dynamic>?;
+
+      if (value != null) {
+        final List<String> data = List<String>.from(value);
+        if (data.isNotEmpty) {
+          urls.clear();
+          urls.addAll(data);
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,16 +72,16 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   yes: () => SizedBox.fromSize(),
                   no: () => GestureDetector(
                     onTap: () {
-                      dog(post.urls.length.toString());
+                      dog(urls.length.toString());
                       showGeneralDialog(
                         context: context,
-                        pageBuilder: (_, __, ___) =>
-                            PhotoViewerScreen(urls: post.urls),
+                        pageBuilder: (_, __, ___) => PhotoViewerScreen(
+                          urls: urls,
+                        ),
                       );
                     },
                     child: DisplayDatabasePhotos(
-                      urls: widget.post.urls,
-                      // path: '${Post.node}/${widget.post.category}/${widget.post.id}/${Field.urls}',
+                      initialData: widget.post.urls,
                       ref: widget.post.urlsRef,
                     ),
                   ),
