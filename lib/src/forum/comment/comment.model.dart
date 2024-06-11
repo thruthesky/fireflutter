@@ -36,6 +36,8 @@ class Comment {
 
   bool deleted;
 
+  bool get isMine => uid == myUid;
+
   /// Get the post id of the comment.
   ///
   String get postId => ref.parent!.key!;
