@@ -1,1 +1,1 @@
-typedef Json = Map<String, String>;
+typedef Json = Map<String, dynamic>;
