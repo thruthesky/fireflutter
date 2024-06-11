@@ -1,16 +1,15 @@
-/// Multi language internalization
-typedef Mintl = Map<String, String>;
+import 'package:fireflutter/fireflutter.dart';
 
 class T {
   T._();
 
   /// New translations
-  static Mintl version = {
+  static Json version = {
     'en': 'Ver: #version',
     'ko': '버전: #version',
   };
 
-  static Mintl yes = {
+  static Json yes = {
     'en': 'Yes',
     'ko': '예',
     'vi': 'Có',
@@ -18,7 +17,7 @@ class T {
     'lo': 'ແມ່ນແລ້ວ'
   };
 
-  static Mintl no = {
+  static Json no = {
     'en': 'No',
     'ko': '아니요',
     'vi': 'Không',
@@ -26,7 +25,7 @@ class T {
     'lo': 'ບໍ່'
   };
 
-  static Mintl ok = {
+  static Json ok = {
     'en': 'OK',
     'ko': '확인',
     'vi': 'Ổn',
@@ -34,7 +33,7 @@ class T {
     'lo': 'ຕົວຢ່າງ'
   };
 
-  static Mintl error = {
+  static Json error = {
     'en': 'Error',
     'ko': '오류',
     'vi': 'Lỗi',
@@ -42,7 +41,7 @@ class T {
     'lo': 'ຜິດພາດ'
   };
 
-  static Mintl save = {
+  static Json save = {
     'en': 'Save',
     'ko': '저장',
     'vi': 'Lưu',
@@ -50,7 +49,7 @@ class T {
     'lo': 'ບັນທຶກ'
   };
 
-  static Mintl stateMessage = {
+  static Json stateMessage = {
     'en': 'State Message',
     'ko': '상태 메시지',
     'vi': 'Tin nhắn trạng thái',
@@ -58,7 +57,7 @@ class T {
     'lo': 'ຂໍ້ຄວາມສະຖານະ',
   };
 
-  static Mintl saved = {
+  static Json saved = {
     'en': 'Saved.',
     'ko': '저장되었습니다.',
     'vi': 'Đã lưu',
@@ -66,7 +65,7 @@ class T {
     'lo': 'ບັນທຶກແລ້ວ'
   };
 
-  static Mintl name = {
+  static Json name = {
     'en': 'Name',
     'ko': '이름',
     'vi': 'Tên',
@@ -74,7 +73,7 @@ class T {
     'lo': 'ຊື່',
   };
 
-  static Mintl cancel = {
+  static Json cancel = {
     'en': 'Cancel',
     'ko': '취소',
     'vi': 'Hủy bỏ',
@@ -82,7 +81,7 @@ class T {
     'lo': 'ຍົກເລີກ',
   };
 
-  static Mintl close = {
+  static Json close = {
     'en': 'Close',
     'ko': '닫기',
     'vi': 'Đóng',
@@ -90,67 +89,67 @@ class T {
     'lo': 'ປິດ'
   };
 
-  static Mintl createPost = {
+  static Json createPost = {
     'en': 'Create post',
     'ko': '글 작성',
   };
 
-  static Mintl editPost = {
+  static Json editPost = {
     'en': 'Edit post',
     'ko': '글 수정',
   };
 
-  static Mintl like = {
+  static Json like = {
     'en': 'Like',
     'ko': '좋아요',
   };
 
-  static Mintl chat = {
+  static Json chat = {
     'en': 'Chat',
     'ko': '채팅',
   };
 
-  static Mintl edit = {
+  static Json edit = {
     'en': 'Edit',
     'ko': '수정',
   };
 
-  static Mintl delete = {
+  static Json delete = {
     'en': 'Delete',
     'ko': '삭제',
   };
 
-  static Mintl share = {
+  static Json share = {
     'en': 'Share',
     'ko': '공유',
   };
 
-  static Mintl reply = {
+  static Json reply = {
     'en': 'Reply',
     'ko': '답글',
   };
 
-  static Mintl bookmark = {
+  static Json bookmark = {
     'en': 'Favorite',
     'ko': '북마크',
   };
 
-  static Mintl unbookmark = {
+  static Json unbookmark = {
     'en': 'Unfavorite',
     'ko': '북마크 해제',
   };
 
-  static Mintl bookmarkMessage = {
+  static Json bookmarkMessage = {
     'en': 'Favorite sucess',
     'ko': '북마크 완료',
   };
 
-  static Mintl unbookmarkMessage = {
+  static Json unbookmarkMessage = {
     'en': 'Unfavorite sucess',
     'ko': '북마크 해제 완료',
   };
 
-  static Mintl block = {
+  static Json block = {
     'en': 'Block',
     'ko': '차단',
     'vi': 'Chặn',
@@ -158,7 +157,7 @@ class T {
     'lo': 'ປິດບໍ່ໃຫ້ຕົນໄປ',
   };
 
-  static Mintl unblock = {
+  static Json unblock = {
     'en': 'Unblock',
     'ko': '차단 해제',
     'vi': 'Bỏ chặn',
@@ -166,7 +165,7 @@ class T {
     'lo': 'ປິດຕົນໄປ',
   };
 
-  static Mintl report = {
+  static Json report = {
     'en': 'Report',
     'ko': '신고',
     'vi': 'Báo cáo',
@@ -174,103 +173,103 @@ class T {
     'lo': 'ລາຍງານ'
   };
 
-  static Mintl reportReceived = {
+  static Json reportReceived = {
     'en': 'Report has been received.',
     'ko': '신고가 접수되었습니다.',
   };
 
-  static Mintl writeComment = {
+  static Json writeComment = {
     'en': 'Write a comment',
     'ko': '코멘트 작성',
   };
 
-  static Mintl inputCommentHint = {
+  static Json inputCommentHint = {
     'en': 'Please enter your comment',
     'ko': '댓글을 입력하세요',
   };
 
   /// Meetup translations
-  static Mintl meetupCreate = {
+  static Json meetupCreate = {
     'en': 'Create meetup',
     'ko': '모임 만들기',
   };
 
-  static Mintl meetupUpdate = {
+  static Json meetupUpdate = {
     'en': 'Edit meetup',
     'ko': '모임 수정하기',
   };
 
-  static Mintl meetupName = {
+  static Json meetupName = {
     'en': 'Meetup name',
     'ko': '모임 이름',
   };
-  static Mintl meetupNameDescription = {
+  static Json meetupNameDescription = {
     'en': 'Please write the name of the meetup.',
     'ko': '모임 이름을 적어주세요.',
   };
-  static Mintl meetupPhotoDescription = {
+  static Json meetupPhotoDescription = {
     'en':
         'Please upload a photo of the meetup. Photo Width: 800, Photo Height: 500',
     'ko': '  모임 사진을 업로드 해 주세요. 사진 너비: 800, 사진 높이: 500',
   };
-  static Mintl meetupDescriptionLabel = {
+  static Json meetupDescriptionLabel = {
     'en': 'Meetup description',
     'ko': '모임 설명',
   };
-  static Mintl meetupDescriptionInputDescription = {
+  static Json meetupDescriptionInputDescription = {
     'en': 'Please write a description of the meetup.',
     'ko': '모임 설명을 적어주세요.',
   };
-  static Mintl meetupUpdateMessage = {
+  static Json meetupUpdateMessage = {
     'en': 'The meetup has been modified.',
     'ko': '모임이 수정되었습니다.',
   };
 
-  static Mintl info = {
+  static Json info = {
     'en': 'Info',
     'ko': '소개',
   };
-  static Mintl event = {
+  static Json event = {
     'en': 'Event',
     'ko': '일정',
   };
 
-  static Mintl notice = {
+  static Json notice = {
     'en': 'Notice',
     'ko': '게시판',
   };
 
-  static Mintl gallery = {
+  static Json gallery = {
     'en': 'Gallery',
     'ko': '사진첩',
   };
 
-  static Mintl host = {
+  static Json host = {
     'en': 'Host',
     'ko': '운영자',
   };
 
-  static Mintl members = {
+  static Json members = {
     'en': 'Members',
     'ko': '회원 수',
   };
 
-  static Mintl blockedMembers = {
+  static Json blockedMembers = {
     'en': 'Blocked Members',
     'ko': '차단된 회원 수',
   };
 
-  static Mintl membersList = {
+  static Json membersList = {
     'en': 'Members list',
     'ko': '회원 수',
   };
 
-  static Mintl noOfPeople = {
+  static Json noOfPeople = {
     'en': 'people',
     'ko': '명',
   };
 
-  static Mintl profileUpdate = {
+  static Json profileUpdate = {
     'en': 'Profile update',
     'ko': '프로필 수정',
     'vi': 'Cập nhật hồ sơ',
@@ -278,137 +277,137 @@ class T {
     'lo': 'ອັບເດດຂໍ້ມູນຜູ້ໃຊ້',
   };
 
-  static Mintl contact = {
+  static Json contact = {
     'en': 'Contact',
     'ko': '문의하기',
   };
 
-  static Mintl recentPhotos = {
+  static Json recentPhotos = {
     'en': 'Recent Photos',
     'ko': '최근 사진들',
   };
 
-  static Mintl noRecentPhotos = {
+  static Json noRecentPhotos = {
     'en': 'There are no recent photos',
     'ko': '최근 사진이 없습니다',
   };
 
-  static Mintl recentPosts = {
+  static Json recentPosts = {
     'en': 'Recent Posts',
     'ko': '최근글',
   };
 
-  static Mintl noRecentPosts = {
+  static Json noRecentPosts = {
     'en': 'There are no recent posts',
     'ko': '최근 글이 없습니다.',
   };
 
-    static Mintl meetupInfo = {
+  static Json meetupInfo = {
     'en': 'Meetup information',
     'ko': '모임 정보',
   };
 
-  static Mintl reminder = {
+  static Json reminder = {
     'en': 'Reminder',
     'ko': '알림',
   };
 
-  static Mintl inputReminder = {
+  static Json inputReminder = {
     'en': 'Input reminder',
     'ko': '입력 알림',
   };
 
-  static Mintl createMeetupEvent = {
+  static Json createMeetupEvent = {
     'en': 'Create event',
     'ko': '일정 생성',
   };
 
-  static Mintl addNotice = {
+  static Json addNotice = {
     'en': 'Add notice',
     'ko': '글 쓰기',
   };
 
-  static Mintl addPhoto = {
+  static Json addPhoto = {
     'en': 'Add photo',
     'ko': '글 쓰기',
   };
 
-  static Mintl meetupAdminSetting = {
+  static Json meetupAdminSetting = {
     'en': 'Admin setting',
     'ko': '관리자 설정',
   };
 
-  static Mintl editMeetupInformation = {
+  static Json editMeetupInformation = {
     'en': 'Edit meetup info',
     'ko': '모임 정보 수정',
   };
 
-  static Mintl leaveMeetup = {
+  static Json leaveMeetup = {
     'en': 'Leave meetup',
     'ko': '모임 탈퇴',
   };
 
-  static Mintl joinMeetup = {
+  static Json joinMeetup = {
     'en': 'Join meetup',
     'ko': '모임 가입',
   };
 
-  static Mintl noticeManage = {
+  static Json noticeManage = {
     'en': 'Update notice',
     'ko': '게시판 관리',
   };
 
-  static Mintl closeMeetup = {
+  static Json closeMeetup = {
     'en': 'Close meetup',
     'ko': '모임 폐쇄',
   };
 
-  static Mintl noEvent = {
+  static Json noEvent = {
     'en': 'There are no events',
     'ko': '일정이 없습니다.',
   };
 
-  static Mintl meetupChatBlocked = {
+  static Json meetupChatBlocked = {
     'en': 'Blocked members cannot chat.',
     'ko': '차단된 회원은 채팅을 할 수 없습니다.',
   };
 
-  static Mintl joinMeetupToChat = {
+  static Json joinMeetupToChat = {
     'en': 'You must join the group\nto view the chat room.',
     'ko': '모임에 가입하셔야\n채팅방을 볼 수 있습니다.',
   };
 
-  static Mintl noNoticeYet = {
+  static Json noNoticeYet = {
     'en': 'There are no notices yet.',
     'ko': '글을 등록 해 주세요.',
   };
 
-  static Mintl meetupViewNoticeBlocked = {
+  static Json meetupViewNoticeBlocked = {
     'en': 'Blocked members cannot view the forum.',
     'ko': '차단된 회원은 게시판을 볼 수 없습니다.',
   };
 
-  static Mintl joinMeetupToViewNotice = {
+  static Json joinMeetupToViewNotice = {
     'en': 'You must join the group\nto view the announcement.',
     'ko': '모임에 가입하셔야\n게시판을 볼 수 있습니다.',
   };
 
-  static Mintl noUploadPhotoYet = {
+  static Json noUploadPhotoYet = {
     'en': 'Theres no uploaded photo yet.',
     'ko': '사진을 등록 해 주세요.',
   };
 
-  static Mintl meetupViewGalleryBlocked = {
+  static Json meetupViewGalleryBlocked = {
     'en': 'Blocked members cannot view the gallery.',
     'ko': '차단된 회원은 사진첩을 볼 수 없습니다.',
   };
 
-  static Mintl joinMeetupToViewGallery = {
+  static Json joinMeetupToViewGallery = {
     'en': 'You must join the group\nto view the gallery.',
     'ko': '모임에 가입하셔야\n사진첩을 볼 수 있습니다.',
   };
 
-  static Mintl login = {
+  static Json login = {
     'en': 'Login',
     'ko': '로그인',
     'vi': 'Đăng nhập',
@@ -416,238 +415,238 @@ class T {
     'lo': 'ເຂົ້າສູ່ລະບົບ',
   };
 
-  static Mintl loginFirstToUseMeetup = {
+  static Json loginFirstToUseMeetup = {
     'en': 'To use the meetup function, you must first log in.',
     'ko': '모임 기능을 이용하기 위해서는 로그인을 먼저 하셔야합니다.',
   };
 
-  static Mintl unjoin = {
+  static Json unjoin = {
     'en': 'Unjoin',
     'ko': '탈퇴하기',
   };
 
-  static Mintl join = {
+  static Json join = {
     'en': 'Join',
     'ko': '가입하기',
   };
 
-  static Mintl somethingWentWrong = {
+  static Json somethingWentWrong = {
     'en': 'Something went wrong!',
     'ko': '오류가 발생했습니다.',
   };
 
-  static Mintl deleteMeetup = {
+  static Json deleteMeetup = {
     'en': 'Delete meetup',
     'ko': '모임 삭제',
   };
 
-  static Mintl deleteMeetupMessage = {
+  static Json deleteMeetupMessage = {
     'en': 'Are you sure you want to delete this meetup?',
     'ko': '정말 모임을 삭제하시겠습니까?',
   };
 
-  static Mintl createMeetupSchedule = {
+  static Json createMeetupSchedule = {
     'en': 'Create meetup schedule',
     'ko': '만남 일정 만들기',
   };
 
-  static Mintl editMeetupSchedule = {
+  static Json editMeetupSchedule = {
     'en': 'Edit meetup schedule',
     'ko': '만남 일정 수정하기',
   };
 
-  static Mintl meetupScheduleTitle = {
+  static Json meetupScheduleTitle = {
     'en': 'Meetup schedule title',
     'ko': '오프라인 일정 제목',
   };
 
-  static Mintl meetupScheduleTitleDescription = {
+  static Json meetupScheduleTitleDescription = {
     'en': 'Please enter the title of the meetup schedule.',
     'ko': '오프라인 만남의 제목을 적어주세요.',
   };
 
-  static Mintl meetupCreateSchedule = {
+  static Json meetupCreateSchedule = {
     'en': 'Create a schedule',
     'ko': '일정 만들기',
   };
 
-  static Mintl meetupScheduleDateAndTime = {
+  static Json meetupScheduleDateAndTime = {
     'en': 'Meetup schedule date and time',
     'ko': '만남 일정 날짜와 시간',
   };
 
-  static Mintl selectDate = {
+  static Json selectDate = {
     'en': 'Select date',
     'ko': '날짜 선택',
   };
 
-  static Mintl selectTime = {
+  static Json selectTime = {
     'en': 'Select time',
     'ko': '시간 선택',
   };
 
-  static Mintl meetupSchedulePhoto = {
+  static Json meetupSchedulePhoto = {
     'en': 'Meetup schedule photo',
     'ko': '만남 일정 사진',
   };
 
-  static Mintl meetupScheduleName = {
+  static Json meetupScheduleName = {
     'en': 'Meetup schedule name',
     'ko': '만남 일정 이름',
   };
 
-  static Mintl meetupScheduleNameNote = {
+  static Json meetupScheduleNameNote = {
     'en': 'Please enter the name of the meetup schedule.',
     'ko': '오프라인 만남에 대한 이름을 적어주세요.',
   };
 
-  static Mintl meetupSchedulePhotoNote = {
+  static Json meetupSchedulePhotoNote = {
     'en': 'Please upload a photo. Photo size: 500x500',
     'ko': '모임 사진을 업로드 해 주세요. 사진 크기: 500x500',
   };
 
-  static Mintl meetupScheduleDescription = {
+  static Json meetupScheduleDescription = {
     'en': 'Meetup schedule description',
     'ko': '만남 일정 설명',
   };
 
-  static Mintl meetupScheduleDescriptionNote = {
+  static Json meetupScheduleDescriptionNote = {
     'en': 'Please enter the description of the meetup schedule.',
     'ko': '만남 설명을 적어주세요.',
   };
 
-  static Mintl meetupScheduleDateOrTimeMissing = {
+  static Json meetupScheduleDateOrTimeMissing = {
     'en': 'Please select a meeting date and time.',
     'ko': '모임 날짜와 시간을 선택해주세요.',
   };
 
-  static Mintl meetupScheduleUpdated = {
+  static Json meetupScheduleUpdated = {
     'en': 'Meetup schedule updated',
     'ko': '만남 일정이 수정되었습니다.',
   };
 
-  static Mintl editSchedule = {
+  static Json editSchedule = {
     'en': 'Edit schedule',
     'ko': '일정 수정하기',
   };
 
-  static Mintl meetupDateAndTime = {
+  static Json meetupDateAndTime = {
     'en': 'Meetup date and time',
     'ko': '모임 날짜 & 시간',
   };
 
-  static Mintl meetupEventApplyAttendBlocked = {
+  static Json meetupEventApplyAttendBlocked = {
     'en': 'Attend blocked',
     'ko': '참석 차단',
   };
 
-  static Mintl meetupEventApplyAttendBlockedMessage = {
+  static Json meetupEventApplyAttendBlockedMessage = {
     'en': 'Blocked members cannot apply to attend.',
     'ko': '차단된 회원은 참석 신청을 할 수 없습니다.',
   };
 
-  static Mintl meetupMembershipRequired = {
+  static Json meetupMembershipRequired = {
     'en': 'Meetup membership required.',
     'ko': '클럽 가입 필요',
   };
 
-  static Mintl meetupMembershipRequiredMessage = {
+  static Json meetupMembershipRequiredMessage = {
     'en': 'Please join the meetup first.',
     'ko': '모임에 먼저 가입을 해 주세요.',
   };
 
-  static Mintl meetupCancelledAttendance = {
+  static Json meetupCancelledAttendance = {
     'en': 'Attendance cancelled.',
     'ko': '참석을 취소했습니다.',
   };
 
-  static Mintl meetupCancelAttendance = {
+  static Json meetupCancelAttendance = {
     'en': 'Cancel attendance',
     'ko': '참석 취소하기',
   };
 
-  static Mintl meetupCancelAttendanceMessage = {
+  static Json meetupCancelAttendanceMessage = {
     'en': 'Meetup membership required.',
     'ko': '클럽 가입 필요',
   };
 
-  static Mintl joinFirstThenApplyToAttend = {
+  static Json joinFirstThenApplyToAttend = {
     'en': 'Please join the meetup first and then apply to attend.',
     'ko': '모임에 먼저 가입을 하신 다음, 참석 신청을 주세요.',
   };
 
-  static Mintl applyToAttendConfirmed = {
+  static Json applyToAttendConfirmed = {
     'en': 'Apply to attend confirmed',
     'ko': '참석 신청했습니다.',
   };
 
-  static Mintl applyToAttend = {
+  static Json applyToAttend = {
     'en': 'Apply to attend',
     'ko': '참석 신청하기',
   };
 
-  static Mintl listOfAttendees = {
+  static Json listOfAttendees = {
     'en': 'List of Applicants to Attend',
     'ko': '참석 신청자 목록',
   };
 
-  static Mintl noApplicantsYet = {
+  static Json noApplicantsYet = {
     'en': 'There are no applicants to attend, yet.',
     'ko': '참석 신청자가 없습니다.',
   };
 
-  static Mintl meetupAdminSettings = {
+  static Json meetupAdminSettings = {
     'en': 'Meetup admin settings',
     'ko': '모임 관리자 설정',
   };
 
-  static Mintl recommend = {
+  static Json recommend = {
     'en': 'Recommend',
     'ko': '추천',
   };
 
-  static Mintl all = {
+  static Json all = {
     'en': 'All',
     'ko': '전체',
   };
 
-  static Mintl recommendWithCount = {
+  static Json recommendWithCount = {
     'en': 'Recommend #count',
     'ko': '추천 #count',
   };
 
-  static Mintl inputRecommendHint = {
+  static Json inputRecommendHint = {
     'en':
         'Input number only. Higher number will shown first. 0 will remove the recommendation.',
     'ko': '숫자만 입력하세요. 높은 숫자가 먼저 표시됩니다. 0은 권장 사항을 제거합니다.',
   };
 
-  static Mintl recommendRemove = {
+  static Json recommendRemove = {
     'en': 'Remove recommendation',
     'ko': '추천 삭제',
   };
 
-  static Mintl recommendRemoveMessage = {
+  static Json recommendRemoveMessage = {
     'en': 'Are you sure you want to remove this from recommendations list?',
     'ko': '추천 목록에서 이 항목을 삭제하시겠습니까?',
   };
 
-  static Mintl meetupBlockUser = {
+  static Json meetupBlockUser = {
     'en': 'Block user',
     'ko': '사용자 차단하기',
   };
 
-  static Mintl meetupBlockConfirmMessage = {
+  static Json meetupBlockConfirmMessage = {
     'en': 'Are you sure you want to block this user?',
     'ko': '이 사용자를 차단하시겠습니까?',
   };
 
-  static Mintl meetupUnblockUser = {
+  static Json meetupUnblockUser = {
     'en': 'Unblock user',
     'ko': '사용자 차단 해제하기',
   };
 
-  static Mintl meetupUnblockConfirmMessage = {
+  static Json meetupUnblockConfirmMessage = {
     'en': 'Are you sure you want to unblock this user?',
     'ko': '이 사용자를 차단 해제하시겠습니까?',
   };
@@ -655,53 +654,53 @@ class T {
   /// EO meetups translations
 
   /// Block
-  static Mintl cannotBlockYourself = {
+  static Json cannotBlockYourself = {
     'en': 'You cannot block yourself.',
     'ko': '자신을 차단할 수 없습니다.',
   };
 
-  static Mintl blocked = {
+  static Json blocked = {
     'en': 'Blocked',
     'ko': '차단됨',
   };
 
-  static Mintl blockedMessage = {
+  static Json blockedMessage = {
     'en': 'You have blocked this user.',
     'ko': '이 사용자를 차단하셨습니다.',
   };
 
-  static Mintl blockedTitleMessage = {
+  static Json blockedTitleMessage = {
     'en': 'Blocked this user',
     'ko': '이 사용자를 차단하셨습니다.',
   };
 
-  static Mintl blockedContentMessage = {
+  static Json blockedContentMessage = {
     'en':
         'The contents of this user is hidden because you have blocked this user.',
     'ko': '이 사용자의 내용은 차단된 상태입니다.',
   };
 
-  static Mintl blockedChatMessage = {
+  static Json blockedChatMessage = {
     'en': 'You have blocked this user. Chat message is hidden.',
     'ko': '이 사용자를 차단하셨습니다. 채팅 메시지는 숨겨집니다.',
   };
 
-  static Mintl blockedUserMessage = {
+  static Json blockedUserMessage = {
     'en': 'You have blocked this user.',
     'ko': '이 사용자를 차단하셨습니다.',
   };
 
-  static Mintl unblocked = {
+  static Json unblocked = {
     'en': 'Unblocked',
     'ko': '차단 해제됨',
   };
 
-  static Mintl unblockedMessage = {
+  static Json unblockedMessage = {
     'en': 'You have unblocked this user.',
     'ko': '이 사용자를 차단 해제하셨습니다.',
   };
 
-  static Mintl disabledOnSendMessage = {
+  static Json disabledOnSendMessage = {
     'en': 'You cannot send a message because your account is disabled.',
     'ko': '메시지를 보낼 수 없습니다. 계정이 비활성화 상태입니다.'
   };

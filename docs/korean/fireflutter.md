@@ -1,5 +1,6 @@
 # FireFlutter 설정
 
+- 참고, 설치하는 방법 [FireFlutter 설치](./install.md#설치) 참고
 
 
 ## global context 적용
