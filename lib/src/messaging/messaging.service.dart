@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/fireflutter.field.dart';
+import 'package:fireflutter/src/messaging/comment.messaging.model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -377,6 +379,8 @@ class MessagingService {
   /// ```
   ///
   dynamic parseData(Map<String, dynamic> data) => switch (data) {
+        {Field.postId: String _, Field.category: String _} =>
+          CommentMessaging.fromMap(data),
         {Field.category: String _} => PostMessaging.fromMap(data),
         {Field.roomId: String _} => ChatMessaging.fromMap(data),
         {Field.uid: String _} => UserMessaging.fromMap(data),

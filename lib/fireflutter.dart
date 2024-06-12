@@ -134,6 +134,7 @@ export 'src/messaging/chat.messaging.model.dart';
 export 'src/messaging/messaging.model.dart';
 export 'src/messaging/messaging.service.dart';
 export 'src/messaging/post.messaging.model.dart';
+export 'src/messaging/comment.messaging.model.dart';
 export 'src/messaging/user.messaging.model.dart';
 
 export 'src/report/report.model.dart';
