@@ -40,58 +40,56 @@ class LinkService {
         // Do something (navigation, ...)
         dog('Received uri: $uri');
 
-        SchedulerBinding.instance.addPostFrameCallback((_) async {
-          final uriString = uri.toString();
-          final context = FireFlutterService.instance.globalContext;
+        final uriString = uri.toString();
+        final context = FireFlutterService.instance.globalContext;
 
-          if (context?.mounted == true) {
-            if (uriString.contains('/link')) {
-              final params = Uri.parse(uriString).queryParameters;
-              if (params.isEmpty) {
-                return;
-              }
+        if (context?.mounted == true) {
+          if (uriString.contains('/link')) {
+            final params = Uri.parse(uriString).queryParameters;
+            if (params.isEmpty) {
+              return;
+            }
 
-              /// 구글 FirebaseAuth 로그인 시, deep_link_id 가 들어오는데, 그냥 리턴한다.
-              if (params['deep_link_id'] != null) {
-                dog('-- appLinks.allUriLinkScream.listen() param has deep_link_id. It is for Firebase Auth. Just return.');
-                return;
-              }
-              final pid = params['pid'];
-              final uid = params['uid'];
-              final cid = params['cid'];
-              final page = params['page'];
+            /// 구글 FirebaseAuth 로그인 시, deep_link_id 가 들어오는데, 그냥 리턴한다.
+            if (params['deep_link_id'] != null) {
+              dog('-- appLinks.allUriLinkScream.listen() param has deep_link_id. It is for Firebase Auth. Just return.');
+              return;
+            }
+            final pid = params['pid'];
+            final uid = params['uid'];
+            final cid = params['cid'];
+            final page = params['page'];
 
-              print('pid: $pid, uid: $uid, cid: $cid, page: $page');
+            print('pid: $pid, uid: $uid, cid: $cid, page: $page');
 
-              if (pid != null) {
-                final post = await Post.getAllSummary(pid);
-                print('post; $post');
-                if (post != null) {
-                  ForumService.instance.showPostViewScreen(
-                    context: context!,
-                    post: post,
-                  );
-                } else {
-                  dog('The post of dynamic link pid is null');
-                }
-              } else if (uid != null) {
-                UserService.instance.showPublicProfileScreen(
+            if (pid != null) {
+              final post = await Post.getAllSummary(pid);
+              print('post; $post');
+              if (post != null) {
+                ForumService.instance.showPostViewScreen(
                   context: context!,
-                  uid: uid,
-                );
-              } else if (cid != null) {
-                ChatService.instance.showChatRoomScreen(
-                  context: context!,
-                  roomId: cid,
+                  post: post,
                 );
               } else {
-                if (onLinkTap != null) {
-                  onLinkTap(params);
-                }
+                dog('The post of dynamic link pid is null');
+              }
+            } else if (uid != null) {
+              UserService.instance.showPublicProfileScreen(
+                context: context!,
+                uid: uid,
+              );
+            } else if (cid != null) {
+              ChatService.instance.showChatRoomScreen(
+                context: context!,
+                roomId: cid,
+              );
+            } else {
+              if (onLinkTap != null) {
+                onLinkTap(params);
               }
             }
           }
-        });
+        }
       });
     }
   }
