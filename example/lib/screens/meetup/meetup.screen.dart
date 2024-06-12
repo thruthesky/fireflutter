@@ -34,50 +34,15 @@ class _MenuScreenState extends State<MeetupScreen> {
             Expanded(
               child: TabBarView(
                 children: [
-                  const MeetupListView(
-                    padding: EdgeInsets.all(8),
+                  MeetupListView(
+                    padding: const EdgeInsets.all(16),
+                    separatorBuilder: (_, __) => const SizedBox(height: 16),
                   ),
                   MeetupListView(
                     query: MeetupService.instance.recommendedQuery,
                     padding: const EdgeInsets.all(16),
-                    itemBuilder: (meetup, index) => Card(
-                      clipBehavior: Clip.antiAlias,
-                      child: InkWell(
-                        onTap: () => MeetupService.instance.showViewScreen(
-                          context: context,
-                          meetup: meetup,
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (meetup.photoUrl != null)
-                              CachedNetworkImage(
-                                imageUrl: meetup.photoUrl!,
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
-                              ),
-                            const SizedBox(width: 8),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(meetup.name),
-                                Text(
-                                  meetup.description,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                                if (meetup.recommendOrder != null)
-                                  Text(
-                                    '${meetup.recommendOrder}',
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall,
-                                  ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    itemBuilder: (meetup, index) => MeetupCard(meetup: meetup),
+                    separatorBuilder: (_, __) => const SizedBox(height: 16),
                   ),
                 ],
               ),
