@@ -4,6 +4,12 @@ firebase_options.dart
 key.ts
 **/key.ts
 
+key.dart
+keys.dart
+**/key.dart
+**/keys.dart
+
+
 tmp/
 
 # apps

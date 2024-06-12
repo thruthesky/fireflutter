@@ -47,7 +47,6 @@ export 'src/chat/widgets/default_chat_room.member.dialog.dart';
 export 'src/chat/widgets/default_chat_room.user_list.screen.dart';
 export 'src/chat/widgets/default_chat_room.screen.dart';
 
-export 'src/meetup/meetup.customize.dart';
 export 'src/meetup/meetup.model.dart';
 export 'src/meetup/meetup.service.dart';
 export 'src/meetup/widgets/meetup.card.dart';
