@@ -28,42 +28,44 @@ class MeetupListTile extends StatelessWidget {
               context: context,
               meetup: meetup,
             ),
-      child: Container(
-        padding: padding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (meetup.photoUrl != null)
-              CachedNetworkImage(
-                imageUrl: meetup.photoUrl!,
-                width: double.infinity,
-                height: 200,
-                fit: BoxFit.cover,
-              ),
-            const SizedBox(height: 8),
-            Padding(
-              padding: contentPadding,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    meetup.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  Text(
-                    meetup.description.cut(128),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                      '${T.members.tr}: ${meetup.users.length} ${T.noOfPeople.tr}'),
-                ],
-              ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (meetup.photoUrl != null)
+            CachedNetworkImage(
+              imageUrl: meetup.photoUrl!,
+              width: 120,
+              height: 120,
+              fit: BoxFit.cover,
             ),
-          ],
-        ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 8,
+                ),
+                Text(
+                  meetup.name,
+                  overflow: TextOverflow.clip,
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Text(
+                    meetup.description,
+                    style: Theme.of(context).textTheme.bodySmall,
+                    overflow: TextOverflow.clip,
+                    maxLines: 4,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

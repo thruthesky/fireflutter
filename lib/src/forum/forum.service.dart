@@ -36,6 +36,7 @@ class ForumService {
   Future showPostCreateScreen({
     required BuildContext context,
     required String category,
+    String? group,
   }) async {
     if (notLoggedIn) {
       final re = await UserService.instance.loginRequired!(
@@ -72,6 +73,7 @@ class ForumService {
         context: context,
         pageBuilder: ($, $$, $$$) => PostEditScreen(
           category: category,
+          group: group,
         ),
       );
     }
@@ -80,11 +82,13 @@ class ForumService {
   Future showPostUpdateScreen({
     required BuildContext context,
     required Post post,
+    String? group,
   }) async {
     await showGeneralDialog(
       context: context,
       pageBuilder: ($, $$, $$$) => PostEditScreen(
         post: post,
+        group: group,
       ),
     );
   }

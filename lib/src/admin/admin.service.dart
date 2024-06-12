@@ -108,13 +108,6 @@ class AdminService {
         meetup: meetup,
       ),
     );
-
-    // return showModalBottomSheet(
-    //   context: context,
-    //   builder: (_) => MeetupAdminSettingsScreen(
-    //     meetup: meetup,
-    //   ),
-    // );
   }
 
   /// ## Mirror Backfill RTDB to Firestore

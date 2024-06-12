@@ -171,16 +171,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
 ## 클라우드 함수 설치
 
-파이어베이스 클라우드 함수는 대부분 옵션이다. 예를 들면, 회원 탈퇴를 하는 경우 Firebase Auth 계정을 삭제해야하는데, 클라이언트 SDK 에서 하면 다시 로그인을 하라고 물어온다. 이것을 클라우드 함수를 사용하면 사용자에게 물어보지 않고 회원 계정을 삭제 할 수 있는 것이다. 이 처럼 여러가지 클라우드 함수가 있는데, 필요에 따라 설치를 하면 된다.
-
-참고로, 클라우드 함수는 플러터에서만 쓸 수 있는 것이 아니라, 다른 프론트엔드 플랫폼에서도 쓸 수 있다.
-
-참고로, 어떤 푸시 함수는 설치만 하면 동작하는 것이 있으며 또 어떤 것은 클라이언트에서 호출 해 주어야 하는 것이 있다. 특히, http tirgger 함수나 callable 함수는 클라이언트에서 호출을 해 주어야 한다고 생각을 하면 된다.
-
+2024년 6월 11일, 클라우드함수가 FireFlutter 에서 [Fire-Engine](https://github.com/thruthesky/fire-engine)으로 분리되어 개발 관리된다. 또는 Realtime Database 의 데이터를 Firestore 로 미러링하는 함수들을 별도로 분리하였는데, [mirror-database-to-firestore](https://github.com/thruthesky/mirror-database-to-firestore) 를 통해서 mirroring 할 수 있다.
 
 ### 클라우드 함수 설정
 
-`./firebase/functions/src/config.ts` 에 보면 Config 클래스의 `region` 변수가 있다. 이 변수에 원하는 cloud function region 을 기록하면 된다. 그 외에는 특별히 수정을 하지 않아도 된다.
+클라우드 함수를 설치하기 전에 설정을 해 주어야 한다. 예를 들면, 클라우드 함수는 Hosting 이나 Firestore 근처의 region 이면 좋겠지만, Realtime Database 의 Event Trigger 로 동작하는 함수는 Realtime Database 의 region 에 존재해야 한다. 즉, 함수가 여러 region 에 존재하는 것이 좋을 수 있는 것이다.
+
+`Fire-Engine` 의 `src/config.ts` 에 다음과 같이 설정을 한다.
+
+- `region` 함수의 region 이다.
+- `rtdbRegion` 은 Realtime Database 의 region 이다.
 
 
 #### 푸시 알림 로그 기록
@@ -189,20 +189,16 @@ class _MyHomePageState extends State<MyHomePage> {
 개발 또는 테스트를 하는 경우에는 true 로 할 수 있지만, 실제 운영을 할 때에는 false 로 할 것을 추천한다.
 
 
-
-
-
-
 ### 전체 클라우드 함수 설치하기
+
+아래와 같이 명령하면 된다.
 
 ```sh
 cd firebase
 firebase use --add
-firebase deploy --only functions
+cd functions
+npm run deploy
 ```
-
-### 필요한 클라우드 함수만 설치하기
-
 
 #### 푸시 알림 함수
 
@@ -212,12 +208,6 @@ firebase deploy --only functions
 - `sendPushNotifications` 함수는 클라이언트에서 여러 개의 푸시 알림 토큰을 서버로 전달해서, 서버에서 푸시 알림을 보낼 수 있게 해 준다.
   - 설치는 그냥 일반적인 클라우드 함수 설치 방식인 `firebase deploy --only functions:sendPushNotifications` 와 같이 하면 된다. 이 후, 다른 클라우드 함수들의 설치도 이와 같아서 생략한다.
   - 참고로 이 함수는 http trigger 함수이다. Restful API 방식으로 호출한다고 생각하면 된다.
-
-- `userMirror` 함수는 사용자의 정보를 Firestore 로 저장하는 함수이다. 기본적으로 사용자 정보는 RTDB 의 `/users` 에 저장되는데, 이 정보를 Firestore 의 `/users` 로 복사하기 위한 것이다. Firestore 로 복사하면 회원 정보 필터링을 보다 상세하게 할 수 있으며 필요에 따라 Firebase Extensions 를 활용하여 여러가지 추가 작업을 할 수 있다.
-
-- `postMirror` 함수는 `userMirror` 함수와 비슷하게 RTDB 의 `/posts` 의 글 정보를 Firestore 의 `/posts` 컬렉션으로 복사한다.
-
-- `commentMirror` 함수는 `userMirror` 함수와 비슷하게 RTDB 의 `/comments` 의 글 정보를 Firestore 의 `/comments` 컬렉션으로 복사한다.
 
 - `mirrorBackfillRtdbToFirestore` 함수는 `userMirror`, `postMirror`, `commentMirror` 를 사용 할 때, 기존의 mirror 되지 않은 데이터를 모두 mirror 하는 것이다. 이 함수는 callable function 이며 관리자만 실행하는 한 함수이다.
 
@@ -236,6 +226,46 @@ firebase deploy --only functions
 - `sendMessagesToChatRoomSubscribers` 함수는 채팅 방에 있는 사용자들 중 푸시 알림 구독자들에게만 푸시 알림을 보내고자 할 때 사용하는 함수이다.
 
 - `link` 함수는 dynamic link 함수이다. 앱을 공유하고자 할 때 사용하는 함수이다.
+
+
+
+### Mirroring 함수 설치하기
+
+- 2024년 6월 이전에는 userMirror, postMirror, commentMirror 와 같은 함수가 있었는데, 이제는 `mirror-database-to-firestore` 함수로 분리되었다.
+- 사용자 정보, 게시글, 코멘트 글 등을 Firestore 로 mirroring 하는 이유는 Firestore 를 통해서 데이터를 더 잘 활용할 수 있기 때문이다. 필요에 따라 Firebase Extension 을 활용할 수도 있다.
+  - Fireflutter 에서 기본적으로 제공하는 사용자 검색 기능은 이 mirroring 이 필요하다.
+
+
+- 아래와 같이 설정하고 region 값만 RTDB 의 region 으로 바꾸어준 다음 설치를 하면 된다.
+
+```ts
+export class Config {
+  /**
+   * Region to deploy the function.
+   */
+  public static region = "us-central1"; // 여기에 RTDB 의 region 을 입력하면 된다.
+  /**
+     * Paths to mirror.
+     */
+  public static paths: Array<ConfigPath> = [
+    {
+      source: "users/{uid}",
+      destination: "users",
+    },
+    {
+      source: "posts/{category}/{postId}",
+      destination: "posts",
+      // fields: ["name", "timestamp"],
+    },
+    {
+      source: "comments/{postId}/{commentId}",
+      destination: "comments",
+    },
+  ];
+}
+```
+
+위와 같이 하면, users, posts, comments 노드의 값들이 각각 firestore 의 users, posts, comments 컬렉션에 저장된다.
 
 
 

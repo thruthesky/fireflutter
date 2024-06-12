@@ -7,10 +7,10 @@ class MeetupEditScreen extends StatefulWidget {
   final Meetup? meetup;
 
   @override
-  State<MeetupEditScreen> createState() => _ClubEditScreenState();
+  State<MeetupEditScreen> createState() => _MeetupEditScreenState();
 }
 
-class _ClubEditScreenState extends State<MeetupEditScreen> {
+class _MeetupEditScreenState extends State<MeetupEditScreen> {
   Meetup? meetup;
 
   @override

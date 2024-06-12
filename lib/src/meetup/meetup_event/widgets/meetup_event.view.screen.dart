@@ -12,19 +12,13 @@ class MeetupEventViewScreen extends StatefulWidget {
   final MeetupEvent event;
 
   @override
-  State<MeetupEventViewScreen> createState() => _MeetupViewScreenState();
+  State<MeetupEventViewScreen> createState() => _MeetupEventViewScreenState();
 }
 
-class _MeetupViewScreenState extends State<MeetupEventViewScreen> {
-  /// 클럽에 연결된 밋업이면 클럽 정보를 가져온다.
-  Meetup? event;
-
+class _MeetupEventViewScreenState extends State<MeetupEventViewScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.event.meetupId != null) {
-      Meetup.get(id: widget.event.meetupId!).then((value) => event = value);
-    }
   }
 
   @override
@@ -121,6 +115,7 @@ class _MeetupViewScreenState extends State<MeetupEventViewScreen> {
                     /// * Refactor this not to access database. Or caching the meetup data.
                     final meetup = await Meetup.get(id: event.meetupId!);
 
+                    /// if the user is block from meetup display apply attend blocked  error message
                     if (meetup.blocked == true) {
                       error(
                         context: context,
@@ -130,6 +125,7 @@ class _MeetupViewScreenState extends State<MeetupEventViewScreen> {
                       return;
                     }
 
+                    /// if the user didnt join the meetup display membership required error message
                     if (meetup.joined == false) {
                       error(
                         context: context,
