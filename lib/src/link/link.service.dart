@@ -32,8 +32,8 @@ class LinkService {
     if (autoRedirect) {
       final appLinks = AppLinks();
 
-// Subscribe to all events when app is started.
-// (Use allStringLinkStream to get it as [String])
+      // Subscribe to all events when app is started.
+      // (Use allStringLinkStream to get it as [String])
       /// 주의, Firebase Auth 를 구현할 때, 여기에 떨어진다.
       /// 특히, Firebase Auth 에 `/link` 문자열이 들어 있다. 예) ://firebaseauth/link?deep_link_id=...
       appLinks.allUriLinkStream.listen((uri) async {

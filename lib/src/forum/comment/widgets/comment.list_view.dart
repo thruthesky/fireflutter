@@ -32,8 +32,9 @@ class _CommentListViewState extends State<CommentListView> {
   init() async {
     // Getting all the comments first
     comments = await Comment.getAll(postId: widget.post.id);
-
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
 
     // print('path: ${widget.post.commentsRef.path}');
 
