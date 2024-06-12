@@ -182,6 +182,10 @@ class T {
     'en': 'Write a comment',
     'ko': '코멘트 작성',
   };
+  static Json comments = {
+    'en': 'Comments',
+    'ko': '댓글',
+  };
 
   static Json inputCommentHint = {
     'en': 'Please enter your comment',
