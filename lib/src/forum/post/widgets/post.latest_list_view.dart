@@ -10,7 +10,8 @@ import 'package:flutter/gestures.dart';
 class PostLatestListView extends StatelessWidget {
   const PostLatestListView({
     super.key,
-    required this.category,
+    this.category,
+    this.group,
     this.limit = 5,
     this.loadingBuilder,
     this.errorBuilder,
@@ -38,7 +39,8 @@ class PostLatestListView extends StatelessWidget {
     this.gridDelegate,
   });
 
-  final String category;
+  final String? category;
+  final String? group;
 
   final int limit;
   final Widget Function()? loadingBuilder;
@@ -69,7 +71,11 @@ class PostLatestListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Post>>(
-      future: Post.latestSummary(category: category, limit: limit),
+      future: Post.latestSummary(
+        category: category,
+        group: group,
+        limit: limit,
+      ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return loadingBuilder?.call() ??

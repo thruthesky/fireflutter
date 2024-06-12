@@ -3,10 +3,16 @@ import 'package:flutter/material.dart';
 
 class PostEditScreen extends StatefulWidget {
   static const String routeName = '/PostCreate';
-  const PostEditScreen({super.key, this.category, this.post});
+  const PostEditScreen({
+    super.key,
+    this.category,
+    this.post,
+    this.group,
+  });
 
   final String? category;
   final Post? post;
+  final String? group;
 
   @override
   State<PostEditScreen> createState() => _PostEditScreenState();
@@ -98,6 +104,7 @@ class _PostEditScreenState extends State<PostEditScreen> {
                             title: titleController.text,
                             content: contentController.text,
                             urls: post.urls,
+                            group: widget.group,
                           );
                         } else {
                           newPost = await post.update(

@@ -1,3 +1,4 @@
+export 'fireflutter.defines.dart';
 export 'fireflutter.field.dart';
 export 'fireflutter.functions.dart';
 

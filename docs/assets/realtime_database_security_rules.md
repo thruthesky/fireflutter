@@ -231,7 +231,7 @@
       ".read": true,
       ".write": true,
       "$category": {
-        ".indexOn": ["order", "createdAt"]
+        ".indexOn": ["order", "createdAt", "group_order"]
       }
     },
     // for testing only
@@ -245,7 +245,7 @@
       
     "post-all-summaries": {
       ".read": true,
-      ".indexOn": ["order", "createdAt"]
+      ".indexOn": ["order", "createdAt", "group_order"]
     },
       
     "comments": {
