@@ -9,70 +9,61 @@ class MeetupCard extends StatelessWidget {
   const MeetupCard({
     super.key,
     required this.meetup,
+    this.padding = const EdgeInsets.all(0),
+    this.contentPadding = const EdgeInsets.fromLTRB(16, 8, 16, 16),
+    this.onTap,
   });
 
   final Meetup meetup;
+  final EdgeInsets padding;
+  final EdgeInsets contentPadding;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => MeetupService.instance.showViewScreen(
-        context: context,
-        meetup: meetup,
-      ),
-      child: Container(
-        // padding: const EdgeInsets.all(16),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: Stack(
-            // crossAxisAlignment: CrossAxisAlignment.start,
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => onTap != null
+            ? onTap!.call()
+            : MeetupService.instance.showViewScreen(
+                context: context,
+                meetup: meetup,
+              ),
+        child: Container(
+          padding: padding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (meetup.photoUrl != null)
                 CachedNetworkImage(
                   imageUrl: meetup.photoUrl!,
                   width: double.infinity,
-                  height: 240,
+                  height: 200,
                   fit: BoxFit.cover,
                 ),
-
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black,
-                      ],
+              const SizedBox(height: 8),
+              Padding(
+                padding: contentPadding,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      meetup.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleSmall,
                     ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        meetup.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: Colors.white),
-                      ),
-                    ],
-                  ),
+                    Text(
+                      meetup.description.cut(128),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                        '${T.members.tr}: ${meetup.users.length} ${T.noOfPeople.tr}'),
+                  ],
                 ),
               ),
-              // Text(
-              //   meetup.description.cut(128),
-              //   maxLines: 1,
-              //   overflow: TextOverflow.ellipsis,
-              // ),
-              // Text('회원 수: ${meetup.users.length} 명'),
             ],
           ),
         ),
