@@ -3,6 +3,7 @@ import 'package:example/screens/chat/chat.screen.dart';
 import 'package:example/screens/chat/open_chat.screen.dart';
 import 'package:example/screens/entry/entry.screen.dart';
 import 'package:example/screens/forum/forum.screen.dart';
+import 'package:example/screens/forum/forum_search.screen.dart';
 import 'package:example/screens/forum/latest.posts.screen.dart';
 import 'package:example/screens/forum/post_list_by_group.screen.dart';
 import 'package:example/screens/home/home.screen.dart';
@@ -67,6 +68,10 @@ final router = GoRouter(
     GoRoute(
       path: PostListByGroupScreen.routeName,
       builder: (context, state) => const PostListByGroupScreen(),
+    ),
+    GoRoute(
+      path: ForumSearchScreen.routeName,
+      builder: (context, state) => const ForumSearchScreen(),
     ),
   ],
 );

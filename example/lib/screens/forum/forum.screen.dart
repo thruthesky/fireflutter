@@ -93,7 +93,7 @@ class _ForumScreenState extends State<ForumScreen>
         controller: _tabController,
         children: Categories.menus
             .map(
-              (e) => PostLatestListView(
+              (e) => PostListView(
                 category: e.id,
               ),
             )
