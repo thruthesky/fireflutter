@@ -95,6 +95,9 @@ class Post {
   ///    id: ref.key!,
   ///  );
   /// ```
+  ///
+  /// Note, when creating from JSON data for testing and other purposes, values like uid, createdAt, etc. might be missing.
+  /// Therefore, it provides default values.
   factory Post.fromJson(
     Map<dynamic, dynamic> json, {
     required String id,
@@ -105,8 +108,9 @@ class Post {
       ref: Post.postRef(category, id),
       title: json['title'] ?? '',
       content: json['content'] ?? '',
-      uid: json['uid'],
-      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
+
+      uid: json['uid'] ?? '',
+      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] ?? 0),
       order: json[Field.order] ?? 0,
       likes: List<String>.from((json['likes'] as Map? ?? {}).keys),
       noOfLikes: json[Field.noOfLikes] ?? 0,
@@ -240,6 +244,7 @@ class Post {
     required String content,
     required String category,
     List<String>? urls,
+    String? group,
   }) async {
     if (iam.disabled) return null;
 
@@ -256,13 +261,16 @@ class Post {
       }
     }
 
+    final order = DateTime.now().millisecondsSinceEpoch * -1;
+
     final data = {
       'uid': myUid,
       'title': title,
       'content': content,
       Field.urls: urls,
       'createdAt': ServerValue.timestamp,
-      Field.order: DateTime.now().millisecondsSinceEpoch * -1,
+      Field.order: order,
+      if (group != null) 'group': group,
     };
 
     final DatabaseReference ref = Post.categoryRef(category).push();
@@ -406,15 +414,28 @@ class Post {
   ///
   /// 중요: order 로 정렬하지 않고, createdAt 으로 정렬한다.
   static Future<List<Post>> latestSummary({
-    required String category,
+    String? category,
+    String? group,
     int limit = 5,
   }) async {
-    final snapshot = await postSummariesRef
-        .child(category)
-        .orderByChild(Field.createdAt)
-        // .orderByKey()
-        .limitToLast(limit)
-        .get();
+    assert(category != null || group != null);
+    Query ref;
+
+    /// Get posts from /posts-summaries if [category] is given
+    if (category != null) {
+      ref = postSummariesRef.child(category).orderByChild(Field.createdAt);
+    } else if (group != null) {
+      /// Get posts from /posts-all-smmaries if [group] is given
+      ref = postAllSummariesRef
+          .orderByChild("group_order")
+          .startAt(group)
+          .endAt('$group\uf8ff');
+    } else {
+      throw 'category or group must be given';
+    }
+
+    // .orderByKey()
+    final snapshot = await ref.limitToLast(limit).get();
 
     final List<Post> posts =
         (snapshot.exists == false || snapshot.value == null)
@@ -423,7 +444,7 @@ class Post {
                 .map((DataSnapshot e) => Post.fromJson(
                       e.value as Map,
                       id: e.key as String,
-                      category: category,
+                      category: (e.value as Map)['category'] as String? ?? '',
                     ))
                 .toList();
 

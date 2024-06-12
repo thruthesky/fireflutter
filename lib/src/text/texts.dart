@@ -3,7 +3,6 @@ import 'package:fireflutter/fireflutter.dart';
 class T {
   T._();
 
-  /// New translations
   static Json version = {
     'en': 'Ver: #version',
     'ko': '버전: #version',

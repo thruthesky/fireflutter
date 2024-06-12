@@ -47,6 +47,7 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                         context: context,
                         category: widget.meetup.id +
                             (index == 4 ? '-meetup-gallery' : '-meetup-post'),
+                        group: 'meetup',
                       ),
                       child: Text(index == 4 ? T.addPhoto.tr : T.addNotice.tr),
                     );

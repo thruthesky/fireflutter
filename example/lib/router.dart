@@ -3,6 +3,7 @@ import 'package:example/screens/chat/chat.screen.dart';
 import 'package:example/screens/chat/open_chat.screen.dart';
 import 'package:example/screens/entry/entry.screen.dart';
 import 'package:example/screens/forum/forum.screen.dart';
+import 'package:example/screens/forum/latest.posts.screen.dart';
 import 'package:example/screens/home/home.screen.dart';
 import 'package:example/screens/meetup/meetup.screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -57,6 +58,10 @@ final router = GoRouter(
     GoRoute(
       path: BuyAndSellScreen.routeName,
       builder: (context, state) => const BuyAndSellScreen(),
+    ),
+    GoRoute(
+      path: LatestPostsScreen.routeName,
+      builder: (context, state) => const LatestPostsScreen(),
     ),
   ],
 );

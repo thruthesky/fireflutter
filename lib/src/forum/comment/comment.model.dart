@@ -277,6 +277,7 @@ class Comment {
 
     await ref.set(data);
 
+    /// TODO Do it on backend
     final summaryRef = Post.postSummaryRef(category, postId);
     summaryRef.child(Field.noOfComments).set(ServerValue.increment(1));
 

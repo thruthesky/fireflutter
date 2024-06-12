@@ -3,6 +3,7 @@ import 'package:example/screens/chat/chat.screen.dart';
 import 'package:example/screens/chat/open_chat.screen.dart';
 import 'package:example/screens/entry/entry.screen.dart';
 import 'package:example/screens/forum/forum.screen.dart';
+import 'package:example/screens/forum/latest.posts.screen.dart';
 import 'package:example/screens/meetup/meetup.screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
@@ -64,6 +65,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       ElevatedButton(
                         onPressed: () => context.push(ForumScreen.routeName),
                         child: const Text('Fourm'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () =>
+                            context.push(LatestPostsScreen.routeName),
+                        child: const Text('Latest Posts'),
                       ),
                       ElevatedButton(
                         onPressed: () => context.push(MeetupScreen.routeName),
