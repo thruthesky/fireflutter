@@ -12,10 +12,10 @@ class MeetupEventCreateForm extends StatefulWidget {
   final void Function(MeetupEvent meetup) onCreate;
 
   @override
-  State<MeetupEventCreateForm> createState() => _ClubMeetupCreateFormState();
+  State<MeetupEventCreateForm> createState() => _MeetupEventCreateFormState();
 }
 
-class _ClubMeetupCreateFormState extends State<MeetupEventCreateForm> {
+class _MeetupEventCreateFormState extends State<MeetupEventCreateForm> {
   final TextEditingController titleController = TextEditingController();
 
   @override

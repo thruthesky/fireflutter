@@ -22,17 +22,21 @@ Meeting is a service for sharing details, dates, and participation applications 
 ### Meetup Document data structure
 
 - `/meetups/<meetup-id>` meetup document path
-- `uid` is the ID of the user who first created the meetup. Only the user with this ID can modify the meetup information.
-- `master` is the ID of the user who created the meetup
+- `uid` is the user ID who first created the meetup. Can edit current meetup.
+- `master` is the ID of the user who created the meetup. Can edit current meetup.
 - `users` is the list of users who have joined the meetup.
 - `createdAt` is the date when the meetup was created
 - `updatedAt` is the date when the meetup was updated
 - `photoUrl` is the URL of the meetup photo
 - `hasPhoto` is true if the meetup has a photo, so we can filter meetup that has photo
-- `title` is the title of the meetup
-- `descriptionn` is the description of the meetup
+- `name` is the name of the meetup
+- `description` is the description of the meetup
+- `reminder` is the reminder of the meetup
+- `recommendedOrder` is the order of the meetup. can be use to sort the meetup
 
 ### Meetup Event Document data structure
+
+- Meetup events are save separately. Here we can see who want/withdraw to attend the meetup-event.
 
 - `/meetup-events/<meetup-event-id>` meetup-events document path
 - `meetupId` is the meetup id where it is connected
@@ -46,134 +50,532 @@ Meeting is a service for sharing details, dates, and participation applications 
 - `photoUrl` is the URL of the meetup-event photo
 - `hasPhoto` is true if the meetup-event has a photo, so we can filter meetup-event that has photo
 
-## Firestore 설정
+## Meetup and Forum
 
-### Firestore security rules
+- When creating a meetup, no additional settings are needed to connect it with forum.
+- Every meetup will have their own forum and forum gallery category.
+- The category will be `{meetupId}-meetup-post` and `{meetupId}-meetup-gallery`.
+- With this, it easy to identify which meetup each post belongs to.
 
-## 데이터베이스 구조
+## Meetup Chat
 
+- When creating a meetup, it will create a group chat room.
+- The creator of the meetup will automatically be the administrator of the chatroom.
+- Only Users who join the meetup can use the chat room.
+- If the user leaves the meetup, the user will also leave the chatroom.
+- User must also enter the chatroom to recieve push notification.
 
+## Meetup Event
 
+- Meetup master can create meetup event.
+- Meetup event requires `date`, `time`, `photo`, `title`, `description`
 
-- `master` 는 클럽 주인장이다.
-- `moderators` 는 클럽을 관리 할 수 있는 부 운영자 목록이다.
-- 모임 일정은 Firestore 로 따로 작업을 한다. 참여 희망자 확인 및 참여 철회 등을 표현 할 때 필요하다.
-- 참고로 클럽 문서(`/clubs/<club-id>` 컬렉션 문서)는 너무 자주 업데이트가 되면 안된다. 예를 들어 클럽 조회수와 같은 카운트를 기록하면 `ClubDoc` 을 사용하는 경우, 화면에 너무 자주 깜빡일 수 있기 때문에 가능한 최소한의 업데이트 하도록 구조를 만들어야 한다.
-- `reminder` 는 공지사항이다.
+## Meetup Coding Guidelines
 
-## 클럽 코딩 가이드라인
+### MeetupService
 
-- 클럽 화면을 열고자 한다면 `ClubService.instnace.showClubScreen()` 을 호출하면 된다.
-- 클럽을 생성하는 화면을 열고자 한다면, `ClubService.instance.showCreateScreen()` 을 호출하면 된다.
-- 클럽 소개 정보를 수정하는 화면을 열고자 한다면, `ClubService.instance.showUpdateScreen()` 을 호출하면 된다.
+`MeetupService` is the main service for meetup. To use it you can all the instance like `MeetupService.instance.showViewScreen()`
 
-## 클럽과 게시판
+It has helper method to open most of the accessible meetup screens
 
-클럽을 생성 할 때, 생성된 클럽과 그 클럽에서 사용할 게시판들을 연결할 설정을 따로 하지 않는다. 즉, 클럽과 게시판의 연결(링크)를 위해서 DB 변경이나 따로 코드 실행을 하지 않는다. 클럽에는 게시판과 사진첩이 있는데 이 두 개가 있는데, 각 아이디이를 `clubId-club-post` 와 `clubId-club-gallery` 로 사용한다. 그러면 클럽별 게시글을 목록 할 수 있고, 각 게시글이 어느 클럽에 속해 있는지도 알 수 있게 된다.
+- To show meetup screen you can call
+  - `MeetupService.instance.showViewScreen()`
+- To show meetup create screen you can call
+  - `MeetupService.instance.showCreateScreen()`
+- To show meetup update screen you can call
+  - `MeetupService.instance.showUpdateScreen()`
+- To show meetup members screen you can call
+  - `MeetupService.instance.showMembersScreen()`
+- To show meetup blocked members screen you can call
+  - `MeetupService.instance.showBlockedMembersScreen()`
 
-이와 같이 게시판의 아이디를 활용하여 여러가지 형태로 사용 할 수 있다. 전체 게시글을 목록 할 때 클럽의 글이 나오므로 주의해야 한다. 이 경우 클럽에 가입해야지만 내용을 볼 수 있도록 할 수 있다.
+### MeetupEventService
 
-## 클럽과 채팅
+`MeetupEventService` is the main service for meetup event. To use it you can all the instance like `MeetupEventService.instance.showViewScreen()`
 
-클럽을 생성 할 때, 그룹 채팅방을 생성하고, 최초 클럽 생성자를 채팅방에 입장을 시킨다. 물론 클럽을 생성한 사용자가 채팅방의 관리자가 된다.
+It has helper method to open most of the accessible meetup event screens
 
-사용자가 클럽에 가입을 하면, 채팅방에 입장을 시키고 클럽 탈퇴를 하면 채팅방에서도 퇴장을 하게 된다. 참고로, 채팅방에 미리 입장을 시켜놓아야 알림 등을 받게 된다.
+- To show meetup event view screen you can call
+  - `MeetupEventService.instance.showViewScreen()`
+- To show meetup event create screen you can call
+  - `MeetupEventService.instance.showCreateScreen()`
+- To show meetup event update screen you can call
+  - `MeetupEventService.instance.showUpdateScreen()`
 
-## 클럽과 모임 일정
+## Meetup Admin
 
-클럽 마스터가 일정을 생성 할 수 있다. 자세한 내용은 [모임 문서](./meetup.md)를 참고한다.
+To open the meetup admin screen you can call
 
-## 클럽 목록
+- `AdminService.instance.showMeetupSettingScreen()`
 
-- `ClubListView` 로 하면 된다. `ClubListView` 는 `ListView.separated` 의 모든 파라메타를 지원한다. 그래서 가로 스크롤이나 separator 등을 표현 할 수 있다.
+```dart
+ElevatedButton(
+  onPressed: () => AdminService.instance.showMeetupSettingScreen(),
+  child: const Text('Open Meetup Admin Screen'),
+);
+```
 
-- 기본적으로 Firestore 의 `clubs` 컬렉션에서 최근 생성된 순서로 클럽 정보를 가져오는데, `query` 옵션을 통해서 원하는 데로 쿼리를 할 수 있다.
+## Meetup Widgets
 
-- 아래의 예제는 클럽 목록을 가로 스크롤을 하는 예제이다.
+Meetup have a list of widget ready to use widget. You can also copy this widget if you want to customize your own widget.
+
+### Meetup Doc
+
+- `MeetupDoc` widget rebuild base on the latest snapshot of the meetup document.
+- The `builder` will rebuild if there are any changes on the meetup document provided
+
+```dart
+  MeetupDoc(
+      meetup: meetup,
+      builder: (Meetup meetup)  = {
+        Text(meetup.name)
+      }
+  );
+```
+
+### Meetup Create Button
+
+- To create new meetup you can add `MeetupCreateButton` widget to the `AppBar`.
+- This is simply a widget that display a `IconButton(Icon(Icons.add)`.
+- The `onPressed` will call `MeetupService.instance.showCreateScreen()`.
+- This will display the `MeetupCreateForm`.
+
+```dart
+AppBar(
+  title: const Text('Meetup'),
+  actions: [
+    MeetupCreateButton(),
+  ],
+);
+```
+
+### Meetup Create Form
+
+- A widget that will ask the user to enter the meetup `name`.
+- If the user input a name then `Create` button will appear
+
+```dart
+  Scaffold(
+    appBar: AppBar(
+      title: Text('Create Meetup'),
+    ),
+    body: MeetupCreateForm(
+        onCreate: (Meetup meetup) => setState(() => this.meetup = meetup),
+    ),
+  );
+```
+
+### Meetup Update Form
+
+- A widget display the meetup information and allow the user to update the meetup.
+
+```dart
+  Scaffold(
+    appBar: AppBar(
+      title: Text('Create Meetup'),
+    ),
+    body: MeetupUpdateForm(
+       meetup: meetup
+    ),
+  );
+```
+
+### Meetup List View
+
+- You can use `MeetupListView()` to display meetup that `hasPhoto` and sort by `createdAt`
+- `MeetupListView()` also has the same parameter as `ListView.separated`.
+- Therefore you can use `MeetupListView()` like how you use `ListView.separated`.
+- Meetup information is saved in Firestore `meetups` collection.
+- You can also use `query` to filter meetup list.
+- The example below is an example of horizontally scrolling the meetup list.
 
 ```dart
 SizedBox(
   height: 180,
-  child: ClubListView(
+  child: MeetupListView(
     scrollDirection: Axis.horizontal,
     separatorBuilder: (p0, p1) => const SizedBox(width: 8),
-    itemBuilder: (club, i) => SizedBox(
+    itemBuilder: (Meetup meetup, i) => SizedBox(
       width: 180,
       child: Padding(
         padding: EdgeInsets.only(left: i == 0 ? 16 : 0),
-        child: ClubCard(club: club),
+        child: MeetupCard(meetup: meetup),
       ),
     ),
   ),
 ),
 ```
 
-## 클럽 카드
+### Meetup List Tile
 
-- `ClubCard` 위젯은 클럽 사진과 이름 등을 카드 형태의 위젯 UI 로 보여주는 것으로 클럽을 목록이나 기타 방식으로 표현 할 때, 사용하면 된다.
+- The `MeetupListTile()` widget display the meetup information in a list-like UI.
+- By default the `MeetupListView` uses `MeetupListTile()` to display its item.
 
-## 클럽 가입과 탈퇴
+Simply add
 
-아래와 같이 `join` 과 `leave` 함수로 클럽에 가입 또는 탈퇴를 할 수 있다.
+```dart
+  Scaffold(
+    appBar: AppBar(
+      title: Text('Meetup List'),
+    ),
+    body: MeetupListView()
+  );
+```
+
+or if you want to encapsulate the `MeetupListTile()` widget or even provide your own widget through itemBuilder.
+
+```dart
+  MeetupListView(
+    itemBuilder: (Meetup meetup, i) => Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: MeetupListTile(meetup: meetup),
+    )
+  );
+```
+
+### Meetup Card
+
+- The `MeetupCard()` widget displays meetup photos and names in a card-shaped widget UI and can be used when expressing meetups in lists or other ways.
+
+```dart
+  MeetupListView(
+    itemBuilder: (Meetup meetup, i) => MeetupCard(meetup: meetup),
+  );
+```
+
+### Meetup View Screen
+
+- Meetup also provide a screen to display the meetup information and other functionalities.
+- This includes
+  - Meetup Information tab
+  - Meetup Event tab
+  - Meetup Chat tab
+  - Meetup Forum tab
+  - Meetup Forum Gallery tab
+- You can simple call `MeetupService.instance.showViewScreen()`
+- `MeetupListTile` and `MeetupCard` when tap it will open the respective `MeetupViewScreen`
+
+```dart
+  ElevatedButton(
+    onPressed: () => MeetupService.instance.showViewScreen(
+      context: context,
+      meetup: meetup,
+    ),
+    child: const Text('Open Meetup View Screen'),
+  );
+```
+
+### Meetup Edit Screen
+
+- `MeetupEditScreen` will displays either `MeetupCreateForm` or `MeetupUpdateForm`
+- If `meetup` is not not null, it will display `MeetupUpdateForm`.
+- Otherwise, it will display `MeetupCreateForm`.
+
+Creat Meetup
+
+```dart
+  ElevatedButton(
+    onPressed: () => MeetupService.instance.showCreateScreen(
+      context: context,
+    ),
+    child: const Text('Open Meetup Create Screen'),
+  )
+  or simply use the `MeetupCreateButton()` widget
+
+  MeetupCreateButton()
+```
+
+or
+
+Update Meetup
+
+```dart
+  ElevatedButton(
+    onPressed: () => MeetupService.instance.showUpdateScreen(
+      context: context,
+      meetup: meetup,
+    ),
+    child: const Text('Open Meetup Edit Screen'),
+  )
+```
+
+### Meetup Members List Screen
+
+- Display all the members of the meetup.
+- Additonally for meetup creator/master they can blocked member from this list.
+
+```dart
+  ElevatedButton(
+    onPress: () => MeetupService.instance.showMembersScreen(
+      context: context,
+      meetup: widget.meetup,
+    ),
+    child: const Text('Open Meetup Members Screen'),
+  );
+```
+
+### Meetup Members Blocked Screen
+
+- Display all the blocked members of the meetup.
+- The creator/master are the only one who can unblock member from this list.
+
+```dart
+  ElevatedButton(
+    onPress: () => MeetupService.instance.showBlockedMembersScreen(
+      context: context,
+      meetup: widget.meetup,
+    ),
+    child: const Text('Open Meetup Blocked Members Screen'),
+  );
+```
+
+### Joining and leaving the meetup
+
+- You can join or leave a meeup using the `join` and `leave` functions as shown below.
 
 ```dart
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
-class ClubJoinButton extends StatelessWidget {
-  const ClubJoinButton({
+class MeetupJoinButton extends StatelessWidget {
+  const MeetupJoinButton({
     super.key,
-    required this.club,
+    required this.meetup,
   });
 
-  final Club club;
+  final Meetup meetup;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        if (club.joined) {
-          await club.leave();
+        if (meetup.joined) {
+          await meetup.leave();
         } else {
-          await club.join();
+          await meetup.join();
         }
       },
       child: Text(
-        club.joined ? '탈퇴하기' : '가입하기',
+        meetup.joined ? 'Leave' : 'Join',
       ),
     );
   }
 }
 ```
 
-## 하나의 클럽 정보를 화면에 표시하기
+### Meetup Details
 
-아래의 예제는 `Club.get()` 을 통해서 클럽 정보를 가져와 화면에 표시를 해 주는 예제이다.
+- Display the meetup details.
+- This is by default included in the first tab of the view screen
 
 ```dart
-import 'package:fireflutter/fireflutter.dart';
-import 'package:flutter/material.dart';
+  Scaffold(
+    appBar: AppBar(
+      title: Text('Meetup Details'),
+    ),
+    body: MeetupDetails(
+      meetup: meetup,
+    )
+  )
+```
 
-class ClubFindFriendScreen extends StatefulWidget {
-  static const String routeName = '/ClubFindFriend';
-  const ClubFindFriendScreen({super.key});
+### Meetup View Blocked
 
-  @override
-  State<ClubFindFriendScreen> createState() => _ClubFindFriendScreenState();
-}
+- This widget only display a message that the loggin user is blocked in the meetup.
+- This will be displayed on the chat tab, forum tab and forum gallery tab. If the user was blocked by the creator/master.
 
-class _ClubFindFriendScreenState extends State<ClubFindFriendScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+```dart
+MeetupDoc(
+  meetup: meetup,
+  builder: (Meetup meetup) {
+    if (meetup.blocked == true) {
+      return MeetupViewBlocked(
+        meetup: meetup,
+        label: T.meetupChatBlocked.tr,
+      );
+    } else {
+      // do something...
+    }
+  },
+),
+
+```
+
+### Meetup View Register First Button
+
+- This widget only display a message that the loggin user is not registered in the meetup.
+- With a button to join the meetup.
+- This is by default displayed on the chat tab, forum tab and forum gallery tab. if the user didnt yet join the meetup.
+
+```dart
+  MeetupDoc(
+    meetup: meetup,
+    builder: (Meetup meetup) {
+      if (meetup.users.contains(myUid)) {
+        // do something...
+      } else {
+        return MeetupViewRegisterFirstButton(
+          meetup: meetup,
+          label: T.joinMeetupToChat.tr,
+        );
+      }
+    },
+  ),
+```
+
+## Meetup Event Widgets
+
+Meetup events also have a list of widget ready to use widget. You can also copy this widget if you want to customize your own widget.
+
+### Meetup Event List View
+
+- You can use `MeetupEventListView()` to display meetup event that `hasPhoto` and sort by `createdAt`
+- `MeetupEventListView()` also has the same parameter as `ListView.separated`.
+- Therefore you can use `MeetupEventListView()` like how you use `ListView.separated`.
+- Meetup event information is saved in Firestore `meetup-events` collection.
+- You can also use `query` to filter meetup list.
+
+```dart
+  Scaffol(
+    appBar: AppBar(
+      title: Text('Meetup Events List'),
+    ),
+    body: MeetupEventListView()
+  )
+```
+
+### Meetup Event Card
+
+- The `MeetupEventCard()` widget displays meetup event photos and title in a card-shaped widget UI
+- Date and time information will only be displayed to member of the meetup.
+- This is by default the widget used by the `MeetupEventListView()` widget.
+
+```dart
+  MeetupEventListView()
+
+  or if you want to encapsulate the widget
+
+  MeetupEventListView(
+    itemBuilder: (Meetup meetup, i) => Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: MeetupEventCard(
+        meetup: meetup,
+        index: i,
+      ),
+    ),
+  );
+```
+
+### Meetup Event Create Form
+
+- To create new event for the specific meetup, you can use `MeetupEventCreateForm()` widget.
+- You can call the `MeetupEventService.instance.showCreateScreen()` to show the form.
+- It need the `meetupId` to create the event.
+
+```dart
+  Scaffold(
+    appBar: AppBar(
+      title: Text('Create Meetup Event'),
+    ),
+    body: MeetupEventCreateForm(
+      meetupId: meetupId,
+    )
+  )
+```
+
+### Meetup Event Update Form
+
+- To update the meetup event, you can use `MeetupEventUpdateForm()` widget.
+- You can call the `MeetupEventService.instance.showUpdateScreen()` to show the form.
+- It need the `meetupId` to create the event.
+
+```dart
+  Scaffold(
+    appBar: AppBar(
+      title: Text('Create Meetup Event'),
+    ),
+    body: MeetupEventCreateForm(
+      meetupId: meetupId,
+    )
+  )
+```
+
+### Meetup Event Doc
+
+- `MeetupEventDoc` widget rebuild base on the latest snapshot of the meetup-events document.
+- The `builder` will rebuild if there are any changes on the meetup event document provided
+
+```dart
+  MeetupEventDoc(
+      event: event,
+      builder: (MeetupEvent event)  = {
+        Text(event.title)
+      }
+  );
+```
+
+### Meetup Event Edit Screen
+
+- `MeetupEventEditScreen` will displays either `MeetupEventCreateForm` or `MeetupEventUpdateForm`
+- If `event` is not not null, it will display `MeetupEventUpdateForm`.
+- Otherwise, it will display `MeetupEventCreateForm`. `meetupId` is required when creating an event so we can know which meetup it belongs to.
+
+Creat Event
+
+```dart
+  ElevatedButton(
+    onPressed: () => MeetupEventService.instance.showCreateScreen(
+      context: context,
+      meetupId: meetup.id,
+    ),
+    child: const Text('Open Meetup Event Create Screen'),
+  )
+```
+
+or
+
+Update Event
+
+```dart
+  ElevatedButton(
+    onPressed: () => MeetupEventService.instance.showUpdateScreen(
+      context: context,
+      event: event,
+    ),
+    child: const Text('Open Meetup Event Edit Screen'),
+  )
+```
+
+### Meetup Event View Screen
+
+- Meetup Event also provide a screen to display the meetup event information.
+- You can simply call `MeetupEventService.instance.showViewScreen()`
+- When `MeetupEventCard` was tap it will open the respective `MeetupEventViewScreen`
+
+```dart
+  ElevatedButton(
+    onPressed: () => MeetupService.instance.showViewScreen(
+      context: context,
+      event: event,
+    ),
+    child: const Text('Open Meetup View Screen'),
+  );
+```
+
+## Displaying One meetup information on the screen
+
+- The example below retrieves meetup information through `Meetup.get()` and displays it on the screen.
+
+```dart
+    Scaffold(
       appBar: AppBar(
-        title: const Text('이성 친구 찾기 추천 모임 목록'),
+        title: const Text('Meetup Get'),
       ),
       body: Column(
         children: [
-          const Text("많고 많은 모임들 중에서 이성 친구를 찾을 수 있는 모임을 추천해 드립니다."),
-          FutureBuilder<Club>(
-            future: Club.get(id: '17MCAQOIRJPYuIYqR6qD'),
+          const Text("Get specific meetup"),
+          FutureBuilder<Meetup>(
+            future: Meetup.get(id: '17MCAQOIRJPYuIYqR6qD'), // provide the meetup id here
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();
@@ -181,13 +583,156 @@ class _ClubFindFriendScreenState extends State<ClubFindFriendScreen> {
               if (snapshot.hasError) {
                 return Text('Something went wrong! ${snapshot.error}');
               }
-              final club = snapshot.data!;
-              return ClubListTile(club: club);
+              final meetup = snapshot.data!;
+              return MeetupListTile(meetup: meetup);
             },
           ),
         ],
       ),
     );
+```
+
+## Firestore 설정
+
+### Firestore security rules
+
+You can copy the rules below and supplement the correct admin uids, that allow to update the meetup information.
+This permission will be use when the admin is assigning recommendedOrder to specific meetup to display the meetup in recommended list.
+
+```ts
+rules_version = '2';
+
+// ****************************** COPY FROM ***********************************
+//
+//
+// Return true if the user is admin user.
+function isAdmin() {
+  let adminUIDs = ['admin1Id', 'admin2Id'];
+  return request.auth.uid in adminUIDs || request.auth.token.admin == true;
+}
+// ****************************** COPY UNTIL HERE *****************************
+
+
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /_deeplink_/{deeplink} {
+      allow read: if true;
+    }
+
+    match /users/{uid} {
+      allow read: if true;
+    }
+
+    match /meetups/{meetupId} {
+      // Return true if the user is removing himself from the room.
+      function isLeaving() {
+        return onlyRemoving('users', request.auth.uid);
+      }
+
+      // Return true if the user is adding himself to the room.
+      function isJoining() {
+        return
+          onlyAddingOneElement('users')
+          &&
+          request.resource.data.users.toSet().difference(resource.data.users.toSet()) == [request.auth.uid].toSet();
+      }
+      allow read: if true;
+      allow create: if (request.resource.data.uid == request.auth.uid);
+      allow update: if (resource.data.uid == request.auth.uid) || isJoining() || isLeaving() || isAdmin();
+      allow delete: if resource.data.uid == request.auth.uid;
+    }
+
+    match /meetup-events/{meetupId} {
+      function isLeaving() {
+        return onlyRemoving('users', request.auth.uid);
+      }
+      function isJoining() {
+        return
+          onlyAddingOneElement('users')
+          &&
+          request.resource.data.users.toSet().difference(resource.data.users.toSet()) == [request.auth.uid].toSet();
+      }
+      allow read: if true;
+      allow create: if (request.resource.data.uid == request.auth.uid);
+      allow update: if (resource.data.uid == request.auth.uid) || isJoining() || isLeaving();
+    }
   }
+}
+
+// Return true if the array field in the document is removing only the the element. It must maintain other elements.
+//
+// arrayField is an array
+// [element] is an element to be removed from the arrayField
+//
+// Returns
+// - true if it try to remove an element that is not existing int the array and no other fields are changed.
+// - false if the document does not exsit (especially when you put it on "update if: ...").
+//
+// Use case;
+// Other users can add or remove only their uid from the followers array of the otehr user document
+// match /users/{documentId} {
+//   allow update: if request.auth.uid == documentId || onlyAdding('followers', request.auth.uid) || onlyRemoving('followers', request.auth.uid)
+// }
+function onlyRemoving(arrayField, element) {
+
+  let oldSet = (arrayField in resource.data ? resource.data[arrayField] : []).toSet();
+  let newSet = request.resource.data[arrayField].toSet();
+
+  return
+      // If the field does not exist and no other except the field changes, return true.
+      // Why? - preventing permission if it tries to remove somthing that does not exist.
+      // Does - it jsut return true without producing permission error.
+      // Result - when something is deleted from non exisiting array, just pass.
+      ( !(arrayField in resource.data) && noFieldChangedExcept(arrayField) )
+      ||
+      // If the field exists but the element does not exists.
+      // Why? - when something is delete when it is not existing, just pass without permission error.
+      ( !(element in oldSet) && noFieldChanged() )
+      ||
+      (
+        // If the "arrayField" is the only field that is being chagned,
+        onlyUpdating([arrayField])
+        &&
+        // And if the "element" is the only element that is being removed.
+        oldSet.difference(newSet) == [element].toSet()
+        &&
+        // And if the old set is same as new set meaning, when something is deleted, the old set without the deleted element must have same value with new set.
+        oldSet.intersection(newSet) == newSet
+      )
+  ;
+}
+
+
+// Returns true if it adds only one element to the array field.
+//
+// * It allows to update other fields in the document.
+//
+// This must add an elemnt only. Not replacing any other element. It does unique element check.
+function onlyAddingOneElement(arrayField) {
+  return
+    resource.data[arrayField].toSet().intersection(request.resource.data[arrayField].toSet()) == resource.data[arrayField].toSet()
+    &&
+    request.resource.data[arrayField].toSet().difference(resource.data[arrayField].toSet()).size() == 1
+  ;
+}
+
+// Returns true if there is no fields that are updated except the specified field.
+function noFieldChangedExcept(field) {
+  return request.resource.data.diff(resource.data).affectedKeys().hasOnly([field]);
+}
+
+// Returns true if there is no fields that are updated.
+function noFieldChanged() {
+  return request.resource.data.diff(resource.data).affectedKeys().hasOnly([]);
+}
+
+// Returns true if only the specified fields are updated in the document.
+//
+// For instance, the input fields are ['A', 'B'] and if the document is updated with ['A', 'C'], then it return true.
+// For instance, the input fields are ['A', 'B'] and if the document is updated with ['C', 'D'], then it return false.
+function onlyUpdating(fields) {
+  return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
 }
 ```
