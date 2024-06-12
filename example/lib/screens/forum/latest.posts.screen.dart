@@ -25,6 +25,11 @@ class _LatestPostsScreenState extends State<LatestPostsScreen> {
             physics: NeverScrollableScrollPhysics(),
           ),
           Text("Meetup Latest Posts"),
+          PostLatestListView(
+            group: 'meetup',
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+          ),
         ],
       ),
     );

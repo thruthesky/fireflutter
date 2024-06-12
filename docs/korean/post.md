@@ -35,7 +35,11 @@
 
 - `group_order` 글 데이터에 그룹별 시간 목록 값이다. 백엔드에서 `posts-summaries` 와 `posts-all-summaries` 에만 저장하며, `posts` 노드에는 저장되지 않는 값이다.
   이 값은 `group` 의 값에 `order` 을 더한 값을 가진다. 예를 들어, group 이 community 이고 order 값이 -1234 이면, group_order 의 값은 "community-1234" 가 되며, 적절하게 order by, start at, end at, limit 을 통해서 원하는 값을 가져오면 된다.
+  참고로, `PostListView` 와 `PostLatestListView` 가 기본적으로 group 정렬을 지원한다.
   
+
+- `photoOrder` 사진이 등록된 경우, 글의 `order` 값이 저장된다. 즉, 특정 카테고리에서 사진이 있는 최근글을 추출 할 수 있다.
+
 
 
 

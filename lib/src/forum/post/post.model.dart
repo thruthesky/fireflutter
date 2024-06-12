@@ -75,6 +75,10 @@ class Post {
   /// Since this model is shared by `post-all-summary` and `post-summary`,
   /// we need to check if category is included in the snapshot.
   factory Post.fromSnapshot(DataSnapshot snapshot) {
+    if (snapshot.exists == false) {
+      throw FireFlutterException('Post.fromSnapshot/snapshot-not-exists',
+          'Post.fromSnapshot: snapshot does not exist');
+    }
     final value = snapshot.value as Map<dynamic, dynamic>;
     return Post.fromJson(
       value,
@@ -103,6 +107,11 @@ class Post {
     required String id,
     required String category,
   }) {
+    if (category == '') {
+      dog("id: $id, data: ${json.toString()}");
+      throw FireFlutterException('Post.fromJson/category-is-empty',
+          'Post.fromJson: category is empty');
+    }
     return Post(
       id: id,
       ref: Post.postRef(category, id),
@@ -302,7 +311,6 @@ class Post {
   ///   },
   /// );
   Future<Post> update({
-    String? category,
     String? title,
     String? content,
     List<String>? urls,
@@ -310,7 +318,7 @@ class Post {
     bool? deleted,
     Map<String, dynamic>? otherData,
   }) async {
-    final data = {
+    final Map<String, Object?> data = {
       if (otherData != null) ...otherData,
       if (title != null) Field.title: title,
       if (content != null) Field.content: content,
@@ -320,6 +328,7 @@ class Post {
     };
 
     if (data.isEmpty) return this;
+
     await ref.update(data);
 
     /// Don't wait for this
@@ -440,13 +449,15 @@ class Post {
     final List<Post> posts =
         (snapshot.exists == false || snapshot.value == null)
             ? []
-            : snapshot.children
-                .map((DataSnapshot e) => Post.fromJson(
-                      e.value as Map,
-                      id: e.key as String,
-                      category: (e.value as Map)['category'] as String? ?? '',
-                    ))
-                .toList();
+            : snapshot.children.map((DataSnapshot e) {
+                return Post.fromJson(
+                  e.value as Map,
+                  id: e.key as String,
+
+                  /// posts from `/posts-all-summaries` has no input category. So, it gets from the data.
+                  category: category ?? (e.value as Map)['category']!,
+                );
+              }).toList();
 
     return posts.reversed.toList();
   }

@@ -49,7 +49,8 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
                             (index == 4 ? '-meetup-gallery' : '-meetup-post'),
                         group: 'meetup',
                       ),
-                      child: Text(index == 4 ? T.addPhoto.tr : T.addNotice.tr),
+                      child: Text(
+                          index == 4 ? T.addPhoto.tr : T.createMeetupPost.tr),
                     );
                   } else {
                     return const SizedBox.shrink();
@@ -221,7 +222,7 @@ class _MeetupViewScreenState extends State<MeetupViewScreen> {
               Tab(text: T.info.tr),
               Tab(text: T.event.tr),
               Tab(text: T.chat.tr),
-              Tab(text: T.notice.tr),
+              Tab(text: T.forum.tr),
               Tab(text: T.gallery.tr),
             ],
             onTap: (index) {
