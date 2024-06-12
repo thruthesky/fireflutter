@@ -12,10 +12,10 @@ class MeetupEventUpdateForm extends StatefulWidget {
   final MeetupEvent event;
 
   @override
-  State<MeetupEventUpdateForm> createState() => _ClubMeetupUpdateFormState();
+  State<MeetupEventUpdateForm> createState() => _MeetupEventUpdateFormState();
 }
 
-class _ClubMeetupUpdateFormState extends State<MeetupEventUpdateForm> {
+class _MeetupEventUpdateFormState extends State<MeetupEventUpdateForm> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   DateTime? date;
