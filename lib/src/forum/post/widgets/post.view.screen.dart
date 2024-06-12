@@ -73,9 +73,10 @@ class _PostViewScreenState extends State<PostViewScreen> {
               snap: true,
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               // surfaceTintColor: Colors.amber,
-              title: PostTitle(post: post),
+              // title: PostTitle(post: post),
             ),
             SliverToBoxAdapter(child: PostMeta(post: post)),
+            SliverToBoxAdapter(child: PostTitle(post: post)),
             SliverToBoxAdapter(child: PostContent(post: post)),
             SliverToBoxAdapter(
               child: Padding(

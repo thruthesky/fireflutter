@@ -91,6 +91,20 @@ class _CommentListViewState extends State<CommentListView> {
         ),
       );
     }
+    // on going work for collapsible comments
+    // return SliverToBoxAdapter(
+    //   child: ExpansionPanelList(
+    //     children: parentComments!
+    //         .map(
+    //           (comment) => ExpansionPanel(
+    //             headerBuilder: (context, expanded) =>
+    //                 CommentView(post: widget.post, comment: comment),
+    //             body: const Column(),
+    //           ),
+    //         )
+    //         .toList(),
+    //   ),
+    // );
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(

@@ -22,12 +22,14 @@ class CommentView extends StatefulWidget {
 class _CommentViewState extends State<CommentView> {
   int? previousNoOfLikes;
 
-  Color get lineColor => Theme.of(context).colorScheme.outline.withAlpha(40);
   double lineWidth = 2;
+  Color get lineColor => Theme.of(context).colorScheme.outline.withAlpha(40);
+  bool get isParent => widget.comment.depth != 0;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+      padding: const EdgeInsets.only(left: 16),
 
       /// Intrinsic height is a natural height from its child
       /// Using VerticalDivider, the VerticalDivider will automatically
@@ -58,12 +60,16 @@ class _CommentViewState extends State<CommentView> {
                 ),
               ),
             ),
-            UserAvatar(
-              uid: widget.comment.uid,
-              onTap: () => UserService.instance.showPublicProfileScreen(
-                context: context,
-                uid: widget.comment.uid,
-              ),
+            Column(
+              children: [
+                UserAvatar(
+                  uid: widget.comment.uid,
+                  onTap: () => UserService.instance.showPublicProfileScreen(
+                    context: context,
+                    uid: widget.comment.uid,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -136,11 +142,18 @@ class _CommentViewState extends State<CommentView> {
                     data: Theme.of(context).copyWith(
                       textButtonTheme: TextButtonThemeData(
                         style: TextButton.styleFrom(
-                          textStyle: Theme.of(context).textTheme.labelSmall,
+                          textStyle:
+                              Theme.of(context).textTheme.labelSmall!.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                  ),
                           visualDensity: const VisualDensity(
                             horizontal: -4,
                             vertical: -1,
                           ),
+                          foregroundColor: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withAlpha(200),
                         ),
                       ),
                     ),
@@ -303,6 +316,7 @@ class _CommentViewState extends State<CommentView> {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
