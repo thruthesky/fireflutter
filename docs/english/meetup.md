@@ -1,60 +1,65 @@
 # Meetup
 
-- Meetup is sometimes expressed as a “meeting,” and has the same meaning as a club or meetup. It provides functions such as joining a club, setting up offline club meetings, and various chats and bulletin boards to support offline meetings within the app.
+- "Meetup" is another term for "meeting" and refers to a club or gathering. The app allows users to join clubs, schedule offline meetings, and access various chats and bulletin boards to support these meetings.
 
-- Meetup is a function created by combining FireFlutter's chat and bulletin board functions. If you want, you can use FireFlutter's functions to create other services.
+- Meetup combines FireFlutter's chat and forum functions. You can also use FireFlutter's features to create other services.
 
-- The club provided by default includes various UI change functions, but for customization, you can copy the source code and modify it.
+- The default meetup includes various UI customization functions. For further customization, you can copy and modify the source code.
 
-- Characteristically, club information is stored in Firestore. This is to search (filter) the club's introduction or schedule in more detail. Please note that if you do not use the club function, you do not need to set up club-related Firestore settings.
-
-
-
+- Meetup information is stored in Firestore to allow detailed searching and filtering of meetup introductions and schedules. If you do not use the meetup function, you do not need to set up meetup-related Firestore settings.
 
 ## Overview
 
-모임은 각종 온라인 세미나 일정이나 오프라인 모임 등에 대한 설명과 날짜, 참여 신청 등을 할 수 있도록 해 놓은 서비스이다.
+Meeting is a service for sharing details, dates, and participation applications for online seminars and offline meetings. This feature is one of the app's best functionalities.
 
+- Meetup records are stored in Firestore.
+- Allow to view all meetup information.
+- Display all meetup
+- Display latest meetup
+- \*Display nearest meetup
+- \*Search meetup
 
-- 클럽 소개와 마찬가지로 클럽의 모임 일정은 Firestore 에 저장이 된다.
-- 서브 컬렉션으로 검색을 해서, 전체 모임 일정을 검색 할 수 있는데, 홈 화면이나 기타 검색 등의 화면에서 가장 가까운 모임이 어떤 것들이 있는지 회원들에게 보여주는 기능이, 앱의 아주 좋은 기능 중 하나가 될 수 있다. 최근 모임 중 어떤 모임들이 있는지 확인하고자 할 때 유용하게 쓸 수 있다.
+### Meetup Document data structure
 
-- `/meetups/<meetup-id>` 와 같이 저장된다.
-- `id` 는 meetups 컬렉션의 문서 아이디이다. 읽기 전용.
-- `clubId` 는 클럽의 아이디와 연결하기 위한 것으로 모임에 이 clubId 가 있으면 해당 클럽에서 생성 그리고 관리된다는 것을 의미한다.
-- `uid` 는 모임을 처음 생성한 사용자의 아이디로 이 아이디의 사용자만 모임 정보를 수정 할 수 있다.
-- `users` 필드에 참가 신청한 사용자 uid 가 저장된다.
-- `createdAt` 에 모임 생성 날짜
-- `meetAt` 에 오프라인 모임 날짜.
-- `photoUrl` 에 모임 사진. 없으면 클럽 소개 photoUrl 이 사용됨.
-- `title` 모임 소개 제목
-- `descriptoin` 모임 소개 설명
-- `address` 주소 - 모임 주소. 이 주소는 직접 타이핑해서 입력하도록 한다. 참고로 네비게이터 연결 버튼을 달아 놓도록 한다.
+- `/meetups/<meetup-id>` meetup document path
+- `uid` is the ID of the user who first created the meetup. Only the user with this ID can modify the meetup information.
+- `master` is the ID of the user who created the meetup
+- `users` is the list of users who have joined the meetup.
+- `createdAt` is the date when the meetup was created
+- `updatedAt` is the date when the meetup was updated
+- `photoUrl` is the URL of the meetup photo
+- `hasPhoto` is true if the meetup has a photo, so we can filter meetup that has photo
+- `title` is the title of the meetup
+- `descriptionn` is the description of the meetup
 
+### Meetup Event Document data structure
 
-
+- `/meetup-events/<meetup-event-id>` meetup-events document path
+- `meetupId` is the meetup id where it is connected
+- `createdAt` is the date when the meetup-event was created
+- `updatedAt` is the date when the meetup-event was updated
+- `meetAt` is the date when the meetup event will take place
+- `description` is the description of the meetup event
+- `title` is the title of the meetup event
+- `uid` is the uid of the user who created the meetup-event
+- `users` is the list of users who want to attend the meetup-event.
+- `photoUrl` is the URL of the meetup-event photo
+- `hasPhoto` is true if the meetup-event has a photo, so we can filter meetup-event that has photo
 
 ## Firestore 설정
 
 ### Firestore security rules
 
-
-
-
 ## 데이터베이스 구조
 
-- `/clubs/<club-id>` 와 같이 클럽의 설정 정보가 저장된다.
-- `hasPhoto` 는 클럽 설정 정보에 사진이 있으면, 즉 운영자가 클럽 사진을 등록했으면, true 가 된다. 따라서 이 필드를 통해서 클럽 사진이 있는 클럽 정보만 가져 올 수 있다.
-- 클럽 멤버는 `users` 에 저장한다.
-  - `/clubs/<club-id>` 문서에 `{users: [ uid_a, uid_b, ...] }` 와 같이 방 참여자 목록을 기록한다.
-  - 이 때, 문제는 참여한 멤버가 많아 질 수록 `users` 데이터 값이 커져, 문서의 크기가 커진다는 것이다. 하지만, 이 것은 모든 클럽에서 나타나는 현상이 아니라, 회원수가 많은 극히 일부 클럽 문서 데이터 로드에 부담이 된다. 그렇다고 이를 해결하기 위해서 데이터 정규화를 해도 동일한 문서 읽기 회수나 데이터 로드에 부담이 되기는 마찬가지이다. 그래서 그냥 이 방식으로 한다. UID 는 28 바이트이다. 클럽 멤버 수가 100명 2.8k 이면 약간 부담, 1천명 이상이면 28k 이어서 약간 더 부담되낟. 하지만, 2천명 까지는 무난 할 것으로 판단한다.
-  2천 명이상이면 목록에서 제외하던지 아니면, 전체 목록을 할 때, 회원수가 적은순으로 목록하던지, 최근 생성순으로 목록하던지하면 된다.
+
+
+
 - `master` 는 클럽 주인장이다.
 - `moderators` 는 클럽을 관리 할 수 있는 부 운영자 목록이다.
 - 모임 일정은 Firestore 로 따로 작업을 한다. 참여 희망자 확인 및 참여 철회 등을 표현 할 때 필요하다.
 - 참고로 클럽 문서(`/clubs/<club-id>` 컬렉션 문서)는 너무 자주 업데이트가 되면 안된다. 예를 들어 클럽 조회수와 같은 카운트를 기록하면 `ClubDoc` 을 사용하는 경우, 화면에 너무 자주 깜빡일 수 있기 때문에 가능한 최소한의 업데이트 하도록 구조를 만들어야 한다.
 - `reminder` 는 공지사항이다.
-
 
 ## 클럽 코딩 가이드라인
 
@@ -62,18 +67,11 @@
 - 클럽을 생성하는 화면을 열고자 한다면, `ClubService.instance.showCreateScreen()` 을 호출하면 된다.
 - 클럽 소개 정보를 수정하는 화면을 열고자 한다면, `ClubService.instance.showUpdateScreen()` 을 호출하면 된다.
 
-
-
 ## 클럽과 게시판
 
 클럽을 생성 할 때, 생성된 클럽과 그 클럽에서 사용할 게시판들을 연결할 설정을 따로 하지 않는다. 즉, 클럽과 게시판의 연결(링크)를 위해서 DB 변경이나 따로 코드 실행을 하지 않는다. 클럽에는 게시판과 사진첩이 있는데 이 두 개가 있는데, 각 아이디이를 `clubId-club-post` 와 `clubId-club-gallery` 로 사용한다. 그러면 클럽별 게시글을 목록 할 수 있고, 각 게시글이 어느 클럽에 속해 있는지도 알 수 있게 된다.
 
 이와 같이 게시판의 아이디를 활용하여 여러가지 형태로 사용 할 수 있다. 전체 게시글을 목록 할 때 클럽의 글이 나오므로 주의해야 한다. 이 경우 클럽에 가입해야지만 내용을 볼 수 있도록 할 수 있다.
-
-
-
-
-
 
 ## 클럽과 채팅
 
@@ -81,18 +79,9 @@
 
 사용자가 클럽에 가입을 하면, 채팅방에 입장을 시키고 클럽 탈퇴를 하면 채팅방에서도 퇴장을 하게 된다. 참고로, 채팅방에 미리 입장을 시켜놓아야 알림 등을 받게 된다.
 
-
-
-
-
 ## 클럽과 모임 일정
 
 클럽 마스터가 일정을 생성 할 수 있다. 자세한 내용은 [모임 문서](./meetup.md)를 참고한다.
-
-
-
-
-
 
 ## 클럽 목록
 
@@ -122,9 +111,6 @@ SizedBox(
 ## 클럽 카드
 
 - `ClubCard` 위젯은 클럽 사진과 이름 등을 카드 형태의 위젯 UI 로 보여주는 것으로 클럽을 목록이나 기타 방식으로 표현 할 때, 사용하면 된다.
-
-
-
 
 ## 클럽 가입과 탈퇴
 
@@ -160,11 +146,9 @@ class ClubJoinButton extends StatelessWidget {
 }
 ```
 
-
 ## 하나의 클럽 정보를 화면에 표시하기
 
 아래의 예제는 `Club.get()` 을 통해서 클럽 정보를 가져와 화면에 표시를 해 주는 예제이다.
-
 
 ```dart
 import 'package:fireflutter/fireflutter.dart';

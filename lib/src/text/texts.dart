@@ -303,6 +303,11 @@ class T {
     'ko': '최근 글이 없습니다.',
   };
 
+    static Mintl meetupInfo = {
+    'en': 'Meetup information',
+    'ko': '모임 정보',
+  };
+
   static Mintl reminder = {
     'en': 'Reminder',
     'ko': '알림',
