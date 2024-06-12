@@ -70,7 +70,7 @@ class TextService {
     return texts[key] ?? key;
   }
 
-  mintl(Mintl map, [Map<String, String>? args]) {
+  mintl(Json map, [Map<String, String>? args]) {
     if (args == null) {
       return (map[languageCode] ?? map['en']).toString();
     } else {
@@ -89,7 +89,7 @@ extension TranslationServiceExtension on String {
   String get tr => TextService.instance.text(this);
 }
 
-extension TranslationServiceExtensionMap on Mintl {
+extension TranslationServiceExtensionMap on Json {
   /// Translate the string from the Mintl.
   ///
   /// Example:

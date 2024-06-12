@@ -20,6 +20,9 @@ class DisplayPhotos extends StatelessWidget {
               child: CachedNetworkImage(
                 imageUrl: url,
                 fit: BoxFit.cover,
+                // added sizes
+                width: double.infinity,
+                height: 200,
               ),
             ),
           ),
