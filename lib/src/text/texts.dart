@@ -948,11 +948,15 @@ class T {
       'You can block users from their profile page';
 
   // SettingScreen
-  static const String pushNotificationOnProfileView =
-      'Push Notification on Profile View';
+  static const String pushNotificationsOnProfileView =
+      'Push Notifications on Profile View';
   static const String getNotifiedWhenSomeoneViewYourProfile =
       'Get notified when someone views your profile';
   static const String chooseYourLanguage = 'Choose your language';
+  static const String pushNotificationsOnComment =
+      "Push Notifications on Comment";
+  static const String getNotifiedWhenSomeoneCommentOnYourPost =
+      "Get notified when other user comments/replies on your post/comment";
 
   /// Used in DefaultLoginFirstScreen
   static const String loginRequredTitle = 'Login Required';
