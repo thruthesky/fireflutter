@@ -3,7 +3,6 @@ import 'package:fireflutter/fireflutter.dart';
 class T {
   T._();
 
-  /// New translations
   static Json version = {
     'en': 'Ver: #version',
     'ko': '버전: #version',
@@ -238,8 +237,8 @@ class T {
     'ko': '일정',
   };
 
-  static Json notice = {
-    'en': 'Notice',
+  static Json forum = {
+    'en': 'Forum',
     'ko': '게시판',
   };
 
@@ -326,8 +325,8 @@ class T {
     'ko': '일정 생성',
   };
 
-  static Json addNotice = {
-    'en': 'Add notice',
+  static Json createMeetupPost = {
+    'en': 'Add Post',
     'ko': '글 쓰기',
   };
 

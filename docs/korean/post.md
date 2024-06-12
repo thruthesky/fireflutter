@@ -8,12 +8,39 @@
   - 카테고리를 따로 DB 에 저장하지 않으므로 발생하는 모든 문제는 충분히 해결 가능하다.
 
 
-## 글 데이터베이스 구저
+## 글 데이터베이스 구조
+
+주의 할 것은 글은 여러 경로에 저장되며, 필드가 서로 다를 수 있다. 예를 들면, cloud functions 에서 무제한 update loop 에 빠지지 않게 하기 위해서, `posts` 노드에는 값을 업데이트 하지 않을 수 있다.
+
+- `posts/<category>/<postId>` 에 모든 글 데이터가 카테고리별로 저장되는데, 글 정보 전체를 가져와 보여줄 때 쓴다. 예를 들면 글 읽기 화면에서 사용한다.
+- `posts-summaries/<category>/postId>` 에, 글 요약 정보가 카테고리 저장되는데, 제목과 내용을 짧게 저장한다. 글 목록에서 주로 사용한다.
+- `posts-all-summaries/<postId>` 모든 글의 요약 정보가 카테고리 구분없이 저장된다. 주로, 글 내용을 목록할 때, 카테고리 구분없이 화면에 표시할 때 사용한다.
+
+- 주의, 글 데이터에 `category` 는 저장하지 않는다.
+- `title` 제목
+- `content` 내용
+- `uid` 글 쓴이
+- `createdAt` 글 쓴 시간. 오른차순
+- `order` 글 쓴 시간. 역순
+- `likes` 좋아요. 데이터는 map 타입이며, `{uid: true}` 와 같이 저장된다.
+- `noOfLikes` 좋아요 할 때 같이 업데이트되는 변수이다. 이 변수는 클라이언트에 의해서 저장된다.
+- `urls` 사진 URL 배열
+- `noOfComments` 코멘트가 작성될 때, 백엔드에서 저장(증가)를 시킨다.
+- `deleted` 글이 삭제되면 true.
 
 
-- 글은 `posts/<category>/<podId>` 와 같은 경로에 저장된다.
+- `group` 은 글의 그룹이다. `group` 은 모든 카테고리 구분 없이 글의 그룹을 만든다. 즉, `group` 이 대 카테고리, `category` 가 소 카테고리로 생각을 하면 된다. 이 값은 옵션이며, 글 생성 할 때, 저장하면 백엔드에서 `posts-summaries` 와 `posts-all-summaires` 에 저장을 한다.
+  활용 예를 들면, meetup 게시판글은 빼고 목록을 하고자 한다면, 게시판 글 쓰기를 할 때, 특정 그룹을 주고 그 그룹으로 목록하면 된다.
+  참고로, meetup 게시글은 자동으로 meetup 그룹이 들어간다.
 
-- 글 데이터에 `category` 는 저장하지 않는다.
+- `group_order` 글 데이터에 그룹별 시간 목록 값이다. 백엔드에서 `posts-summaries` 와 `posts-all-summaries` 에만 저장하며, `posts` 노드에는 저장되지 않는 값이다.
+  이 값은 `group` 의 값에 `order` 을 더한 값을 가진다. 예를 들어, group 이 community 이고 order 값이 -1234 이면, group_order 의 값은 "community-1234" 가 되며, 적절하게 order by, start at, end at, limit 을 통해서 원하는 값을 가져오면 된다.
+  참고로, `PostListView` 와 `PostLatestListView` 가 기본적으로 group 정렬을 지원한다.
+  
+
+- `photoOrder` 사진이 등록된 경우, 글의 `order` 값이 저장된다. 즉, 특정 카테고리에서 사진이 있는 최근글을 추출 할 수 있다.
+
+
 
 
 

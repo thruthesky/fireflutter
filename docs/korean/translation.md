@@ -103,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     TextService.instance.languageCode = 'ja';
-    return Text({'ja': '私のバージョン: #version'}.args({'version': '1.0.0'}));
+    return Text({'ja': '私のバージョン: #version'}.args({'version': '1.0.0'}));:wq
   }
 }
 ```

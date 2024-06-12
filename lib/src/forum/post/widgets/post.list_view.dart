@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_ui_database/firebase_ui_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/gestures.dart';
@@ -9,7 +10,8 @@ import 'package:flutter/material.dart';
 class PostListView extends StatelessWidget {
   const PostListView({
     super.key,
-    required this.category,
+    this.category,
+    this.group,
     this.pageSize = 10,
     this.loadingBuilder,
     this.errorBuilder,
@@ -35,9 +37,10 @@ class PostListView extends StatelessWidget {
     ///
     this.gridView = false,
     this.gridDelegate,
-  });
+  }) : assert(category != null || group != null);
 
-  final String category;
+  final String? category;
+  final String? group;
 
   final int pageSize;
   final Widget Function()? loadingBuilder;
@@ -67,8 +70,18 @@ class PostListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Query query;
+    if (category != null) {
+      query = Post.postSummariesRef.child(category!).orderByChild(Field.order);
+    } else {
+      query = Post.postAllSummariesRef
+          .orderByChild('group_order')
+          .startAt(group)
+          .endAt('$group\uf8ff');
+    }
+
     return FirebaseDatabaseQueryBuilder(
-      query: Post.postSummariesRef.child(category).orderByChild(Field.order),
+      query: query,
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
           return loadingBuilder?.call() ??
