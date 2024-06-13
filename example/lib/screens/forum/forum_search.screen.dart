@@ -368,6 +368,7 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
       body: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: forumData.length,
+        
         itemBuilder: (c, i) {
           if (hasMore && i + 1 == forumData.length) {
             /// get more data
@@ -376,9 +377,14 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
 
           final json = forumData[i];
           if (json['commentId'] != null) {
-            return CommentContent(
-              comment: Comment.fromJson(json, json['commentId'],
-                  postId: json['postId']),
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CommentListTile(
+                  comment: Comment.fromJson(json, json['commentId'],
+                      postId: json['postId']),
+                ),
+              ),
             );
           } else {
             return PostListTile(
