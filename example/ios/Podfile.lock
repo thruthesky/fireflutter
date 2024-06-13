@@ -68,7 +68,7 @@ PODS:
     - GoogleUtilities/Logger (~> 7.12)
   - FirebaseCoreExtension (10.27.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseCoreInternal (10.25.0):
+  - FirebaseCoreInternal (10.27.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
   - FirebaseDatabase (10.27.0):
     - FirebaseAppCheckInterop (~> 10.17)
@@ -105,7 +105,7 @@ PODS:
     - FirebaseMessagingInterop (~> 10.0)
     - FirebaseSharedSwift (~> 10.0)
     - GTMSessionFetcher/Core (< 4.0, >= 2.1)
-  - FirebaseInstallations (10.25.0):
+  - FirebaseInstallations (10.27.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
