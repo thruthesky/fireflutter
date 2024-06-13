@@ -139,7 +139,7 @@ class ChatService {
   /// If [authRequired] is true, the user must authenticate before joining this chat room.
   Future<ChatRoom?> showChatRoomCreate({
     required BuildContext context,
-    bool authRequired = false,
+    bool showAuthRequiredOption = false,
   }) async {
     if (notLoggedIn) {
       UserService.instance.loginRequired!(
@@ -155,7 +155,7 @@ class ChatService {
       builder: (_) =>
           customize.chatRoomEditDialogBuilder?.call(context: context) ??
           DefaultChatRoomEditDialog(
-            authRequired: authRequired,
+            showAuthRequiredOption: showAuthRequiredOption,
           ),
     );
   }

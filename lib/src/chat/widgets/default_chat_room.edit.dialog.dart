@@ -11,11 +11,11 @@ class DefaultChatRoomEditDialog extends StatefulWidget {
   const DefaultChatRoomEditDialog({
     super.key,
     this.roomId,
-    this.authRequired = false,
+    this.showAuthRequiredOption = false,
   });
 
   final String? roomId;
-  final bool authRequired;
+  final bool showAuthRequiredOption;
 
   @override
   State<DefaultChatRoomEditDialog> createState() =>
@@ -155,7 +155,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 ),
               ),
             ),
-            if (widget.authRequired)
+            if (widget.showAuthRequiredOption)
               SwitchListTile(
                 value: isVerifiedOnly,
                 onChanged: (v) => setState(() => isVerifiedOnly = v),

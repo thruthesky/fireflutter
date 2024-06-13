@@ -159,7 +159,13 @@ class _ChatRoomState extends State<ChatRoomBody> {
     } on FireFlutterException catch (e) {
       if (e.code == Code.chatRoomNotVerified) {
         if (mounted) {
-          error(context: context, message: '본인 인증을 하지 않아 채팅방에 입장할 수 없습니다.');
+          await error(
+            context: context,
+            message: T.cannotEnterChatRoomWithoutVerification.tr,
+          );
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
         }
         rethrow;
       }
@@ -329,7 +335,11 @@ class _ChatRoomState extends State<ChatRoomBody> {
                             value: 'setting',
                             child: Text(T.setting.tr),
                           ),
-                        PopupMenuItem(child: Text(T.share.tr), value: 'share'),
+                        if (chat.room.isGroupChat)
+                          PopupMenuItem(
+                            child: Text(T.share.tr),
+                            value: 'share',
+                          ),
                         const PopupMenuItem(
                           value: 'members',
                           child: Text(

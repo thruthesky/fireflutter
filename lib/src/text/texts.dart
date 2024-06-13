@@ -730,6 +730,17 @@ class T {
     'ko': '본인 인증 한 회원만 사진을 등록 할 수 있습니다.',
   };
 
+  static Json cannotEnterChatRoomWithoutVerification = {
+    'en':
+        'You cannot enter the chat room because you have not verified your identity.',
+    'ko': '본인 인증을 하지 않아 채팅방에 입장할 수 없습니다.',
+  };
+
+  static Json chatRoomIsForVerifiedUsersOnly = {
+    'en': 'Chat room is for verified users only.',
+    'ko': '인증 회원 전용 채팅방입니다.',
+  };
+
   /// EO Block
 
   ///////////////////////////////////////////////////////////////////
