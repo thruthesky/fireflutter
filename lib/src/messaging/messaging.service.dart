@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflutter/fireflutter.dart';
+import 'package:fireflutter/src/messaging/user.profile.messaging.model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -382,7 +383,7 @@ class MessagingService {
         {Field.category: String _} => PostMessaging.fromMap(data),
         {Field.roomId: String _} => ChatMessaging.fromMap(data),
         {Field.senderUid: String _} => UserMessaging.fromMap(data),
-        // Need to review if we need to add UserProfileMessaging.
+        {Field.uid: String _} => UserProfileMessaging.fromMap(data),
         _ => null,
       };
 }
