@@ -10,19 +10,20 @@ class ErrorDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        title: Text(
-          title ?? T.error.tr,
-          style: Theme.of(context).textTheme.titleLarge,
+      title: Text(
+        title ?? T.error.tr,
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
+      content: Text(
+        message,
+        style: Theme.of(context).textTheme.labelLarge,
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(T.ok.tr),
         ),
-        content: Text(
-          message,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(T.ok.tr),
-          ),
-        ]);
+      ],
+    );
   }
 }
