@@ -212,14 +212,14 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 title: Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
-                    T.urlEntryOnlyForVerified.tr,
+                    '인증 회원 전용 URL 입력',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
                 subtitle: Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
-                    T.onlyVerifiedMembersCanJoinChat.tr,
+                    '본인 인증 한 회원만 URL 링크를 입력 할 수 있습니다.',
                     style: Theme.of(context).textTheme.labelSmall,
                   ),
                 ),
@@ -232,14 +232,14 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                   title: Padding(
                     padding: const EdgeInsets.only(left: 16),
                     child: Text(
-                      T.photoUploadOnlyForVerified.tr,
+                      '인증 회원 전용 사진 등록',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
                   subtitle: Padding(
                     padding: const EdgeInsets.only(left: 16),
                     child: Text(
-                      T.onlyVerifiedMembersCanUploadPhoto.tr,
+                      '본인 인증 한 회원만 사진을 등록 할 수 있습니다.',
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
                   ),
