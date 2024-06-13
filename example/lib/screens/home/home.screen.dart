@@ -3,6 +3,7 @@ import 'package:example/screens/chat/chat.screen.dart';
 import 'package:example/screens/chat/open_chat.screen.dart';
 import 'package:example/screens/entry/entry.screen.dart';
 import 'package:example/screens/forum/forum.screen.dart';
+import 'package:example/screens/forum/forum_search.screen.dart';
 import 'package:example/screens/forum/latest.posts.screen.dart';
 import 'package:example/screens/forum/post_list_by_group.screen.dart';
 import 'package:example/screens/meetup/meetup.screen.dart';
@@ -76,6 +77,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () =>
                             context.push(LatestPostsScreen.routeName),
                         child: const Text('Latest Posts'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () =>
+                            context.push(ForumSearchScreen.routeName),
+                        child: const Text('Fourm Search'),
                       ),
                       ElevatedButton(
                         onPressed: () => context.push(MeetupScreen.routeName),
