@@ -1,5 +1,6 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class Categories {
   static String qna = 'qna';
@@ -65,39 +66,60 @@ class _ForumScreenState extends State<ForumScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('게시판'),
-        actions: [
-          TextButton.icon(
-            onPressed: () {
-              ForumService.instance.showPostCreateScreen(
-                context: context,
-                category: Categories.menus[index].id,
-                group: Categories.menus[index].group,
-              );
-            },
-            icon: const Icon(
-              Icons.create,
-              size: 20,
-            ),
-            label: const Text('글쓰기'),
-          ),
-        ],
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: Categories.menus.map((e) => Tab(text: e.name)).toList(),
+    return Theme(
+      data: ThemeData(
+        listTileTheme: ListTileThemeData(
+          titleTextStyle: Theme.of(context).textTheme.labelLarge!.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+          subtitleTextStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+                fontWeight: FontWeight.w400,
+              ),
+          leadingAndTrailingTextStyle:
+              Theme.of(context).textTheme.labelSmall!.copyWith(
+                    fontWeight: FontWeight.w300,
+                    fontSize: 11,
+                  ),
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: Categories.menus
-            .map(
-              (e) => PostListView(
-                category: e.id,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('게시판'),
+          actions: [
+            TextButton.icon(
+              onPressed: () {
+                ForumService.instance.showPostCreateScreen(
+                  context: context,
+                  category: Categories.menus[index].id,
+                  group: Categories.menus[index].group,
+                );
+              },
+              icon: const Icon(
+                Icons.create,
+                size: 20,
               ),
-            )
-            .toList(),
+              label: const Text('글쓰기'),
+            ),
+          ],
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: Categories.menus.map((e) => Tab(text: e.name)).toList(),
+          ),
+        ),
+        body: TabBarView(
+          controller: _tabController,
+          children: Categories.menus
+              .map(
+                (e) => PostListView(
+                  category: e.id,
+                  separatorBuilder: (p0, p1) => const Divider(
+                    thickness: 0,
+                    height: 24,
+                  ),
+                ),
+              )
+              .toList(),
+        ),
       ),
     );
   }
