@@ -465,10 +465,9 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
       filters.add('group:${searchOptions['group']}');
     }
 
-    /// determine either post or comment
-    // if (searchOptions['dataType'] != 'all') {
-    //   filters.add('dataType:${searchOptions['dataType']}');
-    // }
+    if (searchOptions['dataType'] != 'all') {
+      filters.add('collection:${searchOptions['dataType']}');
+    }
 
     if (filters.isEmpty) {
       return '';
