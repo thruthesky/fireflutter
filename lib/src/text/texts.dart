@@ -708,6 +708,78 @@ class T {
     'ko': '메시지를 보낼 수 없습니다. 계정이 비활성화 상태입니다.'
   };
 
+  // Chats
+
+  static const Json newChat = {
+    'en': 'New chat',
+    'ko': '새로운 채팅',
+  };
+
+  static const Json noPermission = {
+    'en': 'No permission.',
+    'ko': '권한이 없습니다.',
+  };
+
+  static const Json noPermissionModifyChatRoom = {
+    'en': 'You do not have permission to modify the chat room.',
+    'ko': '채팅방을 수정할 권한이 없습니다',
+  };
+
+  static const Json chatRoomSettings = {
+    'en': 'Chat Room Settings',
+    'ko': '채팅방 설정',
+  };
+
+  static const Json chatRoomName = {
+    'en': 'Chat Room Name',
+    'ko': '채팅방 이름',
+  };
+
+  static const Json chatRoomDescription = {
+    'en': 'Chat Room Description',
+    'ko': '채팅방 설명',
+  };
+
+  static const Json uploadChatRoomIcon = {
+    'en': 'Upload Chat Room Icon',
+    'ko': '채팅방 아이콘 업로드',
+  };
+
+  static const Json verifiedMembersOnly = {
+    'en': 'Verified members only',
+    'ko': '인증 회원 전용',
+  };
+
+  static const Json openChat = {
+    'en': 'Open Chat',
+    'ko': '채팅방 열기',
+  };
+
+  static const Json anyoneCanJoinChat = {
+    'en': 'Anyone can join.',
+    'ko': '모든 회원이 채팅방에 참여할 수 있습니다.',
+  };
+
+  static const Json onlyVerifiedMembersCanJoinChat = {
+    'en': 'Must be verified to join.',
+    'ko': '인증 회원만 참여할 수 있습니다.',
+  };
+
+  static const Json passwordToJoin = {
+    'en': 'Password to Join',
+    'ko': '채팅방에 참여하기 위한 비밀번호',
+  };
+
+  static const Json leaveEmptyPasswordIfNotRequired = {
+    'en': 'Empty means no password.',
+    'ko': '비밀번호를 입력하지 않아도 됩니다.',
+  };
+
+  static const Json pleaseEnterChatRoomNameAndDescription = {
+    'en': 'Please enter chat room name and description.',
+    'ko': '채팅방 이름과 설명을 입력해주세요.',
+  };
+
   // Chat-Setting
 
   static Json onlyVerifiedMembersCanSendUrl = {
@@ -807,24 +879,7 @@ class T {
       "Are you sure you want to block this user from the chat room?";
   static const String unblockUserChatConfirmation =
       "Are you sure you want to unblock this user from the chat room? This person may see all the messages in the chat room.";
-  static const String noPermission = 'No permission.';
-  static const String noPermissionModifyChatRoom =
-      'You do not have permission to modify the chat room.';
-  static const String newChat = 'New Chat';
-  static const String chatRoomSettings = 'Chat Room Settings';
-  static const String chatRoomName = 'Chat Room Name';
-  static const String chatRoomDescription = 'Chat Room Description';
-  static const String passwordToJoin = 'Password to Join';
-  static const String leaveEmptyPasswordIfNotRequired =
-      'Empty means no password.';
-  static const String uploadChatRoomIcon = 'Upload Chat Room Icon';
-  static const String openChat = 'Open Chat';
-  static const String anyoneCanJoinChat = 'Anyone can join.';
-  static const String verifiedMembersOnly = 'Verified members only';
-  static const String onlyVerifiedMembersCanJoinChat =
-      'Must be verified to join.';
-  static const String pleaseEnterChatRoomNameAndDescription =
-      'Please enter chat room name and description.';
+
   static const String create = "Create";
   // static const String edit = "Edit";
 

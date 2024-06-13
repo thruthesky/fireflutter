@@ -62,7 +62,7 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
       return ErrorDialog(
         // title: '권한 없음',
         title: T.noPermission.tr,
-        message: T.noPermissionModifyChatRoom,
+        message: T.noPermissionModifyChatRoom.tr,
       );
     }
 
