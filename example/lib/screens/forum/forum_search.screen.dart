@@ -368,7 +368,6 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
       body: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: forumData.length,
-        
         itemBuilder: (c, i) {
           if (hasMore && i + 1 == forumData.length) {
             /// get more data
