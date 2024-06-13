@@ -383,7 +383,8 @@ class MessagingService {
           CommentMessaging.fromMap(data),
         {Field.category: String _} => PostMessaging.fromMap(data),
         {Field.roomId: String _} => ChatMessaging.fromMap(data),
-        {Field.uid: String _} => UserMessaging.fromMap(data),
+        {Field.senderUid: String _} => UserMessaging.fromMap(data),
+        // TODO need to update UserLikeMessaging, UserProfileMessaging,
         _ => null,
       };
 }

@@ -1,13 +1,16 @@
 /// User Messaging Model
 class UserMessaging {
-  String uid;
+  String receiverUid;
+  String senderUid;
 
   UserMessaging({
-    required this.uid,
+    required this.senderUid,
+    required this.receiverUid,
   });
   factory UserMessaging.fromMap(Map<String, dynamic> map) {
     return UserMessaging(
-      uid: map['uid'],
+      senderUid: map['senderUid'],
+      receiverUid: map['receiverUid'],
     );
   }
 }
