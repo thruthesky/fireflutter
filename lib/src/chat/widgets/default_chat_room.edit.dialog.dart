@@ -166,9 +166,12 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
-                subtitle: Text(
-                  T.onlyVerifiedMembersCanJoinChat.tr,
-                  style: Theme.of(context).textTheme.labelSmall,
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: Text(
+                    T.onlyVerifiedMembersCanJoinChat.tr,
+                    style: Theme.of(context).textTheme.labelSmall,
+                  ),
                 ),
               ),
 
