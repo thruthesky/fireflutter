@@ -296,6 +296,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "Example - All - iPhone SE",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPhone SE",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "Example - All - SM T295",
       "request": "launch",
       "type": "dart",

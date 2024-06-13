@@ -36,6 +36,12 @@ class Comment {
 
   bool deleted;
 
+  /// added this two to easily identify which has child and siblings
+  /// hasChild if the comment have a child
+  /// hasSiblings if comment belongs to same parent
+  bool hasChild = false;
+  bool hasSiblings = false;
+
   bool get isMine => uid == myUid;
 
   /// Get the post id of the comment.
@@ -47,11 +53,11 @@ class Comment {
     if (depth == 0) {
       return 0;
     } else if (depth == 1) {
-      return 32;
+      return 19;
     } else if (depth == 2) {
-      return 48;
+      return 47;
     } else if (depth == 3) {
-      return 64;
+      return 76;
     } else if (depth == 4) {
       return 80;
     } else if (depth == 5) {
@@ -59,7 +65,7 @@ class Comment {
     } else if (depth == 6) {
       return 100;
     } else {
-      return 108;
+      return 76;
     }
   }
 
@@ -219,12 +225,13 @@ class Comment {
     /// And add the reply to the parent comment's replies.
     for (final comment in comments) {
       if (comment.parentId == null) {
-        newComments.add(comment);
+        newComments.add(comment); // parent
       } else {
         /// 부모 찾기
         final index = newComments.indexWhere((e) => e.id == comment.parentId);
-
+        // set parent hasChild if parentId is not null
         comment.depth = newComments[index].depth + 1;
+        newComments[index].hasChild = true;
 
         /// 형제 찾기
         final siblingIndex =
@@ -232,6 +239,7 @@ class Comment {
         if (siblingIndex == -1) {
           newComments.insert(index + 1, comment);
         } else {
+          newComments[siblingIndex].hasSiblings = true;
           newComments.insert(siblingIndex + 1, comment);
         }
       }

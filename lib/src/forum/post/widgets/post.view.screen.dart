@@ -69,14 +69,18 @@ class _PostViewScreenState extends State<PostViewScreen> {
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              floating: true,
-              snap: true,
+              pinned: true,
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              // surfaceTintColor: Colors.amber,
-              // title: PostTitle(post: post),
+              // title: PostMeta(
+              //   post: post,
+              //   avatarSize: 32,
+              //   padding: const EdgeInsets.all(0),
+              // ),
+              centerTitle: false,
             ),
             SliverToBoxAdapter(child: PostMeta(post: post)),
-            SliverToBoxAdapter(child: PostTitle(post: post)),
+            if (post.title != post.content)
+              SliverToBoxAdapter(child: PostTitle(post: post)),
             SliverToBoxAdapter(child: PostContent(post: post)),
             SliverToBoxAdapter(
               child: Padding(

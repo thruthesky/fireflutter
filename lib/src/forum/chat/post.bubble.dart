@@ -12,6 +12,10 @@ class PostBubble extends StatelessWidget {
   bool get isMine => post.uid == myUid;
   @override
   Widget build(BuildContext context) {
+    if (post.deleted) {
+      return const SizedBox.shrink();
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
       child: Row(

@@ -118,5 +118,11 @@ class _CommentListViewState extends State<CommentListView> {
         childCount: comments!.length,
       ),
     );
+    // return SliverToBoxAdapter(
+    //   child: NewCommentView(
+    //     comments: comments!,
+    //     post: widget.post,
+    //   ),
+    // );
   }
 }

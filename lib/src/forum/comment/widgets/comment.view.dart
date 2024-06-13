@@ -24,42 +24,42 @@ class _CommentViewState extends State<CommentView> {
 
   double lineWidth = 2;
   Color get lineColor => Theme.of(context).colorScheme.outline.withAlpha(40);
-  bool get isParent => widget.comment.depth != 0;
+  bool get isFirstParent =>
+      widget.comment.parentId == null && widget.comment.depth == 0;
+  bool get isChild => !isFirstParent;
+  bool get hasChild => widget.comment.hasChild;
+  bool get hasSibling => widget.comment.hasSiblings;
 
   @override
   Widget build(BuildContext context) {
+    /// Intrinsic height is a natural height from its child
+    /// Using VerticalDivider, the VerticalDivider will automatically
+    /// takes all the space from the parent
+    // padding: EdgeInsets.only(left: widget.comment.leftMargin, right: 16),
     return Container(
+      margin: EdgeInsets.only(left: widget.comment.leftMargin),
       padding: const EdgeInsets.only(left: 16),
-
-      /// Intrinsic height is a natural height from its child
-      /// Using VerticalDivider, the VerticalDivider will automatically
-      /// takes all the space from the parent
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            VerticalDivider(
-              width: 0,
-              thickness: lineWidth,
-              color: lineColor,
-            ),
-            // Horizontal line from the child comment
-            Container(
-              margin: const EdgeInsets.only(top: 8, right: 8),
-              height: 16,
-              width: widget.comment.leftMargin,
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(width: lineWidth, color: lineColor),
-                  left: BorderSide(width: lineWidth, color: lineColor),
-                ),
+            if (isChild && hasSibling) _parentLine(),
+            if (!isFirstParent)
+              Container(
+                width: 16,
+                height: 16,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(width: lineWidth, color: lineColor),
+                    left: BorderSide(width: lineWidth, color: lineColor),
+                  ),
 
-                /// For making a curve to its edge
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(32),
+                  /// For making a curve to its edge
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(32),
+                  ),
                 ),
               ),
-            ),
             Column(
               children: [
                 UserAvatar(
@@ -68,7 +68,14 @@ class _CommentViewState extends State<CommentView> {
                     context: context,
                     uid: widget.comment.uid,
                   ),
+                  size: isFirstParent ? 40 : 24,
                 ),
+
+                /// the horizontal line
+                if (hasChild)
+                  Expanded(
+                    child: _parentLine(),
+                  ),
               ],
             ),
             const SizedBox(width: 8),
@@ -87,7 +94,8 @@ class _CommentViewState extends State<CommentView> {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        widget.comment.createdAt.toShortDate,
+                        widget.comment.depth.toString(),
+                        // widget.comment.createdAt.toShortDate,
                         style: Theme.of(context).textTheme.labelSmall!.copyWith(
                               color: Theme.of(context).colorScheme.outline,
                               fontSize: 10,
@@ -323,6 +331,23 @@ class _CommentViewState extends State<CommentView> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _parentLine() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: lineColor,
+          width: 1,
+        ),
+      ),
+    );
+  }
+
+  _border() {
+    return BoxDecoration(
+      border: Border.all(color: Colors.black),
     );
   }
 }
