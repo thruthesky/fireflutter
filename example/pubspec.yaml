@@ -14,6 +14,7 @@ dependencies:
   cloud_functions: ^4.7.4
   connectivity_plus: ^6.0.3
   cupertino_icons: ^1.0.2
+  easystate: ^1.0.2
   firebase_auth: ^4.19.5
   firebase_core: ^2.31.0
   firebase_database: ^10.5.5
