@@ -212,14 +212,14 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                 title: Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
-                    '인증 회원 전용 URL 입력', // Only verified members can send URL
+                    T.onlyVerifiedMembersCanSendUrl.tr,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
                 subtitle: Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
-                    '본인 인증 한 회원만 URL 링크를 입력 할 수 있습니다.', // 'Members need to verified themselves to send URL to the chat room',
+                    T.membersNeedToBeVerifiedToSendMessage.tr,
                     style: Theme.of(context).textTheme.labelSmall,
                   ),
                 ),
@@ -232,14 +232,14 @@ class _DefaultChatRoomEditDialogState extends State<DefaultChatRoomEditDialog> {
                   title: Padding(
                     padding: const EdgeInsets.only(left: 16),
                     child: Text(
-                      '인증 회원 전용 사진 등록', // Only verified members can upload photos
+                      T.photoUploadOnlyForVerified.tr,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
                   subtitle: Padding(
                     padding: const EdgeInsets.only(left: 16),
                     child: Text(
-                      '본인 인증 한 회원만 사진을 등록 할 수 있습니다.', // 'Members need to verified themselves to upload photos to the chat room',
+                      T.membersNeedToBeVerifiedToUploadPhoto.tr,
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
                   ),

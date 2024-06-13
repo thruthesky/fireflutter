@@ -708,6 +708,28 @@ class T {
     'ko': '메시지를 보낼 수 없습니다. 계정이 비활성화 상태입니다.'
   };
 
+  // Chat-Setting
+
+  static Json onlyVerifiedMembersCanSendUrl = {
+    'en': 'Only verified members can send URL.',
+    'ko': '인증 회원 전용 URL 입력',
+  };
+
+  static Json membersNeedToBeVerifiedToSendMessage = {
+    'en': 'Members need to be verified to send URL to the chat room',
+    'ko': '본인 인증 한 회원만 URL 링크를 입력 할 수 있습니다.',
+  };
+
+  static Json photoUploadOnlyForVerified = {
+    'en': 'Only verified members can upload photos.',
+    'ko': '인증 회원 전용 사진 등록'
+  };
+
+  static Json membersNeedToBeVerifiedToUploadPhoto = {
+    'en': 'Members need to be verified to upload photos to the chat room',
+    'ko': '본인 인증 한 회원만 사진을 등록 할 수 있습니다.',
+  };
+
   /// EO Block
 
   ///////////////////////////////////////////////////////////////////
@@ -790,12 +812,6 @@ class T {
   static const String verifiedMembersOnly = 'Verified members only';
   static const String onlyVerifiedMembersCanJoinChat =
       'Must be verified to join.';
-  static const String urlEntryOnlyForVerified = 'URL Entry Only for Verified';
-  static const String onlyVerifiedMembersCanEnterViaUrl =
-      'Only verified members can enter via URL';
-  static const String photoUploadOnlyForVerified = "Upload Only for Verified";
-  static const String onlyVerifiedMembersCanUploadPhoto =
-      "Only verified can upload photos.";
   static const String pleaseEnterChatRoomNameAndDescription =
       'Please enter chat room name and description.';
   static const String create = "Create";
