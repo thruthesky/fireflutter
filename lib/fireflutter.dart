@@ -1,3 +1,4 @@
+export 'fireflutter.defines.dart';
 export 'fireflutter.field.dart';
 export 'fireflutter.functions.dart';
 
@@ -46,7 +47,6 @@ export 'src/chat/widgets/default_chat_room.member.dialog.dart';
 export 'src/chat/widgets/default_chat_room.user_list.screen.dart';
 export 'src/chat/widgets/default_chat_room.screen.dart';
 
-export 'src/meetup/meetup.customize.dart';
 export 'src/meetup/meetup.model.dart';
 export 'src/meetup/meetup.service.dart';
 export 'src/meetup/widgets/meetup.card.dart';
@@ -63,6 +63,7 @@ export 'src/meetup/widgets/meetup.details.dart';
 export 'src/meetup/widgets/meetup.create_button.dart';
 export 'src/meetup/widgets/meetup.members.list.screen.dart';
 export 'src/meetup/widgets/meetup.members.blocked.screen.dart';
+export 'src/meetup/widgets/meetup.join_button.dart';
 
 export 'src/common/anonymous_avatar.dart';
 export 'src/common/assets.dart';
@@ -128,8 +129,6 @@ export 'src/meetup/meetup_event/widgets/meetup_event.update_form.dart';
 export 'src/meetup/meetup_event/meetup_event.service.dart';
 export 'src/meetup/meetup_event/widgets/meetup_event.view.screen.dart';
 export 'src/meetup/meetup_event/widgets/meetup.event.list_view.dart';
-
-export 'src/meetup/meetup.config.dart';
 
 export 'src/messaging/chat.messaging.model.dart';
 export 'src/messaging/messaging.model.dart';

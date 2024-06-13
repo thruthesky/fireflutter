@@ -194,7 +194,7 @@
         ".indexOn": "order"
       },
     },
-    // Fireship - posts
+    // posts
     "posts": {
       ".read": true,
       "$category": {
@@ -211,10 +211,6 @@
         "urls": {
           ".validate": "data.child('uid').val() === auth.uid"
         },
-          // 이것은 Fireflutter 에서 post 글을 볼 때, 자동 생성되는 것으로 Fireship 에서는 사용되지 않음.
-        "seenBy": {
-          ".validate": false
-        }
       }
     },
     "post-subscriptions": {
@@ -231,7 +227,7 @@
       ".read": true,
       ".write": true,
       "$category": {
-        ".indexOn": ["order", "createdAt"]
+        ".indexOn": ["order", "createdAt", "group_order"]
       }
     },
     // for testing only
@@ -245,7 +241,7 @@
       
     "post-all-summaries": {
       ".read": true,
-      ".indexOn": ["order", "createdAt"]
+      ".indexOn": ["order", "createdAt", "group_order"]
     },
       
     "comments": {

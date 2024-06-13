@@ -36,6 +36,8 @@ class Comment {
 
   bool deleted;
 
+  bool get isMine => uid == myUid;
+
   /// Get the post id of the comment.
   ///
   String get postId => ref.parent!.key!;
@@ -274,9 +276,6 @@ class Comment {
     };
 
     await ref.set(data);
-
-    final summaryRef = Post.postSummaryRef(category, postId);
-    summaryRef.child(Field.noOfComments).set(ServerValue.increment(1));
 
     /// Don't wait for calling onCommentCreate.
     final created = await Comment.get(

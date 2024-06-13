@@ -75,6 +75,10 @@ class Post {
   /// Since this model is shared by `post-all-summary` and `post-summary`,
   /// we need to check if category is included in the snapshot.
   factory Post.fromSnapshot(DataSnapshot snapshot) {
+    if (snapshot.exists == false) {
+      throw FireFlutterException('Post.fromSnapshot/snapshot-not-exists',
+          'Post.fromSnapshot: snapshot does not exist');
+    }
     final value = snapshot.value as Map<dynamic, dynamic>;
     return Post.fromJson(
       value,
@@ -95,18 +99,27 @@ class Post {
   ///    id: ref.key!,
   ///  );
   /// ```
+  ///
+  /// Note, when creating from JSON data for testing and other purposes, values like uid, createdAt, etc. might be missing.
+  /// Therefore, it provides default values.
   factory Post.fromJson(
     Map<dynamic, dynamic> json, {
     required String id,
     required String category,
   }) {
+    if (category == '') {
+      dog("id: $id, data: ${json.toString()}");
+      throw FireFlutterException('Post.fromJson/category-is-empty',
+          'Post.fromJson: category is empty');
+    }
     return Post(
       id: id,
       ref: Post.postRef(category, id),
       title: json['title'] ?? '',
       content: json['content'] ?? '',
-      uid: json['uid'],
-      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
+
+      uid: json['uid'] ?? '',
+      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] ?? 0),
       order: json[Field.order] ?? 0,
       likes: List<String>.from((json['likes'] as Map? ?? {}).keys),
       noOfLikes: json[Field.noOfLikes] ?? 0,
@@ -240,6 +253,7 @@ class Post {
     required String content,
     required String category,
     List<String>? urls,
+    String? group,
   }) async {
     if (iam.disabled) return null;
 
@@ -256,13 +270,16 @@ class Post {
       }
     }
 
+    final order = DateTime.now().millisecondsSinceEpoch * -1;
+
     final data = {
       'uid': myUid,
       'title': title,
       'content': content,
       Field.urls: urls,
       'createdAt': ServerValue.timestamp,
-      Field.order: DateTime.now().millisecondsSinceEpoch * -1,
+      Field.order: order,
+      if (group != null) 'group': group,
     };
 
     final DatabaseReference ref = Post.categoryRef(category).push();
@@ -294,7 +311,6 @@ class Post {
   ///   },
   /// );
   Future<Post> update({
-    String? category,
     String? title,
     String? content,
     List<String>? urls,
@@ -302,7 +318,7 @@ class Post {
     bool? deleted,
     Map<String, dynamic>? otherData,
   }) async {
-    final data = {
+    final Map<String, Object?> data = {
       if (otherData != null) ...otherData,
       if (title != null) Field.title: title,
       if (content != null) Field.content: content,
@@ -312,6 +328,7 @@ class Post {
     };
 
     if (data.isEmpty) return this;
+
     await ref.update(data);
 
     /// Don't wait for this
@@ -406,26 +423,41 @@ class Post {
   ///
   /// 중요: order 로 정렬하지 않고, createdAt 으로 정렬한다.
   static Future<List<Post>> latestSummary({
-    required String category,
+    String? category,
+    String? group,
     int limit = 5,
   }) async {
-    final snapshot = await postSummariesRef
-        .child(category)
-        .orderByChild(Field.createdAt)
-        // .orderByKey()
-        .limitToLast(limit)
-        .get();
+    assert(category != null || group != null);
+    Query ref;
+
+    /// Get posts from /posts-summaries if [category] is given
+    if (category != null) {
+      ref = postSummariesRef.child(category).orderByChild(Field.createdAt);
+    } else if (group != null) {
+      /// Get posts from /posts-all-smmaries if [group] is given
+      ref = postAllSummariesRef
+          .orderByChild("group_order")
+          .startAt(group)
+          .endAt('$group\uf8ff');
+    } else {
+      throw 'category or group must be given';
+    }
+
+    // .orderByKey()
+    final snapshot = await ref.limitToLast(limit).get();
 
     final List<Post> posts =
         (snapshot.exists == false || snapshot.value == null)
             ? []
-            : snapshot.children
-                .map((DataSnapshot e) => Post.fromJson(
-                      e.value as Map,
-                      id: e.key as String,
-                      category: category,
-                    ))
-                .toList();
+            : snapshot.children.map((DataSnapshot e) {
+                return Post.fromJson(
+                  e.value as Map,
+                  id: e.key as String,
+
+                  /// posts from `/posts-all-summaries` has no input category. So, it gets from the data.
+                  category: category ?? (e.value as Map)['category']!,
+                );
+              }).toList();
 
     return posts.reversed.toList();
   }

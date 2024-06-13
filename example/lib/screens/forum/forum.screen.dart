@@ -9,11 +9,11 @@ class Categories {
 
   Categories._();
 
-  static List<({String name, String id})> menus = [
-    (name: '토론', id: discussion),
-    (name: '질문', id: qna),
-    (name: '장터', id: buyandsell),
-    (name: '정보', id: info),
+  static List<({String name, String id, String? group})> menus = [
+    (name: '토론', id: discussion, group: 'community'),
+    (name: '질문', id: qna, group: 'community'),
+    (name: '장터', id: buyandsell, group: null),
+    (name: '정보', id: info, group: null),
   ];
 
   static String name(String id) {
@@ -74,6 +74,7 @@ class _ForumScreenState extends State<ForumScreen>
               ForumService.instance.showPostCreateScreen(
                 context: context,
                 category: Categories.menus[index].id,
+                group: Categories.menus[index].group,
               );
             },
             icon: const Icon(
@@ -92,7 +93,7 @@ class _ForumScreenState extends State<ForumScreen>
         controller: _tabController,
         children: Categories.menus
             .map(
-              (e) => PostLatestListView(
+              (e) => PostListView(
                 category: e.id,
               ),
             )
