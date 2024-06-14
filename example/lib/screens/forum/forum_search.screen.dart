@@ -84,6 +84,18 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
       appBar: AppBar(
         title: const Text('Forum Search'),
         toolbarHeight: 120,
+        actions:  [
+          Builder(
+            builder: (_) => IconButton(
+              onPressed: () {
+                Scaffold.of(_).openEndDrawer();
+                FocusScope.of(context).unfocus();
+              },
+              icon: const Icon(Icons.filter_list_outlined),
+            ),
+          )
+
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48),
           child: Container(
@@ -152,22 +164,6 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
                         ],
                       ),
                     ),
-                    Row(
-                      children: [
-                        const SizedBox(width: 8),
-                        Builder(
-                          builder: (_) => ElevatedButton.icon(
-                            onPressed: () {
-                              Scaffold.of(_).openEndDrawer();
-
-                              FocusScope.of(context).unfocus();
-                            },
-                            label: const Text('Filter'),
-                            icon: const Icon(Icons.filter_list_outlined),
-                          ),
-                        )
-                      ],
-                    )
                   ],
                 ),
                 const SizedBox(height: 8),
