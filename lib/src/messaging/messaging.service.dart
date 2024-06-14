@@ -377,9 +377,12 @@ class MessagingService {
   /// ```
   ///
   dynamic parseData(Map<String, dynamic> data) => switch (data) {
+        {Field.postId: String _, Field.category: String _} =>
+          CommentMessaging.fromMap(data),
         {Field.category: String _} => PostMessaging.fromMap(data),
         {Field.roomId: String _} => ChatMessaging.fromMap(data),
-        {Field.uid: String _} => UserMessaging.fromMap(data),
+        {Field.senderUid: String _} => UserMessaging.fromMap(data),
+        {Field.uid: String _} => UserProfileMessaging.fromMap(data),
         _ => null,
       };
 }

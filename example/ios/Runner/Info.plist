@@ -29,7 +29,6 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>app-1-776648753457-ios-819d8b75ac2ecff498f010</string>
 				<string>app-1-776648753457-ios-b6719dfc0ea5773198f010</string>
 			</array>
 		</dict>
@@ -41,10 +40,26 @@
 				<string>com.withcenter.test3</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>app-1-776648753457-ios-819d8b75ac2ecff498f010</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>This app requires access to the camera to share the photo on profile, chat, forum.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app requires access to the microphone to share vioce with other users.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app requires access to the photo library to share the photo on profile, chat, forum.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -63,14 +78,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSCameraUsageDescription</key>
-	<string>This app requires access to the camera to share the photo on profile, chat, forum.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This app requires access to the microphone to share vioce with other users.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to the photo library to share the photo on profile, chat, forum.</string>
-	
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
 </dict>
 </plist>

@@ -139,7 +139,7 @@ class ChatService {
   /// If [authRequired] is true, the user must authenticate before joining this chat room.
   Future<ChatRoom?> showChatRoomCreate({
     required BuildContext context,
-    bool authRequired = false,
+    bool showAuthRequiredOption = false,
   }) async {
     if (notLoggedIn) {
       UserService.instance.loginRequired!(
@@ -155,7 +155,7 @@ class ChatService {
       builder: (_) =>
           customize.chatRoomEditDialogBuilder?.call(context: context) ??
           DefaultChatRoomEditDialog(
-            authRequired: authRequired,
+            showAuthRequiredOption: showAuthRequiredOption,
           ),
     );
   }
@@ -190,9 +190,11 @@ class ChatService {
   }) async {
     return await showGeneralDialog(
       context: context,
-      pageBuilder: (_, __, ___) => DefaultChatRoomUserListScreen(
-        room: room,
-      ),
+      pageBuilder: (_, __, ___) =>
+          customize.chatRoomUserListScreen?.call(room: room) ??
+          DefaultChatRoomUserListScreen(
+            room: room,
+          ),
     );
   }
 
@@ -202,9 +204,11 @@ class ChatService {
   }) async {
     return await showGeneralDialog(
       context: context,
-      pageBuilder: (_, __, ___) => DefaultChatRoomBlockedUserListScreen(
-        room: room,
-      ),
+      pageBuilder: (_, __, ___) =>
+          customize.chatRoomBlockedUserListScreen?.call(room: room) ??
+          DefaultChatRoomBlockedUserListScreen(
+            room: room,
+          ),
     );
   }
 

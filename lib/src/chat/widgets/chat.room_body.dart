@@ -159,7 +159,13 @@ class _ChatRoomState extends State<ChatRoomBody> {
     } on FireFlutterException catch (e) {
       if (e.code == Code.chatRoomNotVerified) {
         if (mounted) {
-          error(context: context, message: '본인 인증을 하지 않아 채팅방에 입장할 수 없습니다.');
+          await error(
+            context: context,
+            message: T.cannotEnterChatRoomWithoutVerification.tr,
+          );
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
         }
         rethrow;
       }
@@ -329,19 +335,22 @@ class _ChatRoomState extends State<ChatRoomBody> {
                             value: 'setting',
                             child: Text(T.setting.tr),
                           ),
-                        PopupMenuItem(child: Text(T.share.tr), value: 'share'),
-                        const PopupMenuItem(
+                        if (chat.room.isGroupChat)
+                          PopupMenuItem(
+                            child: Text(T.share.tr),
+                            value: 'share',
+                          ),
+                        PopupMenuItem(
                           value: 'members',
                           child: Text(
-                            // T.members.tr,
-                            "Members",
+                            T.members.tr,
                           ),
                         ),
                         if (chat.room.isGroupChat &&
                             (isAdmin || chat.room.isMaster))
                           PopupMenuItem(
                             value: Field.blockedUsers,
-                            child: Text(T.chatBlockedUserList.tr),
+                            child: Text(T.blockedUsers.tr),
                           ),
                         if (chat.room.isSingleChat)
                           PopupMenuItem(
@@ -356,7 +365,9 @@ class _ChatRoomState extends State<ChatRoomBody> {
                             ),
                           ),
                         PopupMenuItem(
-                            value: 'report', child: Text(T.report.tr)),
+                          value: 'report',
+                          child: Text(T.report.tr),
+                        ),
                         if (widget.leave &&
                             !chat.room.isMaster &&
                             chat.room.isGroupChat)
@@ -409,7 +420,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
                           if (context.mounted) Navigator.of(context).pop();
                         }
                       },
-                      tooltip: '채팅방 설정',
+                      tooltip: T.chatRoomSettings.tr,
                       icon: const Icon(Icons.menu_rounded),
                     ),
               ],
@@ -432,9 +443,9 @@ class _ChatRoomState extends State<ChatRoomBody> {
         ),
 
         if (cannotJoin)
-          const Expanded(
+          Expanded(
             child: Center(
-              child: Text('Error. Cannot join the chat room.'),
+              child: Text(T.cannotJoinChatRoomError.tr),
             ),
           ),
 
