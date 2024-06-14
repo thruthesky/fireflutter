@@ -88,6 +88,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "PhiLov - RealMe Note 50",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "0N14426I24109E26",
+      "flutterMode": "debug",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "SDS - iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",

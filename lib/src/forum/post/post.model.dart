@@ -19,7 +19,7 @@ class Post {
   static DatabaseReference postSummariesRef = rootRef.child('post-summaries');
 
   /// Returns the reference of a post summary
-  static DatabaseReference postSummaryRef(String category, String id) =>
+  static DatabaseReference e(String category, String id) =>
       postSummariesRef.child(category).child(id);
 
   static DatabaseReference postAllSummariesRef =
@@ -43,6 +43,7 @@ class Post {
     // required this.comments,
     required this.noOfComments,
     required this.deleted,
+    required this.photoOrder,
   });
 
   final DatabaseReference ref;
@@ -63,6 +64,9 @@ class Post {
   int noOfComments;
 
   bool deleted;
+  // this is ordering of post if the post have a photo included of the urls have values
+  // photoOrder only exist if theres a urls
+  final int? photoOrder;
 
   /// Get the category of the post
   String get category => ref.parent!.key!;
@@ -117,7 +121,6 @@ class Post {
       ref: Post.postRef(category, id),
       title: json['title'] ?? '',
       content: json['content'] ?? '',
-
       uid: json['uid'] ?? '',
       createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] ?? 0),
       order: json[Field.order] ?? 0,
@@ -130,6 +133,7 @@ class Post {
           : [json['url']],
       noOfComments: json[Field.noOfComments] ?? 0,
       deleted: json[Field.deleted] ?? false,
+      photoOrder: json['photoOrder'] ?? 0,
     );
   }
 
@@ -163,6 +167,7 @@ class Post {
       // comments: [],
       noOfComments: 0,
       deleted: false,
+      photoOrder: null,
     );
   }
 
