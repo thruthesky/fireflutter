@@ -669,6 +669,11 @@ class T {
     'ko': '커뮤니티',
   };
 
+  static Json noResultFound = {
+    'en': 'No result found.',
+    'ko': '검색 결과가 없습니다.',
+  };
+
   static Json meetup = {
     'en': 'Meetup',
     'ko': '모임',
