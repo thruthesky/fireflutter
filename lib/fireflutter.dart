@@ -110,7 +110,7 @@ export 'src/forum/post/widgets/post.card.dart';
 export 'src/forum/post/widgets/post.content.dart';
 export 'src/forum/post/widgets/post.edit.screen.dart';
 export 'src/forum/post/widgets/post.latest_list_view.dart';
-export 'src/forum/post/widgets/post.list.tile.dart';
+export 'src/forum/post/widgets/post.list_tile.dart';
 export 'src/forum/post/widgets/post.list_view.dart';
 export 'src/forum/post/widgets/post.meta.dart';
 export 'src/forum/post/widgets/post.title.dart';
