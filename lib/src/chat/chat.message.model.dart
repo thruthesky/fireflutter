@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:fireflutter/fireflutter.dart';
 
 class ChatMessage {
   /// Paths and Refs
@@ -37,9 +38,9 @@ class ChatMessage {
   bool get hasUrlPreview =>
       previewUrl != null &&
       previewUrl!.isNotEmpty &&
-      (previewTitle != null ||
-          previewDescription != null ||
-          previewImageUrl != null);
+      (!previewTitle.isNullOrEmpty ||
+          !previewDescription.isNullOrEmpty ||
+          !previewImageUrl.isNullOrEmpty);
 
   bool get other => !mine;
 

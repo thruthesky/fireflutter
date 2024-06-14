@@ -77,4 +77,7 @@ class Field {
   static const String reminder = 'reminder';
   static const String hasPhoto = 'hasPhoto';
   static const String recommendOrder = 'recommendOrder';
+
+  static const String postId = 'postId';
+  static const String senderUid = 'senderUid';
 }

@@ -62,7 +62,7 @@ The values can be saved in Firestore collection, "\_link\_".
 Be reminded to add the proper rules to access the collection in Firestore.
 
 ```rules
-match /_deeplink_/{deeplink} {
+match /_link_/{link} {
     allow read: if true;
 }
 ```
@@ -83,11 +83,17 @@ com.com.appname: [
 
 For apple, in Firestore on the "\_link\_" collection, save it under document "apple". Save the TEAMID.bundleId as an array and save it in the field "apps":
 
-For example under "apple" collection:
+For example under "ios" collection:
 
 apps: [
   TEAMID.com.com.exampleapp
 ]
+
+## Multiple Apps
+
+Dynamic link can be used by multiple apps.
+
+When setting up in Firestore, under "\_link\_" collection, add "default" field. It should be a map containing the mentioned fields below. See [Fields](#fields) below.
 
 ### webUrl
 
@@ -183,6 +189,8 @@ This is the default value of HTML:
 ```
 
 It will depend on your design if you want to put the links or redirection urls in the HTML and how to do it.
+
+## Fields
 
 You can also add these in your HTML that will be replaced by the values in Firestore \_link\_ collection or the query parameters of the link.
 

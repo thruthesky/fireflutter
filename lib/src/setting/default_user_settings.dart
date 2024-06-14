@@ -31,7 +31,7 @@ class DefaultUserSettings extends StatelessWidget {
             Text(T.setting.tr),
             SwitchListTile(
               value: userSetting.profileViewNotification != false,
-              title: Text(T.pushNotificationOnProfileView.tr),
+              title: Text(T.pushNotificationsOnProfileView.tr),
               subtitle: Text(T.getNotifiedWhenSomeoneViewYourProfile.tr),
               onChanged: (v) {
                 userSetting.update(

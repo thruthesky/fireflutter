@@ -5,15 +5,16 @@ import 'package:flutter/material.dart';
 ///
 /// [ChatRoomCreateButton] is a widget that creates a chat room.
 ///
-/// [authRequired] is a boolean value that determines whether the user must be authenticated to join the chat room.
+/// [showAuthRequiredOption] is a boolean that will show an option
+/// if verification of user is required before entering room.
 class ChatRoomCreateButton extends StatelessWidget {
   const ChatRoomCreateButton({
     super.key,
-    this.authRequired = false,
+    this.showAuthRequiredOption = false,
     this.icon,
   });
 
-  final bool authRequired;
+  final bool showAuthRequiredOption;
 
   final Widget? icon;
 
@@ -24,7 +25,7 @@ class ChatRoomCreateButton extends StatelessWidget {
       onPressed: () async {
         final room = await ChatService.instance.showChatRoomCreate(
           context: context,
-          authRequired: authRequired,
+          showAuthRequiredOption: showAuthRequiredOption,
         );
         if (room == null) return;
 

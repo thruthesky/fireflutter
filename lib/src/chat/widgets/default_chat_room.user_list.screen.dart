@@ -32,10 +32,10 @@ class DefaultChatRoomUserListScreen extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Text('Something went wrong! ${snapshot.error}');
+            return Text('${T.somethingWentWrong.tr} ${snapshot.error}');
           }
           if (snapshot.hasMore == false && snapshot.docs.isEmpty) {
-            return const Text('No members!');
+            return Text(T.noMembers.tr);
           }
           return ListView.separated(
             separatorBuilder: (context, index) => separatorBuilder != null
@@ -72,14 +72,14 @@ class DefaultChatRoomUserListScreen extends StatelessWidget {
                             children: [
                               Text(user.displayName),
                               if (room.isMasterUser(user.uid))
-                                const Text(' (Master)'),
+                                Text(' (${T.master.tr})'),
                             ],
                           ),
                           subtitle: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               if (user.stateMessage.isEmpty == false)
-                                Text(user.stateMessage.or('....')),
+                                Text(user.stateMessage.or('...')),
                             ],
                           ),
                         );

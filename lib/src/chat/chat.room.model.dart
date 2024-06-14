@@ -515,7 +515,9 @@ class ChatRoom {
       }
       if (verified == false) {
         throw FireFlutterException(
-            Code.chatRoomNotVerified, 'Chat room is for verified users only.');
+          Code.chatRoomNotVerified,
+          T.chatRoomIsForVerifiedUsersOnly.tr,
+        );
       }
     }
 
