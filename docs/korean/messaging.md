@@ -42,7 +42,13 @@
   - `tokens` 는 메시지가 전송된 토큰 목록이다.
   - 주의 할 것은 많은 사용자에게 푸시 알림을 하는 경우, DB 에 기록되는 데이터가 커져서 추가 비용이 발생할 수 있다. 그래서 가능한 꺼 놓도록 한다. `Config.ts` 의 `logPushNotificationLogs` 를 false 로 하면, 푸시 알림 기록을 하지 않는다.
 
-  
+
+- 게시판 카테고리 푸시 알림 구조
+  - `post-subscriptions/<category>/{uid: true}` 와 같이 저장된다.
+    - 만약, A 가 QnA 게시판 알림 수신을 하면, `posts-subscriptions/qna/A` 값에 true 를 저장한다. 즉, category 하위 노드는 map 의 값을 가진다.
+    - A 가 QnA 게시판 알림 수신 해제를 하면, `posts-subscriptions/qna/A` 가 삭제된다. (삭제하면 된다.)
+
+
 
 ## 초기화
 
