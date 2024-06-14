@@ -1,5 +1,6 @@
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// This is a Popup Menu designed specifically for Chat Bubble.
 class ChatBubblePopupMenuButton extends StatelessWidget {
@@ -44,6 +45,11 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
             value: Code.reply,
             height: 40,
             child: Text(T.reply.tr),
+          ),
+        if (!message.text.isNullOrEmpty)
+          const PopupMenuItem(
+            child: Text("Copy"),
+            value: "copy",
           ),
         if ((message.mine || (room.isGroupChat && room.isMaster)) &&
             !message.deleted) ...[
@@ -92,6 +98,8 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
         (onBlockUser ?? _onBlockUser).call(context, message.uid!);
       } else if (value == Code.unblock) {
         (onUnblockUser ?? _onUnblockUser).call(context, message.uid!);
+      } else if (value == "copy") {
+        _onCopy();
       }
     }
   }
@@ -138,5 +146,9 @@ class ChatBubblePopupMenuButton extends StatelessWidget {
     if (unblockConfirmation ?? false) {
       await room.unblock(message.uid!);
     }
+  }
+
+  void _onCopy() {
+    Clipboard.setData(ClipboardData(text: message.text!));
   }
 }
