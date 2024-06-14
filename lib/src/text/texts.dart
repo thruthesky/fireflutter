@@ -228,6 +228,42 @@ class T {
     'ko': '모임이 수정되었습니다.',
   };
 
+  static Json qna = {
+    'en': 'Q&A',
+    'ko': '질문과 답변',
+  };
+
+  static Json discussion = {
+    'en': 'Discussion',
+    'ko': '토론',
+  };
+
+  static Json buyAndSell = {
+    'en': 'Buy & Sell',
+    'ko': '장터',
+  };
+
+  static Json category = {
+    'en': 'Category',
+    'ko': '카테고리',
+  };
+
+  static Json post = {
+    'en': 'Post',
+    'ko': '글',
+  };
+
+  static Json comment = {
+    'en': 'Comment',
+    'ko': '댓글',
+  };
+
+
+  static Json forumType = {
+    'en': 'Forum type',
+    'ko': '게시판 종류',
+  };
+
   static Json info = {
     'en': 'Info',
     'ko': '소개',

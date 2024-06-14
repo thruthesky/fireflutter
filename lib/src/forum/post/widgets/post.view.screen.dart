@@ -1,6 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/common/photo_view/photo.view.screen.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 

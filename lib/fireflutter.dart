@@ -207,3 +207,5 @@ export 'src/common/exception/fireflutter.exception.dart';
 export 'src/utility/theme.screen.dart';
 
 export 'src/link/link.service.dart';
+
+export '/src/common/photo_view/photo.view.screen.dart';

@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/common/photo_view/photo.view.screen.dart';
 import 'package:flutter/material.dart';
 
 class CommentListTile extends StatefulWidget {
@@ -21,16 +20,13 @@ class _CommentListTileState extends State<CommentListTile> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-
-      /// Intrinsic height is a natural height from its child
-      /// Using VerticalDivider, the VerticalDivider will automatically
-      /// takes all the space from the parent
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             UserAvatar(
               uid: widget.comment.uid,
+              size: 32,
               onTap: () => UserService.instance.showPublicProfileScreen(
                 context: context,
                 uid: widget.comment.uid,

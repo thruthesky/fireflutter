@@ -27,18 +27,18 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
   bool hasMore = true;
 
   final searchOptions = {
-    'category': 'all',
-    'group': 'all',
-    'field': 'all',
-    'dataType': 'all'
+    Code.category: Code.all,
+    Code.group: Code.all,
+    Code.field: Code.all,
+    Code.dataType: Code.all
   };
 
   Map<String, String> categories = {
-    'all': 'All',
-    'qna': 'Qna',
-    'discussion': 'Discussion',
-    'buyandsell': 'BuyAndSell',
-    'info': 'Info'
+    Code.all: T.all.tr,
+    'qna': T.qna.tr,
+    'discussion': T.discussion.tr,
+    'buyandsell': T.buyAndSell.tr,
+    'info': T.info.tr
   };
 
   Map<String, String> groups = {
@@ -85,17 +85,17 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
       appBar: AppBar(
         title: const Text('Forum Search'),
         toolbarHeight: 120,
-        actions:  [
-          Builder(
-            builder: (_) => IconButton(
-              onPressed: () {
-                Scaffold.of(_).openEndDrawer();
-                FocusScope.of(context).unfocus();
-              },
-              icon: const Icon(Icons.filter_list_outlined),
-            ),
-          )
-
+        actions: const [
+          SizedBox.shrink()
+          // Builder(
+          //   builder: (_) => IconButton(
+          //     onPressed: () {
+          //       Scaffold.of(_).openEndDrawer();
+          //       FocusScope.of(context).unfocus();
+          //     },
+          //     icon: const Icon(Icons.filter_list_outlined),
+          //   ),
+          // )
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48),
@@ -104,6 +104,43 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
             alignment: Alignment.center,
             child: Column(
               children: [
+                TextField(
+                  controller: searchController,
+                  decoration: InputDecoration(
+                    hintText: '검색어를 입력하세요',
+                    prefixIcon: IconButton(
+                      icon: ValueListenableBuilder(
+                        valueListenable: searchChanges,
+                        builder: (context, value, child) {
+                          return Icon(
+                            value.isEmpty ? Icons.search : Icons.clear,
+                          );
+                        },
+                      ),
+                      onPressed: () {
+                        searchController.clear();
+                        searchChanges.value = '';
+                      },
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    suffixIcon: ValueListenableBuilder(
+                      valueListenable: searchChanges,
+                      builder: (context, value, child) {
+                        return value.isEmpty
+                            ? const SizedBox.shrink()
+                            : IconButton(
+                                icon: const Icon(Icons.send),
+                                onPressed: () => onSearch(),
+                              );
+                      },
+                    ),
+                  ),
+                  onChanged: (v) => searchChanges.value = v,
+                  onSubmitted: (value) => onSearch(),
+                ),
+                const SizedBox(height: 8),
                 Row(
                   children: [
                     Expanded(
@@ -161,6 +198,15 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
                                 style: Theme.of(context).textTheme.bodySmall,
                               ),
                             ],
+                          ),
+                          Builder(
+                            builder: (_) => IconButton(
+                              onPressed: () {
+                                Scaffold.of(_).openEndDrawer();
+                                FocusScope.of(context).unfocus();
+                              },
+                              icon: const Icon(Icons.filter_list_outlined),
+                            ),
                           )
                         ],
                       ),
@@ -168,42 +214,6 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                TextField(
-                  controller: searchController,
-                  decoration: InputDecoration(
-                    hintText: '검색어를 입력하세요',
-                    prefixIcon: IconButton(
-                      icon: ValueListenableBuilder(
-                        valueListenable: searchChanges,
-                        builder: (context, value, child) {
-                          return Icon(
-                            value.isEmpty ? Icons.search : Icons.clear,
-                          );
-                        },
-                      ),
-                      onPressed: () {
-                        searchController.clear();
-                        searchChanges.value = '';
-                      },
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    suffixIcon: ValueListenableBuilder(
-                      valueListenable: searchChanges,
-                      builder: (context, value, child) {
-                        return value.isEmpty
-                            ? const SizedBox.shrink()
-                            : IconButton(
-                                icon: const Icon(Icons.send),
-                                onPressed: () => onSearch(),
-                              );
-                      },
-                    ),
-                  ),
-                  onChanged: (v) => searchChanges.value = v,
-                  onSubmitted: (value) => onSearch(),
-                ),
               ],
             ),
           ),
@@ -362,8 +372,9 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
           ),
         ),
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+      body: ListView.separated(
+        separatorBuilder: (context, index) => const SizedBox(height: 16),
+        padding: const EdgeInsets.all(16),
         itemCount: forumData.length,
         itemBuilder: (c, i) {
           if (hasMore && i + 1 == forumData.length) {
@@ -373,33 +384,159 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
 
           final json = forumData[i];
           if (json['commentId'] != null) {
-            return Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CommentListTile(
-                  comment: Comment.fromJson(json, json['commentId'],
-                      postId: json['postId']),
+            return InkWell(
+              onTap: () async {
+                Post? post = await Post.get(
+                    category: json['category'], id: json['postId']);
+                if (post != null && mounted) {
+                  ForumService.instance
+                      .showPostViewScreen(context: context, post: post);
+                }
+              },
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const SizedBox(width: 16),
+                          Text(
+                            '${T.forum.tr}:',
+                            style: Theme.of(context).textTheme.labelLarge,
+                          ),
+                          Text(
+                            json['collection'] == 'posts'
+                                ? T.post.tr
+                                : T.comment.tr,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            '${T.category.tr}:',
+                            style: Theme.of(context).textTheme.labelLarge,
+                          ),
+                          Text(
+                            Categories.name(json['category']),
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      FutureBuilder<Post?>(
+                        future: Post.get(
+                            category: json['category'], id: json['postId']),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator.adaptive();
+                          }
+                          final post = snapshot.data!;
+                          return ListTile(
+                            leading: UserAvatar(
+                              uid: post.uid,
+                              size: 40,
+                            ),
+                            title: Text(post.title),
+                            subtitle: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                UserDoc.field(
+                                  uid: post.uid,
+                                  field: 'displayName',
+                                  builder: (name) => Text(name ?? ''),
+                                ),
+                                Text(' ${post.createdAt.toYmd}'),
+                              ],
+                            ),
+                            onTap: () =>
+                                ForumService.instance.showPostViewScreen(
+                              context: context,
+                              post: post,
+                            ),
+                          );
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 24),
+                        child: CommentListTile(
+                          comment: Comment.fromJson(json, json['commentId'],
+                              postId: json['postId']),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
           } else {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  Categories.name(json['category']),
-                  style: Theme.of(context).textTheme.titleMedium,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                PostListTile(
-                  post: Post.fromJson(
-                    json,
-                    id: json['postId'],
-                    category: json['category'],
+            Post post = Post.fromJson(
+              json,
+              id: json['postId'],
+              category: json['category'],
+            );
+            return InkWell(
+              onTap: () async {
+                if (mounted) {
+                  ForumService.instance
+                      .showPostViewScreen(context: context, post: post);
+                }
+              },
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const SizedBox(width: 16),
+                          Text(
+                            '${T.forum.tr}:',
+                            style: Theme.of(context).textTheme.labelLarge,
+                          ),
+                          Text(
+                            json['collection'] == 'posts'
+                                ? T.post.tr
+                                : T.comment.tr,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            '${T.category.tr}:',
+                            style: Theme.of(context).textTheme.labelLarge,
+                          ),
+                          Text(
+                            Categories.name(json['category']),
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      PostListTile(
+                        post: post,
+                      ),
+                      if (post.urls.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: InkWell(
+                            onTap: () {
+                              showGeneralDialog(
+                                context: context,
+                                pageBuilder: (_, __, ___) => PhotoViewerScreen(
+                                  urls: post.urls,
+                                ),
+                              );
+                            },
+                            child: DisplayDatabasePhotos(
+                                initialData: post.urls, ref: post.urlsRef),
+                          ),
+                        )
+                    ],
                   ),
                 ),
-              ],
+              ),
             );
           }
         },
