@@ -114,6 +114,7 @@ class _CommentListViewState extends State<CommentListView> {
           return CommentView(
             post: widget.post,
             comment: comment,
+            comments: comments!,
           );
         },
         childCount: comments!.length,

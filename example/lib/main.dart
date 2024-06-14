@@ -74,10 +74,10 @@ class _MainAppState extends State<MainApp> {
     // DO Unit tests
 
     Timer(const Duration(microseconds: 500), () async {
-      final comments = await Comment.getAll(postId: '-O-KUmXcPgcYhHDkPmLF');
+      final comments = await Comment.getAll(postId: '-O-L4RVBGBPs61Rfdalo');
       for (final comment in comments) {
         print(
-          ': comment: ${comment.content} -> id:${comment.id} , hasChild:${comment.hasChild}, isLastChild:${comment.isLastChild}',
+          ': comment: ${comment.content} -> id:${comment.id} , hasChild:${comment.hasChild}, isLastChild:${comment.isLastChild}, isParentLastChild:${comment.isParentLastChild}',
         );
       }
     });

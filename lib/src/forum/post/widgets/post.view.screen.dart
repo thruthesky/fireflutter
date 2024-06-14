@@ -53,7 +53,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // print(post.id);
+    print(post.id);
     return Theme(
       data: Theme.of(context).copyWith(
         textButtonTheme: TextButtonThemeData(

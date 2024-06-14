@@ -42,8 +42,9 @@ class Comment {
   /// [isLastChild] is set to true if the comment is the last child. By default, it is set to false.
   bool isLastChild = true;
 
-  /// [isParentLastChild] is used to refer from [isLastChild] of the parent because there is no direct relation
-  /// between its parent and child
+  /// [isParentLastChild] is set to true if the parent of current comment is the last child of its parent.
+  /// This is used to know if the parent is the last child of its parent.
+  /// This is used in drawing the vertical line of comment tree indentation.
   bool isParentLastChild = false;
 
   bool get isMine => uid == myUid;

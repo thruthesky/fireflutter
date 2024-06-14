@@ -3,16 +3,23 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:fireflutter/src/common/photo_view/photo.view.screen.dart';
 import 'package:flutter/material.dart';
 
+/// Comment view
+///
+/// Note, to display the comemnt tree, it gets the whole comments of the post and
+/// do some computation to display the comment tree. It does not look like a heavy compulation
+/// but it needs an attention.
 class CommentView extends StatefulWidget {
   const CommentView({
     super.key,
     required this.post,
     required this.comment,
+    required this.comments,
     this.onCreate,
   });
 
   final Post post;
   final Comment comment;
+  final List<Comment> comments;
   final Function? onCreate;
 
   @override
@@ -37,6 +44,23 @@ class _CommentViewState extends State<CommentView> {
   bool get parentLastChild => widget.comment.isParentLastChild;
   int get depth => widget.comment.depth;
 
+  List<Comment> parents = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    /// Save the accendent comments of the current comment into the [parents] variable
+    Comment? parent = widget.comment;
+    while (parent != null) {
+      parents.add(parent);
+      if (parent.parentId == null) break;
+      parent = widget.comments.firstWhere(
+        (cmt) => cmt.id == parent!.parentId,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     /// Intrinsic height is a natural height from its child
@@ -49,21 +73,16 @@ class _CommentViewState extends State<CommentView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (int i = 0; i < depth; i++) ...[
-              const SizedBox(width: 18),
-              if (i != depth - 1) ...[
-                if (isChild) ...[
+              Container(
+                padding: const EdgeInsets.only(left: 16),
+                color: Colors.amber,
+              ),
+              if (i < depth) ...[
+                if (parents[i].isParentLastChild == false) ...[
                   _verticalLine(),
-                ], //else if () ...[
-                //_verticalLine(transparent: true),
-                // ],
+                ],
                 const SizedBox(width: 8),
               ]
-              // if (i != depth - 1) ...[
-              //   if (hasSibling || hasChild || isChild && !parentLastChild)
-              //     _verticalLine(),
-              //   // if()
-              //   const SizedBox(width: 8),
-              // ]
             ],
 
             /// curved line
