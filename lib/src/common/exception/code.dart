@@ -73,4 +73,16 @@ class Code {
   static const String meetupNotVerified = 'meetupNotVerified';
 
   static const String joinWithPasswordFailed = 'joinWithPasswordFailed';
+
+  static const String category = 'category';
+  static const String group = 'group';
+  static const String field = 'field';
+  static const String dataType = 'dataType';
+  static const String all = 'all';
+  static const String community = 'community';
+  static const String meetup = 'meetup';
+  static const String title = 'title';
+  static const String content = 'content';
+  static const String posts = 'posts';
+  static const String comments = 'comments';
 }

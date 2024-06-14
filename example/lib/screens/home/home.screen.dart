@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       ElevatedButton(
                         onPressed: () => context.push(ForumScreen.routeName),
-                        child: const Text('Fourm'),
+                        child: const Text('Forum'),
                       ),
                       ElevatedButton(
                         onPressed: () =>
@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ElevatedButton(
                         onPressed: () =>
                             context.push(ForumSearchScreen.routeName),
-                        child: const Text('Fourm Search'),
+                        child: const Text('Forum Search'),
                       ),
                       ElevatedButton(
                         onPressed: () => context.push(MeetupScreen.routeName),
