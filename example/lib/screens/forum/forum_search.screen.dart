@@ -1,3 +1,4 @@
+import 'package:example/screens/forum/forum.screen.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 import 'package:typesense/typesense.dart';
@@ -54,8 +55,8 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
 
   Map<String, String> dataTypes = {
     'all': 'All',
-    'title': 'Post',
-    'content': 'Comment'
+    'posts': 'Post',
+    'comments': 'Comment'
   };
 
   Client client = Client(Configuration(
@@ -382,12 +383,23 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
               ),
             );
           } else {
-            return PostListTile(
-              post: Post.fromJson(
-                json,
-                id: json['postId'],
-                category: json['category'],
-              ),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  Categories.name(json['category']),
+                  style: Theme.of(context).textTheme.titleMedium,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                PostListTile(
+                  post: Post.fromJson(
+                    json,
+                    id: json['postId'],
+                    category: json['category'],
+                  ),
+                ),
+              ],
             );
           }
         },
@@ -465,9 +477,9 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
       filters.add('collection:${searchOptions['dataType']}');
     }
 
-    if (filters.isEmpty) {
-      return '';
-    }
+    // filter deleted posts/comments
+    filters.add('deleted:!=true');
+
     debugPrint(filters.join(' && '));
     return filters.join(' && ');
   }
