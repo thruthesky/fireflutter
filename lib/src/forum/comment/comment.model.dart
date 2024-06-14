@@ -39,8 +39,11 @@ class Comment {
   /// added this two to easily identify which has child and siblings
   /// hasChild if the comment have a child
   /// hasSiblings if comment belongs to same parent
+  /// isLastChild if the comment is the last child
   bool hasChild = false;
   bool hasSiblings = false;
+  bool isLastChild = false;
+  bool isParent = false;
 
   bool get isMine => uid == myUid;
 
@@ -241,6 +244,14 @@ class Comment {
         } else {
           newComments[siblingIndex].hasSiblings = true;
           newComments.insert(siblingIndex + 1, comment);
+
+          newComments[siblingIndex].isLastChild = false;
+          final previousComment = newComments[siblingIndex];
+          if (previousComment.isLastChild == true &&
+              previousComment.parentId ==
+                  newComments[siblingIndex + 1].parentId) {
+            newComments[siblingIndex + 1].isLastChild = true;
+          }
         }
       }
     }

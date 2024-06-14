@@ -29,6 +29,8 @@ class _CommentViewState extends State<CommentView> {
   bool get isChild => !isFirstParent;
   bool get hasChild => widget.comment.hasChild;
   bool get hasSibling => widget.comment.hasSiblings;
+  bool get lastChild => widget.comment.isLastChild;
+  int get depth => widget.comment.depth;
 
   @override
   Widget build(BuildContext context) {
@@ -37,20 +39,23 @@ class _CommentViewState extends State<CommentView> {
     /// takes all the space from the parent
     // padding: EdgeInsets.only(left: widget.comment.leftMargin, right: 16),
     return Container(
-      margin: EdgeInsets.only(left: widget.comment.leftMargin, right: 16),
+      margin: const EdgeInsets.only(right: 16),
       padding: const EdgeInsets.only(left: 16),
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // if (hasSibling) ...[
-            //   _parentLine(),
-            //   const SizedBox(width: 24),
-            // ],
+            for (int i = 0; i < depth; i++) ...[
+              const SizedBox(width: 19),
+              if (i != depth - 1) ...[
+                if (hasSibling || isChild) _parentLine(),
+                const SizedBox(width: 8),
+              ]
+            ],
 
-            if (isChild && hasSibling) _parentLine(),
-            if (widget.comment.depth > 4) const SizedBox(width: 16),
-            if (!isFirstParent && widget.comment.depth <= 4)
+            /// curved line
+            if (isChild) ...[
+              if (!lastChild) _parentLine(),
               Container(
                 width: 16,
                 height: 16,
@@ -66,6 +71,7 @@ class _CommentViewState extends State<CommentView> {
                   ),
                 ),
               ),
+            ],
             Column(
               children: [
                 UserAvatar(
@@ -100,7 +106,7 @@ class _CommentViewState extends State<CommentView> {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        // widget.comment.depth.toString(),
+                        // '${widget.comment.parentId}',
                         widget.comment.createdAt.toShortDate,
                         style: Theme.of(context).textTheme.labelSmall!.copyWith(
                               color: Theme.of(context).colorScheme.outline,
@@ -348,12 +354,6 @@ class _CommentViewState extends State<CommentView> {
           width: 1,
         ),
       ),
-    );
-  }
-
-  _border() {
-    return BoxDecoration(
-      border: Border.all(color: Colors.black),
     );
   }
 }

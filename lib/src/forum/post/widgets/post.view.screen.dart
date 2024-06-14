@@ -257,6 +257,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                 ],
               ),
             ),
+            // NewCommentListView(post: post),
             CommentListView(post: post),
           ],
         ),
