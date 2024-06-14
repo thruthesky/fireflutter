@@ -204,9 +204,11 @@ class ChatService {
   }) async {
     return await showGeneralDialog(
       context: context,
-      pageBuilder: (_, __, ___) => DefaultChatRoomBlockedUserListScreen(
-        room: room,
-      ),
+      pageBuilder: (_, __, ___) =>
+          customize.chatRoomBlockedUserListScreen?.call(room: room) ??
+          DefaultChatRoomBlockedUserListScreen(
+            room: room,
+          ),
     );
   }
 

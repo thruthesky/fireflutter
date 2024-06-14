@@ -9,6 +9,7 @@ class ChatCustomize {
     this.chatRoomEditDialogBuilder,
     this.messageInputBoxPrefixIconBuilder,
     this.chatRoomUserListScreen,
+    this.chatRoomBlockedUserListScreen,
   });
 
   /// Customization for chat room menu inside DefaultChatRoomScreen
@@ -29,6 +30,11 @@ class ChatCustomize {
   final Widget Function({
     required ChatRoom room,
   })? chatRoomUserListScreen;
+
+  /// Customization for chat room blocked user list screen inside DefaultChatRoomScreen
+  final Widget Function({
+    required ChatRoom room,
+  })? chatRoomBlockedUserListScreen;
 
   /// Customization for chat bubble inside DefaultChatRoomScreen
   final Widget Function({
