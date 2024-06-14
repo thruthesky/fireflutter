@@ -977,55 +977,82 @@ class T {
     'ko': "댓글에 알림"
   };
 
-  /// EO Block
-
-  ///////////////////////////////////////////////////////////////////
-
   /// Basic
-  // static const String yes = 'Yes';
-  // static const String no = 'No';
-  // static const String ok = 'OK';
-  // static const String save = 'Save';
-  // static const String cancel = 'Cancel';
-  // static const String close = 'Close';
-  static const String inputName = 'Please enter your name.';
-  static const String nameInputDescription = 'NameInputDescription';
 
-  static const String email = 'Email';
-  static const String inputEmail = 'Please enter your email.';
-  static const String password = 'Password';
-  static const String inputPassword = 'Please enter your password.';
-  // static const String login = 'Login';
-  static const String next = 'Next';
-  static const String prev = 'Prev';
-  static const String back = 'Back';
-  // static const String like = 'Like';
-  static const String likes = 'Likes';
-  // static const String bookmark = 'Favorite';
-  // static const String bookmarkMessage = 'Favorite sucess';
-  // static const String unbookmark = 'Unfavorite';
-  // static const String unbookmarkMessage = 'Unfavorite success';
-  static const String thereAreNoBookmarksInTheList =
-      'There are no bookmarks in the list.';
+  static const Json inputName = {
+    'en': 'Please enter your name.',
+    'ko': '이름을 입력해주세요.',
+  };
 
-  // static const String share = 'Share';
+  static const Json nameInputDescription = {
+    'en': 'Please enter your name.',
+    'ko': '이름을 입력해주세요.',
+  };
 
-  static const String inputTitle = 'Input title';
-  static const String inputContent = 'Input content';
+  static const Json email = {
+    'en': 'Email',
+    'ko': '이메일',
+  };
+
+  static const Json inputEmail = {
+    'en': 'Please enter your email.',
+    'ko': '이메일을 입력해주세요.',
+  };
+
+  static const Json password = {
+    'en': 'Password',
+    'ko': '비밀번호',
+  };
+
+  static const Json inputPassword = {
+    'en': 'Please enter your password.',
+    'ko': '비밀번호를 입력해주세요.',
+  };
+
+  static const Json next = {
+    'en': 'Next',
+    'ko': '다음',
+  };
+
+  static const Json prev = {
+    'en': 'Prev',
+    'ko': '이전',
+  };
+
+  static const Json back = {
+    'en': 'Back',
+    'ko': '뒤로',
+  };
+
+  static const Json likes = {
+    'en': 'Likes',
+    'ko': '좋아요',
+  };
+
+  static const Json thereAreNoBookmarksInTheList = {
+    'en': 'There are no bookmarks in the list.',
+    'ko': '북마크가 없습니다.',
+  };
+
+  // static const String inputTitle = 'Input title';
+  static const Json inputTitle = {
+    'en': 'Input title',
+    'ko': '제목을 입력해주세요.',
+  };
+
+  // static const String inputContent = 'Input content';
+  static const Json inputContent = {
+    'en': 'Input content',
+    'ko': '내용을 입력해주세요.',
+  };
 
   /// Label, texts, buttons,
   static const String dismiss = 'dismiss';
 
-  /// Chat
-  ///
-  // static const String chat = 'Chat';
-  // static const String edit = "Edit";
+  /// EO Block
 
-  /// User
-  // static const String block = 'Block';
-  // static const String unblock = 'Unblock';
-  // static const String report = 'Report';
-  // static const String stateMessage = 'State Message';
+  ///////////////////////////////////////////////////////////////////
+
   static const String stateMessageInProfileUpdate = 'STATE MESSAGE';
   static const String hintInputStateMessage = 'Please input your state message';
   static const String stateMessageDescription = 'State Message Description';
@@ -1102,22 +1129,6 @@ class T {
 
   static const String postCreate = 'Create';
   static const String postUpdate = 'Update';
-
-  /// Block
-  // static const String blocked = 'Blocked';
-  // static const String blockedMessage = 'You have blocked this user.';
-  // static const String blockedTitleMessage = 'Blocked this user';
-  // static const String blockedContentMessage =
-  //     'The contents of this user is hidden because you have blocked this user.';
-  // static const String blockedChatMessage =
-  //     'You have blocked this user. Chat message is hidden.';
-  // static const String blockedUserMessage = 'You have blocked this user.';
-
-  // static const String unblocked = 'Unblocked';
-  // static const String unblockedMessage = 'You have unblocked this user.';
-
-  // static const String disabledOnSendMessage =
-  // 'You cannot send a message because your account is disabled.';
 
   /// Meetup
 

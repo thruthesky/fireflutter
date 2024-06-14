@@ -17,7 +17,7 @@ class DefaultChatRoomInviteScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('친구 초대'),
+        title: Text(T.invitation.tr),
       ),
       body: FirebaseDatabaseListView(
         query: User.usersRef.orderByChild('order'),
