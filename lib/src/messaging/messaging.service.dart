@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/messaging/user.profile.messaging.model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -57,6 +57,10 @@ class MessagingService {
   List<CustomizeMessagingTopic>? customizeTopic;
 
   bool initialized = false;
+
+  /// Paths and Refs
+  static final DatabaseReference _rootRef = FirebaseDatabase.instance.ref();
+  static const String _postSubscriptions = 'post_subscriptions';
 
   init({
     required Future<void> Function(RemoteMessage)? onBackgroundMessage,
@@ -386,4 +390,13 @@ class MessagingService {
         {Field.uid: String _} => UserProfileMessaging.fromMap(data),
         _ => null,
       };
+
+  DatabaseReference forumCategorySubscriptionRef(String category) {
+    return _rootRef.child(_postSubscriptions);
+  }
+
+  Future<void> subscribeToForumCategory(String category) async {
+    final myUid = my!.uid;
+    await forumCategorySubscriptionRef(category).child(myUid).set(true);
+  }
 }
