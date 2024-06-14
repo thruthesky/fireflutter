@@ -10,10 +10,10 @@ class Categories {
   Categories._();
 
   static List<({String name, String id, String? group})> menus = [
-    (name: '토론', id: discussion, group: 'community'),
-    (name: '질문', id: qna, group: 'community'),
-    (name: '장터', id: buyandsell, group: null),
-    (name: '정보', id: info, group: null),
+    (name: T.discussion.tr, id: discussion, group: 'community'),
+    (name: T.qna.tr, id: qna, group: 'community'),
+    (name: T.buyandsell.tr, id: buyandsell, group: null),
+    (name: T.info.tr, id: info, group: null),
   ];
 
   static String name(String id) {

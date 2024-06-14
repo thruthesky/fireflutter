@@ -35,28 +35,28 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
 
   Map<String, String> categories = {
     Code.all: T.all.tr,
-    'qna': T.qna.tr,
-    'discussion': T.discussion.tr,
-    'buyandsell': T.buyAndSell.tr,
-    'info': T.info.tr
+    Categories.qna: Categories.name(Categories.qna),
+    Categories.discussion: Categories.name(Categories.discussion),
+    Categories.buyandsell: Categories.name(Categories.buyandsell),
+    Categories.info: Categories.name(Categories.info)
   };
 
   Map<String, String> groups = {
-    'all': 'All',
-    'community': 'Community',
-    'meetup': 'Meetup'
+    Code.all: T.all.tr,
+    Code.community: T.community.tr,
+    Code.meetup: T.meetup.tr
   };
 
   Map<String, String> fields = {
-    'all': 'All',
-    'title': 'Title',
-    'content': 'Content'
+    Code.all: T.all.tr,
+    Code.title: T.title.tr,
+    Code.content: T.content.tr
   };
 
   Map<String, String> dataTypes = {
-    'all': 'All',
-    'posts': 'Post',
-    'comments': 'Comment'
+    Code.all: T.all.tr,
+    Code.posts: T.posts.tr,
+    Code.comments: T.comments.tr
   };
 
   Client client = Client(Configuration(
@@ -85,29 +85,17 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
       appBar: AppBar(
         title: const Text('Forum Search'),
         toolbarHeight: 120,
-        actions: const [
-          SizedBox.shrink()
-          // Builder(
-          //   builder: (_) => IconButton(
-          //     onPressed: () {
-          //       Scaffold.of(_).openEndDrawer();
-          //       FocusScope.of(context).unfocus();
-          //     },
-          //     icon: const Icon(Icons.filter_list_outlined),
-          //   ),
-          // )
-        ],
+        actions: const [SizedBox.shrink()],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            alignment: Alignment.center,
-            child: Column(
-              children: [
-                TextField(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: TextField(
                   controller: searchController,
                   decoration: InputDecoration(
-                    hintText: '검색어를 입력하세요',
+                    hintText: T.searchKeywordHint.tr,
                     prefixIcon: IconButton(
                       icon: ValueListenableBuilder(
                         valueListenable: searchChanges,
@@ -140,82 +128,78 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
                   onChanged: (v) => searchChanges.value = v,
                   onSubmitted: (value) => onSearch(),
                 ),
-                const SizedBox(height: 8),
-                Row(
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 24, top: 8, right: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Category',
-                                style: Theme.of(context).textTheme.labelSmall,
-                              ),
-                              Text(
-                                categories[searchOptions['category']]!,
-                                style: Theme.of(context).textTheme.bodySmall,
-                              )
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Group',
-                                style: Theme.of(context).textTheme.labelSmall,
-                              ),
-                              Text(
-                                groups[searchOptions['group']]!,
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Field',
-                                style: Theme.of(context).textTheme.labelSmall,
-                              ),
-                              Text(
-                                fields[searchOptions['field']]!,
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Data',
-                                style: Theme.of(context).textTheme.labelSmall,
-                              ),
-                              Text(
-                                dataTypes[searchOptions['dataType']]!,
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
-                          ),
-                          Builder(
-                            builder: (_) => IconButton(
-                              onPressed: () {
-                                Scaffold.of(_).openEndDrawer();
-                                FocusScope.of(context).unfocus();
-                              },
-                              icon: const Icon(Icons.filter_list_outlined),
-                            ),
-                          )
-                        ],
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Category',
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                        Text(
+                          categories[searchOptions['category']]!,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        )
+                      ],
                     ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Group',
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                        Text(
+                          groups[searchOptions['group']]!,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Field',
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                        Text(
+                          fields[searchOptions['field']]!,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Data',
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                        Text(
+                          dataTypes[searchOptions['dataType']]!,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                    Builder(
+                      builder: (_) => IconButton(
+                        onPressed: () {
+                          Scaffold.of(_).openEndDrawer();
+                          FocusScope.of(context).unfocus();
+                        },
+                        icon: const Icon(Icons.filter_list_outlined),
+                      ),
+                    )
                   ],
                 ),
-                const SizedBox(height: 8),
-              ],
-            ),
+              ),
+              const SizedBox(height: 8),
+            ],
           ),
         ),
       ),
@@ -430,7 +414,7 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return const CircularProgressIndicator.adaptive();
+                            return const SizedBox(height: 40);
                           }
                           final post = snapshot.data!;
                           return ListTile(
