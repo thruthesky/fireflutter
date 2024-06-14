@@ -3,18 +3,26 @@ import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class DefaultChatRoomUserListScreen extends StatelessWidget {
+  /// Use `padding` to give a padding on the list view.
+  ///
+  /// Use `separatorBuilder` to separate the list of items in the
+  /// `DefaultChatRoomUserListScreen`
   const DefaultChatRoomUserListScreen({
     super.key,
     required this.room,
+    this.padding,
+    this.separatorBuilder,
   });
 
   final ChatRoom room;
+  final EdgeInsetsGeometry? padding;
+  final Widget Function(BuildContext, int)? separatorBuilder;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Members'),
+        title: Text(T.members.tr),
       ),
       body: FirebaseDatabaseQueryBuilder(
         query: ChatService.instance.roomsRef.child(room.id).child(Field.users),
@@ -29,7 +37,11 @@ class DefaultChatRoomUserListScreen extends StatelessWidget {
           if (snapshot.hasMore == false && snapshot.docs.isEmpty) {
             return const Text('No members!');
           }
-          return ListView.builder(
+          return ListView.separated(
+            separatorBuilder: (context, index) => separatorBuilder != null
+                ? separatorBuilder!.call(context, index)
+                : const SizedBox(),
+            padding: padding,
             itemCount: snapshot.docs.length,
             itemBuilder: (context, index) {
               final member = User.get(snapshot.docs[index].key!);
