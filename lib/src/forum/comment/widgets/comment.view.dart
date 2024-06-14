@@ -37,14 +37,20 @@ class _CommentViewState extends State<CommentView> {
     /// takes all the space from the parent
     // padding: EdgeInsets.only(left: widget.comment.leftMargin, right: 16),
     return Container(
-      margin: EdgeInsets.only(left: widget.comment.leftMargin),
+      margin: EdgeInsets.only(left: widget.comment.leftMargin, right: 16),
       padding: const EdgeInsets.only(left: 16),
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // if (hasSibling) ...[
+            //   _parentLine(),
+            //   const SizedBox(width: 24),
+            // ],
+
             if (isChild && hasSibling) _parentLine(),
-            if (!isFirstParent)
+            if (widget.comment.depth > 4) const SizedBox(width: 16),
+            if (!isFirstParent && widget.comment.depth <= 4)
               Container(
                 width: 16,
                 height: 16,
@@ -94,8 +100,8 @@ class _CommentViewState extends State<CommentView> {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        widget.comment.depth.toString(),
-                        // widget.comment.createdAt.toShortDate,
+                        // widget.comment.depth.toString(),
+                        widget.comment.createdAt.toShortDate,
                         style: Theme.of(context).textTheme.labelSmall!.copyWith(
                               color: Theme.of(context).colorScheme.outline,
                               fontSize: 10,

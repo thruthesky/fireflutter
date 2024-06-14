@@ -55,17 +55,17 @@ class Comment {
     } else if (depth == 1) {
       return 19;
     } else if (depth == 2) {
-      return 47;
+      return 46;
     } else if (depth == 3) {
-      return 76;
-    } else if (depth == 4) {
-      return 80;
-    } else if (depth == 5) {
-      return 90;
-    } else if (depth == 6) {
-      return 100;
+      return 75;
+      // } else if (depth == 4) {
+      //   return 103;
+      // } else if (depth == 5) {
+      //   return 131;
+      // } else if (depth == 6) {
+      //   return 160;
     } else {
-      return 76;
+      return 103;
     }
   }
 
