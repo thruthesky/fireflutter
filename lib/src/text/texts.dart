@@ -813,6 +813,15 @@ class T {
     'ko': '인증 회원 전용 채팅방입니다.',
   };
 
+  // Chat-Setting
+
+  static Json pushNotifications = {'en': "Push Notifications", 'ko': "알림"};
+
+  static Json pushNotificationsOnComment = {
+    'en': "Push Notifications on Comment",
+    'ko': "댓글에 알림"
+  };
+
   /// EO Block
 
   ///////////////////////////////////////////////////////////////////
@@ -1035,8 +1044,7 @@ class T {
   static const String getNotifiedWhenSomeoneViewYourProfile =
       'Get notified when someone views your profile';
   static const String chooseYourLanguage = 'Choose your language';
-  static const String pushNotificationsOnComment =
-      "Push Notifications on Comment";
+
   static const String getNotifiedWhenSomeoneCommentOnYourPost =
       "Get notified when other user comments/replies on your post/comment";
 
