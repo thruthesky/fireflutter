@@ -39,12 +39,12 @@ class Comment {
   /// [hasChild] is set to true if the comment have a child. By defualt, it is set to false.
   bool hasChild = false;
 
-  /// [hasSiblings] is set to true if the comment has sibiling(s). By default, it is set to false.
-  /// This mean, there are more than 1 comment under the same parent.
-  bool hasSiblings = false;
-
   /// [isLastChild] is set to true if the comment is the last child. By default, it is set to false.
-  bool isLastChild = false;
+  bool isLastChild = true;
+
+  /// [isParentLastChild] is used to refer from [isLastChild] of the parent because there is no direct relation
+  /// between its parent and child
+  bool isParentLastChild = false;
 
   bool get isMine => uid == myUid;
 
@@ -244,6 +244,9 @@ class Comment {
         comment.depth = newComments[parentIndex].depth + 1;
         comment.isLastChild = true;
 
+        /// To inherit the parent comment [isLastChild] property
+        comment.isParentLastChild = newComments[parentIndex].isLastChild;
+
         /// Set parent hasChild true if parentId is not null
         newComments[parentIndex].hasChild = true;
 
@@ -264,8 +267,8 @@ class Comment {
           newComments.insert(siblingIndex + 1, comment);
 
           /// Set the [hasSibilings] to true for the all sibiling comments including current comments.
-          newComments[siblingIndex].hasSiblings = true;
-          comment.hasSiblings = true;
+          // newComments[siblingIndex].hasSiblings = true;
+          // comment.hasSiblings = true;
 
           /// Set the [isLastChild] to true if this comment is last one under the parent (among the sibilings)
           newComments[siblingIndex].isLastChild = false;

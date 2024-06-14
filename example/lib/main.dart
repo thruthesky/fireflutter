@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:example/app.localization.dart';
@@ -78,7 +77,7 @@ class _MainAppState extends State<MainApp> {
       final comments = await Comment.getAll(postId: '-O-KUmXcPgcYhHDkPmLF');
       for (final comment in comments) {
         print(
-          ': comment: ${comment.content} -> hasChild:${comment.hasChild}, hasSibiling:${comment.hasSiblings}, isLastChild:${comment.isLastChild}',
+          ': comment: ${comment.content} -> id:${comment.id} , hasChild:${comment.hasChild}, isLastChild:${comment.isLastChild}',
         );
       }
     });

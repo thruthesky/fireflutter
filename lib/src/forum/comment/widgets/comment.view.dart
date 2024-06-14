@@ -24,35 +24,46 @@ class _CommentViewState extends State<CommentView> {
 
   double lineWidth = 2;
   Color get verticalLineColor =>
-      Colors.red; // Theme.of(context).colorScheme.outline.withAlpha(40);
-  Color get curvedLineColor => Colors.green;
+      // Theme.of(context).colorScheme.outline.withAlpha(40);
+      Colors.red;
+  Color get curvedLineColor =>
+      // Theme.of(context).colorScheme.outline.withAlpha(40);
+      Colors.green;
   bool get isFirstParent =>
       widget.comment.parentId == null && widget.comment.depth == 0;
   bool get isChild => !isFirstParent;
   bool get hasChild => widget.comment.hasChild;
-  bool get hasSibling => widget.comment.hasSiblings;
   bool get lastChild => widget.comment.isLastChild;
+  bool get parentLastChild => widget.comment.isParentLastChild;
   int get depth => widget.comment.depth;
 
   @override
   Widget build(BuildContext context) {
     /// Intrinsic height is a natural height from its child
-    /// Using VerticalDivider, the VerticalDivider will automatically
-    /// takes all the space from the parent
+    /// Using a combination of [Container] and [Expanded] the line will be automatically drawn
     // padding: EdgeInsets.only(left: widget.comment.leftMargin, right: 16),
     return Container(
-      margin: const EdgeInsets.only(right: 16),
-      padding: const EdgeInsets.only(left: 16),
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (int i = 0; i < depth; i++) ...[
-              const SizedBox(width: 19),
+              const SizedBox(width: 18),
               if (i != depth - 1) ...[
-                if (hasSibling || isChild) _verticalLine(),
+                if (isChild) ...[
+                  _verticalLine(),
+                ], //else if () ...[
+                //_verticalLine(transparent: true),
+                // ],
                 const SizedBox(width: 8),
               ]
+              // if (i != depth - 1) ...[
+              //   if (hasSibling || hasChild || isChild && !parentLastChild)
+              //     _verticalLine(),
+              //   // if()
+              //   const SizedBox(width: 8),
+              // ]
             ],
 
             /// curved line
@@ -349,11 +360,11 @@ class _CommentViewState extends State<CommentView> {
     );
   }
 
-  Widget _verticalLine() {
+  Widget _verticalLine({bool transparent = false}) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          color: verticalLineColor,
+          color: transparent ? Colors.transparent : verticalLineColor,
           width: 1,
         ),
       ),
