@@ -75,8 +75,6 @@ class _MainAppState extends State<MainApp> {
     // DO Unit tests
 
     Timer(const Duration(microseconds: 500), () async {
-      // Post.get(category: '', id: '-O-5aroAECVEyaOYsRuQ');
-
       final comments = await Comment.getAll(postId: '-O-KUmXcPgcYhHDkPmLF');
       for (final comment in comments) {
         print(

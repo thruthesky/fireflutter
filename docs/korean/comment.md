@@ -80,3 +80,19 @@ return CommentListView(post: post);
 
 - [사용자 설정 문서](./user_settings.md)에 보면, 나의 글 또는 코멘트에 새 코멘트가 작성되면 푸시 알림을 받기 위해서 어떻게 설정되어야 하는지 알 수 있다.
 - 새 코멘트 푸시 알림 전송 관련해서는 [푸시 알림 문서의 코멘트 구독](./messaging.md#코멘트-구독)을 참고한다.
+
+
+## 테스트 코드 작성하는 방법
+
+글 번호를 `Comment.getAll()` 에 넣어서 코든 코멘트를 가져와, 적절하게 값을 확인하면 된다.
+
+```dart
+Timer(const Duration(microseconds: 500), () async {
+    final comments = await Comment.getAll(postId: '-O-KUmXcPgcYhHDkPmLF');
+    for (final comment in comments) {
+    print(
+        ': comment: ${comment.content} -> hasChild:${comment.hasChild}, hasSibiling:${comment.hasSiblings}, isLastChild:${comment.isLastChild}',
+    );
+    }
+});
+```
