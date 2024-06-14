@@ -208,6 +208,16 @@ PostLatestListView(
 ```
 
 
+참고로, PostListTile 을 보다 작게(또는 tight 하게) 표시하고자 한다면, `PostListTile.small()` 을 사용하면 된다. 다른 모든 옵션은 동일하며, `small` 네임드 생성자를 사용하면 된다.
+
+```dart
+PostListTile.small(post);
+```
+
+
+
+
+
 참고로, `PostLatestListView` 는 ListView 의 모든 옵션을 지원하며, GridView 도 같이 지원한다.
 
 ```dart

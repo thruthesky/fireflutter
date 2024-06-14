@@ -1,9 +1,21 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
 class ForumService {
   static ForumService? _instance;
   static ForumService get instance => _instance ??= ForumService._();
+
+  /// Returns the RTDB refererence to the forum category push notification path for the category
+  /// of the login user
+  ///
+  /// Save this path to true to subscribe the push notifications for the category.
+  /// And delete it for unsubscribing from the push notifications.
+  static DatabaseReference categoryPushNotificationPath(String category) =>
+      FirebaseDatabase.instance
+          .ref('post-subscriptions')
+          .child(category)
+          .child(myUid!);
 
   ForumService._();
 
