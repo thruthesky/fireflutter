@@ -89,6 +89,12 @@ apps: [
   TEAMID.com.com.exampleapp
 ]
 
+## Multiple Apps
+
+Dynamic link can be used by multiple apps.
+
+When setting up in Firestore, under "\_link\_" collection, add "default" field. It should be a map containing the mentioned fields below. See [Fields](#fields) below.
+
 ### webUrl
 
 Set the `webUrl` in Firestore on the "\_link\_" collection, using the field name `webUrl`, if you want to redirect it when device is not detected as Android or iOS.
@@ -183,6 +189,8 @@ This is the default value of HTML:
 ```
 
 It will depend on your design if you want to put the links or redirection urls in the HTML and how to do it.
+
+## Fields
 
 You can also add these in your HTML that will be replaced by the values in Firestore \_link\_ collection or the query parameters of the link.
 
