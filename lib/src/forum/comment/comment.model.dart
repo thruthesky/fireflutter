@@ -36,14 +36,15 @@ class Comment {
 
   bool deleted;
 
-  /// added this two to easily identify which has child and siblings
-  /// hasChild if the comment have a child
-  /// hasSiblings if comment belongs to same parent
-  /// isLastChild if the comment is the last child
+  /// [hasChild] is set to true if the comment have a child. By defualt, it is set to false.
   bool hasChild = false;
+
+  /// [hasSiblings] is set to true if the comment has sibiling(s). By default, it is set to false.
+  /// This mean, there are more than 1 comment under the same parent.
   bool hasSiblings = false;
+
+  /// [isLastChild] is set to true if the comment is the last child. By default, it is set to false.
   bool isLastChild = false;
-  bool isParent = false;
 
   bool get isMine => uid == myUid;
 
@@ -228,30 +229,46 @@ class Comment {
     /// And add the reply to the parent comment's replies.
     for (final comment in comments) {
       if (comment.parentId == null) {
-        newComments.add(comment); // parent
+        /// This is the 1st-depth comment (Direct comment under the post)
+        /// hasChild, hasSiblings, isLastChild are set here. But needed to be updated later
+        newComments.add(comment);
       } else {
-        /// 부모 찾기
-        final index = newComments.indexWhere((e) => e.id == comment.parentId);
-        // set parent hasChild if parentId is not null
-        comment.depth = newComments[index].depth + 1;
-        newComments[index].hasChild = true;
+        /// Code comes here if the comment is 2nd-depth or more.
 
-        /// 형제 찾기
-        final siblingIndex =
-            newComments.lastIndexWhere((e) => e.parentId == comment.parentId);
+        /// Find parent
+        /// This comment has parent. Attach it under the parent and update the depth.
+        /// Note, there is always a parent comment for a reply. the [parentIndex] will not become -1.
+        final parentIndex = newComments.indexWhere(
+          (e) => e.id == comment.parentId,
+        );
+        comment.depth = newComments[parentIndex].depth + 1;
+        comment.isLastChild = true;
+
+        /// Set parent hasChild true if parentId is not null
+        newComments[parentIndex].hasChild = true;
+
+        /// Find sibiling from the list of comment (So, this comment can be attached after the sibiling comment)
+        final siblingIndex = newComments.lastIndexWhere(
+          (e) => e.parentId == comment.parentId,
+        );
+
+        /// If there is no sibling, under the parent (meaning, the is the first child of the parent),
+        /// Attche it under the parent.
         if (siblingIndex == -1) {
-          newComments.insert(index + 1, comment);
+          /// hasChild, hasSibilings, isLastChild are all set to false by default at this time.
+          /// (need to be updated later)
+          newComments.insert(parentIndex + 1, comment);
         } else {
-          newComments[siblingIndex].hasSiblings = true;
+          /// Runtime comes here if there is a sibling. Meaning, there are comments already attached to the parent.
+          /// Attach it after the sibling.
           newComments.insert(siblingIndex + 1, comment);
 
+          /// Set the [hasSibilings] to true for the all sibiling comments including current comments.
+          newComments[siblingIndex].hasSiblings = true;
+          comment.hasSiblings = true;
+
+          /// Set the [isLastChild] to true if this comment is last one under the parent (among the sibilings)
           newComments[siblingIndex].isLastChild = false;
-          final previousComment = newComments[siblingIndex];
-          if (previousComment.isLastChild == true &&
-              previousComment.parentId ==
-                  newComments[siblingIndex + 1].parentId) {
-            newComments[siblingIndex + 1].isLastChild = true;
-          }
         }
       }
     }

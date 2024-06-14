@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:example/app.localization.dart';
@@ -39,7 +40,7 @@ void main() async {
       await Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform);
 
-      runApp(const ChatApp());
+      runApp(const MainApp());
 
       FlutterError.onError = (FlutterErrorDetails details) {
         FlutterError.dumpErrorToConsole(details);
@@ -49,16 +50,16 @@ void main() async {
   );
 }
 
-class ChatApp extends StatefulWidget {
-  const ChatApp({
+class MainApp extends StatefulWidget {
+  const MainApp({
     super.key,
   });
 
   @override
-  State<ChatApp> createState() => _ChatAppState();
+  State<MainApp> createState() => _MainAppState();
 }
 
-class _ChatAppState extends State<ChatApp> {
+class _MainAppState extends State<MainApp> {
   bool flagInitLocalization = false;
   @override
   void initState() {
@@ -70,6 +71,19 @@ class _ChatAppState extends State<ChatApp> {
     LinkService.instance.init(urlPrefix: "https://example.com");
 
     initFirstInternetConnection();
+
+    // DO Unit tests
+
+    Timer(const Duration(microseconds: 500), () async {
+      // Post.get(category: '', id: '-O-5aroAECVEyaOYsRuQ');
+
+      final comments = await Comment.getAll(postId: '-O-KUmXcPgcYhHDkPmLF');
+      for (final comment in comments) {
+        print(
+          ': comment: ${comment.content} -> hasChild:${comment.hasChild}, hasSibiling:${comment.hasSiblings}, isLastChild:${comment.isLastChild}',
+        );
+      }
+    });
   }
 
   @override

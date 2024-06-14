@@ -23,7 +23,9 @@ class _CommentViewState extends State<CommentView> {
   int? previousNoOfLikes;
 
   double lineWidth = 2;
-  Color get lineColor => Theme.of(context).colorScheme.outline.withAlpha(40);
+  Color get verticalLineColor =>
+      Colors.red; // Theme.of(context).colorScheme.outline.withAlpha(40);
+  Color get curvedLineColor => Colors.green;
   bool get isFirstParent =>
       widget.comment.parentId == null && widget.comment.depth == 0;
   bool get isChild => !isFirstParent;
@@ -48,21 +50,22 @@ class _CommentViewState extends State<CommentView> {
             for (int i = 0; i < depth; i++) ...[
               const SizedBox(width: 19),
               if (i != depth - 1) ...[
-                if (hasSibling || isChild) _parentLine(),
+                if (hasSibling || isChild) _verticalLine(),
                 const SizedBox(width: 8),
               ]
             ],
 
             /// curved line
             if (isChild) ...[
-              if (!lastChild) _parentLine(),
+              if (!lastChild) _verticalLine(),
               Container(
                 width: 16,
                 height: 16,
                 decoration: BoxDecoration(
                   border: Border(
-                    bottom: BorderSide(width: lineWidth, color: lineColor),
-                    left: BorderSide(width: lineWidth, color: lineColor),
+                    bottom:
+                        BorderSide(width: lineWidth, color: curvedLineColor),
+                    left: BorderSide(width: lineWidth, color: curvedLineColor),
                   ),
 
                   /// For making a curve to its edge
@@ -86,7 +89,7 @@ class _CommentViewState extends State<CommentView> {
                 /// the horizontal line
                 if (hasChild)
                   Expanded(
-                    child: _parentLine(),
+                    child: _verticalLine(),
                   ),
               ],
             ),
@@ -346,11 +349,11 @@ class _CommentViewState extends State<CommentView> {
     );
   }
 
-  Widget _parentLine() {
+  Widget _verticalLine() {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          color: lineColor,
+          color: verticalLineColor,
           width: 1,
         ),
       ),
