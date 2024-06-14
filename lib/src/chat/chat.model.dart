@@ -91,7 +91,7 @@ class ChatModel {
     /// 그룹 채팅방에서 차단된 사용자이면, 메시지를 전송하지 않고 에러를 낸다.
     if (room.blockedUsers.contains(myUid)) {
       throw FireFlutterException(
-          Code.chatSendMessageBlockedUser, T.chatSendMessageBlockedUser);
+          Code.chatSendMessageBlockedUser, T.chatSendMessageBlockedUser.tr);
     }
 
     /// 차단되면, 메시지를 전송하지 않고 에러를 낸다.
@@ -109,12 +109,12 @@ class ChatModel {
 
     /// 인증된 사용자만 URL 전송 옵션
     if (text?.hasUrl == true && room.urlVerifiedUserOnly && iam.notVerified) {
-      throw FireFlutterException(Code.notVerified, T.notVerifiedMessage);
+      throw FireFlutterException(Code.notVerified, T.notVerifiedMessage.tr);
     }
 
     /// 인증된 사용자만 파일 전송 옵션
     if (url != null && room.uploadVerifiedUserOnly && iam.notVerified) {
-      throw FireFlutterException(Code.notVerified, T.notVerifiedMessage);
+      throw FireFlutterException(Code.notVerified, T.notVerifiedMessage.tr);
     }
 
     /// 채팅 메시지 순서를 -1 (감소) 한다.

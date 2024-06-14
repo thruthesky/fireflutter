@@ -60,6 +60,15 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "PhiLov - SM A045F",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "R9ATA00LMJM",
+      "flutterMode": "debug",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart"
+    },
+    {
       "name": "PhiLov - Emulator 5554",
       "request": "launch",
       "type": "dart",
@@ -354,6 +363,15 @@
       "request": "launch",
       "type": "dart",
       "deviceId": "emulator-5554",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.chat.dart"
+    },
+    {
+      "name": "Example - Chat - iPhone sm black",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "00008030-000D445A11A3802E",
       "flutterMode": "debug",
       "cwd": "example",
       "program": "lib/main.chat.dart"
