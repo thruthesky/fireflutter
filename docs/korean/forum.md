@@ -71,20 +71,12 @@ Refer to [Post doc](post.md).
 
 ## 푸시 알림 구독
 
-게시판 카테고리 별 푸시 알림 구독과 해제는 아래와 같이 하면 된다.
+게시판 카테고리 별 푸시 알림 구독과 해제는 아래와 같이 하면 된다. 보다 자세한 코드는 아래의 `CategorySubscriptionIcon` 위젯 소스 코드를 보면 된다.
 
 ```dart
-IconButton(
-  onPressed: () async {
-    toggle(Path.postSubscription(category));
-  },
-  icon: Value(
-    path: Path.postSubscription(category),
-    builder: (v) => v == true
-        ? const Icon(Icons.notifications_rounded)
-        : const Icon(Icons.notifications_outlined),
-  ),
-),
+CategorySubscriptionIcon(
+  category: Categories.menus[index].id,
+)
 ```
 
 
