@@ -118,6 +118,7 @@ export 'src/forum/post/widgets/post.title.dart';
 export 'src/forum/post/widgets/post.view.screen.dart';
 export 'src/forum/chat/forum.chat.input.dart';
 export 'src/forum/chat/post.bubble.dart';
+export 'src/forum/category/widgets/category.subscription.icon.dart';
 
 export 'src/functions/locale.functions.dart';
 
