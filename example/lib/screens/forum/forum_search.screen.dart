@@ -54,8 +54,8 @@ class _ForumSearchScreenState extends State<ForumSearchScreen> {
 
   Map<String, String> dataTypes = {
     'all': 'All',
-    'title': 'Post',
-    'content': 'Comment'
+    'posts': 'Post',
+    'comments': 'Comment'
   };
 
   Client client = Client(Configuration(
