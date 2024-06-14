@@ -190,9 +190,11 @@ class ChatService {
   }) async {
     return await showGeneralDialog(
       context: context,
-      pageBuilder: (_, __, ___) => DefaultChatRoomUserListScreen(
-        room: room,
-      ),
+      pageBuilder: (_, __, ___) =>
+          customize.chatRoomUserListScreen?.call(room: room) ??
+          DefaultChatRoomUserListScreen(
+            room: room,
+          ),
     );
   }
 

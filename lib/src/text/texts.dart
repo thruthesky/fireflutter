@@ -708,6 +708,20 @@ class T {
     'ko': '메시지를 보낼 수 없습니다. 계정이 비활성화 상태입니다.'
   };
 
+  /// Report
+  static const Json reportInputTitle = {
+    'en': 'Report',
+    'ko': '신고',
+  };
+  static const Json reportInputMessage = {
+    "en": 'Please enter the reason for the report.',
+    'ko': '신고 사유를 입력해 주세요.',
+  };
+  static const Json reportInputHint = {
+    'en': 'Reason',
+    'ko': '사유',
+  };
+
   // Chats
 
   static const Json newChat = {
@@ -750,6 +764,46 @@ class T {
     'ko': '인증 회원 전용',
   };
 
+  static const Json invitation = {
+    'en': 'Invitation',
+    'ko': '초대',
+  };
+
+  static const Json search = {
+    'en': 'Search',
+    'ko': '검색',
+  };
+
+  static Json noMembers = {
+    'en': 'No members!',
+    'ko': '회원이 없습니다.',
+  };
+
+  static Json master = {
+    'en': 'Master',
+    'ko': '관리자',
+  };
+
+  static Json cannotJoinChatRoomError = {
+    'en': 'Error. Cannot join the chat room.',
+    'ko': '채팅방에 참여할 수 없습니다.',
+  };
+
+  static const Json notVerifiedMessage = {
+    'en': 'You have not verified yourself.',
+    'ko': '인증되지 않았습니다.'
+  };
+
+  static const Json setting = {
+    'en': 'Setting',
+    'ko': '설정',
+  };
+
+  static const Json chatMessageDelete = {
+    'en': 'Delete',
+    'ko': '삭제',
+  };
+
   static const Json openChat = {
     'en': 'Open Chat',
     'ko': '채팅방 열기',
@@ -778,6 +832,107 @@ class T {
   static const Json pleaseEnterChatRoomNameAndDescription = {
     'en': 'Please enter chat room name and description.',
     'ko': '채팅방 이름과 설명을 입력해주세요.',
+  };
+
+  static const Json pleaseEnterMessage = {
+    'en': 'Please enter message.',
+    'ko': '메시지를 입력해주세요.',
+  };
+
+  static const Json blockedUsers = {
+    'en': 'Blocked Users',
+    'ko': '차단된 사용자',
+  };
+
+  static const Json chatEmptyBlockedUserList = {
+    'en': 'No blocked users.',
+    'ko': '차단된 사용자가 없습니다.',
+  };
+
+  /// DefaultUploadSelectionBottomSheet
+  ///
+  static const Json photoUpload = {
+    'en': 'Upload a photo',
+    'ko': '사진 업로드',
+  };
+
+  static const Json selectPhotoFromGallery = {
+    'en': 'Select photo from gallery',
+    'ko': '갤러리에서 사진 선택'
+  };
+
+  static const Json takePhotoWithCamera = {
+    'en': 'Take photo with camera',
+    'ko': '카메라로 사진 촬영'
+  };
+
+  static const Json chatRoomNoMessageYet = {
+    'en': 'There is no message, yet.',
+    'ko': '메시지가 없습니다.',
+  };
+  static const Json thereIsNoChatRoomInChatRoomListView = {
+    'en': 'There is no chat room.',
+    'ko': '채팅방이 없습니다.',
+  };
+
+  static const Json chatMessageDeleted = {
+    'en': 'This message is deleted.',
+    'ko': '이 메시지는 삭제되었습니다.',
+  };
+  static const Json chatMessageListPermissionDenied = {
+    'en': 'Permission denied.',
+    'ko': '권한이 없습니다.',
+  };
+  static const Json chatSendMessageBlockedUser = {
+    'en': 'You are blocked.',
+    'ko': '차단된 사용자입니다.',
+  };
+  static const Json chatMessageListViewBlockedUser = {
+    'en': 'You are blocked from this chat.',
+    'ko': '채팅방에 차단된 사용자입니다.',
+  };
+  static const Json readMore = {
+    'en': 'Read More',
+    'ko': '더보기',
+  };
+  static const Json viewProfile = {
+    'en': 'View Profile',
+    'ko': '프로필 보기',
+  };
+  static const Json deleteMessage = {
+    'en': 'Delete Message',
+    'ko': '메시지 삭제',
+  };
+  static const Json deleteMessageConfirmation = {
+    'en':
+        "Are you sure you want to delete this message? This action cannot be undone.",
+    'ko': '메시지를 삭제하시겠습니까? 이 행동은 취소할 수 없습니다.',
+  };
+  static const Json blockUser = {
+    'en': 'Block User',
+    'ko': '사용자 차단',
+  };
+  static const Json unblockUser = {
+    'en': 'Unblock User',
+    'ko': '사용자 차단 해제',
+  };
+  static const Json blockUserChatConfirmation = {
+    'en': "Are you sure you want to block this user from the chat room?",
+    'ko': '채팅방에 차단하시겠습니까? 이 행동은 취소할 수 없습니다.',
+  };
+  static const Json unblockUserChatConfirmation = {
+    'en':
+        "Are you sure you want to unblock this user from the chat room? This person may see all the messages in the chat room."
+  };
+
+  static const Json create = {
+    "en": "Create",
+    'ko': '생성',
+  };
+
+  static const Json leave = {
+    'en': 'Leave',
+    'ko': '나가기',
   };
 
   // Chat-Setting
@@ -864,40 +1019,12 @@ class T {
   /// Chat
   ///
   // static const String chat = 'Chat';
-  static const String chatRoomNoMessageYet = 'There is no message, yet.';
-  static const String thereIsNoChatRoomInChatRoomListView =
-      'There is no chat room.';
-
-  static const String chatMessageDelete = 'Delete';
-  static const String chatMessageDeleted = 'This message is deleted.';
-  static const String chatBlockedUserList = 'Blocked users';
-  static const String chatEmptyBlockedUserList = 'No blocked users.';
-  static const String chatMessageListPermissionDenied = 'Permission denied.';
-  static const String chatSendMessageBlockedUser = 'You are blocked.';
-  static const String chatMessageListViewBlockedUser =
-      'You are blocked from this chat.';
-  static const String readMore = 'Read More';
-  static const String viewProfile = 'View Profile';
-  // static const String reply = 'Reply';
-  static const String deleteMessage = 'Delete Message';
-  static const String deleteMessageConfirmation =
-      "Are you sure you want to delete this message? This action cannot be undone.";
-  static const String blockUser = 'Block User';
-  static const String unblockUser = 'Unblock User';
-  static const String blockUserChatConfirmation =
-      "Are you sure you want to block this user from the chat room?";
-  static const String unblockUserChatConfirmation =
-      "Are you sure you want to unblock this user from the chat room? This person may see all the messages in the chat room.";
-
-  static const String create = "Create";
   // static const String edit = "Edit";
 
   /// User
-  static const String setting = 'Setting';
   // static const String block = 'Block';
   // static const String unblock = 'Unblock';
   // static const String report = 'Report';
-  static const String leave = 'Leave';
   // static const String stateMessage = 'State Message';
   static const String stateMessageInProfileUpdate = 'STATE MESSAGE';
   static const String hintInputStateMessage = 'Please input your state message';
@@ -909,12 +1036,9 @@ class T {
   static const String unblockConfirmTitle = 'Unblock this user?';
   static const String unblockConfirmMessage =
       'If you unblock this user, you will be able to see the contents of this user.';
-  static const String notVerifiedMessage = 'You have not verified yourself.';
   static const String writeYourMessage = 'Write your message';
   static const String visitedYourProfileTitle = 'Your profile was visited.';
   static const String visitedYourProfileBody = '#name visited your profile';
-  // chat input box hint text -> please enter a message
-  static const String pleaseEnterMessage = 'Please enter message.';
   // static const String cannotBlockYourself = 'You cannot block yourself.';
 
   /// User and Profile
@@ -999,12 +1123,6 @@ class T {
 
   static const String meetupEmptyList = 'No meetup found.';
 
-  /// Report
-  static const String reportInputTitle = 'Report';
-  static const String reportInputMessage =
-      'Please enter the reason for the report.';
-  static const String reportInputHint = 'Reason';
-
   /// Phone sign in
   static const String phoneNumber = 'Phone Number';
   static const String phoneSignInHeaderTitle =
@@ -1026,12 +1144,6 @@ class T {
   static const String selectProvince = "Select Province";
   static const String selectRegion = 'Select Region';
   static const String noSelectTedRegion = 'No selected province';
-
-  /// DefaultUploadSelectionBottomSheet
-  ///
-  static const String photoUpload = 'Upload a photo';
-  static const String selectPhotoFromGallery = 'Select photo from gallery';
-  static const String takePhotoWithCamera = 'Take photo with camera';
 
   // BlockScreen
   static const String noBlockUser = 'No blocked users';

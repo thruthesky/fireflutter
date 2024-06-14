@@ -340,18 +340,17 @@ class _ChatRoomState extends State<ChatRoomBody> {
                             child: Text(T.share.tr),
                             value: 'share',
                           ),
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'members',
                           child: Text(
-                            // T.members.tr,
-                            "Members",
+                            T.members.tr,
                           ),
                         ),
                         if (chat.room.isGroupChat &&
                             (isAdmin || chat.room.isMaster))
                           PopupMenuItem(
                             value: Field.blockedUsers,
-                            child: Text(T.chatBlockedUserList.tr),
+                            child: Text(T.blockedUsers.tr),
                           ),
                         if (chat.room.isSingleChat)
                           PopupMenuItem(
@@ -366,7 +365,9 @@ class _ChatRoomState extends State<ChatRoomBody> {
                             ),
                           ),
                         PopupMenuItem(
-                            value: 'report', child: Text(T.report.tr)),
+                          value: 'report',
+                          child: Text(T.report.tr),
+                        ),
                         if (widget.leave &&
                             !chat.room.isMaster &&
                             chat.room.isGroupChat)
@@ -419,7 +420,7 @@ class _ChatRoomState extends State<ChatRoomBody> {
                           if (context.mounted) Navigator.of(context).pop();
                         }
                       },
-                      tooltip: '채팅방 설정',
+                      tooltip: T.chatRoomSettings.tr,
                       icon: const Icon(Icons.menu_rounded),
                     ),
               ],
@@ -442,9 +443,9 @@ class _ChatRoomState extends State<ChatRoomBody> {
         ),
 
         if (cannotJoin)
-          const Expanded(
+          Expanded(
             child: Center(
-              child: Text('Error. Cannot join the chat room.'),
+              child: Text(T.cannotJoinChatRoomError.tr),
             ),
           ),
 
