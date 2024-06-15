@@ -130,12 +130,6 @@ class _CommentViewState extends State<CommentView> {
                     ],
                   ),
                   CommentContent(comment: widget.comment),
-                  Text(
-                      'depth: ${widget.comment.depth}, hasChild: ${widget.comment.hasChild}, isLastChild: ${widget.comment.isLastChild}, isParentLastChild: ${widget.comment.isParentLastChild}, hasMoreSibiling: ${widget.comment.hasMoreSibiling}',
-                      style: const TextStyle(
-                        color: Colors.black87,
-                        fontSize: 10,
-                      )),
                   Blocked(
                     otherUserUid: widget.comment.uid,
                     yes: () => SizedBox.fromSize(),
@@ -371,14 +365,6 @@ class _CommentViewState extends State<CommentView> {
   /// [depth] 는 코멘트의 깊이를 나타내는 것으로,
   /// 현재 코멘트의 depth 가 3 이라면, 0 부터 1 과 2 총 세번 호출 된다.
   Widget _newIndentedVerticalLine(int depth) {
-    print("parents.length: ${parents.length}, depth: $depth");
-    // print(
-    //     "if (parents[i].hasChild, parent.content: ${parents[i].content} i: $i, ${widget.comment.content}, (${parents[i].hasChild})) return const SizedBox.shrink();");
-
-    // print(
-    //     "${widget.comment.content}: if ($i == (${widget.comment.depth} - 1) &&  widget.comment.isLastChild == true) => ${(i == (widget.comment.depth - 1) && widget.comment.isLastChild == true)}");
-
-    // if (parents[i].hasChild) return const SizedBox.shrink();
     return Container(
       width: depth == 0 ? 21 : 30,
       child: Column(

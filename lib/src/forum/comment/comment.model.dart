@@ -273,14 +273,9 @@ class Comment {
         } else {
           /// Sibiling exists!!
 
-          // print(
-          //     '${comment.content} has sibiling:  siblingIndex: $siblingIndex, ${newComments[siblingIndex].content} set true');
+          ///
           newComments[siblingIndex].hasMoreSibiling = true;
           comment.hasMoreSibiling = false;
-
-          /// Set the [hasSibilings] to true for the all sibiling comments including current comments.
-          // newComments[siblingIndex].hasSiblings = true;
-          // comment.hasSiblings = true;
 
           /// Set the [isLastChild] to true if this comment is last one under the parent (among the sibilings)
           newComments[siblingIndex].isLastChild = false;
@@ -301,12 +296,9 @@ class Comment {
               break;
             }
           }
-          // print(
-          //     '--> siblingIndex:$siblingIndex, ${comment.content}: lastSibilingIndex: $lastSibilingIndex');
 
           /// Runtime comes here if there is a sibling. Meaning, there are comments already attached to the parent.
           /// Attach it after the sibling.
-          // newComments.insert(siblingIndex + 1, comment);
           newComments.insert(lastSibilingIndex, comment);
         }
       }
@@ -318,6 +310,9 @@ class Comment {
   /// Get the parents of the comment.
   ///
   /// It returns the list of parents in the path to the root from the comment.
+  /// Use this method to get
+  ///   - the parents of the comment. (This case is used by sorting comments and drawing the comment tree)
+  ///   - the users(user uid) in the path to the root. Especially to know who wrote the comment in the path to the post
   static List<Comment> getParents(Comment comment, List<Comment> comments) {
     final List<Comment> parents = [];
     Comment? parent = comment;
