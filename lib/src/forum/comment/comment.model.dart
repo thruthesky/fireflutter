@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,11 @@ class Comment {
   /// This is used to know if the parent is the last child of its parent.
   /// This is used in drawing the vertical line of comment tree indentation.
   bool isParentLastChild = false;
+
+  /// [hasSiblings] is set to true if the comment has sibilings below his place (not above).
+  /// It is like if he has younger brothers or sisters. Not the older ones (place above him).
+  /// By default, it is set to true.
+  bool hasMoreSibiling = true;
 
   bool get isMine => uid == myUid;
 
@@ -261,11 +267,16 @@ class Comment {
         if (siblingIndex == -1) {
           /// hasChild, hasSibilings, isLastChild are all set to false by default at this time.
           /// (need to be updated later)
+          comment.hasMoreSibiling = false;
+          // print('${comment.content} has no sibiling');
           newComments.insert(parentIndex + 1, comment);
         } else {
-          /// Runtime comes here if there is a sibling. Meaning, there are comments already attached to the parent.
-          /// Attach it after the sibling.
-          newComments.insert(siblingIndex + 1, comment);
+          /// Sibiling exists!!
+
+          // print(
+          //     '${comment.content} has sibiling:  siblingIndex: $siblingIndex, ${newComments[siblingIndex].content} set true');
+          newComments[siblingIndex].hasMoreSibiling = true;
+          comment.hasMoreSibiling = false;
 
           /// Set the [hasSibilings] to true for the all sibiling comments including current comments.
           // newComments[siblingIndex].hasSiblings = true;
@@ -273,11 +284,53 @@ class Comment {
 
           /// Set the [isLastChild] to true if this comment is last one under the parent (among the sibilings)
           newComments[siblingIndex].isLastChild = false;
+
+          /// 코멘트를 형제와 형제의 자손까지 포함하여, 그 밑에 추가한다.
+          int lastSibilingIndex = siblingIndex + 1;
+          for (lastSibilingIndex;
+              lastSibilingIndex < newComments.length;
+              lastSibilingIndex++) {
+            /// 각 코멘트의 부모를 경로를 가져온다.
+            final List<Comment> parents =
+                getParents(newComments[lastSibilingIndex], newComments);
+
+            /// 부모 경로에 같은 부모가 있으면 형제 또는 형제의 자손이다.
+            int found = parents.indexWhere((cmt) => cmt.id == comment.parentId);
+            // print("i=$lastSibilingIndex, if (found($found) == -1) { //");
+            if (found == -1) {
+              break;
+            }
+          }
+          // print(
+          //     '--> siblingIndex:$siblingIndex, ${comment.content}: lastSibilingIndex: $lastSibilingIndex');
+
+          /// Runtime comes here if there is a sibling. Meaning, there are comments already attached to the parent.
+          /// Attach it after the sibling.
+          // newComments.insert(siblingIndex + 1, comment);
+          newComments.insert(lastSibilingIndex, comment);
         }
       }
     }
 
     return newComments;
+  }
+
+  /// Get the parents of the comment.
+  ///
+  /// It returns the list of parents in the path to the root from the comment.
+  static List<Comment> getParents(Comment comment, List<Comment> comments) {
+    final List<Comment> parents = [];
+    Comment? parent = comment;
+    while (parent != null) {
+      parent = comments.firstWhereOrNull(
+        (e) => e.id == parent!.parentId,
+      );
+      if (parent == null) {
+        break;
+      }
+      parents.add(parent);
+    }
+    return parents.reversed.toList();
   }
 
   /// Create a comment
