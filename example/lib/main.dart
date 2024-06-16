@@ -72,6 +72,18 @@ class _MainAppState extends State<MainApp> {
     initFirstInternetConnection();
 
     // DO Unit tests
+
+    Timer(const Duration(microseconds: 500), () async {
+      final comments = await Comment.getAll(postId: '-O-PE2-ZiHcVMKdgi4vI');
+      for (final comment in comments) {
+        print(
+          ': comment: ${comment.content} -> id:${comment.id} , hasChild:${comment.hasChild}, isLastChild:${comment.isLastChild}, hasMoreSibiling:${comment.hasMoreSibiling}',
+        );
+      }
+      final post = await Post.getAllSummary('-O-PE2-ZiHcVMKdgi4vI');
+      ForumService.instance
+          .showPostViewScreen(context: globalContext, post: post!);
+    });
   }
 
   @override

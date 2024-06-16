@@ -108,11 +108,13 @@ class ForumService {
   Future showPostViewScreen({
     required BuildContext context,
     required Post post,
+    bool commentable = true,
   }) async {
     await showGeneralDialog(
       context: context,
       pageBuilder: ($, $$, $$$) => PostViewScreen(
         post: post,
+        commentable: commentable,
       ),
     );
   }
