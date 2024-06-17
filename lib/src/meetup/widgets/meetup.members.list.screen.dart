@@ -58,10 +58,7 @@ class MeetupMembersListScreen extends StatelessWidget {
             );
           },
           separatorBuilder: (_, __) =>
-              separatorBuilder?.call(_, __) ??
-              const SizedBox(
-                height: 16,
-              ),
+              separatorBuilder?.call(_, __) ?? const SizedBox(),
           itemCount: meetupDoc.users.length,
         ),
       ),
