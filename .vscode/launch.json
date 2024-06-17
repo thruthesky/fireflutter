@@ -944,6 +944,16 @@
       "args": ["--dart-define", "MODE=noe"]
     },
     {
+      "name": "Philov (noe)- SM J737S",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "SM J737S",
+      "flutterMode": "debug",
+      "cwd": "apps/philov",
+      "program": "lib/main.dart",
+      "args": ["--dart-define", "MODE=noe"]
+    },
+    {
       "name": "Example (noe)- iPhone 15 Pro Max",
       "request": "launch",
       "type": "dart",

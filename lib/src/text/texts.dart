@@ -269,6 +269,36 @@ class T {
     'ko': '게시판 종류',
   };
 
+  static Json searchByCategories = {
+    'en': 'Search by categories',
+    'ko': '카테고리로 검색',
+  };
+
+  static Json searchByGroup = {
+    'en': 'Search by group',
+    'ko': '그룹으로 검색',
+  };
+
+  
+  static Json searchByField = {
+    'en': 'Search by field',
+    'ko': '필드로 검색',
+  };
+
+  
+  static Json searchByForumType = {
+    'en': 'Search by forum type',
+    'ko': '게시판 종류로 검색',
+  };
+
+  
+  static Json reset = {
+    'en': 'Reset',
+    'ko': '초기화',
+  };
+
+
+
   static Json info = {
     'en': 'Info',
     'ko': '정보',
@@ -291,6 +321,16 @@ class T {
   static Json host = {
     'en': 'Host',
     'ko': '운영자',
+  };
+
+  static Json field = {
+    'en': 'Field',
+    'ko': '필드',
+  };
+
+  static Json group = {
+    'en': 'Group',
+    'ko': '그룹',
   };
 
   static Json members = {
@@ -779,6 +819,11 @@ class T {
     'ko': '검색',
   };
 
+  static Json searchFilter = {
+    'en': 'Search Filter',
+    'ko': '검색 필터',
+  };
+
   static Json searchKeywordHint = {
     'en': 'Please enter keyword',
     'ko': '검색어를 입력하세요',
@@ -798,10 +843,16 @@ class T {
   static const Json reportInputMessage = {
     "en": 'Please enter the reason for the report.',
     'ko': '신고 사유를 입력해 주세요.',
+    'lo': 'ກະລຸນາໃສ່ເຫດຜົນຂອງບົດລາຍງານ.',
+    'th': 'กรุณากรอกเหตุผลในการรายงาน',
+    'vi': 'Vui lòng nhập lý do báo cáo.',
   };
   static const Json reportInputHint = {
     'en': 'Reason',
     'ko': '사유',
+    'vi': 'Lý do',
+    'th': 'เหตุผล',
+    'lo': 'ເຫດ​ຜົນ',
   };
 
   // Chats
@@ -873,12 +924,18 @@ class T {
 
   static const Json notVerifiedMessage = {
     'en': 'You have not verified yourself.',
-    'ko': '인증되지 않았습니다.'
+    'ko': '인증되지 않았습니다.',
+    'vi': 'Bạn chưa tự mình xác minh.',
+    'th': 'คุณยังไม่ได้ตรวจสอบด้วยตัวเอง',
+    'lo': 'ທ່ານຍັງບໍ່ໄດ້ກວດສອບມັນເອງ.',
   };
 
   static const Json setting = {
     'en': 'Setting',
     'ko': '설정',
+    'vi': 'cài đặt',
+    'th': 'การตั้งค่า',
+    'lo': 'ການຕັ້ງຄ່າ',
   };
 
   static const Json chatMessageDelete = {
@@ -919,6 +976,9 @@ class T {
   static const Json pleaseEnterMessage = {
     'en': 'Please enter message.',
     'ko': '메시지를 입력해주세요.',
+    'lo': 'ກະລຸນາໃສ່ຂໍ້ຄວາມ.',
+    'th': 'กรุณากรอกข้อความ',
+    'vi': 'Vui lòng nhập tin nhắn.',
   };
 
   static const Json blockedUsers = {
@@ -936,25 +996,42 @@ class T {
   static const Json photoUpload = {
     'en': 'Upload a photo',
     'ko': '사진 업로드',
+    'vi': 'Tải ảnh lên',
+    'th': 'อัพโหลดรูปภาพ',
+    'lo': 'ອັບໂຫຼດຮູບ',
   };
 
   static const Json selectPhotoFromGallery = {
     'en': 'Select photo from gallery',
-    'ko': '갤러리에서 사진 선택'
+    'ko': '갤러리에서 사진 선택',
+    'lo': 'ເລືອກຮູບຈາກຄັງຮູບ',
+    'th': 'เลือกภาพจากแกลเลอรี่',
+    'vi': 'Chọn ảnh từ thư viện',
   };
 
   static const Json takePhotoWithCamera = {
     'en': 'Take photo with camera',
-    'ko': '카메라로 사진 촬영'
+    'ko': '카메라로 사진 촬영',
+    'vi': 'Chọn ảnh từ máy ảnh',
+    'th': 'เลือกภาพจากกล้อง',
+    'lo': 'ເລືອກຮູບຈາກກ້ອງຖ່າຍຮູບ',
   };
 
   static const Json chatRoomNoMessageYet = {
     'en': 'There is no message, yet.',
     'ko': '메시지가 없습니다.',
+    'vi': 'Vẫn chưa có tin nhắn nào.',
+    'th': 'ยังไม่มีข้อความเลย',
+    'lo': 'ບໍ່ມີຂໍ້ຄວາມ, ທັນ.',
   };
   static const Json thereIsNoChatRoomInChatRoomListView = {
     'en': 'There is no chat room.',
     'ko': '채팅방이 없습니다.',
+  };
+
+  static const Json chatBlockedUsersList = {
+    'en': 'Blocked Users',
+    'ko': '차단된 사용자',
   };
 
   static const Json chatMessageDeleted = {
@@ -1064,16 +1141,25 @@ class T {
   static const Json inputName = {
     'en': 'Please enter your name.',
     'ko': '이름을 입력해주세요.',
+    'vi': 'Xin hãy nhập tên của bạn.',
+    'th': 'กรุณากรอกชื่อของคุณ.',
+    'lo': 'ກະລຸນາໃສ່ຊື່ຂອງທ່ານ.',
   };
 
   static const Json nameInputDescription = {
     'en': 'Please enter your name.',
     'ko': '이름을 입력해주세요.',
+    'vi': 'Xin hãy nhập tên của bạn.',
+    'th': 'กรุณากรอกชื่อของคุณ.',
+    'lo': 'ກະລຸນາໃສ່ຊື່ຂອງທ່ານ.'
   };
 
   static const Json email = {
     'en': 'Email',
     'ko': '이메일',
+    'vi': 'E-mail',
+    'th': 'อีเมล',
+    'lo': 'ອີເມວ',
   };
 
   static const Json inputEmail = {
@@ -1084,6 +1170,9 @@ class T {
   static const Json password = {
     'en': 'Password',
     'ko': '비밀번호',
+    'lo': 'ລະຫັດຜ່ານ',
+    'th': 'รหัสผ่าน',
+    'vi': 'Mật khẩu',
   };
 
   static const Json inputPassword = {
@@ -1094,11 +1183,17 @@ class T {
   static const Json next = {
     'en': 'Next',
     'ko': '다음',
+    'vi': 'Kế tiếp',
+    'th': 'ต่อไป',
+    'lo': 'ຕໍ່ໄປ',
   };
 
   static const Json prev = {
     'en': 'Prev',
     'ko': '이전',
+    'lo': 'ກ່ອນໜ້າ',
+    'th': 'ก่อนหน้า',
+    'vi': 'Trước đó',
   };
 
   static const Json back = {

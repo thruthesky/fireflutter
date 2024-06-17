@@ -149,7 +149,7 @@ class _PostEditScreenState extends State<PostEditScreen> {
             padding: viewInsets,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+              children: <Widget>[
                 TextButton.icon(
                   onPressed: () async {
                     final String? url = await StorageService.instance.upload(
@@ -172,13 +172,15 @@ class _PostEditScreenState extends State<PostEditScreen> {
                   ),
                 ),
                 ElevatedButton(
-                  style: ButtonStyle(
-                    elevation: const WidgetStatePropertyAll(0),
-                    backgroundColor: WidgetStatePropertyAll(
-                        Theme.of(context).colorScheme.primary),
-                    foregroundColor: WidgetStatePropertyAll(
-                        Theme.of(context).colorScheme.onPrimary),
-                  ),
+                  // commenting this code because we should not give style inside
+                  // we can just do theme in the app projects
+                  // style: ButtonStyle(
+                  //   elevation: const WidgetStatePropertyAll(0),
+                  //   backgroundColor: WidgetStatePropertyAll(
+                  //       Theme.of(context).colorScheme.primary),
+                  //   foregroundColor: WidgetStatePropertyAll(
+                  //       Theme.of(context).colorScheme.onPrimary),
+                  // ),
                   onPressed: () async {
                     Post? newPost;
                     if (isCreate) {

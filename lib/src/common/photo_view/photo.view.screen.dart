@@ -76,35 +76,52 @@ class _PhotoViewerScreen extends State<PhotoViewerScreen> {
               setState(() {});
             },
           ),
-          Align(
-            alignment: Alignment.center,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  iconButton(
-                    context,
-                    onPressed: () => controller
-                        .previousPage(
-                            duration: const Duration(milliseconds: 150),
-                            curve: Curves.linear)
-                        .toString(),
-                    icon: const Icon(Icons.chevron_left),
-                  ),
-                  iconButton(
-                    context,
-                    onPressed: () => controller
-                        .nextPage(
-                            duration: const Duration(milliseconds: 150),
-                            curve: Curves.linear)
-                        .toString(),
-                    icon: const Icon(Icons.chevron_right),
-                  ),
-                ],
+          // if the urls only gave one item don't show the arrow controls arrow
+          // next and prev arrow for ux because it may confuse the user that there
+          // might be another image to see
+          if (widget.urls.length > 1)
+            Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // if the current image is the first image don't show the previous
+                    // arrow controll so that the user wont be confuse that there might be
+                    // image to prev
+                    if (currentIndex != 0) ...{
+                      iconButton(
+                        context,
+                        onPressed: () => controller
+                            .previousPage(
+                                duration: const Duration(milliseconds: 150),
+                                curve: Curves.linear)
+                            .toString(),
+                        icon: const Icon(Icons.chevron_left),
+                      ),
+                    } else ...{
+                      const Spacer(),
+                    },
+
+                    // if the current image is already the last image don't show
+                    // the next arrow control to not confuse the use that there might be
+                    // more photo but when the user tap there no more
+                    if (currentIndex < widget.urls.length - 1) ...{
+                      iconButton(
+                        context,
+                        onPressed: () => controller
+                            .nextPage(
+                                duration: const Duration(milliseconds: 150),
+                                curve: Curves.linear)
+                            .toString(),
+                        icon: const Icon(Icons.chevron_right),
+                      ),
+                    },
+                  ],
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
