@@ -162,7 +162,12 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
               hintText: T.pleaseEnterMessage.tr,
-              hintStyle: Theme.of(context).textTheme.labelLarge,
+              // This hintStyle is important because we cannot simply let
+              // the devs to update the font size because of alignment things.
+              // Please check the input box
+              hintStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    fontSize: 14,
+                  ),
               hintMaxLines: 1,
               prefixIcon: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
