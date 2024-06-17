@@ -13,9 +13,9 @@ class DisplayPhotos extends StatelessWidget {
   Widget build(BuildContext context) {
     if (urls.isEmpty) return const SizedBox.shrink();
 
-    /// when the image is tap the photoviewerscreen would open and the first image
-    /// the user must see is the image that he tap. so by puting the gesture detector her
-    /// and giving the proper index will display the tap image by the user
+    /// when the image is tap the `PhotoViewerScreen` would open and the first image
+    /// that the user must see is the image that he/she tap. so by puting the gesture detector here
+    /// and giving the proper index it will display the tap image by the user first.
     final List<Widget> children = urls
         .asMap()
         .entries
