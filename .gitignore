@@ -1,4 +1,6 @@
 firebase_options.dart
+.firebase/
+**/.firebase/
 
 # firebase cloud funcions key
 key.ts
