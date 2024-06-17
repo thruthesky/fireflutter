@@ -48,8 +48,8 @@ class PostBubble extends StatelessWidget {
                     ),
                     child: Column(
                       crossAxisAlignment: isMine
-                          ? CrossAxisAlignment.start
-                          : CrossAxisAlignment.end,
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
                       children: [
                         Container(
                           clipBehavior: Clip.antiAlias,
@@ -96,13 +96,14 @@ class PostBubble extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Text(
-                          '   ${isMine ? '수정 삭제' : ''} ${T.readMore.tr}...   ',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall!
-                              .copyWith(color: Colors.grey.shade600),
-                        ),
+                        if (post.content.length > 80)
+                          Text(
+                            '   ${isMine ? '수정 삭제' : ''} ${T.readMore.tr}...   ',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall!
+                                .copyWith(color: Colors.grey.shade600),
+                          ),
                       ],
                     ),
                   ),
