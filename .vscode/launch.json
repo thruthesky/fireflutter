@@ -287,6 +287,16 @@
       "program": "lib/main.dart"
     },
     {
+      "name": "Example - iPad Air(5th generation",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "iPad Air (5th generation)",
+      "flutterMode": "debug",
+      "cwd": "example",
+      "program": "lib/main.dart"
+      // "args": ["-v", "--dart-define", "MODE=test"]
+    },
+    {
       "name": "Example - All - SM J737S",
       "request": "launch",
       "type": "dart",

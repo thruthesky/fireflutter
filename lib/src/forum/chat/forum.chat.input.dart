@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +25,7 @@ class _ForumChatInputState extends State<ForumChatInput> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -38,7 +37,6 @@ class _ForumChatInputState extends State<ForumChatInput> {
             autofocus: false,
             decoration: InputDecoration(
               hintText: "Input content here...",
-              border: const OutlineInputBorder(),
               prefixIcon: isEmpty
                   ? IconButton(
                       onPressed: onUpload,
@@ -73,43 +71,9 @@ class _ForumChatInputState extends State<ForumChatInput> {
               ],
             ),
           ],
-          Wrap(
-            alignment: WrapAlignment.start,
-            spacing: 8,
-            runSpacing: 8,
-            children: urls
-                .map(
-                  (url) => SizedBox(
-                    height: 100,
-                    width: 100,
-                    child: Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.center,
-                          child: CachedNetworkImage(
-                            imageUrl: url,
-                          ),
-                        ),
-                        Align(
-                          alignment: const Alignment(1.5, -1.5),
-                          child: IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              dog('$url is deleted');
-                              StorageService.instance.delete(url);
-                              urls.remove(url);
-                              setState(() {});
-                            },
-                            color: Colors.red,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-                .toList(),
-          ),
           const SizedBox(height: 8),
+          EditUploads(
+              urls: urls, onDelete: (url) => setState(() => urls.remove(url))),
         ],
       ),
     );

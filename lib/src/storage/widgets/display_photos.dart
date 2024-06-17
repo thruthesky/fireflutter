@@ -13,48 +13,47 @@ class DisplayPhotos extends StatelessWidget {
   Widget build(BuildContext context) {
     if (urls.isEmpty) return const SizedBox.shrink();
 
+    ///
+    /// Adding the Ink well here so it doesn't need to set up outside
+    /// and for UX purpose whatever image the user clicks it will be the first one to
+    /// display on [PhotoViewerScreen]
+    ///
     /// when the image is tap the `PhotoViewerScreen` would open and the first image
     /// that the user must see is the image that he/she tap. so by puting the gesture detector here
     /// and giving the proper index it will display the tap image by the user first.
     final List<Widget> children = urls
         .asMap()
-        .entries
-        .map((entry) {
-          final index = entry.key;
-          final url = entry.value;
-
-          return GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              showGeneralDialog(
+        .map(
+          (index, url) => MapEntry(
+            index,
+            InkWell(
+              onTap: () => showGeneralDialog(
                 context: context,
                 pageBuilder: (_, __, ___) => PhotoViewerScreen(
-                  selectedIndex: index,
                   urls: urls,
+                  selectedIndex: index,
                 ),
-              );
-            },
-            child: SizedBox(
+              ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: CachedNetworkImage(
                   imageUrl: url,
                   fit: BoxFit.cover,
-                  // added sizes
                   width: double.infinity,
                   height: 200,
                 ),
               ),
             ),
-          );
-        })
+          ),
+        )
+        .values
         .toList()
         .fold(
-          [],
-          (prev, curr) => prev
-            ..add(curr)
-            ..add(const SizedBox(height: 8)),
-        );
+      [],
+      (prev, curr) => prev
+        ..add(curr)
+        ..add(const SizedBox(height: 8)),
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

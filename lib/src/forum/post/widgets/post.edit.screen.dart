@@ -121,6 +121,7 @@ class _PostEditScreenState extends State<PostEditScreen> {
                 LinearProgressIndicator(
                   value: progress,
                 ),
+              const SizedBox(height: 8),
               EditUploads(
                 urls: post.urls,
                 onDelete: (url) async {

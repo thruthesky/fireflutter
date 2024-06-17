@@ -12,7 +12,6 @@ class PhotoViewerScreen extends StatefulWidget {
 
   final List<String> urls;
   final int? selectedIndex;
-
   @override
   State<PhotoViewerScreen> createState() => _PhotoViewerScreen();
 }
