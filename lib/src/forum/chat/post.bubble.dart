@@ -78,13 +78,12 @@ class PostBubble extends StatelessWidget {
                                     imageUrl: post.urls.first,
                                     fit: BoxFit.cover,
                                     errorWidget: (context, url, error) {
+                                      dog('post.bubble: Image url has problem: $error');
                                       return const Icon(
                                         Icons.error_outline,
                                         color: Colors.red,
                                       );
                                     },
-                                    errorListener: (value) => dog(
-                                        'post.bubble: Image url has problem: $value'),
                                   ),
                                 ),
                               Padding(

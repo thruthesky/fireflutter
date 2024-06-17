@@ -37,6 +37,15 @@ class MeetupListTile extends StatelessWidget {
               width: 120,
               height: 120,
               fit: BoxFit.cover,
+              errorWidget: (context, url, error) {
+                dog('meetup.list_tile: Image url has problem: $error');
+                return const Center(
+                  child: Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                  ),
+                );
+              },
             ),
           const SizedBox(width: 8),
           Expanded(

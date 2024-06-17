@@ -126,8 +126,15 @@ class _MeetupEventUpdateFormState extends State<MeetupEventUpdateForm> {
                           placeholder: (context, url) => const Center(
                             child: CircularProgressIndicator(),
                           ),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
+                          errorWidget: (context, url, error) {
+                            dog('post.bubble: Image url has problem: $error');
+                            return Center(
+                              child: const Icon(
+                                Icons.error_outline,
+                                color: Colors.red,
+                              ),
+                            );
+                          },
                         ),
                 ),
               ),
