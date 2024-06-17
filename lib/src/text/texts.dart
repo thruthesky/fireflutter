@@ -1144,6 +1144,13 @@ class T {
     'ko': '내용을 입력해주세요.',
   };
 
+  // User Settings
+
+  static const Json getNotifiedWhenSomeoneCommentOnYourPost = {
+    'en': "Get notified when other user comments/replies on your post/comment",
+    'ko': ""
+  };
+
   /// Label, texts, buttons,
   static const String dismiss = 'dismiss';
 
@@ -1265,9 +1272,6 @@ class T {
   static const String getNotifiedWhenSomeoneViewYourProfile =
       'Get notified when someone views your profile';
   static const String chooseYourLanguage = 'Choose your language';
-
-  static const String getNotifiedWhenSomeoneCommentOnYourPost =
-      "Get notified when other user comments/replies on your post/comment";
 
   /// Used in DefaultLoginFirstScreen
   static const String loginRequredTitle = 'Login Required';

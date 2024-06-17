@@ -10,8 +10,29 @@ class PostBubble extends StatelessWidget {
 
   final Post post;
   bool get isMine => post.uid == myUid;
+
+  bool get isLongText =>
+      (post.content.length > 100 || '\n'.allMatches(post.content).length > 5);
+
+  String get text {
+    dog('isLongText: $isLongText');
+    dog('post.content: ${post.content}');
+    if (isLongText) {
+      String t = post.content;
+      final splits = t.split('\n');
+      if (splits.length > 5) {
+        return '${splits.sublist(0, 5).join('\n')}...';
+      } else {
+        return '${post.content.substring(0, 99)}...';
+      }
+    } else {
+      return post.content;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    dog("Text: $text");
     if (post.deleted) {
       return const SizedBox.shrink();
     }
@@ -90,12 +111,10 @@ class PostBubble extends StatelessWidget {
                                 padding:
                                     const EdgeInsets.fromLTRB(16, 8, 16, 8),
                                 child: Text(
-                                  post.content
-                                      .orBlocked(
-                                        post.uid,
-                                        T.blockedContentMessage.tr,
-                                      )
-                                      .cut(80),
+                                  text.orBlocked(
+                                    post.uid,
+                                    T.blockedContentMessage.tr,
+                                  ),
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                               ),
@@ -103,13 +122,21 @@ class PostBubble extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Text(
-                          '   ${isMine ? '수정 삭제' : ''} ${T.readMore.tr}...   ',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall!
-                              .copyWith(color: Colors.grey.shade600),
-                        ),
+                        // Text(
+                        //   '   ${isMine ? '수정 삭제' : ''}  ',
+                        //   style: Theme.of(context)
+                        //       .textTheme
+                        //       .labelSmall!
+                        //       .copyWith(color: Colors.grey.shade600),
+                        // ),
+                        if (isLongText)
+                          Text(
+                            "${T.readMore.tr}...",
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall!
+                                .copyWith(color: Colors.grey.shade600),
+                          ),
                       ],
                     ),
                   ),
