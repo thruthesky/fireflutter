@@ -162,6 +162,7 @@ class _ChatMessageInputBoxState extends State<ChatMessageInputBox> {
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
               hintText: T.pleaseEnterMessage.tr,
+              hintStyle: Theme.of(context).textTheme.labelLarge,
               hintMaxLines: 1,
               prefixIcon: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
