@@ -30,6 +30,8 @@ class _PostEditScreenState extends State<PostEditScreen> {
 
   double? progress;
 
+  EdgeInsets get viewInsets => MediaQuery.of(context).viewInsets;
+
   @override
   void initState() {
     super.initState();
@@ -50,91 +52,75 @@ class _PostEditScreenState extends State<PostEditScreen> {
       appBar: AppBar(
         title: Text(isCreate ? T.createPost.tr : T.editPost.tr),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              /// user meta
+              Row(
+                children: [
+                  UserAvatar(
+                    uid: myUid!,
+                    size: 40,
+                  ),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      UserDisplayName(
+                        uid: myUid!,
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      Text(
+                        DateTime.now().toShortDate,
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                              fontWeight: FontWeight.w300,
+                            ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 24),
+
+              _textTitle('Title'),
               TextField(
                 controller: titleController,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
-                  labelText: T.inputTitle.tr, // 'Title',
+                  hintText: T.inputTitle.tr, // 'Title',
+
+                  hintStyle: _hintTextStyle(),
                 ),
+                onTapOutside: (event) => FocusManager.instance.primaryFocus
+                    ?.unfocus(), // to remove keyboard on tap outside
+                // style: Theme.of(context).textTheme.titleMedium,
+                minLines: 1,
+                maxLines: 3,
               ),
               const SizedBox(height: 16),
+              _textTitle('Content'),
               TextField(
                 controller: contentController,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
-                  labelText: T.inputContent.tr, // 'Content',
+                  hintText: T.inputContent.tr,
+                  hintStyle: _hintTextStyle(),
                 ),
-                minLines: 8,
-                maxLines: 10,
+                onTapOutside: (event) => FocusManager.instance.primaryFocus
+                    ?.unfocus(), // to remove keyboard on tap outside
+                style: Theme.of(context).textTheme.bodyMedium,
+                minLines: 6,
+                maxLines: 15,
               ),
               const SizedBox(height: 16),
-              Row(
-                children: [
-                  IconButton(
-                      onPressed: () async {
-                        final String? url =
-                            await StorageService.instance.upload(
-                          context: context,
-                          progress: (p) => setState(() => progress = p),
-                          complete: () => setState(() => progress = null),
-                        );
-                        if (url != null) {
-                          setState(() {
-                            progress = null;
-                            post.urls.add(url);
-                          });
-                        }
-                      },
-                      icon: const Icon(
-                        Icons.camera_alt,
-                        size: 32,
-                      )),
-                  const Spacer(),
-                  ElevatedButton(
-                      onPressed: () async {
-                        Post? newPost;
-                        if (isCreate) {
-                          newPost = await Post.create(
-                            category: post.category,
-                            title: titleController.text,
-                            content: contentController.text,
-                            urls: post.urls,
-                            group: widget.group,
-                          );
-                        } else {
-                          newPost = await post.update(
-                            title: titleController.text,
-                            content: contentController.text,
-                            urls: post.urls,
-                          );
-                        }
-                        if (!context.mounted) return;
-                        Navigator.of(context).pop();
-                        if (isCreate) {
-                          ForumService.instance.showPostViewScreen(
-                            context: context,
-                            post: newPost!,
-                          );
-                        }
-                      },
-                      child: Text(
-                        isCreate ? T.postCreate.tr : T.postUpdate.tr,
-                      ) // 'CREATE' : 'UPDATE'),
-                      ),
-                ],
-              ),
               if (progress != null && progress?.isNaN == false)
                 LinearProgressIndicator(
                   value: progress,
                 ),
-              const SizedBox(
-                height: 8,
-              ),
               EditUploads(
                 urls: post.urls,
                 onDelete: (url) async {
@@ -154,6 +140,98 @@ class _PostEditScreenState extends State<PostEditScreen> {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: Container(
+        margin: const EdgeInsets.only(left: 8, right: 16, top: 4),
+        child: SafeArea(
+          child: Padding(
+            padding: viewInsets,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton.icon(
+                  onPressed: () async {
+                    final String? url = await StorageService.instance.upload(
+                      context: context,
+                      progress: (p) => setState(() => progress = p),
+                      complete: () => setState(() => progress = null),
+                    );
+                    if (url != null) {
+                      setState(() {
+                        progress = null;
+                        post.urls.add(url);
+                      });
+                    }
+                  },
+                  label: Text(T.addPhoto.tr),
+                  icon: Icon(
+                    Icons.camera_alt,
+                    size: 24,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    elevation: const WidgetStatePropertyAll(0),
+                    backgroundColor: WidgetStatePropertyAll(
+                        Theme.of(context).colorScheme.primary),
+                    foregroundColor: WidgetStatePropertyAll(
+                        Theme.of(context).colorScheme.onPrimary),
+                  ),
+                  onPressed: () async {
+                    Post? newPost;
+                    if (isCreate) {
+                      newPost = await Post.create(
+                        category: post.category,
+                        title: titleController.text,
+                        content: contentController.text,
+                        urls: post.urls,
+                        group: widget.group,
+                      );
+                    } else {
+                      newPost = await post.update(
+                        title: titleController.text,
+                        content: contentController.text,
+                        urls: post.urls,
+                      );
+                    }
+                    if (!context.mounted) return;
+                    Navigator.of(context).pop();
+                    if (isCreate) {
+                      ForumService.instance.showPostViewScreen(
+                        context: context,
+                        post: newPost!,
+                      );
+                    }
+                  },
+                  child: Text(
+                    isCreate ? T.postCreate.tr : T.postUpdate.tr,
+                  ), // 'CREATE' : 'UPDATE'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  _hintTextStyle() {
+    return Theme.of(context).textTheme.bodyMedium!.copyWith(
+          wordSpacing: 2,
+          letterSpacing: 2,
+          color: Theme.of(context).colorScheme.secondary.tone(50),
+        );
+  }
+
+  _textTitle(String label) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Text(
+        label,
+        style: Theme.of(context).textTheme.labelMedium!.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
       ),
     );
   }

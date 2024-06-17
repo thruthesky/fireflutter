@@ -1,6 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/common/photo_view/photo.view.screen.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -9,11 +8,18 @@ import 'package:share_plus/share_plus.dart';
 /// This screen shows the details of a post.
 ///
 /// [post] is coming from posts-summary node. Which means, it may not have the full data of the post.
+///
+/// [commentable] is a flag to show or hide the comment input field and the comments.
 class PostViewScreen extends StatefulWidget {
   static const String routeName = '/PostView';
-  const PostViewScreen({super.key, required this.post});
+  const PostViewScreen({
+    super.key,
+    required this.post,
+    this.commentable = true,
+  });
 
   final Post post;
+  final bool commentable;
 
   @override
   State<PostViewScreen> createState() => _PostViewScreenState();
@@ -53,6 +59,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(post.id);
     return Theme(
       data: Theme.of(context).copyWith(
         textButtonTheme: TextButtonThemeData(
@@ -69,13 +76,18 @@ class _PostViewScreenState extends State<PostViewScreen> {
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              floating: true,
-              snap: true,
+              pinned: true,
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              // surfaceTintColor: Colors.amber,
-              title: PostTitle(post: post),
+              // title: PostMeta(
+              //   post: post,
+              //   avatarSize: 32,
+              //   padding: const EdgeInsets.all(0),
+              // ),
+              centerTitle: false,
             ),
             SliverToBoxAdapter(child: PostMeta(post: post)),
+            if (post.title != post.content)
+              SliverToBoxAdapter(child: PostTitle(post: post)),
             SliverToBoxAdapter(child: PostContent(post: post)),
             SliverToBoxAdapter(
               child: Padding(
@@ -233,65 +245,70 @@ class _PostViewScreenState extends State<PostViewScreen> {
               ),
             ),
 
-            /// 가짜 (임시) 코멘트 입력 창
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Divider(thickness: 1, height: 0),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 16.0, top: 12, bottom: 16),
-                    child: Text(
-                      T.comments.tr,
-                      style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                            fontWeight: FontWeight.w400,
-                          ),
+            /// Show the label 'Comments' only if the post is commentable.
+            if (widget.commentable)
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Divider(thickness: 1, height: 0),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0, top: 12, bottom: 16),
+                      child: Text(
+                        T.comments.tr,
+                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                              fontWeight: FontWeight.w400,
+                            ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            CommentListView(post: post),
+            if (widget.commentable) CommentListView(post: post),
           ],
         ),
-        bottomNavigationBar: SafeArea(
-            child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () async {
-            /// 텍스트 입력 버튼 액션
-            await ForumService.instance.showCommentCreateScreen(
-              context: context,
-              post: post,
-              focusOnTextField: true,
-            );
-          },
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                /// 사진 버튼
-                IconButton(
-                  onPressed: () async {
+        bottomNavigationBar: widget.commentable
+            ? SafeArea(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () async {
+                    /// 텍스트 입력 버튼 액션
                     await ForumService.instance.showCommentCreateScreen(
                       context: context,
                       post: post,
-                      showUploadDialog: true,
+                      focusOnTextField: true,
                     );
                   },
-                  icon: const Icon(Icons.camera_alt),
+                  child: Container(
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        /// 사진 버튼
+                        IconButton(
+                          onPressed: () async {
+                            await ForumService.instance.showCommentCreateScreen(
+                              context: context,
+                              post: post,
+                              showUploadDialog: true,
+                            );
+                          },
+                          icon: const Icon(Icons.camera_alt),
+                        ),
+                        Expanded(child: Text(T.inputCommentHint.tr)),
+                        const Icon(Icons.send),
+                        const SizedBox(width: 8),
+                      ],
+                    ),
+                  ),
                 ),
-                Expanded(child: Text(T.inputCommentHint.tr)),
-                const Icon(Icons.send),
-                const SizedBox(width: 8),
-              ],
-            ),
-          ),
-        )),
+              )
+            : null,
       ),
     );
   }

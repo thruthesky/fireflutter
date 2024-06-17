@@ -181,6 +181,12 @@ class T {
     'en': 'Write a comment',
     'ko': '코멘트 작성',
   };
+
+  static Json posts = {
+    'en': 'Posts',
+    'ko': '글',
+  };
+
   static Json comments = {
     'en': 'Comments',
     'ko': '댓글',
@@ -228,9 +234,44 @@ class T {
     'ko': '모임이 수정되었습니다.',
   };
 
+  static Json qna = {
+    'en': 'Q&A',
+    'ko': '질문',
+  };
+
+  static Json discussion = {
+    'en': 'Discussion',
+    'ko': '토론',
+  };
+
+  static Json buyandsell = {
+    'en': 'Buy&Sell',
+    'ko': '장터',
+  };
+
+  static Json category = {
+    'en': 'Category',
+    'ko': '카테고리',
+  };
+
+  static Json post = {
+    'en': 'Post',
+    'ko': '글',
+  };
+
+  static Json comment = {
+    'en': 'Comment',
+    'ko': '댓글',
+  };
+
+  static Json forumType = {
+    'en': 'Forum type',
+    'ko': '게시판 종류',
+  };
+
   static Json info = {
     'en': 'Info',
-    'ko': '소개',
+    'ko': '정보',
   };
   static Json event = {
     'en': 'Event',
@@ -613,6 +654,31 @@ class T {
     'ko': '전체',
   };
 
+  static Json title = {
+    'en': 'Title',
+    'ko': '제목',
+  };
+
+  static Json content = {
+    'en': 'Content',
+    'ko': '내용',
+  };
+
+  static Json community = {
+    'en': 'Community',
+    'ko': '커뮤니티',
+  };
+
+  static Json noResultFound = {
+    'en': 'No result found.',
+    'ko': '검색 결과가 없습니다.',
+  };
+
+  static Json meetup = {
+    'en': 'Meetup',
+    'ko': '모임',
+  };
+
   static Json recommendWithCount = {
     'en': 'Recommend #count',
     'ko': '추천 #count',
@@ -708,6 +774,22 @@ class T {
     'ko': '메시지를 보낼 수 없습니다. 계정이 비활성화 상태입니다.'
   };
 
+  static Json forumSearch = {
+    'en': 'Forum Search',
+    'ko': '검색',
+  };
+
+  static Json searchKeywordHint = {
+    'en': 'Please enter keyword',
+    'ko': '검색어를 입력하세요',
+  };
+
+  static Json postDeletedOrNotFound = {
+    'en': 'Post is deleted or not found',
+    'ko': '게시글이 삭제되었거나 존재하지 않습니다.',
+  };
+
+  /// EO Block
   /// Report
   static const Json reportInputTitle = {
     'en': 'Report',

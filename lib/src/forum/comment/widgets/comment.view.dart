@@ -1,18 +1,26 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fireflutter/fireflutter.dart';
-import 'package:fireflutter/src/common/photo_view/photo.view.screen.dart';
 import 'package:flutter/material.dart';
 
+/// Comment view
+///
+/// Note, to display the comemnt tree, it gets the whole comments of the post and
+/// do some computation to display the comment tree. It does not look like a heavy compulation
+/// but it needs an attention.
 class CommentView extends StatefulWidget {
   const CommentView({
     super.key,
     required this.post,
     required this.comment,
+    required this.comments,
+    required this.index,
     this.onCreate,
   });
 
   final Post post;
   final Comment comment;
+  final List<Comment> comments;
+  final int index;
   final Function? onCreate;
 
   @override
@@ -22,48 +30,76 @@ class CommentView extends StatefulWidget {
 class _CommentViewState extends State<CommentView> {
   int? previousNoOfLikes;
 
-  Color get lineColor => Theme.of(context).colorScheme.outline.withAlpha(40);
   double lineWidth = 2;
+  Color get verticalLineColor =>
+      Theme.of(context).colorScheme.outline.withAlpha(100);
+  bool get isFirstParent =>
+      widget.comment.parentId == null && widget.comment.depth == 0;
+  bool get isChild => !isFirstParent;
+  bool get hasChild => widget.comment.hasChild;
+  bool get lastChild => widget.comment.isLastChild;
+  bool get parentLastChild => widget.comment.isParentLastChild;
+
+  List<Comment> parents = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    /// Save the accendent comments of the current comment into the [parents] variable
+    Comment? parent = widget.comment;
+    while (parent != null) {
+      parents.add(parent);
+      if (parent.parentId == null) break;
+      parent = widget.comments.firstWhere(
+        (cmt) => cmt.id == parent!.parentId,
+      );
+    }
+    parents = parents.reversed.toList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    /// Intrinsic height is a natural height from its child
+    /// Using a combination of [Container] and [Expanded] the line will be automatically drawn
+    // padding: EdgeInsets.only(left: widget.comment.leftMargin, right: 16),
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-
-      /// Intrinsic height is a natural height from its child
-      /// Using VerticalDivider, the VerticalDivider will automatically
-      /// takes all the space from the parent
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            VerticalDivider(
-              width: 0,
-              thickness: lineWidth,
-              color: lineColor,
-            ),
-            // Horizontal line from the child comment
-            Container(
-              margin: const EdgeInsets.only(top: 8, right: 8),
-              height: 16,
-              width: widget.comment.leftMargin,
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(width: lineWidth, color: lineColor),
-                  left: BorderSide(width: lineWidth, color: lineColor),
+            for (int i = 0; i < widget.comment.depth; i++)
+              _newIndentedVerticalLine(i),
+
+            /// curved line
+            if (isChild)
+              CommentCurvedLine(
+                lineWidth: lineWidth - .5,
+                color: verticalLineColor,
+              ),
+
+            Column(
+              children: [
+                UserAvatar(
+                  uid: widget.comment.uid,
+                  onTap: () => UserService.instance.showPublicProfileScreen(
+                    context: context,
+                    uid: widget.comment.uid,
+                  ),
+                  size: isFirstParent ? 40 : 26,
                 ),
 
-                /// For making a curve to its edge
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(32),
-                ),
-              ),
-            ),
-            UserAvatar(
-              uid: widget.comment.uid,
-              onTap: () => UserService.instance.showPublicProfileScreen(
-                context: context,
-                uid: widget.comment.uid,
-              ),
+                /// 자식이 있다면, 아바타 아래에 세로 라인을 그린다. 즉, 아바타 아래의 세로 라인은 여기서 그린다.
+                if (hasChild)
+                  Expanded(
+                    child: VerticalDivider(
+                      color: verticalLineColor,
+                      width: lineWidth,
+                      thickness: lineWidth,
+                    ),
+                  ),
+              ],
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -81,6 +117,7 @@ class _CommentViewState extends State<CommentView> {
                       ),
                       const SizedBox(width: 8),
                       Text(
+                        // '${widget.comment.parentId}',
                         widget.comment.createdAt.toShortDate,
                         style: Theme.of(context).textTheme.labelSmall!.copyWith(
                               color: Theme.of(context).colorScheme.outline,
@@ -136,11 +173,18 @@ class _CommentViewState extends State<CommentView> {
                     data: Theme.of(context).copyWith(
                       textButtonTheme: TextButtonThemeData(
                         style: TextButton.styleFrom(
-                          textStyle: Theme.of(context).textTheme.labelSmall,
+                          textStyle:
+                              Theme.of(context).textTheme.labelSmall!.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                  ),
                           visualDensity: const VisualDensity(
                             horizontal: -4,
                             vertical: -1,
                           ),
+                          foregroundColor: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withAlpha(200),
                         ),
                       ),
                     ),
@@ -303,11 +347,151 @@ class _CommentViewState extends State<CommentView> {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _shortVerticalLine() {
+    return Container(
+      width: lineWidth,
+      height: 6,
+      child: Column(
+        children: [
+          Expanded(
+            child: VerticalDivider(
+              width: lineWidth,
+              color: Colors.red,
+              thickness: lineWidth,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 세로 라인을 긋는다.
+  ///
+  /// [depth] 는 코멘트의 깊이를 나타내는 것으로,
+  /// 현재 코멘트의 depth 가 3 이라면, 0 부터 1 과 2 총 세번 호출 된다.
+  Widget _newIndentedVerticalLine(int depth) {
+    return Container(
+      width: depth == 0 ? 21 : 30,
+      child: Column(
+        /// 세로 라인을 오른쪽으로 붙인다. 그래서 커브 라인이 세로 라인에 붙게 한다.
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          if (maybeDrawVerticalLine(depth))
+            Expanded(
+              child: VerticalDivider(
+                width: lineWidth,
+                color: verticalLineColor,
+                thickness: lineWidth,
+              ),
+            ),
+          if (maybeDrawShortVerticalLine(depth))
+            Container(
+              width: lineWidth,
+              height: 5,
+              decoration: BoxDecoration(
+                color: verticalLineColor,
+                borderRadius:
+
+                    /// For making a curve to its edge
+                    const BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  /// Return true if the vertical line should be drawn.
+  ///
+  /// Logic:
+  /// 루프 앞 단계의 상위에 sibiling 이 있고, 같은 단계의 다음 형제가 마지막 자식이 아니면,
+  ///
+  /// 루프 단계는 0 부터 시작.
+  /// 나의 단계도 0 부터 시작.
+  ///
+  /// 공식:
+  ///   - 현재 루프 단계에서,
+  ///   - 나의 하위에,
+  ///   - 현재 루프 + 1 단계에 자식이 있으면 해당 루프 단계에 긋는다.
+  ///   - 단, 현재 루프 단계가 나와 같은 depth 이면 긋지 않는다.
+  ///
+  /// 예)
+  ///   - 나의 단계 0. 현재 루프 0. 긋지 않는다. 나의 depth 와 루프 depth 가 동일하기 때문이다.
+  ///   - 나의 단계 1. 현재 루프 0. 나의 하위에 0 + 1 = 1 단계 자식이 있으면 0 단계에 긋는다. (단, 나의 depth 와 같으면 긋지 않는다.)
+  ///   - 나의 단계 2. 루프 단계 0. 1 단계에 하위 자식이 있어도 나와 depth 가 같으면, 긋지 않는다. 다르면 긋는다.
+  ///   - 나의 단계 2. 루프 단계 1. 2 단계에 하위 자식이 있는 1단계에 긋는다.
+  ///   - 나의 단계 2. 루프 단계 2. 3 단계에 하위 자식이 있는 2단계에 긋는다.
+  ///   - 나의 단계 3. 루프 단계 2. 3 단계에 하위 자식이 있으면, 2 단계에 긋는다.
+  bool maybeDrawVerticalLine(int depth) {
+    final currComment = widget.comment;
+    final parents = Comment.getParents(currComment, widget.comments);
+    final depthComment = parents[depth];
+
+    if (currComment.depth == depth) {
+      return false;
+    }
+    for (int i = widget.index + 1; i < widget.comments.length; i++) {
+      final target = widget.comments[i];
+      if (target.depth == depth + 1 && target.parentId == depthComment.id) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool maybeDrawShortVerticalLine(int depth) {
+    return widget.comment.depth - 1 == depth;
+  }
+}
+
+class CommentCurvedLine extends StatelessWidget {
+  const CommentCurvedLine({
+    super.key,
+    required this.lineWidth,
+    required this.color,
+  });
+
+  final double lineWidth;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 16,
+      height: 16,
+      child: Stack(
+        children: [
+          Positioned(
+            left: -lineWidth,
+            child: Container(
+              width: 16,
+              height: 16,
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(width: lineWidth, color: color),
+                  left: BorderSide(width: lineWidth, color: color),
+                ),
+
+                /// For making a curve to its edge
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(32),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

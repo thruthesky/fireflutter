@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fireflutter/fireflutter.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,22 @@ class Comment {
 
   bool deleted;
 
+  /// [hasChild] is set to true if the comment have a child. By defualt, it is set to false.
+  bool hasChild = false;
+
+  /// [isLastChild] is set to true if the comment is the last child. By default, it is set to false.
+  bool isLastChild = true;
+
+  /// [isParentLastChild] is set to true if the parent of current comment is the last child of its parent.
+  /// This is used to know if the parent is the last child of its parent.
+  /// This is used in drawing the vertical line of comment tree indentation.
+  bool isParentLastChild = false;
+
+  /// [hasSiblings] is set to true if the comment has sibilings below his place (not above).
+  /// It is like if he has younger brothers or sisters. Not the older ones (place above him).
+  /// By default, it is set to true.
+  bool hasMoreSibiling = true;
+
   bool get isMine => uid == myUid;
 
   /// Get the post id of the comment.
@@ -47,19 +64,19 @@ class Comment {
     if (depth == 0) {
       return 0;
     } else if (depth == 1) {
-      return 32;
+      return 19;
     } else if (depth == 2) {
-      return 48;
+      return 46;
     } else if (depth == 3) {
-      return 64;
-    } else if (depth == 4) {
-      return 80;
-    } else if (depth == 5) {
-      return 90;
-    } else if (depth == 6) {
-      return 100;
+      return 75;
+      // } else if (depth == 4) {
+      //   return 103;
+      // } else if (depth == 5) {
+      //   return 131;
+      // } else if (depth == 6) {
+      //   return 160;
     } else {
-      return 108;
+      return 103;
     }
   }
 
@@ -219,25 +236,96 @@ class Comment {
     /// And add the reply to the parent comment's replies.
     for (final comment in comments) {
       if (comment.parentId == null) {
+        /// This is the 1st-depth comment (Direct comment under the post)
+        /// hasChild, hasSiblings, isLastChild are set here. But needed to be updated later
         newComments.add(comment);
       } else {
-        /// 부모 찾기
-        final index = newComments.indexWhere((e) => e.id == comment.parentId);
+        /// Code comes here if the comment is 2nd-depth or more.
 
-        comment.depth = newComments[index].depth + 1;
+        /// Find parent
+        /// This comment has parent. Attach it under the parent and update the depth.
+        /// Note, there is always a parent comment for a reply. the [parentIndex] will not become -1.
+        final parentIndex = newComments.indexWhere(
+          (e) => e.id == comment.parentId,
+        );
+        comment.depth = newComments[parentIndex].depth + 1;
+        comment.isLastChild = true;
 
-        /// 형제 찾기
-        final siblingIndex =
-            newComments.lastIndexWhere((e) => e.parentId == comment.parentId);
+        /// To inherit the parent comment [isLastChild] property
+        comment.isParentLastChild = newComments[parentIndex].isLastChild;
+
+        /// Set parent hasChild true if parentId is not null
+        newComments[parentIndex].hasChild = true;
+
+        /// Find sibiling from the list of comment (So, this comment can be attached after the sibiling comment)
+        final siblingIndex = newComments.lastIndexWhere(
+          (e) => e.parentId == comment.parentId,
+        );
+
+        /// If there is no sibling, under the parent (meaning, the is the first child of the parent),
+        /// Attche it under the parent.
         if (siblingIndex == -1) {
-          newComments.insert(index + 1, comment);
+          /// hasChild, hasSibilings, isLastChild are all set to false by default at this time.
+          /// (need to be updated later)
+          comment.hasMoreSibiling = false;
+          // print('${comment.content} has no sibiling');
+          newComments.insert(parentIndex + 1, comment);
         } else {
-          newComments.insert(siblingIndex + 1, comment);
+          /// Sibiling exists!!
+
+          ///
+          newComments[siblingIndex].hasMoreSibiling = true;
+          comment.hasMoreSibiling = false;
+
+          /// Set the [isLastChild] to true if this comment is last one under the parent (among the sibilings)
+          newComments[siblingIndex].isLastChild = false;
+
+          /// 코멘트를 형제와 형제의 자손까지 포함하여, 그 밑에 추가한다.
+          int lastSibilingIndex = siblingIndex + 1;
+          for (lastSibilingIndex;
+              lastSibilingIndex < newComments.length;
+              lastSibilingIndex++) {
+            /// 각 코멘트의 부모를 경로를 가져온다.
+            final List<Comment> parents =
+                getParents(newComments[lastSibilingIndex], newComments);
+
+            /// 부모 경로에 같은 부모가 있으면 형제 또는 형제의 자손이다.
+            int found = parents.indexWhere((cmt) => cmt.id == comment.parentId);
+            // print("i=$lastSibilingIndex, if (found($found) == -1) { //");
+            if (found == -1) {
+              break;
+            }
+          }
+
+          /// Runtime comes here if there is a sibling. Meaning, there are comments already attached to the parent.
+          /// Attach it after the sibling.
+          newComments.insert(lastSibilingIndex, comment);
         }
       }
     }
 
     return newComments;
+  }
+
+  /// Get the parents of the comment.
+  ///
+  /// It returns the list of parents in the path to the root from the comment.
+  /// Use this method to get
+  ///   - the parents of the comment. (This case is used by sorting comments and drawing the comment tree)
+  ///   - the users(user uid) in the path to the root. Especially to know who wrote the comment in the path to the post
+  static List<Comment> getParents(Comment comment, List<Comment> comments) {
+    final List<Comment> parents = [];
+    Comment? parent = comment;
+    while (parent != null) {
+      parent = comments.firstWhereOrNull(
+        (e) => e.id == parent!.parentId,
+      );
+      if (parent == null) {
+        break;
+      }
+      parents.add(parent);
+    }
+    return parents.reversed.toList();
   }
 
   /// Create a comment

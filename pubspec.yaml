@@ -17,6 +17,7 @@ dependencies:
   cached_network_image: ^3.3.0
   cloud_firestore: 5.0.1
   cloud_functions: 5.0.1
+  collection: ^1.18.0
   crypto: ^3.0.3
   devicelocale: ^0.7.0
   dio: ^5.4.0

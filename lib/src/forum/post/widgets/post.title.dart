@@ -5,9 +5,15 @@ import 'package:flutter/material.dart';
 ///
 /// Display the title of a post.
 class PostTitle extends StatefulWidget {
-  const PostTitle({super.key, required this.post});
+  const PostTitle({
+    super.key,
+    required this.post,
+    this.textStyle,
+  });
 
   final Post post;
+
+  final TextStyle? textStyle;
 
   @override
   State<PostTitle> createState() => _PostTitleState();
@@ -41,8 +47,20 @@ class _PostTitleState extends State<PostTitle> {
   _text() {
     return Blocked(
       otherUserUid: widget.post.uid,
-      no: () => Text(title),
-      yes: () => Text(T.blockedTitleMessage.tr),
+      no: () => Text(
+        title,
+        style: widget.textStyle ?? _defaultTextStyle(),
+      ),
+      yes: () => Text(
+        T.blockedTitleMessage.tr,
+        style: widget.textStyle ?? _defaultTextStyle(),
+      ),
     );
+  }
+
+  _defaultTextStyle() {
+    return Theme.of(context).textTheme.labelLarge!.copyWith(
+          fontWeight: FontWeight.w700,
+        );
   }
 }
