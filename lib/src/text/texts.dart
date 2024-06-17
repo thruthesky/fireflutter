@@ -1009,7 +1009,8 @@ class T {
   };
   static const Json unblockUserChatConfirmation = {
     'en':
-        "Are you sure you want to unblock this user from the chat room? This person may see all the messages in the chat room."
+        "Are you sure you want to unblock this user from the chat room? This person may see all the messages in the chat room.",
+    'ko': '채팅방에 차단해제하시겠습니까? 이 행동은 취소할 수 없습니다.',
   };
 
   static const Json create = {
@@ -1020,6 +1021,16 @@ class T {
   static const Json leave = {
     'en': 'Leave',
     'ko': '나가기',
+  };
+
+  static const Json copy = {
+    'en': 'Copy',
+    'ko': '복사',
+  };
+
+  static const Json messageWasCopiedToClipboard = {
+    'en': "Message was copied to clipboard.",
+    'ko': '메시지가 클립보드에 복사되었습니다.',
   };
 
   // Chat-Setting
