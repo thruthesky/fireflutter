@@ -27,9 +27,14 @@ class EditUploads extends StatelessWidget {
       children: urls.map((url) {
         return Stack(
           children: [
-            Image.network(
-              url,
-              fit: BoxFit.cover,
+            Container(
+              clipBehavior: Clip.antiAlias,
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(16)),
+              child: Image.network(
+                url,
+                fit: BoxFit.cover,
+              ),
             ),
             Positioned(
               top: 0,
